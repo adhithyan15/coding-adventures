@@ -1,1 +1,1 @@
-echo "assembler: no tests yet"
+echo "Shell package — no tests"

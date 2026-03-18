@@ -1,1 +1,1 @@
-echo "directed-graph: no tests yet"
+echo "Shell package — no tests"

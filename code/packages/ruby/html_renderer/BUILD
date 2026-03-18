@@ -1,1 +1,1 @@
-echo "html_renderer: no tests yet"
+echo "Shell package — no tests"

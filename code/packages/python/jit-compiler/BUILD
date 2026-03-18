@@ -1,1 +1,1 @@
-echo "jit-compiler: no tests yet"
+echo "Shell package — no tests"
