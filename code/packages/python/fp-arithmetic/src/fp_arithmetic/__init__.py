@@ -19,6 +19,12 @@ from fp_arithmetic.ieee754 import (
     is_nan,
     is_zero,
 )
+from fp_arithmetic.pipeline import (
+    FPUnit,
+    PipelinedFMA,
+    PipelinedFPAdder,
+    PipelinedFPMultiplier,
+)
 
 __all__ = [
     # Formats
@@ -45,4 +51,9 @@ __all__ = [
     "fp_abs",
     "fp_compare",
     "fp_convert",
+    # Pipelined operations
+    "PipelinedFPAdder",
+    "PipelinedFPMultiplier",
+    "PipelinedFMA",
+    "FPUnit",
 ]

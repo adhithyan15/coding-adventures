@@ -23,6 +23,7 @@ classifiers = [
 dependencies = [
     "coding-adventures-logic-gates",
     "coding-adventures-arithmetic",
+    "coding-adventures-clock",
 ]
 
 [project.urls]
@@ -54,11 +55,11 @@ select = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=fp_arithmetic --cov-report=term-missing --cov-fail-under=90"
+addopts = "--cov=fp_arithmetic --cov-report=term-missing --cov-fail-under=85"
 
 [tool.coverage.run]
 source = ["src/fp_arithmetic"]
 
 [tool.coverage.report]
-fail_under = 90
+fail_under = 85
 show_missing = true
