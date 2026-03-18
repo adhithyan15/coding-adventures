@@ -93,6 +93,26 @@ func FormatReport(results map[string]executor.BuildResult) string {
 		buf.WriteString(fmt.Sprintf("%-*s   %-12s %s\n", maxNameLen, name, status, duration))
 	}
 
+	// Show error details for failed packages.
+	for _, name := range names {
+		result := results[name]
+		if result.Status == "failed" && (result.Stderr != "" || result.Stdout != "") {
+			buf.WriteString(fmt.Sprintf("\n--- FAILED: %s ---\n", name))
+			if result.Stderr != "" {
+				buf.WriteString(result.Stderr)
+				if !strings.HasSuffix(result.Stderr, "\n") {
+					buf.WriteString("\n")
+				}
+			}
+			if result.Stdout != "" {
+				buf.WriteString(result.Stdout)
+				if !strings.HasSuffix(result.Stdout, "\n") {
+					buf.WriteString("\n")
+				}
+			}
+		}
+	}
+
 	// Summary line — counts of each status.
 	total := len(results)
 	built := 0
