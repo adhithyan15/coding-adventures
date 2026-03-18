@@ -37,4 +37,4 @@ execute(instruction)
 
 ## Spec
 
-See [04d-intel4004-simulator.md](../../../specs/04d-intel4004-simulator.md) for the full specification.
+See [04d-intel4004-simulator.md](../../../specs/07d-intel4004-simulator.md) for the full specification.

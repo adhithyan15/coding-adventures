@@ -37,4 +37,4 @@ tokens = tokenize("x = 42 + y")
 
 ## Spec
 
-See [06-lexer.md](../../../specs/06-lexer.md) for the full specification.
+See [06-lexer.md](../../../specs/02-lexer.md) for the full specification.

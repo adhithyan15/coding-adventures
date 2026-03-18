@@ -39,4 +39,4 @@ binary = assemble("MOV R0, #42\nADD R1, R0, #1\n")
 
 ## Spec
 
-See [05-assembler.md](../../../specs/05-assembler.md) for the full specification.
+See [05-assembler.md](../../../specs/06-assembler.md) for the full specification.

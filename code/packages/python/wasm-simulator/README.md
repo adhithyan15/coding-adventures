@@ -43,4 +43,4 @@ execute(instructions)
 
 ## Spec
 
-See [04c-wasm-simulator.md](../../../specs/04c-wasm-simulator.md) for the full specification.
+See [04c-wasm-simulator.md](../../../specs/07c-wasm-simulator.md) for the full specification.

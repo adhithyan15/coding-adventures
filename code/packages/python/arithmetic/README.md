@@ -212,4 +212,4 @@ result = alu.execute(ALUOp.ADD, [1,0,0,0,0,0,0,0], [0,1,0,0,0,0,0,0])
 
 ## Spec
 
-See [02-arithmetic.md](../../../specs/02-arithmetic.md) for the full specification.
+See [02-arithmetic.md](../../../specs/09-arithmetic.md) for the full specification.

@@ -39,4 +39,4 @@ cpu.run()
 
 ## Spec
 
-See [03-cpu-simulator.md](../../../specs/03-cpu-simulator.md) for the full specification.
+See [03-cpu-simulator.md](../../../specs/08-cpu-simulator.md) for the full specification.
