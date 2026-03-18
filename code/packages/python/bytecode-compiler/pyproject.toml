@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-bytecode-compiler"
 version = "0.1.0"
-description = "Compiles ASTs into stack machine bytecode instructions — Layer 8 of the computing stack"
+description = "Compiles ASTs into stack machine bytecode instructions — Layer 4a of the computing stack"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -20,7 +20,11 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = ["coding-adventures-parser"]
+dependencies = [
+    "coding-adventures-lexer",
+    "coding-adventures-parser",
+    "coding-adventures-virtual-machine",
+]
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
@@ -56,3 +60,6 @@ source = ["src/bytecode_compiler"]
 [tool.coverage.report]
 fail_under = 80
 show_missing = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bytecode_compiler"]
