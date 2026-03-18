@@ -1,0 +1,38 @@
+# Type signatures for adder circuits.
+#
+# These signatures describe the public API of the adder functions.
+# Each function takes single-bit integers (0 or 1) and returns
+# immutable Data objects containing the results.
+
+module CodingAdventures
+  module Arithmetic
+    # Immutable result from half_adder or full_adder.
+    #   sum:   the result bit (0 or 1)
+    #   carry: the carry-out bit (0 or 1)
+    class AdderResult
+      attr_reader sum: Integer
+      attr_reader carry: Integer
+
+      def initialize: (sum: Integer, carry: Integer) -> void
+    end
+
+    # Immutable result from ripple_carry_adder.
+    #   bits:  Array of result bits, LSB first
+    #   carry: the final carry-out (0 or 1)
+    class RippleCarryResult
+      attr_reader bits: Array[Integer]
+      attr_reader carry: Integer
+
+      def initialize: (bits: Array[Integer], carry: Integer) -> void
+    end
+
+    # Adds two single bits. Returns sum and carry.
+    def self.half_adder: (Integer a, Integer b) -> AdderResult
+
+    # Adds two bits plus a carry-in. Returns sum and carry-out.
+    def self.full_adder: (Integer a, Integer b, Integer carry_in) -> AdderResult
+
+    # Adds two N-bit numbers (LSB-first arrays) using chained full adders.
+    def self.ripple_carry_adder: (Array[Integer] a, Array[Integer] b, ?carry_in: Integer) -> RippleCarryResult
+  end
+end

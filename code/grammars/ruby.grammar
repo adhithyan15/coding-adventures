@@ -1,0 +1,68 @@
+# Parser grammar for a subset of Ruby
+# Rule format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from ruby.tokens
+# lowercase names reference other grammar rules
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#
+# This covers enough Ruby to parse:
+#   x = 1 + 2
+#   def add(a, b)
+#     a + b
+#   end
+#   puts add(1, 2)
+
+program        = { statement } ;
+
+statement      = method_def
+               | if_statement
+               | while_statement
+               | assignment
+               | expression_stmt
+               ;
+
+method_def     = KEYWORD_DEF NAME LPAREN [ param_list ] RPAREN NEWLINE
+                 { statement }
+                 KEYWORD_END
+               ;
+
+param_list     = NAME { COMMA NAME } ;
+
+if_statement   = KEYWORD_IF expression NEWLINE
+                 { statement }
+                 [ KEYWORD_ELSE NEWLINE { statement } ]
+                 KEYWORD_END
+               ;
+
+while_statement = KEYWORD_WHILE expression NEWLINE
+                  { statement }
+                  KEYWORD_END
+                ;
+
+assignment     = NAME EQUALS expression NEWLINE ;
+
+expression_stmt = expression NEWLINE ;
+
+expression     = comparison ;
+
+comparison     = addition { ( EQUALS_EQUALS | NOT_EQUALS | LESS | GREATER | LESS_EQUAL | GREATER_EQUAL ) addition } ;
+
+addition       = term { ( PLUS | MINUS ) term } ;
+
+term           = factor { ( STAR | SLASH | PERCENT ) factor } ;
+
+factor         = NUMBER
+               | STRING
+               | NAME [ LPAREN [ arg_list ] RPAREN ]
+               | LPAREN expression RPAREN
+               | KEYWORD_TRUE
+               | KEYWORD_FALSE
+               | KEYWORD_NIL
+               ;
+
+arg_list       = expression { COMMA expression } ;

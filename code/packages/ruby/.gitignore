@@ -1,0 +1,15 @@
+# Ruby / Bundler
+Gemfile.lock
+.bundle/
+vendor/
+
+# SimpleCov coverage reports
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store

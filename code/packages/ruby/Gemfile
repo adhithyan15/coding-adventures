@@ -1,0 +1,56 @@
+# frozen_string_literal: true
+
+# Workspace Gemfile — lists all gems as path dependencies for local development.
+#
+# When developing locally, Bundler resolves inter-gem dependencies from the
+# local paths below. When published to RubyGems, each gem's .gemspec declares
+# the real version-pinned dependencies.
+#
+# Usage:
+#   cd code/packages/ruby
+#   bundle install
+#   bundle exec rake test    # runs tests for all gems
+
+source "https://rubygems.org"
+
+# ── Foundation (Layer 10) ─────────────────────────────────────────────
+gem "coding_adventures_logic_gates", path: "logic_gates"
+
+# ── Arithmetic (Layer 9) ──────────────────────────────────────────────
+gem "coding_adventures_arithmetic", path: "arithmetic"
+
+# ── CPU Simulator (Layer 8) ───────────────────────────────────────────
+gem "coding_adventures_cpu_simulator", path: "cpu_simulator"
+
+# ── ISA Simulators (Layer 7) ──────────────────────────────────────────
+gem "coding_adventures_arm_simulator", path: "arm_simulator"
+gem "coding_adventures_riscv_simulator", path: "riscv_simulator"
+gem "coding_adventures_wasm_simulator", path: "wasm_simulator"
+gem "coding_adventures_intel4004_simulator", path: "intel4004_simulator"
+gem "coding_adventures_jvm_simulator", path: "jvm_simulator"
+gem "coding_adventures_clr_simulator", path: "clr_simulator"
+
+# ── Language Tools (Layers 2-4) ───────────────────────────────────────
+gem "coding_adventures_grammar_tools", path: "grammar_tools"
+gem "coding_adventures_lexer", path: "lexer"
+gem "coding_adventures_parser", path: "parser"
+
+# ── Execution (Layers 4a-5) ──────────────────────────────────────────
+gem "coding_adventures_bytecode_compiler", path: "bytecode_compiler"
+gem "coding_adventures_virtual_machine", path: "virtual_machine"
+
+# ── Integration (Layer 0) ────────────────────────────────────────────
+gem "coding_adventures_pipeline", path: "pipeline"
+
+# ── Shells (future) ──────────────────────────────────────────────────
+gem "coding_adventures_assembler", path: "assembler"
+gem "coding_adventures_jit_compiler", path: "jit_compiler"
+gem "coding_adventures_html_renderer", path: "html_renderer"
+
+# ── Development dependencies (shared across all gems) ────────────────
+group :development, :test do
+  gem "minitest", "~> 5.0"
+  gem "simplecov", "~> 0.22"
+  gem "standard", "~> 1.0"
+  gem "rake", "~> 13.0"
+end

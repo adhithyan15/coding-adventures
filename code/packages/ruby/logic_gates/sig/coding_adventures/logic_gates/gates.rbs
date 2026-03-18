@@ -1,0 +1,27 @@
+module CodingAdventures
+  module LogicGates
+    # Fundamental gates
+    def self.not_gate: (Integer a) -> Integer
+    def self.and_gate: (Integer a, Integer b) -> Integer
+    def self.or_gate: (Integer a, Integer b) -> Integer
+    def self.xor_gate: (Integer a, Integer b) -> Integer
+
+    # Composite gates
+    def self.nand_gate: (Integer a, Integer b) -> Integer
+    def self.nor_gate: (Integer a, Integer b) -> Integer
+    def self.xnor_gate: (Integer a, Integer b) -> Integer
+
+    # NAND-derived gates (proving functional completeness)
+    def self.nand_not: (Integer a) -> Integer
+    def self.nand_and: (Integer a, Integer b) -> Integer
+    def self.nand_or: (Integer a, Integer b) -> Integer
+    def self.nand_xor: (Integer a, Integer b) -> Integer
+
+    # Multi-input gates
+    def self.and_n: (*Integer inputs) -> Integer
+    def self.or_n: (*Integer inputs) -> Integer
+
+    # Internal validation (private)
+    # def self.validate_bit: (untyped value, ?String name) -> void
+  end
+end
