@@ -21,7 +21,7 @@ The pipeline supports two execution paths:
 
 ### Stage Snapshots
 
-Each pipeline stage captures its input and output as a snapshot. This allows the TUI visualizer (and tests) to inspect what happened at every stage:
+Each pipeline stage captures its input and output as a snapshot. This allows the HTML visualizer (and tests) to inspect what happened at every stage:
 
 ```python
 @dataclass
@@ -94,6 +94,24 @@ This package depends on ALL other packages:
 - Verify all stage snapshots are populated
 - Verify error handling: invalid source produces error in result, not an exception
 - Verify run_stage stops at the requested stage
+
+## JSON Export
+
+The pipeline can export its result as JSON conforming to the **PipelineReport** contract defined in `11-html-visualizer.md`. This enables:
+- The HTML renderer to generate static HTML visualizations
+- Any language implementation (Ruby, TypeScript) to produce the same JSON
+- External tools to consume pipeline data
+
+```python
+class Pipeline:
+    @staticmethod
+    def run_to_json(source: str, target: str = "vm") -> str: ...
+        # Run pipeline and return JSON string conforming to PipelineReport schema
+
+    @staticmethod
+    def run_to_json_file(source: str, target: str, output_path: str) -> None: ...
+        # Run pipeline and write JSON to file
+```
 
 ## Future Extensions
 

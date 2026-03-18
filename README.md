@@ -19,11 +19,12 @@ Layer 8:  Bytecode Compiler    Turn ASTs into virtual machine instructions
 Layer 9:  Virtual Machine      Execute bytecode — the heart of Python, Ruby, Java
 ```
 
-Plus two orchestration tools:
-- **Pipeline** — chains all packages into a single execution flow
-- **Stack Visualizer** — Terminal UI that visually walks through every stage
+Plus orchestration and visualization:
+- **Pipeline** — chains all packages into a single execution flow, exports JSON
+- **HTML Renderer** — generates beautiful static HTML reports from pipeline JSON
+- **Pipeline Visualizer** — runs the pipeline and produces a self-contained HTML file
 
-The end goal: write `x = 1 + 2` in Python and watch it propagate through every layer — from source code down to logic gates — in a live terminal UI.
+The end goal: write `x = 1 + 2` in Python, run the pipeline, and open a single HTML file that shows every stage — from source code down to logic gates. Any language implementation (Python, Ruby, TypeScript) can produce the same visualization.
 
 ## Structure
 
