@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "coding_adventures_lexer"
+require "coding_adventures_parser"
+require "coding_adventures_virtual_machine"
+
+require_relative "coding_adventures/bytecode_compiler/version"
+require_relative "coding_adventures/bytecode_compiler/compiler"
+require_relative "coding_adventures/bytecode_compiler/jvm_compiler"
+require_relative "coding_adventures/bytecode_compiler/clr_compiler"
+require_relative "coding_adventures/bytecode_compiler/wasm_compiler"
