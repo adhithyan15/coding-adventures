@@ -1,13 +1,22 @@
 # Token definitions for a subset of Ruby
-# Order matters: first match wins
+# Used by the grammar-driven lexer to tokenize Ruby source code.
 #
-# This grammar covers enough of Ruby to parse:
-#   x = 1 + 2
-#   def greet(name)
-#     puts "Hello, #{name}!"
-#   end
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
 #
-# Both the Python and Ruby lexer packages can read this file.
+# Order matters: first match wins. Multi-character tokens
+# must come before single-character ones (e.g., == before =).
+#
+# Ruby differs from Python in several ways:
+# - `end` closes blocks (instead of indentation)
+# - `elsif` (not `elif`)
+# - `puts` for output
+# - `nil` instead of `None`
+# - `true`/`false` (lowercase, not `True`/`False`)
+# - Range operator `..`
+# - Hash rocket `=>`
+# - `!=`, `<=`, `>=` comparison operators
 
 # Literals
 NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
@@ -16,45 +25,43 @@ STRING      = /"([^"\\]|\\.)*"/
 
 # Multi-character operators (must come before single-char versions)
 EQUALS_EQUALS = "=="
+DOT_DOT     = ".."
+HASH_ROCKET = "=>"
 NOT_EQUALS  = "!="
-LESS_EQUAL  = "<="
-GREATER_EQUAL = ">="
-ARROW       = "=>"
-RANGE       = ".."
+LESS_EQUALS = "<="
+GREATER_EQUALS = ">="
 
-# Single-character operators and delimiters
+# Single-character operators
 EQUALS      = "="
 PLUS        = "+"
 MINUS       = "-"
 STAR        = "*"
 SLASH       = "/"
-PERCENT     = "%"
-LESS        = "<"
-GREATER     = ">"
+
+# Comparison
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+
+# Delimiters
 LPAREN      = "("
 RPAREN      = ")"
-LBRACKET    = "["
-RBRACKET    = "]"
 COMMA       = ","
-DOT         = "."
 COLON       = ":"
-PIPE        = "|"
-BANG        = "!"
 
-# Keywords section
+# Keywords section — names that are reserved in Ruby
 keywords:
-  def
-  end
   if
-  elsif
   else
-  unless
+  elsif
+  end
   while
-  until
+  for
   do
+  def
   return
   class
   module
+  require
   puts
   true
   false
@@ -63,3 +70,9 @@ keywords:
   or
   not
   then
+  unless
+  until
+  yield
+  begin
+  rescue
+  ensure
