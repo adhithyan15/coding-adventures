@@ -1,0 +1,38 @@
+[project]
+name = "coding-adventures-python-workspace"
+version = "0.0.0"
+requires-python = ">=3.12"
+
+[tool.uv.workspace]
+members = [
+    "logic-gates",
+    "arithmetic",
+    "cpu-simulator",
+    "arm-simulator",
+    "riscv-simulator",
+    "wasm-simulator",
+    "intel4004-simulator",
+    "assembler",
+    "lexer",
+    "parser",
+    "bytecode-compiler",
+    "virtual-machine",
+    "pipeline",
+    "html-renderer",
+]
+
+[tool.uv.sources]
+coding-adventures-logic-gates = { workspace = true }
+coding-adventures-arithmetic = { workspace = true }
+coding-adventures-cpu-simulator = { workspace = true }
+coding-adventures-arm-simulator = { workspace = true }
+coding-adventures-riscv-simulator = { workspace = true }
+coding-adventures-wasm-simulator = { workspace = true }
+coding-adventures-intel4004-simulator = { workspace = true }
+coding-adventures-assembler = { workspace = true }
+coding-adventures-lexer = { workspace = true }
+coding-adventures-parser = { workspace = true }
+coding-adventures-bytecode-compiler = { workspace = true }
+coding-adventures-virtual-machine = { workspace = true }
+coding-adventures-pipeline = { workspace = true }
+coding-adventures-html-renderer = { workspace = true }
