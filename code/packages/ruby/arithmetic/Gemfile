@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+# Local path dependency for development — when published to RubyGems, the
+# gemspec's add_dependency handles the real version-pinned dependency.
+gem "coding_adventures_logic_gates", path: "../logic_gates"
+
+group :development, :test do
+  gem "minitest", "~> 5.0"
+  gem "simplecov", "~> 0.22"
+  gem "standard", "~> 1.0"
+  gem "rake", "~> 13.0"
+end
