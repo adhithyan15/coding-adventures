@@ -28,6 +28,8 @@
 - Commits follow the pattern: `type(scope): description` (e.g., `feat(logic-gates): add AND gate implementation`)
 - After implementation, verify: tests pass, coverage high, README exists, CHANGELOG updated, spec still accurate
 - If implementation diverged from spec, update spec and note divergence in commit message
+- Push early and often — create PRs as soon as a branch has meaningful work, keep pushing commits into the same PR as work progresses
+- Keep the todo list updated — check off items as they're completed, add new items as they're discovered
 
 ## Project Structure
 
