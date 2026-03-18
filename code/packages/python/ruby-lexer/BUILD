@@ -1,3 +1,3 @@
 uv venv --quiet --clear
 uv pip install -e ../grammar-tools -e ../lexer -e ".[dev]" --quiet
-uv run pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
