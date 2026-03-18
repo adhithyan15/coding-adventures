@@ -1,0 +1,47 @@
+# Token definitions for a subset of Python
+# Used by the grammar-driven lexer to tokenize Python source code.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#
+# Order matters: first match wins. Multi-character tokens
+# must come before single-character ones (e.g., == before =).
+
+# Literals
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# Multi-character operators (must come before single-char versions)
+EQUALS_EQUALS = "=="
+
+# Single-character operators
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+
+# Delimiters
+LPAREN      = "("
+RPAREN      = ")"
+COMMA       = ","
+COLON       = ":"
+
+# Keywords section — names that are reserved in Python
+keywords:
+  if
+  else
+  elif
+  while
+  for
+  def
+  return
+  class
+  import
+  from
+  as
+  True
+  False
+  None
