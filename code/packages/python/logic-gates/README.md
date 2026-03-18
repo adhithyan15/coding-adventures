@@ -141,4 +141,4 @@ AND_N(1, 1, 1, 0)  # 0 — one input is 0
 
 ## Spec
 
-See [01-logic-gates.md](../../../specs/01-logic-gates.md) for the full specification.
+See [01-logic-gates.md](../../../specs/10-logic-gates.md) for the full specification.

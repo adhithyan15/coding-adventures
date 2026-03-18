@@ -25,7 +25,7 @@ dependencies = ["coding-adventures-cpu-simulator"]
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/04c-wasm-simulator.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/07c-wasm-simulator.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

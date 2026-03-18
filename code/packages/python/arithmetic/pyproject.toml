@@ -25,7 +25,7 @@ dependencies = ["coding-adventures-logic-gates"]
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/02-arithmetic.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/09-arithmetic.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

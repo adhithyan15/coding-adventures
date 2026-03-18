@@ -25,7 +25,7 @@ dependencies = ["coding-adventures-lexer"]
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/07-parser.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/03-parser.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

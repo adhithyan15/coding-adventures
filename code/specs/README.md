@@ -10,19 +10,29 @@ This folder contains the specifications for every package in the coding-adventur
 
 ## Numbering
 
-Specs are numbered by their layer in the computing stack, bottom to top:
+Specs are numbered **top-down** — from the user-facing language down to silicon. This matches the order you experience computing: you write code, it gets compiled, and eventually runs on hardware.
 
 | # | Spec | Layer |
 |---|------|-------|
-| 01 | Logic Gates | Hardware |
-| 02 | Arithmetic | Hardware |
-| 03 | CPU Simulator | Hardware |
-| 04 | ARM Simulator | Hardware/ISA |
-| 05 | Assembler | Software (low-level) |
-| 06 | Lexer | Software (compiler) |
-| 07 | Parser | Software (compiler) |
-| 08 | Bytecode Compiler | Software (compiler) |
-| 09 | Virtual Machine | Software (runtime) |
+| 01 | High-level language | Source code (not a package — this is what you write) |
+| 02 | Lexer | Compiler frontend |
+| 03 | Parser | Compiler frontend |
+| 04 | Bytecode Compiler | Compiler backend |
+| 05 | Virtual Machine | Runtime (interpreted path) |
+| 06 | Assembler | Compiler backend (compiled path) |
+| 07a | RISC-V Simulator | Instruction Set Architecture |
+| 07b | ARM Simulator | Instruction Set Architecture |
+| 07c | WASM Simulator | Instruction Set Architecture |
+| 07d | Intel 4004 Simulator | Instruction Set Architecture |
+| 08 | CPU Simulator | Hardware |
+| 09 | Arithmetic (ALU) | Hardware |
+| 10 | Logic Gates | Hardware (foundation) |
+
+**Tooling specs** (not numbered by layer):
+| # | Spec | Purpose |
+|---|------|---------|
+| 10-pipeline | Pipeline Orchestrator | Chains all layers together |
+| 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
 
 ## Spec Template
 

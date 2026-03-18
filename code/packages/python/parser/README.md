@@ -41,4 +41,4 @@ ast = parse(tokens)
 
 ## Spec
 
-See [07-parser.md](../../../specs/07-parser.md) for the full specification.
+See [07-parser.md](../../../specs/03-parser.md) for the full specification.

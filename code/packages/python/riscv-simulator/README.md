@@ -41,4 +41,4 @@ execute(instruction)
 
 ## Spec
 
-See [04b-riscv-simulator.md](../../../specs/04b-riscv-simulator.md) for the full specification.
+See [04b-riscv-simulator.md](../../../specs/07a-riscv-simulator.md) for the full specification.

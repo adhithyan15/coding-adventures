@@ -37,4 +37,4 @@ code_object.names         # names pool
 
 ## Spec
 
-See [08-bytecode-compiler.md](../../../specs/08-bytecode-compiler.md) for the full specification.
+See [08-bytecode-compiler.md](../../../specs/04-bytecode-compiler.md) for the full specification.

@@ -7,20 +7,29 @@ A polyglot learning monorepo for building the entire computing stack from scratc
 Computers are deterministic. There is no magic. This repo exists to prove that by building every layer of the computing stack by hand:
 
 ```
-Layer 1:  Logic Gates          AND, OR, NOT, XOR — the foundation of all digital logic
-Layer 2:  Arithmetic           Half adders, full adders, ALU — how numbers are computed
-Layer 3:  CPU Simulator        Registers, memory, fetch-decode-execute cycle
-Layer 4a: ARM Simulator        Decode and execute ARM machine code
-Layer 4b: RISC-V Simulator     Decode and execute RISC-V machine code (primary target)
-Layer 5:  Assembler            Translate assembly to binary (supports ARM + RISC-V)
-Layer 6:  Lexer                Break source code into tokens
-Layer 7:  Parser               Build abstract syntax trees from tokens
-Layer 8:  Bytecode Compiler    Turn ASTs into virtual machine instructions
-Layer 9:  Virtual Machine      Execute bytecode — the heart of Python, Ruby, Java
+ Layer 1:  Source Code            You write: x = 1 + 2
+ Layer 2:  Lexer                  Breaks source text into tokens
+ Layer 3:  Parser                 Builds abstract syntax trees from tokens
+ Layer 4:  Bytecode Compiler      Turns ASTs into VM instructions (or assembly)
+                │
+                ├─── Interpreted path ─────────────────────────┐
+                │                                              │
+ Layer 5:  Virtual Machine        Executes bytecode (like CPython, JVM)
+                │                                              │
+                ├─── Compiled path ────────────────────────────┘
+                │
+ Layer 6:  Assembler              Translates assembly → binary machine code
+ Layer 7:  Instruction Set        RISC-V, ARM, WASM, Intel 4004
+                │                 Decodes binary → CPU operations
+ Layer 8:  CPU Simulator          Fetch-decode-execute cycle, registers, memory
+ Layer 9:  Arithmetic (ALU)       Addition, subtraction — built from logic gates
+ Layer 10: Logic Gates            AND, OR, XOR — the irreducible foundation
 ```
 
+Each layer is a Russian nesting doll — the ISA simulators use the CPU, which uses the ALU, which uses logic gates. Every layer delegates downward.
+
 Plus orchestration and visualization:
-- **Pipeline** — chains all packages into a single execution flow, exports JSON
+- **Pipeline** — chains all layers into a single execution flow, exports JSON
 - **HTML Renderer** — generates beautiful static HTML reports from pipeline JSON
 - **Pipeline Visualizer** — runs the pipeline and produces a self-contained HTML file
 

@@ -37,4 +37,4 @@ execute(instruction)
 
 ## Spec
 
-See [04-arm-simulator.md](../../../specs/04-arm-simulator.md) for the full specification.
+See [04-arm-simulator.md](../../../specs/07b-arm-simulator.md) for the full specification.

@@ -24,7 +24,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/01-logic-gates.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/10-logic-gates.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

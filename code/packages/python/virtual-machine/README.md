@@ -38,4 +38,4 @@ vm.run(bytecode)
 
 ## Spec
 
-See [09-virtual-machine.md](../../../specs/09-virtual-machine.md) for the full specification.
+See [09-virtual-machine.md](../../../specs/05-virtual-machine.md) for the full specification.
