@@ -1,0 +1,4 @@
+[project]
+name = "coding-adventures-pkg-c"
+version = "0.1.0"
+dependencies = ["coding-adventures-pkg-d"]

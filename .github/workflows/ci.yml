@@ -1,0 +1,115 @@
+# ================================================================
+# CI — Incremental, parallel monorepo build
+# ================================================================
+#
+# This workflow uses the Go build tool to build and test only the
+# packages that changed. The Go binary is compiled from source on
+# every run (~1-2 seconds).
+#
+# Change detection: git diff against the base branch determines which
+# files changed, maps them to packages, then uses the dependency graph
+# to find all affected packages (changed + transitive dependents).
+#
+# Parallelism: independent packages run concurrently via goroutines.
+#
+# Tiered strategy:
+# - Every push: Linux only (fast feedback)
+# - PRs to main: Linux + macOS (thorough validation)
+
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest"]') || fromJSON('["ubuntu-latest"]') }}
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git diff
+
+      # ── Language toolchains ───────────────────────────────────
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          allow-prereleases: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+
+      - name: Install bundler
+        run: gem install bundler
+
+      # ── Verify toolchains ────────────────────────────────────
+      - name: Verify tools
+        run: |
+          echo "Python: $(python3 --version)"
+          echo "uv: $(uv --version)"
+          echo "Ruby: $(ruby --version)"
+          echo "Bundler: $(bundle --version)"
+          echo "Go: $(go version)"
+
+      # ── Build the build tool ──────────────────────────────────
+      - name: Compile build tool
+        run: |
+          cd code/programs/go/build-tool
+          go build -o ../../../../build-tool .
+
+      # ── Determine what to build ───────────────────────────────
+      - name: Determine diff base
+        id: diff-base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.event.pull_request.base.ref }}"
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            # On main, compare against previous commit
+            BASE="HEAD~1"
+          else
+            # On feature branches, compare against origin/main
+            # Fetch main first in case it's not available
+            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
+            BASE="origin/main"
+          fi
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "Diff base: $BASE"
+
+      # ── Run the build ─────────────────────────────────────────
+      - name: Build and test affected packages
+        run: |
+          ./build-tool \
+            -root . \
+            -diff-base "${{ steps.diff-base.outputs.base }}" \
+            -language all
+
+      # ── Force full build on main ──────────────────────────────
+      - name: Full build on main merge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          ./build-tool -root . -force -language all
