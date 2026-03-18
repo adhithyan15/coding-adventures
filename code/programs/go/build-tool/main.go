@@ -39,6 +39,7 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/hasher"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/reporter"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
@@ -89,7 +90,8 @@ func run() int {
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
 	language := flag.String("language", "all", "Filter to language: python, ruby, go, all")
-	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file")
+	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
+	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 
 	flag.Parse()
 
@@ -144,7 +146,28 @@ func run() int {
 	// Step 4: Resolve dependencies.
 	graph := resolver.ResolveDependencies(packages)
 
-	// Step 5: Hash all packages.
+	// Step 5: Git-diff change detection (default mode).
+	// Git is the source of truth — no cache file needed for primary workflow.
+	var affectedSet map[string]bool
+
+	if !*force {
+		changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
+		if len(changedFiles) > 0 {
+			changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
+			if len(changedPkgs) > 0 {
+				affectedSet = graph.AffectedNodes(changedPkgs)
+				fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
+					len(changedPkgs), len(affectedSet))
+			} else {
+				fmt.Println("Git diff: no package files changed — nothing to build")
+				affectedSet = make(map[string]bool) // empty = build nothing
+			}
+		} else {
+			fmt.Println("Git diff unavailable — falling back to hash-based cache")
+		}
+	}
+
+	// Step 6: Hash all packages (needed for cache fallback).
 	packageHashes := make(map[string]string)
 	depsHashes := make(map[string]string)
 
@@ -153,7 +176,7 @@ func run() int {
 		depsHashes[pkg.Name] = hasher.HashDeps(pkg.Name, graph, packageHashes)
 	}
 
-	// Step 6: Load cache.
+	// Step 7: Load cache (fallback if git diff didn't work).
 	cachePath := *cacheFile
 	if !filepath.IsAbs(cachePath) {
 		cachePath = filepath.Join(repoRoot, cachePath)
@@ -162,7 +185,7 @@ func run() int {
 	buildCache := cache.New()
 	buildCache.Load(cachePath)
 
-	// Steps 7-8: Execute builds.
+	// Steps 8-9: Execute builds.
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -172,9 +195,10 @@ func run() int {
 		*force,
 		*dryRun,
 		*jobs,
+		affectedSet,
 	)
 
-	// Step 9: Save cache (unless dry run).
+	// Step 10: Save cache (secondary record, not primary mechanism).
 	if !*dryRun {
 		if err := buildCache.Save(cachePath); err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: could not save cache: %v\n", err)

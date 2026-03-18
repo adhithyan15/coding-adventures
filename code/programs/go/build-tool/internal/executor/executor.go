@@ -126,6 +126,7 @@ func ExecuteBuilds(
 	force bool,
 	dryRun bool,
 	maxJobs int,
+	affectedSet map[string]bool,
 ) map[string]BuildResult {
 	// Build a lookup from name to Package for quick access.
 	pkgByName := make(map[string]discovery.Package)
@@ -190,11 +191,23 @@ func ExecuteBuilds(
 				continue
 			}
 
-			// Check if the package needs building (cache check).
+			// Check if the package is in the affected set (git-diff mode).
+			// If affectedSet is non-nil, it takes priority over cache.
+			if affectedSet != nil && !affectedSet[name] {
+				resultsMu.Lock()
+				results[name] = BuildResult{
+					PackageName: name,
+					Status:      "skipped",
+				}
+				resultsMu.Unlock()
+				continue
+			}
+
+			// Check if the package needs building (cache fallback).
 			pkgHash := packageHashes[name]
 			depHash := depsHashes[name]
 
-			if !force && !buildCache.NeedsBuild(name, pkgHash, depHash) {
+			if affectedSet == nil && !force && !buildCache.NeedsBuild(name, pkgHash, depHash) {
 				resultsMu.Lock()
 				results[name] = BuildResult{
 					PackageName: name,
