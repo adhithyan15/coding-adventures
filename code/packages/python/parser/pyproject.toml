@@ -22,6 +22,9 @@ classifiers = [
 ]
 dependencies = ["coding-adventures-lexer"]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/lang_parser"]
+
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
