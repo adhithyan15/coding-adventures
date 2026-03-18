@@ -2,8 +2,11 @@ arithmetic
 arm_simulator
 assembler
 bytecode_compiler
+clock
 clr_simulator
 cpu_simulator
+directed_graph
+fp_arithmetic
 grammar_tools
 html_renderer
 intel4004_simulator

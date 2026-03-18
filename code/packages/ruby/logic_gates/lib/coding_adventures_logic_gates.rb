@@ -15,3 +15,4 @@
 
 require_relative "coding_adventures/logic_gates/version"
 require_relative "coding_adventures/logic_gates/gates"
+require_relative "coding_adventures/logic_gates/sequential"

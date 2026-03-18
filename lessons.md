@@ -19,3 +19,19 @@ Building Ruby 3.4 from source via mise fails with `psych` extension error if `li
 ### 2026-03-18: mise ruby.compile=false still compiles from source
 
 Setting `mise settings ruby.compile=false` did not use precompiled binaries as of mise 2026.3. The precompiled binary feature is noted as "coming in 2026.8.0." For now, always install build dependencies (libyaml, openssl) before installing Ruby via mise.
+
+---
+
+### 2026-03-18: Always add BUILD files and DIRS entries for new packages
+
+When creating a new package, you MUST:
+1. Create a `BUILD` file in the package directory with the test command
+2. Add the package directory name to the parent `DIRS` file
+3. Verify the build tool discovers the new package
+
+Without both, the CI build tool will not discover or test the package. This was missed for fp-arithmetic, Go logic-gates, Ruby sequential logic, and clock packages — they passed locally but were invisible to CI.
+
+**Checklist for every new package:**
+- [ ] BUILD file with test command
+- [ ] Added to parent DIRS file
+- [ ] `./build-tool -dry-run` shows the package
