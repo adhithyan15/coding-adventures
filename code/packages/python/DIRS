@@ -2,6 +2,7 @@ arithmetic
 arm-simulator
 assembler
 bytecode-compiler
+clock
 clr-simulator
 cpu-simulator
 directed-graph
