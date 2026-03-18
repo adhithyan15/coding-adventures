@@ -126,6 +126,7 @@ def execute_builds(
     force: bool = False,
     dry_run: bool = False,
     max_jobs: int | None = None,
+    affected_set: set[str] | None = None,
 ) -> dict[str, BuildResult]:
     """Execute BUILD commands for packages, respecting dependency order.
 
@@ -183,10 +184,18 @@ def execute_builds(
                 continue
 
             # Check if we need to build
+            # Priority: git-diff affected_set > hash-based cache
+            if affected_set is not None and name not in affected_set:
+                results[name] = BuildResult(
+                    package_name=name,
+                    status="skipped",
+                )
+                continue
+
             pkg_hash = package_hashes.get(name, "")
             dep_hash = deps_hashes.get(name, "")
 
-            if not force and not cache.needs_build(name, pkg_hash, dep_hash):
+            if affected_set is None and not force and not cache.needs_build(name, pkg_hash, dep_hash):
                 results[name] = BuildResult(
                     package_name=name,
                     status="skipped",

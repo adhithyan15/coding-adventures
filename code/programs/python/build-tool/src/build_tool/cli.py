@@ -36,6 +36,7 @@ from pathlib import Path
 from build_tool.cache import BuildCache
 from build_tool.discovery import discover_packages
 from build_tool.executor import execute_builds
+from build_tool.gitdiff import get_changed_files, map_files_to_packages
 from build_tool.hasher import hash_deps, hash_package
 from build_tool.reporter import print_report
 from build_tool.resolver import resolve_dependencies
@@ -100,10 +101,16 @@ def main(argv: list[str] | None = None) -> int:
         help="Only build packages of this language",
     )
     parser.add_argument(
+        "--diff-base",
+        type=str,
+        default="origin/main",
+        help="Git ref to diff against for change detection (default: origin/main)",
+    )
+    parser.add_argument(
         "--cache-file",
         type=Path,
         default=Path(".build-cache.json"),
-        help="Path to the build cache file",
+        help="Path to the build cache file (used as fallback when git diff unavailable)",
     )
 
     args = parser.parse_args(argv)
@@ -144,7 +151,30 @@ def main(argv: list[str] | None = None) -> int:
     # Step 4: Resolve dependencies
     graph = resolve_dependencies(packages)
 
-    # Step 5: Hash all packages
+    # Step 5: Determine which packages need building
+    #
+    # Default mode: git-diff based change detection.
+    # Git is the source of truth — no cache file needed.
+    # Fallback: hash-based cache (for local dev when not on a branch).
+    affected_set: set[str] | None = None
+
+    if not args.force:
+        # Try git-diff mode first (the default)
+        changed_files = get_changed_files(root, args.diff_base)
+        if changed_files:
+            package_paths = {pkg.name: pkg.path for pkg in packages}
+            changed_packages = map_files_to_packages(changed_files, package_paths, root)
+            if changed_packages:
+                affected_set = graph.affected_nodes(changed_packages)
+                print(f"Git diff: {len(changed_packages)} packages changed, "
+                      f"{len(affected_set)} affected (including dependents)")
+            else:
+                print("Git diff: no package files changed — nothing to build")
+                affected_set = set()
+        else:
+            print("Git diff unavailable — falling back to hash-based cache")
+
+    # Step 6: Hash all packages (needed for cache fallback)
     package_hashes: dict[str, str] = {}
     deps_hashes: dict[str, str] = {}
 
@@ -152,7 +182,7 @@ def main(argv: list[str] | None = None) -> int:
         package_hashes[pkg.name] = hash_package(pkg)
         deps_hashes[pkg.name] = hash_deps(pkg.name, graph, package_hashes)
 
-    # Step 6: Load cache
+    # Step 7: Load cache (fallback if git diff didn't work)
     cache_path = args.cache_file
     if not cache_path.is_absolute():
         cache_path = root / cache_path
@@ -160,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     cache = BuildCache()
     cache.load(cache_path)
 
-    # Steps 7-8: Execute builds
+    # Steps 8-9: Execute builds
     results = execute_builds(
         packages=packages,
         graph=graph,
@@ -170,9 +200,10 @@ def main(argv: list[str] | None = None) -> int:
         force=args.force,
         dry_run=args.dry_run,
         max_jobs=args.jobs,
+        affected_set=affected_set,
     )
 
-    # Step 9: Save cache (unless dry run)
+    # Step 10: Save cache (as secondary record, not primary mechanism)
     if not args.dry_run:
         cache.save(cache_path)
 
