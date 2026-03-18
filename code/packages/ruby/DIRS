@@ -4,6 +4,7 @@ assembler
 bytecode_compiler
 clr_simulator
 cpu_simulator
+directed_graph
 grammar_tools
 html_renderer
 intel4004_simulator
