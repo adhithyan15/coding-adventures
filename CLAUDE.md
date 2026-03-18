@@ -31,6 +31,19 @@
 - Push early and often — create PRs as soon as a branch has meaningful work, keep pushing commits into the same PR as work progresses
 - Keep the todo list updated — check off items as they're completed, add new items as they're discovered
 
+## Build System
+
+- The primary build tool is the Go implementation at `code/programs/go/build-tool/`
+- Build it with `go build -o build-tool .` then run `./build-tool`
+- Default mode: git-diff-based change detection (`--diff-base origin/main`)
+  - Computes `git diff --name-only <base>...HEAD` to find changed files
+  - Maps changed files to packages via path prefix matching
+  - Uses directed graph `affected_nodes()` to find all packages needing rebuild
+  - No cache file needed — git is the source of truth
+- Fallback: `--force` rebuilds everything
+- Independent packages run in parallel via goroutines
+- Python and Ruby build tools exist as educational implementations
+
 ## Project Structure
 
 - `code/specs/` — Specifications for each package (numbered by layer)
