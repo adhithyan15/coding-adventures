@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes how all nine packages in the computing stack connect to form a complete pipeline from high-level source code to logic gate operations.
+This document describes how all packages in the computing stack connect to form a complete pipeline from high-level source code to logic gate operations.
 
 ## The Pipeline
 
@@ -29,17 +29,18 @@ This document describes how all nine packages in the computing stack connect to 
 │ VIRTUAL MACHINE │  Executes bytecode using a stack: push 1, push 2, pop+pop→add→push 3, store
 └─────────────────┘
      │
-     │  (Alternative path: compiler emits ARM assembly instead of bytecode)
+     │  (Alternative paths: compiler emits assembly instead of bytecode)
      │
      ▼
 ┌──────────┐
-│ ASSEMBLER│  Converts "MOV R0, #1" → binary 0xE3A00001
+│ ASSEMBLER│  Converts assembly → binary machine code
 └──────────┘
      │ machine code bytes
      ▼
-┌────────────────┐
-│ ARM SIMULATOR  │  Decodes binary instructions, dispatches to execution units
-└────────────────┘
+┌──────────────────┐   ┌────────────────┐
+│ RISC-V SIMULATOR │   │ ARM SIMULATOR  │  (choose one target)
+│ addi, add, ecall │   │ MOV, ADD, etc. │
+└──────────────────┘   └────────────────┘
      │ operations (add, store, load)
      ▼
 ┌────────────────┐
@@ -67,11 +68,17 @@ Source → Lexer → Parser → Bytecode Compiler → Virtual Machine
 ```
 This is how CPython works. The VM interprets bytecode instruction by instruction.
 
-### Path B: Compiled to hardware (Full stack)
+### Path B: Compiled to RISC-V (Full stack)
+```
+Source → Lexer → Parser → RISC-V Compiler → Assembler → RISC-V Simulator → CPU → ALU → Gates
+```
+This traces execution all the way down to individual logic gates. RISC-V is the primary target due to its clean, regular encoding.
+
+### Path C: Compiled to ARM
 ```
 Source → Lexer → Parser → ARM Compiler → Assembler → ARM Simulator → CPU → ALU → Gates
 ```
-This traces execution all the way down to individual logic gates.
+Same as Path B but targeting ARMv7. Useful for comparing instruction set designs.
 
 ## Package Dependencies
 
@@ -80,12 +87,23 @@ logic-gates          ← no dependencies (foundation)
 arithmetic           ← depends on logic-gates
 cpu-simulator        ← depends on arithmetic
 arm-simulator        ← depends on cpu-simulator
-assembler            ← depends on arm-simulator (for instruction encoding format)
+riscv-simulator      ← depends on cpu-simulator
+assembler            ← depends on arm-simulator, riscv-simulator (for instruction encoding)
 lexer                ← no dependencies (standalone text processing)
 parser               ← depends on lexer (consumes tokens)
 bytecode-compiler    ← depends on parser (consumes AST)
 virtual-machine      ← depends on bytecode-compiler (executes bytecode)
+pipeline             ← depends on ALL packages (orchestrator)
 ```
+
+## Tools
+
+### Pipeline Orchestrator
+Chains all packages into a single `Pipeline.run("x = 1 + 2", target="vm")` call.
+Captures stage snapshots for inspection and visualization.
+
+### Stack Visualizer (TUI)
+Terminal UI (Textual) that visually walks through every stage with step-through debugging.
 
 ## Shared Concepts
 
