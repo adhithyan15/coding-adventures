@@ -13,12 +13,15 @@ members = [
     "wasm-simulator",
     "intel4004-simulator",
     "assembler",
+    "grammar-tools",
+    "jit-compiler",
     "lexer",
     "parser",
     "bytecode-compiler",
     "virtual-machine",
     "pipeline",
     "html-renderer",
+    "clr-simulator",
 ]
 
 [tool.uv.sources]
@@ -34,5 +37,8 @@ coding-adventures-lexer = { workspace = true }
 coding-adventures-parser = { workspace = true }
 coding-adventures-bytecode-compiler = { workspace = true }
 coding-adventures-virtual-machine = { workspace = true }
+coding-adventures-grammar-tools = { workspace = true }
+coding-adventures-jit-compiler = { workspace = true }
 coding-adventures-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
+coding-adventures-clr-simulator = { workspace = true }
