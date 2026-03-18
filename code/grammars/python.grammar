@@ -1,0 +1,22 @@
+# Parser grammar for a subset of Python
+# Used by the grammar-driven parser to build ASTs from token streams.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from python.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match
+
+program      = { statement } ;
+statement    = assignment | expression_stmt ;
+assignment   = NAME EQUALS expression ;
+expression_stmt = expression ;
+expression   = term { ( PLUS | MINUS ) term } ;
+term         = factor { ( STAR | SLASH ) factor } ;
+factor       = NUMBER | STRING | NAME | LPAREN expression RPAREN ;

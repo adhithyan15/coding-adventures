@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-virtual-machine"
 version = "0.1.0"
-description = "Stack-based bytecode interpreter that executes compiled programs — Layer 9 of the computing stack"
+description = "General-purpose stack-based bytecode interpreter — Layer 5 of the computing stack"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -20,12 +20,15 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = ["coding-adventures-bytecode-compiler"]
+dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
 Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/05-virtual-machine.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/virtual_machine"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
