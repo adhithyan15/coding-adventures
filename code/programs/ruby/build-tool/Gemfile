@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# We keep dependencies minimal. The build tool itself uses only the Ruby
+# standard library (json, digest, open3, pathname, optparse, set).
+# These gems are for development and testing only.
+
+group :test do
+  gem "minitest", "~> 5.0"
+  gem "rake", "~> 13.0"
+  gem "simplecov", "~> 0.22", require: false
+end

@@ -1,0 +1,172 @@
+# frozen_string_literal: true
+
+# test_discovery.rb -- Tests for package discovery
+# =================================================
+#
+# These tests verify the DIRS/BUILD file walking logic, language inference,
+# platform-specific BUILD file selection, and the overall discover_packages
+# pipeline.
+
+require_relative "test_helper"
+
+class TestDiscovery < Minitest::Test
+  include TestHelper
+
+  # -- read_lines tests -------------------------------------------------------
+
+  def test_read_lines_returns_non_blank_non_comment_lines
+    # read_lines should strip whitespace, skip blank lines, and skip comments.
+    dir = create_temp_dir
+    file = dir / "test_file"
+    write_file(file, "line1\n  line2  \n\n# comment\nline3\n")
+
+    result = BuildTool::Discovery.read_lines(file)
+    assert_equal %w[line1 line2 line3], result
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_read_lines_returns_empty_for_missing_file
+    result = BuildTool::Discovery.read_lines(Pathname("/nonexistent/file"))
+    assert_equal [], result
+  end
+
+  def test_read_lines_returns_empty_for_blank_file
+    dir = create_temp_dir
+    file = dir / "empty"
+    write_file(file, "\n\n  \n")
+
+    result = BuildTool::Discovery.read_lines(file)
+    assert_equal [], result
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  # -- infer_language tests ----------------------------------------------------
+
+  def test_infer_language_python
+    path = Pathname("/repo/code/packages/python/logic-gates")
+    assert_equal "python", BuildTool::Discovery.infer_language(path)
+  end
+
+  def test_infer_language_ruby
+    path = Pathname("/repo/code/packages/ruby/logic_gates")
+    assert_equal "ruby", BuildTool::Discovery.infer_language(path)
+  end
+
+  def test_infer_language_go
+    path = Pathname("/repo/code/programs/go/build-tool")
+    assert_equal "go", BuildTool::Discovery.infer_language(path)
+  end
+
+  def test_infer_language_unknown
+    path = Pathname("/repo/code/packages/haskell/something")
+    assert_equal "unknown", BuildTool::Discovery.infer_language(path)
+  end
+
+  # -- infer_package_name tests ------------------------------------------------
+
+  def test_infer_package_name
+    path = Pathname("/repo/code/packages/python/logic-gates")
+    assert_equal "python/logic-gates", BuildTool::Discovery.infer_package_name(path, "python")
+  end
+
+  # -- get_build_file tests ----------------------------------------------------
+
+  def test_get_build_file_returns_generic_build
+    dir = create_temp_dir
+    build = dir / "BUILD"
+    write_file(build, "echo hello")
+
+    result = BuildTool::Discovery.get_build_file(dir)
+    assert_equal build, result
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_get_build_file_returns_nil_when_missing
+    dir = create_temp_dir
+    result = BuildTool::Discovery.get_build_file(dir)
+    assert_nil result
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_get_build_file_prefers_platform_build_on_darwin
+    # On macOS (darwin), BUILD_mac should take priority over BUILD.
+    skip unless RUBY_PLATFORM.include?("darwin")
+
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_mac", "mac-specific")
+
+    result = BuildTool::Discovery.get_build_file(dir)
+    assert_equal dir / "BUILD_mac", result
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  # -- discover_packages integration tests -------------------------------------
+
+  def test_discover_simple_fixture
+    # The simple fixture has one package at pkg-a/ with a BUILD file.
+    packages = BuildTool::Discovery.discover_packages(simple_fixture)
+
+    assert_equal 1, packages.size
+    pkg = packages.first
+    # The fixture lives under .../ruby/build-tool/test/fixtures/simple/pkg-a,
+    # so the language inference picks up "ruby" from the path (because the
+    # word "ruby" appears in the path components).
+    assert_equal "ruby/pkg-a", pkg.name
+    assert_equal "ruby", pkg.language
+    assert_equal ["echo \"building pkg-a\""], pkg.build_commands
+  end
+
+  def test_discover_diamond_fixture
+    # The diamond fixture has 4 packages under pkgs/python/.
+    packages = BuildTool::Discovery.discover_packages(diamond_fixture)
+
+    assert_equal 4, packages.size
+    names = packages.map(&:name).sort
+    assert_equal %w[python/pkg-a python/pkg-b python/pkg-c python/pkg-d], names
+  end
+
+  def test_discover_packages_returns_sorted
+    packages = BuildTool::Discovery.discover_packages(diamond_fixture)
+    names = packages.map(&:name)
+    assert_equal names.sort, names
+  end
+
+  def test_discover_empty_directory
+    dir = create_temp_dir
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal [], packages
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_skips_missing_subdirs
+    # If DIRS lists a subdir that doesn't exist, it should be silently skipped.
+    dir = create_temp_dir
+    write_file(dir / "DIRS", "nonexistent\n")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal [], packages
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_package_is_data_define
+    # Verify that Package is an immutable Data object.
+    pkg = BuildTool::Package.new(
+      name: "test/pkg",
+      path: Pathname("/tmp"),
+      build_commands: ["echo hi"],
+      language: "ruby"
+    )
+    assert_equal "test/pkg", pkg.name
+    assert_equal Pathname("/tmp"), pkg.path
+    assert_equal ["echo hi"], pkg.build_commands
+    assert_equal "ruby", pkg.language
+  end
+end
