@@ -1,11 +1,10 @@
 [project]
-name = "stack-visualizer"
-version = "0.1.0"
-description = "Terminal UI that visually walks through every stage of the computing stack"
+name = "pipeline-visualizer"
+description = "Runs the computing stack pipeline and generates a static HTML visualization report"
 requires-python = ">=3.12"
 dependencies = [
-    "textual>=0.50",
     "coding-adventures-pipeline",
+    "coding-adventures-html-renderer",
 ]
 
 [tool.ruff]

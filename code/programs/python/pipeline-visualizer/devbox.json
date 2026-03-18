@@ -7,7 +7,7 @@
   ],
   "shell": {
     "scripts": {
-      "run": "python stack_visualizer.py",
+      "run": "python generate_report.py",
       "lint": "ruff check .",
       "format": "ruff format ."
     }

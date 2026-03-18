@@ -100,10 +100,13 @@ pipeline             ← depends on ALL packages (orchestrator)
 
 ### Pipeline Orchestrator
 Chains all packages into a single `Pipeline.run("x = 1 + 2", target="vm")` call.
-Captures stage snapshots for inspection and visualization.
+Captures stage snapshots and exports them as JSON.
 
-### Stack Visualizer (TUI)
-Terminal UI (Textual) that visually walks through every stage with step-through debugging.
+### HTML Renderer
+Reads the pipeline's JSON output and generates a self-contained HTML file showing every stage. Language-agnostic — any implementation (Python, Ruby, TypeScript) that produces the JSON contract can use the same renderer.
+
+### Pipeline Visualizer (program)
+Entry point that runs the pipeline and generates the HTML report.
 
 ## Shared Concepts
 
