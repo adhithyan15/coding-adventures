@@ -2,3 +2,7 @@
 
 Minimal WebAssembly stack-based VM.
 """
+
+from wasm_simulator.simulator import WasmSimulator
+
+__all__ = ["WasmSimulator"]
