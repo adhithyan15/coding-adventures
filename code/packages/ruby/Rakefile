@@ -1,0 +1,64 @@
+# frozen_string_literal: true
+
+# Workspace Rakefile — runs tests, lint, and type checks across all Ruby gems.
+#
+# Usage:
+#   rake test       # run all gem tests
+#   rake lint       # lint all gems
+#   rake            # default: test + lint
+
+GEMS = %w[
+  logic_gates
+  arithmetic
+  cpu_simulator
+  arm_simulator
+  riscv_simulator
+  wasm_simulator
+  intel4004_simulator
+  jvm_simulator
+  clr_simulator
+  grammar_tools
+  lexer
+  parser
+  bytecode_compiler
+  virtual_machine
+  pipeline
+  assembler
+  jit_compiler
+  html_renderer
+].freeze
+
+desc "Run tests for all gems"
+task :test do
+  failures = []
+  GEMS.each do |gem_dir|
+    next unless File.exist?("#{gem_dir}/Rakefile")
+    next unless Dir.exist?("#{gem_dir}/test")
+
+    puts "\n#{"=" * 60}"
+    puts "Testing: #{gem_dir}"
+    puts "=" * 60
+    unless system("cd #{gem_dir} && bundle exec rake test")
+      failures << gem_dir
+    end
+  end
+
+  if failures.any?
+    puts "\n#{"=" * 60}"
+    puts "FAILURES: #{failures.join(", ")}"
+    puts "=" * 60
+    exit 1
+  end
+end
+
+desc "Lint all gems with Standard Ruby"
+task :lint do
+  GEMS.each do |gem_dir|
+    next unless File.exist?("#{gem_dir}/Gemfile")
+
+    puts "Linting: #{gem_dir}"
+    system("cd #{gem_dir} && bundle exec standardrb --no-fix")
+  end
+end
+
+task default: %i[test lint]
