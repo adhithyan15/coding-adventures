@@ -4,3 +4,4 @@ arithmetic
 cache
 branch-predictor
 hazard-detection
+cpu-pipeline
