@@ -35,3 +35,34 @@ Without both, the CI build tool will not discover or test the package. This was 
 - [ ] BUILD file with test command
 - [ ] Added to parent DIRS file
 - [ ] `./build-tool -dry-run` shows the package
+
+---
+
+### 2026-03-19: TypeScript package.json main must point to src/index.ts for Vitest
+
+When TypeScript packages depend on each other via `"file:../other-pkg"` references, Vitest resolves the dependency using the `main` field in `package.json`. If `main` points to `dist/index.js` (the compiled output), resolution fails because we don't compile before testing — Vitest transforms TypeScript on the fly.
+
+**Solution:** Set `"main": "src/index.ts"` in every TypeScript package's `package.json`. This lets Vitest resolve and transform the TypeScript source directly. Do NOT use `"main": "dist/index.js"` unless you have a pre-build step.
+
+**Checklist for every new TypeScript package:**
+- [ ] `"main": "src/index.ts"` (not `dist/index.js`)
+- [ ] `"type": "module"` for ESM
+- [ ] `file:../` dependencies for internal packages
+
+---
+
+### 2026-03-19: JavaScript 32-bit integer gotchas in CPU simulation
+
+JavaScript bitwise operators (`&`, `|`, `<<`, `>>`) work on **signed 32-bit integers**. This causes two issues when porting CPU simulation code:
+
+1. **`(1 << 32)` wraps to `1`** — bit shifts are modulo 32, so `1 << 32 === 1` instead of `2^32`. Use a conditional: `bitWidth >= 32 ? 0xFFFFFFFF : (1 << bitWidth) - 1`.
+
+2. **`0xFFFFFFFF & 0xFFFFFFFF` yields `-1`** — the `&` operator returns a signed int, so the all-ones pattern is interpreted as `-1`. Use `>>> 0` to convert to unsigned: `(value & mask) >>> 0`.
+
+These are critical when implementing register files, ALU operations, and memory addressing.
+
+---
+
+### 2026-03-19: Always update PR description after each push
+
+When working on a large PR with many commits, update the PR description after each push to reflect current progress. This lets the reviewer (and CI) see what's been done and what's left. Use `gh pr edit <number> --body "..."` to update the description programmatically.

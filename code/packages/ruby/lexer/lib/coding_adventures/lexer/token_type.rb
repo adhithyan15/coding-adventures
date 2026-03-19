@@ -35,6 +35,13 @@ module CodingAdventures
       RPAREN         = "RPAREN"
       COMMA          = "COMMA"
       COLON          = "COLON"
+      SEMICOLON      = "SEMICOLON"
+      LBRACE         = "LBRACE"
+      RBRACE         = "RBRACE"
+      LBRACKET       = "LBRACKET"
+      RBRACKET       = "RBRACKET"
+      DOT            = "DOT"
+      BANG           = "BANG"
 
       # Structural
       NEWLINE        = "NEWLINE"
@@ -56,6 +63,13 @@ module CodingAdventures
         "RPAREN" => RPAREN,
         "COMMA" => COMMA,
         "COLON" => COLON,
+        "SEMICOLON" => SEMICOLON,
+        "LBRACE" => LBRACE,
+        "RBRACE" => RBRACE,
+        "LBRACKET" => LBRACKET,
+        "RBRACKET" => RBRACKET,
+        "DOT" => DOT,
+        "BANG" => BANG,
         "NEWLINE" => NEWLINE,
         "EOF" => EOF
       }.freeze

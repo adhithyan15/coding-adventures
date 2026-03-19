@@ -1,5 +1,6 @@
 // Package resolver reads package metadata files (pyproject.toml, .gemspec,
-// go.mod) and extracts internal dependencies, building a directed graph.
+// go.mod, package.json) and extracts internal dependencies, building a
+// directed graph.
 //
 // # Why dependency resolution matters
 //
@@ -20,6 +21,9 @@
 //
 //   - Go: go.mod uses full module paths. We map based on the last path
 //     component: "go/directed-graph".
+//
+//   - TypeScript: package.json uses "@coding-adventures/" scoped npm names.
+//     "@coding-adventures/logic-gates" maps to "typescript/logic-gates".
 //
 // External dependencies (those not matching the monorepo prefix) are
 // silently skipped — we only care about internal build ordering.
@@ -228,6 +232,67 @@ func parseGoDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	return internalDeps
 }
 
+// parseTypescriptDeps extracts internal dependencies from a TypeScript
+// package.json file.
+//
+// TypeScript packages declare dependencies in package.json:
+//
+//	"dependencies": {
+//	    "@coding-adventures/logic-gates": "file:../logic-gates"
+//	}
+//
+// We scan for lines matching the @coding-adventures/ prefix and map them
+// to our internal package names. Version specifiers and file: references
+// are ignored — we only care about the package name.
+func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	packageJSON := filepath.Join(pkg.Path, "package.json")
+	data, err := os.ReadFile(packageJSON)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// We need to only look inside "dependencies": { ... } blocks, not at
+	// the top-level "name" field. Strategy: find lines inside a dependencies
+	// block and extract @coding-adventures/ references from those lines.
+	//
+	// We scan line by line looking for "dependencies" keys, then collect
+	// entries until we hit a closing brace.
+	inDeps := false
+	re := regexp.MustCompile(`"(@coding-adventures/[^"]+)"`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		if !inDeps {
+			// Look for "dependencies": { or "dependencies":{
+			if strings.Contains(trimmed, `"dependencies"`) && strings.Contains(trimmed, "{") {
+				inDeps = true
+			}
+			continue
+		}
+
+		// Inside dependencies block.
+		if strings.Contains(trimmed, "}") {
+			inDeps = false
+			continue
+		}
+
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			depName := strings.ToLower(match[1])
+			if pkgName, ok := knownNames[depName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -269,6 +334,11 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 					break
 				}
 			}
+
+		case "typescript":
+			// Convert dir name to npm scoped name: "logic-gates" → "@coding-adventures/logic-gates"
+			npmName := "@coding-adventures/" + strings.ToLower(filepath.Base(pkg.Path))
+			known[npmName] = pkg.Name
 		}
 	}
 
@@ -306,6 +376,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseRubyDeps(pkg, knownNames)
 		case "go":
 			deps = parseGoDeps(pkg, knownNames)
+		case "typescript":
+			deps = parseTypescriptDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

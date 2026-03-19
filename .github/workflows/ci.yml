@@ -67,6 +67,11 @@ jobs:
       - name: Install bundler
         run: gem install bundler
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         run: |
@@ -75,6 +80,8 @@ jobs:
           echo "Ruby: $(ruby --version)"
           echo "Bundler: $(bundle --version)"
           echo "Go: $(go version)"
+          echo "Node: $(node --version)"
+          echo "npm: $(npm --version)"
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
