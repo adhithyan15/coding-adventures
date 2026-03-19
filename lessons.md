@@ -35,3 +35,16 @@ Without both, the CI build tool will not discover or test the package. This was 
 - [ ] BUILD file with test command
 - [ ] Added to parent DIRS file
 - [ ] `./build-tool -dry-run` shows the package
+
+---
+
+### 2026-03-19: TypeScript package.json main must point to src/index.ts for Vitest
+
+When TypeScript packages depend on each other via `"file:../other-pkg"` references, Vitest resolves the dependency using the `main` field in `package.json`. If `main` points to `dist/index.js` (the compiled output), resolution fails because we don't compile before testing — Vitest transforms TypeScript on the fly.
+
+**Solution:** Set `"main": "src/index.ts"` in every TypeScript package's `package.json`. This lets Vitest resolve and transform the TypeScript source directly. Do NOT use `"main": "dist/index.js"` unless you have a pre-build step.
+
+**Checklist for every new TypeScript package:**
+- [ ] `"main": "src/index.ts"` (not `dist/index.js`)
+- [ ] `"type": "module"` for ESM
+- [ ] `file:../` dependencies for internal packages
