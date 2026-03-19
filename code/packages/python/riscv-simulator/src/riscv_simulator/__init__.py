@@ -1,9 +1,19 @@
-"""RISC-V Simulator — Layer 7a of the computing stack.
+"""RISC-V Simulator -- Layer 7a of the computing stack.
 
-Minimal RV32I instruction decoder and executor.
+Full RV32I instruction decoder and executor with M-mode privileged extensions.
 Plugs into the CPU simulator via the decoder/executor protocol.
 """
 
+from riscv_simulator.csr import CSRFile
+from riscv_simulator.decode import RiscVDecoder
+from riscv_simulator.encoding import assemble
+from riscv_simulator.execute import RiscVExecutor
 from riscv_simulator.simulator import RiscVSimulator
 
-__all__ = ["RiscVSimulator"]
+__all__ = [
+    "CSRFile",
+    "RiscVDecoder",
+    "RiscVExecutor",
+    "RiscVSimulator",
+    "assemble",
+]
