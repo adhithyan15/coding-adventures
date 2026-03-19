@@ -1,0 +1,597 @@
+// Dependency resolver — reads package metadata files and builds a directed graph.
+//
+// # Why dependency resolution matters
+//
+// In a monorepo, packages often depend on each other. If package B depends
+// on package A, we must build A before B. The resolver reads each package's
+// metadata file to discover these relationships, then encodes them as edges
+// in a directed graph.
+//
+// # Dependency naming conventions
+//
+// Each language ecosystem uses a different naming convention for packages:
+//
+//   - Python: pyproject.toml uses "coding-adventures-" prefix with hyphens.
+//     "coding-adventures-logic-gates" maps to "python/logic-gates".
+//
+//   - Ruby: .gemspec uses "coding_adventures_" prefix with underscores.
+//     "coding_adventures_logic_gates" maps to "ruby/logic_gates".
+//
+//   - Go: go.mod uses full module paths. We map based on the last path
+//     component: "go/directed-graph".
+//
+//   - Rust: Cargo.toml uses `[dependencies]` with `path = "..."` for
+//     workspace-local deps. We match by crate name convention.
+//
+// External dependencies (those not matching the monorepo prefix) are
+// silently skipped — we only care about internal build ordering.
+//
+// # The directed graph
+//
+// Edges go FROM dependency TO dependent: if B depends on A, the edge is
+// A -> B. This convention means "A must be built before B", and
+// independent_groups() naturally produces the correct build order.
+
+use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
+
+use crate::discovery::Package;
+use crate::graph::Graph;
+
+// ---------------------------------------------------------------------------
+// Known-name mapping
+// ---------------------------------------------------------------------------
+
+/// Creates a mapping from ecosystem-specific dependency names to our
+/// internal package names.
+///
+/// This mapping is the "Rosetta Stone" of our build system. Each language
+/// ecosystem uses its own naming convention for packages:
+///
+///   - Python: "coding-adventures-logic-gates" -> "python/logic-gates"
+///   - Ruby:   "coding_adventures_logic_gates" -> "ruby/logic_gates"
+///   - Go:     full module path -> "go/module-name"
+///   - Rust:   crate name -> "rust/crate-name"
+///
+/// By building this mapping upfront, we can resolve dependencies across
+/// languages without hard-coding specific package names.
+pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
+    let mut known = HashMap::new();
+
+    for pkg in packages {
+        let dir_name = pkg
+            .path
+            .file_name()
+            .map(|n| n.to_string_lossy().to_lowercase())
+            .unwrap_or_default();
+
+        match pkg.language.as_str() {
+            "python" => {
+                // Convert dir name to PyPI name: "logic-gates" -> "coding-adventures-logic-gates"
+                let pypi_name = format!("coding-adventures-{}", dir_name);
+                known.insert(pypi_name, pkg.name.clone());
+            }
+            "ruby" => {
+                // Convert dir name to gem name: "logic_gates" -> "coding_adventures_logic_gates"
+                let gem_name = format!("coding_adventures_{}", dir_name);
+                known.insert(gem_name, pkg.name.clone());
+            }
+            "go" => {
+                // For Go, read the module path from go.mod.
+                let go_mod = pkg.path.join("go.mod");
+                if let Ok(data) = fs::read_to_string(&go_mod) {
+                    for line in data.lines() {
+                        if line.starts_with("module ") {
+                            let module_path = line
+                                .trim_start_matches("module ")
+                                .trim()
+                                .to_lowercase();
+                            known.insert(module_path, pkg.name.clone());
+                            break;
+                        }
+                    }
+                }
+            }
+            "rust" => {
+                // For Rust, read the package name from Cargo.toml.
+                // The crate name in dependencies should match this.
+                let cargo_toml = pkg.path.join("Cargo.toml");
+                if let Ok(data) = fs::read_to_string(&cargo_toml) {
+                    if let Ok(parsed) = data.parse::<toml::Table>() {
+                        if let Some(package) = parsed.get("package") {
+                            if let Some(name) = package.get("name") {
+                                if let Some(name_str) = name.as_str() {
+                                    known.insert(name_str.to_lowercase(), pkg.name.clone());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    known
+}
+
+// ---------------------------------------------------------------------------
+// Python dependency parsing
+// ---------------------------------------------------------------------------
+
+/// Extracts internal dependencies from a Python pyproject.toml.
+///
+/// We use simple string scanning rather than a full TOML parser for the
+/// dependencies array. This avoids complexity since we only need to extract
+/// a single array of strings from the [project] section.
+///
+/// The parsing strategy:
+///  1. Find the "dependencies = [" line
+///  2. Collect lines until we hit "]"
+///  3. Extract quoted strings and strip version specifiers
+fn parse_python_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let pyproject = pkg.path.join("pyproject.toml");
+    let data = match fs::read_to_string(&pyproject) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+    let mut in_deps = false;
+
+    for line in data.lines() {
+        let trimmed = line.trim();
+
+        if !in_deps {
+            // Look for the start of the dependencies array.
+            if trimmed.starts_with("dependencies") && trimmed.contains('=') {
+                let after_eq = trimmed.splitn(2, '=').nth(1).unwrap_or("").trim();
+
+                if after_eq.starts_with('[') {
+                    if after_eq.contains(']') {
+                        // Single-line array: dependencies = ["foo", "bar"]
+                        extract_deps(after_eq, known_names, &mut internal_deps);
+                        break;
+                    }
+                    // Multi-line array starts here.
+                    in_deps = true;
+                    extract_deps(after_eq, known_names, &mut internal_deps);
+                }
+            }
+            continue;
+        }
+
+        // We're inside a multi-line dependencies array.
+        if trimmed.contains(']') {
+            extract_deps(trimmed, known_names, &mut internal_deps);
+            break;
+        }
+        extract_deps(trimmed, known_names, &mut internal_deps);
+    }
+
+    internal_deps
+}
+
+/// Finds quoted dependency names in a line and maps them to internal
+/// package names. Version specifiers (>=, <, etc.) are stripped.
+fn extract_deps(
+    line: &str,
+    known_names: &HashMap<String, String>,
+    deps: &mut Vec<String>,
+) {
+    // Simple state machine to extract quoted strings.
+    // We don't use regex to avoid adding a dependency.
+    let mut i = 0;
+    let chars: Vec<char> = line.chars().collect();
+
+    while i < chars.len() {
+        if chars[i] == '"' || chars[i] == '\'' {
+            let quote = chars[i];
+            i += 1;
+            let start = i;
+            while i < chars.len() && chars[i] != quote {
+                i += 1;
+            }
+            if i < chars.len() {
+                let content: String = chars[start..i].iter().collect();
+                // Strip version specifiers: split on >=, <=, >, <, ==, !=, ~=, ;, spaces
+                let dep_name = content
+                    .split(|c: char| ">=<!~; ".contains(c))
+                    .next()
+                    .unwrap_or("")
+                    .trim()
+                    .to_lowercase();
+
+                if let Some(pkg_name) = known_names.get(&dep_name) {
+                    deps.push(pkg_name.clone());
+                }
+            }
+        }
+        i += 1;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Ruby dependency parsing
+// ---------------------------------------------------------------------------
+
+/// Extracts internal dependencies from a Ruby .gemspec file.
+///
+/// Ruby gemspecs declare dependencies with:
+///   spec.add_dependency "coding_adventures_logic_gates"
+///
+/// We scan for these lines and map gem names to internal package names.
+fn parse_ruby_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    // Find .gemspec files in the package directory.
+    let entries = match fs::read_dir(&pkg.path) {
+        Ok(e) => e,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut gemspec_path = None;
+    for entry in entries.flatten() {
+        let name = entry.file_name().to_string_lossy().to_string();
+        if name.ends_with(".gemspec") {
+            gemspec_path = Some(entry.path());
+            break;
+        }
+    }
+
+    let gemspec_path = match gemspec_path {
+        Some(p) => p,
+        None => return Vec::new(),
+    };
+
+    let data = match fs::read_to_string(&gemspec_path) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+
+    for line in data.lines() {
+        // Match: spec.add_dependency "coding_adventures_something"
+        if let Some(rest) = line.trim().strip_prefix("spec.add_dependency") {
+            // Extract the quoted gem name.
+            if let Some(start) = rest.find('"') {
+                let after_quote = &rest[start + 1..];
+                if let Some(end) = after_quote.find('"') {
+                    let gem_name = after_quote[..end].trim().to_lowercase();
+                    if let Some(pkg_name) = known_names.get(&gem_name) {
+                        internal_deps.push(pkg_name.clone());
+                    }
+                }
+            }
+        }
+    }
+
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
+// Go dependency parsing
+// ---------------------------------------------------------------------------
+
+/// Extracts internal dependencies from a Go go.mod file.
+///
+/// Go modules declare dependencies in go.mod with:
+///   require github.com/user/repo/pkg v1.0.0
+///
+/// or in a block:
+///   require (
+///       github.com/user/repo/pkg v1.0.0
+///   )
+///
+/// We parse both forms and map module paths to our internal package names.
+fn parse_go_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let go_mod = pkg.path.join("go.mod");
+    let data = match fs::read_to_string(&go_mod) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+    let mut in_require_block = false;
+
+    for line in data.lines() {
+        let stripped = line.trim();
+
+        if stripped == "require (" {
+            in_require_block = true;
+            continue;
+        }
+        if stripped == ")" {
+            in_require_block = false;
+            continue;
+        }
+
+        if in_require_block || stripped.starts_with("require ") {
+            // Extract the module path (first whitespace-separated token).
+            let clean = stripped.trim_start_matches("require ").trim();
+            let module_path = clean
+                .split_whitespace()
+                .next()
+                .unwrap_or("")
+                .to_lowercase();
+
+            if let Some(pkg_name) = known_names.get(&module_path) {
+                internal_deps.push(pkg_name.clone());
+            }
+        }
+    }
+
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
+// Rust dependency parsing
+// ---------------------------------------------------------------------------
+
+/// Extracts internal dependencies from a Rust Cargo.toml file.
+///
+/// Rust crates declare local dependencies in Cargo.toml with:
+///   [dependencies]
+///   my-crate = { path = "../my-crate" }
+///
+/// We use the `toml` crate to parse the file properly and look for
+/// dependencies that have a `path` key (indicating a local dependency)
+/// or whose name matches a known internal package.
+fn parse_rust_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let cargo_toml = pkg.path.join("Cargo.toml");
+    let data = match fs::read_to_string(&cargo_toml) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let parsed: toml::Table = match data.parse() {
+        Ok(t) => t,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+
+    // Check [dependencies] section.
+    if let Some(deps) = parsed.get("dependencies").and_then(|d| d.as_table()) {
+        for (name, _value) in deps {
+            let lower_name = name.to_lowercase();
+            if let Some(pkg_name) = known_names.get(&lower_name) {
+                internal_deps.push(pkg_name.clone());
+            }
+        }
+    }
+
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
+/// Parses package metadata to discover dependencies and builds a directed graph.
+///
+/// The graph contains all discovered packages as nodes. Edges represent
+/// build ordering: an edge from A to B means "A must be built before B"
+/// (because B depends on A). External dependencies — those not found
+/// among the discovered packages — are silently skipped.
+///
+/// This function is the main entry point for dependency resolution.
+pub fn resolve_dependencies(packages: &[Package]) -> Graph {
+    let mut graph = Graph::new();
+
+    // First, add all packages as nodes. Even packages with no dependencies
+    // need to be in the graph so they appear in independent_groups().
+    for pkg in packages {
+        graph.add_node(&pkg.name);
+    }
+
+    // Build the ecosystem-specific name mapping table.
+    let known_names = build_known_names(packages);
+
+    // Parse dependencies for each package and add edges.
+    for pkg in packages {
+        let deps = match pkg.language.as_str() {
+            "python" => parse_python_deps(pkg, &known_names),
+            "ruby" => parse_ruby_deps(pkg, &known_names),
+            "go" => parse_go_deps(pkg, &known_names),
+            "rust" => parse_rust_deps(pkg, &known_names),
+            _ => Vec::new(),
+        };
+
+        for dep_name in deps {
+            // Edge direction: dep -> pkg means "dep must be built before pkg".
+            // This convention makes independent_groups() produce the correct
+            // build order: nodes with zero in-degree (no deps) come first.
+            graph.add_edge(&dep_name, &pkg.name);
+        }
+    }
+
+    graph
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    #[test]
+    fn test_build_known_names_python() {
+        let packages = vec![Package {
+            name: "python/logic-gates".to_string(),
+            path: PathBuf::from("/repo/code/packages/python/logic-gates"),
+            build_commands: vec![],
+            language: "python".to_string(),
+        }];
+
+        let known = build_known_names(&packages);
+        assert_eq!(
+            known.get("coding-adventures-logic-gates"),
+            Some(&"python/logic-gates".to_string())
+        );
+    }
+
+    #[test]
+    fn test_build_known_names_ruby() {
+        let packages = vec![Package {
+            name: "ruby/logic_gates".to_string(),
+            path: PathBuf::from("/repo/code/packages/ruby/logic_gates"),
+            build_commands: vec![],
+            language: "ruby".to_string(),
+        }];
+
+        let known = build_known_names(&packages);
+        assert_eq!(
+            known.get("coding_adventures_logic_gates"),
+            Some(&"ruby/logic_gates".to_string())
+        );
+    }
+
+    #[test]
+    fn test_extract_deps_single_line() {
+        let mut known = HashMap::new();
+        known.insert(
+            "coding-adventures-logic-gates".to_string(),
+            "python/logic-gates".to_string(),
+        );
+        known.insert(
+            "coding-adventures-arithmetic".to_string(),
+            "python/arithmetic".to_string(),
+        );
+
+        let mut deps = Vec::new();
+        extract_deps(
+            r#"["coding-adventures-logic-gates>=1.0", "coding-adventures-arithmetic"]"#,
+            &known,
+            &mut deps,
+        );
+        assert_eq!(deps.len(), 2);
+        assert!(deps.contains(&"python/logic-gates".to_string()));
+        assert!(deps.contains(&"python/arithmetic".to_string()));
+    }
+
+    #[test]
+    fn test_extract_deps_strips_version() {
+        let mut known = HashMap::new();
+        known.insert(
+            "coding-adventures-logic-gates".to_string(),
+            "python/logic-gates".to_string(),
+        );
+
+        let mut deps = Vec::new();
+        extract_deps(
+            r#""coding-adventures-logic-gates>=2.0,<3.0""#,
+            &known,
+            &mut deps,
+        );
+        assert_eq!(deps, vec!["python/logic-gates"]);
+    }
+
+    #[test]
+    fn test_parse_python_deps_with_temp_file() {
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_pydeps_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+
+        fs::write(
+            dir.join("pyproject.toml"),
+            r#"
+[project]
+name = "coding-adventures-arithmetic"
+dependencies = [
+    "coding-adventures-logic-gates>=1.0",
+]
+"#,
+        )
+        .unwrap();
+
+        let pkg = Package {
+            name: "python/arithmetic".to_string(),
+            path: dir.clone(),
+            build_commands: vec![],
+            language: "python".to_string(),
+        };
+
+        let mut known = HashMap::new();
+        known.insert(
+            "coding-adventures-logic-gates".to_string(),
+            "python/logic-gates".to_string(),
+        );
+
+        let deps = parse_python_deps(&pkg, &known);
+        assert_eq!(deps, vec!["python/logic-gates"]);
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_resolve_dependencies_creates_graph() {
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_resolve_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+
+        // Package A: no deps
+        let dir_a = dir.join("python/logic-gates");
+        fs::create_dir_all(&dir_a).unwrap();
+        fs::write(
+            dir_a.join("pyproject.toml"),
+            r#"
+[project]
+name = "coding-adventures-logic-gates"
+dependencies = []
+"#,
+        )
+        .unwrap();
+
+        // Package B: depends on A
+        let dir_b = dir.join("python/arithmetic");
+        fs::create_dir_all(&dir_b).unwrap();
+        fs::write(
+            dir_b.join("pyproject.toml"),
+            r#"
+[project]
+name = "coding-adventures-arithmetic"
+dependencies = [
+    "coding-adventures-logic-gates",
+]
+"#,
+        )
+        .unwrap();
+
+        let packages = vec![
+            Package {
+                name: "python/logic-gates".to_string(),
+                path: dir_a,
+                build_commands: vec![],
+                language: "python".to_string(),
+            },
+            Package {
+                name: "python/arithmetic".to_string(),
+                path: dir_b,
+                build_commands: vec![],
+                language: "python".to_string(),
+            },
+        ];
+
+        let graph = resolve_dependencies(&packages);
+
+        // Verify the graph has both nodes and the correct edge.
+        assert!(graph.has_node("python/logic-gates"));
+        assert!(graph.has_node("python/arithmetic"));
+
+        // logic-gates should be a predecessor of arithmetic
+        // (arithmetic depends on logic-gates).
+        let preds = graph.predecessors("python/arithmetic").unwrap();
+        assert!(preds.contains(&"python/logic-gates".to_string()));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+}
