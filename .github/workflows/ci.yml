@@ -72,6 +72,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         run: |
@@ -82,6 +85,8 @@ jobs:
           echo "Go: $(go version)"
           echo "Node: $(node --version)"
           echo "npm: $(npm --version)"
+          echo "Rust: $(rustc --version)"
+          echo "Cargo: $(cargo --version)"
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
