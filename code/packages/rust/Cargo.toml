@@ -8,6 +8,8 @@ members = [
     "branch-predictor",
     "directed-graph",
     "grammar-tools",
+    "lexer",
     "fp-arithmetic",
     "hazard-detection",
+    "cpu-simulator",
 ]
