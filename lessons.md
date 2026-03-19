@@ -48,3 +48,15 @@ When TypeScript packages depend on each other via `"file:../other-pkg"` referenc
 - [ ] `"main": "src/index.ts"` (not `dist/index.js`)
 - [ ] `"type": "module"` for ESM
 - [ ] `file:../` dependencies for internal packages
+
+---
+
+### 2026-03-19: JavaScript 32-bit integer gotchas in CPU simulation
+
+JavaScript bitwise operators (`&`, `|`, `<<`, `>>`) work on **signed 32-bit integers**. This causes two issues when porting CPU simulation code:
+
+1. **`(1 << 32)` wraps to `1`** — bit shifts are modulo 32, so `1 << 32 === 1` instead of `2^32`. Use a conditional: `bitWidth >= 32 ? 0xFFFFFFFF : (1 << bitWidth) - 1`.
+
+2. **`0xFFFFFFFF & 0xFFFFFFFF` yields `-1`** — the `&` operator returns a signed int, so the all-ones pattern is interpreted as `-1`. Use `>>> 0` to convert to unsigned: `(value & mask) >>> 0`.
+
+These are critical when implementing register files, ALU operations, and memory addressing.
