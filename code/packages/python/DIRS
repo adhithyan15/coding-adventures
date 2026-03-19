@@ -20,6 +20,7 @@ lexer
 logic-gates
 parser
 compiler-pipeline
+core
 riscv-simulator
 ruby-lexer
 ruby-parser
