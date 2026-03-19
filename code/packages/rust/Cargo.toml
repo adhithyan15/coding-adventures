@@ -11,4 +11,5 @@ members = [
     "core",
     "cpu-simulator",
     "riscv-simulator",
+    "display",
 ]

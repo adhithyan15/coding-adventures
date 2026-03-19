@@ -1,0 +1,5 @@
+[package]
+name = "display"
+version = "0.1.0"
+edition = "2021"
+description = "VGA text-mode framebuffer display driver simulation"
