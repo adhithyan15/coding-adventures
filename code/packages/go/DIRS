@@ -1,4 +1,6 @@
+branch-predictor
 clock
 directed-graph
 fp-arithmetic
+hazard-detection
 logic-gates

@@ -1,6 +1,7 @@
 arithmetic
 arm_simulator
 assembler
+branch_predictor
 bytecode_compiler
 clock
 clr_simulator
@@ -8,6 +9,7 @@ cpu_simulator
 directed_graph
 fp_arithmetic
 grammar_tools
+hazard_detection
 html_renderer
 intel4004_simulator
 jit_compiler
