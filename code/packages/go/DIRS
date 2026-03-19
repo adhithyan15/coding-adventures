@@ -2,6 +2,8 @@ arithmetic
 arm-simulator
 assembler
 bytecode-compiler
+branch-predictor
+cache
 clock
 clr-simulator
 cpu-simulator
@@ -11,6 +13,7 @@ grammar-tools
 intel4004-simulator
 jvm-simulator
 lexer
+hazard-detection
 logic-gates
 parser
 python-lexer

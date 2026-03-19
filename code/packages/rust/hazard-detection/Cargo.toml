@@ -1,0 +1,5 @@
+[package]
+name = "hazard-detection"
+version = "0.1.0"
+edition = "2021"
+description = "Pipeline hazard detection for a classic 5-stage CPU"
