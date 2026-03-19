@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/pipeline",
+  "version": "0.1.0",
+  "description": "Orchestrator that chains lexer, parser, compiler, and VM into a single execution flow with trace capture for visualization",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "pipeline",
+    "orchestrator",
+    "computing-stack",
+    "compiler",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
