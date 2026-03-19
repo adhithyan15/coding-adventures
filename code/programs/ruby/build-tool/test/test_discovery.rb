@@ -3,9 +3,9 @@
 # test_discovery.rb -- Tests for package discovery
 # =================================================
 #
-# These tests verify the DIRS/BUILD file walking logic, language inference,
-# platform-specific BUILD file selection, and the overall discover_packages
-# pipeline.
+# These tests verify the recursive BUILD file walking logic, language inference,
+# platform-specific BUILD file selection, skip-list filtering, and the overall
+# discover_packages pipeline.
 
 require_relative "test_helper"
 
@@ -57,6 +57,11 @@ class TestDiscovery < Minitest::Test
   def test_infer_language_go
     path = Pathname("/repo/code/programs/go/build-tool")
     assert_equal "go", BuildTool::Discovery.infer_language(path)
+  end
+
+  def test_infer_language_rust
+    path = Pathname("/repo/code/packages/rust/logic-gates")
+    assert_equal "rust", BuildTool::Discovery.infer_language(path)
   end
 
   def test_infer_language_unknown
@@ -145,13 +150,93 @@ class TestDiscovery < Minitest::Test
     FileUtils.rm_rf(dir)
   end
 
-  def test_discover_skips_missing_subdirs
-    # If DIRS lists a subdir that doesn't exist, it should be silently skipped.
+  # -- recursive discovery tests -----------------------------------------------
+
+  def test_discover_finds_nested_packages_without_dirs_files
     dir = create_temp_dir
-    write_file(dir / "DIRS", "nonexistent\n")
+    pkg_a = dir / "packages" / "python" / "pkg-a"
+    pkg_b = dir / "packages" / "python" / "pkg-b"
+    write_file(pkg_a / "BUILD", "echo a")
+    write_file(pkg_b / "BUILD", "echo b")
 
     packages = BuildTool::Discovery.discover_packages(dir)
-    assert_equal [], packages
+    assert_equal 2, packages.size
+    names = packages.map(&:name)
+    assert_includes names, "python/pkg-a"
+    assert_includes names, "python/pkg-b"
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_build_stops_recursion
+    dir = create_temp_dir
+    write_file(dir / "pkg-a" / "BUILD", "echo top")
+    write_file(dir / "pkg-a" / "sub" / "BUILD", "echo sub")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal 1, packages.size
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_multi_language
+    dir = create_temp_dir
+    %w[python ruby go rust].each do |lang|
+      write_file(dir / "packages" / lang / "lib" / "BUILD", "echo #{lang}")
+    end
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal 4, packages.size
+    langs = packages.map(&:language).to_set
+    assert_equal Set.new(%w[python ruby go rust]), langs
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  # -- skip list tests ---------------------------------------------------------
+
+  def test_discover_skips_git_dir
+    dir = create_temp_dir
+    write_file(dir / "packages" / "python" / "pkg-a" / "BUILD", "echo a")
+    write_file(dir / ".git" / "hooks" / "BUILD", "echo git")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal 1, packages.size
+    assert_equal "python/pkg-a", packages.first.name
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_skips_venv_dir
+    dir = create_temp_dir
+    write_file(dir / "packages" / "python" / "pkg-a" / "BUILD", "echo a")
+    write_file(dir / ".venv" / "lib" / "BUILD", "echo venv")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal 1, packages.size
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_skips_node_modules
+    dir = create_temp_dir
+    write_file(dir / "packages" / "python" / "pkg-a" / "BUILD", "echo a")
+    write_file(dir / "node_modules" / "dep" / "BUILD", "echo node")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal 1, packages.size
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_skips_target_dir
+    dir = create_temp_dir
+    write_file(dir / "packages" / "rust" / "lib" / "BUILD", "echo rs")
+    write_file(dir / "target" / "debug" / "BUILD", "echo target")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+    assert_equal 1, packages.size
+    assert_equal "rust", packages.first.language
   ensure
     FileUtils.rm_rf(dir)
   end

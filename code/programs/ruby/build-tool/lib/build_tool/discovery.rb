@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-# discovery.rb -- Package Discovery via DIRS/BUILD Files
-# ======================================================
+# discovery.rb -- Package Discovery via Recursive BUILD File Walk
+# ================================================================
 #
-# This module walks a monorepo directory tree following DIRS files to discover
-# packages. A "package" is any directory that contains a BUILD file. DIRS files
-# act as a routing table: each non-blank, non-comment line names a subdirectory
-# to descend into.
+# This module walks a monorepo directory tree to discover packages. A "package"
+# is any directory that contains a BUILD file. The walk is recursive: starting
+# from the root, we list all subdirectories and descend into each one, skipping
+# known non-source directories (.git, .venv, node_modules, etc.).
 #
-# The walk is recursive: if `code/DIRS` contains "packages", we look at
-# `code/packages/`. If `code/packages/DIRS` contains "python" and "ruby",
-# we look at both. When we find a BUILD file in a directory, we stop recursing
-# there and register that directory as a package.
+# When we find a BUILD file in a directory, we stop recursing there and register
+# that directory as a package. This is the same approach used by Bazel, Buck,
+# and Pants — no configuration files are needed to route the walk.
 #
 # Platform-specific BUILD files
 # -----------------------------
@@ -25,7 +24,8 @@
 #
 # We infer the language from the directory path. If the path contains
 # `packages/python/X` or `programs/python/X`, the language is "python".
-# Similarly for "ruby" and "go". The package name is `{language}/{dir-name}`.
+# Similarly for "ruby", "go", and "rust". The package name is
+# `{language}/{dir-name}`.
 
 module BuildTool
   # --------------------------------------------------------------------------
@@ -40,7 +40,7 @@ module BuildTool
   #   name            -- A qualified name like "python/logic-gates".
   #   path            -- Absolute path (Pathname) to the package directory.
   #   build_commands  -- Lines from the BUILD file (commands to execute).
-  #   language        -- Inferred language: "python", "ruby", "go", or "unknown".
+  #   language        -- Inferred language: "python", "ruby", "go", "rust", or "unknown".
   # --------------------------------------------------------------------------
   Package = Data.define(:name, :path, :build_commands, :language)
 
@@ -48,7 +48,15 @@ module BuildTool
     # KNOWN_LANGUAGES lists the language directory names we look for when
     # inferring which ecosystem a package belongs to. If a package lives
     # under a directory with one of these names, we tag it accordingly.
-    KNOWN_LANGUAGES = %w[python ruby go].freeze
+    KNOWN_LANGUAGES = %w[python ruby go rust].freeze
+
+    # SKIP_DIRS is the set of directory names that should never be traversed
+    # during package discovery. These are known to contain non-source files
+    # (caches, dependencies, build artifacts) that would waste time to scan.
+    SKIP_DIRS = Set.new(%w[
+      .git .hg .svn .venv .tox .mypy_cache .pytest_cache .ruff_cache
+      __pycache__ node_modules vendor dist build target .claude Pods
+    ]).freeze
 
     module_function
 
@@ -56,7 +64,7 @@ module BuildTool
     #
     # Blank lines and lines starting with '#' are stripped out. Leading and
     # trailing whitespace is removed from each line. This is the same
-    # filtering we use for both DIRS files and BUILD files.
+    # filtering we use for BUILD files.
     #
     # @param filepath [Pathname] The file to read.
     # @return [Array<String>] The cleaned lines.
@@ -121,13 +129,14 @@ module BuildTool
       nil
     end
 
-    # discover_packages -- Walk DIRS files recursively, collect packages.
+    # discover_packages -- Recursively walk directories, collect packages.
     #
-    # Starting from `root`, we read the DIRS file (if present) and descend
-    # into each listed subdirectory. When we find a BUILD file, we register
-    # that directory as a package and stop recursing into it.
+    # Starting from `root`, we list all subdirectories and descend into
+    # each one (skipping directories in the skip list). When we find a
+    # BUILD file, we register that directory as a package and stop
+    # recursing into it.
     #
-    # @param root [Pathname] The monorepo root (where the top-level DIRS is).
+    # @param root [Pathname] The monorepo root.
     # @return [Array<Package>] Discovered packages, sorted by name.
     def discover_packages(root)
       packages = []
@@ -135,15 +144,18 @@ module BuildTool
       packages.sort_by(&:name)
     end
 
-    # walk_dirs -- Recursively walk DIRS files and collect packages.
+    # walk_dirs -- Recursively walk directories and collect packages.
     #
+    # If the current directory's name is in the skip list, ignore it entirely.
     # If the current directory has a BUILD file, it is a package -- register
-    # it and stop. Otherwise, if it has a DIRS file, read the listed
-    # subdirectories and recurse into each one.
+    # it and stop. Otherwise, list all subdirectories and recurse into each.
     #
     # @param directory [Pathname] The current directory.
     # @param packages [Array<Package>] Accumulator for discovered packages.
     def walk_dirs(directory, packages)
+      # Skip known non-source directories.
+      return if SKIP_DIRS.include?(directory.basename.to_s)
+
       build_file = get_build_file(directory)
 
       if build_file
@@ -161,15 +173,12 @@ module BuildTool
         return
       end
 
-      # Not a package -- look for DIRS file to find subdirectories.
-      dirs_file = directory / "DIRS"
-      return unless dirs_file.exist?
-
-      subdirs = read_lines(dirs_file)
-      subdirs.each do |subdir_name|
-        subdir_path = directory / subdir_name
-        walk_dirs(subdir_path, packages) if subdir_path.directory?
+      # Not a package -- list subdirectories and recurse into each one.
+      directory.children.select(&:directory?).sort.each do |child|
+        walk_dirs(child, packages)
       end
+    rescue Errno::EACCES
+      # Permission denied -- skip this directory.
     end
   end
 end
