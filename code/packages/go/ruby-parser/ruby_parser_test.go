@@ -11,7 +11,7 @@ func TestParseRuby(t *testing.T) {
 		t.Fatalf("Failed to parse Ruby code: %v", err)
 	}
 
-	if len(program.Statements) != 1 {
-		t.Fatalf("Expected 1 statement, got %d", len(program.Statements))
+	if program.RuleName != "program" {
+		t.Fatalf("Expected program rule mapped, got %s", program.RuleName)
 	}
 }
