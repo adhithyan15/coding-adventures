@@ -5,3 +5,4 @@ cache
 branch-predictor
 hazard-detection
 cpu-pipeline
+core
