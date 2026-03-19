@@ -135,6 +135,13 @@ const SIMPLE_TOKENS: ReadonlyMap<string, string> = new Map([
   [")", "RPAREN"],
   [",", "COMMA"],
   [":", "COLON"],
+  [";", "SEMICOLON"],
+  ["{", "LBRACE"],
+  ["}", "RBRACE"],
+  ["[", "LBRACKET"],
+  ["]", "RBRACKET"],
+  [".", "DOT"],
+  ["!", "BANG"],
 ]);
 
 // ---------------------------------------------------------------------------

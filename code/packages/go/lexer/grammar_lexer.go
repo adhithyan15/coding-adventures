@@ -89,6 +89,13 @@ func (l *GrammarLexer) resolveTokenType(tokenName string, value string) TokenTyp
 	case "RPAREN": return TokenRParen
 	case "COMMA": return TokenComma
 	case "COLON": return TokenColon
+	case "SEMICOLON": return TokenSemicolon
+	case "LBRACE": return TokenLBrace
+	case "RBRACE": return TokenRBrace
+	case "LBRACKET": return TokenLBracket
+	case "RBRACKET": return TokenRBracket
+	case "DOT": return TokenDot
+	case "BANG": return TokenBang
 	default:
 		// Default to generic unmapped identifier bounding overlaps safely.
 		return TokenName 

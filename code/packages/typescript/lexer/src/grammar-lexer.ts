@@ -133,6 +133,13 @@ const KNOWN_TOKEN_TYPES: ReadonlySet<string> = new Set([
   "RPAREN",
   "COMMA",
   "COLON",
+  "SEMICOLON",
+  "LBRACE",
+  "RBRACE",
+  "LBRACKET",
+  "RBRACKET",
+  "DOT",
+  "BANG",
   "NEWLINE",
   "EOF",
 ]);

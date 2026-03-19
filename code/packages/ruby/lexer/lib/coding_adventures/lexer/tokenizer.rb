@@ -47,7 +47,14 @@ module CodingAdventures
         "(" => TokenType::LPAREN,
         ")" => TokenType::RPAREN,
         "," => TokenType::COMMA,
-        ":" => TokenType::COLON
+        ":" => TokenType::COLON,
+        ";" => TokenType::SEMICOLON,
+        "{" => TokenType::LBRACE,
+        "}" => TokenType::RBRACE,
+        "[" => TokenType::LBRACKET,
+        "]" => TokenType::RBRACKET,
+        "." => TokenType::DOT,
+        "!" => TokenType::BANG
       }.freeze
 
       # @param source [String] the raw source code to tokenize
