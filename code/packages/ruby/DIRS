@@ -5,6 +5,7 @@ branch_predictor
 bytecode_compiler
 cache
 clock
+cpu_pipeline
 clr_simulator
 cpu_simulator
 directed_graph
