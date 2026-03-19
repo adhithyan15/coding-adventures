@@ -401,6 +401,21 @@ export function encodeAdd(rd: number, rs1: number, rs2: number): number {
 }
 
 /**
+ * Encode: sub rd, rs1, rs2 -> 32-bit instruction.
+ *
+ * R-type format: [funct7=0100000 | rs2 | rs1 | funct3=000 | rd | opcode=0110011]
+ *
+ * Example:
+ *     encodeSub(3, 1, 2)  // sub x3, x1, x2 -> x3 = x1 - x2
+ */
+export function encodeSub(rd: number, rs1: number, rs2: number): number {
+  return (
+    ((0b0100000 << 25) | (rs2 << 20) | (rs1 << 15) | (0 << 12) | (rd << 7) | OPCODE_OP) >>>
+    0
+  );
+}
+
+/**
  * Encode: ecall -> 32-bit instruction.
  *
  * System format: [0...0 | opcode=1110011]

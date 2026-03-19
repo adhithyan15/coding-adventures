@@ -10,6 +10,7 @@ import {
   assemble,
   encodeAdd,
   encodeAddi,
+  encodeSub,
   encodeEcall,
 } from "../src/simulator.js";
 
@@ -34,6 +35,18 @@ describe("TestEncoding", () => {
   it("encode ecall should encode to 0x00000073", () => {
     /** ecall should encode to 0x00000073. */
     expect(encodeEcall()).toBe(0x00000073);
+  });
+
+  it("encode sub x3, x1, x2", () => {
+    /** sub x3, x1, x2 should encode correctly. */
+    const instr = encodeSub(3, 1, 2);
+    // Verify it decodes back to sub
+    const decoder = new RiscVDecoder();
+    const result = decoder.decode(instr, 0);
+    expect(result.mnemonic).toBe("sub");
+    expect(result.fields["rd"]).toBe(3);
+    expect(result.fields["rs1"]).toBe(1);
+    expect(result.fields["rs2"]).toBe(2);
   });
 });
 
@@ -151,6 +164,45 @@ describe("TestRiscVSimulator", () => {
     ]);
     sim.run(program);
     expect(sim.cpu.registers.read(3)).toBe(300);
+  });
+
+  it("subtraction", () => {
+    /** 10 - 3 = 7 via sub instruction. */
+    const sim = new RiscVSimulator();
+    const program = assemble([
+      encodeAddi(1, 0, 10),   // x1 = 10
+      encodeAddi(2, 0, 3),    // x2 = 3
+      encodeSub(3, 1, 2),     // x3 = x1 - x2 = 7
+      encodeEcall(),
+    ]);
+    sim.run(program);
+    expect(sim.cpu.registers.read(3)).toBe(7);
+  });
+
+  it("subtraction resulting in zero", () => {
+    /** 5 - 5 = 0 via sub. */
+    const sim = new RiscVSimulator();
+    const program = assemble([
+      encodeAddi(1, 0, 5),
+      encodeAddi(2, 0, 5),
+      encodeSub(3, 1, 2),
+      encodeEcall(),
+    ]);
+    sim.run(program);
+    expect(sim.cpu.registers.read(3)).toBe(0);
+  });
+
+  it("sub to x0 is a no-op", () => {
+    /** Writing to x0 should be ignored. */
+    const sim = new RiscVSimulator();
+    const program = assemble([
+      encodeAddi(1, 0, 5),
+      encodeAddi(2, 0, 3),
+      encodeSub(0, 1, 2),  // write to x0 -> ignored
+      encodeEcall(),
+    ]);
+    sim.run(program);
+    expect(sim.cpu.registers.read(0)).toBe(0);
   });
 
   it("negative immediate", () => {

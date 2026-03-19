@@ -5,7 +5,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       thresholds: {
-        lines: 79,
+        lines: 80,
       },
     },
   },
