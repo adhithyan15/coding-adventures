@@ -28,73 +28,84 @@ Layer 10: Logic Gates            AND, OR, XOR — the irreducible foundation
 
 ## What's built
 
-### Computing stack — Python (21 packages) and Ruby (20 gems)
+**126 packages and 6 programs across 5 languages.**
 
-Every package is implemented in both Python and Ruby with identical APIs:
+### Computing stack
 
-| Layer | Package | Python Tests | Ruby Tests |
-|-------|---------|-------------|------------|
-| 10 | Logic Gates | ✅ 89 | ✅ 79 |
-| 9 | Arithmetic / ALU | ✅ 34 | ✅ 63 |
-| 8 | CPU Simulator | ✅ 34 | ✅ 28 |
-| 7 | ARM Simulator | ✅ 16 | ✅ 17 |
-| 7 | RISC-V Simulator | ✅ 14 | ✅ 17 |
-| 7 | WASM Simulator | ✅ 28 | ✅ 22 |
-| 7 | Intel 4004 Simulator | ✅ 21 | ✅ 12 |
-| 7 | JVM Simulator | ✅ 81 | ✅ 42 |
-| 7 | CLR Simulator | ✅ 93 | ✅ 39 |
-| 2 | Grammar Tools | ✅ 66 | ✅ 55 |
-| 2 | Lexer | ✅ 146 | ✅ 44 |
-| 3 | Parser | ✅ 88 | ✅ 37 |
-| 4a | Bytecode Compiler | ✅ 133 | ✅ 106 |
-| 5 | Virtual Machine | ✅ 99 | ✅ 61 |
-| 0 | Pipeline | ✅ 40 | ✅ 40 |
+The full computing stack is implemented in Python, Ruby, Go, and TypeScript. Rust covers the deep hardware layers.
+
+| Layer | Package | Python | Ruby | Go | TypeScript | Rust |
+|-------|---------|--------|------|----|------------|------|
+| 10 | Logic Gates | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 9 | Arithmetic / ALU | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 9 | Floating-Point Arithmetic | ✅ | ✅ | ✅ | ✅ | — |
+| 8 | CPU Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 7 | ARM Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 7 | RISC-V Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 7 | WASM Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 7 | Intel 4004 Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 7 | JVM Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 7 | CLR Simulator | ✅ | ✅ | ✅ | ✅ | — |
+| 2 | Grammar Tools | ✅ | ✅ | ✅ | ✅ | — |
+| 2 | Lexer | ✅ | ✅ | ✅ | ✅ | — |
+| 3 | Parser | ✅ | ✅ | ✅ | ✅ | — |
+| 4a | Bytecode Compiler | ✅ | ✅ | ✅ | ✅ | — |
+| 5 | Virtual Machine | ✅ | ✅ | ✅ | ✅ | — |
+| 0 | Pipeline | ✅ | ✅ | — | ✅ | — |
+| — | HTML Renderer | ✅ | ✅ | — | ✅ | — |
+| — | Assembler (shell) | ✅ | ✅ | ✅ | ✅ | — |
+| — | JIT Compiler (shell) | ✅ | ✅ | — | ✅ | — |
+
+### Deep CPU internals (Rust + Python + Ruby + Go + TypeScript)
+
+| Package | Description | Rust | Python | Ruby | Go | TypeScript |
+|---------|-------------|------|--------|------|----|------------|
+| Cache | L1/L2 cache simulation | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Branch Predictor | 1-bit, 2-bit, BTB | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Hazard Detection | Data/control/structural hazards | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Clock | Clock generator, divider, multi-phase | — | ✅ | ✅ | ✅ | ✅ |
 
 ### Cross-language packages
 
 The grammar-driven lexer/parser can tokenize and parse **any language** given grammar files:
 
-| Package | Written in | Tokenizes/Parses | Tests |
-|---------|-----------|-----------------|-------|
-| `ruby-lexer` | Python | Ruby source code | 42 |
-| `ruby-parser` | Python | Ruby source code | 21 |
-| `python_lexer` | Ruby | Python source code | 32 |
-| `python_parser` | Ruby | Python source code | 15 |
+| Target Language | Python pkg | Ruby pkg | Go pkg | TypeScript pkg |
+|-----------------|-----------|----------|--------|---------------|
+| Python | — | `python_lexer`/`python_parser` | `python-lexer`/`python-parser` | `python-lexer`/`python-parser` |
+| Ruby | `ruby-lexer`/`ruby-parser` | — | `ruby-lexer`/`ruby-parser` | `ruby-lexer`/`ruby-parser` |
+| JavaScript | `javascript-lexer`/`javascript-parser` | `javascript_lexer`/`javascript_parser` | `javascript-lexer`/`javascript-parser` | — |
+| TypeScript | `typescript-lexer`/`typescript-parser` | `typescript_lexer`/`typescript_parser` | `typescript-lexer`/`typescript-parser` | — |
 
 ### Build system
 
-An incremental, parallel monorepo build tool implemented in three languages:
+An incremental, parallel monorepo build tool implemented in four languages:
 
-| Implementation | Tests | Coverage | Role |
-|---------------|-------|---------|------|
-| **Go** | 62+ | 88-96% | **Primary** — compiles to native binary, goroutine parallelism |
-| Python | 118 | 95% | Reference implementation |
-| Ruby | 90 | 96% | Educational port |
+| Implementation | Role |
+|---------------|------|
+| **Go** | **Primary** — compiles to native binary, goroutine parallelism |
+| **Rust** | Native performance, rayon thread pool |
+| Python | Reference implementation |
+| Ruby | Educational port |
 
 Features:
-- **Git-diff change detection** — `git diff origin/main...HEAD` determines what changed, no cache file needed
-- **Dependency-aware** — automatically parses `pyproject.toml` and `.gemspec` to build a dependency graph
-- **Parallel execution** — independent packages run concurrently (8 packages at level 0!)
-- **BUILD/DIRS files** — simple text files declaring build commands and directory structure
+- **Recursive BUILD file discovery** — walks the directory tree automatically, no routing files needed
+- **Git-diff change detection** — `git diff origin/main...HEAD` determines what changed
+- **Dependency-aware** — parses `pyproject.toml`, `.gemspec`, `go.mod`, and `Cargo.toml`
+- **Parallel execution** — independent packages run concurrently by topological level
+- **Skip list** — automatically ignores `.git`, `.venv`, `node_modules`, `target`, etc.
 
 ### Directed graph library
 
-The foundation of the build system — a standalone library in three languages:
-
-| Language | Tests | Coverage |
-|----------|-------|---------|
-| Python | 73 | 98% |
-| Ruby | 77 | 100% |
-| Go | 39 | 94% |
-
-Provides: topological sort, cycle detection, independent groups (parallel levels), affected nodes (incremental builds), transitive closure.
+The foundation of the build system — a standalone library in Python, Ruby, and Go. Provides: topological sort, cycle detection, independent groups (parallel levels), affected nodes (incremental builds), transitive closure.
 
 ### Grammar files
 
 Declarative grammar definitions shared by all implementations:
 
-- `code/grammars/python.tokens` + `python.grammar` — Python subset
-- `code/grammars/ruby.tokens` + `ruby.grammar` — Ruby subset
+- `python.tokens` + `python.grammar` — Python subset
+- `ruby.tokens` + `ruby.grammar` — Ruby subset
+- `javascript.tokens` + `javascript.grammar` — JavaScript subset
+- `typescript.tokens` + `typescript.grammar` — TypeScript subset
 
 Adding a new language requires only writing grammar files — no new lexer or parser code.
 
@@ -106,26 +117,33 @@ code/
 ├── grammars/       Language grammar definitions (.tokens, .grammar)
 ├── learning/       Notes and learning materials per language/topic
 ├── packages/       Publishable libraries
-│   ├── python/     21 Python packages (PyPI-ready)
-│   ├── ruby/       20 Ruby gems (RubyGems-ready)
-│   └── go/         Go modules
+│   ├── python/     30 Python packages (PyPI-ready)
+│   ├── ruby/       30 Ruby gems (RubyGems-ready)
+│   ├── go/         29 Go modules
+│   ├── rust/       6 Rust crates
+│   └── typescript/ 31 TypeScript packages (npm-ready)
 └── programs/       Standalone programs
     ├── python/     Hello world, build tool, pipeline visualizer
     ├── ruby/       Build tool
-    └── go/         Build tool (primary)
+    ├── go/         Build tool (primary)
+    └── rust/       Build tool
 ```
 
 ## Languages & Tooling
 
-| Language | Version | Package Manager | Test Framework | Linter | Type Checker |
-|----------|---------|----------------|---------------|--------|-------------|
-| Python | 3.12+ | uv | pytest | ruff | mypy |
-| Ruby | 3.4 | Bundler | Minitest | Standard Ruby | RBS + Steep |
-| Go | 1.26 | go modules | go test | go vet | built-in |
+| Language | Version | Package Manager | Test Framework | Linter |
+|----------|---------|----------------|---------------|--------|
+| Python | 3.12+ | uv | pytest | ruff |
+| Ruby | 3.4 | Bundler | Minitest | Standard Ruby |
+| Go | 1.26 | go modules | go test | go vet |
+| Rust | stable | Cargo | cargo test | clippy |
+| TypeScript | 5.x | npm | vitest | eslint |
 
 All managed via [mise](https://mise.jdx.dev/) — see `mise.toml`.
 
-## CI
+## CI/CD
+
+### CI — Build & Test
 
 GitHub Actions workflow (`.github/workflows/ci.yml`):
 1. Compiles Go build tool from source (~1-2 seconds)
@@ -134,25 +152,33 @@ GitHub Actions workflow (`.github/workflows/ci.yml`):
 4. Runs them in parallel by topological level
 5. Linux on every push, Linux + macOS on PRs to main
 
+### Publish — Release to Registries
+
+GitHub Actions workflow (`.github/workflows/publish.yml`):
+- Triggered by GitHub Release with tag format `<language>/<package-name>/v<version>`
+- **Python**: Trusted Publishers (OIDC) to PyPI — no API tokens needed
+- **Python native extensions**: Builds wheels on Linux, macOS (arm64 + x86_64), and Windows via maturin
+- **Ruby**: Pushes gems via `RUBYGEMS_API_KEY` secret
+
 ## Philosophy
 
 - **No magic** — build every layer from scratch, understand what computers actually do
 - **Go slow and deliberate** — depth over breadth
 - **Literate programming** — Knuth-style, every source file teaches
-- **Publishable quality** — every package ready for PyPI/RubyGems
+- **Publishable quality** — every package ready for PyPI/RubyGems/npm/crates.io
 - **Specs first** — specification → tests → implementation → changelog
 - **>80% test coverage** — enforced, typically 95%+
 - **Multiple languages** — same concepts, different ecosystems, deeper understanding
 
 ## Future roadmap
 
+- [ ] Data structures library (Rust core + language wrappers)
 - [ ] Machine learning track (neuron → network → backprop → autograd → attention)
 - [ ] GPU computing track (naive matmul → tiled → SIMD → GPU kernel → tensor core)
 - [ ] JIT compiler implementation
-- [ ] Sandbox-based build isolation (like Bazel)
-- [ ] TypeScript implementation of the computing stack
-- [ ] VS Code extension for `.tokens`/`.grammar` files
+- [ ] Safe C/C++ data structures (compile-time safety guardrails)
 - [ ] HTML pipeline visualizer
+- [ ] Full RISC-V RV32I + M-mode extensions
 
 ## Copyright
 
