@@ -9,4 +9,6 @@ members = [
     "hazard-detection",
     "cpu-pipeline",
     "core",
+    "cpu-simulator",
+    "riscv-simulator",
 ]

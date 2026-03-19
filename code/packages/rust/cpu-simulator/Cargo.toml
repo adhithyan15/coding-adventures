@@ -1,0 +1,7 @@
+[package]
+name = "cpu-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal CPU simulator with RegisterFile and Memory types for ISA simulators"
+
+[dependencies]
