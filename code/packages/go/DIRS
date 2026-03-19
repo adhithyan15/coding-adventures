@@ -6,6 +6,7 @@ branch-predictor
 cache
 clock
 clr-simulator
+core
 cpu-simulator
 directed-graph
 fp-arithmetic
