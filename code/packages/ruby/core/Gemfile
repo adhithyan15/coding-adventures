@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+# Local dependencies for development
+gem "coding_adventures_cache", path: "../cache"
+gem "coding_adventures_branch_predictor", path: "../branch_predictor"
+gem "coding_adventures_cpu_pipeline", path: "../cpu_pipeline"
+gem "coding_adventures_hazard_detection", path: "../hazard_detection"
+gem "coding_adventures_clock", path: "../clock"
