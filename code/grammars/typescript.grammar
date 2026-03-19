@@ -1,0 +1,35 @@
+# Parser grammar for a subset of TypeScript
+# Used by the grammar-driven parser to build ASTs from token streams.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from typescript.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match
+#
+# TypeScript grammar differences from JavaScript:
+# - Type annotations: `let x: number = 1` (optional colon + type after name)
+# - The grammar is otherwise identical to JavaScript for the simple subset
+#   we support. As more TypeScript features are added (interfaces, generics,
+#   etc.), new rules will be added here.
+#
+# For now, this grammar is identical to javascript.grammar. The key
+# difference is that the lexer uses typescript.tokens (which has more
+# keywords like `interface`, `type`, `enum`, etc.), so those keywords
+# are recognized during tokenization even though the parser doesn't
+# yet have rules for them.
+
+program        = { statement } ;
+statement      = var_declaration | assignment | expression_stmt ;
+var_declaration = KEYWORD NAME EQUALS expression SEMICOLON ;
+assignment     = NAME EQUALS expression SEMICOLON ;
+expression_stmt = expression SEMICOLON ;
+expression     = term { ( PLUS | MINUS ) term } ;
+term           = factor { ( STAR | SLASH ) factor } ;
+factor         = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;

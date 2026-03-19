@@ -16,6 +16,13 @@ var SimpleTokens = map[rune]TokenType{
 	')': TokenRParen,
 	',': TokenComma,
 	':': TokenColon,
+	';': TokenSemicolon,
+	'{': TokenLBrace,
+	'}': TokenRBrace,
+	'[': TokenLBracket,
+	']': TokenRBracket,
+	'.': TokenDot,
+	'!': TokenBang,
 }
 
 type LexerConfig struct {

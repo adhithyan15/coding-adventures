@@ -163,6 +163,27 @@ class TokenType(Enum):
     COLON = auto()
     """A colon ``:``, used in many languages for blocks, slices, or labels."""
 
+    SEMICOLON = auto()
+    """A semicolon ``;``, used in many languages to terminate statements."""
+
+    LBRACE = auto()
+    """A left curly brace ``{``, used in C-family languages for blocks."""
+
+    RBRACE = auto()
+    """A right curly brace ``}``, used to close blocks."""
+
+    LBRACKET = auto()
+    """A left square bracket ``[``, used for array indexing and literals."""
+
+    RBRACKET = auto()
+    """A right square bracket ``]``, used to close array access and literals."""
+
+    DOT = auto()
+    """A dot ``.``, used for member access in many languages."""
+
+    BANG = auto()
+    """An exclamation mark ``!``, used for logical negation."""
+
     # --- Structural ---------------------------------------------------------
     # These token types represent the structure of the source code itself.
 
@@ -392,6 +413,13 @@ class Lexer:
         ")": TokenType.RPAREN,
         ",": TokenType.COMMA,
         ":": TokenType.COLON,
+        ";": TokenType.SEMICOLON,
+        "{": TokenType.LBRACE,
+        "}": TokenType.RBRACE,
+        "[": TokenType.LBRACKET,
+        "]": TokenType.RBRACKET,
+        ".": TokenType.DOT,
+        "!": TokenType.BANG,
     }
 
     def __init__(self, source: str, config: LexerConfig | None = None) -> None:

@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/clr-simulator",
+  "version": "0.1.0",
+  "description": "CLR IL (Common Language Runtime Intermediate Language) simulator — Layer 4f of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "clr",
+    "cil",
+    "msil",
+    "dotnet",
+    "stack-machine",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

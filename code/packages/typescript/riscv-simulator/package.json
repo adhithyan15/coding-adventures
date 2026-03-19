@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/riscv-simulator",
+  "version": "0.1.0",
+  "description": "RISC-V RV32I instruction set decoder and executor -- Layer 4b of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "riscv",
+    "risc-v",
+    "instruction-set",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cpu-simulator": "file:../cpu-simulator"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

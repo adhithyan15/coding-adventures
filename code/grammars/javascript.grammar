@@ -1,0 +1,29 @@
+# Parser grammar for a subset of JavaScript
+# Used by the grammar-driven parser to build ASTs from token streams.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from javascript.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match
+#
+# JavaScript grammar differences from Python and Ruby:
+# - Variable declarations use `let`, `const`, or `var` keywords
+# - Statements end with semicolons (not newlines)
+# - `function` keyword for function declarations
+# - Curly braces for blocks (not indentation or `end`)
+
+program        = { statement } ;
+statement      = var_declaration | assignment | expression_stmt ;
+var_declaration = KEYWORD NAME EQUALS expression SEMICOLON ;
+assignment     = NAME EQUALS expression SEMICOLON ;
+expression_stmt = expression SEMICOLON ;
+expression     = term { ( PLUS | MINUS ) term } ;
+term           = factor { ( STAR | SLASH ) factor } ;
+factor         = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;

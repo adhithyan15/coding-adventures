@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/assembler",
+  "version": "0.1.0",
+  "description": "Two-pass assembler that translates ARM assembly language to binary machine code — Layer 5 of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "assembler",
+    "assembly",
+    "arm",
+    "machine-code",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
