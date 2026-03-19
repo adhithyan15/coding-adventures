@@ -1,16 +1,15 @@
 """
-discovery.py -- Package Discovery via DIRS/BUILD Files
-======================================================
+discovery.py -- Package Discovery via Recursive BUILD File Walk
+================================================================
 
-This module walks a monorepo directory tree following DIRS files to discover
-packages. A "package" is any directory that contains a BUILD file. DIRS files
-act as a routing table: each non-blank, non-comment line names a subdirectory
-to descend into.
+This module walks a monorepo directory tree to discover packages. A "package"
+is any directory that contains a BUILD file. The walk is recursive: starting
+from the root, we list all subdirectories and descend into each one, skipping
+known non-source directories (.git, .venv, node_modules, etc.).
 
-The walk is recursive: if ``code/DIRS`` contains "packages", we look at
-``code/packages/``. If ``code/packages/DIRS`` contains "python" and "ruby",
-we look at both. When we find a BUILD file in a directory, we stop recursing
-there and register that directory as a package.
+When we find a BUILD file in a directory, we stop recursing there and register
+that directory as a package. This is the same approach used by Bazel, Buck,
+and Pants — no configuration files are needed to route the walk.
 
 Platform-specific BUILD files
 -----------------------------
@@ -24,15 +23,38 @@ Language inference
 
 We infer the language from the directory path. If the path contains
 ``packages/python/X`` or ``programs/python/X``, the language is "python".
-Similarly for "ruby" and "go". The package name is ``{language}/{dir-name}``.
+Similarly for "ruby", "go", and "rust". The package name is
+``{language}/{dir-name}``.
 """
 
 from __future__ import annotations
 
 import platform
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
+
+
+# Directories that should never be traversed during package discovery.
+# These are known to contain non-source files (caches, dependencies,
+# build artifacts) that would waste time to scan.
+SKIP_DIRS: frozenset[str] = frozenset({
+    ".git",
+    ".hg",
+    ".svn",
+    ".venv",
+    ".tox",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    "__pycache__",
+    "node_modules",
+    "vendor",
+    "dist",
+    "build",
+    "target",
+    ".claude",
+    "Pods",
+})
 
 
 @dataclass
@@ -43,7 +65,7 @@ class Package:
         name: A qualified name like "python/logic-gates" or "ruby/arithmetic".
         path: Absolute path to the package directory.
         build_commands: Lines from the BUILD file (commands to execute).
-        language: Inferred language -- "python", "ruby", "go", or "unknown".
+        language: Inferred language -- "python", "ruby", "go", "rust", or "unknown".
     """
 
     name: str
@@ -75,10 +97,10 @@ def _infer_language(path: Path) -> str:
 
     We look for known language directory names in the path components.
     The pattern we look for is a parent directory named "python", "ruby",
-    or "go" that sits under "packages" or "programs".
+    "go", or "rust" that sits under "packages" or "programs".
     """
     parts = path.parts
-    for lang in ("python", "ruby", "go"):
+    for lang in ("python", "ruby", "go", "rust"):
         if lang in parts:
             return lang
     return "unknown"
@@ -120,14 +142,14 @@ def _get_build_file(directory: Path) -> Path | None:
 
 
 def discover_packages(root: Path) -> list[Package]:
-    """Walk DIRS files recursively, collect packages with BUILD files.
+    """Recursively walk the directory tree, collect packages with BUILD files.
 
-    Starting from ``root``, we read the DIRS file (if present) and descend
-    into each listed subdirectory. When we find a BUILD file, we register
-    that directory as a package and stop recursing into it.
+    Starting from ``root``, we list all subdirectories and descend into
+    each one (skipping directories in the skip list). When we find a BUILD
+    file, we register that directory as a package and stop recursing into it.
 
     Args:
-        root: The monorepo root directory (where the top-level DIRS file is).
+        root: The monorepo root directory.
 
     Returns:
         A list of discovered Package objects, sorted by name.
@@ -139,12 +161,16 @@ def discover_packages(root: Path) -> list[Package]:
 
 
 def _walk_dirs(directory: Path, packages: list[Package]) -> None:
-    """Recursively walk DIRS files and collect packages.
+    """Recursively walk directories and collect packages.
 
+    If the current directory's name is in the skip list, ignore it entirely.
     If the current directory has a BUILD file, it's a package -- register it
-    and don't recurse further. Otherwise, if it has a DIRS file, read the
-    listed subdirectories and recurse into each one.
+    and don't recurse further. Otherwise, list all subdirectories and recurse.
     """
+    # Skip known non-source directories.
+    if directory.name in SKIP_DIRS:
+        return
+
     build_file = _get_build_file(directory)
 
     if build_file is not None:
@@ -163,13 +189,12 @@ def _walk_dirs(directory: Path, packages: list[Package]) -> None:
         )
         return
 
-    # Not a package -- look for DIRS file to find subdirectories.
-    dirs_file = directory / "DIRS"
-    if not dirs_file.exists():
+    # Not a package -- list subdirectories and recurse into each one.
+    try:
+        entries = sorted(directory.iterdir())
+    except PermissionError:
         return
 
-    subdirs = _read_lines(dirs_file)
-    for subdir_name in subdirs:
-        subdir_path = directory / subdir_name
-        if subdir_path.is_dir():
-            _walk_dirs(subdir_path, packages)
+    for entry in entries:
+        if entry.is_dir():
+            _walk_dirs(entry, packages)
