@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/wasm-simulator",
+  "version": "0.1.0",
+  "description": "WebAssembly stack-based VM simulation — Layer 4c of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "wasm",
+    "webassembly",
+    "stack-machine",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
