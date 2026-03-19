@@ -60,3 +60,9 @@ JavaScript bitwise operators (`&`, `|`, `<<`, `>>`) work on **signed 32-bit inte
 2. **`0xFFFFFFFF & 0xFFFFFFFF` yields `-1`** — the `&` operator returns a signed int, so the all-ones pattern is interpreted as `-1`. Use `>>> 0` to convert to unsigned: `(value & mask) >>> 0`.
 
 These are critical when implementing register files, ALU operations, and memory addressing.
+
+---
+
+### 2026-03-19: Always update PR description after each push
+
+When working on a large PR with many commits, update the PR description after each push to reflect current progress. This lets the reviewer (and CI) see what's been done and what's left. Use `gh pr edit <number> --body "..."` to update the description programmatically.
