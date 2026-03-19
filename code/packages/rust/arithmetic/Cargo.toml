@@ -1,0 +1,8 @@
+[package]
+name = "arithmetic"
+version = "0.1.0"
+edition = "2021"
+description = "Adder circuits and ALU — the computational heart of a CPU"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
