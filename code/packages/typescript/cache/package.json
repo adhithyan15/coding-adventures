@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/cache",
+  "version": "0.1.0",
+  "description": "Configurable CPU cache hierarchy simulator — L1, L2, L3, and beyond. Layer 5 of the computing stack.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "cache",
+    "cpu",
+    "memory-hierarchy",
+    "computer-architecture",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/arithmetic": "file:../arithmetic"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
