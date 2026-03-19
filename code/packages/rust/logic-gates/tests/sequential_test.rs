@@ -280,7 +280,7 @@ fn test_shift_register_right_pattern() {
 
     // After shifting in [1, 0, 1, 0], the register should contain [0, 1, 0, 1]
     // because each new bit pushes from position 0
-    let (out, _) = shift_register(0, 0, &mut state, "right");
+    let (_out, _) = shift_register(0, 0, &mut state, "right");
     // Read current state from slave_q
     let current: Vec<u8> = state.iter().map(|s| s.slave_q).collect();
     assert_eq!(current, vec![0, 1, 0, 1]);
@@ -303,6 +303,7 @@ fn test_counter_counts_to_three() {
     let mut state = CounterState::new(4);
 
     // Count 0 -> 1 -> 2 -> 3
+    // counter(clock, reset, state) — clock cycles low->high, reset=0
     let expected = [
         vec![1, 0, 0, 0], // 1
         vec![0, 1, 0, 0], // 2
@@ -310,8 +311,8 @@ fn test_counter_counts_to_three() {
     ];
 
     for (i, exp) in expected.iter().enumerate() {
-        counter(0, 0, &mut state);
-        let bits = counter(0, 1, &mut state);
+        counter(0, 0, &mut state); // clock low
+        let bits = counter(1, 0, &mut state); // clock high
         assert_eq!(&bits, exp, "Count step {} should be {:?}", i + 1, exp);
     }
 }
@@ -324,14 +325,14 @@ fn test_counter_overflow() {
     // Count to 15
     for _ in 0..15 {
         counter(0, 0, &mut state);
-        counter(0, 1, &mut state);
+        counter(1, 0, &mut state);
     }
     // At this point state.value should be [1, 1, 1, 1] = 15
     assert_eq!(state.value, vec![1, 1, 1, 1]);
 
     // One more tick: overflow to 0
     counter(0, 0, &mut state);
-    let bits = counter(0, 1, &mut state);
+    let bits = counter(1, 0, &mut state);
     assert_eq!(bits, vec![0, 0, 0, 0], "Should overflow to 0");
 }
 
@@ -341,22 +342,14 @@ fn test_counter_reset() {
 
     // Count to 3
     for _ in 0..3 {
-        counter(0, 0, &mut state);
-        counter(0, 1, &mut state);
-    }
-
-    // Reset
-    counter(0, 1, &mut state); // reset=1 handled in the next call
-    // Actually, reset needs to be passed properly
-    let mut state = CounterState::new(4);
-    for _ in 0..3 {
-        counter(0, 0, &mut state);
-        counter(0, 1, &mut state);
+        counter(0, 0, &mut state); // clock low, reset=0
+        counter(1, 0, &mut state); // clock high, reset=0
     }
     assert_eq!(state.value, vec![1, 1, 0, 0]); // decimal 3
 
-    counter(1, 0, &mut state); // reset=1
-    let bits = counter(1, 1, &mut state); // reset=1
+    // Reset: clock low with reset=1, then clock high with reset=1
+    counter(0, 1, &mut state); // clock=0, reset=1
+    let bits = counter(1, 1, &mut state); // clock=1, reset=1
     assert_eq!(bits, vec![0, 0, 0, 0], "Reset should zero the counter");
 }
 
@@ -366,8 +359,8 @@ fn test_counter_8bit_counts() {
 
     // Count to 5
     for _ in 0..5 {
-        counter(0, 0, &mut state);
-        counter(0, 1, &mut state);
+        counter(0, 0, &mut state); // clock low
+        counter(1, 0, &mut state); // clock high
     }
 
     // 5 in binary: 00000101 (LSB first: [1, 0, 1, 0, 0, 0, 0, 0])

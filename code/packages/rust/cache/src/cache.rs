@@ -444,9 +444,7 @@ mod tests {
         let access = cache.write(0x100, &[0xAB], 1);
         assert!(access.hit);
         assert_eq!(cache.stats.writes, 1);
-        assert_eq!(cache.stats.hits, 2); // 1 read hit + 1 write hit... wait
-        // Actually: first read is a miss (1 miss), second write is a hit (1 hit from write)
-        // stats.hits = 1 (write hit only; the read was a miss)
+        // First read was a miss (1 miss), second write is a hit (1 hit)
         assert_eq!(cache.stats.hits, 1);
     }
 

@@ -417,8 +417,8 @@ impl CounterState {
 /// ```
 /// use logic_gates::sequential::{counter, CounterState};
 /// let mut state = CounterState::new(4);
-/// let bits = counter(0, 0, &mut state); // Initialize
-/// let bits = counter(0, 1, &mut state); // Tick 1
+/// let bits = counter(0, 0, &mut state); // clock=0, reset=0
+/// let bits = counter(1, 0, &mut state); // clock=1, reset=0 -> captures count 1
 /// assert_eq!(bits, vec![1, 0, 0, 0]);  // decimal 1
 /// ```
 pub fn counter(clock: u8, reset: u8, state: &mut CounterState) -> Vec<u8> {
@@ -534,9 +534,9 @@ mod tests {
     #[test]
     fn test_counter_counts_up() {
         let mut state = CounterState::new(4);
-        // Tick 1: 0 -> 1
-        counter(0, 0, &mut state);
-        let bits = counter(0, 1, &mut state);
+        // Tick 1: clock low then high (0 -> 1), reset=0
+        counter(0, 0, &mut state);       // clock=0, reset=0
+        let bits = counter(1, 0, &mut state); // clock=1, reset=0
         assert_eq!(bits, vec![1, 0, 0, 0]); // decimal 1
     }
 }
