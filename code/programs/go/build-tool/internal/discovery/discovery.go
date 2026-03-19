@@ -78,7 +78,7 @@ func readLines(filepath string) []string {
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go"} {
+	for _, lang := range []string{"python", "ruby", "go", "typescript"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang

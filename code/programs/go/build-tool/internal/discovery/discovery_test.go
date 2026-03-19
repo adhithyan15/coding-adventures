@@ -77,6 +77,13 @@ func TestInferLanguageGo(t *testing.T) {
 	}
 }
 
+func TestInferLanguageTypescript(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/typescript/logic-gates")
+	if lang != "typescript" {
+		t.Fatalf("expected typescript, got %s", lang)
+	}
+}
+
 func TestInferLanguageUnknown(t *testing.T) {
 	lang := inferLanguage("/repo/code/packages/rust/something")
 	if lang != "unknown" {
