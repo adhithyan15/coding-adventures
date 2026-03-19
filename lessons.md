@@ -63,6 +63,14 @@ These are critical when implementing register files, ALU operations, and memory 
 
 ---
 
+### 2026-03-19: Rust workspace Cargo.toml must match pushed packages
+
+When adding new Rust packages, the workspace `Cargo.toml` lists all members. If a member is listed but its directory hasn't been pushed to the remote yet, ALL Rust packages in the workspace fail to compile in CI with "failed to load manifest" errors.
+
+**Solution:** Only add packages to the workspace `members` list in the same commit where the package directory is pushed. Or push all new packages together in one commit.
+
+---
+
 ### 2026-03-19: Always update PR description after each push
 
 When working on a large PR with many commits, update the PR description after each push to reflect current progress. This lets the reviewer (and CI) see what's been done and what's left. Use `gh pr edit <number> --body "..."` to update the description programmatically.
