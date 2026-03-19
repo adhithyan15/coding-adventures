@@ -13,6 +13,8 @@ grammar_tools
 hazard_detection
 html_renderer
 intel4004_simulator
+javascript_lexer
+javascript_parser
 jit_compiler
 jvm_simulator
 lexer

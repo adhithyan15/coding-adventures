@@ -11,6 +11,8 @@ directed-graph
 fp-arithmetic
 grammar-tools
 intel4004-simulator
+javascript-lexer
+javascript-parser
 jvm-simulator
 lexer
 hazard-detection
