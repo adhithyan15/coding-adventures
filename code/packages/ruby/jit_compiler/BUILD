@@ -1,1 +1,2 @@
-echo "Shell package — no tests"
+bundle install --quiet
+bundle exec rake test
