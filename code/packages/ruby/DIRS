@@ -24,5 +24,7 @@ pipeline
 python_lexer
 python_parser
 riscv_simulator
+typescript_lexer
+typescript_parser
 virtual_machine
 wasm_simulator

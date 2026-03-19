@@ -24,5 +24,7 @@ pipeline
 riscv-simulator
 ruby-lexer
 ruby-parser
+typescript-lexer
+typescript-parser
 virtual-machine
 wasm-simulator
