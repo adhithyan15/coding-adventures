@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/hazard-detection",
+  "version": "0.1.0",
+  "description": "Pipeline hazard detection and resolution — keeping the CPU from tripping over itself",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "hazard-detection",
+    "cpu",
+    "pipeline",
+    "computer-architecture",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
