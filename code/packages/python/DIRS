@@ -6,6 +6,7 @@ bytecode-compiler
 cache
 clock
 clr-simulator
+cpu-pipeline
 cpu-simulator
 directed-graph
 fp-arithmetic
