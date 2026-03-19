@@ -1,0 +1,242 @@
+# ================================================================
+# Publish — Release packages to PyPI and RubyGems
+# ================================================================
+#
+# Triggered when a GitHub Release is published. The release tag
+# determines which package to publish and in which language.
+#
+# Tag format: <language>/<package-name>/v<version>
+#
+# Examples:
+#   python/coding-adventures-arithmetic/v0.1.0
+#   ruby/coding_adventures_clock/v0.1.0
+#
+# Python packages use Trusted Publishers (OIDC) — no API tokens
+# needed. Each package must be registered as a Trusted Publisher
+# on pypi.org (Settings > Publishing) with:
+#   - Repository: adhithyan15/coding-adventures
+#   - Workflow: publish.yml
+#
+# Ruby gems use a RUBYGEMS_API_KEY secret stored in the repo's
+# GitHub Actions secrets.
+#
+# Native extensions (Rust/PyO3 via maturin) are detected by the
+# presence of Cargo.toml in the package directory. When detected,
+# wheels are built on Linux, macOS, and Windows across multiple
+# Python versions, then uploaded together.
+# ================================================================
+
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false  # Never cancel a publish mid-flight
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Parse the release tag ─────────────────────────────────────
+  parse-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      language: ${{ steps.parse.outputs.language }}
+      package: ${{ steps.parse.outputs.package }}
+      version: ${{ steps.parse.outputs.version }}
+      pkg_dir: ${{ steps.parse.outputs.pkg_dir }}
+      has_native: ${{ steps.parse.outputs.has_native }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse release tag
+        id: parse
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+
+          # Expected format: language/package-name/vX.Y.Z
+          LANGUAGE=$(echo "$TAG" | cut -d'/' -f1)
+          PACKAGE=$(echo "$TAG" | cut -d'/' -f2)
+          VERSION=$(echo "$TAG" | cut -d'/' -f3 | sed 's/^v//')
+
+          echo "language=$LANGUAGE" >> "$GITHUB_OUTPUT"
+          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # Resolve package directory from tag
+          if [ "$LANGUAGE" = "python" ]; then
+            # Strip the coding-adventures- prefix to get the directory name
+            DIR_NAME="${PACKAGE#coding-adventures-}"
+            PKG_DIR="code/packages/python/${DIR_NAME}"
+            # Fall back to programs directory if not found in packages
+            if [ ! -d "$PKG_DIR" ]; then
+              PKG_DIR="code/programs/python/${DIR_NAME}"
+            fi
+          elif [ "$LANGUAGE" = "ruby" ]; then
+            # Strip the coding_adventures_ prefix to get the directory name
+            DIR_NAME="${PACKAGE#coding_adventures_}"
+            PKG_DIR="code/packages/ruby/${DIR_NAME}"
+          else
+            echo "::error::Unsupported language: $LANGUAGE"
+            exit 1
+          fi
+
+          if [ ! -d "$PKG_DIR" ]; then
+            echo "::error::Package directory not found: $PKG_DIR"
+            exit 1
+          fi
+
+          echo "pkg_dir=$PKG_DIR" >> "$GITHUB_OUTPUT"
+
+          # Check for native extensions (Cargo.toml = maturin/PyO3)
+          if [ -f "$PKG_DIR/Cargo.toml" ]; then
+            echo "has_native=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_native=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "=== Release Info ==="
+          echo "Language: $LANGUAGE"
+          echo "Package:  $PACKAGE"
+          echo "Version:  $VERSION"
+          echo "Dir:      $PKG_DIR"
+
+  # ── Python: Pure package (sdist + wheel, Linux only) ──────────
+  publish-python-pure:
+    needs: parse-tag
+    if: needs.parse-tag.outputs.language == 'python' && needs.parse-tag.outputs.has_native == 'false'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # OIDC for Trusted Publishers
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build sdist and wheel
+        run: python -m build "${{ needs.parse-tag.outputs.pkg_dir }}"
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: "${{ needs.parse-tag.outputs.pkg_dir }}/dist/"
+
+  # ── Python: Native extension (maturin, OS x Python matrix) ───
+  #
+  # When a package contains Cargo.toml, it's a Rust/PyO3 native
+  # extension. We build platform-specific wheels on all three
+  # major OSes and for multiple Python versions, then upload
+  # everything to PyPI in one shot.
+  # ────────────────────────────────────────────────────────────────
+  publish-python-native-build:
+    needs: parse-tag
+    if: needs.parse-tag.outputs.language == 'python' && needs.parse-tag.outputs.has_native == 'true'
+    strategy:
+      matrix:
+        include:
+          # Linux — builds manylinux wheels (fastest)
+          - os: ubuntu-latest
+            target: x86_64
+          # macOS — Apple Silicon (arm64)
+          - os: macos-latest
+            target: aarch64
+          # macOS — Intel (x86_64)
+          - os: macos-13
+            target: x86_64
+          # Windows — x86_64
+          - os: windows-latest
+            target: x64
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build wheels with maturin
+        uses: PyO3/maturin-action@v1
+        with:
+          args: --release --out dist
+          working-directory: ${{ needs.parse-tag.outputs.pkg_dir }}
+
+      - name: Upload wheel artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}-${{ matrix.target }}
+          path: ${{ needs.parse-tag.outputs.pkg_dir }}/dist/*.whl
+
+  # Collect all platform wheels + build sdist, then publish
+  publish-python-native-upload:
+    needs: [parse-tag, publish-python-native-build]
+    if: needs.parse-tag.outputs.language == 'python' && needs.parse-tag.outputs.has_native == 'true'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # OIDC for Trusted Publishers
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build sdist (source distribution)
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          args: --out dist
+          working-directory: ${{ needs.parse-tag.outputs.pkg_dir }}
+
+      - name: Download all wheel artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          path: dist/
+          merge-multiple: true
+
+      - name: Copy sdist to dist
+        run: |
+          cp "${{ needs.parse-tag.outputs.pkg_dir }}/dist/"*.tar.gz dist/ 2>/dev/null || true
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  # ── Ruby: Build and publish gem ───────────────────────────────
+  publish-ruby:
+    needs: parse-tag
+    if: needs.parse-tag.outputs.language == 'ruby'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Build gem
+        run: |
+          cd "${{ needs.parse-tag.outputs.pkg_dir }}"
+          gem build *.gemspec
+
+      - name: Publish to RubyGems
+        run: |
+          cd "${{ needs.parse-tag.outputs.pkg_dir }}"
+          mkdir -p ~/.gem
+          cat > ~/.gem/credentials <<EOF
+          ---
+          :rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
+          EOF
+          chmod 0600 ~/.gem/credentials
+          gem push *.gem
