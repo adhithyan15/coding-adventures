@@ -1,0 +1,21 @@
+[package]
+name = "build-tool"
+version = "0.1.0"
+edition = "2021"
+description = "Incremental, parallel monorepo build system — Rust port of the Go build tool"
+
+# Dependencies chosen to mirror the Go implementation's capabilities:
+# - clap: CLI argument parsing (replaces Go's flag package)
+# - rayon: work-stealing thread pool (replaces Go's goroutines + semaphore)
+# - serde/serde_json: JSON serialization (replaces Go's encoding/json)
+# - sha2: SHA256 hashing (replaces Go's crypto/sha256)
+# - toml: TOML parsing for pyproject.toml and Cargo.toml
+# - num_cpus: detect CPU count (replaces Go's runtime.NumCPU)
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rayon = "1.10"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+toml = "0.8"
+num_cpus = "1.16"
