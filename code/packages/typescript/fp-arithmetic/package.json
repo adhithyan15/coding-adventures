@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/fp-arithmetic",
+  "version": "0.1.0",
+  "description": "IEEE 754 floating-point arithmetic built from logic gates — the shared foundation for CPU (FPU) and accelerator stacks (GPU/TPU/NPU)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "ieee754",
+    "floating-point",
+    "fp32",
+    "fp16",
+    "bf16",
+    "fma",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
