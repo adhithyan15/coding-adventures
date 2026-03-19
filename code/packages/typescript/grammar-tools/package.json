@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/grammar-tools",
+  "version": "0.1.0",
+  "description": "Define and validate .tokens and .grammar file formats — grammar-driven lexer and parser generation",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "grammar",
+    "lexer-generator",
+    "parser-generator",
+    "ebnf",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
