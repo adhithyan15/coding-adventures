@@ -1,0 +1,1 @@
+//! clock — placeholder, implementation pending
