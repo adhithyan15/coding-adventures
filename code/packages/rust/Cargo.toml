@@ -6,5 +6,7 @@ members = [
     "arithmetic",
     "cache",
     "branch-predictor",
+    "directed-graph",
+    "grammar-tools",
     "hazard-detection",
 ]
