@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "Directed graph with topological sort, cycle detection, and parallel execution levels",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

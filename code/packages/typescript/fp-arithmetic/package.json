@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "IEEE 754 floating-point arithmetic built from logic gates — the shared foundation for CPU (FPU) and accelerator stacks (GPU/TPU/NPU)",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

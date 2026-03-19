@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "Define and validate .tokens and .grammar file formats — grammar-driven lexer and parser generation",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

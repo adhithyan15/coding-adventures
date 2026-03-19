@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "Fundamental logic gate implementations (AND, OR, NOT, XOR, NAND, NOR) — Layer 1 of the computing stack",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
