@@ -16,7 +16,7 @@ The tests are organized into three groups:
 
 from __future__ import annotations
 
-from pipeline import (
+from compiler_pipeline import (
     CompilerStage,
     LexerStage,
     ParserStage,
@@ -25,7 +25,7 @@ from pipeline import (
     VMStage,
     ast_to_dict,
 )
-from pipeline.orchestrator import instruction_to_text
+from compiler_pipeline.orchestrator import instruction_to_text
 
 
 # =========================================================================

@@ -40,7 +40,7 @@ gem "coding_adventures_bytecode_compiler", path: "bytecode_compiler"
 gem "coding_adventures_virtual_machine", path: "virtual_machine"
 
 # ── Integration (Layer 0) ────────────────────────────────────────────
-gem "coding_adventures_pipeline", path: "pipeline"
+gem "coding_adventures_compiler_pipeline", path: "compiler_pipeline"
 
 # ── Shells (future) ──────────────────────────────────────────────────
 gem "coding_adventures_assembler", path: "assembler"

@@ -1,6 +1,6 @@
-# coding_adventures_pipeline
+# coding_adventures_compiler_pipeline
 
-Pipeline orchestrator that chains lexer, parser, compiler, and VM into a single execution flow, capturing traces at every stage for visualization.
+Compiler pipeline orchestrator that chains lexer, parser, compiler, and VM into a single execution flow, capturing traces at every stage for visualization.
 
 ## What It Does
 
@@ -19,9 +19,9 @@ This is the integration layer (Layer 0) that ties all other layers together. It 
 ## Usage
 
 ```ruby
-require "coding_adventures_pipeline"
+require "coding_adventures_compiler_pipeline"
 
-pipeline = CodingAdventures::Pipeline::Orchestrator.new
+pipeline = CodingAdventures::CompilerPipeline::Orchestrator.new
 result = pipeline.run("x = 1 + 2")
 
 # Inspect each stage:

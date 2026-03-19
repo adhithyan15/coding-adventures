@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to coding_adventures_pipeline will be documented here.
+All notable changes to coding_adventures_compiler_pipeline will be documented here.
 
 ## [0.1.0] - 2026-03-18
 

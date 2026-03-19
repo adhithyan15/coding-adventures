@@ -7,4 +7,4 @@ SimpleCov.start do
 end
 
 require "minitest/autorun"
-require "coding_adventures_pipeline"
+require "coding_adventures_compiler_pipeline"

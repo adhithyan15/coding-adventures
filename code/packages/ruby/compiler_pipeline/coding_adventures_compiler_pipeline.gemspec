@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "lib/coding_adventures/pipeline/version"
+require_relative "lib/coding_adventures/compiler_pipeline/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "coding_adventures_pipeline"
-  spec.version = CodingAdventures::Pipeline::VERSION
+  spec.name = "coding_adventures_compiler_pipeline"
+  spec.version = CodingAdventures::CompilerPipeline::VERSION
   spec.authors = ["Adhithya Rajasekaran"]
-  spec.summary = "Pipeline orchestrator chaining lexer, parser, compiler, and VM"
+  spec.summary = "Compiler pipeline orchestrator chaining lexer, parser, compiler, and VM"
   spec.description = "Orchestrates the full computing stack: source -> lexer -> parser -> " \
     "compiler -> VM. Captures traces at every stage for visualization."
   spec.license = "MIT"

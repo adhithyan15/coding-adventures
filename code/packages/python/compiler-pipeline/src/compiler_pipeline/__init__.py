@@ -1,11 +1,11 @@
-"""Pipeline — Orchestrator for the computing stack.
+"""Compiler Pipeline — Orchestrator for the computing stack.
 
 Chains lexer, parser, compiler, and VM into a single execution flow,
 capturing traces at every stage for the HTML visualizer.
 
 Usage::
 
-    from pipeline import Pipeline
+    from compiler_pipeline import Pipeline
 
     result = Pipeline().run("x = 1 + 2")
 
@@ -16,7 +16,7 @@ Usage::
     print(result.vm_stage.final_variables)       # {"x": 3}
 """
 
-from pipeline.orchestrator import (
+from compiler_pipeline.orchestrator import (
     CompilerStage,
     LexerStage,
     ParserStage,

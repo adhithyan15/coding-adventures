@@ -10,12 +10,12 @@ require_relative "test_helper"
 
 class TestPipelineBasic < Minitest::Test
   def setup
-    @pipeline = CodingAdventures::Pipeline::Orchestrator.new
+    @pipeline = CodingAdventures::CompilerPipeline::Orchestrator.new
   end
 
   def test_simple_assignment_returns_pipeline_result
     result = @pipeline.run("x = 1 + 2")
-    assert_instance_of CodingAdventures::Pipeline::PipelineResult, result
+    assert_instance_of CodingAdventures::CompilerPipeline::PipelineResult, result
   end
 
   def test_source_is_preserved
@@ -25,7 +25,7 @@ class TestPipelineBasic < Minitest::Test
 
   def test_lexer_stage_has_tokens
     result = @pipeline.run("x = 1 + 2")
-    assert_instance_of CodingAdventures::Pipeline::LexerStage, result.lexer_stage
+    assert_instance_of CodingAdventures::CompilerPipeline::LexerStage, result.lexer_stage
     assert result.lexer_stage.token_count >= 6
   end
 
@@ -36,7 +36,7 @@ class TestPipelineBasic < Minitest::Test
 
   def test_parser_stage_has_ast
     result = @pipeline.run("x = 1 + 2")
-    assert_instance_of CodingAdventures::Pipeline::ParserStage, result.parser_stage
+    assert_instance_of CodingAdventures::CompilerPipeline::ParserStage, result.parser_stage
     ast_dict = result.parser_stage.ast_dict
     assert_equal "Program", ast_dict["type"]
     assert_equal 1, ast_dict["statements"].length
@@ -51,7 +51,7 @@ class TestPipelineBasic < Minitest::Test
 
   def test_compiler_stage_has_instructions
     result = @pipeline.run("x = 1 + 2")
-    assert_instance_of CodingAdventures::Pipeline::CompilerStage, result.compiler_stage
+    assert_instance_of CodingAdventures::CompilerPipeline::CompilerStage, result.compiler_stage
     refute_empty result.compiler_stage.instructions_text
   end
 
@@ -67,7 +67,7 @@ class TestPipelineBasic < Minitest::Test
 
   def test_vm_stage_final_variables
     result = @pipeline.run("x = 1 + 2")
-    assert_instance_of CodingAdventures::Pipeline::VMStage, result.vm_stage
+    assert_instance_of CodingAdventures::CompilerPipeline::VMStage, result.vm_stage
     assert_equal({"x" => 3}, result.vm_stage.final_variables)
   end
 
@@ -84,7 +84,7 @@ end
 
 class TestPipelineComplex < Minitest::Test
   def setup
-    @pipeline = CodingAdventures::Pipeline::Orchestrator.new
+    @pipeline = CodingAdventures::CompilerPipeline::Orchestrator.new
   end
 
   def test_multiple_assignments
@@ -143,19 +143,19 @@ class TestAstToDict < Minitest::Test
   def test_number_literal
     node = CodingAdventures::Parser::NumberLiteral.new(value: 42)
     assert_equal({"type" => "NumberLiteral", "value" => 42},
-      CodingAdventures::Pipeline.ast_to_dict(node))
+      CodingAdventures::CompilerPipeline.ast_to_dict(node))
   end
 
   def test_string_literal
     node = CodingAdventures::Parser::StringLiteral.new(value: "hello")
     assert_equal({"type" => "StringLiteral", "value" => "hello"},
-      CodingAdventures::Pipeline.ast_to_dict(node))
+      CodingAdventures::CompilerPipeline.ast_to_dict(node))
   end
 
   def test_name
     node = CodingAdventures::Parser::Name.new(name: "x")
     assert_equal({"type" => "Name", "name" => "x"},
-      CodingAdventures::Pipeline.ast_to_dict(node))
+      CodingAdventures::CompilerPipeline.ast_to_dict(node))
   end
 
   def test_binary_op
@@ -164,7 +164,7 @@ class TestAstToDict < Minitest::Test
       op: "+",
       right: CodingAdventures::Parser::NumberLiteral.new(value: 2)
     )
-    d = CodingAdventures::Pipeline.ast_to_dict(node)
+    d = CodingAdventures::CompilerPipeline.ast_to_dict(node)
     assert_equal "BinaryOp", d["type"]
     assert_equal "+", d["op"]
     assert_equal({"type" => "NumberLiteral", "value" => 1}, d["left"])
@@ -176,7 +176,7 @@ class TestAstToDict < Minitest::Test
       target: CodingAdventures::Parser::Name.new(name: "x"),
       value: CodingAdventures::Parser::NumberLiteral.new(value: 42)
     )
-    d = CodingAdventures::Pipeline.ast_to_dict(node)
+    d = CodingAdventures::CompilerPipeline.ast_to_dict(node)
     assert_equal "Assignment", d["type"]
     assert_equal({"type" => "Name", "name" => "x"}, d["target"])
     assert_equal({"type" => "NumberLiteral", "value" => 42}, d["value"])
@@ -188,13 +188,13 @@ class TestAstToDict < Minitest::Test
       value: CodingAdventures::Parser::NumberLiteral.new(value: 1)
     )
     prog = CodingAdventures::Parser::Program.new(statements: [stmt])
-    d = CodingAdventures::Pipeline.ast_to_dict(prog)
+    d = CodingAdventures::CompilerPipeline.ast_to_dict(prog)
     assert_equal "Program", d["type"]
     assert_equal 1, d["statements"].length
   end
 
   def test_unknown_type_fallback
-    d = CodingAdventures::Pipeline.ast_to_dict("something else")
+    d = CodingAdventures::CompilerPipeline.ast_to_dict("something else")
     assert_equal "String", d["type"]
     assert d.key?("repr")
   end
@@ -207,7 +207,7 @@ class TestInstructionToText < Minitest::Test
       constants: [42],
       names: []
     )
-    text = CodingAdventures::Pipeline.instruction_to_text(code.instructions[0], code)
+    text = CodingAdventures::CompilerPipeline.instruction_to_text(code.instructions[0], code)
     assert_equal "LOAD_CONST 0 (42)", text
   end
 
@@ -217,7 +217,7 @@ class TestInstructionToText < Minitest::Test
       constants: [],
       names: ["x"]
     )
-    text = CodingAdventures::Pipeline.instruction_to_text(code.instructions[0], code)
+    text = CodingAdventures::CompilerPipeline.instruction_to_text(code.instructions[0], code)
     assert_equal 'STORE_NAME 0 ("x")', text
   end
 
@@ -227,7 +227,7 @@ class TestInstructionToText < Minitest::Test
       constants: [],
       names: ["y"]
     )
-    text = CodingAdventures::Pipeline.instruction_to_text(code.instructions[0], code)
+    text = CodingAdventures::CompilerPipeline.instruction_to_text(code.instructions[0], code)
     assert_equal 'LOAD_NAME 0 ("y")', text
   end
 
@@ -237,7 +237,7 @@ class TestInstructionToText < Minitest::Test
       constants: [],
       names: []
     )
-    text = CodingAdventures::Pipeline.instruction_to_text(code.instructions[0], code)
+    text = CodingAdventures::CompilerPipeline.instruction_to_text(code.instructions[0], code)
     assert_equal "ADD", text
   end
 
@@ -247,7 +247,7 @@ class TestInstructionToText < Minitest::Test
       constants: [],
       names: []
     )
-    text = CodingAdventures::Pipeline.instruction_to_text(code.instructions[0], code)
+    text = CodingAdventures::CompilerPipeline.instruction_to_text(code.instructions[0], code)
     assert_equal "HALT", text
   end
 
@@ -257,14 +257,14 @@ class TestInstructionToText < Minitest::Test
       constants: [42],
       names: []
     )
-    text = CodingAdventures::Pipeline.instruction_to_text(code.instructions[0], code)
+    text = CodingAdventures::CompilerPipeline.instruction_to_text(code.instructions[0], code)
     assert_equal "LOAD_CONST 99", text
   end
 end
 
 class TestStageDataclasses < Minitest::Test
   def setup
-    @pipeline = CodingAdventures::Pipeline::Orchestrator.new
+    @pipeline = CodingAdventures::CompilerPipeline::Orchestrator.new
   end
 
   def test_lexer_stage_tokens_are_array

@@ -18,7 +18,7 @@ jvm_simulator
 lexer
 logic_gates
 parser
-pipeline
+compiler_pipeline
 python_lexer
 python_parser
 riscv_simulator

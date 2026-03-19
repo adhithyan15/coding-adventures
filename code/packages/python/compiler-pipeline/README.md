@@ -1,6 +1,6 @@
-# Pipeline
+# Compiler Pipeline
 
-**Layer 10 of the computing stack** — the orchestrator that ties all packages together.
+**Layer 10 of the computing stack** — the compiler pipeline orchestrator that ties all packages together.
 
 ## What this package does
 
@@ -17,7 +17,7 @@ Each stage captures a snapshot of its output so the full transformation can be v
 ## Where it fits
 
 ```
-Logic Gates → Arithmetic → CPU → ARM → RISC-V → Assembler → Lexer → Parser → Compiler → VM → [Pipeline]
+Logic Gates → Arithmetic → CPU → ARM → RISC-V → Assembler → Lexer → Parser → Compiler → VM → [Compiler Pipeline]
 ```
 
 This package is the **top-level orchestrator** that imports and coordinates all other packages in the computing stack.
@@ -25,13 +25,13 @@ This package is the **top-level orchestrator** that imports and coordinates all 
 ## Installation
 
 ```bash
-uv add coding-adventures-pipeline
+uv add coding-adventures-compiler-pipeline
 ```
 
 ## Usage
 
 ```python
-from pipeline import Pipeline
+from compiler_pipeline import Pipeline
 
 result = Pipeline.run("print(1 + 2)", target="vm")
 

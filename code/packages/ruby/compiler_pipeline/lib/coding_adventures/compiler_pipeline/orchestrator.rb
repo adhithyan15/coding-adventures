@@ -38,7 +38,7 @@
 # - The VM stage shows the stack evolving as each instruction executes.
 
 module CodingAdventures
-  module Pipeline
+  module CompilerPipeline
     # Captured output from the lexer stage.
     LexerStage = Data.define(:tokens, :token_count, :source)
 
@@ -172,7 +172,7 @@ module CodingAdventures
 
         parser_stage = ParserStage.new(
           ast: ast,
-          ast_dict: Pipeline.ast_to_dict(ast)
+          ast_dict: CompilerPipeline.ast_to_dict(ast)
         )
 
         # ---------------------------------------------------------------
@@ -184,7 +184,7 @@ module CodingAdventures
         compiler_stage = CompilerStage.new(
           code: code,
           instructions_text: code.instructions.map { |instr|
-            Pipeline.instruction_to_text(instr, code)
+            CompilerPipeline.instruction_to_text(instr, code)
           },
           constants: code.constants.dup,
           names: code.names.dup

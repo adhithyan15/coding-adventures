@@ -18,7 +18,7 @@ jvm-simulator
 lexer
 logic-gates
 parser
-pipeline
+compiler-pipeline
 riscv-simulator
 ruby-lexer
 ruby-parser

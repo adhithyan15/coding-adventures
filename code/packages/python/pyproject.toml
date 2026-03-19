@@ -19,7 +19,7 @@ members = [
     "parser",
     "bytecode-compiler",
     "virtual-machine",
-    "pipeline",
+    "compiler-pipeline",
     "html-renderer",
     "clr-simulator",
 ]
@@ -39,6 +39,6 @@ coding-adventures-bytecode-compiler = { workspace = true }
 coding-adventures-virtual-machine = { workspace = true }
 coding-adventures-grammar-tools = { workspace = true }
 coding-adventures-jit-compiler = { workspace = true }
-coding-adventures-pipeline = { workspace = true }
+coding-adventures-compiler-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
 coding-adventures-clr-simulator = { workspace = true }
