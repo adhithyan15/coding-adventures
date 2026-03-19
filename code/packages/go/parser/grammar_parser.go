@@ -126,6 +126,14 @@ func stringToTokenType(id string) lexer.TokenType {
 	case "COLON": return lexer.TokenColon
 	case "NEWLINE": return lexer.TokenNewline
 	case "EOF": return lexer.TokenEOF
+	// JavaScript/TypeScript delimiter tokens
+	case "SEMICOLON": return lexer.TokenSemicolon
+	case "LBRACE": return lexer.TokenLBrace
+	case "RBRACE": return lexer.TokenRBrace
+	case "LBRACKET": return lexer.TokenLBracket
+	case "RBRACKET": return lexer.TokenRBracket
+	case "DOT": return lexer.TokenDot
+	case "BANG": return lexer.TokenBang
 	default: return lexer.TokenName
 	}
 }
