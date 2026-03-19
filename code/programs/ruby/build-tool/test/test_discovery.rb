@@ -108,7 +108,7 @@ class TestDiscovery < Minitest::Test
     result = BuildTool::Discovery.get_build_file(dir)
     assert_equal dir / "BUILD_mac", result
   ensure
-    FileUtils.rm_rf(dir)
+    FileUtils.rm_rf(dir) if dir
   end
 
   # -- discover_packages integration tests -------------------------------------
