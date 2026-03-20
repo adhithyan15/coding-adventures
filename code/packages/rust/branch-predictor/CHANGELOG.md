@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 (2026-03-20)
+
+### Added
+- Dependency on `state-machine` crate for formal DFA representations
+- `two_bit_dfa()` function that constructs a DFA modeling the two-bit saturating counter (4 states, 2 inputs, 8 transitions)
+- `one_bit_dfa()` function that constructs a DFA modeling the one-bit predictor (2 states, 2 inputs, 4 transitions)
+- `TwoBitState::to_dfa_name()` and `TwoBitState::from_dfa_name()` for converting between enum variants and DFA state name strings
+- DFA equivalence tests verifying that the DFA transition tables match the hand-coded enum transition methods
+- Lock-step tests walking the DFA and predictor simultaneously to confirm identical behavior on arbitrary input sequences
+- DFA completeness, validation, and accepts() tests for both one-bit and two-bit DFAs
+
 ## 0.1.0 (2026-03-18)
 
 ### Added
