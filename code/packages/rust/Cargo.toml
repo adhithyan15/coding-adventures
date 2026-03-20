@@ -29,4 +29,5 @@ members = [
     "json-lexer",
     "json-parser",
     "vendor-api-simulators",
+    "blas-library",
 ]

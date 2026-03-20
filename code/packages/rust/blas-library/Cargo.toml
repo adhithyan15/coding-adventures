@@ -1,0 +1,10 @@
+[package]
+name = "blas-library"
+version = "0.1.0"
+edition = "2021"
+description = "Pluggable BLAS library with 7 swappable backends (CPU, CUDA, Metal, OpenCL, Vulkan, WebGPU, OpenGL)"
+
+[dependencies]
+vendor-api-simulators = { path = "../vendor-api-simulators" }
+compute-runtime = { path = "../compute-runtime" }
+gpu-core = { path = "../gpu-core" }
