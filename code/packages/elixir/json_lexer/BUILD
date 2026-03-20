@@ -1,1 +1,1 @@
-elixir
+mix test
