@@ -109,6 +109,10 @@ pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
                     }
                 }
             }
+            "elixir" => {
+                let app_name = format!("coding_adventures_{}", dir_name.replace('-', "_"));
+                known.insert(app_name, pkg.name.clone());
+            }
             _ => {}
         }
     }
@@ -365,6 +369,32 @@ fn parse_rust_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<
 }
 
 // ---------------------------------------------------------------------------
+// Elixir dependency parsing
+// ---------------------------------------------------------------------------
+
+fn parse_elixir_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let mix_exs = pkg.path.join("mix.exs");
+    let data = match fs::read_to_string(&mix_exs) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+    for line in data.lines() {
+        if let Some(idx) = line.find("{:coding_adventures_") {
+            let start = idx + 2; // skip {:
+            let rest = &line[start..];
+            let end = rest.find(|c: char| !c.is_alphanumeric() && c != '_').unwrap_or(rest.len());
+            let app_name = rest[..end].to_lowercase();
+            if let Some(pkg_name) = known_names.get(&app_name) {
+                internal_deps.push(pkg_name.clone());
+            }
+        }
+    }
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -395,6 +425,7 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
             "ruby" => parse_ruby_deps(pkg, &known_names),
             "go" => parse_go_deps(pkg, &known_names),
             "rust" => parse_rust_deps(pkg, &known_names),
+            "elixir" => parse_elixir_deps(pkg, &known_names),
             _ => Vec::new(),
         };
 

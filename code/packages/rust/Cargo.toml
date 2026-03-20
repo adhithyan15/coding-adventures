@@ -13,4 +13,5 @@ members = [
     "hazard-detection",
     "cpu-simulator",
     "parser",
+    "loss-functions",
 ]

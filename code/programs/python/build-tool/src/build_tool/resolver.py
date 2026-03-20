@@ -252,6 +252,29 @@ def _parse_go_deps(package: Package, known_names: dict[str, str]) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# Elixir dependency parsing
+# ---------------------------------------------------------------------------
+
+def _parse_elixir_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from an Elixir mix.exs file."""
+    mix_exs = package.path / "mix.exs"
+    if not mix_exs.exists():
+        return []
+
+    text = mix_exs.read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    pattern = re.compile(r'\{:(coding_adventures_[a-z0-9_]+)')
+    for line in text.splitlines():
+        for match in pattern.finditer(line):
+            app_name = match.group(1).strip().lower()
+            if app_name in known_names:
+                internal_deps.append(known_names[app_name])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -288,6 +311,10 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
                         known[module_path] = pkg.name
                         break
 
+        elif pkg.language == "elixir":
+            app_name = f"coding_adventures_{pkg.path.name.replace('-', '_')}".lower()
+            known[app_name] = pkg.name
+
     return known
 
 
@@ -323,6 +350,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_ruby_deps(pkg, known_names)
         elif pkg.language == "go":
             deps = _parse_go_deps(pkg, known_names)
+        elif pkg.language == "elixir":
+            deps = _parse_elixir_deps(pkg, known_names)
         else:
             deps = []
 
