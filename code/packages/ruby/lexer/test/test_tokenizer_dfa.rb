@@ -311,7 +311,7 @@ class TestTokenizerDFA < Minitest::Test
   end
 
   def test_dfa_dispatch_matches_realistic_code
-    tokens = Tokenizer.new('if x == 1:\n    return "hello"', keywords: %w[if return]).tokenize
+    tokens = Tokenizer.new("if x == 1:\n    return \"hello\"", keywords: %w[if return]).tokenize
     # Should tokenize without error -- the DFA-driven dispatch handles
     # all character classes correctly.
     assert tokens.last.type == TT::EOF
