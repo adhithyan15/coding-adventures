@@ -29,3 +29,5 @@
 
 export { Graph, CycleError, NodeNotFoundError, EdgeNotFoundError } from "./graph.js";
 export { LabeledDirectedGraph } from "./labeled-graph.js";
+export { toDot, toMermaid, toAsciiTable } from "./visualization.js";
+export type { DotOptions, MermaidOptions } from "./visualization.js";

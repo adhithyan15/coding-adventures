@@ -34,6 +34,7 @@ from directed_graph.graph import (
     NodeNotFoundError,
 )
 from directed_graph.labeled_graph import LabeledDirectedGraph
+from directed_graph.visualization import to_ascii_table, to_dot, to_mermaid
 
 __all__ = [
     "DirectedGraph",
@@ -41,4 +42,7 @@ __all__ = [
     "CycleError",
     "NodeNotFoundError",
     "EdgeNotFoundError",
+    "to_dot",
+    "to_mermaid",
+    "to_ascii_table",
 ]
