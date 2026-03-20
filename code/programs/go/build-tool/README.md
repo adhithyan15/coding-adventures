@@ -4,7 +4,7 @@ The **primary build tool** for the coding-adventures monorepo. Compiled to a nat
 
 ## What it does
 
-This tool discovers packages in the monorepo via DIRS/BUILD files, resolves their inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source (or dependency source) has changed. Independent packages are built in parallel using Go goroutines.
+This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.
 
 ## Building
 
@@ -36,6 +36,9 @@ This produces a single static binary with no runtime dependencies.
 # Only build Python packages
 ./build-tool -language python
 
+# Custom git diff base
+./build-tool -diff-base origin/develop
+
 # Custom cache file location
 ./build-tool -cache-file /tmp/my-cache.json
 ```
@@ -48,19 +51,21 @@ This produces a single static binary with no runtime dependencies.
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to: python, ruby, go, or all |
+| `-language` | all | Filter to: python, ruby, go, rust, typescript, or all |
+| `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 
 ## Architecture
 
-The tool is organized into six internal packages, each responsible for one phase of the build pipeline:
+The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
 
-1. **discovery** -- Walks DIRS/BUILD files to find packages
-2. **resolver** -- Parses pyproject.toml, .gemspec, go.mod for dependencies
+1. **discovery** -- Recursively walks for `BUILD` files to find packages
+2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, and `package.json`
 3. **hasher** -- SHA256 hashing for change detection
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore
-6. **reporter** -- Terminal-friendly build report formatting
+6. **gitdiff** -- Git-based change detection for incremental builds
+7. **reporter** -- Terminal-friendly build report formatting
 
 ## Go concurrency advantage
 

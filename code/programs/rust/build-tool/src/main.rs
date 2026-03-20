@@ -1,7 +1,7 @@
 // Build Tool — Incremental, Parallel Monorepo Build System (Rust)
 //
 // This is a complete Rust port of the Go build tool for the coding-adventures
-// monorepo. It discovers packages via DIRS/BUILD files, resolves dependencies,
+// monorepo. It discovers packages via recursive BUILD file walking, resolves dependencies,
 // hashes source files, and only rebuilds packages whose source (or dependency
 // source) has changed. Independent packages are built in parallel using
 // Rayon's work-stealing thread pool.
@@ -9,7 +9,7 @@
 // # The build flow
 //
 //  1. Find the repo root (walk up looking for .git)
-//  2. Discover packages (walk DIRS/BUILD files under code/)
+//  2. Discover packages (walk BUILD files under code/)
 //  3. Filter by language if requested
 //  4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, Cargo.toml)
 //  5. Hash all packages and their dependencies
