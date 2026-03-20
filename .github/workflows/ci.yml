@@ -75,6 +75,9 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
