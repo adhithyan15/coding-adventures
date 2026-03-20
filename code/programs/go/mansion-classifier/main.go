@@ -2,14 +2,11 @@ package main
 
 import (
 	"fmt"
-
-	activation "github.com/adhithyan15/coding-adventures/code/packages/go/activation-functions"
-	loss "github.com/adhithyan15/coding-adventures/code/packages/go/loss-functions"
-	"github.com/adhithyan15/coding-adventures/code/packages/go/matrix"
+	"github.com/adhithyan15/coding-adventures/code/packages/go/perceptron"
 )
 
 func main() {
-	fmt.Println("\n--- Booting Go Mansion Classifier ---")
+	fmt.Println("\n--- Booting Go Mansion Classifier (OOP V2) ---")
 
 	houseData := [][]float64{
 		{4.5, 6.0}, {3.8, 5.0}, {1.5, 2.0},
@@ -19,60 +16,20 @@ func main() {
 		{1.0}, {1.0}, {0.0}, {0.0}, {1.0}, {0.0},
 	}
 
-	features := matrix.New2D(houseData)
-	trueLabels := matrix.New2D(targetData)
+	model := perceptron.New(0.1, 2000)
+	model.Fit(houseData, targetData, 400)
 
-	weights := matrix.New2D([][]float64{{0.0}, {0.0}})
-	bias := 0.0
-	lr := 0.1
-	epochs := 2000
-
-	for epoch := 0; epoch <= epochs; epoch++ {
-		// FORWARD
-		raw, _ := features.Dot(weights)
-		raw.AddScalar(bias)
-
-		linearProbs := make([]float64, features.Rows)
-		linearTruth := make([]float64, features.Rows)
-		gradData := make([][]float64, features.Rows)
-		
-		for i := 0; i < features.Rows; i++ {
-			linearProbs[i] = activation.Sigmoid(raw.Data[i][0])
-			linearTruth[i] = trueLabels.Data[i][0]
+	fmt.Println("\n--- Final Probability Inferences ---")
+	predictions := model.Predict(houseData)
+	for i, prob := range predictions {
+		truth := "Normal"
+		if targetData[i][0] == 1.0 {
+			truth = "Mansion"
 		}
-
-		// LOSS
-		logLoss, _ := loss.BCE(linearTruth, linearProbs)
-		lossGrad, _ := loss.BCED(linearTruth, linearProbs)
-
-		// BACKWARD
-		var biasGrad float64
-		for i := 0; i < features.Rows; i++ {
-			actGrad := activation.SigmoidDerivative(raw.Data[i][0])
-			combined := lossGrad[i] * actGrad
-			gradData[i] = []float64{combined}
-			biasGrad += combined
+		guess := "Normal"
+		if prob > 0.5 {
+			guess = "Mansion"
 		}
-
-		gradMatrix := matrix.New2D(gradData)
-		transposed := features.Transpose()
-		weightGrads, _ := transposed.Dot(gradMatrix)
-
-		// OPTIMIZE
-		scaledWeights := weightGrads.Scale(lr)
-		weights, _ = weights.Subtract(scaledWeights)
-		bias -= biasGrad * lr
-
-		if epoch%400 == 0 {
-			fmt.Printf("Epoch %4d | BCE Loss: %.4f | Bias: %.2f\n", epoch, logLoss, bias)
-		}
+		fmt.Printf("House %d (Truth: %s) -> System: %s (%.2f%%)\n", i+1, truth, guess, prob*100)
 	}
-
-	fmt.Println("\n--- Final Matrix Probability Inferences ---")
-    finalRaw, _ := features.Dot(weights)
-    finalRaw.AddScalar(bias)
-    for i := 0; i < trueLabels.Rows; i++ {
-        prob := activation.Sigmoid(finalRaw.Data[i][0])
-        fmt.Printf("House %d Probability of Mansion: %.2f%%\n", i+1, prob*100)
-    }
 }

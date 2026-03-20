@@ -1,0 +1,1 @@
+export { Perceptron } from './perceptron';
