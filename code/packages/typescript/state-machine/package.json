@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/state-machine",
+  "version": "0.1.0",
+  "description": "Formal automata (DFA, NFA, PDA, Modal) for parsing, protocols, and hardware — with full execution tracing",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "state-machine",
+    "dfa",
+    "nfa",
+    "pda",
+    "automata",
+    "parser",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

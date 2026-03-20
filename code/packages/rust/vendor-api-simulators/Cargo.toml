@@ -1,0 +1,12 @@
+[package]
+name = "vendor-api-simulators"
+version = "0.1.0"
+edition = "2021"
+description = "Six vendor API simulators (CUDA, OpenCL, Metal, Vulkan, WebGPU, OpenGL) — thin wrappers over the Vulkan-inspired compute runtime"
+
+[dependencies]
+compute-runtime = { path = "../compute-runtime" }
+gpu-core = { path = "../gpu-core" }
+device-simulator = { path = "../device-simulator" }
+bitflags = "2"
+thiserror = "2"

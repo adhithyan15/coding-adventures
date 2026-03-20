@@ -37,15 +37,15 @@ Typical usage::
 """
 
 from branch_predictor.base import BranchPredictor, Prediction
-from branch_predictor.btb import BTBEntry, BranchTargetBuffer
-from branch_predictor.one_bit import OneBitPredictor
+from branch_predictor.btb import BranchTargetBuffer, BTBEntry
+from branch_predictor.one_bit import ONE_BIT_DFA, OneBitPredictor
 from branch_predictor.static import (
     AlwaysNotTakenPredictor,
     AlwaysTakenPredictor,
     BackwardTakenForwardNotTaken,
 )
 from branch_predictor.stats import PredictionStats
-from branch_predictor.two_bit import TwoBitPredictor, TwoBitState
+from branch_predictor.two_bit import TWO_BIT_DFA, TwoBitPredictor, TwoBitState
 
 __all__ = [
     "AlwaysNotTakenPredictor",
@@ -54,9 +54,11 @@ __all__ = [
     "BackwardTakenForwardNotTaken",
     "BranchPredictor",
     "BranchTargetBuffer",
+    "ONE_BIT_DFA",
     "OneBitPredictor",
     "Prediction",
     "PredictionStats",
+    "TWO_BIT_DFA",
     "TwoBitPredictor",
     "TwoBitState",
 ]

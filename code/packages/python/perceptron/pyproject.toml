@@ -1,0 +1,13 @@
+[project]
+name = "perceptron"
+version = "0.1.0"
+description = "Object-Oriented Single Layer Neural Node"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-matrix", "coding-adventures-loss-functions", "activation-functions"
+]
+
+[tool.uv.sources]
+coding-adventures-matrix = { path = "../matrix", editable = true }
+coding-adventures-loss-functions = { path = "../loss-functions", editable = true }
+activation-functions = { path = "../activation-functions", editable = true }

@@ -1,0 +1,9 @@
+[project]
+name = "activation-functions"
+version = "0.1.0"
+description = "Mathematical constraints for Matrix topologies."
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

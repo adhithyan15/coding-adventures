@@ -37,7 +37,9 @@
 ///     - Alpha 21064: 2-bit counters with 2048 entries
 ///     - Intel Pentium: 2-bit counters with 256 entries
 ///     - Early ARM (ARM7): 2-bit counters with 64 entries
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+
+use state_machine::DFA;
 
 use crate::prediction::{BranchPredictor, Prediction};
 use crate::stats::PredictionStats;
@@ -127,6 +129,111 @@ impl TwoBitState {
     pub fn predicts_taken(self) -> bool {
         (self as u8) >= (TwoBitState::WeaklyTaken as u8)
     }
+
+    /// Convert a DFA state name string to a `TwoBitState` enum variant.
+    ///
+    /// The DFA uses human-readable string names for states. This function
+    /// maps them back to our efficient enum representation. This is the
+    /// bridge between the formal automata world (strings) and the hardware
+    /// simulation world (enums).
+    ///
+    /// # Panics
+    /// Panics if the state name is not one of the four known names.
+    pub fn from_dfa_name(name: &str) -> TwoBitState {
+        match name {
+            "SNT" => TwoBitState::StronglyNotTaken,
+            "WNT" => TwoBitState::WeaklyNotTaken,
+            "WT" => TwoBitState::WeaklyTaken,
+            "ST" => TwoBitState::StronglyTaken,
+            _ => panic!("Unknown two-bit DFA state name: '{}'", name),
+        }
+    }
+
+    /// Convert this `TwoBitState` to the DFA state name string.
+    ///
+    /// This is the inverse of `from_dfa_name`. The names are short
+    /// abbreviations matching the state diagram in the module docs.
+    pub fn to_dfa_name(self) -> &'static str {
+        match self {
+            TwoBitState::StronglyNotTaken => "SNT",
+            TwoBitState::WeaklyNotTaken => "WNT",
+            TwoBitState::WeaklyTaken => "WT",
+            TwoBitState::StronglyTaken => "ST",
+        }
+    }
+}
+
+/// Build a DFA that models the two-bit saturating counter.
+///
+/// This constructs a formal DFA from the `state_machine` crate whose
+/// transition function is exactly the two-bit saturating counter logic:
+///
+/// ```text
+///     States:      {SNT, WNT, WT, ST}
+///     Alphabet:    {taken, not_taken}
+///     Transitions: (SNT, taken)     -> WNT
+///                  (SNT, not_taken) -> SNT   (saturated)
+///                  (WNT, taken)     -> WT
+///                  (WNT, not_taken) -> SNT
+///                  (WT,  taken)     -> ST
+///                  (WT,  not_taken) -> WNT
+///                  (ST,  taken)     -> ST    (saturated)
+///                  (ST,  not_taken) -> WT
+///     Initial:     WNT (the common textbook default)
+///     Accepting:   {WT, ST}  (states that predict "taken")
+/// ```
+///
+/// The accepting states are the "taken" states (WT and ST), so
+/// `dfa.accepts(sequence)` answers: "after this branch history,
+/// would the predictor predict taken?"
+///
+/// # Example
+/// ```
+/// use branch_predictor::two_bit::two_bit_dfa;
+///
+/// let dfa = two_bit_dfa();
+/// // Starting at WNT, one "taken" moves to WT (an accepting state)
+/// assert!(dfa.accepts(&["taken"]));
+/// // Starting at WNT, one "not_taken" moves to SNT (not accepting)
+/// assert!(!dfa.accepts(&["not_taken"]));
+/// ```
+pub fn two_bit_dfa() -> DFA {
+    let states: HashSet<String> = HashSet::from([
+        "SNT".to_string(),
+        "WNT".to_string(),
+        "WT".to_string(),
+        "ST".to_string(),
+    ]);
+
+    let alphabet: HashSet<String> = HashSet::from([
+        "taken".to_string(),
+        "not_taken".to_string(),
+    ]);
+
+    let transitions: HashMap<(String, String), String> = HashMap::from([
+        // SNT transitions
+        (("SNT".to_string(), "taken".to_string()), "WNT".to_string()),
+        (("SNT".to_string(), "not_taken".to_string()), "SNT".to_string()),
+        // WNT transitions
+        (("WNT".to_string(), "taken".to_string()), "WT".to_string()),
+        (("WNT".to_string(), "not_taken".to_string()), "SNT".to_string()),
+        // WT transitions
+        (("WT".to_string(), "taken".to_string()), "ST".to_string()),
+        (("WT".to_string(), "not_taken".to_string()), "WNT".to_string()),
+        // ST transitions
+        (("ST".to_string(), "taken".to_string()), "ST".to_string()),
+        (("ST".to_string(), "not_taken".to_string()), "WT".to_string()),
+    ]);
+
+    // Initial state: WNT (the common textbook default).
+    // Accepting states: WT and ST (states that predict "taken").
+    let accepting: HashSet<String> = HashSet::from([
+        "WT".to_string(),
+        "ST".to_string(),
+    ]);
+
+    DFA::new(states, alphabet, transitions, "WNT".to_string(), accepting)
+        .expect("two_bit_dfa: DFA construction must not fail for known-good inputs")
 }
 
 /// 2-bit saturating counter predictor -- the textbook classic.
@@ -435,5 +542,161 @@ mod tests {
             pred.get_branch_state(0x200),
             TwoBitState::StronglyNotTaken
         );
+    }
+
+    // ── DFA equivalence tests ─────────────────────────────────────
+
+    #[test]
+    fn test_dfa_construction() {
+        let dfa = two_bit_dfa();
+        assert_eq!(dfa.states().len(), 4);
+        assert_eq!(dfa.alphabet().len(), 2);
+        assert_eq!(dfa.initial(), "WNT");
+        assert!(dfa.accepting().contains("WT"));
+        assert!(dfa.accepting().contains("ST"));
+        assert!(!dfa.accepting().contains("SNT"));
+        assert!(!dfa.accepting().contains("WNT"));
+    }
+
+    #[test]
+    fn test_dfa_is_complete() {
+        let dfa = two_bit_dfa();
+        assert!(dfa.is_complete());
+    }
+
+    #[test]
+    fn test_dfa_no_warnings() {
+        let dfa = two_bit_dfa();
+        assert!(dfa.validate().is_empty());
+    }
+
+    #[test]
+    fn test_dfa_taken_transitions_match_enum() {
+        // Verify that every "taken" transition in the DFA matches
+        // the TwoBitState::taken_outcome() method.
+        let all_states = [
+            TwoBitState::StronglyNotTaken,
+            TwoBitState::WeaklyNotTaken,
+            TwoBitState::WeaklyTaken,
+            TwoBitState::StronglyTaken,
+        ];
+        let dfa = two_bit_dfa();
+        for state in &all_states {
+            let dfa_name = state.to_dfa_name();
+            let expected = state.taken_outcome().to_dfa_name();
+            let key = (dfa_name.to_string(), "taken".to_string());
+            let actual = dfa.transitions().get(&key).expect("transition must exist");
+            assert_eq!(
+                actual, expected,
+                "DFA taken transition from {} should be {} but was {}",
+                dfa_name, expected, actual
+            );
+        }
+    }
+
+    #[test]
+    fn test_dfa_not_taken_transitions_match_enum() {
+        // Verify that every "not_taken" transition in the DFA matches
+        // the TwoBitState::not_taken_outcome() method.
+        let all_states = [
+            TwoBitState::StronglyNotTaken,
+            TwoBitState::WeaklyNotTaken,
+            TwoBitState::WeaklyTaken,
+            TwoBitState::StronglyTaken,
+        ];
+        let dfa = two_bit_dfa();
+        for state in &all_states {
+            let dfa_name = state.to_dfa_name();
+            let expected = state.not_taken_outcome().to_dfa_name();
+            let key = (dfa_name.to_string(), "not_taken".to_string());
+            let actual = dfa.transitions().get(&key).expect("transition must exist");
+            assert_eq!(
+                actual, expected,
+                "DFA not_taken transition from {} should be {} but was {}",
+                dfa_name, expected, actual
+            );
+        }
+    }
+
+    #[test]
+    fn test_dfa_accepts_predicts_taken() {
+        let dfa = two_bit_dfa();
+        // From WNT, one taken -> WT (accepting, predicts taken)
+        assert!(dfa.accepts(&["taken"]));
+        // From WNT, two taken -> ST (accepting)
+        assert!(dfa.accepts(&["taken", "taken"]));
+        // From WNT, not_taken -> SNT (not accepting)
+        assert!(!dfa.accepts(&["not_taken"]));
+        // From WNT, taken then not_taken -> WNT (not accepting)
+        assert!(!dfa.accepts(&["taken", "not_taken"]));
+    }
+
+    #[test]
+    fn test_dfa_saturation() {
+        let dfa = two_bit_dfa();
+        // Many taken inputs should stay in ST (accepting)
+        assert!(dfa.accepts(&["taken", "taken", "taken", "taken", "taken"]));
+        // Many not_taken inputs should stay in SNT (not accepting)
+        assert!(!dfa.accepts(&["not_taken", "not_taken", "not_taken", "not_taken"]));
+    }
+
+    #[test]
+    fn test_dfa_loop_hysteresis() {
+        let dfa = two_bit_dfa();
+        // Simulate a loop: many taken, then one not_taken.
+        // Starting at WNT: T->WT, T->ST, T->ST, T->ST, NT->WT
+        // WT is accepting, so the predictor still predicts taken after one NT.
+        assert!(dfa.accepts(&["taken", "taken", "taken", "taken", "not_taken"]));
+    }
+
+    #[test]
+    fn test_dfa_name_roundtrip() {
+        let all_states = [
+            TwoBitState::StronglyNotTaken,
+            TwoBitState::WeaklyNotTaken,
+            TwoBitState::WeaklyTaken,
+            TwoBitState::StronglyTaken,
+        ];
+        for state in &all_states {
+            let name = state.to_dfa_name();
+            let recovered = TwoBitState::from_dfa_name(name);
+            assert_eq!(*state, recovered);
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "Unknown two-bit DFA state name")]
+    fn test_dfa_name_unknown_panics() {
+        TwoBitState::from_dfa_name("BOGUS");
+    }
+
+    #[test]
+    fn test_dfa_process_matches_predictor() {
+        // Walk the DFA and the predictor in lock-step and verify they agree.
+        let mut dfa = two_bit_dfa();
+        let mut pred = TwoBitPredictor::new(1024, TwoBitState::WeaklyNotTaken);
+        let sequence = [true, true, false, true, false, false, true, true, true, false];
+
+        for &taken in &sequence {
+            // Before update, check prediction matches DFA accepting
+            let dfa_predicts_taken = dfa.accepting().contains(dfa.current_state());
+            let pred_predicts_taken = pred.get_branch_state(0x100).predicts_taken();
+            assert_eq!(
+                dfa_predicts_taken, pred_predicts_taken,
+                "DFA state {} (accepts={}) disagrees with predictor state {:?} (predicts_taken={})",
+                dfa.current_state(), dfa_predicts_taken,
+                pred.get_branch_state(0x100), pred_predicts_taken
+            );
+
+            // Transition both
+            let event = if taken { "taken" } else { "not_taken" };
+            dfa.process(event).unwrap();
+            pred.update(0x100, taken, None);
+
+            // After update, verify DFA state matches predictor state
+            let dfa_state = TwoBitState::from_dfa_name(dfa.current_state());
+            let pred_state = pred.get_branch_state(0x100);
+            assert_eq!(dfa_state, pred_state);
+        }
     }
 }

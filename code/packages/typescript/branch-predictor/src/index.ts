@@ -41,7 +41,13 @@
 
 export type { BranchPredictor, Prediction } from "./base.js";
 export { BTBEntry, BranchTargetBuffer, createBTBEntry } from "./btb.js";
-export { OneBitPredictor } from "./one-bit.js";
+export {
+  ONE_BIT_BOOL_TO_DFA_STATE,
+  ONE_BIT_DFA,
+  ONE_BIT_DFA_STATE_TO_BOOL,
+  OneBitPredictor,
+  oneBitTransitionViaDFA,
+} from "./one-bit.js";
 export {
   AlwaysNotTakenPredictor,
   AlwaysTakenPredictor,
@@ -49,9 +55,13 @@ export {
 } from "./static.js";
 export { PredictionStats } from "./stats.js";
 export {
+  DFA_STATE_TO_ENUM,
+  ENUM_TO_DFA_STATE,
+  TWO_BIT_DFA,
   TwoBitPredictor,
   TwoBitState,
   notTakenOutcome,
   predictsTaken,
   takenOutcome,
+  transitionViaDFA,
 } from "./two-bit.js";
