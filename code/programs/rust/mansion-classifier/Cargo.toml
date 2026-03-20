@@ -7,3 +7,4 @@ edition = "2021"
 matrix = { path = "../../../packages/rust/matrix" }
 loss-functions = { path = "../../../packages/rust/loss-functions" }
 activation-functions = { path = "../../../packages/rust/activation-functions" }
+perceptron = { path = "../../../packages/rust/perceptron" }
