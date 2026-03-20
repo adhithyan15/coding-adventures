@@ -30,4 +30,5 @@ members = [
     "json-parser",
     "vendor-api-simulators",
     "state-machine",
+    "blas-library",
 ]
