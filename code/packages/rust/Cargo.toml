@@ -31,4 +31,5 @@ members = [
     "vendor-api-simulators",
     "state-machine",
     "blas-library",
+    "tree",
 ]
