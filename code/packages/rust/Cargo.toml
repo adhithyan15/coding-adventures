@@ -21,5 +21,6 @@ members = [
     "device-simulator",
     "compute-runtime",
     "jit-compiler",
+    "html-renderer",
     "matrix",
 ]
