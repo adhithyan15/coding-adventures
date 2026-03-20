@@ -22,6 +22,9 @@ members = [
     "pipeline",
     "html-renderer",
     "clr-simulator",
+    "fp-arithmetic",
+    "clock",
+    "gpu-core",
 ]
 
 [tool.uv.sources]
@@ -42,3 +45,6 @@ coding-adventures-jit-compiler = { workspace = true }
 coding-adventures-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
 coding-adventures-clr-simulator = { workspace = true }
+coding-adventures-fp-arithmetic = { workspace = true }
+coding-adventures-clock = { workspace = true }
+coding-adventures-gpu-core = { workspace = true }

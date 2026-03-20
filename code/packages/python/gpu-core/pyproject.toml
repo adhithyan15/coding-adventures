@@ -22,7 +22,6 @@ classifiers = [
 ]
 dependencies = [
     "coding-adventures-fp-arithmetic",
-    "coding-adventures-clock",
 ]
 
 [project.urls]
