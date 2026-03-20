@@ -85,6 +85,7 @@ export interface TokenDefinition {
   readonly pattern: string;
   readonly isRegex: boolean;
   readonly lineNumber: number;
+  readonly alias?: string;
 }
 
 /**
@@ -98,6 +99,9 @@ export interface TokenDefinition {
 export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
   readonly keywords: readonly string[];
+  readonly mode?: string;
+  readonly skipDefinitions?: readonly TokenDefinition[];
+  readonly reservedKeywords?: readonly string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -112,7 +116,14 @@ export interface TokenGrammar {
  * actually exists.
  */
 export function tokenNames(grammar: TokenGrammar): Set<string> {
-  return new Set(grammar.definitions.map((d) => d.name));
+  const names = new Set<string>();
+  for (const d of grammar.definitions) {
+    names.add(d.name);
+    if (d.alias) {
+      names.add(d.alias);
+    }
+  }
+  return names;
 }
 
 // ---------------------------------------------------------------------------
@@ -137,130 +148,217 @@ export function tokenNames(grammar: TokenGrammar): Set<string> {
  * @returns A TokenGrammar containing all parsed definitions and keywords.
  * @throws TokenGrammarError if any line cannot be parsed.
  */
+/**
+ * Parse a single token definition line into a TokenDefinition.
+ *
+ * Handles both forms:
+ *   NAME = /pattern/
+ *   NAME = "literal"
+ *   NAME = /pattern/ -> ALIAS
+ *   NAME = "literal" -> ALIAS
+ *
+ * @param namePart - The token name (left side of =).
+ * @param patternPart - Everything after the = sign.
+ * @param lineNumber - The 1-based line number for error reporting.
+ * @returns A TokenDefinition.
+ */
+function parseDefinition(
+  namePart: string,
+  patternPart: string,
+  lineNumber: number,
+): TokenDefinition {
+  // Check for alias: "-> ALIAS" at the end
+  let alias: string | undefined;
+  let patternStr = patternPart;
+  const arrowIndex = patternStr.indexOf("->");
+  if (arrowIndex !== -1) {
+    const aliasStr = patternStr.slice(arrowIndex + 2).trim();
+    if (!aliasStr) {
+      throw new TokenGrammarError(
+        `Missing alias name after '->' for token '${namePart}'`,
+        lineNumber,
+      );
+    }
+    alias = aliasStr;
+    patternStr = patternStr.slice(0, arrowIndex).trim();
+  }
+
+  if (!patternStr) {
+    throw new TokenGrammarError(
+      `Missing pattern after '=' for token '${namePart}'`,
+      lineNumber,
+    );
+  }
+
+  if (patternStr.startsWith("/")) {
+    if (!patternStr.endsWith("/")) {
+      throw new TokenGrammarError(
+        `Unclosed regex pattern for token '${namePart}'`,
+        lineNumber,
+      );
+    }
+    const regexBody = patternStr.slice(1, -1);
+    if (!regexBody) {
+      throw new TokenGrammarError(
+        `Empty regex pattern for token '${namePart}'`,
+        lineNumber,
+      );
+    }
+    return { name: namePart, pattern: regexBody, isRegex: true, lineNumber, alias };
+  } else if (patternStr.startsWith('"')) {
+    if (!patternStr.endsWith('"')) {
+      throw new TokenGrammarError(
+        `Unclosed literal pattern for token '${namePart}'`,
+        lineNumber,
+      );
+    }
+    const literalBody = patternStr.slice(1, -1);
+    if (!literalBody) {
+      throw new TokenGrammarError(
+        `Empty literal pattern for token '${namePart}'`,
+        lineNumber,
+      );
+    }
+    return { name: namePart, pattern: literalBody, isRegex: false, lineNumber, alias };
+  } else {
+    throw new TokenGrammarError(
+      `Pattern for token '${namePart}' must be /regex/ or ` +
+        `"literal", got: '${patternStr}'`,
+      lineNumber,
+    );
+  }
+}
+
 export function parseTokenGrammar(source: string): TokenGrammar {
   const lines = source.split("\n");
   const definitions: TokenDefinition[] = [];
   const keywords: string[] = [];
-  let inKeywords = false;
+  const skipDefinitions: TokenDefinition[] = [];
+  const reservedKeywords: string[] = [];
+  let mode: string | undefined;
 
-  // The identifier pattern: must start with a letter or underscore,
-  // followed by letters, digits, or underscores.
+  // Sections: "definitions" (default), "keywords", "skip", "reserved"
+  let currentSection = "definitions";
+
   const identifierPattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
   for (let i = 0; i < lines.length; i++) {
     const lineNumber = i + 1;
-
-    // Strip trailing whitespace but preserve leading whitespace
-    // (we need it to detect keyword entries).
     const line = lines[i].replace(/\s+$/, "");
-
-    // --- Blank lines and comments are always skipped ---
     const stripped = line.trim();
+
+    // Blank lines and comments are always skipped
     if (stripped === "" || stripped.startsWith("#")) {
       continue;
     }
 
-    // --- Keywords section header ---
-    if (stripped === "keywords:" || stripped === "keywords :") {
-      inKeywords = true;
+    // --- Mode directive ---
+    if (stripped.startsWith("mode:") || stripped.startsWith("mode :")) {
+      const modeValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!modeValue) {
+        throw new TokenGrammarError(
+          "Missing mode value after 'mode:'",
+          lineNumber,
+        );
+      }
+      mode = modeValue;
       continue;
     }
 
-    // --- Inside keywords section ---
-    if (inKeywords) {
-      // Keywords are indented lines. A non-indented line that isn't
-      // blank or a comment means we've left the keywords section.
-      if (line[0] === " " || line[0] === "\t") {
-        if (stripped) {
-          keywords.push(stripped);
-        }
-        continue;
-      } else {
-        // We've exited the keywords section. Fall through to
-        // parse this line as a normal definition.
-        inKeywords = false;
+    // --- Section headers ---
+    if (stripped === "keywords:" || stripped === "keywords :") {
+      currentSection = "keywords";
+      continue;
+    }
+    if (stripped === "skip:" || stripped === "skip :") {
+      currentSection = "skip";
+      continue;
+    }
+    if (stripped === "reserved:" || stripped === "reserved :") {
+      currentSection = "reserved";
+      continue;
+    }
+
+    // --- Inside a section ---
+    const isIndented = line[0] === " " || line[0] === "\t";
+
+    if (isIndented && currentSection === "keywords") {
+      if (stripped) {
+        keywords.push(stripped);
       }
+      continue;
+    }
+
+    if (isIndented && currentSection === "reserved") {
+      if (stripped) {
+        reservedKeywords.push(stripped);
+      }
+      continue;
+    }
+
+    if (isIndented && currentSection === "skip") {
+      // Skip definitions are indented token definitions
+      const eqIndex = stripped.indexOf("=");
+      if (eqIndex === -1) {
+        throw new TokenGrammarError(
+          `Expected skip definition (NAME = pattern), got: '${stripped}'`,
+          lineNumber,
+        );
+      }
+      const skipName = stripped.slice(0, eqIndex).trim();
+      const skipPattern = stripped.slice(eqIndex + 1).trim();
+      if (!skipPattern) {
+        throw new TokenGrammarError(
+          `Missing pattern after '=' for skip token '${skipName}'`,
+          lineNumber,
+        );
+      }
+      skipDefinitions.push(parseDefinition(skipName, skipPattern, lineNumber));
+      continue;
+    }
+
+    // Non-indented line exits any section
+    if (!isIndented && currentSection !== "definitions") {
+      currentSection = "definitions";
     }
 
     // --- Token definition ---
-    // Expected format: NAME = /pattern/  or  NAME = "literal"
-    // We split on the first '=' to separate name from pattern.
     const eqIndex = line.indexOf("=");
     if (eqIndex === -1) {
       throw new TokenGrammarError(
         `Expected token definition (NAME = pattern), got: '${stripped}'`,
-        lineNumber
+        lineNumber,
       );
     }
 
     const namePart = line.slice(0, eqIndex).trim();
     const patternPart = line.slice(eqIndex + 1).trim();
 
-    // Validate that we got a name.
     if (!namePart) {
       throw new TokenGrammarError(
         "Missing token name before '='",
-        lineNumber
+        lineNumber,
       );
     }
 
-    // Validate the name looks like an identifier.
     if (!identifierPattern.test(namePart)) {
       throw new TokenGrammarError(
         `Invalid token name: '${namePart}' ` +
           "(must be an identifier like NAME or PLUS_EQUALS)",
-        lineNumber
+        lineNumber,
       );
     }
 
-    // Parse the pattern: either /regex/ or "literal".
-    if (!patternPart) {
-      throw new TokenGrammarError(
-        `Missing pattern after '=' for token '${namePart}'`,
-        lineNumber
-      );
-    }
-
-    if (patternPart.startsWith("/") && patternPart.endsWith("/")) {
-      // Regex pattern — strip the delimiters.
-      const regexBody = patternPart.slice(1, -1);
-      if (!regexBody) {
-        throw new TokenGrammarError(
-          `Empty regex pattern for token '${namePart}'`,
-          lineNumber
-        );
-      }
-      definitions.push({
-        name: namePart,
-        pattern: regexBody,
-        isRegex: true,
-        lineNumber,
-      });
-    } else if (patternPart.startsWith('"') && patternPart.endsWith('"')) {
-      // Literal pattern — strip the quotes.
-      const literalBody = patternPart.slice(1, -1);
-      if (!literalBody) {
-        throw new TokenGrammarError(
-          `Empty literal pattern for token '${namePart}'`,
-          lineNumber
-        );
-      }
-      definitions.push({
-        name: namePart,
-        pattern: literalBody,
-        isRegex: false,
-        lineNumber,
-      });
-    } else {
-      throw new TokenGrammarError(
-        `Pattern for token '${namePart}' must be /regex/ or ` +
-          `"literal", got: '${patternPart}'`,
-        lineNumber
-      );
-    }
+    definitions.push(parseDefinition(namePart, patternPart, lineNumber));
   }
 
-  return { definitions, keywords };
+  return {
+    definitions,
+    keywords,
+    mode,
+    skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
+    reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -288,49 +386,66 @@ export function parseTokenGrammar(source: string): TokenGrammar {
  * @param grammar - A parsed TokenGrammar to validate.
  * @returns A list of warning/error strings. An empty list means no issues.
  */
-export function validateTokenGrammar(grammar: TokenGrammar): string[] {
-  const issues: string[] = [];
-  const seenNames = new Map<string, number>();
-
-  for (const defn of grammar.definitions) {
-    // --- Duplicate check ---
+/**
+ * Validate a single list of definitions for common problems.
+ */
+function validateDefinitions(
+  defs: readonly TokenDefinition[],
+  seenNames: Map<string, number>,
+  issues: string[],
+  label: string,
+): void {
+  for (const defn of defs) {
     const firstLine = seenNames.get(defn.name);
     if (firstLine !== undefined) {
       issues.push(
-        `Line ${defn.lineNumber}: Duplicate token name ` +
-          `'${defn.name}' (first defined on line ${firstLine})`
+        `Line ${defn.lineNumber}: Duplicate ${label} name ` +
+          `'${defn.name}' (first defined on line ${firstLine})`,
       );
     } else {
       seenNames.set(defn.name, defn.lineNumber);
     }
 
-    // --- Empty pattern check ---
     if (!defn.pattern) {
       issues.push(
-        `Line ${defn.lineNumber}: Empty pattern for token '${defn.name}'`
+        `Line ${defn.lineNumber}: Empty pattern for ${label} '${defn.name}'`,
       );
     }
 
-    // --- Invalid regex check ---
     if (defn.isRegex) {
       try {
         new RegExp(defn.pattern);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         issues.push(
-          `Line ${defn.lineNumber}: Invalid regex for token ` +
-            `'${defn.name}': ${message}`
+          `Line ${defn.lineNumber}: Invalid regex for ${label} ` +
+            `'${defn.name}': ${message}`,
         );
       }
     }
 
-    // --- Naming convention check ---
     if (defn.name !== defn.name.toUpperCase()) {
       issues.push(
-        `Line ${defn.lineNumber}: Token name '${defn.name}' ` +
-          `should be UPPER_CASE`
+        `Line ${defn.lineNumber}: ${label} name '${defn.name}' ` +
+          `should be UPPER_CASE`,
       );
     }
+  }
+}
+
+export function validateTokenGrammar(grammar: TokenGrammar): string[] {
+  const issues: string[] = [];
+  const seenNames = new Map<string, number>();
+
+  validateDefinitions(grammar.definitions, seenNames, issues, "token");
+
+  if (grammar.skipDefinitions) {
+    validateDefinitions(grammar.skipDefinitions, seenNames, issues, "skip token");
+  }
+
+  // Validate mode value
+  if (grammar.mode !== undefined && grammar.mode !== "indentation") {
+    issues.push(`Unknown mode: '${grammar.mode}'`);
   }
 
   return issues;
