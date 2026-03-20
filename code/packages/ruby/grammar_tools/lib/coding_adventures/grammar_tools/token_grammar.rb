@@ -55,41 +55,163 @@ module CodingAdventures
     #   pattern     -- the pattern string (regex body or literal body)
     #   is_regex    -- true if written as /regex/, false if "literal"
     #   line_number -- 1-based line where this definition appeared
-    TokenDefinition = Data.define(:name, :pattern, :is_regex, :line_number)
+    #   alias_name  -- optional type alias (e.g. STRING_DQ -> STRING means
+    #                  alias_name is "STRING"). The lexer emits the alias
+    #                  as the token type instead of the definition name.
+    TokenDefinition = Data.define(:name, :pattern, :is_regex, :line_number, :alias_name) do
+      def initialize(name:, pattern:, is_regex:, line_number:, alias_name: nil)
+        super(name: name, pattern: pattern, is_regex: is_regex,
+              line_number: line_number, alias_name: alias_name)
+      end
+    end
 
     # The complete contents of a parsed .tokens file.
     #
-    # definitions -- ordered list of TokenDefinition (order matters for
-    #                first-match-wins semantics)
-    # keywords    -- list of reserved words from the keywords: section
+    # definitions       -- ordered list of TokenDefinition (order = priority)
+    # keywords          -- list of reserved words from the keywords: section
+    # mode              -- optional lexer mode (e.g. "indentation")
+    # skip_definitions  -- patterns matched and consumed without producing tokens
+    # reserved_keywords -- keywords that cause lex errors if used as identifiers
     class TokenGrammar
-      attr_reader :definitions, :keywords
+      attr_reader :definitions, :keywords, :skip_definitions, :reserved_keywords
+      attr_accessor :mode
 
-      def initialize(definitions: [], keywords: [])
+      def initialize(definitions: [], keywords: [], mode: nil,
+                     skip_definitions: [], reserved_keywords: [])
         @definitions = definitions
         @keywords = keywords
+        @mode = mode
+        @skip_definitions = skip_definitions
+        @reserved_keywords = reserved_keywords
       end
 
-      # Return the set of all defined token names.
+      # Return the set of all defined token names (including aliases).
       def token_names
-        @definitions.map(&:name).to_set
+        names = Set.new
+        @definitions.each do |d|
+          names.add(d.name)
+          names.add(d.alias_name) if d.alias_name
+        end
+        names
+      end
+
+      # Return the set of token names as the parser will see them.
+      # For definitions with aliases, returns the alias (not the name).
+      def effective_token_names
+        @definitions.map { |d| d.alias_name || d.name }.to_set
+      end
+    end
+
+    # Parse a single token definition's pattern and optional -> ALIAS suffix.
+    #
+    # Returns a TokenDefinition. The pattern_part may have a "-> ALIAS"
+    # suffix after the closing delimiter.
+    def self.parse_definition(pattern_part, name_part, line_number)
+      alias_name = nil
+
+      if pattern_part.start_with?("/")
+        # Regex pattern -- find the closing /
+        last_slash = pattern_part.rindex("/")
+        if last_slash == 0
+          raise TokenGrammarError.new(
+            "Unclosed regex pattern for token #{name_part.inspect}",
+            line_number
+          )
+        end
+        regex_body = pattern_part[1...last_slash]
+        remainder = pattern_part[(last_slash + 1)..].strip
+
+        if regex_body.empty?
+          raise TokenGrammarError.new(
+            "Empty regex pattern for token #{name_part.inspect}",
+            line_number
+          )
+        end
+
+        if remainder.start_with?("->")
+          alias_name = remainder[2..].strip
+          if alias_name.empty?
+            raise TokenGrammarError.new(
+              "Missing alias after '->' for token #{name_part.inspect}",
+              line_number
+            )
+          end
+        elsif !remainder.empty?
+          raise TokenGrammarError.new(
+            "Unexpected text after pattern for token #{name_part.inspect}: #{remainder.inspect}",
+            line_number
+          )
+        end
+
+        TokenDefinition.new(
+          name: name_part, pattern: regex_body,
+          is_regex: true, line_number: line_number, alias_name: alias_name
+        )
+
+      elsif pattern_part.start_with?('"')
+        # Literal pattern -- find the closing "
+        close_quote = pattern_part.index('"', 1)
+        unless close_quote
+          raise TokenGrammarError.new(
+            "Unclosed literal pattern for token #{name_part.inspect}",
+            line_number
+          )
+        end
+        literal_body = pattern_part[1...close_quote]
+        remainder = pattern_part[(close_quote + 1)..].strip
+
+        if literal_body.empty?
+          raise TokenGrammarError.new(
+            "Empty literal pattern for token #{name_part.inspect}",
+            line_number
+          )
+        end
+
+        if remainder.start_with?("->")
+          alias_name = remainder[2..].strip
+          if alias_name.empty?
+            raise TokenGrammarError.new(
+              "Missing alias after '->' for token #{name_part.inspect}",
+              line_number
+            )
+          end
+        elsif !remainder.empty?
+          raise TokenGrammarError.new(
+            "Unexpected text after pattern for token #{name_part.inspect}: #{remainder.inspect}",
+            line_number
+          )
+        end
+
+        TokenDefinition.new(
+          name: name_part, pattern: literal_body,
+          is_regex: false, line_number: line_number, alias_name: alias_name
+        )
+
+      else
+        raise TokenGrammarError.new(
+          "Pattern for token #{name_part.inspect} must be /regex/ or \"literal\", got: #{pattern_part.inspect}",
+          line_number
+        )
       end
     end
 
     # Parse the text of a .tokens file into a TokenGrammar.
     #
-    # The parser operates line-by-line with two modes:
+    # The parser operates line-by-line with several modes:
     #
-    # 1. Definition mode (default) -- each line is a comment, blank, or
-    #    token definition of the form NAME = /pattern/ or NAME = "literal".
+    # 1. Definition mode (default) -- each line is a comment, blank, section
+    #    header, or token definition.
+    # 2. Keywords mode -- entered on "keywords:" line.
+    # 3. Reserved mode -- entered on "reserved:" line.
+    # 4. Skip mode -- entered on "skip:" line. Contains token definitions
+    #    for patterns that are consumed without producing tokens.
     #
-    # 2. Keywords mode -- entered on "keywords:" line. Subsequent indented
-    #    lines are keywords until a non-indented, non-blank line appears.
+    # The "mode:" directive sets the lexer mode (e.g. "indentation") and
+    # can appear anywhere outside a section.
     def self.parse_token_grammar(source)
       lines = source.split("\n")
-      definitions = []
-      keywords = []
-      in_keywords = false
+      grammar = TokenGrammar.new
+      current_section = nil # "keywords", "reserved", "skip"
 
       lines.each_with_index do |raw_line, index|
         line_number = index + 1
@@ -99,20 +221,67 @@ module CodingAdventures
         # Blank lines and comments are always skipped.
         next if stripped.empty? || stripped.start_with?("#")
 
-        # Keywords section header.
-        if stripped == "keywords:" || stripped == "keywords :"
-          in_keywords = true
+        # mode: directive -- sets the lexer mode.
+        if stripped.start_with?("mode:")
+          mode_value = stripped[5..].strip
+          if mode_value.empty?
+            raise TokenGrammarError.new(
+              "Missing value after 'mode:'", line_number
+            )
+          end
+          grammar.mode = mode_value
+          current_section = nil
           next
         end
 
-        # Inside keywords section.
-        if in_keywords
+        # Section headers.
+        if stripped == "keywords:" || stripped == "keywords :"
+          current_section = "keywords"
+          next
+        end
+
+        if stripped == "reserved:" || stripped == "reserved :"
+          current_section = "reserved"
+          next
+        end
+
+        if stripped == "skip:" || stripped == "skip :"
+          current_section = "skip"
+          next
+        end
+
+        # Inside a section -- indented lines belong to the section.
+        if current_section
           if line.start_with?(" ", "\t")
-            keywords << stripped unless stripped.empty?
+            case current_section
+            when "keywords"
+              grammar.keywords << stripped unless stripped.empty?
+            when "reserved"
+              grammar.reserved_keywords << stripped unless stripped.empty?
+            when "skip"
+              unless stripped.include?("=")
+                raise TokenGrammarError.new(
+                  "Expected skip pattern definition (NAME = pattern), got: #{stripped.inspect}",
+                  line_number
+                )
+              end
+              eq_idx = stripped.index("=")
+              skip_name = stripped[0...eq_idx].strip
+              skip_pattern = stripped[(eq_idx + 1)..].strip
+              if skip_name.empty? || skip_pattern.empty?
+                raise TokenGrammarError.new(
+                  "Incomplete skip pattern definition: #{stripped.inspect}",
+                  line_number
+                )
+              end
+              grammar.skip_definitions << parse_definition(
+                skip_pattern, skip_name, line_number
+              )
+            end
             next
           else
-            in_keywords = false
-            # Fall through to parse as definition.
+            # Non-indented line -- exit section, fall through.
+            current_section = nil
           end
         end
 
@@ -146,39 +315,55 @@ module CodingAdventures
           )
         end
 
-        if pattern_part.start_with?("/") && pattern_part.end_with?("/")
-          regex_body = pattern_part[1..-2]
-          if regex_body.empty?
-            raise TokenGrammarError.new(
-              "Empty regex pattern for token #{name_part.inspect}",
-              line_number
-            )
-          end
-          definitions << TokenDefinition.new(
-            name: name_part, pattern: regex_body,
-            is_regex: true, line_number: line_number
-          )
-        elsif pattern_part.start_with?('"') && pattern_part.end_with?('"')
-          literal_body = pattern_part[1..-2]
-          if literal_body.empty?
-            raise TokenGrammarError.new(
-              "Empty literal pattern for token #{name_part.inspect}",
-              line_number
-            )
-          end
-          definitions << TokenDefinition.new(
-            name: name_part, pattern: literal_body,
-            is_regex: false, line_number: line_number
-          )
+        grammar.definitions << parse_definition(
+          pattern_part, name_part, line_number
+        )
+      end
+
+      grammar
+    end
+
+    # Validate a list of token definitions (shared logic for regular and skip).
+    def self.validate_definitions(definitions, label)
+      issues = []
+      seen_names = {}
+
+      definitions.each do |defn|
+        # Duplicate check.
+        if seen_names.key?(defn.name)
+          issues << "Line #{defn.line_number}: Duplicate #{label} name '#{defn.name}' " \
+                    "(first defined on line #{seen_names[defn.name]})"
         else
-          raise TokenGrammarError.new(
-            "Pattern for token #{name_part.inspect} must be /regex/ or \"literal\", got: #{pattern_part.inspect}",
-            line_number
-          )
+          seen_names[defn.name] = defn.line_number
+        end
+
+        # Empty pattern check.
+        if defn.pattern.empty?
+          issues << "Line #{defn.line_number}: Empty pattern for #{label} '#{defn.name}'"
+        end
+
+        # Invalid regex check.
+        if defn.is_regex
+          begin
+            Regexp.new(defn.pattern)
+          rescue RegexpError => e
+            issues << "Line #{defn.line_number}: Invalid regex for #{label} '#{defn.name}': #{e.message}"
+          end
+        end
+
+        # Naming convention check.
+        unless defn.name == defn.name.upcase
+          issues << "Line #{defn.line_number}: Token name '#{defn.name}' should be UPPER_CASE"
+        end
+
+        # Alias convention check.
+        if defn.alias_name && defn.alias_name != defn.alias_name.upcase
+          issues << "Line #{defn.line_number}: Alias '#{defn.alias_name}' for " \
+                    "token '#{defn.name}' should be UPPER_CASE"
         end
       end
 
-      TokenGrammar.new(definitions: definitions, keywords: keywords)
+      issues
     end
 
     # Check a parsed TokenGrammar for common problems.
@@ -188,37 +373,16 @@ module CodingAdventures
     # - Invalid regex patterns
     # - Empty patterns (safety net)
     # - Non-UPPER_CASE names (convention warning)
+    # - Invalid aliases
+    # - Unknown lexer mode
+    # - Skip definition issues
     def self.validate_token_grammar(grammar)
       issues = []
-      seen_names = {}
+      issues.concat(validate_definitions(grammar.definitions, "token"))
+      issues.concat(validate_definitions(grammar.skip_definitions, "skip pattern"))
 
-      grammar.definitions.each do |defn|
-        # Duplicate check.
-        if seen_names.key?(defn.name)
-          issues << "Line #{defn.line_number}: Duplicate token name '#{defn.name}' " \
-                    "(first defined on line #{seen_names[defn.name]})"
-        else
-          seen_names[defn.name] = defn.line_number
-        end
-
-        # Empty pattern check.
-        if defn.pattern.empty?
-          issues << "Line #{defn.line_number}: Empty pattern for token '#{defn.name}'"
-        end
-
-        # Invalid regex check.
-        if defn.is_regex
-          begin
-            Regexp.new(defn.pattern)
-          rescue RegexpError => e
-            issues << "Line #{defn.line_number}: Invalid regex for token '#{defn.name}': #{e.message}"
-          end
-        end
-
-        # Naming convention check.
-        unless defn.name == defn.name.upcase
-          issues << "Line #{defn.line_number}: Token name '#{defn.name}' should be UPPER_CASE"
-        end
+      if grammar.mode && grammar.mode != "indentation"
+        issues << "Unknown lexer mode '#{grammar.mode}' (only 'indentation' is supported)"
       end
 
       issues

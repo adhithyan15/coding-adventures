@@ -15,8 +15,26 @@ require "coding_adventures_grammar_tools"
 # or BinaryOp. Each node records which grammar rule produced it and its
 # matched children (tokens and sub-nodes).
 #
-# Uses backtracking for alternations: if the first choice fails, the parser
-# restores position and tries the next choice.
+# Key features:
+#
+# - Backtracking: when an alternation's first choice fails, the parser
+#   restores position and tries the next choice.
+#
+# - Packrat memoization: caches (rule_name, position) -> result so that
+#   re-parsing the same rule at the same position is O(1). This converts
+#   potentially exponential backtracking into O(n * R) where n = input
+#   length and R = number of grammar rules.
+#
+# - Significant newlines: auto-detects if the grammar references NEWLINE
+#   tokens. If so, newlines are treated as meaningful; otherwise they are
+#   skipped automatically.
+#
+# - String-based token types: handles both TokenType constants (from the
+#   hand-written lexer) and plain string types (from the grammar-driven
+#   lexer with extended grammars like Starlark).
+#
+# - Furthest failure tracking: when parsing fails, reports what was expected
+#   at the furthest position reached, giving much better error messages.
 # ==========================================================================
 
 module CodingAdventures
@@ -57,7 +75,20 @@ module CodingAdventures
         @pos = 0
         @rules = {}
         grammar.rules.each { |rule| @rules[rule.name] = rule }
+
+        # Detect whether newlines are significant in this grammar.
+        @newlines_significant = grammar_references_newline?
+
+        # Packrat memoization cache: [rule_name, position] -> [result, end_pos]
+        @memo = {}
+
+        # Furthest failure tracking for better error messages.
+        @furthest_pos = 0
+        @furthest_expected = []
       end
+
+      # Whether newlines are significant in this grammar.
+      attr_reader :newlines_significant
 
       # Parse using the first grammar rule as entry point.
       def parse
@@ -67,12 +98,25 @@ module CodingAdventures
         result = parse_rule(entry_rule.name)
 
         # Skip trailing newlines.
-        while @pos < @tokens.length && current.type == TT::NEWLINE
+        while @pos < @tokens.length && token_type_name(current) == "NEWLINE"
           @pos += 1
         end
 
         # Verify all tokens consumed.
-        if @pos < @tokens.length && current.type != TT::EOF
+        if @pos < @tokens.length && token_type_name(current) != "EOF"
+          # Use furthest failure info for a better error message.
+          if @furthest_expected.any? && @furthest_pos > @pos
+            expected_str = @furthest_expected.first(5).join(" or ")
+            furthest_tok = if @furthest_pos < @tokens.length
+              @tokens[@furthest_pos]
+            else
+              current
+            end
+            raise GrammarParseError.new(
+              "Expected #{expected_str}, got #{furthest_tok.value.inspect}",
+              furthest_tok
+            )
+          end
           raise GrammarParseError.new(
             "Unexpected token: #{current.value.inspect}",
             current
@@ -89,15 +133,73 @@ module CodingAdventures
         @tokens[@pos]
       end
 
+      # Extract the type name from a token (works with both string and
+      # constant-based types).
+      def token_type_name(token)
+        token.type.to_s
+      end
+
+      # Record an expected token/rule at the current position for error messages.
+      def record_failure(expected)
+        if @pos > @furthest_pos
+          @furthest_pos = @pos
+          @furthest_expected = [expected]
+        elsif @pos == @furthest_pos && !@furthest_expected.include?(expected)
+          @furthest_expected << expected
+        end
+      end
+
+      # Check if any grammar rule references the NEWLINE token.
+      def grammar_references_newline?
+        @grammar.rules.any? { |rule| element_references_newline?(rule.body) }
+      end
+
+      def element_references_newline?(element)
+        case element
+        when GT::RuleReference
+          element.is_token && element.name == "NEWLINE"
+        when GT::Sequence
+          element.elements.any? { |e| element_references_newline?(e) }
+        when GT::Alternation
+          element.choices.any? { |c| element_references_newline?(c) }
+        when GT::Repetition, GT::OptionalElement, GT::Group
+          element_references_newline?(element.element)
+        else
+          false
+        end
+      end
+
+      # Parse a named grammar rule with memoization.
       def parse_rule(rule_name)
         unless @rules.key?(rule_name)
           raise GrammarParseError.new("Undefined rule: #{rule_name}")
         end
 
+        # Check memo cache.
+        memo_key = [rule_name, @pos]
+        if @memo.key?(memo_key)
+          cached_result, cached_end_pos = @memo[memo_key]
+          @pos = cached_end_pos
+          if cached_result.nil?
+            raise GrammarParseError.new(
+              "Expected #{rule_name}, got #{current.value.inspect}",
+              current
+            )
+          end
+          return ASTNode.new(rule_name: rule_name, children: cached_result)
+        end
+
+        # Not cached -- parse the rule.
+        start_pos = @pos
         rule = @rules[rule_name]
         children = match_element(rule.body)
 
+        # Cache the result.
+        @memo[memo_key] = [children, @pos]
+
         unless children
+          @pos = start_pos
+          record_failure(rule_name)
           raise GrammarParseError.new(
             "Expected #{rule_name}, got #{current.value.inspect}",
             current
@@ -157,20 +259,7 @@ module CodingAdventures
 
         when GT::RuleReference
           if element.is_token
-            # UPPERCASE: match a token type.
-            tok = current
-            # Skip newlines when matching non-NEWLINE tokens.
-            while tok.type == TT::NEWLINE && element.name != "NEWLINE"
-              @pos += 1
-              tok = current
-            end
-            expected_type = TT::ALL[element.name]
-            return nil unless expected_type
-            if tok.type == expected_type
-              @pos += 1
-              return [tok]
-            end
-            nil
+            match_token_reference(element)
           else
             # lowercase: parse another grammar rule recursively.
             begin
@@ -184,11 +273,55 @@ module CodingAdventures
 
         when GT::Literal
           tok = current
+
+          # Skip insignificant newlines before literal matching.
+          unless @newlines_significant
+            while token_type_name(tok) == "NEWLINE"
+              @pos += 1
+              tok = current
+            end
+          end
+
           if tok.value == element.value
             @pos += 1
             [tok]
+          else
+            record_failure("\"#{element.value}\"")
+            nil
           end
         end
+      end
+
+      # Match a token reference (UPPERCASE name) against the current token.
+      def match_token_reference(element)
+        tok = current
+
+        # Skip newlines when matching non-NEWLINE tokens, but only if
+        # newlines are not significant.
+        if !@newlines_significant && element.name != "NEWLINE"
+          while token_type_name(tok) == "NEWLINE"
+            @pos += 1
+            tok = current
+          end
+        end
+
+        type_name = token_type_name(tok)
+
+        # Direct string comparison -- works for both constant and string types.
+        if type_name == element.name
+          @pos += 1
+          return [tok]
+        end
+
+        # Backward compatibility: try TokenType::ALL lookup.
+        expected_type = TT::ALL[element.name]
+        if expected_type && tok.type == expected_type
+          @pos += 1
+          return [tok]
+        end
+
+        record_failure(element.name)
+        nil
       end
     end
   end
