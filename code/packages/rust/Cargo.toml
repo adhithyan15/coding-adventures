@@ -14,4 +14,6 @@ members = [
     "cpu-simulator",
     "parser",
     "loss-functions",
+    "gpu-core",
+    "parallel-execution-engine",
 ]
