@@ -1,0 +1,17 @@
+{
+  "name": "matrix",
+  "version": "1.0.0",
+  "description": "Pure ML Matrix dimensional operations",
+  "main": "dist/matrix.js",
+  "types": "dist/matrix.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  }
+}
