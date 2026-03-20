@@ -1,5 +1,9 @@
 package branchpredictor
 
+import (
+	statemachine "github.com/adhithyan15/coding-adventures/code/packages/go/state-machine"
+)
+
 // ─── One-Bit Branch Predictor ─────────────────────────────────────────────────
 //
 // The one-bit predictor is the simplest dynamic predictor. Each branch address
@@ -36,6 +40,41 @@ package branchpredictor
 //	| Predict NOT TAKEN| ------------> |  Predict TAKEN   |
 //	|    (bit = 0)     | <------------ |    (bit = 1)     |
 //	+-----------------+   not taken    +-----------------+
+
+// ─── DFA Representation ──────────────────────────────────────────────────────
+//
+// The one-bit predictor is the simplest possible DFA-based branch predictor:
+// just two states and two input symbols.
+//
+// The DFA has:
+//   - 2 states: "NT" (not taken) and "T" (taken)
+//   - 2 input symbols: "taken" and "not_taken"
+//   - 4 transitions (every state handles every input)
+//   - Initial state: "NT" (predict not-taken on cold start)
+//   - Accepting states: {"T"} (accepting = predicts taken)
+//
+// This is isomorphic to a single D flip-flop in hardware: the input (taken
+// or not_taken) is latched directly as the new state.
+
+// NewOneBitDFA creates a DFA that models the one-bit branch predictor.
+//
+// The returned DFA is fully equivalent to the OneBitPredictor's update logic.
+// Processing "taken" moves to state "T" (predict taken), processing
+// "not_taken" moves to state "NT" (predict not-taken), regardless of the
+// current state.
+func NewOneBitDFA() *statemachine.DFA {
+	return statemachine.NewDFA(
+		[]string{"NT", "T"},
+		[]string{"taken", "not_taken"},
+		map[[2]string]string{
+			{"NT", "taken"}: "T", {"NT", "not_taken"}: "NT",
+			{"T", "taken"}: "T", {"T", "not_taken"}: "NT",
+		},
+		"NT",
+		[]string{"T"},
+		nil, // no actions needed
+	)
+}
 
 // OneBitPredictor is a 1-bit dynamic predictor -- one flip-flop per branch.
 //

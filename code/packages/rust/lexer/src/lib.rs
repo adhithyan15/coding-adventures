@@ -54,4 +54,5 @@
 
 pub mod token;
 pub mod tokenizer;
+pub mod tokenizer_dfa;
 pub mod grammar_lexer;

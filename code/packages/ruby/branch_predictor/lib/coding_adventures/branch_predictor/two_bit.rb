@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "coding_adventures_state_machine"
+
 # ─── Two-Bit Saturating Counter Predictor ─────────────────────────────────────
 #
 # The two-bit predictor improves on the one-bit predictor by adding hysteresis.
@@ -37,19 +39,75 @@
 #     Alpha 21064: 2-bit counters with 2048 entries
 #     Intel Pentium: 2-bit counters with 256 entries
 #     Early ARM (ARM7): 2-bit counters with 64 entries
+#
+# ─── DFA Formalization ─────────────────────────────────────────────────────────
+#
+# The 2-bit saturating counter is a textbook DFA (Deterministic Finite Automaton):
+#
+#     Q     = {SNT, WNT, WT, ST}         -- the four counter states
+#     Sigma = {taken, not_taken}          -- branch outcome events
+#     delta = saturating increment/decrement transitions
+#     q0    = WNT                         -- start in weakly-not-taken
+#     F     = {WT, ST}                    -- accepting = "predict taken"
+#
+# We define TWO_BIT_DFA below using the state_machine library's DFA class.
+# The predictor delegates state transitions to the DFA, keeping the existing
+# integer-based TwoBitState module for backward compatibility and performance.
 
 module CodingAdventures
   module BranchPredictor
+    # The 2-bit saturating counter expressed as a formal DFA.
+    #
+    # This DFA captures the exact same transition logic as TwoBitState, but in
+    # declarative form. It serves as a verifiable specification: we can prove
+    # that TwoBitState.taken_outcome / not_taken_outcome produce the same
+    # state transitions as processing "taken" / "not_taken" events through
+    # this DFA.
+    #
+    # The accepting states {WT, ST} correspond to "predict taken" -- if the
+    # DFA is in an accepting state, the branch is predicted taken.
+    TWO_BIT_DFA = CodingAdventures::StateMachine::DFA.new(
+      states: Set["SNT", "WNT", "WT", "ST"],
+      alphabet: Set["taken", "not_taken"],
+      transitions: {
+        ["SNT", "taken"] => "WNT", ["SNT", "not_taken"] => "SNT",
+        ["WNT", "taken"] => "WT", ["WNT", "not_taken"] => "SNT",
+        ["WT", "taken"] => "ST", ["WT", "not_taken"] => "WNT",
+        ["ST", "taken"] => "ST", ["ST", "not_taken"] => "WT"
+      },
+      initial: "WNT",
+      accepting: Set["WT", "ST"]
+    )
+
     # The 4 states of a 2-bit saturating counter.
     #
     # In hardware, this is just a 2-bit register. The prediction is determined
     # by bit 1: if set, predict taken; if clear, predict not-taken. That's a
     # single wire -- zero logic gates.
+    #
+    # The integer representation (0-3) maps to DFA state names as follows:
+    #     0 (STRONGLY_NOT_TAKEN) -> "SNT"
+    #     1 (WEAKLY_NOT_TAKEN)   -> "WNT"
+    #     2 (WEAKLY_TAKEN)       -> "WT"
+    #     3 (STRONGLY_TAKEN)     -> "ST"
     module TwoBitState
       STRONGLY_NOT_TAKEN = 0
-      WEAKLY_NOT_TAKEN   = 1
-      WEAKLY_TAKEN       = 2
-      STRONGLY_TAKEN     = 3
+      WEAKLY_NOT_TAKEN = 1
+      WEAKLY_TAKEN = 2
+      STRONGLY_TAKEN = 3
+
+      # Maps integer state values to DFA state name strings.
+      # Used for equivalence testing between the integer-based and DFA-based
+      # representations.
+      STATE_TO_NAME = {
+        STRONGLY_NOT_TAKEN => "SNT",
+        WEAKLY_NOT_TAKEN => "WNT",
+        WEAKLY_TAKEN => "WT",
+        STRONGLY_TAKEN => "ST"
+      }.freeze
+
+      # Maps DFA state name strings back to integer state values.
+      NAME_TO_STATE = STATE_TO_NAME.invert.freeze
 
       # Transition on a 'taken' outcome: increment, saturate at 3.
       #

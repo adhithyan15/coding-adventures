@@ -46,6 +46,7 @@
  */
 
 import type { Token } from "./token.js";
+import { classifyChar, newTokenizerDFA } from "./tokenizer-dfa.js";
 
 // ---------------------------------------------------------------------------
 // Lexer Configuration
@@ -508,18 +509,22 @@ export function tokenize(source: string, config?: LexerConfig): Token[] {
   }
 
   // -- Main tokenization loop --
+  //
+  // The loop uses the TOKENIZER_DFA to classify the current character and
+  // determine which sub-routine should handle it. After each sub-routine
+  // finishes (emitting a token or skipping whitespace), the DFA is reset
+  // to "start" and the loop repeats.
 
-  while (currentChar() !== null) {
-    const char = currentChar()!;
+  const dfa = newTokenizerDFA();
 
-    // --- Whitespace (spaces and tabs) ---
-    if (char === " " || char === "\t" || char === "\r") {
+  while (true) {
+    const char = currentChar();
+    const charClass = classifyChar(char);
+    const nextState = dfa.process(charClass);
+
+    if (nextState === "at_whitespace") {
       skipWhitespace();
-      continue;
-    }
-
-    // --- Newlines ---
-    if (char === "\n") {
+    } else if (nextState === "at_newline") {
       const token: Token = {
         type: "NEWLINE",
         value: "\\n",
@@ -528,35 +533,18 @@ export function tokenize(source: string, config?: LexerConfig): Token[] {
       };
       advance();
       tokens.push(token);
-      continue;
-    }
-
-    // --- Numbers ---
-    if (isDigit(char)) {
+    } else if (nextState === "in_number") {
       tokens.push(readNumber());
-      continue;
-    }
-
-    // --- Names and keywords ---
-    if (isAlpha(char)) {
+    } else if (nextState === "in_name") {
       tokens.push(readName());
-      continue;
-    }
-
-    // --- String literals ---
-    if (char === '"') {
+    } else if (nextState === "in_string") {
       tokens.push(readString());
-      continue;
-    }
-
-    // --- The = and == operators (requires lookahead) ---
-    if (char === "=") {
+    } else if (nextState === "in_equals") {
       const startLine = line;
       const startColumn = column;
       advance();
 
       if (currentChar() === "=") {
-        // It's `==` (comparison)
         advance();
         tokens.push({
           type: "EQUALS_EQUALS",
@@ -565,7 +553,6 @@ export function tokenize(source: string, config?: LexerConfig): Token[] {
           column: startColumn,
         });
       } else {
-        // It's just `=` (assignment)
         tokens.push({
           type: "EQUALS",
           value: "=",
@@ -573,31 +560,28 @@ export function tokenize(source: string, config?: LexerConfig): Token[] {
           column: startColumn,
         });
       }
-      continue;
-    }
-
-    // --- Simple single-character tokens ---
-    const simpleType = SIMPLE_TOKENS.get(char);
-    if (simpleType !== undefined) {
+    } else if (nextState === "in_operator") {
+      const simpleType = SIMPLE_TOKENS.get(char!);
       const token: Token = {
-        type: simpleType,
-        value: char,
+        type: simpleType!,
+        value: char!,
         line,
         column,
       };
       advance();
       tokens.push(token);
-      continue;
+    } else if (nextState === "done") {
+      break;
+    } else if (nextState === "error") {
+      throw new LexerError(
+        `Unexpected character: ${JSON.stringify(char)}`,
+        line,
+        column,
+      );
     }
 
-    // --- Unexpected character ---
-    // If we get here, we've encountered a character the lexer doesn't
-    // know how to handle. This is an error in the source code.
-    throw new LexerError(
-      `Unexpected character: ${JSON.stringify(char)}`,
-      line,
-      column,
-    );
+    // Reset the DFA back to "start" for the next character.
+    dfa.reset();
   }
 
   // --- End of input ---

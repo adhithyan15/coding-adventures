@@ -19,7 +19,8 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/grammar-tools": "file:../grammar-tools"
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/state-machine": "file:../state-machine"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

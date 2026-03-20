@@ -32,13 +32,23 @@ Usage::
 """
 
 from lexer.grammar_lexer import GrammarLexer
-from lexer.tokenizer import Lexer, LexerConfig, LexerError, Token, TokenType
+from lexer.tokenizer import (
+    TOKENIZER_DFA,
+    Lexer,
+    LexerConfig,
+    LexerError,
+    Token,
+    TokenType,
+    classify_char,
+)
 
 __all__ = [
     "GrammarLexer",
     "Lexer",
     "LexerConfig",
     "LexerError",
+    "TOKENIZER_DFA",
     "Token",
     "TokenType",
+    "classify_char",
 ]
