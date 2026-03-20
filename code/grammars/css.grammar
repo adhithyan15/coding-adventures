@@ -112,11 +112,16 @@ combinator = GREATER | PLUS | TILDE ;
 
 # A compound selector is a chain of simple selectors with no whitespace:
 #   div.class#id[attr]:hover::before
+#   .class#id       — no type selector, starts with subclass
+#   #header         — just an ID selector
+#   :hover          — just a pseudo-class
 #
-# It optionally starts with a type selector (element name or *), followed
-# by zero or more subclass selectors (class, ID, attribute, pseudo-class),
-# and zero or more pseudo-elements.
-compound_selector = simple_selector { subclass_selector } ;
+# A compound selector optionally starts with a type selector (element name
+# or *), followed by zero or more subclass selectors. Alternatively, it
+# can start directly with one or more subclass selectors (no type selector).
+# The two alternatives ensure at least one selector component is present.
+compound_selector = simple_selector { subclass_selector }
+                  | subclass_selector { subclass_selector } ;
 
 # Simple selectors: the foundation.
 #   div     — type selector (element name)
