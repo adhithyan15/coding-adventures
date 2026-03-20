@@ -1,5 +1,5 @@
 from matrix.matrix import Matrix
-from loss_functions.functions import bce, bce_derivative
+from loss_functions import bce, bce_derivative
 from activation_functions.activations import sigmoid, sigmoid_derivative
 
 class Perceptron:

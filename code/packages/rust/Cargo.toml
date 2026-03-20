@@ -21,10 +21,9 @@ members = [
     "device-simulator",
     "compute-runtime",
     "jit-compiler",
-    "html-renderer",
-    "matrix",
     "pipeline",
     "starlark-lexer",
     "starlark-parser",
     "activation-functions",
+    "perceptron",
 ]

@@ -21,7 +21,8 @@ defmodule SpaceLaunchPredictor.MixProject do
     [
       {:matrix, path: "../../../packages/elixir/matrix"},
       {:coding_adventures_loss_functions, path: "../../../packages/elixir/loss_functions"},
-      {:activation_functions, path: "../../../packages/elixir/activation_functions"}
+      {:activation_functions, path: "../../../packages/elixir/activation_functions"},
+      {:perceptron, path: "../../../packages/elixir/perceptron"}
     ]
   end
 end
