@@ -581,6 +581,118 @@ class TestExtendedValidation:
 # ---------------------------------------------------------------------------
 
 
+# ---------------------------------------------------------------------------
+# Extended format: escapes directive
+# ---------------------------------------------------------------------------
+
+
+class TestParseEscapes:
+    """Test the escapes: directive for configurable escape processing."""
+
+    def test_escapes_none(self) -> None:
+        """escapes: none sets escape_mode to 'none'."""
+        source = """escapes: none
+STRING = /"[^"]*"/
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.escape_mode == "none"
+
+    def test_no_escapes_directive(self) -> None:
+        """Without escapes: directive, escape_mode is None (default)."""
+        source = 'STRING = /"[^"]*"/'
+        grammar = parse_token_grammar(source)
+        assert grammar.escape_mode is None
+
+    def test_escapes_empty_value_raises(self) -> None:
+        """escapes: with no value raises an error."""
+        with pytest.raises(TokenGrammarError, match="Missing value"):
+            parse_token_grammar("escapes:")
+
+    def test_escapes_unknown_value_flagged(self) -> None:
+        """Unknown escape mode is flagged by validator."""
+        source = "escapes: foobar\nNAME = /[a-z]+/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert any("Unknown escape mode" in i for i in issues)
+
+    def test_escapes_none_valid(self) -> None:
+        """escapes: none passes validation."""
+        source = "escapes: none\nNAME = /[a-z]+/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert not any("escape" in i.lower() for i in issues)
+
+
+# ---------------------------------------------------------------------------
+# Extended format: errors section
+# ---------------------------------------------------------------------------
+
+
+class TestParseErrorTokens:
+    """Test the errors: section for error recovery patterns."""
+
+    def test_error_patterns(self) -> None:
+        """Error patterns are parsed from the errors: section."""
+        source = """STRING = /"[^"]*"/
+
+errors:
+  BAD_STRING = /"[^"]*$/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.error_definitions) == 1
+        assert grammar.error_definitions[0].name == "BAD_STRING"
+        assert grammar.error_definitions[0].is_regex is True
+
+    def test_multiple_error_patterns(self) -> None:
+        """Multiple error patterns can be defined."""
+        source = """NAME = /[a-z]+/
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_URL = /url\\([^)]*$/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.error_definitions) == 2
+        assert grammar.error_definitions[0].name == "BAD_STRING"
+        assert grammar.error_definitions[1].name == "BAD_URL"
+
+    def test_errors_empty_section(self) -> None:
+        """Empty errors: section produces no error definitions."""
+        source = """errors:
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.error_definitions == []
+
+    def test_errors_bad_definition_raises(self) -> None:
+        """Non-definition lines in errors: section raise an error."""
+        with pytest.raises(TokenGrammarError, match="Expected error pattern"):
+            parse_token_grammar("errors:\n  NOT_A_DEFINITION")
+
+    def test_errors_incomplete_definition_raises(self) -> None:
+        """An error pattern with = but empty value raises an error."""
+        with pytest.raises(TokenGrammarError, match="Incomplete error"):
+            parse_token_grammar("errors:\n  = /foo/")
+
+    def test_errors_validated(self) -> None:
+        """Error definitions are validated like other definitions."""
+        grammar = TokenGrammar(error_definitions=[
+            TokenDefinition(name="bad", pattern="[0-9]+", is_regex=True, line_number=1),
+        ])
+        issues = validate_token_grammar(grammar)
+        assert any("UPPER_CASE" in i for i in issues)
+
+    def test_no_errors_section(self) -> None:
+        """Without errors: section, error_definitions is empty."""
+        grammar = parse_token_grammar('NAME = /[a-z]+/')
+        assert grammar.error_definitions == []
+
+
+# ---------------------------------------------------------------------------
+# Full Starlark example
+# ---------------------------------------------------------------------------
+
+
 class TestStarlarkTokens:
     """Test parsing the actual starlark.tokens file."""
 

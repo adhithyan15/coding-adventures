@@ -24,6 +24,8 @@ members = [
     "pipeline",
     "starlark-lexer",
     "starlark-parser",
+    "json-lexer",
+    "json-parser",
     "activation-functions",
     "perceptron",
     "json-lexer",
