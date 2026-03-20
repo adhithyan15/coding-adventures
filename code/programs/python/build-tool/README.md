@@ -5,7 +5,7 @@ An incremental, parallel monorepo build tool with hash-based caching.
 ## What it does
 
 This CLI program:
-1. Discovers all packages via DIRS/BUILD files
+1. Discovers all packages via recursive `BUILD` file walking
 2. Resolves dependencies by parsing pyproject.toml and .gemspec files
 3. Builds a directed graph of dependencies
 4. Hashes all source files in each package
@@ -38,8 +38,8 @@ build-tool --language python
 ## How it fits in the stack
 
 This is a standalone program (not a library) that orchestrates builds across
-the entire coding-adventures monorepo. It understands the DIRS/BUILD file
-conventions used throughout the repository and can build Python, Ruby, and Go
+the entire coding-adventures monorepo. It understands the recursive `BUILD`
+discovery convention used throughout the repository and can build Python, Ruby, and Go
 packages.
 
 ## Installation

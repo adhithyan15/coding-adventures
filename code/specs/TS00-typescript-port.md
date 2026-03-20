@@ -48,7 +48,7 @@ Internal dependencies use `file:` references in `package.json`:
 ### Build System Integration
 
 - **BUILD file**: `npm ci --quiet && npx vitest run --coverage`
-- **DIRS entry**: Each package listed in `code/packages/typescript/DIRS`
+- **Package discovery**: Recursive `BUILD` discovery; no `DIRS` entry required
 - **Language detection**: The Go build tool infers `"typescript"` from the path
 - **Dependency resolution**: Reads `package.json` `dependencies`, maps
   `@coding-adventures/<name>` to `typescript/<name>`
