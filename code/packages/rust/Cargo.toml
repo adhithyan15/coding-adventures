@@ -16,4 +16,5 @@ members = [
     "loss-functions",
     "gpu-core",
     "parallel-execution-engine",
+    "compute-unit",
 ]
