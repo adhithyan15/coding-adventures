@@ -19,5 +19,6 @@ members = [
     "gradient-descent",
     "compute-unit",
     "device-simulator",
+    "compute-runtime",
     "jit-compiler",
 ]
