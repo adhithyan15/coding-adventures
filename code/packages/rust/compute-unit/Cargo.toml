@@ -1,0 +1,10 @@
+[package]
+name = "compute-unit"
+version = "0.1.0"
+edition = "2021"
+description = "Compute unit simulators — NVIDIA SM, AMD CU, Google MXU, Intel Xe Core, Apple ANE Core"
+
+[dependencies]
+gpu-core = { path = "../gpu-core" }
+fp-arithmetic = { path = "../fp-arithmetic" }
+parallel-execution-engine = { path = "../parallel-execution-engine" }

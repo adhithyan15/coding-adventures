@@ -17,4 +17,5 @@ members = [
     "gpu-core",
     "parallel-execution-engine",
     "gradient-descent",
+    "compute-unit",
 ]
