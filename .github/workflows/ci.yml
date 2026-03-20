@@ -75,6 +75,17 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.16'
+          otp-version: '26.0'
+
+      - name: Install test runners
+        run: |
+          uv pip install --system pytest
+          npm install -g jest
+
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         run: |

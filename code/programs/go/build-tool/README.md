@@ -51,7 +51,7 @@ This produces a single static binary with no runtime dependencies.
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to: python, ruby, go, rust, typescript, or all |
+| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, or all |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 
@@ -60,7 +60,7 @@ This produces a single static binary with no runtime dependencies.
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
 
 1. **discovery** -- Recursively walks for `BUILD` files to find packages
-2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, and `package.json`
+2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, and `mix.exs`
 3. **hasher** -- SHA256 hashing for change detection
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore

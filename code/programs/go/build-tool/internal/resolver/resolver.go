@@ -345,6 +345,40 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 	return internalDeps
 }
 
+// parseElixirDeps extracts internal dependencies from an Elixir mix.exs file.
+//
+// Elixir mix.exs declares internal path dependencies usually like:
+//
+//	{:coding_adventures_logic_gates, path: "../logic-gates"}
+//
+// We use a regex to capture the atom name starting with `coding_adventures_`.
+func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	mixExs := filepath.Join(pkg.Path, "mix.exs")
+	data, err := os.ReadFile(mixExs)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	re := regexp.MustCompile(`\{:(coding_adventures_[a-z0-9_]+)`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			appName := strings.ToLower(match[1])
+			if pkgName, ok := knownNames[appName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -397,6 +431,11 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 			// "logic-gates" → "logic-gates"
 			crateName := strings.ToLower(filepath.Base(pkg.Path))
 			known[crateName] = pkg.Name
+
+		case "elixir":
+			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
+			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
+			known[appName] = pkg.Name
 		}
 	}
 
@@ -438,6 +477,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseTypescriptDeps(pkg, knownNames)
 		case "rust":
 			deps = parseRustDeps(pkg, knownNames)
+		case "elixir":
+			deps = parseElixirDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

@@ -99,6 +99,7 @@ The package's language is inferred from its directory path. The build system sca
 | `go`          | go         |
 | `rust`        | rust       |
 | `typescript`  | typescript |
+| `elixir`      | elixir     |
 
 For example, `code/packages/python/logic-gates` yields language `python`. If no known language component is found, the language is `unknown`.
 
@@ -121,6 +122,7 @@ The build system parses language-specific metadata files to discover inter-packa
 | Go       | `go.mod`         | module path contains repo   |
 | TypeScript | `package.json` | `@coding-adventures/`       |
 | Rust     | `Cargo.toml`     | workspace member path       |
+| Elixir   | `mix.exs`        | `:coding_adventures_`       |
 
 Dependencies on external packages (not in the monorepo) are silently ignored. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 
@@ -174,7 +176,7 @@ Flags:
   -force                Rebuild everything regardless of cache
   -dry-run              Show what would build without executing
   -jobs <N>             Max parallel workers (default: CPU count)
-  -language <lang>      Filter: implementation-dependent; Go supports python, ruby, go, rust, typescript, all
+  -language <lang>      Filter: implementation-dependent; Go supports python, ruby, go, rust, typescript, elixir, all
   -cache-file <path>    Path to cache file (default: .build-cache.json)
 ```
 

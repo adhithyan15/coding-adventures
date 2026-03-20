@@ -34,6 +34,11 @@ At the time of the original mistake, some tooling still relied on `DIRS` routing
 - [ ] BUILD file with test command
 - [ ] `./build-tool -dry-run` shows the package
 
+**IMPORTANT — multi-language packages:** When implementing the same package across all 5 languages (Python, TypeScript, Ruby, Go, Rust), you MUST add a BUILD file for EVERY language variant. On 2026-03-19 this mistake recurred: Go and Rust compute-unit packages were missing BUILD files while Python, TypeScript, and Ruby had them. The build tool only detected 3 out of 5 packages. After finishing all language implementations, always verify the count matches:
+```
+find code/packages/*/package-name -name BUILD | wc -l   # should equal number of languages
+```
+
 ---
 
 ### 2026-03-19: TypeScript package.json main must point to src/index.ts for Vitest

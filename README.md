@@ -6,7 +6,7 @@ This repository is not just "a lot of packages." It is really four projects livi
 
 1. A computing-stack curriculum, from logic gates and arithmetic up through lexers, parsers, compilers, virtual machines, assemblers, and ISA simulators.
 2. A computer architecture lab, with growing coverage of caches, branch prediction, hazard detection, pipelining, and configurable core design.
-3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, and Rust so the concepts are separated from the language.
+3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, and now Elixir so the concepts are separated from the language.
 4. A publishing and tooling playground, where each package is treated like a real artifact with tests, metadata, changelogs, and CI.
 
 ## What This Repository Optimizes For
@@ -78,11 +78,22 @@ The goal is to connect programming-language tooling back to the machine beneath 
 This track explores computation outside the classic scalar CPU story:
 
 - `gpu-core`
+- `compute-unit`
+- `device-simulator`
 - `parallel-execution-engine`
 
 The goal is to study throughput-oriented execution, dataflow, and accelerator-style design.
 
-### 6. Tooling, visualization, and infrastructure
+### 6. Machine learning fundamentals
+
+This track covers small, foundational learning components that fit naturally with the accelerator story:
+
+- `loss-functions`
+- `gradient-descent`
+
+The goal is to treat optimization primitives as understandable building blocks rather than opaque library calls.
+
+### 7. Tooling, visualization, and infrastructure
 
 This repo also includes the tools needed to sustain the work:
 
@@ -106,13 +117,14 @@ code/
 
 ## Languages
 
-The repository currently spans five ecosystems:
+The repository currently spans six ecosystems:
 
 - Python
 - Ruby
 - Go
 - TypeScript
 - Rust
+- Elixir
 
 The language split is intentional. A parser should still be recognizable as a parser when moved from Python to Go. A cache should still look like a cache in Ruby or TypeScript. The repetition is part of the point.
 
@@ -126,6 +138,8 @@ Start here:
 - [Algorithms](./code/learning/algorithms/README.md)
 - [Computer Architecture](./code/learning/computer-architecture/README.md)
 - [Language Tooling](./code/learning/language-tooling/README.md)
+- [Machine learning notes](./code/learning/loss-functions.md)
+- [Optimization notes](./code/learning/gradient-descent.md)
 - [Python Ecosystem Notes](./code/learning/python/ecosystem.md)
 
 The intended relationship is:
@@ -141,9 +155,9 @@ tests prove the behavior
 
 Today the repo contains:
 
-- 142 package directories
-- 6 program directories
-- 5 implementation languages
+- 164 package directories
+- 12 program directories
+- 6 implementation languages
 
 Those counts matter less than the shape: this is a broad, layered study of computing systems, programming-language tooling, and computer architecture.
 

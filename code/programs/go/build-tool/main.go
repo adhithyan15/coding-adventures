@@ -11,7 +11,7 @@
 //  1. Find the repo root (walk up looking for .git)
 //  2. Discover packages (walk BUILD files under code/)
 //  3. Filter by language if requested
-//  4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, Cargo.toml, package.json)
+//  4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, Cargo.toml, package.json, mix.exs)
 //  5. Hash all packages and their dependencies
 //  6. Load cache, determine what needs building
 //  7. If --dry-run, report what would build and exit
@@ -89,7 +89,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to language: python, ruby, go, rust, typescript, all")
+	language := flag.String("language", "all", "Filter to language: python, ruby, go, rust, typescript, elixir, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 

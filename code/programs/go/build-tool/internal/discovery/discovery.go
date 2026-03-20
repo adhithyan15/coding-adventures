@@ -33,8 +33,8 @@
 // # Language inference
 //
 // We infer a package's language from its directory path. If the path contains
-// "python", "ruby", "go", "rust", or "typescript" as a component under
-// "packages" or "programs", that is the language. The package name is
+// "python", "ruby", "go", "rust", "typescript", or "elixir" as a component
+// under "packages" or "programs", that is the language. The package name is
 // "{language}/{dirname}", e.g., "python/logic-gates" or "go/directed-graph".
 package discovery
 
@@ -53,7 +53,7 @@ type Package struct {
 	Name          string   // Qualified name, e.g. "python/logic-gates"
 	Path          string   // Absolute path to the package directory
 	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", or "unknown"
+	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", or "unknown"
 }
 
 // skipDirs is the set of directory names that should never be traversed
@@ -103,12 +103,12 @@ func readLines(filepath string) []string {
 
 // inferLanguage inspects the directory path to determine the programming
 // language. We look for known language names ("python", "ruby", "go", "rust",
-// "typescript") as path components. For example,
+// "typescript", "elixir") as path components. For example,
 // "/repo/code/packages/python/logic-gates" yields "python".
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript"} {
+	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang
