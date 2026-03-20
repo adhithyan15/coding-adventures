@@ -62,7 +62,7 @@ at_prelude = { at_prelude_token } ;
 at_prelude_token = IDENT | STRING | NUMBER | DIMENSION | PERCENTAGE
                  | HASH | CUSTOM_PROPERTY | UNICODE_RANGE
                  | function_in_prelude | paren_block
-                 | COLON | COMMA | SLASH | DOT | STAR | PLUS
+                 | COLON | COMMA | SLASH | DOT | STAR | PLUS | MINUS
                  | GREATER | TILDE | PIPE | EQUALS | AMPERSAND
                  | CDO | CDC ;
 
@@ -246,7 +246,7 @@ value_list = value { value } ;
 
 value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
       | CUSTOM_PROPERTY | UNICODE_RANGE | function_call
-      | SLASH | COMMA | PLUS ;
+      | SLASH | COMMA | PLUS | MINUS ;
 
 # Function calls in values:
 #   rgb(255, 0, 0)
@@ -266,5 +266,5 @@ function_call = FUNCTION function_args RPAREN
 function_args = { function_arg } ;
 
 function_arg = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
-             | CUSTOM_PROPERTY | COMMA | SLASH | PLUS | STAR
+             | CUSTOM_PROPERTY | COMMA | SLASH | PLUS | MINUS | STAR
              | FUNCTION function_args RPAREN ;

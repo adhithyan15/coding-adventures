@@ -173,9 +173,6 @@ CDC = "-->"
 # CUSTOM_PROPERTY must come before IDENT because -- is a valid IDENT prefix
 # but --variable-name is a custom property, not a regular identifier.
 
-CUSTOM_PROPERTY = /--[a-zA-Z_][a-zA-Z0-9_-]*/
-IDENT           = /-?[a-zA-Z_][a-zA-Z0-9_-]*/
-
 # ============================================================================
 # Unicode Range
 # ============================================================================
@@ -185,8 +182,14 @@ IDENT           = /-?[a-zA-Z_][a-zA-Z0-9_-]*/
 #   unicode-range: U+4??;
 #
 # The ? wildcard matches any hex digit in that position.
+#
+# MUST come before IDENT so that U+0025 is tokenized as UNICODE_RANGE,
+# not IDENT(U) PLUS(+) NUMBER(0025).
 
 UNICODE_RANGE = /[Uu]\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?/
+
+CUSTOM_PROPERTY = /--[a-zA-Z_][a-zA-Z0-9_-]*/
+IDENT           = /-?[a-zA-Z_][a-zA-Z0-9_-]*/
 
 # ============================================================================
 # Multi-Character Operators
@@ -228,6 +231,7 @@ BANG      = "!"
 SLASH     = "/"
 EQUALS    = "="
 AMPERSAND = "&"
+MINUS     = "-"
 
 # ============================================================================
 # Error Tokens
