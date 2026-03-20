@@ -20,4 +20,5 @@ members = [
     "compute-unit",
     "device-simulator",
     "jit-compiler",
+    "html-renderer",
 ]
