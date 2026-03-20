@@ -1,0 +1,9 @@
+[package]
+name = "parallel-execution-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Parallel execution engines — SIMT warps, SIMD wavefronts, systolic arrays, MAC arrays, and subslice EUs"
+
+[dependencies]
+gpu-core = { path = "../gpu-core" }
+fp-arithmetic = { path = "../fp-arithmetic" }
