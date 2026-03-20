@@ -1,0 +1,55 @@
+[project]
+name = "coding-adventures-blas-library"
+version = "0.1.0"
+description = "Pluggable BLAS library with 7 swappable backends (CPU, CUDA, OpenCL, Metal, Vulkan, WebGPU, OpenGL)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Adhithya Rajasekaran" }]
+keywords = [
+    "blas",
+    "linear-algebra",
+    "gpu",
+    "cuda",
+    "metal",
+    "vulkan",
+    "opencl",
+    "webgpu",
+    "opengl",
+    "computer-science",
+    "education",
+]
+
+dependencies = [
+    "coding-adventures-vendor-api-simulators",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/blas_library"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "TCH"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true

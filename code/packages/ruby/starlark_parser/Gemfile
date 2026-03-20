@@ -6,5 +6,6 @@ gemspec
 
 gem "coding_adventures_grammar_tools", path: "../grammar_tools"
 gem "coding_adventures_lexer", path: "../lexer"
+gem "coding_adventures_state_machine", path: "../state_machine"
 gem "coding_adventures_parser", path: "../parser"
 gem "coding_adventures_starlark_lexer", path: "../starlark_lexer"

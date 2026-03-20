@@ -22,6 +22,7 @@
 require_relative "coding_adventures/lexer/version"
 require_relative "coding_adventures/lexer/token_type"
 require_relative "coding_adventures/lexer/token"
+require_relative "coding_adventures/lexer/tokenizer_dfa"
 require_relative "coding_adventures/lexer/tokenizer"
 require_relative "coding_adventures/lexer/grammar_lexer"
 
