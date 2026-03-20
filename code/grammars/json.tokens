@@ -19,7 +19,9 @@
 # Allowed escapes: \" \\ \/ \b \f \n \r \t \uXXXX
 # The regex matches the entire string including quotes. The lexer engine
 # strips the quotes and processes escape sequences automatically.
-STRING   = /"([^"\\]|\\["\\/bfnrt]|\\u[0-9a-fA-F]{4})*"/
+# Note: We use \x2f instead of / inside the regex because the grammar file
+# uses / as the regex delimiter and the parser does not support escaping.
+STRING   = /"([^"\\]|\\["\\\x2fbfnrt]|\\u[0-9a-fA-F]{4})*"/
 
 # Number: optional negative sign, integer part, optional decimal, optional
 # exponent. In JSON, -42 is a single number token (the minus is part of the
