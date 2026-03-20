@@ -48,6 +48,228 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
+from state_machine import DFA
+
+# ---------------------------------------------------------------------------
+# Character Classification
+# ---------------------------------------------------------------------------
+
+
+def classify_char(ch: str | None) -> str:
+    """Classify a character into one of the DFA's alphabet symbols.
+
+    The tokenizer's main loop dispatches on the *kind* of character it sees,
+    not on the exact character. For example, ``'a'``, ``'Z'``, and ``'_'``
+    all belong to the same class because they all start an identifier.
+
+    This function makes that implicit classification explicit by mapping
+    every possible character to a named class. The DFA's transition table
+    uses these class names to decide what to do next.
+
+    Character class table:
+
+    ============  ===========  =====================================
+    Class         Characters   What it triggers
+    ============  ===========  =====================================
+    ``eof``       None (end)   Emit EOF token
+    ``whitespace``  space/tab/CR  Skip whitespace
+    ``newline``   ``\\n``      Emit NEWLINE token
+    ``digit``     ``0-9``      Read a number
+    ``alpha``     ``a-zA-Z``   Read a name/keyword
+    ``underscore`` ``_``       Read a name/keyword (starts identifier)
+    ``quote``     ``"``        Read a string literal
+    ``equals``    ``=``        Lookahead for ``=`` vs ``==``
+    ``operator``  ``+-*/``     Emit simple operator token
+    ``open_paren``  ``(``      Emit LPAREN
+    ``close_paren`` ``)``      Emit RPAREN
+    ``comma``     ``,``        Emit COMMA
+    ``colon``     ``:``        Emit COLON
+    ``semicolon`` ``;``        Emit SEMICOLON
+    ``open_brace`` ``{``       Emit LBRACE
+    ``close_brace`` ``}``      Emit RBRACE
+    ``open_bracket`` ``[``     Emit LBRACKET
+    ``close_bracket`` ``]``    Emit RBRACKET
+    ``dot``       ``.``        Emit DOT
+    ``bang``      ``!``        Emit BANG
+    ``other``     everything   Raise error
+    ============  ===========  =====================================
+
+    Args:
+        ch: A single character, or None if at end of input.
+
+    Returns:
+        A string naming the character class.
+    """
+    if ch is None:
+        return "eof"
+    if ch in " \t\r":
+        return "whitespace"
+    if ch == "\n":
+        return "newline"
+    if ch.isdigit():
+        return "digit"
+    if ch.isalpha():
+        return "alpha"
+    if ch == "_":
+        return "underscore"
+    if ch == '"':
+        return "quote"
+    if ch == "=":
+        return "equals"
+    if ch in "+-*/":
+        return "operator"
+    if ch == "(":
+        return "open_paren"
+    if ch == ")":
+        return "close_paren"
+    if ch == ",":
+        return "comma"
+    if ch == ":":
+        return "colon"
+    if ch == ";":
+        return "semicolon"
+    if ch == "{":
+        return "open_brace"
+    if ch == "}":
+        return "close_brace"
+    if ch == "[":
+        return "open_bracket"
+    if ch == "]":
+        return "close_bracket"
+    if ch == ".":
+        return "dot"
+    if ch == "!":
+        return "bang"
+    return "other"
+
+
+# ---------------------------------------------------------------------------
+# Tokenizer DFA
+# ---------------------------------------------------------------------------
+#
+# The hand-written tokenizer has an *implicit* DFA in its main loop: it looks
+# at the current character, classifies it, and dispatches to the appropriate
+# sub-routine. This section makes that implicit DFA *explicit* by defining it
+# as a formal DFA object using the state-machine library.
+#
+# === States ===
+#
+#   ``start``       -- The idle state. The lexer looks at the next character
+#                      and decides what to do.
+#   ``in_number``   -- Reading a sequence of digits.
+#   ``in_name``     -- Reading an identifier (letters, digits, underscores).
+#   ``in_string``   -- Reading a string literal (between double quotes).
+#   ``in_operator`` -- Emitting a single-character operator or delimiter.
+#   ``in_equals``   -- Handling ``=`` with lookahead for ``==``.
+#   ``at_newline``  -- Emitting a NEWLINE token.
+#   ``at_whitespace`` -- Skipping whitespace.
+#   ``done``        -- End of input reached.
+#   ``error``       -- An unexpected character was encountered.
+#
+# === How the DFA is used ===
+#
+# The DFA does NOT replace the tokenizer's logic. The sub-routines like
+# ``_read_number()`` and ``_read_string()`` still do the actual work. What
+# the DFA provides is a formal, verifiable model of the dispatch decision:
+# "given that I'm in the start state and I see a digit, I should go to
+# in_number." The tokenizer consults the DFA for this decision, then calls
+# the appropriate sub-routine.
+#
+# This means the tokenizer's behavior is now *data-driven* at the top level.
+# If you want to verify that the tokenizer handles every character class,
+# you can inspect the DFA's transition table. If you want to visualize the
+# dispatch logic, you can call ``TOKENIZER_DFA.to_dot()`` and render it as
+# a graph.
+
+_STATES = {
+    "start", "in_number", "in_name", "in_string",
+    "in_operator", "in_equals", "at_newline", "at_whitespace",
+    "done", "error",
+}
+
+_ALPHABET = {
+    "digit", "alpha", "underscore", "quote", "newline", "whitespace",
+    "operator", "equals", "open_paren", "close_paren", "comma", "colon",
+    "semicolon", "open_brace", "close_brace", "open_bracket",
+    "close_bracket", "dot", "bang", "eof", "other",
+}
+
+# Every character class from "start" transitions to the appropriate handling
+# state. All handling states return to "start" after emitting a token (or
+# skipping whitespace), except "done" and "error" which are terminal.
+_TRANSITIONS: dict[tuple[str, str], str] = {}
+
+# From "start", each character class goes to a specific handler state.
+_START_DISPATCH: dict[str, str] = {
+    "digit": "in_number",
+    "alpha": "in_name",
+    "underscore": "in_name",
+    "quote": "in_string",
+    "newline": "at_newline",
+    "whitespace": "at_whitespace",
+    "operator": "in_operator",
+    "equals": "in_equals",
+    "open_paren": "in_operator",
+    "close_paren": "in_operator",
+    "comma": "in_operator",
+    "colon": "in_operator",
+    "semicolon": "in_operator",
+    "open_brace": "in_operator",
+    "close_brace": "in_operator",
+    "open_bracket": "in_operator",
+    "close_bracket": "in_operator",
+    "dot": "in_operator",
+    "bang": "in_operator",
+    "eof": "done",
+    "other": "error",
+}
+
+for _char_class, _target in _START_DISPATCH.items():
+    _TRANSITIONS[("start", _char_class)] = _target
+
+# All handler states transition back to "start" on every symbol (except
+# "done" and "error" which stay in place). This models the fact that after
+# emitting a token, the lexer returns to the start state.
+for _handler in [
+    "in_number", "in_name", "in_string", "in_operator",
+    "in_equals", "at_newline", "at_whitespace",
+]:
+    for _symbol in _ALPHABET:
+        _TRANSITIONS[(_handler, _symbol)] = "start"
+
+# "done" loops on itself for every symbol (the lexer is finished).
+for _symbol in _ALPHABET:
+    _TRANSITIONS[("done", _symbol)] = "done"
+
+# "error" loops on itself for every symbol (the lexer has failed).
+for _symbol in _ALPHABET:
+    _TRANSITIONS[("error", _symbol)] = "error"
+
+TOKENIZER_DFA: DFA = DFA(
+    states=_STATES,
+    alphabet=_ALPHABET,
+    transitions=_TRANSITIONS,
+    initial="start",
+    accepting={"done"},
+)
+"""The formal DFA that models the tokenizer's character-classification dispatch.
+
+This DFA captures the top-level decision logic of the hand-written tokenizer:
+"given the current character class, which sub-routine should handle it?"
+
+Usage::
+
+    # Classify a character and look up the next state
+    char_class = classify_char('5')           # -> "digit"
+    next_state = TOKENIZER_DFA.process(char_class)  # -> "in_number"
+
+    # Visualize the dispatch logic
+    print(TOKENIZER_DFA.to_dot())
+
+The DFA is defined at module level (not inside the Lexer class) because it is
+a constant — the same dispatch table applies to every Lexer instance.
+"""
+
 
 # ---------------------------------------------------------------------------
 # Token Types
@@ -686,19 +908,27 @@ class Lexer:
         """Tokenize the entire source code and return a list of tokens.
 
         This is the main entry point. It loops through the source code,
-        character by character, deciding what kind of token starts at each
-        position and delegating to the appropriate reading method.
+        character by character, classifying each character and consulting
+        the ``TOKENIZER_DFA`` to determine which sub-routine should handle it.
 
-        The algorithm is a classic **dispatch on first character**:
+        The DFA-driven dispatch works as follows:
 
-        1. If the character is a space or tab → skip whitespace
-        2. If the character is a newline → emit a NEWLINE token
-        3. If the character is a digit → read a number
-        4. If the character is a letter or underscore → read a name/keyword
-        5. If the character is a double quote → read a string
-        6. If the character is ``=`` → peek ahead to distinguish ``=`` from ``==``
-        7. If the character is a simple operator/delimiter → look it up in the table
-        8. Otherwise → raise an error (unexpected character)
+        1. Classify the current character into a character class
+           (e.g., ``'5'`` → ``"digit"``, ``'"'`` → ``"quote"``).
+        2. Feed the character class to the DFA to get the next state
+           (e.g., ``"start"`` + ``"digit"`` → ``"in_number"``).
+        3. Dispatch to the appropriate sub-routine based on the DFA state:
+           - ``in_number``     → ``_read_number()``
+           - ``in_name``       → ``_read_name()``
+           - ``in_string``     → ``_read_string()``
+           - ``in_operator``   → look up in ``_SIMPLE_TOKENS`` table
+           - ``in_equals``     → lookahead for ``=`` vs ``==``
+           - ``at_newline``    → emit NEWLINE token
+           - ``at_whitespace`` → skip whitespace
+           - ``done``          → append EOF and stop
+           - ``error``         → raise ``LexerError``
+        4. After the sub-routine finishes, the DFA is reset to ``"start"``
+           and we repeat from step 1.
 
         After all characters are processed, an EOF token is appended.
 
@@ -711,17 +941,24 @@ class Lexer:
         """
         self._tokens = []
 
-        while self._current_char() is not None:
+        # Create a fresh DFA instance for this tokenization run so that
+        # the module-level TOKENIZER_DFA remains pristine.
+        dfa = DFA(
+            states=TOKENIZER_DFA.states,
+            alphabet=TOKENIZER_DFA.alphabet,
+            transitions=TOKENIZER_DFA.transitions,
+            initial=TOKENIZER_DFA.initial,
+            accepting=TOKENIZER_DFA.accepting,
+        )
+
+        while True:
             char = self._current_char()
-            assert char is not None  # for type checker; guaranteed by while condition
+            char_class = classify_char(char)
+            next_state = dfa.process(char_class)
 
-            # --- Whitespace (spaces and tabs) ---
-            if char in " \t\r":
+            if next_state == "at_whitespace":
                 self._skip_whitespace()
-                continue
-
-            # --- Newlines ---
-            if char == "\n":
+            elif next_state == "at_newline":
                 token = Token(
                     type=TokenType.NEWLINE,
                     value="\\n",
@@ -730,44 +967,33 @@ class Lexer:
                 )
                 self._advance()
                 self._tokens.append(token)
-                continue
-
-            # --- Numbers ---
-            if char.isdigit():
+            elif next_state == "in_number":
                 self._tokens.append(self._read_number())
-                continue
-
-            # --- Names and keywords ---
-            if char.isalpha() or char == "_":
+            elif next_state == "in_name":
                 self._tokens.append(self._read_name())
-                continue
-
-            # --- String literals ---
-            if char == '"':
+            elif next_state == "in_string":
                 self._tokens.append(self._read_string())
-                continue
-
-            # --- The = and == operators (requires lookahead) ---
-            if char == "=":
+            elif next_state == "in_equals":
                 start_line = self._line
                 start_column = self._column
                 self._advance()
 
                 if self._current_char() == "=":
-                    # It's ``==`` (comparison)
                     self._advance()
                     self._tokens.append(
-                        Token(TokenType.EQUALS_EQUALS, "==", start_line, start_column)
+                        Token(
+                            TokenType.EQUALS_EQUALS,
+                            "==",
+                            start_line,
+                            start_column,
+                        )
                     )
                 else:
-                    # It's just ``=`` (assignment)
                     self._tokens.append(
                         Token(TokenType.EQUALS, "=", start_line, start_column)
                     )
-                continue
-
-            # --- Simple single-character tokens ---
-            if char in self._SIMPLE_TOKENS:
+            elif next_state == "in_operator":
+                assert char is not None
                 token = Token(
                     type=self._SIMPLE_TOKENS[char],
                     value=char,
@@ -776,19 +1002,19 @@ class Lexer:
                 )
                 self._advance()
                 self._tokens.append(token)
-                continue
+            elif next_state == "done":
+                break
+            elif next_state == "error":
+                raise LexerError(
+                    f"Unexpected character: {char!r}",
+                    line=self._line,
+                    column=self._column,
+                )
 
-            # --- Unexpected character ---
-            # If we get here, we've encountered a character the lexer doesn't
-            # know how to handle. This is an error in the source code.
-            raise LexerError(
-                f"Unexpected character: {char!r}",
-                line=self._line,
-                column=self._column,
-            )
+            # Reset the DFA back to "start" for the next character.
+            dfa.reset()
 
         # --- End of input ---
-        # Append the EOF token so the parser knows the input is finished.
         self._tokens.append(
             Token(
                 type=TokenType.EOF,

@@ -5,3 +5,4 @@ source "https://rubygems.org"
 gemspec
 
 gem "coding_adventures_grammar_tools", path: "../grammar_tools"
+gem "coding_adventures_state_machine", path: "../state_machine"
