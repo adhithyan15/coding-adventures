@@ -323,6 +323,28 @@ module BuildTool
       internal_deps
     end
 
+    # parse_elixir_deps -- Extract internal deps from mix.exs.
+    #
+    # @param package [Package] The Elixir package.
+    # @param known_names [Hash<String, String>] Mapping from elixir app name to package name.
+    # @return [Array<String>] Internal dependency package names.
+    def parse_elixir_deps(package, known_names)
+      mix_exs = package.path / "mix.exs"
+      return [] unless mix_exs.exist?
+
+      internal_deps = []
+      mix_exs.read.lines.each do |line|
+        line.scan(/\{:(coding_adventures_\w+)/).flatten.each do |app_name|
+          app_name = app_name.downcase
+          if known_names.key?(app_name)
+            internal_deps << known_names[app_name]
+          end
+        end
+      end
+
+      internal_deps
+    end
+
     # build_known_names -- Build ecosystem-specific name -> package name mapping.
     #
     # For Python: "coding-adventures-logic-gates" -> "python/logic-gates"
@@ -353,6 +375,9 @@ module BuildTool
               end
             end
           end
+        when "elixir"
+          app_name = "coding_adventures_#{pkg.path.basename.to_s.gsub('-', '_')}".downcase
+          known[app_name] = pkg.name
         end
       end
 
@@ -384,6 +409,7 @@ module BuildTool
                when "python" then parse_python_deps(pkg, known_names)
                when "ruby"   then parse_ruby_deps(pkg, known_names)
                when "go"     then parse_go_deps(pkg, known_names)
+               when "elixir" then parse_elixir_deps(pkg, known_names)
                else []
                end
 

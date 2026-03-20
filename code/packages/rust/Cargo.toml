@@ -13,6 +13,7 @@ members = [
     "hazard-detection",
     "cpu-simulator",
     "parser",
+    "loss-functions",
     "gpu-core",
     "parallel-execution-engine",
 ]

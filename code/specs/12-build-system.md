@@ -98,6 +98,7 @@ The package's language is inferred from its directory path. The build system sca
 | `ruby`        | ruby     |
 | `go`          | go       |
 | `rust`        | rust     |
+| `elixir`      | elixir   |
 
 For example, `code/packages/python/logic-gates` yields language `python`. If no known language component is found, the language is `unknown`.
 
@@ -119,6 +120,7 @@ The build system parses language-specific metadata files to discover inter-packa
 | Ruby     | `*.gemspec`      | `coding_adventures_`        |
 | Go       | `go.mod`         | module path contains repo   |
 | Rust     | `Cargo.toml`     | workspace member path       |
+| Elixir   | `mix.exs`        | `:coding_adventures_`       |
 
 Dependencies on external packages (not in the monorepo) are silently ignored. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 
