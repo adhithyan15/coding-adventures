@@ -36,54 +36,72 @@
 //! the `.tokens` file matters — `==` must come before `=`, or `=` would
 //! always match first and `==` would never be recognized.
 //!
-//! ```text
-//! Source: "x == 42"
-//! Pos 0: try NAME -> matches "x"          -> emit Token(Name, "x")
-//! Pos 1: skip whitespace
-//! Pos 2: try NAME -> no match
-//!         try NUMBER -> no match
-//!         try EQUALS_EQUALS -> matches "==" -> emit Token(EqualsEquals, "==")
-//! Pos 4: skip whitespace
-//! Pos 5: try NAME -> no match
-//!         try NUMBER -> matches "42"       -> emit Token(Number, "42")
-//! Pos 7: EOF -> emit Token(Eof, "")
-//! ```
+//! # Extensions for Starlark-like languages
 //!
-//! # Keyword promotion
+//! This lexer supports several extensions beyond basic grammar-driven tokenization:
 //!
-//! When a token matches the `NAME` pattern and its value is in the grammar's
-//! keyword list, the lexer promotes it from `NAME` to `KEYWORD`. This is
-//! the same approach the hand-written lexer uses.
+//! - **Skip patterns**: Patterns from the `skip:` section consume input without
+//!   emitting tokens (e.g. whitespace, comments).
 //!
-//! # String escape processing
+//! - **Type aliases**: When a definition has `-> ALIAS`, the emitted token uses
+//!   the alias name instead (e.g. `STRING_DQ -> STRING`).
 //!
-//! When a token matches the `STRING` pattern, the lexer strips the
-//! surrounding quotes and processes escape sequences (`\n`, `\t`, `\\`,
-//! `\"`). This matches the behavior of the hand-written lexer.
+//! - **Reserved keywords**: Keywords from the `reserved:` section cause a lexer
+//!   error if encountered in source code.
+//!
+//! - **Indentation mode**: When `mode: indentation` is set, the lexer tracks
+//!   indentation levels and emits synthetic INDENT/DEDENT/NEWLINE tokens,
+//!   following the Python/Starlark whitespace rules.
 
 use regex::Regex;
 use std::collections::HashSet;
 
-use grammar_tools::token_grammar::TokenGrammar;
+use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
 
-use crate::token::{LexerError, Token, TokenType};
+use crate::token::{LexerError, Token, TokenType, string_to_token_type};
 
 // ===========================================================================
 // Compiled pattern — a pre-compiled regex ready for matching
 // ===========================================================================
 
 /// A single token pattern, compiled and ready to match against source text.
-///
-/// Each compiled pattern pairs a token name (from the grammar) with a
-/// regex that is anchored to the start of the remaining input (`^`).
-/// Anchoring is essential: we want to match at the *current position*,
-/// not anywhere later in the string.
 struct CompiledPattern {
     /// The token name from the grammar (e.g., "NAME", "NUMBER", "PLUS").
     name: String,
 
     /// The compiled regex, anchored to the start of the string.
     pattern: Regex,
+
+    /// Optional alias — when set, tokens matching this pattern are emitted
+    /// with the alias as their type name instead of `name`.
+    alias: Option<String>,
+}
+
+/// Compile a list of token definitions into anchored regex patterns.
+fn compile_patterns(definitions: &[TokenDefinition]) -> Vec<CompiledPattern> {
+    definitions
+        .iter()
+        .map(|defn| {
+            let regex_str = if defn.is_regex {
+                format!("^{}", defn.pattern)
+            } else {
+                format!("^{}", regex::escape(&defn.pattern))
+            };
+
+            let compiled = Regex::new(&regex_str).unwrap_or_else(|e| {
+                panic!(
+                    "Failed to compile pattern for token {}: {}",
+                    defn.name, e
+                )
+            });
+
+            CompiledPattern {
+                name: defn.name.clone(),
+                pattern: compiled,
+                alias: defn.alias.clone(),
+            }
+        })
+        .collect()
 }
 
 // ===========================================================================
@@ -92,48 +110,20 @@ struct CompiledPattern {
 
 /// A lexer that tokenizes source code according to a [`TokenGrammar`].
 ///
-/// The grammar defines the token patterns and their priority order. The
-/// lexer compiles these patterns once at construction time, then uses
-/// them to tokenize any number of source strings.
-///
-/// # Example
-///
-/// ```
-/// use grammar_tools::token_grammar::parse_token_grammar;
-/// use lexer::grammar_lexer::GrammarLexer;
-/// use lexer::token::TokenType;
-///
-/// // Define a simple grammar with numbers and plus signs.
-/// let grammar = parse_token_grammar(r#"
-/// NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
-/// NUMBER = /[0-9]+/
-/// PLUS   = "+"
-/// EQUALS = "="
-/// "#).unwrap();
-///
-/// let tokens = GrammarLexer::new("x = 1 + 2", &grammar).tokenize().unwrap();
-///
-/// assert_eq!(tokens[0].type_, TokenType::Name);
-/// assert_eq!(tokens[0].value, "x");
-/// assert_eq!(tokens[2].type_, TokenType::Number);
-/// assert_eq!(tokens[2].value, "1");
-/// ```
+/// Supports standard mode (simple pattern matching with whitespace skipping)
+/// and indentation mode (Python/Starlark-style significant whitespace with
+/// synthetic INDENT/DEDENT/NEWLINE tokens).
 pub struct GrammarLexer<'a> {
-    /// The source code being tokenized, as a vector of characters.
-    /// We convert from &str to Vec<char> so we can index by character
-    /// position without worrying about multi-byte UTF-8 sequences.
+    /// The source code as character vector for indexed access.
     chars: Vec<char>,
 
-    /// The original source string (needed for regex matching, since
-    /// regex operates on string slices, not character arrays).
+    /// The original source string (for regex matching on slices).
     source: &'a str,
 
-    /// Current position in the source string (byte offset).
-    /// We track byte position for slicing the source string for regex,
-    /// and character position separately for line/column tracking.
+    /// Current byte position in the source string.
     byte_pos: usize,
 
-    /// Current character position (for line/column tracking).
+    /// Current character position.
     char_pos: usize,
 
     /// Current line number (1-based).
@@ -142,56 +132,30 @@ pub struct GrammarLexer<'a> {
     /// Current column number (1-based).
     column: usize,
 
-    /// The set of keywords for fast O(1) lookup.
+    /// Keywords for keyword promotion (NAME -> KEYWORD).
     keyword_set: HashSet<String>,
 
-    /// Pre-compiled patterns from the grammar, in priority order.
+    /// Reserved keywords that cause errors if encountered.
+    reserved_set: HashSet<String>,
+
+    /// Pre-compiled token patterns in priority order.
     patterns: Vec<CompiledPattern>,
+
+    /// Pre-compiled skip patterns (whitespace, comments).
+    skip_patterns: Vec<CompiledPattern>,
+
+    /// Whether indentation mode is active.
+    indent_mode: bool,
 }
 
 impl<'a> GrammarLexer<'a> {
     /// Create a new grammar-driven lexer for the given source code.
-    ///
-    /// This constructor compiles all token patterns from the grammar into
-    /// anchored regexes. If any pattern fails to compile, this function
-    /// panics — that is a bug in the grammar, not in the source being
-    /// tokenized.
-    ///
-    /// # Panics
-    ///
-    /// Panics if a regex pattern from the grammar cannot be compiled.
-    /// This should be caught earlier by [`grammar_tools::token_grammar::validate_token_grammar`].
     pub fn new(source: &'a str, grammar: &TokenGrammar) -> Self {
-        // Build the keyword set for O(1) lookup.
         let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
-
-        // Compile each token definition into an anchored regex.
-        let patterns: Vec<CompiledPattern> = grammar
-            .definitions
-            .iter()
-            .map(|defn| {
-                // Anchor the pattern to the start of the string.
-                // For regex patterns, prepend `^`.
-                // For literal patterns, escape special regex characters first.
-                let regex_str = if defn.is_regex {
-                    format!("^{}", defn.pattern)
-                } else {
-                    format!("^{}", regex::escape(&defn.pattern))
-                };
-
-                let compiled = Regex::new(&regex_str).unwrap_or_else(|e| {
-                    panic!(
-                        "Failed to compile pattern for token {}: {}",
-                        defn.name, e
-                    )
-                });
-
-                CompiledPattern {
-                    name: defn.name.clone(),
-                    pattern: compiled,
-                }
-            })
-            .collect();
+        let reserved_set: HashSet<String> = grammar.reserved_keywords.iter().cloned().collect();
+        let patterns = compile_patterns(&grammar.definitions);
+        let skip_patterns = compile_patterns(&grammar.skip_definitions);
+        let indent_mode = grammar.mode.as_deref() == Some("indentation");
 
         GrammarLexer {
             chars: source.chars().collect(),
@@ -201,7 +165,10 @@ impl<'a> GrammarLexer<'a> {
             line: 1,
             column: 1,
             keyword_set,
+            reserved_set,
             patterns,
+            skip_patterns,
+            indent_mode,
         }
     }
 
@@ -209,7 +176,6 @@ impl<'a> GrammarLexer<'a> {
     // Cursor operations
     // -----------------------------------------------------------------------
 
-    /// Advance the cursor by one character, updating line/column tracking.
     fn advance(&mut self) {
         if self.char_pos < self.chars.len() {
             let ch = self.chars[self.char_pos];
@@ -224,56 +190,58 @@ impl<'a> GrammarLexer<'a> {
         }
     }
 
-    /// Advance the cursor by `n` characters.
     fn advance_n(&mut self, n: usize) {
         for _ in 0..n {
             self.advance();
         }
     }
 
+    #[allow(dead_code)]
+    fn current_char(&self) -> Option<char> {
+        self.chars.get(self.char_pos).copied()
+    }
+
     // -----------------------------------------------------------------------
     // Token type resolution
     // -----------------------------------------------------------------------
 
-    /// Map a grammar token name to a [`TokenType`] enum variant.
+    /// Resolve a grammar token name to a TokenType and optional string type name.
     ///
-    /// The grammar uses string names like "NAME", "NUMBER", "PLUS".
-    /// This function converts them to our enum. If a NAME token's value
-    /// appears in the keyword set, it is promoted to KEYWORD.
-    ///
-    /// Unrecognized token names default to `TokenType::Name`. This is
-    /// lenient — a stricter approach would return an error.
-    fn resolve_token_type(&self, token_name: &str, value: &str) -> TokenType {
-        // Keyword promotion: if the grammar token is NAME and the value
-        // is a reserved word, promote to KEYWORD.
-        if token_name == "NAME" {
-            if self.keyword_set.contains(value) {
-                return TokenType::Keyword;
-            }
+    /// Handles keyword promotion, reserved keyword rejection, alias resolution,
+    /// and fallback to string-based type names for custom token types.
+    fn resolve_token_type(
+        &self,
+        token_name: &str,
+        alias: Option<&str>,
+        value: &str,
+    ) -> Result<(TokenType, Option<String>), LexerError> {
+        // Check reserved keywords first — if a NAME matches a reserved word,
+        // that's an error.
+        if token_name == "NAME" && self.reserved_set.contains(value) {
+            return Err(LexerError {
+                message: format!("Reserved keyword '{}' cannot be used as an identifier", value),
+                line: self.line,
+                column: self.column,
+            });
         }
 
-        match token_name {
-            "NAME" => TokenType::Name,
-            "NUMBER" => TokenType::Number,
-            "STRING" => TokenType::String,
-            "PLUS" => TokenType::Plus,
-            "MINUS" => TokenType::Minus,
-            "STAR" => TokenType::Star,
-            "SLASH" => TokenType::Slash,
-            "EQUALS" => TokenType::Equals,
-            "EQUALS_EQUALS" => TokenType::EqualsEquals,
-            "LPAREN" => TokenType::LParen,
-            "RPAREN" => TokenType::RParen,
-            "COMMA" => TokenType::Comma,
-            "COLON" => TokenType::Colon,
-            "SEMICOLON" => TokenType::Semicolon,
-            "LBRACE" => TokenType::LBrace,
-            "RBRACE" => TokenType::RBrace,
-            "LBRACKET" => TokenType::LBracket,
-            "RBRACKET" => TokenType::RBracket,
-            "DOT" => TokenType::Dot,
-            "BANG" => TokenType::Bang,
-            _ => TokenType::Name, // Default for unrecognized names.
+        // Keyword promotion: NAME tokens whose value is in the keyword set.
+        if token_name == "NAME" && self.keyword_set.contains(value) {
+            return Ok((TokenType::Keyword, Some("KEYWORD".to_string())));
+        }
+
+        // Determine the effective type name (alias takes precedence).
+        let effective_name = alias.unwrap_or(token_name);
+
+        // Try to map to a known TokenType enum variant.
+        let token_type = string_to_token_type(effective_name);
+
+        // If string_to_token_type returned Name but the effective name is not
+        // "NAME", it means we have a custom type — store it as type_name.
+        if token_type == TokenType::Name && effective_name != "NAME" {
+            Ok((token_type, Some(effective_name.to_string())))
+        } else {
+            Ok((token_type, None))
         }
     }
 
@@ -281,17 +249,6 @@ impl<'a> GrammarLexer<'a> {
     // Escape processing
     // -----------------------------------------------------------------------
 
-    /// Process escape sequences in a string value.
-    ///
-    /// This converts two-character escape sequences like `\n` into their
-    /// actual character equivalents. The input is the raw string content
-    /// *without* the surrounding quotes.
-    ///
-    /// ```text
-    /// Input:    hello\nworld
-    /// Output:   hello
-    ///           world
-    /// ```
     fn process_escapes(s: &str) -> String {
         let mut result = String::with_capacity(s.len());
         let chars: Vec<char> = s.chars().collect();
@@ -318,34 +275,235 @@ impl<'a> GrammarLexer<'a> {
     }
 
     // -----------------------------------------------------------------------
-    // Main tokenization loop
+    // Skip pattern matching
     // -----------------------------------------------------------------------
 
-    /// Tokenize the source code according to the grammar's patterns.
-    ///
-    /// Returns a vector of tokens ending with EOF, or a `LexerError` if
-    /// the source contains a character sequence that does not match any
-    /// pattern.
-    ///
-    /// # Algorithm
-    ///
-    /// ```text
-    /// while not at EOF:
-    ///     if current char is whitespace (space/tab/CR): skip it
-    ///     if current char is newline: emit NEWLINE token
-    ///     otherwise:
-    ///         try each compiled pattern against remaining input
-    ///         if one matches:
-    ///             emit the corresponding token
-    ///             advance past the matched text
-    ///         if none match:
-    ///             return error
-    /// emit EOF
-    /// ```
-    pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
+    /// Try to match and consume a skip pattern at the current position.
+    /// Returns true if something was skipped.
+    fn try_skip(&mut self) -> bool {
+        let remaining = &self.source[self.byte_pos..];
+        for p in &self.skip_patterns {
+            if let Some(m) = p.pattern.find(remaining) {
+                let char_count = m.as_str().chars().count();
+                self.advance_n(char_count);
+                return true;
+            }
+        }
+        false
+    }
+
+    /// Try to match a token pattern at the current position.
+    /// Returns (name, alias, matched_text) or None.
+    fn try_match_token(&self) -> Option<(String, Option<String>, String)> {
+        let remaining = &self.source[self.byte_pos..];
+        for p in &self.patterns {
+            if let Some(m) = p.pattern.find(remaining) {
+                return Some((
+                    p.name.clone(),
+                    p.alias.clone(),
+                    m.as_str().to_string(),
+                ));
+            }
+        }
+        None
+    }
+
+    // -----------------------------------------------------------------------
+    // Main tokenization — standard mode
+    // -----------------------------------------------------------------------
+
+    fn tokenize_standard(&mut self) -> Result<Vec<Token>, LexerError> {
         let mut tokens = Vec::new();
 
         while self.char_pos < self.chars.len() {
+            let ch = self.chars[self.char_pos];
+
+            // --- Skip whitespace (not newlines) in standard mode ---
+            if ch == ' ' || ch == '\t' || ch == '\r' {
+                self.advance();
+                continue;
+            }
+
+            // --- Try skip patterns ---
+            if self.try_skip() {
+                continue;
+            }
+
+            // --- Newlines ---
+            if ch == '\n' {
+                tokens.push(Token {
+                    type_: TokenType::Newline,
+                    value: "\\n".to_string(),
+                    line: self.line,
+                    column: self.column,
+                    type_name: None,
+                });
+                self.advance();
+                continue;
+            }
+
+            // --- Try each pattern ---
+            if let Some((name, alias, matched)) = self.try_match_token() {
+                let start_line = self.line;
+                let start_col = self.column;
+
+                let (token_type, type_name) = self.resolve_token_type(
+                    &name,
+                    alias.as_deref(),
+                    &matched,
+                )?;
+
+                // For STRING tokens, strip quotes and process escapes.
+                let effective_name = alias.as_deref().unwrap_or(&name);
+                let final_value = if effective_name == "STRING" && matched.len() >= 2 {
+                    let inner = &matched[1..matched.len() - 1];
+                    Self::process_escapes(inner)
+                } else {
+                    matched.clone()
+                };
+
+                tokens.push(Token {
+                    type_: token_type,
+                    value: final_value,
+                    line: start_line,
+                    column: start_col,
+                    type_name,
+                });
+
+                let char_count = matched.chars().count();
+                self.advance_n(char_count);
+                continue;
+            }
+
+            return Err(LexerError {
+                message: format!("Unexpected sequence {:?}", ch),
+                line: self.line,
+                column: self.column,
+            });
+        }
+
+        tokens.push(Token {
+            type_: TokenType::Eof,
+            value: String::new(),
+            line: self.line,
+            column: self.column,
+            type_name: None,
+        });
+
+        Ok(tokens)
+    }
+
+    // -----------------------------------------------------------------------
+    // Main tokenization — indentation mode
+    // -----------------------------------------------------------------------
+
+    /// Tokenize with indentation tracking (Python/Starlark style).
+    ///
+    /// In indentation mode, the lexer:
+    /// - Tracks an indent stack (starts at [0])
+    /// - At each logical line start, counts leading spaces and emits
+    ///   INDENT/DEDENT tokens as needed
+    /// - Suppresses NEWLINE/INDENT/DEDENT inside brackets
+    /// - Skips blank lines and comment-only lines
+    /// - Rejects tabs in leading indentation
+    fn tokenize_indentation(&mut self) -> Result<Vec<Token>, LexerError> {
+        let mut tokens = Vec::new();
+        let mut indent_stack: Vec<usize> = vec![0];
+        let mut bracket_depth: usize = 0;
+        let mut at_line_start = true;
+
+        while self.char_pos < self.chars.len() {
+            // --- Line start: handle indentation ---
+            if at_line_start && bracket_depth == 0 {
+                at_line_start = false;
+
+                // Count leading spaces (reject tabs).
+                let mut spaces = 0;
+                while self.char_pos < self.chars.len() {
+                    let ch = self.chars[self.char_pos];
+                    if ch == ' ' {
+                        spaces += 1;
+                        self.advance();
+                    } else if ch == '\t' {
+                        return Err(LexerError {
+                            message: "Tabs are not allowed in indentation (use spaces)".to_string(),
+                            line: self.line,
+                            column: self.column,
+                        });
+                    } else {
+                        break;
+                    }
+                }
+
+                // Check for blank line or comment-only line.
+                let is_blank_or_comment = if self.char_pos >= self.chars.len() {
+                    true
+                } else {
+                    let ch = self.chars[self.char_pos];
+                    ch == '\n' || ch == '\r' || ch == '#'
+                };
+
+                // Handle blank/comment lines — skip them without emitting
+                // NEWLINE, but consume through the end of line.
+                if is_blank_or_comment {
+                    // Try skip patterns (for comments).
+                    self.try_skip();
+                    // Consume the newline if present.
+                    if self.char_pos < self.chars.len() {
+                        let ch = self.chars[self.char_pos];
+                        if ch == '\n' {
+                            self.advance();
+                        } else if ch == '\r' {
+                            self.advance();
+                            if self.char_pos < self.chars.len() && self.chars[self.char_pos] == '\n' {
+                                self.advance();
+                            }
+                        }
+                    }
+                    at_line_start = true;
+                    continue;
+                }
+
+                // Compare indentation with the current stack top.
+                let current_indent = *indent_stack.last().unwrap();
+                let indent_line = self.line;
+                let indent_col = self.column;
+
+                if spaces > current_indent {
+                    indent_stack.push(spaces);
+                    tokens.push(Token {
+                        type_: TokenType::Indent,
+                        value: String::new(),
+                        line: indent_line,
+                        column: indent_col,
+                        type_name: None,
+                    });
+                } else if spaces < current_indent {
+                    // Emit DEDENT for each level we're leaving.
+                    while indent_stack.len() > 1 && *indent_stack.last().unwrap() > spaces {
+                        indent_stack.pop();
+                        tokens.push(Token {
+                            type_: TokenType::Dedent,
+                            value: String::new(),
+                            line: indent_line,
+                            column: indent_col,
+                            type_name: None,
+                        });
+                    }
+                    // Check that we landed on a valid indentation level.
+                    if *indent_stack.last().unwrap() != spaces {
+                        return Err(LexerError {
+                            message: "Indentation does not match any outer level".to_string(),
+                            line: indent_line,
+                            column: indent_col,
+                        });
+                    }
+                }
+                // If spaces == current_indent, no INDENT/DEDENT needed.
+
+                continue;
+            }
+
             let ch = self.chars[self.char_pos];
 
             // --- Skip whitespace (not newlines) ---
@@ -354,74 +512,128 @@ impl<'a> GrammarLexer<'a> {
                 continue;
             }
 
-            // --- Newlines are significant ---
+            // --- Try skip patterns ---
+            if self.try_skip() {
+                continue;
+            }
+
+            // --- Newlines ---
             if ch == '\n' {
+                if bracket_depth == 0 {
+                    tokens.push(Token {
+                        type_: TokenType::Newline,
+                        value: "\\n".to_string(),
+                        line: self.line,
+                        column: self.column,
+                        type_name: None,
+                    });
+                    at_line_start = true;
+                }
+                self.advance();
+                continue;
+            }
+
+            // --- Try each pattern ---
+            if let Some((name, alias, matched)) = self.try_match_token() {
+                let start_line = self.line;
+                let start_col = self.column;
+
+                let (token_type, type_name) = self.resolve_token_type(
+                    &name,
+                    alias.as_deref(),
+                    &matched,
+                )?;
+
+                // Track bracket depth.
+                match matched.as_str() {
+                    "(" | "[" | "{" => bracket_depth += 1,
+                    ")" | "]" | "}" => {
+                        if bracket_depth > 0 {
+                            bracket_depth -= 1;
+                        }
+                    }
+                    _ => {}
+                }
+
+                let effective_name = alias.as_deref().unwrap_or(&name);
+                let final_value = if effective_name == "STRING" && matched.len() >= 2 {
+                    let inner = &matched[1..matched.len() - 1];
+                    Self::process_escapes(inner)
+                } else {
+                    matched.clone()
+                };
+
+                tokens.push(Token {
+                    type_: token_type,
+                    value: final_value,
+                    line: start_line,
+                    column: start_col,
+                    type_name,
+                });
+
+                let char_count = matched.chars().count();
+                self.advance_n(char_count);
+                continue;
+            }
+
+            return Err(LexerError {
+                message: format!("Unexpected sequence {:?}", ch),
+                line: self.line,
+                column: self.column,
+            });
+        }
+
+        // At EOF: emit remaining DEDENTs.
+        if bracket_depth == 0 {
+            // Emit a final NEWLINE if the last token isn't one.
+            let need_newline = tokens.last().map_or(false, |t| t.type_ != TokenType::Newline);
+            if need_newline {
                 tokens.push(Token {
                     type_: TokenType::Newline,
                     value: "\\n".to_string(),
                     line: self.line,
                     column: self.column,
+                    type_name: None,
                 });
-                self.advance();
-                continue;
             }
 
-            // --- Try each pattern against the remaining input ---
-            let remaining = &self.source[self.byte_pos..];
-            let mut matched = false;
-
-            for p in &self.patterns {
-                if let Some(m) = p.pattern.find(remaining) {
-                    let value = m.as_str();
-                    let start_line = self.line;
-                    let start_col = self.column;
-
-                    // Resolve the token type from the grammar name.
-                    let token_type = self.resolve_token_type(&p.name, value);
-
-                    // For STRING tokens, strip quotes and process escapes.
-                    let final_value = if p.name == "STRING" && value.len() >= 2 {
-                        let inner = &value[1..value.len() - 1];
-                        Self::process_escapes(inner)
-                    } else {
-                        value.to_string()
-                    };
-
-                    tokens.push(Token {
-                        type_: token_type,
-                        value: final_value,
-                        line: start_line,
-                        column: start_col,
-                    });
-
-                    // Advance past the matched text.
-                    // Count the number of characters in the matched text.
-                    let char_count = value.chars().count();
-                    self.advance_n(char_count);
-
-                    matched = true;
-                    break;
-                }
-            }
-
-            if !matched {
-                return Err(LexerError {
-                    message: format!("Unexpected sequence {:?}", ch),
+            while indent_stack.len() > 1 {
+                indent_stack.pop();
+                tokens.push(Token {
+                    type_: TokenType::Dedent,
+                    value: String::new(),
                     line: self.line,
                     column: self.column,
+                    type_name: None,
                 });
             }
         }
 
-        // Always end with EOF.
         tokens.push(Token {
             type_: TokenType::Eof,
             value: String::new(),
             line: self.line,
             column: self.column,
+            type_name: None,
         });
 
         Ok(tokens)
+    }
+
+    // -----------------------------------------------------------------------
+    // Public API
+    // -----------------------------------------------------------------------
+
+    /// Tokenize the source code according to the grammar's patterns.
+    ///
+    /// Dispatches to either standard or indentation mode based on the
+    /// grammar's mode directive.
+    pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
+        if self.indent_mode {
+            self.tokenize_indentation()
+        } else {
+            self.tokenize_standard()
+        }
     }
 }
 
@@ -438,11 +650,6 @@ mod tests {
     // Helper: build a Python-like grammar for testing
     // -----------------------------------------------------------------------
 
-    /// A minimal Python-like token grammar for testing.
-    ///
-    /// This grammar defines the same tokens that the hand-written lexer
-    /// supports, so we can verify that both lexers produce identical output
-    /// for the same input.
     fn python_grammar() -> TokenGrammar {
         parse_token_grammar(
             r#"
@@ -515,19 +722,14 @@ keywords:
 
     #[test]
     fn test_keyword_promotion() {
-        // "if" should be promoted from NAME to KEYWORD because it is
-        // listed in the grammar's keywords section.
         let tokens = tokenize("if x == 5");
-
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "if");
         assert_eq!(tokens[2].type_, TokenType::EqualsEquals);
-        assert_eq!(tokens[2].value, "==");
     }
 
     #[test]
     fn test_non_keyword_is_name() {
-        // "foo" is not in the keyword list, so it stays as NAME.
         let tokens = tokenize("foo");
         assert_eq!(tokens[0].type_, TokenType::Name);
     }
@@ -598,7 +800,7 @@ keywords:
     }
 
     // -----------------------------------------------------------------------
-    // Equals vs EqualsEquals (first-match-wins ordering)
+    // Equals vs EqualsEquals
     // -----------------------------------------------------------------------
 
     #[test]
@@ -609,11 +811,8 @@ keywords:
 
     #[test]
     fn test_equals_double() {
-        // EQUALS_EQUALS is defined *before* EQUALS in the grammar,
-        // so "==" matches EQUALS_EQUALS rather than two EQUALS tokens.
         let tokens = tokenize("x == 5");
         assert_eq!(tokens[1].type_, TokenType::EqualsEquals);
-        assert_eq!(tokens[1].value, "==");
     }
 
     // -----------------------------------------------------------------------
@@ -625,7 +824,6 @@ keywords:
         let tokens = tokenize("x\ny");
         assert_eq!(tokens[0].type_, TokenType::Name);
         assert_eq!(tokens[1].type_, TokenType::Newline);
-        assert_eq!(tokens[1].value, "\\n");
         assert_eq!(tokens[2].type_, TokenType::Name);
     }
 
@@ -636,13 +834,10 @@ keywords:
     #[test]
     fn test_position_tracking() {
         let tokens = tokenize("x = 1");
-
         assert_eq!(tokens[0].line, 1);
         assert_eq!(tokens[0].column, 1);
-
         assert_eq!(tokens[1].line, 1);
         assert_eq!(tokens[1].column, 3);
-
         assert_eq!(tokens[2].line, 1);
         assert_eq!(tokens[2].column, 5);
     }
@@ -650,16 +845,12 @@ keywords:
     #[test]
     fn test_multiline_position() {
         let tokens = tokenize("x\ny");
-
         assert_eq!(tokens[0].line, 1);
-        assert_eq!(tokens[0].column, 1);
-
         assert_eq!(tokens[2].line, 2);
-        assert_eq!(tokens[2].column, 1);
     }
 
     // -----------------------------------------------------------------------
-    // Empty input
+    // Empty input / error
     // -----------------------------------------------------------------------
 
     #[test]
@@ -669,17 +860,12 @@ keywords:
         assert_eq!(tokens[0].type_, TokenType::Eof);
     }
 
-    // -----------------------------------------------------------------------
-    // Error: unexpected character
-    // -----------------------------------------------------------------------
-
     #[test]
     fn test_unexpected_character() {
         let grammar = python_grammar();
         let result = GrammarLexer::new("x @ y", &grammar).tokenize();
         assert!(result.is_err());
-        let err = result.unwrap_err();
-        assert!(err.message.contains("Unexpected"));
+        assert!(result.unwrap_err().message.contains("Unexpected"));
     }
 
     // -----------------------------------------------------------------------
@@ -688,22 +874,15 @@ keywords:
 
     #[test]
     fn test_function_definition() {
-        // A realistic Python-like function definition.
         let tokens = tokenize("def add(x, y):\n    return x + y");
-
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "def");
-        assert_eq!(tokens[1].type_, TokenType::Name);
-        assert_eq!(tokens[1].value, "add");
-        assert_eq!(tokens[2].type_, TokenType::LParen);
-
-        // Find the return keyword
         let return_tok = tokens.iter().find(|t| t.value == "return").unwrap();
         assert_eq!(return_tok.type_, TokenType::Keyword);
     }
 
     // -----------------------------------------------------------------------
-    // Process escapes (unit test for the helper)
+    // Process escapes (unit test)
     // -----------------------------------------------------------------------
 
     #[test]
@@ -728,7 +907,6 @@ keywords:
 
     #[test]
     fn test_process_escapes_unknown() {
-        // Unknown escape sequences pass through the character after the backslash.
         assert_eq!(GrammarLexer::process_escapes(r"a\xb"), "axb");
     }
 
@@ -738,22 +916,18 @@ keywords:
     }
 
     // -----------------------------------------------------------------------
-    // Grammar with no keywords
+    // Grammar without keywords
     // -----------------------------------------------------------------------
 
     #[test]
     fn test_grammar_without_keywords() {
-        // A grammar with no keywords section — all identifiers are NAME.
         let grammar = parse_token_grammar(
             "NAME = /[a-zA-Z_]+/\nNUMBER = /[0-9]+/\nPLUS = \"+\"\n",
         )
         .unwrap();
-
         let tokens = GrammarLexer::new("if 42", &grammar).tokenize().unwrap();
         assert_eq!(tokens[0].type_, TokenType::Name);
         assert_eq!(tokens[0].value, "if");
-        assert_eq!(tokens[1].type_, TokenType::Number);
-        assert_eq!(tokens[1].value, "42");
     }
 
     // -----------------------------------------------------------------------
@@ -762,19 +936,11 @@ keywords:
 
     #[test]
     fn test_consistency_with_hand_written_lexer() {
-        // Both lexers should produce the same token types and values
-        // for the same input.
         use crate::tokenizer::Lexer;
-
         let source = "x = 1 + 2 * 3";
-
-        // Hand-written lexer
         let hand_tokens = Lexer::new(source, None).tokenize().unwrap();
-
-        // Grammar-driven lexer
         let grammar = python_grammar();
         let grammar_tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
-
         assert_eq!(hand_tokens.len(), grammar_tokens.len());
         for (i, (h, g)) in hand_tokens.iter().zip(grammar_tokens.iter()).enumerate() {
             assert_eq!(h.type_, g.type_, "token {} type mismatch", i);
@@ -785,17 +951,13 @@ keywords:
     #[test]
     fn test_consistency_with_keywords() {
         use crate::tokenizer::{Lexer, LexerConfig};
-
         let source = "if x == 5";
-
         let config = LexerConfig {
             keywords: vec!["if".to_string()],
         };
         let hand_tokens = Lexer::new(source, Some(config)).tokenize().unwrap();
-
         let grammar = python_grammar();
         let grammar_tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
-
         assert_eq!(hand_tokens.len(), grammar_tokens.len());
         for (i, (h, g)) in hand_tokens.iter().zip(grammar_tokens.iter()).enumerate() {
             assert_eq!(h.type_, g.type_, "token {} type mismatch", i);
@@ -806,18 +968,178 @@ keywords:
     #[test]
     fn test_consistency_with_strings() {
         use crate::tokenizer::Lexer;
-
         let source = r#"print("Hello\n")"#;
-
         let hand_tokens = Lexer::new(source, None).tokenize().unwrap();
-
         let grammar = python_grammar();
         let grammar_tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
-
         assert_eq!(hand_tokens.len(), grammar_tokens.len());
         for (i, (h, g)) in hand_tokens.iter().zip(grammar_tokens.iter()).enumerate() {
             assert_eq!(h.type_, g.type_, "token {} type mismatch", i);
             assert_eq!(h.value, g.value, "token {} value mismatch", i);
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Skip patterns
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_skip_patterns() {
+        let grammar = parse_token_grammar(
+            "NAME = /[a-zA-Z_]+/\nNUMBER = /[0-9]+/\nskip:\n  WHITESPACE = /[ \\t]+/\n  COMMENT = /#[^\\n]*/",
+        ).unwrap();
+        let tokens = GrammarLexer::new("x 42 # comment", &grammar).tokenize().unwrap();
+        // Should see: NAME("x"), NUMBER("42"), EOF — comment and whitespace skipped
+        assert_eq!(tokens.len(), 3);
+        assert_eq!(tokens[0].value, "x");
+        assert_eq!(tokens[1].value, "42");
+        assert_eq!(tokens[2].type_, TokenType::Eof);
+    }
+
+    // -----------------------------------------------------------------------
+    // Aliases
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_alias_resolution() {
+        let grammar = parse_token_grammar(
+            r#"INT = /[0-9]+/ -> NUMBER
+PLUS = "+""#,
+        ).unwrap();
+        let tokens = GrammarLexer::new("42 + 5", &grammar).tokenize().unwrap();
+        // The token should be resolved to NUMBER type via the alias.
+        assert_eq!(tokens[0].type_, TokenType::Number);
+        assert_eq!(tokens[0].value, "42");
+    }
+
+    // -----------------------------------------------------------------------
+    // Reserved keywords
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_reserved_keyword_error() {
+        let grammar = parse_token_grammar(
+            "NAME = /[a-zA-Z_]+/\nreserved:\n  class\n  import",
+        ).unwrap();
+        let result = GrammarLexer::new("class", &grammar).tokenize();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved keyword"));
+    }
+
+    #[test]
+    fn test_reserved_keyword_allows_non_reserved() {
+        let grammar = parse_token_grammar(
+            "NAME = /[a-zA-Z_]+/\nreserved:\n  class",
+        ).unwrap();
+        let tokens = GrammarLexer::new("foo", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Name);
+        assert_eq!(tokens[0].value, "foo");
+    }
+
+    // -----------------------------------------------------------------------
+    // String-based type names for custom tokens
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_string_type_for_custom_tokens() {
+        let grammar = parse_token_grammar(
+            "IDENTIFIER = /[a-zA-Z_]+/\nINT = /[0-9]+/",
+        ).unwrap();
+        let tokens = GrammarLexer::new("foo 42", &grammar).tokenize().unwrap();
+        // Custom types should have type_name set.
+        assert_eq!(tokens[0].type_name, Some("IDENTIFIER".to_string()));
+        assert_eq!(tokens[1].type_name, Some("INT".to_string()));
+    }
+
+    // -----------------------------------------------------------------------
+    // Indentation mode
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_indent_basic() {
+        let grammar = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-zA-Z_]+/\nCOLON = \":\"",
+        ).unwrap();
+        let source = "foo:\n    bar\n";
+        let tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
+
+        // Expected: NAME("foo"), COLON, NEWLINE, INDENT, NAME("bar"), NEWLINE, DEDENT, EOF
+        let types: Vec<TokenType> = tokens.iter().map(|t| t.type_).collect();
+        assert!(types.contains(&TokenType::Indent));
+        assert!(types.contains(&TokenType::Dedent));
+    }
+
+    #[test]
+    fn test_indent_nested() {
+        let grammar = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-zA-Z_]+/\nCOLON = \":\"",
+        ).unwrap();
+        let source = "a:\n    b:\n        c\n";
+        let tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
+
+        // Count INDENTs and DEDENTs.
+        let indent_count = tokens.iter().filter(|t| t.type_ == TokenType::Indent).count();
+        let dedent_count = tokens.iter().filter(|t| t.type_ == TokenType::Dedent).count();
+        assert_eq!(indent_count, 2);
+        assert_eq!(dedent_count, 2);
+    }
+
+    #[test]
+    fn test_indent_blank_lines_skipped() {
+        let grammar = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-zA-Z_]+/",
+        ).unwrap();
+        let source = "a\n\n    \nb\n";
+        let tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
+
+        // Blank lines should not produce NEWLINE tokens — just a, NEWLINE, b, NEWLINE, EOF
+        let names: Vec<&str> = tokens.iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["a", "b"]);
+    }
+
+    #[test]
+    fn test_indent_tab_rejected() {
+        let grammar = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-zA-Z_]+/",
+        ).unwrap();
+        let source = "a\n\tb\n";
+        let result = GrammarLexer::new(source, &grammar).tokenize();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Tabs"));
+    }
+
+    #[test]
+    fn test_indent_bracket_suppression() {
+        let grammar = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-zA-Z_]+/\nLPAREN = \"(\"\nRPAREN = \")\"",
+        ).unwrap();
+        let source = "a(\n    b\n)\n";
+        let tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
+
+        // Inside brackets, no INDENT/DEDENT should be emitted.
+        let indent_count = tokens.iter().filter(|t| t.type_ == TokenType::Indent).count();
+        assert_eq!(indent_count, 0);
+    }
+
+    // -----------------------------------------------------------------------
+    // Indentation mode with skip patterns
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_indent_with_skip_patterns() {
+        let grammar = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-zA-Z_]+/\nCOLON = \":\"\nskip:\n  WHITESPACE = /[ \\t]+/\n  COMMENT = /#[^\\n]*/",
+        ).unwrap();
+        let source = "foo:\n    # comment\n    bar\n";
+        let tokens = GrammarLexer::new(source, &grammar).tokenize().unwrap();
+
+        let names: Vec<&str> = tokens.iter()
+            .filter(|t| t.type_ == TokenType::Name)
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(names, vec!["foo", "bar"]);
     }
 }

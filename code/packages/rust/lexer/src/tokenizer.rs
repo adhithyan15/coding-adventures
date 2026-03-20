@@ -280,6 +280,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
+            type_name: None,
         }
     }
 
@@ -321,6 +322,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
+            type_name: None,
         }
     }
 
@@ -413,6 +415,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
+            type_name: None,
         })
     }
 
@@ -469,6 +472,7 @@ impl<'a> Lexer<'a> {
                     value: "\\n".to_string(),
                     line: self.line,
                     column: self.column,
+                    type_name: None,
                 };
                 self.advance();
                 tokens.push(tok);
@@ -510,6 +514,7 @@ impl<'a> Lexer<'a> {
                         value: "==".to_string(),
                         line: start_line,
                         column: start_col,
+                        type_name: None,
                     });
                 } else {
                     tokens.push(Token {
@@ -517,6 +522,7 @@ impl<'a> Lexer<'a> {
                         value: "=".to_string(),
                         line: start_line,
                         column: start_col,
+                        type_name: None,
                     });
                 }
                 continue;
@@ -529,6 +535,7 @@ impl<'a> Lexer<'a> {
                     value: ch.to_string(),
                     line: self.line,
                     column: self.column,
+                    type_name: None,
                 };
                 self.advance();
                 tokens.push(tok);
@@ -549,6 +556,7 @@ impl<'a> Lexer<'a> {
             value: String::new(),
             line: self.line,
             column: self.column,
+            type_name: None,
         });
 
         Ok(tokens)

@@ -66,12 +66,22 @@ pub fn cross_validate(
 ) -> Vec<String> {
     let mut issues = Vec::new();
 
-    let defined_tokens = token_names(token_grammar);
+    let mut defined_tokens = token_names(token_grammar);
     let referenced_tokens = grammar_token_references(parser_grammar);
 
+    // --- Implicit tokens ---
+    // EOF is always implicitly available (every token stream ends with it).
+    defined_tokens.insert("EOF".to_string());
+
+    // In indentation mode, INDENT/DEDENT/NEWLINE are synthesized by the
+    // lexer and don't need to be defined in the .tokens file.
+    if token_grammar.mode.as_deref() == Some("indentation") {
+        defined_tokens.insert("INDENT".to_string());
+        defined_tokens.insert("DEDENT".to_string());
+        defined_tokens.insert("NEWLINE".to_string());
+    }
+
     // --- Missing token references (errors) ---
-    // Every UPPERCASE name used in the grammar must exist in the tokens file.
-    // We sort for deterministic output, which makes testing easier.
     let mut sorted_refs: Vec<&String> = referenced_tokens.iter().collect();
     sorted_refs.sort();
     for ref_name in sorted_refs {
@@ -84,11 +94,11 @@ pub fn cross_validate(
     }
 
     // --- Unused tokens (warnings) ---
-    // Every token defined in the `.tokens` file should ideally be used
-    // somewhere in the grammar. We iterate in definition order (not
-    // alphabetical) to match the file layout.
+    // A token counts as "used" if either its name or its alias is referenced.
     for defn in &token_grammar.definitions {
-        if !referenced_tokens.contains(&defn.name) {
+        let name_used = referenced_tokens.contains(&defn.name);
+        let alias_used = defn.alias.as_ref().map_or(false, |a| referenced_tokens.contains(a));
+        if !name_used && !alias_used {
             issues.push(format!(
                 "Warning: Token '{}' (line {}) is defined but never used in the grammar",
                 defn.name, defn.line_number
@@ -193,5 +203,60 @@ mod tests {
         let grammar = parse_parser_grammar("").unwrap();
         let issues = cross_validate(&tokens, &grammar);
         assert!(issues.is_empty());
+    }
+
+    // -----------------------------------------------------------------------
+    // Indentation mode implicit tokens
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_indent_dedent_newline_implicit_in_indent_mode() {
+        // In indentation mode, INDENT/DEDENT/NEWLINE are implicitly available.
+        let tokens = parse_token_grammar(
+            "mode: indentation\nNAME = /[a-z]+/\nCOLON = \":\"",
+        ).unwrap();
+        let grammar = parse_parser_grammar(
+            "file = { NAME COLON NEWLINE INDENT NAME NEWLINE DEDENT } ;",
+        ).unwrap();
+        let issues = cross_validate(&tokens, &grammar);
+        let errors: Vec<&String> = issues.iter().filter(|i| i.starts_with("Error")).collect();
+        assert!(errors.is_empty());
+    }
+
+    #[test]
+    fn test_indent_missing_without_indent_mode() {
+        // Without indentation mode, INDENT is not implicitly available.
+        let tokens = parse_token_grammar("NAME = /[a-z]+/").unwrap();
+        let grammar = parse_parser_grammar("file = NAME INDENT NAME ;").unwrap();
+        let issues = cross_validate(&tokens, &grammar);
+        let errors: Vec<&String> = issues.iter().filter(|i| i.starts_with("Error")).collect();
+        assert!(errors.iter().any(|e| e.contains("INDENT")));
+    }
+
+    // -----------------------------------------------------------------------
+    // Alias cross-validation
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_aliased_tokens_not_reported_unused() {
+        // A token with an alias should not be reported as unused if the
+        // alias is referenced in the grammar.
+        let tokens = parse_token_grammar(
+            r#"STRING_DQ = /"[^"]*"/ -> STRING"#,
+        ).unwrap();
+        let grammar = parse_parser_grammar("expr = STRING ;").unwrap();
+        let issues = cross_validate(&tokens, &grammar);
+        let warnings: Vec<&String> = issues.iter().filter(|i| i.starts_with("Warning")).collect();
+        assert!(warnings.is_empty());
+    }
+
+    #[test]
+    fn test_eof_always_implicit() {
+        // EOF is always implicitly available, even without defining it.
+        let tokens = parse_token_grammar("NAME = /[a-z]+/").unwrap();
+        let grammar = parse_parser_grammar("file = NAME EOF ;").unwrap();
+        let issues = cross_validate(&tokens, &grammar);
+        let errors: Vec<&String> = issues.iter().filter(|i| i.starts_with("Error")).collect();
+        assert!(!errors.iter().any(|e| e.contains("EOF")));
     }
 }
