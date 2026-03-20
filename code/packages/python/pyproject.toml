@@ -33,6 +33,7 @@ members = [
     "vendor-api-simulators",
     "blas-library",
     "ml-framework-core",
+    "ml-framework-torch",
 ]
 
 [tool.uv.sources]
@@ -64,3 +65,11 @@ coding-adventures-compute-runtime = { workspace = true }
 coding-adventures-vendor-api-simulators = { workspace = true }
 coding-adventures-blas-library = { workspace = true }
 coding-adventures-ml-framework-core = { workspace = true }
+coding-adventures-ml-framework-torch = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.15.7",
+]
