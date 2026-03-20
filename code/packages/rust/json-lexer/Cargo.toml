@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-json-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "JSON lexer — tokenizes JSON source text using the grammar-driven lexer and the json.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

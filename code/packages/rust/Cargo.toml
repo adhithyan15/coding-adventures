@@ -26,5 +26,7 @@ members = [
     "starlark-parser",
     "activation-functions",
     "perceptron",
+    "json-lexer",
+    "json-parser",
     "vendor-api-simulators",
 ]
