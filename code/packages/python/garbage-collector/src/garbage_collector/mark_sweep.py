@@ -125,11 +125,18 @@ class MarkAndSweepGC(GarbageCollector):
 
         # ---------------------------------------------------------------
         # Next address to assign. Monotonically increasing — we never
-        # reuse addresses. This simplifies debugging (address 42 always
-        # means the 43rd object ever allocated) and avoids dangling
+        # reuse addresses. This simplifies debugging and avoids dangling
         # pointer issues.
+        #
+        # Addresses start at 0x10000 (65536) rather than 0 to avoid
+        # ambiguity between heap addresses and small integers. Without
+        # this offset, a cons cell (car=1, cdr=2) would have car values
+        # indistinguishable from heap addresses 1 and 2, making it
+        # impossible for the formatter to know whether "1" is the number
+        # or a pointer to heap object #1. Starting at 65536 puts heap
+        # addresses far above typical integer values used in programs.
         # ---------------------------------------------------------------
-        self._next_address: int = 0
+        self._next_address: int = 0x10000
 
         # ---------------------------------------------------------------
         # Counters for introspection and testing.
@@ -142,7 +149,8 @@ class MarkAndSweepGC(GarbageCollector):
         """Store an object on the heap and return its address.
 
         Each call assigns a new, never-before-used address. Addresses
-        are monotonically increasing integers starting from 0.
+        are monotonically increasing integers starting from 0x10000 (65536)
+        to avoid ambiguity with small integer values in programs.
 
         Args:
             obj: The heap object to store.
@@ -153,8 +161,8 @@ class MarkAndSweepGC(GarbageCollector):
         Example::
 
             gc = MarkAndSweepGC()
-            a = gc.allocate(ConsCell(car=1, cdr=2))  # returns 0
-            b = gc.allocate(Symbol(name="x"))          # returns 1
+            a = gc.allocate(ConsCell(car=1, cdr=2))  # returns 0x10000
+            b = gc.allocate(Symbol(name="x"))          # returns 0x10001
         """
         address = self._next_address
         self._next_address += 1
