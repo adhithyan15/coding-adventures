@@ -115,3 +115,63 @@ func CCE(yTrue, yPred []float64) (float64, error) {
 	}
 	return -sum / float64(len(yTrue)), nil
 }
+
+// MSED calculates the derivative of the Mean Squared Error with respect to predictions.
+func MSED(yTrue, yPred []float64) ([]float64, error) {
+	if len(yTrue) != len(yPred) || len(yTrue) == 0 {
+		return nil, errors.New("slices must have the same non-zero length")
+	}
+	n := float64(len(yTrue))
+	res := make([]float64, len(yTrue))
+	for i := range yTrue {
+		res[i] = (2.0 / n) * (yPred[i] - yTrue[i])
+	}
+	return res, nil
+}
+
+// MAED calculates the derivative of the Mean Absolute Error with respect to predictions.
+func MAED(yTrue, yPred []float64) ([]float64, error) {
+	if len(yTrue) != len(yPred) || len(yTrue) == 0 {
+		return nil, errors.New("slices must have the same non-zero length")
+	}
+	n := float64(len(yTrue))
+	res := make([]float64, len(yTrue))
+	for i := range yTrue {
+		if yPred[i] > yTrue[i] {
+			res[i] = 1.0 / n
+		} else if yPred[i] < yTrue[i] {
+			res[i] = -1.0 / n
+		} else {
+			res[i] = 0.0
+		}
+	}
+	return res, nil
+}
+
+// BCED calculates the derivative of the Binary Cross-Entropy with respect to predictions.
+func BCED(yTrue, yPred []float64) ([]float64, error) {
+	if len(yTrue) != len(yPred) || len(yTrue) == 0 {
+		return nil, errors.New("slices must have the same non-zero length")
+	}
+	n := float64(len(yTrue))
+	res := make([]float64, len(yTrue))
+	for i := range yTrue {
+		p := math.Max(epsilon, math.Min(1-epsilon, yPred[i]))
+		res[i] = (1.0 / n) * ((p - yTrue[i]) / (p * (1.0 - p)))
+	}
+	return res, nil
+}
+
+// CCED calculates the derivative of the Categorical Cross-Entropy with respect to predictions.
+func CCED(yTrue, yPred []float64) ([]float64, error) {
+	if len(yTrue) != len(yPred) || len(yTrue) == 0 {
+		return nil, errors.New("slices must have the same non-zero length")
+	}
+	n := float64(len(yTrue))
+	res := make([]float64, len(yTrue))
+	for i := range yTrue {
+		p := math.Max(epsilon, math.Min(1-epsilon, yPred[i]))
+		res[i] = (-1.0 / n) * (yTrue[i] / p)
+	}
+	return res, nil
+}
