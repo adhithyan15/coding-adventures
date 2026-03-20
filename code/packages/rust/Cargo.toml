@@ -28,4 +28,5 @@ members = [
     "starlark-parser",
     "json-lexer",
     "json-parser",
+    "vendor-api-simulators",
 ]
