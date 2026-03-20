@@ -15,7 +15,7 @@ SimpleCov.start do
 
   # Set a minimum coverage threshold — fail the build if coverage drops
   # below 80% (our project standard is >80%).
-  minimum_coverage 70
+  minimum_coverage 80
 end
 
 require "minitest/autorun"
