@@ -66,3 +66,17 @@ export type { CLRCodeObject } from "./clr-compiler.js";
 // WASM compiler
 export { WASMCompiler } from "./wasm-compiler.js";
 export type { WASMCodeObject } from "./wasm-compiler.js";
+
+// Generic compiler framework
+export {
+  GenericCompiler,
+  CompilerError,
+  UnhandledRuleError,
+  DefaultCompilerScope,
+} from "./generic-compiler.js";
+export type {
+  CompileHandler,
+  ASTNode,
+  TokenNode,
+  CompilerScope,
+} from "./generic-compiler.js";
