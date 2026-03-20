@@ -21,4 +21,5 @@ members = [
     "device-simulator",
     "compute-runtime",
     "jit-compiler",
+    "vendor-api-simulators",
 ]
