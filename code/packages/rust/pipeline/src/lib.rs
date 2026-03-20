@@ -770,32 +770,8 @@ fn token_to_json(token: &Token) -> Value {
     })
 }
 
-fn token_type_name(token_type: TokenType) -> &'static str {
-    match token_type {
-        TokenType::Name => "NAME",
-        TokenType::Number => "NUMBER",
-        TokenType::String => "STRING",
-        TokenType::Keyword => "KEYWORD",
-        TokenType::Plus => "PLUS",
-        TokenType::Minus => "MINUS",
-        TokenType::Star => "STAR",
-        TokenType::Slash => "SLASH",
-        TokenType::Equals => "EQUALS",
-        TokenType::EqualsEquals => "EQUALS_EQUALS",
-        TokenType::LParen => "LPAREN",
-        TokenType::RParen => "RPAREN",
-        TokenType::Comma => "COMMA",
-        TokenType::Colon => "COLON",
-        TokenType::Semicolon => "SEMICOLON",
-        TokenType::LBrace => "LBRACE",
-        TokenType::RBrace => "RBRACE",
-        TokenType::LBracket => "LBRACKET",
-        TokenType::RBracket => "RBRACKET",
-        TokenType::Dot => "DOT",
-        TokenType::Bang => "BANG",
-        TokenType::Newline => "NEWLINE",
-        TokenType::Eof => "EOF",
-    }
+fn token_type_name(token_type: TokenType) -> String {
+    token_type.to_string().to_ascii_uppercase()
 }
 
 fn runtime_value_display(value: &RuntimeValue) -> String {
