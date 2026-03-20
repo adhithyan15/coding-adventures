@@ -17,6 +17,9 @@ members = [
     "gpu-core",
     "parallel-execution-engine",
     "gradient-descent",
-    "matrix",
     "compute-unit",
+    "device-simulator",
+    "compute-runtime",
+    "jit-compiler",
+    "matrix",
 ]

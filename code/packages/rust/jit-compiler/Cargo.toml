@@ -1,0 +1,9 @@
+[package]
+name = "jit-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "JIT compiler scaffolding for hot-path profiling and native block management"
+
+[lib]
+name = "jit_compiler"
+path = "src/lib.rs"
