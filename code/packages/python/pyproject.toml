@@ -25,6 +25,7 @@ members = [
     "fp-arithmetic",
     "clock",
     "gpu-core",
+    "parallel-execution-engine",
 ]
 
 [tool.uv.sources]
@@ -48,3 +49,4 @@ coding-adventures-clr-simulator = { workspace = true }
 coding-adventures-fp-arithmetic = { workspace = true }
 coding-adventures-clock = { workspace = true }
 coding-adventures-gpu-core = { workspace = true }
+coding-adventures-parallel-execution-engine = { workspace = true }

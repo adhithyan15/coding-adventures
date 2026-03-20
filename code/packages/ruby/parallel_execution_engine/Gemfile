@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_fp_arithmetic", path: "../fp_arithmetic"
+gem "coding_adventures_logic_gates", path: "../logic_gates"
+gem "coding_adventures_arithmetic", path: "../arithmetic"
+gem "coding_adventures_clock", path: "../clock"
+gem "coding_adventures_gpu_core", path: "../gpu_core"
