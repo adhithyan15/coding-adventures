@@ -246,7 +246,7 @@ class Token:
         column: The 1-based column number where this token starts.
     """
 
-    type: TokenType
+    type: TokenType | str
     value: str
     line: int
     column: int

@@ -721,3 +721,186 @@ describe("TestGrammarParseError", () => {
     expect(String(error)).toContain("Parse error");
   });
 });
+
+// =============================================================================
+// TEST: PACKRAT MEMOIZATION
+// =============================================================================
+
+describe("TestPackratMemoization", () => {
+  it("should produce identical results on repeated parsing", () => {
+    const grammarSource = `
+program = { statement } ;
+statement = assignment | expression_stmt ;
+assignment = NAME EQUALS expression ;
+expression_stmt = expression ;
+expression = NUMBER ;
+`;
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NUMBER", value: "42", line: 1, column: 1 },
+      { type: "EOF", value: "", line: 1, column: 3 },
+    ];
+    const parser1 = new GrammarParser(tokens, pg);
+    const ast1 = parser1.parse();
+    const parser2 = new GrammarParser(tokens, pg);
+    const ast2 = parser2.parse();
+    expect(ast1.ruleName).toBe(ast2.ruleName);
+  });
+});
+
+// =============================================================================
+// TEST: STRING-BASED TOKEN TYPES
+// =============================================================================
+
+describe("TestStringTokenTypes", () => {
+  it("should match string-based token types", () => {
+    const grammarSource = "expr = INT ;";
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "INT", value: "42", line: 1, column: 1 },
+      { type: "EOF", value: "", line: 1, column: 3 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    const ast = parser.parse();
+    expect(ast.ruleName).toBe("expr");
+  });
+});
+
+// =============================================================================
+// TEST: SIGNIFICANT NEWLINES
+// =============================================================================
+
+describe("TestSignificantNewlines", () => {
+  it("should detect newlines as significant when grammar uses NEWLINE", () => {
+    const grammarSource = "file = { NAME NEWLINE } ;";
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NAME", value: "x", line: 1, column: 1 },
+      { type: "NEWLINE", value: "\\n", line: 1, column: 2 },
+      { type: "EOF", value: "", line: 2, column: 1 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    expect(parser.isNewlinesSignificant()).toBe(true);
+    const ast = parser.parse();
+    expect(ast.ruleName).toBe("file");
+  });
+
+  it("should treat newlines as insignificant when not referenced", () => {
+    const grammarSource = "expr = NUMBER ;";
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NEWLINE", value: "\\n", line: 1, column: 1 },
+      { type: "NUMBER", value: "42", line: 2, column: 1 },
+      { type: "EOF", value: "", line: 2, column: 3 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    expect(parser.isNewlinesSignificant()).toBe(false);
+    const ast = parser.parse();
+    expect(ast.ruleName).toBe("expr");
+  });
+});
+
+// =============================================================================
+// TEST: FURTHEST FAILURE TRACKING
+// =============================================================================
+
+describe("TestFurthestFailure", () => {
+  it("should include expected tokens in error message", () => {
+    const grammarSource = "expr = NUMBER PLUS NUMBER ;";
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NUMBER", value: "1", line: 1, column: 1 },
+      { type: "MINUS", value: "-", line: 1, column: 3 },
+      { type: "NUMBER", value: "2", line: 1, column: 5 },
+      { type: "EOF", value: "", line: 1, column: 6 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    try {
+      parser.parse();
+      expect.unreachable("Should have thrown");
+    } catch (e) {
+      expect(e).toBeInstanceOf(GrammarParseError);
+      const error = e as GrammarParseError;
+      expect(error.message).toContain("Expected");
+    }
+  });
+});
+
+// =============================================================================
+// TEST: STARLARK PIPELINE
+// =============================================================================
+
+describe("TestStarlarkPipeline", () => {
+  it("should parse a simple assignment through full pipeline", () => {
+    const grammarSource = `
+program = { statement } ;
+statement = assignment NEWLINE | expression_stmt NEWLINE ;
+assignment = NAME EQUALS expression ;
+expression_stmt = expression ;
+expression = atom { PLUS atom } ;
+atom = NUMBER | NAME ;
+`;
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NAME", value: "x", line: 1, column: 1 },
+      { type: "EQUALS", value: "=", line: 1, column: 3 },
+      { type: "NUMBER", value: "42", line: 1, column: 5 },
+      { type: "NEWLINE", value: "\\n", line: 1, column: 7 },
+      { type: "EOF", value: "", line: 2, column: 1 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    const ast = parser.parse();
+    expect(ast.ruleName).toBe("program");
+    expect(findTokenInTree(ast, "NAME", "x")).toBe(true);
+    expect(findTokenInTree(ast, "NUMBER", "42")).toBe(true);
+  });
+
+  it("should parse expression with addition", () => {
+    const grammarSource = `
+program = { statement } ;
+statement = expression_stmt NEWLINE ;
+expression_stmt = expression ;
+expression = atom { PLUS atom } ;
+atom = NUMBER | NAME ;
+`;
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NUMBER", value: "1", line: 1, column: 1 },
+      { type: "PLUS", value: "+", line: 1, column: 3 },
+      { type: "NUMBER", value: "2", line: 1, column: 5 },
+      { type: "NEWLINE", value: "\\n", line: 1, column: 6 },
+      { type: "EOF", value: "", line: 2, column: 1 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    const ast = parser.parse();
+    expect(ast.ruleName).toBe("program");
+    expect(findTokenInTree(ast, "NUMBER", "1")).toBe(true);
+    expect(findTokenInTree(ast, "PLUS", "+")).toBe(true);
+    expect(findTokenInTree(ast, "NUMBER", "2")).toBe(true);
+  });
+
+  it("should parse function-like structure with indentation tokens", () => {
+    const grammarSource = `
+file = { definition NEWLINE } ;
+definition = NAME COLON NEWLINE INDENT { NAME NEWLINE } DEDENT ;
+`;
+    const pg = parseParserGrammar(grammarSource);
+    const tokens: Token[] = [
+      { type: "NAME", value: "block", line: 1, column: 1 },
+      { type: "COLON", value: ":", line: 1, column: 6 },
+      { type: "NEWLINE", value: "\\n", line: 1, column: 7 },
+      { type: "INDENT", value: "", line: 2, column: 1 },
+      { type: "NAME", value: "x", line: 2, column: 5 },
+      { type: "NEWLINE", value: "\\n", line: 2, column: 6 },
+      { type: "DEDENT", value: "", line: 3, column: 1 },
+      { type: "NEWLINE", value: "\\n", line: 3, column: 1 },
+      { type: "EOF", value: "", line: 4, column: 1 },
+    ];
+    const parser = new GrammarParser(tokens, pg);
+    expect(parser.isNewlinesSignificant()).toBe(true);
+    const ast = parser.parse();
+    expect(ast.ruleName).toBe("file");
+    expect(findTokenInTree(ast, "NAME", "block")).toBe(true);
+    expect(findTokenInTree(ast, "NAME", "x")).toBe(true);
+  });
+});

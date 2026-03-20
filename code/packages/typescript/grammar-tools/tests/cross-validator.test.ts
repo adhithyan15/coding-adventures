@@ -111,3 +111,55 @@ expression = NUMBER PLUS MINUS ;
     expect(issues).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Indentation mode implicit tokens
+// ---------------------------------------------------------------------------
+
+describe("CrossValidateIndentation", () => {
+  it("should not report INDENT/DEDENT/NEWLINE as missing in indent mode", () => {
+    const tokens = parseTokenGrammar(`
+mode: indentation
+NAME = /[a-z]+/
+COLON = ":"
+`);
+    const grammar = parseParserGrammar(`
+file = { NAME COLON NEWLINE INDENT NAME NEWLINE DEDENT } ;
+`);
+    const issues = crossValidate(tokens, grammar);
+    const errors = issues.filter((i) => i.startsWith("Error"));
+    expect(errors).toEqual([]);
+  });
+
+  it("should report INDENT as missing when NOT in indent mode", () => {
+    const tokens = parseTokenGrammar("NAME = /[a-z]+/");
+    const grammar = parseParserGrammar("file = NAME INDENT NAME ;");
+    const issues = crossValidate(tokens, grammar);
+    const errors = issues.filter((i) => i.startsWith("Error"));
+    expect(errors.some((e) => e.includes("INDENT"))).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Alias cross-validation
+// ---------------------------------------------------------------------------
+
+describe("CrossValidateAliases", () => {
+  it("should not report aliased tokens as unused", () => {
+    const tokens = parseTokenGrammar(`
+STRING_DQ = /"[^"]*"/ -> STRING
+`);
+    const grammar = parseParserGrammar("expr = STRING ;");
+    const issues = crossValidate(tokens, grammar);
+    const warnings = issues.filter((i) => i.startsWith("Warning"));
+    expect(warnings).toEqual([]);
+  });
+
+  it("should treat EOF as always implicitly available", () => {
+    const tokens = parseTokenGrammar("NAME = /[a-z]+/");
+    const grammar = parseParserGrammar("file = NAME EOF ;");
+    const issues = crossValidate(tokens, grammar);
+    const errors = issues.filter((i) => i.startsWith("Error"));
+    expect(errors.some((e) => e.includes("EOF"))).toBe(false);
+  });
+});

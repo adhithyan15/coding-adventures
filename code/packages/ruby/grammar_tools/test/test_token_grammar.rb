@@ -203,6 +203,215 @@ class TestTokenGrammar < Minitest::Test
     assert grammar.token_names.include?("NUMBER")
   end
 
+  # -----------------------------------------------------------------------
+  # Extended format: mode directive
+  # -----------------------------------------------------------------------
+
+  def test_parse_mode_directive
+    source = <<~TOKENS
+      mode: indentation
+      NAME = /[a-z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal "indentation", grammar.mode
+    assert_equal 1, grammar.definitions.length
+  end
+
+  def test_parse_mode_missing_value
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("mode:")
+    end
+    assert_includes error.message, "Missing value"
+  end
+
+  # -----------------------------------------------------------------------
+  # Extended format: skip section
+  # -----------------------------------------------------------------------
+
+  def test_parse_skip_section
+    source = <<~TOKENS
+      NAME = /[a-z]+/
+      skip:
+        WHITESPACE = /[ \\t]+/
+        COMMENT = /#[^\\n]*/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 1, grammar.definitions.length
+    assert_equal 2, grammar.skip_definitions.length
+    assert_equal "WHITESPACE", grammar.skip_definitions[0].name
+    assert_equal "COMMENT", grammar.skip_definitions[1].name
+  end
+
+  def test_parse_skip_section_missing_equals
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("skip:\n  BAD_PATTERN")
+    end
+    assert_includes error.message, "Expected skip pattern"
+  end
+
+  def test_parse_skip_section_incomplete
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("skip:\n  BAD =")
+    end
+    assert_includes error.message, "Incomplete"
+  end
+
+  # -----------------------------------------------------------------------
+  # Extended format: reserved section
+  # -----------------------------------------------------------------------
+
+  def test_parse_reserved_section
+    source = <<~TOKENS
+      NAME = /[a-z]+/
+      reserved:
+        class
+        import
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal %w[class import], grammar.reserved_keywords
+  end
+
+  # -----------------------------------------------------------------------
+  # Extended format: alias (-> TYPE)
+  # -----------------------------------------------------------------------
+
+  def test_parse_alias_regex
+    source = 'STRING_DQ = /"[^"]*"/ -> STRING'
+    grammar = GT.parse_token_grammar(source)
+    defn = grammar.definitions[0]
+    assert_equal "STRING_DQ", defn.name
+    assert_equal "STRING", defn.alias_name
+  end
+
+  def test_parse_alias_literal
+    source = 'PLUS_SIGN = "+" -> PLUS'
+    grammar = GT.parse_token_grammar(source)
+    defn = grammar.definitions[0]
+    assert_equal "PLUS_SIGN", defn.name
+    assert_equal "PLUS", defn.alias_name
+  end
+
+  def test_parse_alias_missing
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar('FOO = /x/ ->')
+    end
+    assert_includes error.message, "Missing alias"
+  end
+
+  def test_parse_alias_unexpected_text
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar('FOO = /x/ blah')
+    end
+    assert_includes error.message, "Unexpected text"
+  end
+
+  def test_parse_unclosed_regex
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar('FOO = /unclosed')
+    end
+    assert_includes error.message, "Unclosed regex"
+  end
+
+  def test_parse_unclosed_literal
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar('FOO = "unclosed')
+    end
+    assert_includes error.message, "Unclosed literal"
+  end
+
+  def test_parse_literal_alias_unexpected_text
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar('FOO = "x" blah')
+    end
+    assert_includes error.message, "Unexpected text"
+  end
+
+  def test_parse_literal_alias_missing
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar('FOO = "x" ->')
+    end
+    assert_includes error.message, "Missing alias"
+  end
+
+  # -----------------------------------------------------------------------
+  # Token names with aliases
+  # -----------------------------------------------------------------------
+
+  def test_token_names_includes_aliases
+    source = 'STRING_DQ = /"[^"]*"/ -> STRING'
+    grammar = GT.parse_token_grammar(source)
+    names = grammar.token_names
+    assert_includes names, "STRING_DQ"
+    assert_includes names, "STRING"
+  end
+
+  def test_effective_token_names_uses_alias
+    source = <<~TOKENS
+      NAME = /[a-z]+/
+      STRING_DQ = /"[^"]*"/ -> STRING
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    effective = grammar.effective_token_names
+    assert_includes effective, "NAME"
+    assert_includes effective, "STRING"
+    refute_includes effective, "STRING_DQ"
+  end
+
+  # -----------------------------------------------------------------------
+  # Validation extensions
+  # -----------------------------------------------------------------------
+
+  def test_validate_unknown_mode
+    grammar = GT::TokenGrammar.new(mode: "unknown")
+    issues = GT.validate_token_grammar(grammar)
+    assert issues.any? { |i| i.include?("Unknown lexer mode") }
+  end
+
+  def test_validate_indentation_mode_ok
+    grammar = GT::TokenGrammar.new(mode: "indentation")
+    issues = GT.validate_token_grammar(grammar)
+    refute issues.any? { |i| i.include?("Unknown lexer mode") }
+  end
+
+  def test_validate_skip_definitions
+    defn = GT::TokenDefinition.new(
+      name: "BAD", pattern: "[invalid", is_regex: true,
+      line_number: 1, alias_name: nil
+    )
+    grammar = GT::TokenGrammar.new(skip_definitions: [defn])
+    issues = GT.validate_token_grammar(grammar)
+    assert issues.any? { |i| i.include?("Invalid regex") }
+  end
+
+  def test_validate_alias_convention
+    defn = GT::TokenDefinition.new(
+      name: "FOO", pattern: "x", is_regex: false,
+      line_number: 1, alias_name: "lowercase"
+    )
+    grammar = GT::TokenGrammar.new(definitions: [defn])
+    issues = GT.validate_token_grammar(grammar)
+    assert issues.any? { |i| i.include?("UPPER_CASE") && i.include?("Alias") }
+  end
+
+  # -----------------------------------------------------------------------
+  # Starlark .tokens integration
+  # -----------------------------------------------------------------------
+
+  def test_parse_real_starlark_tokens
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "starlark.tokens")
+    skip("starlark.tokens not found") unless File.exist?(path)
+    source = File.read(path)
+    grammar = GT.parse_token_grammar(source)
+    assert_equal "indentation", grammar.mode
+    assert grammar.definitions.length > 10
+    assert grammar.skip_definitions.length >= 1
+    assert grammar.reserved_keywords.include?("class")
+  end
+
+  # -----------------------------------------------------------------------
+  # Real grammar files (original tests)
+  # -----------------------------------------------------------------------
+
   def test_parse_real_ruby_tokens
     path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "ruby.tokens")
     skip("ruby.tokens not found") unless File.exist?(path)
