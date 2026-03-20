@@ -1,1 +1,2 @@
-ruby -Ilib:test test/test_loss_functions.rb
+bundle install --quiet
+bundle exec rake test
