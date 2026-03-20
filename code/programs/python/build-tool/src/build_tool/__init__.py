@@ -2,7 +2,7 @@
 Build Tool -- Incremental, Parallel Monorepo Build System
 =========================================================
 
-A CLI tool that discovers packages in a monorepo via DIRS/BUILD files, resolves
+A CLI tool that discovers packages in a monorepo via recursive BUILD file walking, resolves
 their dependencies, hashes source files, and only rebuilds packages whose source
 (or dependency source) has changed. Independent packages are built in parallel.
 """

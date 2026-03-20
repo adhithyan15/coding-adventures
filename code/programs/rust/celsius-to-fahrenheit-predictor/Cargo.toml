@@ -1,0 +1,8 @@
+[package]
+name = "celsius-to-fahrenheit-predictor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+loss-functions = { path = "../../../packages/rust/loss-functions" }
+gradient-descent = { path = "../../../packages/rust/gradient-descent" }

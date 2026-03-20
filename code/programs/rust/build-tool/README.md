@@ -1,10 +1,10 @@
 # Build Tool (Rust)
 
-A **Rust port** of the Go build tool for the coding-adventures monorepo. Discovers packages, resolves dependencies, hashes source files for change detection, and rebuilds only what changed. Independent packages are built in parallel using Rayon's work-stealing thread pool.
+A **Rust port** of the Go build tool for the coding-adventures monorepo. It discovers packages, resolves dependencies, hashes source files for change detection, and rebuilds only what changed. Independent packages are built in parallel using Rayon's work-stealing thread pool.
 
 ## What it does
 
-This tool discovers packages in the monorepo via DIRS/BUILD files, resolves their inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source (or dependency source) has changed. Independent packages are built in parallel.
+This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel.
 
 ## Building
 
@@ -60,7 +60,7 @@ The release binary is at `target/release/build-tool` (or `build-tool.exe` on Win
 The tool is organized into eight modules, each responsible for one aspect of the build pipeline:
 
 1. **graph** — Directed graph data structure with topological sort and affected-node queries
-2. **discovery** — Walks DIRS/BUILD files to find packages
+2. **discovery** — Recursively walks for `BUILD` files to find packages
 3. **resolver** — Parses pyproject.toml, .gemspec, go.mod, Cargo.toml for dependencies
 4. **hasher** — SHA256 hashing for change detection
 5. **cache** — JSON-based build cache (read/write with atomic saves)

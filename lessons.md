@@ -22,18 +22,16 @@ Setting `mise settings ruby.compile=false` did not use precompiled binaries as o
 
 ---
 
-### 2026-03-18: Always add BUILD files and DIRS entries for new packages
+### 2026-03-18: Always add BUILD files and verify discovery for new packages
 
 When creating a new package, you MUST:
 1. Create a `BUILD` file in the package directory with the test command
-2. Add the package directory name to the parent `DIRS` file
-3. Verify the build tool discovers the new package
+2. Verify the build tool discovers the new package
 
-Without both, the CI build tool will not discover or test the package. This was missed for fp-arithmetic, Go logic-gates, Ruby sequential logic, and clock packages — they passed locally but were invisible to CI.
+At the time of the original mistake, some tooling still relied on `DIRS` routing. The current build system uses recursive `BUILD` discovery instead, so the important invariant now is that every package has a valid `BUILD` file and shows up in a dry run. This was missed for fp-arithmetic, Go logic-gates, Ruby sequential logic, and clock packages — they passed locally but were invisible to CI.
 
 **Checklist for every new package:**
 - [ ] BUILD file with test command
-- [ ] Added to parent DIRS file
 - [ ] `./build-tool -dry-run` shows the package
 
 **IMPORTANT — multi-language packages:** When implementing the same package across all 5 languages (Python, TypeScript, Ruby, Go, Rust), you MUST add a BUILD file for EVERY language variant. On 2026-03-19 this mistake recurred: Go and Rust compute-unit packages were missing BUILD files while Python, TypeScript, and Ruby had them. The build tool only detected 3 out of 5 packages. After finishing all language implementations, always verify the count matches:
