@@ -64,8 +64,55 @@ from __future__ import annotations
 
 from enum import IntEnum
 
+from state_machine import DFA
+
 from branch_predictor.base import Prediction
 from branch_predictor.stats import PredictionStats
+
+# ─── Two-Bit DFA ─────────────────────────────────────────────────────────────
+#
+# This IS the formal state machine that the 2-bit saturating counter branch
+# predictor implements. The DFA captures the complete transition logic in a
+# declarative form — every (state, input) pair maps to exactly one next state.
+#
+# The four states correspond to the four values of a 2-bit counter:
+#   SNT (00) = Strongly Not Taken
+#   WNT (01) = Weakly Not Taken
+#   WT  (10) = Weakly Taken
+#   ST  (11) = Strongly Taken
+#
+# The accepting states {WT, ST} are the states that predict "taken". In the
+# DFA formalism, "accepting" means the machine is in a state that satisfies
+# the property we're testing — here, "does this branch predict taken?"
+#
+# By defining the predictor as a DFA, we gain:
+#   1. Formal verification: the transition table is the single source of truth
+#   2. Visualization: call TWO_BIT_DFA.to_dot() to generate a Graphviz diagram
+#   3. Tracing: every transition is logged for debugging
+#   4. Composition: the DFA can be minimized, intersected, or complemented
+
+TWO_BIT_DFA = DFA(
+    states={"SNT", "WNT", "WT", "ST"},
+    alphabet={"taken", "not_taken"},
+    transitions={
+        ("SNT", "taken"): "WNT", ("SNT", "not_taken"): "SNT",
+        ("WNT", "taken"): "WT",  ("WNT", "not_taken"): "SNT",
+        ("WT", "taken"): "ST",   ("WT", "not_taken"): "WNT",
+        ("ST", "taken"): "ST",   ("ST", "not_taken"): "WT",
+    },
+    initial="WNT",
+    accepting={"WT", "ST"},  # states that predict "taken"
+)
+
+# ─── Mappings between TwoBitState enum values and DFA state names ────────────
+#
+# The TwoBitState enum uses integer values (0-3) for efficient comparison,
+# while the DFA uses string names for readability. These mappings bridge
+# the two representations so that the enum's transition methods can delegate
+# to the DFA's transition table.
+
+_STATE_TO_NAME: dict[TwoBitState, str] = {}  # populated after class definition
+_NAME_TO_STATE: dict[str, TwoBitState] = {}  # populated after class definition
 
 
 # ─── TwoBitState ──────────────────────────────────────────────────────────────
@@ -104,8 +151,11 @@ class TwoBitState(IntEnum):
     WEAKLY_TAKEN = 2
     STRONGLY_TAKEN = 3
 
-    def taken_outcome(self) -> "TwoBitState":
+    def taken_outcome(self) -> TwoBitState:
         """Transition on a 'taken' branch outcome (increment, saturate at 3).
+
+        Delegates to the TWO_BIT_DFA transition table so that the formal DFA
+        definition is the single source of truth for state transitions.
 
         Example::
 
@@ -114,19 +164,26 @@ class TwoBitState(IntEnum):
             state = state.taken_outcome()           # → STRONGLY_TAKEN (3)
             state = state.taken_outcome()           # → STRONGLY_TAKEN (3) — saturated!
         """
-        return TwoBitState(min(self.value + 1, TwoBitState.STRONGLY_TAKEN))
+        name = _STATE_TO_NAME[self]
+        target = TWO_BIT_DFA.transitions[(name, "taken")]
+        return _NAME_TO_STATE[target]
 
-    def not_taken_outcome(self) -> "TwoBitState":
+    def not_taken_outcome(self) -> TwoBitState:
         """Transition on a 'not taken' branch outcome (decrement, saturate at 0).
+
+        Delegates to the TWO_BIT_DFA transition table so that the formal DFA
+        definition is the single source of truth for state transitions.
 
         Example::
 
             state = TwoBitState.WEAKLY_TAKEN      # 2
             state = state.not_taken_outcome()       # → WEAKLY_NOT_TAKEN (1)
             state = state.not_taken_outcome()       # → STRONGLY_NOT_TAKEN (0)
-            state = state.not_taken_outcome()       # → STRONGLY_NOT_TAKEN (0) — saturated!
+            state = state.not_taken_outcome()       # → SNT (0) — saturated!
         """
-        return TwoBitState(max(self.value - 1, TwoBitState.STRONGLY_NOT_TAKEN))
+        name = _STATE_TO_NAME[self]
+        target = TWO_BIT_DFA.transitions[(name, "not_taken")]
+        return _NAME_TO_STATE[target]
 
     @property
     def predicts_taken(self) -> bool:
@@ -144,6 +201,20 @@ class TwoBitState(IntEnum):
             assert TwoBitState.STRONGLY_NOT_TAKEN.predicts_taken is False
         """
         return self >= TwoBitState.WEAKLY_TAKEN
+
+
+# ─── Populate the enum ↔ DFA name mappings ────────────────────────────────────
+#
+# We do this after TwoBitState is defined so both the enum and the DFA exist.
+# The mapping is simple: each enum member maps to its abbreviated DFA name.
+
+_STATE_TO_NAME.update({
+    TwoBitState.STRONGLY_NOT_TAKEN: "SNT",
+    TwoBitState.WEAKLY_NOT_TAKEN: "WNT",
+    TwoBitState.WEAKLY_TAKEN: "WT",
+    TwoBitState.STRONGLY_TAKEN: "ST",
+})
+_NAME_TO_STATE.update({name: state for state, name in _STATE_TO_NAME.items()})
 
 
 # ─── TwoBitPredictor ─────────────────────────────────────────────────────────
