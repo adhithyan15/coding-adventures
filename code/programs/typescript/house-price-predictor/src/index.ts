@@ -46,21 +46,32 @@ for (let epoch = 0; epoch <= 1500; epoch++) {
   const yPredList = yPred.data.map((r: number[]) => r[0]);
   const totalLoss = meanSquaredError(yTrueList, yPredList);
 
-  // --- NATIVE BACKPROPAGATION ARRAYS ---
-  // Inverting grids dynamically via strictly checked boundary Transposition constraints cleanly.
-  // Equates functionally to dW = X^T • (Error) * 2/N mathematically
+  // --- BACKPROPAGATION (CALCULATING GRADIENTS) ---
+  // How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
+  // 1. We take our original (N BY 2) Data Grid (X) and physically flip it on its side to become (2 BY N). 
+  //    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
+  // 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
+  //    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
   const errMat = yPred.subtract(y);
   const xT = x.transpose();
   const dotErr = xT.dot(errMat);
+  
+  // We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
   const dw = dotErr.scale(2.0 / y.rows);
 
+  // For the Bias (b), because it shifts the prediction unconditionally for every house,
+  // its "share" of the blame is simply the average of all the mistakes combined!
+  // We take the raw (N BY 1) Error array, sum up the N values, and scale it by 2/N.
   let dbTotal = 0.0;
   for (let i = 0; i < errMat.rows; i++) {
     dbTotal += errMat.data[i][0];
   }
   const db = dbTotal * (2.0 / y.rows);
 
-  // --- GRADIENT UPDATE TUNING ---
+  // --- OPTIMIZATION STEP ---
+  // Finally, we take our original Weights and Bias and nudge them against the slope.
+  // We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't 
+  // overshoot the target and cause the math to explode into infinity!
   w = w.subtract(dw.scale(lr));
   b = b - (db * lr);
 

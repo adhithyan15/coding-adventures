@@ -42,20 +42,32 @@ fn main() {
         let y_pred_vec: Vec<f64> = y_pred.data.iter().map(|r| r[0]).collect();
         let total_loss = mean_squared_error(&y_true_vec, &y_pred_vec).unwrap();
 
-        // --- EVALUATING PURE GRADIENT OPTIMIZATION BACKPROPAGATION ---
-        // Efficient dynamic dimensional execution safely mapping error inversions strictly.
+        // --- BACKPROPAGATION (CALCULATING GRADIENTS) ---
+        // How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
+        // 1. We take our original (N BY 2) Data Grid (X) and physically flip it on its side to become (2 BY N). 
+        //    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
+        // 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
+        //    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
         let err_mat = y_pred.subtract(&y).unwrap();
         let x_t = x.transpose();
         let dot_err = x_t.dot(&err_mat).unwrap();
+        
+        // We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
         let dw = dot_err.scale(2.0 / y.rows as f64);
 
+        // For the Bias (b), because it shifts the prediction unconditionally for every house,
+        // its "share" of the blame is simply the average of all the mistakes combined!
+        // We take the raw (N BY 1) Error array, sum up the N values, and scale it by 2/N.
         let mut db_total = 0.0;
         for i in 0..err_mat.rows {
             db_total += err_mat.data[i][0];
         }
         let db = db_total * (2.0 / y.rows as f64);
 
-        // Map and step weights natively efficiently natively dynamically.
+        // --- OPTIMIZATION STEP ---
+        // Finally, we take our original Weights and Bias and nudge them against the slope.
+        // We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't 
+        // overshoot the target and cause the math to explode into infinity!
         let scaled_dw = dw.scale(lr);
         w = w.subtract(&scaled_dw).unwrap();
         b -= db * lr;

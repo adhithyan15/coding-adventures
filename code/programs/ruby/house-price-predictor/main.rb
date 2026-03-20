@@ -39,20 +39,32 @@ puts "Beginning Training Epochs..."
   y_pred_list = y_pred.data.map { |r| r[0] }
   total_loss = LossFunctions.mse(y_true_list, y_pred_list)
 
-  # --- BACKPROPAGATION ARCHITECTURE --- 
-  # Native Tensor Gradients purely executing matrix structural properties beautifully: dW = X^T . (y_pred - y) * (2/N)
+  # --- BACKPROPAGATION (CALCULATING GRADIENTS) ---
+  # How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
+  # 1. We take our original (N BY 2) Data Grid (X) and physically flip it on its side to become (2 BY N). 
+  #    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
+  # 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
+  #    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
   err_mat = y_pred - y
   x_t = x.transpose
   dot_err = x_t.dot(err_mat)
+  
+  # We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
   dw = dot_err * (2.0 / y.rows)
 
+  # For the Bias (b), because it shifts the prediction unconditionally for every house,
+  # its "share" of the blame is simply the average of all the mistakes combined!
+  # We take the raw (N BY 1) Error array, sum up the N values, and scale it by 2/N.
   db_total = 0.0
   err_mat.rows.times do |i|
     db_total += err_mat.data[i][0]
   end
   db = db_total * (2.0 / y.rows)
 
-  # Weights update applying dynamic gradient mapping natively iteratively smoothly effectively!
+  # --- OPTIMIZATION STEP ---
+  # Finally, we take our original Weights and Bias and nudge them against the slope.
+  # We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't 
+  # overshoot the target and cause the math to explode into infinity!
   w = w - (dw * lr)
   b = b - (db * lr)
 

@@ -67,19 +67,25 @@ def train():
         loss = mse_loss(y_true_list, y_pred_list)
         
         # --- BACKPROPAGATION (CALCULATING GRADIENTS) --- #
-        # In a multi-variable matrix layout, the derivative of Loss with respect to Weights involves Matrix Transposition!
-        # Beautifully simplifies mathematically to: dW = X^T • (Y_pred - Y) * (2/N)
+        # How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
+        # 1. We take our original (N BY 2) Data Grid (X) and physically flip it on its side to become (2 BY N). 
+        #    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
+        # 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
+        #    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
         error = Y_pred - Y
         
-        # We structurally transpose X from (4x2) to (2x4). 
-        # Then DOT multiply with Error (4x1) to precisely evaluate a (2x1) Weight Gradient Vector securely!
+        # We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
         dW = X.transpose().dot(error) * (2.0 / Y.rows)
         
-        # Bias gradient is identically the mean average sum of all residual errors mapped globally.
+        # For the Bias (b), because it shifts the prediction unconditionally for every house,
+        # its "share" of the blame is simply the average of all the mistakes combined!
+        # We take the raw (N BY 1) Error array, sum up the N values, and scale it by 2/N.
         db = sum(error.data[i][0] for i in range(error.rows)) * (2.0 / Y.rows)
         
         # --- OPTIMIZATION STEP --- #
-        # Nudge the Weights mathematically into the inverse direction of the slope safely.
+        # Finally, we take our original Weights and Bias and nudge them against the slope.
+        # We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't 
+        # overshoot the target and cause the math to explode into infinity!
         W = W - (dW * lr)
         b = b - (db * lr)
         

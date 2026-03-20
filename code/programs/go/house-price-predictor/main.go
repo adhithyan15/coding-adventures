@@ -61,18 +61,23 @@ func main() {
 		}
 		totalLoss, _ := loss.MSE(yTrueList, yPredList)
 
-		// --- BACKPROPAGATION (CALCULUS) ---
-		// Error derivatives structurally scale against dimensional inversions properly:
-		// dW = X^T . (Y_pred - Y) * (2/N)
+		// --- BACKPROPAGATION (CALCULATING GRADIENTS) ---
+		// How do we figure out exactly how much the SqFt Weight vs Bedroom Weight was responsible for the error?
+		// 1. We take our original (N BY 2) Data Grid (X) and physically flip it on its side to become (2 BY N). 
+		//    - Row 1 now contains only SqFt values. Row 2 contains only Bedroom values.
+		// 2. We Dot Product this (2 BY N) grid against our (N BY 1) Error Vector!
+		//    - This multiplies every single SqFt value by its respective Error, collapsing into a (2 BY 1) Gradient Vector.
 		errMat, _ := YPred.Subtract(Y)
 		
-		// Transpose shifts a (4x2) Matrix natively into a (2x4) framework to multiply the error vectors dimensionally.
 		xT := X.Transpose()
 		dotErr, _ := xT.Dot(errMat)
 		
-		// Scale handles dividing the aggregate matrix gradients flawlessly natively!
+		// We multiply by (2 / N) because of the Mean Squared Error derivative scaling.
 		dW := dotErr.Scale(2.0 / float64(Y.Rows))
 
+		// For the Bias (b), because it shifts the prediction unconditionally for every house,
+		// its "share" of the blame is simply the average of all the mistakes combined!
+		// We take the raw (N BY 1) Error array, sum up the N values, and scale it by 2/N.
 		dbTotal := 0.0
 		for i := 0; i < errMat.Rows; i++ {
 			dbTotal += errMat.Data[i][0]
@@ -80,7 +85,9 @@ func main() {
 		db := dbTotal * (2.0 / float64(Y.Rows))
 
 		// --- OPTIMIZATION STEP ---
-		// Descend functionally inverse strictly into the mathematical valley correctly efficiently.
+		// Finally, we take our original Weights and Bias and nudge them against the slope.
+		// We multiply by our Learning Rate (0.01) which acts as a safety brake so we don't 
+		// overshoot the target and cause the math to explode into infinity!
 		scaledDW := dW.Scale(lr)
 		W, _ = W.Subtract(scaledDW)
 		b = b - (db * lr)
