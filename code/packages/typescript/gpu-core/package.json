@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/gpu-core",
+  "version": "0.1.0",
+  "description": "Generic, pluggable GPU processing element simulator — vendor-agnostic core with configurable ISA, registers, and memory",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "gpu",
+    "cuda",
+    "processing-element",
+    "simulator",
+    "isa",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/fp-arithmetic": "file:../fp-arithmetic"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
