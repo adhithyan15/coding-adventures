@@ -25,6 +25,7 @@ require_relative "coding_adventures/virtual_machine/op_code"
 require_relative "coding_adventures/virtual_machine/data_types"
 require_relative "coding_adventures/virtual_machine/errors"
 require_relative "coding_adventures/virtual_machine/vm"
+require_relative "coding_adventures/virtual_machine/generic_vm"
 
 module CodingAdventures
   module VirtualMachine
