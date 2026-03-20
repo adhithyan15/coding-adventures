@@ -32,6 +32,7 @@ require_relative "test_helper"
 class TestStarlarkParser < Minitest::Test
   ASTNode = CodingAdventures::Parser::ASTNode
   TT = CodingAdventures::Lexer::TokenType
+  INT_TYPE = "INT"
 
   # ------------------------------------------------------------------
   # Helper
@@ -66,8 +67,8 @@ class TestStarlarkParser < Minitest::Test
     all_tokens = collect_tokens(ast)
     name_token = all_tokens.find { |t| t.type == TT::NAME && t.value == "x" }
     refute_nil name_token, "Expected NAME token 'x' in AST"
-    number_token = all_tokens.find { |t| t.type == TT::NUMBER && t.value == "1" }
-    refute_nil number_token, "Expected NUMBER token '1' in AST"
+    number_token = all_tokens.find { |t| t.type == INT_TYPE && t.value == "1" }
+    refute_nil number_token, "Expected INT token '1' in AST"
   end
 
   # ------------------------------------------------------------------

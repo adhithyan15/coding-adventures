@@ -26,6 +26,25 @@ require_relative "test_helper"
 class TestStarlarkLexer < Minitest::Test
   TT = CodingAdventures::Lexer::TokenType
 
+  # ---------------------------------------------------------------
+  # Starlark defines many token types beyond the base TokenType enum.
+  # The GrammarLexer falls back to using raw string names for types
+  # not in TokenType::ALL (e.g., "NOT_EQUALS", "INDENT", "FLOAT").
+  # These constants make tests readable while matching the actual
+  # string types emitted by the grammar-driven lexer.
+  # ---------------------------------------------------------------
+  NOT_EQUALS     = "NOT_EQUALS"
+  LESS_EQUALS    = "LESS_EQUALS"
+  GREATER_EQUALS = "GREATER_EQUALS"
+  PLUS_EQUALS    = "PLUS_EQUALS"
+  MINUS_EQUALS   = "MINUS_EQUALS"
+  STAR_EQUALS    = "STAR_EQUALS"
+  PERCENT        = "PERCENT"
+  INT_TYPE       = "INT"
+  FLOAT_TYPE     = "FLOAT"
+  INDENT_TYPE    = "INDENT"
+  DEDENT_TYPE    = "DEDENT"
+
   # ------------------------------------------------------------------
   # Helper: tokenize source and provide convenient accessors
   # ------------------------------------------------------------------
@@ -53,7 +72,7 @@ class TestStarlarkLexer < Minitest::Test
     tokens = tokenize("x = 1 + 2")
     types = tokens.map(&:type)
     # In indentation mode, every logical line ends with NEWLINE before EOF
-    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::PLUS, TT::NUMBER, TT::NEWLINE, TT::EOF], types
+    assert_equal [TT::NAME, TT::EQUALS, INT_TYPE, TT::PLUS, INT_TYPE, TT::NEWLINE, TT::EOF], types
   end
 
   def test_simple_expression_values
@@ -166,11 +185,11 @@ class TestStarlarkLexer < Minitest::Test
     types = tokens.map(&:type)
 
     # Should contain INDENT and DEDENT tokens
-    assert_includes types, TT::INDENT, "Expected INDENT token for indented block"
-    assert_includes types, TT::DEDENT, "Expected DEDENT token when block ends"
+    assert_includes types, INDENT_TYPE, "Expected INDENT token for indented block"
+    assert_includes types, DEDENT_TYPE, "Expected DEDENT token when block ends"
 
     # INDENT should come after the colon+newline
-    indent_idx = types.index(TT::INDENT)
+    indent_idx = types.index(INDENT_TYPE)
     colon_idx = types.index(TT::COLON)
     assert indent_idx > colon_idx, "INDENT should come after COLON"
   end
@@ -191,29 +210,29 @@ class TestStarlarkLexer < Minitest::Test
 
     # Test not-equals operator
     tokens = tokenize("x != y")
-    assert_equal TT::NOT_EQUALS, tokens[1].type
+    assert_equal NOT_EQUALS, tokens[1].type
 
     # Test less-than-or-equal
     tokens = tokenize("x <= y")
-    assert_equal TT::LESS_EQUALS, tokens[1].type
+    assert_equal LESS_EQUALS, tokens[1].type
 
     # Test greater-than-or-equal
     tokens = tokenize("x >= y")
-    assert_equal TT::GREATER_EQUALS, tokens[1].type
+    assert_equal GREATER_EQUALS, tokens[1].type
   end
 
   def test_augmented_assignment_operators
     # Test += operator
     tokens = tokenize("x += 1")
-    assert_equal TT::PLUS_EQUALS, tokens[1].type
+    assert_equal PLUS_EQUALS, tokens[1].type
 
     # Test -= operator
     tokens = tokenize("x -= 1")
-    assert_equal TT::MINUS_EQUALS, tokens[1].type
+    assert_equal MINUS_EQUALS, tokens[1].type
 
     # Test *= operator
     tokens = tokenize("x *= 2")
-    assert_equal TT::STAR_EQUALS, tokens[1].type
+    assert_equal STAR_EQUALS, tokens[1].type
   end
 
   def test_single_char_operators
@@ -235,7 +254,7 @@ class TestStarlarkLexer < Minitest::Test
 
     # Percent (modulo)
     tokens = tokenize("a % b")
-    assert_equal TT::PERCENT, tokens[1].type
+    assert_equal PERCENT, tokens[1].type
   end
 
   # ------------------------------------------------------------------
@@ -278,7 +297,7 @@ class TestStarlarkLexer < Minitest::Test
     # The meaningful tokens should still be there
     assert_equal TT::NAME, tokens[0].type
     assert_equal TT::EQUALS, tokens[1].type
-    assert_equal TT::NUMBER, tokens[2].type
+    assert_equal INT_TYPE, tokens[2].type
   end
 
   # ------------------------------------------------------------------
@@ -287,7 +306,7 @@ class TestStarlarkLexer < Minitest::Test
 
   def test_integer
     tokens = tokenize("42")
-    assert_equal TT::NUMBER, tokens[0].type
+    assert_equal INT_TYPE, tokens[0].type
     assert_equal "42", tokens[0].value
   end
 
@@ -295,7 +314,7 @@ class TestStarlarkLexer < Minitest::Test
     tokens = tokenize("3.14")
     # Starlark has FLOAT as a separate token type from INT
     # The token type depends on the grammar; it might be NUMBER or FLOAT
-    assert [TT::NUMBER, TT::FLOAT].include?(tokens[0].type),
+    assert [INT_TYPE, FLOAT_TYPE].include?(tokens[0].type),
       "Expected NUMBER or FLOAT token for 3.14"
   end
 
@@ -366,9 +385,9 @@ class TestStarlarkLexer < Minitest::Test
     types = tokens.map(&:type)
     # x = 1 NEWLINE y = 2 NEWLINE EOF
     expected = [
-      TT::NAME, TT::EQUALS, TT::NUMBER,
+      TT::NAME, TT::EQUALS, INT_TYPE,
       TT::NEWLINE,
-      TT::NAME, TT::EQUALS, TT::NUMBER,
+      TT::NAME, TT::EQUALS, INT_TYPE,
       TT::NEWLINE,
       TT::EOF
     ]
