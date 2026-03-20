@@ -139,6 +139,24 @@ module CodingAdventures
         @initial = initial.freeze
         @accepting = accepting.to_set.freeze
 
+        # --- Build internal graph representation ---
+        #
+        # We maintain a LabeledGraph alongside the @transitions hash.
+        # The hash is kept for O(1) lookups in process(), epsilon_closure(),
+        # accepts(), and to_dfa() -- the performance-critical paths.
+        # The graph captures the structure of the NFA for introspection and
+        # future algorithmic queries.
+        #
+        # Epsilon transitions use the EPSILON constant ("") as the edge label,
+        # preserving the distinction between input-consuming and free transitions.
+        @graph = CodingAdventures::DirectedGraph::LabeledGraph.new
+        states.each { |state| @graph.add_node(state) }
+        transitions.each do |(source, event), targets|
+          targets.each do |target|
+            @graph.add_edge(source, target, event)
+          end
+        end
+
         # The NFA starts in the epsilon closure of the initial state.
         # This is because epsilon transitions are "free" -- the machine can
         # take them before reading any input.
