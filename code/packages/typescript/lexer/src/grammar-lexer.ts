@@ -15,56 +15,19 @@
  * from a `.tokens` file (parsed by the `grammar-tools` package) and use
  * those definitions to drive tokenization at runtime.
  *
- * How It Works — The Big Picture
- * ------------------------------
+ * Extensions for Starlark/Python-like Languages
+ * ----------------------------------------------
  *
- * A `.tokens` file looks like this:
+ * Beyond basic regex-driven tokenization, this module supports:
  *
- *     NAME   = /[a-zA-Z_][a-zA-Z0-9_]* /
- *     NUMBER = /[0-9]+/
- *     PLUS   = "+"
- *     MINUS  = "-"
- *
- *     keywords:
- *       if
- *       else
- *
- * Each line defines a token: a name and a pattern. The pattern is either a
- * regex (`/.../`) or a literal string (`"..."`). The `grammar-tools`
- * package parses this file into a `TokenGrammar` object — a structured list
- * of `TokenDefinition` objects plus a keyword list.
- *
- * The `grammarTokenize` function takes that `TokenGrammar` and does the
- * following:
- *
- * 1. **Compile** each token definition into a JavaScript `RegExp` object.
- *    Literal patterns are escaped so that characters like `+` and `*` are
- *    treated as literal characters, not regex operators.
- *
- * 2. **At each position** in the source code, try each compiled pattern in
- *    order (first match wins). This is the "priority" mechanism — if two
- *    patterns could match at the same position, the one that appears first
- *    in the `.tokens` file wins.
- *
- * 3. **Emit a Token** with the matched type and value, using the same
- *    `Token` interface as the hand-written lexer.
- *
- * Because both lexers produce identical `Token` objects, downstream
- * consumers (the parser, the evaluator) do not care which lexer generated
- * the tokens. You can swap one for the other freely.
- *
- * Why Two Lexers?
- * ---------------
- *
- * The hand-written `tokenize` is the **reference implementation** — clear,
- * well-documented, and easy to step through in a debugger. The
- * `grammarTokenize` is the **grammar-driven alternative** — flexible,
- * language-agnostic, and data-driven. Having both lets us:
- *
- * - Verify correctness by comparing their outputs
- * - Demonstrate two fundamentally different approaches to the same problem
- * - Use the hand-written lexer for teaching and the grammar-driven one
- *   for production grammar work
+ * - **Skip patterns**: Whitespace and comment patterns that are consumed
+ *   without producing tokens (defined in the `skip:` section of .tokens).
+ * - **Type aliases**: A token definition like `STRING_DQ -> STRING` emits
+ *   tokens with type "STRING" instead of "STRING_DQ".
+ * - **Reserved keywords**: Identifiers that must not appear in source code
+ *   (e.g., `class` and `import` in Starlark). Raises LexerError on match.
+ * - **Indentation mode**: For Python-like languages, tracks indentation
+ *   levels and emits synthetic INDENT/DEDENT/NEWLINE tokens.
  */
 
 import type { TokenGrammar } from "@coding-adventures/grammar-tools";
@@ -76,32 +39,16 @@ import { LexerError } from "./tokenizer.js";
 // Compiled Pattern
 // ---------------------------------------------------------------------------
 
-/**
- * A pre-compiled regex pattern paired with its token name.
- *
- * During initialization, each token definition from the grammar is compiled
- * into a RegExp. We store the compiled pattern alongside the token name
- * so that during tokenization we can match and emit in one step.
- */
 interface CompiledPattern {
   readonly name: string;
   readonly pattern: RegExp;
+  readonly alias?: string;
 }
 
 // ---------------------------------------------------------------------------
 // Escape helper for literal patterns
 // ---------------------------------------------------------------------------
 
-/**
- * Escape a string so that all regex-special characters are treated literally.
- *
- * For example, "+" becomes "\\+", which matches a literal + character.
- * This is equivalent to Python's `re.escape()` or Go's `regexp.QuoteMeta()`.
- *
- * Why do we need this? Because literal patterns in .tokens files like `"+"`
- * are meant to match the exact character `+`, not be interpreted as the
- * regex quantifier "one or more of the preceding element".
- */
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -111,100 +58,46 @@ function escapeRegExp(s: string): string {
 // ---------------------------------------------------------------------------
 
 /**
- * Map of known token names to their canonical type strings.
- *
- * This mirrors the Python `TokenType` enum: we map grammar token names
- * (like "PLUS") to the type strings used in Token objects. If a token
- * name from the grammar isn't in this map, we fall back to "NAME" as
- * a safe default.
- */
-const KNOWN_TOKEN_TYPES: ReadonlySet<string> = new Set([
-  "NAME",
-  "NUMBER",
-  "STRING",
-  "KEYWORD",
-  "PLUS",
-  "MINUS",
-  "STAR",
-  "SLASH",
-  "EQUALS",
-  "EQUALS_EQUALS",
-  "LPAREN",
-  "RPAREN",
-  "COMMA",
-  "COLON",
-  "SEMICOLON",
-  "LBRACE",
-  "RBRACE",
-  "LBRACKET",
-  "RBRACKET",
-  "DOT",
-  "BANG",
-  "NEWLINE",
-  "EOF",
-]);
-
-/**
  * Resolve a grammar token name and matched value to a token type string.
  *
- * This function handles two things:
- *
- * 1. **Keyword detection**: If the grammar token name is "NAME" and the
- *    matched value is in the keyword set, we return "KEYWORD" instead of
- *    "NAME". This is how `if` becomes a keyword while `iffy` stays a name.
- *
- * 2. **Name-to-type mapping**: We check if the token name is a known
- *    token type. If there is no match (which shouldn't happen with a
- *    well-formed `.tokens` file), we fall back to "NAME".
- *
- * @param tokenName - The token name from the grammar definition
- *     (e.g., "NAME", "PLUS", "NUMBER").
- * @param value - The actual matched text from the source code.
- * @param keywordSet - The set of keywords to check against.
- * @returns The appropriate token type string.
+ * Handles reserved keywords (panic), regular keywords (promote to KEYWORD),
+ * and type aliases (alias takes precedence over definition name).
  */
 function resolveTokenType(
   tokenName: string,
   value: string,
   keywordSet: ReadonlySet<string>,
+  reservedSet: ReadonlySet<string>,
+  alias: string | undefined,
+  line: number,
+  column: number,
 ): string {
-  // Check if it's a NAME that should be reclassified as a KEYWORD.
+  // Reserved keyword check — these are hard errors
+  if (tokenName === "NAME" && reservedSet.has(value)) {
+    throw new LexerError(
+      `Reserved keyword '${value}' cannot be used as an identifier`,
+      line,
+      column,
+    );
+  }
+
+  // Regular keyword check — promote NAME to KEYWORD
   if (tokenName === "NAME" && keywordSet.has(value)) {
     return "KEYWORD";
   }
 
-  // Map grammar token names to known type strings.
-  if (KNOWN_TOKEN_TYPES.has(tokenName)) {
-    return tokenName;
+  // Alias takes precedence
+  if (alias) {
+    return alias;
   }
 
-  // If no direct mapping exists, default to NAME.
-  // This provides a safe fallback for custom token names that
-  // don't have a corresponding known type.
-  return "NAME";
+  return tokenName;
 }
 
 // ---------------------------------------------------------------------------
 // Escape Sequence Processing
 // ---------------------------------------------------------------------------
 
-/**
- * Process escape sequences in a string value.
- *
- * This handles the same escape sequences as the hand-written lexer:
- *
- * - `\n` becomes a newline character
- * - `\t` becomes a tab character
- * - `\\` becomes a literal backslash
- * - `\"` becomes a literal double quote
- * - Any other `\X` becomes just `X` (unknown escapes pass through)
- *
- * This ensures that `grammarTokenize` produces identical string values
- * to the hand-written `tokenize`.
- *
- * @param s - The raw string content (after removing surrounding quotes).
- * @returns The string with escape sequences resolved.
- */
 function processEscapes(s: string): string {
   const result: string[] = [];
   let i = 0;
@@ -236,76 +129,36 @@ function processEscapes(s: string): string {
 /**
  * Tokenize source code using a grammar (parsed from a `.tokens` file).
  *
- * Instead of hardcoded character-matching logic, this lexer:
- *
- * 1. Compiles each token definition's pattern into a regex
- * 2. At each position, tries each regex in definition order (first match wins)
- * 3. Emits a Token with the matched type and value
- *
- * This is fundamentally different from the hand-written `tokenize`:
- *
- * - **Hand-written**: dispatch on first character, custom read methods
- * - **Grammar-driven**: regex matching in priority order
- *
- * Both produce the same Token objects, so the parser does not care
- * which lexer generated them.
- *
- * Usage:
- *
- *     import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
- *     import { grammarTokenize } from "@coding-adventures/lexer";
- *
- *     const grammar = parseTokenGrammar(fs.readFileSync("python.tokens", "utf-8"));
- *     const tokens = grammarTokenize("x = 1 + 2", grammar);
- *
- * @param source - The raw source code text to tokenize.
- * @param grammar - A TokenGrammar object (typically parsed from a `.tokens`
- *     file using `parseTokenGrammar` from grammar-tools).
- * @returns A list of Token objects, always ending with an EOF token.
- * @throws LexerError if an unexpected character is encountered that does
- *     not match any token pattern.
+ * Supports skip patterns, type aliases, reserved keywords, and indentation
+ * mode. The function auto-detects whether to use standard or indentation
+ * tokenization based on `grammar.mode`.
  */
 export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] {
-  // -- State variables --
+  // Shared state
   let pos = 0;
   let line = 1;
   let column = 1;
-  const tokens: Token[] = [];
 
-  // Pre-compute keyword set for fast membership testing.
-  // When the lexer matches a NAME token, it checks this set to decide
-  // whether the value should be reclassified as a KEYWORD.
   const keywordSet: ReadonlySet<string> = new Set(grammar.keywords);
+  const reservedSet: ReadonlySet<string> = new Set(grammar.reservedKeywords ?? []);
 
-  // Compile token patterns into regex objects.
-  // -------------------------------------------
-  // Order matters here — patterns are tried in the order they appear
-  // in the .tokens file. This is the "first match wins" rule that
-  // Lex/Flex use. For example, if "==" is defined before "=", then
-  // at a position where the source has "==", the "==" pattern will
-  // match first, and we will never even try "=".
-  //
-  // For regex patterns (isRegex=true), we compile the pattern as-is.
-  // For literal patterns (isRegex=false), we escape the pattern so
-  // that characters like + and * are treated literally.
+  // Compile token patterns
   const patterns: CompiledPattern[] = grammar.definitions.map((defn) => {
     const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
     return {
       name: defn.name,
       pattern: new RegExp(patternSource),
+      alias: defn.alias,
     };
   });
 
-  // -- Internal advance helper --
+  // Compile skip patterns
+  const skipPatterns: RegExp[] = (grammar.skipDefinitions ?? []).map((defn) => {
+    const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
+    return new RegExp(patternSource);
+  });
 
-  /**
-   * Move position forward by one character, tracking line and column.
-   *
-   * This is identical in spirit to the hand-written lexer's advance
-   * function. When we encounter a newline character, we increment the
-   * line counter and reset the column to 1. For all other characters,
-   * we just increment the column.
-   */
+  // Advance helper
   function advance(): void {
     if (pos < source.length) {
       if (source[pos] === "\n") {
@@ -318,108 +171,264 @@ export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] 
     }
   }
 
-  // -- Main tokenization loop --
-
-  while (pos < source.length) {
-    const char = source[pos];
-
-    // --- Skip whitespace (spaces, tabs, carriage returns) ---
-    // Just like the hand-written lexer, we skip horizontal whitespace
-    // silently. Newlines are NOT whitespace here — they get their own
-    // token because languages like Python care about line endings.
-    if (char === " " || char === "\t" || char === "\r") {
-      advance();
-      continue;
+  // Try to match and consume a skip pattern. Returns true if matched.
+  function trySkip(): boolean {
+    const remaining = source.slice(pos);
+    for (const pat of skipPatterns) {
+      const match = pat.exec(remaining);
+      if (match !== null && match.index === 0) {
+        for (let i = 0; i < match[0].length; i++) {
+          advance();
+        }
+        return true;
+      }
     }
+    return false;
+  }
 
-    // --- Newlines become NEWLINE tokens ---
-    // We handle newlines specially (outside the pattern-matching loop)
-    // because newlines are structural — they mark line boundaries.
-    // The hand-written lexer does the same thing.
-    if (char === "\n") {
-      tokens.push({
-        type: "NEWLINE",
-        value: "\\n",
-        line,
-        column,
-      });
-      advance();
-      continue;
-    }
-
-    // --- Try each pattern in priority order (first match wins) ---
-    // This is the core of the grammar-driven approach. We take a
-    // slice of the source from the current position to the end,
-    // and try to match each pattern at the START of that slice
-    // (using regex's exec() with the match anchored to the start).
-    let matched = false;
+  // Try to match a token at current position. Returns token or null.
+  function tryMatchToken(): Token | null {
     const remaining = source.slice(pos);
 
-    for (const { name, pattern } of patterns) {
-      // We need to match at the beginning of the remaining string.
-      // JavaScript's regex doesn't have Python's match() (which
-      // anchors to the start). We use a fresh exec() and check
-      // that the match starts at index 0.
+    for (const { name, pattern, alias } of patterns) {
       const match = pattern.exec(remaining);
       if (match !== null && match.index === 0) {
-        const value = match[0];
+        let value = match[0];
         const startLine = line;
         const startColumn = column;
 
-        // Determine the token type for this match.
-        const tokenType = resolveTokenType(name, value, keywordSet);
+        const tokenType = resolveTokenType(
+          name, value, keywordSet, reservedSet, alias, startLine, startColumn,
+        );
 
-        // Handle STRING tokens specially: strip surrounding quotes
-        // and process escape sequences, so the token value contains
-        // the actual string content (matching the hand-written lexer).
-        if (name === "STRING") {
-          const inner = value.slice(1, -1); // strip quotes
-          const processed = processEscapes(inner);
-          tokens.push({
-            type: tokenType,
-            value: processed,
-            line: startLine,
-            column: startColumn,
-          });
-        } else {
-          tokens.push({
-            type: tokenType,
-            value,
-            line: startLine,
-            column: startColumn,
-          });
+        // Handle STRING tokens: strip quotes and process escapes
+        if (name === "STRING" || (alias && alias.includes("STRING"))) {
+          if (value.length >= 2 && (value[0] === '"' || value[0] === "'")) {
+            const inner = value.slice(1, -1);
+            value = processEscapes(inner);
+          }
         }
 
-        // Advance position by the number of characters matched.
-        // We advance one character at a time so that line/column
-        // tracking stays accurate (newlines inside strings, etc.).
-        for (let i = 0; i < value.length; i++) {
+        const tok: Token = { type: tokenType, value, line: startLine, column: startColumn };
+
+        for (let i = 0; i < match[0].length; i++) {
           advance();
         }
 
-        matched = true;
-        break;
+        return tok;
       }
     }
+    return null;
+  }
 
-    if (!matched) {
+  // Dispatch to the appropriate tokenization mode
+  if (grammar.mode === "indentation") {
+    return tokenizeIndentation();
+  }
+  return tokenizeStandard();
+
+  // ---------------------------------------------------------------------------
+  // Standard tokenization (no indentation tracking)
+  // ---------------------------------------------------------------------------
+
+  function tokenizeStandard(): Token[] {
+    const tokens: Token[] = [];
+
+    while (pos < source.length) {
+      const char = source[pos];
+
+      // Skip whitespace
+      if (char === " " || char === "\t" || char === "\r") {
+        advance();
+        continue;
+      }
+
+      // Newlines become NEWLINE tokens
+      if (char === "\n") {
+        tokens.push({ type: "NEWLINE", value: "\\n", line, column });
+        advance();
+        continue;
+      }
+
+      // Try skip patterns
+      if (trySkip()) {
+        continue;
+      }
+
+      // Try token patterns
+      const tok = tryMatchToken();
+      if (tok !== null) {
+        tokens.push(tok);
+        continue;
+      }
+
       throw new LexerError(
         `Unexpected character: ${JSON.stringify(char)}`,
         line,
         column,
       );
     }
+
+    tokens.push({ type: "EOF", value: "", line, column });
+    return tokens;
   }
 
-  // --- Append the EOF sentinel ---
-  // Just like the hand-written lexer, we always end with EOF so the
-  // parser has a clean stop signal.
-  tokens.push({
-    type: "EOF",
-    value: "",
-    line,
-    column,
-  });
+  // ---------------------------------------------------------------------------
+  // Indentation tokenization (Python-like INDENT/DEDENT)
+  // ---------------------------------------------------------------------------
 
-  return tokens;
+  function tokenizeIndentation(): Token[] {
+    const tokens: Token[] = [];
+    const indentStack: number[] = [0];
+    let bracketDepth = 0;
+    let atLineStart = true;
+
+    while (pos < source.length) {
+      // Process line start (indentation)
+      if (atLineStart && bracketDepth === 0) {
+        const result = processLineStart(indentStack);
+        if (result === "skip") {
+          continue;
+        }
+        tokens.push(...result);
+        atLineStart = false;
+        if (pos >= source.length) {
+          break;
+        }
+      }
+
+      const char = source[pos];
+
+      // Newline handling
+      if (char === "\n") {
+        if (bracketDepth === 0) {
+          tokens.push({ type: "NEWLINE", value: "\\n", line, column });
+        }
+        advance();
+        atLineStart = true;
+        continue;
+      }
+
+      // Inside brackets: skip whitespace
+      if (bracketDepth > 0 && (char === " " || char === "\t" || char === "\r")) {
+        advance();
+        continue;
+      }
+
+      // Try skip patterns
+      if (trySkip()) {
+        continue;
+      }
+
+      // Try token patterns
+      const tok = tryMatchToken();
+      if (tok !== null) {
+        // Track bracket depth
+        if (tok.value === "(" || tok.value === "[" || tok.value === "{") {
+          bracketDepth++;
+        } else if (tok.value === ")" || tok.value === "]" || tok.value === "}") {
+          bracketDepth--;
+        }
+        tokens.push(tok);
+        continue;
+      }
+
+      throw new LexerError(
+        `Unexpected character: ${JSON.stringify(char)}`,
+        line,
+        column,
+      );
+    }
+
+    // EOF: emit remaining DEDENTs
+    while (indentStack.length > 1) {
+      indentStack.pop();
+      tokens.push({ type: "DEDENT", value: "", line, column });
+    }
+
+    // Final NEWLINE if needed
+    if (tokens.length === 0 || tokens[tokens.length - 1].type !== "NEWLINE") {
+      tokens.push({ type: "NEWLINE", value: "\\n", line, column });
+    }
+
+    tokens.push({ type: "EOF", value: "", line, column });
+    return tokens;
+  }
+
+  /**
+   * Process indentation at the start of a logical line.
+   * Returns "skip" if the line should be skipped (blank/comment),
+   * or an array of INDENT/DEDENT tokens.
+   */
+  function processLineStart(indentStack: number[]): "skip" | Token[] {
+    let indent = 0;
+    while (pos < source.length) {
+      const char = source[pos];
+      if (char === " ") {
+        indent++;
+        advance();
+      } else if (char === "\t") {
+        throw new LexerError(
+          "Tab character in indentation (use spaces only)",
+          line,
+          column,
+        );
+      } else {
+        break;
+      }
+    }
+
+    // Blank line or EOF
+    if (pos >= source.length) {
+      return "skip";
+    }
+    if (source[pos] === "\n") {
+      advance(); // Consume newline to avoid infinite loop
+      return "skip";
+    }
+
+    // Comment-only line — check skip patterns
+    const remaining = source.slice(pos);
+    for (const pat of skipPatterns) {
+      const match = pat.exec(remaining);
+      if (match !== null && match.index === 0) {
+        const peekPos = pos + match[0].length;
+        if (peekPos >= source.length || source[peekPos] === "\n") {
+          for (let i = 0; i < match[0].length; i++) {
+            advance();
+          }
+          if (pos < source.length && source[pos] === "\n") {
+            advance();
+          }
+          return "skip";
+        }
+      }
+    }
+
+    // Compare indent to current level
+    const currentIndent = indentStack[indentStack.length - 1];
+    const indentTokens: Token[] = [];
+
+    if (indent > currentIndent) {
+      indentStack.push(indent);
+      indentTokens.push({ type: "INDENT", value: "", line, column: 1 });
+    } else if (indent < currentIndent) {
+      while (
+        indentStack.length > 1 &&
+        indentStack[indentStack.length - 1] > indent
+      ) {
+        indentStack.pop();
+        indentTokens.push({ type: "DEDENT", value: "", line, column: 1 });
+      }
+      if (indentStack[indentStack.length - 1] !== indent) {
+        throw new LexerError(
+          "Inconsistent dedent",
+          line,
+          column,
+        );
+      }
+    }
+
+    return indentTokens;
+  }
 }

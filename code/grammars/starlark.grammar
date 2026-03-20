@@ -1,0 +1,424 @@
+# Parser grammar for Starlark
+# A deterministic subset of Python for configuration files.
+#
+# Starlark specification: https://github.com/bazelbuild/starlark/blob/master/spec.md
+#
+# This file feeds the grammar-driven parser. The parser reads these rules
+# and uses recursive descent with backtracking to produce an AST.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from starlark.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword or exact value)
+#
+# Note: INDENT, DEDENT, and NEWLINE are synthetic tokens produced by the
+# lexer's indentation mode. They do not appear in starlark.tokens but are
+# referenced here as regular tokens.
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A Starlark file is a sequence of statements separated by newlines.
+# Blank lines (represented as consecutive NEWLINE tokens) are allowed
+# anywhere between statements.
+
+file = { NEWLINE | statement } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Statements come in two forms:
+#
+# 1. Simple statements — one line, optionally chained with semicolons.
+#    Examples: x = 1; y = 2
+#
+# 2. Compound statements — contain indented blocks.
+#    Examples: if, for, def
+
+statement = compound_stmt | simple_stmt ;
+
+# A simple statement line: one or more small statements separated by
+# semicolons, terminated by a newline.
+simple_stmt = small_stmt { SEMICOLON small_stmt } NEWLINE ;
+
+small_stmt = return_stmt
+           | break_stmt
+           | continue_stmt
+           | pass_stmt
+           | load_stmt
+           | assign_stmt ;
+
+# ============================================================================
+# Simple Statements
+# ============================================================================
+
+# Return — exits a function, optionally with a value.
+# return        → returns None
+# return expr   → returns the value of expr
+return_stmt = "return" [ expression ] ;
+
+# Break — exits the innermost for loop.
+break_stmt = "break" ;
+
+# Continue — jumps to the next iteration of the innermost for loop.
+continue_stmt = "continue" ;
+
+# Pass — no-op. Used as a placeholder in empty blocks:
+#   def todo():
+#       pass
+pass_stmt = "pass" ;
+
+# Load — imports symbols from another Starlark module.
+#   load("//rules/python.star", "py_library", alias = "py_test")
+#
+# The first argument is always a string literal (the module path).
+# Remaining arguments are either:
+#   - A string literal: imports the symbol with its original name
+#   - name = "string": imports the symbol with a local alias
+load_stmt = "load" LPAREN STRING { COMMA load_arg } [ COMMA ] RPAREN ;
+load_arg  = NAME EQUALS STRING | STRING ;
+
+# Assignment and expression statements.
+#
+# This handles three distinct cases via a single rule:
+#
+# 1. Simple assignment:      target = expr
+#    The target can be a name, attribute, or subscript:
+#    x = 1, obj.attr = 2, lst[i] = 3
+#
+# 2. Augmented assignment:   target op= expr
+#    x += 1, x -= 1, x *= 2, etc.
+#
+# 3. Expression statement:   expr
+#    print("hello"), f(x), [side effect expressions]
+#
+# 4. Tuple unpacking:        a, b = 1, 2
+#
+# The grammar parses all of these as expression_list with optional
+# assignment suffix. Semantic analysis validates that the LHS of an
+# assignment is a valid target (not a literal or operator expression).
+assign_stmt = expression_list
+              [ ( assign_op | augmented_assign_op ) expression_list ] ;
+
+assign_op = EQUALS ;
+
+augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS
+                    | FLOOR_DIV_EQUALS | PERCENT_EQUALS | AMP_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | DOUBLE_STAR_EQUALS ;
+
+# ============================================================================
+# Compound Statements
+# ============================================================================
+
+compound_stmt = if_stmt | for_stmt | def_stmt ;
+
+# If/elif/else — conditional execution.
+#
+#   if score >= 90:
+#       grade = "A"
+#   elif score >= 80:
+#       grade = "B"
+#   else:
+#       grade = "F"
+#
+# The elif chain can be any length. The else clause is optional.
+if_stmt = "if" expression COLON suite
+          { "elif" expression COLON suite }
+          [ "else" COLON suite ] ;
+
+# For loop — iterates over a finite collection.
+#
+#   for item in items:
+#       process(item)
+#
+#   for key, value in d.items():
+#       print(key, value)
+#
+# Starlark has no while loop. This is intentional: for-loops over finite
+# collections guarantee termination, making BUILD file evaluation decidable.
+for_stmt = "for" loop_vars "in" expression COLON suite ;
+
+# Loop variables: a single name or a tuple of names for unpacking.
+#   for x in lst:           → loop_vars = x
+#   for x, y in pairs:      → loop_vars = x, y
+#   for a, b, c in triples: → loop_vars = a, b, c
+loop_vars = NAME { COMMA NAME } ;
+
+# Function definition.
+#
+#   def greet(name, greeting="Hello"):
+#       return greeting + ", " + name
+#
+# Functions are first-class values in Starlark. They can be assigned to
+# variables, passed as arguments, and returned from other functions.
+# However, recursion is disabled (a function cannot call itself).
+def_stmt = "def" NAME LPAREN [ parameters ] RPAREN COLON suite ;
+
+# A suite is the body of a compound statement. It is either:
+#
+# 1. A single simple statement on the same line (compact form):
+#    if True: pass
+#
+# 2. An indented block of statements (standard form):
+#    if True:
+#        x = 1
+#        y = 2
+suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+
+# ============================================================================
+# Function Parameters
+# ============================================================================
+#
+# Parameters follow Python's model, supporting four kinds:
+#
+#   def f(a, b=1, *args, **kwargs):
+#         ↑  ↑↑    ↑↑     ↑↑
+#         │  │     │      └─ keyword collector
+#         │  │     └─ positional collector
+#         │  └─ default value
+#         └─ positional (required)
+#
+# Order rules (enforced semantically, not in grammar):
+#   1. Positional parameters first
+#   2. Default-value parameters next
+#   3. *args (at most one)
+#   4. **kwargs (at most one, must be last)
+
+parameters = parameter { COMMA parameter } [ COMMA ] ;
+
+parameter = DOUBLE_STAR NAME
+          | STAR NAME
+          | NAME EQUALS expression
+          | NAME ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Expressions are organized by operator precedence, from lowest (top) to
+# highest (bottom). Each precedence level is its own grammar rule that
+# calls the next level down. This encodes precedence without ambiguity
+# in an LL(k) grammar.
+#
+# Precedence table (lowest to highest):
+#
+#   1. lambda           lambda x: x + 1
+#   2. if-else          a if cond else b
+#   3. or               a or b
+#   4. and              a and b
+#   5. not              not a
+#   6. comparisons      a == b, a in lst, a not in lst
+#   7. |                a | b
+#   8. ^                a ^ b
+#   9. &                a & b
+#  10. << >>            a << 1, a >> 1
+#  11. + -              a + b, a - b
+#  12. * / // %         a * b, a // b
+#  13. unary +, -, ~    -a, ~a
+#  14. **               a ** b
+#  15. primary          x.attr, x[i], f(args)
+
+# Expression list — for tuple creation and multi-assignment targets.
+# "1, 2, 3" is an expression list that creates a tuple.
+expression_list = expression { COMMA expression } [ COMMA ] ;
+
+# Top-level expression: lambda or conditional (ternary).
+#   value = x if x > 0 else -x
+#   func = lambda x, y: x + y
+expression = lambda_expr | or_expr [ "if" or_expr "else" expression ] ;
+
+# Lambda — anonymous single-expression function.
+#   f = lambda x, y: x + y
+#   g = lambda: 42
+lambda_expr = "lambda" [ lambda_params ] COLON expression ;
+lambda_params = lambda_param { COMMA lambda_param } [ COMMA ] ;
+lambda_param = NAME [ EQUALS expression ] | STAR NAME | DOUBLE_STAR NAME ;
+
+# Boolean OR — short-circuit: returns first truthy operand.
+#   a or b   →  a if a is truthy, else b
+or_expr = and_expr { "or" and_expr } ;
+
+# Boolean AND — short-circuit: returns first falsy operand.
+#   a and b  →  a if a is falsy, else b
+and_expr = not_expr { "and" not_expr } ;
+
+# Boolean NOT — logical negation.
+#   not x    →  True if x is falsy, False otherwise
+not_expr = "not" not_expr | comparison ;
+
+# Comparisons — the operators ==, !=, <, >, <=, >=, in, not in.
+#
+# In Starlark, comparison chaining (a < b < c) is a syntax error.
+# The grammar allows it syntactically, but semantic analysis rejects it.
+#
+# "not in" is a two-keyword operator: the parser sees "not" followed by
+# "in" and treats them as a single comparison operator.
+comparison = bitwise_or { comp_op bitwise_or } ;
+
+comp_op = EQUALS_EQUALS | NOT_EQUALS
+        | LESS_THAN | GREATER_THAN
+        | LESS_EQUALS | GREATER_EQUALS
+        | "in" | "not" "in" ;
+
+# Bitwise operators — integer bit manipulation.
+bitwise_or  = bitwise_xor { PIPE bitwise_xor } ;
+bitwise_xor = bitwise_and { CARET bitwise_and } ;
+bitwise_and = shift { AMP shift } ;
+
+# Shift operators — bit shifting.
+shift = arith { ( LEFT_SHIFT | RIGHT_SHIFT ) arith } ;
+
+# Arithmetic — addition and subtraction.
+# Also handles string concatenation: "hello" + " " + "world"
+arith = term { ( PLUS | MINUS ) term } ;
+
+# Term — multiplication, division, floor division, modulo.
+# Also handles string formatting: "Hello, %s" % name
+# And list repetition: [0] * 10
+term = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT ) factor } ;
+
+# Unary operators — prefix +, -, ~
+#   -x     → arithmetic negation
+#   +x     → no-op (but type-checked)
+#   ~x     → bitwise complement
+factor = ( PLUS | MINUS | TILDE ) factor | power ;
+
+# Exponentiation — right-associative.
+#   2 ** 10  →  1024
+#
+# Right-associative means: 2 ** 3 ** 2 = 2 ** (3 ** 2) = 2 ** 9 = 512
+# This is achieved by having power call factor (not power) for the base,
+# but factor (which can recurse to power) for the exponent.
+power = primary [ DOUBLE_STAR factor ] ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# A primary expression is an atom followed by zero or more suffixes.
+# The suffixes are:
+#
+#   .attr       attribute access     obj.name
+#   [i]         indexing              lst[0]
+#   [i:j]       slicing              lst[1:3]
+#   [i:j:k]     slicing with step    lst[::2]
+#   (args)      function call        f(x, y)
+#
+# Suffixes bind left-to-right: f(x).attr[0] = ((f(x)).attr)[0]
+
+primary = atom { suffix } ;
+
+suffix = DOT NAME
+       | LBRACKET subscript RBRACKET
+       | LPAREN [ arguments ] RPAREN ;
+
+# Subscript — indexing or slicing.
+#
+# Indexing:  lst[0], d["key"]
+# Slicing:  lst[1:3], lst[::2], lst[::-1]
+#
+# Slicing uses up to three expressions separated by colons:
+#   [start : stop : step]
+# All three are optional: [:] copies the whole list.
+subscript = expression
+          | [ expression ] COLON [ expression ] [ COLON [ expression ] ] ;
+
+# ============================================================================
+# Atoms
+# ============================================================================
+#
+# Atoms are the indivisible leaves of the expression tree.
+
+atom = INT
+     | FLOAT
+     | STRING { STRING }
+     | NAME
+     | "True" | "False" | "None"
+     | list_expr
+     | dict_expr
+     | paren_expr ;
+
+# Adjacent string literals are concatenated at parse time:
+#   "hello " "world" → "hello world"
+# This is useful for breaking long strings across lines.
+
+# List literal or list comprehension.
+#   [1, 2, 3]                    → list literal
+#   [x * 2 for x in range(10)]  → list comprehension
+list_expr = LBRACKET [ list_body ] RBRACKET ;
+
+list_body = expression comp_clause
+          | expression { COMMA expression } [ COMMA ] ;
+
+# Dict literal or dict comprehension.
+#   {"a": 1, "b": 2}                     → dict literal
+#   {k: v for k, v in pairs.items()}      → dict comprehension
+dict_expr = LBRACE [ dict_body ] RBRACE ;
+
+dict_body = dict_entry comp_clause
+          | dict_entry { COMMA dict_entry } [ COMMA ] ;
+
+dict_entry = expression COLON expression ;
+
+# Parenthesized expression or tuple literal.
+#   (x)        → parenthesized expression (not a tuple)
+#   (x,)       → single-element tuple
+#   (x, y)     → two-element tuple
+#   ()         → empty tuple
+paren_expr = LPAREN [ paren_body ] RPAREN ;
+
+paren_body = expression comp_clause
+           | expression COMMA [ expression { COMMA expression } [ COMMA ] ]
+           | expression ;
+
+# ============================================================================
+# Comprehensions
+# ============================================================================
+#
+# Comprehension clauses appear in list, dict, and parenthesized expressions.
+# A comprehension has one or more for-clauses with optional if-filters:
+#
+#   [expr for x in collection if condition for y in other]
+#
+# The for-clauses are nested: the second iterates inside the first.
+# If-clauses filter the current iteration.
+
+comp_clause = comp_for { comp_for | comp_if } ;
+
+comp_for = "for" loop_vars "in" or_expr ;
+
+comp_if = "if" or_expr ;
+
+# ============================================================================
+# Function Call Arguments
+# ============================================================================
+#
+# Function calls support four kinds of arguments:
+#
+#   f(1, 2)              → positional arguments
+#   f(key=value)         → keyword arguments
+#   f(*args)             → positional unpacking
+#   f(**kwargs)          → keyword unpacking
+#
+# Order rules (enforced semantically, not in grammar):
+#   1. Positional arguments first
+#   2. Keyword arguments next
+#   3. *args unpacking
+#   4. **kwargs unpacking
+
+arguments = argument { COMMA argument } [ COMMA ] ;
+
+argument = DOUBLE_STAR expression
+         | STAR expression
+         | NAME EQUALS expression
+         | expression ;

@@ -24,4 +24,6 @@ members = [
     "html-renderer",
     "matrix",
     "pipeline",
+    "starlark-lexer",
+    "starlark-parser",
 ]

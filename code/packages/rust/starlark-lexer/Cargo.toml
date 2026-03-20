@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-starlark-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Starlark lexer — tokenizes Starlark source code using the grammar-driven lexer and the starlark.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

@@ -51,6 +51,18 @@ def cross_validate(
     exists in the token grammar, and warns about tokens that are defined
     but never used.
 
+    Special handling for extended features:
+
+    - **Indentation mode**: When ``token_grammar.mode == "indentation"``,
+      the tokens ``INDENT``, ``DEDENT``, and ``NEWLINE`` are implicitly
+      available (synthesized by the lexer), even if not defined in the
+      .tokens file. The grammar can reference them freely.
+
+    - **Aliases**: When a token definition has an alias (e.g.,
+      ``STRING_DQ -> STRING``), the grammar may reference either the
+      alias (``STRING``) or the original name (``STRING_DQ``). The
+      alias is the preferred form (it is what the lexer emits).
+
     Args:
         token_grammar: A parsed .tokens file.
         parser_grammar: A parsed .grammar file.
@@ -62,11 +74,22 @@ def cross_validate(
     """
     issues: list[str] = []
 
+    # Build the set of all token names the parser can reference.
+    # This includes both definition names and their aliases.
     defined_tokens = token_grammar.token_names()
+
+    # When indentation mode is active, the lexer synthesizes INDENT,
+    # DEDENT, and NEWLINE tokens. These are not in the .tokens file but
+    # are valid to reference in the grammar.
+    if token_grammar.mode == "indentation":
+        defined_tokens |= {"INDENT", "DEDENT", "NEWLINE"}
+
+    # The EOF token is always implicitly available.
+    defined_tokens.add("EOF")
+
     referenced_tokens = parser_grammar.token_references()
 
     # --- Missing token references (errors) ---
-    # Every UPPERCASE name used in the grammar must exist in the tokens file.
     for ref in sorted(referenced_tokens):
         if ref not in defined_tokens:
             issues.append(
@@ -75,10 +98,23 @@ def cross_validate(
             )
 
     # --- Unused tokens (warnings) ---
-    # Every token defined in the .tokens file should ideally be used
-    # somewhere in the grammar.
+    # Build the set of "effectively referenced" names, accounting for
+    # aliases. If the grammar references STRING and a definition has
+    # alias=STRING, that definition counts as used.
+    alias_to_names: dict[str, list[str]] = {}
     for defn in token_grammar.definitions:
-        if defn.name not in referenced_tokens:
+        if defn.alias:
+            alias_to_names.setdefault(defn.alias, []).append(defn.name)
+
+    for defn in token_grammar.definitions:
+        # A definition is "used" if:
+        # 1. Its name is directly referenced, OR
+        # 2. Its alias is referenced
+        is_used = defn.name in referenced_tokens
+        if defn.alias and defn.alias in referenced_tokens:
+            is_used = True
+
+        if not is_used:
             issues.append(
                 f"Warning: Token '{defn.name}' (line {defn.line_number}) "
                 f"is defined but never used in the grammar"

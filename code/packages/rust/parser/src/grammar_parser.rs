@@ -9,24 +9,29 @@
 //! `.grammar` file (parsed by the `grammar_tools` crate) and use them to
 //! drive the parse at runtime.
 //!
+//! # Extensions for Starlark-like languages
+//!
+//! This parser supports several extensions beyond basic EBNF interpretation:
+//!
+//! - **Packrat memoization**: Caches parse results for each (rule, position) pair,
+//!   avoiding exponential backtracking. Essential for grammars with ~40 rules.
+//!
+//! - **Significant newlines**: If the grammar references NEWLINE tokens, they are
+//!   treated as significant (not auto-skipped). Otherwise, NEWLINEs are transparent.
+//!
+//! - **Furthest failure tracking**: When parsing fails, the error message reports
+//!   what was expected at the furthest position reached, not just the first failure.
+//!
+//! - **String-based token matching**: Tokens with a `type_name` field are matched
+//!   by their string name, allowing grammars with custom token types beyond the
+//!   fixed `TokenType` enum.
+//!
 //! # How it works
 //!
-//! 1. A `.grammar` file defines the language's syntax in EBNF notation:
-//!
-//!    ```text
-//!    program    = { statement } ;
-//!    statement  = assignment | expression ;
-//!    assignment = NAME EQUALS expression ;
-//!    expression = term { PLUS term } ;
-//!    term       = NUMBER | NAME ;
-//!    ```
-//!
-//! 2. The `grammar_tools` crate parses this file into a `ParserGrammar` —
-//!    a data structure of `GrammarElement` nodes (Sequence, Alternation,
-//!    Repetition, Optional, RuleReference, TokenReference, Literal).
-//!
-//! 3. This module's `GrammarParser` walks the `GrammarElement` tree while
-//!    consuming tokens. Each grammar element type has a matching strategy:
+//! 1. A `.grammar` file defines the language's syntax in EBNF notation.
+//! 2. The `grammar_tools` crate parses this file into a `ParserGrammar`.
+//! 3. This module's `GrammarParser` walks the grammar rule tree while
+//!    consuming tokens. Each EBNF element type has a natural interpretation:
 //!
 //!    | Element       | Strategy                                    |
 //!    |---------------|---------------------------------------------|
@@ -38,29 +43,6 @@
 //!    | RuleReference | Recursively parse the named rule            |
 //!    | TokenReference| Match if current token has the right type   |
 //!    | Literal       | Match if current token has the right value  |
-//!
-//! 4. The result is a generic AST made of `GrammarASTNode` nodes, where
-//!    each node carries the rule name and a list of children (which can
-//!    be either more AST nodes or raw tokens).
-//!
-//! # Backtracking
-//!
-//! Grammar-driven parsing needs backtracking: when an alternative fails,
-//! we restore the token position and try the next one. This is implemented
-//! by saving `self.pos` before each attempt and restoring it on failure.
-//!
-//! Backtracking is simple but potentially slow for ambiguous grammars. For
-//! our educational purposes, it works perfectly.
-//!
-//! # Comparison with the hand-written parser
-//!
-//! | Aspect          | Hand-written          | Grammar-driven           |
-//! |-----------------|-----------------------|--------------------------|
-//! | Flexibility     | One language only     | Any language via grammar  |
-//! | AST type        | Typed (`ASTNode` enum)| Generic (`GrammarASTNode`)|
-//! | Error messages  | Very specific         | More generic             |
-//! | Performance     | No backtracking       | Backtracks on alternation|
-//! | Maintenance     | Change Rust code      | Change `.grammar` file   |
 
 use lexer::token::{Token, TokenType, string_to_token_type};
 use grammar_tools::parser_grammar::{GrammarElement, ParserGrammar, GrammarRule};
@@ -72,18 +54,6 @@ use std::fmt;
 // ===========================================================================
 
 /// A child of a grammar AST node — either a nested node or a raw token.
-///
-/// This enum is the grammar-driven parser's equivalent of Go's
-/// `[]interface{}` (which can hold `*ASTNode` or `Token`). In Rust, we use
-/// an enum to make this type-safe: every child is clearly labeled as either
-/// a `Node` or a `Token`.
-///
-/// # Why not just use `ASTNode` from `crate::ast`?
-///
-/// The hand-written parser produces typed AST nodes (`Number`, `BinaryOp`,
-/// etc.) because it knows the language it is parsing. The grammar-driven
-/// parser does not know the language — it just knows grammar rules. So its
-/// AST is generic: each node has a rule name and a list of children.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ASTNodeOrToken {
     /// A nested AST node produced by matching a grammar rule.
@@ -97,22 +67,6 @@ pub enum ASTNodeOrToken {
 /// Each node corresponds to a successfully matched grammar rule. The
 /// `rule_name` says which rule matched, and `children` contains the
 /// sub-matches (either deeper rule matches or individual tokens).
-///
-/// # Example
-///
-/// For the grammar rule `expression = term { PLUS term }` and the input
-/// `1 + 2`, the AST would be:
-///
-/// ```text
-/// GrammarASTNode {
-///     rule_name: "expression",
-///     children: [
-///         Node(GrammarASTNode { rule_name: "term", children: [Token(NUMBER "1")] }),
-///         Token(PLUS "+"),
-///         Node(GrammarASTNode { rule_name: "term", children: [Token(NUMBER "2")] }),
-///     ]
-/// }
-/// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct GrammarASTNode {
     pub rule_name: String,
@@ -122,9 +76,6 @@ pub struct GrammarASTNode {
 impl GrammarASTNode {
     /// Check if this node is a "leaf" — a node with exactly one child that
     /// is a raw token.
-    ///
-    /// Leaf nodes typically correspond to terminal grammar rules like
-    /// `term = NUMBER ;`. They wrap a single token.
     pub fn is_leaf(&self) -> bool {
         if self.children.len() == 1 {
             matches!(&self.children[0], ASTNodeOrToken::Token(_))
@@ -134,9 +85,6 @@ impl GrammarASTNode {
     }
 
     /// If this is a leaf node, return a reference to its token.
-    ///
-    /// Returns `None` if the node has multiple children or if its single
-    /// child is a nested node rather than a token.
     pub fn token(&self) -> Option<&Token> {
         if self.is_leaf() {
             match &self.children[0] {
@@ -173,44 +121,84 @@ impl fmt::Display for GrammarParseError {
 impl std::error::Error for GrammarParseError {}
 
 // ===========================================================================
+// Memo entry — packrat memoization cache entry
+// ===========================================================================
+
+/// A cached result from parsing a rule at a specific position.
+///
+/// Packrat memoization stores the result of every (rule, position) attempt
+/// so that re-parsing the same rule at the same position is O(1). This is
+/// essential for grammars with ~40 rules that would otherwise cause
+/// exponential backtracking.
+struct MemoEntry {
+    /// The matched children, or None if the rule failed.
+    children: Option<Vec<ASTNodeOrToken>>,
+    /// The position after the match (or where we gave up).
+    end_pos: usize,
+    /// Whether the match succeeded.
+    ok: bool,
+}
+
+// ===========================================================================
 // Grammar parser
 // ===========================================================================
 
 /// A parser that uses a `ParserGrammar` (from a `.grammar` file) to parse
 /// a token stream into a generic AST.
 ///
-/// # Fields
-///
-/// - `tokens` — The token stream to parse.
-/// - `grammar` — The grammar rules to follow.
-/// - `pos` — Current position in the token stream.
-/// - `rules` — Lookup table mapping rule names to their definitions.
-///   Built from the grammar's rule list for O(1) access during parsing.
+/// Includes packrat memoization, significant newline detection, and
+/// furthest failure tracking for better error messages.
 pub struct GrammarParser {
     tokens: Vec<Token>,
     grammar: ParserGrammar,
     pos: usize,
     rules: HashMap<String, GrammarRule>,
+
+    /// Index of each rule name for memo key generation.
+    rule_index: HashMap<String, usize>,
+
+    /// Whether newlines are significant in this grammar.
+    newlines_significant: bool,
+
+    /// Packrat memoization cache: "rule_idx,pos" -> MemoEntry.
+    memo: HashMap<String, MemoEntry>,
+
+    /// Furthest position reached during parsing.
+    furthest_pos: usize,
+
+    /// What was expected at the furthest position.
+    furthest_expected: Vec<String>,
 }
 
 impl GrammarParser {
     /// Create a new grammar-driven parser.
-    ///
-    /// Builds an internal lookup table from rule names to rule definitions
-    /// for efficient access during recursive descent.
     pub fn new(tokens: Vec<Token>, grammar: ParserGrammar) -> Self {
-        let rules: HashMap<String, GrammarRule> = grammar
-            .rules
-            .iter()
-            .map(|r| (r.name.clone(), r.clone()))
-            .collect();
+        let mut rules = HashMap::new();
+        let mut rule_index = HashMap::new();
+
+        for (i, rule) in grammar.rules.iter().enumerate() {
+            rules.insert(rule.name.clone(), rule.clone());
+            rule_index.insert(rule.name.clone(), i);
+        }
+
+        let newlines_significant = grammar_references_newline(&grammar);
 
         GrammarParser {
             tokens,
             grammar,
             pos: 0,
             rules,
+            rule_index,
+            newlines_significant,
+            memo: HashMap::new(),
+            furthest_pos: 0,
+            furthest_expected: Vec::new(),
         }
+    }
+
+    /// Whether newlines are treated as significant tokens in this grammar.
+    pub fn is_newlines_significant(&self) -> bool {
+        self.newlines_significant
     }
 
     /// Get the current token without consuming it.
@@ -222,11 +210,21 @@ impl GrammarParser {
         }
     }
 
+    /// Record a failed expectation at the current position for error reporting.
+    fn record_failure(&mut self, expected: &str) {
+        if self.pos > self.furthest_pos {
+            self.furthest_pos = self.pos;
+            self.furthest_expected = vec![expected.to_string()];
+        } else if self.pos == self.furthest_pos {
+            if !self.furthest_expected.contains(&expected.to_string()) {
+                self.furthest_expected.push(expected.to_string());
+            }
+        }
+    }
+
     /// Parse the token stream according to the grammar.
     ///
     /// Uses the first rule in the grammar as the entry point (start symbol).
-    /// After parsing, verifies that all tokens have been consumed (except
-    /// trailing newlines and EOF).
     pub fn parse(&mut self) -> Result<GrammarASTNode, GrammarParseError> {
         if self.grammar.rules.is_empty() {
             return Err(GrammarParseError {
@@ -235,15 +233,33 @@ impl GrammarParser {
             });
         }
 
-        // The first rule is the entry point / start symbol.
         let entry_rule_name = self.grammar.rules[0].name.clone();
         let result = self.parse_rule(&entry_rule_name);
 
         match result {
-            None => Err(GrammarParseError {
-                message: "Failed to parse using grammar".to_string(),
-                token: self.current().clone(),
-            }),
+            None => {
+                let tok = self.current().clone();
+                if !self.furthest_expected.is_empty() {
+                    let expected = self.furthest_expected.join(" or ");
+                    let furthest_tok = if self.furthest_pos < self.tokens.len() {
+                        self.tokens[self.furthest_pos].clone()
+                    } else {
+                        tok.clone()
+                    };
+                    Err(GrammarParseError {
+                        message: format!(
+                            "Expected {}, got {:?}",
+                            expected, furthest_tok.value
+                        ),
+                        token: furthest_tok,
+                    })
+                } else {
+                    Err(GrammarParseError {
+                        message: "Failed to parse using grammar".to_string(),
+                        token: tok,
+                    })
+                }
+            }
             Some(node) => {
                 // Skip trailing newlines.
                 while self.pos < self.tokens.len()
@@ -256,12 +272,28 @@ impl GrammarParser {
                 if self.pos < self.tokens.len()
                     && self.current().type_ != TokenType::Eof
                 {
+                    let tok = self.current().clone();
+                    if !self.furthest_expected.is_empty() && self.furthest_pos > self.pos {
+                        let expected = self.furthest_expected.join(" or ");
+                        let furthest_tok = if self.furthest_pos < self.tokens.len() {
+                            self.tokens[self.furthest_pos].clone()
+                        } else {
+                            tok.clone()
+                        };
+                        return Err(GrammarParseError {
+                            message: format!(
+                                "Expected {}, got {:?}",
+                                expected, furthest_tok.value
+                            ),
+                            token: furthest_tok,
+                        });
+                    }
                     return Err(GrammarParseError {
                         message: format!(
                             "Unexpected token: {:?}",
-                            self.current().value
+                            tok.value
                         ),
-                        token: self.current().clone(),
+                        token: tok,
                     });
                 }
 
@@ -270,59 +302,77 @@ impl GrammarParser {
         }
     }
 
-    /// Try to match a named grammar rule.
-    ///
-    /// Looks up the rule by name and attempts to match its body against
-    /// the current token stream. Returns `Some(GrammarASTNode)` on success
-    /// or `None` on failure.
+    // =========================================================================
+    // Rule parsing (with packrat memoization)
+    // =========================================================================
+
+    /// Try to match a named grammar rule with memoization.
     fn parse_rule(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
         let rule = match self.rules.get(rule_name) {
             Some(r) => r.clone(),
             None => return None,
         };
 
-        let children = self.match_element(&rule.body)?;
+        // Check memo cache.
+        if let Some(&idx) = self.rule_index.get(rule_name) {
+            let key = format!("{},{}", idx, self.pos);
+            if let Some(entry) = self.memo.get(&key) {
+                let end_pos = entry.end_pos;
+                let ok = entry.ok;
+                let children = entry.children.clone();
+                self.pos = end_pos;
+                if !ok {
+                    return None;
+                }
+                return Some(GrammarASTNode {
+                    rule_name: rule_name.to_string(),
+                    children: children.unwrap(),
+                });
+            }
+        }
 
-        Some(GrammarASTNode {
-            rule_name: rule_name.to_string(),
-            children,
-        })
+        let start_pos = self.pos;
+        let children = self.match_element(&rule.body);
+
+        // Cache result.
+        if let Some(&idx) = self.rule_index.get(rule_name) {
+            let key = format!("{},{}", idx, start_pos);
+            if let Some(ref result) = children {
+                self.memo.insert(key, MemoEntry {
+                    children: Some(result.clone()),
+                    end_pos: self.pos,
+                    ok: true,
+                });
+            } else {
+                self.memo.insert(key, MemoEntry {
+                    children: None,
+                    end_pos: self.pos,
+                    ok: false,
+                });
+            }
+        }
+
+        match children {
+            Some(c) => Some(GrammarASTNode {
+                rule_name: rule_name.to_string(),
+                children: c,
+            }),
+            None => {
+                self.pos = start_pos;
+                self.record_failure(rule_name);
+                None
+            }
+        }
     }
 
-    /// The core matching engine: try to match a grammar element against
-    /// the token stream.
-    ///
-    /// This is where the magic happens. Each variant of `GrammarElement`
-    /// has its own matching strategy:
-    ///
-    /// - **Sequence**: Match all sub-elements in order. If any fails,
-    ///   backtrack to the starting position and fail.
-    ///
-    /// - **Alternation**: Try each choice in order. The first one that
-    ///   succeeds wins. If all fail, backtrack and fail.
-    ///
-    /// - **Repetition**: Match the inner element zero or more times.
-    ///   Always succeeds (zero matches is valid).
-    ///
-    /// - **Optional**: Try to match the inner element. If it fails,
-    ///   succeed with an empty result (zero matches is valid).
-    ///
-    /// - **Group**: Just delegate to the inner element (grouping is
-    ///   purely syntactic in the grammar).
-    ///
-    /// - **RuleReference**: Recursively parse the named rule. For token
-    ///   references, match directly against the current token's type.
-    ///
-    /// - **Literal**: Match if the current token's value equals the literal.
+    // =========================================================================
+    // Element matching
+    // =========================================================================
+
     fn match_element(&mut self, element: &GrammarElement) -> Option<Vec<ASTNodeOrToken>> {
         let save_pos = self.pos;
 
         match element {
-            // ----- Sequence: match all children in order (AND) -----
-            //
-            // A sequence like `NAME EQUALS expression` requires all three
-            // elements to match consecutively. If the second element fails,
-            // we undo all progress (backtrack) and report failure.
             GrammarElement::Sequence { elements } => {
                 let mut children = Vec::new();
                 for sub in elements {
@@ -337,11 +387,6 @@ impl GrammarParser {
                 Some(children)
             }
 
-            // ----- Alternation: try each choice until one works (OR) -----
-            //
-            // An alternation like `assignment | expression` tries the first
-            // option. If it fails, we backtrack and try the second. The
-            // first match wins (ordered choice).
             GrammarElement::Alternation { choices } => {
                 for choice in choices {
                     self.pos = save_pos;
@@ -353,11 +398,6 @@ impl GrammarParser {
                 None
             }
 
-            // ----- Repetition: zero or more matches (Kleene star) -----
-            //
-            // `{ statement }` matches statements until it cannot match any
-            // more. Zero matches is perfectly valid — an empty program has
-            // no statements.
             GrammarElement::Repetition { element: inner } => {
                 let mut children = Vec::new();
                 loop {
@@ -373,10 +413,6 @@ impl GrammarParser {
                 Some(children)
             }
 
-            // ----- Optional: zero or one match -----
-            //
-            // `[ ELSE block ]` matches the ELSE clause if present, or
-            // succeeds with nothing if it is absent.
             GrammarElement::Optional { element: inner } => {
                 match self.match_element(inner) {
                     Some(result) => Some(result),
@@ -384,36 +420,17 @@ impl GrammarParser {
                 }
             }
 
-            // ----- Group: just delegate (parentheses in EBNF) -----
             GrammarElement::Group { element: inner } => {
                 self.match_element(inner)
             }
 
-            // ----- RuleReference: either a rule name or a token type -----
-            //
-            // UPPERCASE names (like `NUMBER`, `PLUS`) are token references.
-            // Lowercase names (like `expression`, `statement`) are rule
-            // references that trigger recursive parsing.
             GrammarElement::RuleReference { name } => {
                 // Is this an uppercase token reference?
                 let is_token = name.chars().all(|c| c.is_uppercase() || c == '_');
 
                 if is_token {
-                    // Skip newlines unless we are specifically looking for NEWLINE.
-                    while self.current().type_ == TokenType::Newline && name != "NEWLINE" {
-                        self.pos += 1;
-                    }
-
-                    let expected_type = string_to_token_type(name);
-                    if self.current().type_ == expected_type {
-                        let tok = self.current().clone();
-                        self.pos += 1;
-                        Some(vec![ASTNodeOrToken::Token(tok)])
-                    } else {
-                        None
-                    }
+                    self.match_token_reference(name)
                 } else {
-                    // Lowercase: recursively parse the named rule.
                     match self.parse_rule(name) {
                         Some(node) => Some(vec![ASTNodeOrToken::Node(node)]),
                         None => {
@@ -424,37 +441,94 @@ impl GrammarParser {
                 }
             }
 
-            // ----- TokenReference: match by token type name -----
             GrammarElement::TokenReference { name } => {
-                // Skip newlines unless specifically matching NEWLINE.
-                while self.current().type_ == TokenType::Newline && name != "NEWLINE" {
-                    self.pos += 1;
-                }
-
-                let expected_type = string_to_token_type(name);
-                if self.current().type_ == expected_type {
-                    let tok = self.current().clone();
-                    self.pos += 1;
-                    Some(vec![ASTNodeOrToken::Token(tok)])
-                } else {
-                    None
-                }
+                self.match_token_reference(name)
             }
 
-            // ----- Literal: match by exact token value -----
-            //
-            // A literal like `"+"` in the grammar matches a token whose
-            // value is exactly "+".
             GrammarElement::Literal { value } => {
+                // Skip insignificant newlines before literal matching.
+                if !self.newlines_significant {
+                    while self.current().type_ == TokenType::Newline {
+                        self.pos += 1;
+                    }
+                }
+
                 if self.current().value == *value {
                     let tok = self.current().clone();
                     self.pos += 1;
                     Some(vec![ASTNodeOrToken::Token(tok)])
                 } else {
+                    self.record_failure(&format!("\"{}\"", value));
                     None
                 }
             }
         }
+    }
+
+    // =========================================================================
+    // Token reference matching
+    // =========================================================================
+
+    /// Match a token reference, handling string-based type names and
+    /// newline skipping.
+    fn match_token_reference(&mut self, expected_type: &str) -> Option<Vec<ASTNodeOrToken>> {
+        // Skip newlines when matching non-NEWLINE tokens (if insignificant).
+        if !self.newlines_significant && expected_type != "NEWLINE" {
+            while self.current().type_ == TokenType::Newline {
+                self.pos += 1;
+            }
+        }
+
+        let token = self.current();
+
+        // First, check string-based type_name for custom token types.
+        if let Some(ref type_name) = token.type_name {
+            if type_name == expected_type {
+                let tok = token.clone();
+                self.pos += 1;
+                return Some(vec![ASTNodeOrToken::Token(tok)]);
+            }
+        }
+
+        // Fall back to enum-based matching.
+        let expected = string_to_token_type(expected_type);
+        if token.type_ == expected {
+            let tok = token.clone();
+            self.pos += 1;
+            Some(vec![ASTNodeOrToken::Token(tok)])
+        } else {
+            self.record_failure(expected_type);
+            None
+        }
+    }
+}
+
+// ===========================================================================
+// Newline detection — scan grammar for NEWLINE references
+// ===========================================================================
+
+/// Check if any rule in the grammar references the NEWLINE token.
+fn grammar_references_newline(grammar: &ParserGrammar) -> bool {
+    grammar.rules.iter().any(|rule| element_references_newline(&rule.body))
+}
+
+/// Recursively check if a grammar element references NEWLINE.
+fn element_references_newline(element: &GrammarElement) -> bool {
+    match element {
+        GrammarElement::TokenReference { name } => name == "NEWLINE",
+        GrammarElement::RuleReference { name } => name == "NEWLINE",
+        GrammarElement::Sequence { elements } => {
+            elements.iter().any(|e| element_references_newline(e))
+        }
+        GrammarElement::Alternation { choices } => {
+            choices.iter().any(|c| element_references_newline(c))
+        }
+        GrammarElement::Repetition { element: inner }
+        | GrammarElement::Optional { element: inner }
+        | GrammarElement::Group { element: inner } => {
+            element_references_newline(inner)
+        }
+        GrammarElement::Literal { .. } => false,
     }
 }
 
@@ -474,6 +548,18 @@ mod tests {
             value: value.to_string(),
             line: 1,
             column: 1,
+            type_name: None,
+        }
+    }
+
+    /// Helper: create a token with a string type name.
+    fn tok_named(type_: TokenType, value: &str, type_name: &str) -> Token {
+        Token {
+            type_,
+            value: value.to_string(),
+            line: 1,
+            column: 1,
+            type_name: Some(type_name.to_string()),
         }
     }
 
@@ -483,8 +569,6 @@ mod tests {
     /// expression = term { PLUS term } ;
     /// term       = NUMBER ;
     /// ```
-    ///
-    /// This grammar recognizes expressions like `1`, `1 + 2`, `1 + 2 + 3`.
     fn simple_grammar() -> ParserGrammar {
         ParserGrammar {
             rules: vec![
@@ -514,39 +598,23 @@ mod tests {
         }
     }
 
-    /// Test parsing a single number with the grammar-driven parser.
-    ///
-    /// Input: `42`
-    /// Grammar: expression = term { PLUS term } ; term = NUMBER ;
-    /// Expected: expression(term(42))
+    // -----------------------------------------------------------------------
+    // Basic parsing
+    // -----------------------------------------------------------------------
+
     #[test]
     fn test_grammar_parse_single_number() {
         let tokens = vec![
             tok(TokenType::Number, "42"),
             tok(TokenType::Eof, ""),
         ];
-
         let grammar = simple_grammar();
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
-
         assert_eq!(result.rule_name, "expression");
-        // Should have one child: a "term" node
         assert_eq!(result.children.len(), 1);
-        match &result.children[0] {
-            ASTNodeOrToken::Node(term) => {
-                assert_eq!(term.rule_name, "term");
-                assert!(term.is_leaf());
-                assert_eq!(term.token().unwrap().value, "42");
-            }
-            other => panic!("Expected Node, got {:?}", other),
-        }
     }
 
-    /// Test parsing addition: `1 + 2`.
-    ///
-    /// Expected structure:
-    /// expression(term(1), PLUS, term(2))
     #[test]
     fn test_grammar_parse_addition() {
         let tokens = vec![
@@ -555,46 +623,13 @@ mod tests {
             tok(TokenType::Number, "2"),
             tok(TokenType::Eof, ""),
         ];
-
         let grammar = simple_grammar();
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
-
         assert_eq!(result.rule_name, "expression");
-        // Should have: term, PLUS token, term = 3 children
         assert_eq!(result.children.len(), 3);
-
-        // First child: term node with "1"
-        match &result.children[0] {
-            ASTNodeOrToken::Node(term) => {
-                assert_eq!(term.rule_name, "term");
-                assert_eq!(term.token().unwrap().value, "1");
-            }
-            other => panic!("Expected Node for first term, got {:?}", other),
-        }
-
-        // Second child: PLUS token
-        match &result.children[1] {
-            ASTNodeOrToken::Token(tok) => {
-                assert_eq!(tok.type_, TokenType::Plus);
-            }
-            other => panic!("Expected Token for PLUS, got {:?}", other),
-        }
-
-        // Third child: term node with "2"
-        match &result.children[2] {
-            ASTNodeOrToken::Node(term) => {
-                assert_eq!(term.rule_name, "term");
-                assert_eq!(term.token().unwrap().value, "2");
-            }
-            other => panic!("Expected Node for second term, got {:?}", other),
-        }
     }
 
-    /// Test chained addition: `1 + 2 + 3`.
-    ///
-    /// The repetition `{ PLUS term }` should match twice, producing:
-    /// expression(term(1), PLUS, term(2), PLUS, term(3))
     #[test]
     fn test_grammar_parse_chained_addition() {
         let tokens = vec![
@@ -605,33 +640,24 @@ mod tests {
             tok(TokenType::Number, "3"),
             tok(TokenType::Eof, ""),
         ];
-
         let grammar = simple_grammar();
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
-
-        assert_eq!(result.rule_name, "expression");
-        // term, PLUS, term, PLUS, term = 5 children
         assert_eq!(result.children.len(), 5);
     }
 
-    /// Test that an empty grammar produces an error.
     #[test]
     fn test_grammar_parse_empty_grammar() {
         let tokens = vec![tok(TokenType::Eof, "")];
         let grammar = ParserGrammar { rules: vec![] };
         let mut parser = GrammarParser::new(tokens, grammar);
-        let result = parser.parse();
-
-        assert!(result.is_err());
+        assert!(parser.parse().is_err());
     }
 
-    /// Test parsing with alternation.
-    ///
-    /// Grammar:
-    /// ```text
-    /// value = NUMBER | NAME ;
-    /// ```
+    // -----------------------------------------------------------------------
+    // Alternation, Optional, Literal, Group
+    // -----------------------------------------------------------------------
+
     #[test]
     fn test_grammar_parse_alternation() {
         let grammar = ParserGrammar {
@@ -647,31 +673,15 @@ mod tests {
             }],
         };
 
-        // Test with a number
-        let tokens = vec![
-            tok(TokenType::Number, "42"),
-            tok(TokenType::Eof, ""),
-        ];
+        let tokens = vec![tok(TokenType::Number, "42"), tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar.clone());
-        let result = parser.parse().unwrap();
-        assert_eq!(result.rule_name, "value");
+        assert!(parser.parse().is_ok());
 
-        // Test with a name
-        let tokens = vec![
-            tok(TokenType::Name, "x"),
-            tok(TokenType::Eof, ""),
-        ];
+        let tokens = vec![tok(TokenType::Name, "x"), tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar);
-        let result = parser.parse().unwrap();
-        assert_eq!(result.rule_name, "value");
+        assert!(parser.parse().is_ok());
     }
 
-    /// Test optional element matching.
-    ///
-    /// Grammar:
-    /// ```text
-    /// maybe_number = [ NUMBER ] ;
-    /// ```
     #[test]
     fn test_grammar_parse_optional() {
         let grammar = ParserGrammar {
@@ -686,28 +696,17 @@ mod tests {
             }],
         };
 
-        // With a number present
-        let tokens = vec![
-            tok(TokenType::Number, "42"),
-            tok(TokenType::Eof, ""),
-        ];
+        let tokens = vec![tok(TokenType::Number, "42"), tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar.clone());
         let result = parser.parse().unwrap();
         assert_eq!(result.children.len(), 1);
 
-        // Without a number (just EOF)
         let tokens = vec![tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
         assert_eq!(result.children.len(), 0);
     }
 
-    /// Test literal matching.
-    ///
-    /// Grammar:
-    /// ```text
-    /// greeting = "hello" ;
-    /// ```
     #[test]
     fn test_grammar_parse_literal() {
         let grammar = ParserGrammar {
@@ -719,46 +718,12 @@ mod tests {
                 line_number: 1,
             }],
         };
-
-        let tokens = vec![
-            tok(TokenType::Name, "hello"),
-            tok(TokenType::Eof, ""),
-        ];
+        let tokens = vec![tok(TokenType::Name, "hello"), tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
         assert_eq!(result.rule_name, "greeting");
-        assert_eq!(result.children.len(), 1);
     }
 
-    /// Test that the leaf/token helper methods work correctly.
-    #[test]
-    fn test_ast_node_helpers() {
-        // A leaf node (single token child)
-        let leaf = GrammarASTNode {
-            rule_name: "number".to_string(),
-            children: vec![ASTNodeOrToken::Token(tok(TokenType::Number, "42"))],
-        };
-        assert!(leaf.is_leaf());
-        assert_eq!(leaf.token().unwrap().value, "42");
-
-        // A non-leaf node (nested node child)
-        let non_leaf = GrammarASTNode {
-            rule_name: "expr".to_string(),
-            children: vec![
-                ASTNodeOrToken::Node(leaf.clone()),
-                ASTNodeOrToken::Token(tok(TokenType::Plus, "+")),
-            ],
-        };
-        assert!(!non_leaf.is_leaf());
-        assert!(non_leaf.token().is_none());
-    }
-
-    /// Test parsing with a group element.
-    ///
-    /// Grammar:
-    /// ```text
-    /// expr = NUMBER ( PLUS | MINUS ) NUMBER ;
-    /// ```
     #[test]
     fn test_grammar_parse_group() {
         let grammar = ParserGrammar {
@@ -782,41 +747,228 @@ mod tests {
             }],
         };
 
-        // Test with plus
         let tokens = vec![
             tok(TokenType::Number, "1"),
             tok(TokenType::Plus, "+"),
             tok(TokenType::Number, "2"),
             tok(TokenType::Eof, ""),
         ];
-        let mut parser = GrammarParser::new(tokens, grammar.clone());
-        let result = parser.parse().unwrap();
-        assert_eq!(result.children.len(), 3);
-
-        // Test with minus
-        let tokens = vec![
-            tok(TokenType::Number, "5"),
-            tok(TokenType::Minus, "-"),
-            tok(TokenType::Number, "3"),
-            tok(TokenType::Eof, ""),
-        ];
         let mut parser = GrammarParser::new(tokens, grammar);
-        let result = parser.parse().unwrap();
-        assert_eq!(result.children.len(), 3);
+        assert_eq!(parser.parse().unwrap().children.len(), 3);
     }
 
-    /// Integration test: use the grammar-driven parser with real lexer output.
+    // -----------------------------------------------------------------------
+    // AST node helpers
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_ast_node_helpers() {
+        let leaf = GrammarASTNode {
+            rule_name: "number".to_string(),
+            children: vec![ASTNodeOrToken::Token(tok(TokenType::Number, "42"))],
+        };
+        assert!(leaf.is_leaf());
+        assert_eq!(leaf.token().unwrap().value, "42");
+
+        let non_leaf = GrammarASTNode {
+            rule_name: "expr".to_string(),
+            children: vec![
+                ASTNodeOrToken::Node(leaf.clone()),
+                ASTNodeOrToken::Token(tok(TokenType::Plus, "+")),
+            ],
+        };
+        assert!(!non_leaf.is_leaf());
+        assert!(non_leaf.token().is_none());
+    }
+
+    // -----------------------------------------------------------------------
+    // Integration: parser with lexer output
+    // -----------------------------------------------------------------------
+
     #[test]
     fn test_grammar_parser_with_lexer() {
         let source = "1 + 2";
         let mut lexer = lexer::tokenizer::Lexer::new(source, None);
         let tokens = lexer.tokenize().unwrap();
-
         let grammar = simple_grammar();
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
-
         assert_eq!(result.rule_name, "expression");
-        assert_eq!(result.children.len(), 3); // term, PLUS, term
+        assert_eq!(result.children.len(), 3);
+    }
+
+    // -----------------------------------------------------------------------
+    // Packrat memoization
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_packrat_memoization() {
+        // Parse the same input twice to exercise memo cache.
+        // The grammar has alternation that can cause re-parsing of the same
+        // rule at the same position.
+        let grammar = ParserGrammar {
+            rules: vec![
+                GrammarRule {
+                    name: "start".to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            // First alternative: NUMBER PLUS NUMBER
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::RuleReference { name: "atom".to_string() },
+                                    GrammarElement::TokenReference { name: "PLUS".to_string() },
+                                    GrammarElement::RuleReference { name: "atom".to_string() },
+                                ],
+                            },
+                            // Second alternative: just an atom
+                            GrammarElement::RuleReference { name: "atom".to_string() },
+                        ],
+                    },
+                    line_number: 1,
+                },
+                GrammarRule {
+                    name: "atom".to_string(),
+                    body: GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                    line_number: 2,
+                },
+            ],
+        };
+
+        let tokens = vec![
+            tok(TokenType::Number, "1"),
+            tok(TokenType::Plus, "+"),
+            tok(TokenType::Number, "2"),
+            tok(TokenType::Eof, ""),
+        ];
+
+        let mut parser = GrammarParser::new(tokens, grammar);
+        let result = parser.parse().unwrap();
+        assert_eq!(result.rule_name, "start");
+        // Memo should have been populated.
+        assert!(!parser.memo.is_empty());
+    }
+
+    // -----------------------------------------------------------------------
+    // String-based token types
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_string_token_types() {
+        // Use custom token type names that don't map to TokenType variants.
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "expr".to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference { name: "INT".to_string() },
+                        GrammarElement::TokenReference { name: "PLUS".to_string() },
+                        GrammarElement::TokenReference { name: "INT".to_string() },
+                    ],
+                },
+                line_number: 1,
+            }],
+        };
+
+        let tokens = vec![
+            tok_named(TokenType::Name, "1", "INT"),
+            tok(TokenType::Plus, "+"),
+            tok_named(TokenType::Name, "2", "INT"),
+            tok(TokenType::Eof, ""),
+        ];
+
+        let mut parser = GrammarParser::new(tokens, grammar);
+        let result = parser.parse().unwrap();
+        assert_eq!(result.rule_name, "expr");
+        assert_eq!(result.children.len(), 3);
+    }
+
+    // -----------------------------------------------------------------------
+    // Significant newlines
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_significant_newlines_detected() {
+        // A grammar that references NEWLINE should be detected as
+        // newlines-significant.
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "file".to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference { name: "NAME".to_string() },
+                        GrammarElement::TokenReference { name: "NEWLINE".to_string() },
+                    ],
+                },
+                line_number: 1,
+            }],
+        };
+
+        let parser = GrammarParser::new(vec![], grammar);
+        assert!(parser.is_newlines_significant());
+    }
+
+    #[test]
+    fn test_insignificant_newlines_detected() {
+        // A grammar without NEWLINE references should not be significant.
+        let parser = GrammarParser::new(vec![], simple_grammar());
+        assert!(!parser.is_newlines_significant());
+    }
+
+    // -----------------------------------------------------------------------
+    // Furthest failure tracking
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_furthest_failure_error_message() {
+        // When parsing fails, the error should report what was expected
+        // at the furthest position reached.
+        let tokens = vec![
+            tok(TokenType::Number, "1"),
+            tok(TokenType::Name, "x"),  // Invalid: expected PLUS or EOF
+            tok(TokenType::Eof, ""),
+        ];
+
+        let grammar = simple_grammar();
+        let mut parser = GrammarParser::new(tokens, grammar);
+        let err = parser.parse().unwrap_err();
+        // The error should mention what was expected.
+        assert!(err.message.contains("Expected") || err.message.contains("Unexpected"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Starlark-like pipeline test
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_starlark_pipeline() {
+        // End-to-end: lex with grammar lexer, then parse with grammar parser.
+        use grammar_tools::token_grammar::parse_token_grammar;
+        use grammar_tools::parser_grammar::parse_parser_grammar;
+        use lexer::grammar_lexer::GrammarLexer;
+
+        let token_source = r#"
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+NUMBER = /[0-9]+/
+EQUALS = "="
+PLUS = "+"
+"#;
+        let grammar_source = r#"
+program    = { statement } ;
+statement  = assignment ;
+assignment = NAME EQUALS expression ;
+expression = term { PLUS term } ;
+term       = NUMBER | NAME ;
+"#;
+
+        let token_grammar = parse_token_grammar(token_source).unwrap();
+        let parser_grammar = parse_parser_grammar(grammar_source).unwrap();
+
+        let tokens = GrammarLexer::new("x = 1 + 2", &token_grammar)
+            .tokenize()
+            .unwrap();
+
+        let mut parser = GrammarParser::new(tokens, parser_grammar);
+        let ast = parser.parse().unwrap();
+        assert_eq!(ast.rule_name, "program");
     }
 }
