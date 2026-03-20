@@ -1,0 +1,8 @@
+[package]
+name = "gpu-core"
+version = "0.1.0"
+edition = "2021"
+description = "GPU core simulator — pluggable ISA, register file, local memory, and execution tracing"
+
+[dependencies]
+fp-arithmetic = { path = "../fp-arithmetic" }
