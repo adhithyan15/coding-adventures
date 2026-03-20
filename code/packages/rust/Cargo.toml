@@ -22,4 +22,5 @@ members = [
     "compute-runtime",
     "jit-compiler",
     "matrix",
+    "activation-functions",
 ]
