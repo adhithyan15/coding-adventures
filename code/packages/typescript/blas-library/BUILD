@@ -1,8 +1,1 @@
-# BLAS Library -- TypeScript implementation
-# Layer 3 of the accelerator computing stack
-
-[test]
-command = "npx vitest run"
-
-[test.coverage]
-command = "npx vitest run --coverage"
+cd ../logic-gates && npm ci --quiet && cd ../arithmetic && npm ci --quiet && cd ../fp-arithmetic && npm ci --quiet && cd ../clock && npm ci --quiet && cd ../gpu-core && npm ci --quiet && cd ../parallel-execution-engine && npm ci --quiet && cd ../compute-unit && npm ci --quiet && cd ../device-simulator && npm ci --quiet && cd ../compute-runtime && npm ci --quiet && cd ../vendor-api-simulators && npm ci --quiet && cd ../blas-library && npm ci && npx vitest run --coverage
