@@ -23,6 +23,7 @@ members = [
     "jit-compiler",
     "html-renderer",
     "matrix",
+    "pipeline",
     "starlark-lexer",
     "starlark-parser",
 ]
