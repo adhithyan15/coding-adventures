@@ -104,10 +104,12 @@ This machine does not have many tools installed globally. Language runtimes (Rub
 
 **Problem:** Ruby BUILD files used bare `bundle` commands, which invoked system Ruby 2.6.10. All 39 Ruby packages failed to build.
 
-**Fix:** Prefix language-specific commands with `mise exec --` in BUILD files:
+**Fix:** Prefix language-specific commands with the **absolute path** to mise in BUILD files:
 ```
-mise exec -- bundle install --quiet
-mise exec -- bundle exec rake test
+/Users/adhithya/.local/bin/mise exec -- bundle install --quiet
+/Users/adhithya/.local/bin/mise exec -- bundle exec rake test
 ```
 
-**Rule:** Always use `mise exec --` when invoking language-specific tools in BUILD files or scripts. Never assume a tool is available globally. Check `mise.toml` for managed runtimes. This applies to `ruby`, `bundle`, `gem`, `go`, `cargo`, `rustc`, and any other runtime-managed tool.
+**Why absolute path?** The build tool runs BUILD commands via `sh -c`, which gets a minimal PATH that does NOT include `~/.local/bin` where mise is installed. Using just `mise exec` fails with `sh: mise: command not found`.
+
+**Rule:** Always use `/Users/adhithya/.local/bin/mise exec --` (absolute path) when invoking language-specific tools in BUILD files. Never assume mise or any tool is on PATH in `sh -c` contexts. Check `mise.toml` for managed runtimes. This applies to `ruby`, `bundle`, `gem`, `go`, `cargo`, `rustc`, and any other runtime-managed tool.
