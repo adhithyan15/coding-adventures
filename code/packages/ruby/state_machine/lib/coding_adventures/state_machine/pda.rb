@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 # ---------------------------------------------------------------------------
 # Pushdown Automaton (PDA) -- a finite automaton with a stack.
 # ---------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 # ---------------------------------------------------------------------------
 # DFA Minimization using Hopcroft's algorithm.
 # ---------------------------------------------------------------------------
@@ -159,7 +157,7 @@ module CodingAdventures
         # Since all states in the partition are equivalent, they all have
         # the same transition behavior -- so it doesn't matter which one
         # we pick.
-        representative = partition.to_a.sort.first
+        representative = partition.min
         alphabet.each do |event|
           key = [representative, event]
           if transitions.key?(key)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 # ---------------------------------------------------------------------------
 # Deterministic Finite Automaton (DFA) -- the workhorse of state machines.
 # ---------------------------------------------------------------------------
@@ -140,13 +138,11 @@ module CodingAdventures
         end
 
         # --- Validate actions ---
-        if actions
-          actions.each_key do |(source, event)|
-            unless transitions.key?([source, event])
-              raise ArgumentError,
-                "Action defined for (#{source}, #{event}) but no " \
-                "transition exists for that pair"
-            end
+        actions&.each_key do |(source, event)|
+          unless transitions.key?([source, event])
+            raise ArgumentError,
+              "Action defined for (#{source}, #{event}) but no " \
+              "transition exists for that pair"
           end
         end
 

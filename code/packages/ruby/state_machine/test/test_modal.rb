@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "set"
 
 # ---------------------------------------------------------------------------
 # Tests for the Modal State Machine implementation.

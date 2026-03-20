@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 # ---------------------------------------------------------------------------
 # Non-deterministic Finite Automaton (NFA) with epsilon transitions.
 # ---------------------------------------------------------------------------

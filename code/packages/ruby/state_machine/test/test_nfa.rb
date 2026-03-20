@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "set"
 
 # ---------------------------------------------------------------------------
 # Tests for the NFA (Non-deterministic Finite Automaton) implementation.
