@@ -30,6 +30,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 // RunCLI is the main entry point for the command-line interface.
