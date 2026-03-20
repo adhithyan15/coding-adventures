@@ -1,0 +1,247 @@
+# Token definitions for CSS3 (full specification subset)
+#
+# CSS tokenization is significantly harder than JSON or Starlark because of
+# compound tokens (10px is one DIMENSION token, not NUMBER + IDENT), context-
+# dependent disambiguation (#fff as color vs #header as ID selector — both
+# are HASH tokens, grammar disambiguates), and diverse token types (at-keywords,
+# function tokens, URL tokens, unicode ranges, CSS nesting).
+#
+# This file is designed as an infrastructure stress test. It exercises:
+# - First-match-wins priority ordering (DIMENSION before NUMBER, etc.)
+# - Token aliases (STRING_DQ and STRING_SQ both emit STRING)
+# - Multi-line skip patterns (CSS comments span lines)
+# - Error tokens (BAD_STRING for unclosed strings)
+# - escapes: none (CSS hex escapes differ from JSON's \uXXXX format)
+#
+# Format:
+#   TOKEN_NAME = /regex/        — regex-based token pattern
+#   TOKEN_NAME = "literal"      — exact literal match
+#   TOKEN_NAME = /regex/ -> T   — regex pattern, emitted as token type T
+
+# ============================================================================
+# Escape Mode
+# ============================================================================
+#
+# CSS escape sequences use a different format than JSON/Starlark:
+#   \26      → U+0026 (&)     — 1-6 hex digits
+#   \000A9   → U+00A9 (©)     — 6 hex digits
+#   \A9      → U+00A9 (©)     — hex + optional trailing space
+#
+# The default escape processor handles JSON-style escapes (\n, \t, \uXXXX).
+# Setting escapes: none tells the lexer to strip quotes but leave escape
+# sequences as raw text. CSS escape decoding is a semantic concern handled
+# post-parse, not at the lexer level.
+
+escapes: none
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# CSS treats all whitespace (space, tab, carriage return, newline) as
+# insignificant between tokens. Including \n in the whitespace pattern
+# prevents the lexer from emitting NEWLINE tokens.
+#
+# Multi-line comments /* ... */ use [\s\S]*? to match across newlines
+# without requiring re.DOTALL (which the lexer doesn't use). The *? is
+# non-greedy so /* a */ b /* c */ matches two separate comments.
+
+skip:
+  COMMENT    = /\/\*[\s\S]*?\*\//
+  WHITESPACE = /[ \t\r\n]+/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# CSS supports both double-quoted and single-quoted strings. Both variants
+# emit STRING via the -> alias. CSS strings can contain escape sequences
+# like \26 (hex) and \\ (literal backslash). The regex allows any escaped
+# character (\.) inside the string.
+#
+# Note: CSS strings cannot contain unescaped newlines (a newline inside a
+# string without a preceding backslash is an error — see BAD_STRING in the
+# errors: section below).
+
+STRING_DQ = /"([^"\\\n]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\\n]|\\.)*'/ -> STRING
+
+# ============================================================================
+# Numeric Literals and Dimensions
+# ============================================================================
+#
+# ORDER IS CRITICAL HERE — this is the primary tokenization stress test.
+#
+# CSS has three numeric token types that share a common prefix:
+#   10px   → DIMENSION (number + unit identifier)
+#   50%    → PERCENTAGE (number + percent sign)
+#   42     → NUMBER (bare number)
+#
+# If NUMBER came first, "10px" would tokenize as NUMBER(10) IDENT(px) —
+# two tokens instead of one. The first-match-wins rule means we must
+# define DIMENSION before PERCENTAGE before NUMBER.
+#
+# The number part supports:
+#   - Integers: 42, 0
+#   - Decimals: 3.14, .5, 0.5
+#   - Scientific notation: 1e10, 1.5e-3
+#
+# DIMENSION units include all CSS units: px, em, rem, vh, vw, vmin, vmax,
+# ch, ex, cm, mm, in, pt, pc, deg, rad, grad, turn, s, ms, Hz, kHz,
+# dpi, dpcm, dppx, fr. The regex matches any letter suffix.
+
+DIMENSION   = /-?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?[a-zA-Z]+/
+PERCENTAGE  = /-?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?%/
+NUMBER      = /-?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# Hash Token
+# ============================================================================
+#
+# The hash token serves dual duty in CSS:
+#   #fff     — hex color value (in declarations)
+#   #header  — ID selector (in selectors)
+#
+# Both are tokenized as HASH. The grammar disambiguates based on context.
+# The regex allows letters, digits, hyphens, and underscores after #.
+
+HASH = /#[a-zA-Z0-9_-]+/
+
+# ============================================================================
+# At-Keyword Token
+# ============================================================================
+#
+# CSS at-rules start with @ followed by an identifier:
+#   @media, @import, @keyframes, @font-face, @charset, @supports,
+#   @namespace, @page, @counter-style, @layer, @container, @property,
+#   @scope, @starting-style
+#
+# All at-keywords are tokenized as AT_KEYWORD. The grammar handles the
+# different structures of each at-rule.
+
+AT_KEYWORD = /@-?[a-zA-Z][a-zA-Z0-9-]*/
+
+# ============================================================================
+# URL Token
+# ============================================================================
+#
+# CSS has a special unquoted URL syntax: url(path/to/file.png)
+# When the content inside url() is not quoted, the entire construct is a
+# single URL_TOKEN. Quoted URLs (url("path")) are handled as FUNCTION +
+# STRING + RPAREN by the grammar.
+#
+# Must come before FUNCTION (which would match "url(" alone).
+
+URL_TOKEN = /url\([^)'"]*\)/
+
+# ============================================================================
+# Function Token
+# ============================================================================
+#
+# CSS functions are identifiers immediately followed by an opening paren:
+#   rgb(, calc(, linear-gradient(, var(, min(, max(, clamp(
+#
+# The CSS spec treats these as single tokens. The grammar handles the
+# closing paren and arguments. Must come before IDENT (which would match
+# just the identifier without the paren).
+
+FUNCTION = /-?[a-zA-Z_][a-zA-Z0-9_-]*\(/
+
+# ============================================================================
+# CDO / CDC (Legacy HTML Comment Delimiters)
+# ============================================================================
+#
+# CSS recognizes <!-- (Comment Data Open) and --> (Comment Data Close) for
+# historical reasons — early CSS was embedded in HTML without <style> tags,
+# and these delimiters prevented non-CSS-aware browsers from displaying
+# the stylesheet as text. In modern CSS they are simply ignored.
+#
+# Must come before operators that share prefix characters.
+
+CDO = "<!--"
+CDC = "-->"
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# CSS identifiers are more flexible than most languages:
+#   - Can start with a letter, underscore, or hyphen
+#   - Vendor prefixes: -webkit-transform, -moz-user-select
+#   - Custom properties (CSS variables): --main-color, --bg
+#
+# CUSTOM_PROPERTY must come before IDENT because -- is a valid IDENT prefix
+# but --variable-name is a custom property, not a regular identifier.
+
+CUSTOM_PROPERTY = /--[a-zA-Z_][a-zA-Z0-9_-]*/
+IDENT           = /-?[a-zA-Z_][a-zA-Z0-9_-]*/
+
+# ============================================================================
+# Unicode Range
+# ============================================================================
+#
+# Used in @font-face to specify which Unicode code points a font covers:
+#   unicode-range: U+0025-00FF;
+#   unicode-range: U+4??;
+#
+# The ? wildcard matches any hex digit in that position.
+
+UNICODE_RANGE = /[Uu]\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?/
+
+# ============================================================================
+# Multi-Character Operators
+# ============================================================================
+#
+# These MUST come before their single-character components. Without this
+# ordering, "::" would tokenize as COLON COLON, "~=" as TILDE EQUALS, etc.
+
+COLON_COLON    = "::"
+TILDE_EQUALS   = "~="
+PIPE_EQUALS    = "|="
+CARET_EQUALS   = "^="
+DOLLAR_EQUALS  = "$="
+STAR_EQUALS    = "*="
+
+# ============================================================================
+# Single-Character Delimiters and Operators
+# ============================================================================
+#
+# These are the atomic building blocks of CSS syntax. Each is a single
+# character that has structural or operator meaning.
+
+LBRACE    = "{"
+RBRACE    = "}"
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COLON     = ":"
+COMMA     = ","
+DOT       = "."
+PLUS      = "+"
+GREATER   = ">"
+TILDE     = "~"
+STAR      = "*"
+PIPE      = "|"
+BANG      = "!"
+SLASH     = "/"
+EQUALS    = "="
+AMPERSAND = "&"
+
+# ============================================================================
+# Error Tokens
+# ============================================================================
+#
+# Error tokens allow graceful degradation for malformed CSS input. When the
+# lexer encounters text that doesn't match any normal token pattern, it
+# tries these error patterns before raising a LexerError. This matches the
+# CSS spec's error handling model where tokenization never fails — it just
+# produces error tokens that the parser can report or skip.
+#
+# BAD_STRING: An unclosed string (reaches end of line without closing quote).
+# BAD_URL: An unclosed url() function (reaches end of input without closing paren).
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_URL    = /url\([^)]*$/
