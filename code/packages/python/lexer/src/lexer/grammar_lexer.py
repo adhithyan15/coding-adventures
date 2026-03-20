@@ -697,10 +697,46 @@ class GrammarLexer:
         i = 0
         while i < len(s):
             if s[i] == "\\" and i + 1 < len(s):
-                escape_map = {"n": "\n", "t": "\t", "\\": "\\", '"': '"'}
                 next_char = s[i + 1]
-                result.append(escape_map.get(next_char, next_char))
-                i += 2
+
+                # Standard escape sequences. This map covers all escapes
+                # defined by JSON (RFC 8259 section 7) and most programming
+                # languages. Previously only \n, \t, \\, and \" were handled;
+                # \b, \f, \r, and \/ were added for JSON support.
+                escape_map = {
+                    "n": "\n",      # line feed
+                    "t": "\t",      # tab
+                    "r": "\r",      # carriage return
+                    "b": "\b",      # backspace
+                    "f": "\f",      # form feed
+                    "\\": "\\",     # literal backslash
+                    '"': '"',       # literal double quote
+                    "/": "/",       # solidus (JSON allows \/ as an escape)
+                }
+
+                if next_char in escape_map:
+                    result.append(escape_map[next_char])
+                    i += 2
+                elif next_char == "u" and i + 5 < len(s):
+                    # Unicode escape: \uXXXX where XXXX is exactly 4 hex digits.
+                    # This is required by JSON (RFC 8259) and supported by most
+                    # programming languages. We validate that the 4 characters
+                    # after \u are valid hex digits, then convert to the
+                    # corresponding Unicode character.
+                    hex_str = s[i + 2 : i + 6]
+                    if len(hex_str) == 4 and all(
+                        c in "0123456789abcdefABCDEF" for c in hex_str
+                    ):
+                        result.append(chr(int(hex_str, 16)))
+                        i += 6
+                    else:
+                        # Invalid hex digits — pass through as-is.
+                        result.append(next_char)
+                        i += 2
+                else:
+                    # Unknown escape — pass through the escaped character.
+                    result.append(next_char)
+                    i += 2
             else:
                 result.append(s[i])
                 i += 1
