@@ -33,9 +33,11 @@ from directed_graph.graph import (
     EdgeNotFoundError,
     NodeNotFoundError,
 )
+from directed_graph.labeled_graph import LabeledDirectedGraph
 
 __all__ = [
     "DirectedGraph",
+    "LabeledDirectedGraph",
     "CycleError",
     "NodeNotFoundError",
     "EdgeNotFoundError",

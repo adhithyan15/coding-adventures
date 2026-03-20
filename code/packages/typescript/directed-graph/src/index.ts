@@ -28,3 +28,4 @@
  */
 
 export { Graph, CycleError, NodeNotFoundError, EdgeNotFoundError } from "./graph.js";
+export { LabeledDirectedGraph } from "./labeled-graph.js";
