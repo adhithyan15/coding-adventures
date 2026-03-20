@@ -1,8 +1,1 @@
-cd ../transistors && npm ci --quiet
-cd ../clock && npm ci --quiet
-cd ../fp-arithmetic && npm ci --quiet
-cd ../logic-gates && npm ci --quiet
-cd ../arithmetic && npm ci --quiet
-cd ../gpu-core && npm ci --quiet
-cd ../cache && npm ci --quiet
-cd ../parallel-execution-engine && npm ci --quiet && cd ../compute-unit && npm ci --quiet && cd ../device-simulator && npm ci && npx vitest run --coverage
+npm ci && npx vitest run --coverage
