@@ -1,6 +1,6 @@
 module github.com/adhithyan15/coding-adventures/code/packages/go/json-parser
 
-go 1.22
+go 1.23
 
 require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools v0.0.0
@@ -10,7 +10,7 @@ require (
 
 require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/lexer v0.0.0 // indirect
-	github.com/adhithyan15/coding-adventures/code/packages/go/state-machine v0.0.0
+	github.com/adhithyan15/coding-adventures/code/packages/go/state-machine v0.0.0 // indirect
 )
 
 replace github.com/adhithyan15/coding-adventures/code/packages/go/json-lexer => ../json-lexer
