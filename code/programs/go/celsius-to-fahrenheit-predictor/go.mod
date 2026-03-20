@@ -1,6 +1,6 @@
 module github.com/adhithyan15/coding-adventures/code/programs/go/celsius-to-fahrenheit-predictor
 
-go 1.201
+go 1.21
 
 require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/gradient-descent v0.0.0
