@@ -18,4 +18,5 @@ members = [
     "parallel-execution-engine",
     "gradient-descent",
     "compute-unit",
+    "device-simulator",
 ]
