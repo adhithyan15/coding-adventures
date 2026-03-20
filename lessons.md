@@ -95,3 +95,19 @@ cd ../C && npm ci --quiet && cd ../B && npm ci --quiet && cd ../A && npm ci && n
 - [ ] Identify the full transitive `file:` dependency chain
 - [ ] Install from leaves to root in the BUILD script
 - [ ] Test from a clean state: `rm -rf node_modules ../dep/node_modules && bash BUILD`
+
+---
+
+### 2026-03-20: Use mise for all language runtimes — nothing is installed globally
+
+This machine does not have many tools installed globally. Language runtimes (Ruby, Go, Rust, etc.) are managed by **mise** (configured in `mise.toml` at the repo root). The system Ruby is 2.6.10, but the project requires 3.4+.
+
+**Problem:** Ruby BUILD files used bare `bundle` commands, which invoked system Ruby 2.6.10. All 39 Ruby packages failed to build.
+
+**Fix:** Prefix language-specific commands with `mise exec --` in BUILD files:
+```
+mise exec -- bundle install --quiet
+mise exec -- bundle exec rake test
+```
+
+**Rule:** Always use `mise exec --` when invoking language-specific tools in BUILD files or scripts. Never assume a tool is available globally. Check `mise.toml` for managed runtimes. This applies to `ruby`, `bundle`, `gem`, `go`, `cargo`, `rustc`, and any other runtime-managed tool.

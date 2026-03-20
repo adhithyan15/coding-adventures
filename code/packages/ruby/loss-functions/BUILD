@@ -1,1 +1,2 @@
-ruby -Ilib:test test/test_loss_functions.rb
+mise exec -- bundle install --quiet
+mise exec -- bundle exec rake test

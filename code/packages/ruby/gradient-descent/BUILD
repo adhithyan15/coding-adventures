@@ -1,2 +1,2 @@
-bundle install
-ruby -Ilib:test test/test_gradient_descent.rb
+mise exec -- bundle install --quiet
+mise exec -- bundle exec rake test
