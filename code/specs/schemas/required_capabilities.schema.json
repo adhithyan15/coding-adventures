@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "title": "Required Capabilities Manifest",
+  "description": "Declares the OS-level capabilities a package requires. This file is OPTIONAL — packages without it are treated as pure computation with zero OS access (default deny). Only packages that need OS capabilities should have this file. Any non-empty capability requires hardware-key-signed approval.",
+  "type": "object",
+  "required": ["version", "package", "capabilities", "justification"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this JSON Schema for editor autocompletion."
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version. Currently 1. Allows schema evolution without breaking existing manifests."
+    },
+    "package": {
+      "type": "string",
+      "pattern": "^(python|ruby|go|typescript)/[a-z0-9][a-z0-9-]*$",
+      "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache."
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "List of OS-level capabilities this package requires. An empty array means the package is pure computation with zero OS interaction — this is the expected state for most packages.",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "justification": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable explanation of the overall capability profile. Should explain WHY the package needs (or does not need) OS access."
+    },
+    "banned_construct_exceptions": {
+      "type": "array",
+      "description": "Exceptions to the banned dynamic execution constructs (eval, exec, __import__, etc.). Each exception requires hardware-key-signed approval. Most packages should not have any exceptions.",
+      "items": {
+        "$ref": "#/$defs/banned_construct_exception"
+      }
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "required": ["category", "action", "target", "justification"],
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"],
+          "description": "The kind of OS resource being accessed."
+        },
+        "action": {
+          "type": "string",
+          "description": "The operation being performed on the resource.",
+          "enum": [
+            "read", "write", "create", "delete", "list",
+            "connect", "listen", "dns",
+            "exec", "fork", "signal",
+            "call", "load",
+            "sleep"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The specific resource being accessed. Format depends on category: fs uses relative/absolute paths with globs (e.g., '../../grammars/*.tokens'), net uses host:port (e.g., 'api.example.com:443'), proc uses command names (e.g., 'git'), env uses variable names (e.g., 'HOME'), ffi uses library names (e.g., 'libssl'). Use '*' for broad access (discouraged)."
+        },
+        "justification": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Human-readable explanation of WHY this specific capability is needed. Should be specific enough that a reviewer can evaluate whether the access is legitimate."
+        }
+      }
+    },
+    "banned_construct_exception": {
+      "type": "object",
+      "required": ["construct", "language", "justification"],
+      "additionalProperties": false,
+      "properties": {
+        "construct": {
+          "type": "string",
+          "description": "The banned construct being exempted (e.g., 'eval', 'compile', '__import__', 'reflect.Value.Call')."
+        },
+        "language": {
+          "type": "string",
+          "enum": ["python", "ruby", "go", "typescript"],
+          "description": "The language this exception applies to."
+        },
+        "justification": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Why this package needs this banned construct. Must explain what it's used for and why alternatives are insufficient."
+        }
+      }
+    }
+  }
+}
