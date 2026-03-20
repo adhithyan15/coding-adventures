@@ -1,0 +1,16 @@
+[package]
+name = "ca-capability-analyzer"
+version = "0.1.0"
+edition = "2021"
+description = "Static capability analyzer for Rust source code"
+license = "MIT"
+
+[dependencies]
+proc-macro2 = { version = "1", features = ["span-locations"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+syn = { version = "2", features = ["full", "visit"] }
+
+[[bin]]
+name = "ca-capability-analyzer"
+path = "src/main.rs"
