@@ -51,6 +51,7 @@ defmodule CodingAdventures.StateMachine.DFA do
   """
 
   alias CodingAdventures.StateMachine.Types, as: TransitionRecord
+  alias CodingAdventures.DirectedGraph.LabeledGraph
 
   defstruct [
     :states,
@@ -59,7 +60,8 @@ defmodule CodingAdventures.StateMachine.DFA do
     :initial,
     :accepting,
     :current,
-    :trace
+    :trace,
+    :graph
   ]
 
   @type t :: %__MODULE__{
@@ -69,7 +71,8 @@ defmodule CodingAdventures.StateMachine.DFA do
           initial: String.t(),
           accepting: MapSet.t(String.t()),
           current: String.t(),
-          trace: [TransitionRecord.t()]
+          trace: [TransitionRecord.t()],
+          graph: LabeledGraph.t()
         }
 
   @doc """
@@ -114,6 +117,29 @@ defmodule CodingAdventures.StateMachine.DFA do
          :ok <- validate_member(initial, states, "Initial state", "states set"),
          :ok <- validate_subset(accepting, states, "Accepting states", "states set"),
          :ok <- validate_transitions(transitions, states, alphabet) do
+      # --- Build internal graph representation ---
+      #
+      # We maintain a LabeledGraph alongside the transitions map.
+      # The map provides O(1) lookups for process() (the hot path).
+      # The graph provides structural queries like reachable_states() via
+      # transitive_closure, avoiding the need for hand-rolled BFS.
+      #
+      # Each state becomes a node. Each transition (source, event) -> target
+      # becomes a labeled edge from source to target with the event as label.
+      graph = LabeledGraph.new()
+
+      graph =
+        Enum.reduce(states, graph, fn state, acc ->
+          {:ok, acc} = LabeledGraph.add_node(acc, state)
+          acc
+        end)
+
+      graph =
+        Enum.reduce(transitions, graph, fn {{source, event}, target}, acc ->
+          {:ok, acc} = LabeledGraph.add_edge(acc, source, target, event)
+          acc
+        end)
+
       {:ok,
        %__MODULE__{
          states: states,
@@ -122,7 +148,8 @@ defmodule CodingAdventures.StateMachine.DFA do
          initial: initial,
          accepting: accepting,
          current: initial,
-         trace: []
+         trace: [],
+         graph: graph
        }}
     end
   end
@@ -328,21 +355,14 @@ defmodule CodingAdventures.StateMachine.DFA do
   A MapSet of reachable state names.
   """
   def reachable_states(%__MODULE__{} = dfa) do
-    do_bfs([dfa.initial], MapSet.new([dfa.initial]), dfa.transitions)
-  end
-
-  defp do_bfs([], visited, _transitions), do: visited
-
-  defp do_bfs([state | rest], visited, transitions) do
-    # Find all states reachable from this state via any input
-    new_states =
-      transitions
-      |> Enum.filter(fn {{source, _event}, _target} -> source == state end)
-      |> Enum.map(fn {_key, target} -> target end)
-      |> Enum.reject(fn target -> MapSet.member?(visited, target) end)
-
-    new_visited = Enum.reduce(new_states, visited, &MapSet.put(&2, &1))
-    do_bfs(rest ++ new_states, new_visited, transitions)
+    # Delegates to the internal LabeledGraph's transitive_closure,
+    # which performs a BFS over the transition graph. transitive_closure
+    # returns all nodes reachable FROM the initial state (not including
+    # the initial state itself), so we union it with the initial state.
+    case LabeledGraph.transitive_closure(dfa.graph, dfa.initial) do
+      {:ok, closure} -> MapSet.put(closure, dfa.initial)
+      {:error, _} -> MapSet.new([dfa.initial])
+    end
   end
 
   @doc """

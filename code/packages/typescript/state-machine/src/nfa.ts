@@ -48,6 +48,7 @@
  * @module nfa
  */
 
+import { LabeledDirectedGraph } from "@coding-adventures/directed-graph";
 import { DFA } from "./dfa.js";
 import { transitionKey } from "./types.js";
 
@@ -102,6 +103,18 @@ export class NFA {
   private readonly _transitions: Map<string, ReadonlySet<string>>;
   private readonly _initial: string;
   private readonly _accepting: ReadonlySet<string>;
+
+  // --- Internal graph representation ---
+  //
+  // We maintain a LabeledDirectedGraph alongside the _transitions Map.
+  // The Map is kept for O(1) lookups in process(), epsilonClosure(),
+  // accepts(), and toDfa() — the performance-critical paths.
+  // The graph captures the structure of the NFA for introspection and
+  // future algorithmic queries.
+  //
+  // Epsilon transitions use the EPSILON constant ("") as the edge label,
+  // preserving the distinction between input-consuming and free transitions.
+  private readonly _graph: LabeledDirectedGraph;
 
   /** The NFA starts in the epsilon closure of the initial state. */
   private _current: ReadonlySet<string>;
@@ -180,6 +193,25 @@ export class NFA {
     );
     this._initial = initial;
     this._accepting = new Set(accepting);
+
+    // --- Build internal graph representation ---
+    //
+    // Each state becomes a node. Each transition (source, event) -> targets
+    // becomes labeled edges from source to each target with the event as label.
+    // Epsilon transitions use the EPSILON constant ("") as the label.
+    this._graph = new LabeledDirectedGraph();
+    for (const state of states) {
+      this._graph.addNode(state);
+    }
+    for (const [key, targets] of transitions) {
+      const sep = key.indexOf("\0");
+      const source = key.substring(0, sep);
+      const event = key.substring(sep + 1);
+      const label = event !== EPSILON ? event : EPSILON;
+      for (const target of targets) {
+        this._graph.addEdge(source, target, label);
+      }
+    }
 
     // The NFA starts in the epsilon closure of the initial state
     this._current = this.epsilonClosure(new Set([initial]));

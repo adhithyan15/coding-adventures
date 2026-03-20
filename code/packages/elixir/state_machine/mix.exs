@@ -21,6 +21,8 @@ defmodule CodingAdventures.StateMachine.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:coding_adventures_directed_graph, path: "../directed_graph"}
+    ]
   end
 end

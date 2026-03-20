@@ -40,6 +40,7 @@
  * @module modal
  */
 
+import { LabeledDirectedGraph } from "@coding-adventures/directed-graph";
 import { DFA } from "./dfa.js";
 
 /**
@@ -82,6 +83,15 @@ export class ModalStateMachine {
   private readonly _modes: Map<string, DFA>;
   private readonly _modeTransitions: Map<string, string>;
   private readonly _initialMode: string;
+
+  // --- Internal graph of mode transitions ---
+  //
+  // The mode graph captures the structure of mode switching: each mode
+  // is a node, and each mode transition (mode, trigger) -> target_mode
+  // becomes a labeled edge with the trigger as the label. This makes
+  // the mode transition topology available for structural queries
+  // (e.g., "which modes are reachable from the initial mode?").
+  private readonly _modeGraph: LabeledDirectedGraph;
 
   /** Mutable execution state. */
   private _currentMode: string;
@@ -130,6 +140,22 @@ export class ModalStateMachine {
     this._modes = new Map(modes);
     this._modeTransitions = new Map(modeTransitions);
     this._initialMode = initialMode;
+
+    // --- Build internal graph of mode transitions ---
+    //
+    // Each mode becomes a node. Each mode transition (mode, trigger) -> target
+    // becomes a labeled edge from mode to target with the trigger as the label.
+    this._modeGraph = new LabeledDirectedGraph();
+    for (const mode of modes.keys()) {
+      this._modeGraph.addNode(mode);
+    }
+    for (const [key, toMode] of modeTransitions) {
+      const sep = key.indexOf("\0");
+      const fromMode = key.substring(0, sep);
+      const trigger = key.substring(sep + 1);
+      this._modeGraph.addEdge(fromMode, toMode, trigger);
+    }
+
     this._currentMode = initialMode;
     this._modeTrace = [];
   }
