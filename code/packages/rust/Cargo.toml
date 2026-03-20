@@ -26,4 +26,5 @@ members = [
     "pipeline",
     "starlark-lexer",
     "starlark-parser",
+    "vendor-api-simulators",
 ]
