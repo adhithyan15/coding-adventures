@@ -293,6 +293,58 @@ func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []
 	return internalDeps
 }
 
+// parseRustDeps extracts internal dependencies from a Rust Cargo.toml file.
+//
+// Rust Cargo.toml declares workspace-local dependencies with path references:
+//
+//	[dependencies]
+//	logic-gates = { path = "../logic-gates" }
+//
+// We look for lines in the [dependencies] section that contain `path =` and
+// extract the crate name (the key before the `=`). We then look up that name
+// in the known names mapping.
+func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	cargoToml := filepath.Join(pkg.Path, "Cargo.toml")
+	data, err := os.ReadFile(cargoToml)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Scan for [dependencies] section and extract path-based deps.
+	inDeps := false
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		// Detect section headers like [dependencies] or [dev-dependencies]
+		if strings.HasPrefix(trimmed, "[") {
+			inDeps = trimmed == "[dependencies]"
+			continue
+		}
+
+		if !inDeps {
+			continue
+		}
+
+		// Look for lines like: logic-gates = { path = "../logic-gates" }
+		if strings.Contains(trimmed, "path") && strings.Contains(trimmed, "=") {
+			// Extract the crate name (everything before the first '=')
+			parts := strings.SplitN(trimmed, "=", 2)
+			if len(parts) < 2 {
+				continue
+			}
+			crateName := strings.TrimSpace(strings.ToLower(parts[0]))
+			if pkgName, ok := knownNames[crateName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -339,6 +391,12 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 			// Convert dir name to npm scoped name: "logic-gates" → "@coding-adventures/logic-gates"
 			npmName := "@coding-adventures/" + strings.ToLower(filepath.Base(pkg.Path))
 			known[npmName] = pkg.Name
+
+		case "rust":
+			// Rust crate names use the directory name directly (kebab-case).
+			// "logic-gates" → "logic-gates"
+			crateName := strings.ToLower(filepath.Base(pkg.Path))
+			known[crateName] = pkg.Name
 		}
 	}
 
@@ -378,6 +436,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseGoDeps(pkg, knownNames)
 		case "typescript":
 			deps = parseTypescriptDeps(pkg, knownNames)
+		case "rust":
+			deps = parseRustDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

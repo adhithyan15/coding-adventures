@@ -1,0 +1,9 @@
+[package]
+name = "parser"
+version = "0.1.0"
+edition = "2021"
+description = "Two parser implementations — a hand-written recursive descent parser for a Python subset, and a grammar-driven universal parser that parses any language from a ParserGrammar specification"
+
+[dependencies]
+lexer = { path = "../lexer" }
+grammar-tools = { path = "../grammar-tools" }
