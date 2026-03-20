@@ -79,3 +79,21 @@ When adding new Rust packages, the workspace `Cargo.toml` lists all members. If 
 ### 2026-03-19: Always update PR description after each push
 
 When working on a large PR with many commits, update the PR description after each push to reflect current progress. This lets the reviewer (and CI) see what's been done and what's left. Use `gh pr edit <number> --body "..."` to update the description programmatically.
+
+---
+
+### 2026-03-19: TypeScript file: deps need transitive installs on CI
+
+When TypeScript package A depends on B (`"file:../B"`) and B depends on C (`"file:../C"`), running `npm ci` in A installs B but does NOT install C inside B's own `node_modules`. On a fresh CI runner (no pre-existing `node_modules`), this causes `ERR_MODULE_NOT_FOUND` at runtime when B tries to import C.
+
+**Solution:** The BUILD file must chain installs from the bottom of the dependency tree upward:
+```
+cd ../C && npm ci --quiet && cd ../B && npm ci --quiet && cd ../A && npm ci && npx vitest run
+```
+
+**Why this only fails on CI:** Locally, if you've ever run `npm install` in package C, its `node_modules` already exists. The `file:` reference from B resolves because C's deps are already present. On CI, every directory starts clean — no `node_modules` anywhere.
+
+**Checklist for TypeScript BUILD files:**
+- [ ] Identify the full transitive `file:` dependency chain
+- [ ] Install from leaves to root in the BUILD script
+- [ ] Test from a clean state: `rm -rf node_modules ../dep/node_modules && bash BUILD`

@@ -1,0 +1,40 @@
+{
+  "name": "@coding-adventures/device-simulator",
+  "version": "0.1.0",
+  "description": "Complete accelerator device simulators — NVIDIA GPU, AMD GPU, Google TPU, Intel GPU, Apple ANE. Layer 6 of the accelerator computing stack.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "gpu",
+    "tpu",
+    "npu",
+    "device-simulator",
+    "nvidia",
+    "amd",
+    "intel",
+    "apple",
+    "google",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compute-unit": "file:../compute-unit",
+    "@coding-adventures/cache": "file:../cache",
+    "@coding-adventures/gpu-core": "file:../gpu-core",
+    "@coding-adventures/fp-arithmetic": "file:../fp-arithmetic",
+    "@coding-adventures/clock": "file:../clock"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
