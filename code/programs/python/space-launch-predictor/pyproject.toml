@@ -1,0 +1,15 @@
+[project]
+name = "space-launch-predictor"
+version = "0.1.0"
+description = "Binary Classifier leveraging Matrix BCE and Sigmoid modules."
+requires-python = ">=3.9"
+dependencies = [
+    "coding-adventures-matrix",
+    "coding-adventures-loss-functions",
+    "activation-functions"
+]
+
+[tool.uv.sources]
+coding-adventures-matrix = { path = "../../../packages/python/matrix" }
+coding-adventures-loss-functions = { path = "../../../packages/python/loss-functions" }
+activation-functions = { path = "../../../packages/python/activation-functions" }
