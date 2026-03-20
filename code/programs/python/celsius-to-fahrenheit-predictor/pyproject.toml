@@ -1,0 +1,16 @@
+[project]
+name = "celsius-to-fahrenheit-predictor"
+version = "1.0.0"
+description = "AI learning C to F"
+requires-python = ">=3.9"
+dependencies = [
+    "coding-adventures-loss-functions",
+    "coding-adventures-gradient-descent"
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.uv.sources]
+coding-adventures-loss-functions = { path = "../../../packages/python/loss-functions" }
+coding-adventures-gradient-descent = { path = "../../../packages/python/gradient-descent" }
