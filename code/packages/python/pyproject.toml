@@ -32,6 +32,7 @@ members = [
     "compute-runtime",
     "vendor-api-simulators",
     "blas-library",
+    "ml-framework-core",
 ]
 
 [tool.uv.sources]
@@ -62,3 +63,4 @@ coding-adventures-cache = { workspace = true }
 coding-adventures-compute-runtime = { workspace = true }
 coding-adventures-vendor-api-simulators = { workspace = true }
 coding-adventures-blas-library = { workspace = true }
+coding-adventures-ml-framework-core = { workspace = true }
