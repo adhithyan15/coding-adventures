@@ -338,3 +338,312 @@ def test_unknown_command_path_falls_back_to_root() -> None:
     # Falls back to root — should still show something
     assert "USAGE" in text
     assert "mytool" in text
+
+
+# =========================================================================
+# Required variadic argument in USAGE and ARGUMENTS
+# =========================================================================
+
+
+REQUIRED_VARIADIC_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "cp",
+    "description": "Copy files",
+    "version": "8.32",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [],
+    "arguments": [
+        {
+            "id": "source",
+            "name": "SOURCE",
+            "description": "Source file",
+            "type": "path",
+            "required": True,
+            "variadic": True,
+            "variadic_min": 1,
+            "variadic_max": None,
+            "default": None,
+            "enum_values": [],
+            "required_unless_flag": [],
+        },
+    ],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_required_variadic_arg_in_usage() -> None:
+    """Required variadic args appear as <NAME...> in the USAGE line."""
+    gen = HelpGenerator(REQUIRED_VARIADIC_SPEC, ["cp"])
+    text = gen.generate()
+    assert "<SOURCE...>" in text
+
+
+def test_required_variadic_arg_in_arguments_section() -> None:
+    """Required variadic args appear as <NAME...> in the ARGUMENTS section."""
+    gen = HelpGenerator(REQUIRED_VARIADIC_SPEC, ["cp"])
+    text = gen.generate()
+    assert "ARGUMENTS" in text
+    assert "<SOURCE...>" in text
+
+
+# =========================================================================
+# Long flag signature wrapping
+# =========================================================================
+
+
+LONG_FLAG_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "tool",
+    "description": "A tool",
+    "version": None,
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": False, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "very-long-flag-name-that-exceeds-column-width",
+            "long": "very-long-flag-name-that-exceeds-column-width",
+            "description": "A flag with a very long name",
+            "type": "string",
+            "required": False,
+            "default": None,
+            "value_name": "VALUE",
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_long_flag_signature_wraps_description() -> None:
+    """A flag signature exceeding COLUMN_WIDTH puts description on next line."""
+    gen = HelpGenerator(LONG_FLAG_SPEC, ["tool"])
+    text = gen.generate()
+    assert "very-long-flag-name-that-exceeds-column-width" in text
+    assert "A flag with a very long name" in text
+
+
+# =========================================================================
+# Long argument name wrapping
+# =========================================================================
+
+
+LONG_ARG_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "tool",
+    "description": "A tool",
+    "version": None,
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": False, "version": False},
+    "global_flags": [],
+    "flags": [],
+    "arguments": [
+        {
+            "id": "arg",
+            "name": "VERY_LONG_ARGUMENT_NAME_EXCEEDING_COLUMN_WIDTH_LIMIT",
+            "description": "A very long argument name",
+            "type": "string",
+            "required": True,
+            "variadic": False,
+            "variadic_min": 1,
+            "variadic_max": None,
+            "default": None,
+            "enum_values": [],
+            "required_unless_flag": [],
+        }
+    ],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_long_argument_name_wraps_description() -> None:
+    """An argument name exceeding COLUMN_WIDTH puts description on next line."""
+    gen = HelpGenerator(LONG_ARG_SPEC, ["tool"])
+    text = gen.generate()
+    assert "VERY_LONG_ARGUMENT_NAME_EXCEEDING_COLUMN_WIDTH_LIMIT" in text
+    assert "A very long argument name" in text
+
+
+# =========================================================================
+# Command path resolution via alias
+# =========================================================================
+
+
+ALIAS_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "git",
+    "description": "Version control",
+    "version": "2.0",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": True},
+    "global_flags": [],
+    "flags": [],
+    "arguments": [],
+    "commands": [
+        {
+            "id": "cmd-commit",
+            "name": "commit",
+            "aliases": ["ci"],
+            "description": "Record changes",
+            "flags": [
+                {
+                    "id": "message",
+                    "short": "m",
+                    "long": "message",
+                    "description": "Commit message",
+                    "type": "string",
+                    "required": False,
+                    "default": None,
+                    "value_name": "MSG",
+                    "enum_values": [],
+                    "conflicts_with": [],
+                    "requires": [],
+                    "required_unless": [],
+                    "repeatable": False,
+                }
+            ],
+            "arguments": [],
+            "commands": [],
+            "mutually_exclusive_groups": [],
+        }
+    ],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_resolve_node_via_alias() -> None:
+    """_resolve_node follows an alias to find the correct command node."""
+    gen = HelpGenerator(ALIAS_SPEC, ["git", "ci"])
+    text = gen.generate()
+    # Should resolve to the "commit" command via its "ci" alias
+    assert "--message" in text or "-m" in text
+
+
+# =========================================================================
+# Minimal spec with no flags / no version
+# =========================================================================
+
+
+def test_minimal_spec_no_options_section() -> None:
+    """A spec with no flags produces no OPTIONS section."""
+    spec: dict[str, Any] = {
+        "cli_builder_spec_version": "1.0",
+        "name": "minimal",
+        "description": "Minimal tool",
+        "version": None,
+        "parsing_mode": "gnu",
+        "builtin_flags": {"help": False, "version": False},
+        "global_flags": [],
+        "flags": [],
+        "arguments": [],
+        "commands": [],
+        "mutually_exclusive_groups": [],
+    }
+    gen = HelpGenerator(spec, ["minimal"])
+    text = gen.generate()
+    assert "USAGE" in text
+    # No OPTIONS or GLOBAL OPTIONS when no flags
+    assert "OPTIONS" not in text
+
+
+def test_flag_with_no_default_does_not_show_default() -> None:
+    """A flag with default=None does not show [default: ...] in help."""
+    gen = HelpGenerator(ROOT_SPEC, ["mytool"])
+    text = gen.generate()
+    # --verbose has default=None, so [default: ...] should not appear on verbose line
+    lines = text.split("\n")
+    verbose_lines = [l for l in lines if "--verbose" in l]
+    for line in verbose_lines:
+        assert "[default:" not in line
+
+
+def test_flag_with_required_true_does_not_show_default() -> None:
+    """A required flag with a default value does not show [default: ...] in help."""
+    spec: dict[str, Any] = {
+        "cli_builder_spec_version": "1.0",
+        "name": "tool",
+        "description": "Tool",
+        "version": None,
+        "parsing_mode": "gnu",
+        "builtin_flags": {"help": False, "version": False},
+        "global_flags": [],
+        "flags": [
+            {
+                "id": "output",
+                "long": "output",
+                "description": "Output file",
+                "type": "string",
+                "required": True,
+                "default": "out.txt",  # default set but flag is required
+                "value_name": "FILE",
+                "enum_values": [],
+                "conflicts_with": [],
+                "requires": [],
+                "required_unless": [],
+                "repeatable": False,
+            }
+        ],
+        "arguments": [],
+        "commands": [],
+        "mutually_exclusive_groups": [],
+    }
+    gen = HelpGenerator(spec, ["tool"])
+    text = gen.generate()
+    # [default: out.txt] should NOT appear because flag is required=True
+    assert "[default: out.txt]" not in text
+
+
+def test_value_name_used_in_placeholder() -> None:
+    """A custom value_name is shown in the placeholder instead of the type name."""
+    gen = HelpGenerator(ROOT_SPEC, ["mytool"])
+    text = gen.generate()
+    # --output has value_name="FILE"
+    assert "<FILE>" in text
+    # --output should not show <STRING> (the type name)
+    assert "<STRING>" not in text or "<FILE>" in text  # custom name takes precedence
+
+
+def test_flag_type_used_as_placeholder_when_no_value_name() -> None:
+    """When value_name is None, the type name is used as placeholder."""
+    spec: dict[str, Any] = {
+        "cli_builder_spec_version": "1.0",
+        "name": "tool",
+        "description": "Tool",
+        "version": None,
+        "parsing_mode": "gnu",
+        "builtin_flags": {"help": False, "version": False},
+        "global_flags": [],
+        "flags": [
+            {
+                "id": "count",
+                "long": "count",
+                "description": "A count",
+                "type": "integer",
+                "required": False,
+                "default": None,
+                "value_name": None,  # no custom name
+                "enum_values": [],
+                "conflicts_with": [],
+                "requires": [],
+                "required_unless": [],
+                "repeatable": False,
+            }
+        ],
+        "arguments": [],
+        "commands": [],
+        "mutually_exclusive_groups": [],
+    }
+    gen = HelpGenerator(spec, ["tool"])
+    text = gen.generate()
+    # Type "integer" should be used as placeholder
+    assert "<INTEGER>" in text

@@ -568,7 +568,7 @@ impl Parser {
     fn resolve_active_scope(
         &self,
         node: &ResolvedNode,
-        command_path: &[String],
+        _command_path: &[String],
     ) -> (Vec<FlagDef>, Vec<ArgumentDef>, Vec<ExclusiveGroup>) {
         let mut flags: Vec<FlagDef> = Vec::new();
         let mut arguments: Vec<ArgumentDef> = Vec::new();

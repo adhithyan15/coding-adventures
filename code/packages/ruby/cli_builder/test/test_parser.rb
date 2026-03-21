@@ -947,4 +947,461 @@ class TestParser < Minitest::Test
     result = parse(spec, ["myapp"])
     assert_equal 30, result.flags["timeout"]
   end
+
+  # ===========================================================================
+  # Additional coverage: float, invalid float, single_dash_long non-boolean,
+  # flag with no value at end, unknown flag with suggestion, builtin flag
+  # disabling, boolean default, version absent, required_unless in validator,
+  # traditional mode where first token matches a subcommand, single_dash_long
+  # value-taking flag via next token, repeatable flag via long form
+  # ===========================================================================
+
+  # Invalid float flag
+  def test_invalid_float_flag
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "ratio", "long" => "ratio", "description" => "ratio", "type" => "float"}
+      ]
+    }
+    assert_parse_error(spec, ["myapp", "--ratio=abc"],
+      error_type: "invalid_value")
+  end
+
+  # Float flag via space-separated next token
+  def test_float_flag_space_separated
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "ratio", "long" => "ratio", "description" => "ratio", "type" => "float"}
+      ]
+    }
+    result = parse(spec, ["myapp", "--ratio", "2.71"])
+    assert_in_delta 2.71, result.flags["ratio"]
+  end
+
+  # Flag with no value at end (missing_required_argument from flag_value mode)
+  def test_flag_value_required_but_missing_at_end
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "output", "long" => "output", "description" => "output", "type" => "string"}
+      ]
+    }
+    assert_parse_error(spec, ["myapp", "--output"],
+      error_type: "missing_required_argument")
+  end
+
+  # Unknown flag with a close match should produce a suggestion
+  def test_unknown_flag_with_suggestion
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "verbose", "long" => "verbose", "description" => "verbose", "type" => "boolean"}
+      ]
+    }
+    err = assert_parse_error(spec, ["myapp", "--verbos"],
+      error_type: "unknown_flag")
+    # Should suggest --verbose since it's close
+    has_suggestion = err.errors.any? { |e| e.suggestion&.include?("verbose") }
+    assert has_suggestion, "Expected a suggestion for --verbos"
+  end
+
+  # Unknown flag with no close match — no suggestion
+  def test_unknown_flag_no_suggestion
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "verbose", "long" => "verbose", "description" => "verbose", "type" => "boolean"}
+      ]
+    }
+    err = assert_parse_error(spec, ["myapp", "--zzzzz"],
+      error_type: "unknown_flag")
+    has_nil_suggestion = err.errors.any? { |e| e.error_type == "unknown_flag" && e.suggestion.nil? }
+    assert has_nil_suggestion, "Expected no suggestion for --zzzzz"
+  end
+
+  # Builtin help disabled: --help should be unknown
+  def test_builtin_help_disabled
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "builtin_flags" => {"help" => false, "version" => false},
+      "flags" => []
+    }
+    # --help should not be recognized as help, so it becomes unknown_flag
+    assert_parse_error(spec, ["myapp", "--help"],
+      error_type: "unknown_flag")
+  end
+
+  # Version absent from spec — --version builtin should not be injected
+  def test_version_flag_absent_when_no_version_in_spec
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => []
+      # No "version" key
+    }
+    # --version is only injected when spec["version"] is set
+    assert_parse_error(spec, ["myapp", "--version"],
+      error_type: "unknown_flag")
+  end
+
+  # Boolean flag with explicit non-nil default
+  def test_boolean_flag_with_explicit_default_false
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {
+          "id" => "debug",
+          "long" => "debug",
+          "description" => "debug mode",
+          "type" => "boolean",
+          "default" => false
+        }
+      ]
+    }
+    result = parse(spec, ["myapp"])
+    assert_equal false, result.flags["debug"]
+  end
+
+  # User-defined flag claiming --help: builtin --help should not clash
+  def test_user_defined_help_flag_wins
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "help-level", "long" => "help", "description" => "help level", "type" => "string"}
+      ]
+    }
+    # When user defines --help, the builtin is suppressed for that long name
+    # Parsing --help=2 should use the user flag, not show help
+    result = parse(spec, ["myapp", "--help=2"])
+    assert_equal "2", result.flags["help-level"]
+  end
+
+  # User-defined -h flag: builtin -h (short) should be suppressed
+  def test_user_defined_short_h_suppresses_builtin_short_h
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {"id" => "host", "short" => "h", "description" => "hostname", "type" => "string"}
+      ]
+    }
+    # -h is claimed by user flag "host", so --help should still work as HelpResult
+    # but -h maps to "host" (not help)
+    result = parse(spec, ["myapp", "-h", "localhost"])
+    assert_instance_of ParseResult, result
+    assert_equal "localhost", result.flags["host"]
+  end
+
+  # required_unless in FlagValidator: exemption when another flag present
+  def test_required_unless_flag_exemption
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {
+          "id" => "output",
+          "long" => "output",
+          "description" => "output file",
+          "type" => "string",
+          "required" => true,
+          "required_unless" => ["stdout"]
+        },
+        {
+          "id" => "stdout",
+          "long" => "stdout",
+          "description" => "write to stdout",
+          "type" => "boolean"
+        }
+      ]
+    }
+    # --output is required unless --stdout is given
+    result = parse(spec, ["myapp", "--stdout"])
+    assert_instance_of ParseResult, result
+    assert_equal true, result.flags["stdout"]
+  end
+
+  def test_required_unless_still_fails_when_neither_present
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => [
+        {
+          "id" => "output",
+          "long" => "output",
+          "description" => "output file",
+          "type" => "string",
+          "required" => true,
+          "required_unless" => ["stdout"]
+        },
+        {
+          "id" => "stdout",
+          "long" => "stdout",
+          "description" => "write to stdout",
+          "type" => "boolean"
+        }
+      ]
+    }
+    assert_parse_error(spec, ["myapp"],
+      error_type: "missing_required_flag")
+  end
+
+  # Single-dash-long non-boolean flag: value via next token
+  def test_single_dash_long_non_boolean_value_via_next_token
+    result = parse(JAVA_SPEC, ["java", "-classpath", "/usr/lib/java", "Main"])
+    assert_equal "/usr/lib/java", result.flags["classpath"]
+    assert_equal "Main", result.arguments["classname"]
+  end
+
+  # Repeatable flag via long form (--header X --header Y)
+  def test_repeatable_flag_long_form
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "curl",
+      "description" => "curl",
+      "flags" => [
+        {"id" => "header", "long" => "header",
+         "description" => "header", "type" => "string",
+         "repeatable" => true}
+      ]
+    }
+    result = parse(spec, ["curl", "--header", "X-Foo: bar", "--header", "X-Baz: qux"])
+    assert_equal ["X-Foo: bar", "X-Baz: qux"], result.flags["header"]
+  end
+
+  # Repeatable flag via --flag=value form (multiple times)
+  def test_repeatable_flag_long_with_value_form
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "curl",
+      "description" => "curl",
+      "flags" => [
+        {"id" => "header", "long" => "header",
+         "description" => "header", "type" => "string",
+         "repeatable" => true}
+      ]
+    }
+    result = parse(spec, ["curl", "--header=X-Foo: bar", "--header=X-Baz: qux"])
+    assert_equal ["X-Foo: bar", "X-Baz: qux"], result.flags["header"]
+  end
+
+  # Enum argument coercion via parser
+  def test_enum_argument_valid
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "runner",
+      "description" => "run",
+      "arguments" => [
+        {
+          "id" => "mode",
+          "name" => "MODE",
+          "description" => "run mode",
+          "type" => "enum",
+          "enum_values" => ["fast", "slow", "medium"],
+          "required" => true
+        }
+      ]
+    }
+    result = parse(spec, ["runner", "fast"])
+    assert_equal "fast", result.arguments["mode"]
+  end
+
+  def test_enum_argument_invalid
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "runner",
+      "description" => "run",
+      "arguments" => [
+        {
+          "id" => "mode",
+          "name" => "MODE",
+          "description" => "run mode",
+          "type" => "enum",
+          "enum_values" => ["fast", "slow", "medium"],
+          "required" => true
+        }
+      ]
+    }
+    assert_parse_error(spec, ["runner", "turbo"],
+      error_type: "invalid_enum_value")
+  end
+
+  # Integer argument via parser
+  def test_integer_argument
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "head",
+      "description" => "head",
+      "arguments" => [
+        {"id" => "lines", "name" => "LINES", "description" => "n lines",
+         "type" => "integer", "required" => true}
+      ]
+    }
+    result = parse(spec, ["head", "10"])
+    assert_equal 10, result.arguments["lines"]
+  end
+
+  def test_invalid_integer_argument
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "head",
+      "description" => "head",
+      "arguments" => [
+        {"id" => "lines", "name" => "LINES", "description" => "n lines",
+         "type" => "integer", "required" => true}
+      ]
+    }
+    assert_parse_error(spec, ["head", "notanumber"],
+      error_type: "invalid_value")
+  end
+
+  # Float argument via parser
+  def test_float_argument
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "scale",
+      "description" => "scale",
+      "arguments" => [
+        {"id" => "factor", "name" => "FACTOR", "description" => "factor",
+         "type" => "float", "required" => true}
+      ]
+    }
+    result = parse(spec, ["scale", "1.5"])
+    assert_in_delta 1.5, result.arguments["factor"]
+  end
+
+  def test_invalid_float_argument
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "scale",
+      "description" => "scale",
+      "arguments" => [
+        {"id" => "factor", "name" => "FACTOR", "description" => "factor",
+         "type" => "float", "required" => true}
+      ]
+    }
+    assert_parse_error(spec, ["scale", "bad"],
+      error_type: "invalid_value")
+  end
+
+  # Exclusive group required but none present (missing_exclusive_group)
+  def test_required_exclusive_group_missing
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "convert",
+      "description" => "convert",
+      "flags" => [
+        {"id" => "to-json", "long" => "json", "description" => "json", "type" => "boolean"},
+        {"id" => "to-csv", "long" => "csv", "description" => "csv", "type" => "boolean"}
+      ],
+      "mutually_exclusive_groups" => [
+        {"id" => "format", "flag_ids" => ["to-json", "to-csv"], "required" => true}
+      ]
+    }
+    assert_parse_error(spec, ["convert"],
+      error_type: "missing_exclusive_group")
+  end
+
+  # Subcommand with unknown flag: error should carry command_path context
+  def test_parse_error_carries_command_path_context
+    err = assert_raises(ParseErrors) do
+      parse(GIT_SPEC, ["git", "commit", "--unknown-flag", "-m", "msg"])
+    end
+    assert(err.errors.any? { |e| e.context.include?("commit") },
+      "Expected error context to include 'commit'")
+  end
+
+  # Traditional mode: first non-cmd token as stacked flags, value via next token
+  def test_tar_traditional_cvf_create_with_members
+    result = parse(TAR_SPEC, ["tar", "cvf", "out.tar", "dir/"])
+    assert_equal true, result.flags["create"]
+    assert_equal true, result.flags["verbose"]
+    assert_equal "out.tar", result.flags["file"]
+    assert_equal ["dir/"], result.arguments["members"]
+  end
+
+  # Phase 1 routing: flag followed by value is skipped correctly
+  def test_routing_skips_long_flag_with_value
+    # git commit -m "msg" remote add ... — routing should find "commit" not be confused
+    result = parse(GIT_SPEC, ["git", "commit", "-m", "Initial commit"])
+    assert_equal ["git", "commit"], result.command_path
+  end
+
+  # Stacked flags: last is non-boolean, next token is value
+  def test_stacked_flags_last_non_boolean_next_token_is_value
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "tool",
+      "description" => "tool",
+      "flags" => [
+        {"id" => "verbose", "short" => "v", "description" => "verbose", "type" => "boolean"},
+        {"id" => "output", "short" => "o", "description" => "output", "type" => "string"}
+      ]
+    }
+    result = parse(spec, ["tool", "-vo", "out.txt"])
+    assert_equal true, result.flags["verbose"]
+    assert_equal "out.txt", result.flags["output"]
+  end
+
+  # Duplicate non-repeatable flag via stacked flags with inline value + plain
+  def test_duplicate_flag_via_multiple_occurrences_is_error
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "tool",
+      "description" => "tool",
+      "flags" => [
+        {"id" => "output", "short" => "o", "long" => "output",
+         "description" => "output", "type" => "string"}
+      ]
+    }
+    assert_parse_error(spec, ["tool", "--output=a.txt", "--output=b.txt"],
+      error_type: "duplicate_flag")
+  end
+
+  # Bare argv[0] only (no tokens)
+  def test_empty_argv_only_program_name
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => []
+    }
+    result = parse(spec, ["myapp"])
+    assert_instance_of ParseResult, result
+    assert_equal "myapp", result.program
+    assert_equal ["myapp"], result.command_path
+  end
+
+  # argv[0] only — program name from spec when argv is empty
+  def test_empty_argv_uses_spec_name
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "app",
+      "flags" => []
+    }
+    result = parse(spec, [])
+    assert_equal "myapp", result.program
+  end
 end

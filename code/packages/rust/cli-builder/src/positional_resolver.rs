@@ -152,7 +152,7 @@ pub fn resolve_positionals(
 fn resolve_no_variadic(
     tokens: &[String],
     arg_defs: &[&ArgumentDef],
-    parsed_flags: &HashMap<String, Value>,
+    _parsed_flags: &HashMap<String, Value>,
     command_path: &[String],
     assignments: &mut HashMap<String, Value>,
     errors: &mut Vec<ParseError>,
@@ -329,6 +329,7 @@ fn resolve_with_variadic_refs(
 }
 
 /// Wrapper that accepts `&[ArgumentDef]` (used by unit tests).
+#[allow(dead_code)]
 fn resolve_with_variadic(
     tokens: &[String],
     arg_defs: &[ArgumentDef],
@@ -689,5 +690,305 @@ mod tests {
         let r = resolve_positionals(&tokens(&[]), &defs, &no_flags(), &ctx());
         assert!(r.errors.is_empty());
         assert_eq!(r.assignments["files"], json!([]));
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — boolean type
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_boolean_true_variants() {
+        assert_eq!(coerce_value("true", "boolean", &[]).unwrap(), json!(true));
+        assert_eq!(coerce_value("1", "boolean", &[]).unwrap(), json!(true));
+        assert_eq!(coerce_value("yes", "boolean", &[]).unwrap(), json!(true));
+    }
+
+    #[test]
+    fn test_coerce_boolean_false_variants() {
+        assert_eq!(coerce_value("false", "boolean", &[]).unwrap(), json!(false));
+        assert_eq!(coerce_value("0", "boolean", &[]).unwrap(), json!(false));
+        assert_eq!(coerce_value("no", "boolean", &[]).unwrap(), json!(false));
+    }
+
+    #[test]
+    fn test_coerce_boolean_invalid() {
+        let err = coerce_value("maybe", "boolean", &[]).unwrap_err();
+        assert_eq!(err.error_type, "invalid_value");
+        assert!(err.message.contains("maybe"));
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — path type (empty rejected)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_empty_path_rejected() {
+        let err = coerce_value("", "path", &[]).unwrap_err();
+        assert_eq!(err.error_type, "invalid_value");
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — float type
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_float_integer_value() {
+        assert_eq!(coerce_value("5", "float", &[]).unwrap(), json!(5.0));
+    }
+
+    #[test]
+    fn test_coerce_float_negative() {
+        let v = coerce_value("-1.5", "float", &[]).unwrap();
+        assert_eq!(v, json!(-1.5));
+    }
+
+    #[test]
+    fn test_coerce_float_invalid() {
+        let err = coerce_value("not-a-float", "float", &[]).unwrap_err();
+        assert_eq!(err.error_type, "invalid_value");
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — file type
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_file_nonexistent() {
+        let err = coerce_value("/tmp/cli_builder_test_nonexistent_xyz_12345.txt", "file", &[]).unwrap_err();
+        assert_eq!(err.error_type, "invalid_value");
+        assert!(err.message.contains("not readable") || err.message.contains("does not exist"));
+    }
+
+    #[test]
+    fn test_coerce_file_is_directory() {
+        // /tmp exists as a directory — passing it as "file" should fail.
+        let path = if cfg!(windows) { "C:\\Windows" } else { "/tmp" };
+        let err = coerce_value(path, "file", &[]).unwrap_err();
+        assert_eq!(err.error_type, "invalid_value");
+        assert!(err.message.contains("not a file") || err.message.contains("is not a file") || err.message.contains("does not exist"));
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — directory type
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_directory_nonexistent() {
+        let err = coerce_value("/tmp/cli_builder_no_such_dir_xyz_abc", "directory", &[]).unwrap_err();
+        assert_eq!(err.error_type, "invalid_value");
+    }
+
+    #[test]
+    fn test_coerce_directory_valid() {
+        // Use the current directory (always exists).
+        let path = if cfg!(windows) { "C:\\Windows" } else { "/tmp" };
+        let v = coerce_value(path, "directory", &[]).unwrap();
+        assert!(v.is_string());
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — unknown type (treated as string)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_unknown_type_treated_as_string() {
+        let v = coerce_value("hello", "custom_type", &[]).unwrap();
+        assert_eq!(v, json!("hello"));
+    }
+
+    // -----------------------------------------------------------------------
+    // coerce_value — integer boundary
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_integer_zero() {
+        assert_eq!(coerce_value("0", "integer", &[]).unwrap(), json!(0));
+    }
+
+    // -----------------------------------------------------------------------
+    // optional arg with explicit default value (non-null)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_optional_arg_with_string_default() {
+        let mut def = mk_arg("mode", "MODE", false, false, 0);
+        def.required = false;
+        def.default = Some(json!("auto"));
+        let defs = vec![def];
+        let r = resolve_positionals(&tokens(&[]), &defs, &no_flags(), &ctx());
+        assert!(r.errors.is_empty());
+        assert_eq!(r.assignments["mode"], json!("auto"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Variadic with non-null default when no tokens consumed
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_variadic_with_default_used_when_empty() {
+        let mut def = mk_arg("files", "FILE", false, true, 0);
+        def.required = false;
+        def.variadic_min = 0;
+        def.default = Some(json!(["default.txt"]));
+        let defs = vec![def];
+        let r = resolve_positionals(&tokens(&[]), &defs, &no_flags(), &ctx());
+        assert!(r.errors.is_empty());
+        // variadic with array default — should use the default
+        assert_eq!(r.assignments["files"], json!(["default.txt"]));
+    }
+
+    // -----------------------------------------------------------------------
+    // Variadic with scalar default — passed through as-is from resolve_with_variadic
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_variadic_with_scalar_default_passed_through() {
+        let mut def = mk_arg("files", "FILE", false, true, 0);
+        def.required = false;
+        def.variadic_min = 0;
+        def.default = Some(json!("default.txt"));
+        let defs = vec![def];
+        let r = resolve_positionals(&tokens(&[]), &defs, &no_flags(), &ctx());
+        assert!(r.errors.is_empty());
+        // resolve_with_variadic_refs uses the default as-is when arr is empty
+        assert_eq!(r.assignments["files"], json!("default.txt"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Optional non-variadic arg absent: default wrapping in "populate defaults" block
+    // The "populate defaults" block wraps variadic scalar defaults in array
+    // only for arguments that were NOT processed by resolve_with_variadic_refs.
+    // This path is exercised when a variadic arg is 'required=false' but there is
+    // no variadic in the effective_defs (it's exempt via required_unless_flag).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_exempt_variadic_gets_null_default_from_populate_block() {
+        // A variadic arg that is exempt (required_unless_flag present and satisfied)
+        // gets assigned default/null from the "populate defaults" block,
+        // with scalar wrapping in array.
+        let mut def = mk_arg("files", "FILE", false, true, 0);
+        def.required = false;
+        def.variadic_min = 0;
+        def.required_unless_flag = vec!["stdin".to_string()];
+        let defs = vec![def];
+        // With "stdin"=true, this arg is exempt from effective_defs
+        let flags = HashMap::from([("stdin".to_string(), json!(true))]);
+        let r = resolve_positionals(&tokens(&[]), &defs, &flags, &ctx());
+        assert!(r.errors.is_empty());
+        // Exempt arg is assigned default (null) in the upfront exempt block,
+        // not the "populate defaults" block
+        assert_eq!(r.assignments["files"], json!(null));
+    }
+
+    // -----------------------------------------------------------------------
+    // required_unless_flag with false/null values (should NOT exempt)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_required_unless_flag_false_value_does_not_exempt() {
+        let mut def = mk_arg("pattern", "PATTERN", true, false, 1);
+        def.required_unless_flag = vec!["regexp".to_string()];
+        let defs = vec![def];
+        // "regexp" flag is present but value is false → not truthy → not exempt
+        let flags = HashMap::from([("regexp".to_string(), json!(false))]);
+        let r = resolve_positionals(&tokens(&[]), &defs, &flags, &ctx());
+        // Should still require PATTERN since regexp is false
+        assert!(!r.errors.is_empty());
+        assert_eq!(r.errors[0].error_type, "missing_required_argument");
+    }
+
+    #[test]
+    fn test_required_unless_flag_null_value_does_not_exempt() {
+        let mut def = mk_arg("pattern", "PATTERN", true, false, 1);
+        def.required_unless_flag = vec!["regexp".to_string()];
+        let defs = vec![def];
+        let flags = HashMap::from([("regexp".to_string(), json!(null))]);
+        let r = resolve_positionals(&tokens(&[]), &defs, &flags, &ctx());
+        assert!(!r.errors.is_empty());
+        assert_eq!(r.errors[0].error_type, "missing_required_argument");
+    }
+
+    #[test]
+    fn test_required_unless_flag_empty_array_does_not_exempt() {
+        let mut def = mk_arg("pattern", "PATTERN", true, false, 1);
+        def.required_unless_flag = vec!["regexp".to_string()];
+        let defs = vec![def];
+        let flags = HashMap::from([("regexp".to_string(), json!([]))]);
+        let r = resolve_positionals(&tokens(&[]), &defs, &flags, &ctx());
+        // empty array is falsy → not exempt
+        assert!(!r.errors.is_empty());
+        assert_eq!(r.errors[0].error_type, "missing_required_argument");
+    }
+
+    #[test]
+    fn test_required_unless_flag_non_empty_array_exempts() {
+        let mut def = mk_arg("pattern", "PATTERN", true, false, 1);
+        def.required_unless_flag = vec!["regexp".to_string()];
+        let defs = vec![def];
+        let flags = HashMap::from([("regexp".to_string(), json!(["foo"]))]);
+        let r = resolve_positionals(&tokens(&[]), &defs, &flags, &ctx());
+        assert!(r.errors.is_empty());
+    }
+
+    // -----------------------------------------------------------------------
+    // Leading args in variadic pattern missing
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_leading_arg_missing_in_variadic_context() {
+        // prefix_arg (required) + variadic + trailing
+        // If no tokens at all → error for prefix_arg
+        let prefix = mk_arg("prefix", "PREFIX", true, false, 1);
+        let mut files = mk_arg("files", "FILE", true, true, 1);
+        files.variadic = true;
+        files.variadic_min = 1;
+        let defs = vec![prefix, files];
+        let r = resolve_positionals(&tokens(&[]), &defs, &no_flags(), &ctx());
+        assert!(!r.errors.is_empty());
+    }
+
+    // -----------------------------------------------------------------------
+    // Enum coerce with empty enum_values (catches the else branch in enum)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_enum_invalid_value_error_type() {
+        let enums = vec!["a".to_string(), "b".to_string()];
+        let err = coerce_value("c", "enum", &enums).unwrap_err();
+        assert_eq!(err.error_type, "invalid_enum_value");
+        assert!(err.message.contains("c"));
+        assert!(err.message.contains("a"));
+        assert!(err.message.contains("b"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Coerce error in no-variadic path (coerce error propagates)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_coerce_error_in_no_variadic_path() {
+        let mut def = mk_arg("count", "COUNT", true, false, 1);
+        def.arg_type = "integer".to_string();
+        let defs = vec![def];
+        let r = resolve_positionals(&tokens(&["notanint"]), &defs, &no_flags(), &ctx());
+        assert!(!r.errors.is_empty());
+        assert_eq!(r.errors[0].error_type, "invalid_value");
+    }
+
+    // -----------------------------------------------------------------------
+    // Variadic required_unless_flag with flag present (exempt from variadic min check)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_variadic_required_unless_flag_exempt_from_min() {
+        let mut def = mk_arg("files", "FILE", true, true, 1);
+        def.required_unless_flag = vec!["stdin".to_string()];
+        let defs = vec![def];
+        // "stdin" flag is present → variadic min check is exempt
+        let flags = HashMap::from([("stdin".to_string(), json!(true))]);
+        let r = resolve_positionals(&tokens(&[]), &defs, &flags, &ctx());
+        // Should produce empty array (variadic with no tokens) and no error
+        assert!(r.errors.is_empty(), "errors: {:?}", r.errors);
     }
 }

@@ -270,4 +270,90 @@ class TestTokenClassifier < Minitest::Test
     result = classifier.classify("-xyz")
     assert_equal :unknown_flag, result[:type]
   end
+
+  # ---------------------------------------------------------------------------
+  # Edge cases: stacked flags where first char is non-boolean (inline value)
+  # ---------------------------------------------------------------------------
+
+  def test_stacked_flags_first_char_non_boolean_rest_is_value
+    # "-fout.txt" with f=non-boolean → short_flag_with_value (not stacked)
+    c = TokenClassifier.new(OUTPUT_FLAGS)
+    result = c.classify("-fout.txt")
+    assert_equal :short_flag_with_value, result[:type]
+    assert_equal "file", result[:flag]["id"]
+    assert_equal "out.txt", result[:value]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Long flag: name only after "--" (empty string edge case)
+  # ---------------------------------------------------------------------------
+
+  def test_long_flag_unknown_with_value
+    result = classifier.classify("--nonexistent=foo")
+    assert_equal :unknown_flag, result[:type]
+    assert_equal "--nonexistent=foo", result[:token]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Single_dash_long: no match at all → falls to unknown
+  # ---------------------------------------------------------------------------
+
+  def test_single_dash_multi_char_no_match_is_unknown
+    c = TokenClassifier.new(JAVA_FLAGS)
+    # "-junk" doesn't match any SDL and 'j' is not a known short flag
+    result = c.classify("-junk")
+    assert_equal :unknown_flag, result[:type]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Stacked flags: all boolean, returns stacked with last_value nil
+  # ---------------------------------------------------------------------------
+
+  def test_stacked_all_boolean_returns_nil_last_value
+    c = TokenClassifier.new(OUTPUT_FLAGS)
+    result = c.classify("-lah")
+    assert_equal :stacked_flags, result[:type]
+    assert_nil result[:last_value]
+    ids = result[:flags].map { |f| f["id"] }
+    assert_equal ["long", "all", "human"], ids
+  end
+
+  # ---------------------------------------------------------------------------
+  # Stacked flags: non-boolean last with empty remainder → last_value nil
+  # ---------------------------------------------------------------------------
+
+  def test_stacked_non_boolean_last_empty_remainder_nil_last_value
+    # "-lf" → last flag 'f' is non-boolean, remainder after 'f' is empty → last_value nil
+    c = TokenClassifier.new(OUTPUT_FLAGS)
+    result = c.classify("-lf")
+    assert_equal :stacked_flags, result[:type]
+    assert_nil result[:last_value]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Classify with no flags at all — everything is unknown or positional
+  # ---------------------------------------------------------------------------
+
+  def test_empty_flag_set_long_flag_is_unknown
+    c = TokenClassifier.new([])
+    result = c.classify("--verbose")
+    assert_equal :unknown_flag, result[:type]
+  end
+
+  def test_empty_flag_set_positional_still_works
+    c = TokenClassifier.new([])
+    result = c.classify("file.txt")
+    assert_equal :positional, result[:type]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Short flag: non-boolean without remainder (bare -f)
+  # ---------------------------------------------------------------------------
+
+  def test_non_boolean_short_flag_alone_is_short_flag
+    c = TokenClassifier.new(OUTPUT_FLAGS)
+    result = c.classify("-o")
+    assert_equal :short_flag, result[:type]
+    assert_equal "output", result[:flag]["id"]
+  end
 end

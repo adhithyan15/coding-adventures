@@ -1025,3 +1025,625 @@ def test_empty_argv_raises() -> None:
     path = make_spec_file(ECHO_SPEC)
     with pytest.raises(ParseErrors):
         Parser(path, []).parse()
+
+
+# =========================================================================
+# Float flag type
+# =========================================================================
+
+FLOAT_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Test float",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "ratio",
+            "long": "ratio",
+            "description": "A float ratio",
+            "type": "float",
+            "required": False,
+            "default": None,
+            "value_name": "RATIO",
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_float_flag_coerced() -> None:
+    """--ratio=3.14 results in float 3.14."""
+    path = make_spec_file(FLOAT_SPEC)
+    result = Parser(path, ["myapp", "--ratio=3.14"]).parse()
+    assert isinstance(result, ParseResult)
+    assert abs(result.flags["ratio"] - 3.14) < 1e-9
+    assert isinstance(result.flags["ratio"], float)
+
+
+def test_invalid_float_raises() -> None:
+    """--ratio=abc raises ParseErrors: invalid_value."""
+    path = make_spec_file(FLOAT_SPEC)
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "--ratio=abc"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "invalid_value" in types
+
+
+# =========================================================================
+# Enum flag type
+# =========================================================================
+
+ENUM_FLAG_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Test enum",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "format",
+            "long": "format",
+            "description": "Output format",
+            "type": "enum",
+            "enum_values": ["json", "csv", "xml"],
+            "required": False,
+            "default": None,
+            "value_name": "FORMAT",
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_enum_flag_valid_value() -> None:
+    """--format=json is accepted and returned as string."""
+    path = make_spec_file(ENUM_FLAG_SPEC)
+    result = Parser(path, ["myapp", "--format=json"]).parse()
+    assert isinstance(result, ParseResult)
+    assert result.flags["format"] == "json"
+
+
+def test_enum_flag_invalid_value_raises() -> None:
+    """--format=yaml raises ParseErrors: invalid_enum_value."""
+    path = make_spec_file(ENUM_FLAG_SPEC)
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "--format=yaml"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "invalid_enum_value" in types
+
+
+# =========================================================================
+# Subcommand_first parsing mode
+# =========================================================================
+
+SUBCMD_FIRST_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Subcommand-first app",
+    "parsing_mode": "subcommand_first",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [],
+    "arguments": [],
+    "commands": [
+        {
+            "id": "cmd-run",
+            "name": "run",
+            "description": "Run something",
+            "aliases": [],
+            "inherit_global_flags": True,
+            "flags": [],
+            "arguments": [],
+            "commands": [],
+            "mutually_exclusive_groups": [],
+        }
+    ],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_subcommand_first_valid_command_routes() -> None:
+    """In subcommand_first mode, a valid first token routes to the subcommand."""
+    path = make_spec_file(SUBCMD_FIRST_SPEC)
+    result = Parser(path, ["myapp", "run"]).parse()
+    assert isinstance(result, ParseResult)
+    assert result.command_path == ["myapp", "run"]
+
+
+def test_subcommand_first_unknown_command_raises() -> None:
+    """In subcommand_first mode, an unknown first non-flag token raises ParseErrors."""
+    path = make_spec_file(SUBCMD_FIRST_SPEC)
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "notacommand"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "unknown_command" in types
+
+
+def test_subcommand_first_unknown_command_suggests() -> None:
+    """In subcommand_first mode, a close-match token includes a suggestion."""
+    path = make_spec_file(SUBCMD_FIRST_SPEC)
+    try:
+        Parser(path, ["myapp", "ru"]).parse()  # close to "run"
+    except ParseErrors as e:
+        suggestions = [err.suggestion for err in e.errors if err.suggestion]
+        # Should suggest "run"
+        assert any("run" in (s or "") for s in suggestions)
+
+
+# =========================================================================
+# User-defined -h flag does not trigger builtin help
+# =========================================================================
+
+USER_H_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "App with custom -h",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "human-readable",
+            "short": "h",
+            "long": "human-readable",
+            "description": "Human-readable output",
+            "type": "boolean",
+            "required": False,
+            "default": None,
+            "value_name": None,
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_user_defined_short_h_does_not_trigger_help() -> None:
+    """-h does not trigger builtin help when user has a -h flag."""
+    path = make_spec_file(USER_H_SPEC)
+    result = Parser(path, ["myapp", "-h"]).parse()
+    # Should be ParseResult (not HelpResult) because user defined -h
+    assert isinstance(result, ParseResult)
+    assert result.flags["human-readable"] is True
+
+
+def test_double_dash_help_still_works_with_user_short_h() -> None:
+    """--help still triggers help even when user defines -h."""
+    path = make_spec_file(USER_H_SPEC)
+    result = Parser(path, ["myapp", "--help"]).parse()
+    assert isinstance(result, HelpResult)
+
+
+# =========================================================================
+# inherit_global_flags = False
+# =========================================================================
+
+NO_INHERIT_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "App",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [
+        {
+            "id": "verbose",
+            "short": "v",
+            "long": "verbose",
+            "description": "Verbose",
+            "type": "boolean",
+            "required": False,
+            "default": None,
+            "value_name": None,
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "flags": [],
+    "arguments": [],
+    "commands": [
+        {
+            "id": "cmd-run",
+            "name": "run",
+            "description": "Run",
+            "aliases": [],
+            "inherit_global_flags": False,  # does NOT inherit globals
+            "flags": [],
+            "arguments": [],
+            "commands": [],
+            "mutually_exclusive_groups": [],
+        }
+    ],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_inherit_global_flags_false_excludes_globals() -> None:
+    """When inherit_global_flags=False, global flags are not active in subcommand."""
+    path = make_spec_file(NO_INHERIT_SPEC)
+    # Passing --verbose to a command that does not inherit globals should raise unknown_flag
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "run", "--verbose"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "unknown_flag" in types
+
+
+# =========================================================================
+# Traditional mode — fallback to positional when token doesn't match flags
+# =========================================================================
+
+
+def test_traditional_mode_unknown_chars_become_positional() -> None:
+    """In traditional mode, first token with unknown chars falls back to positional."""
+    # TAR_SPEC has no argument defs, so a positional would trigger too_many_arguments.
+    # We need a spec with an argument to accept the fallback positional.
+    spec: dict[str, Any] = {
+        "cli_builder_spec_version": "1.0",
+        "name": "tar",
+        "description": "Archive",
+        "version": "1.34",
+        "parsing_mode": "traditional",
+        "builtin_flags": {"help": True, "version": False},
+        "global_flags": [],
+        "flags": [
+            {
+                "id": "extract",
+                "short": "x",
+                "long": "extract",
+                "description": "Extract",
+                "type": "boolean",
+                "required": False,
+                "default": None,
+                "value_name": None,
+                "enum_values": [],
+                "conflicts_with": [],
+                "requires": [],
+                "required_unless": [],
+                "repeatable": False,
+            }
+        ],
+        "arguments": [
+            {
+                "id": "archive",
+                "name": "ARCHIVE",
+                "description": "Archive file",
+                "type": "string",
+                "required": False,
+                "variadic": False,
+                "variadic_min": 0,
+                "variadic_max": None,
+                "default": None,
+                "enum_values": [],
+                "required_unless_flag": [],
+            }
+        ],
+        "commands": [],
+        "mutually_exclusive_groups": [],
+    }
+    path = make_spec_file(spec)
+    # "Zarchive.tar" — 'Z' is not a known short flag → falls through to positional
+    result = Parser(path, ["tar", "Zarchive.tar"]).parse()
+    assert isinstance(result, ParseResult)
+    assert result.arguments["archive"] == "Zarchive.tar"
+    assert result.flags["extract"] is False
+
+
+# =========================================================================
+# Traditional mode — non-boolean flag in middle of stack (error path)
+# =========================================================================
+
+
+def test_traditional_mode_nonbool_not_last_errors() -> None:
+    """In traditional mode, non-boolean flag not at end of stack raises error."""
+    spec: dict[str, Any] = {
+        "cli_builder_spec_version": "1.0",
+        "name": "tar",
+        "description": "Archive",
+        "version": "1.34",
+        "parsing_mode": "traditional",
+        "builtin_flags": {"help": True, "version": False},
+        "global_flags": [],
+        "flags": [
+            {
+                "id": "file",
+                "short": "f",
+                "long": "file",
+                "description": "Archive file",
+                "type": "string",
+                "required": False,
+                "default": None,
+                "value_name": "ARCHIVE",
+                "enum_values": [],
+                "conflicts_with": [],
+                "requires": [],
+                "required_unless": [],
+                "repeatable": False,
+            },
+            {
+                "id": "extract",
+                "short": "x",
+                "long": "extract",
+                "description": "Extract",
+                "type": "boolean",
+                "required": False,
+                "default": None,
+                "value_name": None,
+                "enum_values": [],
+                "conflicts_with": [],
+                "requires": [],
+                "required_unless": [],
+                "repeatable": False,
+            },
+        ],
+        "arguments": [],
+        "commands": [],
+        "mutually_exclusive_groups": [],
+    }
+    path = make_spec_file(spec)
+    # "fx" — 'f' is non-boolean in the middle, 'x' follows → error
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["tar", "fx", "archive.tar"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "missing_flag_value" in types
+
+
+# =========================================================================
+# Short flag with inline value — coerce error
+# =========================================================================
+
+SHORT_INTEGER_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Test",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "count",
+            "short": "n",
+            "long": "count",
+            "description": "Count",
+            "type": "integer",
+            "required": False,
+            "default": None,
+            "value_name": "N",
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_short_flag_with_inline_value_coerce_error() -> None:
+    """-nabc (inline value 'abc' for integer flag) raises ParseErrors: invalid_value."""
+    path = make_spec_file(SHORT_INTEGER_SPEC)
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "-nabc"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "invalid_value" in types
+
+
+# =========================================================================
+# Stacked flags with inline trailing value — coerce error
+# =========================================================================
+
+STACKED_INTEGER_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Test",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "verbose",
+            "short": "v",
+            "long": "verbose",
+            "description": "Verbose",
+            "type": "boolean",
+            "required": False,
+            "default": None,
+            "value_name": None,
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        },
+        {
+            "id": "count",
+            "short": "n",
+            "long": "count",
+            "description": "Count",
+            "type": "integer",
+            "required": False,
+            "default": None,
+            "value_name": "N",
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        },
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_stacked_with_trailing_value_coerce_error() -> None:
+    """-vnabc (stacked: v boolean, n integer with inline 'abc') raises invalid_value."""
+    path = make_spec_file(STACKED_INTEGER_SPEC)
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "-vnabc"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "invalid_value" in types
+
+
+# =========================================================================
+# Boolean flag default value
+# =========================================================================
+
+BOOL_DEFAULT_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Test bool default",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "enabled",
+            "long": "enabled",
+            "description": "Enabled by default",
+            "type": "boolean",
+            "required": False,
+            "default": True,  # non-None default for boolean
+            "value_name": None,
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_boolean_flag_with_non_none_default() -> None:
+    """A boolean flag with default=True gets that default when absent."""
+    path = make_spec_file(BOOL_DEFAULT_SPEC)
+    result = Parser(path, ["myapp"]).parse()
+    assert isinstance(result, ParseResult)
+    assert result.flags["enabled"] is True
+
+
+# =========================================================================
+# Help before routing errors (quick_help path)
+# =========================================================================
+
+
+def test_help_shown_even_with_routing_error() -> None:
+    """--help is returned even when there is also a routing error (quick-help path)."""
+    # subcommand_first mode: "badcmd" triggers unknown_command routing error,
+    # but --help appears after it and short-circuits before that error propagates.
+    path = make_spec_file(SUBCMD_FIRST_SPEC)
+    result = Parser(path, ["myapp", "badcmd", "--help"]).parse()
+    assert isinstance(result, HelpResult)
+
+
+# =========================================================================
+# Value flag — value is next token (FLAG_VALUE mode)
+# =========================================================================
+
+
+def test_value_flag_next_token_coerced() -> None:
+    """-n 5 (separate token) is parsed as count=5."""
+    path = make_spec_file(SHORT_INTEGER_SPEC)
+    result = Parser(path, ["myapp", "-n", "5"]).parse()
+    assert isinstance(result, ParseResult)
+    assert result.flags["count"] == 5
+
+
+def test_value_flag_next_token_coerce_error() -> None:
+    """-n abc (separate token, invalid integer) raises ParseErrors."""
+    path = make_spec_file(SHORT_INTEGER_SPEC)
+    with pytest.raises(ParseErrors) as exc_info:
+        Parser(path, ["myapp", "-n", "abc"]).parse()
+    types = [e.error_type for e in exc_info.value.errors]
+    assert "invalid_value" in types
+
+
+# =========================================================================
+# Single-dash-long boolean flag
+# =========================================================================
+
+SDL_BOOLEAN_SPEC: dict[str, Any] = {
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "Test SDL boolean",
+    "parsing_mode": "gnu",
+    "builtin_flags": {"help": True, "version": False},
+    "global_flags": [],
+    "flags": [
+        {
+            "id": "verbose",
+            "single_dash_long": "verbose",
+            "description": "Verbose mode",
+            "type": "boolean",
+            "required": False,
+            "default": None,
+            "value_name": None,
+            "enum_values": [],
+            "conflicts_with": [],
+            "requires": [],
+            "required_unless": [],
+            "repeatable": False,
+        }
+    ],
+    "arguments": [],
+    "commands": [],
+    "mutually_exclusive_groups": [],
+}
+
+
+def test_single_dash_long_boolean_flag() -> None:
+    """-verbose (single_dash_long boolean) sets the flag to True."""
+    path = make_spec_file(SDL_BOOLEAN_SPEC)
+    result = Parser(path, ["myapp", "-verbose"]).parse()
+    assert isinstance(result, ParseResult)
+    assert result.flags["verbose"] is True
+
+
+# =========================================================================
+# _fuzzy_suggest — no candidates within threshold
+# =========================================================================
+
+
+def test_fuzzy_suggest_no_close_match() -> None:
+    """A very different token gets no suggestion (distance > 2)."""
+    from cli_builder.parser import _fuzzy_suggest
+    suggestion = _fuzzy_suggest("zzzzzzz", ["verbose", "output", "debug"])
+    assert suggestion is None
+
+
+def test_fuzzy_suggest_exact_match() -> None:
+    """An exact match returns that candidate."""
+    from cli_builder.parser import _fuzzy_suggest
+    suggestion = _fuzzy_suggest("verbose", ["verbose", "output"])
+    assert suggestion == "verbose"

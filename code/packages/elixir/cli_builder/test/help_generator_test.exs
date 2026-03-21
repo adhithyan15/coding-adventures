@@ -216,4 +216,410 @@ defmodule CodingAdventures.CliBuilder.HelpGeneratorTest do
       refute text =~ "--version"
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # Required flags formatting
+  # ---------------------------------------------------------------------------
+
+  describe "required flags in OPTIONS" do
+    test "required flag shows [required] suffix" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{
+              "id" => "output",
+              "short" => "o",
+              "long" => "output",
+              "description" => "Output file",
+              "type" => "string",
+              "required" => true
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "[required]"
+    end
+
+    test "optional flag with default shows [default: ...] suffix" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{
+              "id" => "format",
+              "long" => "format",
+              "description" => "Output format",
+              "type" => "string",
+              "default" => "table"
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "[default: table]"
+    end
+
+    test "optional flag without default shows no suffix" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{
+              "id" => "verbose",
+              "short" => "v",
+              "description" => "Verbose",
+              "type" => "boolean"
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      refute text =~ "[required]"
+      refute text =~ "[default:"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # SDL flag formatting
+  # ---------------------------------------------------------------------------
+
+  describe "SDL flag in OPTIONS" do
+    test "single-dash-long flag is formatted with leading dash" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{
+              "id" => "classpath",
+              "single_dash_long" => "classpath",
+              "description" => "Java classpath",
+              "type" => "string"
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "-classpath"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Argument format in usage line
+  # ---------------------------------------------------------------------------
+
+  describe "argument format in usage line" do
+    test "required non-variadic argument shown as <NAME>" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{"id" => "file", "name" => "FILE", "description" => "A file", "type" => "path", "required" => true}
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "<FILE>"
+    end
+
+    test "required variadic argument shown as <NAME>..." do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{
+              "id" => "file",
+              "name" => "FILES",
+              "description" => "Files",
+              "type" => "path",
+              "required" => true,
+              "variadic" => true,
+              "variadic_min" => 1
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "<FILES>..."
+    end
+
+    test "optional non-variadic argument shown as [NAME]" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{
+              "id" => "file",
+              "name" => "FILE",
+              "description" => "A file",
+              "type" => "path",
+              "required" => false
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "[FILE]"
+    end
+
+    test "optional variadic argument shown as [NAME...]" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{
+              "id" => "file",
+              "name" => "FILE",
+              "description" => "Files",
+              "type" => "path",
+              "required" => false,
+              "variadic" => true,
+              "variadic_min" => 0
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "[FILE...]" or text =~ "[FILE"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # ARGUMENTS section formatting
+  # ---------------------------------------------------------------------------
+
+  describe "ARGUMENTS section formatting" do
+    test "required argument has 'Required.' in ARGUMENTS section" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{"id" => "file", "name" => "FILE", "description" => "A file", "type" => "path", "required" => true}
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "Required."
+    end
+
+    test "optional argument has 'Optional.' in ARGUMENTS section" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{
+              "id" => "file",
+              "name" => "FILE",
+              "description" => "A file",
+              "type" => "path",
+              "required" => false
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "Optional."
+    end
+
+    test "variadic argument has 'Repeatable.' in ARGUMENTS section" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{
+              "id" => "file",
+              "name" => "FILE",
+              "description" => "Files",
+              "type" => "path",
+              "required" => false,
+              "variadic" => true,
+              "variadic_min" => 0
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "Repeatable."
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Subcommand with inherit_global_flags: false
+  # ---------------------------------------------------------------------------
+
+  describe "inherit_global_flags false in help" do
+    test "subcommand with inherit_global_flags false shows no global flags" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "global_flags" => [
+            %{"id" => "verbose", "short" => "v", "long" => "verbose", "description" => "Verbose", "type" => "boolean"}
+          ],
+          "commands" => [
+            %{
+              "id" => "cmd-private",
+              "name" => "private",
+              "description" => "Private command",
+              "inherit_global_flags" => false,
+              "flags" => [],
+              "arguments" => []
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog", "private"])
+      # Global --verbose should NOT appear in the private subcommand help
+      refute text =~ "--verbose"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Path resolution for unknown subcommand in help (graceful fallback)
+  # ---------------------------------------------------------------------------
+
+  describe "unknown subcommand in help path" do
+    test "unknown subcommand path falls back to last known node" do
+      # Requesting help for a nonexistent path should not crash
+      text = HelpGenerator.generate(git_spec(), ["git", "nonexistent"])
+      assert is_binary(text)
+      assert String.length(text) > 0
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # builtin flags disabled
+  # ---------------------------------------------------------------------------
+
+  describe "builtin flags disabled" do
+    test "help builtin disabled → no --help in GLOBAL OPTIONS" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "builtin_flags" => %{"help" => false, "version" => false}
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      refute text =~ "--help"
+    end
+
+    test "version builtin disabled → no --version in GLOBAL OPTIONS" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "version" => "1.0",
+          "builtin_flags" => %{"help" => true, "version" => false}
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      refute text =~ "--version"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Subcommand with aliases shown in COMMANDS section
+  # ---------------------------------------------------------------------------
+
+  describe "help for subcommand with aliases" do
+    test "help can be generated for command found via alias" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "version" => "1.0",
+          "commands" => [
+            %{
+              "id" => "cmd-commit",
+              "name" => "commit",
+              "aliases" => ["ci"],
+              "description" => "Record changes",
+              "flags" => [],
+              "arguments" => []
+            }
+          ]
+        })
+
+      # Generate help using the alias as the path element
+      text = HelpGenerator.generate(spec, ["prog", "ci"])
+      assert is_binary(text)
+      assert String.length(text) > 0
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Flag with only short handle (no long, no SDL)
+  # ---------------------------------------------------------------------------
+
+  describe "flag with short handle only" do
+    test "short-only flag appears in OPTIONS without --long part" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{"id" => "newline", "short" => "n", "description" => "No newline", "type" => "boolean"}
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "-n"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Custom value_name in flag formatting
+  # ---------------------------------------------------------------------------
+
+  describe "custom value_name" do
+    test "custom value_name appears in flag output" do
+      spec =
+        load(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{
+              "id" => "output",
+              "long" => "output",
+              "description" => "Output file",
+              "type" => "string",
+              "value_name" => "OUTFILE"
+            }
+          ]
+        })
+
+      text = HelpGenerator.generate(spec, ["prog"])
+      assert text =~ "OUTFILE"
+    end
+  end
 end

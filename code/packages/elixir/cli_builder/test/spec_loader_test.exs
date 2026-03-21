@@ -473,5 +473,538 @@ defmodule CodingAdventures.CliBuilder.SpecLoaderTest do
         SpecLoader.load!("/nonexistent/path/to/spec.json")
       end
     end
+
+    test "raises when file exists but is not valid JSON" do
+      tmpdir = System.tmp_dir!()
+      path = Path.join(tmpdir, "bad_spec_#{:rand.uniform(999_999)}.json")
+      File.write!(path, "not json {{{")
+
+      try do
+        assert_raise SpecError, ~r/Invalid JSON/, fn ->
+          SpecLoader.load!(path)
+        end
+      after
+        File.rm(path)
+      end
+    end
+
+    test "successfully loads a valid spec from disk" do
+      tmpdir = System.tmp_dir!()
+      path = Path.join(tmpdir, "valid_spec_#{:rand.uniform(999_999)}.json")
+
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test"
+        })
+
+      File.write!(path, json)
+
+      try do
+        spec = SpecLoader.load!(path)
+        assert spec["name"] == "prog"
+      after
+        File.rm(path)
+      end
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Additional normalisation and validation paths
+  # ---------------------------------------------------------------------------
+
+  describe "additional validation paths" do
+    test "raises when flags field is not an array" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => "not_an_array"
+        })
+
+      assert_raise SpecError, ~r/must be an array/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when arguments field is not an array" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => "not_an_array"
+        })
+
+      assert_raise SpecError, ~r/must be an array/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when commands field is not an array" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => "not_an_array"
+        })
+
+      assert_raise SpecError, ~r/must be an array/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when mutually_exclusive_groups is not an array" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "mutually_exclusive_groups" => "not_an_array"
+        })
+
+      assert_raise SpecError, ~r/must be an array/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when a flag is not an object" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => ["not_a_map"]
+        })
+
+      assert_raise SpecError, ~r/not an object/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when an argument is not an object" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => ["not_a_map"]
+        })
+
+      assert_raise SpecError, ~r/not an object/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when a command is not an object" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => ["not_a_map"]
+        })
+
+      assert_raise SpecError, ~r/not an object/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when an exclusive group is not an object" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{"id" => "a", "short" => "a", "description" => "A", "type" => "boolean"},
+            %{"id" => "b", "short" => "b", "description" => "B", "type" => "boolean"}
+          ],
+          "mutually_exclusive_groups" => ["not_a_map"]
+        })
+
+      assert_raise SpecError, ~r/not an object/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises on duplicate command IDs among siblings" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{"id" => "dup-id", "name" => "foo", "description" => "Foo"},
+            %{"id" => "dup-id", "name" => "bar", "description" => "Bar"}
+          ]
+        })
+
+      assert_raise SpecError, ~r/[Dd]uplicate command/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises on duplicate command names among siblings" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{"id" => "cmd-a", "name" => "same-name", "description" => "A"},
+            %{"id" => "cmd-b", "name" => "same-name", "description" => "B"}
+          ]
+        })
+
+      assert_raise SpecError, ~r/[Dd]uplicate command/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when command has alias duplicating another command name" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{"id" => "cmd-a", "name" => "foo", "description" => "Foo", "aliases" => ["bar"]},
+            %{"id" => "cmd-b", "name" => "bar", "description" => "Bar"}
+          ]
+        })
+
+      assert_raise SpecError, ~r/[Dd]uplicate command/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises on unknown requires reference inside subcommand" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{
+              "id" => "cmd-sub",
+              "name" => "sub",
+              "description" => "Sub",
+              "flags" => [
+                %{
+                  "id" => "flag-a",
+                  "short" => "a",
+                  "description" => "A",
+                  "type" => "boolean",
+                  "requires" => ["nonexistent"]
+                }
+              ]
+            }
+          ]
+        })
+
+      assert_raise SpecError, ~r/requires.*unknown/i, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises on unknown conflicts_with reference inside subcommand" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{
+              "id" => "cmd-sub",
+              "name" => "sub",
+              "description" => "Sub",
+              "flags" => [
+                %{
+                  "id" => "flag-a",
+                  "short" => "a",
+                  "description" => "A",
+                  "type" => "boolean",
+                  "conflicts_with" => ["ghost"]
+                }
+              ]
+            }
+          ]
+        })
+
+      assert_raise SpecError, ~r/conflicts_with.*unknown/i, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when exclusive group in subcommand references unknown flag" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{
+              "id" => "cmd-sub",
+              "name" => "sub",
+              "description" => "Sub",
+              "flags" => [
+                %{"id" => "fa", "short" => "a", "description" => "A", "type" => "boolean"}
+              ],
+              "mutually_exclusive_groups" => [
+                %{"id" => "g1", "flag_ids" => ["fa", "ghost"]}
+              ]
+            }
+          ]
+        })
+
+      assert_raise SpecError, ~r/unknown flag/i, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when flag is missing its id field" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{"short" => "v", "description" => "Verbose", "type" => "boolean"}
+          ]
+        })
+
+      assert_raise SpecError, ~r/Missing required field "id"/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when flag type is not a valid type" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{"id" => "f", "short" => "f", "description" => "F", "type" => "invalid_type"}
+          ]
+        })
+
+      assert_raise SpecError, ~r/must be one of/i, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "raises when argument type is not a valid type" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{"id" => "a", "name" => "A", "description" => "A", "type" => "bad_type"}
+          ]
+        })
+
+      assert_raise SpecError, ~r/must be one of/i, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "display_name defaults to name when not provided" do
+      spec = SpecLoader.load_from_string!(minimal_spec())
+      assert spec["display_name"] == "prog"
+    end
+
+    test "display_name is preserved when provided" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "display_name" => "My Program",
+          "description" => "test"
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      assert spec["display_name"] == "My Program"
+    end
+
+    test "enum flag with enum_values list passes validation" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "flags" => [
+            %{
+              "id" => "fmt",
+              "long" => "format",
+              "description" => "Format",
+              "type" => "enum",
+              "enum_values" => ["json", "csv"]
+            }
+          ]
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      assert hd(spec["flags"])["enum_values"] == ["json", "csv"]
+    end
+
+    test "builtin_flags can be overridden to disable help" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "builtin_flags" => %{"help" => false, "version" => false}
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      assert spec["builtin_flags"]["help"] == false
+      assert spec["builtin_flags"]["version"] == false
+    end
+
+    test "at-most-one-variadic check works for variadic in subcommand" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{
+              "id" => "cmd-sub",
+              "name" => "sub",
+              "description" => "Sub",
+              "arguments" => [
+                %{
+                  "id" => "a",
+                  "name" => "A",
+                  "description" => "A",
+                  "type" => "string",
+                  "variadic" => true
+                },
+                %{
+                  "id" => "b",
+                  "name" => "B",
+                  "description" => "B",
+                  "type" => "string",
+                  "variadic" => true
+                }
+              ]
+            }
+          ]
+        })
+
+      assert_raise SpecError, ~r/variadic/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "spec version nil raises unsupported version error" do
+      json = Jason.encode!(%{"name" => "prog", "description" => "test"})
+
+      assert_raise SpecError, ~r/Unsupported cli_builder_spec_version/, fn ->
+        SpecLoader.load_from_string!(json)
+      end
+    end
+
+    test "argument required defaults to true and variadic_min to 1" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{"id" => "a", "name" => "A", "description" => "A", "type" => "string", "variadic" => true}
+          ]
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      arg = hd(spec["arguments"])
+      assert arg["required"] == true
+      # variadic_min defaults to 1 when required is true
+      assert arg["variadic_min"] == 1
+    end
+
+    test "argument required false defaults variadic_min to 0" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "arguments" => [
+            %{
+              "id" => "a",
+              "name" => "A",
+              "description" => "A",
+              "type" => "string",
+              "required" => false,
+              "variadic" => true
+            }
+          ]
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      arg = hd(spec["arguments"])
+      assert arg["required"] == false
+      assert arg["variadic_min"] == 0
+    end
+
+    test "command normalises aliases field to empty list by default" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{"id" => "cmd", "name" => "sub", "description" => "Sub"}
+          ]
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      cmd = hd(spec["commands"])
+      assert cmd["aliases"] == []
+    end
+
+    test "command aliases are preserved when provided" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "commands" => [
+            %{"id" => "cmd", "name" => "commit", "description" => "Commit", "aliases" => ["ci"]}
+          ]
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      cmd = hd(spec["commands"])
+      assert cmd["aliases"] == ["ci"]
+    end
+
+    test "global flags can cross-reference each other in requires" do
+      json =
+        Jason.encode!(%{
+          "cli_builder_spec_version" => "1.0",
+          "name" => "prog",
+          "description" => "test",
+          "global_flags" => [
+            %{
+              "id" => "verbose",
+              "short" => "v",
+              "description" => "Verbose",
+              "type" => "boolean",
+              "requires" => ["debug"]
+            },
+            %{"id" => "debug", "short" => "d", "description" => "Debug", "type" => "boolean"}
+          ]
+        })
+
+      spec = SpecLoader.load_from_string!(json)
+      assert length(spec["global_flags"]) == 2
+    end
   end
 end

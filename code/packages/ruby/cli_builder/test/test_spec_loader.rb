@@ -410,4 +410,217 @@ class TestSpecLoader < Minitest::Test
   ensure
     f.unlink
   end
+
+  # ---------------------------------------------------------------------------
+  # Validation Error 5: required_unless references unknown id
+  # ---------------------------------------------------------------------------
+
+  def test_error_required_unless_unknown_id
+    spec = ECHO_SPEC.merge("flags" => [
+      {
+        "id" => "foo",
+        "short" => "f",
+        "description" => "foo",
+        "type" => "boolean",
+        "required_unless" => ["nonexistent"]
+      }
+    ])
+    assert_spec_error(spec, /required_unless reference to unknown id/i)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Validation Error 3: duplicate argument id
+  # ---------------------------------------------------------------------------
+
+  def test_error_duplicate_argument_id
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "arguments" => [
+        {"id" => "file", "name" => "FILE", "description" => "a", "type" => "string"},
+        {"id" => "file", "name" => "FILE2", "description" => "b", "type" => "string"}
+      ]
+    }
+    assert_spec_error(spec, /duplicate argument id/i)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Validation Error 3: duplicate command id
+  # ---------------------------------------------------------------------------
+
+  def test_error_duplicate_command_id
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "commands" => [
+        {"id" => "cmd-a", "name" => "run", "description" => "run it"},
+        {"id" => "cmd-a", "name" => "build", "description" => "build it"}
+      ]
+    }
+    assert_spec_error(spec, /duplicate command id/i)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Validation Error 9: self-loop cycle (A requires A)
+  # ---------------------------------------------------------------------------
+
+  def test_error_self_loop_requires
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "flags" => [
+        {
+          "id" => "verbose",
+          "short" => "v",
+          "description" => "verbose",
+          "type" => "boolean",
+          "requires" => ["verbose"]
+        }
+      ]
+    }
+    assert_spec_error(spec, /circular requires dependency/i)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Validation: enum argument (not just flag) must have enum_values
+  # ---------------------------------------------------------------------------
+
+  def test_error_enum_argument_without_values
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "arguments" => [
+        {
+          "id" => "mode",
+          "name" => "MODE",
+          "description" => "run mode",
+          "type" => "enum",
+          "enum_values" => []
+        }
+      ]
+    }
+    assert_spec_error(spec, /type 'enum' but no enum_values/i)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Valid: inherit_global_flags false suppresses global flags from scope
+  # ---------------------------------------------------------------------------
+
+  def test_inherit_global_flags_false_normalizes
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "global_flags" => [
+        {"id" => "verbose", "short" => "v", "description" => "verbose", "type" => "boolean"}
+      ],
+      "commands" => [
+        {
+          "id" => "cmd-run",
+          "name" => "run",
+          "description" => "run",
+          "inherit_global_flags" => false
+        }
+      ]
+    }
+    loaded = load_spec(spec)
+    cmd = loaded["commands"].first
+    assert_equal false, cmd["inherit_global_flags"]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Normalization: variadic_min defaults based on required field
+  # ---------------------------------------------------------------------------
+
+  def test_normalize_variadic_min_defaults_to_0_when_not_required
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "arguments" => [
+        {
+          "id" => "files",
+          "name" => "FILES",
+          "description" => "files",
+          "type" => "string",
+          "required" => false,
+          "variadic" => true
+        }
+      ]
+    }
+    loaded = load_spec(spec)
+    arg = loaded["arguments"].first
+    assert_equal 0, arg["variadic_min"]
+  end
+
+  def test_normalize_variadic_min_defaults_to_1_when_required
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "arguments" => [
+        {
+          "id" => "files",
+          "name" => "FILES",
+          "description" => "files",
+          "type" => "string",
+          "required" => true,
+          "variadic" => true
+        }
+      ]
+    }
+    loaded = load_spec(spec)
+    arg = loaded["arguments"].first
+    assert_equal 1, arg["variadic_min"]
+  end
+
+  # ---------------------------------------------------------------------------
+  # Validation: command-level scope validates cross-references too
+  # ---------------------------------------------------------------------------
+
+  def test_error_command_scope_requires_unknown_id
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "commands" => [
+        {
+          "id" => "cmd-run",
+          "name" => "run",
+          "description" => "run",
+          "flags" => [
+            {
+              "id" => "fast",
+              "short" => "f",
+              "description" => "fast",
+              "type" => "boolean",
+              "requires" => ["nonexistent"]
+            }
+          ]
+        }
+      ]
+    }
+    assert_spec_error(spec, /requires reference to unknown id/i)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Validation: command name alias duplication
+  # ---------------------------------------------------------------------------
+
+  def test_error_command_alias_clashes_with_sibling_name
+    spec = {
+      "cli_builder_spec_version" => "1.0",
+      "name" => "myapp",
+      "description" => "test",
+      "commands" => [
+        {"id" => "cmd-a", "name" => "run", "description" => "run it"},
+        {"id" => "cmd-b", "name" => "build", "aliases" => ["run"], "description" => "build it"}
+      ]
+    }
+    assert_spec_error(spec, /duplicate command name\/alias/i)
+  end
 end

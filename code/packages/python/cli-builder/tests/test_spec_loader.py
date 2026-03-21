@@ -513,3 +513,477 @@ def test_duplicate_command_names_raise() -> None:
     path = make_spec_file(spec)
     with pytest.raises(SpecError, match="Duplicate command"):
         SpecLoader(path).load()
+
+
+def test_duplicate_command_ids_raise() -> None:
+    """Duplicate command IDs (even with different names) raise SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["commands"] = [
+        {
+            "id": "same-id",
+            "name": "add",
+            "description": "Add something",
+        },
+        {
+            "id": "same-id",  # duplicate id
+            "name": "remove",
+            "description": "Remove something",
+        },
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="Duplicate command id"):
+        SpecLoader(path).load()
+
+
+def test_command_missing_id_raises() -> None:
+    """A command with no 'id' field raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["commands"] = [
+        {
+            # no "id" field
+            "name": "add",
+            "description": "Add something",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing required field 'id'"):
+        SpecLoader(path).load()
+
+
+def test_command_missing_name_raises() -> None:
+    """A command with no 'name' field raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["commands"] = [
+        {
+            "id": "cmd-add",
+            # no "name" field
+            "description": "Add something",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'name'"):
+        SpecLoader(path).load()
+
+
+def test_command_missing_description_raises() -> None:
+    """A command with no 'description' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["commands"] = [
+        {
+            "id": "cmd-add",
+            "name": "add",
+            # no "description"
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'description'"):
+        SpecLoader(path).load()
+
+
+def test_command_alias_duplicates_name_raises() -> None:
+    """An alias that duplicates another command's name raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["commands"] = [
+        {
+            "id": "cmd-add",
+            "name": "add",
+            "description": "Add something",
+            "aliases": ["remove"],  # conflicts with the name below
+        },
+        {
+            "id": "cmd-remove",
+            "name": "remove",
+            "description": "Remove something",
+        },
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="Duplicate command"):
+        SpecLoader(path).load()
+
+
+# =========================================================================
+# Flag validation — additional error paths
+# =========================================================================
+
+
+def test_flag_missing_id_raises() -> None:
+    """A flag without an 'id' field raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["flags"] = [
+        {
+            # no "id"
+            "long": "verbose",
+            "description": "Be verbose",
+            "type": "boolean",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing required field 'id'"):
+        SpecLoader(path).load()
+
+
+def test_flag_missing_description_raises() -> None:
+    """A flag without a 'description' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            # no "description"
+            "type": "boolean",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'description'"):
+        SpecLoader(path).load()
+
+
+def test_flag_missing_type_raises() -> None:
+    """A flag without a 'type' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            "description": "Be verbose",
+            # no "type"
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'type'"):
+        SpecLoader(path).load()
+
+
+def test_flag_invalid_type_raises() -> None:
+    """A flag with an invalid type string raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            "description": "Be verbose",
+            "type": "hexadecimal",  # invalid
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="invalid type"):
+        SpecLoader(path).load()
+
+
+# =========================================================================
+# Argument validation — additional error paths
+# =========================================================================
+
+
+def test_argument_missing_id_raises() -> None:
+    """An argument without 'id' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["arguments"] = [
+        {
+            # no "id"
+            "name": "FILE",
+            "description": "Input file",
+            "type": "string",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing required field 'id'"):
+        SpecLoader(path).load()
+
+
+def test_argument_missing_name_raises() -> None:
+    """An argument without 'name' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["arguments"] = [
+        {
+            "id": "file",
+            # no "name"
+            "description": "Input file",
+            "type": "string",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'name'"):
+        SpecLoader(path).load()
+
+
+def test_argument_missing_description_raises() -> None:
+    """An argument without 'description' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["arguments"] = [
+        {
+            "id": "file",
+            "name": "FILE",
+            # no "description"
+            "type": "string",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'description'"):
+        SpecLoader(path).load()
+
+
+def test_argument_missing_type_raises() -> None:
+    """An argument without 'type' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["arguments"] = [
+        {
+            "id": "file",
+            "name": "FILE",
+            "description": "Input file",
+            # no "type"
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'type'"):
+        SpecLoader(path).load()
+
+
+def test_argument_invalid_type_raises() -> None:
+    """An argument with an invalid type string raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["arguments"] = [
+        {
+            "id": "file",
+            "name": "FILE",
+            "description": "Input file",
+            "type": "not_a_real_type",
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="invalid type"):
+        SpecLoader(path).load()
+
+
+def test_argument_enum_without_values_raises() -> None:
+    """An argument with type 'enum' but no enum_values raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["arguments"] = [
+        {
+            "id": "format",
+            "name": "FORMAT",
+            "description": "Output format",
+            "type": "enum",
+            # no enum_values
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="enum_values"):
+        SpecLoader(path).load()
+
+
+# =========================================================================
+# Exclusive group validation — additional paths
+# =========================================================================
+
+
+def test_exclusive_group_missing_id_raises() -> None:
+    """An exclusive group without an 'id' raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            "description": "Verbose",
+            "type": "boolean",
+        }
+    ]
+    spec["mutually_exclusive_groups"] = [
+        {
+            # no "id"
+            "flag_ids": ["verbose"],
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="missing 'id'"):
+        SpecLoader(path).load()
+
+
+def test_exclusive_group_empty_flag_ids_raises() -> None:
+    """An exclusive group with empty flag_ids raises SpecError."""
+    spec = dict(MINIMAL_SPEC)
+    spec["flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            "description": "Verbose",
+            "type": "boolean",
+        }
+    ]
+    spec["mutually_exclusive_groups"] = [
+        {
+            "id": "my-group",
+            "flag_ids": [],  # empty!
+        }
+    ]
+    path = make_spec_file(spec)
+    with pytest.raises(SpecError, match="empty 'flag_ids'"):
+        SpecLoader(path).load()
+
+
+# =========================================================================
+# Defaults and normalization
+# =========================================================================
+
+
+def test_display_name_defaults_to_name() -> None:
+    """When display_name is not provided, it defaults to name."""
+    path = make_spec_file(MINIMAL_SPEC)
+    spec = SpecLoader(path).load()
+    assert spec["display_name"] == spec["name"]
+
+
+def test_display_name_explicit_value_preserved() -> None:
+    """When display_name is provided explicitly, it is preserved."""
+    s = dict(MINIMAL_SPEC)
+    s["display_name"] = "My Echo"
+    path = make_spec_file(s)
+    spec = SpecLoader(path).load()
+    assert spec["display_name"] == "My Echo"
+
+
+def test_flag_defaults_filled_in() -> None:
+    """SpecLoader fills in defaults for optional flag fields."""
+    s = dict(MINIMAL_SPEC)
+    s["flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            "description": "Be verbose",
+            "type": "boolean",
+        }
+    ]
+    path = make_spec_file(s)
+    spec = SpecLoader(path).load()
+    flag = spec["flags"][0]
+    assert flag["required"] is False
+    assert flag["default"] is None
+    assert flag["value_name"] is None
+    assert flag["enum_values"] == []
+    assert flag["conflicts_with"] == []
+    assert flag["requires"] == []
+    assert flag["required_unless"] == []
+    assert flag["repeatable"] is False
+
+
+def test_argument_defaults_filled_in() -> None:
+    """SpecLoader fills in defaults for optional argument fields."""
+    s = dict(MINIMAL_SPEC)
+    s["arguments"] = [
+        {
+            "id": "src",
+            "name": "SRC",
+            "description": "Source",
+            "type": "string",
+        }
+    ]
+    path = make_spec_file(s)
+    spec = SpecLoader(path).load()
+    arg = spec["arguments"][0]
+    assert arg["required"] is True  # default
+    assert arg["variadic"] is False
+    assert arg["default"] is None
+    assert arg["enum_values"] == []
+    assert arg["required_unless_flag"] == []
+
+
+def test_command_defaults_filled_in() -> None:
+    """SpecLoader fills in defaults for optional command fields."""
+    s = dict(MINIMAL_SPEC)
+    s["commands"] = [
+        {
+            "id": "cmd-run",
+            "name": "run",
+            "description": "Run",
+        }
+    ]
+    path = make_spec_file(s)
+    spec = SpecLoader(path).load()
+    cmd = spec["commands"][0]
+    assert cmd["aliases"] == []
+    assert cmd["inherit_global_flags"] is True
+    assert cmd["flags"] == []
+    assert cmd["arguments"] == []
+    assert cmd["commands"] == []
+    assert cmd["mutually_exclusive_groups"] == []
+
+
+def test_nested_command_validation() -> None:
+    """Nested commands are validated recursively."""
+    spec = dict(MINIMAL_SPEC)
+    spec["commands"] = [
+        {
+            "id": "cmd-remote",
+            "name": "remote",
+            "description": "Remote operations",
+            "commands": [
+                {
+                    "id": "cmd-remote-add",
+                    "name": "add",
+                    "description": "Add a remote",
+                    "flags": [
+                        {
+                            "id": "track",
+                            "long": "track",
+                            "description": "Branch to track",
+                            "type": "string",
+                        }
+                    ],
+                    "arguments": [
+                        {
+                            "id": "name",
+                            "name": "NAME",
+                            "description": "Remote name",
+                            "type": "string",
+                        }
+                    ],
+                }
+            ],
+        }
+    ]
+    path = make_spec_file(spec)
+    result = SpecLoader(path).load()  # Should not raise
+    assert result["name"] == "echo"
+
+
+def test_global_flags_cross_references_skipped_during_global_validation() -> None:
+    """Global flags referencing other globals in conflicts_with do not fail.
+
+    Global flags are validated with available_ids=None (cross-ref check skipped)
+    so forward references within global_flags are permitted.
+    """
+    # 'verbose' references 'quiet' in conflicts_with, and 'quiet' appears after it.
+    # Because available_ids=None during global flag validation, this does not raise.
+    spec = dict(MINIMAL_SPEC)
+    spec["global_flags"] = [
+        {
+            "id": "verbose",
+            "long": "verbose",
+            "description": "Verbose",
+            "type": "boolean",
+            "conflicts_with": ["quiet"],  # references 'quiet' defined below
+        },
+        {
+            "id": "quiet",
+            "long": "quiet",
+            "description": "Quiet",
+            "type": "boolean",
+        },
+    ]
+    path = make_spec_file(spec)
+    result = SpecLoader(path).load()
+    assert len(result["global_flags"]) == 2
+
+
+def test_builtin_flags_defaults() -> None:
+    """builtin_flags defaults are filled if not explicitly provided."""
+    s = {
+        "cli_builder_spec_version": "1.0",
+        "name": "myapp",
+        "description": "My app",
+        # No builtin_flags key
+    }
+    path = make_spec_file(s)
+    spec = SpecLoader(path).load()
+    assert spec["builtin_flags"]["help"] is True
+    assert spec["builtin_flags"]["version"] is True

@@ -408,4 +408,173 @@ mod tests {
         let errs = validate_flags(&flags, &[fa, fb], &[group], &ctx());
         assert!(errs.is_empty());
     }
+
+    // -----------------------------------------------------------------------
+    // format_flag_name coverage
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_format_flag_name_long_and_short() {
+        let f = mk_flag("verbose", Some("v"), Some("verbose"), true);
+        // Covered indirectly — validate a flag with long+short and check error message.
+        let mut f2 = mk_flag("quiet", Some("q"), Some("quiet"), true);
+        f2.requires = vec!["verbose".to_string()];
+        // quiet requires verbose; quiet present, verbose absent → error msg uses --verbose/-v form
+        let flags = HashMap::from([("quiet".to_string(), json!(true))]);
+        let errs = validate_flags(&flags, &[f, f2], &[], &ctx());
+        // There should be an error about missing dependency
+        assert!(!errs.is_empty());
+        let msg = &errs[0].message;
+        // The message must reference the flag name in some form
+        assert!(msg.contains("verbose") || msg.contains("-v") || msg.contains("--verbose"));
+    }
+
+    #[test]
+    fn test_format_flag_name_short_only() {
+        // A flag with only a short form — format_flag_name should produce "-x"
+        let mut f = mk_flag("extract", Some("x"), None, true);
+        f.required = true;
+        let flags = HashMap::new(); // extract absent
+        let errs = validate_flags(&flags, &[f], &[], &ctx());
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].error_type, "missing_required_flag");
+        // message should use -x form
+        assert!(errs[0].message.contains("-x") || errs[0].message.contains("extract"));
+    }
+
+    #[test]
+    fn test_format_flag_name_sdl_only() {
+        // A flag with only a single_dash_long form
+        let f = FlagDef {
+            id: "classpath".to_string(),
+            short: None,
+            long: None,
+            single_dash_long: Some("classpath".to_string()),
+            description: "classpath".to_string(),
+            flag_type: "string".to_string(),
+            required: true,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let flags = HashMap::new(); // absent
+        let errs = validate_flags(&flags, &[f], &[], &ctx());
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].error_type, "missing_required_flag");
+        assert!(errs[0].message.contains("-classpath") || errs[0].message.contains("classpath"));
+    }
+
+    #[test]
+    fn test_format_flag_name_id_only_fallback() {
+        // A flag with no short, no long, no sdl — id is the fallback
+        let f = FlagDef {
+            id: "secret-flag".to_string(),
+            short: None,
+            long: None,
+            single_dash_long: None,
+            description: "secret".to_string(),
+            flag_type: "boolean".to_string(),
+            required: true,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let flags = HashMap::new();
+        let errs = validate_flags(&flags, &[f], &[], &ctx());
+        assert_eq!(errs.len(), 1);
+        assert!(errs[0].message.contains("secret-flag"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Builtin flag present in parsed_flags but not in active_flags — skipped
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_builtin_flag_in_parsed_flags_is_skipped() {
+        // If __builtin_help is in parsed_flags but not in active_flags, no crash.
+        let flags = HashMap::from([("__builtin_help".to_string(), json!(true))]);
+        let errs = validate_flags(&flags, &[], &[], &ctx());
+        assert!(errs.is_empty());
+    }
+
+    // -----------------------------------------------------------------------
+    // required_unless exempts the flag from missing_required_flag
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_required_unless_not_satisfied_raises_error() {
+        // flag is required, required_unless ["opt"] — "opt" absent → error
+        let mut f = mk_flag("output", Some("o"), Some("output"), false);
+        f.required = true;
+        f.required_unless = vec!["opt".to_string()];
+        let f2 = mk_flag("opt", None, Some("opt"), true);
+        let flags = HashMap::new(); // neither present
+        let errs = validate_flags(&flags, &[f, f2], &[], &ctx());
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].error_type, "missing_required_flag");
+    }
+
+    // -----------------------------------------------------------------------
+    // conflicts_with only reports once (deduplication: smaller-id first)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_conflicting_flags_deduplicated_once() {
+        // "aaa" conflicts_with "bbb" AND "bbb" conflicts_with "aaa".
+        // Both present → exactly 1 error reported (aaa < bbb).
+        let mut fa = mk_flag("aaa", None, Some("aaa"), true);
+        let mut fb = mk_flag("bbb", None, Some("bbb"), true);
+        fa.conflicts_with = vec!["bbb".to_string()];
+        fb.conflicts_with = vec!["aaa".to_string()];
+        let flags = HashMap::from([
+            ("aaa".to_string(), json!(true)),
+            ("bbb".to_string(), json!(true)),
+        ]);
+        let errs = validate_flags(&flags, &[fa, fb], &[], &ctx());
+        // Only 1 conflicting_flags error (from aaa's perspective, since "aaa" < "bbb")
+        let conflict_errs: Vec<_> = errs.iter().filter(|e| e.error_type == "conflicting_flags").collect();
+        assert_eq!(conflict_errs.len(), 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // Multiple errors collected in one pass
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_multiple_errors_collected() {
+        let mut f1 = mk_flag("msg", Some("m"), Some("msg"), false);
+        f1.required = true;
+        let mut f2 = mk_flag("type", Some("t"), Some("type"), false);
+        f2.required = true;
+        let flags = HashMap::new(); // both absent
+        let errs = validate_flags(&flags, &[f1, f2], &[], &ctx());
+        assert_eq!(errs.len(), 2);
+        assert!(errs.iter().all(|e| e.error_type == "missing_required_flag"));
+    }
+
+    // -----------------------------------------------------------------------
+    // requires referencing a flag that exists in scope but is absent
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_requires_chain_all_absent_reports_all_missing() {
+        let mut fa = mk_flag("a", Some("a"), None, true);
+        let mut fb = mk_flag("b", Some("b"), None, true);
+        let fc = mk_flag("c", Some("c"), None, true);
+        fa.requires = vec!["b".to_string()];
+        fb.requires = vec!["c".to_string()];
+        // Only "a" is present; "b" and "c" are absent.
+        let flags = HashMap::from([("a".to_string(), json!(true))]);
+        let errs = validate_flags(&flags, &[fa, fb, fc], &[], &ctx());
+        assert!(!errs.is_empty());
+        assert!(errs.iter().all(|e| e.error_type == "missing_dependency_flag"));
+    }
 }

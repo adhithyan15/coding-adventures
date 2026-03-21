@@ -179,6 +179,7 @@ module CodingAdventures
                 context: []
               )
             end
+            result[td["id"]] = td["default"]
           end
           if n < n_leading
             leading_defs[n..].each do |ld|
@@ -190,8 +191,11 @@ module CodingAdventures
                   context: []
                 )
               end
+              result[ld["id"]] = ld["default"]
             end
           end
+          # Variadic gets nothing when we don't have enough tokens for fixed args
+          result[variadic_def["id"]] = []
           return
         end
 

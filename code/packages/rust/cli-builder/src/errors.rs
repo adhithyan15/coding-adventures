@@ -204,3 +204,189 @@ impl From<ParseErrors> for CliBuilderError {
         CliBuilderError::ParseErrors(e)
     }
 }
+
+// ===========================================================================
+// Unit tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // -----------------------------------------------------------------------
+    // ParseError construction and Display
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_error_new_no_suggestion() {
+        let e = ParseError::new("missing_required_flag", "--output is required", vec!["prog".into()]);
+        assert_eq!(e.error_type, "missing_required_flag");
+        assert_eq!(e.message, "--output is required");
+        assert!(e.suggestion.is_none());
+        assert_eq!(e.context, vec!["prog".to_string()]);
+    }
+
+    #[test]
+    fn test_parse_error_with_suggestion() {
+        let e = ParseError::with_suggestion(
+            "unknown_flag",
+            "Unknown flag '--verbos'",
+            "--verbose",
+            vec!["prog".into()],
+        );
+        assert_eq!(e.suggestion, Some("--verbose".to_string()));
+    }
+
+    #[test]
+    fn test_parse_error_display_no_suggestion() {
+        let e = ParseError::new("missing_required_flag", "flag is required", vec![]);
+        let s = format!("{}", e);
+        assert!(s.contains("missing_required_flag"));
+        assert!(s.contains("flag is required"));
+        assert!(!s.contains("suggestion"));
+    }
+
+    #[test]
+    fn test_parse_error_display_with_suggestion() {
+        let e = ParseError::with_suggestion(
+            "unknown_flag",
+            "Unknown flag '--verbo'",
+            "--verbose",
+            vec![],
+        );
+        let s = format!("{}", e);
+        assert!(s.contains("suggestion"));
+        assert!(s.contains("--verbose"));
+    }
+
+    #[test]
+    fn test_parse_error_equality() {
+        let a = ParseError::new("missing_required_flag", "msg", vec!["prog".into()]);
+        let b = ParseError::new("missing_required_flag", "msg", vec!["prog".into()]);
+        assert_eq!(a, b);
+    }
+
+    // -----------------------------------------------------------------------
+    // ParseErrors construction and Display
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_errors_single() {
+        let e = ParseErrors::single(ParseError::new("err", "msg", vec![]));
+        assert_eq!(e.errors.len(), 1);
+    }
+
+    #[test]
+    fn test_parse_errors_display_single() {
+        let errs = ParseErrors {
+            errors: vec![ParseError::new("missing_required_flag", "--output is required", vec!["cp".into()])],
+        };
+        let s = format!("{}", errs);
+        assert!(s.contains("error 1:"));
+        assert!(s.contains("missing_required_flag"));
+    }
+
+    #[test]
+    fn test_parse_errors_display_multiple() {
+        let errs = ParseErrors {
+            errors: vec![
+                ParseError::new("err_a", "first error", vec![]),
+                ParseError::new("err_b", "second error", vec![]),
+            ],
+        };
+        let s = format!("{}", errs);
+        assert!(s.contains("error 1:"));
+        assert!(s.contains("error 2:"));
+        assert!(s.contains("first error"));
+        assert!(s.contains("second error"));
+    }
+
+    // -----------------------------------------------------------------------
+    // CliBuilderError Display variants
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_cli_builder_error_spec_error_display() {
+        let e = CliBuilderError::SpecError("duplicate id 'verbose'".into());
+        let s = format!("{}", e);
+        assert!(s.contains("spec error"));
+        assert!(s.contains("duplicate id"));
+    }
+
+    #[test]
+    fn test_cli_builder_error_json_error_display() {
+        let e = CliBuilderError::JsonError("unexpected token at line 1".into());
+        let s = format!("{}", e);
+        assert!(s.contains("JSON error"));
+    }
+
+    #[test]
+    fn test_cli_builder_error_parse_errors_display() {
+        let errs = ParseErrors {
+            errors: vec![ParseError::new("unknown_flag", "--foo unknown", vec![])],
+        };
+        let e = CliBuilderError::ParseErrors(errs);
+        let s = format!("{}", e);
+        assert!(s.contains("parse errors"));
+    }
+
+    #[test]
+    fn test_cli_builder_error_io_error_display() {
+        let io_err = std::io::Error::new(std::io::ErrorKind::NotFound, "file not found");
+        let e = CliBuilderError::IoError(io_err);
+        let s = format!("{}", e);
+        assert!(s.contains("IO error"));
+    }
+
+    // -----------------------------------------------------------------------
+    // CliBuilderError::source() coverage
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_cli_builder_error_source_io() {
+        use std::error::Error;
+        let io_err = std::io::Error::new(std::io::ErrorKind::PermissionDenied, "denied");
+        let e = CliBuilderError::IoError(io_err);
+        assert!(e.source().is_some());
+    }
+
+    #[test]
+    fn test_cli_builder_error_source_parse_errors() {
+        use std::error::Error;
+        let errs = ParseErrors { errors: vec![] };
+        let e = CliBuilderError::ParseErrors(errs);
+        assert!(e.source().is_some());
+    }
+
+    #[test]
+    fn test_cli_builder_error_source_spec_error_is_none() {
+        use std::error::Error;
+        let e = CliBuilderError::SpecError("bad spec".into());
+        assert!(e.source().is_none());
+    }
+
+    #[test]
+    fn test_cli_builder_error_source_json_error_is_none() {
+        use std::error::Error;
+        let e = CliBuilderError::JsonError("bad json".into());
+        assert!(e.source().is_none());
+    }
+
+    // -----------------------------------------------------------------------
+    // From conversions
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_from_parse_errors() {
+        let errs = ParseErrors { errors: vec![] };
+        let e: CliBuilderError = errs.into();
+        assert!(matches!(e, CliBuilderError::ParseErrors(_)));
+    }
+
+    #[test]
+    fn test_from_io_error() {
+        let io_err = std::io::Error::new(std::io::ErrorKind::NotFound, "not found");
+        let e: CliBuilderError = io_err.into();
+        assert!(matches!(e, CliBuilderError::IoError(_)));
+    }
+}
