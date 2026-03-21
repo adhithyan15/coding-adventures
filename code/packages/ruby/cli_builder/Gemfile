@@ -1,4 +1,12 @@
 # frozen_string_literal: true
 
 source "https://rubygems.org"
+
+# Local gems — not published to RubyGems; use path references so bundle install
+# works in CI without requiring a published version.
+# state_machine depends on directed_graph, so both must be listed here so
+# Bundler can resolve the full transitive dependency graph locally.
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"
+
 gemspec
