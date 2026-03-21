@@ -13,4 +13,5 @@ members = [
     "riscv-simulator",
     "display",
     "rom-bios",
+    "interrupt-handler",
 ]
