@@ -1,139 +1,260 @@
-#![allow(unused_variables)] // C API callbacks have fixed signatures
+// We use snake_case names to match the N-API C convention exactly.
+#![allow(non_camel_case_types)]
 
-//! # node-bridge — Thin safe wrapper over Node.js N-API
+//! # node-bridge — Zero-dependency Rust wrapper for Node.js N-API
 //!
-//! This crate replaces napi-rs with ~350 lines of explicit, debuggable code.
-//! It wraps only the raw N-API functions from `napi-sys` needed to build
-//! Node.js native addons.
+//! This crate provides safe Rust wrappers around Node.js N-API using raw
+//! `extern "C"` declarations. No napi-sys, no napi-rs, no bindgen, no
+//! build-time header requirements. Compiles on any platform with just
+//! a Rust toolchain.
 //!
-//! ## How N-API works
+//! ## How it works
 //!
-//! N-API is Node.js's stable C API for native addons. Unlike Ruby/Python
-//! where there's a global interpreter state, N-API is **stateless** — every
-//! function takes a `napi_env` handle as its first parameter. This handle
-//! represents the current JavaScript execution context.
+//! N-API is Node.js's stable C API for native addons. It was specifically
+//! designed for ABI stability — addons built against N-API v4 work on any
+//! Node.js version that supports v4+. We declare the functions as
+//! `extern "C"` and the dynamic linker resolves them at load time.
 //!
-//! N-API is ABI-stable: an addon built against N-API version 4 works on
-//! any Node.js version that supports N-API 4+, without recompilation.
+//! ## Key difference from Python/Ruby
 //!
-//! ## Example
-//!
-//! ```rust,ignore
-//! use node_bridge::*;
-//!
-//! #[no_mangle]
-//! unsafe extern "C" fn napi_register_module_v1(
-//!     env: napi_env,
-//!     exports: napi_value,
-//! ) -> napi_value {
-//!     // define class, methods, etc.
-//!     exports
-//! }
-//! ```
+//! N-API is **stateless** — every function takes a `napi_env` handle as
+//! its first parameter. This handle represents the current JS execution
+//! context. There are no global variables to access.
 
 use std::ffi::{c_char, c_void, CString};
 use std::ptr;
 
-pub use napi_sys::{napi_callback_info, napi_env, napi_status, napi_value};
+// ---------------------------------------------------------------------------
+// Opaque types — N-API uses opaque pointer types for everything
+// ---------------------------------------------------------------------------
+
+/// Opaque N-API environment handle.
+#[repr(C)]
+pub struct napi_env__{
+    _opaque: [u8; 0],
+}
+pub type napi_env = *mut napi_env__;
+
+/// Opaque N-API value (represents any JS value).
+#[repr(C)]
+pub struct napi_value__ {
+    _opaque: [u8; 0],
+}
+pub type napi_value = *mut napi_value__;
+
+/// Opaque callback info (passed to native function callbacks).
+#[repr(C)]
+pub struct napi_callback_info__ {
+    _opaque: [u8; 0],
+}
+pub type napi_callback_info = *mut napi_callback_info__;
+
+/// N-API status codes.
+pub type napi_status = i32;
+pub const NAPI_OK: napi_status = 0;
+
+/// N-API callback function signature.
+pub type napi_callback =
+    Option<unsafe extern "C" fn(env: napi_env, info: napi_callback_info) -> napi_value>;
+
+/// N-API destructor for wrapped data.
+pub type napi_finalize = Option<
+    unsafe extern "C" fn(env: napi_env, data: *mut c_void, hint: *mut c_void),
+>;
+
+/// Property attributes.
+pub type napi_property_attributes = i32;
+pub const NAPI_DEFAULT: napi_property_attributes = 0;
+pub const NAPI_DEFAULT_METHOD: napi_property_attributes = 0;
+
+/// Property descriptor — describes one method/property on a class.
+#[repr(C)]
+pub struct napi_property_descriptor {
+    pub utf8name: *const c_char,
+    pub name: napi_value,
+    pub method: napi_callback,
+    pub getter: napi_callback,
+    pub setter: napi_callback,
+    pub value: napi_value,
+    pub attributes: napi_property_attributes,
+    pub data: *mut c_void,
+}
+
+// ---------------------------------------------------------------------------
+// N-API extern "C" declarations
+// ---------------------------------------------------------------------------
+
+extern "C" {
+    // -- String operations -------------------------------------------------
+    pub fn napi_create_string_utf8(
+        env: napi_env,
+        str: *const c_char,
+        length: usize,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    pub fn napi_get_value_string_utf8(
+        env: napi_env,
+        value: napi_value,
+        buf: *mut c_char,
+        bufsize: usize,
+        result: *mut usize,
+    ) -> napi_status;
+
+    // -- Array operations --------------------------------------------------
+    pub fn napi_create_array(env: napi_env, result: *mut napi_value) -> napi_status;
+    pub fn napi_get_array_length(env: napi_env, value: napi_value, result: *mut u32) -> napi_status;
+    pub fn napi_get_element(
+        env: napi_env,
+        object: napi_value,
+        index: u32,
+        result: *mut napi_value,
+    ) -> napi_status;
+    pub fn napi_set_element(
+        env: napi_env,
+        object: napi_value,
+        index: u32,
+        value: napi_value,
+    ) -> napi_status;
+
+    // -- Boolean operations ------------------------------------------------
+    pub fn napi_get_boolean(env: napi_env, value: bool, result: *mut napi_value) -> napi_status;
+
+    // -- Number operations -------------------------------------------------
+    pub fn napi_create_int64(env: napi_env, value: i64, result: *mut napi_value) -> napi_status;
+
+    // -- Undefined/null ----------------------------------------------------
+    pub fn napi_get_undefined(env: napi_env, result: *mut napi_value) -> napi_status;
+    pub fn napi_get_null(env: napi_env, result: *mut napi_value) -> napi_status;
+
+    // -- Callback info -----------------------------------------------------
+    pub fn napi_get_cb_info(
+        env: napi_env,
+        cbinfo: napi_callback_info,
+        argc: *mut usize,
+        argv: *mut napi_value,
+        this_arg: *mut napi_value,
+        data: *mut *mut c_void,
+    ) -> napi_status;
+
+    // -- Object wrapping ---------------------------------------------------
+    pub fn napi_wrap(
+        env: napi_env,
+        js_object: napi_value,
+        native_object: *mut c_void,
+        finalize_cb: napi_finalize,
+        finalize_hint: *mut c_void,
+        result: *mut *mut c_void, // napi_ref, but we don't need it
+    ) -> napi_status;
+
+    pub fn napi_unwrap(
+        env: napi_env,
+        js_object: napi_value,
+        result: *mut *mut c_void,
+    ) -> napi_status;
+
+    // -- Class definition --------------------------------------------------
+    pub fn napi_define_class(
+        env: napi_env,
+        utf8name: *const c_char,
+        length: usize,
+        constructor: napi_callback,
+        data: *mut c_void,
+        property_count: usize,
+        properties: *const napi_property_descriptor,
+        result: *mut napi_value,
+    ) -> napi_status;
+
+    // -- Property setting --------------------------------------------------
+    pub fn napi_set_named_property(
+        env: napi_env,
+        object: napi_value,
+        utf8name: *const c_char,
+        value: napi_value,
+    ) -> napi_status;
+
+    // -- Error handling ----------------------------------------------------
+    pub fn napi_throw_error(
+        env: napi_env,
+        code: *const c_char,
+        msg: *const c_char,
+    ) -> napi_status;
+}
 
 // ---------------------------------------------------------------------------
 // Status checking
 // ---------------------------------------------------------------------------
 
-/// Check if an N-API call succeeded. Panics with message if not.
 fn check_status(status: napi_status, msg: &str) {
-    if status != napi_sys::Status::napi_ok {
-        panic!("N-API error (status {:?}): {}", status, msg);
+    if status != NAPI_OK {
+        panic!("N-API error (status {}): {}", status, msg);
     }
 }
 
 // ---------------------------------------------------------------------------
-// String conversion
+// Safe wrappers — Strings
 // ---------------------------------------------------------------------------
 
-/// Convert a Rust `&str` to a JavaScript string.
 pub fn str_to_js(env: napi_env, s: &str) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
     let status = unsafe {
-        napi_sys::napi_create_string_utf8(
-            env,
-            s.as_ptr() as *const c_char,
-            s.len(),
-            &mut result,
-        )
+        napi_create_string_utf8(env, s.as_ptr() as *const c_char, s.len(), &mut result)
     };
     check_status(status, "napi_create_string_utf8");
     result
 }
 
-/// Convert a JavaScript string to a Rust `String`.
-///
-/// Returns `None` if the value is not a string.
 pub fn str_from_js(env: napi_env, val: napi_value) -> Option<String> {
-    // First, get the string length.
     let mut len: usize = 0;
     let status = unsafe {
-        napi_sys::napi_get_value_string_utf8(env, val, ptr::null_mut(), 0, &mut len)
+        napi_get_value_string_utf8(env, val, ptr::null_mut(), 0, &mut len)
     };
-    if status != napi_sys::Status::napi_ok {
+    if status != NAPI_OK {
         return None;
     }
-
-    // Allocate buffer and read the string.
     let mut buf = vec![0u8; len + 1];
     let mut actual_len: usize = 0;
     let status = unsafe {
-        napi_sys::napi_get_value_string_utf8(
-            env,
-            val,
+        napi_get_value_string_utf8(
+            env, val,
             buf.as_mut_ptr() as *mut c_char,
             buf.len(),
             &mut actual_len,
         )
     };
-    if status != napi_sys::Status::napi_ok {
+    if status != NAPI_OK {
         return None;
     }
-
     buf.truncate(actual_len);
     String::from_utf8(buf).ok()
 }
 
 // ---------------------------------------------------------------------------
-// Array conversion
+// Safe wrappers — Arrays
 // ---------------------------------------------------------------------------
 
-/// Create an empty JavaScript array.
 pub fn array_new(env: napi_env) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    let status = unsafe { napi_sys::napi_create_array(env, &mut result) };
-    check_status(status, "napi_create_array");
+    check_status(unsafe { napi_create_array(env, &mut result) }, "napi_create_array");
     result
 }
 
-/// Get the length of a JavaScript array.
 pub fn array_len(env: napi_env, array: napi_value) -> u32 {
     let mut len: u32 = 0;
-    let status = unsafe { napi_sys::napi_get_array_length(env, array, &mut len) };
-    check_status(status, "napi_get_array_length");
+    check_status(unsafe { napi_get_array_length(env, array, &mut len) }, "napi_get_array_length");
     len
 }
 
-/// Get an element from a JavaScript array by index.
 pub fn array_get(env: napi_env, array: napi_value, index: u32) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    let status = unsafe { napi_sys::napi_get_element(env, array, index, &mut result) };
-    check_status(status, "napi_get_element");
+    check_status(unsafe { napi_get_element(env, array, index, &mut result) }, "napi_get_element");
     result
 }
 
-/// Set an element in a JavaScript array at index.
 pub fn array_set(env: napi_env, array: napi_value, index: u32, value: napi_value) {
-    let status = unsafe { napi_sys::napi_set_element(env, array, index, value) };
-    check_status(status, "napi_set_element");
+    check_status(unsafe { napi_set_element(env, array, index, value) }, "napi_set_element");
 }
 
-/// Convert a `Vec<String>` to a JavaScript array of strings.
 pub fn vec_str_to_js(env: napi_env, items: &[String]) -> napi_value {
     let arr = array_new(env);
     for (i, item) in items.iter().enumerate() {
@@ -142,20 +263,17 @@ pub fn vec_str_to_js(env: napi_env, items: &[String]) -> napi_value {
     arr
 }
 
-/// Convert a JavaScript array of strings to a `Vec<String>`.
 pub fn vec_str_from_js(env: napi_env, val: napi_value) -> Vec<String> {
     let len = array_len(env, val);
     let mut result = Vec::with_capacity(len as usize);
     for i in 0..len {
-        let elem = array_get(env, val, i);
-        if let Some(s) = str_from_js(env, elem) {
+        if let Some(s) = str_from_js(env, array_get(env, val, i)) {
             result.push(s);
         }
     }
     result
 }
 
-/// Convert a `Vec<Vec<String>>` to a JavaScript array of arrays of strings.
 pub fn vec_vec_str_to_js(env: napi_env, items: &[Vec<String>]) -> napi_value {
     let arr = array_new(env);
     for (i, group) in items.iter().enumerate() {
@@ -164,7 +282,6 @@ pub fn vec_vec_str_to_js(env: napi_env, items: &[Vec<String>]) -> napi_value {
     arr
 }
 
-/// Convert `Vec<(String, String)>` to a JavaScript array of [from, to] arrays.
 pub fn vec_tuple2_str_to_js(env: napi_env, items: &[(String, String)]) -> napi_value {
     let arr = array_new(env);
     for (i, (a, b)) in items.iter().enumerate() {
@@ -177,39 +294,37 @@ pub fn vec_tuple2_str_to_js(env: napi_env, items: &[(String, String)]) -> napi_v
 }
 
 // ---------------------------------------------------------------------------
-// Boolean conversion
+// Safe wrappers — Boolean, Number, Undefined, Null
 // ---------------------------------------------------------------------------
 
-/// Convert a Rust `bool` to a JavaScript boolean.
 pub fn bool_to_js(env: napi_env, b: bool) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    let status = unsafe { napi_sys::napi_get_boolean(env, b, &mut result) };
-    check_status(status, "napi_get_boolean");
+    check_status(unsafe { napi_get_boolean(env, b, &mut result) }, "napi_get_boolean");
     result
 }
 
-// ---------------------------------------------------------------------------
-// Number conversion
-// ---------------------------------------------------------------------------
-
-/// Convert a Rust `usize` to a JavaScript number.
 pub fn usize_to_js(env: napi_env, n: usize) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    let status = unsafe {
-        napi_sys::napi_create_int64(env, n as i64, &mut result)
-    };
-    check_status(status, "napi_create_int64");
+    check_status(unsafe { napi_create_int64(env, n as i64, &mut result) }, "napi_create_int64");
+    result
+}
+
+pub fn undefined(env: napi_env) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    check_status(unsafe { napi_get_undefined(env, &mut result) }, "napi_get_undefined");
+    result
+}
+
+pub fn null(env: napi_env) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    check_status(unsafe { napi_get_null(env, &mut result) }, "napi_get_null");
     result
 }
 
 // ---------------------------------------------------------------------------
-// Argument parsing
+// Safe wrappers — Callback info
 // ---------------------------------------------------------------------------
 
-/// Extract arguments from a N-API callback.
-///
-/// Returns (this, args) where `this` is the JS `this` value and `args`
-/// are the function arguments.
 pub fn get_cb_info(
     env: napi_env,
     info: napi_callback_info,
@@ -218,153 +333,105 @@ pub fn get_cb_info(
     let mut this: napi_value = ptr::null_mut();
     let mut argc = max_args;
     let mut argv: Vec<napi_value> = vec![ptr::null_mut(); max_args];
-
-    let status = unsafe {
-        napi_sys::napi_get_cb_info(
-            env,
-            info,
-            &mut argc,
-            argv.as_mut_ptr(),
-            &mut this,
-            ptr::null_mut(),
-        )
-    };
-    check_status(status, "napi_get_cb_info");
+    check_status(
+        unsafe {
+            napi_get_cb_info(env, info, &mut argc, argv.as_mut_ptr(), &mut this, ptr::null_mut())
+        },
+        "napi_get_cb_info",
+    );
     argv.truncate(argc);
     (this, argv)
 }
 
 // ---------------------------------------------------------------------------
-// Data wrapping — store a Rust struct inside a JS object
+// Safe wrappers — Data wrapping
 // ---------------------------------------------------------------------------
 
-/// Wrap a Rust value inside a JavaScript object.
-///
-/// The data is heap-allocated (Box) and the destructor runs when the
-/// JS object is garbage collected.
 pub fn wrap_data<T>(env: napi_env, this: napi_value, data: T) {
     let boxed = Box::into_raw(Box::new(data));
-    let status = unsafe {
-        napi_sys::napi_wrap(
-            env,
-            this,
-            boxed as *mut c_void,
-            Some(free_data::<T>),
-            ptr::null_mut(),
-            ptr::null_mut(),
-        )
-    };
-    check_status(status, "napi_wrap");
+    check_status(
+        unsafe {
+            napi_wrap(env, this, boxed as *mut c_void, Some(free_data::<T>), ptr::null_mut(), ptr::null_mut())
+        },
+        "napi_wrap",
+    );
 }
 
-/// Extract a reference to the Rust data wrapped inside a JS object.
 pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> &'static T {
     let mut ptr: *mut c_void = ptr::null_mut();
-    let status = napi_sys::napi_unwrap(env, this, &mut ptr);
-    check_status(status, "napi_unwrap");
+    check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
     &*(ptr as *const T)
 }
 
-/// Extract a mutable reference to the Rust data wrapped inside a JS object.
 pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> &'static mut T {
     let mut ptr: *mut c_void = ptr::null_mut();
-    let status = napi_sys::napi_unwrap(env, this, &mut ptr);
-    check_status(status, "napi_unwrap");
+    check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
     &mut *(ptr as *mut T)
 }
 
-/// Destructor called by V8's GC when the JS object is collected.
-unsafe extern "C" fn free_data<T>(
-    _env: napi_env,
-    data: *mut c_void,
-    _hint: *mut c_void,
-) {
+unsafe extern "C" fn free_data<T>(_env: napi_env, data: *mut c_void, _hint: *mut c_void) {
     if !data.is_null() {
         let _ = Box::from_raw(data as *mut T);
     }
 }
 
 // ---------------------------------------------------------------------------
-// Error handling
+// Safe wrappers — Error handling
 // ---------------------------------------------------------------------------
 
-/// Throw a JavaScript Error with the given message.
 pub fn throw_error(env: napi_env, msg: &str) {
     let c_msg = CString::new(msg).unwrap_or_else(|_| CString::new("(error)").unwrap());
-    unsafe {
-        napi_sys::napi_throw_error(env, ptr::null(), c_msg.as_ptr());
-    }
-}
-
-/// Return JavaScript `undefined`.
-pub fn undefined(env: napi_env) -> napi_value {
-    let mut result: napi_value = ptr::null_mut();
-    let status = unsafe { napi_sys::napi_get_undefined(env, &mut result) };
-    check_status(status, "napi_get_undefined");
-    result
-}
-
-/// Return JavaScript `null`.
-pub fn null(env: napi_env) -> napi_value {
-    let mut result: napi_value = ptr::null_mut();
-    let status = unsafe { napi_sys::napi_get_null(env, &mut result) };
-    check_status(status, "napi_get_null");
-    result
+    unsafe { napi_throw_error(env, ptr::null(), c_msg.as_ptr()); }
 }
 
 // ---------------------------------------------------------------------------
-// Class definition
+// Safe wrappers — Class definition
 // ---------------------------------------------------------------------------
 
-/// Define a property descriptor for a class method.
-pub fn method_property(
-    env: napi_env,
-    name: &str,
-    method: napi_sys::napi_callback,
-) -> napi_sys::napi_property_descriptor {
-    let c_name = CString::new(name).expect("method name must not contain NUL");
-    napi_sys::napi_property_descriptor {
+pub fn method_property(name: &str, method: napi_callback) -> napi_property_descriptor {
+    let c_name = CString::new(name).expect("name must not contain NUL");
+    napi_property_descriptor {
         utf8name: c_name.into_raw(),
         name: ptr::null_mut(),
         method,
         getter: None,
         setter: None,
         value: ptr::null_mut(),
-        attributes: napi_sys::PropertyAttributes::default,
+        attributes: NAPI_DEFAULT_METHOD,
         data: ptr::null_mut(),
     }
 }
 
-/// Define a JavaScript class with a constructor and methods.
 pub fn define_class(
     env: napi_env,
     name: &str,
-    constructor: napi_sys::napi_callback,
-    properties: &[napi_sys::napi_property_descriptor],
+    constructor: napi_callback,
+    properties: &[napi_property_descriptor],
 ) -> napi_value {
-    let c_name = CString::new(name).expect("class name must not contain NUL");
+    let c_name = CString::new(name).expect("name must not contain NUL");
     let mut result: napi_value = ptr::null_mut();
-    let status = unsafe {
-        napi_sys::napi_define_class(
-            env,
-            c_name.as_ptr(),
-            usize::MAX,
-            constructor,
-            ptr::null_mut(),
-            properties.len(),
-            properties.as_ptr(),
-            &mut result,
-        )
-    };
-    check_status(status, "napi_define_class");
+    check_status(
+        unsafe {
+            napi_define_class(
+                env,
+                c_name.as_ptr(),
+                usize::MAX, // NAPI_AUTO_LENGTH
+                constructor,
+                ptr::null_mut(),
+                properties.len(),
+                properties.as_ptr(),
+                &mut result,
+            )
+        },
+        "napi_define_class",
+    );
     result
 }
 
-/// Set a named property on a JavaScript object (e.g., module.exports.MyClass = ...).
 pub fn set_named_property(env: napi_env, object: napi_value, name: &str, value: napi_value) {
-    let c_name = CString::new(name).expect("property name must not contain NUL");
-    let status = unsafe {
-        napi_sys::napi_set_named_property(env, object, c_name.as_ptr(), value)
-    };
-    check_status(status, "napi_set_named_property");
+    let c_name = CString::new(name).expect("name must not contain NUL");
+    check_status(
+        unsafe { napi_set_named_property(env, object, c_name.as_ptr(), value) },
+        "napi_set_named_property",
+    );
 }

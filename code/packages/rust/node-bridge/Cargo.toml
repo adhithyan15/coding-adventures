@@ -1,16 +1,13 @@
-# This crate is intentionally NOT part of the Rust workspace because it
-# depends on napi-sys which requires Node.js headers. Keeping it
-# separate means `cargo build` in the workspace doesn't need Node.js.
+# Zero dependencies. We declare Node.js N-API functions ourselves using
+# extern "C" — no napi-sys, no napi-rs, no bindgen, no build-time headers.
+# N-API is ABI-stable by design (that's its entire purpose).
 [workspace]
 
 [package]
 name = "node-bridge"
 version = "0.1.0"
 edition = "2021"
-description = "Thin safe Rust wrapper over Node.js N-API — no napi-rs, no macros, no magic"
+description = "Thin safe Rust wrapper over Node.js N-API — zero dependencies, no napi-rs, no macros"
 
-# napi-sys provides raw Rust FFI bindings to Node.js N-API.
-# N-API is ABI-stable across Node versions — extensions built with
-# one version work on any later version without recompilation.
 [dependencies]
-napi-sys = { version = "2", features = ["napi4"] }
+# None. That's the point.

@@ -14,7 +14,14 @@ Three reasons:
 
 2. **Comprehension.** The C APIs for Python, Ruby, and Node.js are well-documented, stable, and small. A developer who understands the bridge understands the actual FFI mechanism — not an abstraction over it. This is educational infrastructure, and hiding the mechanism defeats the purpose.
 
-3. **Dependency weight.** PyO3 pulls in `proc-macro2`, `quote`, `syn`, `unicode-ident`, `unindent`, `indoc`, and more. Magnus pulls in similar. Each framework is a build-time dependency tree of 20-40 crates. Our bridges depend on exactly one crate each: the raw `-sys` binding.
+3. **Dependency weight.** PyO3 pulls in `proc-macro2`, `quote`, `syn`, `unicode-ident`, `unindent`, `indoc`, and more. Magnus pulls in `bindgen`, `clang-sys`, `rb-sys-build`, and more. Each framework is a build-time dependency tree of 20-40 crates. Our bridges have **zero Rust dependencies** — not even the raw `-sys` bindings.
+
+4. **Build portability.** The `-sys` crates (pyo3-ffi, rb-sys, napi-sys) require language development headers and often `bindgen`/`clang` at build time. This fails on Windows where Ruby is built with MinGW but Rust targets MSVC. By declaring the C API functions ourselves with `extern "C"`, our bridges compile on **any platform with just a Rust toolchain** — no Python headers, no Ruby headers, no clang. The functions are resolved by the dynamic linker at load time against the running interpreter.
+
+5. **ABI stability.** The C API functions we declare are part of each language's stable ABI:
+   - **Python**: Limited API (PEP 384), stable since Python 3.2 (2011)
+   - **Ruby**: `rb_define_method`, `rb_ary_push`, etc. — unchanged since Ruby 1.8 (2003)
+   - **Node.js**: N-API, designed specifically for ABI stability across Node versions
 
 ## Architecture
 
@@ -34,7 +41,7 @@ Three reasons:
 │     python-bridge        │       │     directed-graph        │
 │                          │       │     (pure Rust core)      │
 │  Safe wrappers around    │       │                          │
-│  pyo3-ffi C functions    │       │  Zero FFI knowledge.     │
+│  raw extern "C" decls    │       │  Zero FFI knowledge.     │
 │                          │       │  No Python types.        │
 │  ~350 lines of Rust      │       │  No Ruby types.          │
 └──────────┬───────────────┘       │  No Node types.          │

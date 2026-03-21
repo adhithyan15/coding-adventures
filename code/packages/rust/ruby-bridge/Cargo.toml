@@ -1,16 +1,13 @@
-# This crate is intentionally NOT part of the Rust workspace because it
-# depends on rb-sys which requires Ruby development headers. Keeping
-# it separate means `cargo build` in the workspace doesn't need Ruby.
+# Zero dependencies. We declare Ruby's C API functions ourselves using
+# extern "C" — no rb-sys, no Magnus, no bindgen, no build-time headers.
+# These function signatures have been stable since Ruby 1.8 (2003).
 [workspace]
 
 [package]
 name = "ruby-bridge"
 version = "0.1.0"
 edition = "2021"
-description = "Thin safe Rust wrapper over Ruby's C API — no Magnus, no macros, no magic"
+description = "Thin safe Rust wrapper over Ruby's C API — zero dependencies, no Magnus, no macros"
 
-# rb-sys provides raw Rust FFI bindings to Ruby's C API. It generates
-# bindings via bindgen against the Ruby headers found on the system.
-# This is the ONLY dependency — everything else is our own code.
 [dependencies]
-rb-sys = "0.9"
+# None. That's the point.
