@@ -1,3 +1,8 @@
+# This crate is intentionally NOT part of the Rust workspace because it
+# depends on pyo3-ffi which requires Python development headers. Keeping
+# it separate means `cargo build` in the workspace doesn't need Python.
+[workspace]
+
 [package]
 name = "python-bridge"
 version = "0.1.0"

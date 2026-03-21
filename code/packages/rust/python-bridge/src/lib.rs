@@ -21,7 +21,7 @@ pub mod error;
 pub mod types;
 
 use std::collections::HashSet;
-use std::ffi::{c_char, c_int, c_void, CString};
+use std::ffi::{c_char, CString};
 use std::ptr;
 
 use pyo3_ffi::*;
