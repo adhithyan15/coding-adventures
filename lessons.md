@@ -51,6 +51,8 @@ When TypeScript packages depend on each other via `"file:../other-pkg"` referenc
 - [ ] `"main": "src/index.ts"` (not `dist/index.js`)
 - [ ] `"type": "module"` for ESM
 - [ ] `file:../` dependencies for internal packages
+- [ ] `"@vitest/coverage-v8": "^3.0.0"` in devDependencies (missed on 5 packages in the S-series work — display, interrupt-handler, rom-bios, bootloader, os-kernel, system-board)
+- [ ] BUILD file uses `npm install --silent` (not `npm ci`) unless package-lock.json is committed and in sync
 
 ---
 
