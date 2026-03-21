@@ -54,7 +54,7 @@ defmodule CodingAdventures.CpuPipeline do
   implementations of caches, hazard detectors, and branch predictors.
   """
 
-  alias CodingAdventures.CpuPipeline.{Pipeline, Token, Snapshot}
+  alias CodingAdventures.CpuPipeline.{Pipeline, Token}
 
   defdelegate new_pipeline(config, fetch, decode, execute, memory, writeback), to: Pipeline, as: :new
   defdelegate step(pipeline), to: Pipeline

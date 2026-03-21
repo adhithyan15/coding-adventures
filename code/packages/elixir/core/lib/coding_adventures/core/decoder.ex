@@ -70,7 +70,7 @@ defmodule CodingAdventures.Core.MockDecoder do
 
   @behaviour CodingAdventures.Core.Decoder
 
-  use Bitwise
+  import Bitwise
 
   alias CodingAdventures.CpuPipeline.Token
   alias CodingAdventures.Core.RegisterFile

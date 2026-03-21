@@ -430,7 +430,7 @@ defmodule CodingAdventures.CpuPipeline.Pipeline do
   # Internal helpers
   # =========================================================================
 
-  defp determine_flush_count(%HazardResponse{flush_count: fc}, config, num_stages) when fc > 0 do
+  defp determine_flush_count(%HazardResponse{flush_count: fc}, _config, num_stages) when fc > 0 do
     min(fc, num_stages)
   end
 
@@ -442,7 +442,7 @@ defmodule CodingAdventures.CpuPipeline.Pipeline do
     min(flush_count, num_stages)
   end
 
-  defp determine_stall_point(%HazardResponse{stall_stages: ss}, config, num_stages) when ss > 0 do
+  defp determine_stall_point(%HazardResponse{stall_stages: ss}, _config, num_stages) when ss > 0 do
     min(ss, num_stages - 1)
   end
 

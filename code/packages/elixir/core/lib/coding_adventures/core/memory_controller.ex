@@ -101,8 +101,8 @@ defmodule CodingAdventures.Core.MemoryController do
         band(bsr(value, 24), 0xFF)
       >>
 
-      <<before::binary-size(address), _::binary-size(4), after::binary>> = memory
-      %{mc | memory: before <> bytes <> after}
+      <<before::binary-size(address), _::binary-size(4), rest::binary>> = memory
+      %{mc | memory: before <> bytes <> rest}
     end
   end
 

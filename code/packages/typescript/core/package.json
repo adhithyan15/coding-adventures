@@ -23,7 +23,9 @@
     "@coding-adventures/cache": "file:../cache",
     "@coding-adventures/clock": "file:../clock",
     "@coding-adventures/cpu-pipeline": "file:../cpu-pipeline",
-    "@coding-adventures/hazard-detection": "file:../hazard-detection"
+    "@coding-adventures/hazard-detection": "file:../hazard-detection",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

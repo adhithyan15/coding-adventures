@@ -2,3 +2,5 @@
 
 source "https://rubygems.org"
 gemspec
+
+gem "coding_adventures_riscv_simulator", path: "../riscv_simulator"

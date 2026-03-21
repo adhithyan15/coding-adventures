@@ -36,13 +36,4 @@ defmodule CodingAdventures.Core do
   struct along with a pipeline snapshot.
   """
 
-  alias CodingAdventures.Core.{
-    Config,
-    Decoder,
-    RegisterFile,
-    MemoryController,
-    InterruptController,
-    MultiCore,
-    Stats
-  }
 end
