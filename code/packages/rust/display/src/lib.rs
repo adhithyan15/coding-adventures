@@ -164,6 +164,19 @@ impl<'a> DisplayDriver<'a> {
         driver
     }
 
+    /// Wrap an existing framebuffer without clearing it.
+    ///
+    /// Use this when the framebuffer already has content you want to
+    /// preserve -- for example, when creating a temporary driver to
+    /// handle a single syscall in the system board.
+    pub fn wrap(config: DisplayConfig, memory: &'a mut [u8]) -> Self {
+        Self {
+            config,
+            memory,
+            cursor: CursorPosition { row: 0, col: 0 },
+        }
+    }
+
     // ============================================================
     // Writing characters
     // ============================================================

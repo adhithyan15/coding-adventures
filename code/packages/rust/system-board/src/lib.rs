@@ -290,7 +290,7 @@ impl SystemBoard {
 
         // Create a temporary display driver for syscall handling
         let dc = self.config.display_config;
-        let mut display_driver = DisplayDriver::new(dc, &mut self.display_memory);
+        let mut display_driver = DisplayDriver::wrap(dc, &mut self.display_memory);
 
         let kernel = self.kernel.as_mut().unwrap();
         kernel.handle_syscall(syscall_num, &mut reg_adapter, &mem_adapter, Some(&mut display_driver));
