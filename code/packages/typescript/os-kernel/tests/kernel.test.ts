@@ -90,6 +90,81 @@ describe("Kernel", () => {
   });
 });
 
+describe("Kernel syscalls", () => {
+  function makeRegs(vals: Record<number, number> = {}) {
+    const written: Record<number, number> = {};
+    return {
+      readRegister: (i: number) => vals[i] ?? 0,
+      writeRegister: (i: number, v: number) => { written[i] = v; },
+      written,
+    };
+  }
+  const makeMem = (data: Record<number, number> = {}) => ({
+    readMemoryByte: (addr: number) => data[addr] ?? 0,
+  });
+
+  it("unknown syscall terminates process", () => {
+    const kernel = new Kernel(defaultKernelConfig(), null, null);
+    kernel.boot();
+    kernel.currentProcess = 1;
+    const result = kernel.handleSyscall(999, makeRegs(), makeMem());
+    expect(result).toBe(false);
+    expect(kernel.processTable[1].state).toBe(ProcessState.Terminated);
+  });
+
+  it("getCurrentPCB returns current process", () => {
+    const kernel = new Kernel(defaultKernelConfig(), null, null);
+    kernel.boot();
+    kernel.currentProcess = 1;
+    const pcb = kernel.getCurrentPCB();
+    expect(pcb).not.toBeNull();
+    expect(pcb!.pid).toBe(1);
+  });
+
+  it("getCurrentPCB returns null for invalid pid", () => {
+    const kernel = new Kernel(defaultKernelConfig(), null, null);
+    kernel.boot();
+    kernel.currentProcess = -1;
+    expect(kernel.getCurrentPCB()).toBeNull();
+  });
+
+  it("sys_write writes bytes to display", () => {
+    const chars: number[] = [];
+    const display = { putChar: (ch: number) => chars.push(ch) };
+    const kernel = new Kernel(defaultKernelConfig(), null, display as any);
+    kernel.boot();
+    kernel.currentProcess = 1;
+    const data: Record<number, number> = { 100: 72, 101: 105 }; // "Hi"
+    const regs = makeRegs({ [REG_A0]: 1, [REG_A1]: 100, [REG_A2]: 2 });
+    kernel.handleSyscall(SYS_WRITE, regs, makeMem(data));
+    expect(chars).toEqual([72, 105]);
+    expect(regs.written[REG_A0]).toBe(2);
+  });
+
+  it("sys_write with wrong fd returns 0", () => {
+    const kernel = new Kernel(defaultKernelConfig(), null, null);
+    kernel.boot();
+    const regs = makeRegs({ [REG_A0]: 2, [REG_A1]: 0, [REG_A2]: 5 }); // fd=2, not stdout
+    kernel.handleSyscall(SYS_WRITE, regs, makeMem());
+    expect(regs.written[REG_A0]).toBe(0);
+  });
+
+  it("sys_yield switches to next process", () => {
+    const kernel = new Kernel(defaultKernelConfig(), null, null);
+    kernel.boot();
+    kernel.currentProcess = 1;
+    kernel.processTable[1].state = ProcessState.Running;
+    kernel.handleSyscall(SYS_YIELD, makeRegs(), makeMem());
+    expect(kernel.processTable[1].state).toBe(ProcessState.Ready);
+  });
+
+  it("addKeystroke adds to buffer", () => {
+    const kernel = new Kernel(defaultKernelConfig(), null, null);
+    kernel.addKeystroke(65); // 'A'
+    expect(kernel.keyboardBuffer).toEqual([65]);
+  });
+});
+
 describe("Program generators", () => {
   it("idle program generates valid machine code", () => {
     const idle = generateIdleProgram();
