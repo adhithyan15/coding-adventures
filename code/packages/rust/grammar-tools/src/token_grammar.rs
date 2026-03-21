@@ -227,9 +227,25 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
     let (pattern_str, alias) = if after_eq.starts_with('/') {
-        // Regex pattern — find the closing slash.
+        // Regex pattern — find the closing slash, skipping escaped slashes (\/).
         let rest = &after_eq[1..];
-        match rest.find('/') {
+        let close_idx = {
+            let mut i = 0;
+            let bytes = rest.as_bytes();
+            let mut found = None;
+            while i < bytes.len() {
+                if bytes[i] == b'\\' {
+                    i += 2; // skip escaped character
+                } else if bytes[i] == b'/' {
+                    found = Some(i);
+                    break;
+                } else {
+                    i += 1;
+                }
+            }
+            found
+        };
+        match close_idx {
             Some(close_idx) => {
                 let regex_body = &rest[..close_idx];
                 if regex_body.is_empty() {
