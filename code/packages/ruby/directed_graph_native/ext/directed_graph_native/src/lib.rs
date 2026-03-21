@@ -147,8 +147,8 @@ impl RbDirectedGraph {
 // Module init
 // ---------------------------------------------------------------------------
 
-#[magnus::init]
-fn init_directed_graph_native() -> Result<(), Error> {
+#[magnus::init(name = "directed_graph_native")]
+fn init() -> Result<(), Error> {
     let coding_adventures = define_module("CodingAdventures")?;
     let module = coding_adventures.define_module("DirectedGraphNative")?;
 
