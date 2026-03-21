@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+
+# --------------------------------------------------------------------------
+# Rakefile -- Build and test tasks for the native extension
+# --------------------------------------------------------------------------
+#
+# This Rakefile provides two main tasks:
+#
+#   rake compile  -- Compile the Rust extension via Cargo
+#   rake test     -- Run the minitest test suite
+#   rake default  -- Compile then test
+#
+# The `rake-compiler` gem handles the Rust compilation. It knows how to:
+# 1. Find the extconf.rb file
+# 2. Run it to generate a Makefile (which uses rb_sys to invoke Cargo)
+# 3. Build the shared library and place it in lib/directed_graph_native/
+#
+# After compilation, the shared library lives at:
+#   lib/directed_graph_native/directed_graph_native.{so,bundle,dll}
+# --------------------------------------------------------------------------
+
+require "rake/testtask"
+require "rake/extensiontask"
+
+# Register the native extension compilation task.
+# This creates `rake compile` which builds the Rust code.
+Rake::ExtensionTask.new("directed_graph_native") do |ext|
+  ext.lib_dir = "lib/directed_graph_native"
+end
+
+# Register the test task.
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/test_*.rb"]
+end
+
+# Default task: compile the extension, then run tests.
+task test: :compile
+task default: :test

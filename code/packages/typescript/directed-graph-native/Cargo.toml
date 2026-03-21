@@ -1,0 +1,38 @@
+# Cargo.toml -- napi-rs native extension for Node.js
+# ===================================================
+#
+# This crate builds a Node.js native addon (.node file) that wraps the Rust
+# directed-graph crate via napi-rs. The pattern is the same as the Python/PyO3
+# wrapper in code/packages/python/directed-graph-native/, but targeting the
+# Node.js N-API instead of the Python C API.
+#
+# The crate type is "cdylib" because native addons are shared libraries that
+# Node.js loads at runtime via require() or import.
+
+[package]
+name = "directed-graph-native-node"
+version = "0.1.0"
+edition = "2021"
+description = "Node.js native extension wrapping the Rust directed-graph crate via napi-rs"
+
+[lib]
+# cdylib produces a .node shared library that Node.js can load.
+# The name must be a valid Rust identifier -- napi-rs maps it to the
+# JavaScript module name at build time.
+crate-type = ["cdylib"]
+
+[dependencies]
+# napi-rs is the Rust <-> Node.js N-API bridge. The "napi4" feature enables
+# N-API version 4 which supports BigInt, thread-safe functions, etc.
+# We only need basic features (classes, functions, error handling).
+napi = { version = "2", default-features = false, features = ["napi4"] }
+napi-derive = "2"
+
+# The core directed-graph crate -- all the real algorithms live here.
+# The wrapper in this crate is just thin glue between napi-rs and the Rust API.
+directed-graph = { path = "../../rust/directed-graph" }
+
+[build-dependencies]
+# napi-build generates the C header and linker configuration that Node.js
+# needs to load the addon.
+napi-build = "2"

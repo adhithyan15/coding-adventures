@@ -1,0 +1,33 @@
+# Cargo.toml -- Rust build configuration for the Ruby native extension
+# =====================================================================
+#
+# This crate compiles into a C-compatible dynamic library (.so on Linux,
+# .bundle on macOS, .dll on Windows) that Ruby can load via `require`.
+# Magnus handles all the FFI plumbing: it generates the `Init_` function
+# that Ruby expects, marshals types between Rust and Ruby, and provides
+# a safe wrapper around Ruby's C API.
+#
+# The crate type is `cdylib` because Ruby native extensions are shared
+# libraries loaded at runtime, not statically linked Rust libraries.
+
+[package]
+name = "directed-graph-native-ruby"
+version = "0.1.0"
+edition = "2021"
+description = "Ruby native extension wrapping the Rust directed-graph crate via Magnus"
+
+[lib]
+# The library name must match what Ruby expects when it does
+# `require "directed_graph_native/directed_graph_native"`.
+name = "directed_graph_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Magnus is the Rust <-> Ruby bridge, analogous to PyO3 for Python.
+# The "rb-sys-interop" feature enables compatibility with the rb-sys gem,
+# which provides Ruby header files and build configuration.
+magnus = { version = "0.7", features = ["rb-sys-interop"] }
+
+# The core directed-graph crate -- all algorithms live here.
+# This wrapper contains zero algorithm logic; it's pure glue code.
+directed-graph = { path = "../../rust/directed-graph" }

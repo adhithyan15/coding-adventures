@@ -1,0 +1,27 @@
+[package]
+name = "directed-graph-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WASM-compiled directed graph — runs in browsers, Node.js, Deno, and any WASM runtime"
+
+[lib]
+# wasm-bindgen requires cdylib for building .wasm modules.
+crate-type = ["cdylib"]
+
+[dependencies]
+# wasm-bindgen is the bridge between Rust and JavaScript in WASM land.
+# It generates the JS glue code that handles type conversion across the
+# WASM boundary (strings, arrays, objects).
+wasm-bindgen = "0.2"
+
+# The core directed-graph crate — same one used by the Python and Ruby
+# native extensions. Zero algorithm duplication across all wrappers.
+directed-graph = { path = "../../rust/directed-graph" }
+
+# serde + serde-wasm-bindgen for converting complex types (Vec, HashSet)
+# to JavaScript arrays and objects.
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
