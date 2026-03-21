@@ -100,7 +100,7 @@ module CodingAdventures
         tokens = @argv[1..] || []
 
         # Phase 1: Route to the correct command
-        command_path, current_node_id, remaining_tokens, consumed_indices =
+        command_path, _current_node_id, _remaining_tokens, consumed_indices =
           phase1_routing(tokens, program)
 
         # Build the active flag set for the resolved context

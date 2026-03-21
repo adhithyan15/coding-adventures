@@ -113,7 +113,7 @@ module CodingAdventures
       def resolve_no_variadic(tokens, parsed_flags, result, errors)
         # Check for too many tokens
         if tokens.size > @arg_defs.size
-          extra = tokens.size - @arg_defs.size
+          _extra = tokens.size - @arg_defs.size
           errors << ParseError.new(
             error_type: "too_many_arguments",
             message: "Expected at most #{@arg_defs.size} argument(s), got #{tokens.size}",
@@ -165,7 +165,7 @@ module CodingAdventures
         n = tokens.size
         n_leading = leading_defs.size
         n_trailing = trailing_defs.size
-        min_needed = n_leading + n_trailing + (variadic_def["variadic_min"] || 1)
+        _min_needed = n_leading + n_trailing + (variadic_def["variadic_min"] || 1)
 
         # Check if we have enough tokens for leading + trailing minimums
         if n < n_leading + n_trailing
@@ -193,6 +193,37 @@ module CodingAdventures
             end
           end
           return
+        end
+
+        # When all tokens are consumed by leading/trailing defs (none left for the
+        # variadic), check whether any required leading def has a required_unless_flag
+        # that is NOT satisfied. This catches the case where the user provided a FILE
+        # argument but forgot the required PATTERN argument — without this check the
+        # resolver would silently consume the FILE token into the PATTERN slot.
+        #
+        # Example: `grep file.txt` with spec [PATTERN(required_unless=-e), FILE(variadic)]
+        #   n=1, n_leading=1, n_trailing=0  → n == n_leading + n_trailing
+        #   -e flag not present             → required_unless_flag not satisfied
+        #   → report missing_required_argument for PATTERN and bail out
+        #
+        # We only apply this stricter check when the arg has required_unless_flag,
+        # because that flag signals the arg is "conditionally optional" — the user might
+        # legitimately skip it by providing the flag. Without required_unless_flag, a
+        # token present for that slot is always correct to consume.
+        if n == n_leading + n_trailing
+          leading_defs.each do |ld|
+            next if ld["required"] == false
+            next if (ld["required_unless_flag"] || []).empty?
+            next if required_unless_satisfied?(ld, parsed_flags)
+
+            errors << ParseError.new(
+              error_type: "missing_required_argument",
+              message: "Missing required argument: <#{ld["name"]}>",
+              suggestion: nil,
+              context: []
+            )
+          end
+          return if errors.any?
         end
 
         # Assign leading tokens
