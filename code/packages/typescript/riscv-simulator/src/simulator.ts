@@ -1,67 +1,15 @@
 /**
- * RISC-V RV32I Simulator -- a clean, modern instruction set.
+ * RISC-V RV32I Simulator -- full base integer ISA with M-mode extensions.
  *
- * === What is RISC-V? ===
- *
- * RISC-V (pronounced "risk-five") is an open-source instruction set architecture
- * (ISA) designed at UC Berkeley by Patterson and Hennessy -- the same people who
- * wrote the definitive computer architecture textbooks. It was designed from
- * scratch in 2010 with no historical baggage, making it the cleanest ISA to learn.
- *
- * "RISC" stands for Reduced Instruction Set Computer -- the philosophy that a
- * CPU should have a small number of simple instructions rather than many complex
- * ones. Each instruction does one thing well.
- *
- * === RISC-V vs other ISAs ===
- *
- *     RISC-V:     Clean, regular encoding. 32 registers. No condition codes.
- *     ARM:        More complex encoding. 16 registers. Conditional execution.
- *     WASM:       Stack-based (no registers). Modern virtual machine.
- *     Intel 4004: 4-bit accumulator. Historical (1971).
- *
- * === Register conventions ===
- *
- * RISC-V has 32 registers, each 32 bits wide:
- *
- *     x0  = always 0 (hardwired -- writes are ignored, reads always return 0)
- *     x1  = ra (return address -- where to go back after a function call)
- *     x2  = sp (stack pointer -- top of the stack)
- *     x3  = gp (global pointer)
- *     x4  = tp (thread pointer)
- *     x5-x7   = t0-t2 (temporary registers)
- *     x8-x9   = s0-s1 (saved registers)
- *     x10-x17 = a0-a7 (function arguments and return values)
- *     x18-x27 = s2-s11 (more saved registers)
- *     x28-x31 = t3-t6 (more temporaries)
- *
- * The x0 register is special and brilliant: because it's always 0, many
- * operations become simpler. To load an immediate value, you just add it to x0:
- *     addi x1, x0, 42    ->    x1 = 0 + 42 = 42
- *
- * === Instruction encoding ===
- *
- * Every RISC-V instruction is exactly 32 bits. The opcode is always in bits [6:0].
- * Register fields are always in the same positions -- this regularity makes the
- * decoder simpler than ARM's.
- *
- * R-type (register-register):
- *     +---------+-----+-----+-------+-----+---------+
- *     | funct7  | rs2 | rs1 |funct3 | rd  | opcode  |
- *     | 31   25 |24 20|19 15|14   12|11  7| 6     0 |
- *     +---------+-----+-----+-------+-----+---------+
- *
- * I-type (immediate):
- *     +--------------+-----+-------+-----+---------+
- *     |  imm[11:0]   | rs1 |funct3 | rd  | opcode  |
- *     | 31        20 |19 15|14   12|11  7| 6     0 |
- *     +--------------+-----+-------+-----+---------+
- *
- * === MVP instruction set (just enough for x = 1 + 2) ===
- *
- *     addi x1, x0, 1    ->  x1 = 0 + 1 = 1     (I-type, opcode=0010011)
- *     addi x2, x0, 2    ->  x2 = 0 + 2 = 2     (I-type, opcode=0010011)
- *     add  x3, x1, x2   ->  x3 = 1 + 2 = 3     (R-type, opcode=0110011)
- *     ecall              ->  halt                 (I-type, opcode=1110011)
+ * Supports all 37 RV32I instructions plus M-mode privileged extensions:
+ *   - Arithmetic: add, sub, addi, slt, sltu, slti, sltiu, and, or, xor, andi, ori, xori
+ *   - Shifts: sll, srl, sra, slli, srli, srai
+ *   - Loads: lb, lh, lw, lbu, lhu
+ *   - Stores: sb, sh, sw
+ *   - Branches: beq, bne, blt, bge, bltu, bgeu
+ *   - Jumps: jal, jalr
+ *   - Upper immediates: lui, auipc
+ *   - System: ecall, mret, csrrw, csrrs, csrrc
  */
 
 import {
@@ -75,79 +23,92 @@ import {
   type Memory,
 } from "@coding-adventures/cpu-simulator";
 
-// ---------------------------------------------------------------------------
-// Instruction encoding constants
-// ---------------------------------------------------------------------------
-// These are the bit patterns that identify each instruction type.
-// The opcode is always in bits [6:0] of the 32-bit instruction.
+import {
+  OpcodeLoad, OpcodeStore, OpcodeBranch, OpcodeJAL, OpcodeJALR,
+  OpcodeLUI, OpcodeAUIPC, OpcodeOpImm, OpcodeOp, OpcodeSystem,
+  Funct3ADDI, Funct3SLTI, Funct3SLTIU, Funct3XORI, Funct3ORI, Funct3ANDI,
+  Funct3SLLI, Funct3SRLI,
+  Funct3ADD, Funct3SLL, Funct3SLT, Funct3SLTU, Funct3XOR, Funct3SRL, Funct3OR, Funct3AND,
+  Funct7Normal, Funct7Alt, Funct7MRET,
+  Funct3LB, Funct3LH, Funct3LW, Funct3LBU, Funct3LHU,
+  Funct3SB, Funct3SH, Funct3SW,
+  Funct3BEQ, Funct3BNE, Funct3BLT, Funct3BGE, Funct3BLTU, Funct3BGEU,
+  Funct3PRIV, Funct3CSRRW, Funct3CSRRS, Funct3CSRRC,
+} from "./opcodes.js";
 
-/** I-type arithmetic with immediate (addi, etc.) */
-export const OPCODE_OP_IMM = 0b0010011;
+import {
+  CSRFile, CSR_MSTATUS, CSR_MTVEC, CSR_MEPC, CSR_MCAUSE,
+  MIE, CAUSE_ECALL_MMODE,
+} from "./csr.js";
 
-/** R-type arithmetic (add, sub, etc.) */
-export const OPCODE_OP = 0b0110011;
+// Re-export for convenience
+export { CSRFile } from "./csr.js";
+export {
+  CSR_MSTATUS, CSR_MTVEC, CSR_MEPC, CSR_MCAUSE, MIE, CAUSE_ECALL_MMODE,
+} from "./csr.js";
 
-/** System instructions (ecall) */
-export const OPCODE_SYSTEM = 0b1110011;
+// === Helper: sign-extend from N bits ===
+function signExtend(value: number, bits: number): number {
+  const mask = 1 << (bits - 1);
+  return ((value ^ mask) - mask) | 0;
+}
 
-// ---------------------------------------------------------------------------
+// === Helper: to int32 (signed interpretation) ===
+function toI32(v: number): number { return v | 0; }
+function toU32(v: number): number { return v >>> 0; }
+
+// =========================================================================
 // Decoder
-// ---------------------------------------------------------------------------
+// =========================================================================
 
-/**
- * Decodes RISC-V RV32I instructions from 32-bit binary to structured fields.
- *
- * The decoder extracts the opcode, register numbers, and immediate values
- * from the raw instruction bits. It doesn't execute anything -- it just
- * figures out what the instruction means.
- *
- * Example: decoding addi x1, x0, 1 (binary: 0x00100093)
- *
- *     Bits: 000000000001 00000 000 00001 0010011
- *           ^^^^^^^^^^^^ ^^^^^ ^^^ ^^^^^ ^^^^^^^
- *           imm=1        rs1=0 f3  rd=1  opcode=OP_IMM
- *
- *     Result: { mnemonic: "addi", fields: { rd: 1, rs1: 0, imm: 1 } }
- */
 export class RiscVDecoder implements InstructionDecoder {
-  /**
-   * Decode a 32-bit RISC-V instruction.
-   *
-   * Extracts the opcode from bits [6:0], then dispatches to the
-   * appropriate format decoder (R-type, I-type, etc.).
-   */
   decode(rawInstruction: number, pc: number): DecodeResult {
-    const opcode = rawInstruction & 0x7f; // bits [6:0]
+    const raw = rawInstruction >>> 0;
+    const opcode = raw & 0x7f;
 
-    if (opcode === OPCODE_OP_IMM) {
-      return this.decodeIType(rawInstruction, "addi");
-    } else if (opcode === OPCODE_OP) {
-      return this.decodeRType(rawInstruction);
-    } else if (opcode === OPCODE_SYSTEM) {
-      return {
-        mnemonic: "ecall",
-        fields: {},
-        rawInstruction,
-      };
-    } else {
-      return {
-        mnemonic: `UNKNOWN(0x${opcode.toString(16).padStart(2, "0")})`,
-        fields: { opcode },
-        rawInstruction,
-      };
+    switch (opcode) {
+      case OpcodeOpImm: return this.decodeOpImm(raw);
+      case OpcodeOp: return this.decodeRType(raw);
+      case OpcodeLoad: return this.decodeLoad(raw);
+      case OpcodeStore: return this.decodeSType(raw);
+      case OpcodeBranch: return this.decodeBType(raw);
+      case OpcodeJAL: return this.decodeJType(raw);
+      case OpcodeJALR: return this.decodeJALR(raw);
+      case OpcodeLUI: return this.decodeUType(raw, "lui");
+      case OpcodeAUIPC: return this.decodeUType(raw, "auipc");
+      case OpcodeSystem: return this.decodeSystem(raw);
+      default:
+        return {
+          mnemonic: `UNKNOWN(0x${opcode.toString(16).padStart(2, "0")})`,
+          fields: { opcode },
+          rawInstruction: raw,
+        };
     }
   }
 
-  /**
-   * Decode an R-type instruction (register-register operation).
-   *
-   * R-type format:
-   *     [funct7 | rs2 | rs1 | funct3 | rd | opcode]
-   *      31  25  24 20 19 15  14   12  11 7  6    0
-   *
-   * Example: add x3, x1, x2
-   *     funct7=0000000, rs2=2, rs1=1, funct3=000, rd=3, opcode=0110011
-   */
+  private decodeOpImm(raw: number): DecodeResult {
+    const rd = (raw >>> 7) & 0x1f;
+    const funct3 = (raw >>> 12) & 0x7;
+    const rs1 = (raw >>> 15) & 0x1f;
+    let imm = raw >>> 20;
+    if (imm & 0x800) imm -= 0x1000;
+
+    const mnemonics: Record<number, string> = {
+      [Funct3ADDI]: "addi", [Funct3SLTI]: "slti", [Funct3SLTIU]: "sltiu",
+      [Funct3XORI]: "xori", [Funct3ORI]: "ori", [Funct3ANDI]: "andi",
+    };
+    let mnemonic = mnemonics[funct3] ?? `opimm(f3=${funct3})`;
+
+    if (funct3 === Funct3SLLI) { mnemonic = "slli"; imm = imm & 0x1f; }
+    if (funct3 === Funct3SRLI) {
+      const funct7 = (raw >>> 25) & 0x7f;
+      mnemonic = funct7 === Funct7Alt ? "srai" : "srli";
+      imm = imm & 0x1f;
+    }
+
+    return { mnemonic, fields: { rd, rs1, imm, funct3 }, rawInstruction: raw };
+  }
+
   private decodeRType(raw: number): DecodeResult {
     const rd = (raw >>> 7) & 0x1f;
     const funct3 = (raw >>> 12) & 0x7;
@@ -155,370 +116,378 @@ export class RiscVDecoder implements InstructionDecoder {
     const rs2 = (raw >>> 20) & 0x1f;
     const funct7 = (raw >>> 25) & 0x7f;
 
-    // Determine the specific operation from funct3 and funct7
-    let mnemonic: string;
-    if (funct3 === 0 && funct7 === 0) {
-      mnemonic = "add";
-    } else if (funct3 === 0 && funct7 === 0x20) {
-      mnemonic = "sub";
-    } else {
-      mnemonic = `r_op(f3=${funct3},f7=${funct7})`;
-    }
-
-    return {
-      mnemonic,
-      fields: { rd, rs1, rs2, funct3, funct7 },
-      rawInstruction: raw,
+    const key = funct3 * 256 + funct7;
+    const map: Record<number, string> = {
+      [Funct3ADD * 256 + Funct7Normal]: "add",
+      [Funct3ADD * 256 + Funct7Alt]: "sub",
+      [Funct3SLL * 256 + Funct7Normal]: "sll",
+      [Funct3SLT * 256 + Funct7Normal]: "slt",
+      [Funct3SLTU * 256 + Funct7Normal]: "sltu",
+      [Funct3XOR * 256 + Funct7Normal]: "xor",
+      [Funct3SRL * 256 + Funct7Normal]: "srl",
+      [Funct3SRL * 256 + Funct7Alt]: "sra",
+      [Funct3OR * 256 + Funct7Normal]: "or",
+      [Funct3AND * 256 + Funct7Normal]: "and",
     };
+    const mnemonic = map[key] ?? `r_op(f3=${funct3},f7=${funct7})`;
+
+    return { mnemonic, fields: { rd, rs1, rs2, funct3, funct7 }, rawInstruction: raw };
   }
 
-  /**
-   * Decode an I-type instruction (immediate operation).
-   *
-   * I-type format:
-   *     [imm[11:0] | rs1 | funct3 | rd | opcode]
-   *      31     20  19 15  14   12  11 7  6    0
-   *
-   * The immediate value is sign-extended from 12 bits to 32 bits.
-   * This means bit 11 is the sign bit:
-   *     0x001 = 1    (positive)
-   *     0xFFF = -1   (negative, sign-extended)
-   *
-   * Example: addi x1, x0, 1
-   *     imm=000000000001, rs1=0, funct3=000, rd=1, opcode=0010011
-   */
-  private decodeIType(raw: number, defaultMnemonic: string): DecodeResult {
+  private decodeLoad(raw: number): DecodeResult {
     const rd = (raw >>> 7) & 0x1f;
     const funct3 = (raw >>> 12) & 0x7;
     const rs1 = (raw >>> 15) & 0x1f;
-    let imm = (raw >>> 20) & 0xfff;
+    let imm = raw >>> 20;
+    if (imm & 0x800) imm -= 0x1000;
 
-    // Sign-extend the 12-bit immediate to 32 bits
-    // If bit 11 is set, the value is negative
-    if (imm & 0x800) {
-      imm -= 0x1000; // Convert from unsigned to signed
-    }
-
-    return {
-      mnemonic: defaultMnemonic,
-      fields: { rd, rs1, imm, funct3 },
-      rawInstruction: raw,
+    const mnemonics: Record<number, string> = {
+      [Funct3LB]: "lb", [Funct3LH]: "lh", [Funct3LW]: "lw",
+      [Funct3LBU]: "lbu", [Funct3LHU]: "lhu",
     };
+    const mnemonic = mnemonics[funct3] ?? `load(f3=${funct3})`;
+    return { mnemonic, fields: { rd, rs1, imm, funct3 }, rawInstruction: raw };
+  }
+
+  private decodeSType(raw: number): DecodeResult {
+    const funct3 = (raw >>> 12) & 0x7;
+    const rs1 = (raw >>> 15) & 0x1f;
+    const rs2 = (raw >>> 20) & 0x1f;
+    const immLow = (raw >>> 7) & 0x1f;
+    const immHigh = (raw >>> 25) & 0x7f;
+    let imm = (immHigh << 5) | immLow;
+    if (imm & 0x800) imm -= 0x1000;
+
+    const mnemonics: Record<number, string> = {
+      [Funct3SB]: "sb", [Funct3SH]: "sh", [Funct3SW]: "sw",
+    };
+    const mnemonic = mnemonics[funct3] ?? `store(f3=${funct3})`;
+    return { mnemonic, fields: { rs1, rs2, imm, funct3 }, rawInstruction: raw };
+  }
+
+  private decodeBType(raw: number): DecodeResult {
+    const funct3 = (raw >>> 12) & 0x7;
+    const rs1 = (raw >>> 15) & 0x1f;
+    const rs2 = (raw >>> 20) & 0x1f;
+    const imm12 = (raw >>> 31) & 0x1;
+    const imm11 = (raw >>> 7) & 0x1;
+    const imm10_5 = (raw >>> 25) & 0x3f;
+    const imm4_1 = (raw >>> 8) & 0xf;
+    let imm = (imm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | (imm4_1 << 1);
+    if (imm & 0x1000) imm -= 0x2000;
+
+    const mnemonics: Record<number, string> = {
+      [Funct3BEQ]: "beq", [Funct3BNE]: "bne", [Funct3BLT]: "blt",
+      [Funct3BGE]: "bge", [Funct3BLTU]: "bltu", [Funct3BGEU]: "bgeu",
+    };
+    const mnemonic = mnemonics[funct3] ?? `branch(f3=${funct3})`;
+    return { mnemonic, fields: { rs1, rs2, imm, funct3 }, rawInstruction: raw };
+  }
+
+  private decodeJType(raw: number): DecodeResult {
+    const rd = (raw >>> 7) & 0x1f;
+    const imm20 = (raw >>> 31) & 0x1;
+    const imm10_1 = (raw >>> 21) & 0x3ff;
+    const imm11 = (raw >>> 20) & 0x1;
+    const imm19_12 = (raw >>> 12) & 0xff;
+    let imm = (imm20 << 20) | (imm19_12 << 12) | (imm11 << 11) | (imm10_1 << 1);
+    if (imm & 0x100000) imm -= 0x200000;
+    return { mnemonic: "jal", fields: { rd, imm }, rawInstruction: raw };
+  }
+
+  private decodeJALR(raw: number): DecodeResult {
+    const rd = (raw >>> 7) & 0x1f;
+    const rs1 = (raw >>> 15) & 0x1f;
+    let imm = raw >>> 20;
+    if (imm & 0x800) imm -= 0x1000;
+    return { mnemonic: "jalr", fields: { rd, rs1, imm }, rawInstruction: raw };
+  }
+
+  private decodeUType(raw: number, mnemonic: string): DecodeResult {
+    const rd = (raw >>> 7) & 0x1f;
+    let imm = raw >>> 12;
+    if (imm & 0x80000) imm -= 0x100000;
+    return { mnemonic, fields: { rd, imm }, rawInstruction: raw };
+  }
+
+  private decodeSystem(raw: number): DecodeResult {
+    const funct3 = (raw >>> 12) & 0x7;
+    if (funct3 === Funct3PRIV) {
+      const funct7 = (raw >>> 25) & 0x7f;
+      if (funct7 === Funct7MRET) return { mnemonic: "mret", fields: { funct7 }, rawInstruction: raw };
+      return { mnemonic: "ecall", fields: { funct7 }, rawInstruction: raw };
+    }
+    const rd = (raw >>> 7) & 0x1f;
+    const rs1 = (raw >>> 15) & 0x1f;
+    const csr = (raw >>> 20) & 0xfff;
+    const mnemonics: Record<number, string> = {
+      [Funct3CSRRW]: "csrrw", [Funct3CSRRS]: "csrrs", [Funct3CSRRC]: "csrrc",
+    };
+    const mnemonic = mnemonics[funct3] ?? `system(f3=${funct3})`;
+    return { mnemonic, fields: { rd, rs1, csr, funct3 }, rawInstruction: raw };
   }
 }
 
-// ---------------------------------------------------------------------------
+// =========================================================================
 // Executor
-// ---------------------------------------------------------------------------
+// =========================================================================
 
-/**
- * Executes decoded RISC-V instructions.
- *
- * The executor reads register values, performs the operation (often using
- * the ALU), writes the result back, and determines the next PC.
- *
- * RISC-V special rule: register x0 is HARDWIRED to 0. Any write to x0
- * is silently ignored. Any read from x0 always returns 0. This is
- * enforced here, not in the register file (which is generic).
- */
 export class RiscVExecutor implements InstructionExecutor {
-  /**
-   * Execute one decoded RISC-V instruction.
-   */
-  execute(
-    decoded: DecodeResult,
-    registers: RegisterFile,
-    memory: Memory,
-    pc: number
-  ): ExecuteResult {
-    const mnemonic = decoded.mnemonic;
+  csr: CSRFile | null = null;
 
-    if (mnemonic === "addi") {
-      return this.execAddi(decoded, registers, pc);
-    } else if (mnemonic === "add") {
-      return this.execAdd(decoded, registers, pc);
-    } else if (mnemonic === "sub") {
-      return this.execSub(decoded, registers, pc);
-    } else if (mnemonic === "ecall") {
-      return {
-        description: "System call (halt)",
-        registersChanged: {},
-        memoryChanged: {},
-        nextPc: pc,
-        halted: true,
-      };
-    } else {
-      return {
-        description: `Unknown instruction: ${mnemonic}`,
-        registersChanged: {},
-        memoryChanged: {},
-        nextPc: pc + 4,
-        halted: false,
-      };
-    }
-  }
+  execute(decoded: DecodeResult, registers: RegisterFile, memory: Memory, pc: number): ExecuteResult {
+    const f = decoded.fields;
+    const m = decoded.mnemonic;
 
-  /**
-   * Execute: addi rd, rs1, imm -> rd = rs1 + imm
-   *
-   * Example: addi x1, x0, 1
-   *     rs1 = x0 = 0 (always zero)
-   *     imm = 1
-   *     result = 0 + 1 = 1
-   *     Write 1 to x1
-   */
-  private execAddi(
-    decoded: DecodeResult,
-    registers: RegisterFile,
-    pc: number
-  ): ExecuteResult {
-    const rd = decoded.fields["rd"];
-    const rs1 = decoded.fields["rs1"];
-    const imm = decoded.fields["imm"];
-
-    const rs1Val = registers.read(rs1);
-    const result = (rs1Val + imm) & 0xffffffff; // Mask to 32 bits
-
-    // x0 is hardwired to 0 -- writes to x0 are silently ignored
-    const changes: Record<string, number> = {};
-    if (rd !== 0) {
-      registers.write(rd, result);
-      changes[`x${rd}`] = result;
-    }
-
-    return {
-      description: `x${rd} = x${rs1}(${rs1Val}) + ${imm} = ${result}`,
-      registersChanged: changes,
-      memoryChanged: {},
-      nextPc: pc + 4,
-      halted: false,
+    const writeRd = (rd: number, value: number): Record<string, number> => {
+      const changes: Record<string, number> = {};
+      if (rd !== 0) {
+        const v = toU32(value);
+        registers.write(rd, v);
+        changes[`x${rd}`] = v;
+      }
+      return changes;
     };
+
+    const noMem: Record<number, number> = {};
+    const noReg: Record<string, number> = {};
+
+    // === I-type arithmetic ===
+    const immArith = (name: string, op: (a: number, b: number) => number): ExecuteResult => {
+      const rs1Val = toI32(registers.read(f["rs1"]));
+      const result = toU32(op(rs1Val, f["imm"]));
+      return { description: name, registersChanged: writeRd(f["rd"], result), memoryChanged: noMem, nextPc: pc + 4, halted: false };
+    };
+
+    // === R-type arithmetic ===
+    const regArith = (name: string, op: (a: number, b: number) => number): ExecuteResult => {
+      const a = registers.read(f["rs1"]);
+      const b = registers.read(f["rs2"]);
+      const result = toU32(op(a, b));
+      return { description: name, registersChanged: writeRd(f["rd"], result), memoryChanged: noMem, nextPc: pc + 4, halted: false };
+    };
+
+    // === Branch ===
+    const branch = (name: string, cond: (a: number, b: number) => boolean): ExecuteResult => {
+      const a = registers.read(f["rs1"]);
+      const b = registers.read(f["rs2"]);
+      const taken = cond(a, b);
+      return { description: name, registersChanged: noReg, memoryChanged: noMem, nextPc: taken ? pc + f["imm"] : pc + 4, halted: false };
+    };
+
+    switch (m) {
+      // I-type arithmetic
+      case "addi": return immArith("addi", (a, b) => (a + b) | 0);
+      case "slti": return immArith("slti", (a, b) => toI32(a) < toI32(b) ? 1 : 0);
+      case "sltiu": return immArith("sltiu", (a, b) => toU32(a) < toU32(b) ? 1 : 0);
+      case "xori": return immArith("xori", (a, b) => a ^ b);
+      case "ori": return immArith("ori", (a, b) => a | b);
+      case "andi": return immArith("andi", (a, b) => a & b);
+      case "slli": return immArith("slli", (a, b) => (toU32(a) << (b & 0x1f)));
+      case "srli": return immArith("srli", (a, b) => toU32(a) >>> (b & 0x1f));
+      case "srai": return immArith("srai", (a, b) => toI32(a) >> (b & 0x1f));
+
+      // R-type arithmetic
+      case "add": return regArith("add", (a, b) => (toI32(a) + toI32(b)) | 0);
+      case "sub": return regArith("sub", (a, b) => (toI32(a) - toI32(b)) | 0);
+      case "sll": return regArith("sll", (a, b) => a << (b & 0x1f));
+      case "slt": return regArith("slt", (a, b) => toI32(a) < toI32(b) ? 1 : 0);
+      case "sltu": return regArith("sltu", (a, b) => toU32(a) < toU32(b) ? 1 : 0);
+      case "xor": return regArith("xor", (a, b) => a ^ b);
+      case "srl": return regArith("srl", (a, b) => a >>> (b & 0x1f));
+      case "sra": return regArith("sra", (a, b) => toI32(a) >> (b & 0x1f));
+      case "or": return regArith("or", (a, b) => a | b);
+      case "and": return regArith("and", (a, b) => a & b);
+
+      // Load
+      case "lb": case "lh": case "lw": case "lbu": case "lhu":
+        return this.execLoad(decoded, registers, memory, pc, writeRd);
+
+      // Store
+      case "sb": case "sh": case "sw":
+        return this.execStore(decoded, registers, memory, pc);
+
+      // Branch
+      case "beq": return branch("beq", (a, b) => a === b);
+      case "bne": return branch("bne", (a, b) => a !== b);
+      case "blt": return branch("blt", (a, b) => toI32(a) < toI32(b));
+      case "bge": return branch("bge", (a, b) => toI32(a) >= toI32(b));
+      case "bltu": return branch("bltu", (a, b) => toU32(a) < toU32(b));
+      case "bgeu": return branch("bgeu", (a, b) => toU32(a) >= toU32(b));
+
+      // Jump
+      case "jal": {
+        const returnAddr = toU32(pc + 4);
+        return { description: "jal", registersChanged: writeRd(f["rd"], returnAddr), memoryChanged: noMem, nextPc: pc + f["imm"], halted: false };
+      }
+      case "jalr": {
+        const returnAddr = toU32(pc + 4);
+        const target = (toI32(registers.read(f["rs1"])) + f["imm"]) & ~1;
+        return { description: "jalr", registersChanged: writeRd(f["rd"], returnAddr), memoryChanged: noMem, nextPc: target, halted: false };
+      }
+
+      // Upper immediate
+      case "lui": {
+        const result = toU32(f["imm"] << 12);
+        return { description: "lui", registersChanged: writeRd(f["rd"], result), memoryChanged: noMem, nextPc: pc + 4, halted: false };
+      }
+      case "auipc": {
+        const result = toU32(pc + (f["imm"] << 12));
+        return { description: "auipc", registersChanged: writeRd(f["rd"], result), memoryChanged: noMem, nextPc: pc + 4, halted: false };
+      }
+
+      // System
+      case "ecall": return this.execEcall(pc);
+      case "mret": return this.execMret(pc);
+      case "csrrw": return this.execCSRRW(decoded, registers, pc, writeRd);
+      case "csrrs": return this.execCSRRS(decoded, registers, pc, writeRd);
+      case "csrrc": return this.execCSRRC(decoded, registers, pc, writeRd);
+
+      default:
+        return { description: `Unknown: ${m}`, registersChanged: noReg, memoryChanged: noMem, nextPc: pc + 4, halted: false };
+    }
   }
 
-  /**
-   * Execute: add rd, rs1, rs2 -> rd = rs1 + rs2
-   *
-   * Example: add x3, x1, x2  (where x1=1, x2=2)
-   *     rs1_val = 1, rs2_val = 2
-   *     result = 1 + 2 = 3
-   *     Write 3 to x3
-   */
-  private execAdd(
-    decoded: DecodeResult,
-    registers: RegisterFile,
-    pc: number
-  ): ExecuteResult {
-    const rd = decoded.fields["rd"];
-    const rs1 = decoded.fields["rs1"];
-    const rs2 = decoded.fields["rs2"];
+  private execLoad(decoded: DecodeResult, registers: RegisterFile, memory: Memory, pc: number,
+    writeRd: (rd: number, value: number) => Record<string, number>): ExecuteResult {
+    const f = decoded.fields;
+    const addr = (toI32(registers.read(f["rs1"])) + f["imm"]) | 0;
+    let result: number;
 
-    const rs1Val = registers.read(rs1);
-    const rs2Val = registers.read(rs2);
-    const result = (rs1Val + rs2Val) & 0xffffffff;
-
-    const changes: Record<string, number> = {};
-    if (rd !== 0) {
-      registers.write(rd, result);
-      changes[`x${rd}`] = result;
+    switch (decoded.mnemonic) {
+      case "lb": result = toI32(signExtend(memory.readByte(addr), 8)); break;
+      case "lh": {
+        const lo = memory.readByte(addr);
+        const hi = memory.readByte(addr + 1);
+        result = toI32(signExtend(lo | (hi << 8), 16));
+        break;
+      }
+      case "lw": result = memory.readWord(addr); break;
+      case "lbu": result = memory.readByte(addr); break;
+      case "lhu": {
+        const lo = memory.readByte(addr);
+        const hi = memory.readByte(addr + 1);
+        result = lo | (hi << 8);
+        break;
+      }
+      default: result = 0;
     }
 
-    return {
-      description: `x${rd} = x${rs1}(${rs1Val}) + x${rs2}(${rs2Val}) = ${result}`,
-      registersChanged: changes,
-      memoryChanged: {},
-      nextPc: pc + 4,
-      halted: false,
-    };
+    return { description: decoded.mnemonic, registersChanged: writeRd(f["rd"], toU32(result)), memoryChanged: {}, nextPc: pc + 4, halted: false };
   }
 
-  /**
-   * Execute: sub rd, rs1, rs2 -> rd = rs1 - rs2
-   */
-  private execSub(
-    decoded: DecodeResult,
-    registers: RegisterFile,
-    pc: number
-  ): ExecuteResult {
-    const rd = decoded.fields["rd"];
-    const rs1 = decoded.fields["rs1"];
-    const rs2 = decoded.fields["rs2"];
+  private execStore(decoded: DecodeResult, registers: RegisterFile, memory: Memory, pc: number): ExecuteResult {
+    const f = decoded.fields;
+    const addr = (toI32(registers.read(f["rs1"])) + f["imm"]) | 0;
+    const val = registers.read(f["rs2"]);
+    const memChanges: Record<number, number> = {};
 
-    const rs1Val = registers.read(rs1);
-    const rs2Val = registers.read(rs2);
-    const result = (rs1Val - rs2Val) & 0xffffffff;
-
-    const changes: Record<string, number> = {};
-    if (rd !== 0) {
-      registers.write(rd, result);
-      changes[`x${rd}`] = result;
+    switch (decoded.mnemonic) {
+      case "sb": {
+        const b = val & 0xff;
+        memory.writeByte(addr, b);
+        memChanges[addr] = b;
+        break;
+      }
+      case "sh": {
+        const lo = val & 0xff;
+        const hi = (val >>> 8) & 0xff;
+        memory.writeByte(addr, lo);
+        memory.writeByte(addr + 1, hi);
+        memChanges[addr] = lo;
+        memChanges[addr + 1] = hi;
+        break;
+      }
+      case "sw": {
+        memory.writeWord(addr, val);
+        memChanges[addr] = val & 0xff;
+        memChanges[addr + 1] = (val >>> 8) & 0xff;
+        memChanges[addr + 2] = (val >>> 16) & 0xff;
+        memChanges[addr + 3] = (val >>> 24) & 0xff;
+        break;
+      }
     }
 
-    return {
-      description: `x${rd} = x${rs1}(${rs1Val}) - x${rs2}(${rs2Val}) = ${result}`,
-      registersChanged: changes,
-      memoryChanged: {},
-      nextPc: pc + 4,
-      halted: false,
-    };
+    return { description: decoded.mnemonic, registersChanged: {}, memoryChanged: memChanges, nextPc: pc + 4, halted: false };
+  }
+
+  private execEcall(pc: number): ExecuteResult {
+    if (!this.csr) {
+      return { description: "ecall: halt (no CSR)", registersChanged: {}, memoryChanged: {}, nextPc: pc, halted: true };
+    }
+    const mtvec = this.csr.read(CSR_MTVEC);
+    if (mtvec === 0) {
+      return { description: "ecall: halt (mtvec=0)", registersChanged: {}, memoryChanged: {}, nextPc: pc, halted: true };
+    }
+    this.csr.write(CSR_MEPC, toU32(pc));
+    this.csr.write(CSR_MCAUSE, CAUSE_ECALL_MMODE);
+    const mstatus = this.csr.read(CSR_MSTATUS);
+    this.csr.write(CSR_MSTATUS, (mstatus & ~MIE) >>> 0);
+    return { description: `ecall: trap to 0x${mtvec.toString(16)}`, registersChanged: {}, memoryChanged: {}, nextPc: mtvec, halted: false };
+  }
+
+  private execMret(pc: number): ExecuteResult {
+    if (!this.csr) {
+      return { description: "mret: no CSR", registersChanged: {}, memoryChanged: {}, nextPc: pc + 4, halted: false };
+    }
+    const mepc = this.csr.read(CSR_MEPC);
+    const mstatus = this.csr.read(CSR_MSTATUS);
+    this.csr.write(CSR_MSTATUS, (mstatus | MIE) >>> 0);
+    return { description: `mret: return to 0x${mepc.toString(16)}`, registersChanged: {}, memoryChanged: {}, nextPc: mepc, halted: false };
+  }
+
+  private execCSRRW(decoded: DecodeResult, registers: RegisterFile, pc: number,
+    writeRd: (rd: number, value: number) => Record<string, number>): ExecuteResult {
+    if (!this.csr) return { description: "csrrw: no CSR", registersChanged: {}, memoryChanged: {}, nextPc: pc + 4, halted: false };
+    const f = decoded.fields;
+    const rs1Val = registers.read(f["rs1"]);
+    const oldCSR = this.csr.readWrite(f["csr"], rs1Val);
+    return { description: "csrrw", registersChanged: writeRd(f["rd"], oldCSR), memoryChanged: {}, nextPc: pc + 4, halted: false };
+  }
+
+  private execCSRRS(decoded: DecodeResult, registers: RegisterFile, pc: number,
+    writeRd: (rd: number, value: number) => Record<string, number>): ExecuteResult {
+    if (!this.csr) return { description: "csrrs: no CSR", registersChanged: {}, memoryChanged: {}, nextPc: pc + 4, halted: false };
+    const f = decoded.fields;
+    const rs1Val = registers.read(f["rs1"]);
+    const oldCSR = this.csr.readSet(f["csr"], rs1Val);
+    return { description: "csrrs", registersChanged: writeRd(f["rd"], oldCSR), memoryChanged: {}, nextPc: pc + 4, halted: false };
+  }
+
+  private execCSRRC(decoded: DecodeResult, registers: RegisterFile, pc: number,
+    writeRd: (rd: number, value: number) => Record<string, number>): ExecuteResult {
+    if (!this.csr) return { description: "csrrc: no CSR", registersChanged: {}, memoryChanged: {}, nextPc: pc + 4, halted: false };
+    const f = decoded.fields;
+    const rs1Val = registers.read(f["rs1"]);
+    const oldCSR = this.csr.readClear(f["csr"], rs1Val);
+    return { description: "csrrc", registersChanged: writeRd(f["rd"], oldCSR), memoryChanged: {}, nextPc: pc + 4, halted: false };
   }
 }
 
-// ---------------------------------------------------------------------------
-// Assembler helpers
-// ---------------------------------------------------------------------------
-// These functions encode RISC-V instructions from human-readable form
-// to binary. This is a tiny assembler -- just enough to create test programs.
-
-/**
- * Encode: addi rd, rs1, imm -> 32-bit instruction.
- *
- * I-type format: [imm[11:0] | rs1 | funct3=000 | rd | opcode=0010011]
- *
- * Example:
- *     encodeAddi(1, 0, 1)  // addi x1, x0, 1 -> 0x00100093
- */
-export function encodeAddi(rd: number, rs1: number, imm: number): number {
-  const immBits = imm & 0xfff;
-  return (
-    ((immBits << 20) | (rs1 << 15) | (0 << 12) | (rd << 7) | OPCODE_OP_IMM) >>>
-    0
-  );
-}
-
-/**
- * Encode: add rd, rs1, rs2 -> 32-bit instruction.
- *
- * R-type format: [funct7=0 | rs2 | rs1 | funct3=000 | rd | opcode=0110011]
- *
- * Example:
- *     encodeAdd(3, 1, 2)  // add x3, x1, x2 -> 0x002081B3
- */
-export function encodeAdd(rd: number, rs1: number, rs2: number): number {
-  return (
-    ((0 << 25) | (rs2 << 20) | (rs1 << 15) | (0 << 12) | (rd << 7) | OPCODE_OP) >>>
-    0
-  );
-}
-
-/**
- * Encode: sub rd, rs1, rs2 -> 32-bit instruction.
- *
- * R-type format: [funct7=0100000 | rs2 | rs1 | funct3=000 | rd | opcode=0110011]
- *
- * Example:
- *     encodeSub(3, 1, 2)  // sub x3, x1, x2 -> x3 = x1 - x2
- */
-export function encodeSub(rd: number, rs1: number, rs2: number): number {
-  return (
-    ((0b0100000 << 25) | (rs2 << 20) | (rs1 << 15) | (0 << 12) | (rd << 7) | OPCODE_OP) >>>
-    0
-  );
-}
-
-/**
- * Encode: ecall -> 32-bit instruction.
- *
- * System format: [0...0 | opcode=1110011]
- *
- * Example:
- *     encodeEcall()  // -> 0x00000073
- */
-export function encodeEcall(): number {
-  return OPCODE_SYSTEM;
-}
-
-// ---------------------------------------------------------------------------
+// =========================================================================
 // High-level simulator
-// ---------------------------------------------------------------------------
+// =========================================================================
 
-/**
- * Complete RISC-V simulator -- ISA + CPU in one convenient class.
- *
- * This wraps the CPU simulator with the RISC-V decoder and executor,
- * providing a simple interface for running RISC-V programs.
- *
- * Example: running x = 1 + 2
- *
- *     const sim = new RiscVSimulator();
- *     const program = assemble([
- *         encodeAddi(1, 0, 1),    // x1 = 1
- *         encodeAddi(2, 0, 2),    // x2 = 2
- *         encodeAdd(3, 1, 2),     // x3 = x1 + x2 = 3
- *         encodeEcall(),           // halt
- *     ]);
- *     const traces = sim.run(program);
- *     sim.cpu.registers.read(3);  // 3
- *
- *     The pipeline trace for each instruction shows:
- *     --- Cycle 0 ---
- *       FETCH              | DECODE             | EXECUTE
- *       PC: 0x0000         | addi               | x1 = x0(0) + 1 = 1
- *       -> 0x00100093      | rd=1 rs1=0 imm=1   | PC -> 4
- */
 export class RiscVSimulator {
-  /** The RISC-V instruction decoder. */
   readonly decoder: RiscVDecoder;
-
-  /** The RISC-V instruction executor. */
   readonly executor: RiscVExecutor;
-
-  /** The underlying generic CPU. */
   readonly cpu: CPU;
+  readonly csr: CSRFile;
 
   constructor(memorySize: number = 65536) {
     this.decoder = new RiscVDecoder();
+    this.csr = new CSRFile();
     this.executor = new RiscVExecutor();
-    this.cpu = new CPU(
-      this.decoder,
-      this.executor,
-      32, // RISC-V has 32 registers
-      32,
-      memorySize
-    );
-    // Enforce x0 = 0 (it's already 0 from initialization,
-    // but the executor also prevents writes to x0)
+    this.executor.csr = this.csr;
+    this.cpu = new CPU(this.decoder, this.executor, 32, 32, memorySize);
   }
 
-  /**
-   * Load and run a RISC-V program, returning the pipeline trace.
-   */
   run(program: number[] | Uint8Array): PipelineTrace[] {
     this.cpu.loadProgram(program);
     return this.cpu.run();
   }
 
-  /**
-   * Execute one instruction and return its pipeline trace.
-   */
   step(): PipelineTrace {
     return this.cpu.step();
   }
-}
-
-/**
- * Convert a list of 32-bit instruction words to bytes (little-endian).
- *
- * This is a convenience function for creating test programs:
- *
- *     const program = assemble([
- *         encodeAddi(1, 0, 1),   // x1 = 1
- *         encodeAddi(2, 0, 2),   // x2 = 2
- *         encodeAdd(3, 1, 2),    // x3 = x1 + x2
- *         encodeEcall(),          // halt
- *     ]);
- *
- * Each 32-bit instruction is stored as 4 bytes in little-endian order.
- * Little-endian means the least significant byte comes first:
- *     0x00100093 -> [0x93, 0x00, 0x10, 0x00]
- */
-export function assemble(instructions: number[]): number[] {
-  const result: number[] = [];
-  for (const instr of instructions) {
-    const masked = (instr & 0xffffffff) >>> 0;
-    result.push(masked & 0xff);
-    result.push((masked >>> 8) & 0xff);
-    result.push((masked >>> 16) & 0xff);
-    result.push((masked >>> 24) & 0xff);
-  }
-  return result;
 }
