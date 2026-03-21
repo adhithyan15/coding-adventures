@@ -19,8 +19,6 @@
 
 module CodingAdventures
   module RiscvSimulator
-    MASK32 = 0xFFFFFFFF
-
     class RiscVISADecoder
       attr_reader :csr
 

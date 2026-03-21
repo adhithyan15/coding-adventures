@@ -1,4 +1,6 @@
 uv venv --quiet --clear
+uv pip install -e ../state-machine --quiet
+uv pip install -e ../directed-graph --quiet
 uv pip install -e ".[dev]" --quiet
 uv pip install -e ../bootloader --quiet
 uv pip install -e ../os-kernel --quiet
@@ -15,6 +17,4 @@ uv pip install -e ../branch-predictor --quiet
 uv pip install -e ../cpu-pipeline --quiet
 uv pip install -e ../hazard-detection --quiet
 uv pip install -e ../clock --quiet
-uv pip install -e ../state-machine --quiet
-uv pip install -e ../directed-graph --quiet
 .venv/bin/python -m pytest tests/ -v

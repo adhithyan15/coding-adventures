@@ -118,8 +118,8 @@ defmodule CodingAdventures.Core.MemoryController do
     if start_address < 0 or start_address + prog_size > byte_size(memory) do
       mc
     else
-      <<before::binary-size(start_address), _::binary-size(prog_size), after::binary>> = memory
-      %{mc | memory: before <> prog_binary <> after}
+      <<before::binary-size(start_address), _::binary-size(prog_size), rest::binary>> = memory
+      %{mc | memory: before <> prog_binary <> rest}
     end
   end
 
@@ -200,8 +200,8 @@ defmodule CodingAdventures.Core.MemoryController do
     if address < 0 or address + data_size > byte_size(memory) do
       memory
     else
-      <<before::binary-size(address), _::binary-size(data_size), after::binary>> = memory
-      before <> data <> after
+      <<before::binary-size(address), _::binary-size(data_size), rest::binary>> = memory
+      before <> data <> rest
     end
   end
 end
