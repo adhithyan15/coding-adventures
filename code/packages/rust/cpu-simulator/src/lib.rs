@@ -5,9 +5,12 @@
 //!
 //! - `RegisterFile`: A fixed-size array of 32-bit registers
 //! - `Memory`: Byte-addressable memory with word read/write support
+//! - `SparseMemory`: Address-range-mapped memory for full 32-bit address spaces
 //!
 //! These are deliberately simple -- just data containers with no instruction
 //! fetching or pipeline logic. The ISA simulator handles decode and execute.
+
+pub mod sparse_memory;
 
 /// A fixed-size array of 32-bit registers.
 ///

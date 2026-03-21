@@ -9,6 +9,8 @@ pub mod decode;
 pub mod execute;
 pub mod encoding;
 pub mod simulator;
+pub mod core_adapter;
 
 pub use csr::CSRFile;
+pub use core_adapter::RiscVISADecoder;
 pub use simulator::RiscVSimulator;
