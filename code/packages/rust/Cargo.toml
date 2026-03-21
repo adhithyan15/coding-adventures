@@ -12,4 +12,5 @@ members = [
     "cpu-simulator",
     "riscv-simulator",
     "display",
+    "rom-bios",
 ]
