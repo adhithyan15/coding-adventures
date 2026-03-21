@@ -5,6 +5,13 @@ description = "TensorFlow-compatible API built on ml-framework-core"
 requires-python = ">=3.12"
 dependencies = ["coding-adventures-ml-framework-core"]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4.0",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
