@@ -7,8 +7,15 @@
 3. **Feature branches for everything** — Never commit directly to main.
 4. **Commit frequently** — Small, focused commits with detailed log messages explaining what and why.
 5. **Protect files** — Never force-delete. Always ensure files can be retrieved via git.
-6. **Check lessons.md first** — Before starting any work, review lessons.md to avoid repeating mistakes.
-7. **Document mistakes** — If a mistake is made, add it to lessons.md immediately.
+6. **Check lessons.md first** — Before starting ANY implementation work, read lessons.md cover to cover. Key lessons that recur:
+   - BUILD files must install ALL transitive dependencies in leaf-to-root order
+   - Elixir reserved words (`after`, `rescue`, etc.) cannot be variables
+   - Rust workspace: run `cargo build --workspace` to catch missing exports
+   - Ruby require ordering: dependencies must be required before own modules
+   - TypeScript: chain-install transitive `file:` deps in BUILD files
+   - Go: run `go mod tidy` in ALL transitively dependent packages after adding a new module
+   - Every package needs BUILD, README.md, CHANGELOG.md in every language
+7. **Document mistakes** — If a mistake is made or a CI failure occurs, add it to lessons.md immediately. Don't wait until later.
 
 ## Repo Standards
 

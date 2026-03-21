@@ -6,6 +6,9 @@ source "https://rubygems.org"
 # standard library (json, digest, open3, pathname, optparse, set).
 # These gems are for development and testing only.
 
+# Optional runtime dependency: progress bar for build output.
+gem "coding_adventures_progress_bar", path: "../../../packages/ruby/progress_bar"
+
 group :test do
   gem "minitest", "~> 5.0"
   gem "rake", "~> 13.0"

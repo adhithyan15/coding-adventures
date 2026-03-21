@@ -1,0 +1,13 @@
+# Zero dependencies. We declare Node.js N-API functions ourselves using
+# extern "C" — no napi-sys, no napi-rs, no bindgen, no build-time headers.
+# N-API is ABI-stable by design (that's its entire purpose).
+[workspace]
+
+[package]
+name = "node-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Thin safe Rust wrapper over Node.js N-API — zero dependencies, no napi-rs, no macros"
+
+[dependencies]
+# None. That's the point.

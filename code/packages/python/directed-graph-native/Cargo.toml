@@ -1,0 +1,20 @@
+[package]
+name = "directed-graph-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust directed-graph crate via PyO3"
+
+[lib]
+# PyO3 requires cdylib for building a Python extension module (.so/.pyd).
+# The module name must match the Python import name.
+name = "directed_graph_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# PyO3 is the Rust ↔ Python bridge. The "extension-module" feature tells
+# PyO3 not to link against libpython (maturin handles that at build time).
+pyo3 = { version = "0.23", features = ["extension-module"] }
+
+# The core directed-graph crate — this is where all the real algorithms live.
+# The wrapper in this crate is just thin glue between PyO3 and the Rust API.
+directed-graph = { path = "../../rust/directed-graph" }

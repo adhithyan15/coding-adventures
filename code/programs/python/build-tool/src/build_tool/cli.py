@@ -41,6 +41,15 @@ from build_tool.hasher import hash_deps, hash_package
 from build_tool.reporter import print_report
 from build_tool.resolver import resolve_dependencies
 
+# Optional progress bar integration. When the progress bar package is
+# installed, builds get a real-time terminal UI showing which packages are
+# building and overall completion. When unavailable, builds work identically
+# but without the visual feedback.
+try:
+    from progress_bar import Tracker
+except ImportError:
+    Tracker = None  # type: ignore[assignment, misc]
+
 
 def _find_repo_root(start: Path | None = None) -> Path | None:
     """Walk up from ``start`` (or cwd) looking for a ``.git`` directory.
@@ -191,6 +200,15 @@ def main(argv: list[str] | None = None) -> int:
     cache.load(cache_path)
 
     # Steps 8-9: Execute builds
+    # Set up the progress bar tracker. We only show the progress bar during
+    # real builds (not dry runs), and only when the progress bar package is
+    # installed. The tracker writes to stderr so it doesn't interfere with
+    # structured output on stdout.
+    tracker = None
+    if not args.dry_run and Tracker is not None:
+        tracker = Tracker(total=len(packages), writer=sys.stderr)
+        tracker.start()
+
     results = execute_builds(
         packages=packages,
         graph=graph,
@@ -201,7 +219,11 @@ def main(argv: list[str] | None = None) -> int:
         dry_run=args.dry_run,
         max_jobs=args.jobs,
         affected_set=affected_set,
+        tracker=tracker,
     )
+
+    if tracker:
+        tracker.stop()
 
     # Step 10: Save cache (as secondary record, not primary mechanism)
     if not args.dry_run:
