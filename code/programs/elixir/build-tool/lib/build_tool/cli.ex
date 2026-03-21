@@ -1,0 +1,270 @@
+defmodule BuildTool.CLI do
+  @moduledoc """
+  Main escript entry point for the Elixir build tool.
+
+  This module parses command-line arguments and orchestrates the full build
+  flow — the same 11 steps as the Go implementation. It is the "imperative
+  shell" that wires together all the pure functional modules.
+
+  ## The 11-step build flow
+
+    1. Find the repo root (walk up looking for `.git`)
+    2. Discover packages (walk BUILD files under `code/`)
+    3. Filter by language if requested
+    4. Resolve dependencies (parse metadata files)
+    5. Git-diff change detection (`git diff --name-only <base>...HEAD`)
+    6. Hash all packages and their dependencies
+    7. Load cache (fallback when git diff is unavailable)
+    8. If `--dry-run`, report what would build and exit
+    9. Execute builds in parallel by dependency level
+   10. Update and save cache
+   11. Print report and exit with code 1 if any builds failed
+
+  ## CLI flags
+
+  The escript accepts the same flags as the Go build tool:
+
+    - `--root PATH` — repo root directory (auto-detected from `.git`)
+    - `--force` — rebuild everything regardless of cache
+    - `--dry-run` — show what would build without executing
+    - `--jobs N` — max parallel jobs (default: CPU count)
+    - `--language LANG` — filter to a specific language
+    - `--diff-base REF` — git ref to diff against (default: `origin/main`)
+    - `--cache-file PATH` — path to cache file (default: `.build-cache.json`)
+
+  ## Usage
+
+      mix escript.build
+      ./build_tool --root /path/to/repo --force
+  """
+
+  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Reporter, Resolver}
+  alias CodingAdventures.ProgressBar
+
+  # ---------------------------------------------------------------------------
+  # Entry point
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Main entry point for the escript. Parses arguments and runs the build.
+
+  Exits with code 0 on success, 1 if any builds failed.
+  """
+  def main(argv) do
+    exit_code = run(argv)
+    System.halt(exit_code)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Core logic
+  # ---------------------------------------------------------------------------
+  #
+  # The run/1 function contains the actual logic, separated from main/1
+  # so we can return an exit code cleanly (and test it without halting).
+
+  @doc false
+  def run(argv) do
+    # Parse CLI flags using OptionParser.
+    {opts, _rest, _invalid} =
+      OptionParser.parse(argv,
+        strict: [
+          root: :string,
+          force: :boolean,
+          dry_run: :boolean,
+          jobs: :integer,
+          language: :string,
+          diff_base: :string,
+          cache_file: :string
+        ],
+        aliases: [
+          r: :root,
+          f: :force,
+          n: :dry_run,
+          j: :jobs,
+          l: :language
+        ]
+      )
+
+    root = Keyword.get(opts, :root, "")
+    force = Keyword.get(opts, :force, false)
+    dry_run = Keyword.get(opts, :dry_run, false)
+    jobs = Keyword.get(opts, :jobs, System.schedulers_online())
+    language = Keyword.get(opts, :language, "all")
+    diff_base = Keyword.get(opts, :diff_base, "origin/main")
+    cache_file = Keyword.get(opts, :cache_file, ".build-cache.json")
+
+    # Step 1: Find the repo root.
+    repo_root =
+      if root == "" do
+        find_repo_root(File.cwd!())
+      else
+        Path.expand(root)
+      end
+
+    if repo_root == nil do
+      IO.puts(:stderr, "Error: Could not find repo root (.git directory).")
+      IO.puts(:stderr, "Use --root to specify the repo root.")
+      1
+    else
+      do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file)
+    end
+  end
+
+  defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file) do
+    # The build starts from the code/ directory inside the repo root.
+    code_root = Path.join(repo_root, "code")
+
+    if not File.dir?(code_root) do
+      IO.puts(:stderr, "Error: #{code_root} does not exist or is not a directory.")
+      1
+    else
+      # Step 2: Discover packages.
+      all_packages = Discovery.discover_packages(code_root)
+
+      # Step 3: Filter by language if requested.
+      packages =
+        if language != "all" do
+          Enum.filter(all_packages, fn pkg -> pkg.language == language end)
+        else
+          all_packages
+        end
+
+      cond do
+        all_packages == [] ->
+          IO.puts(:stderr, "No packages found.")
+          0
+
+        packages == [] ->
+          IO.puts(:stderr, "No #{language} packages found.")
+          0
+
+        true ->
+          do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base, cache_file)
+      end
+    end
+  end
+
+  defp do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base, cache_file) do
+    IO.puts("Discovered #{length(packages)} packages")
+
+    # Step 4: Resolve dependencies.
+    graph = Resolver.resolve_dependencies(packages)
+
+    # Step 5: Git-diff change detection (default mode).
+    affected_set =
+      if force do
+        nil
+      else
+        changed_files = GitDiff.get_changed_files(repo_root, diff_base)
+
+        if length(changed_files) > 0 do
+          changed_pkgs = GitDiff.map_files_to_packages(changed_files, packages, repo_root)
+
+          if MapSet.size(changed_pkgs) > 0 do
+            affected = DirectedGraph.affected_nodes(graph, changed_pkgs)
+
+            IO.puts(
+              "Git diff: #{MapSet.size(changed_pkgs)} packages changed, #{MapSet.size(affected)} affected (including dependents)"
+            )
+
+            affected
+          else
+            IO.puts("Git diff: no package files changed — nothing to build")
+            MapSet.new()
+          end
+        else
+          IO.puts("Git diff unavailable — falling back to hash-based cache")
+          nil
+        end
+      end
+
+    # Step 6: Hash all packages.
+    package_hashes = Map.new(packages, fn pkg -> {pkg.name, Hasher.hash_package(pkg)} end)
+
+    deps_hashes =
+      Map.new(packages, fn pkg ->
+        {pkg.name, Hasher.hash_deps(pkg.name, graph, package_hashes)}
+      end)
+
+    # Step 7: Load cache (fallback if git diff didn't work).
+    cache_path =
+      if Path.type(cache_file) == :absolute do
+        cache_file
+      else
+        Path.join(repo_root, cache_file)
+      end
+
+    {:ok, build_cache} = Cache.start_link()
+    Cache.load(build_cache, cache_path)
+
+    # Steps 8-9: Execute builds with progress tracking.
+    tracker =
+      if dry_run do
+        nil
+      else
+        case ProgressBar.start_link(total: length(packages), writer: :stderr) do
+          {:ok, pid} -> pid
+          _ -> nil
+        end
+      end
+
+    results =
+      Executor.execute_builds(packages, graph, build_cache, package_hashes, deps_hashes,
+        force: force,
+        dry_run: dry_run,
+        max_jobs: jobs,
+        affected_set: affected_set,
+        tracker: tracker
+      )
+
+    if tracker do
+      ProgressBar.stop(tracker)
+    end
+
+    # Step 10: Save cache.
+    if not dry_run do
+      case Cache.save(build_cache, cache_path) do
+        :ok -> :ok
+        {:error, reason} -> IO.puts(:stderr, "Warning: could not save cache: #{inspect(reason)}")
+      end
+    end
+
+    # Step 10: Print report.
+    Reporter.print_report(results)
+
+    # Step 11: Exit with code 1 if any builds failed.
+    has_failure = results |> Map.values() |> Enum.any?(fn r -> r.status == "failed" end)
+    if has_failure, do: 1, else: 0
+  end
+
+  # ---------------------------------------------------------------------------
+  # Repo root detection
+  # ---------------------------------------------------------------------------
+  #
+  # Walks up from the given directory looking for a .git directory.
+  # Returns the directory containing .git, or nil if not found.
+
+  @doc false
+  def find_repo_root(start) do
+    current = Path.expand(start)
+    do_find_repo_root(current)
+  end
+
+  defp do_find_repo_root(current) do
+    git_dir = Path.join(current, ".git")
+
+    if File.dir?(git_dir) do
+      current
+    else
+      parent = Path.dirname(current)
+
+      if parent == current do
+        # Reached filesystem root without finding .git.
+        nil
+      else
+        do_find_repo_root(parent)
+      end
+    end
+  end
+
+end
