@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/system-board",
+  "version": "0.1.0",
+  "description": "System board: complete simulated computer with boot-to-hello-world",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": { "build": "tsc", "test": "vitest run" },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/riscv-simulator": "file:../riscv-simulator",
+    "@coding-adventures/display": "file:../display",
+    "@coding-adventures/interrupt-handler": "file:../interrupt-handler",
+    "@coding-adventures/bootloader": "file:../bootloader",
+    "@coding-adventures/rom-bios": "file:../rom-bios",
+    "@coding-adventures/os-kernel": "file:../os-kernel"
+  },
+  "devDependencies": { "typescript": "^5.0.0", "vitest": "^3.0.0", "@vitest/coverage-v8": "^3.0.0" }
+}

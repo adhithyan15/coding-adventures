@@ -12,12 +12,15 @@ from cpu_simulator.cpu import CPU, CPUState
 from cpu_simulator.memory import Memory
 from cpu_simulator.pipeline import PipelineStage, PipelineTrace
 from cpu_simulator.registers import RegisterFile
+from cpu_simulator.sparse_memory import MemoryRegion, SparseMemory
 
 __all__ = [
     "CPU",
     "CPUState",
     "Memory",
+    "MemoryRegion",
     "RegisterFile",
     "PipelineStage",
     "PipelineTrace",
+    "SparseMemory",
 ]

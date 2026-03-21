@@ -1,36 +1,42 @@
-# riscv-simulator
+# RISC-V Simulator (Rust)
 
-RISC-V RV32I simulator -- a clean, modern open-source instruction set architecture.
-
-## What is this?
-
-This crate simulates a subset of the RISC-V RV32I instruction set. RISC-V is an open-source ISA built on the RISC philosophy: a small number of simple instructions rather than many complex ones.
+Full RV32I base integer instruction set with M-mode privileged extensions.
 
 ## Supported Instructions
 
-| Instruction | Type   | Description                          |
-|-------------|--------|--------------------------------------|
-| `addi`      | I-type | Add immediate to register            |
-| `add`       | R-type | Add two registers                    |
-| `sub`       | R-type | Subtract two registers               |
-| `ecall`     | System | System call (halts the simulator)    |
+- **Arithmetic**: add, sub, addi, slt, sltu, slti, sltiu, and, or, xor, andi, ori, xori
+- **Shifts**: sll, srl, sra, slli, srli, srai
+- **Loads**: lb, lh, lw, lbu, lhu
+- **Stores**: sb, sh, sw
+- **Branches**: beq, bne, blt, bge, bltu, bgeu
+- **Jumps**: jal, jalr
+- **Upper immediates**: lui, auipc
+- **System**: ecall, mret, csrrw, csrrs, csrrc
+- **CSR registers**: mstatus, mtvec, mepc, mcause, mscratch
 
-## How it fits in the stack
+## Architecture
 
-This crate builds on `cpu-simulator` (the generic CPU framework) by providing RISC-V-specific instruction decoding and execution. The generic CPU handles the fetch-decode-execute loop; this crate tells it how to interpret RISC-V machine code.
+```
+opcodes.rs   -- opcode and funct3/funct7 constants
+decode.rs    -- instruction decoder for all six formats (R/I/S/B/U/J)
+execute.rs   -- instruction executor for all operations
+csr.rs       -- Control and Status Register file for M-mode
+encoding.rs  -- helpers to construct machine code for testing
+simulator.rs -- top-level simulator with fetch-decode-execute loop
+```
 
 ## Usage
 
 ```rust
-use riscv_simulator::*;
+use riscv_simulator::RiscVSimulator;
+use riscv_simulator::encoding::*;
 
 let mut sim = RiscVSimulator::new(65536);
-let program = assemble(&[
-    encode_addi(1, 0, 42),  // x1 = 42
-    encode_addi(2, 0, 8),   // x2 = 8
-    encode_add(3, 1, 2),    // x3 = x1 + x2 = 50
+sim.run_instructions(&[
+    encode_addi(1, 0, 1),   // x1 = 1
+    encode_addi(2, 0, 2),   // x2 = 2
+    encode_add(3, 1, 2),    // x3 = 3
     encode_ecall(),          // halt
 ]);
-let traces = sim.run(&program);
-assert_eq!(sim.cpu.registers.read(3), 50);
+assert_eq!(sim.regs.read(3), 3);
 ```

@@ -1,19 +1,30 @@
 /**
- * RISC-V Simulator -- Layer 4b of the computing stack.
+ * RISC-V Simulator -- full RV32I + M-mode extensions.
  *
- * Minimal RV32I instruction decoder and executor.
- * Plugs into the CPU simulator via the decoder/executor protocol.
+ * Provides decoder, executor, CSR file, encoding helpers, and the
+ * high-level RiscVSimulator class.
  */
 
 export {
   RiscVSimulator,
   RiscVDecoder,
   RiscVExecutor,
-  encodeAddi,
-  encodeAdd,
-  encodeEcall,
-  assemble,
-  OPCODE_OP_IMM,
-  OPCODE_OP,
-  OPCODE_SYSTEM,
+  CSRFile,
+  CSR_MSTATUS, CSR_MTVEC, CSR_MEPC, CSR_MCAUSE,
+  MIE, CAUSE_ECALL_MMODE,
 } from "./simulator.js";
+
+export {
+  encodeAddi, encodeSlti, encodeSltiu, encodeXori, encodeOri, encodeAndi,
+  encodeSlli, encodeSrli, encodeSrai,
+  encodeAdd, encodeSub, encodeSll, encodeSlt, encodeSltu,
+  encodeXor, encodeSrl, encodeSra, encodeOr, encodeAnd,
+  encodeLb, encodeLh, encodeLw, encodeLbu, encodeLhu,
+  encodeSb, encodeSh, encodeSw,
+  encodeBeq, encodeBne, encodeBlt, encodeBge, encodeBltu, encodeBgeu,
+  encodeJal, encodeJalr, encodeLui, encodeAuipc,
+  encodeEcall, encodeMret, encodeCsrrw, encodeCsrrs, encodeCsrrc,
+  assemble,
+} from "./encoding.js";
+
+export * from "./opcodes.js";

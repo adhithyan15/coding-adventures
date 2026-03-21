@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+gem "coding_adventures_riscv_simulator", path: "../riscv_simulator"
+gem "coding_adventures_cpu_simulator", path: "../cpu_simulator"
+gem "coding_adventures_display", path: "../display"
+gem "coding_adventures_interrupt_handler", path: "../interrupt_handler"
