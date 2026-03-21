@@ -1,1 +1,2 @@
-bundle install --quiet && bundle exec rake test
+bundle install --quiet
+bundle exec rake test

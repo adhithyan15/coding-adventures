@@ -395,6 +395,58 @@ func TestParseTypescriptDepsExternalSkipped(t *testing.T) {
 	}
 }
 
+func TestBuildKnownNamesRust(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/logic-gates", Path: "/repo/packages/rust/logic-gates", Language: "rust"},
+	}
+	known := BuildKnownNames(packages)
+	if known["logic-gates"] != "rust/logic-gates" {
+		t.Fatalf("expected rust/logic-gates, got %s", known["logic-gates"])
+	}
+}
+
+func TestParseRustDeps(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"arithmetic/Cargo.toml": `[package]
+name = "arithmetic"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+`,
+		"logic-gates/Cargo.toml": `[package]
+name = "logic-gates"
+version = "0.1.0"
+edition = "2021"
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "rust/arithmetic", Path: filepath.Join(root, "arithmetic"), Language: "rust"},
+		{Name: "rust/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "rust"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseRustDeps(packages[0], known)
+
+	if len(deps) != 1 {
+		t.Fatalf("expected 1 dep, got %d: %v", len(deps), deps)
+	}
+	if deps[0] != "rust/logic-gates" {
+		t.Fatalf("expected rust/logic-gates, got %s", deps[0])
+	}
+}
+
+func TestParseRustDepsNoCargoToml(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{Name: "rust/pkg-x", Path: root, Language: "rust"}
+	deps := parseRustDeps(pkg, map[string]string{})
+	if len(deps) != 0 {
+		t.Fatalf("expected 0 deps, got %d", len(deps))
+	}
+}
+
 func TestBuildKnownNamesGo(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"directed-graph/go.mod": `module github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph

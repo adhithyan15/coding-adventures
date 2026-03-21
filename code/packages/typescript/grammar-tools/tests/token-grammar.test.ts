@@ -283,6 +283,118 @@ NUMBER = /[0-9]+\\.?[0-9]*/
 });
 
 // ---------------------------------------------------------------------------
+// Mode directive
+// ---------------------------------------------------------------------------
+
+describe("ParseModeDirective", () => {
+  it("should parse mode: indentation", () => {
+    const grammar = parseTokenGrammar("mode: indentation\nNAME = /[a-z]+/");
+    expect(grammar.mode).toBe("indentation");
+  });
+
+  it("should have undefined mode when not specified", () => {
+    const grammar = parseTokenGrammar("NAME = /[a-z]+/");
+    expect(grammar.mode).toBeUndefined();
+  });
+
+  it("should throw on missing mode value", () => {
+    expect(() => parseTokenGrammar("mode:")).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar("mode:")).toThrow(/Missing mode value/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Skip section
+// ---------------------------------------------------------------------------
+
+describe("ParseSkipSection", () => {
+  it("should parse skip definitions", () => {
+    const source = `NAME = /[a-z]+/
+skip:
+  WHITESPACE = /[ \\t]+/
+  COMMENT = /#[^\\n]*/`;
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.skipDefinitions).toHaveLength(2);
+    expect(grammar.skipDefinitions![0].name).toBe("WHITESPACE");
+    expect(grammar.skipDefinitions![1].name).toBe("COMMENT");
+  });
+
+  it("should throw on skip definition without equals", () => {
+    expect(() => parseTokenGrammar("skip:\n  BAD_PATTERN")).toThrow(
+      TokenGrammarError,
+    );
+  });
+
+  it("should throw on incomplete skip definition", () => {
+    expect(() => parseTokenGrammar("skip:\n  BAD =")).toThrow(
+      TokenGrammarError,
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Reserved keywords section
+// ---------------------------------------------------------------------------
+
+describe("ParseReservedSection", () => {
+  it("should parse reserved keywords", () => {
+    const source = `NAME = /[a-z]+/
+reserved:
+  class
+  import`;
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.reservedKeywords).toEqual(["class", "import"]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Aliases
+// ---------------------------------------------------------------------------
+
+describe("ParseAlias", () => {
+  it("should parse regex alias", () => {
+    const source = `STRING_DQ = /"[^"]*"/ -> STRING`;
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.definitions[0].alias).toBe("STRING");
+  });
+
+  it("should parse literal alias", () => {
+    const source = `PLUS_SIGN = "+" -> PLUS`;
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.definitions[0].alias).toBe("PLUS");
+  });
+
+  it("should throw on missing alias name", () => {
+    expect(() => parseTokenGrammar(`FOO = /x/ ->`)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(`FOO = /x/ ->`)).toThrow(/Missing alias/);
+  });
+
+  it("should include aliases in tokenNames", () => {
+    const source = `STRING_DQ = /"[^"]*"/ -> STRING`;
+    const grammar = parseTokenGrammar(source);
+    const names = tokenNames(grammar);
+    expect(names.has("STRING_DQ")).toBe(true);
+    expect(names.has("STRING")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Error cases for new syntax
+// ---------------------------------------------------------------------------
+
+describe("ParseNewSyntaxErrors", () => {
+  it("should throw on unclosed regex", () => {
+    expect(() => parseTokenGrammar("FOO = /unclosed")).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar("FOO = /unclosed")).toThrow(/Unclosed regex/);
+  });
+
+  it("should throw on unclosed literal", () => {
+    expect(() => parseTokenGrammar(`FOO = "unclosed`)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(`FOO = "unclosed`)).toThrow(/Unclosed literal/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Full example
 // ---------------------------------------------------------------------------
 
@@ -330,6 +442,51 @@ keywords:
       "False",
       "None",
     ]);
+    const issues = validateTokenGrammar(grammar);
+    expect(issues).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Starlark-like full example
+// ---------------------------------------------------------------------------
+
+describe("StarlarkTokens", () => {
+  it("should parse a starlark-like tokens file", () => {
+    const source = `
+mode: indentation
+
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+INT = /[0-9]+/
+EQUALS = "="
+PLUS = "+"
+COLON = ":"
+LPAREN = "("
+RPAREN = ")"
+COMMA = ","
+
+keywords:
+  def
+  return
+  if
+  else
+  for
+  in
+  pass
+
+reserved:
+  class
+  import
+
+skip:
+  WHITESPACE = /[ \\t]+/
+  COMMENT = /#[^\\n]*/
+`;
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.mode).toBe("indentation");
+    expect(grammar.reservedKeywords).toEqual(["class", "import"]);
+    expect(grammar.skipDefinitions).toHaveLength(2);
+    expect(grammar.keywords).toHaveLength(7);
     const issues = validateTokenGrammar(grammar);
     expect(issues).toEqual([]);
   });

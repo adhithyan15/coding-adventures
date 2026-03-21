@@ -2,7 +2,7 @@
 
 ## Overview
 
-The build system discovers, resolves, and builds packages across a multi-language monorepo. It is implemented in four languages (Go, Python, Ruby, Rust) with identical behavior. The Go implementation is the primary build tool used in CI.
+The build system discovers, resolves, and builds packages across a multi-language monorepo. It is implemented in four languages (Go, Python, Ruby, Rust) with a shared architecture, but the Go implementation is the most up to date and is the primary build tool used in CI.
 
 The build system is not part of the computing stack — it is the infrastructure that builds and tests the stack.
 
@@ -10,7 +10,7 @@ The build system is not part of the computing stack — it is the infrastructure
 
 1. **Incremental**: Only rebuild packages that changed (via git diff or hash comparison).
 2. **Parallel**: Independent packages build concurrently.
-3. **Multi-language**: A single tool builds Python, Ruby, Go, and Rust packages.
+3. **Multi-language**: The primary tool builds Python, Ruby, Go, Rust, and TypeScript packages.
 4. **Zero configuration**: Packages are discovered automatically from the directory tree.
 5. **Deterministic**: Same inputs always produce the same build plan.
 
@@ -94,10 +94,12 @@ The package's language is inferred from its directory path. The build system sca
 
 | Path component | Language |
 |---------------|----------|
-| `python`      | python   |
-| `ruby`        | ruby     |
-| `go`          | go       |
-| `rust`        | rust     |
+| `python`      | python     |
+| `ruby`        | ruby       |
+| `go`          | go         |
+| `rust`        | rust       |
+| `typescript`  | typescript |
+| `elixir`      | elixir     |
 
 For example, `code/packages/python/logic-gates` yields language `python`. If no known language component is found, the language is `unknown`.
 
@@ -118,7 +120,9 @@ The build system parses language-specific metadata files to discover inter-packa
 | Python   | `pyproject.toml` | `coding-adventures-`        |
 | Ruby     | `*.gemspec`      | `coding_adventures_`        |
 | Go       | `go.mod`         | module path contains repo   |
+| TypeScript | `package.json` | `@coding-adventures/`       |
 | Rust     | `Cargo.toml`     | workspace member path       |
+| Elixir   | `mix.exs`        | `:coding_adventures_`       |
 
 Dependencies on external packages (not in the monorepo) are silently ignored. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 
@@ -161,7 +165,7 @@ If a package fails to build, all packages that transitively depend on it are mar
 
 ## CLI Interface
 
-All four implementations accept the same flags:
+The implementations intentionally share the same overall CLI shape, but they are not perfectly feature-identical. The Go tool is the reference behavior used in CI.
 
 ```
 build-tool [flags]
@@ -172,7 +176,7 @@ Flags:
   -force                Rebuild everything regardless of cache
   -dry-run              Show what would build without executing
   -jobs <N>             Max parallel workers (default: CPU count)
-  -language <lang>      Filter: python, ruby, go, rust, or all (default: all)
+  -language <lang>      Filter: implementation-dependent; Go supports python, ruby, go, rust, typescript, elixir, all
   -cache-file <path>    Path to cache file (default: .build-cache.json)
 ```
 
@@ -180,11 +184,11 @@ Flags:
 
 | Language | Location                              | Parallelism      | Notes                    |
 |----------|---------------------------------------|-------------------|--------------------------|
-| Go       | `code/programs/go/build-tool/`        | goroutines        | Primary CI tool          |
+| Go       | `code/programs/go/build-tool/`        | goroutines        | Primary CI tool, broadest language support |
 | Python   | `code/programs/python/build-tool/`    | ThreadPoolExecutor| Reference implementation |
 | Ruby     | `code/programs/ruby/build-tool/`      | Threads           | Educational              |
 | Rust     | `code/programs/rust/build-tool/`      | rayon             | Native performance       |
 
 ## Migration Note
 
-The build system previously used DIRS files to route directory traversal. DIRS files are plain text files listing subdirectories to descend into. This mechanism is being replaced by recursive BUILD file discovery (described above) because DIRS files create merge conflicts when multiple contributors add packages in parallel. Existing DIRS files are ignored and will be removed in a future cleanup.
+The build system previously used DIRS files to route directory traversal. DIRS files are plain text files listing subdirectories to descend into. That mechanism has been replaced by recursive BUILD file discovery because DIRS files create merge conflicts when multiple contributors add packages in parallel. Any remaining DIRS files are legacy and ignored.

@@ -1,4 +1,4 @@
 [tools]
-go = "1.26"
+go = "latest"
 ruby = "3.4"
 rust = "stable"

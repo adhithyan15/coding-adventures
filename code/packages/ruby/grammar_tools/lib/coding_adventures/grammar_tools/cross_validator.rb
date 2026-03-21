@@ -27,10 +27,25 @@ module CodingAdventures
     # Returns a list of error/warning strings. Errors describe broken
     # references; warnings describe unused definitions. An empty list means
     # the two grammars are fully consistent.
+    #
+    # Special handling for extended features:
+    # - Indentation mode: INDENT, DEDENT, NEWLINE are implicitly available.
+    # - Aliases: If STRING_DQ -> STRING, referencing STRING counts as used.
+    # - EOF is always implicitly available.
     def self.cross_validate(token_grammar, parser_grammar)
       issues = []
 
+      # Build the set of all token names the parser can reference.
       defined_tokens = token_grammar.token_names
+
+      # Indentation mode synthesizes INDENT, DEDENT, NEWLINE tokens.
+      if token_grammar.mode == "indentation"
+        defined_tokens.merge(%w[INDENT DEDENT NEWLINE])
+      end
+
+      # EOF is always implicitly available.
+      defined_tokens.add("EOF")
+
       referenced_tokens = parser_grammar.token_references
 
       # Missing token references (errors).
@@ -42,8 +57,20 @@ module CodingAdventures
       end
 
       # Unused tokens (warnings).
+      # Build alias -> names mapping for "used via alias" detection.
+      alias_to_names = {}
       token_grammar.definitions.each do |defn|
-        unless referenced_tokens.include?(defn.name)
+        if defn.alias_name
+          (alias_to_names[defn.alias_name] ||= []) << defn.name
+        end
+      end
+
+      token_grammar.definitions.each do |defn|
+        # A definition is "used" if its name OR its alias is referenced.
+        is_used = referenced_tokens.include?(defn.name)
+        is_used = true if defn.alias_name && referenced_tokens.include?(defn.alias_name)
+
+        unless is_used
           issues << "Warning: Token '#{defn.name}' (line #{defn.line_number}) " \
                     "is defined but never used in the grammar"
         end

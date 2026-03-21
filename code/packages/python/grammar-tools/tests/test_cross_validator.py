@@ -102,3 +102,89 @@ expression = NUMBER PLUS MINUS ;
         grammar = parse_parser_grammar("")
         issues = cross_validate(tokens, grammar)
         assert issues == []
+
+
+class TestCrossValidateIndentationMode:
+    """Test cross-validation with indentation mode implicit tokens."""
+
+    def test_indent_dedent_newline_implicit(self) -> None:
+        """INDENT, DEDENT, NEWLINE are valid when mode is indentation."""
+        tokens = parse_token_grammar("""
+mode: indentation
+NAME = /[a-z]+/
+COLON = ":"
+""")
+        grammar = parse_parser_grammar("""
+block = NAME COLON NEWLINE INDENT NAME NEWLINE DEDENT ;
+""")
+        issues = cross_validate(tokens, grammar)
+        errors = [i for i in issues if i.startswith("Error")]
+        assert errors == []
+
+    def test_indent_dedent_not_implicit_without_mode(self) -> None:
+        """Without indentation mode, INDENT/DEDENT/NEWLINE are errors."""
+        tokens = parse_token_grammar("""
+NAME = /[a-z]+/
+COLON = ":"
+""")
+        grammar = parse_parser_grammar("""
+block = NAME COLON NEWLINE INDENT NAME DEDENT ;
+""")
+        issues = cross_validate(tokens, grammar)
+        errors = [i for i in issues if i.startswith("Error")]
+        assert len(errors) == 3
+        error_text = " ".join(errors)
+        assert "INDENT" in error_text
+        assert "DEDENT" in error_text
+        assert "NEWLINE" in error_text
+
+    def test_eof_always_implicit(self) -> None:
+        """EOF is always valid even without indentation mode."""
+        tokens = parse_token_grammar("NAME = /[a-z]+/")
+        grammar = parse_parser_grammar("file = NAME EOF ;")
+        issues = cross_validate(tokens, grammar)
+        errors = [i for i in issues if i.startswith("Error")]
+        assert errors == []
+
+
+class TestCrossValidateAliases:
+    """Test cross-validation with aliased token definitions."""
+
+    def test_alias_counts_as_used(self) -> None:
+        """A definition with alias=STRING is used when grammar references STRING."""
+        tokens = parse_token_grammar("""
+STRING_DQ = /"[^"]*"/ -> STRING
+NAME = /[a-z]+/
+""")
+        grammar = parse_parser_grammar("""
+expr = STRING | NAME ;
+""")
+        issues = cross_validate(tokens, grammar)
+        warnings = [i for i in issues if i.startswith("Warning")]
+        # STRING_DQ should NOT be warned as unused — its alias STRING is used
+        assert not any("STRING_DQ" in w for w in warnings)
+
+    def test_original_name_also_resolves(self) -> None:
+        """Referencing the original name (not alias) also counts as defined."""
+        tokens = parse_token_grammar("""
+STRING_DQ = /"[^"]*"/ -> STRING
+""")
+        grammar = parse_parser_grammar("""
+expr = STRING_DQ ;
+""")
+        issues = cross_validate(tokens, grammar)
+        errors = [i for i in issues if i.startswith("Error")]
+        assert errors == []
+
+    def test_unreferenced_aliased_token_warns(self) -> None:
+        """An aliased token neither referenced by name nor alias is unused."""
+        tokens = parse_token_grammar("""
+STRING_DQ = /"[^"]*"/ -> STRING
+NAME = /[a-z]+/
+""")
+        grammar = parse_parser_grammar("""
+expr = NAME ;
+""")
+        issues = cross_validate(tokens, grammar)
+        warnings = [i for i in issues if i.startswith("Warning")]
+        assert any("STRING_DQ" in w for w in warnings)

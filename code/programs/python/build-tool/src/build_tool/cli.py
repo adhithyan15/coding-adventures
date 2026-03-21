@@ -15,7 +15,7 @@ Usage::
     build-tool --language python      # Only build Python packages
 
 The flow is:
-1. Discover packages (walk DIRS/BUILD files)
+1. Discover packages (walk recursive BUILD files)
 2. Filter by language if specified
 3. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod)
 4. Hash all packages

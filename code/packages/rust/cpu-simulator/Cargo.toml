@@ -2,6 +2,7 @@
 name = "cpu-simulator"
 version = "0.1.0"
 edition = "2021"
-description = "Minimal CPU simulator with RegisterFile and Memory types for ISA simulators"
+description = "CPU simulator — registers, memory, and the fetch-decode-execute pipeline"
 
 [dependencies]
+arithmetic = { path = "../arithmetic" }

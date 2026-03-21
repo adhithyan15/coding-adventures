@@ -1,184 +1,196 @@
 # Coding Adventures
 
-A polyglot learning monorepo for building the entire computing stack from scratch — from logic gates to high-level language execution. Every layer is implemented, tested, and documented in multiple languages.
+Coding Adventures is a learning-first monorepo for understanding how computers work by building the layers ourselves.
 
-## Vision
+This repository is not just "a lot of packages." It is really four projects living in one place:
 
-Computers are deterministic. There is no magic. This repo exists to prove that by building every layer of the computing stack by hand:
+1. A computing-stack curriculum, from logic gates and arithmetic up through lexers, parsers, compilers, virtual machines, assemblers, and ISA simulators.
+2. A computer architecture lab, with growing coverage of caches, branch prediction, hazard detection, pipelining, and configurable core design.
+3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, and now Elixir so the concepts are separated from the language.
+4. A publishing and tooling playground, where each package is treated like a real artifact with tests, metadata, changelogs, and CI.
 
-```
-Layer 1:  Source Code            You write: x = 1 + 2
-Layer 2:  Lexer                  Breaks source text into tokens
-Layer 3:  Parser                 Builds abstract syntax trees from tokens
-              │
-              ├─── Path A (Interpreted) ─────── Path B (Compiled) ───┐
-              │                                                      │
-Layer 4a: Bytecode Compiler      VM instructions    Layer 4b: Machine Code Compiler
-              │                                                      │
-Layer 5:  Virtual Machine        Stack-based eval   Layer 6:  Assembler
-              │                  (like JVM, CLR)                     │
-              ├─→ JIT (future)                      Layer 7:  ISA Simulators
-              │                                     RISC-V, ARM, WASM, Intel 4004, JVM, CLR
-              └────────────────────────┬─────────────────────────────┘
-                                       │
-Layer 8:  CPU Simulator          Fetch-decode-execute cycle
-Layer 9:  Arithmetic (ALU)       Adders, subtractors — built from gates
-Layer 10: Logic Gates            AND, OR, XOR — the irreducible foundation
-```
+## What This Repository Optimizes For
 
-## What's built
+- **Understanding before abstraction**: build the layers directly instead of treating them as magic.
+- **Learning through implementation**: every package should teach, not just execute.
+- **Architecture as a first-class topic**: this repo is as much about pipelines, caches, and execution models as it is about parsers and bytecode.
+- **Cross-language repetition with purpose**: re-implementing the same idea in multiple ecosystems is part of the learning method.
+- **Publishable quality**: packages are expected to have tests, READMEs, changelogs, and package metadata.
+- **Specs and learning notes alongside code**: the code, the specifications, and the learning material should reinforce each other.
 
-**126 packages and 6 programs across 5 languages.**
+## The Main Tracks
 
-### Computing stack
+### 1. Digital logic and arithmetic
 
-The full computing stack is implemented in Python, Ruby, Go, and TypeScript. Rust covers the deep hardware layers.
+This track starts at the hardware floor:
 
-| Layer | Package | Python | Ruby | Go | TypeScript | Rust |
-|-------|---------|--------|------|----|------------|------|
-| 10 | Logic Gates | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 9 | Arithmetic / ALU | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 9 | Floating-Point Arithmetic | ✅ | ✅ | ✅ | ✅ | — |
-| 8 | CPU Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 7 | ARM Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 7 | RISC-V Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 7 | WASM Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 7 | Intel 4004 Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 7 | JVM Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 7 | CLR Simulator | ✅ | ✅ | ✅ | ✅ | — |
-| 2 | Grammar Tools | ✅ | ✅ | ✅ | ✅ | — |
-| 2 | Lexer | ✅ | ✅ | ✅ | ✅ | — |
-| 3 | Parser | ✅ | ✅ | ✅ | ✅ | — |
-| 4a | Bytecode Compiler | ✅ | ✅ | ✅ | ✅ | — |
-| 5 | Virtual Machine | ✅ | ✅ | ✅ | ✅ | — |
-| 0 | Pipeline | ✅ | ✅ | — | ✅ | — |
-| — | HTML Renderer | ✅ | ✅ | — | ✅ | — |
-| — | Assembler (shell) | ✅ | ✅ | ✅ | ✅ | — |
-| — | JIT Compiler (shell) | ✅ | ✅ | — | ✅ | — |
+- `logic-gates`
+- `arithmetic`
+- `fp-arithmetic`
+- `clock`
 
-### Deep CPU internals (Rust + Python + Ruby + Go + TypeScript)
+The goal is to show how larger behavior emerges from small, deterministic building blocks.
 
-| Package | Description | Rust | Python | Ruby | Go | TypeScript |
-|---------|-------------|------|--------|------|----|------------|
-| Cache | L1/L2 cache simulation | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Branch Predictor | 1-bit, 2-bit, BTB | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Hazard Detection | Data/control/structural hazards | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Clock | Clock generator, divider, multi-phase | — | ✅ | ✅ | ✅ | ✅ |
+### 2. CPU and ISA simulation
 
-### Cross-language packages
+This track models execution closer to real hardware:
 
-The grammar-driven lexer/parser can tokenize and parse **any language** given grammar files:
+- `cpu-simulator`
+- `arm-simulator`
+- `riscv-simulator`
+- `wasm-simulator`
+- `intel4004-simulator`
+- `jvm-simulator`
+- `clr-simulator`
 
-| Target Language | Python pkg | Ruby pkg | Go pkg | TypeScript pkg |
-|-----------------|-----------|----------|--------|---------------|
-| Python | — | `python_lexer`/`python_parser` | `python-lexer`/`python-parser` | `python-lexer`/`python-parser` |
-| Ruby | `ruby-lexer`/`ruby-parser` | — | `ruby-lexer`/`ruby-parser` | `ruby-lexer`/`ruby-parser` |
-| JavaScript | `javascript-lexer`/`javascript-parser` | `javascript_lexer`/`javascript_parser` | `javascript-lexer`/`javascript-parser` | — |
-| TypeScript | `typescript-lexer`/`typescript-parser` | `typescript_lexer`/`typescript_parser` | `typescript-lexer`/`typescript-parser` | — |
+The goal is to understand instruction formats, execution models, fetch-decode-execute loops, and the differences between register machines, stack machines, and older accumulator-style designs.
 
-### Build system
+### 3. Deep computer architecture
 
-An incremental, parallel monorepo build tool implemented in four languages:
+This is one of the most important themes in the repo:
 
-| Implementation | Role |
-|---------------|------|
-| **Go** | **Primary** — compiles to native binary, goroutine parallelism |
-| **Rust** | Native performance, rayon thread pool |
-| Python | Reference implementation |
-| Ruby | Educational port |
+- `cache`
+- `branch-predictor`
+- `hazard-detection`
+- `pipeline`
+- `core`
 
-Features:
-- **Recursive BUILD file discovery** — walks the directory tree automatically, no routing files needed
-- **Git-diff change detection** — `git diff origin/main...HEAD` determines what changed
-- **Dependency-aware** — parses `pyproject.toml`, `.gemspec`, `go.mod`, and `Cargo.toml`
-- **Parallel execution** — independent packages run concurrently by topological level
-- **Skip list** — automatically ignores `.git`, `.venv`, `node_modules`, `target`, etc.
+The goal is to move beyond "a CPU executes instructions" and into "how a modern core actually stays fast."
 
-### Directed graph library
+### 4. Language frontends and execution
 
-The foundation of the build system — a standalone library in Python, Ruby, and Go. Provides: topological sort, cycle detection, independent groups (parallel levels), affected nodes (incremental builds), transitive closure.
+This track builds the path from source code to execution:
 
-### Grammar files
+- `grammar-tools`
+- `lexer`
+- `parser`
+- `python-lexer`, `ruby-lexer`, `javascript-lexer`, `typescript-lexer`
+- `python-parser`, `ruby-parser`, `javascript-parser`, `typescript-parser`
+- `bytecode-compiler`
+- `virtual-machine`
+- `assembler`
+- `jit-compiler`
 
-Declarative grammar definitions shared by all implementations:
+The goal is to connect programming-language tooling back to the machine beneath it.
 
-- `python.tokens` + `python.grammar` — Python subset
-- `ruby.tokens` + `ruby.grammar` — Ruby subset
-- `javascript.tokens` + `javascript.grammar` — JavaScript subset
-- `typescript.tokens` + `typescript.grammar` — TypeScript subset
+### 5. Accelerators and parallel execution
 
-Adding a new language requires only writing grammar files — no new lexer or parser code.
+This track explores computation outside the classic scalar CPU story:
 
-## Structure
+- `gpu-core`
+- `compute-unit`
+- `device-simulator`
+- `parallel-execution-engine`
 
-```
+The goal is to study throughput-oriented execution, dataflow, and accelerator-style design.
+
+### 6. Machine learning fundamentals
+
+This track covers small, foundational learning components that fit naturally with the accelerator story:
+
+- `loss-functions`
+- `gradient-descent`
+
+The goal is to treat optimization primitives as understandable building blocks rather than opaque library calls.
+
+### 7. Tooling, visualization, and infrastructure
+
+This repo also includes the tools needed to sustain the work:
+
+- monorepo build tools
+- `directed-graph`
+- `html-renderer`
+- pipeline visualizers and support programs
+
+These are not side quests. They are part of the project's teaching philosophy: infrastructure is also a thing worth understanding.
+
+## How The Repository Is Organized
+
+```text
 code/
-├── specs/          Specifications for each package (the blueprint)
-├── grammars/       Language grammar definitions (.tokens, .grammar)
-├── learning/       Notes and learning materials per language/topic
-├── packages/       Publishable libraries
-│   ├── python/     30 Python packages (PyPI-ready)
-│   ├── ruby/       30 Ruby gems (RubyGems-ready)
-│   ├── go/         29 Go modules
-│   ├── rust/       6 Rust crates
-│   └── typescript/ 31 TypeScript packages (npm-ready)
-└── programs/       Standalone programs
-    ├── python/     Hello world, build tool, pipeline visualizer
-    ├── ruby/       Build tool
-    ├── go/         Build tool (primary)
-    └── rust/       Build tool
+├── specs/         Specifications and architecture documents
+├── learning/      Explanatory notes and teaching material
+├── grammars/      Shared grammar definitions
+├── packages/      Publishable libraries in multiple languages
+└── programs/      Standalone tools and demos
 ```
 
-## Languages & Tooling
+## Languages
 
-| Language | Version | Package Manager | Test Framework | Linter |
-|----------|---------|----------------|---------------|--------|
-| Python | 3.12+ | uv | pytest | ruff |
-| Ruby | 3.4 | Bundler | Minitest | Standard Ruby |
-| Go | 1.26 | go modules | go test | go vet |
-| Rust | stable | Cargo | cargo test | clippy |
-| TypeScript | 5.x | npm | vitest | eslint |
+The repository currently spans six ecosystems:
 
-All managed via [mise](https://mise.jdx.dev/) — see `mise.toml`.
+- Python
+- Ruby
+- Go
+- TypeScript
+- Rust
+- Elixir
 
-## CI/CD
+The language split is intentional. A parser should still be recognizable as a parser when moved from Python to Go. A cache should still look like a cache in Ruby or TypeScript. The repetition is part of the point.
 
-### CI — Build & Test
+## Learning Material
 
-GitHub Actions workflow (`.github/workflows/ci.yml`):
-1. Compiles Go build tool from source (~1-2 seconds)
-2. Uses `git diff` to detect changed packages
-3. Builds dependency graph, finds affected packages
-4. Runs them in parallel by topological level
-5. Linux on every push, Linux + macOS on PRs to main
+The learning side of the repository is now a first-class part of the structure, not an afterthought.
 
-### Publish — Release to Registries
+Start here:
 
-GitHub Actions workflow (`.github/workflows/publish.yml`):
-- Triggered by GitHub Release with tag format `<language>/<package-name>/v<version>`
-- **Python**: Trusted Publishers (OIDC) to PyPI — no API tokens needed
-- **Python native extensions**: Builds wheels on Linux, macOS (arm64 + x86_64), and Windows via maturin
-- **Ruby**: Pushes gems via `RUBYGEMS_API_KEY` secret
+- [Learning Index](./code/learning/README.md)
+- [Algorithms](./code/learning/algorithms/README.md)
+- [Computer Architecture](./code/learning/computer-architecture/README.md)
+- [Language Tooling](./code/learning/language-tooling/README.md)
+- [Machine learning notes](./code/learning/loss-functions.md)
+- [Optimization notes](./code/learning/gradient-descent.md)
+- [Python Ecosystem Notes](./code/learning/python/ecosystem.md)
 
-## Philosophy
+The intended relationship is:
 
-- **No magic** — build every layer from scratch, understand what computers actually do
-- **Go slow and deliberate** — depth over breadth
-- **Literate programming** — Knuth-style, every source file teaches
-- **Publishable quality** — every package ready for PyPI/RubyGems/npm/crates.io
-- **Specs first** — specification → tests → implementation → changelog
-- **>80% test coverage** — enforced, typically 95%+
-- **Multiple languages** — same concepts, different ecosystems, deeper understanding
+```text
+specs explain what we intend to build
+learning explains why the ideas matter
+packages show the ideas in code
+tests prove the behavior
+```
 
-## Future roadmap
+## Current Shape
 
-- [ ] Data structures library (Rust core + language wrappers)
-- [ ] Machine learning track (neuron → network → backprop → autograd → attention)
-- [ ] GPU computing track (naive matmul → tiled → SIMD → GPU kernel → tensor core)
-- [ ] JIT compiler implementation
-- [ ] Safe C/C++ data structures (compile-time safety guardrails)
-- [ ] HTML pipeline visualizer
-- [ ] Full RISC-V RV32I + M-mode extensions
+Today the repo contains:
+
+- 167 package directories
+- 12 program directories
+- 6 implementation languages
+
+Those counts matter less than the shape: this is a broad, layered study of computing systems, programming-language tooling, and computer architecture.
+
+## Workflow
+
+The working style for the repository is:
+
+1. Write or refine the spec.
+2. Add or update the learning entry for the concept.
+3. Add tests.
+4. Implement the package or feature.
+5. Update changelog and package README.
+
+The long-term goal is that no major concept in the repository exists only as code. It should also exist as a teachable explanation.
+
+## Good Entry Points
+
+If you want to explore the repository by theme:
+
+- Start with [00-architecture.md](./code/specs/00-architecture.md) for the big picture.
+- Read [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track.
+- Read [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) to see how the build system uses graph algorithms.
+- Read [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story.
+
+## Future Direction
+
+The repository is still expanding in a few directions:
+
+- richer learning material tied to every major package family
+- deeper computer architecture coverage
+- stronger accelerator and GPU material
+- more cross-language consistency
+- better visualization of the stack and execution flow
 
 ## Copyright
 
