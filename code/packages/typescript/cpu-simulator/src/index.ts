@@ -23,3 +23,5 @@ export type {
   PipelineTrace,
 } from "./pipeline.js";
 export { RegisterFile } from "./registers.js";
+export { SparseMemory } from "./sparse-memory.js";
+export type { MemoryRegionConfig } from "./sparse-memory.js";

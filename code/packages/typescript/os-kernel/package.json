@@ -1,0 +1,16 @@
+{
+  "name": "@coding-adventures/os-kernel",
+  "version": "0.1.0",
+  "description": "Minimal OS kernel with process management, scheduler, and syscalls",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": { "build": "tsc", "test": "vitest run" },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/display": "file:../display",
+    "@coding-adventures/interrupt-handler": "file:../interrupt-handler",
+    "@coding-adventures/riscv-simulator": "file:../riscv-simulator"
+  },
+  "devDependencies": { "typescript": "^5.0.0", "vitest": "^3.0.0", "@vitest/coverage-v8": "^3.0.0" }
+}

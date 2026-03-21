@@ -51,6 +51,8 @@ When TypeScript packages depend on each other via `"file:../other-pkg"` referenc
 - [ ] `"main": "src/index.ts"` (not `dist/index.js`)
 - [ ] `"type": "module"` for ESM
 - [ ] `file:../` dependencies for internal packages
+- [ ] `"@vitest/coverage-v8": "^3.0.0"` in devDependencies (missed on 5 packages in the S-series work — display, interrupt-handler, rom-bios, bootloader, os-kernel, system-board)
+- [ ] BUILD file uses `npm install --silent` (not `npm ci`) unless package-lock.json is committed and in sync
 
 ---
 
@@ -95,6 +97,92 @@ cd ../C && npm ci --quiet && cd ../B && npm ci --quiet && cd ../A && npm ci && n
 - [ ] Identify the full transitive `file:` dependency chain
 - [ ] Install from leaves to root in the BUILD script
 - [ ] Test from a clean state: `rm -rf node_modules ../dep/node_modules && bash BUILD`
+
+---
+
+### 2026-03-21: BUILD files must install ALL transitive dependencies explicitly
+
+When creating packages that depend on sibling packages, the BUILD file must install every transitive dependency — not just direct ones. CI runs each package in isolation with a clean environment. If package A depends on B which depends on C, A's BUILD file must install C too.
+
+This caused repeated CI failures across Python, Ruby, and Go during the S-series system software work. The same mistake was made 3 times before being fully resolved.
+
+**Python:** `uv pip install` resolves deps from PyPI. If a sibling package (e.g., `state-machine`) isn't on PyPI, it must be installed with `-e ../state-machine` BEFORE any package that depends on it. Install order matters — install leaves first:
+```
+uv pip install -e ../directed-graph -e ../state-machine -e ../branch-predictor -e ../core -e ".[dev]"
+```
+
+**Ruby:** Gemfiles must list ALL transitive path dependencies. If `riscv_simulator` depends on `cpu_simulator`, then any package depending on `riscv_simulator` must also have:
+```ruby
+gem "coding_adventures_cpu_simulator", path: "../cpu_simulator"
+gem "coding_adventures_riscv_simulator", path: "../riscv_simulator"
+```
+
+**Go:** When a transitive dependency adds a new module (e.g., `state-machine`), ALL packages up the chain need `go mod tidy` or manual additions to `go.mod`. A single missing entry in go.sum breaks the build. After adding a new Go package, run `go mod tidy` in EVERY package that transitively depends on it.
+
+**TypeScript:** `npm ci` requires lock files in sync. After adding new dependencies to `package.json`, either regenerate `package-lock.json` with `npm install`, or use `npm install` instead of `npm ci` in BUILD files.
+
+**Checklist for every new package with dependencies:**
+- [ ] List ALL transitive deps in BUILD file (not just direct)
+- [ ] Install deps in leaf-to-root order
+- [ ] Test from a completely clean state (no cached installs)
+- [ ] For Go: run `go mod tidy` in all dependent packages
+- [ ] For TypeScript: regenerate lock files or use `npm install`
+
+---
+
+### 2026-03-21: Elixir reserved words cannot be used as variable names
+
+Elixir reserves words like `after`, `rescue`, `catch`, `else` that cannot be used as variable names. When porting code from other languages, rename these variables (e.g., `after` → `rest`, `after_bytes`). This caused a compilation error in the Core memory_controller.ex that required two rounds of fixes because the first fix only caught one occurrence.
+
+**Rule:** When porting to Elixir, grep for reserved words used as variables: `after`, `rescue`, `catch`, `else`, `end`, `fn`, `do`, `when`, `cond`, `try`, `receive`.
+
+---
+
+### 2026-03-21: Ruby predicate methods use `?` suffix — don't port method names literally
+
+Ruby convention: methods that return a boolean end with `?` (e.g., `contains?`, `empty?`, `valid?`). When porting from Go/Python/TypeScript where the method is `contains()` or `is_empty()`, Ruby code must use `contains?()`. Tests calling `snap.contains("text")` instead of `snap.contains?("text")` will fail with `NoMethodError`.
+
+**Rule:** When writing Ruby tests that call boolean methods, always add `?`. Grep test files for common predicates: `contains`, `empty`, `valid`, `halted`, `idle` — they all need `?` in Ruby.
+
+---
+
+### 2026-03-21: Python Enum rejects invalid values — don't construct with arbitrary integers
+
+Python's `enum.Enum` raises `ValueError` if you call `MyEnum(99)` and 99 isn't a defined member. This differs from Go (where enums are just ints) and TypeScript (where enums allow any number). Tests that check behavior for "invalid enum values" by constructing `BootPhase(99)` will fail.
+
+**Rule:** When testing "not found" or "invalid" enum cases in Python, use `None` or a sentinel value — don't construct the Enum with an invalid int. Or use `IntEnum` if arbitrary ints should be allowed.
+
+---
+
+### 2026-03-21: Ruby `include` inside a method body doesn't work as expected
+
+In Ruby, `include SomeModule` is a class-level operation that adds the module's constants/methods to the current class. Calling `include` inside a test method (instance method) calls `Kernel#include` which doesn't exist as an instance method — it raises `NoMethodError`.
+
+**Rule:** Either `include` the module at the class level (inside the test class but outside any method), or use fully qualified constant names like `CodingAdventures::SystemBoard::PHASE_NAMES`.
+
+---
+
+### 2026-03-21: Rust cpu-simulator must export ALL types other crates import
+
+When creating a Rust crate that replaces or extends an existing one (e.g., cpu-simulator), check ALL downstream crates that import from it. The arm-simulator crate imported `CPU`, `DecodeResult`, `ExecuteResult`, `InstructionDecoder`, `InstructionExecutor`, `PipelineTrace` — but our fresh cpu-simulator only exported `Memory`, `RegisterFile`, and `SparseMemory`. This broke the entire Rust workspace in CI.
+
+**Rule:** After creating or modifying a Rust crate, run `cargo build --workspace` to catch any missing exports. Don't just test the individual crate — test the whole workspace.
+
+---
+
+### 2026-03-21: Ruby require ordering matters for constant resolution
+
+Ruby loads files in the order they are `require`d. If `system_board/config.rb` references `RomBios::BIOSConfig`, the `coding_adventures_rom_bios` gem must be required BEFORE the config file loads. This means the main entry point file (`coding_adventures_system_board.rb`) must `require "coding_adventures_rom_bios"` before requiring its own modules.
+
+**Rule:** When a Ruby package depends on another, add the `require` for the dependency at the TOP of the entry point file, before any `require_relative` calls to the package's own modules.
+
+---
+
+### 2026-03-21: TypeScript BUILD files must chain-install transitive file: deps
+
+TypeScript packages using `"file:../sibling"` dependencies need their transitive deps installed first. CI starts with a clean `node_modules`. The BUILD file must `cd` into each transitive dep and run `npm install` in leaf-to-root order before running the package's own tests.
+
+This was already documented (2026-03-19) but continues to recur because new packages are added without following the pattern. The fix is mechanical — check the dependency chain and install from leaves to root.
 
 ---
 

@@ -1,0 +1,5 @@
+[package]
+name = "cpu-pipeline"
+version = "0.1.0"
+edition = "2021"
+description = "Configurable N-stage CPU instruction pipeline (IF -> ID -> EX -> MEM -> WB)"
