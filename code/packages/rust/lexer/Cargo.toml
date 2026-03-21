@@ -7,4 +7,5 @@ description = "Two lexer implementations — a hand-written Python tokenizer and
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
 state-machine = { path = "../state-machine" }
+directed-graph = { path = "../directed-graph" }
 regex = "1"

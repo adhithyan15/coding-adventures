@@ -37,7 +37,8 @@ dependencies on other packages in the repo, but is used by many layers:
    Parser (03)          Sequential Logic (10)    Future: Markdown parser
 ```
 
-**Depends on:** Nothing (standalone).
+**Depends on:** `directed-graph` (uses `LabeledDirectedGraph` internally for
+graph structure, reachability, and visualization).
 **Used by:** `lexer`, `grammar-tools`, `branch-predictor` (retroactive demo),
 future browser/networking packages.
 

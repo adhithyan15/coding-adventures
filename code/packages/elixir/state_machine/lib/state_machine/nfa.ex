@@ -55,6 +55,7 @@ defmodule CodingAdventures.StateMachine.NFA do
   """
 
   alias CodingAdventures.StateMachine.DFA
+  alias CodingAdventures.DirectedGraph.LabeledGraph
 
   @doc """
   The sentinel value for epsilon transitions.
@@ -72,7 +73,8 @@ defmodule CodingAdventures.StateMachine.NFA do
     :transitions,
     :initial,
     :accepting,
-    :current
+    :current,
+    :graph
   ]
 
   @type t :: %__MODULE__{
@@ -81,7 +83,8 @@ defmodule CodingAdventures.StateMachine.NFA do
           transitions: %{{String.t(), String.t()} => MapSet.t(String.t())},
           initial: String.t(),
           accepting: MapSet.t(String.t()),
-          current: MapSet.t(String.t())
+          current: MapSet.t(String.t()),
+          graph: LabeledGraph.t()
         }
 
   @doc """
@@ -123,13 +126,36 @@ defmodule CodingAdventures.StateMachine.NFA do
          :ok <- validate_member(initial, states, "Initial state"),
          :ok <- validate_subset(accepting, states, "Accepting states"),
          :ok <- validate_transitions(transitions, states, alphabet) do
+      # --- Build internal graph representation ---
+      #
+      # Each state becomes a node. Each transition (source, event) -> targets
+      # becomes labeled edges. Epsilon transitions use "" as the label.
+      graph = LabeledGraph.new()
+
+      graph =
+        Enum.reduce(states, graph, fn state, acc ->
+          {:ok, acc} = LabeledGraph.add_node(acc, state)
+          acc
+        end)
+
+      graph =
+        Enum.reduce(transitions, graph, fn {{source, event}, targets}, acc ->
+          label = if event == @epsilon, do: @epsilon, else: event
+
+          Enum.reduce(targets, acc, fn target, inner_acc ->
+            {:ok, inner_acc} = LabeledGraph.add_edge(inner_acc, source, target, label)
+            inner_acc
+          end)
+        end)
+
       nfa = %__MODULE__{
         states: states,
         alphabet: alphabet,
         transitions: transitions,
         initial: initial,
         accepting: accepting,
-        current: MapSet.new()
+        current: MapSet.new(),
+        graph: graph
       }
 
       # The NFA starts in the epsilon closure of the initial state

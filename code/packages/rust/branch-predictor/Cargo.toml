@@ -6,3 +6,4 @@ description = "Pluggable branch prediction algorithms for CPU simulation"
 
 [dependencies]
 state-machine = { path = "../state-machine" }
+directed-graph = { path = "../directed-graph" }

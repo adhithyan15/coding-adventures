@@ -23,7 +23,8 @@
     "@coding-adventures/lexer": "file:../lexer",
     "@coding-adventures/grammar-tools": "file:../grammar-tools",
     "@coding-adventures/parser": "file:../parser",
-    "@coding-adventures/starlark-lexer": "file:../starlark-lexer"
+    "@coding-adventures/starlark-lexer": "file:../starlark-lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

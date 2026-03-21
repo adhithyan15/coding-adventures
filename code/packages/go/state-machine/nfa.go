@@ -52,6 +52,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 )
 
 // EPSILON is the sentinel value for epsilon transitions.
@@ -75,6 +77,17 @@ type NFA struct {
 	transitions map[[2]string][]string // [state, event_or_epsilon] -> slice of targets
 	initial     string
 	accepting   map[string]bool
+
+	// Internal graph representation.
+	//
+	// We maintain a LabeledGraph alongside the transitions map.
+	// The map is kept for O(1) lookups in Process(), EpsilonClosure(),
+	// Accepts(), and ToDFA() — the performance-critical paths.
+	// The graph captures the structure of the NFA for introspection.
+	//
+	// Epsilon transitions use the EPSILON constant ("") as the edge label,
+	// preserving the distinction between input-consuming and free transitions.
+	graph *directedgraph.LabeledGraph
 
 	// Current set of active states
 	current map[string]bool
@@ -165,12 +178,33 @@ func NewNFA(
 		trans[k] = cp
 	}
 
+	// --- Build internal graph representation ---
+	//
+	// Each state becomes a node. Each transition (source, event) -> targets
+	// becomes labeled edges from source to each target with the event as label.
+	// Self-loops are allowed because an FSM state can transition to itself.
+	g := directedgraph.NewLabeledGraphAllowSelfLoops()
+	for s := range stateSet {
+		g.AddNode(s)
+	}
+	for key, targets := range trans {
+		source, event := key[0], key[1]
+		label := event
+		if event == EPSILON {
+			label = EPSILON
+		}
+		for _, target := range targets {
+			g.AddEdge(source, target, label)
+		}
+	}
+
 	nfa := &NFA{
 		states:      stateSet,
 		alphabet:    alphaSet,
 		transitions: trans,
 		initial:     initial,
 		accepting:   acceptSet,
+		graph:       g,
 	}
 
 	// Start in the epsilon closure of the initial state

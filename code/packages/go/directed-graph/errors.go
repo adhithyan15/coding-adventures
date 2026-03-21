@@ -29,3 +29,14 @@ type EdgeNotFoundError struct {
 func (e *EdgeNotFoundError) Error() string {
 	return fmt.Sprintf("edge not found: %q -> %q", e.From, e.To)
 }
+
+// LabelNotFoundError is returned when removing a label that doesn't exist on an edge.
+type LabelNotFoundError struct {
+	From  string
+	To    string
+	Label string
+}
+
+func (e *LabelNotFoundError) Error() string {
+	return fmt.Sprintf("label %q not found on edge %q -> %q", e.Label, e.From, e.To)
+}

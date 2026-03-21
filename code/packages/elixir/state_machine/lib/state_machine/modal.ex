@@ -46,6 +46,7 @@ defmodule CodingAdventures.StateMachine.Modal do
   """
 
   alias CodingAdventures.StateMachine.DFA
+  alias CodingAdventures.DirectedGraph.LabeledGraph
 
   defmodule ModeTransitionRecord do
     @moduledoc """
@@ -67,7 +68,8 @@ defmodule CodingAdventures.StateMachine.Modal do
     :mode_transitions,
     :initial_mode,
     :current_mode,
-    :mode_trace
+    :mode_trace,
+    :mode_graph
   ]
 
   @type t :: %__MODULE__{
@@ -75,7 +77,8 @@ defmodule CodingAdventures.StateMachine.Modal do
           mode_transitions: %{{String.t(), String.t()} => String.t()},
           initial_mode: String.t(),
           current_mode: String.t(),
-          mode_trace: [ModeTransitionRecord.t()]
+          mode_trace: [ModeTransitionRecord.t()],
+          mode_graph: LabeledGraph.t()
         }
 
   @doc """
@@ -115,13 +118,32 @@ defmodule CodingAdventures.StateMachine.Modal do
     with :ok <- validate_modes_non_empty(modes),
          :ok <- validate_initial_mode(initial_mode, modes),
          :ok <- validate_mode_transitions(mode_transitions, modes) do
+      # --- Build internal mode graph ---
+      #
+      # Each mode is a node. Each mode transition (from_mode, trigger) -> to_mode
+      # becomes a labeled edge with the trigger as the label.
+      mode_graph = LabeledGraph.new()
+
+      mode_graph =
+        Enum.reduce(Map.keys(modes), mode_graph, fn mode_name, acc ->
+          {:ok, acc} = LabeledGraph.add_node(acc, mode_name)
+          acc
+        end)
+
+      mode_graph =
+        Enum.reduce(mode_transitions, mode_graph, fn {{from_mode, trigger}, to_mode}, acc ->
+          {:ok, acc} = LabeledGraph.add_edge(acc, from_mode, to_mode, trigger)
+          acc
+        end)
+
       {:ok,
        %__MODULE__{
          modes: modes,
          mode_transitions: mode_transitions,
          initial_mode: initial_mode,
          current_mode: initial_mode,
-         mode_trace: []
+         mode_trace: [],
+         mode_graph: mode_graph
        }}
     end
   end

@@ -22,6 +22,7 @@ defmodule CodingAdventures.BranchPredictor.MixProject do
 
   defp deps do
     [
+      {:coding_adventures_directed_graph, path: "../directed_graph"},
       {:coding_adventures_state_machine, path: "../state_machine"}
     ]
   end

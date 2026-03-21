@@ -34,6 +34,7 @@ members = [
     "blas-library",
     "state-machine",
     "blas-library",
+    "tree",
     "virtual-machine",
     "bytecode-compiler",
     "brainfuck",

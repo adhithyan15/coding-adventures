@@ -34,6 +34,8 @@
 #   )
 #   turnstile.process("coin")  # => "unlocked"
 
+require "coding_adventures_directed_graph"
+
 require_relative "coding_adventures/state_machine/version"
 require_relative "coding_adventures/state_machine/types"
 require_relative "coding_adventures/state_machine/dfa"

@@ -56,6 +56,8 @@ determine transitions.
 
 from __future__ import annotations
 
+from directed_graph import LabeledDirectedGraph
+
 from state_machine.types import Action, TransitionRecord
 
 
@@ -176,6 +178,21 @@ class DFA:
         self._initial: str = initial
         self._accepting: frozenset[str] = frozenset(accepting)
         self._actions: dict[tuple[str, str], Action] = dict(actions or {})
+
+        # --- Build internal graph representation ---
+        #
+        # We maintain a LabeledDirectedGraph alongside the _transitions dict.
+        # The dict provides O(1) lookups for process() (the hot path).
+        # The graph provides structural queries like reachable_states() via
+        # transitive_closure, avoiding the need for hand-rolled BFS.
+        #
+        # Each state becomes a node. Each transition (source, event) -> target
+        # becomes a labeled edge from source to target with the event as label.
+        self._graph: LabeledDirectedGraph = LabeledDirectedGraph()
+        for state in states:
+            self._graph.add_node(state)
+        for (source, event), target in transitions.items():
+            self._graph.add_edge(source, target, label=event)
 
         # --- Mutable execution state ---
         self._current: str = initial
@@ -376,9 +393,10 @@ class DFA:
     def reachable_states(self) -> frozenset[str]:
         """Return the set of states reachable from the initial state.
 
-        Uses breadth-first search over the transition graph. A state is
-        reachable if there exists any sequence of inputs that leads from
-        the initial state to that state.
+        Delegates to the internal LabeledDirectedGraph's transitive_closure,
+        which performs a BFS over the transition graph. A state is reachable
+        if there exists any sequence of inputs that leads from the initial
+        state to that state.
 
         States that are defined but not reachable are "dead weight" —
         they can never be entered and can be safely removed during
@@ -387,22 +405,11 @@ class DFA:
         Returns:
             A frozenset of reachable state names.
         """
-        # BFS from the initial state
-        visited: set[str] = set()
-        queue: list[str] = [self._initial]
-
-        while queue:
-            state = queue.pop(0)
-            if state in visited:
-                continue
-            visited.add(state)
-
-            # Find all states reachable from this one via any input
-            for (source, _event), target in self._transitions.items():
-                if source == state and target not in visited:
-                    queue.append(target)
-
-        return frozenset(visited)
+        # transitive_closure returns all nodes reachable FROM the initial
+        # state (not including the initial state itself), so we union it
+        # with {initial} to get the full set of reachable states.
+        reachable = self._graph.transitive_closure(self._initial)
+        return frozenset(reachable | {self._initial})
 
     def is_complete(self) -> bool:
         """Check if a transition is defined for every (state, input) pair.
