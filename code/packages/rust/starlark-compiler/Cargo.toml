@@ -1,0 +1,14 @@
+[package]
+name = "starlark-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compiles Starlark AST to bytecode — opcodes, compiler handlers, source-to-bytecode pipeline"
+
+[dependencies]
+coding-adventures-starlark-lexer = { path = "../starlark-lexer" }
+coding-adventures-starlark-parser = { path = "../starlark-parser" }
+bytecode-compiler = { path = "../bytecode-compiler" }
+virtual-machine = { path = "../virtual-machine" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+grammar-tools = { path = "../grammar-tools" }

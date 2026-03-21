@@ -1,0 +1,8 @@
+[package]
+name = "ml-framework-tf"
+version = "0.1.0"
+edition = "2021"
+description = "TensorFlow-compatible API simulation built on ml-framework-core — GradientTape, Variables, tf.keras layers/models/optimizers"
+
+[dependencies]
+ml-framework-core = { path = "../ml-framework-core" }

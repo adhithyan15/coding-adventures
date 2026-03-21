@@ -115,6 +115,11 @@ pub struct TokenDefinition {
 /// - `reserved_keywords` — Keywords from the `reserved:` section. Unlike
 ///   regular keywords, these cause a lexer error if encountered in source
 ///   code (they are reserved for future use).
+/// - `escapes` — Optional escape mode directive (e.g. `"none"` for CSS,
+///   which uses hex escapes that differ from JSON's `\uXXXX` format).
+/// - `error_definitions` — Token definitions from the `errors:` section.
+///   These patterns match malformed input (e.g. unclosed strings) and
+///   produce error tokens for graceful degradation.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenGrammar {
     pub definitions: Vec<TokenDefinition>,
@@ -122,6 +127,8 @@ pub struct TokenGrammar {
     pub mode: Option<String>,
     pub skip_definitions: Vec<TokenDefinition>,
     pub reserved_keywords: Vec<String>,
+    pub escapes: Option<String>,
+    pub error_definitions: Vec<TokenDefinition>,
 }
 
 // ===========================================================================
@@ -319,9 +326,11 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut mode: Option<String> = None;
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
+    let mut escapes: Option<String> = None;
+    let mut error_definitions = Vec::new();
 
     // Track which section we are currently in.
-    // Sections: "definitions" (default), "keywords", "skip", "reserved"
+    // Sections: "definitions" (default), "keywords", "skip", "reserved", "errors"
     let mut current_section = "definitions";
 
     for (i, raw_line) in source.split('\n').enumerate() {
@@ -345,6 +354,25 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         }
         if stripped == "reserved:" || stripped == "reserved :" {
             current_section = "reserved";
+            continue;
+        }
+        if stripped == "errors:" || stripped == "errors :" {
+            current_section = "errors";
+            continue;
+        }
+
+        // --- Escapes directive ---
+        //
+        // The `escapes:` directive tells the lexer how to handle escape
+        // sequences in string tokens. For example, `escapes: none` means
+        // the lexer should strip quotes but leave escape sequences as raw
+        // text (used by CSS, where hex escapes differ from JSON's \uXXXX).
+        if stripped.starts_with("escapes:") || stripped.starts_with("escapes :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let escapes_value = stripped[colon_idx + 1..].trim();
+            if !escapes_value.is_empty() {
+                escapes = Some(escapes_value.to_string());
+            }
             continue;
         }
 
@@ -399,6 +427,18 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
                     current_section = "definitions";
                 }
             }
+            "errors" => {
+                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
+                if first_char == b' ' || first_char == b'\t' {
+                    if !stripped.is_empty() {
+                        let defn = parse_definition(stripped, line_number)?;
+                        error_definitions.push(defn);
+                    }
+                    continue;
+                } else {
+                    current_section = "definitions";
+                }
+            }
             _ => {} // "definitions" — fall through to parse as definition
         }
 
@@ -413,6 +453,8 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         mode,
         skip_definitions,
         reserved_keywords,
+        escapes,
+        error_definitions,
     })
 }
 
@@ -719,6 +761,8 @@ keywords:
             mode: None,
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -740,6 +784,8 @@ keywords:
             mode: None,
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -761,6 +807,8 @@ keywords:
             mode: None,
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -961,6 +1009,8 @@ skip:
             mode: Some("unknown".to_string()),
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));

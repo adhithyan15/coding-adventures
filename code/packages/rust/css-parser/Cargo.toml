@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-css-parser"
+version = "0.1.0"
+edition = "2021"
+description = "CSS parser — parses CSS source code into an AST using the grammar-driven parser and the css.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-css-lexer = { path = "../css-lexer" }
