@@ -24,6 +24,8 @@ members = [
     "pipeline",
     "starlark-lexer",
     "starlark-parser",
+    "json-lexer",
+    "json-parser",
     "activation-functions",
     "perceptron",
     "json-lexer",
@@ -32,4 +34,7 @@ members = [
     "state-machine",
     "blas-library",
     "tree",
+    "virtual-machine",
+    "bytecode-compiler",
+    "brainfuck",
 ]

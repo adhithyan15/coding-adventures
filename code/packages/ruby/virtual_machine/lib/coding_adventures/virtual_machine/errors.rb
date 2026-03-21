@@ -23,5 +23,11 @@ module CodingAdventures
 
     # Raised when an instruction's operand is out of bounds or missing.
     class InvalidOperandError < VMError; end
+
+    # Raised when an operation receives values of incompatible types.
+    class VMTypeError < VMError; end
+
+    # Raised when the call stack exceeds the maximum depth.
+    class MaxRecursionError < VMError; end
   end
 end

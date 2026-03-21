@@ -1,6 +1,6 @@
 module github.com/adhithyan15/coding-adventures/code/packages/go/bytecode-compiler
 
-go 1.26.1
+go 1.23
 
 require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/parser v0.0.0

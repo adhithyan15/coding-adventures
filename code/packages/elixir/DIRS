@@ -5,3 +5,5 @@ loss_functions
 matrix
 directed_graph
 tree
+virtual_machine
+brainfuck

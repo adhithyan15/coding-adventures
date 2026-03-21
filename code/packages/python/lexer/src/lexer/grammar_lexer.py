@@ -177,6 +177,11 @@ class GrammarLexer:
         # exist, they replace the default whitespace-skipping behavior.
         self._has_skip_patterns = len(grammar.skip_definitions) > 0
 
+        # Escape mode controls STRING token processing.
+        # None = standard (strip quotes + process escapes).
+        # "none" = strip quotes only, no escape processing.
+        self._escape_mode = grammar.escape_mode
+
         # Build alias map: definition name → alias name.
         # For example, STRING_DQ → STRING. When we match STRING_DQ, we
         # emit the token type as STRING (the alias).
@@ -205,6 +210,19 @@ class GrammarLexer:
                 self._skip_patterns.append(re.compile(defn.pattern))
             else:
                 self._skip_patterns.append(re.compile(re.escape(defn.pattern)))
+
+        # Compile error patterns (error recovery tokens).
+        # These are tried as a last resort when no normal token matches.
+        # Error tokens allow graceful degradation for malformed inputs —
+        # for example, CSS emits BAD_STRING for unclosed strings instead
+        # of crashing with a LexerError.
+        self._error_patterns: list[tuple[str, re.Pattern[str]]] = []
+        for defn in grammar.error_definitions:
+            if defn.is_regex:
+                pattern = re.compile(defn.pattern)
+            else:
+                pattern = re.compile(re.escape(defn.pattern))
+            self._error_patterns.append((defn.name, pattern))
 
     # -- Main tokenization entry point ----------------------------------------
 
@@ -275,6 +293,15 @@ class GrammarLexer:
             token = self._try_match_token()
             if token is not None:
                 tokens.append(token)
+                continue
+
+            # --- Try error patterns as fallback ---
+            # Error patterns allow graceful degradation: instead of crashing,
+            # the lexer emits an error token (e.g., BAD_STRING for unclosed
+            # strings). The parser can then handle or report these tokens.
+            error_token = self._try_match_error_token()
+            if error_token is not None:
+                tokens.append(error_token)
                 continue
 
             raise LexerError(
@@ -400,6 +427,12 @@ class GrammarLexer:
             token = self._try_match_token()
             if token is not None:
                 tokens.append(token)
+                continue
+
+            # --- Try error patterns as fallback ---
+            error_token = self._try_match_error_token()
+            if error_token is not None:
+                tokens.append(error_token)
                 continue
 
             raise LexerError(
@@ -570,10 +603,15 @@ class GrammarLexer:
                 # Handle STRING tokens: strip quotes and process escapes.
                 # We check the effective type (after alias resolution) so
                 # that STRING_DQ -> STRING still gets escape processing.
+                #
+                # Escape mode controls what happens to STRING values:
+                # - None (default): strip quotes AND process escape sequences
+                # - "none": strip quotes only, leave escapes as-is
                 effective_name = self._alias_map.get(token_name, token_name)
                 if effective_name == "STRING" or token_name == "STRING":
                     inner = value[1:-1]
-                    inner = self._process_escapes(inner)
+                    if self._escape_mode != "none":
+                        inner = self._process_escapes(inner)
                     token = Token(
                         type=token_type,
                         value=inner,
@@ -589,6 +627,44 @@ class GrammarLexer:
                     )
 
                 # Advance position by the number of characters matched.
+                for _ in range(len(value)):
+                    self._advance()
+
+                return token
+
+        return None
+
+    def _try_match_error_token(self) -> Token | None:
+        """Try to match an error pattern at the current position.
+
+        Error patterns are a fallback — they are only tried when no normal
+        token pattern matches. This allows graceful degradation for malformed
+        inputs. For example, CSS can emit a ``BAD_STRING`` token for an
+        unclosed string instead of crashing with a ``LexerError``.
+
+        Error tokens are emitted with the pattern name as the token type
+        (e.g., ``"BAD_STRING"``). Downstream consumers can check for these
+        error token types and report or recover accordingly.
+
+        Returns:
+            A Token if an error pattern matched, None otherwise.
+        """
+        remaining = self._source[self._pos:]
+
+        for error_name, pattern in self._error_patterns:
+            match = pattern.match(remaining)
+            if match:
+                value = match.group(0)
+                start_line = self._line
+                start_column = self._column
+
+                token = Token(
+                    type=error_name,
+                    value=value,
+                    line=start_line,
+                    column=start_column,
+                )
+
                 for _ in range(len(value)):
                     self._advance()
 
