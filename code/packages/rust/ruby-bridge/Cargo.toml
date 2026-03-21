@@ -1,0 +1,11 @@
+[package]
+name = "ruby-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Thin safe Rust wrapper over Ruby's C API — no Magnus, no macros, no magic"
+
+# rb-sys provides raw Rust FFI bindings to Ruby's C API. It generates
+# bindings via bindgen against the Ruby headers found on the system.
+# This is the ONLY dependency — everything else is our own code.
+[dependencies]
+rb-sys = "0.9"

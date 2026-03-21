@@ -1,0 +1,11 @@
+[package]
+name = "node-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Thin safe Rust wrapper over Node.js N-API — no napi-rs, no macros, no magic"
+
+# napi-sys provides raw Rust FFI bindings to Node.js N-API.
+# N-API is ABI-stable across Node versions — extensions built with
+# one version work on any later version without recompilation.
+[dependencies]
+napi-sys = { version = "2", features = ["napi4"] }
