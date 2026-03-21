@@ -1,0 +1,6 @@
+program   = { sexpr } ;
+sexpr     = atom | list | quoted ;
+atom      = NUMBER | SYMBOL | STRING ;
+list      = LPAREN list_body RPAREN ;
+list_body = [ sexpr { sexpr } [ DOT sexpr ] ] ;
+quoted    = QUOTE sexpr ;
