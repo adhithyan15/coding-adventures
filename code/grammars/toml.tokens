@@ -56,7 +56,7 @@ escapes: none
 # ML_LITERAL_STRING allows everything literally, including backslashes.
 # Both use non-greedy matching (*?) to find the closest closing delimiter.
 
-ML_BASIC_STRING   = /"""([^\\]|\\.|\n)*?"""/
+ML_BASIC_STRING   = /"""([^\\]|\\(.|\n)|\n)*?"""/
 ML_LITERAL_STRING = /'''[\s\S]*?'''/
 
 # ============================================================================
