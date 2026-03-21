@@ -61,4 +61,7 @@ members = [
     "tree",
     "virtual-machine",
     "wasm-simulator",
+    "bytecode-compiler",
+    "brainfuck",
+    "progress-bar",
 ]

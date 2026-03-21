@@ -7,3 +7,4 @@ directed_graph
 tree
 virtual_machine
 brainfuck
+progress_bar
