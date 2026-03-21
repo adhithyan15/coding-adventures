@@ -23,7 +23,8 @@
     "@coding-adventures/lexer": "file:../lexer",
     "@coding-adventures/grammar-tools": "file:../grammar-tools",
     "@coding-adventures/parser": "file:../parser",
-    "@coding-adventures/ruby-lexer": "file:../ruby-lexer"
+    "@coding-adventures/ruby-lexer": "file:../ruby-lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

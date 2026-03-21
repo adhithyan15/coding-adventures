@@ -25,3 +25,5 @@
 require_relative "coding_adventures/directed_graph/version"
 require_relative "coding_adventures/directed_graph/errors"
 require_relative "coding_adventures/directed_graph/graph"
+require_relative "coding_adventures/directed_graph/labeled_graph"
+require_relative "coding_adventures/directed_graph/visualization"

@@ -154,6 +154,21 @@ module CodingAdventures
         @accepting = accepting.to_set.freeze
         @actions = (actions || {}).dup.freeze
 
+        # --- Build internal graph representation ---
+        #
+        # We maintain a LabeledGraph alongside the @transitions hash.
+        # The hash provides O(1) lookups for process() (the hot path).
+        # The graph provides structural queries like reachable_states via
+        # transitive_closure, avoiding the need for hand-rolled BFS.
+        #
+        # Each state becomes a node. Each transition [source, event] => target
+        # becomes a labeled edge from source to target with the event as label.
+        @graph = CodingAdventures::DirectedGraph::LabeledGraph.new
+        states.each { |state| @graph.add_node(state) }
+        transitions.each do |(source, event), target|
+          @graph.add_edge(source, target, event)
+        end
+
         # --- Mutable execution state ---
         @current_state = initial
         @trace = []
@@ -304,7 +319,8 @@ module CodingAdventures
 
       # Return the set of states reachable from the initial state.
       #
-      # Uses breadth-first search over the transition graph. A state is
+      # Delegates to the internal LabeledGraph's transitive_closure,
+      # which performs a BFS over the transition graph. A state is
       # reachable if there exists any sequence of inputs that leads from
       # the initial state to that state.
       #
@@ -312,33 +328,16 @@ module CodingAdventures
       # they can never be entered and can be safely removed during
       # minimization.
       #
-      # BFS algorithm:
-      #   1. Start with a queue containing just the initial state.
-      #   2. Pop a state from the queue.
-      #   3. For each transition FROM that state, add the target to the
-      #      queue if we haven't visited it yet.
-      #   4. Repeat until the queue is empty.
-      #   5. Return all visited states.
+      # transitive_closure returns a Hash mapping each node to the Set of
+      # nodes reachable from it (not including itself). We look up the
+      # initial state's entry and union it with {initial} to get the
+      # full set of reachable states.
       #
       # @return [Set<String>] The set of reachable state names.
       def reachable_states
-        visited = Set.new
-        queue = [@initial]
-
-        until queue.empty?
-          state = queue.shift
-          next if visited.include?(state)
-          visited.add(state)
-
-          # Find all states reachable from this one via any input
-          @transitions.each do |(source, _event), target|
-            if source == state && !visited.include?(target)
-              queue << target
-            end
-          end
-        end
-
-        visited.freeze
+        closure = @graph.transitive_closure
+        reachable = (closure[@initial] || Set.new) | Set[@initial]
+        reachable.freeze
       end
 
       # Check if a transition is defined for every (state, input) pair.

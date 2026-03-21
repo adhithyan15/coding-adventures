@@ -57,6 +57,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 )
 
 // DFA is a Deterministic Finite Automaton.
@@ -77,6 +79,17 @@ type DFA struct {
 
 	// Optional actions
 	actions map[[2]string]Action
+
+	// Internal graph representation.
+	//
+	// We maintain a LabeledGraph alongside the transitions map.
+	// The map provides O(1) lookups for Process() (the hot path).
+	// The graph provides structural queries like ReachableStates() via
+	// TransitiveClosure, avoiding the need for hand-rolled BFS.
+	//
+	// Each state becomes a node. Each transition (source, event) -> target
+	// becomes a labeled edge from source to target with the event as label.
+	graph *directedgraph.LabeledGraph
 
 	// Mutable execution state
 	current string
@@ -192,6 +205,21 @@ func NewDFA(
 		}
 	}
 
+	// --- Build internal graph representation ---
+	//
+	// We build a LabeledGraph from states and transitions so that
+	// structural queries like ReachableStates() can delegate to the
+	// graph's TransitiveClosure algorithm instead of hand-rolling BFS.
+	// Self-loops are allowed because an FSM state can transition to itself.
+	g := directedgraph.NewLabeledGraphAllowSelfLoops()
+	for s := range stateSet {
+		g.AddNode(s)
+	}
+	for key, target := range trans {
+		source, event := key[0], key[1]
+		g.AddEdge(source, target, event)
+	}
+
 	return &DFA{
 		states:      stateSet,
 		alphabet:    alphaSet,
@@ -199,6 +227,7 @@ func NewDFA(
 		initial:     initial,
 		accepting:   acceptSet,
 		actions:     acts,
+		graph:       g,
 		current:     initial,
 		trace:       nil,
 	}
@@ -371,26 +400,18 @@ func (d *DFA) Reset() {
 // States that are defined but not reachable are "dead weight" — they can
 // never be entered and can be safely removed during minimization.
 func (d *DFA) ReachableStates() map[string]bool {
-	visited := map[string]bool{}
-	queue := []string{d.initial}
-
-	for len(queue) > 0 {
-		state := queue[0]
-		queue = queue[1:]
-		if visited[state] {
-			continue
-		}
-		visited[state] = true
-
-		// Find all states reachable from this one via any input
-		for key, target := range d.transitions {
-			if key[0] == state && !visited[target] {
-				queue = append(queue, target)
-			}
-		}
+	// Delegate to the internal LabeledGraph's TransitiveClosure, which
+	// performs BFS over the transition graph. TransitiveClosure returns
+	// all nodes reachable FROM the initial state (not including the
+	// initial state itself), so we add {initial} to get the full set.
+	reachable, err := d.graph.TransitiveClosure(d.initial)
+	if err != nil {
+		// This should never happen — the initial state is always a node
+		// in the graph. But if it does, fall back to just the initial state.
+		return map[string]bool{d.initial: true}
 	}
-
-	return visited
+	reachable[d.initial] = true
+	return reachable
 }
 
 // IsComplete checks if a transition is defined for every (state, input) pair.

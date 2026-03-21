@@ -20,6 +20,7 @@ defmodule CodingAdventures.JsonLexer.MixProject do
   defp deps do
     [
       {:coding_adventures_grammar_tools, path: "../grammar_tools"},
+      {:coding_adventures_directed_graph, path: "../directed_graph"},
       {:coding_adventures_lexer, path: "../lexer"}
     ]
   end

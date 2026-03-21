@@ -97,7 +97,18 @@ impl std::error::Error for GraphError {}
 /// The graph stores string-typed nodes. Edges are directed: `add_edge("A", "B")`
 /// means A points to B, so B is a *successor* of A and A is a *predecessor* of B.
 ///
-/// Self-loops are disallowed — `add_edge("A", "A")` returns a [`GraphError::SelfLoop`].
+/// # Self-loops
+///
+/// By default, self-loops (edges from a node to itself, like A→A) are
+/// prohibited because they create trivial cycles, which makes topological
+/// sorting impossible. However, some use cases genuinely need self-loops —
+/// for example, modeling state machines where a state can transition to
+/// itself, or representing "retry" semantics in a workflow graph.
+///
+/// Use [`Graph::new_allow_self_loops()`] to create a graph that permits
+/// self-loops. The `allow_self_loops` flag is checked only in `add_edge`;
+/// all other methods work correctly regardless of the flag's value.
+///
 /// Duplicate edges and nodes are silently ignored (idempotent adds).
 ///
 /// # Example
@@ -115,14 +126,20 @@ pub struct Graph {
     forward: HashMap<String, HashSet<String>>,
     /// reverse adjacency: node -> set of predecessors (nodes that point TO it)
     reverse: HashMap<String, HashSet<String>>,
+    /// whether self-loops (A→A edges) are permitted
+    allow_self_loops: bool,
 }
 
 impl Graph {
     // ------------------------------------------------------------------
-    // Constructor
+    // Constructors
     // ------------------------------------------------------------------
 
-    /// Create an empty directed graph.
+    /// Create an empty directed graph that prohibits self-loops.
+    ///
+    /// This is the default constructor. If you try to add an edge from a
+    /// node to itself (e.g., `g.add_edge("A", "A")`), it will return
+    /// [`GraphError::SelfLoop`].
     ///
     /// Both adjacency maps start empty. Nodes are added either explicitly
     /// with [`add_node`] or implicitly by [`add_edge`].
@@ -130,7 +147,30 @@ impl Graph {
         Graph {
             forward: HashMap::new(),
             reverse: HashMap::new(),
+            allow_self_loops: false,
         }
+    }
+
+    /// Create an empty directed graph that permits self-loops.
+    ///
+    /// A self-loop is an edge from a node to itself, like A→A. This is
+    /// useful for modeling state machines, retry loops, or any domain
+    /// where a node can reference itself.
+    ///
+    /// Note: a graph with self-loops will have cycles (a self-loop IS a
+    /// cycle of length 1), so `topological_sort()` will return
+    /// [`GraphError::CycleError`] and `has_cycle()` will return true.
+    pub fn new_allow_self_loops() -> Self {
+        Graph {
+            forward: HashMap::new(),
+            reverse: HashMap::new(),
+            allow_self_loops: true,
+        }
+    }
+
+    /// Returns whether this graph permits self-loops.
+    pub fn allows_self_loops(&self) -> bool {
+        self.allow_self_loops
     }
 
     // ------------------------------------------------------------------
@@ -216,12 +256,22 @@ impl Graph {
     /// you can build a graph entirely with `add_edge` calls — no need
     /// to call `add_node` first.
     ///
-    /// Returns [`GraphError::SelfLoop`] if `from == to` (self-loops are not
-    /// allowed in a DAG-oriented graph because they trivially create a cycle).
+    /// Self-loop behavior depends on how the graph was created:
+    ///
+    /// - `Graph::new()` → self-loops are **prohibited** (returns
+    ///   [`GraphError::SelfLoop`])
+    /// - `Graph::new_allow_self_loops()` → self-loops are **allowed**
+    ///
+    /// When self-loops are allowed, `add_edge("A", "A")` inserts A into
+    /// both the forward and reverse adjacency sets for A. This means:
+    /// - `has_edge("A", "A")` returns true
+    /// - `successors("A")` includes "A"
+    /// - `predecessors("A")` includes "A"
+    /// - `has_cycle()` returns true (a self-loop is a cycle of length 1)
     ///
     /// Duplicate edges are silently ignored (HashSets handle deduplication).
     pub fn add_edge(&mut self, from: &str, to: &str) -> Result<(), GraphError> {
-        if from == to {
+        if from == to && !self.allow_self_loops {
             return Err(GraphError::SelfLoop(from.to_string()));
         }
 
@@ -785,6 +835,130 @@ mod tests {
         let mut g = Graph::new();
         let err = g.add_edge("A", "A").unwrap_err();
         assert_eq!(err, GraphError::SelfLoop("A".to_string()));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // Self-loop (allowed) tests
+    // ═══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_allow_self_loops_add_edge() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        assert!(g.has_edge("A", "A"));
+    }
+
+    #[test]
+    fn test_allow_self_loops_has_node() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        assert!(g.has_node("A"));
+        assert_eq!(g.size(), 1);
+    }
+
+    #[test]
+    fn test_allow_self_loops_successors() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        let succs = g.successors("A").unwrap();
+        assert_eq!(succs, vec!["A"]);
+    }
+
+    #[test]
+    fn test_allow_self_loops_predecessors() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        let preds = g.predecessors("A").unwrap();
+        assert_eq!(preds, vec!["A"]);
+    }
+
+    #[test]
+    fn test_allow_self_loops_has_cycle() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        assert!(g.has_cycle(), "self-loop is a cycle of length 1");
+    }
+
+    #[test]
+    fn test_allow_self_loops_topo_sort_fails() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        let err = g.topological_sort().unwrap_err();
+        assert_eq!(err, GraphError::CycleError);
+    }
+
+    #[test]
+    fn test_allow_self_loops_mixed_edges() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("B", "C").unwrap();
+        assert!(g.has_edge("A", "A"));
+        assert!(g.has_edge("A", "B"));
+        assert_eq!(g.size(), 3);
+    }
+
+    #[test]
+    fn test_allow_self_loops_remove_edge() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        g.remove_edge("A", "A").unwrap();
+        assert!(!g.has_edge("A", "A"));
+        assert!(g.has_node("A"), "node should still exist after removing self-loop");
+    }
+
+    #[test]
+    fn test_allow_self_loops_remove_node() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        g.add_edge("A", "B").unwrap();
+        g.remove_node("A").unwrap();
+        assert!(!g.has_node("A"));
+        assert!(!g.has_edge("A", "A"));
+        assert!(!g.has_edge("A", "B"));
+    }
+
+    #[test]
+    fn test_allow_self_loops_edges_output() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        g.add_edge("A", "B").unwrap();
+        let edges = g.edges();
+        assert_eq!(edges.len(), 2);
+        assert_eq!(edges[0], ("A".to_string(), "A".to_string()));
+        assert_eq!(edges[1], ("A".to_string(), "B".to_string()));
+    }
+
+    #[test]
+    fn test_default_graph_rejects_self_loops() {
+        let mut g = Graph::new();
+        let err = g.add_edge("X", "X").unwrap_err();
+        assert_eq!(err, GraphError::SelfLoop("X".to_string()));
+    }
+
+    #[test]
+    fn test_allow_self_loops_normal_edge_still_works() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("X", "Y").unwrap();
+        assert!(g.has_edge("X", "Y"));
+    }
+
+    #[test]
+    fn test_allow_self_loops_transitive_closure() {
+        let mut g = Graph::new_allow_self_loops();
+        g.add_edge("A", "A").unwrap();
+        g.add_edge("A", "B").unwrap();
+        let closure = g.transitive_closure("A").unwrap();
+        assert!(closure.contains("A"), "A should be in its own closure via self-loop");
+        assert!(closure.contains("B"));
+    }
+
+    #[test]
+    fn test_allows_self_loops_flag() {
+        let g1 = Graph::new();
+        assert!(!g1.allows_self_loops());
+        let g2 = Graph::new_allow_self_loops();
+        assert!(g2.allows_self_loops());
     }
 
     #[test]
