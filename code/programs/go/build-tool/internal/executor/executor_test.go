@@ -145,7 +145,7 @@ func TestExecuteBuildsSkipsCached(t *testing.T) {
 	bc := cache.New()
 	bc.Record("python/pkg-a", "hash-a", "deps-a", "success")
 
-	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, false, 1, nil)
+	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, false, 1, nil, nil)
 
 	if results["python/pkg-a"].Status != "skipped" {
 		t.Fatalf("expected skipped, got %s", results["python/pkg-a"].Status)
@@ -167,7 +167,7 @@ func TestExecuteBuildsForceOverridesCache(t *testing.T) {
 	bc := cache.New()
 	bc.Record("python/pkg-a", "hash-a", "deps-a", "success")
 
-	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, true, false, 1, nil)
+	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, true, false, 1, nil, nil)
 
 	if results["python/pkg-a"].Status != "built" {
 		t.Fatalf("expected built (force), got %s", results["python/pkg-a"].Status)
@@ -188,7 +188,7 @@ func TestExecuteBuildsDryRun(t *testing.T) {
 
 	bc := cache.New()
 
-	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, true, 1, nil)
+	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, true, 1, nil, nil)
 
 	if results["python/pkg-a"].Status != "would-build" {
 		t.Fatalf("expected would-build, got %s", results["python/pkg-a"].Status)
@@ -216,7 +216,7 @@ func TestExecuteBuildsDepSkipped(t *testing.T) {
 	results := ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "ha", "python/pkg-b": "hb"},
 		map[string]string{"python/pkg-a": "da", "python/pkg-b": "db"},
-		true, false, 1, nil)
+		true, false, 1, nil, nil)
 
 	if results["python/pkg-a"].Status != "failed" {
 		t.Fatalf("expected pkg-a failed, got %s", results["python/pkg-a"].Status)
@@ -247,7 +247,7 @@ func TestExecuteBuildsParallelLevel(t *testing.T) {
 	results := ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "ha", "python/pkg-b": "hb"},
 		map[string]string{"python/pkg-a": "da", "python/pkg-b": "db"},
-		true, false, 2, nil)
+		true, false, 2, nil, nil)
 
 	if results["python/pkg-a"].Status != "built" {
 		t.Fatalf("expected pkg-a built, got %s", results["python/pkg-a"].Status)
@@ -274,7 +274,7 @@ func TestExecuteBuildsCacheUpdatedOnSuccess(t *testing.T) {
 	ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "hash-a"},
 		map[string]string{"python/pkg-a": "deps-a"},
-		true, false, 1, nil)
+		true, false, 1, nil, nil)
 
 	entries := bc.Entries()
 	if entries["python/pkg-a"].Status != "success" {
@@ -299,7 +299,7 @@ func TestExecuteBuildsCacheUpdatedOnFailure(t *testing.T) {
 	ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "hash-a"},
 		map[string]string{"python/pkg-a": "deps-a"},
-		true, false, 1, nil)
+		true, false, 1, nil, nil)
 
 	entries := bc.Entries()
 	if entries["python/pkg-a"].Status != "failed" {
