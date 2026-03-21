@@ -126,6 +126,19 @@ class TokenGrammar:
             tokens), reserved words cause an immediate lex error. This
             catches mistakes like ``class Foo`` in Starlark at lex time
             instead of producing a confusing parse error.
+        escape_mode: Controls how the lexer processes STRING token values.
+            None (default) uses standard escape processing (JSON-style
+            escapes like backslash-n, backslash-t, backslash-uXXXX).
+            The string "none" disables escape processing — quotes are
+            stripped but escape sequences are left as-is. This is useful
+            for languages like CSS where escape semantics differ from the
+            standard set and should be handled post-parse.
+        error_definitions: Token definitions for error recovery patterns.
+            When the lexer fails to match any normal token or skip pattern,
+            it tries these patterns before raising ``LexerError``. This
+            allows graceful degradation for malformed inputs — for example,
+            CSS emits ``BAD_STRING`` for unclosed strings instead of
+            crashing. Error tokens carry an ``is_error`` marker.
     """
 
     definitions: list[TokenDefinition] = field(default_factory=list)
@@ -133,6 +146,8 @@ class TokenGrammar:
     mode: str | None = None
     skip_definitions: list[TokenDefinition] = field(default_factory=list)
     reserved_keywords: list[str] = field(default_factory=list)
+    escape_mode: str | None = None
+    error_definitions: list[TokenDefinition] = field(default_factory=list)
 
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
@@ -351,6 +366,21 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = None
             continue
 
+        # --- escapes: directive ---
+        # Controls how STRING tokens are processed. "none" disables
+        # escape processing (quotes are stripped but escapes are left
+        # as-is). Useful for CSS where escape semantics differ from JSON.
+        if stripped.startswith("escapes:"):
+            escape_value = stripped[8:].strip()
+            if not escape_value:
+                raise TokenGrammarError(
+                    "Missing value after 'escapes:'",
+                    line_number,
+                )
+            grammar.escape_mode = escape_value
+            current_section = None
+            continue
+
         # --- Section headers ---
         if stripped in ("keywords:", "keywords :"):
             current_section = "keywords"
@@ -362,6 +392,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
 
         if stripped in ("skip:", "skip :"):
             current_section = "skip"
+            continue
+
+        if stripped in ("errors:", "errors :"):
+            current_section = "errors"
             continue
 
         # --- Inside a section ---
@@ -396,6 +430,30 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                         skip_pattern, skip_name, line_number
                     )
                     grammar.skip_definitions.append(defn)
+                elif current_section == "errors":
+                    # Errors section contains token definitions for
+                    # error recovery — patterns tried as a fallback when
+                    # no normal token matches (e.g., BAD_STRING for
+                    # unclosed strings in CSS).
+                    if "=" not in stripped:
+                        raise TokenGrammarError(
+                            f"Expected error pattern definition "
+                            f"(NAME = pattern), got: {stripped!r}",
+                            line_number,
+                        )
+                    eq_index = stripped.index("=")
+                    err_name = stripped[:eq_index].strip()
+                    err_pattern = stripped[eq_index + 1 :].strip()
+                    if not err_name or not err_pattern:
+                        raise TokenGrammarError(
+                            f"Incomplete error pattern definition: "
+                            f"{stripped!r}",
+                            line_number,
+                        )
+                    defn = _parse_definition(
+                        err_pattern, err_name, line_number
+                    )
+                    grammar.error_definitions.append(defn)
                 continue
             else:
                 # Non-indented line — exit section, fall through
@@ -536,11 +594,21 @@ def validate_token_grammar(grammar: TokenGrammar) -> list[str]:
     # Validate skip definitions
     issues.extend(_validate_definitions(grammar.skip_definitions, "skip pattern"))
 
+    # Validate error definitions
+    issues.extend(_validate_definitions(grammar.error_definitions, "error pattern"))
+
     # Validate mode
     if grammar.mode is not None and grammar.mode != "indentation":
         issues.append(
             f"Unknown lexer mode '{grammar.mode}' "
             f"(only 'indentation' is supported)"
+        )
+
+    # Validate escape mode
+    if grammar.escape_mode is not None and grammar.escape_mode != "none":
+        issues.append(
+            f"Unknown escape mode '{grammar.escape_mode}' "
+            f"(only 'none' is supported)"
         )
 
     return issues

@@ -50,8 +50,96 @@
  *     The two-bit predictor solves this — see two-bit.ts.
  */
 
+import { DFA } from "../../state-machine/src/index.js";
 import type { BranchPredictor, Prediction } from "./base.js";
 import { PredictionStats } from "./stats.js";
+
+// ─── DFA representation ──────────────────────────────────────────────────────
+//
+// The 1-bit predictor is a 2-state DFA — the simplest possible dynamic
+// branch predictor. It has just two states (predict taken or not taken)
+// and flips on every misprediction.
+//
+// Expressing it as a formal DFA makes the structure explicit and enables
+// equivalence testing with the manual implementation above.
+
+/**
+ * The 1-bit predictor expressed as a formal DFA.
+ *
+ * States:
+ *   NT = Not Taken (bit = 0)
+ *   T  = Taken (bit = 1)
+ *
+ * Alphabet: { "taken", "not_taken" }
+ *
+ * Transitions:
+ * ```
+ *   NT --taken--> T       NT --not_taken--> NT
+ *   T  --taken--> T       T  --not_taken--> NT
+ * ```
+ *
+ * Initial state: NT (cold start, defaults to not taken)
+ *
+ * Accepting states: { T } — the state that predicts "taken".
+ */
+export const ONE_BIT_DFA = new DFA(
+  new Set(["NT", "T"]),
+  new Set(["taken", "not_taken"]),
+  new Map([
+    ["NT\0taken", "T"],
+    ["NT\0not_taken", "NT"],
+    ["T\0taken", "T"],
+    ["T\0not_taken", "NT"],
+  ]),
+  "NT",
+  new Set(["T"]),
+);
+
+/**
+ * Maps DFA state names to boolean prediction values.
+ */
+export const ONE_BIT_DFA_STATE_TO_BOOL: ReadonlyMap<string, boolean> = new Map([
+  ["NT", false],
+  ["T", true],
+]);
+
+/**
+ * Maps boolean prediction values to DFA state names.
+ */
+export const ONE_BIT_BOOL_TO_DFA_STATE: ReadonlyMap<boolean, string> = new Map([
+  [false, "NT"],
+  [true, "T"],
+]);
+
+/**
+ * Compute the next prediction state using the DFA transition function.
+ *
+ * @param currentlyTaken - The current prediction (true = taken, false = not taken).
+ * @param actualTaken - Whether the branch was actually taken.
+ * @returns The next prediction state after the transition.
+ */
+export function oneBitTransitionViaDFA(
+  currentlyTaken: boolean,
+  actualTaken: boolean,
+): boolean {
+  const startName = ONE_BIT_BOOL_TO_DFA_STATE.get(currentlyTaken)!;
+  const dfa = new DFA(
+    new Set(["NT", "T"]),
+    new Set(["taken", "not_taken"]),
+    new Map([
+      ["NT\0taken", "T"],
+      ["NT\0not_taken", "NT"],
+      ["T\0taken", "T"],
+      ["T\0not_taken", "NT"],
+    ]),
+    startName,
+    new Set(["T"]),
+  );
+
+  const event = actualTaken ? "taken" : "not_taken";
+  dfa.process(event);
+  return ONE_BIT_DFA_STATE_TO_BOOL.get(dfa.currentState)!;
+}
 
 /**
  * 1-bit predictor — one flip-flop per branch address.

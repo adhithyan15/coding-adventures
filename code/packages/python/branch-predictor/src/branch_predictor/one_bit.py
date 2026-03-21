@@ -50,8 +50,35 @@ The double-misprediction problem:
 
 from __future__ import annotations
 
+from state_machine import DFA
+
 from branch_predictor.base import Prediction
 from branch_predictor.stats import PredictionStats
+
+# ─── One-Bit DFA ─────────────────────────────────────────────────────────────
+#
+# This IS the formal state machine that the 1-bit branch predictor implements.
+# The one-bit predictor is a DFA with just two states: "not_taken" and "taken".
+# On every branch outcome, the machine transitions to the state matching the
+# actual outcome — it always predicts "whatever happened last time."
+#
+# The accepting state {"taken"} represents the condition "predicts taken."
+# In the DFA formalism, processing a sequence of branch outcomes through
+# ONE_BIT_DFA and checking acceptance tells you what the predictor would
+# predict for the NEXT branch.
+
+ONE_BIT_DFA = DFA(
+    states={"not_taken", "taken"},
+    alphabet={"taken", "not_taken"},
+    transitions={
+        ("not_taken", "taken"): "taken",
+        ("not_taken", "not_taken"): "not_taken",
+        ("taken", "taken"): "taken",
+        ("taken", "not_taken"): "not_taken",
+    },
+    initial="not_taken",
+    accepting={"taken"},
+)
 
 
 class OneBitPredictor:
@@ -143,8 +170,9 @@ class OneBitPredictor:
     def update(self, pc: int, taken: bool, target: int | None = None) -> None:  # noqa: ARG002
         """Update the prediction table with the actual outcome.
 
-        Simply sets the bit to match the actual outcome. This is the "flip"
-        that gives the 1-bit predictor its characteristic behavior.
+        Uses the ONE_BIT_DFA transition table to compute the next state.
+        The DFA event is "taken" or "not_taken", and the resulting state
+        (also "taken" or "not_taken") becomes the new prediction bit.
 
         Args:
             pc: The program counter of the branch instruction.
@@ -156,8 +184,13 @@ class OneBitPredictor:
         # what the predictor would have predicted.
         predicted = self._table.get(index, False)
         self._stats.record(correct=(predicted == taken))
-        # Now update the table to remember this outcome for next time.
-        self._table[index] = taken
+
+        # Use the DFA transition table to compute the next state.
+        # The current state is "taken" if the bit is set, "not_taken" otherwise.
+        current_dfa_state = "taken" if predicted else "not_taken"
+        event = "taken" if taken else "not_taken"
+        next_dfa_state = ONE_BIT_DFA.transitions[(current_dfa_state, event)]
+        self._table[index] = (next_dfa_state == "taken")
 
     @property
     def stats(self) -> PredictionStats:

@@ -65,6 +65,7 @@
  *     - MIPS R10000: 2-bit counters as base predictor in a tournament scheme
  */
 
+import { DFA } from "../../state-machine/src/index.js";
 import type { BranchPredictor, Prediction } from "./base.js";
 import { PredictionStats } from "./stats.js";
 
@@ -152,6 +153,126 @@ export function notTakenOutcome(state: TwoBitState): TwoBitState {
  */
 export function predictsTaken(state: TwoBitState): boolean {
   return state >= TwoBitState.WEAKLY_TAKEN;
+}
+
+// ─── DFA representation ──────────────────────────────────────────────────────
+//
+// The 2-bit saturating counter is a textbook DFA. We define it here using the
+// state-machine library's DFA class. This serves two purposes:
+//
+// 1. **Formal verification**: we can prove that the manual takenOutcome /
+//    notTakenOutcome functions produce the same transitions as the DFA.
+//
+// 2. **Visualization**: the DFA can render itself as Graphviz DOT or an ASCII
+//    transition table, which is invaluable for teaching.
+//
+// The DFA's states are string names ("SNT", "WNT", "WT", "ST") that correspond
+// to the TwoBitState enum values. We provide bidirectional mappings below.
+
+/**
+ * Maps DFA state names to TwoBitState enum values.
+ *
+ * Used when reading the DFA's current state and converting back to the
+ * numeric representation used by the predictor table.
+ */
+export const DFA_STATE_TO_ENUM: ReadonlyMap<string, TwoBitState> = new Map([
+  ["SNT", TwoBitState.STRONGLY_NOT_TAKEN],
+  ["WNT", TwoBitState.WEAKLY_NOT_TAKEN],
+  ["WT", TwoBitState.WEAKLY_TAKEN],
+  ["ST", TwoBitState.STRONGLY_TAKEN],
+]);
+
+/**
+ * Maps TwoBitState enum values to DFA state names.
+ *
+ * Used when setting the DFA's initial state from the predictor table.
+ */
+export const ENUM_TO_DFA_STATE: ReadonlyMap<TwoBitState, string> = new Map([
+  [TwoBitState.STRONGLY_NOT_TAKEN, "SNT"],
+  [TwoBitState.WEAKLY_NOT_TAKEN, "WNT"],
+  [TwoBitState.WEAKLY_TAKEN, "WT"],
+  [TwoBitState.STRONGLY_TAKEN, "ST"],
+]);
+
+/**
+ * The 2-bit saturating counter expressed as a formal DFA.
+ *
+ * States:
+ *   SNT = Strongly Not Taken (0)
+ *   WNT = Weakly Not Taken (1)
+ *   WT  = Weakly Taken (2)
+ *   ST  = Strongly Taken (3)
+ *
+ * Alphabet: { "taken", "not_taken" }
+ *
+ * Transitions:
+ * ```
+ *   SNT --taken--> WNT    SNT --not_taken--> SNT  (saturated)
+ *   WNT --taken--> WT     WNT --not_taken--> SNT
+ *   WT  --taken--> ST     WT  --not_taken--> WNT
+ *   ST  --taken--> ST     ST  --not_taken--> WT   (saturated)
+ * ```
+ *
+ * Initial state: WNT (conservative start, one taken flips to predict taken)
+ *
+ * Accepting states: { WT, ST } — states that predict "taken".
+ * The DFA "accepts" an input sequence iff the final state predicts taken.
+ */
+export const TWO_BIT_DFA = new DFA(
+  new Set(["SNT", "WNT", "WT", "ST"]),
+  new Set(["taken", "not_taken"]),
+  new Map([
+    ["SNT\0taken", "WNT"],
+    ["SNT\0not_taken", "SNT"],
+    ["WNT\0taken", "WT"],
+    ["WNT\0not_taken", "SNT"],
+    ["WT\0taken", "ST"],
+    ["WT\0not_taken", "WNT"],
+    ["ST\0taken", "ST"],
+    ["ST\0not_taken", "WT"],
+  ]),
+  "WNT",
+  new Set(["WT", "ST"]),
+);
+
+/**
+ * Compute the next TwoBitState using the DFA transition function.
+ *
+ * This is an alternative to the manual takenOutcome/notTakenOutcome functions.
+ * It creates a temporary DFA, sets it to the given state, processes the event,
+ * and returns the resulting TwoBitState. This is less efficient than the direct
+ * functions (it constructs a DFA each time), but proves the equivalence.
+ *
+ * @param state - The current TwoBitState.
+ * @param taken - Whether the branch was taken.
+ * @returns The next TwoBitState after the transition.
+ */
+export function transitionViaDFA(
+  state: TwoBitState,
+  taken: boolean,
+): TwoBitState {
+  // Build a fresh DFA starting from the given state
+  const startName = ENUM_TO_DFA_STATE.get(state)!;
+  const dfa = new DFA(
+    new Set(["SNT", "WNT", "WT", "ST"]),
+    new Set(["taken", "not_taken"]),
+    new Map([
+      ["SNT\0taken", "WNT"],
+      ["SNT\0not_taken", "SNT"],
+      ["WNT\0taken", "WT"],
+      ["WNT\0not_taken", "SNT"],
+      ["WT\0taken", "ST"],
+      ["WT\0not_taken", "WNT"],
+      ["ST\0taken", "ST"],
+      ["ST\0not_taken", "WT"],
+    ]),
+    startName,
+    new Set(["WT", "ST"]),
+  );
+
+  const event = taken ? "taken" : "not_taken";
+  dfa.process(event);
+  return DFA_STATE_TO_ENUM.get(dfa.currentState)!;
 }
 
 // ─── TwoBitPredictor ─────────────────────────────────────────────────────────

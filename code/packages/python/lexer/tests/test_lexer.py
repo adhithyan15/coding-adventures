@@ -588,3 +588,161 @@ class TestEdgeCases:
         # The newline is inside the string, so it's part of the string value
         assert tokens[0].type == TokenType.STRING
         assert "\n" in tokens[0].value
+
+
+# ============================================================================
+# Tokenizer DFA integration
+# ============================================================================
+
+class TestTokenizerDFA:
+    """Test the formal TOKENIZER_DFA and the classify_char helper."""
+
+    def test_classify_char_eof(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char(None) == "eof"
+
+    def test_classify_char_digit(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("0") == "digit"
+        assert classify_char("9") == "digit"
+
+    def test_classify_char_alpha(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("a") == "alpha"
+        assert classify_char("Z") == "alpha"
+
+    def test_classify_char_underscore(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("_") == "underscore"
+
+    def test_classify_char_whitespace(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char(" ") == "whitespace"
+        assert classify_char("\t") == "whitespace"
+        assert classify_char("\r") == "whitespace"
+
+    def test_classify_char_newline(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("\n") == "newline"
+
+    def test_classify_char_quote(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char('"') == "quote"
+
+    def test_classify_char_equals(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("=") == "equals"
+
+    def test_classify_char_operators(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("+") == "operator"
+        assert classify_char("-") == "operator"
+        assert classify_char("*") == "operator"
+        assert classify_char("/") == "operator"
+
+    def test_classify_char_delimiters(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("(") == "open_paren"
+        assert classify_char(")") == "close_paren"
+        assert classify_char(",") == "comma"
+        assert classify_char(":") == "colon"
+        assert classify_char(";") == "semicolon"
+        assert classify_char("{") == "open_brace"
+        assert classify_char("}") == "close_brace"
+        assert classify_char("[") == "open_bracket"
+        assert classify_char("]") == "close_bracket"
+        assert classify_char(".") == "dot"
+        assert classify_char("!") == "bang"
+
+    def test_classify_char_other(self) -> None:
+        from lexer.tokenizer import classify_char
+        assert classify_char("@") == "other"
+        assert classify_char("#") == "other"
+        assert classify_char("$") == "other"
+
+    def test_dfa_exists_and_is_complete(self) -> None:
+        """The TOKENIZER_DFA should be a well-formed, complete DFA."""
+        from lexer.tokenizer import TOKENIZER_DFA
+        assert TOKENIZER_DFA.is_complete()
+
+    def test_dfa_start_to_done_on_eof(self) -> None:
+        """From start, receiving 'eof' should go to 'done'."""
+        from state_machine import DFA
+        from lexer.tokenizer import TOKENIZER_DFA
+        # Create a fresh copy
+        dfa = DFA(
+            states=TOKENIZER_DFA.states,
+            alphabet=TOKENIZER_DFA.alphabet,
+            transitions=TOKENIZER_DFA.transitions,
+            initial=TOKENIZER_DFA.initial,
+            accepting=TOKENIZER_DFA.accepting,
+        )
+        result = dfa.process("eof")
+        assert result == "done"
+
+    def test_dfa_start_to_in_number_on_digit(self) -> None:
+        from state_machine import DFA
+        from lexer.tokenizer import TOKENIZER_DFA
+        dfa = DFA(
+            states=TOKENIZER_DFA.states,
+            alphabet=TOKENIZER_DFA.alphabet,
+            transitions=TOKENIZER_DFA.transitions,
+            initial=TOKENIZER_DFA.initial,
+            accepting=TOKENIZER_DFA.accepting,
+        )
+        result = dfa.process("digit")
+        assert result == "in_number"
+
+    def test_dfa_start_to_in_name_on_alpha(self) -> None:
+        from state_machine import DFA
+        from lexer.tokenizer import TOKENIZER_DFA
+        dfa = DFA(
+            states=TOKENIZER_DFA.states,
+            alphabet=TOKENIZER_DFA.alphabet,
+            transitions=TOKENIZER_DFA.transitions,
+            initial=TOKENIZER_DFA.initial,
+            accepting=TOKENIZER_DFA.accepting,
+        )
+        assert dfa.process("alpha") == "in_name"
+
+    def test_dfa_start_to_in_name_on_underscore(self) -> None:
+        from state_machine import DFA
+        from lexer.tokenizer import TOKENIZER_DFA
+        dfa = DFA(
+            states=TOKENIZER_DFA.states,
+            alphabet=TOKENIZER_DFA.alphabet,
+            transitions=TOKENIZER_DFA.transitions,
+            initial=TOKENIZER_DFA.initial,
+            accepting=TOKENIZER_DFA.accepting,
+        )
+        assert dfa.process("underscore") == "in_name"
+
+    def test_dfa_start_to_error_on_other(self) -> None:
+        from state_machine import DFA
+        from lexer.tokenizer import TOKENIZER_DFA
+        dfa = DFA(
+            states=TOKENIZER_DFA.states,
+            alphabet=TOKENIZER_DFA.alphabet,
+            transitions=TOKENIZER_DFA.transitions,
+            initial=TOKENIZER_DFA.initial,
+            accepting=TOKENIZER_DFA.accepting,
+        )
+        assert dfa.process("other") == "error"
+
+    def test_dfa_dispatch_matches_existing_behavior(self) -> None:
+        """The DFA dispatch should produce the same tokens as before."""
+        # This is a comprehensive integration test: tokenize a realistic
+        # expression and verify the result matches expectations.
+        tokens = tokenize('if x == 1:\n    return "hello"')
+        types = [t.type for t in tokens]
+        assert types == [
+            TokenType.NAME,          # if
+            TokenType.NAME,          # x
+            TokenType.EQUALS_EQUALS, # ==
+            TokenType.NUMBER,        # 1
+            TokenType.COLON,         # :
+            TokenType.NEWLINE,       # \n
+            TokenType.NAME,          # return
+            TokenType.STRING,        # "hello"
+            TokenType.EOF,
+        ]

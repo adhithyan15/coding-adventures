@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/branch-predictor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Branch prediction algorithms — teaching CPUs to guess the future",
   "type": "module",
   "main": "src/index.ts",
@@ -17,6 +17,9 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",

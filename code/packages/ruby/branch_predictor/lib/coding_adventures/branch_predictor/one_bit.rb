@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "coding_adventures_state_machine"
+
 # ─── One-Bit Branch Predictor ─────────────────────────────────────────────────
 #
 # The one-bit predictor is the simplest dynamic predictor. Unlike static
@@ -36,9 +38,38 @@
 #     | Predict NOT TAKEN| ------------> |  Predict TAKEN   |
 #     |    (bit = 0)     | <------------ |    (bit = 1)     |
 #     +-----------------+   not taken    +-----------------+
+#
+# ─── DFA Formalization ─────────────────────────────────────────────────────────
+#
+# The 1-bit predictor is the simplest possible DFA with branch-prediction
+# semantics:
+#
+#     Q     = {NT, T}                    -- two states: not-taken, taken
+#     Sigma = {taken, not_taken}         -- branch outcome events
+#     delta = outcome directly sets the state (no saturation)
+#     q0    = NT                         -- start predicting not-taken
+#     F     = {T}                        -- accepting = "predict taken"
+#
+# Unlike the 2-bit DFA, every transition goes to the state matching the event.
+# There is no hysteresis -- a single misprediction flips the prediction.
 
 module CodingAdventures
   module BranchPredictor
+    # The 1-bit predictor expressed as a formal DFA.
+    #
+    # Two states: "NT" (predict not-taken) and "T" (predict taken).
+    # The transition function simply moves to the state that matches the
+    # observed outcome. The accepting state {T} means "predict taken."
+    ONE_BIT_DFA = CodingAdventures::StateMachine::DFA.new(
+      states: Set["NT", "T"],
+      alphabet: Set["taken", "not_taken"],
+      transitions: {
+        ["NT", "taken"] => "T", ["NT", "not_taken"] => "NT",
+        ["T", "taken"] => "T", ["T", "not_taken"] => "NT"
+      },
+      initial: "NT",
+      accepting: Set["T"]
+    )
     # 1-bit predictor -- one flip-flop per branch address.
     #
     # Maintains a table of 1-bit entries indexed by (pc % table_size).
