@@ -43,16 +43,51 @@ import (
 // edges (node → its predecessors) for efficient lookups in both
 // directions. This doubles memory usage but makes transitive_dependents
 // queries O(V+E) instead of requiring a full graph reversal.
+//
+// # Self-loops
+//
+// By default, self-loops (edges from a node to itself, like A→A) are
+// prohibited because they create trivial cycles, which makes topological
+// sorting impossible. However, some use cases genuinely need self-loops —
+// for example, modeling state machines where a state can transition to
+// itself, or representing "retry" semantics in a workflow graph.
+//
+// Use NewAllowSelfLoops() to create a graph that permits self-loops.
+// The allowSelfLoops flag is checked only in AddEdge; all other methods
+// (HasCycle, TopologicalSort, etc.) work correctly regardless of the
+// flag's value.
 type Graph struct {
-	forward map[string]map[string]bool // node → set of successors
-	reverse map[string]map[string]bool // node → set of predecessors
+	forward        map[string]map[string]bool // node → set of successors
+	reverse        map[string]map[string]bool // node → set of predecessors
+	allowSelfLoops bool                       // whether A→A edges are permitted
 }
 
-// New creates an empty directed graph.
+// New creates an empty directed graph that prohibits self-loops.
+//
+// This is the default constructor. If you try to add an edge from a
+// node to itself (e.g., g.AddEdge("A", "A")), it will panic.
 func New() *Graph {
 	return &Graph{
-		forward: make(map[string]map[string]bool),
-		reverse: make(map[string]map[string]bool),
+		forward:        make(map[string]map[string]bool),
+		reverse:        make(map[string]map[string]bool),
+		allowSelfLoops: false,
+	}
+}
+
+// NewAllowSelfLoops creates an empty directed graph that permits self-loops.
+//
+// A self-loop is an edge from a node to itself, like A→A. This is useful
+// for modeling state machines, retry loops, or any domain where a node
+// can reference itself.
+//
+// Note: a graph with self-loops will have cycles (a self-loop IS a cycle
+// of length 1), so TopologicalSort will return a CycleError and HasCycle
+// will return true.
+func NewAllowSelfLoops() *Graph {
+	return &Graph{
+		forward:        make(map[string]map[string]bool),
+		reverse:        make(map[string]map[string]bool),
+		allowSelfLoops: true,
 	}
 }
 
@@ -66,9 +101,20 @@ func (g *Graph) AddNode(node string) {
 
 // AddEdge adds a directed edge from 'from' to 'to'.
 // Both nodes are implicitly added if they don't exist.
-// Panics on self-loops (from == to).
+//
+// Self-loop behavior depends on how the graph was created:
+//
+//   - New()              → self-loops are PROHIBITED (panics on from == to)
+//   - NewAllowSelfLoops() → self-loops are ALLOWED
+//
+// When self-loops are allowed, AddEdge("A", "A") inserts A into both
+// the forward and reverse adjacency sets for A. This means:
+//   - HasEdge("A", "A") returns true
+//   - Successors("A") includes "A"
+//   - Predecessors("A") includes "A"
+//   - HasCycle() returns true (a self-loop is a cycle of length 1)
 func (g *Graph) AddEdge(from, to string) {
-	if from == to {
+	if from == to && !g.allowSelfLoops {
 		panic(fmt.Sprintf("self-loop not allowed: %q", from))
 	}
 	g.AddNode(from)

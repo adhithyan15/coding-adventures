@@ -46,6 +46,8 @@
 
 use std::collections::{BTreeSet, HashMap, HashSet, VecDeque};
 
+use directed_graph::LabeledDirectedGraph;
+
 use crate::dfa::DFA;
 
 /// Sentinel value for epsilon transitions (transitions that consume no input).
@@ -66,11 +68,18 @@ pub struct NFA {
     /// The finite set of input symbols.
     alphabet: HashSet<String>,
     /// Transition function: (state, event_or_epsilon) -> set of target states.
+    /// Kept for O(1) lookups in process() and accepts().
     transitions: HashMap<(String, String), HashSet<String>>,
     /// The initial state.
     initial: String,
     /// The set of accepting/final states.
     accepting: HashSet<String>,
+    /// Internal graph representation for structural queries.
+    ///
+    /// Each state becomes a node. Each transition (source, event) -> targets
+    /// becomes labeled edges from source to each target. Epsilon transitions
+    /// use the EPSILON constant ("") as the edge label.
+    _graph: LabeledDirectedGraph,
     /// Current set of states the NFA is in (always the epsilon closure
     /// of whichever states we've reached).
     current: HashSet<String>,
@@ -146,12 +155,29 @@ impl NFA {
             }
         }
 
+        // --- Build internal graph representation ---
+        //
+        // Each state becomes a node. Each transition (source, event) -> targets
+        // becomes labeled edges. Epsilon transitions use EPSILON ("") as label.
+        // Self-loops are allowed since NFA states commonly transition to themselves.
+        let mut graph = LabeledDirectedGraph::new_allow_self_loops();
+        for state in &states {
+            graph.add_node(state);
+        }
+        for ((source, event), targets) in &transitions {
+            let label = if event == EPSILON { EPSILON } else { event.as_str() };
+            for target in targets {
+                let _ = graph.add_edge(source, target, label);
+            }
+        }
+
         let mut nfa = NFA {
             states,
             alphabet,
             transitions,
             initial: initial.clone(),
             accepting,
+            _graph: graph,
             current: HashSet::new(),
         };
 

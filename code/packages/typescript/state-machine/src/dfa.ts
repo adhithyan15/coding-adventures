@@ -53,6 +53,7 @@
  * @module dfa
  */
 
+import { LabeledDirectedGraph } from "@coding-adventures/directed-graph";
 import type { Action, TransitionRecord } from "./types.js";
 import { transitionKey } from "./types.js";
 
@@ -97,6 +98,17 @@ export class DFA {
   private readonly _initial: string;
   private readonly _accepting: ReadonlySet<string>;
   private readonly _actions: Map<string, Action>;
+
+  // --- Internal graph representation ---
+  //
+  // We maintain a LabeledDirectedGraph alongside the _transitions Map.
+  // The Map provides O(1) lookups for process() (the hot path).
+  // The graph provides structural queries like reachableStates() via
+  // transitiveClosure, avoiding the need for hand-rolled BFS.
+  //
+  // Each state becomes a node. Each transition (source, event) -> target
+  // becomes a labeled edge from source to target with the event as label.
+  private readonly _graph: LabeledDirectedGraph;
 
   /** The state the machine is currently in. */
   private _current: string;
@@ -202,6 +214,22 @@ export class DFA {
     this._initial = initial;
     this._accepting = new Set(accepting);
     this._actions = new Map(actions ?? []);
+
+    // --- Build internal graph representation ---
+    //
+    // We build a LabeledDirectedGraph from states and transitions so that
+    // structural queries like reachableStates() can delegate to the graph's
+    // transitiveClosure algorithm instead of hand-rolling BFS.
+    this._graph = new LabeledDirectedGraph();
+    for (const state of states) {
+      this._graph.addNode(state);
+    }
+    for (const [key, target] of transitions) {
+      const sep = key.indexOf("\0");
+      const source = key.substring(0, sep);
+      const event = key.substring(sep + 1);
+      this._graph.addEdge(source, target, event);
+    }
 
     // --- Mutable execution state ---
     this._current = initial;
@@ -400,9 +428,10 @@ export class DFA {
   /**
    * Return the set of states reachable from the initial state.
    *
-   * Uses breadth-first search over the transition graph. A state is
-   * reachable if there exists any sequence of inputs that leads from
-   * the initial state to that state.
+   * Delegates to the internal LabeledDirectedGraph's transitiveClosure,
+   * which performs a BFS over the transition graph. A state is reachable
+   * if there exists any sequence of inputs that leads from the initial
+   * state to that state.
    *
    * States that are defined but not reachable are "dead weight" —
    * they can never be entered and can be safely removed during
@@ -411,28 +440,12 @@ export class DFA {
    * @returns A Set of reachable state names.
    */
   reachableStates(): Set<string> {
-    // BFS from the initial state
-    const visited = new Set<string>();
-    const queue: string[] = [this._initial];
-
-    while (queue.length > 0) {
-      const state = queue.shift()!;
-      if (visited.has(state)) {
-        continue;
-      }
-      visited.add(state);
-
-      // Find all states reachable from this one via any input
-      for (const [key, target] of this._transitions) {
-        const sep = key.indexOf("\0");
-        const source = key.substring(0, sep);
-        if (source === state && !visited.has(target)) {
-          queue.push(target);
-        }
-      }
-    }
-
-    return visited;
+    // transitiveClosure returns all nodes reachable FROM the initial
+    // state (not including the initial state itself), so we union it
+    // with {initial} to get the full set of reachable states.
+    const reachable = this._graph.transitiveClosure(this._initial);
+    reachable.add(this._initial);
+    return reachable;
   }
 
   /**

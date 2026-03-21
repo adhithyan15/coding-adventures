@@ -45,7 +45,9 @@
 //! The 2-bit branch predictor in the branch-predictor package is a DFA.
 //! The CPU pipeline is a linear DFA: FETCH -> DECODE -> EXECUTE -> repeat.
 
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, HashSet};
+
+use directed_graph::LabeledDirectedGraph;
 
 use crate::types::TransitionRecord;
 
@@ -63,11 +65,22 @@ pub struct DFA {
     /// The finite set of input symbols (Sigma).
     alphabet: HashSet<String>,
     /// The transition function: (state, event) -> target_state.
+    /// Kept for O(1) lookups in process() and accepts() -- the hot path.
     transitions: HashMap<(String, String), String>,
     /// The initial state (q0).
     initial: String,
     /// The set of accepting/final states (F).
     accepting: HashSet<String>,
+    /// Internal graph representation for structural queries.
+    ///
+    /// We maintain a LabeledDirectedGraph alongside the _transitions HashMap.
+    /// The HashMap provides O(1) lookups for process() (the hot path).
+    /// The graph provides structural queries like reachable_states() via
+    /// transitive_closure, avoiding the need for hand-rolled BFS.
+    ///
+    /// Each state becomes a node. Each transition (source, event) -> target
+    /// becomes a labeled edge from source to target with the event as label.
+    graph: LabeledDirectedGraph,
     /// The current state -- mutated by process().
     current: String,
     /// Execution trace -- a log of every transition taken.
@@ -148,6 +161,21 @@ impl DFA {
             }
         }
 
+        // --- Build internal graph representation ---
+        //
+        // Each state becomes a node. Each transition (source, event) -> target
+        // becomes a labeled edge from source to target with the event as label.
+        // The graph uses allow_self_loops since DFA states commonly have
+        // self-transitions (e.g., locked --push--> locked).
+        let mut graph = LabeledDirectedGraph::new_allow_self_loops();
+        for state in &states {
+            graph.add_node(state);
+        }
+        for ((source, event), target) in &transitions {
+            // add_edge on a self-loop-enabled graph won't error for self-loops.
+            let _ = graph.add_edge(source, target, event);
+        }
+
         let current = initial.clone();
         Ok(DFA {
             states,
@@ -155,6 +183,7 @@ impl DFA {
             transitions,
             initial,
             accepting,
+            graph,
             current,
             trace: Vec::new(),
         })
@@ -308,33 +337,24 @@ impl DFA {
 
     /// Return the set of states reachable from the initial state.
     ///
-    /// Uses breadth-first search over the transition graph. A state is
-    /// reachable if there exists any sequence of inputs that leads from
-    /// the initial state to that state.
+    /// Delegates to the internal LabeledDirectedGraph's transitive_closure,
+    /// which performs a BFS over the transition graph. A state is reachable
+    /// if there exists any sequence of inputs that leads from the initial
+    /// state to that state.
     ///
     /// States that are defined but not reachable are "dead weight" --
     /// they can never be entered and can be safely removed during
     /// minimization.
     pub fn reachable_states(&self) -> HashSet<String> {
-        let mut visited: HashSet<String> = HashSet::new();
-        let mut queue: VecDeque<String> = VecDeque::new();
-        queue.push_back(self.initial.clone());
-
-        while let Some(state) = queue.pop_front() {
-            if visited.contains(&state) {
-                continue;
-            }
-            visited.insert(state.clone());
-
-            // Find all states reachable from this one via any input
-            for ((source, _event), target) in &self.transitions {
-                if source == &state && !visited.contains(target) {
-                    queue.push_back(target.clone());
-                }
-            }
-        }
-
-        visited
+        // transitive_closure returns all nodes reachable FROM the initial
+        // state (not including the initial state itself), so we union it
+        // with {initial} to get the full set of reachable states.
+        let mut reachable = self
+            .graph
+            .transitive_closure(&self.initial)
+            .unwrap_or_default();
+        reachable.insert(self.initial.clone());
+        reachable
     }
 
     /// Check if a transition is defined for every (state, input) pair.

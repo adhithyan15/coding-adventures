@@ -57,6 +57,8 @@ members = [
     "typescript-lexer",
     "typescript-parser",
     "vendor-api-simulators",
+    "blas-library",
+    "tree",
     "virtual-machine",
     "wasm-simulator",
 ]

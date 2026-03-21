@@ -98,6 +98,19 @@ module CodingAdventures
         @initial_mode = initial_mode.freeze
         @current_mode = initial_mode
         @mode_trace = []
+
+        # --- Build internal graph of mode transitions ---
+        #
+        # The mode graph captures the structure of mode switching: each mode
+        # is a node, and each mode transition [mode, trigger] => target_mode
+        # becomes a labeled edge with the trigger as the label. This makes
+        # the mode transition topology available for structural queries
+        # (e.g., "which modes are reachable from the initial mode?").
+        @mode_graph = CodingAdventures::DirectedGraph::LabeledGraph.new
+        modes.each_key { |mode| @mode_graph.add_node(mode) }
+        mode_transitions.each do |(mode, trigger), target_mode|
+          @mode_graph.add_edge(mode, target_mode, trigger)
+        end
       end
 
       # The DFA for the current mode.
