@@ -19,7 +19,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = ["coding-adventures-progress-bar"]
+dependencies = []
 
 [project.scripts]
 build-tool = "build_tool.cli:main"

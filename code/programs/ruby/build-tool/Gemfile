@@ -7,7 +7,7 @@ source "https://rubygems.org"
 # These gems are for development and testing only.
 
 # Optional runtime dependency: progress bar for build output.
-gem "coding_adventures_progress_bar", path: "../../packages/ruby/progress_bar"
+gem "coding_adventures_progress_bar", path: "../../../packages/ruby/progress_bar"
 
 group :test do
   gem "minitest", "~> 5.0"
