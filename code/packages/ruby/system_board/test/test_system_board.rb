@@ -9,7 +9,7 @@ class TestBootToHelloWorld < Minitest::Test
     board.run(100_000)
     snap = board.display_snapshot
     refute_nil snap
-    assert snap.contains("Hello World")
+    assert snap.contains?("Hello World")
   end
 
   def test_idle_after_hello_world
@@ -77,9 +77,8 @@ class TestBootPhases < Minitest::Test
   end
 
   def test_phase_names
-    include CodingAdventures::SystemBoard
-    assert_equal "PowerOn", PHASE_NAMES[PHASE_POWER_ON]
-    assert_equal "Idle", PHASE_NAMES[PHASE_IDLE]
+    assert_equal "PowerOn", CodingAdventures::SystemBoard::PHASE_NAMES[CodingAdventures::SystemBoard::PHASE_POWER_ON]
+    assert_equal "Idle", CodingAdventures::SystemBoard::PHASE_NAMES[CodingAdventures::SystemBoard::PHASE_IDLE]
   end
 end
 

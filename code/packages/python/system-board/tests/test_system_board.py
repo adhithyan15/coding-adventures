@@ -119,7 +119,8 @@ class TestBootTrace:
         board.power_on()
         board.run(100000)
         assert board.trace.phase_start_cycle(BootPhase.POWER_ON) == 0
-        assert board.trace.phase_start_cycle(BootPhase(99)) == -1
+        # Invalid phase returns -1 (use a valid enum member that won't appear in trace)
+        assert board.trace.phase_start_cycle(None) == -1  # type: ignore[arg-type]
 
     def test_events_in_phase(self) -> None:
         board = SystemBoard(DefaultSystemConfig())
