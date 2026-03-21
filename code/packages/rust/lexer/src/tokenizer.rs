@@ -51,6 +51,7 @@
 use std::collections::HashSet;
 
 use crate::token::{LexerError, Token, TokenType};
+use crate::tokenizer_dfa::{classify_char, new_tokenizer_dfa};
 
 // ===========================================================================
 // Simple token lookup table
@@ -280,6 +281,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
+            type_name: None,
         }
     }
 
@@ -321,6 +323,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
+            type_name: None,
         }
     }
 
@@ -413,6 +416,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
+            type_name: None,
         })
     }
 
@@ -448,99 +452,96 @@ impl<'a> Lexer<'a> {
     /// ```
     pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
         let mut tokens = Vec::new();
+        let mut dfa = new_tokenizer_dfa();
 
         loop {
-            // Check if we have reached the end of the source.
-            let ch = match self.current_char() {
-                Some(ch) => ch,
-                None => break,
-            };
+            let ch = self.current_char();
+            let char_class = classify_char(ch);
+            let next_state = dfa
+                .process(char_class)
+                .expect("DFA transition should never fail for a valid char class");
 
-            // --- Whitespace (not newlines) ---
-            if ch == ' ' || ch == '\t' || ch == '\r' {
-                self.skip_whitespace();
-                continue;
-            }
-
-            // --- Newlines (significant in Python) ---
-            if ch == '\n' {
-                let tok = Token {
-                    type_: TokenType::Newline,
-                    value: "\\n".to_string(),
-                    line: self.line,
-                    column: self.column,
-                };
-                self.advance();
-                tokens.push(tok);
-                continue;
-            }
-
-            // --- Numbers ---
-            if ch.is_ascii_digit() {
-                tokens.push(self.read_number());
-                continue;
-            }
-
-            // --- Names and keywords ---
-            if ch.is_alphabetic() || ch == '_' {
-                tokens.push(self.read_name());
-                continue;
-            }
-
-            // --- String literals ---
-            if ch == '"' {
-                tokens.push(self.read_string()?);
-                continue;
-            }
-
-            // --- Equals and double-equals ---
-            // This is the one case where we need lookahead. When we see `=`,
-            // we check the next character:
-            //   - If it is also `=`, we emit `==` (EQUALS_EQUALS)
-            //   - Otherwise, we emit `=` (EQUALS)
-            if ch == '=' {
-                let start_line = self.line;
-                let start_col = self.column;
-                self.advance();
-
-                if self.current_char() == Some('=') {
+            match next_state.as_str() {
+                "at_whitespace" => {
+                    self.skip_whitespace();
+                }
+                "at_newline" => {
+                    let tok = Token {
+                        type_: TokenType::Newline,
+                        value: "\\n".to_string(),
+                        line: self.line,
+                        column: self.column,
+                        type_name: None,
+                    };
                     self.advance();
-                    tokens.push(Token {
-                        type_: TokenType::EqualsEquals,
-                        value: "==".to_string(),
-                        line: start_line,
-                        column: start_col,
-                    });
-                } else {
-                    tokens.push(Token {
-                        type_: TokenType::Equals,
-                        value: "=".to_string(),
-                        line: start_line,
-                        column: start_col,
+                    tokens.push(tok);
+                }
+                "in_number" => {
+                    tokens.push(self.read_number());
+                }
+                "in_name" => {
+                    tokens.push(self.read_name());
+                }
+                "in_string" => {
+                    tokens.push(self.read_string()?);
+                }
+                "in_equals" => {
+                    let start_line = self.line;
+                    let start_col = self.column;
+                    self.advance();
+
+                    if self.current_char() == Some('=') {
+                        self.advance();
+                        tokens.push(Token {
+                            type_: TokenType::EqualsEquals,
+                            value: "==".to_string(),
+                            line: start_line,
+                            column: start_col,
+                            type_name: None,
+                        });
+                    } else {
+                        tokens.push(Token {
+                            type_: TokenType::Equals,
+                            value: "=".to_string(),
+                            line: start_line,
+                            column: start_col,
+                            type_name: None,
+                        });
+                    }
+                }
+                "in_operator" => {
+                    let c = ch.expect("char must exist for in_operator");
+                    let token_type =
+                        simple_token_type(c).expect("char must be a simple token");
+                    let tok = Token {
+                        type_: token_type,
+                        value: c.to_string(),
+                        line: self.line,
+                        column: self.column,
+                        type_name: None,
+                    };
+                    self.advance();
+                    tokens.push(tok);
+                }
+                "done" => {
+                    break;
+                }
+                "error" => {
+                    let c = ch.unwrap_or('\0');
+                    return Err(LexerError {
+                        message: format!("Unexpected character {:?}", c),
+                        line: self.line,
+                        column: self.column,
                     });
                 }
-                continue;
+                _ => {
+                    // Should never happen with a well-formed DFA.
+                    unreachable!("Unexpected DFA state: {}", next_state);
+                }
             }
 
-            // --- Simple single-character tokens ---
-            if let Some(token_type) = simple_token_type(ch) {
-                let tok = Token {
-                    type_: token_type,
-                    value: ch.to_string(),
-                    line: self.line,
-                    column: self.column,
-                };
-                self.advance();
-                tokens.push(tok);
-                continue;
-            }
-
-            // --- Unexpected character ---
-            return Err(LexerError {
-                message: format!("Unexpected character {:?}", ch),
-                line: self.line,
-                column: self.column,
-            });
+            // Reset the DFA back to "start" for the next character.
+            dfa.reset();
         }
 
         // Every token stream ends with EOF.
@@ -549,6 +550,7 @@ impl<'a> Lexer<'a> {
             value: String::new(),
             line: self.line,
             column: self.column,
+            type_name: None,
         });
 
         Ok(tokens)

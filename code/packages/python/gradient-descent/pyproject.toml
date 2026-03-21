@@ -1,0 +1,15 @@
+[project]
+name = "coding-adventures-gradient-descent"
+version = "1.0.0"
+description = "Pure mathematical gradient descent optimizers"
+requires-python = ">=3.9"
+dependencies = [
+    "pytest>=7.0.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gradient_descent"]

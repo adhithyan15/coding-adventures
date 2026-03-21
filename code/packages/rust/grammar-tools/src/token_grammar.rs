@@ -85,12 +85,16 @@ impl std::error::Error for TokenGrammarError {}
 ///   if it was written as `"literal"`.
 /// - `line_number` — The 1-based line number where this definition appeared.
 ///   Used for error messages and cross-referencing.
+/// - `alias` — Optional type alias. When a definition has `-> ALIAS`, tokens
+///   matching this pattern are emitted with the alias name instead. For example,
+///   `STRING_DQ = /"[^"]*"/ -> STRING` means the lexer emits `STRING` tokens.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenDefinition {
     pub name: String,
     pub pattern: String,
     pub is_regex: bool,
     pub line_number: usize,
+    pub alias: Option<String>,
 }
 
 /// The complete contents of a parsed `.tokens` file.
@@ -103,23 +107,42 @@ pub struct TokenDefinition {
 ///   multi-character operators like `==` must come before `=`.
 /// - `keywords` — List of reserved words from the `keywords:` section.
 ///   These are identifiers that the lexer reclassifies into keyword tokens.
+/// - `mode` — Optional mode directive (e.g. `"indentation"` for languages
+///   like Python/Starlark that use significant whitespace).
+/// - `skip_definitions` — Token definitions from the `skip:` section.
+///   These patterns are consumed but not emitted as tokens (e.g. whitespace,
+///   comments).
+/// - `reserved_keywords` — Keywords from the `reserved:` section. Unlike
+///   regular keywords, these cause a lexer error if encountered in source
+///   code (they are reserved for future use).
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenGrammar {
     pub definitions: Vec<TokenDefinition>,
     pub keywords: Vec<String>,
+    pub mode: Option<String>,
+    pub skip_definitions: Vec<TokenDefinition>,
+    pub reserved_keywords: Vec<String>,
 }
 
 // ===========================================================================
 // Helper: extract all token names
 // ===========================================================================
 
-/// Return the set of all defined token names.
+/// Return the set of all defined token names, including aliases.
 ///
 /// This is useful for cross-validation: the parser grammar references
 /// tokens by name, and we need to check that every referenced token
-/// actually exists in the token grammar.
+/// actually exists in the token grammar. Aliases are included because
+/// grammars typically reference the alias name (e.g. `STRING`) rather
+/// than the raw definition name (e.g. `STRING_DQ`).
 pub fn token_names(grammar: &TokenGrammar) -> HashSet<String> {
-    grammar.definitions.iter().map(|d| d.name.clone()).collect()
+    let mut names: HashSet<String> = grammar.definitions.iter().map(|d| d.name.clone()).collect();
+    for defn in &grammar.definitions {
+        if let Some(alias) = &defn.alias {
+            names.insert(alias.clone());
+        }
+    }
+    names
 }
 
 // ===========================================================================
@@ -161,111 +184,235 @@ pub fn token_names(grammar: &TokenGrammar) -> HashSet<String> {
 /// assert_eq!(grammar.definitions.len(), 2);
 /// assert_eq!(grammar.keywords, vec!["if", "else"]);
 /// ```
+/// Parse a single token definition from a line, returning the definition.
+///
+/// Handles the `NAME = /pattern/` or `NAME = "literal"` syntax, plus the
+/// optional `-> ALIAS` suffix. Also detects unclosed delimiters for better
+/// error messages.
+fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, TokenGrammarError> {
+    let eq_index = match line.find('=') {
+        Some(idx) => idx,
+        None => {
+            return Err(TokenGrammarError {
+                message: "Expected token definition (NAME = pattern)".to_string(),
+                line_number,
+            });
+        }
+    };
+
+    let name_part = line[..eq_index].trim();
+    let after_eq = line[eq_index + 1..].trim();
+
+    if name_part.is_empty() {
+        return Err(TokenGrammarError {
+            message: "Missing token name".to_string(),
+            line_number,
+        });
+    }
+
+    if after_eq.is_empty() {
+        return Err(TokenGrammarError {
+            message: "Missing pattern after '='".to_string(),
+            line_number,
+        });
+    }
+
+    // Parse pattern and optional alias from the remainder after '='.
+    // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
+    let (pattern_str, alias) = if after_eq.starts_with('/') {
+        // Regex pattern — find the closing slash.
+        let rest = &after_eq[1..];
+        match rest.find('/') {
+            Some(close_idx) => {
+                let regex_body = &rest[..close_idx];
+                if regex_body.is_empty() {
+                    return Err(TokenGrammarError {
+                        message: "Empty regex pattern".to_string(),
+                        line_number,
+                    });
+                }
+                let after_pattern = rest[close_idx + 1..].trim();
+                let alias = parse_alias(after_pattern, line_number)?;
+                (
+                    TokenDefinition {
+                        name: name_part.to_string(),
+                        pattern: regex_body.to_string(),
+                        is_regex: true,
+                        line_number,
+                        alias: alias.clone(),
+                    },
+                    alias,
+                )
+            }
+            None => {
+                return Err(TokenGrammarError {
+                    message: "Unclosed regex pattern (missing closing '/')".to_string(),
+                    line_number,
+                });
+            }
+        }
+    } else if after_eq.starts_with('"') {
+        // Literal pattern — find the closing quote.
+        let rest = &after_eq[1..];
+        match rest.find('"') {
+            Some(close_idx) => {
+                let literal_body = &rest[..close_idx];
+                if literal_body.is_empty() {
+                    return Err(TokenGrammarError {
+                        message: "Empty literal pattern".to_string(),
+                        line_number,
+                    });
+                }
+                let after_pattern = rest[close_idx + 1..].trim();
+                let alias = parse_alias(after_pattern, line_number)?;
+                (
+                    TokenDefinition {
+                        name: name_part.to_string(),
+                        pattern: literal_body.to_string(),
+                        is_regex: false,
+                        line_number,
+                        alias: alias.clone(),
+                    },
+                    alias,
+                )
+            }
+            None => {
+                return Err(TokenGrammarError {
+                    message: "Unclosed literal pattern (missing closing '\"')".to_string(),
+                    line_number,
+                });
+            }
+        }
+    } else {
+        return Err(TokenGrammarError {
+            message: "Pattern must be /regex/ or \"literal\"".to_string(),
+            line_number,
+        });
+    };
+
+    let _ = alias; // already stored in pattern_str
+    Ok(pattern_str)
+}
+
+/// Parse an optional `-> ALIAS` suffix from the text after a pattern.
+fn parse_alias(after_pattern: &str, line_number: usize) -> Result<Option<String>, TokenGrammarError> {
+    if after_pattern.is_empty() {
+        return Ok(None);
+    }
+    if after_pattern.starts_with("->") {
+        let alias_name = after_pattern[2..].trim();
+        if alias_name.is_empty() {
+            return Err(TokenGrammarError {
+                message: "Missing alias name after '->'".to_string(),
+                line_number,
+            });
+        }
+        Ok(Some(alias_name.to_string()))
+    } else {
+        Ok(None)
+    }
+}
+
 pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarError> {
     let mut definitions = Vec::new();
     let mut keywords = Vec::new();
-    let mut in_keywords = false;
+    let mut mode: Option<String> = None;
+    let mut skip_definitions = Vec::new();
+    let mut reserved_keywords = Vec::new();
+
+    // Track which section we are currently in.
+    // Sections: "definitions" (default), "keywords", "skip", "reserved"
+    let mut current_section = "definitions";
 
     for (i, raw_line) in source.split('\n').enumerate() {
         let line_number = i + 1;
-
-        // Strip trailing whitespace but preserve leading whitespace
-        // (we need it to detect keyword entries that are indented).
         let line = raw_line.trim_end();
+        let stripped = line.trim();
 
         // --- Blank lines and comments are always skipped ---
-        let stripped = line.trim();
         if stripped.is_empty() || stripped.starts_with('#') {
             continue;
         }
 
-        // --- Keywords section header ---
-        // The `keywords:` line (with or without a space before the colon)
-        // switches us into keyword-collection mode.
+        // --- Section headers ---
         if stripped == "keywords:" || stripped == "keywords :" {
-            in_keywords = true;
+            current_section = "keywords";
+            continue;
+        }
+        if stripped == "skip:" || stripped == "skip :" {
+            current_section = "skip";
+            continue;
+        }
+        if stripped == "reserved:" || stripped == "reserved :" {
+            current_section = "reserved";
             continue;
         }
 
-        // --- Inside keywords section ---
-        // Keywords are indented lines. A non-indented line that is not blank
-        // or a comment means we have left the keywords section.
-        if in_keywords {
-            let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
-            if first_char == b' ' || first_char == b'\t' {
-                if !stripped.is_empty() {
-                    keywords.push(stripped.to_string());
-                }
-                continue;
-            } else {
-                // We have exited the keywords section. Fall through to
-                // parse this line as a normal definition.
-                in_keywords = false;
-            }
-        }
-
-        // --- Token definition ---
-        // Expected format: NAME = /pattern/  or  NAME = "literal"
-        // We split on the first '=' to separate name from pattern.
-        let eq_index = match line.find('=') {
-            Some(idx) => idx,
-            None => {
+        // --- Mode directive ---
+        if stripped.starts_with("mode:") || stripped.starts_with("mode :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let mode_value = stripped[colon_idx + 1..].trim();
+            if mode_value.is_empty() {
                 return Err(TokenGrammarError {
-                    message: "Expected token definition (NAME = pattern)".to_string(),
+                    message: "Missing mode value after 'mode:'".to_string(),
                     line_number,
                 });
             }
-        };
-
-        let name_part = line[..eq_index].trim();
-        let pattern_part = line[eq_index + 1..].trim();
-
-        // Validate that we got a name.
-        if name_part.is_empty() {
-            return Err(TokenGrammarError {
-                message: "Missing token name".to_string(),
-                line_number,
-            });
+            mode = Some(mode_value.to_string());
+            continue;
         }
 
-        // Validate that we got a pattern.
-        if pattern_part.is_empty() {
-            return Err(TokenGrammarError {
-                message: "Missing pattern after '='".to_string(),
-                line_number,
-            });
+        // --- Inside a section ---
+        match current_section {
+            "keywords" => {
+                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
+                if first_char == b' ' || first_char == b'\t' {
+                    if !stripped.is_empty() {
+                        keywords.push(stripped.to_string());
+                    }
+                    continue;
+                } else {
+                    // Non-indented line — exit keywords section, fall through
+                    current_section = "definitions";
+                }
+            }
+            "reserved" => {
+                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
+                if first_char == b' ' || first_char == b'\t' {
+                    if !stripped.is_empty() {
+                        reserved_keywords.push(stripped.to_string());
+                    }
+                    continue;
+                } else {
+                    current_section = "definitions";
+                }
+            }
+            "skip" => {
+                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
+                if first_char == b' ' || first_char == b'\t' {
+                    if !stripped.is_empty() {
+                        let defn = parse_definition(stripped, line_number)?;
+                        skip_definitions.push(defn);
+                    }
+                    continue;
+                } else {
+                    current_section = "definitions";
+                }
+            }
+            _ => {} // "definitions" — fall through to parse as definition
         }
 
-        // Parse the pattern: either /regex/ or "literal".
-        if pattern_part.starts_with('/') && pattern_part.ends_with('/') && pattern_part.len() >= 2 {
-            // Regex pattern — strip the delimiters.
-            let regex_body = &pattern_part[1..pattern_part.len() - 1];
-            definitions.push(TokenDefinition {
-                name: name_part.to_string(),
-                pattern: regex_body.to_string(),
-                is_regex: true,
-                line_number,
-            });
-        } else if pattern_part.starts_with('"') && pattern_part.ends_with('"') && pattern_part.len() >= 2 {
-            // Literal pattern — strip the quotes.
-            let literal_body = &pattern_part[1..pattern_part.len() - 1];
-            definitions.push(TokenDefinition {
-                name: name_part.to_string(),
-                pattern: literal_body.to_string(),
-                is_regex: false,
-                line_number,
-            });
-        } else {
-            return Err(TokenGrammarError {
-                message: format!("Pattern must be /regex/ or \"literal\""),
-                line_number,
-            });
-        }
+        // --- Token definition ---
+        let defn = parse_definition(line, line_number)?;
+        definitions.push(defn);
     }
 
     Ok(TokenGrammar {
         definitions,
         keywords,
+        mode,
+        skip_definitions,
+        reserved_keywords,
     })
 }
 
@@ -289,11 +436,16 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
 ///   `.grammar` files.
 ///
 /// Returns a list of warning/error strings. An empty list means no issues.
-pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
-    let mut issues = Vec::new();
-    let mut seen_names: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
-
-    for defn in &grammar.definitions {
+/// Validate a list of token definitions for common problems.
+///
+/// Shared between the main definitions and skip definitions to avoid
+/// duplicating validation logic.
+fn validate_definitions(
+    definitions: &[TokenDefinition],
+    seen_names: &mut std::collections::HashMap<String, usize>,
+    issues: &mut Vec<String>,
+) {
+    for defn in definitions {
         // --- Duplicate check ---
         if let Some(&first_line) = seen_names.get(&defn.name) {
             issues.push(format!(
@@ -313,9 +465,6 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
         }
 
         // --- Invalid regex check ---
-        // We use the `regex` crate to try compiling each regex pattern.
-        // This catches syntax errors early, before the grammar is used
-        // to generate an actual lexer.
         if defn.is_regex {
             if let Err(e) = regex::Regex::new(&defn.pattern) {
                 issues.push(format!(
@@ -326,13 +475,29 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
         }
 
         // --- Naming convention check ---
-        // Token names should be UPPER_CASE to distinguish them from parser
-        // rule names (which are lowercase). This is a warning, not an error.
         if defn.name != defn.name.to_uppercase() {
             issues.push(format!(
                 "Line {}: Token name '{}' should be UPPER_CASE",
                 defn.line_number, defn.name
             ));
+        }
+    }
+}
+
+pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
+    let mut issues = Vec::new();
+    let mut seen_names: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+
+    // Validate main definitions.
+    validate_definitions(&grammar.definitions, &mut seen_names, &mut issues);
+
+    // Validate skip definitions.
+    validate_definitions(&grammar.skip_definitions, &mut seen_names, &mut issues);
+
+    // Validate mode value if present.
+    if let Some(ref mode) = grammar.mode {
+        if mode != "indentation" {
+            issues.push(format!("Unknown mode '{}' (expected 'indentation')", mode));
         }
     }
 
@@ -540,15 +705,20 @@ keywords:
                     pattern: "[0-9]+".to_string(),
                     is_regex: true,
                     line_number: 1,
+                    alias: None,
                 },
                 TokenDefinition {
                     name: "NUMBER".to_string(),
                     pattern: "[0-9]*".to_string(),
                     is_regex: true,
                     line_number: 2,
+                    alias: None,
                 },
             ],
             keywords: vec![],
+            mode: None,
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -564,8 +734,12 @@ keywords:
                 pattern: "[unclosed".to_string(),
                 is_regex: true,
                 line_number: 1,
+                alias: None,
             }],
             keywords: vec![],
+            mode: None,
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -581,8 +755,12 @@ keywords:
                 pattern: "[0-9]+".to_string(),
                 is_regex: true,
                 line_number: 1,
+                alias: None,
             }],
             keywords: vec![],
+            mode: None,
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -600,5 +778,191 @@ keywords:
         assert!(names.contains("NUMBER"));
         assert!(names.contains("PLUS"));
         assert_eq!(names.len(), 2);
+    }
+
+    // -----------------------------------------------------------------------
+    // Mode directive
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_mode_indentation() {
+        let grammar = parse_token_grammar("mode: indentation\nNAME = /[a-z]+/").unwrap();
+        assert_eq!(grammar.mode, Some("indentation".to_string()));
+    }
+
+    #[test]
+    fn test_parse_no_mode() {
+        let grammar = parse_token_grammar("NAME = /[a-z]+/").unwrap();
+        assert_eq!(grammar.mode, None);
+    }
+
+    #[test]
+    fn test_parse_mode_missing_value() {
+        let result = parse_token_grammar("mode:");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Missing mode value"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Skip section
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_skip_section() {
+        let source = "NAME = /[a-z]+/\nskip:\n  WHITESPACE = /[ \\t]+/\n  COMMENT = /#[^\\n]*/";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.skip_definitions.len(), 2);
+        assert_eq!(grammar.skip_definitions[0].name, "WHITESPACE");
+        assert_eq!(grammar.skip_definitions[1].name, "COMMENT");
+    }
+
+    #[test]
+    fn test_parse_skip_definition_without_equals() {
+        let result = parse_token_grammar("skip:\n  BAD_PATTERN");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_parse_skip_definition_incomplete() {
+        let result = parse_token_grammar("skip:\n  BAD =");
+        assert!(result.is_err());
+    }
+
+    // -----------------------------------------------------------------------
+    // Reserved section
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_reserved_section() {
+        let source = "NAME = /[a-z]+/\nreserved:\n  class\n  import";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.reserved_keywords, vec!["class", "import"]);
+    }
+
+    // -----------------------------------------------------------------------
+    // Aliases
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_regex_alias() {
+        let source = r#"STRING_DQ = /"[^"]*"/ -> STRING"#;
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.definitions[0].alias, Some("STRING".to_string()));
+    }
+
+    #[test]
+    fn test_parse_literal_alias() {
+        let source = r#"PLUS_SIGN = "+" -> PLUS"#;
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.definitions[0].alias, Some("PLUS".to_string()));
+    }
+
+    #[test]
+    fn test_parse_missing_alias_name() {
+        let result = parse_token_grammar("FOO = /x/ ->");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Missing alias"));
+    }
+
+    #[test]
+    fn test_token_names_includes_aliases() {
+        let source = r#"STRING_DQ = /"[^"]*"/ -> STRING"#;
+        let grammar = parse_token_grammar(source).unwrap();
+        let names = token_names(&grammar);
+        assert!(names.contains("STRING_DQ"));
+        assert!(names.contains("STRING"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Error cases for new syntax
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_unclosed_regex() {
+        let result = parse_token_grammar("FOO = /unclosed");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Unclosed regex"));
+    }
+
+    #[test]
+    fn test_unclosed_literal() {
+        let result = parse_token_grammar("FOO = \"unclosed");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Unclosed literal"));
+    }
+
+    #[test]
+    fn test_empty_regex() {
+        let result = parse_token_grammar("FOO = //");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Empty regex"));
+    }
+
+    #[test]
+    fn test_empty_literal() {
+        let result = parse_token_grammar(r#"FOO = """#);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Empty literal"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Starlark-like full example
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_starlark_tokens() {
+        let source = r#"
+mode: indentation
+
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+INT = /[0-9]+/
+EQUALS = "="
+PLUS = "+"
+COLON = ":"
+LPAREN = "("
+RPAREN = ")"
+COMMA = ","
+
+keywords:
+  def
+  return
+  if
+  else
+  for
+  in
+  pass
+
+reserved:
+  class
+  import
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT = /#[^\n]*/
+"#;
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.mode, Some("indentation".to_string()));
+        assert_eq!(grammar.reserved_keywords, vec!["class", "import"]);
+        assert_eq!(grammar.skip_definitions.len(), 2);
+        assert_eq!(grammar.keywords.len(), 7);
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.is_empty());
+    }
+
+    // -----------------------------------------------------------------------
+    // Validate mode
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_validate_unknown_mode() {
+        let grammar = TokenGrammar {
+            definitions: vec![],
+            keywords: vec![],
+            mode: Some("unknown".to_string()),
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
+        };
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.iter().any(|i| i.contains("Unknown mode")));
     }
 }

@@ -1,158 +1,196 @@
 # Coding Adventures
 
-A polyglot learning monorepo for building the entire computing stack from scratch — from logic gates to high-level language execution. Every layer is implemented, tested, and documented in multiple languages.
+Coding Adventures is a learning-first monorepo for understanding how computers work by building the layers ourselves.
 
-## Vision
+This repository is not just "a lot of packages." It is really four projects living in one place:
 
-Computers are deterministic. There is no magic. This repo exists to prove that by building every layer of the computing stack by hand:
+1. A computing-stack curriculum, from logic gates and arithmetic up through lexers, parsers, compilers, virtual machines, assemblers, and ISA simulators.
+2. A computer architecture lab, with growing coverage of caches, branch prediction, hazard detection, pipelining, and configurable core design.
+3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, and now Elixir so the concepts are separated from the language.
+4. A publishing and tooling playground, where each package is treated like a real artifact with tests, metadata, changelogs, and CI.
 
-```
-Layer 1:  Source Code            You write: x = 1 + 2
-Layer 2:  Lexer                  Breaks source text into tokens
-Layer 3:  Parser                 Builds abstract syntax trees from tokens
-              │
-              ├─── Path A (Interpreted) ─────── Path B (Compiled) ───┐
-              │                                                      │
-Layer 4a: Bytecode Compiler      VM instructions    Layer 4b: Machine Code Compiler
-              │                                                      │
-Layer 5:  Virtual Machine        Stack-based eval   Layer 6:  Assembler
-              │                  (like JVM, CLR)                     │
-              ├─→ JIT (future)                      Layer 7:  ISA Simulators
-              │                                     RISC-V, ARM, WASM, Intel 4004, JVM, CLR
-              └────────────────────────┬─────────────────────────────┘
-                                       │
-Layer 8:  CPU Simulator          Fetch-decode-execute cycle
-Layer 9:  Arithmetic (ALU)       Adders, subtractors — built from gates
-Layer 10: Logic Gates            AND, OR, XOR — the irreducible foundation
-```
+## What This Repository Optimizes For
 
-## What's built
+- **Understanding before abstraction**: build the layers directly instead of treating them as magic.
+- **Learning through implementation**: every package should teach, not just execute.
+- **Architecture as a first-class topic**: this repo is as much about pipelines, caches, and execution models as it is about parsers and bytecode.
+- **Cross-language repetition with purpose**: re-implementing the same idea in multiple ecosystems is part of the learning method.
+- **Publishable quality**: packages are expected to have tests, READMEs, changelogs, and package metadata.
+- **Specs and learning notes alongside code**: the code, the specifications, and the learning material should reinforce each other.
 
-### Computing stack — Python (21 packages) and Ruby (20 gems)
+## The Main Tracks
 
-Every package is implemented in both Python and Ruby with identical APIs:
+### 1. Digital logic and arithmetic
 
-| Layer | Package | Python Tests | Ruby Tests |
-|-------|---------|-------------|------------|
-| 10 | Logic Gates | ✅ 89 | ✅ 79 |
-| 9 | Arithmetic / ALU | ✅ 34 | ✅ 63 |
-| 8 | CPU Simulator | ✅ 34 | ✅ 28 |
-| 7 | ARM Simulator | ✅ 16 | ✅ 17 |
-| 7 | RISC-V Simulator | ✅ 14 | ✅ 17 |
-| 7 | WASM Simulator | ✅ 28 | ✅ 22 |
-| 7 | Intel 4004 Simulator | ✅ 21 | ✅ 12 |
-| 7 | JVM Simulator | ✅ 81 | ✅ 42 |
-| 7 | CLR Simulator | ✅ 93 | ✅ 39 |
-| 2 | Grammar Tools | ✅ 66 | ✅ 55 |
-| 2 | Lexer | ✅ 146 | ✅ 44 |
-| 3 | Parser | ✅ 88 | ✅ 37 |
-| 4a | Bytecode Compiler | ✅ 133 | ✅ 106 |
-| 5 | Virtual Machine | ✅ 99 | ✅ 61 |
-| 0 | Pipeline | ✅ 40 | ✅ 40 |
+This track starts at the hardware floor:
 
-### Cross-language packages
+- `logic-gates`
+- `arithmetic`
+- `fp-arithmetic`
+- `clock`
 
-The grammar-driven lexer/parser can tokenize and parse **any language** given grammar files:
+The goal is to show how larger behavior emerges from small, deterministic building blocks.
 
-| Package | Written in | Tokenizes/Parses | Tests |
-|---------|-----------|-----------------|-------|
-| `ruby-lexer` | Python | Ruby source code | 42 |
-| `ruby-parser` | Python | Ruby source code | 21 |
-| `python_lexer` | Ruby | Python source code | 32 |
-| `python_parser` | Ruby | Python source code | 15 |
+### 2. CPU and ISA simulation
 
-### Build system
+This track models execution closer to real hardware:
 
-An incremental, parallel monorepo build tool implemented in three languages:
+- `cpu-simulator`
+- `arm-simulator`
+- `riscv-simulator`
+- `wasm-simulator`
+- `intel4004-simulator`
+- `jvm-simulator`
+- `clr-simulator`
 
-| Implementation | Tests | Coverage | Role |
-|---------------|-------|---------|------|
-| **Go** | 62+ | 88-96% | **Primary** — compiles to native binary, goroutine parallelism |
-| Python | 118 | 95% | Reference implementation |
-| Ruby | 90 | 96% | Educational port |
+The goal is to understand instruction formats, execution models, fetch-decode-execute loops, and the differences between register machines, stack machines, and older accumulator-style designs.
 
-Features:
-- **Git-diff change detection** — `git diff origin/main...HEAD` determines what changed, no cache file needed
-- **Dependency-aware** — automatically parses `pyproject.toml` and `.gemspec` to build a dependency graph
-- **Parallel execution** — independent packages run concurrently (8 packages at level 0!)
-- **BUILD/DIRS files** — simple text files declaring build commands and directory structure
+### 3. Deep computer architecture
 
-### Directed graph library
+This is one of the most important themes in the repo:
 
-The foundation of the build system — a standalone library in three languages:
+- `cache`
+- `branch-predictor`
+- `hazard-detection`
+- `pipeline`
+- `core`
 
-| Language | Tests | Coverage |
-|----------|-------|---------|
-| Python | 73 | 98% |
-| Ruby | 77 | 100% |
-| Go | 39 | 94% |
+The goal is to move beyond "a CPU executes instructions" and into "how a modern core actually stays fast."
 
-Provides: topological sort, cycle detection, independent groups (parallel levels), affected nodes (incremental builds), transitive closure.
+### 4. Language frontends and execution
 
-### Grammar files
+This track builds the path from source code to execution:
 
-Declarative grammar definitions shared by all implementations:
+- `grammar-tools`
+- `lexer`
+- `parser`
+- `python-lexer`, `ruby-lexer`, `javascript-lexer`, `typescript-lexer`
+- `python-parser`, `ruby-parser`, `javascript-parser`, `typescript-parser`
+- `bytecode-compiler`
+- `virtual-machine`
+- `assembler`
+- `jit-compiler`
 
-- `code/grammars/python.tokens` + `python.grammar` — Python subset
-- `code/grammars/ruby.tokens` + `ruby.grammar` — Ruby subset
+The goal is to connect programming-language tooling back to the machine beneath it.
 
-Adding a new language requires only writing grammar files — no new lexer or parser code.
+### 5. Accelerators and parallel execution
 
-## Structure
+This track explores computation outside the classic scalar CPU story:
 
-```
+- `gpu-core`
+- `compute-unit`
+- `device-simulator`
+- `parallel-execution-engine`
+
+The goal is to study throughput-oriented execution, dataflow, and accelerator-style design.
+
+### 6. Machine learning fundamentals
+
+This track covers small, foundational learning components that fit naturally with the accelerator story:
+
+- `loss-functions`
+- `gradient-descent`
+
+The goal is to treat optimization primitives as understandable building blocks rather than opaque library calls.
+
+### 7. Tooling, visualization, and infrastructure
+
+This repo also includes the tools needed to sustain the work:
+
+- monorepo build tools
+- `directed-graph`
+- `html-renderer`
+- pipeline visualizers and support programs
+
+These are not side quests. They are part of the project's teaching philosophy: infrastructure is also a thing worth understanding.
+
+## How The Repository Is Organized
+
+```text
 code/
-├── specs/          Specifications for each package (the blueprint)
-├── grammars/       Language grammar definitions (.tokens, .grammar)
-├── learning/       Notes and learning materials per language/topic
-├── packages/       Publishable libraries
-│   ├── python/     21 Python packages (PyPI-ready)
-│   ├── ruby/       20 Ruby gems (RubyGems-ready)
-│   └── go/         Go modules
-└── programs/       Standalone programs
-    ├── python/     Hello world, build tool, pipeline visualizer
-    ├── ruby/       Build tool
-    └── go/         Build tool (primary)
+├── specs/         Specifications and architecture documents
+├── learning/      Explanatory notes and teaching material
+├── grammars/      Shared grammar definitions
+├── packages/      Publishable libraries in multiple languages
+└── programs/      Standalone tools and demos
 ```
 
-## Languages & Tooling
+## Languages
 
-| Language | Version | Package Manager | Test Framework | Linter | Type Checker |
-|----------|---------|----------------|---------------|--------|-------------|
-| Python | 3.12+ | uv | pytest | ruff | mypy |
-| Ruby | 3.4 | Bundler | Minitest | Standard Ruby | RBS + Steep |
-| Go | 1.26 | go modules | go test | go vet | built-in |
+The repository currently spans six ecosystems:
 
-All managed via [mise](https://mise.jdx.dev/) — see `mise.toml`.
+- Python
+- Ruby
+- Go
+- TypeScript
+- Rust
+- Elixir
 
-## CI
+The language split is intentional. A parser should still be recognizable as a parser when moved from Python to Go. A cache should still look like a cache in Ruby or TypeScript. The repetition is part of the point.
 
-GitHub Actions workflow (`.github/workflows/ci.yml`):
-1. Compiles Go build tool from source (~1-2 seconds)
-2. Uses `git diff` to detect changed packages
-3. Builds dependency graph, finds affected packages
-4. Runs them in parallel by topological level
-5. Linux on every push, Linux + macOS on PRs to main
+## Learning Material
 
-## Philosophy
+The learning side of the repository is now a first-class part of the structure, not an afterthought.
 
-- **No magic** — build every layer from scratch, understand what computers actually do
-- **Go slow and deliberate** — depth over breadth
-- **Literate programming** — Knuth-style, every source file teaches
-- **Publishable quality** — every package ready for PyPI/RubyGems
-- **Specs first** — specification → tests → implementation → changelog
-- **>80% test coverage** — enforced, typically 95%+
-- **Multiple languages** — same concepts, different ecosystems, deeper understanding
+Start here:
 
-## Future roadmap
+- [Learning Index](./code/learning/README.md)
+- [Algorithms](./code/learning/algorithms/README.md)
+- [Computer Architecture](./code/learning/computer-architecture/README.md)
+- [Language Tooling](./code/learning/language-tooling/README.md)
+- [Machine learning notes](./code/learning/loss-functions.md)
+- [Optimization notes](./code/learning/gradient-descent.md)
+- [Python Ecosystem Notes](./code/learning/python/ecosystem.md)
 
-- [ ] Machine learning track (neuron → network → backprop → autograd → attention)
-- [ ] GPU computing track (naive matmul → tiled → SIMD → GPU kernel → tensor core)
-- [ ] JIT compiler implementation
-- [ ] Sandbox-based build isolation (like Bazel)
-- [ ] TypeScript implementation of the computing stack
-- [ ] VS Code extension for `.tokens`/`.grammar` files
-- [ ] HTML pipeline visualizer
+The intended relationship is:
+
+```text
+specs explain what we intend to build
+learning explains why the ideas matter
+packages show the ideas in code
+tests prove the behavior
+```
+
+## Current Shape
+
+Today the repo contains:
+
+- 167 package directories
+- 12 program directories
+- 6 implementation languages
+
+Those counts matter less than the shape: this is a broad, layered study of computing systems, programming-language tooling, and computer architecture.
+
+## Workflow
+
+The working style for the repository is:
+
+1. Write or refine the spec.
+2. Add or update the learning entry for the concept.
+3. Add tests.
+4. Implement the package or feature.
+5. Update changelog and package README.
+
+The long-term goal is that no major concept in the repository exists only as code. It should also exist as a teachable explanation.
+
+## Good Entry Points
+
+If you want to explore the repository by theme:
+
+- Start with [00-architecture.md](./code/specs/00-architecture.md) for the big picture.
+- Read [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track.
+- Read [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) to see how the build system uses graph algorithms.
+- Read [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story.
+
+## Future Direction
+
+The repository is still expanding in a few directions:
+
+- richer learning material tied to every major package family
+- deeper computer architecture coverage
+- stronger accelerator and GPU material
+- more cross-language consistency
+- better visualization of the stack and execution flow
 
 ## Copyright
 

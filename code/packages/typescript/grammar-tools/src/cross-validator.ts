@@ -60,10 +60,19 @@ export function crossValidate(
   const definedTokens = tokenNames(tokenGrammar);
   const referencedTokens = grammarTokenReferences(parserGrammar);
 
+  // Implicit tokens that are always available
+  const implicitTokens = new Set<string>(["EOF"]);
+
+  // In indentation mode, INDENT/DEDENT/NEWLINE are implicitly available
+  if (tokenGrammar.mode === "indentation") {
+    implicitTokens.add("INDENT");
+    implicitTokens.add("DEDENT");
+    implicitTokens.add("NEWLINE");
+  }
+
   // --- Missing token references (errors) ---
-  // Every UPPERCASE name used in the grammar must exist in the tokens file.
   for (const ref of [...referencedTokens].sort()) {
-    if (!definedTokens.has(ref)) {
+    if (!definedTokens.has(ref) && !implicitTokens.has(ref)) {
       issues.push(
         `Error: Grammar references token '${ref}' which is not ` +
           `defined in the tokens file`
@@ -72,10 +81,11 @@ export function crossValidate(
   }
 
   // --- Unused tokens (warnings) ---
-  // Every token defined in the .tokens file should ideally be used
-  // somewhere in the grammar.
+  // Check if a token (or its alias) is used by the grammar
   for (const defn of tokenGrammar.definitions) {
-    if (!referencedTokens.has(defn.name)) {
+    const isUsed = referencedTokens.has(defn.name) ||
+      (defn.alias !== undefined && referencedTokens.has(defn.alias));
+    if (!isUsed) {
       issues.push(
         `Warning: Token '${defn.name}' (line ${defn.lineNumber}) ` +
           `is defined but never used in the grammar`

@@ -33,12 +33,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from grammar_tools import parse_parser_grammar
 from lexer import Lexer, Token, TokenType
 
 from lang_parser.grammar_parser import ASTNode, GrammarParseError, GrammarParser
-
 
 # =============================================================================
 # FIXTURES — Load the grammar once and reuse across tests
@@ -57,6 +55,13 @@ def grammar():  # noqa: ANN201
 # =============================================================================
 # HELPER — Convert AST tree to a readable dict for assertions
 # =============================================================================
+
+
+def _type_name(token: Token) -> str:
+    """Extract the type name from a token (handles enum and string types)."""
+    if isinstance(token.type, str):
+        return token.type
+    return token.type.name
 
 
 def ast_to_dict(node: ASTNode | Token) -> dict | str:
@@ -81,7 +86,7 @@ def ast_to_dict(node: ASTNode | Token) -> dict | str:
         A dict (for ASTNode) or string (for Token) representation.
     """
     if isinstance(node, Token):
-        return f"{node.type.name}:{node.value}"
+        return f"{_type_name(node)}:{node.value}"
     return {
         "rule": node.rule_name,
         "children": [ast_to_dict(child) for child in node.children],
@@ -266,7 +271,10 @@ class TestPrecedence:
         # The expression should have children:
         # [term("1"), PLUS, term("2 * 3")]
         # The first term contains just "1", the second term contains "2 * 3".
-        terms = [c for c in expression.children if isinstance(c, ASTNode) and c.rule_name == "term"]
+        terms = [
+            c for c in expression.children
+            if isinstance(c, ASTNode) and c.rule_name == "term"
+        ]
         assert len(terms) == 2
 
         # First term should contain just the number 1
@@ -284,7 +292,10 @@ class TestPrecedence:
         expression = _find_rule(ast, "expression")
         assert expression is not None
 
-        terms = [c for c in expression.children if isinstance(c, ASTNode) and c.rule_name == "term"]
+        terms = [
+            c for c in expression.children
+            if isinstance(c, ASTNode) and c.rule_name == "term"
+        ]
         assert len(terms) == 2
 
         # First term: just 10
@@ -372,7 +383,10 @@ class TestAssignment:
         # Find the expression inside the assignment
         expression = _find_rule(assignment, "expression")
         assert expression is not None
-        terms = [c for c in expression.children if isinstance(c, ASTNode) and c.rule_name == "term"]
+        terms = [
+            c for c in expression.children
+            if isinstance(c, ASTNode) and c.rule_name == "term"
+        ]
         assert len(terms) == 2
 
 
@@ -485,7 +499,7 @@ class TestErrors:
 
     def test_undefined_rule_raises(self, grammar: object) -> None:
         """Referencing an undefined rule should raise an error."""
-        from grammar_tools import ParserGrammar, GrammarRule, RuleReference
+        from grammar_tools import GrammarRule, ParserGrammar, RuleReference
 
         bad_grammar = ParserGrammar(
             rules=[
@@ -609,6 +623,295 @@ class TestGrammarParseError:
 
 
 # =============================================================================
+# TEST: PACKRAT MEMOIZATION
+# =============================================================================
+
+
+class TestPackratMemoization:
+    """Tests for packrat memoization correctness."""
+
+    def test_memoization_produces_same_result(self, grammar: object) -> None:
+        """Parsing the same input twice should produce identical results.
+
+        This verifies that memoization doesn't corrupt results.
+        """
+        ast1 = parse_source("1 + 2 * 3", grammar)
+        ast2 = parse_source("1 + 2 * 3", grammar)
+        assert ast_to_dict(ast1) == ast_to_dict(ast2)
+
+    def test_memoization_with_backtracking(self, grammar: object) -> None:
+        """Backtracking should work correctly with memoization.
+
+        When the parser tries an alternative that fails, it backtracks.
+        Memoization caches the failure so it doesn't retry.
+        """
+        # This expression requires the parser to try assignment first,
+        # fail, then try expression_stmt.
+        ast = parse_source("1 + 2", grammar)
+        assert _find_token_in_tree(ast, "NUMBER", "1")
+        assert _find_token_in_tree(ast, "PLUS", "+")
+
+
+# =============================================================================
+# TEST: STRING-BASED TOKEN TYPES
+# =============================================================================
+
+
+class TestStringTokenTypes:
+    """Tests for parsing with string-based token types.
+
+    When the grammar-driven lexer emits tokens with string types (for
+    extended grammars like Starlark), the parser must handle them correctly.
+    """
+
+    def test_string_type_token_matching(self) -> None:
+        """Tokens with string types should match grammar references."""
+        from grammar_tools import GrammarRule, ParserGrammar, RuleReference, Sequence
+
+        # Create a grammar that references "INT" (a string type, not in TokenType)
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="expr",
+                body=Sequence(elements=[
+                    RuleReference(name="INT", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        # Create a token with string type "INT"
+        tokens = [
+            Token(type="INT", value="42", line=1, column=1),
+            Token(type="EOF", value="", line=1, column=3),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert ast.rule_name == "expr"
+        assert len(ast.children) == 1
+        assert ast.children[0].value == "42"  # type: ignore[union-attr]
+
+    def test_mixed_enum_and_string_types(self) -> None:
+        """Parser should handle a mix of enum and string token types."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="expr",
+                body=Sequence(elements=[
+                    RuleReference(name="NAME", is_token=True),
+                    RuleReference(name="CUSTOM_OP", is_token=True),
+                    RuleReference(name="NUMBER", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="x", line=1, column=1),
+            Token(type="CUSTOM_OP", value="<>", line=1, column=3),
+            Token(type=TokenType.NUMBER, value="1", line=1, column=6),
+            Token(type=TokenType.EOF, value="", line=1, column=7),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert len(ast.children) == 3
+
+
+# =============================================================================
+# TEST: SIGNIFICANT NEWLINES
+# =============================================================================
+
+
+class TestSignificantNewlines:
+    """Tests for grammars where NEWLINE tokens are significant."""
+
+    def test_grammar_with_newlines_detected(self) -> None:
+        """When a grammar references NEWLINE, the parser detects it."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            Repetition,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="file",
+                body=Repetition(element=Sequence(elements=[
+                    RuleReference(name="NAME", is_token=True),
+                    RuleReference(name="NEWLINE", is_token=True),
+                ])),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="x", line=1, column=1),
+            Token(type=TokenType.NEWLINE, value="\\n", line=1, column=2),
+            Token(type=TokenType.EOF, value="", line=2, column=1),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        # Parser should detect that NEWLINE is referenced
+        assert parser._newlines_significant is True
+
+        ast = parser.parse()
+        assert ast.rule_name == "file"
+
+    def test_grammar_without_newlines_insignificant(self) -> None:
+        """When no rule references NEWLINE, newlines are insignificant."""
+        from grammar_tools import GrammarRule, ParserGrammar, RuleReference
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="expr",
+                body=RuleReference(name="NUMBER", is_token=True),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NEWLINE, value="\\n", line=1, column=1),
+            Token(type=TokenType.NUMBER, value="42", line=2, column=1),
+            Token(type=TokenType.EOF, value="", line=2, column=3),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        assert parser._newlines_significant is False
+
+        # Should skip the leading NEWLINE and parse the number
+        ast = parser.parse()
+        assert _find_token_in_tree(ast, "NUMBER", "42")
+
+
+# =============================================================================
+# TEST: STARLARK FULL PIPELINE
+# =============================================================================
+
+
+class TestStarlarkPipeline:
+    """Full pipeline test: starlark.tokens + starlark.grammar → parse.
+
+    This is the ultimate integration test for the grammar-driven stack.
+    """
+
+    @pytest.fixture()
+    def starlark_grammar(self):  # noqa: ANN201
+        """Load the starlark.grammar file."""
+        grammar_path = GRAMMARS_DIR / "starlark.grammar"
+        if not grammar_path.exists():
+            pytest.skip("starlark.grammar not found")
+        return parse_parser_grammar(grammar_path.read_text())
+
+    @pytest.fixture()
+    def starlark_tokens(self):  # noqa: ANN201
+        """Load the starlark.tokens file."""
+        from grammar_tools import parse_token_grammar
+        tokens_path = GRAMMARS_DIR / "starlark.tokens"
+        if not tokens_path.exists():
+            pytest.skip("starlark.tokens not found")
+        return parse_token_grammar(tokens_path.read_text())
+
+    def test_simple_assignment(
+        self,
+        starlark_grammar: object,
+        starlark_tokens: object,
+    ) -> None:
+        """Parse a simple Starlark assignment: x = 1"""
+        from lexer.grammar_lexer import GrammarLexer
+
+        tokens = GrammarLexer(
+            "x = 1\n", starlark_tokens,  # type: ignore[arg-type]
+        ).tokenize()
+        parser = GrammarParser(
+            tokens, starlark_grammar,  # type: ignore[arg-type]
+        )
+        ast = parser.parse()
+        assert ast.rule_name == "file"
+
+    def test_function_definition(
+        self,
+        starlark_grammar: object,
+        starlark_tokens: object,
+    ) -> None:
+        """Parse a Starlark function definition."""
+        from lexer.grammar_lexer import GrammarLexer
+
+        source = "def add(x, y):\n    return x + y\n"
+        tokens = GrammarLexer(
+            source, starlark_tokens,  # type: ignore[arg-type]
+        ).tokenize()
+        parser = GrammarParser(
+            tokens, starlark_grammar,  # type: ignore[arg-type]
+        )
+        ast = parser.parse()
+        assert ast.rule_name == "file"
+        # Should contain 'def' and 'return' keywords
+        all_tokens = _collect_all_tokens(ast)
+        values = [t.value for t in all_tokens]
+        assert "def" in values
+        assert "return" in values
+
+    def test_if_else(
+        self,
+        starlark_grammar: object,
+        starlark_tokens: object,
+    ) -> None:
+        """Parse a Starlark if/else statement."""
+        from lexer.grammar_lexer import GrammarLexer
+
+        source = "if x:\n    y = 1\nelse:\n    y = 2\n"
+        tokens = GrammarLexer(
+            source, starlark_tokens,  # type: ignore[arg-type]
+        ).tokenize()
+        parser = GrammarParser(
+            tokens, starlark_grammar,  # type: ignore[arg-type]
+        )
+        ast = parser.parse()
+        assert ast.rule_name == "file"
+
+    def test_list_literal(
+        self,
+        starlark_grammar: object,
+        starlark_tokens: object,
+    ) -> None:
+        """Parse a Starlark list literal."""
+        from lexer.grammar_lexer import GrammarLexer
+
+        source = 'x = [1, 2, 3]\n'
+        tokens = GrammarLexer(
+            source, starlark_tokens,  # type: ignore[arg-type]
+        ).tokenize()
+        parser = GrammarParser(
+            tokens, starlark_grammar,  # type: ignore[arg-type]
+        )
+        ast = parser.parse()
+        assert ast.rule_name == "file"
+
+    def test_for_loop(
+        self,
+        starlark_grammar: object,
+        starlark_tokens: object,
+    ) -> None:
+        """Parse a Starlark for loop."""
+        from lexer.grammar_lexer import GrammarLexer
+
+        source = "for x in items:\n    pass\n"
+        tokens = GrammarLexer(
+            source, starlark_tokens,  # type: ignore[arg-type]
+        ).tokenize()
+        parser = GrammarParser(
+            tokens, starlark_grammar,  # type: ignore[arg-type]
+        )
+        ast = parser.parse()
+        assert ast.rule_name == "file"
+
+
+# =============================================================================
 # TREE TRAVERSAL HELPERS
 # =============================================================================
 #
@@ -632,11 +935,11 @@ def _find_token_in_tree(
         True if a matching token was found anywhere in the tree.
     """
     if isinstance(node, Token):
-        return node.type.name == token_type and node.value == value
-    for child in node.children:
-        if _find_token_in_tree(child, token_type, value):
-            return True
-    return False
+        return _type_name(node) == token_type and node.value == value
+    return any(
+        _find_token_in_tree(child, token_type, value)
+        for child in node.children
+    )
 
 
 def _find_rule(node: ASTNode | Token, rule_name: str) -> ASTNode | None:
@@ -675,7 +978,7 @@ def _collect_tokens(node: ASTNode | Token, token_type: str) -> list[Token]:
         A list of matching Token objects in tree-traversal order.
     """
     if isinstance(node, Token):
-        if node.type.name == token_type:
+        if _type_name(node) == token_type:
             return [node]
         return []
     tokens: list[Token] = []

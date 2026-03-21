@@ -1,16 +1,16 @@
 # Build Tool (Ruby)
 
-A Ruby port of the Python monorepo build tool. Discovers packages via DIRS/BUILD files, resolves dependencies from package metadata, hashes source files for change detection, caches build state, and executes builds in parallel respecting dependency order.
+A Ruby port of the Python monorepo build tool. It discovers packages via recursive `BUILD` file walking, resolves dependencies from package metadata, hashes source files for change detection, caches build state, and executes builds in parallel respecting dependency order.
 
 ## How It Fits in the Stack
 
-This is a standalone program (not a publishable gem) that orchestrates building all packages in the coding-adventures monorepo. It is a direct port of the Python build tool, sharing the same DIRS/BUILD file conventions and cache format.
+This is a standalone program (not a publishable gem) that orchestrates building all packages in the coding-adventures monorepo. It is a direct port of the Python build tool, sharing the same recursive `BUILD` discovery model and cache format.
 
 ## Architecture
 
 | Module       | Responsibility                                      |
 |-------------|-----------------------------------------------------|
-| `discovery`  | Walk DIRS files, find packages with BUILD files     |
+| `discovery`  | Recursively walk directories, find packages with BUILD files |
 | `resolver`   | Parse metadata, build a dependency graph            |
 | `hasher`     | SHA256 hashing for change detection                 |
 | `cache`      | JSON cache file for incremental builds              |

@@ -1,0 +1,38 @@
+{
+  "name": "@coding-adventures/parallel-execution-engine",
+  "version": "0.1.0",
+  "description": "Parallel execution engines for GPU/TPU/NPU — SIMT warps, SIMD wavefronts, systolic arrays, MAC arrays, and Intel Xe subslices",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "gpu",
+    "tpu",
+    "npu",
+    "simt",
+    "simd",
+    "systolic",
+    "warp",
+    "wavefront",
+    "parallel",
+    "execution-engine",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/gpu-core": "file:../gpu-core",
+    "@coding-adventures/fp-arithmetic": "file:../fp-arithmetic"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

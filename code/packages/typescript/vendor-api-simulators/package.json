@@ -1,0 +1,43 @@
+{
+  "name": "@coding-adventures/vendor-api-simulators",
+  "version": "0.1.0",
+  "description": "Six vendor API simulators (CUDA, OpenCL, Metal, Vulkan, WebGPU, OpenGL) — Layer 3 of the accelerator computing stack. Thin wrappers over the Vulkan-inspired compute runtime.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "gpu",
+    "cuda",
+    "opencl",
+    "metal",
+    "vulkan",
+    "webgpu",
+    "opengl",
+    "vendor-api",
+    "simulator",
+    "compute",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compute-runtime": "file:../compute-runtime",
+    "@coding-adventures/device-simulator": "file:../device-simulator",
+    "@coding-adventures/compute-unit": "file:../compute-unit",
+    "@coding-adventures/parallel-execution-engine": "file:../parallel-execution-engine",
+    "@coding-adventures/gpu-core": "file:../gpu-core",
+    "@coding-adventures/fp-arithmetic": "file:../fp-arithmetic",
+    "@coding-adventures/clock": "file:../clock",
+    "@coding-adventures/arithmetic": "file:../arithmetic",
+    "@coding-adventures/logic-gates": "file:../logic-gates"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

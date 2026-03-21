@@ -445,7 +445,7 @@ describe("grammarTokenize — custom grammars", () => {
     expect(tokens[1].value).toBe("x");
   });
 
-  it("should fall back to NAME for unknown token names", () => {
+  it("should use string type for custom token names", () => {
     const grammar: TokenGrammar = {
       definitions: [
         { name: "IDENTIFIER", pattern: "[a-zA-Z]+", isRegex: true, lineNumber: 1 },
@@ -453,8 +453,8 @@ describe("grammarTokenize — custom grammars", () => {
       keywords: [],
     };
     const tokens = grammarTokenize("hello", grammar);
-    // "IDENTIFIER" is not in the known types, so it falls back to NAME.
-    expect(tokens[0].type).toBe("NAME");
+    // Custom token names are preserved as string types.
+    expect(tokens[0].type).toBe("IDENTIFIER");
     expect(tokens[0].value).toBe("hello");
   });
 
@@ -503,5 +503,170 @@ describe("grammarTokenize — custom grammars", () => {
     };
     expect(() => grammarTokenize("abc", grammar)).toThrow(LexerError);
     expect(() => grammarTokenize("abc", grammar)).toThrow("Unexpected character");
+  });
+});
+
+// ============================================================================
+// Skip patterns
+// ============================================================================
+
+describe("grammarTokenize — skip patterns", () => {
+  it("should skip whitespace via skip patterns", () => {
+    const grammar: TokenGrammar = {
+      definitions: [
+        { name: "NAME", pattern: "[a-z]+", isRegex: true, lineNumber: 1 },
+      ],
+      keywords: [],
+      skipDefinitions: [
+        { name: "WHITESPACE", pattern: "[ \\t]+", isRegex: true, lineNumber: 2 },
+      ],
+    };
+    const tokens = grammarTokenize("hello world", grammar);
+    const nameTokens = tokens.filter((t) => t.type === "NAME");
+    expect(nameTokens).toHaveLength(2);
+    expect(nameTokens[0].value).toBe("hello");
+    expect(nameTokens[1].value).toBe("world");
+  });
+});
+
+// ============================================================================
+// Type aliases
+// ============================================================================
+
+describe("grammarTokenize — aliases", () => {
+  it("should use alias as token type", () => {
+    const grammar: TokenGrammar = {
+      definitions: [
+        { name: "NUM", pattern: "[0-9]+", isRegex: true, lineNumber: 1, alias: "INT" },
+      ],
+      keywords: [],
+    };
+    const tokens = grammarTokenize("42", grammar);
+    expect(tokens[0].type).toBe("INT");
+  });
+});
+
+// ============================================================================
+// Reserved keywords
+// ============================================================================
+
+describe("grammarTokenize — reserved keywords", () => {
+  it("should throw on reserved keyword", () => {
+    const grammar: TokenGrammar = {
+      definitions: [
+        { name: "NAME", pattern: "[a-zA-Z_]+", isRegex: true, lineNumber: 1 },
+      ],
+      keywords: [],
+      reservedKeywords: ["class", "import"],
+    };
+    expect(() => grammarTokenize("class", grammar)).toThrow(LexerError);
+    expect(() => grammarTokenize("class", grammar)).toThrow(/Reserved keyword/);
+  });
+
+  it("should allow non-reserved identifiers", () => {
+    const grammar: TokenGrammar = {
+      definitions: [
+        { name: "NAME", pattern: "[a-zA-Z_]+", isRegex: true, lineNumber: 1 },
+      ],
+      keywords: [],
+      reservedKeywords: ["class"],
+    };
+    const tokens = grammarTokenize("hello", grammar);
+    expect(tokens[0].type).toBe("NAME");
+    expect(tokens[0].value).toBe("hello");
+  });
+});
+
+// ============================================================================
+// Indentation mode
+// ============================================================================
+
+describe("grammarTokenize — indentation mode", () => {
+  it("should emit INDENT and DEDENT tokens", () => {
+    const grammar: TokenGrammar = {
+      mode: "indentation",
+      definitions: [
+        { name: "NAME", pattern: "[a-zA-Z_]+", isRegex: true, lineNumber: 1 },
+        { name: "EQUALS", pattern: "=", isRegex: false, lineNumber: 2 },
+        { name: "INT", pattern: "[0-9]+", isRegex: true, lineNumber: 3 },
+        { name: "COLON", pattern: ":", isRegex: false, lineNumber: 4 },
+      ],
+      keywords: ["if"],
+      skipDefinitions: [
+        { name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10 },
+      ],
+    };
+    const tokens = grammarTokenize("if x:\n    y = 1\n", grammar);
+    const typeList = tokens.map((t) => t.type);
+    expect(typeList).toContain("INDENT");
+    expect(typeList).toContain("DEDENT");
+  });
+
+  it("should reject tab indentation", () => {
+    const grammar: TokenGrammar = {
+      mode: "indentation",
+      definitions: [
+        { name: "NAME", pattern: "[a-z]+", isRegex: true, lineNumber: 1 },
+        { name: "COLON", pattern: ":", isRegex: false, lineNumber: 2 },
+      ],
+      keywords: [],
+      skipDefinitions: [
+        { name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10 },
+      ],
+    };
+    expect(() => grammarTokenize("if:\n\ty\n", grammar)).toThrow(LexerError);
+    expect(() => grammarTokenize("if:\n\ty\n", grammar)).toThrow(/Tab/);
+  });
+
+  it("should handle empty source in indentation mode", () => {
+    const grammar: TokenGrammar = {
+      mode: "indentation",
+      definitions: [],
+      keywords: [],
+      skipDefinitions: [
+        { name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10 },
+      ],
+    };
+    const tokens = grammarTokenize("", grammar);
+    expect(tokens[tokens.length - 1].type).toBe("EOF");
+  });
+
+  it("should suppress newlines inside brackets", () => {
+    const grammar: TokenGrammar = {
+      mode: "indentation",
+      definitions: [
+        { name: "NAME", pattern: "[a-z]+", isRegex: true, lineNumber: 1 },
+        { name: "LPAREN", pattern: "(", isRegex: false, lineNumber: 2 },
+        { name: "RPAREN", pattern: ")", isRegex: false, lineNumber: 3 },
+        { name: "COMMA", pattern: ",", isRegex: false, lineNumber: 4 },
+      ],
+      keywords: [],
+      skipDefinitions: [
+        { name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10 },
+      ],
+    };
+    const tokens = grammarTokenize("f(\n  a,\n  b\n)\n", grammar);
+    const typeList = tokens.map((t) => t.type);
+    // No NEWLINE inside brackets
+    const firstLParen = typeList.indexOf("LPAREN");
+    const firstRParen = typeList.indexOf("RPAREN");
+    const betweenParens = typeList.slice(firstLParen + 1, firstRParen);
+    expect(betweenParens).not.toContain("NEWLINE");
+  });
+
+  it("should skip blank lines without emitting tokens", () => {
+    const grammar: TokenGrammar = {
+      mode: "indentation",
+      definitions: [
+        { name: "NAME", pattern: "[a-z]+", isRegex: true, lineNumber: 1 },
+      ],
+      keywords: [],
+      skipDefinitions: [
+        { name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10 },
+      ],
+    };
+    const tokens = grammarTokenize("x\n\ny\n", grammar);
+    const nameTokens = tokens.filter((t) => t.type === "NAME");
+    expect(nameTokens).toHaveLength(2);
   });
 });

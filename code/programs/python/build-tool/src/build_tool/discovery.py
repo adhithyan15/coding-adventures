@@ -100,7 +100,7 @@ def _infer_language(path: Path) -> str:
     "go", or "rust" that sits under "packages" or "programs".
     """
     parts = path.parts
-    for lang in ("python", "ruby", "go", "rust"):
+    for lang in ("python", "ruby", "go", "rust", "typescript", "elixir"):
         if lang in parts:
             return lang
     return "unknown"

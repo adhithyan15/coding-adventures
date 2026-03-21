@@ -6,8 +6,10 @@ A JIT (Just-In-Time) compiler watches bytecode being executed by the Virtual
 Machine and, when it detects "hot" code (loops, frequently-called functions),
 compiles that bytecode directly to native machine instructions at runtime.
 
-This is a **future package** — the spec exists to document where it fits and
-how it will work. No implementation yet.
+This is a **future-facing package** — the spec exists to document where it fits
+and how it will work. Early implementations may stop short of real machine-code
+generation and focus first on profiling, hot-path detection, bookkeeping, and
+deoptimization hooks.
 
 ## Where it fits
 
@@ -76,3 +78,16 @@ of lines of code. The challenges include:
 
 We'll start simple when we implement this — a trace compiler that JIT-compiles
 straight-line code without branching. Then add complexity incrementally.
+
+## Initial implementation boundary
+
+The first implementation milestone for this package is intentionally smaller
+than a full native-code JIT:
+
+- count executions per bytecode offset
+- decide when a path becomes "hot"
+- register shell native blocks
+- support deoptimization by discarding those blocks
+
+That gives the repository the control-plane shape of a JIT before the much
+harder backend work of instruction selection and code generation.

@@ -1,0 +1,15 @@
+{
+  "name": "celsius-to-fahrenheit-predictor",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "coding-adventures-loss-functions": "file:../../../packages/typescript/loss-functions",
+    "coding-adventures-gradient-descent": "file:../../../packages/typescript/gradient-descent"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1"
+  }
+}

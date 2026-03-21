@@ -1,0 +1,16 @@
+{
+  "name": "coding-adventures-loss-functions",
+  "version": "1.0.0",
+  "description": "Loss functions for machine learning",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  }
+}

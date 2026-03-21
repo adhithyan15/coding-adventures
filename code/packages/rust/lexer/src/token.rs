@@ -154,6 +154,17 @@ pub enum TokenType {
     /// The value is stored as the literal string `\n` for display purposes.
     Newline,
 
+    /// An increase in indentation level. Emitted by the grammar-driven lexer
+    /// when operating in indentation mode (e.g. for Python/Starlark). Each
+    /// INDENT token means "the following code is nested one level deeper."
+    Indent,
+
+    /// A decrease in indentation level. Emitted by the grammar-driven lexer
+    /// when operating in indentation mode. Each DEDENT token means "the
+    /// following code returns one level outward." Multiple DEDENTs can be
+    /// emitted at once when exiting several nested blocks.
+    Dedent,
+
     /// End of file. Every token stream ends with exactly one EOF token.
     /// This simplifies parser logic: instead of checking "are there more
     /// tokens?" the parser can just check "is the current token EOF?"
@@ -189,9 +200,11 @@ impl fmt::Display for TokenType {
             TokenType::Dot => "Dot",
             TokenType::Bang => "Bang",
             TokenType::Newline => "Newline",
+            TokenType::Indent => "Indent",
+            TokenType::Dedent => "Dedent",
             TokenType::Eof => "EOF",
         };
-        write!(f, "{}", name)
+        write!(f, "{name}")
     }
 }
 
@@ -235,6 +248,14 @@ pub struct Token {
 
     /// The 1-based column number where this token starts.
     pub column: usize,
+
+    /// Optional string-based type name for grammar-driven tokens.
+    ///
+    /// When the grammar defines token names that don't map to a [`TokenType`]
+    /// enum variant (e.g. `INT`, `FLOAT`, `ARROW`), the lexer stores the
+    /// string name here and sets `type_` to `Name` as a fallback. The
+    /// grammar-driven parser checks `type_name` first for matching.
+    pub type_name: Option<std::string::String>,
 }
 
 impl fmt::Display for Token {
@@ -351,6 +372,8 @@ pub fn string_to_token_type(name: &str) -> TokenType {
         "DOT" => TokenType::Dot,
         "BANG" => TokenType::Bang,
         "NEWLINE" => TokenType::Newline,
+        "INDENT" => TokenType::Indent,
+        "DEDENT" => TokenType::Dedent,
         "EOF" => TokenType::Eof,
         _ => TokenType::Name,
     }
@@ -393,6 +416,8 @@ mod tests {
         assert_eq!(format!("{}", TokenType::Dot), "Dot");
         assert_eq!(format!("{}", TokenType::Bang), "Bang");
         assert_eq!(format!("{}", TokenType::Newline), "Newline");
+        assert_eq!(format!("{}", TokenType::Indent), "Indent");
+        assert_eq!(format!("{}", TokenType::Dedent), "Dedent");
         assert_eq!(format!("{}", TokenType::Eof), "EOF");
     }
 
@@ -427,19 +452,19 @@ mod tests {
             value: "x".to_string(),
             line: 1,
             column: 1,
+            type_name: None,
         };
         assert_eq!(format!("{}", tok), "Token(Name, \"x\", 1:1)");
     }
 
     #[test]
     fn test_token_display_string_with_escape() {
-        // String values that contain special characters should be
-        // displayed with Rust's Debug formatting (escaped).
         let tok = Token {
             type_: TokenType::String,
             value: "hello\nworld".to_string(),
             line: 3,
             column: 5,
+            type_name: None,
         };
         let display = format!("{}", tok);
         assert!(display.contains("String"));
@@ -457,12 +482,14 @@ mod tests {
             value: "42".to_string(),
             line: 1,
             column: 1,
+            type_name: None,
         };
         let b = Token {
             type_: TokenType::Number,
             value: "42".to_string(),
             line: 1,
             column: 1,
+            type_name: None,
         };
         assert_eq!(a, b);
     }
@@ -474,12 +501,14 @@ mod tests {
             value: "42".to_string(),
             line: 1,
             column: 1,
+            type_name: None,
         };
         let b = Token {
             type_: TokenType::Name,
             value: "42".to_string(),
             line: 1,
             column: 1,
+            type_name: None,
         };
         assert_ne!(a, b);
     }
@@ -524,6 +553,7 @@ mod tests {
             value: "if".to_string(),
             line: 10,
             column: 5,
+            type_name: None,
         };
         let cloned = original.clone();
         assert_eq!(original, cloned);
@@ -542,6 +572,8 @@ mod tests {
         assert_eq!(string_to_token_type("PLUS"), TokenType::Plus);
         assert_eq!(string_to_token_type("EQUALS_EQUALS"), TokenType::EqualsEquals);
         assert_eq!(string_to_token_type("NEWLINE"), TokenType::Newline);
+        assert_eq!(string_to_token_type("INDENT"), TokenType::Indent);
+        assert_eq!(string_to_token_type("DEDENT"), TokenType::Dedent);
         assert_eq!(string_to_token_type("EOF"), TokenType::Eof);
     }
 

@@ -33,3 +33,11 @@ export {
   InvalidOpcodeError,
   InvalidOperandError,
 } from "./vm.js";
+
+export {
+  GenericVM,
+  type OpcodeHandler,
+  type BuiltinFunction,
+  MaxRecursionError,
+  VMTypeError,
+} from "./generic-vm.js";

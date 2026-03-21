@@ -1,0 +1,7 @@
+[package]
+name = "wasm-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bytecode simulator — a stack-based virtual machine"
+
+[dependencies]

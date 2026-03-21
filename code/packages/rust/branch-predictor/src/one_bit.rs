@@ -30,7 +30,9 @@
 ///     (it remembered "not taken" from the last exit) and once at the last
 ///     iteration (it remembered "taken" from the loop body). The two-bit
 ///     predictor solves this with hysteresis.
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+
+use state_machine::DFA;
 
 use crate::prediction::{BranchPredictor, Prediction};
 use crate::stats::PredictionStats;
@@ -102,6 +104,58 @@ impl OneBitPredictor {
     fn index(&self, pc: u64) -> u64 {
         pc % self.table_size as u64
     }
+}
+
+/// Build a DFA that models the one-bit branch predictor.
+///
+/// This constructs a formal DFA from the `state_machine` crate whose
+/// transition function is the one-bit predictor logic:
+///
+/// ```text
+///     States:      {NT, T}
+///     Alphabet:    {taken, not_taken}
+///     Transitions: (NT, taken)     -> T
+///                  (NT, not_taken) -> NT
+///                  (T,  taken)     -> T
+///                  (T,  not_taken) -> NT
+///     Initial:     NT (cold start: predict not-taken)
+///     Accepting:   {T} (predicts "taken")
+/// ```
+///
+/// The accepting state is T, so `dfa.accepts(sequence)` answers:
+/// "after this branch history, would the predictor predict taken?"
+///
+/// # Example
+/// ```
+/// use branch_predictor::one_bit::one_bit_dfa;
+///
+/// let dfa = one_bit_dfa();
+/// assert!(dfa.accepts(&["taken"]));
+/// assert!(!dfa.accepts(&["not_taken"]));
+/// assert!(!dfa.accepts(&["taken", "not_taken"]));
+/// ```
+pub fn one_bit_dfa() -> DFA {
+    let states: HashSet<String> = HashSet::from([
+        "NT".to_string(),
+        "T".to_string(),
+    ]);
+
+    let alphabet: HashSet<String> = HashSet::from([
+        "taken".to_string(),
+        "not_taken".to_string(),
+    ]);
+
+    let transitions: HashMap<(String, String), String> = HashMap::from([
+        (("NT".to_string(), "taken".to_string()), "T".to_string()),
+        (("NT".to_string(), "not_taken".to_string()), "NT".to_string()),
+        (("T".to_string(), "taken".to_string()), "T".to_string()),
+        (("T".to_string(), "not_taken".to_string()), "NT".to_string()),
+    ]);
+
+    let accepting: HashSet<String> = HashSet::from(["T".to_string()]);
+
+    DFA::new(states, alphabet, transitions, "NT".to_string(), accepting)
+        .expect("one_bit_dfa: DFA construction must not fail for known-good inputs")
 }
 
 impl BranchPredictor for OneBitPredictor {
@@ -230,5 +284,91 @@ mod tests {
         let mut pred = OneBitPredictor::new(1024);
         let p = pred.predict(0x100);
         assert!((p.confidence - 0.5).abs() < f64::EPSILON);
+    }
+
+    // ── DFA equivalence tests ─────────────────────────────────────
+
+    #[test]
+    fn test_dfa_construction() {
+        let dfa = one_bit_dfa();
+        assert_eq!(dfa.states().len(), 2);
+        assert_eq!(dfa.alphabet().len(), 2);
+        assert_eq!(dfa.initial(), "NT");
+        assert!(dfa.accepting().contains("T"));
+        assert!(!dfa.accepting().contains("NT"));
+    }
+
+    #[test]
+    fn test_dfa_is_complete() {
+        let dfa = one_bit_dfa();
+        assert!(dfa.is_complete());
+    }
+
+    #[test]
+    fn test_dfa_no_warnings() {
+        let dfa = one_bit_dfa();
+        assert!(dfa.validate().is_empty());
+    }
+
+    #[test]
+    fn test_dfa_accepts_reflects_prediction() {
+        let dfa = one_bit_dfa();
+        // From NT, taken -> T (accepting)
+        assert!(dfa.accepts(&["taken"]));
+        // From NT, not_taken -> NT (not accepting)
+        assert!(!dfa.accepts(&["not_taken"]));
+        // From NT, taken then not_taken -> NT (not accepting)
+        assert!(!dfa.accepts(&["taken", "not_taken"]));
+        // From NT, taken then taken -> T (accepting)
+        assert!(dfa.accepts(&["taken", "taken"]));
+    }
+
+    #[test]
+    fn test_dfa_transitions_match_predictor() {
+        let dfa = one_bit_dfa();
+        // Verify all 4 transitions
+        let t = dfa.transitions();
+        assert_eq!(t[&("NT".to_string(), "taken".to_string())], "T");
+        assert_eq!(t[&("NT".to_string(), "not_taken".to_string())], "NT");
+        assert_eq!(t[&("T".to_string(), "taken".to_string())], "T");
+        assert_eq!(t[&("T".to_string(), "not_taken".to_string())], "NT");
+    }
+
+    #[test]
+    fn test_dfa_process_matches_predictor() {
+        // Walk the DFA and the predictor in lock-step.
+        let mut dfa = one_bit_dfa();
+        let mut pred = OneBitPredictor::new(1024);
+        let sequence = [true, true, false, true, false, false, true];
+
+        for &taken in &sequence {
+            // Before update, check prediction matches DFA accepting
+            let dfa_predicts_taken = dfa.accepting().contains(dfa.current_state());
+            let pred_prediction = *pred.table.get(&(0x100u64 % 1024)).unwrap_or(&false);
+            assert_eq!(
+                dfa_predicts_taken, pred_prediction,
+                "DFA state {} disagrees with predictor state {}",
+                dfa.current_state(), pred_prediction
+            );
+
+            // Transition both
+            let event = if taken { "taken" } else { "not_taken" };
+            dfa.process(event).unwrap();
+            pred.update(0x100, taken, None);
+
+            // After update, verify states match
+            let dfa_in_taken = dfa.current_state() == "T";
+            let pred_in_taken = *pred.table.get(&(0x100u64 % 1024)).unwrap_or(&false);
+            assert_eq!(dfa_in_taken, pred_in_taken);
+        }
+    }
+
+    #[test]
+    fn test_dfa_double_misprediction_demo() {
+        let dfa = one_bit_dfa();
+        // After a loop (many taken, then one not_taken), the DFA ends in NT.
+        // On re-entry (next taken), it was in NT -> would mispredict.
+        // This demonstrates the double-misprediction problem.
+        assert!(!dfa.accepts(&["taken", "taken", "taken", "not_taken"]));
     }
 }

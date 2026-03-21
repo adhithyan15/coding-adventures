@@ -22,19 +22,22 @@ Setting `mise settings ruby.compile=false` did not use precompiled binaries as o
 
 ---
 
-### 2026-03-18: Always add BUILD files and DIRS entries for new packages
+### 2026-03-18: Always add BUILD files and verify discovery for new packages
 
 When creating a new package, you MUST:
 1. Create a `BUILD` file in the package directory with the test command
-2. Add the package directory name to the parent `DIRS` file
-3. Verify the build tool discovers the new package
+2. Verify the build tool discovers the new package
 
-Without both, the CI build tool will not discover or test the package. This was missed for fp-arithmetic, Go logic-gates, Ruby sequential logic, and clock packages — they passed locally but were invisible to CI.
+At the time of the original mistake, some tooling still relied on `DIRS` routing. The current build system uses recursive `BUILD` discovery instead, so the important invariant now is that every package has a valid `BUILD` file and shows up in a dry run. This was missed for fp-arithmetic, Go logic-gates, Ruby sequential logic, and clock packages — they passed locally but were invisible to CI.
 
 **Checklist for every new package:**
 - [ ] BUILD file with test command
-- [ ] Added to parent DIRS file
 - [ ] `./build-tool -dry-run` shows the package
+
+**IMPORTANT — multi-language packages:** When implementing the same package across all 5 languages (Python, TypeScript, Ruby, Go, Rust), you MUST add a BUILD file for EVERY language variant. On 2026-03-19 this mistake recurred: Go and Rust compute-unit packages were missing BUILD files while Python, TypeScript, and Ruby had them. The build tool only detected 3 out of 5 packages. After finishing all language implementations, always verify the count matches:
+```
+find code/packages/*/package-name -name BUILD | wc -l   # should equal number of languages
+```
 
 ---
 
@@ -74,3 +77,39 @@ When adding new Rust packages, the workspace `Cargo.toml` lists all members. If 
 ### 2026-03-19: Always update PR description after each push
 
 When working on a large PR with many commits, update the PR description after each push to reflect current progress. This lets the reviewer (and CI) see what's been done and what's left. Use `gh pr edit <number> --body "..."` to update the description programmatically.
+
+---
+
+### 2026-03-19: TypeScript file: deps need transitive installs on CI
+
+When TypeScript package A depends on B (`"file:../B"`) and B depends on C (`"file:../C"`), running `npm ci` in A installs B but does NOT install C inside B's own `node_modules`. On a fresh CI runner (no pre-existing `node_modules`), this causes `ERR_MODULE_NOT_FOUND` at runtime when B tries to import C.
+
+**Solution:** The BUILD file must chain installs from the bottom of the dependency tree upward:
+```
+cd ../C && npm ci --quiet && cd ../B && npm ci --quiet && cd ../A && npm ci && npx vitest run
+```
+
+**Why this only fails on CI:** Locally, if you've ever run `npm install` in package C, its `node_modules` already exists. The `file:` reference from B resolves because C's deps are already present. On CI, every directory starts clean — no `node_modules` anywhere.
+
+**Checklist for TypeScript BUILD files:**
+- [ ] Identify the full transitive `file:` dependency chain
+- [ ] Install from leaves to root in the BUILD script
+- [ ] Test from a clean state: `rm -rf node_modules ../dep/node_modules && bash BUILD`
+
+---
+
+### 2026-03-20: Use mise for all language runtimes — nothing is installed globally
+
+This machine does not have many tools installed globally. Language runtimes (Ruby, Go, Rust, etc.) are managed by **mise** (configured in `mise.toml` at the repo root). The system Ruby is 2.6.10, but the project requires 3.4+.
+
+**Problem:** Ruby BUILD files used bare `bundle` commands, which invoked system Ruby 2.6.10. All 39 Ruby packages failed to build.
+
+**Fix:** Prefix language-specific commands with the **absolute path** to mise in BUILD files:
+```
+/Users/adhithya/.local/bin/mise exec -- bundle install --quiet
+/Users/adhithya/.local/bin/mise exec -- bundle exec rake test
+```
+
+**Why absolute path?** The build tool runs BUILD commands via `sh -c`, which gets a minimal PATH that does NOT include `~/.local/bin` where mise is installed. Using just `mise exec` fails with `sh: mise: command not found`.
+
+**Rule:** Always use `/Users/adhithya/.local/bin/mise exec --` (absolute path) when invoking language-specific tools in BUILD files. Never assume mise or any tool is on PATH in `sh -c` contexts. Check `mise.toml` for managed runtimes. This applies to `ruby`, `bundle`, `gem`, `go`, `cargo`, `rustc`, and any other runtime-managed tool.
