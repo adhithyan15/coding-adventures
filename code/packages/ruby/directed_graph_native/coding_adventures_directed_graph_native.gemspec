@@ -12,9 +12,9 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
 
-  spec.files         = Dir["lib/**/*.rb", "ext/**/*", "src/**/*", "Cargo.toml", "README.md", "CHANGELOG.md"]
+  spec.files         = Dir["lib/**/*.rb", "ext/**/*", "README.md", "CHANGELOG.md"]
   spec.require_paths = ["lib"]
-  spec.extensions    = ["extconf.rb"]
+  spec.extensions    = ["ext/directed_graph_native/extconf.rb"]
 
   spec.metadata = {
     "source_code_uri" => "https://github.com/adhithyan15/coding-adventures",

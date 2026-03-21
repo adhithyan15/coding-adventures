@@ -30,4 +30,4 @@ magnus = { version = "0.7", features = ["rb-sys-interop"] }
 
 # The core directed-graph crate -- all algorithms live here.
 # This wrapper contains zero algorithm logic; it's pure glue code.
-directed-graph = { path = "../../rust/directed-graph" }
+directed-graph = { path = "../../../../rust/directed-graph" }
