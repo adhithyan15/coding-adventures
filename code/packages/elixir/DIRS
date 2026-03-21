@@ -5,3 +5,4 @@ loss_functions
 matrix
 virtual_machine
 brainfuck
+progress_bar

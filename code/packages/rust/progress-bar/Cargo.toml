@@ -1,0 +1,5 @@
+[package]
+name = "progress-bar"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable text-based progress bar for tracking concurrent operations"

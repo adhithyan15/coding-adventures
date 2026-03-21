@@ -37,4 +37,5 @@ members = [
     "virtual-machine",
     "bytecode-compiler",
     "brainfuck",
+    "progress-bar",
 ]
