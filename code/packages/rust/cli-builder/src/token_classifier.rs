@@ -730,7 +730,8 @@ mod tests {
 
     #[test]
     fn test_find_by_long_hit() {
-        let result = tc().find_by_long("all");
+        let binding = tc();
+        let result = binding.find_by_long("all");
         assert!(result.is_some());
         assert_eq!(result.unwrap().id, "all");
     }
@@ -742,7 +743,8 @@ mod tests {
 
     #[test]
     fn test_find_by_sdl_hit() {
-        let result = tc().find_by_sdl("classpath");
+        let binding = tc();
+        let result = binding.find_by_sdl("classpath");
         assert!(result.is_some());
     }
 
@@ -753,7 +755,8 @@ mod tests {
 
     #[test]
     fn test_find_by_short_hit() {
-        let result = tc().find_by_short('l');
+        let binding = tc();
+        let result = binding.find_by_short('l');
         assert!(result.is_some());
         assert_eq!(result.unwrap().id, "long-listing");
     }

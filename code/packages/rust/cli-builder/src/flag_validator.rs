@@ -445,7 +445,7 @@ mod tests {
     #[test]
     fn test_format_flag_name_sdl_only() {
         // A flag with only a single_dash_long form
-        let mut f = FlagDef {
+        let f = FlagDef {
             id: "classpath".to_string(),
             short: None,
             long: None,

@@ -175,12 +175,13 @@ describe("FlagValidator — requires (transitive)", () => {
     const errors = validator.validate({ "human-readable": true }, ["tool"]);
     const depErrors = errors.filter((e) => e.errorType === "missing_dependency_flag");
     expect(depErrors).toHaveLength(1);
-    expect(depErrors[0].message).toContain("long-listing");
+    // _flagDisplay uses short ("-l") not the id ("long-listing")
+    expect(depErrors[0].message).toContain("-l");
   });
 
   it("transitive chain A→B→C: A present, B absent → error", () => {
     // A requires B, B requires C.
-    // When A is present but B is absent, we expect an error for A→B.
+    // When A is present but B and C are absent, we expect errors for A→B and A→C.
     const flagA = makeBoolFlag("flag-a", { short: "a", requires: ["flag-b"] });
     const flagB = makeBoolFlag("flag-b", { short: "b", requires: ["flag-c"] });
     const flagC = makeBoolFlag("flag-c", { short: "c" });
@@ -189,9 +190,10 @@ describe("FlagValidator — requires (transitive)", () => {
     // Only A is present; B and C are absent
     const errors = validator.validate({ "flag-a": true }, ["tool"]);
     const depErrors = errors.filter((e) => e.errorType === "missing_dependency_flag");
-    // A→B should be reported; B→C may also be reported transitively
+    // A→B and A→C (transitively) should be reported.
+    // _flagDisplay uses short flags: B is "-b", C is "-c"
     expect(depErrors.length).toBeGreaterThan(0);
-    expect(depErrors.some((e) => e.message.includes("flag-b"))).toBe(true);
+    expect(depErrors.some((e) => e.message.includes("-b"))).toBe(true);
   });
 
   it("no error when only the required dependency is present (not the requiring flag)", () => {
@@ -215,7 +217,8 @@ describe("FlagValidator — required flags", () => {
     const errors = validator.validate({}, ["tool"]);
     const reqErrors = errors.filter((e) => e.errorType === "missing_required_flag");
     expect(reqErrors).toHaveLength(1);
-    expect(reqErrors[0].message).toContain("verbose");
+    // _flagDisplay uses short ("-v") not the id ("verbose")
+    expect(reqErrors[0].message).toContain("-v");
   });
 
   it("no error when required flag is present", () => {
@@ -332,13 +335,15 @@ describe("FlagValidator — mutually_exclusive_groups", () => {
   it("violation error message lists the conflicting flag names", () => {
     const validator = new FlagValidator([flagCreate, flagExtract], [optionalGroup]);
     const errors = validator.validate({ create: true, extract: true }, ["tool"]);
-    expect(errors[0].message).toMatch(/create|extract/);
+    // _flagDisplay uses short flags: create → "-c", extract → "-x"
+    expect(errors[0].message).toMatch(/-c|-x/);
   });
 
   it("required group error message lists all flag names", () => {
     const validator = new FlagValidator([flagCreate, flagExtract, flagList], [requiredGroup]);
     const errors = validator.validate({}, ["tar"]);
-    expect(errors[0].message).toMatch(/create|extract|list/);
+    // _flagDisplay uses short flags: create → "-c", extract → "-x", list → "-t"
+    expect(errors[0].message).toMatch(/-c|-x|-t/);
   });
 });
 

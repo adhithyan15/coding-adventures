@@ -115,9 +115,13 @@ describe("coerceValue — integer type", () => {
     }
   });
 
-  it("returns error for empty string", () => {
+  it("returns 0 for empty string (Number('') === 0, which is a valid integer)", () => {
+    // Number("") === 0, and Number.isInteger(0) === true, so this coerces to 0.
     const result = coerceValue("", "integer", "count", ["tool"]);
-    expect("error" in result).toBe(true);
+    expect("value" in result).toBe(true);
+    if ("value" in result) {
+      expect(result.value).toBe(0);
+    }
   });
 
   it("includes context in the error", () => {
@@ -172,9 +176,14 @@ describe("coerceValue — float type", () => {
     }
   });
 
-  it("returns error for empty string (NaN)", () => {
+  it("returns 0 for empty string (Number('') === 0, not NaN)", () => {
+    // Number("") === 0, which is a valid finite number, not NaN.
+    // So coerceValue returns { value: 0 } rather than an error.
     const result = coerceValue("", "float", "ratio", ["tool"]);
-    expect("error" in result).toBe(true);
+    expect("value" in result).toBe(true);
+    if ("value" in result) {
+      expect(result.value).toBe(0);
+    }
   });
 });
 

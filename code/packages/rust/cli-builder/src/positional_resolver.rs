@@ -152,7 +152,7 @@ pub fn resolve_positionals(
 fn resolve_no_variadic(
     tokens: &[String],
     arg_defs: &[&ArgumentDef],
-    parsed_flags: &HashMap<String, Value>,
+    _parsed_flags: &HashMap<String, Value>,
     command_path: &[String],
     assignments: &mut HashMap<String, Value>,
     errors: &mut Vec<ParseError>,
@@ -329,6 +329,7 @@ fn resolve_with_variadic_refs(
 }
 
 /// Wrapper that accepts `&[ArgumentDef]` (used by unit tests).
+#[allow(dead_code)]
 fn resolve_with_variadic(
     tokens: &[String],
     arg_defs: &[ArgumentDef],

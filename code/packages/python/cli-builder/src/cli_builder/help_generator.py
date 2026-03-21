@@ -152,11 +152,17 @@ class HelpGenerator:
 
         # Determine if this node has subcommands
         has_subcommands = bool(self._node.get("commands"))
-        # Determine if this node has flags (or inherited globals)
+        # Determine if this node has flags (or inherited globals).
+        # We must check for actual enabled builtins, not just whether the
+        # builtin_flags dict exists — {"help": False, "version": False} is a
+        # non-empty dict but produces zero flags.
+        builtin_list = self._builtin_flags_list(
+            self._spec.get("builtin_flags", {})
+        )
         has_flags = bool(
             self._node.get("flags")
             or self._spec.get("global_flags")
-            or self._spec.get("builtin_flags")
+            or builtin_list
         )
         # Determine if this node has arguments
         arguments = self._node.get("arguments", [])

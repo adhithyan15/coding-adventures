@@ -347,6 +347,8 @@ describe("HelpGenerator — flag signature value names", () => {
 // ---------------------------------------------------------------------------
 
 describe("HelpGenerator — ARGUMENTS section formatting", () => {
+  // Only one variadic argument is allowed per scope. SOURCE is variadic;
+  // DEST is required non-variadic; EXTRA is optional non-variadic.
   const specWithArgs = {
     cli_builder_spec_version: "1.0",
     name: "cp",
@@ -354,7 +356,7 @@ describe("HelpGenerator — ARGUMENTS section formatting", () => {
     arguments: [
       { id: "source", name: "SOURCE", description: "Source file", type: "path", required: true, variadic: true, variadic_min: 1 },
       { id: "dest", name: "DEST", description: "Destination", type: "path", required: true },
-      { id: "extra", name: "EXTRA", description: "Extra optional", type: "path", required: false, variadic: true, variadic_min: 0 },
+      { id: "extra", name: "EXTRA", description: "Extra optional", type: "path", required: false },
     ],
   };
 

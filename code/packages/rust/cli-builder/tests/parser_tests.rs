@@ -88,7 +88,7 @@ fn test_echo_empty() {
 }
 
 #[test]
-fn test_echo_conflicting_e_E() {
+fn test_echo_conflicting_e_and_e() {
     let errs = parse_err_types(ECHO_SPEC, &["echo", "-e", "-E", "hello"]);
     assert!(has_error(&errs, "conflicting_flags"), "errors: {:?}", errs);
 }
