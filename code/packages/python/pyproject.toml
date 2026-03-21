@@ -14,6 +14,7 @@ members = [
     "intel4004-simulator",
     "assembler",
     "grammar-tools",
+    "state-machine",
     "jit-compiler",
     "lexer",
     "parser",
@@ -52,6 +53,7 @@ coding-adventures-parser = { workspace = true }
 coding-adventures-bytecode-compiler = { workspace = true }
 coding-adventures-virtual-machine = { workspace = true }
 coding-adventures-grammar-tools = { workspace = true }
+coding-adventures-state-machine = { workspace = true }
 coding-adventures-jit-compiler = { workspace = true }
 coding-adventures-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
