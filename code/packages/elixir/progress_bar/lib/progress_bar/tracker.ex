@@ -59,15 +59,6 @@ defmodule CodingAdventures.ProgressBar.Tracker do
   # Event struct
   # ---------------------------------------------------------------------------
 
-  @doc """
-  An event that workers send to the tracker.
-
-  Fields:
-    * `type` -- what happened (`:started`, `:finished`, `:skipped`)
-    * `name` -- human-readable identifier (e.g., `"python/logic-gates"`)
-    * `status` -- outcome label, only meaningful for `:finished` events
-                  (e.g., `"built"`, `"failed"`, `"cached"`)
-  """
   defmodule Event do
     @moduledoc """
     A minimal event struct representing something that happened to a tracked
@@ -382,7 +373,7 @@ defmodule CodingAdventures.ProgressBar.Tracker do
   #     █ (U+2588) -- filled portion
   #     ░ (U+2591) -- empty portion
 
-  defp render_bar(completed, total) when total <= 0 do
+  defp render_bar(_completed, total) when total <= 0 do
     String.duplicate("\u2591", @bar_width)
   end
 

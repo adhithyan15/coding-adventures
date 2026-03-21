@@ -58,7 +58,6 @@ import time
 from dataclasses import dataclass
 from typing import TextIO
 
-
 # ---------------------------------------------------------------------------
 # Event types — what can happen to a tracked item
 # ---------------------------------------------------------------------------
@@ -244,7 +243,9 @@ class Tracker:
         # enough to absorb bursts from many threads without blocking,
         # small enough to keep memory negligible.
         self._events: queue.Queue[Event | object] = queue.Queue(maxsize=64)
-        self._writer: TextIO | io.StringIO = writer if writer is not None else sys.stderr
+        self._writer: TextIO | io.StringIO = (
+            writer if writer is not None else sys.stderr
+        )
         self._start_time: float = 0.0
         self._label = label
         self._thread: threading.Thread | None = None
