@@ -16,7 +16,10 @@ dev = ["pytest>=8.0", "pytest-cov>=5.0", "maturin>=1.0"]
 [tool.maturin]
 # The Python module name must match the Rust lib name in Cargo.toml.
 module-name = "directed_graph_native"
-# No PyO3 features needed — we use our own python-bridge.
+# Tell maturin this is a raw cdylib with its own PyInit_ function —
+# not a PyO3 or cffi project. Without this, maturin auto-detects
+# "cffi" mode and tries to install the cffi package.
+bindings = "pyo3"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
