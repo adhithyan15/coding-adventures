@@ -1,0 +1,5 @@
+[package]
+name = "ml-framework-core"
+version = "0.1.0"
+edition = "2021"
+description = "Core ML framework abstractions — tensors with automatic differentiation, parameter management, and device simulation"

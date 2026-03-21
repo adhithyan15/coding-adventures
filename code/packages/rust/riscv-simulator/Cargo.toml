@@ -1,0 +1,8 @@
+[package]
+name = "riscv-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "RISC-V RV32I simulator — a clean, modern instruction set architecture"
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }

@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-javascript-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "JavaScript lexer — tokenizes JavaScript source code using the grammar-driven lexer and the javascript.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
