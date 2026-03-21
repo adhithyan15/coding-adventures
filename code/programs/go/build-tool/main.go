@@ -36,6 +36,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
@@ -185,7 +186,16 @@ func run() int {
 	buildCache := cache.New()
 	buildCache.Load(cachePath)
 
-	// Steps 8-9: Execute builds.
+	// Steps 8-9: Execute builds with progress tracking.
+	//
+	// The progress tracker shows a live-updating bar on stderr while
+	// builds run. It's nil in dry-run mode (no builds to track).
+	var tracker *progress.Tracker
+	if !*dryRun {
+		tracker = progress.New(len(packages), os.Stderr, "")
+		tracker.Start()
+	}
+
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -196,7 +206,12 @@ func run() int {
 		*dryRun,
 		*jobs,
 		affectedSet,
+		tracker,
 	)
+
+	if tracker != nil {
+		tracker.Stop()
+	}
 
 	// Step 10: Save cache (secondary record, not primary mechanism).
 	if !*dryRun {
