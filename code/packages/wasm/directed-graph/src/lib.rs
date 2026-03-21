@@ -218,16 +218,21 @@ impl DirectedGraph {
 }
 
 // ---------------------------------------------------------------------------
-// Tests (run with wasm-pack test)
+// Tests
 // ---------------------------------------------------------------------------
+//
+// These tests exercise the underlying Rust Graph directly rather than going
+// through the wasm-bindgen wrapper. The wrapper methods return JsError which
+// panics on non-WASM targets, so we test the core logic instead. The JS-side
+// behavior is tested via wasm-pack test or by the consuming JS test suites.
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use directed_graph::graph::Graph;
 
     #[test]
     fn test_add_node_and_size() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         assert_eq!(g.size(), 0);
         g.add_node("A");
         assert_eq!(g.size(), 1);
@@ -237,7 +242,7 @@ mod tests {
 
     #[test]
     fn test_add_and_has_edge() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         g.add_edge("A", "B").unwrap();
         assert!(g.has_edge("A", "B"));
         assert!(!g.has_edge("B", "A"));
@@ -245,7 +250,7 @@ mod tests {
 
     #[test]
     fn test_has_node() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         g.add_node("A");
         assert!(g.has_node("A"));
         assert!(!g.has_node("B"));
@@ -253,7 +258,7 @@ mod tests {
 
     #[test]
     fn test_remove_node() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         g.add_edge("A", "B").unwrap();
         g.remove_node("A").unwrap();
         assert!(!g.has_node("A"));
@@ -262,13 +267,13 @@ mod tests {
 
     #[test]
     fn test_self_loop_rejected() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         assert!(g.add_edge("A", "A").is_err());
     }
 
     #[test]
     fn test_has_cycle() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         g.add_edge("A", "B").unwrap();
         g.add_edge("B", "A").unwrap();
         assert!(g.has_cycle());
@@ -276,9 +281,31 @@ mod tests {
 
     #[test]
     fn test_no_cycle() {
-        let mut g = DirectedGraph::new();
+        let mut g = Graph::new();
         g.add_edge("A", "B").unwrap();
         g.add_edge("B", "C").unwrap();
         assert!(!g.has_cycle());
+    }
+
+    #[test]
+    fn test_topological_sort() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("B", "C").unwrap();
+        let order = g.topological_sort().unwrap();
+        assert_eq!(order, vec!["A", "B", "C"]);
+    }
+
+    #[test]
+    fn test_independent_groups() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("A", "C").unwrap();
+        g.add_edge("B", "D").unwrap();
+        g.add_edge("C", "D").unwrap();
+        let groups = g.independent_groups().unwrap();
+        assert_eq!(groups.len(), 3);
+        assert_eq!(groups[0], vec!["A"]);
+        assert_eq!(groups[2], vec!["D"]);
     }
 }
