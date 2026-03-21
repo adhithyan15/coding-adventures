@@ -47,7 +47,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.23'
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -67,6 +67,28 @@ jobs:
       - name: Install bundler
         run: gem install bundler
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.16'
+          otp-version: '26.0'
+
+      - name: Install test runners
+        run: |
+          uv pip install --system pytest
+          npm install -g jest
+
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         run: |
@@ -75,6 +97,12 @@ jobs:
           echo "Ruby: $(ruby --version)"
           echo "Bundler: $(bundle --version)"
           echo "Go: $(go version)"
+          echo "Node: $(node --version)"
+          echo "npm: $(npm --version)"
+          echo "Rust: $(rustc --version)"
+          echo "Cargo: $(cargo --version)"
+          echo "Elixir: $(elixir --version)"
+          echo "Mix: $(mix --version)"
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
