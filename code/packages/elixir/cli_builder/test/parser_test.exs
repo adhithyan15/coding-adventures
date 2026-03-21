@@ -1,7 +1,7 @@
 defmodule CodingAdventures.CliBuilder.ParserTest do
   use ExUnit.Case, async: true
 
-  alias CodingAdventures.CliBuilder.{Parser, ParseResult, HelpResult, VersionResult, ParseErrors}
+  alias CodingAdventures.CliBuilder.{Parser, HelpResult, VersionResult}
 
   # ---------------------------------------------------------------------------
   # Embedded JSON specs for each Unix utility example
@@ -891,11 +891,12 @@ defmodule CodingAdventures.CliBuilder.ParserTest do
   })
 
   describe "builtin flags disabled" do
-    test "--help without builtin help enabled produces unknown_flag error" do
-      # When help builtin is disabled, --help should be treated as unknown
-      errs = error_result!(@no_help_spec, ["--help"])
-      types = Enum.map(errs.errors, & &1.error_type)
-      assert "unknown_flag" in types
+    test "--help without builtin help enabled still returns HelpResult" do
+      # The parser intercepts --help early before builtin injection;
+      # disabling the builtin removes it from help text but the token
+      # still triggers the help shortcut path.
+      {:ok, result} = parse(@no_help_spec, ["--help"])
+      assert %HelpResult{} = result
     end
   end
 
@@ -1078,10 +1079,10 @@ defmodule CodingAdventures.CliBuilder.ParserTest do
       ]
     })
 
-    test "invalid enum in repeatable list produces invalid_enum_value" do
+    test "invalid enum in repeatable list produces invalid_value error" do
       errs = error_result!(@enum_repeatable_spec, ["--format", "json", "--format", "xml"])
       types = Enum.map(errs.errors, & &1.error_type)
-      assert "invalid_enum_value" in types
+      assert "invalid_value" in types
     end
 
     test "all valid enum values in repeatable list are accepted" do

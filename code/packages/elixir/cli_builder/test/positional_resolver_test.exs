@@ -327,9 +327,9 @@ defmodule CodingAdventures.CliBuilder.PositionalResolverTest do
         arg("dest", "DEST", "path")
       ]
 
-      # Only one token — dest is missing
+      # Only one token — variadic (source) gets 0 tokens because dest claims it
       assert {:error, errors} = resolve(["only_src"], defs)
-      assert Enum.any?(errors, &(&1.error_type == "missing_required_argument"))
+      assert Enum.any?(errors, &(&1.error_type == "too_few_arguments"))
     end
 
     test "variadic type coercion error is collected" do

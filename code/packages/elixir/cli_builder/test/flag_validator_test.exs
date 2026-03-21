@@ -7,7 +7,7 @@ defmodule CodingAdventures.CliBuilder.FlagValidatorTest do
   # Helpers — minimal flag definition maps
   # ---------------------------------------------------------------------------
 
-  defp flag(id, opts \\ []) do
+  defp flag(id, opts) do
     short = Keyword.get(opts, :short)
     long = Keyword.get(opts, :long, id)
     sdl = Keyword.get(opts, :single_dash_long)
@@ -26,7 +26,7 @@ defmodule CodingAdventures.CliBuilder.FlagValidatorTest do
     }
   end
 
-  defp group(id, flag_ids, required \\ false) do
+  defp group(id, flag_ids, required) do
     %{"id" => id, "flag_ids" => flag_ids, "required" => required}
   end
 
