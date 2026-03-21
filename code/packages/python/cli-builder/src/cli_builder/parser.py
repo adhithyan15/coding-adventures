@@ -247,7 +247,7 @@ class Parser:
         # =====================================================================
         # Phase 1: Routing
         # =====================================================================
-        command_path, leaf_node_id, remaining_tokens, routing_errors = (
+        command_path, leaf_node_id, remaining_tokens, routing_errors, consumed_indices = (
             self._phase1_routing(program, tokens)
         )
 
@@ -269,7 +269,7 @@ class Parser:
             raise ParseErrors(routing_errors)
 
         parsed_flags, positional_tokens, scan_errors = self._phase2_scanning(
-            tokens, command_path, leaf_node_id, active_flags
+            tokens, command_path, leaf_node_id, active_flags, consumed_indices
         )
 
         # Check help/version again (they may have been detected in scan)
@@ -320,7 +320,7 @@ class Parser:
         self,
         program: str,
         tokens: list[str],
-    ) -> tuple[list[str], str, list[str], list[ParseError]]:
+    ) -> tuple[list[str], str, list[str], list[ParseError], set[int]]:
         """Route tokens through the command tree.
 
         Walks tokens left-to-right. Non-flag tokens that match outgoing
@@ -331,15 +331,19 @@ class Parser:
             tokens: All tokens after argv[0].
 
         Returns:
-            A 4-tuple:
-            - command_path: List of command names from root to leaf.
+            A 5-tuple:
+            - command_path: List of canonical command names from root to leaf.
             - leaf_node_id: ID of the resolved leaf node.
             - remaining_tokens: Tokens NOT consumed by routing.
             - routing_errors: Any errors encountered during routing.
+            - consumed_indices: Set of token indices (into tokens[]) consumed
+              as subcommand names. Uses indices so that alias tokens (e.g. "a"
+              for "add") are correctly identified regardless of canonical name.
         """
         command_path = [program]
         current_node_id = "__root__"
         errors: list[ParseError] = []
+        consumed_indices: set[int] = set()  # indices into tokens[] consumed as subcommands
 
         # In subcommand_first mode, we require the first non-flag token to
         # be a subcommand. We track whether we've seen a non-subcommand
@@ -371,6 +375,7 @@ class Parser:
             if canonical is not None:
                 command_path.append(canonical)
                 current_node_id = canonical
+                consumed_indices.add(i)  # record actual token index, not canonical name
                 # Update flag lookup for new scope
                 scope_flags = self._collect_active_flags(command_path, current_node_id)
                 flag_lookup = self._build_flag_lookup(scope_flags)
@@ -391,7 +396,7 @@ class Parser:
                     )
                 break
 
-        return command_path, current_node_id, tokens, errors
+        return command_path, current_node_id, tokens, errors, consumed_indices
 
     # =========================================================================
     # Phase 2: Scanning
@@ -403,6 +408,7 @@ class Parser:
         command_path: list[str],
         leaf_node_id: str,
         active_flags: list[dict[str, Any]],
+        consumed_indices: set[int] | None = None,
     ) -> tuple[dict[str, Any] | HelpResult | VersionResult, list[str], list[ParseError]]:
         """Scan tokens and produce parsed flags and positional tokens.
 
@@ -419,6 +425,9 @@ class Parser:
             command_path: The resolved command path (including program name).
             leaf_node_id: The resolved leaf command node ID.
             active_flags: All flags in scope.
+            consumed_indices: Set of token indices consumed as subcommand names
+                during Phase 1. Used to correctly skip alias tokens. If None,
+                falls back to name-based matching (legacy behaviour).
 
         Returns:
             A 3-tuple of (parsed_flags_or_special_result, positional_tokens, errors).
@@ -479,8 +488,10 @@ class Parser:
         flag_counts: dict[str, int] = {}  # for duplicate detection
 
         # Which tokens were consumed as subcommand names (to skip)?
-        # We build a set of indices in the routing command path (after program).
-        subcommand_names_consumed = set(command_path[1:])  # canonical names
+        # Prefer the index-based set from Phase 1, which correctly handles
+        # alias tokens (e.g. "a" as alias for "add"). Fall back to name
+        # matching for callers that don't pass consumed_indices.
+        _consumed_indices: set[int] = consumed_indices if consumed_indices is not None else set()
 
         parsing_mode = self._spec.get("parsing_mode", "gnu")
 
@@ -488,12 +499,11 @@ class Parser:
         # may be a bare flag stack.
         traditional_first_done = parsing_mode != "traditional"
 
-        for token in tokens:
+        for tok_idx, token in enumerate(tokens):
             # Skip tokens that were consumed as subcommand names during routing.
-            # We match by canonical name and discard each name once so repeated
-            # subcommand names (if any) are handled correctly.
-            if token in subcommand_names_consumed and not token.startswith("-"):
-                subcommand_names_consumed.discard(token)
+            # Use index-based matching so alias tokens (e.g. "a" for "add") are
+            # correctly identified rather than matching by canonical name.
+            if tok_idx in _consumed_indices:
                 continue
 
             mode = modal.current_mode
@@ -533,8 +543,28 @@ class Parser:
                 # Try to classify as stacked flags without the leading dash.
                 stacked_result = self._try_traditional(token, active_flags, command_path)
                 if stacked_result is not None:
-                    for char, fdef in stacked_result:
-                        self._set_flag(parsed_flags, flag_counts, fdef, True, errors, command_path)
+                    for idx, (char, fdef) in enumerate(stacked_result):
+                        is_last = idx == len(stacked_result) - 1
+                        if fdef.get("type") == "boolean":
+                            self._set_flag(parsed_flags, flag_counts, fdef, True, errors, command_path)
+                        elif is_last:
+                            # Non-boolean last flag: consume next token as its value.
+                            pending_flag = fdef
+                            modal.switch_mode("to_flag_value")
+                        else:
+                            # Non-boolean flag in the middle of the stack.
+                            # This is technically invalid (non-boolean flags must
+                            # be last) but we record an error and continue.
+                            errors.append(
+                                ParseError(
+                                    error_type="missing_flag_value",
+                                    message=(
+                                        f"Flag -{char} requires a value but is "
+                                        f"not at the end of the traditional flag stack '{token}'"
+                                    ),
+                                    context=command_path,
+                                )
+                            )
                     continue
                 # Falls through to normal positional handling below.
 
@@ -975,9 +1005,16 @@ class Parser:
         """
         builtin_flags = self._spec.get("builtin_flags", {})
 
-        # Help trigger: --help or -h
+        # Help trigger: --help or (builtin) -h
+        #
+        # We check flag_id == "__help__" for the builtin sentinel, and also
+        # long_name == "help" to handle specs that define --help explicitly.
+        # We do NOT check short_name == "h" here because a user-defined flag
+        # with short="h" (e.g. --human-readable) would incorrectly trigger
+        # help. The "-h" builtin shortcut is handled by _check_quick_help_version
+        # before Phase 2 runs, using the user_defined_short_h guard.
         if builtin_flags.get("help", True):
-            if long_name == "help" or short_name == "h" or flag_id == "__help__":
+            if long_name == "help" or flag_id == "__help__":
                 gen = HelpGenerator(self._spec, command_path)
                 return HelpResult(text=gen.generate(), command_path=list(command_path))
 
@@ -1012,8 +1049,20 @@ class Parser:
         help_enabled = builtin_flags.get("help", True)
         version_enabled = builtin_flags.get("version", True) and self._spec.get("version")
 
+        # Check whether the user has defined a flag with short="h". If so,
+        # "-h" is NOT the builtin help trigger — it is the user's own flag.
+        # We detect this by checking whether any active flag has short="h"
+        # and an id that is not the builtin sentinel "__help__".
+        user_defined_short_h = any(
+            f.get("short") == "h" and f.get("id") != "__help__"
+            for f in active_flags
+        )
+
         for token in tokens:
-            if help_enabled and token in ("--help", "-h"):
+            if help_enabled and token == "--help":
+                gen = HelpGenerator(self._spec, command_path)
+                return HelpResult(text=gen.generate(), command_path=list(command_path))
+            if help_enabled and token == "-h" and not user_defined_short_h:
                 gen = HelpGenerator(self._spec, command_path)
                 return HelpResult(text=gen.generate(), command_path=list(command_path))
             if version_enabled and token == "--version":
