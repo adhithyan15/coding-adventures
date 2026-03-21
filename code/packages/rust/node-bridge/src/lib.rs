@@ -1,3 +1,5 @@
+#![allow(unused_variables)] // C API callbacks have fixed signatures
+
 //! # node-bridge — Thin safe wrapper over Node.js N-API
 //!
 //! This crate replaces napi-rs with ~350 lines of explicit, debuggable code.
@@ -29,7 +31,7 @@
 //! }
 //! ```
 
-use std::ffi::{c_char, c_void, CStr, CString};
+use std::ffi::{c_char, c_void, CString};
 use std::ptr;
 
 pub use napi_sys::{napi_callback_info, napi_env, napi_status, napi_value};
@@ -40,7 +42,7 @@ pub use napi_sys::{napi_callback_info, napi_env, napi_status, napi_value};
 
 /// Check if an N-API call succeeded. Panics with message if not.
 fn check_status(status: napi_status, msg: &str) {
-    if status != napi_sys::napi_status::napi_ok {
+    if status != napi_sys::Status::napi_ok {
         panic!("N-API error (status {:?}): {}", status, msg);
     }
 }
@@ -73,7 +75,7 @@ pub fn str_from_js(env: napi_env, val: napi_value) -> Option<String> {
     let status = unsafe {
         napi_sys::napi_get_value_string_utf8(env, val, ptr::null_mut(), 0, &mut len)
     };
-    if status != napi_sys::napi_status::napi_ok {
+    if status != napi_sys::Status::napi_ok {
         return None;
     }
 
@@ -89,7 +91,7 @@ pub fn str_from_js(env: napi_env, val: napi_value) -> Option<String> {
             &mut actual_len,
         )
     };
-    if status != napi_sys::napi_status::napi_ok {
+    if status != napi_sys::Status::napi_ok {
         return None;
     }
 
@@ -324,11 +326,11 @@ pub fn method_property(
     napi_sys::napi_property_descriptor {
         utf8name: c_name.into_raw(),
         name: ptr::null_mut(),
-        method: Some(method),
+        method,
         getter: None,
         setter: None,
         value: ptr::null_mut(),
-        attributes: napi_sys::napi_property_attributes::napi_default_method,
+        attributes: napi_sys::PropertyAttributes::default,
         data: ptr::null_mut(),
     }
 }
@@ -346,8 +348,8 @@ pub fn define_class(
         napi_sys::napi_define_class(
             env,
             c_name.as_ptr(),
-            napi_sys::NAPI_AUTO_LENGTH,
-            Some(constructor),
+            usize::MAX,
+            constructor,
             ptr::null_mut(),
             properties.len(),
             properties.as_ptr(),
