@@ -1,0 +1,8 @@
+[package]
+name = "bootloader"
+version = "0.1.0"
+edition = "2021"
+description = "S02 Bootloader -- generates RISC-V machine code to load OS kernel from disk into RAM"
+
+[dependencies]
+riscv-simulator = { path = "../riscv-simulator" }

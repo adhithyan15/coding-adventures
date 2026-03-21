@@ -38,4 +38,7 @@ members = [
     "bytecode-compiler",
     "brainfuck",
     "progress-bar",
+    "bootloader",
+    "os-kernel",
+    "system-board",
 ]
