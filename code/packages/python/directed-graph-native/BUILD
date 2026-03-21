@@ -1,2 +1,4 @@
+uv venv --quiet --clear
+uv pip install maturin pytest --quiet
 maturin develop
-python -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
