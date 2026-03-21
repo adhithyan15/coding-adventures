@@ -50,8 +50,6 @@ defmodule CodingAdventures.CliBuilder.Parser do
     HelpGenerator
   }
 
-  alias CodingAdventures.DirectedGraph.Graph
-
   # ---------------------------------------------------------------------------
   # Public API
   # ---------------------------------------------------------------------------
@@ -179,9 +177,14 @@ defmodule CodingAdventures.CliBuilder.Parser do
         # Enum value validation
         enum_errors = validate_enum_values(flags_with_defaults, active_flags, command_path)
 
-        # Flag constraint validation
+        # Flag constraint validation.
+        # IMPORTANT: pass the original parsed_flags (before defaults are filled
+        # in) so that conflict/requires checks only fire for flags the user
+        # actually specified.  If we passed flags_with_defaults, every boolean
+        # flag that defaulted to false would appear "present", causing false
+        # conflicts_with violations (e.g. -e and -E both appearing as false).
         constraint_errors =
-          FlagValidator.validate(flags_with_defaults, active_flags, excl_groups, command_path)
+          FlagValidator.validate(parsed_flags, active_flags, excl_groups, command_path)
 
         all_errors =
           routing_errors ++
@@ -226,42 +229,92 @@ defmodule CodingAdventures.CliBuilder.Parser do
 
   # Recursive router: at each step look at the current token.
   # If it matches a subcommand of the current node, follow it.
-  # If it is a flag, skip it (and its value if needed).
+  # If it is a flag, pass it through to Phase 2 (do NOT drop it).
   # Otherwise stop.
+  #
+  # IMPORTANT: Flag tokens (and their values) must NOT be consumed here.
+  # They are only passed through so that Phase 2 can parse them.  The old
+  # "skip_flag_during_routing" approach silently dropped flag tokens,
+  # which caused --version, -m "msg", etc. to disappear before Phase 2.
+  #
+  # The router collects "passed-through" flag tokens in `deferred` and
+  # prepends them back onto `remaining` before returning.
   defp route([], _current_spec_node, command_path), do: {command_path, [], []}
 
   defp route(argv, current_spec_node, command_path) do
+    route_with_deferred(argv, current_spec_node, command_path, [])
+  end
+
+  # Inner loop that tracks deferred (flag) tokens seen so far.
+  defp route_with_deferred([], _current_spec_node, command_path, deferred) do
+    {command_path, Enum.reverse(deferred), []}
+  end
+
+  defp route_with_deferred(argv, current_spec_node, command_path, deferred) do
     [token | rest] = argv
 
     cond do
       token == "--" ->
-        # End-of-flags marker: stop routing, keep "--" in remaining.
-        {command_path, argv, []}
+        # End-of-flags marker: stop routing; prepend all deferred flags then
+        # the "--" and everything after it so Phase 2 sees the full stream.
+        {command_path, Enum.reverse(deferred) ++ argv, []}
 
-      String.starts_with?(token, "--") ->
-        # Long flag: skip it and possibly its value.
-        # Peek to determine if the flag is value-taking.
-        rest = skip_flag_during_routing(token, rest, current_spec_node)
-        route(rest, current_spec_node, command_path)
+      String.starts_with?(token, "--") or
+          (String.starts_with?(token, "-") and token != "-") ->
+        # Flag token: defer it (and its inline value if "=" form) so Phase 2
+        # can parse it.  We must peek at the NEXT token only to decide if it
+        # is a value that should also be deferred, so we do not mistake a
+        # flag value like "commit" for a subcommand name.
+        {deferred_tokens, remaining_after_flag} =
+          collect_flag_and_value(token, rest, current_spec_node)
 
-      String.starts_with?(token, "-") and token != "-" ->
-        # Short/SDL flag: skip it.
-        rest = skip_flag_during_routing(token, rest, current_spec_node)
-        route(rest, current_spec_node, command_path)
+        route_with_deferred(
+          remaining_after_flag,
+          current_spec_node,
+          command_path,
+          Enum.reverse(deferred_tokens) ++ deferred
+        )
 
       true ->
-        # Non-flag token: check if it's a subcommand name.
+        # Non-flag token: check if it is a subcommand name.
         commands = Map.get(current_spec_node, "commands", [])
 
         case find_command(token, commands) do
           nil ->
-            # Not a subcommand — stop routing.
-            {command_path, argv, []}
+            # Not a subcommand — stop routing; flush deferred back first.
+            {command_path, Enum.reverse(deferred) ++ argv, []}
 
           cmd ->
             canonical = cmd["name"]
-            route(rest, cmd, command_path ++ [canonical])
+            # Subcommand matched: do NOT defer this token (it is consumed by
+            # routing). Any previously deferred flag tokens are kept in
+            # `deferred` and will be flushed when routing ends.
+            route_with_deferred(rest, cmd, command_path ++ [canonical], deferred)
         end
+    end
+  end
+
+  # Collect a flag token and (if needed) its next-token value into a list.
+  # Returns {[token, ...], remaining_after}.
+  # For inline-value flags (--flag=val) no extra peeking is needed.
+  # For space-separated values (-m "msg") we defer both the flag and the value.
+  defp collect_flag_and_value(flag_token, rest, spec_node) do
+    if String.contains?(flag_token, "=") do
+      # Inline value: no extra token consumed.
+      {[flag_token], rest}
+    else
+      active = build_active_flags_for_node(spec_node)
+      flag_def = find_flag_def_for_token(flag_token, active)
+
+      if flag_def != nil and flag_def["type"] != "boolean" do
+        # Non-boolean flag: the next token is its value — defer both.
+        case rest do
+          [value | remainder] -> {[flag_token, value], remainder}
+          [] -> {[flag_token], []}
+        end
+      else
+        {[flag_token], rest}
+      end
     end
   end
 
@@ -270,30 +323,6 @@ defmodule CodingAdventures.CliBuilder.Parser do
     Enum.find(commands, fn cmd ->
       cmd["name"] == token or token in Map.get(cmd, "aliases", [])
     end)
-  end
-
-  # Skip a flag token (and possibly its next-token value) during routing.
-  # We need to not accidentally interpret the value of a non-boolean flag as
-  # a subcommand token.
-  defp skip_flag_during_routing(flag_token, rest, spec_node) do
-    # If the flag has "=" in it, the value is inline — rest is unchanged.
-    if String.contains?(flag_token, "=") do
-      rest
-    else
-      # Look up the flag to see if it takes a value.
-      active = build_active_flags_for_node(spec_node)
-      flag_def = find_flag_def_for_token(flag_token, active)
-
-      if flag_def != nil and flag_def["type"] != "boolean" do
-        # Drop the next token (it's the value).
-        case rest do
-          [_value | remainder] -> remainder
-          [] -> []
-        end
-      else
-        rest
-      end
-    end
   end
 
   # Build a quick active flags list for a single spec node (for routing).
@@ -706,13 +735,6 @@ defmodule CodingAdventures.CliBuilder.Parser do
     effective_global ++ root_flags ++ node_flags
   end
 
-  defp find_node_and_inherit(commands, name) do
-    case Enum.find(commands, fn c -> c["name"] == name or name in Map.get(c, "aliases", []) end) do
-      nil -> {nil, true}
-      cmd -> {cmd, Map.get(cmd, "inherit_global_flags", true)}
-    end
-  end
-
   # Resolve the spec node for a given command_path.
   defp resolve_command_node(spec, command_path) do
     subcommand_names = Enum.drop(command_path, 1)
@@ -804,6 +826,13 @@ defmodule CodingAdventures.CliBuilder.Parser do
   end
 
   # Fill in defaults for all flags not present in parsed_flags.
+  #
+  # NOTE: normalise_flags always writes `"default" => nil` into the flag map
+  # when no explicit default is given (rather than omitting the key entirely).
+  # That means `Map.get(flag, "default", false)` always returns the stored
+  # value — which is nil — and the fallback `false` is never triggered.
+  # We therefore compute the effective default explicitly: a boolean flag with
+  # no explicit default value should be false, not nil.
   defp apply_flag_defaults(parsed_flags, active_flags) do
     Enum.reduce(active_flags, parsed_flags, fn flag, acc ->
       id = flag["id"]
@@ -811,10 +840,15 @@ defmodule CodingAdventures.CliBuilder.Parser do
       if Map.has_key?(acc, id) do
         acc
       else
+        explicit_default = Map.get(flag, "default")
+
         default =
           case flag["type"] do
-            "boolean" -> Map.get(flag, "default", false)
-            _ -> Map.get(flag, "default")
+            "boolean" ->
+              if explicit_default == nil, do: false, else: explicit_default
+
+            _ ->
+              explicit_default
           end
 
         Map.put(acc, id, default)
@@ -940,34 +974,40 @@ defmodule CodingAdventures.CliBuilder.Parser do
 
   # Levenshtein edit distance between two strings.
   # Standard DP implementation, O(m*n).
+  #
+  # We keep the previous row as a plain list and compute each new row using
+  # `Enum.at/2` for random access, which avoids off-by-one errors in the
+  # diagonal/above lookups.
+  #
+  # Row layout:  prev_row[j]  = dp[i-1][j]
+  #              new_row[j]   = dp[i][j]
+  # where i indexes a_chars (1-based) and j indexes b_chars (1-based).
   defp levenshtein(a, b) do
     a_chars = String.graphemes(a)
     b_chars = String.graphemes(b)
-    m = length(a_chars)
     n = length(b_chars)
 
-    # Build the DP matrix as a list of rows.
+    # Base case: dp[0][j] = j (cost of inserting j chars of b)
     first_row = Enum.to_list(0..n)
 
-    Enum.with_index(a_chars)
+    Enum.with_index(a_chars, 1)
     |> Enum.reduce(first_row, fn {a_char, i}, prev_row ->
-      [_ | prev_tail] = prev_row
-      first_cell = i + 1
-
-      {new_row, _} =
-        Enum.with_index(b_chars)
-        |> Enum.reduce({[first_cell], prev_tail}, fn {b_char, j}, {row_acc, [prev_diag | prev_right]} ->
-          left = hd(row_acc)
-          above = Enum.at(prev_row, j + 1)
-          diag = prev_diag
-          cost = if a_char == b_char, do: 0, else: 1
-          val = Enum.min([left + 1, above + 1, diag + cost])
-          {[val | row_acc], prev_right}
+      # For each column j in 0..n build the new row.
+      # dp[i][0] = i (cost of deleting i chars of a)
+      new_row =
+        Enum.reduce(1..n, [i], fn j, acc ->
+          b_char = Enum.at(b_chars, j - 1)
+          above = Enum.at(prev_row, j)       # dp[i-1][j]   (delete from a)
+          left  = hd(acc)                    # dp[i][j-1]   (insert into a)
+          diag  = Enum.at(prev_row, j - 1)  # dp[i-1][j-1] (replace or match)
+          cost  = if a_char == b_char, do: 0, else: 1
+          val   = Enum.min([above + 1, left + 1, diag + cost])
+          [val | acc]
         end)
 
       Enum.reverse(new_row)
     end)
-    |> List.last()
+    |> Enum.at(n)
   end
 
   # ---------------------------------------------------------------------------

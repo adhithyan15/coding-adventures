@@ -679,8 +679,10 @@ export class Parser {
             }
 
             case "SHORT_FLAG": {
-              // Check for -h (help)
-              if (classified.char === "h" && spec.builtinFlags.help) {
+              // Check for -h (help): only trigger help if 'h' maps to the builtin help
+              // flag (id == "__builtin_help"), not a user-defined flag that happens to use -h.
+              const shortHFlag = classifier.lookupByShort(classified.char);
+              if (classified.char === "h" && spec.builtinFlags.help && (!shortHFlag || shortHFlag.id === "__builtin_help")) {
                 const helpGen = new HelpGenerator(spec, commandPath);
                 return {
                   parsedFlags,

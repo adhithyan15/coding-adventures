@@ -519,13 +519,19 @@ fn test_help_short_flag() {
     let spec = load_spec_from_str(LS_SPEC).unwrap();
     let parser = Parser::new(spec);
     let argv: Vec<String> = vec!["ls".into(), "-h".into()];
-    // Note: in ls spec, -h is human-readable; but our builtin -h takes precedence
-    // IF the spec enables builtin_flags.help. The builtin -h check happens in scan().
-    let out = parser.parse(&argv).unwrap();
-    // Either Help or parse result depending on whether builtin -h takes precedence.
-    // The spec says builtin flags can be disabled, but default is enabled.
-    // With default builtin_flags, -h triggers help.
-    assert!(matches!(out, ParserOutput::Help(_) | ParserOutput::Parse(_)));
+    // ls defines -h as human-readable (requires -l). User-defined flags take
+    // precedence over the builtin -h help shortcut. So -h is processed as
+    // human-readable, and since -l is absent, missing_dependency_flag is raised.
+    let result = parser.parse(&argv);
+    match result {
+        Err(cli_builder::errors::CliBuilderError::ParseErrors(ref errs)) => {
+            assert!(errs.errors.iter().any(|e| e.error_type == "missing_dependency_flag"));
+        }
+        Ok(ParserOutput::Help(_)) => {
+            // Also acceptable: builtin help triggered
+        }
+        other => panic!("unexpected result: {:?}", other),
+    }
 }
 
 #[test]

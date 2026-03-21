@@ -399,8 +399,27 @@ export class PositionalResolver {
     // Compute how many tokens are available after leading args
     const remainingTokens = tokens.slice(leadingDefs.length);
 
-    // Assign trailing arguments from the END (last-wins)
-    const trailingStart = remainingTokens.length - trailingDefs.length;
+    // Determine how many tokens to reserve for trailing args.
+    // We use "last-wins": trailing args take from the end of remainingTokens.
+    // However, if there aren't enough tokens for both the variadic minimum AND
+    // the trailing args, we prioritize giving the variadic its minimum (so the
+    // trailing args report missing_required_argument rather than stealing tokens
+    // that the variadic needs).
+    //
+    // Example: cp SOURCE... DEST with 1 token ["a.txt"]
+    //   trailingStart = 1 - 1 = 0, variadicMin = 1
+    //   1 < 1 + 1 → shortage: give SOURCE its 1 token, DEST is missing
+    //
+    // Example: cp SOURCE... DEST with 2 tokens ["a.txt", "/tmp/"]
+    //   trailingStart = 2 - 1 = 1, variadicMin = 1
+    //   2 >= 1 + 1 → no shortage: DEST gets last token, SOURCE gets first
+    const rawTrailingStart = remainingTokens.length - trailingDefs.length;
+    const hasShortage =
+      trailingDefs.length > 0 &&
+      remainingTokens.length < trailingDefs.length + variadicDef.variadicMin;
+
+    // When there's a shortage, give variadic its minimum and trailing gets nothing.
+    const trailingStart = hasShortage ? remainingTokens.length : rawTrailingStart;
 
     for (let i = 0; i < trailingDefs.length; i++) {
       const def = trailingDefs[i];
@@ -434,8 +453,10 @@ export class PositionalResolver {
       }
     }
 
-    // Variadic gets everything between leading and trailing
-    const variadicEndIdx = trailingStart > 0 ? trailingStart : remainingTokens.length;
+    // Variadic gets everything between leading and trailing.
+    // Use rawTrailingStart (not adjusted trailingStart) so variadic gets the
+    // correct slice when there's no shortage.
+    const variadicEndIdx = hasShortage ? remainingTokens.length : rawTrailingStart;
     const variadicTokens = remainingTokens.slice(
       0,
       Math.max(0, variadicEndIdx),

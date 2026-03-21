@@ -62,16 +62,45 @@ pub fn resolve_positionals(
     let mut assignments: HashMap<String, Value> = HashMap::new();
     let mut errors: Vec<ParseError> = Vec::new();
 
-    // Find the index of the first variadic argument, if any.
-    // The spec allows at most one variadic per scope (validated at load time).
-    let variadic_idx = arg_defs.iter().position(|a| a.variadic);
+    // Split arg_defs into "effective" (participate in token assignment) and
+    // "exempt" (optional due to required_unless_flag being satisfied).
+    //
+    // Exempt args do not consume positional tokens. They receive their default
+    // value (or null). This mirrors the TypeScript implementation's filtering.
+    let is_exempt = |def: &ArgumentDef| -> bool {
+        !def.required_unless_flag.is_empty()
+            && def.required_unless_flag.iter().any(|fid| {
+                if let Some(v) = parsed_flags.get(fid) {
+                    // Present and truthy (non-false, non-empty-array, non-null)
+                    match v {
+                        Value::Bool(false) | Value::Null => false,
+                        Value::Array(arr) => !arr.is_empty(),
+                        _ => true,
+                    }
+                } else {
+                    false
+                }
+            })
+    };
+
+    let effective_defs: Vec<&ArgumentDef> = arg_defs.iter().filter(|d| !is_exempt(d)).collect();
+    let exempt_defs: Vec<&ArgumentDef> = arg_defs.iter().filter(|d| is_exempt(d)).collect();
+
+    // Assign default (or null) for all exempt args upfront.
+    for def in &exempt_defs {
+        let default_val = def.default.clone().unwrap_or(Value::Null);
+        assignments.insert(def.id.clone(), default_val);
+    }
+
+    // Find the index of the first variadic argument in the effective defs.
+    let variadic_idx = effective_defs.iter().position(|a| a.variadic);
 
     match variadic_idx {
         None => {
             // Case A: no variadic — strict one-to-one assignment.
             resolve_no_variadic(
                 tokens,
-                arg_defs,
+                &effective_defs,
                 parsed_flags,
                 command_path,
                 &mut assignments,
@@ -80,9 +109,9 @@ pub fn resolve_positionals(
         }
         Some(vi) => {
             // Case B: one variadic argument at index `vi`.
-            resolve_with_variadic(
+            resolve_with_variadic_refs(
                 tokens,
-                arg_defs,
+                &effective_defs,
                 vi,
                 parsed_flags,
                 command_path,
@@ -97,10 +126,7 @@ pub fn resolve_positionals(
         if assignments.contains_key(&def.id) {
             continue;
         }
-        // Check required_unless_flag: if any of the listed flags is present,
-        // this argument is not required.
-        let exempt = def.required_unless_flag.iter().any(|fid| parsed_flags.contains_key(fid));
-        if !def.required && !exempt {
+        if !def.required {
             // Use the default value if provided, otherwise null.
             let default_val = def.default.clone().unwrap_or(Value::Null);
             // Variadic defaults wrap in an array if needed.
@@ -125,7 +151,7 @@ pub fn resolve_positionals(
 
 fn resolve_no_variadic(
     tokens: &[String],
-    arg_defs: &[ArgumentDef],
+    arg_defs: &[&ArgumentDef],
     parsed_flags: &HashMap<String, Value>,
     command_path: &[String],
     assignments: &mut HashMap<String, Value>,
@@ -140,8 +166,7 @@ fn resolve_no_variadic(
             }
         } else {
             // Token not present for this argument slot.
-            let exempt = def.required_unless_flag.iter().any(|fid| parsed_flags.contains_key(fid));
-            if def.required && !exempt {
+            if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
                     format!("Missing required argument: <{}>", def.name),
@@ -172,24 +197,28 @@ fn resolve_no_variadic(
 // Case B: one variadic argument
 // ---------------------------------------------------------------------------
 
-fn resolve_with_variadic(
+/// Version of `resolve_with_variadic` that accepts a slice of references.
+/// Used by the public `resolve_positionals` function after filtering exempt args.
+fn resolve_with_variadic_refs(
     tokens: &[String],
-    arg_defs: &[ArgumentDef],
+    arg_defs: &[&ArgumentDef],
     variadic_idx: usize,
     parsed_flags: &HashMap<String, Value>,
     command_path: &[String],
     assignments: &mut HashMap<String, Value>,
     errors: &mut Vec<ParseError>,
 ) {
-    let variadic_def = &arg_defs[variadic_idx];
+    let variadic_def = arg_defs[variadic_idx];
     let leading_defs = &arg_defs[..variadic_idx];
     let trailing_defs = &arg_defs[variadic_idx + 1..];
 
     let n = tokens.len();
+    let n_leading = leading_defs.len();
     let n_trailing = trailing_defs.len();
 
-    // We need at least `leading_defs.len() + variadic_min + trailing_defs.len()` tokens
-    // for the assignment to be valid, but we report each shortage individually.
+    // Check if there's a shortage: not enough tokens for variadic min + trailing.
+    let has_shortage = n_trailing > 0
+        && n < n_trailing + variadic_def.variadic_min;
 
     // Assign leading arguments (from the start of tokens).
     for (i, def) in leading_defs.iter().enumerate() {
@@ -199,8 +228,7 @@ fn resolve_with_variadic(
                 Err(e) => errors.push(e),
             }
         } else {
-            let exempt = def.required_unless_flag.iter().any(|fid| parsed_flags.contains_key(fid));
-            if def.required && !exempt {
+            if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
                     format!("Missing required argument: <{}>", def.name),
@@ -211,19 +239,24 @@ fn resolve_with_variadic(
     }
 
     // Assign trailing arguments (from the end of tokens).
-    // `trailing_start` is the index into `tokens` where trailing defs begin.
-    let trailing_start = if n >= n_trailing { n - n_trailing } else { 0 };
+    // When there's a shortage, push trailing start to end so trailing gets nothing.
+    let trailing_start = if has_shortage {
+        n
+    } else if n >= n_trailing {
+        n - n_trailing
+    } else {
+        0
+    };
 
     for (i, def) in trailing_defs.iter().enumerate() {
         let token_idx = trailing_start + i;
-        if token_idx < n && token_idx >= leading_defs.len() {
+        if token_idx < n && token_idx >= n_leading {
             match coerce_value(&tokens[token_idx], &def.arg_type, &def.enum_values) {
                 Ok(v) => { assignments.insert(def.id.clone(), v); }
                 Err(e) => errors.push(e),
             }
         } else {
-            let exempt = def.required_unless_flag.iter().any(|fid| parsed_flags.contains_key(fid));
-            if def.required && !exempt {
+            if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
                     format!("Missing required argument: <{}>", def.name),
@@ -234,9 +267,12 @@ fn resolve_with_variadic(
     }
 
     // The variadic gets everything in between leading and trailing.
-    let variadic_end = trailing_start.max(leading_defs.len());
-    let variadic_tokens = if leading_defs.len() <= variadic_end {
-        &tokens[leading_defs.len()..variadic_end]
+    let variadic_end = if has_shortage { n } else { trailing_start.max(n_leading) };
+    // Guard against n_leading or variadic_end exceeding token slice length.
+    let safe_start = n_leading.min(n);
+    let safe_end = variadic_end.min(n);
+    let variadic_tokens = if safe_start <= safe_end {
+        &tokens[safe_start..safe_end]
     } else {
         &tokens[0..0]
     };
@@ -279,7 +315,31 @@ fn resolve_with_variadic(
             Err(e) => errors.push(e),
         }
     }
-    assignments.insert(variadic_def.id.clone(), Value::Array(arr));
+
+    // When no tokens were consumed by the variadic and there's a default, use it.
+    if arr.is_empty() {
+        if let Some(ref default_val) = variadic_def.default {
+            assignments.insert(variadic_def.id.clone(), default_val.clone());
+        } else {
+            assignments.insert(variadic_def.id.clone(), Value::Array(arr));
+        }
+    } else {
+        assignments.insert(variadic_def.id.clone(), Value::Array(arr));
+    }
+}
+
+/// Wrapper that accepts `&[ArgumentDef]` (used by unit tests).
+fn resolve_with_variadic(
+    tokens: &[String],
+    arg_defs: &[ArgumentDef],
+    variadic_idx: usize,
+    parsed_flags: &HashMap<String, Value>,
+    command_path: &[String],
+    assignments: &mut HashMap<String, Value>,
+    errors: &mut Vec<ParseError>,
+) {
+    let refs: Vec<&ArgumentDef> = arg_defs.iter().collect();
+    resolve_with_variadic_refs(tokens, &refs, variadic_idx, parsed_flags, command_path, assignments, errors);
 }
 
 // ---------------------------------------------------------------------------

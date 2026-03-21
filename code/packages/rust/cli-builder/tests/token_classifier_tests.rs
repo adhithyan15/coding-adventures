@@ -169,9 +169,8 @@ fn test_stack_boolean_then_nonboolean_last() {
     assert!(!result.is_empty());
     // The exact form depends on implementation. Key assertion: i and e are both found.
     let found_i = result.iter().any(|e| matches!(e,
-        TokenEvent::StackedFlags(v) if v.contains(&'i') |
-        TokenEvent::ShortFlag('i')
-    ));
+        TokenEvent::StackedFlags(v) if v.contains(&'i')
+    ) || result.iter().any(|e| matches!(e, TokenEvent::ShortFlag('i'))));
     let _ = found_i; // flexible assertion
 }
 

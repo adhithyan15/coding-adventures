@@ -40,7 +40,7 @@ use crate::help_generator::{generate_command_help, generate_root_help};
 use crate::positional_resolver::{coerce_value, resolve_positionals};
 use crate::token_classifier::{FlagInfo, TokenClassifier, TokenEvent};
 use crate::types::{
-    ArgumentDef, BuiltinFlags, CliSpec, CommandDef, ExclusiveGroup, FlagDef,
+    ArgumentDef, CliSpec, CommandDef, ExclusiveGroup, FlagDef,
     HelpResult, ParseResult, ParserOutput, VersionResult,
 };
 
@@ -279,7 +279,7 @@ impl Parser {
         }
 
         RoutingResult {
-            command_path,
+            command_path: command_path.clone(),
             resolved_node: ResolvedNode::from_spec_path(&self.spec, &command_path[1..]),
             remaining_argv: argv.to_vec(),
         }
@@ -459,11 +459,13 @@ impl Parser {
                             }
 
                             TokenEvent::ShortFlag(ch) => {
-                                if ch == 'h' && self.spec.builtin_flags.help {
-                                    help_requested = true;
-                                    return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested });
-                                }
                                 if let Some(flag) = active_flags.iter().find(|f| f.short.as_deref() == Some(&ch.to_string())) {
+                                    // If this is the builtin help flag (not a user-defined flag
+                                    // that happens to use the same short char), trigger help.
+                                    if flag.id == "__builtin_help" {
+                                        help_requested = true;
+                                        return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested });
+                                    }
                                     if flag.flag_type == "boolean" {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
                                     } else {
@@ -588,12 +590,64 @@ impl Parser {
         arguments.extend(node.arguments.clone());
         groups.extend(node.exclusive_groups.clone());
 
+        // Inject builtin flags after user flags so that user-defined flags with
+        // the same short form take precedence (first-write-wins dedup below).
+        if self.spec.builtin_flags.help {
+            flags.push(FlagDef {
+                id: "__builtin_help".to_string(),
+                short: Some("h".to_string()),
+                long: Some("help".to_string()),
+                single_dash_long: None,
+                description: "Show this help message and exit.".to_string(),
+                flag_type: "boolean".to_string(),
+                required: false,
+                default: None,
+                value_name: None,
+                enum_values: Vec::new(),
+                conflicts_with: Vec::new(),
+                requires: Vec::new(),
+                required_unless: Vec::new(),
+                repeatable: false,
+            });
+        }
+        if self.spec.builtin_flags.version && self.spec.version.is_some() {
+            flags.push(FlagDef {
+                id: "__builtin_version".to_string(),
+                short: None,
+                long: Some("version".to_string()),
+                single_dash_long: None,
+                description: "Show version and exit.".to_string(),
+                flag_type: "boolean".to_string(),
+                required: false,
+                default: None,
+                value_name: None,
+                enum_values: Vec::new(),
+                conflicts_with: Vec::new(),
+                requires: Vec::new(),
+                required_unless: Vec::new(),
+                repeatable: false,
+            });
+        }
+
         // Deduplicate by id (global flags may conflict with leaf flags in ID space —
         // local flags shadow global flags with the same id).
         let mut seen: HashSet<String> = HashSet::new();
         let deduped: Vec<FlagDef> = flags
             .into_iter()
             .filter(|f| seen.insert(f.id.clone()))
+            .collect();
+
+        // Also deduplicate by short char (first-write-wins: user flags before builtins).
+        let mut seen_short: HashSet<String> = HashSet::new();
+        let deduped: Vec<FlagDef> = deduped
+            .into_iter()
+            .filter(|f| {
+                if let Some(ref s) = f.short {
+                    seen_short.insert(s.clone())
+                } else {
+                    true
+                }
+            })
             .collect();
 
         (deduped, arguments, groups)
@@ -622,7 +676,7 @@ impl Parser {
             if let Some(exp) = expected {
                 // Check if this token matches the expected command name or alias.
                 if let Some(cmd) = current_commands.iter().find(|c| c.name == *token || c.aliases.iter().any(|a| a == token)) {
-                    if cmd.name == *exp || cmd.aliases.iter().any(|a| a == *exp) {
+                    if cmd.name == *exp || cmd.aliases.iter().any(|a| *a == *exp) {
                         indices.insert(i);
                         current_commands = &cmd.commands;
                         expected = remaining_commands.next();
@@ -1140,15 +1194,13 @@ mod tests {
 
     #[test]
     fn test_grep_missing_pattern_no_e_flag() {
-        // No pattern and no -e flag → missing_required_argument
-        let errs = parse_err(GREP_SPEC, &["grep", "file.txt"]);
-        // "file.txt" becomes the pattern (first positional), so this actually
-        // works... Let's test with just "grep" to get a real missing error.
-        // Actually "grep file.txt" assigns "file.txt" as the pattern.
-        // Let's instead force a real error:
+        // "grep file.txt" assigns "file.txt" as the pattern — it succeeds.
+        let r = parse_ok(GREP_SPEC, &["grep", "file.txt"]);
+        assert_eq!(r.arguments["pattern"], serde_json::json!("file.txt"));
+
+        // "grep" with no args and no -e flag → missing_required_argument for PATTERN.
         let errs2 = parse_err(GREP_SPEC, &["grep"]);
         assert!(errs2.iter().any(|e| e.error_type == "missing_required_argument"));
-        let _ = errs;
     }
 
     // -----------------------------------------------------------------------

@@ -128,16 +128,25 @@ func NewTokenClassifier(activeFlags []map[string]any) *TokenClassifier {
 		singleDashLongs: make(map[string]map[string]any),
 	}
 
+	// First-write-wins: user-defined flags take precedence over any builtin
+	// flags that share the same name (e.g. a user's -h should not be treated
+	// as the builtin --help even when the builtin is also in activeFlags).
 	for _, f := range activeFlags {
 		if long := stringField(f, "long"); long != "" {
-			tc.longFlags[long] = f
+			if _, exists := tc.longFlags[long]; !exists {
+				tc.longFlags[long] = f
+			}
 		}
 		if short := stringField(f, "short"); short != "" {
-			tc.shortFlags[short] = f
+			if _, exists := tc.shortFlags[short]; !exists {
+				tc.shortFlags[short] = f
+			}
 		}
 		if sdl := stringField(f, "single_dash_long"); sdl != "" {
-			tc.singleDashLongs[sdl] = f
-			tc.sdlNames = append(tc.sdlNames, sdl)
+			if _, exists := tc.singleDashLongs[sdl]; !exists {
+				tc.singleDashLongs[sdl] = f
+				tc.sdlNames = append(tc.sdlNames, sdl)
+			}
 		}
 	}
 
@@ -212,10 +221,23 @@ func (tc *TokenClassifier) Classify(token string) TokenEvent {
 					// More characters follow — try stacking
 					return tc.classifyStacked(rest, raw)
 				}
-				// Non-boolean short flag
+				// Non-boolean short flag with additional characters following.
 				if len(rest) == 1 {
 					// "-x" alone — value is the next token
 					return TokenEvent{Kind: TokenShortFlag, Name: firstChar, Raw: raw}
+				}
+				// "-xSTUFF": check if all remaining chars are known flags.
+				// If yes, this is an invalid stacking attempt (non-boolean not last)
+				// and should error. If no, the remainder is the inline value.
+				allKnownFlags := true
+				for _, r := range rest[1:] {
+					if _, ok := tc.shortFlags[string(r)]; !ok {
+						allKnownFlags = false
+						break
+					}
+				}
+				if allKnownFlags {
+					return TokenEvent{Kind: TokenUnknownFlag, Name: firstChar, Raw: raw}
 				}
 				// "-xVALUE" — remainder is the inline value
 				return TokenEvent{Kind: TokenShortFlagWithValue, Name: firstChar, Value: rest[1:], Raw: raw}

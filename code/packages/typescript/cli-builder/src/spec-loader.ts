@@ -105,8 +105,12 @@ export class SpecLoader {
    * Load a spec from an already-parsed object (used in tests).
    *
    * Skips file I/O. Useful for embedding spec JSON directly in test code.
+   * Results are cached after the first call — subsequent calls return the same object.
    */
   loadFromObject(raw: Record<string, unknown>): CliSpec {
+    if (this._cached !== null) {
+      return this._cached;
+    }
     this._cached = this._parseSpec(raw);
     return this._cached;
   }

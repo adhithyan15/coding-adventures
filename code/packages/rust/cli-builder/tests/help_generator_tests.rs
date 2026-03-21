@@ -16,7 +16,8 @@ const ECHO_SPEC: &str = r#"{
     "version": "8.32",
     "flags": [
         {"id":"no-newline","short":"n","description":"Do not output trailing newline","type":"boolean"},
-        {"id":"enable-escapes","short":"e","description":"Enable interpretation of backslash escapes","type":"boolean","conflicts_with":["disable-escapes"]}
+        {"id":"enable-escapes","short":"e","description":"Enable interpretation of backslash escapes","type":"boolean","conflicts_with":["disable-escapes"]},
+        {"id":"disable-escapes","short":"E","description":"Disable interpretation of backslash escapes","type":"boolean","conflicts_with":["enable-escapes"]}
     ],
     "arguments": [
         {"id":"string","name":"STRING","description":"Text to print","type":"string","required":false,"variadic":true,"variadic_min":0}

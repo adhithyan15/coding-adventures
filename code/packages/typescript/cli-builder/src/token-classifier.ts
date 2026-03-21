@@ -164,13 +164,13 @@ export class TokenClassifier {
     this._sdlMap = new Map();
 
     for (const flag of activeFlags) {
-      if (flag.short !== undefined) {
+      if (flag.short !== undefined && !this._shortMap.has(flag.short)) {
         this._shortMap.set(flag.short, flag);
       }
-      if (flag.long !== undefined) {
+      if (flag.long !== undefined && !this._longMap.has(flag.long)) {
         this._longMap.set(flag.long, flag);
       }
-      if (flag.singleDashLong !== undefined) {
+      if (flag.singleDashLong !== undefined && !this._sdlMap.has(flag.singleDashLong)) {
         this._sdlMap.set(flag.singleDashLong, flag);
       }
     }

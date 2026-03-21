@@ -190,12 +190,18 @@ defmodule CodingAdventures.CliBuilder.PositionalResolver do
       end)
 
     # --- Trailing ---
+    # NOTE: trailing_start may be negative when n_tokens < n_trailing (i.e.
+    # not enough tokens were provided to fill even the trailing required args).
+    # In that case token_idx will be negative, which must be treated as
+    # "missing" — do NOT attempt Enum.at(tokens, negative_idx) because
+    # Elixir's Enum.at/2 with a negative index counts from the end, which
+    # would silently reuse an earlier token and hide the missing-arg error.
     {assignments, errors} =
       Enum.with_index(trailing_defs)
       |> Enum.reduce({assignments, errors}, fn {def, i}, {acc_map, acc_errors} ->
         token_idx = trailing_start + i
 
-        if token_idx >= n_tokens do
+        if token_idx < 0 or token_idx >= n_tokens do
           handle_missing_arg(def, parsed_flags, acc_map, acc_errors, command_path)
         else
           token = Enum.at(tokens, token_idx)

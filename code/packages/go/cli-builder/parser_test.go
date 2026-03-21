@@ -195,7 +195,7 @@ const tarSpec = `{
   "flags": [
     {"id": "extract", "short": "x", "description": "Extract", "type": "boolean"},
     {"id": "verbose", "short": "v", "description": "Verbose", "type": "boolean"},
-    {"id": "file", "short": "f", "description": "Archive file", "type": "path"}
+    {"id": "file", "short": "f", "description": "Use archive file (next positional)", "type": "boolean"}
   ],
   "arguments": [
     {
@@ -922,5 +922,162 @@ func TestParseErrors_Error_Multiple(t *testing.T) {
 	got := pe.Error()
 	if got == "" {
 		t.Error("expected non-empty error string")
+	}
+}
+
+// =========================================================================
+// Coverage-filling tests for uncovered paths
+// =========================================================================
+
+// javaSpec: single_dash_long flags (SDL)
+const javaSpec = `{
+  "cli_builder_spec_version": "1.0",
+  "name": "java",
+  "description": "Java runtime",
+  "flags": [
+    {"id": "classpath", "single_dash_long": "classpath", "description": "Class path", "type": "string"},
+    {"id": "cp", "single_dash_long": "cp", "description": "Class path alias", "type": "string"},
+    {"id": "verbose", "single_dash_long": "verbose", "description": "Verbose", "type": "boolean"}
+  ],
+  "arguments": [
+    {"id": "class", "name": "CLASS", "description": "Class to run", "type": "string", "required": false}
+  ]
+}`
+
+func TestParser_SDL_ClasspathFlag(t *testing.T) {
+	p, err := NewParserFromBytes([]byte(javaSpec), []string{"java", "-classpath", ".", "Main"})
+	if err != nil {
+		t.Fatalf("NewParserFromBytes failed: %v", err)
+	}
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("Parse failed: %v", err)
+	}
+	pr := result.(*ParseResult)
+	if pr.Flags["classpath"] != "." {
+		t.Errorf("expected classpath='.', got %v", pr.Flags["classpath"])
+	}
+	if pr.Arguments["class"] != "Main" {
+		t.Errorf("expected class='Main', got %v", pr.Arguments["class"])
+	}
+}
+
+func TestParser_SDL_VerboseBoolean(t *testing.T) {
+	p, err := NewParserFromBytes([]byte(javaSpec), []string{"java", "-verbose", "Main"})
+	if err != nil {
+		t.Fatalf("NewParserFromBytes failed: %v", err)
+	}
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("Parse failed: %v", err)
+	}
+	pr := result.(*ParseResult)
+	if pr.Flags["verbose"] != true {
+		t.Errorf("expected verbose=true, got %v", pr.Flags["verbose"])
+	}
+}
+
+// requiredUnlessSpec: required_unless_flag test
+const requiredUnlessSpec = `{
+  "cli_builder_spec_version": "1.0",
+  "name": "myapp",
+  "description": "test",
+  "flags": [
+    {"id": "all", "short": "a", "long": "all", "description": "All", "type": "boolean"}
+  ],
+  "arguments": [
+    {
+      "id": "file",
+      "name": "FILE",
+      "description": "Input file",
+      "type": "path",
+      "required": false,
+      "required_unless_flag": ["all"]
+    }
+  ]
+}`
+
+func TestParser_RequiredUnlessFlag_Exempt(t *testing.T) {
+	// -a present → FILE is not required
+	p, err := NewParserFromBytes([]byte(requiredUnlessSpec), []string{"myapp", "--all"})
+	if err != nil {
+		t.Fatalf("NewParserFromBytes failed: %v", err)
+	}
+	_, err = p.Parse()
+	if err != nil {
+		t.Errorf("expected no error when --all is present, got: %v", err)
+	}
+}
+
+func TestParser_SubcommandFirst_UnknownCommand(t *testing.T) {
+	spec := `{
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "test",
+    "parsing_mode": "subcommand_first",
+    "commands": [
+      {"id": "run", "name": "run", "description": "Run the app"}
+    ]
+  }`
+	p, err := NewParserFromBytes([]byte(spec), []string{"myapp", "invalid"})
+	if err != nil {
+		t.Fatalf("NewParserFromBytes failed: %v", err)
+	}
+	_, err = p.Parse()
+	if err == nil {
+		t.Fatal("expected error for unknown command in subcommand_first mode")
+	}
+}
+
+func TestParser_NewParser_InvalidFile(t *testing.T) {
+	_, err := NewParser("/nonexistent/path/to/spec.json", []string{"myapp"})
+	if err == nil {
+		t.Fatal("expected error for non-existent spec file")
+	}
+}
+
+func TestParser_Float_Flag(t *testing.T) {
+	spec := `{
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "test",
+    "flags": [
+      {"id": "ratio", "long": "ratio", "description": "ratio", "type": "float"}
+    ]
+  }`
+	p, err := NewParserFromBytes([]byte(spec), []string{"myapp", "--ratio", "3.14"})
+	if err != nil {
+		t.Fatalf("failed: %v", err)
+	}
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("Parse failed: %v", err)
+	}
+	pr := result.(*ParseResult)
+	ratio, ok := pr.Flags["ratio"].(float64)
+	if !ok {
+		t.Fatalf("expected float64, got %T: %v", pr.Flags["ratio"], pr.Flags["ratio"])
+	}
+	if ratio < 3.13 || ratio > 3.15 {
+		t.Errorf("expected ratio≈3.14, got %v", ratio)
+	}
+}
+
+func TestParser_BuiltinVersionDisabled(t *testing.T) {
+	spec := `{
+    "cli_builder_spec_version": "1.0",
+    "name": "myapp",
+    "description": "test",
+    "version": "1.0",
+    "builtin_flags": {"version": false}
+  }`
+	p, err := NewParserFromBytes([]byte(spec), []string{"myapp", "--version"})
+	if err != nil {
+		t.Fatalf("NewParserFromBytes failed: %v", err)
+	}
+	_, err = p.Parse()
+	// --version should be unknown since builtin is disabled
+	if err == nil {
+		t.Fatal("expected error when --version builtin is disabled")
 	}
 }

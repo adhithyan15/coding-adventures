@@ -253,21 +253,28 @@ func (p *Parser) phaseRouting(
 		"mutually_exclusive_groups": p.spec["mutually_exclusive_groups"],
 	}
 
+	// consumedIdx tracks token indices consumed as subcommand names.
+	// Flags and positional args are NOT consumed here — they are preserved for
+	// Phase 2. We only mark the indices of tokens that were matched as
+	// subcommand names so they can be excluded from the remaining slice.
+	consumedIdx := make(map[int]bool)
+
 	i := 0
 	for i < len(tokens) {
 		token := tokens[i]
 
-		// "--" ends routing immediately
+		// "--" ends routing immediately; leave it (and everything after) in remaining.
 		if token == "--" {
 			break
 		}
 
-		// Skip flags during routing (Phase 1 only routes, Phase 2 scans)
+		// Skip flags during routing (Phase 1 only routes, Phase 2 scans).
+		// Critically: we do NOT add these indices to consumedIdx — the flags
+		// must reach Phase 2 intact.
 		if strings.HasPrefix(token, "-") {
-			// Peek: does this flag take a value?
+			// Peek ahead for value-taking flags so we don't accidentally treat
+			// the value token as a subcommand on the next iteration.
 			if strings.HasPrefix(token, "--") && !strings.Contains(token, "=") {
-				// Could be a value-taking long flag. Conservatively skip 1 or 2 tokens.
-				// We skip the value if the next token does not start with "-".
 				rootFlags := p.buildActiveFlags(commandPath)
 				flagName := token[2:]
 				if isValueTakingLong(flagName, rootFlags) && i+1 < len(tokens) && !strings.HasPrefix(tokens[i+1], "-") {
@@ -275,7 +282,6 @@ func (p *Parser) phaseRouting(
 					continue
 				}
 			} else if len(token) == 2 && token[0] == '-' && token[1] != '-' {
-				// Short flag: -x
 				rootFlags := p.buildActiveFlags(commandPath)
 				char := string(token[1])
 				if isValueTakingShort(char, rootFlags) && i+1 < len(tokens) && !strings.HasPrefix(tokens[i+1], "-") {
@@ -287,25 +293,22 @@ func (p *Parser) phaseRouting(
 			continue
 		}
 
-		// In subcommand_first mode, the first non-flag token must be a subcommand
-		// (never treated as a positional). In all other modes, unrecognized tokens
-		// end routing.
-
+		// Non-flag token: check if it matches a known subcommand at this level.
 		currentCommands := sliceOfMaps(resolvedNode["commands"])
 		matched, matchedCmd := findCommand(token, currentCommands)
 		if matched {
+			consumedIdx[i] = true
 			commandPath = append(commandPath, stringField(matchedCmd, "name"))
 			resolvedNode = map[string]any{
-				"flags":                   matchedCmd["flags"],
-				"arguments":               matchedCmd["arguments"],
-				"commands":                matchedCmd["commands"],
+				"flags":                     matchedCmd["flags"],
+				"arguments":                 matchedCmd["arguments"],
+				"commands":                  matchedCmd["commands"],
 				"mutually_exclusive_groups": matchedCmd["mutually_exclusive_groups"],
-				"inherit_global_flags":    matchedCmd["inherit_global_flags"],
+				"inherit_global_flags":      matchedCmd["inherit_global_flags"],
 			}
 			i++
 		} else {
 			if parsingMode == "subcommand_first" && len(commandPath) == 1 {
-				// In subcommand_first mode, the first non-flag token must be a command
 				knownNames := commandNames(currentCommands)
 				suggestion := ""
 				if s, ok := fuzzyMatch(token, knownNames); ok {
@@ -321,7 +324,15 @@ func (p *Parser) phaseRouting(
 		}
 	}
 
-	remaining = tokens[i:]
+	// Build remaining: every token that was NOT consumed as a subcommand name.
+	// This preserves flags and positional args that appeared before the point
+	// where routing stopped (e.g. "ls -lah /tmp" — "-lah" is NOT consumed and
+	// must reach Phase 2).
+	for j, t := range tokens {
+		if !consumedIdx[j] {
+			remaining = append(remaining, t)
+		}
+	}
 	return commandPath, resolvedNode, remaining, errs
 }
 
@@ -486,16 +497,17 @@ func (p *Parser) phaseScanning(
 				msm.SwitchMode("to_end_of_flags")
 
 			case TokenLongFlag:
-				// Check for builtin help/version
-				if ev.Name == "help" {
+				// Look up the flag def first; check builtin id (not just name) so
+				// user-defined flags named "help"/"version" don't hijack the builtin.
+				flagDef := tc.LookupByLong(ev.Name)
+				if flagDef != nil && stringField(flagDef, "id") == "help" {
 					helpRequested = true
 					return
 				}
-				if ev.Name == "version" {
+				if flagDef != nil && stringField(flagDef, "id") == "version" {
 					versionRequested = true
 					return
 				}
-				flagDef := tc.LookupByLong(ev.Name)
 				if flagDef == nil {
 					suggestion := ""
 					if s, ok := fuzzyMatch("--"+ev.Name, tc.KnownLongNames()); ok {
@@ -520,11 +532,11 @@ func (p *Parser) phaseScanning(
 				}
 
 			case TokenLongFlagWithValue:
-				if ev.Name == "help" {
+				flagDef := tc.LookupByLong(ev.Name)
+				if flagDef != nil && stringField(flagDef, "id") == "help" {
 					helpRequested = true
 					return
 				}
-				flagDef := tc.LookupByLong(ev.Name)
 				if flagDef == nil {
 					suggestion := ""
 					if s, ok := fuzzyMatch("--"+ev.Name, tc.KnownLongNames()); ok {
@@ -578,12 +590,12 @@ func (p *Parser) phaseScanning(
 				}
 
 			case TokenShortFlag:
-				// Check for builtin -h
-				if ev.Name == "h" {
+				// Look up the flag def; check id so user -h flags are not mistaken for builtin.
+				flagDef := tc.LookupByShort(ev.Name)
+				if flagDef != nil && stringField(flagDef, "id") == "help" {
 					helpRequested = true
 					return
 				}
-				flagDef := tc.LookupByShort(ev.Name)
 				if flagDef == nil {
 					suggestion := ""
 					if s, ok := fuzzyMatch("-"+ev.Name, tc.KnownShortNames()); ok {

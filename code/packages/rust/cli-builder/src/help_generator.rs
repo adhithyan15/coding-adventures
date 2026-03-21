@@ -276,9 +276,8 @@ fn format_flag_signature(f: &FlagDef) -> String {
     let value_part = if f.flag_type == "boolean" {
         String::new()
     } else {
-        let vn = f.value_name
-            .as_deref()
-            .unwrap_or(&f.flag_type.to_uppercase());
+        let upper = f.flag_type.to_uppercase();
+        let vn = f.value_name.as_deref().unwrap_or(&upper);
         format!(" <{}>", vn)
     };
 
