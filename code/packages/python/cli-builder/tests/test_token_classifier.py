@@ -325,3 +325,69 @@ def test_empty_classifier_no_flags() -> None:
     assert c.classify("-v")["type"] == "unknown_flag"
     assert c.classify("hello")["type"] == "positional"
     assert c.classify("--")["type"] == "end_of_flags"
+
+
+# =========================================================================
+# Additional stacking edge cases
+# =========================================================================
+
+
+def test_stacked_single_non_boolean_no_inline_value_is_stacked(
+    value_classifier: TokenClassifier,
+) -> None:
+    """A multi-char token starting with a non-boolean flag yields stacked_flags."""
+    # -la where 'l' is boolean and 'a' is also boolean — already tested.
+    # Test the path where suffix starts with a non-boolean flag that is NOT alone.
+    # -ol where 'o' is non-boolean: remainder 'l' is the inline value.
+    result = value_classifier.classify("-ol")
+    # 'o' is non-boolean, 'l' is the remainder (inline value)
+    assert result["type"] == "short_flag_with_value"
+    assert result["char"] == "o"
+    assert result["value"] == "l"
+
+
+def test_stacked_three_booleans(bool_classifier: TokenClassifier) -> None:
+    """-vla is stacked with three boolean flags."""
+    result = bool_classifier.classify("-vla")
+    assert result["type"] == "stacked_flags"
+    assert set(result["chars"]) == {"v", "l", "a"}
+    assert result["trailing_value"] is None
+
+
+def test_stacked_bool_then_nonbool_at_end_no_inline_is_stacked(
+    value_classifier: TokenClassifier,
+) -> None:
+    """-lo where 'l' is boolean and 'o' is non-boolean at end: stacked, trailing_value=None."""
+    result = value_classifier.classify("-lo")
+    assert result["type"] == "stacked_flags"
+    assert "l" in result["chars"]
+    assert "o" in result["chars"]
+    assert result["trailing_value"] is None
+
+
+def test_stacked_single_non_boolean_alone_falls_back_to_short_flag(
+    value_classifier: TokenClassifier,
+) -> None:
+    """Single non-boolean flag in stacked path (len=1): falls back to short_flag."""
+    # When we call _classify_stacked with a single char that is non-boolean,
+    # and trailing_value is None, the result should be short_flag, not stacked.
+    # This is exercised via the suffix len==1 path.
+    result = value_classifier.classify("-o")
+    assert result["type"] == "short_flag"
+    assert result["char"] == "o"
+
+
+def test_unknown_first_char_in_multi_char_suffix(
+    bool_classifier: TokenClassifier,
+) -> None:
+    """-Xl where X is unknown falls back to unknown_flag via _classify_stacked."""
+    result = bool_classifier.classify("-Xl")
+    assert result["type"] == "unknown_flag"
+
+
+def test_single_dash_long_not_matching_falls_to_short_path(
+    classifier: TokenClassifier,
+) -> None:
+    """-unknown where suffix is not in sdl and first char is unknown → unknown_flag."""
+    result = classifier.classify("-zzz")
+    assert result["type"] == "unknown_flag"

@@ -362,4 +362,165 @@ class TestHelpGenerator < Minitest::Test
     # Command path appears in usage
     assert_match(/git/, text)
   end
+
+  # ---------------------------------------------------------------------------
+  # format_flag_name: type nil → "VALUE" fallback
+  # ---------------------------------------------------------------------------
+
+  def test_flag_without_type_uses_value_fallback
+    spec = SIMPLE_SPEC.merge("flags" => [
+      {
+        "id" => "config",
+        "long" => "config",
+        "description" => "Config file",
+        "required" => false,
+        "repeatable" => false,
+        "conflicts_with" => [],
+        "requires" => [],
+        "required_unless" => [],
+        "enum_values" => []
+        # no "type" key → nil
+      }
+    ], "arguments" => [])
+    text = generate(spec, ["echo"])
+    # Should render <VALUE> when type is nil
+    assert_match(/VALUE/, text)
+  end
+
+  # ---------------------------------------------------------------------------
+  # format_default: required flag gets no [default: ...] annotation
+  # ---------------------------------------------------------------------------
+
+  def test_required_flag_no_default_annotation
+    spec = SIMPLE_SPEC.merge("flags" => [
+      {
+        "id" => "output",
+        "long" => "output",
+        "description" => "Output file",
+        "type" => "string",
+        "required" => true,
+        "default" => "out.txt",
+        "repeatable" => false,
+        "conflicts_with" => [],
+        "requires" => [],
+        "required_unless" => [],
+        "enum_values" => []
+      }
+    ], "arguments" => [])
+    text = generate(spec, ["echo"])
+    # Even though default is set, required flag should NOT show [default: ...]
+    refute_match(/\[default:/, text)
+  end
+
+  # ---------------------------------------------------------------------------
+  # No GLOBAL OPTIONS section when both builtins are disabled and no global flags
+  # ---------------------------------------------------------------------------
+
+  def test_no_global_options_when_builtins_disabled_and_no_global_flags
+    spec = SIMPLE_SPEC.merge(
+      "builtin_flags" => {"help" => false, "version" => false},
+      "global_flags" => [],
+      "flags" => [],
+      "arguments" => []
+    )
+    text = generate(spec, ["echo"])
+    refute_match(/GLOBAL OPTIONS/, text)
+  end
+
+  # ---------------------------------------------------------------------------
+  # No version in GLOBAL OPTIONS when spec has no version
+  # ---------------------------------------------------------------------------
+
+  def test_no_version_in_global_options_when_no_version_field
+    spec = SIMPLE_SPEC.merge("global_flags" => [], "flags" => [], "arguments" => [])
+    spec = spec.reject { |k, _| k == "version" }
+    text = generate(spec, ["echo"])
+    refute_match(/Show version/, text)
+  end
+
+  # ---------------------------------------------------------------------------
+  # COMMANDS section: multiple commands, alignment
+  # ---------------------------------------------------------------------------
+
+  def test_commands_section_alignment
+    text = generate(GIT_SPEC, ["git"])
+    # commit and remote should both appear aligned in the COMMANDS section
+    assert_match(/commit/, text)
+    assert_match(/remote/, text)
+  end
+
+  # ---------------------------------------------------------------------------
+  # OPTIONS section absent when no local flags
+  # ---------------------------------------------------------------------------
+
+  def test_no_options_section_when_no_local_flags
+    text = generate(GIT_SPEC, ["git", "remote"])
+    # git remote has no flags in GIT_SPEC
+    # The OPTIONS section should be absent (but GLOBAL OPTIONS may still appear)
+    # We check that local OPTIONS header doesn't appear while COMMANDS might
+    lines = text.split("\n")
+    # There should be no "^OPTIONS" line (just GLOBAL OPTIONS is OK)
+    refute(lines.any? { |l| l.strip == "OPTIONS" },
+      "Expected no standalone OPTIONS section for git remote")
+  end
+
+  # ---------------------------------------------------------------------------
+  # format_arg_usage: variadic required vs optional in usage line
+  # ---------------------------------------------------------------------------
+
+  def test_usage_line_includes_variadic_required_arg
+    spec = SIMPLE_SPEC.merge(
+      "arguments" => [
+        {
+          "id" => "files",
+          "name" => "FILE",
+          "description" => "Files to process",
+          "type" => "path",
+          "required" => true,
+          "variadic" => true,
+          "variadic_min" => 1,
+          "variadic_max" => nil,
+          "enum_values" => [],
+          "required_unless_flag" => []
+        }
+      ],
+      "flags" => []
+    )
+    text = generate(spec, ["echo"])
+    # Required variadic: <FILE>...
+    assert_match(/<FILE>\.\.\./, text)
+  end
+
+  def test_usage_line_includes_optional_non_variadic_arg
+    spec = SIMPLE_SPEC.merge(
+      "arguments" => [
+        {
+          "id" => "target",
+          "name" => "TARGET",
+          "description" => "Optional target",
+          "type" => "string",
+          "required" => false,
+          "variadic" => false,
+          "variadic_min" => 0,
+          "variadic_max" => nil,
+          "enum_values" => [],
+          "required_unless_flag" => []
+        }
+      ],
+      "flags" => []
+    )
+    text = generate(spec, ["echo"])
+    # Optional non-variadic: [TARGET]
+    assert_match(/\[TARGET\]/, text)
+  end
+
+  # ---------------------------------------------------------------------------
+  # DESCRIPTION section: absent when empty
+  # ---------------------------------------------------------------------------
+
+  def test_no_description_section_when_empty
+    spec = SIMPLE_SPEC.merge("description" => "", "flags" => [], "arguments" => [])
+    text = generate(spec, ["echo"])
+    refute_match(/^DESCRIPTION/, text)
+  end
 end

@@ -207,4 +207,95 @@ defmodule CodingAdventures.CliBuilder.TokenClassifierTest do
       assert TokenClassifier.classify("hello", []) == {:positional, "hello"}
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # Additional edge cases for stacked flags
+  # ---------------------------------------------------------------------------
+
+  describe "stacked flags edge cases" do
+    test "non-boolean flag as last in stack is accepted (stacked_flags)" do
+      # -vf: v=boolean, f=string (last) → stacked
+      result = TokenClassifier.classify("-vf", flags())
+      assert result == {:stacked_flags, ["v", "f"]}
+    end
+
+    test "non-boolean flag as non-last in stack → unknown_flag" do
+      # -von: v=boolean, o=string (not last), n=integer → unknown because o in middle
+      result = TokenClassifier.classify("-von", flags())
+      assert match?({:unknown_flag, _}, result)
+    end
+
+    test "single unknown char stacked produces unknown_flag" do
+      result = TokenClassifier.classify("-z", flags())
+      assert result == {:unknown_flag, "-z"}
+    end
+
+    test "stack starting with unknown char is unknown_flag" do
+      # 'z' is not known → immediate unknown
+      result = TokenClassifier.classify("-zv", flags())
+      assert result == {:unknown_flag, "-zv"}
+    end
+
+    test "stack with unknown char in the middle is unknown_flag" do
+      # v=boolean, then z=unknown → unknown
+      result = TokenClassifier.classify("-vzl", flags())
+      assert match?({:unknown_flag, _}, result)
+    end
+
+    test "four boolean flags stacked" do
+      result = TokenClassifier.classify("-vlah", flags())
+      assert result == {:stacked_flags, ["v", "l", "a", "h"]}
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # SDL priority over short flags
+  # ---------------------------------------------------------------------------
+
+  describe "SDL takes priority over short-flag rule" do
+    test "SDL match returns single_dash_long even if first char is also a short flag" do
+      # Build flags where 'v' is a short flag but 'verbose' is also an SDL
+      sdl_and_short_flags = [
+        %{"id" => "verbose-short", "short" => "v", "long" => nil, "single_dash_long" => nil, "type" => "boolean"},
+        %{"id" => "verbose-sdl", "short" => nil, "long" => nil, "single_dash_long" => "verbose", "type" => "boolean"}
+      ]
+
+      # "-verbose" should match SDL first (Rule 1) over short (Rule 2)
+      result = TokenClassifier.classify("-verbose", sdl_and_short_flags)
+      assert result == {:single_dash_long, "verbose"}
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Long flag edge cases
+  # ---------------------------------------------------------------------------
+
+  describe "long flag edge cases" do
+    test "long flag with empty value (--flag=)" do
+      result = TokenClassifier.classify("--output=", flags())
+      assert result == {:long_flag_with_value, "output", ""}
+    end
+
+    test "long flag with multiple = signs only splits on first" do
+      # "--key=a=b=c" → name="key", value="a=b=c"
+      result = TokenClassifier.classify("--key=a=b=c", flags())
+      assert result == {:long_flag_with_value, "key", "a=b=c"}
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Short flag with value edge cases
+  # ---------------------------------------------------------------------------
+
+  describe "short flag with value edge cases" do
+    test "inline value after non-boolean flag is captured" do
+      result = TokenClassifier.classify("-o/some/path", flags())
+      assert result == {:short_flag_with_value, "o", "/some/path"}
+    end
+
+    test "inline value with spaces (no spaces in token) is the full remainder" do
+      result = TokenClassifier.classify("-ofilename with spaces.txt", flags())
+      assert result == {:short_flag_with_value, "o", "filename with spaces.txt"}
+    end
+  end
 end

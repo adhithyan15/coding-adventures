@@ -533,4 +533,249 @@ mod tests {
         assert_eq!(spec.name, "ls");
         assert_eq!(spec.flags.len(), 4);
     }
+
+    // -----------------------------------------------------------------------
+    // required_unless references unknown flag id
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_required_unless_unknown_id_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "flags": [
+                {"id":"msg","short":"m","description":"msg","type":"string","required":true,"required_unless":["nonexistent"]}
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+        if let CliBuilderError::SpecError(msg) = err {
+            assert!(msg.contains("required_unless") || msg.contains("nonexistent"));
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // argument enum type with empty enum_values rejected
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_argument_enum_without_values_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "arguments": [
+                {"id":"mode","name":"MODE","description":"mode","type":"enum","enum_values":[]}
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+        if let CliBuilderError::SpecError(msg) = err {
+            assert!(msg.contains("enum_values"));
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // argument required_unless_flag references unknown flag id
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_argument_required_unless_flag_unknown_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "arguments": [
+                {"id":"pattern","name":"PATTERN","description":"pattern","type":"string","required_unless_flag":["nonexistent"]}
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+        if let CliBuilderError::SpecError(msg) = err {
+            assert!(msg.contains("required_unless_flag") || msg.contains("nonexistent"));
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // load_spec_from_file — missing file
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_load_spec_from_file_missing() {
+        let err = load_spec_from_file("/tmp/cli_builder_no_such_spec_xyz_12345.json").unwrap_err();
+        assert!(matches!(err, CliBuilderError::IoError(_)));
+    }
+
+    // -----------------------------------------------------------------------
+    // global_flags: duplicate ID rejected
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_global_flags_duplicate_id_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "global_flags": [
+                {"id":"verbose","short":"v","description":"verbose","type":"boolean"},
+                {"id":"verbose","short":"q","description":"quiet","type":"boolean"}
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+        if let CliBuilderError::SpecError(msg) = err {
+            assert!(msg.contains("duplicate"));
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // global_flags: flag with no form rejected
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_global_flags_no_form_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "global_flags": [
+                {"id":"bad","description":"no form","type":"boolean"}
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+    }
+
+    // -----------------------------------------------------------------------
+    // global_flags: enum without values rejected
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_global_flags_enum_without_values_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "global_flags": [
+                {"id":"fmt","long":"format","description":"format","type":"enum","enum_values":[]}
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+    }
+
+    // -----------------------------------------------------------------------
+    // Nested subcommand validation — errors propagate
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_nested_command_duplicate_flag_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "commands": [
+                {
+                    "id": "cmd-foo",
+                    "name": "foo",
+                    "description": "foo",
+                    "flags": [
+                        {"id":"verbose","short":"v","description":"verbose","type":"boolean"},
+                        {"id":"verbose","short":"q","description":"quiet","type":"boolean"}
+                    ]
+                }
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+    }
+
+    #[test]
+    fn test_nested_command_cycle_rejected() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "commands": [
+                {
+                    "id": "cmd-foo",
+                    "name": "foo",
+                    "description": "foo",
+                    "flags": [
+                        {"id":"a","short":"a","description":"a","type":"boolean","requires":["b"]},
+                        {"id":"b","short":"b","description":"b","type":"boolean","requires":["a"]}
+                    ]
+                }
+            ]
+        }"#;
+        let err = load_spec_from_str(json).unwrap_err();
+        assert!(matches!(err, CliBuilderError::SpecError(_)));
+        if let CliBuilderError::SpecError(msg) = err {
+            assert!(msg.contains("circular") || msg.contains("cycle"));
+        }
+    }
+
+    #[test]
+    fn test_deeply_nested_command_validated() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "commands": [
+                {
+                    "id": "cmd-remote",
+                    "name": "remote",
+                    "description": "remote",
+                    "commands": [
+                        {
+                            "id": "cmd-remote-add",
+                            "name": "add",
+                            "description": "add remote",
+                            "flags": [
+                                {"id":"verbose","short":"v","description":"verbose","type":"boolean"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }"#;
+        let spec = load_spec_from_str(json).unwrap();
+        assert_eq!(spec.commands[0].commands[0].name, "add");
+    }
+
+    // -----------------------------------------------------------------------
+    // Spec with display_name and version fields
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_spec_with_display_name_and_version() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "myapp",
+            "display_name": "My Application",
+            "description": "A cool app",
+            "version": "2.5.0"
+        }"#;
+        let spec = load_spec_from_str(json).unwrap();
+        assert_eq!(spec.display_name, Some("My Application".to_string()));
+        assert_eq!(spec.version, Some("2.5.0".to_string()));
+    }
+
+    // -----------------------------------------------------------------------
+    // Spec with builtin_flags explicitly disabled
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_builtin_flags_disabled() {
+        let json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "builtin_flags": {"help": false, "version": false}
+        }"#;
+        let spec = load_spec_from_str(json).unwrap();
+        assert!(!spec.builtin_flags.help);
+        assert!(!spec.builtin_flags.version);
+    }
 }

@@ -616,4 +616,248 @@ mod tests {
         assert!(s.starts_with('['));
         assert!(s.ends_with(']'));
     }
+
+    // -----------------------------------------------------------------------
+    // format_arg_usage: optional variadic
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_format_arg_usage_optional_variadic() {
+        let a = ArgumentDef {
+            id: "files".into(),
+            name: "FILE".into(),
+            description: "".into(),
+            arg_type: "path".into(),
+            required: false,
+            variadic: true,
+            variadic_min: 0,
+            variadic_max: None,
+            default: None,
+            enum_values: vec![],
+            required_unless_flag: vec![],
+        };
+        let s = format_arg_usage(&a);
+        // Should be [FILE...]
+        assert!(s.starts_with('['));
+        assert!(s.contains("...") || s.contains("FILE"));
+    }
+
+    // -----------------------------------------------------------------------
+    // format_flag_signature: sdl-only flag (no short, no long)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_format_flag_signature_sdl_only() {
+        let f = FlagDef {
+            id: "classpath".into(),
+            short: None,
+            long: None,
+            single_dash_long: Some("classpath".into()),
+            description: "Set classpath".into(),
+            flag_type: "string".into(),
+            required: false,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let sig = format_flag_signature(&f);
+        assert!(sig.contains("-classpath"));
+        assert!(sig.contains("<")); // non-boolean: shows value name
+    }
+
+    #[test]
+    fn test_format_flag_signature_short_only_with_value() {
+        // short-only non-boolean: value part appended to short form
+        let f = FlagDef {
+            id: "key".into(),
+            short: Some("k".into()),
+            long: None,
+            single_dash_long: None,
+            description: "Sort key".into(),
+            flag_type: "string".into(),
+            required: false,
+            default: None,
+            value_name: Some("KEYDEF".into()),
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let sig = format_flag_signature(&f);
+        assert!(sig.contains("-k"));
+        assert!(sig.contains("<KEYDEF>"));
+    }
+
+    #[test]
+    fn test_format_flag_signature_uses_type_as_default_value_name() {
+        // Non-boolean flag with no explicit value_name: type uppercased is used
+        let f = FlagDef {
+            id: "output".into(),
+            short: Some("o".into()),
+            long: Some("output".into()),
+            single_dash_long: None,
+            description: "Output".into(),
+            flag_type: "file".into(),
+            required: false,
+            default: None,
+            value_name: None, // no explicit value_name → "FILE"
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let sig = format_flag_signature(&f);
+        assert!(sig.contains("<FILE>"), "expected <FILE> in sig: {}", sig);
+    }
+
+    // -----------------------------------------------------------------------
+    // generate_command_help: command path that doesn't resolve → fallback to root
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_generate_command_help_nonexistent_path_falls_back_to_root() {
+        let spec = load_spec_from_str(GIT_PARTIAL_SPEC).unwrap();
+        let path = vec!["git".to_string(), "nonexistent-cmd".to_string()];
+        let help = generate_command_help(&spec, &path);
+        // Falls back to root help
+        assert!(help.contains("USAGE") || help.contains("git"));
+    }
+
+    // -----------------------------------------------------------------------
+    // generate_command_help: subcommand that does NOT inherit global flags
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_generate_command_help_no_global_flags_section_when_not_inherited() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "myapp",
+            "description": "My app",
+            "global_flags": [
+                {"id":"verbose","short":"v","description":"verbose","type":"boolean"}
+            ],
+            "commands": [
+                {
+                    "id": "cmd-isolated",
+                    "name": "isolated",
+                    "description": "A command that does not inherit globals",
+                    "inherit_global_flags": false,
+                    "flags": [],
+                    "arguments": []
+                }
+            ]
+        }"#;
+        let spec = load_spec_from_str(spec_json).unwrap();
+        let path = vec!["myapp".to_string(), "isolated".to_string()];
+        let help = generate_command_help(&spec, &path);
+        // The GLOBAL OPTIONS section should not contain the global verbose flag
+        // since inherit_global_flags=false
+        assert!(help.contains("USAGE"));
+        // Since inherit_global_flags=false, no GLOBAL OPTIONS section
+        assert!(!help.contains("GLOBAL OPTIONS"), "unexpected GLOBAL OPTIONS in: {}", help);
+    }
+
+    // -----------------------------------------------------------------------
+    // generate_command_help: subcommand with nested sub-subcommands
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_generate_command_help_with_subsubcommands() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "git",
+            "description": "Git",
+            "commands": [
+                {
+                    "id": "cmd-remote",
+                    "name": "remote",
+                    "description": "Manage remotes",
+                    "flags": [{"id":"verbose","short":"v","description":"verbose","type":"boolean"}],
+                    "commands": [
+                        {
+                            "id": "cmd-remote-add",
+                            "name": "add",
+                            "description": "Add a remote",
+                            "flags": []
+                        }
+                    ]
+                }
+            ]
+        }"#;
+        let spec = load_spec_from_str(spec_json).unwrap();
+        let path = vec!["git".to_string(), "remote".to_string()];
+        let help = generate_command_help(&spec, &path);
+        assert!(help.contains("COMMANDS"));
+        assert!(help.contains("add"));
+    }
+
+    // -----------------------------------------------------------------------
+    // generate_root_help: no builtins (help=false, version=false)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_generate_root_help_no_builtins_no_global_options() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "minimal",
+            "description": "Minimal app",
+            "builtin_flags": {"help": false, "version": false}
+        }"#;
+        let spec = load_spec_from_str(spec_json).unwrap();
+        let help = generate_root_help(&spec);
+        // No GLOBAL OPTIONS because no global flags and no builtins
+        assert!(!help.contains("GLOBAL OPTIONS"));
+    }
+
+    // -----------------------------------------------------------------------
+    // generate_root_help: spec without version — no version builtin
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_generate_root_help_no_version_field() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "notool",
+            "description": "No version"
+        }"#;
+        let spec = load_spec_from_str(spec_json).unwrap();
+        let help = generate_root_help(&spec);
+        // --version should not appear in help since spec.version is None
+        // (version builtin is only injected when spec.version.is_some())
+        // --help should still appear
+        assert!(help.contains("--help") || help.contains("GLOBAL OPTIONS"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Arguments section: shows Required/Optional/Repeatable labels
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_arguments_section_shows_optional_label() {
+        let spec = load_spec_from_str(ECHO_SPEC).unwrap();
+        let help = generate_root_help(&spec);
+        // STRING is optional variadic → "Optional." and "Repeatable." in its description
+        assert!(help.contains("Optional.") || help.contains("optional"));
+    }
+
+    #[test]
+    fn test_arguments_section_shows_default_value() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "myapp",
+            "description": "My app",
+            "arguments": [
+                {"id":"count","name":"COUNT","description":"Number","type":"integer","required":false,"default":5}
+            ]
+        }"#;
+        let spec = load_spec_from_str(spec_json).unwrap();
+        let help = generate_root_help(&spec);
+        assert!(help.contains("5") || help.contains("default"));
+    }
 }

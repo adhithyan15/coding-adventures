@@ -540,4 +540,221 @@ mod tests {
         let result = tc.classify_traditional("foo", &[]);
         assert_eq!(result, vec![TokenEvent::Positional("foo".into())]);
     }
+
+    // -----------------------------------------------------------------------
+    // FlagInfo::from_flag_def coverage
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_flag_info_from_flag_def_boolean() {
+        use crate::types::FlagDef;
+        let def = FlagDef {
+            id: "verbose".into(),
+            short: Some("v".into()),
+            long: Some("verbose".into()),
+            single_dash_long: None,
+            description: "Be verbose".into(),
+            flag_type: "boolean".into(),
+            required: false,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let info = FlagInfo::from_flag_def(&def);
+        assert_eq!(info.id, "verbose");
+        assert_eq!(info.short, Some('v'));
+        assert_eq!(info.long, Some("verbose".to_string()));
+        assert!(info.is_boolean);
+    }
+
+    #[test]
+    fn test_flag_info_from_flag_def_non_boolean() {
+        use crate::types::FlagDef;
+        let def = FlagDef {
+            id: "output".into(),
+            short: Some("o".into()),
+            long: Some("output".into()),
+            single_dash_long: None,
+            description: "Output file".into(),
+            flag_type: "string".into(),
+            required: false,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let info = FlagInfo::from_flag_def(&def);
+        assert!(!info.is_boolean);
+    }
+
+    #[test]
+    fn test_flag_info_from_flag_def_sdl() {
+        use crate::types::FlagDef;
+        let def = FlagDef {
+            id: "classpath".into(),
+            short: None,
+            long: None,
+            single_dash_long: Some("classpath".into()),
+            description: "classpath".into(),
+            flag_type: "string".into(),
+            required: false,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let info = FlagInfo::from_flag_def(&def);
+        assert_eq!(info.single_dash_long, Some("classpath".to_string()));
+        assert!(info.short.is_none());
+    }
+
+    #[test]
+    fn test_flag_info_from_flag_def_empty_short_string() {
+        // An empty "short" string should produce short = None (no first char).
+        use crate::types::FlagDef;
+        let def = FlagDef {
+            id: "test".into(),
+            short: Some("".into()), // empty string
+            long: Some("test".into()),
+            single_dash_long: None,
+            description: "test".into(),
+            flag_type: "boolean".into(),
+            required: false,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+        };
+        let info = FlagInfo::from_flag_def(&def);
+        assert!(info.short.is_none());
+    }
+
+    // -----------------------------------------------------------------------
+    // classify_as_stack: non-boolean flag in the MIDDLE of a stack
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_stack_nonboolean_in_middle_emits_stacked_then_with_value() {
+        // Flags: l=boolean, o=non-boolean, a=boolean
+        // "-lox" → l is boolean, o is non-boolean in middle → StackedFlags(['l']) + ShortFlagWithValue('o', "x")
+        let flags = vec![
+            FlagInfo { id: "long".into(), short: Some('l'), long: None, single_dash_long: None, is_boolean: true },
+            FlagInfo { id: "output".into(), short: Some('o'), long: None, single_dash_long: None, is_boolean: false },
+            FlagInfo { id: "all".into(), short: Some('a'), long: None, single_dash_long: None, is_boolean: true },
+        ];
+        let tc = TokenClassifier::new(flags);
+        let result = tc.classify("-lox");
+        // l is boolean, then o is non-boolean with remainder "x" → split
+        assert_eq!(result.len(), 2);
+        assert!(matches!(&result[0], TokenEvent::StackedFlags(v) if v == &['l']));
+        assert!(matches!(&result[1], TokenEvent::ShortFlagWithValue('o', ref v) if v == "x"));
+    }
+
+    #[test]
+    fn test_stack_nonboolean_first_in_stack_no_bool_stack() {
+        // "-ox" where o is non-boolean and first: results in ShortFlagWithValue directly
+        // (bool_stack is empty, so just ShortFlagWithValue)
+        let flags = vec![
+            FlagInfo { id: "output".into(), short: Some('o'), long: None, single_dash_long: None, is_boolean: false },
+            FlagInfo { id: "all".into(), short: Some('a'), long: None, single_dash_long: None, is_boolean: true },
+        ];
+        let tc = TokenClassifier::new(flags);
+        // -oax: o is non-boolean, remainder "ax" — ShortFlagWithValue('o', "ax")
+        let result = tc.classify("-oax");
+        assert_eq!(result, vec![TokenEvent::ShortFlagWithValue('o', "ax".into())]);
+    }
+
+    // -----------------------------------------------------------------------
+    // classify_traditional: non-boolean in middle (without leading dash)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_traditional_nonboolean_in_middle_produces_stacked_then_with_value() {
+        let flags = vec![
+            FlagInfo { id: "extract".into(), short: Some('x'), long: None, single_dash_long: None, is_boolean: true },
+            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false },
+            FlagInfo { id: "verbose".into(), short: Some('v'), long: None, single_dash_long: None, is_boolean: true },
+        ];
+        let tc = TokenClassifier::new(flags);
+        // "xfv": x=boolean, f=non-boolean in middle, remaining "v" is inline value
+        // Result: StackedFlags(['x']) + ShortFlagWithValue('f', "v")
+        let result = tc.classify_traditional("xfv", &[]);
+        assert_eq!(result.len(), 2);
+        assert!(matches!(&result[0], TokenEvent::StackedFlags(v) if v == &['x']));
+        assert!(matches!(&result[1], TokenEvent::ShortFlagWithValue('f', ref val) if val == "v"));
+    }
+
+    #[test]
+    fn test_traditional_nonboolean_first_no_bool_stack() {
+        // "farchive.tar" where f is non-boolean and first → ShortFlagWithValue directly
+        let flags = vec![
+            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false },
+        ];
+        let tc = TokenClassifier::new(flags);
+        let result = tc.classify_traditional("farchive.tar", &[]);
+        assert_eq!(result, vec![TokenEvent::ShortFlagWithValue('f', "archive.tar".into())]);
+    }
+
+    // -----------------------------------------------------------------------
+    // classify_traditional: empty token
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_traditional_empty_token_is_positional() {
+        let tc = TokenClassifier::new(vec![]);
+        let result = tc.classify_traditional("", &[]);
+        assert_eq!(result, vec![TokenEvent::Positional("".into())]);
+    }
+
+    // -----------------------------------------------------------------------
+    // find_by_long / find_by_sdl / find_by_short lookup helpers
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_find_by_long_miss() {
+        assert!(tc().find_by_long("nonexistent").is_none());
+    }
+
+    #[test]
+    fn test_find_by_long_hit() {
+        let result = tc().find_by_long("all");
+        assert!(result.is_some());
+        assert_eq!(result.unwrap().id, "all");
+    }
+
+    #[test]
+    fn test_find_by_sdl_miss() {
+        assert!(tc().find_by_sdl("nonexistent").is_none());
+    }
+
+    #[test]
+    fn test_find_by_sdl_hit() {
+        let result = tc().find_by_sdl("classpath");
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn test_find_by_short_miss() {
+        assert!(tc().find_by_short('Z').is_none());
+    }
+
+    #[test]
+    fn test_find_by_short_hit() {
+        let result = tc().find_by_short('l');
+        assert!(result.is_some());
+        assert_eq!(result.unwrap().id, "long-listing");
+    }
 }
