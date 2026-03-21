@@ -1,0 +1,7 @@
+[package]
+name = "jvm-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "JVM bytecode simulator — a typed stack-based virtual machine"
+
+[dependencies]
