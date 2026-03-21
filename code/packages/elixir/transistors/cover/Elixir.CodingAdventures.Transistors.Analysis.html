@@ -1,0 +1,1601 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cover/Elixir.CodingAdventures.Transistors.Analysis.html</title>
+<style>/*
+ %CopyrightBegin%
+
+ SPDX-License-Identifier: Apache-2.0
+
+ Copyright Milton Mazzarri <me@milmazz.uno>
+ Copyright Ericsson AB 2018-2025. All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ %CopyrightEnd%
+*/
+
+body {
+  font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #000;
+  border-top: 2px solid #ddd;
+  background-color: #fff;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  font-weight: 100;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+
+h1 code {
+  font-size: 0.96em;
+}
+
+code {
+  font: 12px monospace;
+}
+
+footer {
+  background: #eee;
+  width: 100%;
+  padding: 10px 0;
+  text-align: right;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex: 1;
+  order: 2;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  border: 1px solid #cbcbcb;
+  color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+table thead {
+  display: none;
+}
+table td.line,
+table td.line a,
+table td.hits {
+  width: 20px;
+  background: #eaeaea;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 0 10px;
+  color: #949494;
+}
+table td.hits {
+  width: 10px;
+  text-align: right;
+  padding: 2px 5px;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+}
+tr.miss td.line,
+tr.miss td.line a,
+tr.miss td.hits {
+  background-color: #ffdce0;
+  border-color: #fdaeb7;
+}
+tr.miss td {
+  background-color: #ffeef0;
+}
+tr.hit td.line,
+tr.hit td.line a,
+tr.hit td.hits {
+  background-color: #cdffd8;
+  border-color: #bef5cb;
+}
+tr.hit td {
+  background-color: #e6ffed;
+}
+td.source {
+  padding-left: 15px;
+  line-height: 15px;
+  white-space: pre;
+  font: 12px monospace;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(95%);
+    background-color: #000000;
+  }
+  a:link {
+    color: #2B507D;
+  }
+  a:visited, a:active {
+    color: #85ABD5;
+  }
+}
+</style>
+</head>
+<body>
+<h1><code>cover/Elixir.CodingAdventures.Transistors.Analysis.html</code></h1>
+<footer><p>File generated from <code>/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/condescending-shockley/code/packages/elixir/transistors/lib/coding_adventures/transistors/analysis.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-03-21 at 16:52:43</p></footer>
+<table>
+<tbody>
+<tr>
+<td class="line" id="L1"><a href="#L1">1</a></td>
+<td class="hits"></td>
+<td class="source"><code>defmodule CodingAdventures.Transistors.Analysis do</code></td>
+</tr>
+<tr>
+<td class="line" id="L2"><a href="#L2">2</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @moduledoc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L3"><a href="#L3">3</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Electrical Analysis — noise margins, power, timing, and technology comparison.</code></td>
+</tr>
+<tr>
+<td class="line" id="L4"><a href="#L4">4</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L5"><a href="#L5">5</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Why Electrical Analysis Matters</code></td>
+</tr>
+<tr>
+<td class="line" id="L6"><a href="#L6">6</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L7"><a href="#L7">7</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Digital logic designers care about more than truth tables:</code></td>
+</tr>
+<tr>
+<td class="line" id="L8"><a href="#L8">8</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L9"><a href="#L9">9</a></td>
+<td class="hits"></td>
+<td class="source"><code>  1. **NOISE MARGINS:** Can the circuit tolerate voltage fluctuations?</code></td>
+</tr>
+<tr>
+<td class="line" id="L10"><a href="#L10">10</a></td>
+<td class="hits"></td>
+<td class="source"><code>  2. **POWER:** How much energy does the chip consume?</code></td>
+</tr>
+<tr>
+<td class="line" id="L11"><a href="#L11">11</a></td>
+<td class="hits"></td>
+<td class="source"><code>  3. **TIMING:** How fast can the circuit switch?</code></td>
+</tr>
+<tr>
+<td class="line" id="L12"><a href="#L12">12</a></td>
+<td class="hits"></td>
+<td class="source"><code>  4. **SCALING:** How do properties change as transistors shrink?</code></td>
+</tr>
+<tr>
+<td class="line" id="L13"><a href="#L13">13</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L14"><a href="#L14">14</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L15"><a href="#L15">15</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Transistors.TTLGates</code></td>
+</tr>
+<tr>
+<td class="line" id="L16"><a href="#L16">16</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Transistors.Types.{</code></td>
+</tr>
+<tr>
+<td class="line" id="L17"><a href="#L17">17</a></td>
+<td class="hits"></td>
+<td class="source"><code>    MOSFETParams,</code></td>
+</tr>
+<tr>
+<td class="line" id="L18"><a href="#L18">18</a></td>
+<td class="hits"></td>
+<td class="source"><code>    NoiseMargins,</code></td>
+</tr>
+<tr>
+<td class="line" id="L19"><a href="#L19">19</a></td>
+<td class="hits"></td>
+<td class="source"><code>    PowerAnalysis,</code></td>
+</tr>
+<tr>
+<td class="line" id="L20"><a href="#L20">20</a></td>
+<td class="hits"></td>
+<td class="source"><code>    TimingAnalysis</code></td>
+</tr>
+<tr>
+<td class="line" id="L21"><a href="#L21">21</a></td>
+<td class="hits"></td>
+<td class="source"><code>  }</code></td>
+</tr>
+<tr>
+<td class="line" id="L22"><a href="#L22">22</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L23"><a href="#L23">23</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L24"><a href="#L24">24</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Analyze noise margins for a gate.</code></td>
+</tr>
+<tr>
+<td class="line" id="L25"><a href="#L25">25</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L26"><a href="#L26">26</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Noise margins tell you how much electrical noise a digital signal</code></td>
+</tr>
+<tr>
+<td class="line" id="L27"><a href="#L27">27</a></td>
+<td class="hits"></td>
+<td class="source"><code>  can tolerate before being misinterpreted.</code></td>
+</tr>
+<tr>
+<td class="line" id="L28"><a href="#L28">28</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L29"><a href="#L29">29</a></td>
+<td class="hits"></td>
+<td class="source"><code>  `gate_type` must be `:cmos_inverter` or `:ttl_nand`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L30"><a href="#L30">30</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L31"><a href="#L31">31</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Options:</code></td>
+</tr>
+<tr>
+<td class="line" id="L32"><a href="#L32">32</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `vdd` — supply voltage for CMOS (default 3.3)</code></td>
+</tr>
+<tr>
+<td class="line" id="L33"><a href="#L33">33</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `vcc` — supply voltage for TTL (default 5.0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L34"><a href="#L34">34</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L35"><a href="#L35">35</a></td>
+<td class="hits">9</td>
+<td class="source"><code>  def compute_noise_margins(gate_type, opts \\ []) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L36"><a href="#L36">36</a></td>
+<td class="hits">9</td>
+<td class="source"><code>    case gate_type do</code></td>
+</tr>
+<tr>
+<td class="line" id="L37"><a href="#L37">37</a></td>
+<td class="hits"></td>
+<td class="source"><code>      :cmos_inverter -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L38"><a href="#L38">38</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        vdd = Keyword.get(opts, :vdd, 3.3)</code></td>
+</tr>
+<tr>
+<td class="line" id="L39"><a href="#L39">39</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # CMOS has nearly ideal rail-to-rail output</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L40"><a href="#L40">40</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        vol = 0.0</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L41"><a href="#L41">41</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        voh = vdd</code></td>
+</tr>
+<tr>
+<td class="line" id="L42"><a href="#L42">42</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # Input thresholds at ~40% and ~60% of Vdd (symmetric CMOS)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L43"><a href="#L43">43</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        vil = 0.4 * vdd</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L44"><a href="#L44">44</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        vih = 0.6 * vdd</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L45"><a href="#L45">45</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        nml = vil - vol</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L46"><a href="#L46">46</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        nmh = voh - vih</code></td>
+</tr>
+<tr>
+<td class="line" id="L47"><a href="#L47">47</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L48"><a href="#L48">48</a></td>
+<td class="hits">5</td>
+<td class="source"><code>        %NoiseMargins{vol: vol, voh: voh, vil: vil, vih: vih, nml: nml, nmh: nmh}</code></td>
+</tr>
+<tr>
+<td class="line" id="L49"><a href="#L49">49</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L50"><a href="#L50">50</a></td>
+<td class="hits"></td>
+<td class="source"><code>      :ttl_nand -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L51"><a href="#L51">51</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        vcc = Keyword.get(opts, :vcc, 5.0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L52"><a href="#L52">52</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # TTL specifications (standard 74xx series)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L53"><a href="#L53">53</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        vol = 0.2</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L54"><a href="#L54">54</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        voh = vcc - 0.7</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L55"><a href="#L55">55</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        vil = 0.8</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L56"><a href="#L56">56</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        vih = 2.0</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L57"><a href="#L57">57</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        nml = vil - vol</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L58"><a href="#L58">58</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        nmh = voh - vih</code></td>
+</tr>
+<tr>
+<td class="line" id="L59"><a href="#L59">59</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L60"><a href="#L60">60</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        %NoiseMargins{vol: vol, voh: voh, vil: vil, vih: vih, nml: nml, nmh: nmh}</code></td>
+</tr>
+<tr>
+<td class="line" id="L61"><a href="#L61">61</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L62"><a href="#L62">62</a></td>
+<td class="hits"></td>
+<td class="source"><code>      other -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L63"><a href="#L63">63</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        raise ArgumentError, "Unsupported gate type: #{inspect(other)}"</code></td>
+</tr>
+<tr>
+<td class="line" id="L64"><a href="#L64">64</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L65"><a href="#L65">65</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L66"><a href="#L66">66</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L67"><a href="#L67">67</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L68"><a href="#L68">68</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Compute power consumption for a gate at a given operating frequency.</code></td>
+</tr>
+<tr>
+<td class="line" id="L69"><a href="#L69">69</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L70"><a href="#L70">70</a></td>
+<td class="hits"></td>
+<td class="source"><code>  `gate_type` must be `:cmos_inverter`, `:cmos_nand`, `:cmos_nor`, or `:ttl_nand`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L71"><a href="#L71">71</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L72"><a href="#L72">72</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Options:</code></td>
+</tr>
+<tr>
+<td class="line" id="L73"><a href="#L73">73</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `frequency`       — Operating frequency in Hz (default 1 GHz)</code></td>
+</tr>
+<tr>
+<td class="line" id="L74"><a href="#L74">74</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `c_load`          — Load capacitance in Farads (default 1 pF)</code></td>
+</tr>
+<tr>
+<td class="line" id="L75"><a href="#L75">75</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `activity_factor` — Fraction of cycles with transition (default 0.5)</code></td>
+</tr>
+<tr>
+<td class="line" id="L76"><a href="#L76">76</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `vdd`             — CMOS supply voltage (default 3.3)</code></td>
+</tr>
+<tr>
+<td class="line" id="L77"><a href="#L77">77</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `vcc`             — TTL supply voltage (default 5.0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L78"><a href="#L78">78</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L79"><a href="#L79">79</a></td>
+<td class="hits">5</td>
+<td class="source"><code>  def analyze_power(gate_type, opts \\ []) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L80"><a href="#L80">80</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    frequency = Keyword.get(opts, :frequency, 1.0e9)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L81"><a href="#L81">81</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    c_load = Keyword.get(opts, :c_load, 1.0e-12)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L82"><a href="#L82">82</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    activity_factor = Keyword.get(opts, :activity_factor, 0.5)</code></td>
+</tr>
+<tr>
+<td class="line" id="L83"><a href="#L83">83</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L84"><a href="#L84">84</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    {static, vdd} =</code></td>
+</tr>
+<tr>
+<td class="line" id="L85"><a href="#L85">85</a></td>
+<td class="hits"></td>
+<td class="source"><code>      case gate_type do</code></td>
+</tr>
+<tr>
+<td class="line" id="L86"><a href="#L86">86</a></td>
+<td class="hits"></td>
+<td class="source"><code>        :ttl_nand -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L87"><a href="#L87">87</a></td>
+<td class="hits">3</td>
+<td class="source"><code>          vcc = Keyword.get(opts, :vcc, 5.0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L88"><a href="#L88">88</a></td>
+<td class="hits"></td>
+<td class="source"><code>          {TTLGates.ttl_nand_static_power(vcc), vcc}</code></td>
+</tr>
+<tr>
+<td class="line" id="L89"><a href="#L89">89</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L90"><a href="#L90">90</a></td>
+<td class="hits"></td>
+<td class="source"><code>        type when type in [:cmos_inverter, :cmos_nand, :cmos_nor] -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L91"><a href="#L91">91</a></td>
+<td class="hits">29</td>
+<td class="source"><code>          vdd = Keyword.get(opts, :vdd, 3.3)</code></td>
+</tr>
+<tr>
+<td class="line" id="L92"><a href="#L92">92</a></td>
+<td class="hits"></td>
+<td class="source"><code>          {0.0, vdd}</code></td>
+</tr>
+<tr>
+<td class="line" id="L93"><a href="#L93">93</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L94"><a href="#L94">94</a></td>
+<td class="hits"></td>
+<td class="source"><code>        other -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L95"><a href="#L95">95</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          raise ArgumentError, "Unsupported gate type: #{inspect(other)}"</code></td>
+</tr>
+<tr>
+<td class="line" id="L96"><a href="#L96">96</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end</code></td>
+</tr>
+<tr>
+<td class="line" id="L97"><a href="#L97">97</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L98"><a href="#L98">98</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Dynamic power: P = C * V^2 * f * alpha</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L99"><a href="#L99">99</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    dynamic = c_load * vdd * vdd * frequency * activity_factor</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L100"><a href="#L100">100</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    total = static + dynamic</code></td>
+</tr>
+<tr>
+<td class="line" id="L101"><a href="#L101">101</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L102"><a href="#L102">102</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Energy per switching event: E = C * V^2</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L103"><a href="#L103">103</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    energy_per_switch = c_load * vdd * vdd</code></td>
+</tr>
+<tr>
+<td class="line" id="L104"><a href="#L104">104</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L105"><a href="#L105">105</a></td>
+<td class="hits">32</td>
+<td class="source"><code>    %PowerAnalysis{</code></td>
+</tr>
+<tr>
+<td class="line" id="L106"><a href="#L106">106</a></td>
+<td class="hits"></td>
+<td class="source"><code>      static_power: static,</code></td>
+</tr>
+<tr>
+<td class="line" id="L107"><a href="#L107">107</a></td>
+<td class="hits"></td>
+<td class="source"><code>      dynamic_power: dynamic,</code></td>
+</tr>
+<tr>
+<td class="line" id="L108"><a href="#L108">108</a></td>
+<td class="hits"></td>
+<td class="source"><code>      total_power: total,</code></td>
+</tr>
+<tr>
+<td class="line" id="L109"><a href="#L109">109</a></td>
+<td class="hits"></td>
+<td class="source"><code>      energy_per_switch: energy_per_switch</code></td>
+</tr>
+<tr>
+<td class="line" id="L110"><a href="#L110">110</a></td>
+<td class="hits"></td>
+<td class="source"><code>    }</code></td>
+</tr>
+<tr>
+<td class="line" id="L111"><a href="#L111">111</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L112"><a href="#L112">112</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L113"><a href="#L113">113</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L114"><a href="#L114">114</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Compute timing characteristics for a gate.</code></td>
+</tr>
+<tr>
+<td class="line" id="L115"><a href="#L115">115</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L116"><a href="#L116">116</a></td>
+<td class="hits"></td>
+<td class="source"><code>  `gate_type` must be `:cmos_inverter`, `:cmos_nand`, `:cmos_nor`, or `:ttl_nand`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L117"><a href="#L117">117</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L118"><a href="#L118">118</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Options:</code></td>
+</tr>
+<tr>
+<td class="line" id="L119"><a href="#L119">119</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `c_load`      — Load capacitance in Farads (default 1 pF)</code></td>
+</tr>
+<tr>
+<td class="line" id="L120"><a href="#L120">120</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `vdd`         — CMOS supply voltage (default 3.3)</code></td>
+</tr>
+<tr>
+<td class="line" id="L121"><a href="#L121">121</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `nmos_params` — MOSFET params for NMOS (default %MOSFETParams{})</code></td>
+</tr>
+<tr>
+<td class="line" id="L122"><a href="#L122">122</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `pmos_params` — MOSFET params for PMOS (default %MOSFETParams{})</code></td>
+</tr>
+<tr>
+<td class="line" id="L123"><a href="#L123">123</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L124"><a href="#L124">124</a></td>
+<td class="hits">8</td>
+<td class="source"><code>  def analyze_timing(gate_type, opts \\ []) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L125"><a href="#L125">125</a></td>
+<td class="hits">33</td>
+<td class="source"><code>    c_load = Keyword.get(opts, :c_load, 1.0e-12)</code></td>
+</tr>
+<tr>
+<td class="line" id="L126"><a href="#L126">126</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L127"><a href="#L127">127</a></td>
+<td class="hits">33</td>
+<td class="source"><code>    case gate_type do</code></td>
+</tr>
+<tr>
+<td class="line" id="L128"><a href="#L128">128</a></td>
+<td class="hits"></td>
+<td class="source"><code>      :ttl_nand -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L129"><a href="#L129">129</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # TTL has relatively fixed timing characteristics</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L130"><a href="#L130">130</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        tphl = 7.0e-9</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L131"><a href="#L131">131</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        tplh = 11.0e-9</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L132"><a href="#L132">132</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        tpd = (tphl + tplh) / 2.0</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L133"><a href="#L133">133</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        rise_time = 15.0e-9</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L134"><a href="#L134">134</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        fall_time = 10.0e-9</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L135"><a href="#L135">135</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        max_frequency = 1.0 / (2.0 * tpd)</code></td>
+</tr>
+<tr>
+<td class="line" id="L136"><a href="#L136">136</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L137"><a href="#L137">137</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        %TimingAnalysis{</code></td>
+</tr>
+<tr>
+<td class="line" id="L138"><a href="#L138">138</a></td>
+<td class="hits"></td>
+<td class="source"><code>          tphl: tphl,</code></td>
+</tr>
+<tr>
+<td class="line" id="L139"><a href="#L139">139</a></td>
+<td class="hits"></td>
+<td class="source"><code>          tplh: tplh,</code></td>
+</tr>
+<tr>
+<td class="line" id="L140"><a href="#L140">140</a></td>
+<td class="hits"></td>
+<td class="source"><code>          tpd: tpd,</code></td>
+</tr>
+<tr>
+<td class="line" id="L141"><a href="#L141">141</a></td>
+<td class="hits"></td>
+<td class="source"><code>          rise_time: rise_time,</code></td>
+</tr>
+<tr>
+<td class="line" id="L142"><a href="#L142">142</a></td>
+<td class="hits"></td>
+<td class="source"><code>          fall_time: fall_time,</code></td>
+</tr>
+<tr>
+<td class="line" id="L143"><a href="#L143">143</a></td>
+<td class="hits"></td>
+<td class="source"><code>          max_frequency: max_frequency</code></td>
+</tr>
+<tr>
+<td class="line" id="L144"><a href="#L144">144</a></td>
+<td class="hits"></td>
+<td class="source"><code>        }</code></td>
+</tr>
+<tr>
+<td class="line" id="L145"><a href="#L145">145</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L146"><a href="#L146">146</a></td>
+<td class="hits"></td>
+<td class="source"><code>      type when type in [:cmos_inverter, :cmos_nand, :cmos_nor] -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L147"><a href="#L147">147</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        vdd = Keyword.get(opts, :vdd, 3.3)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L148"><a href="#L148">148</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        nmos_params = Keyword.get(opts, :nmos_params, %MOSFETParams{})</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L149"><a href="#L149">149</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        pmos_params = Keyword.get(opts, :pmos_params, %MOSFETParams{})</code></td>
+</tr>
+<tr>
+<td class="line" id="L150"><a href="#L150">150</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L151"><a href="#L151">151</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        k_n = nmos_params.k</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L152"><a href="#L152">152</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        vth_n = nmos_params.vth</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L153"><a href="#L153">153</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        k_p = pmos_params.k</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L154"><a href="#L154">154</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        vth_p = pmos_params.vth</code></td>
+</tr>
+<tr>
+<td class="line" id="L155"><a href="#L155">155</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L156"><a href="#L156">156</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        ids_sat_n =</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L157"><a href="#L157">157</a></td>
+<td class="hits">30</td>
+<td class="source"><code>          if vdd &gt; vth_n, do: 0.5 * k_n * (vdd - vth_n) * (vdd - vth_n), else: 1.0e-12</code></td>
+</tr>
+<tr>
+<td class="line" id="L158"><a href="#L158">158</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L159"><a href="#L159">159</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        ids_sat_p =</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L160"><a href="#L160">160</a></td>
+<td class="hits">30</td>
+<td class="source"><code>          if vdd &gt; vth_p, do: 0.5 * k_p * (vdd - vth_p) * (vdd - vth_p), else: 1.0e-12</code></td>
+</tr>
+<tr>
+<td class="line" id="L161"><a href="#L161">161</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L162"><a href="#L162">162</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # Propagation delays</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L163"><a href="#L163">163</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        tphl = c_load * vdd / (2.0 * ids_sat_n)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L164"><a href="#L164">164</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        tplh = c_load * vdd / (2.0 * ids_sat_p)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L165"><a href="#L165">165</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        tpd = (tphl + tplh) / 2.0</code></td>
+</tr>
+<tr>
+<td class="line" id="L166"><a href="#L166">166</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L167"><a href="#L167">167</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # Rise and fall times (2.2 RC time constants)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L168"><a href="#L168">168</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        r_on_n = if ids_sat_n &gt; 0, do: vdd / (2.0 * ids_sat_n), else: 1.0e6</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L169"><a href="#L169">169</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        r_on_p = if ids_sat_p &gt; 0, do: vdd / (2.0 * ids_sat_p), else: 1.0e6</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L170"><a href="#L170">170</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        rise_time = 2.2 * r_on_p * c_load</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L171"><a href="#L171">171</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        fall_time = 2.2 * r_on_n * c_load</code></td>
+</tr>
+<tr>
+<td class="line" id="L172"><a href="#L172">172</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L173"><a href="#L173">173</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        max_frequency = if tpd &gt; 0, do: 1.0 / (2.0 * tpd), else: :infinity</code></td>
+</tr>
+<tr>
+<td class="line" id="L174"><a href="#L174">174</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L175"><a href="#L175">175</a></td>
+<td class="hits">30</td>
+<td class="source"><code>        %TimingAnalysis{</code></td>
+</tr>
+<tr>
+<td class="line" id="L176"><a href="#L176">176</a></td>
+<td class="hits"></td>
+<td class="source"><code>          tphl: tphl,</code></td>
+</tr>
+<tr>
+<td class="line" id="L177"><a href="#L177">177</a></td>
+<td class="hits"></td>
+<td class="source"><code>          tplh: tplh,</code></td>
+</tr>
+<tr>
+<td class="line" id="L178"><a href="#L178">178</a></td>
+<td class="hits"></td>
+<td class="source"><code>          tpd: tpd,</code></td>
+</tr>
+<tr>
+<td class="line" id="L179"><a href="#L179">179</a></td>
+<td class="hits"></td>
+<td class="source"><code>          rise_time: rise_time,</code></td>
+</tr>
+<tr>
+<td class="line" id="L180"><a href="#L180">180</a></td>
+<td class="hits"></td>
+<td class="source"><code>          fall_time: fall_time,</code></td>
+</tr>
+<tr>
+<td class="line" id="L181"><a href="#L181">181</a></td>
+<td class="hits"></td>
+<td class="source"><code>          max_frequency: max_frequency</code></td>
+</tr>
+<tr>
+<td class="line" id="L182"><a href="#L182">182</a></td>
+<td class="hits"></td>
+<td class="source"><code>        }</code></td>
+</tr>
+<tr>
+<td class="line" id="L183"><a href="#L183">183</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L184"><a href="#L184">184</a></td>
+<td class="hits"></td>
+<td class="source"><code>      other -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L185"><a href="#L185">185</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        raise ArgumentError, "Unsupported gate type: #{inspect(other)}"</code></td>
+</tr>
+<tr>
+<td class="line" id="L186"><a href="#L186">186</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L187"><a href="#L187">187</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L188"><a href="#L188">188</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L189"><a href="#L189">189</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L190"><a href="#L190">190</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Compare CMOS and TTL NAND gates across all metrics.</code></td>
+</tr>
+<tr>
+<td class="line" id="L191"><a href="#L191">191</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L192"><a href="#L192">192</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Demonstrates WHY CMOS replaced TTL:</code></td>
+</tr>
+<tr>
+<td class="line" id="L193"><a href="#L193">193</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - ~1000x less static power</code></td>
+</tr>
+<tr>
+<td class="line" id="L194"><a href="#L194">194</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - Better noise margins relative to Vdd</code></td>
+</tr>
+<tr>
+<td class="line" id="L195"><a href="#L195">195</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - Can operate at lower voltages</code></td>
+</tr>
+<tr>
+<td class="line" id="L196"><a href="#L196">196</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L197"><a href="#L197">197</a></td>
+<td class="hits">2</td>
+<td class="source"><code>  def compare_cmos_vs_ttl(opts \\ []) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L198"><a href="#L198">198</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    frequency = Keyword.get(opts, :frequency, 1.0e6)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L199"><a href="#L199">199</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    c_load = Keyword.get(opts, :c_load, 1.0e-12)</code></td>
+</tr>
+<tr>
+<td class="line" id="L200"><a href="#L200">200</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L201"><a href="#L201">201</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    cmos_power = analyze_power(:cmos_nand, frequency: frequency, c_load: c_load)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L202"><a href="#L202">202</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    ttl_power = analyze_power(:ttl_nand, frequency: frequency, c_load: c_load)</code></td>
+</tr>
+<tr>
+<td class="line" id="L203"><a href="#L203">203</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L204"><a href="#L204">204</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    cmos_timing = analyze_timing(:cmos_nand, c_load: c_load)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L205"><a href="#L205">205</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    ttl_timing = analyze_timing(:ttl_nand, c_load: c_load)</code></td>
+</tr>
+<tr>
+<td class="line" id="L206"><a href="#L206">206</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L207"><a href="#L207">207</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    cmos_nm = compute_noise_margins(:cmos_inverter)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L208"><a href="#L208">208</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    ttl_nm = compute_noise_margins(:ttl_nand)</code></td>
+</tr>
+<tr>
+<td class="line" id="L209"><a href="#L209">209</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L210"><a href="#L210">210</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    %{</code></td>
+</tr>
+<tr>
+<td class="line" id="L211"><a href="#L211">211</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "cmos" =&gt; %{</code></td>
+</tr>
+<tr>
+<td class="line" id="L212"><a href="#L212">212</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "transistor_count" =&gt; 4,</code></td>
+</tr>
+<tr>
+<td class="line" id="L213"><a href="#L213">213</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "supply_voltage" =&gt; 3.3,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L214"><a href="#L214">214</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "static_power_w" =&gt; cmos_power.static_power,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L215"><a href="#L215">215</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "dynamic_power_w" =&gt; cmos_power.dynamic_power,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L216"><a href="#L216">216</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "total_power_w" =&gt; cmos_power.total_power,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L217"><a href="#L217">217</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "propagation_delay_s" =&gt; cmos_timing.tpd,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L218"><a href="#L218">218</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "max_frequency_hz" =&gt; cmos_timing.max_frequency,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L219"><a href="#L219">219</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "noise_margin_low_v" =&gt; cmos_nm.nml,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L220"><a href="#L220">220</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "noise_margin_high_v" =&gt; cmos_nm.nmh</code></td>
+</tr>
+<tr>
+<td class="line" id="L221"><a href="#L221">221</a></td>
+<td class="hits"></td>
+<td class="source"><code>      },</code></td>
+</tr>
+<tr>
+<td class="line" id="L222"><a href="#L222">222</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "ttl" =&gt; %{</code></td>
+</tr>
+<tr>
+<td class="line" id="L223"><a href="#L223">223</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "transistor_count" =&gt; 3,</code></td>
+</tr>
+<tr>
+<td class="line" id="L224"><a href="#L224">224</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "supply_voltage" =&gt; 5.0,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L225"><a href="#L225">225</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "static_power_w" =&gt; ttl_power.static_power,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L226"><a href="#L226">226</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "dynamic_power_w" =&gt; ttl_power.dynamic_power,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L227"><a href="#L227">227</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "total_power_w" =&gt; ttl_power.total_power,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L228"><a href="#L228">228</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "propagation_delay_s" =&gt; ttl_timing.tpd,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L229"><a href="#L229">229</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "max_frequency_hz" =&gt; ttl_timing.max_frequency,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L230"><a href="#L230">230</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "noise_margin_low_v" =&gt; ttl_nm.nml,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L231"><a href="#L231">231</a></td>
+<td class="hits">2</td>
+<td class="source"><code>        "noise_margin_high_v" =&gt; ttl_nm.nmh</code></td>
+</tr>
+<tr>
+<td class="line" id="L232"><a href="#L232">232</a></td>
+<td class="hits"></td>
+<td class="source"><code>      }</code></td>
+</tr>
+<tr>
+<td class="line" id="L233"><a href="#L233">233</a></td>
+<td class="hits"></td>
+<td class="source"><code>    }</code></td>
+</tr>
+<tr>
+<td class="line" id="L234"><a href="#L234">234</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L235"><a href="#L235">235</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L236"><a href="#L236">236</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L237"><a href="#L237">237</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Show how CMOS performance changes with technology scaling (Moore's Law).</code></td>
+</tr>
+<tr>
+<td class="line" id="L238"><a href="#L238">238</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L239"><a href="#L239">239</a></td>
+<td class="hits"></td>
+<td class="source"><code>  As transistors shrink:</code></td>
+</tr>
+<tr>
+<td class="line" id="L240"><a href="#L240">240</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - Gate length decreases -&gt; faster switching</code></td>
+</tr>
+<tr>
+<td class="line" id="L241"><a href="#L241">241</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - Supply voltage decreases -&gt; less power per switch</code></td>
+</tr>
+<tr>
+<td class="line" id="L242"><a href="#L242">242</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - Gate capacitance decreases -&gt; less energy per transition</code></td>
+</tr>
+<tr>
+<td class="line" id="L243"><a href="#L243">243</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - BUT leakage current INCREASES -&gt; more static power (the "leakage wall")</code></td>
+</tr>
+<tr>
+<td class="line" id="L244"><a href="#L244">244</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L245"><a href="#L245">245</a></td>
+<td class="hits">3</td>
+<td class="source"><code>  def demonstrate_cmos_scaling(technology_nodes \\ nil) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L246"><a href="#L246">246</a></td>
+<td class="hits">5</td>
+<td class="source"><code>    nodes = technology_nodes || [180.0e-9, 90.0e-9, 45.0e-9, 22.0e-9, 7.0e-9, 3.0e-9]</code></td>
+</tr>
+<tr>
+<td class="line" id="L247"><a href="#L247">247</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L248"><a href="#L248">248</a></td>
+<td class="hits">5</td>
+<td class="source"><code>    Enum.map(nodes, fn node -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L249"><a href="#L249">249</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Empirical scaling relationships (simplified)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L250"><a href="#L250">250</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      scale = node / 180.0e-9</code></td>
+</tr>
+<tr>
+<td class="line" id="L251"><a href="#L251">251</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L252"><a href="#L252">252</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      vdd = max(0.7, 3.3 * :math.sqrt(scale))</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L253"><a href="#L253">253</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      vth = max(0.15, 0.4 * :math.pow(scale, 0.3))</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L254"><a href="#L254">254</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      c_gate = 1.0e-15 * scale</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L255"><a href="#L255">255</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      k = 0.001 / :math.sqrt(scale)</code></td>
+</tr>
+<tr>
+<td class="line" id="L256"><a href="#L256">256</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L257"><a href="#L257">257</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      params = %MOSFETParams{vth: vth, k: k, l: node, c_gate: c_gate}</code></td>
+</tr>
+<tr>
+<td class="line" id="L258"><a href="#L258">258</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L259"><a href="#L259">259</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      timing =</code></td>
+</tr>
+<tr>
+<td class="line" id="L260"><a href="#L260">260</a></td>
+<td class="hits"></td>
+<td class="source"><code>        analyze_timing(:cmos_inverter,</code></td>
+</tr>
+<tr>
+<td class="line" id="L261"><a href="#L261">261</a></td>
+<td class="hits"></td>
+<td class="source"><code>          c_load: c_gate * 10,</code></td>
+</tr>
+<tr>
+<td class="line" id="L262"><a href="#L262">262</a></td>
+<td class="hits"></td>
+<td class="source"><code>          vdd: vdd,</code></td>
+</tr>
+<tr>
+<td class="line" id="L263"><a href="#L263">263</a></td>
+<td class="hits"></td>
+<td class="source"><code>          nmos_params: params,</code></td>
+</tr>
+<tr>
+<td class="line" id="L264"><a href="#L264">264</a></td>
+<td class="hits"></td>
+<td class="source"><code>          pmos_params: params</code></td>
+</tr>
+<tr>
+<td class="line" id="L265"><a href="#L265">265</a></td>
+<td class="hits"></td>
+<td class="source"><code>        )</code></td>
+</tr>
+<tr>
+<td class="line" id="L266"><a href="#L266">266</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L267"><a href="#L267">267</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      power =</code></td>
+</tr>
+<tr>
+<td class="line" id="L268"><a href="#L268">268</a></td>
+<td class="hits"></td>
+<td class="source"><code>        analyze_power(:cmos_inverter,</code></td>
+</tr>
+<tr>
+<td class="line" id="L269"><a href="#L269">269</a></td>
+<td class="hits"></td>
+<td class="source"><code>          frequency: 1.0e9,</code></td>
+</tr>
+<tr>
+<td class="line" id="L270"><a href="#L270">270</a></td>
+<td class="hits"></td>
+<td class="source"><code>          c_load: c_gate * 10,</code></td>
+</tr>
+<tr>
+<td class="line" id="L271"><a href="#L271">271</a></td>
+<td class="hits"></td>
+<td class="source"><code>          vdd: vdd</code></td>
+</tr>
+<tr>
+<td class="line" id="L272"><a href="#L272">272</a></td>
+<td class="hits"></td>
+<td class="source"><code>        )</code></td>
+</tr>
+<tr>
+<td class="line" id="L273"><a href="#L273">273</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L274"><a href="#L274">274</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Leakage current increases exponentially as Vth decreases</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L275"><a href="#L275">275</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      leakage = 1.0e-12 * :math.exp((0.4 - vth) / 0.052)</code></td>
+</tr>
+<tr>
+<td class="line" id="L276"><a href="#L276">276</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L277"><a href="#L277">277</a></td>
+<td class="hits">21</td>
+<td class="source"><code>      %{</code></td>
+</tr>
+<tr>
+<td class="line" id="L278"><a href="#L278">278</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "node_nm" =&gt; node * 1.0e9,</code></td>
+</tr>
+<tr>
+<td class="line" id="L279"><a href="#L279">279</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "vdd_v" =&gt; vdd,</code></td>
+</tr>
+<tr>
+<td class="line" id="L280"><a href="#L280">280</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "vth_v" =&gt; vth,</code></td>
+</tr>
+<tr>
+<td class="line" id="L281"><a href="#L281">281</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "c_gate_f" =&gt; c_gate,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L282"><a href="#L282">282</a></td>
+<td class="hits">21</td>
+<td class="source"><code>        "propagation_delay_s" =&gt; timing.tpd,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L283"><a href="#L283">283</a></td>
+<td class="hits">21</td>
+<td class="source"><code>        "dynamic_power_w" =&gt; power.dynamic_power,</code></td>
+</tr>
+<tr>
+<td class="line" id="L284"><a href="#L284">284</a></td>
+<td class="hits"></td>
+<td class="source"><code>        "leakage_current_a" =&gt; leakage,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L285"><a href="#L285">285</a></td>
+<td class="hits">21</td>
+<td class="source"><code>        "max_frequency_hz" =&gt; timing.max_frequency</code></td>
+</tr>
+<tr>
+<td class="line" id="L286"><a href="#L286">286</a></td>
+<td class="hits"></td>
+<td class="source"><code>      }</code></td>
+</tr>
+<tr>
+<td class="line" id="L287"><a href="#L287">287</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L288"><a href="#L288">288</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L289"><a href="#L289">289</a></td>
+<td class="hits"></td>
+<td class="source"><code>end</code></td>
+</tr>
+</tbody>
+<thead>
+<tr>
+<th>Line</th>
+<th>Hits</th>
+<th>Source</th>
+</tr>
+</thead>
+</table>
+</body>
+</html>
