@@ -1,0 +1,11 @@
+# Rust source and build artifacts -- only the compiled .node file ships
+src/
+target/
+Cargo.toml
+Cargo.lock
+build.rs
+tests/
+vitest.config.ts
+tsconfig.json
+BUILD
+.cargo/
