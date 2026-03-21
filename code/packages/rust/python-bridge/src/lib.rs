@@ -151,6 +151,7 @@ pub struct PyModuleDef {
 
 /// Mirrors Python's PyMethodDef.
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct PyMethodDef {
     pub ml_name: *const c_char,
     pub ml_meth: Option<unsafe extern "C" fn(PyObjectPtr, PyObjectPtr) -> PyObjectPtr>,
@@ -170,6 +171,7 @@ pub struct PyType_Spec {
 
 /// Mirrors Python's PyType_Slot.
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct PyType_Slot {
     pub slot: c_int,
     pub pfunc: *mut c_void,
