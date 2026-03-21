@@ -285,12 +285,12 @@ class TestAffectedNodes:
         affected = g.affected_nodes({"A"})
         assert affected == {"A", "B", "C", "D"}
 
-    def test_unknown_nodes_included(self):
+    def test_unknown_nodes_ignored(self):
         g = DirectedGraph()
         g.add_edge("A", "B")
-        # "X" doesn't exist in graph but should still appear in result
+        # "X" doesn't exist in the graph — Rust implementation skips unknown nodes
         affected = g.affected_nodes({"X"})
-        assert "X" in affected
+        assert "X" not in affected
 
 
 # ---------------------------------------------------------------------------
