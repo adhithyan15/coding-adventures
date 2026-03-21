@@ -98,6 +98,44 @@ cd ../C && npm ci --quiet && cd ../B && npm ci --quiet && cd ../A && npm ci && n
 
 ---
 
+### 2026-03-21: BUILD files must install ALL transitive dependencies explicitly
+
+When creating packages that depend on sibling packages, the BUILD file must install every transitive dependency — not just direct ones. CI runs each package in isolation with a clean environment. If package A depends on B which depends on C, A's BUILD file must install C too.
+
+This caused repeated CI failures across Python, Ruby, and Go during the S-series system software work. The same mistake was made 3 times before being fully resolved.
+
+**Python:** `uv pip install` resolves deps from PyPI. If a sibling package (e.g., `state-machine`) isn't on PyPI, it must be installed with `-e ../state-machine` BEFORE any package that depends on it. Install order matters — install leaves first:
+```
+uv pip install -e ../directed-graph -e ../state-machine -e ../branch-predictor -e ../core -e ".[dev]"
+```
+
+**Ruby:** Gemfiles must list ALL transitive path dependencies. If `riscv_simulator` depends on `cpu_simulator`, then any package depending on `riscv_simulator` must also have:
+```ruby
+gem "coding_adventures_cpu_simulator", path: "../cpu_simulator"
+gem "coding_adventures_riscv_simulator", path: "../riscv_simulator"
+```
+
+**Go:** When a transitive dependency adds a new module (e.g., `state-machine`), ALL packages up the chain need `go mod tidy` or manual additions to `go.mod`. A single missing entry in go.sum breaks the build. After adding a new Go package, run `go mod tidy` in EVERY package that transitively depends on it.
+
+**TypeScript:** `npm ci` requires lock files in sync. After adding new dependencies to `package.json`, either regenerate `package-lock.json` with `npm install`, or use `npm install` instead of `npm ci` in BUILD files.
+
+**Checklist for every new package with dependencies:**
+- [ ] List ALL transitive deps in BUILD file (not just direct)
+- [ ] Install deps in leaf-to-root order
+- [ ] Test from a completely clean state (no cached installs)
+- [ ] For Go: run `go mod tidy` in all dependent packages
+- [ ] For TypeScript: regenerate lock files or use `npm install`
+
+---
+
+### 2026-03-21: Elixir reserved words cannot be used as variable names
+
+Elixir reserves words like `after`, `rescue`, `catch`, `else` that cannot be used as variable names. When porting code from other languages, rename these variables (e.g., `after` → `rest`, `after_bytes`). This caused a compilation error in the Core memory_controller.ex that required two rounds of fixes because the first fix only caught one occurrence.
+
+**Rule:** When porting to Elixir, grep for reserved words used as variables: `after`, `rescue`, `catch`, `else`, `end`, `fn`, `do`, `when`, `cond`, `try`, `receive`.
+
+---
+
 ### 2026-03-20: Use mise for all language runtimes — nothing is installed globally
 
 This machine does not have many tools installed globally. Language runtimes (Ruby, Go, Rust, etc.) are managed by **mise** (configured in `mise.toml` at the repo root). The system Ruby is 2.6.10, but the project requires 3.4+.
