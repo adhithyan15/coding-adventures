@@ -18,7 +18,7 @@ defmodule CodingAdventures.Core.Core do
   returns a new Core struct with updated state.
   """
 
-  alias CodingAdventures.CpuPipeline.{Pipeline, PipelineConfig, PipelineStats}
+  alias CodingAdventures.CpuPipeline.Pipeline
   alias CodingAdventures.Core.{Config, RegisterFile, MemoryController, Stats}
 
   @type t :: %__MODULE__{
@@ -171,7 +171,7 @@ defmodule CodingAdventures.Core.Core do
     core = %{core | pipeline: pipeline}
 
     if Pipeline.halted?(pipeline) do
-      core = %{core | halted: true}
+      _core = %{core | halted: true}
     end
 
     core = %{core |

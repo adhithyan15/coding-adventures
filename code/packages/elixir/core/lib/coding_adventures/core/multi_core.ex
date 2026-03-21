@@ -23,7 +23,7 @@ defmodule CodingAdventures.Core.MultiCore do
          Shared Main Memory (DRAM)
   """
 
-  alias CodingAdventures.Core.{Config, MultiCoreConfig, InterruptController, MemoryController, Stats}
+  alias CodingAdventures.Core.{MultiCoreConfig, InterruptController, MemoryController, Stats}
   alias CodingAdventures.Core.Core, as: CoreModule
 
   @type t :: %__MODULE__{

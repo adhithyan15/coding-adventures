@@ -1,6 +1,6 @@
 uv venv --quiet --clear
-uv pip install -e ../state-machine --quiet
 uv pip install -e ../directed-graph --quiet
+uv pip install -e ../state-machine --quiet
 uv pip install -e ".[dev]" --quiet
 uv pip install -e "../cpu-pipeline[dev]" --quiet
 uv pip install -e "../cache[dev]" --quiet

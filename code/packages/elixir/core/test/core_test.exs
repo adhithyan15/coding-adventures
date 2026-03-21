@@ -26,11 +26,6 @@ defmodule CodingAdventures.CoreTest do
     core_tuple
   end
 
-  defp make_default_core do
-    {:ok, core_tuple} = CoreModule.new(Config.default_config(), MockDecoder)
-    core_tuple
-  end
-
   defp encode_prog(instructions) do
     MockDecoder.encode_program(instructions)
   end
@@ -382,8 +377,9 @@ defmodule CodingAdventures.CoreTest do
   end
 
   test "unknown opcode decodes as NOP" do
+    import Bitwise
     token = Token.new()
-    raw = 0xFF <<< 24
+    raw = Bitwise.bsl(0xFF, 24)
     token = MockDecoder.decode(raw, token)
     assert token.opcode == "NOP"
   end

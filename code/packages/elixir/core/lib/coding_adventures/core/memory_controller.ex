@@ -20,7 +20,7 @@ defmodule CodingAdventures.Core.MemoryController do
   remaining cycles, its data is delivered.
   """
 
-  use Bitwise
+  import Bitwise
 
   @type t :: %__MODULE__{
           memory: binary(),
