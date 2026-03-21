@@ -29,6 +29,13 @@
 //
 // If a package fails, all its transitive dependents are marked "dep-skipped".
 // There is no point building something whose dependency is broken.
+//
+// # Progress tracking
+//
+// The executor accepts an optional progress.Tracker that receives events
+// as packages are skipped, started, and finished. This powers a real-time
+// progress bar in the terminal. The tracker is nil-safe — all Send calls
+// are no-ops when tracker is nil, so callers don't need to guard.
 package executor
 
 import (
@@ -39,6 +46,7 @@ import (
 	"time"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
+	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
@@ -115,6 +123,7 @@ func runPackageBuild(pkg discovery.Package) BuildResult {
 //  5. In dry-run mode, marks packages as "would-build"
 //  6. Otherwise, launches goroutines with semaphore-limited concurrency
 //  7. Updates the cache after each build
+//  8. Sends progress events to the tracker (if non-nil)
 //
 // The function returns a map from package name to BuildResult.
 func ExecuteBuilds(
@@ -127,6 +136,7 @@ func ExecuteBuilds(
 	dryRun bool,
 	maxJobs int,
 	affectedSet map[string]bool,
+	tracker *progress.Tracker,
 ) map[string]BuildResult {
 	// Build a lookup from name to Package for quick access.
 	pkgByName := make(map[string]discovery.Package)
@@ -188,6 +198,7 @@ func ExecuteBuilds(
 					Status:      "dep-skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -200,6 +211,7 @@ func ExecuteBuilds(
 					Status:      "skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -214,6 +226,7 @@ func ExecuteBuilds(
 					Status:      "skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -224,6 +237,7 @@ func ExecuteBuilds(
 					Status:      "would-build",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -259,7 +273,9 @@ func ExecuteBuilds(
 				semaphore <- struct{}{}        // acquire
 				defer func() { <-semaphore }() // release
 
+				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
 				result := runPackageBuild(p)
+				tracker.Send(progress.Event{Type: progress.Finished, Name: p.Name, Status: result.Status})
 
 				resultsMu.Lock()
 				results[p.Name] = result

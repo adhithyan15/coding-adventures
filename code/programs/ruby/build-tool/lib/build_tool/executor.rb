@@ -29,6 +29,16 @@
 require "open3"
 require "pathname"
 
+# Optional dependency: progress bar for build output.
+# If the gem is not installed, the build tool works fine without it --
+# callers pass `tracker: nil` and we use safe navigation (`&.`) so
+# every `tracker&.send_event(...)` becomes a harmless no-op.
+begin
+  require "coding_adventures_progress_bar"
+rescue LoadError
+  # Progress bar is optional — builds work without it.
+end
+
 module BuildTool
   # --------------------------------------------------------------------------
   # BuildResult -- The result of building a single package.
@@ -135,7 +145,7 @@ module BuildTool
     # @param max_jobs [Integer, nil] Max parallel workers (nil = 8).
     # @return [Hash<String, BuildResult>]
     def execute_builds(packages:, graph:, cache:, package_hashes:, deps_hashes:,
-                       force: false, dry_run: false, max_jobs: nil)
+                       force: false, dry_run: false, max_jobs: nil, tracker: nil)
       # Build a lookup from name to Package.
       pkg_by_name = packages.each_with_object({}) { |p, h| h[p.name] = p }
 
@@ -157,6 +167,9 @@ module BuildTool
 
           if dep_failed
             results[name] = BuildResult.new(package_name: name, status: "dep-skipped")
+            tracker&.send_event(CodingAdventures::ProgressBar::Event.new(
+              type: CodingAdventures::ProgressBar::EventType::SKIPPED, name: name
+            ))
             next
           end
 
@@ -166,6 +179,9 @@ module BuildTool
 
           if !force && !cache.needs_build?(name, pkg_hash, dep_hash)
             results[name] = BuildResult.new(package_name: name, status: "skipped")
+            tracker&.send_event(CodingAdventures::ProgressBar::Event.new(
+              type: CodingAdventures::ProgressBar::EventType::SKIPPED, name: name
+            ))
             next
           end
 
@@ -195,6 +211,11 @@ module BuildTool
             loop do
               pkg = mutex.synchronize { queue.shift }
               break unless pkg
+
+              # Notify the progress bar that this package is starting.
+              tracker&.send_event(CodingAdventures::ProgressBar::Event.new(
+                type: CodingAdventures::ProgressBar::EventType::STARTED, name: pkg.name
+              ))
 
               begin
                 result = run_package_build(pkg)
@@ -226,6 +247,13 @@ module BuildTool
                     "failed"
                   )
                 end
+
+                # Notify the progress bar that this package is finished.
+                tracker&.send_event(CodingAdventures::ProgressBar::Event.new(
+                  type: CodingAdventures::ProgressBar::EventType::FINISHED,
+                  name: pkg.name,
+                  status: result.status
+                ))
               end
             end
           end
