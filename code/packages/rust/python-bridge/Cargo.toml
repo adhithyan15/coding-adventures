@@ -1,0 +1,14 @@
+# Zero dependencies. We declare Python's C API functions ourselves using
+# extern "C" — no pyo3-ffi, no bindgen, no build-time header requirement.
+# These function signatures are part of Python's stable Limited API (PEP 384)
+# and have been unchanged since Python 3.2 (2011).
+[workspace]
+
+[package]
+name = "python-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Thin safe Rust wrapper over Python's C API — zero dependencies, no PyO3, no macros"
+
+[dependencies]
+# None. That's the point.
