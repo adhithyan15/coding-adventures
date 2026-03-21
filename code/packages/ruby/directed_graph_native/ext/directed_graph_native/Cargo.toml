@@ -26,7 +26,7 @@ crate-type = ["cdylib"]
 # Magnus is the Rust <-> Ruby bridge, analogous to PyO3 for Python.
 # The "rb-sys-interop" feature enables compatibility with the rb-sys gem,
 # which provides Ruby header files and build configuration.
-magnus = { version = "0.7", features = ["rb-sys-interop"] }
+magnus = { version = "0.7", features = ["rb-sys"] }
 
 # The core directed-graph crate -- all algorithms live here.
 # This wrapper contains zero algorithm logic; it's pure glue code.
