@@ -16,6 +16,13 @@ var SimpleTokens = map[rune]TokenType{
 	')': TokenRParen,
 	',': TokenComma,
 	':': TokenColon,
+	';': TokenSemicolon,
+	'{': TokenLBrace,
+	'}': TokenRBrace,
+	'[': TokenLBracket,
+	']': TokenRBracket,
+	'.': TokenDot,
+	'!': TokenBang,
 }
 
 type LexerConfig struct {
@@ -168,35 +175,27 @@ func (l *Lexer) readString() Token {
 
 func (l *Lexer) Tokenize() []Token {
 	l.tokens = []Token{}
+	dfa := NewTokenizerDFA()
+
 	for {
 		char, ok := l.currentChar()
-		if !ok {
-			break
-		}
-		if char == ' ' || char == '\t' || char == '\r' {
+		charClass := ClassifyChar(char, ok)
+		nextState := dfa.Process(charClass)
+
+		switch nextState {
+		case "at_whitespace":
 			l.skipWhitespace()
-			continue
-		}
-		if char == '\n' {
+		case "at_newline":
 			t := Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column}
 			l.advance()
 			l.tokens = append(l.tokens, t)
-			continue
-		}
-		if unicode.IsDigit(char) {
+		case "in_number":
 			l.tokens = append(l.tokens, l.readNumber())
-			continue
-		}
-		if unicode.IsLetter(char) || char == '_' {
+		case "in_name":
 			l.tokens = append(l.tokens, l.readName())
-			continue
-		}
-		if char == '"' {
+		case "in_string":
 			l.tokens = append(l.tokens, l.readString())
-			continue
-		}
-		// Lookahead required:
-		if char == '=' {
+		case "in_equals":
 			startLine := l.line
 			startCol := l.column
 			l.advance()
@@ -206,18 +205,25 @@ func (l *Lexer) Tokenize() []Token {
 			} else {
 				l.tokens = append(l.tokens, Token{Type: TokenEquals, Value: "=", Line: startLine, Column: startCol})
 			}
-			continue
-		}
-
-		if tType, exists := SimpleTokens[char]; exists {
+		case "in_operator":
+			tType := SimpleTokens[char]
 			t := Token{Type: tType, Value: string(char), Line: l.line, Column: l.column}
 			l.advance()
 			l.tokens = append(l.tokens, t)
-			continue
+		case "done":
+			break
+		case "error":
+			panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
 		}
 
-		panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
+		if nextState == "done" {
+			break
+		}
+
+		// Reset the DFA back to "start" for the next character.
+		dfa.Reset()
 	}
+
 	l.tokens = append(l.tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column})
 	return l.tokens
 }

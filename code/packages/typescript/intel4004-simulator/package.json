@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/intel4004-simulator",
+  "version": "0.1.0",
+  "description": "Intel 4004 first microprocessor simulation — Layer 4d of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "intel-4004",
+    "microprocessor",
+    "historical",
+    "4-bit",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

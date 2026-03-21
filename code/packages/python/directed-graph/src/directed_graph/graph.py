@@ -118,7 +118,14 @@ class DirectedGraph:
     are directed: ``add_edge("A", "B")`` means A points to B, so B is a
     *successor* of A and A is a *predecessor* of B.
 
-    Self-loops are disallowed -- ``add_edge("A", "A")`` raises ``ValueError``.
+    By default, self-loops are disallowed -- ``add_edge("A", "A")`` raises
+    ``ValueError``. Pass ``allow_self_loops=True`` to permit them.
+
+    When self-loops ARE allowed, a self-loop edge A -> A means A appears in
+    its own successor set AND its own predecessor set. This naturally creates
+    a cycle, so ``has_cycle()`` returns True and ``topological_sort()`` raises
+    ``CycleError`` for any graph containing a self-loop.
+
     Duplicate edges and nodes are silently ignored (idempotent adds).
 
     Example::
@@ -127,6 +134,13 @@ class DirectedGraph:
         g.add_edge("compile", "link")
         g.add_edge("link", "package")
         print(g.topological_sort())   # ['compile', 'link', 'package']
+
+    Example with self-loops::
+
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")          # OK -- self-loop allowed
+        print(g.has_cycle())           # True
+        print(g.has_edge("A", "A"))    # True
     """
 
     # ------------------------------------------------------------------
@@ -134,10 +148,17 @@ class DirectedGraph:
     # ------------------------------------------------------------------
     # We start with empty dicts. The invariant is: every node that exists
     # in the graph has a key in BOTH _forward and _reverse.
+    #
+    # The ``allow_self_loops`` flag controls whether add_edge permits
+    # from_node == to_node. When False (the default), the graph behaves
+    # as a strict DAG-oriented structure. When True, self-loops are stored
+    # like any other edge: the node appears in both its own _forward and
+    # _reverse sets.
 
-    def __init__(self) -> None:
+    def __init__(self, *, allow_self_loops: bool = False) -> None:
         self._forward: dict[object, set[object]] = {}
         self._reverse: dict[object, set[object]] = {}
+        self._allow_self_loops: bool = allow_self_loops
 
     # ------------------------------------------------------------------
     # Node operations
@@ -206,7 +227,7 @@ class DirectedGraph:
 
         Duplicate edges are silently ignored (sets handle deduplication).
         """
-        if from_node == to_node:
+        if from_node == to_node and not self._allow_self_loops:
             raise ValueError(
                 f"Self-loops are not allowed: {from_node!r} -> {to_node!r}"
             )
@@ -288,7 +309,10 @@ class DirectedGraph:
         return self.has_node(node)
 
     def __repr__(self) -> str:
-        return f"DirectedGraph(nodes={len(self)}, edges={len(self.edges())})"
+        base = f"DirectedGraph(nodes={len(self)}, edges={len(self.edges())})"
+        if self._allow_self_loops:
+            base = f"DirectedGraph(nodes={len(self)}, edges={len(self.edges())}, allow_self_loops=True)"
+        return base
 
     # ==================================================================
     # ALGORITHMS

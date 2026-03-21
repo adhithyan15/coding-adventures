@@ -77,8 +77,22 @@ func TestInferLanguageGo(t *testing.T) {
 	}
 }
 
+func TestInferLanguageRust(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/rust/logic-gates")
+	if lang != "rust" {
+		t.Fatalf("expected rust, got %s", lang)
+	}
+}
+
+func TestInferLanguageTypescript(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/typescript/logic-gates")
+	if lang != "typescript" {
+		t.Fatalf("expected typescript, got %s", lang)
+	}
+}
+
 func TestInferLanguageUnknown(t *testing.T) {
-	lang := inferLanguage("/repo/code/packages/rust/something")
+	lang := inferLanguage("/repo/code/packages/zig/something")
 	if lang != "unknown" {
 		t.Fatalf("expected unknown, got %s", lang)
 	}
@@ -152,15 +166,12 @@ func TestGetBuildFileMacNotOnLinux(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Tests for DiscoverPackages
+// Tests for DiscoverPackages (recursive BUILD file discovery)
 // ---------------------------------------------------------------------------
 
 func TestDiscoverSimplePackage(t *testing.T) {
-	// A minimal fixture: DIRS → pkg-a → BUILD
+	// A minimal fixture: nested directories with a BUILD file at the leaf.
 	root := makeFixture(t, map[string]string{
-		"DIRS":               "packages",
-		"packages/DIRS":      "python",
-		"packages/python/DIRS": "pkg-a",
 		"packages/python/pkg-a/BUILD":           "echo build\n",
 		"packages/python/pkg-a/pyproject.toml":  "[project]\nname = \"coding-adventures-pkg-a\"\n",
 		"packages/python/pkg-a/src/main.py":     "print('hello')\n",
@@ -185,9 +196,6 @@ func TestDiscoverSimplePackage(t *testing.T) {
 
 func TestDiscoverMultiplePackages(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"DIRS":                "packages",
-		"packages/DIRS":       "python",
-		"packages/python/DIRS": "pkg-a\npkg-b",
 		"packages/python/pkg-a/BUILD": "echo a",
 		"packages/python/pkg-b/BUILD": "echo b",
 	})
@@ -205,7 +213,7 @@ func TestDiscoverMultiplePackages(t *testing.T) {
 	}
 }
 
-func TestDiscoverNoDIRS(t *testing.T) {
+func TestDiscoverEmptyDirectory(t *testing.T) {
 	root := t.TempDir()
 	packages := DiscoverPackages(root)
 	if len(packages) != 0 {
@@ -215,7 +223,6 @@ func TestDiscoverNoDIRS(t *testing.T) {
 
 func TestDiscoverNoBUILD(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"DIRS":           "subdir",
 		"subdir/nothing": "just a file",
 	})
 	packages := DiscoverPackages(root)
@@ -225,11 +232,8 @@ func TestDiscoverNoBUILD(t *testing.T) {
 }
 
 func TestDiscoverDiamondStructure(t *testing.T) {
-	// Mimic the Python test fixture: diamond with 4 packages.
+	// Four packages at the same level — the diamond dependency shape.
 	root := makeFixture(t, map[string]string{
-		"DIRS":                          "pkgs",
-		"pkgs/DIRS":                     "python",
-		"pkgs/python/DIRS":              "pkg-a\npkg-b\npkg-c\npkg-d",
 		"pkgs/python/pkg-a/BUILD":       "echo a",
 		"pkgs/python/pkg-a/src/main.py": "pass",
 		"pkgs/python/pkg-b/BUILD":       "echo b",
@@ -255,54 +259,32 @@ func TestDiscoverDiamondStructure(t *testing.T) {
 
 func TestDiscoverMultiLanguage(t *testing.T) {
 	root := makeFixture(t, map[string]string{
-		"DIRS":           "packages\nprograms",
-		"packages/DIRS":  "python\nruby\ngo",
-		"packages/python/DIRS": "lib-py",
 		"packages/python/lib-py/BUILD": "echo py",
-		"packages/ruby/DIRS": "lib-rb",
-		"packages/ruby/lib-rb/BUILD": "echo rb",
-		"packages/go/DIRS": "lib-go",
-		"packages/go/lib-go/BUILD": "echo go",
-		"programs/DIRS": "python",
-		"programs/python/DIRS": "app",
-		"programs/python/app/BUILD": "echo app",
+		"packages/ruby/lib-rb/BUILD":   "echo rb",
+		"packages/go/lib-go/BUILD":     "echo go",
+		"packages/rust/lib-rs/BUILD":   "echo rs",
+		"programs/python/app/BUILD":    "echo app",
 	})
 
 	packages := DiscoverPackages(root)
-	if len(packages) != 4 {
-		t.Fatalf("expected 4 packages, got %d", len(packages))
+	if len(packages) != 5 {
+		t.Fatalf("expected 5 packages, got %d", len(packages))
 	}
 
 	langs := make(map[string]int)
 	for _, pkg := range packages {
 		langs[pkg.Language]++
 	}
-	if langs["python"] != 2 || langs["ruby"] != 1 || langs["go"] != 1 {
+	if langs["python"] != 2 || langs["ruby"] != 1 || langs["go"] != 1 || langs["rust"] != 1 {
 		t.Errorf("unexpected language distribution: %v", langs)
 	}
 }
 
-func TestDiscoverWithComments(t *testing.T) {
-	root := makeFixture(t, map[string]string{
-		"DIRS": "# This is a comment\npkgs\n\n",
-		"pkgs/DIRS": "python",
-		"pkgs/python/DIRS": "# skip this\npkg-a\n# also skip",
-		"pkgs/python/pkg-a/BUILD": "echo a",
-	})
-
-	packages := DiscoverPackages(root)
-	if len(packages) != 1 {
-		t.Fatalf("expected 1 package, got %d", len(packages))
-	}
-}
-
 func TestDiscoverBUILDStopsRecursion(t *testing.T) {
-	// If a directory has a BUILD file, we don't look inside it for DIRS.
+	// If a directory has a BUILD file, we don't look inside it for sub-packages.
 	root := makeFixture(t, map[string]string{
-		"DIRS":                "pkg-a",
-		"pkg-a/BUILD":        "echo top",
-		"pkg-a/DIRS":         "sub",
-		"pkg-a/sub/BUILD":    "echo sub",
+		"pkg-a/BUILD":     "echo top",
+		"pkg-a/sub/BUILD": "echo sub",
 	})
 
 	packages := DiscoverPackages(root)
@@ -311,5 +293,61 @@ func TestDiscoverBUILDStopsRecursion(t *testing.T) {
 	}
 	if packages[0].Name != "unknown/pkg-a" {
 		t.Errorf("expected unknown/pkg-a, got %s", packages[0].Name)
+	}
+}
+
+func TestDiscoverSkipsSkipListDirs(t *testing.T) {
+	// Directories in the skip list should be completely ignored, even if
+	// they contain BUILD files.
+	root := makeFixture(t, map[string]string{
+		"packages/python/pkg-a/BUILD":           "echo a",
+		"packages/python/pkg-a/.venv/BUILD":     "echo venv",
+		"packages/python/pkg-a/node_modules/BUILD": "echo node",
+		".git/hooks/BUILD":                      "echo git",
+		"packages/python/pkg-b/BUILD":           "echo b",
+		"packages/python/pkg-b/__pycache__/BUILD": "echo pycache",
+	})
+
+	packages := DiscoverPackages(root)
+	// Should only find pkg-a and pkg-b (BUILD stops recursion at pkg level,
+	// so .venv and node_modules inside pkg-a are irrelevant). .git at root
+	// is skipped.
+	if len(packages) != 2 {
+		t.Fatalf("expected 2 packages, got %d: %v", len(packages), packages)
+	}
+}
+
+func TestDiscoverSkipsTargetDir(t *testing.T) {
+	// The "target" directory (Rust build output) should be skipped.
+	root := makeFixture(t, map[string]string{
+		"packages/rust/lib-rs/BUILD":                   "echo rs",
+		"packages/rust/lib-rs/target/debug/BUILD":      "echo target",
+	})
+
+	packages := DiscoverPackages(root)
+	// BUILD at lib-rs stops recursion, so target is not reached anyway.
+	// But verify the package is found.
+	if len(packages) != 1 {
+		t.Fatalf("expected 1 package, got %d", len(packages))
+	}
+	if packages[0].Language != "rust" {
+		t.Errorf("expected rust, got %s", packages[0].Language)
+	}
+}
+
+func TestDiscoverSkipsRootLevelSkipDirs(t *testing.T) {
+	// Skip-list directories at the root level should be ignored.
+	root := makeFixture(t, map[string]string{
+		"packages/python/pkg-a/BUILD": "echo a",
+		".claude/worktrees/test/BUILD": "echo claude",
+		"vendor/some-dep/BUILD":        "echo vendor",
+	})
+
+	packages := DiscoverPackages(root)
+	if len(packages) != 1 {
+		t.Fatalf("expected 1 package, got %d: %v", len(packages), packages)
+	}
+	if packages[0].Name != "python/pkg-a" {
+		t.Errorf("expected python/pkg-a, got %s", packages[0].Name)
 	}
 }

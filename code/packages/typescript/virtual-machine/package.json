@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/virtual-machine",
+  "version": "0.1.0",
+  "description": "General-purpose stack-based bytecode interpreter — Layer 5 of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "virtual-machine",
+    "bytecode",
+    "interpreter",
+    "stack-machine",
+    "jvm",
+    "clr",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

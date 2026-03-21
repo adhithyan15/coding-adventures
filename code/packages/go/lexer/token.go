@@ -19,6 +19,13 @@ const (
 	TokenRParen
 	TokenComma
 	TokenColon
+	TokenSemicolon
+	TokenLBrace
+	TokenRBrace
+	TokenLBracket
+	TokenRBracket
+	TokenDot
+	TokenBang
 	TokenNewline
 	TokenEOF
 )
@@ -28,7 +35,8 @@ func (t TokenType) String() string {
 		"Name", "Number", "String", "Keyword",
 		"Plus", "Minus", "Star", "Slash",
 		"Equals", "EqualsEquals", "LParen", "RParen",
-		"Comma", "Colon", "Newline", "EOF",
+		"Comma", "Colon", "Semicolon", "LBrace", "RBrace",
+		"LBracket", "RBracket", "Dot", "Bang", "Newline", "EOF",
 	}
 	if int(t) < len(names) {
 		return names[t]
@@ -37,10 +45,11 @@ func (t TokenType) String() string {
 }
 
 type Token struct {
-	Type   TokenType
-	Value  string
-	Line   int
-	Column int
+	Type     TokenType
+	Value    string
+	Line     int
+	Column   int
+	TypeName string // Grammar-driven token name (e.g. "INT", "FLOAT"). Empty for hand-written lexer tokens.
 }
 
 func (t Token) String() string {

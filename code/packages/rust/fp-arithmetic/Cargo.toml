@@ -1,0 +1,5 @@
+[package]
+name = "fp-arithmetic"
+version = "0.1.0"
+edition = "2021"
+description = "IEEE 754 floating-point formats and arithmetic — from bits to FMA pipelines"

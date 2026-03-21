@@ -1,0 +1,15 @@
+{
+  "name": "house-price-predictor",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx ts-node --transpileOnly src/index.ts"
+  },
+  "dependencies": {
+    "loss-functions": "file:../../../packages/typescript/loss-functions",
+    "matrix": "file:../../../packages/typescript/matrix"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0"
+  }
+}

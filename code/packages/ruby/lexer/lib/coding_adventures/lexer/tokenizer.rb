@@ -5,18 +5,31 @@
 # ==========================================================================
 #
 # This is the reference lexer implementation. It reads source code character
-# by character, dispatching on the first character to determine what kind
-# of token is starting at each position. The algorithm is classic "dispatch
-# on first character":
+# by character, using a formal DFA to classify each character and dispatch
+# to the appropriate sub-routine.
 #
-#   1. Space/tab  -> skip whitespace
-#   2. Newline    -> emit NEWLINE token
-#   3. Digit      -> read a number
-#   4. Letter/_   -> read a name/keyword
-#   5. Double "   -> read a string
-#   6. =          -> peek ahead: = or ==
-#   7. Simple op  -> look up in table
-#   8. Otherwise  -> error
+# The dispatch logic is driven by the TOKENIZER_DFA defined in
+# tokenizer_dfa.rb. At each step, the lexer:
+#
+#   1. Classifies the current character into a character class
+#      (e.g., "5" -> "digit", '"' -> "quote").
+#   2. Feeds the character class to the DFA to get the next state
+#      (e.g., "start" + "digit" -> "in_number").
+#   3. Dispatches to the appropriate sub-routine based on the DFA state:
+#      - "in_number"      -> read_number
+#      - "in_name"        -> read_name
+#      - "in_string"      -> read_string
+#      - "in_operator"    -> look up in SIMPLE_TOKENS table
+#      - "in_equals"      -> lookahead for = vs ==
+#      - "at_newline"     -> emit NEWLINE token
+#      - "at_whitespace"  -> skip whitespace
+#      - "done"           -> append EOF and stop
+#      - "error"          -> raise LexerError
+#   4. Resets the DFA to "start" and repeats from step 1.
+#
+# The DFA does NOT replace the sub-routines -- it formalizes the top-level
+# dispatch decision. The sub-routines (read_number, read_string, etc.)
+# still do the actual character-by-character work of building tokens.
 #
 # The lexer is language-agnostic. The only language-specific part is the
 # keyword list, which is configurable via the keywords parameter.
@@ -47,7 +60,14 @@ module CodingAdventures
         "(" => TokenType::LPAREN,
         ")" => TokenType::RPAREN,
         "," => TokenType::COMMA,
-        ":" => TokenType::COLON
+        ":" => TokenType::COLON,
+        ";" => TokenType::SEMICOLON,
+        "{" => TokenType::LBRACE,
+        "}" => TokenType::RBRACE,
+        "[" => TokenType::LBRACKET,
+        "]" => TokenType::RBRACKET,
+        "." => TokenType::DOT,
+        "!" => TokenType::BANG
       }.freeze
 
       # @param source [String] the raw source code to tokenize
@@ -62,47 +82,46 @@ module CodingAdventures
       end
 
       # Tokenize the entire source code and return a list of tokens.
+      #
+      # This is the main entry point. It loops through the source code,
+      # character by character, classifying each character and consulting
+      # the tokenizer DFA to determine which sub-routine should handle it.
+      #
+      # The DFA-driven dispatch works as follows:
+      #
+      #   1. Classify the current character into a character class.
+      #   2. Feed the character class to the DFA to get the next state.
+      #   3. Dispatch to the appropriate sub-routine.
+      #   4. Reset the DFA to "start" and repeat.
+      #
       # Always ends with an EOF token.
       def tokenize
         @tokens = []
 
-        while (char = current_char)
-          # Whitespace (spaces and tabs, NOT newlines).
-          if char == " " || char == "\t" || char == "\r"
-            skip_whitespace
-            next
-          end
+        # Create a fresh DFA instance for this tokenization run.
+        dfa = TokenizerDFA.new_tokenizer_dfa
 
-          # Newlines.
-          if char == "\n"
+        loop do
+          char = current_char
+          char_class = TokenizerDFA.classify_char(char)
+          next_state = dfa.process(char_class)
+
+          case next_state
+          when "at_whitespace"
+            skip_whitespace
+          when "at_newline"
             @tokens << Token.new(
               type: TokenType::NEWLINE, value: "\\n",
               line: @line, column: @column
             )
             advance
-            next
-          end
-
-          # Numbers.
-          if char.match?(/[0-9]/)
+          when "in_number"
             @tokens << read_number
-            next
-          end
-
-          # Names and keywords.
-          if char.match?(/[a-zA-Z_]/)
+          when "in_name"
             @tokens << read_name
-            next
-          end
-
-          # String literals.
-          if char == '"'
+          when "in_string"
             @tokens << read_string
-            next
-          end
-
-          # The = and == operators (requires lookahead).
-          if char == "="
+          when "in_equals"
             start_line = @line
             start_column = @column
             advance
@@ -118,24 +137,23 @@ module CodingAdventures
                 line: start_line, column: start_column
               )
             end
-            next
-          end
-
-          # Simple single-character tokens.
-          if SIMPLE_TOKENS.key?(char)
+          when "in_operator"
             @tokens << Token.new(
               type: SIMPLE_TOKENS[char], value: char,
               line: @line, column: @column
             )
             advance
-            next
+          when "done"
+            break
+          when "error"
+            raise LexerError.new(
+              "Unexpected character: #{char.inspect}",
+              line: @line, column: @column
+            )
           end
 
-          # Unexpected character.
-          raise LexerError.new(
-            "Unexpected character: #{char.inspect}",
-            line: @line, column: @column
-          )
+          # Reset the DFA back to "start" for the next character.
+          dfa.reset
         end
 
         # EOF token.
@@ -234,7 +252,7 @@ module CodingAdventures
                 line: start_line, column: start_column
               )
             end
-            escape_map = { "n" => "\n", "t" => "\t", "\\" => "\\", '"' => '"' }
+            escape_map = {"n" => "\n", "t" => "\t", "\\" => "\\", '"' => '"'}
             chars << (escape_map[escaped] || escaped)
             advance
           else

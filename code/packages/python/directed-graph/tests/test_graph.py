@@ -303,3 +303,145 @@ class TestEdgeCases:
         assert g.has_edge(1, 2)
         assert g.successors(1) == [2]
         assert len(g) == 3
+
+
+# ======================================================================
+# 7. Self-Loop Support
+# ======================================================================
+# When ``allow_self_loops=True``, edges from a node to itself are permitted.
+# A self-loop means the node is both a successor AND predecessor of itself.
+# This naturally creates a cycle, so cycle-related algorithms detect it.
+#
+# Why support self-loops? Some graph models require them:
+# - State machines where a state can transition to itself
+# - Dependency graphs where a package depends on its own build output
+# - Labeled graphs where multiple relationships exist between entities
+
+
+class TestSelfLoopDefault:
+    """Verify that self-loops are rejected by default (backward compatible)."""
+
+    def test_default_rejects_self_loop(self) -> None:
+        """Without allow_self_loops, A -> A should raise ValueError."""
+        g = DirectedGraph()
+        with pytest.raises(ValueError, match="Self-loops are not allowed"):
+            g.add_edge("A", "A")
+
+    def test_default_rejects_integer_self_loop(self) -> None:
+        """Self-loop rejection works for non-string node types too."""
+        g = DirectedGraph()
+        with pytest.raises(ValueError):
+            g.add_edge(1, 1)
+
+
+class TestSelfLoopAllowed:
+    """Test graphs where allow_self_loops=True."""
+
+    def test_self_loop_can_be_added(self) -> None:
+        """With allow_self_loops=True, A -> A should succeed."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert g.has_edge("A", "A")
+
+    def test_self_loop_node_is_own_successor(self) -> None:
+        """A self-loop means the node appears in its own successor set."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert "A" in g.successors("A")
+
+    def test_self_loop_node_is_own_predecessor(self) -> None:
+        """A self-loop means the node appears in its own predecessor set."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert "A" in g.predecessors("A")
+
+    def test_self_loop_appears_in_edges(self) -> None:
+        """edges() should include the self-loop as a (A, A) tuple."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert ("A", "A") in g.edges()
+
+    def test_self_loop_creates_cycle(self) -> None:
+        """A graph with a self-loop has a cycle."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert g.has_cycle() is True
+
+    def test_self_loop_plus_normal_edges(self) -> None:
+        """Self-loops can coexist with normal edges."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "B")
+        g.add_edge("B", "B")  # self-loop on B
+        assert g.has_edge("A", "B")
+        assert g.has_edge("B", "B")
+        assert not g.has_edge("A", "A")
+
+    def test_self_loop_transitive_closure(self) -> None:
+        """Transitive closure from a self-loop node includes itself.
+
+        If A -> A and A -> B, then transitive_closure("A") = {A, B}
+        because A can reach itself via the self-loop.
+        """
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        g.add_edge("A", "B")
+        closure = g.transitive_closure("A")
+        assert "A" in closure
+        assert "B" in closure
+
+    def test_self_loop_only_transitive_closure(self) -> None:
+        """Transitive closure of a node with ONLY a self-loop includes itself."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert g.transitive_closure("A") == {"A"}
+
+    def test_remove_node_cleans_up_self_loop(self) -> None:
+        """Removing a node with a self-loop should not leave stale data."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        g.add_edge("A", "B")
+        g.remove_node("A")
+        assert not g.has_node("A")
+        assert g.has_node("B")
+        assert g.edges() == []
+
+    def test_remove_edge_on_self_loop(self) -> None:
+        """remove_edge should work on self-loop edges."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        g.remove_edge("A", "A")
+        assert not g.has_edge("A", "A")
+        assert g.has_node("A")  # node still exists
+
+    def test_self_loop_topological_sort_raises(self) -> None:
+        """Topological sort should raise CycleError for self-loop graphs."""
+        from directed_graph import CycleError
+
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        with pytest.raises(CycleError):
+            g.topological_sort()
+
+    def test_repr_shows_self_loops_flag(self) -> None:
+        """repr should indicate allow_self_loops when True."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        assert "allow_self_loops=True" in repr(g)
+
+    def test_self_loop_idempotent(self) -> None:
+        """Adding the same self-loop twice is a no-op."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        g.add_edge("A", "A")
+        assert g.edges() == [("A", "A")]
+
+    def test_multiple_nodes_with_self_loops(self) -> None:
+        """Multiple nodes can each have self-loops."""
+        g = DirectedGraph(allow_self_loops=True)
+        g.add_edge("A", "A")
+        g.add_edge("B", "B")
+        g.add_edge("A", "B")
+        assert g.has_edge("A", "A")
+        assert g.has_edge("B", "B")
+        assert g.has_edge("A", "B")
+        assert len(g.edges()) == 3

@@ -1,21 +1,28 @@
-// Package discovery walks a monorepo directory tree following DIRS/BUILD files
-// to discover packages.
+// Package discovery walks a monorepo directory tree to discover packages.
 //
 // # How package discovery works
 //
-// A monorepo can contain hundreds of packages across multiple languages. Rather
-// than scanning every directory (which would be slow and fragile), we use an
-// explicit routing mechanism: DIRS files. Each DIRS file is a simple text file
-// listing subdirectories to descend into. This is Knuth's idea of "literate
-// directory structure" — the directory layout itself is a readable document.
+// A monorepo can contain hundreds of packages across multiple languages. The
+// build system discovers them by recursively walking the directory tree and
+// looking for BUILD files. Any directory containing a BUILD file is a package.
 //
 // The walk is recursive. Starting from the root:
 //
-//  1. If the current directory has a BUILD file, it is a package. Register it
+//  1. If the current directory's name is in the skip list, ignore it entirely.
+//  2. If the current directory has a BUILD file, it is a package. Register it
 //     and stop — we don't recurse into packages.
-//  2. If the current directory has a DIRS file, read it. Each non-blank,
-//     non-comment line names a subdirectory to descend into.
-//  3. Recurse into each listed subdirectory.
+//  3. Otherwise, list all subdirectories and recurse into each one.
+//
+// This is the same approach used by Bazel, Buck, and Pants. No configuration
+// files are needed to route the walk — the presence of a BUILD file is
+// sufficient to identify a package.
+//
+// # Skip list
+//
+// Certain directories are known to never contain packages: .git, .venv,
+// node_modules, __pycache__, etc. The skip list prevents the walker from
+// descending into these directories, keeping discovery fast even in large
+// repos with deep dependency trees.
 //
 // # Platform-specific BUILD files
 //
@@ -26,9 +33,9 @@
 // # Language inference
 //
 // We infer a package's language from its directory path. If the path contains
-// "python", "ruby", or "go" as a component under "packages" or "programs",
-// that is the language. The package name is "{language}/{dirname}", e.g.,
-// "python/logic-gates" or "go/directed-graph".
+// "python", "ruby", "go", "rust", "typescript", or "elixir" as a component
+// under "packages" or "programs", that is the language. The package name is
+// "{language}/{dirname}", e.g., "python/logic-gates" or "go/directed-graph".
 package discovery
 
 import (
@@ -46,14 +53,37 @@ type Package struct {
 	Name          string   // Qualified name, e.g. "python/logic-gates"
 	Path          string   // Absolute path to the package directory
 	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Inferred language: "python", "ruby", "go", or "unknown"
+	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", or "unknown"
+}
+
+// skipDirs is the set of directory names that should never be traversed
+// during package discovery. These are known to contain non-source files
+// (caches, dependencies, build artifacts) that would waste time to scan
+// and could never contain valid packages.
+var skipDirs = map[string]bool{
+	".git":          true,
+	".hg":           true,
+	".svn":          true,
+	".venv":         true,
+	".tox":          true,
+	".mypy_cache":   true,
+	".pytest_cache": true,
+	".ruff_cache":   true,
+	"__pycache__":   true,
+	"node_modules":  true,
+	"vendor":        true,
+	"dist":          true,
+	"build":         true,
+	"target":        true,
+	".claude":       true,
+	"Pods":          true,
 }
 
 // readLines reads a file and returns non-blank, non-comment lines.
 //
 // Blank lines and lines starting with '#' are stripped out. Leading and
 // trailing whitespace is removed from each line. If the file does not
-// exist, an empty slice is returned (not an error — a missing DIRS file
+// exist, an empty slice is returned (not an error — a missing file
 // simply means "nothing to see here").
 func readLines(filepath string) []string {
 	data, err := os.ReadFile(filepath)
@@ -72,13 +102,13 @@ func readLines(filepath string) []string {
 }
 
 // inferLanguage inspects the directory path to determine the programming
-// language. We look for known language names ("python", "ruby", "go") as
-// path components. For example, "/repo/code/packages/python/logic-gates"
-// yields "python".
+// language. We look for known language names ("python", "ruby", "go", "rust",
+// "typescript", "elixir") as path components. For example,
+// "/repo/code/packages/python/logic-gates" yields "python".
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go"} {
+	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang
@@ -159,14 +189,22 @@ func fileExists(path string) bool {
 	return err == nil && !info.IsDir()
 }
 
-// walkDirs recursively descends into subdirectories following DIRS files,
-// collecting packages that have BUILD files. This is the heart of the
-// discovery algorithm.
+// walkDirs recursively descends into subdirectories, collecting packages that
+// have BUILD files. This is the heart of the discovery algorithm.
+//
+// The walk uses the skip list to avoid descending into directories that are
+// known to contain non-source files (caches, dependencies, build artifacts).
 //
 // The recursion stops at BUILD files: once we find a package, we don't
 // look inside it for sub-packages. This keeps the model simple — a
-// package is a leaf in the directory routing tree.
+// package is a leaf in the directory tree.
 func walkDirs(directory string, packages *[]Package) {
+	// Check if this directory's name is in the skip list.
+	dirName := filepath.Base(directory)
+	if skipDirs[dirName] {
+		return
+	}
+
 	buildFile := getBuildFile(directory)
 
 	if buildFile != "" {
@@ -179,28 +217,26 @@ func walkDirs(directory string, packages *[]Package) {
 			Name:          name,
 			Path:          directory,
 			BuildCommands: commands,
-			Language:       language,
+			Language:      language,
 		})
 		return
 	}
 
-	// Not a package — look for a DIRS file to find subdirectories.
-	dirsFile := filepath.Join(directory, "DIRS")
-	if !fileExists(dirsFile) {
+	// Not a package — list all subdirectories and recurse into each one.
+	entries, err := os.ReadDir(directory)
+	if err != nil {
 		return
 	}
 
-	subdirs := readLines(dirsFile)
-	for _, subdirName := range subdirs {
-		subdirPath := filepath.Join(directory, subdirName)
-		info, err := os.Stat(subdirPath)
-		if err == nil && info.IsDir() {
+	for _, entry := range entries {
+		if entry.IsDir() {
+			subdirPath := filepath.Join(directory, entry.Name())
 			walkDirs(subdirPath, packages)
 		}
 	}
 }
 
-// DiscoverPackages walks DIRS files recursively starting from root,
+// DiscoverPackages recursively walks the directory tree starting from root,
 // collecting packages with BUILD files. The returned list is sorted
 // by package name for deterministic output.
 //

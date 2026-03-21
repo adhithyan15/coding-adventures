@@ -1,5 +1,9 @@
 package branchpredictor
 
+import (
+	statemachine "github.com/adhithyan15/coding-adventures/code/packages/go/state-machine"
+)
+
 // ─── Two-Bit Saturating Counter Predictor ─────────────────────────────────────
 //
 // The two-bit predictor improves on the one-bit predictor by adding hysteresis.
@@ -55,6 +59,80 @@ const (
 	// StronglyTaken predicts TAKEN with high confidence.
 	StronglyTaken TwoBitState = 3
 )
+
+// ─── DFA Representation ──────────────────────────────────────────────────────
+//
+// The two-bit predictor's state transitions can be expressed exactly as a
+// Deterministic Finite Automaton (DFA). This is not a coincidence — the
+// saturating counter IS a DFA, and this function makes that relationship
+// explicit by constructing the same machine using the state-machine package.
+//
+// The DFA has:
+//   - 4 states: SNT, WNT, WT, ST (matching the TwoBitState constants)
+//   - 2 input symbols: "taken" and "not_taken"
+//   - 8 transitions forming a linear chain with saturation at both ends
+//   - Initial state: WNT (weakly not-taken, the best default)
+//   - Accepting states: WT, ST (the states that predict "taken")
+//
+// This DFA is useful for:
+//   - Formal verification that the hand-coded transitions are correct
+//   - Visualization (via ToDot() or ToAscii())
+//   - Educational purposes — showing that hardware predictors are state machines
+
+// twoBitDFAStateNames maps TwoBitState integer values to DFA state name strings.
+var twoBitDFAStateNames = map[TwoBitState]string{
+	StronglyNotTaken: "SNT",
+	WeaklyNotTaken:   "WNT",
+	WeaklyTaken:      "WT",
+	StronglyTaken:    "ST",
+}
+
+// twoBitDFAStateFromName maps DFA state name strings back to TwoBitState values.
+var twoBitDFAStateFromName = map[string]TwoBitState{
+	"SNT": StronglyNotTaken,
+	"WNT": WeaklyNotTaken,
+	"WT":  WeaklyTaken,
+	"ST":  StronglyTaken,
+}
+
+// NewTwoBitDFA creates a DFA that models the two-bit saturating counter.
+//
+// The returned DFA is fully equivalent to the TwoBitState transition methods
+// (TakenOutcome / NotTakenOutcome). You can verify this equivalence by
+// comparing Process() results with the hand-coded methods — the
+// dfa_equivalence_test.go file does exactly this.
+func NewTwoBitDFA() *statemachine.DFA {
+	return statemachine.NewDFA(
+		[]string{"SNT", "WNT", "WT", "ST"},
+		[]string{"taken", "not_taken"},
+		map[[2]string]string{
+			{"SNT", "taken"}: "WNT", {"SNT", "not_taken"}: "SNT",
+			{"WNT", "taken"}: "WT", {"WNT", "not_taken"}: "SNT",
+			{"WT", "taken"}: "ST", {"WT", "not_taken"}: "WNT",
+			{"ST", "taken"}: "ST", {"ST", "not_taken"}: "WT",
+		},
+		"WNT",
+		[]string{"WT", "ST"},
+		nil, // no actions needed
+	)
+}
+
+// TwoBitStateName returns the DFA state name for a TwoBitState value.
+// Useful for bridging between the integer-based predictor and the
+// string-based DFA representation.
+func TwoBitStateName(s TwoBitState) string {
+	return twoBitDFAStateNames[s]
+}
+
+// TwoBitStateFromName returns the TwoBitState value for a DFA state name.
+// Returns StronglyNotTaken (0) for unknown names.
+func TwoBitStateFromName(name string) TwoBitState {
+	s, ok := twoBitDFAStateFromName[name]
+	if !ok {
+		return StronglyNotTaken
+	}
+	return s
+}
 
 // TakenOutcome returns the next state after a "taken" branch outcome.
 // Increments, saturating at StronglyTaken (3).

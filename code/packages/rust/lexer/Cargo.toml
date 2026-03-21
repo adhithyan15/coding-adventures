@@ -1,0 +1,11 @@
+[package]
+name = "lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Two lexer implementations — a hand-written Python tokenizer and a grammar-driven universal lexer that tokenizes any language from a TokenGrammar specification"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+state-machine = { path = "../state-machine" }
+directed-graph = { path = "../directed-graph" }
+regex = "1"

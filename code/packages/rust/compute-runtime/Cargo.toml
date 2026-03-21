@@ -1,0 +1,11 @@
+[package]
+name = "compute-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Vulkan-inspired compute runtime — device discovery, memory management, command recording, synchronization"
+
+[dependencies]
+device-simulator = { path = "../device-simulator" }
+gpu-core = { path = "../gpu-core" }
+bitflags = "2"
+thiserror = "2"

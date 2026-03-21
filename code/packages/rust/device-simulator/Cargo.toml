@@ -1,0 +1,9 @@
+[package]
+name = "device-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Complete accelerator device simulators — NVIDIA GPU, AMD GPU, Google TPU, Intel GPU, Apple ANE"
+
+[dependencies]
+compute-unit = { path = "../compute-unit" }
+gpu-core = { path = "../gpu-core" }

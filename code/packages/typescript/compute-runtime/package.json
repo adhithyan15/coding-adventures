@@ -1,0 +1,41 @@
+{
+  "name": "@coding-adventures/compute-runtime",
+  "version": "0.1.0",
+  "description": "Vulkan-inspired compute runtime — Layer 5 of the accelerator computing stack. Manages device discovery, memory allocation, command recording/submission, synchronization, and pipeline management.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "gpu",
+    "tpu",
+    "npu",
+    "compute-runtime",
+    "vulkan",
+    "command-buffer",
+    "pipeline",
+    "memory-management",
+    "synchronization",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/device-simulator": "file:../device-simulator",
+    "@coding-adventures/compute-unit": "file:../compute-unit",
+    "@coding-adventures/parallel-execution-engine": "file:../parallel-execution-engine",
+    "@coding-adventures/gpu-core": "file:../gpu-core",
+    "@coding-adventures/fp-arithmetic": "file:../fp-arithmetic",
+    "@coding-adventures/clock": "file:../clock"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

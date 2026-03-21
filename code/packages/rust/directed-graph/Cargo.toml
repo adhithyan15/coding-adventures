@@ -1,0 +1,5 @@
+[package]
+name = "directed-graph"
+version = "0.1.0"
+edition = "2021"
+description = "Directed graph with topological sort, cycle detection, and parallel execution levels"

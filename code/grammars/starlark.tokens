@@ -1,0 +1,234 @@
+# Token definitions for Starlark
+# A deterministic subset of Python designed for configuration files.
+#
+# Starlark specification: https://github.com/bazelbuild/starlark/blob/master/spec.md
+#
+# Format:
+#   TOKEN_NAME = /regex/       — regex-based token pattern
+#   TOKEN_NAME = "literal"     — exact literal match
+#   TOKEN_NAME = /regex/ -> T  — regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., ** before *, // before /, == before =).
+#
+# New features used in this file (extensions to the original .tokens format):
+#
+#   mode: indentation     — activates Python-style INDENT/DEDENT/NEWLINE tokens
+#   skip: ... section     — patterns matched and discarded (comments, whitespace)
+#   -> TYPE alias         — multiple patterns can emit the same token type
+#   reserved: ... section — keywords that are syntax errors if used as identifiers
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Starlark uses significant indentation (like Python). When this mode is
+# active, the lexer:
+#   1. Tracks leading whitespace at each logical line start
+#   2. Maintains an indentation stack (starts at [0])
+#   3. Emits INDENT when indentation increases
+#   4. Emits one or more DEDENT when indentation decreases
+#   5. Emits NEWLINE at logical line boundaries
+#   6. Tracks bracket depth — suppresses INDENT/DEDENT/NEWLINE inside (), [], {}
+#   7. Rejects tab characters in leading whitespace
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# These patterns are matched and consumed but produce no tokens.
+# The lexer tries skip patterns first at each position, consuming all
+# skippable content before attempting token patterns.
+#
+# Comments run from # to end of line. Inline whitespace (spaces and tabs
+# between tokens) is skipped. Leading whitespace at line start is handled
+# by the indentation algorithm, not the skip patterns.
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Starlark supports four string quote styles (single, double, triple-single,
+# triple-double) with optional prefixes:
+#   r/R — raw string (backslashes are literal)
+#   b/B — bytes literal (byte values 0-255 only)
+#   rb/br/rB/bR/etc — raw bytes
+#
+# Triple-quoted strings can span multiple lines and must come before
+# single-quoted patterns (first-match-wins: """ before ").
+#
+# All string variants emit the same STRING token type via the -> alias.
+
+# Triple-quoted with optional prefixes
+STRING_RAW_TRIPLE_DQ = /[rR][bB]?"""([^"\\]|\\.|\n)*"""|[bB][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_TRIPLE_SQ = /[rR][bB]?'''([^'\\]|\\.|\n)*'''|[bB][rR]'''([^'\\]|\\.|\n)*'''/   -> STRING
+STRING_TRIPLE_DQ     = /[bB]?"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_TRIPLE_SQ     = /[bB]?'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# Single-quoted with optional prefixes
+STRING_RAW_DQ        = /[rR][bB]?"([^"\\]|\\.)*"|[bB][rR]"([^"\\]|\\.)*"/                  -> STRING
+STRING_RAW_SQ        = /[rR][bB]?'([^'\\]|\\.)*'|[bB][rR]'([^'\\]|\\.)*'/                  -> STRING
+STRING_DQ            = /[bB]?"([^"\\]|\\.)*"/                                               -> STRING
+STRING_SQ            = /[bB]?'([^'\\]|\\.)*'/                                               -> STRING
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# Float patterns must come before integer patterns so that 3.14 is tokenized
+# as FLOAT(3.14) rather than INT(3) DOT INT(14).
+#
+# Hex and octal integer patterns must come before decimal so that 0xFF is
+# one token, not INT(0) NAME(xFF).
+
+# Floats: 3.14, .5, 5., 1e10, 1.5e-3
+FLOAT       = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+/
+
+# Integers: hex, octal, decimal
+INT_HEX     = /0[xX][0-9a-fA-F]+/     -> INT
+INT_OCT     = /0[oO][0-7]+/           -> INT
+INT         = /[0-9]+/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Names start with a letter or underscore, followed by letters, digits,
+# or underscores. The keywords: section below reclassifies certain names
+# as KEYWORD tokens.
+
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Augmented assignment operators with two-character base operators.
+# Must come before two-character operators (first-match-wins).
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must come before their single-character components.
+# e.g., ** before *, == before =, // before /
+
+DOUBLE_STAR     = "**"
+FLOOR_DIV       = "//"
+LEFT_SHIFT      = "<<"
+RIGHT_SHIFT     = ">>"
+EQUALS_EQUALS   = "=="
+NOT_EQUALS      = "!="
+LESS_EQUALS     = "<="
+GREATER_EQUALS  = ">="
+PLUS_EQUALS     = "+="
+MINUS_EQUALS    = "-="
+STAR_EQUALS     = "*="
+SLASH_EQUALS    = "/="
+PERCENT_EQUALS  = "%="
+AMP_EQUALS      = "&="
+PIPE_EQUALS     = "|="
+CARET_EQUALS    = "^="
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+
+PLUS            = "+"
+MINUS           = "-"
+STAR            = "*"
+SLASH           = "/"
+PERCENT         = "%"
+EQUALS          = "="
+LESS_THAN       = "<"
+GREATER_THAN    = ">"
+AMP             = "&"
+PIPE            = "|"
+CARET           = "^"
+TILDE           = "~"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN          = "("
+RPAREN          = ")"
+LBRACKET        = "["
+RBRACKET        = "]"
+LBRACE          = "{"
+RBRACE          = "}"
+COMMA           = ","
+COLON           = ":"
+SEMICOLON       = ";"
+DOT             = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# When the lexer matches a NAME token whose value appears in the keywords
+# list, it reclassifies the token as KEYWORD. This is the same mechanism
+# used in python.tokens and ruby.tokens.
+
+keywords:
+  and
+  break
+  continue
+  def
+  elif
+  else
+  for
+  if
+  in
+  lambda
+  load
+  not
+  or
+  pass
+  return
+  True
+  False
+  None
+
+# ============================================================================
+# Reserved Keywords
+# ============================================================================
+#
+# These words are reserved for future use. If a NAME matches a reserved
+# keyword, the lexer emits an error instead of a token. This prevents
+# code that looks like Python but does something different in Starlark.
+#
+# For example, `class Foo:` would be a confusing parse error without this
+# check. With reserved keywords, it fails immediately with a clear message:
+# "SyntaxError: 'class' is reserved and cannot be used in Starlark"
+
+reserved:
+  as
+  assert
+  async
+  await
+  class
+  del
+  except
+  finally
+  from
+  global
+  import
+  is
+  nonlocal
+  raise
+  try
+  while
+  with
+  yield

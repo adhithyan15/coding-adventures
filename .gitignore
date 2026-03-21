@@ -53,3 +53,15 @@ Cargo.lock
 # Environment
 .env
 .env.local
+
+# Elixir
+_build/
+deps/
+.elixir_ls/
+.mix/
+.mix_test_failures
+*.beam
+*.app
+compile.*
+ebin/
+erl_crash.dump
