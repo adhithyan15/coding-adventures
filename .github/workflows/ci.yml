@@ -101,6 +101,8 @@ jobs:
           echo "npm: $(npm --version)"
           echo "Rust: $(rustc --version)"
           echo "Cargo: $(cargo --version)"
+          echo "Elixir: $(elixir --version)"
+          echo "Mix: $(mix --version)"
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
