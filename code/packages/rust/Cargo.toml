@@ -53,4 +53,5 @@ members = [
     "virtual-memory",
     "process-manager",
     "file-system",
+    "ipc",
 ]
