@@ -1,0 +1,39 @@
+{
+  "name": "@coding-adventures/starlark-ast-to-bytecode-compiler",
+  "version": "0.1.0",
+  "description": "Compiles Starlark ASTs into bytecode using the GenericCompiler framework — ports all 46 opcodes and ~55 grammar rule handlers from the Python reference",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "starlark",
+    "compiler",
+    "bytecode",
+    "ast",
+    "grammar-driven",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/bytecode-compiler": "file:../bytecode-compiler",
+    "@coding-adventures/starlark-parser": "file:../starlark-parser",
+    "@coding-adventures/starlark-lexer": "file:../starlark-lexer",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/virtual-machine": "file:../virtual-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
