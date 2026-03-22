@@ -191,8 +191,9 @@ defmodule CatTest do
       # Line 1 should be numbered, blank line not numbered, line 2 numbered as 2.
       assert output =~ "1\thello"
       assert output =~ "2\tworld"
-      # The blank line should appear but without a number.
-      lines = String.split(output, "\n", trim: true)
+      # The blank line should appear but without a number prefix.
+      # We split WITHOUT trim so empty lines are preserved as empty strings.
+      lines = String.split(output, "\n")
       blank_line = Enum.at(lines, 1)
       refute blank_line =~ ~r/^\s+\d/
     end
