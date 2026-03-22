@@ -1,1 +1,1 @@
-cd code/packages/rust/fpga && /Users/adhithya/.local/bin/mise exec -- cargo test -p fpga
+cargo test -p fpga -- --nocapture

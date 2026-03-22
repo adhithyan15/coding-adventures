@@ -1,1 +1,1 @@
-cd ../logic-gates && /Users/adhithya/.local/bin/mise exec -- npm install --silent && cd ../block-ram && /Users/adhithya/.local/bin/mise exec -- npm install --silent && /Users/adhithya/.local/bin/mise exec -- npx vitest run
+cd ../logic-gates && npm install --silent && cd ../block-ram && npm install --silent && npx vitest run
