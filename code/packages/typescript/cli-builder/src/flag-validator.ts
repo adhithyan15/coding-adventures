@@ -233,6 +233,10 @@ export class FlagValidator {
     if (flag.type === "boolean") {
       return val === true;
     }
+    // v1.1: Count flags are "present" when their value is > 0.
+    if (flag.type === "count") {
+      return typeof val === "number" && val > 0;
+    }
     return val !== null && val !== undefined;
   }
 

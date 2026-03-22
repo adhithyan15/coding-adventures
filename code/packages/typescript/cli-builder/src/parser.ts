@@ -279,7 +279,7 @@ export class Parser {
     const activeFlags = this._buildActiveFlagSet(spec, commandPath, commandNode);
 
     // --- Phase 2: Scanning ---
-    const { parsedFlags, positionalTokens, earlyReturn } = this._phase2Scan(
+    const { parsedFlags, positionalTokens, earlyReturn, explicitFlags } = this._phase2Scan(
       spec,
       commandPath,
       commandNode,
@@ -327,6 +327,7 @@ export class Parser {
       commandPath: fullCommandPath,
       flags: parsedFlags,
       arguments: parsedArgs,
+      explicitFlags,
     };
 
     return parseResult;
@@ -416,11 +417,16 @@ export class Parser {
     // "--name=value": entire thing is one token
     if (token.startsWith("--") && token.includes("=")) return 1;
 
-    // Long flag without value: check if it's boolean
+    // Long flag without value: check if it's boolean or count (both consume no value)
     if (token.startsWith("--")) {
       const name = token.slice(2);
       const flag = activeFlags.find((f) => f.long === name);
-      if (flag && flag.type !== "boolean" && i + 1 < argv.length) return 2;
+      if (flag && flag.type !== "boolean" && flag.type !== "count" && i + 1 < argv.length) {
+        // v1.1: enum flags with defaultWhenPresent may or may not consume a value.
+        // During Phase 1 routing we conservatively skip 1 (the flag may use its default).
+        if (flag.defaultWhenPresent !== undefined) return 1;
+        return 2;
+      }
       return 1;
     }
 
@@ -431,17 +437,17 @@ export class Parser {
       // Check single_dash_long
       const sdlFlag = activeFlags.find((f) => f.singleDashLong === rest);
       if (sdlFlag) {
-        if (sdlFlag.type !== "boolean" && i + 1 < argv.length) return 2;
+        if (sdlFlag.type !== "boolean" && sdlFlag.type !== "count" && i + 1 < argv.length) return 2;
         return 1;
       }
 
       // Check if there's an "=" embedded (like "-n=5") — unlikely but handled
       if (rest.includes("=")) return 1;
 
-      // Short flag: only advance 2 if single char and non-boolean
+      // Short flag: only advance 2 if single char and non-boolean/non-count
       const firstChar = rest[0];
       const shortFlag = activeFlags.find((f) => f.short === firstChar);
-      if (shortFlag && shortFlag.type !== "boolean" && rest.length === 1 && i + 1 < argv.length) {
+      if (shortFlag && shortFlag.type !== "boolean" && shortFlag.type !== "count" && rest.length === 1 && i + 1 < argv.length) {
         return 2;
       }
 
@@ -474,11 +480,15 @@ export class Parser {
     parsedFlags: Record<string, unknown>;
     positionalTokens: string[];
     earlyReturn: HelpResult | VersionResult | null;
+    explicitFlags: string[];
   } {
     const classifier = new TokenClassifier(activeFlags);
     const parsedFlags: Record<string, unknown> = {};
     const positionalTokens: string[] = [];
     const errors: ParseError[] = [];
+    // v1.1: Track which flags were explicitly set by the user.
+    // Every time a flag token is consumed, its ID is appended here.
+    const explicitFlags: string[] = [];
 
     // Initialize the modal state machine for parse mode tracking
     const modeMachine = buildParseModeMachine();
@@ -522,6 +532,7 @@ export class Parser {
                 parsedFlags,
                 errors,
                 fullCommandPath,
+                explicitFlags,
               );
               if (stackResult.pendingFlag !== null) {
                 pendingFlag = stackResult.pendingFlag;
@@ -596,11 +607,11 @@ export class Parser {
                   text: helpGen.generate(),
                   commandPath: fullCommandPath,
                 };
-                return { parsedFlags, positionalTokens, earlyReturn: helpResult };
+                return { parsedFlags, positionalTokens, earlyReturn: helpResult, explicitFlags };
               }
               if (classified.name === "version" && spec.builtinFlags.version && spec.version) {
                 const versionResult: VersionResult = { version: spec.version };
-                return { parsedFlags, positionalTokens, earlyReturn: versionResult };
+                return { parsedFlags, positionalTokens, earlyReturn: versionResult, explicitFlags };
               }
 
               const flag = classifier.lookupByLong(classified.name);
@@ -617,10 +628,31 @@ export class Parser {
                 });
               } else if (flag.type === "boolean") {
                 this._assignFlagValue(flag, true, parsedFlags, errors, fullCommandPath);
+                explicitFlags.push(flag.id);
+              } else if (flag.type === "count") {
+                // v1.1: Count flags increment by 1 on each occurrence.
+                this._incrementCountFlag(flag, parsedFlags);
+                explicitFlags.push(flag.id);
+              } else if (flag.defaultWhenPresent !== undefined) {
+                // v1.1: Enum flag with default_when_present.
+                // Look ahead: if the next token is a valid enum value, consume it.
+                // Otherwise, use defaultWhenPresent.
+                const nextToken = i + 1 < argv.length ? argv[i + 1] : undefined;
+                if (nextToken !== undefined && flag.enumValues.includes(nextToken)) {
+                  // Next token is a valid enum value — consume it as the flag's value.
+                  pendingFlag = flag;
+                  modeMachine.switchMode("to_flag_value");
+                  parseMode = "FLAG_VALUE";
+                } else {
+                  // No valid enum value follows — use the default_when_present value.
+                  this._assignFlagValue(flag, flag.defaultWhenPresent, parsedFlags, errors, fullCommandPath);
+                }
+                explicitFlags.push(flag.id);
               } else {
                 pendingFlag = flag;
                 modeMachine.switchMode("to_flag_value");
                 parseMode = "FLAG_VALUE";
+                explicitFlags.push(flag.id);
               }
               break;
             }
@@ -656,6 +688,7 @@ export class Parser {
                 } else {
                   this._assignFlagValue(flag, coerced.value, parsedFlags, errors, fullCommandPath);
                 }
+                explicitFlags.push(flag.id);
               }
               break;
             }
@@ -670,10 +703,15 @@ export class Parser {
                 });
               } else if (flag.type === "boolean") {
                 this._assignFlagValue(flag, true, parsedFlags, errors, fullCommandPath);
+                explicitFlags.push(flag.id);
+              } else if (flag.type === "count") {
+                this._incrementCountFlag(flag, parsedFlags);
+                explicitFlags.push(flag.id);
               } else {
                 pendingFlag = flag;
                 modeMachine.switchMode("to_flag_value");
                 parseMode = "FLAG_VALUE";
+                explicitFlags.push(flag.id);
               }
               break;
             }
@@ -700,10 +738,26 @@ export class Parser {
                 });
               } else if (flag.type === "boolean") {
                 this._assignFlagValue(flag, true, parsedFlags, errors, fullCommandPath);
+                explicitFlags.push(flag.id);
+              } else if (flag.type === "count") {
+                this._incrementCountFlag(flag, parsedFlags);
+                explicitFlags.push(flag.id);
+              } else if (flag.defaultWhenPresent !== undefined) {
+                // v1.1: Short enum flag with default_when_present — look ahead.
+                const nextToken = i + 1 < argv.length ? argv[i + 1] : undefined;
+                if (nextToken !== undefined && flag.enumValues.includes(nextToken)) {
+                  pendingFlag = flag;
+                  modeMachine.switchMode("to_flag_value");
+                  parseMode = "FLAG_VALUE";
+                } else {
+                  this._assignFlagValue(flag, flag.defaultWhenPresent, parsedFlags, errors, fullCommandPath);
+                }
+                explicitFlags.push(flag.id);
               } else {
                 pendingFlag = flag;
                 modeMachine.switchMode("to_flag_value");
                 parseMode = "FLAG_VALUE";
+                explicitFlags.push(flag.id);
               }
               break;
             }
@@ -729,6 +783,7 @@ export class Parser {
                 } else {
                   this._assignFlagValue(flag, coerced.value, parsedFlags, errors, fullCommandPath);
                 }
+                explicitFlags.push(flag.id);
               }
               break;
             }
@@ -740,6 +795,7 @@ export class Parser {
                 parsedFlags,
                 errors,
                 fullCommandPath,
+                explicitFlags,
               );
               // If the last char in the stack was a non-boolean flag, its
               // value is the next token → switch to FLAG_VALUE mode.
@@ -786,13 +842,19 @@ export class Parser {
       }
     }
 
-    // If we ended in FLAG_VALUE mode, the value was never provided
+    // If we ended in FLAG_VALUE mode, the value was never provided.
+    // However, if the pending flag has defaultWhenPresent, use that default
+    // instead of reporting an error (v1.1).
     if (parseMode === "FLAG_VALUE" && pendingFlag !== null) {
-      errors.push({
-        errorType: "invalid_value",
-        message: `Flag '${this._flagDisplay(pendingFlag)}' requires a value`,
-        context: fullCommandPath,
-      });
+      if (pendingFlag.defaultWhenPresent !== undefined) {
+        this._assignFlagValue(pendingFlag, pendingFlag.defaultWhenPresent, parsedFlags, errors, fullCommandPath);
+      } else {
+        errors.push({
+          errorType: "invalid_value",
+          message: `Flag '${this._flagDisplay(pendingFlag)}' requires a value`,
+          context: fullCommandPath,
+        });
+      }
     }
 
     // If there are scan errors, throw them now
@@ -800,7 +862,7 @@ export class Parser {
       throw new ParseErrors(errors);
     }
 
-    return { parsedFlags, positionalTokens, earlyReturn: null };
+    return { parsedFlags, positionalTokens, earlyReturn: null, explicitFlags };
   }
 
   // ---------------------------------------------------------------------------
@@ -834,6 +896,7 @@ export class Parser {
     parsedFlags: Record<string, unknown>,
     errors: ParseError[],
     context: string[],
+    explicitFlags: string[],
   ): { pendingFlag: FlagDef | null } {
     for (const c of chars) {
       const flag = classifier.lookupByShort(c);
@@ -847,13 +910,40 @@ export class Parser {
       }
       if (flag.type === "boolean") {
         this._assignFlagValue(flag, true, parsedFlags, errors, context);
+        explicitFlags.push(flag.id);
+      } else if (flag.type === "count") {
+        // v1.1: Count flags in a stack each increment by 1.
+        // This is how `-vvv` produces a count of 3.
+        this._incrementCountFlag(flag, parsedFlags);
+        explicitFlags.push(flag.id);
       } else {
-        // Non-boolean in a stack: mark as pending (value comes next)
+        // Non-boolean/non-count in a stack: mark as pending (value comes next)
         // Return the pending flag so the caller can switch to FLAG_VALUE mode
+        explicitFlags.push(flag.id);
         return { pendingFlag: flag };
       }
     }
     return { pendingFlag: null };
+  }
+
+  /**
+   * Increment a count flag by 1.
+   *
+   * v1.1: Count flags behave like boolean flags in that they consume no
+   * value token. Each occurrence increments the counter. The default value
+   * (when absent) is 0. In stacked short flags like `-vvv`, each character
+   * calls this method once, producing a final count of 3.
+   */
+  private _incrementCountFlag(
+    flag: FlagDef,
+    parsedFlags: Record<string, unknown>,
+  ): void {
+    const current = parsedFlags[flag.id];
+    if (typeof current === "number") {
+      parsedFlags[flag.id] = current + 1;
+    } else {
+      parsedFlags[flag.id] = 1;
+    }
   }
 
   /**
@@ -903,6 +993,9 @@ export class Parser {
           parsedFlags[flag.id] = [];
         } else if (flag.type === "boolean") {
           parsedFlags[flag.id] = false;
+        } else if (flag.type === "count") {
+          // v1.1: Count flags default to 0 when absent.
+          parsedFlags[flag.id] = 0;
         } else {
           parsedFlags[flag.id] = flag.default;
         }

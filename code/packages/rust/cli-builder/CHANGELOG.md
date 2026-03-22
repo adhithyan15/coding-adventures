@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] — 2026-03-22
+
+### Added
+
+- **Count flag type** (`"type": "count"`) — a new flag type that consumes no
+  value token. Each occurrence increments a counter: `-vvv` produces 3,
+  `--verbose --verbose` produces 2. Absent count flags default to 0. In stacked
+  short flags, each character increments independently.
+
+- **Enum optional values** (`default_when_present` field on `FlagDef`) — when
+  an enum flag has this field set and the user provides the flag without a value
+  (e.g., `--color` instead of `--color=always`), `default_when_present` is used
+  as the value. When the flag is used with `=value` syntax, the explicit value
+  takes precedence. The token classifier treats such flags as boolean-like (no
+  value consumption), and the parser uses `default_when_present` as the fallback.
+  Validated at spec load time: must be `"enum"` type, value must be in
+  `enum_values`.
+
+- **Flag presence detection** (`explicit_flags: Vec<String>` on `ParseResult`)
+  — tracks which flags were explicitly set by the user on the command line.
+  Every time a flag token is consumed from argv, its ID is appended. A flag
+  that appears multiple times appears multiple times in the list (e.g., `-vvv`
+  adds `"verbose"` three times for a count flag).
+
+- **int64 range validation** — improved error messages for integer values that
+  are out of the i64 range. Rust's `i64::parse()` already validates the range,
+  but the error message now distinguishes "looks numeric but out of range" from
+  "not a valid integer at all."
+
+- **Help output for count flags** — count flags display with no value
+  placeholder (like boolean flags).
+
+- **Help output for enum flags with `default_when_present`** — these flags
+  display `[=VALUE]` instead of `<VALUE>` to indicate the value is optional.
+
+- 30+ new tests covering all four v1.1 features: count flag stacking, count
+  defaults, `default_when_present` bare flag vs `=value`, `explicit_flags`
+  tracking for boolean/count/value/stacked/repeatable flags, integer range
+  errors, and spec validation of `default_when_present`.
+
+### Changed
+
+- `FlagDef` struct gains `default_when_present: Option<String>` field
+  (serde-optional, backward compatible).
+- `ParseResult` struct gains `explicit_flags: Vec<String>` field.
+- `FlagInfo` (token classifier) gains `is_count` and `has_default_when_present`
+  fields. `is_boolean` is now `true` for count flags and enum flags with
+  `default_when_present` (since they consume no value token).
+- `coerce_value` for `"integer"` type now provides a more descriptive error
+  message when the value is numeric but out of i64 range.
+
 ## [0.3.0] — 2026-03-22
 
 ### Added
