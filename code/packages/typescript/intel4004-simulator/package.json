@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/intel4004-simulator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Intel 4004 first microprocessor simulation — Layer 4d of the computing stack",
   "type": "module",
   "main": "src/index.ts",

@@ -31,6 +31,7 @@ members = [
     "grammar-tools",
     "hazard-detection",
     "html-renderer",
+    "intel4004-gatelevel",
     "intel4004-simulator",
     "interrupt-handler",
     "javascript-lexer",
