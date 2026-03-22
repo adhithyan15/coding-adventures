@@ -13,6 +13,7 @@ import {
   parseTokenGrammar,
   validateTokenGrammar,
   tokenNames,
+  effectiveTokenNames,
 } from "../src/token-grammar.js";
 
 // ---------------------------------------------------------------------------
@@ -489,5 +490,266 @@ skip:
     expect(grammar.keywords).toHaveLength(7);
     const issues = validateTokenGrammar(grammar);
     expect(issues).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Pattern groups: happy paths
+// ---------------------------------------------------------------------------
+
+describe("PatternGroups", () => {
+  it("should parse a basic group section", () => {
+    /** A simple group section is parsed into a PatternGroup. */
+    const source = `TEXT = /[^<]+/
+TAG_OPEN = "<"
+
+group tag:
+  TAG_NAME = /[a-zA-Z]+/
+  TAG_CLOSE = ">"
+`;
+    const grammar = parseTokenGrammar(source);
+
+    // Default group patterns
+    expect(grammar.definitions).toHaveLength(2);
+    expect(grammar.definitions[0].name).toBe("TEXT");
+    expect(grammar.definitions[1].name).toBe("TAG_OPEN");
+
+    // Named group
+    expect(grammar.groups).toBeDefined();
+    expect(grammar.groups!["tag"]).toBeDefined();
+    const group = grammar.groups!["tag"];
+    expect(group.name).toBe("tag");
+    expect(group.definitions).toHaveLength(2);
+    expect(group.definitions[0].name).toBe("TAG_NAME");
+    expect(group.definitions[1].name).toBe("TAG_CLOSE");
+  });
+
+  it("should parse multiple groups", () => {
+    /** Multiple groups can be defined in the same file. */
+    const source = `TEXT = /[^<]+/
+
+group tag:
+  TAG_NAME = /[a-zA-Z]+/
+
+group cdata:
+  CDATA_TEXT = /[^]]+/
+  CDATA_END = "]]>"
+`;
+    const grammar = parseTokenGrammar(source);
+
+    expect(Object.keys(grammar.groups!)).toHaveLength(2);
+    expect(grammar.groups!["tag"]).toBeDefined();
+    expect(grammar.groups!["cdata"]).toBeDefined();
+    expect(grammar.groups!["tag"].definitions).toHaveLength(1);
+    expect(grammar.groups!["cdata"].definitions).toHaveLength(2);
+  });
+
+  it("should parse group definitions with aliases", () => {
+    /** Definitions inside groups support -> ALIAS. */
+    const source = `TEXT = /[^<]+/
+
+group tag:
+  ATTR_VALUE_DQ = /"[^"]*"/ -> ATTR_VALUE
+  ATTR_VALUE_SQ = /'[^']*'/ -> ATTR_VALUE
+`;
+    const grammar = parseTokenGrammar(source);
+
+    const group = grammar.groups!["tag"];
+    expect(group.definitions[0].name).toBe("ATTR_VALUE_DQ");
+    expect(group.definitions[0].alias).toBe("ATTR_VALUE");
+    expect(group.definitions[1].name).toBe("ATTR_VALUE_SQ");
+    expect(group.definitions[1].alias).toBe("ATTR_VALUE");
+  });
+
+  it("should parse groups with mixed regex and literal patterns", () => {
+    /** Groups support both regex and literal patterns. */
+    const source = `TEXT = /[^<]+/
+
+group tag:
+  EQUALS = "="
+  TAG_NAME = /[a-zA-Z]+/
+`;
+    const grammar = parseTokenGrammar(source);
+
+    const group = grammar.groups!["tag"];
+    expect(group.definitions[0].isRegex).toBe(false);
+    expect(group.definitions[0].pattern).toBe("=");
+    expect(group.definitions[1].isRegex).toBe(true);
+  });
+
+  it("should have no groups for files without group sections", () => {
+    /** Files without groups have undefined groups (backward compat). */
+    const source = `NUMBER = /[0-9]+/
+PLUS = "+"
+`;
+    const grammar = parseTokenGrammar(source);
+
+    expect(grammar.groups).toBeUndefined();
+    expect(grammar.definitions).toHaveLength(2);
+  });
+
+  it("should coexist with skip and keywords sections", () => {
+    /** skip: and group: sections coexist correctly. */
+    const source = `skip:
+  WS = /[ \\t]+/
+
+TEXT = /[^<]+/
+
+group tag:
+  TAG_NAME = /[a-zA-Z]+/
+`;
+    const grammar = parseTokenGrammar(source);
+
+    expect(grammar.skipDefinitions).toHaveLength(1);
+    expect(grammar.definitions).toHaveLength(1);
+    expect(Object.keys(grammar.groups!)).toHaveLength(1);
+  });
+
+  it("should include group names in tokenNames()", () => {
+    /** tokenNames() includes names from all groups. */
+    const source = `TEXT = /[^<]+/
+
+group tag:
+  TAG_NAME = /[a-zA-Z]+/
+  ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE
+`;
+    const grammar = parseTokenGrammar(source);
+
+    const names = tokenNames(grammar);
+    expect(names.has("TEXT")).toBe(true);
+    expect(names.has("TAG_NAME")).toBe(true);
+    expect(names.has("ATTR_DQ")).toBe(true);
+    expect(names.has("ATTR_VALUE")).toBe(true);
+  });
+
+  it("should include group aliases in effectiveTokenNames()", () => {
+    /** effectiveTokenNames() includes aliased names from groups. */
+    const source = `TEXT = /[^<]+/
+
+group tag:
+  ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE
+`;
+    const grammar = parseTokenGrammar(source);
+
+    const names = effectiveTokenNames(grammar);
+    expect(names.has("TEXT")).toBe(true);
+    expect(names.has("ATTR_VALUE")).toBe(true);
+    // alias replaces name in effective names
+    expect(names.has("ATTR_DQ")).toBe(false);
+  });
+
+  it("should validate group definitions (bad regex)", () => {
+    /** Definitions in groups are validated (e.g., bad regex). */
+    const grammar = {
+      definitions: [],
+      keywords: [],
+      groups: {
+        tag: {
+          name: "tag",
+          definitions: [
+            {
+              name: "BAD",
+              pattern: "[invalid",
+              isRegex: true,
+              lineNumber: 5,
+            },
+          ],
+        },
+      },
+    };
+    const issues = validateTokenGrammar(grammar);
+    expect(issues.some((i) => i.includes("Invalid regex"))).toBe(true);
+  });
+
+  it("should warn on empty groups", () => {
+    /** An empty group produces a validation warning. */
+    const grammar = {
+      definitions: [],
+      keywords: [],
+      groups: {
+        empty: {
+          name: "empty",
+          definitions: [],
+        },
+      },
+    };
+    const issues = validateTokenGrammar(grammar);
+    expect(issues.some((i) => i.includes("Empty pattern group"))).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Pattern groups: error cases
+// ---------------------------------------------------------------------------
+
+describe("PatternGroupErrors", () => {
+  it("should throw on missing group name", () => {
+    /** 'group :' with no name raises an error. */
+    const source = "TEXT = /abc/\ngroup :\n  FOO = /x/\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Missing group name/);
+  });
+
+  it("should throw on uppercase group name", () => {
+    /** Uppercase group names are rejected. */
+    const source = "TEXT = /abc/\ngroup Tag:\n  FOO = /x/\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Invalid group name/);
+  });
+
+  it("should throw on group name starting with digit", () => {
+    /** Group names starting with a digit are rejected. */
+    const source = "TEXT = /abc/\ngroup 1tag:\n  FOO = /x/\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Invalid group name/);
+  });
+
+  it("should throw on reserved group name 'default'", () => {
+    /** 'group default:' is rejected as reserved. */
+    const source = "TEXT = /abc/\ngroup default:\n  FOO = /x/\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Reserved group name/);
+  });
+
+  it("should throw on reserved group name 'skip'", () => {
+    /** 'group skip:' is rejected as reserved. */
+    const source = "TEXT = /abc/\ngroup skip:\n  FOO = /x/\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Reserved group name/);
+  });
+
+  it("should throw on reserved group name 'keywords'", () => {
+    /** 'group keywords:' is rejected as reserved. */
+    const source = "TEXT = /abc/\ngroup keywords:\n  FOO = /x/\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Reserved group name/);
+  });
+
+  it("should throw on duplicate group name", () => {
+    /** Two groups with the same name raises an error. */
+    const source = `TEXT = /abc/
+group tag:
+  FOO = /x/
+group tag:
+  BAR = /y/
+`;
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Duplicate group name/);
+  });
+
+  it("should throw on bad definition in group", () => {
+    /** Invalid definition inside a group raises an error. */
+    const source = "TEXT = /abc/\ngroup tag:\n  not a definition\n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(
+      /Expected token definition/,
+    );
+  });
+
+  it("should throw on incomplete definition in group", () => {
+    /** Missing pattern in group definition raises an error. */
+    const source = "TEXT = /abc/\ngroup tag:\n  FOO = \n";
+    expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
+    expect(() => parseTokenGrammar(source)).toThrow(/Incomplete definition/);
   });
 });
