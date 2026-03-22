@@ -31,6 +31,7 @@ require_relative "../lib/build_tool/hasher"
 require_relative "../lib/build_tool/cache"
 require_relative "../lib/build_tool/executor"
 require_relative "../lib/build_tool/reporter"
+require_relative "../lib/build_tool/starlark_evaluator"
 
 module TestHelper
   # FIXTURES_DIR points to the test/fixtures/ directory. We use Pathname

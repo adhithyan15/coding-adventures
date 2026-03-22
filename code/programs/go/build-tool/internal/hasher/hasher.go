@@ -49,17 +49,25 @@ import (
 // change detection. If any file with these extensions changes, the package
 // needs rebuilding.
 var sourceExtensions = map[string]map[string]bool{
-	"python": {".py": true, ".toml": true, ".cfg": true},
-	"ruby":   {".rb": true, ".gemspec": true},
-	"go":     {".go": true},
+	"python":     {".py": true, ".toml": true, ".cfg": true},
+	"ruby":       {".rb": true, ".gemspec": true},
+	"go":         {".go": true},
+	"typescript": {".ts": true, ".tsx": true, ".json": true},
+	"rust":       {".rs": true, ".toml": true},
+	"elixir":     {".ex": true, ".exs": true},
+	"starlark":   {".star": true},
 }
 
 // specialFilenames maps languages to filenames that should always be
 // included regardless of their extension.
 var specialFilenames = map[string]map[string]bool{
-	"python": {},
-	"ruby":   {"Gemfile": true, "Rakefile": true},
-	"go":     {"go.mod": true, "go.sum": true},
+	"python":     {},
+	"ruby":       {"Gemfile": true, "Rakefile": true},
+	"go":         {"go.mod": true, "go.sum": true},
+	"typescript": {"package.json": true, "tsconfig.json": true, "vitest.config.ts": true},
+	"rust":       {"Cargo.toml": true, "Cargo.lock": true},
+	"elixir":     {"mix.exs": true, "mix.lock": true},
+	"starlark":   {},
 }
 
 // collectSourceFiles walks the package directory and returns all source
@@ -124,6 +132,71 @@ func collectSourceFiles(pkg discovery.Package) []string {
 	return files
 }
 
+// resolveDeclaredSrcs converts the declared source patterns from a Starlark
+// BUILD file into actual file paths. Each pattern is resolved relative to
+// the package directory. Glob patterns (like "src/**/*.py") are expanded.
+// The BUILD file itself is always included.
+//
+// Files are sorted by relative path for deterministic hashing.
+func resolveDeclaredSrcs(pkg discovery.Package) []string {
+	var files []string
+
+	// Always include the BUILD file itself.
+	for _, name := range []string{"BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows"} {
+		buildPath := filepath.Join(pkg.Path, name)
+		if fileExists(buildPath) {
+			files = append(files, buildPath)
+		}
+	}
+
+	// Resolve each declared pattern.
+	for _, pattern := range pkg.DeclaredSrcs {
+		fullPattern := filepath.Join(pkg.Path, pattern)
+
+		// Try glob expansion first.
+		matches, err := filepath.Glob(fullPattern)
+		if err != nil {
+			// Invalid pattern — treat as literal path.
+			literal := filepath.Join(pkg.Path, pattern)
+			if fileExists(literal) {
+				files = append(files, literal)
+			}
+			continue
+		}
+
+		for _, m := range matches {
+			if info, err := os.Stat(m); err == nil && !info.IsDir() {
+				files = append(files, m)
+			}
+		}
+	}
+
+	// Sort by relative path for determinism.
+	sort.Slice(files, func(i, j int) bool {
+		relI, _ := filepath.Rel(pkg.Path, files[i])
+		relJ, _ := filepath.Rel(pkg.Path, files[j])
+		return relI < relJ
+	})
+
+	// Deduplicate (BUILD file may also match a pattern).
+	deduped := make([]string, 0, len(files))
+	seen := make(map[string]bool)
+	for _, f := range files {
+		if !seen[f] {
+			seen[f] = true
+			deduped = append(deduped, f)
+		}
+	}
+
+	return deduped
+}
+
+// fileExists reports whether a file exists and is not a directory.
+func fileExists(path string) bool {
+	info, err := os.Stat(path)
+	return err == nil && !info.IsDir()
+}
+
 // hashFile computes the SHA256 hex digest of a single file's contents.
 // We read in 8KB chunks to handle large files without loading them
 // entirely into memory.
@@ -145,10 +218,21 @@ func hashFile(path string) (string, error) {
 // the package. The hash changes if any source file is added, removed,
 // or modified.
 //
+// When a package has DeclaredSrcs (from a Starlark BUILD file), we hash
+// ONLY those declared files — this is strict mode. When DeclaredSrcs is
+// empty (shell BUILD files), we fall back to extension-based collection.
+//
 // If the package has no source files, we hash the empty string for
 // consistency — every package gets a hash, even empty ones.
 func HashPackage(pkg discovery.Package) string {
-	files := collectSourceFiles(pkg)
+	var files []string
+	if len(pkg.DeclaredSrcs) > 0 {
+		// Strict mode: hash only declared sources.
+		files = resolveDeclaredSrcs(pkg)
+	} else {
+		// Legacy mode: extension-based collection.
+		files = collectSourceFiles(pkg)
+	}
 
 	if len(files) == 0 {
 		// No source files — hash the empty string.
