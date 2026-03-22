@@ -85,7 +85,7 @@ func compareKey(line string, skipFields, skipChars, checkChars int, ignoreCase b
 			}
 			remaining = remaining[idx:]
 		}
-		result = remaining
+		result = strings.TrimLeft(remaining, " \t")
 	}
 
 	// Step 2: Skip characters.

@@ -36,7 +36,8 @@ mod flag_parsing {
 
     #[test]
     fn no_flags_returns_parse() {
-        match parse_argv(&["expand"]) {
+        // Pass a file argument since the spec requires at least one FILE.
+        match parse_argv(&["expand", "-"]) {
             ParserOutput::Parse(_) => {}
             other => panic!("expected Parse, got {:?}", other),
         }
