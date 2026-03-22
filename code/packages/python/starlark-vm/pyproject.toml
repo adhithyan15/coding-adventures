@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "coding-adventures-virtual-machine",
-    "coding-adventures-starlark-compiler",
+    "coding-adventures-starlark-ast-to-bytecode-compiler",
 ]
 
 [project.urls]

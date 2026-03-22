@@ -122,7 +122,13 @@ block = NAME COLON NEWLINE INDENT NAME NEWLINE DEDENT ;
         assert errors == []
 
     def test_indent_dedent_not_implicit_without_mode(self) -> None:
-        """Without indentation mode, INDENT/DEDENT/NEWLINE are errors."""
+        """Without indentation mode, INDENT/DEDENT are errors but NEWLINE is valid.
+
+        NEWLINE is always a valid synthetic token because the lexer emits it
+        whenever a bare newline is encountered and no skip pattern consumed it.
+        This is important for newline-sensitive formats like TOML and Starlark.
+        INDENT/DEDENT are only valid in indentation mode.
+        """
         tokens = parse_token_grammar("""
 NAME = /[a-z]+/
 COLON = ":"
@@ -132,11 +138,11 @@ block = NAME COLON NEWLINE INDENT NAME DEDENT ;
 """)
         issues = cross_validate(tokens, grammar)
         errors = [i for i in issues if i.startswith("Error")]
-        assert len(errors) == 3
+        assert len(errors) == 2
         error_text = " ".join(errors)
         assert "INDENT" in error_text
         assert "DEDENT" in error_text
-        assert "NEWLINE" in error_text
+        assert "NEWLINE" not in error_text
 
     def test_eof_always_implicit(self) -> None:
         """EOF is always valid even without indentation mode."""

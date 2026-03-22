@@ -27,13 +27,179 @@ require "coding_adventures_grammar_tools"
 # - Reserved keywords: identifiers matching reserved words raise errors.
 # - Indentation mode: Python-style INDENT/DEDENT/NEWLINE tracking.
 #
+# Pattern Groups and On-Token Callbacks
+# --------------------------------------
+#
+# Pattern groups enable context-sensitive lexing. A grammar can define
+# named groups of token patterns (e.g., "tag" for XML attribute patterns).
+# The lexer maintains a stack of active groups -- only the patterns from
+# the group on top of the stack are tried during token matching.
+#
+# An on-token callback controls group transitions. When registered via
+# +set_on_token+, the callback fires after each token match (before
+# emission) and receives a LexerContext object. Through the context,
+# the callback can:
+#
+# - Push/pop pattern groups (context-sensitive lexing)
+# - Emit synthetic tokens (token injection)
+# - Suppress the current token (token filtering)
+# - Toggle skip pattern processing (significant whitespace)
+# - Peek ahead in the source text
+#
 # Because both lexers produce identical Token objects, downstream consumers
 # (the parser) don't care which lexer generated the tokens.
 # ==========================================================================
 
 module CodingAdventures
   module Lexer
+    # ========================================================================
+    # LexerContext -- Callback Interface for Group Transitions
+    # ========================================================================
+    #
+    # When a callback is registered via GrammarLexer#set_on_token, it
+    # receives a LexerContext on every token match. The context provides
+    # controlled access to the group stack, token emission, and skip control.
+    #
+    # Methods that modify state (push/pop/emit/suppress) take effect after
+    # the callback returns -- they do not interrupt the current match.
+    #
+    # Example -- XML lexer callback:
+    #
+    #   lexer.set_on_token(proc { |token, ctx|
+    #     if token.type == "OPEN_TAG_START"
+    #       ctx.push_group("tag")
+    #     elsif ["TAG_CLOSE", "SELF_CLOSE"].include?(token.type)
+    #       ctx.pop_group
+    #     end
+    #   })
+    #
+    # Design notes:
+    #
+    # - Actions are buffered, not immediate. This prevents surprising
+    #   mid-match mutations. The tokenizer's main loop applies them after
+    #   the callback returns, in the order they were recorded.
+    #
+    # - The callback is NOT invoked for skip matches, emitted tokens, or
+    #   the EOF token. This prevents infinite loops (emitted tokens don't
+    #   re-trigger the callback) and avoids noisy callbacks for whitespace.
+    # ========================================================================
+    class LexerContext
+      # @param lexer [GrammarLexer] the lexer instance (for reading state)
+      # @param source [String] the full source code being tokenized
+      # @param pos_after_token [Integer] position in source after current token
+      def initialize(lexer, source, pos_after_token)
+        @lexer = lexer
+        @source = source
+        @pos_after = pos_after_token
+
+        # Buffered actions -- applied by the tokenizer after callback returns.
+        @suppressed = false
+        @emitted = []
+        @group_actions = []
+        @skip_enabled = nil # nil = no change requested
+      end
+
+      # These readers allow the tokenizer to inspect buffered actions.
+      attr_reader :suppressed, :emitted, :group_actions, :skip_enabled
+
+      # Push a pattern group onto the stack.
+      #
+      # The pushed group becomes active for the next token match.
+      # Raises ArgumentError if the group name is not defined in the grammar.
+      #
+      # @param group_name [String] name of the group to push
+      def push_group(group_name)
+        unless @lexer.group_patterns.key?(group_name)
+          available = @lexer.group_patterns.keys.sort
+          raise ArgumentError,
+            "Unknown pattern group: #{group_name.inspect}. " \
+            "Available groups: #{available}"
+        end
+        @group_actions << [:push, group_name]
+      end
+
+      # Pop the current group from the stack.
+      #
+      # If only the default group remains, this is a no-op. The default
+      # group is the floor and cannot be popped.
+      def pop_group
+        @group_actions << [:pop, ""]
+      end
+
+      # Return the name of the currently active group.
+      #
+      # @return [String] the group name at the top of the stack
+      def active_group
+        @lexer.group_stack.last
+      end
+
+      # Return the depth of the group stack (always >= 1).
+      #
+      # @return [Integer] the stack depth
+      def group_stack_depth
+        @lexer.group_stack.length
+      end
+
+      # Inject a synthetic token after the current one.
+      #
+      # Emitted tokens do NOT trigger the callback (prevents infinite
+      # loops). Multiple emit calls produce tokens in call order.
+      #
+      # @param token [Token] the synthetic token to inject
+      def emit(token)
+        @emitted << token
+      end
+
+      # Suppress the current token -- do not include it in output.
+      def suppress
+        @suppressed = true
+      end
+
+      # Peek at a source character past the current token.
+      #
+      # @param offset [Integer] characters ahead (1 = immediately after token)
+      # @return [String] the character, or "" if past EOF
+      def peek(offset = 1)
+        idx = @pos_after + offset - 1
+        if idx >= 0 && idx < @source.length
+          @source[idx]
+        else
+          ""
+        end
+      end
+
+      # Peek at the next +length+ characters past the current token.
+      #
+      # @param length [Integer] number of characters to read
+      # @return [String] the substring (may be shorter than length near EOF)
+      def peek_str(length)
+        @source[@pos_after, length] || ""
+      end
+
+      # Toggle skip pattern processing.
+      #
+      # When disabled, skip patterns (whitespace, comments) are not tried.
+      # Useful for groups where whitespace is significant (e.g., CDATA).
+      #
+      # @param enabled [Boolean] whether skip patterns should be active
+      def set_skip_enabled(enabled)
+        @skip_enabled = enabled
+      end
+    end
+
+    # ========================================================================
+    # GrammarLexer -- The Grammar-Driven Lexer
+    # ========================================================================
     class GrammarLexer
+      # Expose group_patterns and group_stack for LexerContext to read.
+      # These are internal state -- not part of the public API for callers,
+      # but needed by LexerContext which acts as a controlled window into
+      # the lexer's state.
+      attr_reader :group_patterns, :group_stack
+
+      # Allow tests to reset source/position for re-tokenization.
+      attr_writer :source, :pos, :line, :column
+
       # @param source [String] the raw source code to tokenize
       # @param grammar [CodingAdventures::GrammarTools::TokenGrammar]
       def initialize(source, grammar)
@@ -46,6 +212,8 @@ module CodingAdventures
         @reserved_set = grammar.reserved_keywords.to_set.freeze
 
         # Compile token patterns into Regexp objects.
+        # Each entry is [name, pattern, alias_name] -- the alias is used
+        # when emitting the token type (e.g., STRING_DQ -> STRING).
         @patterns = grammar.definitions.map do |defn|
           pattern = if defn.is_regex
             Regexp.new(defn.pattern)
@@ -64,13 +232,71 @@ module CodingAdventures
           end
         end
 
+        # Whether the grammar has skip patterns. When skip patterns exist,
+        # they replace the default whitespace-skipping behavior.
+        @has_skip_patterns = !grammar.skip_definitions.empty?
+
         # Indentation mode state.
         @indentation_mode = grammar.mode == "indentation"
         @indent_stack = [0]
         @bracket_depth = 0
+
+        # --- Pattern groups ---
+        # Compile per-group patterns. The "default" group uses the
+        # top-level definitions. Named groups use their own definitions.
+        # When no groups are defined, @group_patterns has only "default".
+        @group_patterns = {
+          "default" => @patterns.dup
+        }
+        grammar.groups.each do |group_name, group|
+          compiled = group.definitions.map do |defn|
+            pat = if defn.is_regex
+              Regexp.new(defn.pattern)
+            else
+              Regexp.new(Regexp.escape(defn.pattern))
+            end
+            [defn.name, pat, defn.alias_name]
+          end
+          @group_patterns[group_name] = compiled
+        end
+
+        # The group stack. Bottom is always "default". Top is the active
+        # group whose patterns are tried during token matching.
+        @group_stack = ["default"]
+
+        # On-token callback -- nil means no callback (zero overhead).
+        # When set, fires after each token match, before emission.
+        @on_token = nil
+
+        # Skip enabled flag -- can be toggled by callbacks for groups
+        # where whitespace is significant (e.g., CDATA, raw content).
+        @skip_enabled = true
+      end
+
+      # Register a callback that fires on every token match.
+      #
+      # The callback receives the matched token and a LexerContext.
+      # It can use the context to push/pop groups, emit extra tokens,
+      # or suppress the current token.
+      #
+      # Only one callback can be registered. Pass nil to clear.
+      #
+      # The callback is NOT invoked for:
+      # - Skip pattern matches (they produce no tokens)
+      # - Tokens emitted via context.emit (prevents infinite loops)
+      # - The EOF token
+      #
+      # @param callback [Proc, nil] the callback, or nil to clear
+      def set_on_token(callback)
+        @on_token = callback
       end
 
       # Tokenize the source code using the grammar's token definitions.
+      #
+      # Dispatches to the appropriate tokenization method based on whether
+      # indentation mode is active.
+      #
+      # @return [Array<Token>] list of tokens, always ending with EOF
       def tokenize
         if @indentation_mode
           tokenize_indentation
@@ -82,19 +308,47 @@ module CodingAdventures
       private
 
       # Standard tokenization (no indentation tracking).
+      #
+      # The algorithm:
+      #
+      # 1. While there are characters left:
+      #    a. If skip patterns exist and skip is enabled, try them.
+      #    b. If no skip patterns, use default whitespace skip.
+      #    c. If the current character is a newline, emit NEWLINE.
+      #    d. Try active group's token patterns (first match wins).
+      #    e. If callback registered, invoke it and process actions.
+      #    f. If nothing matches, raise LexerError.
+      # 2. Append EOF.
+      #
+      # When pattern groups are active, the lexer uses @group_stack.last
+      # to determine which set of patterns to try. When a callback is
+      # registered via set_on_token, it fires after each token match
+      # and can push/pop groups, emit extra tokens, or suppress the
+      # current token.
       def tokenize_standard
         tokens = []
 
         while @pos < @source.length
           char = @source[@pos]
 
-          # Skip whitespace (spaces, tabs, carriage returns).
-          if char == " " || char == "\t" || char == "\r"
+          # --- Skip patterns (grammar-defined) ---
+          # When the grammar has skip patterns AND skip is enabled, they
+          # take over whitespace handling. The callback can disable skip
+          # processing for groups where whitespace is significant.
+          if @has_skip_patterns
+            if @skip_enabled && try_skip
+              next
+            end
+          elsif char == " " || char == "\t" || char == "\r"
+            # --- Default whitespace skip ---
+            # Without skip patterns, use the hardcoded behavior: skip
+            # spaces, tabs, carriage returns silently.
             do_advance
             next
           end
 
-          # Newlines become NEWLINE tokens.
+          # --- Newlines become NEWLINE tokens ---
+          # Newlines are structural -- they mark line boundaries.
           if char == "\n"
             tokens << Token.new(
               type: TokenType::NEWLINE, value: "\\n",
@@ -104,13 +358,42 @@ module CodingAdventures
             next
           end
 
-          # Try skip patterns first.
-          next if try_skip
-
-          # Try each token pattern in priority order.
-          token = try_match_token
+          # --- Try active group's token patterns (first match wins) ---
+          # The active group is the top of the group stack. When no
+          # groups are defined, this is always "default" (the top-level
+          # definitions), preserving backward compatibility.
+          active_group = @group_stack.last
+          token = try_match_token_in_group(active_group)
           if token
-            tokens << token
+            # --- Invoke on-token callback ---
+            # The callback can push/pop groups, emit extra tokens,
+            # suppress the current token, or toggle skip processing.
+            # Emitted tokens do NOT re-trigger the callback.
+            if @on_token
+              ctx = LexerContext.new(self, @source, @pos)
+              @on_token.call(token, ctx)
+
+              # Apply suppression: if the callback suppressed this
+              # token, don't add it to the output.
+              tokens << token unless ctx.suppressed
+
+              # Append any tokens emitted by the callback.
+              tokens.concat(ctx.emitted)
+
+              # Apply group stack actions in order.
+              ctx.group_actions.each do |action, group_name|
+                if action == :push
+                  @group_stack.push(group_name)
+                elsif action == :pop && @group_stack.length > 1
+                  @group_stack.pop
+                end
+              end
+
+              # Apply skip toggle if the callback changed it.
+              @skip_enabled = ctx.skip_enabled unless ctx.skip_enabled.nil?
+            else
+              tokens << token
+            end
             next
           end
 
@@ -120,11 +403,15 @@ module CodingAdventures
           )
         end
 
-        # EOF sentinel.
+        # --- Append EOF sentinel ---
         tokens << Token.new(
           type: TokenType::EOF, value: "",
           line: @line, column: @column
         )
+
+        # Reset group stack for reuse (in case tokenize is called again).
+        @group_stack = ["default"]
+        @skip_enabled = true
 
         tokens
       end
@@ -308,12 +595,30 @@ module CodingAdventures
         false
       end
 
-      # Try to match a token at the current position.
-      # Returns a Token on success, nil on failure.
+      # Try to match a token using the default group's patterns.
+      #
+      # This is the original method used by the indentation tokenizer,
+      # which does not support pattern groups. It delegates to
+      # try_match_token_in_group("default").
+      #
+      # @return [Token, nil] a Token if matched, nil otherwise
       def try_match_token
-        remaining = @source[@pos..]
+        try_match_token_in_group("default")
+      end
 
-        @patterns.each do |token_name, pattern, alias_name|
+      # Try to match a token from a specific pattern group.
+      #
+      # Tries each compiled pattern in the named group in priority order
+      # (first match wins). Handles keyword detection, reserved word
+      # checking, aliases, and string escape processing.
+      #
+      # @param group_name [String] the pattern group to use
+      # @return [Token, nil] a Token if matched, nil otherwise
+      def try_match_token_in_group(group_name)
+        remaining = @source[@pos..]
+        patterns = @group_patterns.fetch(group_name, @patterns)
+
+        patterns.each do |token_name, pattern, alias_name|
           m = pattern.match(remaining)
           next unless m && m.begin(0) == 0
 
@@ -324,11 +629,15 @@ module CodingAdventures
           token_type = resolve_token_type(token_name, value, alias_name)
 
           # Handle STRING tokens: strip quotes and process escapes.
+          # When escape_mode is "none", we strip quotes but leave escape
+          # sequences as raw text. This is used by CSS and TOML where
+          # escape semantics differ from JSON and are handled in the
+          # semantic layer.
           if token_name == "STRING" || (alias_name && alias_name.include?("STRING"))
             # Only strip if the value is quoted.
-            if value.length >= 2 && (value.start_with?('"') || value.start_with?("'"))
+            if value.length >= 2 && value.start_with?('"', "'")
               inner = value[1..-2]
-              inner = process_escapes(inner)
+              inner = process_escapes(inner) unless @grammar.escape_mode == "none"
               value = inner
             end
           end
@@ -393,7 +702,7 @@ module CodingAdventures
         i = 0
         while i < s.length
           if s[i] == "\\" && i + 1 < s.length
-            escape_map = { "n" => "\n", "t" => "\t", "\\" => "\\", '"' => '"' }
+            escape_map = {"n" => "\n", "t" => "\t", "\\" => "\\", '"' => '"'}
             next_char = s[i + 1]
             result << (escape_map[next_char] || next_char)
             i += 2

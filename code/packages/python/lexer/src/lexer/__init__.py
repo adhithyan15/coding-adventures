@@ -31,7 +31,7 @@ Usage::
     tokens = GrammarLexer("x = 1 + 2", grammar).tokenize()
 """
 
-from lexer.grammar_lexer import GrammarLexer
+from lexer.grammar_lexer import GrammarLexer, LexerContext
 from lexer.tokenizer import (
     TOKENIZER_DFA,
     Lexer,
@@ -45,6 +45,7 @@ from lexer.tokenizer import (
 __all__ = [
     "GrammarLexer",
     "Lexer",
+    "LexerContext",
     "LexerConfig",
     "LexerError",
     "TOKENIZER_DFA",

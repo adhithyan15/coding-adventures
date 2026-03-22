@@ -6,24 +6,37 @@
 #
 # A .tokens file is a declarative description of the lexical grammar of a
 # programming language. It lists every token the lexer should recognize, in
-# priority order (first match wins), along with an optional keywords section
-# for reserved words.
+# priority order (first match wins), along with optional sections for
+# keywords, reserved words, skip patterns, and lexer mode configuration.
 #
 # File format overview
 # --------------------
 #
-# Each non-blank, non-comment line has one of three forms:
+# Each non-blank, non-comment line has one of these forms:
 #
-#   TOKEN_NAME = /regex_pattern/      -- a regex-based token
-#   TOKEN_NAME = "literal_string"     -- a literal-string token
-#   keywords:                         -- begins the keywords section
+#   TOKEN_NAME = /regex_pattern/           -- a regex-based token
+#   TOKEN_NAME = "literal_string"          -- a literal-string token
+#   TOKEN_NAME = /regex/ -> ALIAS          -- emits token type ALIAS instead
+#   TOKEN_NAME = "literal" -> ALIAS        -- same for literals
+#   mode: indentation                      -- sets the lexer mode
+#   keywords:                              -- begins the keywords section
+#   reserved:                              -- begins the reserved keywords section
+#   skip:                                  -- begins the skip patterns section
+#   group NAME:                            -- begins a named pattern group
 #
 # Lines starting with # are comments. Blank lines are ignored.
 #
-# The keywords section lists one reserved word per line (indented). Keywords
-# are identifiers that the lexer recognizes as NAME tokens but then
-# reclassifies. For instance, `if` matches the NAME pattern but is promoted
-# to an IF keyword.
+# Pattern groups (group NAME:)
+# ----------------------------
+#
+# Pattern groups enable context-sensitive lexing. The lexer maintains a
+# stack of active groups and only tries patterns from the group on top of
+# the stack. Language-specific callback code pushes/pops groups in response
+# to matched tokens. For example, an XML lexer pushes a "tag" group when
+# it sees ``<`` and pops it on ``>``, so attribute-related patterns are
+# only active inside tags. Patterns outside any group section belong to
+# the implicit "default" group. The grammar file contains no transition
+# logic -- just pattern definitions labeled by group.
 #
 # Design decisions
 # ----------------
@@ -65,6 +78,26 @@ module CodingAdventures
       end
     end
 
+    # A named set of token definitions that are active together.
+    #
+    # When this group is at the top of the lexer's group stack, only these
+    # patterns are tried during token matching. Skip patterns are global
+    # and always tried regardless of the active group.
+    #
+    # Pattern groups enable context-sensitive lexing. For example, an XML
+    # lexer defines a "tag" group with patterns for attribute names, equals
+    # signs, and attribute values. These patterns are only active inside
+    # tags -- the callback pushes the "tag" group when ``<`` is matched and
+    # pops it when ``>`` is matched.
+    #
+    # Attributes:
+    #   name        -- the group name, e.g. "tag" or "cdata". Must be a
+    #                  lowercase identifier matching [a-z_][a-z0-9_]*.
+    #   definitions -- ordered list of token definitions in this group.
+    #                  Order matters (first-match-wins), just like the
+    #                  top-level definitions list.
+    PatternGroup = Data.define(:name, :definitions)
+
     # The complete contents of a parsed .tokens file.
     #
     # definitions       -- ordered list of TokenDefinition (order = priority)
@@ -72,23 +105,33 @@ module CodingAdventures
     # mode              -- optional lexer mode (e.g. "indentation")
     # skip_definitions  -- patterns matched and consumed without producing tokens
     # reserved_keywords -- keywords that cause lex errors if used as identifiers
+    # groups            -- hash of group_name => PatternGroup for named
+    #                      pattern groups (context-sensitive lexing)
     class TokenGrammar
-      attr_reader :definitions, :keywords, :skip_definitions, :reserved_keywords
-      attr_accessor :mode
+      attr_reader :definitions, :keywords, :skip_definitions, :reserved_keywords, :groups
+      attr_accessor :mode, :escape_mode
 
       def initialize(definitions: [], keywords: [], mode: nil,
-                     skip_definitions: [], reserved_keywords: [])
+                     skip_definitions: [], reserved_keywords: [],
+                     escape_mode: nil, groups: {})
         @definitions = definitions
         @keywords = keywords
         @mode = mode
         @skip_definitions = skip_definitions
         @reserved_keywords = reserved_keywords
+        @escape_mode = escape_mode
+        @groups = groups
       end
 
       # Return the set of all defined token names (including aliases).
+      #
+      # Includes names from all pattern groups, since group tokens can
+      # also appear in parser grammars.
       def token_names
         names = Set.new
-        @definitions.each do |d|
+        all_defs = @definitions.dup
+        @groups.each_value { |g| all_defs.concat(g.definitions) }
+        all_defs.each do |d|
           names.add(d.name)
           names.add(d.alias_name) if d.alias_name
         end
@@ -97,8 +140,11 @@ module CodingAdventures
 
       # Return the set of token names as the parser will see them.
       # For definitions with aliases, returns the alias (not the name).
+      # Includes names from all pattern groups.
       def effective_token_names
-        @definitions.map { |d| d.alias_name || d.name }.to_set
+        all_defs = @definitions.dup
+        @groups.each_value { |g| all_defs.concat(g.definitions) }
+        all_defs.map { |d| d.alias_name || d.name }.to_set
       end
     end
 
@@ -205,13 +251,21 @@ module CodingAdventures
     # 3. Reserved mode -- entered on "reserved:" line.
     # 4. Skip mode -- entered on "skip:" line. Contains token definitions
     #    for patterns that are consumed without producing tokens.
+    # 5. Group mode -- entered on "group NAME:" line. Contains token
+    #    definitions that belong to the named pattern group.
     #
     # The "mode:" directive sets the lexer mode (e.g. "indentation") and
     # can appear anywhere outside a section.
     def self.parse_token_grammar(source)
       lines = source.split("\n")
       grammar = TokenGrammar.new
-      current_section = nil # "keywords", "reserved", "skip"
+      # Section tracking. We use a string to track which section we're in,
+      # since sections are mutually exclusive and we can only be in one at
+      # a time (or in no section = definition mode).
+      #
+      # For pattern groups, current_section is "group:NAME" where NAME is
+      # the group name. This distinguishes groups from other sections.
+      current_section = nil # "keywords", "reserved", "skip", "group:NAME"
 
       lines.each_with_index do |raw_line, index|
         line_number = index + 1
@@ -233,6 +287,61 @@ module CodingAdventures
           current_section = nil
           next
         end
+
+        # escapes: directive -- controls how STRING tokens are processed.
+        # "none" disables escape processing (quotes are stripped but escape
+        # sequences are left as-is). Useful for languages like CSS and TOML
+        # where escape semantics differ from JSON.
+        if stripped.start_with?("escapes:")
+          escape_value = stripped[8..].strip
+          if escape_value.empty?
+            raise TokenGrammarError.new(
+              "Missing value after 'escapes:'", line_number
+            )
+          end
+          grammar.escape_mode = escape_value
+          current_section = nil
+          next
+        end
+
+        # Group headers -- "group NAME:" declares a named pattern group.
+        # All subsequent indented lines belong to that group, just like
+        # skip: or reserved: sections.
+        if stripped.start_with?("group ") && stripped.end_with?(":")
+          group_name = stripped[6..-2].strip
+          if group_name.empty?
+            raise TokenGrammarError.new(
+              "Missing group name after 'group'", line_number
+            )
+          end
+          unless group_name.match?(/\A[a-z_][a-z0-9_]*\z/)
+            raise TokenGrammarError.new(
+              "Invalid group name: #{group_name.inspect} " \
+              "(must be a lowercase identifier like 'tag' or 'cdata')",
+              line_number
+            )
+          end
+          reserved_names = %w[default skip keywords reserved errors].to_set
+          if reserved_names.include?(group_name)
+            raise TokenGrammarError.new(
+              "Reserved group name: #{group_name.inspect} " \
+              "(cannot use #{reserved_names.to_a.sort.join(", ")})",
+              line_number
+            )
+          end
+          if grammar.groups.key?(group_name)
+            raise TokenGrammarError.new(
+              "Duplicate group name: #{group_name.inspect}",
+              line_number
+            )
+          end
+          grammar.groups[group_name] = PatternGroup.new(
+            name: group_name, definitions: []
+          )
+          current_section = "group:#{group_name}"
+          next
+        end
+
 
         # Section headers.
         if stripped == "keywords:" || stripped == "keywords :"
@@ -277,6 +386,35 @@ module CodingAdventures
               grammar.skip_definitions << parse_definition(
                 skip_pattern, skip_name, line_number
               )
+            else
+              # Pattern group section -- current_section is "group:NAME".
+              if current_section.start_with?("group:")
+                gname = current_section[6..]
+                unless stripped.include?("=")
+                  raise TokenGrammarError.new(
+                    "Expected token definition in group '#{gname}' " \
+                    "(NAME = pattern), got: #{stripped.inspect}",
+                    line_number
+                  )
+                end
+                eq_idx = stripped.index("=")
+                g_name = stripped[0...eq_idx].strip
+                g_pattern = stripped[(eq_idx + 1)..].strip
+                if g_name.empty? || g_pattern.empty?
+                  raise TokenGrammarError.new(
+                    "Incomplete definition in group '#{gname}': #{stripped.inspect}",
+                    line_number
+                  )
+                end
+                defn = parse_definition(g_pattern, g_name, line_number)
+                # PatternGroup is a Data (frozen), so we replace it with
+                # a new instance that includes the additional definition.
+                old_group = grammar.groups[gname]
+                grammar.groups[gname] = PatternGroup.new(
+                  name: gname,
+                  definitions: [*old_group.definitions, defn]
+                )
+              end
             end
             next
           else
@@ -376,6 +514,7 @@ module CodingAdventures
     # - Invalid aliases
     # - Unknown lexer mode
     # - Skip definition issues
+    # - Pattern group issues (bad regex, empty groups, bad names)
     def self.validate_token_grammar(grammar)
       issues = []
       issues.concat(validate_definitions(grammar.definitions, "token"))
@@ -383,6 +522,26 @@ module CodingAdventures
 
       if grammar.mode && grammar.mode != "indentation"
         issues << "Unknown lexer mode '#{grammar.mode}' (only 'indentation' is supported)"
+      end
+
+      # Validate pattern groups.
+      grammar.groups.each do |group_name, group|
+        # Group name format check.
+        unless group_name.match?(/\A[a-z_][a-z0-9_]*\z/)
+          issues << "Invalid group name '#{group_name}' " \
+                    "(must be a lowercase identifier)"
+        end
+
+        # Empty group warning.
+        if group.definitions.empty?
+          issues << "Empty pattern group '#{group_name}' " \
+                    "(has no token definitions)"
+        end
+
+        # Validate definitions within the group.
+        issues.concat(
+          validate_definitions(group.definitions, "group '#{group_name}' token")
+        )
       end
 
       issues

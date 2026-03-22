@@ -334,10 +334,11 @@ func TestTokenizeJSONWhitespaceSkipped(t *testing.T) {
 // TestTokenizeJSONNewlinesProduceTokens
 // =============================================================================
 //
-// Verifies that the standard tokenizer emits NEWLINE tokens for line breaks.
-// This is a fixed behavior of the lexer engine (newlines are handled before
-// skip patterns are checked). The JSON parser grammar simply ignores these
-// NEWLINE tokens since it never references them in any rule.
+// Verifies that newlines are consumed by the skip pattern and do NOT produce
+// NEWLINE tokens. The JSON grammar's skip pattern includes \n in its character
+// class (WHITESPACE = /[ \t\r\n]+/), which intentionally suppresses NEWLINE
+// tokens. This is correct for JSON — the parser grammar never references
+// NEWLINE tokens, and newlines are just whitespace.
 func TestTokenizeJSONNewlinesProduceTokens(t *testing.T) {
 	source := "\n42\n"
 	tokens, err := TokenizeJSON(source)
@@ -345,7 +346,7 @@ func TestTokenizeJSONNewlinesProduceTokens(t *testing.T) {
 		t.Fatalf("Failed to tokenize with newlines: %v", err)
 	}
 
-	// Should have: NEWLINE, NUMBER("42"), NEWLINE, EOF
+	// Skip pattern consumes \n, so only NUMBER and EOF remain.
 	foundNumber := false
 	newlineCount := 0
 	for _, tok := range tokens {
@@ -360,8 +361,8 @@ func TestTokenizeJSONNewlinesProduceTokens(t *testing.T) {
 	if !foundNumber {
 		t.Error("Expected NUMBER(42) token")
 	}
-	if newlineCount != 2 {
-		t.Errorf("Expected 2 NEWLINE tokens, got %d", newlineCount)
+	if newlineCount != 0 {
+		t.Errorf("Expected 0 NEWLINE tokens (consumed by skip pattern), got %d", newlineCount)
 	}
 }
 

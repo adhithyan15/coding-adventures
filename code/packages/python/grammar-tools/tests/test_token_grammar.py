@@ -12,6 +12,7 @@ from __future__ import annotations
 import pytest
 
 from grammar_tools.token_grammar import (
+    PatternGroup,
     TokenDefinition,
     TokenGrammar,
     TokenGrammarError,
@@ -719,3 +720,255 @@ class TestStarlarkTokens:
 
         issues = validate_token_grammar(grammar)
         assert issues == []
+
+
+# ================================================================
+# Pattern group tests
+# ================================================================
+
+
+class TestPatternGroups:
+    """Tests for the group NAME: section in .tokens files.
+
+    Pattern groups enable context-sensitive lexing by defining named sets
+    of token patterns. The lexer maintains a stack of active groups and
+    only tries patterns from the group on top of the stack.
+    """
+
+    def test_basic_group(self):
+        """A simple group section is parsed into PatternGroup."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            'TAG_OPEN = "<"\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+            '  TAG_CLOSE = ">"\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        # Default group patterns
+        assert len(grammar.definitions) == 2
+        assert grammar.definitions[0].name == "TEXT"
+        assert grammar.definitions[1].name == "TAG_OPEN"
+
+        # Named group
+        assert "tag" in grammar.groups
+        group = grammar.groups["tag"]
+        assert isinstance(group, PatternGroup)
+        assert group.name == "tag"
+        assert len(group.definitions) == 2
+        assert group.definitions[0].name == "TAG_NAME"
+        assert group.definitions[1].name == "TAG_CLOSE"
+
+    def test_multiple_groups(self):
+        """Multiple groups can be defined in the same file."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+            '\n'
+            'group cdata:\n'
+            '  CDATA_TEXT = /[^]]+/\n'
+            '  CDATA_END = "]]>"\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        assert len(grammar.groups) == 2
+        assert "tag" in grammar.groups
+        assert "cdata" in grammar.groups
+        assert len(grammar.groups["tag"].definitions) == 1
+        assert len(grammar.groups["cdata"].definitions) == 2
+
+    def test_group_with_alias(self):
+        """Definitions inside groups support -> ALIAS."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  ATTR_VALUE_DQ = /"[^"]*"/ -> ATTR_VALUE\n'
+            "  ATTR_VALUE_SQ = /'[^']*'/ -> ATTR_VALUE\n"
+        )
+        grammar = parse_token_grammar(source)
+
+        group = grammar.groups["tag"]
+        assert group.definitions[0].name == "ATTR_VALUE_DQ"
+        assert group.definitions[0].alias == "ATTR_VALUE"
+        assert group.definitions[1].name == "ATTR_VALUE_SQ"
+        assert group.definitions[1].alias == "ATTR_VALUE"
+
+    def test_group_with_literal_patterns(self):
+        """Groups support both regex and literal patterns."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  EQUALS = "="\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        group = grammar.groups["tag"]
+        assert group.definitions[0].is_regex is False
+        assert group.definitions[0].pattern == "="
+        assert group.definitions[1].is_regex is True
+
+    def test_no_groups_backward_compat(self):
+        """Files without groups have an empty groups dict."""
+        source = 'NUMBER = /[0-9]+/\nPLUS = "+"\n'
+        grammar = parse_token_grammar(source)
+
+        assert grammar.groups == {}
+        assert len(grammar.definitions) == 2
+
+    def test_groups_with_skip_section(self):
+        """skip: and group: sections coexist correctly."""
+        source = (
+            'skip:\n'
+            '  WS = /[ \\t]+/\n'
+            '\n'
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        assert len(grammar.skip_definitions) == 1
+        assert len(grammar.definitions) == 1
+        assert len(grammar.groups) == 1
+
+    def test_token_names_includes_groups(self):
+        """token_names() includes names from all groups."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+            '  ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        names = grammar.token_names()
+        assert "TEXT" in names
+        assert "TAG_NAME" in names
+        assert "ATTR_DQ" in names
+        assert "ATTR_VALUE" in names
+
+    def test_effective_token_names_includes_groups(self):
+        """effective_token_names() includes aliased names from groups."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        names = grammar.effective_token_names()
+        assert "TEXT" in names
+        assert "ATTR_VALUE" in names
+        assert "ATTR_DQ" not in names  # alias replaces name
+
+    def test_group_validates_definitions(self):
+        """Definitions in groups are validated (e.g., bad regex)."""
+        grammar = TokenGrammar(
+            groups={
+                "tag": PatternGroup(
+                    name="tag",
+                    definitions=[
+                        TokenDefinition(
+                            name="BAD",
+                            pattern="[invalid",
+                            is_regex=True,
+                            line_number=5,
+                        ),
+                    ],
+                ),
+            },
+        )
+        issues = validate_token_grammar(grammar)
+        assert any("Invalid regex" in i for i in issues)
+
+    def test_empty_group_warning(self):
+        """An empty group produces a validation warning."""
+        grammar = TokenGrammar(
+            groups={
+                "empty": PatternGroup(name="empty", definitions=[]),
+            },
+        )
+        issues = validate_token_grammar(grammar)
+        assert any("Empty pattern group" in i for i in issues)
+
+
+class TestPatternGroupErrors:
+    """Tests for error handling in group parsing."""
+
+    def test_missing_group_name(self):
+        """'group :' with no name raises an error."""
+        source = 'TEXT = /abc/\ngroup :\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Missing group name"):
+            parse_token_grammar(source)
+
+    def test_invalid_group_name_uppercase(self):
+        """Uppercase group names are rejected."""
+        source = 'TEXT = /abc/\ngroup Tag:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Invalid group name"):
+            parse_token_grammar(source)
+
+    def test_invalid_group_name_starts_with_digit(self):
+        """Group names starting with a digit are rejected."""
+        source = 'TEXT = /abc/\ngroup 1tag:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Invalid group name"):
+            parse_token_grammar(source)
+
+    def test_reserved_group_name_default(self):
+        """'group default:' is rejected as reserved."""
+        source = 'TEXT = /abc/\ngroup default:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Reserved group name"):
+            parse_token_grammar(source)
+
+    def test_reserved_group_name_skip(self):
+        """'group skip:' is rejected as reserved."""
+        source = 'TEXT = /abc/\ngroup skip:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Reserved group name"):
+            parse_token_grammar(source)
+
+    def test_reserved_group_name_keywords(self):
+        """'group keywords:' is rejected as reserved."""
+        source = 'TEXT = /abc/\ngroup keywords:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Reserved group name"):
+            parse_token_grammar(source)
+
+    def test_duplicate_group_name(self):
+        """Two groups with the same name raises an error."""
+        source = (
+            'TEXT = /abc/\n'
+            'group tag:\n'
+            '  FOO = /x/\n'
+            'group tag:\n'
+            '  BAR = /y/\n'
+        )
+        with pytest.raises(TokenGrammarError, match="Duplicate group name"):
+            parse_token_grammar(source)
+
+    def test_bad_definition_in_group(self):
+        """Invalid definition inside a group raises an error."""
+        source = (
+            'TEXT = /abc/\n'
+            'group tag:\n'
+            '  not a definition\n'
+        )
+        with pytest.raises(TokenGrammarError, match="Expected token definition"):
+            parse_token_grammar(source)
+
+    def test_incomplete_definition_in_group(self):
+        """Missing pattern in group definition raises an error."""
+        source = (
+            'TEXT = /abc/\n'
+            'group tag:\n'
+            '  FOO = \n'
+        )
+        with pytest.raises(TokenGrammarError, match="Incomplete definition"):
+            parse_token_grammar(source)

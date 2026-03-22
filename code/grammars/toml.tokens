@@ -1,0 +1,167 @@
+# Token definitions for TOML (v1.0.0 — https://toml.io/en/v1.0.0)
+#
+# TOML tokenization requires careful ordering because many patterns overlap:
+# multi-line strings vs single-line, dates vs bare keys, floats vs integers.
+# The first-match-wins rule means more specific patterns must come first.
+#
+# TOML is newline-sensitive — key-value pairs are terminated by newlines —
+# so the skip pattern includes only spaces and tabs (NOT newlines). The lexer
+# emits NEWLINE tokens between lines, which the grammar uses to delimit
+# expressions.
+#
+# Format:
+#   TOKEN_NAME = /regex/        — regex-based token pattern
+#   TOKEN_NAME = "literal"      — exact literal match
+#   TOKEN_NAME = /regex/ -> T   — regex pattern, emitted as token type T
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# Comments: hash to end of line. The newline itself is NOT consumed — it
+# becomes a NEWLINE token that the grammar needs for expression delimiting.
+#
+# Whitespace: spaces and tabs only. Newlines are significant.
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# ============================================================================
+# Escape Mode
+# ============================================================================
+#
+# TOML has four string types with different escape semantics:
+#   - Basic strings ("..."): \n, \t, \\, \", \uXXXX, \UXXXXXXXX
+#   - Multi-line basic strings ("""..."""): same + line-ending backslash
+#   - Literal strings ('...'): NO escape processing
+#   - Multi-line literal strings ('''...'''): NO escape processing
+#
+# The generic lexer only supports one escape mode. Setting escapes: none
+# tells the lexer to strip quotes but leave escape sequences as raw text.
+# The semantic layer in toml-parser handles type-specific escape processing.
+# This is the same approach used by the CSS lexer.
+
+escapes: none
+
+# ============================================================================
+# Multi-Line Strings (MUST come before single-line strings)
+# ============================================================================
+#
+# Triple-quoted strings must match before their single-quoted counterparts.
+# Without this ordering, `"""hello"""` would match as `""` (empty BASIC_STRING)
+# followed by `"hello"` (BASIC_STRING) followed by `""`.
+#
+# ML_BASIC_STRING allows escape sequences inside (backslash + any char).
+# ML_LITERAL_STRING allows everything literally, including backslashes.
+# Both use non-greedy matching (*?) to find the closest closing delimiter.
+
+ML_BASIC_STRING   = /"""([^\\]|\\(.|\n)|\n)*?"""/
+ML_LITERAL_STRING = /'''[\s\S]*?'''/
+
+# ============================================================================
+# Single-Line Strings
+# ============================================================================
+#
+# Basic strings support escape sequences. Literal strings do not.
+# Neither can contain unescaped newlines.
+
+BASIC_STRING   = /"([^"\\\n]|\\.)*"/
+LITERAL_STRING = /'[^'\n]*'/
+
+# ============================================================================
+# Date/Time Literals (MUST come before BARE_KEY and numbers)
+# ============================================================================
+#
+# Date/time tokens must be matched before bare keys and integers because:
+#   - `1979-05-27` looks like INTEGER MINUS INTEGER MINUS INTEGER
+#   - `07:32:00` looks like INTEGER COLON INTEGER COLON INTEGER
+#
+# Order: most specific first. OFFSET_DATETIME includes timezone suffix,
+# LOCAL_DATETIME has both date and time, LOCAL_DATE has only date,
+# LOCAL_TIME has only time.
+#
+# The [T ] in datetime patterns allows either 'T' or space as separator:
+#   1979-05-27T07:32:00Z  (with T)
+#   1979-05-27 07:32:00Z  (with space)
+# This works because token patterns are tried before skip patterns consume
+# the space at each position.
+
+OFFSET_DATETIME = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/
+LOCAL_DATETIME  = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?/
+LOCAL_DATE      = /\d{4}-\d{2}-\d{2}/
+LOCAL_TIME      = /\d{2}:\d{2}:\d{2}(\.\d+)?/
+
+# ============================================================================
+# Float Literals (MUST come before INTEGER)
+# ============================================================================
+#
+# Special float values (inf, nan) must come before BARE_KEY because
+# "inf" and "nan" would otherwise match as bare keys.
+#
+# Scientific notation and decimal floats must come before integers because
+# `3.14` would otherwise match as INTEGER(3) DOT BARE_KEY(14).
+#
+# All float variants emit the same FLOAT token type via -> alias.
+# Underscore separators are allowed between digits: 1_000.0
+
+FLOAT_SPECIAL = /[+-]?(inf|nan)/ -> FLOAT
+FLOAT_EXP     = /[+-]?([0-9](_?[0-9])*)(\.[0-9](_?[0-9])*)?[eE][+-]?[0-9](_?[0-9])*/ -> FLOAT
+FLOAT_DEC     = /[+-]?([0-9](_?[0-9])*)\.([0-9](_?[0-9])*)/ -> FLOAT
+
+# ============================================================================
+# Integer Literals (hex/oct/bin BEFORE decimal)
+# ============================================================================
+#
+# Hex (0x), octal (0o), and binary (0b) prefixed integers must match before
+# the generic decimal pattern, which would match just the leading `0`.
+#
+# All integer variants emit the same INTEGER token type.
+# Underscore separators are allowed between digits: 1_000
+
+HEX_INTEGER = /0x[0-9a-fA-F](_?[0-9a-fA-F])*/ -> INTEGER
+OCT_INTEGER = /0o[0-7](_?[0-7])*/ -> INTEGER
+BIN_INTEGER = /0b[01](_?[01])*/ -> INTEGER
+INTEGER     = /[+-]?[0-9](_?[0-9])*/
+
+# ============================================================================
+# Boolean Literals
+# ============================================================================
+#
+# These are literal tokens, not keywords. TOML has no identifier/name concept
+# for values (bare keys are only used for key names, not values). The lexer
+# always emits TRUE for "true" — the grammar handles cases where TRUE appears
+# in key position by including it in the simple_key rule.
+
+TRUE  = "true"
+FALSE = "false"
+
+# ============================================================================
+# Bare Keys (MUST come LAST)
+# ============================================================================
+#
+# A bare key is composed of ASCII letters, digits, dashes, and underscores.
+# This pattern matches EVERYTHING that the above patterns also match:
+# "true" (BARE_KEY), "42" (BARE_KEY), "1979-05-27" (BARE_KEY), "inf" (BARE_KEY).
+#
+# Because BARE_KEY is defined last, those strings match their specific token
+# types first. Only strings that don't match any other pattern (like "my-key",
+# "server", "database") match as BARE_KEY.
+
+BARE_KEY = /[A-Za-z0-9_-]+/
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# These are the structural tokens of TOML. Note the absence of DOUBLE_LBRACKET
+# and DOUBLE_RBRACKET — the grammar handles [[array-of-tables]] as two
+# consecutive LBRACKET tokens, disambiguating from nested arrays by context.
+
+EQUALS   = "="
+DOT      = "."
+COMMA    = ","
+LBRACKET = "["
+RBRACKET = "]"
+LBRACE   = "{"
+RBRACE   = "}"

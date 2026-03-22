@@ -26,7 +26,7 @@ from pathlib import Path
 import pytest
 from grammar_tools import TokenDefinition, TokenGrammar, parse_token_grammar
 
-from lexer.grammar_lexer import GrammarLexer
+from lexer.grammar_lexer import GrammarLexer, LexerContext
 from lexer.tokenizer import Lexer, LexerConfig, LexerError, Token, TokenType
 
 # ---------------------------------------------------------------------------
@@ -1190,3 +1190,511 @@ class TestStarlarkLexer:
         # No INDENT/DEDENT inside brackets
         # After the brackets close, there should be no indentation artifacts
         assert "INDENT" not in types
+
+
+# ===========================================================================
+# Pattern Groups & Callback Hooks Tests
+# ===========================================================================
+#
+# These tests verify the pattern group and on-token callback functionality
+# added in F04. The tests are organized into three categories:
+#
+# 1. **LexerContext unit tests** — push/pop/emit/suppress in isolation
+# 2. **Group stack tests** — correct group transitions during tokenization
+# 3. **Backward compatibility** — no groups + no callback = identical behavior
+# ===========================================================================
+
+
+def _token_type_name(t: Token) -> str:
+    """Normalize a token type to its string name.
+
+    Token types can be either a string (e.g., "TAG_NAME") or a
+    TokenType enum member (e.g., TokenType.EQUALS). This helper
+    normalizes both to a plain string for easy assertion.
+    """
+    if isinstance(t.type, str):
+        return t.type
+    return t.type.name
+
+
+def _make_group_grammar() -> TokenGrammar:
+    """Create a grammar with pattern groups for testing.
+
+    This simulates a simplified XML-like grammar:
+    - Default group: TEXT and OPEN_TAG
+    - tag group: TAG_NAME, EQUALS, TAG_CLOSE
+
+    The grammar uses skip patterns for whitespace and no keywords.
+    """
+    source = """\
+escapes: none
+
+skip:
+  WS = /[ \\t\\r\\n]+/
+
+TEXT      = /[^<]+/
+OPEN_TAG  = "<"
+
+group tag:
+  TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+  EQUALS    = "="
+  VALUE     = /"[^"]*"/
+  TAG_CLOSE = ">"
+"""
+    return parse_token_grammar(source)
+
+
+class TestLexerContext:
+    """Unit tests for the LexerContext API.
+
+    These tests verify that each LexerContext method correctly records
+    actions without immediately mutating lexer state. The actions are
+    applied by the tokenizer's main loop after the callback returns.
+    """
+
+    def test_push_group_records_action(self) -> None:
+        """push_group() records a push action."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        ctx.push_group("tag")
+        assert ctx._group_actions == [("push", "tag")]
+
+    def test_push_unknown_group_raises(self) -> None:
+        """push_group() with unknown name raises ValueError."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        with pytest.raises(ValueError, match="Unknown pattern group"):
+            ctx.push_group("nonexistent")
+
+    def test_pop_group_records_action(self) -> None:
+        """pop_group() records a pop action."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        ctx.pop_group()
+        assert ctx._group_actions == [("pop", "")]
+
+    def test_active_group_reads_stack(self) -> None:
+        """active_group() returns the top of the lexer's group stack."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        assert ctx.active_group() == "default"
+
+    def test_group_stack_depth(self) -> None:
+        """group_stack_depth() returns the length of the group stack."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        assert ctx.group_stack_depth() == 1
+
+    def test_emit_appends_token(self) -> None:
+        """emit() appends a synthetic token to the emitted list."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        synthetic = Token(type="SYNTHETIC", value="!", line=1, column=1)
+        ctx.emit(synthetic)
+        assert ctx._emitted == [synthetic]
+
+    def test_suppress_sets_flag(self) -> None:
+        """suppress() sets the suppressed flag."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        assert ctx._suppressed is False
+        ctx.suppress()
+        assert ctx._suppressed is True
+
+    def test_peek_reads_source(self) -> None:
+        """peek() reads characters from the source after the token."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("hello", grammar)
+        # Suppose token ended at position 3 (consumed "hel")
+        ctx = LexerContext(lexer, "hello", 3)
+        assert ctx.peek(1) == "l"
+        assert ctx.peek(2) == "o"
+        assert ctx.peek(3) == ""  # past EOF
+
+    def test_peek_str_reads_source(self) -> None:
+        """peek_str() reads a substring from the source after the token."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("hello world", grammar)
+        ctx = LexerContext(lexer, "hello world", 5)
+        assert ctx.peek_str(6) == " world"
+
+    def test_set_skip_enabled(self) -> None:
+        """set_skip_enabled() records the new skip state."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        assert ctx._skip_enabled is None  # no change by default
+        ctx.set_skip_enabled(False)
+        assert ctx._skip_enabled is False
+
+    def test_multiple_pushes(self) -> None:
+        """Multiple push_group() calls are recorded in order."""
+        grammar = _make_group_grammar()
+        lexer = GrammarLexer("x", grammar)
+        ctx = LexerContext(lexer, "x", 1)
+        ctx.push_group("tag")
+        ctx.push_group("tag")
+        assert ctx._group_actions == [("push", "tag"), ("push", "tag")]
+
+
+class TestPatternGroupTokenization:
+    """Tests for pattern group switching during tokenization.
+
+    These tests verify that the lexer correctly switches between
+    pattern groups based on callback actions, producing the right
+    tokens in the right order.
+    """
+
+    def test_no_callback_uses_default_group(self) -> None:
+        """Without a callback, only default group patterns are used."""
+        grammar = _make_group_grammar()
+        tokens = GrammarLexer("hello", grammar).tokenize()
+        # TEXT pattern matches in default group
+        assert tokens[0].type == "TEXT"
+        assert tokens[0].value == "hello"
+
+    def test_callback_push_pop_group(self) -> None:
+        """Callback can push/pop groups to switch pattern sets.
+
+        Simulates: <div> where < triggers push("tag"), > triggers pop().
+        """
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "OPEN_TAG":
+                ctx.push_group("tag")
+            elif token.type == "TAG_CLOSE":
+                ctx.pop_group()
+
+        lexer = GrammarLexer('<div>hello', grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [
+            (_token_type_name(t), t.value)
+            for t in tokens if _token_type_name(t) != "EOF"
+        ]
+        assert types == [
+            ("OPEN_TAG", "<"),
+            ("TAG_NAME", "div"),
+            ("TAG_CLOSE", ">"),
+            ("TEXT", "hello"),
+        ]
+
+    def test_callback_with_attributes(self) -> None:
+        """Callback handles tag with attributes.
+
+        Simulates: <div class="main"> where the tag group lexes
+        TAG_NAME, EQUALS, and VALUE tokens.
+        """
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "OPEN_TAG":
+                ctx.push_group("tag")
+            elif token.type == "TAG_CLOSE":
+                ctx.pop_group()
+
+        lexer = GrammarLexer('<div class="main">', grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [
+            (_token_type_name(t), t.value)
+            for t in tokens if _token_type_name(t) != "EOF"
+        ]
+        assert types == [
+            ("OPEN_TAG", "<"),
+            ("TAG_NAME", "div"),
+            ("TAG_NAME", "class"),
+            ("EQUALS", "="),
+            ("VALUE", '"main"'),
+            ("TAG_CLOSE", ">"),
+        ]
+
+    def test_nested_tags(self) -> None:
+        """Group stack handles nested structures.
+
+        Simulates: <a>text<b>inner</b></a> with push/pop on < and >.
+        """
+        # Need a grammar with CLOSE_TAG_START for </
+        source = """\
+escapes: none
+
+skip:
+  WS = /[ \\t\\r\\n]+/
+
+TEXT             = /[^<]+/
+CLOSE_TAG_START  = "</"
+OPEN_TAG         = "<"
+
+group tag:
+  TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+  TAG_CLOSE = ">"
+  SLASH     = "/"
+"""
+        grammar = parse_token_grammar(source)
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type in ("OPEN_TAG", "CLOSE_TAG_START"):
+                ctx.push_group("tag")
+            elif token.type == "TAG_CLOSE":
+                ctx.pop_group()
+
+        lexer = GrammarLexer("<a>text<b>inner</b></a>", grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [
+            (_token_type_name(t), t.value)
+            for t in tokens if _token_type_name(t) != "EOF"
+        ]
+        assert types == [
+            ("OPEN_TAG", "<"),
+            ("TAG_NAME", "a"),
+            ("TAG_CLOSE", ">"),
+            ("TEXT", "text"),
+            ("OPEN_TAG", "<"),
+            ("TAG_NAME", "b"),
+            ("TAG_CLOSE", ">"),
+            ("TEXT", "inner"),
+            ("CLOSE_TAG_START", "</"),
+            ("TAG_NAME", "b"),
+            ("TAG_CLOSE", ">"),
+            ("CLOSE_TAG_START", "</"),
+            ("TAG_NAME", "a"),
+            ("TAG_CLOSE", ">"),
+        ]
+
+    def test_suppress_token(self) -> None:
+        """Callback can suppress tokens (remove from output)."""
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            # Suppress the OPEN_TAG token
+            if token.type == "OPEN_TAG":
+                ctx.suppress()
+
+        lexer = GrammarLexer("<hello", grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [_token_type_name(t) for t in tokens if _token_type_name(t) != "EOF"]
+        # OPEN_TAG was suppressed, only TEXT remains
+        assert types == ["TEXT"]
+
+    def test_emit_synthetic_token(self) -> None:
+        """Callback can emit synthetic tokens after the current one."""
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "OPEN_TAG":
+                ctx.emit(Token(
+                    type="MARKER",
+                    value="[start]",
+                    line=token.line,
+                    column=token.column,
+                ))
+
+        lexer = GrammarLexer("<hello", grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [
+            (_token_type_name(t), t.value)
+            for t in tokens if _token_type_name(t) != "EOF"
+        ]
+        assert types == [
+            ("OPEN_TAG", "<"),
+            ("MARKER", "[start]"),
+            ("TEXT", "hello"),
+        ]
+
+    def test_suppress_and_emit(self) -> None:
+        """Suppress + emit = token replacement.
+
+        The current token is swallowed, but emitted tokens still output.
+        This enables token rewriting (e.g., replacing OPEN_TAG with a
+        different token type).
+        """
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "OPEN_TAG":
+                ctx.suppress()
+                ctx.emit(Token(
+                    type="REPLACED",
+                    value="<",
+                    line=token.line,
+                    column=token.column,
+                ))
+
+        lexer = GrammarLexer("<hello", grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [
+            (_token_type_name(t), t.value)
+            for t in tokens if _token_type_name(t) != "EOF"
+        ]
+        assert types == [
+            ("REPLACED", "<"),
+            ("TEXT", "hello"),
+        ]
+
+    def test_pop_at_bottom_is_noop(self) -> None:
+        """Popping when only default remains is a no-op (no crash)."""
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            ctx.pop_group()  # Should be safe even at the bottom
+
+        lexer = GrammarLexer("hello", grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        # Should still produce TEXT token without crashing
+        assert tokens[0].type == "TEXT"
+
+    def test_set_skip_enabled_false(self) -> None:
+        """Callback can disable skip patterns for significant whitespace.
+
+        When skip is disabled, whitespace that would normally be consumed
+        silently instead causes a match failure (unless the active group
+        has a pattern that matches whitespace).
+        """
+        # Grammar with a group that captures whitespace as a token
+        source = """\
+escapes: none
+
+skip:
+  WS = /[ \\t]+/
+
+TEXT      = /[^<]+/
+START     = "<!"
+
+group raw:
+  RAW_TEXT = /[^>]+/
+  END      = ">"
+"""
+        grammar = parse_token_grammar(source)
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "START":
+                ctx.push_group("raw")
+                ctx.set_skip_enabled(False)
+            elif token.type == "END":
+                ctx.pop_group()
+                ctx.set_skip_enabled(True)
+
+        # The space in "hello world" should be preserved (not skipped)
+        # because skip is disabled while in the raw group.
+        lexer = GrammarLexer("<! hello world >after", grammar)
+        lexer.set_on_token(on_token)
+        tokens = lexer.tokenize()
+
+        types = [
+            (_token_type_name(t), t.value)
+            for t in tokens if _token_type_name(t) != "EOF"
+        ]
+        assert types == [
+            ("START", "<!"),
+            ("RAW_TEXT", " hello world "),
+            ("END", ">"),
+            ("TEXT", "after"),
+        ]
+
+    def test_no_groups_backward_compat(self) -> None:
+        """A grammar with no groups behaves identically to before.
+
+        This verifies backward compatibility: no groups + no callback
+        = same behavior as the original GrammarLexer.
+        """
+        source = """\
+NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+NUMBER = /[0-9]+/
+PLUS   = "+"
+"""
+        grammar = parse_token_grammar(source)
+        tokens = GrammarLexer("x + 1", grammar).tokenize()
+
+        types = [(_token_type_name(t), t.value) for t in tokens
+                 if _token_type_name(t) not in ("NEWLINE", "EOF")]
+        assert types == [
+            ("NAME", "x"),
+            ("PLUS", "+"),
+            ("NUMBER", "1"),
+        ]
+
+    def test_clear_callback(self) -> None:
+        """Passing None to set_on_token clears the callback."""
+        grammar = _make_group_grammar()
+        called = []
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            called.append(token.type)
+
+        lexer = GrammarLexer("hello", grammar)
+        lexer.set_on_token(on_token)
+        lexer.set_on_token(None)
+        lexer.tokenize()
+
+        assert called == []
+
+    def test_group_stack_resets_between_calls(self) -> None:
+        """The group stack resets when tokenize() is called again.
+
+        This ensures the lexer can be reused for multiple tokenize()
+        calls without group state leaking between them.
+        """
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "OPEN_TAG":
+                ctx.push_group("tag")
+
+        lexer = GrammarLexer("<div", grammar)
+        lexer.set_on_token(on_token)
+
+        # First call: pushes "tag" group
+        tokens1 = lexer.tokenize()
+        assert any(t.type == "TAG_NAME" for t in tokens1)
+
+        # Second call: should start fresh from "default"
+        lexer._source = "<div"
+        lexer._pos = 0
+        lexer._line = 1
+        lexer._column = 1
+        tokens2 = lexer.tokenize()
+        assert any(t.type == "TAG_NAME" for t in tokens2)
+
+    def test_multiple_push_pop_sequence(self) -> None:
+        """Multiple push/pop in one callback are applied in order."""
+        grammar = _make_group_grammar()
+
+        def on_token(token: Token, ctx: LexerContext) -> None:
+            if token.type == "OPEN_TAG":
+                # Push tag, then immediately push tag again (stacking)
+                ctx.push_group("tag")
+                ctx.push_group("tag")
+
+        lexer = GrammarLexer("<div", grammar)
+        lexer.set_on_token(on_token)
+        lexer.tokenize()
+
+        # After OPEN_TAG, stack should be ["default", "tag", "tag"]
+        # The test verifies no crash occurs with multiple pushes.
+        # We re-tokenize to confirm the stack handles double-push.
+        lexer._source = "<div"
+        lexer._pos = 0
+        lexer._line = 1
+        lexer._column = 1
+        tokens = lexer.tokenize()
+        assert any(_token_type_name(t) == "TAG_NAME" for t in tokens)

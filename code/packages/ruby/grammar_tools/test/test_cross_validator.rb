@@ -76,14 +76,20 @@ class TestCrossValidator < Minitest::Test
   end
 
   def test_indent_dedent_without_indentation_mode
+    # Without indentation mode, INDENT/DEDENT are errors but NEWLINE is valid.
+    #
+    # NEWLINE is always a valid synthetic token because the lexer emits it
+    # whenever a bare newline is encountered and no skip pattern consumed it.
+    # INDENT/DEDENT are only valid in indentation mode.
     token_source = 'NAME = /[a-z]+/'
-    grammar_source = "file = NAME INDENT NAME DEDENT ;"
+    grammar_source = "file = NAME NEWLINE INDENT NAME DEDENT ;"
     tg = GT.parse_token_grammar(token_source)
     pg = GT.parse_parser_grammar(grammar_source)
     issues = GT.cross_validate(tg, pg)
     errors = issues.select { |i| i.start_with?("Error") }
     assert errors.any? { |i| i.include?("INDENT") }
     assert errors.any? { |i| i.include?("DEDENT") }
+    refute errors.any? { |i| i.include?("NEWLINE") }
   end
 
   def test_eof_always_implicit

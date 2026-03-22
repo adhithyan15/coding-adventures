@@ -11,6 +11,8 @@
  *   character-dispatching logic.
  * - `grammarTokenize` — a grammar-driven alternative that reads token
  *   definitions from a `.tokens` file (via `grammar-tools`).
+ * - `GrammarLexer` — class-based grammar-driven lexer with support for
+ *   pattern groups and on-token callbacks for context-sensitive lexing.
  *
  * Both produce identical `Token` objects and are fully interchangeable.
  *
@@ -29,9 +31,20 @@
  *
  *     const grammar = parseTokenGrammar(fs.readFileSync("python.tokens", "utf-8"));
  *     const tokens = grammarTokenize("x = 1 + 2", grammar);
+ *
+ *     // Class-based with on-token callback:
+ *     import { GrammarLexer, LexerContext } from "@coding-adventures/lexer";
+ *
+ *     const lexer = new GrammarLexer(source, grammar);
+ *     lexer.setOnToken((token, ctx) => {
+ *       if (token.type === "OPEN_TAG") ctx.pushGroup("tag");
+ *       if (token.type === "TAG_CLOSE") ctx.popGroup();
+ *     });
+ *     const tokens = lexer.tokenize();
  */
 
 export type { Token } from "./token.js";
 export { tokenize, LexerError } from "./tokenizer.js";
 export type { LexerConfig } from "./tokenizer.js";
-export { grammarTokenize } from "./grammar-lexer.js";
+export { grammarTokenize, GrammarLexer, LexerContext } from "./grammar-lexer.js";
+export type { OnTokenCallback } from "./grammar-lexer.js";

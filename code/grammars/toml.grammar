@@ -1,0 +1,161 @@
+# Parser grammar for TOML (v1.0.0)
+#
+# TOML has ~12 grammar rules — more than JSON (4 rules) but far fewer than
+# CSS (36 rules). The grammar is context-free; semantic constraints (key
+# uniqueness, table path consistency, inline table immutability) are enforced
+# in a post-parse validation pass.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from toml.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional (zero or one)
+#   ( x )   grouping
+#   "lit"   literal token match
+#
+# Key design decisions:
+#   1. NEWLINE tokens are significant — key-value pairs are newline-delimited
+#   2. [[array]] is two LBRACKET tokens, not a single DOUBLE_LBRACKET token
+#   3. simple_key includes all value tokens (true, 42, etc.) because TOML
+#      allows any bare-key-compatible string as a key name
+#   4. array_values allows NEWLINEs between elements (multi-line arrays)
+#   5. inline_table allows newlines syntactically but the semantic layer
+#      rejects them (keeps the grammar simple)
+
+# ── Document structure ─────────────────────────────────────────────────────
+#
+# A TOML document is a sequence of expressions separated by newlines.
+# The { NEWLINE | expression } pattern handles:
+#   - Blank lines (consecutive NEWLINEs)
+#   - Leading/trailing blank lines
+#   - Expressions (key-value pairs, table headers) between newlines
+
+document = { NEWLINE | expression } ;
+
+# An expression is one of three things:
+#   1. A table header: [server]
+#   2. An array-of-tables header: [[products]]
+#   3. A key-value pair: host = "localhost"
+#
+# The backtracking parser tries these in order. Table and array-of-tables
+# headers both start with LBRACKET, but array-of-tables starts with TWO
+# LBRACKETs, so it is tried first to avoid a false match.
+
+expression = array_table_header | table_header | keyval ;
+
+# ── Key-value pairs ────────────────────────────────────────────────────────
+#
+# The fundamental unit of TOML: key = value
+# Everything in TOML is a key-value pair. Table headers just change which
+# table subsequent key-value pairs are added to.
+
+keyval = key EQUALS value ;
+
+# ── Keys ───────────────────────────────────────────────────────────────────
+#
+# A key is one or more simple keys separated by dots (a "dotted key").
+# Dotted keys create intermediate tables:
+#   a.b.c = 1  is equivalent to  [a.b] \n c = 1
+
+key = simple_key { DOT simple_key } ;
+
+# A simple key is a bare key, a quoted key, or any value token that could
+# appear as a bare key. This is necessary because TOML bare keys are
+# [A-Za-z0-9_-]+, which includes strings like "true", "42", and "1979-05-27".
+# Since the lexer tokenizes those as TRUE, INTEGER, and LOCAL_DATE
+# respectively, the grammar must accept them in key position.
+#
+# Examples of valid TOML keys:
+#   server     → BARE_KEY
+#   "server"   → BASIC_STRING
+#   'server'   → LITERAL_STRING
+#   true       → TRUE (the boolean token, but valid as a key!)
+#   42         → INTEGER
+#   3.14       → FLOAT (dotted keys handle the dot separately)
+#   1979-05-27 → LOCAL_DATE
+
+simple_key = BARE_KEY | BASIC_STRING | LITERAL_STRING
+           | TRUE | FALSE | INTEGER | FLOAT
+           | OFFSET_DATETIME | LOCAL_DATETIME | LOCAL_DATE | LOCAL_TIME ;
+
+# ── Table headers ──────────────────────────────────────────────────────────
+#
+# [server] switches the "current table" — subsequent key-value pairs are
+# added to the table named "server".
+# [a.b.c] creates nested tables: a → b → c
+
+table_header = LBRACKET key RBRACKET ;
+
+# ── Array-of-tables headers ───────────────────────────────────────────────
+#
+# [[products]] appends a new table to the array named "products".
+# Each [[products]] header creates a new element in the array.
+#
+# This is tokenized as LBRACKET LBRACKET key RBRACKET RBRACKET (four tokens,
+# not two). The grammar disambiguates from nested arrays like [[1, 2], [3, 4]]
+# because array_table_header appears in expression (top-level, between
+# newlines), while nested arrays appear in value (after =).
+
+array_table_header = LBRACKET LBRACKET key RBRACKET RBRACKET ;
+
+# ── Values ─────────────────────────────────────────────────────────────────
+#
+# A TOML value is one of:
+#   - String (4 types: basic, multi-line basic, literal, multi-line literal)
+#   - Integer (decimal, hex, octal, binary)
+#   - Float (decimal, scientific, inf, nan)
+#   - Boolean (true, false)
+#   - Date/Time (4 types: offset datetime, local datetime, date, time)
+#   - Array
+#   - Inline table
+#
+# Compound values (array, inline_table) come last since they start with
+# unambiguous delimiters ([ and {). String/number/boolean tokens are tried
+# first for efficiency.
+
+value = BASIC_STRING | ML_BASIC_STRING | LITERAL_STRING | ML_LITERAL_STRING
+      | INTEGER | FLOAT | TRUE | FALSE
+      | OFFSET_DATETIME | LOCAL_DATETIME | LOCAL_DATE | LOCAL_TIME
+      | array | inline_table ;
+
+# ── Arrays ─────────────────────────────────────────────────────────────────
+#
+# Arrays are comma-separated values wrapped in brackets. They can span
+# multiple lines (NEWLINEs are allowed between elements). A trailing comma
+# is permitted after the last element.
+#
+# The { NEWLINE } patterns scattered through array_values allow newlines
+# at any position inside the array:
+#   colors = [
+#     "red",
+#     "green",
+#     "blue",
+#   ]
+
+array = LBRACKET array_values RBRACKET ;
+
+array_values = { NEWLINE }
+               [ value { NEWLINE }
+                 { COMMA { NEWLINE } value { NEWLINE } }
+                 [ COMMA ]
+                 { NEWLINE } ] ;
+
+# ── Inline tables ──────────────────────────────────────────────────────────
+#
+# Inline tables are compact, single-line table definitions:
+#   point = { x = 1, y = 2 }
+#
+# The TOML spec requires inline tables to be single-line. The grammar
+# allows the syntax regardless (no NEWLINE references inside), and the
+# semantic validation layer enforces the single-line constraint by checking
+# that no NEWLINE tokens appear between the braces.
+#
+# Inline tables are immutable — once defined, no additional keys can be
+# added via [table] headers or dotted keys. This is also enforced in the
+# semantic layer, not the grammar.
+
+inline_table = LBRACE [ keyval { COMMA keyval } ] RBRACE ;

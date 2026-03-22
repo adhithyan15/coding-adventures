@@ -38,10 +38,17 @@ module CodingAdventures
       # Build the set of all token names the parser can reference.
       defined_tokens = token_grammar.token_names
 
-      # Indentation mode synthesizes INDENT, DEDENT, NEWLINE tokens.
+      # Indentation mode synthesizes INDENT, DEDENT, and NEWLINE tokens.
       if token_grammar.mode == "indentation"
         defined_tokens.merge(%w[INDENT DEDENT NEWLINE])
       end
+
+      # The NEWLINE token is also implicitly available whenever the skip
+      # pattern does NOT consume newlines. In that case, the lexer emits
+      # NEWLINE tokens at each bare '\n'. Rather than requiring grammars to
+      # redundantly define NEWLINE in their .tokens file, we always treat it
+      # as a valid synthetic token (like EOF).
+      defined_tokens.add("NEWLINE")
 
       # EOF is always implicitly available.
       defined_tokens.add("EOF")

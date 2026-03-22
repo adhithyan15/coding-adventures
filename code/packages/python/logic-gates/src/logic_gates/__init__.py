@@ -2,9 +2,21 @@
 
 Fundamental logic gate implementations: AND, OR, NOT, XOR, NAND, NOR, XNOR.
 Also includes NAND-derived gates (all gates built from NAND only),
-multi-input variants, and sequential logic (latches, flip-flops, registers).
+multi-input variants, sequential logic (latches, flip-flops, registers),
+and combinational circuits (MUX, DEMUX, decoder, encoder, tri-state buffer).
 """
 
+from logic_gates.combinational import (
+    decoder,
+    demux,
+    encoder,
+    mux2,
+    mux4,
+    mux8,
+    mux_n,
+    priority_encoder,
+    tri_state,
+)
 from logic_gates.gates import (
     AND,
     NAND,
@@ -54,4 +66,14 @@ __all__ = [
     "register",
     "shift_register",
     "counter",
+    # Combinational circuits
+    "mux2",
+    "mux4",
+    "mux8",
+    "mux_n",
+    "demux",
+    "decoder",
+    "encoder",
+    "priority_encoder",
+    "tri_state",
 ]

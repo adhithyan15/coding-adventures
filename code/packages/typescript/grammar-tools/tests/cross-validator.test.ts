@@ -131,12 +131,19 @@ file = { NAME COLON NEWLINE INDENT NAME NEWLINE DEDENT } ;
     expect(errors).toEqual([]);
   });
 
-  it("should report INDENT as missing when NOT in indent mode", () => {
+  it("should report INDENT/DEDENT as missing when NOT in indent mode, but NEWLINE is valid", () => {
+    /**
+     * Without indentation mode, INDENT/DEDENT are errors but NEWLINE is valid.
+     * NEWLINE is always a valid synthetic token because the lexer emits it
+     * whenever a bare newline is encountered and no skip pattern consumed it.
+     */
     const tokens = parseTokenGrammar("NAME = /[a-z]+/");
-    const grammar = parseParserGrammar("file = NAME INDENT NAME ;");
+    const grammar = parseParserGrammar("file = NAME NEWLINE INDENT NAME DEDENT ;");
     const issues = crossValidate(tokens, grammar);
     const errors = issues.filter((i) => i.startsWith("Error"));
     expect(errors.some((e) => e.includes("INDENT"))).toBe(true);
+    expect(errors.some((e) => e.includes("DEDENT"))).toBe(true);
+    expect(errors.some((e) => e.includes("NEWLINE"))).toBe(false);
   });
 });
 
