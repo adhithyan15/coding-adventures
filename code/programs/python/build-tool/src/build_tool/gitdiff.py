@@ -143,11 +143,13 @@ def map_files_to_packages(
             pkg_by_name[pkg.name] = pkg
 
     # Convert package paths to relative strings for prefix matching.
+    # We normalize to forward slashes because git diff always outputs
+    # forward-slash paths, even on Windows.
     relative_pkg_paths: dict[str, str] = {}
     for name, abs_path in package_paths.items():
         try:
             rel = abs_path.relative_to(repo_root)
-            relative_pkg_paths[name] = str(rel)
+            relative_pkg_paths[name] = str(rel).replace("\\", "/")
         except ValueError:
             continue
 
