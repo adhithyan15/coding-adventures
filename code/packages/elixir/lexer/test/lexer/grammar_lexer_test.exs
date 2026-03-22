@@ -3,6 +3,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
 
   alias CodingAdventures.Lexer.Token
   alias CodingAdventures.Lexer.GrammarLexer
+  alias CodingAdventures.Lexer.GrammarLexer.LexerContext
   alias CodingAdventures.GrammarTools.TokenGrammar
 
   # Helper to create a simple grammar for testing
@@ -24,6 +25,34 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       |> Path.expand()
 
     {:ok, g} = TokenGrammar.parse(File.read!(Path.join(grammar_dir, "json.tokens")))
+    g
+  end
+
+  # Helper to create a grammar with pattern groups for testing.
+  #
+  # This simulates a simplified XML-like grammar:
+  # - Default group: TEXT and OPEN_TAG
+  # - tag group: TAG_NAME, EQUALS, VALUE, TAG_CLOSE
+  #
+  # The grammar uses skip patterns for whitespace and no keywords.
+  defp group_grammar do
+    {:ok, g} =
+      TokenGrammar.parse("""
+      escapes: none
+
+      skip:
+        WS = /[ \\t\\r\\n]+/
+
+      TEXT      = /[^<]+/
+      OPEN_TAG  = "<"
+
+      group tag:
+        TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+        EQUALS    = "="
+        VALUE     = /"[^"]*"/
+        TAG_CLOSE = ">"
+      """)
+
     g
   end
 
@@ -283,6 +312,446 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
 
     test "no escapes" do
       assert GrammarLexer.process_escapes("hello") == "hello"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # LexerContext — Unit Tests
+  # ---------------------------------------------------------------------------
+  #
+  # These tests verify the LexerContext struct and its peek/peek_str functions.
+  # Unlike the Python tests which test mutating methods, these test the
+  # read-only struct and its helper functions.
+
+  describe "LexerContext — peek" do
+    test "peek reads characters from the source after the token" do
+      ctx = %LexerContext{
+        active_group: "default",
+        group_stack_depth: 1,
+        source: "hello",
+        pos_after_token: 3,
+        available_groups: ["default"]
+      }
+
+      # Position 3 = after "hel", so peek(1) = "l", peek(2) = "o"
+      assert LexerContext.peek(ctx, 1) == "l"
+      assert LexerContext.peek(ctx, 2) == "o"
+      assert LexerContext.peek(ctx, 3) == ""  # past EOF
+    end
+
+    test "peek_str reads a substring after the token" do
+      ctx = %LexerContext{
+        active_group: "default",
+        group_stack_depth: 1,
+        source: "hello world",
+        pos_after_token: 5,
+        available_groups: ["default"]
+      }
+
+      assert LexerContext.peek_str(ctx, 6) == " world"
+    end
+
+    test "peek_str truncates at end of source" do
+      ctx = %LexerContext{
+        active_group: "default",
+        group_stack_depth: 1,
+        source: "hi",
+        pos_after_token: 1,
+        available_groups: ["default"]
+      }
+
+      assert LexerContext.peek_str(ctx, 100) == "i"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Pattern Group Tokenization — Integration Tests
+  # ---------------------------------------------------------------------------
+  #
+  # These tests verify that the lexer correctly switches between pattern
+  # groups based on callback actions, producing the right tokens in the
+  # right order. They are ported from the Python TestPatternGroupTokenization
+  # class, adapted for Elixir's functional callback style.
+
+  describe "pattern groups — no callback" do
+    test "without a callback, only default group patterns are used" do
+      grammar = group_grammar()
+      {:ok, tokens} = GrammarLexer.tokenize("hello", grammar)
+      # TEXT pattern matches in default group
+      assert hd(tokens).type == "TEXT"
+      assert hd(tokens).value == "hello"
+    end
+  end
+
+  describe "pattern groups — push/pop" do
+    test "callback can push/pop groups to switch pattern sets" do
+      # Simulates: <div> where < triggers push("tag"), > triggers pop().
+      grammar = group_grammar()
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "OPEN_TAG" -> [{:push_group, "tag"}]
+          "TAG_CLOSE" -> [:pop_group]
+          _ -> []
+        end
+      end
+
+      {:ok, tokens} = GrammarLexer.tokenize("<div>hello", grammar, on_token: callback)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"OPEN_TAG", "<"},
+               {"TAG_NAME", "div"},
+               {"TAG_CLOSE", ">"},
+               {"TEXT", "hello"}
+             ]
+    end
+
+    test "callback handles tag with attributes" do
+      # Simulates: <div class="main"> where the tag group lexes
+      # TAG_NAME, EQUALS, and VALUE tokens.
+      grammar = group_grammar()
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "OPEN_TAG" -> [{:push_group, "tag"}]
+          "TAG_CLOSE" -> [:pop_group]
+          _ -> []
+        end
+      end
+
+      {:ok, tokens} =
+        GrammarLexer.tokenize(~s(<div class="main">), grammar, on_token: callback)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"OPEN_TAG", "<"},
+               {"TAG_NAME", "div"},
+               {"TAG_NAME", "class"},
+               {"EQUALS", "="},
+               {"VALUE", ~s("main")},
+               {"TAG_CLOSE", ">"}
+             ]
+    end
+  end
+
+  describe "pattern groups — nested tags" do
+    test "group stack handles nested structures" do
+      # Simulates: <a>text<b>inner</b></a> with push/pop on < and >.
+      # Need a grammar with CLOSE_TAG_START for </
+      {:ok, grammar} =
+        TokenGrammar.parse("""
+        escapes: none
+
+        skip:
+          WS = /[ \\t\\r\\n]+/
+
+        TEXT             = /[^<]+/
+        CLOSE_TAG_START  = "</"
+        OPEN_TAG         = "<"
+
+        group tag:
+          TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+          TAG_CLOSE = ">"
+          SLASH     = "/"
+        """)
+
+      callback = fn token, _ctx ->
+        case token.type do
+          type when type in ["OPEN_TAG", "CLOSE_TAG_START"] ->
+            [{:push_group, "tag"}]
+
+          "TAG_CLOSE" ->
+            [:pop_group]
+
+          _ ->
+            []
+        end
+      end
+
+      {:ok, tokens} =
+        GrammarLexer.tokenize("<a>text<b>inner</b></a>", grammar, on_token: callback)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"OPEN_TAG", "<"},
+               {"TAG_NAME", "a"},
+               {"TAG_CLOSE", ">"},
+               {"TEXT", "text"},
+               {"OPEN_TAG", "<"},
+               {"TAG_NAME", "b"},
+               {"TAG_CLOSE", ">"},
+               {"TEXT", "inner"},
+               {"CLOSE_TAG_START", "</"},
+               {"TAG_NAME", "b"},
+               {"TAG_CLOSE", ">"},
+               {"CLOSE_TAG_START", "</"},
+               {"TAG_NAME", "a"},
+               {"TAG_CLOSE", ">"}
+             ]
+    end
+  end
+
+  describe "pattern groups — suppress" do
+    test "callback can suppress tokens (remove from output)" do
+      grammar = group_grammar()
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "OPEN_TAG" -> [:suppress]
+          _ -> []
+        end
+      end
+
+      {:ok, tokens} = GrammarLexer.tokenize("<hello", grammar, on_token: callback)
+
+      types =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(& &1.type)
+
+      # OPEN_TAG was suppressed, only TEXT remains
+      assert types == ["TEXT"]
+    end
+  end
+
+  describe "pattern groups — emit synthetic tokens" do
+    test "callback can emit synthetic tokens after the current one" do
+      grammar = group_grammar()
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "OPEN_TAG" ->
+            [{:emit, %Token{type: "MARKER", value: "[start]", line: token.line, column: token.column}}]
+
+          _ ->
+            []
+        end
+      end
+
+      {:ok, tokens} = GrammarLexer.tokenize("<hello", grammar, on_token: callback)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"OPEN_TAG", "<"},
+               {"MARKER", "[start]"},
+               {"TEXT", "hello"}
+             ]
+    end
+  end
+
+  describe "pattern groups — suppress + emit (token replacement)" do
+    test "suppress + emit = token replacement" do
+      # The current token is swallowed, but emitted tokens still output.
+      # This enables token rewriting (e.g., replacing OPEN_TAG with a
+      # different token type).
+      grammar = group_grammar()
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "OPEN_TAG" ->
+            [:suppress, {:emit, %Token{type: "REPLACED", value: "<", line: token.line, column: token.column}}]
+
+          _ ->
+            []
+        end
+      end
+
+      {:ok, tokens} = GrammarLexer.tokenize("<hello", grammar, on_token: callback)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"REPLACED", "<"},
+               {"TEXT", "hello"}
+             ]
+    end
+  end
+
+  describe "pattern groups — pop at bottom" do
+    test "popping when only default remains is a no-op (no crash)" do
+      grammar = group_grammar()
+
+      callback = fn _token, _ctx ->
+        [:pop_group]
+      end
+
+      {:ok, tokens} = GrammarLexer.tokenize("hello", grammar, on_token: callback)
+
+      # Should still produce TEXT token without crashing
+      assert hd(tokens).type == "TEXT"
+    end
+  end
+
+  describe "pattern groups — set_skip_enabled" do
+    test "callback can disable skip patterns for significant whitespace" do
+      # Grammar with a group that captures whitespace as a token.
+      # When skip is disabled, whitespace that would normally be consumed
+      # silently instead remains for the active group's patterns to match.
+      {:ok, grammar} =
+        TokenGrammar.parse("""
+        escapes: none
+
+        skip:
+          WS = /[ \\t]+/
+
+        TEXT      = /[^<]+/
+        START     = "<!"
+
+        group raw:
+          RAW_TEXT = /[^>]+/
+          END      = ">"
+        """)
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "START" ->
+            [{:push_group, "raw"}, {:set_skip_enabled, false}]
+
+          "END" ->
+            [:pop_group, {:set_skip_enabled, true}]
+
+          _ ->
+            []
+        end
+      end
+
+      # The space in "hello world" should be preserved (not skipped)
+      # because skip is disabled while in the raw group.
+      {:ok, tokens} =
+        GrammarLexer.tokenize("<! hello world >after", grammar, on_token: callback)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"START", "<!"},
+               {"RAW_TEXT", " hello world "},
+               {"END", ">"},
+               {"TEXT", "after"}
+             ]
+    end
+  end
+
+  describe "pattern groups — backward compatibility" do
+    test "a grammar with no groups behaves identically to before" do
+      # This verifies backward compatibility: no groups + no callback
+      # = same behavior as the original GrammarLexer.
+      {:ok, grammar} =
+        TokenGrammar.parse("""
+        NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NUMBER = /[0-9]+/
+        PLUS   = "+"
+        """)
+
+      {:ok, tokens} = GrammarLexer.tokenize("x + 1", grammar)
+
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type in ["NEWLINE", "EOF"]))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"NAME", "x"},
+               {"PLUS", "+"},
+               {"NUMBER", "1"}
+             ]
+    end
+  end
+
+  describe "pattern groups — callback lifecycle" do
+    test "callback receives correct context fields" do
+      grammar = group_grammar()
+
+      # We'll collect context info during tokenization to verify it
+      test_pid = self()
+
+      callback = fn token, ctx ->
+        if token.type == "OPEN_TAG" do
+          send(test_pid, {:context, ctx})
+          [{:push_group, "tag"}]
+        else
+          []
+        end
+      end
+
+      {:ok, _tokens} = GrammarLexer.tokenize("<hello", grammar, on_token: callback)
+
+      assert_received {:context, ctx}
+      assert ctx.active_group == "default"
+      assert ctx.group_stack_depth == 1
+      assert is_binary(ctx.source)
+      assert is_integer(ctx.pos_after_token)
+      assert "default" in ctx.available_groups
+      assert "tag" in ctx.available_groups
+    end
+
+    test "callback is not invoked for EOF" do
+      grammar = group_grammar()
+      test_pid = self()
+
+      callback = fn token, _ctx ->
+        send(test_pid, {:token, token.type})
+        []
+      end
+
+      {:ok, _tokens} = GrammarLexer.tokenize("hello", grammar, on_token: callback)
+
+      # Should receive TEXT but not EOF
+      assert_received {:token, "TEXT"}
+      refute_received {:token, "EOF"}
+    end
+
+    test "push_group with unknown group raises error" do
+      grammar = group_grammar()
+
+      callback = fn _token, _ctx ->
+        [{:push_group, "nonexistent"}]
+      end
+
+      assert_raise ArgumentError, ~r/Unknown pattern group/, fn ->
+        GrammarLexer.tokenize("hello", grammar, on_token: callback)
+      end
+    end
+
+    test "multiple push/pop in one callback are applied in order" do
+      grammar = group_grammar()
+
+      callback = fn token, _ctx ->
+        case token.type do
+          "OPEN_TAG" ->
+            # Push tag twice — stacking
+            [{:push_group, "tag"}, {:push_group, "tag"}]
+
+          _ ->
+            []
+        end
+      end
+
+      # Should not crash with double-push
+      {:ok, tokens} = GrammarLexer.tokenize("<div", grammar, on_token: callback)
+      assert Enum.any?(tokens, &(&1.type == "TAG_NAME"))
     end
   end
 end

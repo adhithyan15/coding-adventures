@@ -196,4 +196,228 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
       assert MapSet.member?(names, "NUMBER")
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # Pattern Groups
+  # ---------------------------------------------------------------------------
+  #
+  # Pattern groups enable context-sensitive lexing by defining named sets
+  # of token patterns. The lexer maintains a stack of active groups and
+  # only tries patterns from the group on top of the stack.
+
+  describe "parse/1 — pattern groups" do
+    test "basic group is parsed into a map with name and definitions" do
+      source =
+        "TEXT = /[^<]+/\n" <>
+          "TAG_OPEN = \"<\"\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  TAG_NAME = /[a-zA-Z]+/\n" <>
+          "  TAG_CLOSE = \">\"\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      # Default group patterns
+      assert length(grammar.definitions) == 2
+      assert Enum.at(grammar.definitions, 0).name == "TEXT"
+      assert Enum.at(grammar.definitions, 1).name == "TAG_OPEN"
+
+      # Named group
+      assert Map.has_key?(grammar.groups, "tag")
+      group = grammar.groups["tag"]
+      assert group.name == "tag"
+      assert length(group.definitions) == 2
+      assert Enum.at(group.definitions, 0).name == "TAG_NAME"
+      assert Enum.at(group.definitions, 1).name == "TAG_CLOSE"
+    end
+
+    test "multiple groups can be defined in the same file" do
+      source =
+        "TEXT = /[^<]+/\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  TAG_NAME = /[a-zA-Z]+/\n" <>
+          "\n" <>
+          "group cdata:\n" <>
+          "  CDATA_TEXT = /[^]]+/\n" <>
+          "  CDATA_END = \"]]>\"\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      assert map_size(grammar.groups) == 2
+      assert Map.has_key?(grammar.groups, "tag")
+      assert Map.has_key?(grammar.groups, "cdata")
+      assert length(grammar.groups["tag"].definitions) == 1
+      assert length(grammar.groups["cdata"].definitions) == 2
+    end
+
+    test "definitions inside groups support -> ALIAS" do
+      source =
+        "TEXT = /[^<]+/\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  ATTR_VALUE_DQ = /\"[^\"]*\"/ -> ATTR_VALUE\n" <>
+          "  ATTR_VALUE_SQ = /'[^']*'/ -> ATTR_VALUE\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      group = grammar.groups["tag"]
+      assert Enum.at(group.definitions, 0).name == "ATTR_VALUE_DQ"
+      assert Enum.at(group.definitions, 0).alias == "ATTR_VALUE"
+      assert Enum.at(group.definitions, 1).name == "ATTR_VALUE_SQ"
+      assert Enum.at(group.definitions, 1).alias == "ATTR_VALUE"
+    end
+
+    test "groups support both regex and literal patterns" do
+      source =
+        "TEXT = /[^<]+/\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  EQUALS = \"=\"\n" <>
+          "  TAG_NAME = /[a-zA-Z]+/\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      group = grammar.groups["tag"]
+      assert Enum.at(group.definitions, 0).is_regex == false
+      assert Enum.at(group.definitions, 0).pattern == "="
+      assert Enum.at(group.definitions, 1).is_regex == true
+    end
+
+    test "files without groups have an empty groups map" do
+      source = "NUMBER = /[0-9]+/\nPLUS = \"+\"\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      assert grammar.groups == %{}
+      assert length(grammar.definitions) == 2
+    end
+
+    test "skip: and group: sections coexist correctly" do
+      source =
+        "skip:\n" <>
+          "  WS = /[ \\t]+/\n" <>
+          "\n" <>
+          "TEXT = /[^<]+/\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  TAG_NAME = /[a-zA-Z]+/\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      assert length(grammar.skip_definitions) == 1
+      assert length(grammar.definitions) == 1
+      assert map_size(grammar.groups) == 1
+    end
+  end
+
+  describe "token_names/1 — with groups" do
+    test "includes names from all groups" do
+      source =
+        "TEXT = /[^<]+/\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  TAG_NAME = /[a-zA-Z]+/\n" <>
+          "  ATTR_DQ = /\"[^\"]*\"/ -> ATTR_VALUE\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      names = TokenGrammar.token_names(grammar)
+      assert MapSet.member?(names, "TEXT")
+      assert MapSet.member?(names, "TAG_NAME")
+      assert MapSet.member?(names, "ATTR_DQ")
+      assert MapSet.member?(names, "ATTR_VALUE")
+    end
+  end
+
+  describe "effective_token_names/1 — with groups" do
+    test "includes aliased names from groups" do
+      source =
+        "TEXT = /[^<]+/\n" <>
+          "\n" <>
+          "group tag:\n" <>
+          "  ATTR_DQ = /\"[^\"]*\"/ -> ATTR_VALUE\n"
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+
+      names = TokenGrammar.effective_token_names(grammar)
+      assert MapSet.member?(names, "TEXT")
+      assert MapSet.member?(names, "ATTR_VALUE")
+      # alias replaces name in effective set
+      refute MapSet.member?(names, "ATTR_DQ")
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Pattern Group Error Cases
+  # ---------------------------------------------------------------------------
+
+  describe "parse/1 — pattern group errors" do
+    test "'group :' with no name raises an error" do
+      source = "TEXT = /abc/\ngroup :\n  FOO = /x/\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Missing group name"
+    end
+
+    test "uppercase group names are rejected" do
+      source = "TEXT = /abc/\ngroup Tag:\n  FOO = /x/\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Invalid group name"
+    end
+
+    test "group names starting with a digit are rejected" do
+      source = "TEXT = /abc/\ngroup 1tag:\n  FOO = /x/\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Invalid group name"
+    end
+
+    test "'group default:' is rejected as reserved" do
+      source = "TEXT = /abc/\ngroup default:\n  FOO = /x/\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Reserved group name"
+    end
+
+    test "'group skip:' is rejected as reserved" do
+      source = "TEXT = /abc/\ngroup skip:\n  FOO = /x/\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Reserved group name"
+    end
+
+    test "'group keywords:' is rejected as reserved" do
+      source = "TEXT = /abc/\ngroup keywords:\n  FOO = /x/\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Reserved group name"
+    end
+
+    test "duplicate group names are rejected" do
+      source =
+        "TEXT = /abc/\n" <>
+          "group tag:\n" <>
+          "  FOO = /x/\n" <>
+          "group tag:\n" <>
+          "  BAR = /y/\n"
+
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Duplicate group name"
+    end
+
+    test "invalid definition inside a group raises an error" do
+      source =
+        "TEXT = /abc/\n" <>
+          "group tag:\n" <>
+          "  not a definition\n"
+
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Expected token definition"
+    end
+
+    test "missing pattern in group definition raises an error" do
+      source =
+        "TEXT = /abc/\n" <>
+          "group tag:\n" <>
+          "  FOO = \n"
+
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Incomplete definition"
+    end
+  end
 end

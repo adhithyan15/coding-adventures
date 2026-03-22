@@ -48,6 +48,17 @@ languages like Starlark (a Python subset), we added four extensions:
 4. **reserved:** section — keywords that are syntax errors if used as
    identifiers. Unlike regular keywords (which produce KEYWORD tokens),
    reserved words cause immediate lex errors.
+
+5. **group NAME:** section — defines a named set of token patterns
+   (a "pattern group"). Groups enable context-sensitive lexing: the
+   lexer maintains a stack of active groups and only tries patterns from
+   the group on top of the stack. Language-specific callback code
+   pushes/pops groups in response to matched tokens. For example, an
+   XML lexer pushes a "tag" group when it sees ``<`` and pops it on
+   ``>``, so attribute-related patterns are only active inside tags.
+   Patterns outside any group section belong to the implicit "default"
+   group. The grammar file contains no transition logic — just pattern
+   definitions labeled by group.
 """
 
 from __future__ import annotations
@@ -106,6 +117,32 @@ class TokenDefinition:
     alias: str | None = None
 
 
+@dataclass(frozen=True)
+class PatternGroup:
+    """A named set of token definitions that are active together.
+
+    When this group is at the top of the lexer's group stack, only these
+    patterns are tried during token matching. Skip patterns are global
+    and always tried regardless of the active group.
+
+    Pattern groups enable context-sensitive lexing. For example, an XML
+    lexer defines a "tag" group with patterns for attribute names, equals
+    signs, and attribute values. These patterns are only active inside
+    tags — the callback pushes the "tag" group when ``<`` is matched and
+    pops it when ``>`` is matched.
+
+    Attributes:
+        name: The group name, e.g. "tag" or "cdata". Must be a lowercase
+            identifier matching ``[a-z_][a-z0-9_]*``.
+        definitions: Ordered list of token definitions in this group.
+            Order matters (first-match-wins), just like the top-level
+            definitions list.
+    """
+
+    name: str
+    definitions: list[TokenDefinition]
+
+
 @dataclass
 class TokenGrammar:
     """The complete contents of a parsed .tokens file.
@@ -148,6 +185,7 @@ class TokenGrammar:
     reserved_keywords: list[str] = field(default_factory=list)
     escape_mode: str | None = None
     error_definitions: list[TokenDefinition] = field(default_factory=list)
+    groups: dict[str, PatternGroup] = field(default_factory=dict)
 
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
@@ -156,12 +194,18 @@ class TokenGrammar:
         (since that is the name the parser grammar references). The original
         definition name is also included for completeness.
 
+        Includes names from all pattern groups, since group tokens can
+        also appear in parser grammars.
+
         This is useful for cross-validation: the parser grammar references
         tokens by name, and we need to check that every referenced token
         actually exists.
         """
         names = set()
-        for d in self.definitions:
+        all_defs = list(self.definitions)
+        for group in self.groups.values():
+            all_defs.extend(group.definitions)
+        for d in all_defs:
             names.add(d.name)
             if d.alias:
                 names.add(d.alias)
@@ -175,8 +219,13 @@ class TokenGrammar:
         what the parser grammar references.
 
         For definitions without aliases, this returns the definition name.
+
+        Includes names from all pattern groups.
         """
-        return {d.alias if d.alias else d.name for d in self.definitions}
+        all_defs = list(self.definitions)
+        for group in self.groups.values():
+            all_defs.extend(group.definitions)
+        return {d.alias if d.alias else d.name for d in all_defs}
 
 
 # ---------------------------------------------------------------------------
@@ -343,7 +392,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
     # Section tracking. We use a string to track which section we're in,
     # since sections are mutually exclusive and we can only be in one at
     # a time (or in no section = definition mode).
-    current_section: str | None = None  # "keywords", "reserved", "skip"
+    #
+    # For pattern groups, current_section is "group:NAME" where NAME is
+    # the group name. This distinguishes groups from other sections.
+    current_section: str | None = None  # "keywords", "reserved", "skip", "group:NAME"
 
     for line_number, raw_line in enumerate(lines, start=1):
         line = raw_line.rstrip()
@@ -379,6 +431,41 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                 )
             grammar.escape_mode = escape_value
             current_section = None
+            continue
+
+        # --- Group headers ---
+        # Pattern groups are declared with ``group NAME:`` where NAME is
+        # a lowercase identifier. All subsequent indented lines belong to
+        # that group, just like skip: or errors: sections.
+        if stripped.startswith("group ") and stripped.endswith(":"):
+            group_name = stripped[6:-1].strip()
+            if not group_name:
+                raise TokenGrammarError(
+                    "Missing group name after 'group'",
+                    line_number,
+                )
+            if not re.match(r"^[a-z_][a-z0-9_]*$", group_name):
+                raise TokenGrammarError(
+                    f"Invalid group name: {group_name!r} "
+                    "(must be a lowercase identifier like 'tag' or 'cdata')",
+                    line_number,
+                )
+            reserved_names = {"default", "skip", "keywords", "reserved", "errors"}
+            if group_name in reserved_names:
+                raise TokenGrammarError(
+                    f"Reserved group name: {group_name!r} "
+                    f"(cannot use {', '.join(sorted(reserved_names))})",
+                    line_number,
+                )
+            if group_name in grammar.groups:
+                raise TokenGrammarError(
+                    f"Duplicate group name: {group_name!r}",
+                    line_number,
+                )
+            grammar.groups[group_name] = PatternGroup(
+                name=group_name, definitions=[]
+            )
+            current_section = f"group:{group_name}"
             continue
 
         # --- Section headers ---
@@ -454,6 +541,36 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                         err_pattern, err_name, line_number
                     )
                     grammar.error_definitions.append(defn)
+                elif current_section is not None and current_section.startswith("group:"):
+                    # Group section contains token definitions,
+                    # same format as skip: and errors: sections.
+                    group_name = current_section[6:]
+                    if "=" not in stripped:
+                        raise TokenGrammarError(
+                            f"Expected token definition in group "
+                            f"'{group_name}' (NAME = pattern), "
+                            f"got: {stripped!r}",
+                            line_number,
+                        )
+                    eq_index = stripped.index("=")
+                    g_name = stripped[:eq_index].strip()
+                    g_pattern = stripped[eq_index + 1 :].strip()
+                    if not g_name or not g_pattern:
+                        raise TokenGrammarError(
+                            f"Incomplete definition in group "
+                            f"'{group_name}': {stripped!r}",
+                            line_number,
+                        )
+                    defn = _parse_definition(
+                        g_pattern, g_name, line_number
+                    )
+                    # PatternGroup is frozen, so we need to create a new
+                    # one with the updated definitions list.
+                    old_group = grammar.groups[group_name]
+                    grammar.groups[group_name] = PatternGroup(
+                        name=group_name,
+                        definitions=[*old_group.definitions, defn],
+                    )
                 continue
             else:
                 # Non-indented line — exit section, fall through
@@ -609,6 +726,27 @@ def validate_token_grammar(grammar: TokenGrammar) -> list[str]:
         issues.append(
             f"Unknown escape mode '{grammar.escape_mode}' "
             f"(only 'none' is supported)"
+        )
+
+    # Validate pattern groups
+    for group_name, group in grammar.groups.items():
+        # Group name format
+        if not re.match(r"^[a-z_][a-z0-9_]*$", group_name):
+            issues.append(
+                f"Invalid group name '{group_name}' "
+                f"(must be a lowercase identifier)"
+            )
+
+        # Empty group warning
+        if not group.definitions:
+            issues.append(
+                f"Empty pattern group '{group_name}' "
+                f"(has no token definitions)"
+            )
+
+        # Validate definitions within the group
+        issues.extend(
+            _validate_definitions(group.definitions, f"group '{group_name}' token")
         )
 
     return issues

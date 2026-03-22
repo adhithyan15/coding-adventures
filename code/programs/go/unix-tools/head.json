@@ -1,0 +1,24 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "head",
+  "display_name": "head",
+  "description": "Output the first part of files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    { "id": "lines", "short": "n", "long": "lines", "description": "Print the first NUM lines instead of the first 10", "type": "integer", "value_name": "NUM" },
+    { "id": "bytes", "short": "c", "long": "bytes", "description": "Print the first NUM bytes of each file", "type": "integer", "value_name": "NUM" },
+    { "id": "quiet", "short": "q", "long": "quiet", "description": "Never print headers giving file names", "type": "boolean" },
+    { "id": "verbose", "short": "v", "long": "verbose", "description": "Always print headers giving file names", "type": "boolean" },
+    { "id": "zero_terminated", "short": "z", "long": "zero-terminated", "description": "Line delimiter is NUL, not newline", "type": "boolean" }
+  ],
+  "arguments": [
+    { "id": "files", "name": "FILE", "description": "Files to read. Use '-' for standard input.", "type": "string", "required": false, "variadic": true, "default": "-" }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    { "id": "count-mode", "flag_ids": ["lines", "bytes"], "required": false },
+    { "id": "header-mode", "flag_ids": ["quiet", "verbose"], "required": false }
+  ]
+}

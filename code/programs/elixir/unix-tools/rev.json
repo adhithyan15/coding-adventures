@@ -1,0 +1,24 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "rev",
+  "display_name": "rev",
+  "description": "Reverse lines characterwise. The rev utility copies the specified files to standard output, reversing the order of characters in every line.",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [],
+  "arguments": [
+    {
+      "id": "files",
+      "description": "Files to reverse (use - for stdin)",
+      "required": false,
+      "variadic": true,
+      "type": "string",
+      "name": "FILE"
+    }
+  ],
+  "commands": []
+}

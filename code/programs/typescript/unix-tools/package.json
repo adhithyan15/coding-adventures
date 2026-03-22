@@ -4,7 +4,20 @@
   "description": "A collection of POSIX Unix utilities reimplemented in TypeScript",
   "type": "module",
   "scripts": {
-    "pwd": "tsx src/pwd.ts"
+    "pwd": "tsx src/pwd.ts",
+    "true": "tsx src/true.ts",
+    "false": "tsx src/false.ts",
+    "echo": "tsx src/echo.ts",
+    "cat": "tsx src/cat.ts",
+    "wc": "tsx src/wc.ts",
+    "head": "tsx src/head.ts",
+    "tail": "tsx src/tail.ts",
+    "basename": "tsx src/basename.ts",
+    "dirname": "tsx src/dirname.ts",
+    "seq": "tsx src/seq.ts",
+    "tee": "tsx src/tee.ts",
+    "rev": "tsx src/rev.ts",
+    "printenv": "tsx src/printenv.ts"
   },
   "dependencies": {
     "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"

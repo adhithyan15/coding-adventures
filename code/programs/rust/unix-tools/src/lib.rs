@@ -1,11 +1,56 @@
-//! # pwd — Library Module
+//! # unix-tools — Library Module
 //!
-//! This module exposes the business logic functions (`get_physical_pwd` and
-//! `get_logical_pwd`) so they can be tested from integration tests in the
-//! `tests/` directory.
+//! This crate provides the business logic for a collection of Unix
+//! command-line tools, all powered by [CLI Builder](../../../packages/rust/cli-builder/).
 //!
-//! The binary entry point is in `main.rs`, which calls these functions
-//! after CLI Builder has parsed the arguments.
+//! Each tool lives in its own module:
+//!
+//! - **pwd** — Print the current working directory (logical or physical)
+//! - **echo** — Display a line of text, with optional escape interpretation
+//! - **cat** — Concatenate and display files, with numbering and formatting
+//! - **wc** — Count lines, words, bytes, and characters
+//! - **true/false** — Exit with success (0) or failure (1) status
+//!
+//! The `true` and `false` tools have no business logic — they simply exit.
+//! They're included for completeness and to verify CLI Builder handles
+//! minimal specs correctly.
+//!
+//! ## Architecture
+//!
+//! ```text
+//!     JSON spec (e.g., pwd.json)
+//!         │
+//!         ▼
+//!     CLI Builder (parsing, validation, help)
+//!         │
+//!         ▼
+//!     This crate (business logic)
+//!         │
+//!         ▼
+//!     main.rs (I/O and exit codes)
+//! ```
+
+// ---------------------------------------------------------------------------
+// Tool modules
+// ---------------------------------------------------------------------------
+
+pub mod echo_tool;
+pub mod cat_tool;
+pub mod wc_tool;
+pub mod head_tool;
+pub mod tail_tool;
+pub mod basename_tool;
+pub mod dirname_tool;
+pub mod seq_tool;
+pub mod tee_tool;
+pub mod rev_tool;
+pub mod printenv_tool;
+
+// ---------------------------------------------------------------------------
+// pwd — Print Working Directory
+// ---------------------------------------------------------------------------
+// The pwd functions live directly in lib.rs for historical reasons (they
+// were the first tool implemented). New tools get their own modules.
 
 use std::path::PathBuf;
 
