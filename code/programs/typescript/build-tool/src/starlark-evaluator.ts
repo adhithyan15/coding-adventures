@@ -84,14 +84,12 @@
  */
 
 import * as fs from "node:fs";
-import { createRequire } from "node:module";
 import * as path from "node:path";
-
-// The starlark-interpreter types are defined inline (not imported) so this
-// module loads even when the interpreter package isn't installed. The actual
-// class is required dynamically inside evaluateBuildFile().
-type FileResolverFn = (label: string) => string;
-type StarlarkResult = { variables: Record<string, unknown> };
+import {
+  StarlarkInterpreter,
+  type FileResolverFn,
+  type StarlarkResult,
+} from "@coding-adventures/starlark-interpreter";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -277,16 +275,7 @@ export function evaluateBuildFile(
   };
 
   // Step 3: Create the interpreter with the file resolver.
-  //
-  // We dynamically require the starlark-interpreter package here rather
-  // than importing it at the top level. This keeps the evaluator module
-  // loadable even when the interpreter package isn't installed (the build
-  // tool falls back to shell BUILD files in that case).
-  const req = createRequire(import.meta.url);
-  const { StarlarkInterpreter: Interpreter } = req(
-    "@coding-adventures/starlark-interpreter",
-  );
-  const interp = new Interpreter({
+  const interp = new StarlarkInterpreter({
     fileResolver,
   });
 
@@ -447,7 +436,7 @@ function getStringList(dict: Record<string, unknown>, key: string): string[] {
  * const cmds = generateCommands({
  *   rule: "py_library",
  *   name: "logic-gates",
- *   srcs: ["src/foo.py"],
+ *   srcs: ["src/**/*.py"],
  *   deps: [],
  *   testRunner: "",
  *   entryPoint: "",

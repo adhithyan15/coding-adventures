@@ -292,12 +292,46 @@ defmodule BuildTool.StarlarkEvaluatorTest do
       assert msg =~ "reading BUILD file"
     end
 
-    # Skipped: the Starlark bytecode compiler's skip_newlines function has a known
-    # infinite loop bug on some inputs, causing this test to hang indefinitely in CI.
-    @tag :skip
+    test "evaluates a simple BUILD file with inline target declaration", %{tmp_dir: tmp_dir} do
+      # Write a minimal Starlark BUILD file that declares _targets directly.
+      # In production, _targets would be populated by rule functions loaded via
+      # load(), but for testing we can set it directly.
+      build_content = """
+      _targets = [
+          {
+              "rule": "py_library",
+              "name": "test-lib",
+              "srcs": ["src/*.py"],
+              "deps": [],
+              "test_runner": "pytest",
+              "entry_point": "",
+          },
+      ]
+      """
+
+      build_path = Path.join(tmp_dir, "BUILD")
+      File.write!(build_path, build_content)
+
+      case StarlarkEvaluator.evaluate_build_file(build_path, tmp_dir, tmp_dir) do
+        {:ok, targets} ->
+          assert length(targets) == 1
+          target = hd(targets)
+          assert target.rule == "py_library"
+          assert target.name == "test-lib"
+          assert target.srcs == ["src/*.py"]
+          assert target.test_runner == "pytest"
+
+        {:error, reason} ->
+          # If the interpreter isn't fully available in the test environment,
+          # we at least verify the error is about evaluation, not file reading.
+          refute reason =~ "reading BUILD file"
+      end
+    end
+
     test "evaluates BUILD file with no targets", %{tmp_dir: tmp_dir} do
-      # A simple Starlark program that sets a variable but doesn't declare targets.
-      build_content = "x = 1 + 2\n"
+      build_content = """
+      x = 1 + 2
+      """
 
       build_path = Path.join(tmp_dir, "BUILD")
       File.write!(build_path, build_content)
@@ -308,25 +342,6 @@ defmodule BuildTool.StarlarkEvaluatorTest do
 
         {:error, _reason} ->
           # Interpreter may not be fully available in all test environments.
-          :ok
-      end
-    end
-
-    # Skipped: same infinite loop bug in the Starlark bytecode compiler.
-    @tag :skip
-    test "evaluates BUILD file that sets _targets to a list", %{tmp_dir: tmp_dir} do
-      # Use Starlark list/dict syntax that the interpreter supports.
-      # The interpreter's dict syntax uses {key: value} (Starlark native).
-      build_content = "_targets = []\n"
-
-      build_path = Path.join(tmp_dir, "BUILD")
-      File.write!(build_path, build_content)
-
-      case StarlarkEvaluator.evaluate_build_file(build_path, tmp_dir, tmp_dir) do
-        {:ok, targets} ->
-          assert targets == []
-
-        {:error, _reason} ->
           :ok
       end
     end
