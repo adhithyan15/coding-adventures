@@ -51,11 +51,20 @@ import (
 // Package represents a discovered package in the monorepo. Each package has
 // a qualified name (like "python/logic-gates"), an absolute path on disk,
 // a list of build commands from its BUILD file, and an inferred language.
+//
+// Packages can use either shell BUILD files (traditional) or Starlark BUILD
+// files (declarative). The IsStarlark flag indicates which format was found.
+// For Starlark BUILD files, the build tool evaluates them to extract targets
+// with explicit srcs and deps, populating DeclaredSrcs and DeclaredDeps.
 type Package struct {
 	Name          string   // Qualified name, e.g. "python/logic-gates"
 	Path          string   // Absolute path to the package directory
 	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", or "unknown"
+	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", "starlark", or "unknown"
+	BuildContent  string   // Raw BUILD file content (used for Starlark detection)
+	IsStarlark    bool     // Whether this BUILD file is Starlark (vs shell)
+	DeclaredSrcs  []string // Explicit source files from Starlark srcs field
+	DeclaredDeps  []string // Explicit deps from Starlark deps field
 }
 
 // skipDirs is the set of directory names that should never be traversed
@@ -221,11 +230,18 @@ func walkDirs(directory string, packages *[]Package) {
 		language := inferLanguage(directory)
 		name := inferPackageName(directory, language)
 
+		// Read raw BUILD content for Starlark detection.
+		rawContent := ""
+		if data, err := os.ReadFile(buildFile); err == nil {
+			rawContent = string(data)
+		}
+
 		*packages = append(*packages, Package{
 			Name:          name,
 			Path:          directory,
 			BuildCommands: commands,
 			Language:      language,
+			BuildContent:  rawContent,
 		})
 		return
 	}

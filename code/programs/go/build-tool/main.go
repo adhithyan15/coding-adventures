@@ -45,6 +45,7 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/hasher"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/reporter"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
+	starlarkeval "github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/starlark"
 )
 
 // findRepoRoot walks up from the given directory (or cwd) looking for
@@ -127,6 +128,43 @@ func run() int {
 	if len(packages) == 0 {
 		fmt.Fprintln(os.Stderr, "No packages found.")
 		return 0
+	}
+
+	// Step 2b: Evaluate Starlark BUILD files.
+	//
+	// For each discovered package, check if its BUILD file is Starlark.
+	// If so, evaluate it through the Go starlark-interpreter to extract
+	// declared targets (with srcs, deps, build commands). This replaces
+	// the raw shell command lines with generated commands from the rule.
+	starlarkCount := 0
+	for i := range packages {
+		pkg := &packages[i]
+		if starlarkeval.IsStarlarkBuild(pkg.BuildContent) {
+			pkg.IsStarlark = true
+			result, err := starlarkeval.EvaluateBuildFile(
+				filepath.Join(pkg.Path, "BUILD"),
+				pkg.Path,
+				repoRoot,
+			)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Warning: Starlark eval failed for %s: %v\n", pkg.Name, err)
+				// Fall back to treating as shell BUILD.
+				pkg.IsStarlark = false
+				continue
+			}
+
+			if len(result.Targets) > 0 {
+				// Use the first target's metadata (most BUILD files have one target).
+				t := result.Targets[0]
+				pkg.DeclaredSrcs = t.Srcs
+				pkg.DeclaredDeps = t.Deps
+				pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+				starlarkCount++
+			}
+		}
+	}
+	if starlarkCount > 0 {
+		fmt.Printf("Evaluated %d Starlark BUILD files\n", starlarkCount)
 	}
 
 	// Step 3: Filter by language if requested.
