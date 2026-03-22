@@ -44,11 +44,14 @@ end
 # as a standalone script without needing to be installed as a gem.
 require_relative "lib/build_tool/discovery"
 require_relative "lib/build_tool/resolver"
+require_relative "lib/build_tool/glob_match"
 require_relative "lib/build_tool/hasher"
 require_relative "lib/build_tool/cache"
 require_relative "lib/build_tool/executor"
 require_relative "lib/build_tool/reporter"
 require_relative "lib/build_tool/starlark_evaluator"
+require_relative "lib/build_tool/git_diff"
+require_relative "lib/build_tool/plan"
 
 module BuildTool
   module CLI
@@ -90,7 +93,9 @@ module BuildTool
         dry_run: false,
         jobs: nil,
         language: "all",
-        cache_file: Pathname(".build-cache.json")
+        cache_file: Pathname(".build-cache.json"),
+        emit_plan: nil,
+        plan_file: nil
       }
 
       parser = OptionParser.new do |opts|
@@ -122,6 +127,14 @@ module BuildTool
 
         opts.on("--cache-file FILE", "Path to the build cache file") do |file|
           options[:cache_file] = Pathname(file)
+        end
+
+        opts.on("--emit-plan FILE", "Write build plan to FILE and exit (no build)") do |file|
+          options[:emit_plan] = Pathname(file)
+        end
+
+        opts.on("--plan-file FILE", "Read build plan from FILE instead of discovering") do |file|
+          options[:plan_file] = Pathname(file)
         end
 
         opts.on("-h", "--help", "Show this help message") do

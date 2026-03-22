@@ -243,12 +243,6 @@ Note: tarpaulin reports coverage for the ENTIRE workspace by default. To get pac
 
 **Rule:** Every Rust package PR must include coverage numbers. Run `cargo tarpaulin -p <name> --out stdout`, sum the covered/total lines for that package's source files, and report the percentage. Don't leave coverage as "n/a" or "all passing" — compute the real number.
 
-**Important:** `cargo tarpaulin` only supports Linux. In BUILD files, wrap it in a uname check:
-```
-if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p <name> --out Stdout --skip-clean; fi
-```
-This prevents CI failures on macOS and Windows runners.
-
 ---
 
 ### 2026-03-21: BUILD files must NOT use absolute mise paths — CI doesn't have mise

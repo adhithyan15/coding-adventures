@@ -43,6 +43,7 @@ import (
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 // sourceExtensions maps languages to the file extensions that matter for
@@ -149,26 +150,34 @@ func resolveDeclaredSrcs(pkg discovery.Package) []string {
 		}
 	}
 
-	// Resolve each declared pattern.
-	for _, pattern := range pkg.DeclaredSrcs {
-		fullPattern := filepath.Join(pkg.Path, pattern)
-
-		// Try glob expansion first.
-		matches, err := filepath.Glob(fullPattern)
-		if err != nil {
-			// Invalid pattern — treat as literal path.
-			literal := filepath.Join(pkg.Path, pattern)
-			if fileExists(literal) {
-				files = append(files, literal)
+	// Resolve each declared pattern by walking the package directory
+	// and matching each file against the pattern using globmatch.MatchPath.
+	//
+	// We use WalkDir + globmatch instead of filepath.Glob because
+	// filepath.Glob does NOT support ** (recursive globbing). The
+	// pattern "src/**/*.py" would silently match nothing with Glob.
+	if len(pkg.DeclaredSrcs) > 0 {
+		filepath.WalkDir(pkg.Path, func(path string, d os.DirEntry, err error) error {
+			if err != nil || d.IsDir() {
+				return nil
 			}
-			continue
-		}
 
-		for _, m := range matches {
-			if info, err := os.Stat(m); err == nil && !info.IsDir() {
-				files = append(files, m)
+			// Get path relative to the package directory, using forward slashes.
+			rel, err := filepath.Rel(pkg.Path, path)
+			if err != nil {
+				return nil
 			}
-		}
+			rel = filepath.ToSlash(rel)
+
+			// Check against each declared source pattern.
+			for _, pattern := range pkg.DeclaredSrcs {
+				if globmatch.MatchPath(pattern, rel) {
+					files = append(files, path)
+					break
+				}
+			}
+			return nil
+		})
 	}
 
 	// Sort by relative path for determinism.

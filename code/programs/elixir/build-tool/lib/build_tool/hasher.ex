@@ -40,7 +40,7 @@ defmodule BuildTool.Hasher do
   stack — fast, well-tested, and available without any external dependencies.
   """
 
-  alias BuildTool.DirectedGraph
+  alias BuildTool.{DirectedGraph, GlobMatch}
 
   # ---------------------------------------------------------------------------
   # Source file extensions by language
@@ -98,7 +98,18 @@ defmodule BuildTool.Hasher do
       64  # SHA256 hex digest is always 64 characters
   """
   def hash_package(package) do
-    files = collect_source_files(package)
+    # When a package has declared_srcs (from a Starlark BUILD file), we hash
+    # ONLY those declared files — this is strict mode. When declared_srcs is
+    # empty or absent (shell BUILD files), we fall back to extension-based
+    # collection. This mirrors the Go implementation's HashPackage function.
+    declared_srcs = Map.get(package, :declared_srcs, [])
+
+    files =
+      if declared_srcs != [] do
+        resolve_declared_srcs(package, declared_srcs)
+      else
+        collect_source_files(package)
+      end
 
     if files == [] do
       # No source files — hash the empty string.
@@ -170,7 +181,61 @@ defmodule BuildTool.Hasher do
   end
 
   # ---------------------------------------------------------------------------
-  # File collection
+  # Declared source resolution (Starlark strict mode)
+  # ---------------------------------------------------------------------------
+  #
+  # When a package has declared_srcs from a Starlark BUILD file, we resolve
+  # those glob patterns into actual file paths. This is "strict mode" — only
+  # files matching the declared patterns (plus BUILD files) are included.
+  #
+  # The algorithm:
+  #   1. Always include BUILD files (the build definition itself).
+  #   2. Walk the package directory recursively.
+  #   3. For each file, compute its path relative to the package root.
+  #   4. Check if it matches any declared src pattern using GlobMatch.
+  #   5. Sort by relative path and deduplicate.
+  #
+  # We use walk_files + GlobMatch instead of Path.wildcard because
+  # Path.wildcard does NOT support ** the way build systems expect.
+
+  defp resolve_declared_srcs(package, declared_srcs) do
+    # Step 1: Always include BUILD files.
+    build_files =
+      ["BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows"]
+      |> Enum.map(&Path.join(package.path, &1))
+      |> Enum.filter(&file_exists?/1)
+
+    # Step 2: Walk the package directory and match against declared patterns.
+    matched_files =
+      package.path
+      |> walk_files([])
+      |> Enum.filter(fn path ->
+        rel = Path.relative_to(path, package.path)
+        # Normalize to forward slashes for pattern matching.
+        rel = String.replace(rel, "\\", "/")
+
+        Enum.any?(declared_srcs, fn pattern ->
+          GlobMatch.match_path?(pattern, rel)
+        end)
+      end)
+
+    # Step 3: Combine, deduplicate, and sort by relative path.
+    (build_files ++ matched_files)
+    |> Enum.uniq()
+    |> Enum.sort_by(fn path ->
+      Path.relative_to(path, package.path)
+    end)
+  end
+
+  defp file_exists?(path) do
+    case File.stat(path) do
+      {:ok, %File.Stat{type: :regular}} -> true
+      _ -> false
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # File collection (legacy extension-based mode)
   # ---------------------------------------------------------------------------
   #
   # collectSourceFiles walks the package directory and returns all source

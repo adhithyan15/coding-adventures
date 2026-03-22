@@ -19,6 +19,7 @@ import {
   hashDeps,
   hashFile,
   collectSourceFiles,
+  collectSourceFilesGlob,
   SOURCE_EXTENSIONS,
   SPECIAL_FILENAMES,
 } from "../src/hasher.js";
@@ -302,6 +303,82 @@ describe("SOURCE_EXTENSIONS", () => {
   it("should include Elixir extensions", () => {
     expect(SOURCE_EXTENSIONS.elixir.has(".ex")).toBe(true);
     expect(SOURCE_EXTENSIONS.elixir.has(".exs")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tests: collectSourceFilesGlob
+// ---------------------------------------------------------------------------
+
+describe("collectSourceFilesGlob", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    rmDir(tmpDir);
+  });
+
+  it("should collect files matching glob patterns", () => {
+    writeFile(path.join(tmpDir, "BUILD"), "test\n");
+    writeFile(path.join(tmpDir, "src", "main.py"), "print('hi')\n");
+    writeFile(path.join(tmpDir, "src", "utils.py"), "pass\n");
+    writeFile(path.join(tmpDir, "README.md"), "# docs\n");
+
+    const pkg = makePkg(tmpDir, "python");
+    const files = collectSourceFilesGlob(pkg, ["src/*.py"]);
+
+    const basenames = files.map((f) => path.basename(f));
+    expect(basenames).toContain("main.py");
+    expect(basenames).toContain("utils.py");
+    expect(basenames).toContain("BUILD"); // Always included
+    expect(basenames).not.toContain("README.md");
+  });
+
+  it("should always include BUILD files regardless of patterns", () => {
+    writeFile(path.join(tmpDir, "BUILD"), "test\n");
+    writeFile(path.join(tmpDir, "src", "main.py"), "pass\n");
+
+    const pkg = makePkg(tmpDir, "python");
+    const files = collectSourceFilesGlob(pkg, ["src/*.py"]);
+    const basenames = files.map((f) => path.basename(f));
+    expect(basenames).toContain("BUILD");
+  });
+
+  it("should return only BUILD when no patterns match", () => {
+    writeFile(path.join(tmpDir, "BUILD"), "test\n");
+    writeFile(path.join(tmpDir, "src", "main.py"), "pass\n");
+
+    const pkg = makePkg(tmpDir, "python");
+    const files = collectSourceFilesGlob(pkg, ["nonexistent/*.rs"]);
+    expect(files.length).toBe(1);
+    expect(path.basename(files[0])).toBe("BUILD");
+  });
+
+  it("should handle empty patterns array", () => {
+    writeFile(path.join(tmpDir, "BUILD"), "test\n");
+    writeFile(path.join(tmpDir, "src", "main.py"), "pass\n");
+
+    const pkg = makePkg(tmpDir, "python");
+    const files = collectSourceFilesGlob(pkg, []);
+    expect(files.length).toBe(1);
+    expect(path.basename(files[0])).toBe("BUILD");
+  });
+
+  it("should return sorted files", () => {
+    writeFile(path.join(tmpDir, "BUILD"), "test\n");
+    writeFile(path.join(tmpDir, "c.py"), "pass\n");
+    writeFile(path.join(tmpDir, "a.py"), "pass\n");
+    writeFile(path.join(tmpDir, "b.py"), "pass\n");
+
+    const pkg = makePkg(tmpDir, "python");
+    const files = collectSourceFilesGlob(pkg, ["*.py"]);
+    const basenames = files.map((f) => path.basename(f));
+    // Sorted by relative path: BUILD (uppercase) sorts after lowercase on
+    // most systems using localeCompare, so verify sorted order.
+    expect(basenames).toEqual(["a.py", "b.py", "BUILD", "c.py"]);
   });
 });
 

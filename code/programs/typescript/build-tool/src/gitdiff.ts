@@ -35,6 +35,7 @@
 
 import { execSync } from "node:child_process";
 import * as path from "node:path";
+import { matchPath } from "./glob-match.js";
 
 /**
  * Get the list of files changed between diffBase and HEAD.
@@ -105,9 +106,24 @@ export function getChangedFiles(
  * A file belongs to a package if its path starts with the package's
  * directory path (relative to repo root).
  *
+ * ## Strict Starlark Filtering
+ *
+ * When a package has declared source patterns (from a Starlark BUILD file),
+ * we apply an extra filter: a changed file only counts if it matches at
+ * least one of the declared `srcs` glob patterns. This prevents spurious
+ * rebuilds when non-source files (like documentation or editor configs)
+ * change inside a package directory.
+ *
+ * For plain-shell BUILD files (no declared srcs), any changed file under
+ * the package directory triggers a rebuild -- the old behavior.
+ *
  * @param changedFiles - File paths relative to repo root.
  * @param packagePaths - Mapping of package name -> absolute package directory.
  * @param repoRoot - The repository root directory.
+ * @param declaredSrcs - Optional mapping of package name -> list of glob
+ *                       patterns from the Starlark BUILD file's `srcs` field.
+ *                       If provided for a package, only files matching at
+ *                       least one pattern count as "changed".
  * @returns Set of package names that contain at least one changed file.
  *
  * @example
@@ -121,6 +137,7 @@ export function mapFilesToPackages(
   changedFiles: string[],
   packagePaths: Map<string, string>,
   repoRoot: string,
+  declaredSrcs?: Map<string, string[]>,
 ): Set<string> {
   const changed = new Set<string>();
 
@@ -133,13 +150,44 @@ export function mapFilesToPackages(
 
   for (const filepath of changedFiles) {
     for (const [pkgName, pkgRelPath] of relativePkgPaths) {
-      if (
-        filepath.startsWith(pkgRelPath + "/") ||
-        filepath === pkgRelPath
-      ) {
-        changed.add(pkgName);
-        break; // A file belongs to at most one package.
+      // Step 1: Check if the file falls under this package's directory.
+      const isUnderPackage =
+        filepath.startsWith(pkgRelPath + "/") || filepath === pkgRelPath;
+
+      if (!isUnderPackage) {
+        continue;
       }
+
+      // Step 2: If the package has declared srcs, apply strict filtering.
+      //
+      // The declared srcs patterns are relative to the package directory,
+      // so we need the file path relative to the package directory too.
+      const patterns = declaredSrcs?.get(pkgName);
+      if (patterns && patterns.length > 0) {
+        const relToPackage = filepath.slice(pkgRelPath.length + 1);
+
+        // BUILD files always count -- they define the build itself.
+        const basename = relToPackage.split("/").pop() ?? "";
+        const isBuildFile =
+          basename === "BUILD" ||
+          basename === "BUILD_mac" ||
+          basename === "BUILD_linux" ||
+          basename === "BUILD_windows" ||
+          basename === "BUILD_mac_and_linux";
+
+        if (!isBuildFile) {
+          // Check if the file matches any declared source pattern.
+          const matchesAny = patterns.some((pat) =>
+            matchPath(pat, relToPackage),
+          );
+          if (!matchesAny) {
+            continue; // File changed but doesn't match any declared src.
+          }
+        }
+      }
+
+      changed.add(pkgName);
+      break; // A file belongs to at most one package.
     }
   }
 

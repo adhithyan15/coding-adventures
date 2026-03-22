@@ -2,6 +2,16 @@
 
 All notable changes to the Ruby build tool are documented in this file.
 
+## [0.2.0] - 2026-03-22
+
+### Added
+
+- **Glob matching module** (`glob_match.rb`): Pure string-matching glob utility supporting `**` (zero or more directory segments), `*`, `?`, and literal patterns. No filesystem access needed.
+- **Strict input filtering in git diff**: `map_files_to_packages` now respects Starlark `declared_srcs` patterns. For Starlark packages, only files matching declared source patterns (or BUILD files) trigger rebuilds.
+- **Build plan module** (`plan.rb`): Serializes/deserializes build plan as versioned JSON (`schema_version: 1`). Supports `write_plan` and `read_plan` with version checking.
+- **`--emit-plan` CLI flag**: Writes build plan JSON to a file and exits.
+- **`--plan-file` CLI flag**: Reads a previously emitted build plan, skipping discovery/resolution/diff.
+
 ## [0.1.0] - 2026-03-18
 
 ### Added
