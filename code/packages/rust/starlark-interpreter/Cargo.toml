@@ -1,0 +1,16 @@
+[package]
+name = "starlark-interpreter"
+version = "0.1.0"
+edition = "2021"
+description = "Starlark interpreter — full pipeline from source to execution with load() support and file resolver"
+
+[dependencies]
+starlark-vm = { path = "../starlark-vm" }
+starlark-compiler = { path = "../starlark-compiler" }
+coding-adventures-starlark-lexer = { path = "../starlark-lexer" }
+coding-adventures-starlark-parser = { path = "../starlark-parser" }
+virtual-machine = { path = "../virtual-machine" }
+bytecode-compiler = { path = "../bytecode-compiler" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+grammar-tools = { path = "../grammar-tools" }
