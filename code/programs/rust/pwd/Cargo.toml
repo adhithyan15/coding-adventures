@@ -1,0 +1,9 @@
+[package]
+name = "pwd"
+version = "1.0.0"
+edition = "2021"
+description = "Print the absolute pathname of the current working directory — powered by CLI Builder"
+
+[dependencies]
+cli-builder = { path = "../../../packages/rust/cli-builder" }
+serde_json = "1.0"
