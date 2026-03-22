@@ -6,8 +6,13 @@
 # under the busicom/ subdirectory, preserving any other content
 # already on GitHub Pages.
 #
-# The app is deployed to:
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into busicom/ on that branch,
+# so the app is available at:
 #   https://<user>.github.io/coding-adventures/busicom/
+#
+# The Vite base path is set to /coding-adventures/busicom/ in
+# vite.config.ts so all asset URLs resolve correctly.
 
 name: Deploy Busicom Calculator
 
