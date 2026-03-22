@@ -26,6 +26,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
@@ -219,9 +220,13 @@ func TestShouldSkipCopyUpdateNewerSource(t *testing.T) {
 	src := filepath.Join(dir, "src.txt")
 	dst := filepath.Join(dir, "dst.txt")
 
-	// Create dest first, then source (source is newer).
+	// Create both files, then explicitly set dest to be older than source.
+	// On fast CI runners, both files can get the same mtime if created
+	// in rapid succession, so we use os.Chtimes to guarantee ordering.
 	os.WriteFile(dst, []byte("old"), 0644)
 	os.WriteFile(src, []byte("new"), 0644)
+	pastTime := time.Now().Add(-10 * time.Second)
+	os.Chtimes(dst, pastTime, pastTime)
 
 	opts := CpOptions{Update: true}
 	if shouldSkipCopy(src, dst, opts) {
