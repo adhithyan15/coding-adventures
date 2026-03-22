@@ -20,6 +20,7 @@ uv.lock
 .coverage
 htmlcov/
 coverage.xml
+coverage/
 
 # Ruby
 *.gem
