@@ -25,8 +25,20 @@ export {
 // Multi-input gates
 export { andN, orN } from "./gates.js";
 
-// Multiplexer and demultiplexer
+// Multiplexer and demultiplexer (basic 2:1 versions from gates.ts)
 export { mux, dmux } from "./gates.js";
+
+// Combinational circuits — MUX trees, decoders, encoders, tri-state
+export {
+  mux2,
+  mux4,
+  muxN,
+  demuxN,
+  decoder,
+  encoder,
+  priorityEncoder,
+  triState,
+} from "./combinational.js";
 
 // Types and validation
 export { type Bit, validateBit } from "./gates.js";

@@ -17,5 +17,6 @@
 //! - **`sequential`** — memory elements (SR latch, D latch, D flip-flop, register,
 //!   shift register) that give circuits the ability to remember.
 
+pub mod combinational;
 pub mod gates;
 pub mod sequential;

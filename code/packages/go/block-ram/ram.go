@@ -1,0 +1,373 @@
+package blockram
+
+// =========================================================================
+// RAM Modules — Synchronous Memory with Read/Write Ports
+// =========================================================================
+//
+// # From Array to Module
+//
+// An SRAM array (sram.go) provides raw row-level read/write. A RAM module
+// adds the interface that digital circuits actually use:
+//
+//  1. Address decoding — binary address bits select a row
+//  2. Synchronous operation — reads and writes happen on clock edges
+//  3. Read modes — what the output shows during a write operation
+//  4. Dual-port access — two independent ports for simultaneous operations
+//
+// # Read Modes
+//
+// During a write operation, what should the data output show? There are
+// three valid answers, and different designs need different behaviors:
+//
+//  1. Read-first: Output shows the OLD value at the address being written.
+//     The read happens before the write within the same cycle. Useful when
+//     you need to know what was there before overwriting it.
+//
+//  2. Write-first (read-after-write): Output shows the NEW value being
+//     written. The write happens first, then the read sees the new value.
+//     Useful for pipeline forwarding.
+//
+//  3. No-change: Output retains its previous value during writes. This
+//     saves power in FPGA Block RAMs because the read circuitry does not
+//     activate during writes.
+//
+// # Dual-Port RAM
+//
+// Two completely independent ports (A and B), each with its own address,
+// data, and write enable. Both can operate simultaneously:
+//   - Read A + Read B at different addresses → both get their data
+//   - Write A + Read B at different addresses → both succeed
+//   - Write A + Write B at the SAME address → collision (undefined in
+//     hardware, we return an error)
+
+import "fmt"
+
+// ReadMode controls what data_out shows during a write operation.
+type ReadMode int
+
+const (
+	// ReadFirst: data_out = old value (read before write).
+	ReadFirst ReadMode = iota
+	// WriteFirst: data_out = new value (write before read).
+	WriteFirst
+	// NoChange: data_out = previous read value (output unchanged).
+	NoChange
+)
+
+// WriteCollisionError is returned when both ports of a dual-port RAM
+// write to the same address in the same clock cycle.
+//
+// In real hardware, simultaneous writes to the same address produce
+// undefined results (the cell may store either value, or a corrupted
+// value). We detect this and return an error to prevent silent bugs.
+type WriteCollisionError struct {
+	Address int
+}
+
+func (e *WriteCollisionError) Error() string {
+	return fmt.Sprintf("blockram: write collision: both ports writing to address %d", e.Address)
+}
+
+// =========================================================================
+// SinglePortRAM
+// =========================================================================
+
+// SinglePortRAM is a single-port synchronous RAM.
+//
+// One address port, one data bus. Each clock cycle you can do ONE
+// operation: read OR write (controlled by write_enable).
+//
+// Interface:
+//
+//	                ┌──────────────────────────┐
+//	  address ──────┤                          │
+//	                │     Single-Port RAM      │
+//	  data_in ──────┤                          ├──── data_out
+//	                │     (depth x width)      │
+//	  write_en ─────┤                          │
+//	                │                          │
+//	  clock ────────┤                          │
+//	                └──────────────────────────┘
+//
+// Operations happen on the rising edge of the clock (transition 0→1).
+type SinglePortRAM struct {
+	depth     int
+	width     int
+	readMode  ReadMode
+	array     *SRAMArray
+	prevClock int
+	lastRead  []int
+}
+
+// NewSinglePortRAM creates a single-port synchronous RAM.
+//
+// Parameters:
+//   - depth: number of addressable words (>= 1)
+//   - width: bits per word (>= 1)
+//   - readMode: what data_out shows during writes (default: ReadFirst)
+//
+// Panics if depth or width < 1.
+func NewSinglePortRAM(depth, width int, readMode ReadMode) *SinglePortRAM {
+	if depth < 1 {
+		panic(fmt.Sprintf("blockram: SinglePortRAM depth must be >= 1, got %d", depth))
+	}
+	if width < 1 {
+		panic(fmt.Sprintf("blockram: SinglePortRAM width must be >= 1, got %d", width))
+	}
+
+	lastRead := make([]int, width)
+	return &SinglePortRAM{
+		depth:     depth,
+		width:     width,
+		readMode:  readMode,
+		array:     NewSRAMArray(depth, width),
+		prevClock: 0,
+		lastRead:  lastRead,
+	}
+}
+
+// Tick executes one half-cycle. Operations happen on the rising edge (0→1).
+//
+// Parameters:
+//   - clock: clock signal (0 or 1)
+//   - address: word address (integer, 0 to depth-1)
+//   - dataIn: data to write (slice of width bits)
+//   - writeEnable: 0 = read, 1 = write
+//
+// Returns data_out: slice of width bits read from the address.
+// During writes, behavior depends on readMode.
+func (r *SinglePortRAM) Tick(clock, address int, dataIn []int, writeEnable int) []int {
+	validateBit(clock, "clock")
+	validateBit(writeEnable, "writeEnable")
+	r.validateAddress(address)
+	r.validateData(dataIn)
+
+	// Detect rising edge: previous clock was 0, now it is 1
+	risingEdge := r.prevClock == 0 && clock == 1
+	r.prevClock = clock
+
+	if !risingEdge {
+		result := make([]int, r.width)
+		copy(result, r.lastRead)
+		return result
+	}
+
+	// Rising edge: perform the operation
+	if writeEnable == 0 {
+		// Read operation
+		r.lastRead = r.array.Read(address)
+		result := make([]int, r.width)
+		copy(result, r.lastRead)
+		return result
+	}
+
+	// Write operation — behavior depends on read mode
+	switch r.readMode {
+	case ReadFirst:
+		// Read the old value first, then write
+		r.lastRead = r.array.Read(address)
+		r.array.Write(address, dataIn)
+		result := make([]int, r.width)
+		copy(result, r.lastRead)
+		return result
+
+	case WriteFirst:
+		// Write first, then read back the new value
+		r.array.Write(address, dataIn)
+		r.lastRead = make([]int, r.width)
+		copy(r.lastRead, dataIn)
+		result := make([]int, r.width)
+		copy(result, r.lastRead)
+		return result
+
+	default: // NoChange
+		// Write but do not update data_out
+		r.array.Write(address, dataIn)
+		result := make([]int, r.width)
+		copy(result, r.lastRead)
+		return result
+	}
+}
+
+// Depth returns the number of addressable words.
+func (r *SinglePortRAM) Depth() int { return r.depth }
+
+// Width returns the bits per word.
+func (r *SinglePortRAM) Width() int { return r.width }
+
+// Dump returns all contents for inspection.
+func (r *SinglePortRAM) Dump() [][]int {
+	result := make([][]int, r.depth)
+	for i := 0; i < r.depth; i++ {
+		result[i] = r.array.Read(i)
+	}
+	return result
+}
+
+func (r *SinglePortRAM) validateAddress(address int) {
+	if address < 0 || address >= r.depth {
+		panic(fmt.Sprintf("blockram: address %d out of range [0, %d]", address, r.depth-1))
+	}
+}
+
+func (r *SinglePortRAM) validateData(dataIn []int) {
+	if len(dataIn) != r.width {
+		panic(fmt.Sprintf("blockram: data_in length %d does not match width %d", len(dataIn), r.width))
+	}
+	for i, bit := range dataIn {
+		validateBit(bit, fmt.Sprintf("dataIn[%d]", i))
+	}
+}
+
+// =========================================================================
+// DualPortRAM
+// =========================================================================
+
+// DualPortRAM is a true dual-port synchronous RAM.
+//
+// Two independent ports (A and B), each with its own address, data,
+// and write enable. Both ports can operate simultaneously on different
+// addresses.
+//
+// Interface:
+//
+//	┌────────────────────────────────────────────┐
+//	│               Dual-Port RAM                │
+//	│  Port A                      Port B        │
+//	│  addr_a, din_a, we_a        addr_b, din_b  │
+//	│  dout_a                      we_b, dout_b  │
+//	└────────────────────────────────────────────┘
+//
+// Write collision: if both ports write to the same address in the
+// same cycle, a WriteCollisionError is returned.
+type DualPortRAM struct {
+	depth      int
+	width      int
+	readModeA  ReadMode
+	readModeB  ReadMode
+	array      *SRAMArray
+	prevClock  int
+	lastReadA  []int
+	lastReadB  []int
+}
+
+// NewDualPortRAM creates a true dual-port synchronous RAM.
+//
+// Panics if depth or width < 1.
+func NewDualPortRAM(depth, width int, readModeA, readModeB ReadMode) *DualPortRAM {
+	if depth < 1 {
+		panic(fmt.Sprintf("blockram: DualPortRAM depth must be >= 1, got %d", depth))
+	}
+	if width < 1 {
+		panic(fmt.Sprintf("blockram: DualPortRAM width must be >= 1, got %d", width))
+	}
+
+	return &DualPortRAM{
+		depth:     depth,
+		width:     width,
+		readModeA: readModeA,
+		readModeB: readModeB,
+		array:     NewSRAMArray(depth, width),
+		prevClock: 0,
+		lastReadA: make([]int, width),
+		lastReadB: make([]int, width),
+	}
+}
+
+// Tick executes one half-cycle on both ports.
+//
+// Returns (dataOutA, dataOutB, error). The error is non-nil only on
+// write collision (both ports writing to the same address).
+func (r *DualPortRAM) Tick(
+	clock int,
+	addressA int, dataInA []int, writeEnableA int,
+	addressB int, dataInB []int, writeEnableB int,
+) ([]int, []int, error) {
+	validateBit(clock, "clock")
+	validateBit(writeEnableA, "writeEnableA")
+	validateBit(writeEnableB, "writeEnableB")
+	r.validateAddress(addressA, "addressA")
+	r.validateAddress(addressB, "addressB")
+	r.validateData(dataInA, "dataInA")
+	r.validateData(dataInB, "dataInB")
+
+	risingEdge := r.prevClock == 0 && clock == 1
+	r.prevClock = clock
+
+	if !risingEdge {
+		outA := make([]int, r.width)
+		outB := make([]int, r.width)
+		copy(outA, r.lastReadA)
+		copy(outB, r.lastReadB)
+		return outA, outB, nil
+	}
+
+	// Check for write collision
+	if writeEnableA == 1 && writeEnableB == 1 && addressA == addressB {
+		return nil, nil, &WriteCollisionError{Address: addressA}
+	}
+
+	// Process port A
+	outA := r.processPort(addressA, dataInA, writeEnableA, r.readModeA, r.lastReadA)
+	r.lastReadA = outA
+
+	// Process port B
+	outB := r.processPort(addressB, dataInB, writeEnableB, r.readModeB, r.lastReadB)
+	r.lastReadB = outB
+
+	resultA := make([]int, r.width)
+	resultB := make([]int, r.width)
+	copy(resultA, outA)
+	copy(resultB, outB)
+	return resultA, resultB, nil
+}
+
+// processPort handles a single port operation.
+func (r *DualPortRAM) processPort(
+	address int, dataIn []int, writeEnable int,
+	readMode ReadMode, lastRead []int,
+) []int {
+	if writeEnable == 0 {
+		return r.array.Read(address)
+	}
+
+	switch readMode {
+	case ReadFirst:
+		result := r.array.Read(address)
+		r.array.Write(address, dataIn)
+		return result
+
+	case WriteFirst:
+		r.array.Write(address, dataIn)
+		out := make([]int, r.width)
+		copy(out, dataIn)
+		return out
+
+	default: // NoChange
+		r.array.Write(address, dataIn)
+		out := make([]int, r.width)
+		copy(out, lastRead)
+		return out
+	}
+}
+
+// Depth returns the number of addressable words.
+func (r *DualPortRAM) Depth() int { return r.depth }
+
+// Width returns the bits per word.
+func (r *DualPortRAM) Width() int { return r.width }
+
+func (r *DualPortRAM) validateAddress(address int, name string) {
+	if address < 0 || address >= r.depth {
+		panic(fmt.Sprintf("blockram: %s %d out of range [0, %d]", name, address, r.depth-1))
+	}
+}
+
+func (r *DualPortRAM) validateData(dataIn []int, name string) {
+	if len(dataIn) != r.width {
+		panic(fmt.Sprintf("blockram: %s length %d does not match width %d", name, len(dataIn), r.width))
+	}
+	for i, bit := range dataIn {
+		validateBit(bit, fmt.Sprintf("%s[%d]", name, i))
+	}
+}

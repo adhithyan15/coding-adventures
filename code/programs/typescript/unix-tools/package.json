@@ -1,0 +1,16 @@
+{
+  "name": "unix-tools",
+  "version": "1.0.0",
+  "description": "A collection of POSIX Unix utilities reimplemented in TypeScript",
+  "type": "module",
+  "scripts": {
+    "pwd": "tsx src/pwd.ts"
+  },
+  "dependencies": {
+    "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
+  }
+}

@@ -2,7 +2,7 @@
 
 These tests exercise the complete pipeline:
     source code → starlark_lexer → tokens → starlark_parser → AST
-    → starlark_compiler → bytecode → starlark_vm → result
+    → starlark_ast_to_bytecode_compiler → bytecode → starlark_vm → result
 
 Each test passes Starlark source code into the pipeline and checks
 the final variable state and/or output.
@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import pytest
 
-from starlark_compiler import compile_starlark, create_starlark_compiler, Op
+from starlark_ast_to_bytecode_compiler import compile_starlark, create_starlark_ast_to_bytecode_compiler, Op
 from starlark_vm import create_starlark_vm, StarlarkResult
 
 
@@ -381,6 +381,86 @@ class TestBitwiseOps:
     def test_right_shift(self):
         result = run("x = 8 >> 2\n")
         assert result.variables["x"] == 2
+
+
+# =========================================================================
+# Test: Keyword Arguments (CALL_FUNCTION_KW)
+# =========================================================================
+
+
+class TestKeywordArguments:
+    """Test that keyword arguments work for user-defined Starlark functions.
+
+    This exercises the full pipeline: the compiler produces CALL_FUNCTION_KW
+    bytecode with a keyword names tuple on the stack, and the VM handler
+    unpacks the kwargs and maps them to the correct parameter positions.
+    """
+
+    def test_single_keyword_arg(self):
+        """f(x=1) — one keyword argument, no positional."""
+        result = run("def f(x):\n    return x\nresult = f(x=42)\n")
+        assert result.variables["result"] == 42
+
+    def test_multiple_keyword_args(self):
+        """f(x=1, y=2) — multiple keyword arguments."""
+        result = run(
+            "def f(x, y):\n    return x + y\n"
+            "result = f(x=10, y=20)\n"
+        )
+        assert result.variables["result"] == 30
+
+    def test_keyword_args_out_of_order(self):
+        """f(y=2, x=1) — keyword arguments can be in any order."""
+        result = run(
+            "def f(x, y):\n    return x * 10 + y\n"
+            "result = f(y=3, x=7)\n"
+        )
+        assert result.variables["result"] == 73
+
+    def test_mixed_positional_and_keyword(self):
+        """f(1, y=2) — mix of positional and keyword arguments."""
+        result = run(
+            "def f(x, y):\n    return x * 10 + y\n"
+            "result = f(1, y=2)\n"
+        )
+        assert result.variables["result"] == 12
+
+    def test_keyword_args_with_three_params(self):
+        """f(a=1, b=2, c=3) — three keyword arguments."""
+        result = run(
+            "def f(a, b, c):\n    return a * 100 + b * 10 + c\n"
+            "result = f(a=4, b=5, c=6)\n"
+        )
+        assert result.variables["result"] == 456
+
+    def test_keyword_args_build_file_style(self):
+        """Simulate BUILD-file-style calls: rule(name='foo', deps=['bar']).
+
+        This is the primary use case for CALL_FUNCTION_KW — it's how BUILD
+        file rules like py_library(name='foo', deps=['bar']) work.
+        """
+        result = run(
+            "def py_library(name, deps):\n"
+            "    return name + \":\" + str(len(deps))\n"
+            "result = py_library(name=\"mylib\", deps=[\"dep1\", \"dep2\"])\n"
+        )
+        assert result.variables["result"] == "mylib:2"
+
+    def test_keyword_args_with_list_value(self):
+        """Keyword argument whose value is a list."""
+        result = run(
+            "def f(items):\n    return len(items)\n"
+            "result = f(items=[1, 2, 3])\n"
+        )
+        assert result.variables["result"] == 3
+
+    def test_keyword_args_with_string_value(self):
+        """Keyword argument whose value is a string."""
+        result = run(
+            "def greet(name):\n    return \"hello \" + name\n"
+            "result = greet(name=\"world\")\n"
+        )
+        assert result.variables["result"] == "hello world"
 
 
 # =========================================================================

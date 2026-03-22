@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+# Rakefile -- Task definitions for the Ruby pwd tool
+# ===================================================
+#
+# The primary task is `test`, which runs the Minitest suite. We also define
+# a default task that runs tests, so `bundle exec rake` does the right thing.
+
+require "rake/testtask"
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.test_files = FileList["test/test_*.rb"]
+  t.warning = false
+end
+
+task default: :test
