@@ -54,4 +54,5 @@ members = [
     "process-manager",
     "file-system",
     "ipc",
+    "network-stack",
 ]

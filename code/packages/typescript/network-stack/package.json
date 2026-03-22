@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/network-stack",
+  "version": "0.1.0",
+  "description": "Full network stack from Ethernet frames to HTTP — Layer 2 through Layer 7 of the TCP/IP model",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "network",
+    "tcp",
+    "udp",
+    "http",
+    "ethernet",
+    "ip",
+    "socket",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
