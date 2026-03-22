@@ -1,0 +1,79 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "comm",
+  "display_name": "comm",
+  "description": "Compare two sorted files line by line",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "suppress_col1",
+      "short": "1",
+      "description": "Suppress column 1 (lines unique to FILE1)",
+      "type": "boolean"
+    },
+    {
+      "id": "suppress_col2",
+      "short": "2",
+      "description": "Suppress column 2 (lines unique to FILE2)",
+      "type": "boolean"
+    },
+    {
+      "id": "suppress_col3",
+      "short": "3",
+      "description": "Suppress column 3 (lines that appear in both files)",
+      "type": "boolean"
+    },
+    {
+      "id": "check_order",
+      "long": "check-order",
+      "description": "Check that the input is correctly sorted, even if all input lines are pairable",
+      "type": "boolean"
+    },
+    {
+      "id": "nocheck_order",
+      "long": "nocheck-order",
+      "description": "Do not check that the input is correctly sorted",
+      "type": "boolean"
+    },
+    {
+      "id": "output_delimiter",
+      "long": "output-delimiter",
+      "description": "Separate columns with STRING",
+      "type": "string",
+      "value_name": "STRING"
+    },
+    {
+      "id": "zero_terminated",
+      "short": "z",
+      "long": "zero-terminated",
+      "description": "Line delimiter is NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "file1",
+      "name": "FILE1",
+      "description": "First sorted file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "file2",
+      "name": "FILE2",
+      "description": "Second sorted file",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "order-check",
+      "flag_ids": ["check_order", "nocheck_order"],
+      "required": false
+    }
+  ]
+}

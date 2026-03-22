@@ -98,6 +98,18 @@ var toolNames = []string{
 	"unexpand",
 	"fold",
 	"nl",
+	// Tier 4
+	"sort",
+	"cut",
+	"paste",
+	"comm",
+	"uname",
+	"id",
+	"groups",
+	"df",
+	"du",
+	"md5sum",
+	"sha256sum",
 }
 
 // =========================================================================
@@ -208,6 +220,29 @@ func dispatch(toolName string, argv []string) int {
 		return runFold(specPath, argv, os.Stdout, os.Stderr)
 	case "nl":
 		return runNl(specPath, argv, os.Stdout, os.Stderr)
+	// Tier 4
+	case "sort":
+		return runSort(specPath, argv, os.Stdout, os.Stderr)
+	case "cut":
+		return runCut(specPath, argv, os.Stdout, os.Stderr)
+	case "paste":
+		return runPaste(specPath, argv, os.Stdout, os.Stderr)
+	case "comm":
+		return runComm(specPath, argv, os.Stdout, os.Stderr)
+	case "uname":
+		return runUname(specPath, argv, os.Stdout, os.Stderr)
+	case "id":
+		return runId(specPath, argv, os.Stdout, os.Stderr)
+	case "groups":
+		return runGroups(specPath, argv, os.Stdout, os.Stderr)
+	case "df":
+		return runDf(specPath, argv, os.Stdout, os.Stderr)
+	case "du":
+		return runDu(specPath, argv, os.Stdout, os.Stderr)
+	case "md5sum":
+		return runMd5sum(specPath, argv, os.Stdout, os.Stderr)
+	case "sha256sum":
+		return runSha256sum(specPath, argv, os.Stdout, os.Stderr)
 	default:
 		fmt.Fprintf(os.Stderr, "unix-tools: unknown tool: %s\n", toolName)
 		fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)

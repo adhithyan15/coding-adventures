@@ -1,0 +1,153 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "sort",
+  "display_name": "sort",
+  "description": "Sort lines of text files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "reverse",
+      "short": "r",
+      "long": "reverse",
+      "description": "Reverse the result of comparisons",
+      "type": "boolean"
+    },
+    {
+      "id": "numeric_sort",
+      "short": "n",
+      "long": "numeric-sort",
+      "description": "Compare according to string numerical value",
+      "type": "boolean"
+    },
+    {
+      "id": "human_numeric_sort",
+      "short": "h",
+      "long": "human-numeric-sort",
+      "description": "Compare human readable numbers (e.g., 2K 1G)",
+      "type": "boolean"
+    },
+    {
+      "id": "month_sort",
+      "short": "M",
+      "long": "month-sort",
+      "description": "Compare (unknown) < 'JAN' < ... < 'DEC'",
+      "type": "boolean"
+    },
+    {
+      "id": "general_numeric_sort",
+      "short": "g",
+      "long": "general-numeric-sort",
+      "description": "Compare according to general numerical value",
+      "type": "boolean"
+    },
+    {
+      "id": "version_sort",
+      "short": "V",
+      "long": "version-sort",
+      "description": "Natural sort of (version) numbers within text",
+      "type": "boolean"
+    },
+    {
+      "id": "unique",
+      "short": "u",
+      "long": "unique",
+      "description": "With -c, check for strict ordering; without -c, output only the first of an equal run",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_case",
+      "short": "f",
+      "long": "ignore-case",
+      "description": "Fold lower case to upper case characters",
+      "type": "boolean"
+    },
+    {
+      "id": "dictionary_order",
+      "short": "d",
+      "long": "dictionary-order",
+      "description": "Consider only blanks and alphanumeric characters",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_nonprinting",
+      "short": "i",
+      "long": "ignore-nonprinting",
+      "description": "Consider only printable characters",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_leading_blanks",
+      "short": "b",
+      "long": "ignore-leading-blanks",
+      "description": "Ignore leading blanks",
+      "type": "boolean"
+    },
+    {
+      "id": "stable",
+      "short": "s",
+      "long": "stable",
+      "description": "Stabilize sort by disabling last-resort comparison",
+      "type": "boolean"
+    },
+    {
+      "id": "key",
+      "short": "k",
+      "long": "key",
+      "description": "Sort via a key; KEYDEF gives location and type",
+      "type": "string",
+      "value_name": "KEYDEF",
+      "repeatable": true
+    },
+    {
+      "id": "field_separator",
+      "short": "t",
+      "long": "field-separator",
+      "description": "Use SEP instead of non-blank to blank transition",
+      "type": "string",
+      "value_name": "SEP"
+    },
+    {
+      "id": "output",
+      "short": "o",
+      "long": "output",
+      "description": "Write result to FILE instead of stdout",
+      "type": "string",
+      "value_name": "FILE"
+    },
+    {
+      "id": "check",
+      "short": "c",
+      "long": "check",
+      "description": "Check for sorted input; do not sort",
+      "type": "boolean"
+    },
+    {
+      "id": "merge",
+      "short": "m",
+      "long": "merge",
+      "description": "Merge already sorted files; do not sort",
+      "type": "boolean"
+    },
+    {
+      "id": "zero_terminated",
+      "short": "z",
+      "long": "zero-terminated",
+      "description": "Line delimiter is NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to sort. Use '-' for stdin.",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "-"
+    }
+  ],
+  "commands": []
+}

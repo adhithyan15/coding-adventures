@@ -10,7 +10,9 @@
     "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.0.0",
-    "tsx": "^4.0.0"
+    "vitest": "^4.1.0"
   }
 }

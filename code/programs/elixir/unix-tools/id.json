@@ -1,0 +1,64 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "id",
+  "display_name": "id",
+  "description": "Print real and effective user and group IDs",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "user",
+      "short": "u",
+      "long": "user",
+      "description": "Print only the effective user ID",
+      "type": "boolean"
+    },
+    {
+      "id": "group",
+      "short": "g",
+      "long": "group",
+      "description": "Print only the effective group ID",
+      "type": "boolean"
+    },
+    {
+      "id": "groups",
+      "short": "G",
+      "long": "groups",
+      "description": "Print all group IDs",
+      "type": "boolean"
+    },
+    {
+      "id": "name",
+      "short": "n",
+      "long": "name",
+      "description": "Print a name instead of a number, for -ugG",
+      "type": "boolean",
+      "required_unless": ["user", "group", "groups"]
+    },
+    {
+      "id": "real",
+      "short": "r",
+      "long": "real",
+      "description": "Print the real ID instead of the effective ID, with -ugG",
+      "type": "boolean"
+    },
+    {
+      "id": "zero",
+      "short": "z",
+      "long": "zero",
+      "description": "Delimit entries with NUL characters, not whitespace",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "user_name",
+      "name": "USER",
+      "description": "User to look up (default: current user)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "commands": []
+}
