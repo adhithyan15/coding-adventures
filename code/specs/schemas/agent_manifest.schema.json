@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/agent_manifest.schema.json",
+  "title": "Agent Manifest",
+  "description": "Declares the capabilities, channels, vault access, and privilege tier for a Chief of Staff agent. This file is REQUIRED for every agent — an agent without a manifest cannot be registered with the orchestrator. Extends the capability taxonomy from required_capabilities.schema.json (Spec 13) with agent-specific fields for channel access, vault access, and privilege tiers.",
+  "type": "object",
+  "required": ["version", "agent", "description", "privilege_tier", "channels", "capabilities", "justification"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this JSON Schema for editor autocompletion."
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version. Currently 1. Allows schema evolution without breaking existing manifests."
+    },
+    "agent": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "minLength": 2,
+      "maxLength": 64,
+      "description": "Unique agent name. Lowercase alphanumeric with hyphens. Examples: email-reader, finance-agent, browser-agent."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Human-readable description of what this agent does. Should be clear enough that a user can decide whether to grant the requested capabilities."
+    },
+    "privilege_tier": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "The privilege tier for this agent. Tier 0: no approval needed. Tier 1: notification with auto-approve. Tier 2: biometric required. Tier 3: hardware key required. The orchestrator uses the maximum tier across all resources in a pipeline to determine the required approval level."
+    },
+    "channels": {
+      "type": "object",
+      "required": ["reads", "writes"],
+      "additionalProperties": false,
+      "description": "Declares which channels this agent can read from and write to. An agent cannot read or write channels not listed here. An agent cannot be both reader and writer on the same channel.",
+      "properties": {
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "description": "Channel names this agent subscribes to (receives messages from). The orchestrator provides the decryption key for each listed channel during pipeline wiring."
+        },
+        "writes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "description": "Channel names this agent publishes to (sends messages to). The orchestrator assigns this agent as the originator for each listed channel during pipeline wiring."
+        }
+      }
+    },
+    "vault_access": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Declares which vault secrets this agent can request and the mode of access. Optional — agents that need no secrets omit this field entirely. Default: no vault access.",
+      "properties": {
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Names of vault secrets this agent is allowed to request. The vault independently verifies that the requesting agent is in the secret's allowed_agents list."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["direct", "leased", "both"],
+          "description": "Access mode. 'direct': secret is delivered to a consumer (e.g., browser), agent never sees plaintext. 'leased': agent receives a time-limited lease key to decrypt the secret. 'both': either mode is permitted depending on the specific request."
+        },
+        "max_lease_ttl": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600,
+          "description": "Maximum lease TTL in seconds for leased mode. 0 means direct-only (no leases). The vault enforces this ceiling — an agent cannot request a longer lease than its manifest allows."
+        }
+      },
+      "required": ["secrets", "mode", "max_lease_ttl"]
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "OS-level capabilities this agent requires, following the same taxonomy as Spec 13's required_capabilities.json. These map directly to Deno permission flags at runtime. An empty array means the agent needs no OS access beyond its channels and vault access.",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "restart_policy": {
+      "type": "string",
+      "enum": ["always", "on-failure", "never"],
+      "default": "on-failure",
+      "description": "How the orchestrator handles agent process exits. 'always': restart on any exit. 'on-failure': restart on non-zero exit code only. 'never': do not restart."
+    },
+    "justification": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable explanation of the overall capability profile. Should explain why the agent needs each capability and why it does not need the ones it omits. A reviewer should be able to evaluate whether the requested access is legitimate."
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "required": ["category", "action", "target", "justification"],
+      "additionalProperties": false,
+      "description": "A single OS-level capability declaration, identical to Spec 13's format. Maps to a Deno permission flag at runtime.",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"],
+          "description": "The kind of OS resource being accessed. Same categories as Spec 13."
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "read", "write", "create", "delete", "list",
+            "connect", "listen", "dns",
+            "exec", "fork", "signal",
+            "call", "load",
+            "sleep"
+          ],
+          "description": "The operation being performed on the resource. Same actions as Spec 13."
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The specific resource being accessed. Format depends on category: fs uses paths with globs, net uses host:port, proc uses command names, env uses variable names. Same format as Spec 13."
+        },
+        "justification": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Human-readable explanation of why this specific capability is needed."
+        }
+      }
+    }
+  }
+}
