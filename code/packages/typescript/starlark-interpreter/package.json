@@ -20,6 +20,8 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/starlark-ast-to-bytecode-compiler": "file:../starlark-ast-to-bytecode-compiler",
+    "@coding-adventures/starlark-vm": "file:../starlark-vm",
     "@coding-adventures/starlark-lexer": "file:../starlark-lexer",
     "@coding-adventures/starlark-parser": "file:../starlark-parser",
     "@coding-adventures/virtual-machine": "file:../virtual-machine",

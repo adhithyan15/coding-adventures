@@ -1,1 +1,2 @@
-cd ../directed-graph && npm ci --quiet && cd ../lexer && npm ci --quiet && cd ../grammar-tools && npm ci --quiet && cd ../parser && npm ci --quiet && cd ../virtual-machine && npm ci --quiet && cd ../bytecode-compiler && npm ci --quiet && cd ../starlark-lexer && npm ci --quiet && cd ../starlark-parser && npm ci --quiet && cd ../starlark-ast-to-bytecode-compiler && npm ci --quiet && npx vitest run --coverage
+npm ci --quiet
+npx vitest run --coverage
