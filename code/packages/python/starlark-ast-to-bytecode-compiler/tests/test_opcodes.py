@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import pytest
 
-from starlark_compiler.opcodes import (
+from starlark_ast_to_bytecode_compiler.opcodes import (
     AUGMENTED_ASSIGN_MAP,
     BINARY_OP_MAP,
     COMPARE_OP_MAP,
     Op,
 )
-from starlark_compiler.compiler import (
+from starlark_ast_to_bytecode_compiler.compiler import (
     _parse_string_literal,
     _type_name,
-    create_starlark_compiler,
+    create_starlark_ast_to_bytecode_compiler,
 )
 
 
@@ -145,11 +145,11 @@ class TestStringLiteralParsing:
 
 
 class TestCompilerFactory:
-    """Test create_starlark_compiler factory."""
+    """Test create_starlark_ast_to_bytecode_compiler factory."""
 
     def test_creates_compiler(self):
         """Factory returns a GenericCompiler with handlers registered."""
-        compiler = create_starlark_compiler()
+        compiler = create_starlark_ast_to_bytecode_compiler()
         # Verify key rules are registered
         assert "file" in compiler._dispatch
         assert "assign_stmt" in compiler._dispatch
@@ -161,7 +161,7 @@ class TestCompilerFactory:
 
     def test_all_expected_rules_registered(self):
         """All rules that need handlers are registered."""
-        compiler = create_starlark_compiler()
+        compiler = create_starlark_ast_to_bytecode_compiler()
         expected_rules = [
             "file", "simple_stmt", "assign_stmt", "return_stmt",
             "break_stmt", "continue_stmt", "pass_stmt", "load_stmt",

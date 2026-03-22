@@ -7,7 +7,7 @@ All notable changes to the Starlark Compiler package will be documented in this 
 ### Added
 - Initial release of the Starlark compiler package.
 - `compile_starlark()` one-call function for source-to-bytecode compilation.
-- `create_starlark_compiler()` factory that returns a `GenericCompiler` configured for Starlark.
+- `create_starlark_ast_to_bytecode_compiler()` factory that returns a `GenericCompiler` configured for Starlark.
 - `Op` IntEnum with ~50 opcodes organized by high nibble:
   - 0x0_: Stack — `LOAD_CONST`, `POP`, `DUP`, `LOAD_NONE`, `LOAD_TRUE`, `LOAD_FALSE`
   - 0x1_: Variables — `STORE_NAME`, `LOAD_NAME`, `STORE_LOCAL`, `LOAD_LOCAL`, `STORE_CLOSURE`, `LOAD_CLOSURE`

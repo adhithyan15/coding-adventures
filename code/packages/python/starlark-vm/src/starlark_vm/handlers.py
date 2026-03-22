@@ -67,7 +67,7 @@ from virtual_machine.vm import (
     VMError,
 )
 
-from starlark_compiler.opcodes import Op
+from starlark_ast_to_bytecode_compiler.opcodes import Op
 
 
 # =========================================================================
@@ -103,6 +103,7 @@ class StarlarkFunction:
     Created by MAKE_FUNCTION, called by CALL_FUNCTION. Contains:
     - The function's compiled code (a CodeObject)
     - Default parameter values
+    - Parameter names (for keyword argument matching)
     - The closure environment (captured variables)
     - Metadata (name, parameter count)
     """
@@ -113,11 +114,13 @@ class StarlarkFunction:
         defaults: list[Any] | None = None,
         name: str = "<lambda>",
         param_count: int = 0,
+        param_names: tuple[str, ...] = (),
     ) -> None:
         self.code = code
         self.defaults = defaults or []
         self.name = name
         self.param_count = param_count
+        self.param_names = param_names
 
     def __repr__(self) -> str:
         return f"<function {self.name}>"
@@ -720,11 +723,39 @@ def handle_make_function(
 ) -> str | None:
     """MAKE_FUNCTION — Create a function object from a CodeObject.
 
-    The CodeObject is on top of the stack (pushed by LOAD_CONST).
-    Default values (if any) are below it.
+    ==========================================================================
+    Stack Layout
+    ==========================================================================
+
+    The stack contains (top to bottom):
+
+    1. **CodeObject** — the function body's compiled bytecode (always on top)
+    2. **param_names tuple** — if flag bit 3 (0x08) is set, a tuple of
+       parameter names like ``("x", "y", "z")``. Needed by CALL_FUNCTION_KW
+       to map keyword argument names to parameter positions.
+    3. **defaults** — if flag bit 0 (0x01) is set (not yet fully used)
+
+    ==========================================================================
+    Flags
+    ==========================================================================
+
+    - ``0x01`` — has default values on the stack
+    - ``0x02`` — has *args parameter
+    - ``0x04`` — has **kwargs parameter
+    - ``0x08`` — has param_names tuple on the stack (NEW — for CALL_FUNCTION_KW)
     """
     flags = instr.operand or 0
+
+    # Pop the CodeObject (always on top)
     func_code = vm.pop()
+
+    # Pop the param_names tuple if present (flag bit 3)
+    param_names: tuple[str, ...] = ()
+    if flags & 0x08:
+        param_names = vm.pop()
+        assert isinstance(param_names, tuple), (
+            f"MAKE_FUNCTION: expected param_names tuple, got {type(param_names).__name__}"
+        )
 
     defaults = []
     if flags & 0x01:  # Has defaults
@@ -736,7 +767,10 @@ def handle_make_function(
     func = StarlarkFunction(
         code=func_code,
         defaults=defaults,
-        param_count=len(func_code.names) if hasattr(func_code, 'names') else 0,
+        param_count=len(param_names) if param_names else (
+            len(func_code.names) if hasattr(func_code, 'names') else 0
+        ),
+        param_names=param_names,
     )
     vm.push(func)
     vm.advance_pc()
@@ -862,11 +896,167 @@ def _execute_function(
 def handle_call_function_kw(
     vm: GenericVM, instr: Instruction, code: CodeObject
 ) -> str | None:
-    """CALL_FUNCTION_KW — Call function with keyword arguments.
+    """CALL_FUNCTION_KW — Call a function with keyword arguments.
 
-    For now, treat like CALL_FUNCTION (keyword handling is complex).
+    ==========================================================================
+    Stack Layout (CPython Convention)
+    ==========================================================================
+
+    When the compiler encounters a call with keyword arguments like
+    ``f(a, x=1, y=2)``, it produces this stack layout::
+
+        Bottom → [func, a_value, 1, 2, ("x", "y")] ← Top
+
+    That is:
+    1. The callable (function or builtin)
+    2. All argument *values* — positional first, then keyword values
+    3. A tuple of keyword names on the very top
+
+    The operand is the total argument count (positional + keyword).
+
+    ==========================================================================
+    How Keyword Mapping Works
+    ==========================================================================
+
+    The handler reconstructs which arguments are positional vs keyword:
+
+    1. Pop the keyword names tuple from the top → ``("x", "y")``, kw_count = 2
+    2. Pop ``argc`` values from the stack → ``[a_value, 1, 2]``
+    3. First ``argc - kw_count`` are positional → ``[a_value]``
+    4. Last ``kw_count`` are keyword values → ``[1, 2]``
+    5. Zip names with values → ``{"x": 1, "y": 2}``
+
+    For user-defined functions (``StarlarkFunction``), keyword names are matched
+    to parameter names in the function's CodeObject. Each keyword value is placed
+    at the correct index in the argument array so the function body can access
+    parameters by index (via ``LOAD_LOCAL``).
+
+    For built-in functions, keyword arguments are passed as a dict alongside
+    positional args if the builtin supports them. Most builtins only accept
+    positional arguments.
+
+    ==========================================================================
+    Example: ``py_library(name="foo", deps=["bar"])``
+    ==========================================================================
+
+    This is the key BUILD-file use case. ``py_library`` is a Starlark function
+    loaded via ``load()``. Its definition might be::
+
+        def py_library(name, deps=[]):
+            _targets.append({"name": name, "deps": deps})
+
+    The call ``py_library(name="foo", deps=["bar"])`` compiles to::
+
+        LOAD_NAME py_library     # Push the function
+        LOAD_CONST "foo"         # Value for keyword 'name'
+        BUILD_LIST 1             # Value for keyword 'deps' = ["bar"]
+        LOAD_CONST ("name", "deps")  # Keyword names tuple
+        CALL_FUNCTION_KW 2       # 2 total args (both keyword)
+
+    The handler:
+    1. Pops ("name", "deps"), kw_count = 2
+    2. Pops 2 values: ["foo", ["bar"]]
+    3. pos_count = 2 - 2 = 0 (no positional args)
+    4. kwargs = {"name": "foo", "deps": ["bar"]}
+    5. Maps "name" → param index 0, "deps" → param index 1
+    6. final_args = ["foo", ["bar"]]
+    7. Calls _execute_function with those args
     """
-    return handle_call_function(vm, instr, code)
+    argc = instr.operand or 0
+    assert isinstance(argc, int)
+
+    # Step 1: Pop the keyword names tuple from the top of the stack.
+    # This was pushed by the compiler after all argument values.
+    kw_names = vm.pop()
+    assert isinstance(kw_names, tuple), (
+        f"CALL_FUNCTION_KW: expected keyword names tuple on top of stack, "
+        f"got {type(kw_names).__name__}"
+    )
+    kw_count = len(kw_names)
+
+    # Step 2: Pop all argument values (positional + keyword).
+    all_values: list[Any] = []
+    for _ in range(argc):
+        all_values.insert(0, vm.pop())
+
+    # Step 3: Split into positional and keyword arguments.
+    # Positional values come first, keyword values come last.
+    pos_count = argc - kw_count
+    pos_args = all_values[:pos_count]
+    kw_values = all_values[pos_count:]
+    kwargs = dict(zip(kw_names, kw_values))
+
+    # Step 4: Pop the callable.
+    func = vm.pop()
+
+    if isinstance(func, StarlarkFunction):
+        # -----------------------------------------------------------------
+        # User-defined Starlark function: map kwargs to parameter positions
+        # -----------------------------------------------------------------
+
+        # The function stores parameter names directly (set by MAKE_FUNCTION
+        # from the param_names tuple the compiler pushes onto the stack).
+        param_names = list(func.param_names)
+
+        # Start with positional arguments
+        final_args: list[Any] = list(pos_args)
+
+        # Pad to the full parameter count with None (for parameters not yet filled)
+        while len(final_args) < func.param_count:
+            final_args.append(None)
+
+        # Fill in keyword arguments by matching names to parameter indices
+        for kw_name, kw_value in kwargs.items():
+            if kw_name in param_names:
+                idx = param_names.index(kw_name)
+                if idx < pos_count:
+                    raise VMTypeError(
+                        f"got multiple values for argument '{kw_name}'"
+                    )
+                final_args[idx] = kw_value
+            else:
+                raise VMTypeError(
+                    f"unexpected keyword argument '{kw_name}'"
+                )
+
+        # Check recursion limit
+        if vm.max_recursion_depth is not None:
+            if len(vm.call_stack) >= vm.max_recursion_depth:
+                raise MaxRecursionError(
+                    f"Maximum recursion depth exceeded "
+                    f"(limit: {vm.max_recursion_depth})"
+                )
+
+        # Execute the function with the properly ordered arguments
+        _execute_function(vm, func, final_args)
+
+    elif hasattr(func, 'implementation'):
+        # -----------------------------------------------------------------
+        # Built-in function: pass positional args (kwargs not yet supported
+        # for builtins — most builtins only use positional arguments)
+        # -----------------------------------------------------------------
+        if kwargs:
+            # Try to pass kwargs to builtins that support them.
+            # We use inspect to check if the implementation accepts a second
+            # parameter. If it does, pass (args, kwargs). Otherwise, raise
+            # an error for unexpected keyword arguments.
+            import inspect
+            sig = inspect.signature(func.implementation)
+            if len(sig.parameters) >= 2:
+                result = func.implementation(pos_args, kwargs)
+            else:
+                raise VMTypeError(
+                    f"built-in function '{func.name}' does not accept "
+                    f"keyword arguments"
+                )
+        else:
+            result = func.implementation(pos_args)
+        vm.push(result)
+        vm.advance_pc()
+    else:
+        raise VMTypeError(f"'{type(func).__name__}' object is not callable")
+
+    return None
 
 
 def handle_return(vm: GenericVM, instr: Instruction, code: CodeObject) -> str | None:

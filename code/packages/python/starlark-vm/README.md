@@ -4,7 +4,7 @@ Executes Starlark bytecode on the pluggable GenericVM framework.
 
 ## What Is This?
 
-This package provides a complete Starlark runtime. It takes the bytecode produced by `starlark-compiler` and executes it on a `GenericVM` from the `virtual-machine` package, with ~50 opcode handlers and ~25 built-in functions that implement Starlark's semantics.
+This package provides a complete Starlark runtime. It takes the bytecode produced by `starlark-ast-to-bytecode-compiler` and executes it on a `GenericVM` from the `virtual-machine` package, with ~50 opcode handlers and ~25 built-in functions that implement Starlark's semantics.
 
 The VM enforces Starlark's restrictions (no recursion, deterministic evaluation) and provides Starlark-specific type behavior (int/float promotion, string concatenation, truthiness rules).
 
@@ -92,4 +92,4 @@ pip install coding-adventures-starlark-vm
 ## Dependencies
 
 - `coding-adventures-virtual-machine` -- provides `GenericVM` framework
-- `coding-adventures-starlark-compiler` -- provides `Op` enum and bytecode compilation
+- `coding-adventures-starlark-ast-to-bytecode-compiler` -- provides `Op` enum and bytecode compilation

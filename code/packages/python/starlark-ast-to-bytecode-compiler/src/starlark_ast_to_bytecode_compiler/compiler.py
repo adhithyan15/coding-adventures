@@ -66,7 +66,7 @@ from bytecode_compiler import GenericCompiler
 from lang_parser import ASTNode
 from lexer import Token
 
-from starlark_compiler.opcodes import (
+from starlark_ast_to_bytecode_compiler.opcodes import (
     AUGMENTED_ASSIGN_MAP,
     BINARY_OP_MAP,
     COMPARE_OP_MAP,
@@ -643,13 +643,27 @@ def compile_def_stmt(compiler: GenericCompiler, node: ASTNode) -> None:
 
     compiler.exit_scope()
 
+    # Push the parameter names tuple as a constant.
+    # This is needed by CALL_FUNCTION_KW so the VM can map keyword argument
+    # names to parameter positions. Without this, the VM only knows parameter
+    # indices (via LOAD_LOCAL/STORE_LOCAL) but not names.
+    #
+    # Stack layout before MAKE_FUNCTION:
+    #   [...defaults...] [param_names_tuple] [CodeObject]
+    #
+    # MAKE_FUNCTION pops the CodeObject, then the param_names tuple (if flag
+    # 0x08 is set), then any defaults.
+    param_names_idx = compiler.add_constant(tuple(clean_param_names))
+    compiler.emit(Op.LOAD_CONST, param_names_idx)
+
     # Push the body CodeObject as a constant
     code_idx = compiler.add_constant(body_code)
     compiler.emit(Op.LOAD_CONST, code_idx)
 
     # Emit MAKE_FUNCTION
-    # Flags encode: bit 0 = has defaults, bit 1 = has varargs, bit 2 = has kwargs
-    flags = 0
+    # Flags encode: bit 0 = has defaults, bit 1 = has varargs,
+    #               bit 2 = has kwargs, bit 3 = has param names tuple
+    flags = 0x08  # Always include param names (bit 3)
     if default_count > 0:
         flags |= 0x01
     if has_varargs:
@@ -1120,42 +1134,91 @@ def _compile_arguments(compiler: GenericCompiler, node: ASTNode) -> tuple[int, b
     Grammar: arguments = argument { COMMA argument } [ COMMA ] ;
 
     Returns (arg_count, has_keyword_args).
+
+    ==========================================================================
+    Stack Layout Convention (CPython-style)
+    ==========================================================================
+
+    For CALL_FUNCTION (no keyword args), the stack looks like::
+
+        [func, arg1_value, arg2_value, ...]
+
+    For CALL_FUNCTION_KW (has keyword args), the stack looks like::
+
+        [func, pos_val1, ..., kw_val1, kw_val2, ..., kw_names_tuple]
+
+    The keyword names tuple sits on top of the stack. Below it are all the
+    argument *values* in order: positional values first, then keyword values
+    (in the same order as the names tuple). This is exactly CPython's calling
+    convention for CALL_FUNCTION_KW.
+
+    Example: ``f(a, x=1, y=2)``::
+
+        LOAD_NAME f        # Push the callable
+        LOAD_NAME a        # Push positional value
+        LOAD_CONST 1       # Push keyword value for 'x'
+        LOAD_CONST 2       # Push keyword value for 'y'
+        LOAD_CONST ("x", "y")  # Push tuple of keyword names
+        CALL_FUNCTION_KW 3     # Total arg count = 3
+
+    The handler can then:
+    1. Pop the keyword names tuple → ("x", "y"), kw_count = 2
+    2. Pop 3 values → [a_val, 1, 2]
+    3. First (3 - 2) = 1 values are positional → [a_val]
+    4. Last 2 values are keyword → {"x": 1, "y": 2}
     """
     arg_nodes = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "argument"]
     argc = 0
     has_kw = False
+    kw_names: list[str] = []
 
     for arg in arg_nodes:
-        kw = _compile_argument(compiler, arg)
-        if kw:
+        kw_name = _compile_argument(compiler, arg)
+        if kw_name is not None:
             has_kw = True
+            kw_names.append(kw_name)
         argc += 1
+
+    # If there are keyword args, push a tuple of their names on top of the stack.
+    # This lets the VM handler know which values are keyword arguments and what
+    # parameter names they correspond to.
+    if has_kw:
+        kw_tuple_idx = compiler.add_constant(tuple(kw_names))
+        compiler.emit(Op.LOAD_CONST, kw_tuple_idx)
 
     return argc, has_kw
 
 
-def _compile_argument(compiler: GenericCompiler, node: ASTNode) -> bool:
+def _compile_argument(compiler: GenericCompiler, node: ASTNode) -> str | None:
     """Compile a single function call argument.
 
     Grammar: argument = DOUBLE_STAR expression | STAR expression
                       | NAME EQUALS expression | expression ;
 
-    Returns True if this is a keyword argument.
+    Returns the keyword name (str) if this is a keyword argument,
+    or None if it is a positional argument. This lets ``_compile_arguments``
+    collect keyword names to build the names tuple.
+
+    For keyword arguments (``name=value``), we push only the *value* onto the
+    stack — the name goes into the keyword names tuple that is pushed separately
+    after all arguments are compiled.
     """
     if _has_token(node, "**"):
-        # **kwargs unpacking
+        # **kwargs unpacking — not yet fully supported, compile value only
         sub_nodes = _nodes(node)
         if sub_nodes:
             compiler.compile_node(sub_nodes[0])
-        return True
+        return None
     elif _has_token(node, "*"):
         # *args unpacking
         sub_nodes = _nodes(node)
         if sub_nodes:
             compiler.compile_node(sub_nodes[0])
-        return False
+        return None
     elif _has_token(node, "="):
         # Keyword argument: name=value
+        # Only push the value — the name is collected by _compile_arguments
+        # and added to the keyword names tuple.
         tokens = _tokens(node)
         sub_nodes = _nodes(node)
         name = None
@@ -1164,13 +1227,10 @@ def _compile_argument(compiler: GenericCompiler, node: ASTNode) -> bool:
                 name = t.value
                 break
         if name and sub_nodes:
-            # Push the keyword name as a constant, then the value
-            name_idx = compiler.add_constant(name)
-            compiler.emit(Op.LOAD_CONST, name_idx)
             compiler.compile_node(sub_nodes[0])
-        return True
+        return name
     else:
-        # Positional argument
+        # Positional argument — push the value
         sub_nodes = _nodes(node)
         if sub_nodes:
             compiler.compile_node(sub_nodes[0])
@@ -1180,7 +1240,7 @@ def _compile_argument(compiler: GenericCompiler, node: ASTNode) -> bool:
                 if isinstance(c, Token):
                     compiler.compile_node(c)
                     break
-        return False
+        return None
 
 
 # =========================================================================
@@ -1659,7 +1719,7 @@ def _parse_lambda_param(node: ASTNode) -> dict[str, Any]:
 # =========================================================================
 
 
-def create_starlark_compiler() -> GenericCompiler:
+def create_starlark_ast_to_bytecode_compiler() -> GenericCompiler:
     """Create a ``GenericCompiler`` configured with all Starlark rule handlers.
 
     This is the main factory function. It creates a fresh GenericCompiler
@@ -1672,7 +1732,7 @@ def create_starlark_compiler() -> GenericCompiler:
 
     Example::
 
-        compiler = create_starlark_compiler()
+        compiler = create_starlark_ast_to_bytecode_compiler()
         ast = parse_starlark("x = 1 + 2\\n")
         code = compiler.compile(ast)
     """
@@ -1763,5 +1823,5 @@ def compile_starlark(source: str) -> CodeObject:
     from starlark_parser import parse_starlark
 
     ast = parse_starlark(source)
-    compiler = create_starlark_compiler()
+    compiler = create_starlark_ast_to_bytecode_compiler()
     return compiler.compile(ast, halt_opcode=Op.HALT)
