@@ -1,0 +1,18 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "seq",
+  "display_name": "seq",
+  "description": "Print a sequence of numbers",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    { "id": "separator", "short": "s", "long": "separator", "description": "Use STRING to separate numbers (default: \\n)", "type": "string", "value_name": "STRING", "default": "\n" },
+    { "id": "equal_width", "short": "w", "long": "equal-width", "description": "Equalize width by padding with leading zeroes", "type": "boolean" },
+    { "id": "format", "short": "f", "long": "format", "description": "Use printf style floating-point FORMAT", "type": "string", "value_name": "FORMAT" }
+  ],
+  "arguments": [
+    { "id": "numbers", "name": "NUMBER", "description": "Sequence specification: LAST, or FIRST LAST, or FIRST INCREMENT LAST", "type": "string", "required": true, "variadic": true }
+  ],
+  "commands": []
+}

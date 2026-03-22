@@ -253,6 +253,7 @@ Note: tarpaulin reports coverage for the ENTIRE workspace by default. To get pac
 
 **Rule:** Do NOT use `/Users/adhithya/.local/bin/mise exec --` in BUILD files. Use bare commands: `go test ./... -v -cover`, `bundle install --quiet && bundle exec rake test`, etc. CI sets up its own runtimes.
 
+
 ---
 
 ### 2026-03-22: Skip patterns consume newlines — update downstream tests
@@ -260,3 +261,21 @@ Note: tarpaulin reports coverage for the ENTIRE workspace by default. To get pac
 When the lexer's skip pattern evaluation order changes (skip patterns before newline check), any grammar with `\n` in its skip pattern (e.g., JSON's `WHITESPACE = /[ \t\r\n]+/`) will consume newlines silently instead of emitting NEWLINE tokens. This broke Go and Ruby json-lexer tests that expected NEWLINE tokens.
 
 **Rule:** When modifying the lexer's main loop order (skip vs newline vs token matching), check ALL downstream lexer wrapper packages (json-lexer, css-lexer, toml-lexer, etc.) for tests that depend on NEWLINE token emission. If a grammar's skip pattern includes `\n`, no NEWLINE tokens should be expected.
+
+---
+
+### 2026-03-22: Go BUILD files must run commands from within the package directory
+
+Go modules with their own `go.mod` file cannot be built via parent directory patterns like `cd ../ && go build ./subdir/...`. This fails with "directory prefix does not contain main module or its selected dependencies." Instead, BUILD files should use `go build ./...`, `go test ./...`, `go vet ./...` which run from within the package directory (the build tool already `cd`s into the package directory before executing BUILD commands).
+
+**Rule:** Go BUILD files should always use `./...` patterns, not `cd ../ && ./subdir/...` patterns. Match the existing convention used by `starlark-parser/BUILD`: `go test ./... -v -cover`.
+
+---
+
+### 2026-03-22: TypeScript file: deps require ALL transitive deps listed directly
+
+When a TypeScript package has `file:` deps (e.g., `"@coding-adventures/lexer": "file:../lexer"`), `npm ci` creates symlinks to those packages but does NOT install their `file:` dependencies' node_modules. If lexer depends on `state-machine` via `file:../state-machine`, your package must ALSO list `state-machine` as a direct dependency.
+
+Additionally, do NOT use `cd ../dep && npm ci` chain patterns in BUILD files — the build tool runs packages in parallel, and two packages running `npm ci` on the same shared dependency simultaneously causes esbuild install conflicts. Instead, use simple `npm ci --quiet` + `npx vitest run` patterns (matching starlark-lexer/starlark-parser BUILD convention) and list all transitive `file:` deps directly in package.json.
+
+**Rule:** TypeScript BUILD files should be `npm ci --quiet\nnpx vitest run --coverage`. All transitive `file:` deps must be listed as direct deps in package.json.

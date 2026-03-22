@@ -1,0 +1,24 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "rev",
+  "display_name": "rev",
+  "description": "Reverse lines characterwise",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to reverse. Use '-' for standard input.",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": []
+}
