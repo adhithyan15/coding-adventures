@@ -73,16 +73,33 @@ defmodule BuildTool.GitDiff do
   end
 
   @doc """
-  Maps changed file paths to package names.
+  Maps changed file paths to package names, with strict Starlark filtering.
 
-  A file belongs to a package if its path starts with the package's directory
-  path relative to the repo root. Returns a `MapSet` of package names.
+  For **shell BUILD packages** (or Starlark packages without declared srcs),
+  a file belongs to a package if its path starts with the package's directory
+  path. Any file change triggers a rebuild — this is the legacy behavior.
+
+  For **Starlark BUILD packages** with declared srcs, we apply strict filtering:
+  only trigger a rebuild if the changed file matches one of the declared source
+  patterns (or is a BUILD file itself). This means editing README.md or
+  CHANGELOG.md in a Starlark package does NOT trigger a rebuild.
+
+  This strict filtering is the key optimization that makes Starlark BUILD files
+  worthwhile: by declaring exactly which files matter for the build, we avoid
+  rebuilding packages when only documentation changes.
 
   ## Parameters
 
     - `changed_files` — list of file paths relative to the repo root
     - `packages` — list of package maps from discovery
     - `repo_root` — absolute path to the repo root
+
+  ## Package map fields used
+
+    - `:name` — qualified package name (e.g., `"python/logic-gates"`)
+    - `:path` — absolute path on disk
+    - `:is_starlark` — (optional) boolean, true if BUILD file uses Starlark
+    - `:declared_srcs` — (optional) list of glob patterns from Starlark srcs
 
   ## Example
 
@@ -92,14 +109,25 @@ defmodule BuildTool.GitDiff do
       MapSet.new(["python/logic-gates"])
   """
   def map_files_to_packages(changed_files, packages, repo_root) do
-    # Build relative path lookup for each package.
-    pkg_paths =
+    # Build relative path lookup with Starlark metadata for each package.
+    #
+    # Each entry is a tuple of:
+    #   {name, rel_path, is_starlark, declared_srcs}
+    #
+    # The is_starlark and declared_srcs fields are extracted from the package
+    # map using Map.get with defaults — older package maps that predate
+    # Starlark support won't have these keys, and that's fine.
+    pkg_infos =
       packages
       |> Enum.map(fn pkg ->
         rel_path = Path.relative_to(pkg.path, repo_root)
         # Normalize to forward slashes for consistent matching.
         rel_path = String.replace(rel_path, "\\", "/")
-        {pkg.name, rel_path}
+
+        is_starlark = Map.get(pkg, :is_starlark, false)
+        declared_srcs = Map.get(pkg, :declared_srcs, [])
+
+        {pkg.name, rel_path, is_starlark, declared_srcs}
       end)
 
     changed_files
@@ -107,13 +135,67 @@ defmodule BuildTool.GitDiff do
       # Normalize file path to forward slashes.
       file = String.replace(file, "\\", "/")
 
-      case Enum.find(pkg_paths, fn {_name, rel_path} ->
-             String.starts_with?(file, rel_path <> "/") or file == rel_path
-           end) do
-        {name, _} -> MapSet.put(acc, name)
-        nil -> acc
+      case find_owning_package(file, pkg_infos) do
+        nil ->
+          # File doesn't belong to any package — skip it.
+          acc
+
+        {name, rel_path, is_starlark, declared_srcs} ->
+          if should_trigger_rebuild?(file, rel_path, is_starlark, declared_srcs) do
+            MapSet.put(acc, name)
+          else
+            acc
+          end
       end
     end)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Strict Starlark filtering helpers
+  # ---------------------------------------------------------------------------
+  #
+  # The rebuild decision tree:
+  #
+  #   1. Is the package a Starlark package with declared srcs?
+  #      NO  → rebuild (legacy: any file change triggers rebuild)
+  #      YES → continue to step 2
+  #
+  #   2. Is the changed file a BUILD file?
+  #      YES → rebuild (build definition changed)
+  #      NO  → continue to step 3
+  #
+  #   3. Does the changed file match any declared src pattern?
+  #      YES → rebuild
+  #      NO  → skip (e.g., README.md, CHANGELOG.md)
+
+  defp find_owning_package(file, pkg_infos) do
+    Enum.find(pkg_infos, fn {_name, rel_path, _is_starlark, _srcs} ->
+      String.starts_with?(file, rel_path <> "/") or file == rel_path
+    end)
+  end
+
+  defp should_trigger_rebuild?(file, rel_path, is_starlark, declared_srcs) do
+    if not is_starlark or declared_srcs == [] do
+      # Shell BUILD or no declared srcs: any file triggers rebuild.
+      true
+    else
+      # Starlark package with declared srcs: strict filtering.
+      # Get the file's path relative to the package directory.
+      rel_to_package = String.trim_leading(file, rel_path <> "/")
+
+      # BUILD file changes always trigger a rebuild — the build
+      # definition itself changed.
+      base = Path.basename(rel_to_package)
+
+      if base == "BUILD" or String.starts_with?(base, "BUILD_") do
+        true
+      else
+        # Check if the file matches any declared source pattern.
+        Enum.any?(declared_srcs, fn pattern ->
+          BuildTool.GlobMatch.match_path?(pattern, rel_to_package)
+        end)
+      end
+    end
   end
 
   # ---------------------------------------------------------------------------

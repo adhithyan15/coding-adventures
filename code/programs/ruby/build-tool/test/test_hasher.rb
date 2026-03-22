@@ -191,4 +191,108 @@ class TestHasher < Minitest::Test
     hash = BuildTool::Hasher.hash_deps("nonexistent", graph, {})
     assert_equal 64, hash.length
   end
+
+  # -- collect_source_files_glob tests -----------------------------------------
+  # These tests verify the glob-based file collection used for Starlark
+  # packages with declared_srcs.
+
+  # GlobPackage is a test double that adds declared_srcs to Package.
+  GlobPackage = Struct.new(:name, :path, :build_commands, :language,
+                           :declared_srcs, keyword_init: true)
+
+  def test_collect_source_files_glob_matches_declared
+    dir = create_temp_dir
+    pkg_dir = dir / "python" / "mypkg"
+    write_file(pkg_dir / "BUILD", "py_library(name='mypkg')")
+    write_file(pkg_dir / "src" / "main.py", "print('hi')")
+    write_file(pkg_dir / "tests" / "test_main.py", "import pytest")
+    write_file(pkg_dir / "README.md", "ignore me")
+    write_file(pkg_dir / "CHANGELOG.md", "also ignore")
+
+    pkg = GlobPackage.new(
+      name: "python/mypkg", path: pkg_dir,
+      build_commands: [], language: "python",
+      declared_srcs: ["src/**/*.py", "tests/**/*.py"]
+    )
+
+    files = BuildTool::Hasher.collect_source_files(pkg)
+    basenames = files.map { |f| f.relative_path_from(pkg_dir).to_s }
+
+    # BUILD is always included.
+    assert_includes basenames, "BUILD"
+    # Declared srcs are included.
+    assert_includes basenames, "src/main.py"
+    assert_includes basenames, "tests/test_main.py"
+    # Non-declared files are excluded.
+    refute_includes basenames, "README.md"
+    refute_includes basenames, "CHANGELOG.md"
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_collect_source_files_glob_build_prefix_included
+    dir = create_temp_dir
+    pkg_dir = dir / "python" / "mypkg"
+    write_file(pkg_dir / "BUILD", "py_library()")
+    write_file(pkg_dir / "BUILD_mac", "# mac specific")
+    write_file(pkg_dir / "src" / "main.py", "")
+
+    pkg = GlobPackage.new(
+      name: "python/mypkg", path: pkg_dir,
+      build_commands: [], language: "python",
+      declared_srcs: ["src/**/*.py"]
+    )
+
+    files = BuildTool::Hasher.collect_source_files(pkg)
+    basenames = files.map { |f| f.relative_path_from(pkg_dir).to_s }
+
+    assert_includes basenames, "BUILD"
+    assert_includes basenames, "BUILD_mac"
+    assert_includes basenames, "src/main.py"
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_collect_source_files_glob_sorted
+    dir = create_temp_dir
+    pkg_dir = dir / "python" / "mypkg"
+    write_file(pkg_dir / "BUILD", "py_library()")
+    write_file(pkg_dir / "src" / "z_module.py", "")
+    write_file(pkg_dir / "src" / "a_module.py", "")
+
+    pkg = GlobPackage.new(
+      name: "python/mypkg", path: pkg_dir,
+      build_commands: [], language: "python",
+      declared_srcs: ["src/**/*.py"]
+    )
+
+    files = BuildTool::Hasher.collect_source_files(pkg)
+    relative = files.map { |f| f.relative_path_from(pkg_dir).to_s }
+    assert_equal relative.sort, relative
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_collect_source_files_falls_back_without_declared_srcs
+    # A package without declared_srcs should use extension-based filtering.
+    dir = create_temp_dir
+    pkg_dir = dir / "python" / "mypkg"
+    write_file(pkg_dir / "BUILD", "echo build")
+    write_file(pkg_dir / "src" / "main.py", "print('hi')")
+    write_file(pkg_dir / "README.md", "ignore me")
+
+    pkg = BuildTool::Package.new(
+      name: "python/mypkg", path: pkg_dir,
+      build_commands: ["echo build"], language: "python"
+    )
+
+    files = BuildTool::Hasher.collect_source_files(pkg)
+    basenames = files.map { |f| f.relative_path_from(pkg_dir).to_s }
+
+    assert_includes basenames, "BUILD"
+    assert_includes basenames, "src/main.py"
+    refute_includes basenames, "README.md"
+  ensure
+    FileUtils.rm_rf(dir)
+  end
 end

@@ -31,6 +31,8 @@ defmodule BuildTool.CLI do
     - `--language LANG` — filter to a specific language
     - `--diff-base REF` — git ref to diff against (default: `origin/main`)
     - `--cache-file PATH` — path to cache file (default: `.build-cache.json`)
+    - `--emit-plan PATH` — write a build plan JSON file and exit (no build)
+    - `--plan-file PATH` — read a build plan instead of running discovery
 
   ## Usage
 
@@ -38,7 +40,7 @@ defmodule BuildTool.CLI do
       ./build_tool --root /path/to/repo --force
   """
 
-  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Reporter, Resolver, StarlarkEvaluator}
+  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Plan, Reporter, Resolver, StarlarkEvaluator}
   alias CodingAdventures.ProgressBar
 
   # ---------------------------------------------------------------------------
@@ -74,7 +76,9 @@ defmodule BuildTool.CLI do
           jobs: :integer,
           language: :string,
           diff_base: :string,
-          cache_file: :string
+          cache_file: :string,
+          emit_plan: :string,
+          plan_file: :string
         ],
         aliases: [
           r: :root,
@@ -92,6 +96,8 @@ defmodule BuildTool.CLI do
     language = Keyword.get(opts, :language, "all")
     diff_base = Keyword.get(opts, :diff_base, "origin/main")
     cache_file = Keyword.get(opts, :cache_file, ".build-cache.json")
+    emit_plan_path = Keyword.get(opts, :emit_plan, nil)
+    plan_file_path = Keyword.get(opts, :plan_file, nil)
 
     # Step 1: Find the repo root.
     repo_root =
@@ -106,11 +112,13 @@ defmodule BuildTool.CLI do
       IO.puts(:stderr, "Use --root to specify the repo root.")
       1
     else
-      do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file)
+      do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
+        emit_plan_path, plan_file_path)
     end
   end
 
-  defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file) do
+  defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
+               emit_plan_path, plan_file_path) do
     # The build starts from the code/ directory inside the repo root.
     code_root = Path.join(repo_root, "code")
 
@@ -144,12 +152,15 @@ defmodule BuildTool.CLI do
           # evaluate it through the Starlark interpreter and replace the raw
           # shell commands with generated commands from the declared targets.
           packages = evaluate_starlark_builds(packages, repo_root)
-          do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base, cache_file)
+
+          do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+            cache_file, emit_plan_path, plan_file_path)
       end
     end
   end
 
-  defp do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base, cache_file) do
+  defp do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+                         cache_file, emit_plan_path, _plan_file_path) do
     IO.puts("Discovered #{length(packages)} packages")
 
     # Step 4: Resolve dependencies.
@@ -182,6 +193,95 @@ defmodule BuildTool.CLI do
           nil
         end
       end
+
+    # --emit-plan: write the build plan to a file and exit without building.
+    # This is used by CI to compute the plan in a fast "detect" job and
+    # share it across build jobs on multiple platforms.
+    if emit_plan_path != nil do
+      return_emit_plan(packages, graph, repo_root, diff_base, force, affected_set,
+        emit_plan_path)
+    else
+      do_execute_builds(packages, graph, repo_root, force, dry_run, jobs, diff_base,
+        cache_file, affected_set)
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Build plan emission
+  # ---------------------------------------------------------------------------
+  #
+  # When --emit-plan is specified, we serialize the discovery + change
+  # detection results to a JSON file and exit. No builds are executed.
+
+  defp return_emit_plan(packages, graph, repo_root, diff_base, force, affected_set,
+                        emit_plan_path) do
+    # Convert affected_set to a list (or nil for "rebuild all").
+    affected_list =
+      case affected_set do
+        nil -> nil
+        set -> MapSet.to_list(set) |> Enum.sort()
+      end
+
+    # Build package entries.
+    pkg_entries =
+      Enum.map(packages, fn pkg ->
+        rel_path =
+          Path.relative_to(pkg.path, repo_root)
+          |> String.replace("\\", "/")
+
+        %Plan.PackageEntry{
+          name: pkg.name,
+          rel_path: rel_path,
+          language: pkg.language,
+          build_commands: pkg.build_commands,
+          is_starlark: Map.get(pkg, :is_starlark, false),
+          declared_srcs: Map.get(pkg, :declared_srcs, []),
+          declared_deps: Map.get(pkg, :declared_deps, [])
+        }
+      end)
+
+    # Extract dependency edges from the graph's forward adjacency map.
+    # Each entry in forward is {from_node, MapSet of successor nodes}.
+    dep_edges =
+      graph.forward
+      |> Enum.flat_map(fn {from, successors} ->
+        successors |> MapSet.to_list() |> Enum.map(fn to -> [from, to] end)
+      end)
+      |> Enum.sort()
+
+    # Determine which languages are needed.
+    langs_needed =
+      packages
+      |> Enum.map(& &1.language)
+      |> Enum.uniq()
+      |> Map.new(fn lang -> {lang, true} end)
+
+    plan = %Plan{
+      diff_base: diff_base,
+      force: force,
+      affected_packages: affected_list,
+      packages: pkg_entries,
+      dependency_edges: dep_edges,
+      languages_needed: langs_needed
+    }
+
+    case Plan.write_plan(plan, emit_plan_path) do
+      :ok ->
+        IO.puts("Build plan written to #{emit_plan_path}")
+        0
+
+      {:error, reason} ->
+        IO.puts(:stderr, "Error writing build plan: #{inspect(reason)}")
+        1
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Build execution (normal flow)
+  # ---------------------------------------------------------------------------
+
+  defp do_execute_builds(packages, graph, repo_root, force, dry_run, jobs, _diff_base,
+                         cache_file, affected_set) do
 
     # Step 6: Hash all packages.
     package_hashes = Map.new(packages, fn pkg -> {pkg.name, Hasher.hash_package(pkg)} end)
