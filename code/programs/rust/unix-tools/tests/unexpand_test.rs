@@ -36,7 +36,7 @@ mod flag_parsing {
 
     #[test]
     fn no_flags_returns_parse() {
-        match parse_argv(&["unexpand"]) {
+        match parse_argv(&["unexpand", "-"]) {
             ParserOutput::Parse(_) => {}
             other => panic!("expected Parse, got {:?}", other),
         }
