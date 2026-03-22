@@ -37,12 +37,14 @@ import (
 	"runtime"
 	"strings"
 
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/hasher"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/plan"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/reporter"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
 	starlarkeval "github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/starlark"
@@ -96,6 +98,8 @@ func run() int {
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
+	emitPlan := flag.String("emit-plan", "", "Write build plan JSON to this path (used by CI detect job)")
+	planFile := flag.String("plan-file", "", "Read build plan JSON, skip discovery/resolution/diff (used by CI build job)")
 
 	flag.Parse()
 
@@ -123,102 +127,174 @@ func run() int {
 		return 1
 	}
 
-	// Step 2: Discover packages.
-	packages := discovery.DiscoverPackages(codeRoot)
-	if len(packages) == 0 {
-		fmt.Fprintln(os.Stderr, "No packages found.")
-		return 0
-	}
-
-	// Step 2b: Evaluate Starlark BUILD files.
+	// ── Plan-based execution path ─────────────────────────────────
 	//
-	// For each discovered package, check if its BUILD file is Starlark.
-	// If so, evaluate it through the Go starlark-interpreter to extract
-	// declared targets (with srcs, deps, build commands). This replaces
-	// the raw shell command lines with generated commands from the rule.
-	starlarkCount := 0
-	for i := range packages {
-		pkg := &packages[i]
-		if starlarkeval.IsStarlarkBuild(pkg.BuildContent) {
-			pkg.IsStarlark = true
-			result, err := starlarkeval.EvaluateBuildFile(
-				filepath.Join(pkg.Path, "BUILD"),
-				pkg.Path,
-				repoRoot,
-			)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Warning: Starlark eval failed for %s: %v\n", pkg.Name, err)
-				// Fall back to treating as shell BUILD.
-				pkg.IsStarlark = false
-				continue
+	// When --plan-file is set, we skip the expensive discovery/resolution/
+	// git-diff steps (1-5) and reconstruct state from a pre-computed plan.
+	// This is used by CI build jobs that receive a plan artifact from the
+	// detect job.
+
+	var packages []discovery.Package
+	var graph *directedgraph.Graph
+	var affectedSet map[string]bool
+	usedPlan := false
+
+	if *planFile != "" {
+		bp, err := plan.Read(*planFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not read plan file %s: %v\n", *planFile, err)
+			fmt.Fprintln(os.Stderr, "Falling back to normal discovery flow")
+		} else {
+			// Reconstruct packages from plan entries.
+			packages = make([]discovery.Package, len(bp.Packages))
+			for i, pe := range bp.Packages {
+				packages[i] = discovery.Package{
+					Name:          pe.Name,
+					Path:          filepath.Join(repoRoot, filepath.FromSlash(pe.RelPath)),
+					BuildCommands: pe.BuildCommands,
+					Language:      pe.Language,
+					IsStarlark:    pe.IsStarlark,
+					DeclaredSrcs:  pe.DeclaredSrcs,
+					DeclaredDeps:  pe.DeclaredDeps,
+				}
 			}
 
-			if len(result.Targets) > 0 {
-				// Use the first target's metadata (most BUILD files have one target).
-				t := result.Targets[0]
-				pkg.DeclaredSrcs = t.Srcs
-				pkg.DeclaredDeps = t.Deps
-				pkg.BuildCommands = starlarkeval.GenerateCommands(t)
-				starlarkCount++
+			// Reconstruct dependency graph from edges.
+			graph = directedgraph.New()
+			for _, pe := range bp.Packages {
+				graph.AddNode(pe.Name)
 			}
+			for _, edge := range bp.DependencyEdges {
+				graph.AddEdge(edge[0], edge[1])
+			}
+
+			// Reconstruct affected set.
+			if bp.Force {
+				*force = true
+				affectedSet = nil
+			} else if bp.AffectedPackages == nil {
+				affectedSet = nil
+			} else {
+				affectedSet = make(map[string]bool)
+				for _, name := range bp.AffectedPackages {
+					affectedSet[name] = true
+				}
+			}
+
+			// Apply language filter if requested.
+			if *language != "all" {
+				var filtered []discovery.Package
+				for _, pkg := range packages {
+					if pkg.Language == *language {
+						filtered = append(filtered, pkg)
+					}
+				}
+				packages = filtered
+			}
+
+			fmt.Printf("Loaded plan: %d packages from %s\n", len(packages), *planFile)
+			usedPlan = true
 		}
-	}
-	if starlarkCount > 0 {
-		fmt.Printf("Evaluated %d Starlark BUILD files\n", starlarkCount)
 	}
 
-	// Step 3: Filter by language if requested.
-	if *language != "all" {
-		var filtered []discovery.Package
-		for _, pkg := range packages {
-			if pkg.Language == *language {
-				filtered = append(filtered, pkg)
-			}
-		}
-		packages = filtered
+	// ── Normal discovery flow (steps 1-5) ────────────────────────
+	//
+	// Runs when no plan file is provided, or when the plan file could
+	// not be read.
+
+	if !usedPlan {
+		// Step 2: Discover packages.
+		packages = discovery.DiscoverPackages(codeRoot)
 		if len(packages) == 0 {
-			fmt.Fprintf(os.Stderr, "No %s packages found.\n", *language)
+			fmt.Fprintln(os.Stderr, "No packages found.")
 			return 0
 		}
-	}
 
-	fmt.Printf("Discovered %d packages\n", len(packages))
+		// Step 2b: Evaluate Starlark BUILD files.
+		//
+		// For each discovered package, check if its BUILD file is Starlark.
+		// If so, evaluate it through the Go starlark-interpreter to extract
+		// declared targets (with srcs, deps, build commands). This replaces
+		// the raw shell command lines with generated commands from the rule.
+		starlarkCount := 0
+		for i := range packages {
+			pkg := &packages[i]
+			if starlarkeval.IsStarlarkBuild(pkg.BuildContent) {
+				pkg.IsStarlark = true
+				result, err := starlarkeval.EvaluateBuildFile(
+					filepath.Join(pkg.Path, "BUILD"),
+					pkg.Path,
+					repoRoot,
+				)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Warning: Starlark eval failed for %s: %v\n", pkg.Name, err)
+					// Fall back to treating as shell BUILD.
+					pkg.IsStarlark = false
+					continue
+				}
 
-	// Step 4: Resolve dependencies.
-	graph := resolver.ResolveDependencies(packages)
-
-	// Step 5: Git-diff change detection (default mode).
-	// Git is the source of truth — no cache file needed for primary workflow.
-	var affectedSet map[string]bool
-
-	if !*force {
-		changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
-		if len(changedFiles) > 0 {
-			changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
-			if len(changedPkgs) > 0 {
-				affectedSet = graph.AffectedNodes(changedPkgs)
-				fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
-					len(changedPkgs), len(affectedSet))
-			} else {
-				fmt.Println("Git diff: no package files changed — nothing to build")
-				affectedSet = make(map[string]bool) // empty = build nothing
+				if len(result.Targets) > 0 {
+					// Use the first target's metadata (most BUILD files have one target).
+					t := result.Targets[0]
+					pkg.DeclaredSrcs = t.Srcs
+					pkg.DeclaredDeps = t.Deps
+					pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+					starlarkCount++
+				}
 			}
-		} else {
-			fmt.Println("Git diff unavailable — falling back to hash-based cache")
+		}
+		if starlarkCount > 0 {
+			fmt.Printf("Evaluated %d Starlark BUILD files\n", starlarkCount)
+		}
+
+		// Step 3: Filter by language if requested.
+		if *language != "all" {
+			var filtered []discovery.Package
+			for _, pkg := range packages {
+				if pkg.Language == *language {
+					filtered = append(filtered, pkg)
+				}
+			}
+			packages = filtered
+			if len(packages) == 0 {
+				fmt.Fprintf(os.Stderr, "No %s packages found.\n", *language)
+				return 0
+			}
+		}
+
+		fmt.Printf("Discovered %d packages\n", len(packages))
+
+		// Step 4: Resolve dependencies.
+		graph = resolver.ResolveDependencies(packages)
+
+		// Step 5: Git-diff change detection (default mode).
+		// Git is the source of truth — no cache file needed for primary workflow.
+		if !*force {
+			changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
+			if len(changedFiles) > 0 {
+				changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
+				if len(changedPkgs) > 0 {
+					affectedSet = graph.AffectedNodes(changedPkgs)
+					fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
+						len(changedPkgs), len(affectedSet))
+				} else {
+					fmt.Println("Git diff: no package files changed — nothing to build")
+					affectedSet = make(map[string]bool) // empty = build nothing
+				}
+			} else {
+				fmt.Println("Git diff unavailable — falling back to hash-based cache")
+			}
 		}
 	}
 
-	// Step 5b: Detect languages mode.
+	// ── Emit plan and/or detect languages ─────────────────────────
 	//
-	// When --detect-languages is set, we output which language toolchains are
-	// needed based on the affected packages. This lets CI conditionally install
-	// only the toolchains that are actually needed — e.g., if only TypeScript
-	// packages changed, we skip installing Rust, Elixir, etc.
-	//
-	// Go is always needed because the build tool itself is written in Go.
-	//
-	// Special case: if shared files changed (grammars, CI config, build tool
-	// source), or if --force is set, all languages are needed.
+	// These are early-exit modes that compute metadata but don't build.
+
+	if *emitPlan != "" {
+		return emitBuildPlan(packages, graph, affectedSet, *force, *diffBase, repoRoot, *emitPlan, *detectLanguages)
+	}
+
 	if *detectLanguages {
 		return detectNeededLanguages(packages, affectedSet, *force, repoRoot, *diffBase)
 	}
@@ -384,6 +460,152 @@ func detectNeededLanguages(
 		line := fmt.Sprintf("needs_%s=%t", lang, value)
 		fmt.Println(line)
 
+		if ghFile != nil {
+			fmt.Fprintln(ghFile, line)
+		}
+	}
+
+	return 0
+}
+
+// computeLanguagesNeeded determines which language toolchains are needed
+// based on affected packages, force mode, and shared file changes.
+// Extracted for reuse by both detectNeededLanguages and emitBuildPlan.
+func computeLanguagesNeeded(
+	packages []discovery.Package,
+	affectedSet map[string]bool,
+	force bool,
+	repoRoot string,
+	diffBase string,
+) map[string]bool {
+	needed := make(map[string]bool)
+	needed["go"] = true
+
+	if force || affectedSet == nil {
+		for _, lang := range allLanguages {
+			needed[lang] = true
+		}
+		return needed
+	}
+
+	changedFiles := gitdiff.GetChangedFiles(repoRoot, diffBase)
+	for _, f := range changedFiles {
+		for _, prefix := range sharedPrefixes {
+			if strings.HasPrefix(f, prefix) {
+				for _, lang := range allLanguages {
+					needed[lang] = true
+				}
+				return needed
+			}
+		}
+	}
+
+	for _, pkg := range packages {
+		if affectedSet[pkg.Name] {
+			needed[pkg.Language] = true
+		}
+	}
+	return needed
+}
+
+// emitBuildPlan serializes the build plan to a JSON file and optionally
+// outputs language detection flags. This is used by the CI detect job
+// to produce a plan artifact that build jobs can consume.
+func emitBuildPlan(
+	packages []discovery.Package,
+	graph *directedgraph.Graph,
+	affectedSet map[string]bool,
+	force bool,
+	diffBase string,
+	repoRoot string,
+	outputPath string,
+	alsoDetectLanguages bool,
+) int {
+	// Build package entries with repo-root-relative paths.
+	entries := make([]plan.PackageEntry, len(packages))
+	for i, pkg := range packages {
+		rel, err := filepath.Rel(repoRoot, pkg.Path)
+		if err != nil {
+			rel = pkg.Path
+		}
+		entries[i] = plan.PackageEntry{
+			Name:          pkg.Name,
+			RelPath:       filepath.ToSlash(rel),
+			Language:      pkg.Language,
+			BuildCommands: pkg.BuildCommands,
+			IsStarlark:    pkg.IsStarlark,
+			DeclaredSrcs:  pkg.DeclaredSrcs,
+			DeclaredDeps:  pkg.DeclaredDeps,
+		}
+	}
+
+	// Build dependency edges from the graph.
+	var edges [][2]string
+	for _, node := range graph.Nodes() {
+		successors, err := graph.Successors(node)
+		if err != nil {
+			continue
+		}
+		for _, succ := range successors {
+			edges = append(edges, [2]string{node, succ})
+		}
+	}
+
+	// Build affected packages list.
+	var affectedList []string
+	if affectedSet != nil {
+		affectedList = make([]string, 0, len(affectedSet))
+		for name := range affectedSet {
+			affectedList = append(affectedList, name)
+		}
+	}
+
+	// Compute languages needed.
+	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force, repoRoot, diffBase)
+
+	bp := &plan.BuildPlan{
+		DiffBase:         diffBase,
+		Force:            force,
+		AffectedPackages: affectedList,
+		Packages:         entries,
+		DependencyEdges:  edges,
+		LanguagesNeeded:  languagesNeeded,
+	}
+
+	if err := plan.Write(bp, outputPath); err != nil {
+		fmt.Fprintf(os.Stderr, "Error writing build plan: %v\n", err)
+		return 1
+	}
+
+	fmt.Printf("Build plan written to %s (%d packages)\n", outputPath, len(packages))
+
+	// If --detect-languages was also set, output language flags.
+	if alsoDetectLanguages {
+		return outputLanguageFlags(languagesNeeded)
+	}
+
+	return 0
+}
+
+// outputLanguageFlags prints language detection results to stdout and
+// $GITHUB_OUTPUT. Extracted from detectNeededLanguages for reuse.
+func outputLanguageFlags(needed map[string]bool) int {
+	ghOutput := os.Getenv("GITHUB_OUTPUT")
+	var ghFile *os.File
+	if ghOutput != "" {
+		var err error
+		ghFile, err = os.OpenFile(ghOutput, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not open $GITHUB_OUTPUT: %v\n", err)
+		} else {
+			defer ghFile.Close()
+		}
+	}
+
+	for _, lang := range allLanguages {
+		value := needed[lang]
+		line := fmt.Sprintf("needs_%s=%t", lang, value)
+		fmt.Println(line)
 		if ghFile != nil {
 			fmt.Fprintln(ghFile, line)
 		}
