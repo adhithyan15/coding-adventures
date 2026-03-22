@@ -1,6 +1,6 @@
 [package]
 name = "intel4004-simulator"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Intel 4004 simulator — the world's first commercial microprocessor"
 

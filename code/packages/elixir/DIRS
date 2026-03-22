@@ -10,3 +10,4 @@ brainfuck
 progress_bar
 toml_lexer
 toml_parser
+intel4004_simulator
