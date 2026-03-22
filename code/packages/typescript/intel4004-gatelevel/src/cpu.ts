@@ -212,6 +212,18 @@ export class Intel4004GateLevel {
     return this._romPort;
   }
 
+  /**
+   * Set the ROM port value (for external I/O simulation).
+   *
+   * In a real Busicom calculator, the keyboard hardware would drive signals
+   * onto the ROM port lines. The CPU reads these via the RDR instruction.
+   * This setter allows external code (like a calculator simulator) to inject
+   * key values that the ROM program can read.
+   */
+  set romPort(value: number) {
+    this._romPort = value & 0xf;
+  }
+
   /** RAM output ports. */
   get ramOutput(): number[] {
     return [0, 1, 2, 3].map((i) => this._ram.readOutput(i));

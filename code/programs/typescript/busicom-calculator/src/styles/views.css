@@ -1,0 +1,788 @@
+/* ==========================================================================
+ * Visualization layer styles — CPU, ALU, Gate, Transistor views
+ * ========================================================================== */
+
+/* --- Shared panel styling --- */
+
+.cpu-view, .alu-view, .gate-view, .transistor-view {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.cpu-view h2, .alu-view h2, .gate-view h2, .transistor-view h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cpu-view h3, .alu-view h3, .gate-view h3, .transistor-view h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ccd;
+  margin-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+ * CPU State — Layer 2
+ * ========================================================================== */
+
+.cpu-state-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.cpu-field {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cpu-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8899aa;
+}
+
+.cpu-value {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--wire-high);
+}
+
+.cpu-value--carry-set {
+  color: var(--accent);
+}
+
+/* Register grid */
+
+.cpu-registers {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 1rem;
+}
+
+.register-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+
+.register-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.register-name {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #8899aa;
+}
+
+.register-value {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--wire-high);
+  font-weight: 600;
+}
+
+.register-cell--changed {
+  background: rgba(233, 69, 96, 0.2);
+  border: 1px solid rgba(233, 69, 96, 0.4);
+}
+
+/* Instruction trace */
+
+.cpu-trace {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.trace-entry {
+  display: grid;
+  grid-template-columns: 60px 80px 1fr;
+  gap: 8px;
+  padding: 3px 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.trace-entry:last-child {
+  border-bottom: none;
+}
+
+.trace-entry--current {
+  background: rgba(233, 69, 96, 0.15);
+  border-radius: 4px;
+  padding: 3px 6px;
+  margin: 0 -6px;
+}
+
+.trace-addr {
+  color: #8899aa;
+}
+
+.trace-hex {
+  color: var(--wire-high);
+}
+
+.trace-mnemonic {
+  color: #dde;
+}
+
+/* Controls */
+
+.cpu-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cpu-controls button, .btn {
+  padding: 8px 16px;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  background: var(--panel-bg);
+  color: #ccd;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cpu-controls button:hover, .btn:hover {
+  background: var(--panel-header);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.cpu-controls button:active, .btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: #ff5a78;
+}
+
+/* RAM view */
+
+.cpu-ram {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 1rem;
+}
+
+.ram-register {
+  margin-bottom: 8px;
+}
+
+.ram-register-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #8899aa;
+  margin-bottom: 2px;
+}
+
+.ram-cells {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.ram-cell {
+  width: 24px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  color: var(--wire-high);
+}
+
+.ram-cell--nonzero {
+  background: rgba(0, 255, 136, 0.1);
+}
+
+/* ==========================================================================
+ * ALU Detail — Layer 3
+ * ========================================================================== */
+
+.alu-view p {
+  color: #8899aa;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.alu-operation {
+  display: inline-block;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-bottom: 1rem;
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.alu-inputs {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.alu-inputs > div {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+
+.alu-inputs span {
+  font-size: 0.75rem;
+  color: #8899aa;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.alu-inputs code {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--wire-high);
+  letter-spacing: 0.2em;
+}
+
+/* Adder chain */
+
+.alu-adder-chain {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+/* Carry propagation arrow between adders */
+.alu-adder-chain::before {
+  content: "";
+}
+
+.full-adder-card {
+  flex: 1;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+}
+
+.full-adder-card h3 {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8899aa;
+  margin-bottom: 8px;
+}
+
+.adder-io {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.adder-input {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.adder-input-label {
+  color: #8899aa;
+  font-size: 0.7rem;
+}
+
+.adder-bit {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.adder-bit--high {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--wire-high);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+}
+
+.adder-bit--low {
+  background: rgba(255, 255, 255, 0.05);
+  color: #555;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.adder-divider {
+  border: none;
+  border-top: 1px solid var(--panel-border);
+  margin: 6px 0;
+}
+
+.adder-output {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.adder-carry-wire {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8899aa;
+  font-size: 0.9rem;
+  z-index: 1;
+}
+
+.adder-carry-wire--active {
+  color: var(--wire-high);
+  text-shadow: 0 0 6px var(--wire-glow);
+}
+
+.alu-result {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.alu-result span {
+  font-size: 0.8rem;
+  color: #8899aa;
+}
+
+.alu-result code {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+}
+
+/* ==========================================================================
+ * Gate Level — Layer 4
+ * ========================================================================== */
+
+.gate-view p {
+  color: #8899aa;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.gate-info {
+  margin-top: 1rem;
+}
+
+.gate-info code {
+  font-family: var(--mono);
+  color: var(--wire-high);
+  font-weight: 600;
+}
+
+.gate-diagram {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 1rem;
+}
+
+.gate-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.gate-symbol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.gate-svg-wrapper {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gate-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #8899aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wire {
+  height: 2px;
+  flex: 1;
+  min-width: 20px;
+  border-radius: 1px;
+}
+
+.wire--high {
+  background: var(--wire-high);
+  box-shadow: 0 0 4px var(--wire-glow);
+}
+
+.wire--low {
+  background: var(--wire-low);
+}
+
+.wire-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.wire-label--high {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--wire-high);
+}
+
+.wire-label--low {
+  background: rgba(255, 255, 255, 0.05);
+  color: #555;
+}
+
+/* Gate description cards */
+.gate-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.gate-card-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 36px;
+}
+
+.gate-card-text {
+  flex: 1;
+}
+
+.gate-card-title {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  font-size: 0.85rem;
+}
+
+.gate-card-desc {
+  font-size: 0.75rem;
+  color: #8899aa;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+ * Transistor Level — Layer 5
+ * ========================================================================== */
+
+.transistor-view p {
+  color: #8899aa;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.transistor-diagram {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 1rem;
+}
+
+.transistor-pair {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.transistor-card {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  min-width: 180px;
+}
+
+.transistor-card h4 {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #ccd;
+  margin-bottom: 8px;
+}
+
+.transistor-svg-wrapper {
+  margin: 8px 0;
+}
+
+.transistor-status {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.transistor-status--conducting {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--wire-high);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.transistor-status--cutoff {
+  background: rgba(255, 255, 255, 0.05);
+  color: #555;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+ * Execution Flow — the "click-to-gates" pipeline visualization
+ * ========================================================================== */
+
+.execution-flow {
+  margin-top: 1.5rem;
+}
+
+.flow-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flow-pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.flow-stage {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.flow-connector {
+  width: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.flow-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--panel-border);
+  border: 2px solid var(--panel-border);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.flow-dot--active {
+  background: var(--wire-high);
+  border-color: var(--wire-high);
+  box-shadow: 0 0 8px var(--wire-glow);
+}
+
+.flow-dot--current {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(233, 69, 96, 0.5);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(233, 69, 96, 0.5); }
+  50% { box-shadow: 0 0 16px rgba(233, 69, 96, 0.8); }
+}
+
+.flow-line {
+  width: 2px;
+  flex: 1;
+  min-height: 8px;
+  background: var(--panel-border);
+}
+
+.flow-line--active {
+  background: var(--wire-high);
+  box-shadow: 0 0 4px var(--wire-glow);
+}
+
+.flow-content {
+  flex: 1;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+}
+
+.flow-content--active {
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.flow-content--current {
+  border-color: var(--accent);
+  background: rgba(233, 69, 96, 0.08);
+}
+
+.flow-stage-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8899aa;
+  margin-bottom: 4px;
+}
+
+.flow-stage-value {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: #dde;
+}
+
+.flow-stage-value code {
+  color: var(--wire-high);
+  font-weight: 600;
+}
+
+.flow-stage-detail {
+  font-size: 0.75rem;
+  color: #8899aa;
+  margin-top: 4px;
+  font-family: var(--mono);
+}
+
+/* Full adder internals within the gate view */
+
+.fa-internals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+.fa-gate-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+.fa-gate-name {
+  color: #8899aa;
+  min-width: 50px;
+}
+
+.fa-gate-io {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .register-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .alu-adder-chain {
+    flex-direction: column;
+  }
+
+  .adder-carry-wire {
+    right: auto;
+    bottom: -12px;
+    top: auto;
+    transform: none;
+  }
+
+  .cpu-state-grid {
+    grid-template-columns: 1fr;
+  }
+}

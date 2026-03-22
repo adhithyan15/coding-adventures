@@ -1,0 +1,78 @@
+# ================================================================
+# Deploy Busicom 141-PF Calculator to GitHub Pages
+# ================================================================
+#
+# Builds the Vite app and deploys it to GitHub Pages whenever
+# changes are pushed to main in the busicom-calculator directory.
+#
+# The app is deployed to:
+#   https://<user>.github.io/coding-adventures/busicom/
+
+name: Deploy Busicom Calculator
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/busicom-calculator/**"
+      - "code/packages/typescript/**"
+      - ".github/workflows/deploy-busicom.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (packages)
+        run: |
+          cd code/packages/typescript/transistors && npm install
+          cd ../logic-gates && npm install
+          cd ../arithmetic && npm install
+          cd ../clock && npm install
+          cd ../intel4004-gatelevel && npm install
+
+      - name: Install dependencies (app)
+        run: |
+          cd code/programs/typescript/busicom-calculator
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/busicom-calculator
+          npx vite build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: code/programs/typescript/busicom-calculator/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
