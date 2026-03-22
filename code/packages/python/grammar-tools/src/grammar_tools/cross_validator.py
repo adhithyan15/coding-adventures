@@ -84,6 +84,13 @@ def cross_validate(
     if token_grammar.mode == "indentation":
         defined_tokens |= {"INDENT", "DEDENT", "NEWLINE"}
 
+    # The NEWLINE token is also implicitly available whenever the skip
+    # pattern does NOT consume newlines. In that case, the lexer emits
+    # NEWLINE tokens at each bare '\n'. Rather than requiring grammars to
+    # redundantly define NEWLINE in their .tokens file, we always treat it
+    # as a valid synthetic token (like EOF).
+    defined_tokens.add("NEWLINE")
+
     # The EOF token is always implicitly available.
     defined_tokens.add("EOF")
 
