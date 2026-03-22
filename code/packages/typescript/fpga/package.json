@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/fpga",
+  "version": "0.1.0",
+  "description": "FPGA — Field-Programmable Gate Array abstraction with LUTs, CLBs, routing fabric, I/O blocks, and bitstream configuration",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "fpga",
+    "lut",
+    "clb",
+    "digital-logic",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/logic-gates": "file:../logic-gates",
+    "@coding-adventures/block-ram": "file:../block-ram"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
