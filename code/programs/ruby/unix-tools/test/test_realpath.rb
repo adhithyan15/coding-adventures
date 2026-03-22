@@ -112,8 +112,10 @@ class TestRealpathMakeRelative < Minitest::Test
 
   def test_relative_base_under
     Dir.mktmpdir do |tmp|
-      resolved = "#{tmp}/sub/file.txt"
-      result = realpath_make_relative(resolved, relative_to: nil, relative_base: tmp)
+      # Resolve tmp to handle macOS /var -> /private/var symlink
+      real_tmp = File.realpath(tmp)
+      resolved = "#{real_tmp}/sub/file.txt"
+      result = realpath_make_relative(resolved, relative_to: nil, relative_base: real_tmp)
       refute result.start_with?("/")
     end
   end
