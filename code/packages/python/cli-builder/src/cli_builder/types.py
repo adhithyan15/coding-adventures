@@ -1,6 +1,6 @@
-"""Output types for CLI Builder parse results.
+"""Output types for CLI Builder parse results and validation.
 
-=== Three kinds of result ===
+=== Three kinds of parse result ===
 
 A CLI invocation can produce one of three outcomes:
 
@@ -91,3 +91,51 @@ class VersionResult:
     """
 
     version: str
+
+
+# =========================================================================
+# Validation result
+# =========================================================================
+
+
+@dataclass
+class ValidationResult:
+    """The outcome of validating a CLI Builder JSON spec.
+
+    === Why a result instead of an exception? ===
+
+    The ``SpecLoader.load()`` method raises ``SpecError`` on the first problem
+    it finds. That's the right behavior for *running* a CLI — you want to fail
+    fast and loudly.
+
+    But sometimes you want to *check* a spec without crashing. For example:
+
+    - A linter that validates spec files in CI
+    - An editor plugin that shows red squiggles on invalid specs
+    - A test suite that checks "does this spec produce the right error?"
+
+    ``ValidationResult`` captures the outcome as data, not control flow.
+    The caller can inspect ``valid`` and ``errors`` without a try/except.
+
+    === Usage ===
+
+    ::
+
+        from cli_builder import validate_spec
+
+        result = validate_spec("myapp.json")
+        if result.valid:
+            print("Spec is valid!")
+        else:
+            for error in result.errors:
+                print(f"  - {error}")
+
+    Attributes:
+        valid: ``True`` if the spec passed all validation checks.
+        errors: A list of human-readable error strings. Empty when ``valid``
+            is ``True``. Contains one or more messages when ``valid`` is
+            ``False``.
+    """
+
+    valid: bool
+    errors: list[str] = field(default_factory=list)
