@@ -1,0 +1,5 @@
+[package]
+name = "virtual-memory"
+version = "0.1.0"
+edition = "2021"
+description = "D13 Virtual Memory -- page tables, TLB, frame allocator, page replacement, and MMU"
