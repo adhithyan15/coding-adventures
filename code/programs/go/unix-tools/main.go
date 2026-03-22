@@ -1,302 +1,192 @@
 // =========================================================================
-// pwd — Print Working Directory
+// unix-tools — A Collection of Unix Utilities
 // =========================================================================
 //
-// This program reimplements the POSIX `pwd` utility using the cli-builder
-// package from this repository. It demonstrates the simplest possible CLI
-// tool built on cli-builder: the entire interface (flags, help text, version
-// output, error messages) is declared in `pwd.json`, and this file contains
-// only the business logic — reading and printing the current directory.
+// This program bundles several classic Unix utilities into a single binary.
+// Each tool is implemented in its own file (pwd_tool.go, true_tool.go, etc.)
+// and this file serves as the dispatcher — routing execution to the correct
+// tool based on how the program is invoked.
 //
-// # How POSIX pwd works
+// # How dispatching works
 //
-// The `pwd` command prints the absolute pathname of the current working
-// directory. It has two modes:
+// Unix has a tradition of "multi-call binaries" — single executables that
+// behave differently depending on the name used to invoke them. BusyBox is
+// the most famous example: it contains hundreds of utilities in one binary,
+// and each is accessed via a symlink with the tool's name.
 //
-//   -L (logical)   Print the value of $PWD, which preserves the path the
-//                  user navigated through — including symlinks. This is
-//                  the default behavior.
+// Our program supports two invocation styles:
 //
-//   -P (physical)  Print the actual filesystem path with all symlinks
-//                  resolved. This is what you'd get if you followed every
-//                  directory component to its real inode.
+//   1. Symlink mode (like BusyBox):
+//      Create a symlink: ln -s unix-tools pwd
+//      Then invoke: ./pwd -P
+//      The program checks argv[0] ("pwd") and dispatches accordingly.
 //
-// # Why the distinction matters
-//
-// Consider:
-//
-//	/home/user/projects -> /mnt/ssd/projects  (symlink)
-//
-// If you `cd /home/user/projects`, then:
-//
-//	pwd -L  =>  /home/user/projects   (the logical path you typed)
-//	pwd -P  =>  /mnt/ssd/projects     (the real filesystem path)
-//
-// The logical path is friendlier (it matches what the user typed); the
-// physical path is authoritative (it's where the bytes actually live).
+//   2. Subcommand mode:
+//      Invoke directly: ./unix-tools pwd -P
+//      The program checks argv[1] ("pwd") and dispatches accordingly.
 //
 // # Architecture
 //
-//	pwd.json (spec)          main.go (this file)
-//	┌──────────────────┐     ┌──────────────────────────────┐
-//	│ flags: -L, -P    │     │ if physical:                 │
-//	│ mutual exclusion │────>│     print(resolve_symlinks)  │
-//	│ help, version    │     │ else:                        │
-//	│ error messages   │     │     print($PWD or fallback)  │
-//	└──────────────────┘     └──────────────────────────────┘
-//	    CLI Builder               Your code
-//	  handles all this          handles only this
+//   main.go (this file)          tool files
+//   ┌─────────────────────┐     ┌──────────────────┐
+//   │ argv[0] or argv[1]  │────>│ pwd_tool.go      │
+//   │ determines which    │     │ true_tool.go     │
+//   │ tool to run         │     │ false_tool.go    │
+//   │                     │     │ echo_tool.go     │
+//   │ resolveSpecPath()   │     │ cat_tool.go      │
+//   │ finds JSON specs    │     │ wc_tool.go       │
+//   └─────────────────────┘     └──────────────────┘
+//
+// # Adding a new tool
+//
+// To add a new tool:
+//   1. Create a JSON spec file (e.g., head.json)
+//   2. Create a Go source file with runHead() (e.g., head_tool.go)
+//   3. Add "head" to the toolNames list and dispatch map below
+//   4. Create tests in head_test.go
 
 package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
-
-	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
+
+// =========================================================================
+// toolNames — the list of all supported tools
+// =========================================================================
+//
+// This list serves two purposes:
+//   1. Dispatching: we check if argv[0] or argv[1] matches a tool name
+//   2. Help text: we can list all available tools when invoked incorrectly
+
+var toolNames = []string{
+	"pwd",
+	"true",
+	"false",
+	"echo",
+	"cat",
+	"wc",
+}
 
 // =========================================================================
 // Spec file resolution
 // =========================================================================
 //
-// The pwd.json spec file lives alongside the compiled binary. We resolve
-// its path relative to the executable, NOT relative to the current working
-// directory. This is critical because:
+// Each tool has a JSON spec file that lives alongside the compiled binary.
+// We resolve spec paths relative to the executable, NOT relative to the
+// current working directory. This is critical because:
 //
-//   1. The user might invoke `pwd` from any directory on the system.
+//   1. The user might invoke the tool from any directory on the system.
 //   2. If we resolved relative to cwd, we'd look for pwd.json in the
 //      user's current directory — which almost certainly doesn't have it.
 //   3. os.Executable() gives us the path to the running binary, and the
-//      spec file is always deployed alongside it.
-//
-// This pattern is standard for tools that carry configuration next to
-// their binary (like how a .app bundle works on macOS).
+//      spec files are always deployed alongside it.
 
-func resolveSpecPath() (string, error) {
+func resolveSpecPath(toolName string) (string, error) {
 	// os.Executable() returns the path to the currently running binary.
-	// On macOS/Linux this resolves symlinks to the actual binary location.
 	execPath, err := os.Executable()
 	if err != nil {
 		return "", fmt.Errorf("cannot determine executable path: %w", err)
 	}
 
 	// filepath.Dir() strips the filename, leaving just the directory.
-	// filepath.Join() then appends "pwd.json" with the correct separator.
+	// filepath.Join() then appends "<tool>.json" with the correct separator.
 	execDir := filepath.Dir(execPath)
-	return filepath.Join(execDir, "pwd.json"), nil
+	return filepath.Join(execDir, toolName+".json"), nil
 }
 
 // =========================================================================
-// Logical vs. physical path helpers
+// dispatch — route to the correct tool based on name
 // =========================================================================
 //
-// These two functions encapsulate the core business logic of pwd.
+// Given a tool name and arguments, this function resolves the spec path
+// and calls the appropriate runXxx function.
 
-// getLogicalPath returns the logical current working directory.
-//
-// The logical path comes from the $PWD environment variable, which the
-// shell maintains as the user navigates. It preserves symlinks and is
-// the "friendly" path the user expects to see.
-//
-// However, $PWD can be stale, missing, or tampered with. We validate it
-// by checking that it points to the same directory as os.Getwd(). If
-// validation fails, we fall back to os.Getwd().
-//
-// Why validate? Consider:
-//
-//	export PWD=/tmp          # user manually sets $PWD
-//	cd /home/user
-//	pwd -L                   # should NOT print /tmp!
-//
-// The POSIX spec says: "If the PWD environment variable is an absolute
-// pathname that does not contain the filenames dot or dot-dot, and if
-// it refers to the same directory as the current working directory, it
-// shall be considered to be the current working directory."
-func getLogicalPath() (string, error) {
-	// Step 1: Try $PWD from the environment.
-	pwd := os.Getenv("PWD")
-
-	// Step 2: If $PWD is empty, fall back to os.Getwd() immediately.
-	// This happens in environments where $PWD is not set (some cron jobs,
-	// Docker containers, etc.).
-	if pwd == "" {
-		return os.Getwd()
-	}
-
-	// Step 3: Validate that $PWD actually points to the current directory.
-	// We do this by resolving both paths to their physical locations and
-	// comparing. If they match, the logical $PWD is trustworthy.
-	pwdReal, err := filepath.EvalSymlinks(pwd)
+func dispatch(toolName string, argv []string) int {
+	specPath, err := resolveSpecPath(toolName)
 	if err != nil {
-		// $PWD points to a path that doesn't exist or can't be resolved.
-		// Fall back to os.Getwd().
-		return os.Getwd()
-	}
-
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("cannot determine current directory: %w", err)
-	}
-
-	cwdReal, err := filepath.EvalSymlinks(cwd)
-	if err != nil {
-		// If we can't resolve the real cwd, just use cwd as-is.
-		cwdReal = cwd
-	}
-
-	// Step 4: Compare the resolved paths. If they point to the same place,
-	// $PWD is valid — return the logical (possibly symlinked) path.
-	if pwdReal == cwdReal {
-		return pwd, nil
-	}
-
-	// $PWD is stale or wrong. Fall back to os.Getwd().
-	return cwd, nil
-}
-
-// getPhysicalPath returns the physical current working directory with all
-// symlinks resolved.
-//
-// We use filepath.EvalSymlinks on the result of os.Getwd() to resolve any
-// remaining symlinks. os.Getwd() itself usually returns a physical path on
-// most systems, but filepath.EvalSymlinks provides the guarantee.
-func getPhysicalPath() (string, error) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("cannot determine current directory: %w", err)
-	}
-
-	// EvalSymlinks resolves every symlink component in the path.
-	// For example: /home/user/link -> /mnt/real becomes /mnt/real.
-	resolved, err := filepath.EvalSymlinks(cwd)
-	if err != nil {
-		// If symlink resolution fails (rare), fall back to the raw cwd.
-		return cwd, nil
-	}
-
-	return resolved, nil
-}
-
-// =========================================================================
-// run — the testable core of the program
-// =========================================================================
-//
-// We separate "run" from "main" so that the core logic can be tested
-// without invoking os.Exit(). The run function:
-//
-//   1. Creates a parser from the spec file and argv.
-//   2. Parses the arguments.
-//   3. Type-switches on the result to handle each case.
-//   4. Returns the exit code (0 for success, 1 for errors).
-//
-// All output goes to the provided io.Writer (stdout in production, a
-// buffer in tests). Errors go to the provided stderr writer.
-//
-// This pattern — extracting a testable `run` function that takes writers
-// and returns an exit code — is idiomatic Go for CLI tools. It lets us
-// test every code path without subprocess execution.
-
-func run(specPath string, argv []string, stdout io.Writer, stderr io.Writer) int {
-	// Step 1: Create the parser.
-	//
-	// NewParser reads and validates the JSON spec. If the spec file is
-	// missing or malformed, it returns an error immediately — before we
-	// try to parse any arguments. This "fail fast" behavior means we get
-	// clear error messages about spec problems rather than confusing
-	// parse failures later.
-	parser, err := clibuilder.NewParser(specPath, argv)
-	if err != nil {
-		fmt.Fprintf(stderr, "pwd: %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s: %s\n", toolName, err)
 		return 1
 	}
 
-	// Step 2: Parse argv against the spec.
-	//
-	// Parse() returns one of three result types:
-	//   - *ParseResult:   normal operation — flags and arguments are ready
-	//   - *HelpResult:    user passed --help; contains rendered help text
-	//   - *VersionResult: user passed --version; contains version string
-	//
-	// Or it returns a *ParseErrors containing all validation failures.
-	result, err := parser.Parse()
-	if err != nil {
-		// ParseErrors implements the error interface, so we can print it
-		// directly. It formats all errors nicely.
-		fmt.Fprintf(stderr, "%s\n", err)
-		return 1
-	}
-
-	// Step 3: Handle the result.
-	//
-	// Go's type switch is perfect for this pattern. Each arm handles one
-	// result type. The compiler warns us if we forget a case (when using
-	// an interface with a sealed set of implementations).
-	switch r := result.(type) {
-
-	case *clibuilder.HelpResult:
-		// The user passed --help or -h. Print the generated help text
-		// and exit successfully. The help text is fully formatted by
-		// cli-builder — we just print it.
-		fmt.Fprintln(stdout, r.Text)
-		return 0
-
-	case *clibuilder.VersionResult:
-		// The user passed --version. Print the version from the spec.
-		fmt.Fprintln(stdout, r.Version)
-		return 0
-
-	case *clibuilder.ParseResult:
-		// Normal operation. Check which mode the user requested.
-		//
-		// The "physical" flag is a boolean. If true, the user passed -P
-		// or --physical. If false (the default), we use logical mode.
-		//
-		// Note: "logical" and "physical" are mutually exclusive (declared
-		// in pwd.json), so cli-builder guarantees at most one is true.
-		// We check "physical" because logical is the default behavior.
-		physical, _ := r.Flags["physical"].(bool)
-
-		var path string
-		if physical {
-			path, err = getPhysicalPath()
-		} else {
-			path, err = getLogicalPath()
-		}
-
-		if err != nil {
-			fmt.Fprintf(stderr, "pwd: %s\n", err)
-			return 1
-		}
-
-		fmt.Fprintln(stdout, path)
-		return 0
-
+	switch toolName {
+	case "pwd":
+		return runPwd(specPath, argv, os.Stdout, os.Stderr)
+	case "true":
+		return runTrue(specPath, argv, os.Stdout, os.Stderr)
+	case "false":
+		return runFalse(specPath, argv, os.Stdout, os.Stderr)
+	case "echo":
+		return runEcho(specPath, argv, os.Stdout, os.Stderr)
+	case "cat":
+		return runCat(specPath, argv, os.Stdout, os.Stderr)
+	case "wc":
+		return runWc(specPath, argv, os.Stdout, os.Stderr)
 	default:
-		// This should never happen — cli-builder always returns one of
-		// the three types above. If it does, something is very wrong.
-		fmt.Fprintf(stderr, "pwd: unexpected result type: %T\n", result)
+		fmt.Fprintf(os.Stderr, "unix-tools: unknown tool: %s\n", toolName)
+		fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)
 		return 1
 	}
+}
+
+// =========================================================================
+// isKnownTool — check if a name matches a known tool
+// =========================================================================
+
+func isKnownTool(name string) bool {
+	for _, t := range toolNames {
+		if name == t {
+			return true
+		}
+	}
+	return false
 }
 
 // =========================================================================
 // Main — the entry point
 // =========================================================================
 //
-// The main function is a thin wrapper around run(). It resolves the spec
-// file path and delegates everything else. This separation keeps main()
-// minimal and untestable code to a bare minimum.
+// The main function determines which tool to run and delegates to dispatch().
+//
+// Invocation detection:
+//   1. Extract the base name of argv[0] (e.g., "/usr/bin/pwd" -> "pwd")
+//   2. If it matches a known tool, run that tool with the given args
+//   3. Otherwise, treat argv[1] as the tool name (subcommand mode)
+//   4. If neither works, print usage and exit with error
 
 func main() {
-	// Find pwd.json next to the binary.
-	specPath, err := resolveSpecPath()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "pwd: %s\n", err)
+	if len(os.Args) < 1 {
+		fmt.Fprintln(os.Stderr, "unix-tools: no arguments")
 		os.Exit(1)
 	}
 
-	os.Exit(run(specPath, os.Args, os.Stdout, os.Stderr))
+	// Check if argv[0] matches a known tool (symlink mode).
+	// filepath.Base extracts just the filename: "/usr/local/bin/pwd" -> "pwd"
+	baseName := filepath.Base(os.Args[0])
+
+	if isKnownTool(baseName) {
+		// Symlink mode: the binary was invoked as "pwd", "cat", etc.
+		os.Exit(dispatch(baseName, os.Args))
+	}
+
+	// Subcommand mode: check if argv[1] is a tool name.
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "Usage: unix-tools <tool> [args...]")
+		fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)
+		os.Exit(1)
+	}
+
+	toolName := os.Args[1]
+	if isKnownTool(toolName) {
+		// Rewrite argv so the tool sees itself as argv[0].
+		// For example: ["unix-tools", "pwd", "-P"] -> ["pwd", "-P"]
+		toolArgv := append([]string{toolName}, os.Args[2:]...)
+		os.Exit(dispatch(toolName, toolArgv))
+	}
+
+	fmt.Fprintf(os.Stderr, "unix-tools: unknown tool: %s\n", toolName)
+	fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)
+	os.Exit(1)
 }

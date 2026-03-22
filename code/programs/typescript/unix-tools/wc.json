@@ -1,0 +1,65 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "wc",
+  "display_name": "wc",
+  "description": "Print newline, word, and byte counts for each file. With no FILE, or when FILE is -, read standard input.",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "lines",
+      "short": "l",
+      "long": "lines",
+      "description": "Print the newline counts",
+      "type": "boolean"
+    },
+    {
+      "id": "words",
+      "short": "w",
+      "long": "words",
+      "description": "Print the word counts",
+      "type": "boolean"
+    },
+    {
+      "id": "bytes",
+      "short": "c",
+      "long": "bytes",
+      "description": "Print the byte counts",
+      "type": "boolean"
+    },
+    {
+      "id": "chars",
+      "short": "m",
+      "long": "chars",
+      "description": "Print the character counts",
+      "type": "boolean"
+    },
+    {
+      "id": "max_line_length",
+      "short": "L",
+      "long": "max-line-length",
+      "description": "Print the maximum display width",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "display_name": "FILE",
+      "description": "Files to process (use - for stdin)",
+      "required": false,
+      "variadic": true,
+      "type": "string",
+      "default": "-"
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "count-mode",
+      "flag_ids": ["bytes", "chars"],
+      "required": false
+    }
+  ]
+}

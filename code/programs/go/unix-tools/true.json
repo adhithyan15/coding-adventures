@@ -1,0 +1,12 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "true",
+  "display_name": "true",
+  "description": "Do nothing, successfully. Exit with status code 0.",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [],
+  "arguments": [],
+  "commands": []
+}
