@@ -95,8 +95,11 @@ class TestRmdirRemoveWithParents < Minitest::Test
     Dir.mktmpdir do |tmp|
       chain = File.join(tmp, "a", "b", "c")
       FileUtils.mkdir_p(chain)
-      # Don't assert return value — -p walks into tmp dir parent which
-      # may be non-empty, returning false. Just verify nested dirs removed.
+      # Place a guard file in tmp so -p walk-up stops at tmp (non-empty).
+      # Without this, remove_with_parents removes tmp itself, causing
+      # Dir.mktmpdir's cleanup to fail with ENOENT.
+      guard = File.join(tmp, ".guard")
+      File.write(guard, "")
       rmdir_remove_with_parents(chain, verbose: false, ignore_non_empty: false)
       refute File.exist?(File.join(tmp, "a"))
     end
