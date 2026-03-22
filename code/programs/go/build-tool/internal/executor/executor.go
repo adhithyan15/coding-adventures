@@ -41,6 +41,7 @@ package executor
 import (
 	"fmt"
 	"os/exec"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -67,14 +68,15 @@ type BuildResult struct {
 // This is because BUILD files are scripts: later commands may depend on
 // earlier ones (e.g., "install dependencies" before "run tests").
 //
-// We use os/exec with shell execution (sh -c) so that BUILD commands can
-// use shell features like pipes, redirects, and environment variables.
+// We use os/exec with shell execution so that BUILD commands can use
+// shell features like pipes, redirects, and environment variables.
+// On Windows, we use "cmd /C"; on Unix, "sh -c".
 func runPackageBuild(pkg discovery.Package) BuildResult {
 	start := time.Now()
 	var allStdout, allStderr []string
 
 	for _, command := range pkg.BuildCommands {
-		cmd := exec.Command("sh", "-c", command)
+		cmd := shellCommand(command)
 		cmd.Dir = pkg.Path
 
 		var stdout, stderr strings.Builder
@@ -111,6 +113,28 @@ func runPackageBuild(pkg discovery.Package) BuildResult {
 		Stderr:      strings.Join(allStderr, ""),
 		ReturnCode:  0,
 	}
+}
+
+// shellCommand returns an exec.Cmd that runs the given command string in
+// the platform-appropriate shell. On Windows this is "cmd /C command"; on
+// Unix (macOS, Linux) it is "sh -c command".
+//
+// This is the same approach used by the Rust build tool (which uses
+// cfg!(target_os = "windows") to select between cmd and sh). Python's
+// subprocess.run(shell=True) and Node's child_process.exec() handle this
+// automatically, but Go requires explicit selection.
+func shellCommand(command string) *exec.Cmd {
+	return shellCommandForOS(command, runtime.GOOS)
+}
+
+// shellCommandForOS is the testable version of shellCommand that accepts
+// an explicit OS name. This allows tests to verify Windows behavior on
+// non-Windows hosts.
+func shellCommandForOS(command string, goos string) *exec.Cmd {
+	if goos == "windows" {
+		return exec.Command("cmd", "/C", command)
+	}
+	return exec.Command("sh", "-c", command)
 }
 
 // ExecuteBuilds runs BUILD commands for packages respecting dependency order.

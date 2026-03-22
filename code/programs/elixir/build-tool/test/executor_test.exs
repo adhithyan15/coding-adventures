@@ -172,6 +172,24 @@ defmodule BuildTool.ExecutorTest do
   end
 
   # ---------------------------------------------------------------------------
+  # Shell command selection (platform-specific)
+  # ---------------------------------------------------------------------------
+
+  describe "shell_command_for_os/1" do
+    test "returns sh -c for Unix (darwin)" do
+      assert Executor.shell_command_for_os({:unix, :darwin}) == {"sh", "-c"}
+    end
+
+    test "returns sh -c for Unix (linux)" do
+      assert Executor.shell_command_for_os({:unix, :linux}) == {"sh", "-c"}
+    end
+
+    test "returns cmd /C for Windows" do
+      assert Executor.shell_command_for_os({:win32, :nt}) == {"cmd", "/C"}
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # Cache integration
   # ---------------------------------------------------------------------------
 
