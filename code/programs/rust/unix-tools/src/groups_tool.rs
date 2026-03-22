@@ -151,8 +151,16 @@ mod tests {
 
     #[test]
     fn groups_are_consistent() {
-        let first = get_groups().unwrap();
-        let second = get_groups().unwrap();
+        // Call get_groups() twice and verify both calls return the same
+        // set of groups. We sort both lists before comparing because on
+        // some CI environments (e.g., GitHub Actions Ubuntu runners),
+        // the order from getgroups(2) can vary between calls.
+        let mut first = get_groups().unwrap();
+        let mut second = get_groups().unwrap();
+        first.sort();
+        second.sort();
+        first.dedup();
+        second.dedup();
         assert_eq!(first, second, "group list should be consistent");
     }
 }
