@@ -38,6 +38,12 @@ py-modules = [
     "du_tool",
     "md5sum_tool",
     "sha256sum_tool",
+    "cp_tool",
+    "mv_tool",
+    "ls_tool",
+    "grep_tool",
+    "join_tool",
+    "split_tool",
 ]
 
 [project.optional-dependencies]
