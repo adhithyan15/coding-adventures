@@ -37,6 +37,14 @@
 pub mod echo_tool;
 pub mod cat_tool;
 pub mod wc_tool;
+pub mod head_tool;
+pub mod tail_tool;
+pub mod basename_tool;
+pub mod dirname_tool;
+pub mod seq_tool;
+pub mod tee_tool;
+pub mod rev_tool;
+pub mod printenv_tool;
 
 // ---------------------------------------------------------------------------
 // pwd — Print Working Directory

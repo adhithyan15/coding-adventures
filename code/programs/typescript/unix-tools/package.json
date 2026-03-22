@@ -9,7 +9,15 @@
     "false": "tsx src/false.ts",
     "echo": "tsx src/echo.ts",
     "cat": "tsx src/cat.ts",
-    "wc": "tsx src/wc.ts"
+    "wc": "tsx src/wc.ts",
+    "head": "tsx src/head.ts",
+    "tail": "tsx src/tail.ts",
+    "basename": "tsx src/basename.ts",
+    "dirname": "tsx src/dirname.ts",
+    "seq": "tsx src/seq.ts",
+    "tee": "tsx src/tee.ts",
+    "rev": "tsx src/rev.ts",
+    "printenv": "tsx src/printenv.ts"
   },
   "dependencies": {
     "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"
