@@ -1,0 +1,1651 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cover/Elixir.UnixTools.EnvTool.html</title>
+<style>/*
+ %CopyrightBegin%
+
+ SPDX-License-Identifier: Apache-2.0
+
+ Copyright Milton Mazzarri <me@milmazz.uno>
+ Copyright Ericsson AB 2018-2025. All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ %CopyrightEnd%
+*/
+
+body {
+  font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #000;
+  border-top: 2px solid #ddd;
+  background-color: #fff;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  font-weight: 100;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+
+h1 code {
+  font-size: 0.96em;
+}
+
+code {
+  font: 12px monospace;
+}
+
+footer {
+  background: #eee;
+  width: 100%;
+  padding: 10px 0;
+  text-align: right;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex: 1;
+  order: 2;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  border: 1px solid #cbcbcb;
+  color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+table thead {
+  display: none;
+}
+table td.line,
+table td.line a,
+table td.hits {
+  width: 20px;
+  background: #eaeaea;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 0 10px;
+  color: #949494;
+}
+table td.hits {
+  width: 10px;
+  text-align: right;
+  padding: 2px 5px;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+}
+tr.miss td.line,
+tr.miss td.line a,
+tr.miss td.hits {
+  background-color: #ffdce0;
+  border-color: #fdaeb7;
+}
+tr.miss td {
+  background-color: #ffeef0;
+}
+tr.hit td.line,
+tr.hit td.line a,
+tr.hit td.hits {
+  background-color: #cdffd8;
+  border-color: #bef5cb;
+}
+tr.hit td {
+  background-color: #e6ffed;
+}
+td.source {
+  padding-left: 15px;
+  line-height: 15px;
+  white-space: pre;
+  font: 12px monospace;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(95%);
+    background-color: #000000;
+  }
+  a:link {
+    color: #2B507D;
+  }
+  a:visited, a:active {
+    color: #85ABD5;
+  }
+}
+</style>
+</head>
+<body>
+<h1><code>cover/Elixir.UnixTools.EnvTool.html</code></h1>
+<footer><p>File generated from <code>/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/silly-roentgen/code/programs/elixir/unix-tools/lib/unix_tools/env_tool.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-03-22 at 15:17:24</p></footer>
+<table>
+<tbody>
+<tr>
+<td class="line" id="L1"><a href="#L1">1</a></td>
+<td class="hits"></td>
+<td class="source"><code>defmodule UnixTools.EnvTool do</code></td>
+</tr>
+<tr>
+<td class="line" id="L2"><a href="#L2">2</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @moduledoc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L3"><a href="#L3">3</a></td>
+<td class="hits"></td>
+<td class="source"><code>  env -- run a program in a modified environment.</code></td>
+</tr>
+<tr>
+<td class="line" id="L4"><a href="#L4">4</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L5"><a href="#L5">5</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## What This Program Does</code></td>
+</tr>
+<tr>
+<td class="line" id="L6"><a href="#L6">6</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L7"><a href="#L7">7</a></td>
+<td class="hits"></td>
+<td class="source"><code>  This is a reimplementation of the GNU `env` utility in Elixir. It prints</code></td>
+</tr>
+<tr>
+<td class="line" id="L8"><a href="#L8">8</a></td>
+<td class="hits"></td>
+<td class="source"><code>  the current environment or runs a command with a modified environment.</code></td>
+</tr>
+<tr>
+<td class="line" id="L9"><a href="#L9">9</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L10"><a href="#L10">10</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## How env Works</code></td>
+</tr>
+<tr>
+<td class="line" id="L11"><a href="#L11">11</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L12"><a href="#L12">12</a></td>
+<td class="hits"></td>
+<td class="source"><code>  With no arguments, env prints all environment variables:</code></td>
+</tr>
+<tr>
+<td class="line" id="L13"><a href="#L13">13</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L14"><a href="#L14">14</a></td>
+<td class="hits"></td>
+<td class="source"><code>      env                     =&gt;   HOME=/Users/alice</code></td>
+</tr>
+<tr>
+<td class="line" id="L15"><a href="#L15">15</a></td>
+<td class="hits"></td>
+<td class="source"><code>                                   PATH=/usr/bin:...</code></td>
+</tr>
+<tr>
+<td class="line" id="L16"><a href="#L16">16</a></td>
+<td class="hits"></td>
+<td class="source"><code>                                   SHELL=/bin/zsh</code></td>
+</tr>
+<tr>
+<td class="line" id="L17"><a href="#L17">17</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L18"><a href="#L18">18</a></td>
+<td class="hits"></td>
+<td class="source"><code>  With arguments, env can modify the environment before running a command:</code></td>
+</tr>
+<tr>
+<td class="line" id="L19"><a href="#L19">19</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L20"><a href="#L20">20</a></td>
+<td class="hits"></td>
+<td class="source"><code>      env FOO=bar bash        =&gt;   runs bash with FOO=bar added</code></td>
+</tr>
+<tr>
+<td class="line" id="L21"><a href="#L21">21</a></td>
+<td class="hits"></td>
+<td class="source"><code>      env -i bash             =&gt;   runs bash with an empty environment</code></td>
+</tr>
+<tr>
+<td class="line" id="L22"><a href="#L22">22</a></td>
+<td class="hits"></td>
+<td class="source"><code>      env -u HOME bash        =&gt;   runs bash without the HOME variable</code></td>
+</tr>
+<tr>
+<td class="line" id="L23"><a href="#L23">23</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L24"><a href="#L24">24</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Modifier Flags</code></td>
+</tr>
+<tr>
+<td class="line" id="L25"><a href="#L25">25</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L26"><a href="#L26">26</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | Flag | Effect                                          |</code></td>
+</tr>
+<tr>
+<td class="line" id="L27"><a href="#L27">27</a></td>
+<td class="hits"></td>
+<td class="source"><code>  |------|-------------------------------------------------|</code></td>
+</tr>
+<tr>
+<td class="line" id="L28"><a href="#L28">28</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | -i   | Start with a completely empty environment        |</code></td>
+</tr>
+<tr>
+<td class="line" id="L29"><a href="#L29">29</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | -u   | Remove (unset) a specific variable              |</code></td>
+</tr>
+<tr>
+<td class="line" id="L30"><a href="#L30">30</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | -0   | End output lines with NUL instead of newline     |</code></td>
+</tr>
+<tr>
+<td class="line" id="L31"><a href="#L31">31</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | -C   | Change working directory before running command   |</code></td>
+</tr>
+<tr>
+<td class="line" id="L32"><a href="#L32">32</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L33"><a href="#L33">33</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Argument Parsing</code></td>
+</tr>
+<tr>
+<td class="line" id="L34"><a href="#L34">34</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L35"><a href="#L35">35</a></td>
+<td class="hits"></td>
+<td class="source"><code>  env uses a unique argument style. Arguments that contain `=` are treated</code></td>
+</tr>
+<tr>
+<td class="line" id="L36"><a href="#L36">36</a></td>
+<td class="hits"></td>
+<td class="source"><code>  as environment variable assignments. The first argument without `=` starts</code></td>
+</tr>
+<tr>
+<td class="line" id="L37"><a href="#L37">37</a></td>
+<td class="hits"></td>
+<td class="source"><code>  the command:</code></td>
+</tr>
+<tr>
+<td class="line" id="L38"><a href="#L38">38</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L39"><a href="#L39">39</a></td>
+<td class="hits"></td>
+<td class="source"><code>      env A=1 B=2 my_command arg1 arg2</code></td>
+</tr>
+<tr>
+<td class="line" id="L40"><a href="#L40">40</a></td>
+<td class="hits"></td>
+<td class="source"><code>      ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^</code></td>
+</tr>
+<tr>
+<td class="line" id="L41"><a href="#L41">41</a></td>
+<td class="hits"></td>
+<td class="source"><code>      assignments  command + its args</code></td>
+</tr>
+<tr>
+<td class="line" id="L42"><a href="#L42">42</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L43"><a href="#L43">43</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Implementation Approach</code></td>
+</tr>
+<tr>
+<td class="line" id="L44"><a href="#L44">44</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L45"><a href="#L45">45</a></td>
+<td class="hits"></td>
+<td class="source"><code>  1. `parse_assignments/1` separates NAME=VALUE pairs from the command.</code></td>
+</tr>
+<tr>
+<td class="line" id="L46"><a href="#L46">46</a></td>
+<td class="hits"></td>
+<td class="source"><code>  2. `build_environment/3` constructs the final environment map.</code></td>
+</tr>
+<tr>
+<td class="line" id="L47"><a href="#L47">47</a></td>
+<td class="hits"></td>
+<td class="source"><code>  3. `format_environment/2` formats env vars for display.</code></td>
+</tr>
+<tr>
+<td class="line" id="L48"><a href="#L48">48</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L49"><a href="#L49">49</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L50"><a href="#L50">50</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.CliBuilder.Parser</code></td>
+</tr>
+<tr>
+<td class="line" id="L51"><a href="#L51">51</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.CliBuilder.{ParseResult, HelpResult, VersionResult, ParseErrors}</code></td>
+</tr>
+<tr>
+<td class="line" id="L52"><a href="#L52">52</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L53"><a href="#L53">53</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L54"><a href="#L54">54</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Entry point</code></td>
+</tr>
+<tr>
+<td class="line" id="L55"><a href="#L55">55</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L56"><a href="#L56">56</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L57"><a href="#L57">57</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L58"><a href="#L58">58</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Entry point. Receives `argv` as a list of strings.</code></td>
+</tr>
+<tr>
+<td class="line" id="L59"><a href="#L59">59</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L60"><a href="#L60">60</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def main(argv) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L61"><a href="#L61">61</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    spec_path = resolve_spec_path()</code></td>
+</tr>
+<tr>
+<td class="line" id="L62"><a href="#L62">62</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L63"><a href="#L63">63</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    case Parser.parse(spec_path, ["env" | argv]) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L64"><a href="#L64">64</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {:ok, %HelpResult{text: text}} -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L65"><a href="#L65">65</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        IO.puts(text)</code></td>
+</tr>
+<tr>
+<td class="line" id="L66"><a href="#L66">66</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L67"><a href="#L67">67</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {:ok, %VersionResult{version: version}} -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L68"><a href="#L68">68</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        IO.puts(version)</code></td>
+</tr>
+<tr>
+<td class="line" id="L69"><a href="#L69">69</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L70"><a href="#L70">70</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {:ok, %ParseResult{flags: flags, arguments: arguments}} -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L71"><a href="#L71">71</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        opts = %{</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L72"><a href="#L72">72</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          ignore_env: !!flags["ignore_environment"],</code></td>
+</tr>
+<tr>
+<td class="line" id="L73"><a href="#L73">73</a></td>
+<td class="hits"></td>
+<td class="source"><code>          unset_vars: normalize_list(flags["unset"]),</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L74"><a href="#L74">74</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          null_terminator: !!flags["null"],</code></td>
+</tr>
+<tr>
+<td class="line" id="L75"><a href="#L75">75</a></td>
+<td class="hits"></td>
+<td class="source"><code>          chdir: flags["chdir"]</code></td>
+</tr>
+<tr>
+<td class="line" id="L76"><a href="#L76">76</a></td>
+<td class="hits"></td>
+<td class="source"><code>        }</code></td>
+</tr>
+<tr>
+<td class="line" id="L77"><a href="#L77">77</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L78"><a href="#L78">78</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        raw_args = normalize_list(arguments["assignments_and_command"])</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L79"><a href="#L79">79</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        {assignments, command_with_args} = parse_assignments(raw_args)</code></td>
+</tr>
+<tr>
+<td class="line" id="L80"><a href="#L80">80</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L81"><a href="#L81">81</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        run(assignments, command_with_args, opts)</code></td>
+</tr>
+<tr>
+<td class="line" id="L82"><a href="#L82">82</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L83"><a href="#L83">83</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {:error, %ParseErrors{errors: errors}} -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L84"><a href="#L84">84</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        Enum.each(errors, fn err -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L85"><a href="#L85">85</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          IO.puts(:stderr, "env: #{err.message}")</code></td>
+</tr>
+<tr>
+<td class="line" id="L86"><a href="#L86">86</a></td>
+<td class="hits"></td>
+<td class="source"><code>        end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L87"><a href="#L87">87</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L88"><a href="#L88">88</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        System.halt(125)</code></td>
+</tr>
+<tr>
+<td class="line" id="L89"><a href="#L89">89</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L90"><a href="#L90">90</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L91"><a href="#L91">91</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L92"><a href="#L92">92</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L93"><a href="#L93">93</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Business Logic</code></td>
+</tr>
+<tr>
+<td class="line" id="L94"><a href="#L94">94</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L95"><a href="#L95">95</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L96"><a href="#L96">96</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L97"><a href="#L97">97</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Separate NAME=VALUE assignments from the command and its arguments.</code></td>
+</tr>
+<tr>
+<td class="line" id="L98"><a href="#L98">98</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L99"><a href="#L99">99</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Arguments containing `=` (before the first non-assignment) are treated</code></td>
+</tr>
+<tr>
+<td class="line" id="L100"><a href="#L100">100</a></td>
+<td class="hits"></td>
+<td class="source"><code>  as environment variable assignments. The first argument without `=`</code></td>
+</tr>
+<tr>
+<td class="line" id="L101"><a href="#L101">101</a></td>
+<td class="hits"></td>
+<td class="source"><code>  starts the command.</code></td>
+</tr>
+<tr>
+<td class="line" id="L102"><a href="#L102">102</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L103"><a href="#L103">103</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L104"><a href="#L104">104</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L105"><a href="#L105">105</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.parse_assignments(["A=1", "B=2", "echo", "hello"])</code></td>
+</tr>
+<tr>
+<td class="line" id="L106"><a href="#L106">106</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {[{"A", "1"}], ["echo", "hello"]}</code></td>
+</tr>
+<tr>
+<td class="line" id="L107"><a href="#L107">107</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L108"><a href="#L108">108</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.parse_assignments(["echo", "A=1"])</code></td>
+</tr>
+<tr>
+<td class="line" id="L109"><a href="#L109">109</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {[], ["echo", "A=1"]}</code></td>
+</tr>
+<tr>
+<td class="line" id="L110"><a href="#L110">110</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L111"><a href="#L111">111</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.parse_assignments(["FOO=bar"])</code></td>
+</tr>
+<tr>
+<td class="line" id="L112"><a href="#L112">112</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {[{"FOO", "bar"}], []}</code></td>
+</tr>
+<tr>
+<td class="line" id="L113"><a href="#L113">113</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L114"><a href="#L114">114</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def parse_assignments(args) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L115"><a href="#L115">115</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    {assignments, cmd_parts, _done} =</code></td>
+</tr>
+<tr>
+<td class="line" id="L116"><a href="#L116">116</a></td>
+<td class="hits"></td>
+<td class="source"><code>      Enum.reduce(args, {[], [], false}, fn arg, {assigns, cmd, done} -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L117"><a href="#L117">117</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        if done do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L118"><a href="#L118">118</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          {assigns, cmd ++ [arg], true}</code></td>
+</tr>
+<tr>
+<td class="line" id="L119"><a href="#L119">119</a></td>
+<td class="hits"></td>
+<td class="source"><code>        else</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L120"><a href="#L120">120</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          case parse_single_assignment(arg) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L121"><a href="#L121">121</a></td>
+<td class="hits"></td>
+<td class="source"><code>            {:ok, key, value} -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L122"><a href="#L122">122</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>              {assigns ++ [{key, value}], cmd, false}</code></td>
+</tr>
+<tr>
+<td class="line" id="L123"><a href="#L123">123</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L124"><a href="#L124">124</a></td>
+<td class="hits"></td>
+<td class="source"><code>            :not_assignment -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L125"><a href="#L125">125</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>              {assigns, cmd ++ [arg], true}</code></td>
+</tr>
+<tr>
+<td class="line" id="L126"><a href="#L126">126</a></td>
+<td class="hits"></td>
+<td class="source"><code>          end</code></td>
+</tr>
+<tr>
+<td class="line" id="L127"><a href="#L127">127</a></td>
+<td class="hits"></td>
+<td class="source"><code>        end</code></td>
+</tr>
+<tr>
+<td class="line" id="L128"><a href="#L128">128</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L129"><a href="#L129">129</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L130"><a href="#L130">130</a></td>
+<td class="hits"></td>
+<td class="source"><code>    {assignments, cmd_parts}</code></td>
+</tr>
+<tr>
+<td class="line" id="L131"><a href="#L131">131</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L132"><a href="#L132">132</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L133"><a href="#L133">133</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L134"><a href="#L134">134</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Try to parse a single string as a NAME=VALUE assignment.</code></td>
+</tr>
+<tr>
+<td class="line" id="L135"><a href="#L135">135</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L136"><a href="#L136">136</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Returns `{:ok, name, value}` if the string contains `=` and the</code></td>
+</tr>
+<tr>
+<td class="line" id="L137"><a href="#L137">137</a></td>
+<td class="hits"></td>
+<td class="source"><code>  part before `=` looks like a valid environment variable name.</code></td>
+</tr>
+<tr>
+<td class="line" id="L138"><a href="#L138">138</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Returns `:not_assignment` otherwise.</code></td>
+</tr>
+<tr>
+<td class="line" id="L139"><a href="#L139">139</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L140"><a href="#L140">140</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Rules for Valid Variable Names</code></td>
+</tr>
+<tr>
+<td class="line" id="L141"><a href="#L141">141</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L142"><a href="#L142">142</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - Must start with a letter or underscore</code></td>
+</tr>
+<tr>
+<td class="line" id="L143"><a href="#L143">143</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - Can contain letters, digits, and underscores</code></td>
+</tr>
+<tr>
+<td class="line" id="L144"><a href="#L144">144</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - The `=` must not be the first character</code></td>
+</tr>
+<tr>
+<td class="line" id="L145"><a href="#L145">145</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L146"><a href="#L146">146</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L147"><a href="#L147">147</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L148"><a href="#L148">148</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.parse_single_assignment("HOME=/Users/alice")</code></td>
+</tr>
+<tr>
+<td class="line" id="L149"><a href="#L149">149</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {:ok, "HOME", "/Users/alice"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L150"><a href="#L150">150</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L151"><a href="#L151">151</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.parse_single_assignment("echo")</code></td>
+</tr>
+<tr>
+<td class="line" id="L152"><a href="#L152">152</a></td>
+<td class="hits"></td>
+<td class="source"><code>      :not_assignment</code></td>
+</tr>
+<tr>
+<td class="line" id="L153"><a href="#L153">153</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L154"><a href="#L154">154</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.parse_single_assignment("FOO=")</code></td>
+</tr>
+<tr>
+<td class="line" id="L155"><a href="#L155">155</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {:ok, "FOO", ""}</code></td>
+</tr>
+<tr>
+<td class="line" id="L156"><a href="#L156">156</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L157"><a href="#L157">157</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def parse_single_assignment(arg) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L158"><a href="#L158">158</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    case String.split(arg, "=", parts: 2) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L159"><a href="#L159">159</a></td>
+<td class="hits"></td>
+<td class="source"><code>      [key, value] when key != "" -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L160"><a href="#L160">160</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        if Regex.match?(~r/^[A-Za-z_][A-Za-z0-9_]*$/, key) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L161"><a href="#L161">161</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          {:ok, key, value}</code></td>
+</tr>
+<tr>
+<td class="line" id="L162"><a href="#L162">162</a></td>
+<td class="hits"></td>
+<td class="source"><code>        else</code></td>
+</tr>
+<tr>
+<td class="line" id="L163"><a href="#L163">163</a></td>
+<td class="hits"></td>
+<td class="source"><code>          :not_assignment</code></td>
+</tr>
+<tr>
+<td class="line" id="L164"><a href="#L164">164</a></td>
+<td class="hits"></td>
+<td class="source"><code>        end</code></td>
+</tr>
+<tr>
+<td class="line" id="L165"><a href="#L165">165</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L166"><a href="#L166">166</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      _ -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L167"><a href="#L167">167</a></td>
+<td class="hits"></td>
+<td class="source"><code>        :not_assignment</code></td>
+</tr>
+<tr>
+<td class="line" id="L168"><a href="#L168">168</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L169"><a href="#L169">169</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L170"><a href="#L170">170</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L171"><a href="#L171">171</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L172"><a href="#L172">172</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Build the final environment map from the current environment,</code></td>
+</tr>
+<tr>
+<td class="line" id="L173"><a href="#L173">173</a></td>
+<td class="hits"></td>
+<td class="source"><code>  assignments, and options.</code></td>
+</tr>
+<tr>
+<td class="line" id="L174"><a href="#L174">174</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L175"><a href="#L175">175</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Steps</code></td>
+</tr>
+<tr>
+<td class="line" id="L176"><a href="#L176">176</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L177"><a href="#L177">177</a></td>
+<td class="hits"></td>
+<td class="source"><code>  1. Start with current environment (or empty if -i is set).</code></td>
+</tr>
+<tr>
+<td class="line" id="L178"><a href="#L178">178</a></td>
+<td class="hits"></td>
+<td class="source"><code>  2. Remove any variables specified by -u.</code></td>
+</tr>
+<tr>
+<td class="line" id="L179"><a href="#L179">179</a></td>
+<td class="hits"></td>
+<td class="source"><code>  3. Apply NAME=VALUE assignments.</code></td>
+</tr>
+<tr>
+<td class="line" id="L180"><a href="#L180">180</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L181"><a href="#L181">181</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L182"><a href="#L182">182</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L183"><a href="#L183">183</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; current = %{"HOME" =&gt; "/home/user", "PATH" =&gt; "/usr/bin"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L184"><a href="#L184">184</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.build_environment(current, [{"FOO", "bar"}], %{unset_vars: ["PATH"]})</code></td>
+</tr>
+<tr>
+<td class="line" id="L185"><a href="#L185">185</a></td>
+<td class="hits"></td>
+<td class="source"><code>      %{"HOME" =&gt; "/home/user", "FOO" =&gt; "bar"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L186"><a href="#L186">186</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L187"><a href="#L187">187</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def build_environment(current_env, assignments, opts) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L188"><a href="#L188">188</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 1: Start with current or empty environment</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L189"><a href="#L189">189</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    base =</code></td>
+</tr>
+<tr>
+<td class="line" id="L190"><a href="#L190">190</a></td>
+<td class="hits"></td>
+<td class="source"><code>      if opts[:ignore_env] do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L191"><a href="#L191">191</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        %{}</code></td>
+</tr>
+<tr>
+<td class="line" id="L192"><a href="#L192">192</a></td>
+<td class="hits"></td>
+<td class="source"><code>      else</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L193"><a href="#L193">193</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        current_env</code></td>
+</tr>
+<tr>
+<td class="line" id="L194"><a href="#L194">194</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end</code></td>
+</tr>
+<tr>
+<td class="line" id="L195"><a href="#L195">195</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L196"><a href="#L196">196</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 2: Remove unset variables</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L197"><a href="#L197">197</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    unset_list = opts[:unset_vars] || []</code></td>
+</tr>
+<tr>
+<td class="line" id="L198"><a href="#L198">198</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L199"><a href="#L199">199</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    filtered =</code></td>
+</tr>
+<tr>
+<td class="line" id="L200"><a href="#L200">200</a></td>
+<td class="hits"></td>
+<td class="source"><code>      Enum.reduce(unset_list, base, fn var_name, env_map -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L201"><a href="#L201">201</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        Map.delete(env_map, var_name)</code></td>
+</tr>
+<tr>
+<td class="line" id="L202"><a href="#L202">202</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L203"><a href="#L203">203</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L204"><a href="#L204">204</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 3: Apply assignments</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L205"><a href="#L205">205</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    Enum.reduce(assignments, filtered, fn {key, value}, env_map -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L206"><a href="#L206">206</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      Map.put(env_map, key, value)</code></td>
+</tr>
+<tr>
+<td class="line" id="L207"><a href="#L207">207</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L208"><a href="#L208">208</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L209"><a href="#L209">209</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L210"><a href="#L210">210</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L211"><a href="#L211">211</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Format environment variables for display.</code></td>
+</tr>
+<tr>
+<td class="line" id="L212"><a href="#L212">212</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L213"><a href="#L213">213</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Each variable is printed as NAME=VALUE, separated by either a</code></td>
+</tr>
+<tr>
+<td class="line" id="L214"><a href="#L214">214</a></td>
+<td class="hits"></td>
+<td class="source"><code>  newline (default) or NUL character (with -0 flag).</code></td>
+</tr>
+<tr>
+<td class="line" id="L215"><a href="#L215">215</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L216"><a href="#L216">216</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L217"><a href="#L217">217</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L218"><a href="#L218">218</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.format_environment(%{"A" =&gt; "1", "B" =&gt; "2"}, %{})</code></td>
+</tr>
+<tr>
+<td class="line" id="L219"><a href="#L219">219</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "A=1\\nB=2"</code></td>
+</tr>
+<tr>
+<td class="line" id="L220"><a href="#L220">220</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L221"><a href="#L221">221</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; UnixTools.EnvTool.format_environment(%{"A" =&gt; "1"}, %{null_terminator: true})</code></td>
+</tr>
+<tr>
+<td class="line" id="L222"><a href="#L222">222</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "A=1\\0"</code></td>
+</tr>
+<tr>
+<td class="line" id="L223"><a href="#L223">223</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L224"><a href="#L224">224</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def format_environment(env_map, opts) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L225"><a href="#L225">225</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    separator = if opts[:null_terminator], do: "\0", else: "\n"</code></td>
+</tr>
+<tr>
+<td class="line" id="L226"><a href="#L226">226</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L227"><a href="#L227">227</a></td>
+<td class="hits"></td>
+<td class="source"><code>    env_map</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L228"><a href="#L228">228</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    |&gt; Enum.sort_by(fn {key, _value} -&gt; key end)</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L229"><a href="#L229">229</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    |&gt; Enum.map(fn {key, value} -&gt; "#{key}=#{value}" end)</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L230"><a href="#L230">230</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    |&gt; Enum.join(separator)</code></td>
+</tr>
+<tr>
+<td class="line" id="L231"><a href="#L231">231</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L232"><a href="#L232">232</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L233"><a href="#L233">233</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L234"><a href="#L234">234</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Run</code></td>
+</tr>
+<tr>
+<td class="line" id="L235"><a href="#L235">235</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L236"><a href="#L236">236</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L237"><a href="#L237">237</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp run(assignments, command_with_args, opts) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L238"><a href="#L238">238</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    current_env = System.get_env()</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L239"><a href="#L239">239</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    final_env = build_environment(current_env, assignments, opts)</code></td>
+</tr>
+<tr>
+<td class="line" id="L240"><a href="#L240">240</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L241"><a href="#L241">241</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    case command_with_args do</code></td>
+</tr>
+<tr>
+<td class="line" id="L242"><a href="#L242">242</a></td>
+<td class="hits"></td>
+<td class="source"><code>      [] -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L243"><a href="#L243">243</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # No command: print the environment</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L244"><a href="#L244">244</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        output = format_environment(final_env, opts)</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L245"><a href="#L245">245</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        if output != "", do: IO.write(output &lt;&gt; if(opts[:null_terminator], do: "", else: "\n"))</code></td>
+</tr>
+<tr>
+<td class="line" id="L246"><a href="#L246">246</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L247"><a href="#L247">247</a></td>
+<td class="hits"></td>
+<td class="source"><code>      [cmd | cmd_args] -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L248"><a href="#L248">248</a></td>
+<td class="hits"></td>
+<td class="source"><code>        # Run the command with the modified environment</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L249"><a href="#L249">249</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        env_list = Enum.map(final_env, fn {k, v} -&gt; {String.to_charlist(k), String.to_charlist(v)} end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L250"><a href="#L250">250</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L251"><a href="#L251">251</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        cmd_opts = [</code></td>
+</tr>
+<tr>
+<td class="line" id="L252"><a href="#L252">252</a></td>
+<td class="hits"></td>
+<td class="source"><code>          env: env_list,</code></td>
+</tr>
+<tr>
+<td class="line" id="L253"><a href="#L253">253</a></td>
+<td class="hits"></td>
+<td class="source"><code>          stderr_to_stdout: true</code></td>
+</tr>
+<tr>
+<td class="line" id="L254"><a href="#L254">254</a></td>
+<td class="hits"></td>
+<td class="source"><code>        ]</code></td>
+</tr>
+<tr>
+<td class="line" id="L255"><a href="#L255">255</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L256"><a href="#L256">256</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        cmd_opts =</code></td>
+</tr>
+<tr>
+<td class="line" id="L257"><a href="#L257">257</a></td>
+<td class="hits"></td>
+<td class="source"><code>          if opts[:chdir] do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L258"><a href="#L258">258</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>            Keyword.put(cmd_opts, :cd, opts[:chdir])</code></td>
+</tr>
+<tr>
+<td class="line" id="L259"><a href="#L259">259</a></td>
+<td class="hits"></td>
+<td class="source"><code>          else</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L260"><a href="#L260">260</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>            cmd_opts</code></td>
+</tr>
+<tr>
+<td class="line" id="L261"><a href="#L261">261</a></td>
+<td class="hits"></td>
+<td class="source"><code>          end</code></td>
+</tr>
+<tr>
+<td class="line" id="L262"><a href="#L262">262</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L263"><a href="#L263">263</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        try do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L264"><a href="#L264">264</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          {output, exit_code} = System.cmd(cmd, cmd_args, cmd_opts)</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L265"><a href="#L265">265</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          if output != "", do: IO.write(output)</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L266"><a href="#L266">266</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          if exit_code != 0, do: System.halt(exit_code)</code></td>
+</tr>
+<tr>
+<td class="line" id="L267"><a href="#L267">267</a></td>
+<td class="hits"></td>
+<td class="source"><code>        rescue</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L268"><a href="#L268">268</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>          err -&gt;</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L269"><a href="#L269">269</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>            IO.puts(:stderr, "env: '#{cmd}': #{Exception.message(err)}")</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L270"><a href="#L270">270</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>            System.halt(127)</code></td>
+</tr>
+<tr>
+<td class="line" id="L271"><a href="#L271">271</a></td>
+<td class="hits"></td>
+<td class="source"><code>        end</code></td>
+</tr>
+<tr>
+<td class="line" id="L272"><a href="#L272">272</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L273"><a href="#L273">273</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L274"><a href="#L274">274</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L275"><a href="#L275">275</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L276"><a href="#L276">276</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Helpers</code></td>
+</tr>
+<tr>
+<td class="line" id="L277"><a href="#L277">277</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L278"><a href="#L278">278</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L279"><a href="#L279">279</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>  defp normalize_list(nil), do: []</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L280"><a href="#L280">280</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>  defp normalize_list(val) when is_binary(val), do: [val]</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L281"><a href="#L281">281</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>  defp normalize_list(val) when is_list(val), do: val</code></td>
+</tr>
+<tr>
+<td class="line" id="L282"><a href="#L282">282</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L283"><a href="#L283">283</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp resolve_spec_path do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L284"><a href="#L284">284</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    candidates = [</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L285"><a href="#L285">285</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      if(function_exported?(Mix, :Project, 0),</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L286"><a href="#L286">286</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        do: Path.join(Mix.Project.config()[:lockfile] |&gt; Path.dirname(), "env.json"),</code></td>
+</tr>
+<tr>
+<td class="line" id="L287"><a href="#L287">287</a></td>
+<td class="hits"></td>
+<td class="source"><code>        else: nil</code></td>
+</tr>
+<tr>
+<td class="line" id="L288"><a href="#L288">288</a></td>
+<td class="hits"></td>
+<td class="source"><code>      ),</code></td>
+</tr>
+<tr>
+<td class="line" id="L289"><a href="#L289">289</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "env.json",</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L290"><a href="#L290">290</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      Path.join(:code.priv_dir(:unix_tools) |&gt; to_string(), "env.json")</code></td>
+</tr>
+<tr>
+<td class="line" id="L291"><a href="#L291">291</a></td>
+<td class="hits"></td>
+<td class="source"><code>    ]</code></td>
+</tr>
+<tr>
+<td class="line" id="L292"><a href="#L292">292</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L293"><a href="#L293">293</a></td>
+<td class="hits"></td>
+<td class="source"><code>    Enum.find(candidates, fn</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L294"><a href="#L294">294</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      nil -&gt; false</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L295"><a href="#L295">295</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      path -&gt; File.exists?(path)</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L296"><a href="#L296">296</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    end) ||</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L297"><a href="#L297">297</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      raise "Could not find env.json spec file"</code></td>
+</tr>
+<tr>
+<td class="line" id="L298"><a href="#L298">298</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L299"><a href="#L299">299</a></td>
+<td class="hits"></td>
+<td class="source"><code>end</code></td>
+</tr>
+</tbody>
+<thead>
+<tr>
+<th>Line</th>
+<th>Hits</th>
+<th>Source</th>
+</tr>
+</thead>
+</table>
+</body>
+</html>

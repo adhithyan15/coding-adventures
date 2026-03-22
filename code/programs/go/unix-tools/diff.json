@@ -1,0 +1,141 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "diff",
+  "display_name": "diff",
+  "description": "Compare files line by line",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "unified",
+      "short": "u",
+      "long": "unified",
+      "description": "Output NUM (default 3) lines of unified context",
+      "type": "integer",
+      "value_name": "NUM",
+      "default": 3
+    },
+    {
+      "id": "context_format",
+      "short": "c",
+      "long": "context",
+      "description": "Output NUM (default 3) lines of copied context",
+      "type": "integer",
+      "value_name": "NUM",
+      "default": 3
+    },
+    {
+      "id": "ed",
+      "short": "e",
+      "long": "ed",
+      "description": "Output an ed script",
+      "type": "boolean"
+    },
+    {
+      "id": "normal",
+      "long": "normal",
+      "description": "Output a normal diff (default)",
+      "type": "boolean"
+    },
+    {
+      "id": "side_by_side",
+      "short": "y",
+      "long": "side-by-side",
+      "description": "Output in two columns",
+      "type": "boolean"
+    },
+    {
+      "id": "width",
+      "short": "W",
+      "long": "width",
+      "description": "Output at most NUM print columns (default 130)",
+      "type": "integer",
+      "value_name": "NUM",
+      "default": 130
+    },
+    {
+      "id": "recursive",
+      "short": "r",
+      "long": "recursive",
+      "description": "Recursively compare any subdirectories found",
+      "type": "boolean"
+    },
+    {
+      "id": "new_file",
+      "short": "N",
+      "long": "new-file",
+      "description": "Treat absent files as empty",
+      "type": "boolean"
+    },
+    {
+      "id": "brief",
+      "short": "q",
+      "long": "brief",
+      "description": "Report only when files differ",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_case",
+      "short": "i",
+      "long": "ignore-case",
+      "description": "Ignore case differences in file contents",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_space_change",
+      "short": "b",
+      "long": "ignore-space-change",
+      "description": "Ignore changes in the amount of white space",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_all_space",
+      "short": "w",
+      "long": "ignore-all-space",
+      "description": "Ignore all white space",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_blank_lines",
+      "short": "B",
+      "long": "ignore-blank-lines",
+      "description": "Ignore changes whose lines are all blank",
+      "type": "boolean"
+    },
+    {
+      "id": "exclude",
+      "short": "x",
+      "long": "exclude",
+      "description": "Exclude files that match PATTERN",
+      "type": "string",
+      "value_name": "PATTERN",
+      "repeatable": true
+    },
+    {
+      "id": "color",
+      "long": "color",
+      "description": "Colorize the output",
+      "type": "enum",
+      "enum_values": ["always", "auto", "never"],
+      "default": "auto"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "file1",
+      "name": "FILE1",
+      "description": "First file or directory",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "file2",
+      "name": "FILE2",
+      "description": "Second file or directory",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "commands": []
+}

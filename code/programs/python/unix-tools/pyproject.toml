@@ -44,6 +44,13 @@ py-modules = [
     "grep_tool",
     "join_tool",
     "split_tool",
+    "diff_tool",
+    "cmp_tool",
+    "xargs_tool",
+    "env_tool",
+    "chmod_tool",
+    "chown_tool",
+    "tar_tool",
 ]
 
 [project.optional-dependencies]
