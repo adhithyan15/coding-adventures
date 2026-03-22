@@ -477,7 +477,7 @@ mod tests {
     fn mk_arg(id: &str, name: &str, required: bool, variadic: bool, variadic_min: usize) -> ArgumentDef {
         ArgumentDef {
             id: id.to_string(),
-            name: name.to_string(),
+            display_name: name.to_string(),
             description: "".to_string(),
             arg_type: "string".to_string(),
             required,
