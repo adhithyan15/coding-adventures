@@ -1,0 +1,26 @@
+{
+  "name": "build-tool",
+  "version": "1.0.0",
+  "description": "Incremental, parallel monorepo build tool with hash-based caching",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "build-tool": "src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "build-tool",
+    "monorepo",
+    "incremental-build",
+    "parallel-build"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
