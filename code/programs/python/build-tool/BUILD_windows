@@ -1,4 +1,4 @@
 uv venv --quiet --clear
 uv pip install -e ../../../packages/python/progress-bar --quiet
 uv pip install -e .[dev] --quiet
-.venv/Scripts/python -m pytest tests/ -v
+uv run python -m pytest tests/ -v

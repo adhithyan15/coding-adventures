@@ -17,4 +17,4 @@ uv pip install -e ../branch-predictor --quiet
 uv pip install -e ../cpu-pipeline --quiet
 uv pip install -e ../hazard-detection --quiet
 uv pip install -e ../clock --quiet
-.venv/Scripts/python -m pytest tests/ -v
+uv run python -m pytest tests/ -v

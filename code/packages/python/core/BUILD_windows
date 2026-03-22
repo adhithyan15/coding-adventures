@@ -8,4 +8,4 @@ uv pip install -e ../branch-predictor[dev] --quiet
 uv pip install -e ../hazard-detection[dev] --quiet
 uv pip install -e ../clock[dev] --quiet
 uv pip install -e ../cpu-simulator[dev] --quiet
-.venv/Scripts/python -m pytest tests/ -v
+uv run python -m pytest tests/ -v
