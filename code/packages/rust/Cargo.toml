@@ -50,4 +50,5 @@ members = [
     "system-board",
     "arm-simulator",
     "device-driver-framework",
+    "virtual-memory",
 ]
