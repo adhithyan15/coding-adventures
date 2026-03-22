@@ -171,15 +171,22 @@ export class TracingCPU {
    */
   runUntilIdle(maxSteps: number = 10000): number {
     let steps = 0;
+    let keyConsumed = this._cpu.romPort === 0;
+
     while (steps < maxSteps && !this._cpu.halted) {
       this.step();
       steps++;
-      // If the CPU just executed RDR and the result was 0 (no key),
-      // it's idle in the scan loop
+
       const last = this.lastTrace;
       if (last && last.decoded.isIo && (last.raw & 0x0f) === 0x0a) {
-        // RDR instruction — check if accumulator is 0 (no key pressed)
-        if (last.snapshot.accumulator === 0) {
+        // RDR instruction executed
+        if (!keyConsumed) {
+          // First RDR consumed the key — clear the port so the CPU
+          // can return to idle on the next scan loop iteration
+          keyConsumed = true;
+          this._cpu.romPort = 0;
+        } else if (last.snapshot.accumulator === 0) {
+          // RDR returned 0 (no key) — CPU is idle in scan loop
           break;
         }
       }
