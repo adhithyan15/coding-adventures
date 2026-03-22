@@ -51,4 +51,5 @@ members = [
     "arm-simulator",
     "device-driver-framework",
     "virtual-memory",
+    "process-manager",
 ]
