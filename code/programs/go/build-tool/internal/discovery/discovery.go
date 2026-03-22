@@ -26,9 +26,11 @@
 //
 // # Platform-specific BUILD files
 //
-// On macOS, if BUILD_mac exists in a directory, we use it instead of BUILD.
-// On Linux, BUILD_linux takes precedence. This allows platform-specific build
-// commands (e.g., different compiler flags or test runners).
+// Platform-specific BUILD files override the generic BUILD file. The priority
+// is: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows), then
+// BUILD_mac_and_linux (shared macOS/Linux), then BUILD (all platforms). This
+// allows platform-specific build commands (e.g., different venv paths on
+// Windows, or skipping tools that don't support certain platforms).
 //
 // # Language inference
 //
@@ -127,40 +129,30 @@ func inferPackageName(path, language string) string {
 // getBuildFile returns the path to the appropriate BUILD file for the current
 // platform, or an empty string if none exists.
 //
-// Priority:
-//  1. BUILD_mac on macOS (Darwin)
-//  2. BUILD_linux on Linux
-//  3. BUILD (cross-platform fallback)
+// Priority (most specific wins):
+//  1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+//  2. Shared: BUILD_mac_and_linux (macOS or Linux — for Unix-like systems)
+//  3. Generic: BUILD (all platforms)
 //  4. "" if no BUILD file exists
+//
+// This layering lets packages provide Windows-specific build commands via
+// BUILD_windows while sharing a single BUILD_mac_and_linux for the common
+// Unix case, falling back to BUILD when no platform differences exist.
 func getBuildFile(directory string) string {
-	system := runtime.GOOS
-
-	if system == "darwin" {
-		platformBuild := filepath.Join(directory, "BUILD_mac")
-		if fileExists(platformBuild) {
-			return platformBuild
-		}
-	}
-
-	if system == "linux" {
-		platformBuild := filepath.Join(directory, "BUILD_linux")
-		if fileExists(platformBuild) {
-			return platformBuild
-		}
-	}
-
-	genericBuild := filepath.Join(directory, "BUILD")
-	if fileExists(genericBuild) {
-		return genericBuild
-	}
-
-	return ""
+	return GetBuildFileForPlatform(directory, runtime.GOOS)
 }
 
 // GetBuildFileForPlatform is like getBuildFile but accepts an explicit OS name.
 // This is useful for testing platform-specific behavior without running on
-// that platform. The os parameter should be "darwin", "linux", etc.
+// that platform. The goos parameter should be "darwin", "linux", or "windows".
+//
+// Priority (most specific wins):
+//  1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+//  2. Shared: BUILD_mac_and_linux (macOS or Linux)
+//  3. Generic: BUILD (all platforms)
+//  4. "" if no BUILD file exists
 func GetBuildFileForPlatform(directory, goos string) string {
+	// Step 1: Check for the most specific platform file.
 	if goos == "darwin" {
 		platformBuild := filepath.Join(directory, "BUILD_mac")
 		if fileExists(platformBuild) {
@@ -175,6 +167,22 @@ func GetBuildFileForPlatform(directory, goos string) string {
 		}
 	}
 
+	if goos == "windows" {
+		platformBuild := filepath.Join(directory, "BUILD_windows")
+		if fileExists(platformBuild) {
+			return platformBuild
+		}
+	}
+
+	// Step 2: Check for the shared Unix file (macOS + Linux).
+	if goos == "darwin" || goos == "linux" {
+		sharedBuild := filepath.Join(directory, "BUILD_mac_and_linux")
+		if fileExists(sharedBuild) {
+			return sharedBuild
+		}
+	}
+
+	// Step 3: Fall back to the generic BUILD file.
 	genericBuild := filepath.Join(directory, "BUILD")
 	if fileExists(genericBuild) {
 		return genericBuild
