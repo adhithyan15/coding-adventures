@@ -1,0 +1,85 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "mv",
+  "display_name": "mv",
+  "description": "Move (rename) files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "force",
+      "short": "f",
+      "long": "force",
+      "description": "Do not prompt before overwriting",
+      "type": "boolean"
+    },
+    {
+      "id": "interactive",
+      "short": "i",
+      "long": "interactive",
+      "description": "Prompt before overwrite",
+      "type": "boolean"
+    },
+    {
+      "id": "no_clobber",
+      "short": "n",
+      "long": "no-clobber",
+      "description": "Do not overwrite an existing file",
+      "type": "boolean"
+    },
+    {
+      "id": "update",
+      "short": "u",
+      "long": "update",
+      "description": "Move only when the SOURCE file is newer than the destination file or when the destination file is missing",
+      "type": "boolean"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Explain what is being done",
+      "type": "boolean"
+    },
+    {
+      "id": "target_directory",
+      "short": "t",
+      "long": "target-directory",
+      "description": "Move all SOURCE arguments into DIRECTORY",
+      "type": "string",
+      "value_name": "DIRECTORY"
+    },
+    {
+      "id": "no_target_directory",
+      "short": "T",
+      "long": "no-target-directory",
+      "description": "Treat DEST as a normal file",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "sources",
+      "name": "SOURCE",
+      "description": "Source file(s) and destination. Last argument is the destination.",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 2
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "overwrite-mode",
+      "flag_ids": ["force", "interactive", "no_clobber"],
+      "required": false
+    },
+    {
+      "id": "target-mode",
+      "flag_ids": ["target_directory", "no_target_directory"],
+      "required": false
+    }
+  ]
+}
