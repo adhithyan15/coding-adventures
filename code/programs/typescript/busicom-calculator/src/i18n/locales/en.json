@@ -102,5 +102,42 @@
   "transistor.conducting": "Conducting",
   "transistor.cutoff": "Cut off",
 
+  "layer.timing": "Timing",
+
+  "timing.title": "Clock & Instruction Timing",
+  "timing.description": "The Intel 4004 uses a two-phase non-overlapping clock. Every instruction takes exactly 8 clock phases (one machine cycle), organized as Address-Memory-Execute. Two-byte instructions take two cycles (16 phases).",
+  "timing.phi1": "\u03a61",
+  "timing.phi2": "\u03a62",
+  "timing.waveform.label": "Two-phase clock waveform showing Phi1 and Phi2 signals",
+  "timing.clock.title": "Two-Phase Clock Waveform",
+  "timing.clock.description": "The 4004's clock has two non-overlapping phases. When Phi1 is high, Phi2 is low and vice versa. This prevents race conditions in the logic.",
+  "timing.phase": "Phase",
+  "timing.group": "Group",
+  "timing.activity": "Activity",
+  "timing.cycles": "cycle(s)",
+  "timing.currentInstruction": "Current Instruction",
+  "timing.noInstruction": "Execute an instruction to see its timing breakdown.",
+  "timing.phaseTable.label": "Phase activity table for current instruction",
+  "timing.timeline.title": "Instruction Timeline",
+  "timing.timeline.label": "Timeline of recent instructions",
+
+  "timing.phase.a1.desc": "PC sends address bits 11-8 to ROM",
+  "timing.phase.a2.desc": "PC sends address bits 7-4 to ROM",
+  "timing.phase.a3.desc": "PC sends address bits 3-0 to ROM",
+  "timing.phase.m1.desc": "ROM sends opcode bits 7-4 (OPR)",
+  "timing.phase.m2.desc": "ROM sends opcode bits 3-0 (OPA)",
+  "timing.phase.x1.desc": "Instruction decode & register read",
+  "timing.phase.x2.desc": "ALU operation / address compute",
+  "timing.phase.x3.desc": "Result writeback / PC update",
+
+  "timing.phase.a1.desc2": "PC sends 2nd-byte address bits 11-8",
+  "timing.phase.a2.desc2": "PC sends 2nd-byte address bits 7-4",
+  "timing.phase.a3.desc2": "PC sends 2nd-byte address bits 3-0",
+  "timing.phase.m1.desc2": "ROM sends 2nd byte bits 7-4",
+  "timing.phase.m2.desc2": "ROM sends 2nd byte bits 3-0",
+  "timing.phase.x1.desc2": "Decode with full 16-bit instruction",
+  "timing.phase.x2.desc2": "Execute (jump target / immediate load)",
+  "timing.phase.x3.desc2": "PC update with new target address",
+
   "footer.credit": "Simulating the Intel 4004 (1971) — the first commercial microprocessor, designed for the Busicom 141-PF calculator"
 }

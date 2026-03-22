@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 — 2026-03-22
+
+### Added
+
+- **Native ALU trace emission**: `GateALU` now captures `ALUTrace` after every arithmetic operation via `rippleCarryAdderTraced()`. The `lastTrace` getter provides operation type, input/output bits, carry, and per-adder snapshots.
+- `ALUTrace` interface with operation, inputA, inputB, carryIn, adders (FullAdderSnapshot[]), result, carryOut.
+- `GateALU.clearTrace()` method — called at the start of each CPU step.
+- **`GateTrace` extended**: `step()` now returns `decoded` (DecodedInstruction), `aluTrace` (ALUTrace | undefined), and `memoryAccess` (MemoryAccess | undefined) natively.
+- `MemoryAccess` interface tracking register reads/writes, RAM reads/writes, and port reads during instruction execution.
+
+### Changed
+
+- `GateTrace` is no longer a minimal type — it now includes full decoded instruction and ALU/memory trace data, eliminating the need for external replay.
+
 ## 0.1.0 — 2026-03-21
 
 ### Added

@@ -40,7 +40,7 @@
  *   0x0: No key (idle)
  *   0x1-0x9: Digits 1-9
  *   0xA: Digit 0
- *   0xB: Decimal point (not implemented in v1)
+ *   0xB: Clear (C) — resets all state
  *   0xC: Add (+)
  *   0xD: Subtract (-)
  *   0xE: Multiply (×)
@@ -317,7 +317,21 @@ export function buildBusicomROM(): Uint8Array {
   a.SUB(1);                     // acc = key - 0xB (carry set if key >= 0xB)
   a.JCN(0xA, "is_digit");      // jump if carry clear (key < 0xB → digit)
 
-  // Not a digit. Check specific operator keys.
+  // Not a digit. Check for clear (0xB) first.
+  a.LD(0);                      // acc = key
+  a.LDM(0xB);
+  a.XCH(1);                     // R1 = 0xB
+  a.LD(0);
+  a.CLC();                      // Clear carry before comparison
+  a.SUB(1);                     // acc = key - 0xB
+  a.JCN(0xC, "not_clear");     // jump if acc != 0
+  // It's clear (0xB) — reset everything
+  a.JMS("clear");
+  a.JMS("display");
+  a.JUN("key_scan");
+
+  a.label("not_clear");
+  // Check specific operator keys.
   a.LD(0);                      // acc = key
   a.LDM(0xC);
   a.XCH(1);                     // R1 = 0xC

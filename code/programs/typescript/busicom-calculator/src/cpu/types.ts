@@ -1,20 +1,20 @@
 /**
  * Type definitions for the enhanced tracing CPU.
  *
- * These types extend the base GateTrace from the intel4004-gatelevel package
- * to capture additional detail needed by the visualization layers:
+ * === V2 simplification ===
  *
- *   - DecodedInstruction: which instruction family, operands
- *   - ALU detail: inputs, carry chain, per-adder intermediate values
- *   - Memory access: which register/RAM was read or written
- *   - CPU snapshot: full state after execution
+ * In V1, ALUDetail and FullAdderState were defined here and populated by
+ * replaying the adder chain in TracingCPU. In V2, the intel4004-gatelevel
+ * package emits ALU traces natively via ALUTrace. The DetailedTrace type
+ * now extends GateTrace (which already includes decoded, aluTrace, and
+ * memoryAccess) and adds only the CPU state snapshot.
  *
- * The ALU detail is reconstructed by *replaying* the adder chain independently,
- * using the instruction's operands. This avoids modifying the core CPU library.
+ * The old ALUDetail and FullAdderState types are re-exported from the
+ * package for backwards compatibility with visualization components.
  */
 
-import type { Bit } from "@coding-adventures/logic-gates";
-import type { GateTrace, DecodedInstruction } from "@coding-adventures/intel4004-gatelevel";
+import type { GateTrace, ALUTrace } from "@coding-adventures/intel4004-gatelevel";
+import type { FullAdderSnapshot } from "@coding-adventures/arithmetic";
 
 /**
  * Snapshot of the CPU's full state at a point in time.
@@ -52,97 +52,33 @@ export interface CpuSnapshot {
 }
 
 /**
- * Per-adder intermediate state in the ripple carry chain.
- *
- * The 4004's ALU is a 4-bit ripple carry adder — four full adders
- * chained from LSB to MSB. Each full adder takes two input bits
- * and a carry-in, producing a sum bit and carry-out.
- *
- * ```
- *      A3 B3      A2 B2      A1 B1      A0 B0
- *       |  |       |  |       |  |       |  |
- *     +----+     +----+     +----+     +----+
- *     | FA |<----| FA |<----| FA |<----| FA |<-- carryIn
- *     +----+     +----+     +----+     +----+
- *       |           |          |          |
- *      S3          S2         S1         S0
- * ```
- */
-export interface FullAdderState {
-  /** Input bit from operand A. */
-  a: Bit;
-  /** Input bit from operand B (possibly complemented for SUB). */
-  b: Bit;
-  /** Carry in from the previous adder (or initial carry). */
-  cIn: Bit;
-  /** Sum output bit. */
-  sum: Bit;
-  /** Carry output to the next adder. */
-  cOut: Bit;
-}
-
-/**
- * Detailed ALU operation trace.
- *
- * Captured when the current instruction involves the ALU:
- * ADD, SUB, INC (ISZ), DAC, IAC, DAA, TCS, CMA, etc.
- */
-export interface ALUDetail {
-  /** Which ALU operation was performed. */
-  operation: "add" | "sub" | "inc" | "dec" | "complement" | "daa";
-
-  /** Input A bits (4-bit, LSB first). */
-  inputA: Bit[];
-
-  /** Input B bits (4-bit, LSB first). May be complemented for SUB. */
-  inputB: Bit[];
-
-  /** Carry/borrow input to the LSB full adder. */
-  carryIn: Bit;
-
-  /** Per-adder intermediate state for the 4-bit ripple carry chain. */
-  adders: FullAdderState[];
-
-  /** Result bits (4-bit, LSB first). */
-  result: Bit[];
-
-  /** Final carry/borrow output from the MSB full adder. */
-  carryOut: Bit;
-}
-
-/**
- * Memory access detail.
- *
- * Captured when the instruction reads or writes a register or RAM location.
- */
-export interface MemoryAccess {
-  /** Type of access. */
-  type: "reg_read" | "reg_write" | "ram_read" | "ram_write";
-
-  /** Register index (0-15) or RAM address components. */
-  address: number;
-
-  /** Value read or written (4-bit). */
-  value: number;
-}
-
-/**
  * Extended trace with full visualization data.
  *
- * This is the primary data structure consumed by all five visualization
- * layers. It extends the base GateTrace with decoded instruction fields,
- * ALU intermediate values, memory access details, and a full CPU snapshot.
+ * GateTrace now provides decoded instruction, ALU trace, and memory access
+ * natively. DetailedTrace adds the CPU state snapshot for the CPU view.
  */
 export interface DetailedTrace extends GateTrace {
-  /** Decoded instruction with all control signals. */
-  decoded: DecodedInstruction;
-
   /** CPU state snapshot after this instruction executed. */
   snapshot: CpuSnapshot;
-
-  /** ALU detail, present when the instruction uses the ALU. */
-  aluDetail?: ALUDetail;
-
-  /** Memory access, present when the instruction reads/writes registers or RAM. */
-  memoryAccess?: MemoryAccess;
 }
+
+// Re-export ALU types for use by visualization components
+export type { ALUTrace, FullAdderSnapshot };
+
+/**
+ * Type alias for backwards compatibility.
+ * Components that referenced ALUDetail can use ALUTrace instead.
+ */
+export type ALUDetail = ALUTrace;
+
+/**
+ * Type alias for backwards compatibility.
+ * Components that referenced FullAdderState can use FullAdderSnapshot instead.
+ */
+export type FullAdderState = FullAdderSnapshot;
+
+/**
+ * Type alias for backwards compatibility.
+ * MemoryAccess is now part of GateTrace from the package.
+ */
+export type { MemoryAccess } from "@coding-adventures/intel4004-gatelevel";

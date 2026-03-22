@@ -165,3 +165,80 @@ export function rippleCarryAdder(
 
   return [sumBits, carry];
 }
+
+/**
+ * Per-adder snapshot capturing intermediate state in the ripple carry chain.
+ *
+ * This is the same data that `rippleCarryAdder` computes internally, but
+ * normally discards. Visualizations (e.g., the Busicom calculator's ALU
+ * drill-down) need these intermediate values to show how carries propagate
+ * from bit 0 through bit N.
+ */
+export interface FullAdderSnapshot {
+  /** Input bit from operand A. */
+  a: Bit;
+  /** Input bit from operand B (possibly complemented for subtraction). */
+  b: Bit;
+  /** Carry input from the previous adder (or the initial carry). */
+  cIn: Bit;
+  /** Sum output bit. */
+  sum: Bit;
+  /** Carry output to the next adder. */
+  cOut: Bit;
+}
+
+/**
+ * Result of a traced ripple carry addition.
+ *
+ * Contains the same sum and carry as `rippleCarryAdder`, plus per-adder
+ * snapshots showing exactly how the carry rippled through the chain.
+ */
+export interface RippleCarryResult {
+  /** Sum bits (LSB first). */
+  sum: Bit[];
+  /** Final carry out from the MSB adder. */
+  carryOut: Bit;
+  /** Per-bit adder snapshots, from LSB (index 0) to MSB. */
+  adders: FullAdderSnapshot[];
+}
+
+/**
+ * Add two N-bit numbers with full per-adder trace data.
+ *
+ * Functionally identical to `rippleCarryAdder`, but captures the
+ * intermediate state of each full adder for visualization purposes.
+ *
+ * @param a - First number as array of bits, LSB first.
+ * @param b - Second number as array of bits, LSB first.
+ * @param carryIn - Initial carry (default 0).
+ * @returns A RippleCarryResult with sum, carryOut, and per-adder snapshots.
+ */
+export function rippleCarryAdderTraced(
+  a: Bit[],
+  b: Bit[],
+  carryIn: Bit = 0
+): RippleCarryResult {
+  if (a.length !== b.length) {
+    throw new Error(
+      `a and b must have the same length, got ${a.length} and ${b.length}`
+    );
+  }
+  if (a.length === 0) {
+    throw new Error("bit lists must not be empty");
+  }
+
+  const sumBits: Bit[] = [];
+  const adders: FullAdderSnapshot[] = [];
+  let carry: Bit = carryIn;
+
+  for (let i = 0; i < a.length; i++) {
+    const ai = a[i];
+    const bi = b[i];
+    const [sumBit, newCarry] = fullAdder(ai, bi, carry);
+    adders.push({ a: ai, b: bi, cIn: carry, sum: sumBit, cOut: newCarry });
+    sumBits.push(sumBit);
+    carry = newCarry;
+  }
+
+  return { sum: sumBits, carryOut: carry, adders };
+}

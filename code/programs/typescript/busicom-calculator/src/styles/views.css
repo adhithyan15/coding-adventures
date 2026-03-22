@@ -4,13 +4,13 @@
 
 /* --- Shared panel styling --- */
 
-.cpu-view, .alu-view, .gate-view, .transistor-view {
+.cpu-view, .alu-view, .gate-view, .transistor-view, .timing-view {
   max-width: 900px;
   margin: 0 auto;
   padding: 1rem;
 }
 
-.cpu-view h2, .alu-view h2, .gate-view h2, .transistor-view h2 {
+.cpu-view h2, .alu-view h2, .gate-view h2, .transistor-view h2, .timing-view h2 {
   font-size: 1.3rem;
   font-weight: 700;
   color: #fff;
@@ -20,7 +20,7 @@
   gap: 0.5rem;
 }
 
-.cpu-view h3, .alu-view h3, .gate-view h3, .transistor-view h3 {
+.cpu-view h3, .alu-view h3, .gate-view h3, .transistor-view h3, .timing-view h3 {
   font-size: 0.95rem;
   font-weight: 600;
   color: #ccd;
@@ -765,6 +765,153 @@
   align-items: center;
 }
 
+/* ==========================================================================
+ * Timing View — Layer 6
+ * ========================================================================== */
+
+.timing-view p {
+  color: #8899aa;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.timing-section {
+  margin-bottom: 1.5rem;
+}
+
+.timing-section-desc {
+  font-size: 0.8rem;
+  color: #8899aa;
+  margin-bottom: 0.5rem;
+}
+
+.timing-no-instruction {
+  font-style: italic;
+  color: #667;
+}
+
+/* Clock waveform SVG */
+.clock-waveform {
+  width: 100%;
+  max-height: 130px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+/* Phase table */
+.phase-table {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.phase-table-header {
+  display: grid;
+  grid-template-columns: 70px 80px 1fr;
+  gap: 1px;
+  background: var(--panel-header);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.phase-table-row {
+  display: grid;
+  grid-template-columns: 70px 80px 1fr;
+  gap: 1px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.phase-table-cell {
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.phase-table-cell--header {
+  color: #8899aa;
+  padding: 8px 10px;
+}
+
+.phase-table-cell--phase {
+  color: var(--wire-high);
+  font-weight: 600;
+}
+
+.phase-table-cell--group {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.phase-table-cell--activity {
+  color: #ccd;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+}
+
+/* Instruction timeline */
+.instruction-timeline {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.timeline-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeline-entry {
+  display: grid;
+  grid-template-columns: 60px 80px 1fr 70px;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.timeline-entry:last-child {
+  border-bottom: none;
+}
+
+.timeline-addr {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #8899aa;
+}
+
+.timeline-mnemonic {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #dde;
+  font-weight: 500;
+}
+
+.timeline-duration {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #8899aa;
+  text-align: right;
+}
+
+.cycle-blocks {
+  display: flex;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.cycle-block {
+  height: 100%;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .register-grid {
@@ -784,5 +931,21 @@
 
   .cpu-state-grid {
     grid-template-columns: 1fr;
+  }
+
+  .timeline-entry {
+    grid-template-columns: 50px 60px 1fr 50px;
+    gap: 4px;
+    font-size: 0.7rem;
+  }
+
+  .phase-table-header,
+  .phase-table-row {
+    grid-template-columns: 60px 60px 1fr;
+  }
+
+  .phase-table-cell {
+    font-size: 0.7rem;
+    padding: 4px 6px;
   }
 }

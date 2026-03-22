@@ -25,11 +25,53 @@
  * where borrow_in = 0 if carry_flag else 1 (inverted carry semantics).
  * The ALU's SUB operation does this internally using NOT gates to
  * complement B, then feeding through the same adder.
+ *
+ * === Native trace emission (V2) ===
+ *
+ * The ALU now captures per-adder intermediate state during every arithmetic
+ * operation via `rippleCarryAdderTraced()`. After any add/subtract/increment/
+ * decrement, the `lastTrace` property holds the full ALU trace — inputs,
+ * per-adder snapshots, result, and carry. This eliminates the need for
+ * consumers (like the Busicom calculator app) to replay the adder chain.
  */
 
-import { ALU, ALUOp } from "@coding-adventures/arithmetic";
+import { ALU, ALUOp, rippleCarryAdderTraced } from "@coding-adventures/arithmetic";
+import type { FullAdderSnapshot } from "@coding-adventures/arithmetic";
 import { type Bit } from "@coding-adventures/logic-gates";
 import { intToBits, bitsToInt } from "./bits.js";
+
+/**
+ * Complete trace of a 4-bit ALU operation.
+ *
+ * Captures every intermediate value so visualizations can show
+ * exactly how the result was computed — from input bits through
+ * the carry chain to the final output.
+ */
+export interface ALUTrace {
+  /** Which ALU operation was performed. */
+  operation: "add" | "sub" | "inc" | "dec" | "complement" | "and" | "or" | "daa";
+
+  /** 4-bit input A (LSB first). */
+  inputA: Bit[];
+
+  /** 4-bit input B (LSB first). For SUB, this is the complemented value. */
+  inputB: Bit[];
+
+  /** Carry/borrow input to the adder chain. */
+  carryIn: Bit;
+
+  /**
+   * Per-bit full adder snapshots, from bit 0 (LSB) to bit 3 (MSB).
+   * Empty for non-adder operations (complement, and, or).
+   */
+  adders: FullAdderSnapshot[];
+
+  /** 4-bit result (LSB first). */
+  result: Bit[];
+
+  /** Final carry out from the MSB adder. */
+  carryOut: Bit;
+}
 
 /**
  * 4-bit ALU for the Intel 4004 gate-level simulator.
@@ -37,95 +79,133 @@ import { intToBits, bitsToInt } from "./bits.js";
  * All operations route through real logic gates via the arithmetic
  * package's ALU class. No behavioral shortcuts.
  *
- * The ALU provides:
- *   - add(a, b, carryIn)       => [result, carryOut]
- *   - subtract(a, b, borrowIn) => [result, carryOut]
- *   - complement(a)            => result (4-bit NOT)
- *   - increment(a)             => [result, carryOut]
- *   - decrement(a)             => [result, borrowOut]
+ * After any operation, `lastTrace` holds the full trace data.
  */
 export class GateALU {
   private _alu: ALU;
 
+  /** Trace from the most recent operation. Cleared before each new op. */
+  private _lastTrace: ALUTrace | undefined;
+
   constructor() {
     /** Create a 4-bit ALU using real logic gates. */
     this._alu = new ALU(4);
+    this._lastTrace = undefined;
+  }
+
+  /** The most recent ALU operation trace. */
+  get lastTrace(): ALUTrace | undefined {
+    return this._lastTrace;
+  }
+
+  /** Clear the last trace. Called at the start of each CPU step(). */
+  clearTrace(): void {
+    this._lastTrace = undefined;
   }
 
   /**
    * Add two 4-bit values with carry.
    *
    * Routes through: XOR -> AND -> OR -> fullAdder x 4 -> rippleCarry
-   *
-   * @param a - First operand (0-15).
-   * @param b - Second operand (0-15).
-   * @param carryIn - Carry from previous operation (0 or 1).
-   * @returns [result, carryOut] where result is 4-bit (0-15).
    */
   add(a: number, b: number, carryIn: number = 0): [number, boolean] {
     const aBits = intToBits(a, 4);
     const bBits = intToBits(b, 4);
 
     if (carryIn) {
-      // Add carry_in by first adding a+b, then adding 1
-      // This simulates the carry input to the LSB full adder
       const result1 = this._alu.execute(ALUOp.ADD, aBits, bBits);
       const oneBits = intToBits(1, 4);
       const result2 = this._alu.execute(ALUOp.ADD, result1.value, oneBits);
-      // Carry is set if either addition overflowed
       const carry = result1.carry || result2.carry;
+
+      // Capture trace using the traced adder
+      const traced = rippleCarryAdderTraced(aBits, bBits, 1 as Bit);
+      this._lastTrace = {
+        operation: "add",
+        inputA: aBits,
+        inputB: bBits,
+        carryIn: 1 as Bit,
+        adders: traced.adders,
+        result: traced.sum,
+        carryOut: traced.carryOut,
+      };
+
       return [bitsToInt(result2.value), carry];
     } else {
       const result = this._alu.execute(ALUOp.ADD, aBits, bBits);
+
+      const traced = rippleCarryAdderTraced(aBits, bBits, 0 as Bit);
+      this._lastTrace = {
+        operation: "add",
+        inputA: aBits,
+        inputB: bBits,
+        carryIn: 0 as Bit,
+        adders: traced.adders,
+        result: traced.sum,
+        carryOut: traced.carryOut,
+      };
+
       return [bitsToInt(result.value), result.carry];
     }
   }
 
   /**
    * Subtract using complement-add: A + NOT(B) + borrowIn.
-   *
-   * The 4004's carry flag semantics for subtraction:
-   *   carry=true  => no borrow (result >= 0)
-   *   carry=false => borrow occurred
-   *
-   * @param a - Minuend (0-15).
-   * @param b - Subtrahend (0-15).
-   * @param borrowIn - 1 if no previous borrow, 0 if borrow.
-   * @returns [result, carryOut] where carryOut=true means no borrow.
    */
   subtract(a: number, b: number, borrowIn: number = 0): [number, boolean] {
-    // Complement b using NOT gates
     const bBits = intToBits(b, 4);
     const bComp = this._alu.execute(ALUOp.NOT, bBits, bBits);
-    // A + NOT(B) + borrowIn
-    return this.add(a, bitsToInt(bComp.value), borrowIn);
+    const bCompBits = bComp.value as Bit[];
+    const [result, carry] = this.add(a, bitsToInt(bCompBits), borrowIn);
+
+    // Fix the trace to show SUB operation with complemented B
+    if (this._lastTrace) {
+      this._lastTrace.operation = "sub";
+      this._lastTrace.inputB = bCompBits;
+    }
+
+    return [result, carry];
   }
 
   /**
    * 4-bit NOT: invert all bits using NOT gates.
-   *
-   * @param a - Value to complement (0-15).
-   * @returns Complemented value (0-15).
    */
   complement(a: number): number {
     const aBits = intToBits(a, 4);
     const result = this._alu.execute(ALUOp.NOT, aBits, aBits);
-    return bitsToInt(result.value);
+    const resultBits = result.value as Bit[];
+
+    this._lastTrace = {
+      operation: "complement",
+      inputA: aBits,
+      inputB: [0, 0, 0, 0],
+      carryIn: 0,
+      adders: [],
+      result: resultBits,
+      carryOut: 0,
+    };
+
+    return bitsToInt(resultBits);
   }
 
   /** Increment by 1 using the adder. Returns [result, carry]. */
   increment(a: number): [number, boolean] {
-    return this.add(a, 1, 0);
+    const result = this.add(a, 1, 0);
+    if (this._lastTrace) {
+      this._lastTrace.operation = "inc";
+    }
+    return result;
   }
 
   /**
    * Decrement by 1 using complement-add.
-   *
-   * A - 1 = A + NOT(1) + 1 = A + 14 + 1 = A + 15.
-   * carry=true if A > 0 (no borrow), false if A == 0.
    */
   decrement(a: number): [number, boolean] {
-    return this.subtract(a, 1, 1);
+    const result = this.subtract(a, 1, 1);
+    if (this._lastTrace) {
+      this._lastTrace.operation = "dec";
+    }
+    return result;
   }
 
   /** 4-bit AND using AND gates. */
@@ -133,6 +213,7 @@ export class GateALU {
     const aBits = intToBits(a, 4);
     const bBits = intToBits(b, 4);
     const result = this._alu.execute(ALUOp.AND, aBits, bBits);
+    this._lastTrace = undefined;
     return bitsToInt(result.value);
   }
 
@@ -141,17 +222,12 @@ export class GateALU {
     const aBits = intToBits(a, 4);
     const bBits = intToBits(b, 4);
     const result = this._alu.execute(ALUOp.OR, aBits, bBits);
+    this._lastTrace = undefined;
     return bitsToInt(result.value);
   }
 
   /**
    * Estimated gate count for a 4-bit ALU.
-   *
-   * Each full adder: 5 gates (2 XOR + 2 AND + 1 OR).
-   * 4-bit ripple carry: 4 x 5 = 20 gates.
-   * SUB complement: 4 NOT gates.
-   * Control muxing: ~8 gates.
-   * Total: ~32 gates.
    */
   get gateCount(): number {
     return 32;

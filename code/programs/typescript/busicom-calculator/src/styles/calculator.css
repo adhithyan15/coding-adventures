@@ -342,3 +342,59 @@ body {
 .key--wide {
   flex: 2.15;
 }
+
+/* --- Reduced Motion ---
+ * Disable animations and transitions for users who prefer reduced motion.
+ * This respects the OS-level accessibility setting.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Mobile Responsiveness --- */
+
+@media (max-width: 480px) {
+  .app {
+    padding: 0.5rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .app-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .layer-tabs {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .layer-tab {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .calculator-body {
+    padding: 16px 14px 20px;
+    max-width: 100%;
+  }
+
+  .key {
+    height: 40px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .layer-tabs {
+    max-width: 100%;
+  }
+}

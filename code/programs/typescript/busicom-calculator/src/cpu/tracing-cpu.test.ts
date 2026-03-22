@@ -119,9 +119,9 @@ describe("TracingCPU", () => {
 
       const trace = cpu.step(); // ADD R0 (acc = 5 + 3 = 8)
 
-      expect(trace.aluDetail).toBeDefined();
-      expect(trace.aluDetail!.operation).toBe("add");
-      expect(trace.aluDetail!.adders).toHaveLength(4);
+      expect(trace.aluTrace).toBeDefined();
+      expect(trace.aluTrace!.operation).toBe("add");
+      expect(trace.aluTrace!.adders).toHaveLength(4);
 
       // Verify the result is correct (5 + 3 = 8)
       expect(trace.snapshot.accumulator).toBe(8);
@@ -140,7 +140,7 @@ describe("TracingCPU", () => {
 
       const trace = cpu.step(); // ADD R0
 
-      const alu = trace.aluDetail!;
+      const alu = trace.aluTrace!;
       // 1 in binary LSB-first: [1, 0, 0, 0]
       expect(alu.inputA).toEqual([1, 0, 0, 0]);
       expect(alu.inputB).toEqual([1, 0, 0, 0]);
@@ -179,9 +179,9 @@ describe("TracingCPU", () => {
 
       const trace = cpu.step(); // SUB R0
 
-      expect(trace.aluDetail).toBeDefined();
-      expect(trace.aluDetail!.operation).toBe("sub");
-      expect(trace.aluDetail!.adders).toHaveLength(4);
+      expect(trace.aluTrace).toBeDefined();
+      expect(trace.aluTrace!.operation).toBe("sub");
+      expect(trace.aluTrace!.adders).toHaveLength(4);
     });
 
     it("should capture ALU detail for INC instruction", () => {
@@ -194,17 +194,17 @@ describe("TracingCPU", () => {
 
       const trace = cpu.step(); // INC R3
 
-      expect(trace.aluDetail).toBeDefined();
-      expect(trace.aluDetail!.operation).toBe("inc");
+      expect(trace.aluTrace).toBeDefined();
+      expect(trace.aluTrace!.operation).toBe("inc");
       // 7 + 1 = 8
-      expect(trace.aluDetail!.adders).toHaveLength(4);
+      expect(trace.aluTrace!.adders).toHaveLength(4);
     });
 
     it("should not capture ALU detail for non-ALU instructions", () => {
       const cpu = new TracingCPU();
       cpu.loadProgram(new Uint8Array([0xd5, 0x01])); // LDM 5
       const trace = cpu.step();
-      expect(trace.aluDetail).toBeUndefined();
+      expect(trace.aluTrace).toBeUndefined();
     });
 
     it("should capture complement operation for CMA", () => {
@@ -216,12 +216,12 @@ describe("TracingCPU", () => {
 
       const trace = cpu.step(); // CMA
 
-      expect(trace.aluDetail).toBeDefined();
-      expect(trace.aluDetail!.operation).toBe("complement");
+      expect(trace.aluTrace).toBeDefined();
+      expect(trace.aluTrace!.operation).toBe("complement");
       // 5 in LSB-first: [1, 0, 1, 0]
-      expect(trace.aluDetail!.inputA).toEqual([1, 0, 1, 0]);
+      expect(trace.aluTrace!.inputA).toEqual([1, 0, 1, 0]);
       // Result: NOT(5) = 10 in LSB-first: [0, 1, 0, 1]
-      expect(trace.aluDetail!.result).toEqual([0, 1, 0, 1]);
+      expect(trace.aluTrace!.result).toEqual([0, 1, 0, 1]);
     });
   });
 

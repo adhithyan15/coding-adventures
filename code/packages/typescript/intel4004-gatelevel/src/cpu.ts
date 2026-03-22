@@ -48,6 +48,7 @@
 
 import { AND, NOT, OR, register as regFn, type Bit } from "@coding-adventures/logic-gates";
 import { GateALU } from "./alu.js";
+import type { ALUTrace } from "./alu.js";
 import { intToBits, bitsToInt } from "./bits.js";
 import { type DecodedInstruction, decode } from "./decoder.js";
 import { ProgramCounter } from "./pc.js";
@@ -56,10 +57,19 @@ import { Accumulator, CarryFlag, RegisterFile } from "./registers.js";
 import { HardwareStack } from "./stack.js";
 
 /**
+ * Memory access performed during instruction execution.
+ */
+export interface MemoryAccess {
+  type: "reg_read" | "reg_write" | "ram_read" | "ram_write" | "rom_read" | "port_read" | "port_write";
+  address: number;
+  value: number;
+}
+
+/**
  * Trace record for one instruction execution.
  *
- * Same information as Intel4004Trace from the behavioral simulator,
- * plus gate-level details.
+ * Contains before/after state, decoded instruction, and optional
+ * ALU trace and memory access details.
  */
 export interface GateTrace {
   address: number;
@@ -70,6 +80,15 @@ export interface GateTrace {
   accumulatorAfter: number;
   carryBefore: boolean;
   carryAfter: boolean;
+
+  /** Full instruction decode. Always present. */
+  decoded: DecodedInstruction;
+
+  /** ALU operation detail, if the instruction used the ALU. */
+  aluTrace?: ALUTrace;
+
+  /** Memory access performed by this instruction, if any. */
+  memoryAccess?: MemoryAccess;
 }
 
 /**
@@ -108,6 +127,9 @@ export class Intel4004GateLevel {
   // --- Control state ---
   private _halted: boolean;
 
+  // --- Memory access tracking (set during _execute, read by step) ---
+  private _lastMemAccess: MemoryAccess | undefined;
+
   constructor() {
     this._alu = new GateALU();
     this._regs = new RegisterFile();
@@ -122,6 +144,7 @@ export class Intel4004GateLevel {
     this._ramCharacter = 0;
     this._romPort = 0;
     this._halted = false;
+    this._lastMemAccess = undefined;
   }
 
   // ------------------------------------------------------------------
@@ -251,6 +274,10 @@ export class Intel4004GateLevel {
       throw new Error("CPU is halted -- cannot step further");
     }
 
+    // Clear ALU trace and memory access from previous step
+    this._alu.clearTrace();
+    this._lastMemAccess = undefined;
+
     // Snapshot state before
     const accBefore = this._acc.read();
     const carryBefore = this._carry.read();
@@ -281,6 +308,9 @@ export class Intel4004GateLevel {
       accumulatorAfter: this._acc.read(),
       carryBefore,
       carryAfter: this._carry.read(),
+      decoded,
+      aluTrace: this._alu.lastTrace,
+      memoryAccess: this._lastMemAccess,
     };
   }
 
@@ -363,6 +393,7 @@ export class Intel4004GateLevel {
     if (d.isLd) {
       const val = this._regs.read(d.regIndex);
       this._acc.write(val);
+      this._lastMemAccess = { type: "reg_read", address: d.regIndex, value: val };
       this._pc.increment();
       return `LD R${d.regIndex}`;
     }
@@ -373,6 +404,7 @@ export class Intel4004GateLevel {
       const rVal = this._regs.read(d.regIndex);
       this._acc.write(rVal);
       this._regs.write(d.regIndex, aVal);
+      this._lastMemAccess = { type: "reg_write", address: d.regIndex, value: aVal };
       this._pc.increment();
       return `XCH R${d.regIndex}`;
     }
@@ -382,6 +414,7 @@ export class Intel4004GateLevel {
       const rVal = this._regs.read(d.regIndex);
       const [result] = this._alu.increment(rVal);
       this._regs.write(d.regIndex, result);
+      this._lastMemAccess = { type: "reg_write", address: d.regIndex, value: result };
       this._pc.increment();
       return `INC R${d.regIndex}`;
     }
@@ -571,6 +604,7 @@ export class Intel4004GateLevel {
       this._ram.writeMain(
         this._ramBank, this._ramRegister, this._ramCharacter, aVal,
       );
+      this._lastMemAccess = { type: "ram_write", address: this._ramCharacter, value: aVal };
       this._pc.increment();
       return "WRM";
     }
@@ -624,13 +658,16 @@ export class Intel4004GateLevel {
         this._ramBank, this._ramRegister, this._ramCharacter,
       );
       this._acc.write(val);
+      this._lastMemAccess = { type: "ram_read", address: this._ramCharacter, value: val };
       this._pc.increment();
       return "RDM";
     }
 
     if (subOp === 0xa) {
       // RDR
-      this._acc.write(this._romPort & 0xf);
+      const val = this._romPort & 0xf;
+      this._acc.write(val);
+      this._lastMemAccess = { type: "port_read", address: 0, value: val };
       this._pc.increment();
       return "RDR";
     }

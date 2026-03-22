@@ -428,7 +428,7 @@ export function encoder(inputs: Bit[]): Bit[] {
   }
 
   // Validate one-hot: exactly one bit must be 1
-  const activeCount = inputs.reduce((sum, b) => sum + b, 0);
+  const activeCount = inputs.reduce((sum: number, b) => sum + b, 0 as number);
   if (activeCount !== 1) {
     throw new RangeError(
       `inputs must be one-hot (exactly one bit = 1), got ${activeCount} active bits`,

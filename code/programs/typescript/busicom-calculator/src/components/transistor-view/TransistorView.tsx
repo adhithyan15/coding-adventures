@@ -213,7 +213,7 @@ function CmosInverterDiagram({ input }: { input: Bit }) {
 /** Find the most recent trace with ALU detail. */
 function findLastAluTrace(history: readonly DetailedTrace[]): DetailedTrace | undefined {
   for (let i = history.length - 1; i >= 0; i--) {
-    if (history[i]!.aluDetail) return history[i];
+    if (history[i]!.aluTrace) return history[i];
   }
   return undefined;
 }
@@ -222,10 +222,10 @@ export function TransistorView({ trace, traceHistory }: TransistorViewProps) {
   const { t } = useTranslation();
 
   // Use ALU data if available for realistic inputs
-  const aluTrace = trace?.aluDetail ? trace : findLastAluTrace(traceHistory ?? []);
-  const hasAlu = !!aluTrace?.aluDetail && aluTrace.aluDetail.adders.length > 0;
-  const sampleA: Bit = hasAlu ? aluTrace!.aluDetail!.adders[0]!.a : 1;
-  const sampleB: Bit = hasAlu ? aluTrace!.aluDetail!.adders[0]!.b : 0;
+  const aluTrace = trace?.aluTrace ? trace : findLastAluTrace(traceHistory ?? []);
+  const hasAlu = !!aluTrace?.aluTrace && aluTrace.aluTrace.adders.length > 0;
+  const sampleA: Bit = hasAlu ? aluTrace!.aluTrace!.adders[0]!.a : 1;
+  const sampleB: Bit = hasAlu ? aluTrace!.aluTrace!.adders[0]!.b : 0;
 
   return (
     <section className="transistor-view" aria-label={t("transistor.title")}>

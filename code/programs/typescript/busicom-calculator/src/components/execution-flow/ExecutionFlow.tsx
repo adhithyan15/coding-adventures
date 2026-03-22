@@ -37,15 +37,15 @@ interface FlowStage {
 /** Find the most recent trace with ALU detail. */
 function findLastAluTrace(history: readonly DetailedTrace[]): DetailedTrace | undefined {
   for (let i = history.length - 1; i >= 0; i--) {
-    if (history[i]!.aluDetail) return history[i];
+    if (history[i]!.aluTrace) return history[i];
   }
   return undefined;
 }
 
 export function ExecutionFlow({ trace, traceHistory, displayDigits, pc, accumulator }: ExecutionFlowProps) {
   const hasTrace = !!trace;
-  const aluTrace = trace?.aluDetail ? trace : findLastAluTrace(traceHistory);
-  const hasAlu = !!aluTrace?.aluDetail;
+  const aluTrace = trace?.aluTrace ? trace : findLastAluTrace(traceHistory);
+  const hasAlu = !!aluTrace?.aluTrace;
 
   // Build the pipeline stages
   const stages: FlowStage[] = [
@@ -115,7 +115,7 @@ export function ExecutionFlow({ trace, traceHistory, displayDigits, pc, accumula
       label: "ALU",
       getValue: () => {
         if (!hasAlu) return "Not used for this instruction";
-        const alu = aluTrace!.aluDetail!;
+        const alu = aluTrace!.aluTrace!;
         const aVal = parseInt([...alu.inputA].reverse().map(b => b.toString()).join(""), 2);
         const bVal = parseInt([...alu.inputB].reverse().map(b => b.toString()).join(""), 2);
         const rVal = parseInt([...alu.result].reverse().map(b => b.toString()).join(""), 2);
@@ -123,7 +123,7 @@ export function ExecutionFlow({ trace, traceHistory, displayDigits, pc, accumula
       },
       getDetail: () => {
         if (!hasAlu) return "";
-        const alu = aluTrace!.aluDetail!;
+        const alu = aluTrace!.aluTrace!;
         return `Carry chain: ${alu.adders.map(a => a.cOut).join(" → ")} → Cout=${alu.carryOut}`;
       },
       isActive: hasAlu,
@@ -132,8 +132,8 @@ export function ExecutionFlow({ trace, traceHistory, displayDigits, pc, accumula
       label: "Logic Gates",
       getValue: () => {
         if (!hasAlu) return "20+ gates in ALU idle";
-        const totalGates = aluTrace!.aluDetail!.adders.length * 5;
-        return `${totalGates} gates activated (${aluTrace!.aluDetail!.adders.length} full adders × 5 gates)`;
+        const totalGates = aluTrace!.aluTrace!.adders.length * 5;
+        return `${totalGates} gates activated (${aluTrace!.aluTrace!.adders.length} full adders × 5 gates)`;
       },
       getDetail: () => hasAlu ? "2×XOR + 2×AND + 1×OR per full adder" : "",
       isActive: hasAlu,
@@ -142,7 +142,7 @@ export function ExecutionFlow({ trace, traceHistory, displayDigits, pc, accumula
       label: "Transistors",
       getValue: () => {
         if (!hasAlu) return "CMOS pairs idle";
-        const totalTransistors = aluTrace!.aluDetail!.adders.length * 5 * 4;
+        const totalTransistors = aluTrace!.aluTrace!.adders.length * 5 * 4;
         return `~${totalTransistors} transistors switched`;
       },
       getDetail: () => hasAlu ? "Each gate = 2 PMOS + 2 NMOS (CMOS pair)" : "",

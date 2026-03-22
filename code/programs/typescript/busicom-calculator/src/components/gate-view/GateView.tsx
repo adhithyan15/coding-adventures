@@ -167,7 +167,7 @@ function FullAdderGates({ adder, bitIndex }: { adder: FullAdderState; bitIndex: 
 /** Find the most recent trace with ALU detail. */
 function findLastAluTrace(history: readonly DetailedTrace[]): DetailedTrace | undefined {
   for (let i = history.length - 1; i >= 0; i--) {
-    if (history[i]!.aluDetail) return history[i];
+    if (history[i]!.aluTrace) return history[i];
   }
   return undefined;
 }
@@ -175,8 +175,8 @@ function findLastAluTrace(history: readonly DetailedTrace[]): DetailedTrace | un
 export function GateView({ trace, traceHistory }: GateViewProps) {
   const { t } = useTranslation();
 
-  const aluTrace = trace?.aluDetail ? trace : findLastAluTrace(traceHistory);
-  const hasAlu = !!aluTrace?.aluDetail && aluTrace.aluDetail.adders.length > 0;
+  const aluTrace = trace?.aluTrace ? trace : findLastAluTrace(traceHistory);
+  const hasAlu = !!aluTrace?.aluTrace && aluTrace.aluTrace.adders.length > 0;
 
   return (
     <section className="gate-view" aria-label={t("gate.title")}>
@@ -254,12 +254,12 @@ export function GateView({ trace, traceHistory }: GateViewProps) {
           {/* Full adder gate breakdowns if ALU was active */}
           {hasAlu && (
             <div className="gate-diagram">
-              <h3>ALU Gate Activations — {t(`alu.op.${aluTrace!.aluDetail!.operation}`)}</h3>
+              <h3>ALU Gate Activations — {t(`alu.op.${aluTrace!.aluTrace!.operation}`)}</h3>
               <p style={{ fontSize: "0.8rem", color: "#8899aa", marginBottom: 12 }}>
                 Each full adder is built from 5 logic gates. Here are the exact gate activations
-                for the {aluTrace!.aluDetail!.operation} operation:
+                for the {aluTrace!.aluTrace!.operation} operation:
               </p>
-              {aluTrace!.aluDetail!.adders.map((adder, i) => (
+              {aluTrace!.aluTrace!.adders.map((adder, i) => (
                 <FullAdderGates key={i} adder={adder} bitIndex={i} />
               ))}
             </div>
