@@ -1,6 +1,7 @@
 defmodule CodingAdventures.StarlarkVm.VmTest do
   use ExUnit.Case, async: true
 
+  alias CodingAdventures.StarlarkVm
   alias CodingAdventures.StarlarkVm.Vm
   alias CodingAdventures.StarlarkVm.Handlers.StarlarkResult
 
@@ -459,5 +460,134 @@ defmodule CodingAdventures.StarlarkVm.VmTest do
   test "list comprehension" do
     result = exec("x = [i for i in [1, 2, 3]]\n")
     assert result.variables["x"] == [1, 2, 3]
+  end
+
+  # ===========================================================================
+  # StarlarkVm Delegator Module Tests
+  # ===========================================================================
+
+  test "StarlarkVm.create_starlark_vm/0 delegates correctly" do
+    vm = StarlarkVm.create_starlark_vm()
+    assert map_size(vm.handlers) > 40
+    assert map_size(vm.builtins) >= 23
+  end
+
+  test "StarlarkVm.create_starlark_vm/1 delegates with opts" do
+    vm = StarlarkVm.create_starlark_vm(max_recursion_depth: 100)
+    assert vm.max_recursion_depth == 100
+  end
+
+  test "StarlarkVm.execute_starlark/1 delegates correctly" do
+    result = StarlarkVm.execute_starlark("x = 42\n")
+    assert %StarlarkResult{} = result
+    assert result.variables["x"] == 42
+  end
+
+  # ===========================================================================
+  # Additional Coverage — Frozen VM
+  # ===========================================================================
+
+  test "create_starlark_vm with frozen option" do
+    vm = Vm.create_starlark_vm(frozen: true)
+    assert vm.frozen == true
+  end
+
+  # ===========================================================================
+  # Function Definition and Call
+  # ===========================================================================
+
+  test "simple function definition and call" do
+    result = exec("def add(a, b):\n  return a + b\nx = add(3, 4)\n")
+    assert result.variables["x"] == 7
+  end
+
+  test "function with default arguments" do
+    result = exec("def greet(name, greeting = \"hello\"):\n  return greeting + \" \" + name\nx = greet(\"world\")\n")
+    assert result.variables["x"] == "hello world"
+  end
+
+  # ===========================================================================
+  # Subscript Operations via execute
+  # ===========================================================================
+
+  test "list subscript" do
+    result = exec("x = [10, 20, 30]\ny = x[1]\n")
+    assert result.variables["y"] == 20
+  end
+
+  test "dict subscript" do
+    result = exec("x = {\"a\": 1}\ny = x[\"a\"]\n")
+    assert result.variables["y"] == 1
+  end
+
+  test "string subscript" do
+    result = exec("x = \"hello\"\ny = x[0]\n")
+    assert result.variables["y"] == "h"
+  end
+
+  # ===========================================================================
+  # Membership Testing via execute
+  # ===========================================================================
+
+  test "in operator with list" do
+    result = exec("x = 2 in [1, 2, 3]\n")
+    assert result.variables["x"] == true
+  end
+
+  test "not in operator with list" do
+    result = exec("x = 5 not in [1, 2, 3]\n")
+    assert result.variables["x"] == true
+  end
+
+  # ===========================================================================
+  # If/Else via execute
+  # ===========================================================================
+
+  test "if else statement" do
+    result = exec("x = 0\nif False:\n  x = 1\nelse:\n  x = 2\n")
+    assert result.variables["x"] == 2
+  end
+
+  # ===========================================================================
+  # Print via execute
+  # ===========================================================================
+
+  test "print function captures output" do
+    result = exec("print(42)\n")
+    assert result.output == ["42"]
+  end
+
+  test "print multiple args" do
+    result = exec("print(1, 2, 3)\n")
+    assert result.output == ["1 2 3"]
+  end
+
+  # ===========================================================================
+  # Division by zero
+  # ===========================================================================
+
+  test "division by zero raises" do
+    assert_raise CodingAdventures.VirtualMachine.Errors.DivisionByZeroError, fn ->
+      exec("x = 1 / 0\n")
+    end
+  end
+
+  # ===========================================================================
+  # Bitwise not via execute
+  # ===========================================================================
+
+  test "bitwise not" do
+    result = exec("x = ~0\n")
+    assert result.variables["x"] == -1
+  end
+
+  # ===========================================================================
+  # Multiple prints
+  # ===========================================================================
+
+  test "multiple print statements" do
+    result = exec("print(\"a\")\nprint(\"b\")\n")
+    # Output is reversed in execute_starlark (Enum.reverse on vm.output)
+    assert result.output == ["b", "a"]
   end
 end
