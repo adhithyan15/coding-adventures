@@ -38,7 +38,7 @@ defmodule BuildTool.CLI do
       ./build_tool --root /path/to/repo --force
   """
 
-  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Reporter, Resolver}
+  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Reporter, Resolver, StarlarkEvaluator}
   alias CodingAdventures.ProgressBar
 
   # ---------------------------------------------------------------------------
@@ -139,6 +139,11 @@ defmodule BuildTool.CLI do
           0
 
         true ->
+          # Step 3.5: Evaluate Starlark BUILD files.
+          # For each package whose BUILD file is Starlark (not shell), we
+          # evaluate it through the Starlark interpreter and replace the raw
+          # shell commands with generated commands from the declared targets.
+          packages = evaluate_starlark_builds(packages, repo_root)
           do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base, cache_file)
       end
     end
@@ -235,6 +240,53 @@ defmodule BuildTool.CLI do
     # Step 11: Exit with code 1 if any builds failed.
     has_failure = results |> Map.values() |> Enum.any?(fn r -> r.status == "failed" end)
     if has_failure, do: 1, else: 0
+  end
+
+  # ---------------------------------------------------------------------------
+  # Starlark BUILD evaluation
+  # ---------------------------------------------------------------------------
+  #
+  # After discovering packages, we check each one's BUILD file content.
+  # If it contains Starlark code (detected by looking for rule calls and
+  # load() statements), we evaluate it through the Starlark interpreter
+  # and replace the raw shell commands with generated commands.
+  #
+  # This mirrors the Go implementation's Starlark evaluation step in main.go.
+
+  defp evaluate_starlark_builds(packages, repo_root) do
+    {updated_packages, starlark_count} =
+      Enum.map_reduce(packages, 0, fn pkg, count ->
+        # Read the BUILD file content to check if it's Starlark.
+        build_content = Enum.join(pkg.build_commands, "\n")
+
+        if StarlarkEvaluator.starlark_build?(build_content) do
+          build_file = Path.join(pkg.path, "BUILD")
+
+          case StarlarkEvaluator.evaluate_build_file(build_file, pkg.path, repo_root) do
+            {:ok, targets} when targets != [] ->
+              # Use the first target's metadata (most BUILD files have one target).
+              target = hd(targets)
+              commands = StarlarkEvaluator.generate_commands(target)
+              updated_pkg = %{pkg | build_commands: commands}
+              {updated_pkg, count + 1}
+
+            {:ok, _empty_targets} ->
+              {pkg, count}
+
+            {:error, reason} ->
+              IO.puts(:stderr, "Warning: Starlark evaluation failed for #{pkg.name}: #{reason}")
+              {pkg, count}
+          end
+        else
+          {pkg, count}
+        end
+      end)
+
+    if starlark_count > 0 do
+      IO.puts("Evaluated #{starlark_count} Starlark BUILD file(s)")
+    end
+
+    updated_packages
   end
 
   # ---------------------------------------------------------------------------
