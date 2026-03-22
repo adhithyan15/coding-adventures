@@ -147,7 +147,10 @@ export function inferLanguage(dirPath: string): string {
   // Split the path into its component parts (directories).
   // On Unix: "/a/b/c" -> ["", "a", "b", "c"]
   // On Windows: "C:\\a\\b" -> ["C:", "a", "b"]
-  const parts = dirPath.split(path.sep);
+  // Split on both forward slash and backslash so this works on Windows
+  // (where path.sep is "\") even when paths contain "/" (e.g., from
+  // cross-platform plan files or test fixtures).
+  const parts = dirPath.split(/[/\\]/);
 
   const knownLanguages = [
     "python",

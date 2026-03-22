@@ -157,6 +157,20 @@ func run() int {
 					DeclaredSrcs:  pe.DeclaredSrcs,
 					DeclaredDeps:  pe.DeclaredDeps,
 				}
+
+				// Re-read the platform-appropriate BUILD file for this package.
+				// The plan's BuildCommands were generated on the detect job's OS
+				// (typically Linux) and may contain shell syntax that doesn't
+				// work on Windows (e.g., 2>/dev/null, shell quoting). By re-reading
+				// the BUILD file for the current platform, we get the correct
+				// commands for this runner's OS.
+				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+				if platformBuild != "" {
+					platformCmds := discovery.ReadLines(platformBuild)
+					if len(platformCmds) > 0 {
+						packages[i].BuildCommands = platformCmds
+					}
+				}
 			}
 
 			// Reconstruct dependency graph from edges.
