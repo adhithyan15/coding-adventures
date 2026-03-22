@@ -51,17 +51,14 @@ members = [
     "ml-framework-keras",
     "ml-framework-tf",
     "ml-framework-torch",
-
     "os-kernel",
     "parallel-execution-engine",
     "parser",
     "perceptron",
     "pipeline",
     "progress-bar",
-
     "riscv-simulator",
     "rom-bios",
-
     "ruby-lexer",
     "ruby-parser",
     "starlark-compiler",
@@ -72,6 +69,7 @@ members = [
     "system-board",
     "toml-lexer",
     "toml-parser",
+    "transistors",
     "tree",
     "typescript-lexer",
     "typescript-parser",
