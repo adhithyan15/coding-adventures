@@ -1,4 +1,4 @@
 uv venv --quiet --clear
 uv pip install maturin pytest --quiet
 .venv/bin/maturin develop
-.venv\Scripts\python -m pytest tests/ -v
+.venv/Scripts/python -m pytest tests/ -v

@@ -154,7 +154,12 @@ jobs:
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           if [ "$RUNNER_OS" = "Windows" ]; then
-            $BT -root . -force -language all
+            # Force-build on Windows to validate BUILD_windows files.
+            # Skip Elixir — erlef/setup-beam doesn't support Windows.
+            for lang in python ruby go rust typescript; do
+              echo "=== Building $lang packages ==="
+              $BT -root . -force -language "$lang"
+            done
           else
             $BT \
               -root . \
