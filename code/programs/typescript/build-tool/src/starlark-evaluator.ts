@@ -436,7 +436,7 @@ function getStringList(dict: Record<string, unknown>, key: string): string[] {
  * const cmds = generateCommands({
  *   rule: "py_library",
  *   name: "logic-gates",
- *   srcs: ["src/**/*.py"],
+ *   srcs: ["src/foo.py"],
  *   deps: [],
  *   testRunner: "",
  *   entryPoint: "",
