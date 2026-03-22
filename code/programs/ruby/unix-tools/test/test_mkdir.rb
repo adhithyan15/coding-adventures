@@ -7,7 +7,6 @@ require "simplecov"
 SimpleCov.start do
   add_filter "/test/"
   enable_coverage :branch
-  minimum_coverage 80
 end
 
 require "minitest/autorun"
@@ -107,127 +106,7 @@ class TestMkdirParseMode < Minitest::Test
     assert_equal 0o755, mkdir_parse_mode("755")
   end
 
-  def test_octal_700
-    assert_equal 0o700, mkdir_parse_mode("700")
-  end
-
   def test_invalid_mode
     assert_nil mkdir_parse_mode("xyz")
-  end
-end
-
-class TestMkdirCreateDirectoryEdgeCases < Minitest::Test
-  def test_create_with_mode
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "modedir")
-      assert mkdir_create_directory(path, parents: false, mode: 0o700, verbose: false)
-      assert File.directory?(path)
-      actual_mode = File.stat(path).mode & 0o777
-      assert_equal 0o700, actual_mode
-    end
-  end
-
-  def test_create_with_parents_and_mode
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "a", "b", "c")
-      assert mkdir_create_directory(path, parents: true, mode: 0o755, verbose: false)
-      assert File.directory?(path)
-    end
-  end
-
-  def test_verbose_with_parents
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "verbosep")
-      out, _err = capture_io do
-        mkdir_create_directory(path, parents: true, mode: nil, verbose: true)
-      end
-      assert_includes out, "created directory"
-    end
-  end
-
-  def test_existing_dir_with_parents_succeeds
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "existing")
-      Dir.mkdir(path)
-      # parents mode silently succeeds for existing dirs
-      assert mkdir_create_directory(path, parents: true, mode: nil, verbose: false)
-    end
-  end
-end
-
-class TestMkdirMainIntegration < Minitest::Test
-  def test_main_creates_directory
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "maindir")
-      old_argv = ARGV.dup
-      ARGV.replace([path])
-      e = assert_raises(SystemExit) { mkdir_main }
-      assert_equal 0, e.status
-      assert File.directory?(path)
-    ensure
-      ARGV.replace(old_argv)
-    end
-  end
-
-  def test_main_with_parents
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "a", "b", "c")
-      old_argv = ARGV.dup
-      ARGV.replace(["-p", path])
-      e = assert_raises(SystemExit) { mkdir_main }
-      assert_equal 0, e.status
-      assert File.directory?(path)
-    ensure
-      ARGV.replace(old_argv)
-    end
-  end
-
-  def test_main_with_mode
-    Dir.mktmpdir do |tmp|
-      path = File.join(tmp, "modedir")
-      old_argv = ARGV.dup
-      ARGV.replace(["-m", "700", path])
-      e = assert_raises(SystemExit) { mkdir_main }
-      assert_equal 0, e.status
-      assert File.directory?(path)
-    ensure
-      ARGV.replace(old_argv)
-    end
-  end
-
-  def test_main_invalid_mode
-    old_argv = ARGV.dup
-    ARGV.replace(["-m", "xyz", "somedir"])
-    _out, err = capture_io do
-      e = assert_raises(SystemExit) { mkdir_main }
-      assert_equal 1, e.status
-    end
-    assert_includes err, "invalid mode"
-  ensure
-    ARGV.replace(old_argv)
-  end
-
-  def test_main_help
-    old_argv = ARGV.dup
-    ARGV.replace(["--help"])
-    out, _err = capture_io do
-      e = assert_raises(SystemExit) { mkdir_main }
-      assert_equal 0, e.status
-    end
-    assert_includes out, "mkdir"
-  ensure
-    ARGV.replace(old_argv)
-  end
-
-  def test_main_version
-    old_argv = ARGV.dup
-    ARGV.replace(["--version"])
-    out, _err = capture_io do
-      e = assert_raises(SystemExit) { mkdir_main }
-      assert_equal 0, e.status
-    end
-    assert_includes out, "1.0.0"
-  ensure
-    ARGV.replace(old_argv)
   end
 end

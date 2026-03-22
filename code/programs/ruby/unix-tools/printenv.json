@@ -5,7 +5,10 @@
   "description": "Print all or part of environment",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "null",
@@ -18,8 +21,7 @@
   "arguments": [
     {
       "id": "variables",
-      "name": "variables",
-      "display_name": "VARIABLE",
+      "display_name": "variables",
       "description": "Environment variables to print",
       "type": "string",
       "required": false,

@@ -5,7 +5,10 @@
   "description": "Output the last part of files",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "lines",
@@ -60,8 +63,7 @@
   "arguments": [
     {
       "id": "files",
-      "name": "files",
-      "display_name": "FILE",
+      "display_name": "files",
       "description": "Files to read (use - for standard input)",
       "type": "string",
       "required": false,
@@ -73,12 +75,18 @@
   "mutually_exclusive_groups": [
     {
       "id": "count-mode",
-      "flag_ids": ["lines", "bytes"],
+      "flag_ids": [
+        "lines",
+        "bytes"
+      ],
       "required": false
     },
     {
       "id": "header-mode",
-      "flag_ids": ["quiet", "verbose"],
+      "flag_ids": [
+        "quiet",
+        "verbose"
+      ],
       "required": false
     }
   ]
