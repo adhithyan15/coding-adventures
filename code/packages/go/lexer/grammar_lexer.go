@@ -203,12 +203,30 @@ func (l *GrammarLexer) tryMatchToken() *Token {
 
 			tType, typeName := l.resolveTokenType(p.Name, value, p.Alias)
 
-			// Handle STRING tokens: strip quotes and process escapes.
-			if p.Name == "STRING" || (p.Alias != "" && strings.Contains(p.Alias, "STRING")) {
-				if len(value) >= 2 && (value[0] == '"' || value[0] == '\'') {
-					inner := value[1 : len(value)-1]
-					inner = processEscapes(inner)
-					value = inner
+			// Handle STRING tokens: strip quotes and optionally process escapes.
+			// When EscapeMode is "none", we strip the quotes but leave escape
+			// sequences as raw text. This is used by grammars like TOML and CSS
+			// where different string types have different escape semantics — the
+			// semantic layer handles escape processing instead of the lexer.
+			if strings.Contains(p.Name, "STRING") || (p.Alias != "" && strings.Contains(p.Alias, "STRING")) {
+				if len(value) >= 2 {
+					quote := value[0]
+					if quote == '"' || quote == '\'' {
+						// Check for triple-quoted strings (""" or ''')
+						if len(value) >= 6 && value[0] == value[1] && value[1] == value[2] {
+							inner := value[3 : len(value)-3]
+							if l.grammar.EscapeMode != "none" {
+								inner = processEscapes(inner)
+							}
+							value = inner
+						} else {
+							inner := value[1 : len(value)-1]
+							if l.grammar.EscapeMode != "none" {
+								inner = processEscapes(inner)
+							}
+							value = inner
+						}
+					}
 				}
 			}
 

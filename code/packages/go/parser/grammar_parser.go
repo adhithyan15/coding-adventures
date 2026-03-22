@@ -281,10 +281,17 @@ func (p *GrammarParser) parseRule(ruleName string) *ASTNode {
 		p.memo[key] = &memoEntry{children: children, endPos: p.pos, ok: ok}
 	}
 
-	if !ok || children == nil {
+	if !ok {
 		p.pos = startPos
 		p.recordFailure(ruleName)
 		return nil
+	}
+
+	// When a rule body consists entirely of repetitions and optionals
+	// (like TOML's array_values rule), children may be nil even on success.
+	// Normalize nil to an empty slice so the ASTNode is well-formed.
+	if children == nil {
+		children = []interface{}{}
 	}
 
 	return &ASTNode{RuleName: ruleName, Children: children}
