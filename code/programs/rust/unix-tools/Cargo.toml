@@ -8,3 +8,6 @@ description = "Unix command-line tools reimplemented in Rust — powered by CLI 
 cli-builder = { path = "../../../packages/rust/cli-builder" }
 serde_json = "1.0"
 libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"

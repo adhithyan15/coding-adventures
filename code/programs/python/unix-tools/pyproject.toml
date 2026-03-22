@@ -27,6 +27,17 @@ py-modules = [
     "unexpand_tool",
     "fold_tool",
     "nl_tool",
+    "sort_tool",
+    "cut_tool",
+    "paste_tool",
+    "comm_tool",
+    "uname_tool",
+    "id_tool",
+    "groups_tool",
+    "df_tool",
+    "du_tool",
+    "md5sum_tool",
+    "sha256sum_tool",
 ]
 
 [project.optional-dependencies]

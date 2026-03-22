@@ -1,0 +1,76 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "uname",
+  "display_name": "uname",
+  "description": "Print system information",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "all",
+      "short": "a",
+      "long": "all",
+      "description": "Print all information, in the following order",
+      "type": "boolean"
+    },
+    {
+      "id": "kernel_name",
+      "short": "s",
+      "long": "kernel-name",
+      "description": "Print the kernel name",
+      "type": "boolean"
+    },
+    {
+      "id": "nodename",
+      "short": "n",
+      "long": "nodename",
+      "description": "Print the network node hostname",
+      "type": "boolean"
+    },
+    {
+      "id": "kernel_release",
+      "short": "r",
+      "long": "kernel-release",
+      "description": "Print the kernel release",
+      "type": "boolean"
+    },
+    {
+      "id": "kernel_version",
+      "short": "v",
+      "long": "kernel-version",
+      "description": "Print the kernel version",
+      "type": "boolean"
+    },
+    {
+      "id": "machine",
+      "short": "m",
+      "long": "machine",
+      "description": "Print the machine hardware name",
+      "type": "boolean"
+    },
+    {
+      "id": "processor",
+      "short": "p",
+      "long": "processor",
+      "description": "Print the processor type (non-portable)",
+      "type": "boolean"
+    },
+    {
+      "id": "hardware_platform",
+      "short": "i",
+      "long": "hardware-platform",
+      "description": "Print the hardware platform (non-portable)",
+      "type": "boolean"
+    },
+    {
+      "id": "operating_system",
+      "short": "o",
+      "long": "operating-system",
+      "description": "Print the operating system",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [],
+  "commands": []
+}
