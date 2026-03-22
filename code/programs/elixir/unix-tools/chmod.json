@@ -1,0 +1,66 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "chmod",
+  "display_name": "chmod",
+  "description": "Change file mode bits",
+  "version": "1.0.0",
+  "parsing_mode": "posix",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "recursive",
+      "short": "R",
+      "long": "recursive",
+      "description": "Change files and directories recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Output a diagnostic for every file processed",
+      "type": "boolean"
+    },
+    {
+      "id": "changes",
+      "short": "c",
+      "long": "changes",
+      "description": "Like verbose but report only when a change is made",
+      "type": "boolean"
+    },
+    {
+      "id": "silent",
+      "short": "f",
+      "long": "silent",
+      "description": "Suppress most error messages",
+      "type": "boolean"
+    },
+    {
+      "id": "reference",
+      "long": "reference",
+      "description": "Use RFILE's mode instead of MODE values",
+      "type": "string",
+      "value_name": "RFILE"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "mode",
+      "name": "MODE",
+      "description": "File mode in octal (e.g., 755) or symbolic notation (e.g., u+rwx,go+rx)",
+      "type": "string",
+      "required": true,
+      "required_unless_flag": ["reference"]
+    },
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files or directories to change",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 1
+    }
+  ],
+  "commands": []
+}
