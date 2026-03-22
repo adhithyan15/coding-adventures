@@ -32,3 +32,17 @@ All notable changes to the `fpga` package will be documented in this file.
   - Three modes: INPUT, OUTPUT, TRISTATE
   - Tri-state uses logic-gates `tri_state` buffer
   - Pad and internal signal interfaces
+
+- **Bitstream**: JSON-based FPGA configuration format
+  - `from_json` and `from_dict` loading
+  - Parses CLB, routing, and I/O configurations
+  - Sensible defaults for missing fields
+
+- **FPGA**: Top-level fabric model
+  - Creates and configures CLBs, switch matrices, I/O blocks from bitstream
+  - `evaluate_clb`, `route`, `set_input`, `read_output`, `drive_output`
+
+- **JSON Examples**: Three worked configuration examples
+  - `and_gate.json`: Simple AND gate in one LUT
+  - `two_bit_adder.json`: 2-bit ripple-carry adder with carry chain
+  - `registered_counter.json`: Toggle flip-flop using registered output
