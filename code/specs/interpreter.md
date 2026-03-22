@@ -20,7 +20,7 @@ Lexer (starlark-lexer)             NAME('x') EQUALS INT(1) PLUS INT(2)
 Parser (starlark-parser)           ASTNode(rule_name="file", children=[...])
     |
     v
-Bytecode Compiler (starlark-compiler)
+Bytecode Compiler (starlark-ast-to-bytecode-compiler)
     |                              LOAD_CONST 0    # push 1
     |                              LOAD_CONST 1    # push 2
     |                              ADD             # pop both, push 3
@@ -1139,7 +1139,7 @@ Source code → lex → parse → compile → execute → verify result:
 ### Coverage Target
 
 - Generic framework (bytecode-compiler, virtual-machine): 90%+
-- Starlark wrappers (starlark-compiler, starlark-vm): 90%+
+- Starlark wrappers (starlark-ast-to-bytecode-compiler, starlark-vm): 90%+
 
 
 ## Part 11: Packages Summary
@@ -1155,7 +1155,7 @@ Source code → lex → parse → compile → execute → verify result:
 
 | Package | Per Language | Description |
 |---------|-------------|-------------|
-| `starlark-compiler` | 5 | Registers all 55 grammar rule handlers with GenericCompiler. |
+| `starlark-ast-to-bytecode-compiler` | 5 | Registers all 55 grammar rule handlers with GenericCompiler. |
 | `starlark-vm` | 5 | Registers all ~50 opcode handlers and ~30 built-ins with GenericVM. |
 
 **10 new packages total** + backward-compatible extensions to 10 existing packages.

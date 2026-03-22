@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "coding-adventures-starlark-compiler"
+name = "coding-adventures-starlark-ast-to-bytecode-compiler"
 version = "0.1.0"
 description = "Compiles Starlark ASTs into bytecode using the pluggable GenericCompiler framework"
 requires-python = ">=3.12"
@@ -54,14 +54,14 @@ select = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=starlark_compiler --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=starlark_ast_to_bytecode_compiler --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
-source = ["src/starlark_compiler"]
+source = ["src/starlark_ast_to_bytecode_compiler"]
 
 [tool.coverage.report]
 fail_under = 80
 show_missing = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/starlark_compiler"]
+packages = ["src/starlark_ast_to_bytecode_compiler"]

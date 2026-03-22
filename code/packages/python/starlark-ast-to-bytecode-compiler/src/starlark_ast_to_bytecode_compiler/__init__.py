@@ -7,12 +7,12 @@ bytecode that the Starlark VM can execute.
 
 Key exports:
     - compile_starlark: One-call source → bytecode compilation.
-    - create_starlark_compiler: Factory that returns a configured GenericCompiler.
+    - create_starlark_ast_to_bytecode_compiler: Factory that returns a configured GenericCompiler.
     - Op: The Starlark opcode enumeration.
 """
 
-from starlark_compiler.compiler import compile_starlark, create_starlark_compiler
-from starlark_compiler.opcodes import (
+from starlark_ast_to_bytecode_compiler.compiler import compile_starlark, create_starlark_ast_to_bytecode_compiler
+from starlark_ast_to_bytecode_compiler.opcodes import (
     AUGMENTED_ASSIGN_MAP,
     BINARY_OP_MAP,
     COMPARE_OP_MAP,
@@ -25,5 +25,5 @@ __all__ = [
     "COMPARE_OP_MAP",
     "AUGMENTED_ASSIGN_MAP",
     "compile_starlark",
-    "create_starlark_compiler",
+    "create_starlark_ast_to_bytecode_compiler",
 ]

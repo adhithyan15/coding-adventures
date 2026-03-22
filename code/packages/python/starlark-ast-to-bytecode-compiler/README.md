@@ -24,7 +24,7 @@ starlark_lexer.tokenize_starlark()     -- tokenizes source
 starlark_parser.parse_starlark()       -- produces AST
     |
     v
-starlark_compiler.compile_starlark()   -- [this package] AST -> bytecode
+starlark_ast_to_bytecode_compiler.compile_starlark()   -- [this package] AST -> bytecode
     |
     v
 CodeObject (instructions + constants + names)
@@ -44,7 +44,7 @@ starlark_vm.execute_starlark()         -- executes bytecode
 ## Usage
 
 ```python
-from starlark_compiler import compile_starlark, Op
+from starlark_ast_to_bytecode_compiler import compile_starlark, Op
 
 # One-call compilation from source to bytecode
 code = compile_starlark('x = 1 + 2\n')
@@ -53,9 +53,9 @@ print(code.constants)      # [1, 2]
 print(code.names)          # ['x']
 
 # Or create a reusable compiler instance
-from starlark_compiler import create_starlark_compiler
+from starlark_ast_to_bytecode_compiler import create_starlark_ast_to_bytecode_compiler
 
-compiler = create_starlark_compiler()
+compiler = create_starlark_ast_to_bytecode_compiler()
 code = compiler.compile('def add(a, b):\n    return a + b\n')
 
 # Inspect the opcode enum
@@ -65,7 +65,7 @@ print(list(Op))  # All ~50 opcodes
 ## Installation
 
 ```bash
-pip install coding-adventures-starlark-compiler
+pip install coding-adventures-starlark-ast-to-bytecode-compiler
 ```
 
 ## Dependencies

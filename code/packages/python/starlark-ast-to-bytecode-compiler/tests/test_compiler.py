@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import pytest
 
-from starlark_compiler import compile_starlark, Op
-from starlark_compiler.compiler import (
+from starlark_ast_to_bytecode_compiler import compile_starlark, Op
+from starlark_ast_to_bytecode_compiler.compiler import (
     _extract_simple_name,
     _has_token,
     _find_token_index,
