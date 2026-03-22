@@ -50,4 +50,6 @@ members = [
     "system-board",
     "arm-simulator",
     "transistors",
+    "block-ram",
+    "fpga",
 ]
