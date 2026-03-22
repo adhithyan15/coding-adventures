@@ -1,0 +1,23 @@
+/* ==========================================================================
+ * Vacuum Tube era styles.
+ *
+ * Warm amber and orange tones evoke the glow of heated filaments
+ * and the golden age of vacuum tube electronics.
+ * ========================================================================== */
+
+.era--vacuum-tube .era-header__year {
+  background: #cc6600;
+}
+
+.era--vacuum-tube .triode-diagram {
+  background: #1a1510;
+  border-color: #3a2a1a;
+}
+
+.era--vacuum-tube .slider-control__value {
+  color: #ffaa44;
+}
+
+.era--vacuum-tube .voltage-readout__value {
+  color: #ffaa44;
+}
