@@ -26,7 +26,7 @@
       "variadic": true,
       "type": "string",
       "min": 1,
-      "name": "NAME"
+      "display_name": "NAME"
     }
   ],
   "commands": []

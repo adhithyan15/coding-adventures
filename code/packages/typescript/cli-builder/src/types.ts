@@ -103,8 +103,8 @@ export interface FlagDef {
 export interface ArgDef {
   /** Unique identifier within the scope. Used as the key in ParseResult.arguments. */
   id: string;
-  /** Display name in help text (e.g., "FILE", "DEST"). */
-  name: string;
+  /** Display name in help text (e.g., "FILE", "DEST"). Accepts display_name (preferred) or name (backward compat). */
+  display_name: string;
   /** Human-readable description. */
   description: string;
   /** The value type. */

@@ -279,7 +279,7 @@ export class HelpGenerator {
    * - Optional variadic: `[NAME...]`
    */
   private _argDisplay(arg: ArgDef): string {
-    const namePart = arg.variadic ? `${arg.name}...` : arg.name;
+    const namePart = arg.variadic ? `${arg.display_name}...` : arg.display_name;
     if (arg.required) {
       return `<${namePart}>`;
     }

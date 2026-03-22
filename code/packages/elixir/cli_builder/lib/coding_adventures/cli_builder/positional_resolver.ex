@@ -140,7 +140,7 @@ defmodule CodingAdventures.CliBuilder.PositionalResolver do
           if required and not exempt do
             err = %ParseError{
               error_type: "missing_required_argument",
-              message: "Missing required argument: <#{def["name"]}>",
+              message: "Missing required argument: <#{def["display_name"] || def["name"]}>",
               suggestion: nil,
               context: command_path
             }
@@ -222,7 +222,7 @@ defmodule CodingAdventures.CliBuilder.PositionalResolver do
           %ParseError{
             error_type: "too_few_arguments",
             message:
-              "Expected at least #{variadic_min} <#{variadic_def["name"]}>, got #{count}",
+              "Expected at least #{variadic_min} <#{variadic_def["display_name"] || variadic_def["name"]}>, got #{count}",
             suggestion: nil,
             context: command_path
           }
@@ -238,7 +238,7 @@ defmodule CodingAdventures.CliBuilder.PositionalResolver do
           %ParseError{
             error_type: "too_many_arguments",
             message:
-              "Expected at most #{variadic_max} <#{variadic_def["name"]}>, got #{count}",
+              "Expected at most #{variadic_max} <#{variadic_def["display_name"] || variadic_def["name"]}>, got #{count}",
             suggestion: nil,
             context: command_path
           }
@@ -389,7 +389,7 @@ defmodule CodingAdventures.CliBuilder.PositionalResolver do
     if required and not exempt do
       err = %ParseError{
         error_type: "missing_required_argument",
-        message: "Missing required argument: <#{def["name"]}>",
+        message: "Missing required argument: <#{def["display_name"] || def["name"]}>",
         suggestion: nil,
         context: command_path
       }

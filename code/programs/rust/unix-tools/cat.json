@@ -5,7 +5,10 @@
   "description": "Concatenate files and print on the standard output",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "number",
@@ -60,13 +63,13 @@
   "arguments": [
     {
       "id": "files",
-      "name": "FILE",
       "description": "Files to concatenate (use - for stdin)",
       "type": "string",
       "required": false,
       "variadic": true,
       "variadic_min": 0,
-      "default": "-"
+      "default": "-",
+      "display_name": "FILE"
     }
   ],
   "commands": []

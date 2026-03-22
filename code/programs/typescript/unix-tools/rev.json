@@ -17,7 +17,7 @@
       "required": false,
       "variadic": true,
       "type": "string",
-      "name": "FILE"
+      "display_name": "FILE"
     }
   ],
   "commands": []

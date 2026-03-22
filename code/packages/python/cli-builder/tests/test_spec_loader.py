@@ -692,18 +692,18 @@ def test_argument_missing_id_raises() -> None:
 
 
 def test_argument_missing_name_raises() -> None:
-    """An argument without 'name' raises SpecError."""
+    """An argument without 'name' or 'display_name' raises SpecError."""
     spec = dict(MINIMAL_SPEC)
     spec["arguments"] = [
         {
             "id": "file",
-            # no "name"
+            # no "name" or "display_name"
             "description": "Input file",
             "type": "string",
         }
     ]
     path = make_spec_file(spec)
-    with pytest.raises(SpecError, match="missing 'name'"):
+    with pytest.raises(SpecError, match="missing 'display_name'"):
         SpecLoader(path).load()
 
 

@@ -21,11 +21,11 @@
   "arguments": [
     {
       "id": "variables",
-      "name": "VARIABLE",
       "description": "Environment variables to print. If none given, print all.",
       "type": "string",
       "required": false,
-      "variadic": true
+      "variadic": true,
+      "display_name": "VARIABLE"
     }
   ],
   "commands": []

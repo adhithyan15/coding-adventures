@@ -50,24 +50,30 @@
   "arguments": [
     {
       "id": "files",
-      "name": "FILE",
       "description": "Files to read. Use '-' for standard input.",
       "type": "string",
       "required": false,
       "variadic": true,
-      "default": "-"
+      "default": "-",
+      "display_name": "FILE"
     }
   ],
   "commands": [],
   "mutually_exclusive_groups": [
     {
       "id": "count-mode",
-      "flag_ids": ["lines", "bytes"],
+      "flag_ids": [
+        "lines",
+        "bytes"
+      ],
       "required": false
     },
     {
       "id": "header-mode",
-      "flag_ids": ["quiet", "verbose"],
+      "flag_ids": [
+        "quiet",
+        "verbose"
+      ],
       "required": false
     }
   ]

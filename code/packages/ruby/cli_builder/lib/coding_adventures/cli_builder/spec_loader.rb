@@ -127,6 +127,8 @@ module CodingAdventures
       def normalize_arguments(args)
         args.map do |a|
           a = a.dup
+          # Accept display_name (preferred) or name (backward compatibility).
+          a["display_name"] ||= a["name"]
           a["required"] = a.key?("required") ? a["required"] : true
           a["variadic"] ||= false
           a["variadic_min"] = a.key?("variadic_min") ? a["variadic_min"] : (a["required"] ? 1 : 0)

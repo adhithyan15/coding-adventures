@@ -128,7 +128,8 @@ module CodingAdventures
       end
 
       def format_arg_usage(arg)
-        name = arg["name"]
+        # Prefer display_name, fall back to name for backward compatibility.
+        name = arg["display_name"] || arg["name"]
         required = arg["required"] != false
         variadic = arg["variadic"]
 

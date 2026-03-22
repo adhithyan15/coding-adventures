@@ -308,14 +308,14 @@ fn format_flag_signature(f: &FlagDef) -> String {
 fn format_arg_usage(a: &ArgumentDef) -> String {
     if a.variadic {
         if a.required {
-            format!("<{}...>", a.name)
+            format!("<{}...>", a.display_name)
         } else {
-            format!("[{}...]", a.name)
+            format!("[{}...]", a.display_name)
         }
     } else if a.required {
-        format!("<{}>", a.name)
+        format!("<{}>", a.display_name)
     } else {
-        format!("[{}]", a.name)
+        format!("[{}]", a.display_name)
     }
 }
 
@@ -581,7 +581,7 @@ mod tests {
     fn test_format_arg_usage_required_variadic() {
         let a = ArgumentDef {
             id: "src".into(),
-            name: "SOURCE".into(),
+            display_name: "SOURCE".into(),
             description: "".into(),
             arg_type: "path".into(),
             required: true,
@@ -601,7 +601,7 @@ mod tests {
     fn test_format_arg_usage_optional_scalar() {
         let a = ArgumentDef {
             id: "p".into(),
-            name: "PATH".into(),
+            display_name: "PATH".into(),
             description: "".into(),
             arg_type: "path".into(),
             required: false,
@@ -625,7 +625,7 @@ mod tests {
     fn test_format_arg_usage_optional_variadic() {
         let a = ArgumentDef {
             id: "files".into(),
-            name: "FILE".into(),
+            display_name: "FILE".into(),
             description: "".into(),
             arg_type: "path".into(),
             required: false,
