@@ -52,4 +52,5 @@ members = [
     "device-driver-framework",
     "virtual-memory",
     "process-manager",
+    "file-system",
 ]
