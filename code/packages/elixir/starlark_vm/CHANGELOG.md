@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 — 2026-03-22
+
+### Fixed
+- `call_starlark_function` now saves/restores full VM state (pc, stack, call_stack, halted) for correct nested function calls
+- Function calls inside for-loops no longer corrupt the stack
+- Keyword argument calls (`func(name=val)`) pass pre-bound args correctly
+- Removed unused `CallFrame` alias
+
 ## 0.1.0 — 2026-03-22
 
 ### Added

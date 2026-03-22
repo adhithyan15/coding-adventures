@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1 — 2026-03-22
+
+### Fixed
+- Added INDENT/DEDENT token injection to tokenizer for proper block parsing
+- Multi-statement function bodies and if-blocks now parse correctly
+- Multiline function calls (with NEWLINE/INDENT/DEDENT inside parens) no longer hang
+- `handle_def_stmt` now correctly captures the BUILD_TUPLE emission for default args
+- Added `skip_whitespace` helper that skips NEWLINE/INDENT/DEDENT in non-block contexts
+
 ## 0.1.0 — 2026-03-22
 
 ### Added

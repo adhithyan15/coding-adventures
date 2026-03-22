@@ -269,3 +269,42 @@ When the lexer's skip pattern evaluation order changes (skip patterns before new
 Go modules with their own `go.mod` file cannot be built via parent directory patterns like `cd ../ && go build ./subdir/...`. This fails with "directory prefix does not contain main module or its selected dependencies." Instead, BUILD files should use `go build ./...`, `go test ./...`, `go vet ./...` which run from within the package directory (the build tool already `cd`s into the package directory before executing BUILD commands).
 
 **Rule:** Go BUILD files should always use `./...` patterns, not `cd ../ && ./subdir/...` patterns. Match the existing convention used by `starlark-parser/BUILD`: `go test ./... -v -cover`.
+
+---
+
+### 2026-03-22: Elixir indentation-sensitive parser needs INDENT/DEDENT tokens
+
+When building a parser for Python/Starlark in Elixir, the tokenizer MUST produce INDENT and DEDENT tokens for block boundaries. Without them, `parse_block` cannot determine where a function body or if-body ends. A simple "parse one statement" heuristic fails for multi-statement blocks (e.g., `def factorial(n):` with an if-return and a second return).
+
+**Solution:** Post-process raw tokens to inject INDENT/DEDENT based on indentation levels from the source text. Use an indent stack (like Python's tokenize module). Additionally, `skip_newlines` must NOT skip DEDENT tokens — DEDENT is a block boundary marker. Create a separate `skip_whitespace` helper that skips NEWLINE + INDENT + DEDENT for contexts where indentation is noise (e.g., multiline function call arguments).
+
+---
+
+### 2026-03-22: Elixir GenericVM — function calls need fresh execution context
+
+When calling a Starlark function via `GenericVM.execute`, the VM's pc, stack, call_stack, and halted state carry over from the caller. This causes function calls to fail silently (pc past end of function's code, empty call_stack triggers wrong RETURN behavior).
+
+**Solution:** Save the entire caller state (pc, variables, locals, stack, call_stack, halted), reset them for the function call (pc=0, stack=[], call_stack=[], halted=false), execute the function's CodeObject, extract the return value from the function's stack, then restore all caller state and push the return value.
+
+---
+
+### 2026-03-22: Elixir `if` blocks must capture their result
+
+In Elixir, `if` blocks return a value. If you write:
+```elixir
+if condition do
+  {_idx, compiler} = emit(compiler, ...)
+  compiler
+end
+# Compile body as nested code object
+```
+The result of the `if` is DISCARDED — `compiler` after the `if` is the OLD value. You must write:
+```elixir
+compiler = if condition do
+  {_idx, comp} = emit(compiler, ...)
+  comp
+else
+  compiler
+end
+```
+This bit us in `handle_def_stmt` where defaults BUILD_TUPLE was never emitted.
