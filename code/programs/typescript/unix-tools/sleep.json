@@ -1,0 +1,23 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "sleep",
+  "display_name": "sleep",
+  "description": "Delay for a specified amount of time",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [],
+  "arguments": [
+    {
+      "id": "duration",
+      "display_name": "NUMBER[SUFFIX]",
+      "description": "Duration to sleep. SUFFIX may be 's' (seconds, default), 'm' (minutes), 'h' (hours), or 'd' (days). Multiple values are summed.",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 1
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}

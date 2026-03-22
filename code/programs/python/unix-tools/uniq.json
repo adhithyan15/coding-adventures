@@ -63,17 +63,17 @@
   "arguments": [
     {
       "id": "input_file",
-      "name": "INPUT",
       "description": "Input file (default: standard input)",
       "type": "string",
-      "required": false
+      "required": false,
+      "display_name": "INPUT"
     },
     {
       "id": "output_file",
-      "name": "OUTPUT",
       "description": "Output file (default: standard output)",
       "type": "string",
-      "required": false
+      "required": false,
+      "display_name": "OUTPUT"
     }
   ],
   "commands": []

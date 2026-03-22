@@ -1,10 +1,14 @@
 # ================================================================
-# CI — Incremental, parallel monorepo build
+# CI — Incremental, parallel monorepo build with conditional toolchains
 # ================================================================
 #
-# This workflow uses the Go build tool to build and test only the
-# packages that changed. The Go binary is compiled from source on
-# every run (~1-2 seconds).
+# Two-job pipeline:
+#   1. detect: Fast (~10s) — compiles the Go build tool and runs
+#      --detect-languages to determine which toolchains are needed.
+#   2. build: Installs only the needed toolchains, then runs the build.
+#
+# This saves 3-5 minutes on language-specific changes by skipping
+# unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
 #
 # Change detection: git diff against the base branch determines which
 # files changed, maps them to packages, then uses the dependency graph
@@ -30,7 +34,76 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ── Job 1: Detect which languages need toolchains ────────────
+  #
+  # This job is fast (~10s). It compiles the Go build tool, runs
+  # --detect-languages, and outputs boolean flags for each language.
+  # The build job reads these flags to conditionally install toolchains.
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      needs_python: ${{ steps.detect.outputs.needs_python }}
+      needs_ruby: ${{ steps.detect.outputs.needs_ruby }}
+      needs_go: ${{ steps.detect.outputs.needs_go }}
+      needs_typescript: ${{ steps.detect.outputs.needs_typescript }}
+      needs_rust: ${{ steps.detect.outputs.needs_rust }}
+      needs_elixir: ${{ steps.detect.outputs.needs_elixir }}
+      diff_base: ${{ steps.diff-base.outputs.base }}
+      is_main: ${{ steps.detect-main.outputs.is_main }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Determine diff base
+        id: diff-base
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.event.pull_request.base.ref }}"
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            BASE="HEAD~1"
+          else
+            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
+            BASE="origin/main"
+          fi
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "Diff base: $BASE"
+
+      - name: Check if main branch
+        id: detect-main
+        shell: bash
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ github.event_name }}" = "push" ]; then
+            echo "is_main=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_main=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Detect needed languages
+        id: detect
+        shell: bash
+        run: |
+          cd code/programs/go/build-tool
+          go build -o ../../../../build-tool .
+          cd ../../../..
+          ./build-tool \
+            -root . \
+            -diff-base "${{ steps.diff-base.outputs.base }}" \
+            -detect-languages
+
+  # ── Job 2: Build and test ──────────────────────────────────────
+  #
+  # Installs only the toolchains flagged by the detect job, then
+  # compiles the build tool and runs the incremental build.
   build:
+    needs: detect
     strategy:
       matrix:
         os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
@@ -41,46 +114,60 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for git diff
+          fetch-depth: 0
 
-      # ── Language toolchains ───────────────────────────────────
+      # ── Language toolchains (conditional) ───────────────────────
+      #
+      # Go is always installed — the build tool is written in Go.
+      # Other toolchains are installed only if their language has
+      # affected packages, as determined by the detect job.
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
 
       - name: Set up Python
+        if: needs.detect.outputs.needs_python == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
+        if: needs.detect.outputs.needs_python == 'true'
         uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.6.x"
 
       - name: Set up Ruby
+        if: needs.detect.outputs.needs_ruby == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
           bundler-cache: false
 
       - name: Install bundler
+        if: needs.detect.outputs.needs_ruby == 'true'
         shell: bash
         run: gem install bundler
 
       - name: Set up Node.js
+        if: needs.detect.outputs.needs_typescript == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Set up Rust
+        if: needs.detect.outputs.needs_rust == 'true'
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-tarpaulin
-        if: runner.os == 'Linux'
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
+        if: needs.detect.outputs.needs_elixir == 'true'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16'
@@ -89,24 +176,38 @@ jobs:
       - name: Install test runners
         shell: bash
         run: |
-          uv pip install --system pytest
-          npm install -g jest
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
+            uv pip install --system pytest
+          fi
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
+            npm install -g jest
+          fi
 
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         shell: bash
         run: |
-          echo "Python: $(python --version)"
-          echo "uv: $(uv --version)"
-          echo "Ruby: $(ruby --version)"
-          echo "Bundler: $(bundle --version)"
           echo "Go: $(go version)"
-          echo "Node: $(node --version)"
-          echo "npm: $(npm --version)"
-          echo "Rust: $(rustc --version)"
-          echo "Cargo: $(cargo --version)"
-          echo "Elixir: $(elixir --version)"
-          echo "Mix: $(mix --version)"
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
+            echo "Python: $(python --version)"
+            echo "uv: $(uv --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ]; then
+            echo "Ruby: $(ruby --version)"
+            echo "Bundler: $(bundle --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
+            echo "Node: $(node --version)"
+            echo "npm: $(npm --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ]; then
+            echo "Rust: $(rustc --version)"
+            echo "Cargo: $(cargo --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
+            echo "Elixir: $(elixir --version)"
+            echo "Mix: $(mix --version)"
+          fi
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
@@ -119,25 +220,6 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
-      # ── Determine what to build ───────────────────────────────
-      - name: Determine diff base
-        id: diff-base
-        shell: bash
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE="origin/${{ github.event.pull_request.base.ref }}"
-          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            # On main, compare against previous commit
-            BASE="HEAD~1"
-          else
-            # On feature branches, compare against origin/main
-            # Fetch main first in case it's not available
-            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
-            BASE="origin/main"
-          fi
-          echo "base=$BASE" >> "$GITHUB_OUTPUT"
-          echo "Diff base: $BASE"
-
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
         shell: bash
@@ -145,12 +227,12 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           $BT \
             -root . \
-            -diff-base "${{ steps.diff-base.outputs.base }}" \
+            -diff-base "${{ needs.detect.outputs.diff_base }}" \
             -language all
 
       # ── Force full build on main ──────────────────────────────
       - name: Full build on main merge
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: needs.detect.outputs.is_main == 'true'
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi

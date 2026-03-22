@@ -86,10 +86,10 @@
   "arguments": [
     {
       "id": "file",
-      "name": "FILE",
       "description": "File to number. Use '-' for standard input.",
       "type": "string",
-      "required": false
+      "required": false,
+      "display_name": "FILE"
     }
   ],
   "commands": []

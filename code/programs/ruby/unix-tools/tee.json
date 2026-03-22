@@ -5,7 +5,10 @@
   "description": "Read from standard input and write to standard output and files",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "append",
@@ -25,8 +28,7 @@
   "arguments": [
     {
       "id": "files",
-      "name": "files",
-      "display_name": "FILE",
+      "display_name": "files",
       "description": "Files to write to in addition to standard output",
       "type": "string",
       "required": false,

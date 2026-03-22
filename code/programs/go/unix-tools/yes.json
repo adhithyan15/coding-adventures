@@ -1,0 +1,27 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "yes",
+  "display_name": "yes",
+  "description": "Repeatedly output a line with 'y' or a specified string",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [],
+  "arguments": [
+    {
+      "id": "string",
+      "display_name": "STRING",
+      "description": "The string to output repeatedly (default: 'y')",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "y",
+      "variadic_min": 0
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}

@@ -1,0 +1,27 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "nproc",
+  "display_name": "nproc",
+  "description": "Print the number of processing units available",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "all",
+      "long": "all",
+      "description": "Print the number of installed processors (not just available)",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore",
+      "long": "ignore",
+      "description": "If possible, exclude N processing units",
+      "type": "integer",
+      "value_name": "N"
+    }
+  ],
+  "arguments": [],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}
