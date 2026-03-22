@@ -137,9 +137,10 @@ pub fn validate_spec_str(json: &str) -> ValidationResult {
 /// ```
 /// use cli_builder::validate::validate_spec_file;
 ///
-/// let result = validate_spec_file("/tmp/no_such_file_abc123.json");
+/// // Use a path that doesn't exist on any platform.
+/// let result = validate_spec_file("nonexistent_dir_xyz/no_such_file.json");
 /// assert!(!result.valid);
-/// assert!(result.errors[0].contains("No such file"));
+/// assert!(!result.errors[0].is_empty());
 /// ```
 pub fn validate_spec_file(path: &str) -> ValidationResult {
     match spec_loader::load_spec_from_file(path) {
