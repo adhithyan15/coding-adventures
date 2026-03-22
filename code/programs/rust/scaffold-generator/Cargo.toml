@@ -1,0 +1,17 @@
+[package]
+name = "scaffold-generator"
+version = "1.0.0"
+edition = "2021"
+description = "Generate CI-ready package scaffolding for the coding-adventures monorepo"
+authors = ["Adhithya Rajasekaran"]
+license = "MIT"
+
+[workspace]
+
+[lib]
+name = "scaffold_generator"
+path = "src/lib.rs"
+
+[[bin]]
+name = "scaffold-generator"
+path = "src/main.rs"
