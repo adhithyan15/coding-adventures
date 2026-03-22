@@ -152,4 +152,162 @@ class TestNlNumberLines < Minitest::Test
                              separator: "\t", section_delimiter: "\\:")
     assert_equal [], result
   end
+
+  def test_section_delimiters
+    lines = ["\\:\\:\\:", "header line", "\\:\\:", "body line", "\\:", "footer line"]
+    result = nl_number_lines(lines, body_style: "a", header_style: "a",
+                             footer_style: "a", start_number: 1, increment: 1,
+                             number_format: "rn", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    # Section delimiter lines produce empty strings in the output
+    assert_equal "", result[0]
+    assert_includes result[1], "1" # header line numbered starting from 1
+    assert_equal "", result[2]
+    assert_includes result[3], "body line"
+    assert_equal "", result[4]
+    assert_includes result[5], "footer line"
+  end
+
+  def test_header_resets_number
+    lines = ["\\:\\:\\:", "h1", "\\:\\:\\:", "h2"]
+    result = nl_number_lines(lines, body_style: "a", header_style: "a",
+                             footer_style: "a", start_number: 1, increment: 1,
+                             number_format: "rn", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    # Each header section resets numbering
+    assert_includes result[1], "1"
+    assert_includes result[3], "1"
+  end
+
+  def test_non_numbered_body_line
+    lines = ["hello", ""]
+    result = nl_number_lines(lines, body_style: "t", header_style: "n",
+                             footer_style: "n", start_number: 1, increment: 1,
+                             number_format: "rn", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    # Empty line should not be numbered (style "t")
+    assert_includes result[0], "1"
+    refute_includes result[1], "2"
+  end
+
+  def test_left_justified_format
+    lines = %w[hello world]
+    result = nl_number_lines(lines, body_style: "a", header_style: "n",
+                             footer_style: "n", start_number: 1, increment: 1,
+                             number_format: "ln", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    assert result[0].start_with?("1")
+  end
+
+  def test_right_zero_format
+    lines = %w[hello]
+    result = nl_number_lines(lines, body_style: "a", header_style: "n",
+                             footer_style: "n", start_number: 1, increment: 1,
+                             number_format: "rz", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    assert_includes result[0], "000001"
+  end
+
+  def test_custom_start_number
+    lines = %w[hello]
+    result = nl_number_lines(lines, body_style: "a", header_style: "n",
+                             footer_style: "n", start_number: 10, increment: 1,
+                             number_format: "rn", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    assert_includes result[0], "10"
+  end
+
+  def test_custom_separator
+    lines = %w[hello]
+    result = nl_number_lines(lines, body_style: "a", header_style: "n",
+                             footer_style: "n", start_number: 1, increment: 1,
+                             number_format: "rn", number_width: 6,
+                             separator: ": ", section_delimiter: "\\:")
+    assert_includes result[0], ": "
+  end
+
+  def test_regex_numbering_style
+    lines = ["ERROR: fail", "info: ok", "ERROR: another"]
+    result = nl_number_lines(lines, body_style: "pERROR", header_style: "n",
+                             footer_style: "n", start_number: 1, increment: 1,
+                             number_format: "rn", number_width: 6,
+                             separator: "\t", section_delimiter: "\\:")
+    assert_includes result[0], "1"
+    refute_includes result[1], "2" # info line should not be numbered
+    assert_includes result[2], "2"
+  end
+end
+
+class TestNlShouldNumberEdgeCases < Minitest::Test
+  def test_unknown_style
+    refute nl_should_number("hello", "x")
+  end
+
+  def test_regex_no_match
+    refute nl_should_number("hello world", "p^ERROR")
+  end
+end
+
+class TestNlMainIntegration < Minitest::Test
+  def test_main_with_file
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "input.txt")
+      File.write(path, "hello\nworld\n")
+      old_argv = ARGV.dup
+      ARGV.replace([path])
+      out, _err = capture_io { nl_main }
+      assert_includes out, "hello"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_nonexistent_file
+    old_argv = ARGV.dup
+    ARGV.replace(["/nonexistent/file.txt"])
+    _out, err = capture_io do
+      e = assert_raises(SystemExit) { nl_main }
+      assert_equal 1, e.status
+    end
+    assert_includes err, "No such file or directory"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_help
+    old_argv = ARGV.dup
+    ARGV.replace(["--help"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { nl_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "nl"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_version
+    old_argv = ARGV.dup
+    ARGV.replace(["--version"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { nl_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "1.0.0"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_with_body_numbering
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "input.txt")
+      File.write(path, "hello\n\nworld\n")
+      old_argv = ARGV.dup
+      ARGV.replace(["-b", "a", path])
+      out, _err = capture_io { nl_main }
+      assert_includes out, "1"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
 end

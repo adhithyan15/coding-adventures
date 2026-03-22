@@ -112,4 +112,98 @@ class TestExpandExpandLine < Minitest::Test
   def test_empty_line
     assert_equal "\n", expand_expand_line("\n", 8, initial_only: false)
   end
+
+  def test_multiple_tabs
+    result = expand_expand_line("\t\thello", 4, initial_only: false)
+    assert_equal "        hello", result
+  end
+
+  def test_space_before_tab
+    result = expand_expand_line(" \thello", 8, initial_only: false)
+    assert_equal "        hello", result
+  end
+
+  def test_explicit_tab_stops
+    result = expand_expand_line("\thello\tworld", [4, 12], initial_only: false)
+    # Tab at col 0 -> next stop at 4, so 4 spaces. "hello" takes 5 chars (col 9).
+    # Tab at col 9 -> next stop at 12, so 3 spaces.
+    assert_equal "    hello   world", result
+  end
+
+  def test_initial_only_no_tabs_after_text
+    result = expand_expand_line("\thello\tworld", 8, initial_only: true)
+    assert result.start_with?("        hello")
+    assert_includes result, "\t"
+  end
+
+  def test_non_blank_detection
+    # Space is blank; letter triggers seen_non_blank
+    result = expand_expand_line("  \ttest\ttab", 8, initial_only: true)
+    assert_includes result, "\t"
+  end
+
+  def test_no_tabs_returns_unchanged
+    assert_equal "hello world", expand_expand_line("hello world", 8, initial_only: false)
+  end
+end
+
+class TestExpandMainIntegration < Minitest::Test
+  def test_main_with_file
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "input.txt")
+      File.write(path, "\thello\n")
+      old_argv = ARGV.dup
+      ARGV.replace([path])
+      out, _err = capture_io { expand_main }
+      assert_includes out, "        hello"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_nonexistent_file
+    old_argv = ARGV.dup
+    ARGV.replace(["/nonexistent/file.txt"])
+    _out, err = capture_io { expand_main }
+    assert_includes err, "No such file or directory"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_with_tab_flag
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "input.txt")
+      File.write(path, "\thello\n")
+      old_argv = ARGV.dup
+      ARGV.replace(["-t", "4", path])
+      out, _err = capture_io { expand_main }
+      assert_includes out, "    hello"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_help
+    old_argv = ARGV.dup
+    ARGV.replace(["--help"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { expand_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "expand"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_version
+    old_argv = ARGV.dup
+    ARGV.replace(["--version"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { expand_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "1.0.0"
+  ensure
+    ARGV.replace(old_argv)
+  end
 end

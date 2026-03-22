@@ -134,4 +134,151 @@ class TestUniqFilterLines < Minitest::Test
                                check_chars: nil)
     assert_equal [], result
   end
+
+  def test_single_line
+    result = uniq_filter_lines(%w[hello], count: false, repeated: false, unique: false,
+                               ignore_case: false, skip_fields: 0, skip_chars: 0,
+                               check_chars: nil)
+    assert_equal %w[hello], result
+  end
+
+  def test_all_same
+    result = uniq_filter_lines(%w[a a a a], count: false, repeated: false, unique: false,
+                               ignore_case: false, skip_fields: 0, skip_chars: 0,
+                               check_chars: nil)
+    assert_equal %w[a], result
+  end
+
+  def test_count_and_repeated
+    result = uniq_filter_lines(%w[a a b c c], count: true, repeated: true, unique: false,
+                               ignore_case: false, skip_fields: 0, skip_chars: 0,
+                               check_chars: nil)
+    assert_equal 2, result.length
+    assert_includes result[0], "2"
+    assert_includes result[1], "2"
+  end
+
+  def test_count_and_unique
+    result = uniq_filter_lines(%w[a a b c c], count: true, repeated: false, unique: true,
+                               ignore_case: false, skip_fields: 0, skip_chars: 0,
+                               check_chars: nil)
+    assert_equal 1, result.length
+    assert_includes result[0], "1"
+    assert_includes result[0], "b"
+  end
+end
+
+class TestUniqComparisonKeyEdgeCases < Minitest::Test
+  def test_skip_fields
+    key = uniq_comparison_key("  field1  field2  field3", skip_fields: 2, skip_chars: 0,
+                              check_chars: nil, ignore_case: false)
+    assert_includes key, "field3"
+  end
+
+  def test_skip_fields_more_than_available
+    key = uniq_comparison_key("one two", skip_fields: 5, skip_chars: 0,
+                              check_chars: nil, ignore_case: false)
+    assert_equal "", key
+  end
+
+  def test_skip_chars_more_than_length
+    key = uniq_comparison_key("hi", skip_fields: 0, skip_chars: 10,
+                              check_chars: nil, ignore_case: false)
+    assert_equal "", key
+  end
+
+  def test_combined_skip_fields_and_chars
+    # After skipping 1 field from "field1 hello", remaining is " hello"
+    # Then skip 2 chars from " hello" gives "ello"
+    key = uniq_comparison_key("field1 hello", skip_fields: 1, skip_chars: 2,
+                              check_chars: nil, ignore_case: false)
+    assert_equal "ello", key
+  end
+
+  def test_check_chars_with_skip
+    key = uniq_comparison_key("abcdefgh", skip_fields: 0, skip_chars: 2,
+                              check_chars: 3, ignore_case: false)
+    assert_equal "cde", key
+  end
+end
+
+class TestUniqMainIntegration < Minitest::Test
+  def test_main_with_file
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "input.txt")
+      File.write(path, "hello\nhello\nworld\n")
+      old_argv = ARGV.dup
+      ARGV.replace([path])
+      out, _err = capture_io { uniq_main }
+      assert_includes out, "hello"
+      assert_includes out, "world"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_nonexistent_file
+    old_argv = ARGV.dup
+    ARGV.replace(["/nonexistent/file.txt"])
+    _out, err = capture_io do
+      e = assert_raises(SystemExit) { uniq_main }
+      assert_equal 1, e.status
+    end
+    assert_includes err, "No such file or directory"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_with_output_file
+    Dir.mktmpdir do |tmp|
+      input = File.join(tmp, "input.txt")
+      output = File.join(tmp, "output.txt")
+      File.write(input, "a\na\nb\n")
+      old_argv = ARGV.dup
+      ARGV.replace([input, output])
+      capture_io { uniq_main }
+      content = File.read(output)
+      assert_includes content, "a"
+      assert_includes content, "b"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_help
+    old_argv = ARGV.dup
+    ARGV.replace(["--help"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { uniq_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "uniq"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_version
+    old_argv = ARGV.dup
+    ARGV.replace(["--version"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { uniq_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "1.0.0"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_count_flag
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "input.txt")
+      File.write(path, "a\na\nb\n")
+      old_argv = ARGV.dup
+      ARGV.replace(["-c", path])
+      out, _err = capture_io { uniq_main }
+      assert_includes out, "2"
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
 end

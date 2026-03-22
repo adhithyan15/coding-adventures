@@ -113,8 +113,9 @@ class TestRealpathMakeRelative < Minitest::Test
 
   def test_relative_base_under
     Dir.mktmpdir do |tmp|
-      resolved = "#{tmp}/sub/file.txt"
-      result = realpath_make_relative(resolved, relative_to: nil, relative_base: tmp)
+      real_tmp = File.realpath(tmp)
+      resolved = "#{real_tmp}/sub/file.txt"
+      result = realpath_make_relative(resolved, relative_to: nil, relative_base: real_tmp)
       refute result.start_with?("/")
     end
   end
@@ -123,5 +124,197 @@ class TestRealpathMakeRelative < Minitest::Test
     result = realpath_make_relative("/completely/different/path",
                                    relative_to: nil, relative_base: "/some/base")
     assert result.start_with?("/")
+  end
+
+  def test_no_relative
+    result = realpath_make_relative("/a/b/c", relative_to: nil, relative_base: nil)
+    assert_equal "/a/b/c", result
+  end
+
+  def test_relative_base_exact_match
+    result = realpath_make_relative("/some/base", relative_to: nil, relative_base: "/some/base")
+    assert_equal ".", result
+  end
+end
+
+class TestRealpathResolveEdgeCases < Minitest::Test
+  def test_default_mode_nonexistent_leaf
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "nonexistent_file.txt")
+      resolved = realpath_resolve(path, canonicalize_existing: false,
+                                  canonicalize_missing: false, no_symlinks: false)
+      refute_nil resolved
+      assert_includes resolved, "nonexistent_file.txt"
+    end
+  end
+
+  def test_default_mode_nonexistent_parent
+    resolved = realpath_resolve("/nonexistent_parent/nonexistent_child",
+                                canonicalize_existing: false,
+                                canonicalize_missing: false, no_symlinks: false)
+    refute_nil resolved
+  end
+
+  def test_canonicalize_missing_with_existing_prefix
+    Dir.mktmpdir do |tmp|
+      resolved = realpath_resolve("#{tmp}/missing/part",
+                                  canonicalize_existing: false,
+                                  canonicalize_missing: true, no_symlinks: false)
+      refute_nil resolved
+      assert_includes resolved, "missing/part"
+    end
+  end
+
+  def test_canonicalize_missing_all_missing
+    resolved = realpath_resolve("/nonexistent/path/here",
+                                canonicalize_existing: false,
+                                canonicalize_missing: true, no_symlinks: false)
+    refute_nil resolved
+  end
+
+  def test_resolve_dot_components
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, ".", "file.txt")
+      File.write(File.join(tmp, "file.txt"), "data")
+      resolved = realpath_resolve(path, canonicalize_existing: false,
+                                  canonicalize_missing: false, no_symlinks: false)
+      refute_includes resolved, "/."
+    end
+  end
+
+  def test_resolve_symlink_chain
+    Dir.mktmpdir do |tmp|
+      target = File.join(tmp, "real.txt")
+      File.write(target, "data")
+      link1 = File.join(tmp, "link1.txt")
+      File.symlink(target, link1)
+      link2 = File.join(tmp, "link2.txt")
+      File.symlink(link1, link2)
+      resolved = realpath_resolve(link2, canonicalize_existing: false,
+                                  canonicalize_missing: false, no_symlinks: false)
+      assert_equal File.realpath(target), resolved
+    end
+  end
+end
+
+class TestRealpathMainIntegration < Minitest::Test
+  def test_main_resolve_path
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "file.txt")
+      File.write(path, "data")
+      old_argv = ARGV.dup
+      ARGV.replace([path])
+      out, _err = capture_io do
+        e = assert_raises(SystemExit) { realpath_main }
+        assert_equal 0, e.status
+      end
+      refute out.strip.empty?
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_canonicalize_existing_fail
+    old_argv = ARGV.dup
+    ARGV.replace(["-e", "/nonexistent/path"])
+    _out, err = capture_io do
+      e = assert_raises(SystemExit) { realpath_main }
+      assert_equal 1, e.status
+    end
+    assert_includes err, "No such file or directory"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_quiet_suppresses_error
+    old_argv = ARGV.dup
+    ARGV.replace(["-e", "-q", "/nonexistent/path"])
+    _out, err = capture_io do
+      e = assert_raises(SystemExit) { realpath_main }
+      assert_equal 1, e.status
+    end
+    refute_includes err, "No such file or directory"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_canonicalize_missing
+    old_argv = ARGV.dup
+    ARGV.replace(["-m", "/nonexistent/path"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { realpath_main }
+      assert_equal 0, e.status
+    end
+    refute out.strip.empty?
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_no_symlinks
+    old_argv = ARGV.dup
+    ARGV.replace(["-s", "/tmp"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { realpath_main }
+      assert_equal 0, e.status
+    end
+    refute out.strip.empty?
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_relative_to
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "file.txt")
+      File.write(path, "data")
+      old_argv = ARGV.dup
+      ARGV.replace(["--relative-to=#{tmp}", path])
+      out, _err = capture_io do
+        e = assert_raises(SystemExit) { realpath_main }
+        assert_equal 0, e.status
+      end
+      refute out.strip.start_with?("/")
+    ensure
+      ARGV.replace(old_argv)
+    end
+  end
+
+  def test_main_help
+    old_argv = ARGV.dup
+    ARGV.replace(["--help"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { realpath_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "realpath"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_version
+    old_argv = ARGV.dup
+    ARGV.replace(["--version"])
+    out, _err = capture_io do
+      e = assert_raises(SystemExit) { realpath_main }
+      assert_equal 0, e.status
+    end
+    assert_includes out, "1.0.0"
+  ensure
+    ARGV.replace(old_argv)
+  end
+
+  def test_main_zero_terminator
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "file.txt")
+      File.write(path, "data")
+      old_argv = ARGV.dup
+      ARGV.replace(["-z", path])
+      out, _err = capture_io do
+        e = assert_raises(SystemExit) { realpath_main }
+        assert_equal 0, e.status
+      end
+      assert out.include?("\0")
+    ensure
+      ARGV.replace(old_argv)
+    end
   end
 end
