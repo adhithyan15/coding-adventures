@@ -88,4 +88,5 @@ members = [
     "vendor-api-simulators",
     "virtual-machine",
     "wasm-simulator",
+    "xml-lexer",
 ]
