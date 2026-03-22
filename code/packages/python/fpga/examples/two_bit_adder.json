@@ -1,0 +1,51 @@
+{
+    "_comment": "2-bit ripple-carry adder using carry chain between slices",
+    "_explanation": [
+        "Each slice computes one bit of the addition:",
+        "  LUT A = XOR (computes the sum bit: A XOR B XOR carry_in)",
+        "  LUT B = AND (computes carry generate: A AND B)",
+        "  Carry chain: carry_out = (A AND B) OR (carry_in AND (A XOR B))",
+        "",
+        "Slice 0 handles bit 0: A0 + B0 + carry_in",
+        "Slice 1 handles bit 1: A1 + B1 + carry_out_from_slice0",
+        "",
+        "XOR truth table: index 1 (01) and 2 (10) are 1, rest are 0",
+        "AND truth table: index 3 (11) is 1, rest are 0"
+    ],
+    "clbs": {
+        "clb_adder": {
+            "slice0": {
+                "lut_a": [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "lut_b": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "carry": true
+            },
+            "slice1": {
+                "lut_a": [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "lut_b": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "carry": true
+            }
+        }
+    },
+    "routing": {
+        "sw_input": [
+            {"src": "in_a0", "dst": "clb_s0_a"},
+            {"src": "in_b0", "dst": "clb_s0_b"},
+            {"src": "in_a1", "dst": "clb_s1_a"},
+            {"src": "in_b1", "dst": "clb_s1_b"}
+        ],
+        "sw_output": [
+            {"src": "clb_sum0", "dst": "out_sum0"},
+            {"src": "clb_sum1", "dst": "out_sum1"},
+            {"src": "clb_cout", "dst": "out_carry"}
+        ]
+    },
+    "io": {
+        "in_a0": {"mode": "input"},
+        "in_b0": {"mode": "input"},
+        "in_a1": {"mode": "input"},
+        "in_b1": {"mode": "input"},
+        "out_sum0": {"mode": "output"},
+        "out_sum1": {"mode": "output"},
+        "out_carry": {"mode": "output"}
+    }
+}

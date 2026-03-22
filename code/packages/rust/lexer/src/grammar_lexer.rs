@@ -720,6 +720,17 @@ impl<'a> GrammarLexer<'a> {
                 )?;
 
                 // For STRING tokens, strip quotes and process escapes.
+                //
+                // A token is considered a "string" if its effective name ends
+                // with "STRING" (catches STRING, BASIC_STRING, LITERAL_STRING,
+                // ML_BASIC_STRING, ML_LITERAL_STRING, etc.) AND its matched
+                // text starts and ends with matching quote characters.
+                //
+                // When escape_mode is "none", we strip quotes but leave escape
+                // sequences as raw text. This is used by grammars like CSS and
+                // TOML where the semantic layer handles type-specific escape
+                // processing (e.g., TOML has four string types with different
+                // escape rules).
                 let effective_name = alias.as_deref().unwrap_or(&name);
                 let final_value = if effective_name.ends_with("STRING") && matched.len() >= 2
                     && Self::is_quoted(&matched)

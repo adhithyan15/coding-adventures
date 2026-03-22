@@ -342,6 +342,7 @@ module CodingAdventures
           next
         end
 
+
         # Section headers.
         if stripped == "keywords:" || stripped == "keywords :"
           current_section = "keywords"

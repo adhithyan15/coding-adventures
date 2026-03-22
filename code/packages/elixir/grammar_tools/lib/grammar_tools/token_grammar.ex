@@ -149,6 +149,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
                   {:cont, %{acc | grammar: grammar, section: {:group, group_name}}}
               end
 
+
             # Section headers
             stripped in ["keywords:", "keywords :"] ->
               {:cont, %{acc | section: :keywords}}

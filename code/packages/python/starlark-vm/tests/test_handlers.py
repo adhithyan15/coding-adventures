@@ -12,7 +12,7 @@ from virtual_machine import (
 )
 from virtual_machine.vm import DivisionByZeroError, UndefinedNameError
 
-from starlark_compiler.opcodes import Op
+from starlark_ast_to_bytecode_compiler.opcodes import Op
 from starlark_vm import create_starlark_vm
 from starlark_vm.builtins import (
     builtin_abs,

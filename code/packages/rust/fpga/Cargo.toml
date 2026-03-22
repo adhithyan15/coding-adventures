@@ -1,0 +1,11 @@
+[package]
+name = "fpga"
+version = "0.1.0"
+edition = "2021"
+description = "FPGA fabric simulation — LUTs, slices, CLBs, switch matrices, I/O blocks, and bitstream configuration"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+block-ram = { path = "../block-ram" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

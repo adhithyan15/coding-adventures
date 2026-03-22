@@ -265,6 +265,7 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 			continue
 		}
 
+
 		// Section headers
 		if stripped == "keywords:" || stripped == "keywords :" {
 			currentSection = "keywords"

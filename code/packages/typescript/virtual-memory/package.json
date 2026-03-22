@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/virtual-memory",
+  "version": "0.1.0",
+  "description": "Virtual memory subsystem — page tables, TLB, frame allocator, page replacement policies (FIFO/LRU/Clock), and MMU. Layer D13 of the computing stack.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "virtual-memory",
+    "page-table",
+    "tlb",
+    "mmu",
+    "operating-system",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

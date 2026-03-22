@@ -111,6 +111,107 @@ class TestDiscovery < Minitest::Test
     FileUtils.rm_rf(dir) if dir
   end
 
+  # -- get_build_file_for_platform tests (cross-platform, testable) ----------
+
+  def test_get_build_file_for_platform_mac_preferred
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_mac", "mac")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "darwin")
+    assert_equal dir / "BUILD_mac", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_linux_preferred
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_linux", "linux")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "linux")
+    assert_equal dir / "BUILD_linux", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_windows_preferred
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_windows", "windows")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "windows")
+    assert_equal dir / "BUILD_windows", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_windows_fallback
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "windows")
+    assert_equal dir / "BUILD", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_windows_not_on_mac
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_windows", "windows")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "darwin")
+    assert_equal dir / "BUILD", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_mac_and_linux_on_mac
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_mac_and_linux", "unix")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "darwin")
+    assert_equal dir / "BUILD_mac_and_linux", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_mac_and_linux_on_linux
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_mac_and_linux", "unix")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "linux")
+    assert_equal dir / "BUILD_mac_and_linux", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_mac_and_linux_not_on_windows
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_mac_and_linux", "unix")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "windows")
+    assert_equal dir / "BUILD", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_get_build_file_for_platform_mac_overrides_mac_and_linux
+    dir = create_temp_dir
+    write_file(dir / "BUILD", "generic")
+    write_file(dir / "BUILD_mac", "mac")
+    write_file(dir / "BUILD_mac_and_linux", "unix")
+
+    result = BuildTool::Discovery.get_build_file_for_platform(dir, "darwin")
+    assert_equal dir / "BUILD_mac", result
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
   # -- discover_packages integration tests -------------------------------------
 
   def test_discover_simple_fixture

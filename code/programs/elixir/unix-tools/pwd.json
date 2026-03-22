@@ -1,0 +1,34 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "pwd",
+  "display_name": "pwd",
+  "description": "Print the absolute pathname of the current working directory",
+  "version": "1.0.0",
+  "parsing_mode": "posix",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "logical",
+      "short": "L",
+      "long": "logical",
+      "description": "Display the logical current working directory (default)",
+      "type": "boolean"
+    },
+    {
+      "id": "physical",
+      "short": "P",
+      "long": "physical",
+      "description": "Display the physical current working directory (resolve all symlinks)",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "pwd-mode",
+      "flag_ids": ["logical", "physical"],
+      "required": false
+    }
+  ]
+}

@@ -210,21 +210,39 @@ defmodule BuildTool.Discovery do
   Like `get_build_file/1` but accepts an explicit OS name. This is useful
   for testing platform-specific behavior without running on that platform.
 
-  The `os` parameter should be `:darwin`, `:linux`, or `:win32`.
+  The `os` parameter should be `:darwin`, `:linux`, or `:windows`.
+
+  Priority (most specific wins):
+    1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+    2. Shared: BUILD_mac_and_linux (macOS or Linux — for Unix-like systems)
+    3. Generic: BUILD (all platforms)
+    4. nil if no BUILD file exists
 
   ## Example
 
       iex> BuildTool.Discovery.get_build_file_for_platform("/some/dir", :darwin)
-      # Returns path to BUILD_mac if it exists, else BUILD, else nil
+      # Returns path to BUILD_mac if it exists, else BUILD_mac_and_linux, else BUILD, else nil
   """
   def get_build_file_for_platform(directory, os) do
+    # Step 1: Check for the most specific platform file.
+    platform_file =
+      case os do
+        :darwin -> Path.join(directory, "BUILD_mac")
+        :linux -> Path.join(directory, "BUILD_linux")
+        :windows -> Path.join(directory, "BUILD_windows")
+        _ -> nil
+      end
+
     cond do
-      os == :darwin and file_exists?(Path.join(directory, "BUILD_mac")) ->
-        Path.join(directory, "BUILD_mac")
+      platform_file != nil and file_exists?(platform_file) ->
+        platform_file
 
-      os == :linux and file_exists?(Path.join(directory, "BUILD_linux")) ->
-        Path.join(directory, "BUILD_linux")
+      # Step 2: Check for the shared Unix file (macOS + Linux).
+      os in [:darwin, :linux] and
+          file_exists?(Path.join(directory, "BUILD_mac_and_linux")) ->
+        Path.join(directory, "BUILD_mac_and_linux")
 
+      # Step 3: Fall back to the generic BUILD file.
       file_exists?(Path.join(directory, "BUILD")) ->
         Path.join(directory, "BUILD")
 

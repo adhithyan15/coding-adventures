@@ -319,10 +319,17 @@ defmodule BuildTool.Executor do
     # We use stderr_to_stdout: true so that System.cmd captures both streams.
     # This matches the Go implementation which captures both stdout and stderr
     # from the shell command.
+    #
+    # On Windows, we use "cmd /C" instead of "sh -c" to invoke the shell.
+    # This is the same approach used by the Rust build tool. Python's
+    # subprocess.run(shell=True) and Node's child_process.exec() handle this
+    # automatically, but Elixir's System.cmd requires explicit selection.
+    {shell, shell_flag} = shell_command()
+
     {all_output, final_status, final_code} =
       Enum.reduce_while(pkg.build_commands, {[], "built", 0}, fn command,
                                                                   {output_acc, _status, _code} ->
-        case System.cmd("sh", ["-c", command],
+        case System.cmd(shell, [shell_flag, command],
                cd: pkg.path,
                stderr_to_stdout: true
              ) do
@@ -362,4 +369,24 @@ defmodule BuildTool.Executor do
     |> MapSet.to_list()
     |> Enum.any?(fn dep -> MapSet.member?(failed_packages, dep) end)
   end
+
+  # ---------------------------------------------------------------------------
+  # Shell command selection
+  # ---------------------------------------------------------------------------
+  #
+  # Returns the platform-appropriate shell and flag for executing BUILD
+  # commands. On Windows, this is {"cmd", "/C"}; on Unix, {"sh", "-c"}.
+  #
+  # This is the same approach used by the Rust build tool (which uses
+  # cfg!(target_os = "windows") to select between cmd and sh). Python's
+  # subprocess.run(shell=True) and Node's child_process.exec() handle this
+  # automatically, but Elixir's System.cmd requires explicit selection.
+
+  defp shell_command do
+    shell_command_for_os(:os.type())
+  end
+
+  @doc false
+  def shell_command_for_os({:win32, _}), do: {"cmd", "/C"}
+  def shell_command_for_os(_), do: {"sh", "-c"}
 end

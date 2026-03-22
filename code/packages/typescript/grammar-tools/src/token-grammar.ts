@@ -424,6 +424,19 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       continue;
     }
 
+    // --- Escapes directive ---
+    if (stripped.startsWith("escapes:") || stripped.startsWith("escapes :")) {
+      const escapesValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!escapesValue) {
+        throw new TokenGrammarError(
+          "Missing escapes value after 'escapes:'",
+          lineNumber,
+        );
+      }
+      escapeMode = escapesValue;
+      continue;
+    }
+
     // --- Section headers ---
     if (stripped === "keywords:" || stripped === "keywords :") {
       currentSection = "keywords";
@@ -678,6 +691,7 @@ export function validateTokenGrammar(grammar: TokenGrammar): string[] {
       );
     }
   }
+
 
   return issues;
 }
