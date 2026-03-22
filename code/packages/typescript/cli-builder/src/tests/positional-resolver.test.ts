@@ -44,7 +44,7 @@ function makeArgDef(
 ): ArgDef {
   return {
     id,
-    name: opts.name ?? id.toUpperCase(),
+    display_name: opts.display_name ?? id.toUpperCase(),
     description: opts.description ?? id,
     type: opts.type ?? "string",
     required: opts.required ?? true,

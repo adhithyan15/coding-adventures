@@ -5,10 +5,21 @@
   "description": "Reverse lines characterwise",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [],
   "arguments": [
-    { "id": "files", "name": "FILE", "description": "Files to read. Use '-' for standard input.", "type": "string", "required": false, "variadic": true, "default": "-" }
+    {
+      "id": "files",
+      "description": "Files to read. Use '-' for standard input.",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "-",
+      "display_name": "FILE"
+    }
   ],
   "commands": []
 }

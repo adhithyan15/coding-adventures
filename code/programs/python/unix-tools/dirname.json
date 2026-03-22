@@ -21,12 +21,12 @@
   "arguments": [
     {
       "id": "names",
-      "name": "NAME",
       "description": "Filenames to strip last component from",
       "type": "string",
       "required": true,
       "variadic": true,
-      "min": 1
+      "min": 1,
+      "display_name": "NAME"
     }
   ],
   "commands": []

@@ -106,7 +106,7 @@ func (pr *PositionalResolver) resolveSimple(tokens []string, result map[string]a
 		id := stringField(def, "id")
 		argType := stringField(def, "type")
 		required := boolField(def, "required", true) // default is true per spec
-		displayName := stringField(def, "name")
+		displayName := displayNameFallback(def)
 
 		// Check required_unless_flag exemption
 		if required && isExemptedByFlag(def, parsedFlags) {
@@ -162,7 +162,7 @@ func (pr *PositionalResolver) resolveVariadic(tokens []string, variadicIdx int, 
 
 	varID := stringField(variadicDef, "id")
 	varType := stringField(variadicDef, "type")
-	varDisplayName := stringField(variadicDef, "name")
+	varDisplayName := displayNameFallback(variadicDef)
 
 	// Read variadic_min (default 1 if required, else 0)
 	varRequired := boolField(variadicDef, "required", true)
@@ -187,7 +187,7 @@ func (pr *PositionalResolver) resolveVariadic(tokens []string, variadicIdx int, 
 		id := stringField(def, "id")
 		argType := stringField(def, "type")
 		required := boolField(def, "required", true)
-		displayName := stringField(def, "name")
+		displayName := displayNameFallback(def)
 
 		if required && isExemptedByFlag(def, parsedFlags) {
 			required = false
@@ -227,7 +227,7 @@ func (pr *PositionalResolver) resolveVariadic(tokens []string, variadicIdx int, 
 		id := stringField(def, "id")
 		argType := stringField(def, "type")
 		required := boolField(def, "required", true)
-		displayName := stringField(def, "name")
+		displayName := displayNameFallback(def)
 
 		if required && isExemptedByFlag(def, parsedFlags) {
 			required = false

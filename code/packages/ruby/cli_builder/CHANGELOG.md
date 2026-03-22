@@ -2,6 +2,14 @@
 
 All notable changes to the `coding_adventures_cli_builder` gem will be documented in this file.
 
+## [0.2.0] - 2026-03-22
+
+### Changed
+
+- Arguments now use `display_name` instead of `name` for the display label in help text.
+  Both fields are accepted for backward compatibility — `display_name` is preferred, with
+  `name` as a fallback.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

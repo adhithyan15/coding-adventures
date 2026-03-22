@@ -28,11 +28,11 @@
   "arguments": [
     {
       "id": "files",
-      "name": "FILE",
       "description": "Files to write to in addition to standard output",
       "type": "string",
       "required": false,
-      "variadic": true
+      "variadic": true,
+      "display_name": "FILE"
     }
   ],
   "commands": []

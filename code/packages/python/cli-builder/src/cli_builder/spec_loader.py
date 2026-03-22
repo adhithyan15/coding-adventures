@@ -344,11 +344,19 @@ class SpecLoader:
                 )
             seen_ids.add(aid)
 
-            for fname in ("name", "description"):
-                if not arg.get(fname):
-                    raise SpecError(
-                        f"Argument '{aid}' in scope '{scope_name}' is missing '{fname}'"
-                    )
+            # Accept display_name (preferred) or name (backward compatibility).
+            # Normalize to display_name for downstream consumers.
+            if not arg.get("display_name") and not arg.get("name"):
+                raise SpecError(
+                    f"Argument '{aid}' in scope '{scope_name}' is missing 'display_name'"
+                )
+            if not arg.get("display_name"):
+                arg["display_name"] = arg["name"]
+
+            if not arg.get("description"):
+                raise SpecError(
+                    f"Argument '{aid}' in scope '{scope_name}' is missing 'description'"
+                )
 
             atype = arg.get("type")
             if not atype:

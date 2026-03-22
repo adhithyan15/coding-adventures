@@ -169,7 +169,7 @@ fn resolve_no_variadic(
             if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
-                    format!("Missing required argument: <{}>", def.name),
+                    format!("Missing required argument: <{}>", def.display_name),
                     command_path.to_vec(),
                 ));
             }
@@ -231,7 +231,7 @@ fn resolve_with_variadic_refs(
             if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
-                    format!("Missing required argument: <{}>", def.name),
+                    format!("Missing required argument: <{}>", def.display_name),
                     command_path.to_vec(),
                 ));
             }
@@ -259,7 +259,7 @@ fn resolve_with_variadic_refs(
             if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
-                    format!("Missing required argument: <{}>", def.name),
+                    format!("Missing required argument: <{}>", def.display_name),
                     command_path.to_vec(),
                 ));
             }
@@ -287,7 +287,7 @@ fn resolve_with_variadic_refs(
                 "too_few_arguments",
                 format!(
                     "Expected at least {} <{}>, got {}",
-                    v_min, variadic_def.name, count
+                    v_min, variadic_def.display_name, count
                 ),
                 command_path.to_vec(),
             ));
@@ -300,7 +300,7 @@ fn resolve_with_variadic_refs(
                 "too_many_arguments",
                 format!(
                     "Expected at most {} <{}>, got {}",
-                    v_max, variadic_def.name, count
+                    v_max, variadic_def.display_name, count
                 ),
                 command_path.to_vec(),
             ));

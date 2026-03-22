@@ -304,7 +304,7 @@ class PositionalResolver:
             arg_type=adef["type"],
             enum_values=adef.get("enum_values", []),
             context=ctx,
-            arg_name=adef.get("name", adef["id"]),
+            arg_name=adef.get("display_name", adef.get("name", adef["id"])),
         )
 
     def _resolve_fixed(
@@ -341,7 +341,7 @@ class PositionalResolver:
                         error_type="missing_required_argument",
                         message=(
                             f"Missing required argument: "
-                            f"<{adef.get('name', adef['id'])}>"
+                            f"<{adef.get('display_name', adef.get('name', adef['id']))}>"
                         ),
                         context=ctx,
                     )
@@ -402,7 +402,7 @@ class PositionalResolver:
                         error_type="missing_required_argument",
                         message=(
                             f"Missing required argument: "
-                            f"<{adef.get('name', adef['id'])}>"
+                            f"<{adef.get('display_name', adef.get('name', adef['id']))}>"
                         ),
                         context=ctx,
                     )
@@ -424,7 +424,7 @@ class PositionalResolver:
                         error_type="missing_required_argument",
                         message=(
                             f"Missing required argument: "
-                            f"<{adef.get('name', adef['id'])}>"
+                            f"<{adef.get('display_name', adef.get('name', adef['id']))}>"
                         ),
                         context=ctx,
                     )
@@ -444,7 +444,7 @@ class PositionalResolver:
                     error_type="too_few_arguments",
                     message=(
                         f"Expected at least {v_min} "
-                        f"<{variadic_def.get('name', variadic_def['id'])}>, "
+                        f"<{variadic_def.get('display_name', variadic_def.get('name', variadic_def['id']))}>, "
                         f"got {count}"
                     ),
                     context=ctx,
@@ -456,7 +456,7 @@ class PositionalResolver:
                     error_type="too_many_arguments",
                     message=(
                         f"Expected at most {v_max} "
-                        f"<{variadic_def.get('name', variadic_def['id'])}>, "
+                        f"<{variadic_def.get('display_name', variadic_def.get('name', variadic_def['id']))}>, "
                         f"got {count}"
                     ),
                     context=ctx,

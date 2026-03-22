@@ -196,7 +196,8 @@ defmodule CodingAdventures.CliBuilder.HelpGenerator do
 
   # Format a single argument in usage synopsis style.
   defp format_arg_usage(arg) do
-    name = arg["name"]
+    # Prefer display_name, fall back to name for backward compatibility.
+    name = arg["display_name"] || arg["name"]
     required = arg["required"]
     variadic = arg["variadic"]
 
@@ -260,7 +261,8 @@ defmodule CodingAdventures.CliBuilder.HelpGenerator do
 
   # Format a single argument definition into an ARGUMENTS line.
   defp format_argument(arg) do
-    name = arg["name"]
+    # Prefer display_name, fall back to name for backward compatibility.
+    name = arg["display_name"] || arg["name"]
     required = arg["required"]
     variadic = arg["variadic"]
     description = arg["description"]

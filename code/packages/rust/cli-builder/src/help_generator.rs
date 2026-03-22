@@ -308,14 +308,14 @@ fn format_flag_signature(f: &FlagDef) -> String {
 fn format_arg_usage(a: &ArgumentDef) -> String {
     if a.variadic {
         if a.required {
-            format!("<{}...>", a.name)
+            format!("<{}...>", a.display_name)
         } else {
-            format!("[{}...]", a.name)
+            format!("[{}...]", a.display_name)
         }
     } else if a.required {
-        format!("<{}>", a.name)
+        format!("<{}>", a.display_name)
     } else {
-        format!("[{}]", a.name)
+        format!("[{}]", a.display_name)
     }
 }
 

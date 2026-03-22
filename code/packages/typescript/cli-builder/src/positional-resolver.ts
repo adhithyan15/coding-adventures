@@ -330,7 +330,7 @@ export class PositionalResolver {
         if (def.required && !isExempt) {
           errors.push({
             errorType: "missing_required_argument",
-            message: `Missing required argument: <${def.name}>`,
+            message: `Missing required argument: <${def.display_name}>`,
             context,
           });
         } else {
@@ -387,7 +387,7 @@ export class PositionalResolver {
         if (def.required && !isExempt) {
           errors.push({
             errorType: "missing_required_argument",
-            message: `Missing required argument: <${def.name}>`,
+            message: `Missing required argument: <${def.display_name}>`,
             context,
           });
         } else {
@@ -444,7 +444,7 @@ export class PositionalResolver {
         if (def.required && !isExempt) {
           errors.push({
             errorType: "missing_required_argument",
-            message: `Missing required argument: <${def.name}>`,
+            message: `Missing required argument: <${def.display_name}>`,
             context,
           });
         } else {
@@ -470,7 +470,7 @@ export class PositionalResolver {
     if (count < variadicDef.variadicMin && !isExempt) {
       errors.push({
         errorType: "too_few_arguments",
-        message: `Expected at least ${variadicDef.variadicMin} <${variadicDef.name}>, got ${count}`,
+        message: `Expected at least ${variadicDef.variadicMin} <${variadicDef.display_name}>, got ${count}`,
         context,
       });
     } else if (
@@ -479,7 +479,7 @@ export class PositionalResolver {
     ) {
       errors.push({
         errorType: "too_many_arguments",
-        message: `Expected at most ${variadicDef.variadicMax} <${variadicDef.name}>, got ${count}`,
+        message: `Expected at most ${variadicDef.variadicMax} <${variadicDef.display_name}>, got ${count}`,
         context,
       });
     }

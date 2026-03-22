@@ -32,18 +32,21 @@
   "arguments": [
     {
       "id": "strings",
-      "name": "STRING",
       "description": "Strings to display",
       "type": "string",
       "required": false,
-      "variadic": true
+      "variadic": true,
+      "display_name": "STRING"
     }
   ],
   "commands": [],
   "mutually_exclusive_groups": [
     {
       "id": "escape-mode",
-      "flag_ids": ["enable_escapes", "disable_escapes"],
+      "flag_ids": [
+        "enable_escapes",
+        "disable_escapes"
+      ],
       "required": false
     }
   ]

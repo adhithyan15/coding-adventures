@@ -223,17 +223,21 @@ defmodule CodingAdventures.CliBuilder.SpecLoader do
     |> Enum.map(fn {arg, idx} ->
       unless is_map(arg), do: raise(SpecError, message: "Argument at index #{idx} in #{scope_name} is not an object")
       require_field!(arg, "id", "string", "argument ##{idx} in #{scope_name}")
-      require_field!(arg, "name", "string", "argument #{inspect(Map.get(arg, "id"))} in #{scope_name}")
+      # Accept display_name (preferred) or name (backward compatibility).
+      unless Map.has_key?(arg, "display_name") or Map.has_key?(arg, "name") do
+        raise SpecError, message: "argument #{inspect(Map.get(arg, "id"))} in #{scope_name} is missing required field \"display_name\""
+      end
       require_field!(arg, "description", "string", "argument #{inspect(Map.get(arg, "id"))} in #{scope_name}")
       require_field_in!(arg, "type", @valid_types, "argument #{inspect(Map.get(arg, "id"))} in #{scope_name}")
 
       required = Map.get(arg, "required", true)
       variadic = Map.get(arg, "variadic", false)
       variadic_min_default = if required, do: 1, else: 0
+      display_name = Map.get(arg, "display_name", Map.get(arg, "name"))
 
       %{
         "id" => Map.get(arg, "id"),
-        "name" => Map.get(arg, "name"),
+        "display_name" => display_name,
         "description" => Map.get(arg, "description"),
         "type" => Map.get(arg, "type"),
         "required" => required,
