@@ -180,8 +180,9 @@ mod tests {
 
     #[test]
     fn delete_complement() {
-        // Delete everything that is NOT a vowel.
-        assert_eq!(delete_chars("hello", "helo", true), "");
+        // With complement=true, delete chars NOT in set (keep only set chars).
+        // "hello world" with set "aeiou" keeps only vowels.
+        assert_eq!(delete_chars("hello world", "aeiou", true), "eoo");
     }
 
     #[test]

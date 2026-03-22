@@ -135,6 +135,8 @@ fn compare_key(
             }
         }
     }
+    // Trim leading whitespace after skipping fields.
+    remaining = remaining.trim_start_matches(|c: char| c == ' ' || c == '\t');
 
     // Skip characters.
     let chars: Vec<char> = remaining.chars().collect();
