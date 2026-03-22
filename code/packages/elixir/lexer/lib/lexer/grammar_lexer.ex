@@ -43,6 +43,7 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       :reserved_set,
       :alias_map,
       :has_skip_patterns,
+      :escape_mode,
       pos: 0,
       line: 1,
       column: 1
@@ -106,7 +107,8 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       keyword_set: MapSet.new(grammar.keywords),
       reserved_set: MapSet.new(grammar.reserved_keywords),
       alias_map: alias_map,
-      has_skip_patterns: length(grammar.skip_definitions) > 0
+      has_skip_patterns: length(grammar.skip_definitions) > 0,
+      escape_mode: grammar.escape_mode
     }
   end
 
@@ -214,14 +216,22 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
           # Resolve token type (keyword detection, alias, etc.)
           case resolve_token_type(token_name, match, state) do
             {:ok, token_type} ->
-              # Handle STRING tokens: strip quotes and process escapes
+              # Handle STRING tokens: strip quotes and process escapes.
+              # When escape_mode is "none", we strip quotes but leave escape
+              # sequences as raw text — the semantic layer handles them.
+              # This is used by grammars like TOML where different string types
+              # have different escape semantics.
               effective_name = Map.get(state.alias_map, token_name, token_name)
 
               value =
                 if effective_name == "STRING" or token_name == "STRING" do
-                  match
-                  |> String.slice(1..-2//1)
-                  |> process_escapes()
+                  stripped = String.slice(match, 1..-2//1)
+
+                  if state.escape_mode == "none" do
+                    stripped
+                  else
+                    process_escapes(stripped)
+                  end
                 else
                   match
                 end

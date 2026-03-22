@@ -19,6 +19,7 @@ type TokenGrammar struct {
 	Definitions      []TokenDefinition
 	Keywords         []string
 	Mode             string            // Lexer mode (e.g. "indentation")
+	EscapeMode       string            // Escape processing mode (e.g. "none" to skip escape processing)
 	SkipDefinitions  []TokenDefinition // Patterns consumed without producing tokens
 	ReservedKeywords []string          // Keywords that cause lex errors
 }
@@ -117,6 +118,20 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 				return nil, fmt.Errorf("Line %d: Missing value after 'mode:'", lineNumber)
 			}
 			grammar.Mode = modeValue
+			currentSection = ""
+			continue
+		}
+
+		// escapes: directive — controls how escape sequences in STRING tokens
+		// are handled. "none" means the lexer strips quotes but leaves escape
+		// sequences as raw text (useful for languages like TOML and CSS where
+		// different string types have different escape semantics).
+		if strings.HasPrefix(stripped, "escapes:") {
+			escapeValue := strings.TrimSpace(stripped[8:])
+			if escapeValue == "" {
+				return nil, fmt.Errorf("Line %d: Missing value after 'escapes:'", lineNumber)
+			}
+			grammar.EscapeMode = escapeValue
 			currentSection = ""
 			continue
 		}

@@ -1,0 +1,5 @@
+[package]
+name = "network-stack"
+version = "0.1.0"
+edition = "2021"
+description = "Full layered networking stack: Ethernet, IP, TCP, UDP, sockets, DNS, HTTP"

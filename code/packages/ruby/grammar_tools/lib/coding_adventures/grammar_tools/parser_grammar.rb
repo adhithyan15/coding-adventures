@@ -373,8 +373,14 @@ module CodingAdventures
 
       # Undefined token references.
       if token_names
+        # Synthetic tokens are always valid — the lexer produces these
+        # implicitly without needing a .tokens definition:
+        #   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
+        #   INDENT/DEDENT — emitted in indentation mode
+        #   EOF — always emitted at end of input
+        synthetic_tokens = Set.new(%w[NEWLINE INDENT DEDENT EOF])
         referenced_tokens.sort.each do |ref|
-          unless token_names.include?(ref)
+          unless token_names.include?(ref) || synthetic_tokens.include?(ref)
             issues << "Undefined token reference: '#{ref}'"
           end
         end

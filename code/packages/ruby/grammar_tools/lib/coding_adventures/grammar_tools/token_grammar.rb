@@ -74,15 +74,17 @@ module CodingAdventures
     # reserved_keywords -- keywords that cause lex errors if used as identifiers
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :reserved_keywords
-      attr_accessor :mode
+      attr_accessor :mode, :escape_mode
 
       def initialize(definitions: [], keywords: [], mode: nil,
-                     skip_definitions: [], reserved_keywords: [])
+                     skip_definitions: [], reserved_keywords: [],
+                     escape_mode: nil)
         @definitions = definitions
         @keywords = keywords
         @mode = mode
         @skip_definitions = skip_definitions
         @reserved_keywords = reserved_keywords
+        @escape_mode = escape_mode
       end
 
       # Return the set of all defined token names (including aliases).
@@ -230,6 +232,22 @@ module CodingAdventures
             )
           end
           grammar.mode = mode_value
+          current_section = nil
+          next
+        end
+
+        # escapes: directive -- controls how STRING tokens are processed.
+        # "none" disables escape processing (quotes are stripped but escape
+        # sequences are left as-is). Useful for languages like CSS and TOML
+        # where escape semantics differ from JSON.
+        if stripped.start_with?("escapes:")
+          escape_value = stripped[8..].strip
+          if escape_value.empty?
+            raise TokenGrammarError.new(
+              "Missing value after 'escapes:'", line_number
+            )
+          end
+          grammar.escape_mode = escape_value
           current_section = nil
           next
         end
