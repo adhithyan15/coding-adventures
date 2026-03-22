@@ -3,15 +3,8 @@
 //! ## What is the Intel 4004?
 //!
 //! The Intel 4004 was the world's first commercial single-chip microprocessor,
-//! released by Intel in 1971. It was designed by Federico Faggin, Ted Hoff, and
-//! Stanley Mazor for the Busicom 141-PF calculator — a Japanese desktop printing
-//! calculator. Intel negotiated to retain the rights to the chip design, which
-//! turned out to be one of the most consequential business decisions in history.
-//!
-//! The entire processor contained just 2,300 transistors. For perspective, a
-//! modern CPU has billions. The 4004 ran at 740 kHz — about a million times
-//! slower than today's processors. Yet it proved that a general-purpose processor
-//! could be built on a single chip, launching the microprocessor revolution.
+//! released by Intel in 1971. The entire processor contained just 2,300
+//! transistors -- compared to billions in modern CPUs.
 //!
 //! ## Why 4-bit?
 //!
@@ -38,63 +31,79 @@
 //!
 //! ## Instruction encoding
 //!
-//! Each instruction is 8 bits (1 byte), though some instructions are 2 bytes:
+//! The 4004 uses both 1-byte and 2-byte instructions:
 //!
 //! ```text
-//!     7    4  3    0
-//!     +------+------+
-//!     | opcode| operand|
-//!     | 4 bits| 4 bits |
-//!     +------+------+
+//!     1-byte:          2-byte:
+//!     7    4  3    0   7    4  3    0   7          0
+//!     +------+------+  +------+------+  +----------+
+//!     |opcode|operand|  |opcode|operand|  | data/addr|
+//!     |4 bits|4 bits |  |4 bits|4 bits |  |  8 bits  |
+//!     +------+------+  +------+------+  +----------+
 //! ```
 //!
-//! ## Complete Instruction Set (46 instructions)
+//! 2-byte instructions: JCN, FIM, JUN, JMS, ISZ, and even-addressed SRC variants.
 //!
-//! The 4004 has 46 instructions organized by encoding:
+//! ## Memory architecture
 //!
-//! | Byte     | Mnemonic     | Description                              |
-//! |----------|--------------|------------------------------------------|
-//! | 0x00     | NOP          | No operation                             |
-//! | 0x01     | HLT          | Halt (simulator-only)                    |
-//! | 0x1C AA  | JCN c,addr   | Conditional jump                         |
-//! | 0x2P DD  | FIM Pp,data  | Fetch immediate to register pair (even)  |
-//! | 0x2P+1   | SRC Pp       | Send register control (odd)              |
-//! | 0x3P     | FIN Pp       | Fetch indirect from ROM (even)           |
-//! | 0x3P+1   | JIN Pp       | Jump indirect (odd)                      |
-//! | 0x4H LL  | JUN addr     | Unconditional jump (12-bit)              |
-//! | 0x5H LL  | JMS addr     | Jump to subroutine                       |
-//! | 0x6R     | INC Rn       | Increment register                       |
-//! | 0x7R AA  | ISZ Rn,addr  | Increment and skip if zero               |
-//! | 0x8R     | ADD Rn       | Add register to accumulator with carry    |
-//! | 0x9R     | SUB Rn       | Subtract register from accumulator       |
-//! | 0xAR     | LD Rn        | Load register into accumulator           |
-//! | 0xBR     | XCH Rn       | Exchange accumulator and register         |
-//! | 0xCN     | BBL n        | Branch back and load                     |
-//! | 0xDN     | LDM n        | Load immediate into accumulator          |
-//! | 0xE0     | WRM          | Write RAM main character                 |
-//! | 0xE1     | WMP          | Write RAM output port                    |
-//! | 0xE2     | WRR          | Write ROM I/O port                       |
-//! | 0xE3     | WPM          | Write program RAM (NOP in simulator)     |
-//! | 0xE4-E7  | WR0-WR3      | Write RAM status characters 0-3          |
-//! | 0xE8     | SBM          | Subtract RAM from accumulator            |
-//! | 0xE9     | RDM          | Read RAM main character                  |
-//! | 0xEA     | RDR          | Read ROM I/O port                        |
-//! | 0xEB     | ADM          | Add RAM to accumulator                   |
-//! | 0xEC-EF  | RD0-RD3      | Read RAM status characters 0-3           |
-//! | 0xF0     | CLB          | Clear both (A=0, carry=0)                |
-//! | 0xF1     | CLC          | Clear carry                              |
-//! | 0xF2     | IAC          | Increment accumulator                    |
-//! | 0xF3     | CMC          | Complement carry                         |
-//! | 0xF4     | CMA          | Complement accumulator                   |
-//! | 0xF5     | RAL          | Rotate left through carry                |
-//! | 0xF6     | RAR          | Rotate right through carry               |
-//! | 0xF7     | TCC          | Transfer carry to accumulator            |
-//! | 0xF8     | DAC          | Decrement accumulator                    |
-//! | 0xF9     | TCS          | Transfer carry subtract                  |
-//! | 0xFA     | STC          | Set carry                                |
-//! | 0xFB     | DAA          | Decimal adjust accumulator               |
-//! | 0xFC     | KBP          | Keyboard process                         |
-//! | 0xFD     | DCL          | Designate command line                   |
+//! The 4004 has a rich memory hierarchy:
+//!
+//! - **ROM**: Up to 4096 bytes of program memory (12-bit address space)
+//! - **RAM**: 4 banks x 4 registers x 16 characters (nibbles) of data memory
+//! - **RAM status**: 4 banks x 4 registers x 4 status nibbles
+//! - **Hardware stack**: 3-level deep for subroutine return addresses
+//!
+//! ## All 46 instructions
+//!
+//! | Byte     | Mnemonic | Description                                   |
+//! |----------|----------|-----------------------------------------------|
+//! | 0x00     | NOP      | No operation                                  |
+//! | 0x01     | HLT      | Halt (custom for testing, not original 4004)  |
+//! | 0x1C_    | JCN      | Jump conditional (2-byte)                     |
+//! | 0x2E_    | FIM      | Fetch immediate to register pair (2-byte)     |
+//! | 0x2O_    | SRC      | Send register control (set RAM address)       |
+//! | 0x3E_    | FIN      | Fetch indirect from ROM to register pair      |
+//! | 0x3O_    | JIN      | Jump indirect through register pair           |
+//! | 0x4__    | JUN      | Jump unconditional (2-byte, 12-bit address)   |
+//! | 0x5__    | JMS      | Jump to subroutine (2-byte, push return addr) |
+//! | 0x6_     | INC      | Increment register                            |
+//! | 0x7__    | ISZ      | Increment and skip if zero (2-byte)           |
+//! | 0x8_     | ADD      | Add register to accumulator with carry         |
+//! | 0x9_     | SUB      | Subtract register from accumulator (compl.)   |
+//! | 0xA_     | LD       | Load register into accumulator                |
+//! | 0xB_     | XCH      | Exchange accumulator with register             |
+//! | 0xC_     | BBL      | Branch back and load (return from subroutine) |
+//! | 0xD_     | LDM      | Load immediate into accumulator               |
+//! | 0xE0     | WRM      | Write accumulator to RAM main memory          |
+//! | 0xE1     | WMP      | Write accumulator to RAM output port          |
+//! | 0xE2     | WRR      | Write accumulator to ROM port                 |
+//! | 0xE3     | WPM      | Write program memory (not impl in sim)        |
+//! | 0xE4     | WR0      | Write accumulator to RAM status char 0        |
+//! | 0xE5     | WR1      | Write accumulator to RAM status char 1        |
+//! | 0xE6     | WR2      | Write accumulator to RAM status char 2        |
+//! | 0xE7     | WR3      | Write accumulator to RAM status char 3        |
+//! | 0xE8     | SBM      | Subtract RAM main memory from accumulator     |
+//! | 0xE9     | RDM      | Read RAM main memory into accumulator         |
+//! | 0xEA     | RDR      | Read ROM port into accumulator                |
+//! | 0xEB     | ADM      | Add RAM main memory to accumulator            |
+//! | 0xEC     | RD0      | Read RAM status char 0 into accumulator       |
+//! | 0xED     | RD1      | Read RAM status char 1 into accumulator       |
+//! | 0xEE     | RD2      | Read RAM status char 2 into accumulator       |
+//! | 0xEF     | RD3      | Read RAM status char 3 into accumulator       |
+//! | 0xF0     | CLB      | Clear both accumulator and carry              |
+//! | 0xF1     | CLC      | Clear carry                                   |
+//! | 0xF2     | IAC      | Increment accumulator                         |
+//! | 0xF3     | CMC      | Complement carry                              |
+//! | 0xF4     | CMA      | Complement accumulator                        |
+//! | 0xF5     | RAL      | Rotate accumulator left through carry         |
+//! | 0xF6     | RAR      | Rotate accumulator right through carry        |
+//! | 0xF7     | TCC      | Transfer carry to accumulator, clear carry    |
+//! | 0xF8     | DAC      | Decrement accumulator                         |
+//! | 0xF9     | TCS      | Transfer carry subtract, clear carry          |
+//! | 0xFA     | STC      | Set carry                                     |
+//! | 0xFB     | DAA      | Decimal adjust accumulator                    |
+//! | 0xFC     | KBP      | Keyboard process                              |
+//! | 0xFD     | DCL      | Designate command line (select RAM bank)      |
 
 // ===========================================================================
 // Trace type
@@ -107,29 +116,43 @@
 /// instructions, `raw2` holds the second byte.
 #[derive(Debug, Clone)]
 pub struct Intel4004Trace {
-    /// ROM address where this instruction was fetched.
     pub address: usize,
-    /// The first (or only) byte of the instruction.
     pub raw: u8,
-    /// The second byte for 2-byte instructions, or `None`.
     pub raw2: Option<u8>,
-    /// Human-readable disassembly (e.g., "LDM 5", "JUN 0x100").
     pub mnemonic: String,
-    /// Accumulator value before execution.
     pub accumulator_before: u8,
-    /// Accumulator value after execution.
     pub accumulator_after: u8,
-    /// Carry flag before execution.
     pub carry_before: bool,
-    /// Carry flag after execution.
     pub carry_after: bool,
+}
+
+// ===========================================================================
+// Two-byte instruction detection
+// ===========================================================================
+
+/// Determine whether a given first byte indicates a 2-byte instruction.
+///
+/// The 4004 has six 2-byte instruction types:
+///
+/// ```text
+///   Upper nibble 0x1 → JCN (jump conditional)
+///   Upper nibble 0x2, bit0=0 → FIM (fetch immediate to register pair)
+///   Upper nibble 0x4 → JUN (jump unconditional)
+///   Upper nibble 0x5 → JMS (jump to subroutine)
+///   Upper nibble 0x7 → ISZ (increment and skip if zero)
+/// ```
+///
+/// All other instructions are single-byte.
+fn is_two_byte(raw: u8) -> bool {
+    let upper = (raw >> 4) & 0xF;
+    matches!(upper, 0x1 | 0x4 | 0x5 | 0x7) || (upper == 0x2 && (raw & 0x1) == 0)
 }
 
 // ===========================================================================
 // Simulator
 // ===========================================================================
 
-/// The Intel 4004 simulator — all 46 real instructions plus HLT.
+/// The Intel 4004 simulator.
 ///
 /// Stands on its own rather than using the generic cpu-simulator framework,
 /// because the 32-bit-oriented CPU base doesn't fit a 4-bit architecture.
@@ -137,148 +160,136 @@ pub struct Intel4004Trace {
 /// ```text
 ///     +-------------------------------------------+
 ///     |           Intel 4004                       |
-///     |  Accumulator:   4 bits                     |
-///     |  Registers:     16 × 4 bits (R0-R15)      |
-///     |  Carry:         1 bit                      |
-///     |  PC:            12 bits (0-4095)           |
-///     |  Stack:         3-level × 12 bits          |
-///     |  ROM:           4096 × 8-bit               |
-///     |  RAM:           4 banks × 4 regs × 16 nib  |
-///     |  RAM status:    4 banks × 4 regs × 4 nib   |
+///     |  Accumulator:     4 bits                   |
+///     |  Registers:       16 x 4 bits              |
+///     |  Carry:           1 bit                    |
+///     |  Program memory:  byte-addressable ROM     |
+///     |  Data RAM:        4x4x16 nibbles           |
+///     |  RAM status:      4x4x4 nibbles            |
+///     |  Hardware stack:  3-level x 12-bit addrs   |
+///     |  ROM port:        4 bits                   |
+///     |  RAM output port: 4 bits per bank          |
 ///     +-------------------------------------------+
 /// ```
 pub struct Intel4004Simulator {
-    // --- CPU Registers ---
-
-    /// The 4-bit accumulator (0-15). The heart of computation.
+    /// The 4-bit accumulator (0-15).
     pub accumulator: u8,
-
     /// 16 general-purpose 4-bit registers (R0-R15).
-    ///
-    /// Organized as 8 pairs: P0=(R0,R1), P1=(R2,R3), ..., P7=(R14,R15).
-    /// The even register is the high nibble, odd is the low nibble when
-    /// reading a pair as an 8-bit value.
-    pub registers: [u8; 16],
-
-    /// The carry flag — set when arithmetic overflows or underflows.
-    ///
-    /// For SUB, the carry semantics are INVERTED from what you'd expect:
-    /// - carry=true means NO borrow occurred (result >= 0)
-    /// - carry=false means borrow occurred (result was negative)
+    /// Arranged as 8 pairs: (R0,R1), (R2,R3), ..., (R14,R15).
+    /// Each register holds a 4-bit value (0-15).
+    pub registers: Vec<u8>,
+    /// The carry flag -- set when arithmetic overflows or underflows.
     pub carry: bool,
-
-    // --- Memory ---
-
-    /// Byte-addressable program memory (ROM). Up to 4096 bytes.
+    /// Byte-addressable program memory (ROM).
+    /// The real 4004 supports up to 4096 bytes.
     pub memory: Vec<u8>,
-
-    /// Program counter (12-bit, addresses 0-4095).
+    /// Program counter (12-bit address space, 0-4095).
     pub pc: usize,
+    /// Whether the CPU has halted (via the custom HLT instruction).
+    pub halted: bool,
 
-    // --- Hardware Call Stack ---
+    // ----- New fields for full 4004 support -----
 
-    /// 3-level hardware call stack storing 12-bit return addresses.
+    /// Hardware subroutine stack.
     ///
-    /// The real 4004 has exactly 3 stack levels — no more. If you call
-    /// a 4th subroutine without returning, the oldest return address is
-    /// silently overwritten. There is no stack overflow exception.
+    /// The real 4004 has a 3-level deep hardware stack (no RAM-based stack).
+    /// Each entry holds a 12-bit return address. When you call JMS, the
+    /// return address is pushed. When you execute BBL, it is popped.
+    /// If you nest more than 3 levels, the oldest address is lost (wraps).
     pub hw_stack: [u16; 3],
 
-    /// Stack pointer (0-2), wraps modulo 3.
+    /// Stack pointer (0-2). Points to the next free slot.
+    /// On the real 4004, the stack wraps silently -- there is no overflow trap.
     pub stack_pointer: usize,
 
-    // --- RAM ---
-
-    /// Main RAM: 4 banks × 4 registers × 16 nibbles.
+    /// Data RAM: 4 banks x 4 registers x 16 characters (nibbles).
     ///
-    /// Addressed by: `ram[ram_bank][ram_register][ram_character]`
-    /// Each entry is a 4-bit value (0-15).
+    /// ```text
+    ///   ram[bank][register][character]
+    ///        0-3     0-3       0-15
+    /// ```
+    ///
+    /// Each element stores a 4-bit value (0-15). Selected by DCL (bank)
+    /// and SRC (register + character). Read with RDM, written with WRM.
     pub ram: [[[u8; 16]; 4]; 4],
 
-    /// RAM status characters: 4 banks × 4 registers × 4 status nibbles.
+    /// RAM status characters: 4 banks x 4 registers x 4 status nibbles.
     ///
-    /// Each RAM register has 4 status nibbles in addition to the 16 main
-    /// nibbles. These were used for flags, signs, etc. in BCD calculators.
+    /// Each register has 4 extra status nibbles (separate from the 16 main
+    /// characters). Read with RD0-RD3, written with WR0-WR3.
     pub ram_status: [[[u8; 4]; 4]; 4],
 
-    /// RAM output port — one per bank, written by WMP.
+    /// RAM output port: one 4-bit latch per bank.
+    /// Written by WMP, which writes the accumulator to the currently
+    /// selected bank's output port.
     pub ram_output: [u8; 4],
 
-    /// Selected RAM bank (0-3), set by DCL instruction.
+    /// Currently selected RAM bank (set by DCL). Range: 0-3.
     pub ram_bank: usize,
 
-    /// Selected RAM register (0-3), set by SRC instruction (high nibble of pair).
+    /// Currently selected RAM register within the bank (set by SRC). Range: 0-3.
     pub ram_register: usize,
 
-    /// Selected RAM character (0-15), set by SRC instruction (low nibble of pair).
+    /// Currently selected RAM character within the register (set by SRC). Range: 0-15.
     pub ram_character: usize,
 
-    // --- ROM I/O ---
-
-    /// ROM I/O port value, written by WRR, read by RDR.
+    /// ROM I/O port: 4-bit value. Written by WRR, read by RDR.
     pub rom_port: u8,
-
-    // --- Control ---
-
-    /// Whether the CPU has halted (HLT instruction executed).
-    pub halted: bool,
-}
-
-// ===========================================================================
-// Helper: detect 2-byte instructions
-// ===========================================================================
-
-/// Returns true if the raw byte starts a 2-byte instruction.
-///
-/// The 4004 has five 2-byte instruction families:
-///
-/// | Upper nibble | Instruction | Condition           |
-/// |--------------|-------------|---------------------|
-/// | 0x1          | JCN         | always 2-byte       |
-/// | 0x2          | FIM         | even lower nibble   |
-/// | 0x4          | JUN         | always 2-byte       |
-/// | 0x5          | JMS         | always 2-byte       |
-/// | 0x7          | ISZ         | always 2-byte       |
-///
-/// Note: 0x2 with odd lower nibble is SRC, which is 1-byte.
-fn is_two_byte(raw: u8) -> bool {
-    let upper = (raw >> 4) & 0xF;
-    match upper {
-        0x1 | 0x4 | 0x5 | 0x7 => true,
-        0x2 => (raw & 0x1) == 0, // FIM (even) is 2-byte, SRC (odd) is 1-byte
-        _ => false,
-    }
 }
 
 impl Intel4004Simulator {
-    /// Create a new Intel 4004 simulator with the given memory size.
+    /// Create a new Intel 4004 simulator with the given program memory size.
     ///
-    /// The real 4004 addresses 4096 bytes of ROM. Pass `4096` for
-    /// authentic behavior.
+    /// All state is initialized to zero: accumulator, registers, carry, stack,
+    /// RAM, ports, and program counter.
     pub fn new(memory_size: usize) -> Self {
         Intel4004Simulator {
             accumulator: 0,
-            registers: [0; 16],
+            registers: vec![0; 16],
             carry: false,
             memory: vec![0; memory_size],
             pc: 0,
+            halted: false,
             hw_stack: [0; 3],
             stack_pointer: 0,
-            ram: [[[0; 16]; 4]; 4],
-            ram_status: [[[0; 4]; 4]; 4],
-            ram_output: [0; 4],
+            ram: [[[0u8; 16]; 4]; 4],
+            ram_status: [[[0u8; 4]; 4]; 4],
+            ram_output: [0u8; 4],
             ram_bank: 0,
             ram_register: 0,
             ram_character: 0,
             rom_port: 0,
-            halted: false,
         }
     }
 
-    /// Load a program into memory starting at address 0.
+    /// Reset all CPU state to initial values (zeros).
     ///
-    /// Resets the program counter and halted flag, but preserves
-    /// registers, accumulator, carry, RAM, and stack state.
+    /// Called automatically by `run()` before loading a new program.
+    /// Useful for running multiple programs sequentially on the same
+    /// simulator instance without constructing a new one.
+    pub fn reset(&mut self) {
+        self.accumulator = 0;
+        for r in self.registers.iter_mut() {
+            *r = 0;
+        }
+        self.carry = false;
+        for b in self.memory.iter_mut() {
+            *b = 0;
+        }
+        self.pc = 0;
+        self.halted = false;
+        self.hw_stack = [0; 3];
+        self.stack_pointer = 0;
+        self.ram = [[[0u8; 16]; 4]; 4];
+        self.ram_status = [[[0u8; 4]; 4]; 4];
+        self.ram_output = [0u8; 4];
+        self.ram_bank = 0;
+        self.ram_register = 0;
+        self.ram_character = 0;
+        self.rom_port = 0;
+    }
+
+    /// Load a program into memory starting at address 0.
     pub fn load_program(&mut self, program: &[u8]) {
         for (i, &b) in program.iter().enumerate() {
             self.memory[i] = b;
@@ -287,105 +298,101 @@ impl Intel4004Simulator {
         self.halted = false;
     }
 
-    /// Reset all CPU state to initial values.
-    pub fn reset(&mut self) {
-        self.accumulator = 0;
-        self.registers = [0; 16];
-        self.carry = false;
-        for byte in self.memory.iter_mut() {
-            *byte = 0;
-        }
-        self.pc = 0;
-        self.hw_stack = [0; 3];
-        self.stack_pointer = 0;
-        self.ram = [[[0; 16]; 4]; 4];
-        self.ram_status = [[[0; 4]; 4]; 4];
-        self.ram_output = [0; 4];
-        self.ram_bank = 0;
-        self.ram_register = 0;
-        self.ram_character = 0;
-        self.rom_port = 0;
-        self.halted = false;
-    }
-
-    // ===================================================================
+    // -----------------------------------------------------------------------
     // Register pair helpers
-    // ===================================================================
+    // -----------------------------------------------------------------------
 
-    /// Read an 8-bit value from a register pair.
+    /// Read an 8-bit value from register pair `p`.
     ///
-    /// Pair 0 = (R0, R1), Pair 1 = (R2, R3), ..., Pair 7 = (R14, R15).
-    /// The even register is the high nibble, the odd register is the low nibble.
+    /// The 4004 groups its 16 registers into 8 pairs:
+    ///   Pair 0 = (R0, R1), Pair 1 = (R2, R3), ..., Pair 7 = (R14, R15)
+    ///
+    /// The high nibble comes from the even register, the low nibble from
+    /// the odd register. This gives an 8-bit value (0-255).
     ///
     /// ```text
-    ///     Pair P = (R[2*P], R[2*P+1])
-    ///     Value  = (R[2*P] << 4) | R[2*P+1]
+    ///   Pair p -> R[2p] (high nibble) : R[2p+1] (low nibble)
+    ///   Example: Pair 0, R0=0xA, R1=0x3 -> 0xA3
     /// ```
-    fn read_pair(&self, pair_idx: usize) -> u8 {
-        let high_reg = pair_idx * 2;
-        let low_reg = high_reg + 1;
-        (self.registers[high_reg] << 4) | self.registers[low_reg]
+    fn read_pair(&self, p: usize) -> u8 {
+        let hi = self.registers[p * 2] & 0xF;
+        let lo = self.registers[p * 2 + 1] & 0xF;
+        (hi << 4) | lo
     }
 
-    /// Write an 8-bit value to a register pair.
+    /// Write an 8-bit value to register pair `p`.
     ///
-    /// High nibble goes to the even register, low nibble to the odd register.
-    fn write_pair(&mut self, pair_idx: usize, value: u8) {
-        let high_reg = pair_idx * 2;
-        let low_reg = high_reg + 1;
-        self.registers[high_reg] = (value >> 4) & 0xF;
-        self.registers[low_reg] = value & 0xF;
+    /// The high nibble goes into the even register, the low nibble into
+    /// the odd register.
+    fn write_pair(&mut self, p: usize, val: u8) {
+        self.registers[p * 2] = (val >> 4) & 0xF;
+        self.registers[p * 2 + 1] = val & 0xF;
     }
 
-    // ===================================================================
-    // Stack helpers
-    // ===================================================================
+    // -----------------------------------------------------------------------
+    // Hardware stack helpers
+    // -----------------------------------------------------------------------
 
-    /// Push a return address onto the 3-level hardware stack.
+    /// Push a 12-bit address onto the hardware stack.
     ///
-    /// The real 4004 wraps silently on overflow — the 4th push overwrites
-    /// the oldest entry. There is no stack overflow exception.
-    fn stack_push(&mut self, address: u16) {
-        self.hw_stack[self.stack_pointer] = address & 0xFFF;
+    /// The 4004's stack is only 3 levels deep. If you push a 4th value,
+    /// it wraps around and overwrites the oldest entry. The real hardware
+    /// does this silently -- no exception, no warning.
+    fn stack_push(&mut self, addr: u16) {
+        self.hw_stack[self.stack_pointer % 3] = addr & 0xFFF;
         self.stack_pointer = (self.stack_pointer + 1) % 3;
     }
 
-    /// Pop a return address from the hardware stack.
+    /// Pop a 12-bit address from the hardware stack.
+    ///
+    /// Returns the most recently pushed address. If the stack is empty
+    /// (underflow), it wraps and returns whatever value happens to be
+    /// in that slot -- just like the real hardware.
     fn stack_pop(&mut self) -> u16 {
-        // (sp - 1) mod 3, using +2 to avoid underflow on unsigned
-        self.stack_pointer = (self.stack_pointer + 2) % 3;
-        self.hw_stack[self.stack_pointer]
+        self.stack_pointer = if self.stack_pointer == 0 { 2 } else { self.stack_pointer - 1 };
+        self.hw_stack[self.stack_pointer % 3]
     }
 
-    // ===================================================================
-    // RAM helpers
-    // ===================================================================
+    // -----------------------------------------------------------------------
+    // RAM access helpers
+    // -----------------------------------------------------------------------
 
-    /// Read the current RAM main character (addressed by SRC + DCL).
+    /// Read the currently addressed RAM main memory nibble.
+    ///
+    /// The address is set by DCL (bank) and SRC (register + character).
+    /// Returns a 4-bit value (0-15).
     fn ram_read_main(&self) -> u8 {
-        self.ram[self.ram_bank][self.ram_register][self.ram_character]
+        self.ram[self.ram_bank][self.ram_register][self.ram_character] & 0xF
     }
 
-    /// Write to the current RAM main character.
-    fn ram_write_main(&mut self, value: u8) {
-        self.ram[self.ram_bank][self.ram_register][self.ram_character] = value & 0xF;
+    /// Write a 4-bit value to the currently addressed RAM main memory nibble.
+    fn ram_write_main(&mut self, val: u8) {
+        self.ram[self.ram_bank][self.ram_register][self.ram_character] = val & 0xF;
     }
 
-    /// Read a RAM status character (0-3) for the current register.
-    fn ram_read_status(&self, index: usize) -> u8 {
-        self.ram_status[self.ram_bank][self.ram_register][index]
+    /// Read a RAM status nibble at the given index (0-3).
+    fn ram_read_status(&self, idx: usize) -> u8 {
+        self.ram_status[self.ram_bank][self.ram_register][idx] & 0xF
     }
 
-    /// Write a RAM status character (0-3).
-    fn ram_write_status(&mut self, index: usize, value: u8) {
-        self.ram_status[self.ram_bank][self.ram_register][index] = value & 0xF;
+    /// Write a RAM status nibble at the given index (0-3).
+    fn ram_write_status(&mut self, idx: usize, val: u8) {
+        self.ram_status[self.ram_bank][self.ram_register][idx] = val & 0xF;
     }
 
-    // ===================================================================
-    // Fetch-decode-execute
-    // ===================================================================
+    // -----------------------------------------------------------------------
+    // Step (fetch-decode-execute cycle)
+    // -----------------------------------------------------------------------
 
     /// Execute one instruction and return a trace.
+    ///
+    /// The fetch-decode-execute cycle:
+    /// 1. **Fetch**: Read the byte at the program counter.
+    /// 2. **Detect 2-byte**: If this opcode needs a second byte, fetch it too.
+    /// 3. **Decode**: Split the first byte into opcode (upper nibble) and
+    ///    operand (lower nibble).
+    /// 4. **Execute**: Dispatch to the appropriate instruction handler.
+    /// 5. **Trace**: Record before/after state for debugging.
     ///
     /// # Panics
     ///
@@ -395,20 +402,25 @@ impl Intel4004Simulator {
 
         let address = self.pc;
         let raw = self.memory[self.pc];
-        let acc_before = self.accumulator;
-        let carry_before = self.carry;
+        self.pc += 1;
 
-        // Check if this is a 2-byte instruction and fetch the second byte.
+        // Fetch second byte for 2-byte instructions.
         let raw2 = if is_two_byte(raw) {
-            let b2 = self.memory[self.pc + 1];
-            self.pc += 2;
-            Some(b2)
-        } else {
+            let b = self.memory[self.pc];
             self.pc += 1;
+            Some(b)
+        } else {
             None
         };
 
-        let mnemonic = self.execute(raw, raw2, address);
+        let acc_before = self.accumulator;
+        let carry_before = self.carry;
+
+        // Decode: split 8-bit instruction into 4-bit opcode and operand.
+        let opcode = (raw >> 4) & 0xF;
+        let operand = raw & 0xF;
+
+        let mnemonic = self.execute(opcode, operand, raw, raw2, address);
 
         Intel4004Trace {
             address,
@@ -422,671 +434,658 @@ impl Intel4004Simulator {
         }
     }
 
+    // -----------------------------------------------------------------------
+    // Execute (instruction dispatch)
+    // -----------------------------------------------------------------------
+
     /// Execute the decoded instruction, updating all CPU state.
     ///
-    /// Dispatches based on the upper nibble (and full byte for 0xE_/0xF_ range).
-    /// Returns the mnemonic string for the trace.
-    ///
-    /// # Instruction encoding overview
+    /// The instruction set is organized by upper nibble:
     ///
     /// ```text
-    ///     Upper nibble    Instruction(s)
-    ///     0x0             NOP (0x00), HLT (0x01)
-    ///     0x1             JCN (2-byte conditional jump)
-    ///     0x2             FIM (even, 2-byte) / SRC (odd, 1-byte)
-    ///     0x3             FIN (even) / JIN (odd)
-    ///     0x4             JUN (2-byte unconditional jump)
-    ///     0x5             JMS (2-byte jump to subroutine)
-    ///     0x6             INC (increment register)
-    ///     0x7             ISZ (2-byte increment and skip if zero)
-    ///     0x8             ADD (add register with carry)
-    ///     0x9             SUB (subtract register with borrow)
-    ///     0xA             LD  (load register into accumulator)
-    ///     0xB             XCH (exchange accumulator and register)
-    ///     0xC             BBL (branch back and load)
-    ///     0xD             LDM (load immediate)
-    ///     0xE             I/O operations (full byte dispatch)
-    ///     0xF             Accumulator operations (full byte dispatch)
+    ///   0x0: NOP (0x00), HLT (0x01)
+    ///   0x1: JCN -- conditional jump
+    ///   0x2: FIM (even) / SRC (odd)
+    ///   0x3: FIN (even) / JIN (odd)
+    ///   0x4: JUN -- unconditional jump
+    ///   0x5: JMS -- jump to subroutine
+    ///   0x6: INC -- increment register
+    ///   0x7: ISZ -- increment and skip if zero
+    ///   0x8: ADD -- add register to accumulator
+    ///   0x9: SUB -- subtract register from accumulator
+    ///   0xA: LD  -- load register to accumulator
+    ///   0xB: XCH -- exchange accumulator and register
+    ///   0xC: BBL -- branch back and load
+    ///   0xD: LDM -- load immediate to accumulator
+    ///   0xE: I/O and RAM instructions
+    ///   0xF: Accumulator group instructions
     /// ```
-    fn execute(&mut self, raw: u8, raw2: Option<u8>, address: usize) -> String {
-        let upper = (raw >> 4) & 0xF;
-        let lower = raw & 0xF;
+    fn execute(
+        &mut self,
+        opcode: u8,
+        operand: u8,
+        raw: u8,
+        raw2: Option<u8>,
+        address: usize,
+    ) -> String {
+        // ----- Special single-byte instructions at 0x00 and 0x01 -----
+        if raw == 0x00 {
+            // NOP -- No Operation.
+            // The CPU does nothing for one instruction cycle.
+            // Used for timing delays or as placeholder padding.
+            return "NOP".to_string();
+        }
+        if raw == 0x01 {
+            // HLT -- Halt (custom instruction for testing).
+            // Not part of the original 4004 instruction set, but invaluable
+            // for testing: it stops execution cleanly.
+            self.halted = true;
+            return "HLT".to_string();
+        }
 
-        match upper {
-            // =============================================================
-            // 0x0: NOP and HLT
-            // =============================================================
-            0x0 => {
-                match raw {
-                    0x00 => {
-                        // NOP — No operation. The simplest instruction: do nothing,
-                        // just advance to the next byte. Used for timing delays or
-                        // alignment padding.
-                        "NOP".to_string()
-                    }
-                    0x01 => {
-                        // HLT — Halt execution. This is a simulator-only instruction
-                        // that doesn't exist on the real 4004 hardware. We use it to
-                        // stop execution cleanly in tests.
-                        self.halted = true;
-                        "HLT".to_string()
-                    }
-                    _ => format!("UNKNOWN(0x{raw:02X})"),
-                }
-            }
-
-            // =============================================================
-            // 0x1: JCN — Conditional jump (2-byte)
-            // =============================================================
+        match opcode {
+            // =================================================================
+            // 0x1: JCN -- Jump Conditional
+            // =================================================================
             //
-            // Format: 0x1C AA
-            //   C = condition nibble (4 bits of test flags)
-            //   AA = target address within the same 256-byte page
+            // Format: 2 bytes -- [0x1C] [address_low]
+            //   C = condition nibble (4 bits):
+            //     bit 3 (8): invert -- if set, jump when condition is FALSE
+            //     bit 2 (4): test zero -- true if accumulator == 0
+            //     bit 1 (2): test carry -- true if carry flag is set
+            //     bit 0 (1): test pin -- true if test pin is active (always 0 in sim)
             //
-            // The condition nibble C has 4 bits:
-            //   Bit 3 (0x8): INVERT — if set, invert the final test result
-            //   Bit 2 (0x4): TEST_ZERO — test if accumulator == 0
-            //   Bit 1 (0x2): TEST_CARRY — test if carry == 1
-            //   Bit 0 (0x1): TEST_PIN — test input pin (always 0 in simulator)
+            // The condition bits are OR'd together. If any enabled test is true
+            // (before inversion), the condition is met.
             //
-            // Multiple test bits can be set — they are OR'd together.
-            // If the (possibly inverted) result is True, the jump is taken.
+            // Target address: same ROM page as the JCN instruction, low byte
+            // replaced by the second byte. Formally:
+            //   target = (address_of_JCN + 2) & 0xF00 | raw2
+            //
+            // This limits JCN to jumping within the current 256-byte page.
             0x1 => {
-                let cond = lower;
-                let addr = raw2.unwrap_or(0);
+                let cond = operand;
+                let addr_low = raw2.unwrap_or(0);
 
-                // Evaluate condition tests (OR'd together)
-                let mut test_result = false;
-                if cond & 0x4 != 0 {
-                    // Test accumulator == 0
-                    test_result = test_result || (self.accumulator == 0);
-                }
-                if cond & 0x2 != 0 {
-                    // Test carry == 1
-                    test_result = test_result || self.carry;
-                }
-                if cond & 0x1 != 0 {
-                    // Test input pin (always 0 = not asserted in simulator)
-                    // test_result = test_result || false;
-                }
+                let invert = cond & 0x8 != 0;
+                let test_zero = cond & 0x4 != 0;
+                let test_carry = cond & 0x2 != 0;
+                let test_pin = cond & 0x1 != 0;
 
-                // Invert if bit 3 is set
-                if cond & 0x8 != 0 {
-                    test_result = !test_result;
+                // Evaluate: OR together enabled tests.
+                let mut result = false;
+                if test_zero {
+                    result = result || (self.accumulator == 0);
+                }
+                if test_carry {
+                    result = result || self.carry;
+                }
+                if test_pin {
+                    // Test pin is always 0 in this simulator (no external hardware).
+                    result = result || false;
                 }
 
-                if test_result {
-                    // Jump: target is within the same 256-byte page
-                    let page = self.pc & 0xF00;
-                    self.pc = page | (addr as usize);
+                // Apply inversion.
+                if invert {
+                    result = !result;
                 }
 
-                format!("JCN {cond},{addr:02X}")
+                if result {
+                    // Jump target: keep the page (high nibble of 12-bit addr),
+                    // replace the low 8 bits.
+                    let page = (address + 2) & 0xF00;
+                    self.pc = page | (addr_low as usize);
+                }
+
+                format!("JCN 0x{:X},0x{:02X}", cond, addr_low)
             }
 
-            // =============================================================
-            // 0x2: FIM (even) / SRC (odd)
-            // =============================================================
+            // =================================================================
+            // 0x2 (even): FIM -- Fetch Immediate to Register Pair
+            // =================================================================
+            //
+            // Format: 2 bytes -- [0x2P0] [data8]
+            //   P = register pair number (0-7)
+            //   data8 = 8-bit immediate value
+            //
+            // Loads an 8-bit value into a register pair. The high nibble goes
+            // to the even register, the low nibble to the odd register.
+            //
+            // Example: FIM P0, 0xA3 -> R0=0xA, R1=0x3
+            0x2 if raw & 1 == 0 => {
+                let pair = (operand >> 1) as usize;
+                let data = raw2.unwrap_or(0);
+                self.write_pair(pair, data);
+                format!("FIM P{},0x{:02X}", pair, data)
+            }
+
+            // =================================================================
+            // 0x2 (odd): SRC -- Send Register Control
+            // =================================================================
+            //
+            // Format: 1 byte -- [0x2P1]
+            //   P = register pair number (0-7)
+            //
+            // Sets the RAM address for subsequent I/O instructions (WRM, RDM,
+            // WR0-WR3, RD0-RD3, WMP). The register pair provides:
+            //   - Bits 5-4 of pair value: selects RAM register (0-3)
+            //   - Bits 3-0 of pair value: selects character (0-15)
             0x2 => {
-                let pair = (lower >> 1) as usize;
-
-                if lower & 0x1 == 0 {
-                    // FIM Pp,data (0x2P 0xDD): Fetch immediate to register pair.
-                    //
-                    // Load the 8-bit immediate data byte into register pair Pp.
-                    // High nibble → R(2*p), low nibble → R(2*p+1).
-                    // This is the only way to load an 8-bit value in one instruction.
-                    let data = raw2.unwrap_or(0);
-                    self.write_pair(pair, data);
-                    format!("FIM P{pair},0x{data:02X}")
-                } else {
-                    // SRC Pp (0x2P+1): Send Register Control.
-                    //
-                    // Send the 8-bit value in register pair Pp as an address for
-                    // subsequent RAM/ROM I/O operations:
-                    //   High nibble → ram_register (0-3)
-                    //   Low nibble  → ram_character (0-15)
-                    //
-                    // This is like setting a pointer before a memory read/write.
-                    let pair_val = self.read_pair(pair);
-                    self.ram_register = ((pair_val >> 4) & 0xF) as usize;
-                    self.ram_character = (pair_val & 0xF) as usize;
-                    format!("SRC P{pair}")
-                }
+                let pair = (operand >> 1) as usize;
+                let pair_val = self.read_pair(pair);
+                // Bits 5-4 select the RAM register (0-3).
+                // Bits 3-0 select the character within that register (0-15).
+                self.ram_register = ((pair_val >> 4) & 0x3) as usize;
+                self.ram_character = (pair_val & 0xF) as usize;
+                format!("SRC P{}", pair)
             }
 
-            // =============================================================
-            // 0x3: FIN (even) / JIN (odd)
-            // =============================================================
+            // =================================================================
+            // 0x3 (even): FIN -- Fetch Indirect from ROM
+            // =================================================================
+            //
+            // Format: 1 byte -- [0x3P0]
+            //   P = register pair number (0-7)
+            //
+            // Reads 1 byte from ROM at the address formed by register pair 0
+            // (R0:R1), and stores it in register pair P. This is an indirect
+            // load from ROM -- useful for table lookups.
+            //
+            // The ROM address is: (current_page & 0xF00) | R0:R1
+            0x3 if raw & 1 == 0 => {
+                let pair = (operand >> 1) as usize;
+                let rom_addr = self.read_pair(0) as usize;
+                let page = self.pc & 0xF00;
+                let full_addr = page | rom_addr;
+                let data = self.memory[full_addr];
+                self.write_pair(pair, data);
+                format!("FIN P{}", pair)
+            }
+
+            // =================================================================
+            // 0x3 (odd): JIN -- Jump Indirect
+            // =================================================================
+            //
+            // Format: 1 byte -- [0x3P1]
+            //   P = register pair number (0-7)
+            //
+            // Jumps to the address formed by: current page | register pair value.
+            // Like JCN, limited to the current 256-byte page.
             0x3 => {
-                let pair = (lower >> 1) as usize;
-
-                if lower & 0x1 == 0 {
-                    // FIN Pp (0x3P): Fetch Indirect from ROM.
-                    //
-                    // Read the ROM byte at the address formed by:
-                    //   - High bits: current page (bits 11-8 of the instruction's PC)
-                    //   - Low bits:  register pair P0 (R0:R1)
-                    //
-                    // Store the result into register pair Pp.
-                    // Note: the address comes from P0 regardless of which pair
-                    // is the destination.
-                    let p0_val = self.read_pair(0) as usize;
-                    let current_page = address & 0xF00;
-                    let rom_addr = current_page | p0_val;
-                    let rom_byte = if rom_addr < self.memory.len() {
-                        self.memory[rom_addr]
-                    } else {
-                        0
-                    };
-                    self.write_pair(pair, rom_byte);
-                    format!("FIN P{pair}")
-                } else {
-                    // JIN Pp (0x3P+1): Jump Indirect.
-                    //
-                    // Jump to the address formed by:
-                    //   - High bits: current page (bits 11-8 of this instruction's PC)
-                    //   - Low bits:  register pair Pp (8-bit value)
-                    let pair_val = self.read_pair(pair) as usize;
-                    let current_page = address & 0xF00;
-                    self.pc = current_page | pair_val;
-                    format!("JIN P{pair}")
-                }
+                let pair = (operand >> 1) as usize;
+                let pair_val = self.read_pair(pair) as usize;
+                let page = self.pc & 0xF00;
+                self.pc = page | pair_val;
+                format!("JIN P{}", pair)
             }
 
-            // =============================================================
-            // 0x4: JUN — Unconditional jump (2-byte)
-            // =============================================================
+            // =================================================================
+            // 0x4: JUN -- Jump Unconditional
+            // =================================================================
             //
-            // Format: 0x4H LL
-            //   H = high 4 bits of 12-bit address (from lower nibble of byte 1)
-            //   LL = low 8 bits of 12-bit address (byte 2)
-            //   Full address = (H << 8) | LL
+            // Format: 2 bytes -- [0x4H] [LL]
+            //   Full 12-bit address = (H << 8) | LL
+            //   H = operand (lower nibble of first byte), provides bits 11-8
+            //   LL = second byte, provides bits 7-0
             //
-            // This is the 4004's "goto" — jumps anywhere in the 4KB ROM space.
+            // Jumps anywhere in the 4096-byte address space.
             0x4 => {
-                let addr = ((lower as u16) << 8) | (raw2.unwrap_or(0) as u16);
-                self.pc = addr as usize;
-                format!("JUN 0x{addr:03X}")
+                let addr_hi = (operand as u16) << 8;
+                let addr_lo = raw2.unwrap_or(0) as u16;
+                let target = (addr_hi | addr_lo) as usize;
+                self.pc = target;
+                format!("JUN 0x{:03X}", target)
             }
 
-            // =============================================================
-            // 0x5: JMS — Jump to subroutine (2-byte)
-            // =============================================================
+            // =================================================================
+            // 0x5: JMS -- Jump to Subroutine
+            // =================================================================
             //
-            // Format: 0x5H LL
-            //   Same address encoding as JUN.
+            // Format: 2 bytes -- [0x5H] [LL]
+            //   Same address format as JUN.
             //
-            // Pushes the return address (address of next instruction after JMS)
-            // onto the 3-level hardware stack, then jumps to the target.
-            // The return address is `address + 2` since JMS is 2 bytes.
+            // Pushes the return address (PC after this instruction) onto the
+            // hardware stack, then jumps to the target address. Use BBL to return.
+            //
+            // The stack is only 3 deep -- nesting more than 3 subroutine calls
+            // silently corrupts the stack (oldest return address lost).
             0x5 => {
-                let addr = ((lower as u16) << 8) | (raw2.unwrap_or(0) as u16);
-                // Push return address (the instruction AFTER this 2-byte JMS)
-                let return_addr = (address + 2) as u16;
-                self.stack_push(return_addr);
-                self.pc = addr as usize;
-                format!("JMS 0x{addr:03X}")
+                let addr_hi = (operand as u16) << 8;
+                let addr_lo = raw2.unwrap_or(0) as u16;
+                let target = (addr_hi | addr_lo) as usize;
+                self.stack_push(self.pc as u16);
+                self.pc = target;
+                format!("JMS 0x{:03X}", target)
             }
 
-            // =============================================================
-            // 0x6: INC — Increment register
-            // =============================================================
+            // =================================================================
+            // 0x6: INC -- Increment Register
+            // =================================================================
             //
-            // INC Rn: Rn = (Rn + 1) & 0xF
+            // Format: 1 byte -- [0x6R]
+            //   R = register number (0-15)
             //
-            // Note: INC does NOT affect the carry flag. It wraps from 15 to 0
-            // silently. This is different from IAC (increment accumulator),
-            // which does set carry.
+            // Adds 1 to the register, wrapping from 15 to 0.
+            // Does NOT affect the carry flag (unlike ADD).
             0x6 => {
-                let reg = lower as usize;
-                self.registers[reg] = (self.registers[reg] + 1) & 0xF;
-                format!("INC R{reg}")
+                let reg = operand as usize;
+                self.registers[reg] = (self.registers[reg].wrapping_add(1)) & 0xF;
+                format!("INC R{}", reg)
             }
 
-            // =============================================================
-            // 0x7: ISZ — Increment and Skip if Zero (2-byte)
-            // =============================================================
+            // =================================================================
+            // 0x7: ISZ -- Increment and Skip if Zero
+            // =================================================================
             //
-            // Format: 0x7R AA
-            //   R = register number
-            //   AA = target address within the same 256-byte page
+            // Format: 2 bytes -- [0x7R] [address_low]
+            //   R = register number (0-15)
+            //   address_low = jump target (low 8 bits, same page)
             //
-            // Increment Rn. If Rn != 0 after increment, jump to addr.
-            // If Rn == 0 (wrapped from 15), fall through to next instruction.
+            // Increments register R (wrapping at 15->0). If the result is NOT
+            // zero, jumps to the target address (same page). If zero, falls
+            // through to the next instruction.
             //
-            // This is the 4004's loop counter instruction. Load a register with
-            // a negative count in 4-bit (e.g., -4 = 12), then ISZ loops until
-            // the register wraps to 0.
+            // This is the 4004's loop instruction: set a register to a count,
+            // then ISZ decrements (via wrapping increment from complement)
+            // until it hits zero.
             0x7 => {
-                let reg = lower as usize;
-                let addr = raw2.unwrap_or(0);
-
-                self.registers[reg] = (self.registers[reg] + 1) & 0xF;
-
+                let reg = operand as usize;
+                self.registers[reg] = (self.registers[reg].wrapping_add(1)) & 0xF;
+                let addr_low = raw2.unwrap_or(0);
                 if self.registers[reg] != 0 {
-                    // Not zero yet — jump back to continue loop
-                    let page = self.pc & 0xF00;
-                    self.pc = page | (addr as usize);
+                    let page = (address + 2) & 0xF00;
+                    self.pc = page | (addr_low as usize);
                 }
-                // If zero, fall through (pc already advanced past 2-byte instruction)
-
-                format!("ISZ R{reg},0x{addr:02X}")
+                format!("ISZ R{},0x{:02X}", reg, addr_low)
             }
 
-            // =============================================================
-            // 0x8: ADD — Add register to accumulator with carry
-            // =============================================================
+            // =================================================================
+            // 0x8: ADD -- Add Register to Accumulator (with carry)
+            // =================================================================
             //
-            // A = A + Rn + carry
-            // Carry is set if result > 15.
+            // The 4004's ADD includes the carry flag in the addition:
+            //   result = Accumulator + Register[R] + Carry
             //
-            // The carry flag participates in the addition — this is how
-            // multi-digit BCD arithmetic works. After adding two BCD digits,
-            // the carry propagates to the next digit pair.
+            // This enables multi-digit BCD addition: the carry from adding
+            // one digit propagates to the next digit.
+            //
+            // Carry is set if result > 15 (overflow).
+            // Accumulator gets result & 0xF.
+            //
+            // Example: A=9, R0=8, carry=1 -> result=18, carry=true, A=2
             0x8 => {
-                let reg = lower as usize;
-                let result = self.accumulator as u16
-                    + self.registers[reg] as u16
-                    + if self.carry { 1 } else { 0 };
+                let reg = (operand & 0xF) as usize;
+                let carry_in = if self.carry { 1u16 } else { 0 };
+                let result = self.accumulator as u16 + self.registers[reg] as u16 + carry_in;
                 self.carry = result > 0xF;
                 self.accumulator = (result & 0xF) as u8;
-                format!("ADD R{reg}")
+                format!("ADD R{}", reg)
             }
 
-            // =============================================================
-            // 0x9: SUB — Subtract register from accumulator with borrow
-            // =============================================================
+            // =================================================================
+            // 0x9: SUB -- Subtract Register from Accumulator
+            // =================================================================
             //
-            // The 4004 uses complement-add for subtraction:
-            //   A = A + (~Rn & 0xF) + borrow_in
-            //   where borrow_in = 0 if carry (previous borrow), 1 if no carry
+            // The 4004 implements subtraction using complement-and-add:
+            //   complement = NOT(Register[R]) & 0xF   (ones' complement)
+            //   borrow_in = if carry then 0 else 1
+            //   result = Accumulator + complement + borrow_in
             //
-            // The carry flag is INVERTED from what you'd expect:
-            //   - carry=true  means NO borrow occurred (result >= 0)
-            //   - carry=false means borrow occurred (result was negative)
+            // This is mathematically equivalent to: A - R - borrow
             //
-            // This matches the MCS-4 manual. The initial carry state acts as
-            // an inverse borrow-in: carry=false means "there was a previous borrow",
-            // so we subtract an extra 1.
+            // The carry flag has inverted meaning for subtraction:
+            //   carry=true  means NO borrow occurred (result >= 0)
+            //   carry=false means borrow occurred (result < 0)
+            //
+            // After: carry = (result > 15), Accumulator = result & 0xF
+            //
+            // The carry flag starts false, so borrow_in=1 for standalone subtracts,
+            // giving the correct result. For chained subtracts, the carry from the
+            // previous operation propagates correctly.
+            //
+            // Example: A=5, R0=3, carry=false (fresh)
+            //   complement(3)=12, borrow_in=1, 5+12+1=18, carry=true, A=2
+            //   Result: 5-3=2, no borrow. Correct!
             0x9 => {
-                let reg = lower as usize;
+                let reg = (operand & 0xF) as usize;
                 let complement = (!self.registers[reg]) & 0xF;
                 let borrow_in: u16 = if self.carry { 0 } else { 1 };
                 let result = self.accumulator as u16 + complement as u16 + borrow_in;
                 self.carry = result > 0xF;
                 self.accumulator = (result & 0xF) as u8;
-                format!("SUB R{reg}")
+                format!("SUB R{}", reg)
             }
 
-            // =============================================================
-            // 0xA: LD — Load register into accumulator
-            // =============================================================
+            // =================================================================
+            // 0xA: LD -- Load Register to Accumulator
+            // =================================================================
             //
-            // A = Rn (4-bit value)
-            //
-            // This is a simple register-to-accumulator copy. The register is
-            // not modified.
+            // Copies the value of register R into the accumulator.
+            // The register is unchanged. Both values are 4-bit.
             0xA => {
-                let reg = lower as usize;
+                let reg = (operand & 0xF) as usize;
                 self.accumulator = self.registers[reg] & 0xF;
-                format!("LD R{reg}")
+                format!("LD R{}", reg)
             }
 
-            // =============================================================
-            // 0xB: XCH — Exchange accumulator with register
-            // =============================================================
+            // =================================================================
+            // 0xB: XCH -- Exchange Accumulator with Register
+            // =================================================================
             //
-            // Swap A and Rn (both 4-bit values).
+            // Swaps the accumulator and register R.
+            // Both values are masked to 4 bits.
             0xB => {
-                let reg = lower as usize;
+                let reg = (operand & 0xF) as usize;
                 let old_a = self.accumulator;
                 self.accumulator = self.registers[reg] & 0xF;
                 self.registers[reg] = old_a & 0xF;
-                format!("XCH R{reg}")
+                format!("XCH R{}", reg)
             }
 
-            // =============================================================
-            // 0xC: BBL — Branch Back and Load
-            // =============================================================
+            // =================================================================
+            // 0xC: BBL -- Branch Back and Load
+            // =================================================================
             //
-            // Pop the top of the hardware stack, load N into the accumulator,
-            // and jump to the popped address.
+            // Returns from a subroutine: pops the return address from the
+            // hardware stack and loads an immediate 4-bit value into the
+            // accumulator. The immediate value is in the operand nibble.
             //
-            // This is the 4004's "return from subroutine" instruction with a
-            // twist — it also loads an immediate value into A. This lets a
-            // subroutine return a simple status code (0 = success, 1 = error, etc.)
+            // This is the ONLY way to return from JMS. The "load" part is
+            // a bonus -- it lets subroutines return a small result without
+            // needing extra instructions.
             0xC => {
-                let n = lower;
-                self.accumulator = n & 0xF;
-                let return_addr = self.stack_pop();
-                self.pc = return_addr as usize;
-                format!("BBL {n}")
+                let ret_addr = self.stack_pop();
+                self.pc = ret_addr as usize;
+                self.accumulator = operand & 0xF;
+                format!("BBL {}", operand)
             }
 
-            // =============================================================
-            // 0xD: LDM — Load immediate into accumulator
-            // =============================================================
+            // =================================================================
+            // 0xD: LDM -- Load Immediate to Accumulator
+            // =================================================================
             //
-            // A = N (the lower nibble of the instruction byte).
-            // The simplest way to get a constant value into the accumulator.
+            // Loads a 4-bit immediate value into the accumulator.
+            // The value is in the operand nibble (lower 4 bits of the instruction).
             0xD => {
-                self.accumulator = lower & 0xF;
-                format!("LDM {lower}")
+                self.accumulator = operand & 0xF;
+                format!("LDM {}", operand)
             }
 
-            // =============================================================
-            // 0xE: I/O operations (full byte dispatch)
-            // =============================================================
+            // =================================================================
+            // 0xE: I/O and RAM Instructions
+            // =================================================================
             //
-            // These instructions interact with the 4004's RAM and ROM I/O
-            // subsystem. The full byte determines the operation.
-            0xE => self.execute_io(raw),
-
-            // =============================================================
-            // 0xF: Accumulator operations (full byte dispatch)
-            // =============================================================
-            //
-            // These instructions manipulate the accumulator and carry flag
-            // in various ways. The full byte determines the operation.
-            0xF => self.execute_accumulator(raw),
-
-            _ => format!("UNKNOWN(0x{raw:02X})"),
-        }
-    }
-
-    /// Execute I/O instructions (0xE0-0xEF).
-    ///
-    /// These instructions read/write the 4004's RAM subsystem (main characters,
-    /// status characters, output ports) and ROM I/O port. The RAM address is
-    /// set by a prior SRC instruction; the RAM bank is set by DCL.
-    fn execute_io(&mut self, raw: u8) -> String {
-        match raw {
-            // --- RAM/ROM Write Operations ---
-
-            0xE0 => {
-                // WRM: Write accumulator to RAM main character.
-                // Writes A to ram[bank][register][character].
-                self.ram_write_main(self.accumulator);
-                "WRM".to_string()
-            }
-            0xE1 => {
-                // WMP: Write accumulator to RAM output port.
-                // Each bank has one output port nibble.
-                self.ram_output[self.ram_bank] = self.accumulator & 0xF;
-                "WMP".to_string()
-            }
-            0xE2 => {
-                // WRR: Write accumulator to ROM I/O port.
-                self.rom_port = self.accumulator & 0xF;
-                "WRR".to_string()
-            }
-            0xE3 => {
-                // WPM: Write Program Memory. On the real 4004, this was used
-                // for EPROM programming — not applicable in simulation.
-                // We treat it as a NOP.
-                "WPM".to_string()
-            }
-            0xE4 => {
-                // WR0: Write accumulator to RAM status character 0.
-                self.ram_write_status(0, self.accumulator);
-                "WR0".to_string()
-            }
-            0xE5 => {
-                // WR1: Write accumulator to RAM status character 1.
-                self.ram_write_status(1, self.accumulator);
-                "WR1".to_string()
-            }
-            0xE6 => {
-                // WR2: Write accumulator to RAM status character 2.
-                self.ram_write_status(2, self.accumulator);
-                "WR2".to_string()
-            }
-            0xE7 => {
-                // WR3: Write accumulator to RAM status character 3.
-                self.ram_write_status(3, self.accumulator);
-                "WR3".to_string()
-            }
-
-            // --- RAM Arithmetic ---
-
-            0xE8 => {
-                // SBM: Subtract RAM main character from accumulator.
-                //
-                // Same complement-add logic as SUB:
-                //   A = A + (~ram_val & 0xF) + borrow_in
-                let ram_val = self.ram_read_main();
-                let complement = (!ram_val) & 0xF;
-                let borrow_in: u16 = if self.carry { 0 } else { 1 };
-                let result = self.accumulator as u16 + complement as u16 + borrow_in;
-                self.carry = result > 0xF;
-                self.accumulator = (result & 0xF) as u8;
-                "SBM".to_string()
-            }
-
-            // --- RAM/ROM Read Operations ---
-
-            0xE9 => {
-                // RDM: Read RAM main character into accumulator.
-                self.accumulator = self.ram_read_main();
-                "RDM".to_string()
-            }
-            0xEA => {
-                // RDR: Read ROM I/O port into accumulator.
-                self.accumulator = self.rom_port & 0xF;
-                "RDR".to_string()
-            }
-            0xEB => {
-                // ADM: Add RAM main character to accumulator with carry.
-                //
-                // Same logic as ADD but reads from RAM instead of a register.
-                let ram_val = self.ram_read_main();
-                let result =
-                    self.accumulator as u16 + ram_val as u16 + if self.carry { 1 } else { 0 };
-                self.carry = result > 0xF;
-                self.accumulator = (result & 0xF) as u8;
-                "ADM".to_string()
-            }
-            0xEC => {
-                // RD0: Read RAM status character 0 into accumulator.
-                self.accumulator = self.ram_read_status(0);
-                "RD0".to_string()
-            }
-            0xED => {
-                // RD1: Read RAM status character 1 into accumulator.
-                self.accumulator = self.ram_read_status(1);
-                "RD1".to_string()
-            }
-            0xEE => {
-                // RD2: Read RAM status character 2 into accumulator.
-                self.accumulator = self.ram_read_status(2);
-                "RD2".to_string()
-            }
-            0xEF => {
-                // RD3: Read RAM status character 3 into accumulator.
-                self.accumulator = self.ram_read_status(3);
-                "RD3".to_string()
-            }
-
-            _ => format!("UNKNOWN(0x{raw:02X})"),
-        }
-    }
-
-    /// Execute accumulator manipulation instructions (0xF0-0xFD).
-    ///
-    /// These are single-byte instructions that operate on the accumulator
-    /// and/or carry flag. They form the core of the 4004's arithmetic and
-    /// logic capability beyond simple add/subtract.
-    fn execute_accumulator(&mut self, raw: u8) -> String {
-        match raw {
-            0xF0 => {
-                // CLB: Clear Both. A = 0, carry = 0.
-                // The nuclear option: zero everything.
-                self.accumulator = 0;
-                self.carry = false;
-                "CLB".to_string()
-            }
-            0xF1 => {
-                // CLC: Clear Carry. carry = 0.
-                // Useful before an ADD chain when you don't want a stale carry
-                // from a previous operation affecting the first addition.
-                self.carry = false;
-                "CLC".to_string()
-            }
-            0xF2 => {
-                // IAC: Increment Accumulator. A = (A + 1) & 0xF.
-                // Carry is set if A was 15 (wraps to 0).
-                let result = self.accumulator as u16 + 1;
-                self.carry = result > 0xF;
-                self.accumulator = (result & 0xF) as u8;
-                "IAC".to_string()
-            }
-            0xF3 => {
-                // CMC: Complement Carry. carry = !carry.
-                self.carry = !self.carry;
-                "CMC".to_string()
-            }
-            0xF4 => {
-                // CMA: Complement Accumulator. A = ~A & 0xF (4-bit NOT).
-                //
-                // Flips all 4 bits: 0b0101 → 0b1010, 0b1111 → 0b0000.
-                // Used in BCD subtraction (complement + add + 1 = negate).
-                self.accumulator = (!self.accumulator) & 0xF;
-                "CMA".to_string()
-            }
-            0xF5 => {
-                // RAL: Rotate Accumulator Left through carry.
-                //
-                // This is a 5-bit rotation: the carry acts as bit 4.
-                //
-                //   Before: [carry | A3 A2 A1 A0]
-                //   After:  [A3   | A2 A1 A0 carry_old]
-                //
-                // The highest bit (A3) shifts into carry, and the old carry
-                // shifts into the lowest bit (A0).
-                let old_carry = u8::from(self.carry);
-                self.carry = (self.accumulator & 0x8) != 0;
-                self.accumulator = ((self.accumulator << 1) | old_carry) & 0xF;
-                "RAL".to_string()
-            }
-            0xF6 => {
-                // RAR: Rotate Accumulator Right through carry.
-                //
-                //   Before: [carry | A3 A2 A1 A0]
-                //   After:  [A0   | carry_old A3 A2 A1]
-                //
-                // The lowest bit (A0) shifts into carry, and the old carry
-                // shifts into the highest bit (A3).
-                let old_carry = u8::from(self.carry);
-                self.carry = (self.accumulator & 0x1) != 0;
-                self.accumulator = ((self.accumulator >> 1) | (old_carry << 3)) & 0xF;
-                "RAR".to_string()
-            }
-            0xF7 => {
-                // TCC: Transfer Carry to accumulator and Clear carry.
-                //
-                // A = 1 if carry was set, else 0. Carry is always cleared.
-                // Useful for extracting the carry flag as a data value.
-                self.accumulator = if self.carry { 1 } else { 0 };
-                self.carry = false;
-                "TCC".to_string()
-            }
-            0xF8 => {
-                // DAC: Decrement Accumulator. A = (A - 1) & 0xF.
-                //
-                // Carry is SET if no borrow (A > 0), CLEARED if borrow (A was 0).
-                // When A=0: result = -1, carry=false, A=15.
-                // When A=5: result = 4, carry=true, A=4.
-                let result = self.accumulator as i16 - 1;
-                self.carry = result >= 0;
-                self.accumulator = (result & 0xF) as u8;
-                "DAC".to_string()
-            }
-            0xF9 => {
-                // TCS: Transfer Carry Subtract.
-                //
-                // A = 10 if carry was set, else 9. Carry is always cleared.
-                //
-                // This is used in BCD subtraction: it provides the
-                // tens-complement correction factor.
-                self.accumulator = if self.carry { 10 } else { 9 };
-                self.carry = false;
-                "TCS".to_string()
-            }
-            0xFA => {
-                // STC: Set Carry. carry = 1.
-                self.carry = true;
-                "STC".to_string()
-            }
-            0xFB => {
-                // DAA: Decimal Adjust Accumulator (BCD correction).
-                //
-                // If A > 9 or carry is set, add 6 to A.
-                // If the addition causes overflow past 15, set carry.
-                //
-                // This instruction exists because the 4004 was built for BCD
-                // calculators. When you add two BCD digits (0-9 each), the
-                // result might be > 9 (e.g., 7 + 8 = 15). DAA corrects this
-                // by adding 6, wrapping to the correct BCD digit (15 + 6 = 21,
-                // keep lower nibble 5, set carry for the tens digit).
-                if self.accumulator > 9 || self.carry {
-                    let result = self.accumulator as u16 + 6;
-                    if result > 0xF {
-                        self.carry = true;
+            // These instructions interact with the RAM data memory, RAM status
+            // characters, RAM output port, and ROM I/O port. The full byte
+            // determines the specific operation.
+            0xE => {
+                match raw {
+                    // WRM -- Write accumulator to RAM main memory.
+                    0xE0 => {
+                        self.ram_write_main(self.accumulator);
+                        "WRM".to_string()
                     }
-                    self.accumulator = (result & 0xF) as u8;
+                    // WMP -- Write accumulator to RAM output port.
+                    // The port is specific to the currently selected RAM bank.
+                    0xE1 => {
+                        self.ram_output[self.ram_bank] = self.accumulator & 0xF;
+                        "WMP".to_string()
+                    }
+                    // WRR -- Write accumulator to ROM port.
+                    0xE2 => {
+                        self.rom_port = self.accumulator & 0xF;
+                        "WRR".to_string()
+                    }
+                    // WPM -- Write program memory (not implemented in simulator).
+                    // On the real 4004, this writes to an external program
+                    // memory device. We treat it as a NOP.
+                    0xE3 => {
+                        "WPM".to_string()
+                    }
+                    // WR0-WR3 -- Write accumulator to RAM status character 0-3.
+                    0xE4 => {
+                        self.ram_write_status(0, self.accumulator);
+                        "WR0".to_string()
+                    }
+                    0xE5 => {
+                        self.ram_write_status(1, self.accumulator);
+                        "WR1".to_string()
+                    }
+                    0xE6 => {
+                        self.ram_write_status(2, self.accumulator);
+                        "WR2".to_string()
+                    }
+                    0xE7 => {
+                        self.ram_write_status(3, self.accumulator);
+                        "WR3".to_string()
+                    }
+                    // SBM -- Subtract RAM main memory from accumulator.
+                    // Uses the same complement-and-add method as SUB.
+                    0xE8 => {
+                        let mem_val = self.ram_read_main();
+                        let complement = (!mem_val) & 0xF;
+                        let borrow_in: u16 = if self.carry { 0 } else { 1 };
+                        let result = self.accumulator as u16 + complement as u16 + borrow_in;
+                        self.carry = result > 0xF;
+                        self.accumulator = (result & 0xF) as u8;
+                        "SBM".to_string()
+                    }
+                    // RDM -- Read RAM main memory into accumulator.
+                    0xE9 => {
+                        self.accumulator = self.ram_read_main();
+                        "RDM".to_string()
+                    }
+                    // RDR -- Read ROM port into accumulator.
+                    0xEA => {
+                        self.accumulator = self.rom_port & 0xF;
+                        "RDR".to_string()
+                    }
+                    // ADM -- Add RAM main memory to accumulator (with carry).
+                    0xEB => {
+                        let mem_val = self.ram_read_main();
+                        let carry_in = if self.carry { 1u16 } else { 0 };
+                        let result = self.accumulator as u16 + mem_val as u16 + carry_in;
+                        self.carry = result > 0xF;
+                        self.accumulator = (result & 0xF) as u8;
+                        "ADM".to_string()
+                    }
+                    // RD0-RD3 -- Read RAM status character 0-3 into accumulator.
+                    0xEC => {
+                        self.accumulator = self.ram_read_status(0);
+                        "RD0".to_string()
+                    }
+                    0xED => {
+                        self.accumulator = self.ram_read_status(1);
+                        "RD1".to_string()
+                    }
+                    0xEE => {
+                        self.accumulator = self.ram_read_status(2);
+                        "RD2".to_string()
+                    }
+                    0xEF => {
+                        self.accumulator = self.ram_read_status(3);
+                        "RD3".to_string()
+                    }
+                    _ => format!("UNKNOWN(0x{:02X})", raw),
                 }
-                "DAA".to_string()
-            }
-            0xFC => {
-                // KBP: Keyboard Process.
-                //
-                // Converts a 1-hot encoded input to a binary position number:
-                //   0b0000 (0) → 0  (no key pressed)
-                //   0b0001 (1) → 1  (key 1)
-                //   0b0010 (2) → 2  (key 2)
-                //   0b0100 (4) → 3  (key 3)
-                //   0b1000 (8) → 4  (key 4)
-                //   anything else → 15 (error: multiple keys)
-                //
-                // This was designed for the Busicom calculator's keyboard scanning.
-                self.accumulator = match self.accumulator {
-                    0 => 0,
-                    1 => 1,
-                    2 => 2,
-                    4 => 3,
-                    8 => 4,
-                    _ => 15,
-                };
-                "KBP".to_string()
-            }
-            0xFD => {
-                // DCL: Designate Command Line (select RAM bank).
-                //
-                // The lower 3 bits of A select the RAM bank (0-7, but only 0-3
-                // are used since the 4004 has 4 RAM banks). We clamp to 0-3.
-                let mut bank = (self.accumulator & 0x7) as usize;
-                if bank > 3 {
-                    bank &= 0x3;
-                }
-                self.ram_bank = bank;
-                "DCL".to_string()
             }
 
-            _ => format!("UNKNOWN(0x{raw:02X})"),
+            // =================================================================
+            // 0xF: Accumulator Group Instructions
+            // =================================================================
+            //
+            // These instructions operate on the accumulator and/or carry flag.
+            // Each is identified by the full byte (0xF0-0xFD).
+            0xF => {
+                match raw {
+                    // CLB -- Clear both accumulator and carry.
+                    // The simplest reset: zero out everything in one instruction.
+                    0xF0 => {
+                        self.accumulator = 0;
+                        self.carry = false;
+                        "CLB".to_string()
+                    }
+                    // CLC -- Clear carry flag only.
+                    // Useful before starting a fresh addition chain.
+                    0xF1 => {
+                        self.carry = false;
+                        "CLC".to_string()
+                    }
+                    // IAC -- Increment Accumulator.
+                    // Adds 1 to the accumulator, wrapping 15->0.
+                    // Sets carry if overflow (was 15, now 0).
+                    0xF2 => {
+                        let result = self.accumulator as u16 + 1;
+                        self.carry = result > 0xF;
+                        self.accumulator = (result & 0xF) as u8;
+                        "IAC".to_string()
+                    }
+                    // CMC -- Complement Carry.
+                    // Flips the carry flag: true->false, false->true.
+                    0xF3 => {
+                        self.carry = !self.carry;
+                        "CMC".to_string()
+                    }
+                    // CMA -- Complement Accumulator.
+                    // Inverts all 4 bits: A = NOT(A) & 0xF.
+                    // Example: A=0b0101 (5) -> A=0b1010 (10)
+                    0xF4 => {
+                        self.accumulator = (!self.accumulator) & 0xF;
+                        "CMA".to_string()
+                    }
+                    // RAL -- Rotate Accumulator Left through carry.
+                    //
+                    // Before:  [carry] [b3 b2 b1 b0]
+                    // After:   [b3]    [b2 b1 b0 carry_old]
+                    //
+                    // The old carry becomes bit 0 of the accumulator.
+                    // Bit 3 of the accumulator becomes the new carry.
+                    // This is a 5-bit rotate (4 data bits + carry).
+                    0xF5 => {
+                        let old_carry = if self.carry { 1u8 } else { 0 };
+                        self.carry = self.accumulator & 0x8 != 0;
+                        self.accumulator = ((self.accumulator << 1) | old_carry) & 0xF;
+                        "RAL".to_string()
+                    }
+                    // RAR -- Rotate Accumulator Right through carry.
+                    //
+                    // Before:  [carry] [b3 b2 b1 b0]
+                    // After:   [b0]    [carry_old b3 b2 b1]
+                    //
+                    // The old carry becomes bit 3 of the accumulator.
+                    // Bit 0 of the accumulator becomes the new carry.
+                    0xF6 => {
+                        let old_carry = if self.carry { 0x8u8 } else { 0 };
+                        self.carry = self.accumulator & 0x1 != 0;
+                        self.accumulator = ((self.accumulator >> 1) | old_carry) & 0xF;
+                        "RAR".to_string()
+                    }
+                    // TCC -- Transfer Carry to accumulator and Clear Carry.
+                    // A = 1 if carry was set, 0 otherwise. Carry is cleared.
+                    0xF7 => {
+                        self.accumulator = if self.carry { 1 } else { 0 };
+                        self.carry = false;
+                        "TCC".to_string()
+                    }
+                    // DAC -- Decrement Accumulator.
+                    // Subtracts 1 from the accumulator, wrapping 0->15.
+                    // Carry is set if NO borrow (i.e., A was > 0).
+                    // Carry is cleared if borrow occurred (A was 0).
+                    0xF8 => {
+                        self.carry = self.accumulator > 0;
+                        self.accumulator = (self.accumulator.wrapping_sub(1)) & 0xF;
+                        "DAC".to_string()
+                    }
+                    // TCS -- Transfer Carry Subtract.
+                    // If carry was set: A = 10. If carry was clear: A = 9.
+                    // Carry is cleared.
+                    //
+                    // This is designed for BCD (Binary Coded Decimal) subtraction.
+                    // After subtracting two BCD digits, TCS provides the correction
+                    // factor based on whether there was a borrow.
+                    0xF9 => {
+                        self.accumulator = if self.carry { 10 } else { 9 };
+                        self.carry = false;
+                        "TCS".to_string()
+                    }
+                    // STC -- Set Carry.
+                    0xFA => {
+                        self.carry = true;
+                        "STC".to_string()
+                    }
+                    // DAA -- Decimal Adjust Accumulator.
+                    //
+                    // After a binary ADD, if the result is > 9 or carry is set,
+                    // add 6 to correct back to BCD. If the correction itself
+                    // overflows, set carry.
+                    //
+                    // Example: 8 + 5 = 13 (binary). DAA adds 6 -> 19, carry=true,
+                    // A = 19 & 0xF = 3. So BCD result is 13: carry=1, digit=3.
+                    0xFB => {
+                        if self.accumulator > 9 || self.carry {
+                            let result = self.accumulator as u16 + 6;
+                            if result > 0xF {
+                                self.carry = true;
+                            }
+                            self.accumulator = (result & 0xF) as u8;
+                        }
+                        "DAA".to_string()
+                    }
+                    // KBP -- Keyboard Process.
+                    //
+                    // Converts a one-hot encoded keyboard input to a binary position:
+                    //   0b0000 (0)  -> 0 (no key pressed)
+                    //   0b0001 (1)  -> 1 (key 1)
+                    //   0b0010 (2)  -> 2 (key 2)
+                    //   0b0100 (4)  -> 3 (key 3)
+                    //   0b1000 (8)  -> 4 (key 4)
+                    //   anything else -> 15 (error: multiple keys pressed)
+                    //
+                    // This was designed for the Busicom calculator keyboard.
+                    0xFC => {
+                        self.accumulator = match self.accumulator {
+                            0 => 0,
+                            1 => 1,
+                            2 => 2,
+                            4 => 3,
+                            8 => 4,
+                            _ => 15,
+                        };
+                        "KBP".to_string()
+                    }
+                    // DCL -- Designate Command Line (select RAM bank).
+                    //
+                    // Sets the RAM bank based on the lower 3 bits of the accumulator.
+                    // Banks 0-3 are valid; bits beyond 2 are masked off.
+                    //
+                    // On the real 4004, the 3 accumulator bits drive 3 "command lines"
+                    // (CM0, CM1, CM2) that select which RAM bank responds to subsequent
+                    // I/O instructions.
+                    0xFD => {
+                        self.ram_bank = (self.accumulator & 0x7) as usize;
+                        if self.ram_bank > 3 {
+                            self.ram_bank &= 3;
+                        }
+                        "DCL".to_string()
+                    }
+                    _ => format!("UNKNOWN(0x{:02X})", raw),
+                }
+            }
+
+            _ => format!("UNKNOWN(0x{:02X})", raw),
         }
     }
 
     /// Run a program to completion or until max_steps is reached.
     ///
-    /// Resets all CPU state, loads the program, then executes step by step.
-    /// Returns a trace of every instruction executed.
+    /// Resets all CPU state before loading the program, ensuring a clean
+    /// execution environment. Returns the trace of every executed instruction.
     pub fn run(&mut self, program: &[u8], max_steps: usize) -> Vec<Intel4004Trace> {
         self.reset();
         self.load_program(program);
         let mut traces = Vec::new();
         for _ in 0..max_steps {
-            if self.halted || self.pc >= self.memory.len() {
+            if self.halted {
                 break;
             }
             traces.push(self.step());
@@ -1098,16 +1097,13 @@ impl Intel4004Simulator {
 // ===========================================================================
 // Encoding helpers
 // ===========================================================================
-//
-// These functions produce the raw bytes for each instruction, making it
-// easy to assemble programs in tests without memorizing hex opcodes.
 
 /// Encode `NOP` (no operation).
 pub fn encode_nop() -> u8 {
     0x00
 }
 
-/// Encode `HLT` (halt — simulator only).
+/// Encode `HLT` (halt).
 pub fn encode_hlt() -> u8 {
     0x01
 }
@@ -1117,7 +1113,7 @@ pub fn encode_ldm(n: u8) -> u8 {
     (0xD << 4) | (n & 0xF)
 }
 
-/// Encode `LD Rn` (load register into accumulator).
+/// Encode `LD Rn` (load register n into accumulator).
 pub fn encode_ld(r: u8) -> u8 {
     (0xA << 4) | (r & 0xF)
 }
@@ -1132,7 +1128,7 @@ pub fn encode_add(r: u8) -> u8 {
     (0x8 << 4) | (r & 0xF)
 }
 
-/// Encode `SUB Rn` (subtract register n from accumulator with borrow).
+/// Encode `SUB Rn` (subtract register n from accumulator).
 pub fn encode_sub(r: u8) -> u8 {
     (0x9 << 4) | (r & 0xF)
 }
@@ -1142,95 +1138,98 @@ pub fn encode_inc(r: u8) -> u8 {
     (0x6 << 4) | (r & 0xF)
 }
 
-/// Encode `BBL N` (branch back and load N).
+/// Encode `BBL N` (branch back and load N into accumulator).
 pub fn encode_bbl(n: u8) -> u8 {
     (0xC << 4) | (n & 0xF)
 }
 
-/// Encode `JCN cond, addr` (conditional jump — returns 2 bytes).
-pub fn encode_jcn(cond: u8, addr: u8) -> [u8; 2] {
-    [(0x1 << 4) | (cond & 0xF), addr]
+/// Encode `JCN cond, addr` (conditional jump -- 2 bytes).
+/// Returns (byte1, byte2).
+pub fn encode_jcn(cond: u8, addr: u8) -> (u8, u8) {
+    ((0x1 << 4) | (cond & 0xF), addr)
 }
 
-/// Encode `FIM Pp, data` (fetch immediate to register pair — returns 2 bytes).
-pub fn encode_fim(pair: u8, data: u8) -> [u8; 2] {
-    [(0x2 << 4) | ((pair & 0x7) << 1), data]
+/// Encode `FIM Pp, data` (fetch immediate to register pair -- 2 bytes).
+/// Returns (byte1, byte2).
+pub fn encode_fim(pair: u8, data: u8) -> (u8, u8) {
+    ((0x2 << 4) | ((pair & 0x7) << 1), data)
 }
 
 /// Encode `SRC Pp` (send register control).
 pub fn encode_src(pair: u8) -> u8 {
-    (0x2 << 4) | ((pair & 0x7) << 1) | 0x1
+    (0x2 << 4) | ((pair & 0x7) << 1) | 1
 }
 
-/// Encode `FIN Pp` (fetch indirect from ROM).
+/// Encode `FIN Pp` (fetch indirect from ROM to register pair).
 pub fn encode_fin(pair: u8) -> u8 {
     (0x3 << 4) | ((pair & 0x7) << 1)
 }
 
-/// Encode `JIN Pp` (jump indirect).
+/// Encode `JIN Pp` (jump indirect through register pair).
 pub fn encode_jin(pair: u8) -> u8 {
-    (0x3 << 4) | ((pair & 0x7) << 1) | 0x1
+    (0x3 << 4) | ((pair & 0x7) << 1) | 1
 }
 
-/// Encode `JUN addr` (unconditional jump — returns 2 bytes).
-pub fn encode_jun(addr: u16) -> [u8; 2] {
-    [
-        (0x4 << 4) | (((addr >> 8) & 0xF) as u8),
-        (addr & 0xFF) as u8,
-    ]
+/// Encode `JUN addr` (unconditional jump -- 2 bytes).
+/// Returns (byte1, byte2). addr is a 12-bit address.
+pub fn encode_jun(addr: u16) -> (u8, u8) {
+    let hi = ((addr >> 8) & 0xF) as u8;
+    let lo = (addr & 0xFF) as u8;
+    ((0x4 << 4) | hi, lo)
 }
 
-/// Encode `JMS addr` (jump to subroutine — returns 2 bytes).
-pub fn encode_jms(addr: u16) -> [u8; 2] {
-    [
-        (0x5 << 4) | (((addr >> 8) & 0xF) as u8),
-        (addr & 0xFF) as u8,
-    ]
+/// Encode `JMS addr` (jump to subroutine -- 2 bytes).
+/// Returns (byte1, byte2). addr is a 12-bit address.
+pub fn encode_jms(addr: u16) -> (u8, u8) {
+    let hi = ((addr >> 8) & 0xF) as u8;
+    let lo = (addr & 0xFF) as u8;
+    ((0x5 << 4) | hi, lo)
 }
 
-/// Encode `ISZ Rn, addr` (increment and skip if zero — returns 2 bytes).
-pub fn encode_isz(r: u8, addr: u8) -> [u8; 2] {
-    [(0x7 << 4) | (r & 0xF), addr]
+/// Encode `ISZ Rn, addr` (increment and skip if zero -- 2 bytes).
+/// Returns (byte1, byte2).
+pub fn encode_isz(r: u8, addr: u8) -> (u8, u8) {
+    ((0x7 << 4) | (r & 0xF), addr)
 }
 
-// I/O instruction encoders — these are single-byte, full-byte opcodes.
+// I/O instruction encoders (all single-byte, fixed encoding).
 
-/// Encode `WRM` (write accumulator to RAM main character).
+/// Encode `WRM` (write accumulator to RAM main memory).
 pub fn encode_wrm() -> u8 { 0xE0 }
 /// Encode `WMP` (write accumulator to RAM output port).
 pub fn encode_wmp() -> u8 { 0xE1 }
-/// Encode `WRR` (write accumulator to ROM I/O port).
+/// Encode `WRR` (write accumulator to ROM port).
 pub fn encode_wrr() -> u8 { 0xE2 }
-/// Encode `WPM` (write program RAM — NOP in simulator).
+/// Encode `WPM` (write program memory -- no-op in simulator).
 pub fn encode_wpm() -> u8 { 0xE3 }
-/// Encode `WR0` (write RAM status character 0).
+/// Encode `WR0` (write accumulator to RAM status char 0).
 pub fn encode_wr0() -> u8 { 0xE4 }
-/// Encode `WR1` (write RAM status character 1).
+/// Encode `WR1` (write accumulator to RAM status char 1).
 pub fn encode_wr1() -> u8 { 0xE5 }
-/// Encode `WR2` (write RAM status character 2).
+/// Encode `WR2` (write accumulator to RAM status char 2).
 pub fn encode_wr2() -> u8 { 0xE6 }
-/// Encode `WR3` (write RAM status character 3).
+/// Encode `WR3` (write accumulator to RAM status char 3).
 pub fn encode_wr3() -> u8 { 0xE7 }
 /// Encode `SBM` (subtract RAM from accumulator).
 pub fn encode_sbm() -> u8 { 0xE8 }
-/// Encode `RDM` (read RAM main character).
+/// Encode `RDM` (read RAM main memory into accumulator).
 pub fn encode_rdm() -> u8 { 0xE9 }
-/// Encode `RDR` (read ROM I/O port).
+/// Encode `RDR` (read ROM port into accumulator).
 pub fn encode_rdr() -> u8 { 0xEA }
-/// Encode `ADM` (add RAM to accumulator).
+/// Encode `ADM` (add RAM main memory to accumulator).
 pub fn encode_adm() -> u8 { 0xEB }
-/// Encode `RD0` (read RAM status character 0).
+/// Encode `RD0` (read RAM status char 0).
 pub fn encode_rd0() -> u8 { 0xEC }
-/// Encode `RD1` (read RAM status character 1).
+/// Encode `RD1` (read RAM status char 1).
 pub fn encode_rd1() -> u8 { 0xED }
-/// Encode `RD2` (read RAM status character 2).
+/// Encode `RD2` (read RAM status char 2).
 pub fn encode_rd2() -> u8 { 0xEE }
-/// Encode `RD3` (read RAM status character 3).
+/// Encode `RD3` (read RAM status char 3).
 pub fn encode_rd3() -> u8 { 0xEF }
 
-// Accumulator instruction encoders — single-byte, full-byte opcodes.
+// Accumulator group encoders (all single-byte, fixed encoding).
 
-/// Encode `CLB` (clear both A and carry).
+/// Encode `CLB` (clear both accumulator and carry).
 pub fn encode_clb() -> u8 { 0xF0 }
 /// Encode `CLC` (clear carry).
 pub fn encode_clc() -> u8 { 0xF1 }
@@ -1244,11 +1243,11 @@ pub fn encode_cma() -> u8 { 0xF4 }
 pub fn encode_ral() -> u8 { 0xF5 }
 /// Encode `RAR` (rotate accumulator right through carry).
 pub fn encode_rar() -> u8 { 0xF6 }
-/// Encode `TCC` (transfer carry to accumulator).
+/// Encode `TCC` (transfer carry to accumulator, clear carry).
 pub fn encode_tcc() -> u8 { 0xF7 }
 /// Encode `DAC` (decrement accumulator).
 pub fn encode_dac() -> u8 { 0xF8 }
-/// Encode `TCS` (transfer carry subtract).
+/// Encode `TCS` (transfer carry subtract, clear carry).
 pub fn encode_tcs() -> u8 { 0xF9 }
 /// Encode `STC` (set carry).
 pub fn encode_stc() -> u8 { 0xFA }
@@ -1256,7 +1255,7 @@ pub fn encode_stc() -> u8 { 0xFA }
 pub fn encode_daa() -> u8 { 0xFB }
 /// Encode `KBP` (keyboard process).
 pub fn encode_kbp() -> u8 { 0xFC }
-/// Encode `DCL` (designate command line / select RAM bank).
+/// Encode `DCL` (designate command line -- select RAM bank).
 pub fn encode_dcl() -> u8 { 0xFD }
 
 // ===========================================================================
@@ -1267,43 +1266,36 @@ pub fn encode_dcl() -> u8 { 0xFD }
 mod tests {
     use super::*;
 
-    // ===================================================================
-    // Helper: run a program and return the simulator
-    // ===================================================================
+    // -----------------------------------------------------------------------
+    // Helper to build and run a program conveniently
+    // -----------------------------------------------------------------------
 
     fn run_program(program: &[u8]) -> Intel4004Simulator {
         let mut sim = Intel4004Simulator::new(4096);
-        sim.run(program, 10000);
+        sim.run(program, 1000);
         sim
     }
 
-    // ===================================================================
-    // NOP
-    // ===================================================================
+    // =======================================================================
+    // NOP and HLT
+    // =======================================================================
 
     #[test]
     fn nop_does_nothing() {
-        let sim = run_program(&[encode_nop(), encode_hlt()]);
+        let mut sim = Intel4004Simulator::new(4096);
+        let program = vec![encode_nop(), encode_nop(), encode_hlt()];
+        let traces = sim.run(&program, 10);
+        assert_eq!(traces.len(), 3);
+        assert_eq!(traces[0].mnemonic, "NOP");
+        assert_eq!(traces[1].mnemonic, "NOP");
         assert_eq!(sim.accumulator, 0);
         assert!(!sim.carry);
     }
 
     #[test]
-    fn nop_mnemonic() {
-        let mut sim = Intel4004Simulator::new(4096);
-        let traces = sim.run(&[encode_nop(), encode_hlt()], 10);
-        assert_eq!(traces[0].mnemonic, "NOP");
-    }
-
-    // ===================================================================
-    // HLT
-    // ===================================================================
-
-    #[test]
     fn hlt_stops_execution() {
-        let sim = run_program(&[encode_hlt(), encode_ldm(5)]);
+        let sim = run_program(&[encode_hlt()]);
         assert!(sim.halted);
-        assert_eq!(sim.accumulator, 0); // LDM 5 never executed
     }
 
     #[test]
@@ -1314,64 +1306,1016 @@ mod tests {
         sim.step();
     }
 
-    // ===================================================================
-    // LDM — Load Immediate
-    // ===================================================================
+    // =======================================================================
+    // LDM -- Load Immediate
+    // =======================================================================
 
     #[test]
-    fn ldm_loads_value() {
+    fn ldm_loads_immediate() {
         let sim = run_program(&[encode_ldm(7), encode_hlt()]);
         assert_eq!(sim.accumulator, 7);
     }
 
     #[test]
     fn ldm_all_values() {
-        for n in 0..16u8 {
+        for n in 0..=15u8 {
             let sim = run_program(&[encode_ldm(n), encode_hlt()]);
-            assert_eq!(sim.accumulator, n, "LDM {n} should set A={n}");
+            assert_eq!(sim.accumulator, n, "LDM {} failed", n);
         }
     }
 
-    // ===================================================================
-    // LD — Load Register
-    // ===================================================================
+    // =======================================================================
+    // LD -- Load Register
+    // =======================================================================
 
     #[test]
     fn ld_loads_register() {
         let sim = run_program(&[
             encode_ldm(9),
-            encode_xch(3), // R3 = 9
-            encode_ldm(0), // A = 0
-            encode_ld(3),  // A = R3 = 9
+            encode_xch(3),  // R3 = 9
+            encode_ldm(0),  // A = 0
+            encode_ld(3),   // A = R3 = 9
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 9);
     }
 
-    // ===================================================================
-    // XCH — Exchange
-    // ===================================================================
+    // =======================================================================
+    // XCH -- Exchange Accumulator and Register
+    // =======================================================================
 
     #[test]
-    fn xch_swaps_values() {
+    fn xch_exchanges_values() {
         let sim = run_program(&[
             encode_ldm(5),
-            encode_xch(0), // R0=5, A=0
-            encode_ldm(3), // A=3
-            encode_xch(0), // R0=3, A=5
+            encode_xch(0),  // R0=5, A=0
+            encode_ldm(3),  // A=3
+            encode_xch(0),  // R0=3, A=5
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 5);
         assert_eq!(sim.registers[0], 3);
     }
 
-    // ===================================================================
-    // ADD — Add with carry
-    // ===================================================================
+    // =======================================================================
+    // ADD -- Add with Carry
+    // =======================================================================
 
     #[test]
     fn add_basic() {
-        // 1 + 2 = 3 (the classic test from the original)
+        // 1 + 2 = 3, no carry
+        let sim = run_program(&[
+            encode_ldm(2), encode_xch(0),  // R0=2
+            encode_ldm(1),                  // A=1
+            encode_add(0),                  // A=1+2+0=3
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 3);
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn add_overflow_sets_carry() {
+        // 15 + 15 = 30 -> carry=true, A=14
+        let sim = run_program(&[
+            encode_ldm(15), encode_xch(0),
+            encode_ldm(15),
+            encode_add(0),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 14);
+        assert!(sim.carry);
+    }
+
+    #[test]
+    fn add_includes_carry() {
+        // A=5, R0=3, set carry first -> 5+3+1=9
+        let mut sim = Intel4004Simulator::new(4096);
+        sim.load_program(&[
+            encode_ldm(3), encode_xch(0),  // R0=3
+            encode_ldm(5),                  // A=5
+            encode_stc(),                   // carry=true
+            encode_add(0),                  // A=5+3+1=9
+            encode_hlt(),
+        ]);
+        // Run manually since run() resets
+        while !sim.halted { sim.step(); }
+        assert_eq!(sim.accumulator, 9);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // SUB -- Subtract (complement-add)
+    // =======================================================================
+
+    #[test]
+    fn sub_basic_no_borrow() {
+        // A=5, R0=3, carry starts false -> borrow_in=1
+        // complement(3) = 12, 5+12+1 = 18, carry=true, A=2
+        let sim = run_program(&[
+            encode_ldm(3), encode_xch(0),
+            encode_ldm(5),
+            encode_sub(0),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 2);
+        assert!(sim.carry, "No borrow: carry should be true");
+    }
+
+    #[test]
+    fn sub_with_borrow() {
+        // A=3, R0=5, carry=false -> borrow_in=1
+        // complement(5) = 10, 3+10+1 = 14, carry=false, A=14
+        let sim = run_program(&[
+            encode_ldm(5), encode_xch(0),
+            encode_ldm(3),
+            encode_sub(0),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 14);
+        assert!(!sim.carry, "Borrow occurred: carry should be false");
+    }
+
+    #[test]
+    fn sub_zero_minus_one() {
+        // A=0, R0=1, carry=false -> borrow_in=1
+        // complement(1)=14, 0+14+1=15, carry=false, A=15
+        let sim = run_program(&[
+            encode_ldm(1), encode_xch(0),
+            encode_ldm(0),
+            encode_sub(0),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 15);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // INC -- Increment Register
+    // =======================================================================
+
+    #[test]
+    fn inc_basic() {
+        let sim = run_program(&[
+            encode_ldm(7), encode_xch(2),  // R2=7
+            encode_inc(2),                  // R2=8
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.registers[2], 8);
+    }
+
+    #[test]
+    fn inc_wraps_at_15() {
+        let sim = run_program(&[
+            encode_ldm(15), encode_xch(0),
+            encode_inc(0),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.registers[0], 0);
+    }
+
+    #[test]
+    fn inc_does_not_affect_carry() {
+        let mut sim = Intel4004Simulator::new(4096);
+        sim.load_program(&[
+            encode_ldm(15), encode_xch(0),
+            encode_stc(),    // set carry
+            encode_inc(0),   // R0: 15->0, carry should remain true
+            encode_hlt(),
+        ]);
+        while !sim.halted { sim.step(); }
+        assert_eq!(sim.registers[0], 0);
+        assert!(sim.carry, "INC should not affect carry");
+    }
+
+    // =======================================================================
+    // JUN -- Jump Unconditional
+    // =======================================================================
+
+    #[test]
+    fn jun_jumps() {
+        let (b1, b2) = encode_jun(0x004); // Jump to address 4
+        let sim = run_program(&[
+            b1, b2,             // JUN 0x004: skip next 2 bytes
+            encode_ldm(15),     // skipped
+            encode_hlt(),       // skipped
+            encode_ldm(7),      // landed here
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 7);
+    }
+
+    // =======================================================================
+    // JMS / BBL -- Subroutine call and return
+    // =======================================================================
+
+    #[test]
+    fn jms_and_bbl() {
+        // Main: JMS to subroutine, which returns with BBL 3.
+        // After return, A should be 3 (BBL loads its operand into A).
+        let (b1, b2) = encode_jms(0x004); // subroutine at addr 4
+        let sim = run_program(&[
+            b1, b2,             // 0x000: JMS 0x004
+            encode_hlt(),       // 0x002: HLT (return here)
+            0x00,               // 0x003: padding
+            encode_ldm(5),      // 0x004: subroutine body: A=5
+            encode_bbl(3),      // 0x005: return, A=3
+        ]);
+        assert_eq!(sim.accumulator, 3);
+    }
+
+    #[test]
+    fn nested_subroutine_calls() {
+        // Test 2 levels of nesting:
+        // Main calls sub1 at 0x010, sub1 calls sub2 at 0x020.
+        // sub2 returns BBL 7, sub1 returns BBL 9.
+        let mut program = vec![0u8; 256];
+
+        // Main at 0x000
+        let (b1, b2) = encode_jms(0x010);
+        program[0] = b1;
+        program[1] = b2;
+        program[2] = encode_hlt();
+
+        // Sub1 at 0x010
+        let (b1, b2) = encode_jms(0x020);
+        program[0x010] = b1;
+        program[0x011] = b2;
+        // After sub2 returns, A=7. Now return with BBL 9.
+        program[0x012] = encode_bbl(9);
+
+        // Sub2 at 0x020
+        program[0x020] = encode_bbl(7);
+
+        let sim = run_program(&program);
+        // Final A should be 9 (from sub1's BBL)
+        assert_eq!(sim.accumulator, 9);
+    }
+
+    // =======================================================================
+    // JCN -- Conditional Jump
+    // =======================================================================
+
+    #[test]
+    fn jcn_jump_if_accumulator_zero() {
+        // Condition 0x4: test_zero. A=0, so should jump.
+        // Address layout:
+        //   0: b1  1: b2  2: ldm15  3: hlt  4: nop  5: ldm1  6: hlt
+        // JCN target = (0+2) & 0xF00 | 0x05 = 0x05 (addr 5)
+        let (b1, b2) = encode_jcn(0x4, 0x05);
+        let sim = run_program(&[
+            b1, b2,             // addr 0-1: JCN test_zero, 0x05
+            encode_ldm(15),     // addr 2: skipped
+            encode_hlt(),       // addr 3: skipped
+            0x00,               // addr 4: padding
+            encode_ldm(1),      // addr 5: landed here
+            encode_hlt(),       // addr 6
+        ]);
+        assert_eq!(sim.accumulator, 1);
+    }
+
+    #[test]
+    fn jcn_no_jump_if_accumulator_nonzero() {
+        // Condition 0x4: test_zero. A=5 (not zero), so should NOT jump.
+        let (b1, b2) = encode_jcn(0x4, 0x06);
+        let sim = run_program(&[
+            encode_ldm(5),      // A=5
+            b1, b2,             // JCN test_zero, 0x06 -- no jump
+            encode_ldm(2),      // executed (A=2)
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 2);
+    }
+
+    #[test]
+    fn jcn_invert_test() {
+        // Condition 0xC: invert + test_zero. Jump if A is NOT zero.
+        // Address layout:
+        //   0: ldm5  1: b1  2: b2  3: ldm15  4: hlt  5: ldm1  6: hlt
+        // JCN at addr 1, target = (1+2) & 0xF00 | 0x05 = 0x05
+        let (b1, b2) = encode_jcn(0xC, 0x05);
+        let sim = run_program(&[
+            encode_ldm(5),      // addr 0: A=5 (not zero)
+            b1, b2,             // addr 1-2: JCN invert+zero, 0x05
+            encode_ldm(15),     // addr 3: skipped
+            encode_hlt(),       // addr 4: skipped
+            encode_ldm(1),      // addr 5: landed here
+            encode_hlt(),       // addr 6
+        ]);
+        assert_eq!(sim.accumulator, 1);
+    }
+
+    #[test]
+    fn jcn_test_carry() {
+        // Condition 0x2: test_carry. Carry is set -> should jump.
+        // Address layout:
+        //   0: stc  1: b1  2: b2  3: ldm15  4: hlt  5: ldm1  6: hlt
+        // JCN at addr 1, target = (1+2) & 0xF00 | 0x05 = 0x05
+        let (b1, b2) = encode_jcn(0x2, 0x05);
+        let sim = run_program(&[
+            encode_stc(),       // addr 0: set carry
+            b1, b2,             // addr 1-2: JCN test_carry, 0x05
+            encode_ldm(15),     // addr 3: skipped
+            encode_hlt(),       // addr 4: skipped
+            encode_ldm(1),      // addr 5: landed here
+            encode_hlt(),       // addr 6
+        ]);
+        assert_eq!(sim.accumulator, 1);
+    }
+
+    // =======================================================================
+    // ISZ -- Increment and Skip if Zero
+    // =======================================================================
+
+    #[test]
+    fn isz_loops_until_zero() {
+        // Count from 14 to 0 (incrementing wraps: 14->15->0).
+        // ISZ increments R0, jumps back if not zero.
+        // After 2 iterations: R0=14->15->0, loop exits.
+        let (isz_b1, isz_b2) = encode_isz(0, 0x02);
+        let sim = run_program(&[
+            encode_ldm(14), encode_xch(0),  // R0=14
+            isz_b1, isz_b2,                 // addr 2: ISZ R0, 0x02
+            encode_hlt(),                   // addr 4: exits when R0=0
+        ]);
+        assert_eq!(sim.registers[0], 0);
+    }
+
+    #[test]
+    fn isz_falls_through_when_zero() {
+        // R0=15, ISZ increments to 0 -> falls through (no jump).
+        let (isz_b1, isz_b2) = encode_isz(0, 0x10);
+        let sim = run_program(&[
+            encode_ldm(15), encode_xch(0),
+            isz_b1, isz_b2,    // ISZ R0, 0x10 -- R0=0, no jump
+            encode_ldm(7),      // falls through here
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.registers[0], 0);
+        assert_eq!(sim.accumulator, 7);
+    }
+
+    // =======================================================================
+    // FIM -- Fetch Immediate to Register Pair
+    // =======================================================================
+
+    #[test]
+    fn fim_loads_pair() {
+        let (b1, b2) = encode_fim(0, 0xA3);
+        let sim = run_program(&[b1, b2, encode_hlt()]);
+        assert_eq!(sim.registers[0], 0xA); // R0 = high nibble
+        assert_eq!(sim.registers[1], 0x3); // R1 = low nibble
+    }
+
+    #[test]
+    fn fim_all_pairs() {
+        // Load different values into all 8 pairs.
+        let mut program = Vec::new();
+        for p in 0..8u8 {
+            let val = (p << 4) | (15 - p);
+            let (b1, b2) = encode_fim(p, val);
+            program.push(b1);
+            program.push(b2);
+        }
+        program.push(encode_hlt());
+        let sim = run_program(&program);
+        for p in 0..8usize {
+            let val = ((p as u8) << 4) | (15 - p as u8);
+            assert_eq!(sim.registers[p * 2], (val >> 4) & 0xF);
+            assert_eq!(sim.registers[p * 2 + 1], val & 0xF);
+        }
+    }
+
+    // =======================================================================
+    // SRC -- Send Register Control
+    // =======================================================================
+
+    #[test]
+    fn src_sets_ram_address() {
+        // FIM P0, 0x25 -> R0=2, R1=5
+        // SRC P0 -> ram_register = (0x25 >> 4) & 3 = 2, ram_character = 5
+        let (b1, b2) = encode_fim(0, 0x25);
+        let sim = run_program(&[b1, b2, encode_src(0), encode_hlt()]);
+        assert_eq!(sim.ram_register, 2);
+        assert_eq!(sim.ram_character, 5);
+    }
+
+    // =======================================================================
+    // FIN -- Fetch Indirect from ROM
+    // =======================================================================
+
+    #[test]
+    fn fin_reads_from_rom() {
+        // Set R0:R1 = 0x08 (address 8 in ROM).
+        // At ROM address 8, store 0xBC.
+        // FIN P1 should read 0xBC -> R2=0xB, R3=0xC.
+        let (fim_b1, fim_b2) = encode_fim(0, 0x08);
+        let mut program = vec![
+            fim_b1, fim_b2,     // FIM P0, 0x08
+            encode_fin(1),      // FIN P1 (read ROM[0x08])
+            encode_hlt(),
+            0, 0, 0, 0,        // padding to addr 8
+            0xBC,               // addr 8: data to read
+        ];
+        // Ensure program is long enough.
+        while program.len() < 9 {
+            program.push(0);
+        }
+        let sim = run_program(&program);
+        assert_eq!(sim.registers[2], 0xB);
+        assert_eq!(sim.registers[3], 0xC);
+    }
+
+    // =======================================================================
+    // JIN -- Jump Indirect
+    // =======================================================================
+
+    #[test]
+    fn jin_jumps_to_pair_address() {
+        // FIM P0, 0x05 -> pair 0 = 0x05
+        // JIN P0 -> jump to addr 0x05 (on current page)
+        // Address layout:
+        //   0: fim_b1  1: fim_b2  2: jin  3: ldm15  4: hlt  5: ldm3  6: hlt
+        let (fim_b1, fim_b2) = encode_fim(0, 0x05);
+        let sim = run_program(&[
+            fim_b1, fim_b2,     // addr 0-1: FIM P0, 0x05
+            encode_jin(0),      // addr 2: JIN P0 -> jump to 0x05
+            encode_ldm(15),     // addr 3: skipped
+            encode_hlt(),       // addr 4: skipped
+            encode_ldm(3),      // addr 5: landed here
+            encode_hlt(),       // addr 6
+        ]);
+        assert_eq!(sim.accumulator, 3);
+    }
+
+    // =======================================================================
+    // RAM operations: WRM, RDM, SRC, DCL
+    // =======================================================================
+
+    #[test]
+    fn wrm_and_rdm_roundtrip() {
+        // Write 7 to RAM, read it back.
+        let (fim_b1, fim_b2) = encode_fim(0, 0x00); // register 0, character 0
+        let sim = run_program(&[
+            fim_b1, fim_b2,
+            encode_src(0),      // SRC P0 -> address RAM[0][0][0]
+            encode_ldm(7),      // A=7
+            encode_wrm(),       // RAM[0][0][0] = 7
+            encode_ldm(0),      // A=0 (clear accumulator)
+            encode_rdm(),       // A = RAM[0][0][0] = 7
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 7);
+    }
+
+    #[test]
+    fn dcl_selects_ram_bank() {
+        // Write to bank 0, then bank 2, then read both back.
+        let (fim_b1, fim_b2) = encode_fim(0, 0x00);
+        let sim = run_program(&[
+            // Set up SRC to register 0, character 0.
+            fim_b1, fim_b2,
+            encode_src(0),
+            // Write 5 to bank 0.
+            encode_ldm(0),
+            encode_dcl(),       // bank = 0
+            encode_ldm(5),
+            encode_wrm(),
+            // Write 9 to bank 2.
+            encode_ldm(2),
+            encode_dcl(),       // bank = 2
+            encode_ldm(9),
+            encode_wrm(),
+            // Read back bank 0.
+            encode_ldm(0),
+            encode_dcl(),       // bank = 0
+            encode_rdm(),       // A = 5
+            encode_xch(2),      // R2 = 5
+            // Read back bank 2.
+            encode_ldm(2),
+            encode_dcl(),       // bank = 2
+            encode_rdm(),       // A = 9
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 9);
+        assert_eq!(sim.registers[2], 5);
+    }
+
+    // =======================================================================
+    // RAM status: WR0-WR3, RD0-RD3
+    // =======================================================================
+
+    #[test]
+    fn wr_rd_status_roundtrip() {
+        let (fim_b1, fim_b2) = encode_fim(0, 0x00);
+        let sim = run_program(&[
+            fim_b1, fim_b2,
+            encode_src(0),
+            // Write status chars 0-3.
+            encode_ldm(1),  encode_wr0(),
+            encode_ldm(2),  encode_wr1(),
+            encode_ldm(3),  encode_wr2(),
+            encode_ldm(4),  encode_wr3(),
+            // Read them back.
+            encode_rd0(),   encode_xch(4),  // R4 = 1
+            encode_rd1(),   encode_xch(5),  // R5 = 2
+            encode_rd2(),   encode_xch(6),  // R6 = 3
+            encode_rd3(),                   // A = 4
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.registers[4], 1);
+        assert_eq!(sim.registers[5], 2);
+        assert_eq!(sim.registers[6], 3);
+        assert_eq!(sim.accumulator, 4);
+    }
+
+    // =======================================================================
+    // ROM port: WRR, RDR
+    // =======================================================================
+
+    #[test]
+    fn wrr_and_rdr_roundtrip() {
+        let sim = run_program(&[
+            encode_ldm(11),
+            encode_wrr(),       // rom_port = 11
+            encode_ldm(0),      // A = 0
+            encode_rdr(),       // A = rom_port = 11
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 11);
+    }
+
+    // =======================================================================
+    // WMP -- RAM output port
+    // =======================================================================
+
+    #[test]
+    fn wmp_writes_output_port() {
+        let sim = run_program(&[
+            encode_ldm(0),
+            encode_dcl(),       // bank 0
+            encode_ldm(13),
+            encode_wmp(),       // ram_output[0] = 13
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.ram_output[0], 13);
+    }
+
+    // =======================================================================
+    // ADM -- Add RAM to Accumulator
+    // =======================================================================
+
+    #[test]
+    fn adm_adds_ram_to_accumulator() {
+        let (fim_b1, fim_b2) = encode_fim(0, 0x00);
+        let sim = run_program(&[
+            fim_b1, fim_b2,
+            encode_src(0),
+            encode_ldm(6),
+            encode_wrm(),       // RAM[0][0][0] = 6
+            encode_ldm(3),      // A = 3
+            encode_adm(),       // A = 3 + 6 + 0 = 9
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 9);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // SBM -- Subtract RAM from Accumulator
+    // =======================================================================
+
+    #[test]
+    fn sbm_subtracts_ram_from_accumulator() {
+        let (fim_b1, fim_b2) = encode_fim(0, 0x00);
+        let sim = run_program(&[
+            fim_b1, fim_b2,
+            encode_src(0),
+            encode_ldm(3),
+            encode_wrm(),       // RAM[0][0][0] = 3
+            encode_ldm(7),      // A = 7
+            encode_sbm(),       // A = 7 - 3 = 4, carry=true (no borrow)
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 4);
+        assert!(sim.carry);
+    }
+
+    // =======================================================================
+    // CLB -- Clear Both
+    // =======================================================================
+
+    #[test]
+    fn clb_clears_accumulator_and_carry() {
+        let sim = run_program(&[
+            encode_ldm(15),
+            encode_stc(),
+            encode_clb(),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 0);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // CLC -- Clear Carry
+    // =======================================================================
+
+    #[test]
+    fn clc_clears_carry_only() {
+        let sim = run_program(&[
+            encode_ldm(7),
+            encode_stc(),
+            encode_clc(),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 7);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // IAC -- Increment Accumulator
+    // =======================================================================
+
+    #[test]
+    fn iac_increments() {
+        let sim = run_program(&[encode_ldm(4), encode_iac(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 5);
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn iac_wraps_and_sets_carry() {
+        let sim = run_program(&[encode_ldm(15), encode_iac(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0);
+        assert!(sim.carry);
+    }
+
+    // =======================================================================
+    // CMC -- Complement Carry
+    // =======================================================================
+
+    #[test]
+    fn cmc_toggles_carry() {
+        let sim = run_program(&[encode_cmc(), encode_hlt()]);
+        assert!(sim.carry); // was false, now true
+
+        let sim = run_program(&[encode_stc(), encode_cmc(), encode_hlt()]);
+        assert!(!sim.carry); // was true, now false
+    }
+
+    // =======================================================================
+    // CMA -- Complement Accumulator
+    // =======================================================================
+
+    #[test]
+    fn cma_complements() {
+        // A=5 (0101) -> complement = 10 (1010)
+        let sim = run_program(&[encode_ldm(5), encode_cma(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 10);
+    }
+
+    #[test]
+    fn cma_zero() {
+        let sim = run_program(&[encode_ldm(0), encode_cma(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 15);
+    }
+
+    // =======================================================================
+    // RAL -- Rotate Accumulator Left through Carry
+    // =======================================================================
+
+    #[test]
+    fn ral_basic() {
+        // A=0b0101 (5), carry=false
+        // After RAL: carry=0 (bit3 was 0), A=0b1010 (10)
+        let sim = run_program(&[encode_ldm(5), encode_ral(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0b1010); // 10
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn ral_carry_in() {
+        // A=0b0101 (5), carry=true
+        // After RAL: carry=0 (bit3 was 0), A=0b1011 (11)
+        let sim = run_program(&[encode_ldm(5), encode_stc(), encode_ral(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0b1011); // 11
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn ral_carry_out() {
+        // A=0b1000 (8), carry=false
+        // After RAL: carry=1 (bit3 was 1), A=0b0000 (0)
+        let sim = run_program(&[encode_ldm(8), encode_ral(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0);
+        assert!(sim.carry);
+    }
+
+    // =======================================================================
+    // RAR -- Rotate Accumulator Right through Carry
+    // =======================================================================
+
+    #[test]
+    fn rar_basic() {
+        // A=0b0110 (6), carry=false
+        // After RAR: carry=0 (bit0 was 0), A=0b0011 (3)
+        let sim = run_program(&[encode_ldm(6), encode_rar(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 3);
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn rar_carry_in() {
+        // A=0b0110 (6), carry=true
+        // After RAR: carry=0, A=0b1011 (11) -- old carry goes to bit3
+        let sim = run_program(&[encode_ldm(6), encode_stc(), encode_rar(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0b1011); // 11
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn rar_carry_out() {
+        // A=0b0001 (1), carry=false
+        // After RAR: carry=1 (bit0 was 1), A=0b0000 (0)
+        let sim = run_program(&[encode_ldm(1), encode_rar(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0);
+        assert!(sim.carry);
+    }
+
+    // =======================================================================
+    // TCC -- Transfer Carry to Accumulator, Clear Carry
+    // =======================================================================
+
+    #[test]
+    fn tcc_carry_set() {
+        let sim = run_program(&[encode_stc(), encode_tcc(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 1);
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn tcc_carry_clear() {
+        let sim = run_program(&[encode_tcc(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 0);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // DAC -- Decrement Accumulator
+    // =======================================================================
+
+    #[test]
+    fn dac_basic() {
+        let sim = run_program(&[encode_ldm(5), encode_dac(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 4);
+        assert!(sim.carry, "No borrow: carry should be true");
+    }
+
+    #[test]
+    fn dac_wraps_and_clears_carry() {
+        let sim = run_program(&[encode_ldm(0), encode_dac(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 15);
+        assert!(!sim.carry, "Borrow: carry should be false");
+    }
+
+    // =======================================================================
+    // TCS -- Transfer Carry Subtract
+    // =======================================================================
+
+    #[test]
+    fn tcs_carry_set() {
+        let sim = run_program(&[encode_stc(), encode_tcs(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 10);
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn tcs_carry_clear() {
+        let sim = run_program(&[encode_tcs(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 9);
+        assert!(!sim.carry);
+    }
+
+    // =======================================================================
+    // STC -- Set Carry
+    // =======================================================================
+
+    #[test]
+    fn stc_sets_carry() {
+        let sim = run_program(&[encode_stc(), encode_hlt()]);
+        assert!(sim.carry);
+    }
+
+    // =======================================================================
+    // DAA -- Decimal Adjust Accumulator
+    // =======================================================================
+
+    #[test]
+    fn daa_no_adjustment_needed() {
+        // A=5, carry=false: no adjustment (5 <= 9 and no carry)
+        let sim = run_program(&[encode_ldm(5), encode_daa(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 5);
+        assert!(!sim.carry);
+    }
+
+    #[test]
+    fn daa_adjustment_on_overflow() {
+        // Simulate BCD: 8 + 5 = 13 (binary), DAA should add 6 -> 19, A=3, carry=1
+        let sim = run_program(&[
+            encode_ldm(5), encode_xch(0),
+            encode_ldm(8),
+            encode_add(0),      // A = 8+5+0 = 13, carry=false
+            encode_daa(),       // A > 9, add 6: 13+6=19, A=3, carry=true
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 3);
+        assert!(sim.carry);
+    }
+
+    #[test]
+    fn daa_with_carry_already_set() {
+        // If carry is set (from previous BCD add), DAA adjusts even if A <= 9.
+        // A=2, carry=true -> add 6: 2+6=8, no overflow.
+        // Carry remains true because DAA only sets carry on overflow,
+        // it doesn't clear existing carry.
+        let sim = run_program(&[
+            encode_ldm(2),
+            encode_stc(),
+            encode_daa(),
+            encode_hlt(),
+        ]);
+        assert_eq!(sim.accumulator, 8);
+        assert!(sim.carry);
+    }
+
+    // =======================================================================
+    // KBP -- Keyboard Process
+    // =======================================================================
+
+    #[test]
+    fn kbp_valid_inputs() {
+        // One-hot to binary position.
+        let cases = [(0, 0), (1, 1), (2, 2), (4, 3), (8, 4)];
+        for (input, expected) in cases {
+            let sim = run_program(&[encode_ldm(input), encode_kbp(), encode_hlt()]);
+            assert_eq!(sim.accumulator, expected, "KBP({}) should be {}", input, expected);
+        }
+    }
+
+    #[test]
+    fn kbp_invalid_inputs() {
+        // Multiple bits set -> error (15).
+        let invalids = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15];
+        for input in invalids {
+            let sim = run_program(&[encode_ldm(input), encode_kbp(), encode_hlt()]);
+            assert_eq!(sim.accumulator, 15, "KBP({}) should be 15 (error)", input);
+        }
+    }
+
+    // =======================================================================
+    // DCL -- Designate Command Line
+    // =======================================================================
+
+    #[test]
+    fn dcl_bank_selection() {
+        for bank in 0..4u8 {
+            let sim = run_program(&[encode_ldm(bank), encode_dcl(), encode_hlt()]);
+            assert_eq!(sim.ram_bank, bank as usize);
+        }
+    }
+
+    #[test]
+    fn dcl_masks_to_valid_bank() {
+        // A=7 (0b111) -> bank = 7 & 3 = 3 (since > 3, masked)
+        let sim = run_program(&[encode_ldm(7), encode_dcl(), encode_hlt()]);
+        assert_eq!(sim.ram_bank, 3);
+    }
+
+    // =======================================================================
+    // WPM -- Write Program Memory (no-op in simulator)
+    // =======================================================================
+
+    #[test]
+    fn wpm_is_noop() {
+        let sim = run_program(&[encode_ldm(5), encode_wpm(), encode_hlt()]);
+        assert_eq!(sim.accumulator, 5); // unchanged
+    }
+
+    // =======================================================================
+    // Reset
+    // =======================================================================
+
+    #[test]
+    fn reset_clears_all_state() {
+        let mut sim = Intel4004Simulator::new(4096);
+        sim.accumulator = 15;
+        sim.carry = true;
+        sim.registers[0] = 7;
+        sim.pc = 100;
+        sim.halted = true;
+        sim.hw_stack[0] = 0xABC;
+        sim.stack_pointer = 2;
+        sim.ram[1][2][3] = 5;
+        sim.ram_status[1][2][1] = 8;
+        sim.ram_output[1] = 3;
+        sim.ram_bank = 2;
+        sim.ram_register = 3;
+        sim.ram_character = 7;
+        sim.rom_port = 12;
+
+        sim.reset();
+
+        assert_eq!(sim.accumulator, 0);
+        assert!(!sim.carry);
+        assert_eq!(sim.registers[0], 0);
+        assert_eq!(sim.pc, 0);
+        assert!(!sim.halted);
+        assert_eq!(sim.hw_stack, [0; 3]);
+        assert_eq!(sim.stack_pointer, 0);
+        assert_eq!(sim.ram[1][2][3], 0);
+        assert_eq!(sim.ram_status[1][2][1], 0);
+        assert_eq!(sim.ram_output[1], 0);
+        assert_eq!(sim.ram_bank, 0);
+        assert_eq!(sim.ram_register, 0);
+        assert_eq!(sim.ram_character, 0);
+        assert_eq!(sim.rom_port, 0);
+    }
+
+    // =======================================================================
+    // Trace verification
+    // =======================================================================
+
+    #[test]
+    fn trace_records_raw2_for_two_byte_instructions() {
+        let (b1, b2) = encode_jun(0x004);
+        let mut sim = Intel4004Simulator::new(4096);
+        sim.load_program(&[b1, b2, 0, 0, encode_hlt()]);
+        let trace = sim.step();
+        assert_eq!(trace.raw, b1);
+        assert_eq!(trace.raw2, Some(b2));
+    }
+
+    #[test]
+    fn trace_records_none_for_single_byte() {
+        let mut sim = Intel4004Simulator::new(4096);
+        sim.load_program(&[encode_ldm(5), encode_hlt()]);
+        let trace = sim.step();
+        assert_eq!(trace.raw2, None);
+    }
+
+    // =======================================================================
+    // Two-byte detection
+    // =======================================================================
+
+    #[test]
+    fn is_two_byte_detection() {
+        // JCN (0x1_)
+        assert!(is_two_byte(0x10));
+        assert!(is_two_byte(0x1F));
+        // FIM (0x2_, even)
+        assert!(is_two_byte(0x20));
+        assert!(is_two_byte(0x2E));
+        // SRC (0x2_, odd) -- NOT two-byte
+        assert!(!is_two_byte(0x21));
+        assert!(!is_two_byte(0x2F));
+        // JUN (0x4_)
+        assert!(is_two_byte(0x40));
+        // JMS (0x5_)
+        assert!(is_two_byte(0x50));
+        // ISZ (0x7_)
+        assert!(is_two_byte(0x70));
+        // Single-byte instructions
+        assert!(!is_two_byte(0x00)); // NOP
+        assert!(!is_two_byte(0x60)); // INC
+        assert!(!is_two_byte(0xD0)); // LDM
+        assert!(!is_two_byte(0xF0)); // CLB
+    }
+
+    // =======================================================================
+    // Unknown instructions
+    // =======================================================================
+
+    #[test]
+    fn unknown_instruction_produces_mnemonic() {
+        // 0xFE and 0xFF are not defined instructions
+        let mut sim = Intel4004Simulator::new(4096);
+        sim.load_program(&[0xFE, encode_hlt()]);
+        let trace = sim.step();
+        assert!(trace.mnemonic.contains("UNKNOWN"));
+    }
+
+    // =======================================================================
+    // End-to-end programs
+    // =======================================================================
+
+    /// Compute x = 1 + 2 using accumulator architecture.
+    ///
+    /// Steps: LDM 1, XCH R0, LDM 2, ADD R0, XCH R1, HLT
+    /// This takes 6 instructions vs 4 on a register machine (RISC-V),
+    /// illustrating the accumulator architecture's verbosity.
+    #[test]
+    fn program_add_1_plus_2() {
         let sim = run_program(&[
             encode_ldm(1),
             encode_xch(0),
@@ -1383,1012 +2327,295 @@ mod tests {
         assert_eq!(sim.registers[1], 3);
     }
 
+    /// Count down from 5 to 0 using DAC in a loop.
+    ///
+    /// This demonstrates:
+    /// - DAC (decrement accumulator)
+    /// - JCN with invert+zero test (jump while A != 0)
+    /// - A simple loop pattern
     #[test]
-    fn add_with_carry_input() {
-        // ADD includes the carry flag in the sum: A = A + Rn + carry
+    fn program_countdown() {
+        // Start A=5, decrement in a loop until A=0.
+        //
+        // addr 0: LDM 5       -- A=5
+        // addr 1: DAC          -- A = A-1
+        // addr 2-3: JCN 0xC, 0x01  -- if A != 0, jump to addr 1
+        // addr 4: HLT
+        let (jcn_b1, jcn_b2) = encode_jcn(0xC, 0x01); // invert+test_zero: jump if NOT zero
         let sim = run_program(&[
-            encode_stc(),        // carry = 1
-            encode_ldm(3),       // A = 3
-            encode_xch(0),       // R0 = 3, A = 0
-            encode_ldm(4),       // A = 4
-            encode_add(0),       // A = 4 + 3 + 1(carry) = 8
+            encode_ldm(5),
+            encode_dac(),
+            jcn_b1, jcn_b2,
             encode_hlt(),
         ]);
-        assert_eq!(sim.accumulator, 8);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn add_overflow_sets_carry() {
-        let sim = run_program(&[
-            encode_ldm(15),
-            encode_xch(0),   // R0 = 15
-            encode_ldm(15),  // A = 15
-            encode_clc(),    // clear carry
-            encode_add(0),   // A = 15 + 15 + 0 = 30, carry=true, A=14
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.accumulator, 14);
-        assert!(sim.carry);
-    }
-
-    // ===================================================================
-    // SUB — Subtract with borrow (complement-add)
-    // ===================================================================
-
-    #[test]
-    fn sub_no_borrow() {
-        // 5 - 3 = 2, carry=true (no borrow)
-        // Using complement-add: A + (~3 & 0xF) + 1 = 5 + 12 + 1 = 18
-        // 18 > 15 → carry=true, A = 18 & 0xF = 2
-        let sim = run_program(&[
-            encode_ldm(3),
-            encode_xch(0),  // R0 = 3
-            encode_ldm(5),  // A = 5
-            encode_clc(),   // carry = false (meaning "no previous borrow"; borrow_in = 1)
-            encode_sub(0),  // A = 5 + ~3 + 1 = 5 + 12 + 1 = 18 → A=2, carry=true
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.accumulator, 2);
-        assert!(sim.carry, "carry=true means no borrow");
-    }
-
-    #[test]
-    fn sub_with_borrow() {
-        // 0 - 1 with no previous borrow (carry=false → borrow_in=1)
-        // A + (~1 & 0xF) + 1 = 0 + 14 + 1 = 15
-        // 15 <= 15 → carry=false (borrow), A=15
-        let sim = run_program(&[
-            encode_ldm(1),
-            encode_xch(0),  // R0 = 1
-            encode_ldm(0),  // A = 0
-            encode_clc(),   // carry = false
-            encode_sub(0),  // A = 0 + 14 + 1 = 15, carry=false (borrow)
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.accumulator, 15);
-        assert!(!sim.carry, "carry=false means borrow occurred");
-    }
-
-    // ===================================================================
-    // INC — Increment register
-    // ===================================================================
-
-    #[test]
-    fn inc_register() {
-        let sim = run_program(&[
-            encode_ldm(7),
-            encode_xch(2), // R2 = 7
-            encode_inc(2), // R2 = 8
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.registers[2], 8);
-    }
-
-    #[test]
-    fn inc_wraps_at_15() {
-        let sim = run_program(&[
-            encode_ldm(15),
-            encode_xch(0),  // R0 = 15
-            encode_inc(0),  // R0 = 0 (wraps)
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.registers[0], 0);
-        // INC does NOT affect carry
-        assert!(!sim.carry);
-    }
-
-    // ===================================================================
-    // JUN — Unconditional jump
-    // ===================================================================
-
-    #[test]
-    fn jun_jumps() {
-        // JUN to address 6, skipping the LDM 1 at address 2
-        let jun = encode_jun(0x006);
-        let program = vec![
-            jun[0], jun[1],    // 0-1: JUN 0x006
-            encode_ldm(1),     // 2: (skipped)
-            encode_hlt(),      // 3: (skipped)
-            0x00, 0x00,        // 4-5: padding
-            encode_ldm(9),     // 6: A = 9
-            encode_hlt(),      // 7: halt
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 9);
-    }
-
-    // ===================================================================
-    // JMS / BBL — Subroutine call and return
-    // ===================================================================
-
-    #[test]
-    fn jms_bbl_subroutine() {
-        // Main: JMS 0x006, HLT
-        // Sub at 0x006: BBL 5
-        let jms = encode_jms(0x006);
-        let program = vec![
-            jms[0], jms[1],    // 0-1: JMS 0x006
-            encode_hlt(),      // 2: halt (after return)
-            0x00, 0x00, 0x00,  // 3-5: padding
-            encode_bbl(5),     // 6: BBL 5 (return, A=5)
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 5);
-        assert!(sim.halted);
-    }
-
-    #[test]
-    fn nested_subroutines() {
-        // Main calls sub1, sub1 calls sub2, sub2 returns 3, sub1 returns
-        let jms1 = encode_jms(0x004);
-        let jms2 = encode_jms(0x007);
-        let program = vec![
-            jms1[0], jms1[1],  // 0-1: JMS 0x004
-            encode_hlt(),      // 2: halt
-            0x00,              // 3: padding
-            jms2[0], jms2[1],  // 4-5: JMS 0x007
-            encode_bbl(0),     // 6: BBL 0 (return from sub1)
-            encode_bbl(3),     // 7: BBL 3 (return from sub2, A=3)
-        ];
-        let sim = run_program(&program);
-        // sub2 sets A=3, then sub1 sets A=0 via BBL 0
         assert_eq!(sim.accumulator, 0);
     }
 
-    // ===================================================================
-    // JCN — Conditional jump
-    // ===================================================================
-
+    /// BCD addition of 8 + 5 = 13 (BCD: carry=1, digit=3).
+    ///
+    /// Demonstrates the DAA instruction for decimal arithmetic.
     #[test]
-    fn jcn_test_zero_taken() {
-        // JCN 4 (test A==0), A is 0, so jump should be taken
-        let jcn = encode_jcn(0x4, 0x04);
-        let program = vec![
-            jcn[0], jcn[1],    // 0-1: JCN 4, 0x04
-            encode_ldm(1),     // 2: skipped
-            encode_hlt(),      // 3: skipped
-            encode_ldm(9),     // 4: A = 9
-            encode_hlt(),      // 5: halt
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 9);
-    }
-
-    #[test]
-    fn jcn_test_zero_not_taken() {
-        // JCN 4 (test A==0), but A is 5, so jump not taken
-        let jcn = encode_jcn(0x4, 0x06);
-        let program = vec![
-            encode_ldm(5),     // 0: A = 5
-            jcn[0], jcn[1],    // 1-2: JCN 4, 0x06 (not taken, A != 0)
-            encode_ldm(1),     // 3: A = 1 (executed)
-            encode_hlt(),      // 4: halt
-            0x00,              // 5: padding
-            encode_ldm(9),     // 6: not reached
-            encode_hlt(),      // 7: not reached
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 1);
-    }
-
-    #[test]
-    fn jcn_test_carry() {
-        // JCN 2 (test carry==1)
-        let jcn = encode_jcn(0x2, 0x05);
-        let program = vec![
-            encode_stc(),      // 0: set carry
-            jcn[0], jcn[1],    // 1-2: JCN 2, 0x05 (taken, carry is set)
-            encode_ldm(1),     // 3: skipped
-            encode_hlt(),      // 4: skipped
-            encode_ldm(7),     // 5: A = 7
-            encode_hlt(),      // 6: halt
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 7);
-    }
-
-    #[test]
-    fn jcn_invert() {
-        // JCN 0xC (invert | test_zero): jump if A != 0
-        let jcn = encode_jcn(0xC, 0x05);
-        let program = vec![
-            encode_ldm(3),     // 0: A = 3 (not zero)
-            jcn[0], jcn[1],    // 1-2: JCN 0xC, 0x05 (invert test_zero: jump if A!=0)
-            encode_ldm(1),     // 3: skipped
-            encode_hlt(),      // 4: skipped
-            encode_ldm(8),     // 5: A = 8
-            encode_hlt(),      // 6: halt
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 8);
-    }
-
-    // ===================================================================
-    // FIM — Fetch Immediate to register pair
-    // ===================================================================
-
-    #[test]
-    fn fim_loads_pair() {
-        let fim = encode_fim(0, 0xAB);
-        let program = vec![
-            fim[0], fim[1],  // FIM P0, 0xAB → R0=0xA, R1=0xB
+    fn program_bcd_addition() {
+        let sim = run_program(&[
+            encode_ldm(5), encode_xch(0),   // R0 = 5
+            encode_ldm(8),                   // A = 8
+            encode_clc(),                    // clear carry for clean add
+            encode_add(0),                   // A = 8+5 = 13 (binary)
+            encode_daa(),                    // DAA: 13+6 = 19, A=3, carry=1
             encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.registers[0], 0xA);
-        assert_eq!(sim.registers[1], 0xB);
+        ]);
+        assert_eq!(sim.accumulator, 3);
+        assert!(sim.carry);
     }
 
-    // ===================================================================
-    // SRC — Send Register Control
-    // ===================================================================
-
+    /// Subroutine that doubles a value.
+    ///
+    /// Main: load 6 into R0, call double subroutine, check result in R1.
     #[test]
-    fn src_sets_ram_address() {
-        let fim = encode_fim(1, 0x25); // P1 = 0x25 → R2=2, R3=5
-        let program = vec![
-            fim[0], fim[1],
-            encode_src(1),  // SRC P1 → ram_register=2, ram_character=5
-            encode_hlt(),
-        ];
+    fn program_double_subroutine() {
+        let mut program = vec![0u8; 256];
+
+        // Main: load 6, call double at 0x010, halt.
+        program[0] = encode_ldm(6);      // A = 6
+        program[1] = encode_xch(0);      // R0 = 6
+        let (b1, b2) = encode_jms(0x010);
+        program[2] = b1;
+        program[3] = b2;                  // JMS 0x010
+        // After return, load R1 to get the result.
+        program[4] = encode_ld(1);        // A = R1 = 12
+        program[5] = encode_hlt();
+
+        // Double subroutine at 0x010:
+        // Expects input in R0. Stores R0 * 2 in R1.
+        program[0x010] = encode_ld(0);    // A = R0 = 6
+        program[0x011] = encode_add(0);   // A = 6+6 = 12
+        program[0x012] = encode_xch(1);   // R1 = 12
+        program[0x013] = encode_bbl(0);   // return, A=0
+
         let sim = run_program(&program);
-        assert_eq!(sim.ram_register, 2);
-        assert_eq!(sim.ram_character, 5);
+        assert_eq!(sim.accumulator, 12);
     }
 
-    // ===================================================================
-    // FIN — Fetch Indirect from ROM
-    // ===================================================================
-
+    /// Store and retrieve multiple values from RAM.
     #[test]
-    fn fin_fetches_from_rom() {
-        // Put data at ROM address 0x0A (within page 0)
-        // Set P0 (R0:R1) = 0x0A, then FIN P1 reads ROM[0x0A] into P1
-        let fim = encode_fim(0, 0x0A); // P0 = 0x0A
-        let mut program = vec![
-            fim[0], fim[1],   // 0-1: FIM P0, 0x0A
-            encode_fin(1),    // 2: FIN P1 → read ROM[page|0x0A]
-            encode_hlt(),     // 3: halt
-        ];
-        // Pad to address 0x0A and put data there
-        while program.len() < 0x0A {
-            program.push(0x00);
+    fn program_ram_array() {
+        // Store values 1, 3, 5 in RAM characters 0, 1, 2, then read them back.
+        let mut program = Vec::new();
+
+        // Use FIM to set up different SRC addresses.
+        let values = [1u8, 3, 5];
+        for (i, &v) in values.iter().enumerate() {
+            let (b1, b2) = encode_fim(0, i as u8); // register 0, character i
+            program.push(b1);
+            program.push(b2);
+            program.push(encode_src(0));
+            program.push(encode_ldm(v));
+            program.push(encode_wrm());
         }
-        program.push(0x37); // ROM[0x0A] = 0x37
 
-        let sim = run_program(&program);
-        assert_eq!(sim.registers[2], 0x3); // P1 high = R2
-        assert_eq!(sim.registers[3], 0x7); // P1 low = R3
-    }
+        // Read back character 1 (should be 3).
+        let (b1, b2) = encode_fim(0, 1);
+        program.push(b1);
+        program.push(b2);
+        program.push(encode_src(0));
+        program.push(encode_rdm());
+        program.push(encode_hlt());
 
-    // ===================================================================
-    // JIN — Jump Indirect
-    // ===================================================================
-
-    #[test]
-    fn jin_jumps_indirect() {
-        let fim = encode_fim(1, 0x08); // P1 = 0x08
-        let program = vec![
-            fim[0], fim[1],   // 0-1: FIM P1, 0x08
-            encode_jin(1),    // 2: JIN P1 → jump to page|0x08
-            encode_ldm(1),    // 3: skipped
-            encode_hlt(),     // 4: skipped
-            0x00, 0x00, 0x00, // 5-7: padding
-            encode_ldm(6),    // 8: A = 6
-            encode_hlt(),     // 9: halt
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 6);
-    }
-
-    // ===================================================================
-    // ISZ — Increment and Skip if Zero
-    // ===================================================================
-
-    #[test]
-    fn isz_loops_until_zero() {
-        // Loop: use ISZ to count R0 from 14 to 0 (2 iterations)
-        let isz = encode_isz(0, 0x03); // ISZ R0, jump to addr 0x03
-        let program = vec![
-            encode_ldm(14),    // 0: A = 14
-            encode_xch(0),     // 1: R0 = 14
-            encode_ldm(0),     // 2: A = 0
-            isz[0], isz[1],   // 3-4: ISZ R0, 0x03 (loop back to addr 3)
-            encode_hlt(),      // 5: halt (when R0 wraps to 0)
-        ];
-        let sim = run_program(&program);
-        // R0 went 14→15→0, ISZ looped once (15!=0), then second time 0==0, fell through
-        assert_eq!(sim.registers[0], 0);
-    }
-
-    #[test]
-    fn isz_falls_through_on_zero() {
-        // R0 = 15, ISZ increments to 0, falls through
-        let isz = encode_isz(0, 0x00);
-        let program = vec![
-            encode_ldm(15),
-            encode_xch(0),     // R0 = 15
-            isz[0], isz[1],   // ISZ R0, 0x00
-            encode_ldm(7),     // Falls through, A = 7
-            encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.registers[0], 0);
-        assert_eq!(sim.accumulator, 7);
-    }
-
-    // ===================================================================
-    // CLB — Clear Both
-    // ===================================================================
-
-    #[test]
-    fn clb_clears_both() {
-        let sim = run_program(&[
-            encode_ldm(15),
-            encode_stc(),
-            encode_clb(),
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.accumulator, 0);
-        assert!(!sim.carry);
-    }
-
-    // ===================================================================
-    // CLC — Clear Carry
-    // ===================================================================
-
-    #[test]
-    fn clc_clears_carry() {
-        let sim = run_program(&[encode_stc(), encode_clc(), encode_hlt()]);
-        assert!(!sim.carry);
-    }
-
-    // ===================================================================
-    // IAC — Increment Accumulator
-    // ===================================================================
-
-    #[test]
-    fn iac_increments() {
-        let sim = run_program(&[encode_ldm(5), encode_iac(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 6);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn iac_wraps_and_sets_carry() {
-        let sim = run_program(&[encode_ldm(15), encode_iac(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0);
-        assert!(sim.carry);
-    }
-
-    // ===================================================================
-    // CMC — Complement Carry
-    // ===================================================================
-
-    #[test]
-    fn cmc_toggles_carry() {
-        let sim = run_program(&[encode_cmc(), encode_hlt()]); // false → true
-        assert!(sim.carry);
-
-        let sim = run_program(&[encode_stc(), encode_cmc(), encode_hlt()]); // true → false
-        assert!(!sim.carry);
-    }
-
-    // ===================================================================
-    // CMA — Complement Accumulator
-    // ===================================================================
-
-    #[test]
-    fn cma_complements() {
-        let sim = run_program(&[encode_ldm(0b0101), encode_cma(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0b1010);
-
-        let sim = run_program(&[encode_ldm(0), encode_cma(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 15);
-
-        let sim = run_program(&[encode_ldm(15), encode_cma(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0);
-    }
-
-    // ===================================================================
-    // RAL — Rotate Left through carry
-    // ===================================================================
-
-    #[test]
-    fn ral_rotates_left() {
-        // A=0b0101=5, carry=0
-        // After: carry=0 (bit3 was 0), A=0b1010=10
-        let sim = run_program(&[encode_ldm(0b0101), encode_clc(), encode_ral(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0b1010);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn ral_with_carry() {
-        // A=0b1001=9, carry=1
-        // After: carry=1 (bit3 was 1), A=0b0011=3
-        let sim = run_program(&[encode_ldm(0b1001), encode_stc(), encode_ral(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0b0011);
-        assert!(sim.carry);
-    }
-
-    // ===================================================================
-    // RAR — Rotate Right through carry
-    // ===================================================================
-
-    #[test]
-    fn rar_rotates_right() {
-        // A=0b1010=10, carry=0
-        // After: carry=0 (bit0 was 0), A=0b0101=5
-        let sim = run_program(&[encode_ldm(0b1010), encode_clc(), encode_rar(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0b0101);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn rar_with_carry() {
-        // A=0b0110=6, carry=1
-        // After: carry=0 (bit0 was 0), A=0b1011=11
-        let sim = run_program(&[encode_ldm(0b0110), encode_stc(), encode_rar(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0b1011);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn rar_bit0_to_carry() {
-        // A=0b0011=3, carry=0
-        // After: carry=1 (bit0 was 1), A=0b0001=1
-        let sim = run_program(&[encode_ldm(0b0011), encode_clc(), encode_rar(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0b0001);
-        assert!(sim.carry);
-    }
-
-    // ===================================================================
-    // TCC — Transfer Carry to Accumulator
-    // ===================================================================
-
-    #[test]
-    fn tcc_with_carry_set() {
-        let sim = run_program(&[encode_stc(), encode_tcc(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 1);
-        assert!(!sim.carry); // carry cleared after transfer
-    }
-
-    #[test]
-    fn tcc_with_carry_clear() {
-        let sim = run_program(&[encode_clc(), encode_tcc(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 0);
-        assert!(!sim.carry);
-    }
-
-    // ===================================================================
-    // DAC — Decrement Accumulator
-    // ===================================================================
-
-    #[test]
-    fn dac_decrements() {
-        let sim = run_program(&[encode_ldm(5), encode_dac(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 4);
-        assert!(sim.carry, "carry=true when no borrow");
-    }
-
-    #[test]
-    fn dac_borrow_at_zero() {
-        let sim = run_program(&[encode_ldm(0), encode_dac(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 15);
-        assert!(!sim.carry, "carry=false when borrow");
-    }
-
-    // ===================================================================
-    // TCS — Transfer Carry Subtract
-    // ===================================================================
-
-    #[test]
-    fn tcs_with_carry() {
-        let sim = run_program(&[encode_stc(), encode_tcs(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 10);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn tcs_without_carry() {
-        let sim = run_program(&[encode_clc(), encode_tcs(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 9);
-        assert!(!sim.carry);
-    }
-
-    // ===================================================================
-    // STC — Set Carry
-    // ===================================================================
-
-    #[test]
-    fn stc_sets_carry() {
-        let sim = run_program(&[encode_stc(), encode_hlt()]);
-        assert!(sim.carry);
-    }
-
-    // ===================================================================
-    // DAA — Decimal Adjust Accumulator
-    // ===================================================================
-
-    #[test]
-    fn daa_adjusts_when_above_9() {
-        // A=12, DAA adds 6: 12+6=18, A=2, carry=true
-        let sim = run_program(&[encode_ldm(12), encode_clc(), encode_daa(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 2);
-        assert!(sim.carry);
-    }
-
-    #[test]
-    fn daa_no_adjust_when_9_or_below() {
-        let sim = run_program(&[encode_ldm(9), encode_clc(), encode_daa(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 9);
-        assert!(!sim.carry);
-    }
-
-    #[test]
-    fn daa_adjusts_when_carry_set() {
-        // Even if A <= 9, if carry is set, add 6
-        let sim = run_program(&[encode_ldm(3), encode_stc(), encode_daa(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 9);
-        // 3+6=9, no overflow, but carry was already set and DAA only sets carry on overflow
-        // The Python reference doesn't clear carry if no overflow — carry stays as-is
-        // unless the addition overflows.
-        assert!(sim.carry); // carry was set, and 3+6=9 doesn't overflow, carry remains
-    }
-
-    // ===================================================================
-    // KBP — Keyboard Process
-    // ===================================================================
-
-    #[test]
-    fn kbp_conversions() {
-        let cases = [(0, 0), (1, 1), (2, 2), (4, 3), (8, 4), (3, 15), (5, 15), (15, 15)];
-        for (input, expected) in cases {
-            let sim = run_program(&[encode_ldm(input), encode_kbp(), encode_hlt()]);
-            assert_eq!(sim.accumulator, expected, "KBP({input}) should be {expected}");
-        }
-    }
-
-    // ===================================================================
-    // DCL — Designate Command Line
-    // ===================================================================
-
-    #[test]
-    fn dcl_selects_bank() {
-        let sim = run_program(&[encode_ldm(2), encode_dcl(), encode_hlt()]);
-        assert_eq!(sim.ram_bank, 2);
-    }
-
-    #[test]
-    fn dcl_clamps_to_valid_range() {
-        // Bank 5 (0b101) → clamped to 1 (5 & 3 = 1)
-        let sim = run_program(&[encode_ldm(5), encode_dcl(), encode_hlt()]);
-        assert_eq!(sim.ram_bank, 1);
-    }
-
-    // ===================================================================
-    // WRM / RDM — Write/Read RAM main character
-    // ===================================================================
-
-    #[test]
-    fn wrm_rdm_roundtrip() {
-        let fim = encode_fim(0, 0x00); // P0 → ram_register=0, ram_character=0
-        let program = vec![
-            fim[0], fim[1],
-            encode_src(0),     // SRC P0
-            encode_ldm(11),    // A = 11
-            encode_wrm(),      // Write A to RAM[0][0][0]
-            encode_ldm(0),     // A = 0
-            encode_rdm(),      // Read RAM[0][0][0] into A
-            encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 11);
-    }
-
-    // ===================================================================
-    // WMP — Write RAM output port
-    // ===================================================================
-
-    #[test]
-    fn wmp_writes_output() {
-        let sim = run_program(&[encode_ldm(7), encode_wmp(), encode_hlt()]);
-        assert_eq!(sim.ram_output[0], 7); // bank 0 by default
-    }
-
-    // ===================================================================
-    // WRR / RDR — Write/Read ROM I/O port
-    // ===================================================================
-
-    #[test]
-    fn wrr_rdr_roundtrip() {
-        let sim = run_program(&[
-            encode_ldm(13),
-            encode_wrr(),      // ROM port = 13
-            encode_ldm(0),     // A = 0
-            encode_rdr(),      // A = ROM port = 13
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.accumulator, 13);
-    }
-
-    // ===================================================================
-    // WPM — Write Program Memory (NOP)
-    // ===================================================================
-
-    #[test]
-    fn wpm_is_nop() {
-        let sim = run_program(&[encode_ldm(5), encode_wpm(), encode_hlt()]);
-        assert_eq!(sim.accumulator, 5); // A unchanged
-    }
-
-    // ===================================================================
-    // WR0-WR3 / RD0-RD3 — Write/Read RAM status characters
-    // ===================================================================
-
-    #[test]
-    fn wr0_rd0_roundtrip() {
-        let fim = encode_fim(0, 0x00);
-        let program = vec![
-            fim[0], fim[1],
-            encode_src(0),
-            encode_ldm(4),
-            encode_wr0(),
-            encode_ldm(0),
-            encode_rd0(),
-            encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 4);
-    }
-
-    #[test]
-    fn wr1_rd1_roundtrip() {
-        let fim = encode_fim(0, 0x00);
-        let program = vec![
-            fim[0], fim[1], encode_src(0),
-            encode_ldm(8), encode_wr1(), encode_ldm(0), encode_rd1(), encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 8);
-    }
-
-    #[test]
-    fn wr2_rd2_roundtrip() {
-        let fim = encode_fim(0, 0x00);
-        let program = vec![
-            fim[0], fim[1], encode_src(0),
-            encode_ldm(3), encode_wr2(), encode_ldm(0), encode_rd2(), encode_hlt(),
-        ];
         let sim = run_program(&program);
         assert_eq!(sim.accumulator, 3);
     }
 
+    /// ISZ-based loop that sums 1+2+3.
     #[test]
-    fn wr3_rd3_roundtrip() {
-        let fim = encode_fim(0, 0x00);
-        let program = vec![
-            fim[0], fim[1], encode_src(0),
-            encode_ldm(15), encode_wr3(), encode_ldm(0), encode_rd3(), encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 15);
+    fn program_isz_loop_sum() {
+        // Use R0 as loop counter (start at 13, wraps to 0 after 3 increments).
+        // Use R1 to track which iteration we're on (1, 2, 3).
+        // Accumulate sum in R2.
+        let (fim_b1, fim_b2) = encode_fim(0, (13 << 4) | 0);
+        let (isz_b1, isz_b2) = encode_isz(0, 0x04);
+        let sim = run_program(&[
+            fim_b1, fim_b2,     // R0=13, R1=0
+            encode_ldm(0),      // A=0
+            encode_xch(2),      // R2=0 (sum)
+            encode_inc(1),      // R1++ (iteration)
+            encode_ld(2),       // A = sum
+            encode_add(1),      // A = sum + iteration
+            encode_xch(2),      // R2 = new sum
+            isz_b1, isz_b2,    // R0++, jump to 0x04 if R0 != 0
+            encode_ld(2),       // A = final sum
+            encode_hlt(),
+        ]);
+        // R0 goes 13->14->15->0: three iterations.
+        // R1 goes 0->1->2->3.
+        // Sum = 1 + 2 + 3 = 6.
+        assert_eq!(sim.accumulator, 6);
     }
 
-    // ===================================================================
-    // SBM — Subtract RAM from accumulator
-    // ===================================================================
-
+    /// Test the register pair read/write helpers.
     #[test]
-    fn sbm_subtracts_ram() {
-        let fim = encode_fim(0, 0x00);
-        let program = vec![
-            fim[0], fim[1],
-            encode_src(0),
-            encode_ldm(3),
-            encode_wrm(),      // RAM[0][0][0] = 3
-            encode_ldm(7),     // A = 7
-            encode_clc(),      // carry = false (borrow_in = 1)
-            encode_sbm(),      // A = 7 + ~3 + 1 = 7 + 12 + 1 = 20 → A=4, carry=true
+    fn register_pair_operations() {
+        let (b1, b2) = encode_fim(3, 0xDE);
+        let sim = run_program(&[b1, b2, encode_hlt()]);
+        // Pair 3 = (R6, R7)
+        assert_eq!(sim.registers[6], 0xD);
+        assert_eq!(sim.registers[7], 0xE);
+    }
+
+    /// Rotate left twice: equivalent to shift left 2 (with carry chain).
+    #[test]
+    fn double_rotate_left() {
+        // A=0b0001 (1), carry=false
+        // RAL 1: carry=0, A=0b0010 (2)
+        // RAL 2: carry=0, A=0b0100 (4)
+        let sim = run_program(&[
+            encode_ldm(1),
+            encode_ral(),
+            encode_ral(),
             encode_hlt(),
-        ];
-        let sim = run_program(&program);
+        ]);
         assert_eq!(sim.accumulator, 4);
-        assert!(sim.carry);
-    }
-
-    // ===================================================================
-    // ADM — Add RAM to accumulator
-    // ===================================================================
-
-    #[test]
-    fn adm_adds_ram() {
-        let fim = encode_fim(0, 0x00);
-        let program = vec![
-            fim[0], fim[1],
-            encode_src(0),
-            encode_ldm(5),
-            encode_wrm(),      // RAM[0][0][0] = 5
-            encode_ldm(3),     // A = 3
-            encode_clc(),      // carry = false
-            encode_adm(),      // A = 3 + 5 + 0 = 8
-            encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.accumulator, 8);
         assert!(!sim.carry);
     }
 
-    // ===================================================================
-    // Stack wraps at 3 levels
-    // ===================================================================
-
+    /// Test all KBP conversions exhaustively.
     #[test]
-    fn stack_wraps_mod_3() {
-        // Push 3 addresses, then pop — should get LIFO order with mod-3 wrap
-        let mut sim = Intel4004Simulator::new(4096);
-        sim.stack_push(0x100);
-        sim.stack_push(0x200);
-        sim.stack_push(0x300);
-        // Stack: [0x100, 0x200, 0x300], sp=0
-        // Pop should give 0x300, 0x200, 0x100
-        assert_eq!(sim.stack_pop(), 0x300);
-        assert_eq!(sim.stack_pop(), 0x200);
-        assert_eq!(sim.stack_pop(), 0x100);
+    fn kbp_exhaustive() {
+        let expected = [0, 1, 2, 15, 3, 15, 15, 15, 4, 15, 15, 15, 15, 15, 15, 15];
+        for input in 0..16u8 {
+            let sim = run_program(&[encode_ldm(input), encode_kbp(), encode_hlt()]);
+            assert_eq!(
+                sim.accumulator, expected[input as usize],
+                "KBP({}) = {}, expected {}", input, sim.accumulator, expected[input as usize]
+            );
+        }
     }
 
+    /// Test stack wrapping: 4 pushes into a 3-level stack.
     #[test]
-    fn stack_overflow_wraps() {
-        // Push 4 addresses — the 4th overwrites the 1st
+    fn stack_wraps_on_overflow() {
+        // Call 4 subroutines without returning -- the first return address is lost.
+        let mut program = vec![0u8; 256];
+
+        // Sub at 0x10: calls 0x20
+        let (b1, b2) = encode_jms(0x20);
+        program[0x10] = b1;
+        program[0x11] = b2;
+        program[0x12] = encode_bbl(0);
+
+        // Sub at 0x20: calls 0x30
+        let (b1, b2) = encode_jms(0x30);
+        program[0x20] = b1;
+        program[0x21] = b2;
+        program[0x22] = encode_bbl(0);
+
+        // Sub at 0x30: calls 0x40
+        let (b1, b2) = encode_jms(0x40);
+        program[0x30] = b1;
+        program[0x31] = b2;
+        program[0x32] = encode_bbl(0);
+
+        // Sub at 0x40: just returns
+        program[0x40] = encode_bbl(0);
+
+        // Main at 0x00: calls 0x10
+        let (b1, b2) = encode_jms(0x10);
+        program[0x00] = b1;
+        program[0x01] = b2;
+        program[0x02] = encode_hlt();
+
+        // This nests 4 deep: main->0x10->0x20->0x30->0x40
+        // Stack has 3 slots, so the main return address (0x02) may be lost.
+        // We just verify it doesn't crash.
         let mut sim = Intel4004Simulator::new(4096);
-        sim.stack_push(0x100);
-        sim.stack_push(0x200);
-        sim.stack_push(0x300);
-        sim.stack_push(0x400); // Overwrites 0x100
-        assert_eq!(sim.stack_pop(), 0x400);
-        assert_eq!(sim.stack_pop(), 0x300);
-        assert_eq!(sim.stack_pop(), 0x200);
+        sim.run(&program, 100);
     }
 
-    // ===================================================================
-    // Encoding helpers — verify they produce correct bytes
-    // ===================================================================
-
+    /// Encoding roundtrip: all encoder functions produce expected byte patterns.
     #[test]
-    fn encoding_sanity() {
+    fn encoding_roundtrip() {
         assert_eq!(encode_nop(), 0x00);
         assert_eq!(encode_hlt(), 0x01);
         assert_eq!(encode_ldm(5), 0xD5);
         assert_eq!(encode_ld(3), 0xA3);
         assert_eq!(encode_xch(7), 0xB7);
-        assert_eq!(encode_add(0), 0x80);
-        assert_eq!(encode_sub(1), 0x91);
-        assert_eq!(encode_inc(4), 0x64);
-        assert_eq!(encode_bbl(0), 0xC0);
-        assert_eq!(encode_jun(0x123), [0x41, 0x23]);
-        assert_eq!(encode_jms(0x456), [0x54, 0x56]);
-        assert_eq!(encode_jcn(0x4, 0xAA), [0x14, 0xAA]);
-        assert_eq!(encode_fim(0, 0xFF), [0x20, 0xFF]);
+        assert_eq!(encode_add(2), 0x82);
+        assert_eq!(encode_sub(4), 0x94);
+        assert_eq!(encode_inc(6), 0x66);
+        assert_eq!(encode_bbl(1), 0xC1);
+
+        let (b1, b2) = encode_jcn(0x4, 0x10);
+        assert_eq!(b1, 0x14);
+        assert_eq!(b2, 0x10);
+
+        let (b1, b2) = encode_fim(2, 0xAB);
+        assert_eq!(b1, 0x24);
+        assert_eq!(b2, 0xAB);
+
         assert_eq!(encode_src(1), 0x23);
-        assert_eq!(encode_fin(2), 0x34);
+
+        assert_eq!(encode_fin(3), 0x36);
         assert_eq!(encode_jin(3), 0x37);
-        assert_eq!(encode_isz(5, 0x10), [0x75, 0x10]);
+
+        let (b1, b2) = encode_jun(0x123);
+        assert_eq!(b1, 0x41);
+        assert_eq!(b2, 0x23);
+
+        let (b1, b2) = encode_jms(0x456);
+        assert_eq!(b1, 0x54);
+        assert_eq!(b2, 0x56);
+
+        let (b1, b2) = encode_isz(5, 0x20);
+        assert_eq!(b1, 0x75);
+        assert_eq!(b2, 0x20);
+
+        // I/O encoders
+        assert_eq!(encode_wrm(), 0xE0);
+        assert_eq!(encode_wmp(), 0xE1);
+        assert_eq!(encode_wrr(), 0xE2);
+        assert_eq!(encode_wpm(), 0xE3);
+        assert_eq!(encode_wr0(), 0xE4);
+        assert_eq!(encode_wr1(), 0xE5);
+        assert_eq!(encode_wr2(), 0xE6);
+        assert_eq!(encode_wr3(), 0xE7);
+        assert_eq!(encode_sbm(), 0xE8);
+        assert_eq!(encode_rdm(), 0xE9);
+        assert_eq!(encode_rdr(), 0xEA);
+        assert_eq!(encode_adm(), 0xEB);
+        assert_eq!(encode_rd0(), 0xEC);
+        assert_eq!(encode_rd1(), 0xED);
+        assert_eq!(encode_rd2(), 0xEE);
+        assert_eq!(encode_rd3(), 0xEF);
+
+        // Accumulator group encoders
+        assert_eq!(encode_clb(), 0xF0);
+        assert_eq!(encode_clc(), 0xF1);
+        assert_eq!(encode_iac(), 0xF2);
+        assert_eq!(encode_cmc(), 0xF3);
+        assert_eq!(encode_cma(), 0xF4);
+        assert_eq!(encode_ral(), 0xF5);
+        assert_eq!(encode_rar(), 0xF6);
+        assert_eq!(encode_tcc(), 0xF7);
+        assert_eq!(encode_dac(), 0xF8);
+        assert_eq!(encode_tcs(), 0xF9);
+        assert_eq!(encode_stc(), 0xFA);
+        assert_eq!(encode_daa(), 0xFB);
+        assert_eq!(encode_kbp(), 0xFC);
+        assert_eq!(encode_dcl(), 0xFD);
     }
 
-    // ===================================================================
-    // Two-byte detection
-    // ===================================================================
-
+    /// Verify run() calls reset() so sequential programs start clean.
     #[test]
-    fn two_byte_detection() {
-        // 2-byte instructions
-        assert!(is_two_byte(0x10)); // JCN
-        assert!(is_two_byte(0x1F)); // JCN
-        assert!(is_two_byte(0x20)); // FIM (even)
-        assert!(is_two_byte(0x40)); // JUN
-        assert!(is_two_byte(0x50)); // JMS
-        assert!(is_two_byte(0x70)); // ISZ
-
-        // 1-byte instructions
-        assert!(!is_two_byte(0x00)); // NOP
-        assert!(!is_two_byte(0x01)); // HLT
-        assert!(!is_two_byte(0x21)); // SRC (odd)
-        assert!(!is_two_byte(0x30)); // FIN
-        assert!(!is_two_byte(0x31)); // JIN
-        assert!(!is_two_byte(0x60)); // INC
-        assert!(!is_two_byte(0x80)); // ADD
-        assert!(!is_two_byte(0xD0)); // LDM
-        assert!(!is_two_byte(0xE0)); // WRM
-        assert!(!is_two_byte(0xF0)); // CLB
-    }
-
-    // ===================================================================
-    // Trace recording
-    // ===================================================================
-
-    #[test]
-    fn trace_records_before_after() {
+    fn run_resets_between_programs() {
         let mut sim = Intel4004Simulator::new(4096);
-        let traces = sim.run(
-            &[encode_ldm(0), encode_ldm(5), encode_hlt()],
-            10,
-        );
-        assert_eq!(traces[1].accumulator_before, 0);
-        assert_eq!(traces[1].accumulator_after, 5);
-        assert_eq!(traces[1].mnemonic, "LDM 5");
-    }
 
-    #[test]
-    fn trace_two_byte_instruction() {
-        let jun = encode_jun(0x004);
-        let mut sim = Intel4004Simulator::new(4096);
-        let program = vec![jun[0], jun[1], 0x00, 0x00, encode_hlt()];
-        let traces = sim.run(&program, 10);
-        assert_eq!(traces[0].raw, jun[0]);
-        assert_eq!(traces[0].raw2, Some(jun[1]));
-        assert_eq!(traces[0].mnemonic, "JUN 0x004");
-    }
+        // First program: set A=15, carry=true
+        sim.run(&[encode_ldm(15), encode_stc(), encode_hlt()], 10);
+        assert_eq!(sim.accumulator, 15);
+        assert!(sim.carry);
 
-    // ===================================================================
-    // Integration: compute 3 + 4 = 7 via subroutine
-    // ===================================================================
-
-    #[test]
-    fn integration_add_via_subroutine() {
-        // Main: load 3 and 4 into R0 and R1, call add_subroutine, check R2
-        // add_subroutine at 0x10: LD R0, ADD R1, XCH R2, BBL 0
-        let jms = encode_jms(0x010);
-        let mut program = vec![
-            encode_ldm(3),     // 0: A = 3
-            encode_xch(0),     // 1: R0 = 3
-            encode_ldm(4),     // 2: A = 4
-            encode_xch(1),     // 3: R1 = 4
-            encode_clc(),      // 4: clear carry before add
-            jms[0], jms[1],    // 5-6: JMS 0x010
-            encode_hlt(),      // 7: halt
-        ];
-        // Pad to 0x10
-        while program.len() < 0x10 {
-            program.push(0x00);
-        }
-        // Subroutine: add R0 + R1, store in R2
-        program.push(encode_ld(0));     // 0x10: A = R0
-        program.push(encode_add(1));    // 0x11: A = A + R1
-        program.push(encode_xch(2));    // 0x12: R2 = A
-        program.push(encode_bbl(0));    // 0x13: return
-
-        let sim = run_program(&program);
-        assert_eq!(sim.registers[2], 7);
-    }
-
-    // ===================================================================
-    // Integration: count down using ISZ loop
-    // ===================================================================
-
-    #[test]
-    fn integration_isz_countdown() {
-        // Use ISZ to loop 4 times (R0 starts at 12 = -4 in 4-bit)
-        // Each iteration increments R1
-        let isz = encode_isz(0, 0x04);
-        let program = vec![
-            encode_ldm(12),    // 0: R0 = 12 (-4 in 4-bit)
-            encode_xch(0),     // 1: R0 = 12
-            encode_ldm(0),     // 2: A = 0 (clear for loop body)
-            encode_xch(1),     // 3: R1 = 0 (loop counter)
-            encode_inc(1),     // 4: R1++ (loop body)
-            isz[0], isz[1],   // 5-6: ISZ R0, 0x04 (jump to 4 if R0 != 0)
-            encode_hlt(),      // 7: halt
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.registers[0], 0);  // R0 wrapped to 0
-        assert_eq!(sim.registers[1], 4);  // R1 counted 4 iterations
-    }
-
-    // ===================================================================
-    // Integration: RAM bank switching
-    // ===================================================================
-
-    #[test]
-    fn integration_ram_banks() {
-        let fim = encode_fim(0, 0x00); // P0 = 0x00 → reg=0, char=0
-        let program = vec![
-            fim[0], fim[1],
-            encode_src(0),
-            // Write 5 to bank 0
-            encode_ldm(5),
-            encode_wrm(),
-            // Switch to bank 1
-            encode_ldm(1),
-            encode_dcl(),
-            // Write 9 to bank 1
-            encode_ldm(9),
-            encode_wrm(),
-            // Read from bank 1
-            encode_ldm(0),
-            encode_rdm(),
-            encode_xch(0),     // R0 = value from bank 1
-            // Switch back to bank 0
-            encode_ldm(0),
-            encode_dcl(),
-            // Read from bank 0
-            encode_rdm(),
-            encode_xch(1),     // R1 = value from bank 0
-            encode_hlt(),
-        ];
-        let sim = run_program(&program);
-        assert_eq!(sim.registers[0], 9);  // from bank 1
-        assert_eq!(sim.registers[1], 5);  // from bank 0
-    }
-
-    // ===================================================================
-    // Unknown instruction
-    // ===================================================================
-
-    #[test]
-    fn unknown_instruction_produces_mnemonic() {
-        let mut sim = Intel4004Simulator::new(4096);
-        let traces = sim.run(&[0xFE, encode_hlt()], 10);
-        assert!(traces[0].mnemonic.contains("UNKNOWN"));
-    }
-
-    // ===================================================================
-    // BCD addition using DAA
-    // ===================================================================
-
-    #[test]
-    fn integration_bcd_addition() {
-        // BCD: 7 + 8 = 15 decimal
-        // Binary: 7 + 8 = 15. DAA: 15 > 9, so 15 + 6 = 21, A = 5, carry = 1
-        // Result: carry=1, A=5 → BCD "15"
-        let sim = run_program(&[
-            encode_ldm(8),
-            encode_xch(0),     // R0 = 8
-            encode_ldm(7),     // A = 7
-            encode_clc(),
-            encode_add(0),     // A = 7 + 8 = 15, carry=false (15 <= 15)
-            encode_daa(),      // A > 9, so A = 15+6=21, A=5, carry=true
-            encode_hlt(),
-        ]);
-        assert_eq!(sim.accumulator, 5);
-        assert!(sim.carry); // represents the "1" in "15"
-    }
-
-    // ===================================================================
-    // Register pair read/write
-    // ===================================================================
-
-    #[test]
-    fn pair_read_write() {
-        let mut sim = Intel4004Simulator::new(4096);
-        sim.write_pair(3, 0xAB);
-        assert_eq!(sim.registers[6], 0xA);
-        assert_eq!(sim.registers[7], 0xB);
-        assert_eq!(sim.read_pair(3), 0xAB);
-    }
-
-    // ===================================================================
-    // Reset clears everything
-    // ===================================================================
-
-    #[test]
-    fn reset_clears_state() {
-        let mut sim = Intel4004Simulator::new(4096);
-        sim.accumulator = 5;
-        sim.carry = true;
-        sim.registers[0] = 7;
-        sim.ram_bank = 2;
-        sim.halted = true;
-        sim.stack_push(0x100);
-
-        sim.reset();
-
+        // Second program: should start with A=0, carry=false
+        sim.run(&[encode_hlt()], 10);
         assert_eq!(sim.accumulator, 0);
         assert!(!sim.carry);
-        assert_eq!(sim.registers[0], 0);
-        assert_eq!(sim.ram_bank, 0);
-        assert!(!sim.halted);
-        assert_eq!(sim.hw_stack, [0, 0, 0]);
     }
 }

@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/intel4004-simulator",
-  "version": "0.2.0",
-  "description": "Intel 4004 first microprocessor simulation — Layer 4d of the computing stack",
+  "name": "@coding-adventures/intel4004-gatelevel",
+  "version": "0.1.0",
+  "description": "Intel 4004 gate-level simulator — all computations route through real logic gates",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -11,15 +11,19 @@
   },
   "keywords": [
     "intel-4004",
+    "gate-level",
     "microprocessor",
-    "historical",
-    "4-bit",
+    "logic-gates",
     "simulator",
     "computer-science",
     "education"
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/logic-gates": "file:../logic-gates",
+    "@coding-adventures/arithmetic": "file:../arithmetic"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",
