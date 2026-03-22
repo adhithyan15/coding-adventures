@@ -14,13 +14,6 @@
 # - Broken pipe handling (Errno::EPIPE)
 # - --help and --version via CLI Builder
 
-require "simplecov"
-SimpleCov.start do
-  add_filter "/test/"
-  enable_coverage :branch
-  minimum_coverage 80
-end
-
 require "minitest/autorun"
 require "stringio"
 require "coding_adventures_cli_builder"

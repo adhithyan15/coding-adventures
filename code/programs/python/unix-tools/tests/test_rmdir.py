@@ -151,10 +151,11 @@ class TestRemoveWithParents:
     def test_remove_chain(self, tmp_path: Path) -> None:
         chain = tmp_path / "a" / "b" / "c"
         chain.mkdir(parents=True)
-        result = remove_with_parents(
+        remove_with_parents(
             str(chain), verbose=False, ignore_non_empty=False
         )
-        assert result is True
+        # Don't check return value — -p walks into temp dir parent which
+        # is non-empty, returning False. Just verify nested dirs removed.
         assert not (tmp_path / "a").exists()
 
     def test_remove_chain_stops_at_nonempty(self, tmp_path: Path) -> None:

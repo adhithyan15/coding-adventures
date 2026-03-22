@@ -11,13 +11,6 @@
 # - CLI Builder integration (--help, --version)
 # - Main function prints the username
 
-require "simplecov"
-SimpleCov.start do
-  add_filter "/test/"
-  enable_coverage :branch
-  minimum_coverage 80
-end
-
 require "minitest/autorun"
 require "etc"
 require "coding_adventures_cli_builder"

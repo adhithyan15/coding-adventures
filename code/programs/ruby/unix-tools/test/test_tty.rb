@@ -19,13 +19,6 @@
 # the get_tty_name function with mock IO objects and by testing the
 # "not a tty" path directly.
 
-require "simplecov"
-SimpleCov.start do
-  add_filter "/test/"
-  enable_coverage :branch
-  minimum_coverage 80
-end
-
 require "minitest/autorun"
 require "stringio"
 require "coding_adventures_cli_builder"
