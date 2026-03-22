@@ -166,6 +166,94 @@ func TestGetBuildFileMacNotOnLinux(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
+// Tests for BUILD_windows support
+// ---------------------------------------------------------------------------
+
+func TestGetBuildFileWindowsPreferred(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD":         "echo generic",
+		"BUILD_windows": "echo windows",
+	})
+	got := GetBuildFileForPlatform(root, "windows")
+	if filepath.Base(got) != "BUILD_windows" {
+		t.Fatalf("expected BUILD_windows, got %s", got)
+	}
+}
+
+func TestGetBuildFileWindowsFallback(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD": "echo generic",
+	})
+	got := GetBuildFileForPlatform(root, "windows")
+	if filepath.Base(got) != "BUILD" {
+		t.Fatalf("expected BUILD on windows fallback, got %s", got)
+	}
+}
+
+func TestGetBuildFileWindowsNotOnMac(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD":         "echo generic",
+		"BUILD_windows": "echo windows",
+	})
+	got := GetBuildFileForPlatform(root, "darwin")
+	// On macOS, BUILD_windows should not be used — fall back to BUILD.
+	if filepath.Base(got) != "BUILD" {
+		t.Fatalf("expected BUILD on darwin, got %s", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Tests for BUILD_mac_and_linux support
+// ---------------------------------------------------------------------------
+
+func TestGetBuildFileMacAndLinuxOnMac(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD":               "echo generic",
+		"BUILD_mac_and_linux": "echo unix",
+	})
+	got := GetBuildFileForPlatform(root, "darwin")
+	if filepath.Base(got) != "BUILD_mac_and_linux" {
+		t.Fatalf("expected BUILD_mac_and_linux on darwin, got %s", got)
+	}
+}
+
+func TestGetBuildFileMacAndLinuxOnLinux(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD":               "echo generic",
+		"BUILD_mac_and_linux": "echo unix",
+	})
+	got := GetBuildFileForPlatform(root, "linux")
+	if filepath.Base(got) != "BUILD_mac_and_linux" {
+		t.Fatalf("expected BUILD_mac_and_linux on linux, got %s", got)
+	}
+}
+
+func TestGetBuildFileMacAndLinuxNotOnWindows(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD":               "echo generic",
+		"BUILD_mac_and_linux": "echo unix",
+	})
+	got := GetBuildFileForPlatform(root, "windows")
+	// On Windows, BUILD_mac_and_linux should not be used — fall back to BUILD.
+	if filepath.Base(got) != "BUILD" {
+		t.Fatalf("expected BUILD on windows, got %s", got)
+	}
+}
+
+func TestGetBuildFileMacOverridesMacAndLinux(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD":               "echo generic",
+		"BUILD_mac":           "echo mac",
+		"BUILD_mac_and_linux": "echo unix",
+	})
+	got := GetBuildFileForPlatform(root, "darwin")
+	// BUILD_mac is more specific than BUILD_mac_and_linux.
+	if filepath.Base(got) != "BUILD_mac" {
+		t.Fatalf("expected BUILD_mac (most specific), got %s", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Tests for DiscoverPackages (recursive BUILD file discovery)
 // ---------------------------------------------------------------------------
 

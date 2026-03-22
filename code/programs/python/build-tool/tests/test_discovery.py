@@ -127,6 +127,59 @@ class TestGetBuildFile:
         result = _get_build_file(tmp_path)
         assert result == tmp_path / "BUILD"
 
+    # -- BUILD_windows tests --------------------------------------------------
+
+    @patch("build_tool.discovery.platform.system", return_value="Windows")
+    def test_windows_build_preferred(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_windows").write_text("echo windows")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_windows"
+
+    @patch("build_tool.discovery.platform.system", return_value="Windows")
+    def test_windows_fallback_to_generic(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD"
+
+    @patch("build_tool.discovery.platform.system", return_value="Darwin")
+    def test_windows_build_not_on_mac(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_windows").write_text("echo windows")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD"
+
+    # -- BUILD_mac_and_linux tests --------------------------------------------
+
+    @patch("build_tool.discovery.platform.system", return_value="Darwin")
+    def test_mac_and_linux_on_mac(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_mac_and_linux"
+
+    @patch("build_tool.discovery.platform.system", return_value="Linux")
+    def test_mac_and_linux_on_linux(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_mac_and_linux"
+
+    @patch("build_tool.discovery.platform.system", return_value="Windows")
+    def test_mac_and_linux_not_on_windows(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD"
+
+    @patch("build_tool.discovery.platform.system", return_value="Darwin")
+    def test_mac_overrides_mac_and_linux(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac").write_text("echo mac")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_mac"
+
 
 class TestDiscoverPackagesSimple:
     """Tests using the simple fixture (single package, no deps)."""
