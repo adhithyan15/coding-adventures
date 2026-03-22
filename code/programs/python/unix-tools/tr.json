@@ -35,17 +35,17 @@
   "arguments": [
     {
       "id": "set1",
-      "name": "SET1",
       "description": "Set of characters to translate from",
       "type": "string",
-      "required": true
+      "required": true,
+      "display_name": "SET1"
     },
     {
       "id": "set2",
-      "name": "SET2",
       "description": "Set of characters to translate to",
       "type": "string",
-      "required": false
+      "required": false,
+      "display_name": "SET2"
     }
   ],
   "commands": []

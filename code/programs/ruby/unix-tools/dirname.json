@@ -5,7 +5,10 @@
   "description": "Strip last component from file name",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "zero",
@@ -18,8 +21,7 @@
   "arguments": [
     {
       "id": "names",
-      "name": "names",
-      "display_name": "NAME",
+      "display_name": "names",
       "description": "The pathname(s) to process",
       "type": "string",
       "required": true,

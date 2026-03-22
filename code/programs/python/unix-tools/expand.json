@@ -28,11 +28,11 @@
   "arguments": [
     {
       "id": "files",
-      "name": "FILE",
       "description": "Files to process. Use '-' for standard input.",
       "type": "string",
       "required": false,
-      "variadic": true
+      "variadic": true,
+      "display_name": "FILE"
     }
   ],
   "commands": []

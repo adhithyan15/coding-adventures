@@ -5,7 +5,10 @@
   "description": "Print a sequence of numbers",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "separator",
@@ -33,8 +36,7 @@
   "arguments": [
     {
       "id": "numbers",
-      "name": "numbers",
-      "display_name": "NUMBER",
+      "display_name": "numbers",
       "description": "LAST, FIRST LAST, or FIRST INCREMENT LAST",
       "type": "string",
       "required": true,

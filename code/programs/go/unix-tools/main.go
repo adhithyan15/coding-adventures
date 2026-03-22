@@ -62,9 +62,18 @@ import (
 //   2. Help text: we can list all available tools when invoked incorrectly
 
 var toolNames = []string{
+	// Tier 0
 	"pwd",
+	// Tier 1
 	"true",
 	"false",
+	"yes",
+	"whoami",
+	"logname",
+	"tty",
+	"nproc",
+	"sleep",
+	// Tier 2
 	"echo",
 	"cat",
 	"wc",
@@ -76,6 +85,7 @@ var toolNames = []string{
 	"tee",
 	"rev",
 	"printenv",
+	// Tier 3
 	"mkdir",
 	"rmdir",
 	"touch",
@@ -160,6 +170,20 @@ func dispatch(toolName string, argv []string) int {
 		return runRev(specPath, argv, os.Stdout, os.Stderr)
 	case "printenv":
 		return runPrintenv(specPath, argv, os.Stdout, os.Stderr)
+	// Tier 1
+	case "yes":
+		return runYes(specPath, argv, os.Stdout, os.Stderr)
+	case "whoami":
+		return runWhoami(specPath, argv, os.Stdout, os.Stderr)
+	case "logname":
+		return runLogname(specPath, argv, os.Stdout, os.Stderr)
+	case "tty":
+		return runTty(specPath, argv, os.Stdout, os.Stderr)
+	case "nproc":
+		return runNproc(specPath, argv, os.Stdout, os.Stderr)
+	case "sleep":
+		return runSleep(specPath, argv, os.Stdout, os.Stderr)
+	// Tier 3
 	case "mkdir":
 		return runMkdir(specPath, argv, os.Stdout, os.Stderr)
 	case "rmdir":

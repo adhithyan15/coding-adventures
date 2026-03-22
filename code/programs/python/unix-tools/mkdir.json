@@ -35,11 +35,11 @@
   "arguments": [
     {
       "id": "directories",
-      "name": "DIRECTORY",
       "description": "Directories to create",
       "type": "string",
       "required": true,
-      "variadic": true
+      "variadic": true,
+      "display_name": "DIRECTORY"
     }
   ],
   "commands": []

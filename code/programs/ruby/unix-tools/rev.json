@@ -5,13 +5,15 @@
   "description": "Reverse lines characterwise",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [],
   "arguments": [
     {
       "id": "files",
-      "name": "files",
-      "display_name": "FILE",
+      "display_name": "files",
       "description": "Files to reverse (use - for standard input)",
       "type": "string",
       "required": false,

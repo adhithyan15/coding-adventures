@@ -1,68 +1,47 @@
-//! # unix-tools — Library Module
+//! # Unix Tools — Library Module
 //!
-//! This crate provides the business logic for a collection of Unix
-//! command-line tools, all powered by [CLI Builder](../../../packages/rust/cli-builder/).
+//! This module exposes the business logic functions for all Unix tool
+//! implementations so they can be tested from integration tests in the
+//! `tests/` directory.
 //!
-//! Each tool lives in its own module:
-//!
-//! - **pwd** — Print the current working directory (logical or physical)
-//! - **echo** — Display a line of text, with optional escape interpretation
-//! - **cat** — Concatenate and display files, with numbering and formatting
-//! - **wc** — Count lines, words, bytes, and characters
-//! - **true/false** — Exit with success (0) or failure (1) status
-//!
-//! The `true` and `false` tools have no business logic — they simply exit.
-//! They're included for completeness and to verify CLI Builder handles
-//! minimal specs correctly.
-//!
-//! ## Architecture
-//!
-//! ```text
-//!     JSON spec (e.g., pwd.json)
-//!         │
-//!         ▼
-//!     CLI Builder (parsing, validation, help)
-//!         │
-//!         ▼
-//!     This crate (business logic)
-//!         │
-//!         ▼
-//!     main.rs (I/O and exit codes)
-//! ```
+//! The binary entry point is in `main.rs`, which calls these functions
+//! after CLI Builder has parsed the arguments.
 
-// ---------------------------------------------------------------------------
-// Tool modules
-// ---------------------------------------------------------------------------
-
-pub mod echo_tool;
-pub mod cat_tool;
-pub mod wc_tool;
-pub mod head_tool;
-pub mod tail_tool;
+// --- Tool modules ---
+// Each tool has its own module with the business logic separated from
+// CLI parsing, making it independently testable.
 pub mod basename_tool;
+pub mod cat_tool;
 pub mod dirname_tool;
-pub mod seq_tool;
-pub mod tee_tool;
-pub mod rev_tool;
-pub mod printenv_tool;
-pub mod mkdir_tool;
-pub mod rmdir_tool;
-pub mod touch_tool;
-pub mod ln_tool;
-pub mod rm_tool;
-pub mod realpath_tool;
-pub mod tr_tool;
-pub mod uniq_tool;
+pub mod echo_tool;
 pub mod expand_tool;
-pub mod unexpand_tool;
+pub mod false_tool;
 pub mod fold_tool;
+pub mod head_tool;
+pub mod ln_tool;
+pub mod logname_tool;
+pub mod mkdir_tool;
 pub mod nl_tool;
-
-// ---------------------------------------------------------------------------
-// pwd — Print Working Directory
-// ---------------------------------------------------------------------------
-// The pwd functions live directly in lib.rs for historical reasons (they
-// were the first tool implemented). New tools get their own modules.
+pub mod nproc_tool;
+pub mod printenv_tool;
+pub mod pwd_tool;
+pub mod realpath_tool;
+pub mod rev_tool;
+pub mod rm_tool;
+pub mod rmdir_tool;
+pub mod seq_tool;
+pub mod sleep_tool;
+pub mod tail_tool;
+pub mod tee_tool;
+pub mod touch_tool;
+pub mod tr_tool;
+pub mod true_tool;
+pub mod tty_tool;
+pub mod unexpand_tool;
+pub mod uniq_tool;
+pub mod wc_tool;
+pub mod whoami_tool;
+pub mod yes_tool;
 
 use std::path::PathBuf;
 

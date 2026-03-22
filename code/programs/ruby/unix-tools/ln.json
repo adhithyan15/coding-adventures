@@ -63,11 +63,11 @@
   "arguments": [
     {
       "id": "targets",
-      "name": "TARGET",
       "description": "Target file(s) and optional link name",
       "type": "string",
       "required": true,
-      "variadic": true
+      "variadic": true,
+      "display_name": "TARGET"
     }
   ],
   "commands": []
