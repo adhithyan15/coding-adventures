@@ -49,4 +49,5 @@ members = [
     "os-kernel",
     "system-board",
     "arm-simulator",
+    "transistors",
 ]
