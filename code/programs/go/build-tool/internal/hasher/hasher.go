@@ -49,17 +49,25 @@ import (
 // change detection. If any file with these extensions changes, the package
 // needs rebuilding.
 var sourceExtensions = map[string]map[string]bool{
-	"python": {".py": true, ".toml": true, ".cfg": true},
-	"ruby":   {".rb": true, ".gemspec": true},
-	"go":     {".go": true},
+	"python":     {".py": true, ".toml": true, ".cfg": true},
+	"ruby":       {".rb": true, ".gemspec": true},
+	"go":         {".go": true},
+	"typescript": {".ts": true, ".tsx": true, ".json": true},
+	"rust":       {".rs": true, ".toml": true},
+	"elixir":     {".ex": true, ".exs": true},
+	"starlark":   {".star": true},
 }
 
 // specialFilenames maps languages to filenames that should always be
 // included regardless of their extension.
 var specialFilenames = map[string]map[string]bool{
-	"python": {},
-	"ruby":   {"Gemfile": true, "Rakefile": true},
-	"go":     {"go.mod": true, "go.sum": true},
+	"python":     {},
+	"ruby":       {"Gemfile": true, "Rakefile": true},
+	"go":         {"go.mod": true, "go.sum": true},
+	"typescript": {"package.json": true, "tsconfig.json": true, "vitest.config.ts": true},
+	"rust":       {"Cargo.toml": true, "Cargo.lock": true},
+	"elixir":     {"mix.exs": true, "mix.lock": true},
+	"starlark":   {},
 }
 
 // collectSourceFiles walks the package directory and returns all source

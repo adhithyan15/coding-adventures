@@ -35,6 +35,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
@@ -93,6 +94,7 @@ func run() int {
 	language := flag.String("language", "all", "Filter to language: python, ruby, go, rust, typescript, elixir, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
+	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
 
 	flag.Parse()
 
@@ -168,6 +170,21 @@ func run() int {
 		}
 	}
 
+	// Step 5b: Detect languages mode.
+	//
+	// When --detect-languages is set, we output which language toolchains are
+	// needed based on the affected packages. This lets CI conditionally install
+	// only the toolchains that are actually needed — e.g., if only TypeScript
+	// packages changed, we skip installing Rust, Elixir, etc.
+	//
+	// Go is always needed because the build tool itself is written in Go.
+	//
+	// Special case: if shared files changed (grammars, CI config, build tool
+	// source), or if --force is set, all languages are needed.
+	if *detectLanguages {
+		return detectNeededLanguages(packages, affectedSet, *force, repoRoot, *diffBase)
+	}
+
 	// Step 6: Hash all packages (needed for cache fallback).
 	packageHashes := make(map[string]string)
 	depsHashes := make(map[string]string)
@@ -229,5 +246,110 @@ func run() int {
 			return 1
 		}
 	}
+	return 0
+}
+
+// allLanguages is the canonical list of supported languages in the monorepo.
+// The order is stable and matches the order used in CI toolchain setup.
+var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir"}
+
+// sharedPrefixes are path prefixes that, when changed, mean ALL languages
+// need rebuilding. These are cross-cutting concerns:
+//   - code/grammars/ — shared grammar definitions used by all language lexers/parsers
+//   - .github/ — CI configuration affects all languages
+//   - code/programs/go/build-tool/ — the build tool itself
+//   - code/specs/ — specifications that drive implementations across languages
+var sharedPrefixes = []string{
+	"code/grammars/",
+	".github/",
+	"code/programs/go/build-tool/",
+	"code/specs/",
+}
+
+// detectNeededLanguages determines which language toolchains CI needs to
+// install based on the affected packages. It outputs one line per language
+// in the format "needs_<lang>=true|false" to both stdout and $GITHUB_OUTPUT
+// (if the environment variable is set).
+//
+// Go is always needed because the build tool is written in Go.
+//
+// If --force is set, or if shared files (grammars, CI, build tool source)
+// changed, all languages are marked as needed.
+func detectNeededLanguages(
+	packages []discovery.Package,
+	affectedSet map[string]bool,
+	force bool,
+	repoRoot string,
+	diffBase string,
+) int {
+	needed := make(map[string]bool)
+
+	// Go is always needed — the build tool itself is Go.
+	needed["go"] = true
+
+	if force {
+		// Force mode: all languages needed.
+		for _, lang := range allLanguages {
+			needed[lang] = true
+		}
+	} else if affectedSet == nil {
+		// Git diff unavailable (nil means no diff data). Be safe: need everything.
+		for _, lang := range allLanguages {
+			needed[lang] = true
+		}
+	} else {
+		// Check if shared files changed — if so, all languages are needed.
+		changedFiles := gitdiff.GetChangedFiles(repoRoot, diffBase)
+		sharedChanged := false
+		for _, f := range changedFiles {
+			for _, prefix := range sharedPrefixes {
+				if strings.HasPrefix(f, prefix) {
+					sharedChanged = true
+					break
+				}
+			}
+			if sharedChanged {
+				break
+			}
+		}
+
+		if sharedChanged {
+			for _, lang := range allLanguages {
+				needed[lang] = true
+			}
+		} else {
+			// Only mark languages that have affected packages.
+			for _, pkg := range packages {
+				if affectedSet[pkg.Name] {
+					needed[pkg.Language] = true
+				}
+			}
+		}
+	}
+
+	// Output results. Each line is "needs_<lang>=true" or "needs_<lang>=false".
+	// If $GITHUB_OUTPUT is set, also write there for GitHub Actions.
+	ghOutput := os.Getenv("GITHUB_OUTPUT")
+	var ghFile *os.File
+	if ghOutput != "" {
+		var err error
+		ghFile, err = os.OpenFile(ghOutput, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not open $GITHUB_OUTPUT: %v\n", err)
+		} else {
+			defer ghFile.Close()
+		}
+	}
+
+	for _, lang := range allLanguages {
+		value := needed[lang]
+		line := fmt.Sprintf("needs_%s=%t", lang, value)
+		fmt.Println(line)
+
+		if ghFile != nil {
+			fmt.Fprintln(ghFile, line)
+		}
+	}
+
 	return 0
 }

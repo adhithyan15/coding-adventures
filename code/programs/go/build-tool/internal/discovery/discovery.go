@@ -105,12 +105,12 @@ func readLines(filepath string) []string {
 
 // inferLanguage inspects the directory path to determine the programming
 // language. We look for known language names ("python", "ruby", "go", "rust",
-// "typescript", "elixir") as path components. For example,
+// "typescript", "elixir", "starlark") as path components. For example,
 // "/repo/code/packages/python/logic-gates" yields "python".
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir"} {
+	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "starlark"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang
