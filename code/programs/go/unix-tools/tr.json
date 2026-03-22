@@ -1,0 +1,56 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "tr",
+  "display_name": "tr",
+  "description": "Translate or delete characters",
+  "version": "1.0.0",
+  "parsing_mode": "posix",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "complement",
+      "short": "c",
+      "long": "complement",
+      "description": "Use the complement of SET1",
+      "type": "boolean"
+    },
+    {
+      "id": "delete",
+      "short": "d",
+      "long": "delete",
+      "description": "Delete characters in SET1, do not translate",
+      "type": "boolean"
+    },
+    {
+      "id": "squeeze_repeats",
+      "short": "s",
+      "long": "squeeze-repeats",
+      "description": "Replace each sequence of a repeated character that is listed in the last specified SET with a single occurrence",
+      "type": "boolean"
+    },
+    {
+      "id": "truncate_set1",
+      "short": "t",
+      "long": "truncate-set1",
+      "description": "First truncate SET1 to length of SET2",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "set1",
+      "name": "SET1",
+      "description": "Set of characters to translate from (or delete)",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "set2",
+      "name": "SET2",
+      "description": "Set of characters to translate to",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "commands": []
+}

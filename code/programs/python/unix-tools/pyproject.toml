@@ -20,6 +20,18 @@ py-modules = [
     "tee_tool",
     "rev_tool",
     "printenv_tool",
+    "mkdir_tool",
+    "rmdir_tool",
+    "touch_tool",
+    "ln_tool",
+    "rm_tool",
+    "realpath_tool",
+    "tr_tool",
+    "uniq_tool",
+    "expand_tool",
+    "unexpand_tool",
+    "fold_tool",
+    "nl_tool",
 ]
 
 [project.optional-dependencies]

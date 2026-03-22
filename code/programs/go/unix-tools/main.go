@@ -76,6 +76,18 @@ var toolNames = []string{
 	"tee",
 	"rev",
 	"printenv",
+	"mkdir",
+	"rmdir",
+	"touch",
+	"ln",
+	"rm",
+	"realpath",
+	"tr",
+	"uniq",
+	"expand",
+	"unexpand",
+	"fold",
+	"nl",
 }
 
 // =========================================================================
@@ -148,6 +160,30 @@ func dispatch(toolName string, argv []string) int {
 		return runRev(specPath, argv, os.Stdout, os.Stderr)
 	case "printenv":
 		return runPrintenv(specPath, argv, os.Stdout, os.Stderr)
+	case "mkdir":
+		return runMkdir(specPath, argv, os.Stdout, os.Stderr)
+	case "rmdir":
+		return runRmdir(specPath, argv, os.Stdout, os.Stderr)
+	case "touch":
+		return runTouch(specPath, argv, os.Stdout, os.Stderr)
+	case "ln":
+		return runLn(specPath, argv, os.Stdout, os.Stderr)
+	case "rm":
+		return runRm(specPath, argv, os.Stdout, os.Stderr)
+	case "realpath":
+		return runRealpath(specPath, argv, os.Stdout, os.Stderr)
+	case "tr":
+		return runTr(specPath, argv, os.Stdout, os.Stderr)
+	case "uniq":
+		return runUniq(specPath, argv, os.Stdout, os.Stderr)
+	case "expand":
+		return runExpand(specPath, argv, os.Stdout, os.Stderr)
+	case "unexpand":
+		return runUnexpand(specPath, argv, os.Stdout, os.Stderr)
+	case "fold":
+		return runFold(specPath, argv, os.Stdout, os.Stderr)
+	case "nl":
+		return runNl(specPath, argv, os.Stdout, os.Stderr)
 	default:
 		fmt.Fprintf(os.Stderr, "unix-tools: unknown tool: %s\n", toolName)
 		fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)

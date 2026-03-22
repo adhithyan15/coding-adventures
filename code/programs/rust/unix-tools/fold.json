@@ -1,0 +1,46 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "fold",
+  "display_name": "fold",
+  "description": "Wrap each input line to fit in specified width",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "bytes",
+      "short": "b",
+      "long": "bytes",
+      "description": "Count bytes rather than columns",
+      "type": "boolean"
+    },
+    {
+      "id": "spaces",
+      "short": "s",
+      "long": "spaces",
+      "description": "Break at spaces",
+      "type": "boolean"
+    },
+    {
+      "id": "width",
+      "short": "w",
+      "long": "width",
+      "description": "Use WIDTH columns instead of 80",
+      "type": "integer",
+      "value_name": "WIDTH",
+      "default": 80
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to fold. Use '-' for stdin.",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "-"
+    }
+  ],
+  "commands": []
+}

@@ -45,6 +45,18 @@ pub mod seq_tool;
 pub mod tee_tool;
 pub mod rev_tool;
 pub mod printenv_tool;
+pub mod mkdir_tool;
+pub mod rmdir_tool;
+pub mod touch_tool;
+pub mod ln_tool;
+pub mod rm_tool;
+pub mod realpath_tool;
+pub mod tr_tool;
+pub mod uniq_tool;
+pub mod expand_tool;
+pub mod unexpand_tool;
+pub mod fold_tool;
+pub mod nl_tool;
 
 // ---------------------------------------------------------------------------
 // pwd — Print Working Directory
