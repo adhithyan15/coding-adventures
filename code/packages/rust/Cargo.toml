@@ -77,6 +77,8 @@ members = [
     "toml-lexer",
     "toml-parser",
     "transistors",
+    "block-ram",
+    "fpga",
     "tree",
     "typescript-lexer",
     "typescript-parser",
