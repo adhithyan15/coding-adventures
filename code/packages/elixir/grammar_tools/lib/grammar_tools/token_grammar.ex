@@ -326,13 +326,101 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
 
   defp parse_pattern_with_alias(name, rest, line_number) do
     # Check for alias: pattern -> ALIAS
-    {pattern_str, alias_name} =
-      case String.split(rest, "->", parts: 2) do
-        [pat, ali] -> {String.trim(pat), String.trim(ali)}
-        _ -> {rest, nil}
-      end
-
+    #
+    # We must be careful not to confuse "->" inside a regex pattern with
+    # the alias separator. Strategy: find the closing delimiter first
+    # (/ for regex, " for literal), then check for -> in the remainder.
+    {pattern_str, alias_name} = split_pattern_and_alias(rest)
     parse_pattern(name, pattern_str, line_number, alias_name)
+  end
+
+  # Find the closing delimiter of the pattern, then check for -> alias
+  # in whatever follows. This avoids incorrectly splitting on -> that
+  # appears inside a regex (e.g., /([^-]|-(?!->))+/).
+  defp split_pattern_and_alias(rest) do
+    cond do
+      String.starts_with?(rest, "/") ->
+        # Regex pattern — find the closing /
+        # Start searching from index 1 (after the opening /)
+        case find_closing_slash(rest, 1) do
+          nil ->
+            # No closing slash found — return as-is, let parse_pattern error
+            {rest, nil}
+
+          close_idx ->
+            pattern = String.slice(rest, 0, close_idx + 1)
+            remainder = String.trim(String.slice(rest, (close_idx + 1)..-1//1))
+            extract_alias(pattern, remainder)
+        end
+
+      String.starts_with?(rest, "\"") ->
+        # Literal pattern — find the closing "
+        case find_closing_quote(rest, 1) do
+          nil ->
+            {rest, nil}
+
+          close_idx ->
+            pattern = String.slice(rest, 0, close_idx + 1)
+            remainder = String.trim(String.slice(rest, (close_idx + 1)..-1//1))
+            extract_alias(pattern, remainder)
+        end
+
+      true ->
+        # Neither regex nor literal — return as-is for error handling
+        {rest, nil}
+    end
+  end
+
+  # Find the index of the closing / in a regex pattern (skipping escaped ones)
+  defp find_closing_slash(str, idx) when idx >= byte_size(str), do: nil
+
+  defp find_closing_slash(str, idx) do
+    ch = binary_part(str, idx, 1)
+
+    cond do
+      ch == "\\" and idx + 1 < byte_size(str) ->
+        # Escaped character — skip next
+        find_closing_slash(str, idx + 2)
+
+      ch == "/" ->
+        idx
+
+      true ->
+        find_closing_slash(str, idx + 1)
+    end
+  end
+
+  # Find the index of the closing " in a literal pattern (skipping escaped ones)
+  defp find_closing_quote(str, idx) when idx >= byte_size(str), do: nil
+
+  defp find_closing_quote(str, idx) do
+    ch = binary_part(str, idx, 1)
+
+    cond do
+      ch == "\\" and idx + 1 < byte_size(str) ->
+        find_closing_quote(str, idx + 2)
+
+      ch == "\"" ->
+        idx
+
+      true ->
+        find_closing_quote(str, idx + 1)
+    end
+  end
+
+  # Extract alias from remainder after closing delimiter
+  defp extract_alias(pattern, remainder) do
+    if String.starts_with?(remainder, "->") do
+      alias_name = String.trim(String.slice(remainder, 2..-1//1))
+
+      if alias_name == "" do
+        {pattern, nil}
+      else
+        {pattern, alias_name}
+      end
+    else
+      {pattern, nil}
+    end
   end
 
   defp parse_pattern(name, pattern_str, line_number, alias_name) do
