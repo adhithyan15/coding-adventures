@@ -315,3 +315,30 @@ When a TypeScript package has `file:` deps (e.g., `"@coding-adventures/lexer": "
 Additionally, do NOT use `cd ../dep && npm ci` chain patterns in BUILD files — the build tool runs packages in parallel, and two packages running `npm ci` on the same shared dependency simultaneously causes esbuild install conflicts. Instead, use simple `npm ci --quiet` + `npx vitest run` patterns (matching starlark-lexer/starlark-parser BUILD convention) and list all transitive `file:` deps directly in package.json.
 
 **Rule:** TypeScript BUILD files should be `npm ci --quiet\nnpx vitest run --coverage`. All transitive `file:` deps must be listed as direct deps in package.json.
+
+---
+
+### 2026-03-22: TypeScript JSDoc comments must not contain unescaped glob patterns
+
+When writing JSDoc/TSDoc comments in TypeScript, never include raw glob patterns like `src/**/*.py` in `@example` blocks. The `**` sequence confuses esbuild's parser which treats the `*` after `*/` as a syntax error inside the comment block. This caused the TypeScript build-tool CI to fail with "Unexpected `*`" on the starlark-evaluator.ts JSDoc example.
+
+**Rule:** In TSDoc `@example` blocks, either:
+- Omit glob patterns entirely
+- Use escaped/simplified patterns (e.g., `"src/*.py"` instead of `"src/**/*.py"`)
+- Use backtick code fences within the comment
+
+---
+
+### 2026-03-22: Adding new source files without tests drops coverage below threshold
+
+When adding a new source module to an existing package (e.g., `starlark_evaluator.py` to the Python build-tool), coverage drops because the new code has 0% coverage. The Python build-tool has `fail_under=80` in its pytest-cov config. Adding ~150 lines of untested code dropped coverage from 83% to 77%.
+
+**Rule:** Every new source file must have a corresponding test file in the same commit. Plan tests alongside implementation, not as an afterthought.
+
+---
+
+### 2026-03-22: Elixir Starlark compiler may infinite-loop on certain inputs
+
+The Elixir Starlark AST-to-bytecode compiler can get stuck in an infinite loop in `skip_newlines/1` when processing certain Starlark source patterns (particularly inline target declarations). Integration tests that call `evaluate_build_file` through the full interpreter pipeline should use `@tag timeout: :infinity` or be skipped entirely to avoid blocking CI for 60+ seconds.
+
+**Rule:** When adding integration tests that exercise the full Starlark interpreter pipeline in Elixir, either skip them or set generous timeouts. Unit tests for detection, command generation, and extraction helpers should not need the interpreter.
