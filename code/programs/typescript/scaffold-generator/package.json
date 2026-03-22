@@ -1,0 +1,20 @@
+{
+  "name": "scaffold-generator",
+  "version": "1.0.0",
+  "description": "Generate CI-ready package scaffolding for the coding-adventures monorepo",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
