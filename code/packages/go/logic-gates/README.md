@@ -39,6 +39,21 @@ Multi-input gates:
 - `ANDn(inputs...)` -- N-input AND (all must be 1)
 - `ORn(inputs...)` -- N-input OR (any must be 1)
 
+### Combinational Circuits (`combinational.go`)
+
+Higher-level circuits built from primitive gates:
+
+| Circuit | Description |
+|---------|-------------|
+| `Mux2(d0, d1, sel)` | 2:1 multiplexer |
+| `Mux4(d0, d1, d2, d3, sel)` | 4:1 multiplexer (tree of 2:1 MUXes) |
+| `MuxN(inputs, sel)` | N:1 recursive multiplexer (N must be power of 2) |
+| `Demux(data, sel, nOutputs)` | 1-to-N demultiplexer |
+| `Decoder(inputs)` | N-to-2^N decoder (binary to one-hot) |
+| `Encoder(inputs)` | 2^N-to-N encoder (one-hot to binary) |
+| `PriorityEncoder(inputs)` | Priority encoder (highest active wins) |
+| `TriState(data, enable)` | Tri-state buffer (returns `*int`, nil = high-Z) |
+
 ### Sequential Logic (`sequential.go`)
 
 Six sequential components that build on each other:
