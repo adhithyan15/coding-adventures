@@ -14,7 +14,7 @@
 #
 # Tiered strategy:
 # - Every push: Linux only (fast feedback)
-# - PRs to main: Linux + macOS (thorough validation)
+# - PRs to main: Linux + macOS + Windows (thorough validation)
 
 name: CI
 
@@ -33,7 +33,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest"]') || fromJSON('["ubuntu-latest"]') }}
+        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -65,6 +65,7 @@ jobs:
           bundler-cache: false
 
       - name: Install bundler
+        shell: bash
         run: gem install bundler
 
       - name: Set up Node.js
@@ -76,23 +77,27 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-tarpaulin
+        if: runner.os == 'Linux'
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
+        if: runner.os != 'Windows'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16'
           otp-version: '26.0'
 
       - name: Install test runners
+        shell: bash
         run: |
           uv pip install --system pytest
           npm install -g jest
 
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
+        shell: bash
         run: |
-          echo "Python: $(python3 --version)"
+          echo "Python: $(python --version)"
           echo "uv: $(uv --version)"
           echo "Ruby: $(ruby --version)"
           echo "Bundler: $(bundle --version)"
@@ -101,18 +106,28 @@ jobs:
           echo "npm: $(npm --version)"
           echo "Rust: $(rustc --version)"
           echo "Cargo: $(cargo --version)"
-          echo "Elixir: $(elixir --version)"
-          echo "Mix: $(mix --version)"
+          if command -v elixir &>/dev/null; then
+            echo "Elixir: $(elixir --version)"
+            echo "Mix: $(mix --version)"
+          else
+            echo "Elixir: not installed (skipped on this platform)"
+          fi
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
+        shell: bash
         run: |
           cd code/programs/go/build-tool
-          go build -o ../../../../build-tool .
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            go build -o ../../../../build-tool.exe .
+          else
+            go build -o ../../../../build-tool .
+          fi
 
       # ── Determine what to build ───────────────────────────────
       - name: Determine diff base
         id: diff-base
+        shell: bash
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="origin/${{ github.event.pull_request.base.ref }}"
@@ -130,8 +145,10 @@ jobs:
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
+        shell: bash
         run: |
-          ./build-tool \
+          if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
+          $BT \
             -root . \
             -diff-base "${{ steps.diff-base.outputs.base }}" \
             -language all
@@ -139,5 +156,7 @@ jobs:
       # ── Force full build on main ──────────────────────────────
       - name: Full build on main merge
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        shell: bash
         run: |
-          ./build-tool -root . -force -language all
+          if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
+          $BT -root . -force -language all
