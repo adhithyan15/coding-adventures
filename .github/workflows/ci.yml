@@ -81,7 +81,6 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        if: runner.os != 'Windows'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16'
@@ -106,12 +105,8 @@ jobs:
           echo "npm: $(npm --version)"
           echo "Rust: $(rustc --version)"
           echo "Cargo: $(cargo --version)"
-          if command -v elixir &>/dev/null; then
-            echo "Elixir: $(elixir --version)"
-            echo "Mix: $(mix --version)"
-          else
-            echo "Elixir: not installed (skipped on this platform)"
-          fi
+          echo "Elixir: $(elixir --version)"
+          echo "Mix: $(mix --version)"
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
@@ -144,30 +139,14 @@ jobs:
           echo "Diff base: $BASE"
 
       # ── Run the build ─────────────────────────────────────────
-      #
-      # On Windows we force-build everything because Windows CI is new
-      # and we need to validate that all BUILD_windows files actually
-      # work. Once Windows CI is stable, this can switch to diff-based
-      # like Linux and macOS.
       - name: Build and test affected packages
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            # On Windows, skip Elixir (erlef/setup-beam doesn't support Windows).
-            # Run each supported language separately.
-            for lang in python ruby go rust typescript; do
-              echo "=== Building $lang packages ==="
-              $BT -root . \
-                -diff-base "${{ steps.diff-base.outputs.base }}" \
-                -language "$lang"
-            done
-          else
-            $BT \
-              -root . \
-              -diff-base "${{ steps.diff-base.outputs.base }}" \
-              -language all
-          fi
+          $BT \
+            -root . \
+            -diff-base "${{ steps.diff-base.outputs.base }}" \
+            -language all
 
       # ── Force full build on main ──────────────────────────────
       - name: Full build on main merge
