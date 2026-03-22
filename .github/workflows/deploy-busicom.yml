@@ -2,12 +2,14 @@
 # Deploy Busicom 141-PF Calculator to GitHub Pages
 # ================================================================
 #
-# Builds the Vite app and deploys it to the gh-pages branch
-# under the busicom/ subdirectory, preserving any other content
-# already on GitHub Pages.
+# Builds the Vite app and deploys it using GitHub's native Pages
+# deployment (actions/upload-pages-artifact + actions/deploy-pages).
 #
 # The app is deployed to:
 #   https://<user>.github.io/coding-adventures/busicom/
+#
+# Note: The Vite base path is set to /coding-adventures/busicom/
+# in vite.config.ts so all asset URLs resolve correctly.
 
 name: Deploy Busicom Calculator
 
@@ -21,11 +23,21 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Only allow one deployment at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,10 +65,14 @@ jobs:
           cd code/programs/typescript/busicom-calculator
           npm run build
 
-      - name: Deploy to GitHub Pages (busicom/ subdirectory)
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: code/programs/typescript/busicom-calculator/dist
-          destination_dir: busicom
-          keep_files: true
+          path: code/programs/typescript/busicom-calculator/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
