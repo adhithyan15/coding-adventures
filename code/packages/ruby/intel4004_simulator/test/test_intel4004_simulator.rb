@@ -857,7 +857,8 @@ module CodingAdventures
           0xE9,             # RDM -> ram[0][0][0]=0
           0x01
         ))
-        13.times { @sim.step }
+        # Steps: LDM DCL FIM SRC LDM WRM LDM DCL FIM SRC RDM = 11
+        11.times { @sim.step }
         assert_equal 0, @sim.accumulator
         assert_equal 7, @sim.ram[1][0][0]
       end
