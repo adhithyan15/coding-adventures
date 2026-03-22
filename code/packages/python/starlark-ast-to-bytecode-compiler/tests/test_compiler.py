@@ -797,3 +797,906 @@ class TestCompilationErrors:
         """continue outside a for loop should raise SyntaxError."""
         with pytest.raises(SyntaxError, match="continue"):
             compile_starlark("continue\n")
+
+
+# =========================================================================
+# Test: Load Statements
+# =========================================================================
+
+
+class TestLoadStatements:
+    """Test compilation of load() statements."""
+
+    def test_load_single_symbol(self):
+        """load('mod.star', 'sym') produces LOAD_MODULE + IMPORT_FROM."""
+        code = compile('load("mod.star", "sym")\n')
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_MODULE in ops
+        assert Op.IMPORT_FROM in ops
+        assert "mod.star" in code.names
+        assert "sym" in code.names
+
+    def test_load_multiple_symbols(self):
+        """load('mod.star', 'a', 'b') produces multiple IMPORT_FROM."""
+        code = compile('load("mod.star", "a", "b")\n')
+        ops = [i.opcode for i in code.instructions]
+        import_count = ops.count(Op.IMPORT_FROM)
+        assert import_count >= 2
+        assert "a" in code.names
+        assert "b" in code.names
+
+
+# =========================================================================
+# Test: For Loops with Break and Continue
+# =========================================================================
+
+
+class TestForLoopControl:
+    """Test for loop compilation with break and continue."""
+
+    def test_for_with_break(self):
+        """break inside a for loop emits JUMP past the loop."""
+        code = compile("for x in [1, 2, 3]:\n    break\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.GET_ITER in ops
+        assert Op.FOR_ITER in ops
+        assert Op.JUMP in ops
+
+    def test_for_with_continue(self):
+        """continue inside a for loop emits JUMP back to loop top."""
+        code = compile("for x in [1, 2, 3]:\n    continue\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.GET_ITER in ops
+        assert Op.FOR_ITER in ops
+
+    def test_for_with_break_and_continue(self):
+        """Combined break and continue in a loop."""
+        code = compile(
+            "for x in [1, 2, 3]:\n"
+            "    if x == 1:\n"
+            "        continue\n"
+            "    if x == 3:\n"
+            "        break\n"
+        )
+        ops = [i.opcode for i in code.instructions]
+        assert Op.GET_ITER in ops
+        assert Op.FOR_ITER in ops
+
+
+# =========================================================================
+# Test: Function Parameters — Defaults, Varargs, Kwargs
+# =========================================================================
+
+
+class TestFunctionParameters:
+    """Test compilation of various function parameter styles."""
+
+    def test_default_parameter(self):
+        """def f(x=1) should compile default value."""
+        code = compile("def f(x=1):\n    return x\n")
+        # Default value 1 should be in constants
+        assert 1 in code.constants
+
+    def test_multiple_defaults(self):
+        """def f(x=1, y=2) — multiple default values."""
+        code = compile("def f(x=1, y=2):\n    return x + y\n")
+        assert 1 in code.constants
+        assert 2 in code.constants
+
+    def test_varargs_parameter(self):
+        """def f(*args) — varargs parameter."""
+        code = compile("def f(*args):\n    return args\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+
+    def test_kwargs_parameter(self):
+        """def f(**kwargs) — keyword arguments parameter."""
+        code = compile("def f(**kwargs):\n    return kwargs\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+
+    def test_mixed_params(self):
+        """def f(a, b=1, *args) — mixed parameters."""
+        code = compile("def f(a, b=1, *args):\n    return a\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+
+
+# =========================================================================
+# Test: If/Elif/Else Compilation
+# =========================================================================
+
+
+class TestIfElifElse:
+    """Test compilation of if/elif/else chains."""
+
+    def test_if_elif(self):
+        """if/elif produces correct jumps."""
+        code = compile(
+            "if x == 1:\n"
+            "    y = 1\n"
+            "elif x == 2:\n"
+            "    y = 2\n"
+        )
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_EQ in ops
+        assert Op.JUMP_IF_FALSE in ops
+
+    def test_if_elif_else(self):
+        """if/elif/else produces correct jumps."""
+        code = compile(
+            "if x == 1:\n"
+            "    y = 1\n"
+            "elif x == 2:\n"
+            "    y = 2\n"
+            "else:\n"
+            "    y = 3\n"
+        )
+        ops = [i.opcode for i in code.instructions]
+        assert ops.count(Op.CMP_EQ) >= 2
+        assert ops.count(Op.JUMP_IF_FALSE) >= 2
+
+
+# =========================================================================
+# Test: Ternary Expressions
+# =========================================================================
+
+
+class TestTernaryExpressions:
+    """Test compilation of ternary if/else expressions."""
+
+    def test_simple_ternary(self):
+        """x if True else y — ternary expression."""
+        code = compile("result = 1 if True else 0\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.JUMP_IF_FALSE in ops
+        assert Op.JUMP in ops
+
+    def test_nested_ternary(self):
+        """Nested ternary expression."""
+        code = compile("result = 1 if x else (2 if y else 3)\n")
+        ops = [i.opcode for i in code.instructions]
+        assert ops.count(Op.JUMP_IF_FALSE) >= 2
+
+
+# =========================================================================
+# Test: Boolean Operators
+# =========================================================================
+
+
+class TestBooleanOperators:
+    """Test compilation of and/or/not operators."""
+
+    def test_or_expression(self):
+        """a or b uses short-circuit evaluation."""
+        code = compile("result = a or b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.JUMP_IF_TRUE_OR_POP in ops
+
+    def test_chained_or(self):
+        """a or b or c — chained or."""
+        code = compile("result = a or b or c\n")
+        ops = [i.opcode for i in code.instructions]
+        assert ops.count(Op.JUMP_IF_TRUE_OR_POP) >= 2
+
+    def test_and_expression(self):
+        """a and b uses short-circuit evaluation."""
+        code = compile("result = a and b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.JUMP_IF_FALSE_OR_POP in ops
+
+    def test_chained_and(self):
+        """a and b and c — chained and."""
+        code = compile("result = a and b and c\n")
+        ops = [i.opcode for i in code.instructions]
+        assert ops.count(Op.JUMP_IF_FALSE_OR_POP) >= 2
+
+    def test_not_expression(self):
+        """not x compiles to NOT opcode."""
+        code = compile("result = not x\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.NOT in ops
+
+    def test_combined_and_or(self):
+        """(a or b) and c — combined boolean operators."""
+        code = compile("result = (a or b) and c\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.JUMP_IF_TRUE_OR_POP in ops
+        assert Op.JUMP_IF_FALSE_OR_POP in ops
+
+
+# =========================================================================
+# Test: Comparison Operators
+# =========================================================================
+
+
+class TestComparisonOperators:
+    """Test compilation of comparison operators."""
+
+    def test_in_operator(self):
+        """x in lst compiles to CMP_IN."""
+        code = compile("result = x in [1, 2, 3]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_IN in ops
+
+    def test_not_in_operator(self):
+        """x not in lst compiles to CMP_NOT_IN."""
+        code = compile("result = x not in [1, 2]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_NOT_IN in ops
+
+    def test_less_than(self):
+        code = compile("result = a < b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_LT in ops
+
+    def test_greater_equal(self):
+        code = compile("result = a >= b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_GE in ops
+
+    def test_less_equal(self):
+        code = compile("result = a <= b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_LE in ops
+
+
+# =========================================================================
+# Test: Arithmetic and Unary Operators
+# =========================================================================
+
+
+class TestArithmeticOperators:
+    """Test compilation of arithmetic and unary operators."""
+
+    def test_floor_division(self):
+        code = compile("result = a // b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.FLOOR_DIV in ops
+
+    def test_modulo(self):
+        code = compile("result = a % b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MOD in ops
+
+    def test_power(self):
+        code = compile("result = a ** 2\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.POWER in ops
+
+    def test_unary_negate(self):
+        code = compile("result = -x\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.NEGATE in ops
+
+    def test_bit_not(self):
+        code = compile("result = ~x\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BIT_NOT in ops
+
+    def test_left_shift(self):
+        code = compile("result = x << 2\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LSHIFT in ops
+
+    def test_right_shift(self):
+        code = compile("result = x >> 2\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.RSHIFT in ops
+
+    def test_bit_and(self):
+        code = compile("result = a & b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BIT_AND in ops
+
+    def test_bit_or(self):
+        code = compile("result = a | b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BIT_OR in ops
+
+    def test_bit_xor(self):
+        code = compile("result = a ^ b\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BIT_XOR in ops
+
+
+# =========================================================================
+# Test: Subscript and Slicing
+# =========================================================================
+
+
+class TestSubscriptAndSlicing:
+    """Test compilation of subscript access and slicing."""
+
+    def test_simple_subscript(self):
+        """lst[0] compiles to LOAD_SUBSCRIPT."""
+        code = compile("result = lst[0]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SUBSCRIPT in ops
+
+    @pytest.mark.skip(reason="Complex assignment targets not yet implemented")
+    def test_store_subscript(self):
+        """lst[0] = 1 compiles to STORE_SUBSCRIPT."""
+        code = compile("lst[0] = 1\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.STORE_SUBSCRIPT in ops
+
+    @pytest.mark.skip(reason="Slice syntax not yet supported by parser")
+    def test_slice_start_end(self):
+        """lst[1:3] compiles to LOAD_SLICE."""
+        code = compile("result = lst[1:3]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SLICE in ops
+
+    @pytest.mark.skip(reason="Slice syntax not yet supported by parser")
+    def test_slice_start_only(self):
+        """lst[1:] compiles with slice support."""
+        code = compile("result = lst[1:]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SLICE in ops
+
+    @pytest.mark.skip(reason="Slice syntax not yet supported by parser")
+    def test_slice_end_only(self):
+        """lst[:3] compiles with slice support."""
+        code = compile("result = lst[:3]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SLICE in ops
+
+    @pytest.mark.skip(reason="Slice syntax not yet supported by parser")
+    def test_slice_full(self):
+        """lst[:] compiles with slice support."""
+        code = compile("result = lst[:]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SLICE in ops
+
+    @pytest.mark.skip(reason="Slice syntax not yet supported by parser")
+    def test_slice_with_step(self):
+        """lst[::2] compiles with slice support."""
+        code = compile("result = lst[::2]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SLICE in ops
+
+    @pytest.mark.skip(reason="Slice syntax not yet supported by parser")
+    def test_slice_all_parts(self):
+        """lst[1:3:2] compiles with slice support."""
+        code = compile("result = lst[1:3:2]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SLICE in ops
+
+
+# =========================================================================
+# Test: Attribute Access
+# =========================================================================
+
+
+class TestAttributeAccess:
+    """Test compilation of attribute access and store."""
+
+    def test_load_attribute(self):
+        """obj.attr compiles to LOAD_ATTR."""
+        code = compile("result = obj.attr\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_ATTR in ops
+
+    @pytest.mark.skip(reason="Complex assignment targets not yet implemented")
+    def test_store_attribute(self):
+        """obj.attr = 1 compiles to STORE_ATTR."""
+        code = compile("obj.attr = 1\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.STORE_ATTR in ops
+
+
+# =========================================================================
+# Test: List Comprehensions
+# =========================================================================
+
+
+class TestListComprehensions:
+    """Test compilation of list comprehensions."""
+
+    def test_simple_comprehension(self):
+        """[x for x in lst] produces BUILD_LIST + GET_ITER + FOR_ITER."""
+        code = compile("[x for x in range(5)]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_LIST in ops
+        assert Op.GET_ITER in ops
+        assert Op.FOR_ITER in ops
+
+    def test_comprehension_with_filter(self):
+        """[x for x in lst if x > 0] includes JUMP_IF_FALSE."""
+        code = compile("[x for x in range(10) if x > 5]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_LIST in ops
+        assert Op.JUMP_IF_FALSE in ops
+
+
+# =========================================================================
+# Test: Dict Literals and Comprehensions
+# =========================================================================
+
+
+class TestDictCompilation:
+    """Test compilation of dict literals and comprehensions."""
+
+    def test_empty_dict(self):
+        """Empty dict {} compiles to BUILD_DICT."""
+        code = compile("d = {}\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_DICT in ops
+
+    def test_dict_with_entries(self):
+        """Dict with entries compiles key-value pairs + BUILD_DICT."""
+        code = compile('d = {"a": 1, "b": 2}\n')
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_DICT in ops
+
+
+# =========================================================================
+# Test: Augmented Assignment
+# =========================================================================
+
+
+class TestAugmentedAssignment:
+    """Test compilation of augmented assignment operators."""
+
+    def test_plus_equals(self):
+        """x += 1 compiles to LOAD + ADD + STORE."""
+        code = compile("x = 0\nx += 1\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.ADD in ops
+
+    def test_minus_equals(self):
+        """x -= 1 compiles to LOAD + SUB + STORE."""
+        code = compile("x = 0\nx -= 1\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.SUB in ops
+
+    def test_times_equals(self):
+        """x *= 2 compiles to LOAD + MUL + STORE."""
+        code = compile("x = 1\nx *= 2\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MUL in ops
+
+
+# =========================================================================
+# Test: Keyword Argument Compilation (CPython Convention)
+# =========================================================================
+
+
+class TestKeywordArgCompilation:
+    """Test that keyword arguments compile to the CPython convention."""
+
+    def test_kw_arg_produces_names_tuple(self):
+        """f(x=1) should push a names tuple ('x',) as a constant."""
+        code = compile("f(x=1)\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CALL_FUNCTION_KW in ops
+        # The keyword names tuple should be in the constants
+        found = any(c == ("x",) for c in code.constants)
+        assert found, f"Expected ('x',) in constants, got {code.constants}"
+
+    def test_multiple_kw_args_names_tuple(self):
+        """f(a=1, b=2) should push ('a', 'b') as constant."""
+        code = compile("f(a=1, b=2)\n")
+        found = any(c == ("a", "b") for c in code.constants)
+        assert found, f"Expected ('a', 'b') in constants, got {code.constants}"
+
+    def test_mixed_pos_and_kw(self):
+        """f(1, x=2) emits CALL_FUNCTION_KW with argc=2."""
+        code = compile("f(1, x=2)\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CALL_FUNCTION_KW in ops
+        # Find the CALL_FUNCTION_KW instruction and check operand
+        for instr in code.instructions:
+            if instr.opcode == Op.CALL_FUNCTION_KW:
+                assert instr.operand == 2
+                break
+
+    def test_param_names_tuple_in_function(self):
+        """def f(a, b): ... should push ('a', 'b') as param_names."""
+        code = compile("def f(a, b):\n    return a + b\n")
+        # The param names tuple should be in the constants
+        found = any(c == ("a", "b") for c in code.constants)
+        assert found, f"Expected ('a', 'b') in constants, got {code.constants}"
+
+
+# =========================================================================
+# Test: Load Statement with Alias
+# =========================================================================
+
+
+class TestLoadAlias:
+    """Test load() with aliased imports: load('file', alias = 'symbol')."""
+
+    def test_load_alias(self):
+        """load('file.star', my_fn = 'orig_fn') emits IMPORT_FROM + STORE_NAME for alias."""
+        code = compile('load("//rules.star", my_fn = "orig_fn")\n')
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_MODULE in ops
+        assert Op.IMPORT_FROM in ops
+        # Both the original name and alias should be in names
+        assert "orig_fn" in code.names
+        assert "my_fn" in code.names
+
+
+# =========================================================================
+# Test: Tuple Unpacking in For Loops
+# =========================================================================
+
+
+class TestForLoopUnpacking:
+    """Test for loops with tuple unpacking: for x, y in pairs."""
+
+    def test_for_tuple_unpack(self):
+        """for x, y in pairs: ... emits UNPACK_SEQUENCE."""
+        code = compile("for x, y in pairs:\n    z = x\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.UNPACK_SEQUENCE in ops
+
+
+# =========================================================================
+# Test: Expression List (Tuple Creation)
+# =========================================================================
+
+
+class TestExpressionList:
+    """Test that expression lists create tuples."""
+
+    def test_tuple_assignment(self):
+        """x = 1, 2, 3 creates a tuple via BUILD_TUPLE."""
+        code = compile("x = 1, 2, 3\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_TUPLE in ops
+
+    def test_single_trailing_comma(self):
+        """x = 1, creates a single-element tuple."""
+        code = compile("x = 1,\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_TUPLE in ops
+
+
+# =========================================================================
+# Test: Literal Values (True, False, None)
+# =========================================================================
+
+
+class TestLiteralValues:
+    """Test compilation of True, False, None."""
+
+    def test_true_literal(self):
+        """x = True emits LOAD_TRUE."""
+        code = compile("x = True\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_TRUE in ops
+
+    def test_false_literal(self):
+        """x = False emits LOAD_FALSE."""
+        code = compile("x = False\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_FALSE in ops
+
+    def test_none_literal(self):
+        """x = None emits LOAD_NONE."""
+        code = compile("x = None\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_NONE in ops
+
+
+# =========================================================================
+# Test: Adjacent String Concatenation
+# =========================================================================
+
+
+class TestStringConcatenation:
+    """Test compile-time string concatenation."""
+
+    def test_adjacent_strings(self):
+        """'hello' 'world' concatenates at compile time."""
+        code = compile('x = "hello" "world"\n')
+        # Should have concatenated string in constants
+        assert "helloworld" in code.constants
+
+
+# =========================================================================
+# Test: Unary Operators
+# =========================================================================
+
+
+class TestUnaryOperators:
+    """Test compilation of unary operators."""
+
+    def test_negate(self):
+        """x = -5 emits NEGATE."""
+        code = compile("x = -y\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.NEGATE in ops
+
+    def test_bitwise_not(self):
+        """x = ~y emits BIT_NOT."""
+        code = compile("x = ~y\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BIT_NOT in ops
+
+    def test_unary_plus(self):
+        """x = +y is a no-op (just loads y)."""
+        code = compile("x = +y\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_NAME in ops
+        # No NEGATE should be present
+        assert Op.NEGATE not in ops
+
+
+# =========================================================================
+# Test: Paren Expressions and Tuples
+# =========================================================================
+
+
+class TestParenExpressions:
+    """Test parenthesized expressions and tuples."""
+
+    def test_empty_tuple(self):
+        """x = () creates empty tuple."""
+        code = compile("x = ()\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_TUPLE in ops
+        for instr in code.instructions:
+            if instr.opcode == Op.BUILD_TUPLE:
+                assert instr.operand == 0
+                break
+
+    def test_paren_tuple(self):
+        """x = (1, 2) creates a tuple."""
+        code = compile("x = (1, 2)\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_TUPLE in ops
+
+    def test_single_paren(self):
+        """x = (1) is just parenthesized, not a tuple."""
+        code = compile("x = (1)\n")
+        ops = [i.opcode for i in code.instructions]
+        # Should NOT have BUILD_TUPLE
+        assert Op.BUILD_TUPLE not in ops
+
+    def test_single_element_tuple(self):
+        """x = (1,) creates a single-element tuple."""
+        code = compile("x = (1,)\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_TUPLE in ops
+
+
+# =========================================================================
+# Test: Dict Literals
+# =========================================================================
+
+
+class TestDictLiterals:
+    """Test compilation of dict literals."""
+
+    def test_empty_dict(self):
+        """x = {} creates empty dict."""
+        code = compile("x = {}\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_DICT in ops
+        for instr in code.instructions:
+            if instr.opcode == Op.BUILD_DICT:
+                assert instr.operand == 0
+                break
+
+    def test_dict_with_entries(self):
+        """x = {'a': 1, 'b': 2} creates dict with 2 entries."""
+        code = compile('x = {"a": 1, "b": 2}\n')
+        ops = [i.opcode for i in code.instructions]
+        assert Op.BUILD_DICT in ops
+
+    def test_dict_string_keys(self):
+        """Dict keys are in constants."""
+        code = compile('x = {"key": 42}\n')
+        assert "key" in code.constants
+        assert 42 in code.constants
+
+
+# =========================================================================
+# Test: While Loop
+# =========================================================================
+
+
+class TestWhileLoop:
+    """Test compilation of while loops (Starlark doesn't have while, test for loops instead)."""
+
+    def test_for_loop_has_jump(self):
+        """for x in lst: ... emits FOR_ITER + JUMP loop."""
+        code = compile("for x in lst:\n    y = x\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.FOR_ITER in ops
+        assert Op.JUMP in ops
+
+
+# =========================================================================
+# Test: Return Statement
+# =========================================================================
+
+
+class TestReturnStatement:
+    """Test compilation of return statements."""
+
+    def test_return_value(self):
+        """return x emits LOAD_NAME + RETURN."""
+        code = compile("def f():\n    return 42\n")
+        # The nested function code should have RETURN
+        for const in code.constants:
+            if hasattr(const, 'instructions'):
+                inner_ops = [i.opcode for i in const.instructions]
+                assert Op.RETURN in inner_ops
+                break
+
+    def test_return_none(self):
+        """Bare return emits LOAD_NONE + RETURN."""
+        code = compile("def f():\n    return\n")
+        for const in code.constants:
+            if hasattr(const, 'instructions'):
+                inner_ops = [i.opcode for i in const.instructions]
+                assert Op.RETURN in inner_ops
+                assert Op.LOAD_NONE in inner_ops
+                break
+
+
+# =========================================================================
+# Test: Pass Statement
+# =========================================================================
+
+
+class TestPassStatement:
+    """Test compilation of pass statements."""
+
+    def test_pass_compiles(self):
+        """pass compiles without error."""
+        code = compile("pass\n")
+        # pass should produce at least a HALT instruction
+        assert len(code.instructions) >= 1
+
+
+# =========================================================================
+# Test: Multiple Statements
+# =========================================================================
+
+
+class TestMultipleStatements:
+    """Test compilation of multi-line programs."""
+
+    def test_sequential_assignments(self):
+        """Multiple assignments compile sequentially."""
+        code = compile("x = 1\ny = 2\nz = 3\n")
+        store_count = sum(1 for i in code.instructions if i.opcode == Op.STORE_NAME)
+        assert store_count == 3
+
+    def test_function_and_call(self):
+        """def f(): ... then f() both compile."""
+        code = compile("def f():\n    return 1\nresult = f()\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+        assert Op.CALL_FUNCTION in ops
+
+
+# =========================================================================
+# Test: Lambda Expressions
+# =========================================================================
+
+
+class TestLambdaExpressions:
+    """Test compilation of lambda expressions."""
+
+    def test_simple_lambda(self):
+        """f = lambda x: x + 1 compiles to MAKE_FUNCTION."""
+        code = compile("f = lambda x: x + 1\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+
+    def test_lambda_no_args(self):
+        """f = lambda: 42 compiles."""
+        code = compile("f = lambda: 42\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+
+    def test_lambda_multiple_args(self):
+        """f = lambda x, y: x + y compiles."""
+        code = compile("f = lambda x, y: x + y\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.MAKE_FUNCTION in ops
+
+
+# =========================================================================
+# Test: List Comprehension with Filter
+# =========================================================================
+
+
+class TestListComprehensionFilter:
+    """Test list comprehensions with if clauses."""
+
+    def test_comp_with_if(self):
+        """[x for x in lst if x > 0] emits JUMP_IF_FALSE for filter."""
+        code = compile("result = [x for x in lst if x > 0]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.JUMP_IF_FALSE in ops
+        assert Op.GET_ITER in ops
+        assert Op.FOR_ITER in ops
+        assert Op.LIST_APPEND in ops
+
+
+# =========================================================================
+# Test: String Escape Sequences
+# =========================================================================
+
+
+class TestStringEscapes:
+    """Test string literal parsing with escape sequences."""
+
+    def test_newline_escape(self):
+        """'hello\\nworld' has a newline in the constant."""
+        code = compile('x = "hello\\nworld"\n')
+        assert "hello\nworld" in code.constants
+
+    def test_tab_escape(self):
+        """'hello\\tworld' has a tab in the constant."""
+        code = compile('x = "hello\\tworld"\n')
+        assert "hello\tworld" in code.constants
+
+    def test_backslash_escape(self):
+        """'hello\\\\world' has a backslash in the constant."""
+        code = compile('x = "hello\\\\world"\n')
+        assert "hello\\world" in code.constants
+
+
+# =========================================================================
+# Test: Complex Expressions
+# =========================================================================
+
+
+class TestComplexExpressions:
+    """Test compilation of complex expressions combining multiple features."""
+
+    def test_nested_function_calls(self):
+        """f(g(x)) compiles with nested CALL_FUNCTION."""
+        code = compile("result = f(g(x))\n")
+        call_count = sum(1 for i in code.instructions if i.opcode == Op.CALL_FUNCTION)
+        assert call_count == 2
+
+    def test_chained_comparison(self):
+        """Comparison operators compile correctly."""
+        code = compile("result = x == y\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_EQ in ops
+
+    def test_not_equal(self):
+        """x != y emits CMP_NE."""
+        code = compile("result = x != y\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.CMP_NE in ops
+
+    def test_method_call(self):
+        """obj.method() compiles to LOAD_ATTR + CALL_FUNCTION."""
+        code = compile("result = obj.method()\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_ATTR in ops
+        assert Op.CALL_FUNCTION in ops
+
+    def test_subscript_access(self):
+        """lst[0] compiles to LOAD_SUBSCRIPT."""
+        code = compile("result = lst[0]\n")
+        ops = [i.opcode for i in code.instructions]
+        assert Op.LOAD_SUBSCRIPT in ops
+
+    def test_function_with_defaults(self):
+        """def f(x, y=10): ... compiles defaults."""
+        code = compile("def f(x, y=10):\n    return x + y\n")
+        # Default value 10 should be in constants
+        assert 10 in code.constants
+
+    def test_for_loop_in_function(self):
+        """For loop inside function uses LOAD_LOCAL."""
+        code = compile("def f(lst):\n    for x in lst:\n        y = x\n    return y\n")
+        for const in code.constants:
+            if hasattr(const, 'instructions'):
+                inner_ops = [i.opcode for i in const.instructions]
+                # Should use LOAD_LOCAL/STORE_LOCAL inside function scope
+                assert Op.STORE_LOCAL in inner_ops or Op.STORE_NAME in inner_ops
+                break
