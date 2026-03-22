@@ -49,19 +49,22 @@
   "arguments": [
     {
       "id": "files",
-      "name": "FILE",
       "description": "Files to count. Use '-' for standard input.",
       "type": "string",
       "required": false,
       "variadic": true,
-      "default": "-"
+      "default": "-",
+      "display_name": "FILE"
     }
   ],
   "commands": [],
   "mutually_exclusive_groups": [
     {
       "id": "byte-char-mode",
-      "flag_ids": ["bytes", "chars"],
+      "flag_ids": [
+        "bytes",
+        "chars"
+      ],
       "required": false
     }
   ]

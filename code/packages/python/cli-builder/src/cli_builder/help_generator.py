@@ -318,7 +318,8 @@ class HelpGenerator:
         Returns:
             Formatted argument usage string.
         """
-        name = arg.get("name", arg.get("id", "ARG"))
+        # Prefer display_name, fall back to name for backward compatibility.
+        name = arg.get("display_name", arg.get("name", arg.get("id", "ARG")))
         required = arg.get("required", True)
         variadic = arg.get("variadic", False)
 

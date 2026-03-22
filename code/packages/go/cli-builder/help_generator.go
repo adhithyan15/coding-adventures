@@ -241,7 +241,11 @@ func (hg *HelpGenerator) buildUsageLine(programName string, isRoot bool) string 
 // argUsageToken returns the usage token for an argument, e.g. "<FILE>",
 // "[FILE]", "<FILE>...", "[FILE...]".
 func argUsageToken(a map[string]any) string {
-	name := stringField(a, "name")
+	// Prefer display_name, fall back to name for backward compatibility.
+	name := stringField(a, "display_name")
+	if name == "" {
+		name = stringField(a, "name")
+	}
 	required := boolField(a, "required", true)
 	variadic := boolField(a, "variadic", false)
 

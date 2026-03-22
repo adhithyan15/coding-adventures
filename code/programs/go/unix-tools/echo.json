@@ -5,17 +5,49 @@
   "description": "Display a line of text",
   "version": "1.0.0",
   "parsing_mode": "posix",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
-    { "id": "no_newline", "short": "n", "description": "Do not output the trailing newline", "type": "boolean" },
-    { "id": "enable_escapes", "short": "e", "description": "Enable interpretation of backslash escapes", "type": "boolean" },
-    { "id": "disable_escapes", "short": "E", "description": "Disable interpretation of backslash escapes (default)", "type": "boolean" }
+    {
+      "id": "no_newline",
+      "short": "n",
+      "description": "Do not output the trailing newline",
+      "type": "boolean"
+    },
+    {
+      "id": "enable_escapes",
+      "short": "e",
+      "description": "Enable interpretation of backslash escapes",
+      "type": "boolean"
+    },
+    {
+      "id": "disable_escapes",
+      "short": "E",
+      "description": "Disable interpretation of backslash escapes (default)",
+      "type": "boolean"
+    }
   ],
   "arguments": [
-    { "id": "strings", "name": "STRING", "description": "Strings to display", "type": "string", "required": false, "variadic": true }
+    {
+      "id": "strings",
+      "description": "Strings to display",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "display_name": "STRING"
+    }
   ],
   "commands": [],
   "mutually_exclusive_groups": [
-    { "id": "escape-mode", "flag_ids": ["enable_escapes", "disable_escapes"], "required": false }
+    {
+      "id": "escape-mode",
+      "flag_ids": [
+        "enable_escapes",
+        "disable_escapes"
+      ],
+      "required": false
+    }
   ]
 }

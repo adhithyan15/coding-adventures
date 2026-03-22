@@ -35,12 +35,12 @@
   "arguments": [
     {
       "id": "name",
-      "name": "NAME",
       "description": "Filenames to strip directory from",
       "type": "string",
       "required": true,
       "variadic": true,
-      "min": 1
+      "min": 1,
+      "display_name": "NAME"
     }
   ],
   "commands": []

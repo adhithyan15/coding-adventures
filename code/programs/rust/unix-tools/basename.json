@@ -5,7 +5,10 @@
   "description": "Strip directory and suffix from filenames",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "multiple",
@@ -32,12 +35,12 @@
   "arguments": [
     {
       "id": "name",
-      "name": "NAME",
       "description": "Filename(s) to strip",
       "type": "string",
       "required": true,
       "variadic": true,
-      "variadic_min": 1
+      "variadic_min": 1,
+      "display_name": "NAME"
     }
   ],
   "commands": [],

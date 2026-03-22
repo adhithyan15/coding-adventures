@@ -169,7 +169,9 @@ pub struct ArgumentDef {
     pub id: String,
 
     /// Display name in help (e.g. `"FILE"`, `"DEST"`).
-    pub name: String,
+    /// Accepts `display_name` (preferred) or `name` (backward compatibility).
+    #[serde(alias = "name")]
+    pub display_name: String,
 
     /// Human-readable description.
     pub description: String,

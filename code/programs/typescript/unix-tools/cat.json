@@ -68,7 +68,7 @@
       "variadic": true,
       "type": "string",
       "default": "-",
-      "name": "FILE"
+      "display_name": "FILE"
     }
   ],
   "commands": []

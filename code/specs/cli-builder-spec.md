@@ -196,7 +196,7 @@ subcommand name.
 ```json
 {
   "id": "source",
-  "name": "SOURCE",
+  "display_name": "SOURCE",
   "description": "Source file or directory to copy",
   "type": "path",
   "required": true,
@@ -212,7 +212,7 @@ subcommand name.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `id` | string | yes | Unique identifier within this scope. Used in output dict keys. |
-| `name` | string | yes | Display name in help (e.g., `"FILE"`, `"DEST"`). Required args shown as `<NAME>`, optional as `[NAME]`. |
+| `display_name` | string | yes | Display name shown in help text (e.g., `"FILE"`, `"DEST"`). Required args shown as `<DISPLAY_NAME>`, optional as `[DISPLAY_NAME]`. |
 | `description` | string | yes | Human-readable description. |
 | `type` | string | yes | Value type (see §3). |
 | `required` | boolean | no | Whether at least one value must be provided. Default: `true`. |
@@ -231,6 +231,11 @@ subcommand name.
    (§6.4) applies.
 3. Optional arguments (`required: false`) may appear in any position in the spec.
    The parser attempts to satisfy them in order but does not error if absent.
+
+**Backward compatibility note:** The `display_name` field was previously called
+`name` in earlier drafts. Implementations should accept both `display_name` and
+`name` for arguments, preferring `display_name` when both are present. New specs
+should always use `display_name`.
 
 ### 2.4 Command Definition
 
@@ -817,10 +822,10 @@ ARGUMENTS
 ```
 
 **Formatting rules:**
-- Required positional arguments: `<NAME>`
-- Optional positional arguments: `[NAME]`
-- Variadic required: `<NAME>...`
-- Variadic optional: `[NAME...]`
+- Required positional arguments: `<DISPLAY_NAME>`
+- Optional positional arguments: `[DISPLAY_NAME]`
+- Variadic required: `<DISPLAY_NAME>...`
+- Variadic optional: `[DISPLAY_NAME...]`
 - Non-boolean flags: `-s, --long <VALUE>` (value_name or the type name uppercased)
 - Boolean flags: `-s, --long`
 - `single_dash_long` flags: `-classpath <VALUE>`
@@ -872,7 +877,7 @@ backslash interpretation, the other disables it).
   "arguments": [
     {
       "id": "string",
-      "name": "STRING",
+      "display_name": "STRING",
       "description": "Text to print",
       "type": "string",
       "required": false,
@@ -987,7 +992,7 @@ makes sense with `-l` (long listing), so it `requires` `-l`.
   "arguments": [
     {
       "id": "path",
-      "name": "PATH",
+      "display_name": "PATH",
       "description": "Directory or file to list",
       "type": "path",
       "required": false,
@@ -1057,7 +1062,7 @@ makes sense with `-l` (long listing), so it `requires` `-l`.
   "arguments": [
     {
       "id": "file",
-      "name": "FILE",
+      "display_name": "FILE",
       "description": "Files to concatenate. If absent or '-', reads from standard input.",
       "type": "path",
       "required": false,
@@ -1093,7 +1098,7 @@ enforced by CLI Builder. The `file` argument type is `path` (not `file`) to perm
   "arguments": [
     {
       "id": "file",
-      "name": "FILE",
+      "display_name": "FILE",
       "description": "Files to count. If absent, reads from standard input.",
       "type": "path",
       "required": false,
@@ -1130,7 +1135,7 @@ argument is always the destination.
   "arguments": [
     {
       "id": "source",
-      "name": "SOURCE",
+      "display_name": "SOURCE",
       "description": "Source file(s) or directory",
       "type": "path",
       "required": true,
@@ -1139,7 +1144,7 @@ argument is always the destination.
     },
     {
       "id": "dest",
-      "name": "DEST",
+      "display_name": "DEST",
       "description": "Destination file or directory",
       "type": "path",
       "required": true,
@@ -1204,7 +1209,7 @@ are mutually exclusive.
   "arguments": [
     {
       "id": "pattern",
-      "name": "PATTERN",
+      "display_name": "PATTERN",
       "description": "The search pattern",
       "type": "string",
       "required": true,
@@ -1212,7 +1217,7 @@ are mutually exclusive.
     },
     {
       "id": "files",
-      "name": "FILE",
+      "display_name": "FILE",
       "description": "Files to search. If absent, reads from standard input.",
       "type": "path",
       "required": false,
@@ -1275,7 +1280,7 @@ are mutually exclusive.
   "arguments": [
     {
       "id": "file",
-      "name": "FILE",
+      "display_name": "FILE",
       "description": "Files to sort. If absent, reads from standard input.",
       "type": "path",
       "required": false,
@@ -1334,7 +1339,7 @@ are mutually exclusive.
   "arguments": [
     {
       "id": "file",
-      "name": "FILE",
+      "display_name": "FILE",
       "description": "Files to read. If absent, reads from standard input.",
       "type": "path",
       "required": false,
@@ -1388,7 +1393,7 @@ mutually exclusive.
   "arguments": [
     {
       "id": "member",
-      "name": "MEMBER",
+      "display_name": "MEMBER",
       "description": "Archive members to extract or list",
       "type": "path",
       "required": false,
@@ -1470,14 +1475,14 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
   "arguments": [
     {
       "id": "class-or-jar",
-      "name": "CLASS|JARFILE",
+      "display_name": "CLASS|JARFILE",
       "description": "The class whose main method is called, or the JAR file to execute",
       "type": "string",
       "required": false
     },
     {
       "id": "args",
-      "name": "ARGS",
+      "display_name": "ARGS",
       "description": "Arguments passed to the main method",
       "type": "string",
       "required": false,
@@ -1545,7 +1550,7 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
       "arguments": [
         {
           "id": "pathspec",
-          "name": "PATHSPEC",
+          "display_name": "PATHSPEC",
           "description": "Files to add content from",
           "type": "path",
           "required": true,
@@ -1591,14 +1596,14 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
       "arguments": [
         {
           "id": "remote",
-          "name": "REMOTE",
+          "display_name": "REMOTE",
           "description": "The remote to push to",
           "type": "string",
           "required": false
         },
         {
           "id": "refspec",
-          "name": "REFSPEC",
+          "display_name": "REFSPEC",
           "description": "Refs to push",
           "type": "string",
           "required": false,
@@ -1626,8 +1631,8 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
               "conflicts_with": ["tags"] }
           ],
           "arguments": [
-            { "id": "name", "name": "NAME", "description": "Name for the remote", "type": "string", "required": true },
-            { "id": "url",  "name": "URL",  "description": "URL of the remote",   "type": "string", "required": true }
+            { "id": "name", "display_name": "NAME", "description": "Name for the remote", "type": "string", "required": true },
+            { "id": "url",  "display_name": "URL",  "description": "URL of the remote",   "type": "string", "required": true }
           ]
         },
         {
@@ -1636,7 +1641,7 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
           "aliases": ["rm"],
           "description": "Remove the remote named NAME",
           "arguments": [
-            { "id": "name", "name": "NAME", "description": "Name of the remote to remove", "type": "string", "required": true }
+            { "id": "name", "display_name": "NAME", "description": "Name of the remote to remove", "type": "string", "required": true }
           ]
         },
         {
@@ -1644,8 +1649,8 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
           "name": "rename",
           "description": "Rename the remote named OLD to NEW",
           "arguments": [
-            { "id": "old", "name": "OLD", "description": "Current remote name", "type": "string", "required": true },
-            { "id": "new", "name": "NEW", "description": "New remote name",     "type": "string", "required": true }
+            { "id": "old", "display_name": "OLD", "description": "Current remote name", "type": "string", "required": true },
+            { "id": "new", "display_name": "NEW", "description": "New remote name",     "type": "string", "required": true }
           ]
         },
         {
@@ -1653,8 +1658,8 @@ longest-match-first: `-classpath` must not be decomposed as stacked single-char 
           "name": "set-url",
           "description": "Change URLs for the remote",
           "arguments": [
-            { "id": "name", "name": "NAME", "description": "Remote name",  "type": "string", "required": true },
-            { "id": "url",  "name": "URL",  "description": "New URL",      "type": "string", "required": true }
+            { "id": "name", "display_name": "NAME", "description": "Remote name",  "type": "string", "required": true },
+            { "id": "url",  "display_name": "URL",  "description": "New URL",      "type": "string", "required": true }
           ]
         }
       ]
@@ -1740,14 +1745,14 @@ arrays. This is one of the most complex real-world CLI patterns.
       "arguments": [
         {
           "id": "image",
-          "name": "IMAGE",
+          "display_name": "IMAGE",
           "description": "The container image to run",
           "type": "string",
           "required": true
         },
         {
           "id": "command",
-          "name": "COMMAND",
+          "display_name": "COMMAND",
           "description": "Command to run in the container",
           "type": "string",
           "required": false,

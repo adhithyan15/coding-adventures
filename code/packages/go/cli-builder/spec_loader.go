@@ -267,8 +267,13 @@ func validateScope(scopeName string, scope map[string]any, globalFlagIDs map[str
 		}
 		argIDs[id] = true
 
-		if a["name"] == nil {
-			return &SpecError{Message: fmt.Sprintf("in %s: argument %q is missing required field \"name\"", scopeName, id)}
+		// Accept display_name (preferred) or name (backward compatibility).
+		// Normalize to display_name for downstream consumers.
+		if a["display_name"] == nil && a["name"] == nil {
+			return &SpecError{Message: fmt.Sprintf("in %s: argument %q is missing required field \"display_name\"", scopeName, id)}
+		}
+		if a["display_name"] == nil {
+			a["display_name"] = a["name"]
 		}
 		if _, ok := a["description"]; !ok {
 			return &SpecError{Message: fmt.Sprintf("in %s: argument %q is missing required field \"description\"", scopeName, id)}
@@ -400,6 +405,15 @@ func boolField(m map[string]any, key string, defaultVal bool) bool {
 func stringField(m map[string]any, key string) string {
 	s, _ := m[key].(string)
 	return s
+}
+
+// displayNameFallback returns the display_name of an argument map,
+// falling back to name for backward compatibility.
+func displayNameFallback(m map[string]any) string {
+	if dn := stringField(m, "display_name"); dn != "" {
+		return dn
+	}
+	return stringField(m, "name")
 }
 
 // getAllFlagsForScope returns the combined list of flags visible at a given

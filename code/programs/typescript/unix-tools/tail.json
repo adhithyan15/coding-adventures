@@ -70,19 +70,25 @@
       "variadic": true,
       "type": "string",
       "default": "-",
-      "name": "FILE"
+      "display_name": "FILE"
     }
   ],
   "commands": [],
   "mutually_exclusive_groups": [
     {
       "id": "count-mode",
-      "flag_ids": ["lines", "bytes"],
+      "flag_ids": [
+        "lines",
+        "bytes"
+      ],
       "required": false
     },
     {
       "id": "header-mode",
-      "flag_ids": ["quiet", "verbose"],
+      "flag_ids": [
+        "quiet",
+        "verbose"
+      ],
       "required": false
     }
   ]

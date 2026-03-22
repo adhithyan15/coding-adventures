@@ -355,7 +355,11 @@ export class SpecLoader {
     path: string,
   ): ArgDef {
     const id = this._requireString(raw, "id", path);
-    const name = this._requireString(raw, "name", path);
+    // Accept display_name (preferred) or name (backward compatibility).
+    const display_name =
+      typeof raw["display_name"] === "string"
+        ? raw["display_name"]
+        : this._requireString(raw, "name", path);
     const description = this._requireString(raw, "description", path);
     const type = this._parseValueType(raw["type"], path);
     const required = raw["required"] !== false; // defaults to true
@@ -381,7 +385,7 @@ export class SpecLoader {
 
     return {
       id,
-      name,
+      display_name,
       description,
       type,
       required,

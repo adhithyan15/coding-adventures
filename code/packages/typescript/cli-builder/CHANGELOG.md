@@ -7,6 +7,15 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.2.0] — 2026-03-22
+
+### Changed
+
+- Arguments now use `display_name` instead of `name` for the display label in help text.
+  Both fields are accepted for backward compatibility — `display_name` is preferred, with
+  `name` as a fallback. In the `ArgDef` interface, the field is renamed from `name` to
+  `display_name`.
+
 ## [0.1.0] — 2026-03-21
 
 ### Added

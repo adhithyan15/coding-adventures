@@ -63,12 +63,12 @@
   "arguments": [
     {
       "id": "files",
-      "name": "FILE",
       "description": "Files to concatenate. Use '-' for standard input.",
       "type": "string",
       "required": false,
       "variadic": true,
-      "default": "-"
+      "default": "-",
+      "display_name": "FILE"
     }
   ],
   "commands": []
