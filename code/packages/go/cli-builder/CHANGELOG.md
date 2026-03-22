@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.3.0] — 2026-03-22
+
+### Added
+
+- `ValidationResult` struct — holds `Valid` bool and `Errors []string` for non-panicking validation.
+- `ValidateSpec(specFilePath string) ValidationResult` — validates a JSON spec file on disk,
+  returning all errors in the result instead of panicking.
+- `ValidateSpecBytes(data []byte) ValidationResult` — validates a JSON spec from raw bytes,
+  useful for CI linters, editor plugins, and test harnesses.
+- Comprehensive test suite for the validation API covering: valid specs, missing/unsupported
+  version, missing required fields, invalid JSON, nonexistent files, flags without name forms,
+  and circular requires dependencies.
+
 ## [0.2.0] — 2026-03-22
 
 ### Changed

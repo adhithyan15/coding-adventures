@@ -7,6 +7,23 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.3.0] — 2026-03-22
+
+### Added
+
+- **`validateSpec()`** — standalone function that validates a CLI Builder JSON
+  spec file at a given path and returns a `ValidationResult` (with `valid` boolean
+  and `errors` string array) instead of throwing exceptions. Useful for editor
+  tooling, CI pipelines, and programmatic checks.
+
+- **`validateSpecObject()`** — same validation but accepts an already-parsed
+  plain object instead of a file path. No I/O required.
+
+- **`ValidationResult`** interface — the return type for both validation
+  functions: `{ valid: boolean; errors: string[] }`.
+
+---
+
 ## [0.2.0] — 2026-03-22
 
 ### Changed

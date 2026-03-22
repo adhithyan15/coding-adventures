@@ -43,7 +43,8 @@ from cli_builder.parser import Parser
 from cli_builder.positional_resolver import PositionalResolver
 from cli_builder.spec_loader import SpecLoader
 from cli_builder.token_classifier import TokenClassifier
-from cli_builder.types import HelpResult, ParseResult, VersionResult
+from cli_builder.types import HelpResult, ParseResult, ValidationResult, VersionResult
+from cli_builder.validate import validate_spec, validate_spec_string
 
 __all__ = [
     # Main entry point
@@ -52,6 +53,10 @@ __all__ = [
     "ParseResult",
     "HelpResult",
     "VersionResult",
+    "ValidationResult",
+    # Standalone validation
+    "validate_spec",
+    "validate_spec_string",
     # Error types
     "CliBuilderError",
     "SpecError",

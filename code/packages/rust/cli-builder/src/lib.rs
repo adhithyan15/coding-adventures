@@ -72,6 +72,7 @@
 //! - [`positional_resolver`] — assign positional tokens to argument slots (§6.4.1)
 //! - [`flag_validator`] — flag constraint validation (§6.4.2)
 //! - [`help_generator`] — generate help text from the spec (§9)
+//! - [`validate`] — standalone spec validation returning `ValidationResult`
 
 pub mod errors;
 pub mod flag_validator;
@@ -81,9 +82,11 @@ pub mod positional_resolver;
 pub mod spec_loader;
 pub mod token_classifier;
 pub mod types;
+pub mod validate;
 
 // Re-export the most commonly used items at the crate root for convenience.
 pub use errors::{CliBuilderError, ParseError, ParseErrors};
 pub use parser::Parser;
 pub use spec_loader::{load_spec_from_file, load_spec_from_str};
 pub use types::{CliSpec, HelpResult, ParseResult, ParserOutput, VersionResult};
+pub use validate::{validate_spec_file, validate_spec_str, ValidationResult};

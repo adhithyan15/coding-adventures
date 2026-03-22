@@ -7,6 +7,23 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.3.0] — 2026-03-22
+
+### Added
+
+- **`validate_spec(spec_path)`**: Standalone function that validates a CLI Builder JSON
+  spec file and returns a `ValidationResult` instead of raising exceptions. Ideal for
+  linters, CI checks, and editor integrations.
+
+- **`validate_spec_string(json_string)`**: Same as `validate_spec()`, but accepts an
+  in-memory JSON string. Useful for testing and programmatic spec generation.
+
+- **`ValidationResult`** dataclass with `valid: bool` and `errors: list[str]` fields.
+  Added to `cli_builder.types` and exported from the top-level package.
+
+- New test module `tests/test_validate.py` with comprehensive coverage of both
+  validation functions and the `ValidationResult` dataclass.
+
 ## [0.2.0] — 2026-03-22
 
 ### Changed

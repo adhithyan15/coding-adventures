@@ -2,6 +2,17 @@
 
 All notable changes to this package are documented here.
 
+## [0.3.0] — 2026-03-22
+
+### Added
+
+- `Validator` module with standalone, non-raising spec validation:
+  - `validate_spec/1` — validate a spec file on disk, returns `%{valid, errors}`.
+  - `validate_spec_string/1` — validate a spec from a JSON string.
+- 15 tests covering valid specs, invalid JSON, missing version, unsupported
+  version, missing required fields, flag with no short/long, nonexistent file,
+  invalid parsing mode, and missing flag type.
+
 ## [0.2.0] — 2026-03-22
 
 ### Changed

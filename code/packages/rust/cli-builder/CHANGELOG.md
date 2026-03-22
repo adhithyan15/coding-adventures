@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.0] — 2026-03-22
+
+### Added
+
+- **`validate`** — standalone spec validation module with `ValidationResult`,
+  `validate_spec_str()`, and `validate_spec_file()`. Returns a simple
+  `{ valid, errors }` struct instead of `Result`, making it convenient for
+  CI linting, editor integration, and dry-run workflows. Re-exported at the
+  crate root for ergonomic access.
+
 ## [0.2.0] — 2026-03-22
 
 ### Changed

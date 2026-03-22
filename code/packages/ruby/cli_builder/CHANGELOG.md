@@ -2,6 +2,20 @@
 
 All notable changes to the `coding_adventures_cli_builder` gem will be documented in this file.
 
+## [0.3.0] - 2026-03-22
+
+### Added
+
+- **Validator**: Standalone `validate_spec` and `validate_spec_string` module methods that
+  return a `ValidationResult` value object instead of raising exceptions. Useful for linters,
+  editors, CI pipelines, and interactive tools that want to collect errors without exception
+  handling.
+- **ValidationResult**: Simple value object with `valid?` (boolean) and `errors` (array of
+  strings). Errors array is frozen (immutable after creation).
+- Comprehensive test suite for the validator covering: valid specs, missing version, unsupported
+  version, missing required fields, invalid JSON, nonexistent files, and flags with no
+  short/long name.
+
 ## [0.2.0] - 2026-03-22
 
 ### Changed
