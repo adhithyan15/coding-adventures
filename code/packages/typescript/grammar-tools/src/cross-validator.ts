@@ -70,6 +70,13 @@ export function crossValidate(
     implicitTokens.add("NEWLINE");
   }
 
+  // The NEWLINE token is also implicitly available whenever the skip
+  // pattern does NOT consume newlines. In that case, the lexer emits
+  // NEWLINE tokens at each bare '\n'. Rather than requiring grammars to
+  // redundantly define NEWLINE in their .tokens file, we always treat it
+  // as a valid synthetic token (like EOF).
+  implicitTokens.add("NEWLINE");
+
   // --- Missing token references (errors) ---
   for (const ref of [...referencedTokens].sort()) {
     if (!definedTokens.has(ref) && !implicitTokens.has(ref)) {

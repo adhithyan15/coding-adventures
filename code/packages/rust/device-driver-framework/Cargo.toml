@@ -1,0 +1,4 @@
+[package]
+name = "device-driver-framework"
+version = "0.1.0"
+edition = "2021"

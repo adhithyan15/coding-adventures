@@ -734,8 +734,14 @@ export function validateParserGrammar(
 
   // --- Undefined token references ---
   if (tokenNamesSet != null) {
+    // Synthetic tokens are always valid — the lexer produces these
+    // implicitly without needing a .tokens definition:
+    //   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
+    //   INDENT/DEDENT — emitted in indentation mode
+    //   EOF — always emitted at end of input
+    const syntheticTokens = new Set(["NEWLINE", "INDENT", "DEDENT", "EOF"]);
     for (const ref of [...referencedTokens].sort()) {
-      if (!tokenNamesSet.has(ref)) {
+      if (!tokenNamesSet.has(ref) && !syntheticTokens.has(ref)) {
         issues.push(`Undefined token reference: '${ref}'`);
       }
     }

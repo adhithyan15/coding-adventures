@@ -666,8 +666,14 @@ def validate_parser_grammar(
 
     # --- Undefined token references ---
     if token_names is not None:
+        # Synthetic tokens are always valid — the lexer produces these
+        # implicitly without needing a .tokens definition:
+        #   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
+        #   INDENT/DEDENT — emitted in indentation mode
+        #   EOF — always emitted at end of input
+        synthetic_tokens = {"NEWLINE", "INDENT", "DEDENT", "EOF"}
         for ref in sorted(referenced_tokens):
-            if ref not in token_names:
+            if ref not in token_names and ref not in synthetic_tokens:
                 issues.append(f"Undefined token reference: '{ref}'")
 
     # --- Unreachable rules ---

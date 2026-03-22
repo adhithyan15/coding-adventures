@@ -324,11 +324,15 @@ module CodingAdventures
           token_type = resolve_token_type(token_name, value, alias_name)
 
           # Handle STRING tokens: strip quotes and process escapes.
+          # When escape_mode is "none", we strip quotes but leave escape
+          # sequences as raw text. This is used by CSS and TOML where
+          # escape semantics differ from JSON and are handled in the
+          # semantic layer.
           if token_name == "STRING" || (alias_name && alias_name.include?("STRING"))
             # Only strip if the value is quoted.
             if value.length >= 2 && (value.start_with?('"') || value.start_with?("'"))
               inner = value[1..-2]
-              inner = process_escapes(inner)
+              inner = process_escapes(inner) unless @grammar.escape_mode == "none"
               value = inner
             end
           end

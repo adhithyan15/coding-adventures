@@ -81,6 +81,13 @@ pub fn cross_validate(
         defined_tokens.insert("NEWLINE".to_string());
     }
 
+    // The NEWLINE token is also implicitly available whenever the skip
+    // pattern does NOT consume newlines. In that case, the lexer emits
+    // NEWLINE tokens at each bare '\n'. Rather than requiring grammars to
+    // redundantly define NEWLINE in their .tokens file, we always treat it
+    // as a valid synthetic token (like EOF).
+    defined_tokens.insert("NEWLINE".to_string());
+
     // --- Missing token references (errors) ---
     let mut sorted_refs: Vec<&String> = referenced_tokens.iter().collect();
     sorted_refs.sort();
@@ -224,13 +231,17 @@ mod tests {
     }
 
     #[test]
-    fn test_indent_missing_without_indent_mode() {
-        // Without indentation mode, INDENT is not implicitly available.
+    fn test_indent_dedent_missing_without_indent_mode_but_newline_valid() {
+        // Without indentation mode, INDENT/DEDENT are errors but NEWLINE is valid.
+        // NEWLINE is always a valid synthetic token because the lexer emits it
+        // whenever a bare newline is encountered and no skip pattern consumed it.
         let tokens = parse_token_grammar("NAME = /[a-z]+/").unwrap();
-        let grammar = parse_parser_grammar("file = NAME INDENT NAME ;").unwrap();
+        let grammar = parse_parser_grammar("file = NAME NEWLINE INDENT NAME DEDENT ;").unwrap();
         let issues = cross_validate(&tokens, &grammar);
         let errors: Vec<&String> = issues.iter().filter(|i| i.starts_with("Error")).collect();
         assert!(errors.iter().any(|e| e.contains("INDENT")));
+        assert!(errors.iter().any(|e| e.contains("DEDENT")));
+        assert!(!errors.iter().any(|e| e.contains("NEWLINE")));
     }
 
     // -----------------------------------------------------------------------
