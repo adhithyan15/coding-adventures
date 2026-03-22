@@ -1,0 +1,35 @@
+/* ==========================================================================
+ * Shared dark theme for coding-adventures visualizations.
+ *
+ * All interactive visualization apps (Busicom calculator, transistor
+ * visualizer, etc.) share this dark palette. App-specific colors
+ * (calculator body color, era-specific accents) are defined in each app.
+ * ========================================================================== */
+
+:root {
+  /* Background layers */
+  --body-bg: #1a1a2e;
+  --body-text: #e0ddd5;
+  --panel-bg: #16213e;
+  --panel-border: #2a3a5e;
+  --panel-header: #0f3460;
+
+  /* Accent colors */
+  --accent: #e94560;
+  --accent-dim: #943040;
+
+  /* Wire / signal visualization */
+  --wire-high: #00ff88;
+  --wire-low: #444;
+  --wire-glow: rgba(0, 255, 136, 0.3);
+
+  /* Tab navigation */
+  --tab-bg: #0f3460;
+  --tab-active: #e94560;
+  --tab-text: #8899aa;
+  --tab-active-text: #ffffff;
+
+  /* Typography */
+  --mono: "SF Mono", "Cascadia Code", "Fira Code", Consolas, monospace;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
