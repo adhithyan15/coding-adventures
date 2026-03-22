@@ -33,15 +33,26 @@ import (
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
 
-// specPath returns the absolute path to pwd.json for testing.
+// pwdSpecPath returns the absolute path to pwd.json for testing.
 //
 // In tests, the working directory is the package directory (where this
 // file lives), so we can resolve pwd.json relative to ".".
-func specPath(t *testing.T) string {
+func pwdSpecPath(t *testing.T) string {
 	t.Helper()
 	abs, err := filepath.Abs("pwd.json")
 	if err != nil {
 		t.Fatalf("cannot resolve pwd.json path: %v", err)
+	}
+	return abs
+}
+
+// toolSpecPath returns the absolute path to a tool's JSON spec file.
+// This is a general helper used by all tool test files.
+func toolSpecPath(t *testing.T, toolName string) string {
+	t.Helper()
+	abs, err := filepath.Abs(toolName + ".json")
+	if err != nil {
+		t.Fatalf("cannot resolve %s.json path: %v", toolName, err)
 	}
 	return abs
 }
@@ -55,7 +66,7 @@ func specPath(t *testing.T) string {
 // If this test fails, the spec file is either missing or malformed.
 // All other tests depend on a valid spec, so this is the canary.
 func TestSpecLoads(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd"})
 	if err != nil {
 		t.Fatalf("failed to load pwd.json spec: %v", err)
 	}
@@ -74,7 +85,7 @@ func TestSpecLoads(t *testing.T) {
 // The default behavior is logical mode, but that's handled by the business
 // logic — the parser just reports what flags the user explicitly set.
 func TestDefaultMode(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -100,7 +111,7 @@ func TestDefaultMode(t *testing.T) {
 
 // TestPhysicalShortFlag verifies that `-P` sets the physical flag.
 func TestPhysicalShortFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "-P"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "-P"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -122,7 +133,7 @@ func TestPhysicalShortFlag(t *testing.T) {
 
 // TestPhysicalLongFlag verifies that `--physical` sets the physical flag.
 func TestPhysicalLongFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "--physical"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "--physical"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -144,7 +155,7 @@ func TestPhysicalLongFlag(t *testing.T) {
 
 // TestLogicalShortFlag verifies that `-L` sets the logical flag.
 func TestLogicalShortFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "-L"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "-L"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -166,7 +177,7 @@ func TestLogicalShortFlag(t *testing.T) {
 
 // TestLogicalLongFlag verifies that `--logical` sets the logical flag.
 func TestLogicalLongFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "--logical"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "--logical"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -192,7 +203,7 @@ func TestLogicalLongFlag(t *testing.T) {
 
 // TestHelpFlag verifies that `--help` returns a HelpResult with non-empty text.
 func TestHelpFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "--help"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "--help"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -214,7 +225,7 @@ func TestHelpFlag(t *testing.T) {
 
 // TestHelpShortFlag verifies that `-h` also returns a HelpResult.
 func TestHelpShortFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "-h"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "-h"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -232,7 +243,7 @@ func TestHelpShortFlag(t *testing.T) {
 
 // TestVersionFlag verifies that `--version` returns a VersionResult.
 func TestVersionFlag(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "--version"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "--version"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -259,7 +270,7 @@ func TestVersionFlag(t *testing.T) {
 // TestMutualExclusivity verifies that passing both -L and -P produces a
 // parse error, since they are declared as mutually exclusive in pwd.json.
 func TestMutualExclusivity(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "-L", "-P"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "-L", "-P"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -418,13 +429,13 @@ func TestGetLogicalPathWithInvalidPWD(t *testing.T) {
 // =========================================================================
 
 // TestResolveSpecPath verifies that resolveSpecPath returns a path ending
-// in "pwd.json".
+// in "<tool>.json".
 //
 // Note: In test mode, os.Executable() returns the test binary path, not
-// the pwd binary path. So the resolved path will be alongside the test
+// the actual binary path. So the resolved path will be alongside the test
 // binary — which is fine for verifying the function's logic.
 func TestResolveSpecPath(t *testing.T) {
-	path, err := resolveSpecPath()
+	path, err := resolveSpecPath("pwd")
 	if err != nil {
 		t.Fatalf("resolveSpecPath failed: %v", err)
 	}
@@ -455,7 +466,7 @@ func TestInvalidSpecPath(t *testing.T) {
 // TestUnexpectedArgument verifies that passing an unexpected positional
 // argument produces a parse error, since pwd accepts no arguments.
 func TestUnexpectedArgument(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "extra-arg"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "extra-arg"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -469,7 +480,7 @@ func TestUnexpectedArgument(t *testing.T) {
 // TestHelpTextContainsFlagDescriptions verifies that the help output
 // includes descriptions for both -L and -P flags.
 func TestHelpTextContainsFlagDescriptions(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd", "--help"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd", "--help"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -493,7 +504,7 @@ func TestHelpTextContainsFlagDescriptions(t *testing.T) {
 // TestProgramNameInParseResult verifies that the Program field is set
 // correctly in the ParseResult.
 func TestProgramNameInParseResult(t *testing.T) {
-	parser, err := clibuilder.NewParser(specPath(t), []string{"pwd"})
+	parser, err := clibuilder.NewParser(pwdSpecPath(t), []string{"pwd"})
 	if err != nil {
 		t.Fatalf("NewParser failed: %v", err)
 	}
@@ -514,19 +525,19 @@ func TestProgramNameInParseResult(t *testing.T) {
 }
 
 // =========================================================================
-// run() integration tests
+// runPwd() integration tests
 // =========================================================================
 //
-// These tests exercise the run() function directly, which covers the full
+// These tests exercise the runPwd() function directly, which covers the full
 // code path from spec loading through result handling. By capturing stdout
 // and stderr in buffers, we can verify exact output without subprocess
 // execution.
 
-// TestRunDefaultPrintsDirectory verifies that `run` with no flags prints
+// TestRunDefaultPrintsDirectory verifies that `runPwd` with no flags prints
 // the current directory and returns exit code 0.
 func TestRunDefaultPrintsDirectory(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd"}, &stdout, &stderr)
 
 	if code != 0 {
 		t.Errorf("run() returned exit code %d, want 0. stderr: %s", code, stderr.String())
@@ -542,11 +553,11 @@ func TestRunDefaultPrintsDirectory(t *testing.T) {
 	}
 }
 
-// TestRunPhysicalPrintsDirectory verifies that `run` with -P prints
+// TestRunPhysicalPrintsDirectory verifies that `runPwd` with -P prints
 // the physical directory and returns exit code 0.
 func TestRunPhysicalPrintsDirectory(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "-P"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "-P"}, &stdout, &stderr)
 
 	if code != 0 {
 		t.Errorf("run(-P) returned exit code %d, want 0. stderr: %s", code, stderr.String())
@@ -562,11 +573,11 @@ func TestRunPhysicalPrintsDirectory(t *testing.T) {
 	}
 }
 
-// TestRunLogicalPrintsDirectory verifies that `run` with -L prints
+// TestRunLogicalPrintsDirectory verifies that `runPwd` with -L prints
 // the logical directory and returns exit code 0.
 func TestRunLogicalPrintsDirectory(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "-L"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "-L"}, &stdout, &stderr)
 
 	if code != 0 {
 		t.Errorf("run(-L) returned exit code %d, want 0. stderr: %s", code, stderr.String())
@@ -582,7 +593,7 @@ func TestRunLogicalPrintsDirectory(t *testing.T) {
 // and returns exit code 0.
 func TestRunHelpReturnsZero(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "--help"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "--help"}, &stdout, &stderr)
 
 	if code != 0 {
 		t.Errorf("run(--help) returned exit code %d, want 0", code)
@@ -601,7 +612,7 @@ func TestRunHelpReturnsZero(t *testing.T) {
 // to stdout and returns exit code 0.
 func TestRunVersionReturnsZero(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "--version"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "--version"}, &stdout, &stderr)
 
 	if code != 0 {
 		t.Errorf("run(--version) returned exit code %d, want 0", code)
@@ -617,7 +628,7 @@ func TestRunVersionReturnsZero(t *testing.T) {
 // an error and returns exit code 1.
 func TestRunMutualExclusionReturnsOne(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "-L", "-P"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "-L", "-P"}, &stdout, &stderr)
 
 	if code != 1 {
 		t.Errorf("run(-L -P) returned exit code %d, want 1", code)
@@ -632,7 +643,7 @@ func TestRunMutualExclusionReturnsOne(t *testing.T) {
 // causes run() to return exit code 1.
 func TestRunInvalidSpecReturnsOne(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run("/nonexistent/spec.json", []string{"pwd"}, &stdout, &stderr)
+	code := runPwd("/nonexistent/spec.json", []string{"pwd"}, &stdout, &stderr)
 
 	if code != 1 {
 		t.Errorf("run(bad spec) returned exit code %d, want 1", code)
@@ -647,7 +658,7 @@ func TestRunInvalidSpecReturnsOne(t *testing.T) {
 // cause run() to return exit code 1.
 func TestRunUnexpectedArgReturnsOne(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "extra"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "extra"}, &stdout, &stderr)
 
 	if code != 1 {
 		t.Errorf("run(extra arg) returned exit code %d, want 1", code)
@@ -658,7 +669,7 @@ func TestRunUnexpectedArgReturnsOne(t *testing.T) {
 // matches getPhysicalPath().
 func TestRunPhysicalMatchesHelper(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run(specPath(t), []string{"pwd", "-P"}, &stdout, &stderr)
+	code := runPwd(pwdSpecPath(t), []string{"pwd", "-P"}, &stdout, &stderr)
 
 	if code != 0 {
 		t.Fatalf("run(-P) failed: %s", stderr.String())

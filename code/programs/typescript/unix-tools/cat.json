@@ -1,0 +1,75 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "cat",
+  "display_name": "cat",
+  "description": "Concatenate files and print on standard output. With no FILE, or when FILE is -, read standard input.",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "number",
+      "short": "n",
+      "long": "number",
+      "description": "Number all output lines",
+      "type": "boolean"
+    },
+    {
+      "id": "number_nonblank",
+      "short": "b",
+      "long": "number-nonblank",
+      "description": "Number nonempty output lines, overrides -n",
+      "type": "boolean"
+    },
+    {
+      "id": "squeeze_blank",
+      "short": "s",
+      "long": "squeeze-blank",
+      "description": "Suppress repeated empty output lines",
+      "type": "boolean"
+    },
+    {
+      "id": "show_tabs",
+      "short": "T",
+      "long": "show-tabs",
+      "description": "Display TAB characters as ^I",
+      "type": "boolean"
+    },
+    {
+      "id": "show_ends",
+      "short": "E",
+      "long": "show-ends",
+      "description": "Display $ at end of each line",
+      "type": "boolean"
+    },
+    {
+      "id": "show_nonprinting",
+      "short": "v",
+      "long": "show-nonprinting",
+      "description": "Use ^ and M- notation, except for LFD and TAB",
+      "type": "boolean"
+    },
+    {
+      "id": "show_all",
+      "short": "A",
+      "long": "show-all",
+      "description": "Equivalent to -vET",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "description": "Files to concatenate (use - for stdin)",
+      "required": false,
+      "variadic": true,
+      "type": "string",
+      "default": "-",
+      "name": "FILE"
+    }
+  ],
+  "commands": []
+}
