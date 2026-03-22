@@ -389,17 +389,18 @@ def evaluate_build_file(
     RuntimeError
         If the Starlark interpreter fails to evaluate the file.
     """
+    build_file_path = Path(build_file_path)
+    repo_root = Path(repo_root)
+
+    # Read the BUILD file first — fail fast if it doesn't exist,
+    # before attempting to import the interpreter.
+    source = build_file_path.read_text(encoding="utf-8")
+
     # Import the Starlark interpreter lazily. This module is optional --
     # the build tool can function without it (falling back to shell BUILD
     # files). Lazy import keeps startup fast and avoids hard crashes if
     # the starlark-interpreter package isn't installed.
     from starlark_interpreter import StarlarkInterpreter
-
-    build_file_path = Path(build_file_path)
-    repo_root = Path(repo_root)
-
-    # Read the BUILD file.
-    source = build_file_path.read_text(encoding="utf-8")
     if not source.endswith("\n"):
         source += "\n"
 
