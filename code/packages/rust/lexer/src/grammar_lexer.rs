@@ -54,11 +54,184 @@
 //!   following the Python/Starlark whitespace rules.
 
 use regex::Regex;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
 
 use crate::token::{LexerError, Token, TokenType, string_to_token_type};
+
+// ===========================================================================
+// ContextAction — deferred mutations from the on-token callback
+// ===========================================================================
+
+/// An action recorded by a [`LexerContext`] callback.
+///
+/// The Rust borrow checker prevents the callback from directly mutating
+/// the lexer (the callback borrows the token, which borrows the lexer).
+/// Instead, the callback records actions in the context. After the
+/// callback returns, the lexer's main loop applies them in order.
+///
+/// This is the classic "collect-then-apply" pattern — it keeps the
+/// borrow checker happy while giving callbacks full control over lexer
+/// state transitions.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ContextAction {
+    /// Push a named group onto the group stack.
+    /// The group becomes active for the next token match.
+    Push(String),
+
+    /// Pop the current group from the stack.
+    /// No-op if only the default group remains.
+    Pop,
+
+    /// Inject a synthetic token after the current one.
+    /// Emitted tokens do NOT trigger the callback (prevents infinite loops).
+    Emit(Token),
+
+    /// Suppress the current token — omit it from output.
+    Suppress,
+
+    /// Toggle skip pattern processing on or off.
+    SetSkipEnabled(bool),
+}
+
+// ===========================================================================
+// LexerContext — the callback's view of the lexer
+// ===========================================================================
+
+/// Interface that on-token callbacks use to control the lexer.
+///
+/// When a callback is registered via [`GrammarLexer::set_on_token()`], it
+/// receives a `&mut LexerContext` on every token match. The context
+/// provides controlled access to the group stack, token emission, and
+/// skip control.
+///
+/// Methods that modify state (push/pop/emit/suppress) record actions
+/// that take effect after the callback returns — they do not interrupt
+/// the current match.
+///
+/// # Example — XML lexer callback
+///
+/// ```text
+/// |token, ctx| {
+///     if token.type_name.as_deref() == Some("OPEN_TAG") {
+///         ctx.push_group("tag").unwrap();
+///     } else if token.type_name.as_deref() == Some("TAG_CLOSE") {
+///         ctx.pop_group();
+///     }
+/// }
+/// ```
+pub struct LexerContext<'a> {
+    /// The names of all defined groups (for validation in push_group).
+    group_names: &'a HashSet<String>,
+
+    /// Read-only view of the current group stack.
+    group_stack: &'a Vec<String>,
+
+    /// The source code being tokenized (for peek operations).
+    source: &'a str,
+
+    /// The byte position immediately after the current token.
+    pos_after_token: usize,
+
+    /// Accumulated actions to apply after the callback returns.
+    actions: Vec<ContextAction>,
+
+    /// Whether the current token has been suppressed.
+    suppressed: bool,
+}
+
+impl<'a> LexerContext<'a> {
+    /// Push a pattern group onto the stack.
+    ///
+    /// The pushed group becomes active for the next token match.
+    /// Returns `Err` if the group name is not defined in the grammar.
+    pub fn push_group(&mut self, group_name: &str) -> Result<(), String> {
+        if !self.group_names.contains(group_name) {
+            return Err(format!(
+                "Unknown pattern group: {:?}. Available groups: {:?}",
+                group_name,
+                {
+                    let mut names: Vec<&String> = self.group_names.iter().collect();
+                    names.sort();
+                    names
+                }
+            ));
+        }
+        self.actions.push(ContextAction::Push(group_name.to_string()));
+        Ok(())
+    }
+
+    /// Pop the current group from the stack.
+    ///
+    /// If only the default group remains, this is a no-op. The default
+    /// group is the floor and cannot be popped.
+    pub fn pop_group(&mut self) {
+        self.actions.push(ContextAction::Pop);
+    }
+
+    /// Return the name of the currently active group.
+    pub fn active_group(&self) -> &str {
+        self.group_stack.last().map(|s| s.as_str()).unwrap_or("default")
+    }
+
+    /// Return the depth of the group stack (always >= 1).
+    pub fn group_stack_depth(&self) -> usize {
+        self.group_stack.len()
+    }
+
+    /// Inject a synthetic token after the current one.
+    ///
+    /// Emitted tokens do NOT trigger the callback (prevents infinite
+    /// loops). Multiple `emit()` calls produce tokens in call order.
+    pub fn emit(&mut self, token: Token) {
+        self.actions.push(ContextAction::Emit(token));
+    }
+
+    /// Suppress the current token — do not include it in output.
+    pub fn suppress(&mut self) {
+        self.suppressed = true;
+    }
+
+    /// Peek at a source character past the current token.
+    ///
+    /// `offset` is 1-based: `peek(1)` returns the character immediately
+    /// after the current token. Returns `""` if past EOF.
+    pub fn peek(&self, offset: usize) -> &str {
+        let idx = self.pos_after_token + offset - 1;
+        if idx < self.source.len() {
+            // Safe because we check bounds. We return a 1-char slice.
+            let ch = &self.source[idx..];
+            let end = ch.char_indices().nth(1).map_or(ch.len(), |(i, _)| i);
+            &self.source[idx..idx + end]
+        } else {
+            ""
+        }
+    }
+
+    /// Peek at the next `length` characters past the current token.
+    pub fn peek_str(&self, length: usize) -> &str {
+        let start = self.pos_after_token;
+        if start >= self.source.len() {
+            return "";
+        }
+        // Find the byte position `length` chars ahead.
+        let remaining = &self.source[start..];
+        let end_byte = remaining
+            .char_indices()
+            .nth(length)
+            .map_or(remaining.len(), |(i, _)| i);
+        &self.source[start..start + end_byte]
+    }
+
+    /// Toggle skip pattern processing.
+    ///
+    /// When disabled, skip patterns (whitespace, comments) are not tried.
+    /// Useful for groups where whitespace is significant (e.g., CDATA).
+    pub fn set_skip_enabled(&mut self, enabled: bool) {
+        self.actions.push(ContextAction::SetSkipEnabled(enabled));
+    }
+}
 
 // ===========================================================================
 // Compiled pattern — a pre-compiled regex ready for matching
@@ -105,6 +278,18 @@ fn compile_patterns(definitions: &[TokenDefinition]) -> Vec<CompiledPattern> {
 }
 
 // ===========================================================================
+// Callback type alias
+// ===========================================================================
+
+/// Type alias for the on-token callback.
+///
+/// The callback receives a reference to the matched token and a mutable
+/// reference to a [`LexerContext`]. It can use the context to push/pop
+/// groups, emit synthetic tokens, suppress the current token, or toggle
+/// skip processing.
+pub type OnTokenCallback = Box<dyn FnMut(&Token, &mut LexerContext)>;
+
+// ===========================================================================
 // GrammarLexer
 // ===========================================================================
 
@@ -113,6 +298,21 @@ fn compile_patterns(definitions: &[TokenDefinition]) -> Vec<CompiledPattern> {
 /// Supports standard mode (simple pattern matching with whitespace skipping)
 /// and indentation mode (Python/Starlark-style significant whitespace with
 /// synthetic INDENT/DEDENT/NEWLINE tokens).
+///
+/// # Pattern groups and callbacks
+///
+/// The lexer supports **pattern groups** — named sets of token patterns
+/// that can be activated dynamically via a callback. This enables
+/// context-sensitive lexing without modifying the grammar.
+///
+/// For example, an XML lexer defines a "tag" group with patterns for
+/// attribute names, equals signs, and attribute values. A callback
+/// pushes the "tag" group when `<` is matched and pops it when `>`
+/// is matched. Outside tags, only the default group's patterns are tried.
+///
+/// The callback is registered via [`set_on_token()`](GrammarLexer::set_on_token)
+/// and receives each token plus a [`LexerContext`] that provides controlled
+/// access to group stack manipulation, token emission, and skip control.
 pub struct GrammarLexer<'a> {
     /// The source code as character vector for indexed access.
     chars: Vec<char>,
@@ -138,7 +338,7 @@ pub struct GrammarLexer<'a> {
     /// Reserved keywords that cause errors if encountered.
     reserved_set: HashSet<String>,
 
-    /// Pre-compiled token patterns in priority order.
+    /// Pre-compiled token patterns in priority order (the "default" group).
     patterns: Vec<CompiledPattern>,
 
     /// Pre-compiled skip patterns (whitespace, comments).
@@ -154,10 +354,42 @@ pub struct GrammarLexer<'a> {
     /// rules). When `None`, the default escape processing (`\n`, `\t`, `\\`,
     /// `\"`) is applied.
     escape_mode: Option<String>,
+
+    // --- Pattern group support ---
+
+    /// Compiled patterns for each named group. The "default" group contains
+    /// the top-level definitions. Named groups come from `group NAME:` sections.
+    group_patterns: HashMap<String, Vec<CompiledPattern>>,
+
+    /// The set of all valid group names (for validation in LexerContext).
+    group_names: HashSet<String>,
+
+    /// The group stack. Bottom is always "default". Top is the active group
+    /// whose patterns are tried during token matching.
+    group_stack: Vec<String>,
+
+    /// On-token callback — `None` means no callback (zero overhead path).
+    ///
+    /// The callback fires after each token match, before emission. It
+    /// receives the matched token and a `LexerContext` for recording
+    /// actions. The callback is NOT invoked for:
+    /// - Skip pattern matches (they produce no tokens)
+    /// - Tokens emitted via `context.emit()` (prevents infinite loops)
+    /// - The EOF token
+    on_token: Option<OnTokenCallback>,
+
+    /// Whether skip patterns should be tried. Callbacks can toggle this
+    /// via `LexerContext::set_skip_enabled()` for groups where whitespace
+    /// is significant (e.g., CDATA, raw strings).
+    skip_enabled: bool,
 }
 
 impl<'a> GrammarLexer<'a> {
     /// Create a new grammar-driven lexer for the given source code.
+    ///
+    /// Compiles all token definitions (including group definitions) into
+    /// anchored regex patterns. The "default" group contains the top-level
+    /// definitions; named groups come from `group NAME:` sections.
     pub fn new(source: &'a str, grammar: &TokenGrammar) -> Self {
         let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
         let reserved_set: HashSet<String> = grammar.reserved_keywords.iter().cloned().collect();
@@ -165,6 +397,38 @@ impl<'a> GrammarLexer<'a> {
         let skip_patterns = compile_patterns(&grammar.skip_definitions);
         let indent_mode = grammar.mode.as_deref() == Some("indentation");
         let escape_mode = grammar.escapes.clone();
+
+        // --- Build per-group compiled patterns ---
+        // The "default" group uses the top-level definitions. Named groups
+        // use their own definitions from the grammar's `groups` map.
+        let mut group_patterns: HashMap<String, Vec<CompiledPattern>> = HashMap::new();
+
+        // Clone the default patterns for the "default" group entry.
+        let default_compiled: Vec<CompiledPattern> = grammar
+            .definitions
+            .iter()
+            .map(|defn| {
+                let regex_str = if defn.is_regex {
+                    format!("^{}", defn.pattern)
+                } else {
+                    format!("^{}", regex::escape(&defn.pattern))
+                };
+                CompiledPattern {
+                    name: defn.name.clone(),
+                    pattern: Regex::new(&regex_str).unwrap(),
+                    alias: defn.alias.clone(),
+                }
+            })
+            .collect();
+        group_patterns.insert("default".to_string(), default_compiled);
+
+        for (group_name, group) in &grammar.groups {
+            let compiled = compile_patterns(&group.definitions);
+            group_patterns.insert(group_name.clone(), compiled);
+        }
+
+        // Build the set of valid group names for validation.
+        let group_names: HashSet<String> = group_patterns.keys().cloned().collect();
 
         GrammarLexer {
             chars: source.chars().collect(),
@@ -179,7 +443,28 @@ impl<'a> GrammarLexer<'a> {
             skip_patterns,
             indent_mode,
             escape_mode,
+            group_patterns,
+            group_names,
+            group_stack: vec!["default".to_string()],
+            on_token: None,
+            skip_enabled: true,
         }
+    }
+
+    /// Register a callback that fires on every token match.
+    ///
+    /// The callback receives the matched token and a [`LexerContext`].
+    /// It can use the context to push/pop groups, emit extra tokens,
+    /// or suppress the current token.
+    ///
+    /// Only one callback can be registered. Pass `None` to clear.
+    ///
+    /// The callback is NOT invoked for:
+    /// - Skip pattern matches (they produce no tokens)
+    /// - Tokens emitted via `context.emit()` (prevents infinite loops)
+    /// - The EOF token
+    pub fn set_on_token(&mut self, callback: Option<OnTokenCallback>) {
+        self.on_token = callback;
     }
 
     // -----------------------------------------------------------------------
@@ -333,11 +618,39 @@ impl<'a> GrammarLexer<'a> {
         false
     }
 
-    /// Try to match a token pattern at the current position.
-    /// Returns (name, alias, matched_text) or None.
+    /// Try to match a token pattern at the current position using the
+    /// default group's patterns. Used by indentation mode (which does
+    /// not support group switching).
+    ///
+    /// Returns `(name, alias, matched_text)` or `None`.
     fn try_match_token(&self) -> Option<(String, Option<String>, String)> {
         let remaining = &self.source[self.byte_pos..];
         for p in &self.patterns {
+            if let Some(m) = p.pattern.find(remaining) {
+                return Some((
+                    p.name.clone(),
+                    p.alias.clone(),
+                    m.as_str().to_string(),
+                ));
+            }
+        }
+        None
+    }
+
+    /// Try to match a token pattern from a specific named group.
+    ///
+    /// Tries each compiled pattern in the named group in priority order
+    /// (first match wins). Falls back to the default patterns if the
+    /// group name is not found (defensive, should not happen in practice).
+    ///
+    /// Returns `(name, alias, matched_text)` or `None`.
+    fn try_match_token_in_group(&self, group_name: &str) -> Option<(String, Option<String>, String)> {
+        let remaining = &self.source[self.byte_pos..];
+        let patterns = match self.group_patterns.get(group_name) {
+            Some(p) => p,
+            None => &self.patterns, // fallback to default
+        };
+        for p in patterns {
             if let Some(m) = p.pattern.find(remaining) {
                 return Some((
                     p.name.clone(),
@@ -355,19 +668,27 @@ impl<'a> GrammarLexer<'a> {
 
     fn tokenize_standard(&mut self) -> Result<Vec<Token>, LexerError> {
         let mut tokens = Vec::new();
+        let has_skip_patterns = !self.skip_patterns.is_empty();
 
         while self.char_pos < self.chars.len() {
             let ch = self.chars[self.char_pos];
 
-            // --- Skip whitespace (not newlines) in standard mode ---
-            if ch == ' ' || ch == '\t' || ch == '\r' {
-                self.advance();
-                continue;
-            }
-
-            // --- Try skip patterns ---
-            if self.try_skip() {
-                continue;
+            // --- Skip patterns (grammar-defined) ---
+            // When the grammar has skip patterns AND skip is enabled, they
+            // take over whitespace handling. The callback can disable skip
+            // processing for groups where whitespace is significant (CDATA).
+            if has_skip_patterns {
+                if self.skip_enabled && self.try_skip() {
+                    continue;
+                }
+            } else {
+                // --- Default whitespace skip ---
+                // Without skip patterns, use hardcoded behavior: skip
+                // spaces, tabs, carriage returns silently.
+                if ch == ' ' || ch == '\t' || ch == '\r' {
+                    self.advance();
+                    continue;
+                }
             }
 
             // --- Newlines ---
@@ -383,8 +704,12 @@ impl<'a> GrammarLexer<'a> {
                 continue;
             }
 
-            // --- Try each pattern ---
-            if let Some((name, alias, matched)) = self.try_match_token() {
+            // --- Try active group's token patterns (first match wins) ---
+            // The active group is the top of the group stack. When no
+            // groups are defined, this is always "default" (the top-level
+            // definitions), preserving backward compatibility.
+            let active_group = self.group_stack.last().cloned().unwrap_or_else(|| "default".to_string());
+            if let Some((name, alias, matched)) = self.try_match_token_in_group(&active_group) {
                 let start_line = self.line;
                 let start_col = self.column;
 
@@ -395,17 +720,6 @@ impl<'a> GrammarLexer<'a> {
                 )?;
 
                 // For STRING tokens, strip quotes and process escapes.
-                //
-                // A token is considered a "string" if its effective name ends
-                // with "STRING" (catches STRING, BASIC_STRING, LITERAL_STRING,
-                // ML_BASIC_STRING, ML_LITERAL_STRING, etc.) AND its matched
-                // text starts and ends with matching quote characters.
-                //
-                // When escape_mode is "none", we strip quotes but leave escape
-                // sequences as raw text. This is used by grammars like CSS and
-                // TOML where the semantic layer handles type-specific escape
-                // processing (e.g., TOML has four string types with different
-                // escape rules).
                 let effective_name = alias.as_deref().unwrap_or(&name);
                 let final_value = if effective_name.ends_with("STRING") && matched.len() >= 2
                     && Self::is_quoted(&matched)
@@ -421,16 +735,72 @@ impl<'a> GrammarLexer<'a> {
                     matched.clone()
                 };
 
-                tokens.push(Token {
+                let char_count = matched.chars().count();
+                self.advance_n(char_count);
+
+                let token = Token {
                     type_: token_type,
                     value: final_value,
                     line: start_line,
                     column: start_col,
                     type_name,
-                });
+                };
 
-                let char_count = matched.chars().count();
-                self.advance_n(char_count);
+                // --- Invoke on-token callback ---
+                // The callback can push/pop groups, emit extra tokens,
+                // suppress the current token, or toggle skip processing.
+                // Emitted tokens do NOT re-trigger the callback.
+                if self.on_token.is_some() {
+                    // Build a LexerContext for the callback. We need to
+                    // temporarily take the callback out of self to satisfy
+                    // the borrow checker (callback borrows token, which
+                    // would conflict with &mut self).
+                    let mut ctx = LexerContext {
+                        group_names: &self.group_names,
+                        group_stack: &self.group_stack,
+                        source: self.source,
+                        pos_after_token: self.byte_pos,
+                        actions: Vec::new(),
+                        suppressed: false,
+                    };
+
+                    // Take the callback out temporarily.
+                    let mut callback = self.on_token.take().unwrap();
+                    callback(&token, &mut ctx);
+                    // Put it back.
+                    self.on_token = Some(callback);
+
+                    // Apply suppression: if the callback suppressed this
+                    // token, don't add it to the output.
+                    if !ctx.suppressed {
+                        tokens.push(token);
+                    }
+
+                    // Process actions in order.
+                    for action in ctx.actions {
+                        match action {
+                            ContextAction::Push(group_name) => {
+                                self.group_stack.push(group_name);
+                            }
+                            ContextAction::Pop => {
+                                if self.group_stack.len() > 1 {
+                                    self.group_stack.pop();
+                                }
+                            }
+                            ContextAction::Emit(emitted_token) => {
+                                tokens.push(emitted_token);
+                            }
+                            ContextAction::Suppress => {
+                                // Already handled above via ctx.suppressed
+                            }
+                            ContextAction::SetSkipEnabled(enabled) => {
+                                self.skip_enabled = enabled;
+                            }
+                        }
+                    }
+                } else {
+                    tokens.push(token);
+                }
                 continue;
             }
 
@@ -448,6 +818,10 @@ impl<'a> GrammarLexer<'a> {
             column: self.column,
             type_name: None,
         });
+
+        // Reset group stack and skip_enabled for reuse.
+        self.group_stack = vec!["default".to_string()];
+        self.skip_enabled = true;
 
         Ok(tokens)
     }
@@ -1207,5 +1581,585 @@ PLUS = "+""#,
             .map(|t| t.value.as_str())
             .collect();
         assert_eq!(names, vec!["foo", "bar"]);
+    }
+
+    // ===================================================================
+    // Helper: build a group grammar for testing (XML-like)
+    // ===================================================================
+
+    /// Create a grammar with pattern groups for testing.
+    ///
+    /// This simulates a simplified XML-like grammar:
+    /// - Default group: TEXT and OPEN_TAG
+    /// - tag group: TAG_NAME, EQUALS, VALUE, TAG_CLOSE
+    ///
+    /// The grammar uses skip patterns for whitespace and escape mode "none".
+    fn make_group_grammar() -> TokenGrammar {
+        parse_token_grammar(
+            "escapes: none\n\n\
+             skip:\n  WS = /[ \\t\\r\\n]+/\n\n\
+             TEXT      = /[^<]+/\n\
+             OPEN_TAG  = \"<\"\n\n\
+             group tag:\n\
+             \x20 TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/\n\
+             \x20 EQUALS    = \"=\"\n\
+             \x20 VALUE     = /\"[^\"]*\"/\n\
+             \x20 TAG_CLOSE = \">\"\n",
+        )
+        .unwrap()
+    }
+
+    /// Normalize a token's type to a string name.
+    ///
+    /// Tokens can have a `type_name` (for grammar-driven custom types) or
+    /// fall back to the `TokenType` enum variant name. This helper gives
+    /// a consistent string for assertions.
+    fn token_type_name(t: &Token) -> String {
+        if let Some(ref name) = t.type_name {
+            name.clone()
+        } else {
+            format!("{}", t.type_)
+        }
+    }
+
+    // ===================================================================
+    // LexerContext unit tests
+    // ===================================================================
+
+    #[test]
+    fn test_ctx_push_group_records_action() {
+        // push_group() records a Push action.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        ctx.push_group("tag").unwrap();
+        assert_eq!(ctx.actions, vec![ContextAction::Push("tag".to_string())]);
+    }
+
+    #[test]
+    fn test_ctx_push_unknown_group_errors() {
+        // push_group() with unknown name returns Err.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        let result = ctx.push_group("nonexistent");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Unknown pattern group"));
+    }
+
+    #[test]
+    fn test_ctx_pop_group_records_action() {
+        // pop_group() records a Pop action.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        ctx.pop_group();
+        assert_eq!(ctx.actions, vec![ContextAction::Pop]);
+    }
+
+    #[test]
+    fn test_ctx_active_group_reads_stack() {
+        // active_group() returns the top of the lexer's group stack.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        assert_eq!(ctx.active_group(), "default");
+    }
+
+    #[test]
+    fn test_ctx_group_stack_depth() {
+        // group_stack_depth() returns the length of the group stack.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        assert_eq!(ctx.group_stack_depth(), 1);
+    }
+
+    #[test]
+    fn test_ctx_emit_appends_token() {
+        // emit() records an Emit action with the given token.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        let synthetic = Token {
+            type_: TokenType::Name,
+            value: "!".to_string(),
+            line: 1,
+            column: 1,
+            type_name: Some("SYNTHETIC".to_string()),
+        };
+        ctx.emit(synthetic.clone());
+        assert_eq!(ctx.actions, vec![ContextAction::Emit(synthetic)]);
+    }
+
+    #[test]
+    fn test_ctx_suppress_sets_flag() {
+        // suppress() sets the suppressed flag.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        assert!(!ctx.suppressed);
+        ctx.suppress();
+        assert!(ctx.suppressed);
+    }
+
+    #[test]
+    fn test_ctx_peek_reads_source() {
+        // peek() reads characters from the source after the token.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("hello", &grammar);
+        // Suppose token ended at byte position 3 (consumed "hel")
+        let ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "hello",
+            pos_after_token: 3,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        assert_eq!(ctx.peek(1), "l");
+        assert_eq!(ctx.peek(2), "o");
+        assert_eq!(ctx.peek(3), "");  // past EOF
+    }
+
+    #[test]
+    fn test_ctx_peek_str_reads_source() {
+        // peek_str() reads a substring from the source after the token.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("hello world", &grammar);
+        let ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "hello world",
+            pos_after_token: 5,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        assert_eq!(ctx.peek_str(6), " world");
+    }
+
+    #[test]
+    fn test_ctx_set_skip_enabled() {
+        // set_skip_enabled() records a SetSkipEnabled action.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        ctx.set_skip_enabled(false);
+        assert_eq!(ctx.actions, vec![ContextAction::SetSkipEnabled(false)]);
+    }
+
+    #[test]
+    fn test_ctx_multiple_pushes() {
+        // Multiple push_group() calls are recorded in order.
+        let grammar = make_group_grammar();
+        let lexer = GrammarLexer::new("x", &grammar);
+        let mut ctx = LexerContext {
+            group_names: &lexer.group_names,
+            group_stack: &lexer.group_stack,
+            source: "x",
+            pos_after_token: 1,
+            actions: Vec::new(),
+            suppressed: false,
+        };
+        ctx.push_group("tag").unwrap();
+        ctx.push_group("tag").unwrap();
+        assert_eq!(ctx.actions, vec![
+            ContextAction::Push("tag".to_string()),
+            ContextAction::Push("tag".to_string()),
+        ]);
+    }
+
+    // ===================================================================
+    // Pattern group tokenization tests
+    // ===================================================================
+
+    #[test]
+    fn test_no_callback_uses_default_group() {
+        // Without a callback, only default group patterns are used.
+        let grammar = make_group_grammar();
+        let tokens = GrammarLexer::new("hello", &grammar).tokenize().unwrap();
+        assert_eq!(token_type_name(&tokens[0]), "TEXT");
+        assert_eq!(tokens[0].value, "hello");
+    }
+
+    #[test]
+    fn test_callback_push_pop_group() {
+        // Callback can push/pop groups to switch pattern sets.
+        // Simulates: <div> where < triggers push("tag"), > triggers pop().
+        let grammar = make_group_grammar();
+        let mut lexer = GrammarLexer::new("<div>hello", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.push_group("tag").unwrap();
+            } else if token.type_name.as_deref() == Some("TAG_CLOSE") {
+                ctx.pop_group();
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("OPEN_TAG".to_string(), "<".to_string()),
+            ("TAG_NAME".to_string(), "div".to_string()),
+            ("TAG_CLOSE".to_string(), ">".to_string()),
+            ("TEXT".to_string(), "hello".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_callback_with_attributes() {
+        // Callback handles tag with attributes.
+        // Simulates: <div class="main"> with the tag group.
+        let grammar = make_group_grammar();
+        let mut lexer = GrammarLexer::new("<div class=\"main\">", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.push_group("tag").unwrap();
+            } else if token.type_name.as_deref() == Some("TAG_CLOSE") {
+                ctx.pop_group();
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("OPEN_TAG".to_string(), "<".to_string()),
+            ("TAG_NAME".to_string(), "div".to_string()),
+            ("TAG_NAME".to_string(), "class".to_string()),
+            ("Equals".to_string(), "=".to_string()),
+            ("VALUE".to_string(), "\"main\"".to_string()),
+            ("TAG_CLOSE".to_string(), ">".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_nested_tags() {
+        // Group stack handles nested structures.
+        // Simulates: <a>text<b>inner</b></a> with push/pop on < and >.
+        let grammar = parse_token_grammar(
+            "escapes: none\n\n\
+             skip:\n  WS = /[ \\t\\r\\n]+/\n\n\
+             TEXT             = /[^<]+/\n\
+             CLOSE_TAG_START  = \"</\"\n\
+             OPEN_TAG         = \"<\"\n\n\
+             group tag:\n\
+             \x20 TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/\n\
+             \x20 TAG_CLOSE = \">\"\n\
+             \x20 SLASH     = \"/\"\n",
+        ).unwrap();
+
+        let mut lexer = GrammarLexer::new("<a>text<b>inner</b></a>", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            let name = token.type_name.as_deref().unwrap_or("");
+            if name == "OPEN_TAG" || name == "CLOSE_TAG_START" {
+                ctx.push_group("tag").unwrap();
+            } else if name == "TAG_CLOSE" {
+                ctx.pop_group();
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("OPEN_TAG".to_string(), "<".to_string()),
+            ("TAG_NAME".to_string(), "a".to_string()),
+            ("TAG_CLOSE".to_string(), ">".to_string()),
+            ("TEXT".to_string(), "text".to_string()),
+            ("OPEN_TAG".to_string(), "<".to_string()),
+            ("TAG_NAME".to_string(), "b".to_string()),
+            ("TAG_CLOSE".to_string(), ">".to_string()),
+            ("TEXT".to_string(), "inner".to_string()),
+            ("CLOSE_TAG_START".to_string(), "</".to_string()),
+            ("TAG_NAME".to_string(), "b".to_string()),
+            ("TAG_CLOSE".to_string(), ">".to_string()),
+            ("CLOSE_TAG_START".to_string(), "</".to_string()),
+            ("TAG_NAME".to_string(), "a".to_string()),
+            ("TAG_CLOSE".to_string(), ">".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_suppress_token() {
+        // Callback can suppress tokens (remove from output).
+        let grammar = make_group_grammar();
+        let mut lexer = GrammarLexer::new("<hello", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.suppress();
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<String> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| token_type_name(t))
+            .collect();
+        // OPEN_TAG was suppressed, only TEXT remains
+        assert_eq!(types, vec!["TEXT"]);
+    }
+
+    #[test]
+    fn test_emit_synthetic_token() {
+        // Callback can emit synthetic tokens after the current one.
+        let grammar = make_group_grammar();
+        let mut lexer = GrammarLexer::new("<hello", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.emit(Token {
+                    type_: TokenType::Name,
+                    value: "[start]".to_string(),
+                    line: token.line,
+                    column: token.column,
+                    type_name: Some("MARKER".to_string()),
+                });
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("OPEN_TAG".to_string(), "<".to_string()),
+            ("MARKER".to_string(), "[start]".to_string()),
+            ("TEXT".to_string(), "hello".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_suppress_and_emit() {
+        // Suppress + emit = token replacement.
+        let grammar = make_group_grammar();
+        let mut lexer = GrammarLexer::new("<hello", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.suppress();
+                ctx.emit(Token {
+                    type_: TokenType::Name,
+                    value: "<".to_string(),
+                    line: token.line,
+                    column: token.column,
+                    type_name: Some("REPLACED".to_string()),
+                });
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("REPLACED".to_string(), "<".to_string()),
+            ("TEXT".to_string(), "hello".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_pop_at_bottom_is_noop() {
+        // Popping when only default remains is a no-op (no crash).
+        let grammar = make_group_grammar();
+        let mut lexer = GrammarLexer::new("hello", &grammar);
+        lexer.set_on_token(Some(Box::new(|_token: &Token, ctx: &mut LexerContext| {
+            ctx.pop_group();
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        // Should still produce TEXT token without crashing.
+        assert_eq!(token_type_name(&tokens[0]), "TEXT");
+    }
+
+    #[test]
+    fn test_set_skip_enabled_false() {
+        // Callback can disable skip patterns for significant whitespace.
+        let grammar = parse_token_grammar(
+            "escapes: none\n\n\
+             skip:\n  WS = /[ \\t]+/\n\n\
+             TEXT      = /[^<]+/\n\
+             START     = \"<!\"\n\n\
+             group raw:\n\
+             \x20 RAW_TEXT = /[^>]+/\n\
+             \x20 END      = \">\"\n",
+        ).unwrap();
+
+        let mut lexer = GrammarLexer::new("<! hello world >after", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            let name = token.type_name.as_deref().unwrap_or("");
+            if name == "START" {
+                ctx.push_group("raw").unwrap();
+                ctx.set_skip_enabled(false);
+            } else if name == "END" {
+                ctx.pop_group();
+                ctx.set_skip_enabled(true);
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| token_type_name(t) != "EOF")
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("START".to_string(), "<!".to_string()),
+            ("RAW_TEXT".to_string(), " hello world ".to_string()),
+            ("END".to_string(), ">".to_string()),
+            ("TEXT".to_string(), "after".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_no_groups_backward_compat() {
+        // A grammar with no groups behaves identically to before.
+        let grammar = parse_token_grammar(
+            "NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/\n\
+             NUMBER = /[0-9]+/\n\
+             PLUS   = \"+\"\n",
+        ).unwrap();
+        let tokens = GrammarLexer::new("x + 1", &grammar).tokenize().unwrap();
+
+        let types: Vec<(String, String)> = tokens.iter()
+            .filter(|t| {
+                let name = token_type_name(t);
+                name != "Newline" && name != "EOF"
+            })
+            .map(|t| (token_type_name(t), t.value.clone()))
+            .collect();
+        assert_eq!(types, vec![
+            ("Name".to_string(), "x".to_string()),
+            ("Plus".to_string(), "+".to_string()),
+            ("Number".to_string(), "1".to_string()),
+        ]);
+    }
+
+    #[test]
+    fn test_clear_callback() {
+        // Passing None to set_on_token clears the callback.
+        let grammar = make_group_grammar();
+        use std::sync::{Arc, Mutex};
+        let called = Arc::new(Mutex::new(Vec::<String>::new()));
+        let called_clone = called.clone();
+
+        let mut lexer = GrammarLexer::new("hello", &grammar);
+        lexer.set_on_token(Some(Box::new(move |token: &Token, _ctx: &mut LexerContext| {
+            called_clone.lock().unwrap().push(token_type_name(token));
+        })));
+        lexer.set_on_token(None);
+        lexer.tokenize().unwrap();
+
+        assert!(called.lock().unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_group_stack_resets_between_calls() {
+        // The group stack resets when tokenize() is called again.
+        // In Rust, we create a fresh lexer each time (GrammarLexer doesn't
+        // support re-tokenizing the same source), but the reset logic in
+        // tokenize_standard ensures clean state.
+        let grammar = make_group_grammar();
+
+        // First tokenization: push "tag" group
+        let mut lexer1 = GrammarLexer::new("<div", &grammar);
+        lexer1.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.push_group("tag").unwrap();
+            }
+        })));
+        let tokens1 = lexer1.tokenize().unwrap();
+        assert!(tokens1.iter().any(|t| token_type_name(t) == "TAG_NAME"));
+
+        // Second tokenization: should start fresh from "default"
+        let mut lexer2 = GrammarLexer::new("<div", &grammar);
+        lexer2.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                ctx.push_group("tag").unwrap();
+            }
+        })));
+        let tokens2 = lexer2.tokenize().unwrap();
+        assert!(tokens2.iter().any(|t| token_type_name(t) == "TAG_NAME"));
+    }
+
+    #[test]
+    fn test_multiple_push_pop_sequence() {
+        // Multiple push/pop in one callback are applied in order.
+        let grammar = make_group_grammar();
+
+        let mut lexer = GrammarLexer::new("<div", &grammar);
+        lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
+            if token.type_name.as_deref() == Some("OPEN_TAG") {
+                // Push tag twice (stacking)
+                ctx.push_group("tag").unwrap();
+                ctx.push_group("tag").unwrap();
+            }
+        })));
+        let tokens = lexer.tokenize().unwrap();
+
+        // Should not crash and should still produce TAG_NAME.
+        assert!(tokens.iter().any(|t| token_type_name(t) == "TAG_NAME"));
     }
 }
