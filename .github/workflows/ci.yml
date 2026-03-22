@@ -144,14 +144,23 @@ jobs:
           echo "Diff base: $BASE"
 
       # ── Run the build ─────────────────────────────────────────
+      #
+      # On Windows we force-build everything because Windows CI is new
+      # and we need to validate that all BUILD_windows files actually
+      # work. Once Windows CI is stable, this can switch to diff-based
+      # like Linux and macOS.
       - name: Build and test affected packages
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          $BT \
-            -root . \
-            -diff-base "${{ steps.diff-base.outputs.base }}" \
-            -language all
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            $BT -root . -force -language all
+          else
+            $BT \
+              -root . \
+              -diff-base "${{ steps.diff-base.outputs.base }}" \
+              -language all
+          fi
 
       # ── Force full build on main ──────────────────────────────
       - name: Full build on main merge
