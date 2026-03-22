@@ -253,6 +253,7 @@ Note: tarpaulin reports coverage for the ENTIRE workspace by default. To get pac
 
 **Rule:** Do NOT use `/Users/adhithya/.local/bin/mise exec --` in BUILD files. Use bare commands: `go test ./... -v -cover`, `bundle install --quiet && bundle exec rake test`, etc. CI sets up its own runtimes.
 
+
 ---
 
 ### 2026-03-22: Skip patterns consume newlines — update downstream tests
