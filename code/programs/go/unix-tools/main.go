@@ -68,6 +68,14 @@ var toolNames = []string{
 	"echo",
 	"cat",
 	"wc",
+	"head",
+	"tail",
+	"basename",
+	"dirname",
+	"seq",
+	"tee",
+	"rev",
+	"printenv",
 }
 
 // =========================================================================
@@ -124,6 +132,22 @@ func dispatch(toolName string, argv []string) int {
 		return runCat(specPath, argv, os.Stdout, os.Stderr)
 	case "wc":
 		return runWc(specPath, argv, os.Stdout, os.Stderr)
+	case "head":
+		return runHead(specPath, argv, os.Stdout, os.Stderr)
+	case "tail":
+		return runTail(specPath, argv, os.Stdout, os.Stderr)
+	case "basename":
+		return runBasename(specPath, argv, os.Stdout, os.Stderr)
+	case "dirname":
+		return runDirname(specPath, argv, os.Stdout, os.Stderr)
+	case "seq":
+		return runSeq(specPath, argv, os.Stdout, os.Stderr)
+	case "tee":
+		return runTee(specPath, argv, os.Stdout, os.Stderr)
+	case "rev":
+		return runRev(specPath, argv, os.Stdout, os.Stderr)
+	case "printenv":
+		return runPrintenv(specPath, argv, os.Stdout, os.Stderr)
 	default:
 		fmt.Fprintf(os.Stderr, "unix-tools: unknown tool: %s\n", toolName)
 		fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)

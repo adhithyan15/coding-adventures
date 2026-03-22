@@ -5,10 +5,7 @@
   "description": "Display a line of text",
   "version": "1.0.0",
   "parsing_mode": "posix",
-  "builtin_flags": {
-    "help": true,
-    "version": true
-  },
+  "builtin_flags": { "help": true, "version": true },
   "flags": [
     {
       "id": "no_newline",
@@ -35,10 +32,10 @@
   "arguments": [
     {
       "id": "strings",
+      "name": "STRING",
       "description": "Strings to display",
       "required": false,
       "variadic": true,
-      "name": "STRING",
       "type": "string"
     }
   ],
@@ -46,10 +43,7 @@
   "mutually_exclusive_groups": [
     {
       "id": "escape-mode",
-      "flag_ids": [
-        "enable_escapes",
-        "disable_escapes"
-      ],
+      "flag_ids": ["enable_escapes", "disable_escapes"],
       "required": false
     }
   ]
