@@ -1,0 +1,222 @@
+module CodingAdventures
+  module Transistors
+    VERSION: String
+
+    module MOSFETRegion
+      CUTOFF: String
+      LINEAR: String
+      SATURATION: String
+    end
+
+    module BJTRegion
+      CUTOFF: String
+      ACTIVE: String
+      SATURATION: String
+    end
+
+    module TransistorType
+      NMOS: String
+      PMOS: String
+      NPN: String
+      PNP: String
+    end
+
+    class MOSFETParams
+      attr_reader vth: Float
+      attr_reader k: Float
+      attr_reader w: Float
+      attr_reader l: Float
+      attr_reader c_gate: Float
+      attr_reader c_drain: Float
+      def initialize: (?vth: Float, ?k: Float, ?w: Float, ?l: Float, ?c_gate: Float, ?c_drain: Float) -> void
+    end
+
+    class BJTParams
+      attr_reader beta: Float
+      attr_reader vbe_on: Float
+      attr_reader vce_sat: Float
+      attr_reader is_: Float
+      attr_reader c_base: Float
+      def initialize: (?beta: Float, ?vbe_on: Float, ?vce_sat: Float, ?is_: Float, ?c_base: Float) -> void
+    end
+
+    class CircuitParams
+      attr_reader vdd: Float
+      attr_reader temperature: Float
+      def initialize: (?vdd: Float, ?temperature: Float) -> void
+    end
+
+    class GateOutput
+      attr_reader logic_value: Integer
+      attr_reader voltage: Float
+      attr_reader current_draw: Float
+      attr_reader power_dissipation: Float
+      attr_reader propagation_delay: Float
+      attr_reader transistor_count: Integer
+    end
+
+    class AmplifierAnalysis
+      attr_reader voltage_gain: Float
+      attr_reader transconductance: Float
+      attr_reader input_impedance: Float
+      attr_reader output_impedance: Float
+      attr_reader bandwidth: Float
+      attr_reader operating_point: Hash[String, Float]
+    end
+
+    class NoiseMargins
+      attr_reader vol: Float
+      attr_reader voh: Float
+      attr_reader vil: Float
+      attr_reader vih: Float
+      attr_reader nml: Float
+      attr_reader nmh: Float
+    end
+
+    class PowerAnalysis
+      attr_reader static_power: Float
+      attr_reader dynamic_power: Float
+      attr_reader total_power: Float
+      attr_reader energy_per_switch: Float
+    end
+
+    class TimingAnalysis
+      attr_reader tphl: Float
+      attr_reader tplh: Float
+      attr_reader tpd: Float
+      attr_reader rise_time: Float
+      attr_reader fall_time: Float
+      attr_reader max_frequency: Float
+    end
+
+    def self.validate_bit: (untyped value, ?String name) -> void
+
+    class NMOS
+      attr_reader params: MOSFETParams
+      def initialize: (?MOSFETParams? params) -> void
+      def region: (vgs: Float, vds: Float) -> String
+      def drain_current: (vgs: Float, vds: Float) -> Float
+      def conducting?: (vgs: Float) -> bool
+      def output_voltage: (vgs: Float, vdd: Float) -> Float
+      def transconductance: (vgs: Float, vds: Float) -> Float
+    end
+
+    class PMOS
+      attr_reader params: MOSFETParams
+      def initialize: (?MOSFETParams? params) -> void
+      def region: (vgs: Float, vds: Float) -> String
+      def drain_current: (vgs: Float, vds: Float) -> Float
+      def conducting?: (vgs: Float) -> bool
+      def output_voltage: (vgs: Float, vdd: Float) -> Float
+      def transconductance: (vgs: Float, vds: Float) -> Float
+    end
+
+    class NPN
+      attr_reader params: BJTParams
+      def initialize: (?BJTParams? params) -> void
+      def region: (vbe: Float, vce: Float) -> String
+      def collector_current: (vbe: Float, vce: Float) -> Float
+      def base_current: (vbe: Float, vce: Float) -> Float
+      def conducting?: (vbe: Float) -> bool
+      def transconductance: (vbe: Float, vce: Float) -> Float
+    end
+
+    class PNP
+      attr_reader params: BJTParams
+      def initialize: (?BJTParams? params) -> void
+      def region: (vbe: Float, vce: Float) -> String
+      def collector_current: (vbe: Float, vce: Float) -> Float
+      def base_current: (vbe: Float, vce: Float) -> Float
+      def conducting?: (vbe: Float) -> bool
+      def transconductance: (vbe: Float, vce: Float) -> Float
+    end
+
+    class CMOSInverter
+      TRANSISTOR_COUNT: Integer
+      attr_reader circuit: CircuitParams
+      attr_reader nmos: NMOS
+      attr_reader pmos: PMOS
+      def initialize: (?CircuitParams? circuit_params, ?MOSFETParams? nmos_params, ?MOSFETParams? pmos_params) -> void
+      def evaluate: (Float input_voltage) -> GateOutput
+      def evaluate_digital: (Integer a) -> Integer
+      def voltage_transfer_characteristic: (?steps: Integer) -> Array[[Float, Float]]
+      def static_power: -> Float
+      def dynamic_power: (frequency: Float, c_load: Float) -> Float
+    end
+
+    class CMOSNand
+      TRANSISTOR_COUNT: Integer
+      attr_reader circuit: CircuitParams
+      def initialize: (?CircuitParams? circuit_params, ?MOSFETParams? nmos_params, ?MOSFETParams? pmos_params) -> void
+      def evaluate: (Float va, Float vb) -> GateOutput
+      def evaluate_digital: (Integer a, Integer b) -> Integer
+      def transistor_count: -> Integer
+    end
+
+    class CMOSNor
+      TRANSISTOR_COUNT: Integer
+      attr_reader circuit: CircuitParams
+      def initialize: (?CircuitParams? circuit_params, ?MOSFETParams? nmos_params, ?MOSFETParams? pmos_params) -> void
+      def evaluate: (Float va, Float vb) -> GateOutput
+      def evaluate_digital: (Integer a, Integer b) -> Integer
+    end
+
+    class CMOSAnd
+      TRANSISTOR_COUNT: Integer
+      attr_reader circuit: CircuitParams
+      def initialize: (?CircuitParams? circuit_params) -> void
+      def evaluate: (Float va, Float vb) -> GateOutput
+      def evaluate_digital: (Integer a, Integer b) -> Integer
+    end
+
+    class CMOSOr
+      TRANSISTOR_COUNT: Integer
+      attr_reader circuit: CircuitParams
+      def initialize: (?CircuitParams? circuit_params) -> void
+      def evaluate: (Float va, Float vb) -> GateOutput
+      def evaluate_digital: (Integer a, Integer b) -> Integer
+    end
+
+    class CMOSXor
+      TRANSISTOR_COUNT: Integer
+      attr_reader circuit: CircuitParams
+      def initialize: (?CircuitParams? circuit_params) -> void
+      def evaluate: (Float va, Float vb) -> GateOutput
+      def evaluate_digital: (Integer a, Integer b) -> Integer
+      def evaluate_from_nands: (Integer a, Integer b) -> Integer
+    end
+
+    class TTLNand
+      attr_reader vcc: Float
+      attr_reader params: BJTParams
+      attr_reader r_pullup: Float
+      def initialize: (?vcc: Float, ?bjt_params: BJTParams?) -> void
+      def evaluate: (Float va, Float vb) -> GateOutput
+      def evaluate_digital: (Integer a, Integer b) -> Integer
+      def static_power: -> Float
+    end
+
+    class RTLInverter
+      attr_reader vcc: Float
+      attr_reader r_base: Float
+      attr_reader r_collector: Float
+      attr_reader params: BJTParams
+      def initialize: (?vcc: Float, ?r_base: Float, ?r_collector: Float, ?bjt_params: BJTParams?) -> void
+      def evaluate: (Float v_input) -> GateOutput
+      def evaluate_digital: (Integer a) -> Integer
+    end
+
+    module Amplifier
+      def self.analyze_common_source_amp: (NMOS transistor, vgs: Float, vdd: Float, r_drain: Float, ?c_load: Float) -> AmplifierAnalysis
+      def self.analyze_common_emitter_amp: (NPN transistor, vbe: Float, vcc: Float, r_collector: Float, ?c_load: Float) -> AmplifierAnalysis
+    end
+
+    module Analysis
+      def self.compute_noise_margins: (CMOSInverter | TTLNand gate) -> NoiseMargins
+      def self.analyze_power: (CMOSInverter | CMOSNand | CMOSNor | TTLNand gate, ?frequency: Float, ?c_load: Float, ?activity_factor: Float) -> PowerAnalysis
+      def self.analyze_timing: (CMOSInverter | CMOSNand | CMOSNor | TTLNand gate, ?c_load: Float) -> TimingAnalysis
+      def self.compare_cmos_vs_ttl: (?frequency: Float, ?c_load: Float) -> Hash[String, Hash[String, untyped]]
+      def self.demonstrate_cmos_scaling: (?Array[Float]? technology_nodes) -> Array[Hash[String, Float]]
+    end
+  end
+end
