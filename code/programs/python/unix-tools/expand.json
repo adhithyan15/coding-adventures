@@ -1,0 +1,39 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "expand",
+  "display_name": "expand",
+  "description": "Convert tabs to spaces",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "tabs",
+      "short": "t",
+      "long": "tabs",
+      "description": "Have tabs N characters apart, not 8, or use comma-separated list of tab positions",
+      "type": "string"
+    },
+    {
+      "id": "initial",
+      "short": "i",
+      "long": "initial",
+      "description": "Do not convert tabs after non blanks",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to process. Use '-' for standard input.",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": []
+}

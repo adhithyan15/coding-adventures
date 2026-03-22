@@ -1,0 +1,47 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "fold",
+  "display_name": "fold",
+  "description": "Wrap each input line to fit in specified width",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "width",
+      "short": "w",
+      "long": "width",
+      "description": "Use WIDTH columns instead of 80",
+      "type": "integer",
+      "default": 80
+    },
+    {
+      "id": "spaces",
+      "short": "s",
+      "long": "spaces",
+      "description": "Break at spaces",
+      "type": "boolean"
+    },
+    {
+      "id": "bytes",
+      "short": "b",
+      "long": "bytes",
+      "description": "Count bytes rather than columns",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to process. Use '-' for standard input.",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": []
+}

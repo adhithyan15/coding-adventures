@@ -1,0 +1,78 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "rm",
+  "display_name": "rm",
+  "description": "Remove files or directories",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "force",
+      "short": "f",
+      "long": "force",
+      "description": "Ignore nonexistent files and arguments, never prompt",
+      "type": "boolean"
+    },
+    {
+      "id": "interactive",
+      "short": "i",
+      "description": "Prompt before every removal",
+      "type": "boolean"
+    },
+    {
+      "id": "interactive_once",
+      "short": "I",
+      "description": "Prompt once before removing more than three files or recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "recursive",
+      "short": "r",
+      "long": "recursive",
+      "description": "Remove directories and their contents recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "dir",
+      "short": "d",
+      "long": "dir",
+      "description": "Remove empty directories",
+      "type": "boolean"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Explain what is being done",
+      "type": "boolean"
+    },
+    {
+      "id": "preserve_root",
+      "long": "preserve-root",
+      "description": "Do not remove '/' (default)",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "id": "one_file_system",
+      "long": "one-file-system",
+      "description": "When removing a hierarchy recursively, skip directories on different file systems",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files or directories to remove",
+      "type": "string",
+      "required": true,
+      "variadic": true
+    }
+  ],
+  "commands": []
+}

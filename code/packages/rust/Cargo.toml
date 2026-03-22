@@ -62,7 +62,9 @@ members = [
     "rom-bios",
     "ruby-lexer",
     "ruby-parser",
+    "starlark-ast-to-bytecode-compiler",
     "starlark-compiler",
+    "starlark-interpreter",
     "starlark-lexer",
     "starlark-parser",
     "starlark-vm",
@@ -86,4 +88,5 @@ members = [
     "vendor-api-simulators",
     "virtual-machine",
     "wasm-simulator",
+    "xml-lexer",
 ]

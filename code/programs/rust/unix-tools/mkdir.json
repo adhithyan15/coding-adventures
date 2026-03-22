@@ -1,0 +1,45 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "mkdir",
+  "display_name": "mkdir",
+  "description": "Make directories",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "parents",
+      "short": "p",
+      "long": "parents",
+      "description": "No error if existing, make parent directories as needed",
+      "type": "boolean"
+    },
+    {
+      "id": "mode",
+      "short": "m",
+      "long": "mode",
+      "description": "Set file mode (as in chmod), not a=rwx - umask",
+      "type": "string",
+      "value_name": "MODE"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Print a message for each created directory",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "directories",
+      "name": "DIRECTORY",
+      "description": "Directories to create",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 1
+    }
+  ],
+  "commands": []
+}

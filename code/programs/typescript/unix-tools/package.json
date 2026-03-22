@@ -17,7 +17,19 @@
     "seq": "tsx src/seq.ts",
     "tee": "tsx src/tee.ts",
     "rev": "tsx src/rev.ts",
-    "printenv": "tsx src/printenv.ts"
+    "printenv": "tsx src/printenv.ts",
+    "mkdir": "tsx src/mkdir.ts",
+    "rmdir": "tsx src/rmdir.ts",
+    "touch": "tsx src/touch.ts",
+    "ln": "tsx src/ln.ts",
+    "rm": "tsx src/rm.ts",
+    "realpath": "tsx src/realpath.ts",
+    "tr": "tsx src/tr.ts",
+    "uniq": "tsx src/uniq.ts",
+    "expand": "tsx src/expand.ts",
+    "unexpand": "tsx src/unexpand.ts",
+    "fold": "tsx src/fold.ts",
+    "nl": "tsx src/nl.ts"
   },
   "dependencies": {
     "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"

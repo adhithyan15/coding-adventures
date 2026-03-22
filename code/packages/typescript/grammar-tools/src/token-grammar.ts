@@ -252,63 +252,109 @@ function parseDefinition(
   patternPart: string,
   lineNumber: number,
 ): TokenDefinition {
-  // Check for alias: "-> ALIAS" at the end
-  let alias: string | undefined;
-  let patternStr = patternPart;
-  const arrowIndex = patternStr.indexOf("->");
-  if (arrowIndex !== -1) {
-    const aliasStr = patternStr.slice(arrowIndex + 2).trim();
-    if (!aliasStr) {
-      throw new TokenGrammarError(
-        `Missing alias name after '->' for token '${namePart}'`,
-        lineNumber,
-      );
-    }
-    alias = aliasStr;
-    patternStr = patternStr.slice(0, arrowIndex).trim();
-  }
+  // Parse the pattern and optional alias. We must find the closing
+  // delimiter FIRST, then check for "-> ALIAS" in the remainder.
+  // A naive indexOf("->") would break when "->" appears inside a
+  // regex pattern (e.g., /([^-]|-(?!->))+/ in XML's COMMENT_TEXT).
 
-  if (!patternStr) {
+  if (!patternPart) {
     throw new TokenGrammarError(
       `Missing pattern after '=' for token '${namePart}'`,
       lineNumber,
     );
   }
 
-  if (patternStr.startsWith("/")) {
-    if (!patternStr.endsWith("/")) {
+  if (patternPart.startsWith("/")) {
+    // Regex pattern — find the closing /
+    // The closing / is the last / in the pattern portion. We scan
+    // for the second / that ends the regex (not escaped).
+    const closingSlash = patternPart.indexOf("/", 1);
+    if (closingSlash === -1) {
       throw new TokenGrammarError(
         `Unclosed regex pattern for token '${namePart}'`,
         lineNumber,
       );
     }
-    const regexBody = patternStr.slice(1, -1);
+
+    // The pattern could contain slashes inside character classes or
+    // groups. To find the true closing /, we look for the LAST / that
+    // could be the closer. Strategy: find the last / in the string,
+    // then check if what follows is either empty or "-> ALIAS".
+    let lastSlash = patternPart.lastIndexOf("/");
+    if (lastSlash === 0) {
+      throw new TokenGrammarError(
+        `Unclosed regex pattern for token '${namePart}'`,
+        lineNumber,
+      );
+    }
+
+    const regexBody = patternPart.slice(1, lastSlash);
     if (!regexBody) {
       throw new TokenGrammarError(
         `Empty regex pattern for token '${namePart}'`,
         lineNumber,
       );
     }
+
+    // Check for -> ALIAS in the remainder after the closing /
+    const remainder = patternPart.slice(lastSlash + 1).trim();
+    let alias: string | undefined;
+    if (remainder.startsWith("->")) {
+      alias = remainder.slice(2).trim();
+      if (!alias) {
+        throw new TokenGrammarError(
+          `Missing alias name after '->' for token '${namePart}'`,
+          lineNumber,
+        );
+      }
+    } else if (remainder) {
+      throw new TokenGrammarError(
+        `Unexpected text after regex pattern for token '${namePart}': '${remainder}'`,
+        lineNumber,
+      );
+    }
+
     return { name: namePart, pattern: regexBody, isRegex: true, lineNumber, alias };
-  } else if (patternStr.startsWith('"')) {
-    if (!patternStr.endsWith('"')) {
+  } else if (patternPart.startsWith('"')) {
+    // Literal pattern — find the closing "
+    const closingQuote = patternPart.indexOf('"', 1);
+    if (closingQuote === -1) {
       throw new TokenGrammarError(
         `Unclosed literal pattern for token '${namePart}'`,
         lineNumber,
       );
     }
-    const literalBody = patternStr.slice(1, -1);
+    const literalBody = patternPart.slice(1, closingQuote);
     if (!literalBody) {
       throw new TokenGrammarError(
         `Empty literal pattern for token '${namePart}'`,
         lineNumber,
       );
     }
+
+    // Check for -> ALIAS in the remainder after the closing "
+    const litRemainder = patternPart.slice(closingQuote + 1).trim();
+    let alias: string | undefined;
+    if (litRemainder.startsWith("->")) {
+      alias = litRemainder.slice(2).trim();
+      if (!alias) {
+        throw new TokenGrammarError(
+          `Missing alias name after '->' for token '${namePart}'`,
+          lineNumber,
+        );
+      }
+    } else if (litRemainder) {
+      throw new TokenGrammarError(
+        `Unexpected text after literal pattern for token '${namePart}': '${litRemainder}'`,
+        lineNumber,
+      );
+    }
+
     return { name: namePart, pattern: literalBody, isRegex: false, lineNumber, alias };
   } else {
     throw new TokenGrammarError(
       `Pattern for token '${namePart}' must be /regex/ or ` +
-        `"literal", got: '${patternStr}'`,
+        `"literal", got: '${patternPart}'`,
       lineNumber,
     );
   }
