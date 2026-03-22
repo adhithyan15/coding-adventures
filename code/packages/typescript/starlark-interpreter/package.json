@@ -29,7 +29,8 @@
     "@coding-adventures/lexer": "file:../lexer",
     "@coding-adventures/parser": "file:../parser",
     "@coding-adventures/grammar-tools": "file:../grammar-tools",
-    "@coding-adventures/directed-graph": "file:../directed-graph"
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

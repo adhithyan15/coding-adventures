@@ -28,6 +28,7 @@
     "@coding-adventures/grammar-tools": "file:../grammar-tools",
     "@coding-adventures/parser": "file:../parser",
     "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine",
     "@coding-adventures/virtual-machine": "file:../virtual-machine"
   },
   "devDependencies": {
