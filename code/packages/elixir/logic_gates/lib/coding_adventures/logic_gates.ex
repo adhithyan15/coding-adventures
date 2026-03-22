@@ -45,6 +45,16 @@ defmodule CodingAdventures.LogicGates do
   defdelegate and_n(inputs), to: CodingAdventures.LogicGates.Gates
   defdelegate or_n(inputs), to: CodingAdventures.LogicGates.Gates
 
+  # Combinational circuits
+  defdelegate mux2(d0, d1, sel), to: CodingAdventures.LogicGates.Combinational
+  defdelegate mux4(d0, d1, d2, d3, sel), to: CodingAdventures.LogicGates.Combinational
+  defdelegate mux_n(inputs, sel), to: CodingAdventures.LogicGates.Combinational
+  defdelegate demux(data, sel, n_outputs), to: CodingAdventures.LogicGates.Combinational
+  defdelegate decoder(inputs), to: CodingAdventures.LogicGates.Combinational
+  defdelegate encoder(inputs), to: CodingAdventures.LogicGates.Combinational
+  defdelegate priority_encoder(inputs), to: CodingAdventures.LogicGates.Combinational
+  defdelegate tri_state(data, enable), to: CodingAdventures.LogicGates.Combinational
+
   defdelegate sr_latch(set_, reset, q, q_bar), to: CodingAdventures.LogicGates.Sequential
   defdelegate d_latch(data, enable, q, q_bar), to: CodingAdventures.LogicGates.Sequential
   defdelegate d_flip_flop(data, clock, state), to: CodingAdventures.LogicGates.Sequential

@@ -14,12 +14,13 @@
  */
 
 // Token grammar
-export type { TokenDefinition, TokenGrammar } from "./token-grammar.js";
+export type { TokenDefinition, PatternGroup, TokenGrammar } from "./token-grammar.js";
 export {
   TokenGrammarError,
   parseTokenGrammar,
   validateTokenGrammar,
   tokenNames,
+  effectiveTokenNames,
 } from "./token-grammar.js";
 
 // Parser grammar

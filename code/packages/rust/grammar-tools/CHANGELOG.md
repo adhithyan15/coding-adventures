@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-03-21
+
+### Added
+
+- `PatternGroup` struct for named sets of token definitions (context-sensitive lexing)
+- `groups: HashMap<String, PatternGroup>` field on `TokenGrammar`
+- `group NAME:` section parsing in `parse_token_grammar()` with validation:
+  - Group name must match `[a-z_][a-z0-9_]*`
+  - Reserved names (`default`, `skip`, `keywords`, `reserved`, `errors`) rejected
+  - Duplicate group names rejected
+  - Group definitions use same definition parser as other sections
+- `effective_token_names()` function (returns alias names where present)
+- `token_names()` now includes names from all pattern groups
+- Group validation in `validate_token_grammar()`: bad regex, empty groups, naming conventions
+- Comprehensive test suite for pattern groups (parsing, validation, error cases)
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

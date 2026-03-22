@@ -20,8 +20,8 @@ from virtual_machine.vm import (
     VMError,
 )
 
-from starlark_compiler.opcodes import Op
-from starlark_compiler import compile_starlark
+from starlark_ast_to_bytecode_compiler.opcodes import Op
+from starlark_ast_to_bytecode_compiler import compile_starlark
 from starlark_vm import create_starlark_vm, execute_starlark, StarlarkResult
 from starlark_vm.builtins import (
     builtin_abs,

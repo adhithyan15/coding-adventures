@@ -259,21 +259,20 @@ class TestJsonLexer < Minitest::Test
   end
 
   def test_newline_after_value
-    # The GrammarLexer emits NEWLINE tokens for actual newline characters
-    # even though json.tokens skips whitespace. This is because the lexer
-    # engine treats newlines specially (it tracks line numbers). The parser
-    # handles filtering these out when needed.
+    # The JSON grammar's skip pattern includes \n (WHITESPACE = /[ \t\r\n]+/),
+    # which consumes newlines silently. No NEWLINE tokens are emitted — this
+    # is correct for JSON where newlines are just whitespace.
     tokens = tokenize("42\n")
     types = tokens.map(&:type)
-    assert_equal [NUMBER_TYPE, TT::NEWLINE, TT::EOF], types
+    assert_equal [NUMBER_TYPE, TT::EOF], types
   end
 
   def test_tabs_and_newlines_in_json
-    # The lexer emits NEWLINE tokens for line breaks (for line tracking).
-    # Tabs and spaces within lines are skipped.
+    # The JSON skip pattern consumes tabs, spaces, and newlines. Only
+    # structural tokens remain in the output.
     tokens = tokenize("{\n\t\"key\"\n}")
     types = tokens.map(&:type)
-    expected = [TT::LBRACE, TT::NEWLINE, TT::STRING, TT::NEWLINE, TT::RBRACE, TT::EOF]
+    expected = [TT::LBRACE, TT::STRING, TT::RBRACE, TT::EOF]
     assert_equal expected, types
   end
 

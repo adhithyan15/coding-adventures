@@ -421,4 +421,246 @@ class TestTokenGrammar < Minitest::Test
     assert grammar.keywords.include?("def")
     assert grammar.keywords.include?("end")
   end
+
+  # -----------------------------------------------------------------------
+  # Pattern groups: parsing
+  # -----------------------------------------------------------------------
+
+  def test_basic_group
+    source = <<~TOKENS
+      TEXT = /[^<]+/
+      TAG_OPEN = "<"
+
+      group tag:
+        TAG_NAME = /[a-zA-Z]+/
+        TAG_CLOSE = ">"
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    # Default group patterns
+    assert_equal 2, grammar.definitions.length
+    assert_equal "TEXT", grammar.definitions[0].name
+    assert_equal "TAG_OPEN", grammar.definitions[1].name
+
+    # Named group
+    assert grammar.groups.key?("tag")
+    group = grammar.groups["tag"]
+    assert_instance_of GT::PatternGroup, group
+    assert_equal "tag", group.name
+    assert_equal 2, group.definitions.length
+    assert_equal "TAG_NAME", group.definitions[0].name
+    assert_equal "TAG_CLOSE", group.definitions[1].name
+  end
+
+  def test_multiple_groups
+    source = <<~TOKENS
+      TEXT = /[^<]+/
+
+      group tag:
+        TAG_NAME = /[a-zA-Z]+/
+
+      group cdata:
+        CDATA_TEXT = /[^]]+/
+        CDATA_END = "]]>"
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    assert_equal 2, grammar.groups.length
+    assert grammar.groups.key?("tag")
+    assert grammar.groups.key?("cdata")
+    assert_equal 1, grammar.groups["tag"].definitions.length
+    assert_equal 2, grammar.groups["cdata"].definitions.length
+  end
+
+  def test_group_with_alias
+    source = <<~TOKENS
+      TEXT = /[^<]+/
+
+      group tag:
+        ATTR_VALUE_DQ = /"[^"]*"/ -> ATTR_VALUE
+        ATTR_VALUE_SQ = /'[^']*'/ -> ATTR_VALUE
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    group = grammar.groups["tag"]
+    assert_equal "ATTR_VALUE_DQ", group.definitions[0].name
+    assert_equal "ATTR_VALUE", group.definitions[0].alias_name
+    assert_equal "ATTR_VALUE_SQ", group.definitions[1].name
+    assert_equal "ATTR_VALUE", group.definitions[1].alias_name
+  end
+
+  def test_group_with_literal_patterns
+    source = <<~TOKENS
+      TEXT = /[^<]+/
+
+      group tag:
+        EQUALS = "="
+        TAG_NAME = /[a-zA-Z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    group = grammar.groups["tag"]
+    refute group.definitions[0].is_regex
+    assert_equal "=", group.definitions[0].pattern
+    assert group.definitions[1].is_regex
+  end
+
+  def test_no_groups_backward_compat
+    source = "NUMBER = /[0-9]+/\nPLUS = \"+\"\n"
+    grammar = GT.parse_token_grammar(source)
+
+    assert_equal({}, grammar.groups)
+    assert_equal 2, grammar.definitions.length
+  end
+
+  def test_groups_with_skip_section
+    source = <<~TOKENS
+      skip:
+        WS = /[ \\t]+/
+
+      TEXT = /[^<]+/
+
+      group tag:
+        TAG_NAME = /[a-zA-Z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    assert_equal 1, grammar.skip_definitions.length
+    assert_equal 1, grammar.definitions.length
+    assert_equal 1, grammar.groups.length
+  end
+
+  def test_token_names_includes_groups
+    source = <<~TOKENS
+      TEXT = /[^<]+/
+
+      group tag:
+        TAG_NAME = /[a-zA-Z]+/
+        ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    names = grammar.token_names
+    assert_includes names, "TEXT"
+    assert_includes names, "TAG_NAME"
+    assert_includes names, "ATTR_DQ"
+    assert_includes names, "ATTR_VALUE"
+  end
+
+  def test_effective_token_names_includes_groups
+    source = <<~TOKENS
+      TEXT = /[^<]+/
+
+      group tag:
+        ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+
+    names = grammar.effective_token_names
+    assert_includes names, "TEXT"
+    assert_includes names, "ATTR_VALUE"
+    refute_includes names, "ATTR_DQ" # alias replaces name
+  end
+
+  # -----------------------------------------------------------------------
+  # Pattern groups: validation
+  # -----------------------------------------------------------------------
+
+  def test_group_validates_definitions
+    grammar = GT::TokenGrammar.new(
+      groups: {
+        "tag" => GT::PatternGroup.new(
+          name: "tag",
+          definitions: [
+            GT::TokenDefinition.new(
+              name: "BAD", pattern: "[invalid",
+              is_regex: true, line_number: 5
+            )
+          ]
+        )
+      }
+    )
+    issues = GT.validate_token_grammar(grammar)
+    assert issues.any? { |i| i.include?("Invalid regex") }
+  end
+
+  def test_empty_group_warning
+    grammar = GT::TokenGrammar.new(
+      groups: {
+        "empty" => GT::PatternGroup.new(name: "empty", definitions: [])
+      }
+    )
+    issues = GT.validate_token_grammar(grammar)
+    assert issues.any? { |i| i.include?("Empty pattern group") }
+  end
+
+  # -----------------------------------------------------------------------
+  # Pattern groups: error handling
+  # -----------------------------------------------------------------------
+
+  def test_error_missing_group_name
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup :\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Missing group name"
+  end
+
+  def test_error_invalid_group_name_uppercase
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup Tag:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Invalid group name"
+  end
+
+  def test_error_invalid_group_name_starts_with_digit
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup 1tag:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Invalid group name"
+  end
+
+  def test_error_reserved_group_name_default
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup default:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Reserved group name"
+  end
+
+  def test_error_reserved_group_name_skip
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup skip:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Reserved group name"
+  end
+
+  def test_error_reserved_group_name_keywords
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup keywords:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Reserved group name"
+  end
+
+  def test_error_duplicate_group_name
+    source = "TEXT = /abc/\ngroup tag:\n  FOO = /x/\ngroup tag:\n  BAR = /y/\n"
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar(source)
+    end
+    assert_includes error.message, "Duplicate group name"
+  end
+
+  def test_error_bad_definition_in_group
+    source = "TEXT = /abc/\ngroup tag:\n  not a definition\n"
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar(source)
+    end
+    assert_includes error.message, "Expected token definition"
+  end
+
+  def test_error_incomplete_definition_in_group
+    source = "TEXT = /abc/\ngroup tag:\n  FOO = \n"
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar(source)
+    end
+    assert_includes error.message, "Incomplete definition"
+  end
 end

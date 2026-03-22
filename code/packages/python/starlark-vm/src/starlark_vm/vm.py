@@ -26,7 +26,7 @@ Chapter 2: How to Use
 
 **Step by step — for more control:**
 
-    from starlark_compiler import compile_starlark
+    from starlark_ast_to_bytecode_compiler import compile_starlark
     from starlark_vm import create_starlark_vm
 
     # Compile
@@ -47,7 +47,7 @@ from typing import Any
 
 from virtual_machine import GenericVM, VMTrace
 
-from starlark_compiler.opcodes import Op
+from starlark_ast_to_bytecode_compiler.opcodes import Op
 from starlark_vm.builtins import get_all_builtins
 from starlark_vm.handlers import (
     handle_add,
@@ -246,6 +246,18 @@ def create_starlark_vm(
     for name, impl in get_all_builtins().items():
         vm.register_builtin(name, impl)
 
+    # Override print() with a closure that captures output to the VM.
+    # The default builtin_print returns None without side effects because
+    # builtins don't have access to the VM instance. This closure fixes
+    # that by writing to vm.output directly, matching the PRINT opcode's
+    # behavior for calls made via ``print("hello")``.
+    def _print_with_capture(args: list) -> None:
+        output_str = " ".join(str(a) for a in args)
+        vm.output.append(output_str)
+        return None
+
+    vm.register_builtin("print", _print_with_capture)
+
     # -- Configure restrictions --
     vm.set_max_recursion_depth(max_recursion_depth)
     if frozen:
@@ -306,7 +318,7 @@ def execute_starlark(source: str) -> StarlarkResult:
         assert result.variables["x"] == 3
         assert result.output == ["3"]
     """
-    from starlark_compiler import compile_starlark
+    from starlark_ast_to_bytecode_compiler import compile_starlark
 
     code = compile_starlark(source)
     vm = create_starlark_vm()
