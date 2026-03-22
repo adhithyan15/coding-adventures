@@ -14,11 +14,17 @@
  * File format overview
  * --------------------
  *
- * Each non-blank, non-comment line in a .tokens file has one of three forms:
+ * Each non-blank, non-comment line in a .tokens file has one of these forms:
  *
- *   TOKEN_NAME = /regex_pattern/      — a regex-based token
- *   TOKEN_NAME = "literal_string"     — a literal-string token
- *   keywords:                         — begins the keywords section
+ *   TOKEN_NAME = /regex_pattern/           — a regex-based token
+ *   TOKEN_NAME = "literal_string"          — a literal-string token
+ *   TOKEN_NAME = /regex/ -> ALIAS          — emits token type ALIAS instead
+ *   TOKEN_NAME = "literal" -> ALIAS        — same for literals
+ *   mode: indentation                      — sets the lexer mode
+ *   keywords:                              — begins the keywords section
+ *   reserved:                              — begins the reserved keywords section
+ *   skip:                                  — begins the skip patterns section
+ *   group NAME:                            — begins a named pattern group
  *
  * Lines starting with # are comments. Blank lines are ignored.
  *
@@ -26,6 +32,14 @@
  * are identifiers that the lexer recognizes as NAME tokens but then
  * reclassifies. For instance, `if` matches the NAME pattern but is promoted
  * to an IF keyword.
+ *
+ * Pattern groups (group NAME:) enable context-sensitive lexing: the lexer
+ * maintains a stack of active groups and only tries patterns from the group
+ * on top of the stack. Language-specific callback code pushes/pops groups
+ * in response to matched tokens. For example, an XML lexer pushes a "tag"
+ * group when it sees `<` and pops it on `>`, so attribute-related patterns
+ * are only active inside tags. Patterns outside any group section belong
+ * to the implicit "default" group.
  *
  * Design decisions
  * ----------------
@@ -89,12 +103,44 @@ export interface TokenDefinition {
 }
 
 /**
+ * A named set of token definitions that are active together.
+ *
+ * When this group is at the top of the lexer's group stack, only these
+ * patterns are tried during token matching. Skip patterns are global
+ * and always tried regardless of the active group.
+ *
+ * Pattern groups enable context-sensitive lexing. For example, an XML
+ * lexer defines a "tag" group with patterns for attribute names, equals
+ * signs, and attribute values. These patterns are only active inside
+ * tags — the callback pushes the "tag" group when `<` is matched and
+ * pops it when `>` is matched.
+ *
+ * Properties:
+ *   name: The group name, e.g. "tag" or "cdata". Must be a lowercase
+ *       identifier matching [a-z_][a-z0-9_]*.
+ *   definitions: Ordered list of token definitions in this group.
+ *       Order matters (first-match-wins), just like the top-level
+ *       definitions list.
+ */
+export interface PatternGroup {
+  readonly name: string;
+  readonly definitions: readonly TokenDefinition[];
+}
+
+/**
  * The complete contents of a parsed .tokens file.
  *
  * Properties:
  *   definitions: Ordered list of token definitions. Order matters
  *       because the lexer uses first-match-wins semantics.
  *   keywords: List of reserved words from the keywords: section.
+ *   mode: Optional lexer mode (e.g. "indentation").
+ *   escapeMode: Controls how STRING tokens are processed.
+ *   skipDefinitions: Patterns matched and consumed without producing tokens.
+ *   reservedKeywords: Keywords that are syntax errors if used as identifiers.
+ *   groups: Named pattern groups for context-sensitive lexing. Each group
+ *       contains an ordered list of token definitions that are only active
+ *       when the group is at the top of the lexer's group stack.
  */
 export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
@@ -103,6 +149,7 @@ export interface TokenGrammar {
   readonly escapeMode?: string;
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
+  readonly groups?: Readonly<Record<string, PatternGroup>>;
 }
 
 // ---------------------------------------------------------------------------
@@ -112,19 +159,56 @@ export interface TokenGrammar {
 /**
  * Return the set of all defined token names.
  *
+ * When a definition has an alias, the alias is included in the set
+ * (since that is the name the parser grammar references). The original
+ * definition name is also included for completeness.
+ *
+ * Includes names from all pattern groups, since group tokens can
+ * also appear in parser grammars.
+ *
  * This is useful for cross-validation: the parser grammar references
  * tokens by name, and we need to check that every referenced token
  * actually exists.
  */
 export function tokenNames(grammar: TokenGrammar): Set<string> {
   const names = new Set<string>();
-  for (const d of grammar.definitions) {
+
+  // Collect definitions from the top-level list plus all groups
+  const allDefs: TokenDefinition[] = [...grammar.definitions];
+  if (grammar.groups) {
+    for (const group of Object.values(grammar.groups)) {
+      allDefs.push(...group.definitions);
+    }
+  }
+
+  for (const d of allDefs) {
     names.add(d.name);
     if (d.alias) {
       names.add(d.alias);
     }
   }
   return names;
+}
+
+/**
+ * Return the set of token names as the parser will see them.
+ *
+ * For definitions with aliases, this returns the alias (not the
+ * definition name), because that is what the lexer will emit and
+ * what the parser grammar references.
+ *
+ * For definitions without aliases, this returns the definition name.
+ *
+ * Includes names from all pattern groups.
+ */
+export function effectiveTokenNames(grammar: TokenGrammar): Set<string> {
+  const allDefs: TokenDefinition[] = [...grammar.definitions];
+  if (grammar.groups) {
+    for (const group of Object.values(grammar.groups)) {
+      allDefs.push(...group.definitions);
+    }
+  }
+  return new Set(allDefs.map((d) => d.alias ?? d.name));
 }
 
 // ---------------------------------------------------------------------------
@@ -236,13 +320,34 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const keywords: string[] = [];
   const skipDefinitions: TokenDefinition[] = [];
   const reservedKeywords: string[] = [];
+  const groups: Record<string, PatternGroup> = {};
   let mode: string | undefined;
   let escapeMode: string | undefined;
 
-  // Sections: "definitions" (default), "keywords", "skip", "reserved"
+  // Section tracking. We use a string to track which section we're in,
+  // since sections are mutually exclusive and we can only be in one at
+  // a time (or in no section = definition mode).
+  //
+  // For pattern groups, currentSection is "group:NAME" where NAME is
+  // the group name. This distinguishes groups from other sections.
   let currentSection = "definitions";
 
   const identifierPattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+
+  // Group name must be a lowercase identifier: letters, digits, underscores,
+  // starting with a letter or underscore. No uppercase allowed — group names
+  // are always lowercase by convention (e.g., "tag", "cdata", "string_body").
+  const groupNamePattern = /^[a-z_][a-z0-9_]*$/;
+
+  // Reserved names that cannot be used as group names. These collide with
+  // built-in section names and the implicit "default" group.
+  const reservedGroupNames = new Set([
+    "default",
+    "skip",
+    "keywords",
+    "reserved",
+    "errors",
+  ]);
 
   for (let i = 0; i < lines.length; i++) {
     const lineNumber = i + 1;
@@ -264,6 +369,58 @@ export function parseTokenGrammar(source: string): TokenGrammar {
         );
       }
       mode = modeValue;
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- Escapes directive ---
+    if (stripped.startsWith("escapes:") || stripped.startsWith("escapes :")) {
+      const escapesValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!escapesValue) {
+        throw new TokenGrammarError(
+          "Missing escapes value after 'escapes:'",
+          lineNumber,
+        );
+      }
+      escapeMode = escapesValue;
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- Group headers ---
+    // Pattern groups are declared with "group NAME:" where NAME is
+    // a lowercase identifier. All subsequent indented lines belong to
+    // that group, just like skip: or errors: sections.
+    if (stripped.startsWith("group ") && stripped.endsWith(":")) {
+      const groupName = stripped.slice(6, -1).trim();
+      if (!groupName) {
+        throw new TokenGrammarError(
+          "Missing group name after 'group'",
+          lineNumber,
+        );
+      }
+      if (!groupNamePattern.test(groupName)) {
+        throw new TokenGrammarError(
+          `Invalid group name: '${groupName}' ` +
+            "(must be a lowercase identifier like 'tag' or 'cdata')",
+          lineNumber,
+        );
+      }
+      if (reservedGroupNames.has(groupName)) {
+        throw new TokenGrammarError(
+          `Reserved group name: '${groupName}' ` +
+            `(cannot use ${[...reservedGroupNames].sort().join(", ")})`,
+          lineNumber,
+        );
+      }
+      if (groupName in groups) {
+        throw new TokenGrammarError(
+          `Duplicate group name: '${groupName}'`,
+          lineNumber,
+        );
+      }
+      groups[groupName] = { name: groupName, definitions: [] };
+      currentSection = `group:${groupName}`;
       continue;
     }
 
@@ -332,6 +489,35 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       continue;
     }
 
+    // --- Inside a group section ---
+    // Group sections contain indented token definitions, same format as
+    // skip: sections. Each definition is parsed and added to the group's
+    // definitions list.
+    if (isIndented && currentSection.startsWith("group:")) {
+      const groupName = currentSection.slice(6);
+      const eqIndex = stripped.indexOf("=");
+      if (eqIndex === -1) {
+        throw new TokenGrammarError(
+          `Expected token definition in group '${groupName}' ` +
+            `(NAME = pattern), got: '${stripped}'`,
+          lineNumber,
+        );
+      }
+      const gName = stripped.slice(0, eqIndex).trim();
+      const gPattern = stripped.slice(eqIndex + 1).trim();
+      if (!gName || !gPattern) {
+        throw new TokenGrammarError(
+          `Incomplete definition in group '${groupName}': '${stripped}'`,
+          lineNumber,
+        );
+      }
+      const defn = parseDefinition(gName, gPattern, lineNumber);
+      // Since interfaces are readonly, we build the definitions array
+      // mutably here during parsing and freeze it when we return.
+      (groups[groupName].definitions as TokenDefinition[]).push(defn);
+      continue;
+    }
+
     // Non-indented line exits any section
     if (!isIndented && currentSection !== "definitions") {
       currentSection = "definitions";
@@ -367,6 +553,10 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     definitions.push(parseDefinition(namePart, patternPart, lineNumber));
   }
 
+  // Build the result. Only include optional fields when they have content,
+  // keeping the interface clean for consumers that don't use those features.
+  const hasGroups = Object.keys(groups).length > 0;
+
   return {
     definitions,
     keywords,
@@ -374,6 +564,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     escapeMode,
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
+    groups: hasGroups ? groups : undefined,
   };
 }
 
@@ -468,6 +659,39 @@ export function validateTokenGrammar(grammar: TokenGrammar): string[] {
   if (grammar.escapeMode !== undefined && grammar.escapeMode !== "none") {
     issues.push(`Unknown escapes mode: '${grammar.escapeMode}'`);
   }
+
+  // Validate pattern groups
+  if (grammar.groups) {
+    const groupNamePattern = /^[a-z_][a-z0-9_]*$/;
+    for (const [groupName, group] of Object.entries(grammar.groups)) {
+      // Group name format check
+      if (!groupNamePattern.test(groupName)) {
+        issues.push(
+          `Invalid group name '${groupName}' ` +
+            `(must be a lowercase identifier)`,
+        );
+      }
+
+      // Empty group warning — a group with no definitions is likely
+      // a mistake (the author forgot to add patterns).
+      if (group.definitions.length === 0) {
+        issues.push(
+          `Empty pattern group '${groupName}' ` +
+            `(has no token definitions)`,
+        );
+      }
+
+      // Validate definitions within the group using the same checks
+      // as regular and skip definitions (duplicates, bad regex, naming).
+      validateDefinitions(
+        group.definitions,
+        new Map<string, number>(),
+        issues,
+        `group '${groupName}' token`,
+      );
+    }
+  }
+
 
   return issues;
 }

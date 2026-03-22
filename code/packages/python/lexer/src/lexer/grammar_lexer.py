@@ -92,10 +92,117 @@ language-agnostic, and data-driven. Having both lets us:
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 
 from grammar_tools import TokenGrammar
 
 from lexer.tokenizer import LexerError, Token, TokenType
+
+# ---------------------------------------------------------------------------
+# Lexer Context — Callback Interface for Group Transitions
+# ---------------------------------------------------------------------------
+
+
+class LexerContext:
+    """Interface that on-token callbacks use to control the lexer.
+
+    When a callback is registered via ``GrammarLexer.set_on_token()``, it
+    receives a ``LexerContext`` on every token match. The context provides
+    controlled access to the group stack, token emission, and skip control.
+
+    Methods that modify state (push/pop/emit/suppress) take effect after
+    the callback returns — they do not interrupt the current match.
+
+    Example — XML lexer callback::
+
+        def xml_hook(token, ctx):
+            if token.type == "OPEN_TAG_START":
+                ctx.push_group("tag")
+            elif token.type in ("TAG_CLOSE", "SELF_CLOSE"):
+                ctx.pop_group()
+    """
+
+    def __init__(
+        self,
+        lexer: GrammarLexer,
+        source: str,
+        pos_after_token: int,
+    ) -> None:
+        self._lexer = lexer
+        self._source = source
+        self._pos_after = pos_after_token
+        self._suppressed = False
+        self._emitted: list[Token] = []
+        self._group_actions: list[tuple[str, str]] = []
+        self._skip_enabled: bool | None = None  # None = no change
+
+    def push_group(self, group_name: str) -> None:
+        """Push a pattern group onto the stack.
+
+        The pushed group becomes active for the next token match.
+        Raises ValueError if the group name is not defined in the grammar.
+        """
+        if group_name not in self._lexer._group_patterns:
+            raise ValueError(
+                f"Unknown pattern group: {group_name!r}. "
+                f"Available groups: {sorted(self._lexer._group_patterns.keys())}"
+            )
+        self._group_actions.append(("push", group_name))
+
+    def pop_group(self) -> None:
+        """Pop the current group from the stack.
+
+        If only the default group remains, this is a no-op. The default
+        group is the floor and cannot be popped.
+        """
+        self._group_actions.append(("pop", ""))
+
+    def active_group(self) -> str:
+        """Return the name of the currently active group."""
+        return self._lexer._group_stack[-1]
+
+    def group_stack_depth(self) -> int:
+        """Return the depth of the group stack (always >= 1)."""
+        return len(self._lexer._group_stack)
+
+    def emit(self, token: Token) -> None:
+        """Inject a synthetic token after the current one.
+
+        Emitted tokens do NOT trigger the callback (prevents infinite
+        loops). Multiple emit() calls produce tokens in call order.
+        """
+        self._emitted.append(token)
+
+    def suppress(self) -> None:
+        """Suppress the current token — do not include it in output."""
+        self._suppressed = True
+
+    def peek(self, offset: int = 1) -> str:
+        """Peek at a source character past the current token.
+
+        Args:
+            offset: Number of characters ahead (1 = immediately after token).
+
+        Returns:
+            The character, or '' if past EOF.
+        """
+        idx = self._pos_after + offset - 1
+        if 0 <= idx < len(self._source):
+            return self._source[idx]
+        return ""
+
+    def peek_str(self, length: int) -> str:
+        """Peek at the next ``length`` characters past the current token."""
+        return self._source[self._pos_after:self._pos_after + length]
+
+    def set_skip_enabled(self, enabled: bool) -> None:
+        """Toggle skip pattern processing.
+
+        When disabled, skip patterns (whitespace, comments) are not tried.
+        Useful for groups where whitespace is significant (e.g., CDATA).
+        """
+        self._skip_enabled = enabled
+
 
 # ---------------------------------------------------------------------------
 # The Grammar-Driven Lexer
@@ -224,6 +331,58 @@ class GrammarLexer:
                 pattern = re.compile(re.escape(defn.pattern))
             self._error_patterns.append((defn.name, pattern))
 
+        # --- Pattern groups ---
+        # Compile per-group patterns. The "default" group uses the
+        # top-level definitions. Named groups use their own definitions.
+        # When no groups are defined, _group_patterns has only "default".
+        self._group_patterns: dict[str, list[tuple[str, re.Pattern[str]]]] = {
+            "default": list(self._patterns),
+        }
+        for group_name, group in grammar.groups.items():
+            compiled: list[tuple[str, re.Pattern[str]]] = []
+            for defn in group.definitions:
+                if defn.is_regex:
+                    pat = re.compile(defn.pattern)
+                else:
+                    pat = re.compile(re.escape(defn.pattern))
+                compiled.append((defn.name, pat))
+                # Register aliases from group definitions
+                if defn.alias:
+                    self._alias_map[defn.name] = defn.alias
+            self._group_patterns[group_name] = compiled
+
+        # The group stack. Bottom is always "default". Top is the active
+        # group whose patterns are tried during token matching.
+        self._group_stack: list[str] = ["default"]
+
+        # On-token callback — None means no callback (zero overhead).
+        self._on_token: (
+            Callable[[Token, LexerContext], None] | None
+        ) = None
+
+        # Skip enabled flag — can be toggled by callbacks for groups
+        # where whitespace is significant (e.g., CDATA, comments).
+        self._skip_enabled: bool = True
+
+    def set_on_token(
+        self,
+        callback: Callable[[Token, LexerContext], None] | None,
+    ) -> None:
+        """Register a callback that fires on every token match.
+
+        The callback receives the matched token and a ``LexerContext``.
+        It can use the context to push/pop groups, emit extra tokens,
+        or suppress the current token.
+
+        Only one callback can be registered. Pass None to clear.
+
+        The callback is NOT invoked for:
+        - Skip pattern matches (they produce no tokens)
+        - Tokens emitted via ``context.emit()`` (prevents infinite loops)
+        - The EOF token
+        """
+        self._on_token = callback
+
     # -- Main tokenization entry point ----------------------------------------
 
     def tokenize(self) -> list[Token]:
@@ -251,12 +410,20 @@ class GrammarLexer:
         The algorithm:
 
         1. While there are characters left:
-           a. If skip patterns exist, try them (consume silently).
+           a. If skip patterns exist and skip is enabled, try them.
            b. If no skip patterns, use default whitespace skip.
            c. If the current character is a newline, emit NEWLINE.
-           d. Try each token pattern (first match wins).
-           e. If nothing matches, raise LexerError.
+           d. Try active group's token patterns (first match wins).
+           e. If callback registered, invoke it and process actions.
+           f. If nothing matches, try error patterns as fallback.
+           g. If still nothing, raise LexerError.
         2. Append EOF.
+
+        When pattern groups are active, the lexer uses ``_group_stack[-1]``
+        to determine which set of patterns to try. When a callback is
+        registered via ``set_on_token()``, it fires after each token match
+        and can push/pop groups, emit extra tokens, or suppress the
+        current token.
         """
         tokens: list[Token] = []
 
@@ -264,10 +431,11 @@ class GrammarLexer:
             char = self._source[self._pos]
 
             # --- Skip patterns (grammar-defined) ---
-            # When the grammar has skip patterns, they take over whitespace
-            # handling. The lexer tries each skip pattern before token patterns.
+            # When the grammar has skip patterns AND skip is enabled, they
+            # take over whitespace handling. The callback can disable skip
+            # processing for groups where whitespace is significant (CDATA).
             if self._has_skip_patterns:
-                if self._try_skip():
+                if self._skip_enabled and self._try_skip():
                     continue
             else:
                 # --- Default whitespace skip ---
@@ -289,10 +457,41 @@ class GrammarLexer:
                 self._advance()
                 continue
 
-            # --- Try each token pattern (first match wins) ---
-            token = self._try_match_token()
+            # --- Try active group's token patterns (first match wins) ---
+            # The active group is the top of the group stack. When no
+            # groups are defined, this is always "default" (the top-level
+            # definitions), preserving backward compatibility.
+            active_group = self._group_stack[-1]
+            token = self._try_match_token_in_group(active_group)
             if token is not None:
-                tokens.append(token)
+                # --- Invoke on-token callback ---
+                # The callback can push/pop groups, emit extra tokens,
+                # suppress the current token, or toggle skip processing.
+                # Emitted tokens do NOT re-trigger the callback.
+                if self._on_token is not None:
+                    ctx = LexerContext(self, self._source, self._pos)
+                    self._on_token(token, ctx)
+
+                    # Apply suppression: if the callback suppressed this
+                    # token, don't add it to the output.
+                    if not ctx._suppressed:
+                        tokens.append(token)
+
+                    # Append any tokens emitted by the callback.
+                    tokens.extend(ctx._emitted)
+
+                    # Apply group stack actions in order.
+                    for action, group_name in ctx._group_actions:
+                        if action == "push":
+                            self._group_stack.append(group_name)
+                        elif action == "pop" and len(self._group_stack) > 1:
+                            self._group_stack.pop()
+
+                    # Apply skip toggle if the callback changed it.
+                    if ctx._skip_enabled is not None:
+                        self._skip_enabled = ctx._skip_enabled
+                else:
+                    tokens.append(token)
                 continue
 
             # --- Try error patterns as fallback ---
@@ -317,6 +516,10 @@ class GrammarLexer:
             line=self._line,
             column=self._column,
         ))
+
+        # Reset group stack for reuse (in case tokenize is called again).
+        self._group_stack = ["default"]
+        self._skip_enabled = True
 
         return tokens
 
@@ -581,16 +784,31 @@ class GrammarLexer:
     def _try_match_token(self) -> Token | None:
         """Try to match a token pattern at the current position.
 
-        Tries each compiled pattern in priority order (first match wins).
-        Handles keyword detection, reserved word checking, aliases, and
-        string escape processing.
+        Uses the default group's patterns (``self._patterns``). This method
+        is used by the indentation tokenizer which does not support groups.
+
+        Returns:
+            A Token if a pattern matched, None otherwise.
+        """
+        return self._try_match_token_in_group("default")
+
+    def _try_match_token_in_group(self, group_name: str) -> Token | None:
+        """Try to match a token pattern from a specific group.
+
+        Tries each compiled pattern in the named group in priority order
+        (first match wins). Handles keyword detection, reserved word
+        checking, aliases, and string escape processing.
+
+        Args:
+            group_name: The pattern group to use (e.g., "default", "tag").
 
         Returns:
             A Token if a pattern matched, None otherwise.
         """
         remaining = self._source[self._pos:]
+        patterns = self._group_patterns.get(group_name, self._patterns)
 
-        for token_name, pattern in self._patterns:
+        for token_name, pattern in patterns:
             match = pattern.match(remaining)
             if match:
                 value = match.group(0)

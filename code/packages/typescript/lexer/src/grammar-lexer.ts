@@ -28,6 +28,30 @@
  *   (e.g., `class` and `import` in Starlark). Raises LexerError on match.
  * - **Indentation mode**: For Python-like languages, tracks indentation
  *   levels and emits synthetic INDENT/DEDENT/NEWLINE tokens.
+ *
+ * Pattern Groups and On-Token Callbacks
+ * --------------------------------------
+ *
+ * Pattern groups enable **context-sensitive lexing**. A grammar can define
+ * named groups of patterns (e.g., a "tag" group for XML attributes) that
+ * are only active when the group is at the top of the lexer's group stack.
+ *
+ * The lexer maintains a stack of group names, starting with "default".
+ * An **on-token callback** can push/pop groups, emit synthetic tokens,
+ * suppress the current token, or toggle skip pattern processing. This
+ * enables lexing of context-sensitive languages like XML/HTML where
+ * different parts of the input require different token patterns.
+ *
+ * Example — XML-like lexing:
+ *
+ *     // Grammar defines "default" patterns (TEXT, OPEN_TAG) and a
+ *     // "tag" group (TAG_NAME, EQUALS, VALUE, TAG_CLOSE).
+ *     const lexer = new GrammarLexer(source, grammar);
+ *     lexer.setOnToken((token, ctx) => {
+ *       if (token.type === "OPEN_TAG") ctx.pushGroup("tag");
+ *       if (token.type === "TAG_CLOSE") ctx.popGroup();
+ *     });
+ *     const tokens = lexer.tokenize();
  */
 
 import type { TokenGrammar } from "@coding-adventures/grammar-tools";
@@ -39,6 +63,13 @@ import { LexerError } from "./tokenizer.js";
 // Compiled Pattern
 // ---------------------------------------------------------------------------
 
+/**
+ * A compiled token pattern — ready for regex matching.
+ *
+ * Each compiled pattern pairs a token name (like "NUMBER" or "TAG_NAME")
+ * with a RegExp object. The optional `alias` field maps the definition
+ * name to a different token type for emission (e.g., STRING_DQ -> STRING).
+ */
 interface CompiledPattern {
   readonly name: string;
   readonly pattern: RegExp;
@@ -49,6 +80,13 @@ interface CompiledPattern {
 // Escape helper for literal patterns
 // ---------------------------------------------------------------------------
 
+/**
+ * Escape special regex characters in a literal pattern string.
+ *
+ * When a `.tokens` file defines a literal pattern like `"+"`, we need to
+ * escape the `+` so it is treated as a literal character in the regex,
+ * not as a quantifier. This function handles all regex-special characters.
+ */
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -60,8 +98,14 @@ function escapeRegExp(s: string): string {
 /**
  * Resolve a grammar token name and matched value to a token type string.
  *
- * Handles reserved keywords (panic), regular keywords (promote to KEYWORD),
- * and type aliases (alias takes precedence over definition name).
+ * The resolution follows a priority order:
+ *
+ * 1. **Reserved keyword check**: If the token is a NAME and the value is
+ *    a reserved keyword, throw a LexerError immediately.
+ * 2. **Keyword detection**: If the token is a NAME and the value is a
+ *    keyword, return "KEYWORD" (promoting the NAME to a keyword token).
+ * 3. **Alias resolution**: If the definition has an alias, use it.
+ * 4. **Direct name**: Use the definition name as-is.
  */
 function resolveTokenType(
   tokenName: string,
@@ -98,6 +142,13 @@ function resolveTokenType(
 // Escape Sequence Processing
 // ---------------------------------------------------------------------------
 
+/**
+ * Process escape sequences in a string value.
+ *
+ * Handles the standard escape sequences: `\n` (newline), `\t` (tab),
+ * `\\` (literal backslash), `\"` (literal double quote). Unknown escape
+ * sequences pass through the escaped character (e.g., `\x` becomes `x`).
+ */
 function processEscapes(s: string): string {
   const result: string[] = [];
   let i = 0;
@@ -123,219 +174,622 @@ function processEscapes(s: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// The Grammar-Driven Lexer
+// On-Token Callback Type
 // ---------------------------------------------------------------------------
 
 /**
- * Tokenize source code using a grammar (parsed from a `.tokens` file).
+ * Signature for on-token callbacks.
  *
- * Supports skip patterns, type aliases, reserved keywords, and indentation
- * mode. The function auto-detects whether to use standard or indentation
- * tokenization based on `grammar.mode`.
+ * The callback receives the matched token and a `LexerContext` that
+ * provides controlled access to group stack manipulation, token emission,
+ * suppression, lookahead, and skip pattern toggling.
+ *
+ * The callback is NOT invoked for:
+ * - Skip pattern matches (they produce no tokens)
+ * - Tokens emitted via `ctx.emit()` (prevents infinite loops)
+ * - The EOF token
  */
-export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] {
-  // Shared state
-  let pos = 0;
-  let line = 1;
-  let column = 1;
+export type OnTokenCallback = (token: Token, ctx: LexerContext) => void;
 
-  const keywordSet: ReadonlySet<string> = new Set(grammar.keywords);
-  const reservedSet: ReadonlySet<string> = new Set(grammar.reservedKeywords ?? []);
+// ---------------------------------------------------------------------------
+// Lexer Context — Callback Interface for Group Transitions
+// ---------------------------------------------------------------------------
 
-  // Compile token patterns
-  const patterns: CompiledPattern[] = grammar.definitions.map((defn) => {
-    const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
-    return {
-      name: defn.name,
-      pattern: new RegExp(patternSource),
-      alias: defn.alias,
+/**
+ * Interface that on-token callbacks use to control the lexer.
+ *
+ * When a callback is registered via `GrammarLexer.setOnToken()`, it
+ * receives a `LexerContext` on every token match. The context provides
+ * controlled access to the group stack, token emission, and skip control.
+ *
+ * Methods that modify state (push/pop/emit/suppress) take effect **after**
+ * the callback returns — they do not interrupt the current match.
+ *
+ * Think of the context as a "request form" that the callback fills out.
+ * The lexer's main loop reads the form after the callback returns and
+ * applies the requested actions in order:
+ *
+ * 1. Suppress the current token (if requested)
+ * 2. Append any emitted synthetic tokens
+ * 3. Apply group stack changes (push/pop)
+ * 4. Toggle skip processing (if requested)
+ *
+ * Example — XML lexer callback:
+ *
+ *     function xmlHook(token: Token, ctx: LexerContext): void {
+ *       if (token.type === "OPEN_TAG_START") {
+ *         ctx.pushGroup("tag");
+ *       } else if (token.type === "TAG_CLOSE" || token.type === "SELF_CLOSE") {
+ *         ctx.popGroup();
+ *       }
+ *     }
+ */
+export class LexerContext {
+  /** @internal Reference to the lexer (for reading group stack state). */
+  private readonly _lexer: GrammarLexer;
+
+  /** @internal The full source string being tokenized. */
+  private readonly _source: string;
+
+  /** @internal Position in the source immediately after the current token. */
+  private readonly _posAfter: number;
+
+  /** @internal Whether the current token should be suppressed from output. */
+  _suppressed: boolean = false;
+
+  /** @internal Synthetic tokens to inject after the current one. */
+  _emitted: Token[] = [];
+
+  /** @internal Group stack actions recorded by the callback: ("push", name) or ("pop", ""). */
+  _groupActions: Array<[string, string]> = [];
+
+  /** @internal New skip-enabled state, or null if unchanged. */
+  _skipEnabled: boolean | null = null;
+
+  constructor(lexer: GrammarLexer, source: string, posAfterToken: number) {
+    this._lexer = lexer;
+    this._source = source;
+    this._posAfter = posAfterToken;
+  }
+
+  /**
+   * Push a pattern group onto the stack.
+   *
+   * The pushed group becomes active for the **next** token match.
+   * Throws an Error if the group name is not defined in the grammar.
+   *
+   * Multiple pushes in a single callback are applied in order, so you
+   * can stack multiple groups if needed (though this is rare).
+   */
+  pushGroup(groupName: string): void {
+    if (!this._lexer.hasGroup(groupName)) {
+      throw new Error(
+        `Unknown pattern group: '${groupName}'. ` +
+        `Available groups: ${this._lexer.availableGroups().sort().join(", ")}`,
+      );
+    }
+    this._groupActions.push(["push", groupName]);
+  }
+
+  /**
+   * Pop the current group from the stack.
+   *
+   * If only the "default" group remains (stack depth = 1), this is a
+   * no-op. The default group is the floor and cannot be popped — this
+   * prevents accidental stack underflow in recursive structures.
+   */
+  popGroup(): void {
+    this._groupActions.push(["pop", ""]);
+  }
+
+  /**
+   * Return the name of the currently active group.
+   *
+   * The active group is the top of the group stack. When no groups
+   * have been pushed, this is always "default".
+   */
+  activeGroup(): string {
+    return this._lexer.activeGroup();
+  }
+
+  /**
+   * Return the depth of the group stack (always >= 1).
+   *
+   * A depth of 1 means only the "default" group is on the stack.
+   * A depth of 2 means one group has been pushed on top of default.
+   */
+  groupStackDepth(): number {
+    return this._lexer.groupStackDepth();
+  }
+
+  /**
+   * Inject a synthetic token after the current one.
+   *
+   * Emitted tokens do NOT trigger the callback (this prevents infinite
+   * loops — a callback that emits tokens which trigger the callback
+   * which emits more tokens...). Multiple `emit()` calls produce
+   * tokens in call order.
+   */
+  emit(token: Token): void {
+    this._emitted.push(token);
+  }
+
+  /**
+   * Suppress the current token — do not include it in output.
+   *
+   * Combined with `emit()`, this enables **token replacement**: suppress
+   * the original token and emit a modified version in its place.
+   */
+  suppress(): void {
+    this._suppressed = true;
+  }
+
+  /**
+   * Peek at a source character past the current token.
+   *
+   * This provides lookahead capability without advancing the lexer's
+   * position. Useful for making group-switching decisions based on
+   * what comes next in the source.
+   *
+   * @param offset - Number of characters ahead (1 = immediately after token).
+   * @returns The character, or empty string if past EOF.
+   */
+  peek(offset: number = 1): string {
+    const idx = this._posAfter + offset - 1;
+    if (idx >= 0 && idx < this._source.length) {
+      return this._source[idx];
+    }
+    return "";
+  }
+
+  /**
+   * Peek at the next `length` characters past the current token.
+   *
+   * Returns a substring starting immediately after the current token.
+   * If fewer than `length` characters remain, returns whatever is left.
+   */
+  peekStr(length: number): string {
+    return this._source.slice(this._posAfter, this._posAfter + length);
+  }
+
+  /**
+   * Toggle skip pattern processing.
+   *
+   * When disabled, skip patterns (whitespace, comments) are not tried.
+   * This is useful for groups where whitespace is significant — for
+   * example, CDATA sections in XML where spaces must be preserved
+   * as part of the content rather than being silently consumed.
+   */
+  setSkipEnabled(enabled: boolean): void {
+    this._skipEnabled = enabled;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// The Grammar-Driven Lexer (Class-Based)
+// ---------------------------------------------------------------------------
+
+/**
+ * A lexer driven by a `TokenGrammar` (parsed from a `.tokens` file).
+ *
+ * Instead of hardcoded character-matching logic, this lexer:
+ *
+ * 1. Compiles each token definition's pattern into a regex.
+ * 2. At each position, tries each regex in definition order (first match wins).
+ * 3. Emits a `Token` with the matched type and value.
+ *
+ * The `GrammarLexer` class extends the basic `grammarTokenize` function
+ * with two powerful features:
+ *
+ * - **Pattern groups**: Named sets of patterns that can be activated/
+ *   deactivated via a stack. This enables context-sensitive lexing where
+ *   different parts of the input use different token patterns.
+ *
+ * - **On-token callbacks**: A hook that fires after each token match,
+ *   allowing external code to push/pop groups, emit synthetic tokens,
+ *   suppress tokens, or toggle skip pattern processing.
+ *
+ * Usage:
+ *
+ *     import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
+ *     import { GrammarLexer } from "@coding-adventures/lexer";
+ *
+ *     const grammar = parseTokenGrammar(source);
+ *     const lexer = new GrammarLexer("<div class=\"main\">hello</div>", grammar);
+ *     lexer.setOnToken((token, ctx) => {
+ *       if (token.type === "OPEN_TAG") ctx.pushGroup("tag");
+ *       if (token.type === "TAG_CLOSE") ctx.popGroup();
+ *     });
+ *     const tokens = lexer.tokenize();
+ */
+export class GrammarLexer {
+  // -- Source and position tracking --
+
+  /** The complete source code string being tokenized. */
+  private _source: string;
+
+  /** Current position (index) in the source string. */
+  private _pos: number = 0;
+
+  /** Current line number (1-based), for error reporting. */
+  private _line: number = 1;
+
+  /** Current column number (1-based), for error reporting. */
+  private _column: number = 1;
+
+  // -- Grammar metadata --
+
+  /** The TokenGrammar that defines which tokens to recognize. */
+  private readonly _grammar: TokenGrammar;
+
+  /** Pre-computed set of keywords for O(1) lookup. */
+  private readonly _keywordSet: ReadonlySet<string>;
+
+  /** Reserved keywords that cause lex errors. */
+  private readonly _reservedSet: ReadonlySet<string>;
+
+  /** Whether the grammar has skip patterns defined. */
+  private readonly _hasSkipPatterns: boolean;
+
+  /** Whether indentation mode is active. */
+  private readonly _indentationMode: boolean;
+
+  // -- Compiled patterns --
+
+  /** Default group compiled patterns, in priority order. */
+  private readonly _patterns: CompiledPattern[];
+
+  /** Compiled skip patterns (comments, whitespace). */
+  private readonly _skipPatterns: RegExp[];
+
+  /** Compiled patterns per group. "default" + named groups. */
+  private readonly _groupPatterns: Record<string, CompiledPattern[]>;
+
+  /** Maps definition names to their aliases (e.g., STRING_DQ -> STRING). */
+  private readonly _aliasMap: Record<string, string>;
+
+  // -- Group stack and callback --
+
+  /**
+   * The group stack. Bottom is always "default". Top is the active
+   * group whose patterns are tried during token matching.
+   */
+  private _groupStack: string[] = ["default"];
+
+  /**
+   * On-token callback — null means no callback (zero overhead).
+   * When set, fires after each token match with a LexerContext.
+   */
+  private _onToken: OnTokenCallback | null = null;
+
+  /**
+   * Skip enabled flag — can be toggled by callbacks for groups
+   * where whitespace is significant (e.g., CDATA, raw text).
+   */
+  private _skipEnabled: boolean = true;
+
+  constructor(source: string, grammar: TokenGrammar) {
+    this._source = source;
+    this._grammar = grammar;
+    this._keywordSet = new Set(grammar.keywords);
+    this._reservedSet = new Set(grammar.reservedKeywords ?? []);
+    this._indentationMode = grammar.mode === "indentation";
+    this._hasSkipPatterns = (grammar.skipDefinitions ?? []).length > 0;
+
+    // Build alias map: definition name -> alias name.
+    // For example, STRING_DQ -> STRING. When we match STRING_DQ, we
+    // emit the token type as STRING (the alias).
+    this._aliasMap = {};
+    for (const defn of grammar.definitions) {
+      if (defn.alias) {
+        this._aliasMap[defn.name] = defn.alias;
+      }
+    }
+
+    // Compile token patterns into regex objects.
+    // Order matters — patterns are tried in the order they appear in the
+    // .tokens file. This is the "first match wins" rule from Lex/Flex.
+    this._patterns = grammar.definitions.map((defn) => {
+      const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
+      return {
+        name: defn.name,
+        pattern: new RegExp(patternSource),
+        alias: defn.alias,
+      };
+    });
+
+    // Compile skip patterns (comments, whitespace, etc.).
+    // These are tried before token patterns at each position.
+    this._skipPatterns = (grammar.skipDefinitions ?? []).map((defn) => {
+      const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
+      return new RegExp(patternSource);
+    });
+
+    // --- Pattern groups ---
+    // Compile per-group patterns. The "default" group uses the top-level
+    // definitions. Named groups use their own definitions. When no groups
+    // are defined, _groupPatterns has only "default".
+    this._groupPatterns = {
+      default: [...this._patterns],
     };
-  });
 
-  // Compile skip patterns
-  const skipPatterns: RegExp[] = (grammar.skipDefinitions ?? []).map((defn) => {
-    const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
-    return new RegExp(patternSource);
-  });
-
-  // Advance helper
-  function advance(): void {
-    if (pos < source.length) {
-      if (source[pos] === "\n") {
-        line += 1;
-        column = 1;
-      } else {
-        column += 1;
-      }
-      pos += 1;
-    }
-  }
-
-  // Try to match and consume a skip pattern. Returns true if matched.
-  function trySkip(): boolean {
-    const remaining = source.slice(pos);
-    for (const pat of skipPatterns) {
-      const match = pat.exec(remaining);
-      if (match !== null && match.index === 0) {
-        for (let i = 0; i < match[0].length; i++) {
-          advance();
-        }
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // Try to match a token at current position. Returns token or null.
-  function tryMatchToken(): Token | null {
-    const remaining = source.slice(pos);
-
-    for (const { name, pattern, alias } of patterns) {
-      const match = pattern.exec(remaining);
-      if (match !== null && match.index === 0) {
-        let value = match[0];
-        const startLine = line;
-        const startColumn = column;
-
-        const tokenType = resolveTokenType(
-          name, value, keywordSet, reservedSet, alias, startLine, startColumn,
-        );
-
-        // Handle STRING tokens: strip quotes and optionally process escapes.
-        // When escapeMode is "none", the lexer strips quotes but leaves escape
-        // sequences as raw text. This is used by languages like TOML and CSS
-        // where different string types have different escape semantics — the
-        // semantic layer handles escape processing after parsing.
-        if (name === "STRING" || name.includes("STRING") || (alias && alias.includes("STRING"))) {
-          // Multi-line strings use triple quotes (""" or '''), single-line use single quotes.
-          // Check for triple quotes first to avoid partial stripping.
-          if (value.length >= 6 && (value.startsWith('"""') || value.startsWith("'''"))) {
-            const inner = value.slice(3, -3);
-            value = grammar.escapeMode === "none" ? inner : processEscapes(inner);
-          } else if (value.length >= 2 && (value[0] === '"' || value[0] === "'")) {
-            const inner = value.slice(1, -1);
-            value = grammar.escapeMode === "none" ? inner : processEscapes(inner);
+    if (grammar.groups) {
+      for (const [groupName, group] of Object.entries(grammar.groups)) {
+        const compiled: CompiledPattern[] = group.definitions.map((defn) => {
+          const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
+          // Register aliases from group definitions
+          if (defn.alias) {
+            this._aliasMap[defn.name] = defn.alias;
           }
-        }
-
-        const tok: Token = { type: tokenType, value, line: startLine, column: startColumn };
-
-        for (let i = 0; i < match[0].length; i++) {
-          advance();
-        }
-
-        return tok;
+          return {
+            name: defn.name,
+            pattern: new RegExp(patternSource),
+            alias: defn.alias,
+          };
+        });
+        this._groupPatterns[groupName] = compiled;
       }
     }
-    return null;
   }
 
-  // Dispatch to the appropriate tokenization mode
-  if (grammar.mode === "indentation") {
-    return tokenizeIndentation();
+  // -- Public API: callback registration --
+
+  /**
+   * Register a callback that fires on every token match.
+   *
+   * The callback receives the matched token and a `LexerContext`. It can
+   * use the context to push/pop groups, emit extra tokens, suppress the
+   * current token, or toggle skip processing.
+   *
+   * Only one callback can be registered at a time. Pass `null` to clear.
+   *
+   * The callback is NOT invoked for:
+   * - Skip pattern matches (they produce no tokens)
+   * - Tokens emitted via `ctx.emit()` (prevents infinite loops)
+   * - The EOF token
+   */
+  setOnToken(callback: OnTokenCallback | null): void {
+    this._onToken = callback;
   }
-  return tokenizeStandard();
 
-  // ---------------------------------------------------------------------------
-  // Standard tokenization (no indentation tracking)
-  // ---------------------------------------------------------------------------
+  // -- Public API: group introspection (used by LexerContext) --
 
-  function tokenizeStandard(): Token[] {
+  /** Check whether a group name is defined in the grammar. */
+  hasGroup(groupName: string): boolean {
+    return groupName in this._groupPatterns;
+  }
+
+  /** Return all available group names. */
+  availableGroups(): string[] {
+    return Object.keys(this._groupPatterns);
+  }
+
+  /** Return the name of the currently active group (top of stack). */
+  activeGroup(): string {
+    return this._groupStack[this._groupStack.length - 1];
+  }
+
+  /** Return the depth of the group stack (always >= 1). */
+  groupStackDepth(): number {
+    return this._groupStack.length;
+  }
+
+  // -- Main tokenization entry point --
+
+  /**
+   * Tokenize the source code using the grammar's token definitions.
+   *
+   * Dispatches to the appropriate tokenization method based on whether
+   * indentation mode is active. Resets the group stack and skip flag
+   * at the end so the lexer can be reused for multiple `tokenize()` calls.
+   *
+   * @returns A list of Token objects, always ending with an EOF token.
+   * @throws LexerError if an unexpected character is encountered, a
+   *         reserved keyword is used, or indentation is inconsistent.
+   */
+  tokenize(): Token[] {
+    if (this._indentationMode) {
+      return this._tokenizeIndentation();
+    }
+    return this._tokenizeStandard();
+  }
+
+  // -- Standard (non-indentation) tokenization --
+
+  /**
+   * Tokenize without indentation tracking.
+   *
+   * The algorithm:
+   *
+   * 1. While there are characters left:
+   *    a. If skip patterns exist and skip is enabled, try them.
+   *    b. If no skip patterns, use default whitespace skip.
+   *    c. If the current character is a newline, emit NEWLINE.
+   *    d. Try active group's token patterns (first match wins).
+   *    e. If callback registered, invoke it and process actions.
+   *    f. If nothing matches, raise LexerError.
+   * 2. Append EOF.
+   *
+   * When pattern groups are active, the lexer uses `_groupStack[-1]`
+   * to determine which set of patterns to try. When a callback is
+   * registered via `setOnToken()`, it fires after each token match
+   * and can push/pop groups, emit extra tokens, or suppress the
+   * current token.
+   */
+  private _tokenizeStandard(): Token[] {
     const tokens: Token[] = [];
 
-    while (pos < source.length) {
-      const char = source[pos];
+    while (this._pos < this._source.length) {
+      const char = this._source[this._pos];
 
-      // Skip whitespace
-      if (char === " " || char === "\t" || char === "\r") {
-        advance();
-        continue;
+      // --- Skip patterns (grammar-defined) ---
+      // When the grammar has skip patterns AND skip is enabled, they
+      // take over whitespace handling. The callback can disable skip
+      // processing for groups where whitespace is significant (CDATA).
+      if (this._hasSkipPatterns) {
+        if (this._skipEnabled && this._trySkip()) {
+          continue;
+        }
+      } else {
+        // --- Default whitespace skip ---
+        // Without skip patterns, use the hardcoded behavior: skip
+        // spaces, tabs, carriage returns silently.
+        if (char === " " || char === "\t" || char === "\r") {
+          this._advance();
+          continue;
+        }
       }
 
-      // Newlines become NEWLINE tokens
+      // --- Newlines become NEWLINE tokens ---
+      // Newlines are structural — they mark line boundaries.
       if (char === "\n") {
-        tokens.push({ type: "NEWLINE", value: "\\n", line, column });
-        advance();
+        tokens.push({
+          type: "NEWLINE",
+          value: "\\n",
+          line: this._line,
+          column: this._column,
+        });
+        this._advance();
         continue;
       }
 
-      // Try skip patterns
-      if (trySkip()) {
-        continue;
-      }
+      // --- Try active group's token patterns (first match wins) ---
+      // The active group is the top of the group stack. When no
+      // groups are defined, this is always "default" (the top-level
+      // definitions), preserving backward compatibility.
+      const activeGroupName = this._groupStack[this._groupStack.length - 1];
+      const token = this._tryMatchTokenInGroup(activeGroupName);
+      if (token !== null) {
+        // --- Invoke on-token callback ---
+        // The callback can push/pop groups, emit extra tokens,
+        // suppress the current token, or toggle skip processing.
+        // Emitted tokens do NOT re-trigger the callback.
+        if (this._onToken !== null) {
+          const ctx = new LexerContext(this, this._source, this._pos);
+          this._onToken(token, ctx);
 
-      // Try token patterns
-      const tok = tryMatchToken();
-      if (tok !== null) {
-        tokens.push(tok);
+          // Apply suppression: if the callback suppressed this
+          // token, don't add it to the output.
+          if (!ctx._suppressed) {
+            tokens.push(token);
+          }
+
+          // Append any tokens emitted by the callback.
+          tokens.push(...ctx._emitted);
+
+          // Apply group stack actions in order.
+          for (const [action, groupName] of ctx._groupActions) {
+            if (action === "push") {
+              this._groupStack.push(groupName);
+            } else if (action === "pop" && this._groupStack.length > 1) {
+              this._groupStack.pop();
+            }
+          }
+
+          // Apply skip toggle if the callback changed it.
+          if (ctx._skipEnabled !== null) {
+            this._skipEnabled = ctx._skipEnabled;
+          }
+        } else {
+          tokens.push(token);
+        }
         continue;
       }
 
       throw new LexerError(
         `Unexpected character: ${JSON.stringify(char)}`,
-        line,
-        column,
+        this._line,
+        this._column,
       );
     }
 
-    tokens.push({ type: "EOF", value: "", line, column });
+    // --- Append EOF sentinel ---
+    tokens.push({
+      type: "EOF",
+      value: "",
+      line: this._line,
+      column: this._column,
+    });
+
+    // Reset group stack and skip flag for reuse (in case tokenize is
+    // called again on the same instance).
+    this._groupStack = ["default"];
+    this._skipEnabled = true;
+
     return tokens;
   }
 
-  // ---------------------------------------------------------------------------
-  // Indentation tokenization (Python-like INDENT/DEDENT)
-  // ---------------------------------------------------------------------------
+  // -- Indentation mode tokenization --
 
-  function tokenizeIndentation(): Token[] {
+  /**
+   * Tokenize with Python-style indentation tracking.
+   *
+   * This method implements the full indentation algorithm: it maintains
+   * an indent stack, tracks bracket depth for implicit line joining,
+   * and emits synthetic INDENT/DEDENT/NEWLINE tokens.
+   */
+  private _tokenizeIndentation(): Token[] {
     const tokens: Token[] = [];
     const indentStack: number[] = [0];
     let bracketDepth = 0;
     let atLineStart = true;
 
-    while (pos < source.length) {
+    while (this._pos < this._source.length) {
       // Process line start (indentation)
       if (atLineStart && bracketDepth === 0) {
-        const result = processLineStart(indentStack);
+        const result = this._processLineStart(indentStack);
         if (result === "skip") {
           continue;
         }
         tokens.push(...result);
         atLineStart = false;
-        if (pos >= source.length) {
+        if (this._pos >= this._source.length) {
           break;
         }
       }
 
-      const char = source[pos];
+      const char = this._source[this._pos];
 
       // Newline handling
       if (char === "\n") {
         if (bracketDepth === 0) {
-          tokens.push({ type: "NEWLINE", value: "\\n", line, column });
+          tokens.push({
+            type: "NEWLINE",
+            value: "\\n",
+            line: this._line,
+            column: this._column,
+          });
         }
-        advance();
+        this._advance();
         atLineStart = true;
         continue;
       }
 
       // Inside brackets: skip whitespace
-      if (bracketDepth > 0 && (char === " " || char === "\t" || char === "\r")) {
-        advance();
+      if (
+        bracketDepth > 0 &&
+        (char === " " || char === "\t" || char === "\r")
+      ) {
+        this._advance();
         continue;
       }
 
       // Try skip patterns
-      if (trySkip()) {
+      if (this._trySkip()) {
         continue;
       }
 
-      // Try token patterns
-      const tok = tryMatchToken();
+      // Try token patterns (always uses default group for indentation mode)
+      const tok = this._tryMatchTokenInGroup("default");
       if (tok !== null) {
         // Track bracket depth
         if (tok.value === "(" || tok.value === "[" || tok.value === "{") {
           bracketDepth++;
-        } else if (tok.value === ")" || tok.value === "]" || tok.value === "}") {
+        } else if (
+          tok.value === ")" ||
+          tok.value === "]" ||
+          tok.value === "}"
+        ) {
           bracketDepth--;
         }
         tokens.push(tok);
@@ -344,43 +798,67 @@ export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] 
 
       throw new LexerError(
         `Unexpected character: ${JSON.stringify(char)}`,
-        line,
-        column,
+        this._line,
+        this._column,
       );
     }
 
     // EOF: emit remaining DEDENTs
     while (indentStack.length > 1) {
       indentStack.pop();
-      tokens.push({ type: "DEDENT", value: "", line, column });
+      tokens.push({
+        type: "DEDENT",
+        value: "",
+        line: this._line,
+        column: this._column,
+      });
     }
 
     // Final NEWLINE if needed
-    if (tokens.length === 0 || tokens[tokens.length - 1].type !== "NEWLINE") {
-      tokens.push({ type: "NEWLINE", value: "\\n", line, column });
+    if (
+      tokens.length === 0 ||
+      tokens[tokens.length - 1].type !== "NEWLINE"
+    ) {
+      tokens.push({
+        type: "NEWLINE",
+        value: "\\n",
+        line: this._line,
+        column: this._column,
+      });
     }
 
-    tokens.push({ type: "EOF", value: "", line, column });
+    tokens.push({
+      type: "EOF",
+      value: "",
+      line: this._line,
+      column: this._column,
+    });
+
+    // Reset group stack for reuse.
+    this._groupStack = ["default"];
+    this._skipEnabled = true;
+
     return tokens;
   }
 
   /**
    * Process indentation at the start of a logical line.
+   *
    * Returns "skip" if the line should be skipped (blank/comment),
    * or an array of INDENT/DEDENT tokens.
    */
-  function processLineStart(indentStack: number[]): "skip" | Token[] {
+  private _processLineStart(indentStack: number[]): "skip" | Token[] {
     let indent = 0;
-    while (pos < source.length) {
-      const char = source[pos];
+    while (this._pos < this._source.length) {
+      const char = this._source[this._pos];
       if (char === " ") {
         indent++;
-        advance();
+        this._advance();
       } else if (char === "\t") {
         throw new LexerError(
           "Tab character in indentation (use spaces only)",
-          line,
-          column,
+          this._line,
+          this._column,
         );
       } else {
         break;
@@ -388,26 +866,32 @@ export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] 
     }
 
     // Blank line or EOF
-    if (pos >= source.length) {
+    if (this._pos >= this._source.length) {
       return "skip";
     }
-    if (source[pos] === "\n") {
-      advance(); // Consume newline to avoid infinite loop
+    if (this._source[this._pos] === "\n") {
+      this._advance(); // Consume newline to avoid infinite loop
       return "skip";
     }
 
     // Comment-only line — check skip patterns
-    const remaining = source.slice(pos);
-    for (const pat of skipPatterns) {
+    const remaining = this._source.slice(this._pos);
+    for (const pat of this._skipPatterns) {
       const match = pat.exec(remaining);
       if (match !== null && match.index === 0) {
-        const peekPos = pos + match[0].length;
-        if (peekPos >= source.length || source[peekPos] === "\n") {
+        const peekPos = this._pos + match[0].length;
+        if (
+          peekPos >= this._source.length ||
+          this._source[peekPos] === "\n"
+        ) {
           for (let i = 0; i < match[0].length; i++) {
-            advance();
+            this._advance();
           }
-          if (pos < source.length && source[pos] === "\n") {
-            advance();
+          if (
+            this._pos < this._source.length &&
+            this._source[this._pos] === "\n"
+          ) {
+            this._advance();
           }
           return "skip";
         }
@@ -420,24 +904,183 @@ export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] 
 
     if (indent > currentIndent) {
       indentStack.push(indent);
-      indentTokens.push({ type: "INDENT", value: "", line, column: 1 });
+      indentTokens.push({
+        type: "INDENT",
+        value: "",
+        line: this._line,
+        column: 1,
+      });
     } else if (indent < currentIndent) {
       while (
         indentStack.length > 1 &&
         indentStack[indentStack.length - 1] > indent
       ) {
         indentStack.pop();
-        indentTokens.push({ type: "DEDENT", value: "", line, column: 1 });
+        indentTokens.push({
+          type: "DEDENT",
+          value: "",
+          line: this._line,
+          column: 1,
+        });
       }
       if (indentStack[indentStack.length - 1] !== indent) {
         throw new LexerError(
           "Inconsistent dedent",
-          line,
-          column,
+          this._line,
+          this._column,
         );
       }
     }
 
     return indentTokens;
   }
+
+  // -- Shared helpers --
+
+  /**
+   * Try to match and consume a skip pattern at the current position.
+   *
+   * Skip patterns are defined in the `skip:` section of a .tokens file.
+   * They match text that should be consumed without emitting a token —
+   * typically comments and inline whitespace.
+   *
+   * @returns true if a skip pattern matched (text was consumed), false otherwise.
+   */
+  private _trySkip(): boolean {
+    const remaining = this._source.slice(this._pos);
+    for (const pat of this._skipPatterns) {
+      const match = pat.exec(remaining);
+      if (match !== null && match.index === 0) {
+        for (let i = 0; i < match[0].length; i++) {
+          this._advance();
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Try to match a token pattern from a specific group.
+   *
+   * Tries each compiled pattern in the named group in priority order
+   * (first match wins). Handles keyword detection, reserved word
+   * checking, aliases, and string escape processing.
+   *
+   * @param groupName - The pattern group to use (e.g., "default", "tag").
+   * @returns A Token if a pattern matched, null otherwise.
+   */
+  private _tryMatchTokenInGroup(groupName: string): Token | null {
+    const remaining = this._source.slice(this._pos);
+    const patterns = this._groupPatterns[groupName] ?? this._patterns;
+
+    for (const { name, pattern, alias } of patterns) {
+      const match = pattern.exec(remaining);
+      if (match !== null && match.index === 0) {
+        let value = match[0];
+        const startLine = this._line;
+        const startColumn = this._column;
+
+        const tokenType = resolveTokenType(
+          name,
+          value,
+          this._keywordSet,
+          this._reservedSet,
+          alias,
+          startLine,
+          startColumn,
+        );
+
+        // Handle STRING tokens: strip quotes and optionally process escapes.
+        // When escapeMode is "none", the lexer strips quotes but leaves escape
+        // sequences as raw text.
+        const effectiveName = this._aliasMap[name] ?? name;
+        if (
+          effectiveName === "STRING" ||
+          name === "STRING" ||
+          name.includes("STRING") ||
+          (alias && alias.includes("STRING"))
+        ) {
+          // Multi-line strings use triple quotes, single-line use single quotes.
+          if (
+            value.length >= 6 &&
+            (value.startsWith('"""') || value.startsWith("'''"))
+          ) {
+            const inner = value.slice(3, -3);
+            value =
+              this._grammar.escapeMode === "none"
+                ? inner
+                : processEscapes(inner);
+          } else if (
+            value.length >= 2 &&
+            (value[0] === '"' || value[0] === "'")
+          ) {
+            const inner = value.slice(1, -1);
+            value =
+              this._grammar.escapeMode === "none"
+                ? inner
+                : processEscapes(inner);
+          }
+        }
+
+        const tok: Token = {
+          type: tokenType,
+          value,
+          line: startLine,
+          column: startColumn,
+        };
+
+        for (let i = 0; i < match[0].length; i++) {
+          this._advance();
+        }
+
+        return tok;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Move position forward by one character, tracking line and column.
+   *
+   * When we encounter a newline character, we increment the line counter
+   * and reset the column to 1. For all other characters, we just increment
+   * the column.
+   */
+  private _advance(): void {
+    if (this._pos < this._source.length) {
+      if (this._source[this._pos] === "\n") {
+        this._line += 1;
+        this._column = 1;
+      } else {
+        this._column += 1;
+      }
+      this._pos += 1;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Convenience function — backward-compatible wrapper
+// ---------------------------------------------------------------------------
+
+/**
+ * Tokenize source code using a grammar (parsed from a `.tokens` file).
+ *
+ * This is a convenience wrapper around `GrammarLexer` that provides
+ * backward compatibility with the original function-based API. It creates
+ * a `GrammarLexer` instance and calls `tokenize()` on it.
+ *
+ * For advanced features like pattern groups and on-token callbacks, use
+ * the `GrammarLexer` class directly.
+ *
+ * @param source - The raw source code text to tokenize.
+ * @param grammar - A TokenGrammar object (parsed from a .tokens file).
+ * @returns A list of Token objects, always ending with an EOF token.
+ */
+export function grammarTokenize(
+  source: string,
+  grammar: TokenGrammar,
+): Token[] {
+  return new GrammarLexer(source, grammar).tokenize();
 }
