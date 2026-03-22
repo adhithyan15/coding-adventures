@@ -26,7 +26,8 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | 07d | Intel 4004 Simulator | Instruction Set Architecture |
 | 08 | CPU Simulator | Hardware |
 | 09 | Arithmetic (ALU) | Hardware |
-| 10 | Logic Gates | Hardware (foundation) |
+| 10 | Logic Gates | Hardware |
+| 11 | Transistors | Hardware (foundation) |
 
 **Tooling specs** (not numbered by layer):
 | # | Spec | Purpose |

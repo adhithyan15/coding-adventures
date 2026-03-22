@@ -135,6 +135,32 @@ export class Graph {
   private readonly _reverse: Map<string, Set<string>> = new Map();
 
   // ------------------------------------------------------------------
+  // Self-loop control
+  // ------------------------------------------------------------------
+  // By default, self-loops (edges where fromNode === toNode) are
+  // forbidden because they represent cycles of length 1, which break
+  // topological sort and most DAG algorithms.
+  //
+  // However, some use cases — like labeled graphs modeling state
+  // machines — genuinely need self-loops (e.g. a state that transitions
+  // back to itself on certain inputs).
+  //
+  // Pass `{ allowSelfLoops: true }` to the constructor to permit them.
+
+  private readonly _allowSelfLoops: boolean;
+
+  constructor(options?: { allowSelfLoops?: boolean }) {
+    this._allowSelfLoops = options?.allowSelfLoops ?? false;
+  }
+
+  /**
+   * Returns true if self-loops are permitted in this graph.
+   */
+  get allowSelfLoops(): boolean {
+    return this._allowSelfLoops;
+  }
+
+  // ------------------------------------------------------------------
   // Node operations
   // ------------------------------------------------------------------
 
@@ -214,7 +240,7 @@ export class Graph {
    * Duplicate edges are silently ignored (Sets handle deduplication).
    */
   addEdge(fromNode: string, toNode: string): void {
-    if (fromNode === toNode) {
+    if (fromNode === toNode && !this._allowSelfLoops) {
       throw new Error(
         `Self-loops are not allowed: "${fromNode}" -> "${toNode}"`
       );

@@ -756,10 +756,19 @@ pub fn validate_parser_grammar(
 
     // --- Undefined token references ---
     if let Some(token_set) = token_names_set {
+        // Synthetic tokens are always valid — the lexer produces these
+        // implicitly without needing a .tokens definition:
+        //   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
+        //   INDENT/DEDENT — emitted in indentation mode
+        //   EOF — always emitted at end of input
+        let synthetic_tokens: HashSet<String> = ["NEWLINE", "INDENT", "DEDENT", "EOF"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         let mut sorted_token_refs: Vec<&String> = referenced_tokens.iter().collect();
         sorted_token_refs.sort();
         for ref_name in sorted_token_refs {
-            if !token_set.contains(ref_name.as_str()) {
+            if !token_set.contains(ref_name.as_str()) && !synthetic_tokens.contains(ref_name.as_str()) {
                 issues.push(format!("Undefined token reference: '{}'", ref_name));
             }
         }

@@ -32,6 +32,14 @@ require "optparse"
 require "pathname"
 require "set"
 
+# Optional dependency: progress bar for build output.
+# If the gem is not installed, the build tool works fine without it.
+begin
+  require "coding_adventures_progress_bar"
+rescue LoadError
+  # Progress bar is optional — builds work without it.
+end
+
 # Load all build tool modules. We use require_relative so the tool works
 # as a standalone script without needing to be installed as a gem.
 require_relative "lib/build_tool/discovery"
@@ -182,6 +190,21 @@ module BuildTool
       cache.load(cache_path)
 
       # -- Steps 7-8: Execute builds --------------------------------------------
+
+      # Create a progress bar tracker unless we're in dry-run mode.
+      # The tracker renders a live progress bar to stderr so it doesn't
+      # interfere with stdout output. If the progress bar gem is not
+      # installed, we gracefully fall back to nil and use safe navigation.
+      tracker = nil
+      unless options[:dry_run]
+        begin
+          tracker = CodingAdventures::ProgressBar::Tracker.new(packages.size, $stderr, "")
+          tracker.start
+        rescue NameError
+          # Progress bar not available
+        end
+      end
+
       results = Executor.execute_builds(
         packages: packages,
         graph: graph,
@@ -190,8 +213,12 @@ module BuildTool
         deps_hashes: deps_hashes,
         force: options[:force],
         dry_run: options[:dry_run],
-        max_jobs: options[:jobs]
+        max_jobs: options[:jobs],
+        tracker: tracker
       )
+
+      # Shut down the progress bar renderer thread.
+      tracker&.stop
 
       # -- Step 9: Save cache (unless dry run) ----------------------------------
       cache.save(cache_path) unless options[:dry_run]

@@ -1,0 +1,12 @@
+[package]
+name = "core"
+version = "0.1.0"
+edition = "2021"
+description = "Configurable processor core integrating pipeline, caches, branch predictor, and hazard detection"
+
+[dependencies]
+cpu-pipeline = { path = "../cpu-pipeline" }
+cache = { path = "../cache" }
+branch-predictor = { path = "../branch-predictor" }
+hazard-detection = { path = "../hazard-detection" }
+clock = { path = "../clock" }

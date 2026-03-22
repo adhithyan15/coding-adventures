@@ -1,0 +1,8 @@
+[package]
+name = "ml-framework-keras"
+version = "0.1.0"
+edition = "2021"
+description = "Keras 3-compatible high-level neural network API — Sequential, compile/fit/evaluate/predict, multi-backend abstraction"
+
+[dependencies]
+ml-framework-core = { path = "../ml-framework-core" }

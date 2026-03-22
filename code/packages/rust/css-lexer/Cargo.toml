@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-css-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "CSS lexer — tokenizes CSS source code using the grammar-driven lexer and the css.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

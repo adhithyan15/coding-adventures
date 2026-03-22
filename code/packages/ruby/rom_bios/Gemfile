@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_riscv_simulator", path: "../riscv_simulator"
+gem "coding_adventures_cpu_simulator", path: "../cpu_simulator"

@@ -43,6 +43,8 @@ package statemachine
 import (
 	"fmt"
 	"sort"
+
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 )
 
 // ModeTransitionRecord captures a mode switch event.
@@ -78,6 +80,15 @@ type ModalStateMachine struct {
 	modes           map[string]*DFA
 	modeTransitions map[[2]string]string
 	initialMode     string
+
+	// Internal graph of mode transitions.
+	//
+	// The mode graph captures the structure of mode switching: each mode
+	// is a node, and each mode transition (mode, trigger) -> target_mode
+	// becomes a labeled edge with the trigger as the label. This makes
+	// the mode transition topology available for structural queries
+	// (e.g., "which modes are reachable from the initial mode?").
+	modeGraph *directedgraph.LabeledGraph
 
 	currentMode string
 	modeTrace   []ModeTransitionRecord
@@ -134,10 +145,24 @@ func NewModalStateMachine(
 		transCopy[k] = v
 	}
 
+	// --- Build internal graph of mode transitions ---
+	//
+	// Each mode becomes a node. Each mode transition (mode, trigger) -> target
+	// becomes a labeled edge from mode to target with the trigger as the label.
+	mg := directedgraph.NewLabeledGraphAllowSelfLoops()
+	for mode := range modesCopy {
+		mg.AddNode(mode)
+	}
+	for key, target := range transCopy {
+		from, trigger := key[0], key[1]
+		mg.AddEdge(from, target, trigger)
+	}
+
 	return &ModalStateMachine{
 		modes:           modesCopy,
 		modeTransitions: transCopy,
 		initialMode:     initialMode,
+		modeGraph:       mg,
 		currentMode:     initialMode,
 		modeTrace:       nil,
 	}

@@ -31,6 +31,8 @@
 
 use std::collections::HashMap;
 
+use directed_graph::LabeledDirectedGraph;
+
 use crate::dfa::DFA;
 
 /// Record of a mode switch event.
@@ -56,6 +58,13 @@ pub struct ModalStateMachine {
     modes: HashMap<String, DFA>,
     /// Mode transition rules: (current_mode, trigger) -> target_mode.
     mode_transitions: HashMap<(String, String), String>,
+    /// Internal graph of mode transitions.
+    ///
+    /// Each mode is a node. Each mode transition (from_mode, trigger) -> to_mode
+    /// becomes a labeled edge from from_mode to to_mode with trigger as the label.
+    /// This graph captures the structure of mode switching for potential
+    /// introspection and visualization.
+    _mode_graph: LabeledDirectedGraph,
     /// The initial mode name.
     initial_mode: String,
     /// The currently active mode.
@@ -107,9 +116,23 @@ impl ModalStateMachine {
             }
         }
 
+        // --- Build internal mode graph ---
+        //
+        // Each mode is a node. Each mode transition (from_mode, trigger) -> to_mode
+        // becomes a labeled edge with the trigger as the label. Self-loops are
+        // allowed since a mode can transition to itself.
+        let mut mode_graph = LabeledDirectedGraph::new_allow_self_loops();
+        for mode_name in modes.keys() {
+            mode_graph.add_node(mode_name);
+        }
+        for ((from_mode, trigger), to_mode) in &mode_transitions {
+            let _ = mode_graph.add_edge(from_mode, to_mode, trigger);
+        }
+
         Ok(ModalStateMachine {
             modes,
             mode_transitions,
+            _mode_graph: mode_graph,
             initial_mode: initial_mode.clone(),
             current_mode: initial_mode,
             mode_trace: Vec::new(),

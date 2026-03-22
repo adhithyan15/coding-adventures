@@ -146,6 +146,14 @@ pub struct GrammarLexer<'a> {
 
     /// Whether indentation mode is active.
     indent_mode: bool,
+
+    /// Escape processing mode. When set to `"none"`, STRING tokens have their
+    /// quotes stripped but escape sequences are left as raw text. This is used
+    /// by grammars like CSS and TOML where escape processing is deferred to a
+    /// semantic layer (e.g., TOML has four string types with different escape
+    /// rules). When `None`, the default escape processing (`\n`, `\t`, `\\`,
+    /// `\"`) is applied.
+    escape_mode: Option<String>,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -156,6 +164,7 @@ impl<'a> GrammarLexer<'a> {
         let patterns = compile_patterns(&grammar.definitions);
         let skip_patterns = compile_patterns(&grammar.skip_definitions);
         let indent_mode = grammar.mode.as_deref() == Some("indentation");
+        let escape_mode = grammar.escapes.clone();
 
         GrammarLexer {
             chars: source.chars().collect(),
@@ -169,6 +178,7 @@ impl<'a> GrammarLexer<'a> {
             patterns,
             skip_patterns,
             indent_mode,
+            escape_mode,
         }
     }
 
@@ -242,6 +252,37 @@ impl<'a> GrammarLexer<'a> {
             Ok((token_type, Some(effective_name.to_string())))
         } else {
             Ok((token_type, None))
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Quote detection helpers
+    // -----------------------------------------------------------------------
+
+    /// Check if a matched string starts and ends with matching quote characters.
+    ///
+    /// Handles both single-char quotes (`"..."`, `'...'`) and triple-char
+    /// quotes (`"""..."""`, `'''...'''`) used by languages like TOML and Python.
+    fn is_quoted(s: &str) -> bool {
+        if s.len() >= 6 && (s.starts_with("\"\"\"") && s.ends_with("\"\"\"")
+            || s.starts_with("'''") && s.ends_with("'''"))
+        {
+            return true;
+        }
+        if s.len() >= 2 {
+            let first = s.as_bytes()[0];
+            let last = s.as_bytes()[s.len() - 1];
+            return (first == b'"' && last == b'"') || (first == b'\'' && last == b'\'');
+        }
+        false
+    }
+
+    /// Return the number of quote characters on each side (1 or 3).
+    fn quote_len(s: &str) -> usize {
+        if s.len() >= 6 && (s.starts_with("\"\"\"") || s.starts_with("'''")) {
+            3
+        } else {
+            1
         }
     }
 
@@ -354,10 +395,28 @@ impl<'a> GrammarLexer<'a> {
                 )?;
 
                 // For STRING tokens, strip quotes and process escapes.
+                //
+                // A token is considered a "string" if its effective name ends
+                // with "STRING" (catches STRING, BASIC_STRING, LITERAL_STRING,
+                // ML_BASIC_STRING, ML_LITERAL_STRING, etc.) AND its matched
+                // text starts and ends with matching quote characters.
+                //
+                // When escape_mode is "none", we strip quotes but leave escape
+                // sequences as raw text. This is used by grammars like CSS and
+                // TOML where the semantic layer handles type-specific escape
+                // processing (e.g., TOML has four string types with different
+                // escape rules).
                 let effective_name = alias.as_deref().unwrap_or(&name);
-                let final_value = if effective_name == "STRING" && matched.len() >= 2 {
-                    let inner = &matched[1..matched.len() - 1];
-                    Self::process_escapes(inner)
+                let final_value = if effective_name.ends_with("STRING") && matched.len() >= 2
+                    && Self::is_quoted(&matched)
+                {
+                    let quote_len = Self::quote_len(&matched);
+                    let inner = &matched[quote_len..matched.len() - quote_len];
+                    if self.escape_mode.as_deref() == Some("none") {
+                        inner.to_string()
+                    } else {
+                        Self::process_escapes(inner)
+                    }
                 } else {
                     matched.clone()
                 };
@@ -556,9 +615,16 @@ impl<'a> GrammarLexer<'a> {
                 }
 
                 let effective_name = alias.as_deref().unwrap_or(&name);
-                let final_value = if effective_name == "STRING" && matched.len() >= 2 {
-                    let inner = &matched[1..matched.len() - 1];
-                    Self::process_escapes(inner)
+                let final_value = if effective_name.ends_with("STRING") && matched.len() >= 2
+                    && Self::is_quoted(&matched)
+                {
+                    let quote_len = Self::quote_len(&matched);
+                    let inner = &matched[quote_len..matched.len() - quote_len];
+                    if self.escape_mode.as_deref() == Some("none") {
+                        inner.to_string()
+                    } else {
+                        Self::process_escapes(inner)
+                    }
                 } else {
                     matched.clone()
                 };

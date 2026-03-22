@@ -28,6 +28,27 @@ defmodule CodingAdventures.GrammarTools.CrossValidatorTest do
     assert Enum.any?(issues, &(&1 =~ "Token 'STRING' is defined but never referenced"))
   end
 
+  test "NEWLINE is always valid, INDENT/DEDENT only in indentation mode" do
+    # NEWLINE is always a valid synthetic token because the lexer emits it
+    # whenever a bare newline is encountered and no skip pattern consumed it.
+    # INDENT/DEDENT are only valid in indentation mode.
+    {:ok, tg} = TokenGrammar.parse("NAME = /[a-z]+/")
+    {:ok, pg} = ParserGrammar.parse("file = NAME NEWLINE INDENT NAME DEDENT ;")
+    issues = CrossValidator.validate(tg, pg)
+    undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))
+    assert Enum.any?(undefined, &(&1 =~ "INDENT"))
+    assert Enum.any?(undefined, &(&1 =~ "DEDENT"))
+    refute Enum.any?(undefined, &(&1 =~ "NEWLINE"))
+  end
+
+  test "EOF is always implicitly available" do
+    {:ok, tg} = TokenGrammar.parse("NAME = /[a-z]+/")
+    {:ok, pg} = ParserGrammar.parse("file = NAME EOF ;")
+    issues = CrossValidator.validate(tg, pg)
+    undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))
+    refute Enum.any?(undefined, &(&1 =~ "EOF"))
+  end
+
   test "validates json.tokens against json.grammar" do
     grammar_dir =
       Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])

@@ -137,6 +137,173 @@ func TestSelfLoopPanics(t *testing.T) {
 	g.AddEdge("A", "A")
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// Self-loop (allowed) tests
+// ═══════════════════════════════════════════════════════════════════════
+
+func TestAllowSelfLoopsAddEdge(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	if !g.HasEdge("A", "A") {
+		t.Error("self-loop graph should have edge A→A")
+	}
+}
+
+func TestAllowSelfLoopsHasNode(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	if !g.HasNode("A") {
+		t.Error("self-loop graph should have node A")
+	}
+	if g.Size() != 1 {
+		t.Errorf("expected size 1, got %d", g.Size())
+	}
+}
+
+func TestAllowSelfLoopsSuccessors(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	succs, err := g.Successors("A")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(succs) != 1 || succs[0] != "A" {
+		t.Errorf("expected [A], got %v", succs)
+	}
+}
+
+func TestAllowSelfLoopsPredecessors(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	preds, err := g.Predecessors("A")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(preds) != 1 || preds[0] != "A" {
+		t.Errorf("expected [A], got %v", preds)
+	}
+}
+
+func TestAllowSelfLoopsHasCycle(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	if !g.HasCycle() {
+		t.Error("self-loop is a cycle of length 1")
+	}
+}
+
+func TestAllowSelfLoopsTopoSortFails(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	_, err := g.TopologicalSort()
+	var ce *CycleError
+	if !errors.As(err, &ce) {
+		t.Error("expected CycleError from topological sort with self-loop")
+	}
+}
+
+func TestAllowSelfLoopsMixedEdges(t *testing.T) {
+	// A self-loop graph can also have normal edges
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	g.AddEdge("A", "B")
+	g.AddEdge("B", "C")
+	if !g.HasEdge("A", "A") {
+		t.Error("should have self-loop A→A")
+	}
+	if !g.HasEdge("A", "B") {
+		t.Error("should have normal edge A→B")
+	}
+	if g.Size() != 3 {
+		t.Errorf("expected 3 nodes, got %d", g.Size())
+	}
+}
+
+func TestAllowSelfLoopsRemoveEdge(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	err := g.RemoveEdge("A", "A")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if g.HasEdge("A", "A") {
+		t.Error("self-loop should be removed")
+	}
+	// Node should still exist
+	if !g.HasNode("A") {
+		t.Error("node A should still exist after removing self-loop")
+	}
+}
+
+func TestAllowSelfLoopsRemoveNode(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	g.AddEdge("A", "B")
+	err := g.RemoveNode("A")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if g.HasNode("A") {
+		t.Error("node A should be removed")
+	}
+	if g.HasEdge("A", "A") {
+		t.Error("self-loop should be removed with node")
+	}
+	if g.HasEdge("A", "B") {
+		t.Error("edge A→B should be removed with node")
+	}
+}
+
+func TestAllowSelfLoopsEdgesOutput(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	g.AddEdge("A", "B")
+	edges := g.Edges()
+	if len(edges) != 2 {
+		t.Errorf("expected 2 edges, got %d", len(edges))
+	}
+	// Sorted: [A,A] comes before [A,B]
+	if edges[0] != [2]string{"A", "A"} {
+		t.Errorf("expected first edge [A,A], got %v", edges[0])
+	}
+	if edges[1] != [2]string{"A", "B"} {
+		t.Errorf("expected second edge [A,B], got %v", edges[1])
+	}
+}
+
+func TestDefaultGraphRejectsSelfLoops(t *testing.T) {
+	// Verify that New() still rejects self-loops
+	g := New()
+	defer func() {
+		if r := recover(); r == nil {
+			t.Error("default graph should panic on self-loop")
+		}
+	}()
+	g.AddEdge("X", "X")
+}
+
+func TestAllowSelfLoopsNormalEdgeStillWorks(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("X", "Y")
+	if !g.HasEdge("X", "Y") {
+		t.Error("normal edges should work in self-loop graph")
+	}
+}
+
+func TestAllowSelfLoopsTransitiveClosure(t *testing.T) {
+	g := NewAllowSelfLoops()
+	g.AddEdge("A", "A")
+	g.AddEdge("A", "B")
+	closure, err := g.TransitiveClosure("A")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// A→A means A is in its own closure, plus B
+	if !closure["A"] || !closure["B"] {
+		t.Errorf("expected A and B in closure, got %v", closure)
+	}
+}
+
 func TestRemoveEdge(t *testing.T) {
 	g := New()
 	g.AddEdge("A", "B")

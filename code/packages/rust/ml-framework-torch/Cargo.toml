@@ -1,0 +1,8 @@
+[package]
+name = "ml-framework-torch"
+version = "0.1.0"
+edition = "2021"
+description = "PyTorch-compatible API simulation built on ml-framework-core — nn.Module, nn.Linear, optim.SGD/Adam, DataLoader"
+
+[dependencies]
+ml-framework-core = { path = "../ml-framework-core" }

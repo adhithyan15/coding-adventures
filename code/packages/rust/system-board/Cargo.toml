@@ -1,0 +1,14 @@
+[package]
+name = "system-board"
+version = "0.1.0"
+edition = "2021"
+description = "S06 System Board -- complete simulated computer from power-on to Hello World"
+
+[dependencies]
+riscv-simulator = { path = "../riscv-simulator" }
+display = { path = "../display" }
+interrupt-handler = { path = "../interrupt-handler" }
+rom-bios = { path = "../rom-bios" }
+bootloader = { path = "../bootloader" }
+os-kernel = { path = "../os-kernel" }
+cpu-simulator = { path = "../cpu-simulator" }

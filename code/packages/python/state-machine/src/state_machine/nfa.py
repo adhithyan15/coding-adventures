@@ -47,6 +47,8 @@ efficient execution (O(1) per character).
 
 from __future__ import annotations
 
+from directed_graph import LabeledDirectedGraph
+
 from state_machine.dfa import DFA
 
 # === Epsilon Sentinel ===
@@ -156,6 +158,24 @@ class NFA:
         }
         self._initial: str = initial
         self._accepting: frozenset[str] = frozenset(accepting)
+
+        # --- Build internal graph representation ---
+        #
+        # We maintain a LabeledDirectedGraph alongside the _transitions dict.
+        # The dict is kept for O(1) lookups in process(), epsilon_closure(),
+        # accepts(), and to_dfa() — the performance-critical paths.
+        # The graph captures the structure of the NFA for introspection and
+        # future algorithmic queries.
+        #
+        # Epsilon transitions use the EPSILON constant ("") as the edge label,
+        # preserving the distinction between input-consuming and free transitions.
+        self._graph: LabeledDirectedGraph = LabeledDirectedGraph()
+        for state in states:
+            self._graph.add_node(state)
+        for (source, event), targets in transitions.items():
+            label = event if event != EPSILON else EPSILON
+            for target in targets:
+                self._graph.add_edge(source, target, label=label)
 
         # The NFA starts in the epsilon closure of the initial state
         self._current: frozenset[str] = self.epsilon_closure(

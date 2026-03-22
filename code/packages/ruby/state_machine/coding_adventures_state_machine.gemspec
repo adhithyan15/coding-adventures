@@ -19,6 +19,8 @@ Gem::Specification.new do |spec|
     "source_code_uri" => "https://github.com/adhithyan15/coding-adventures",
     "rubygems_mfa_required" => "true"
   }
+  # Runtime dependencies
+  spec.add_dependency "coding_adventures_directed_graph", "~> 0.1"
   # Development dependencies
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "simplecov", "~> 0.22"

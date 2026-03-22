@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-toml-parser"
+version = "0.1.0"
+edition = "2021"
+description = "TOML parser — parses TOML source text into an AST using the grammar-driven parser and the toml.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-toml-lexer = { path = "../toml-lexer" }

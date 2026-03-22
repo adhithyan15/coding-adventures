@@ -1,0 +1,26 @@
+{
+    "_comment": "Simple 2-input AND gate configured in one LUT",
+    "_explanation": [
+        "This configures a single CLB's LUT A as a 2-input AND gate.",
+        "The truth table has 16 entries (4-input LUT), but only I0 and I1 matter.",
+        "Index 3 (binary 0011, I0=1 I1=1) is the only entry set to 1.",
+        "All other entries are 0 because AND only outputs 1 when both inputs are 1."
+    ],
+    "clbs": {
+        "clb_0": {
+            "slice0": {
+                "lut_a": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "lut_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            "slice1": {
+                "lut_a": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "lut_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }
+        }
+    },
+    "io": {
+        "in_a": {"mode": "input"},
+        "in_b": {"mode": "input"},
+        "out_and": {"mode": "output"}
+    }
+}

@@ -38,6 +38,15 @@ from build_tool.discovery import Package
 from build_tool.hasher import hash_deps, hash_package
 from build_tool.resolver import DirectedGraph
 
+# Optional progress bar integration. The progress bar package provides a
+# real-time terminal UI showing build progress. When unavailable we degrade
+# gracefully — the build works identically, just without the visual feedback.
+try:
+    from progress_bar import Event, EventType, NullTracker, Tracker
+except ImportError:
+    Tracker = None  # type: ignore[assignment, misc]
+    NullTracker = None  # type: ignore[assignment, misc]
+
 
 @dataclass
 class BuildResult:
@@ -127,6 +136,7 @@ def execute_builds(
     dry_run: bool = False,
     max_jobs: int | None = None,
     affected_set: set[str] | None = None,
+    tracker=None,
 ) -> dict[str, BuildResult]:
     """Execute BUILD commands for packages, respecting dependency order.
 
@@ -181,6 +191,8 @@ def execute_builds(
                     package_name=name,
                     status="dep-skipped",
                 )
+                if tracker:
+                    tracker.send(Event(type=EventType.SKIPPED, name=name))
                 continue
 
             # Check if we need to build
@@ -190,6 +202,8 @@ def execute_builds(
                     package_name=name,
                     status="skipped",
                 )
+                if tracker:
+                    tracker.send(Event(type=EventType.SKIPPED, name=name))
                 continue
 
             pkg_hash = package_hashes.get(name, "")
@@ -200,6 +214,8 @@ def execute_builds(
                     package_name=name,
                     status="skipped",
                 )
+                if tracker:
+                    tracker.send(Event(type=EventType.SKIPPED, name=name))
                 continue
 
             if dry_run:
@@ -218,10 +234,12 @@ def execute_builds(
         workers = max_jobs if max_jobs else min(len(to_build), 8)
 
         with ThreadPoolExecutor(max_workers=workers) as executor:
-            futures = {
-                executor.submit(_run_package_build, pkg): pkg
-                for pkg in to_build
-            }
+            futures = {}
+            for pkg in to_build:
+                # Notify the progress bar that this package is starting
+                if tracker:
+                    tracker.send(Event(type=EventType.STARTED, name=pkg.name))
+                futures[executor.submit(_run_package_build, pkg)] = pkg
 
             for future in as_completed(futures):
                 pkg = futures[future]
@@ -236,6 +254,14 @@ def execute_builds(
                     )
 
                 results[pkg.name] = result
+
+                # Notify the progress bar that this package finished
+                if tracker:
+                    tracker.send(Event(
+                        type=EventType.FINISHED,
+                        name=pkg.name,
+                        status=result.status,
+                    ))
 
                 # Update cache
                 if result.status == "built":

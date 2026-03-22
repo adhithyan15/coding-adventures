@@ -1,0 +1,9 @@
+[package]
+name = "lisp-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compiles Lisp S-expression ASTs into bytecode instructions for the Lisp VM"
+
+[dependencies]
+lisp-lexer = { path = "../lisp-lexer" }
+lisp-parser = { path = "../lisp-parser" }

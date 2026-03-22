@@ -23,7 +23,8 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/lexer": "file:../lexer",
-    "@coding-adventures/parser": "file:../parser"
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

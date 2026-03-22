@@ -27,7 +27,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             keywords: [],
             skip_definitions: [],
             reserved_keywords: [],
-            mode: nil
+            mode: nil,
+            escape_mode: nil
 
   @type token_definition :: %{
           name: String.t(),
@@ -42,7 +43,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           keywords: [String.t()],
           skip_definitions: [token_definition()],
           reserved_keywords: [String.t()],
-          mode: String.t() | nil
+          mode: String.t() | nil,
+          escape_mode: String.t() | nil
         }
 
   @doc """
@@ -72,6 +74,13 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             String.starts_with?(stripped, "mode:") ->
               mode = stripped |> String.replace_prefix("mode:", "") |> String.trim()
               {:cont, %{acc | grammar: %{acc.grammar | mode: mode}}}
+
+            # Escapes directive — controls escape processing for STRING tokens.
+            # "none" means the lexer strips quotes but leaves escape sequences
+            # as raw text, deferring escape handling to the semantic layer.
+            String.starts_with?(stripped, "escapes:") ->
+              escape_mode = stripped |> String.replace_prefix("escapes:", "") |> String.trim()
+              {:cont, %{acc | grammar: %{acc.grammar | escape_mode: escape_mode}}}
 
             # Section headers
             stripped in ["keywords:", "keywords :"] ->
