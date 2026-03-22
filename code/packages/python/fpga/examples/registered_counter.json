@@ -1,0 +1,29 @@
+{
+    "_comment": "Registered output example — LUT output captured by flip-flop",
+    "_explanation": [
+        "This demonstrates using flip-flops for sequential (clocked) logic.",
+        "LUT A is configured as an inverter (NOT gate using I0 only):",
+        "  When I0=0 → output 1 (index 0), when I0=1 → output 0 (index 1)",
+        "The flip-flop captures the LUT output on each clock rising edge.",
+        "By feeding the FF output back to the LUT input, you get a toggle",
+        "flip-flop (T flip-flop) — the simplest counter (0 → 1 → 0 → 1...).",
+        "",
+        "This is the building block of all counters and state machines."
+    ],
+    "clbs": {
+        "clb_toggle": {
+            "slice0": {
+                "lut_a": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                "lut_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "ff_a": true
+            },
+            "slice1": {
+                "lut_a": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "lut_b": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }
+        }
+    },
+    "io": {
+        "toggle_out": {"mode": "output"}
+    }
+}

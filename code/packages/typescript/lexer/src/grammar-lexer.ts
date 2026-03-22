@@ -201,11 +201,20 @@ export function grammarTokenize(source: string, grammar: TokenGrammar): Token[] 
           name, value, keywordSet, reservedSet, alias, startLine, startColumn,
         );
 
-        // Handle STRING tokens: strip quotes and process escapes
-        if (name === "STRING" || (alias && alias.includes("STRING"))) {
-          if (value.length >= 2 && (value[0] === '"' || value[0] === "'")) {
+        // Handle STRING tokens: strip quotes and optionally process escapes.
+        // When escapeMode is "none", the lexer strips quotes but leaves escape
+        // sequences as raw text. This is used by languages like TOML and CSS
+        // where different string types have different escape semantics — the
+        // semantic layer handles escape processing after parsing.
+        if (name === "STRING" || name.includes("STRING") || (alias && alias.includes("STRING"))) {
+          // Multi-line strings use triple quotes (""" or '''), single-line use single quotes.
+          // Check for triple quotes first to avoid partial stripping.
+          if (value.length >= 6 && (value.startsWith('"""') || value.startsWith("'''"))) {
+            const inner = value.slice(3, -3);
+            value = grammar.escapeMode === "none" ? inner : processEscapes(inner);
+          } else if (value.length >= 2 && (value[0] === '"' || value[0] === "'")) {
             const inner = value.slice(1, -1);
-            value = processEscapes(inner);
+            value = grammar.escapeMode === "none" ? inner : processEscapes(inner);
           }
         }
 

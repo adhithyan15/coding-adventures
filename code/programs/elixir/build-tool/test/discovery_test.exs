@@ -128,6 +128,66 @@ defmodule BuildTool.DiscoveryTest do
     test "returns nil when no BUILD file exists", %{tmp_dir: tmp_dir} do
       assert Discovery.get_build_file_for_platform(tmp_dir, :darwin) == nil
     end
+
+    # -- BUILD_windows tests --------------------------------------------------
+
+    test "returns BUILD_windows on windows when it exists", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_windows"), "echo windows")
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :windows)
+      assert result == Path.join(tmp_dir, "BUILD_windows")
+    end
+
+    test "falls back to BUILD on windows when BUILD_windows missing", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :windows)
+      assert result == Path.join(tmp_dir, "BUILD")
+    end
+
+    test "BUILD_windows not used on darwin", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_windows"), "echo windows")
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :darwin)
+      assert result == Path.join(tmp_dir, "BUILD")
+    end
+
+    # -- BUILD_mac_and_linux tests --------------------------------------------
+
+    test "returns BUILD_mac_and_linux on darwin", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :darwin)
+      assert result == Path.join(tmp_dir, "BUILD_mac_and_linux")
+    end
+
+    test "returns BUILD_mac_and_linux on linux", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :linux)
+      assert result == Path.join(tmp_dir, "BUILD_mac_and_linux")
+    end
+
+    test "BUILD_mac_and_linux not used on windows", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :windows)
+      assert result == Path.join(tmp_dir, "BUILD")
+    end
+
+    test "BUILD_mac overrides BUILD_mac_and_linux on darwin", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_mac"), "echo mac")
+      File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo generic")
+
+      result = Discovery.get_build_file_for_platform(tmp_dir, :darwin)
+      assert result == Path.join(tmp_dir, "BUILD_mac")
+    end
   end
 
   # ---------------------------------------------------------------------------
