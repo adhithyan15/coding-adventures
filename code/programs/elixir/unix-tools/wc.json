@@ -46,7 +46,7 @@
   "arguments": [
     {
       "id": "files",
-      "display_name": "FILE",
+      "name": "FILE",
       "description": "Files to process (use - for stdin)",
       "required": false,
       "variadic": true,
