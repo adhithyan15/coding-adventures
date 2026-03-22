@@ -6,8 +6,9 @@
  */
 
 export { Intel4004GateLevel } from "./cpu.js";
-export type { GateTrace } from "./cpu.js";
+export type { GateTrace, MemoryAccess } from "./cpu.js";
 export { GateALU } from "./alu.js";
+export type { ALUTrace } from "./alu.js";
 export { RegisterFile, Accumulator, CarryFlag } from "./registers.js";
 export { ProgramCounter } from "./pc.js";
 export { HardwareStack } from "./stack.js";

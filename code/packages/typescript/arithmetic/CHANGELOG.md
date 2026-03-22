@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-22
+
+### Added
+
+- `rippleCarryAdderTraced(a, b, carryIn?)` — same as `rippleCarryAdder` but captures per-adder intermediate state (`FullAdderSnapshot`) for visualization.
+- `FullAdderSnapshot` interface — records `a`, `b`, `cIn`, `sum`, `cOut` for each full adder stage.
+- `RippleCarryResult` interface — traced adder return type with `sum`, `carryOut`, and `adders` array.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

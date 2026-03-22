@@ -38,6 +38,7 @@ import type { DetailedTrace } from "../cpu/types.js";
  * These match the encoding in the ROM program:
  *   0x1-0x9: digits 1-9
  *   0xA: digit 0
+ *   0xB: clear (C)
  *   0xC: add (+)
  *   0xD: subtract (-)
  *   0xE: multiply (×)
@@ -54,12 +55,12 @@ export const KEY_CODES = {
   "8": 0x8,
   "9": 0x9,
   "0": 0xa,
+  C: 0xb,
   "+": 0xc,
   "-": 0xd,
   "×": 0xe,
   "÷": 0xe,
   "=": 0xf,
-  C: 0xf,
 } as const;
 
 export type KeyName = keyof typeof KEY_CODES;

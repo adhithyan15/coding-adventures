@@ -5,6 +5,7 @@
  * Built entirely from logic gates (Layer 1).
  */
 
-export { halfAdder, fullAdder, rippleCarryAdder } from "./adders.js";
+export { halfAdder, fullAdder, rippleCarryAdder, rippleCarryAdderTraced } from "./adders.js";
+export type { FullAdderSnapshot, RippleCarryResult } from "./adders.js";
 export { ALU, ALUOp } from "./alu.js";
 export type { ALUResult } from "./alu.js";

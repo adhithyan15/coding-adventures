@@ -37,7 +37,7 @@ function BitCircle({ value }: { value: Bit }) {
 /** Find the most recent trace with ALU detail in the history. */
 function findLastAluTrace(history: readonly DetailedTrace[]): DetailedTrace | undefined {
   for (let i = history.length - 1; i >= 0; i--) {
-    if (history[i]!.aluDetail) return history[i];
+    if (history[i]!.aluTrace) return history[i];
   }
   return undefined;
 }
@@ -46,9 +46,9 @@ export function AluView({ trace, traceHistory }: AluViewProps) {
   const { t } = useTranslation();
 
   // Use the last trace if it has ALU detail, otherwise find most recent one
-  const aluTrace = trace?.aluDetail ? trace : findLastAluTrace(traceHistory);
+  const aluTraceEntry = trace?.aluTrace ? trace : findLastAluTrace(traceHistory);
 
-  if (!aluTrace?.aluDetail) {
+  if (!aluTraceEntry?.aluTrace) {
     return (
       <section className="alu-view" aria-label={t("alu.title")}>
         <h2>{t("alu.title")}</h2>
@@ -57,7 +57,7 @@ export function AluView({ trace, traceHistory }: AluViewProps) {
     );
   }
 
-  const { aluDetail } = aluTrace;
+  const alu = aluTraceEntry.aluTrace;
 
   return (
     <section className="alu-view" aria-label={t("alu.title")}>
@@ -65,7 +65,7 @@ export function AluView({ trace, traceHistory }: AluViewProps) {
       <p>{t("alu.description")}</p>
 
       <div className="alu-operation">
-        {t(`alu.op.${aluDetail.operation}`)}
+        {t(`alu.op.${alu.operation}`)}
       </div>
 
       {/* Inputs */}
@@ -73,7 +73,7 @@ export function AluView({ trace, traceHistory }: AluViewProps) {
         <div>
           <span>{t("alu.inputA")}</span>
           <code>
-            {[...aluDetail.inputA].reverse().map((b, i) => (
+            {[...alu.inputA].reverse().map((b, i) => (
               <BitCircle key={i} value={b} />
             ))}
           </code>
@@ -81,21 +81,21 @@ export function AluView({ trace, traceHistory }: AluViewProps) {
         <div>
           <span>{t("alu.inputB")}</span>
           <code>
-            {[...aluDetail.inputB].reverse().map((b, i) => (
+            {[...alu.inputB].reverse().map((b, i) => (
               <BitCircle key={i} value={b} />
             ))}
           </code>
         </div>
         <div>
           <span>{t("alu.carryIn")}</span>
-          <code><BitCircle value={aluDetail.carryIn} /></code>
+          <code><BitCircle value={alu.carryIn} /></code>
         </div>
       </div>
 
       {/* Ripple Carry Adder Chain — MSB on left, LSB on right */}
       <h3 style={{ marginBottom: 12 }}>Ripple Carry Adder Chain</h3>
       <div className="alu-adder-chain">
-        {[...aluDetail.adders].reverse().map((adder, i) => {
+        {[...alu.adders].reverse().map((adder, i) => {
           const bitIndex = 3 - i;
           return (
             <div key={bitIndex} className="full-adder-card">
@@ -138,13 +138,13 @@ export function AluView({ trace, traceHistory }: AluViewProps) {
       <div className="alu-result">
         <span>{t("alu.result")}:</span>
         <code>
-          {[...aluDetail.result].reverse().map((b, i) => (
+          {[...alu.result].reverse().map((b, i) => (
             <BitCircle key={i} value={b} />
           ))}
         </code>
-        <span>= {parseInt([...aluDetail.result].reverse().map(b => b.toString()).join(""), 2)}</span>
+        <span>= {parseInt([...alu.result].reverse().map(b => b.toString()).join(""), 2)}</span>
         <span style={{ marginLeft: 12 }}>
-          {t("alu.carryOut")}: <BitCircle value={aluDetail.carryOut} />
+          {t("alu.carryOut")}: <BitCircle value={alu.carryOut} />
         </span>
       </div>
     </section>
