@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-03-22
+
+### Added
+
+- **Glob matching module** (`BuildTool.GlobMatch`): Pure string-matching glob utility supporting `**` (zero or more directory segments), `*`, `?`, and literal patterns.
+- **Strict input filtering in git diff**: `BuildTool.GitDiff.map_files_to_packages/4` now respects Starlark `declared_srcs` patterns. For Starlark packages, only files matching declared source patterns (or BUILD files) trigger rebuilds.
+- **Build plan module** (`BuildTool.Plan`): Serializes/deserializes build plan as versioned JSON (`schema_version: 1`). Supports `write_plan/2` and `read_plan/1` with version checking.
+- **`--emit-plan` CLI flag**: Writes build plan JSON to a file and exits.
+- **`--plan-file` CLI flag**: Reads a previously emitted build plan, skipping discovery/resolution/diff.
+- **`BUILD_windows`**: Windows-compatible BUILD file without shell redirects.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

@@ -2,6 +2,20 @@
 
 All notable changes to the TypeScript build tool will be documented in this file.
 
+## [1.1.0] - 2026-03-22
+
+### Added
+
+- **Glob matching module** (`glob-match.ts`): Pure string-matching glob utility supporting `**` (zero or more directory segments), `*`, `?`, and literal patterns.
+- **Strict input filtering in git diff**: `mapFilesToPackages()` now respects Starlark `declaredSrcs` patterns. For Starlark packages, only files matching declared source patterns (or BUILD files) trigger rebuilds.
+- **Build plan module** (`plan.ts`): Serializes/deserializes build plan as versioned JSON (`schema_version: 1`). Supports `writePlan()` and `readPlan()` with version checking and forward compatibility.
+- **`--emit-plan` CLI flag**: Writes build plan JSON to a file and exits.
+- **`--plan-file` CLI flag**: Reads a previously emitted build plan, skipping discovery/resolution/diff.
+
+### Fixed
+
+- **Windows path splitting**: `inferLanguage()` now splits on both `/` and `\` for correct language detection on Windows where paths may use backslashes.
+
 ## [1.0.0] - 2026-03-21
 
 ### Added
