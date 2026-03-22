@@ -100,6 +100,7 @@ export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
   readonly keywords: readonly string[];
   readonly mode?: string;
+  readonly escapeMode?: string;
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
 }
@@ -236,6 +237,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const skipDefinitions: TokenDefinition[] = [];
   const reservedKeywords: string[] = [];
   let mode: string | undefined;
+  let escapeMode: string | undefined;
 
   // Sections: "definitions" (default), "keywords", "skip", "reserved"
   let currentSection = "definitions";
@@ -262,6 +264,19 @@ export function parseTokenGrammar(source: string): TokenGrammar {
         );
       }
       mode = modeValue;
+      continue;
+    }
+
+    // --- Escapes directive ---
+    if (stripped.startsWith("escapes:") || stripped.startsWith("escapes :")) {
+      const escapesValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!escapesValue) {
+        throw new TokenGrammarError(
+          "Missing escapes value after 'escapes:'",
+          lineNumber,
+        );
+      }
+      escapeMode = escapesValue;
       continue;
     }
 
@@ -356,6 +371,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     definitions,
     keywords,
     mode,
+    escapeMode,
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
   };
@@ -446,6 +462,11 @@ export function validateTokenGrammar(grammar: TokenGrammar): string[] {
   // Validate mode value
   if (grammar.mode !== undefined && grammar.mode !== "indentation") {
     issues.push(`Unknown mode: '${grammar.mode}'`);
+  }
+
+  // Validate escapeMode value
+  if (grammar.escapeMode !== undefined && grammar.escapeMode !== "none") {
+    issues.push(`Unknown escapes mode: '${grammar.escapeMode}'`);
   }
 
   return issues;
