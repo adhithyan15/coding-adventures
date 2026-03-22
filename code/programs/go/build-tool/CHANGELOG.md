@@ -2,6 +2,22 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
+## [0.2.0] - 2026-03-22
+
+### Added
+
+- **`--detect-languages` flag**: Outputs which language toolchains CI needs based on git diff. Enables conditional toolchain installation in CI — only install Python if Python packages changed, etc. Go is always needed (build tool dependency).
+- **Starlark BUILD file evaluation**: BUILD files can now be written in Starlark instead of shell. The build tool detects Starlark BUILD files (via `load()` or rule calls) and evaluates them through the Go starlark-interpreter.
+- **Starlark evaluator** (`internal/starlark/evaluator.go`): Evaluates Starlark BUILD files, extracts targets with declared srcs/deps, generates shell commands from rule types.
+- **Strict input hashing**: When a package has declared srcs (from Starlark BUILD), only those files are hashed for change detection. Falls back to extension-based collection for shell BUILD files.
+- **12 rule types supported**: py_library, py_binary, go_library, go_binary, ruby_library, ruby_binary, ts_library, ts_binary, rust_library, rust_binary, elixir_library, elixir_binary.
+- **"starlark" language support**: Discovery and hasher recognize "starlark" as a first-class language alongside python/go/ruby/typescript/rust/elixir.
+- **TypeScript, Rust, Elixir extension mappings** in hasher (previously only python/ruby/go were mapped).
+
+### Dependencies
+
+- Added starlark-interpreter and its 10 transitive Go package dependencies via replace directives.
+
 ## [0.1.0] - 2026-03-18
 
 ### Added
