@@ -1,0 +1,79 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "realpath",
+  "display_name": "realpath",
+  "description": "Print the resolved absolute file name",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "canonicalize_existing",
+      "short": "e",
+      "long": "canonicalize-existing",
+      "description": "All components of the path must exist",
+      "type": "boolean"
+    },
+    {
+      "id": "canonicalize_missing",
+      "short": "m",
+      "long": "canonicalize-missing",
+      "description": "No path components need exist or be a directory",
+      "type": "boolean"
+    },
+    {
+      "id": "no_symlinks",
+      "short": "s",
+      "long": "no-symlinks",
+      "description": "Don't expand symlinks",
+      "type": "boolean"
+    },
+    {
+      "id": "quiet",
+      "short": "q",
+      "long": "quiet",
+      "description": "Suppress most error messages",
+      "type": "boolean"
+    },
+    {
+      "id": "relative_to",
+      "long": "relative-to",
+      "description": "Print the resolved path relative to DIR",
+      "type": "string",
+      "value_name": "DIR"
+    },
+    {
+      "id": "relative_base",
+      "long": "relative-base",
+      "description": "Print absolute paths unless paths below DIR",
+      "type": "string",
+      "value_name": "DIR"
+    },
+    {
+      "id": "zero",
+      "short": "z",
+      "long": "zero",
+      "description": "End each output line with NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to resolve",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 1
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "canonicalize-mode",
+      "flag_ids": ["canonicalize_existing", "canonicalize_missing"],
+      "required": false
+    }
+  ]
+}
