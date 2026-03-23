@@ -12,7 +12,7 @@
 //  3. Block boundary lengths — 55, 56, 64, 127, 128 bytes
 //  4. Edge cases — null bytes, all byte values, single bytes
 //  5. Streaming API — equivalence with one-shot, non-destructive, io.Writer
-package md5
+package ca_md5
 
 import (
 	"bytes"

@@ -1,4 +1,4 @@
-package sha1
+package ca_sha1
 
 import (
 	"encoding/hex"

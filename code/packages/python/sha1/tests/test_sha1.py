@@ -10,7 +10,7 @@ input, exact block boundaries, and very long inputs.
 
 import pytest
 
-from sha1 import SHA1, sha1, sha1_hex
+from ca_sha1 import SHA1, sha1, sha1_hex
 
 
 # ─── FIPS 180-4 Test Vectors ─────────────────────────────────────────────────

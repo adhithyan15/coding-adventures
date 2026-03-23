@@ -15,22 +15,22 @@
 #  10. Private internals         — T-table spot-checks, shift table, init constants
 
 require "minitest/autorun"
-require "coding_adventures_md5"
+require "ca_md5"
 
 class TestMd5 < Minitest::Test
   # Convenience: compute hex digest of a string via the one-shot API.
   def hex(str)
-    CodingAdventures::Md5.md5_hex(str)
+    Ca::Md5.md5_hex(str)
   end
 
   # ─── Version ──────────────────────────────────────────────────────────────────
 
   def test_version_exists
-    refute_nil CodingAdventures::Md5::VERSION
+    refute_nil Ca::Md5::VERSION
   end
 
   def test_version_is_string
-    assert_instance_of String, CodingAdventures::Md5::VERSION
+    assert_instance_of String, Ca::Md5::VERSION
   end
 
   # ─── RFC 1321 Official Test Vectors ───────────────────────────────────────────
@@ -80,35 +80,35 @@ class TestMd5 < Minitest::Test
 
   def test_md5_returns_binary_string
     # md5() must return a String of exactly 16 bytes in binary encoding
-    result = CodingAdventures::Md5.md5("abc")
+    result = Ca::Md5.md5("abc")
     assert_instance_of String, result
     assert_equal 16, result.bytesize
   end
 
   def test_md5_binary_encoding
     # The 16-byte result should have ASCII-8BIT (binary) encoding
-    result = CodingAdventures::Md5.md5("abc")
+    result = Ca::Md5.md5("abc")
     assert_equal Encoding::ASCII_8BIT, result.encoding
   end
 
   def test_md5_hex_returns_string
-    result = CodingAdventures::Md5.md5_hex("abc")
+    result = Ca::Md5.md5_hex("abc")
     assert_instance_of String, result
   end
 
   def test_md5_hex_returns_32_chars
     # 16 bytes × 2 hex chars per byte = 32 characters
-    assert_equal 32, CodingAdventures::Md5.md5_hex("abc").length
+    assert_equal 32, Ca::Md5.md5_hex("abc").length
   end
 
   def test_md5_hex_is_lowercase
     # Standard MD5 hex output uses lowercase letters a-f
-    hex_result = CodingAdventures::Md5.md5_hex("abc")
+    hex_result = Ca::Md5.md5_hex("abc")
     assert_equal hex_result, hex_result.downcase
   end
 
   def test_md5_hex_contains_only_hex_chars
-    hex_result = CodingAdventures::Md5.md5_hex("abc")
+    hex_result = Ca::Md5.md5_hex("abc")
     assert_match(/\A[0-9a-f]{32}\z/, hex_result)
   end
 
@@ -123,7 +123,7 @@ class TestMd5 < Minitest::Test
   # would be written as 0xD9_8C_1D_D4 → bytes d9 8c 1d d4 ... (different).
 
   def test_little_endian_first_byte_of_empty_hash
-    bytes = CodingAdventures::Md5.md5("").bytes
+    bytes = Ca::Md5.md5("").bytes
     # d41d8cd9... → first byte is 0xd4
     assert_equal 0xd4, bytes[0]
   end
@@ -131,14 +131,14 @@ class TestMd5 < Minitest::Test
   def test_little_endian_empty_hash_bytes
     # Verify first 8 bytes of md5("") to ensure little-endian word storage
     expected = [0xd4, 0x1d, 0x8c, 0xd9, 0x8f, 0x00, 0xb2, 0x04]
-    actual = CodingAdventures::Md5.md5("").bytes.first(8)
+    actual = Ca::Md5.md5("").bytes.first(8)
     assert_equal expected, actual
   end
 
   def test_little_endian_vs_unpack
     # The binary output, when unpacked as "V4" (little-endian), should give
     # four 32-bit words. If we used big-endian "N4" we'd get a wrong digest.
-    raw = CodingAdventures::Md5.md5("")
+    raw = Ca::Md5.md5("")
     # Unpack as little-endian words
     le_words = raw.unpack("V4")
     # The first LE word of md5("") state is A = 0xD98C1DD4 after rounds.
@@ -231,7 +231,7 @@ class TestMd5 < Minitest::Test
   def test_accepts_binary_encoding
     # Explicitly binary-encoded strings should work
     data = "\x01\x02\x03\x04".b
-    result = CodingAdventures::Md5.md5(data)
+    result = Ca::Md5.md5(data)
     assert_equal 16, result.bytesize
   end
 
@@ -248,36 +248,36 @@ class TestMd5 < Minitest::Test
   # ─── Streaming API: Digest Class ──────────────────────────────────────────────
 
   def test_digest_version_matches_module
-    assert_equal CodingAdventures::Md5::VERSION,
-      CodingAdventures::Md5::VERSION
+    assert_equal Ca::Md5::VERSION,
+      Ca::Md5::VERSION
   end
 
   def test_digest_empty_hexdigest
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     assert_equal "d41d8cd98f00b204e9800998ecf8427e", d.hexdigest
   end
 
   def test_digest_single_update
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     assert_equal "900150983cd24fb0d6963f7d28e17f72", d.hexdigest
   end
 
   def test_digest_multiple_updates_equal_oneshot
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("ab")
     d.update("c")
     assert_equal hex("abc"), d.hexdigest
   end
 
   def test_digest_update_returns_self_for_chaining
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     result = d.update("abc")
     assert_same d, result
   end
 
   def test_digest_chained_updates
-    result = CodingAdventures::Md5::Digest.new
+    result = Ca::Md5::Digest.new
       .update("abc")
       .update("defghijklmnopqrstuvwxyz")
       .hexdigest
@@ -285,24 +285,24 @@ class TestMd5 < Minitest::Test
   end
 
   def test_digest_shovel_alias_works
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d << "abc"
     assert_equal "900150983cd24fb0d6963f7d28e17f72", d.hexdigest
   end
 
   def test_digest_shovel_chaining
-    result = (CodingAdventures::Md5::Digest.new << "ab" << "c").hexdigest
+    result = (Ca::Md5::Digest.new << "ab" << "c").hexdigest
     assert_equal "900150983cd24fb0d6963f7d28e17f72", result
   end
 
   def test_digest_returns_16_bytes
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     assert_equal 16, d.digest.bytesize
   end
 
   def test_digest_binary_encoding
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     assert_equal Encoding::ASCII_8BIT, d.digest.encoding
   end
@@ -313,7 +313,7 @@ class TestMd5 < Minitest::Test
   # and digest() calls must still work correctly.
 
   def test_digest_is_nondestructive
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     first  = d.digest
     second = d.digest
@@ -321,7 +321,7 @@ class TestMd5 < Minitest::Test
   end
 
   def test_digest_can_continue_after_digest_call
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     _ = d.digest            # peek at the digest
     d.update("defghijklmnopqrstuvwxyz")  # continue hashing
@@ -329,7 +329,7 @@ class TestMd5 < Minitest::Test
   end
 
   def test_hexdigest_is_nondestructive
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     first  = d.hexdigest
     second = d.hexdigest
@@ -341,14 +341,14 @@ class TestMd5 < Minitest::Test
   # copy() lets you hash a common prefix once, then branch independently.
 
   def test_digest_copy_produces_same_hash
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     copy = d.copy
     assert_equal d.hexdigest, copy.hexdigest
   end
 
   def test_digest_copy_is_independent
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     copy = d.copy
     # Feed different data into each
@@ -358,7 +358,7 @@ class TestMd5 < Minitest::Test
   end
 
   def test_digest_copy_original_unaffected
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("abc")
     expected = d.hexdigest
     copy = d.copy
@@ -368,7 +368,7 @@ class TestMd5 < Minitest::Test
   end
 
   def test_digest_copy_of_empty
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     copy = d.copy
     copy.update("abc")
     assert_equal hex("abc"), copy.hexdigest
@@ -383,7 +383,7 @@ class TestMd5 < Minitest::Test
 
   def test_streaming_across_64_byte_boundary
     # Feed 65 bytes in two chunks: 60 bytes then 5 bytes
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("a" * 60)
     d.update("a" * 5)
     assert_equal hex("a" * 65), d.hexdigest
@@ -391,14 +391,14 @@ class TestMd5 < Minitest::Test
 
   def test_streaming_one_byte_at_a_time
     msg = "abcdefghijklmnopqrstuvwxyz"
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     msg.each_char { |c| d.update(c) }
     assert_equal hex(msg), d.hexdigest
   end
 
   def test_streaming_large_chunks
     # 200 bytes in two 100-byte chunks
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     d.update("Z" * 100)
     d.update("Z" * 100)
     assert_equal hex("Z" * 200), d.hexdigest
@@ -412,7 +412,7 @@ class TestMd5 < Minitest::Test
     assert_equal 32, result.length
     assert_match(/\A[0-9a-f]{32}\z/, result)
     # Verify streaming matches one-shot
-    d = CodingAdventures::Md5::Digest.new
+    d = Ca::Md5::Digest.new
     msg.chars.each_slice(37) { |chunk| d.update(chunk.join) }
     assert_equal result, d.hexdigest
   end

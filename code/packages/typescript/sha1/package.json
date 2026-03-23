@@ -1,5 +1,5 @@
 {
-  "name": "@coding-adventures/sha1",
+  "name": "@ca/sha1",
   "version": "0.1.0",
   "description": "SHA-1 cryptographic hash function (FIPS 180-4) implemented from scratch",
   "type": "module",

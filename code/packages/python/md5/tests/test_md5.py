@@ -9,7 +9,7 @@ endian output format, and inputs across all 256 byte values.
 
 import pytest
 
-from md5 import MD5, md5, md5_hex
+from ca_md5 import MD5, md5, md5_hex
 
 
 # ─── RFC 1321 Test Vectors ────────────────────────────────────────────────────
