@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.0 — Combinational Logic tab
+
+### Added
+
+- **Tab 3: Combinational Logic** — three interactive circuit visualizations
+- `MuxDiagram` — 2:1 multiplexer with D0/D1 data inputs + select line
+  - Trapezoid MUX symbol with dashed selection path showing which input is routed
+  - Truth table highlighting which data input is selected
+- `DecoderDiagram` — 2-to-4 decoder (binary → one-hot conversion)
+  - SVG with 4 output lines, active output highlighted with green dot
+  - Full truth table with current input combination highlighted
+- `EncoderDiagram` — 4-to-2 priority encoder (highest active input wins)
+  - Star marker on winning input, binary output + valid flag display
+  - Handles multiple simultaneous active inputs (priority arbitration)
+- `CombinationalLogic` container stacking all three circuits vertically
+- 11 new i18n strings covering all combinational circuit content
+- 19 new tests (74 total), all passing
+
+### Changed
+
+- `App.tsx` now renders CombinationalLogic when Combinational tab is active
+
 ## 0.2.0 — NAND Universality tab
 
 ### Added
