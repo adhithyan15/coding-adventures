@@ -125,32 +125,35 @@ def cmd(program, args=[]):
 # cmd_windows -- Returns a command dict only on Windows.
 #
 # On any non-Windows platform, returns None.
-# On Windows, delegates to cmd() to create the dict.
+#
+# Note: each platform function inlines the dict construction rather than
+# calling cmd().  This is required because the VM's function call mechanism
+# uses a separate local scope — cross-module function references (like cmd)
+# are not available inside function bodies.  This is a known VM limitation
+# that will be fixed when proper scope analysis is added to the compiler.
 
 def cmd_windows(program, args=[]):
     if _current_os != "windows":
         return None
-    return cmd(program, args)
+    return {"type": "cmd", "program": program, "args": args}
 
 # cmd_linux -- Returns a command dict only on Linux.
 #
 # On any non-Linux platform, returns None.
-# On Linux, delegates to cmd() to create the dict.
 
 def cmd_linux(program, args=[]):
     if _current_os != "linux":
         return None
-    return cmd(program, args)
+    return {"type": "cmd", "program": program, "args": args}
 
 # cmd_macos -- Returns a command dict only on macOS (darwin).
 #
 # On any non-macOS platform, returns None.
-# On macOS (os == "darwin"), delegates to cmd() to create the dict.
 
 def cmd_macos(program, args=[]):
     if _current_os != "darwin":
         return None
-    return cmd(program, args)
+    return {"type": "cmd", "program": program, "args": args}
 
 # cmd_unix -- Returns a command dict on any Unix platform (not Windows).
 #
@@ -163,7 +166,7 @@ def cmd_macos(program, args=[]):
 def cmd_unix(program, args=[]):
     if _current_os == "windows":
         return None
-    return cmd(program, args)
+    return {"type": "cmd", "program": program, "args": args}
 
 # ============================================================================
 # filter_commands() -- Remove None entries from a command list

@@ -66,6 +66,7 @@ package starlarkcompiler
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -121,10 +122,21 @@ func (c *StarlarkCompiler) emit(opcode vm.OpCode, operand ...interface{}) {
 
 // addConstant adds a value to the constants pool and returns its index.
 // If the value already exists, returns the existing index (deduplication).
+//
+// Values that are not comparable with == (maps, slices — such as CodeObject
+// from def statements) are always appended without deduplication. Each
+// function definition needs its own constant slot even if two functions
+// have identical structure. The == operator panics on uncomparable types,
+// so we check comparability via reflect first.
 func (c *StarlarkCompiler) addConstant(value interface{}) int {
-	for i, v := range c.constants {
-		if v == value {
-			return i
+	// Only deduplicate comparable types (int, string, bool, float64, etc.).
+	// CodeObject, maps, and slices are uncomparable and must always get
+	// fresh slots.
+	if reflect.TypeOf(value) != nil && reflect.TypeOf(value).Comparable() {
+		for i, v := range c.constants {
+			if v == value {
+				return i
+			}
 		}
 	}
 	c.constants = append(c.constants, value)
@@ -288,14 +300,30 @@ func parseStringLiteral(s string) string {
 	// Check if this string still has its quotes (lexer didn't strip them).
 	// The grammar lexer strips quotes when the first character is a quote char.
 	// Prefixed strings (r"...", b"...", rb"...") still have their prefix + quotes.
+	//
+	// IMPORTANT: we must check for quotes AFTER any potential prefix characters.
+	// A string like "build" (already stripped by lexer) starts with 'b' but has
+	// no quotes — it's a bare value, not a b"uild" byte-string prefix.
+	// Previously this function would incorrectly strip 'b'/'r' from values
+	// like "build", "run", "rake", "bundle" etc.
 	firstChar := s[0]
-	hasPrefix := firstChar == 'r' || firstChar == 'R' || firstChar == 'b' || firstChar == 'B'
 	hasQuotes := firstChar == '"' || firstChar == '\''
 
-	if !hasPrefix && !hasQuotes {
-		// The lexer already stripped quotes and processed escapes.
-		// Return the value as-is.
-		return s
+	if hasQuotes {
+		// String still has quotes — strip them below.
+	} else {
+		// Check if it's a prefixed string (e.g., r"hello" or b"data").
+		// A prefix is only valid if it's followed by a quote character.
+		stripped := s
+		for len(stripped) > 0 && (stripped[0] == 'r' || stripped[0] == 'R' || stripped[0] == 'b' || stripped[0] == 'B') {
+			stripped = stripped[1:]
+		}
+		if len(stripped) == 0 || (stripped[0] != '"' && stripped[0] != '\'') {
+			// No quotes after the prefix characters — the lexer already
+			// stripped quotes. The leading b/r/B/R is part of the value.
+			return s
+		}
+		// Fall through to prefix+quote stripping below.
 	}
 
 	// Strip optional prefix (r, b, rb, br, R, B, etc.)
