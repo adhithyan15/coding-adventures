@@ -653,6 +653,317 @@
   }
 }
 
+/* ==========================================================================
+ * Sequential Logic — Tab 4 styles
+ * ========================================================================== */
+
+.sequential {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.sequential__intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.sequential__circuits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Sequential circuit card --- */
+
+.sequential-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sequential-card__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.5rem;
+}
+
+.sequential-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.sequential-card__badge {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #ce93d8;
+  background: rgba(156, 39, 176, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.sequential-card__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+.sequential-card__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.sequential-card__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sequential-card__svg {
+  flex: 1;
+  max-height: 150px;
+  min-width: 0;
+}
+
+.sequential-card__outputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* --- State indicator --- */
+
+.sequential-card__state {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(76, 175, 80, 0.08);
+  color: #81c784;
+  text-align: center;
+}
+
+.sequential-card__state--forbidden {
+  background: rgba(244, 67, 54, 0.12);
+  color: #ef5350;
+}
+
+/* --- Clock pulse button --- */
+
+.clock-pulse-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ffb74d;
+  border-radius: 6px;
+  background: rgba(255, 183, 77, 0.08);
+  color: #ffb74d;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.clock-pulse-btn:hover {
+  background: rgba(255, 183, 77, 0.15);
+}
+
+.clock-pulse-btn:focus-visible {
+  outline: 2px solid #ffb74d;
+  outline-offset: 2px;
+}
+
+.clock-pulse-btn__icon {
+  font-size: 1rem;
+}
+
+.clock-pulse-btn__text {
+  font-size: 0.75rem;
+}
+
+/* --- Counter display --- */
+
+.counter-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.counter-display__bits {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.counter-bit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.counter-bit__label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #888;
+}
+
+.counter-bit__value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.counter-bit--high .counter-bit__value {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+}
+
+.counter-bit--low .counter-bit__value {
+  background: rgba(100, 100, 100, 0.08);
+  color: #666;
+  border: 1px solid rgba(100, 100, 100, 0.15);
+}
+
+.counter-display__decimal {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.counter-display__decimal-label {
+  color: #888;
+  font-size: 1rem;
+}
+
+.counter-display__decimal-value {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #4fc3f7;
+  min-width: 2ch;
+  text-align: right;
+}
+
+.counter-display__decimal-max {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* --- Counter controls --- */
+
+.counter-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.counter-controls__btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+  color: var(--tab-text);
+}
+
+.counter-controls__btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.counter-controls__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.counter-controls__btn--step {
+  border-color: #4fc3f7;
+  color: #4fc3f7;
+}
+
+.counter-controls__btn--step:hover {
+  background: rgba(79, 195, 247, 0.1);
+}
+
+.counter-controls__btn--auto {
+  border-color: #81c784;
+  color: #81c784;
+}
+
+.counter-controls__btn--auto:hover {
+  background: rgba(129, 199, 132, 0.1);
+}
+
+.counter-controls__btn--active {
+  background: rgba(129, 199, 132, 0.15);
+}
+
+.counter-controls__btn--reset {
+  border-color: #ef5350;
+  color: #ef5350;
+}
+
+.counter-controls__btn--reset:hover {
+  background: rgba(239, 83, 80, 0.1);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 480px) {
+  .sequential-card__diagram {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .counter-display {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .counter-controls {
+    flex-wrap: wrap;
+  }
+}
+
 /* --- Placeholder for future tabs --- */
 
 .placeholder {

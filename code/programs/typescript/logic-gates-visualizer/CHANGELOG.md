@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.4.0 — Sequential Logic tab (all 4 tabs complete!)
+
+### Added
+
+- **Tab 4: Sequential Logic** — the leap from combinational to memory
+- `SrLatchDiagram` — interactive SR latch with cross-coupled NOR gate SVG
+  - Toggle Set/Reset inputs, see Q/Q̄ hold state via feedback
+  - Forbidden state (S=R=1) warning with red indicator
+  - Truth table with Set/Reset/Hold/Forbidden actions
+- `DFlipFlopDiagram` — master-slave D flip-flop with clock pulse
+  - Set data input, pulse clock to capture (rising edge behavior)
+  - SVG shows master/slave latch configuration
+  - Displays last capture event
+- `CounterView` — 4-bit binary counter with auto-step mode
+  - Manual step, auto-step (500ms interval), and reset buttons
+  - Visual bit cells (B3-B0) with decimal display and max value
+  - Counter wraps from 1111 → 0000
+- `SequentialLogic` container stacking all three circuits
+- 18 new i18n strings, 20 new tests (94 total)
+- Sequential-specific CSS (state indicators, clock pulse button, counter display, counter controls)
+
+### Changed
+
+- `App.tsx` now renders SequentialLogic when Sequential tab is active
+- All 4 tabs are now fully implemented — no more placeholders!
+
 ## 0.3.0 — Combinational Logic tab
 
 ### Added
