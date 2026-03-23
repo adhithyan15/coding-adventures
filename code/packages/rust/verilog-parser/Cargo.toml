@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-verilog-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Verilog parser — parses Verilog HDL source code into an AST using the grammar-driven parser and the verilog.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }
+coding-adventures-verilog-lexer = { path = "../verilog-lexer" }
