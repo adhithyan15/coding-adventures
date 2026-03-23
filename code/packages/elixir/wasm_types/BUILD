@@ -1,2 +1,1 @@
-cd ../wasm_leb128 && mix deps.get --quiet && mix compile --quiet && \
-cd ../wasm_types && mix deps.get --quiet && mix test --cover
+mix deps.get --quiet && mix test

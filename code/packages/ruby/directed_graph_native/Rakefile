@@ -1,0 +1,48 @@
+# frozen_string_literal: true
+
+# --------------------------------------------------------------------------
+# Rakefile — Build and test tasks for directed_graph_native
+# --------------------------------------------------------------------------
+#
+# Key tasks:
+#   rake compile   — Build the Rust native extension
+#   rake test      — Run the test suite (compiles first)
+#   rake clean     — Remove build artifacts
+
+require "rake/testtask"
+
+# -- Compile task -----------------------------------------------------------
+#
+# Runs extconf.rb to generate a Makefile, then runs make.
+# The compiled .so/.bundle ends up in lib/.
+
+desc "Compile the Rust native extension"
+task :compile do
+  cd "ext/directed_graph_native" do
+    ruby "extconf.rb"
+    sh "make"
+  end
+end
+
+# -- Test task --------------------------------------------------------------
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+# Tests depend on compilation
+task test: :compile
+
+# -- Clean task -------------------------------------------------------------
+
+desc "Remove build artifacts"
+task :clean do
+  cd "ext/directed_graph_native" do
+    sh "cargo clean" if File.exist?("Cargo.toml")
+  end
+  rm_f Dir["lib/directed_graph_native.*"]
+end
+
+task default: :test
