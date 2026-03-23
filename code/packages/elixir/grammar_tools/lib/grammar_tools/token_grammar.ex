@@ -43,7 +43,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             mode: nil,
             escape_mode: nil,
             groups: %{},
-            case_sensitive: true
+            case_sensitive: true,
+            error_definitions: []
 
   @type token_definition :: %{
           name: String.t(),
@@ -74,7 +75,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           mode: String.t() | nil,
           escape_mode: String.t() | nil,
           groups: %{optional(String.t()) => pattern_group()},
-          case_sensitive: boolean()
+          case_sensitive: boolean(),
+          error_definitions: [token_definition()]
         }
 
   @doc """
@@ -177,6 +179,9 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             stripped in ["skip:", "skip :"] ->
               {:cont, %{acc | section: :skip}}
 
+            stripped in ["errors:", "errors :"] ->
+              {:cont, %{acc | section: :errors}}
+
             # Inside a section — indented lines are section entries
             acc.section in [:keywords, :reserved] and
                 (String.starts_with?(line, " ") or String.starts_with?(line, "\t")) ->
@@ -204,6 +209,20 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
                   {:halt, {:error, "Line #{line_number}: #{msg}"}}
               end
 
+            # Inside errors section — parse as token definitions for error recovery.
+            # Error patterns are tried as a fallback when no normal token matches.
+            # Example: BAD_STRING for unclosed strings in CSS allows graceful degradation.
+            acc.section == :errors and
+                (String.starts_with?(line, " ") or String.starts_with?(line, "\t")) ->
+              case parse_definition(stripped, line_number) do
+                {:ok, defn} ->
+                  grammar = %{acc.grammar | error_definitions: acc.grammar.error_definitions ++ [defn]}
+                  {:cont, %{acc | grammar: grammar}}
+
+                {:error, msg} ->
+                  {:halt, {:error, "Line #{line_number}: #{msg}"}}
+              end
+
             # Inside a group section — parse as token definitions into the
             # named group. Uses the same definition parser as skip: and
             # errors: sections, but appends to the group's definition list.
@@ -225,7 +244,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             # Non-indented line exits any section
             true ->
               section =
-                if acc.section in [:keywords, :reserved, :skip] or match?({:group, _}, acc.section),
+                if acc.section in [:keywords, :reserved, :skip, :errors] or match?({:group, _}, acc.section),
                   do: :definitions,
                   else: acc.section
 
@@ -294,6 +313,157 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
       end
     end)
     |> MapSet.new()
+  end
+
+  @doc """
+  Validate a parsed `TokenGrammar` for common problems.
+
+  This is a *lint* pass, not a parse pass — the grammar has already been
+  parsed successfully. We look for semantic issues that would cause problems
+  downstream:
+
+  - **Duplicate token names** — two definitions with the same name.
+  - **Empty patterns** — should have been caught during parsing, but we
+    double-check here.
+  - **Invalid regex** — a pattern that `Regex.compile/1` cannot compile.
+  - **Non-UPPER_CASE names** — token names should be UPPER_CASE by convention.
+  - **Non-UPPER_CASE aliases** — alias names follow the same convention.
+  - **Unknown mode** — only `"indentation"` is currently supported.
+  - **Unknown escape_mode** — only `"none"` is currently supported.
+
+  The same checks are applied to `skip_definitions` and `error_definitions`.
+
+  Returns a list of issue strings. An empty list means no problems found.
+  """
+  @spec validate_token_grammar(t()) :: [String.t()]
+  def validate_token_grammar(%__MODULE__{} = grammar) do
+    issues = []
+
+    # Validate regular definitions
+    issues = issues ++ validate_definitions(grammar.definitions, "token")
+
+    # Validate skip definitions
+    issues = issues ++ validate_definitions(grammar.skip_definitions, "skip pattern")
+
+    # Validate error definitions
+    issues = issues ++ validate_definitions(grammar.error_definitions, "error pattern")
+
+    # Validate mode — only "indentation" is supported currently
+    issues =
+      if grammar.mode != nil and grammar.mode != "indentation" do
+        issues ++ ["Unknown lexer mode '#{grammar.mode}' (only 'indentation' is supported)"]
+      else
+        issues
+      end
+
+    # Validate escape_mode — only "none" is supported currently
+    issues =
+      if grammar.escape_mode != nil and grammar.escape_mode != "none" do
+        issues ++ ["Unknown escape mode '#{grammar.escape_mode}' (only 'none' is supported)"]
+      else
+        issues
+      end
+
+    # Validate pattern groups — name format, emptiness, and definitions within
+    issues =
+      Enum.reduce(grammar.groups, issues, fn {group_name, group}, acc ->
+        # Group name format check (parser rejects bad names, but belt-and-suspenders)
+        acc =
+          if not Regex.match?(~r/^[a-z_][a-z0-9_]*$/, group_name) do
+            acc ++ ["Invalid group name '#{group_name}' (must be a lowercase identifier)"]
+          else
+            acc
+          end
+
+        # Empty group warning
+        acc =
+          if group.definitions == [] do
+            acc ++ ["Empty pattern group '#{group_name}' (has no token definitions)"]
+          else
+            acc
+          end
+
+        # Validate definitions within the group
+        acc ++ validate_definitions(group.definitions, "group '#{group_name}' token")
+      end)
+
+    issues
+  end
+
+  # -- Private: validate a list of token definitions -------------------------
+  #
+  # Shared logic for regular, skip, and error definitions. Returns a list of
+  # issue strings. Checks: duplicate names, empty patterns, invalid regexes,
+  # and naming conventions (UPPER_CASE names and aliases).
+
+  defp validate_definitions(definitions, label) do
+    {issues, _seen} =
+      Enum.reduce(definitions, {[], %{}}, fn defn, {issues, seen} ->
+        issues =
+          # --- Duplicate name check ---
+          if Map.has_key?(seen, defn.name) do
+            first_line = seen[defn.name]
+            issues ++
+              [
+                "Line #{defn.line_number}: Duplicate #{label} name '#{defn.name}' " <>
+                  "(first defined on line #{first_line})"
+              ]
+          else
+            issues
+          end
+
+        seen = Map.put_new(seen, defn.name, defn.line_number)
+
+        # --- Empty pattern check ---
+        issues =
+          if defn.pattern == "" do
+            issues ++ ["Line #{defn.line_number}: Empty pattern for #{label} '#{defn.name}'"]
+          else
+            issues
+          end
+
+        # --- Invalid regex check ---
+        issues =
+          if defn.is_regex do
+            case Regex.compile(defn.pattern) do
+              {:ok, _} ->
+                issues
+
+              {:error, {reason, _pos}} ->
+                issues ++
+                  [
+                    "Line #{defn.line_number}: Invalid regex for #{label} '#{defn.name}': #{reason}"
+                  ]
+            end
+          else
+            issues
+          end
+
+        # --- Naming convention: UPPER_CASE ---
+        issues =
+          if defn.name != String.upcase(defn.name) do
+            issues ++
+              ["Line #{defn.line_number}: Token name '#{defn.name}' should be UPPER_CASE"]
+          else
+            issues
+          end
+
+        # --- Alias convention: UPPER_CASE ---
+        issues =
+          if defn.alias != nil and defn.alias != String.upcase(defn.alias) do
+            issues ++
+              [
+                "Line #{defn.line_number}: Alias '#{defn.alias}' for token '#{defn.name}' " <>
+                  "should be UPPER_CASE"
+              ]
+          else
+            issues
+          end
+
+        {issues, seen}
+      end)
+
+    issues
   end
 
   # -- Private: parse a group definition line --------------------------------

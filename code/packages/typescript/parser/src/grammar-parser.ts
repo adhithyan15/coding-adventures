@@ -119,6 +119,29 @@ interface MemoEntry {
 // THE GRAMMAR-DRIVEN PARSER
 // =============================================================================
 
+/**
+ * Options for configuring a GrammarParser instance.
+ *
+ * Properties:
+ *   trace: When true, the parser emits a ``[TRACE]`` line to ``process.stderr``
+ *       for each rule attempt, reporting the rule name, the current token
+ *       index, the current token (type + value), and whether the rule
+ *       matched or failed.
+ *
+ *       Example output::
+ *
+ *           [TRACE] rule 'qualified_rule' at token 5 (IDENT "h1") → match
+ *           [TRACE] rule 'at_rule' at token 5 (IDENT "h1") → fail
+ *
+ *       Trace output goes to stderr so it does not interfere with any
+ *       structured output written to stdout by the caller. This mirrors
+ *       the convention used by many parser generators (yacc's ``YYDEBUG``,
+ *       ANTLR's ``DiagnosticErrorListener``, etc.).
+ */
+export interface GrammarParserOptions {
+  readonly trace?: boolean;
+}
+
 export class GrammarParser {
   private tokens: readonly Token[];
   private readonly grammar: ParserGrammar;
@@ -146,13 +169,17 @@ export class GrammarParser {
   /** Post-parse hooks: transform AST after parsing. */
   private _postParseHooks: Array<(ast: ASTNode) => ASTNode> = [];
 
-  constructor(tokens: readonly Token[], grammar: ParserGrammar) {
+  /** Whether trace mode is enabled. */
+  private readonly trace: boolean;
+
+  constructor(tokens: readonly Token[], grammar: ParserGrammar, options?: GrammarParserOptions) {
     this.tokens = tokens;
     this.grammar = grammar;
     this.pos = 0;
     this.memo = new Map();
     this.furthestPos = 0;
     this.furthestExpected = [];
+    this.trace = options?.trace ?? false;
 
     const ruleMap = new Map<string, GrammarRule>();
     const ruleIndex = new Map<string, number>();
@@ -362,7 +389,23 @@ export class GrammarParser {
       this.memo.set(key, { children: null, endPos: startPos, ok: false });
     }
 
+    // Emit a [TRACE] line before attempting the rule (if trace mode is on).
+    // We capture the current token here, before matchElement() advances pos,
+    // so the trace line shows the token *at the point of attempt*, not after.
+    // Format: [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail
+    if (this.trace) {
+      const tok = this.current();
+      process.stderr.write(
+        `[TRACE] rule '${ruleName}' at token ${startPos} (${tok.type} "${tok.value}") → `
+      );
+    }
+
     let children = this.matchElement(rule.body);
+
+    // Emit the match/fail outcome, completing the line started above.
+    if (this.trace) {
+      process.stderr.write(children !== null ? "match\n" : "fail\n");
+    }
 
     // Cache result
     if (idx !== undefined) {

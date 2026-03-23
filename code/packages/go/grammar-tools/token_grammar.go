@@ -46,6 +46,7 @@ type TokenGrammar struct {
 	Mode             string                   // Lexer mode (e.g. "indentation")
 	EscapeMode       string                   // Escape processing mode (e.g. "none" to skip escape processing)
 	SkipDefinitions  []TokenDefinition        // Patterns consumed without producing tokens
+	ErrorDefinitions []TokenDefinition        // Error recovery patterns tried when no normal token matches
 	ReservedKeywords []string                 // Keywords that cause lex errors
 	Groups           map[string]*PatternGroup // Named pattern groups for context-sensitive lexing
 	CaseSensitive    bool                     // Whether the lexer should match case-sensitively (default true)
@@ -325,6 +326,10 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 			currentSection = "skip"
 			continue
 		}
+		if stripped == "errors:" || stripped == "errors :" {
+			currentSection = "errors"
+			continue
+		}
 
 		// Inside a section
 		if currentSection != "" {
@@ -355,6 +360,24 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 						return nil, err
 					}
 					grammar.SkipDefinitions = append(grammar.SkipDefinitions, defn)
+				case currentSection == "errors":
+					// Errors section contains token definitions for error recovery —
+					// patterns tried as a fallback when no normal token matches
+					// (e.g., BAD_STRING for unclosed strings in CSS).
+					eqIdx := strings.Index(stripped, "=")
+					if eqIdx == -1 {
+						return nil, fmt.Errorf("Line %d: Expected error pattern (NAME = pattern), got: %q", lineNumber, stripped)
+					}
+					errName := strings.TrimSpace(stripped[:eqIdx])
+					errPattern := strings.TrimSpace(stripped[eqIdx+1:])
+					if errName == "" || errPattern == "" {
+						return nil, fmt.Errorf("Line %d: Incomplete error pattern definition: %q", lineNumber, stripped)
+					}
+					defn, err := parseDefinition(errPattern, errName, lineNumber)
+					if err != nil {
+						return nil, err
+					}
+					grammar.ErrorDefinitions = append(grammar.ErrorDefinitions, defn)
 				case strings.HasPrefix(currentSection, "group:"):
 					// Group section — parse token definitions just like the
 					// skip: section, but append to the named group instead.
@@ -503,6 +526,9 @@ func ValidateTokenGrammar(grammar *TokenGrammar) []string {
 
 	// Validate skip definitions
 	issues = append(issues, validateDefinitions(grammar.SkipDefinitions, "skip pattern")...)
+
+	// Validate error definitions
+	issues = append(issues, validateDefinitions(grammar.ErrorDefinitions, "error pattern")...)
 
 	// Validate mode
 	if grammar.Mode != "" && grammar.Mode != "indentation" {

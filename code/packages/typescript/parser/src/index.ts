@@ -62,7 +62,7 @@ export type {
 export { Parser, ParseError } from "./parser.js";
 
 // Grammar-driven parser (generic AST nodes)
-export type { ASTNode } from "./grammar-parser.js";
+export type { ASTNode, GrammarParserOptions } from "./grammar-parser.js";
 export {
   GrammarParser,
   GrammarParseError,

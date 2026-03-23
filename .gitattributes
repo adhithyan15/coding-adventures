@@ -1,0 +1,5 @@
+# Force LF line endings for all text files.
+# Many test suites compare string output byte-for-byte; CRLF on Windows
+# would cause false mismatches in heredoc-based assertions (Elixir, Ruby,
+# Python docstrings, etc.).
+* text=auto eol=lf

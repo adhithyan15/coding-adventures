@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/lattice-parser",
+  "version": "0.1.0",
+  "description": "Parser producing an AST for Lattice source",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lattice-lexer": "file:../lattice-lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

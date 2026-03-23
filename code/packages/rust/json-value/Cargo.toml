@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-json-value"
+version = "0.1.0"
+edition = "2021"
+description = "JSON value types — converts json-parser AST nodes into typed JsonValue representations"
+
+[dependencies]
+coding-adventures-json-parser = { path = "../json-parser" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

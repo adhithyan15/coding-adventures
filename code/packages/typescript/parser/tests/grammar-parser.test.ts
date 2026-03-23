@@ -904,3 +904,149 @@ definition = NAME COLON NEWLINE INDENT { NAME NEWLINE } DEDENT ;
     expect(findTokenInTree(ast, "NAME", "x")).toBe(true);
   });
 });
+
+// =============================================================================
+// TRACE MODE — options.trace writes [TRACE] lines to process.stderr
+// =============================================================================
+//
+// When GrammarParser is constructed with ``{ trace: true }``, it emits a
+// ``[TRACE]`` line to ``process.stderr`` for each rule attempt, reporting:
+//   - the rule name
+//   - the current token index
+//   - the current token type and value
+//   - whether the attempt matched or failed
+//
+// We capture stderr by replacing ``process.stderr.write`` with a spy so that
+// the trace output is collected in memory rather than printed to the terminal.
+// =============================================================================
+
+/**
+ * Helper that captures all output written to ``process.stderr``.
+ *
+ * Returns a function that, when called, restores the original ``write``
+ * method and returns the accumulated output as a single string.
+ */
+function captureStderr(): () => string {
+  const chunks: string[] = [];
+  const original = process.stderr.write.bind(process.stderr);
+  process.stderr.write = (chunk: string | Uint8Array): boolean => {
+    chunks.push(chunk.toString());
+    return true;
+  };
+  return () => {
+    process.stderr.write = original;
+    return chunks.join("");
+  };
+}
+
+describe("GrammarParserTraceMode", () => {
+  it("should produce a correct parse result when trace is enabled", () => {
+    /**
+     * Trace mode must not affect the correctness of the parse — it only adds
+     * side-effect output. The AST structure should be identical to parsing
+     * without trace.
+     */
+    const restore = captureStderr();
+    const ast = new GrammarParser(tokenize("42"), grammar, { trace: true }).parse();
+    restore();
+
+    expect(ast.ruleName).toBe("program");
+    expect(findTokenInTree(ast, "NUMBER", "42")).toBe(true);
+  });
+
+  it("should write [TRACE] lines to stderr", () => {
+    /**
+     * When trace is enabled, at least one ``[TRACE]`` line must appear on
+     * stderr. We don't assert the exact count because the grammar may evolve.
+     */
+    const restore = captureStderr();
+    new GrammarParser(tokenize("1 + 2"), grammar, { trace: true }).parse();
+    const output = restore();
+
+    expect(output).toContain("[TRACE]");
+  });
+
+  it("should format trace lines with rule name, token index, type, and value", () => {
+    /**
+     * Every [TRACE] line must follow the format:
+     *   [TRACE] rule '<name>' at token <N> (<TYPE> "<value>") → match|fail
+     *
+     * We check that at least one line matches the expected pattern.
+     */
+    const restore = captureStderr();
+    new GrammarParser(tokenize("42"), grammar, { trace: true }).parse();
+    const output = restore();
+
+    // Match the canonical format, e.g.:
+    // [TRACE] rule 'program' at token 0 (NUMBER "42") → match
+    const traceLinePattern = /\[TRACE\] rule '[a-z_]+' at token \d+ \([A-Z_]+ ".*?"\) → (match|fail)/;
+    const lines = output.split("\n").filter((l) => l.startsWith("[TRACE]"));
+    expect(lines.length).toBeGreaterThan(0);
+    for (const line of lines) {
+      expect(line).toMatch(traceLinePattern);
+    }
+  });
+
+  it("should report both match and fail outcomes", () => {
+    /**
+     * A non-trivial input will cause some rule attempts to fail (backtracking)
+     * and others to succeed. Both outcomes must appear in the trace.
+     */
+    const restore = captureStderr();
+    // "1 + 2" exercises alternation — some rules will fail before the right
+    // one is tried.
+    new GrammarParser(tokenize("1 + 2"), grammar, { trace: true }).parse();
+    const output = restore();
+
+    expect(output).toContain("→ match");
+    expect(output).toContain("→ fail");
+  });
+
+  it("should not write anything to stderr when trace is disabled", () => {
+    /**
+     * The default (no options) must produce no trace output. This ensures that
+     * production parsing does not accidentally emit debug output.
+     */
+    const restore = captureStderr();
+    new GrammarParser(tokenize("42"), grammar).parse();
+    const output = restore();
+
+    expect(output).not.toContain("[TRACE]");
+  });
+
+  it("should not write anything to stderr when trace is explicitly false", () => {
+    const restore = captureStderr();
+    new GrammarParser(tokenize("x = 1"), grammar, { trace: false }).parse();
+    const output = restore();
+
+    expect(output).not.toContain("[TRACE]");
+  });
+
+  it("should include the current token in each trace line", () => {
+    /**
+     * The token at the current position when the rule is attempted must
+     * appear in the trace line. For input "42", the first rule attempt
+     * should show the NUMBER token.
+     */
+    const restore = captureStderr();
+    new GrammarParser(tokenize("42"), grammar, { trace: true }).parse();
+    const output = restore();
+
+    // The NUMBER token with value "42" must appear somewhere in the trace.
+    expect(output).toContain('NUMBER "42"');
+  });
+
+  it("should produce correct result for assignment with trace enabled", () => {
+    /**
+     * Trace mode should work for a multi-token input that exercises
+     * assignment parsing (two tokens: NAME = ... ; multi-rule grammar).
+     */
+    const restore = captureStderr();
+    const ast = new GrammarParser(tokenize("x = 42"), grammar, { trace: true }).parse();
+    restore();
+
+    expect(ast.ruleName).toBe("program");
+    expect(findTokenInTree(ast, "NAME", "x")).toBe(true);
+    expect(findTokenInTree(ast, "NUMBER", "42")).toBe(true);
+  });
+});

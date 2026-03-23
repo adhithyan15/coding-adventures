@@ -112,16 +112,18 @@ module CodingAdventures
     #                      the source text before matching. Used by
     #                      case-insensitive languages like VHDL and SQL.
     class TokenGrammar
-      attr_reader :definitions, :keywords, :skip_definitions, :reserved_keywords, :groups
+      attr_reader :definitions, :keywords, :skip_definitions, :error_definitions, :reserved_keywords, :groups
       attr_accessor :mode, :escape_mode, :case_sensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
-                     skip_definitions: [], reserved_keywords: [],
+                     skip_definitions: [], error_definitions: [],
+                     reserved_keywords: [],
                      escape_mode: nil, groups: {}, case_sensitive: true)
         @definitions = definitions
         @keywords = keywords
         @mode = mode
         @skip_definitions = skip_definitions
+        @error_definitions = error_definitions
         @reserved_keywords = reserved_keywords
         @escape_mode = escape_mode
         @groups = groups
@@ -412,6 +414,15 @@ module CodingAdventures
           next
         end
 
+        # errors: section -- fallback patterns for graceful lexer error
+        # recovery. Tried only when no normal token matches. This mirrors
+        # the Python grammar_tools behaviour so that CSS/Lattice .tokens
+        # files that include an errors: block are accepted without error.
+        if stripped == "errors:" || stripped == "errors :"
+          current_section = "errors"
+          next
+        end
+
         # Inside a section -- indented lines belong to the section.
         if current_section
           if line.start_with?(" ", "\t")
@@ -438,6 +449,31 @@ module CodingAdventures
               end
               grammar.skip_definitions << parse_definition(
                 skip_pattern, skip_name, line_number
+              )
+            when "errors"
+              # Error recovery patterns — stored for completeness and
+              # compatibility with .tokens files that include an errors:
+              # block (e.g. css.tokens, lattice.tokens). The GrammarLexer
+              # does not currently use these, but storing them here keeps
+              # the grammar_tools round-trip-compatible with the Python
+              # grammar_tools which does support them.
+              unless stripped.include?("=")
+                raise TokenGrammarError.new(
+                  "Expected error pattern definition (NAME = pattern), got: #{stripped.inspect}",
+                  line_number
+                )
+              end
+              eq_idx = stripped.index("=")
+              err_name = stripped[0...eq_idx].strip
+              err_pattern = stripped[(eq_idx + 1)..].strip
+              if err_name.empty? || err_pattern.empty?
+                raise TokenGrammarError.new(
+                  "Incomplete error pattern definition: #{stripped.inspect}",
+                  line_number
+                )
+              end
+              grammar.error_definitions << parse_definition(
+                err_pattern, err_name, line_number
               )
             else
               # Pattern group section -- current_section is "group:NAME".

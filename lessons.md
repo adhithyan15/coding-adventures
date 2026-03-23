@@ -407,3 +407,52 @@ pub fn get_user_info() -> Result<UserInfo, String> {
 **Elixir/Python solution:** Provide `BUILD_windows` files that avoid Unix shell syntax (`2>/dev/null`) and handle dependency paths correctly.
 
 **Rule:** When writing tools that use OS-specific APIs, always add platform guards from the start. Don't wait for CI failures. Check: `syscall.Stat_t`, `syscall.Statfs`, `os.Chown`, `libc::getuid`, `libc::statvfs`, etc.
+
+---
+
+### 2026-03-23: uv pip install cannot resolve local editable deps on Windows
+
+When a Python package's `pyproject.toml` declares a dependency on another local package (e.g., `dependencies = ["coding-adventures-json-parser"]`), `uv pip install -e ../json-parser -e ".[dev]"` works on Linux/macOS but **fails on Windows** with "not found in the package registry." This is because uv on Windows doesn't resolve editable package names from the same command line during dependency resolution.
+
+**Workaround:** Remove unpublished local package dependencies from `pyproject.toml` (since BUILD files handle all transitive deps anyway). Document them in comments for future PyPI publishing. This makes `uv pip install -e ".[dev]"` succeed because there are no deps to resolve from PyPI.
+
+**Also learned:**
+- `".[dev]"` with double quotes works in `sh -c` (bash strips quotes) but fails in `cmd /C` (cmd.exe passes quotes literally to uv, causing "Failed to parse" error)
+- `.venv/bin/python` doesn't exist on Windows — use `uv run python` for cross-platform compatibility
+- Always provide `BUILD_windows` files for Python packages that have shell-specific syntax
+- The build tool's `GetBuildFileForPlatform` correctly selects `BUILD_windows` on Windows via `runtime.GOOS`
+
+---
+
+### 2026-03-23: .gitattributes eol=lf fixes Elixir heredoc CRLF test failures
+
+Elixir heredoc strings in test files (triple-quoted `"""`) embed literal line endings. When git's `autocrlf` converts `\n` to `\r\n` on Windows checkout, the heredoc strings contain `\r\n` but the serializer produces `\n`, causing test assertion failures.
+
+**Fix:** Add `.gitattributes` with `* text=auto eol=lf` to force LF line endings on all platforms. This prevents CRLF-related test failures across all languages (Elixir, Ruby, Python doctests, etc.).
+
+---
+
+### 2026-03-23: CPython type slot numbers must match typeslots.h exactly
+
+When building native Python extensions via python-bridge, the slot numbers passed to `PyType_FromSpec` must exactly match CPython's `Include/typeslots.h`. Wrong slot numbers cause silent memory corruption during module loading -- typically manifesting as `UnicodeDecodeError` or access violation crashes.
+
+**Correct slot numbers (from CPython typeslots.h):**
+- `Py_sq_contains` = 41, `Py_sq_length` = 45
+- `Py_tp_dealloc` = 52, `Py_tp_methods` = 64, `Py_tp_new` = 65, `Py_tp_repr` = 66
+- `Py_tp_hash` = 59 (NOT 56), `Py_tp_iter` = 62 (NOT 58), `Py_tp_richcompare` = 67
+- `Py_nb_and` = 8 (NOT 1), `Py_nb_invert` = 27 (NOT 5), `Py_nb_or` = 31 (NOT 12), `Py_nb_xor` = 38 (NOT 17)
+
+**Rule:** Always verify slot numbers against the CPython source (`Include/typeslots.h`) or the official docs. Do not guess from memory. The numbers in `typeslots.h` are NOT sequential per category -- they are assigned globally across all protocols.
+### 2026-03-23: Always use the scaffold generator to create new packages
+
+Hand-crafting multi-language packages causes 12+ recurring CI failure categories: missing BUILD files, TypeScript `main` pointing to `dist/` instead of `src/`, missing transitive dependencies, Ruby require ordering issues, Rust workspace `Cargo.toml` not updated, missing README or CHANGELOG, etc.
+
+**Rule:** Always build and use `code/programs/go/scaffold-generator/` before writing any implementation code for a new package.
+
+```bash
+cd code/programs/go/scaffold-generator
+go build -o scaffold-generator .
+./scaffold-generator <package-name> --language all --depends-on <dep1,dep2> --description "..."
+```
+
+The scaffold generator handles: correct directory naming per language (Ruby/Elixir use underscores), BUILD files for all platforms, `go.mod` with `replace` directives, TypeScript `package.json` with `src/index.ts` as main, Rust workspace membership, and transitive dependency resolution.
