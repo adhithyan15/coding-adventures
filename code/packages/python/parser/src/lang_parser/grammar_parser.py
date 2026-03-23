@@ -508,13 +508,35 @@ class GrammarParser:
     # =========================================================================
 
     def _parse_rule(self, rule_name: str) -> ASTNode:
-        """Parse a named grammar rule with memoization.
+        """Parse a named grammar rule with memoization and left-recursion support.
 
-        This is the entry point for parsing any grammar rule. It first
-        checks the memo cache for a previously computed result. If found,
-        it restores the position and returns immediately.
+        This method implements the seed-and-grow technique from Warth et al.,
+        "Packrat Parsers Can Support Left Recursion" (2008). The algorithm
+        handles left-recursive rules like:
 
-        If not cached, it parses the rule, caches the result, and returns.
+            expression = expression PLUS term | term
+
+        Without this technique, a left-recursive rule would cause infinite
+        recursion: ``expression`` calls ``expression`` calls ``expression``...
+
+        The seed-and-grow algorithm breaks the cycle in three steps:
+
+        1. **Seed**: Before parsing the rule body, plant a failure entry in the
+           memo cache. If the rule references itself at the same position, the
+           memo check finds this failure entry and returns None, breaking the
+           infinite recursion.
+
+        2. **Initial parse**: Parse the rule body. The left-recursive alternative
+           fails (hits the seed), but a non-recursive alternative may succeed.
+           For ``expression = expression PLUS term | term``, the ``expression``
+           alternative fails, but ``term`` succeeds.
+
+        3. **Grow**: If the initial parse succeeded, iteratively re-parse the
+           rule body with the previous successful result cached. Each iteration
+           lets the left-recursive alternative consume more input:
+           - First grow: ``expression`` (= term) ``PLUS term`` → succeeds
+           - Second grow: ``expression`` (= term + term) ``PLUS term`` → succeeds
+           - ...until no more input is consumed.
 
         Args:
             rule_name: The name of the grammar rule to parse.
@@ -540,16 +562,42 @@ class GrammarParser:
                 )
             return ASTNode(rule_name=rule_name, children=cached_result)
 
-        # Not cached — parse the rule.
         start_pos = self._pos
         rule = self._rules[rule_name]
+
+        # Left-recursion guard: seed the memo with a failure entry BEFORE
+        # parsing the rule body. If the rule references itself (directly or
+        # indirectly) at the same position, the memo check above will find
+        # this failure entry and raise GrammarParseError, which the caller
+        # in _match_element catches and treats as "no match" — breaking the
+        # infinite recursion cycle.
+        self._memo[memo_key] = (None, start_pos)
+
         children = self._match_element(rule.body)
 
         # Cache the result.
         self._memo[memo_key] = (children, self._pos)
 
+        # If the initial parse succeeded, try to grow the match.
+        # This is the iterative growth phase of the seed-and-grow algorithm.
+        # Each iteration re-parses the rule body with the previous successful
+        # result cached, allowing the left-recursive alternative to consume
+        # more input.
+        if children is not None:
+            while True:
+                prev_end = self._pos
+                self._pos = start_pos
+                self._memo[memo_key] = (children, prev_end)
+                new_children = self._match_element(rule.body)
+                if new_children is None or self._pos <= prev_end:
+                    # Could not grow the match — restore the best result.
+                    self._pos = prev_end
+                    self._memo[memo_key] = (children, prev_end)
+                    break
+                children = new_children
+
         if children is None:
-            self._pos = start_pos  # Restore position on failure
+            self._pos = start_pos
             self._record_failure(rule_name)
             raise GrammarParseError(
                 f"Expected {rule_name}, got {self._current().value!r}",

@@ -213,12 +213,25 @@ module CodingAdventures
         end
       end
 
-      # Parse a named grammar rule with memoization.
+      # Parse a named grammar rule with memoization and left-recursion support.
       #
       # When trace mode is enabled, emits a [TRACE] line to $stderr for every
       # rule attempt (both hits and misses), whether the result is fresh or
       # served from the memo cache. This makes the full parse history visible
       # without changing the parse result.
+      #
+      # Left-recursion support:
+      # Implements the seed-and-grow technique from Warth et al.,
+      # "Packrat Parsers Can Support Left Recursion" (2008).
+      #
+      # The algorithm handles left-recursive rules like:
+      #   expression = expression PLUS term | term
+      #
+      # 1. Seed: plant a failure entry in the memo cache before parsing.
+      # 2. Initial parse: the left-recursive alternative fails (hits seed),
+      #    but a non-recursive alternative may succeed.
+      # 3. Grow: iteratively re-parse with previous result cached, letting
+      #    the left-recursive alternative consume more input each time.
       def parse_rule(rule_name)
         unless @rules.key?(rule_name)
           raise GrammarParseError.new("Undefined rule: #{rule_name}")
@@ -244,13 +257,36 @@ module CodingAdventures
           return ASTNode.new(rule_name: rule_name, children: cached_result)
         end
 
-        # Not cached -- parse the rule.
         start_pos = @pos
         rule = @rules[rule_name]
+
+        # Left-recursion guard: seed the memo with a failure entry BEFORE
+        # parsing the rule body. If the rule references itself at the same
+        # position, the memo check above will find this failure entry and
+        # raise GrammarParseError, breaking the infinite recursion cycle.
+        @memo[memo_key] = [nil, start_pos]
+
         children = match_element(rule.body)
 
         # Cache the result.
         @memo[memo_key] = [children, @pos]
+
+        # If the initial parse succeeded, try to grow the match.
+        if children
+          loop do
+            prev_end = @pos
+            @pos = start_pos
+            @memo[memo_key] = [children, prev_end]
+            new_children = match_element(rule.body)
+            if new_children.nil? || @pos <= prev_end
+              # Could not grow — restore the best result.
+              @pos = prev_end
+              @memo[memo_key] = [children, prev_end]
+              break
+            end
+            children = new_children
+          end
+        end
 
         unless children
           @pos = start_pos
