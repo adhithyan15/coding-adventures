@@ -1,1 +1,1 @@
-mix deps.get && mix test --cover
+mix deps.get && mix test

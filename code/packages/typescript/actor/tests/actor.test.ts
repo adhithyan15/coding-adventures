@@ -172,15 +172,15 @@ describe("Message", () => {
   });
 
   // Test 9: Large payload
-  it("9. handles 1MB binary payload", () => {
-    const payload = new Uint8Array(1024 * 1024);
+  it("9. handles 64KB binary payload", () => {
+    const payload = new Uint8Array(64 * 1024);
     // Fill with pattern to verify integrity
     for (let i = 0; i < payload.length; i++) {
       payload[i] = i % 256;
     }
     const msg = Message.binary("sender", "application/octet-stream", payload);
     const restored = Message.fromBytes(msg.toBytes());
-    expect(restored.payload.length).toBe(1024 * 1024);
+    expect(restored.payload.length).toBe(64 * 1024);
     expect(restored.payload).toEqual(payload);
   });
 

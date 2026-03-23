@@ -41,7 +41,7 @@
  * @module
  */
 
-import type { JsonValue } from "coding-adventures-json-value";
+import type { JsonValue } from "@coding-adventures/json-value";
 import type { SerializerConfig } from "./config.js";
 import { resolveConfig } from "./config.js";
 import { JsonSerializerError } from "./errors.js";

@@ -33,7 +33,7 @@ import {
   parseNative,
   parse,
   type JsonValue,
-} from "coding-adventures-json-value";
+} from "@coding-adventures/json-value";
 
 // =============================================================================
 // serialize() -- COMPACT MODE

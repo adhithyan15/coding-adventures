@@ -1,5 +1,5 @@
 {
-  "name": "coding-adventures-json-serializer",
+  "name": "@coding-adventures/json-serializer",
   "version": "0.1.0",
   "description": "JSON serializer — converts JsonValue or native types to compact or pretty-printed JSON text",
   "type": "module",
@@ -20,7 +20,7 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "coding-adventures-json-value": "file:../json-value"
+    "@coding-adventures/json-value": "file:../json-value"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

@@ -1,1 +1,3 @@
-cd ../directed-graph && uv pip install -e ".[dev]" && cd ../state-machine && uv pip install -e ".[dev]" && cd ../grammar-tools && uv pip install -e ".[dev]" && cd ../lexer && uv pip install -e ".[dev]" && cd ../parser && uv pip install -e ".[dev]" && cd ../json-lexer && uv pip install -e ".[dev]" && cd ../json-parser && uv pip install -e ".[dev]" && cd ../json-value && uv pip install -e ".[dev]" && python -m pytest tests/ -v --tb=short --cov=json_value --cov-report=term-missing
+uv venv --quiet --clear
+uv pip install -e ../grammar-tools -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../json-lexer -e ../json-parser -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v --tb=short --cov=json_value --cov-report=term-missing

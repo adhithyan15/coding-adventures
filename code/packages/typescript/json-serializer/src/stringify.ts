@@ -16,7 +16,7 @@
  * @module
  */
 
-import { fromNative } from "coding-adventures-json-value";
+import { fromNative } from "@coding-adventures/json-value";
 import type { SerializerConfig } from "./config.js";
 import { serialize, serializePretty } from "./serializer.js";
 

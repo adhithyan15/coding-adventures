@@ -1,5 +1,5 @@
 {
-  "name": "coding-adventures-json-value",
+  "name": "@coding-adventures/json-value",
   "version": "0.1.0",
   "description": "Typed JSON value representation — converts json-parser ASTs into discriminated union types and native JS values",
   "type": "module",
