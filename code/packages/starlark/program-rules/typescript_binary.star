@@ -83,4 +83,8 @@ def ts_binary(name, srcs = [], deps = [], entry_point = "src/index.ts"):
         "srcs": srcs,
         "deps": deps,
         "entry_point": entry_point,
+        "commands": [
+            {"type": "cmd", "program": "npm", "args": ["install", "--silent"]},
+            {"type": "cmd", "program": "npx", "args": ["vitest", "run", "--coverage"]},
+        ],
     })

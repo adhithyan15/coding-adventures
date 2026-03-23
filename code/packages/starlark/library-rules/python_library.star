@@ -123,37 +123,30 @@ def py_library(name, srcs = [], deps = [], test_runner = "pytest"):
               The build tool uses this to generate the correct test command
               when building the target.
     """
+    # Build the structured command list.  Each command is a dict with
+    # "type", "program", and "args" keys.  The build tool's command
+    # renderer converts these to shell strings.  Platform-specific
+    # filtering (if needed) returns None, which the renderer skips.
+    #
+    # Command dicts are inlined rather than using cmd() from cmd.star
+    # to avoid cross-module function scope limitations in the VM.
+    install_cmd = {"type": "cmd", "program": "uv", "args": ["pip", "install", "--system", "-e", ".[dev]"]}
+    if test_runner == "pytest":
+        test_cmd = {"type": "cmd", "program": "python", "args": ["-m", "pytest", "--cov", "--cov-report=term-missing"]}
+    else:
+        test_cmd = {"type": "cmd", "program": "python", "args": ["-m", "unittest", "discover", "tests/"]}
+
     _targets.append({
-        # "rule" identifies what kind of target this is. The build tool
-        # dispatches to different build logic based on this field:
-        #   - "py_library" → install with uv pip, run pytest/unittest
-        #   - "go_library" → run go test ./...
-        #   - "rs_library" → run cargo test
-        # This string must match what the build tool expects.
         "rule": "py_library",
-
-        # "name" is the unique identifier for this target within the build
-        # graph. Combined with the language prefix, it forms a fully
-        # qualified target like "python/logic-gates".
         "name": name,
-
-        # "srcs" tells the change detection system which files to watch.
-        # In git-diff mode, the build tool computes:
-        #   git diff --name-only origin/main...HEAD
-        # and checks if any changed file matches these patterns. If so,
-        # this target (and all targets that depend on it) are rebuilt.
         "srcs": srcs,
-
-        # "deps" defines edges in the dependency graph. If A depends on B,
-        # there's a directed edge from B to A. The build tool uses this
-        # graph to:
-        #   1. Determine build order (topological sort)
-        #   2. Propagate "dirty" status (if B changed, A must rebuild too)
-        #   3. Parallelize (independent targets build simultaneously)
         "deps": deps,
-
-        # "test_runner" controls which test command is generated.
-        # This is Python-specific — other rules (go_library, etc.) don't
-        # need this because Go/Rust have a single built-in test runner.
         "test_runner": test_runner,
+
+        # "commands" is a list of structured command dicts.  When present,
+        # the build tool uses the command renderer instead of the hardcoded
+        # GenerateCommands() fallback.  This is how OS-aware BUILD rules
+        # work — cmd_windows/cmd_unix return None on wrong platforms,
+        # and the renderer skips None entries.
+        "commands": [install_cmd, test_cmd],
     })

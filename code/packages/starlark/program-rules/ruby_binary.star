@@ -78,4 +78,8 @@ def ruby_binary(name, srcs = [], deps = [], entry_point = "main.rb"):
         "srcs": srcs,
         "deps": deps,
         "entry_point": entry_point,
+        "commands": [
+            {"type": "cmd", "program": "bundle", "args": ["install", "--quiet"]},
+            {"type": "cmd", "program": "bundle", "args": ["exec", "rake", "test"]},
+        ],
     })

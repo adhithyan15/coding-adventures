@@ -76,4 +76,8 @@ def rust_binary(name, srcs = [], deps = []):
         "name": name,
         "srcs": srcs,
         "deps": deps,
+        "commands": [
+            {"type": "cmd", "program": "cargo", "args": ["build"]},
+            {"type": "cmd", "program": "cargo", "args": ["test"]},
+        ],
     })

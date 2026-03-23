@@ -79,20 +79,14 @@ def py_binary(name, srcs = [], deps = [], entry_point = "main.py"):
               The build tool uses this to verify the program starts
               successfully (e.g., python main.py --help should exit 0).
     """
+    install_cmd = {"type": "cmd", "program": "uv", "args": ["pip", "install", "--system", "-e", ".[dev]"]}
+    test_cmd = {"type": "cmd", "program": "python", "args": ["-m", "pytest", "--cov", "--cov-report=term-missing"]}
+
     _targets.append({
-        # "py_binary" triggers binary-specific build logic:
-        #   - Same dependency installation as py_library
-        #   - Tests run if tests/ directory exists
-        #   - Entry point validation: the file must exist and be importable
         "rule": "py_binary",
         "name": name,
         "srcs": srcs,
         "deps": deps,
-
-        # entry_point distinguishes a binary from a library. The build tool
-        # uses this to:
-        #   1. Verify the file exists
-        #   2. Optionally run a smoke test (python entry_point --help)
-        #   3. Generate wrapper scripts or CLI entry points
         "entry_point": entry_point,
+        "commands": [install_cmd, test_cmd],
     })

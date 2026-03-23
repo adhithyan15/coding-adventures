@@ -96,4 +96,8 @@ def elixir_binary(name, srcs = [], deps = [], entry_point = "lib/main.ex"):
         "srcs": srcs,
         "deps": deps,
         "entry_point": entry_point,
+        "commands": [
+            {"type": "cmd", "program": "mix", "args": ["deps.get"]},
+            {"type": "cmd", "program": "mix", "args": ["test", "--cover"]},
+        ],
     })

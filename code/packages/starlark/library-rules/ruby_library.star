@@ -103,4 +103,8 @@ def ruby_library(name, srcs = [], deps = [], test_runner = "minitest"):
         "srcs": srcs,
         "deps": deps,
         "test_runner": test_runner,
+        "commands": [
+            {"type": "cmd", "program": "bundle", "args": ["install", "--quiet"]},
+            {"type": "cmd", "program": "bundle", "args": ["exec", "rake", "test"]},
+        ],
     })

@@ -83,4 +83,9 @@ def go_binary(name, srcs = [], deps = []):
         "name": name,
         "srcs": srcs,
         "deps": deps,
+        "commands": [
+            {"type": "cmd", "program": "go", "args": ["build", "./..."]},
+            {"type": "cmd", "program": "go", "args": ["test", "./...", "-v", "-cover"]},
+            {"type": "cmd", "program": "go", "args": ["vet", "./..."]},
+        ],
     })

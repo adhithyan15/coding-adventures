@@ -115,4 +115,8 @@ def ts_library(name, srcs = [], deps = [], test_runner = "vitest"):
         "srcs": srcs,
         "deps": deps,
         "test_runner": test_runner,
+        "commands": [
+            {"type": "cmd", "program": "npm", "args": ["install", "--silent"]},
+            {"type": "cmd", "program": "npx", "args": ["vitest", "run", "--coverage"]},
+        ],
     })

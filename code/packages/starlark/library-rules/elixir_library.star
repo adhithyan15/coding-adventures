@@ -106,4 +106,8 @@ def elixir_library(name, srcs = [], deps = []):
         "name": name,
         "srcs": srcs,
         "deps": deps,
+        "commands": [
+            {"type": "cmd", "program": "mix", "args": ["deps.get"]},
+            {"type": "cmd", "program": "mix", "args": ["test", "--cover"]},
+        ],
     })

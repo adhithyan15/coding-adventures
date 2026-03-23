@@ -75,13 +75,13 @@ def go_library(name, srcs = [], deps = []):
               the relationship.
     """
     _targets.append({
-        # "go_library" tells the build tool to use Go-specific build logic:
-        #   - No virtual environment or package installation step
-        #   - Runs go vet for linting (required by repo standards)
-        #   - Runs go test for testing
-        #   - Coverage is built into go test via the -cover flag
         "rule": "go_library",
         "name": name,
         "srcs": srcs,
         "deps": deps,
+        "commands": [
+            {"type": "cmd", "program": "go", "args": ["build", "./..."]},
+            {"type": "cmd", "program": "go", "args": ["test", "./...", "-v", "-cover"]},
+            {"type": "cmd", "program": "go", "args": ["vet", "./..."]},
+        ],
     })
