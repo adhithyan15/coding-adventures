@@ -11,7 +11,7 @@ import time
 
 import pytest
 
-from ca_uuid import (
+from coding_adventures_uuid import (
     MAX,
     NAMESPACE_DNS,
     NAMESPACE_OID,

@@ -1,10 +1,10 @@
-defmodule Ca.UuidTest do
+defmodule CodingAdventures.UuidTest do
   use ExUnit.Case
-  alias Ca.Uuid
+  alias CodingAdventures.Uuid
 
   # ─── Module Loading ────────────────────────────────────────────────────────
   test "module loads" do
-    assert Code.ensure_loaded?(Ca.Uuid)
+    assert Code.ensure_loaded?(CodingAdventures.Uuid)
   end
 
   # ─── Nil and Max UUIDs ────────────────────────────────────────────────────

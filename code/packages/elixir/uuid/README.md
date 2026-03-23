@@ -1,4 +1,4 @@
-# ca_uuid (Elixir)
+# coding_adventures_uuid (Elixir)
 
 UUID v1/v3/v4/v5/v7 generation and parsing (RFC 4122 + RFC 9562) — implemented from scratch for educational purposes.
 
@@ -25,7 +25,7 @@ Format: `550e8400-e29b-41d4-a716-446655440000` — 32 hex digits in 8-4-4-4-12 g
 Add to your `mix.exs`:
 
 ```elixir
-{:ca_uuid, path: "../uuid"}
+{:coding_adventures_uuid, path: "../uuid"}
 ```
 
 Then:
@@ -38,25 +38,25 @@ mix deps.get
 
 ```elixir
 # Random UUID
-uuid = Ca.Uuid.v4()
-Ca.Uuid.to_string(uuid)
+uuid = CodingAdventures.Uuid.v4()
+CodingAdventures.Uuid.to_string(uuid)
 # => "550e8400-e29b-41d4-a716-446655440000"
 
 # Name-based (deterministic)
-uuid = Ca.Uuid.v5(Ca.Uuid.namespace_dns(), "python.org")
-Ca.Uuid.to_string(uuid)
+uuid = CodingAdventures.Uuid.v5(CodingAdventures.Uuid.namespace_dns(), "python.org")
+CodingAdventures.Uuid.to_string(uuid)
 # => "886313e1-3b8a-5372-9b90-0c9aee199e5d"  (always)
 
 # Time-ordered (sortable)
-uuid = Ca.Uuid.v7()
-Ca.Uuid.version(uuid)  # => 7
+uuid = CodingAdventures.Uuid.v7()
+CodingAdventures.Uuid.version(uuid)  # => 7
 
 # Parse from string
-{:ok, uuid} = Ca.Uuid.parse("550e8400-e29b-41d4-a716-446655440000")
-{:ok, uuid} = Ca.Uuid.parse("550e8400e29b41d4a716446655440000")  # compact
+{:ok, uuid} = CodingAdventures.Uuid.parse("550e8400-e29b-41d4-a716-446655440000")
+{:ok, uuid} = CodingAdventures.Uuid.parse("550e8400e29b41d4a716446655440000")  # compact
 
 # Validate
-Ca.Uuid.valid?("not-a-uuid")  # => false
+CodingAdventures.Uuid.valid?("not-a-uuid")  # => false
 ```
 
 ## API
@@ -65,25 +65,25 @@ All UUIDs are represented internally as 16-byte binaries (`<<...>>`). Public fun
 
 | Function | Description |
 |----------|-------------|
-| `Ca.Uuid.v1/0` | Time-based UUID |
-| `Ca.Uuid.v3/2` | MD5 name-based UUID |
-| `Ca.Uuid.v4/0` | Random UUID |
-| `Ca.Uuid.v5/2` | SHA-1 name-based UUID |
-| `Ca.Uuid.v7/0` | Unix timestamp UUID |
-| `Ca.Uuid.parse/1` | `{:ok, binary}` or `{:error, reason}` |
-| `Ca.Uuid.to_string/1` | Format binary as `xxxxxxxx-xxxx-...` |
-| `Ca.Uuid.version/1` | Extract version integer |
-| `Ca.Uuid.variant/1` | Extract variant string |
-| `Ca.Uuid.valid?/1` | Boolean check on a string |
-| `Ca.Uuid.namespace_dns/0` | Well-known DNS namespace binary |
-| `Ca.Uuid.namespace_url/0` | Well-known URL namespace binary |
-| `Ca.Uuid.namespace_oid/0` | Well-known OID namespace binary |
-| `Ca.Uuid.namespace_x500/0` | Well-known X.500 namespace binary |
+| `CodingAdventures.Uuid.v1/0` | Time-based UUID |
+| `CodingAdventures.Uuid.v3/2` | MD5 name-based UUID |
+| `CodingAdventures.Uuid.v4/0` | Random UUID |
+| `CodingAdventures.Uuid.v5/2` | SHA-1 name-based UUID |
+| `CodingAdventures.Uuid.v7/0` | Unix timestamp UUID |
+| `CodingAdventures.Uuid.parse/1` | `{:ok, binary}` or `{:error, reason}` |
+| `CodingAdventures.Uuid.to_string/1` | Format binary as `xxxxxxxx-xxxx-...` |
+| `CodingAdventures.Uuid.version/1` | Extract version integer |
+| `CodingAdventures.Uuid.variant/1` | Extract variant string |
+| `CodingAdventures.Uuid.valid?/1` | Boolean check on a string |
+| `CodingAdventures.Uuid.namespace_dns/0` | Well-known DNS namespace binary |
+| `CodingAdventures.Uuid.namespace_url/0` | Well-known URL namespace binary |
+| `CodingAdventures.Uuid.namespace_oid/0` | Well-known OID namespace binary |
+| `CodingAdventures.Uuid.namespace_x500/0` | Well-known X.500 namespace binary |
 
 ## Dependencies
 
-- `:ca_sha1` — SHA-1 implementation (for v5)
-- `:ca_md5` — MD5 implementation (for v3)
+- `:coding_adventures_sha1` — SHA-1 implementation (for v5)
+- `:coding_adventures_md5` — MD5 implementation (for v3)
 
 ## Development
 

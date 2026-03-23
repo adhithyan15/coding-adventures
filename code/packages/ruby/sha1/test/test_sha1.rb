@@ -5,14 +5,14 @@
 # Test vectors come from FIPS 180-4 (the official SHA-1 standard). Any correct
 # SHA-1 implementation must produce exactly these digests for these inputs.
 #
-# We also test the streaming API (Ca::Sha1::Digest) to verify it
+# We also test the streaming API (CodingAdventures::Sha1::Digest) to verify it
 # produces the same results as the one-shot sha1() function, and test edge cases
 # like empty input, exact block boundaries, and very long inputs.
 
 require "minitest/autorun"
-require "ca_sha1"
+require "coding_adventures_sha1"
 
-SHA1 = Ca::Sha1
+SHA1 = CodingAdventures::Sha1
 
 class TestVersion < Minitest::Test
   def test_version_exists

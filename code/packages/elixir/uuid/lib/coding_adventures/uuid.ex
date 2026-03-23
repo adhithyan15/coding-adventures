@@ -1,4 +1,4 @@
-defmodule Ca.Uuid do
+defmodule CodingAdventures.Uuid do
   @moduledoc """
   UUID v1/v3/v4/v5/v7 generation and parsing (RFC 4122 + RFC 9562).
 
@@ -165,11 +165,11 @@ defmodule Ca.Uuid do
 
   ## Examples
 
-      iex> {:ok, uuid} = Ca.Uuid.parse("550e8400-e29b-41d4-a716-446655440000")
+      iex> {:ok, uuid} = CodingAdventures.Uuid.parse("550e8400-e29b-41d4-a716-446655440000")
       iex> byte_size(uuid)
       16
 
-      iex> Ca.Uuid.parse("not-a-uuid")
+      iex> CodingAdventures.Uuid.parse("not-a-uuid")
       {:error, "Invalid UUID: \\"not-a-uuid\\""}
   """
   def parse(s) when is_binary(s) do
@@ -204,7 +204,7 @@ defmodule Ca.Uuid do
 
   ## Examples
 
-      iex> Ca.Uuid.to_string(Ca.Uuid.nil_uuid())
+      iex> CodingAdventures.Uuid.to_string(CodingAdventures.Uuid.nil_uuid())
       "00000000-0000-0000-0000-000000000000"
   """
   def to_string(<<a::binary-4, b::binary-2, c::binary-2, d::binary-2, e::binary-6>>) do
@@ -234,7 +234,7 @@ defmodule Ca.Uuid do
 
   ## Examples
 
-      iex> Ca.Uuid.version(Ca.Uuid.v4())
+      iex> CodingAdventures.Uuid.version(CodingAdventures.Uuid.v4())
       4
   """
   def version(<<_::48, v::4, _::76>>), do: v
@@ -246,7 +246,7 @@ defmodule Ca.Uuid do
 
   ## Examples
 
-      iex> Ca.Uuid.variant(Ca.Uuid.v4())
+      iex> CodingAdventures.Uuid.variant(CodingAdventures.Uuid.v4())
       "rfc4122"
   """
   def variant(<<_::64, high2::2, _::62>>) do
@@ -337,8 +337,8 @@ defmodule Ca.Uuid do
 
   ## Example
 
-      iex> uuid = Ca.Uuid.v1()
-      iex> Ca.Uuid.version(uuid)
+      iex> uuid = CodingAdventures.Uuid.v1()
+      iex> CodingAdventures.Uuid.version(uuid)
       1
   """
   def v1 do
@@ -391,13 +391,13 @@ defmodule Ca.Uuid do
 
   ## Example
 
-      iex> uuid = Ca.Uuid.v3(Ca.Uuid.namespace_dns(), "python.org")
-      iex> Ca.Uuid.to_string(uuid)
+      iex> uuid = CodingAdventures.Uuid.v3(CodingAdventures.Uuid.namespace_dns(), "python.org")
+      iex> CodingAdventures.Uuid.to_string(uuid)
       "6fa459ea-ee8a-3ca4-894e-db77e160355e"
   """
   def v3(namespace, name) when is_binary(namespace) and is_binary(name) do
     data = namespace <> name
-    raw = Ca.Md5.md5(data)  # 16 bytes
+    raw = CodingAdventures.Md5.md5(data)  # 16 bytes
     set_version_variant(raw, 3)
   end
 
@@ -427,10 +427,10 @@ defmodule Ca.Uuid do
 
   ## Example
 
-      iex> uuid = Ca.Uuid.v4()
-      iex> Ca.Uuid.version(uuid)
+      iex> uuid = CodingAdventures.Uuid.v4()
+      iex> CodingAdventures.Uuid.version(uuid)
       4
-      iex> Ca.Uuid.variant(uuid)
+      iex> CodingAdventures.Uuid.variant(uuid)
       "rfc4122"
   """
   def v4 do
@@ -467,13 +467,13 @@ defmodule Ca.Uuid do
 
   ## Example
 
-      iex> uuid = Ca.Uuid.v5(Ca.Uuid.namespace_dns(), "python.org")
-      iex> Ca.Uuid.to_string(uuid)
+      iex> uuid = CodingAdventures.Uuid.v5(CodingAdventures.Uuid.namespace_dns(), "python.org")
+      iex> CodingAdventures.Uuid.to_string(uuid)
       "886313e1-3b8a-5372-9b90-0c9aee199e5d"
   """
   def v5(namespace, name) when is_binary(namespace) and is_binary(name) do
     data = namespace <> name
-    digest = Ca.Sha1.sha1(data)   # 20 bytes
+    digest = CodingAdventures.Sha1.sha1(data)   # 20 bytes
     raw = binary_part(digest, 0, 16)
     set_version_variant(raw, 5)
   end
@@ -510,8 +510,8 @@ defmodule Ca.Uuid do
 
   ## Example
 
-      iex> uuid = Ca.Uuid.v7()
-      iex> Ca.Uuid.version(uuid)
+      iex> uuid = CodingAdventures.Uuid.v7()
+      iex> CodingAdventures.Uuid.version(uuid)
       7
   """
   def v7 do

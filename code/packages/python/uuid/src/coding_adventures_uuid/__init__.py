@@ -37,8 +37,8 @@ most portable representation and matches the wire/disk format. All other views
 
 Dependencies
 ============
-- ca_sha1: our scratch SHA-1 package (for v5)
-- ca_md5:  our scratch MD5 package (for v3)
+- coding_adventures_sha1: our scratch SHA-1 package (for v5)
+- coding_adventures_md5:  our scratch MD5 package (for v3)
 """
 
 from __future__ import annotations
@@ -49,8 +49,8 @@ import struct
 import time
 from typing import Union
 
-import ca_md5 as _md5_mod
-import ca_sha1 as _sha1_mod
+import coding_adventures_md5 as _md5_mod
+import coding_adventures_sha1 as _sha1_mod
 
 __version__ = "0.1.0"
 

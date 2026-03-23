@@ -1,4 +1,4 @@
-defmodule Ca.Md5 do
+defmodule CodingAdventures.Md5 do
   @moduledoc """
   MD5 message digest algorithm (RFC 1321) implemented from scratch.
 

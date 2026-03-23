@@ -54,7 +54,7 @@
 //	Field:       time_low    | time_mid | time_hi+ver | clk_seq | node
 //
 // This matches the wire format defined in RFC 4122 section 4.1.2.
-package ca_uuid
+package uuid
 
 import (
 	"crypto/rand"

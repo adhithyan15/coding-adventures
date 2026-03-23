@@ -20,32 +20,32 @@ SimpleCov.start do
 end
 
 require "minitest/autorun"
-require "ca_uuid"
+require "coding_adventures_uuid"
 
 # Bring the UUID class and module-level constants into scope
-UUID          = Ca::Uuid::UUID
-UUIDError     = Ca::Uuid::UUIDError
-NAMESPACE_DNS = Ca::Uuid::NAMESPACE_DNS
-NAMESPACE_URL = Ca::Uuid::NAMESPACE_URL
-NAMESPACE_OID = Ca::Uuid::NAMESPACE_OID
-NAMESPACE_X500 = Ca::Uuid::NAMESPACE_X500
-NIL_UUID      = Ca::Uuid::NIL
-MAX_UUID      = Ca::Uuid::MAX
+UUID          = CodingAdventures::Uuid::UUID
+UUIDError     = CodingAdventures::Uuid::UUIDError
+NAMESPACE_DNS = CodingAdventures::Uuid::NAMESPACE_DNS
+NAMESPACE_URL = CodingAdventures::Uuid::NAMESPACE_URL
+NAMESPACE_OID = CodingAdventures::Uuid::NAMESPACE_OID
+NAMESPACE_X500 = CodingAdventures::Uuid::NAMESPACE_X500
+NIL_UUID      = CodingAdventures::Uuid::NIL
+MAX_UUID      = CodingAdventures::Uuid::MAX
 
 class TestCaUuidVersion < Minitest::Test
   # ---- Version constant -------------------------------------------------------
 
   def test_version_exists
-    refute_nil Ca::Uuid::VERSION
+    refute_nil CodingAdventures::Uuid::VERSION
   end
 
   def test_version_is_string
-    assert_kind_of String, Ca::Uuid::VERSION
+    assert_kind_of String, CodingAdventures::Uuid::VERSION
   end
 
   def test_version_format
     # Should match semver X.Y.Z
-    assert_match(/\A\d+\.\d+\.\d+\z/, Ca::Uuid::VERSION)
+    assert_match(/\A\d+\.\d+\.\d+\z/, CodingAdventures::Uuid::VERSION)
   end
 end
 
@@ -157,25 +157,25 @@ class TestUuidVersion < Minitest::Test
   end
 
   def test_v4_version
-    assert_equal 4, Ca::Uuid.v4.version
+    assert_equal 4, CodingAdventures::Uuid.v4.version
   end
 
   def test_v1_version
-    assert_equal 1, Ca::Uuid.v1.version
+    assert_equal 1, CodingAdventures::Uuid.v1.version
   end
 
   def test_v5_version
-    u = Ca::Uuid.v5(NAMESPACE_DNS, "python.org")
+    u = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "python.org")
     assert_equal 5, u.version
   end
 
   def test_v3_version
-    u = Ca::Uuid.v3(NAMESPACE_DNS, "python.org")
+    u = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "python.org")
     assert_equal 3, u.version
   end
 
   def test_v7_version
-    assert_equal 7, Ca::Uuid.v7.version
+    assert_equal 7, CodingAdventures::Uuid.v7.version
   end
 end
 
@@ -183,25 +183,25 @@ class TestUuidVariant < Minitest::Test
   # ---- UUID#variant -----------------------------------------------------------
 
   def test_v4_variant
-    assert_equal "rfc4122", Ca::Uuid.v4.variant
+    assert_equal "rfc4122", CodingAdventures::Uuid.v4.variant
   end
 
   def test_v1_variant
-    assert_equal "rfc4122", Ca::Uuid.v1.variant
+    assert_equal "rfc4122", CodingAdventures::Uuid.v1.variant
   end
 
   def test_v5_variant
-    u = Ca::Uuid.v5(NAMESPACE_DNS, "example.com")
+    u = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "example.com")
     assert_equal "rfc4122", u.variant
   end
 
   def test_v3_variant
-    u = Ca::Uuid.v3(NAMESPACE_DNS, "example.com")
+    u = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "example.com")
     assert_equal "rfc4122", u.variant
   end
 
   def test_v7_variant
-    assert_equal "rfc4122", Ca::Uuid.v7.variant
+    assert_equal "rfc4122", CodingAdventures::Uuid.v7.variant
   end
 
   def test_nil_uuid_variant
@@ -222,11 +222,11 @@ class TestUuidNilMax < Minitest::Test
   end
 
   def test_v4_is_not_nil
-    refute Ca::Uuid.v4.nil?
+    refute CodingAdventures::Uuid.v4.nil?
   end
 
   def test_v4_is_not_max
-    refute Ca::Uuid.v4.max?
+    refute CodingAdventures::Uuid.v4.max?
   end
 
   def test_nil_to_s
@@ -333,27 +333,27 @@ class TestUuidV4 < Minitest::Test
   # ---- UUID.v4 ----------------------------------------------------------------
 
   def test_v4_returns_uuid
-    assert_kind_of UUID, Ca::Uuid.v4
+    assert_kind_of UUID, CodingAdventures::Uuid.v4
   end
 
   def test_v4_version_is_4
-    assert_equal 4, Ca::Uuid.v4.version
+    assert_equal 4, CodingAdventures::Uuid.v4.version
   end
 
   def test_v4_variant_is_rfc4122
-    assert_equal "rfc4122", Ca::Uuid.v4.variant
+    assert_equal "rfc4122", CodingAdventures::Uuid.v4.variant
   end
 
   def test_v4_uniqueness
     # Two independently generated v4 UUIDs should be different.
     # The probability they're equal is 1/2^122 — effectively impossible.
-    a = Ca::Uuid.v4
-    b = Ca::Uuid.v4
+    a = CodingAdventures::Uuid.v4
+    b = CodingAdventures::Uuid.v4
     refute_equal a, b
   end
 
   def test_v4_to_s_format
-    s = Ca::Uuid.v4.to_s
+    s = CodingAdventures::Uuid.v4.to_s
     assert_match(/\A[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/, s)
   end
 end
@@ -364,35 +364,35 @@ class TestUuidV5 < Minitest::Test
   def test_v5_rfc_vector_python_org
     # RFC 4122 Appendix B:
     # v5(NAMESPACE_DNS, "python.org") => "886313e1-3b8a-5372-9b90-0c9aee199e5d"
-    u = Ca::Uuid.v5(NAMESPACE_DNS, "python.org")
+    u = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "python.org")
     assert_equal "886313e1-3b8a-5372-9b90-0c9aee199e5d", u.to_s
   end
 
   def test_v5_deterministic
-    a = Ca::Uuid.v5(NAMESPACE_DNS, "example.com")
-    b = Ca::Uuid.v5(NAMESPACE_DNS, "example.com")
+    a = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "example.com")
+    b = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "example.com")
     assert_equal a, b
   end
 
   def test_v5_different_names_differ
-    a = Ca::Uuid.v5(NAMESPACE_DNS, "example.com")
-    b = Ca::Uuid.v5(NAMESPACE_DNS, "example.org")
+    a = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "example.com")
+    b = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "example.org")
     refute_equal a, b
   end
 
   def test_v5_different_namespaces_differ
-    a = Ca::Uuid.v5(NAMESPACE_DNS, "example.com")
-    b = Ca::Uuid.v5(NAMESPACE_URL, "example.com")
+    a = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "example.com")
+    b = CodingAdventures::Uuid.v5(NAMESPACE_URL, "example.com")
     refute_equal a, b
   end
 
   def test_v5_version_is_5
-    u = Ca::Uuid.v5(NAMESPACE_DNS, "test")
+    u = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "test")
     assert_equal 5, u.version
   end
 
   def test_v5_variant_is_rfc4122
-    u = Ca::Uuid.v5(NAMESPACE_DNS, "test")
+    u = CodingAdventures::Uuid.v5(NAMESPACE_DNS, "test")
     assert_equal "rfc4122", u.variant
   end
 end
@@ -403,29 +403,29 @@ class TestUuidV3 < Minitest::Test
   def test_v3_rfc_vector_python_org
     # RFC 4122 Appendix B:
     # v3(NAMESPACE_DNS, "python.org") => "6fa459ea-ee8a-3ca4-894e-db77e160355e"
-    u = Ca::Uuid.v3(NAMESPACE_DNS, "python.org")
+    u = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "python.org")
     assert_equal "6fa459ea-ee8a-3ca4-894e-db77e160355e", u.to_s
   end
 
   def test_v3_deterministic
-    a = Ca::Uuid.v3(NAMESPACE_DNS, "example.com")
-    b = Ca::Uuid.v3(NAMESPACE_DNS, "example.com")
+    a = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "example.com")
+    b = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "example.com")
     assert_equal a, b
   end
 
   def test_v3_different_names_differ
-    a = Ca::Uuid.v3(NAMESPACE_DNS, "example.com")
-    b = Ca::Uuid.v3(NAMESPACE_DNS, "example.org")
+    a = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "example.com")
+    b = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "example.org")
     refute_equal a, b
   end
 
   def test_v3_version_is_3
-    u = Ca::Uuid.v3(NAMESPACE_DNS, "test")
+    u = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "test")
     assert_equal 3, u.version
   end
 
   def test_v3_variant_is_rfc4122
-    u = Ca::Uuid.v3(NAMESPACE_DNS, "test")
+    u = CodingAdventures::Uuid.v3(NAMESPACE_DNS, "test")
     assert_equal "rfc4122", u.variant
   end
 end
@@ -434,20 +434,20 @@ class TestUuidV1 < Minitest::Test
   # ---- UUID.v1 ----------------------------------------------------------------
 
   def test_v1_returns_uuid
-    assert_kind_of UUID, Ca::Uuid.v1
+    assert_kind_of UUID, CodingAdventures::Uuid.v1
   end
 
   def test_v1_version_is_1
-    assert_equal 1, Ca::Uuid.v1.version
+    assert_equal 1, CodingAdventures::Uuid.v1.version
   end
 
   def test_v1_variant_is_rfc4122
-    assert_equal "rfc4122", Ca::Uuid.v1.variant
+    assert_equal "rfc4122", CodingAdventures::Uuid.v1.variant
   end
 
   def test_v1_uniqueness
-    a = Ca::Uuid.v1
-    b = Ca::Uuid.v1
+    a = CodingAdventures::Uuid.v1
+    b = CodingAdventures::Uuid.v1
     refute_equal a, b
   end
 end
@@ -456,20 +456,20 @@ class TestUuidV7 < Minitest::Test
   # ---- UUID.v7 ----------------------------------------------------------------
 
   def test_v7_returns_uuid
-    assert_kind_of UUID, Ca::Uuid.v7
+    assert_kind_of UUID, CodingAdventures::Uuid.v7
   end
 
   def test_v7_version_is_7
-    assert_equal 7, Ca::Uuid.v7.version
+    assert_equal 7, CodingAdventures::Uuid.v7.version
   end
 
   def test_v7_variant_is_rfc4122
-    assert_equal "rfc4122", Ca::Uuid.v7.variant
+    assert_equal "rfc4122", CodingAdventures::Uuid.v7.variant
   end
 
   def test_v7_uniqueness
-    a = Ca::Uuid.v7
-    b = Ca::Uuid.v7
+    a = CodingAdventures::Uuid.v7
+    b = CodingAdventures::Uuid.v7
     refute_equal a, b
   end
 
@@ -477,45 +477,45 @@ class TestUuidV7 < Minitest::Test
     # Because v7 embeds a millisecond timestamp in the high bits, UUIDs
     # generated later should sort after those generated earlier.
     # We generate two UUIDs with a small sleep to ensure different timestamps.
-    a = Ca::Uuid.v7
+    a = CodingAdventures::Uuid.v7
     sleep(0.002)  # 2 ms — enough to guarantee a different ms timestamp
-    b = Ca::Uuid.v7
+    b = CodingAdventures::Uuid.v7
     assert a < b, "v7 UUID generated later should sort after earlier one"
   end
 
   def test_v7_to_s_format
-    s = Ca::Uuid.v7.to_s
+    s = CodingAdventures::Uuid.v7.to_s
     # Version nibble must be 7 (third group starts with '7')
     assert_match(/\A[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/, s)
   end
 end
 
 class TestUuidModuleMethods < Minitest::Test
-  # ---- Ca::Uuid module-level convenience wrappers ----------------------------
+  # ---- CodingAdventures::Uuid module-level convenience wrappers ----------------------------
 
   def test_module_parse
-    u = Ca::Uuid.parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
+    u = CodingAdventures::Uuid.parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
     assert_kind_of UUID, u
   end
 
   def test_module_valid_true
-    assert Ca::Uuid.valid?("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
+    assert CodingAdventures::Uuid.valid?("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
   end
 
   def test_module_valid_false
-    refute Ca::Uuid.valid?("garbage")
+    refute CodingAdventures::Uuid.valid?("garbage")
   end
 
   def test_module_v4
-    assert_kind_of UUID, Ca::Uuid.v4
+    assert_kind_of UUID, CodingAdventures::Uuid.v4
   end
 
   def test_module_v1
-    assert_kind_of UUID, Ca::Uuid.v1
+    assert_kind_of UUID, CodingAdventures::Uuid.v1
   end
 
   def test_module_v7
-    assert_kind_of UUID, Ca::Uuid.v7
+    assert_kind_of UUID, CodingAdventures::Uuid.v7
   end
 end
 

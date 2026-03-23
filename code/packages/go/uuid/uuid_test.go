@@ -22,7 +22,7 @@
 //	V5(NamespaceDNS, "python.org") = "886313e1-3b8a-5372-9b90-0c9aee199e5d"
 //
 // These vectors are the gold standard for testing UUID implementations.
-package ca_uuid
+package uuid
 
 import (
 	"strings"

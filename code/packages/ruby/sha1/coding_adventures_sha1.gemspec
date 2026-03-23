@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/ca/sha1/version"
+require_relative "lib/coding_adventures/sha1/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "ca_sha1"
-  spec.version       = Ca::Sha1::VERSION
+  spec.name          = "coding_adventures_sha1"
+  spec.version       = CodingAdventures::Sha1::VERSION
   spec.authors       = ["Adhithya Rajasekaran"]
   spec.summary       = "SHA-1 cryptographic hash function (FIPS 180-4) implemented from scratch"
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
