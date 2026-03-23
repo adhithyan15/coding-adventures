@@ -279,6 +279,14 @@ type GrammarLexer struct {
 // regexes. The compiled patterns are anchored to the start of the remaining
 // source (using ^) so that only matches at the current position are found.
 func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
+	// Case-insensitive mode: lowercase the entire source before tokenization.
+	// This ensures keyword matching works because keywords in the .tokens file
+	// are already lowercase, and now the source text will be too.
+	src := source
+	if !grammar.CaseSensitive {
+		src = strings.ToLower(source)
+	}
+
 	keywordSet := make(map[string]struct{})
 	for _, kw := range grammar.Keywords {
 		keywordSet[kw] = struct{}{}
@@ -361,7 +369,7 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 	}
 
 	return &GrammarLexer{
-		source:          source,
+		source:          src,
 		grammar:         grammar,
 		pos:             0,
 		line:            1,

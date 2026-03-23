@@ -54,6 +54,7 @@
 //!   following the Python/Starlark whitespace rules.
 
 use regex::Regex;
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
 use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
@@ -318,7 +319,8 @@ pub struct GrammarLexer<'a> {
     chars: Vec<char>,
 
     /// The original source string (for regex matching on slices).
-    source: &'a str,
+    /// When case_sensitive is false, this holds the lowercased copy.
+    source: Cow<'a, str>,
 
     /// Current byte position in the source string.
     byte_pos: usize,
@@ -382,6 +384,12 @@ pub struct GrammarLexer<'a> {
     /// via `LexerContext::set_skip_enabled()` for groups where whitespace
     /// is significant (e.g., CDATA, raw strings).
     skip_enabled: bool,
+
+    /// Whether the grammar is case-sensitive. When `false`, the source
+    /// string is lowercased before tokenization so that keywords and
+    /// patterns match regardless of case. This is useful for languages
+    /// like SQL and BASIC where `SELECT` and `select` are equivalent.
+    case_sensitive: bool,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -391,6 +399,7 @@ impl<'a> GrammarLexer<'a> {
     /// anchored regex patterns. The "default" group contains the top-level
     /// definitions; named groups come from `group NAME:` sections.
     pub fn new(source: &'a str, grammar: &TokenGrammar) -> Self {
+        let case_sensitive = grammar.case_sensitive;
         let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
         let reserved_set: HashSet<String> = grammar.reserved_keywords.iter().cloned().collect();
         let patterns = compile_patterns(&grammar.definitions);
@@ -430,9 +439,19 @@ impl<'a> GrammarLexer<'a> {
         // Build the set of valid group names for validation.
         let group_names: HashSet<String> = group_patterns.keys().cloned().collect();
 
+        // When case_sensitive is false, lowercase the entire source so that
+        // patterns and keywords match regardless of the original casing. Both
+        // `source` (used for regex matching) and `chars` (used for indexed
+        // access) operate on the lowercased text.
+        let effective_source: Cow<'a, str> = if case_sensitive {
+            Cow::Borrowed(source)
+        } else {
+            Cow::Owned(source.to_lowercase())
+        };
+
         GrammarLexer {
-            chars: source.chars().collect(),
-            source,
+            chars: effective_source.chars().collect(),
+            source: effective_source,
             byte_pos: 0,
             char_pos: 0,
             line: 1,
@@ -448,6 +467,7 @@ impl<'a> GrammarLexer<'a> {
             group_stack: vec!["default".to_string()],
             on_token: None,
             skip_enabled: true,
+            case_sensitive,
         }
     }
 
@@ -769,7 +789,7 @@ impl<'a> GrammarLexer<'a> {
                     let mut ctx = LexerContext {
                         group_names: &self.group_names,
                         group_stack: &self.group_stack,
-                        source: self.source,
+                        source: &self.source,
                         pos_after_token: self.byte_pos,
                         actions: Vec::new(),
                         suppressed: false,

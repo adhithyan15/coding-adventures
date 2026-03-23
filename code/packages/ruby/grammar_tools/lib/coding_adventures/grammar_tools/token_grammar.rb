@@ -107,13 +107,17 @@ module CodingAdventures
     # reserved_keywords -- keywords that cause lex errors if used as identifiers
     # groups            -- hash of group_name => PatternGroup for named
     #                      pattern groups (context-sensitive lexing)
+    # case_sensitive    -- whether the lexer should match case-sensitively
+    #                      (default true). When false, the lexer lowercases
+    #                      the source text before matching. Used by
+    #                      case-insensitive languages like VHDL and SQL.
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :error_definitions, :reserved_keywords, :groups
-      attr_accessor :mode, :escape_mode
+      attr_accessor :mode, :escape_mode, :case_sensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
-                     reserved_keywords: [], escape_mode: nil, groups: {})
+                     reserved_keywords: [], escape_mode: nil, groups: {}, case_sensitive: true)
         @definitions = definitions
         @keywords = keywords
         @mode = mode
@@ -122,6 +126,7 @@ module CodingAdventures
         @reserved_keywords = reserved_keywords
         @escape_mode = escape_mode
         @groups = groups
+        @case_sensitive = case_sensitive
       end
 
       # Return the set of all defined token names (including aliases).
@@ -331,6 +336,24 @@ module CodingAdventures
             )
           end
           grammar.escape_mode = escape_value
+          current_section = nil
+          next
+        end
+
+        # case_sensitive: directive -- controls whether the lexer matches
+        # case-sensitively. ``case_sensitive: false`` makes the lexer
+        # lowercase the source text before matching. Used by
+        # case-insensitive languages like VHDL and SQL.
+        if stripped.start_with?("case_sensitive:")
+          cs_value = stripped[15..].strip.downcase
+          unless %w[true false].include?(cs_value)
+            raise TokenGrammarError.new(
+              "Invalid value for 'case_sensitive:': #{cs_value.inspect} " \
+              "(expected 'true' or 'false')",
+              line_number
+            )
+          end
+          grammar.case_sensitive = cs_value == "true"
           current_section = nil
           next
         end

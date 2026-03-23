@@ -434,6 +434,16 @@ export class GrammarLexer {
   /** Whether indentation mode is active. */
   private readonly _indentationMode: boolean;
 
+  /**
+   * Whether the grammar is case-sensitive.
+   *
+   * When false, the lexer lowercases the source text before matching.
+   * This means token values will be lowercase and keyword promotion
+   * works because both the source and keywords are lowercase.
+   * Used by case-insensitive languages like VHDL or SQL.
+   */
+  private readonly _caseSensitive: boolean;
+
   // -- Compiled patterns --
 
   /** Default group compiled patterns, in priority order. */
@@ -469,7 +479,12 @@ export class GrammarLexer {
   private _skipEnabled: boolean = true;
 
   constructor(source: string, grammar: TokenGrammar) {
-    this._source = source;
+    // Case sensitivity: when the grammar is case-insensitive, we lowercase
+    // the entire source string before tokenization. This ensures that all
+    // pattern matching and keyword promotion works correctly — both the
+    // source and the keywords/patterns are compared in lowercase.
+    this._caseSensitive = grammar.caseSensitive !== false;
+    this._source = this._caseSensitive ? source : source.toLowerCase();
     this._grammar = grammar;
     this._keywordSet = new Set(grammar.keywords);
     this._reservedSet = new Set(grammar.reservedKeywords ?? []);

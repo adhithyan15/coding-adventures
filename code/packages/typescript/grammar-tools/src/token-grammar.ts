@@ -141,6 +141,10 @@ export interface PatternGroup {
  *   groups: Named pattern groups for context-sensitive lexing. Each group
  *       contains an ordered list of token definitions that are only active
  *       when the group is at the top of the lexer's group stack.
+ *   caseSensitive: Whether the lexer should match patterns case-sensitively.
+ *       Defaults to true. When false, the lexer lowercases the source text
+ *       before matching and performs keyword promotion on the lowercased
+ *       values. Used by case-insensitive languages like VHDL or SQL.
  */
 export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
@@ -150,6 +154,7 @@ export interface TokenGrammar {
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
   readonly groups?: Readonly<Record<string, PatternGroup>>;
+  readonly caseSensitive?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -385,6 +390,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const groups: Record<string, PatternGroup> = {};
   let mode: string | undefined;
   let escapeMode: string | undefined;
+  let caseSensitive: boolean = true;
 
   // Section tracking. We use a string to track which section we're in,
   // since sections are mutually exclusive and we can only be in one at
@@ -445,6 +451,24 @@ export function parseTokenGrammar(source: string): TokenGrammar {
         );
       }
       escapeMode = escapesValue;
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- case_sensitive: directive ---
+    // Controls whether the lexer should match case-sensitively.
+    // ``case_sensitive: false`` makes the lexer lowercase input before
+    // matching and perform keyword promotion on lowercased values.
+    if (stripped.startsWith("case_sensitive:")) {
+      const csValue = stripped.slice(stripped.indexOf(":") + 1).trim().toLowerCase();
+      if (csValue !== "true" && csValue !== "false") {
+        throw new TokenGrammarError(
+          `Invalid value for 'case_sensitive:': '${csValue}' ` +
+            "(expected 'true' or 'false')",
+          lineNumber,
+        );
+      }
+      caseSensitive = csValue === "true";
       currentSection = "definitions";
       continue;
     }
@@ -647,6 +671,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
     groups: hasGroups ? groups : undefined,
+    caseSensitive: caseSensitive ? undefined : false,
   };
 }
 

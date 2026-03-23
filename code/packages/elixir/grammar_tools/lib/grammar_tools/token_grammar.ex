@@ -43,7 +43,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             mode: nil,
             escape_mode: nil,
             groups: %{},
-            error_definitions: []
+            error_definitions: [],
+            case_sensitive: true
 
   @type token_definition :: %{
           name: String.t(),
@@ -74,7 +75,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           mode: String.t() | nil,
           escape_mode: String.t() | nil,
           groups: %{optional(String.t()) => pattern_group()},
-          error_definitions: [token_definition()]
+          error_definitions: [token_definition()],
+          case_sensitive: boolean()
         }
 
   @doc """
@@ -111,6 +113,21 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             String.starts_with?(stripped, "escapes:") ->
               escape_mode = stripped |> String.replace_prefix("escapes:", "") |> String.trim()
               {:cont, %{acc | grammar: %{acc.grammar | escape_mode: escape_mode}}}
+
+            # Case-sensitivity directive — controls whether the lexer matches
+            # patterns case-sensitively. When false, the lexer lowercases the
+            # source text before matching. Used by case-insensitive languages
+            # like VHDL or SQL.
+            String.starts_with?(stripped, "case_sensitive:") ->
+              cs_value = stripped |> String.replace_prefix("case_sensitive:", "") |> String.trim() |> String.downcase()
+
+              case cs_value do
+                v when v in ["true", "false"] ->
+                  {:cont, %{acc | grammar: %{acc.grammar | case_sensitive: v == "true"}}}
+
+                _ ->
+                  {:halt, {:error, "Line #{line_number}: Invalid value for 'case_sensitive:': #{inspect(cs_value)} (expected 'true' or 'false')"}}
+              end
 
             # Group headers — "group NAME:" declares a named pattern group.
             # Group names must be lowercase identifiers matching [a-z_][a-z0-9_]*.
