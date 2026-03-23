@@ -149,6 +149,34 @@ module CodingAdventures
       end
     end
 
+    # Scan a /pattern/ string starting at index 1 and return the index of
+    # the closing /. Skips escaped characters (\x) and does not treat /
+    # inside [...] character classes as the closing delimiter.
+    # Returns -1 if no closing slash is found.
+    def self.find_closing_slash(s)
+      in_bracket = false
+      i = 1
+      while i < s.length
+        ch = s[i]
+        if ch == "\\"
+          i += 2 # skip escaped character
+          next
+        end
+        if ch == "[" && !in_bracket
+          in_bracket = true
+        elsif ch == "]" && in_bracket
+          in_bracket = false
+        elsif ch == "/" && !in_bracket
+          return i
+        end
+        i += 1
+      end
+      # Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+      # try the last / as a best-effort parse.
+      last = s.rindex("/")
+      (last && last > 0) ? last : -1
+    end
+
     # Parse a single token definition's pattern and optional -> ALIAS suffix.
     #
     # Returns a TokenDefinition. The pattern_part may have a "-> ALIAS"
@@ -157,9 +185,11 @@ module CodingAdventures
       alias_name = nil
 
       if pattern_part.start_with?("/")
-        # Regex pattern -- find the closing /
-        last_slash = pattern_part.rindex("/")
-        if last_slash == 0
+        # Regex pattern — find the closing / by scanning character-by-character.
+        # We track bracket depth so that / inside [...] character classes is
+        # not mistaken for the closing delimiter. We also skip escaped chars.
+        last_slash = find_closing_slash(pattern_part)
+        if last_slash == -1
           raise TokenGrammarError.new(
             "Unclosed regex pattern for token #{name_part.inspect}",
             line_number

@@ -233,6 +233,42 @@ class TokenGrammar:
 # ---------------------------------------------------------------------------
 
 
+def _find_closing_slash(pattern_part: str) -> int:
+    """Find the index of the closing ``/`` in a regex pattern string.
+
+    The string is expected to start with ``/``. We scan from index 1
+    looking for the first unescaped ``/`` that is NOT inside a ``[...]``
+    character class.
+
+    If the bracket-aware scan fails (e.g. an unclosed ``[``), we fall
+    back to finding the last ``/`` so the pattern can still be parsed
+    and validated downstream.
+
+    Returns the index of the closing ``/``, or ``-1`` if not found.
+    """
+    i = 1
+    in_bracket = False
+    n = len(pattern_part)
+    while i < n:
+        ch = pattern_part[i]
+        if ch == "\\":
+            # Escaped character — skip next
+            i += 2
+            continue
+        if ch == "[" and not in_bracket:
+            in_bracket = True
+        elif ch == "]" and in_bracket:
+            in_bracket = False
+        elif ch == "/" and not in_bracket:
+            return i
+        i += 1
+
+    # Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+    # try the last / as a best-effort parse.
+    last = pattern_part.rfind("/")
+    return last if last > 0 else -1
+
+
 def _parse_definition(
     pattern_part: str,
     name_part: str,
@@ -265,12 +301,11 @@ def _parse_definition(
     # the -> in the alias with characters inside a regex pattern.
     # Strategy: find the closing delimiter first, then check for ->.
     if pattern_part.startswith("/"):
-        # Regex pattern — find the closing /
-        # The pattern could contain escaped slashes, but our format
-        # doesn't support that (slashes inside regex use [/] or other
-        # workarounds). So we find the LAST / as the closing delimiter.
-        last_slash = pattern_part.rfind("/")
-        if last_slash == 0:
+        # Regex pattern — find the closing / by scanning character-by-character.
+        # We track bracket depth so that / inside [...] character classes is
+        # not mistaken for the closing delimiter. We also skip escaped chars.
+        last_slash = _find_closing_slash(pattern_part)
+        if last_slash == -1:
             raise TokenGrammarError(
                 f"Unclosed regex pattern for token {name_part!r}",
                 line_number,

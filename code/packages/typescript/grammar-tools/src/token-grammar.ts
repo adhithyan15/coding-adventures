@@ -247,6 +247,34 @@ export function effectiveTokenNames(grammar: TokenGrammar): Set<string> {
  * @param lineNumber - The 1-based line number for error reporting.
  * @returns A TokenDefinition.
  */
+/**
+ * Scan a /pattern/ string starting at index 1 and return the index of
+ * the closing /. Skips escaped characters (\x) and does not treat /
+ * inside [...] character classes as the closing delimiter.
+ * Returns -1 if no closing slash is found.
+ */
+function findClosingSlash(s: string): number {
+  let inBracket = false;
+  for (let i = 1; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === "\\") {
+      i++; // skip escaped character
+      continue;
+    }
+    if (ch === "[" && !inBracket) {
+      inBracket = true;
+    } else if (ch === "]" && inBracket) {
+      inBracket = false;
+    } else if (ch === "/" && !inBracket) {
+      return i;
+    }
+  }
+  // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+  // try the last / as a best-effort parse.
+  const last = s.lastIndexOf("/");
+  return last > 0 ? last : -1;
+}
+
 function parseDefinition(
   namePart: string,
   patternPart: string,
@@ -265,23 +293,11 @@ function parseDefinition(
   }
 
   if (patternPart.startsWith("/")) {
-    // Regex pattern — find the closing /
-    // The closing / is the last / in the pattern portion. We scan
-    // for the second / that ends the regex (not escaped).
-    const closingSlash = patternPart.indexOf("/", 1);
-    if (closingSlash === -1) {
-      throw new TokenGrammarError(
-        `Unclosed regex pattern for token '${namePart}'`,
-        lineNumber,
-      );
-    }
-
-    // The pattern could contain slashes inside character classes or
-    // groups. To find the true closing /, we look for the LAST / that
-    // could be the closer. Strategy: find the last / in the string,
-    // then check if what follows is either empty or "-> ALIAS".
-    let lastSlash = patternPart.lastIndexOf("/");
-    if (lastSlash === 0) {
+    // Regex pattern — find the closing / by scanning character-by-character.
+    // We track bracket depth so that / inside [...] character classes is
+    // not mistaken for the closing delimiter. We also skip escaped chars.
+    const lastSlash = findClosingSlash(patternPart);
+    if (lastSlash === -1) {
       throw new TokenGrammarError(
         `Unclosed regex pattern for token '${namePart}'`,
         lineNumber,
