@@ -1,7 +1,7 @@
 cd ../../../packages/typescript/transistors && npm install
-cd ../logic-gates && npm install
-cd ../arithmetic && npm install
-cd ../eniac && npm install
-cd ../ui-components && npm install
+cd ../../../packages/typescript/logic-gates && npm install
+cd ../../../packages/typescript/arithmetic && npm install
+cd ../../../packages/typescript/eniac && npm install
+cd ../../../packages/typescript/ui-components && npm install
 cd ../../../programs/typescript/eniac-visualizer && npm install
 npx vitest run
