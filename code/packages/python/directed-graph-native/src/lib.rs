@@ -26,8 +26,8 @@ const PY_TP_DEALLOC: c_int = 52;
 const PY_TP_REPR: c_int = 66;
 const PY_TP_METHODS: c_int = 64;
 const PY_TP_NEW: c_int = 65;
-const PY_SQ_LENGTH: c_int = 38;
-const PY_SQ_CONTAINS: c_int = 37;
+const PY_MP_LENGTH: c_int = 41;   // mp_length — __len__ via mapping protocol
+const PY_SQ_CONTAINS: c_int = 37; // sq_contains — __contains__ via sequence protocol
 
 // ---------------------------------------------------------------------------
 // Instance layout: GraphObject = PyObject_HEAD + graph pointer
@@ -275,7 +275,7 @@ pub unsafe extern "C" fn PyInit_directed_graph_native() -> PyObjectPtr {
     SLOTS[1] = PyType_Slot { slot: PY_TP_DEALLOC, pfunc: graph_dealloc as *mut c_void };
     SLOTS[2] = PyType_Slot { slot: PY_TP_METHODS, pfunc: (&raw mut METHODS) as *mut c_void };
     SLOTS[3] = PyType_Slot { slot: PY_TP_REPR, pfunc: graph_repr as *mut c_void };
-    SLOTS[4] = PyType_Slot { slot: PY_SQ_LENGTH, pfunc: graph_sq_length as *mut c_void };
+    SLOTS[4] = PyType_Slot { slot: PY_MP_LENGTH, pfunc: graph_sq_length as *mut c_void };
     SLOTS[5] = PyType_Slot { slot: PY_SQ_CONTAINS, pfunc: graph_sq_contains as *mut c_void };
     SLOTS[6] = type_slot_sentinel();
 

@@ -23,22 +23,24 @@ fn main() {
             println!("cargo:rustc-cdylib-link-arg=dynamic_lookup");
         }
         "windows" => {
-            // On Windows, we need to link against the Python import library.
-            // Try to find it via the PYO3_PYTHON or PYTHON_SYS_EXECUTABLE env vars,
-            // or fall back to the python3.lib in the PATH.
-            //
-            // For maturin builds, maturin sets the correct python path.
-            // We try to find the library directory from the Python executable.
-            if let Ok(python) = std::env::var("PYO3_PYTHON")
+            // On Windows, we must link against pythonXY.lib (the import library).
+            // Try multiple strategies to find Python and its library directory.
+            let python = std::env::var("PYO3_PYTHON")
                 .or_else(|_| std::env::var("PYTHON_SYS_EXECUTABLE"))
-                .or_else(|_| which_python())
-            {
-                if let Some(lib_dir) = get_python_lib_dir(&python) {
+                .or_else(|_| which_python());
+
+            if let Ok(ref python) = python {
+                eprintln!("cargo:warning=python-bridge: found Python at {}", python);
+                if let Some(lib_dir) = get_python_lib_dir(python) {
+                    eprintln!("cargo:warning=python-bridge: lib dir = {}", lib_dir);
                     println!("cargo:rustc-link-search=native={}", lib_dir);
                 }
-                if let Some(lib_name) = get_python_lib_name(&python) {
+                if let Some(lib_name) = get_python_lib_name(python) {
+                    eprintln!("cargo:warning=python-bridge: lib name = {}", lib_name);
                     println!("cargo:rustc-link-lib={}", lib_name);
                 }
+            } else {
+                eprintln!("cargo:warning=python-bridge: could not find Python executable");
             }
         }
         _ => {
