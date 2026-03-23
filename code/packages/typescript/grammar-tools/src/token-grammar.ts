@@ -496,6 +496,10 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       currentSection = "reserved";
       continue;
     }
+    if (stripped === "errors:" || stripped === "errors :") {
+      currentSection = "errors";
+      continue;
+    }
 
     // --- Inside a section ---
     const isIndented = line[0] === " " || line[0] === "\t";
@@ -510,6 +514,22 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     if (isIndented && currentSection === "reserved") {
       if (stripped) {
         reservedKeywords.push(stripped);
+      }
+      continue;
+    }
+
+    if (isIndented && currentSection === "errors") {
+      // Error token definitions — parsed same as skip but stored separately.
+      // Error tokens match invalid input patterns and are silently ignored
+      // during tokenization (the lexer skips them like whitespace).
+      const eqIndex = stripped.indexOf("=");
+      if (eqIndex !== -1) {
+        // We parse and discard error token definitions — they are informational
+        // for documentation and future error-reporting features, not used yet.
+        const _errName = stripped.slice(0, eqIndex).trim();
+        const _errPattern = stripped.slice(eqIndex + 1).trim();
+        void _errName;
+        void _errPattern;
       }
       continue;
     }

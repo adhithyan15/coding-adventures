@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-lattice-transpiler"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Lattice source to CSS text pipeline"
+
+[dependencies]
+coding-adventures-lattice-ast-to-css = { path = "../lattice-ast-to-css" }
+coding-adventures-lattice-parser = { path = "../lattice-parser" }
+coding-adventures-lattice-lexer = { path = "../lattice-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
