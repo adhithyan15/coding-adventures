@@ -106,4 +106,5 @@ members = [
     "sha1",
     "md5",
     "uuid",
+    "immutable-list",
 ]
