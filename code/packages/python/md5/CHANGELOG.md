@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-03-23
+
+### Changed
+
+- Renamed Python module from `md5` to `ca_md5` to avoid future name conflicts
+  and for consistency with the `ca_` prefix applied to all packages in this repo.
+  Import: `from ca_md5 import md5, md5_hex, MD5`
+
 ## [0.1.0] - 2026-03-22
 
 ### Added
