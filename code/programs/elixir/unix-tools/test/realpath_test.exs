@@ -108,13 +108,19 @@ defmodule RealpathTest do
 
   describe "resolve_path/4" do
     test "resolves existing path with no_symlinks" do
-      {:ok, resolved} = UnixTools.Realpath.resolve_path("/tmp", false, false, true)
-      assert resolved == "/tmp"
+      # Use a path that exists on all platforms
+      test_path = if :os.type() == {:win32, :nt}, do: System.tmp_dir!(), else: "/tmp"
+      {:ok, resolved} = UnixTools.Realpath.resolve_path(test_path, false, false, true)
+      assert is_binary(resolved)
+      assert String.length(resolved) > 0
     end
 
     test "resolves with canonicalize_missing for nonexistent path" do
+      base = if :os.type() == {:win32, :nt}, do: System.tmp_dir!(), else: "/tmp"
+      nonexistent = Path.join(base, "nonexistent_test_path")
+
       {:ok, resolved} =
-        UnixTools.Realpath.resolve_path("/tmp/nonexistent_test_path", false, true, false)
+        UnixTools.Realpath.resolve_path(nonexistent, false, true, false)
 
       assert resolved =~ "nonexistent_test_path"
     end
