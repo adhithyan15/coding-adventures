@@ -119,6 +119,29 @@ func (s *ScopeChain) HasLocal(name string) bool {
 	return ok
 }
 
+// SetGlobal binds a name to a value in the root (global) scope.
+//
+// Walks up the parent chain to find the root scope (the one with no parent),
+// then sets the binding there. This implements the !global flag in Lattice
+// variable declarations.
+//
+// When !global is used inside a deeply nested scope (e.g., inside a mixin
+// inside a @for loop), the variable is set at the top level, making it
+// visible everywhere:
+//
+//	$theme: light;
+//	@mixin set-dark {
+//	    $theme: dark !global;
+//	    // Sets $theme in the root scope, not the mixin scope
+//	}
+func (s *ScopeChain) SetGlobal(name string, value interface{}) {
+	root := s
+	for root.parent != nil {
+		root = root.parent
+	}
+	root.bindings[name] = value
+}
+
 // Child creates a new child scope with this scope as parent.
 //
 // The child inherits all bindings from the parent chain via Get, but any
