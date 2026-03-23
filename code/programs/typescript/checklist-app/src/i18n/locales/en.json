@@ -56,5 +56,11 @@
 
   "status.inProgress": "In Progress",
   "status.completed": "Completed",
-  "status.abandoned": "Abandoned"
+  "status.abandoned": "Abandoned",
+
+  "branch.yes": "If yes:",
+  "branch.no": "If no:",
+  "branch.summary": "{checks} steps",
+  "branch.summaryWithDecisions": "{checks} steps, {decisions} decisions",
+  "branch.clickToExpand": "click to expand"
 }

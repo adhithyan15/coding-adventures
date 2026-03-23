@@ -1,0 +1,184 @@
+/*
+ * tree.css — Shared CSS for TreeView and BranchGroup components.
+ *
+ * CSS connector technique:
+ *   1. border-left on .tree__node-wrapper draws the vertical trunk
+ *   2. ::before pseudo-element draws the horizontal connector
+ *   3. :last-child variation turns T-connector into L-connector
+ *
+ * Result:
+ *   ├─ Item 1      (T-connector: trunk continues below)
+ *   ├─ Item 2      (T-connector)
+ *   │  ├─ Child A  (nested T-connector)
+ *   │  └─ Child B  (L-connector: trunk ends here)
+ *   └─ Item 3      (L-connector)
+ */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+
+:root {
+  --tree-indent: 24px;
+  --tree-connector-color: var(--panel-border, #30363d);
+  --tree-connector-width: 1px;
+  --tree-connector-horizontal: 12px;
+  --tree-branch-active-opacity: 1;
+  --tree-branch-inactive-opacity: 0.4;
+  --tree-transition-duration: 200ms;
+}
+
+/* ── Tree container ─────────────────────────────────────────────────────── */
+
+.tree {
+  font-size: 0.95rem;
+}
+
+/* ── Node wrapper (draws the vertical trunk) ────────────────────────────── */
+
+.tree__node-wrapper {
+  position: relative;
+  padding-left: var(--tree-indent);
+}
+
+/* Vertical trunk: a left border that continues from this node to the next. */
+.tree__children > .tree__node-wrapper {
+  border-left: var(--tree-connector-width) solid var(--tree-connector-color);
+  margin-left: 0;
+}
+
+/* Last child: no trunk below — switch from T to L. */
+.tree__children > .tree__node-wrapper--last {
+  border-left-color: transparent;
+}
+
+/* Horizontal connector: from the trunk to the node content. */
+.tree__children > .tree__node-wrapper::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--tree-indent);
+  width: var(--tree-connector-horizontal);
+  height: 0;
+  border-bottom: var(--tree-connector-width) solid var(--tree-connector-color);
+}
+
+/* L-connector for last child: draw the missing vertical segment
+   from the top of this node down to the horizontal connector. */
+.tree__children > .tree__node-wrapper--last::before {
+  border-left: var(--tree-connector-width) solid var(--tree-connector-color);
+  height: var(--tree-indent);
+  top: 0;
+}
+
+/* ── Node (the treeitem row) ────────────────────────────────────────────── */
+
+.tree__node {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 32px;
+  padding: 4px 0;
+}
+
+.tree__node-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Expand/collapse toggle ─────────────────────────────────────────────── */
+
+.tree__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--tree-connector-color);
+  flex-shrink: 0;
+  font-size: 10px;
+  transition: background var(--tree-transition-duration);
+}
+
+.tree__toggle:hover {
+  background: var(--panel-header, #21262d);
+}
+
+.tree__toggle-icon {
+  display: inline-block;
+  transition: transform var(--tree-transition-duration);
+}
+
+.tree__toggle-icon--expanded {
+  transform: rotate(90deg);
+}
+
+/* ── Children group ─────────────────────────────────────────────────────── */
+
+.tree__children {
+  padding-left: 0;
+}
+
+/* ── BranchGroup ────────────────────────────────────────────────────────── */
+
+.branch-group {
+  transition: opacity var(--tree-transition-duration) ease;
+}
+
+.branch-group--active {
+  opacity: var(--tree-branch-active-opacity);
+}
+
+.branch-group--inactive {
+  opacity: var(--tree-branch-inactive-opacity);
+}
+
+.branch-group--inactive .branch-group__content {
+  pointer-events: none;
+}
+
+/* ── Branch label ───────────────────────────────────────────────────────── */
+
+.branch-group__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 0;
+  color: var(--tab-text, #8b949e);
+}
+
+/* ── Branch summary (collapsed inactive) ────────────────────────────────── */
+
+.branch-group__summary {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 12px;
+  margin: 2px 0;
+  background: transparent;
+  border: 1px dashed var(--panel-border, #30363d);
+  border-radius: 6px;
+  color: var(--tab-text, #8b949e);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color var(--tree-transition-duration),
+    color var(--tree-transition-duration);
+}
+
+.branch-group__summary:hover {
+  border-color: var(--accent, #58a6ff);
+  color: var(--accent, #58a6ff);
+}
+
+/* ── Branch content ─────────────────────────────────────────────────────── */
+
+.branch-group__content {
+  transition: max-height var(--tree-transition-duration) ease,
+    opacity var(--tree-transition-duration) ease;
+}
