@@ -802,15 +802,17 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 		panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
 	}
 
-	// EOF: emit remaining DEDENTs
+	// EOF: emit NEWLINE to end the last statement, then DEDENTs to close
+	// all open blocks.  The parser expects NEWLINE before DEDENT because
+	// NEWLINE terminates the simple_stmt that precedes the block close.
+	// Python's tokenizer follows the same order: NEWLINE, DEDENT, ..., EOF.
+	if len(tokens) == 0 || tokens[len(tokens)-1].Type != TokenNewline {
+		tokens = append(tokens, Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column, TypeName: "NEWLINE"})
+	}
+
 	for len(l.indentStack) > 1 {
 		l.indentStack = l.indentStack[:len(l.indentStack)-1]
 		tokens = append(tokens, Token{Type: TokenName, Value: "", Line: l.line, Column: l.column, TypeName: "DEDENT"})
-	}
-
-	// Final NEWLINE if needed
-	if len(tokens) == 0 || tokens[len(tokens)-1].Type != TokenNewline {
-		tokens = append(tokens, Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column, TypeName: "NEWLINE"})
 	}
 
 	tokens = append(tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column, TypeName: "EOF"})
