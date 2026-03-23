@@ -1,6 +1,7 @@
 package jsonparser
 
 import (
+	"os"
 	"testing"
 )
 
@@ -483,5 +484,67 @@ func TestParseJSONAllValueTypes(t *testing.T) {
 
 	if program.RuleName != "value" {
 		t.Fatalf("Expected root rule 'value', got %q", program.RuleName)
+	}
+}
+
+// =============================================================================
+// TestCreateJSONParserErrorMissingFile
+// =============================================================================
+//
+// Verifies that CreateJSONParser returns an error when the grammar file cannot
+// be found. This covers the os.ReadFile error path that is otherwise
+// unreachable in normal test runs (the grammar file always exists).
+//
+// We override the package-level jsonGrammarPath variable, then restore it
+// with defer — the standard Go pattern for testing file-path-dependent code.
+func TestCreateJSONParserErrorMissingFile(t *testing.T) {
+	original := jsonGrammarPath
+	jsonGrammarPath = "/does/not/exist/json.grammar"
+	defer func() { jsonGrammarPath = original }()
+
+	_, err := CreateJSONParser(`{"key": "value"}`)
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestParseJSONErrorPropagates
+// =============================================================================
+//
+// Verifies that ParseJSON propagates errors from CreateJSONParser. This
+// covers the `if err != nil { return nil, err }` path inside ParseJSON.
+func TestParseJSONErrorPropagates(t *testing.T) {
+	original := jsonGrammarPath
+	jsonGrammarPath = "/does/not/exist/json.grammar"
+	defer func() { jsonGrammarPath = original }()
+
+	_, err := ParseJSON(`[1, 2, 3]`)
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestCreateJSONParserErrorInvalidGrammar
+// =============================================================================
+//
+// Verifies that CreateJSONParser returns an error when the grammar file exists
+// but contains invalid EBNF content. This covers the ParseParserGrammar error
+// path, which is the third error return in CreateJSONParser.
+func TestCreateJSONParserErrorInvalidGrammar(t *testing.T) {
+	tmp := t.TempDir()
+	badPath := tmp + "/bad.grammar"
+	if err := os.WriteFile(badPath, []byte("not valid EBNF %%%\n"), 0o644); err != nil {
+		t.Fatalf("Failed to write temp grammar: %v", err)
+	}
+
+	original := jsonGrammarPath
+	jsonGrammarPath = badPath
+	defer func() { jsonGrammarPath = original }()
+
+	_, err := CreateJSONParser(`{"key": "value"}`)
+	if err == nil {
+		t.Error("Expected error for invalid grammar content, got nil")
 	}
 }
