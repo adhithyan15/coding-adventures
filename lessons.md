@@ -396,3 +396,19 @@ When a Python package's `pyproject.toml` declares a dependency on another local 
 Elixir heredoc strings in test files (triple-quoted `"""`) embed literal line endings. When git's `autocrlf` converts `\n` to `\r\n` on Windows checkout, the heredoc strings contain `\r\n` but the serializer produces `\n`, causing test assertion failures.
 
 **Fix:** Add `.gitattributes` with `* text=auto eol=lf` to force LF line endings on all platforms. This prevents CRLF-related test failures across all languages (Elixir, Ruby, Python doctests, etc.).
+
+---
+
+### 2026-03-23: Always use the scaffold generator to create new packages
+
+Hand-crafting multi-language packages causes 12+ recurring CI failure categories: missing BUILD files, TypeScript `main` pointing to `dist/` instead of `src/`, missing transitive dependencies, Ruby require ordering issues, Rust workspace `Cargo.toml` not updated, missing README or CHANGELOG, etc.
+
+**Rule:** Always build and use `code/programs/go/scaffold-generator/` before writing any implementation code for a new package.
+
+```bash
+cd code/programs/go/scaffold-generator
+go build -o scaffold-generator .
+./scaffold-generator <package-name> --language all --depends-on <dep1,dep2> --description "..."
+```
+
+The scaffold generator handles: correct directory naming per language (Ruby/Elixir use underscores), BUILD files for all platforms, `go.mod` with `replace` directives, TypeScript `package.json` with `src/index.ts` as main, Rust workspace membership, and transitive dependency resolution.
