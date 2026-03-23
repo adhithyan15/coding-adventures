@@ -34,6 +34,14 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       assert err.message =~ "500"
       assert err.max_iterations == 500
     end
+
+    test "creates error with max_iterations and line (2-arg arity)" do
+      err = MaxIterationError.new(200, 10)
+      assert err.message =~ "200"
+      assert err.max_iterations == 200
+      assert err.line == 10
+      assert err.column == 0
+    end
   end
 
   describe "ExtendTargetNotFoundError" do
@@ -42,6 +50,14 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       assert err.message =~ "%message-shared"
       assert err.target == "%message-shared"
     end
+
+    test "creates error with target and line (2-arg arity)" do
+      err = ExtendTargetNotFoundError.new(".btn", 42)
+      assert err.message =~ ".btn"
+      assert err.target == ".btn"
+      assert err.line == 42
+      assert err.column == 0
+    end
   end
 
   describe "RangeError" do
@@ -49,12 +65,26 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       err = RangeError.new("Index 5 out of bounds")
       assert err.message == "Index 5 out of bounds"
     end
+
+    test "creates error with message and line (2-arg arity)" do
+      err = RangeError.new("Index out of range", 15)
+      assert err.message == "Index out of range"
+      assert err.line == 15
+      assert err.column == 0
+    end
   end
 
   describe "ZeroDivisionInExpressionError" do
     test "creates error" do
       err = ZeroDivisionInExpressionError.new()
       assert err.message == "Division by zero"
+    end
+
+    test "creates error with line (1-arg arity)" do
+      err = ZeroDivisionInExpressionError.new(7)
+      assert err.message == "Division by zero"
+      assert err.line == 7
+      assert err.column == 0
     end
   end
 
