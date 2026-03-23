@@ -1,0 +1,30 @@
+{
+  "name": "coding-adventures-json-serializer",
+  "version": "0.1.0",
+  "description": "JSON serializer — converts JsonValue or native types to compact or pretty-printed JSON text",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "json",
+    "serializer",
+    "stringify",
+    "pretty-print",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "coding-adventures-json-value": "file:../json-value"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

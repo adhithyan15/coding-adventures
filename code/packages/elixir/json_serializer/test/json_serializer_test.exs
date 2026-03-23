@@ -292,7 +292,7 @@ defmodule CodingAdventures.JsonSerializerTest do
 
     test "42. tab indent" do
       obj = {:object, [{"a", {:number, 1}}]}
-      {:ok, text} = JsonSerializer.serialize_pretty(obj, indent_char: "\t")
+      {:ok, text} = JsonSerializer.serialize_pretty(obj, indent_char: "\t", indent_size: 1)
       assert text == "{\n\t\"a\": 1\n}"
     end
 
@@ -553,6 +553,104 @@ defmodule CodingAdventures.JsonSerializerTest do
       z_pos = :binary.match(text, "\"z\"") |> elem(0)
       a_pos = :binary.match(text, "\"a\"") |> elem(0)
       assert z_pos < a_pos
+    end
+
+    test "76. pretty-print single-element array" do
+      arr = {:array, [{:number, 42}]}
+      {:ok, text} = JsonSerializer.serialize_pretty(arr)
+      assert text == "[\n  42\n]"
+    end
+
+    test "77. pretty-print nested arrays with sort_keys" do
+      obj = {:object, [
+        {"b", {:array, [{:number, 2}]}},
+        {"a", {:array, [{:number, 1}]}}
+      ]}
+      {:ok, text} = JsonSerializer.serialize_pretty(obj, sort_keys: true)
+      a_pos = :binary.match(text, "\"a\"") |> elem(0)
+      b_pos = :binary.match(text, "\"b\"") |> elem(0)
+      assert a_pos < b_pos
+    end
+
+    test "78. compact serialize string with all escape types" do
+      # String with every escape char type
+      input_str = "\"\\\b\f\n\r\t" <> <<0x01>> <> <<0x1F>>
+      {:ok, text} = JsonSerializer.serialize({:string, input_str})
+      assert String.contains?(text, "\\\"")
+      assert String.contains?(text, "\\\\")
+      assert String.contains?(text, "\\b")
+      assert String.contains?(text, "\\f")
+      assert String.contains?(text, "\\n")
+      assert String.contains?(text, "\\r")
+      assert String.contains?(text, "\\t")
+      assert String.contains?(text, "\\u0001")
+      assert String.contains?(text, "\\u001f")
+    end
+
+    test "79. compact serialize large negative integer" do
+      assert {:ok, "-999999"} = JsonSerializer.serialize({:number, -999_999})
+    end
+
+    test "80. pretty-print with trailing newline on array" do
+      arr = {:array, [{:number, 1}]}
+      {:ok, text} = JsonSerializer.serialize_pretty(arr, trailing_newline: true)
+      assert String.ends_with?(text, "\n")
+    end
+
+    test "81. pretty-print boolean value" do
+      {:ok, text} = JsonSerializer.serialize_pretty({:boolean, false})
+      assert text == "false"
+    end
+
+    test "82. pretty-print with trailing newline on string" do
+      {:ok, text} = JsonSerializer.serialize_pretty({:string, "hi"}, trailing_newline: true)
+      assert text == "\"hi\"\n"
+    end
+
+    test "83. stringify_pretty with trailing_newline" do
+      {:ok, text} = JsonSerializer.stringify_pretty(%{"a" => 1}, trailing_newline: true)
+      assert String.ends_with?(text, "\n")
+    end
+
+    test "84. stringify empty list" do
+      assert {:ok, "[]"} = JsonSerializer.stringify([])
+    end
+
+    test "85. stringify empty map" do
+      assert {:ok, "{}"} = JsonSerializer.stringify(%{})
+    end
+
+    test "86. pretty multiple pairs object" do
+      obj = {:object, [
+        {"a", {:number, 1}},
+        {"b", {:string, "two"}},
+        {"c", {:boolean, true}},
+        {"d", :null}
+      ]}
+      {:ok, text} = JsonSerializer.serialize_pretty(obj)
+      expected = "{\n  \"a\": 1,\n  \"b\": \"two\",\n  \"c\": true,\n  \"d\": null\n}"
+      assert text == expected
+    end
+
+    test "87. compact array with nested objects" do
+      arr = {:array, [{:object, [{"x", {:number, 1}}]}, {:object, [{"y", {:number, 2}}]}]}
+      {:ok, text} = JsonSerializer.serialize(arr)
+      assert text == ~s([{"x":1},{"y":2}])
+    end
+
+    test "88. compact object with null value" do
+      obj = {:object, [{"key", :null}]}
+      assert {:ok, ~s({"key":null})} = JsonSerializer.serialize(obj)
+    end
+
+    test "89. compact object with boolean values" do
+      obj = {:object, [{"t", {:boolean, true}}, {"f", {:boolean, false}}]}
+      assert {:ok, ~s({"t":true,"f":false})} = JsonSerializer.serialize(obj)
+    end
+
+    test "90. stringify nested list" do
+      {:ok, text} = JsonSerializer.stringify([[1, 2], [3]])
+      assert text == "[[1,2],[3]]"
     end
   end
 end

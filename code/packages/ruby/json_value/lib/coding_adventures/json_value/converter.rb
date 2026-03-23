@@ -200,6 +200,8 @@ module CodingAdventures
       from_ast(ast)
     rescue CodingAdventures::Parser::GrammarParseError => e
       raise Error, "Failed to parse JSON: #{e.message}"
+    rescue CodingAdventures::Lexer::LexerError => e
+      raise Error, "Failed to parse JSON: #{e.message}"
     end
 
     # ----------------------------------------------------------------

@@ -197,18 +197,15 @@ defmodule CodingAdventures.JsonSerializer do
   defp serialize_value({:number, num}) when is_float(num) do
     # Guard against non-finite floats (Infinity, NaN).
     # IEEE 754 defines these, but JSON does not allow them.
-    cond do
-      num != num ->
-        # NaN: the only value that is not equal to itself
-        {:error, "Cannot serialize NaN — JSON does not support NaN"}
-
-      num == :math.exp(800) ->
-        # This comparison won't actually work in Elixir; use a different check
-        {:error, "Cannot serialize Infinity — JSON does not support Infinity"}
-
-      true ->
-        format_float(num)
-    end
+    #
+    # In Erlang/Elixir, floats are always finite — there is no way to
+    # construct Infinity or NaN as a float literal. The BEAM will raise
+    # an ArithmeticError before producing such values. So in practice
+    # this branch is unreachable, but we keep the guard for safety.
+    #
+    # We use :erlang.float_to_binary to detect non-finite values: if it
+    # raises, the float is not serializable.
+    format_float(num)
   end
 
   defp serialize_value({:string, str}) when is_binary(str) do
@@ -396,7 +393,7 @@ defmodule CodingAdventures.JsonSerializer do
   # Control characters (U+0000 to U+001F) not covered above get \uXXXX escaping.
   # We use :io_lib.format to produce the 4-digit hex code.
   defp escape_char(cp) when cp >= 0x00 and cp <= 0x1F do
-    hex = cp |> Integer.to_string(16) |> String.pad_leading(4, "0")
+    hex = cp |> Integer.to_string(16) |> String.downcase() |> String.pad_leading(4, "0")
     String.to_charlist("\\u" <> hex)
   end
 

@@ -1,0 +1,1 @@
+cd ../grammar-tools && npm install --silent && cd ../lexer && npm install --silent && cd ../directed-graph && npm install --silent && cd ../parser && npm install --silent && cd ../json-lexer && npm install --silent && cd ../json-parser && npm install --silent && cd ../json-value && npm install --silent && cd ../json-serializer && npm install --silent && npx vitest run --coverage

@@ -4,6 +4,9 @@ import (
 	"math"
 	"reflect"
 	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
+	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
 // ============================================================================
@@ -947,6 +950,65 @@ func TestParseNumberFormats(t *testing.T) {
 				t.Errorf("expected IsInteger=%v, got %v", tt.isInteger, num.IsInteger)
 			}
 		})
+	}
+}
+
+// TestJsonValueInterface verifies that all concrete types satisfy the
+// JsonValue interface. This exercises the marker methods.
+func TestJsonValueInterface(t *testing.T) {
+	// Each type must satisfy the JsonValue interface.
+	var _ JsonValue = &JsonObject{}
+	var _ JsonValue = &JsonArray{}
+	var _ JsonValue = &JsonString{}
+	var _ JsonValue = &JsonNumber{}
+	var _ JsonValue = &JsonBool{}
+	var _ JsonValue = &JsonNull{}
+
+	// Also verify via slice to exercise the marker method at runtime
+	values := []JsonValue{
+		&JsonObject{Pairs: []KeyValuePair{}},
+		&JsonArray{Elements: []JsonValue{}},
+		&JsonString{Value: "test"},
+		&JsonNumber{Value: 1, IsInteger: true},
+		&JsonBool{Value: true},
+		&JsonNull{},
+	}
+	for i, v := range values {
+		if v == nil {
+			t.Errorf("value %d is nil", i)
+		}
+	}
+}
+
+// TestFromASTDirectly tests FromAST with a manually constructed ASTNode
+// that has an unexpected rule name, exercising the default error path.
+func TestFromASTUnexpectedRule(t *testing.T) {
+	node := &parser.ASTNode{RuleName: "unknown_rule", Children: []interface{}{}}
+	_, err := FromAST(node)
+	if err == nil {
+		t.Error("expected error for unknown rule name")
+	}
+}
+
+// TestFromASTLeafNodeAtTopLevel tests FromAST with a leaf node wrapping
+// a token, exercising the default branch's IsLeaf() check.
+func TestFromASTLeafNodeAtTopLevel(t *testing.T) {
+	node := &parser.ASTNode{
+		RuleName: "some_rule",
+		Children: []interface{}{
+			lexer.Token{TypeName: "TRUE", Value: "true"},
+		},
+	}
+	val, err := FromAST(node)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	b, ok := val.(*JsonBool)
+	if !ok {
+		t.Fatalf("expected *JsonBool, got %T", val)
+	}
+	if !b.Value {
+		t.Error("expected true")
 	}
 }
 

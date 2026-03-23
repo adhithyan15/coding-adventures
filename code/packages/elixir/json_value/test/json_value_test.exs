@@ -197,6 +197,135 @@ defmodule CodingAdventures.JsonValueTest do
       {:error, msg} = JsonValue.from_ast("not an AST")
       assert msg =~ "Expected"
     end
+
+    test "23b. from_ast with a raw Token (STRING)" do
+      token = %CodingAdventures.Lexer.Token{type: "STRING", value: "hello", line: 1, column: 1}
+      {:ok, result} = JsonValue.from_ast(token)
+      assert result == {:string, "hello"}
+    end
+
+    test "23c. from_ast with a raw Token (NUMBER int)" do
+      token = %CodingAdventures.Lexer.Token{type: "NUMBER", value: "42", line: 1, column: 1}
+      {:ok, result} = JsonValue.from_ast(token)
+      assert result == {:number, 42}
+    end
+
+    test "23d. from_ast with a raw Token (NUMBER float)" do
+      token = %CodingAdventures.Lexer.Token{type: "NUMBER", value: "3.14", line: 1, column: 1}
+      {:ok, result} = JsonValue.from_ast(token)
+      assert result == {:number, 3.14}
+    end
+
+    test "23e. from_ast with a raw Token (TRUE)" do
+      token = %CodingAdventures.Lexer.Token{type: "TRUE", value: "true", line: 1, column: 1}
+      {:ok, result} = JsonValue.from_ast(token)
+      assert result == {:boolean, true}
+    end
+
+    test "23f. from_ast with a raw Token (FALSE)" do
+      token = %CodingAdventures.Lexer.Token{type: "FALSE", value: "false", line: 1, column: 1}
+      {:ok, result} = JsonValue.from_ast(token)
+      assert result == {:boolean, false}
+    end
+
+    test "23g. from_ast with a raw Token (NULL)" do
+      token = %CodingAdventures.Lexer.Token{type: "NULL", value: "null", line: 1, column: 1}
+      {:ok, result} = JsonValue.from_ast(token)
+      assert result == :null
+    end
+
+    test "23h. from_ast with unexpected token type" do
+      token = %CodingAdventures.Lexer.Token{type: "LBRACE", value: "{", line: 1, column: 1}
+      {:error, msg} = JsonValue.from_ast(token)
+      assert msg =~ "Unexpected token"
+    end
+
+    test "23i. from_ast with unexpected rule_name" do
+      node = %CodingAdventures.Parser.ASTNode{rule_name: "unknown", children: []}
+      {:error, msg} = JsonValue.from_ast(node)
+      assert msg =~ "Unexpected rule"
+    end
+
+    test "23j. from_ast with empty value node" do
+      node = %CodingAdventures.Parser.ASTNode{rule_name: "value", children: []}
+      {:error, msg} = JsonValue.from_ast(node)
+      assert msg =~ "Empty value"
+    end
+
+    test "23k. from_ast with value node containing only structural tokens" do
+      # A value node with only non-meaningful tokens (e.g., COLON)
+      colon = %CodingAdventures.Lexer.Token{type: "COLON", value: ":", line: 1, column: 1}
+      node = %CodingAdventures.Parser.ASTNode{rule_name: "value", children: [colon]}
+      {:error, msg} = JsonValue.from_ast(node)
+      assert msg =~ "Empty value"
+    end
+
+    test "23l. from_ast with pair missing key" do
+      value_node = %CodingAdventures.Parser.ASTNode{
+        rule_name: "value",
+        children: [
+          %CodingAdventures.Lexer.Token{type: "NUMBER", value: "1", line: 1, column: 1}
+        ]
+      }
+
+      pair_node = %CodingAdventures.Parser.ASTNode{
+        rule_name: "pair",
+        children: [value_node]
+      }
+
+      object_node = %CodingAdventures.Parser.ASTNode{
+        rule_name: "object",
+        children: [pair_node]
+      }
+
+      {:error, msg} = JsonValue.from_ast(object_node)
+      assert msg =~ "missing key"
+    end
+
+    test "23m. from_ast with pair missing value" do
+      key_token = %CodingAdventures.Lexer.Token{
+        type: "STRING",
+        value: "key",
+        line: 1,
+        column: 1
+      }
+
+      pair_node = %CodingAdventures.Parser.ASTNode{
+        rule_name: "pair",
+        children: [key_token]
+      }
+
+      object_node = %CodingAdventures.Parser.ASTNode{
+        rule_name: "object",
+        children: [pair_node]
+      }
+
+      {:error, msg} = JsonValue.from_ast(object_node)
+      assert msg =~ "missing value"
+    end
+
+    test "23n. from_ast with number exponent and E (uppercase)" do
+      {:ok, ast} = CodingAdventures.JsonParser.parse("1E10")
+      {:ok, result} = JsonValue.from_ast(ast)
+      assert {:number, num} = result
+      assert is_float(num)
+    end
+
+    test "23o. from_ast with negative exponent" do
+      {:ok, ast} = CodingAdventures.JsonParser.parse("1e-5")
+      {:ok, result} = JsonValue.from_ast(ast)
+      assert {:number, num} = result
+      assert is_float(num)
+      assert_in_delta num, 1.0e-5, 1.0e-10
+    end
+
+    test "23p. from_ast with float exponent (has dot and e)" do
+      {:ok, ast} = CodingAdventures.JsonParser.parse("1.5e2")
+      {:ok, result} = JsonValue.from_ast(ast)
+      assert {:number, num} = result
+      assert is_float(num)
+      assert_in_delta num, 150.0, 0.001
+    end
   end
 
   # ===========================================================================
@@ -310,7 +439,7 @@ defmodule CodingAdventures.JsonValueTest do
       }
 
       {:ok, result} = JsonValue.from_native(native)
-      assert {:object, pairs} = result
+      assert {:object, _pairs} = result
 
       # Convert back to native to verify round-trip
       reconstructed = JsonValue.to_native(result)

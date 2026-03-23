@@ -621,11 +621,23 @@ func FromNative(value interface{}) (JsonValue, error) {
 //
 //	val, err := Parse(`{"name": "Alice", "age": 30}`)
 //	// val is *JsonObject with two pairs
-func Parse(text string) (JsonValue, error) {
-	ast, err := jsonparser.ParseJSON(text)
-	if err != nil {
+func Parse(text string) (result JsonValue, err error) {
+	// The lexer may panic on invalid input (e.g., unexpected characters).
+	// We recover from the panic and return it as an error instead, so
+	// callers get a clean error interface rather than a crash.
+	defer func() {
+		if r := recover(); r != nil {
+			result = nil
+			err = &JsonValueError{
+				Message: fmt.Sprintf("parse error: %v", r),
+			}
+		}
+	}()
+
+	ast, parseErr := jsonparser.ParseJSON(text)
+	if parseErr != nil {
 		return nil, &JsonValueError{
-			Message: fmt.Sprintf("parse error: %s", err.Error()),
+			Message: fmt.Sprintf("parse error: %s", parseErr.Error()),
 		}
 	}
 	return FromAST(ast)
