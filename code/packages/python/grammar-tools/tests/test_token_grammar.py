@@ -972,3 +972,117 @@ class TestPatternGroupErrors:
         )
         with pytest.raises(TokenGrammarError, match="Incomplete definition"):
             parse_token_grammar(source)
+
+
+# ---------------------------------------------------------------------------
+# Magic comments
+# ---------------------------------------------------------------------------
+
+
+class TestMagicComments:
+    """Tests for magic comment directives (# @key value) in .tokens files.
+
+    Magic comments allow grammar authors to embed metadata in comment lines
+    so the file remains valid to any tool that treats # as a plain comment.
+    They use the form ``# @key value`` and must occupy an entire line.
+
+    Recognised directives:
+        ``# @version N``              — sets TokenGrammar.version to N
+        ``# @case_insensitive true``  — sets case_insensitive to True
+        ``# @case_insensitive false`` — sets case_insensitive to False
+
+    All other ``@key`` directives are silently ignored.
+    """
+
+    def test_version_is_set(self) -> None:
+        """# @version 1 sets grammar.version to 1."""
+        source = "# @version 1\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 1
+
+    def test_version_larger_number(self) -> None:
+        """# @version 42 sets grammar.version to 42."""
+        source = "# @version 42\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 42
+
+    def test_version_default_zero(self) -> None:
+        """Without # @version, grammar.version defaults to 0."""
+        source = "NUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 0
+
+    def test_case_insensitive_true(self) -> None:
+        """# @case_insensitive true sets case_insensitive to True."""
+        source = "# @case_insensitive true\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.case_insensitive is True
+
+    def test_case_insensitive_false(self) -> None:
+        """# @case_insensitive false sets case_insensitive to False."""
+        source = "# @case_insensitive false\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.case_insensitive is False
+
+    def test_case_insensitive_default_false(self) -> None:
+        """Without # @case_insensitive, case_insensitive defaults to False."""
+        source = "NUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.case_insensitive is False
+
+    def test_unknown_magic_key_silently_ignored(self) -> None:
+        """An unrecognised @key does not raise an error."""
+        source = "# @future_directive foo\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        # We only check that parsing succeeded and defaults are intact.
+        assert grammar.version == 0
+        assert grammar.case_insensitive is False
+        assert len(grammar.definitions) == 1
+
+    def test_multiple_magic_comments_together(self) -> None:
+        """Both @version and @case_insensitive can appear in the same file."""
+        source = (
+            "# @version 3\n"
+            "# @case_insensitive true\n"
+            "NUMBER = /[0-9]+/\n"
+        )
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 3
+        assert grammar.case_insensitive is True
+
+    def test_magic_comment_mixed_with_normal_comments(self) -> None:
+        """Magic comments and ordinary comments coexist peacefully."""
+        source = (
+            "# This is an ordinary comment\n"
+            "# @version 2\n"
+            "# Another ordinary comment\n"
+            "NUMBER = /[0-9]+/\n"
+        )
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 2
+        assert len(grammar.definitions) == 1
+
+    def test_magic_comment_extra_whitespace(self) -> None:
+        """Extra whitespace around @ and the value is handled correctly."""
+        source = "#  @version   7\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 7
+
+    def test_version_non_integer_silently_ignored(self) -> None:
+        """A non-integer @version value is silently ignored (version stays 0)."""
+        source = "# @version not_a_number\nNUMBER = /[0-9]+/\n"
+        grammar = parse_token_grammar(source)
+        assert grammar.version == 0
+
+    def test_magic_comments_do_not_affect_definitions(self) -> None:
+        """Magic comments do not accidentally consume or corrupt definitions."""
+        source = (
+            "# @version 1\n"
+            "# @case_insensitive true\n"
+            "NUMBER = /[0-9]+/\n"
+            "PLUS   = \"+\"\n"
+        )
+        grammar = parse_token_grammar(source)
+        assert len(grammar.definitions) == 2
+        assert grammar.definitions[0].name == "NUMBER"
+        assert grammar.definitions[1].name == "PLUS"

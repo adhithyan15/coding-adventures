@@ -3,6 +3,7 @@ package grammartools
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -40,7 +41,14 @@ type PatternGroup struct {
 }
 
 // TokenGrammar represents the complete contents of a parsed .tokens file.
+//
+// Magic comments at the top of the file configure the grammar:
+//
+//	# @version 1           — pins to format version 1 (default: 0, meaning latest)
+//	# @case_insensitive true  — keywords matched case-insensitively (default: false)
 type TokenGrammar struct {
+	Version          int                      // From # @version N magic comment (0 = latest)
+	CaseInsensitive  bool                     // From # @case_insensitive true magic comment
 	Definitions      []TokenDefinition
 	Keywords         []string
 	Mode             string                   // Lexer mode (e.g. "indentation")
@@ -195,6 +203,12 @@ func parseDefinition(patternPart, namePart string, lineNumber int) (TokenDefinit
 	return defn, nil
 }
 
+// magicCommentRe matches magic comment lines of the form: # @key value
+// The first capture group is the key (e.g. "version", "case_insensitive").
+// The second capture group is the value (e.g. "1", "true").
+// Unknown keys are silently ignored for forward compatibility.
+var magicCommentRe = regexp.MustCompile(`^#\s*@(\w+)\s*(.*)$`)
+
 // groupNameRe matches valid group names: lowercase identifiers like "tag"
 // or "cdata_section". Group names must start with a lowercase letter or
 // underscore, followed by lowercase letters, digits, or underscores.
@@ -237,7 +251,23 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 		line := strings.TrimRight(rawLine, " \t\r")
 		stripped := strings.TrimSpace(line)
 
-		if stripped == "" || strings.HasPrefix(stripped, "#") {
+		if stripped == "" {
+			continue
+		}
+		if strings.HasPrefix(stripped, "#") {
+			// Magic comments: # @key value — configure the grammar.
+			// Unknown keys are silently ignored for forward compatibility.
+			if m := magicCommentRe.FindStringSubmatch(stripped); m != nil {
+				key, value := m[1], strings.TrimSpace(m[2])
+				switch key {
+				case "version":
+					if n, err := strconv.Atoi(value); err == nil {
+						grammar.Version = n
+					}
+				case "case_insensitive":
+					grammar.CaseInsensitive = (value == "true")
+				}
+			}
 			continue
 		}
 

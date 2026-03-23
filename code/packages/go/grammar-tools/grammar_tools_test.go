@@ -1319,3 +1319,116 @@ func TestCrossValidateSyntheticTokensAlwaysValid(t *testing.T) {
 		}
 	}
 }
+
+// ── Magic comment tests ────────────────────────────────────────────────────
+
+func TestMagicCommentVersionTokenGrammar(t *testing.T) {
+	// # @version N sets the Version field.
+	source := "# @version 1\nNAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.Version != 1 {
+		t.Errorf("Expected Version 1, got %d", grammar.Version)
+	}
+}
+
+func TestMagicCommentVersionDefaultsToZero(t *testing.T) {
+	// Missing @version defaults to 0 (latest).
+	source := "NAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.Version != 0 {
+		t.Errorf("Expected Version 0, got %d", grammar.Version)
+	}
+}
+
+func TestMagicCommentCaseInsensitiveTrue(t *testing.T) {
+	// # @case_insensitive true sets CaseInsensitive to true.
+	source := "# @case_insensitive true\nNAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if !grammar.CaseInsensitive {
+		t.Error("Expected CaseInsensitive true")
+	}
+}
+
+func TestMagicCommentCaseInsensitiveFalse(t *testing.T) {
+	// # @case_insensitive false is the default; explicit false also works.
+	source := "# @case_insensitive false\nNAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.CaseInsensitive {
+		t.Error("Expected CaseInsensitive false")
+	}
+}
+
+func TestMagicCommentCaseInsensitiveDefaultsFalse(t *testing.T) {
+	// Missing @case_insensitive defaults to false.
+	source := "NAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.CaseInsensitive {
+		t.Error("Expected CaseInsensitive false by default")
+	}
+}
+
+func TestMagicCommentUnknownKeyIgnored(t *testing.T) {
+	// Unknown @keys are silently ignored for forward compatibility.
+	source := "# @future_option value\nNAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error for unknown magic comment key: %v", err)
+	}
+	if grammar.Version != 0 || grammar.CaseInsensitive {
+		t.Error("Unknown magic comment key should not affect grammar")
+	}
+}
+
+func TestMagicCommentBothOnTokenGrammar(t *testing.T) {
+	// Both @version and @case_insensitive can appear together.
+	source := "# @version 1\n# @case_insensitive true\nNAME = /[a-z]+/"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.Version != 1 {
+		t.Errorf("Expected Version 1, got %d", grammar.Version)
+	}
+	if !grammar.CaseInsensitive {
+		t.Error("Expected CaseInsensitive true")
+	}
+}
+
+func TestMagicCommentVersionOnParserGrammar(t *testing.T) {
+	// # @version N on a .grammar file sets ParserGrammar.Version.
+	source := "# @version 1\nprogram = NAME ;"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.Version != 1 {
+		t.Errorf("Expected Version 1, got %d", grammar.Version)
+	}
+}
+
+func TestMagicCommentVersionParserGrammarDefaultsToZero(t *testing.T) {
+	// Missing @version on .grammar defaults to 0.
+	source := "program = NAME ;"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if grammar.Version != 0 {
+		t.Errorf("Expected Version 0, got %d", grammar.Version)
+	}
+}

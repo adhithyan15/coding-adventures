@@ -111,14 +111,19 @@ module CodingAdventures
     #                      (default true). When false, the lexer lowercases
     #                      the source text before matching. Used by
     #                      case-insensitive languages like VHDL and SQL.
+    # version           -- integer schema version from "# @version N" magic
+    #                      comment; defaults to 0 when not specified
+    # case_insensitive  -- when true, token patterns should be matched without
+    #                      regard to letter case; set via "# @case_insensitive
+    #                      true" magic comment; defaults to false
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :error_definitions, :reserved_keywords, :groups
-      attr_accessor :mode, :escape_mode, :case_sensitive
+      attr_accessor :mode, :escape_mode, :case_sensitive, :version, :case_insensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
-                     reserved_keywords: [],
-                     escape_mode: nil, groups: {}, case_sensitive: true)
+                     reserved_keywords: [], escape_mode: nil, groups: {},
+                     case_sensitive: true, version: 0, case_insensitive: false)
         @definitions = definitions
         @keywords = keywords
         @mode = mode
@@ -128,6 +133,8 @@ module CodingAdventures
         @escape_mode = escape_mode
         @groups = groups
         @case_sensitive = case_sensitive
+        @version = version
+        @case_insensitive = case_insensitive
       end
 
       # Return the set of all defined token names (including aliases).
@@ -309,8 +316,36 @@ module CodingAdventures
         line = raw_line.rstrip
         stripped = line.strip
 
-        # Blank lines and comments are always skipped.
-        next if stripped.empty? || stripped.start_with?("#")
+        # Blank lines are always skipped.
+        next if stripped.empty?
+
+        # Comment lines: check for magic comments before skipping.
+        #
+        # A magic comment has the form:
+        #
+        #   # @key value
+        #
+        # where key is an identifier and value is the rest of the line.
+        # Known keys:
+        #   @version N             -- sets grammar.version to N (integer)
+        #   @case_insensitive true/false -- sets grammar.case_insensitive
+        #
+        # Unknown keys are silently ignored so that future extensions do not
+        # break older parsers. Regular comments (no @key) are also ignored.
+        if stripped.start_with?("#")
+          if (m = stripped.match(/^#\s*@(\w+)\s*(.*)/))
+            key = m[1]
+            value = m[2].strip
+            case key
+            when "version"
+              grammar.version = value.to_i
+            when "case_insensitive"
+              grammar.case_insensitive = (value == "true")
+            end
+            # Unknown keys: silently ignore (fall through to next)
+          end
+          next
+        end
 
         # mode: directive -- sets the lexer mode.
         if stripped.start_with?("mode:")

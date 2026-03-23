@@ -141,6 +141,26 @@ export interface PatternGroup {
  *   groups: Named pattern groups for context-sensitive lexing. Each group
  *       contains an ordered list of token definitions that are only active
  *       when the group is at the top of the lexer's group stack.
+ *   version: Grammar file version number, from `# @version N` magic comment.
+ *       Defaults to 0 (meaning "latest" or "unversioned").
+ *   caseInsensitive: Whether the lexer should match tokens case-insensitively,
+ *       from `# @case_insensitive true` magic comment. Defaults to false.
+ *
+ * Magic comments
+ * --------------
+ *
+ * Lines beginning with `# @key value` are "magic comments." They look like
+ * ordinary comments but carry structured metadata for tooling. This is the
+ * same convention used by many languages (Python's `# type:`, PHP's
+ * `// @var`, etc.) — keeping metadata in comments means the file stays
+ * human-readable and backward-compatible with tools that just skip comments.
+ *
+ * Supported magic comments:
+ *   # @version N             — integer schema version (default 0 = latest)
+ *   # @case_insensitive true — enable case-insensitive matching (default false)
+ *
+ * Unknown keys are silently ignored, making it easy to add new metadata in
+ * the future without breaking older parsers.
  */
 export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
@@ -153,6 +173,10 @@ export interface TokenGrammar {
   /** Controls whether the lexer matches case-sensitively. Defaults to true.
    *  When false, the lexer lowercases source text before matching. */
   readonly caseSensitive?: boolean;
+  /** Grammar file version number from `# @version N` magic comment. Defaults to 0. */
+  readonly version: number;
+  /** Whether the lexer should match case-insensitively, from `# @case_insensitive true`. */
+  readonly caseInsensitive: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -384,6 +408,17 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   let escapeMode: string | undefined;
   let caseSensitive: boolean = true;
 
+  // Magic comment state. These are collected from `# @key value` lines
+  // anywhere in the file before being used in the returned grammar.
+  // We initialize to the defaults so callers always see well-typed values.
+  let version = 0;
+  let caseInsensitive = false;
+
+  // Regex that matches a magic comment: `# @key optional_value`
+  // Group 1: the key  (word characters only)
+  // Group 2: the rest of the line after the key (may be empty)
+  const magicCommentPattern = /^#\s*@(\w+)\s*(.*)$/;
+
   // Section tracking. We use a string to track which section we're in,
   // since sections are mutually exclusive and we can only be in one at
   // a time (or in no section = definition mode).
@@ -414,8 +449,29 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     const line = lines[i].replace(/\s+$/, "");
     const stripped = line.trim();
 
-    // Blank lines and comments are always skipped
-    if (stripped === "" || stripped.startsWith("#")) {
+    // Blank lines are always skipped.
+    if (stripped === "") {
+      continue;
+    }
+
+    // Lines starting with '#' are comments — but magic comments (`# @key value`)
+    // carry structured metadata we need to extract before discarding the line.
+    // We check for the magic pattern first; non-magic comments are skipped.
+    if (stripped.startsWith("#")) {
+      const magicMatch = magicCommentPattern.exec(stripped);
+      if (magicMatch) {
+        const key = magicMatch[1];
+        const value = magicMatch[2].trim();
+        if (key === "version") {
+          // Parse the version as a decimal integer. NaN falls back to 0
+          // so a malformed `# @version abc` is treated as "unversioned."
+          const parsed = parseInt(value, 10);
+          version = isNaN(parsed) ? 0 : parsed;
+        } else if (key === "case_insensitive") {
+          caseInsensitive = value === "true";
+        }
+        // Unknown keys are silently ignored — forward-compatible design.
+      }
       continue;
     }
 
@@ -669,6 +725,8 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
     groups: hasGroups ? groups : undefined,
     caseSensitive: caseSensitive ? undefined : false,
+    version,
+    caseInsensitive,
   };
 }
 

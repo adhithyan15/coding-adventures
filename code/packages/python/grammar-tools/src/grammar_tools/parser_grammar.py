@@ -63,7 +63,22 @@ descent parsers) were invented to solve.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
+
+# ---------------------------------------------------------------------------
+# Magic comment regex
+# ---------------------------------------------------------------------------
+# The same magic-comment convention used in .tokens files applies to
+# .grammar files. Each magic comment is a full comment line of the form:
+#
+#   # @key value
+#
+# Currently the only recognised key for .grammar files is:
+#   @version N  — declares the schema version as integer N.
+#
+# All other keys are silently ignored for forward compatibility.
+_PARSER_MAGIC_COMMENT_RE = re.compile(r'^#\s*@(\w+)\s*(.*)$')
 
 
 # ---------------------------------------------------------------------------
@@ -234,10 +249,15 @@ class ParserGrammar:
     """The complete contents of a parsed .grammar file.
 
     Attributes:
+        version: Schema version declared with ``# @version N``. Defaults
+            to 0 (unversioned). Mirrors the same field on ``TokenGrammar``
+            so tools can require a minimum version consistently across
+            both file types.
         rules: Ordered list of grammar rules. The first rule is the
             entry point (start symbol).
     """
 
+    version: int = 0
     rules: list[GrammarRule] = field(default_factory=list)
 
     def rule_names(self) -> set[str]:
@@ -592,19 +612,52 @@ def parse_parser_grammar(source: str) -> ParserGrammar:
     This function tokenizes the source, then runs a recursive descent
     parser over the token stream to produce an AST of grammar elements.
 
+    Before tokenizing, we do a separate linear scan of all comment lines
+    to extract magic comments (``# @key value``). Magic comments carry
+    grammar-level metadata that has no syntactic role in the EBNF and
+    therefore cannot be encoded in the token stream.
+
+    Currently recognised magic comment keys:
+        ``@version N`` — sets ``ParserGrammar.version`` to the integer N.
+
+    All other ``@key`` directives are silently ignored so that files
+    written for a newer grammar-tools version still parse correctly with
+    older tooling.
+
     Args:
         source: The full text content of a .grammar file.
 
     Returns:
-        A ParserGrammar containing all parsed rules.
+        A ParserGrammar containing all parsed rules plus any metadata
+        extracted from magic comments.
 
     Raises:
         ParserGrammarError: If the source cannot be parsed.
     """
+    # --- Pass 1: extract magic comments from raw lines ---
+    # We scan all lines before tokenizing. This keeps magic-comment
+    # handling fully decoupled from the EBNF parser.
+    grammar = ParserGrammar()
+    for raw_line in source.split("\n"):
+        stripped = raw_line.strip()
+        if not stripped.startswith("#"):
+            continue
+        magic = _PARSER_MAGIC_COMMENT_RE.match(stripped)
+        if magic:
+            key = magic.group(1)
+            value = magic.group(2).strip()
+            if key == "version":
+                try:
+                    grammar.version = int(value)
+                except ValueError:
+                    pass  # Non-integer version — ignore silently
+            # All other keys are intentionally ignored (forward compat)
+
+    # --- Pass 2: tokenize and parse the EBNF rules ---
     tokens = _tokenize_grammar(source)
     parser = _Parser(tokens)
-    rules = parser.parse()
-    return ParserGrammar(rules=rules)
+    grammar.rules = parser.parse()
+    return grammar
 
 
 def validate_parser_grammar(
