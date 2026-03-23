@@ -1,9 +1,9 @@
-defmodule Ca.Uuid.MixProject do
+defmodule CodingAdventures.Uuid.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ca_uuid,
+      app: :coding_adventures_uuid,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -18,8 +18,8 @@ defmodule Ca.Uuid.MixProject do
 
   defp deps do
     [
-      {:ca_sha1, path: "../sha1"},
-      {:ca_md5, path: "../md5"}
+      {:coding_adventures_sha1, path: "../sha1"},
+      {:coding_adventures_md5, path: "../md5"}
     ]
   end
 end

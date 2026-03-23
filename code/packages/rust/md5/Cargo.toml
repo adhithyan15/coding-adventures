@@ -1,5 +1,5 @@
 [package]
-name = "ca_md5"
+name = "coding_adventures_md5"
 version = "0.1.0"
 edition = "2021"
 description = "MD5 message digest algorithm (RFC 1321) implemented from scratch"

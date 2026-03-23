@@ -12,6 +12,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@coding-adventures/indexeddb": "file:../../../packages/typescript/indexeddb",
+    "@coding-adventures/store": "file:../../../packages/typescript/store",
     "@coding-adventures/ui-components": "file:../../../packages/typescript/ui-components",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

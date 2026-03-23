@@ -1,7 +1,7 @@
-defmodule Ca.Md5Test do
+defmodule CodingAdventures.Md5Test do
   use ExUnit.Case, async: true
 
-  alias Ca.Md5
+  alias CodingAdventures.Md5
 
   # ─── RFC 1321 Official Test Vectors ──────────────────────────────────────────
   #

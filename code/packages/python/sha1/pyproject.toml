@@ -15,7 +15,7 @@ readme = "README.md"
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ca_sha1"]
+packages = ["src/coding_adventures_sha1"]
 
 [tool.ruff]
 target-version = "py312"
@@ -26,10 +26,10 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=ca_sha1 --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=coding_adventures_sha1 --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
-source = ["src/ca_sha1"]
+source = ["src/coding_adventures_sha1"]
 
 [tool.coverage.report]
 fail_under = 80

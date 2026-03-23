@@ -1,4 +1,4 @@
-defmodule Ca.Sha1Test do
+defmodule CodingAdventures.Sha1Test do
   @moduledoc """
   Tests for the SHA-1 implementation.
 
@@ -11,7 +11,7 @@ defmodule Ca.Sha1Test do
 
   use ExUnit.Case, async: true
 
-  alias Ca.Sha1, as: S
+  alias CodingAdventures.Sha1, as: S
 
   # ─── FIPS 180-4 Test Vectors ───────────────────────────────────────────────
 

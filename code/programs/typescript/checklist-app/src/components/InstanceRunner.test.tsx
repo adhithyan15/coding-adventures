@@ -3,11 +3,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { initI18n } from "@coding-adventures/ui-components";
 import en from "../i18n/locales/en.json";
+import { store } from "../state.js";
 import {
-  appState,
-  createTemplate,
-  createInstance,
-} from "../state.js";
+  stateLoadAction,
+  createTemplateAction,
+  createInstanceAction,
+} from "../actions.js";
 import { InstanceRunner } from "./InstanceRunner.js";
 import type { TemplateItem } from "../types.js";
 
@@ -16,13 +17,14 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  appState.templates.length = 0;
-  appState.instances.length = 0;
+  store.dispatch(stateLoadAction([], []));
 });
 
 function makeRunner(items: TemplateItem[], navigate = vi.fn()) {
-  const t = createTemplate(appState, "Test", "", items);
-  const inst = createInstance(appState, t.id);
+  store.dispatch(createTemplateAction("Test", "", items));
+  const templateId = store.getState().templates[0]!.id;
+  store.dispatch(createInstanceAction(templateId));
+  const inst = store.getState().instances[0]!;
   const { rerender } = render(
     <InstanceRunner instanceId={inst.id} onNavigate={navigate} />,
   );
@@ -105,6 +107,7 @@ describe("InstanceRunner", () => {
     const { inst } = makeRunner([], navigate);
     fireEvent.click(screen.getByText(/abandon/i));
     expect(navigate).toHaveBeenCalledWith(`/instance/${inst.id}/stats`);
-    expect(inst.status).toBe("abandoned");
+    const updated = store.getState().instances.find((i) => i.id === inst.id);
+    expect(updated?.status).toBe("abandoned");
   });
 });

@@ -2,6 +2,24 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.2.0] - 2026-03-23
+
+### Added
+
+- `GrammarParser::new_with_trace(tokens, grammar, trace: bool)` constructor
+  - When `trace = true`, emits a `[TRACE]` line to stderr for every grammar
+    rule attempt, showing the rule name, token index, token type and value,
+    and whether the rule matched or failed
+  - Format: `[TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail`
+  - Trace output goes to stderr so it does not pollute parser return values
+  - `new()` is now a thin wrapper over `new_with_trace(..., false)` (no behaviour change)
+- Added `trace: bool` field to `GrammarParser` struct
+- 4 new unit tests for trace mode in `grammar_parser::tests`:
+  - `test_trace_mode_parse_succeeds` — trace does not affect parse correctness
+  - `test_trace_mode_no_panic_on_failure` — trace does not panic on bad input
+  - `test_trace_mode_addition` — multi-token sequence works in trace mode
+  - `test_trace_false_same_as_new` — `new_with_trace(false)` == `new()`
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

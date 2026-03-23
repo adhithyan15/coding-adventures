@@ -39,7 +39,7 @@
 //! ## FIPS 180-4 Test Vectors
 //!
 //! ```
-//! use ca_sha1::sum1;
+//! use coding_adventures_sha1::sum1;
 //! assert_eq!(
 //!     sum1(b"abc").iter().map(|b| format!("{:02x}", b)).collect::<String>(),
 //!     "a9993e364706816aba3e25717850c26c9cd0d89d"
@@ -207,7 +207,7 @@ fn compress(state: [u32; 5], block: &[u8]) -> [u32; 5] {
 /// # Examples
 ///
 /// ```
-/// use ca_sha1::sum1;
+/// use coding_adventures_sha1::sum1;
 /// let digest = sum1(b"abc");
 /// let hex: String = digest.iter().map(|b| format!("{:02x}", b)).collect();
 /// assert_eq!(hex, "a9993e364706816aba3e25717850c26c9cd0d89d");
@@ -232,7 +232,7 @@ pub fn sum1(data: &[u8]) -> [u8; 20] {
 /// # Examples
 ///
 /// ```
-/// use ca_sha1::hex_string;
+/// use coding_adventures_sha1::hex_string;
 /// assert_eq!(
 ///     hex_string(b"abc"),
 ///     "a9993e364706816aba3e25717850c26c9cd0d89d"
@@ -250,7 +250,7 @@ pub fn hex_string(data: &[u8]) -> String {
 /// # Examples
 ///
 /// ```
-/// use ca_sha1::{Digest, sum1};
+/// use coding_adventures_sha1::{Digest, sum1};
 /// let mut h = Digest::new();
 /// h.update(b"ab");
 /// h.update(b"c");

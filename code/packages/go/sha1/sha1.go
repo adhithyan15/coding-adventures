@@ -24,7 +24,7 @@
 //
 // Note: This package is named "sha1" but lives in a separate module from Go's
 // standard library crypto/sha1. Import it by module path to use it.
-package ca_sha1
+package sha1
 
 import (
 	"encoding/binary"

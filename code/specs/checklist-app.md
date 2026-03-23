@@ -672,9 +672,126 @@ Recursively counts items in a branch for the collapsed summary text.
 
 ---
 
+## V0.3 — IndexedDB Persistence + Store Pattern
+
+### Problem
+
+V0.2 stores all state in memory. Page reload loses everything. React
+components mutate a global `appState` singleton directly, mixing state
+management with the UI layer.
+
+### Solution
+
+Three changes:
+
+1. **`@coding-adventures/indexeddb`** — a standalone Promise-based wrapper
+   around the raw browser IndexedDB API. Defines a `KVStorage` interface
+   with two implementations: `IndexedDBStorage` (browser) and
+   `MemoryStorage` (tests). No external dependencies.
+
+2. **`@coding-adventures/store`** — a standalone Flux-like event-driven
+   state store. Components dispatch actions; a reducer processes them; the
+   store emits change events; React components subscribe and re-render.
+
+3. **Checklist app refactor** — components dispatch actions instead of
+   calling mutation functions. A persistence middleware writes to IndexedDB
+   after each dispatch (fire-and-forget).
+
+---
+
+### Package: `@coding-adventures/indexeddb`
+
+```typescript
+interface KVStorage {
+  open(): Promise<void>;
+  get<T>(storeName: string, key: string): Promise<T | undefined>;
+  getAll<T>(storeName: string): Promise<T[]>;
+  put<T>(storeName: string, record: T): Promise<void>;
+  delete(storeName: string, key: string): Promise<void>;
+  close(): void;
+}
+```
+
+**IndexedDBStorage** wraps the raw browser API:
+- Constructor takes `dbName`, `version`, `stores: StoreSchema[]`
+- `open()` calls `indexedDB.open()`, handles `onupgradeneeded`
+- Each method opens a transaction, performs the operation, returns a Promise
+
+**MemoryStorage** is an in-memory Map-of-Maps for tests. Same interface,
+zero browser APIs.
+
+**IndexedDB schema for checklist-app:**
+- Database: `"checklist-app"`, version 1
+- Store `"templates"`: keyPath `"id"`
+- Store `"instances"`: keyPath `"id"`, index on `"templateId"`
+
+---
+
+### Package: `@coding-adventures/store`
+
+```typescript
+class Store<S> {
+  constructor(initialState: S, reducer: Reducer<S>);
+  getState(): S;
+  dispatch(action: Action): void;
+  subscribe(listener: () => void): () => void;
+  use(middleware: Middleware<S>): void;
+}
+
+function useStore<S>(store: Store<S>): S;
+// React hook: subscribes on mount, triggers re-render on store change.
+```
+
+**Middleware** intercepts every dispatch. The persistence layer is a
+middleware that writes to KVStorage after the reducer runs.
+
+**Data flow:**
+```
+User action → dispatch(Action) → middleware chain → reducer(state, action) → new state
+                                      ↓
+                              persistence middleware writes to IndexedDB (async)
+                                      ↓
+                              store emits "change" → useStore re-renders
+```
+
+---
+
+### Checklist App Changes
+
+**New files:**
+- `actions.ts` — action types + creators (TEMPLATE_CREATE, INSTANCE_CHECK, etc.)
+- `reducer.ts` — pure `(AppState, Action) → AppState` function
+- `persistence.ts` — middleware mapping action types to DB writes
+
+**Modified files:**
+- `state.ts` — simplified to just store creation
+- `main.tsx` — async init: open DB → load data → create store → seed if empty
+- All components — `useStore(store)` + `store.dispatch(action)` instead of
+  direct `appState` mutation
+
+---
+
+### Startup Flow
+
+```
+1. initI18n(en)
+2. storage = new IndexedDBStorage(schema)
+3. await storage.open()
+4. templates = await storage.getAll("templates")
+5. instances = await storage.getAll("instances")
+6. store = new Store({ templates, instances }, reducer)
+7. store.use(persistenceMiddleware(storage))
+8. if (templates.length === 0) {
+     dispatch seed actions → middleware persists them
+   }
+9. createRoot(root).render(<App />)
+```
+
+---
+
 ## Future Extensions
 
-- **V1**: localStorage persistence; JSON import/export; drag-and-drop reorder
+- **V1**: Web Crypto encryption layer on top of IndexedDB (PBKDF2 + AES-GCM)
 - **V2**: Electron packaging; native file open/save dialogs via IPC
 - **V3**: Aggregate stats view (compare multiple runs of the same template)
 - **V4**: Template sharing via URL (state serialized into hash fragment)
