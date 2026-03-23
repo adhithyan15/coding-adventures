@@ -81,6 +81,8 @@ members = [
     "toml-lexer",
     "toml-parser",
     "transistors",
+    "trig",
+    "wave",
     "virtual-memory",
     "tree",
     "typescript-lexer",
