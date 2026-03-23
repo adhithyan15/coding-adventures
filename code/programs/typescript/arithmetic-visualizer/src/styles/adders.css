@@ -1,0 +1,259 @@
+/* ==========================================================================
+ * Styles for the Binary Adders tab (Tab 1).
+ *
+ * Covers: adder cards, SVG circuit diagrams, BitGroup multi-bit inputs,
+ * ripple-carry operand layout, and per-adder snapshot display.
+ * ========================================================================== */
+
+/* --- Tab intro --- */
+
+.adders {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.adders__intro {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--body-text);
+  max-width: 800px;
+}
+
+/* --- Adder card (half, full, ripple) --- */
+
+.adder-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.adder-card--wide {
+  max-width: none;
+}
+
+.adder-card__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffb74d;
+}
+
+.adder-card__description {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+/* --- Circuit layout (inputs → SVG → outputs) --- */
+
+.adder-card__circuit {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.adder-card__inputs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.adder-card__svg {
+  flex: 1;
+  min-width: 200px;
+  max-width: 400px;
+  height: auto;
+}
+
+.adder-card__outputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.adder-card__intermediates {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+/* --- SVG wire and gate styling --- */
+
+.gate-box {
+  fill: rgba(255, 255, 255, 0.05);
+  stroke: var(--panel-border);
+  stroke-width: 1.5;
+}
+
+.gate-label {
+  fill: var(--body-text);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.wire-text--high {
+  fill: #4caf50;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.wire-text--low {
+  fill: #888;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.wire-text--dim {
+  fill: var(--tab-text);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+/* --- BitGroup (multi-bit input) --- */
+
+.bit-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bit-group__label {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--body-text);
+  min-width: 1.5rem;
+}
+
+.bit-group__bits {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.bit-group__decimal {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--tab-text);
+  min-width: 2.5rem;
+}
+
+/* --- Ripple-carry operand layout --- */
+
+.ripple__operands {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.ripple__operator {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tab-text);
+  font-family: var(--mono);
+}
+
+.ripple__result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ripple__result-bits {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.ripple__result-bit {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid;
+}
+
+.ripple__result-bit--high {
+  border-color: #4caf50;
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.ripple__result-bit--low {
+  border-color: #555;
+  color: #888;
+  background: transparent;
+}
+
+.ripple__result-decimal {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--tab-text);
+}
+
+.ripple__equation {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--body-text);
+}
+
+.ripple__overflow {
+  font-size: 0.85rem;
+  color: var(--tab-text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ripple__overflow--active {
+  color: #ff8a65;
+  font-weight: 600;
+}
+
+/* --- Ripple-carry chain SVG --- */
+
+.ripple__chain-svg {
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+}
+
+.ripple__snapshot-table {
+  max-width: 400px;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 640px) {
+  .adder-card__circuit {
+    flex-direction: column;
+  }
+
+  .ripple__operands {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bit-group {
+    flex-wrap: wrap;
+  }
+}
