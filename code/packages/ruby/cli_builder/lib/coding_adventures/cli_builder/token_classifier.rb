@@ -199,24 +199,36 @@ module CodingAdventures
         remainder = rest[1..]
 
         if (short_flag = @short_index[first_char])
-          if short_flag["type"] == "boolean"
-            # Boolean flag. The remainder might be more stacked flags.
+          if no_value_flag?(short_flag)
+            # Boolean or count flag. The remainder might be more stacked flags.
+            # Count flags (v1.1) behave like boolean flags for classification
+            # purposes — they consume no value token, and each occurrence in a
+            # stack is treated as a separate flag event.
             if remainder.empty?
-              # Just "-x" with a single boolean flag
+              # Just "-x" with a single boolean/count flag
               return {type: :short_flag, flag: short_flag}
             else
-              # "-xyz..." — first char is a known boolean. Try to classify rest as stack.
+              # "-xyz..." — first char is a known boolean/count. Try to classify rest as stack.
               return classify_as_stack(rest, token)
             end
-          else
-            # Non-boolean flag. Remainder (if any) is the inline value.
+          elsif short_flag["default_when_present"]
+            # Enum flag with default_when_present: in stacking context, the
+            # remainder could be more flags (not a value). Try stack first.
             if remainder.empty?
-              # "-f" — value will be the next argv token
               return {type: :short_flag, flag: short_flag}
             else
-              # "-ffile.txt" — value is "file.txt"
+              # Try to classify the remainder as a stack. If that fails,
+              # treat the remainder as an inline value.
+              stack_result = try_stack(rest)
+              return stack_result if stack_result
               return {type: :short_flag_with_value, flag: short_flag, value: remainder}
             end
+          elsif remainder.empty?
+            # Non-boolean flag with no remainder — value will be the next argv token
+            return {type: :short_flag, flag: short_flag}
+          else
+            # Non-boolean flag with remainder — remainder is inline value ("-ffile.txt")
+            return {type: :short_flag_with_value, flag: short_flag, value: remainder}
           end
         end
 
@@ -263,19 +275,34 @@ module CodingAdventures
             return nil
           end
 
-          if flag["type"] == "boolean"
+          if no_value_flag?(flag)
+            # Boolean and count flags (v1.1) both consume no value token,
+            # so they can appear freely within a stack. "-vvv" with v being
+            # a count flag produces three separate flag entries in the stack.
             collected_flags << flag
             i += 1
           else
-            # Non-boolean flag: rest of the string is its inline value
+            # Non-boolean/non-count flag: rest of the string is its inline value
             last_value = chars[i + 1..]
             collected_flags << flag
             return {type: :stacked_flags, flags: collected_flags, last_value: last_value.empty? ? nil : last_value}
           end
         end
 
-        # All flags were boolean
+        # All flags were boolean/count
         {type: :stacked_flags, flags: collected_flags, last_value: nil}
+      end
+
+      # ---------------------------------------------------------------------------
+      # Helper: does this flag consume no value token?
+      # ---------------------------------------------------------------------------
+      #
+      # Boolean and count flags share the property of not consuming a value
+      # token from argv. This predicate captures that shared behavior so the
+      # stacking and classification logic can treat them uniformly.
+
+      def no_value_flag?(flag)
+        flag["type"] == "boolean" || flag["type"] == "count"
       end
     end
   end

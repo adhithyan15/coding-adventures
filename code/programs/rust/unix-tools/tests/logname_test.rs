@@ -117,6 +117,11 @@ mod builtins {
 mod business_logic {
     use super::*;
 
+    // These tests rely on $LOGNAME/$USER env vars which are Unix-specific.
+    // Windows uses $USERNAME instead, and neither $LOGNAME nor $USER is
+    // typically set on Windows CI.
+
+    #[cfg(unix)]
     #[test]
     fn returns_a_login_name() {
         let result = get_logname();
@@ -125,6 +130,7 @@ mod business_logic {
         assert!(!name.is_empty(), "login name should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn login_name_has_no_newlines() {
         let name = get_logname().unwrap();
@@ -135,6 +141,7 @@ mod business_logic {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn login_name_is_consistent() {
         let first = get_logname().unwrap();
@@ -142,6 +149,7 @@ mod business_logic {
         assert_eq!(first, second, "login name should be consistent across calls");
     }
 
+    #[cfg(unix)]
     #[test]
     fn login_name_matches_env() {
         let name = get_logname().unwrap();

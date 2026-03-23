@@ -13,6 +13,7 @@ from build_tool.resolver import (
     _parse_python_deps,
     _parse_ruby_deps,
     _parse_go_deps,
+    _parse_lua_deps,
     resolve_dependencies,
 )
 
@@ -202,6 +203,112 @@ class TestParseRubyDeps:
         pkg = Package(name="ruby/pkg", path=pkg_dir, language="ruby")
         deps = _parse_ruby_deps(pkg, {})
         assert deps == []
+
+
+class TestParseLuaDeps:
+    """Tests for _parse_lua_deps."""
+
+    def test_parses_rockspec_multiline(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        (pkg_dir / "coding-adventures-pkg-0.1.0-1.rockspec").write_text(
+            'package = "coding-adventures-pkg"\n'
+            'version = "0.1.0-1"\n'
+            'dependencies = {\n'
+            '    "lua >= 5.4",\n'
+            '    "coding-adventures-other >= 0.1.0",\n'
+            '}\n'
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+        known = {"coding-adventures-other": "lua/other"}
+        deps = _parse_lua_deps(pkg, known)
+        assert deps == ["lua/other"]
+
+    def test_parses_rockspec_single_line(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        (pkg_dir / "coding-adventures-pkg-0.1.0-1.rockspec").write_text(
+            'dependencies = { "lua >= 5.4", "coding-adventures-other >= 0.1.0" }\n'
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+        known = {"coding-adventures-other": "lua/other"}
+        deps = _parse_lua_deps(pkg, known)
+        assert deps == ["lua/other"]
+
+    def test_no_rockspec(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+        deps = _parse_lua_deps(pkg, {})
+        assert deps == []
+
+    def test_skips_external_deps(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        (pkg_dir / "test-0.1.0-1.rockspec").write_text(
+            'dependencies = {\n'
+            '    "lua >= 5.4",\n'
+            '    "luafilesystem >= 1.8",\n'
+            '}\n'
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+        deps = _parse_lua_deps(pkg, {})
+        assert deps == []
+
+    def test_strips_version_specifiers(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        (pkg_dir / "test-0.1.0-1.rockspec").write_text(
+            'dependencies = {\n'
+            '    "coding-adventures-logic-gates >= 0.1.0",\n'
+            '}\n'
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+        known = {"coding-adventures-logic-gates": "lua/logic_gates"}
+        deps = _parse_lua_deps(pkg, known)
+        assert deps == ["lua/logic_gates"]
+
+    def test_multiple_internal_deps(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        (pkg_dir / "test-0.1.0-1.rockspec").write_text(
+            'dependencies = {\n'
+            '    "lua >= 5.4",\n'
+            '    "coding-adventures-logic-gates >= 0.1.0",\n'
+            '    "coding-adventures-arithmetic >= 0.1.0",\n'
+            '}\n'
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+        known = {
+            "coding-adventures-logic-gates": "lua/logic_gates",
+            "coding-adventures-arithmetic": "lua/arithmetic",
+        }
+        deps = _parse_lua_deps(pkg, known)
+        assert "lua/logic_gates" in deps
+        assert "lua/arithmetic" in deps
+
+
+class TestBuildKnownNamesLua:
+    """Tests for Lua entries in _build_known_names."""
+
+    def test_lua_mapping(self):
+        pkg = Package(
+            name="lua/logic_gates",
+            path=Path("/fake/packages/lua/logic_gates"),
+            language="lua",
+        )
+        known = _build_known_names([pkg])
+        assert known["coding-adventures-logic-gates"] == "lua/logic_gates"
+
+    def test_lua_mapping_with_hyphens(self):
+        """Directory uses underscores, rockspec uses hyphens."""
+        pkg = Package(
+            name="lua/cpu_simulator",
+            path=Path("/fake/packages/lua/cpu_simulator"),
+            language="lua",
+        )
+        known = _build_known_names([pkg])
+        assert known["coding-adventures-cpu-simulator"] == "lua/cpu_simulator"
 
 
 class TestParseGoDeps:

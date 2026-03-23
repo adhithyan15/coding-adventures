@@ -49,6 +49,24 @@ from __future__ import annotations
 from typing import Any
 
 
+def _is_valueless_type(flag_type: str | None) -> bool:
+    """Check if a flag type consumes no value token.
+
+    Both ``"boolean"`` and ``"count"`` flags are "valueless" — they do not
+    consume the next argv token as their value. Boolean flags toggle to True;
+    count flags increment an integer counter. From the token classifier's
+    perspective, they behave identically: the token ``-v`` is complete on its
+    own, whether ``v`` is boolean or count.
+
+    Args:
+        flag_type: The ``type`` field from the flag definition.
+
+    Returns:
+        True if the flag consumes no value token.
+    """
+    return flag_type in ("boolean", "count")
+
+
 class TokenClassifier:
     """Classifies a single argv token into a typed event dict.
 
@@ -224,15 +242,15 @@ class TokenClassifier:
         flag_def = self._by_short.get(first_char)
 
         if flag_def is not None:
-            is_boolean = flag_def.get("type") == "boolean"
+            is_valueless = _is_valueless_type(flag_def.get("type"))
             remainder = suffix[1:]  # characters after the flag char
 
-            if is_boolean and remainder:
-                # The first char is a known boolean flag, but there's more.
-                # Try to parse the remainder as stacked flags.
+            if is_valueless and remainder:
+                # The first char is a known valueless flag (boolean/count),
+                # but there are more characters. Try stacked flags.
                 return self._classify_stacked(suffix, token)
 
-            if not is_boolean:
+            if not is_valueless:
                 # Non-boolean flag: the remainder (if any) is the inline value.
                 if remainder:
                     return {
@@ -304,18 +322,19 @@ class TokenClassifier:
                 # Unknown character in stack — this is an error.
                 return {"type": "unknown_flag", "token": original_token}
 
-            is_boolean = flag_def.get("type") == "boolean"
+            is_valueless = _is_valueless_type(flag_def.get("type"))
             is_last = i == len(suffix) - 1
 
-            if is_boolean:
+            if is_valueless:
+                # Boolean and count flags can stack freely.
                 chars.append(char)
                 flag_defs.append(flag_def)
-            elif not is_boolean and is_last:
-                # Non-boolean as the last character, no inline value.
+            elif not is_valueless and is_last:
+                # Value-taking flag as the last character, no inline value.
                 chars.append(char)
                 flag_defs.append(flag_def)
-            elif not is_boolean and not is_last:
-                # Non-boolean not at end: remaining chars are the inline value.
+            elif not is_valueless and not is_last:
+                # Value-taking flag not at end: remaining chars are the inline value.
                 chars.append(char)
                 flag_defs.append(flag_def)
                 trailing_value = suffix[i + 1 :]
@@ -323,7 +342,7 @@ class TokenClassifier:
 
         if len(chars) == 1 and trailing_value is None:
             # Single flag, not really "stacked"
-            if flag_defs[0].get("type") == "boolean":
+            if _is_valueless_type(flag_defs[0].get("type")):
                 return {
                     "type": "short_flag",
                     "char": chars[0],

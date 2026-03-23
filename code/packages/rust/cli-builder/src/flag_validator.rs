@@ -225,6 +225,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         }
     }
 
@@ -460,6 +461,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let flags = HashMap::new(); // absent
         let errs = validate_flags(&flags, &[f], &[], &ctx());
@@ -486,6 +488,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let flags = HashMap::new();
         let errs = validate_flags(&flags, &[f], &[], &ctx());

@@ -297,3 +297,197 @@ func ParseParserGrammar(source string) (*ParserGrammar, error) {
 	}
 	return &ParserGrammar{Rules: rules}, nil
 }
+
+// ---------------------------------------------------------------------------
+// ParserGrammar helper methods
+// ---------------------------------------------------------------------------
+
+// RuleNames returns the set of all defined rule names in the grammar.
+func (g *ParserGrammar) RuleNames() map[string]bool {
+	names := make(map[string]bool)
+	for _, rule := range g.Rules {
+		names[rule.Name] = true
+	}
+	return names
+}
+
+// RuleReferences returns all lowercase rule names referenced in rule bodies.
+// These are the non-token references — names that should correspond to other
+// rules in this grammar.
+func (g *ParserGrammar) RuleReferences() map[string]bool {
+	refs := make(map[string]bool)
+	for _, rule := range g.Rules {
+		collectRuleRefs(rule.Body, refs)
+	}
+	return refs
+}
+
+// TokenReferences returns all UPPERCASE names referenced in rule bodies.
+// These are token references — names that should correspond to tokens defined
+// in a .tokens file.
+func (g *ParserGrammar) TokenReferences() map[string]bool {
+	refs := make(map[string]bool)
+	for _, rule := range g.Rules {
+		collectTokenRefs(rule.Body, refs)
+	}
+	return refs
+}
+
+// collectRuleRefs walks the grammar element tree and collects lowercase (rule)
+// references into the provided set.
+func collectRuleRefs(element GrammarElement, refs map[string]bool) {
+	switch e := element.(type) {
+	case RuleReference:
+		if !e.IsToken {
+			refs[e.Name] = true
+		}
+	case Sequence:
+		for _, sub := range e.Elements {
+			collectRuleRefs(sub, refs)
+		}
+	case Alternation:
+		for _, choice := range e.Choices {
+			collectRuleRefs(choice, refs)
+		}
+	case Repetition:
+		collectRuleRefs(e.Element, refs)
+	case Optional:
+		collectRuleRefs(e.Element, refs)
+	case Group:
+		collectRuleRefs(e.Element, refs)
+	}
+}
+
+// collectTokenRefs walks the grammar element tree and collects UPPERCASE
+// (token) references into the provided set.
+func collectTokenRefs(element GrammarElement, refs map[string]bool) {
+	switch e := element.(type) {
+	case RuleReference:
+		if e.IsToken {
+			refs[e.Name] = true
+		}
+	case Sequence:
+		for _, sub := range e.Elements {
+			collectTokenRefs(sub, refs)
+		}
+	case Alternation:
+		for _, choice := range e.Choices {
+			collectTokenRefs(choice, refs)
+		}
+	case Repetition:
+		collectTokenRefs(e.Element, refs)
+	case Optional:
+		collectTokenRefs(e.Element, refs)
+	case Group:
+		collectTokenRefs(e.Element, refs)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Validator
+// ---------------------------------------------------------------------------
+
+// ValidateParserGrammar checks a parsed ParserGrammar for common problems.
+//
+// Validation checks (mirrors Python's validate_parser_grammar):
+//   - Duplicate rule names — two rules with the same name
+//   - Non-lowercase rule names — convention violation (token names are UPPER_CASE,
+//     rule names are lowercase)
+//   - Undefined rule references — a lowercase name used in a body but not defined
+//   - Undefined token references — an UPPERCASE name not in tokenNames (if provided)
+//   - Unreachable rules — defined but never referenced; the start rule is exempt
+//
+// tokenNames is an optional set of valid token names from a .tokens file. When
+// non-nil, UPPERCASE references are checked against it. Synthetic tokens
+// (NEWLINE, INDENT, DEDENT, EOF) are always valid.
+func ValidateParserGrammar(grammar *ParserGrammar, tokenNames map[string]bool) []string {
+	var issues []string
+
+	defined := grammar.RuleNames()
+	referencedRules := grammar.RuleReferences()
+	referencedTokens := grammar.TokenReferences()
+
+	// --- Duplicate rule names ---
+	seen := make(map[string]int) // name -> first line number
+	for _, rule := range grammar.Rules {
+		if firstLine, exists := seen[rule.Name]; exists {
+			issues = append(issues, fmt.Sprintf(
+				"Line %d: Duplicate rule name '%s' (first defined on line %d)",
+				rule.LineNumber, rule.Name, firstLine,
+			))
+		} else {
+			seen[rule.Name] = rule.LineNumber
+		}
+	}
+
+	// --- Non-lowercase rule names ---
+	for _, rule := range grammar.Rules {
+		if rule.Name != strings.ToLower(rule.Name) {
+			issues = append(issues, fmt.Sprintf(
+				"Line %d: Rule name '%s' should be lowercase",
+				rule.LineNumber, rule.Name,
+			))
+		}
+	}
+
+	// --- Undefined rule references ---
+	// Sort for deterministic output
+	sortedRuleRefs := sortedKeys(referencedRules)
+	for _, ref := range sortedRuleRefs {
+		if !defined[ref] {
+			issues = append(issues, fmt.Sprintf("Undefined rule reference: '%s'", ref))
+		}
+	}
+
+	// --- Undefined token references ---
+	// Synthetic tokens are always valid — the lexer produces these implicitly:
+	//   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
+	//   INDENT/DEDENT — emitted in indentation mode
+	//   EOF — always emitted at end of input
+	syntheticTokens := map[string]bool{
+		"NEWLINE": true,
+		"INDENT":  true,
+		"DEDENT":  true,
+		"EOF":     true,
+	}
+	if tokenNames != nil {
+		sortedTokRefs := sortedKeys(referencedTokens)
+		for _, ref := range sortedTokRefs {
+			if !tokenNames[ref] && !syntheticTokens[ref] {
+				issues = append(issues, fmt.Sprintf("Undefined token reference: '%s'", ref))
+			}
+		}
+	}
+
+	// --- Unreachable rules ---
+	// The first rule is the start symbol and is always reachable.
+	if len(grammar.Rules) > 0 {
+		startRule := grammar.Rules[0].Name
+		for _, rule := range grammar.Rules {
+			if rule.Name != startRule && !referencedRules[rule.Name] {
+				issues = append(issues, fmt.Sprintf(
+					"Line %d: Rule '%s' is defined but never referenced (unreachable)",
+					rule.LineNumber, rule.Name,
+				))
+			}
+		}
+	}
+
+	return issues
+}
+
+// sortedKeys returns the keys of a map[string]bool in sorted order.
+// This ensures deterministic output for validation messages.
+func sortedKeys(m map[string]bool) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	// Simple insertion sort for small maps (grammar refs are typically small)
+	for i := 1; i < len(keys); i++ {
+		for j := i; j > 0 && keys[j] < keys[j-1]; j-- {
+			keys[j], keys[j-1] = keys[j-1], keys[j]
+		}
+	}
+	return keys
+}

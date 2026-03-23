@@ -971,3 +971,95 @@ simple_expr = NAME | NUMBER ;
 		t.Errorf("Expected 'file', got %q", ast.RuleName)
 	}
 }
+
+// -----------------------------------------------------------------------
+// Trace mode tests
+// -----------------------------------------------------------------------
+
+func TestGrammarParserWithTraceNoError(t *testing.T) {
+	// Parsing with trace=true should produce the same result as without trace.
+	// The trace output goes to stderr, so it does not affect the return value.
+	grammarSource := "expr = NUMBER ;"
+	pg, err := grammartools.ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	tokens := []lexer.Token{
+		{Type: lexer.TokenNumber, Value: "42", Line: 1, Column: 1, TypeName: "NUMBER"},
+		{Type: lexer.TokenEOF, Value: "", Line: 1, Column: 3, TypeName: "EOF"},
+	}
+
+	// trace=true should not crash and should return the correct result.
+	p := NewGrammarParserWithTrace(tokens, pg, true)
+	ast, err := p.Parse()
+	if err != nil {
+		t.Fatalf("Parse with trace=true failed: %v", err)
+	}
+	if ast == nil {
+		t.Fatal("Expected non-nil AST from trace parse")
+	}
+	if ast.RuleName != "expr" {
+		t.Errorf("Expected rule name 'expr', got %q", ast.RuleName)
+	}
+}
+
+func TestGrammarParserWithTraceMatchesNoTrace(t *testing.T) {
+	// The AST produced with trace=true must be identical to trace=false.
+	grammarSource := "program = { item } ;\nitem = NUMBER ;"
+	pg, err := grammartools.ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	tokens := []lexer.Token{
+		{Type: lexer.TokenNumber, Value: "1", Line: 1, Column: 1, TypeName: "NUMBER"},
+		{Type: lexer.TokenNumber, Value: "2", Line: 1, Column: 3, TypeName: "NUMBER"},
+		{Type: lexer.TokenEOF, Value: "", Line: 1, Column: 5, TypeName: "EOF"},
+	}
+
+	p1 := NewGrammarParserWithTrace(tokens, pg, false)
+	ast1, err1 := p1.Parse()
+
+	p2 := NewGrammarParserWithTrace(tokens, pg, true)
+	ast2, err2 := p2.Parse()
+
+	if err1 != nil {
+		t.Fatalf("Non-trace parse failed: %v", err1)
+	}
+	if err2 != nil {
+		t.Fatalf("Trace parse failed: %v", err2)
+	}
+	if ast1 == nil || ast2 == nil {
+		t.Fatal("Expected non-nil ASTs")
+	}
+	// Both should produce the same top-level rule name.
+	if ast1.RuleName != ast2.RuleName {
+		t.Errorf("Rule names differ: %q vs %q", ast1.RuleName, ast2.RuleName)
+	}
+	// Both should have the same number of children.
+	if len(ast1.Children) != len(ast2.Children) {
+		t.Errorf("Child count differs: %d vs %d", len(ast1.Children), len(ast2.Children))
+	}
+}
+
+func TestGrammarParserWithTraceFailurePath(t *testing.T) {
+	// Trace mode works correctly even when parsing fails.
+	grammarSource := "expr = NUMBER ;"
+	pg, err := grammartools.ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	// Provide a NAME token where NUMBER is expected — parse should fail.
+	tokens := []lexer.Token{
+		{Type: lexer.TokenName, Value: "x", Line: 1, Column: 1, TypeName: "NAME"},
+		{Type: lexer.TokenEOF, Value: "", Line: 1, Column: 2, TypeName: "EOF"},
+	}
+
+	p := NewGrammarParserWithTrace(tokens, pg, true)
+	_, err = p.Parse()
+	if err == nil {
+		t.Fatal("Expected parse error on trace failure path, got nil")
+	}
+}

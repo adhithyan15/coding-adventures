@@ -295,11 +295,22 @@ class HelpGenerator:
 
         sig = ", ".join(parts)
 
-        # Append value placeholder for non-boolean flags
+        # Append value placeholder for non-boolean, non-count flags.
+        #
+        # Count flags (v1.1) behave like booleans in the help signature:
+        # they don't take a value argument on the command line.
+        #
+        # Enum flags with ``default_when_present`` (v1.1) use ``[=VALUE]``
+        # instead of ``<VALUE>`` to indicate the value is optional. The
+        # square brackets + equals sign follow GNU conventions (e.g.,
+        # ``--color[=WHEN]`` in ls/grep).
         flag_type = flag.get("type", "string")
-        if flag_type != "boolean":
+        if flag_type not in ("boolean", "count"):
             value_name = flag.get("value_name") or flag_type.upper()
-            sig = f"{sig} <{value_name}>"
+            if flag.get("default_when_present") is not None:
+                sig = f"{sig} [={value_name}]"
+            else:
+                sig = f"{sig} <{value_name}>"
 
         return sig
 

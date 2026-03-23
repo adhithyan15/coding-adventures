@@ -89,6 +89,7 @@ pub struct FsInfo {
 ///     free  = 63419349  * 4096 = 259,805,413,376 bytes ≈ 242 GiB
 ///     used  = total - (f_bfree * f_frsize)
 /// ```
+#[cfg(unix)]
 pub fn get_fs_info(path: &str) -> Result<FsInfo, String> {
     use std::ffi::CString;
 
@@ -133,6 +134,12 @@ pub fn get_fs_info(path: &str) -> Result<FsInfo, String> {
             inodes_used,
         })
     }
+}
+
+/// Non-Unix stub so the code compiles on all platforms.
+#[cfg(not(unix))]
+pub fn get_fs_info(path: &str) -> Result<FsInfo, String> {
+    Err(format!("df: not supported on this platform ({})", path))
 }
 
 /// Format a byte count in human-readable form (powers of 1024).
@@ -200,18 +207,21 @@ pub fn bytes_to_1k_blocks(bytes: u64) -> u64 {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn get_fs_info_root() {
         let info = get_fs_info("/");
         assert!(info.is_ok(), "should be able to stat root filesystem");
     }
 
+    #[cfg(unix)]
     #[test]
     fn total_is_positive() {
         let info = get_fs_info("/").unwrap();
         assert!(info.total_bytes > 0, "total bytes should be positive");
     }
 
+    #[cfg(unix)]
     #[test]
     fn used_plus_available_approximates_total() {
         let info = get_fs_info("/").unwrap();
@@ -224,6 +234,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn use_percent_in_range() {
         let info = get_fs_info("/").unwrap();
@@ -234,6 +245,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn invalid_path_returns_error() {
         let info = get_fs_info("/nonexistent/path/12345");
@@ -285,6 +297,7 @@ mod tests {
         assert_eq!(bytes_to_1k_blocks(0), 0);
     }
 
+    #[cfg(unix)]
     #[test]
     fn block_size_is_positive() {
         let info = get_fs_info("/").unwrap();

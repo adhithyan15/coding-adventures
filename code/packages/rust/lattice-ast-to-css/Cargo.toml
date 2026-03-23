@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-lattice-ast-to-css"
+version = "0.1.0"
+edition = "2021"
+description = "Three-pass compiler: Lattice AST to clean CSS AST"
+
+[dependencies]
+coding-adventures-lattice-parser = { path = "../lattice-parser" }
+coding-adventures-lattice-lexer = { path = "../lattice-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

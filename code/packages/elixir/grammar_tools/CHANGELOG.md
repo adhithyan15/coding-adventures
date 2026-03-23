@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.0] - 2026-03-23
+
+### Added
+- `error_definitions: []` field on `%TokenGrammar{}` struct for error-recovery patterns.
+- Parsing support for `errors:` section in `.tokens` files (mirrors the `skip:` section — indented `NAME = /pattern/` lines are stored as error definitions).
+- `validate_token_grammar/1` function — lint pass over a parsed `TokenGrammar` checking:
+  duplicate names, empty patterns, invalid regexes, non-UPPER_CASE names/aliases,
+  unknown mode (only `"indentation"` supported), unknown escape_mode (only `"none"` supported).
+  Applies the same checks to `skip_definitions` and `error_definitions`.
+- `validate_parser_grammar/2` function on `ParserGrammar` — lint pass checking:
+  duplicate rule names, non-lowercase rule names, undefined rule references,
+  undefined token references (when `token_names` MapSet provided), and unreachable rules
+  (first rule is exempt as the start symbol). Synthetic tokens (`NEWLINE`, `INDENT`, `DEDENT`,
+  `EOF`) are always valid.
+- Updated `CrossValidator.validate/2` to use `TokenGrammar.token_names/1` helper for
+  building the valid token set. Unused token detection now accounts for aliases (if the
+  grammar references `STRING` and a definition has `alias: "STRING"`, that definition is
+  considered used).
+- `Mix.Tasks.GrammarTools.Validate` Mix task (`mix grammar_tools.validate`) with three
+  subcommands: `validate`, `validate_tokens`, `validate_grammar`. Output format matches
+  the Python CLI exactly (e.g., `OK (N tokens, M skip, K error)`).
+- Trace mode (`trace: true` option) in `CodingAdventures.Parser.GrammarParser.parse/3` —
+  emits `[TRACE] rule 'name' at token N (TYPE "value") → match|fail` lines to stderr
+  for each rule attempt, aiding parse failure diagnosis. Does not affect parse results.
+- Comprehensive test coverage for all new features (32 new tests across grammar_tools and
+  parser packages).
+
 ## [0.2.0] - 2026-03-21
 
 ### Added

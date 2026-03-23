@@ -203,14 +203,22 @@ func (fv *FlagValidator) Validate(parsedFlags map[string]any) []ParseError {
 }
 
 // isPresent returns true if a parsed flag value is "set" — i.e., not
-// a boolean false and not nil. This distinguishes "flag was seen in argv"
-// from "flag is absent with a false/nil default".
+// a boolean false, not nil, and not a count of 0. This distinguishes
+// "flag was seen in argv" from "flag is absent with a zero default".
+//
+// For boolean flags, false means absent. For count flags, int64(0) means
+// absent. For all other types, nil means absent.
 func isPresent(v any) bool {
 	if v == nil {
 		return false
 	}
 	if b, ok := v.(bool); ok {
 		return b
+	}
+	// Count flags default to int64(0) when absent; treat 0 as not present
+	// for constraint checking purposes (conflicts_with, requires, etc.).
+	if n, ok := v.(int64); ok {
+		return n != 0
 	}
 	return true
 }

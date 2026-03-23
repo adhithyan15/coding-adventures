@@ -53,7 +53,8 @@ defmodule CodingAdventures.Parser.GrammarParser do
       pos: 0,
       memo: %{},
       furthest_pos: 0,
-      furthest_expected: []
+      furthest_expected: [],
+      trace: false
     ]
   end
 
@@ -64,9 +65,21 @@ defmodule CodingAdventures.Parser.GrammarParser do
 
   The first rule in the grammar is the entry point. Returns
   `{:ok, ast_node}` on success, `{:error, message}` on failure.
+
+  ## Options
+
+  - `trace: false` (default) — when set to `true`, emits a line to stderr
+    for each rule attempt. This helps diagnose parse failures by showing
+    which rules were tried at which token positions.
+
+    Trace format:
+    ```
+    [TRACE] rule 'name' at token 0 (TYPE "value") → match
+    [TRACE] rule 'name' at token 1 (TYPE "value") → fail
+    ```
   """
-  @spec parse([Token.t()], ParserGrammar.t()) :: {:ok, ASTNode.t()} | {:error, String.t()}
-  def parse(tokens, %ParserGrammar{rules: rules}) when is_list(tokens) do
+  @spec parse([Token.t()], ParserGrammar.t(), keyword()) :: {:ok, ASTNode.t()} | {:error, String.t()}
+  def parse(tokens, %ParserGrammar{rules: rules}, opts \\ []) when is_list(tokens) do
     if rules == [] do
       {:error, "Grammar has no rules"}
     else
@@ -76,11 +89,14 @@ defmodule CodingAdventures.Parser.GrammarParser do
       # Detect newline significance
       newlines_sig = Enum.any?(rules, fn r -> element_references_newline?(r.body) end)
 
+      trace = Keyword.get(opts, :trace, false)
+
       state = %State{
         tokens: :array.from_list(tokens),
         rules: rule_map,
         newlines_significant: newlines_sig,
-        pos: 0
+        pos: 0,
+        trace: trace
       }
 
       token_count = length(tokens)
@@ -186,6 +202,7 @@ defmodule CodingAdventures.Parser.GrammarParser do
         case Map.fetch(state.memo, memo_key) do
           {:ok, {nil, end_pos}} ->
             current = current_token(state, :array.size(state.tokens))
+            emit_trace(state, rule_name, state.pos, current, :fail)
 
             {:error,
              "Parse error at #{current.line}:#{current.column}: " <>
@@ -193,19 +210,24 @@ defmodule CodingAdventures.Parser.GrammarParser do
              %{state | pos: end_pos}}
 
           {:ok, {children, end_pos}} ->
+            current = current_token(state, :array.size(state.tokens))
+            emit_trace(state, rule_name, state.pos, current, :match)
             node = %ASTNode{rule_name: rule_name, children: children}
             {:ok, node, %{state | pos: end_pos}}
 
           :error ->
             start_pos = state.pos
+            current_at_start = current_token(state, :array.size(state.tokens))
 
             case match_element(rule.body, state) do
               {:ok, children, state} ->
+                emit_trace(state, rule_name, start_pos, current_at_start, :match)
                 state = %{state | memo: Map.put(state.memo, memo_key, {children, state.pos})}
                 node = %ASTNode{rule_name: rule_name, children: children}
                 {:ok, node, state}
 
               {:fail, state} ->
+                emit_trace(state, rule_name, start_pos, current_at_start, :fail)
                 state = %{state | pos: start_pos}
                 state = record_failure(state, rule_name)
                 state = %{state | memo: Map.put(state.memo, memo_key, {nil, state.pos})}
@@ -219,6 +241,15 @@ defmodule CodingAdventures.Parser.GrammarParser do
         end
     end
   end
+
+  # Emit a trace line to stderr when tracing is enabled.
+  # Format: [TRACE] rule 'name' at token N (TYPE "value") → match|fail
+  defp emit_trace(%State{trace: true}, rule_name, pos, token, result) do
+    outcome = if result == :match, do: "match", else: "fail"
+    IO.write(:stderr, "[TRACE] rule '#{rule_name}' at token #{pos} (#{token.type} #{inspect(token.value)}) \u2192 #{outcome}\n")
+  end
+
+  defp emit_trace(%State{trace: false}, _rule_name, _pos, _token, _result), do: :ok
 
   # -- Element matching (the core grammar interpreter) ------------------------
   #

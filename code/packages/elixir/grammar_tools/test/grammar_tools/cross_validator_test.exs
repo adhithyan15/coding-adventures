@@ -61,4 +61,46 @@ defmodule CodingAdventures.GrammarTools.CrossValidatorTest do
     undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))
     assert undefined == []
   end
+
+  # ---------------------------------------------------------------------------
+  # Cross-validator uses token_names/1 helper from TokenGrammar
+  # ---------------------------------------------------------------------------
+
+  test "token with alias: grammar can reference alias name without undefined error" do
+    # STRING_DQ has alias STRING — grammar references STRING, which is valid
+    {:ok, tg} = TokenGrammar.parse(~s(STRING_DQ = /"[^"]*"/ -> STRING))
+    {:ok, pg} = ParserGrammar.parse("value = STRING ;")
+    issues = CrossValidator.validate(tg, pg)
+    undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))
+    assert undefined == []
+  end
+
+  test "token with alias: definition name counts as used when alias is referenced" do
+    # STRING_DQ -> STRING: grammar references STRING, so STRING_DQ is "used"
+    {:ok, tg} = TokenGrammar.parse(~s(STRING_DQ = /"[^"]*"/ -> STRING))
+    {:ok, pg} = ParserGrammar.parse("value = STRING ;")
+    issues = CrossValidator.validate(tg, pg)
+    # STRING_DQ should NOT appear in unused warnings
+    refute Enum.any?(issues, &(&1 =~ "Token 'STRING_DQ' is defined but never referenced"))
+  end
+
+  test "indentation mode makes INDENT and DEDENT available" do
+    {:ok, tg} = TokenGrammar.parse("mode: indentation\nNAME = /[a-z]+/")
+    {:ok, pg} = ParserGrammar.parse("file = NAME INDENT NAME DEDENT ;")
+    issues = CrossValidator.validate(tg, pg)
+    undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))
+    refute Enum.any?(undefined, &(&1 =~ "INDENT"))
+    refute Enum.any?(undefined, &(&1 =~ "DEDENT"))
+  end
+
+  test "token in grammar group is included in token_names" do
+    source =
+      "TEXT = /[^<]+/\n\ngroup tag:\n  TAG_NAME = /[a-zA-Z]+/\n"
+
+    {:ok, tg} = TokenGrammar.parse(source)
+    {:ok, pg} = ParserGrammar.parse("doc = TEXT TAG_NAME ;")
+    issues = CrossValidator.validate(tg, pg)
+    undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))
+    refute Enum.any?(undefined, &(&1 =~ "TAG_NAME"))
+  end
 end

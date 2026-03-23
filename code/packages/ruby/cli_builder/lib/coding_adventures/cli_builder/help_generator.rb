@@ -245,6 +245,19 @@ module CodingAdventures
         "  #{name_part.ljust(28)}#{desc}#{default_part}"
       end
 
+      # ---------------------------------------------------------------------------
+      # Flag name formatting (v1.1 updated)
+      # ---------------------------------------------------------------------------
+      #
+      # v1.1 changes: When an enum flag has default_when_present, its value
+      # is optional. We show this as "[=VALUE]" instead of " <VALUE>" to
+      # communicate that the value can be omitted:
+      #
+      #   --color [=WHEN]       ← enum with default_when_present
+      #   --output <FILE>       ← regular non-boolean flag
+      #   --verbose             ← boolean (no value shown)
+      #   --verbose             ← count (no value shown, like boolean)
+
       def format_flag_name(flag)
         parts = []
         parts << "-#{flag["short"]}" if flag["short"]
@@ -253,9 +266,14 @@ module CodingAdventures
 
         name = parts.join(", ")
 
-        unless flag["type"] == "boolean"
+        unless %w[boolean count].include?(flag["type"])
           value_label = flag["value_name"] || flag["type"]&.upcase || "VALUE"
-          name += " <#{value_label}>"
+          # Optional value (v1.1): show as [=VALUE] to indicate the value can be omitted
+          name += if flag["default_when_present"]
+            " [=#{value_label}]"
+          else
+            " <#{value_label}>"
+          end
         end
 
         name

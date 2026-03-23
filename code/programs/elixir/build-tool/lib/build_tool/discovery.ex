@@ -35,7 +35,7 @@ defmodule BuildTool.Discovery do
   ## Language inference
 
   We infer a package's language from its directory path. If the path contains
-  "python", "ruby", "go", "rust", "typescript", or "elixir" as a component
+  "python", "ruby", "go", "rust", "typescript", "elixir", or "lua" as a component
   under "packages" or "programs", that is the language. The package name is
   "{language}/{dirname}", e.g., "python/logic-gates" or "go/directed-graph".
 
@@ -86,7 +86,7 @@ defmodule BuildTool.Discovery do
   # Known languages
   # ---------------------------------------------------------------------------
 
-  @known_languages ["python", "ruby", "go", "rust", "typescript", "elixir"]
+  @known_languages ["python", "ruby", "go", "rust", "typescript", "elixir", "lua"]
 
   # ---------------------------------------------------------------------------
   # Public API

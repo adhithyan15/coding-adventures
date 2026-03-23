@@ -35,6 +35,10 @@
  *   with underscores. For example, `coding_adventures_logic_gates` maps to
  *   `elixir/logic-gates`.
  *
+ * - **Lua**: Rock names in .rockspec files use the `coding-adventures-`
+ *   prefix with hyphens. For example, `coding-adventures-logic-gates` maps
+ *   to `lua/logic_gates`.
+ *
  * External dependencies (those not matching the monorepo prefix) are
  * silently skipped.
  *
@@ -661,6 +665,81 @@ function parseElixirDeps(
 }
 
 // ===========================================================================
+// Dependency Parsing -- Lua
+// ===========================================================================
+
+/**
+ * Extract internal dependencies from a Lua package's .rockspec file.
+ *
+ * Lua rockspec files declare dependencies in a block like:
+ *
+ *     dependencies = {
+ *         "lua >= 5.4",
+ *         "coding-adventures-logic-gates >= 0.1.0",
+ *     }
+ *
+ * We scan for the `dependencies = {` line, collect quoted strings until
+ * the closing `}`, strip version specifiers (>=, <=, >, <, ==, ~>), and
+ * look up each name in the known names mapping.
+ */
+function parseLuaDeps(
+  pkg: Package,
+  knownNames: Map<string, string>,
+): string[] {
+  // Find .rockspec files in the package directory.
+  let entries: string[];
+  try {
+    entries = fs.readdirSync(pkg.path);
+  } catch {
+    return [];
+  }
+
+  const rockspecFile = entries.find((e) => e.endsWith(".rockspec"));
+  if (!rockspecFile) {
+    return [];
+  }
+
+  const text = fs.readFileSync(nodePath.join(pkg.path, rockspecFile), "utf-8");
+  const internalDeps: string[] = [];
+
+  // Strategy: scan line by line for the dependencies block,
+  // then extract quoted strings and strip version specifiers.
+  let inDeps = false;
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+
+    if (!inDeps) {
+      // Look for the start of the dependencies block.
+      if (trimmed.startsWith("dependencies") && trimmed.includes("=") && trimmed.includes("{")) {
+        inDeps = true;
+        continue;
+      }
+      continue;
+    }
+
+    // We're inside the dependencies block.
+    if (trimmed.includes("}")) {
+      break;
+    }
+
+    // Extract quoted strings: "something >= 1.0" or 'something >= 1.0'
+    const re = /["']([^"']+)["']/g;
+    let match: RegExpExecArray | null;
+
+    while ((match = re.exec(trimmed)) !== null) {
+      // Strip version specifiers: split on >=, <=, >, <, ==, ~>, or whitespace.
+      const depName = match[1].split(/[>=<!~\s]/)[0].trim().toLowerCase();
+      const pkgName = knownNames.get(depName);
+      if (pkgName) {
+        internalDeps.push(pkgName);
+      }
+    }
+  }
+
+  return internalDeps;
+}
+
+// ===========================================================================
 // Known Names Mapping
 // ===========================================================================
 
@@ -741,6 +820,15 @@ export function buildKnownNames(packages: Package[]): Map<string, string> {
         known.set(appName, pkg.name);
         break;
       }
+
+      case "lua": {
+        // Lua rock names replace underscores with hyphens and add the prefix:
+        // "logic_gates" -> "coding-adventures-logic-gates"
+        const rockName =
+          `coding-adventures-${dirName.replace(/_/g, "-")}`.toLowerCase();
+        known.set(rockName, pkg.name);
+        break;
+      }
     }
   }
 
@@ -796,6 +884,9 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
         break;
       case "elixir":
         deps = parseElixirDeps(pkg, knownNames);
+        break;
+      case "lua":
+        deps = parseLuaDeps(pkg, knownNames);
         break;
       default:
         deps = [];

@@ -13,9 +13,10 @@ package clibuilder
 // # Supported types
 //
 //   string    → string (validated non-empty)
-//   integer   → int64
+//   integer   → int64 (range: [-2^63, 2^63-1]; overflow produces invalid_value)
 //   float     → float64
 //   boolean   → bool (flag presence, not a string "true"/"false")
+//   count     → int64 (incremented by presence; never coerced from a string value)
 //   path      → string (syntactic validity only; existence not checked)
 //   file      → string (must exist and be readable at parse time)
 //   directory → string (must be an existing directory at parse time)
@@ -44,9 +45,27 @@ func coerceValue(raw string, typeName string, def map[string]any) (any, error) {
 		return raw, nil
 
 	case "integer":
+		// Parse as a 64-bit signed integer. Go's strconv.ParseInt with
+		// bitSize=64 naturally rejects values outside [-2^63, 2^63-1],
+		// returning a *strconv.NumError with Err == strconv.ErrRange.
+		// We detect this case to provide a specific range error message
+		// per the v1.1 spec's int64 range validation requirement.
 		n, err := strconv.ParseInt(raw, 10, 64)
 		if err != nil {
+			if numErr, ok := err.(*strconv.NumError); ok && numErr.Err == strconv.ErrRange {
+				return nil, fmt.Errorf("integer value %q is out of range (must be between -9223372036854775808 and 9223372036854775807)", raw)
+			}
 			return nil, fmt.Errorf("not a valid integer: %q", raw)
+		}
+		return n, nil
+
+	case "count":
+		// Count flags are never coerced from a string value — they are
+		// incremented by presence in the parser. If we somehow end up
+		// here (e.g., via --count=3), parse it as an integer.
+		n, err := strconv.ParseInt(raw, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("not a valid count value: %q", raw)
 		}
 		return n, nil
 
