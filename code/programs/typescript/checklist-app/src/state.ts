@@ -317,3 +317,30 @@ export function computeStats(instance: Instance): InstanceStats {
 
   return { totalItems, checkedItems, decisionCount, completionRate, durationMs };
 }
+
+/**
+ * countBranchItems — counts items in a branch for the collapsed summary.
+ *
+ * Recursively walks the InstanceItem tree and returns counts of check items
+ * and decision items. Used by the tree view's inactive branch summary:
+ * "3 steps" or "3 steps, 1 decision".
+ */
+export function countBranchItems(items: InstanceItem[]): {
+  checks: number;
+  decisions: number;
+} {
+  let checks = 0;
+  let decisions = 0;
+  for (const item of items) {
+    if (item.type === "check") {
+      checks++;
+    } else {
+      decisions++;
+      checks += countBranchItems(item.yesBranch).checks;
+      decisions += countBranchItems(item.yesBranch).decisions;
+      checks += countBranchItems(item.noBranch).checks;
+      decisions += countBranchItems(item.noBranch).decisions;
+    }
+  }
+  return { checks, decisions };
+}

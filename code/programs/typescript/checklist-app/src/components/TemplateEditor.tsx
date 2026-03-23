@@ -1,20 +1,23 @@
 /**
  * TemplateEditor — Screen 2: create or edit a checklist template.
  *
- * The form maintains local draft state (DraftItem[]) until Save is pressed.
+ * V0.2 uses the shared TreeView and BranchGroup components to render the
+ * item tree with CSS connectors — "what you build is what you run."
+ *
+ * The editor maintains local draft state (DraftItem[]) until Save is pressed.
  * Only then does it write to the global AppState. Cancel discards all changes.
  *
- * The item list is recursive: a DraftItem of type "decision" has two sub-lists
- * (yesBranch and noBranch), each of which can contain further DraftItems.
- * The ItemEditor component renders itself recursively to handle arbitrary depth.
- *
- * DraftItem is a working copy of TemplateItem. It carries the same shape but
- * uses a local draft ID (not the stable template ID) so items can be freely
- * added, removed, and reordered without touching the AppState.
+ * Decision items show two BranchGroups (yes/no), each containing a nested
+ * TreeView of its branch items. "Add step" buttons appear at the end of
+ * each branch.
  */
 
 import { useState } from "react";
-import { useTranslation } from "@coding-adventures/ui-components";
+import {
+  TreeView,
+  BranchGroup,
+  useTranslation,
+} from "@coding-adventures/ui-components";
 import {
   appState,
   createTemplate,
@@ -24,13 +27,11 @@ import {
 import type { TemplateItem } from "../types.js";
 
 interface TemplateEditorProps {
-  /** If provided, edit an existing template; otherwise create a new one. */
   templateId?: string;
   onNavigate: (path: string) => void;
 }
 
 // ── Draft types ────────────────────────────────────────────────────────────
-// These are local-only while editing. They are converted to TemplateItems on save.
 
 interface DraftCheckItem {
   draftId: string;
@@ -57,17 +58,6 @@ function newCheckItem(): DraftCheckItem {
   return { draftId: newDraftId(), type: "check", label: "" };
 }
 
-function newDecisionItem(): DraftDecisionItem {
-  return {
-    draftId: newDraftId(),
-    type: "decision",
-    label: "",
-    yesBranch: [],
-    noBranch: [],
-  };
-}
-
-/** Convert saved TemplateItems into DraftItems for editing. */
 function toDraft(items: TemplateItem[]): DraftItem[] {
   return items.map((item): DraftItem => {
     if (item.type === "check") {
@@ -84,9 +74,8 @@ function toDraft(items: TemplateItem[]): DraftItem[] {
   });
 }
 
-/** Convert DraftItems back to TemplateItems for saving. */
 function toTemplateItems(drafts: DraftItem[]): TemplateItem[] {
-  return drafts.map((draft, idx): TemplateItem => {
+  return drafts.map((draft): TemplateItem => {
     if (draft.type === "check") {
       return { id: draft.draftId, type: "check", label: draft.label };
     } else {
@@ -98,33 +87,164 @@ function toTemplateItems(drafts: DraftItem[]): TemplateItem[] {
         noBranch: toTemplateItems(draft.noBranch),
       };
     }
-    void idx; // suppress unused-variable warning
   });
 }
 
-// ── ItemEditor ─────────────────────────────────────────────────────────────
+// ── TreeView node adapter ──────────────────────────────────────────────────
 
-interface ItemEditorProps {
+interface DraftTreeNode {
+  id: string;
+  draft: DraftItem;
+  children?: DraftTreeNode[];
+}
+
+function toDraftTreeNodes(items: DraftItem[]): DraftTreeNode[] {
+  return items.map((item) => ({
+    id: item.draftId,
+    draft: item,
+  }));
+}
+
+// ── Recursive editor item list ─────────────────────────────────────────────
+
+interface EditorItemListProps {
+  items: DraftItem[];
+  depth: number;
+  onChange: (updated: DraftItem[]) => void;
+}
+
+function EditorItemList({ items, depth, onChange }: EditorItemListProps) {
+  const { t } = useTranslation();
+  const nodes = toDraftTreeNodes(items);
+
+  function updateItem(idx: number, updated: DraftItem) {
+    const next = [...items];
+    next[idx] = updated;
+    onChange(next);
+  }
+
+  function removeItem(idx: number) {
+    onChange(items.filter((_, i) => i !== idx));
+  }
+
+  function moveItem(idx: number, direction: -1 | 1) {
+    const next = [...items];
+    const target = idx + direction;
+    if (target < 0 || target >= next.length) return;
+    [next[idx], next[target]] = [next[target]!, next[idx]!];
+    onChange(next);
+  }
+
+  function addItem() {
+    onChange([...items, newCheckItem()]);
+  }
+
+  function updateBranch(
+    itemIdx: number,
+    branch: "yesBranch" | "noBranch",
+    updated: DraftItem[],
+  ) {
+    const item = items[itemIdx];
+    if (item?.type === "decision") {
+      updateItem(itemIdx, { ...item, [branch]: updated });
+    }
+  }
+
+  return (
+    <div>
+      <TreeView
+        nodes={nodes}
+        renderNode={(treeNode) => {
+          const idx = items.findIndex((i) => i.draftId === treeNode.draft.draftId);
+          const item = treeNode.draft;
+
+          return (
+            <div>
+              <ItemEditorRow
+                item={item}
+                index={idx}
+                total={items.length}
+                onChange={(updated) => updateItem(idx, updated)}
+                onRemove={() => removeItem(idx)}
+                onMoveUp={() => moveItem(idx, -1)}
+                onMoveDown={() => moveItem(idx, 1)}
+              />
+              {item.type === "decision" && (
+                <div style={{ marginTop: "8px" }}>
+                  <BranchGroup
+                    label={
+                      <span className="item-editor__branch-label--yes">
+                        {t("branch.yes")}
+                      </span>
+                    }
+                    collapsed={false}
+                    inactive={false}
+                  >
+                    <EditorItemList
+                      items={item.yesBranch}
+                      depth={depth + 1}
+                      onChange={(updated) =>
+                        updateBranch(idx, "yesBranch", updated)
+                      }
+                    />
+                  </BranchGroup>
+                  <BranchGroup
+                    label={
+                      <span className="item-editor__branch-label--no">
+                        {t("branch.no")}
+                      </span>
+                    }
+                    collapsed={false}
+                    inactive={false}
+                  >
+                    <EditorItemList
+                      items={item.noBranch}
+                      depth={depth + 1}
+                      onChange={(updated) =>
+                        updateBranch(idx, "noBranch", updated)
+                      }
+                    />
+                  </BranchGroup>
+                </div>
+              )}
+            </div>
+          );
+        }}
+        ariaLabel="Checklist editor"
+      />
+      <button
+        className="btn--ghost"
+        onClick={addItem}
+        type="button"
+        style={{ alignSelf: "flex-start", marginTop: "8px" }}
+      >
+        + {depth === 0 ? t("editor.addItem") : t("editor.addBranchItem")}
+      </button>
+    </div>
+  );
+}
+
+// ── ItemEditorRow ──────────────────────────────────────────────────────────
+
+interface ItemEditorRowProps {
   item: DraftItem;
   index: number;
   total: number;
-  depth: number;
   onChange: (updated: DraftItem) => void;
   onRemove: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
 }
 
-function ItemEditor({
+function ItemEditorRow({
   item,
   index,
   total,
-  depth,
   onChange,
   onRemove,
   onMoveUp,
   onMoveDown,
-}: ItemEditorProps) {
+}: ItemEditorRowProps) {
   const { t } = useTranslation();
 
   function setLabel(label: string) {
@@ -145,21 +265,11 @@ function ItemEditor({
     });
   }
 
-  function updateBranch(
-    branch: "yesBranch" | "noBranch",
-    updated: DraftItem[],
-  ) {
-    if (item.type === "decision") {
-      onChange({ ...item, [branch]: updated });
-    }
-  }
-
   return (
     <div
       className={`item-editor${item.type === "decision" ? " item-editor--decision" : ""}`}
     >
       <div className="item-editor__row">
-        {/* Type toggle */}
         <div className="item-editor__type-toggle">
           <button
             className={`item-editor__type-btn${item.type === "check" ? " item-editor__type-btn--active" : ""}`}
@@ -178,8 +288,6 @@ function ItemEditor({
             {t("editor.typeDecision")}
           </button>
         </div>
-
-        {/* Label input */}
         <input
           type="text"
           value={item.label}
@@ -195,8 +303,6 @@ function ItemEditor({
               : t("editor.questionPlaceholder")
           }
         />
-
-        {/* Controls */}
         <div className="item-editor__controls">
           <button
             className="btn--ghost"
@@ -229,88 +335,6 @@ function ItemEditor({
           </button>
         </div>
       </div>
-
-      {/* Decision branches (recursive) */}
-      {item.type === "decision" && (
-        <>
-          <div className="item-editor__branch-label item-editor__branch-label--yes">
-            {t("editor.yesBranch")}
-          </div>
-          <ItemList
-            items={item.yesBranch}
-            depth={depth + 1}
-            onChange={(updated) => updateBranch("yesBranch", updated)}
-          />
-          <div className="item-editor__branch-label item-editor__branch-label--no">
-            {t("editor.noBranch")}
-          </div>
-          <ItemList
-            items={item.noBranch}
-            depth={depth + 1}
-            onChange={(updated) => updateBranch("noBranch", updated)}
-          />
-        </>
-      )}
-    </div>
-  );
-}
-
-// ── ItemList ───────────────────────────────────────────────────────────────
-
-interface ItemListProps {
-  items: DraftItem[];
-  depth: number;
-  onChange: (updated: DraftItem[]) => void;
-}
-
-function ItemList({ items, depth, onChange }: ItemListProps) {
-  const { t } = useTranslation();
-
-  function addItem() {
-    onChange([...items, newCheckItem()]);
-  }
-
-  function updateItem(idx: number, updated: DraftItem) {
-    const next = [...items];
-    next[idx] = updated;
-    onChange(next);
-  }
-
-  function removeItem(idx: number) {
-    onChange(items.filter((_, i) => i !== idx));
-  }
-
-  function moveItem(idx: number, direction: -1 | 1) {
-    const next = [...items];
-    const target = idx + direction;
-    if (target < 0 || target >= next.length) return;
-    [next[idx], next[target]] = [next[target]!, next[idx]!];
-    onChange(next);
-  }
-
-  return (
-    <div className={`item-list${depth > 0 ? " item-list--branch" : ""}`}>
-      {items.map((item, idx) => (
-        <ItemEditor
-          key={item.draftId}
-          item={item}
-          index={idx}
-          total={items.length}
-          depth={depth}
-          onChange={(updated) => updateItem(idx, updated)}
-          onRemove={() => removeItem(idx)}
-          onMoveUp={() => moveItem(idx, -1)}
-          onMoveDown={() => moveItem(idx, 1)}
-        />
-      ))}
-      <button
-        className="btn--ghost"
-        onClick={addItem}
-        type="button"
-        style={{ alignSelf: "flex-start", marginTop: "4px" }}
-      >
-        + {depth === 0 ? t("editor.addItem") : t("editor.addBranchItem")}
-      </button>
     </div>
   );
 }
@@ -382,7 +406,7 @@ export function TemplateEditor({ templateId, onNavigate }: TemplateEditorProps) 
         />
       </div>
 
-      <ItemList items={items} depth={0} onChange={setItems} />
+      <EditorItemList items={items} depth={0} onChange={setItems} />
 
       <div className="template-editor__actions">
         <button
