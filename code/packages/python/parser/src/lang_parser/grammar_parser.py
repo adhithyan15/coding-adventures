@@ -137,6 +137,7 @@ needed.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from grammar_tools import (
@@ -325,6 +326,42 @@ class GrammarParser:
         self._furthest_pos = 0
         self._furthest_expected: list[str] = []
 
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. See the lexer's hooks for the general pattern.
+        self._pre_parse_hooks: list[Callable[[list[Token]], list[Token]]] = []
+        self._post_parse_hooks: list[Callable[[ASTNode], ASTNode]] = []
+
+    def add_pre_parse(self, hook: Callable[[list[Token]], list[Token]]) -> None:
+        """Register a token transform to run before parsing.
+
+        The hook receives the token list and returns a (possibly modified)
+        token list. Runs after all lexer hooks have completed.
+
+        Use cases:
+        - Token-level disambiguation
+        - Injecting synthetic tokens for parser guidance
+
+        Args:
+            hook: A function list[Token] → list[Token].
+        """
+        self._pre_parse_hooks.append(hook)
+
+    def add_post_parse(self, hook: Callable[[ASTNode], ASTNode]) -> None:
+        """Register an AST transform to run after parsing.
+
+        The hook receives the root ASTNode and returns a (possibly modified)
+        ASTNode. Multiple hooks compose left-to-right.
+
+        Use cases:
+        - Lisp defmacro expansion
+        - Desugaring (syntactic sugar → core forms)
+        - AST optimization passes
+
+        Args:
+            hook: A function ASTNode → ASTNode.
+        """
+        self._post_parse_hooks.append(hook)
+
     def _grammar_references_newline(self) -> bool:
         """Check if any grammar rule references the NEWLINE token.
 
@@ -358,8 +395,20 @@ class GrammarParser:
     def parse(self) -> ASTNode:
         """Parse the token stream using the first grammar rule as entry point.
 
-        The first rule in a ``.grammar`` file is always the start symbol.
-        After parsing, we verify all tokens have been consumed.
+        The parsing pipeline has three stages:
+
+        1. **Pre-parse hooks** — transform the token list before parsing.
+           Each hook receives a token list and returns a token list. Multiple
+           hooks compose left-to-right (A → B → C).
+
+        2. **Core parsing** — the existing grammar-driven recursive descent
+           parser, using the first rule as the start symbol.
+
+        3. **Post-parse hooks** — transform the AST after parsing.
+           Each hook receives an ASTNode and returns an ASTNode.
+
+        When no hooks are registered, this is equivalent to the original
+        parse() — zero overhead.
 
         Returns:
             An ASTNode representing the complete parse tree.
@@ -368,6 +417,15 @@ class GrammarParser:
             GrammarParseError: If the grammar has no rules, the input doesn't
                 match, or there are unconsumed tokens.
         """
+        # Stage 1: Pre-parse hooks transform the token list.
+        # Common use cases: token disambiguation, injecting synthetic tokens.
+        # Each hook is list[Token] → list[Token].
+        if self._pre_parse_hooks:
+            tokens = self._tokens
+            for hook in self._pre_parse_hooks:
+                tokens = hook(tokens)
+            self._tokens = tokens
+
         if not self._grammar.rules:
             raise GrammarParseError("Grammar has no rules")
 
@@ -405,6 +463,13 @@ class GrammarParser:
                     f"Unexpected token: {tok.value!r}",
                     tok,
                 )
+
+        # Stage 3: Post-parse hooks transform the AST.
+        # Common use cases: Lisp defmacro expansion, desugaring,
+        # AST optimization passes. Each hook is ASTNode → ASTNode.
+        if self._post_parse_hooks:
+            for hook in self._post_parse_hooks:
+                result = hook(result)
 
         return result
 

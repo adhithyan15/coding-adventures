@@ -1449,6 +1449,7 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups,
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Invalid regex")));
@@ -1474,6 +1475,7 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups,
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Empty pattern group")));

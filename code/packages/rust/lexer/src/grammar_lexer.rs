@@ -390,6 +390,14 @@ pub struct GrammarLexer<'a> {
     /// patterns match regardless of case. This is useful for languages
     /// like SQL and BASIC where `SELECT` and `select` are equivalent.
     case_sensitive: bool,
+
+    /// Pre-tokenize hooks: transform source text before lexing.
+    /// Each hook is a function `String -> String`. Multiple hooks compose left-to-right.
+    pre_tokenize_hooks: Vec<Box<dyn Fn(String) -> String>>,
+
+    /// Post-tokenize hooks: transform token list after lexing.
+    /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    post_tokenize_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -468,6 +476,8 @@ impl<'a> GrammarLexer<'a> {
             on_token: None,
             skip_enabled: true,
             case_sensitive,
+            pre_tokenize_hooks: Vec::new(),
+            post_tokenize_hooks: Vec::new(),
         }
     }
 
@@ -485,6 +495,22 @@ impl<'a> GrammarLexer<'a> {
     /// - The EOF token
     pub fn set_on_token(&mut self, callback: Option<OnTokenCallback>) {
         self.on_token = callback;
+    }
+
+    /// Register a text transform to run before tokenization.
+    ///
+    /// The hook receives the source string and returns a (possibly modified)
+    /// source string. Multiple hooks compose left-to-right.
+    pub fn add_pre_tokenize(&mut self, hook: Box<dyn Fn(String) -> String>) {
+        self.pre_tokenize_hooks.push(hook);
+    }
+
+    /// Register a token transform to run after tokenization.
+    ///
+    /// The hook receives the full token list and returns a (possibly modified)
+    /// token list. Multiple hooks compose left-to-right.
+    pub fn add_post_tokenize(&mut self, hook: Box<dyn Fn(Vec<Token>) -> Vec<Token>>) {
+        self.post_tokenize_hooks.push(hook);
     }
 
     // -----------------------------------------------------------------------
@@ -1100,11 +1126,30 @@ impl<'a> GrammarLexer<'a> {
     /// Dispatches to either standard or indentation mode based on the
     /// grammar's mode directive.
     pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
-        if self.indent_mode {
-            self.tokenize_indentation()
-        } else {
-            self.tokenize_standard()
+        // Stage 1: Pre-tokenize hooks transform the source text.
+        if !self.pre_tokenize_hooks.is_empty() {
+            let mut source = self.source.clone().into_owned();
+            for hook in &self.pre_tokenize_hooks {
+                source = hook(source);
+            }
+            // Rebuild chars and source from the transformed text.
+            self.chars = source.chars().collect();
+            self.source = Cow::Owned(source);
         }
+
+        // Stage 2: Core tokenization.
+        let mut tokens = if self.indent_mode {
+            self.tokenize_indentation()?
+        } else {
+            self.tokenize_standard()?
+        };
+
+        // Stage 3: Post-tokenize hooks transform the token list.
+        for hook in &self.post_tokenize_hooks {
+            tokens = hook(tokens);
+        }
+
+        Ok(tokens)
     }
 }
 

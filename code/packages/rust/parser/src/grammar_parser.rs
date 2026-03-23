@@ -189,6 +189,14 @@ pub struct GrammarParser {
     /// at a position where we're already inside that same rule (but haven't
     /// cached the result yet), we know it's left recursion and should fail.
     in_progress: std::collections::HashSet<String>,
+
+    /// Pre-parse hooks: transform token list before parsing.
+    /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    pre_parse_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
+
+    /// Post-parse hooks: transform AST after parsing.
+    /// Each hook is a function `GrammarASTNode -> GrammarASTNode`. Multiple hooks compose left-to-right.
+    post_parse_hooks: Vec<Box<dyn Fn(GrammarASTNode) -> GrammarASTNode>>,
 }
 
 impl GrammarParser {
@@ -252,12 +260,30 @@ impl GrammarParser {
             furthest_expected: Vec::new(),
             trace,
             in_progress: std::collections::HashSet::new(),
+            pre_parse_hooks: Vec::new(),
+            post_parse_hooks: Vec::new(),
         }
     }
 
     /// Whether newlines are treated as significant tokens in this grammar.
     pub fn is_newlines_significant(&self) -> bool {
         self.newlines_significant
+    }
+
+    /// Register a token transform to run before parsing.
+    ///
+    /// The hook receives the token list and returns a (possibly modified)
+    /// token list. Multiple hooks compose left-to-right.
+    pub fn add_pre_parse(&mut self, hook: Box<dyn Fn(Vec<Token>) -> Vec<Token>>) {
+        self.pre_parse_hooks.push(hook);
+    }
+
+    /// Register an AST transform to run after parsing.
+    ///
+    /// The hook receives the parsed AST root and returns a (possibly modified)
+    /// AST. Multiple hooks compose left-to-right.
+    pub fn add_post_parse(&mut self, hook: Box<dyn Fn(GrammarASTNode) -> GrammarASTNode>) {
+        self.post_parse_hooks.push(hook);
     }
 
     /// Get the current token without consuming it.
@@ -285,6 +311,15 @@ impl GrammarParser {
     ///
     /// Uses the first rule in the grammar as the entry point (start symbol).
     pub fn parse(&mut self) -> Result<GrammarASTNode, GrammarParseError> {
+        // Pre-parse hooks: transform the token list before parsing begins.
+        if !self.pre_parse_hooks.is_empty() {
+            let mut tokens = std::mem::take(&mut self.tokens);
+            for hook in &self.pre_parse_hooks {
+                tokens = hook(tokens);
+            }
+            self.tokens = tokens;
+        }
+
         if self.grammar.rules.is_empty() {
             return Err(GrammarParseError {
                 message: "Grammar has no rules".to_string(),
@@ -356,7 +391,13 @@ impl GrammarParser {
                     });
                 }
 
-                Ok(node)
+                // Post-parse hooks: transform the AST after parsing completes.
+                let mut result = node;
+                for hook in &self.post_parse_hooks {
+                    result = hook(result);
+                }
+
+                Ok(result)
             }
         }
     }

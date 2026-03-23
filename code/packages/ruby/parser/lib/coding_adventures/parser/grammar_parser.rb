@@ -104,13 +104,35 @@ module CodingAdventures
         # Furthest failure tracking for better error messages.
         @furthest_pos = 0
         @furthest_expected = []
+
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. Hooks compose left-to-right.
+        @pre_parse_hooks = []
+        @post_parse_hooks = []
       end
 
       # Whether newlines are significant in this grammar.
       attr_reader :newlines_significant
 
+      # Register a token transform to run before parsing begins.
+      # The hook receives the token list and returns a (possibly
+      # modified) token list. Multiple hooks compose left-to-right.
+      def add_pre_parse(hook)
+        @pre_parse_hooks << hook
+      end
+
+      # Register an AST transform to run after parsing completes.
+      # The hook receives the root ASTNode and returns a (possibly
+      # modified) ASTNode. Multiple hooks compose left-to-right.
+      def add_post_parse(hook)
+        @post_parse_hooks << hook
+      end
+
       # Parse using the first grammar rule as entry point.
       def parse
+        # Pre-parse hooks transform the token list before parsing.
+        @pre_parse_hooks.each { |hook| @tokens = hook.call(@tokens) }
+
         raise GrammarParseError.new("Grammar has no rules") if @grammar.rules.empty?
 
         entry_rule = @grammar.rules[0]
@@ -141,6 +163,9 @@ module CodingAdventures
             current
           )
         end
+
+        # Post-parse hooks transform the AST after parsing completes.
+        @post_parse_hooks.each { |hook| result = hook.call(result) }
 
         result
       end

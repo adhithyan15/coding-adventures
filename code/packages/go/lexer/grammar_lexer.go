@@ -51,6 +51,18 @@ type compiledPattern struct {
 // On-Token Callback Type
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Hook Types — Pre/Post Tokenization Transforms
+// ---------------------------------------------------------------------------
+
+// PreTokenizeHook transforms source text before tokenization.
+// Multiple hooks compose left-to-right: source flows through A → B → C.
+type PreTokenizeHook func(source string) string
+
+// PostTokenizeHook transforms the token list after tokenization.
+// Multiple hooks compose left-to-right.
+type PostTokenizeHook func(tokens []Token) []Token
+
 // OnTokenCallback is the function signature for on-token callbacks.
 //
 // The callback fires after each token match, before the token is added to
@@ -271,6 +283,14 @@ type GrammarLexer struct {
 	// aliasMap maps token definition names to their aliases. Used during
 	// group pattern compilation to register aliases from group definitions.
 	aliasMap map[string]string
+
+	// preTokenizeHooks holds functions that transform the source text before
+	// tokenization. Multiple hooks compose left-to-right (A → B → C).
+	preTokenizeHooks []PreTokenizeHook
+
+	// postTokenizeHooks holds functions that transform the token list after
+	// tokenization. Multiple hooks compose left-to-right.
+	postTokenizeHooks []PostTokenizeHook
 }
 
 // NewGrammarLexer creates a new grammar-driven lexer.
@@ -388,6 +408,20 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 		skipEnabled:     true,
 		aliasMap:        aliasMap,
 	}
+}
+
+// AddPreTokenize registers a text transform to run before tokenization.
+// The hook receives the raw source string and returns a (possibly modified)
+// source string. Multiple hooks compose left-to-right.
+func (l *GrammarLexer) AddPreTokenize(hook PreTokenizeHook) {
+	l.preTokenizeHooks = append(l.preTokenizeHooks, hook)
+}
+
+// AddPostTokenize registers a token transform to run after tokenization.
+// The hook receives the full token list (including EOF) and returns a
+// (possibly modified) token list. Multiple hooks compose left-to-right.
+func (l *GrammarLexer) AddPostTokenize(hook PostTokenizeHook) {
+	l.postTokenizeHooks = append(l.postTokenizeHooks, hook)
 }
 
 // SetOnToken registers a callback that fires on every token match.
@@ -632,10 +666,34 @@ func processEscapes(s string) string {
 // Dispatches to the appropriate tokenization method based on whether
 // indentation mode is active.
 func (l *GrammarLexer) Tokenize() []Token {
-	if l.indentMode {
-		return l.tokenizeIndentation()
+	// Stage 1: Pre-tokenize hooks transform the source text.
+	// Each hook receives the output of the previous hook, composing
+	// left-to-right. This enables source-level transforms like macro
+	// expansion or encoding normalization before any pattern matching.
+	if len(l.preTokenizeHooks) > 0 {
+		source := l.source
+		for _, hook := range l.preTokenizeHooks {
+			source = hook(source)
+		}
+		l.source = source
 	}
-	return l.tokenizeStandard()
+
+	// Stage 2: Core tokenization.
+	var tokens []Token
+	if l.indentMode {
+		tokens = l.tokenizeIndentation()
+	} else {
+		tokens = l.tokenizeStandard()
+	}
+
+	// Stage 3: Post-tokenize hooks transform the token list.
+	// Each hook receives the full token list (including EOF) and returns
+	// a (possibly modified) token list. Hooks compose left-to-right.
+	for _, hook := range l.postTokenizeHooks {
+		tokens = hook(tokens)
+	}
+
+	return tokens
 }
 
 // ---------------------------------------------------------------------------
