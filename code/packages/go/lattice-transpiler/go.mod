@@ -2,13 +2,16 @@ module github.com/adhithyan15/coding-adventures/code/packages/go/lattice-transpi
 
 go 1.26
 
+require github.com/adhithyan15/coding-adventures/code/packages/go/lattice-ast-to-css v0.0.0
+
 require (
-	github.com/adhithyan15/coding-adventures/code/packages/go/lattice-ast-to-css v0.0.0
-	github.com/adhithyan15/coding-adventures/code/packages/go/lattice-parser v0.0.0
-	github.com/adhithyan15/coding-adventures/code/packages/go/lattice-lexer v0.0.0
-	github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools v0.0.0
-	github.com/adhithyan15/coding-adventures/code/packages/go/parser v0.0.0
-	github.com/adhithyan15/coding-adventures/code/packages/go/lexer v0.0.0
+	github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/lattice-lexer v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/lattice-parser v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/lexer v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/parser v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/state-machine v0.0.0 // indirect
 )
 
 replace (
