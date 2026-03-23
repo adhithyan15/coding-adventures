@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.2.0 — Everything is Addition tab
+
+### Added
+
+- **Tab 2: Everything is Addition** — the central insight of computer arithmetic
+- `SubtractionView` — interactive 3-step two's complement transformation
+  - Step 1: Show A − B as the problem
+  - Step 2: Negate B → NOT(B) + 1 = two's complement of B, with bit-by-bit display
+  - Step 3: Add A + (−B) through the SAME ripple-carry adder, with per-bit trace table
+  - Educational callout explaining why `NOT(x) + 1 = −x`
+- `MultiplicationView` — shift-and-add algorithm with long multiplication grid
+  - 4-bit inputs with MSB-first grid display (like pencil-and-paper multiplication)
+  - Per-step partial products: shows shifted multiplicand when bit=1, skip when bit=0
+  - Step trace table with running totals
+  - Active rows highlighted, skipped rows dimmed
+  - Educational callout about AND gates and conditional additions
+- `EverythingIsAddition` container stacking both views
+- 17 new i18n strings covering subtraction and multiplication content
+- Addition-specific CSS (transformation steps, long multiplication grid, callouts)
+- 17 new tests (37 total)
+
+### Changed
+
+- `App.tsx` now renders EverythingIsAddition when addition tab is active
+
 ## 0.1.0 — App scaffold + Binary Adders tab
 
 ### Added

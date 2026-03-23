@@ -13,6 +13,7 @@ import en from "./i18n/locales/en.json";
 import { App } from "./App.js";
 import "./styles/app.css";
 import "./styles/adders.css";
+import "./styles/addition.css";
 
 // Initialize translations before rendering any components.
 // All visible text comes from en.json — no hardcoded strings in components.

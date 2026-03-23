@@ -25,6 +25,31 @@
 
   "truthTable.title": "Truth Table",
 
+  "addition.intro": "The adder circuit from Tab 1 is the only arithmetic hardware a CPU truly needs. Both subtraction and multiplication reduce to addition — no separate circuits required. This is one of the most elegant insights in computer architecture.",
+
+  "addition.sub.title": "Subtraction = Addition with Two's Complement",
+  "addition.sub.description": "To compute A − B, the CPU doesn't subtract at all. It negates B using two's complement (flip every bit, add 1), then adds: A + (−B). The same ripple-carry adder handles both addition and subtraction — just toggle a MUX and a carry-in wire.",
+  "addition.sub.ariaLabel": "Subtraction as addition: two's complement transformation step by step",
+  "addition.sub.step1": "Step 1 — The Problem",
+  "addition.sub.step2": "Step 2 — Negate B (Two's Complement)",
+  "addition.sub.step3": "Step 3 — Add A + (−B) using the SAME adder",
+  "addition.sub.twosComp": "in two's complement",
+  "addition.sub.adderTrace": "Adder Trace (same circuit as Tab 1!)",
+  "addition.sub.insight": "The beauty of two's complement: x + NOT(x) + 1 = 0 for any x. Therefore NOT(x) + 1 = −x. The ALU reuses the exact same adder for both ADD and SUB — it just needs NOT gates on the B input and a carry-in of 1. No separate subtraction hardware!",
+
+  "addition.mul.title": "Multiplication = Shift-and-Add",
+  "addition.mul.description": "Binary multiplication is like long multiplication on paper, but simpler: each digit is only 0 or 1, so each partial product is either 'add shifted value' or 'skip'. The multiplicand is shifted left and conditionally added to a running total — using the same adder circuit again.",
+  "addition.mul.ariaLabel": "Multiplication as shift-and-add: long multiplication grid with step-by-step trace",
+  "addition.mul.gridLabel": "Long multiplication grid",
+  "addition.mul.add": "add",
+  "addition.mul.skip": "skip",
+  "addition.mul.stepTrace": "Step-by-Step Trace",
+  "addition.mul.step": "Step",
+  "addition.mul.bit": "Bit",
+  "addition.mul.action": "Action",
+  "addition.mul.runningTotal": "Running Total",
+  "addition.mul.insight": "Each 'multiply by one bit' is just an AND gate (bit × multiplicand). Each 'add to running total' is a ripple-carry adder. Multiplication is nothing more than conditional additions of shifted values. A 4-bit multiplier needs at most 3 additions.",
+
   "placeholder.comingSoon": "Coming soon",
 
   "footer.credit": "Built with gate-level arithmetic models"
