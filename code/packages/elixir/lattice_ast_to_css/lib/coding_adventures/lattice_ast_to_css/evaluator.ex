@@ -62,6 +62,7 @@ defmodule CodingAdventures.LatticeAstToCss.Evaluator do
       "lattice_multiplicative" -> eval_multiplicative(children, scope)
       "lattice_unary" -> eval_unary(children, scope)
       "lattice_primary" -> eval_primary(children, scope)
+      "value_list" -> eval_value_list(children, scope)
       # For any other single-child wrapper rule, unwrap
       _ ->
         case children do
@@ -95,6 +96,27 @@ defmodule CodingAdventures.LatticeAstToCss.Evaluator do
   # Just a single-child pass-through.
   defp eval_single_child([child | _], scope), do: evaluate(child, scope)
   defp eval_single_child([], _scope), do: :null
+
+  # value_list — produced by variable substitution.
+  # When expand_variable_declaration substitutes `$i + 1`, the evaluator
+  # receives a value_list node whose children are [NUMBER(2), PLUS, NUMBER(1)].
+  # If arithmetic operators are present, delegate to additive; otherwise
+  # evaluate the first child.
+  defp eval_value_list([], _scope), do: :null
+  defp eval_value_list([single], scope), do: evaluate(single, scope)
+
+  defp eval_value_list(children, scope) do
+    has_ops = Enum.any?(children, fn
+      %Token{value: v} when v in ["+", "-", "*"] -> true
+      _ -> false
+    end)
+
+    if has_ops do
+      eval_additive(children, scope)
+    else
+      evaluate(hd(children), scope)
+    end
+  end
 
   # lattice_or_expr = lattice_and_expr { "or" lattice_and_expr } ;
   #

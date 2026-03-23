@@ -103,6 +103,7 @@ impl<'a> ExpressionEvaluator<'a> {
             "lattice_multiplicative" => self.eval_multiplicative(node),
             "lattice_unary" => self.eval_unary(node),
             "lattice_primary" => self.eval_primary(node),
+            "value_list" => self.eval_value_list(node),
             _ => {
                 // For wrapper rules with a single child, unwrap.
                 if node.children.len() == 1 {
@@ -331,6 +332,40 @@ impl<'a> ExpressionEvaluator<'a> {
             _ => false,
         };
         LatticeValue::Bool(result)
+    }
+
+    // -----------------------------------------------------------------------
+    // value_list — produced by variable substitution.
+    // When expand_variable_declaration substitutes `$i + 1`, the evaluator
+    // receives a value_list AST node whose children are
+    // [NUMBER(2), PLUS, NUMBER(1)].  If arithmetic operators are present
+    // we delegate to the additive handler; otherwise evaluate the first child.
+    // -----------------------------------------------------------------------
+
+    fn eval_value_list(&self, node: &GrammarASTNode) -> Result<LatticeValue, LatticeError> {
+        if node.children.is_empty() {
+            return Ok(LatticeValue::Null);
+        }
+        if node.children.len() <= 1 {
+            return match &node.children[0] {
+                ASTNodeOrToken::Node(n) => self.evaluate_node(n),
+                ASTNodeOrToken::Token(t) => Ok(self.evaluate_token(t)),
+            };
+        }
+        let has_ops = node.children.iter().any(|c| {
+            if let ASTNodeOrToken::Token(t) = c {
+                t.value == "+" || t.value == "-" || t.value == "*"
+            } else {
+                false
+            }
+        });
+        if has_ops {
+            return self.eval_additive(node);
+        }
+        match &node.children[0] {
+            ASTNodeOrToken::Node(n) => self.evaluate_node(n),
+            ASTNodeOrToken::Token(t) => Ok(self.evaluate_token(t)),
+        }
     }
 
     // -----------------------------------------------------------------------

@@ -614,6 +614,28 @@ class ExpressionEvaluator:
 
         return LatticeNull()
 
+    def _eval_value_list(self, node: object) -> LatticeValue:
+        """value_list — produced by variable substitution.
+
+        When ``expand_variable_declaration`` substitutes ``$i + 1``, the
+        evaluator receives a ``value_list`` AST node whose children are
+        ``[NUMBER(2), PLUS, NUMBER(1)]``.  If arithmetic operators are
+        present we delegate to the existing additive handler; otherwise
+        we simply evaluate the first child.
+        """
+        children = node.children  # type: ignore[attr-defined]
+        if len(children) <= 1:
+            return self.evaluate(children[0]) if children else LatticeNull()
+        has_ops = any(
+            hasattr(c, "value")
+            and not hasattr(c, "rule_name")
+            and c.value in ("+", "-", "*")  # type: ignore[attr-defined]
+            for c in children
+        )
+        if has_ops:
+            return self._eval_lattice_additive(node)
+        return self.evaluate(children[0])
+
     def _eval_lattice_expression(self, node: object) -> LatticeValue:
         """lattice_expression = lattice_or_expr ;"""
         children = node.children  # type: ignore[attr-defined]

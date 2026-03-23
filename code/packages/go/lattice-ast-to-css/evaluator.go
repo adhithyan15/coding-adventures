@@ -1243,6 +1243,8 @@ func (e *ExpressionEvaluator) Evaluate(node interface{}) LatticeValue {
 		return e.evalUnary(ast)
 	case "lattice_primary":
 		return e.evalPrimary(ast)
+	case "value_list":
+		return e.evalValueList(ast)
 	}
 
 	// For single-child wrapper rules, unwrap and recurse
@@ -1259,6 +1261,33 @@ func (e *ExpressionEvaluator) Evaluate(node interface{}) LatticeValue {
 	}
 
 	return LatticeNull{}
+}
+
+// evalValueList handles value_list nodes produced by variable substitution.
+// When expand_variable_declaration substitutes `$i + 1`, the evaluator receives
+// a value_list AST node whose children are [NUMBER(2), PLUS, NUMBER(1)].
+// If arithmetic operators are present we delegate to the additive handler;
+// otherwise we simply evaluate the first child.
+func (e *ExpressionEvaluator) evalValueList(node *parser.ASTNode) LatticeValue {
+	if len(node.Children) == 0 {
+		return LatticeNull{}
+	}
+	if len(node.Children) <= 1 {
+		return e.Evaluate(node.Children[0])
+	}
+	hasOps := false
+	for _, c := range node.Children {
+		if tok, ok := c.(lexer.Token); ok {
+			if tok.Value == "+" || tok.Value == "-" || tok.Value == "*" {
+				hasOps = true
+				break
+			}
+		}
+	}
+	if hasOps {
+		return e.evalAdditive(node)
+	}
+	return e.Evaluate(node.Children[0])
 }
 
 // evalExpression handles: lattice_expression = lattice_or_expr ;

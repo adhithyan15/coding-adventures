@@ -382,4 +382,54 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2CoverageTest do
       assert MapSet.member?(names, "math.div")
     end
   end
+
+  # ==========================================================================
+  # Evaluator: eval_value_list
+  # ==========================================================================
+
+  describe "Evaluator eval_value_list" do
+    alias CodingAdventures.LatticeAstToCss.{Evaluator, Scope}
+    alias CodingAdventures.Parser.ASTNode
+    alias CodingAdventures.Lexer.Token
+
+    defp tok(type, value), do: %Token{type: type, value: value, line: 1, column: 1}
+
+    test "value_list with arithmetic operators delegates to additive" do
+      # Simulates: 2 + 1 -> value_list with [NUMBER(2), PLUS, NUMBER(1)]
+      node = %ASTNode{
+        rule_name: "value_list",
+        children: [tok("NUMBER", "2"), tok("PLUS", "+"), tok("NUMBER", "1")]
+      }
+      scope = Scope.new()
+      result = Evaluator.evaluate(node, scope)
+      assert {:number, 3.0} = result
+    end
+
+    test "value_list without operators evaluates first child" do
+      node = %ASTNode{
+        rule_name: "value_list",
+        children: [tok("IDENT", "red"), tok("COMMA", ","), tok("IDENT", "blue")]
+      }
+      scope = Scope.new()
+      result = Evaluator.evaluate(node, scope)
+      assert {:ident, "red"} = result
+    end
+
+    test "value_list with single child evaluates that child" do
+      node = %ASTNode{
+        rule_name: "value_list",
+        children: [tok("NUMBER", "42")]
+      }
+      scope = Scope.new()
+      result = Evaluator.evaluate(node, scope)
+      assert {:number, 42.0} = result
+    end
+
+    test "value_list with empty children returns null" do
+      node = %ASTNode{rule_name: "value_list", children: []}
+      scope = Scope.new()
+      result = Evaluator.evaluate(node, scope)
+      assert :null = result
+    end
+  end
 end

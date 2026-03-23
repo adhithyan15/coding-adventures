@@ -487,6 +487,23 @@ module CodingAdventures
 
       private
 
+      # value_list — used when variable substitution produces a flat list of
+      # tokens (e.g., `$i + 1` becomes a value_list with children
+      # [NUMBER(2), PLUS, NUMBER(1)]). If arithmetic operators are present,
+      # delegate to the additive handler; otherwise evaluate the first child.
+      def eval_value_list(node)
+        children = node.children
+        return evaluate(children[0]) if children.size <= 1
+
+        has_ops = children.any? do |c|
+          !c.respond_to?(:rule_name) && c.respond_to?(:value) &&
+            ["+", "-", "*"].include?(c.value)
+        end
+        return eval_lattice_additive(node) if has_ops
+
+        evaluate(children[0])
+      end
+
       # lattice_expression = lattice_or_expr ;
       def eval_lattice_expression(node)
         evaluate(node.children[0])

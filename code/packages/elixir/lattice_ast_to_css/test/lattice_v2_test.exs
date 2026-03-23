@@ -42,6 +42,14 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       assert err.line == 10
       assert err.column == 0
     end
+
+    test "creates error with all three args (3-arg arity)" do
+      err = MaxIterationError.new(300, 5, 12)
+      assert err.message =~ "300"
+      assert err.max_iterations == 300
+      assert err.line == 5
+      assert err.column == 12
+    end
   end
 
   describe "ExtendTargetNotFoundError" do
@@ -58,6 +66,14 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       assert err.line == 42
       assert err.column == 0
     end
+
+    test "creates error with target, line and column (3-arg arity)" do
+      err = ExtendTargetNotFoundError.new(".card", 10, 5)
+      assert err.message =~ ".card"
+      assert err.target == ".card"
+      assert err.line == 10
+      assert err.column == 5
+    end
   end
 
   describe "RangeError" do
@@ -72,6 +88,13 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       assert err.line == 15
       assert err.column == 0
     end
+
+    test "creates error with message, line and column (3-arg arity)" do
+      err = RangeError.new("Value too large", 8, 3)
+      assert err.message == "Value too large"
+      assert err.line == 8
+      assert err.column == 3
+    end
   end
 
   describe "ZeroDivisionInExpressionError" do
@@ -85,6 +108,13 @@ defmodule CodingAdventures.LatticeAstToCss.LatticeV2Test do
       assert err.message == "Division by zero"
       assert err.line == 7
       assert err.column == 0
+    end
+
+    test "creates error with line and column (2-arg arity)" do
+      err = ZeroDivisionInExpressionError.new(3, 14)
+      assert err.message == "Division by zero"
+      assert err.line == 3
+      assert err.column == 14
     end
   end
 
