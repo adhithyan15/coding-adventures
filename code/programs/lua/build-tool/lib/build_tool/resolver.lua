@@ -46,7 +46,10 @@ local function find_file_by_extension(directory, extension)
     -- Try using lfs if available.
     local lfs_ok, lfs = pcall(require, "lfs")
     if lfs_ok then
-        for name in lfs.dir(directory) do
+        -- lfs.dir() throws if the directory doesn't exist, so wrap in pcall.
+        local ok, iter, state = pcall(lfs.dir, directory)
+        if not ok then return nil end
+        for name in iter, state do
             if name:match("%." .. extension .. "$") then
                 return directory .. "/" .. name
             end
