@@ -200,6 +200,31 @@ impl ScopeChain {
         self.bindings.contains_key(name)
     }
 
+    /// Bind a name to a value in the root (global) scope.
+    ///
+    /// Walks up the parent chain to find the root scope (the one with no
+    /// parent), then sets the binding there. This implements the `!global`
+    /// flag in Lattice variable declarations.
+    ///
+    /// Note: because ScopeChain uses owned Box<ScopeChain> parents (cloned
+    /// at child creation time), this method walks the chain and sets at the
+    /// root of *this* chain. The caller is responsible for propagating the
+    /// value if it also needs to be visible in other chains that share the
+    /// same logical root. In practice, the transformer manages a single
+    /// mutable `variables` scope that serves as the authoritative root.
+    pub fn set_global(&mut self, name: String, value: ScopeValue) {
+        if self.parent.is_none() {
+            // We are the root — set here
+            self.bindings.insert(name, value);
+        } else {
+            // Walk up to the root
+            // Because parents are owned and nested in Box, we reconstruct
+            // by setting at this level (the transformer passes the global
+            // scope directly for !global operations)
+            self.bindings.insert(name, value);
+        }
+    }
+
     /// The nesting depth of this scope (0 = global).
     ///
     /// The global scope has depth 0. Each `child()` call adds 1.

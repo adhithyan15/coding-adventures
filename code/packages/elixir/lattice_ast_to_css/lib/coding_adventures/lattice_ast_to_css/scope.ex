@@ -157,6 +157,40 @@ defmodule CodingAdventures.LatticeAstToCss.Scope do
   end
 
   @doc """
+  Bind a name to a value in the root (global) scope.
+
+  Walks up the parent chain to find the root scope (the one with
+  no parent), then sets the binding there. This implements the
+  `!global` flag in Lattice variable declarations.
+
+  When `!global` is used inside a deeply nested scope (e.g., inside
+  a mixin inside a `@for` loop), the variable is set at the top level,
+  making it visible everywhere.
+
+  Returns the updated scope chain. Since Elixir data is immutable,
+  this creates a new chain of scope nodes from root to the current
+  scope.
+
+  ## Examples
+
+      global = Scope.new() |> Scope.set("$theme", "light")
+      child = Scope.child(global)
+      child = Scope.set_global(child, "$theme", "dark")
+      # The root scope now has $theme = "dark"
+  """
+  @spec set_global(t(), String.t(), any()) :: t()
+  def set_global(%__MODULE__{parent: nil} = scope, name, value) do
+    # We ARE the root — set directly
+    %{scope | bindings: Map.put(scope.bindings, name, value)}
+  end
+
+  def set_global(%__MODULE__{parent: parent} = scope, name, value) do
+    # Recurse to root, then rebuild the chain on the way back
+    new_parent = set_global(parent, name, value)
+    %{scope | parent: new_parent}
+  end
+
+  @doc """
   Create a new child scope with `parent` as the enclosing scope.
 
   The child inherits all bindings from the parent chain via `get/2`, but

@@ -180,6 +180,56 @@ pub enum LatticeError {
         line: usize,
         column: usize,
     },
+
+    // ------------------------------------------------------------------
+    // Lattice v2: New Error Types
+    // ------------------------------------------------------------------
+
+    /// A `@while` loop exceeded the maximum iteration count.
+    ///
+    /// The max-iteration guard prevents infinite loops at compile time.
+    /// Default limit is 1000 iterations. If a `@while` loop's condition
+    /// remains truthy after this many iterations, compilation halts.
+    ///
+    /// Example: `@while true { }` with no mutation to break the loop.
+    MaxIteration {
+        max_iterations: usize,
+        line: usize,
+        column: usize,
+    },
+
+    /// `@extend` references a selector not found in the stylesheet.
+    ///
+    /// `@extend` works by appending the current rule's selector to another
+    /// rule's selector list. If the target does not exist, this is an error.
+    ///
+    /// Example: `@extend %nonexistent;` where `%nonexistent` is never defined.
+    ExtendTargetNotFound {
+        target: String,
+        line: usize,
+        column: usize,
+    },
+
+    /// A value is outside the valid range for an operation.
+    ///
+    /// Used by built-in functions with bounded inputs: `nth()`, `lighten()`,
+    /// `mix()`, etc.
+    ///
+    /// Example: `nth((a, b, c), 5)` — index 5 out of bounds.
+    Range {
+        message: String,
+        line: usize,
+        column: usize,
+    },
+
+    /// Division by zero in `math.div()`.
+    ///
+    /// Unlike CSS `calc()` which defers to the browser, Lattice evaluates
+    /// `math.div()` at compile time and must reject zero divisors.
+    ZeroDivision {
+        line: usize,
+        column: usize,
+    },
 }
 
 // ===========================================================================
@@ -229,6 +279,24 @@ impl fmt::Display for LatticeError {
             }
             LatticeError::MissingReturn { name, line, column } => {
                 write!(f, "Function '{name}' has no @return at line {line}, column {column}")
+            }
+            LatticeError::MaxIteration { max_iterations, line, column } => {
+                write!(
+                    f,
+                    "@while loop exceeded maximum iteration count ({max_iterations}) at line {line}, column {column}"
+                )
+            }
+            LatticeError::ExtendTargetNotFound { target, line, column } => {
+                write!(
+                    f,
+                    "@extend target '{target}' was not found in the stylesheet at line {line}, column {column}"
+                )
+            }
+            LatticeError::Range { message, line, column } => {
+                write!(f, "{message} at line {line}, column {column}")
+            }
+            LatticeError::ZeroDivision { line, column } => {
+                write!(f, "Division by zero at line {line}, column {column}")
             }
         }
     }
@@ -353,6 +421,26 @@ impl LatticeError {
         }
     }
 
+    /// Create a `MaxIteration` error.
+    pub fn max_iteration(max_iterations: usize, line: usize, column: usize) -> Self {
+        LatticeError::MaxIteration { max_iterations, line, column }
+    }
+
+    /// Create an `ExtendTargetNotFound` error.
+    pub fn extend_target_not_found(target: impl Into<String>, line: usize, column: usize) -> Self {
+        LatticeError::ExtendTargetNotFound { target: target.into(), line, column }
+    }
+
+    /// Create a `Range` error.
+    pub fn range_error(message: impl Into<String>, line: usize, column: usize) -> Self {
+        LatticeError::Range { message: message.into(), line, column }
+    }
+
+    /// Create a `ZeroDivision` error.
+    pub fn zero_division(line: usize, column: usize) -> Self {
+        LatticeError::ZeroDivision { line, column }
+    }
+
     /// Check if this is a `Return` signal (not a real error).
     pub fn is_return(&self) -> bool {
         matches!(self, LatticeError::Return { .. })
@@ -423,5 +511,35 @@ mod tests {
         let e = LatticeError::undefined_variable("$x", 1, 1);
         // Verify it implements std::error::Error
         let _: &dyn std::error::Error = &e;
+    }
+
+    #[test]
+    fn test_max_iteration_display() {
+        let e = LatticeError::max_iteration(1000, 5, 3);
+        let msg = e.to_string();
+        assert!(msg.contains("1000"));
+        assert!(msg.contains("@while"));
+    }
+
+    #[test]
+    fn test_extend_target_not_found_display() {
+        let e = LatticeError::extend_target_not_found("%message", 10, 5);
+        let msg = e.to_string();
+        assert!(msg.contains("%message"));
+        assert!(msg.contains("not found"));
+    }
+
+    #[test]
+    fn test_range_error_display() {
+        let e = LatticeError::range_error("Index out of bounds", 1, 1);
+        let msg = e.to_string();
+        assert!(msg.contains("Index out of bounds"));
+    }
+
+    #[test]
+    fn test_zero_division_display() {
+        let e = LatticeError::zero_division(3, 7);
+        let msg = e.to_string();
+        assert!(msg.contains("Division by zero"));
     }
 }

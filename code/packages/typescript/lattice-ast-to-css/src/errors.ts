@@ -293,3 +293,103 @@ export class MissingReturnError extends LatticeError {
     this.name = name;
   }
 }
+
+// =============================================================================
+// Lattice v2: New Error Types
+// =============================================================================
+//
+// These errors support the new features introduced in Lattice v2:
+// - @while loops (MaxIterationError)
+// - @extend directive (ExtendTargetNotFoundError)
+// - Built-in functions (RangeError, ZeroDivisionInExpressionError)
+// =============================================================================
+
+/**
+ * Raised when a @while loop exceeds the maximum iteration count.
+ *
+ * The max-iteration guard prevents infinite loops. Lattice sets a
+ * configurable limit (default: 1000 iterations). If a @while loop's
+ * condition remains truthy after this many iterations, compilation
+ * halts with this error.
+ *
+ * The most common cause is a missing or incorrect loop variable update:
+ *
+ *     $i: 1;
+ *     @while $i <= 10 {
+ *         // Oops -- forgot to increment $i!
+ *         .item-#{$i} { display: block; }
+ *     }
+ *
+ * Example: @while true { } (no mutation to break the loop)
+ */
+export class MaxIterationError extends LatticeError {
+  readonly maxIterations: number;
+
+  constructor(maxIterations: number = 1000, line: number = 0, column: number = 0) {
+    super(
+      `@while loop exceeded maximum iteration count (${maxIterations})`,
+      line,
+      column
+    );
+    this.maxIterations = maxIterations;
+  }
+}
+
+/**
+ * Raised when @extend references a selector not found in the stylesheet.
+ *
+ * @extend works by appending the current rule's selector to another rule's
+ * selector list. If the target selector does not exist anywhere in the
+ * stylesheet, it is an error -- the programmer likely made a typo or
+ * forgot to define the base rule.
+ *
+ *     .success {
+ *         @extend %message-shared;  // Error if %message-shared is never defined
+ *     }
+ *
+ * Example: @extend .nonexistent; where .nonexistent has no matching rule
+ */
+export class ExtendTargetNotFoundError extends LatticeError {
+  readonly target: string;
+
+  constructor(target: string, line: number = 0, column: number = 0) {
+    super(
+      `@extend target '${target}' was not found in the stylesheet`,
+      line,
+      column
+    );
+    this.target = target;
+  }
+}
+
+/**
+ * Raised when a value is outside the valid range for an operation.
+ *
+ * Used by built-in functions that require bounded inputs:
+ *
+ * - nth($list, $n) -- index must be >= 1 and <= list length
+ * - lighten($color, $amount) -- amount must be between 0% and 100%
+ * - mix($c1, $c2, $weight) -- weight must be between 0% and 100%
+ *
+ * Example: nth((a, b, c), 5) -- index 5 out of bounds for list of length 3
+ */
+export class LatticeRangeError extends LatticeError {
+  constructor(message: string, line: number = 0, column: number = 0) {
+    super(message, line, column);
+  }
+}
+
+/**
+ * Raised when math.div() encounters a zero divisor.
+ *
+ * Division by zero is undefined. Unlike CSS calc() which defers
+ * evaluation to the browser, Lattice evaluates math.div() at compile
+ * time and must reject zero divisors.
+ *
+ * Example: math.div(100px, 0)
+ */
+export class ZeroDivisionInExpressionError extends LatticeError {
+  constructor(line: number = 0, column: number = 0) {
+    super("Division by zero", line, column);
+  }
+}

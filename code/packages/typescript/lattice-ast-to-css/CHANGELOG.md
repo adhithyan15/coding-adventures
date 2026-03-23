@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-23
+
+### Added
+
+- **Lattice v2 features** ported from the Python reference implementation:
+
+#### New Error Types
+- `MaxIterationError` -- raised when `@while` exceeds max iterations (default 1000)
+- `ExtendTargetNotFoundError` -- raised when `@extend` target is not found
+- `LatticeRangeError` -- raised when a value is outside valid range (e.g., nth out of bounds)
+- `ZeroDivisionInExpressionError` -- raised when `math.div()` encounters zero divisor
+
+#### Scope Chain
+- `ScopeChain.setGlobal(name, value)` -- sets a variable in the root scope, implementing `!global`
+
+#### Value Types
+- `LatticeMap` -- ordered key-value map type with `get()`, `keys()`, `values()`, `hasKey()`
+- `LatticeColor.toRgb()` / `toHsl()` / `fromRgb()` / `fromHsl()` -- color space conversions
+
+#### Built-in Functions (37 total)
+- **Map**: `map-get`, `map-keys`, `map-values`, `map-has-key`, `map-merge`, `map-remove`
+- **Color**: `lighten`, `darken`, `saturate`, `desaturate`, `adjust-hue`, `complement`, `mix`, `rgba`, `red`, `green`, `blue`, `hue`, `saturation`, `lightness`
+- **List**: `nth`, `length`, `join`, `append`, `index`
+- **Type**: `type-of`, `unit`, `unitless`, `comparable`
+- **Math**: `math.div`, `math.floor`, `math.ceil`, `math.round`, `math.abs`, `math.min`, `math.max`
+
+#### Transformer Features
+- `@while` loops with max-iteration guard
+- `!default` flag -- only sets variable if not already defined
+- `!global` flag -- sets variable in root scope from any depth
+- Variables in selectors (`.col-$i`, `$tag-name`)
+- `@content` blocks -- pass content to mixins via `@include mixin { ... }`
+- `@at-root` -- hoist rules to stylesheet root, escaping nesting context
+- `@extend` and `%placeholder` selectors -- placeholder-only rules are removed from output
+- Property nesting (`font: { size: 14px; weight: bold; }` becomes `font-size: 14px; font-weight: bold;`)
+- Built-in function dispatch in transformer (user functions shadow built-ins)
+- Map/list iteration in `@each` (`@each $key, $value in $map`)
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

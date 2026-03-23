@@ -103,6 +103,18 @@ pub enum LatticeValue {
     /// Used in `@each $color in red, green, blue { ... }` and multi-value
     /// declarations. Each item is a nested `LatticeValue`.
     List(Vec<LatticeValue>),
+
+    /// An ordered key-value map — Lattice v2 value type.
+    ///
+    /// Maps are written as parenthesized key-value pairs:
+    ///
+    /// ```scss
+    /// $theme: (primary: #4a90d9, secondary: #7b68ee);
+    /// ```
+    ///
+    /// Keys are strings. Values are any LatticeValue. Stored as a Vec of
+    /// tuples to preserve insertion order.
+    Map(Vec<(String, LatticeValue)>),
 }
 
 impl LatticeValue {
@@ -138,6 +150,13 @@ impl LatticeValue {
                     .map(|v| v.to_css_string())
                     .collect::<Vec<_>>()
                     .join(", ")
+            }
+            LatticeValue::Map(entries) => {
+                let inner = entries.iter()
+                    .map(|(k, v)| format!("{}: {}", k, v.to_css_string()))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                format!("({})", inner)
             }
         }
     }
@@ -175,6 +194,46 @@ impl LatticeValue {
             LatticeValue::Bool(_) => "bool",
             LatticeValue::Null => "null",
             LatticeValue::List(_) => "list",
+            LatticeValue::Map(_) => "map",
+        }
+    }
+
+    /// Look up a value by key in a Map. Returns None if not a Map or key not found.
+    pub fn map_get(&self, key: &str) -> Option<&LatticeValue> {
+        if let LatticeValue::Map(entries) = self {
+            for (k, v) in entries {
+                if k == key {
+                    return Some(v);
+                }
+            }
+        }
+        None
+    }
+
+    /// Get all keys from a Map as a list of Ident values.
+    pub fn map_keys(&self) -> Option<Vec<LatticeValue>> {
+        if let LatticeValue::Map(entries) = self {
+            Some(entries.iter().map(|(k, _)| LatticeValue::Ident(k.clone())).collect())
+        } else {
+            None
+        }
+    }
+
+    /// Get all values from a Map.
+    pub fn map_values(&self) -> Option<Vec<LatticeValue>> {
+        if let LatticeValue::Map(entries) = self {
+            Some(entries.iter().map(|(_, v)| v.clone()).collect())
+        } else {
+            None
+        }
+    }
+
+    /// Check if a Map contains a key.
+    pub fn map_has_key(&self, key: &str) -> bool {
+        if let LatticeValue::Map(entries) = self {
+            entries.iter().any(|(k, _)| k == key)
+        } else {
+            false
         }
     }
 }
@@ -288,6 +347,107 @@ fn split_dimension(s: &str) -> (&str, &str) {
         .unwrap_or(s.len());
 
     (&s[..split_pos], &s[split_pos..])
+}
+
+// ===========================================================================
+// Color conversion helpers (Lattice v2)
+// ===========================================================================
+
+/// Parse a hex color string to (r, g, b, a) where r/g/b are 0-255, a is 0.0-1.0.
+///
+/// Handles #RGB (3-char), #RRGGBB (6-char), and #RRGGBBAA (8-char) formats.
+pub fn hex_to_rgba(hex: &str) -> (u8, u8, u8, f64) {
+    let h = hex.trim_start_matches('#');
+    match h.len() {
+        3 => {
+            let r = u8::from_str_radix(&h[0..1].repeat(2), 16).unwrap_or(0);
+            let g = u8::from_str_radix(&h[1..2].repeat(2), 16).unwrap_or(0);
+            let b = u8::from_str_radix(&h[2..3].repeat(2), 16).unwrap_or(0);
+            (r, g, b, 1.0)
+        }
+        6 => {
+            let r = u8::from_str_radix(&h[0..2], 16).unwrap_or(0);
+            let g = u8::from_str_radix(&h[2..4], 16).unwrap_or(0);
+            let b = u8::from_str_radix(&h[4..6], 16).unwrap_or(0);
+            (r, g, b, 1.0)
+        }
+        8 => {
+            let r = u8::from_str_radix(&h[0..2], 16).unwrap_or(0);
+            let g = u8::from_str_radix(&h[2..4], 16).unwrap_or(0);
+            let b = u8::from_str_radix(&h[4..6], 16).unwrap_or(0);
+            let a = u8::from_str_radix(&h[6..8], 16).unwrap_or(255) as f64 / 255.0;
+            (r, g, b, a)
+        }
+        _ => (0, 0, 0, 1.0),
+    }
+}
+
+/// Convert RGB to HSL. Returns (h: 0-360, s: 0-100, l: 0-100, a: 0-1).
+pub fn rgb_to_hsl(r: u8, g: u8, b: u8, a: f64) -> (f64, f64, f64, f64) {
+    let rf = r as f64 / 255.0;
+    let gf = g as f64 / 255.0;
+    let bf = b as f64 / 255.0;
+    let mx = rf.max(gf).max(bf);
+    let mn = rf.min(gf).min(bf);
+    let light = (mx + mn) / 2.0;
+
+    if (mx - mn).abs() < f64::EPSILON {
+        return (0.0, 0.0, light * 100.0, a);
+    }
+
+    let d = mx - mn;
+    let sat = if light > 0.5 { d / (2.0 - mx - mn) } else { d / (mx + mn) };
+
+    let hue = if (mx - rf).abs() < f64::EPSILON {
+        (gf - bf) / d + if gf < bf { 6.0 } else { 0.0 }
+    } else if (mx - gf).abs() < f64::EPSILON {
+        (bf - rf) / d + 2.0
+    } else {
+        (rf - gf) / d + 4.0
+    } * 60.0;
+
+    (hue, sat * 100.0, light * 100.0, a)
+}
+
+/// Convert HSL to RGB. h in 0-360, s/l in 0-100, a in 0-1.
+/// Returns (r, g, b) each 0-255.
+pub fn hsl_to_rgb(h: f64, s: f64, l: f64) -> (u8, u8, u8) {
+    let h = h % 360.0;
+    let s = s.clamp(0.0, 100.0) / 100.0;
+    let l = l.clamp(0.0, 100.0) / 100.0;
+
+    if s == 0.0 {
+        let v = (l * 255.0).round() as u8;
+        return (v, v, v);
+    }
+
+    let q = if l < 0.5 { l * (1.0 + s) } else { l + s - l * s };
+    let p = 2.0 * l - q;
+
+    fn hue_to_rgb(p: f64, q: f64, mut t: f64) -> f64 {
+        if t < 0.0 { t += 1.0; }
+        if t > 1.0 { t -= 1.0; }
+        if t < 1.0 / 6.0 { return p + (q - p) * 6.0 * t; }
+        if t < 1.0 / 2.0 { return q; }
+        if t < 2.0 / 3.0 { return p + (q - p) * (2.0 / 3.0 - t) * 6.0; }
+        p
+    }
+
+    let h_norm = h / 360.0;
+    let r = (hue_to_rgb(p, q, h_norm + 1.0 / 3.0) * 255.0).round() as u8;
+    let g = (hue_to_rgb(p, q, h_norm) * 255.0).round() as u8;
+    let b = (hue_to_rgb(p, q, h_norm - 1.0 / 3.0) * 255.0).round() as u8;
+
+    (r, g, b)
+}
+
+/// Create a hex color string from RGB(A) components.
+pub fn rgba_to_hex(r: u8, g: u8, b: u8, a: f64) -> String {
+    if a >= 1.0 {
+        format!("#{:02x}{:02x}{:02x}", r, g, b)
+    } else {
+        format!("rgba({}, {}, {}, {})", r, g, b, a)
+    }
 }
 
 #[cfg(test)]
@@ -442,5 +602,105 @@ mod tests {
         assert_eq!(LatticeValue::Dimension { value: 1.0, unit: "px".to_string() }.type_name(), "dimension");
         assert_eq!(LatticeValue::Null.type_name(), "null");
         assert_eq!(LatticeValue::Bool(true).type_name(), "bool");
+        assert_eq!(LatticeValue::Map(vec![]).type_name(), "map");
+    }
+
+    // -----------------------------------------------------------------------
+    // Map tests (Lattice v2)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_map_format() {
+        let map = LatticeValue::Map(vec![
+            ("primary".to_string(), LatticeValue::Color("#4a90d9".to_string())),
+            ("secondary".to_string(), LatticeValue::Color("#7b68ee".to_string())),
+        ]);
+        assert_eq!(map.to_css_string(), "(primary: #4a90d9, secondary: #7b68ee)");
+    }
+
+    #[test]
+    fn test_map_truthy() {
+        // Maps are always truthy, even empty
+        assert!(LatticeValue::Map(vec![]).is_truthy());
+        assert!(LatticeValue::Map(vec![("k".to_string(), LatticeValue::Null)]).is_truthy());
+    }
+
+    #[test]
+    fn test_map_get() {
+        let map = LatticeValue::Map(vec![
+            ("color".to_string(), LatticeValue::Ident("red".to_string())),
+            ("size".to_string(), LatticeValue::Number(16.0)),
+        ]);
+        assert_eq!(map.map_get("color"), Some(&LatticeValue::Ident("red".to_string())));
+        assert_eq!(map.map_get("size"), Some(&LatticeValue::Number(16.0)));
+        assert_eq!(map.map_get("missing"), None);
+    }
+
+    #[test]
+    fn test_map_keys_values() {
+        let map = LatticeValue::Map(vec![
+            ("a".to_string(), LatticeValue::Number(1.0)),
+            ("b".to_string(), LatticeValue::Number(2.0)),
+        ]);
+        assert_eq!(map.map_keys().unwrap(), vec![
+            LatticeValue::Ident("a".to_string()),
+            LatticeValue::Ident("b".to_string()),
+        ]);
+        assert_eq!(map.map_values().unwrap(), vec![
+            LatticeValue::Number(1.0),
+            LatticeValue::Number(2.0),
+        ]);
+    }
+
+    #[test]
+    fn test_map_has_key() {
+        let map = LatticeValue::Map(vec![
+            ("x".to_string(), LatticeValue::Null),
+        ]);
+        assert!(map.map_has_key("x"));
+        assert!(!map.map_has_key("y"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Color conversion tests (Lattice v2)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_hex_to_rgba_6char() {
+        let (r, g, b, a) = hex_to_rgba("#4a90d9");
+        assert_eq!(r, 74);
+        assert_eq!(g, 144);
+        assert_eq!(b, 217);
+        assert!((a - 1.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn test_hex_to_rgba_3char() {
+        let (r, g, b, _) = hex_to_rgba("#f00");
+        assert_eq!(r, 255);
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[test]
+    fn test_rgb_to_hsl_red() {
+        let (h, s, l, _) = rgb_to_hsl(255, 0, 0, 1.0);
+        assert!((h - 0.0).abs() < 1.0);
+        assert!((s - 100.0).abs() < 1.0);
+        assert!((l - 50.0).abs() < 1.0);
+    }
+
+    #[test]
+    fn test_hsl_to_rgb_roundtrip() {
+        let (r, g, b) = hsl_to_rgb(0.0, 100.0, 50.0);
+        assert_eq!(r, 255);
+        assert_eq!(g, 0);
+        assert_eq!(b, 0);
+    }
+
+    #[test]
+    fn test_rgba_to_hex() {
+        assert_eq!(rgba_to_hex(74, 144, 217, 1.0), "#4a90d9");
+        assert!(rgba_to_hex(74, 144, 217, 0.5).starts_with("rgba("));
     }
 }

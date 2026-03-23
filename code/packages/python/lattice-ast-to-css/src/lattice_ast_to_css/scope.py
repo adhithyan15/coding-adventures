@@ -156,6 +156,33 @@ class ScopeChain:
         """
         return name in self.bindings
 
+    def set_global(self, name: str, value: Any) -> None:
+        """Bind a name to a value in the root (global) scope.
+
+        Walks up the parent chain to find the root scope (the one with
+        no parent), then sets the binding there. This implements the
+        ``!global`` flag in Lattice variable declarations.
+
+        When ``!global`` is used inside a deeply nested scope (e.g., inside
+        a mixin inside a @for loop), the variable is set at the top level,
+        making it visible everywhere::
+
+            $theme: light;
+
+            @mixin set-dark {
+                $theme: dark !global;
+                // Sets $theme in the root scope, not the mixin scope
+            }
+
+        Args:
+            name: The variable name to bind globally.
+            value: The value to associate with the name.
+        """
+        root = self
+        while root.parent is not None:
+            root = root.parent
+        root.bindings[name] = value
+
     def child(self) -> ScopeChain:
         """Create a new child scope with ``self`` as parent.
 

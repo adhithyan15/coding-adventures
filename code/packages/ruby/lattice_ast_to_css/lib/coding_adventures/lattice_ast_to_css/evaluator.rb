@@ -135,6 +135,9 @@ module CodingAdventures
     # A hex color value. Maps to CSS HASH token in color context.
     # Stored as the raw string including the # prefix.
     # Examples: #4a90d9, #fff, #00000080
+    #
+    # Provides conversion helpers for RGB and HSL color spaces,
+    # needed by Lattice v2 built-in color functions (lighten, darken, etc.).
     LatticeColor = Struct.new(:value) do
       def to_s
         value
@@ -143,6 +146,98 @@ module CodingAdventures
       def truthy?
         true
       end
+
+      # Parse hex string to [r, g, b, a] where r/g/b are 0-255, a is 0.0-1.0.
+      # Handles #RGB (3-char), #RRGGBB (6-char), and #RRGGBBAA (8-char).
+      def to_rgb
+        h = value.sub("#", "")
+        case h.length
+        when 3
+          r = (h[0] * 2).to_i(16)
+          g = (h[1] * 2).to_i(16)
+          b = (h[2] * 2).to_i(16)
+          [r, g, b, 1.0]
+        when 6
+          [h[0..1].to_i(16), h[2..3].to_i(16), h[4..5].to_i(16), 1.0]
+        when 8
+          [h[0..1].to_i(16), h[2..3].to_i(16), h[4..5].to_i(16), h[6..7].to_i(16) / 255.0]
+        else
+          [0, 0, 0, 1.0]
+        end
+      end
+
+      # Convert to [h, s, l, a] where h is 0-360, s/l are 0-100, a is 0-1.
+      def to_hsl
+        r, g, b, a = to_rgb
+        rf = r / 255.0
+        gf = g / 255.0
+        bf = b / 255.0
+        mx = [rf, gf, bf].max
+        mn = [rf, gf, bf].min
+        light = (mx + mn) / 2.0
+
+        return [0.0, 0.0, light * 100.0, a] if mx == mn
+
+        d = mx - mn
+        sat = light > 0.5 ? d / (2.0 - mx - mn) : d / (mx + mn)
+
+        hue = if mx == rf
+               (gf - bf) / d + (gf < bf ? 6.0 : 0.0)
+             elsif mx == gf
+               (bf - rf) / d + 2.0
+             else
+               (rf - gf) / d + 4.0
+             end
+        hue *= 60.0
+
+        [hue, sat * 100.0, light * 100.0, a]
+      end
+    end
+
+    # Class-level helper to construct a LatticeColor from RGB(A) components.
+    # Clamps each channel to its valid range before encoding as hex.
+    def self.color_from_rgb(r, g, b, a = 1.0)
+      r = [[0, r.round].max, 255].min
+      g = [[0, g.round].max, 255].min
+      b = [[0, b.round].max, 255].min
+      a = [[0.0, a].max, 1.0].min
+      if a >= 1.0
+        LatticeColor.new(format("#%02x%02x%02x", r, g, b))
+      else
+        LatticeColor.new("rgba(#{r}, #{g}, #{b}, #{a})")
+      end
+    end
+
+    # Class-level helper to construct a LatticeColor from HSL(A) components.
+    # Uses the standard HSL-to-RGB algorithm.
+    def self.color_from_hsl(h, s, l, a = 1.0)
+      h = h % 360.0
+      s = [[0.0, s].max, 100.0].min / 100.0
+      l = [[0.0, l].max, 100.0].min / 100.0
+
+      if s == 0.0
+        v = (l * 255).round
+        return color_from_rgb(v, v, v, a)
+      end
+
+      q = l < 0.5 ? l * (1 + s) : l + s - l * s
+      p = 2 * l - q
+
+      hue_to_rgb = lambda do |pp, qq, t|
+        t += 1 if t < 0
+        t -= 1 if t > 1
+        return pp + (qq - pp) * 6 * t if t < 1.0 / 6
+        return qq if t < 1.0 / 2
+        return pp + (qq - pp) * (2.0 / 3 - t) * 6 if t < 2.0 / 3
+
+        pp
+      end
+
+      h_norm = h / 360.0
+      r = (hue_to_rgb.call(p, q, h_norm + 1.0 / 3) * 255).round
+      g = (hue_to_rgb.call(p, q, h_norm) * 255).round
+      b = (hue_to_rgb.call(p, q, h_norm - 1.0 / 3) * 255).round
+      color_from_rgb(r, g, b, a)
     end
 
     # A boolean value — true or false.
@@ -183,11 +278,54 @@ module CodingAdventures
       end
     end
 
-    # Type alias: any of the 9 value types above.
+    # An ordered key-value map -- Lattice v2 value type.
+    #
+    # Maps are written as parenthesized key-value pairs:
+    #
+    #   $theme: (
+    #     primary: #4a90d9,
+    #     secondary: #7b68ee,
+    #   );
+    #
+    # Stored as an array of [key, value] pairs to maintain insertion order.
+    # Access is exclusively through built-in functions: map-get, map-keys, etc.
+    LatticeMap = Struct.new(:items) do
+      # Look up a value by key. Returns nil if not found.
+      def get(key)
+        items.each { |k, v| return v if k == key }
+        nil
+      end
+
+      # Return all keys in insertion order.
+      def keys
+        items.map { |k, _| k }
+      end
+
+      # Return all values in insertion order.
+      def values
+        items.map { |_, v| v }
+      end
+
+      # Check if a key exists.
+      def has_key?(key)
+        items.any? { |k, _| k == key }
+      end
+
+      def to_s
+        entries = items.map { |k, v| "#{k}: #{v}" }.join(", ")
+        "(#{entries})"
+      end
+
+      def truthy?
+        true
+      end
+    end
+
+    # Type alias: any of the 10 value types.
     LATTICE_VALUE_TYPES = [
       LatticeNumber, LatticeDimension, LatticePercentage,
       LatticeString, LatticeIdent, LatticeColor,
-      LatticeBool, LatticeNull, LatticeList
+      LatticeBool, LatticeNull, LatticeList, LatticeMap
     ].freeze
 
     # ============================================================
@@ -348,6 +486,23 @@ module CodingAdventures
       end
 
       private
+
+      # value_list — used when variable substitution produces a flat list of
+      # tokens (e.g., `$i + 1` becomes a value_list with children
+      # [NUMBER(2), PLUS, NUMBER(1)]). If arithmetic operators are present,
+      # delegate to the additive handler; otherwise evaluate the first child.
+      def eval_value_list(node)
+        children = node.children
+        return evaluate(children[0]) if children.size <= 1
+
+        has_ops = children.any? do |c|
+          !c.respond_to?(:rule_name) && c.respond_to?(:value) &&
+            ["+", "-", "*"].include?(c.value)
+        end
+        return eval_lattice_additive(node) if has_ops
+
+        evaluate(children[0])
+      end
 
       # lattice_expression = lattice_or_expr ;
       def eval_lattice_expression(node)
@@ -669,6 +824,440 @@ module CodingAdventures
       def eval_comparison_op(node)
         LatticeAstToCss.token_to_value(node.children[0])
       end
+
+      # Collect and evaluate arguments from a function_args AST node.
+      # Splits on COMMA tokens to produce individual argument values.
+      # Public so the transformer can call it for built-in function evaluation.
+      public
+
+      def collect_function_args(node)
+        args = []
+        current_tokens = []
+
+        node.children.each do |child|
+          unless child.respond_to?(:rule_name)
+            if LatticeAstToCss.token_type_name(child) == "COMMA"
+              args << eval_arg_tokens(current_tokens) unless current_tokens.empty?
+              current_tokens = []
+              next
+            end
+          end
+
+          if child.respond_to?(:rule_name) && child.rule_name == "function_arg"
+            child.children.each do |ic|
+              unless ic.respond_to?(:rule_name)
+                if LatticeAstToCss.token_type_name(ic) == "COMMA"
+                  args << eval_arg_tokens(current_tokens) unless current_tokens.empty?
+                  current_tokens = []
+                  next
+                end
+                current_tokens << ic
+              else
+                args << evaluate(ic)
+                current_tokens = []
+              end
+            end
+          end
+        end
+
+        args << eval_arg_tokens(current_tokens) unless current_tokens.empty?
+        args
+      end
+
+      private
+
+      def eval_arg_tokens(tokens)
+        return LatticeNull.new if tokens.empty?
+
+        if tokens.size == 1
+          tok = tokens[0]
+          type = LatticeAstToCss.token_type_name(tok)
+          if type == "VARIABLE"
+            result = @scope.get(tok.value)
+            if result
+              return result if LATTICE_VALUE_TYPES.any? { |t| result.is_a?(t) }
+              return extract_value_from_ast(result) if result.respond_to?(:rule_name)
+            end
+          end
+          return LatticeAstToCss.token_to_value(tok)
+        end
+
+        LatticeAstToCss.token_to_value(tokens[0])
+      end
     end
+
+    # ============================================================
+    # Built-in Function Registry -- Lattice v2
+    # ============================================================
+    #
+    # Built-in functions are registered in BUILTIN_FUNCTIONS hash.
+    # Each function takes (args, scope) and returns a LatticeValue.
+    #
+    # Categories:
+    #   Map:   map-get, map-keys, map-values, map-has-key, map-merge, map-remove
+    #   Color: lighten, darken, saturate, desaturate, adjust-hue, complement,
+    #          mix, rgba, red, green, blue, hue, saturation, lightness
+    #   List:  nth, length, join, append, index
+    #   Type:  type-of, unit, unitless, comparable
+    #   Math:  math.div, math.floor, math.ceil, math.round, math.abs,
+    #          math.min, math.max
+    # ============================================================
+
+    # Return the Lattice type name for a value.
+    def self.type_name_of(value)
+      case value
+      when LatticeNumber, LatticeDimension, LatticePercentage then "number"
+      when LatticeString, LatticeIdent then "string"
+      when LatticeColor then "color"
+      when LatticeBool then "bool"
+      when LatticeNull then "null"
+      when LatticeList then "list"
+      when LatticeMap then "map"
+      else "unknown"
+      end
+    end
+
+    # Extract the numeric value from a number-like LatticeValue.
+    def self.get_numeric_value(v)
+      case v
+      when LatticeNumber, LatticeDimension, LatticePercentage then v.value
+      else
+        raise LatticeTypeErrorInExpression.new("use", "Expected a number, got #{type_name_of(v)}", "")
+      end
+    end
+
+    # Ensure a value is a LatticeColor.
+    def self.ensure_color(v)
+      unless v.is_a?(LatticeColor)
+        raise LatticeTypeErrorInExpression.new("use", "Expected a color, got #{type_name_of(v)}", "")
+      end
+      v
+    end
+
+    # Extract a percentage amount (0-100) from a value.
+    def self.ensure_amount(v)
+      val = get_numeric_value(v)
+      raise LatticeRangeError.new("Amount must be between 0% and 100%") if val < 0 || val > 100
+
+      val
+    end
+
+    BUILTIN_FUNCTIONS = {
+      # -- Map functions --
+      "map-get" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "map-get requires 2 arguments", "") if args.size < 2
+        m = args[0]
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m)}", "") unless m.is_a?(LatticeMap)
+        key = args[1].to_s.delete('"')
+        result = m.get(key)
+        result || LatticeNull.new
+      },
+      "map-keys" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "map-keys requires 1 argument", "") if args.empty?
+        m = args[0]
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m)}", "") unless m.is_a?(LatticeMap)
+        LatticeList.new(m.keys.map { |k| LatticeIdent.new(k) })
+      },
+      "map-values" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "map-values requires 1 argument", "") if args.empty?
+        m = args[0]
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m)}", "") unless m.is_a?(LatticeMap)
+        LatticeList.new(m.values)
+      },
+      "map-has-key" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "map-has-key requires 2 arguments", "") if args.size < 2
+        m = args[0]
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m)}", "") unless m.is_a?(LatticeMap)
+        key = args[1].to_s.delete('"')
+        LatticeBool.new(m.has_key?(key))
+      },
+      "map-merge" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "map-merge requires 2 arguments", "") if args.size < 2
+        m1 = args[0]
+        m2 = args[1]
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m1)}", "") unless m1.is_a?(LatticeMap)
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m2)}", "") unless m2.is_a?(LatticeMap)
+        merged = m1.items.to_h
+        m2.items.each { |k, v| merged[k] = v }
+        LatticeMap.new(merged.to_a)
+      },
+      "map-remove" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "map-remove requires at least 1 argument", "") if args.empty?
+        m = args[0]
+        raise LatticeTypeErrorInExpression.new("use", "Expected a map, got #{LatticeAstToCss.type_name_of(m)}", "") unless m.is_a?(LatticeMap)
+        keys_to_remove = args[1..].map { |a| a.to_s.delete('"') }
+        LatticeMap.new(m.items.reject { |k, _| keys_to_remove.include?(k) })
+      },
+
+      # -- Color functions --
+      "lighten" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        amount = LatticeAstToCss.ensure_amount(args[1])
+        h, s, l, a = color.to_hsl
+        l = [100.0, l + amount].min
+        LatticeAstToCss.color_from_hsl(h, s, l, a)
+      },
+      "darken" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        amount = LatticeAstToCss.ensure_amount(args[1])
+        h, s, l, a = color.to_hsl
+        l = [0.0, l - amount].max
+        LatticeAstToCss.color_from_hsl(h, s, l, a)
+      },
+      "saturate" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        amount = LatticeAstToCss.ensure_amount(args[1])
+        h, s, l, a = color.to_hsl
+        s = [100.0, s + amount].min
+        LatticeAstToCss.color_from_hsl(h, s, l, a)
+      },
+      "desaturate" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        amount = LatticeAstToCss.ensure_amount(args[1])
+        h, s, l, a = color.to_hsl
+        s = [0.0, s - amount].max
+        LatticeAstToCss.color_from_hsl(h, s, l, a)
+      },
+      "adjust-hue" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        degrees = LatticeAstToCss.get_numeric_value(args[1])
+        h, s, l, a = color.to_hsl
+        h = (h + degrees) % 360.0
+        LatticeAstToCss.color_from_hsl(h, s, l, a)
+      },
+      "complement" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        h, s, l, a = color.to_hsl
+        h = (h + 180.0) % 360.0
+        LatticeAstToCss.color_from_hsl(h, s, l, a)
+      },
+      "mix" => lambda { |args, _scope|
+        c1 = LatticeAstToCss.ensure_color(args[0])
+        c2 = LatticeAstToCss.ensure_color(args[1])
+        weight = args.size >= 3 ? LatticeAstToCss.get_numeric_value(args[2]) : 50.0
+        w = weight / 100.0
+        r1, g1, b1, a1 = c1.to_rgb
+        r2, g2, b2, a2 = c2.to_rgb
+        r = (r1 * w + r2 * (1 - w)).round
+        g = (g1 * w + g2 * (1 - w)).round
+        b = (b1 * w + b2 * (1 - w)).round
+        a = a1 * w + a2 * (1 - w)
+        LatticeAstToCss.color_from_rgb(r, g, b, a)
+      },
+      "rgba" => lambda { |args, _scope|
+        if args.size == 2 && args[0].is_a?(LatticeColor)
+          r, g, b, _ = args[0].to_rgb
+          alpha = LatticeAstToCss.get_numeric_value(args[1])
+          LatticeAstToCss.color_from_rgb(r, g, b, alpha)
+        elsif args.size == 4
+          r = LatticeAstToCss.get_numeric_value(args[0]).round
+          g = LatticeAstToCss.get_numeric_value(args[1]).round
+          b = LatticeAstToCss.get_numeric_value(args[2]).round
+          a = LatticeAstToCss.get_numeric_value(args[3])
+          LatticeAstToCss.color_from_rgb(r, g, b, a)
+        else
+          LatticeNull.new
+        end
+      },
+      "red" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        r, _, _, _ = color.to_rgb
+        LatticeNumber.new(r.to_f)
+      },
+      "green" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        _, g, _, _ = color.to_rgb
+        LatticeNumber.new(g.to_f)
+      },
+      "blue" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        _, _, b, _ = color.to_rgb
+        LatticeNumber.new(b.to_f)
+      },
+      "hue" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        h, _, _, _ = color.to_hsl
+        LatticeDimension.new(h.round.to_f, "deg")
+      },
+      "saturation" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        _, s, _, _ = color.to_hsl
+        LatticePercentage.new(s.round.to_f)
+      },
+      "lightness" => lambda { |args, _scope|
+        color = LatticeAstToCss.ensure_color(args[0])
+        _, _, l, _ = color.to_hsl
+        LatticePercentage.new(l.round.to_f)
+      },
+
+      # -- List functions --
+      "nth" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "nth requires 2 arguments", "") if args.size < 2
+        lst = args[0]
+        n = LatticeAstToCss.get_numeric_value(args[1]).to_i
+        raise LatticeRangeError.new("List index must be 1 or greater") if n < 1
+        if lst.is_a?(LatticeList)
+          raise LatticeRangeError.new("Index #{n} out of bounds for list of length #{lst.items.size}") if n > lst.items.size
+          lst.items[n - 1]
+        elsif n == 1
+          lst
+        else
+          raise LatticeRangeError.new("Index #{n} out of bounds for list of length 1")
+        end
+      },
+      "length" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "length requires 1 argument", "") if args.empty?
+        v = args[0]
+        case v
+        when LatticeList then LatticeNumber.new(v.items.size.to_f)
+        when LatticeMap then LatticeNumber.new(v.items.size.to_f)
+        else LatticeNumber.new(1.0)
+        end
+      },
+      "join" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "join requires at least 2 arguments", "") if args.size < 2
+        items1 = args[0].is_a?(LatticeList) ? args[0].items : [args[0]]
+        items2 = args[1].is_a?(LatticeList) ? args[1].items : [args[1]]
+        LatticeList.new(items1 + items2)
+      },
+      "append" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "append requires at least 2 arguments", "") if args.size < 2
+        items = args[0].is_a?(LatticeList) ? args[0].items : [args[0]]
+        LatticeList.new(items + [args[1]])
+      },
+      "index" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "index requires 2 arguments", "") if args.size < 2
+        items = args[0].is_a?(LatticeList) ? args[0].items : [args[0]]
+        target_str = args[1].to_s
+        items.each_with_index do |item, i|
+          return LatticeNumber.new((i + 1).to_f) if item.to_s == target_str
+        end
+        LatticeNull.new
+      },
+
+      # -- Type introspection functions --
+      "type-of" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "type-of requires 1 argument", "") if args.empty?
+        LatticeString.new(LatticeAstToCss.type_name_of(args[0]))
+      },
+      "unit" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "unit requires 1 argument", "") if args.empty?
+        v = args[0]
+        case v
+        when LatticeDimension then LatticeString.new(v.unit)
+        when LatticePercentage then LatticeString.new("%")
+        when LatticeNumber then LatticeString.new("")
+        else raise LatticeTypeErrorInExpression.new("use", "Expected a number, got #{LatticeAstToCss.type_name_of(v)}", "")
+        end
+      },
+      "unitless" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "unitless requires 1 argument", "") if args.empty?
+        LatticeBool.new(args[0].is_a?(LatticeNumber))
+      },
+      "comparable" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "comparable requires 2 arguments", "") if args.size < 2
+        a, b = args[0], args[1]
+        if a.instance_of?(b.class)
+          if a.is_a?(LatticeDimension) && b.is_a?(LatticeDimension)
+            LatticeBool.new(a.unit == b.unit)
+          else
+            LatticeBool.new(true)
+          end
+        elsif [LatticeNumber, LatticeDimension, LatticePercentage].any? { |t| a.is_a?(t) } &&
+              [LatticeNumber, LatticeDimension, LatticePercentage].any? { |t| b.is_a?(t) }
+          LatticeBool.new(a.is_a?(LatticeNumber) || b.is_a?(LatticeNumber))
+        else
+          LatticeBool.new(false)
+        end
+      },
+
+      # -- Math functions --
+      "math.div" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.div requires 2 arguments", "") if args.size < 2
+        a, b = args[0], args[1]
+        b_val = LatticeAstToCss.get_numeric_value(b)
+        raise LatticeZeroDivisionError.new if b_val == 0
+        a_val = LatticeAstToCss.get_numeric_value(a)
+        if a.is_a?(LatticeDimension) && b.is_a?(LatticeNumber)
+          LatticeDimension.new(a_val / b_val, a.unit)
+        elsif a.is_a?(LatticeDimension) && b.is_a?(LatticeDimension) && a.unit == b.unit
+          LatticeNumber.new(a_val / b_val)
+        elsif a.is_a?(LatticePercentage) && b.is_a?(LatticeNumber)
+          LatticePercentage.new(a_val / b_val)
+        else
+          LatticeNumber.new(a_val / b_val)
+        end
+      },
+      "math.floor" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.floor requires 1 argument", "") if args.empty?
+        v = args[0]
+        val = LatticeAstToCss.get_numeric_value(v)
+        result = val.floor.to_f
+        case v
+        when LatticeDimension then LatticeDimension.new(result, v.unit)
+        when LatticePercentage then LatticePercentage.new(result)
+        else LatticeNumber.new(result)
+        end
+      },
+      "math.ceil" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.ceil requires 1 argument", "") if args.empty?
+        v = args[0]
+        val = LatticeAstToCss.get_numeric_value(v)
+        result = val.ceil.to_f
+        case v
+        when LatticeDimension then LatticeDimension.new(result, v.unit)
+        when LatticePercentage then LatticePercentage.new(result)
+        else LatticeNumber.new(result)
+        end
+      },
+      "math.round" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.round requires 1 argument", "") if args.empty?
+        v = args[0]
+        val = LatticeAstToCss.get_numeric_value(v)
+        result = val.round.to_f
+        case v
+        when LatticeDimension then LatticeDimension.new(result, v.unit)
+        when LatticePercentage then LatticePercentage.new(result)
+        else LatticeNumber.new(result)
+        end
+      },
+      "math.abs" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.abs requires 1 argument", "") if args.empty?
+        v = args[0]
+        val = LatticeAstToCss.get_numeric_value(v)
+        result = val.abs
+        case v
+        when LatticeDimension then LatticeDimension.new(result, v.unit)
+        when LatticePercentage then LatticePercentage.new(result)
+        else LatticeNumber.new(result)
+        end
+      },
+      "math.min" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.min requires at least 1 argument", "") if args.empty?
+        best = args[0]
+        best_val = LatticeAstToCss.get_numeric_value(best)
+        args[1..].each do |arg|
+          val = LatticeAstToCss.get_numeric_value(arg)
+          if val < best_val
+            best = arg
+            best_val = val
+          end
+        end
+        best
+      },
+      "math.max" => lambda { |args, _scope|
+        raise LatticeTypeErrorInExpression.new("call", "math.max requires at least 1 argument", "") if args.empty?
+        best = args[0]
+        best_val = LatticeAstToCss.get_numeric_value(best)
+        args[1..].each do |arg|
+          val = LatticeAstToCss.get_numeric_value(arg)
+          if val > best_val
+            best = arg
+            best_val = val
+          end
+        end
+        best
+      }
+    }.freeze
   end
 end

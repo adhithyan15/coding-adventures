@@ -213,5 +213,65 @@ module CodingAdventures
         super("Function '#{name}' has no @return", line, column)
       end
     end
+
+    # ============================================================
+    # Lattice v2: New Error Types
+    # ============================================================
+    #
+    # These errors support the new features introduced in Lattice v2:
+    #   - @while loops (LatticeMaxIterationError)
+    #   - @extend directive (LatticeExtendTargetNotFoundError)
+    #   - Built-in functions (LatticeRangeError, LatticeZeroDivisionError)
+
+    # Raised when a @while loop exceeds the maximum iteration count.
+    #
+    # The max-iteration guard prevents infinite loops. Default: 1000
+    # iterations. If a @while loop's condition remains truthy after
+    # this many iterations, compilation halts with this error.
+    #
+    # Example: @while true { } (no mutation to break the loop)
+    class LatticeMaxIterationError < LatticeError
+      attr_reader :max_iterations
+
+      def initialize(max_iterations = 1000, line = 0, column = 0)
+        @max_iterations = max_iterations
+        super("@while loop exceeded maximum iteration count (#{max_iterations})", line, column)
+      end
+    end
+
+    # Raised when @extend references a selector not found in the stylesheet.
+    #
+    # Example: .success { @extend %message-shared; }
+    # where %message-shared is never defined.
+    class LatticeExtendTargetNotFoundError < LatticeError
+      attr_reader :target
+
+      def initialize(target, line = 0, column = 0)
+        @target = target
+        super("@extend target '#{target}' was not found in the stylesheet", line, column)
+      end
+    end
+
+    # Raised when a value is outside the valid range for an operation.
+    #
+    # Used by built-in functions that require bounded inputs:
+    #   nth($list, $n) -- index must be >= 1 and <= list length
+    #   lighten($color, $amount) -- amount must be between 0% and 100%
+    #
+    # Example: nth((a, b, c), 5)
+    class LatticeRangeError < LatticeError
+      def initialize(message, line = 0, column = 0)
+        super(message, line, column)
+      end
+    end
+
+    # Raised when math.div() encounters a zero divisor.
+    #
+    # Example: math.div(100px, 0)
+    class LatticeZeroDivisionError < LatticeError
+      def initialize(line = 0, column = 0)
+        super("Division by zero", line, column)
+      end
+    end
   end
 end
