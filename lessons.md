@@ -722,3 +722,5 @@ python -m venv .venv --clear
 ```
 
 **Critical quoting rule:** Use `.[dev]` WITHOUT double quotes in `BUILD_windows` files. Go's `exec.Command("cmd", "/C", command)` escapes arguments via Windows CreateProcess API, causing CMD to receive the literal string `".[dev]"` (with quotes) instead of `.[dev]`. Pip then rejects it: `ERROR: ".[dev]" is not a valid editable requirement`. The Unix BUILD files can use `".[dev]"` because bash strips quotes before passing to pip. Always check existing working BUILD_windows files (e.g., `lexer/BUILD_windows`) — they all use unquoted `.[dev]`.
+
+**Chain reaction rule:** When a low-level Python package (grammar-tools, lexer) changes, ALL packages that depend on it are added to the affected set by the build tool and will be rebuilt. This means every Python package in `git diff origin/main...HEAD` that has a BUILD_windows file using `uv run python -m pytest` will fail on Windows. Before pushing any Python changes, grep all modified packages' BUILD_windows files for `uv run python` and fix them with the `python -m venv` pattern above. In this PR, grammar-tools and lexer both changed → both needed BUILD_windows fixes independently.
