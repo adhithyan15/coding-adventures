@@ -28,5 +28,36 @@
 
   "placeholder.comingSoon": "Coming soon",
 
+  "nand.intro": "NAND is functionally complete — every logic gate can be built using NAND gates alone. Since a NAND gate costs only 4 transistors in CMOS, this means you can build ANY digital circuit from a single, cheap building block. This profound result, discovered independently by Peirce (1880) and Sheffer (1913), is the foundation of modern chip design.",
+
+  "nand.nandGate.title": "The NAND Gate — Universal Building Block",
+  "nand.nandGate.description": "NAND outputs 0 only when BOTH inputs are 1. It is the inverse of AND. In CMOS, NAND is a 'natural' gate: 2 PMOS transistors in parallel form the pull-up network, and 2 NMOS transistors in series form the pull-down. This makes it one of the cheapest gates to manufacture.",
+
+  "nand.not.title": "NAND → NOT",
+  "nand.not.formula": "NOT(a) = NAND(a, a)",
+  "nand.not.description": "The simplest derivation: connect the same wire to both NAND inputs. NAND(0,0) = 1 and NAND(1,1) = 0 — which is exactly NOT. Uses 1 NAND gate (4 transistors), compared to a native NOT gate's 2 transistors.",
+  "nand.not.ariaLabel": "NOT from NAND: single NAND gate with both inputs tied together",
+
+  "nand.and.title": "NAND → AND",
+  "nand.and.formula": "AND(a,b) = NAND(NAND(a,b), NAND(a,b))",
+  "nand.and.description": "NAND is the opposite of AND, so inverting NAND gives us AND. Gate 1 computes NAND(a,b), then Gate 2 acts as NOT by feeding that result to both inputs of a second NAND. Two NAND gates, 8 transistors total — compared to 6 transistors for a native AND (NAND + inverter).",
+  "nand.and.ariaLabel": "AND from NAND: two NAND gates in series, second one inverts the first",
+
+  "nand.or.title": "NAND → OR",
+  "nand.or.formula": "OR(a,b) = NAND(NAND(a,a), NAND(b,b))",
+  "nand.or.description": "This is De Morgan's Law in action: A OR B = NOT(NOT(A) AND NOT(B)) = NAND(NOT(A), NOT(B)). Gates 1 and 2 invert each input (using the NOT-from-NAND trick), then Gate 3 NANDs the results. Three NAND gates, 12 transistors — compared to 6 for a native OR.",
+  "nand.or.ariaLabel": "OR from NAND: two NAND gates invert inputs, third NAND combines them via De Morgan's Law",
+
+  "nand.xor.title": "NAND → XOR",
+  "nand.xor.formula": "XOR(a,b) = NAND(NAND(a,N), NAND(b,N)) where N=NAND(a,b)",
+  "nand.xor.description": "The most complex basic derivation, requiring 4 NAND gates (16 transistors). Gate 1 computes N = NAND(a,b). This intermediate value feeds into Gates 2 and 3 alongside the original inputs. Gate 4 combines the results. The signal reuse (N goes to two gates) is what makes XOR inherently more expensive than AND or OR.",
+  "nand.xor.ariaLabel": "XOR from NAND: four NAND gates with shared intermediate wire N",
+
+  "nand.cost.nandOnly": "NAND-only",
+  "nand.cost.native": "Native",
+
+  "nand.tradeoff.title": "The Engineering Tradeoff",
+  "nand.tradeoff.description": "Building everything from NAND gates uses more transistors than mixing gate types. So why would anyone do it? Uniformity. When every gate on a chip is identical, manufacturing becomes simpler: one mask pattern, one timing model, one test procedure. Early chips used this approach extensively. Modern designs use a mix of gate types for efficiency, but NAND remains the single most common gate in production chips.",
+
   "footer.credit": "Built with gate-level simulation models"
 }
