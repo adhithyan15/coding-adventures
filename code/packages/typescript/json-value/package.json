@@ -22,8 +22,12 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/json-parser": "file:../json-parser",
+    "@coding-adventures/json-lexer": "file:../json-lexer",
     "@coding-adventures/parser": "file:../parser",
-    "@coding-adventures/lexer": "file:../lexer"
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
