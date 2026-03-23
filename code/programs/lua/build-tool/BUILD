@@ -1,1 +1,1 @@
-lua build.lua --help
+cd tests && busted . --verbose
