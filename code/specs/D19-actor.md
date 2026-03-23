@@ -115,10 +115,12 @@ Message
 │                  │ "application/octet-stream", etc.         │
 │                  │ Actors can filter by content_type.       │
 ├──────────────────┼─────────────────────────────────────────┤
-│ payload          │ The message body. Arbitrary bytes in the │
-│                  │ general case, but typically a structured │
-│                  │ type (string, JSON object, etc.) when    │
-│                  │ content_type is set.                     │
+│ payload          │ The message body. Always raw bytes.       │
+│                  │ Content_type tells the receiver how to   │
+│                  │ interpret them: UTF-8 text, JSON, PNG,   │
+│                  │ MP4, or any other format. The Actor      │
+│                  │ system never inspects or transforms the  │
+│                  │ payload — it is opaque binary data.      │
 ├──────────────────┼─────────────────────────────────────────┤
 │ metadata         │ Optional key-value pairs for extensibility│
 │                  │ (correlation IDs, trace IDs, priority,   │
@@ -141,25 +143,206 @@ Message
    arbitrary context. D18 uses it for encryption nonces, sequence numbers, and
    signatures. This package does not interpret metadata — it passes it through.
 
-4. **Serialization.** Messages must be serializable to bytes and deserializable from
-   bytes. This is required for channel persistence (writing to disk) and for future
-   network transport (sending between machines). The serialization format is JSON for
-   V1 — simple, human-readable, debuggable.
+4. **Binary-native serialization.** Messages are serialized to a binary wire format
+   that separates the **envelope** (metadata — always JSON) from the **payload**
+   (always raw bytes). This avoids Base64-encoding binary data like images or videos,
+   which would bloat size by 33% and waste CPU.
 
-**Message serialization format (JSON):**
+**Message wire format:**
 
-```json
-{
-  "id": "msg_01J7X8K9M2N3P4Q5R6S7T8U9V0",
-  "timestamp": 1679616000000000000,
-  "sender_id": "actor_email_reader",
-  "content_type": "application/json",
-  "payload": "{\"subject\": \"Meeting tomorrow\", \"from\": \"boss@company.com\"}",
-  "metadata": {
-    "correlation_id": "req_abc123",
-    "priority": "normal"
-  }
-}
+The serialization format uses a fixed-size header followed by a JSON envelope
+followed by raw payload bytes:
+
+```
+Message on disk / on wire:
+
+┌─────────────────────────────────────────────┐
+│ HEADER (17 bytes, fixed size)               │
+│                                              │
+│ magic:          4 bytes  "ACTM" (0x4143544D) │
+│ version:        1 byte   0x01                │
+│ envelope_length: 4 bytes (big-endian u32)    │
+│ payload_length:  8 bytes (big-endian u64)    │
+└──────────────────────┬──────────────────────┘
+┌──────────────────────┴──────────────────────┐
+│ ENVELOPE (UTF-8 JSON, variable length)       │
+│                                              │
+│ {                                            │
+│   "id": "msg_01J7X8K9M2N3P4Q5R6S7T8U9V0",  │
+│   "timestamp": 1679616000000000000,          │
+│   "sender_id": "actor_email_reader",         │
+│   "content_type": "image/png",               │
+│   "metadata": {                              │
+│     "correlation_id": "req_abc123",          │
+│     "width": "1920",                         │
+│     "height": "1080"                         │
+│   }                                          │
+│ }                                            │
+│                                              │
+│ (No payload here — envelope is pure metadata)│
+└──────────────────────┬──────────────────────┘
+┌──────────────────────┴──────────────────────┐
+│ PAYLOAD (raw bytes, variable length)         │
+│                                              │
+│ 89 50 4E 47 0D 0A 1A 0A ... (PNG bytes)     │
+│                                              │
+│ No encoding. No Base64. Raw binary.          │
+│ Could be 10 bytes or 10 gigabytes.           │
+└─────────────────────────────────────────────┘
+```
+
+**Why separate envelope from payload?**
+
+1. **No bloat.** A 10MB image is 10MB on disk, not 13.3MB after Base64.
+2. **Scannable without loading payloads.** To search for "all messages from
+   browser_agent," read headers and envelopes only — skip payload bytes.
+   You can index an entire channel of videos without loading a single frame.
+3. **Content-type driven.** The envelope's `content_type` tells the receiver
+   how to interpret the payload bytes:
+
+```
+content_type               payload bytes are...
+─────────────              ────────────────────
+text/plain                 UTF-8 text
+application/json           JSON (UTF-8 text)
+image/png                  raw PNG image
+image/jpeg                 raw JPEG image
+video/mp4                  raw MP4 video
+application/octet-stream   opaque binary (receiver knows what to do)
+```
+
+**Convenience constructors for common cases:**
+
+For text and JSON messages (the common case), convenience constructors accept
+strings and handle UTF-8 encoding automatically:
+
+```python
+# Text message — payload stored as UTF-8 bytes internally
+msg = Message.text(sender_id="agent", payload="hello world")
+
+# JSON message — payload is JSON-serialized to UTF-8 bytes
+msg = Message.json(sender_id="agent", payload={"key": "value"})
+
+# Binary message — payload is raw bytes
+msg = Message.binary(
+    sender_id="browser",
+    content_type="image/png",
+    payload=png_bytes,
+)
+```
+
+---
+
+### Wire Format Versioning and Envelope Encoding
+
+Every schema in this system is versioned. The wire format version is embedded in
+every serialized message's header. This enables forward and backward compatibility
+as the format evolves.
+
+**Pluggable envelope encoding:**
+
+The envelope (message metadata — everything except the raw payload) is encoded using
+a format identified by the version byte in the header. V1 uses JSON because it is
+human-readable and debuggable. But the architecture supports swapping the envelope
+encoding entirely — to Protocol Buffers, MessagePack, CBOR, FlatBuffers, or any other
+format — by bumping the version byte.
+
+```
+Version → Envelope Encoding Mapping
+════════════════════════════════════
+
+v1:  JSON (UTF-8)        — human-readable, debuggable, V1 default
+v2:  (future) Protobuf   — compact, schema-enforced, fast parsing
+v3:  (future) MessagePack — compact, schema-less, fast parsing
+...
+
+The version byte tells the reader HOW to parse the envelope.
+The payload is always raw bytes, unaffected by envelope encoding.
+```
+
+**Why this matters:** When both sender and receiver are upgraded to understand Protobuf
+(for example), they can switch to v2. The channel log can contain mixed v1 (JSON) and
+v2 (Protobuf) messages — the reader dispatches based on each message's version byte.
+Old messages remain readable. No migration needed.
+
+**The contract:** The envelope encoding can change. The *fields* in the envelope
+(id, timestamp, sender_id, content_type, metadata) are the stable contract. Whether
+those fields are serialized as JSON keys, Protobuf field numbers, or MessagePack
+maps is an implementation detail hidden behind the version byte.
+
+```
+Stable contract (does not change):     Encoding (can change per version):
+├── id: string                         ├── v1: {"id": "msg_001", ...}
+├── timestamp: u64                     ├── v2: <protobuf bytes>
+├── sender_id: string                  └── v3: <msgpack bytes>
+├── content_type: string
+└── metadata: map<string, string>
+```
+
+**Version rules:**
+
+```
+Version Compatibility Rules
+═══════════════════════════
+
+1. READING: A reader MUST handle all versions ≤ its own version.
+   A v3 reader can read v1, v2, and v3 messages.
+
+2. READING: A reader that encounters a version > its own MUST NOT crash.
+   It MUST return a clear VersionError with the encountered version
+   and the maximum supported version. This tells the user to upgrade.
+
+3. WRITING: A writer ALWAYS writes the latest version it supports.
+   A v3 writer writes v3 messages, never v1 or v2.
+
+4. ADDING FIELDS: New optional fields in the envelope are a MINOR change.
+   Old readers ignore fields they don't recognize (JSON's natural behavior).
+   No version bump needed.
+
+5. CHANGING FIELD TYPES OR REMOVING FIELDS: This is a MAJOR change.
+   Requires a version bump (v1 → v2). Old readers use the version byte
+   to dispatch to the correct parser.
+
+6. CHANGING THE HEADER LAYOUT: This is an EXTREME change. The first 5
+   bytes (magic + version) MUST NEVER change — they are the anchor that
+   all future versions use to identify the format. Changes to header
+   fields after the version byte require a version bump.
+```
+
+**How version dispatch works:**
+
+```
+Reading a message:
+
+1. Read 5 bytes: magic (4) + version (1).
+2. If magic ≠ "ACTM" → InvalidFormat error.
+3. If version > MAX_SUPPORTED_VERSION → VersionError.
+4. Dispatch to version-specific parser:
+   ├── v1: read 12 more header bytes (envelope_len u32 + payload_len u64)
+   ├── v2: (future) might have different header fields
+   └── v3: (future) might have a completely different layout
+
+The version byte is the ONLY thing all versions agree on.
+Everything after it can change between versions.
+```
+
+**Channel log versioning:**
+
+A single channel log file can contain messages of **mixed versions**. If the
+system is upgraded from v1 to v2, old messages in the log remain v1. New messages
+are written as v2. The reader handles both transparently because each message
+self-describes its version in its own header. No migration step needed.
+
+```
+Channel file after upgrade from v1 to v2:
+
+[ACTM][v1][...] message 0 (written before upgrade)
+[ACTM][v1][...] message 1 (written before upgrade)
+[ACTM][v2][...] message 2 (written after upgrade, new format)
+[ACTM][v2][...] message 3 (written after upgrade)
+
+Reader handles both v1 and v2 transparently.
+No need to rewrite the log.
 ```
 
 ---
@@ -251,20 +434,55 @@ They are independent. A being ahead does not affect B.
 
 **Persistence:**
 
-In V1, channels persist to disk as newline-delimited JSON (NDJSON). Each line is one
-serialized Message. This format is:
-- Human-readable (you can `cat` the file and read it)
-- Appendable (just write a new line — no need to parse the whole file)
-- Replayable (read line by line from the beginning)
-- Greppable (search for messages with standard Unix tools)
+Channels persist to disk as a **binary append log** using the same wire format as
+individual messages. Each message is written as its header + envelope + payload,
+concatenated end-to-end. This format is:
+
+- **Binary-native** — images, videos, and arbitrary payloads are stored as raw bytes,
+  not Base64-encoded text. Zero bloat.
+- **Appendable** — just write the next message's bytes at the end of the file.
+- **Replayable** — read from the beginning: parse header → read envelope → read/skip
+  payload → parse next header → repeat.
+- **Scannable without loading payloads** — to index the channel, read each 17-byte
+  header, read the envelope JSON, skip `payload_length` bytes, move to the next
+  message. You can index a channel full of videos without loading a single frame.
 
 ```
-Channel file: channels/email-summaries.ndjson
+Channel file: channels/email-summaries.log
 
-{"id":"msg_001","timestamp":1679616000000000000,"sender_id":"email_reader",...}
-{"id":"msg_002","timestamp":1679616001000000000,"sender_id":"email_reader",...}
-{"id":"msg_003","timestamp":1679616002000000000,"sender_id":"email_reader",...}
+┌──────────────────────────────────────────────┐
+│[ACTM][v1][env_len=82][pay_len=45]            │ message 0 header
+│{"id":"msg_001","sender_id":"email_reader",...}│ message 0 envelope
+│Meeting tomorrow at 3pm...                    │ message 0 payload
+├──────────────────────────────────────────────┤
+│[ACTM][v1][env_len=78][pay_len=1048576]       │ message 1 header
+│{"id":"msg_002","content_type":"image/png",...}│ message 1 envelope
+│<1MB of raw PNG bytes>                        │ message 1 payload
+├──────────────────────────────────────────────┤
+│[ACTM][v1][env_len=85][pay_len=23]            │ message 2 header
+│{"id":"msg_003","sender_id":"email_reader",...}│ message 2 envelope
+│See attached screenshot                       │ message 2 payload
+└──────────────────────────────────────────────┘
 ```
+
+**Index file (optional, for fast offset-to-byte-position lookups):**
+
+For large channels with many messages, an optional `.idx` file maps sequence
+numbers to byte offsets in the log file. This allows O(1) seeking to any message
+instead of scanning from the beginning:
+
+```
+Channel index: channels/email-summaries.idx
+
+sequence 0 → byte offset 0
+sequence 1 → byte offset 144
+sequence 2 → byte offset 1048798
+...
+```
+
+The index is rebuilt from the log on recovery if missing — the log is always the
+source of truth. The index is a performance optimization, not a correctness
+requirement.
 
 D18 adds encryption on top of this persistence layer. This package stores plaintext —
 encryption is a concern of the Chief of Staff system, not the Actor primitive.
@@ -550,11 +768,19 @@ append(channel, message)
 2. channel.log.append(message)
 
 3. If persistence is enabled:
-     Serialize message to JSON.
-     Append JSON line to channel file (channels/{channel.name}.ndjson).
-     Flush to disk (fsync).
-     // fsync ensures the message survives a crash.
-     // Without fsync, the OS might buffer the write and lose it.
+     a. Serialize message envelope to JSON bytes.
+     b. Get payload as raw bytes.
+     c. Write 17-byte header:
+        - magic: "ACTM" (4 bytes)
+        - version: 0x01 (1 byte)
+        - envelope_length: len(envelope_json) (4 bytes, big-endian)
+        - payload_length: len(payload) (8 bytes, big-endian)
+     d. Write envelope JSON bytes.
+     e. Write raw payload bytes.
+     f. Flush to disk (fsync).
+        // fsync ensures the message survives a crash.
+        // Without fsync, the OS might buffer the write and lose it.
+     g. If index file exists, append: sequence_number → byte_offset.
 
 4. Return sequence_number.
 
@@ -586,21 +812,33 @@ Time complexity: O(limit) — copying the requested slice.
 recover(channel_name)
 ═════════════════════
 
-1. path = channels/{channel_name}.ndjson
+1. path = channels/{channel_name}.log
 
 2. If file does not exist:
      return new empty Channel
 
 3. Open file for reading.
 
-4. For each line in file:
-     a. Parse JSON → Message
-     b. Append to in-memory log (do NOT write back to file)
+4. Loop until EOF:
+     a. Read 17-byte header.
+        - Verify magic = "ACTM".
+        - Read version, envelope_length, payload_length.
+     b. Read envelope_length bytes → parse JSON → envelope fields.
+     c. Read payload_length bytes → raw payload.
+     d. Reconstruct Message from envelope + payload.
+     e. Append to in-memory log (do NOT write back to file).
 
-5. Return the reconstructed Channel.
+5. If header is truncated (partial write before crash):
+     Discard the incomplete message. Log a warning.
+     The last complete message is the recovery point.
+
+6. Return the reconstructed Channel.
 
 This is how the system recovers after a crash. The channel file
 IS the source of truth. The in-memory log is just a cache.
+The 17-byte header acts as a frame boundary — if a crash happens
+mid-write, the next recovery will see a truncated header or
+incomplete payload and cleanly discard only the partial message.
 ```
 
 ---
@@ -616,15 +854,54 @@ expose equivalent types and functions.
 # ═══════════════════════════════════════════════════════════════
 
 class Message:
-    """Immutable message — the atom of actor communication."""
+    """Immutable message — the atom of actor communication.
+
+    Payload is always bytes. Content_type describes how to interpret them.
+    Use convenience constructors for common cases: Message.text(),
+    Message.json(), Message.binary().
+    """
+
+    WIRE_VERSION = 1  # Bump when wire format changes
 
     def __init__(
         self,
         sender_id: str,
         content_type: str,
-        payload: str | bytes,
+        payload: bytes,
         metadata: dict[str, str] | None = None,
     ) -> None: ...
+
+    # --- Convenience constructors ---
+
+    @classmethod
+    def text(
+        cls,
+        sender_id: str,
+        payload: str,
+        metadata: dict[str, str] | None = None,
+    ) -> "Message": ...
+        # content_type = "text/plain", payload = text.encode("utf-8")
+
+    @classmethod
+    def json(
+        cls,
+        sender_id: str,
+        payload: dict | list,
+        metadata: dict[str, str] | None = None,
+    ) -> "Message": ...
+        # content_type = "application/json", payload = json.dumps(payload).encode("utf-8")
+
+    @classmethod
+    def binary(
+        cls,
+        sender_id: str,
+        content_type: str,
+        payload: bytes,
+        metadata: dict[str, str] | None = None,
+    ) -> "Message": ...
+        # For images, videos, arbitrary binary data
+
+    # --- Properties (read-only) ---
 
     @property
     def id(self) -> str: ...            # Auto-generated unique ID
@@ -639,20 +916,37 @@ class Message:
     def content_type(self) -> str: ...
 
     @property
-    def payload(self) -> str | bytes: ...
+    def payload(self) -> bytes: ...     # Always bytes
+
+    @property
+    def payload_text(self) -> str: ...  # payload.decode("utf-8") — convenience
+
+    @property
+    def payload_json(self) -> dict | list: ...  # json.loads(payload) — convenience
 
     @property
     def metadata(self) -> dict[str, str]: ...
 
-    def to_json(self) -> str: ...       # Serialize to JSON string
+    # --- Serialization (binary wire format) ---
 
-    @classmethod
-    def from_json(cls, json_str: str) -> "Message": ...  # Deserialize
-
-    def to_bytes(self) -> bytes: ...    # Serialize to bytes (UTF-8 JSON)
+    def to_bytes(self) -> bytes: ...
+        # Serializes to wire format: 17-byte header + envelope JSON + payload bytes.
+        # Header contains: magic ("ACTM"), version, envelope_length, payload_length.
 
     @classmethod
     def from_bytes(cls, data: bytes) -> "Message": ...
+        # Deserializes from wire format. Validates magic and version.
+        # Raises VersionError if version > WIRE_VERSION (forward-compat check).
+
+    def envelope_to_json(self) -> str: ...
+        # Serializes ONLY the envelope (all fields except payload) to JSON.
+        # Useful for logging, indexing, debugging without touching the payload.
+
+    @classmethod
+    def from_stream(cls, stream) -> "Message": ...
+        # Read one message from a byte stream (file or network socket).
+        # Reads header first, then envelope, then payload.
+        # Returns None on EOF.
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -801,10 +1095,9 @@ The simplest possible actor. It receives a message and sends it back to the send
 ```python
 def echo_behavior(state, message):
     """Echo: send the same message back to whoever sent it."""
-    reply = Message(
+    reply = Message.text(
         sender_id="echo",
-        content_type=message.content_type,
-        payload=f"echo: {message.payload}",
+        payload=f"echo: {message.payload_text}",
     )
     return ActorResult(
         new_state=state,
@@ -970,78 +1263,102 @@ D19 Actor
 3. **Unique IDs**: Create 1000 messages, verify all IDs are unique.
 4. **Timestamp ordering**: Create messages sequentially, verify timestamps are strictly
    increasing.
-5. **JSON round-trip**: Serialize to JSON, deserialize, verify all fields match.
-6. **Bytes round-trip**: Serialize to bytes, deserialize, verify all fields match.
+5. **Wire format round-trip (text)**: Create text message, to_bytes, from_bytes,
+   verify all fields match including payload.
+6. **Wire format round-trip (binary)**: Create binary message (PNG header bytes),
+   to_bytes, from_bytes, verify payload bytes are identical.
 7. **Metadata passthrough**: Create message with metadata, serialize/deserialize,
    verify metadata preserved.
-8. **Empty payload**: Create message with empty string payload, verify it works.
-9. **Large payload**: Create message with 1MB payload, verify serialization works.
+8. **Empty payload**: Create message with empty payload (zero bytes), verify it works.
+9. **Large payload**: Create message with 1MB binary payload, verify serialization works.
 10. **Content type**: Verify content_type is preserved across serialization.
+11. **Convenience constructors**: Message.text(), Message.json(), Message.binary() all
+    produce correct content_type and payload encoding.
+12. **payload_text**: Text message payload_text returns decoded string.
+13. **payload_json**: JSON message payload_json returns parsed dict/list.
+14. **Envelope-only serialization**: envelope_to_json() produces JSON without payload.
+15. **Wire format magic**: to_bytes() starts with "ACTM" magic bytes.
+16. **Wire format version**: to_bytes() contains version byte matching WIRE_VERSION.
+17. **Future version rejection**: from_bytes() with version > WIRE_VERSION raises
+    VersionError (not a crash, a clear error).
+18. **Corrupt magic rejection**: from_bytes() with wrong magic raises InvalidFormat.
+19. **Stream reading**: from_stream() reads exactly one message from a byte stream
+    and leaves the stream positioned at the start of the next message.
 
 ### Unit Tests — Channel
 
-11. **Create channel**: Create a Channel, verify id and name.
-12. **Append and length**: Append 3 messages, verify length() returns 3.
-13. **Append returns sequence number**: Verify append returns 0, 1, 2 for successive
+20. **Create channel**: Create a Channel, verify id and name.
+21. **Append and length**: Append 3 messages, verify length() returns 3.
+22. **Append returns sequence number**: Verify append returns 0, 1, 2 for successive
     appends.
-14. **Read from beginning**: Append 5 messages, read(0, 5), verify all 5 returned
+23. **Read from beginning**: Append 5 messages, read(0, 5), verify all 5 returned
     in order.
-15. **Read with offset**: Append 5 messages, read(2, 3), verify messages 2, 3, 4
+24. **Read with offset**: Append 5 messages, read(2, 3), verify messages 2, 3, 4
     returned.
-16. **Read past end**: Append 3 messages, read(5, 10), verify empty list returned.
-17. **Read with limit**: Append 10 messages, read(0, 3), verify only 3 returned.
-18. **Slice**: Append 5 messages, slice(1, 4), verify messages 1, 2, 3 returned.
-19. **Independent readers**: Two consumers read the same channel at different offsets,
+25. **Read past end**: Append 3 messages, read(5, 10), verify empty list returned.
+26. **Read with limit**: Append 10 messages, read(0, 3), verify only 3 returned.
+27. **Slice**: Append 5 messages, slice(1, 4), verify messages 1, 2, 3 returned.
+28. **Independent readers**: Two consumers read the same channel at different offsets,
     verify they see correct messages independently.
-20. **Append-only**: Verify there is no method to delete or modify messages in the log.
-21. **Persistence (NDJSON)**: Append messages, persist to disk, verify file contents
-    are valid NDJSON.
-22. **Recovery**: Persist a channel, recover from disk, verify all messages restored.
-23. **Recovery preserves order**: Persist 100 messages, recover, verify order matches.
-24. **Empty channel recovery**: Recover from non-existent file, verify empty channel.
+29. **Append-only**: Verify there is no method to delete or modify messages in the log.
+30. **Binary persistence**: Append messages (text + binary), persist to disk, verify
+    file starts with "ACTM" magic and contains correct headers.
+31. **Recovery**: Persist a channel, recover from disk, verify all messages restored
+    including binary payloads.
+32. **Recovery preserves order**: Persist 100 messages, recover, verify order matches.
+33. **Empty channel recovery**: Recover from non-existent file, verify empty channel.
+34. **Mixed content recovery**: Persist text, JSON, and binary (PNG) messages to same
+    channel, recover, verify all content types and payloads are correct.
+35. **Truncated write recovery**: Simulate crash mid-write (truncate file mid-message),
+    recover, verify all complete messages are restored and partial message is discarded.
+36. **Mixed version recovery**: Write v1 messages, simulate upgrade to v2 (hypothetical),
+    write v2 messages. Recover and verify both versions are correctly parsed.
 
 ### Unit Tests — Actor
 
-25. **Create actor**: Create actor with initial state, verify status is IDLE.
-26. **Send message**: Send message to actor, verify mailbox_size is 1.
-27. **Process message**: Send message, call process_next, verify behavior was called.
-28. **State update**: Create counter actor, send 3 messages, verify state is 3.
-29. **Messages to send**: Create echo actor, send message, process, verify reply
+37. **Create actor**: Create actor with initial state, verify status is IDLE.
+38. **Send message**: Send message to actor, verify mailbox_size is 1.
+39. **Process message**: Send message, call process_next, verify behavior was called.
+40. **State update**: Create counter actor, send 3 messages, verify state is 3.
+41. **Messages to send**: Create echo actor, send message, process, verify reply
     was delivered to sender's mailbox.
-30. **Actor creation**: Create spawner actor, send "spawn" message, process, verify
+42. **Actor creation**: Create spawner actor, send "spawn" message, process, verify
     new actor exists in system.
-31. **Stop actor**: Send stop message, verify status is STOPPED after processing.
-32. **Stopped actor rejects messages**: Stop an actor, send a message, verify it
+43. **Stop actor**: Send stop message, verify status is STOPPED after processing.
+44. **Stopped actor rejects messages**: Stop an actor, send a message, verify it
     goes to dead_letters.
-33. **Dead letters**: Send message to non-existent actor, verify dead_letters contains it.
-34. **Sequential processing**: Send 3 messages, process_next 3 times, verify they
+45. **Dead letters**: Send message to non-existent actor, verify dead_letters contains it.
+46. **Sequential processing**: Send 3 messages, process_next 3 times, verify they
     were processed in FIFO order.
-35. **Mailbox drains on stop**: Actor has 3 pending messages, stop it, verify all 3
+47. **Mailbox drains on stop**: Actor has 3 pending messages, stop it, verify all 3
     go to dead_letters.
-36. **Behavior exception**: Create actor whose behavior throws on certain messages,
+48. **Behavior exception**: Create actor whose behavior throws on certain messages,
     verify: state unchanged, message goes to dead_letters, actor continues processing
     next message.
-37. **Duplicate actor ID**: Attempt to create two actors with same ID, verify error.
+49. **Duplicate actor ID**: Attempt to create two actors with same ID, verify error.
 
 ### Integration Tests
 
-38. **Ping-pong**: Two actors send messages back and forth 10 times. Verify both
+50. **Ping-pong**: Two actors send messages back and forth 10 times. Verify both
     processed 10 messages. Verify system reaches idle state.
-39. **Pipeline**: Three actors in a chain: A → B → C. A sends a message, B transforms
+51. **Pipeline**: Three actors in a chain: A → B → C. A sends a message, B transforms
     it and forwards to C. Verify C receives the transformed message.
-40. **Channel-based pipeline**: Producer writes to channel, consumer reads from channel
+52. **Channel-based pipeline**: Producer writes to channel, consumer reads from channel
     and processes. Verify consumer reads all messages in order.
-41. **Fan-out**: One actor sends the same message to 5 different actors. Verify all 5
+53. **Fan-out**: One actor sends the same message to 5 different actors. Verify all 5
     receive and process it.
-42. **Dynamic topology**: Actor A spawns Actor B, sends B a message, B responds.
+54. **Dynamic topology**: Actor A spawns Actor B, sends B a message, B responds.
     Verify the full round-trip works with a dynamically created actor.
-43. **Run until idle**: Create a complex network of 5 actors with interconnected
+55. **Run until idle**: Create a complex network of 5 actors with interconnected
     messaging. Call run_until_idle(). Verify all messages were processed and system
     is quiet.
-44. **Persistence round-trip**: Create actors, send messages through channels, persist
-    channels, create a new ActorSystem, recover channels, verify messages are intact.
-45. **Large-scale**: Create 100 actors, send 1000 messages randomly between them,
+56. **Persistence round-trip**: Create actors, send messages through channels (including
+    binary payloads), persist channels, create a new ActorSystem, recover channels,
+    verify all messages are intact.
+57. **Large-scale**: Create 100 actors, send 1000 messages randomly between them,
     run_until_done, verify no messages lost (all delivered or in dead_letters).
+58. **Binary message pipeline**: Actor A sends a PNG image to Actor B via a channel.
+    Actor B receives and verifies the image bytes are identical to what A sent.
 
 ### Coverage Target
 
