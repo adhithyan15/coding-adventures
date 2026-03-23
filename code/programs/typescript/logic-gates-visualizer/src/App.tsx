@@ -12,16 +12,18 @@
  *   <main>     — Active category's visualization panel
  *   <footer>   — Credit line
  *
- * === PR scope ===
+ * === Implemented tabs ===
  *
- * Only the "Basic Gates" tab is fully implemented in this PR. The other
- * three tabs show a placeholder message. Each subsequent PR will fill in
- * one more tab.
+ * Tab 1 — Basic Gates: NOT, AND, OR, XOR with truth tables and CMOS panels
+ * Tab 2 — NAND Universality: every gate built from NAND alone
+ *
+ * Tabs 3 and 4 show placeholder messages until their PRs land.
  */
 
 import { useState } from "react";
 import { TabList, useTranslation } from "@coding-adventures/ui-components";
 import { FundamentalGates } from "./components/fundamental/FundamentalGates.js";
+import { NandUniversality } from "./components/nand-universality/NandUniversality.js";
 
 /** The four circuit categories, ordered from simple to complex. */
 type TabId = "fundamental" | "nand" | "combinational" | "sequential";
@@ -54,7 +56,8 @@ export function App() {
 
       <main className="app__main">
         {activeTab === "fundamental" && <FundamentalGates />}
-        {activeTab !== "fundamental" && (
+        {activeTab === "nand" && <NandUniversality />}
+        {(activeTab === "combinational" || activeTab === "sequential") && (
           <div className="placeholder">
             <p>{t("placeholder.comingSoon")}</p>
           </div>

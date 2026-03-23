@@ -293,6 +293,198 @@
   max-height: 200px;
 }
 
+/* ==========================================================================
+ * NAND Universality — Tab 2 styles
+ * ========================================================================== */
+
+/* --- Universality section --- */
+
+.nand-universality {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.nand-universality__intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+/* --- NAND gate card --- */
+
+.nand-universality__nand-card {
+  background: rgba(233, 69, 96, 0.06);
+  border: 1px solid rgba(233, 69, 96, 0.25);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.nand-universality__nand-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e94560;
+  margin-bottom: 0.4rem;
+}
+
+.nand-universality__nand-description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+  margin-bottom: 0.6rem;
+}
+
+.nand-universality__nand-stats {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nand-universality__stat {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(233, 69, 96, 0.12);
+  color: #e94560;
+  border-radius: 12px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.nand-universality__stat--natural {
+  background: rgba(76, 175, 80, 0.12);
+  color: #81c784;
+}
+
+/* --- Derivation cards --- */
+
+.nand-universality__derivations {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.nand-derivation {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nand-derivation__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nand-derivation__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.nand-derivation__formula {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #e94560;
+  background: rgba(233, 69, 96, 0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.nand-derivation__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+/* --- Diagram area (inputs → SVG → output) --- */
+
+.nand-derivation__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.nand-derivation__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nand-derivation__svg {
+  flex: 1;
+  max-height: 160px;
+  min-width: 0;
+}
+
+.nand-derivation__output {
+  flex-shrink: 0;
+}
+
+/* --- Transistor cost comparison --- */
+
+.nand-derivation__cost {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nand-derivation__cost-item {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.nand-derivation__cost-item--nand {
+  background: rgba(233, 69, 96, 0.1);
+  color: #e94560;
+}
+
+.nand-derivation__cost-item--native {
+  background: rgba(76, 175, 80, 0.1);
+  color: #81c784;
+}
+
+/* --- Tradeoff note --- */
+
+.nand-universality__tradeoff {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.nand-universality__tradeoff-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--body-text);
+  margin-bottom: 0.4rem;
+}
+
+.nand-universality__tradeoff p {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
 /* --- Placeholder for future tabs --- */
 
 .placeholder {
