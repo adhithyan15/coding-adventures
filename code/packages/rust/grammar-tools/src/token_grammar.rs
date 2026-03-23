@@ -289,23 +289,34 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
     let (pattern_str, alias) = if after_eq.starts_with('/') {
-        // Regex pattern — find the closing slash, skipping escaped slashes (\/).
+        // Regex pattern — find the closing slash by scanning character-by-character.
+        // We track bracket depth so that / inside [...] character classes is
+        // not mistaken for the closing delimiter. We also skip escaped chars.
         let rest = &after_eq[1..];
         let close_idx = {
             let mut i = 0;
             let bytes = rest.as_bytes();
             let mut found = None;
+            let mut in_bracket = false;
             while i < bytes.len() {
                 if bytes[i] == b'\\' {
                     i += 2; // skip escaped character
-                } else if bytes[i] == b'/' {
+                } else if bytes[i] == b'[' && !in_bracket {
+                    in_bracket = true;
+                    i += 1;
+                } else if bytes[i] == b']' && in_bracket {
+                    in_bracket = false;
+                    i += 1;
+                } else if bytes[i] == b'/' && !in_bracket {
                     found = Some(i);
                     break;
                 } else {
                     i += 1;
                 }
             }
-            found
+            // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+            // try the last / as a best-effort parse.
+            found.or_else(|| rest.rfind('/').filter(|&idx| idx > 0))
         };
         match close_idx {
             Some(close_idx) => {

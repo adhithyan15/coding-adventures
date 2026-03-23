@@ -342,7 +342,9 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
       String.starts_with?(rest, "/") ->
         # Regex pattern — find the closing /
         # Start searching from index 1 (after the opening /)
-        case find_closing_slash(rest, 1) do
+        close_idx = find_closing_slash(rest, 1) || find_closing_slash_fallback(rest)
+
+        case close_idx do
           nil ->
             # No closing slash found — return as-is, let parse_pattern error
             {rest, nil}
@@ -371,22 +373,44 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
     end
   end
 
-  # Find the index of the closing / in a regex pattern (skipping escaped ones)
-  defp find_closing_slash(str, idx) when idx >= byte_size(str), do: nil
+  # Find the index of the closing / in a regex pattern (skipping escaped ones).
+  # Tracks bracket depth so that / inside [...] character classes is not
+  # mistaken for the closing delimiter.
+  defp find_closing_slash(str, idx, in_bracket \\ false)
 
-  defp find_closing_slash(str, idx) do
+  defp find_closing_slash(str, idx, _in_bracket) when idx >= byte_size(str), do: nil
+
+  defp find_closing_slash(str, idx, in_bracket) do
     ch = binary_part(str, idx, 1)
 
     cond do
       ch == "\\" and idx + 1 < byte_size(str) ->
         # Escaped character — skip next
-        find_closing_slash(str, idx + 2)
+        find_closing_slash(str, idx + 2, in_bracket)
 
-      ch == "/" ->
+      ch == "[" and not in_bracket ->
+        find_closing_slash(str, idx + 1, true)
+
+      ch == "]" and in_bracket ->
+        find_closing_slash(str, idx + 1, false)
+
+      ch == "/" and not in_bracket ->
         idx
 
       true ->
-        find_closing_slash(str, idx + 1)
+        find_closing_slash(str, idx + 1, in_bracket)
+    end
+  end
+
+  # Fallback version called when the bracket-aware scan returns nil.
+  # Used by split_pattern_and_alias to handle patterns with unclosed brackets.
+  defp find_closing_slash_fallback(str) do
+    # Find the last / in the string as a best-effort parse
+    case :binary.matches(str, "/") do
+      [] -> nil
+      matches ->
+        {last_pos, _} = List.last(matches)
+        if last_pos > 0, do: last_pos, else: nil
     end
   end
 
