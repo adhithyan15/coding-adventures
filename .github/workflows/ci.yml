@@ -48,6 +48,7 @@ jobs:
       needs_typescript: ${{ steps.detect.outputs.needs_typescript }}
       needs_rust: ${{ steps.detect.outputs.needs_rust }}
       needs_elixir: ${{ steps.detect.outputs.needs_elixir }}
+      needs_lua: ${{ steps.detect.outputs.needs_lua }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -184,6 +185,24 @@ jobs:
           elixir-version: '1.16'
           otp-version: '26.0'
 
+      - name: Set up Lua
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        uses: leafo/gh-actions-lua@v11
+        with:
+          luaVersion: "5.4"
+
+      - name: Set up LuaRocks
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Install Lua test tools
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        shell: bash
+        run: |
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacheck
+
       - name: Install test runners
         shell: bash
         run: |
@@ -218,6 +237,10 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
+            echo "Lua: $(lua -v)"
+            echo "LuaRocks: $(luarocks --version)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────
