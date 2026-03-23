@@ -4,6 +4,18 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-03-23: Python pyproject.toml must declare ALL monorepo imports as dependencies
+
+When migrating from shell BUILD files to Starlark, the auto-discovery of monorepo deps reads pyproject.toml. If a package imports from a sibling (e.g., `from riscv_simulator import ...`) but doesn't declare `coding-adventures-riscv-simulator` in `dependencies`, the build will fail because `uv pip install` doesn't know to install it. The old shell BUILD files papered over this with explicit `-e ../dep` flags. Always ensure pyproject.toml dependencies match actual imports. 29 packages had this issue.
+
+---
+
+### 2026-03-23: Transitive monorepo deps need recursive discovery
+
+For Python, `uv pip install -e ../dep` doesn't transitively install dep's own monorepo deps (they're not on PyPI). For TypeScript, `npm install` in a dep directory doesn't install its own `file:../` deps. The build tool must walk the dep tree recursively (leaf-first) and install every transitive monorepo dep explicitly. Direct-only discovery is insufficient.
+
+---
+
 ### 2026-03-23: Plan-based execution must re-evaluate Starlark BUILD files
 
 When the Go build tool runs with `--plan-file` (CI build jobs), it re-reads platform-specific BUILD files using `ReadLines()`. For Starlark BUILD files, this passes raw Starlark source (e.g., `load(...)`) to the shell executor, causing `'load' is not recognized` on Windows. The fix: check `IsStarlark` and call `EvaluateBuildFile()` instead of `ReadLines()` for Starlark packages. Any code path that reads BUILD files must respect the Starlark/shell distinction.
