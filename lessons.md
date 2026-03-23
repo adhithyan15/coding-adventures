@@ -343,6 +343,26 @@ The Elixir Starlark AST-to-bytecode compiler can get stuck in an infinite loop i
 
 **Rule:** When adding integration tests that exercise the full Starlark interpreter pipeline in Elixir, either skip them or set generous timeouts. Unit tests for detection, command generation, and extraction helpers should not need the interpreter.
 
+### 2026-03-22: Lexer NEWLINE/DEDENT ordering at EOF
+
+The indentation-mode tokenizer emitted DEDENTs before the final NEWLINE at EOF. This broke parsing of multiline expressions inside function bodies (e.g., `x = { ... }` spanning multiple lines in a `def`). The parser expects NEWLINE to terminate the statement before DEDENT closes the block.
+
+**Rule:** The correct EOF token order is: NEWLINE → DEDENT → ... → DEDENT → EOF. Always emit NEWLINE before DEDENTs at EOF. This matches Python's tokenizer behavior.
+
+### 2026-03-22: CALL_FUNCTION_KW compiler/VM protocol mismatch
+
+The VM's `handleCallFunctionKW` handler expected a CPython-style keyword names tuple on top of stack, but our compiler emits interleaved key-value pairs: `[callable, key1, val1, key2, val2, ...]` with operand = number of keyword pairs. The handler was popping the wrong values, causing "string not callable" errors.
+
+Also, function default parameters are right-aligned: `def f(a, b=1, c=2)` has defaults for params 1 and 2 (the last N), not params 0 and 1.
+
+**Rule:** When debugging "X not callable" errors, check the stack layout protocol between the compiler and VM handler. Print the bytecode (`CompileStarlark`) and trace the stack to find mismatches.
+
+### 2026-03-22: Cross-module function scope limitation
+
+Functions loaded via `load()` execute in the caller's VM, not the source module's VM. Module-level variables (like `_targets = []`) from the source file are invisible to the function body because the compiler uses `LOAD_LOCAL` for all name references inside functions.
+
+**Workaround:** Rule functions should `return` their target dict instead of appending to a module-level list. The BUILD file constructs `_targets` directly: `_targets = [rule_func(...)]`.
+
 ### 2026-03-22: Pin uv version in CI to avoid missing platform binaries
 
 The `astral-sh/setup-uv@v4` action with `version: latest` resolved to uv `0.10.12`, which was missing the `aarch64-apple-darwin` binary (404 error). This caused all macOS CI runs to fail on the "Install uv" step. The fix is to pin to a known stable version series (e.g., `version: "0.6.x"`) rather than relying on `latest`.
