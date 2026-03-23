@@ -389,22 +389,42 @@ func TestPyInstallCmd(t *testing.T) {
 		t.Errorf("pyInstallCmd(nonexistent) = %q, want default", cmd)
 	}
 
-	// Create a temp dir with a pyproject.toml to test real parsing.
-	tmpDir := t.TempDir()
-	pyproject := `[project]
-name = "coding-adventures-logic-gates"
-dependencies = [
-    "coding-adventures-transistors>=0.1.0",
-    "coding-adventures-nand-gate>=0.1.0",
-]`
-	if err := os.WriteFile(tmpDir+"/pyproject.toml", []byte(pyproject), 0644); err != nil {
-		t.Fatal(err)
+	// Create a temp dir structure to test transitive dep discovery.
+	// parent/
+	//   pkg-a/pyproject.toml  (depends on pkg-b)
+	//   pkg-b/pyproject.toml  (depends on pkg-c)
+	//   pkg-c/pyproject.toml  (no monorepo deps)
+	parent := t.TempDir()
+
+	// pkg-c: leaf, no monorepo deps
+	os.MkdirAll(parent+"/pkg-c", 0755)
+	os.WriteFile(parent+"/pkg-c/pyproject.toml", []byte(`[project]
+name = "coding-adventures-pkg-c"
+dependencies = ["pytest>=7.0"]`), 0644)
+
+	// pkg-b: depends on pkg-c
+	os.MkdirAll(parent+"/pkg-b", 0755)
+	os.WriteFile(parent+"/pkg-b/pyproject.toml", []byte(`[project]
+name = "coding-adventures-pkg-b"
+dependencies = ["coding-adventures-pkg-c"]`), 0644)
+
+	// pkg-a: depends on pkg-b
+	os.MkdirAll(parent+"/pkg-a", 0755)
+	os.WriteFile(parent+"/pkg-a/pyproject.toml", []byte(`[project]
+name = "coding-adventures-pkg-a"
+dependencies = ["coding-adventures-pkg-b"]`), 0644)
+
+	cmd = pyInstallCmd(parent + "/pkg-a")
+	// Should install pkg-c first (leaf), then pkg-b, then pkg-a's own deps
+	expected := `uv pip install --system -e ../pkg-c -e ../pkg-b -e ".[dev]"`
+	if cmd != expected {
+		t.Errorf("pyInstallCmd(transitive) = %q, want %q", cmd, expected)
 	}
 
-	cmd = pyInstallCmd(tmpDir)
-	expected := `uv pip install --system -e ../transistors -e ../nand-gate -e ".[dev]"`
-	if cmd != expected {
-		t.Errorf("pyInstallCmd() = %q, want %q", cmd, expected)
+	// pkg-c has no monorepo deps, should get default command.
+	cmd = pyInstallCmd(parent + "/pkg-c")
+	if cmd != `uv pip install --system -e ".[dev]"` {
+		t.Errorf("pyInstallCmd(leaf) = %q, want default", cmd)
 	}
 }
 

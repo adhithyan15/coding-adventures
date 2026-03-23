@@ -11,7 +11,11 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["css", "parser", "ast", "grammar-driven", "computer-science", "education"]
-dependencies = []
+dependencies = [
+    "coding-adventures-css-lexer",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-parser",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

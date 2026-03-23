@@ -5,6 +5,7 @@ description = "Object-Oriented Single Layer Neural Node"
 requires-python = ">=3.12"
 dependencies = [
     "coding-adventures-matrix", "coding-adventures-loss-functions", "activation-functions"
+    "coding-adventures-activation-functions",
 ]
 
 [tool.uv.sources]

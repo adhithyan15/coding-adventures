@@ -13,6 +13,8 @@ readme = "README.md"
 keywords = ["json", "parser", "grammar-driven", "ast", "computer-science", "education"]
 dependencies = [
     "coding-adventures-json-lexer",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-parser",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

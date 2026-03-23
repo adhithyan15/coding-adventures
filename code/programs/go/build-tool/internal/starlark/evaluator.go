@@ -362,31 +362,58 @@ func GenerateCommands(t Target, pkgPath string) []string {
 //	uv pip install --system -e ../lexer -e ../grammar-tools -e ".[dev]"
 //
 // This auto-discovery replaces the need to manually list deps in BUILD files.
+//
+// The discovery is transitive: if A depends on B and B depends on C, the
+// resulting command installs C, B, then A.  This mirrors what the old shell
+// BUILD files did manually with explicit -e flags for every transitive dep.
 func pyInstallCmd(pkgPath string) string {
 	if pkgPath == "" {
 		return `uv pip install --system -e ".[dev]"`
 	}
 
-	pyproject := filepath.Join(pkgPath, "pyproject.toml")
-	data, err := os.ReadFile(pyproject)
-	if err != nil {
-		return `uv pip install --system -e ".[dev]"`
-	}
-
-	// Extract monorepo deps from pyproject.toml.  Monorepo deps use the
-	// "coding-adventures-" prefix.  We strip that prefix to get the
-	// relative path: "coding-adventures-lexer" -> "../lexer".
-	depPaths := extractPyMonorepoDeps(string(data))
-	if len(depPaths) == 0 {
+	// Collect all transitive monorepo deps by walking the dep tree.
+	parentDir := filepath.Dir(pkgPath)
+	allDeps := collectPyTransitiveDeps(pkgPath, parentDir, make(map[string]bool))
+	if len(allDeps) == 0 {
 		return `uv pip install --system -e ".[dev]"`
 	}
 
 	args := "uv pip install --system"
-	for _, dep := range depPaths {
+	for _, dep := range allDeps {
 		args += " -e ../" + dep
 	}
 	args += ` -e ".[dev]"`
 	return args
+}
+
+// collectPyTransitiveDeps walks the monorepo dep tree starting from pkgPath.
+// It reads each package's pyproject.toml, finds coding-adventures-* deps,
+// and recurses into each.  Returns a flat list in leaf-first order (deps
+// before dependents) with no duplicates.
+func collectPyTransitiveDeps(pkgPath, parentDir string, visited map[string]bool) []string {
+	pyproject := filepath.Join(pkgPath, "pyproject.toml")
+	data, err := os.ReadFile(pyproject)
+	if err != nil {
+		return nil
+	}
+
+	directDeps := extractPyMonorepoDeps(string(data))
+	var result []string
+
+	for _, dep := range directDeps {
+		if visited[dep] {
+			continue
+		}
+		visited[dep] = true
+
+		// Recurse into the dep's own pyproject.toml.
+		depPath := filepath.Join(parentDir, dep)
+		transitive := collectPyTransitiveDeps(depPath, parentDir, visited)
+		result = append(result, transitive...)
+		result = append(result, dep)
+	}
+
+	return result
 }
 
 // extractPyMonorepoDeps parses pyproject.toml and returns relative dep
