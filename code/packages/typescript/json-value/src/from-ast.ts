@@ -208,148 +208,33 @@ function convertToken(token: Token): JsonValue {
 }
 
 /**
- * Strip surrounding quotes from a JSON string token value and process escapes.
+ * Extract the string value from a STRING token.
  *
- * The json-lexer stores string tokens with their surrounding double quotes:
- *   Token value: '"hello"'   --> unquoted: 'hello'
- *   Token value: '"a\nb"'    --> unquoted: 'a\nb' (real newline)
+ * The grammar-driven lexer in this project already:
+ *   1. Strips the surrounding double quotes from string tokens
+ *   2. Processes standard escape sequences (\n, \t, \\, \", etc.)
  *
- * JSON escape sequences (RFC 8259 Section 7):
- *   \"  --> "
- *   \\  --> \
- *   \/  --> /
- *   \b  --> backspace (U+0008)
- *   \f  --> form feed (U+000C)
- *   \n  --> newline (U+000A)
- *   \r  --> carriage return (U+000D)
- *   \t  --> tab (U+0009)
- *   \uXXXX --> Unicode code point
+ * So by the time we receive the token value, it's already the unescaped
+ * string content. For example:
+ *
+ *     JSON source: "hello"     --> token value: hello
+ *     JSON source: "a\nb"     --> token value: a<newline>b  (real newline)
+ *     JSON source: "a\\b"     --> token value: a\b          (real backslash + b)
+ *
+ * If the quotes are still present (e.g., from a different lexer configuration),
+ * we strip them. Otherwise, we return the value as-is.
  */
 function unquoteString(raw: string): string {
   /**
-   * If the string has surrounding quotes, strip them.
-   * Some lexer configurations may have already stripped them.
+   * Check if the string still has surrounding quotes.
+   * The grammar-driven lexer strips them, but we handle both cases
+   * for robustness.
    */
-  let s = raw;
-  if (s.length >= 2 && s[0] === '"' && s[s.length - 1] === '"') {
-    s = s.slice(1, -1);
+  if (raw.length >= 2 && raw[0] === '"' && raw[raw.length - 1] === '"') {
+    return raw.slice(1, -1);
   }
 
-  /**
-   * Process escape sequences. Walk through the string character by character.
-   * When we encounter a backslash, consume the next character(s) as an escape.
-   */
-  let result = "";
-  let i = 0;
-
-  while (i < s.length) {
-    if (s[i] === "\\") {
-      i++; // skip the backslash
-      if (i >= s.length) {
-        /**
-         * Trailing backslash with no following character -- this shouldn't
-         * happen in valid JSON, but we handle it gracefully.
-         */
-        result += "\\";
-        break;
-      }
-
-      switch (s[i]) {
-        case '"':
-          result += '"';
-          break;
-        case "\\":
-          result += "\\";
-          break;
-        case "/":
-          result += "/";
-          break;
-        case "b":
-          result += "\b";
-          break;
-        case "f":
-          result += "\f";
-          break;
-        case "n":
-          result += "\n";
-          break;
-        case "r":
-          result += "\r";
-          break;
-        case "t":
-          result += "\t";
-          break;
-        case "u": {
-          /**
-           * Unicode escape: \uXXXX where XXXX is exactly 4 hex digits.
-           * Example: \u0041 --> 'A'
-           *
-           * Handle surrogate pairs: \uD800-\uDBFF followed by \uDC00-\uDFFF
-           * form a single code point above U+FFFF.
-           */
-          const hex = s.slice(i + 1, i + 5);
-          if (hex.length < 4) {
-            result += "\\u" + hex;
-            i += hex.length;
-            break;
-          }
-          const codePoint = parseInt(hex, 16);
-          if (isNaN(codePoint)) {
-            result += "\\u" + hex;
-            i += 4;
-            break;
-          }
-
-          /**
-           * Check for high surrogate (first half of a surrogate pair).
-           * If followed by \uDC00-\uDFFF, combine into a single code point.
-           */
-          if (
-            codePoint >= 0xd800 &&
-            codePoint <= 0xdbff &&
-            i + 5 < s.length &&
-            s[i + 5] === "\\" &&
-            s[i + 6] === "u"
-          ) {
-            const lowHex = s.slice(i + 7, i + 11);
-            const lowCodePoint = parseInt(lowHex, 16);
-            if (
-              !isNaN(lowCodePoint) &&
-              lowCodePoint >= 0xdc00 &&
-              lowCodePoint <= 0xdfff
-            ) {
-              /**
-               * Surrogate pair formula:
-               * codePoint = (high - 0xD800) * 0x400 + (low - 0xDC00) + 0x10000
-               */
-              const combined =
-                (codePoint - 0xd800) * 0x400 +
-                (lowCodePoint - 0xdc00) +
-                0x10000;
-              result += String.fromCodePoint(combined);
-              i += 10; // skip past \uXXXX\uXXXX (already past first \)
-              break;
-            }
-          }
-
-          result += String.fromCharCode(codePoint);
-          i += 4;
-          break;
-        }
-        default:
-          /**
-           * Unknown escape -- preserve the backslash and character as-is.
-           * This is technically invalid JSON, but we're lenient.
-           */
-          result += "\\" + s[i];
-      }
-    } else {
-      result += s[i];
-    }
-    i++;
-  }
-
-  return result;
+  return raw;
 }
 
 /**

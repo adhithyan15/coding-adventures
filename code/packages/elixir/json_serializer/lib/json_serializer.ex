@@ -45,6 +45,13 @@ defmodule CodingAdventures.JsonSerializer do
       U+0000-U+001F    \\uXXXX    All other control characters
 
   Forward slash (/) is NOT escaped — RFC 8259 allows but does not require it.
+
+  ## Note on Non-Finite Floats
+
+  In many languages, you must guard against Infinity and NaN when serializing
+  floats. In Elixir/Erlang, the BEAM raises `ArithmeticError` before a
+  non-finite float value can be constructed, so this is not a concern.
+  All float values that reach the serializer are guaranteed to be finite.
   """
 
   alias CodingAdventures.JsonValue
@@ -73,12 +80,12 @@ defmodule CodingAdventures.JsonSerializer do
   # ---------------------------------------------------------------------------
   #
   # Dispatch on the tagged tuple type:
-  #   :null           → "null"
-  #   {:boolean, b}   → "true" or "false"
-  #   {:number, n}    → string representation of n
-  #   {:string, s}    → quoted and escaped string
-  #   {:array, elems} → "[elem1,elem2,...]"
-  #   {:object, pairs}→ "{"key1":val1,"key2":val2,...}"
+  #   :null           -> "null"
+  #   {:boolean, b}   -> "true" or "false"
+  #   {:number, n}    -> string representation of n
+  #   {:string, s}    -> quoted and escaped string
+  #   {:array, elems} -> "[elem1,elem2,...]"
+  #   {:object, pairs}-> "{"key1":val1,"key2":val2,...}"
 
   @doc """
   Serialize a JSON value to compact JSON text (no unnecessary whitespace).
@@ -89,12 +96,9 @@ defmodule CodingAdventures.JsonSerializer do
       {:ok, "42"} = serialize({:number, 42})
       {:ok, ~s({"a":1})} = serialize({:object, [{"a", {:number, 1}}]})
   """
-  @spec serialize(JsonValue.json_value()) :: {:ok, String.t()} | {:error, String.t()}
+  @spec serialize(JsonValue.json_value()) :: {:ok, String.t()}
   def serialize(value) do
-    case serialize_value(value) do
-      {:error, _} = err -> err
-      text -> {:ok, text}
-    end
+    {:ok, serialize_value(value)}
   end
 
   # ---------------------------------------------------------------------------
@@ -116,25 +120,19 @@ defmodule CodingAdventures.JsonSerializer do
                                      sort_keys: true)
       # keys are sorted alphabetically
   """
-  @spec serialize_pretty(JsonValue.json_value(), opts()) ::
-          {:ok, String.t()} | {:error, String.t()}
+  @spec serialize_pretty(JsonValue.json_value(), opts()) :: {:ok, String.t()}
   def serialize_pretty(value, user_opts \\ []) do
     merged_opts = Keyword.merge(@default_opts, user_opts)
+    text = serialize_pretty_value(value, merged_opts, 0)
 
-    case serialize_pretty_value(value, merged_opts, 0) do
-      {:error, _} = err ->
-        err
+    final_text =
+      if Keyword.get(merged_opts, :trailing_newline, false) do
+        text <> "\n"
+      else
+        text
+      end
 
-      text ->
-        final_text =
-          if Keyword.get(merged_opts, :trailing_newline, false) do
-            text <> "\n"
-          else
-            text
-          end
-
-        {:ok, final_text}
-    end
+    {:ok, final_text}
   end
 
   # ---------------------------------------------------------------------------
@@ -185,6 +183,10 @@ defmodule CodingAdventures.JsonSerializer do
   # ===========================================================================
   # Private Helpers — Compact Serialization
   # ===========================================================================
+  #
+  # These functions always return a string. In Elixir, all floats are finite
+  # (the BEAM raises ArithmeticError for overflow), so there are no error
+  # cases to propagate during serialization.
 
   defp serialize_value(:null), do: "null"
   defp serialize_value({:boolean, true}), do: "true"
@@ -195,16 +197,10 @@ defmodule CodingAdventures.JsonSerializer do
   end
 
   defp serialize_value({:number, num}) when is_float(num) do
-    # Guard against non-finite floats (Infinity, NaN).
-    # IEEE 754 defines these, but JSON does not allow them.
-    #
-    # In Erlang/Elixir, floats are always finite — there is no way to
-    # construct Infinity or NaN as a float literal. The BEAM will raise
-    # an ArithmeticError before producing such values. So in practice
-    # this branch is unreachable, but we keep the guard for safety.
-    #
-    # We use :erlang.float_to_binary to detect non-finite values: if it
-    # raises, the float is not serializable.
+    # In Elixir/Erlang, floats are always finite. The BEAM raises
+    # ArithmeticError before producing Infinity or NaN, so we don't need
+    # to check for non-finite values. Every float that reaches here is
+    # safe to serialize.
     format_float(num)
   end
 
@@ -212,47 +208,26 @@ defmodule CodingAdventures.JsonSerializer do
     "\"" <> escape_json_string(str) <> "\""
   end
 
+  defp serialize_value({:array, []}) do
+    "[]"
+  end
+
   defp serialize_value({:array, elements}) when is_list(elements) do
-    case elements do
-      [] ->
-        "[]"
+    parts = Enum.map(elements, &serialize_value/1)
+    "[" <> Enum.join(parts, ",") <> "]"
+  end
 
-      _ ->
-        parts = Enum.map(elements, &serialize_value/1)
-
-        # Check for errors in any element
-        first_error = Enum.find(parts, &match?({:error, _}, &1))
-
-        case first_error do
-          nil -> "[" <> Enum.join(parts, ",") <> "]"
-          err -> err
-        end
-    end
+  defp serialize_value({:object, []}) do
+    "{}"
   end
 
   defp serialize_value({:object, pairs}) when is_list(pairs) do
-    case pairs do
-      [] ->
-        "{}"
+    parts =
+      Enum.map(pairs, fn {key, val} ->
+        "\"" <> escape_json_string(key) <> "\":" <> serialize_value(val)
+      end)
 
-      _ ->
-        parts =
-          Enum.map(pairs, fn {key, val} ->
-            val_str = serialize_value(val)
-
-            case val_str do
-              {:error, _} = err -> err
-              _ -> "\"" <> escape_json_string(key) <> "\":" <> val_str
-            end
-          end)
-
-        first_error = Enum.find(parts, &match?({:error, _}, &1))
-
-        case first_error do
-          nil -> "{" <> Enum.join(parts, ",") <> "}"
-          err -> err
-        end
-    end
+    "{" <> Enum.join(parts, ",") <> "}"
   end
 
   # ===========================================================================
@@ -288,20 +263,10 @@ defmodule CodingAdventures.JsonSerializer do
 
     lines =
       Enum.map(elements, fn elem ->
-        elem_str = serialize_pretty_value(elem, merged_opts, depth + 1)
-
-        case elem_str do
-          {:error, _} = err -> err
-          _ -> indent <> elem_str
-        end
+        indent <> serialize_pretty_value(elem, merged_opts, depth + 1)
       end)
 
-    first_error = Enum.find(lines, &match?({:error, _}, &1))
-
-    case first_error do
-      nil -> "[\n" <> Enum.join(lines, ",\n") <> "\n" <> closing_indent <> "]"
-      err -> err
-    end
+    "[\n" <> Enum.join(lines, ",\n") <> "\n" <> closing_indent <> "]"
   end
 
   defp serialize_pretty_value({:object, []}, _opts, _depth), do: "{}"
@@ -310,7 +275,10 @@ defmodule CodingAdventures.JsonSerializer do
     indent = make_indent(merged_opts, depth + 1)
     closing_indent = make_indent(merged_opts, depth)
 
-    # Optionally sort keys alphabetically
+    # Optionally sort keys alphabetically.
+    # When sort_keys is false (default), we preserve insertion order — the
+    # same order the keys appeared in the original JSON or the order they
+    # were added to the map.
     sorted_pairs =
       if Keyword.get(merged_opts, :sort_keys, false) do
         Enum.sort_by(pairs, fn {key, _val} -> key end)
@@ -321,30 +289,18 @@ defmodule CodingAdventures.JsonSerializer do
     lines =
       Enum.map(sorted_pairs, fn {key, val} ->
         val_str = serialize_pretty_value(val, merged_opts, depth + 1)
-
-        case val_str do
-          {:error, _} = err ->
-            err
-
-          _ ->
-            indent <> "\"" <> escape_json_string(key) <> "\": " <> val_str
-        end
+        indent <> "\"" <> escape_json_string(key) <> "\": " <> val_str
       end)
 
-    first_error = Enum.find(lines, &match?({:error, _}, &1))
-
-    case first_error do
-      nil -> "{\n" <> Enum.join(lines, ",\n") <> "\n" <> closing_indent <> "}"
-      err -> err
-    end
+    "{\n" <> Enum.join(lines, ",\n") <> "\n" <> closing_indent <> "}"
   end
 
   # Build the indentation string for a given depth.
   #
   # Example with indent_size=2 and indent_char=" ":
-  #   depth 0 → ""
-  #   depth 1 → "  "
-  #   depth 2 → "    "
+  #   depth 0 -> ""
+  #   depth 1 -> "  "
+  #   depth 2 -> "    "
   defp make_indent(merged_opts, depth) do
     indent_char = Keyword.get(merged_opts, :indent_char, " ")
     indent_size = Keyword.get(merged_opts, :indent_size, 2)
@@ -359,14 +315,14 @@ defmodule CodingAdventures.JsonSerializer do
   # at a time, replacing special characters with their escape sequences.
   #
   # The escape table:
-  #   "    → \"
-  #   \    → \\
-  #   \b   → \b   (backspace, U+0008)
-  #   \f   → \f   (form feed, U+000C)
-  #   \n   → \n   (newline, U+000A)
-  #   \r   → \r   (carriage return, U+000D)
-  #   \t   → \t   (tab, U+0009)
-  #   U+0000-U+001F (other control chars) → \uXXXX
+  #   "    -> \"
+  #   \    -> \\
+  #   \b   -> \b   (backspace, U+0008)
+  #   \f   -> \f   (form feed, U+000C)
+  #   \n   -> \n   (newline, U+000A)
+  #   \r   -> \r   (carriage return, U+000D)
+  #   \t   -> \t   (tab, U+0009)
+  #   U+0000-U+001F (other control chars) -> \uXXXX
   #
   # All other characters pass through unchanged, including non-ASCII Unicode
   # characters (we output UTF-8 directly, not \uXXXX escapes for non-control
@@ -391,7 +347,7 @@ defmodule CodingAdventures.JsonSerializer do
   defp escape_char(?\t), do: ~c"\\t"
 
   # Control characters (U+0000 to U+001F) not covered above get \uXXXX escaping.
-  # We use :io_lib.format to produce the 4-digit hex code.
+  # We produce lowercase hex digits for consistency.
   defp escape_char(cp) when cp >= 0x00 and cp <= 0x1F do
     hex = cp |> Integer.to_string(16) |> String.downcase() |> String.pad_leading(4, "0")
     String.to_charlist("\\u" <> hex)
@@ -404,9 +360,9 @@ defmodule CodingAdventures.JsonSerializer do
   # Float Formatting
   # ===========================================================================
   #
-  # Elixir's Float.to_string/1 produces output like "3.14" for most values,
-  # but we want to ensure consistent output. We use :erlang.float_to_binary
-  # with the :short option for concise representation.
+  # We use :erlang.float_to_binary with the :short option, which produces the
+  # shortest decimal representation that round-trips correctly. This gives us
+  # output like "3.14" for 3.14, "1.0" for 1.0, etc.
 
   defp format_float(num) do
     :erlang.float_to_binary(num, [:short])
