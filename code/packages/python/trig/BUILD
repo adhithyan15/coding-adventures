@@ -1,3 +1,3 @@
-uv venv --quiet --clear
-uv pip install -e . pytest --quiet
-.venv/bin/python -m pytest tests/ -v
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e . pytest --quiet
+uv run --no-project python -m pytest tests/ -v

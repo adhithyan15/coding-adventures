@@ -1,6 +1,6 @@
-uv venv --quiet --clear
-uv pip install -e ../wasm-leb128 --quiet
-uv pip install -e ../wasm-types --quiet
-uv pip install -e ../wasm-opcodes --quiet
-uv pip install -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e ../wasm-leb128 --quiet
+uv pip install --python .venv -e ../wasm-types --quiet
+uv pip install --python .venv -e ../wasm-opcodes --quiet
+uv pip install --python .venv -e ".[dev]" --quiet
+uv run --no-project python -m pytest tests/ -v

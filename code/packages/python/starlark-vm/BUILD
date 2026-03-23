@@ -1,3 +1,3 @@
-uv venv --quiet --clear
-uv pip install -e ../grammar-tools -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../virtual-machine -e ../bytecode-compiler -e ../starlark-lexer -e ../starlark-parser -e ../starlark-ast-to-bytecode-compiler -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e ../grammar-tools -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../virtual-machine -e ../bytecode-compiler -e ../starlark-lexer -e ../starlark-parser -e ../starlark-ast-to-bytecode-compiler -e ".[dev]" --quiet
+uv run --no-project python -m pytest tests/ -v

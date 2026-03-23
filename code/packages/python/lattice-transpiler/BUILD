@@ -1,10 +1,10 @@
-uv venv --quiet --clear
-uv pip install -e ../directed-graph --quiet
-uv pip install -e ../grammar-tools --quiet
-uv pip install -e ../lexer --quiet
-uv pip install -e ../lattice-lexer --quiet
-uv pip install -e ../parser --quiet
-uv pip install -e ../lattice-parser --quiet
-uv pip install -e ../lattice-ast-to-css --quiet
-uv pip install -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e ../directed-graph --quiet
+uv pip install --python .venv -e ../grammar-tools --quiet
+uv pip install --python .venv -e ../lexer --quiet
+uv pip install --python .venv -e ../lattice-lexer --quiet
+uv pip install --python .venv -e ../parser --quiet
+uv pip install --python .venv -e ../lattice-parser --quiet
+uv pip install --python .venv -e ../lattice-ast-to-css --quiet
+uv pip install --python .venv -e ".[dev]" --quiet
+uv run --no-project python -m pytest tests/ -v

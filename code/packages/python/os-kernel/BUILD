@@ -1,9 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ".[dev]" --quiet
-uv pip install -e ../riscv-simulator --quiet
-uv pip install -e ../cpu-simulator --quiet
-uv pip install -e ../logic-gates --quiet
-uv pip install -e ../arithmetic --quiet
-uv pip install -e ../display --quiet
-uv pip install -e ../interrupt-handler --quiet
-.venv/bin/python -m pytest tests/ -v
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e ".[dev]" --quiet
+uv pip install --python .venv -e ../riscv-simulator --quiet
+uv pip install --python .venv -e ../cpu-simulator --quiet
+uv pip install --python .venv -e ../logic-gates --quiet
+uv pip install --python .venv -e ../arithmetic --quiet
+uv pip install --python .venv -e ../display --quiet
+uv pip install --python .venv -e ../interrupt-handler --quiet
+uv run --no-project python -m pytest tests/ -v
