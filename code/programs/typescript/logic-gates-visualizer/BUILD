@@ -1,5 +1,9 @@
-cd ../../../packages/typescript/logic-gates && npm install
-cd ../../../packages/typescript/ui-components && npm install
-cd ../../../packages/typescript/transistors && npm install
-cd ../../../programs/typescript/logic-gates-visualizer && npm install
-npx vitest run
+load("code/packages/starlark/program-rules/typescript_binary.star", "ts_binary")
+
+_targets = [
+    ts_binary(
+        name = "logic-gates-visualizer",
+        srcs = ["src/**/*.ts", "src/**/*.tsx", "*.ts"],
+        deps = [],
+    ),
+]
