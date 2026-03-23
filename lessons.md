@@ -456,3 +456,139 @@ go build -o scaffold-generator .
 ```
 
 The scaffold generator handles: correct directory naming per language (Ruby/Elixir use underscores), BUILD files for all platforms, `go.mod` with `replace` directives, TypeScript `package.json` with `src/index.ts` as main, Rust workspace membership, and transitive dependency resolution.
+
+---
+
+### 2026-03-23: Comprehensive BUILD file rules — the definitive guide
+
+After 6+ rounds of CI failures on PR #165 (infrastructure fixes for Verilog/VHDL), every BUILD file pitfall has been encountered. This section consolidates ALL BUILD file rules into one place.
+
+#### Rule 1: Each BUILD line runs as a SEPARATE shell process
+
+The build tool (`code/programs/go/build-tool/`) executes each line of a BUILD file as a separate `sh -c` (Unix) or `cmd /C` (Windows) invocation. **`cd` does NOT persist between lines.** The working directory resets to the package directory before each line.
+
+**Wrong:**
+```
+cd ../directed-graph && npm ci --quiet
+cd ../state-machine && npm ci --quiet     ← starts in PACKAGE dir, not directed-graph
+cd ../cli-builder && npm ci --quiet       ← starts in PACKAGE dir, not state-machine
+```
+
+**Right — chain on one line:**
+```
+cd ../directed-graph && npm ci --quiet && cd ../state-machine && npm ci --quiet && cd ../cli-builder && npm ci --quiet
+npm ci --quiet
+npx vitest run --coverage
+```
+
+**Or use full paths from the package dir on each line:**
+```
+cd ../../../packages/typescript/directed-graph && npm ci --quiet
+cd ../../../packages/typescript/state-machine && npm ci --quiet
+cd ../../../packages/typescript/cli-builder && npm ci --quiet
+npm ci --quiet
+npx vitest run --coverage
+```
+
+#### Rule 2: TypeScript — `npm ci` resolves `file:` deps transitively
+
+For TypeScript **packages** (under `code/packages/typescript/`), a simple `npm ci --quiet` resolves all `file:` dependencies transitively via `package-lock.json`. No need for explicit `cd ../dep && npm ci` lines. The package-lock.json already encodes the full dependency tree.
+
+**Preferred BUILD file for TypeScript packages:**
+```
+npm ci --quiet
+npx vitest run --coverage
+```
+
+**Exception: TypeScript programs** (under `code/programs/typescript/`) with deep relative paths (`../../../packages/...`) need explicit dep installation because `npm ci` can't always resolve deeply nested `file:` references. Chain dep installs on a single line (see Rule 1).
+
+#### Rule 3: TypeScript — never install sibling deps in parallel from BUILD files
+
+When multiple packages run `cd ../state-machine && npm ci` in parallel (e.g., verilog-lexer and vhdl-lexer building simultaneously), they race to install into `state-machine/node_modules`, causing `ETXTBSY` (esbuild binary busy) or missing `package.json` errors. The build tool handles parallelism — BUILD files should only install their OWN deps.
+
+#### Rule 4: Python — uv workspace discovery causes shared `.venv`
+
+A workspace `pyproject.toml` exists at `code/packages/python/pyproject.toml`. By default, `uv venv` discovers this workspace and creates `.venv` at the workspace root, not in the individual package directory. When packages build in parallel, they all share this `.venv`, causing dependency conflicts.
+
+**Fix:** Use `--no-project` and `--python .venv` flags:
+```
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e ".[dev]" --quiet
+uv run --no-project python -m pytest tests/ -v
+```
+
+- `uv venv .venv --no-project` — creates `.venv` in the package dir, ignoring workspace
+- `uv pip install --python .venv` — installs into the correct local `.venv`
+- `uv run --no-project python` — runs python from the local `.venv`, cross-platform
+
+#### Rule 5: Python — `.venv/bin/python` does not exist on Windows
+
+Windows uses `.venv\Scripts\python`, not `.venv/bin/python`. The cross-platform alternative is `uv run --no-project python` which works on all platforms.
+
+**Never use:** `.venv/bin/python -m pytest tests/ -v`
+**Always use:** `uv run --no-project python -m pytest tests/ -v`
+
+#### Rule 6: Python — `".[dev]"` quoting fails on Windows
+
+On Windows, `cmd /C` passes double quotes literally to uv, causing path resolution errors. The `"` character becomes part of the package specifier.
+
+**Fails on Windows:** `uv pip install -e ".[dev]" --quiet`
+**Works everywhere:** `uv pip install -e .[dev] --quiet`
+
+Note: Some existing packages still use `".[dev]"` and work because they haven't been rebuilt on Windows yet. When touching any Python BUILD file, fix the quoting.
+
+#### Rule 7: Mass BUILD file changes trigger full rebuild
+
+The build tool uses `git diff --name-only` to detect changed files. Modifying ALL BUILD files in one commit causes the build tool to mark ALL packages for rebuild. This exposes pre-existing broken BUILD files that were previously untested.
+
+**Rule:** When making a global BUILD file fix, only change the files that are actually broken or that your PR touches. Do not proactively fix working BUILD files — they'll be fixed when the scaffold generator is next used.
+
+#### Rule 8: Canonical BUILD file templates
+
+**TypeScript packages:**
+```
+npm ci --quiet
+npx vitest run --coverage
+```
+
+**TypeScript programs (with deep deps):**
+```
+cd ../../../packages/typescript/dep-a && npm ci --quiet && cd ../dep-b && npm ci --quiet && cd ../dep-c && npm ci --quiet
+npm ci --quiet
+npx vitest run --coverage
+```
+
+**Python packages (multi-line):**
+```
+uv venv .venv --quiet --no-project
+uv pip install --python .venv -e ../dep-a -e ../dep-b -e .[dev] --quiet
+uv run --no-project python -m pytest tests/ -v
+```
+
+**Python packages (single-line, for packages in the uv workspace):**
+```
+uv venv .venv --quiet --no-project && uv pip install --python .venv -e ../dep-a -e ../dep-b -e ".[dev]" --quiet && uv run --no-project python -m pytest tests/ -v --tb=short
+```
+
+**Go packages:**
+```
+go test ./... -v -cover
+go vet ./...
+```
+
+**Rust packages:**
+```
+cargo test -p PACKAGE_NAME
+```
+
+**Ruby packages:**
+```
+bundle install --quiet
+bundle exec rake test
+```
+
+**Elixir packages:**
+```
+mix deps.get --quiet
+mix test --cover
+```
