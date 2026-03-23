@@ -39,20 +39,27 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	interpreter "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-interpreter"
 )
 
+// CtxSchemaVersion is the version of the _ctx build context schema.
+// Bump this when making breaking changes to the _ctx dict structure.
+// See spec 15-os-aware-build-rules.md for versioning rules.
+const CtxSchemaVersion = 1
+
 // Target represents a single build target declared in a Starlark BUILD file.
 // Each call to py_library(), go_library(), etc. produces one Target.
 type Target struct {
-	Rule        string   // Rule type: "py_library", "go_binary", etc.
-	Name        string   // Target name: "starlark-vm", "build-tool", etc.
-	Srcs        []string // Declared source file patterns for change detection
-	Deps        []string // Dependencies as "language/package-name" strings
-	TestRunner  string   // Test framework: "pytest", "vitest", "minitest", etc.
-	EntryPoint  string   // Binary entry point: "main.py", "src/index.ts", etc.
+	Rule        string        // Rule type: "py_library", "go_binary", etc.
+	Name        string        // Target name: "starlark-vm", "build-tool", etc.
+	Srcs        []string      // Declared source file patterns for change detection
+	Deps        []string      // Dependencies as "language/package-name" strings
+	TestRunner  string        // Test framework: "pytest", "vitest", "minitest", etc.
+	EntryPoint  string        // Binary entry point: "main.py", "src/index.ts", etc.
+	Commands    []interface{} // Structured command dicts from cmd.star (nil = use GenerateCommands)
 }
 
 // BuildResult holds the targets extracted from evaluating a Starlark BUILD file.
@@ -127,7 +134,9 @@ func EvaluateBuildFile(buildFilePath, pkgDir, repoRoot string) (*BuildResult, er
 	// resolves to <repoRoot>/code/packages/starlark/library-rules/python_library.star
 	fileResolver := func(label string) (string, error) {
 		// The label is a real filesystem path relative to the repo root.
-		fullPath := filepath.Join(repoRoot, label)
+		// filepath.FromSlash ensures forward slashes in load() labels
+		// work correctly on Windows (where the separator is \).
+		fullPath := filepath.Join(repoRoot, filepath.FromSlash(label))
 		data, err := os.ReadFile(fullPath)
 		if err != nil {
 			return "", fmt.Errorf("load(%q): %w", label, err)
@@ -135,9 +144,24 @@ func EvaluateBuildFile(buildFilePath, pkgDir, repoRoot string) (*BuildResult, er
 		return string(data), nil
 	}
 
-	// Create the interpreter with the file resolver.
+	// Build the _ctx dict — the build context injected into every Starlark
+	// scope.  This is how Starlark code (cmd.star, rule files) accesses
+	// platform and environment information.  See spec 15 for the full schema.
+	ctxDict := map[string]interface{}{
+		"version":   CtxSchemaVersion,
+		"os":        runtime.GOOS,
+		"arch":      runtime.GOARCH,
+		"cpu_count": runtime.NumCPU(),
+		"ci":        os.Getenv("CI") != "",
+		"repo_root": repoRoot,
+	}
+
+	// Create the interpreter with the file resolver and _ctx globals.
 	interp := interpreter.NewInterpreter(
 		interpreter.WithFileResolver(fileResolver),
+		interpreter.WithGlobals(map[string]interface{}{
+			"_ctx": ctxDict,
+		}),
 	)
 
 	// Execute the BUILD file.
@@ -186,6 +210,7 @@ func extractTargets(variables map[string]interface{}) ([]Target, error) {
 			Deps:       getStringList(dict, "deps"),
 			TestRunner: getString(dict, "test_runner"),
 			EntryPoint: getString(dict, "entry_point"),
+			Commands:   getInterfaceList(dict, "commands"),
 		}
 		targets = append(targets, t)
 	}
@@ -225,6 +250,21 @@ func getStringList(dict map[string]interface{}, key string) []string {
 		}
 	}
 	return result
+}
+
+// getInterfaceList safely extracts a []interface{} from a dict.
+// Returns nil if the key doesn't exist or isn't a list.
+// Used for the "commands" field which contains structured command dicts.
+func getInterfaceList(dict map[string]interface{}, key string) []interface{} {
+	v, ok := dict[key]
+	if !ok {
+		return nil
+	}
+	list, ok := v.([]interface{})
+	if !ok {
+		return nil
+	}
+	return list
 }
 
 // GenerateCommands converts a Target into shell commands that the

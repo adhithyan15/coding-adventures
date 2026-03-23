@@ -40,6 +40,7 @@ import (
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cmdrender"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
@@ -252,7 +253,21 @@ func run() int {
 					t := result.Targets[0]
 					pkg.DeclaredSrcs = t.Srcs
 					pkg.DeclaredDeps = t.Deps
-					pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+
+					// If the target has structured commands (from cmd.star),
+					// render them to shell strings.  Otherwise fall back to
+					// GenerateCommands() which hardcodes commands by rule type.
+					if len(t.Commands) > 0 {
+						rendered, err := cmdrender.RenderCommands(t.Commands)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "Warning: cmd render failed for %s: %v\n", pkg.Name, err)
+							pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+						} else {
+							pkg.BuildCommands = rendered
+						}
+					} else {
+						pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+					}
 					starlarkCount++
 				}
 			}
