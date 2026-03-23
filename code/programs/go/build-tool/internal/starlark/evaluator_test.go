@@ -1,6 +1,7 @@
 package starlark
 
 import (
+	"os"
 	"testing"
 )
 
@@ -234,7 +235,7 @@ func TestGenerateCommands(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmds := GenerateCommands(tt.target)
+			cmds := GenerateCommands(tt.target, "")
 			if len(cmds) != tt.wantLen {
 				t.Errorf("got %d commands, want %d: %v", len(cmds), tt.wantLen, cmds)
 			}
@@ -308,5 +309,134 @@ func TestGetStringList(t *testing.T) {
 	mixed := getStringList(dict, "mixed")
 	if len(mixed) != 2 || mixed[0] != "a" || mixed[1] != "b" {
 		t.Errorf("getStringList(mixed) = %v, want [a b]", mixed)
+	}
+}
+
+// TestExtractPyMonorepoDeps verifies parsing of monorepo deps from pyproject.toml.
+func TestExtractPyMonorepoDeps(t *testing.T) {
+	tests := []struct {
+		name string
+		text string
+		want []string
+	}{
+		{
+			name: "single dep",
+			text: `[project]
+name = "coding-adventures-logic-gates"
+dependencies = ["coding-adventures-transistors>=0.1.0"]`,
+			want: []string{"transistors"},
+		},
+		{
+			name: "multiple deps",
+			text: `[project]
+dependencies = [
+    "coding-adventures-lexer>=0.1.0",
+    "coding-adventures-grammar-tools>=0.1.0",
+    "pytest>=7.0",
+]`,
+			want: []string{"lexer", "grammar-tools"},
+		},
+		{
+			name: "no monorepo deps",
+			text: `[project]
+dependencies = ["pytest>=7.0", "numpy>=1.0"]`,
+			want: nil,
+		},
+		{
+			name: "no dependencies section",
+			text: `[project]
+name = "foo"`,
+			want: nil,
+		},
+		{
+			name: "single line array",
+			text: `dependencies = ["coding-adventures-vm>=0.1.0", "coding-adventures-compiler"]`,
+			want: []string{"vm", "compiler"},
+		},
+		{
+			name: "dep with version specifiers",
+			text: `dependencies = ["coding-adventures-parser~=1.2.0"]`,
+			want: []string{"parser"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := extractPyMonorepoDeps(tt.text)
+			if len(got) != len(tt.want) {
+				t.Fatalf("extractPyMonorepoDeps() = %v, want %v", got, tt.want)
+			}
+			for i := range got {
+				if got[i] != tt.want[i] {
+					t.Errorf("dep[%d] = %q, want %q", i, got[i], tt.want[i])
+				}
+			}
+		})
+	}
+}
+
+// TestPyInstallCmd verifies the install command includes monorepo deps.
+func TestPyInstallCmd(t *testing.T) {
+	// With empty path, should return default command.
+	cmd := pyInstallCmd("")
+	if cmd != `uv pip install --system -e ".[dev]"` {
+		t.Errorf("pyInstallCmd(\"\") = %q, want default", cmd)
+	}
+
+	// With nonexistent path, should return default command.
+	cmd = pyInstallCmd("/nonexistent/path")
+	if cmd != `uv pip install --system -e ".[dev]"` {
+		t.Errorf("pyInstallCmd(nonexistent) = %q, want default", cmd)
+	}
+
+	// Create a temp dir with a pyproject.toml to test real parsing.
+	tmpDir := t.TempDir()
+	pyproject := `[project]
+name = "coding-adventures-logic-gates"
+dependencies = [
+    "coding-adventures-transistors>=0.1.0",
+    "coding-adventures-nand-gate>=0.1.0",
+]`
+	if err := os.WriteFile(tmpDir+"/pyproject.toml", []byte(pyproject), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd = pyInstallCmd(tmpDir)
+	expected := `uv pip install --system -e ../transistors -e ../nand-gate -e ".[dev]"`
+	if cmd != expected {
+		t.Errorf("pyInstallCmd() = %q, want %q", cmd, expected)
+	}
+}
+
+// TestTsInstallCmd verifies the npm install command chains transitive deps.
+func TestTsInstallCmd(t *testing.T) {
+	// With empty path, should return default command.
+	cmd := tsInstallCmd("")
+	if cmd != "npm install --silent" {
+		t.Errorf("tsInstallCmd(\"\") = %q, want default", cmd)
+	}
+
+	// Create a temp dir with a package.json that has file: deps.
+	tmpDir := t.TempDir()
+	pkgJSON := `{
+  "name": "coding-adventures-compiler",
+  "dependencies": {
+    "coding-adventures-lexer": "file:../lexer",
+    "coding-adventures-parser": "file:../parser"
+  }
+}`
+	if err := os.WriteFile(tmpDir+"/package.json", []byte(pkgJSON), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd = tsInstallCmd(tmpDir)
+	if !containsStr(cmd, "cd ../lexer") {
+		t.Errorf("tsInstallCmd() missing lexer dep install: %q", cmd)
+	}
+	if !containsStr(cmd, "cd ../parser") {
+		t.Errorf("tsInstallCmd() missing parser dep install: %q", cmd)
+	}
+	if !containsStr(cmd, "npm install --silent") {
+		t.Errorf("tsInstallCmd() missing final npm install: %q", cmd)
 	}
 }

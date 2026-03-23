@@ -182,12 +182,12 @@ func run() int {
 							if len(t.Commands) > 0 {
 								rendered, rerr := cmdrender.RenderCommands(t.Commands)
 								if rerr != nil {
-									packages[i].BuildCommands = starlarkeval.GenerateCommands(t)
+									packages[i].BuildCommands = starlarkeval.GenerateCommands(t, packages[i].Path)
 								} else {
 									packages[i].BuildCommands = rendered
 								}
 							} else {
-								packages[i].BuildCommands = starlarkeval.GenerateCommands(t)
+								packages[i].BuildCommands = starlarkeval.GenerateCommands(t, packages[i].Path)
 							}
 						}
 					} else {
@@ -286,12 +286,12 @@ func run() int {
 						rendered, err := cmdrender.RenderCommands(t.Commands)
 						if err != nil {
 							fmt.Fprintf(os.Stderr, "Warning: cmd render failed for %s: %v\n", pkg.Name, err)
-							pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+							pkg.BuildCommands = starlarkeval.GenerateCommands(t, pkg.Path)
 						} else {
 							pkg.BuildCommands = rendered
 						}
 					} else {
-						pkg.BuildCommands = starlarkeval.GenerateCommands(t)
+						pkg.BuildCommands = starlarkeval.GenerateCommands(t, pkg.Path)
 					}
 					starlarkCount++
 				}
