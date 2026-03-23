@@ -75,5 +75,33 @@
   "comb.encoder.winner": "Winner",
   "comb.encoder.noInput": "No active input",
 
+  "seq.intro": "Sequential circuits can REMEMBER — their outputs depend not only on current inputs but also on past inputs. This is the critical leap that makes computers possible. Memory arises from feedback: wiring a gate's output back into its own input creates a stable loop that latches into a state and holds it.",
+
+  "seq.srLatch.title": "SR Latch — The Birth of Memory",
+  "seq.srLatch.description": "The simplest memory element: two NOR gates cross-coupled so that each feeds its output into the other's input. This feedback loop creates two stable states that persist even after inputs are removed. Set (S=1) stores a 1. Reset (R=1) stores a 0. S=R=1 is the 'forbidden' state.",
+  "seq.srLatch.ariaLabel": "SR Latch: two cross-coupled NOR gates with feedback",
+  "seq.srLatch.setting": "Setting — storing a 1",
+  "seq.srLatch.resetting": "Resetting — storing a 0",
+  "seq.srLatch.holding": "Holding — remembering previous state",
+  "seq.srLatch.forbidden": "⚠ Forbidden state: S=1, R=1 — both outputs forced to 0",
+
+  "seq.dFlipFlop.title": "D Flip-Flop — Edge-Triggered Memory",
+  "seq.dFlipFlop.description": "Two D latches in a master-slave configuration. The master captures data when clock is LOW; the slave outputs it when clock goes HIGH. Data is effectively captured at the rising edge — the precise instant the clock transitions from 0 to 1. This edge-triggered behavior prevents data races in synchronous circuits.",
+  "seq.dFlipFlop.ariaLabel": "D Flip-Flop: master-slave configuration capturing data on rising clock edge",
+  "seq.dFlipFlop.pulse": "Pulse Clock ↑",
+  "seq.dFlipFlop.pulseAriaLabel": "Pulse clock to capture data",
+  "seq.dFlipFlop.lastCapture": "Last capture",
+
+  "seq.counter.title": "4-Bit Binary Counter",
+  "seq.counter.description": "A register that increments its own value on each clock pulse. Built from 4 D flip-flops (storage) plus a chain of half-adders (incrementer). Counts 0000 → 0001 → 0010 → ... → 1111 → 0000 (wraps around). Used in program counters, timers, and pipeline stage tracking.",
+  "seq.counter.bitsAriaLabel": "4-bit counter value",
+  "seq.counter.step": "Step",
+  "seq.counter.stepAriaLabel": "Step counter by 1",
+  "seq.counter.auto": "Auto ▶",
+  "seq.counter.stop": "Stop ■",
+  "seq.counter.autoAriaLabel": "Auto-step counter",
+  "seq.counter.reset": "Reset",
+  "seq.counter.resetAriaLabel": "Reset counter to 0",
+
   "footer.credit": "Built with gate-level simulation models"
 }
