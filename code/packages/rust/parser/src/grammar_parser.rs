@@ -492,6 +492,24 @@ impl GrammarParser {
 
         // Fall back to enum-based matching.
         let expected = string_to_token_type(expected_type);
+
+        // If the expected type maps to `Name` but is not literally "NAME", it
+        // is a custom grammar-defined token type (e.g. AT_KEYWORD, VARIABLE,
+        // FUNCTION, IDENT). In that case we must NOT match a token that already
+        // has a *different* type_name set — e.g. an IDENT token must not match
+        // a VARIABLE reference just because both have TokenType::Name.
+        //
+        // A token with type_name = None and type_ = Name is a "bare" name token
+        // (e.g. a keyword or identifier produced by a grammar that didn't assign
+        // a named type), and we allow it to match any custom Name-based type.
+        if expected == TokenType::Name && expected_type != "NAME" {
+            if token.type_name.is_some() {
+                // Token has a specific custom type that didn't match above.
+                self.record_failure(expected_type);
+                return None;
+            }
+        }
+
         if token.type_ == expected {
             let tok = token.clone();
             self.pos += 1;

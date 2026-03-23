@@ -94,4 +94,8 @@ members = [
     "virtual-machine",
     "wasm-simulator",
     "xml-lexer",
+  "lattice-lexer",
+  "lattice-parser",
+  "lattice-ast-to-css",
+  "lattice-transpiler",
 ]
