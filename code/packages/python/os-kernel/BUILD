@@ -1,5 +1,5 @@
 uv venv --quiet --clear
-uv pip install -e .[dev] --quiet
+uv pip install -e ".[dev]" --quiet
 uv pip install -e ../riscv-simulator --quiet
 uv pip install -e ../cpu-simulator --quiet
 uv pip install -e ../logic-gates --quiet
