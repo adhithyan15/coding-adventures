@@ -1372,19 +1372,36 @@ module CodingAdventures
 
       def expand_while(node, scope)
         # while_directive = "@while" lattice_expression block ;
+        #
+        # Unlike @for (which creates a child scope per iteration), @while
+        # uses the enclosing scope directly. Variable mutations inside the
+        # body (e.g., $i: $i + 1) must persist across iterations so the
+        # loop condition can change.
+        #
+        # We extract block_contents children once, then deep-copy and
+        # expand each item per iteration using expand_block_item_inner
+        # which processes lattice_block_item (variable_declaration,
+        # include_directive, lattice_control) and CSS items directly
+        # in the given scope — no child scope is created.
         condition = nil
-        block = nil
+        block_items = nil
 
         node.children.each do |child|
           next unless child.respond_to?(:rule_name)
-
           case child.rule_name
-          when "lattice_expression" then condition = child
-          when "block" then block = child
+          when "lattice_expression"
+            condition = child
+          when "block"
+            # Find block_contents inside the block node
+            child.children.each do |bc|
+              if bc.respond_to?(:rule_name) && bc.rule_name == "block_contents"
+                block_items = bc.children
+              end
+            end
           end
         end
 
-        return [] unless condition && block
+        return [] unless condition && block_items
 
         result = []
         iteration = 0
@@ -1397,34 +1414,19 @@ module CodingAdventures
           iteration += 1
           raise LatticeMaxIterationError.new(@max_while_iterations) if iteration > @max_while_iterations
 
-          # Expand the block contents directly in the enclosing scope
-          # (NOT via expand_block which creates a child scope).
-          # @while needs variable mutations (e.g. $i: $i + 1) to
-          # persist across iterations and update the loop condition.
-          expanded = expand_while_body(deep_copy(block), scope)
-          result.concat(expanded)
-        end
-
-        result
-      end
-
-      def expand_while_body(block, scope)
-        # Find the block_contents child inside the block node and
-        # expand it directly in the enclosing scope. Unlike expand_block
-        # (which creates a child scope), @while needs mutations to be
-        # visible to the loop condition on the next iteration.
-        return [] unless block.respond_to?(:children)
-
-        block.children.each do |child|
-          next unless child.respond_to?(:rule_name)
-
-          if child.rule_name == "block_contents"
-            expanded = expand_block_contents(child, scope)
-            return expanded.respond_to?(:children) ? expanded.children.compact : []
+          # Expand each block item directly in the enclosing scope.
+          # Variable declarations update scope; CSS rules are collected.
+          deep_copy(block_items).each do |item|
+            expanded = expand_block_item_inner(item, scope)
+            if expanded.is_a?(Array)
+              result.concat(expanded)
+            elsif expanded
+              result << expanded
+            end
           end
         end
 
-        []
+        result
       end
 
       # ============================================================
