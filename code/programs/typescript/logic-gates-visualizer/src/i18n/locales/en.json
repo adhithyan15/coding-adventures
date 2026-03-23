@@ -59,5 +59,21 @@
   "nand.tradeoff.title": "The Engineering Tradeoff",
   "nand.tradeoff.description": "Building everything from NAND gates uses more transistors than mixing gate types. So why would anyone do it? Uniformity. When every gate on a chip is identical, manufacturing becomes simpler: one mask pattern, one timing model, one test procedure. Early chips used this approach extensively. Modern designs use a mix of gate types for efficiency, but NAND remains the single most common gate in production chips.",
 
+  "comb.intro": "Combinational circuits produce outputs that depend only on the current inputs — no memory, no clock. Built from the gates in Tab 1, they are the building blocks between individual gates and full arithmetic units. Every CPU, FPGA, and memory chip uses these circuits extensively.",
+
+  "comb.mux.title": "2:1 Multiplexer (MUX)",
+  "comb.mux.description": "A data selector that routes one of two inputs to the output. When the select line S is 0, D0 passes through. When S is 1, D1 passes through. MUXes are everywhere in CPUs: selecting register outputs, ALU operands, and forwarded values. In FPGAs, the entire logic fabric is built from look-up tables, which are just large MUX trees.",
+  "comb.mux.ariaLabel": "2-to-1 MUX: select line routes one data input to output",
+
+  "comb.decoder.title": "2-to-4 Decoder",
+  "comb.decoder.description": "Converts a 2-bit binary input into a one-hot output — exactly one of 4 output lines goes HIGH. Used in memory addressing (selecting which row to read/write), instruction decoding (activating the right execution unit), and display drivers (converting binary to segment patterns).",
+  "comb.decoder.ariaLabel": "2-to-4 decoder: binary input selects one output line",
+
+  "comb.encoder.title": "4-to-2 Priority Encoder",
+  "comb.encoder.description": "The inverse of a decoder, with a twist: when multiple inputs are active, the highest-numbered input wins. Outputs the binary index of the winner plus a 'valid' flag. Essential in interrupt controllers — when multiple hardware interrupts fire simultaneously, the priority encoder picks the most important one.",
+  "comb.encoder.ariaLabel": "4-to-2 priority encoder: highest active input wins",
+  "comb.encoder.winner": "Winner",
+  "comb.encoder.noInput": "No active input",
+
   "footer.credit": "Built with gate-level simulation models"
 }

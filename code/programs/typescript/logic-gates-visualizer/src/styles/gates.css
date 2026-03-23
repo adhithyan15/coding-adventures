@@ -485,6 +485,174 @@
   color: var(--tab-text);
 }
 
+/* ==========================================================================
+ * Combinational Logic — Tab 3 styles
+ * ========================================================================== */
+
+.combinational {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.combinational__intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.combinational__circuits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Combinational circuit card --- */
+
+.combinational-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.combinational-card__header {
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.5rem;
+}
+
+.combinational-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.combinational-card__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+.combinational-card__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.combinational-card__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.combinational-card__inputs--row {
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.combinational-card__svg {
+  flex: 1;
+  max-height: 180px;
+  min-width: 0;
+}
+
+.combinational-card__output {
+  flex-shrink: 0;
+}
+
+.combinational-card__output-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+/* --- Decoder outputs --- */
+
+.decoder-output {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  color: #777;
+  background: rgba(100, 100, 100, 0.05);
+}
+
+.decoder-output--active {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.12);
+  font-weight: 700;
+}
+
+/* --- Encoder inputs --- */
+
+.encoder-input {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.encoder-input--winner {
+  /* Subtle glow around the winning input */
+}
+
+.encoder-input__crown {
+  color: #ffb74d;
+  font-size: 0.8rem;
+  margin-top: -0.2rem;
+}
+
+/* --- Encoder result --- */
+
+.encoder-result {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+}
+
+.encoder-result--valid {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.encoder-result--invalid {
+  color: #777;
+  background: rgba(100, 100, 100, 0.05);
+  font-style: italic;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 480px) {
+  .combinational-card__diagram {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .combinational-card__inputs--row {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .combinational-card__svg {
+    max-height: 140px;
+  }
+}
+
 /* --- Placeholder for future tabs --- */
 
 .placeholder {

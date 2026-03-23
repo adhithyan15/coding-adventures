@@ -16,14 +16,16 @@
  *
  * Tab 1 — Basic Gates: NOT, AND, OR, XOR with truth tables and CMOS panels
  * Tab 2 — NAND Universality: every gate built from NAND alone
+ * Tab 3 — Combinational Logic: MUX, decoder, priority encoder
  *
- * Tabs 3 and 4 show placeholder messages until their PRs land.
+ * Tab 4 shows a placeholder message until its PR lands.
  */
 
 import { useState } from "react";
 import { TabList, useTranslation } from "@coding-adventures/ui-components";
 import { FundamentalGates } from "./components/fundamental/FundamentalGates.js";
 import { NandUniversality } from "./components/nand-universality/NandUniversality.js";
+import { CombinationalLogic } from "./components/combinational/CombinationalLogic.js";
 
 /** The four circuit categories, ordered from simple to complex. */
 type TabId = "fundamental" | "nand" | "combinational" | "sequential";
@@ -57,7 +59,8 @@ export function App() {
       <main className="app__main">
         {activeTab === "fundamental" && <FundamentalGates />}
         {activeTab === "nand" && <NandUniversality />}
-        {(activeTab === "combinational" || activeTab === "sequential") && (
+        {activeTab === "combinational" && <CombinationalLogic />}
+        {activeTab === "sequential" && (
           <div className="placeholder">
             <p>{t("placeholder.comingSoon")}</p>
           </div>
