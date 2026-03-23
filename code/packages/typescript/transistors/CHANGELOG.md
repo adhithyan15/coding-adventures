@@ -2,6 +2,18 @@
 
 All notable changes to `@coding-adventures/transistors` will be documented in this file.
 
+## [0.2.0] - 2026-03-23
+
+### Added
+
+- **Vacuum tube triode model** — the historical predecessor to MOSFET and BJT, now a first-class citizen in the package alongside modern transistors.
+  - `TriodeParams` interface (mu, K, plateVoltage)
+  - `defaultTriodeParams()` — 12AX7-style small-signal triode defaults
+  - `triodePlateCurrent(gridVoltage, params?)` — Child-Langmuir 3/2 power law
+  - `isConducting(gridVoltage, params?)` — digital abstraction (on/off switch)
+- 11 new tests covering cutoff, conducting, monotonicity, custom parameters
+- Comparison table in source documentation: triode vs MOSFET properties
+
 ## [0.1.0] - 2026-03-21
 
 ### Added
