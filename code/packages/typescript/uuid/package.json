@@ -1,5 +1,5 @@
 {
-  "name": "@coding-adventures/uuid",
+  "name": "@ca/uuid",
   "version": "0.1.0",
   "description": "UUID v1/v3/v4/v5/v7 generation and parsing (RFC 4122 + RFC 9562)",
   "type": "module",
@@ -12,8 +12,8 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/sha1": "file:../sha1",
-    "@coding-adventures/md5": "file:../md5"
+    "@ca/sha1": "file:../sha1",
+    "@ca/md5": "file:../md5"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
