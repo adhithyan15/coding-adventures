@@ -37,44 +37,40 @@
 #
 # ============================================================================
 
-_targets = []
-
-
 def go_library(name, srcs = [], deps = []):
-    """Register a Go library target for the build system.
-
-    Go libraries are simpler than Python libraries because Go has a single,
-    built-in test runner (go test) and a single way to manage dependencies
-    (go.mod). There's no test_runner parameter to choose between frameworks.
-
-    The build tool will run these commands for a go_library target:
-        go vet ./...           — static analysis (catches common mistakes)
-        go test ./... -v -cover — run tests with verbose output and coverage
-
-    Args:
-        name: The package name, matching the directory under
-              code/packages/go/. For example, "directed-graph" corresponds
-              to code/packages/go/directed-graph/.
-
-        srcs: File paths or glob patterns for change detection.
-              For Go packages, this is typically ["**/*.go"] to track all
-              Go source files, or ["**/*.go", "go.mod", "go.sum"] to also
-              rebuild when dependencies change.
-
-              If empty, the build tool tracks all files in the package
-              directory.
-
-        deps: Dependencies as "language/package-name" strings.
-              Examples:
-                  ["go/transistors"]
-                  ["go/logic-gates", "go/arithmetic"]
-
-              These must mirror the replace directives in go.mod. If your
-              go.mod has a replace pointing to ../transistors, you should
-              have "go/transistors" in deps so the build tool knows about
-              the relationship.
-    """
-    _targets.append({
+    # Register a Go library target for the build system.
+    #
+    # Go libraries are simpler than Python libraries because Go has a single,
+    # built-in test runner (go test) and a single way to manage dependencies
+    # (go.mod). There's no test_runner parameter to choose between frameworks.
+    #
+    # The build tool will run these commands for a go_library target:
+    #     go vet ./...           — static analysis (catches common mistakes)
+    #     go test ./... -v -cover — run tests with verbose output and coverage
+    #
+    # Args:
+    #     name: The package name, matching the directory under
+    #           code/packages/go/. For example, "directed-graph" corresponds
+    #           to code/packages/go/directed-graph/.
+    #
+    #     srcs: File paths or glob patterns for change detection.
+    #           For Go packages, this is typically ["**/*.go"] to track all
+    #           Go source files, or ["**/*.go", "go.mod", "go.sum"] to also
+    #           rebuild when dependencies change.
+    #
+    #           If empty, the build tool tracks all files in the package
+    #           directory.
+    #
+    #     deps: Dependencies as "language/package-name" strings.
+    #           Examples:
+    #               ["go/transistors"]
+    #               ["go/logic-gates", "go/arithmetic"]
+    #
+    #           These must mirror the replace directives in go.mod. If your
+    #           go.mod has a replace pointing to ../transistors, you should
+    #           have "go/transistors" in deps so the build tool knows about
+    #           the relationship.
+    return {
         "rule": "go_library",
         "name": name,
         "srcs": srcs,
@@ -84,4 +80,4 @@ def go_library(name, srcs = [], deps = []):
             {"type": "cmd", "program": "go", "args": ["test", "./...", "-v", "-cover"]},
             {"type": "cmd", "program": "go", "args": ["vet", "./..."]},
         ],
-    })
+    }
