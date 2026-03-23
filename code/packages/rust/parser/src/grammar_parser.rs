@@ -168,11 +168,62 @@ pub struct GrammarParser {
 
     /// What was expected at the furthest position.
     furthest_expected: Vec<String>,
+
+    /// When true, emit a `[TRACE]` line to stderr for every rule attempt.
+    ///
+    /// Trace mode is invaluable when debugging why a grammar does not match
+    /// a particular input. Instead of reading the grammar rules and mentally
+    /// simulating the parse, you can see exactly which rule was attempted at
+    /// which token position and whether it succeeded or failed.
+    ///
+    /// Example output:
+    /// ```text
+    /// [TRACE] rule 'expression' at token 0 (Name "x") → match
+    /// [TRACE] rule 'term' at token 0 (Name "x") → match
+    /// [TRACE] rule 'factor' at token 2 (Plus "+") → fail
+    /// ```
+    trace: bool,
 }
 
 impl GrammarParser {
-    /// Create a new grammar-driven parser.
+    /// Create a new grammar-driven parser (trace disabled).
     pub fn new(tokens: Vec<Token>, grammar: ParserGrammar) -> Self {
+        Self::new_with_trace(tokens, grammar, false)
+    }
+
+    /// Create a new grammar-driven parser with optional trace mode.
+    ///
+    /// When `trace` is `true`, every rule attempt emits a `[TRACE]` line to
+    /// stderr showing the rule name, the token position, the current token
+    /// type and value, and whether the rule matched or failed.
+    ///
+    /// This is intended for debugging grammar issues. Keep it off in
+    /// production because the output can be voluminous.
+    ///
+    /// # Format
+    ///
+    /// ```text
+    /// [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match
+    /// [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → fail
+    /// ```
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use parser::grammar_parser::GrammarParser;
+    /// use grammar_tools::parser_grammar::parse_parser_grammar;
+    /// use lexer::token::{Token, TokenType};
+    ///
+    /// let grammar = parse_parser_grammar("value = NUMBER ;").unwrap();
+    /// let tokens = vec![
+    ///     Token { type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None },
+    ///     Token { type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None },
+    /// ];
+    /// let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
+    /// let result = parser.parse();
+    /// assert!(result.is_ok());
+    /// ```
+    pub fn new_with_trace(tokens: Vec<Token>, grammar: ParserGrammar, trace: bool) -> Self {
         let mut rules = HashMap::new();
         let mut rule_index = HashMap::new();
 
@@ -193,6 +244,7 @@ impl GrammarParser {
             memo: HashMap::new(),
             furthest_pos: 0,
             furthest_expected: Vec::new(),
+            trace,
         }
     }
 
@@ -332,7 +384,39 @@ impl GrammarParser {
         }
 
         let start_pos = self.pos;
+
+        // Capture trace info BEFORE mutating self.pos via match_element.
+        // We snapshot the token at start_pos so the trace line shows the
+        // token the rule is attempting to match at the moment of the attempt.
+        let trace_token_info = if self.trace {
+            let tok = if start_pos < self.tokens.len() {
+                &self.tokens[start_pos]
+            } else {
+                &self.tokens[self.tokens.len() - 1]
+            };
+            // Prefer the string type_name (grammar-driven tokens like "IDENT",
+            // "NUMBER") over the enum variant name for readability.
+            let type_label = if let Some(ref tn) = tok.type_name {
+                tn.clone()
+            } else {
+                format!("{}", tok.type_)
+            };
+            Some((start_pos, type_label, tok.value.clone()))
+        } else {
+            None
+        };
+
         let children = self.match_element(&rule.body);
+
+        // Emit [TRACE] line to stderr now that we know success/failure.
+        // The arrow character → (U+2192) mirrors the task spec exactly.
+        if let Some((idx, type_label, value)) = trace_token_info {
+            let outcome = if children.is_some() { "match" } else { "fail" };
+            eprintln!(
+                "[TRACE] rule '{}' at token {} ({} \"{}\") \u{2192} {}",
+                rule_name, idx, type_label, value, outcome
+            );
+        }
 
         // Cache result.
         if let Some(&idx) = self.rule_index.get(rule_name) {
@@ -970,5 +1054,74 @@ term       = NUMBER | NAME ;
         let mut parser = GrammarParser::new(tokens, parser_grammar);
         let ast = parser.parse().unwrap();
         assert_eq!(ast.rule_name, "program");
+    }
+
+    // -----------------------------------------------------------------------
+    // Trace mode
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_trace_mode_parse_succeeds() {
+        // new_with_trace(trace=true) must parse correctly — the same result
+        // as new() with trace=false. Trace output goes to stderr so it does
+        // not affect the return value.
+        let tokens = vec![
+            tok(TokenType::Number, "7"),
+            tok(TokenType::Eof, ""),
+        ];
+        let grammar = simple_grammar();
+        let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
+        let result = parser.parse();
+        assert!(result.is_ok(), "trace mode must not affect parse correctness");
+        assert_eq!(result.unwrap().rule_name, "expression");
+    }
+
+    #[test]
+    fn test_trace_mode_no_panic_on_failure() {
+        // When the input does not match the grammar, trace mode must not panic.
+        // The error is the same as without trace mode.
+        let tokens = vec![
+            tok(TokenType::Plus, "+"), // Does not match `NUMBER`
+            tok(TokenType::Eof, ""),
+        ];
+        let grammar = simple_grammar();
+        let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
+        let result = parser.parse();
+        assert!(result.is_err(), "invalid input should still produce an error in trace mode");
+    }
+
+    #[test]
+    fn test_trace_mode_addition() {
+        // Trace mode works correctly for a multi-token sequence.
+        let tokens = vec![
+            tok(TokenType::Number, "1"),
+            tok(TokenType::Plus, "+"),
+            tok(TokenType::Number, "2"),
+            tok(TokenType::Eof, ""),
+        ];
+        let grammar = simple_grammar();
+        let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
+        let result = parser.parse().unwrap();
+        assert_eq!(result.rule_name, "expression");
+        // expression expands to: term + term = NUMBER "+" NUMBER
+        // children: the NUMBER node, the Plus token, the NUMBER node.
+        assert_eq!(result.children.len(), 3);
+    }
+
+    #[test]
+    fn test_trace_false_same_as_new() {
+        // new_with_trace(trace=false) is identical in behaviour to new().
+        let tokens = vec![
+            tok(TokenType::Number, "99"),
+            tok(TokenType::Eof, ""),
+        ];
+        let g1 = simple_grammar();
+        let g2 = simple_grammar();
+        let mut p1 = GrammarParser::new(tokens.clone(), g1);
+        let mut p2 = GrammarParser::new_with_trace(tokens, g2, false);
+        let r1 = p1.parse().unwrap();
+        let r2 = p2.parse().unwrap();
+        assert_eq!(r1.rule_name, r2.rule_name);
+        assert_eq!(r1.children.len(), r2.children.len());
     }
 }

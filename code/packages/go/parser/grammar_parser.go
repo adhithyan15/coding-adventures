@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
@@ -60,10 +61,26 @@ type GrammarParser struct {
 	ruleIndex           map[string]int        // rule name -> index for memo key
 	furthestPos         int
 	furthestExpected    []string
+	trace               bool // When true, print rule attempts to stderr
 }
 
 // NewGrammarParser creates a new grammar-driven parser with memoization.
 func NewGrammarParser(tokens []lexer.Token, grammar *grammartools.ParserGrammar) *GrammarParser {
+	return NewGrammarParserWithTrace(tokens, grammar, false)
+}
+
+// NewGrammarParserWithTrace creates a grammar-driven parser with optional
+// trace output. When trace=true, each rule attempt is printed to stderr with
+// the format:
+//
+//	[TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match
+//	[TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → fail
+//
+// Trace mode is useful for diagnosing parse failures: it shows exactly which
+// rules were tried at each position and whether they matched. Because the
+// parser uses packrat memoization, each (rule, position) pair is traced at
+// most once.
+func NewGrammarParserWithTrace(tokens []lexer.Token, grammar *grammartools.ParserGrammar, trace bool) *GrammarParser {
 	rules := make(map[string]grammartools.GrammarRule)
 	ruleIndex := make(map[string]int)
 	for i, rule := range grammar.Rules {
@@ -78,6 +95,7 @@ func NewGrammarParser(tokens []lexer.Token, grammar *grammartools.ParserGrammar)
 		rules:     rules,
 		memo:      make(map[[2]int]*memoEntry),
 		ruleIndex: ruleIndex,
+		trace:     trace,
 	}
 	p.newlinesSignificant = p.grammarReferencesNewline()
 	return p
@@ -272,6 +290,13 @@ func (p *GrammarParser) parseRule(ruleName string) *ASTNode {
 		}
 	}
 
+	// Emit trace line before attempting the rule.
+	if p.trace {
+		tok := p.current()
+		fmt.Fprintf(os.Stderr, "[TRACE] rule '%s' at token %d (%s %q)",
+			ruleName, p.pos, tokenTypeName(tok), tok.Value)
+	}
+
 	startPos := p.pos
 	children, ok := p.matchElement(rule.Body)
 
@@ -282,9 +307,16 @@ func (p *GrammarParser) parseRule(ruleName string) *ASTNode {
 	}
 
 	if !ok {
+		if p.trace {
+			fmt.Fprintln(os.Stderr, " → fail")
+		}
 		p.pos = startPos
 		p.recordFailure(ruleName)
 		return nil
+	}
+
+	if p.trace {
+		fmt.Fprintln(os.Stderr, " → match")
 	}
 
 	// When a rule body consists entirely of repetitions and optionals
