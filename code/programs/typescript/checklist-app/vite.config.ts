@@ -3,5 +3,8 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/coding-adventures/checklist/",
+  // "./" makes assets load via relative paths, which works in both:
+  //   - Electron (file:// protocol, no web server)
+  //   - GitHub Pages (deployed under a subdirectory)
+  base: "./",
 });

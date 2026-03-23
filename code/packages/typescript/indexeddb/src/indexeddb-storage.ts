@@ -35,7 +35,7 @@
  *   request.onerror.
  */
 
-import type { KVStorage, StorageRecord, StorageConfig } from "./types.js";
+import type { KVStorage, StorageConfig } from "./types.js";
 
 export class IndexedDBStorage implements KVStorage {
   private db: IDBDatabase | null = null;
@@ -131,15 +131,16 @@ export class IndexedDBStorage implements KVStorage {
     });
   }
 
-  async get<T extends StorageRecord>(storeName: string, key: string): Promise<T | undefined> {
+  async get<T = unknown>(storeName: string, key: string): Promise<T | undefined> {
     return this.request<T | undefined>(storeName, "readonly", (store) => store.get(key));
   }
 
-  async getAll<T extends StorageRecord>(storeName: string): Promise<T[]> {
+  async getAll<T = unknown>(storeName: string): Promise<T[]> {
     return this.request<T[]>(storeName, "readonly", (store) => store.getAll());
   }
 
-  async put<T extends StorageRecord>(storeName: string, record: T): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async put(storeName: string, record: any): Promise<void> {
     // put() is an upsert: inserts if key is new, replaces if key exists.
     // The key is extracted from the record using the store's keyPath.
     await this.request<void>(storeName, "readwrite", (store) => store.put(record));

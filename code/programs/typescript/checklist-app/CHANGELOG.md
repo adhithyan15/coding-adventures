@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.6.0] - Unreleased
+
+### Added
+
+- **Electron desktop app** — wraps the existing React app in an Electron
+  shell. Same code, now runs as a native desktop application.
+- **electron/main.ts** — main process with literate-programming docs
+  explaining Electron's architecture, security model, and process separation.
+- **electron-builder.yml** — packaging for macOS (dmg+zip), Windows
+  (nsis+portable), and Linux (AppImage).
+- **GitHub Actions release workflow** — `release-checklist.yml` triggers on
+  `checklist-v*` tags, builds for all 3 platforms in parallel, uploads
+  binaries to GitHub Releases.
+- **Electron dev mode** — `npm run electron:dev` opens a desktop window
+  pointing at the Vite dev server (hot reload works).
+
+### Changed
+
+- **vite.config.ts** — base changed from `/coding-adventures/checklist/` to
+  `"./"` for file:// protocol compatibility in Electron.
+- **package.json** — bumped to 0.6.0, added `"main"` field, electron +
+  electron-builder + cross-env dev dependencies, electron:* scripts.
+
 ## [0.5.0] - Unreleased
 
 ### Added
