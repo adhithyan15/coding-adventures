@@ -9,10 +9,13 @@
 #
 # New tokens:
 #   VARIABLE       — $color, $font-size (CSS never uses $)
+#   PLACEHOLDER    — %button-base, %flex-center (for @extend)
 #   EQUALS_EQUALS  — == (equality comparison in @if expressions)
 #   NOT_EQUALS     — != (inequality comparison)
 #   GREATER_EQUALS — >= (greater-or-equal comparison)
 #   LESS_EQUALS    — <= (less-or-equal comparison)
+#   BANG_DEFAULT   — !default (set variable only if not already defined)
+#   BANG_GLOBAL    — !global (set variable in root scope)
 #
 # Format:
 #   TOKEN_NAME = /regex/        — regex-based token pattern
@@ -77,6 +80,16 @@ STRING_SQ = /'([^'\\\n]|\\.)*'/ -> STRING
 # $10px should not be parsed as $ + DIMENSION.
 
 VARIABLE = /\$[a-zA-Z_][a-zA-Z0-9_-]*/
+
+# ============================================================================
+# Placeholder Selector Token (NEW — Lattice v2 extension)
+# ============================================================================
+#
+# Placeholder selectors start with % followed by an identifier. They define
+# abstract rules that exist only to be @extended — they never appear in CSS
+# output. Must come before PERCENTAGE to avoid tokenizing %name as PERCENTAGE.
+
+PLACEHOLDER = /%[a-zA-Z_][a-zA-Z0-9_-]*/
 
 # ============================================================================
 # Numeric Literals and Dimensions
@@ -178,7 +191,11 @@ GREATER   = ">"
 TILDE     = "~"
 STAR      = "*"
 PIPE      = "|"
-BANG      = "!"
+# Lattice variable flags (NEW — v2). Must come before BANG so "!default" is
+# matched as a single token, not BANG + IDENT.
+BANG_DEFAULT = "!default"
+BANG_GLOBAL  = "!global"
+BANG         = "!"
 SLASH     = "/"
 EQUALS    = "="
 AMPERSAND = "&"
