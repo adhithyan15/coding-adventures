@@ -374,6 +374,14 @@ class GrammarLexer:
         # where whitespace is significant (e.g., CDATA, comments).
         self._skip_enabled: bool = True
 
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. Hooks compose left-to-right: if three pre_tokenize hooks
+        # A, B, C are registered, source flows through A → B → C.
+        # When no hooks are registered, zero overhead — the existing tokenize()
+        # path executes unchanged.
+        self._pre_tokenize_hooks: list[Callable[[str], str]] = []
+        self._post_tokenize_hooks: list[Callable[[list[Token]], list[Token]]] = []
+
     def set_on_token(
         self,
         callback: Callable[[Token, LexerContext], None] | None,
@@ -393,13 +401,58 @@ class GrammarLexer:
         """
         self._on_token = callback
 
+    def add_pre_tokenize(self, hook: Callable[[str], str]) -> None:
+        """Register a text transform to run before tokenization.
+
+        The hook receives the raw source string and returns a (possibly
+        modified) source string. Multiple hooks compose left-to-right:
+        source flows through A → B → C before tokenization.
+
+        Use cases:
+        - COBOL/FORTRAN column stripping
+        - C #include file insertion
+        - Line continuation / splicing
+
+        Args:
+            hook: A function str → str.
+        """
+        self._pre_tokenize_hooks.append(hook)
+
+    def add_post_tokenize(self, hook: Callable[[list[Token]], list[Token]]) -> None:
+        """Register a token transform to run after tokenization.
+
+        The hook receives the full token list (including EOF) and returns
+        a (possibly modified) token list. Multiple hooks compose left-to-right.
+
+        Use cases:
+        - C #define macro expansion
+        - Token filtering or reclassification
+        - Inserting synthetic tokens
+
+        Args:
+            hook: A function list[Token] → list[Token].
+        """
+        self._post_tokenize_hooks.append(hook)
+
     # -- Main tokenization entry point ----------------------------------------
 
     def tokenize(self) -> list[Token]:
         """Tokenize the source code using the grammar's token definitions.
 
-        Dispatches to the appropriate tokenization method based on whether
-        indentation mode is active.
+        The tokenization pipeline has three stages:
+
+        1. **Pre-tokenize hooks** — transform the source text before lexing.
+           Each hook receives a string and returns a string. Multiple hooks
+           compose left-to-right (A → B → C).
+
+        2. **Core tokenization** — the existing grammar-driven lexer logic,
+           dispatching to standard or indentation mode.
+
+        3. **Post-tokenize hooks** — transform the token list after lexing.
+           Each hook receives a token list and returns a token list.
+
+        When no hooks are registered, this is equivalent to the original
+        tokenize() — zero overhead.
 
         Returns:
             A list of ``Token`` objects, always ending with an EOF token.
@@ -408,9 +461,29 @@ class GrammarLexer:
             LexerError: If an unexpected character is encountered, a reserved
                 keyword is used, or indentation is inconsistent.
         """
+        # Stage 1: Pre-tokenize hooks transform the source text.
+        # Common use cases: COBOL column stripping, C #include resolution,
+        # line continuation splicing. Each hook is str → str.
+        if self._pre_tokenize_hooks:
+            source = self._source
+            for hook in self._pre_tokenize_hooks:
+                source = hook(source)
+            self._source = source
+
+        # Stage 2: Core tokenization — dispatch to standard or indentation mode.
         if self._indentation_mode:
-            return self._tokenize_indentation()
-        return self._tokenize_standard()
+            tokens = self._tokenize_indentation()
+        else:
+            tokens = self._tokenize_standard()
+
+        # Stage 3: Post-tokenize hooks transform the token list.
+        # Common use cases: C #define expansion, token filtering,
+        # conditional compilation. Each hook is list[Token] → list[Token].
+        if self._post_tokenize_hooks:
+            for hook in self._post_tokenize_hooks:
+                tokens = hook(tokens)
+
+        return tokens
 
     # -- Standard (non-indentation) tokenization ------------------------------
 

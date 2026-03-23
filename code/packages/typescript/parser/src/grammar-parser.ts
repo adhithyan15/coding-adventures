@@ -120,7 +120,7 @@ interface MemoEntry {
 // =============================================================================
 
 export class GrammarParser {
-  private readonly tokens: readonly Token[];
+  private tokens: readonly Token[];
   private readonly grammar: ParserGrammar;
   private pos: number;
   private readonly rules: ReadonlyMap<string, GrammarRule>;
@@ -139,6 +139,12 @@ export class GrammarParser {
 
   /** What was expected at the furthest position. */
   private furthestExpected: string[];
+
+  /** Pre-parse hooks: transform token list before parsing. */
+  private _preParseHooks: Array<(tokens: Token[]) => Token[]> = [];
+
+  /** Post-parse hooks: transform AST after parsing. */
+  private _postParseHooks: Array<(ast: ASTNode) => ASTNode> = [];
 
   constructor(tokens: readonly Token[], grammar: ParserGrammar) {
     this.tokens = tokens;
@@ -168,9 +174,38 @@ export class GrammarParser {
   }
 
   /**
+   * Register a token transform to run before parsing.
+   *
+   * The hook receives the token list and returns a (possibly modified)
+   * token list. Multiple hooks compose left-to-right.
+   */
+  addPreParse(hook: (tokens: Token[]) => Token[]): void {
+    this._preParseHooks.push(hook);
+  }
+
+  /**
+   * Register an AST transform to run after parsing.
+   *
+   * The hook receives the final AST and returns a (possibly modified)
+   * AST. Multiple hooks compose left-to-right.
+   */
+  addPostParse(hook: (ast: ASTNode) => ASTNode): void {
+    this._postParseHooks.push(hook);
+  }
+
+  /**
    * Parse the token stream using the first grammar rule as entry point.
    */
   parse(): ASTNode {
+    // Stage 1: Pre-parse hooks transform the token list.
+    if (this._preParseHooks.length > 0) {
+      let mutableTokens = [...this.tokens];
+      for (const hook of this._preParseHooks) {
+        mutableTokens = hook(mutableTokens);
+      }
+      this.tokens = mutableTokens;
+    }
+
     if (this.grammar.rules.length === 0) {
       throw new GrammarParseError("Grammar has no rules");
     }
@@ -223,7 +258,13 @@ export class GrammarParser {
       );
     }
 
-    return result;
+    // Stage 2: Post-parse hooks transform the AST.
+    let ast: ASTNode = result;
+    for (const hook of this._postParseHooks) {
+      ast = hook(ast);
+    }
+
+    return ast;
   }
 
   // =========================================================================
