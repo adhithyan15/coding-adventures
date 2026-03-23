@@ -24,23 +24,30 @@ fn main() {
         }
         "windows" => {
             // On Windows, we must link against pythonXY.lib (the import library).
-            // Try multiple strategies to find Python and its library directory.
+            // Strategy: find python.exe, ask it for sys.base_prefix and version,
+            // then construct the lib path directly.
             let python = std::env::var("PYO3_PYTHON")
                 .or_else(|_| std::env::var("PYTHON_SYS_EXECUTABLE"))
-                .or_else(|_| which_python());
+                .or_else(|_| which_python())
+                .unwrap_or_else(|_| "python".to_string());
 
-            if let Ok(ref python) = python {
-                eprintln!("cargo:warning=python-bridge: found Python at {}", python);
-                if let Some(lib_dir) = get_python_lib_dir(python) {
-                    eprintln!("cargo:warning=python-bridge: lib dir = {}", lib_dir);
+            println!("cargo:warning=python-bridge: using Python at: {}", python);
+
+            // Ask Python directly for the lib path and name
+            let script = "import sys, os; prefix = sys.base_prefix; v = sys.version_info; \
+                          lib_dir = os.path.join(prefix, 'libs'); \
+                          lib_name = f'python{v.major}{v.minor}'; \
+                          print(f'{lib_dir}|{lib_name}')";
+            if let Ok(output) = std::process::Command::new(&python)
+                .args(["-c", script])
+                .output()
+            {
+                let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+                println!("cargo:warning=python-bridge: Python output: {}", stdout);
+                if let Some((lib_dir, lib_name)) = stdout.split_once('|') {
                     println!("cargo:rustc-link-search=native={}", lib_dir);
-                }
-                if let Some(lib_name) = get_python_lib_name(python) {
-                    eprintln!("cargo:warning=python-bridge: lib name = {}", lib_name);
                     println!("cargo:rustc-link-lib={}", lib_name);
                 }
-            } else {
-                eprintln!("cargo:warning=python-bridge: could not find Python executable");
             }
         }
         _ => {

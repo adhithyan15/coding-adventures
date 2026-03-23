@@ -26,7 +26,6 @@ const PY_TP_DEALLOC: c_int = 52;
 const PY_TP_REPR: c_int = 66;
 const PY_TP_METHODS: c_int = 64;
 const PY_TP_NEW: c_int = 65;
-const PY_MP_LENGTH: c_int = 41;   // mp_length — __len__ via mapping protocol
 const PY_SQ_CONTAINS: c_int = 37; // sq_contains — __contains__ via sequence protocol
 
 // ---------------------------------------------------------------------------
@@ -113,8 +112,8 @@ unsafe extern "C" fn graph_dealloc(obj: PyObjectPtr) {
 // sq_length and sq_contains (for __len__ and __contains__)
 // ---------------------------------------------------------------------------
 
-unsafe extern "C" fn graph_sq_length(slf: PyObjectPtr) -> isize {
-    get_graph(slf).size() as isize
+unsafe extern "C" fn graph_len(slf: PyObjectPtr, _args: PyObjectPtr) -> PyObjectPtr {
+    usize_to_py(get_graph(slf).size())
 }
 
 unsafe extern "C" fn graph_sq_contains(slf: PyObjectPtr, key: PyObjectPtr) -> c_int {
@@ -244,8 +243,8 @@ fn cstr(s: &str) -> *const c_char {
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_directed_graph_native() -> PyObjectPtr {
     // -- Method table (leaked — must live forever) --------------------------
-    static mut METHODS: [PyMethodDef; 16] = [
-        PyMethodDef { ml_name: ptr::null(), ml_meth: None, ml_flags: 0, ml_doc: ptr::null() }; 16
+    static mut METHODS: [PyMethodDef; 17] = [
+        PyMethodDef { ml_name: ptr::null(), ml_meth: None, ml_flags: 0, ml_doc: ptr::null() }; 17
     ];
 
     // We initialize at runtime because CString can't be const.
@@ -264,20 +263,20 @@ pub unsafe extern "C" fn PyInit_directed_graph_native() -> PyObjectPtr {
     METHODS[12] = PyMethodDef { ml_name: cstr("transitive_closure"), ml_meth: Some(graph_transitive_closure), ml_flags: METH_VARARGS, ml_doc: ptr::null() };
     METHODS[13] = PyMethodDef { ml_name: cstr("affected_nodes"), ml_meth: Some(graph_affected_nodes), ml_flags: METH_VARARGS, ml_doc: ptr::null() };
     METHODS[14] = PyMethodDef { ml_name: cstr("independent_groups"), ml_meth: Some(graph_independent_groups), ml_flags: METH_NOARGS, ml_doc: ptr::null() };
-    METHODS[15] = method_def_sentinel();
+    METHODS[15] = PyMethodDef { ml_name: cstr("__len__"), ml_meth: Some(graph_len), ml_flags: METH_NOARGS, ml_doc: ptr::null() };
+    METHODS[16] = method_def_sentinel();
 
     // -- Type slots ---------------------------------------------------------
-    static mut SLOTS: [PyType_Slot; 7] = [
-        PyType_Slot { slot: 0, pfunc: ptr::null_mut() }; 7
+    static mut SLOTS: [PyType_Slot; 6] = [
+        PyType_Slot { slot: 0, pfunc: ptr::null_mut() }; 6
     ];
 
     SLOTS[0] = PyType_Slot { slot: PY_TP_NEW, pfunc: graph_new as *mut c_void };
     SLOTS[1] = PyType_Slot { slot: PY_TP_DEALLOC, pfunc: graph_dealloc as *mut c_void };
     SLOTS[2] = PyType_Slot { slot: PY_TP_METHODS, pfunc: (&raw mut METHODS) as *mut c_void };
     SLOTS[3] = PyType_Slot { slot: PY_TP_REPR, pfunc: graph_repr as *mut c_void };
-    SLOTS[4] = PyType_Slot { slot: PY_MP_LENGTH, pfunc: graph_sq_length as *mut c_void };
-    SLOTS[5] = PyType_Slot { slot: PY_SQ_CONTAINS, pfunc: graph_sq_contains as *mut c_void };
-    SLOTS[6] = type_slot_sentinel();
+    SLOTS[4] = PyType_Slot { slot: PY_SQ_CONTAINS, pfunc: graph_sq_contains as *mut c_void };
+    SLOTS[5] = type_slot_sentinel();
 
     // -- Type spec ----------------------------------------------------------
     static mut SPEC: PyType_Spec = PyType_Spec {
