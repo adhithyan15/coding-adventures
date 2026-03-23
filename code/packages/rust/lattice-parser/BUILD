@@ -1,1 +1,1 @@
-cargo test -p lattice-parser -- --nocapture
+cargo test -p coding-adventures-lattice-parser -- --nocapture

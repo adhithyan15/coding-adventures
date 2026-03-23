@@ -1,1 +1,1 @@
-cargo test -p lattice-transpiler -- --nocapture
+cargo test -p coding-adventures-lattice-transpiler -- --nocapture

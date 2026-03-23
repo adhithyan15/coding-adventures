@@ -1,1 +1,1 @@
-cargo test -p lattice-lexer -- --nocapture
+cargo test -p coding-adventures-lattice-lexer -- --nocapture

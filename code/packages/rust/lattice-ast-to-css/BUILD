@@ -1,1 +1,1 @@
-cargo test -p lattice-ast-to-css -- --nocapture
+cargo test -p coding-adventures-lattice-ast-to-css -- --nocapture
