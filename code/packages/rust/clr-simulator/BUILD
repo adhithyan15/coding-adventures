@@ -1,1 +1,9 @@
-cargo test -p clr-simulator -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "clr-simulator",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

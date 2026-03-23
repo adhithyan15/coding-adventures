@@ -1,1 +1,9 @@
-cargo test -p intel4004-simulator -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "intel4004-simulator",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

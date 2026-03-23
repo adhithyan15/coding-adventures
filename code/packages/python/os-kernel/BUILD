@@ -1,9 +1,9 @@
-uv venv --quiet --clear
-uv pip install -e ".[dev]" --quiet
-uv pip install -e ../riscv-simulator --quiet
-uv pip install -e ../cpu-simulator --quiet
-uv pip install -e ../logic-gates --quiet
-uv pip install -e ../arithmetic --quiet
-uv pip install -e ../display --quiet
-uv pip install -e ../interrupt-handler --quiet
-.venv/bin/python -m pytest tests/ -v
+load("code/packages/starlark/library-rules/python_library.star", "py_library")
+
+_targets = [
+    py_library(
+        name = "os-kernel",
+        srcs = ["src/**/*.py", "tests/**/*.py"],
+        deps = [],
+    ),
+]

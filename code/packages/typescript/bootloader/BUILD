@@ -1,1 +1,9 @@
-cd ../cpu-simulator && npm install --silent && cd ../riscv-simulator && npm install --silent && cd ../bootloader && npm install --silent && npx vitest run
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "bootloader",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

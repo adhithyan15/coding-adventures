@@ -1,3 +1,9 @@
-cd ../directed-graph && npm install --silent && cd ../state-machine && npm install --silent && cd ../cli-builder
-npm install --silent
-npm test
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "cli-builder",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

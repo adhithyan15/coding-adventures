@@ -1,1 +1,9 @@
-cargo test -p starlark-ast-to-bytecode-compiler -- --nocapture
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "starlark-ast-to-bytecode-compiler",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

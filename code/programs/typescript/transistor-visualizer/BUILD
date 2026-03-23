@@ -1,4 +1,9 @@
-cd ../../../packages/typescript/ui-components && npm install
-cd ../../../packages/typescript/transistors && npm install
-cd ../../../programs/typescript/transistor-visualizer && npm install
-npx vitest run
+load("code/packages/starlark/program-rules/typescript_binary.star", "ts_binary")
+
+_targets = [
+    ts_binary(
+        name = "transistor-visualizer",
+        srcs = ["src/**/*.ts", "*.ts"],
+        deps = [],
+    ),
+]

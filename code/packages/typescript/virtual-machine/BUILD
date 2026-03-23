@@ -1,1 +1,9 @@
-npm ci --quiet && npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "virtual-machine",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

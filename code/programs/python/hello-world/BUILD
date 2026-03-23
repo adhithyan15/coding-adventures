@@ -1,1 +1,9 @@
-python3 hello_world.py
+load("code/packages/starlark/program-rules/python_binary.star", "py_binary")
+
+_targets = [
+    py_binary(
+        name = "hello-world",
+        srcs = ["src/**/*.py", "*.py"],
+        deps = [],
+    ),
+]

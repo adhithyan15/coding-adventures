@@ -1,2 +1,9 @@
-cargo test -p brainfuck
-if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p brainfuck --out Stdout --skip-clean; fi
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "brainfuck",
+        srcs = ["src/**/*.rs"],
+        deps = [],
+    ),
+]

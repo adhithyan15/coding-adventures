@@ -1,1 +1,9 @@
-cd ../logic-gates && npm install --silent && cd ../block-ram && npm install --silent && cd ../fpga && npm install --silent && npx vitest run
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "fpga",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

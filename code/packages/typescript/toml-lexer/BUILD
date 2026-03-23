@@ -1,5 +1,9 @@
-cd ../directed-graph && npm install --silent
-cd ../grammar-tools && npm install --silent
-cd ../lexer && npm install --silent
-cd ../toml-lexer && npm install --silent
-npx vitest run --coverage
+load("code/packages/starlark/library-rules/typescript_library.star", "ts_library")
+
+_targets = [
+    ts_library(
+        name = "toml-lexer",
+        srcs = ["src/**/*.ts", "test/**/*.ts"],
+        deps = [],
+    ),
+]

@@ -1,1 +1,9 @@
-cd ../virtual_machine && mix deps.get && mix compile && cd ../brainfuck && mix deps.get && mix test --cover
+load("code/packages/starlark/library-rules/elixir_library.star", "elixir_library")
+
+_targets = [
+    elixir_library(
+        name = "brainfuck",
+        srcs = ["lib/**/*.ex", "test/**/*.exs"],
+        deps = [],
+    ),
+]
