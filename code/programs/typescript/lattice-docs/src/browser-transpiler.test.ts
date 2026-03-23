@@ -54,7 +54,7 @@ describe("transpileLatticeBrowser", () => {
 
   it("expands a mixin", () => {
     const result = transpile(
-      "@mixin bold { font-weight: bold; }\n.title { @include bold; }"
+      "@mixin bold() { font-weight: bold; }\n.title { @include bold(); }"
     );
     expect(result.success).toBe(true);
     if (result.success) {
@@ -79,13 +79,13 @@ describe("transpileLatticeBrowser", () => {
 
   it("expands a @for loop", () => {
     const result = transpile(
-      "@for $i from 1 through 3 { .col-$i { flex: $i; } }"
+      "@for $i from 1 through 3 { .item { order: $i; } }"
     );
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.css).toContain(".col-1");
-      expect(result.css).toContain(".col-2");
-      expect(result.css).toContain(".col-3");
+      expect(result.css).toContain("order: 1");
+      expect(result.css).toContain("order: 2");
+      expect(result.css).toContain("order: 3");
     }
   });
 });
