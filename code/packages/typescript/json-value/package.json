@@ -21,7 +21,9 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/json-parser": "file:../json-parser"
+    "@coding-adventures/json-parser": "file:../json-parser",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/lexer": "file:../lexer"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

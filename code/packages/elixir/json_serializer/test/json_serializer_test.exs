@@ -652,5 +652,37 @@ defmodule CodingAdventures.JsonSerializerTest do
       {:ok, text} = JsonSerializer.stringify([[1, 2], [3]])
       assert text == "[[1,2],[3]]"
     end
+
+    test "91. pretty-print object with nested array and object" do
+      obj = {:object, [
+        {"arr", {:array, [{:object, [{"k", {:string, "v"}}]}]}}
+      ]}
+      {:ok, text} = JsonSerializer.serialize_pretty(obj)
+      assert String.contains?(text, "\"arr\"")
+      assert String.contains?(text, "\"k\"")
+    end
+
+    test "92. pretty-print deeply nested with tab indent_size=1" do
+      obj = {:object, [{"a", {:object, [{"b", {:number, 1}}]}}]}
+      {:ok, text} = JsonSerializer.serialize_pretty(obj, indent_char: "\t", indent_size: 1)
+      assert String.contains?(text, "\t\t\"b\"")
+    end
+
+    test "93. stringify_pretty list" do
+      {:ok, text} = JsonSerializer.stringify_pretty([1, "two", true])
+      assert String.contains?(text, "1")
+      assert String.contains?(text, "\"two\"")
+      assert String.contains?(text, "true")
+    end
+
+    test "94. serialize float 1.0" do
+      {:ok, text} = JsonSerializer.serialize({:number, 1.0})
+      assert String.to_float(text) == 1.0
+    end
+
+    test "95. serialize float 0.0" do
+      {:ok, text} = JsonSerializer.serialize({:number, 0.0})
+      assert String.to_float(text) == 0.0
+    end
   end
 end
