@@ -1378,7 +1378,7 @@ end)
 
 describe("Visualization - labeled ASCII table", function()
     it("renders transition table", function()
-        local lg = LabeledGraph.new()
+        local lg = LabeledGraph.new_allow_self_loops()
         lg:add_edge("locked", "unlocked", "coin")
         lg:add_edge("unlocked", "locked", "push")
         lg:add_edge("locked", "locked", "push")
