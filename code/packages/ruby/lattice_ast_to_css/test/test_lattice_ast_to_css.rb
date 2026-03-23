@@ -750,3 +750,391 @@ class TestFullPipeline < Minitest::Test
     refute_includes css, "background: white"
   end
 end
+
+# ================================================================
+# Lattice v2: New Error Types
+# ================================================================
+class TestV2ErrorClasses < Minitest::Test
+  def test_max_iteration_error
+    err = ATC::LatticeMaxIterationError.new(500, 10, 3)
+    assert_equal 500, err.max_iterations
+    assert_includes err.message, "500"
+    assert_includes err.message, "@while"
+    assert_kind_of ATC::LatticeError, err
+  end
+
+  def test_max_iteration_error_default
+    err = ATC::LatticeMaxIterationError.new
+    assert_equal 1000, err.max_iterations
+  end
+
+  def test_extend_target_not_found_error
+    err = ATC::LatticeExtendTargetNotFoundError.new("%msg", 5, 1)
+    assert_equal "%msg", err.target
+    assert_includes err.message, "%msg"
+    assert_kind_of ATC::LatticeError, err
+  end
+
+  def test_range_error
+    err = ATC::LatticeRangeError.new("Index out of bounds")
+    assert_includes err.message, "out of bounds"
+    assert_kind_of ATC::LatticeError, err
+  end
+
+  def test_zero_division_error
+    err = ATC::LatticeZeroDivisionError.new
+    assert_includes err.message, "Division by zero"
+    assert_kind_of ATC::LatticeError, err
+  end
+end
+
+# ================================================================
+# Lattice v2: ScopeChain set_global
+# ================================================================
+class TestScopeChainV2 < Minitest::Test
+  def test_set_global_from_nested_scope
+    global = ATC::ScopeChain.new
+    global.set("$theme", "light")
+    child = global.child
+    grandchild = child.child
+    grandchild.set_global("$theme", "dark")
+    assert_equal "dark", global.get("$theme")
+    assert_equal "dark", child.get("$theme")
+  end
+
+  def test_set_global_creates_new_variable
+    global = ATC::ScopeChain.new
+    child = global.child
+    child.set_global("$new_var", "hello")
+    assert_equal "hello", global.get("$new_var")
+    refute child.has_local?("$new_var")
+  end
+end
+
+# ================================================================
+# Lattice v2: LatticeMap value type
+# ================================================================
+class TestLatticeMap < Minitest::Test
+  def test_map_get
+    m = ATC::LatticeMap.new([["primary", ATC::LatticeColor.new("#4a90d9")]])
+    assert_equal "#4a90d9", m.get("primary").value
+    assert_nil m.get("nonexistent")
+  end
+
+  def test_map_keys
+    m = ATC::LatticeMap.new([["a", ATC::LatticeNumber.new(1.0)], ["b", ATC::LatticeNumber.new(2.0)]])
+    assert_equal ["a", "b"], m.keys
+  end
+
+  def test_map_values
+    m = ATC::LatticeMap.new([["a", ATC::LatticeNumber.new(1.0)], ["b", ATC::LatticeNumber.new(2.0)]])
+    vals = m.values
+    assert_equal 2, vals.size
+    assert_equal 1.0, vals[0].value
+  end
+
+  def test_map_has_key
+    m = ATC::LatticeMap.new([["x", ATC::LatticeNull.new]])
+    assert m.has_key?("x")
+    refute m.has_key?("y")
+  end
+
+  def test_map_to_s
+    m = ATC::LatticeMap.new([["a", ATC::LatticeNumber.new(1.0)]])
+    assert_equal "(a: 1)", m.to_s
+  end
+
+  def test_map_truthy
+    assert ATC::LatticeMap.new([]).truthy?
+  end
+end
+
+# ================================================================
+# Lattice v2: LatticeColor RGB/HSL conversions
+# ================================================================
+class TestLatticeColorConversions < Minitest::Test
+  def test_to_rgb_six_char
+    c = ATC::LatticeColor.new("#ff0000")
+    r, g, b, a = c.to_rgb
+    assert_equal 255, r
+    assert_equal 0, g
+    assert_equal 0, b
+    assert_in_delta 1.0, a
+  end
+
+  def test_to_rgb_three_char
+    c = ATC::LatticeColor.new("#f00")
+    r, g, b, _ = c.to_rgb
+    assert_equal 255, r
+    assert_equal 0, g
+    assert_equal 0, b
+  end
+
+  def test_to_hsl_red
+    c = ATC::LatticeColor.new("#ff0000")
+    h, s, l, _ = c.to_hsl
+    assert_in_delta 0.0, h, 1
+    assert_in_delta 100.0, s, 1
+    assert_in_delta 50.0, l, 1
+  end
+
+  def test_color_from_rgb
+    c = ATC.color_from_rgb(255, 0, 0)
+    assert_equal "#ff0000", c.value
+  end
+
+  def test_color_from_rgb_with_alpha
+    c = ATC.color_from_rgb(255, 0, 0, 0.5)
+    assert_includes c.value, "rgba"
+  end
+
+  def test_color_from_hsl
+    c = ATC.color_from_hsl(0, 100, 50)
+    r, g, b, _ = c.to_rgb
+    assert_equal 255, r
+    assert_in_delta 0, g, 2
+    assert_in_delta 0, b, 2
+  end
+end
+
+# ================================================================
+# Lattice v2: Built-in Functions
+# ================================================================
+class TestBuiltinFunctions < Minitest::Test
+  def test_builtin_length_list
+    args = [ATC::LatticeList.new([ATC::LatticeNumber.new(1.0), ATC::LatticeNumber.new(2.0)])]
+    result = ATC::BUILTIN_FUNCTIONS["length"].call(args, nil)
+    assert_equal 2.0, result.value
+  end
+
+  def test_builtin_nth
+    lst = ATC::LatticeList.new([ATC::LatticeIdent.new("a"), ATC::LatticeIdent.new("b")])
+    result = ATC::BUILTIN_FUNCTIONS["nth"].call([lst, ATC::LatticeNumber.new(2.0)], nil)
+    assert_equal "b", result.value
+  end
+
+  def test_builtin_nth_out_of_bounds
+    lst = ATC::LatticeList.new([ATC::LatticeIdent.new("a")])
+    assert_raises(ATC::LatticeRangeError) do
+      ATC::BUILTIN_FUNCTIONS["nth"].call([lst, ATC::LatticeNumber.new(5.0)], nil)
+    end
+  end
+
+  def test_builtin_type_of
+    result = ATC::BUILTIN_FUNCTIONS["type-of"].call([ATC::LatticeNumber.new(42.0)], nil)
+    assert_equal "number", result.value
+  end
+
+  def test_builtin_unit
+    result = ATC::BUILTIN_FUNCTIONS["unit"].call([ATC::LatticeDimension.new(16.0, "px")], nil)
+    assert_equal "px", result.value
+  end
+
+  def test_builtin_unitless
+    result = ATC::BUILTIN_FUNCTIONS["unitless"].call([ATC::LatticeNumber.new(42.0)], nil)
+    assert result.value
+    result2 = ATC::BUILTIN_FUNCTIONS["unitless"].call([ATC::LatticeDimension.new(16.0, "px")], nil)
+    refute result2.value
+  end
+
+  def test_builtin_math_div
+    result = ATC::BUILTIN_FUNCTIONS["math.div"].call(
+      [ATC::LatticeNumber.new(10.0), ATC::LatticeNumber.new(2.0)], nil
+    )
+    assert_in_delta 5.0, result.value
+  end
+
+  def test_builtin_math_div_zero
+    assert_raises(ATC::LatticeZeroDivisionError) do
+      ATC::BUILTIN_FUNCTIONS["math.div"].call(
+        [ATC::LatticeNumber.new(10.0), ATC::LatticeNumber.new(0.0)], nil
+      )
+    end
+  end
+
+  def test_builtin_math_floor
+    result = ATC::BUILTIN_FUNCTIONS["math.floor"].call([ATC::LatticeNumber.new(3.7)], nil)
+    assert_in_delta 3.0, result.value
+  end
+
+  def test_builtin_math_ceil
+    result = ATC::BUILTIN_FUNCTIONS["math.ceil"].call([ATC::LatticeNumber.new(3.2)], nil)
+    assert_in_delta 4.0, result.value
+  end
+
+  def test_builtin_math_abs
+    result = ATC::BUILTIN_FUNCTIONS["math.abs"].call([ATC::LatticeNumber.new(-5.0)], nil)
+    assert_in_delta 5.0, result.value
+  end
+
+  def test_builtin_math_min
+    result = ATC::BUILTIN_FUNCTIONS["math.min"].call(
+      [ATC::LatticeNumber.new(5.0), ATC::LatticeNumber.new(3.0), ATC::LatticeNumber.new(7.0)], nil
+    )
+    assert_in_delta 3.0, result.value
+  end
+
+  def test_builtin_math_max
+    result = ATC::BUILTIN_FUNCTIONS["math.max"].call(
+      [ATC::LatticeNumber.new(5.0), ATC::LatticeNumber.new(3.0), ATC::LatticeNumber.new(7.0)], nil
+    )
+    assert_in_delta 7.0, result.value
+  end
+
+  def test_builtin_map_get
+    m = ATC::LatticeMap.new([["primary", ATC::LatticeColor.new("#4a90d9")]])
+    result = ATC::BUILTIN_FUNCTIONS["map-get"].call([m, ATC::LatticeIdent.new("primary")], nil)
+    assert_equal "#4a90d9", result.value
+  end
+
+  def test_builtin_map_get_not_found
+    m = ATC::LatticeMap.new([["a", ATC::LatticeNumber.new(1.0)]])
+    result = ATC::BUILTIN_FUNCTIONS["map-get"].call([m, ATC::LatticeIdent.new("b")], nil)
+    assert_instance_of ATC::LatticeNull, result
+  end
+
+  def test_builtin_map_keys
+    m = ATC::LatticeMap.new([["x", ATC::LatticeNumber.new(1.0)], ["y", ATC::LatticeNumber.new(2.0)]])
+    result = ATC::BUILTIN_FUNCTIONS["map-keys"].call([m], nil)
+    assert_instance_of ATC::LatticeList, result
+    assert_equal 2, result.items.size
+  end
+
+  def test_builtin_map_has_key
+    m = ATC::LatticeMap.new([["x", ATC::LatticeNumber.new(1.0)]])
+    result = ATC::BUILTIN_FUNCTIONS["map-has-key"].call([m, ATC::LatticeIdent.new("x")], nil)
+    assert result.value
+  end
+
+  def test_builtin_map_merge
+    m1 = ATC::LatticeMap.new([["a", ATC::LatticeNumber.new(1.0)]])
+    m2 = ATC::LatticeMap.new([["b", ATC::LatticeNumber.new(2.0)]])
+    result = ATC::BUILTIN_FUNCTIONS["map-merge"].call([m1, m2], nil)
+    assert_instance_of ATC::LatticeMap, result
+    assert_equal 2, result.items.size
+  end
+
+  def test_builtin_lighten
+    c = ATC::LatticeColor.new("#000000")
+    result = ATC::BUILTIN_FUNCTIONS["lighten"].call([c, ATC::LatticeNumber.new(50.0)], nil)
+    assert_instance_of ATC::LatticeColor, result
+    # Black lightened by 50% should be roughly gray
+    _, _, l, _ = result.to_hsl
+    assert_in_delta 50.0, l, 2
+  end
+
+  def test_builtin_darken
+    c = ATC::LatticeColor.new("#ffffff")
+    result = ATC::BUILTIN_FUNCTIONS["darken"].call([c, ATC::LatticeNumber.new(50.0)], nil)
+    assert_instance_of ATC::LatticeColor, result
+  end
+
+  def test_builtin_complement
+    c = ATC::LatticeColor.new("#ff0000")
+    result = ATC::BUILTIN_FUNCTIONS["complement"].call([c], nil)
+    assert_instance_of ATC::LatticeColor, result
+    # Complement of red should be cyan
+    h, _, _, _ = result.to_hsl
+    assert_in_delta 180.0, h, 5
+  end
+
+  def test_builtin_red_green_blue
+    c = ATC::LatticeColor.new("#ff8040")
+    r = ATC::BUILTIN_FUNCTIONS["red"].call([c], nil)
+    g = ATC::BUILTIN_FUNCTIONS["green"].call([c], nil)
+    b = ATC::BUILTIN_FUNCTIONS["blue"].call([c], nil)
+    assert_in_delta 255.0, r.value
+    assert_in_delta 128.0, g.value
+    assert_in_delta 64.0, b.value
+  end
+
+  def test_builtin_join
+    l1 = ATC::LatticeList.new([ATC::LatticeIdent.new("a")])
+    l2 = ATC::LatticeList.new([ATC::LatticeIdent.new("b")])
+    result = ATC::BUILTIN_FUNCTIONS["join"].call([l1, l2], nil)
+    assert_equal 2, result.items.size
+  end
+
+  def test_builtin_append
+    lst = ATC::LatticeList.new([ATC::LatticeIdent.new("a")])
+    result = ATC::BUILTIN_FUNCTIONS["append"].call([lst, ATC::LatticeIdent.new("b")], nil)
+    assert_equal 2, result.items.size
+  end
+
+  def test_builtin_index_found
+    lst = ATC::LatticeList.new([ATC::LatticeIdent.new("a"), ATC::LatticeIdent.new("b")])
+    result = ATC::BUILTIN_FUNCTIONS["index"].call([lst, ATC::LatticeIdent.new("b")], nil)
+    assert_in_delta 2.0, result.value
+  end
+
+  def test_builtin_index_not_found
+    lst = ATC::LatticeList.new([ATC::LatticeIdent.new("a")])
+    result = ATC::BUILTIN_FUNCTIONS["index"].call([lst, ATC::LatticeIdent.new("z")], nil)
+    assert_instance_of ATC::LatticeNull, result
+  end
+
+  def test_builtin_comparable
+    result = ATC::BUILTIN_FUNCTIONS["comparable"].call(
+      [ATC::LatticeDimension.new(10.0, "px"), ATC::LatticeDimension.new(20.0, "px")], nil
+    )
+    assert result.value
+
+    result2 = ATC::BUILTIN_FUNCTIONS["comparable"].call(
+      [ATC::LatticeDimension.new(10.0, "px"), ATC::LatticeDimension.new(5.0, "em")], nil
+    )
+    refute result2.value
+  end
+end
+
+# ================================================================
+# Lattice v2: @while loop transformer integration
+# ================================================================
+class TestTransformerWhile < Minitest::Test
+  def test_while_basic_loop
+    source = <<~LATTICE
+      $i: 1;
+      @while $i <= 3 {
+        h1 { z-index: $i; }
+        $i: $i + 1;
+      }
+    LATTICE
+    css = transpile(source)
+    assert_equal 3, css.scan("z-index:").size
+  end
+
+  def test_while_false_never_executes
+    source = <<~LATTICE
+      $flag: false;
+      @while $flag {
+        h1 { color: red; }
+      }
+    LATTICE
+    css = transpile(source)
+    refute_includes css, "color: red"
+  end
+end
+
+# ================================================================
+# Lattice v2: !default and !global flags
+# ================================================================
+class TestTransformerFlags < Minitest::Test
+  def test_default_flag_not_set_if_defined
+    source = <<~LATTICE
+      $color: red;
+      $color: blue !default;
+      h1 { color: $color; }
+    LATTICE
+    css = transpile(source)
+    assert_includes css, "color: red"
+    refute_includes css, "color: blue"
+  end
+
+  def test_default_flag_sets_if_undefined
+    source = <<~LATTICE
+      $size: 16px !default;
+      h1 { font-size: $size; }
+    LATTICE
+    css = transpile(source)
+    assert_includes css, "font-size: 16px"
+  end
+end

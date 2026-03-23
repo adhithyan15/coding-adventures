@@ -121,18 +121,33 @@ module CodingAdventures
     #
     # The returned AST contains only CSS nodes. Pass it to
     # CSSEmitter to produce CSS text.
+    # Maximum number of iterations allowed in a @while loop.
+    MAX_WHILE_ITERATIONS = 1000
+
     class LatticeTransformer
-      def initialize
+      def initialize(max_while_iterations: MAX_WHILE_ITERATIONS)
         @variables = ScopeChain.new
         @mixins = {}
         @functions = {}
         @mixin_stack = []
         @function_stack = []
+        @max_while_iterations = max_while_iterations
+        # Lattice v2: @extend tracking
+        @extend_map = {}
+        # Lattice v2: @at-root hoisted rules
+        @at_root_rules = []
+        # Lattice v2: @content block tracking
+        @content_block_stack = []
+        @content_scope_stack = []
       end
 
       # Transform a Lattice AST into a clean CSS AST.
       #
-      # Runs the three-pass pipeline.
+      # Runs the three-pass pipeline:
+      #   1. Collect symbols (variables, mixins, functions, @extend)
+      #   2. Expand (resolve variables, expand mixins, evaluate control flow,
+      #      handle @while/@content/@at-root/property nesting)
+      #   3. Cleanup + @extend selector merging + @at-root hoisting
       #
       # @param ast [ASTNode] the root stylesheet node
       # @return [ASTNode] the cleaned CSS AST
@@ -143,8 +158,10 @@ module CodingAdventures
         # Pass 2: Expand
         result = expand_node(ast, @variables)
 
-        # Pass 3: Cleanup
+        # Pass 3: Cleanup + @extend + @at-root
         cleanup(result)
+        remove_placeholder_rules(result) unless @extend_map.empty?
+        splice_at_root_rules(result) unless @at_root_rules.empty?
 
         result
       end
@@ -201,19 +218,50 @@ module CodingAdventures
       end
 
       def collect_variable(node)
-        # variable_declaration = VARIABLE COLON value_list SEMICOLON ;
+        # variable_declaration = VARIABLE COLON value_list { variable_flag } SEMICOLON ;
+        # Lattice v2 adds !default and !global flags.
         name = nil
         value_node = nil
+        is_default = false
+        is_global = false
 
         node.children.each do |child|
           if child.respond_to?(:rule_name)
-            value_node = child if child.rule_name == "value_list"
-          elsif token_type_name(child) == "VARIABLE"
-            name = child.value
+            case child.rule_name
+            when "value_list"
+              value_node = child
+            when "variable_flag"
+              child.children.each do |fc|
+                ft = fc.respond_to?(:rule_name) ? "" : token_type_name(fc)
+                is_default = true if ft == "BANG_DEFAULT"
+                is_global = true if ft == "BANG_GLOBAL"
+              end
+            end
+          else
+            type = token_type_name(child)
+            if type == "VARIABLE"
+              name = child.value
+            elsif type == "BANG_DEFAULT"
+              is_default = true
+            elsif type == "BANG_GLOBAL"
+              is_global = true
+            end
           end
         end
 
-        @variables.set(name, value_node) if name && value_node
+        return unless name && value_node
+
+        if is_default && is_global
+          root = @variables
+          root = root.parent while root.parent
+          @variables.set_global(name, value_node) if root.get(name).nil?
+        elsif is_default
+          @variables.set(name, value_node) if @variables.get(name).nil?
+        elsif is_global
+          @variables.set_global(name, value_node)
+        else
+          @variables.set(name, value_node)
+        end
       end
 
       def collect_mixin(node)
@@ -343,6 +391,9 @@ module CodingAdventures
           expand_stylesheet(node, scope)
         when "rule"
           expand_rule(node, scope)
+        # Lattice v2: resolve variables in selector positions
+        when "compound_selector", "simple_selector", "class_selector"
+          expand_selector_with_vars(node, scope)
         else
           expand_children(node, scope)
         end
@@ -519,6 +570,16 @@ module CodingAdventures
               new_lbi = rebuild_node(inner_children[0], [result])
               return rebuild_node(child, [new_lbi])
             end
+
+            # Lattice v2: handle property_nesting inside declaration_or_nested
+            if inner_rule == "declaration_or_nested"
+              don_children = inner_children[0].children
+              if !don_children.empty? && don_children[0].respond_to?(:rule_name) &&
+                 don_children[0].rule_name == "property_nesting"
+                result = expand_property_nesting(don_children[0], scope)
+                return result.empty? ? nil : result
+              end
+            end
           end
 
           return expand_children(child, scope)
@@ -528,7 +589,9 @@ module CodingAdventures
       end
 
       def expand_lattice_block_item(node, scope)
-        # lattice_block_item = variable_declaration | include_directive | lattice_control ;
+        # lattice_block_item = variable_declaration | include_directive
+        #                    | lattice_control | content_directive
+        #                    | at_root_directive | extend_directive ;
         return node if node.children.empty?
 
         inner = node.children[0]
@@ -542,6 +605,14 @@ module CodingAdventures
           expand_include(inner, scope)
         when "lattice_control"
           expand_control(inner, scope)
+        when "content_directive"
+          expand_content(inner, scope)
+        when "at_root_directive"
+          expand_at_root(inner, scope)
+          nil  # Hoisted to root in Pass 3
+        when "extend_directive"
+          collect_extend(inner, scope)
+          nil  # Handled in Pass 3
         else
           expand_children(node, scope)
         end
@@ -549,20 +620,49 @@ module CodingAdventures
 
       def expand_variable_declaration(node, scope)
         # Sets the variable in the current scope. Removed from output.
+        # Lattice v2: handles !default and !global flags.
         name = nil
         value_node = nil
+        is_default = false
+        is_global = false
 
         node.children.each do |child|
           if child.respond_to?(:rule_name)
-            value_node = child if child.rule_name == "value_list"
-          elsif token_type_name(child) == "VARIABLE"
-            name = child.value
+            case child.rule_name
+            when "value_list"
+              value_node = child
+            when "variable_flag"
+              child.children.each do |fc|
+                ft = fc.respond_to?(:rule_name) ? "" : token_type_name(fc)
+                is_default = true if ft == "BANG_DEFAULT"
+                is_global = true if ft == "BANG_GLOBAL"
+              end
+            end
+          else
+            type = token_type_name(child)
+            if type == "VARIABLE"
+              name = child.value
+            elsif type == "BANG_DEFAULT"
+              is_default = true
+            elsif type == "BANG_GLOBAL"
+              is_global = true
+            end
           end
         end
 
-        if name && value_node
-          # Expand the value first (it might contain variables).
-          expanded_value = expand_node(deep_copy(value_node), scope)
+        return unless name && value_node
+
+        expanded_value = expand_node(deep_copy(value_node), scope)
+
+        if is_default && is_global
+          root = scope
+          root = root.parent while root.parent
+          scope.set_global(name, expanded_value) if root.get(name).nil?
+        elsif is_default
+          scope.set(name, expanded_value) if scope.get(name).nil?
+        elsif is_global
+          scope.set_global(name, expanded_value)
+        else
           scope.set(name, expanded_value)
         end
       end
@@ -617,12 +717,18 @@ module CodingAdventures
         # URL_TOKEN or unknown — pass through.
         return expand_children(node, scope) if func_name.nil?
 
-        # Lattice function — evaluated FIRST, even if the name happens to
-        # collide with a CSS built-in (e.g., a user-defined @function scale
-        # takes precedence over the CSS scale() transform function).
+        # CSS built-in that does NOT overlap with Lattice built-ins — pass through.
+        if LatticeAstToCss.css_function?(func_name) && !BUILTIN_FUNCTIONS.key?(func_name)
+          return expand_children(node, scope)
+        end
+
+        # User-defined function takes priority over built-ins (Sass behavior).
         return evaluate_function_call(func_name, node, scope) if @functions.key?(func_name)
 
-        # CSS built-in — expand args but keep structure.
+        # Lattice v2 built-in function.
+        return evaluate_builtin_function(func_name, node, scope) if BUILTIN_FUNCTIONS.key?(func_name)
+
+        # CSS built-in that overlaps with Lattice built-in names.
         return expand_children(node, scope) if LatticeAstToCss.css_function?(func_name)
 
         # Unknown function — pass through.
@@ -634,14 +740,23 @@ module CodingAdventures
       # ============================================================
 
       def expand_include(node, scope)
-        # include_directive = "@include" FUNCTION include_args RPAREN ( SEMICOLON | block )
+        # include_directive = "@include" FUNCTION [ include_args ] RPAREN
+        #                       ( SEMICOLON | block )
         #                   | "@include" IDENT ( SEMICOLON | block ) ;
+        # Lattice v2: if @include has a trailing block, that block is the
+        # content block -- it replaces @content; in the mixin body.
         mixin_name = nil
         args_node = nil
+        content_block = nil
 
         node.children.each do |child|
           if child.respond_to?(:rule_name)
-            args_node = child if child.respond_to?(:rule_name) && child.rule_name == "include_args"
+            case child.rule_name
+            when "include_args"
+              args_node = child
+            when "block"
+              content_block = child
+            end
           else
             type = token_type_name(child)
             if type == "FUNCTION"
@@ -682,6 +797,10 @@ module CodingAdventures
           end
         end
 
+        # Lattice v2: push content block and caller scope for @content
+        @content_block_stack.push(content_block)
+        @content_scope_stack.push(scope)
+
         # Clone and expand the mixin body.
         @mixin_stack.push(mixin_name)
         begin
@@ -699,6 +818,8 @@ module CodingAdventures
           []
         ensure
           @mixin_stack.pop
+          @content_block_stack.pop
+          @content_scope_stack.pop
         end
       end
 
@@ -755,7 +876,7 @@ module CodingAdventures
       # ============================================================
 
       def expand_control(node, scope)
-        # lattice_control = if_directive | for_directive | each_directive ;
+        # lattice_control = if_directive | for_directive | each_directive | while_directive ;
         return nil if node.children.empty?
 
         inner = node.children[0]
@@ -768,6 +889,8 @@ module CodingAdventures
           expand_for(inner, scope)
         when "each_directive"
           expand_each(inner, scope)
+        when "while_directive"
+          expand_while(inner, scope)
         end
       end
 
@@ -878,6 +1001,7 @@ module CodingAdventures
 
       def expand_each(node, scope)
         # each_directive = "@each" VARIABLE { COMMA VARIABLE } "in" each_list block ;
+        # Lattice v2: @each $key, $value in $map destructures map entries.
         var_names = []
         each_list = nil
         block = nil
@@ -895,8 +1019,11 @@ module CodingAdventures
 
         return [] unless !var_names.empty? && each_list && block
 
+        # Check if each_list references a variable holding a map or list
+        resolved = resolve_each_list(each_list, scope)
+        return expand_each_over_resolved(var_names, resolved, block, scope) if resolved
+
         # Extract list items from each_list.
-        # each_list = value { COMMA value } ;
         items = each_list.children.select do |c|
           c.respond_to?(:rule_name) && c.rule_name == "value"
         end
@@ -909,6 +1036,47 @@ module CodingAdventures
 
           expanded = expand_block_to_items(deep_copy(block), loop_scope)
           result.concat(expanded)
+        end
+        result
+      end
+
+      # Try to resolve an each_list to a LatticeMap or LatticeList.
+      def resolve_each_list(each_list, scope)
+        var_tokens = []
+        each_list.children.each do |child|
+          if child.respond_to?(:rule_name) && child.rule_name == "value"
+            child.children.each do |vc|
+              if !vc.respond_to?(:rule_name) && token_type_name(vc) == "VARIABLE"
+                var_tokens << vc
+              end
+            end
+          end
+        end
+        if var_tokens.size == 1
+          val = scope.get(var_tokens[0].value)
+          return val if val.is_a?(LatticeMap) || val.is_a?(LatticeList)
+        end
+        nil
+      end
+
+      # Expand @each over a resolved LatticeMap or LatticeList.
+      def expand_each_over_resolved(var_names, collection, block, scope)
+        result = []
+        if collection.is_a?(LatticeMap)
+          collection.items.each do |key, value|
+            loop_scope = scope.child
+            loop_scope.set(var_names[0], LatticeIdent.new(key))
+            loop_scope.set(var_names[1], value) if var_names.size >= 2
+            expanded = expand_block_to_items(deep_copy(block), loop_scope)
+            result.concat(expanded)
+          end
+        elsif collection.is_a?(LatticeList)
+          collection.items.each do |item|
+            loop_scope = scope.child
+            loop_scope.set(var_names[0], item)
+            expanded = expand_block_to_items(deep_copy(block), loop_scope)
+            result.concat(expanded)
+          end
         end
         result
       end
@@ -1181,6 +1349,350 @@ module CodingAdventures
         # Convert each arg group to a single value.
         args.filter_map do |group|
           group.empty? ? nil : group[0]
+        end
+      end
+
+      # ============================================================
+      # Lattice v2: @while Loops
+      # ============================================================
+
+      def expand_while(node, scope)
+        # while_directive = "@while" lattice_expression block ;
+        condition = nil
+        block = nil
+
+        node.children.each do |child|
+          next unless child.respond_to?(:rule_name)
+
+          case child.rule_name
+          when "lattice_expression" then condition = child
+          when "block" then block = child
+          end
+        end
+
+        return [] unless condition && block
+
+        result = []
+        iteration = 0
+
+        loop do
+          evaluator = make_evaluator(scope)
+          cond_value = evaluator.evaluate(deep_copy(condition))
+          break unless LatticeAstToCss.truthy?(cond_value)
+
+          iteration += 1
+          raise LatticeMaxIterationError.new(@max_while_iterations) if iteration > @max_while_iterations
+
+          expanded = expand_block_to_items(deep_copy(block), scope)
+          result.concat(expanded)
+        end
+
+        result
+      end
+
+      # ============================================================
+      # Lattice v2: $var in Selectors
+      # ============================================================
+
+      def expand_selector_with_vars(node, scope)
+        new_children = []
+        node.children.each do |child|
+          unless child.respond_to?(:rule_name)
+            if token_type_name(child) == "VARIABLE"
+              var_name = child.value
+              value = scope.get(var_name)
+              if value.nil?
+                raise LatticeUndefinedVariableError.new(
+                  var_name,
+                  child.respond_to?(:line) ? child.line : 0,
+                  child.respond_to?(:column) ? child.column : 0
+                )
+              end
+              css_text = if LATTICE_VALUE_TYPES.any? { |t| value.is_a?(t) }
+                LatticeAstToCss.value_to_css(value)
+              elsif value.respond_to?(:rule_name)
+                ev = make_evaluator(scope)
+                v = ev.send(:extract_value_from_ast, value)
+                LatticeAstToCss.value_to_css(v)
+              else
+                value.to_s
+              end
+              # Strip quotes from strings in selector context
+              css_text = css_text.delete('"').delete("'")
+              new_children << make_token(css_text, child)
+            else
+              new_children << child
+            end
+          else
+            new_children << expand_node(child, scope)
+          end
+        end
+        rebuild_node(node, new_children)
+      end
+
+      # ============================================================
+      # Lattice v2: @content Blocks
+      # ============================================================
+
+      def expand_content(_node, scope)
+        # content_directive = "@content" SEMICOLON ;
+        return [] if @content_block_stack.empty?
+
+        content_block = @content_block_stack.last
+        return [] unless content_block
+
+        caller_scope = @content_scope_stack.last || scope
+        expand_block_to_items(deep_copy(content_block), caller_scope)
+      end
+
+      # ============================================================
+      # Lattice v2: @at-root
+      # ============================================================
+
+      def expand_at_root(node, scope)
+        # at_root_directive = "@at-root" ( block | selector_list block ) ;
+        block = nil
+        selector_list = nil
+
+        node.children.each do |child|
+          next unless child.respond_to?(:rule_name)
+
+          case child.rule_name
+          when "block" then block = child
+          when "selector_list" then selector_list = child
+          end
+        end
+
+        return unless block
+
+        if selector_list
+          expanded_sel = expand_node(deep_copy(selector_list), scope)
+          expanded_block = expand_node(deep_copy(block), scope)
+          qr = SimpleNode.new("qualified_rule", [expanded_sel, expanded_block])
+          @at_root_rules << qr
+        else
+          expanded = expand_block_to_items(deep_copy(block), scope)
+          @at_root_rules.concat(expanded)
+        end
+      end
+
+      # ============================================================
+      # Lattice v2: @extend and %placeholder
+      # ============================================================
+
+      def collect_extend(node, _scope)
+        # extend_directive = "@extend" extend_target SEMICOLON ;
+        target = ""
+        node.children.each do |child|
+          if child.respond_to?(:rule_name) && child.rule_name == "extend_target"
+            parts = []
+            child.children.each do |tc|
+              parts << tc.value unless tc.respond_to?(:rule_name)
+            end
+            target = parts.join
+          end
+        end
+        @extend_map[target] = [] if !target.empty? && !@extend_map.key?(target)
+      end
+
+      # ============================================================
+      # Lattice v2: Property Nesting
+      # ============================================================
+
+      def expand_property_nesting(node, scope)
+        # property_nesting = property COLON block ;
+        parent_prop = ""
+        block = nil
+
+        node.children.each do |child|
+          next unless child.respond_to?(:rule_name)
+
+          case child.rule_name
+          when "property"
+            child.children.each { |pc| parent_prop = pc.value }
+          when "block"
+            block = child
+          end
+        end
+
+        return [] if parent_prop.empty? || block.nil?
+
+        expanded = expand_node(deep_copy(block), scope)
+        result = []
+        flatten_nested_props(expanded, parent_prop, result)
+        result
+      end
+
+      def flatten_nested_props(node, prefix, result)
+        return unless node.respond_to?(:children)
+
+        node.children.each do |child|
+          next unless child.respond_to?(:rule_name)
+
+          case child.rule_name
+          when "block_contents"
+            flatten_nested_props(child, prefix, result)
+          when "block_item"
+            flatten_nested_block_item(child, prefix, result)
+          when "declaration"
+            rewrite_declaration_prefix(child, prefix, result)
+          end
+        end
+      end
+
+      def flatten_nested_block_item(node, prefix, result)
+        return if node.children.empty?
+
+        inner = node.children[0]
+        return unless inner.respond_to?(:rule_name)
+
+        if inner.rule_name == "declaration_or_nested"
+          inner.children.each do |dc|
+            next unless dc.respond_to?(:rule_name)
+
+            case dc.rule_name
+            when "declaration"
+              rewrite_declaration_prefix(dc, prefix, result)
+            when "property_nesting"
+              sub = expand_property_nesting_with_prefix(dc, prefix)
+              result.concat(sub)
+            end
+          end
+        end
+      end
+
+      def rewrite_declaration_prefix(decl, prefix, result)
+        # Rewrite the declaration's property name to include the prefix.
+        # We need to rebuild the property node with the modified token.
+        decl.children.each do |child|
+          if child.respond_to?(:rule_name) && child.rule_name == "property"
+            child.children.each do |pc|
+              unless pc.respond_to?(:rule_name)
+                old_name = pc.value
+                # Create a new token with prefixed name
+                new_tok = SyntheticToken.new(pc.respond_to?(:type) ? (pc.type.respond_to?(:name) ? pc.type.name : pc.type.to_s) : "IDENT",
+                  "#{prefix}-#{old_name}",
+                  pc.respond_to?(:line) ? pc.line : 0,
+                  pc.respond_to?(:column) ? pc.column : 0)
+                # Replace in-place - property nodes are mutable enough for this
+                idx = child.children.index(pc)
+                if child.respond_to?(:with)
+                  new_children = child.children.dup
+                  new_children[idx] = new_tok
+                  # Rebuild immutable node
+                else
+                  child.children[idx] = new_tok if idx
+                end
+              end
+            end
+          end
+        end
+        result << decl
+      end
+
+      def expand_property_nesting_with_prefix(node, prefix)
+        sub_prop = ""
+        block = nil
+        node.children.each do |child|
+          next unless child.respond_to?(:rule_name)
+
+          case child.rule_name
+          when "property"
+            child.children.each { |pc| sub_prop = pc.value }
+          when "block"
+            block = child
+          end
+        end
+        new_prefix = "#{prefix}-#{sub_prop}"
+        result = []
+        flatten_nested_props(block, new_prefix, result) if block
+        result
+      end
+
+      # ============================================================
+      # Lattice v2: Built-in Function Evaluation
+      # ============================================================
+
+      def evaluate_builtin_function(func_name, node, scope)
+        # Evaluate args using ExpressionEvaluator, then call the built-in handler.
+        args = []
+        node.children.each do |child|
+          if child.respond_to?(:rule_name) && child.rule_name == "function_args"
+            evaluator = make_evaluator(scope)
+            args = evaluator.collect_function_args(child)
+            break
+          end
+        end
+
+        handler = BUILTIN_FUNCTIONS[func_name]
+        result = handler.call(args, scope)
+
+        return expand_children(node, scope) if result.is_a?(LatticeNull)
+
+        css_text = LatticeAstToCss.value_to_css(result)
+        make_value_node(css_text, node)
+      end
+
+      # ============================================================
+      # Lattice v2: @extend Selector Merging (Pass 3)
+      # ============================================================
+
+      def remove_placeholder_rules(node)
+        return unless node.respond_to?(:children)
+
+        new_children = []
+        node.children.each do |child|
+          next if child.nil?
+          next if placeholder_only_rule?(child)
+
+          remove_placeholder_rules(child)
+          new_children << child
+        end
+        rebuild_node(node, new_children)
+      end
+
+      def placeholder_only_rule?(node)
+        return false unless node.respond_to?(:rule_name)
+
+        if node.rule_name == "qualified_rule"
+          selector_text = extract_selector_text(node)
+          selectors = selector_text.split(",").map(&:strip)
+          return selectors.all? { |s| s.start_with?("%") } if selectors.any?
+        end
+        if node.rule_name == "rule" && !node.children.empty? && node.children[0].respond_to?(:rule_name)
+          return placeholder_only_rule?(node.children[0])
+        end
+        false
+      end
+
+      def extract_selector_text(node)
+        return "" unless node.respond_to?(:children)
+
+        node.children.each do |child|
+          if child.respond_to?(:rule_name) && child.rule_name == "selector_list"
+            return collect_text(child)
+          end
+        end
+        ""
+      end
+
+      def collect_text(node)
+        return node.value if !node.respond_to?(:rule_name) && node.respond_to?(:value)
+
+        parts = []
+        node.children.each { |c| parts << collect_text(c) } if node.respond_to?(:children)
+        parts.join(" ")
+      end
+
+      # ============================================================
+      # Lattice v2: @at-root Hoisting (Pass 3)
+      # ============================================================
+
+      def splice_at_root_rules(root)
+        return unless root.respond_to?(:children)
+
+        @at_root_rules.each do |rule|
+          root.children << rule if rule
         end
       end
 
