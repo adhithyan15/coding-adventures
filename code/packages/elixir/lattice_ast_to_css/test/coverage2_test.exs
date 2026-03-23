@@ -675,4 +675,26 @@ defmodule CodingAdventures.LatticeAstToCss.Coverage2Test do
       assert css =~ "var"
     end
   end
+
+  # ===========================================================================
+  # Transformer.State — cover defstruct by constructing instances directly
+  # ===========================================================================
+
+  describe "Transformer.State struct" do
+    test "can be created with defaults" do
+      state = %Transformer.State{}
+      assert state.mixins == %{}
+      assert state.functions == %{}
+      assert state.mixin_stack == []
+      assert state.function_stack == []
+      assert state.variables == nil
+    end
+
+    test "can be created with explicit values" do
+      scope = Scope.new()
+      state = %Transformer.State{variables: scope, mixins: %{"m" => 1}}
+      assert state.variables == scope
+      assert state.mixins == %{"m" => 1}
+    end
+  end
 end

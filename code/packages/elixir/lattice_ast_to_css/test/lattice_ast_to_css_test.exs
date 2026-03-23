@@ -3,7 +3,7 @@ defmodule CodingAdventures.LatticeAstToCssTest do
 
   alias CodingAdventures.LatticeParser
   alias CodingAdventures.LatticeAstToCss
-  alias CodingAdventures.LatticeAstToCss.{Scope, Values, Evaluator, Transformer, Emitter, Errors}
+  alias CodingAdventures.LatticeAstToCss.{Scope, Values, Transformer, Emitter, Errors}
 
   # Helper: parse + transform + emit in one step
   defp transpile!(source, opts \\ []) do
