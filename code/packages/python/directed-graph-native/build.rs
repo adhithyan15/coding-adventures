@@ -58,18 +58,12 @@ fn main() {
 }
 
 fn which_python() -> Result<String, std::env::VarError> {
-    // Try to find python3 or python in PATH
+    let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+    // On Windows, use `where` which returns native paths.
+    // On Unix, use `which`.
+    let finder = if target_os == "windows" { "where" } else { "which" };
     for name in &["python3", "python"] {
-        if let Ok(output) = std::process::Command::new("which").arg(name).output() {
-            if output.status.success() {
-                let path = String::from_utf8_lossy(&output.stdout).trim().to_string();
-                if !path.is_empty() {
-                    return Ok(path);
-                }
-            }
-        }
-        // Windows: try where instead of which
-        if let Ok(output) = std::process::Command::new("where").arg(name).output() {
+        if let Ok(output) = std::process::Command::new(finder).arg(name).output() {
             if output.status.success() {
                 let path = String::from_utf8_lossy(&output.stdout)
                     .lines()

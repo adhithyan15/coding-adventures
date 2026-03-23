@@ -26,8 +26,8 @@ const PY_TP_DEALLOC: c_int = 52;
 const PY_TP_REPR: c_int = 66;
 const PY_TP_METHODS: c_int = 64;
 const PY_TP_NEW: c_int = 65;
-const PY_SQ_LENGTH: c_int = 38;    // sq_length — __len__ via sequence protocol
-const PY_SQ_CONTAINS: c_int = 37;  // sq_contains — __contains__ via sequence protocol
+const PY_SQ_LENGTH: c_int = 45;    // Py_sq_length — from CPython typeslots.h
+const PY_SQ_CONTAINS: c_int = 41;  // Py_sq_contains — from CPython typeslots.h
 
 // ---------------------------------------------------------------------------
 // Instance layout: GraphObject = PyObject_HEAD + graph pointer
