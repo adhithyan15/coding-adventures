@@ -1,0 +1,36 @@
+{
+  "name": "lattice-docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive documentation and live playground for the Lattice CSS superset language",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@coding-adventures/lattice-ast-to-css": "file:../../../packages/typescript/lattice-ast-to-css",
+    "@coding-adventures/lattice-parser": "file:../../../packages/typescript/lattice-parser",
+    "@coding-adventures/lattice-lexer": "file:../../../packages/typescript/lattice-lexer",
+    "@coding-adventures/lattice-transpiler": "file:../../../packages/typescript/lattice-transpiler",
+    "@coding-adventures/grammar-tools": "file:../../../packages/typescript/grammar-tools",
+    "@coding-adventures/parser": "file:../../../packages/typescript/parser",
+    "@coding-adventures/lexer": "file:../../../packages/typescript/lexer",
+    "@coding-adventures/directed-graph": "file:../../../packages/typescript/directed-graph",
+    "@coding-adventures/state-machine": "file:../../../packages/typescript/state-machine",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "~5.7.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}

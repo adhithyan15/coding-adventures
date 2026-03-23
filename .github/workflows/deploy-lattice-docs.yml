@@ -1,0 +1,87 @@
+# ================================================================
+# Deploy Lattice Docs to GitHub Pages
+# ================================================================
+#
+# Builds the Vite + React app and deploys it to the gh-pages branch
+# under the lattice/ subdirectory, preserving other content
+# (e.g., logic-gates/, busicom/, transistors/) already on GitHub Pages.
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into lattice/ on that branch,
+# so the app is available at:
+#   https://adhithyan15.github.io/coding-adventures/lattice/
+#
+# The Vite base path is set to /coding-adventures/lattice/ in
+# vite.config.ts so all asset URLs resolve correctly.
+#
+# The Lattice transpiler runs in the browser:
+#   - Grammar files are embedded as string constants by Vite's `?raw` import
+#   - No server-side compilation — everything is compile-time inlined
+#   - Real-time Lattice → CSS in the playground requires no network requests
+
+name: Deploy Lattice Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/lattice-docs/**"
+      - "code/packages/typescript/lattice-transpiler/**"
+      - "code/packages/typescript/lattice-ast-to-css/**"
+      - "code/packages/typescript/lattice-parser/**"
+      - "code/packages/typescript/lattice-lexer/**"
+      - "code/grammars/lattice.tokens"
+      - "code/grammars/lattice.grammar"
+      - ".github/workflows/deploy-lattice-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Install packages in topological order (each must be installed before
+      # its dependents can resolve file: references in package.json).
+
+      - name: Install dependencies (transitive packages)
+        run: |
+          cd code/packages/typescript/state-machine && npm install
+          cd ../directed-graph && npm install
+          cd ../grammar-tools && npm install
+          cd ../lexer && npm install
+          cd ../parser && npm install
+
+      - name: Install dependencies (lattice packages)
+        run: |
+          cd code/packages/typescript/lattice-lexer && npm install
+          cd ../lattice-parser && npm install
+          cd ../lattice-ast-to-css && npm install
+          cd ../lattice-transpiler && npm install
+
+      - name: Install dependencies (app)
+        run: |
+          cd code/programs/typescript/lattice-docs
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/lattice-docs
+          npm run build
+
+      - name: Deploy to GitHub Pages (lattice/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/lattice-docs/dist
+          destination_dir: lattice
+          keep_files: true
