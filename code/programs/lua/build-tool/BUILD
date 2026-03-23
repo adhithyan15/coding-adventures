@@ -1,1 +1,1 @@
-cd tests && busted . --verbose
+cd tests && busted . --verbose --pattern=test_
