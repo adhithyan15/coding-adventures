@@ -285,8 +285,10 @@ mod business_logic {
     /// Check whether a path is absolute (works on both Unix and Windows).
     fn is_absolute_path(path: &str) -> bool {
         // Unix: starts with /
-        // Windows: starts with drive letter like C:\
-        path.starts_with('/') || (path.len() >= 3 && path.as_bytes()[1] == b':')
+        // Windows: starts with drive letter like C:\ or UNC path \\?\ or \\server
+        path.starts_with('/')
+            || (path.len() >= 3 && path.as_bytes()[1] == b':')
+            || path.starts_with("\\\\")
     }
 
     /// The physical pwd function should return an absolute path.

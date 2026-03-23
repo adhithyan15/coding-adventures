@@ -2,4 +2,4 @@ uv venv --quiet --clear
 uv pip install -e ../directed-graph -e ../state-machine --quiet
 uv pip install pytest pytest-cov ruff mypy --quiet
 uv pip install -e . --no-deps --quiet
-uv run python -m pytest tests/ -v
+.venv\Scripts\python -m pytest tests/ -v
