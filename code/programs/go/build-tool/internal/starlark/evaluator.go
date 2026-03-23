@@ -495,30 +495,66 @@ func extractMonorepoPyNames(line, prefix string) []string {
 }
 
 // tsInstallCmd reads package.json to find monorepo file: deps and chains
-// npm install commands for transitive deps.
+// npm install commands for all transitive deps in leaf-first order.
 //
 // TypeScript packages use "file:../sibling-pkg" references in package.json.
-// Some transitive deps need their own npm install first.  This function
-// reads package.json and generates chained install commands.
+// Each dep (and its transitive deps) needs npm install before the parent
+// can resolve it.  This mirrors what the old shell BUILD files did with
+// explicit chained install commands.
 func tsInstallCmd(pkgPath string) string {
 	if pkgPath == "" {
 		return "npm install --silent"
 	}
 
-	pkgJSON := filepath.Join(pkgPath, "package.json")
-	data, err := os.ReadFile(pkgJSON)
-	if err != nil {
+	parentDir := filepath.Dir(pkgPath)
+	allDeps := collectTsTransitiveDeps(pkgPath, parentDir, make(map[string]bool))
+	if len(allDeps) == 0 {
 		return "npm install --silent"
 	}
 
-	// Look for "file:../" references in dependencies and devDependencies.
-	// These are monorepo deps that need their own npm install first.
-	text := string(data)
+	// Chain: cd into each dep dir (leaf-first) and npm install.
+	cmds := ""
+	for _, dep := range allDeps {
+		cmds += fmt.Sprintf("cd ../%s && npm install --silent && cd - > /dev/null && ", dep)
+	}
+	cmds += "npm install --silent"
+	return cmds
+}
+
+// collectTsTransitiveDeps walks the file: dep tree from a package.json.
+// Returns dep directory names in leaf-first order with no duplicates.
+func collectTsTransitiveDeps(pkgPath, parentDir string, visited map[string]bool) []string {
+	directDeps := extractTsFileDeps(pkgPath)
+	var result []string
+
+	for _, dep := range directDeps {
+		if visited[dep] {
+			continue
+		}
+		visited[dep] = true
+
+		depPath := filepath.Join(parentDir, dep)
+		transitive := collectTsTransitiveDeps(depPath, parentDir, visited)
+		result = append(result, transitive...)
+		result = append(result, dep)
+	}
+
+	return result
+}
+
+// extractTsFileDeps reads package.json and returns directory names for
+// "file:../" references in dependencies and devDependencies.
+func extractTsFileDeps(pkgPath string) []string {
+	pkgJSON := filepath.Join(pkgPath, "package.json")
+	data, err := os.ReadFile(pkgJSON)
+	if err != nil {
+		return nil
+	}
+
 	var depDirs []string
-	for _, line := range strings.Split(text, "\n") {
+	for _, line := range strings.Split(string(data), "\n") {
 		trimmed := strings.TrimSpace(line)
 		if strings.Contains(trimmed, `"file:../`) {
-			// Extract the relative path: "file:../foo" -> "foo"
 			idx := strings.Index(trimmed, `"file:../`)
 			if idx >= 0 {
 				rest := trimmed[idx+len(`"file:../`):]
@@ -530,16 +566,5 @@ func tsInstallCmd(pkgPath string) string {
 		}
 	}
 
-	if len(depDirs) == 0 {
-		return "npm install --silent"
-	}
-
-	// Chain: cd into each dep dir and npm install, then come back.
-	// This ensures transitive file: deps are installed.
-	cmds := ""
-	for _, dep := range depDirs {
-		cmds += fmt.Sprintf("cd ../%s && npm install --silent && cd - > /dev/null && ", dep)
-	}
-	cmds += "npm install --silent"
-	return cmds
+	return depDirs
 }

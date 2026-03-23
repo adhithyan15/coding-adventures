@@ -436,27 +436,47 @@ func TestTsInstallCmd(t *testing.T) {
 		t.Errorf("tsInstallCmd(\"\") = %q, want default", cmd)
 	}
 
-	// Create a temp dir with a package.json that has file: deps.
-	tmpDir := t.TempDir()
-	pkgJSON := `{
-  "name": "coding-adventures-compiler",
+	// Create a temp dir structure with transitive file: deps.
+	// parent/
+	//   pkg-a/package.json  (depends on pkg-b)
+	//   pkg-b/package.json  (depends on pkg-c)
+	//   pkg-c/package.json  (no file: deps)
+	parent := t.TempDir()
+
+	os.MkdirAll(parent+"/pkg-c", 0755)
+	os.WriteFile(parent+"/pkg-c/package.json", []byte(`{
+  "name": "@ca/pkg-c",
+  "dependencies": {}
+}`), 0644)
+
+	os.MkdirAll(parent+"/pkg-b", 0755)
+	os.WriteFile(parent+"/pkg-b/package.json", []byte(`{
+  "name": "@ca/pkg-b",
   "dependencies": {
-    "coding-adventures-lexer": "file:../lexer",
-    "coding-adventures-parser": "file:../parser"
+    "@ca/pkg-c": "file:../pkg-c"
   }
-}`
-	if err := os.WriteFile(tmpDir+"/package.json", []byte(pkgJSON), 0644); err != nil {
-		t.Fatal(err)
+}`), 0644)
+
+	os.MkdirAll(parent+"/pkg-a", 0755)
+	os.WriteFile(parent+"/pkg-a/package.json", []byte(`{
+  "name": "@ca/pkg-a",
+  "dependencies": {
+    "@ca/pkg-b": "file:../pkg-b"
+  }
+}`), 0644)
+
+	cmd = tsInstallCmd(parent + "/pkg-a")
+	// Should install pkg-c first (leaf), then pkg-b, then pkg-a
+	if !containsStr(cmd, "cd ../pkg-c") {
+		t.Errorf("tsInstallCmd() missing transitive dep pkg-c: %q", cmd)
+	}
+	if !containsStr(cmd, "cd ../pkg-b") {
+		t.Errorf("tsInstallCmd() missing direct dep pkg-b: %q", cmd)
 	}
 
-	cmd = tsInstallCmd(tmpDir)
-	if !containsStr(cmd, "cd ../lexer") {
-		t.Errorf("tsInstallCmd() missing lexer dep install: %q", cmd)
-	}
-	if !containsStr(cmd, "cd ../parser") {
-		t.Errorf("tsInstallCmd() missing parser dep install: %q", cmd)
-	}
-	if !containsStr(cmd, "npm install --silent") {
-		t.Errorf("tsInstallCmd() missing final npm install: %q", cmd)
+	// pkg-c has no file: deps, should get default command.
+	cmd = tsInstallCmd(parent + "/pkg-c")
+	if cmd != "npm install --silent" {
+		t.Errorf("tsInstallCmd(leaf) = %q, want default", cmd)
 	}
 }
