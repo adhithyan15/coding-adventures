@@ -167,9 +167,34 @@ func run() int {
 				// commands for this runner's OS.
 				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
 				if platformBuild != "" {
-					platformCmds := discovery.ReadLines(platformBuild)
-					if len(platformCmds) > 0 {
-						packages[i].BuildCommands = platformCmds
+					if packages[i].IsStarlark {
+						// Starlark BUILD files must be evaluated, not
+						// executed line-by-line as shell commands.
+						result, err := starlarkeval.EvaluateBuildFile(
+							platformBuild,
+							packages[i].Path,
+							repoRoot,
+						)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "Warning: Starlark re-eval for %s: %v\n", packages[i].Name, err)
+						} else if len(result.Targets) > 0 {
+							t := result.Targets[0]
+							if len(t.Commands) > 0 {
+								rendered, rerr := cmdrender.RenderCommands(t.Commands)
+								if rerr != nil {
+									packages[i].BuildCommands = starlarkeval.GenerateCommands(t)
+								} else {
+									packages[i].BuildCommands = rendered
+								}
+							} else {
+								packages[i].BuildCommands = starlarkeval.GenerateCommands(t)
+							}
+						}
+					} else {
+						platformCmds := discovery.ReadLines(platformBuild)
+						if len(platformCmds) > 0 {
+							packages[i].BuildCommands = platformCmds
+						}
 					}
 				}
 			}
