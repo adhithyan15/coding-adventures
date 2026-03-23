@@ -862,9 +862,69 @@ The component renders a `<div>` containing:
 
 ---
 
+## V0.6 — Electron Desktop App
+
+### Problem
+
+The app only runs in a browser tab. Users want a native desktop experience:
+a dedicated window, a dock/taskbar icon, and offline use without a web server.
+
+### Solution
+
+Wrap the existing React app in Electron. The web code is unchanged — Electron's
+main process creates a BrowserWindow that loads the Vite-built `dist/index.html`.
+
+### Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│  Electron App                                │
+│                                              │
+│  ┌──────────────┐    ┌────────────────────┐  │
+│  │ Main Process  │    │ Renderer Process   │  │
+│  │ (Node.js)     │    │ (Chromium)         │  │
+│  │               │    │                    │  │
+│  │ • Window mgmt │◄──►│ • React app        │  │
+│  │ • OS access   │ IPC│ • IndexedDB        │  │
+│  │ • Menu bar    │    │ • Same code as     │  │
+│  │ • Auto-update │    │   the browser app  │  │
+│  └──────────────┘    └────────────────────┘  │
+│                                              │
+│  Chromium engine         Node.js runtime     │
+└──────────────────────────────────────────────┘
+```
+
+**Main process** (`electron/main.ts`): Node.js process that creates windows,
+handles OS integration. Security: `nodeIntegration: false`, `contextIsolation: true`.
+
+**Renderer process**: Your React app running inside Chromium. Loaded from
+`dist/index.html` (production) or Vite dev server URL (development).
+
+### Build Pipeline
+
+```
+Vite builds React app → dist/index.html + assets
+tsc compiles main.ts  → dist-electron/main.js
+electron-builder      → platform-specific installer (dmg/nsis/AppImage)
+```
+
+### GitHub Release Workflow
+
+A GitHub Actions workflow triggers on `checklist-v*` tags. Three parallel
+jobs build for macOS (dmg+zip), Windows (nsis+portable), and Linux (AppImage).
+All binaries are attached to the GitHub Release automatically.
+
+### Security Model
+
+- `nodeIntegration: false` — renderer cannot access Node.js APIs
+- `contextIsolation: true` — renderer runs in a separate JavaScript context
+- Future: `preload.ts` + `contextBridge` for safe OS access (file system, keychain)
+
+---
+
 ## Future Extensions
 
 - **V1**: Web Crypto encryption layer on top of IndexedDB (PBKDF2 + AES-GCM)
-- **V2**: Electron packaging; native file open/save dialogs via IPC
+- **V2**: OAuth client package + calendar integration
 - **V3**: Aggregate stats view (compare multiple runs of the same template)
 - **V4**: Template sharing via URL (state serialized into hash fragment)

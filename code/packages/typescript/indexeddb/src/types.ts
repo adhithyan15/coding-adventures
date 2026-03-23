@@ -40,9 +40,12 @@ export interface StorageConfig {
  */
 export interface KVStorage {
   open(): Promise<void>;
-  get<T extends StorageRecord>(storeName: string, key: string): Promise<T | undefined>;
-  getAll<T extends StorageRecord>(storeName: string): Promise<T[]>;
-  put<T extends StorageRecord>(storeName: string, record: T): Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get<T = any>(storeName: string, key: string): Promise<T | undefined>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getAll<T = any>(storeName: string): Promise<T[]>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  put(storeName: string, record: any): Promise<void>;
   delete(storeName: string, key: string): Promise<void>;
   close(): void;
 }
