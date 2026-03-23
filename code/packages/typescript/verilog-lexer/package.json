@@ -1,0 +1,35 @@
+{
+  "name": "@coding-adventures/verilog-lexer",
+  "version": "0.1.0",
+  "description": "Tokenizes Verilog (IEEE 1364-2005) source code using the grammar-driven lexer, with built-in preprocessor for `define/`ifdef/`include directives",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "verilog",
+    "hdl",
+    "lexer",
+    "tokenizer",
+    "preprocessor",
+    "grammar-driven",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
