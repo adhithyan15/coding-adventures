@@ -1,4 +1,5 @@
 # XML Token Grammar
+# @version 1
 # =================
 #
 # This grammar defines the lexical structure of XML 1.0. Unlike most

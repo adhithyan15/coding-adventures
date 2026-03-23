@@ -1,4 +1,5 @@
 # XML Token Grammar (Rust-compatible)
+# @version 1
 # ====================================
 #
 # This is a Rust-compatible variant of the xml.tokens grammar. The original

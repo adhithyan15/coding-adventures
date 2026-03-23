@@ -1,4 +1,5 @@
 # Token definitions for a subset of TypeScript
+# @version 1
 # Used by the grammar-driven lexer to tokenize TypeScript source code.
 #
 # Format:
