@@ -1,0 +1,1490 @@
+-- lexer -- Character-by-character analysis translating source bytes to typed tokens
+-- ================================================================================
+--
+-- This package is part of the coding-adventures monorepo, a ground-up
+-- implementation of the computing stack from transistors to operating systems.
+-- Layer 2 in the computing stack.
+--
+-- # What is a lexer?
+--
+-- A lexer (also called a tokenizer or scanner) is the first phase of any
+-- language implementation. It reads raw source text character by character
+-- and groups those characters into *tokens* -- the smallest meaningful units
+-- of the language.
+--
+-- For example, the source text "x = 42" becomes three tokens:
+--
+--     Token(Name, "x", 1:1)
+--     Token(Equals, "=", 1:3)
+--     Token(Number, "42", 1:5)
+--
+-- # Architecture
+--
+-- This package provides two lexers:
+--
+--   1. **Lexer** (hand-written) -- A character-by-character tokenizer with
+--      a dispatch DFA. The DFA classifies each character and dispatches to
+--      the appropriate sub-routine (readNumber, readName, readString, etc.).
+--
+--   2. **GrammarLexer** (grammar-driven) -- A regex-based tokenizer driven
+--      by a TokenGrammar object (parsed from a .tokens file). It compiles
+--      token definitions into regexes and tries them in priority order.
+--
+-- Both produce the same Token objects.
+--
+-- # OOP Pattern
+--
+-- We use the standard Lua metatable OOP pattern:
+--
+--     local Lexer = {}
+--     Lexer.__index = Lexer
+--     function Lexer.new(...) ... end
+--
+-- This gives us method dispatch via the : operator:
+--
+--     local lex = Lexer.new("x = 42", config)
+--     local tokens = lex:tokenize()
+--
+-- # Dependencies
+--
+-- - state_machine: DFA for the tokenizer dispatch logic
+-- - grammar_tools: TokenGrammar for the grammar-driven lexer (when available)
+
+local state_machine = require("coding_adventures.state_machine")
+local DFA = state_machine.DFA
+
+-- =========================================================================
+-- Token Types
+-- =========================================================================
+--
+-- Each token has a numeric type that classifies it. These correspond to the
+-- Go implementation's TokenType enum.
+--
+-- Token type table:
+--
+--   Value  Name           Example
+--   -----  ----           -------
+--   0      Name           x, foo, myVar
+--   1      Number         42, 0, 999
+--   2      String         "hello"
+--   3      Keyword        if, while, def
+--   4      Plus           +
+--   5      Minus          -
+--   6      Star           *
+--   7      Slash          /
+--   8      Equals         =
+--   9      EqualsEquals   ==
+--   10     LParen         (
+--   11     RParen         )
+--   12     Comma          ,
+--   13     Colon          :
+--   14     Semicolon      ;
+--   15     LBrace         {
+--   16     RBrace         }
+--   17     LBracket       [
+--   18     RBracket       ]
+--   19     Dot            .
+--   20     Bang           !
+--   21     Newline        \n
+--   22     EOF            (end of input)
+
+local TokenType = {
+    Name         = 0,
+    Number       = 1,
+    String       = 2,
+    Keyword      = 3,
+    Plus         = 4,
+    Minus        = 5,
+    Star         = 6,
+    Slash        = 7,
+    Equals       = 8,
+    EqualsEquals = 9,
+    LParen       = 10,
+    RParen       = 11,
+    Comma        = 12,
+    Colon        = 13,
+    Semicolon    = 14,
+    LBrace       = 15,
+    RBrace       = 16,
+    LBracket     = 17,
+    RBracket     = 18,
+    Dot          = 19,
+    Bang         = 20,
+    Newline      = 21,
+    EOF          = 22,
+}
+
+--- Map from token type number to human-readable name.
+-- Used by Token:__tostring() for debugging output.
+local token_type_names = {
+    [0]  = "Name",
+    [1]  = "Number",
+    [2]  = "String",
+    [3]  = "Keyword",
+    [4]  = "Plus",
+    [5]  = "Minus",
+    [6]  = "Star",
+    [7]  = "Slash",
+    [8]  = "Equals",
+    [9]  = "EqualsEquals",
+    [10] = "LParen",
+    [11] = "RParen",
+    [12] = "Comma",
+    [13] = "Colon",
+    [14] = "Semicolon",
+    [15] = "LBrace",
+    [16] = "RBrace",
+    [17] = "LBracket",
+    [18] = "RBracket",
+    [19] = "Dot",
+    [20] = "Bang",
+    [21] = "Newline",
+    [22] = "EOF",
+}
+
+--- Convert a token type number to its name string.
+-- @param t number The token type number.
+-- @return string The name, or "Unknown" if not found.
+local function token_type_to_string(t)
+    return token_type_names[t] or "Unknown"
+end
+
+-- =========================================================================
+-- Token
+-- =========================================================================
+--
+-- A Token is the output unit of the lexer. It carries:
+--   - type:      numeric TokenType (for fast comparisons)
+--   - value:     the matched text (or processed text for strings)
+--   - line:      1-based line number where the token starts
+--   - column:    1-based column number where the token starts
+--   - type_name: grammar-driven token name (e.g. "INT", "FLOAT"), empty
+--                for hand-written lexer tokens
+
+local Token = {}
+Token.__index = Token
+
+--- Create a new Token.
+-- @param ttype number Token type (from TokenType).
+-- @param value string The token's text value.
+-- @param line number Line number (1-based).
+-- @param column number Column number (1-based).
+-- @param type_name string|nil Grammar-driven type name (optional).
+-- @return Token
+function Token.new(ttype, value, line, column, type_name)
+    return setmetatable({
+        type      = ttype,
+        value     = value,
+        line      = line,
+        column    = column,
+        type_name = type_name or "",
+    }, Token)
+end
+
+--- Human-readable string representation of the token.
+-- Format matches the Go implementation: Token(TypeName, "value", line:col)
+function Token:__tostring()
+    return string.format(
+        'Token(%s, %q, %d:%d)',
+        token_type_to_string(self.type),
+        self.value,
+        self.line,
+        self.column
+    )
+end
+
+-- =========================================================================
+-- Simple Token Map
+-- =========================================================================
+--
+-- Maps single-character operators and delimiters to their token types.
+-- These characters always produce a single token with no lookahead needed
+-- (unlike '=' which requires checking for '==').
+
+local simple_tokens = {
+    ["+"] = TokenType.Plus,
+    ["-"] = TokenType.Minus,
+    ["*"] = TokenType.Star,
+    ["/"] = TokenType.Slash,
+    ["("] = TokenType.LParen,
+    [")"] = TokenType.RParen,
+    [","] = TokenType.Comma,
+    [":"] = TokenType.Colon,
+    [";"] = TokenType.Semicolon,
+    ["{"] = TokenType.LBrace,
+    ["}"] = TokenType.RBrace,
+    ["["] = TokenType.LBracket,
+    ["]"] = TokenType.RBracket,
+    ["."] = TokenType.Dot,
+    ["!"] = TokenType.Bang,
+}
+
+-- =========================================================================
+-- Character Classification for the Tokenizer DFA
+-- =========================================================================
+--
+-- The tokenizer DFA does NOT replace the tokenizer's logic. The sub-routines
+-- like read_number() and read_string() still do the actual work. What the
+-- DFA provides is a formal, verifiable model of the dispatch decision.
+--
+-- Character class table:
+--
+--   Class           Characters       Triggers
+--   "eof"           end of input     EOF token
+--   "whitespace"    space/tab/CR     skip whitespace
+--   "newline"       \n               NEWLINE token
+--   "digit"         0-9              read number
+--   "alpha"         a-zA-Z           read name/keyword
+--   "underscore"    _                read name/keyword
+--   "quote"         "                read string literal
+--   "equals"        =                lookahead for = vs ==
+--   "operator"      +-*/             simple operator token
+--   "open_paren"    (                LPAREN
+--   "close_paren"   )                RPAREN
+--   "comma"         ,                COMMA
+--   "colon"         :                COLON
+--   "semicolon"     ;                SEMICOLON
+--   "open_brace"    {                LBRACE
+--   "close_brace"   }                RBRACE
+--   "open_bracket"  [                LBRACKET
+--   "close_bracket" ]                RBRACKET
+--   "dot"           .                DOT
+--   "bang"          !                BANG
+--   "other"         everything else  error
+
+--- Classify a character into its character class for the tokenizer DFA.
+-- @param ch string|nil The character (single byte string), or nil for EOF.
+-- @return string The character class name.
+local function classify_char(ch)
+    if ch == nil then
+        return "eof"
+    end
+
+    -- Whitespace: space, tab, carriage return
+    if ch == " " or ch == "\t" or ch == "\r" then
+        return "whitespace"
+    end
+
+    -- Newline
+    if ch == "\n" then
+        return "newline"
+    end
+
+    -- Digit: 0-9
+    local byte = string.byte(ch)
+    if byte >= 48 and byte <= 57 then  -- '0' = 48, '9' = 57
+        return "digit"
+    end
+
+    -- Alpha: a-z, A-Z
+    if (byte >= 65 and byte <= 90) or (byte >= 97 and byte <= 122) then
+        return "alpha"
+    end
+
+    -- Underscore
+    if ch == "_" then
+        return "underscore"
+    end
+
+    -- Quote (double quote only for the hand-written lexer)
+    if ch == '"' then
+        return "quote"
+    end
+
+    -- Equals (needs lookahead for ==)
+    if ch == "=" then
+        return "equals"
+    end
+
+    -- Arithmetic operators
+    if ch == "+" or ch == "-" or ch == "*" or ch == "/" then
+        return "operator"
+    end
+
+    -- Delimiters and punctuation
+    if ch == "(" then return "open_paren" end
+    if ch == ")" then return "close_paren" end
+    if ch == "," then return "comma" end
+    if ch == ":" then return "colon" end
+    if ch == ";" then return "semicolon" end
+    if ch == "{" then return "open_brace" end
+    if ch == "}" then return "close_brace" end
+    if ch == "[" then return "open_bracket" end
+    if ch == "]" then return "close_bracket" end
+    if ch == "." then return "dot" end
+    if ch == "!" then return "bang" end
+
+    return "other"
+end
+
+-- =========================================================================
+-- Tokenizer DFA Construction
+-- =========================================================================
+--
+-- # States
+--
+--   - "start"         -- idle, examining the next character
+--   - "in_number"     -- reading a sequence of digits
+--   - "in_name"       -- reading an identifier
+--   - "in_string"     -- reading a string literal
+--   - "in_operator"   -- emitting a single-character operator/delimiter
+--   - "in_equals"     -- handling = with lookahead for ==
+--   - "at_newline"    -- emitting a NEWLINE token
+--   - "at_whitespace" -- skipping whitespace
+--   - "done"          -- end of input
+--   - "error"         -- unexpected character
+
+local tokenizer_dfa_states = {
+    "start", "in_number", "in_name", "in_string",
+    "in_operator", "in_equals", "at_newline", "at_whitespace",
+    "done", "error",
+}
+
+local tokenizer_dfa_alphabet = {
+    "digit", "alpha", "underscore", "quote", "newline", "whitespace",
+    "operator", "equals", "open_paren", "close_paren", "comma", "colon",
+    "semicolon", "open_brace", "close_brace", "open_bracket",
+    "close_bracket", "dot", "bang", "eof", "other",
+}
+
+--- Maps each character class to its target state from "start".
+local start_dispatch = {
+    digit         = "in_number",
+    alpha         = "in_name",
+    underscore    = "in_name",
+    quote         = "in_string",
+    newline       = "at_newline",
+    whitespace    = "at_whitespace",
+    operator      = "in_operator",
+    equals        = "in_equals",
+    open_paren    = "in_operator",
+    close_paren   = "in_operator",
+    comma         = "in_operator",
+    colon         = "in_operator",
+    semicolon     = "in_operator",
+    open_brace    = "in_operator",
+    close_brace   = "in_operator",
+    open_bracket  = "in_operator",
+    close_bracket = "in_operator",
+    dot           = "in_operator",
+    bang          = "in_operator",
+    eof           = "done",
+    other         = "error",
+}
+
+--- Build the full transition map for the tokenizer DFA.
+--
+-- The transition map has the structure:
+--   transitions["state\0event"] = target_state
+--
+-- From "start", dispatch based on character class. All handler states
+-- return to "start" on every symbol. "done" and "error" loop on themselves.
+--
+-- @return table Transition map compatible with state_machine.DFA.
+local function build_tokenizer_dfa_transitions()
+    local transitions = {}
+
+    -- From "start", dispatch based on character class.
+    for char_class, target in pairs(start_dispatch) do
+        transitions[{ "start", char_class }] = target
+    end
+
+    -- All handler states return to "start" on every symbol.
+    local handlers = {
+        "in_number", "in_name", "in_string", "in_operator",
+        "in_equals", "at_newline", "at_whitespace",
+    }
+    for _, handler in ipairs(handlers) do
+        for _, symbol in ipairs(tokenizer_dfa_alphabet) do
+            transitions[{ handler, symbol }] = "start"
+        end
+    end
+
+    -- "done" loops on itself for every symbol.
+    for _, symbol in ipairs(tokenizer_dfa_alphabet) do
+        transitions[{ "done", symbol }] = "done"
+    end
+
+    -- "error" loops on itself for every symbol.
+    for _, symbol in ipairs(tokenizer_dfa_alphabet) do
+        transitions[{ "error", symbol }] = "error"
+    end
+
+    return transitions
+end
+
+--- Create a new instance of the tokenizer dispatch DFA.
+--
+-- Each call returns a fresh DFA so callers can process independently.
+-- The DFA models the top-level character classification dispatch of the
+-- hand-written tokenizer.
+--
+-- @return DFA A state_machine.DFA instance.
+local function new_tokenizer_dfa()
+    return DFA.new(
+        tokenizer_dfa_states,
+        tokenizer_dfa_alphabet,
+        build_tokenizer_dfa_transitions(),
+        "start",
+        { "done" },
+        nil
+    )
+end
+
+-- =========================================================================
+-- Hand-Written Lexer
+-- =========================================================================
+--
+-- The hand-written lexer processes source text character by character,
+-- using the tokenizer DFA to dispatch to the appropriate sub-routine
+-- for each token type. It supports:
+--
+--   - Identifiers (names) and keywords
+--   - Integer numbers
+--   - Double-quoted string literals with escape sequences
+--   - Single-character operators and delimiters
+--   - The = / == distinction via one-character lookahead
+--   - Whitespace skipping and newline tokens
+
+local Lexer = {}
+Lexer.__index = Lexer
+
+--- Create a new hand-written Lexer.
+--
+-- @param source string The source text to tokenize.
+-- @param config table|nil Configuration with optional `keywords` array.
+-- @return Lexer
+function Lexer.new(source, config)
+    config = config or {}
+    local keywords_set = {}
+    if config.keywords then
+        for _, kw in ipairs(config.keywords) do
+            keywords_set[kw] = true
+        end
+    end
+    return setmetatable({
+        _source       = source,
+        _config       = config,
+        _pos          = 1,       -- 1-based index into source
+        _line         = 1,
+        _column       = 1,
+        _tokens       = {},
+        _keywords_set = keywords_set,
+    }, Lexer)
+end
+
+--- Return the current character, or nil if at end of input.
+-- @return string|nil
+function Lexer:_current_char()
+    if self._pos <= #self._source then
+        return self._source:sub(self._pos, self._pos)
+    end
+    return nil
+end
+
+--- Return the next character (one ahead of current), or nil if past end.
+-- @return string|nil
+function Lexer:_peek()
+    local next_pos = self._pos + 1
+    if next_pos <= #self._source then
+        return self._source:sub(next_pos, next_pos)
+    end
+    return nil
+end
+
+--- Advance past the current character and return it.
+-- Updates line/column tracking: newlines reset column to 1 and
+-- increment line; all other characters increment column.
+-- @return string The consumed character.
+function Lexer:_advance()
+    local ch = self._source:sub(self._pos, self._pos)
+    self._pos = self._pos + 1
+    if ch == "\n" then
+        self._line = self._line + 1
+        self._column = 1
+    else
+        self._column = self._column + 1
+    end
+    return ch
+end
+
+--- Skip whitespace (spaces, tabs, carriage returns).
+-- Does NOT skip newlines -- those become NEWLINE tokens.
+function Lexer:_skip_whitespace()
+    while true do
+        local ch = self:_current_char()
+        if ch == nil or (ch ~= " " and ch ~= "\t" and ch ~= "\r") then
+            break
+        end
+        self:_advance()
+    end
+end
+
+--- Read a contiguous sequence of digits and return a Number token.
+-- @return Token
+function Lexer:_read_number()
+    local start_line = self._line
+    local start_col = self._column
+    local chars = {}
+    while true do
+        local ch = self:_current_char()
+        if ch == nil then break end
+        local b = string.byte(ch)
+        if b < 48 or b > 57 then break end  -- not a digit
+        chars[#chars + 1] = self:_advance()
+    end
+    return Token.new(TokenType.Number, table.concat(chars), start_line, start_col)
+end
+
+--- Read an identifier (letters, digits, underscores) and return a Name
+-- or Keyword token.
+--
+-- After reading the full identifier, we check whether it appears in the
+-- keyword set. If so, we emit a Keyword token instead of a Name token.
+--
+-- @return Token
+function Lexer:_read_name()
+    local start_line = self._line
+    local start_col = self._column
+    local chars = {}
+    while true do
+        local ch = self:_current_char()
+        if ch == nil then break end
+        local b = string.byte(ch)
+        -- Letter, digit, or underscore
+        local is_letter = (b >= 65 and b <= 90) or (b >= 97 and b <= 122)
+        local is_digit = (b >= 48 and b <= 57)
+        local is_under = (ch == "_")
+        if not (is_letter or is_digit or is_under) then break end
+        chars[#chars + 1] = self:_advance()
+    end
+    local value = table.concat(chars)
+    local ttype = TokenType.Name
+    if self._keywords_set[value] then
+        ttype = TokenType.Keyword
+    end
+    return Token.new(ttype, value, start_line, start_col)
+end
+
+--- Read a double-quoted string literal with escape sequence support.
+--
+-- Supported escape sequences:
+--   \\n  -> newline
+--   \\t  -> tab
+--   \\\\  -> backslash
+--   \\"  -> double quote
+--   \\x  -> x (any other character is passed through)
+--
+-- Raises an error for unterminated strings.
+-- @return Token
+function Lexer:_read_string()
+    local start_line = self._line
+    local start_col = self._column
+    local chars = {}
+    self:_advance()  -- consume opening quote
+    while true do
+        local ch = self:_current_char()
+        if ch == nil then
+            error(string.format(
+                "LexerError at %d:%d: Unterminated string literal",
+                start_line, start_col
+            ))
+        end
+        if ch == '"' then
+            self:_advance()  -- consume closing quote
+            break
+        end
+        if ch == '\\' then
+            self:_advance()  -- consume backslash
+            local escaped = self:_current_char()
+            if escaped == nil then
+                error(string.format(
+                    "LexerError at %d:%d: Unterminated string literal (ends with backslash)",
+                    start_line, start_col
+                ))
+            end
+            if escaped == "n" then
+                chars[#chars + 1] = "\n"
+            elseif escaped == "t" then
+                chars[#chars + 1] = "\t"
+            elseif escaped == "\\" then
+                chars[#chars + 1] = "\\"
+            elseif escaped == '"' then
+                chars[#chars + 1] = '"'
+            else
+                chars[#chars + 1] = escaped
+            end
+            self:_advance()
+        else
+            chars[#chars + 1] = ch
+            self:_advance()
+        end
+    end
+    return Token.new(TokenType.String, table.concat(chars), start_line, start_col)
+end
+
+--- Tokenize the source text and return an array of Token objects.
+--
+-- The main loop uses the tokenizer DFA to classify each character and
+-- dispatch to the appropriate handler. After each handler completes,
+-- the DFA is reset to "start" for the next character.
+--
+-- @return table Array of Token objects, ending with an EOF token.
+function Lexer:tokenize()
+    self._tokens = {}
+    local dfa = new_tokenizer_dfa()
+
+    while true do
+        local ch = self:_current_char()
+        local char_class = classify_char(ch)
+        local next_state = dfa:process(char_class)
+
+        if next_state == "at_whitespace" then
+            self:_skip_whitespace()
+        elseif next_state == "at_newline" then
+            local t = Token.new(TokenType.Newline, "\\n", self._line, self._column)
+            self:_advance()
+            self._tokens[#self._tokens + 1] = t
+        elseif next_state == "in_number" then
+            self._tokens[#self._tokens + 1] = self:_read_number()
+        elseif next_state == "in_name" then
+            self._tokens[#self._tokens + 1] = self:_read_name()
+        elseif next_state == "in_string" then
+            self._tokens[#self._tokens + 1] = self:_read_string()
+        elseif next_state == "in_equals" then
+            local start_line = self._line
+            local start_col = self._column
+            self:_advance()
+            local next_ch = self:_current_char()
+            if next_ch == "=" then
+                self:_advance()
+                self._tokens[#self._tokens + 1] = Token.new(
+                    TokenType.EqualsEquals, "==", start_line, start_col
+                )
+            else
+                self._tokens[#self._tokens + 1] = Token.new(
+                    TokenType.Equals, "=", start_line, start_col
+                )
+            end
+        elseif next_state == "in_operator" then
+            local ttype = simple_tokens[ch]
+            local t = Token.new(ttype, ch, self._line, self._column)
+            self:_advance()
+            self._tokens[#self._tokens + 1] = t
+        elseif next_state == "done" then
+            break
+        elseif next_state == "error" then
+            error(string.format(
+                "LexerError at %d:%d: Unexpected character %q",
+                self._line, self._column, ch
+            ))
+        end
+
+        -- Reset the DFA back to "start" for the next character.
+        dfa:reset()
+    end
+
+    self._tokens[#self._tokens + 1] = Token.new(
+        TokenType.EOF, "", self._line, self._column
+    )
+    return self._tokens
+end
+
+-- =========================================================================
+-- Escape Processing (shared by GrammarLexer)
+-- =========================================================================
+--
+-- Handles escape sequences in string literals: \n, \t, \\, \", and
+-- pass-through for any other escaped character.
+
+--- Process escape sequences in a string.
+-- @param s string The raw string (without surrounding quotes).
+-- @return string The string with escape sequences resolved.
+local function process_escapes(s)
+    local result = {}
+    local i = 1
+    while i <= #s do
+        if s:sub(i, i) == '\\' and i + 1 <= #s then
+            local next_ch = s:sub(i + 1, i + 1)
+            if next_ch == 'n' then
+                result[#result + 1] = '\n'
+            elseif next_ch == 't' then
+                result[#result + 1] = '\t'
+            elseif next_ch == '\\' then
+                result[#result + 1] = '\\'
+            elseif next_ch == '"' then
+                result[#result + 1] = '"'
+            else
+                result[#result + 1] = next_ch
+            end
+            i = i + 2
+        else
+            result[#result + 1] = s:sub(i, i)
+            i = i + 1
+        end
+    end
+    return table.concat(result)
+end
+
+-- =========================================================================
+-- Lexer Context -- Callback Interface for Group Transitions
+-- =========================================================================
+--
+-- LexerContext is the interface that on-token callbacks use to control the
+-- grammar-driven lexer. When a callback is registered via
+-- GrammarLexer:set_on_token(), it receives a LexerContext on every token
+-- match.
+--
+-- Methods that modify state (push_group/pop_group/emit/suppress) take
+-- effect after the callback returns -- they do not interrupt the current
+-- match.
+
+local LexerContext = {}
+LexerContext.__index = LexerContext
+
+--- Create a new LexerContext (internal -- called by GrammarLexer).
+-- @param lexer GrammarLexer The lexer that created this context.
+-- @param source string The complete source text.
+-- @param pos_after number Position after the current token.
+-- @return LexerContext
+function LexerContext._new(lexer, source, pos_after)
+    return setmetatable({
+        _lexer        = lexer,
+        _source       = source,
+        _pos_after    = pos_after,
+        _suppressed   = false,
+        _emitted      = {},
+        _group_actions = {},
+        _skip_enabled = nil,  -- nil = no change
+    }, LexerContext)
+end
+
+--- Push a pattern group onto the group stack.
+--
+-- The pushed group becomes active for the next token match. Errors if the
+-- group name is not defined in the grammar.
+-- @param group_name string The name of the group to push.
+function LexerContext:push_group(group_name)
+    if not self._lexer._group_patterns[group_name] then
+        local available = {}
+        for name in pairs(self._lexer._group_patterns) do
+            available[#available + 1] = name
+        end
+        error(string.format(
+            'Unknown pattern group: %q. Available groups: %s',
+            group_name,
+            table.concat(available, ", ")
+        ))
+    end
+    self._group_actions[#self._group_actions + 1] = { action = "push", group_name = group_name }
+end
+
+--- Pop the current group from the stack.
+--
+-- If only the default group remains, this is a no-op. The default group is
+-- the floor of the stack and cannot be popped.
+function LexerContext:pop_group()
+    self._group_actions[#self._group_actions + 1] = { action = "pop", group_name = "" }
+end
+
+--- Return the name of the currently active group.
+-- @return string The active group name (always at least "default").
+function LexerContext:active_group()
+    local stack = self._lexer._group_stack
+    return stack[#stack]
+end
+
+--- Return the depth of the group stack (always >= 1).
+-- @return number
+function LexerContext:group_stack_depth()
+    return #self._lexer._group_stack
+end
+
+--- Inject a synthetic token after the current one.
+--
+-- Emitted tokens do NOT trigger the callback (prevents infinite loops).
+-- Multiple emit() calls produce tokens in call order.
+-- @param token Token The token to inject.
+function LexerContext:emit(token)
+    self._emitted[#self._emitted + 1] = token
+end
+
+--- Suppress the current token -- it will not appear in the output.
+--
+-- Emitted tokens (from emit()) are still included even when the current
+-- token is suppressed. This enables token replacement.
+function LexerContext:suppress()
+    self._suppressed = true
+end
+
+--- Read a source character past the current token.
+--
+-- offset=1 means the character immediately after the token. Returns an
+-- empty string if the position is past EOF.
+-- @param offset number Number of characters past the token end.
+-- @return string Single character or empty string.
+function LexerContext:peek(offset)
+    local idx = self._pos_after + offset - 1
+    if idx >= 1 and idx <= #self._source then
+        return self._source:sub(idx, idx)
+    end
+    return ""
+end
+
+--- Read the next `length` characters past the current token.
+-- @param length number How many characters to read.
+-- @return string The substring (may be shorter if near EOF).
+function LexerContext:peek_str(length)
+    local start = self._pos_after
+    local stop = start + length - 1
+    if stop > #self._source then
+        stop = #self._source
+    end
+    if start > #self._source then
+        return ""
+    end
+    return self._source:sub(start, stop)
+end
+
+--- Toggle skip pattern processing.
+--
+-- When disabled, skip patterns (whitespace, comments) are not tried.
+-- Useful for groups where whitespace is significant.
+-- @param enabled boolean Whether to enable skip processing.
+function LexerContext:set_skip_enabled(enabled)
+    self._skip_enabled = enabled
+end
+
+-- =========================================================================
+-- Grammar-Driven Lexer
+-- =========================================================================
+--
+-- Instead of hardcoded character-matching logic, this lexer:
+--
+--   1. Compiles each token definition's pattern into a Lua pattern or regex
+--   2. At each position, tries each pattern in definition order (first match
+--      wins)
+--   3. Emits a Token with the matched type and value
+--
+-- Supports skip patterns, type aliases, reserved keywords, indentation
+-- mode, pattern groups with stackable transitions, and on-token callbacks.
+--
+-- # TokenGrammar format
+--
+-- The grammar is a table with these fields:
+--   - definitions:       array of {name, pattern, is_regex, alias}
+--   - keywords:          array of keyword strings
+--   - mode:              "indentation" or nil
+--   - escape_mode:       "none" or nil
+--   - skip_definitions:  array of {name, pattern, is_regex}
+--   - reserved_keywords: array of reserved keyword strings
+--   - groups:            table mapping group name to {definitions = {...}}
+
+local GrammarLexer = {}
+GrammarLexer.__index = GrammarLexer
+
+--- Compile a single token definition into a Lua pattern string.
+--
+-- If is_regex is true, the pattern is used as-is (Lua patterns).
+-- If is_regex is false, the pattern is escaped for literal matching.
+--
+-- All patterns are anchored to the start of the remaining source (^).
+--
+-- @param defn table Token definition with name, pattern, is_regex, alias.
+-- @return table Compiled pattern with name, pattern_str, alias.
+local function compile_pattern(defn)
+    local pat_str
+    if defn.is_regex then
+        pat_str = "^" .. defn.pattern
+    else
+        -- Escape magic characters for literal matching
+        pat_str = "^" .. defn.pattern:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
+    end
+    return {
+        name    = defn.name,
+        pattern = pat_str,
+        alias   = defn.alias or "",
+    }
+end
+
+--- Map from effective token name to TokenType + type_name.
+--
+-- This maps grammar token names (like "NAME", "NUMBER", "PLUS") to
+-- their corresponding TokenType enum values. Unknown names default
+-- to TokenType.Name with the grammar name as type_name.
+--
+-- @param token_name string The definition name.
+-- @param value string The matched text.
+-- @param alias string The alias name (or "").
+-- @param keyword_set table Set of keywords.
+-- @param reserved_set table Set of reserved keywords.
+-- @param line number Current line for error messages.
+-- @param column number Current column for error messages.
+-- @return number, string  TokenType and type_name.
+local function resolve_token_type(token_name, value, alias, keyword_set, reserved_set, line, column)
+    -- Reserved keyword check
+    if token_name == "NAME" then
+        if reserved_set[value] then
+            error(string.format(
+                "LexerError at %d:%d: Reserved keyword %q cannot be used as an identifier",
+                line, column, value
+            ))
+        end
+    end
+
+    -- Regular keyword check
+    if token_name == "NAME" then
+        if keyword_set[value] then
+            return TokenType.Keyword, "KEYWORD"
+        end
+    end
+
+    -- Determine effective name (alias takes precedence)
+    local effective = token_name
+    if alias ~= "" then
+        effective = alias
+    end
+
+    -- Map known token types
+    local type_map = {
+        NAME          = { TokenType.Name,         "NAME" },
+        NUMBER        = { TokenType.Number,       "NUMBER" },
+        STRING        = { TokenType.String,       "STRING" },
+        PLUS          = { TokenType.Plus,         "PLUS" },
+        MINUS         = { TokenType.Minus,        "MINUS" },
+        STAR          = { TokenType.Star,         "STAR" },
+        SLASH         = { TokenType.Slash,        "SLASH" },
+        EQUALS        = { TokenType.Equals,       "EQUALS" },
+        EQUALS_EQUALS = { TokenType.EqualsEquals, "EQUALS_EQUALS" },
+        LPAREN        = { TokenType.LParen,       "LPAREN" },
+        RPAREN        = { TokenType.RParen,       "RPAREN" },
+        COMMA         = { TokenType.Comma,        "COMMA" },
+        COLON         = { TokenType.Colon,        "COLON" },
+        SEMICOLON     = { TokenType.Semicolon,    "SEMICOLON" },
+        LBRACE        = { TokenType.LBrace,       "LBRACE" },
+        RBRACE        = { TokenType.RBrace,       "RBRACE" },
+        LBRACKET      = { TokenType.LBracket,     "LBRACKET" },
+        RBRACKET      = { TokenType.RBracket,     "RBRACKET" },
+        DOT           = { TokenType.Dot,          "DOT" },
+        BANG          = { TokenType.Bang,         "BANG" },
+    }
+
+    local mapping = type_map[effective]
+    if mapping then
+        return mapping[1], mapping[2]
+    end
+
+    -- Unknown type -- use Name as base with the grammar type name
+    return TokenType.Name, effective
+end
+
+--- Create a new grammar-driven lexer.
+--
+-- @param source string The source text to tokenize.
+-- @param grammar table A TokenGrammar table.
+-- @return GrammarLexer
+function GrammarLexer.new(source, grammar)
+    -- Build keyword set
+    local keyword_set = {}
+    for _, kw in ipairs(grammar.keywords or {}) do
+        keyword_set[kw] = true
+    end
+
+    -- Build reserved set
+    local reserved_set = {}
+    for _, rk in ipairs(grammar.reserved_keywords or {}) do
+        reserved_set[rk] = true
+    end
+
+    -- Build alias map
+    local alias_map = {}
+    for _, defn in ipairs(grammar.definitions or {}) do
+        if defn.alias and defn.alias ~= "" then
+            alias_map[defn.name] = defn.alias
+        end
+    end
+
+    -- Compile top-level token patterns
+    local patterns = {}
+    for _, defn in ipairs(grammar.definitions or {}) do
+        patterns[#patterns + 1] = compile_pattern(defn)
+    end
+
+    -- Compile skip patterns
+    local skip_patterns = {}
+    for _, defn in ipairs(grammar.skip_definitions or {}) do
+        local pat_str
+        if defn.is_regex then
+            pat_str = "^" .. defn.pattern
+        else
+            pat_str = "^" .. defn.pattern:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
+        end
+        skip_patterns[#skip_patterns + 1] = pat_str
+    end
+
+    -- Compile pattern groups
+    -- The "default" group uses the top-level definitions.
+    local group_patterns = {
+        default = {},
+    }
+    for i, p in ipairs(patterns) do
+        group_patterns["default"][i] = { name = p.name, pattern = p.pattern, alias = p.alias }
+    end
+
+    for group_name, group in pairs(grammar.groups or {}) do
+        local compiled = {}
+        for _, defn in ipairs(group.definitions or {}) do
+            compiled[#compiled + 1] = compile_pattern(defn)
+            if defn.alias and defn.alias ~= "" then
+                alias_map[defn.name] = defn.alias
+            end
+        end
+        group_patterns[group_name] = compiled
+    end
+
+    return setmetatable({
+        _source           = source,
+        _grammar          = grammar,
+        _pos              = 1,
+        _line             = 1,
+        _column           = 1,
+        _keyword_set      = keyword_set,
+        _reserved_set     = reserved_set,
+        _patterns         = patterns,
+        _skip_patterns    = skip_patterns,
+        _has_skip_patterns = #skip_patterns > 0,
+        _indent_mode      = (grammar.mode == "indentation"),
+        _indent_stack     = { 0 },
+        _bracket_depth    = 0,
+        _group_patterns   = group_patterns,
+        _group_stack      = { "default" },
+        _on_token         = nil,
+        _skip_enabled     = true,
+        _alias_map        = alias_map,
+        _escape_mode      = grammar.escape_mode or "",
+    }, GrammarLexer)
+end
+
+--- Register a callback that fires on every token match.
+--
+-- The callback receives (token, context) where context is a LexerContext.
+-- Pass nil to clear the callback.
+-- @param callback function|nil The callback function.
+function GrammarLexer:set_on_token(callback)
+    self._on_token = callback
+end
+
+--- Advance past the current character (internal).
+function GrammarLexer:_advance()
+    if self._pos <= #self._source then
+        local ch = self._source:sub(self._pos, self._pos)
+        if ch == "\n" then
+            self._line = self._line + 1
+            self._column = 1
+        else
+            self._column = self._column + 1
+        end
+        self._pos = self._pos + 1
+    end
+end
+
+--- Try to match and consume a skip pattern at the current position.
+-- @return boolean True if a skip pattern matched (and was consumed).
+function GrammarLexer:_try_skip()
+    local remaining = self._source:sub(self._pos)
+    for _, pat in ipairs(self._skip_patterns) do
+        local s, e = remaining:find(pat)
+        if s == 1 then
+            for _ = 1, e do
+                self:_advance()
+            end
+            return true
+        end
+    end
+    return false
+end
+
+--- Try to match a token using a specific group's patterns.
+--
+-- Tries each compiled pattern in the named group in priority order
+-- (first match wins). Handles keyword detection, reserved word checking,
+-- aliases, and string escape processing.
+--
+-- @param group_name string The group to match against.
+-- @return Token|nil The matched token, or nil if nothing matched.
+function GrammarLexer:_try_match_token_in_group(group_name)
+    local remaining = self._source:sub(self._pos)
+
+    local pats = self._group_patterns[group_name]
+    if not pats then
+        pats = self._patterns
+    end
+
+    for _, p in ipairs(pats) do
+        local s, e = remaining:find(p.pattern)
+        if s == 1 then
+            local value = remaining:sub(1, e)
+            local start_line = self._line
+            local start_col = self._column
+
+            local ttype, type_name = resolve_token_type(
+                p.name, value, p.alias,
+                self._keyword_set, self._reserved_set,
+                self._line, self._column
+            )
+
+            -- Handle STRING tokens: strip quotes and optionally process
+            -- escapes. When escape_mode is "none", we strip quotes but
+            -- leave escape sequences as raw text.
+            if p.name:find("STRING") or (p.alias ~= "" and p.alias:find("STRING")) then
+                if #value >= 2 then
+                    local quote = value:sub(1, 1)
+                    if quote == '"' or quote == "'" then
+                        -- Check for triple-quoted strings
+                        if #value >= 6 and value:sub(1, 3) == quote:rep(3) then
+                            local inner = value:sub(4, #value - 3)
+                            if self._escape_mode ~= "none" then
+                                inner = process_escapes(inner)
+                            end
+                            value = inner
+                        else
+                            local inner = value:sub(2, #value - 1)
+                            if self._escape_mode ~= "none" then
+                                inner = process_escapes(inner)
+                            end
+                            value = inner
+                        end
+                    end
+                end
+            end
+
+            local tok = Token.new(ttype, value, start_line, start_col, type_name)
+
+            for _ = 1, e do
+                self:_advance()
+            end
+
+            return tok
+        end
+    end
+    return nil
+end
+
+--- Try to match a token using the default group's patterns.
+-- @return Token|nil
+function GrammarLexer:_try_match_token()
+    return self:_try_match_token_in_group("default")
+end
+
+--- Tokenize the source using the grammar's token definitions.
+--
+-- Dispatches to the appropriate tokenization method based on whether
+-- indentation mode is active.
+-- @return table Array of Token objects.
+function GrammarLexer:tokenize()
+    if self._indent_mode then
+        return self:_tokenize_indentation()
+    end
+    return self:_tokenize_standard()
+end
+
+--- Standard (non-indentation) tokenization.
+--
+-- Algorithm:
+--   1. While there are characters left:
+--      a. If skip patterns exist and skip is enabled, try them first.
+--      b. If no skip patterns, use default whitespace skip.
+--      c. If the current character is a newline, emit NEWLINE.
+--      d. Try the active group's token patterns (first match wins).
+--      e. If a callback is registered, invoke it and process actions.
+--      f. If nothing matches, raise a LexerError.
+--   2. Append EOF.
+--   3. Reset group stack and skip state for reuse.
+-- @return table Array of Token objects.
+function GrammarLexer:_tokenize_standard()
+    local tokens = {}
+
+    while self._pos <= #self._source do
+        local ch = self._source:sub(self._pos, self._pos)
+
+        -- Skip patterns (grammar-defined)
+        if self._has_skip_patterns then
+            if self._skip_enabled and self:_try_skip() then
+                goto continue
+            end
+        else
+            -- Default whitespace skip
+            if ch == " " or ch == "\t" or ch == "\r" then
+                self:_advance()
+                goto continue
+            end
+        end
+
+        -- Newlines become NEWLINE tokens
+        if ch == "\n" then
+            tokens[#tokens + 1] = Token.new(
+                TokenType.Newline, "\\n",
+                self._line, self._column, "NEWLINE"
+            )
+            self:_advance()
+            goto continue
+        end
+
+        -- Try active group's token patterns
+        do
+            local active_group = self._group_stack[#self._group_stack]
+            local tok = self:_try_match_token_in_group(active_group)
+            if tok then
+                -- Invoke on-token callback
+                if self._on_token then
+                    local ctx = LexerContext._new(self, self._source, self._pos)
+                    self._on_token(tok, ctx)
+
+                    -- Apply suppression
+                    if not ctx._suppressed then
+                        tokens[#tokens + 1] = tok
+                    end
+
+                    -- Append emitted tokens
+                    for _, emitted in ipairs(ctx._emitted) do
+                        tokens[#tokens + 1] = emitted
+                    end
+
+                    -- Apply group stack actions
+                    for _, ga in ipairs(ctx._group_actions) do
+                        if ga.action == "push" then
+                            self._group_stack[#self._group_stack + 1] = ga.group_name
+                        elseif ga.action == "pop" and #self._group_stack > 1 then
+                            self._group_stack[#self._group_stack] = nil
+                        end
+                    end
+
+                    -- Apply skip toggle
+                    if ctx._skip_enabled ~= nil then
+                        self._skip_enabled = ctx._skip_enabled
+                    end
+                else
+                    tokens[#tokens + 1] = tok
+                end
+                goto continue
+            end
+        end
+
+        error(string.format(
+            "LexerError at %d:%d: Unexpected character %q",
+            self._line, self._column, ch
+        ))
+
+        ::continue::
+    end
+
+    tokens[#tokens + 1] = Token.new(
+        TokenType.EOF, "", self._line, self._column, "EOF"
+    )
+
+    -- Reset group stack and skip state for reuse
+    self._group_stack = { "default" }
+    self._skip_enabled = true
+
+    return tokens
+end
+
+--- Process indentation at the start of a logical line.
+--
+-- Counts leading spaces, then compares against the indent stack to emit
+-- INDENT/DEDENT tokens. Blank lines and comment-only lines are skipped.
+--
+-- @return table|nil Array of indent/dedent tokens (or nil for skip).
+-- @return boolean True if the line should be skipped entirely.
+function GrammarLexer:_process_line_start()
+    local indent = 0
+    while self._pos <= #self._source do
+        local ch = self._source:sub(self._pos, self._pos)
+        if ch == " " then
+            indent = indent + 1
+            self:_advance()
+        elseif ch == "\t" then
+            error(string.format(
+                "LexerError at %d:%d: Tab character in indentation (use spaces only)",
+                self._line, self._column
+            ))
+        else
+            break
+        end
+    end
+
+    -- Blank line or EOF
+    if self._pos > #self._source then
+        return nil, true
+    end
+    if self._source:sub(self._pos, self._pos) == "\n" then
+        self:_advance()
+        return nil, true
+    end
+
+    -- Comment-only line
+    local remaining = self._source:sub(self._pos)
+    for _, pat in ipairs(self._skip_patterns) do
+        local s, e = remaining:find(pat)
+        if s == 1 then
+            local peek_pos = self._pos + e
+            if peek_pos > #self._source or self._source:sub(peek_pos, peek_pos) == "\n" then
+                for _ = 1, e do
+                    self:_advance()
+                end
+                if self._pos <= #self._source and self._source:sub(self._pos, self._pos) == "\n" then
+                    self:_advance()
+                end
+                return nil, true
+            end
+        end
+    end
+
+    -- Compare indent to current level
+    local current_indent = self._indent_stack[#self._indent_stack]
+    local indent_tokens = {}
+
+    if indent > current_indent then
+        self._indent_stack[#self._indent_stack + 1] = indent
+        indent_tokens[#indent_tokens + 1] = Token.new(
+            TokenType.Name, "", self._line, 1, "INDENT"
+        )
+    elseif indent < current_indent then
+        while #self._indent_stack > 1 and self._indent_stack[#self._indent_stack] > indent do
+            self._indent_stack[#self._indent_stack] = nil
+            indent_tokens[#indent_tokens + 1] = Token.new(
+                TokenType.Name, "", self._line, 1, "DEDENT"
+            )
+        end
+        if self._indent_stack[#self._indent_stack] ~= indent then
+            error(string.format(
+                "LexerError at %d:%d: Inconsistent dedent",
+                self._line, self._column
+            ))
+        end
+    end
+
+    return indent_tokens, false
+end
+
+--- Indentation-mode tokenization.
+--
+-- Tracks indentation levels and emits INDENT/DEDENT tokens. Brackets
+-- suppress indentation processing (implicit line continuation).
+-- @return table Array of Token objects.
+function GrammarLexer:_tokenize_indentation()
+    local tokens = {}
+    local at_line_start = true
+
+    while self._pos <= #self._source do
+        -- Process line start
+        if at_line_start and self._bracket_depth == 0 then
+            local indent_tokens, skip_line = self:_process_line_start()
+            if skip_line then
+                goto continue
+            end
+            if indent_tokens then
+                for _, t in ipairs(indent_tokens) do
+                    tokens[#tokens + 1] = t
+                end
+            end
+            at_line_start = false
+            if self._pos > #self._source then
+                break
+            end
+        end
+
+        local ch = self._source:sub(self._pos, self._pos)
+
+        -- Newline handling
+        if ch == "\n" then
+            if self._bracket_depth == 0 then
+                tokens[#tokens + 1] = Token.new(
+                    TokenType.Newline, "\\n",
+                    self._line, self._column, "NEWLINE"
+                )
+            end
+            self:_advance()
+            at_line_start = true
+            goto continue
+        end
+
+        -- Inside brackets: skip whitespace
+        if self._bracket_depth > 0 and (ch == " " or ch == "\t" or ch == "\r") then
+            self:_advance()
+            goto continue
+        end
+
+        -- Try skip patterns
+        if self:_try_skip() then
+            goto continue
+        end
+
+        -- Try token patterns
+        do
+            local tok = self:_try_match_token()
+            if tok then
+                -- Track bracket depth
+                if tok.value == "(" or tok.value == "[" or tok.value == "{" then
+                    self._bracket_depth = self._bracket_depth + 1
+                elseif tok.value == ")" or tok.value == "]" or tok.value == "}" then
+                    self._bracket_depth = self._bracket_depth - 1
+                end
+                tokens[#tokens + 1] = tok
+                goto continue
+            end
+        end
+
+        error(string.format(
+            "LexerError at %d:%d: Unexpected character %q",
+            self._line, self._column, ch
+        ))
+
+        ::continue::
+    end
+
+    -- EOF: emit remaining DEDENTs
+    while #self._indent_stack > 1 do
+        self._indent_stack[#self._indent_stack] = nil
+        tokens[#tokens + 1] = Token.new(
+            TokenType.Name, "", self._line, self._column, "DEDENT"
+        )
+    end
+
+    -- Final NEWLINE if needed
+    if #tokens == 0 or tokens[#tokens].type ~= TokenType.Newline then
+        tokens[#tokens + 1] = Token.new(
+            TokenType.Newline, "\\n", self._line, self._column, "NEWLINE"
+        )
+    end
+
+    tokens[#tokens + 1] = Token.new(
+        TokenType.EOF, "", self._line, self._column, "EOF"
+    )
+    return tokens
+end
+
+-- =========================================================================
+-- Module Exports
+-- =========================================================================
+
+local lexer = {}
+
+lexer.VERSION = "0.1.0"
+
+-- Classes
+lexer.Token        = Token
+lexer.Lexer        = Lexer
+lexer.GrammarLexer = GrammarLexer
+lexer.LexerContext = LexerContext
+
+-- Constants
+lexer.TokenType = TokenType
+
+-- Functions (exported for testing)
+lexer.classify_char        = classify_char
+lexer.new_tokenizer_dfa    = new_tokenizer_dfa
+lexer.token_type_to_string = token_type_to_string
+lexer.process_escapes      = process_escapes
+
+return lexer
