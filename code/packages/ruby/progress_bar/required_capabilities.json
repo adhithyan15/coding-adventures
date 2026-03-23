@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/progress_bar",
+  "capabilities": [
+    "stdout:write:*",
+    "time:read:*"
+  ],
+  "justification": "Writes progress bar output to an IO stream (typically $stderr). Uses Process.clock_gettime for elapsed time tracking."
+}

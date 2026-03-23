@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/cli-builder",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads CLI spec files for command-line argument parsing configuration."
+    }
+  ],
+  "justification": "CLI builder framework. Reads specification files to configure argument parsing. Process exit is shown only in doc examples."
+}

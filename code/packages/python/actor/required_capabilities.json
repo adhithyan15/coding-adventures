@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/actor",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "monotonic",
+      "justification": "Uses time.monotonic_ns() for message ordering and channel creation timestamps."
+    },
+    {
+      "category": "fs",
+      "action": "read_write",
+      "target": "*",
+      "justification": "Opens log files for writing and reading channel message history."
+    }
+  ],
+  "justification": "Actor message ordering requires monotonic time, and channel logging writes to files."
+}

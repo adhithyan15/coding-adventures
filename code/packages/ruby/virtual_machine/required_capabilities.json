@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/virtual_machine",
+  "capabilities": [],
+  "justification": "Pure computation. Executes bytecode in a simulated VM without OS access."
+}

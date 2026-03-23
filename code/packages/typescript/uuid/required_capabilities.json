@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/uuid",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Uses Date.now() to generate timestamp-based UUIDs (v1 and v7)."
+    }
+  ],
+  "justification": "UUID v1/v7 generation requires wall-clock time. No other OS access needed."
+}
