@@ -13,11 +13,7 @@ members = [
     "wasm-simulator",
     "intel4004-simulator",
     "assembler",
-    "directed-graph",
     "grammar-tools",
-    "state-machine",
-    "sql-lexer",
-    "sql-parser",
     "jit-compiler",
     "lexer",
     "parser",
@@ -55,11 +51,7 @@ coding-adventures-lexer = { workspace = true }
 coding-adventures-parser = { workspace = true }
 coding-adventures-bytecode-compiler = { workspace = true }
 coding-adventures-virtual-machine = { workspace = true }
-coding-adventures-directed-graph = { workspace = true }
 coding-adventures-grammar-tools = { workspace = true }
-coding-adventures-state-machine = { workspace = true }
-coding-adventures-sql-lexer = { workspace = true }
-coding-adventures-sql-parser = { workspace = true }
 coding-adventures-jit-compiler = { workspace = true }
 coding-adventures-compiler-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
