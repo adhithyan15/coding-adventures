@@ -1,0 +1,32 @@
+{
+  "app.title": "Logic Gates — Interactive Digital Logic",
+  "app.subtitle": "From transistors to computation: how gates process information",
+  "nav.tabs": "Circuit categories",
+  "tabs.fundamental": "Basic Gates",
+  "tabs.nand": "NAND Universality",
+  "tabs.combinational": "Combinational",
+  "tabs.sequential": "Sequential",
+
+  "fundamental.intro": "Logic gates are the building blocks of all digital circuits. Each gate performs a simple Boolean operation on one or two binary inputs. What makes them remarkable is that every gate is physically built from just a few CMOS transistors on silicon.",
+
+  "gate.not.name": "NOT (Inverter)",
+  "gate.not.description": "Outputs the opposite of its input. The simplest possible gate — just 2 transistors (1 PMOS + 1 NMOS). When input is 1, NMOS pulls output to ground. When input is 0, PMOS pulls output to Vdd.",
+  "gate.and.name": "AND",
+  "gate.and.description": "Outputs 1 only when BOTH inputs are 1. Built as NAND + NOT (6 transistors). Not a 'natural' CMOS gate — it needs an extra inverter stage because CMOS naturally inverts.",
+  "gate.or.name": "OR",
+  "gate.or.description": "Outputs 1 when EITHER input is 1. Built as NOR + NOT (6 transistors). Like AND, it's not natural in CMOS and requires an extra inverter.",
+  "gate.xor.name": "XOR (Exclusive OR)",
+  "gate.xor.description": "Outputs 1 when inputs DIFFER. The most complex basic gate (8-12 transistors). Essential for arithmetic — XOR computes the sum bit in binary addition.",
+
+  "cmos.showTransistors": "Show CMOS implementation",
+  "cmos.hideTransistors": "Hide CMOS implementation",
+  "cmos.transistorCount": "transistors",
+  "cmos.naturalGate": "CMOS natural gate",
+  "cmos.needsInverter": "Requires extra inverter stage",
+
+  "truthTable.title": "Truth Table",
+
+  "placeholder.comingSoon": "Coming soon",
+
+  "footer.credit": "Built with gate-level simulation models"
+}
