@@ -86,6 +86,7 @@ members = [
     "typescript-lexer",
     "typescript-parser",
     "vendor-api-simulators",
+    "verilog-lexer",
     "virtual-machine",
     "wasm-simulator",
     "xml-lexer",

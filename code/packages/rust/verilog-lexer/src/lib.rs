@@ -1,0 +1,729 @@
+//! # Verilog Lexer — tokenizing Verilog HDL source code.
+//!
+//! [Verilog](https://en.wikipedia.org/wiki/Verilog) is a Hardware Description
+//! Language (HDL) used to model and design digital circuits. Unlike software
+//! languages that describe sequential computations, Verilog describes physical
+//! structures — gates, wires, flip-flops — that exist simultaneously and
+//! operate in parallel.
+//!
+//! This crate provides a lexer (tokenizer) for Verilog (IEEE 1364-2005). It
+//! loads the `verilog.tokens` grammar file — a declarative description of
+//! every token in Verilog — and feeds it to the generic [`GrammarLexer`]
+//! from the `lexer` crate.
+//!
+//! # Preprocessor
+//!
+//! Verilog has a C-like preprocessor with directives prefixed by backtick:
+//! `` `define ``, `` `ifdef ``, `` `include ``, etc. This crate includes a
+//! [`preprocessor`] module that expands macros and evaluates conditional
+//! compilation directives *before* tokenization.
+//!
+//! The preprocessor is optional: you can call [`tokenize_verilog`] for raw
+//! tokenization, or [`tokenize_verilog_preprocessed`] to run the preprocessor
+//! first.
+//!
+//! # Architecture
+//!
+//! ```text
+//! verilog.tokens       (grammar file on disk)
+//!        |
+//!        v
+//! grammar-tools        (parses .tokens -> TokenGrammar struct)
+//!        |
+//!        v
+//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
+//!        |
+//!        v
+//! verilog-lexer        (THIS CRATE: wires grammar + lexer + preprocessor)
+//! ```
+//!
+//! # Token types
+//!
+//! The Verilog lexer produces these token categories:
+//!
+//! - **NAME** — identifiers like `clk`, `data_in`, `_valid`
+//! - **KEYWORD** — reserved words: `module`, `wire`, `reg`, `always`, `assign`, etc.
+//! - **NUMBER** — plain integer literals: `42`, `0`, `1_000`
+//! - **SIZED_NUMBER** — sized literals with base: `4'b1010`, `8'hFF`, `32'd42`
+//! - **REAL_NUMBER** — floating-point literals: `3.14`, `1.5e-3`
+//! - **STRING** — string literals: `"hello"`, `"value = %d"`
+//! - **SYSTEM_ID** — system tasks/functions: `$display`, `$finish`, `$time`
+//! - **DIRECTIVE** — compiler directives: `` `define ``, `` `ifdef ``
+//! - **ESCAPED_IDENT** — escaped identifiers: `\my.name`, `\bus[0]`
+//! - **Operators** — `+`, `-`, `*`, `===`, `!==`, `<<<`, `>>>`, `&&`, `||`, etc.
+//! - **Delimiters** — `(`, `)`, `[`, `]`, `{`, `}`, `;`, `,`, `.`, `#`, `@`
+//! - **EOF** — end of file
+
+pub mod preprocessor;
+
+use std::fs;
+
+use grammar_tools::token_grammar::parse_token_grammar;
+use lexer::grammar_lexer::GrammarLexer;
+use lexer::token::Token;
+
+// ===========================================================================
+// Grammar file location
+// ===========================================================================
+
+/// Build the path to the `verilog.tokens` grammar file.
+///
+/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
+/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
+/// `grammars/` directory at the repository root.
+///
+/// ```text
+/// code/
+///   grammars/
+///     verilog.tokens        <-- this is what we want
+///   packages/
+///     rust/
+///       verilog-lexer/
+///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
+///         src/
+///           lib.rs          <-- we are here
+/// ```
+///
+/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
+/// `../../../grammars/verilog.tokens`
+fn grammar_path() -> String {
+    let manifest_dir = env!("CARGO_MANIFEST_DIR");
+    format!("{manifest_dir}/../../../grammars/verilog.tokens")
+}
+
+// ===========================================================================
+// Public API
+// ===========================================================================
+
+/// Create a `GrammarLexer` configured for Verilog source code.
+///
+/// This function:
+/// 1. Reads the `verilog.tokens` grammar file from disk.
+/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
+/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
+///
+/// The returned lexer is ready to call `.tokenize()` on.
+///
+/// **Note:** This function does NOT run the preprocessor. If your source
+/// contains `` `define `` or `` `ifdef `` directives, call
+/// [`preprocessor::verilog_preprocess`] first, or use
+/// [`tokenize_verilog_preprocessed`].
+///
+/// # Panics
+///
+/// Panics if the grammar file cannot be read or parsed.
+///
+/// # Example
+///
+/// ```no_run
+/// use coding_adventures_verilog_lexer::create_verilog_lexer;
+///
+/// let mut lexer = create_verilog_lexer("module top; endmodule");
+/// let tokens = lexer.tokenize().expect("tokenization failed");
+/// for token in &tokens {
+///     println!("{}", token);
+/// }
+/// ```
+pub fn create_verilog_lexer(source: &str) -> GrammarLexer<'_> {
+    // Step 1: Read the grammar file from disk.
+    let grammar_text = fs::read_to_string(grammar_path())
+        .unwrap_or_else(|e| panic!("Failed to read verilog.tokens: {e}"));
+
+    // Step 2: Parse the grammar text into a structured TokenGrammar.
+    //
+    // The TokenGrammar contains:
+    //   - Token definitions (NAME, NUMBER, SIZED_NUMBER, REAL_NUMBER, STRING,
+    //     SYSTEM_ID, DIRECTIVE, ESCAPED_IDENT, operators, delimiters)
+    //   - Skip patterns (whitespace, single-line comments, block comments)
+    //   - Keywords (module, wire, reg, always, assign, if, else, etc.)
+    //   - Mode: default (no indentation tracking)
+    let grammar = parse_token_grammar(&grammar_text)
+        .unwrap_or_else(|e| panic!("Failed to parse verilog.tokens: {e}"));
+
+    // Step 3: Create and return the lexer.
+    GrammarLexer::new(source, &grammar)
+}
+
+/// Tokenize Verilog source code into a vector of tokens.
+///
+/// This is the most convenient entry point for raw tokenization — it handles
+/// grammar loading, lexer creation, and tokenization in one call. The returned
+/// vector always ends with an `EOF` token.
+///
+/// **Note:** This function does NOT run the preprocessor. Directive tokens
+/// like `` `define `` will appear as DIRECTIVE tokens in the output.
+///
+/// # Panics
+///
+/// Panics if the grammar file cannot be read/parsed, or if the source
+/// contains an unexpected character.
+///
+/// # Example
+///
+/// ```no_run
+/// use coding_adventures_verilog_lexer::tokenize_verilog;
+///
+/// let tokens = tokenize_verilog("module top; endmodule");
+/// for token in &tokens {
+///     println!("{:?} {:?}", token.type_, token.value);
+/// }
+/// ```
+pub fn tokenize_verilog(source: &str) -> Vec<Token> {
+    let mut verilog_lexer = create_verilog_lexer(source);
+
+    verilog_lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Verilog tokenization failed: {e}"))
+}
+
+/// Tokenize Verilog source code with preprocessing.
+///
+/// This function first runs the Verilog preprocessor to expand macros and
+/// evaluate conditional compilation directives, then tokenizes the result.
+///
+/// Use this when your source contains directives like `` `define ``,
+/// `` `ifdef ``, `` `include ``, or `` `timescale ``.
+///
+/// # Example
+///
+/// ```no_run
+/// use coding_adventures_verilog_lexer::tokenize_verilog_preprocessed;
+///
+/// let source = r#"`define WIDTH 8
+/// module top;
+///   reg [`WIDTH-1:0] data;
+/// endmodule"#;
+///
+/// let tokens = tokenize_verilog_preprocessed(source);
+/// // `WIDTH has been expanded to 8 before tokenization
+/// ```
+pub fn tokenize_verilog_preprocessed(source: &str) -> Vec<Token> {
+    let preprocessed = preprocessor::verilog_preprocess(source);
+    tokenize_verilog(&preprocessed)
+}
+
+// ===========================================================================
+// Tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use lexer::token::TokenType;
+
+    // -----------------------------------------------------------------------
+    // Helper: collect token (type_, value) pairs excluding EOF.
+    // -----------------------------------------------------------------------
+
+    fn token_pairs(tokens: &[Token]) -> Vec<(TokenType, &str)> {
+        tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| (t.type_, t.value.as_str()))
+            .collect()
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 1: Simple module declaration
+    // -----------------------------------------------------------------------
+
+    /// Verify that a basic module declaration is tokenized correctly.
+    #[test]
+    fn test_tokenize_module_declaration() {
+        let tokens = tokenize_verilog("module top; endmodule");
+        let pairs = token_pairs(&tokens);
+
+        assert!(pairs.len() >= 3, "Expected at least 3 tokens, got {}", pairs.len());
+        assert_eq!(pairs[0].0, TokenType::Keyword);
+        assert_eq!(pairs[0].1, "module");
+        assert_eq!(pairs[1].0, TokenType::Name);
+        assert_eq!(pairs[1].1, "top");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 2: Keywords are recognized
+    // -----------------------------------------------------------------------
+
+    /// Verilog keywords should be classified as KEYWORD tokens, not NAME.
+    #[test]
+    fn test_keywords() {
+        let keywords = [
+            "module", "endmodule", "wire", "reg", "input", "output",
+            "always", "assign", "begin", "end", "if", "else",
+            "case", "endcase", "for", "parameter", "localparam",
+        ];
+
+        for kw in &keywords {
+            let source = format!("{kw};");
+            let tokens = tokenize_verilog(&source);
+            let pairs = token_pairs(&tokens);
+
+            assert_eq!(
+                pairs[0].0, TokenType::Keyword,
+                "Expected '{}' to be a KEYWORD, got {:?}",
+                kw, pairs[0].0
+            );
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 3: Operators
+    // -----------------------------------------------------------------------
+
+    /// Arithmetic and bitwise operators should be tokenized correctly.
+    #[test]
+    fn test_operators() {
+        let tokens = tokenize_verilog("a + b - c * d / e;");
+        let pairs = token_pairs(&tokens);
+
+        let ops: Vec<&str> = pairs
+            .iter()
+            .filter(|(_, v)| ["+", "-", "*", "/"].contains(v))
+            .map(|(_, v)| *v)
+            .collect();
+
+        assert_eq!(ops, vec!["+", "-", "*", "/"]);
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 4: Multi-character operators
+    // -----------------------------------------------------------------------
+
+    /// Multi-character operators like ===, !==, <<<, >>> should be tokenized
+    /// as single tokens.
+    #[test]
+    fn test_multi_char_operators() {
+        let tokens = tokenize_verilog("a === b !== c;");
+        let pairs = token_pairs(&tokens);
+
+        let has_case_eq = pairs.iter().any(|(_, v)| *v == "===");
+        let has_case_neq = pairs.iter().any(|(_, v)| *v == "!==");
+
+        assert!(has_case_eq, "Expected '===' token");
+        assert!(has_case_neq, "Expected '!==' token");
+    }
+
+    #[test]
+    fn test_shift_operators() {
+        let tokens = tokenize_verilog("a << b >> c <<< d >>> e;");
+        let pairs = token_pairs(&tokens);
+
+        let has_lshift = pairs.iter().any(|(_, v)| *v == "<<");
+        let has_rshift = pairs.iter().any(|(_, v)| *v == ">>");
+        let has_alshift = pairs.iter().any(|(_, v)| *v == "<<<");
+        let has_arshift = pairs.iter().any(|(_, v)| *v == ">>>");
+
+        assert!(has_lshift, "Expected '<<' token");
+        assert!(has_rshift, "Expected '>>' token");
+        assert!(has_alshift, "Expected '<<<' token");
+        assert!(has_arshift, "Expected '>>>' token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 5: String literals
+    // -----------------------------------------------------------------------
+
+    /// Verilog supports double-quoted strings.
+    #[test]
+    fn test_strings() {
+        let tokens = tokenize_verilog("$display(\"hello world\");");
+        let pairs = token_pairs(&tokens);
+
+        let has_string = pairs.iter().any(|(t, _)| *t == TokenType::String);
+        assert!(has_string, "Expected a STRING token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 6: Number literals
+    // -----------------------------------------------------------------------
+
+    /// Verilog supports plain integers.
+    #[test]
+    fn test_plain_numbers() {
+        let tokens = tokenize_verilog("42;");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].0, TokenType::Number);
+        assert_eq!(pairs[0].1, "42");
+    }
+
+    /// Verilog sized numbers like 4'b1010 and 8'hFF.
+    #[test]
+    fn test_sized_numbers() {
+        let tokens = tokenize_verilog("4'b1010;");
+        let pairs = token_pairs(&tokens);
+
+        // The sized number should be a single token
+        assert_eq!(pairs[0].1, "4'b1010");
+    }
+
+    #[test]
+    fn test_hex_sized_numbers() {
+        let tokens = tokenize_verilog("8'hFF;");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].1, "8'hFF");
+    }
+
+    #[test]
+    fn test_real_numbers() {
+        let tokens = tokenize_verilog("3.14;");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].1, "3.14");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 7: System identifiers
+    // -----------------------------------------------------------------------
+
+    /// System tasks like $display and $finish should be tokenized.
+    #[test]
+    fn test_system_identifiers() {
+        let tokens = tokenize_verilog("$display;");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].1, "$display");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 8: Compiler directives
+    // -----------------------------------------------------------------------
+
+    /// Directives like `define should be tokenized as DIRECTIVE tokens
+    /// when preprocessing is NOT applied.
+    #[test]
+    fn test_directives() {
+        let tokens = tokenize_verilog("`define WIDTH 8");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].1, "`define");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 9: Delimiters
+    // -----------------------------------------------------------------------
+
+    /// All delimiter tokens should be recognized.
+    #[test]
+    fn test_delimiters() {
+        let tokens = tokenize_verilog("(){}[];,.#@");
+        let pairs = token_pairs(&tokens);
+
+        let values: Vec<&str> = pairs.iter().map(|(_, v)| *v).collect();
+        assert!(values.contains(&"("));
+        assert!(values.contains(&")"));
+        assert!(values.contains(&"{"));
+        assert!(values.contains(&"}"));
+        assert!(values.contains(&"["));
+        assert!(values.contains(&"]"));
+        assert!(values.contains(&";"));
+        assert!(values.contains(&","));
+        assert!(values.contains(&"."));
+        assert!(values.contains(&"#"));
+        assert!(values.contains(&"@"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 10: Comments are skipped
+    // -----------------------------------------------------------------------
+
+    /// Single-line and block comments should be skipped.
+    #[test]
+    fn test_comments_skipped() {
+        let tokens = tokenize_verilog("wire a; // comment\nwire b;");
+        let pairs = token_pairs(&tokens);
+
+        // "comment" should NOT appear as a token
+        let has_comment_text = pairs.iter().any(|(_, v)| v.contains("comment"));
+        assert!(!has_comment_text, "Comments should be skipped");
+    }
+
+    #[test]
+    fn test_block_comments_skipped() {
+        let tokens = tokenize_verilog("wire a; /* block comment */ wire b;");
+        let pairs = token_pairs(&tokens);
+
+        let has_comment_text = pairs.iter().any(|(_, v)| v.contains("block"));
+        assert!(!has_comment_text, "Block comments should be skipped");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 11: Whitespace is skipped
+    // -----------------------------------------------------------------------
+
+    /// Whitespace between tokens should be consumed without producing tokens.
+    #[test]
+    fn test_whitespace_skipped() {
+        let compact = tokenize_verilog("wire a;");
+        let spaced = tokenize_verilog("wire  a  ;");
+
+        let pairs_compact = token_pairs(&compact);
+        let pairs_spaced = token_pairs(&spaced);
+
+        assert_eq!(pairs_compact.len(), pairs_spaced.len());
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 12: Factory function
+    // -----------------------------------------------------------------------
+
+    /// The `create_verilog_lexer` factory function should return a
+    /// working `GrammarLexer`.
+    #[test]
+    fn test_create_lexer() {
+        let mut lexer = create_verilog_lexer("42;");
+        let tokens = lexer.tokenize().expect("Lexer should tokenize successfully");
+
+        assert!(tokens.len() >= 2);
+        assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 13: Module with ports
+    // -----------------------------------------------------------------------
+
+    /// A module declaration with ports exercises keywords, identifiers,
+    /// parentheses, and commas.
+    #[test]
+    fn test_module_with_ports() {
+        let tokens = tokenize_verilog("module adder(input a, input b, output sum);");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].0, TokenType::Keyword);
+        assert_eq!(pairs[0].1, "module");
+        assert_eq!(pairs[1].0, TokenType::Name);
+        assert_eq!(pairs[1].1, "adder");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 14: Sensitivity list with @
+    // -----------------------------------------------------------------------
+
+    /// The @ token and sensitivity keywords (posedge, negedge) should work.
+    #[test]
+    fn test_sensitivity_list() {
+        let tokens = tokenize_verilog("always @(posedge clk) begin end");
+        let pairs = token_pairs(&tokens);
+
+        let has_at = pairs.iter().any(|(_, v)| *v == "@");
+        let has_posedge = pairs.iter().any(|(_, v)| *v == "posedge");
+        assert!(has_at, "Expected '@' token");
+        assert!(has_posedge, "Expected 'posedge' keyword");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 15: Assign statement
+    // -----------------------------------------------------------------------
+
+    /// Continuous assignment with the assign keyword.
+    #[test]
+    fn test_assign_statement() {
+        let tokens = tokenize_verilog("assign out = a & b;");
+        let pairs = token_pairs(&tokens);
+
+        assert_eq!(pairs[0].0, TokenType::Keyword);
+        assert_eq!(pairs[0].1, "assign");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 16: Preprocessed tokenization
+    // -----------------------------------------------------------------------
+
+    /// Tokenize with preprocessing — macros should be expanded.
+    #[test]
+    fn test_preprocessed_tokenization() {
+        let source = "`define WIDTH 8\nreg [`WIDTH-1:0] data;";
+        let tokens = tokenize_verilog_preprocessed(source);
+        let pairs = token_pairs(&tokens);
+
+        // After preprocessing, `WIDTH becomes 8
+        // We should see NUMBER(8), not DIRECTIVE(`WIDTH)
+        let has_eight = pairs.iter().any(|(t, v)| *t == TokenType::Number && *v == "8");
+        assert!(has_eight, "Expected NUMBER(8) after preprocessing");
+
+        // No DIRECTIVE tokens should remain for `WIDTH
+        let has_width_directive = pairs.iter().any(|(_, v)| *v == "`WIDTH");
+        assert!(!has_width_directive, "Preprocessor should have expanded `WIDTH");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 17: Conditional preprocessing + tokenization
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_preprocessed_ifdef() {
+        let source = "\
+`define USE_FAST
+`ifdef USE_FAST
+wire fast_path;
+`else
+wire slow_path;
+`endif";
+        let tokens = tokenize_verilog_preprocessed(source);
+        let pairs = token_pairs(&tokens);
+
+        let has_fast = pairs.iter().any(|(_, v)| *v == "fast_path");
+        let has_slow = pairs.iter().any(|(_, v)| *v == "slow_path");
+        assert!(has_fast, "Expected fast_path in output");
+        assert!(!has_slow, "slow_path should be excluded by ifdef");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 18: Bitwise operators
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_bitwise_operators() {
+        let tokens = tokenize_verilog("a & b | c ^ d;");
+        let pairs = token_pairs(&tokens);
+
+        let ops: Vec<&str> = pairs
+            .iter()
+            .filter(|(_, v)| ["&", "|", "^"].contains(v))
+            .map(|(_, v)| *v)
+            .collect();
+
+        assert_eq!(ops, vec!["&", "|", "^"]);
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 19: Logical operators
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_logical_operators() {
+        let tokens = tokenize_verilog("a && b || c;");
+        let pairs = token_pairs(&tokens);
+
+        let has_land = pairs.iter().any(|(_, v)| *v == "&&");
+        let has_lor = pairs.iter().any(|(_, v)| *v == "||");
+
+        assert!(has_land, "Expected '&&' token");
+        assert!(has_lor, "Expected '||' token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 20: Comparison operators
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_comparison_operators() {
+        let tokens = tokenize_verilog("a == b != c <= d >= e;");
+        let pairs = token_pairs(&tokens);
+
+        let has_eq = pairs.iter().any(|(_, v)| *v == "==");
+        let has_neq = pairs.iter().any(|(_, v)| *v == "!=");
+        let has_leq = pairs.iter().any(|(_, v)| *v == "<=");
+        let has_geq = pairs.iter().any(|(_, v)| *v == ">=");
+
+        assert!(has_eq, "Expected '==' token");
+        assert!(has_neq, "Expected '!=' token");
+        assert!(has_leq, "Expected '<=' token");
+        assert!(has_geq, "Expected '>=' token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 21: Unary operators
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_unary_operators() {
+        let tokens = tokenize_verilog("~a !b;");
+        let pairs = token_pairs(&tokens);
+
+        let has_tilde = pairs.iter().any(|(_, v)| *v == "~");
+        let has_bang = pairs.iter().any(|(_, v)| *v == "!");
+
+        assert!(has_tilde, "Expected '~' token");
+        assert!(has_bang, "Expected '!' token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 22: Ternary operator
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_ternary_operator() {
+        let tokens = tokenize_verilog("assign out = sel ? a : b;");
+        let pairs = token_pairs(&tokens);
+
+        let has_question = pairs.iter().any(|(_, v)| *v == "?");
+        let has_colon = pairs.iter().any(|(_, v)| *v == ":");
+
+        assert!(has_question, "Expected '?' token");
+        assert!(has_colon, "Expected ':' token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 23: Full module example
+    // -----------------------------------------------------------------------
+
+    /// A complete small module should tokenize without errors.
+    #[test]
+    fn test_full_module() {
+        let source = r#"
+module mux2to1(
+    input a,
+    input b,
+    input sel,
+    output reg out
+);
+    always @(*) begin
+        if (sel)
+            out = b;
+        else
+            out = a;
+    end
+endmodule
+"#;
+        let tokens = tokenize_verilog(source);
+        let pairs = token_pairs(&tokens);
+
+        // Should have many tokens without errors
+        assert!(pairs.len() > 20, "Expected many tokens from full module");
+
+        // Check key structural tokens
+        let first_kw = pairs.iter().find(|(t, _)| *t == TokenType::Keyword);
+        assert_eq!(first_kw.unwrap().1, "module");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 24: Escaped identifier
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_escaped_identifier() {
+        let tokens = tokenize_verilog("wire \\my.signal ;");
+        let pairs = token_pairs(&tokens);
+
+        let has_escaped = pairs.iter().any(|(_, v)| v.starts_with('\\'));
+        assert!(has_escaped, "Expected an escaped identifier token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 25: Power operator
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_power_operator() {
+        let tokens = tokenize_verilog("2 ** 3;");
+        let pairs = token_pairs(&tokens);
+
+        let has_power = pairs.iter().any(|(_, v)| *v == "**");
+        assert!(has_power, "Expected '**' token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 26: Trigger operator
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_trigger_operator() {
+        let tokens = tokenize_verilog("-> event1;");
+        let pairs = token_pairs(&tokens);
+
+        let has_trigger = pairs.iter().any(|(_, v)| *v == "->");
+        assert!(has_trigger, "Expected '->' token");
+    }
+}
