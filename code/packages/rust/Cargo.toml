@@ -6,6 +6,7 @@ members = [
     "arithmetic",
     "arm-simulator",
     "assembler",
+    "bitset",
     "blas-library",
     "bootloader",
     "brainfuck",
