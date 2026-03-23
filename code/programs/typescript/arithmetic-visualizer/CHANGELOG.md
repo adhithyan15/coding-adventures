@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.4.0 — CPU Step-Through tab
+
+### Added
+
+- **Tab 4: CPU Step-Through** — Intel 4004 gate-level CPU executing real programs
+- `CpuView` — full CPU visualization with program loader, step controls, state dashboard
+- Program loader with 4 example programs:
+  1. "Count to 6" — INC loop with conditional jump
+  2. "Add Two Numbers" — 5 + 7 = 12 via LDM/XCH/ADD
+  3. "Fibonacci Sequence" — register-to-register arithmetic loop
+  4. "Conditional Branch" — SUB comparison with JCN branching
+- Step controls: Step (one instruction), Auto-Step (500ms interval), Reset
+- CPU state dashboard: accumulator, carry flag, PC (all update live)
+- Register grid: R0-R15 in 8-column layout, changed registers highlighted green
+- Current instruction panel: address, opcode, mnemonic, ACC before→after, carry before→after
+- ALU trace panel: per-bit full adder snapshots when arithmetic instructions execute
+- Execution trace history: scrollable list of all executed instructions with ALU markers
+- CPU halts and disables controls on HLT instruction
+- 24 new i18n strings, CPU-specific CSS
+- 15 new tests (66 total)
+
+### Changed
+
+- `App.tsx` now renders CpuView when CPU tab is active (no more placeholders)
+
 ## 0.3.0 — The ALU tab
 
 ### Added
