@@ -1,0 +1,14 @@
+[workspace]
+
+[package]
+name = "directed-graph-native-ruby"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "directed_graph_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
+directed-graph = { path = "../../../../rust/directed-graph" }
