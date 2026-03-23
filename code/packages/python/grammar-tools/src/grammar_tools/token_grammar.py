@@ -176,6 +176,11 @@ class TokenGrammar:
             allows graceful degradation for malformed inputs — for example,
             CSS emits ``BAD_STRING`` for unclosed strings instead of
             crashing. Error tokens carry an ``is_error`` marker.
+        case_sensitive: Whether the lexer should match patterns
+            case-sensitively. Defaults to True. When False, the lexer
+            lowercases the source text before matching and performs
+            keyword promotion on the lowercased values. This is used
+            by case-insensitive languages like VHDL.
     """
 
     definitions: list[TokenDefinition] = field(default_factory=list)
@@ -186,6 +191,7 @@ class TokenGrammar:
     escape_mode: str | None = None
     error_definitions: list[TokenDefinition] = field(default_factory=list)
     groups: dict[str, PatternGroup] = field(default_factory=dict)
+    case_sensitive: bool = True
 
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
@@ -465,6 +471,22 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                     line_number,
                 )
             grammar.escape_mode = escape_value
+            current_section = None
+            continue
+
+        # --- case_sensitive: directive ---
+        # Controls whether the lexer should match case-sensitively.
+        # ``case_sensitive: false`` makes the lexer lowercase input before
+        # matching and perform keyword promotion on lowercased values.
+        if stripped.startswith("case_sensitive:"):
+            cs_value = stripped[15:].strip().lower()
+            if cs_value not in ("true", "false"):
+                raise TokenGrammarError(
+                    f"Invalid value for 'case_sensitive:': {cs_value!r} "
+                    "(expected 'true' or 'false')",
+                    line_number,
+                )
+            grammar.case_sensitive = cs_value == "true"
             current_section = None
             continue
 

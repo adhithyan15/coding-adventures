@@ -256,7 +256,14 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
   def tokenize(source, %TokenGrammar{} = grammar, opts) do
     on_token = Keyword.get(opts, :on_token, nil)
-    state = init_state(source, grammar, on_token)
+
+    # Case-insensitive mode: lowercase the entire source before matching.
+    # This mirrors the Python GrammarLexer behavior — keyword promotion and
+    # pattern matching both operate on the lowercased text, which is the
+    # correct behavior for case-insensitive languages like VHDL or SQL.
+    effective_source = if grammar.case_sensitive, do: source, else: String.downcase(source)
+
+    state = init_state(effective_source, grammar, on_token)
     tokenize_standard(state, [])
   end
 

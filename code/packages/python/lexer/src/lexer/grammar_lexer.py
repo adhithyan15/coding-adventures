@@ -260,7 +260,12 @@ class GrammarLexer:
             grammar: A ``TokenGrammar`` object (typically parsed from a
                 ``.tokens`` file using ``grammar_tools.parse_token_grammar``).
         """
-        self._source = source
+        # For case-insensitive languages, lowercase the source text so that
+        # regex patterns match regardless of input casing. We keep the original
+        # source for position tracking but use the lowercased version for all
+        # pattern matching. Token values are extracted from the lowercased
+        # source, which is the correct behavior for case-insensitive languages.
+        self._source = source.lower() if not grammar.case_sensitive else source
         self._grammar = grammar
         self._pos = 0
         self._line = 1
@@ -288,6 +293,11 @@ class GrammarLexer:
         # None = standard (strip quotes + process escapes).
         # "none" = strip quotes only, no escape processing.
         self._escape_mode = grammar.escape_mode
+
+        # Case sensitivity mode. When False, the lexer lowercases input
+        # before matching and promotes NAME → KEYWORD for lowercased values
+        # that match keywords. Used by case-insensitive languages like VHDL.
+        self._case_sensitive = grammar.case_sensitive
 
         # Build alias map: definition name → alias name.
         # For example, STRING_DQ → STRING. When we match STRING_DQ, we

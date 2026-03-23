@@ -203,7 +203,13 @@ module CodingAdventures
       # @param source [String] the raw source code to tokenize
       # @param grammar [CodingAdventures::GrammarTools::TokenGrammar]
       def initialize(source, grammar)
-        @source = source
+        # Case sensitivity: when the grammar is case-insensitive, we
+        # lowercase the entire source before tokenization. This means
+        # all pattern matching happens against lowercase text, and token
+        # values are lowercase. Keyword promotion works automatically
+        # because both the source and keyword list are compared in the
+        # same case. Used by case-insensitive languages like VHDL and SQL.
+        @source = grammar.case_sensitive ? source : source.downcase
         @grammar = grammar
         @pos = 0
         @line = 1
@@ -235,6 +241,11 @@ module CodingAdventures
         # Whether the grammar has skip patterns. When skip patterns exist,
         # they replace the default whitespace-skipping behavior.
         @has_skip_patterns = !grammar.skip_definitions.empty?
+
+        # Case sensitivity mode. When false, the lexer lowercases input
+        # before matching and promotes NAME -> KEYWORD for lowercased values
+        # that match keywords. Used by case-insensitive languages like VHDL.
+        @case_sensitive = grammar.case_sensitive
 
         # Indentation mode state.
         @indentation_mode = grammar.mode == "indentation"
