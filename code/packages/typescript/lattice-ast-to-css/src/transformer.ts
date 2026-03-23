@@ -976,8 +976,26 @@ export class LatticeTransformer {
     }
 
     if (name && valueNode) {
-      const expandedValue = this._expandNode(deepClone(valueNode), scope);
-      const value = expandedValue ?? valueNode;
+      let expandedValue = this._expandNode(deepClone(valueNode), scope);
+      let value: unknown = expandedValue ?? valueNode;
+
+      // Try to evaluate as an expression (e.g. $i + 1 → LatticeNumber(2)).
+      // This is critical for @while loops: without it, $i: $i + 1
+      // stores unevaluated tokens instead of the computed number, causing
+      // the loop condition to never change and looping forever.
+      try {
+        const evaluator = new ExpressionEvaluator(scope);
+        const evaluated = evaluator.evaluate(
+          deepClone((expandedValue ?? valueNode) as ASTNode)
+        );
+        if (evaluated !== null && evaluated !== undefined) {
+          // Store the LatticeValue directly so _substituteVariable can
+          // convert it via the "kind" in value check.
+          value = evaluated;
+        }
+      } catch {
+        // Not a pure expression (e.g. Helvetica, sans-serif) — keep AST
+      }
 
       if (isDefault && isGlobal) {
         let root: ScopeChain = scope;

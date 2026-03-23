@@ -959,6 +959,22 @@ func (t *LatticeTransformer) expandVariableDeclaration(node *parser.ASTNode, sco
 	if name != "" && valueNode != nil {
 		// Expand the value first (it might reference other variables)
 		expanded := t.expandNode(deepCloneAST(valueNode), scope)
+
+		// Try to evaluate as an expression (e.g. $i + 1 → LatticeNumber(2)).
+		// This is critical for @while loops: without it, $i: $i + 1
+		// stores unevaluated tokens instead of the computed number, causing
+		// the loop condition to never change and looping forever.
+		func() {
+			defer func() { recover() }() // silently ignore evaluation failures
+			evaluator := NewExpressionEvaluator(scope)
+			evaluated := evaluator.Evaluate(expanded)
+			if evaluated != nil {
+				// Store the LatticeValue directly so substituteVariable can
+				// convert it via the LatticeValue type assertion branch.
+				expanded = evaluated
+			}
+		}()
+
 		t.setVariableWithFlags(scope, name, expanded, isDefault, isGlobal)
 	}
 }

@@ -718,24 +718,38 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
     {is_default, is_global} = extract_variable_flags(children)
 
     if name && value_node do
+      # Try to evaluate the value as an expression (e.g. $i + 1 → {:number, 2}).
+      # This is critical for @while loops: without it, $i: $i + 1
+      # stores unevaluated AST tokens instead of the computed number, causing
+      # the loop condition to never change and looping forever.
+      stored_value =
+        try do
+          evaluated = Evaluator.evaluate(deep_copy(value_node), scope)
+          if is_tuple(evaluated) or evaluated == :null, do: evaluated, else: value_node
+        rescue
+          _ -> value_node
+        catch
+          _, _ -> value_node
+        end
+
       cond do
         is_default and is_global ->
           root = get_root_scope(scope)
           if Scope.get(root, name) == :error do
-            Scope.set_global(scope, name, value_node)
+            Scope.set_global(scope, name, stored_value)
           else
             scope
           end
         is_default ->
           if Scope.get(scope, name) == :error do
-            Scope.set(scope, name, value_node)
+            Scope.set(scope, name, stored_value)
           else
             scope
           end
         is_global ->
-          Scope.set_global(scope, name, value_node)
+          Scope.set_global(scope, name, stored_value)
         true ->
-          Scope.set(scope, name, value_node)
+          Scope.set(scope, name, stored_value)
       end
     else
       scope

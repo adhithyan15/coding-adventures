@@ -654,6 +654,20 @@ module CodingAdventures
 
         expanded_value = expand_node(deep_copy(value_node), scope)
 
+        # Try to evaluate as an expression (e.g. $i + 1 → LatticeNumber(2)).
+        # This is critical for @while loops: without it, $i: $i + 1
+        # stores unevaluated tokens instead of the computed number, causing
+        # the loop condition to never change and looping forever.
+        begin
+          evaluator = make_evaluator(scope)
+          evaluated = evaluator.evaluate(deep_copy(expanded_value))
+          # Store the LatticeValue directly so substitute_variable can
+          # convert it via the LATTICE_VALUE_TYPES check.
+          expanded_value = evaluated if LATTICE_VALUE_TYPES.any? { |t| evaluated.is_a?(t) }
+        rescue
+          # Not a pure expression (e.g. Helvetica, sans-serif) — keep AST
+        end
+
         if is_default && is_global
           root = scope
           root = root.parent while root.parent

@@ -712,6 +712,20 @@ class LatticeTransformer:
             # Expand the value first (it might contain variables)
             expanded_value = self._expand_node(copy.deepcopy(value_node), scope)
 
+            # Try to evaluate as an expression (e.g. ``$i + 1`` → LatticeNumber(2)).
+            # This is critical for @while loops: without it, ``$i: $i + 1``
+            # stores unevaluated tokens instead of the computed number, causing
+            # the loop condition to never change and looping forever.
+            try:
+                evaluator = ExpressionEvaluator(scope)
+                evaluated = evaluator.evaluate(copy.deepcopy(expanded_value))
+                # Store the LatticeValue directly so _substitute_variable can
+                # convert it to a token via the isinstance(value, LatticeValue)
+                # branch.  Storing a raw token would fall through that check.
+                expanded_value = evaluated
+            except Exception:
+                pass  # Not a pure expression (e.g. ``Helvetica, sans-serif``)
+
             if is_default and is_global:
                 root = scope
                 while root.parent is not None:

@@ -914,7 +914,16 @@ impl LatticeTransformer {
                 ASTNodeOrToken::Node(n) => {
                     if n.rule_name == "value_list" {
                         let expanded = self.expand_value_list(n.clone(), scope)?;
-                        value_text = Some(emit_raw_node(&expanded));
+                        // Try to evaluate as an expression (e.g. $i + 1 → 2).
+                        // This is critical for @while loops: without it,
+                        // $i: $i + 1 stores "1 + 1" instead of "2", causing
+                        // the loop condition to never change and looping forever.
+                        let evaluator = ExpressionEvaluator::new(scope);
+                        if let Ok(evaluated) = evaluator.evaluate_node(&expanded) {
+                            value_text = Some(evaluated.to_css_string());
+                        } else {
+                            value_text = Some(emit_raw_node(&expanded));
+                        }
                     } else if n.rule_name == "variable_flag" {
                         for fc in &n.children {
                             if let ASTNodeOrToken::Token(ft) = fc {
