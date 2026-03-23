@@ -347,7 +347,22 @@ export class GrammarParser {
     }
 
     const startPos = this.pos;
-    const children = this.matchElement(rule.body);
+
+    // Left-recursion guard: seed the memo with a failure entry BEFORE
+    // parsing the rule body. If the rule references itself (directly or
+    // indirectly) at the same position, the memo check above will find
+    // this failure entry and return null, breaking the infinite recursion.
+    //
+    // After the initial parse, if it succeeded, we iteratively try to
+    // grow the match. This is the standard technique for handling left
+    // recursion in packrat parsers (Warth et al., "Packrat Parsers Can
+    // Support Left Recursion", 2008).
+    if (idx !== undefined) {
+      const key = `${idx},${startPos}`;
+      this.memo.set(key, { children: null, endPos: startPos, ok: false });
+    }
+
+    let children = this.matchElement(rule.body);
 
     // Cache result
     if (idx !== undefined) {
@@ -356,6 +371,26 @@ export class GrammarParser {
         this.memo.set(key, { children, endPos: this.pos, ok: true });
       } else {
         this.memo.set(key, { children: null, endPos: this.pos, ok: false });
+      }
+
+      // If the initial parse succeeded, iteratively try to grow the match.
+      // Each iteration re-parses the rule body with the previous successful
+      // result cached, allowing the left-recursive alternative to consume
+      // more input.
+      if (children !== null) {
+        for (;;) {
+          const prevEnd = this.pos;
+          this.pos = startPos;
+          this.memo.set(key, { children, endPos: prevEnd, ok: true });
+          const newChildren = this.matchElement(rule.body);
+          if (newChildren === null || this.pos <= prevEnd) {
+            // Could not grow the match — restore the best result.
+            this.pos = prevEnd;
+            this.memo.set(key, { children, endPos: prevEnd, ok: true });
+            break;
+          }
+          children = newChildren;
+        }
       }
     }
 
