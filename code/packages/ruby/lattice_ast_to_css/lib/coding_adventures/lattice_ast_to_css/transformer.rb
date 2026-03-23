@@ -188,10 +188,9 @@ module CodingAdventures
               end
             end
 
-            new_children << child
-          else
-            new_children << child
           end
+
+          new_children << child
         end
 
         # NOTE: collect_symbols does NOT rebuild the AST here. It only reads
@@ -1058,12 +1057,14 @@ module CodingAdventures
         end
 
         evaluator = make_evaluator(scope)
+        matched_block = nil
         branches.each do |condition, block|
           if condition.nil? || LatticeAstToCss.truthy?(evaluator.evaluate(condition))
-            evaluate_block_in_function(block, scope)
-            return
+            matched_block = block
+            break
           end
         end
+        evaluate_block_in_function(matched_block, scope) if matched_block
       end
 
       def evaluate_block_in_function(block, scope)

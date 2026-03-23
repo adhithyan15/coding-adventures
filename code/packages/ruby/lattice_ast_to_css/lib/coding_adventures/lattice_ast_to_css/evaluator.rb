@@ -425,7 +425,7 @@ module CodingAdventures
       def compare(left, right, op)
         # Numeric comparison for same types.
         numeric_types = [LatticeNumber, LatticeDimension, LatticePercentage]
-        if numeric_types.any? { |t| left.is_a?(t) } && left.class == right.class
+        if numeric_types.any? { |t| left.is_a?(t) } && left.instance_of?(right.class)
           lv = left.value
           rv = right.value
 
