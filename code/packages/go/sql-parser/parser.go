@@ -58,11 +58,21 @@ import (
 	sqllexer "github.com/adhithyan15/coding-adventures/code/packages/go/sql-lexer"
 )
 
+// sqlGrammarPath is the path to the sql.grammar file. It defaults to "" which
+// triggers automatic path discovery via runtime.Caller(0). Tests can override
+// this variable to point at a different file (or a non-existent path) to
+// exercise error-handling code paths without mocking.
+//
+// This pattern is equivalent to dependency injection for file paths: the
+// default is the real production path, and tests can swap it temporarily.
+var sqlGrammarPath = ""
+
 // getGrammarPath computes the absolute path to the sql.grammar file.
 //
-// This uses the same runtime.Caller(0) technique as the sql-lexer package.
-// We navigate up 3 levels from this source file to reach the code/ directory,
-// then down into grammars/.
+// If sqlGrammarPath is non-empty (e.g., overridden by a test), that value is
+// returned directly. Otherwise, this uses runtime.Caller(0) to locate the
+// source file at compile/run time and navigates up 3 levels to the grammars/
+// directory.
 //
 // Directory structure:
 //
@@ -74,6 +84,10 @@ import (
 //	      sql-parser/
 //	        parser.go    <-- we are here (3 levels below code/)
 func getGrammarPath() string {
+	if sqlGrammarPath != "" {
+		return sqlGrammarPath
+	}
+
 	// runtime.Caller(0) returns the file path of this source file at runtime.
 	_, filename, _, _ := runtime.Caller(0)
 

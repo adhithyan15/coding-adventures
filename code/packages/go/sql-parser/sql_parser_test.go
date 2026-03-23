@@ -1,6 +1,7 @@
 package sqlparser
 
 import (
+	"os"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
@@ -417,6 +418,68 @@ func TestCreateSQLParser(t *testing.T) {
 	}
 	if ast.RuleName != "program" {
 		t.Errorf("Expected root rule 'program', got %q", ast.RuleName)
+	}
+}
+
+// =============================================================================
+// TestCreateSQLParserErrorMissingGrammarFile
+// =============================================================================
+//
+// Verifies that CreateSQLParser returns an error when the grammar file cannot
+// be found. This exercises the os.ReadFile error path that is otherwise
+// unreachable in normal operation.
+//
+// We use the package-level sqlGrammarPath override to point at a non-existent
+// file, then restore it after the test with defer.
+func TestCreateSQLParserErrorMissingGrammarFile(t *testing.T) {
+	original := sqlGrammarPath
+	sqlGrammarPath = "/does/not/exist/sql.grammar"
+	defer func() { sqlGrammarPath = original }()
+
+	_, err := CreateSQLParser("SELECT 1")
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestParseSQLErrorPropagates
+// =============================================================================
+//
+// Verifies that ParseSQL propagates errors from CreateSQLParser. This covers
+// the `if err != nil { return nil, err }` path inside ParseSQL, which is
+// otherwise unreachable because the grammar file is always present.
+func TestParseSQLErrorPropagates(t *testing.T) {
+	original := sqlGrammarPath
+	sqlGrammarPath = "/does/not/exist/sql.grammar"
+	defer func() { sqlGrammarPath = original }()
+
+	_, err := ParseSQL("SELECT 1")
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestCreateSQLParserErrorInvalidGrammar
+// =============================================================================
+//
+// Verifies that CreateSQLParser returns an error when the grammar file exists
+// but contains invalid EBNF. This covers the ParseParserGrammar error path.
+func TestCreateSQLParserErrorInvalidGrammar(t *testing.T) {
+	tmp := t.TempDir()
+	badPath := tmp + "/bad.grammar"
+	if err := os.WriteFile(badPath, []byte("not valid EBNF %%%\n"), 0o644); err != nil {
+		t.Fatalf("Failed to write temp grammar: %v", err)
+	}
+
+	original := sqlGrammarPath
+	sqlGrammarPath = badPath
+	defer func() { sqlGrammarPath = original }()
+
+	_, err := CreateSQLParser("SELECT 1")
+	if err == nil {
+		t.Error("Expected error for invalid grammar content, got nil")
 	}
 }
 

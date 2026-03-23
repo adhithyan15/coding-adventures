@@ -1,6 +1,7 @@
 package sqllexer
 
 import (
+	"os"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -419,6 +420,71 @@ func TestCreateSQLLexer(t *testing.T) {
 	tokens := lex.Tokenize()
 	if len(tokens) < 2 {
 		t.Fatalf("Expected at least 2 tokens, got %d", len(tokens))
+	}
+}
+
+// =============================================================================
+// TestCreateSQLLexerErrorMissingFile
+// =============================================================================
+//
+// Verifies that CreateSQLLexer returns an error when the grammar file cannot
+// be found. This exercises the os.ReadFile error path in CreateSQLLexer that
+// is otherwise unreachable in normal operation.
+//
+// We use the package-level sqlTokensPath override to point at a non-existent
+// file, then restore it after the test. This is the standard Go pattern for
+// testing file-path-dependent code without mocking.
+func TestCreateSQLLexerErrorMissingFile(t *testing.T) {
+	original := sqlTokensPath
+	sqlTokensPath = "/does/not/exist/sql.tokens"
+	defer func() { sqlTokensPath = original }()
+
+	_, err := CreateSQLLexer("SELECT 1")
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestTokenizeSQLErrorMissingFile
+// =============================================================================
+//
+// Verifies that TokenizeSQL propagates the error from CreateSQLLexer when the
+// grammar file is missing. This covers the error return path in TokenizeSQL.
+func TestTokenizeSQLErrorMissingFile(t *testing.T) {
+	original := sqlTokensPath
+	sqlTokensPath = "/does/not/exist/sql.tokens"
+	defer func() { sqlTokensPath = original }()
+
+	_, err := TokenizeSQL("SELECT 1")
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestCreateSQLLexerErrorInvalidGrammar
+// =============================================================================
+//
+// Verifies that CreateSQLLexer returns an error when the grammar file exists
+// but contains invalid content. This exercises the ParseTokenGrammar error path.
+//
+// We write a temporary file with invalid grammar content and point the lexer at it.
+func TestCreateSQLLexerErrorInvalidGrammar(t *testing.T) {
+	// Write a temp file with invalid grammar content (malformed token definition)
+	tmp := t.TempDir()
+	badGrammarPath := tmp + "/bad.tokens"
+	if err := os.WriteFile(badGrammarPath, []byte("INVALID%%GRAMMAR\n"), 0o644); err != nil {
+		t.Fatalf("Failed to create temp grammar file: %v", err)
+	}
+
+	original := sqlTokensPath
+	sqlTokensPath = badGrammarPath
+	defer func() { sqlTokensPath = original }()
+
+	_, err := CreateSQLLexer("SELECT 1")
+	if err == nil {
+		t.Error("Expected error for invalid grammar content, got nil")
 	}
 }
 
