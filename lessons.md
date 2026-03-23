@@ -704,3 +704,21 @@ When a Python package is added to the `[tool.uv.workspace]` members list in `cod
 2. The correct fix for directed-graph resolution failures is to **remove the problematic workspace member** (e.g., `state-machine`) from the workspace — not to add the missing dep to the workspace.
 3. Packages that install deps via explicit `-e ../dep` paths in their BUILD files don't need to be workspace members. The workspace is only needed for packages that have no explicit dep paths (like `grammar-tools` which only does `uv pip install -e .[dev]`).
 4. **Grammar-tools is correctly a workspace member** since it has no runtime deps, so no workspace resolution issues arise (as long as other workspace members don't have unresolvable deps).
+
+---
+
+### 2026-03-23: Python BUILD_windows for packages with no runtime deps must use python -m venv + pip
+
+Packages where `pyproject.toml` has `dependencies = []` (no runtime deps) and the BUILD file only has `uv pip install -e ".[dev]"` fail on Windows with `No module named pytest` because:
+1. `uv venv --quiet --clear` creates the workspace-root venv (not package-local)
+2. `uv pip install -e .[dev]` installs pytest into that venv
+3. `uv run python -m pytest` syncs the project env (only runtime deps → 0 pkgs) → removes pytest
+
+**Fix for grammar-tools and similar no-dep packages:** Use `python -m venv` (creates package-local .venv) + direct pip paths:
+```
+python -m venv .venv --clear
+.venv\Scripts\pip install -e .[dev] --quiet
+.venv\Scripts\python -m pytest tests/ -v
+```
+
+**Critical quoting rule:** Use `.[dev]` WITHOUT double quotes in `BUILD_windows` files. Go's `exec.Command("cmd", "/C", command)` escapes arguments via Windows CreateProcess API, causing CMD to receive the literal string `".[dev]"` (with quotes) instead of `.[dev]`. Pip then rejects it: `ERROR: ".[dev]" is not a valid editable requirement`. The Unix BUILD files can use `".[dev]"` because bash strips quotes before passing to pip. Always check existing working BUILD_windows files (e.g., `lexer/BUILD_windows`) — they all use unquoted `.[dev]`.
