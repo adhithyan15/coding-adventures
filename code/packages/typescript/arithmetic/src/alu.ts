@@ -95,7 +95,7 @@ function bitwiseOp(
  * The beauty of this is that the ALU can use the EXACT same adder circuit for
  * both positive and negative math. No special subtraction hardware is needed!
  */
-function twosComplementNegate(bits: Bit[]): [Bit[], Bit] {
+export function twosComplementNegate(bits: Bit[]): [Bit[], Bit] {
   const inverted: Bit[] = bits.map((b) => NOT(b));
   const one: Bit[] = [1 as Bit, ...new Array<Bit>(bits.length - 1).fill(0 as Bit)];
   return rippleCarryAdder(inverted, one);

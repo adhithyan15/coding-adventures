@@ -60,7 +60,7 @@ type Package struct {
 	Name          string   // Qualified name, e.g. "python/logic-gates"
 	Path          string   // Absolute path to the package directory
 	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", "starlark", or "unknown"
+	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "starlark", or "unknown"
 	BuildContent  string   // Raw BUILD file content (used for Starlark detection)
 	IsStarlark    bool     // Whether this BUILD file is Starlark (vs shell)
 	DeclaredSrcs  []string // Explicit source files from Starlark srcs field
@@ -119,7 +119,7 @@ func readLines(filepath string) []string {
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "starlark"} {
+	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "lua", "starlark"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang

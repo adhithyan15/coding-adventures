@@ -69,11 +69,30 @@ module CodingAdventures
       TT = CodingAdventures::Lexer::TokenType
       GT = CodingAdventures::GrammarTools
 
-      def initialize(tokens, grammar)
+      # Initialize a grammar-driven parser.
+      #
+      # Arguments:
+      #   tokens  -- flat array of Token objects from the lexer
+      #   grammar -- ParserGrammar produced by GT.parse_parser_grammar
+      #
+      # Keyword arguments:
+      #   trace: false  -- when true, emit a [TRACE] line to $stderr for
+      #                    every rule attempt. Useful for debugging why a
+      #                    parse is failing or succeeding.
+      #
+      # Trace format:
+      #
+      #   [TRACE] rule 'qualified_rule' at token 5 (IDENT "h1") → match
+      #   [TRACE] rule 'at_rule' at token 5 (IDENT "h1") → fail
+      #
+      # The token index is the position *before* the attempt. The type and
+      # value shown are those of the token at that position.
+      def initialize(tokens, grammar, trace: false)
         @tokens = tokens
         @grammar = grammar
         @pos = 0
         @rules = {}
+        @trace = trace
         grammar.rules.each { |rule| @rules[rule.name] = rule }
 
         # Detect whether newlines are significant in this grammar.
@@ -170,10 +189,19 @@ module CodingAdventures
       end
 
       # Parse a named grammar rule with memoization.
+      #
+      # When trace mode is enabled, emits a [TRACE] line to $stderr for every
+      # rule attempt (both hits and misses), whether the result is fresh or
+      # served from the memo cache. This makes the full parse history visible
+      # without changing the parse result.
       def parse_rule(rule_name)
         unless @rules.key?(rule_name)
           raise GrammarParseError.new("Undefined rule: #{rule_name}")
         end
+
+        # Capture position and token info for trace output.
+        attempt_pos = @pos
+        tok = current
 
         # Check memo cache.
         memo_key = [rule_name, @pos]
@@ -181,11 +209,13 @@ module CodingAdventures
           cached_result, cached_end_pos = @memo[memo_key]
           @pos = cached_end_pos
           if cached_result.nil?
+            emit_trace(rule_name, attempt_pos, tok, :fail) if @trace
             raise GrammarParseError.new(
               "Expected #{rule_name}, got #{current.value.inspect}",
               current
             )
           end
+          emit_trace(rule_name, attempt_pos, tok, :match) if @trace
           return ASTNode.new(rule_name: rule_name, children: cached_result)
         end
 
@@ -200,13 +230,29 @@ module CodingAdventures
         unless children
           @pos = start_pos
           record_failure(rule_name)
+          emit_trace(rule_name, attempt_pos, tok, :fail) if @trace
           raise GrammarParseError.new(
             "Expected #{rule_name}, got #{current.value.inspect}",
             current
           )
         end
 
+        emit_trace(rule_name, attempt_pos, tok, :match) if @trace
         ASTNode.new(rule_name: rule_name, children: children)
+      end
+
+      # Emit a single trace line to $stderr.
+      #
+      # Format:
+      #   [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail
+      #
+      # The arrow uses the Unicode right arrow (→) to visually separate the
+      # context from the outcome, matching the Python trace format.
+      def emit_trace(rule_name, pos, tok, outcome)
+        type_str = tok.type.to_s
+        val_str = tok.value.to_s
+        result_str = (outcome == :match) ? "match" : "fail"
+        warn "[TRACE] rule '#{rule_name}' at token #{pos} (#{type_str} \"#{val_str}\") \u2192 #{result_str}"
       end
 
       # Try to match a grammar element against the token stream.

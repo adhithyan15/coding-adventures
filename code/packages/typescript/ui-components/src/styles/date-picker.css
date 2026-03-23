@@ -1,0 +1,51 @@
+/*
+ * date-picker.css — Shared styles for the DatePicker component.
+ *
+ * Styles the native <input type="date"> to match the dark theme.
+ * The clear button (✕) floats to the right of the input.
+ */
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.date-picker__input {
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 0.95rem;
+  background: var(--panel-bg, #161b22);
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  color: inherit;
+  padding: 8px 12px;
+  flex: 1;
+  color-scheme: dark;
+}
+
+.date-picker__input:focus {
+  outline: 2px solid var(--accent, #58a6ff);
+  outline-offset: 2px;
+}
+
+.date-picker__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 4px;
+  color: var(--tab-text, #8b949e);
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.date-picker__clear:hover {
+  border-color: var(--danger-color, #f87171);
+  color: var(--danger-color, #f87171);
+}

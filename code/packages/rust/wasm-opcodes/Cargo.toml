@@ -1,0 +1,8 @@
+[package]
+name = "wasm-opcodes"
+version = "0.1.0"
+edition = "2021"
+description = "Complete WASM 1.0 opcode table with metadata (name, immediates, stack effects, category)"
+
+[dependencies]
+wasm-types = { path = "../wasm-types" }
