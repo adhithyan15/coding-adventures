@@ -97,13 +97,6 @@ extern "C" {
     pub fn PyObject_GetIter(o: PyObjectPtr) -> PyObjectPtr;
     pub fn PyIter_Next(iter: PyObjectPtr) -> PyObjectPtr;
 
-    // -- Boolean/None singletons -------------------------------------------
-    // These are global variables in libpython, not functions.
-    // We access them via helper functions below.
-    static mut _Py_TrueStruct: PyObject;
-    static mut _Py_FalseStruct: PyObject;
-    static mut _Py_NoneStruct: PyObject;
-
     // -- Error handling ----------------------------------------------------
     pub fn PyErr_SetString(type_: PyObjectPtr, message: *const c_char);
     pub fn PyErr_NewException(
@@ -113,10 +106,20 @@ extern "C" {
     ) -> PyObjectPtr;
     pub fn PyErr_Clear();
 
-    // -- Built-in exception types ------------------------------------------
-    static mut PyExc_Exception: PyObjectPtr;
-    static mut PyExc_ValueError: PyObjectPtr;
-    static mut PyExc_RuntimeError: PyObjectPtr;
+    // -- Object protocol ---------------------------------------------------
+    pub fn PyObject_GetAttrString(obj: PyObjectPtr, name: *const c_char) -> PyObjectPtr;
+
+    // -- Bool creation (avoids dllimport issue with _Py_TrueStruct) --------
+    pub fn PyBool_FromLong(v: c_long) -> PyObjectPtr;
+
+    // -- Py_None / Py_True / Py_False via Py_BuildValue --------------------
+    // On Windows, accessing _Py_NoneStruct and PyExc_* as extern statics
+    // requires dllimport which Rust doesn't support portably. Instead we
+    // use functions that return the same values.
+    pub fn Py_BuildValue(format: *const c_char, ...) -> PyObjectPtr;
+
+    // -- Import ------------------------------------------------------------
+    pub fn PyImport_ImportModule(name: *const c_char) -> PyObjectPtr;
 }
 
 // ---------------------------------------------------------------------------
@@ -314,18 +317,14 @@ pub unsafe fn set_str_from_py(obj: PyObjectPtr) -> Option<HashSet<String>> {
 // Safe wrappers — Boolean, Integer, None
 // ---------------------------------------------------------------------------
 
-/// Python `True`.
+/// Python `True` (new reference via PyBool_FromLong).
 pub unsafe fn py_true() -> PyObjectPtr {
-    let obj = &raw mut _Py_TrueStruct as PyObjectPtr;
-    Py_IncRef(obj);
-    obj
+    PyBool_FromLong(1)
 }
 
-/// Python `False`.
+/// Python `False` (new reference via PyBool_FromLong).
 pub unsafe fn py_false() -> PyObjectPtr {
-    let obj = &raw mut _Py_FalseStruct as PyObjectPtr;
-    Py_IncRef(obj);
-    obj
+    PyBool_FromLong(0)
 }
 
 /// Convert a Rust `bool` to Python bool.
@@ -338,11 +337,11 @@ pub unsafe fn usize_to_py(n: usize) -> PyObjectPtr {
     PyLong_FromLong(n as c_long)
 }
 
-/// Python `None` (with incremented reference count).
+/// Python `None` (new reference via Py_BuildValue with empty format).
 pub unsafe fn py_none() -> PyObjectPtr {
-    let obj = &raw mut _Py_NoneStruct as PyObjectPtr;
-    Py_IncRef(obj);
-    obj
+    // Py_BuildValue("") returns a new reference to Py_None
+    let fmt = b"\0".as_ptr() as *const c_char;
+    Py_BuildValue(fmt)
 }
 
 // ---------------------------------------------------------------------------
@@ -389,19 +388,29 @@ pub unsafe fn set_error(exc_type: PyObjectPtr, msg: &str) {
     PyErr_SetString(exc_type, c_msg.as_ptr());
 }
 
+/// Get a built-in exception class by name from the builtins module.
+unsafe fn get_builtin_exception(name: &str) -> PyObjectPtr {
+    let builtins_name = CString::new("builtins").unwrap();
+    let builtins = PyImport_ImportModule(builtins_name.as_ptr());
+    let exc_name = CString::new(name).unwrap();
+    let exc = PyObject_GetAttrString(builtins, exc_name.as_ptr());
+    Py_DecRef(builtins);
+    exc
+}
+
 /// Get the built-in Exception class.
 pub unsafe fn exception_class() -> PyObjectPtr {
-    PyExc_Exception
+    get_builtin_exception("Exception")
 }
 
 /// Get the built-in ValueError class.
 pub unsafe fn value_error_class() -> PyObjectPtr {
-    PyExc_ValueError
+    get_builtin_exception("ValueError")
 }
 
 /// Get the built-in RuntimeError class.
 pub unsafe fn runtime_error_class() -> PyObjectPtr {
-    PyExc_RuntimeError
+    get_builtin_exception("RuntimeError")
 }
 
 // ---------------------------------------------------------------------------
