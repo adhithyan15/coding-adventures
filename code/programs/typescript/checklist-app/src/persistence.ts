@@ -46,6 +46,10 @@ import {
   INSTANCE_ANSWER,
   INSTANCE_COMPLETE,
   INSTANCE_ABANDON,
+  TODO_CREATE,
+  TODO_UPDATE,
+  TODO_DELETE,
+  TODO_TOGGLE,
 } from "./actions.js";
 
 /**
@@ -109,6 +113,30 @@ export function createPersistenceMiddleware(
         if (instance) {
           storage.put<Instance>("instances", instance);
         }
+        break;
+      }
+
+      // ── Todo persistence ──────────────────────────────────────────────
+      case TODO_CREATE: {
+        const todo = state.todos[state.todos.length - 1];
+        if (todo) {
+          storage.put("todos", todo);
+        }
+        break;
+      }
+
+      case TODO_UPDATE:
+      case TODO_TOGGLE: {
+        const todoId = action.todoId as string;
+        const todo = state.todos.find((t) => t.id === todoId);
+        if (todo) {
+          storage.put("todos", todo);
+        }
+        break;
+      }
+
+      case TODO_DELETE: {
+        storage.delete("todos", action.todoId as string);
         break;
       }
 

@@ -19,7 +19,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  store.dispatch(stateLoadAction([], []));
+  store.dispatch(stateLoadAction([], [], []));
 });
 
 describe("StatsView", () => {

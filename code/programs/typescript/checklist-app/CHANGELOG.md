@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0] - Unreleased
+
+### Added
+
+- **Todo list** — basic CRUD for todo items integrated into the app
+- **TodoItem data model** — id, title, description, status (todo/in-progress/done),
+  createdAt, updatedAt. All JSON-serializable for future DB compatibility.
+- **4 new actions** — TODO_CREATE, TODO_UPDATE, TODO_DELETE, TODO_TOGGLE
+- **2 new screens** — TodoList (grouped by status) and TodoEditor (create/edit form)
+- **Header navigation** — Checklists / Todos tab bar for switching between modes
+- **IndexedDB v2** — new "todos" object store, schema upgrade from v1
+- **Persistence** — todos saved to IndexedDB via the same middleware pattern
+
 ## [0.3.0] - Unreleased
 
 ### Added

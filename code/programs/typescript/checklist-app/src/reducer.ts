@@ -38,6 +38,8 @@ import type {
   DecisionInstanceItem,
   DecisionAnswer,
   InstanceStats,
+  TodoItem,
+  TodoStatus,
 } from "./types.js";
 import {
   TEMPLATE_CREATE,
@@ -50,6 +52,10 @@ import {
   INSTANCE_COMPLETE,
   INSTANCE_ABANDON,
   STATE_LOAD,
+  TODO_CREATE,
+  TODO_UPDATE,
+  TODO_DELETE,
+  TODO_TOGGLE,
 } from "./actions.js";
 
 // ── AppState ───────────────────────────────────────────────────────────────
@@ -57,6 +63,7 @@ import {
 export interface AppState {
   templates: Template[];
   instances: Instance[];
+  todos: TodoItem[];
 }
 
 // ── ID generation ──────────────────────────────────────────────────────────
@@ -349,8 +356,58 @@ export function reducer(state: AppState, action: Action): AppState {
 
     case STATE_LOAD: {
       return {
-        templates: action.templates as Template[],
-        instances: action.instances as Instance[],
+        templates: (action.templates as Template[]) ?? [],
+        instances: (action.instances as Instance[]) ?? [],
+        todos: (action.todos as TodoItem[]) ?? [],
+      };
+    }
+
+    // ── Todo actions ─────────────────────────────────────────────────
+
+    case TODO_CREATE: {
+      const now = Date.now();
+      const todo: TodoItem = {
+        id: generateId(),
+        title: action.title as string,
+        description: (action.description as string) ?? "",
+        status: "todo",
+        createdAt: now,
+        updatedAt: now,
+      };
+      return { ...state, todos: [...state.todos, todo] };
+    }
+
+    case TODO_UPDATE: {
+      const todoId = action.todoId as string;
+      const patch = action.patch as Partial<TodoItem>;
+      return {
+        ...state,
+        todos: state.todos.map((t) =>
+          t.id === todoId ? { ...t, ...patch, updatedAt: Date.now() } : t
+        ),
+      };
+    }
+
+    case TODO_DELETE: {
+      const todoId = action.todoId as string;
+      return {
+        ...state,
+        todos: state.todos.filter((t) => t.id !== todoId),
+      };
+    }
+
+    case TODO_TOGGLE: {
+      const todoId = action.todoId as string;
+      const statusCycle: Record<TodoStatus, TodoStatus> = {
+        "todo": "in-progress",
+        "in-progress": "done",
+        "done": "todo",
+      };
+      return {
+        ...state,
+        todos: state.todos.map((t) =>
+          t.id === todoId ? { ...t, status: statusCycle[t.status], updatedAt: Date.now() } : t
+        ),
       };
     }
 

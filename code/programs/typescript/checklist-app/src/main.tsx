@@ -30,7 +30,7 @@ import { stateLoadAction, STATE_LOAD } from "./actions.js";
 import { createPersistenceMiddleware } from "./persistence.js";
 import { seedTemplates } from "./seed.js";
 import { App } from "./App.js";
-import type { Template, Instance } from "./types.js";
+import type { Template, Instance, TodoItem } from "./types.js";
 import "@coding-adventures/ui-components/src/styles/theme.css";
 import "./styles/app.css";
 import en from "./i18n/locales/en.json";
@@ -44,7 +44,7 @@ async function init() {
   try {
     const idbStorage = new IndexedDBStorage({
       dbName: "checklist-app",
-      version: 1,
+      version: 2,
       stores: [
         { name: "templates", keyPath: "id" },
         {
@@ -52,6 +52,7 @@ async function init() {
           keyPath: "id",
           indexes: [{ name: "templateId", keyPath: "templateId" }],
         },
+        { name: "todos", keyPath: "id" },
       ],
     });
     await idbStorage.open();
@@ -61,6 +62,7 @@ async function init() {
     const memStorage = new MemoryStorage([
       { name: "templates", keyPath: "id" },
       { name: "instances", keyPath: "id" },
+      { name: "todos", keyPath: "id" },
     ]);
     await memStorage.open();
     storage = memStorage;
@@ -69,13 +71,14 @@ async function init() {
   // ── 3. Load existing data ───────────────────────────────────────────────
   const templates = await storage.getAll<Template>("templates");
   const instances = await storage.getAll<Instance>("instances");
+  const todos = await storage.getAll<TodoItem>("todos");
 
   // ── 4. Attach persistence middleware BEFORE dispatching any actions ────
   store.use(createPersistenceMiddleware(storage));
 
   if (templates.length > 0) {
     // Existing user — load their persisted data into the store
-    store.dispatch(stateLoadAction(templates, instances));
+    store.dispatch(stateLoadAction(templates, instances, todos));
   } else {
     // First visit — seed example templates (persistence middleware saves them)
     seedTemplates(store);

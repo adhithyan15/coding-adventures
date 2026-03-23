@@ -23,6 +23,8 @@ import { TemplateLibrary } from "./components/TemplateLibrary.js";
 import { TemplateEditor } from "./components/TemplateEditor.js";
 import { InstanceRunner } from "./components/InstanceRunner.js";
 import { StatsView } from "./components/StatsView.js";
+import { TodoList } from "./components/TodoList.js";
+import { TodoEditor } from "./components/TodoEditor.js";
 
 // ── Router ─────────────────────────────────────────────────────────────────
 
@@ -68,6 +70,22 @@ function renderScreen(
     return <InstanceRunner instanceId={runMatch[1]} onNavigate={onNavigate} />;
   }
 
+  // #/todos
+  if (path === "/todos") {
+    return <TodoList onNavigate={onNavigate} />;
+  }
+
+  // #/todos/new
+  if (path === "/todos/new") {
+    return <TodoEditor onNavigate={onNavigate} />;
+  }
+
+  // #/todos/:id/edit
+  const todoEditMatch = path.match(/^\/todos\/([^/]+)\/edit$/);
+  if (todoEditMatch) {
+    return <TodoEditor todoId={todoEditMatch[1]} onNavigate={onNavigate} />;
+  }
+
   // 404
   return (
     <div>
@@ -109,6 +127,22 @@ export function App() {
         >
           Checklist
         </h1>
+        <nav className="app-nav">
+          <button
+            className={`app-nav__tab${!path.startsWith("/todos") ? " app-nav__tab--active" : ""}`}
+            onClick={() => handleNavigate("/")}
+            type="button"
+          >
+            Checklists
+          </button>
+          <button
+            className={`app-nav__tab${path.startsWith("/todos") ? " app-nav__tab--active" : ""}`}
+            onClick={() => handleNavigate("/todos")}
+            type="button"
+          >
+            Todos
+          </button>
+        </nav>
       </header>
       <main>{renderScreen(path, handleNavigate)}</main>
     </div>
