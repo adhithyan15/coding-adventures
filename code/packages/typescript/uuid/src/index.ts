@@ -1,5 +1,5 @@
 /**
- * @ca/uuid
+ * @coding-adventures/uuid
  *
  * UUID v1/v3/v4/v5/v7 generation and parsing (RFC 4122 + RFC 9562)
  *
@@ -60,8 +60,8 @@
  * byte first). This matches the standard UUID byte ordering defined by RFC 4122.
  */
 
-import { sha1 } from "@ca/sha1";
-import { md5 } from "@ca/md5";
+import { sha1 } from "@coding-adventures/sha1";
+import { md5 } from "@coding-adventures/md5";
 
 export const VERSION = "0.1.0";
 
