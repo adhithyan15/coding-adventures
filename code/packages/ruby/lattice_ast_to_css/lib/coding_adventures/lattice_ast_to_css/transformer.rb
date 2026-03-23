@@ -1383,11 +1383,34 @@ module CodingAdventures
           iteration += 1
           raise LatticeMaxIterationError.new(@max_while_iterations) if iteration > @max_while_iterations
 
-          expanded = expand_block_to_items(deep_copy(block), scope)
+          # Expand the block contents directly in the enclosing scope
+          # (NOT via expand_block which creates a child scope).
+          # @while needs variable mutations (e.g. $i: $i + 1) to
+          # persist across iterations and update the loop condition.
+          expanded = expand_while_body(deep_copy(block), scope)
           result.concat(expanded)
         end
 
         result
+      end
+
+      def expand_while_body(block, scope)
+        # Find the block_contents child inside the block node and
+        # expand it directly in the enclosing scope. Unlike expand_block
+        # (which creates a child scope), @while needs mutations to be
+        # visible to the loop condition on the next iteration.
+        return [] unless block.respond_to?(:children)
+
+        block.children.each do |child|
+          next unless child.respond_to?(:rule_name)
+
+          if child.rule_name == "block_contents"
+            expanded = expand_block_contents(child, scope)
+            return expanded.respond_to?(:children) ? expanded.children.compact : []
+          end
+        end
+
+        []
       end
 
       # ============================================================
