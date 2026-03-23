@@ -90,6 +90,9 @@ function TodoItemCard({
         {todo.description && (
           <p className="todo-item__description">{todo.description}</p>
         )}
+        {todo.dueDate && (
+          <DueDateBadge dueDate={todo.dueDate} isDone={todo.status === "done"} />
+        )}
       </div>
       <div className="todo-item__actions">
         <button
@@ -104,6 +107,17 @@ function TodoItemCard({
         </button>
       </div>
     </article>
+  );
+}
+
+function DueDateBadge({ dueDate, isDone }: { dueDate: string; isDone: boolean }) {
+  const { t } = useTranslation();
+  const today = new Date().toISOString().slice(0, 10);
+  const isOverdue = !isDone && dueDate < today;
+  return (
+    <span className={`todo-item__due${isOverdue ? " todo-item__due--overdue" : ""}`}>
+      {isOverdue ? `${t("todos.overdue")}: ${dueDate}` : dueDate}
+    </span>
   );
 }
 

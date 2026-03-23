@@ -77,5 +77,9 @@
   "todos.editorTitleNew": "New Todo",
   "todos.editorTitleEdit": "Edit Todo",
   "nav.checklists": "Checklists",
-  "nav.todos": "Todos"
+  "nav.todos": "Todos",
+
+  "todos.dueDate": "Due Date",
+  "todos.dueDateNone": "No due date",
+  "todos.overdue": "Overdue"
 }

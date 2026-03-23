@@ -14,6 +14,7 @@
 @import "@coding-adventures/ui-components/src/styles/theme.css";
 @import "@coding-adventures/ui-components/src/styles/accessibility.css";
 @import "@coding-adventures/ui-components/src/styles/tree.css";
+@import "@coding-adventures/ui-components/src/styles/date-picker.css";
 
 /* ── Reset ──────────────────────────────────────────────────────────────── */
 
@@ -761,4 +762,18 @@ textarea:focus {
 .todo-status-select:focus {
   outline: 2px solid var(--accent, #58a6ff);
   outline-offset: 2px;
+}
+
+/* ── Todo due date badge ────────────────────────────────────────────────── */
+
+.todo-item__due {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--tab-text, #8b949e);
+  margin-top: 4px;
+}
+
+.todo-item__due--overdue {
+  color: var(--danger-color, #f87171);
+  font-weight: 600;
 }

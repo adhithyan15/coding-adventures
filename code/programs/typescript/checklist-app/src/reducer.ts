@@ -371,6 +371,7 @@ export function reducer(state: AppState, action: Action): AppState {
         title: action.title as string,
         description: (action.description as string) ?? "",
         status: "todo",
+        dueDate: (action.dueDate as string | null) ?? null,
         createdAt: now,
         updatedAt: now,
       };
