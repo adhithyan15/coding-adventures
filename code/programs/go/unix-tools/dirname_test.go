@@ -18,6 +18,7 @@ package main
 
 import (
 	"bytes"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -45,6 +46,9 @@ func TestDirnameSpecLoads(t *testing.T) {
 
 // TestDirnameSimplePath verifies directory extraction from a full path.
 func TestDirnameSimplePath(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Unix-style path test not applicable on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runDirname(toolSpecPath(t, "dirname"), []string{"dirname", "/usr/bin/sort"}, &stdout, &stderr)
 
@@ -75,6 +79,9 @@ func TestDirnamePlainFilename(t *testing.T) {
 
 // TestDirnameRootPath verifies that "/" returns "/".
 func TestDirnameRootPath(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Unix-style path test not applicable on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runDirname(toolSpecPath(t, "dirname"), []string{"dirname", "/"}, &stdout, &stderr)
 
@@ -90,6 +97,9 @@ func TestDirnameRootPath(t *testing.T) {
 
 // TestDirnameMultipleArgs verifies processing multiple arguments.
 func TestDirnameMultipleArgs(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Unix-style path test not applicable on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runDirname(toolSpecPath(t, "dirname"), []string{"dirname", "/usr/bin/sort", "/home/user/file.txt"}, &stdout, &stderr)
 
@@ -112,6 +122,9 @@ func TestDirnameMultipleArgs(t *testing.T) {
 
 // TestDirnameZeroTerminated verifies -z uses NUL terminator.
 func TestDirnameZeroTerminated(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Unix-style path test not applicable on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runDirname(toolSpecPath(t, "dirname"), []string{"dirname", "-z", "/usr/bin/sort"}, &stdout, &stderr)
 
@@ -173,6 +186,9 @@ func TestDirnameInvalidSpec(t *testing.T) {
 
 // TestDirnameNestedPath verifies deep nested paths.
 func TestDirnameNestedPath(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Unix-style path test not applicable on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runDirname(toolSpecPath(t, "dirname"), []string{"dirname", "/a/b/c/d/e"}, &stdout, &stderr)
 

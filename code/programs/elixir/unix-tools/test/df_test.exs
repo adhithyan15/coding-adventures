@@ -178,41 +178,46 @@ defmodule DfTest do
   # Test: get_fs_info/0 (live system test)
   # ---------------------------------------------------------------------------
 
-  describe "get_fs_info/0" do
-    test "returns a non-empty list of filesystem entries" do
-      entries = UnixTools.Df.get_fs_info()
-      assert is_list(entries)
-      assert length(entries) > 0
+  # -------------------------------------------------------------------------
+  # Live filesystem tests — Unix only
+  #
+  # get_fs_info/0 and get_fs_info/1 shell out to the `df` command, which
+  # is not available on Windows. These tests only run on Unix systems.
+  # -------------------------------------------------------------------------
+
+  if :os.type() != {:win32, :nt} do
+    describe "get_fs_info/0" do
+      test "returns a non-empty list of filesystem entries" do
+        entries = UnixTools.Df.get_fs_info()
+        assert is_list(entries)
+        assert length(entries) > 0
+      end
+
+      test "entries have expected keys" do
+        entries = UnixTools.Df.get_fs_info()
+        entry = List.first(entries)
+
+        assert Map.has_key?(entry, :filesystem)
+        assert Map.has_key?(entry, :blocks)
+        assert Map.has_key?(entry, :used)
+        assert Map.has_key?(entry, :available)
+        assert Map.has_key?(entry, :use_percent)
+        assert Map.has_key?(entry, :mounted_on)
+      end
+
+      test "blocks are positive integers" do
+        entries = UnixTools.Df.get_fs_info()
+        entry = List.first(entries)
+        assert is_integer(entry.blocks)
+      end
     end
 
-    test "entries have expected keys" do
-      entries = UnixTools.Df.get_fs_info()
-      entry = List.first(entries)
-
-      assert Map.has_key?(entry, :filesystem)
-      assert Map.has_key?(entry, :blocks)
-      assert Map.has_key?(entry, :used)
-      assert Map.has_key?(entry, :available)
-      assert Map.has_key?(entry, :use_percent)
-      assert Map.has_key?(entry, :mounted_on)
-    end
-
-    test "blocks are positive integers" do
-      entries = UnixTools.Df.get_fs_info()
-      entry = List.first(entries)
-      assert is_integer(entry.blocks)
-    end
-  end
-
-  # ---------------------------------------------------------------------------
-  # Test: get_fs_info/1 (specific path, live system test)
-  # ---------------------------------------------------------------------------
-
-  describe "get_fs_info/1" do
-    test "returns info for root filesystem" do
-      entries = UnixTools.Df.get_fs_info("/")
-      assert is_list(entries)
-      assert length(entries) >= 1
+    describe "get_fs_info/1" do
+      test "returns info for root filesystem" do
+        entries = UnixTools.Df.get_fs_info("/")
+        assert is_list(entries)
+        assert length(entries) >= 1
+      end
     end
   end
 end

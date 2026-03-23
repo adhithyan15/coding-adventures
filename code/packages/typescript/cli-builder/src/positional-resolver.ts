@@ -68,6 +68,11 @@ export function coerceValue(
       // If we somehow end up here, treat as a raw string.
       return { value: raw };
 
+    case "count":
+      // Count flags are set by flag presence (like booleans), not by
+      // positional values. If we somehow end up here, treat as raw string.
+      return { value: raw };
+
     case "string":
       if (raw.length === 0) {
         return {
@@ -87,6 +92,28 @@ export function coerceValue(
           error: {
             errorType: "invalid_value",
             message: `Invalid integer for "${argId}": '${raw}'`,
+            context,
+          },
+        };
+      }
+      // v1.1: int64 range validation.
+      //
+      // JavaScript's Number type uses IEEE 754 double-precision floats,
+      // which can only represent integers exactly up to 2^53 - 1 (and
+      // down to -(2^53 - 1)). Beyond this range, integers lose precision:
+      // e.g., 2^53 + 1 === 2^53 in JavaScript.
+      //
+      // Number.MAX_SAFE_INTEGER = 9007199254740991 (2^53 - 1)
+      // Number.MIN_SAFE_INTEGER = -9007199254740991 (-(2^53 - 1))
+      //
+      // Values outside this range silently lose precision, which is a
+      // correctness hazard for IDs, timestamps, and large counters.
+      // We reject them at parse time with a clear error.
+      if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
+        return {
+          error: {
+            errorType: "invalid_value",
+            message: `Integer value for "${argId}" is outside the safe range (${Number.MIN_SAFE_INTEGER} to ${Number.MAX_SAFE_INTEGER}): '${raw}'`,
             context,
           },
         };

@@ -43,7 +43,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"syscall"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
@@ -59,51 +58,6 @@ type FsInfo struct {
 	UsedBytes  uint64 // bytes in use
 	AvailBytes uint64 // bytes available to non-root users
 	UsePercent int    // usage percentage (0-100)
-}
-
-// =========================================================================
-// getFilesystemInfo — get filesystem stats for a given path
-// =========================================================================
-//
-// Uses syscall.Statfs to query the kernel for filesystem statistics.
-// The Statfs struct contains:
-//   - Bsize:  fundamental filesystem block size
-//   - Blocks: total number of blocks
-//   - Bfree:  free blocks (total, including reserved for root)
-//   - Bavail: free blocks available to non-root users
-
-func getFilesystemInfo(path string) (*FsInfo, error) {
-	var stat syscall.Statfs_t
-	if err := syscall.Statfs(path, &stat); err != nil {
-		return nil, fmt.Errorf("cannot stat filesystem at %s: %w", path, err)
-	}
-
-	// Calculate sizes in bytes.
-	blockSize := uint64(stat.Bsize)
-	totalBytes := stat.Blocks * blockSize
-	availBytes := stat.Bavail * blockSize
-	freeBytes := stat.Bfree * blockSize
-	usedBytes := totalBytes - freeBytes
-
-	// Calculate usage percentage. Guard against divide-by-zero.
-	usePercent := 0
-	if totalBytes > 0 {
-		// The "used" for percentage calculation is: total - free-for-root.
-		// Denominator is: used + available-to-user.
-		denominator := usedBytes + availBytes
-		if denominator > 0 {
-			usePercent = int((usedBytes * 100) / denominator)
-		}
-	}
-
-	return &FsInfo{
-		Filesystem: "unknown", // Real implementation would read /proc/mounts
-		MountPoint: path,
-		TotalBytes: totalBytes,
-		UsedBytes:  usedBytes,
-		AvailBytes: availBytes,
-		UsePercent: usePercent,
-	}, nil
 }
 
 // =========================================================================

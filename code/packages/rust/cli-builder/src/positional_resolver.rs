@@ -380,12 +380,17 @@ pub fn coerce_value(raw: &str, type_name: &str, enum_values: &[String]) -> Resul
                 Ok(Value::String(raw.to_string()))
             }
         }
-        "integer" => raw.parse::<i64>().map(|n| json!(n)).map_err(|_| {
-            ParseError::new(
-                "invalid_value",
-                format!("Invalid integer: {:?}", raw),
-                vec![],
-            )
+        "integer" => raw.parse::<i64>().map(|n| json!(n)).map_err(|e| {
+            // Provide a clear error message distinguishing parse failures from
+            // out-of-range values. Rust's i64 parse already validates the full
+            // -2^63..2^63-1 range, but the error message should be helpful.
+            let msg = if raw.chars().all(|c| c.is_ascii_digit() || c == '-' || c == '+') {
+                // Looks numeric but out of range
+                format!("Integer value {:?} is out of range (must fit in int64): {}", raw, e)
+            } else {
+                format!("Invalid integer: {:?}", raw)
+            };
+            ParseError::new("invalid_value", msg, vec![])
         }),
         "float" => raw.parse::<f64>().map(|n| json!(n)).map_err(|_| {
             ParseError::new(

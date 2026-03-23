@@ -434,74 +434,84 @@ defmodule ChmodTest do
   # Test: File operations
   # ---------------------------------------------------------------------------
 
-  describe "file operations" do
-    @tag :tmp_dir
-    test "change file to 755", %{tmp_dir: tmp} do
-      path = Path.join(tmp, "test.sh")
-      File.write!(path, "#!/bin/sh\necho hello")
-      File.chmod!(path, 0o644)
+  # -------------------------------------------------------------------------
+  # File operations tests — Unix only
+  #
+  # These tests verify actual file permission changes via File.chmod!/2.
+  # Windows does not support Unix permission bits (owner/group/other rwx),
+  # so these tests only run on Unix systems.
+  # -------------------------------------------------------------------------
 
-      mode_spec = UnixTools.Chmod.parse_mode("755")
-      new_mode = UnixTools.Chmod.apply_mode(mode_spec, 0o644)
-      File.chmod!(path, new_mode)
+  if :os.type() != {:win32, :nt} do
+    describe "file operations" do
+      @tag :tmp_dir
+      test "change file to 755", %{tmp_dir: tmp} do
+        path = Path.join(tmp, "test.sh")
+        File.write!(path, "#!/bin/sh\necho hello")
+        File.chmod!(path, 0o644)
 
-      %{mode: file_mode} = File.stat!(path)
-      assert (file_mode &&& 0o777) == 0o755
-    end
+        mode_spec = UnixTools.Chmod.parse_mode("755")
+        new_mode = UnixTools.Chmod.apply_mode(mode_spec, 0o644)
+        File.chmod!(path, new_mode)
 
-    @tag :tmp_dir
-    test "add execute permission with symbolic mode", %{tmp_dir: tmp} do
-      path = Path.join(tmp, "script.sh")
-      File.write!(path, "#!/bin/sh")
-      File.chmod!(path, 0o644)
+        %{mode: file_mode} = File.stat!(path)
+        assert (file_mode &&& 0o777) == 0o755
+      end
 
-      mode_spec = UnixTools.Chmod.parse_mode("u+x")
-      current_mode = File.stat!(path).mode &&& 0o7777
-      new_mode = UnixTools.Chmod.apply_mode(mode_spec, current_mode)
-      File.chmod!(path, new_mode)
+      @tag :tmp_dir
+      test "add execute permission with symbolic mode", %{tmp_dir: tmp} do
+        path = Path.join(tmp, "script.sh")
+        File.write!(path, "#!/bin/sh")
+        File.chmod!(path, 0o644)
 
-      %{mode: file_mode} = File.stat!(path)
-      assert (file_mode &&& 0o100) == 0o100
-    end
-
-    @tag :tmp_dir
-    test "remove write from group and other", %{tmp_dir: tmp} do
-      path = Path.join(tmp, "readonly.txt")
-      File.write!(path, "content")
-      File.chmod!(path, 0o666)
-
-      mode_spec = UnixTools.Chmod.parse_mode("go-w")
-      current_mode = File.stat!(path).mode &&& 0o7777
-      new_mode = UnixTools.Chmod.apply_mode(mode_spec, current_mode)
-      File.chmod!(path, new_mode)
-
-      %{mode: file_mode} = File.stat!(path)
-      assert (file_mode &&& 0o022) == 0o000
-    end
-
-    @tag :tmp_dir
-    test "recursive chmod on directory", %{tmp_dir: tmp} do
-      dir = Path.join(tmp, "subdir")
-      File.mkdir_p!(dir)
-      file1 = Path.join(dir, "file1.txt")
-      file2 = Path.join(dir, "file2.txt")
-      File.write!(file1, "content1")
-      File.write!(file2, "content2")
-      File.chmod!(file1, 0o644)
-      File.chmod!(file2, 0o644)
-
-      # Apply u+x to both files via symbolic mode
-      mode_spec = UnixTools.Chmod.parse_mode("u+x")
-
-      [file1, file2]
-      |> Enum.each(fn file_path ->
-        current_mode = File.stat!(file_path).mode &&& 0o7777
+        mode_spec = UnixTools.Chmod.parse_mode("u+x")
+        current_mode = File.stat!(path).mode &&& 0o7777
         new_mode = UnixTools.Chmod.apply_mode(mode_spec, current_mode)
-        File.chmod!(file_path, new_mode)
-      end)
+        File.chmod!(path, new_mode)
 
-      assert (File.stat!(file1).mode &&& 0o100) == 0o100
-      assert (File.stat!(file2).mode &&& 0o100) == 0o100
+        %{mode: file_mode} = File.stat!(path)
+        assert (file_mode &&& 0o100) == 0o100
+      end
+
+      @tag :tmp_dir
+      test "remove write from group and other", %{tmp_dir: tmp} do
+        path = Path.join(tmp, "readonly.txt")
+        File.write!(path, "content")
+        File.chmod!(path, 0o666)
+
+        mode_spec = UnixTools.Chmod.parse_mode("go-w")
+        current_mode = File.stat!(path).mode &&& 0o7777
+        new_mode = UnixTools.Chmod.apply_mode(mode_spec, current_mode)
+        File.chmod!(path, new_mode)
+
+        %{mode: file_mode} = File.stat!(path)
+        assert (file_mode &&& 0o022) == 0o000
+      end
+
+      @tag :tmp_dir
+      test "recursive chmod on directory", %{tmp_dir: tmp} do
+        dir = Path.join(tmp, "subdir")
+        File.mkdir_p!(dir)
+        file1 = Path.join(dir, "file1.txt")
+        file2 = Path.join(dir, "file2.txt")
+        File.write!(file1, "content1")
+        File.write!(file2, "content2")
+        File.chmod!(file1, 0o644)
+        File.chmod!(file2, 0o644)
+
+        # Apply u+x to both files via symbolic mode
+        mode_spec = UnixTools.Chmod.parse_mode("u+x")
+
+        [file1, file2]
+        |> Enum.each(fn file_path ->
+          current_mode = File.stat!(file_path).mode &&& 0o7777
+          new_mode = UnixTools.Chmod.apply_mode(mode_spec, current_mode)
+          File.chmod!(file_path, new_mode)
+        end)
+
+        assert (File.stat!(file1).mode &&& 0o100) == 0o100
+        assert (File.stat!(file2).mode &&& 0o100) == 0o100
+      end
     end
   end
 end

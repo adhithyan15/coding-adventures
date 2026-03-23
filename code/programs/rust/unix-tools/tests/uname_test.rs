@@ -83,17 +83,22 @@ mod cli_parsing {
 mod business_logic {
     use super::*;
 
+    // All tests call get_system_info() which uses libc::uname — Unix only.
+
+    #[cfg(unix)]
     #[test]
     fn system_info_succeeds() {
         assert!(get_system_info().is_ok());
     }
 
+    #[cfg(unix)]
     #[test]
     fn sysname_nonempty() {
         let info = get_system_info().unwrap();
         assert!(!info.sysname.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn default_shows_sysname() {
         let info = get_system_info().unwrap();
@@ -101,6 +106,7 @@ mod business_logic {
         assert_eq!(output, info.sysname);
     }
 
+    #[cfg(unix)]
     #[test]
     fn all_has_multiple_parts() {
         let info = get_system_info().unwrap();
@@ -109,18 +115,21 @@ mod business_logic {
         assert!(parts.len() >= 3);
     }
 
+    #[cfg(unix)]
     #[test]
     fn machine_nonempty() {
         let info = get_system_info().unwrap();
         assert!(!info.machine.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn nodename_nonempty() {
         let info = get_system_info().unwrap();
         assert!(!info.nodename.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn kernel_name_flag() {
         let info = get_system_info().unwrap();
@@ -128,6 +137,7 @@ mod business_logic {
         assert_eq!(output, info.sysname);
     }
 
+    #[cfg(unix)]
     #[test]
     fn machine_flag() {
         let info = get_system_info().unwrap();

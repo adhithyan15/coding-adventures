@@ -85,17 +85,20 @@ mod cli_parsing {
 mod business_logic {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn get_groups_succeeds() {
         assert!(get_groups().is_ok());
     }
 
+    #[cfg(unix)]
     #[test]
     fn has_at_least_one_group() {
         let groups = get_groups().unwrap();
         assert!(!groups.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn group_names_nonempty() {
         let groups = get_groups().unwrap();
@@ -104,6 +107,7 @@ mod business_logic {
         }
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_output() {
         let groups = get_groups().unwrap();
@@ -113,6 +117,7 @@ mod business_logic {
         assert!(output.split_whitespace().count() >= 1);
     }
 
+    #[cfg(unix)]
     #[test]
     fn consistent_results() {
         let first = get_groups().unwrap();

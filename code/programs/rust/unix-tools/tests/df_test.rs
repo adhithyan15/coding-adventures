@@ -83,18 +83,21 @@ mod cli_parsing {
 mod business_logic {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn root_fs_info() {
         let info = get_fs_info("/");
         assert!(info.is_ok());
     }
 
+    #[cfg(unix)]
     #[test]
     fn total_positive() {
         let info = get_fs_info("/").unwrap();
         assert!(info.total_bytes > 0);
     }
 
+    #[cfg(unix)]
     #[test]
     fn use_percent_in_range() {
         let info = get_fs_info("/").unwrap();
@@ -126,6 +129,7 @@ mod business_logic {
         assert_eq!(bytes_to_1k_blocks(500), 1);
     }
 
+    #[cfg(unix)]
     #[test]
     fn block_size_positive() {
         let info = get_fs_info("/").unwrap();
