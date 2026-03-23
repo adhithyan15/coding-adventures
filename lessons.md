@@ -688,3 +688,19 @@ If the scaffold generator wouldn't produce the right output for your use case, f
 **Proper fix**: All 6 language implementations of the `.tokens` parser now use bracket-aware scanning that tracks `[...]` depth and doesn't treat `/` inside character classes as the closing delimiter. The scanner also has a fallback to `lastIndexOf("/")` for edge cases like unclosed brackets.
 
 **Rule**: Never escape `/` inside `[...]` in .tokens files. The parser handles it correctly.
+
+---
+
+### 2026-03-23: uv workspace membership causes shared venv on Windows, breaking parallel builds
+
+When a Python package is added to the `[tool.uv.workspace]` members list in `code/packages/python/pyproject.toml`, uv creates the virtual environment at the **workspace root** (`code/packages/python/.venv`) instead of the package directory. This causes two problems on Windows:
+
+**Problem 1 — Directed-graph resolution:** If any workspace member depends on a package that is NOT in the workspace sources (e.g., `state-machine` depends on `directed-graph`), uv tries to find it in PyPI, fails, and aborts. Example error: `coding-adventures-directed-graph was not found in the package registry and coding-adventures-state-machine depends on coding-adventures-directed-graph`.
+
+**Problem 2 — Shared venv race condition:** When multiple packages are workspace members and run `uv venv --quiet --clear` in parallel, they all clear and rebuild the SAME workspace-root venv. A package running `uv pip install -e .[dev]` installs only 1 package (itself) into the shared venv, then another parallel build clears it again. Result: `No module named pytest`.
+
+**Rules:**
+1. **Do NOT add new packages to the uv workspace members list** unless you explicitly want them to share a workspace-root venv.
+2. The correct fix for directed-graph resolution failures is to **remove the problematic workspace member** (e.g., `state-machine`) from the workspace — not to add the missing dep to the workspace.
+3. Packages that install deps via explicit `-e ../dep` paths in their BUILD files don't need to be workspace members. The workspace is only needed for packages that have no explicit dep paths (like `grammar-tools` which only does `uv pip install -e .[dev]`).
+4. **Grammar-tools is correctly a workspace member** since it has no runtime deps, so no workspace resolution issues arise (as long as other workspace members don't have unresolvable deps).
