@@ -54,7 +54,7 @@ use lexer::token::Token;
 
 use crate::errors::LatticeError;
 use crate::scope::ScopeChain;
-use crate::values::{LatticeValue, token_to_value};
+use crate::values::{LatticeValue, token_to_value, hex_to_rgba, rgb_to_hsl, hsl_to_rgb, rgba_to_hex};
 
 // ===========================================================================
 // Expression Evaluator
@@ -575,6 +575,380 @@ impl<'a> ExpressionEvaluator<'a> {
                 Ok(LatticeValue::Ident(name.to_string()))
             }
         }
+    }
+}
+
+// ===========================================================================
+// Built-in Functions (Lattice v2)
+// ===========================================================================
+//
+// Built-in functions are registered by name and dispatched during function
+// call evaluation. They cover four categories:
+//
+// 1. Color: lighten, darken, saturate, desaturate, adjust-hue, complement,
+//           mix, red, green, blue, hue, saturation, lightness
+// 2. List:  nth, length, join, append, index
+// 3. Map:   map-get, map-keys, map-values, map-has-key, map-merge, map-remove
+// 4. Math:  math.div, math.floor, math.ceil, math.round, math.abs,
+//           math.min, math.max
+// 5. Type:  type-of, unit, unitless, comparable
+
+/// Check if a function name is a Lattice built-in function.
+pub fn is_builtin_function(name: &str) -> bool {
+    matches!(name,
+        "lighten" | "darken" | "saturate" | "desaturate" |
+        "adjust-hue" | "complement" | "mix" |
+        "red" | "green" | "blue" | "hue" | "saturation" | "lightness" |
+        "nth" | "length" | "join" | "append" | "index" |
+        "map-get" | "map-keys" | "map-values" | "map-has-key" | "map-merge" | "map-remove" |
+        "math.div" | "math.floor" | "math.ceil" | "math.round" | "math.abs" |
+        "math.min" | "math.max" |
+        "type-of" | "unit" | "unitless" | "comparable" |
+        "if"
+    )
+}
+
+/// Evaluate a built-in function call with the given arguments.
+pub fn evaluate_builtin(name: &str, args: &[LatticeValue]) -> Result<LatticeValue, LatticeError> {
+    match name {
+        // -------------------------------------------------------------------
+        // Conditional function
+        // -------------------------------------------------------------------
+        "if" => {
+            if args.len() != 3 {
+                return Err(LatticeError::wrong_arity("Function", "if", 3, args.len(), 0, 0));
+            }
+            if args[0].is_truthy() { Ok(args[1].clone()) } else { Ok(args[2].clone()) }
+        }
+
+        // -------------------------------------------------------------------
+        // Color functions
+        // -------------------------------------------------------------------
+        "lighten" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let amount = extract_percentage_or_number(&args[1]);
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (h, s, l, _) = rgb_to_hsl(r, g, b, a);
+            let new_l = (l + amount).clamp(0.0, 100.0);
+            let (nr, ng, nb) = hsl_to_rgb(h, s, new_l);
+            Ok(LatticeValue::Color(rgba_to_hex(nr, ng, nb, a)))
+        }
+        "darken" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let amount = extract_percentage_or_number(&args[1]);
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (h, s, l, _) = rgb_to_hsl(r, g, b, a);
+            let new_l = (l - amount).clamp(0.0, 100.0);
+            let (nr, ng, nb) = hsl_to_rgb(h, s, new_l);
+            Ok(LatticeValue::Color(rgba_to_hex(nr, ng, nb, a)))
+        }
+        "complement" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (h, s, l, _) = rgb_to_hsl(r, g, b, a);
+            let new_h = (h + 180.0) % 360.0;
+            let (nr, ng, nb) = hsl_to_rgb(new_h, s, l);
+            Ok(LatticeValue::Color(rgba_to_hex(nr, ng, nb, a)))
+        }
+        "adjust-hue" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let degrees = extract_number_value(&args[1]);
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (h, s, l, _) = rgb_to_hsl(r, g, b, a);
+            let new_h = (h + degrees) % 360.0;
+            let (nr, ng, nb) = hsl_to_rgb(new_h, s, l);
+            Ok(LatticeValue::Color(rgba_to_hex(nr, ng, nb, a)))
+        }
+        "mix" => {
+            if args.len() < 2 || args.len() > 3 {
+                return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0));
+            }
+            let (r1, g1, b1, a1) = extract_color(&args[0])?;
+            let (r2, g2, b2, a2) = extract_color(&args[1])?;
+            let weight = if args.len() == 3 { extract_percentage_or_number(&args[2]) / 100.0 } else { 0.5 };
+            let w = weight.clamp(0.0, 1.0);
+            let nr = ((r1 as f64) * w + (r2 as f64) * (1.0 - w)).round() as u8;
+            let ng = ((g1 as f64) * w + (g2 as f64) * (1.0 - w)).round() as u8;
+            let nb = ((b1 as f64) * w + (b2 as f64) * (1.0 - w)).round() as u8;
+            let na = a1 * w + a2 * (1.0 - w);
+            Ok(LatticeValue::Color(rgba_to_hex(nr, ng, nb, na)))
+        }
+        "red" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (r, _, _, _) = extract_color(&args[0])?;
+            Ok(LatticeValue::Number(r as f64))
+        }
+        "green" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (_, g, _, _) = extract_color(&args[0])?;
+            Ok(LatticeValue::Number(g as f64))
+        }
+        "blue" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (_, _, b, _) = extract_color(&args[0])?;
+            Ok(LatticeValue::Number(b as f64))
+        }
+        "hue" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (h, _, _, _) = rgb_to_hsl(r, g, b, a);
+            Ok(LatticeValue::Dimension { value: h, unit: "deg".to_string() })
+        }
+        "saturation" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (_, s, _, _) = rgb_to_hsl(r, g, b, a);
+            Ok(LatticeValue::Percentage(s))
+        }
+        "lightness" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let (r, g, b, a) = extract_color(&args[0])?;
+            let (_, _, l, _) = rgb_to_hsl(r, g, b, a);
+            Ok(LatticeValue::Percentage(l))
+        }
+
+        // -------------------------------------------------------------------
+        // List functions
+        // -------------------------------------------------------------------
+        "nth" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let list = match &args[0] {
+                LatticeValue::List(items) => items.clone(),
+                other => vec![other.clone()],
+            };
+            let n = extract_number_value(&args[1]) as usize;
+            if n < 1 || n > list.len() {
+                return Err(LatticeError::range_error(
+                    format!("Index {} out of bounds for list of length {}", n, list.len()), 0, 0));
+            }
+            Ok(list[n - 1].clone())
+        }
+        "length" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let len = match &args[0] {
+                LatticeValue::List(items) => items.len(),
+                LatticeValue::Map(entries) => entries.len(),
+                _ => 1,
+            };
+            Ok(LatticeValue::Number(len as f64))
+        }
+        "join" => {
+            if args.len() < 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let mut items = match &args[0] {
+                LatticeValue::List(items) => items.clone(),
+                other => vec![other.clone()],
+            };
+            match &args[1] {
+                LatticeValue::List(items2) => items.extend(items2.clone()),
+                other => items.push(other.clone()),
+            }
+            Ok(LatticeValue::List(items))
+        }
+        "append" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let mut items = match &args[0] {
+                LatticeValue::List(items) => items.clone(),
+                other => vec![other.clone()],
+            };
+            items.push(args[1].clone());
+            Ok(LatticeValue::List(items))
+        }
+        "index" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let list = match &args[0] {
+                LatticeValue::List(items) => items.clone(),
+                other => vec![other.clone()],
+            };
+            let target = &args[1];
+            for (i, item) in list.iter().enumerate() {
+                if item.to_css_string() == target.to_css_string() {
+                    return Ok(LatticeValue::Number((i + 1) as f64));
+                }
+            }
+            Ok(LatticeValue::Null)
+        }
+
+        // -------------------------------------------------------------------
+        // Map functions
+        // -------------------------------------------------------------------
+        "map-get" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let key = args[1].to_css_string().trim_matches('"').to_string();
+            match args[0].map_get(&key) {
+                Some(v) => Ok(v.clone()),
+                None => Ok(LatticeValue::Null),
+            }
+        }
+        "map-keys" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            match args[0].map_keys() {
+                Some(keys) => Ok(LatticeValue::List(keys)),
+                None => Err(LatticeError::type_error("map-keys", args[0].type_name(), "", 0, 0)),
+            }
+        }
+        "map-values" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            match args[0].map_values() {
+                Some(vals) => Ok(LatticeValue::List(vals)),
+                None => Err(LatticeError::type_error("map-values", args[0].type_name(), "", 0, 0)),
+            }
+        }
+        "map-has-key" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let key = args[1].to_css_string().trim_matches('"').to_string();
+            Ok(LatticeValue::Bool(args[0].map_has_key(&key)))
+        }
+        "map-merge" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            if let (LatticeValue::Map(mut m1), LatticeValue::Map(m2)) = (args[0].clone(), args[1].clone()) {
+                for (k, v) in m2 {
+                    if let Some(pos) = m1.iter().position(|(ek, _)| ek == &k) {
+                        m1[pos] = (k, v);
+                    } else {
+                        m1.push((k, v));
+                    }
+                }
+                Ok(LatticeValue::Map(m1))
+            } else {
+                Err(LatticeError::type_error("map-merge", args[0].type_name(), args[1].type_name(), 0, 0))
+            }
+        }
+        "map-remove" => {
+            if args.len() < 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            if let LatticeValue::Map(m) = &args[0] {
+                let keys_to_remove: Vec<String> = args[1..].iter()
+                    .map(|a| a.to_css_string().trim_matches('"').to_string())
+                    .collect();
+                let filtered: Vec<(String, LatticeValue)> = m.iter()
+                    .filter(|(k, _)| !keys_to_remove.contains(k))
+                    .cloned()
+                    .collect();
+                Ok(LatticeValue::Map(filtered))
+            } else {
+                Err(LatticeError::type_error("map-remove", args[0].type_name(), "", 0, 0))
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // Math functions
+        // -------------------------------------------------------------------
+        "math.div" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let divisor = extract_number_value(&args[1]);
+            if divisor == 0.0 { return Err(LatticeError::zero_division(0, 0)); }
+            match (&args[0], &args[1]) {
+                (LatticeValue::Dimension { value, unit }, LatticeValue::Number(_)) => {
+                    Ok(LatticeValue::Dimension { value: value / divisor, unit: unit.clone() })
+                }
+                (LatticeValue::Number(l), LatticeValue::Number(r)) => {
+                    Ok(LatticeValue::Number(l / r))
+                }
+                (LatticeValue::Percentage(l), LatticeValue::Number(r)) => {
+                    Ok(LatticeValue::Percentage(l / r))
+                }
+                _ => Err(LatticeError::type_error("divide", &args[0].to_css_string(), &args[1].to_css_string(), 0, 0)),
+            }
+        }
+        "math.floor" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            apply_math_unary(&args[0], f64::floor)
+        }
+        "math.ceil" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            apply_math_unary(&args[0], f64::ceil)
+        }
+        "math.round" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            apply_math_unary(&args[0], f64::round)
+        }
+        "math.abs" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            apply_math_unary(&args[0], f64::abs)
+        }
+        "math.min" => {
+            if args.is_empty() { return Err(LatticeError::wrong_arity("Function", name, 1, 0, 0, 0)); }
+            let mut min = extract_number_value(&args[0]);
+            for arg in &args[1..] { min = min.min(extract_number_value(arg)); }
+            Ok(LatticeValue::Number(min))
+        }
+        "math.max" => {
+            if args.is_empty() { return Err(LatticeError::wrong_arity("Function", name, 1, 0, 0, 0)); }
+            let mut max = extract_number_value(&args[0]);
+            for arg in &args[1..] { max = max.max(extract_number_value(arg)); }
+            Ok(LatticeValue::Number(max))
+        }
+
+        // -------------------------------------------------------------------
+        // Type introspection functions
+        // -------------------------------------------------------------------
+        "type-of" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            Ok(LatticeValue::Ident(args[0].type_name().to_string()))
+        }
+        "unit" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let u = match &args[0] {
+                LatticeValue::Dimension { unit, .. } => unit.clone(),
+                LatticeValue::Percentage(_) => "%".to_string(),
+                _ => String::new(),
+            };
+            Ok(LatticeValue::String(u))
+        }
+        "unitless" => {
+            if args.len() != 1 { return Err(LatticeError::wrong_arity("Function", name, 1, args.len(), 0, 0)); }
+            let is_unitless = matches!(&args[0], LatticeValue::Number(_));
+            Ok(LatticeValue::Bool(is_unitless))
+        }
+        "comparable" => {
+            if args.len() != 2 { return Err(LatticeError::wrong_arity("Function", name, 2, args.len(), 0, 0)); }
+            let comparable = match (&args[0], &args[1]) {
+                (LatticeValue::Number(_), LatticeValue::Number(_)) => true,
+                (LatticeValue::Dimension { unit: u1, .. }, LatticeValue::Dimension { unit: u2, .. }) => u1 == u2,
+                (LatticeValue::Percentage(_), LatticeValue::Percentage(_)) => true,
+                _ => false,
+            };
+            Ok(LatticeValue::Bool(comparable))
+        }
+
+        _ => Err(LatticeError::undefined_function(name, 0, 0)),
+    }
+}
+
+/// Extract a numeric value from a LatticeValue (Number, Dimension, Percentage).
+fn extract_number_value(val: &LatticeValue) -> f64 {
+    match val {
+        LatticeValue::Number(n) => *n,
+        LatticeValue::Dimension { value, .. } => *value,
+        LatticeValue::Percentage(p) => *p,
+        _ => 0.0,
+    }
+}
+
+/// Extract a percentage value: Percentage(50) → 50, Number(20) → 20.
+fn extract_percentage_or_number(val: &LatticeValue) -> f64 {
+    match val {
+        LatticeValue::Percentage(p) => *p,
+        LatticeValue::Number(n) => *n,
+        LatticeValue::Dimension { value, .. } => *value,
+        _ => 0.0,
+    }
+}
+
+/// Extract RGBA components from a color value.
+fn extract_color(val: &LatticeValue) -> Result<(u8, u8, u8, f64), LatticeError> {
+    match val {
+        LatticeValue::Color(hex) => Ok(hex_to_rgba(hex)),
+        _ => Err(LatticeError::type_error("color function", val.type_name(), "color", 0, 0)),
+    }
+}
+
+/// Apply a unary math function (floor, ceil, round, abs) to a numeric value.
+fn apply_math_unary(val: &LatticeValue, f: fn(f64) -> f64) -> Result<LatticeValue, LatticeError> {
+    match val {
+        LatticeValue::Number(n) => Ok(LatticeValue::Number(f(*n))),
+        LatticeValue::Dimension { value, unit } => Ok(LatticeValue::Dimension { value: f(*value), unit: unit.clone() }),
+        LatticeValue::Percentage(p) => Ok(LatticeValue::Percentage(f(*p))),
+        _ => Err(LatticeError::type_error("math function", val.type_name(), "number", 0, 0)),
     }
 }
 
