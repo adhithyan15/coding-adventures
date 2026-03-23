@@ -1,4 +1,4 @@
-# ca_uuid (Rust)
+# coding_adventures_uuid (Rust)
 
 UUID v1/v3/v4/v5/v7 generation and parsing (RFC 4122 + RFC 9562) — implemented from scratch for educational purposes.
 
@@ -26,13 +26,13 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ca_uuid = { path = "../uuid" }
+coding_adventures_uuid = { path = "../uuid" }
 ```
 
 ## Usage
 
 ```rust
-use ca_uuid::{v4, v5, v3, v1, v7, NAMESPACE_DNS, parse, is_valid, UUID};
+use coding_adventures_uuid::{v4, v5, v3, v1, v7, NAMESPACE_DNS, parse, is_valid, UUID};
 
 // Random UUID
 let u = v4().unwrap();
@@ -62,16 +62,16 @@ assert!(!is_valid("not-a-uuid"));
 ## Namespace Constants
 
 ```rust
-ca_uuid::NAMESPACE_DNS   // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
-ca_uuid::NAMESPACE_URL   // 6ba7b811-9dad-11d1-80b4-00c04fd430c8
-ca_uuid::NAMESPACE_OID   // 6ba7b812-9dad-11d1-80b4-00c04fd430c8
-ca_uuid::NAMESPACE_X500  // 6ba7b814-9dad-11d1-80b4-00c04fd430c8
+coding_adventures_uuid::NAMESPACE_DNS   // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+coding_adventures_uuid::NAMESPACE_URL   // 6ba7b811-9dad-11d1-80b4-00c04fd430c8
+coding_adventures_uuid::NAMESPACE_OID   // 6ba7b812-9dad-11d1-80b4-00c04fd430c8
+coding_adventures_uuid::NAMESPACE_X500  // 6ba7b814-9dad-11d1-80b4-00c04fd430c8
 ```
 
 ## Dependencies
 
-- `ca_sha1` — SHA-1 implementation (for v5)
-- `ca_md5` — MD5 implementation (for v3)
+- `coding_adventures_sha1` — SHA-1 implementation (for v5)
+- `coding_adventures_md5` — MD5 implementation (for v3)
 - `getrandom` — cryptographically secure random bytes (for v4, v7)
 
 ## Development

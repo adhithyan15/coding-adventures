@@ -1,4 +1,4 @@
-//! # ca_uuid — UUID v1/v3/v4/v5/v7 generation and parsing
+//! # coding_adventures_uuid — UUID v1/v3/v4/v5/v7 generation and parsing
 //!
 //! A from-scratch implementation of UUIDs (Universally Unique Identifiers),
 //! covering RFC 4122 (v1/v3/v4/v5) and the newer RFC 9562 (v7), without
@@ -37,13 +37,13 @@
 //! This crate is part of the `coding-adventures` monorepo — a ground-up
 //! implementation of the computing stack from transistors to web services.
 //! We build UUID generation here to show that cryptographic hash functions
-//! (implemented in `ca_sha1` and `ca_md5`) compose naturally into higher-
+//! (implemented in `coding_adventures_sha1` and `coding_adventures_md5`) compose naturally into higher-
 //! level protocols and identifiers.
 //!
 //! ## Examples
 //!
 //! ```
-//! use ca_uuid::{v4, v5, NAMESPACE_DNS};
+//! use coding_adventures_uuid::{v4, v5, NAMESPACE_DNS};
 //! let u = v4().unwrap();
 //! assert_eq!(u.version(), 4);
 //! assert_eq!(u.variant(), "rfc4122");
@@ -53,8 +53,8 @@
 //! assert_eq!(u2.to_string(), "886313e1-3b8a-5372-9b90-0c9aee199e5d");
 //! ```
 
-use ca_sha1::sum1;    // fn sum1(data: &[u8]) -> [u8; 20]
-use ca_md5::sum_md5;  // fn sum_md5(data: &[u8]) -> [u8; 16]
+use coding_adventures_sha1::sum1;    // fn sum1(data: &[u8]) -> [u8; 20]
+use coding_adventures_md5::sum_md5;  // fn sum_md5(data: &[u8]) -> [u8; 16]
 
 use std::fmt;
 use std::str::FromStr;
@@ -243,7 +243,7 @@ impl FromStr for UUID {
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::parse;
+/// use coding_adventures_uuid::parse;
 /// let u = parse("550e8400-e29b-41d4-a716-446655440000").unwrap();
 /// assert_eq!(u.to_string(), "550e8400-e29b-41d4-a716-446655440000");
 /// ```
@@ -290,7 +290,7 @@ pub fn parse(s: &str) -> Result<UUID, UUIDError> {
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::is_valid;
+/// use coding_adventures_uuid::is_valid;
 /// assert!(is_valid("550e8400-e29b-41d4-a716-446655440000"));
 /// assert!(is_valid("{550e8400-e29b-41d4-a716-446655440000}"));
 /// assert!(!is_valid("not-a-uuid"));
@@ -439,7 +439,7 @@ fn random_bytes<const N: usize>() -> Result<[u8; N], UUIDError> {
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::v4;
+/// use coding_adventures_uuid::v4;
 /// let u = v4().unwrap();
 /// assert_eq!(u.version(), 4);
 /// assert_eq!(u.variant(), "rfc4122");
@@ -476,7 +476,7 @@ pub fn v4() -> Result<UUID, UUIDError> {
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::{v5, NAMESPACE_DNS};
+/// use coding_adventures_uuid::{v5, NAMESPACE_DNS};
 /// let u = v5(NAMESPACE_DNS, "python.org");
 /// assert_eq!(u.to_string(), "886313e1-3b8a-5372-9b90-0c9aee199e5d");
 /// ```
@@ -516,7 +516,7 @@ pub fn v5(namespace: UUID, name: &str) -> UUID {
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::{v3, NAMESPACE_DNS};
+/// use coding_adventures_uuid::{v3, NAMESPACE_DNS};
 /// let u = v3(NAMESPACE_DNS, "python.org");
 /// assert_eq!(u.to_string(), "6fa459ea-ee8a-3ca4-894e-db77e160355e");
 /// ```
@@ -568,7 +568,7 @@ const GREGORIAN_OFFSET: u64 = 122_192_928_000_000_000;
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::v1;
+/// use coding_adventures_uuid::v1;
 /// let u = v1().unwrap();
 /// assert_eq!(u.version(), 1);
 /// assert_eq!(u.variant(), "rfc4122");
@@ -653,7 +653,7 @@ pub fn v1() -> Result<UUID, UUIDError> {
 /// # Examples
 ///
 /// ```
-/// use ca_uuid::v7;
+/// use coding_adventures_uuid::v7;
 /// let u = v7().unwrap();
 /// assert_eq!(u.version(), 7);
 /// assert_eq!(u.variant(), "rfc4122");

@@ -67,7 +67,7 @@
 //! ## RFC 1321 Test Vectors
 //!
 //! ```
-//! use ca_md5::hex_string;
+//! use coding_adventures_md5::hex_string;
 //! assert_eq!(hex_string(b""), "d41d8cd98f00b204e9800998ecf8427e");
 //! assert_eq!(hex_string(b"abc"), "900150983cd24fb0d6963f7d28e17f72");
 //! ```
@@ -326,7 +326,7 @@ fn finalize(state: [u32; 4]) -> [u8; 16] {
 /// # Examples
 ///
 /// ```
-/// use ca_md5::sum_md5;
+/// use coding_adventures_md5::sum_md5;
 /// // RFC 1321 test vector: empty string
 /// let digest = sum_md5(b"");
 /// let hex: String = digest.iter().map(|b| format!("{:02x}", b)).collect();
@@ -346,7 +346,7 @@ pub fn sum_md5(data: &[u8]) -> [u8; 16] {
 /// # Examples
 ///
 /// ```
-/// use ca_md5::hex_string;
+/// use coding_adventures_md5::hex_string;
 /// assert_eq!(hex_string(b""), "d41d8cd98f00b204e9800998ecf8427e");
 /// assert_eq!(hex_string(b"abc"), "900150983cd24fb0d6963f7d28e17f72");
 /// ```
@@ -367,7 +367,7 @@ pub fn hex_string(data: &[u8]) -> String {
 /// # Examples
 ///
 /// ```
-/// use ca_md5::{Digest, sum_md5};
+/// use coding_adventures_md5::{Digest, sum_md5};
 /// let mut h = Digest::new();
 /// h.update(b"ab");
 /// h.update(b"c");
@@ -450,7 +450,7 @@ impl Digest {
     /// # Examples
     ///
     /// ```
-    /// use ca_md5::Digest;
+    /// use coding_adventures_md5::Digest;
     /// let mut h = Digest::new();
     /// h.update(b"hello");
     /// let mut h2 = h.clone_digest();   // diverge here

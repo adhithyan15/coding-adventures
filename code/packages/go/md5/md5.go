@@ -66,7 +66,7 @@
 //	md5("a")             → "0cc175b9c0f1b6a831c399e269772661"
 //	md5("abc")           → "900150983cd24fb0d6963f7d28e17f72"
 //	md5("message digest") → "f96b697d7cb7938d525a2f31aaf161d0"
-package ca_md5
+package md5
 
 import (
 	"encoding/binary"

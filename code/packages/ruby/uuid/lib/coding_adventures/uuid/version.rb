@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Ca
-  module Sha1
+module CodingAdventures
+  module Uuid
     VERSION = "0.1.0"
   end
 end

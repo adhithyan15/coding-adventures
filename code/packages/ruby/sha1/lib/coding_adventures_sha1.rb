@@ -41,9 +41,9 @@
 #   sha1("")    → "da39a3ee5e6b4b0d3255bfef95601890afd80709"
 #   sha1("abc") → "a9993e364706816aba3e25717850c26c9cd0d89d"
 
-require_relative "ca/sha1/version"
+require_relative "coding_adventures/sha1/version"
 
-module Ca
+module CodingAdventures
   module Sha1
     # ─── Initialization Constants ──────────────────────────────────────────────
     #
@@ -184,7 +184,7 @@ module Ca
     #
     # This is the one-shot API: hash a complete message in a single call.
     #
-    #   Ca::Sha1.sha1("abc").unpack1("H*")
+    #   CodingAdventures::Sha1.sha1("abc").unpack1("H*")
     #   # → "a9993e364706816aba3e25717850c26c9cd0d89d"
     #
     # "5N" packs five 32-bit big-endian unsigned integers into 20 bytes.
@@ -199,7 +199,7 @@ module Ca
 
     # Compute SHA-1 and return the 40-character lowercase hex string.
     #
-    #   Ca::Sha1.sha1_hex("abc")
+    #   CodingAdventures::Sha1.sha1_hex("abc")
     #   # → "a9993e364706816aba3e25717850c26c9cd0d89d"
     def self.sha1_hex(data)
       sha1(data).unpack1("H*")
@@ -210,7 +210,7 @@ module Ca
     # Useful when the full message is not available at once — for example when
     # reading a large file in chunks or hashing a network stream.
     #
-    #   h = Ca::Sha1::Digest.new
+    #   h = CodingAdventures::Sha1::Digest.new
     #   h.update("ab")
     #   h.update("c")
     #   h.hexdigest  # → "a9993e364706816aba3e25717850c26c9cd0d89d"

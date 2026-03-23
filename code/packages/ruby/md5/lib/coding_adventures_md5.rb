@@ -64,15 +64,15 @@
 #   md5("abc")           → "900150983cd24fb0d6963f7d28e17f72"
 #   md5("message digest") → "f96b697d7cb7938d525a2f31aaf161d0"
 
-require_relative "ca/md5/version"
+require_relative "coding_adventures/md5/version"
 
-module Ca
+module CodingAdventures
   # MD5 message digest algorithm (RFC 1321) implemented from scratch.
   #
   # Public API:
-  #   Ca::Md5.md5(data)      → 16-byte binary String
-  #   Ca::Md5.md5_hex(data)  → 32-char hex String
-  #   Ca::Md5::Digest        → streaming hasher class
+  #   CodingAdventures::Md5.md5(data)      → 16-byte binary String
+  #   CodingAdventures::Md5.md5_hex(data)  → 32-char hex String
+  #   CodingAdventures::Md5::Digest        → streaming hasher class
   module Md5
     # ─── Internal Computation Module ──────────────────────────────────────────
     #
@@ -253,7 +253,7 @@ module Ca
     # compatibility only.
     #
     # Example:
-    #   Ca::Md5.md5("abc").unpack1("H*")
+    #   CodingAdventures::Md5.md5("abc").unpack1("H*")
     #   # => "900150983cd24fb0d6963f7d28e17f72"
     def self.md5(data)
       data = data.b if data.encoding != Encoding::BINARY
@@ -272,7 +272,7 @@ module Ca
     # Compute the MD5 digest of data. Returns a 32-character lowercase hex string.
     #
     # Example:
-    #   Ca::Md5.md5_hex("abc")
+    #   CodingAdventures::Md5.md5_hex("abc")
     #   # => "900150983cd24fb0d6963f7d28e17f72"
     def self.md5_hex(data)
       md5(data).unpack1("H*")
@@ -286,7 +286,7 @@ module Ca
     #
     # The interface is similar to Ruby's OpenSSL::Digest:
     #
-    #   d = Ca::Md5::Digest.new
+    #   d = CodingAdventures::Md5::Digest.new
     #   d.update("Hello, ")
     #   d << "world!"        # << is an alias for update
     #   d.hexdigest          # => "e5a00d6eeab1a4e0901b0ef31f645a0a"

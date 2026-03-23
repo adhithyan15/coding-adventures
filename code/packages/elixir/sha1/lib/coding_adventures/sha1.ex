@@ -1,4 +1,4 @@
-defmodule Ca.Sha1 do
+defmodule CodingAdventures.Sha1 do
   @moduledoc """
   SHA-1 cryptographic hash function (FIPS 180-4) implemented from scratch.
 

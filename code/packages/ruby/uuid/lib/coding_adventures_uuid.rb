@@ -55,14 +55,14 @@
 # v3(NAMESPACE_DNS, "python.org") => "6fa459ea-ee8a-3ca4-894e-db77e160355e"
 
 # IMPORTANT: Require dependencies FIRST, before own modules.
-# Ruby's require mechanism is order-dependent. If Ca::Sha1 or Ca::Md5 constants
-# are needed when loading ca/uuid/version, they must already exist in the VM.
-require "ca_sha1"
-require "ca_md5"
+# Ruby's require mechanism is order-dependent. If CodingAdventures::Sha1 or CodingAdventures::Md5 constants
+# are needed when loading coding_adventures/uuid/version, they must already exist in the VM.
+require "coding_adventures_sha1"
+require "coding_adventures_md5"
 require "securerandom"
-require_relative "ca/uuid/version"
+require_relative "coding_adventures/uuid/version"
 
-module Ca
+module CodingAdventures
   # UUID — Universally Unique Identifier library.
   #
   # Implements UUID v1, v3, v4, v5, v7 from scratch using only:
@@ -72,10 +72,10 @@ module Ca
   #   - Process.clock_gettime for high-resolution wall-clock time
   #
   # Quick start:
-  #   Ca::Uuid.v4.to_s        # random v4
-  #   Ca::Uuid.v7.to_s        # time-sortable UUID
-  #   Ca::Uuid.v5(Ca::Uuid::NAMESPACE_DNS, "example.com").to_s
-  #   Ca::Uuid.parse("550e8400-e29b-41d4-a716-446655440000")
+  #   CodingAdventures::Uuid.v4.to_s        # random v4
+  #   CodingAdventures::Uuid.v7.to_s        # time-sortable UUID
+  #   CodingAdventures::Uuid.v5(CodingAdventures::Uuid::NAMESPACE_DNS, "example.com").to_s
+  #   CodingAdventures::Uuid.parse("550e8400-e29b-41d4-a716-446655440000")
   module Uuid
     # ---- Error Class -----------------------------------------------------------
 
@@ -228,7 +228,7 @@ module Ca
       def self.v3(namespace, name)
         # namespace.bytes_string returns the 16 raw bytes; name must be UTF-8 binary
         data = namespace.bytes_string + name.encode("UTF-8").b
-        digest = Ca::Md5.md5(data)   # => 16-byte binary string
+        digest = CodingAdventures::Md5.md5(data)   # => 16-byte binary string
         raw = digest.bytes
         raw[6] = (raw[6] & 0x0F) | 0x30   # version = 3
         raw[8] = (raw[8] & 0x3F) | 0x80   # variant = 10xx
@@ -260,7 +260,7 @@ module Ca
       #   v5(NAMESPACE_DNS, "python.org") => "886313e1-3b8a-5372-9b90-0c9aee199e5d"
       def self.v5(namespace, name)
         data = namespace.bytes_string + name.encode("UTF-8").b
-        digest = Ca::Sha1.sha1(data)   # => 20-byte binary string
+        digest = CodingAdventures::Sha1.sha1(data)   # => 20-byte binary string
         raw = digest[0, 16].bytes      # take first 16 bytes
         raw[6] = (raw[6] & 0x0F) | 0x50   # version = 5
         raw[8] = (raw[8] & 0x3F) | 0x80   # variant = 10xx
@@ -433,8 +433,8 @@ module Ca
     # with v3 and v5 to generate deterministic UUIDs for names in well-known spaces.
     #
     # Usage:
-    #   Ca::Uuid.v5(Ca::Uuid::NAMESPACE_DNS, "example.com")
-    #   Ca::Uuid.v3(Ca::Uuid::NAMESPACE_URL, "https://example.com/page")
+    #   CodingAdventures::Uuid.v5(CodingAdventures::Uuid::NAMESPACE_DNS, "example.com")
+    #   CodingAdventures::Uuid.v3(CodingAdventures::Uuid::NAMESPACE_URL, "https://example.com/page")
 
     # For names that are DNS domain names ("example.com", "python.org").
     NAMESPACE_DNS  = UUID.parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
@@ -459,7 +459,7 @@ module Ca
     # ---- Module-Level Convenience Methods -------------------------------------
     #
     # These delegate to the UUID class methods so callers can write
-    #   Ca::Uuid.v4   instead of   Ca::Uuid::UUID.v4
+    #   CodingAdventures::Uuid.v4   instead of   CodingAdventures::Uuid::UUID.v4
 
     # Parse a UUID string. Raises UUIDError for invalid input.
     def self.parse(s) = UUID.parse(s)

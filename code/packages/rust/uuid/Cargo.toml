@@ -1,12 +1,12 @@
 [package]
-name = "ca_uuid"
+name = "coding_adventures_uuid"
 version = "0.1.0"
 edition = "2021"
 description = "UUID v1/v3/v4/v5/v7 generation and parsing (RFC 4122 + RFC 9562)"
 
 [dependencies]
-ca_sha1 = { path = "../sha1" }
-ca_md5 = { path = "../md5" }
+coding_adventures_sha1 = { path = "../sha1" }
+coding_adventures_md5 = { path = "../md5" }
 getrandom = "0.2"
 
 [dev-dependencies]
