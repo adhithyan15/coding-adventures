@@ -79,6 +79,7 @@ pub fn get_username() -> Result<String, String> {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn returns_a_username() {
         // In any reasonable test environment, $USER should be set.
@@ -88,6 +89,7 @@ mod tests {
         assert!(!name.is_empty(), "username should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn username_has_no_whitespace() {
         // Unix usernames should not contain spaces or newlines.
@@ -99,6 +101,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn username_is_not_empty() {
         let name = get_username().unwrap();

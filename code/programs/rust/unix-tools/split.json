@@ -1,0 +1,103 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "split",
+  "display_name": "split",
+  "description": "Split a file into pieces",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "lines",
+      "short": "l",
+      "long": "lines",
+      "description": "Put NUMBER lines/records per output file",
+      "type": "integer",
+      "value_name": "NUMBER",
+      "default": 1000
+    },
+    {
+      "id": "bytes",
+      "short": "b",
+      "long": "bytes",
+      "description": "Put SIZE bytes per output file",
+      "type": "string",
+      "value_name": "SIZE"
+    },
+    {
+      "id": "number",
+      "short": "n",
+      "long": "number",
+      "description": "Generate CHUNKS output files",
+      "type": "string",
+      "value_name": "CHUNKS"
+    },
+    {
+      "id": "suffix_length",
+      "short": "a",
+      "long": "suffix-length",
+      "description": "Generate suffixes of length N (default 2)",
+      "type": "integer",
+      "value_name": "N",
+      "default": 2
+    },
+    {
+      "id": "numeric_suffixes",
+      "short": "d",
+      "long": "numeric-suffixes",
+      "description": "Use numeric suffixes starting at 0, not alphabetic",
+      "type": "boolean"
+    },
+    {
+      "id": "hex_suffixes",
+      "short": "x",
+      "long": "hex-suffixes",
+      "description": "Use hex suffixes starting at 0, not alphabetic",
+      "type": "boolean"
+    },
+    {
+      "id": "additional_suffix",
+      "long": "additional-suffix",
+      "description": "Append an additional SUFFIX to file names",
+      "type": "string",
+      "value_name": "SUFFIX"
+    },
+    {
+      "id": "verbose",
+      "long": "verbose",
+      "description": "Print a diagnostic just before each output file is opened",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "file",
+      "name": "FILE",
+      "description": "File to split (default: stdin)",
+      "type": "string",
+      "required": false,
+      "default": "-"
+    },
+    {
+      "id": "prefix",
+      "name": "PREFIX",
+      "description": "Output file prefix (default: 'x')",
+      "type": "string",
+      "required": false,
+      "default": "x"
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "split-mode",
+      "flag_ids": ["lines", "bytes", "number"],
+      "required": false
+    },
+    {
+      "id": "suffix-type",
+      "flag_ids": ["numeric_suffixes", "hex_suffixes"],
+      "required": false
+    }
+  ]
+}

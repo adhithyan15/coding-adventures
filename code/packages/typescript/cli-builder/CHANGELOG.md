@@ -7,6 +7,51 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.1.0] — 2026-03-22
+
+### Added
+
+- **Count type** (`type: "count"`) — New flag type that consumes no value token.
+  Each occurrence increments an integer counter starting from 0. In stacked
+  short flags, each character increments independently: `-vvv` = 3,
+  `--verbose --verbose` = 2. Default is 0 when the flag is absent.
+
+- **Enum optional values** (`default_when_present`) — New field on enum flag
+  definitions. When an enum flag has this field and appears without a value
+  (e.g., `--color` instead of `--color=always`), the `default_when_present`
+  value is used. Disambiguation: if the next token is a valid enum member,
+  it is consumed as the value; otherwise `default_when_present` is used.
+  Validated at spec load time: must be of type "enum" and the value must be
+  a member of `enum_values`.
+
+- **Flag presence detection** (`explicitFlags`) — New `explicitFlags: string[]`
+  field on `ParseResult`. Every time a flag token is consumed from argv, the
+  flag's ID is appended to this array. Lets callers distinguish "user set
+  --color=auto" from "color defaulted to auto". Flags that appear multiple
+  times (e.g., `-vvv`) appear multiple times in the array.
+
+- **int64 range validation** — Integer parsing now rejects values outside
+  `Number.MIN_SAFE_INTEGER` to `Number.MAX_SAFE_INTEGER` (-(2^53-1) to
+  2^53-1) with an `invalid_value` error. JavaScript's Number type silently
+  loses precision beyond this range, making this a correctness hazard for
+  IDs, timestamps, and large counters.
+
+### Changed
+
+- `ValueType` union now includes `"count"` alongside `"boolean"`, `"string"`,
+  etc.
+
+- `FlagDef` interface gains optional `defaultWhenPresent?: string` field.
+
+- `ParseResult` interface gains `explicitFlags: string[]` field.
+
+- Help generator shows `[=VALUE]` for enum flags with `default_when_present`
+  (instead of `<VALUE>`) to indicate the value is optional.
+
+- Count flags display like boolean flags in help text (no value placeholder).
+
+---
+
 ## [0.3.0] — 2026-03-22
 
 ### Added

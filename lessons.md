@@ -243,12 +243,6 @@ Note: tarpaulin reports coverage for the ENTIRE workspace by default. To get pac
 
 **Rule:** Every Rust package PR must include coverage numbers. Run `cargo tarpaulin -p <name> --out stdout`, sum the covered/total lines for that package's source files, and report the percentage. Don't leave coverage as "n/a" or "all passing" — compute the real number.
 
-**Important:** `cargo tarpaulin` only supports Linux. In BUILD files, wrap it in a uname check:
-```
-if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p <name> --out Stdout --skip-clean; fi
-```
-This prevents CI failures on macOS and Windows runners.
-
 ---
 
 ### 2026-03-21: BUILD files must NOT use absolute mise paths — CI doesn't have mise
@@ -390,3 +384,26 @@ The scaffold generator has been updated to use the unquoted form. Existing packa
 The build-tool uses diff-based change detection. Touching a BUILD file marks that package (and its dependents) for rebuild. Changing ALL 82 Python BUILD files in one commit forces a full rebuild of every Python package, exposing pre-existing broken BUILD files that were previously untested.
 
 **Rule:** When making a global change to BUILD files (like fixing a syntax issue), only change the files that are actually broken. Don't apply the fix to files that are working — they'll be fixed next time the scaffold generator is used.
+### 2026-03-22: Unix-specific tools must compile on Windows CI
+
+Tools that use Unix-specific syscalls (syscall.Stat_t, libc::getgroups, libc::statvfs, etc.) will fail to compile on the Windows CI runner. This affected chown, df, ls, groups, id, uname, and tty tools across Go and Rust.
+
+**Go solution:** Use build tags to split platform-specific code:
+- `tool_unix.go` with `//go:build !windows` — contains the real implementation
+- `tool_windows.go` with `//go:build windows` — contains stubs that return errors/defaults
+- The main `tool.go` file calls platform-abstracted helper functions
+
+**Rust solution:** Use `#[cfg(unix)]` and `#[cfg(not(unix))]` conditional compilation:
+```rust
+#[cfg(unix)]
+pub fn get_user_info() -> Result<UserInfo, String> { /* real impl */ }
+
+#[cfg(not(unix))]
+pub fn get_user_info() -> Result<UserInfo, String> {
+    Err("id: not supported on this platform".to_string())
+}
+```
+
+**Elixir/Python solution:** Provide `BUILD_windows` files that avoid Unix shell syntax (`2>/dev/null`) and handle dependency paths correctly.
+
+**Rule:** When writing tools that use OS-specific APIs, always add platform guards from the start. Don't wait for CI failures. Check: `syscall.Stat_t`, `syscall.Statfs`, `os.Chown`, `libc::getuid`, `libc::statvfs`, etc.

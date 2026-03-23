@@ -53,6 +53,19 @@ pub mod uniq_tool;
 pub mod wc_tool;
 pub mod whoami_tool;
 pub mod yes_tool;
+pub mod cp_tool;
+pub mod mv_tool;
+pub mod ls_tool;
+pub mod grep_tool;
+pub mod join_tool;
+pub mod split_tool;
+pub mod diff_tool;
+pub mod cmp_tool;
+pub mod xargs_tool;
+pub mod env_tool;
+pub mod chmod_tool;
+pub mod chown_tool;
+pub mod tar_tool;
 
 use std::path::PathBuf;
 

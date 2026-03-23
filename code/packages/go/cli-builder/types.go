@@ -38,12 +38,25 @@ type ParseResult struct {
 
 	// Flags maps flag `id` to the parsed and type-coerced value.
 	// All flags in scope are present; absent optional flags use their
-	// default value (false for booleans, nil for others).
+	// default value (false for booleans, nil for others, 0 for count).
 	Flags map[string]any
 
 	// Arguments maps argument `id` to the parsed and type-coerced value.
 	// Variadic arguments map to []any.
 	Arguments map[string]any
+
+	// ExplicitFlags lists the IDs of flags that were explicitly set by
+	// the user in argv. This distinguishes "user typed --verbose" from
+	// "verbose was filled with its default value".
+	//
+	// The slice preserves insertion order: the first flag consumed from
+	// argv appears first. A flag ID may appear multiple times if the flag
+	// is repeatable or is a count type encountered multiple times.
+	//
+	// Use case: a program might want to know whether --color was
+	// explicitly passed or silently defaulted. ExplicitFlags makes
+	// that distinction possible without comparing against defaults.
+	ExplicitFlags []string
 }
 
 // HelpResult is returned when the user passes --help or -h.

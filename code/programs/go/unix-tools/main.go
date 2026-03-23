@@ -110,6 +110,10 @@ var toolNames = []string{
 	"du",
 	"md5sum",
 	"sha256sum",
+	// Tier 5
+	"cp", "mv", "ls", "grep", "join", "split",
+	// Tier 6
+	"diff", "cmp", "xargs", "env", "chmod", "chown", "tar",
 }
 
 // =========================================================================
@@ -243,6 +247,34 @@ func dispatch(toolName string, argv []string) int {
 		return runMd5sum(specPath, argv, os.Stdout, os.Stderr)
 	case "sha256sum":
 		return runSha256sum(specPath, argv, os.Stdout, os.Stderr)
+	// Tier 5
+	case "cp":
+		return runCp(specPath, argv, os.Stdout, os.Stderr)
+	case "mv":
+		return runMv(specPath, argv, os.Stdout, os.Stderr)
+	case "ls":
+		return runLs(specPath, argv, os.Stdout, os.Stderr)
+	case "grep":
+		return runGrep(specPath, argv, os.Stdout, os.Stderr)
+	case "join":
+		return runJoin(specPath, argv, os.Stdout, os.Stderr)
+	case "split":
+		return runSplit(specPath, argv, os.Stdout, os.Stderr)
+	// Tier 6
+	case "diff":
+		return runDiff(specPath, argv, os.Stdout, os.Stderr)
+	case "cmp":
+		return runCmp(specPath, argv, os.Stdout, os.Stderr)
+	case "xargs":
+		return runXargs(specPath, argv, os.Stdout, os.Stderr)
+	case "env":
+		return runEnv(specPath, argv, os.Stdout, os.Stderr)
+	case "chmod":
+		return runChmod(specPath, argv, os.Stdout, os.Stderr)
+	case "chown":
+		return runChown(specPath, argv, os.Stdout, os.Stderr)
+	case "tar":
+		return runTar(specPath, argv, os.Stdout, os.Stderr)
 	default:
 		fmt.Fprintf(os.Stderr, "unix-tools: unknown tool: %s\n", toolName)
 		fmt.Fprintf(os.Stderr, "Available tools: %v\n", toolNames)

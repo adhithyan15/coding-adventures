@@ -59,6 +59,7 @@ pub use crate::{get_logical_pwd, get_physical_pwd};
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn physical_pwd_returns_absolute_path() {
         let result = get_physical_pwd();
@@ -71,6 +72,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn logical_pwd_returns_absolute_path() {
         let result = get_logical_pwd();

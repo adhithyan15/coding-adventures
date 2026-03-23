@@ -41,6 +41,8 @@ import { hashPackage, hashDeps } from "./hasher.js";
 import { BuildCache } from "./cache.js";
 import { executeBuilds } from "./executor.js";
 import { printReport } from "./reporter.js";
+import { writePlan, readPlan, CURRENT_SCHEMA_VERSION } from "./plan.js";
+import type { BuildPlan, PackageEntry } from "./plan.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -84,6 +86,8 @@ async function main(argv?: string[]): Promise<number> {
       language: { type: "string", default: "all" },
       "diff-base": { type: "string", default: "origin/main" },
       "cache-file": { type: "string", default: ".build-cache.json" },
+      "emit-plan": { type: "boolean", default: false },
+      "plan-file": { type: "string", default: "build-plan.json" },
       help: { type: "boolean", default: false },
     },
     strict: true,
@@ -100,6 +104,8 @@ Options:
   --language <lang>  Only build packages of this language (python|ruby|go|typescript|rust|elixir|all)
   --diff-base <ref>  Git ref to diff against (default: origin/main)
   --cache-file <f>   Path to build cache file (default: .build-cache.json)
+  --emit-plan        Write a build plan JSON file and exit (no builds executed)
+  --plan-file <f>    Path to write/read the build plan (default: build-plan.json)
   --help             Show this help message`);
     return 0;
   }
@@ -179,6 +185,63 @@ Options:
     } else {
       console.log("Git diff unavailable -- falling back to hash-based cache");
     }
+  }
+
+  // Step 5b: Emit build plan if requested.
+  //
+  // The --emit-plan flag writes a JSON file describing the full build plan
+  // (packages, dependency edges, affected set, etc.) and exits without
+  // executing any builds. This is useful for CI pipelines that separate
+  // planning from execution.
+  const emitPlan = values["emit-plan"] ?? false;
+  const planFile = values["plan-file"] ?? "build-plan.json";
+
+  if (emitPlan) {
+    const planPath = path.isAbsolute(planFile)
+      ? planFile
+      : path.join(root, planFile);
+
+    // Build the list of package entries for the plan.
+    const planPackages: PackageEntry[] = packages.map((pkg) => ({
+      name: pkg.name,
+      rel_path: path.relative(root, pkg.path),
+      language: pkg.language,
+      build_commands: pkg.buildCommands,
+    }));
+
+    // Build the dependency edges from the graph.
+    const edges: [string, string][] = [];
+    for (const pkg of packages) {
+      // graph.successors gives us the packages this one depends on.
+      if (graph.hasNode(pkg.name)) {
+        for (const successor of graph.successors(pkg.name)) {
+          edges.push([pkg.name, successor]);
+        }
+      }
+    }
+
+    // Determine which languages are needed by the affected packages.
+    const langsNeeded: Record<string, boolean> = {};
+    const relevantPkgs = affectedSet
+      ? packages.filter((p) => affectedSet!.has(p.name))
+      : packages;
+    for (const pkg of relevantPkgs) {
+      langsNeeded[pkg.language] = true;
+    }
+
+    const plan: BuildPlan = {
+      schema_version: CURRENT_SCHEMA_VERSION,
+      diff_base: diffBase,
+      force,
+      affected_packages: affectedSet ? Array.from(affectedSet).sort() : null,
+      packages: planPackages,
+      dependency_edges: edges,
+      languages_needed: langsNeeded,
+    };
+
+    writePlan(plan, planPath);
+    console.log(`Build plan written to ${planPath}`);
+    return 0;
   }
 
   // Step 6: Hash all packages (needed for cache fallback).

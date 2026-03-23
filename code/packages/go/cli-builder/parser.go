@@ -169,8 +169,8 @@ func (p *Parser) Parse() (any, error) {
 	// Phase 2 — Scanning (Modal State Machine + TokenClassifier)
 	// -----------------------------------------------------------------------
 	tc := NewTokenClassifier(activeFlags)
-	parsedFlags, positionalTokens, scanErrs, helpRequested, versionRequested :=
-		p.phaseScanning(remainingTokens, commandPath, tc, parsingMode)
+	parsedFlags, positionalTokens, scanErrs, helpRequested, versionRequested, explicitFlags :=
+		p.phaseScanning(remainingTokens, commandPath, tc, parsingMode, activeFlags)
 
 	// Short-circuit for --help and --version
 	if helpRequested {
@@ -222,10 +222,11 @@ func (p *Parser) Parse() (any, error) {
 	}
 
 	return &ParseResult{
-		Program:     program,
-		CommandPath: commandPath,
-		Flags:       parsedFlags,
-		Arguments:   parsedArgs,
+		Program:       program,
+		CommandPath:   commandPath,
+		Flags:         parsedFlags,
+		Arguments:     parsedArgs,
+		ExplicitFlags: explicitFlags,
 	}, nil
 }
 
@@ -362,21 +363,25 @@ func commandNames(commands []map[string]any) []string {
 	return names
 }
 
-// isValueTakingLong returns true if the long flag name refers to a non-boolean flag.
+// isValueTakingLong returns true if the long flag name refers to a flag that
+// consumes a value token. Boolean and count flags do not consume values.
 func isValueTakingLong(name string, activeFlags []map[string]any) bool {
 	for _, f := range activeFlags {
 		if stringField(f, "long") == name {
-			return stringField(f, "type") != "boolean"
+			t := stringField(f, "type")
+			return t != "boolean" && t != "count"
 		}
 	}
 	return false
 }
 
-// isValueTakingShort returns true if the short flag char refers to a non-boolean flag.
+// isValueTakingShort returns true if the short flag char refers to a flag that
+// consumes a value token. Boolean and count flags do not consume values.
 func isValueTakingShort(char string, activeFlags []map[string]any) bool {
 	for _, f := range activeFlags {
 		if stringField(f, "short") == char {
-			return stringField(f, "type") != "boolean"
+			t := stringField(f, "type")
+			return t != "boolean" && t != "count"
 		}
 	}
 	return false
@@ -399,7 +404,8 @@ func (p *Parser) phaseScanning(
 	commandPath []string,
 	tc *TokenClassifier,
 	parsingMode string,
-) (parsedFlags map[string]any, positionalTokens []string, errs []ParseError, helpRequested bool, versionRequested bool) {
+	activeFlags []map[string]any,
+) (parsedFlags map[string]any, positionalTokens []string, errs []ParseError, helpRequested bool, versionRequested bool, explicitFlags []string) {
 	parsedFlags = make(map[string]any)
 
 	// ---- Build the Modal State Machine ----
@@ -468,6 +474,54 @@ func (p *Parser) phaseScanning(
 				flagType := stringField(pendingFlag, "type")
 				repeatable := boolField(pendingFlag, "repeatable", false)
 
+				// ---------------------------------------------------------------
+				// default_when_present disambiguation (v1.1 Feature 2)
+				//
+				// When an enum flag has "default_when_present" set, it can be
+				// used without a value. If the next token is a valid enum value,
+				// consume it. If not, use default_when_present and treat the
+				// token as something else (put it back for re-processing).
+				// ---------------------------------------------------------------
+				dwp := stringField(pendingFlag, "default_when_present")
+				if flagType == "enum" && dwp != "" {
+					// Check if this token is a valid enum value
+					allowed := sliceOfStrings(pendingFlag["enum_values"])
+					isValidEnum := false
+					for _, v := range allowed {
+						if v == token {
+							isValidEnum = true
+							break
+						}
+					}
+					if !isValidEnum {
+						// Token is NOT a valid enum value — use default_when_present
+						// and re-process this token. We do this by setting the flag
+						// to dwp and NOT consuming the token from the main loop.
+						setFlagValue(parsedFlags, flagID, dwp, repeatable, pendingFlag, &errs)
+						explicitFlags = append(explicitFlags, flagID)
+						pendingFlag = nil
+						msm.SwitchMode("to_scanning")
+						// Re-process this token in SCANNING mode by falling through
+						// to the scanning case. We do this by re-classifying it.
+						reEv := tc.Classify(token)
+						switch reEv.Kind {
+						case TokenPositional:
+							if parsingMode == "posix" {
+								msm.SwitchMode("to_end_of_flags")
+							}
+							positionalTokens = append(positionalTokens, reEv.Name)
+						case TokenEndOfFlags:
+							msm.SwitchMode("to_end_of_flags")
+						default:
+							// It's a flag token — process it in scanning mode
+							// by recursing into the scanning logic below.
+							// For simplicity, we handle the most common cases.
+							p.handleScanToken(reEv, tc, parsedFlags, &positionalTokens, &errs, &helpRequested, &versionRequested, &pendingFlag, msm, parsingMode, &explicitFlags)
+						}
+						continue
+					}
+				}
+
 				val, err := coerceValue(token, flagType, pendingFlag)
 				if err != nil {
 					// Check if it's an enum error
@@ -485,6 +539,7 @@ func (p *Parser) phaseScanning(
 				} else {
 					setFlagValue(parsedFlags, flagID, val, repeatable, pendingFlag, &errs)
 				}
+				explicitFlags = append(explicitFlags, flagID)
 				pendingFlag = nil
 			}
 			msm.SwitchMode("to_scanning")
@@ -525,7 +580,14 @@ func (p *Parser) phaseScanning(
 				repeatable := boolField(flagDef, "repeatable", false)
 				if flagType == "boolean" {
 					setFlagValue(parsedFlags, flagID, true, repeatable, flagDef, &errs)
+					explicitFlags = append(explicitFlags, flagID)
+				} else if flagType == "count" {
+					// Count flags: each occurrence increments the counter by 1.
+					incrementCountFlag(parsedFlags, flagID)
+					explicitFlags = append(explicitFlags, flagID)
 				} else {
+					// For enum flags with default_when_present: if this is the
+					// last token or the next token is a flag, use default_when_present.
 					pendingFlag = flagDef
 					_ = flagID
 					msm.SwitchMode("to_flag_value")
@@ -568,6 +630,7 @@ func (p *Parser) phaseScanning(
 				} else {
 					setFlagValue(parsedFlags, flagID, val, repeatable, flagDef, &errs)
 				}
+				explicitFlags = append(explicitFlags, flagID)
 
 			case TokenSingleDashLong:
 				flagDef := tc.LookupBySDL(ev.Name)
@@ -583,6 +646,10 @@ func (p *Parser) phaseScanning(
 				repeatable := boolField(flagDef, "repeatable", false)
 				if flagType == "boolean" {
 					setFlagValue(parsedFlags, flagID, true, repeatable, flagDef, &errs)
+					explicitFlags = append(explicitFlags, flagID)
+				} else if flagType == "count" {
+					incrementCountFlag(parsedFlags, flagID)
+					explicitFlags = append(explicitFlags, flagID)
 				} else {
 					pendingFlag = flagDef
 					_ = flagID
@@ -613,6 +680,10 @@ func (p *Parser) phaseScanning(
 				repeatable := boolField(flagDef, "repeatable", false)
 				if flagType == "boolean" {
 					setFlagValue(parsedFlags, flagID, true, repeatable, flagDef, &errs)
+					explicitFlags = append(explicitFlags, flagID)
+				} else if flagType == "count" {
+					incrementCountFlag(parsedFlags, flagID)
+					explicitFlags = append(explicitFlags, flagID)
 				} else {
 					pendingFlag = flagDef
 					_ = flagID
@@ -647,6 +718,7 @@ func (p *Parser) phaseScanning(
 				} else {
 					setFlagValue(parsedFlags, flagID, val, repeatable, flagDef, &errs)
 				}
+				explicitFlags = append(explicitFlags, flagID)
 
 			case TokenStackedFlags:
 				for _, ch := range ev.Chars {
@@ -663,6 +735,12 @@ func (p *Parser) phaseScanning(
 					repeatable := boolField(flagDef, "repeatable", false)
 					if flagType == "boolean" {
 						setFlagValue(parsedFlags, flagID, true, repeatable, flagDef, &errs)
+						explicitFlags = append(explicitFlags, flagID)
+					} else if flagType == "count" {
+						// Count flags in stacks: each character increments.
+						// -vvv means verbose is incremented 3 times.
+						incrementCountFlag(parsedFlags, flagID)
+						explicitFlags = append(explicitFlags, flagID)
 					} else {
 						// Last non-boolean flag in a stack — value is the next token
 						pendingFlag = flagDef
@@ -697,7 +775,25 @@ func (p *Parser) phaseScanning(
 		}
 	}
 
-	return parsedFlags, positionalTokens, errs, helpRequested, versionRequested
+	// -----------------------------------------------------------------------
+	// Handle trailing pending flag with default_when_present (v1.1)
+	//
+	// If scanning ended while waiting for a flag value and that flag has
+	// default_when_present, use the default instead of leaving it dangling.
+	// -----------------------------------------------------------------------
+	if pendingFlag != nil {
+		flagID := stringField(pendingFlag, "id")
+		flagType := stringField(pendingFlag, "type")
+		dwp := stringField(pendingFlag, "default_when_present")
+		repeatable := boolField(pendingFlag, "repeatable", false)
+		if flagType == "enum" && dwp != "" {
+			setFlagValue(parsedFlags, flagID, dwp, repeatable, pendingFlag, &errs)
+			explicitFlags = append(explicitFlags, flagID)
+			pendingFlag = nil
+		}
+	}
+
+	return parsedFlags, positionalTokens, errs, helpRequested, versionRequested, explicitFlags
 }
 
 // setFlagValue sets a flag's parsed value, handling repeatable flags and
@@ -721,6 +817,117 @@ func setFlagValue(parsedFlags map[string]any, flagID string, val any, repeatable
 		} else {
 			parsedFlags[flagID] = val
 		}
+	}
+}
+
+// -----------------------------------------------------------------------
+// Count flag support (v1.1 Feature 1)
+// -----------------------------------------------------------------------
+
+// incrementCountFlag increments a count flag's value by 1.
+//
+// Count flags behave like boolean flags in that they consume no value token,
+// but instead of being set to true, each occurrence increments an int64
+// counter. For example, `-vvv` sets the verbose flag to int64(3).
+//
+// If the flag has not been seen before, it starts at int64(1).
+// If the flag was already seen, we add 1 to the existing int64 value.
+func incrementCountFlag(parsedFlags map[string]any, flagID string) {
+	existing, ok := parsedFlags[flagID]
+	if !ok {
+		parsedFlags[flagID] = int64(1)
+	} else if n, isInt := existing.(int64); isInt {
+		parsedFlags[flagID] = n + 1
+	} else {
+		// Shouldn't happen, but defensive: start at 1
+		parsedFlags[flagID] = int64(1)
+	}
+}
+
+// handleScanToken processes a single TokenEvent in SCANNING mode.
+//
+// This is extracted as a helper so that the default_when_present re-processing
+// path in FLAG_VALUE mode can reuse the scanning logic without code duplication.
+func (p *Parser) handleScanToken(
+	ev TokenEvent,
+	tc *TokenClassifier,
+	parsedFlags map[string]any,
+	positionalTokens *[]string,
+	errs *[]ParseError,
+	helpRequested *bool,
+	versionRequested *bool,
+	pendingFlag *map[string]any,
+	msm interface{ SwitchMode(string) string },
+	parsingMode string,
+	explicitFlags *[]string,
+) {
+	switch ev.Kind {
+	case TokenEndOfFlags:
+		msm.SwitchMode("to_end_of_flags")
+
+	case TokenLongFlag:
+		flagDef := tc.LookupByLong(ev.Name)
+		if flagDef != nil && stringField(flagDef, "id") == "help" {
+			*helpRequested = true
+			return
+		}
+		if flagDef != nil && stringField(flagDef, "id") == "version" {
+			*versionRequested = true
+			return
+		}
+		if flagDef == nil {
+			*errs = append(*errs, ParseError{
+				ErrorType: ErrUnknownFlag,
+				Message:   fmt.Sprintf("unknown flag --%s", ev.Name),
+			})
+			return
+		}
+		flagID := stringField(flagDef, "id")
+		flagType := stringField(flagDef, "type")
+		repeatable := boolField(flagDef, "repeatable", false)
+		if flagType == "boolean" {
+			setFlagValue(parsedFlags, flagID, true, repeatable, flagDef, errs)
+			*explicitFlags = append(*explicitFlags, flagID)
+		} else if flagType == "count" {
+			incrementCountFlag(parsedFlags, flagID)
+			*explicitFlags = append(*explicitFlags, flagID)
+		} else {
+			*pendingFlag = flagDef
+			msm.SwitchMode("to_flag_value")
+		}
+
+	case TokenShortFlag:
+		flagDef := tc.LookupByShort(ev.Name)
+		if flagDef != nil && stringField(flagDef, "id") == "help" {
+			*helpRequested = true
+			return
+		}
+		if flagDef == nil {
+			*errs = append(*errs, ParseError{
+				ErrorType: ErrUnknownFlag,
+				Message:   fmt.Sprintf("unknown flag -%s", ev.Name),
+			})
+			return
+		}
+		flagID := stringField(flagDef, "id")
+		flagType := stringField(flagDef, "type")
+		repeatable := boolField(flagDef, "repeatable", false)
+		if flagType == "boolean" {
+			setFlagValue(parsedFlags, flagID, true, repeatable, flagDef, errs)
+			*explicitFlags = append(*explicitFlags, flagID)
+		} else if flagType == "count" {
+			incrementCountFlag(parsedFlags, flagID)
+			*explicitFlags = append(*explicitFlags, flagID)
+		} else {
+			*pendingFlag = flagDef
+			msm.SwitchMode("to_flag_value")
+		}
+
+	case TokenPositional:
+		if parsingMode == "posix" {
+			msm.SwitchMode("to_end_of_flags")
+		}
+		*positionalTokens = append(*positionalTokens, ev.Name)
 	}
 }
 
@@ -767,6 +974,11 @@ func (p *Parser) applyFlagDefaults(activeFlags []map[string]any, parsedFlags map
 		flagType := stringField(f, "type")
 		if flagType == "boolean" {
 			parsedFlags[id] = false
+		} else if flagType == "count" {
+			// Count flags default to int64(0) when absent — never nil.
+			// This mirrors boolean's default of false: a "zero value" that
+			// tells the caller "this flag was not seen."
+			parsedFlags[id] = int64(0)
 		} else if f["default"] != nil {
 			parsedFlags[id] = f["default"]
 		} else {

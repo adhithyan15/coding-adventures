@@ -86,7 +86,7 @@ jobs:
             echo "is_main=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Detect needed languages
+      - name: Detect needed languages and emit build plan
         id: detect
         shell: bash
         run: |
@@ -96,7 +96,15 @@ jobs:
           ./build-tool \
             -root . \
             -diff-base "${{ steps.diff-base.outputs.base }}" \
-            -detect-languages
+            -detect-languages \
+            -emit-plan build-plan.json
+
+      - name: Upload build plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-plan
+          path: build-plan.json
+          retention-days: 1
 
   # ── Job 2: Build and test ──────────────────────────────────────
   #
@@ -209,6 +217,13 @@ jobs:
             echo "Mix: $(mix --version)"
           fi
 
+      # ── Download build plan (skip discovery in build job) ─────
+      - name: Download build plan
+        uses: actions/download-artifact@v4
+        with:
+          name: build-plan
+        continue-on-error: true
+
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
         shell: bash
@@ -225,9 +240,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
+          PLAN_FLAG=""
+          if [ -f build-plan.json ]; then
+            PLAN_FLAG="-plan-file build-plan.json"
+            echo "Using pre-computed build plan"
+          fi
           $BT \
             -root . \
-            -diff-base "${{ needs.detect.outputs.diff_base }}" \
+            $PLAN_FLAG \
             -language all
 
       # ── Force full build on main ──────────────────────────────

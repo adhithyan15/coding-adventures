@@ -1,0 +1,180 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "ls",
+  "display_name": "ls",
+  "description": "List directory contents",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "all",
+      "short": "a",
+      "long": "all",
+      "description": "Do not ignore entries starting with .",
+      "type": "boolean"
+    },
+    {
+      "id": "almost_all",
+      "short": "A",
+      "long": "almost-all",
+      "description": "Do not list implied . and ..",
+      "type": "boolean"
+    },
+    {
+      "id": "long",
+      "short": "l",
+      "description": "Use a long listing format",
+      "type": "boolean"
+    },
+    {
+      "id": "human_readable",
+      "short": "h",
+      "long": "human-readable",
+      "description": "With -l, print sizes like 1K 234M 2G",
+      "type": "boolean"
+    },
+    {
+      "id": "si",
+      "long": "si",
+      "description": "Like -h but use powers of 1000 not 1024",
+      "type": "boolean"
+    },
+    {
+      "id": "reverse",
+      "short": "r",
+      "long": "reverse",
+      "description": "Reverse order while sorting",
+      "type": "boolean"
+    },
+    {
+      "id": "recursive",
+      "short": "R",
+      "long": "recursive",
+      "description": "List subdirectories recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "sort_by_size",
+      "short": "S",
+      "description": "Sort by file size, largest first",
+      "type": "boolean"
+    },
+    {
+      "id": "sort_by_time",
+      "short": "t",
+      "description": "Sort by time, newest first",
+      "type": "boolean"
+    },
+    {
+      "id": "sort_by_extension",
+      "short": "X",
+      "description": "Sort alphabetically by entry extension",
+      "type": "boolean"
+    },
+    {
+      "id": "sort_by_version",
+      "short": "v",
+      "description": "Natural sort of (version) numbers within text",
+      "type": "boolean"
+    },
+    {
+      "id": "unsorted",
+      "short": "U",
+      "description": "Do not sort; list entries in directory order",
+      "type": "boolean"
+    },
+    {
+      "id": "directory",
+      "short": "d",
+      "long": "directory",
+      "description": "List directories themselves, not their contents",
+      "type": "boolean"
+    },
+    {
+      "id": "classify",
+      "short": "F",
+      "long": "classify",
+      "description": "Append indicator (one of */=>@|) to entries",
+      "type": "boolean"
+    },
+    {
+      "id": "inode",
+      "short": "i",
+      "long": "inode",
+      "description": "Print the index number of each file",
+      "type": "boolean"
+    },
+    {
+      "id": "no_group",
+      "short": "G",
+      "long": "no-group",
+      "description": "In a long listing, don't print group names",
+      "type": "boolean"
+    },
+    {
+      "id": "numeric_uid_gid",
+      "short": "n",
+      "long": "numeric-uid-gid",
+      "description": "Like -l, but list numeric user and group IDs",
+      "type": "boolean"
+    },
+    {
+      "id": "one_per_line",
+      "short": "1",
+      "description": "List one file per line",
+      "type": "boolean"
+    },
+    {
+      "id": "color",
+      "long": "color",
+      "description": "Colorize the output",
+      "type": "enum",
+      "enum_values": ["always", "auto", "never"],
+      "default": "auto"
+    },
+    {
+      "id": "block_size",
+      "long": "block-size",
+      "description": "With -l, scale sizes by SIZE",
+      "type": "string",
+      "value_name": "SIZE"
+    },
+    {
+      "id": "dereference",
+      "short": "L",
+      "long": "dereference",
+      "description": "Show information for the file the symlink references",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files or directories to list",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "."
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "dot-files",
+      "flag_ids": ["all", "almost_all"],
+      "required": false
+    },
+    {
+      "id": "size-format",
+      "flag_ids": ["human_readable", "si"],
+      "required": false
+    },
+    {
+      "id": "sort-mode",
+      "flag_ids": ["sort_by_size", "sort_by_time", "sort_by_extension", "sort_by_version", "unsorted"],
+      "required": false
+    }
+  ]
+}

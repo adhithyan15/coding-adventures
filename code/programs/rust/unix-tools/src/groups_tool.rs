@@ -50,6 +50,7 @@
 ///     3. Call getgroups(count, array) → fills array with GIDs
 ///     4. Look up each GID → group name via getgrgid()
 /// ```
+#[cfg(unix)]
 pub fn get_groups() -> Result<Vec<String>, String> {
     unsafe {
         // --- Step 1: Get the count ---
@@ -87,6 +88,12 @@ pub fn get_groups() -> Result<Vec<String>, String> {
     }
 }
 
+/// Non-Unix stub so the code compiles on all platforms.
+#[cfg(not(unix))]
+pub fn get_groups() -> Result<Vec<String>, String> {
+    Err("groups: not supported on this platform".to_string())
+}
+
 /// Format group output as a space-separated string.
 ///
 /// ```text
@@ -104,12 +111,14 @@ pub fn format_groups(groups: &[String]) -> String {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn get_groups_succeeds() {
         let result = get_groups();
         assert!(result.is_ok(), "get_groups should succeed");
     }
 
+    #[cfg(unix)]
     #[test]
     fn has_at_least_one_group() {
         let groups = get_groups().unwrap();
@@ -119,6 +128,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn group_names_are_nonempty() {
         let groups = get_groups().unwrap();
@@ -149,10 +159,19 @@ mod tests {
         assert_eq!(format_groups(&groups), "");
     }
 
+    #[cfg(unix)]
     #[test]
     fn groups_are_consistent() {
-        let first = get_groups().unwrap();
-        let second = get_groups().unwrap();
+        // Call get_groups() twice and verify both calls return the same
+        // set of groups. We sort both lists before comparing because on
+        // some CI environments (e.g., GitHub Actions Ubuntu runners),
+        // the order from getgroups(2) can vary between calls.
+        let mut first = get_groups().unwrap();
+        let mut second = get_groups().unwrap();
+        first.sort();
+        second.sort();
+        first.dedup();
+        second.dedup();
         assert_eq!(first, second, "group list should be consistent");
     }
 }

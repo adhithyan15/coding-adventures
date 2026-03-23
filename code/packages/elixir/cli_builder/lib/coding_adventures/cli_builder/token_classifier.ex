@@ -163,8 +163,11 @@ defmodule CodingAdventures.CliBuilder.TokenClassifier do
             # "-x" with nothing left
             {:short_flag, char}
 
-          flag["type"] == "boolean" ->
-            # Boolean flag; try to stack the remainder.
+          flag["type"] in ["boolean", "count"] ->
+            # Boolean and count flags consume no value; try to stack the
+            # remainder characters.  Count flags behave identically to boolean
+            # flags during tokenisation — each occurrence simply increments
+            # the counter in the parser.
             classify_stacked(char, remainder, short_map, sdl_map)
 
           true ->
@@ -210,8 +213,10 @@ defmodule CodingAdventures.CliBuilder.TokenClassifier do
         {:unknown, char}
 
       flag ->
-        if flag["type"] == "boolean" or rest == [] do
-          # Boolean flags and the last flag (which may consume next token) are OK.
+        if flag["type"] in ["boolean", "count"] or rest == [] do
+          # Boolean and count flags consume no value and are always safe to
+          # stack.  The last flag in the stack (which may consume the next
+          # token as its value) is also OK regardless of type.
           walk_stack(rest, short_map, [char | acc])
         else
           # Non-boolean flag in the middle of a stack — the remaining chars

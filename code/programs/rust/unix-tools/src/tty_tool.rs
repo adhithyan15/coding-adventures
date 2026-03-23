@@ -72,6 +72,7 @@ pub struct TtyResult {
 ///     // When stdin is a pipe:
 ///     check_tty() => TtyResult { name: "not a tty", exit_code: 1 }
 /// ```
+#[cfg(unix)]
 pub fn check_tty() -> TtyResult {
     // --- Step 1: Check if stdin is a terminal ---
     // libc::isatty() returns 1 if the file descriptor refers to a
@@ -110,6 +111,15 @@ pub fn check_tty() -> TtyResult {
             name,
             exit_code: 0,
         }
+    }
+}
+
+/// Non-Unix stub so the code compiles on all platforms.
+#[cfg(not(unix))]
+pub fn check_tty() -> TtyResult {
+    TtyResult {
+        name: "not a tty".to_string(),
+        exit_code: 1,
     }
 }
 

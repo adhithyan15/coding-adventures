@@ -6,6 +6,7 @@ package main
 
 import (
 	"bytes"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -16,6 +17,9 @@ import (
 
 // TestGetFilesystemInfoRoot verifies that we can stat the root filesystem.
 func TestGetFilesystemInfoRoot(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("df uses Unix-specific filesystem info")
+	}
 	info, err := getFilesystemInfo("/")
 	if err != nil {
 		t.Fatalf("getFilesystemInfo(\"/\") failed: %v", err)
@@ -42,6 +46,9 @@ func TestGetFilesystemInfoInvalidPath(t *testing.T) {
 
 // TestGetFilesystemInfoTempDir verifies statting a temp directory.
 func TestGetFilesystemInfoTempDir(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("df uses Unix-specific filesystem info")
+	}
 	dir := t.TempDir()
 	info, err := getFilesystemInfo(dir)
 	if err != nil {
@@ -102,6 +109,9 @@ func TestFormatSizeSI(t *testing.T) {
 
 // TestRunDfDefault verifies default output includes a header.
 func TestRunDfDefault(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("df uses Unix-specific filesystem info")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runDf(toolSpecPath(t, "df"), []string{"df"}, &stdout, &stderr)
 
