@@ -94,4 +94,7 @@ members = [
     "virtual-machine",
     "wasm-simulator",
     "xml-lexer",
+  "sha1",
+  "md5",
+  "uuid",
 ]
