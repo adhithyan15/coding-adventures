@@ -7,10 +7,19 @@
  * Delete removes the template after a window.confirm guard.
  *
  * The "New Checklist" button navigates to the Template Editor in create mode.
+ *
+ * V0.3: Uses useStore(store) for reactive state and store.dispatch(action)
+ * for mutations. The store returns new state objects on every dispatch,
+ * which triggers re-renders via useSyncExternalStore under the hood.
  */
 
 import { useTranslation } from "@coding-adventures/ui-components";
-import { appState, createInstance, deleteTemplate } from "../state.js";
+import { useStore } from "@coding-adventures/store";
+import { store } from "../state.js";
+import {
+  createInstanceAction,
+  deleteTemplateAction,
+} from "../actions.js";
 import type { Template } from "../types.js";
 
 interface TemplateLibraryProps {
@@ -68,11 +77,17 @@ function TemplateCard({ template, onRun, onEdit, onDelete }: TemplateCardProps) 
 
 export function TemplateLibrary({ onNavigate }: TemplateLibraryProps) {
   const { t } = useTranslation();
-  const templates = appState.templates;
+  const state = useStore(store);
+  const templates = state.templates;
 
   function handleRun(templateId: string) {
-    const instance = createInstance(appState, templateId);
-    onNavigate(`/instance/${instance.id}`);
+    store.dispatch(createInstanceAction(templateId));
+    // The new instance is the last one in the array after dispatch
+    const newState = store.getState();
+    const instance = newState.instances[newState.instances.length - 1];
+    if (instance) {
+      onNavigate(`/instance/${instance.id}`);
+    }
   }
 
   function handleDelete(template: Template) {
@@ -80,7 +95,7 @@ export function TemplateLibrary({ onNavigate }: TemplateLibraryProps) {
       t("library.deleteConfirm").replace("{name}", template.name),
     );
     if (confirmed) {
-      deleteTemplate(appState, template.id);
+      store.dispatch(deleteTemplateAction(template.id));
       onNavigate("/");
     }
   }

@@ -305,4 +305,60 @@ defmodule CodingAdventures.Parser.GrammarParserTest do
       assert ASTNode.token(node) == nil
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # Trace mode
+  # ---------------------------------------------------------------------------
+  #
+  # When trace: true is passed, the parser emits [TRACE] lines to stderr for
+  # each rule attempt. This helps diagnose parse failures. The trace output
+  # must not affect the parse result — the parser must produce the same AST
+  # whether tracing is on or off.
+
+  describe "parse/3 — trace mode" do
+    test "trace: false (default) produces the same result as no option" do
+      tg = simple_token_grammar()
+      {:ok, pg} = ParserGrammar.parse("value = NUMBER ;")
+      tokens = tokenize("42", tg)
+
+      {:ok, node_no_opt} = GrammarParser.parse(tokens, pg)
+      {:ok, node_with_false} = GrammarParser.parse(tokens, pg, trace: false)
+
+      assert node_no_opt.rule_name == node_with_false.rule_name
+      assert length(node_no_opt.children) == length(node_with_false.children)
+    end
+
+    test "trace: true produces the same parse result as trace: false" do
+      tg = simple_token_grammar()
+      {:ok, pg} = ParserGrammar.parse("value = NUMBER ;")
+      tokens = tokenize("42", tg)
+
+      {:ok, node_trace_false} = GrammarParser.parse(tokens, pg, trace: false)
+      {:ok, node_trace_true} = GrammarParser.parse(tokens, pg, trace: true)
+
+      assert node_trace_false.rule_name == node_trace_true.rule_name
+      assert length(node_trace_false.children) == length(node_trace_true.children)
+    end
+
+    test "trace mode does not crash on failed parse" do
+      tg = simple_token_grammar()
+      {:ok, pg} = ParserGrammar.parse("value = NUMBER ;")
+      # Feed a NAME token where NUMBER is expected — parse should fail cleanly
+      tokens = tokenize("hello", tg)
+
+      result = GrammarParser.parse(tokens, pg, trace: true)
+      assert match?({:error, _}, result)
+    end
+
+    test "trace mode works with complex grammars" do
+      tg = json_token_grammar()
+      pg = json_parser_grammar()
+      tokens = tokenize(~s({"key": 42}), tg)
+
+      {:ok, node_no_trace} = GrammarParser.parse(tokens, pg, trace: false)
+      {:ok, node_trace} = GrammarParser.parse(tokens, pg, trace: true)
+
+      assert node_no_trace.rule_name == node_trace.rule_name
+    end
+  end
 end

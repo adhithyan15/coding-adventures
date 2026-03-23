@@ -184,4 +184,128 @@ defmodule CodingAdventures.GrammarTools.ParserGrammarTest do
       refute MapSet.member?(refs, "LBRACE")
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # validate_parser_grammar/2
+  # ---------------------------------------------------------------------------
+  #
+  # The validator runs a lint pass over a parsed grammar, catching semantic
+  # issues such as undefined rule references, duplicate rule names, and
+  # unreachable rules.
+
+  describe "validate_parser_grammar/2 — valid grammar" do
+    test "returns empty list for a valid grammar" do
+      # array is the start rule; it references value which is defined.
+      # Neither rule is unreachable (array is start, value is referenced by array).
+      source = """
+      array = LBRACKET value RBRACKET ;
+      value = NUMBER ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      assert ParserGrammar.validate_parser_grammar(grammar) == []
+    end
+  end
+
+  describe "validate_parser_grammar/2 — duplicate rule names" do
+    test "reports duplicate rule name" do
+      # Build a grammar struct directly to simulate duplicate names
+      rule1 = %{name: "value", body: {:rule_reference, "NUMBER", true}, line_number: 1}
+      rule2 = %{name: "value", body: {:rule_reference, "STRING", true}, line_number: 2}
+      grammar = %ParserGrammar{rules: [rule1, rule2]}
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Duplicate rule name 'value'"))
+    end
+  end
+
+  describe "validate_parser_grammar/2 — non-lowercase rule names" do
+    test "reports UPPERCASE rule name" do
+      rule = %{name: "Value", body: {:rule_reference, "NUMBER", true}, line_number: 1}
+      grammar = %ParserGrammar{rules: [rule]}
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "should be lowercase"))
+    end
+  end
+
+  describe "validate_parser_grammar/2 — undefined rule references" do
+    test "reports undefined rule reference" do
+      source = "program = expression ;"
+      {:ok, grammar} = ParserGrammar.parse(source)
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Undefined rule reference: 'expression'"))
+    end
+
+    test "no issue when all rule references are defined" do
+      source = """
+      program = expression ;
+      expression = NUMBER ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      refute Enum.any?(issues, &(&1 =~ "Undefined rule reference"))
+    end
+  end
+
+  describe "validate_parser_grammar/2 — undefined token references" do
+    test "reports undefined token reference when token_names provided" do
+      source = "value = NUMBER | STRING ;"
+      {:ok, grammar} = ParserGrammar.parse(source)
+      token_names = MapSet.new(["NUMBER"])
+      issues = ParserGrammar.validate_parser_grammar(grammar, token_names)
+      assert Enum.any?(issues, &(&1 =~ "Undefined token reference: 'STRING'"))
+      refute Enum.any?(issues, &(&1 =~ "Undefined token reference: 'NUMBER'"))
+    end
+
+    test "no undefined token check when token_names is nil" do
+      source = "value = TOTALLY_UNDEFINED ;"
+      {:ok, grammar} = ParserGrammar.parse(source)
+      issues = ParserGrammar.validate_parser_grammar(grammar, nil)
+      refute Enum.any?(issues, &(&1 =~ "Undefined token reference"))
+    end
+
+    test "synthetic tokens are always valid" do
+      source = "program = NEWLINE INDENT NAME DEDENT EOF ;"
+      {:ok, grammar} = ParserGrammar.parse(source)
+      # Only NAME is undefined; synthetic tokens should not trigger an error
+      token_names = MapSet.new([])
+      issues = ParserGrammar.validate_parser_grammar(grammar, token_names)
+      refute Enum.any?(issues, &(&1 =~ "Undefined token reference: 'NEWLINE'"))
+      refute Enum.any?(issues, &(&1 =~ "Undefined token reference: 'INDENT'"))
+      refute Enum.any?(issues, &(&1 =~ "Undefined token reference: 'DEDENT'"))
+      refute Enum.any?(issues, &(&1 =~ "Undefined token reference: 'EOF'"))
+      assert Enum.any?(issues, &(&1 =~ "Undefined token reference: 'NAME'"))
+    end
+  end
+
+  describe "validate_parser_grammar/2 — unreachable rules" do
+    test "reports unreachable rule" do
+      source = """
+      program = NUMBER ;
+      orphan = STRING ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Rule 'orphan' is defined but never referenced"))
+    end
+
+    test "start rule is exempt from unreachable check" do
+      source = "program = NUMBER ;"
+      {:ok, grammar} = ParserGrammar.parse(source)
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      refute Enum.any?(issues, &(&1 =~ "Rule 'program'"))
+    end
+
+    test "referenced rules are not flagged as unreachable" do
+      source = """
+      program = expression ;
+      expression = NUMBER ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      issues = ParserGrammar.validate_parser_grammar(grammar)
+      refute Enum.any?(issues, &(&1 =~ "unreachable"))
+    end
+  end
 end

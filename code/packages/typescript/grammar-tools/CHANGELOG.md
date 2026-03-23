@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-03-23
+
+### Added
+
+- `src/cli.ts` — CLI entry point for grammar validation. Implements three subcommands:
+  - `grammar-tools validate <file.tokens> <file.grammar>` — validates both files individually and cross-validates them.
+  - `grammar-tools validate-tokens <file.tokens>` — validates just a `.tokens` file.
+  - `grammar-tools validate-grammar <file.grammar>` — validates just a `.grammar` file.
+  - `grammar-tools --help` / `-h` / `help` — prints usage information.
+- Output format matches the Python `grammar_tools` CLI: `OK (N tokens, M skip)`, `OK (P rules)`, `Cross-validating ... OK`, `All checks passed.` / `Found N error(s). Fix them and try again.`
+- Exit codes: 0 = all checks passed, 1 = validation errors, 2 = usage error.
+- `"bin": { "grammar-tools": "./dist/cli.js" }` added to `package.json` so the CLI binary is installed when the package is installed globally or as a local dep.
+- 29 new tests in `tests/cli.test.ts` covering all subcommands, error paths, exit codes, usage output, and `main()` dispatch. Uses in-process function calls rather than subprocess spawning for speed and reliability.
+
 ## [0.2.0] - 2026-03-21
 
 ### Added

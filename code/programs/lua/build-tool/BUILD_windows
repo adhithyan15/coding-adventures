@@ -1,0 +1,1 @@
+echo "Skipping Lua build tool on Windows (Lua not available in CI)"

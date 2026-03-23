@@ -4,18 +4,19 @@
  * Shows the completion rate as a large number, a grid of detail stats,
  * and action buttons to run again or return to the library.
  *
+ * V0.3: Uses useStore(store) for reactive state and store.dispatch for
+ * mutations. The "Run Again" button dispatches INSTANCE_CREATE and reads
+ * the new instance from store.getState() to navigate to it.
+ *
  * formatDuration converts milliseconds to a human-readable string:
- *   < 60 000 ms  →  "42s"
- *   ≥ 60 000 ms  →  "3m 22s"
+ *   < 60 000 ms  ->  "42s"
+ *   >= 60 000 ms ->  "3m 22s"
  */
 
 import { useTranslation } from "@coding-adventures/ui-components";
-import {
-  appState,
-  computeStats,
-  createInstance,
-  getInstance,
-} from "../state.js";
+import { useStore } from "@coding-adventures/store";
+import { store, computeStats } from "../state.js";
+import { createInstanceAction } from "../actions.js";
 
 interface StatsViewProps {
   instanceId: string;
@@ -32,7 +33,8 @@ function formatDuration(ms: number): string {
 
 export function StatsView({ instanceId, onNavigate }: StatsViewProps) {
   const { t } = useTranslation();
-  const instance = getInstance(appState, instanceId);
+  const state = useStore(store);
+  const instance = state.instances.find((i) => i.id === instanceId);
 
   if (!instance) {
     return <p>Instance not found.</p>;
@@ -43,8 +45,12 @@ export function StatsView({ instanceId, onNavigate }: StatsViewProps) {
   const rateLabel = `${Math.round(stats.completionRate)}%`;
 
   function handleRunAgain() {
-    const newInstance = createInstance(appState, instance!.templateId);
-    onNavigate(`/instance/${newInstance.id}`);
+    store.dispatch(createInstanceAction(instance!.templateId));
+    const newState = store.getState();
+    const newInstance = newState.instances[newState.instances.length - 1];
+    if (newInstance) {
+      onNavigate(`/instance/${newInstance.id}`);
+    }
   }
 
   return (

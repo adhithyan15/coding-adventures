@@ -4,8 +4,10 @@
  * V0.2 uses the shared TreeView and BranchGroup components to render the
  * item tree with CSS connectors — "what you build is what you run."
  *
- * The editor maintains local draft state (DraftItem[]) until Save is pressed.
- * Only then does it write to the global AppState. Cancel discards all changes.
+ * V0.3 replaces direct state mutations with store.dispatch(action).
+ * The editor still maintains local draft state (DraftItem[]) until Save
+ * is pressed. Only then does it dispatch a TEMPLATE_CREATE or TEMPLATE_UPDATE
+ * action. Cancel discards all changes (no action dispatched).
  *
  * Decision items show two BranchGroups (yes/no), each containing a nested
  * TreeView of its branch items. "Add step" buttons appear at the end of
@@ -18,12 +20,12 @@ import {
   BranchGroup,
   useTranslation,
 } from "@coding-adventures/ui-components";
+import { useStore } from "@coding-adventures/store";
+import { store } from "../state.js";
 import {
-  appState,
-  createTemplate,
-  getTemplate,
-  updateTemplate,
-} from "../state.js";
+  createTemplateAction,
+  updateTemplateAction,
+} from "../actions.js";
 import type { TemplateItem } from "../types.js";
 
 interface TemplateEditorProps {
@@ -343,7 +345,10 @@ function ItemEditorRow({
 
 export function TemplateEditor({ templateId, onNavigate }: TemplateEditorProps) {
   const { t } = useTranslation();
-  const existing = templateId ? getTemplate(appState, templateId) : undefined;
+  const state = useStore(store);
+  const existing = templateId
+    ? state.templates.find((tpl) => tpl.id === templateId)
+    : undefined;
 
   const [name, setName] = useState(existing?.name ?? "");
   const [description, setDescription] = useState(existing?.description ?? "");
@@ -359,13 +364,17 @@ export function TemplateEditor({ templateId, onNavigate }: TemplateEditorProps) 
     }
     const templateItems = toTemplateItems(items);
     if (existing) {
-      updateTemplate(appState, existing.id, {
-        name: name.trim(),
-        description: description.trim(),
-        items: templateItems,
-      });
+      store.dispatch(
+        updateTemplateAction(existing.id, {
+          name: name.trim(),
+          description: description.trim(),
+          items: templateItems,
+        }),
+      );
     } else {
-      createTemplate(appState, name.trim(), description.trim(), templateItems);
+      store.dispatch(
+        createTemplateAction(name.trim(), description.trim(), templateItems),
+      );
     }
     onNavigate("/");
   }

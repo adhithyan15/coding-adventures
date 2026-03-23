@@ -4,18 +4,15 @@
  * V0.2 replaces the flat list with a recursive tree view via the shared
  * TreeView and BranchGroup components from @coding-adventures/ui-components.
  *
+ * V0.3 replaces the mutable appState singleton with the immutable store.
+ * State is read via useStore(store) and mutations go through dispatch.
+ * The setTick() hack for forcing re-renders is no longer needed because
+ * useStore automatically re-renders when the store state changes.
+ *
  * The tree renders the full item structure with CSS connectors. Decision
  * nodes show two BranchGroups (yes/no). The active branch is fully
  * interactive; the inactive branch is dimmed and collapsed to a summary
  * line (expandable on click for review).
- *
- * Key changes from V0.1:
- *   - flattenVisibleItems is no longer used for rendering (still used by
- *     computeStats for the progress bar and stats calculations)
- *   - The recursive tree structure is rendered directly, showing both
- *     branches of every decision at all times
- *   - Inactive branches show "N steps • click to expand" and can be
- *     expanded for read-only review
  */
 
 import { useState, useCallback } from "react";
@@ -24,22 +21,20 @@ import {
   BranchGroup,
   useTranslation,
 } from "@coding-adventures/ui-components";
+import { useStore } from "@coding-adventures/store";
+import { store, flattenVisibleItems, countBranchItems } from "../state.js";
 import {
-  appState,
-  checkItem,
-  uncheckItem,
-  answerDecision,
-  completeInstance,
-  abandonInstance,
-  flattenVisibleItems,
-  countBranchItems,
-  getInstance,
-} from "../state.js";
+  checkItemAction,
+  uncheckItemAction,
+  answerDecisionAction,
+  completeInstanceAction,
+  abandonInstanceAction,
+} from "../actions.js";
 import type {
   InstanceItem,
   CheckInstanceItem,
   DecisionInstanceItem,
-} from "../state.js";
+} from "../types.js";
 import { ProgressBar } from "./shared/ProgressBar.js";
 
 interface InstanceRunnerProps {
@@ -47,13 +42,7 @@ interface InstanceRunnerProps {
   onNavigate: (path: string) => void;
 }
 
-// ── Adapter: InstanceItem → TreeViewNode ───────────────────────────────────
-//
-// The TreeView expects nodes with `id` and `children`. InstanceItems have
-// `templateItemId` and decision items have `yesBranch`/`noBranch`. We don't
-// restructure the data — instead we use `renderNode` to handle the branching
-// logic inline, and pass an empty `children` array to prevent TreeView from
-// recursing (we manage the branch recursion ourselves via BranchGroups).
+// ── Adapter: InstanceItem -> TreeViewNode ───────────────────────────────────
 
 interface InstanceTreeNode {
   id: string;
@@ -65,7 +54,6 @@ function toTreeNodes(items: InstanceItem[]): InstanceTreeNode[] {
   return items.map((item) => ({
     id: item.templateItemId,
     item,
-    // We handle decision branches in renderNode, not via TreeView recursion
   }));
 }
 
@@ -73,7 +61,7 @@ function toTreeNodes(items: InstanceItem[]): InstanceTreeNode[] {
 
 export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) {
   const { t } = useTranslation();
-  const [, setTick] = useState(0);
+  const state = useStore(store);
   // Track which inactive branches the user has manually expanded for review
   const [expandedInactive, setExpandedInactive] = useState<Set<string>>(
     new Set(),
@@ -81,7 +69,7 @@ export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) 
   // Track which decisions are in re-answer mode
   const [reanswering, setReanswering] = useState<Set<string>>(new Set());
 
-  const instance = getInstance(appState, instanceId);
+  const instance = state.instances.find((i) => i.id === instanceId);
   if (!instance) {
     return <p>Instance not found.</p>;
   }
@@ -101,27 +89,21 @@ export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) 
   const canComplete =
     (totalCheckItems === 0 || allChecked) && allDecisionsAnswered;
 
-  function refresh() {
-    setTick((n) => n + 1);
-  }
-
   function handleCheck(templateItemId: string, currentlyChecked: boolean) {
     if (currentlyChecked) {
-      uncheckItem(appState, instanceId, templateItemId);
+      store.dispatch(uncheckItemAction(instanceId, templateItemId));
     } else {
-      checkItem(appState, instanceId, templateItemId);
+      store.dispatch(checkItemAction(instanceId, templateItemId));
     }
-    refresh();
   }
 
   function handleAnswer(templateItemId: string, answer: "yes" | "no") {
-    answerDecision(appState, instanceId, templateItemId, answer);
+    store.dispatch(answerDecisionAction(instanceId, templateItemId, answer));
     setReanswering((prev) => {
       const next = new Set(prev);
       next.delete(templateItemId);
       return next;
     });
-    refresh();
   }
 
   function handleReanswer(templateItemId: string) {
@@ -138,12 +120,12 @@ export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) 
   }
 
   function handleComplete() {
-    completeInstance(appState, instanceId);
+    store.dispatch(completeInstanceAction(instanceId));
     onNavigate(`/instance/${instanceId}/stats`);
   }
 
   function handleAbandon() {
-    abandonInstance(appState, instanceId);
+    store.dispatch(abandonInstanceAction(instanceId));
     onNavigate(`/instance/${instanceId}/stats`);
   }
 
@@ -233,7 +215,7 @@ export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) 
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [instanceId, reanswering, expandedInactive],
+    [instanceId, reanswering, expandedInactive, state],
   );
 
   return (
