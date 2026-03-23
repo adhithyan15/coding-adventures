@@ -214,8 +214,25 @@ module CodingAdventures
         @pos = 0
         @line = 1
         @column = 1
-        @keyword_set = grammar.keywords.to_set.freeze
-        @reserved_set = grammar.reserved_keywords.to_set.freeze
+        # Case-insensitive keyword matching.
+        #
+        # When the grammar declares `# @case_insensitive true`, the lexer
+        # normalises every keyword to uppercase at compile time and then
+        # compares incoming NAME values against that uppercase set. This
+        # means "select", "SELECT", and "Select" all resolve to KEYWORD
+        # with the normalised value "SELECT".
+        #
+        # Default is false — keywords are compared exactly as written in
+        # the .tokens file, preserving the original case-sensitive behaviour.
+        @case_insensitive = grammar.case_insensitive
+
+        if @case_insensitive
+          @keyword_set = grammar.keywords.map(&:upcase).to_set.freeze
+          @reserved_set = grammar.reserved_keywords.map(&:upcase).to_set.freeze
+        else
+          @keyword_set = grammar.keywords.to_set.freeze
+          @reserved_set = grammar.reserved_keywords.to_set.freeze
+        end
 
         # Compile token patterns into Regexp objects.
         # Each entry is [name, pattern, alias_name] -- the alias is used
@@ -671,6 +688,16 @@ module CodingAdventures
 
           token_type = resolve_token_type(token_name, value, alias_name)
 
+          # Case-insensitive keyword normalisation.
+          #
+          # When the grammar is case-insensitive and a NAME matched a
+          # keyword, normalise the emitted value to uppercase so that
+          # "select", "SELECT", and "Select" all produce the same token.
+          # Non-keyword NAMEs retain their original casing.
+          if @case_insensitive && token_type == TokenType::KEYWORD
+            value = value.upcase
+          end
+
           # Handle STRING tokens: strip quotes and process escapes.
           # When escape_mode is "none", we strip quotes but leave escape
           # sequences as raw text. This is used by CSS and TOML where
@@ -716,9 +743,18 @@ module CodingAdventures
       # 3. Use alias_name if present.
       # 4. Look up in TokenType::ALL.
       # 5. Fall back to the token name as a string (grammar-driven types).
+      #
+      # When @case_insensitive is true, keyword and reserved-word lookups
+      # are performed against the uppercased value so that "select",
+      # "SELECT", and "Select" all resolve the same way.
       def resolve_token_type(token_name, value, alias_name)
+        # Normalise the lookup key when case-insensitive mode is active.
+        # The keyword sets were already uppercased at initialisation, so
+        # we just need to upcase the incoming value before comparing.
+        lookup_value = @case_insensitive ? value.upcase : value
+
         # Reserved keyword check.
-        if token_name == "NAME" && @reserved_set.include?(value)
+        if token_name == "NAME" && @reserved_set.include?(lookup_value)
           raise LexerError.new(
             "Reserved keyword '#{value}' cannot be used as an identifier",
             line: @line, column: @column
@@ -726,7 +762,7 @@ module CodingAdventures
         end
 
         # Regular keyword check.
-        if token_name == "NAME" && @keyword_set.include?(value)
+        if token_name == "NAME" && @keyword_set.include?(lookup_value)
           return TokenType::KEYWORD
         end
 

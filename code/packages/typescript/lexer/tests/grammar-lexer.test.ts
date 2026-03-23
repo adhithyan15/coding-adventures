@@ -1118,3 +1118,84 @@ PLUS   = "+"
     expect(tokens[0].value).toBe("hello");
   });
 });
+
+// ============================================================================
+// Case-insensitive keyword tests
+// ============================================================================
+
+/**
+ * Build a minimal grammar with `# @case_insensitive true`.
+ *
+ * Tokens defined:
+ *   - NAME  — [a-zA-Z_][a-zA-Z0-9_]*  (regex)
+ *   - COMMA — ","                       (literal)
+ * Skip: whitespace [ \t\r]+
+ * Keywords: select, from
+ */
+function makeCaseInsensitiveGrammar(): TokenGrammar {
+  // .tokens format: NAME = /pattern/ at top level (no "tokens:" section header).
+  // Indented lines under skip: and keywords: belong to those sections.
+  const source = [
+    "# @case_insensitive true",
+    "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/",
+    "skip:",
+    "  WS = /[ \\t\\r\\n]+/",
+    "keywords:",
+    "  select",
+    "  from",
+  ].join("\n");
+  return parseTokenGrammar(source);
+}
+
+describe("GrammarLexer — case-insensitive keywords", () => {
+  it("lowercase 'select' is emitted as KEYWORD with value 'SELECT'", () => {
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("select", grammar).tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("SELECT");
+  });
+
+  it("uppercase 'SELECT' is emitted as KEYWORD with value 'SELECT'", () => {
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("SELECT", grammar).tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("SELECT");
+  });
+
+  it("mixed-case 'Select' is emitted as KEYWORD with value 'SELECT'", () => {
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("Select", grammar).tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("SELECT");
+  });
+
+  it("non-keyword identifier retains its original casing in case-insensitive grammar", () => {
+    // 'myTable' is not in the keywords list, so it stays as NAME with original case
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("myTable", grammar).tokenize();
+    expect(tokens[0].type).toBe("NAME");
+    expect(tokens[0].value).toBe("myTable");
+  });
+
+  it("case-sensitive grammar (default) does not promote mixed-case identifier to KEYWORD", () => {
+    // Build the same grammar without the @case_insensitive directive
+    const source = [
+      "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/",
+      "skip:",
+      "  WS = /[ \\t\\r]+/",
+      "keywords:",
+      "  select",
+    ].join("\n");
+    const grammar = parseTokenGrammar(source);
+
+    // 'SELECT' (all caps) should NOT match the lowercase keyword entry
+    const tokens = new GrammarLexer("SELECT", grammar).tokenize();
+    expect(tokens[0].type).toBe("NAME");
+    expect(tokens[0].value).toBe("SELECT");
+
+    // 'select' (exact match) should still be a KEYWORD
+    const tokens2 = new GrammarLexer("select", grammar).tokenize();
+    expect(tokens2[0].type).toBe("KEYWORD");
+    expect(tokens2[0].value).toBe("select");
+  });
+});
