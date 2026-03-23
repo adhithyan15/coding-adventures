@@ -21,6 +21,10 @@ import {
   answerDecisionAction,
   completeInstanceAction,
   abandonInstanceAction,
+  createTodoAction,
+  updateTodoAction,
+  deleteTodoAction,
+  toggleTodoAction,
 } from "../actions.js";
 import type { TemplateItem } from "../types.js";
 import type { CheckInstanceItem, DecisionInstanceItem } from "../types.js";
@@ -28,7 +32,7 @@ import type { CheckInstanceItem, DecisionInstanceItem } from "../types.js";
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function createStore(): Store<AppState> {
-  return new Store<AppState>({ templates: [], instances: [] }, reducer);
+  return new Store<AppState>({ templates: [], instances: [], todos: [] }, reducer);
 }
 
 /** Builds a minimal flat template with N check items. */
@@ -526,5 +530,65 @@ describe("completeInstance / abandonInstance", () => {
   it("getInstance returns undefined for unknown id", () => {
     const state = s.getState();
     expect(state.instances.find((i) => i.id === "no-such")).toBeUndefined();
+  });
+});
+
+// ── Todo actions ──────────────────────────────────────────────────────────
+
+describe("Todo actions", () => {
+  let s: Store<AppState>;
+  beforeEach(() => {
+    s = createStore();
+  });
+
+  it("TODO_CREATE creates a todo with status 'todo' and timestamps", () => {
+    const before = Date.now();
+    s.dispatch(createTodoAction("Buy milk", "From the store"));
+    const todo = s.getState().todos[0]!;
+    expect(todo.title).toBe("Buy milk");
+    expect(todo.description).toBe("From the store");
+    expect(todo.status).toBe("todo");
+    expect(todo.createdAt).toBeGreaterThanOrEqual(before);
+    expect(todo.updatedAt).toBeGreaterThanOrEqual(before);
+    expect(todo.id).toBeTruthy();
+  });
+
+  it("TODO_UPDATE changes title and description", () => {
+    s.dispatch(createTodoAction("Old title", "Old desc"));
+    const todoId = s.getState().todos[0]!.id;
+    s.dispatch(updateTodoAction(todoId, { title: "New title", description: "New desc" }));
+    const todo = s.getState().todos[0]!;
+    expect(todo.title).toBe("New title");
+    expect(todo.description).toBe("New desc");
+  });
+
+  it("TODO_DELETE removes a todo", () => {
+    s.dispatch(createTodoAction("Task", ""));
+    const todoId = s.getState().todos[0]!.id;
+    s.dispatch(deleteTodoAction(todoId));
+    expect(s.getState().todos).toHaveLength(0);
+  });
+
+  it("TODO_TOGGLE cycles: todo -> in-progress -> done -> todo", () => {
+    s.dispatch(createTodoAction("Task", ""));
+    const todoId = s.getState().todos[0]!.id;
+
+    s.dispatch(toggleTodoAction(todoId));
+    expect(s.getState().todos[0]!.status).toBe("in-progress");
+
+    s.dispatch(toggleTodoAction(todoId));
+    expect(s.getState().todos[0]!.status).toBe("done");
+
+    s.dispatch(toggleTodoAction(todoId));
+    expect(s.getState().todos[0]!.status).toBe("todo");
+  });
+
+  it("TODO_TOGGLE updates updatedAt timestamp", () => {
+    s.dispatch(createTodoAction("Task", ""));
+    const todoId = s.getState().todos[0]!.id;
+    const beforeToggle = s.getState().todos[0]!.updatedAt;
+    s.dispatch(toggleTodoAction(todoId));
+    const afterToggle = s.getState().todos[0]!.updatedAt;
+    expect(afterToggle).toBeGreaterThanOrEqual(beforeToggle);
   });
 });

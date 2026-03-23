@@ -16,7 +16,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   // Reset store state between tests
-  store.dispatch(stateLoadAction([], []));
+  store.dispatch(stateLoadAction([], [], []));
 });
 
 describe("TemplateLibrary", () => {

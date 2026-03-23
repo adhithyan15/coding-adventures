@@ -41,7 +41,7 @@
  */
 
 import type { Action } from "@coding-adventures/store";
-import type { Template, TemplateItem, Instance, DecisionAnswer } from "./types.js";
+import type { Template, TemplateItem, Instance, DecisionAnswer, TodoStatus, TodoItem } from "./types.js";
 
 // ── Action type constants ──────────────────────────────────────────────────
 //
@@ -67,6 +67,11 @@ export const INSTANCE_ABANDON = "INSTANCE_ABANDON";
  * and instances arrays in one atomic action.
  */
 export const STATE_LOAD = "STATE_LOAD";
+
+export const TODO_CREATE = "TODO_CREATE";
+export const TODO_UPDATE = "TODO_UPDATE";
+export const TODO_DELETE = "TODO_DELETE";
+export const TODO_TOGGLE = "TODO_TOGGLE";
 
 // ── Action creator functions ──────────────────────────────────────────────
 
@@ -136,6 +141,23 @@ export function abandonInstanceAction(instanceId: string): Action {
 export function stateLoadAction(
   templates: Template[],
   instances: Instance[],
+  todos: TodoItem[],
 ): Action {
-  return { type: STATE_LOAD, templates, instances };
+  return { type: STATE_LOAD, templates, instances, todos };
+}
+
+export function createTodoAction(title: string, description: string) {
+  return { type: TODO_CREATE, title, description };
+}
+
+export function updateTodoAction(todoId: string, patch: { title?: string; description?: string; status?: TodoStatus }) {
+  return { type: TODO_UPDATE, todoId, patch };
+}
+
+export function deleteTodoAction(todoId: string) {
+  return { type: TODO_DELETE, todoId };
+}
+
+export function toggleTodoAction(todoId: string) {
+  return { type: TODO_TOGGLE, todoId };
 }

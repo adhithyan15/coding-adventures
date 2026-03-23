@@ -108,6 +108,25 @@ export interface InstanceStats {
   durationMs: number | null;
 }
 
+// ── Todo types ─────────────────────────────────────────────────────────────
+//
+// A TodoItem is a simple task with a status lifecycle: todo → in-progress → done.
+// All fields use JSON-serializable primitives (string, number) so the data
+// works with IndexedDB, JSON export, REST APIs, and SQL databases.
+
+export type TodoStatus = "todo" | "in-progress" | "done";
+
+export interface TodoItem {
+  id: string;
+  title: string;
+  description: string;
+  status: TodoStatus;
+  /** Unix timestamp from Date.now() */
+  createdAt: number;
+  /** Unix timestamp, updated on every mutation */
+  updatedAt: number;
+}
+
 // ── Type guards ────────────────────────────────────────────────────────────
 //
 // These narrow the union types without relying on `as` casts. They are the

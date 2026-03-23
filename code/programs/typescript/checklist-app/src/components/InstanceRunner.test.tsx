@@ -17,7 +17,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  store.dispatch(stateLoadAction([], []));
+  store.dispatch(stateLoadAction([], [], []));
 });
 
 function makeRunner(items: TemplateItem[], navigate = vi.fn()) {

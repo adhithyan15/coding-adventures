@@ -22,4 +22,4 @@ export type { AppState };
 export { flattenVisibleItems, computeStats, countBranchItems } from "./reducer.js";
 
 /** The singleton store used by the running app. */
-export const store = new Store<AppState>({ templates: [], instances: [] }, reducer);
+export const store = new Store<AppState>({ templates: [], instances: [], todos: [] }, reducer);
