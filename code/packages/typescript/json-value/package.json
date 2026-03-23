@@ -1,0 +1,31 @@
+{
+  "name": "coding-adventures-json-value",
+  "version": "0.1.0",
+  "description": "Typed JSON value representation — converts json-parser ASTs into discriminated union types and native JS values",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "json",
+    "value",
+    "ast",
+    "typed",
+    "discriminated-union",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/json-parser": "file:../json-parser"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
