@@ -221,3 +221,100 @@ class MissingReturnError(LatticeError):
     def __init__(self, name: str, line: int = 0, column: int = 0) -> None:
         self.name = name
         super().__init__(f"Function '{name}' has no @return", line, column)
+
+
+# ---------------------------------------------------------------------------
+# Lattice v2: New Error Types
+# ---------------------------------------------------------------------------
+#
+# These errors support the new features introduced in Lattice v2:
+# - @while loops (MaxIterationError)
+# - @extend directive (ExtendTargetNotFoundError)
+# - Built-in functions (RangeError, ZeroDivisionInExpressionError)
+# ---------------------------------------------------------------------------
+
+
+class MaxIterationError(LatticeError):
+    """Raised when a @while loop exceeds the maximum iteration count.
+
+    The max-iteration guard prevents infinite loops. Lattice sets a
+    configurable limit (default: 1000 iterations). If a @while loop's
+    condition remains truthy after this many iterations, compilation
+    halts with this error.
+
+    The most common cause is a missing or incorrect loop variable update:
+
+    .. code-block:: scss
+
+        $i: 1;
+        @while $i <= 10 {
+            // Oops — forgot to increment $i!
+            .item-#{$i} { display: block; }
+        }
+
+    Example: @while true { } (no mutation to break the loop)
+    """
+
+    def __init__(self, max_iterations: int = 1000, line: int = 0, column: int = 0) -> None:
+        self.max_iterations = max_iterations
+        super().__init__(
+            f"@while loop exceeded maximum iteration count ({max_iterations})",
+            line,
+            column,
+        )
+
+
+class ExtendTargetNotFoundError(LatticeError):
+    """Raised when @extend references a selector not found in the stylesheet.
+
+    @extend works by appending the current rule's selector to another rule's
+    selector list. If the target selector does not exist anywhere in the
+    stylesheet, it is an error — the programmer likely made a typo or
+    forgot to define the base rule.
+
+    .. code-block:: scss
+
+        .success {
+            @extend %message-shared;  // Error if %message-shared is never defined
+        }
+
+    Example: @extend .nonexistent; where .nonexistent has no matching rule
+    """
+
+    def __init__(self, target: str, line: int = 0, column: int = 0) -> None:
+        self.target = target
+        super().__init__(
+            f"@extend target '{target}' was not found in the stylesheet",
+            line,
+            column,
+        )
+
+
+class RangeError(LatticeError):
+    """Raised when a value is outside the valid range for an operation.
+
+    Used by built-in functions that require bounded inputs:
+
+    - ``nth($list, $n)`` — index must be >= 1 and <= list length
+    - ``lighten($color, $amount)`` — amount must be between 0% and 100%
+    - ``mix($c1, $c2, $weight)`` — weight must be between 0% and 100%
+
+    Example: nth((a, b, c), 5) — index 5 out of bounds for list of length 3
+    """
+
+    def __init__(self, message: str, line: int = 0, column: int = 0) -> None:
+        super().__init__(message, line, column)
+
+
+class ZeroDivisionInExpressionError(LatticeError):
+    """Raised when math.div() encounters a zero divisor.
+
+    Division by zero is undefined. Unlike CSS calc() which defers
+    evaluation to the browser, Lattice evaluates math.div() at compile
+    time and must reject zero divisors.
+
+    Example: math.div(100px, 0)
+    """
+
+    def __init__(self, line: int = 0, column: int = 0) -> None:
+        super().__init__("Division by zero", line, column)
