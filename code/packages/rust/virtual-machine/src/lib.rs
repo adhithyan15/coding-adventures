@@ -548,6 +548,31 @@ impl GenericVM {
         self.pc = target;
     }
 
+    // ── Global injection ──────────────────────────────────────────────────
+
+    /// Pre-seed named variables into the VM's global scope.
+    ///
+    /// These variables are available to the program as regular variables
+    /// but are set before execution begins. Useful for build context,
+    /// environment info, etc.
+    ///
+    /// Injected globals are merged into `variables` — they don't replace
+    /// the map. If a key already exists, the injected value overwrites it.
+    ///
+    /// # Example
+    ///
+    /// ```rust,ignore
+    /// use std::collections::HashMap;
+    /// let mut globals = HashMap::new();
+    /// globals.insert("_ctx".to_string(), Value::Dict(ctx_dict));
+    /// vm.inject_globals(globals);
+    /// ```
+    pub fn inject_globals(&mut self, globals: HashMap<String, Value>) {
+        for (key, value) in globals {
+            self.variables.insert(key, value);
+        }
+    }
+
     // ── Configuration ────────────────────────────────────────────────────
 
     /// Set the maximum recursion depth. Pass `None` for unlimited.
