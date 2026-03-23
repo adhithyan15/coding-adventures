@@ -183,6 +183,12 @@ pub struct GrammarParser {
     /// [TRACE] rule 'factor' at token 2 (Plus "+") → fail
     /// ```
     trace: bool,
+
+    /// Set of (rule_index, pos) pairs currently being parsed.
+    /// Used to detect and break left recursion: if we try to parse a rule
+    /// at a position where we're already inside that same rule (but haven't
+    /// cached the result yet), we know it's left recursion and should fail.
+    in_progress: std::collections::HashSet<String>,
 }
 
 impl GrammarParser {
@@ -245,6 +251,7 @@ impl GrammarParser {
             furthest_pos: 0,
             furthest_expected: Vec::new(),
             trace,
+            in_progress: std::collections::HashSet::new(),
         }
     }
 
@@ -381,6 +388,17 @@ impl GrammarParser {
                     children: children.unwrap(),
                 });
             }
+
+            // Left-recursion guard: if we're already trying to parse this
+            // rule at this position (but haven't finished and cached the
+            // result yet), then we've hit left recursion. Return None to
+            // break the cycle. This handles grammars with rules like:
+            //   primary = ... | primary LBRACKET expression RBRACKET
+            // where `primary` appears as the first element of an alternative.
+            if !self.in_progress.insert(key.clone()) {
+                // key was already present — left recursion detected
+                return None;
+            }
         }
 
         let start_pos = self.pos;
@@ -418,9 +436,10 @@ impl GrammarParser {
             );
         }
 
-        // Cache result.
+        // Cache result and remove from in_progress set.
         if let Some(&idx) = self.rule_index.get(rule_name) {
             let key = format!("{},{}", idx, start_pos);
+            self.in_progress.remove(&key);
             if let Some(ref result) = children {
                 self.memo.insert(key, MemoEntry {
                     children: Some(result.clone()),
