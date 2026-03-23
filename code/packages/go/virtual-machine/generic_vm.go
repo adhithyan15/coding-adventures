@@ -382,6 +382,36 @@ func (vm *GenericVM) JumpTo(target int) {
 // CONFIGURATION
 // ════════════════════════════════════════════════════════════════════════
 
+// InjectGlobals pre-seeds named variables into the VM's global scope.
+//
+// These variables are available to the program as regular global variables,
+// but they exist before execution begins.  This is the proper way to pass
+// context from the host environment (e.g., build configuration, platform
+// information) into a Starlark/bytecode program.
+//
+// Injected globals are merged into Variables — they don't replace the map.
+// If a key already exists in Variables, the injected value overwrites it.
+//
+// This is analogous to Bazel's repository_ctx.os which provides platform
+// information to Starlark code, except our mechanism is general-purpose:
+// any key-value pair can be injected.
+//
+// Example:
+//
+//	vm := NewGenericVM()
+//	vm.InjectGlobals(map[string]interface{}{
+//	    "_ctx": map[string]interface{}{
+//	        "os":   "darwin",
+//	        "arch": "arm64",
+//	    },
+//	})
+//	// Now the program can access _ctx["os"] as a regular variable.
+func (vm *GenericVM) InjectGlobals(globals map[string]interface{}) {
+	for k, v := range globals {
+		vm.Variables[k] = v
+	}
+}
+
 // SetMaxRecursionDepth configures the maximum call stack depth.
 // Pass nil for unlimited recursion.  Pass a pointer to 0 to disallow
 // any function calls.
