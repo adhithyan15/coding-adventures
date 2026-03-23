@@ -1,0 +1,35 @@
+{
+  "name": "@coding-adventures/core",
+  "version": "0.1.0",
+  "description": "Complete processor core — composing pipeline, caches, branch predictor, and hazard detection into a working CPU",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "cpu",
+    "core",
+    "processor",
+    "computer-architecture",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/branch-predictor": "file:../branch-predictor",
+    "@coding-adventures/cache": "file:../cache",
+    "@coding-adventures/clock": "file:../clock",
+    "@coding-adventures/cpu-pipeline": "file:../cpu-pipeline",
+    "@coding-adventures/hazard-detection": "file:../hazard-detection",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

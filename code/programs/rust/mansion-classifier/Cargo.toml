@@ -1,0 +1,10 @@
+[package]
+name = "mansion-classifier"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+matrix = { path = "../../../packages/rust/matrix" }
+loss-functions = { path = "../../../packages/rust/loss-functions" }
+activation-functions = { path = "../../../packages/rust/activation-functions" }
+perceptron = { path = "../../../packages/rust/perceptron" }

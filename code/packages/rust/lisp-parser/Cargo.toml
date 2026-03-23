@@ -1,0 +1,8 @@
+[package]
+name = "lisp-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parses a Lisp token stream into an S-expression abstract syntax tree (AST)"
+
+[dependencies]
+lisp-lexer = { path = "../lisp-lexer" }

@@ -1,0 +1,14 @@
+/* ==========================================================================
+ * BJT era styles.
+ *
+ * Cool blue tones representing the solid-state semiconductor era.
+ * ========================================================================== */
+
+.era--bjt .era-header__year {
+  background: #336699;
+}
+
+.era--bjt .npn-diagram {
+  background: #121820;
+  border-color: #2a3a4e;
+}

@@ -1,0 +1,87 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "sha256sum",
+  "display_name": "sha256sum",
+  "description": "Compute and check SHA256 message digest",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "check",
+      "short": "c",
+      "long": "check",
+      "description": "Read SHA256 sums from the files and check them",
+      "type": "boolean"
+    },
+    {
+      "id": "binary",
+      "short": "b",
+      "long": "binary",
+      "description": "Read in binary mode",
+      "type": "boolean"
+    },
+    {
+      "id": "text",
+      "short": "t",
+      "long": "text",
+      "description": "Read in text mode (default)",
+      "type": "boolean"
+    },
+    {
+      "id": "quiet",
+      "long": "quiet",
+      "description": "Don't print OK for each successfully verified file",
+      "type": "boolean",
+      "requires": ["check"]
+    },
+    {
+      "id": "status",
+      "long": "status",
+      "description": "Don't output anything, status code shows success",
+      "type": "boolean",
+      "requires": ["check"]
+    },
+    {
+      "id": "strict",
+      "long": "strict",
+      "description": "Exit non-zero for improperly formatted checksum lines",
+      "type": "boolean",
+      "requires": ["check"]
+    },
+    {
+      "id": "warn",
+      "short": "w",
+      "long": "warn",
+      "description": "Warn about improperly formatted checksum lines",
+      "type": "boolean",
+      "requires": ["check"]
+    },
+    {
+      "id": "zero",
+      "short": "z",
+      "long": "zero",
+      "description": "End each output line with NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to checksum. Use '-' for stdin.",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "-"
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "read-mode",
+      "flag_ids": ["binary", "text"],
+      "required": false
+    }
+  ]
+}

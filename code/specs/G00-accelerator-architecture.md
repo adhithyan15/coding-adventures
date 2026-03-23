@@ -21,7 +21,7 @@ Layer 4:  Runtime Simulator        cudaRuntime / XLA Runtime / CoreML Runtime
 Layer 5:  ISA Simulator            PTX (GPU) / HLO (TPU) / ANE Instructions (NPU)
 Layer 6:  Device Simulator         Full GPU / TPU / NPU device
 Layer 7:  Compute Unit Simulator   SM (GPU) / MXU (TPU) / Neural Engine Core (NPU)
-Layer 8:  Execution Unit           Warp-SIMT (GPU) / Systolic Array (TPU) / MAC Array (NPU)
+Layer 8:  Parallel Execution Engine Warp-SIMT (GPU) / SIMD Wavefront (AMD) / Systolic Array (TPU) / MAC Array (NPU)
 Layer 9:  Core Simulator           CUDA Core (GPU) / PE (TPU) / MAC Unit (NPU)
 Layer 10: FP Arithmetic            IEEE 754 FP32/FP16/BF16, FMA — SHARED with CPU stack
 Layer 11: Logic Gates              AND, OR, XOR, NAND — SHARED with CPU stack

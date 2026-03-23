@@ -1,0 +1,148 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "tar",
+  "display_name": "tar",
+  "description": "An archiving utility",
+  "version": "1.0.0",
+  "parsing_mode": "traditional",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "create",
+      "short": "c",
+      "long": "create",
+      "description": "Create a new archive",
+      "type": "boolean"
+    },
+    {
+      "id": "extract",
+      "short": "x",
+      "long": "extract",
+      "description": "Extract files from an archive",
+      "type": "boolean"
+    },
+    {
+      "id": "list",
+      "short": "t",
+      "long": "list",
+      "description": "List the contents of an archive",
+      "type": "boolean"
+    },
+    {
+      "id": "append",
+      "short": "r",
+      "long": "append",
+      "description": "Append files to the end of an archive",
+      "type": "boolean"
+    },
+    {
+      "id": "update",
+      "short": "u",
+      "long": "update",
+      "description": "Only append files newer than copy in archive",
+      "type": "boolean"
+    },
+    {
+      "id": "file",
+      "short": "f",
+      "long": "file",
+      "description": "Use ARCHIVE as the archive file",
+      "type": "string",
+      "value_name": "ARCHIVE"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Verbosely list files processed",
+      "type": "boolean"
+    },
+    {
+      "id": "gzip",
+      "short": "z",
+      "long": "gzip",
+      "description": "Filter the archive through gzip",
+      "type": "boolean"
+    },
+    {
+      "id": "bzip2",
+      "short": "j",
+      "long": "bzip2",
+      "description": "Filter the archive through bzip2",
+      "type": "boolean"
+    },
+    {
+      "id": "xz",
+      "short": "J",
+      "long": "xz",
+      "description": "Filter the archive through xz",
+      "type": "boolean"
+    },
+    {
+      "id": "directory",
+      "short": "C",
+      "long": "directory",
+      "description": "Change to DIR before performing any operations",
+      "type": "string",
+      "value_name": "DIR"
+    },
+    {
+      "id": "exclude",
+      "long": "exclude",
+      "description": "Exclude files matching PATTERN",
+      "type": "string",
+      "value_name": "PATTERN",
+      "repeatable": true
+    },
+    {
+      "id": "keep_old_files",
+      "short": "k",
+      "long": "keep-old-files",
+      "description": "Don't replace existing files when extracting",
+      "type": "boolean"
+    },
+    {
+      "id": "preserve_permissions",
+      "short": "p",
+      "long": "preserve-permissions",
+      "description": "Extract information about file permissions",
+      "type": "boolean"
+    },
+    {
+      "id": "strip_components",
+      "long": "strip-components",
+      "description": "Strip NUMBER leading components from file names on extraction",
+      "type": "integer",
+      "value_name": "NUMBER"
+    },
+    {
+      "id": "wildcards",
+      "long": "wildcards",
+      "description": "Use wildcards (default for exclusion)",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files or directories to archive/extract",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "operation",
+      "flag_ids": ["create", "extract", "list", "append", "update"],
+      "required": true
+    },
+    {
+      "id": "compression",
+      "flag_ids": ["gzip", "bzip2", "xz"],
+      "required": false
+    }
+  ]
+}

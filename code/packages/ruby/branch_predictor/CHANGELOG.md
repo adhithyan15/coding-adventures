@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — 2026-03-20
+
+### Added
+- `TWO_BIT_DFA` module constant — formal DFA definition of the 2-bit saturating counter using `coding_adventures_state_machine`
+- `ONE_BIT_DFA` module constant — formal DFA definition of the 1-bit predictor using `coding_adventures_state_machine`
+- `TwoBitState::STATE_TO_NAME` and `TwoBitState::NAME_TO_STATE` mappings between integer states and DFA state names
+- DFA equivalence test suite (`test/test_dfa_equivalence.rb`) verifying structural correctness and transition-by-transition equivalence between imperative and DFA representations
+- Runtime dependency on `coding_adventures_state_machine` gem
+
 ## 0.1.0 — 2026-03-18
 
 ### Added

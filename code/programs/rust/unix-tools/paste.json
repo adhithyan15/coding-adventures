@@ -1,0 +1,45 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "paste",
+  "display_name": "paste",
+  "description": "Merge lines of files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "delimiters",
+      "short": "d",
+      "long": "delimiters",
+      "description": "Reuse characters from LIST instead of TABs",
+      "type": "string",
+      "value_name": "LIST"
+    },
+    {
+      "id": "serial",
+      "short": "s",
+      "long": "serial",
+      "description": "Paste one file at a time instead of in parallel",
+      "type": "boolean"
+    },
+    {
+      "id": "zero_terminated",
+      "short": "z",
+      "long": "zero-terminated",
+      "description": "Line delimiter is NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to merge. Use '-' for stdin.",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 1
+    }
+  ],
+  "commands": []
+}

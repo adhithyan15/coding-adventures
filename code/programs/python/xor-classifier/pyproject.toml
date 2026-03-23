@@ -1,0 +1,13 @@
+[project]
+name = "xor-classifier"
+version = "0.1.0"
+description = "Manual neural network implementation solving XOR"
+requires-python = ">=3.12"
+dependencies = [
+    "matrix", "loss-functions", "activation-functions"
+]
+
+[tool.uv.sources]
+matrix = { path = "../../../packages/python/matrix", editable = true }
+loss-functions = { path = "../../../packages/python/loss-functions", editable = true }
+activation-functions = { path = "../../../packages/python/activation-functions", editable = true }

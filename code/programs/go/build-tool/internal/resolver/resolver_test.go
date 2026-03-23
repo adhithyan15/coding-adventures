@@ -327,6 +327,126 @@ func TestBuildKnownNamesRuby(t *testing.T) {
 	}
 }
 
+func TestBuildKnownNamesTypescript(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "typescript/logic-gates", Path: "/repo/packages/typescript/logic-gates", Language: "typescript"},
+	}
+	known := BuildKnownNames(packages)
+	if known["@coding-adventures/logic-gates"] != "typescript/logic-gates" {
+		t.Fatalf("expected typescript/logic-gates, got %s", known["@coding-adventures/logic-gates"])
+	}
+}
+
+func TestParseTypescriptDeps(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/package.json": `{
+  "name": "@coding-adventures/pkg-a",
+  "dependencies": {
+    "@coding-adventures/pkg-b": "file:../pkg-b",
+    "@coding-adventures/pkg-c": "file:../pkg-c"
+  }
+}`,
+		"pkg-b/package.json": `{
+  "name": "@coding-adventures/pkg-b"
+}`,
+		"pkg-c/package.json": `{
+  "name": "@coding-adventures/pkg-c"
+}`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "typescript/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "typescript"},
+		{Name: "typescript/pkg-b", Path: filepath.Join(root, "pkg-b"), Language: "typescript"},
+		{Name: "typescript/pkg-c", Path: filepath.Join(root, "pkg-c"), Language: "typescript"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseTypescriptDeps(packages[0], known)
+
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParseTypescriptDepsNoPackageJSON(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{Name: "typescript/pkg-x", Path: root, Language: "typescript"}
+	deps := parseTypescriptDeps(pkg, map[string]string{})
+	if len(deps) != 0 {
+		t.Fatalf("expected 0 deps, got %d", len(deps))
+	}
+}
+
+func TestParseTypescriptDepsExternalSkipped(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/package.json": `{
+  "name": "@coding-adventures/pkg-a",
+  "dependencies": {
+    "vitest": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}`,
+	})
+
+	pkg := discovery.Package{Name: "typescript/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "typescript"}
+	deps := parseTypescriptDeps(pkg, map[string]string{})
+	if len(deps) != 0 {
+		t.Fatalf("expected external deps to be skipped, got %d", len(deps))
+	}
+}
+
+func TestBuildKnownNamesRust(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/logic-gates", Path: "/repo/packages/rust/logic-gates", Language: "rust"},
+	}
+	known := BuildKnownNames(packages)
+	if known["logic-gates"] != "rust/logic-gates" {
+		t.Fatalf("expected rust/logic-gates, got %s", known["logic-gates"])
+	}
+}
+
+func TestParseRustDeps(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"arithmetic/Cargo.toml": `[package]
+name = "arithmetic"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+`,
+		"logic-gates/Cargo.toml": `[package]
+name = "logic-gates"
+version = "0.1.0"
+edition = "2021"
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "rust/arithmetic", Path: filepath.Join(root, "arithmetic"), Language: "rust"},
+		{Name: "rust/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "rust"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseRustDeps(packages[0], known)
+
+	if len(deps) != 1 {
+		t.Fatalf("expected 1 dep, got %d: %v", len(deps), deps)
+	}
+	if deps[0] != "rust/logic-gates" {
+		t.Fatalf("expected rust/logic-gates, got %s", deps[0])
+	}
+}
+
+func TestParseRustDepsNoCargoToml(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{Name: "rust/pkg-x", Path: root, Language: "rust"}
+	deps := parseRustDeps(pkg, map[string]string{})
+	if len(deps) != 0 {
+		t.Fatalf("expected 0 deps, got %d", len(deps))
+	}
+}
+
 func TestBuildKnownNamesGo(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"directed-graph/go.mod": `module github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph

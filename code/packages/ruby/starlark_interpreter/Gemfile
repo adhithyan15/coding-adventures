@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+gem "coding_adventures_grammar_tools", path: "../grammar_tools"
+gem "coding_adventures_lexer", path: "../lexer"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"
+gem "coding_adventures_parser", path: "../parser"
+gem "coding_adventures_virtual_machine", path: "../virtual_machine"
+gem "coding_adventures_bytecode_compiler", path: "../bytecode_compiler"
+gem "coding_adventures_starlark_lexer", path: "../starlark_lexer"
+gem "coding_adventures_starlark_parser", path: "../starlark_parser"
+gem "coding_adventures_starlark_ast_to_bytecode_compiler", path: "../starlark_ast_to_bytecode_compiler"
+gem "coding_adventures_starlark_vm", path: "../starlark_vm"
+gem "coding_adventures_jvm_simulator", path: "../jvm_simulator"
+gem "coding_adventures_clr_simulator", path: "../clr_simulator"
+gem "coding_adventures_wasm_simulator", path: "../wasm_simulator"

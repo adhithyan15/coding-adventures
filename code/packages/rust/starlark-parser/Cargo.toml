@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-starlark-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Starlark parser — parses Starlark source code into an AST using the grammar-driven parser and the starlark.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-starlark-lexer = { path = "../starlark-lexer" }

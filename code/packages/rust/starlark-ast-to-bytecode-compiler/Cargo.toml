@@ -1,0 +1,10 @@
+[package]
+name = "starlark-ast-to-bytecode-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compiles Starlark ASTs to bytecode — all 55 grammar rule handlers, using the GenericCompiler framework"
+
+[dependencies]
+bytecode-compiler = { path = "../bytecode-compiler" }
+virtual-machine = { path = "../virtual-machine" }
+starlark-compiler = { path = "../starlark-compiler" }

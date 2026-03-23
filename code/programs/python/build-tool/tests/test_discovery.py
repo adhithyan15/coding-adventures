@@ -9,6 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from build_tool.discovery import (
+    SKIP_DIRS,
     Package,
     _get_build_file,
     _infer_language,
@@ -67,8 +68,13 @@ class TestInferLanguage:
         path.mkdir(parents=True)
         assert _infer_language(path) == "go"
 
+    def test_rust_path(self, tmp_path):
+        path = tmp_path / "packages" / "rust" / "logic-gates"
+        path.mkdir(parents=True)
+        assert _infer_language(path) == "rust"
+
     def test_unknown_path(self, tmp_path):
-        path = tmp_path / "packages" / "rust" / "something"
+        path = tmp_path / "packages" / "zig" / "something"
         path.mkdir(parents=True)
         assert _infer_language(path) == "unknown"
 
@@ -120,6 +126,59 @@ class TestGetBuildFile:
         (tmp_path / "BUILD").write_text("echo generic")
         result = _get_build_file(tmp_path)
         assert result == tmp_path / "BUILD"
+
+    # -- BUILD_windows tests --------------------------------------------------
+
+    @patch("build_tool.discovery.platform.system", return_value="Windows")
+    def test_windows_build_preferred(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_windows").write_text("echo windows")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_windows"
+
+    @patch("build_tool.discovery.platform.system", return_value="Windows")
+    def test_windows_fallback_to_generic(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD"
+
+    @patch("build_tool.discovery.platform.system", return_value="Darwin")
+    def test_windows_build_not_on_mac(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_windows").write_text("echo windows")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD"
+
+    # -- BUILD_mac_and_linux tests --------------------------------------------
+
+    @patch("build_tool.discovery.platform.system", return_value="Darwin")
+    def test_mac_and_linux_on_mac(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_mac_and_linux"
+
+    @patch("build_tool.discovery.platform.system", return_value="Linux")
+    def test_mac_and_linux_on_linux(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_mac_and_linux"
+
+    @patch("build_tool.discovery.platform.system", return_value="Windows")
+    def test_mac_and_linux_not_on_windows(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD"
+
+    @patch("build_tool.discovery.platform.system", return_value="Darwin")
+    def test_mac_overrides_mac_and_linux(self, mock_sys, tmp_path):
+        (tmp_path / "BUILD").write_text("echo generic")
+        (tmp_path / "BUILD_mac").write_text("echo mac")
+        (tmp_path / "BUILD_mac_and_linux").write_text("echo unix")
+        result = _get_build_file(tmp_path)
+        assert result == tmp_path / "BUILD_mac"
 
 
 class TestDiscoverPackagesSimple:
@@ -174,15 +233,117 @@ class TestDiscoverEmpty:
         packages = discover_packages(tmp_path)
         assert packages == []
 
-    def test_dirs_pointing_to_missing_dir(self, tmp_path):
-        (tmp_path / "DIRS").write_text("nonexistent\n")
+    def test_no_build_files(self, tmp_path):
+        subdir = tmp_path / "sub"
+        subdir.mkdir()
+        (subdir / "readme.txt").write_text("just a file")
         packages = discover_packages(tmp_path)
         assert packages == []
 
-    def test_nested_dirs_without_build(self, tmp_path):
-        subdir = tmp_path / "sub"
-        subdir.mkdir()
-        (tmp_path / "DIRS").write_text("sub\n")
-        # sub has no DIRS and no BUILD
+
+class TestDiscoverRecursive:
+    """Tests for recursive BUILD file discovery (no DIRS files needed)."""
+
+    def test_discovers_nested_packages(self, tmp_path):
+        # Nested directories with BUILD files at leaves — no DIRS needed.
+        pkg_a = tmp_path / "packages" / "python" / "pkg-a"
+        pkg_b = tmp_path / "packages" / "python" / "pkg-b"
+        pkg_a.mkdir(parents=True)
+        pkg_b.mkdir(parents=True)
+        (pkg_a / "BUILD").write_text("echo a")
+        (pkg_b / "BUILD").write_text("echo b")
+
         packages = discover_packages(tmp_path)
-        assert packages == []
+        assert len(packages) == 2
+        names = [p.name for p in packages]
+        assert "python/pkg-a" in names
+        assert "python/pkg-b" in names
+
+    def test_build_stops_recursion(self, tmp_path):
+        # A BUILD file at a directory means we don't look inside for more.
+        pkg = tmp_path / "pkg-a"
+        sub = pkg / "sub"
+        pkg.mkdir()
+        sub.mkdir()
+        (pkg / "BUILD").write_text("echo top")
+        (sub / "BUILD").write_text("echo sub")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 1
+
+    def test_multi_language(self, tmp_path):
+        for lang in ("python", "ruby", "go", "rust"):
+            pkg = tmp_path / "packages" / lang / "lib"
+            pkg.mkdir(parents=True)
+            (pkg / "BUILD").write_text(f"echo {lang}")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 4
+        langs = {p.language for p in packages}
+        assert langs == {"python", "ruby", "go", "rust"}
+
+
+class TestDiscoverSkipList:
+    """Tests for skip-list directory filtering."""
+
+    def test_skips_git_dir(self, tmp_path):
+        pkg = tmp_path / "packages" / "python" / "pkg-a"
+        pkg.mkdir(parents=True)
+        (pkg / "BUILD").write_text("echo a")
+
+        git_pkg = tmp_path / ".git" / "hooks"
+        git_pkg.mkdir(parents=True)
+        (git_pkg / "BUILD").write_text("echo git")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 1
+        assert packages[0].name == "python/pkg-a"
+
+    def test_skips_venv_dir(self, tmp_path):
+        pkg = tmp_path / "packages" / "python" / "pkg-a"
+        pkg.mkdir(parents=True)
+        (pkg / "BUILD").write_text("echo a")
+
+        venv = tmp_path / ".venv" / "lib"
+        venv.mkdir(parents=True)
+        (venv / "BUILD").write_text("echo venv")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 1
+
+    def test_skips_node_modules(self, tmp_path):
+        pkg = tmp_path / "packages" / "python" / "pkg-a"
+        pkg.mkdir(parents=True)
+        (pkg / "BUILD").write_text("echo a")
+
+        nm = tmp_path / "node_modules" / "some-dep"
+        nm.mkdir(parents=True)
+        (nm / "BUILD").write_text("echo node")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 1
+
+    def test_skips_target_dir(self, tmp_path):
+        pkg = tmp_path / "packages" / "rust" / "lib"
+        pkg.mkdir(parents=True)
+        (pkg / "BUILD").write_text("echo rs")
+
+        tgt = tmp_path / "target" / "debug"
+        tgt.mkdir(parents=True)
+        (tgt / "BUILD").write_text("echo target")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 1
+        assert packages[0].language == "rust"
+
+    def test_skips_claude_dir(self, tmp_path):
+        pkg = tmp_path / "packages" / "python" / "pkg-a"
+        pkg.mkdir(parents=True)
+        (pkg / "BUILD").write_text("echo a")
+
+        claude = tmp_path / ".claude" / "worktrees" / "test"
+        claude.mkdir(parents=True)
+        (claude / "BUILD").write_text("echo claude")
+
+        packages = discover_packages(tmp_path)
+        assert len(packages) == 1

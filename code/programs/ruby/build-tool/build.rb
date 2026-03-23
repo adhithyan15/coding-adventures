@@ -17,7 +17,7 @@
 #     ruby build.rb --language python       # Only build Python packages
 #
 # The flow is:
-#   1. Discover packages (walk DIRS/BUILD files)
+#   1. Discover packages (walk recursive BUILD files)
 #   2. Filter by language if specified
 #   3. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod)
 #   4. Hash all packages
@@ -32,14 +32,26 @@ require "optparse"
 require "pathname"
 require "set"
 
+# Optional dependency: progress bar for build output.
+# If the gem is not installed, the build tool works fine without it.
+begin
+  require "coding_adventures_progress_bar"
+rescue LoadError
+  # Progress bar is optional — builds work without it.
+end
+
 # Load all build tool modules. We use require_relative so the tool works
 # as a standalone script without needing to be installed as a gem.
 require_relative "lib/build_tool/discovery"
 require_relative "lib/build_tool/resolver"
+require_relative "lib/build_tool/glob_match"
 require_relative "lib/build_tool/hasher"
 require_relative "lib/build_tool/cache"
 require_relative "lib/build_tool/executor"
 require_relative "lib/build_tool/reporter"
+require_relative "lib/build_tool/starlark_evaluator"
+require_relative "lib/build_tool/git_diff"
+require_relative "lib/build_tool/plan"
 
 module BuildTool
   module CLI
@@ -81,7 +93,9 @@ module BuildTool
         dry_run: false,
         jobs: nil,
         language: "all",
-        cache_file: Pathname(".build-cache.json")
+        cache_file: Pathname(".build-cache.json"),
+        emit_plan: nil,
+        plan_file: nil
       }
 
       parser = OptionParser.new do |opts|
@@ -113,6 +127,14 @@ module BuildTool
 
         opts.on("--cache-file FILE", "Path to the build cache file") do |file|
           options[:cache_file] = Pathname(file)
+        end
+
+        opts.on("--emit-plan FILE", "Write build plan to FILE and exit (no build)") do |file|
+          options[:emit_plan] = Pathname(file)
+        end
+
+        opts.on("--plan-file FILE", "Read build plan from FILE instead of discovering") do |file|
+          options[:plan_file] = Pathname(file)
         end
 
         opts.on("-h", "--help", "Show this help message") do
@@ -182,6 +204,21 @@ module BuildTool
       cache.load(cache_path)
 
       # -- Steps 7-8: Execute builds --------------------------------------------
+
+      # Create a progress bar tracker unless we're in dry-run mode.
+      # The tracker renders a live progress bar to stderr so it doesn't
+      # interfere with stdout output. If the progress bar gem is not
+      # installed, we gracefully fall back to nil and use safe navigation.
+      tracker = nil
+      unless options[:dry_run]
+        begin
+          tracker = CodingAdventures::ProgressBar::Tracker.new(packages.size, $stderr, "")
+          tracker.start
+        rescue NameError
+          # Progress bar not available
+        end
+      end
+
       results = Executor.execute_builds(
         packages: packages,
         graph: graph,
@@ -190,8 +227,12 @@ module BuildTool
         deps_hashes: deps_hashes,
         force: options[:force],
         dry_run: options[:dry_run],
-        max_jobs: options[:jobs]
+        max_jobs: options[:jobs],
+        tracker: tracker
       )
+
+      # Shut down the progress bar renderer thread.
+      tracker&.stop
 
       # -- Step 9: Save cache (unless dry run) ----------------------------------
       cache.save(cache_path) unless options[:dry_run]

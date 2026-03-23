@@ -12,12 +12,13 @@ from __future__ import annotations
 import pytest
 
 from grammar_tools.token_grammar import (
+    PatternGroup,
+    TokenDefinition,
     TokenGrammar,
     TokenGrammarError,
     parse_token_grammar,
     validate_token_grammar,
 )
-
 
 # ---------------------------------------------------------------------------
 # Parsing: happy paths
@@ -205,6 +206,16 @@ NUMBER = /[0-9]+\\.?[0-9]*/
         with pytest.raises(TokenGrammarError, match="Empty literal"):
             parse_token_grammar('EMPTY = ""')
 
+    def test_missing_token_name(self) -> None:
+        """A line with = but no name before it raises an error."""
+        with pytest.raises(TokenGrammarError, match="Missing token name"):
+            parse_token_grammar(' = /foo/')
+
+    def test_invalid_token_name(self) -> None:
+        """A token name with invalid characters raises an error."""
+        with pytest.raises(TokenGrammarError, match="Invalid token name"):
+            parse_token_grammar('123BAD = /foo/')
+
     def test_error_includes_line_number(self) -> None:
         """Error messages include the correct line number."""
         source = """# comment
@@ -306,3 +317,658 @@ keywords:
         ]
         issues = validate_token_grammar(grammar)
         assert issues == []
+
+
+# ---------------------------------------------------------------------------
+# Extended format: mode directive
+# ---------------------------------------------------------------------------
+
+
+class TestParseMode:
+    """Test the mode: directive."""
+
+    def test_mode_indentation(self) -> None:
+        source = """mode: indentation
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.mode == "indentation"
+
+    def test_mode_at_end(self) -> None:
+        source = """NAME = /[a-z]+/
+mode: indentation
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.mode == "indentation"
+
+    def test_no_mode(self) -> None:
+        source = 'NAME = /[a-z]+/'
+        grammar = parse_token_grammar(source)
+        assert grammar.mode is None
+
+    def test_mode_empty_value_raises(self) -> None:
+        with pytest.raises(TokenGrammarError, match="Missing value"):
+            parse_token_grammar("mode:")
+
+    def test_mode_custom_value(self) -> None:
+        grammar = parse_token_grammar("mode: custom_mode\nNAME = /[a-z]+/")
+        assert grammar.mode == "custom_mode"
+
+
+# ---------------------------------------------------------------------------
+# Extended format: skip section
+# ---------------------------------------------------------------------------
+
+
+class TestParseSkip:
+    """Test the skip: section for patterns that produce no tokens."""
+
+    def test_skip_regex(self) -> None:
+        source = """skip:
+  COMMENT = /#[^\\n]*/
+  WHITESPACE = /[ \\t]+/
+
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.skip_definitions) == 2
+        assert grammar.skip_definitions[0].name == "COMMENT"
+        assert grammar.skip_definitions[0].is_regex is True
+        assert grammar.skip_definitions[1].name == "WHITESPACE"
+
+    def test_skip_section_exits_on_non_indented(self) -> None:
+        source = """skip:
+  COMMENT = /#[^\\n]*/
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.skip_definitions) == 1
+        assert len(grammar.definitions) == 1
+
+    def test_skip_empty_section(self) -> None:
+        source = """skip:
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.skip_definitions) == 0
+        assert len(grammar.definitions) == 1
+
+    def test_skip_bad_definition_raises(self) -> None:
+        with pytest.raises(TokenGrammarError, match="Expected skip pattern"):
+            parse_token_grammar("skip:\n  NOT_A_DEFINITION")
+
+    def test_skip_incomplete_definition_raises(self) -> None:
+        """A skip pattern with = but empty name or pattern raises an error."""
+        with pytest.raises(TokenGrammarError, match="Incomplete skip"):
+            parse_token_grammar("skip:\n  = /foo/")
+
+
+# ---------------------------------------------------------------------------
+# Extended format: -> TYPE alias
+# ---------------------------------------------------------------------------
+
+
+class TestParseAlias:
+    """Test the -> TYPE alias suffix on token definitions."""
+
+    def test_regex_with_alias(self) -> None:
+        source = 'STRING_DQ = /"([^"\\\\]|\\\\.)*"/ -> STRING'
+        grammar = parse_token_grammar(source)
+        defn = grammar.definitions[0]
+        assert defn.name == "STRING_DQ"
+        assert defn.alias == "STRING"
+        assert defn.is_regex is True
+
+    def test_literal_with_alias(self) -> None:
+        source = 'DOUBLE_STAR = "**" -> STAR_STAR'
+        grammar = parse_token_grammar(source)
+        defn = grammar.definitions[0]
+        assert defn.name == "DOUBLE_STAR"
+        assert defn.alias == "STAR_STAR"
+        assert defn.pattern == "**"
+
+    def test_no_alias(self) -> None:
+        source = 'PLUS = "+"'
+        grammar = parse_token_grammar(source)
+        assert grammar.definitions[0].alias is None
+
+    def test_alias_missing_name_raises(self) -> None:
+        with pytest.raises(TokenGrammarError, match="Missing alias"):
+            parse_token_grammar('FOO = /bar/ ->')
+
+    def test_literal_alias_missing_name_raises(self) -> None:
+        """Missing alias after -> on a literal pattern raises an error."""
+        with pytest.raises(TokenGrammarError, match="Missing alias"):
+            parse_token_grammar('FOO = "bar" ->')
+
+    def test_unexpected_text_after_regex(self) -> None:
+        """Junk text after a regex closing / raises an error."""
+        with pytest.raises(TokenGrammarError, match="Unexpected text"):
+            parse_token_grammar('FOO = /bar/ baz')
+
+    def test_unexpected_text_after_literal(self) -> None:
+        """Junk text after a literal closing " raises an error."""
+        with pytest.raises(TokenGrammarError, match="Unexpected text"):
+            parse_token_grammar('FOO = "bar" baz')
+
+    def test_unclosed_literal(self) -> None:
+        """A literal missing its closing quote raises an error."""
+        with pytest.raises(TokenGrammarError, match="Unclosed literal"):
+            parse_token_grammar('FOO = "bar')
+
+    def test_unclosed_regex(self) -> None:
+        """A regex with only the opening / raises an error."""
+        with pytest.raises(TokenGrammarError, match="Unclosed regex"):
+            parse_token_grammar("FOO = /bar")
+
+    def test_multiple_aliases_same_target(self) -> None:
+        source = """STRING_DQ = /"[^"]*"/ -> STRING
+STRING_SQ = /'[^']*'/ -> STRING
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.definitions[0].alias == "STRING"
+        assert grammar.definitions[1].alias == "STRING"
+
+    def test_token_names_includes_aliases(self) -> None:
+        source = 'STRING_DQ = /"[^"]*"/ -> STRING'
+        grammar = parse_token_grammar(source)
+        names = grammar.token_names()
+        assert "STRING_DQ" in names
+        assert "STRING" in names
+
+    def test_effective_token_names_uses_alias(self) -> None:
+        source = """STRING_DQ = /"[^"]*"/ -> STRING
+PLUS = "+"
+"""
+        grammar = parse_token_grammar(source)
+        effective = grammar.effective_token_names()
+        assert effective == {"STRING", "PLUS"}
+
+
+# ---------------------------------------------------------------------------
+# Extended format: reserved section
+# ---------------------------------------------------------------------------
+
+
+class TestParseReserved:
+    """Test the reserved: section for forbidden identifiers."""
+
+    def test_reserved_keywords(self) -> None:
+        source = """NAME = /[a-z]+/
+
+reserved:
+  class
+  import
+  while
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.reserved_keywords == ["class", "import", "while"]
+
+    def test_reserved_empty(self) -> None:
+        source = """reserved:
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.reserved_keywords == []
+
+    def test_keywords_and_reserved_coexist(self) -> None:
+        source = """NAME = /[a-z]+/
+keywords:
+  if
+  else
+reserved:
+  class
+  while
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.keywords == ["if", "else"]
+        assert grammar.reserved_keywords == ["class", "while"]
+
+
+# ---------------------------------------------------------------------------
+# Extended format: validation
+# ---------------------------------------------------------------------------
+
+
+class TestExtendedValidation:
+    """Test validation of extended features."""
+
+    def test_valid_mode_no_issues(self) -> None:
+        source = "mode: indentation\nNAME = /[a-z]+/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert not any("mode" in i.lower() for i in issues)
+
+    def test_invalid_mode(self) -> None:
+        source = "mode: foobar\nNAME = /[a-z]+/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert any("Unknown lexer mode" in i for i in issues)
+
+    def test_alias_non_uppercase_flagged(self) -> None:
+        source = 'FOO = /bar/ -> string'
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert any("Alias" in i and "UPPER_CASE" in i for i in issues)
+
+    def test_skip_invalid_regex_flagged(self) -> None:
+        source = "skip:\n  BAD = /[invalid/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert any("Invalid regex" in i for i in issues)
+
+    def test_empty_pattern_flagged(self) -> None:
+        """An empty pattern (constructed programmatically) is flagged."""
+        grammar = TokenGrammar(definitions=[
+            TokenDefinition(
+                name="EMPTY", pattern="", is_regex=False, line_number=1,
+            )
+        ])
+        issues = validate_token_grammar(grammar)
+        assert any("Empty pattern" in i for i in issues)
+
+    def test_duplicate_skip_names_flagged(self) -> None:
+        """Duplicate skip pattern names are flagged."""
+        grammar = TokenGrammar(skip_definitions=[
+            TokenDefinition(name="WS", pattern="[ \\t]+", is_regex=True, line_number=1),
+            TokenDefinition(name="WS", pattern="\\s+", is_regex=True, line_number=2),
+        ])
+        issues = validate_token_grammar(grammar)
+        assert any("Duplicate" in i for i in issues)
+
+
+# ---------------------------------------------------------------------------
+# Full Starlark example
+# ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+# Extended format: escapes directive
+# ---------------------------------------------------------------------------
+
+
+class TestParseEscapes:
+    """Test the escapes: directive for configurable escape processing."""
+
+    def test_escapes_none(self) -> None:
+        """escapes: none sets escape_mode to 'none'."""
+        source = """escapes: none
+STRING = /"[^"]*"/
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.escape_mode == "none"
+
+    def test_no_escapes_directive(self) -> None:
+        """Without escapes: directive, escape_mode is None (default)."""
+        source = 'STRING = /"[^"]*"/'
+        grammar = parse_token_grammar(source)
+        assert grammar.escape_mode is None
+
+    def test_escapes_empty_value_raises(self) -> None:
+        """escapes: with no value raises an error."""
+        with pytest.raises(TokenGrammarError, match="Missing value"):
+            parse_token_grammar("escapes:")
+
+    def test_escapes_unknown_value_flagged(self) -> None:
+        """Unknown escape mode is flagged by validator."""
+        source = "escapes: foobar\nNAME = /[a-z]+/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert any("Unknown escape mode" in i for i in issues)
+
+    def test_escapes_none_valid(self) -> None:
+        """escapes: none passes validation."""
+        source = "escapes: none\nNAME = /[a-z]+/"
+        grammar = parse_token_grammar(source)
+        issues = validate_token_grammar(grammar)
+        assert not any("escape" in i.lower() for i in issues)
+
+
+# ---------------------------------------------------------------------------
+# Extended format: errors section
+# ---------------------------------------------------------------------------
+
+
+class TestParseErrorTokens:
+    """Test the errors: section for error recovery patterns."""
+
+    def test_error_patterns(self) -> None:
+        """Error patterns are parsed from the errors: section."""
+        source = """STRING = /"[^"]*"/
+
+errors:
+  BAD_STRING = /"[^"]*$/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.error_definitions) == 1
+        assert grammar.error_definitions[0].name == "BAD_STRING"
+        assert grammar.error_definitions[0].is_regex is True
+
+    def test_multiple_error_patterns(self) -> None:
+        """Multiple error patterns can be defined."""
+        source = """NAME = /[a-z]+/
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_URL = /url\\([^)]*$/
+"""
+        grammar = parse_token_grammar(source)
+        assert len(grammar.error_definitions) == 2
+        assert grammar.error_definitions[0].name == "BAD_STRING"
+        assert grammar.error_definitions[1].name == "BAD_URL"
+
+    def test_errors_empty_section(self) -> None:
+        """Empty errors: section produces no error definitions."""
+        source = """errors:
+NAME = /[a-z]+/
+"""
+        grammar = parse_token_grammar(source)
+        assert grammar.error_definitions == []
+
+    def test_errors_bad_definition_raises(self) -> None:
+        """Non-definition lines in errors: section raise an error."""
+        with pytest.raises(TokenGrammarError, match="Expected error pattern"):
+            parse_token_grammar("errors:\n  NOT_A_DEFINITION")
+
+    def test_errors_incomplete_definition_raises(self) -> None:
+        """An error pattern with = but empty value raises an error."""
+        with pytest.raises(TokenGrammarError, match="Incomplete error"):
+            parse_token_grammar("errors:\n  = /foo/")
+
+    def test_errors_validated(self) -> None:
+        """Error definitions are validated like other definitions."""
+        grammar = TokenGrammar(error_definitions=[
+            TokenDefinition(name="bad", pattern="[0-9]+", is_regex=True, line_number=1),
+        ])
+        issues = validate_token_grammar(grammar)
+        assert any("UPPER_CASE" in i for i in issues)
+
+    def test_no_errors_section(self) -> None:
+        """Without errors: section, error_definitions is empty."""
+        grammar = parse_token_grammar('NAME = /[a-z]+/')
+        assert grammar.error_definitions == []
+
+
+# ---------------------------------------------------------------------------
+# Full Starlark example
+# ---------------------------------------------------------------------------
+
+
+class TestStarlarkTokens:
+    """Test parsing the actual starlark.tokens file."""
+
+    def test_parse_starlark_tokens(self) -> None:
+        """The full starlark.tokens file parses without errors."""
+        import os
+        # tests/ → grammar-tools/ → python/ → packages/ → code/
+        code_dir = os.path.dirname(os.path.dirname(os.path.dirname(
+            os.path.dirname(os.path.dirname(
+                os.path.abspath(__file__))))))
+        tokens_path = os.path.join(code_dir, "grammars", "starlark.tokens")
+        if not os.path.exists(tokens_path):
+            pytest.skip("starlark.tokens not found")
+        with open(tokens_path) as f:
+            source = f.read()
+        grammar = parse_token_grammar(source)
+
+        assert grammar.mode == "indentation"
+        assert len(grammar.definitions) > 40
+        assert len(grammar.keywords) == 18
+        assert len(grammar.reserved_keywords) == 18
+        assert len(grammar.skip_definitions) == 2
+        assert sum(1 for d in grammar.definitions if d.alias) > 5
+
+        issues = validate_token_grammar(grammar)
+        assert issues == []
+
+
+# ================================================================
+# Pattern group tests
+# ================================================================
+
+
+class TestPatternGroups:
+    """Tests for the group NAME: section in .tokens files.
+
+    Pattern groups enable context-sensitive lexing by defining named sets
+    of token patterns. The lexer maintains a stack of active groups and
+    only tries patterns from the group on top of the stack.
+    """
+
+    def test_basic_group(self):
+        """A simple group section is parsed into PatternGroup."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            'TAG_OPEN = "<"\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+            '  TAG_CLOSE = ">"\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        # Default group patterns
+        assert len(grammar.definitions) == 2
+        assert grammar.definitions[0].name == "TEXT"
+        assert grammar.definitions[1].name == "TAG_OPEN"
+
+        # Named group
+        assert "tag" in grammar.groups
+        group = grammar.groups["tag"]
+        assert isinstance(group, PatternGroup)
+        assert group.name == "tag"
+        assert len(group.definitions) == 2
+        assert group.definitions[0].name == "TAG_NAME"
+        assert group.definitions[1].name == "TAG_CLOSE"
+
+    def test_multiple_groups(self):
+        """Multiple groups can be defined in the same file."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+            '\n'
+            'group cdata:\n'
+            '  CDATA_TEXT = /[^]]+/\n'
+            '  CDATA_END = "]]>"\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        assert len(grammar.groups) == 2
+        assert "tag" in grammar.groups
+        assert "cdata" in grammar.groups
+        assert len(grammar.groups["tag"].definitions) == 1
+        assert len(grammar.groups["cdata"].definitions) == 2
+
+    def test_group_with_alias(self):
+        """Definitions inside groups support -> ALIAS."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  ATTR_VALUE_DQ = /"[^"]*"/ -> ATTR_VALUE\n'
+            "  ATTR_VALUE_SQ = /'[^']*'/ -> ATTR_VALUE\n"
+        )
+        grammar = parse_token_grammar(source)
+
+        group = grammar.groups["tag"]
+        assert group.definitions[0].name == "ATTR_VALUE_DQ"
+        assert group.definitions[0].alias == "ATTR_VALUE"
+        assert group.definitions[1].name == "ATTR_VALUE_SQ"
+        assert group.definitions[1].alias == "ATTR_VALUE"
+
+    def test_group_with_literal_patterns(self):
+        """Groups support both regex and literal patterns."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  EQUALS = "="\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        group = grammar.groups["tag"]
+        assert group.definitions[0].is_regex is False
+        assert group.definitions[0].pattern == "="
+        assert group.definitions[1].is_regex is True
+
+    def test_no_groups_backward_compat(self):
+        """Files without groups have an empty groups dict."""
+        source = 'NUMBER = /[0-9]+/\nPLUS = "+"\n'
+        grammar = parse_token_grammar(source)
+
+        assert grammar.groups == {}
+        assert len(grammar.definitions) == 2
+
+    def test_groups_with_skip_section(self):
+        """skip: and group: sections coexist correctly."""
+        source = (
+            'skip:\n'
+            '  WS = /[ \\t]+/\n'
+            '\n'
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        assert len(grammar.skip_definitions) == 1
+        assert len(grammar.definitions) == 1
+        assert len(grammar.groups) == 1
+
+    def test_token_names_includes_groups(self):
+        """token_names() includes names from all groups."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  TAG_NAME = /[a-zA-Z]+/\n'
+            '  ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        names = grammar.token_names()
+        assert "TEXT" in names
+        assert "TAG_NAME" in names
+        assert "ATTR_DQ" in names
+        assert "ATTR_VALUE" in names
+
+    def test_effective_token_names_includes_groups(self):
+        """effective_token_names() includes aliased names from groups."""
+        source = (
+            'TEXT = /[^<]+/\n'
+            '\n'
+            'group tag:\n'
+            '  ATTR_DQ = /"[^"]*"/ -> ATTR_VALUE\n'
+        )
+        grammar = parse_token_grammar(source)
+
+        names = grammar.effective_token_names()
+        assert "TEXT" in names
+        assert "ATTR_VALUE" in names
+        assert "ATTR_DQ" not in names  # alias replaces name
+
+    def test_group_validates_definitions(self):
+        """Definitions in groups are validated (e.g., bad regex)."""
+        grammar = TokenGrammar(
+            groups={
+                "tag": PatternGroup(
+                    name="tag",
+                    definitions=[
+                        TokenDefinition(
+                            name="BAD",
+                            pattern="[invalid",
+                            is_regex=True,
+                            line_number=5,
+                        ),
+                    ],
+                ),
+            },
+        )
+        issues = validate_token_grammar(grammar)
+        assert any("Invalid regex" in i for i in issues)
+
+    def test_empty_group_warning(self):
+        """An empty group produces a validation warning."""
+        grammar = TokenGrammar(
+            groups={
+                "empty": PatternGroup(name="empty", definitions=[]),
+            },
+        )
+        issues = validate_token_grammar(grammar)
+        assert any("Empty pattern group" in i for i in issues)
+
+
+class TestPatternGroupErrors:
+    """Tests for error handling in group parsing."""
+
+    def test_missing_group_name(self):
+        """'group :' with no name raises an error."""
+        source = 'TEXT = /abc/\ngroup :\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Missing group name"):
+            parse_token_grammar(source)
+
+    def test_invalid_group_name_uppercase(self):
+        """Uppercase group names are rejected."""
+        source = 'TEXT = /abc/\ngroup Tag:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Invalid group name"):
+            parse_token_grammar(source)
+
+    def test_invalid_group_name_starts_with_digit(self):
+        """Group names starting with a digit are rejected."""
+        source = 'TEXT = /abc/\ngroup 1tag:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Invalid group name"):
+            parse_token_grammar(source)
+
+    def test_reserved_group_name_default(self):
+        """'group default:' is rejected as reserved."""
+        source = 'TEXT = /abc/\ngroup default:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Reserved group name"):
+            parse_token_grammar(source)
+
+    def test_reserved_group_name_skip(self):
+        """'group skip:' is rejected as reserved."""
+        source = 'TEXT = /abc/\ngroup skip:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Reserved group name"):
+            parse_token_grammar(source)
+
+    def test_reserved_group_name_keywords(self):
+        """'group keywords:' is rejected as reserved."""
+        source = 'TEXT = /abc/\ngroup keywords:\n  FOO = /x/\n'
+        with pytest.raises(TokenGrammarError, match="Reserved group name"):
+            parse_token_grammar(source)
+
+    def test_duplicate_group_name(self):
+        """Two groups with the same name raises an error."""
+        source = (
+            'TEXT = /abc/\n'
+            'group tag:\n'
+            '  FOO = /x/\n'
+            'group tag:\n'
+            '  BAR = /y/\n'
+        )
+        with pytest.raises(TokenGrammarError, match="Duplicate group name"):
+            parse_token_grammar(source)
+
+    def test_bad_definition_in_group(self):
+        """Invalid definition inside a group raises an error."""
+        source = (
+            'TEXT = /abc/\n'
+            'group tag:\n'
+            '  not a definition\n'
+        )
+        with pytest.raises(TokenGrammarError, match="Expected token definition"):
+            parse_token_grammar(source)
+
+    def test_incomplete_definition_in_group(self):
+        """Missing pattern in group definition raises an error."""
+        source = (
+            'TEXT = /abc/\n'
+            'group tag:\n'
+            '  FOO = \n'
+        )
+        with pytest.raises(TokenGrammarError, match="Incomplete definition"):
+            parse_token_grammar(source)

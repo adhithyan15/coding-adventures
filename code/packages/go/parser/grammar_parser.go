@@ -2,16 +2,19 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
+	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
+// ASTNode is a generic AST node produced by grammar-driven parsing.
 type ASTNode struct {
 	RuleName string
 	Children []interface{} // Can be *ASTNode or lexer.Token
 }
 
+// IsLeaf returns true if this node wraps a single token.
 func (n *ASTNode) IsLeaf() bool {
 	if len(n.Children) == 1 {
 		_, ok := n.Children[0].(lexer.Token)
@@ -20,6 +23,7 @@ func (n *ASTNode) IsLeaf() bool {
 	return false
 }
 
+// Token returns the leaf token if IsLeaf(), nil otherwise.
 func (n *ASTNode) Token() *lexer.Token {
 	if n.IsLeaf() {
 		tok := n.Children[0].(lexer.Token)
@@ -28,33 +32,60 @@ func (n *ASTNode) Token() *lexer.Token {
 	return nil
 }
 
+// GrammarParseError is raised when grammar-driven parsing fails.
 type GrammarParseError struct {
 	Message string
-	Token   lexer.Token
+	Tok     lexer.Token
 }
 
 func (e *GrammarParseError) Error() string {
-	return fmt.Sprintf("Parse error at %d:%d: %s", e.Token.Line, e.Token.Column, e.Message)
+	return fmt.Sprintf("Parse error at %d:%d: %s", e.Tok.Line, e.Tok.Column, e.Message)
 }
 
+// memoEntry caches a parse result for packrat memoization.
+type memoEntry struct {
+	children []interface{} // nil means parse failed
+	endPos   int
+	ok       bool
+}
+
+// GrammarParser interprets grammar rules at runtime with packrat memoization.
 type GrammarParser struct {
-	tokens  []lexer.Token
-	grammar *grammartools.ParserGrammar
-	pos     int
-	rules   map[string]grammartools.GrammarRule
+	tokens              []lexer.Token
+	grammar             *grammartools.ParserGrammar
+	pos                 int
+	rules               map[string]grammartools.GrammarRule
+	newlinesSignificant bool
+	memo                map[[2]int]*memoEntry // key: [ruleIndex, position]
+	ruleIndex           map[string]int        // rule name -> index for memo key
+	furthestPos         int
+	furthestExpected    []string
 }
 
+// NewGrammarParser creates a new grammar-driven parser with memoization.
 func NewGrammarParser(tokens []lexer.Token, grammar *grammartools.ParserGrammar) *GrammarParser {
 	rules := make(map[string]grammartools.GrammarRule)
-	for _, rule := range grammar.Rules {
+	ruleIndex := make(map[string]int)
+	for i, rule := range grammar.Rules {
 		rules[rule.Name] = rule
+		ruleIndex[rule.Name] = i
 	}
-	return &GrammarParser{
-		tokens:  tokens,
-		grammar: grammar,
-		pos:     0,
-		rules:   rules,
+
+	p := &GrammarParser{
+		tokens:    tokens,
+		grammar:   grammar,
+		pos:       0,
+		rules:     rules,
+		memo:      make(map[[2]int]*memoEntry),
+		ruleIndex: ruleIndex,
 	}
+	p.newlinesSignificant = p.grammarReferencesNewline()
+	return p
+}
+
+// NewlinesSignificant returns whether newlines are significant in this grammar.
+func (p *GrammarParser) NewlinesSignificant() bool {
+	return p.newlinesSignificant
 }
 
 func (p *GrammarParser) current() lexer.Token {
@@ -64,6 +95,114 @@ func (p *GrammarParser) current() lexer.Token {
 	return p.tokens[len(p.tokens)-1]
 }
 
+// tokenTypeName extracts the effective type name from a token.
+func tokenTypeName(tok lexer.Token) string {
+	if tok.TypeName != "" {
+		return tok.TypeName
+	}
+	// Fall back to the enum-based names
+	switch tok.Type {
+	case lexer.TokenName:
+		return "NAME"
+	case lexer.TokenNumber:
+		return "NUMBER"
+	case lexer.TokenString:
+		return "STRING"
+	case lexer.TokenKeyword:
+		return "KEYWORD"
+	case lexer.TokenPlus:
+		return "PLUS"
+	case lexer.TokenMinus:
+		return "MINUS"
+	case lexer.TokenStar:
+		return "STAR"
+	case lexer.TokenSlash:
+		return "SLASH"
+	case lexer.TokenEquals:
+		return "EQUALS"
+	case lexer.TokenEqualsEquals:
+		return "EQUALS_EQUALS"
+	case lexer.TokenLParen:
+		return "LPAREN"
+	case lexer.TokenRParen:
+		return "RPAREN"
+	case lexer.TokenComma:
+		return "COMMA"
+	case lexer.TokenColon:
+		return "COLON"
+	case lexer.TokenNewline:
+		return "NEWLINE"
+	case lexer.TokenEOF:
+		return "EOF"
+	case lexer.TokenSemicolon:
+		return "SEMICOLON"
+	case lexer.TokenLBrace:
+		return "LBRACE"
+	case lexer.TokenRBrace:
+		return "RBRACE"
+	case lexer.TokenLBracket:
+		return "LBRACKET"
+	case lexer.TokenRBracket:
+		return "RBRACKET"
+	case lexer.TokenDot:
+		return "DOT"
+	case lexer.TokenBang:
+		return "BANG"
+	default:
+		return "UNKNOWN"
+	}
+}
+
+func (p *GrammarParser) recordFailure(expected string) {
+	if p.pos > p.furthestPos {
+		p.furthestPos = p.pos
+		p.furthestExpected = []string{expected}
+	} else if p.pos == p.furthestPos {
+		for _, e := range p.furthestExpected {
+			if e == expected {
+				return
+			}
+		}
+		p.furthestExpected = append(p.furthestExpected, expected)
+	}
+}
+
+func (p *GrammarParser) grammarReferencesNewline() bool {
+	for _, rule := range p.grammar.Rules {
+		if p.elementReferencesNewline(rule.Body) {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *GrammarParser) elementReferencesNewline(element grammartools.GrammarElement) bool {
+	switch e := element.(type) {
+	case grammartools.RuleReference:
+		return e.IsToken && e.Name == "NEWLINE"
+	case grammartools.Sequence:
+		for _, sub := range e.Elements {
+			if p.elementReferencesNewline(sub) {
+				return true
+			}
+		}
+	case grammartools.Alternation:
+		for _, choice := range e.Choices {
+			if p.elementReferencesNewline(choice) {
+				return true
+			}
+		}
+	case grammartools.Repetition:
+		return p.elementReferencesNewline(e.Element)
+	case grammartools.Optional:
+		return p.elementReferencesNewline(e.Element)
+	case grammartools.Group:
+		return p.elementReferencesNewline(e.Element)
+	}
+	return false
+}
+
+// Parse parses the token stream using the first grammar rule as entry point.
 func (p *GrammarParser) Parse() (*ASTNode, error) {
 	if len(p.grammar.Rules) == 0 {
 		return nil, fmt.Errorf("Grammar has no rules")
@@ -74,20 +213,40 @@ func (p *GrammarParser) Parse() (*ASTNode, error) {
 
 	if result == nil {
 		tok := p.current()
+		if len(p.furthestExpected) > 0 {
+			expected := strings.Join(p.furthestExpected, " or ")
+			return nil, &GrammarParseError{
+				Message: fmt.Sprintf("Expected %s, got %q", expected, tok.Value),
+				Tok:     tok,
+			}
+		}
 		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("Failed to parse grammar structurally safely starting across entry bounds."),
-			Token:   tok,
+			Message: "Failed to parse",
+			Tok:     tok,
 		}
 	}
 
-	for p.pos < len(p.tokens) && p.current().Type == lexer.TokenNewline {
+	// Skip trailing newlines
+	for p.pos < len(p.tokens) && tokenTypeName(p.current()) == "NEWLINE" {
 		p.pos++
 	}
 
-	if p.pos < len(p.tokens) && p.current().Type != lexer.TokenEOF {
+	if p.pos < len(p.tokens) && tokenTypeName(p.current()) != "EOF" {
+		tok := p.current()
+		if len(p.furthestExpected) > 0 && p.furthestPos > p.pos {
+			expected := strings.Join(p.furthestExpected, " or ")
+			furthestTok := tok
+			if p.furthestPos < len(p.tokens) {
+				furthestTok = p.tokens[p.furthestPos]
+			}
+			return nil, &GrammarParseError{
+				Message: fmt.Sprintf("Expected %s, got %q", expected, furthestTok.Value),
+				Tok:     furthestTok,
+			}
+		}
 		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("Unexpected token: %q", p.current().Value),
-			Token:   p.current(),
+			Message: fmt.Sprintf("Unexpected token: %q", tok.Value),
+			Tok:     tok,
 		}
 	}
 
@@ -100,34 +259,42 @@ func (p *GrammarParser) parseRule(ruleName string) *ASTNode {
 		return nil
 	}
 
+	// Check memo cache
+	idx, hasIdx := p.ruleIndex[ruleName]
+	if hasIdx {
+		key := [2]int{idx, p.pos}
+		if entry, ok := p.memo[key]; ok {
+			p.pos = entry.endPos
+			if !entry.ok {
+				return nil
+			}
+			return &ASTNode{RuleName: ruleName, Children: entry.children}
+		}
+	}
+
+	startPos := p.pos
 	children, ok := p.matchElement(rule.Body)
-	if !ok || children == nil {
+
+	// Cache result
+	if hasIdx {
+		key := [2]int{idx, startPos}
+		p.memo[key] = &memoEntry{children: children, endPos: p.pos, ok: ok}
+	}
+
+	if !ok {
+		p.pos = startPos
+		p.recordFailure(ruleName)
 		return nil
 	}
 
-	return &ASTNode{RuleName: ruleName, Children: children}
-}
-
-func stringToTokenType(id string) lexer.TokenType {
-	switch id {
-	case "NAME": return lexer.TokenName
-	case "NUMBER": return lexer.TokenNumber
-	case "STRING": return lexer.TokenString
-	case "KEYWORD": return lexer.TokenKeyword
-	case "PLUS": return lexer.TokenPlus
-	case "MINUS": return lexer.TokenMinus
-	case "STAR": return lexer.TokenStar
-	case "SLASH": return lexer.TokenSlash
-	case "EQUALS": return lexer.TokenEquals
-	case "EQUALS_EQUALS": return lexer.TokenEqualsEquals
-	case "LPAREN": return lexer.TokenLParen
-	case "RPAREN": return lexer.TokenRParen
-	case "COMMA": return lexer.TokenComma
-	case "COLON": return lexer.TokenColon
-	case "NEWLINE": return lexer.TokenNewline
-	case "EOF": return lexer.TokenEOF
-	default: return lexer.TokenName
+	// When a rule body consists entirely of repetitions and optionals
+	// (like TOML's array_values rule), children may be nil even on success.
+	// Normalize nil to an empty slice so the ASTNode is well-formed.
+	if children == nil {
+		children = []interface{}{}
 	}
+
+	return &ASTNode{RuleName: ruleName, Children: children}
 }
 
 func (p *GrammarParser) matchElement(element grammartools.GrammarElement) ([]interface{}, bool) {
@@ -182,35 +349,115 @@ func (p *GrammarParser) matchElement(element grammartools.GrammarElement) ([]int
 
 	case grammartools.RuleReference:
 		if e.IsToken {
-			token := p.current()
-			for token.Type == lexer.TokenNewline && e.Name != "NEWLINE" {
-				p.pos++
-				token = p.current()
-			}
-
-			expectedType := stringToTokenType(e.Name)
-			if token.Type == expectedType {
-				p.pos++
-				return []interface{}{token}, true
-			}
-			return nil, false
-		} else {
-			node := p.parseRule(e.Name)
-			if node != nil {
-				return []interface{}{node}, true
-			}
-			p.pos = savePos
-			return nil, false
+			return p.matchTokenReference(e)
 		}
+		node := p.parseRule(e.Name)
+		if node != nil {
+			return []interface{}{node}, true
+		}
+		p.pos = savePos
+		return nil, false
 
 	case grammartools.Literal:
 		token := p.current()
+		// Skip insignificant newlines before literal matching
+		if !p.newlinesSignificant {
+			for tokenTypeName(token) == "NEWLINE" {
+				p.pos++
+				token = p.current()
+			}
+		}
 		if token.Value == e.Value {
 			p.pos++
 			return []interface{}{token}, true
 		}
+		p.recordFailure(fmt.Sprintf("%q", e.Value))
 		return nil, false
 	}
 
 	return nil, false
+}
+
+func (p *GrammarParser) matchTokenReference(e grammartools.RuleReference) ([]interface{}, bool) {
+	token := p.current()
+
+	// Skip newlines when matching non-NEWLINE tokens
+	if !p.newlinesSignificant && e.Name != "NEWLINE" {
+		for tokenTypeName(token) == "NEWLINE" {
+			p.pos++
+			token = p.current()
+		}
+	}
+
+	typeName := tokenTypeName(token)
+
+	// Direct string comparison (works for both enum and string types)
+	if typeName == e.Name {
+		p.pos++
+		return []interface{}{token}, true
+	}
+
+	// Backward compatibility: try enum-based matching
+	expectedType := stringToTokenType(e.Name)
+	if token.Type == expectedType && expectedType != lexer.TokenName {
+		p.pos++
+		return []interface{}{token}, true
+	}
+
+	p.recordFailure(e.Name)
+	return nil, false
+}
+
+// stringToTokenType maps grammar token names to TokenType constants.
+func stringToTokenType(id string) lexer.TokenType {
+	switch id {
+	case "NAME":
+		return lexer.TokenName
+	case "NUMBER":
+		return lexer.TokenNumber
+	case "STRING":
+		return lexer.TokenString
+	case "KEYWORD":
+		return lexer.TokenKeyword
+	case "PLUS":
+		return lexer.TokenPlus
+	case "MINUS":
+		return lexer.TokenMinus
+	case "STAR":
+		return lexer.TokenStar
+	case "SLASH":
+		return lexer.TokenSlash
+	case "EQUALS":
+		return lexer.TokenEquals
+	case "EQUALS_EQUALS":
+		return lexer.TokenEqualsEquals
+	case "LPAREN":
+		return lexer.TokenLParen
+	case "RPAREN":
+		return lexer.TokenRParen
+	case "COMMA":
+		return lexer.TokenComma
+	case "COLON":
+		return lexer.TokenColon
+	case "NEWLINE":
+		return lexer.TokenNewline
+	case "EOF":
+		return lexer.TokenEOF
+	case "SEMICOLON":
+		return lexer.TokenSemicolon
+	case "LBRACE":
+		return lexer.TokenLBrace
+	case "RBRACE":
+		return lexer.TokenRBrace
+	case "LBRACKET":
+		return lexer.TokenLBracket
+	case "RBRACKET":
+		return lexer.TokenRBracket
+	case "DOT":
+		return lexer.TokenDot
+	case "BANG":
+		return lexer.TokenBang
+	default:
+		return lexer.TokenName
+	}
 }

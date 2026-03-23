@@ -1,0 +1,81 @@
+# Token definitions for a subset of JavaScript
+# Used by the grammar-driven lexer to tokenize JavaScript source code.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#
+# Order matters: first match wins. Multi-character tokens
+# must come before single-character ones (e.g., === before ==).
+#
+# JavaScript differs from Python and Ruby in several ways:
+# - `let`, `const`, `var` for variable declarations
+# - `===` and `!==` for strict equality (preferred over == and !=)
+# - Semicolons terminate statements (not newlines or `end`)
+# - Curly braces `{}` for blocks (not indentation or `end`)
+# - `null` and `undefined` (not `None` or `nil`)
+# - `true`/`false` (lowercase, like Ruby)
+# - `=>` for arrow functions
+# - `$` is valid in identifiers
+
+# Literals
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# Multi-character operators (must come before single-char versions)
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+# Single-character operators
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# Delimiters
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# Keywords section — names that are reserved in JavaScript
+keywords:
+  let
+  const
+  var
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  class
+  import
+  export
+  from
+  as
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined

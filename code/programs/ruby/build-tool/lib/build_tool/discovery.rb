@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-# discovery.rb -- Package Discovery via DIRS/BUILD Files
-# ======================================================
+# discovery.rb -- Package Discovery via Recursive BUILD File Walk
+# ================================================================
 #
-# This module walks a monorepo directory tree following DIRS files to discover
-# packages. A "package" is any directory that contains a BUILD file. DIRS files
-# act as a routing table: each non-blank, non-comment line names a subdirectory
-# to descend into.
+# This module walks a monorepo directory tree to discover packages. A "package"
+# is any directory that contains a BUILD file. The walk is recursive: starting
+# from the root, we list all subdirectories and descend into each one, skipping
+# known non-source directories (.git, .venv, node_modules, etc.).
 #
-# The walk is recursive: if `code/DIRS` contains "packages", we look at
-# `code/packages/`. If `code/packages/DIRS` contains "python" and "ruby",
-# we look at both. When we find a BUILD file in a directory, we stop recursing
-# there and register that directory as a package.
+# When we find a BUILD file in a directory, we stop recursing there and register
+# that directory as a package. This is the same approach used by Bazel, Buck,
+# and Pants — no configuration files are needed to route the walk.
 #
 # Platform-specific BUILD files
 # -----------------------------
@@ -25,7 +24,8 @@
 #
 # We infer the language from the directory path. If the path contains
 # `packages/python/X` or `programs/python/X`, the language is "python".
-# Similarly for "ruby" and "go". The package name is `{language}/{dir-name}`.
+# Similarly for "ruby", "go", and "rust". The package name is
+# `{language}/{dir-name}`.
 
 module BuildTool
   # --------------------------------------------------------------------------
@@ -40,7 +40,7 @@ module BuildTool
   #   name            -- A qualified name like "python/logic-gates".
   #   path            -- Absolute path (Pathname) to the package directory.
   #   build_commands  -- Lines from the BUILD file (commands to execute).
-  #   language        -- Inferred language: "python", "ruby", "go", or "unknown".
+  #   language        -- Inferred language: "python", "ruby", "go", "rust", or "unknown".
   # --------------------------------------------------------------------------
   Package = Data.define(:name, :path, :build_commands, :language)
 
@@ -48,7 +48,15 @@ module BuildTool
     # KNOWN_LANGUAGES lists the language directory names we look for when
     # inferring which ecosystem a package belongs to. If a package lives
     # under a directory with one of these names, we tag it accordingly.
-    KNOWN_LANGUAGES = %w[python ruby go].freeze
+    KNOWN_LANGUAGES = %w[python ruby go rust typescript elixir].freeze
+
+    # SKIP_DIRS is the set of directory names that should never be traversed
+    # during package discovery. These are known to contain non-source files
+    # (caches, dependencies, build artifacts) that would waste time to scan.
+    SKIP_DIRS = Set.new(%w[
+      .git .hg .svn .venv .tox .mypy_cache .pytest_cache .ruff_cache
+      __pycache__ node_modules vendor dist build target .claude Pods
+    ]).freeze
 
     module_function
 
@@ -56,7 +64,7 @@ module BuildTool
     #
     # Blank lines and lines starting with '#' are stripped out. Leading and
     # trailing whitespace is removed from each line. This is the same
-    # filtering we use for both DIRS files and BUILD files.
+    # filtering we use for BUILD files.
     #
     # @param filepath [Pathname] The file to read.
     # @return [Array<String>] The cleaned lines.
@@ -94,40 +102,79 @@ module BuildTool
 
     # get_build_file -- Return the appropriate BUILD file for the current platform.
     #
-    # Priority:
-    #   1. BUILD_mac on macOS, BUILD_linux on Linux
-    #   2. BUILD (fallback)
-    #   3. nil if no BUILD file exists
+    # Priority (most specific wins):
+    #   1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+    #   2. Shared: BUILD_mac_and_linux (macOS or Linux — for Unix-like systems)
+    #   3. Generic: BUILD (all platforms)
+    #   4. nil if no BUILD file exists
+    #
+    # This layering lets packages provide Windows-specific build commands via
+    # BUILD_windows while sharing a single BUILD_mac_and_linux for the common
+    # Unix case, falling back to BUILD when no platform differences exist.
     #
     # We use `RUBY_PLATFORM` to detect the OS. On macOS it contains "darwin";
-    # on Linux it contains "linux".
+    # on Linux it contains "linux"; on Windows it contains "mingw" or "mswin".
     #
     # @param directory [Pathname] The directory to check.
     # @return [Pathname, nil] The BUILD file path, or nil.
     def get_build_file(directory)
-      if RUBY_PLATFORM.include?("darwin")
+      os = if RUBY_PLATFORM.include?("darwin")
+             "darwin"
+           elsif RUBY_PLATFORM.include?("linux")
+             "linux"
+           elsif RUBY_PLATFORM =~ /mingw|mswin|cygwin/
+             "windows"
+           else
+             "unknown"
+           end
+      get_build_file_for_platform(directory, os)
+    end
+
+    # get_build_file_for_platform -- Like get_build_file but accepts an explicit
+    # OS name. This is useful for testing platform-specific behavior without
+    # running on that platform.
+    #
+    # @param directory [Pathname] The directory to check.
+    # @param os [String] The OS name: "darwin", "linux", or "windows".
+    # @return [Pathname, nil] The BUILD file path, or nil.
+    def get_build_file_for_platform(directory, os)
+      # Step 1: Check for the most specific platform file.
+      if os == "darwin"
         platform_build = directory / "BUILD_mac"
         return platform_build if platform_build.exist?
       end
 
-      if RUBY_PLATFORM.include?("linux")
+      if os == "linux"
         platform_build = directory / "BUILD_linux"
         return platform_build if platform_build.exist?
       end
 
+      if os == "windows"
+        platform_build = directory / "BUILD_windows"
+        return platform_build if platform_build.exist?
+      end
+
+      # Step 2: Check for the shared Unix file (macOS + Linux).
+      if os == "darwin" || os == "linux"
+        shared_build = directory / "BUILD_mac_and_linux"
+        return shared_build if shared_build.exist?
+      end
+
+      # Step 3: Fall back to the generic BUILD file.
       generic_build = directory / "BUILD"
       return generic_build if generic_build.exist?
 
       nil
     end
 
-    # discover_packages -- Walk DIRS files recursively, collect packages.
+    # discover_packages -- Recursively walk directories, collect packages.
     #
-    # Starting from `root`, we read the DIRS file (if present) and descend
-    # into each listed subdirectory. When we find a BUILD file, we register
-    # that directory as a package and stop recursing into it.
+    # Starting from `root`, we list all subdirectories and descend into
+    # each one (skipping directories in the skip list). When we find a
+    # BUILD file, we register that directory as a package and stop
+    # recursing into it.
     #
-    # @param root [Pathname] The monorepo root (where the top-level DIRS is).
+    # @param root [Pathname] The monorepo root.
     # @return [Array<Package>] Discovered packages, sorted by name.
     def discover_packages(root)
       packages = []
@@ -135,15 +182,18 @@ module BuildTool
       packages.sort_by(&:name)
     end
 
-    # walk_dirs -- Recursively walk DIRS files and collect packages.
+    # walk_dirs -- Recursively walk directories and collect packages.
     #
+    # If the current directory's name is in the skip list, ignore it entirely.
     # If the current directory has a BUILD file, it is a package -- register
-    # it and stop. Otherwise, if it has a DIRS file, read the listed
-    # subdirectories and recurse into each one.
+    # it and stop. Otherwise, list all subdirectories and recurse into each.
     #
     # @param directory [Pathname] The current directory.
     # @param packages [Array<Package>] Accumulator for discovered packages.
     def walk_dirs(directory, packages)
+      # Skip known non-source directories.
+      return if SKIP_DIRS.include?(directory.basename.to_s)
+
       build_file = get_build_file(directory)
 
       if build_file
@@ -161,15 +211,12 @@ module BuildTool
         return
       end
 
-      # Not a package -- look for DIRS file to find subdirectories.
-      dirs_file = directory / "DIRS"
-      return unless dirs_file.exist?
-
-      subdirs = read_lines(dirs_file)
-      subdirs.each do |subdir_name|
-        subdir_path = directory / subdir_name
-        walk_dirs(subdir_path, packages) if subdir_path.directory?
+      # Not a package -- list subdirectories and recurse into each one.
+      directory.children.select(&:directory?).sort.each do |child|
+        walk_dirs(child, packages)
       end
+    rescue Errno::EACCES
+      # Permission denied -- skip this directory.
     end
   end
 end

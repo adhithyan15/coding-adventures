@@ -1,0 +1,8 @@
+[package]
+name = "state-machine"
+version = "0.1.0"
+edition = "2021"
+description = "State machines from DFA to PDA — the computational models behind parsing and pattern matching"
+
+[dependencies]
+directed-graph = { path = "../directed-graph" }

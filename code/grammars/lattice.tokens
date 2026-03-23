@@ -1,0 +1,193 @@
+# Token definitions for Lattice — a CSS superset language
+#
+# Lattice extends CSS with variables ($var), mixins (@mixin/@include),
+# control flow (@if/@for/@each), functions (@function/@return), and
+# modules (@use). This file is a standalone copy of all CSS token
+# definitions plus 5 new tokens for Lattice-specific constructs.
+#
+# The existing css.tokens is NOT modified. This file is self-contained.
+#
+# New tokens:
+#   VARIABLE       — $color, $font-size (CSS never uses $)
+#   EQUALS_EQUALS  — == (equality comparison in @if expressions)
+#   NOT_EQUALS     — != (inequality comparison)
+#   GREATER_EQUALS — >= (greater-or-equal comparison)
+#   LESS_EQUALS    — <= (less-or-equal comparison)
+#
+# Format:
+#   TOKEN_NAME = /regex/        — regex-based token pattern
+#   TOKEN_NAME = "literal"      — exact literal match
+#   TOKEN_NAME = /regex/ -> T   — regex pattern, emitted as token type T
+
+# ============================================================================
+# Escape Mode
+# ============================================================================
+#
+# CSS escape sequences use a different format than JSON/Starlark:
+#   \26      → U+0026 (&)     — 1-6 hex digits
+#   \000A9   → U+00A9 (©)     — 6 hex digits
+#   \A9      → U+00A9 (©)     — hex + optional trailing space
+#
+# The default escape processor handles JSON-style escapes (\n, \t, \uXXXX).
+# Setting escapes: none tells the lexer to strip quotes but leave escape
+# sequences as raw text. CSS escape decoding is a semantic concern handled
+# post-parse, not at the lexer level.
+
+escapes: none
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# Lattice treats all whitespace as insignificant between tokens, just like
+# CSS. Including \n in the whitespace pattern prevents NEWLINE token emission.
+#
+# Lattice also supports single-line comments (// to end of line), which CSS
+# does not. These are listed before block comments so // inside /* */ is
+# handled correctly (the block comment pattern consumes everything including
+# // sequences).
+
+skip:
+  LINE_COMMENT = /\/\/[^\n]*/
+  COMMENT      = /\/\*[\s\S]*?\*\//
+  WHITESPACE   = /[ \t\r\n]+/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# CSS supports both double-quoted and single-quoted strings. Both variants
+# emit STRING via the -> alias.
+
+STRING_DQ = /"([^"\\\n]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\\n]|\\.)*'/ -> STRING
+
+# ============================================================================
+# Variable Token (NEW — Lattice extension)
+# ============================================================================
+#
+# Lattice variables start with $ followed by an identifier. The $ character
+# never appears in valid CSS value positions, making this completely
+# unambiguous. Must come before DOLLAR_EQUALS ($=) in priority ordering:
+#
+#   $color   → VARIABLE ($ + letter matches)
+#   $=       → DOLLAR_EQUALS ($ + = does NOT match VARIABLE regex)
+#
+# Also must come before DIMENSION, PERCENTAGE, NUMBER — a variable like
+# $10px should not be parsed as $ + DIMENSION.
+
+VARIABLE = /\$[a-zA-Z_][a-zA-Z0-9_-]*/
+
+# ============================================================================
+# Numeric Literals and Dimensions
+# ============================================================================
+#
+# ORDER IS CRITICAL — DIMENSION before PERCENTAGE before NUMBER.
+# See css.tokens for detailed rationale.
+
+DIMENSION   = /-?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?[a-zA-Z]+/
+PERCENTAGE  = /-?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?%/
+NUMBER      = /-?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# Hash Token
+# ============================================================================
+
+HASH = /#[a-zA-Z0-9_-]+/
+
+# ============================================================================
+# At-Keyword Token
+# ============================================================================
+#
+# CSS at-rules AND Lattice at-rules share the same token type:
+#   @media, @import      — CSS at-rules
+#   @mixin, @include     — Lattice mixins
+#   @if, @else           — Lattice control flow
+#   @for, @each          — Lattice iteration
+#   @function, @return   — Lattice functions
+#   @use                 — Lattice modules
+#
+# The grammar (not the lexer) distinguishes Lattice at-keywords from CSS
+# at-keywords via literal matching on the token text.
+
+AT_KEYWORD = /@-?[a-zA-Z][a-zA-Z0-9-]*/
+
+# ============================================================================
+# URL Token
+# ============================================================================
+
+URL_TOKEN = /url\([^)'"]*\)/
+
+# ============================================================================
+# Function Token
+# ============================================================================
+
+FUNCTION = /-?[a-zA-Z_][a-zA-Z0-9_-]*\(/
+
+# ============================================================================
+# CDO / CDC (Legacy HTML Comment Delimiters)
+# ============================================================================
+
+CDO = "<!--"
+CDC = "-->"
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+
+UNICODE_RANGE   = /[Uu]\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?/
+CUSTOM_PROPERTY = /--[a-zA-Z_][a-zA-Z0-9_-]*/
+IDENT           = /-?[a-zA-Z_][a-zA-Z0-9_-]*/
+
+# ============================================================================
+# Multi-Character Operators
+# ============================================================================
+#
+# These MUST come before their single-character components. Comparison
+# operators (==, !=, >=, <=) are Lattice extensions for @if expressions.
+
+COLON_COLON    = "::"
+TILDE_EQUALS   = "~="
+PIPE_EQUALS    = "|="
+CARET_EQUALS   = "^="
+DOLLAR_EQUALS  = "$="
+STAR_EQUALS    = "*="
+
+# Lattice comparison operators (NEW)
+EQUALS_EQUALS  = "=="
+NOT_EQUALS     = "!="
+GREATER_EQUALS = ">="
+LESS_EQUALS    = "<="
+
+# ============================================================================
+# Single-Character Delimiters and Operators
+# ============================================================================
+
+LBRACE    = "{"
+RBRACE    = "}"
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COLON     = ":"
+COMMA     = ","
+DOT       = "."
+PLUS      = "+"
+GREATER   = ">"
+TILDE     = "~"
+STAR      = "*"
+PIPE      = "|"
+BANG      = "!"
+SLASH     = "/"
+EQUALS    = "="
+AMPERSAND = "&"
+MINUS     = "-"
+
+# ============================================================================
+# Error Tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_URL    = /url\([^)]*$/

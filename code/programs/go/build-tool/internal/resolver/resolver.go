@@ -1,5 +1,6 @@
 // Package resolver reads package metadata files (pyproject.toml, .gemspec,
-// go.mod) and extracts internal dependencies, building a directed graph.
+// go.mod, package.json) and extracts internal dependencies, building a
+// directed graph.
 //
 // # Why dependency resolution matters
 //
@@ -20,6 +21,9 @@
 //
 //   - Go: go.mod uses full module paths. We map based on the last path
 //     component: "go/directed-graph".
+//
+//   - TypeScript: package.json uses "@coding-adventures/" scoped npm names.
+//     "@coding-adventures/logic-gates" maps to "typescript/logic-gates".
 //
 // External dependencies (those not matching the monorepo prefix) are
 // silently skipped — we only care about internal build ordering.
@@ -228,6 +232,153 @@ func parseGoDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	return internalDeps
 }
 
+// parseTypescriptDeps extracts internal dependencies from a TypeScript
+// package.json file.
+//
+// TypeScript packages declare dependencies in package.json:
+//
+//	"dependencies": {
+//	    "@coding-adventures/logic-gates": "file:../logic-gates"
+//	}
+//
+// We scan for lines matching the @coding-adventures/ prefix and map them
+// to our internal package names. Version specifiers and file: references
+// are ignored — we only care about the package name.
+func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	packageJSON := filepath.Join(pkg.Path, "package.json")
+	data, err := os.ReadFile(packageJSON)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// We need to only look inside "dependencies": { ... } blocks, not at
+	// the top-level "name" field. Strategy: find lines inside a dependencies
+	// block and extract @coding-adventures/ references from those lines.
+	//
+	// We scan line by line looking for "dependencies" keys, then collect
+	// entries until we hit a closing brace.
+	inDeps := false
+	re := regexp.MustCompile(`"(@coding-adventures/[^"]+)"`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		if !inDeps {
+			// Look for "dependencies": { or "dependencies":{
+			if strings.Contains(trimmed, `"dependencies"`) && strings.Contains(trimmed, "{") {
+				inDeps = true
+			}
+			continue
+		}
+
+		// Inside dependencies block.
+		if strings.Contains(trimmed, "}") {
+			inDeps = false
+			continue
+		}
+
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			depName := strings.ToLower(match[1])
+			if pkgName, ok := knownNames[depName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
+// parseRustDeps extracts internal dependencies from a Rust Cargo.toml file.
+//
+// Rust Cargo.toml declares workspace-local dependencies with path references:
+//
+//	[dependencies]
+//	logic-gates = { path = "../logic-gates" }
+//
+// We look for lines in the [dependencies] section that contain `path =` and
+// extract the crate name (the key before the `=`). We then look up that name
+// in the known names mapping.
+func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	cargoToml := filepath.Join(pkg.Path, "Cargo.toml")
+	data, err := os.ReadFile(cargoToml)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Scan for [dependencies] section and extract path-based deps.
+	inDeps := false
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		// Detect section headers like [dependencies] or [dev-dependencies]
+		if strings.HasPrefix(trimmed, "[") {
+			inDeps = trimmed == "[dependencies]"
+			continue
+		}
+
+		if !inDeps {
+			continue
+		}
+
+		// Look for lines like: logic-gates = { path = "../logic-gates" }
+		if strings.Contains(trimmed, "path") && strings.Contains(trimmed, "=") {
+			// Extract the crate name (everything before the first '=')
+			parts := strings.SplitN(trimmed, "=", 2)
+			if len(parts) < 2 {
+				continue
+			}
+			crateName := strings.TrimSpace(strings.ToLower(parts[0]))
+			if pkgName, ok := knownNames[crateName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
+// parseElixirDeps extracts internal dependencies from an Elixir mix.exs file.
+//
+// Elixir mix.exs declares internal path dependencies usually like:
+//
+//	{:coding_adventures_logic_gates, path: "../logic-gates"}
+//
+// We use a regex to capture the atom name starting with `coding_adventures_`.
+func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	mixExs := filepath.Join(pkg.Path, "mix.exs")
+	data, err := os.ReadFile(mixExs)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	re := regexp.MustCompile(`\{:(coding_adventures_[a-z0-9_]+)`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			appName := strings.ToLower(match[1])
+			if pkgName, ok := knownNames[appName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -269,6 +420,22 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 					break
 				}
 			}
+
+		case "typescript":
+			// Convert dir name to npm scoped name: "logic-gates" → "@coding-adventures/logic-gates"
+			npmName := "@coding-adventures/" + strings.ToLower(filepath.Base(pkg.Path))
+			known[npmName] = pkg.Name
+
+		case "rust":
+			// Rust crate names use the directory name directly (kebab-case).
+			// "logic-gates" → "logic-gates"
+			crateName := strings.ToLower(filepath.Base(pkg.Path))
+			known[crateName] = pkg.Name
+
+		case "elixir":
+			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
+			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
+			known[appName] = pkg.Name
 		}
 	}
 
@@ -306,6 +473,12 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseRubyDeps(pkg, knownNames)
 		case "go":
 			deps = parseGoDeps(pkg, knownNames)
+		case "typescript":
+			deps = parseTypescriptDeps(pkg, knownNames)
+		case "rust":
+			deps = parseRustDeps(pkg, knownNames)
+		case "elixir":
+			deps = parseElixirDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

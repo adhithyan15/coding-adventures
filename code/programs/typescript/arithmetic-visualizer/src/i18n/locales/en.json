@@ -1,0 +1,31 @@
+{
+  "app.title": "Arithmetic — From Adders to Execution",
+  "app.subtitle": "Everything reduces to addition: how computers do math with just gates and wires",
+  "nav.tabs": "Circuit categories",
+  "tabs.adders": "Binary Adders",
+  "tabs.addition": "Everything is Addition",
+  "tabs.alu": "The ALU",
+  "tabs.cpu": "CPU Step-Through",
+
+  "adders.intro": "Addition is the foundation of ALL arithmetic in a CPU. Every subtraction, every multiplication, every comparison ultimately flows through an adder circuit. Here we build one from scratch: starting with a half adder (2 gates), scaling to a full adder (5 gates), and chaining them into a ripple-carry adder that adds multi-bit numbers.",
+
+  "adders.half.title": "Half Adder — Adding Two Bits",
+  "adders.half.description": "The simplest arithmetic circuit: adds two single bits. The sum is XOR(A, B) — it's 1 when inputs differ. The carry is AND(A, B) — it's 1 only when both inputs are 1. Called 'half' because it can't accept a carry-in from a previous column.",
+  "adders.half.ariaLabel": "Half adder: XOR gate for sum, AND gate for carry",
+
+  "adders.full.title": "Full Adder — Handling the Carry",
+  "adders.full.description": "Extends the half adder by accepting a carry-in from the previous bit position. Built from two half adders and an OR gate: first half-add A and B, then half-add that result with carry-in. If either step produces a carry, the final carry-out is 1.",
+  "adders.full.ariaLabel": "Full adder: two half adders plus OR gate for carry propagation",
+
+  "adders.ripple.title": "Ripple-Carry Adder (4-bit)",
+  "adders.ripple.description": "Chains 4 full adders together, with each carry-out wired to the next carry-in. Just like adding numbers on paper — column by column, right to left, carrying as you go. The carry 'ripples' from the least significant bit all the way to the most significant bit.",
+  "adders.ripple.ariaLabel": "4-bit ripple-carry adder: four chained full adders with carry propagation",
+  "adders.ripple.overflow": "Overflow! Result doesn't fit in 4 bits.",
+  "adders.ripple.noOverflow": "No overflow.",
+
+  "truthTable.title": "Truth Table",
+
+  "placeholder.comingSoon": "Coming soon",
+
+  "footer.credit": "Built with gate-level arithmetic models"
+}

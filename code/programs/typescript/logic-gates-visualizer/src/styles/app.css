@@ -1,0 +1,108 @@
+/* ==========================================================================
+ * Main application styles for the Logic Gates Visualizer.
+ *
+ * Imports the shared theme and accessibility CSS from ui-components,
+ * then adds app-specific layout and styling.
+ * ========================================================================== */
+
+@import "@coding-adventures/ui-components/src/styles/theme.css";
+@import "@coding-adventures/ui-components/src/styles/accessibility.css";
+
+/* --- Base reset & body --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--body-text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* --- App layout ---
+ * Single column, centered, with max-width for readability. */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  gap: 1.5rem;
+}
+
+/* --- Header ---
+ * Title with a gradient effect and subtitle. */
+
+.app__header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.app__title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4fc3f7, #81c784, #4fc3f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.app__subtitle {
+  font-size: 0.95rem;
+  color: var(--tab-text);
+  margin-top: 0.3rem;
+}
+
+/* --- Main content area --- */
+
+.app__main {
+  flex: 1;
+}
+
+/* --- Footer --- */
+
+.app__footer {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+  color: var(--tab-text);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  .app__title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem 0.5rem;
+  }
+
+  .app__title {
+    font-size: 1.25rem;
+  }
+
+  .tab-list__tab {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+}

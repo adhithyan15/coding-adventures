@@ -1,0 +1,96 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "nl",
+  "display_name": "nl",
+  "description": "Number lines of files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "body_numbering",
+      "short": "b",
+      "long": "body-numbering",
+      "description": "Use STYLE for numbering body lines (a=all, t=non-empty, n=none, pBRE=matching regex)",
+      "type": "string",
+      "default": "t"
+    },
+    {
+      "id": "header_numbering",
+      "short": "h",
+      "long": "header-numbering",
+      "description": "Use STYLE for numbering header lines",
+      "type": "string",
+      "default": "n"
+    },
+    {
+      "id": "footer_numbering",
+      "short": "f",
+      "long": "footer-numbering",
+      "description": "Use STYLE for numbering footer lines",
+      "type": "string",
+      "default": "n"
+    },
+    {
+      "id": "starting_line_number",
+      "short": "v",
+      "long": "starting-line-number",
+      "description": "First line number on each logical page",
+      "type": "integer",
+      "default": 1
+    },
+    {
+      "id": "line_increment",
+      "short": "i",
+      "long": "line-increment",
+      "description": "Line number increment at each line",
+      "type": "integer",
+      "default": 1
+    },
+    {
+      "id": "number_format",
+      "short": "n",
+      "long": "number-format",
+      "description": "Insert line numbers according to FORMAT (ln=left justified, rn=right justified, rz=right justified with leading zeros)",
+      "type": "string",
+      "default": "rn"
+    },
+    {
+      "id": "number_width",
+      "short": "w",
+      "long": "number-width",
+      "description": "Use NUMBER columns for line numbers",
+      "type": "integer",
+      "default": 6
+    },
+    {
+      "id": "number_separator",
+      "short": "s",
+      "long": "number-separator",
+      "description": "Add STRING after (possible) line number",
+      "type": "string",
+      "default": "\t"
+    },
+    {
+      "id": "section_delimiter",
+      "short": "d",
+      "long": "section-delimiter",
+      "description": "Use CC for logical page delimiters",
+      "type": "string",
+      "default": "\\:"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "file",
+      "description": "File to number. Use '-' for standard input.",
+      "type": "string",
+      "required": false,
+      "display_name": "FILE"
+    }
+  ],
+  "commands": []
+}

@@ -1,0 +1,20 @@
+{
+  "name": "wave",
+  "version": "0.1.0",
+  "description": "Simple harmonic wave model for electromagnetic wave fundamentals",
+  "main": "dist/wave.js",
+  "types": "dist/wave.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "trig": "file:../trig"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  }
+}

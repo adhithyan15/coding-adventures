@@ -6,11 +6,55 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — TypeScript Port + JavaScript/TypeScript Grammars (PR #14)
+- **31 TypeScript packages** — complete port of the computing stack to TypeScript
+- `javascript.tokens` + `javascript.grammar` — JavaScript grammar definitions
+- `typescript.tokens` + `typescript.grammar` — TypeScript grammar definitions
+- Cross-language packages: `javascript-lexer`, `javascript-parser`, `typescript-lexer`, `typescript-parser` in Python, Ruby, and Go
+- D05 Core package (processor integration) in Python, Ruby, Go, and TypeScript
+- Extended RISC-V simulator with full RV32I base integer ISA + M-mode privileged extensions
+
+### Changed — Build System: Recursive Discovery + Rust Build Tool (PRs #16, #17)
+- **Recursive BUILD file discovery** replaces DIRS-based routing in all build tools (Go, Python, Ruby)
+- Build tools now walk the directory tree automatically — no DIRS files needed
+- Added skip list for non-source directories (`.git`, `.venv`, `node_modules`, `target`, `.claude`, etc.)
+- **Rust added as recognized language** — 6 Rust packages now properly discovered (were "unknown")
+- **New: Rust build tool** — complete port with rayon parallelism, SHA256 hashing, git-diff detection
+- **All 18 DIRS files removed** from the repository
+- Total discovered packages increased from 77 (DIRS-routed) to 126+ (recursive)
+
+### Added — Publish Workflow + Package Completeness (PR #13)
+- `.github/workflows/publish.yml` — release publishing for PyPI and RubyGems
+- PyPI publishing via OIDC Trusted Publishers (no API tokens)
+- Native extension support via maturin: builds wheels on Linux, macOS (arm64 + x86_64), Windows
+- Ruby gem publishing via `RUBYGEMS_API_KEY` secret
+- Fixed 8 incomplete packages:
+  - Go: README + CHANGELOG for assembler, python-lexer, ruby-lexer
+  - Ruby: test suites for assembler, html_renderer, jit_compiler shell gems
+  - Python: README/CHANGELOG for hello-world and pipeline-visualizer programs
+
+### Added — Go Port (PR #12)
+- **25 Go packages** — complete port of the computing stack to Go
+- Go implementations of all hardware layers, simulators, lexer, parser, compiler, and VM
+- Grammar-driven lexer/parser with cross-language packages (python-lexer, ruby-lexer)
+
+### Added — Deep CPU Internals (PR #11)
+- `cache` — L1/L2 cache simulation with LRU eviction in Python, Ruby, Go, and Rust
+- `branch-predictor` — 1-bit, 2-bit saturating counter, branch target buffer in Python, Ruby, Go, and Rust
+- `hazard-detection` — data, control, and structural hazard detection in Python, Ruby, Go, and Rust
+- `clock` — clock generator, divider, multi-phase clock in Python, Ruby, and Go
+- `fp-arithmetic` — IEEE 754 floating-point arithmetic in Python, Ruby, and Go
+- Deep CPU architecture specs (D00-D05)
+- Floating-point arithmetic spec (FP01)
+
+### Added — Accelerator Computing Stack (PR #10)
+- GPU/TPU/NPU computing stack specs and overview
+- Accelerator architecture documentation (G00)
+
 ### Added — Build System (PR #9)
 - **Directed graph library** in Python (73 tests, 98%), Ruby (77 tests, 100%), and Go (39 tests, 94%)
 - **Build tool** in Go (primary), Python (reference), and Ruby (educational) — incremental, parallel, git-diff-based change detection
-- **BUILD files** for all 41 packages — declarative build commands per package
-- **DIRS files** — directory tree navigation for the build tool
+- **BUILD files** for all packages — declarative build commands per package
 - **GitHub Actions CI** — compiles Go build tool, runs affected packages in parallel
 - Go 1.26 added to mise.toml
 

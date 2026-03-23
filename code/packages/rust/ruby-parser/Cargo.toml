@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-ruby-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Ruby parser — parses Ruby source code into an AST using the grammar-driven parser and the ruby.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-ruby-lexer = { path = "../ruby-lexer" }

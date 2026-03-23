@@ -30,6 +30,7 @@ from grammar_tools.parser_grammar import (
     validate_parser_grammar,
 )
 from grammar_tools.token_grammar import (
+    PatternGroup,
     TokenDefinition,
     TokenGrammar,
     TokenGrammarError,
@@ -39,6 +40,7 @@ from grammar_tools.token_grammar import (
 
 __all__ = [
     # Token grammar
+    "PatternGroup",
     "TokenDefinition",
     "TokenGrammar",
     "TokenGrammarError",

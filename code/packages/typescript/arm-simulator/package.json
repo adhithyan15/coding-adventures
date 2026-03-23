@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/arm-simulator",
+  "version": "0.1.0",
+  "description": "ARMv7 instruction set decoder and executor -- Layer 4 of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "arm",
+    "instruction-set",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cpu-simulator": "file:../cpu-simulator"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

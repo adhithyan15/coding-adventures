@@ -1,0 +1,8 @@
+[package]
+name = "house-price-predictor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+matrix = { path = "../../../packages/rust/matrix" }
+loss-functions = { path = "../../../packages/rust/loss-functions" }

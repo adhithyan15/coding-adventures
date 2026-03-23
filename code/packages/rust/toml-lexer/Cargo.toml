@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-toml-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "TOML lexer — tokenizes TOML source text using the grammar-driven lexer and the toml.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

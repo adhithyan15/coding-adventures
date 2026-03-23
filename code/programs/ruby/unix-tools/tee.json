@@ -1,0 +1,40 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "tee",
+  "display_name": "tee",
+  "description": "Read from standard input and write to standard output and files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "append",
+      "short": "a",
+      "long": "append",
+      "description": "Append to the given FILEs, do not overwrite",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_interrupts",
+      "short": "i",
+      "long": "ignore-interrupts",
+      "description": "Ignore the SIGINT signal",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "display_name": "files",
+      "description": "Files to write to in addition to standard output",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}

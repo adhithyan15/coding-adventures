@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/jvm-simulator",
+  "version": "0.1.0",
+  "description": "Java Virtual Machine bytecode simulator — Layer 4e of the computing stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "jvm",
+    "java",
+    "bytecode",
+    "stack-machine",
+    "simulator",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

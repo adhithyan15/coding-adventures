@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-typescript-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "TypeScript lexer — tokenizes TypeScript source code using the grammar-driven lexer and the typescript.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

@@ -1,0 +1,8 @@
+[package]
+name = "rom-bios"
+version = "0.1.0"
+edition = "2021"
+description = "ROM & BIOS firmware for simulated computer power-on initialization"
+
+[dependencies]
+riscv-simulator = { path = "../riscv-simulator" }
