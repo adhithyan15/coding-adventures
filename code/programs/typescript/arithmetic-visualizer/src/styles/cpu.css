@@ -1,0 +1,360 @@
+/* ==========================================================================
+ * Styles for the CPU Step-Through tab (Tab 4).
+ *
+ * Covers: program loader, step controls, CPU state dashboard, register grid,
+ * instruction decode, ALU trace, and execution history.
+ * ========================================================================== */
+
+/* --- CPU view container --- */
+
+.cpu-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cpu-view__intro {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--body-text);
+  max-width: 800px;
+}
+
+/* --- Panel (reusable container) --- */
+
+.cpu-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cpu-panel__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ff8a65;
+}
+
+/* --- Program loader --- */
+
+.cpu-loader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cpu-loader__select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  background: var(--panel-bg);
+  color: var(--body-text);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  max-width: 300px;
+}
+
+.cpu-loader__desc {
+  font-size: 0.85rem;
+  color: var(--tab-text);
+  line-height: 1.5;
+}
+
+.cpu-loader__hex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.cpu-loader__byte {
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  color: var(--tab-text);
+}
+
+.cpu-loader__byte--active {
+  border-color: #4caf50;
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* --- Buttons --- */
+
+.cpu-btn {
+  padding: 0.4rem 1rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--body-text);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cpu-btn:hover:not(:disabled) {
+  border-color: #ffb74d;
+  color: #ffb74d;
+}
+
+.cpu-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cpu-btn--active {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+}
+
+/* --- Controls --- */
+
+.cpu-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cpu-halted {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: #ff8a65;
+  font-size: 0.85rem;
+}
+
+.cpu-step-count {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--tab-text);
+  margin-left: auto;
+}
+
+/* --- CPU state dashboard --- */
+
+.cpu-state {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cpu-state__item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cpu-state__label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tab-text);
+}
+
+.cpu-state__value {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.cpu-state__hex {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--tab-text);
+}
+
+.cpu-state__flag {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #888;
+}
+
+.cpu-state__flag--set {
+  color: #4caf50;
+}
+
+/* --- Register grid --- */
+
+.cpu-registers {
+  margin-top: 0.5rem;
+}
+
+.cpu-registers__title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tab-text);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.cpu-registers__grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.3rem;
+}
+
+.cpu-reg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.2rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.cpu-reg--changed {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.cpu-reg__name {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--tab-text);
+}
+
+.cpu-reg__val {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+/* --- Instruction decode --- */
+
+.cpu-instr {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cpu-instr__row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cpu-instr__label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--tab-text);
+  min-width: 5rem;
+}
+
+.cpu-instr__value {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--body-text);
+}
+
+.cpu-instr__mnemonic {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffb74d;
+}
+
+/* --- ALU trace (inside instruction panel) --- */
+
+.cpu-alu-trace {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+}
+
+.cpu-alu-trace__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4fc3f7;
+  margin-bottom: 0.3rem;
+}
+
+.cpu-alu-trace__op {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--body-text);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+/* --- Execution trace history --- */
+
+.cpu-trace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.cpu-trace-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.2rem 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  border-radius: 3px;
+}
+
+.cpu-trace-row--current {
+  background: rgba(255, 183, 77, 0.1);
+  border-left: 2px solid #ffb74d;
+}
+
+.cpu-trace-row__num {
+  color: var(--tab-text);
+  min-width: 2rem;
+}
+
+.cpu-trace-row__addr {
+  color: var(--tab-text);
+  min-width: 2.5rem;
+}
+
+.cpu-trace-row__mnem {
+  color: #ffb74d;
+  font-weight: 600;
+  min-width: 6rem;
+}
+
+.cpu-trace-row__acc {
+  color: var(--body-text);
+  min-width: 6rem;
+}
+
+.cpu-trace-row__alu {
+  color: #4fc3f7;
+  font-size: 0.7rem;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 640px) {
+  .cpu-registers__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .cpu-state {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cpu-trace-row {
+    flex-wrap: wrap;
+  }
+}
