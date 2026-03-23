@@ -803,13 +803,15 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
         func_name = String.trim_trailing(func_name_with_paren, "(")
 
         cond do
+          # User-defined function ALWAYS takes priority — even over CSS built-ins
+          # like scale(), translate(), etc. If the user defines @function scale(),
+          # their definition wins. This matches Sass behavior.
+          Map.has_key?(state.functions, func_name) ->
+            evaluate_function_call(func_name, node, scope, state)
+
           # CSS built-in that is NOT also a Lattice built-in — pass through
           css_function?(func_name) and not Builtins.builtin?(func_name) ->
             expand_children(node, scope, state)
-
-          # User-defined function takes priority over built-ins (Sass behavior)
-          Map.has_key?(state.functions, func_name) ->
-            evaluate_function_call(func_name, node, scope, state)
 
           # Lattice v2 built-in function
           Builtins.builtin?(func_name) ->

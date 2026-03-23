@@ -731,13 +731,15 @@ module CodingAdventures
         # URL_TOKEN or unknown — pass through.
         return expand_children(node, scope) if func_name.nil?
 
+        # User-defined function ALWAYS takes priority — even over CSS built-ins
+        # like scale(), translate(), etc. If the user defines @function scale(),
+        # their definition wins. This matches Sass behavior.
+        return evaluate_function_call(func_name, node, scope) if @functions.key?(func_name)
+
         # CSS built-in that does NOT overlap with Lattice built-ins — pass through.
         if LatticeAstToCss.css_function?(func_name) && !BUILTIN_FUNCTIONS.key?(func_name)
           return expand_children(node, scope)
         end
-
-        # User-defined function takes priority over built-ins (Sass behavior).
-        return evaluate_function_call(func_name, node, scope) if @functions.key?(func_name)
 
         # Lattice v2 built-in function.
         return evaluate_builtin_function(func_name, node, scope) if BUILTIN_FUNCTIONS.key?(func_name)

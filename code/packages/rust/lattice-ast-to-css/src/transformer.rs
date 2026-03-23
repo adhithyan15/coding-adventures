@@ -1025,19 +1025,26 @@ impl LatticeTransformer {
             return self.expand_children(node, scope);
         };
 
-        // CSS built-in: expand args but keep structure
-        if is_css_function(&func_name) {
-            return self.expand_children(node, scope);
-        }
-
-        // Lattice function: evaluate
+        // User-defined function ALWAYS takes priority — even over CSS built-ins
+        // like scale(), translate(), etc. If the user defines @function scale(),
+        // their definition wins. This matches Sass behavior.
         if self.functions.contains_key(&func_name) {
             return self.evaluate_function_call(&func_name.clone(), node, scope);
+        }
+
+        // CSS built-in that is NOT also a Lattice built-in — pass through
+        if is_css_function(&func_name) && !is_builtin_function(&func_name) {
+            return self.expand_children(node, scope);
         }
 
         // Lattice v2: Built-in function evaluation
         if is_builtin_function(&func_name) {
             return self.evaluate_builtin_function_call(&func_name, node, scope);
+        }
+
+        // CSS built-in that overlaps with Lattice built-in names
+        if is_css_function(&func_name) {
+            return self.expand_children(node, scope);
         }
 
         // Unknown function: pass through

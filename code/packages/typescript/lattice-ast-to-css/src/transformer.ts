@@ -1090,16 +1090,16 @@ export class LatticeTransformer {
       return this._expandChildren(node, scope);
     }
 
-    // CSS built-in — expand args but keep structure
-    // Note: Lattice v2 built-in color functions like "rgba" and "saturate"
-    // overlap with CSS names. We check if they're registered as built-ins.
-    if (isCssFunction(funcName) && !BUILTIN_FUNCTIONS.has(funcName)) {
-      return this._expandChildren(node, scope);
-    }
-
-    // User-defined function takes priority over built-ins (Sass behavior)
+    // User-defined function ALWAYS takes priority — even over CSS built-ins
+    // like scale(), translate(), etc. If the user defines @function scale(),
+    // their definition wins. This matches Sass behavior.
     if (this.functions.has(funcName)) {
       return this._evaluateFunctionCall(funcName, node, scope);
+    }
+
+    // CSS built-in that is NOT also a Lattice built-in — pass through
+    if (isCssFunction(funcName) && !BUILTIN_FUNCTIONS.has(funcName)) {
+      return this._expandChildren(node, scope);
     }
 
     // Lattice v2 built-in function

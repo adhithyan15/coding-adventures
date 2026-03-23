@@ -778,8 +778,8 @@ class LatticeTransformer:
 
         Priority order:
 
-        1. CSS built-in (rgb, calc, etc.) — pass through unchanged
-        2. User-defined @function — evaluate and replace with return value
+        1. User-defined @function — evaluate and replace with return value
+        2. CSS built-in (rgb, calc, etc.) — pass through unchanged
         3. Lattice v2 built-in function (map-get, lighten, math.div, etc.)
            — evaluate with ExpressionEvaluator and replace
         4. Unknown — pass through (might be a CSS function we don't know)
@@ -797,16 +797,15 @@ class LatticeTransformer:
         if func_name is None:
             return self._expand_children(node, scope)
 
-        # CSS built-in — expand args but keep structure
-        # Note: Lattice v2 built-in color functions like "rgba" and "saturate"
-        # overlap with CSS names. We check if they're being called with
-        # LatticeColor args (making them Lattice built-ins) vs CSS passthrough.
-        if _is_css_function(func_name) and func_name not in BUILTIN_FUNCTIONS:
-            return self._expand_children(node, scope)
-
-        # User-defined function takes priority over built-ins (Sass behavior)
+        # User-defined function ALWAYS takes priority — even over CSS built-ins
+        # like scale(), translate(), etc. If the user defines @function scale(),
+        # their definition wins. This matches Sass behavior.
         if func_name in self.functions:
             return self._evaluate_function_call(func_name, node, scope)
+
+        # CSS built-in that is NOT also a Lattice built-in — pass through
+        if _is_css_function(func_name) and func_name not in BUILTIN_FUNCTIONS:
+            return self._expand_children(node, scope)
 
         # Lattice v2 built-in function
         if func_name in BUILTIN_FUNCTIONS:
