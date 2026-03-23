@@ -1,0 +1,70 @@
+# ================================================================
+# Deploy Arithmetic Visualizer to GitHub Pages
+# ================================================================
+#
+# Builds the Vite app and deploys it to the gh-pages branch
+# under the arithmetic/ subdirectory, preserving other content
+# (e.g., busicom/, transistors/, logic-gates/) already on GitHub Pages.
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into arithmetic/ on that
+# branch, so the app is available at:
+#   https://<user>.github.io/coding-adventures/arithmetic/
+#
+# The Vite base path is set to /coding-adventures/arithmetic/ in
+# vite.config.ts so all asset URLs resolve correctly.
+
+name: Deploy Arithmetic Visualizer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/arithmetic-visualizer/**"
+      - "code/packages/typescript/arithmetic/**"
+      - "code/packages/typescript/intel4004-gatelevel/**"
+      - "code/packages/typescript/logic-gates/**"
+      - "code/packages/typescript/ui-components/**"
+      - ".github/workflows/deploy-arithmetic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (packages)
+        run: |
+          cd code/packages/typescript/transistors && npm install
+          cd ../logic-gates && npm install
+          cd ../arithmetic && npm install
+          cd ../intel4004-gatelevel && npm install
+          cd ../ui-components && npm install
+
+      - name: Install dependencies (app)
+        run: |
+          cd code/programs/typescript/arithmetic-visualizer
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/arithmetic-visualizer
+          npm run build
+
+      - name: Deploy to GitHub Pages (arithmetic/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/arithmetic-visualizer/dist
+          destination_dir: arithmetic
+          keep_files: true
