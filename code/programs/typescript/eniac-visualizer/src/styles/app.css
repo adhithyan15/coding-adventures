@@ -1,0 +1,47 @@
+@import "@coding-adventures/ui-components/src/styles/theme.css";
+@import "@coding-adventures/ui-components/src/styles/accessibility.css";
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body { background: var(--body-bg); color: var(--body-text); font-family: var(--sans); line-height: 1.6; min-height: 100vh; }
+
+.app { display: flex; flex-direction: column; min-height: 100vh; max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem; gap: 1.5rem; }
+.app__header { text-align: center; padding: 1rem 0; }
+.app__title { font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #ff6b35, #ffb74d, #ff8a65); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.02em; }
+.app__subtitle { font-size: 0.95rem; color: var(--tab-text); margin-top: 0.3rem; }
+.app__main { flex: 1; }
+.app__footer { text-align: center; padding: 1.5rem 0 0.5rem; color: var(--tab-text); font-size: 0.8rem; border-top: 1px solid var(--panel-border); }
+
+/* Shared card */
+.eniac-card { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.eniac-card__title { font-size: 1.1rem; font-weight: 700; color: #ff8a65; }
+
+/* Shared callout */
+.eniac-callout { background: rgba(255, 107, 53, 0.08); border-left: 3px solid #ff6b35; padding: 0.75rem 1rem; border-radius: 0 6px 6px 0; font-size: 0.85rem; line-height: 1.6; }
+
+/* Shared button */
+.eniac-btn { padding: 0.4rem 1rem; border: 2px solid var(--panel-border); border-radius: 6px; background: transparent; color: var(--body-text); font-family: var(--mono); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.eniac-btn:hover { border-color: #ff8a65; color: #ff8a65; }
+.eniac-btn--active { border-color: #ff6b35; background: rgba(255, 107, 53, 0.15); color: #ff6b35; }
+
+/* Shared table */
+.eniac-table { border-collapse: collapse; font-family: var(--mono); font-size: 0.8rem; margin: 0.5rem 0; }
+.eniac-table caption { font-size: 0.75rem; color: var(--tab-text); margin-bottom: 0.3rem; text-align: left; }
+.eniac-table th, .eniac-table td { padding: 0.25rem 0.6rem; text-align: center; border: 1px solid var(--panel-border); }
+.eniac-table th { background: rgba(255,255,255,0.05); font-weight: 600; }
+.eniac-table__row--carry { background: rgba(255, 107, 53, 0.1); }
+
+/* Tube indicator */
+.tube { width: 36px; height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50% 50% 6px 6px; border: 2px solid; transition: all 0.2s ease; position: relative; }
+.tube--on { border-color: #ff8a65; background: rgba(255, 138, 101, 0.15); box-shadow: 0 0 12px rgba(255, 107, 53, 0.4); }
+.tube--off { border-color: #444; background: transparent; }
+.tube--highlight { box-shadow: 0 0 16px rgba(255, 107, 53, 0.6); }
+.tube__filament { width: 4px; height: 10px; border-radius: 2px; }
+.tube--on .tube__filament { background: #ff6b35; box-shadow: 0 0 6px #ff6b35; }
+.tube--off .tube__filament { background: #333; }
+.tube__label { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; }
+.tube--on .tube__label { color: #ff8a65; }
+.tube--off .tube__label { color: #666; }
+
+@media (max-width: 768px) { .app__title { font-size: 1.5rem; } }
+@media (max-width: 480px) { .app { padding: 1rem 0.5rem; } .app__title { font-size: 1.25rem; } .tab-list__tab { font-size: 0.7rem; padding: 0.4rem 0.5rem; } }
