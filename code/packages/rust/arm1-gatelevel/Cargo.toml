@@ -1,0 +1,10 @@
+[package]
+name = "arm1-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "ARM1 gate-level simulator built from logic gates"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
+clock = { path = "../clock" }
