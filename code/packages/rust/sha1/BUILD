@@ -1,1 +1,1 @@
-cargo test -p sha1 -- --nocapture
+cargo test -p ca_sha1 -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p uuid -- --nocapture
+cargo test -p ca_uuid -- --nocapture
