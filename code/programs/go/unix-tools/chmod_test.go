@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -305,6 +306,9 @@ func TestChmodApplyModeSymbolic(t *testing.T) {
 // =========================================================================
 
 func TestChmodOctalOnFile(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod not supported on Windows")
+	}
 	dir := t.TempDir()
 	file := filepath.Join(dir, "test.txt")
 	os.WriteFile(file, []byte("data"), 0644)
@@ -325,6 +329,9 @@ func TestChmodOctalOnFile(t *testing.T) {
 }
 
 func TestChmodSymbolicOnFile(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod not supported on Windows")
+	}
 	dir := t.TempDir()
 	file := filepath.Join(dir, "test.txt")
 	os.WriteFile(file, []byte("data"), 0644)
@@ -345,6 +352,9 @@ func TestChmodSymbolicOnFile(t *testing.T) {
 }
 
 func TestChmodRecursive(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod not supported on Windows")
+	}
 	dir := t.TempDir()
 	subdir := filepath.Join(dir, "sub")
 	os.MkdirAll(subdir, 0755)
@@ -387,6 +397,9 @@ func TestChmodVerbose(t *testing.T) {
 }
 
 func TestChmodChangesOnly(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod not supported on Windows")
+	}
 	dir := t.TempDir()
 	file := filepath.Join(dir, "test.txt")
 	os.WriteFile(file, []byte("data"), 0755)
@@ -430,6 +443,9 @@ func TestChmodInvalidSpec(t *testing.T) {
 }
 
 func TestChmodMultipleFiles(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod not supported on Windows")
+	}
 	dir := t.TempDir()
 	file1 := filepath.Join(dir, "a.txt")
 	file2 := filepath.Join(dir, "b.txt")

@@ -126,6 +126,7 @@ mod tests {
         assert!(Path::new(&path).is_absolute());
     }
 
+    #[cfg(unix)]
     #[test]
     fn resolve_missing_with_m() {
         let result = resolve_path("/nonexistent/path/to/file", false, true, false);
@@ -139,6 +140,7 @@ mod tests {
         assert!(result.is_err());
     }
 
+    #[cfg(unix)]
     #[test]
     fn resolve_root() {
         let result = resolve_path("/", false, false, false);
@@ -146,6 +148,7 @@ mod tests {
         assert_eq!(result.unwrap(), "/");
     }
 
+    #[cfg(unix)]
     #[test]
     fn clean_path_with_dots() {
         let path = PathBuf::from("/a/b/../c/./d");

@@ -220,7 +220,10 @@ defmodule DuTest do
     end
 
     test "handles nonexistent path" do
-      results = UnixTools.Du.disk_usage("/nonexistent/path/xyz")
+      # Use Path.join with System.tmp_dir! so the path format is correct on
+      # both Unix and Windows (avoids hard-coding a Unix-style absolute path).
+      nonexistent = Path.join(System.tmp_dir!(), "nonexistent_du_test_#{:rand.uniform(999_999)}")
+      results = UnixTools.Du.disk_usage(nonexistent)
       assert results == []
     end
   end

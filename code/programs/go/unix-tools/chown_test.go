@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -48,6 +49,9 @@ func TestChownSpecLoads(t *testing.T) {
 // =========================================================================
 
 func TestParseChownSpecCurrentUser(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chown not supported on Windows (no Unix uid/gid)")
+	}
 	// Get current user — this should always resolve.
 	u, err := user.Current()
 	if err != nil {
@@ -279,6 +283,9 @@ func TestResolveChownGroupNumeric(t *testing.T) {
 }
 
 func TestResolveChownGroupByName(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chown not supported on Windows (no Unix uid/gid)")
+	}
 	// Try resolving the current user's primary group.
 	u, err := user.Current()
 	if err != nil {
@@ -320,6 +327,9 @@ func TestChownRecursive(t *testing.T) {
 }
 
 func TestResolveChownUserByName(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chown not supported on Windows (no Unix uid/gid)")
+	}
 	u, err := user.Current()
 	if err != nil {
 		t.Skip("cannot get current user")
