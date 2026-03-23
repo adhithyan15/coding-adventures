@@ -89,6 +89,7 @@ members = [
     "verilog-lexer",
     "verilog-parser",
     "vhdl-lexer",
+    "vhdl-parser",
     "virtual-machine",
     "wasm-simulator",
     "xml-lexer",
