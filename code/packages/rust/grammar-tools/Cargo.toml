@@ -4,5 +4,9 @@ version = "0.1.0"
 edition = "2021"
 description = "Parser and validator for .tokens and .grammar files — the bridge between human-readable grammar specifications and machine-usable parse tables"
 
+[[bin]]
+name = "grammar-tools"
+path = "src/bin/grammar-tools.rs"
+
 [dependencies]
 regex = "1"

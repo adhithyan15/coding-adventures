@@ -3,7 +3,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { initI18n } from "@coding-adventures/ui-components";
 import en from "../i18n/locales/en.json";
-import { appState } from "../state.js";
+import { store } from "../state.js";
+import { stateLoadAction } from "../actions.js";
 import { TemplateEditor } from "./TemplateEditor.js";
 
 beforeAll(() => {
@@ -11,8 +12,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  appState.templates.length = 0;
-  appState.instances.length = 0;
+  store.dispatch(stateLoadAction([], [], []));
 });
 
 describe("TemplateEditor", () => {
@@ -36,8 +36,8 @@ describe("TemplateEditor", () => {
       target: { value: "My New List" },
     });
     fireEvent.click(screen.getByText("Save"));
-    expect(appState.templates).toHaveLength(1);
-    expect(appState.templates[0]?.name).toBe("My New List");
+    expect(store.getState().templates).toHaveLength(1);
+    expect(store.getState().templates[0]?.name).toBe("My New List");
     expect(navigate).toHaveBeenCalledWith("/");
   });
 
@@ -48,7 +48,7 @@ describe("TemplateEditor", () => {
       target: { value: "Unsaved" },
     });
     fireEvent.click(screen.getByText("Cancel"));
-    expect(appState.templates).toHaveLength(0);
+    expect(store.getState().templates).toHaveLength(0);
     expect(navigate).toHaveBeenCalledWith("/");
   });
 });

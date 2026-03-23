@@ -14,15 +14,18 @@
  *      that decisions can appear inside other decision branches, and that
  *      the visible list expands progressively as you answer each question.
  *
- * These templates are registered directly into the AppState singleton at
- * app startup, before the first render.
+ * V0.3: seedTemplates now accepts a Store and dispatches TEMPLATE_CREATE
+ * actions instead of calling createTemplate directly. This means the
+ * persistence middleware will automatically save each seed template to
+ * IndexedDB as it is created.
  */
 
-import { createTemplate } from "./state.js";
-import type { AppState } from "./state.js";
+import type { Store } from "@coding-adventures/store";
+import { createTemplateAction } from "./actions.js";
+import type { AppState } from "./reducer.js";
 import type { TemplateItem } from "./types.js";
 
-export function seedTemplates(state: AppState): void {
+export function seedTemplates(store: Store<AppState>): void {
   // ── 1. Morning Routine ───────────────────────────────────────────────────
   // A flat procedural checklist — the bread and butter of any checklist app.
   // Pilots call this a "do-list": items to be completed in sequence with no
@@ -38,11 +41,12 @@ export function seedTemplates(state: AppState): void {
     { id: "m7", type: "check", label: "Set a timer for deep-work block" },
   ];
 
-  createTemplate(
-    state,
-    "Morning Routine",
-    "A flat daily routine — no decisions, just a procedural sequence to start the day right.",
-    morningItems,
+  store.dispatch(
+    createTemplateAction(
+      "Morning Routine",
+      "A flat daily routine — no decisions, just a procedural sequence to start the day right.",
+      morningItems,
+    ),
   );
 
   // ── 2. Deployment Runbook ────────────────────────────────────────────────
@@ -73,11 +77,12 @@ export function seedTemplates(state: AppState): void {
     },
   ];
 
-  createTemplate(
-    state,
-    "Deployment Runbook",
-    "Step-by-step deployment with a smoke-test decision. Success path monitors; failure path triggers rollback.",
-    deployItems,
+  store.dispatch(
+    createTemplateAction(
+      "Deployment Runbook",
+      "Step-by-step deployment with a smoke-test decision. Success path monitors; failure path triggers rollback.",
+      deployItems,
+    ),
   );
 
   // ── 3. Troubleshooting Guide ─────────────────────────────────────────────
@@ -127,10 +132,11 @@ export function seedTemplates(state: AppState): void {
     },
   ];
 
-  createTemplate(
-    state,
-    "Troubleshooting Guide",
-    "Two-level nested decision tree for diagnosing service issues. Demonstrates how visible items expand progressively.",
-    troubleshootItems,
+  store.dispatch(
+    createTemplateAction(
+      "Troubleshooting Guide",
+      "Two-level nested decision tree for diagnosing service issues. Demonstrates how visible items expand progressively.",
+      troubleshootItems,
+    ),
   );
 }

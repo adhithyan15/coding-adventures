@@ -390,9 +390,481 @@ Three templates are pre-loaded on first visit to demonstrate V0 features:
 
 ---
 
+## V0.2 — Tree View
+
+### Problem
+
+V0.1 renders the Instance Runner as a flat list. The `flattenVisibleItems`
+algorithm produces a one-dimensional array and the Runner maps it into a
+vertical stack of cards with zero indentation. This works for shallow trees
+(1–2 levels of decisions), but breaks down as depth grows:
+
+- You lose spatial context: "am I in the yes-branch or the no-branch?"
+- You cannot see the unchosen branch at all — it vanishes entirely.
+- You cannot compare the two paths side by side.
+- There is no visual indication of nesting depth.
+
+### Solution
+
+Replace the flat list rendering in both the Runner and Editor with a
+**recursive tree view** that draws CSS connectors between parent and child
+nodes. Both branches of every decision are always visible: the active branch
+is fully interactive, the inactive branch is dimmed and collapsed to a
+one-line summary (expandable on click for review).
+
+The tree view components live in `@coding-adventures/ui-components` as
+shared, reusable components — not specific to the checklist app.
+
+---
+
+### Shared Component: `TreeView<T>`
+
+**Package:** `@coding-adventures/ui-components`
+
+A generic recursive tree renderer. Not checklist-specific — any app can use
+it to render hierarchical data with visual connectors.
+
+```typescript
+// The minimal shape every node must satisfy.
+interface TreeViewNode {
+  id: string;
+  children?: TreeViewNode[];
+}
+
+interface TreeViewProps<T extends TreeViewNode> {
+  /** The root-level nodes to render. */
+  nodes: T[];
+
+  /** Render function called for every node. Return the node's visual content.
+   *  The TreeView handles layout, indentation, and connectors around it. */
+  renderNode: (node: T, depth: number) => React.ReactNode;
+
+  /** Optional: render a label above a child group (e.g., "If yes:", "If no:"). */
+  renderBranchLabel?: (node: T, branchIndex: number) => React.ReactNode;
+
+  /** Return true if the node's children should be visible. Default: true. */
+  isExpanded?: (node: T) => boolean;
+
+  /** Called when the user toggles a node's expand/collapse state. */
+  onToggleExpand?: (node: T) => void;
+
+  /** CSS class on the outermost container. */
+  className?: string;
+
+  /** Accessible label for the tree. */
+  ariaLabel?: string;
+}
+```
+
+**Rendering algorithm:**
+
+For each node in `nodes`:
+1. Render the node via `renderNode(node, depth)`.
+2. If the node has `children` and `isExpanded(node)` returns true, recurse
+   into each child group with `depth + 1`.
+3. Draw CSS connectors: vertical trunk (border-left on the child list),
+   horizontal connector (::before pseudo-element), T-shape for middle items,
+   L-shape for the last item.
+
+**CSS connectors (border-based):**
+
+```
+├─ Step 1                    T-connector (middle item)
+├─ Did it work?              T-connector (middle item)
+│  ├─ ✅ YES branch          T-connector (branch start)
+│  │  ├─ Monitor 10 min      T-connector
+│  │  └─ Post in #deploys    L-connector (last item)
+│  └─ ❌ NO branch (dimmed)  L-connector (last branch)
+│     └─ 4 steps • expand    Collapsed summary
+└─ Step 3                    L-connector (last top-level item)
+```
+
+Technique:
+- `border-left: var(--tree-connector-width) solid var(--tree-connector-color)`
+  on each item creates the vertical trunk.
+- `::before` pseudo-element with `border-bottom` draws the horizontal
+  connector from the trunk to the node content.
+- `:last-child` switches from T-shape (trunk continues below) to L-shape
+  (trunk ends).
+
+**ARIA treeview pattern:**
+
+```
+role="tree"        → outermost container
+role="treeitem"    → each node
+  aria-expanded    → true/false for nodes with children
+  aria-level       → depth (1-indexed)
+  aria-selected    → true for checked items
+role="group"       → wrapper around child nodes, labelledby parent
+```
+
+Keyboard:
+- `↑` / `↓` — move focus between visible nodes
+- `←` — collapse current node (if expanded), or move to parent
+- `→` — expand current node (if collapsed), or move to first child
+- `Space` / `Enter` — activate (check item, answer decision, toggle expand)
+- `Home` / `End` — jump to first / last visible node
+
+---
+
+### Shared Component: `BranchGroup`
+
+**Package:** `@coding-adventures/ui-components`
+
+A wrapper for a group of child nodes under a parent decision. Handles the
+three visual states of a decision branch.
+
+```typescript
+interface BranchGroupProps {
+  /** Label rendered above the group (e.g., "If yes:", "If no:"). */
+  label: React.ReactNode;
+
+  /** When true, children are hidden and summary is shown. */
+  collapsed: boolean;
+
+  /** When true, the branch is dimmed (40% opacity, pointer-events: none). */
+  inactive: boolean;
+
+  /** Text shown when collapsed (e.g., "3 steps • click to expand"). */
+  summary?: string;
+
+  /** Called when the user clicks the summary to toggle collapse. */
+  onToggleCollapse?: () => void;
+
+  /** The child tree nodes to render inside this group. */
+  children: React.ReactNode;
+
+  /** CSS class on the outermost wrapper. */
+  className?: string;
+}
+```
+
+**Three branch states:**
+
+| State | Trigger | Opacity | Interaction | Height |
+|-------|---------|---------|-------------|--------|
+| **Pending** | Decision unanswered | 100% | Buttons visible | 0 (no branch items shown) |
+| **Active** | Chosen branch | 100% | Fully interactive | Auto |
+| **Inactive** | Unchosen branch | 40% | Collapsed to summary; click to expand read-only | Collapsed: 1 line; Expanded: auto |
+
+**Collapse/expand animation:**
+- `max-height` transition (0 → generous fallback) with `overflow: hidden`
+- `opacity` transition (0.4 ↔ 1.0) with 200ms ease
+- `pointer-events: none` on inactive collapsed branches
+
+**Inactive summary format:**
+- `"3 steps • click to expand"` — for branches with only check items
+- `"3 steps, 1 decision • click to expand"` — if it contains sub-decisions
+
+---
+
+### Shared CSS: `tree.css`
+
+**Package:** `@coding-adventures/ui-components/src/styles/tree.css`
+
+```css
+:root {
+  --tree-indent: 24px;
+  --tree-connector-color: var(--panel-border, #30363d);
+  --tree-connector-width: 1px;
+  --tree-branch-active-opacity: 1;
+  --tree-branch-inactive-opacity: 0.4;
+  --tree-transition-duration: 200ms;
+}
+```
+
+BEM classes:
+- `.tree` — outermost container
+- `.tree__node` — one tree node (content + connector)
+- `.tree__connector` — the vertical + horizontal line drawing
+- `.tree__children` — wrapper around child nodes
+- `.branch-group` — the BranchGroup wrapper
+- `.branch-group--active` / `.branch-group--inactive` / `.branch-group--collapsed`
+- `.branch-group__label` — the "If yes:" / "If no:" header
+- `.branch-group__summary` — the collapsed summary line
+
+---
+
+### Changes to Checklist App
+
+**InstanceRunner.tsx:**
+
+Replace the current flat rendering:
+```tsx
+// V0.1 (flat)
+flattenVisibleItems(instance.items).map(item => ...)
+
+// V0.2 (tree)
+<TreeView
+  nodes={instance.items}
+  renderNode={(item, depth) =>
+    item.type === "check"
+      ? <CheckItemRow item={item} ... />
+      : <DecisionItemRow item={item} ... />
+  }
+  isExpanded={(item) => item.type === "decision" && item.answer !== null}
+  ariaLabel="Checklist"
+/>
+```
+
+Decision nodes render two `<BranchGroup>` children inside their `renderNode`.
+Active/inactive state is driven by `decision.answer`. The `CheckItemRow`
+and `DecisionItemRow` sub-components remain largely unchanged — only their
+layout wrapper changes.
+
+**TemplateEditor.tsx:**
+
+Replace the current `ItemList` / `ItemEditor` recursion with `<TreeView>` +
+`<BranchGroup>`. The `renderNode` function returns the editing UI: label
+input, type toggle (check/decision), move up/down, remove. "Add step"
+buttons appear at the end of each branch group.
+
+**state.ts:**
+
+Add one new helper (the rest stays unchanged):
+```typescript
+function countBranchItems(items: InstanceItem[]): {
+  checks: number;
+  decisions: number;
+}
+```
+
+Recursively counts items in a branch for the collapsed summary text.
+`flattenVisibleItems` remains for stats computation.
+
+**en.json additions:**
+```json
+"branch.summary": "{checks} steps",
+"branch.summaryWithDecisions": "{checks} steps, {decisions} decisions",
+"branch.clickToExpand": "click to expand",
+"branch.yes": "If yes:",
+"branch.no": "If no:"
+```
+
+---
+
+### Test Strategy for V0.2
+
+**TreeView tests (ui-components):**
+- Renders flat list of nodes (no children) — no connectors
+- Renders nested nodes — correct indentation at each depth
+- `isExpanded` false → children hidden
+- `onToggleExpand` called on click
+- ARIA attributes: role=tree, role=treeitem, aria-expanded, aria-level
+- Keyboard: arrow up/down moves focus, left/right expand/collapse
+
+**BranchGroup tests (ui-components):**
+- Active state: children visible, full opacity
+- Inactive state: children hidden, summary shown
+- Collapsed + click summary → calls onToggleCollapse
+- Inactive has pointer-events: none (via class check)
+
+**InstanceRunner tests (checklist-app):**
+- Tree renders with connectors for nested decision template
+- Answering Yes → yes-branch active, no-branch dimmed with summary
+- Clicking inactive summary → expands to show items
+- All existing Runner tests still pass (check, uncheck, complete, abandon)
+
+**TemplateEditor tests (checklist-app):**
+- Editor renders tree structure for decision template
+- Add item inside a branch → appears under correct branch group
+- Move up/down within a branch works
+
+---
+
+## V0.3 — IndexedDB Persistence + Store Pattern
+
+### Problem
+
+V0.2 stores all state in memory. Page reload loses everything. React
+components mutate a global `appState` singleton directly, mixing state
+management with the UI layer.
+
+### Solution
+
+Three changes:
+
+1. **`@coding-adventures/indexeddb`** — a standalone Promise-based wrapper
+   around the raw browser IndexedDB API. Defines a `KVStorage` interface
+   with two implementations: `IndexedDBStorage` (browser) and
+   `MemoryStorage` (tests). No external dependencies.
+
+2. **`@coding-adventures/store`** — a standalone Flux-like event-driven
+   state store. Components dispatch actions; a reducer processes them; the
+   store emits change events; React components subscribe and re-render.
+
+3. **Checklist app refactor** — components dispatch actions instead of
+   calling mutation functions. A persistence middleware writes to IndexedDB
+   after each dispatch (fire-and-forget).
+
+---
+
+### Package: `@coding-adventures/indexeddb`
+
+```typescript
+interface KVStorage {
+  open(): Promise<void>;
+  get<T>(storeName: string, key: string): Promise<T | undefined>;
+  getAll<T>(storeName: string): Promise<T[]>;
+  put<T>(storeName: string, record: T): Promise<void>;
+  delete(storeName: string, key: string): Promise<void>;
+  close(): void;
+}
+```
+
+**IndexedDBStorage** wraps the raw browser API:
+- Constructor takes `dbName`, `version`, `stores: StoreSchema[]`
+- `open()` calls `indexedDB.open()`, handles `onupgradeneeded`
+- Each method opens a transaction, performs the operation, returns a Promise
+
+**MemoryStorage** is an in-memory Map-of-Maps for tests. Same interface,
+zero browser APIs.
+
+**IndexedDB schema for checklist-app:**
+- Database: `"checklist-app"`, version 1
+- Store `"templates"`: keyPath `"id"`
+- Store `"instances"`: keyPath `"id"`, index on `"templateId"`
+
+---
+
+### Package: `@coding-adventures/store`
+
+```typescript
+class Store<S> {
+  constructor(initialState: S, reducer: Reducer<S>);
+  getState(): S;
+  dispatch(action: Action): void;
+  subscribe(listener: () => void): () => void;
+  use(middleware: Middleware<S>): void;
+}
+
+function useStore<S>(store: Store<S>): S;
+// React hook: subscribes on mount, triggers re-render on store change.
+```
+
+**Middleware** intercepts every dispatch. The persistence layer is a
+middleware that writes to KVStorage after the reducer runs.
+
+**Data flow:**
+```
+User action → dispatch(Action) → middleware chain → reducer(state, action) → new state
+                                      ↓
+                              persistence middleware writes to IndexedDB (async)
+                                      ↓
+                              store emits "change" → useStore re-renders
+```
+
+---
+
+### Checklist App Changes
+
+**New files:**
+- `actions.ts` — action types + creators (TEMPLATE_CREATE, INSTANCE_CHECK, etc.)
+- `reducer.ts` — pure `(AppState, Action) → AppState` function
+- `persistence.ts` — middleware mapping action types to DB writes
+
+**Modified files:**
+- `state.ts` — simplified to just store creation
+- `main.tsx` — async init: open DB → load data → create store → seed if empty
+- All components — `useStore(store)` + `store.dispatch(action)` instead of
+  direct `appState` mutation
+
+---
+
+### Startup Flow
+
+```
+1. initI18n(en)
+2. storage = new IndexedDBStorage(schema)
+3. await storage.open()
+4. templates = await storage.getAll("templates")
+5. instances = await storage.getAll("instances")
+6. store = new Store({ templates, instances }, reducer)
+7. store.use(persistenceMiddleware(storage))
+8. if (templates.length === 0) {
+     dispatch seed actions → middleware persists them
+   }
+9. createRoot(root).render(<App />)
+```
+
+---
+
+## V0.5 — Due Dates
+
+### Problem
+
+Todo items have no timeline. You can't see what's due today, what's
+overdue, or plan ahead.
+
+### Solution
+
+Add an optional `dueDate` field to `TodoItem` and a shared `DatePicker`
+component in `@coding-adventures/ui-components`.
+
+### Data Model Change
+
+```typescript
+interface TodoItem {
+  // ... existing fields ...
+  dueDate: string | null;  // ISO 8601 date: "YYYY-MM-DD" or null
+}
+```
+
+`dueDate` is a **string, not a Date object or timestamp**, because:
+- JSON-serializable without conversion (IndexedDB, REST, SQL all handle it)
+- A due date is a calendar date, not a point in time — "2026-03-25" means
+  the same thing in every timezone
+- The HTML `<input type="date">` returns YYYY-MM-DD natively
+- String comparison works for sorting: `"2026-03-25" < "2026-04-01"`
+
+### Shared Component: `DatePicker`
+
+**Package:** `@coding-adventures/ui-components`
+
+A thin, accessible wrapper around `<input type="date">` that integrates
+with the shared dark theme and provides a consistent API.
+
+```typescript
+interface DatePickerProps {
+  /** Current value as YYYY-MM-DD string, or empty string for no date. */
+  value: string;
+  /** Called with the new YYYY-MM-DD string on change. */
+  onChange: (value: string) => void;
+  /** Accessible label text. */
+  label: string;
+  /** HTML id for the input (for htmlFor on external labels). */
+  id?: string;
+  /** Placeholder text when no date is selected. */
+  placeholder?: string;
+  /** Additional CSS class. */
+  className?: string;
+}
+```
+
+The component renders a `<div>` containing:
+- The `<input type="date">` styled to match the dark theme
+- A "clear" button (✕) that resets the value to empty string
+- Proper `aria-label` and focus styling
+
+### UI Changes
+
+**TodoEditor**: date picker field between description and status selector.
+**TodoList**: due date shown on each item card, with overdue highlighting
+(red text if `dueDate < today` and status is not "done").
+
+### i18n
+
+```json
+"todos.dueDate": "Due Date",
+"todos.dueDateNone": "No due date",
+"todos.overdue": "Overdue"
+```
+
+---
+
 ## Future Extensions
 
-- **V1**: localStorage persistence; JSON import/export; drag-and-drop reorder
+- **V1**: Web Crypto encryption layer on top of IndexedDB (PBKDF2 + AES-GCM)
 - **V2**: Electron packaging; native file open/save dialogs via IPC
 - **V3**: Aggregate stats view (compare multiple runs of the same template)
 - **V4**: Template sharing via URL (state serialized into hash fragment)

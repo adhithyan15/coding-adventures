@@ -329,6 +329,172 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
     end
   end
 
+  # ---------------------------------------------------------------------------
+  # Error Definitions Section
+  # ---------------------------------------------------------------------------
+  #
+  # The errors: section defines patterns for error recovery. When the lexer
+  # fails to match any normal token or skip pattern, it tries these patterns
+  # before raising a LexError. This allows graceful degradation for malformed
+  # inputs — e.g., CSS emits BAD_STRING for unclosed strings instead of
+  # crashing.
+
+  describe "parse/1 — errors section" do
+    test "parses error patterns into error_definitions" do
+      source = """
+      STRING = /"[^"]*"/
+
+      errors:
+        BAD_STRING = /"[^"\\n]*/
+        BAD_URI = /url\\([^)\\n]*/
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert length(grammar.error_definitions) == 2
+      [bad_str, bad_uri] = grammar.error_definitions
+      assert bad_str.name == "BAD_STRING"
+      assert bad_uri.name == "BAD_URI"
+    end
+
+    test "empty error_definitions when no errors: section" do
+      {:ok, grammar} = TokenGrammar.parse("NAME = /[a-z]+/")
+      assert grammar.error_definitions == []
+    end
+
+    test "error definitions support alias syntax" do
+      source = "NAME = /[a-z]+/\n\nerrors:\n  BAD_STR_DQ = /\"[^\"\\n]*/ -> BAD_STRING\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      [defn] = grammar.error_definitions
+      assert defn.alias == "BAD_STRING"
+    end
+
+    test "errors: section and skip: section coexist" do
+      source = """
+      STRING = /"[^"]*"/
+
+      skip:
+        WS = /[ \\t]+/
+
+      errors:
+        BAD_STRING = /"[^"\\n]*/
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert length(grammar.skip_definitions) == 1
+      assert length(grammar.error_definitions) == 1
+    end
+
+    test "errors: with a space before colon is recognized" do
+      source = "NAME = /[a-z]+/\n\nerrors :\n  BAD = /x/\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert length(grammar.error_definitions) == 1
+    end
+
+    test "non-indented line after errors: section exits back to definitions" do
+      source = "NAME = /[a-z]+/\n\nerrors:\n  BAD = /x/\n\nNUMBER = /[0-9]+/\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert length(grammar.definitions) == 2
+      assert length(grammar.error_definitions) == 1
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # validate_token_grammar/1
+  # ---------------------------------------------------------------------------
+  #
+  # The validator runs a lint pass over a parsed grammar, catching semantic
+  # issues that would cause problems downstream without failing the parser.
+
+  describe "validate_token_grammar/1 — valid grammar" do
+    test "returns empty list for a valid grammar" do
+      {:ok, grammar} = TokenGrammar.parse("NAME = /[a-zA-Z]+/\nNUMBER = /[0-9]+/")
+      assert TokenGrammar.validate_token_grammar(grammar) == []
+    end
+  end
+
+  describe "validate_token_grammar/1 — duplicate names" do
+    test "reports duplicate token name" do
+      # We have to manually construct a grammar with duplicate names since the
+      # parser would accept both (it doesn't validate semantic uniqueness).
+      defn1 = %{name: "NAME", pattern: "[a-z]+", is_regex: true, line_number: 1, alias: nil}
+      defn2 = %{name: "NAME", pattern: "[A-Z]+", is_regex: true, line_number: 3, alias: nil}
+      grammar = %TokenGrammar{definitions: [defn1, defn2]}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Duplicate token name 'NAME'"))
+      assert Enum.any?(issues, &(&1 =~ "first defined on line 1"))
+    end
+  end
+
+  describe "validate_token_grammar/1 — invalid regex" do
+    test "reports invalid regex pattern" do
+      defn = %{name: "BAD", pattern: "[unclosed", is_regex: true, line_number: 1, alias: nil}
+      grammar = %TokenGrammar{definitions: [defn]}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Invalid regex for token 'BAD'"))
+    end
+  end
+
+  describe "validate_token_grammar/1 — naming conventions" do
+    test "reports non-UPPER_CASE token name" do
+      defn = %{name: "lowercase_name", pattern: "x", is_regex: false, line_number: 1, alias: nil}
+      grammar = %TokenGrammar{definitions: [defn]}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "should be UPPER_CASE"))
+    end
+
+    test "reports non-UPPER_CASE alias" do
+      defn = %{name: "FOO", pattern: "x", is_regex: false, line_number: 1, alias: "lowercase_alias"}
+      grammar = %TokenGrammar{definitions: [defn]}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Alias 'lowercase_alias'"))
+      assert Enum.any?(issues, &(&1 =~ "should be UPPER_CASE"))
+    end
+  end
+
+  describe "validate_token_grammar/1 — mode checks" do
+    test "reports unknown mode" do
+      grammar = %TokenGrammar{mode: "unknown_mode"}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Unknown lexer mode 'unknown_mode'"))
+    end
+
+    test "accepts 'indentation' mode" do
+      grammar = %TokenGrammar{mode: "indentation"}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      refute Enum.any?(issues, &(&1 =~ "Unknown lexer mode"))
+    end
+  end
+
+  describe "validate_token_grammar/1 — escape_mode checks" do
+    test "reports unknown escape_mode" do
+      grammar = %TokenGrammar{escape_mode: "strict"}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "Unknown escape mode 'strict'"))
+    end
+
+    test "accepts 'none' escape_mode" do
+      grammar = %TokenGrammar{escape_mode: "none"}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      refute Enum.any?(issues, &(&1 =~ "Unknown escape mode"))
+    end
+  end
+
+  describe "validate_token_grammar/1 — skip and error definitions" do
+    test "validates skip_definitions with same checks" do
+      skip_defn = %{name: "ws", pattern: "[ ]+", is_regex: true, line_number: 5, alias: nil}
+      grammar = %TokenGrammar{skip_definitions: [skip_defn]}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "should be UPPER_CASE"))
+    end
+
+    test "validates error_definitions with same checks" do
+      err_defn = %{name: "bad", pattern: "x", is_regex: false, line_number: 7, alias: nil}
+      grammar = %TokenGrammar{error_definitions: [err_defn]}
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &(&1 =~ "should be UPPER_CASE"))
+    end
+  end
+
   describe "effective_token_names/1 — with groups" do
     test "includes aliased names from groups" do
       source =

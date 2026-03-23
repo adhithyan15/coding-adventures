@@ -78,6 +78,119 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
     |> MapSet.new()
   end
 
+  @doc """
+  Validate a parsed `ParserGrammar` for common problems.
+
+  Validation checks:
+
+  - **Duplicate rule names** — two rules with the same name.
+  - **Non-lowercase rule names** — by convention, rule names are lowercase.
+  - **Undefined rule references** — a lowercase name used in a body but never
+    defined as a rule.
+  - **Undefined token references** — an UPPERCASE name used but not in the
+    provided `token_names` set (only checked when `token_names` is given).
+  - **Unreachable rules** — a rule that is defined but never referenced by
+    any other rule. The first rule (start symbol) is exempt.
+
+  Synthetic tokens (`NEWLINE`, `INDENT`, `DEDENT`, `EOF`) are always
+  considered valid token references regardless of the token grammar.
+
+  Returns a list of issue strings. An empty list means no problems found.
+  """
+  @spec validate_parser_grammar(t(), MapSet.t(String.t()) | nil) :: [String.t()]
+  def validate_parser_grammar(%__MODULE__{} = grammar, token_names \\ nil) do
+    issues = []
+    defined = rule_names(grammar)
+    referenced_rules = rule_references(grammar)
+    referenced_tokens = token_references(grammar)
+
+    # --- Duplicate rule names ---
+    {issues, _seen} =
+      Enum.reduce(grammar.rules, {issues, %{}}, fn rule, {acc_issues, seen} ->
+        if Map.has_key?(seen, rule.name) do
+          first_line = seen[rule.name]
+
+          {acc_issues ++
+             [
+               "Line #{rule.line_number}: Duplicate rule name '#{rule.name}' " <>
+                 "(first defined on line #{first_line})"
+             ], seen}
+        else
+          {acc_issues, Map.put(seen, rule.name, rule.line_number)}
+        end
+      end)
+
+    # --- Non-lowercase rule names ---
+    issues =
+      Enum.reduce(grammar.rules, issues, fn rule, acc ->
+        if rule.name != String.downcase(rule.name) do
+          acc ++
+            ["Line #{rule.line_number}: Rule name '#{rule.name}' should be lowercase"]
+        else
+          acc
+        end
+      end)
+
+    # --- Undefined rule references ---
+    issues =
+      referenced_rules
+      |> MapSet.to_list()
+      |> Enum.sort()
+      |> Enum.reduce(issues, fn ref, acc ->
+        if not MapSet.member?(defined, ref) do
+          acc ++ ["Undefined rule reference: '#{ref}'"]
+        else
+          acc
+        end
+      end)
+
+    # --- Undefined token references ---
+    # Synthetic tokens produced by the lexer without explicit .tokens
+    # definitions: NEWLINE (bare newlines), INDENT/DEDENT (indentation mode),
+    # EOF (always emitted at end of input).
+    synthetic_tokens = MapSet.new(["NEWLINE", "INDENT", "DEDENT", "EOF"])
+
+    issues =
+      if token_names != nil do
+        referenced_tokens
+        |> MapSet.to_list()
+        |> Enum.sort()
+        |> Enum.reduce(issues, fn ref, acc ->
+          if not MapSet.member?(token_names, ref) and not MapSet.member?(synthetic_tokens, ref) do
+            acc ++ ["Undefined token reference: '#{ref}'"]
+          else
+            acc
+          end
+        end)
+      else
+        issues
+      end
+
+    # --- Unreachable rules ---
+    # The first rule is the start symbol; all other rules that are never
+    # referenced by any other rule are unreachable dead code.
+    issues =
+      if grammar.rules != [] do
+        start_rule = hd(grammar.rules).name
+
+        Enum.reduce(grammar.rules, issues, fn rule, acc ->
+          if rule.name != start_rule and not MapSet.member?(referenced_rules, rule.name) do
+            acc ++
+              [
+                "Line #{rule.line_number}: Rule '#{rule.name}' is defined but " <>
+                  "never referenced (unreachable)"
+              ]
+          else
+            acc
+          end
+        end)
+      else
+        issues
+      end
+
+    issues
+  end
+
   # -- Collect references from grammar elements -----------------------------
 
   defp collect_refs({:rule_reference, name, true}, :token), do: [name]

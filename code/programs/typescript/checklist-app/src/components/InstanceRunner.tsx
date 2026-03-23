@@ -1,40 +1,40 @@
 /**
- * InstanceRunner — Screen 3: execute a checklist instance.
+ * InstanceRunner — Screen 3: execute a checklist instance with tree view.
  *
- * This is the core interaction screen. It renders the flattened visible item
- * list and lets the user check items and answer decisions.
+ * V0.2 replaces the flat list with a recursive tree view via the shared
+ * TreeView and BranchGroup components from @coding-adventures/ui-components.
  *
- * Key design decisions:
+ * V0.3 replaces the mutable appState singleton with the immutable store.
+ * State is read via useStore(store) and mutations go through dispatch.
+ * The setTick() hack for forcing re-renders is no longer needed because
+ * useStore automatically re-renders when the store state changes.
  *
- *   - flattenVisibleItems is called on every render. It is a pure tree walk
- *     with no memoization needed for V0 (lists are short).
- *
- *   - Checking an item or answering a decision calls the state mutation, then
- *     calls forceUpdate to re-render. React re-runs flattenVisibleItems and
- *     the new visible list reflects the answered decision.
- *
- *   - "Complete" is enabled only when all visible check items are checked AND
- *     all visible decision items are answered. This mirrors the aviation rule:
- *     you cannot complete the checklist until every item is addressed.
- *
- *   - Decision items can be re-answered. Clicking the answer badge opens the
- *     Yes / No buttons again. This is intentional: pilots can correct a
- *     premature answer.
+ * The tree renders the full item structure with CSS connectors. Decision
+ * nodes show two BranchGroups (yes/no). The active branch is fully
+ * interactive; the inactive branch is dimmed and collapsed to a summary
+ * line (expandable on click for review).
  */
 
-import { useState } from "react";
-import { useTranslation } from "@coding-adventures/ui-components";
+import { useState, useCallback } from "react";
 import {
-  appState,
-  checkItem,
-  uncheckItem,
-  answerDecision,
-  completeInstance,
-  abandonInstance,
-  flattenVisibleItems,
-  getInstance,
-} from "../state.js";
-import type { CheckInstanceItem, DecisionInstanceItem } from "../state.js";
+  TreeView,
+  BranchGroup,
+  useTranslation,
+} from "@coding-adventures/ui-components";
+import { useStore } from "@coding-adventures/store";
+import { store, flattenVisibleItems, countBranchItems } from "../state.js";
+import {
+  checkItemAction,
+  uncheckItemAction,
+  answerDecisionAction,
+  completeInstanceAction,
+  abandonInstanceAction,
+} from "../actions.js";
+import type {
+  InstanceItem,
+  CheckInstanceItem,
+  DecisionInstanceItem,
+} from "../types.js";
 import { ProgressBar } from "./shared/ProgressBar.js";
 
 interface InstanceRunnerProps {
@@ -42,23 +42,46 @@ interface InstanceRunnerProps {
   onNavigate: (path: string) => void;
 }
 
+// ── Adapter: InstanceItem -> TreeViewNode ───────────────────────────────────
+
+interface InstanceTreeNode {
+  id: string;
+  item: InstanceItem;
+  children?: InstanceTreeNode[];
+}
+
+function toTreeNodes(items: InstanceItem[]): InstanceTreeNode[] {
+  return items.map((item) => ({
+    id: item.templateItemId,
+    item,
+  }));
+}
+
+// ── InstanceRunner ─────────────────────────────────────────────────────────
+
 export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) {
   const { t } = useTranslation();
-  // forceUpdate trick: toggling a boolean causes React to re-render, which
-  // re-calls flattenVisibleItems with the latest state.
-  const [, setTick] = useState(0);
-  // Track which decision items are in "re-answer mode" (showing yes/no buttons again).
+  const state = useStore(store);
+  // Track which inactive branches the user has manually expanded for review
+  const [expandedInactive, setExpandedInactive] = useState<Set<string>>(
+    new Set(),
+  );
+  // Track which decisions are in re-answer mode
   const [reanswering, setReanswering] = useState<Set<string>>(new Set());
 
-  const instance = getInstance(appState, instanceId);
+  const instance = state.instances.find((i) => i.id === instanceId);
   if (!instance) {
     return <p>Instance not found.</p>;
   }
 
+  // Stats for progress bar (still uses flattenVisibleItems)
   const visible = flattenVisibleItems(instance.items);
-  const checkItems = visible.filter((i) => i.type === "check") as CheckInstanceItem[];
-  const decisionItems = visible.filter((i) => i.type === "decision") as DecisionInstanceItem[];
-
+  const checkItems = visible.filter(
+    (i) => i.type === "check",
+  ) as CheckInstanceItem[];
+  const decisionItems = visible.filter(
+    (i) => i.type === "decision",
+  ) as DecisionInstanceItem[];
   const totalCheckItems = checkItems.length;
   const checkedCount = checkItems.filter((i) => i.checked).length;
   const allDecisionsAnswered = decisionItems.every((i) => i.answer !== null);
@@ -66,42 +89,134 @@ export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) 
   const canComplete =
     (totalCheckItems === 0 || allChecked) && allDecisionsAnswered;
 
-  function refresh() {
-    setTick((n) => n + 1);
-  }
-
   function handleCheck(templateItemId: string, currentlyChecked: boolean) {
     if (currentlyChecked) {
-      uncheckItem(appState, instanceId, templateItemId);
+      store.dispatch(uncheckItemAction(instanceId, templateItemId));
     } else {
-      checkItem(appState, instanceId, templateItemId);
+      store.dispatch(checkItemAction(instanceId, templateItemId));
     }
-    refresh();
   }
 
   function handleAnswer(templateItemId: string, answer: "yes" | "no") {
-    answerDecision(appState, instanceId, templateItemId, answer);
+    store.dispatch(answerDecisionAction(instanceId, templateItemId, answer));
     setReanswering((prev) => {
       const next = new Set(prev);
       next.delete(templateItemId);
       return next;
     });
-    refresh();
   }
 
   function handleReanswer(templateItemId: string) {
     setReanswering((prev) => new Set(prev).add(templateItemId));
   }
 
+  function toggleInactiveBranch(key: string) {
+    setExpandedInactive((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
   function handleComplete() {
-    completeInstance(appState, instanceId);
+    store.dispatch(completeInstanceAction(instanceId));
     onNavigate(`/instance/${instanceId}/stats`);
   }
 
   function handleAbandon() {
-    abandonInstance(appState, instanceId);
+    store.dispatch(abandonInstanceAction(instanceId));
     onNavigate(`/instance/${instanceId}/stats`);
   }
+
+  function branchSummary(items: InstanceItem[]): string {
+    const { checks, decisions } = countBranchItems(items);
+    const summary =
+      decisions > 0
+        ? t("branch.summaryWithDecisions")
+            .replace("{checks}", String(checks))
+            .replace("{decisions}", String(decisions))
+        : t("branch.summary").replace("{checks}", String(checks));
+    return `${summary} • ${t("branch.clickToExpand")}`;
+  }
+
+  // ── Recursive item renderer ──────────────────────────────────────────────
+
+  const renderItems = useCallback(
+    (items: InstanceItem[]): React.ReactNode => {
+      const nodes = toTreeNodes(items);
+      return (
+        <TreeView
+          nodes={nodes}
+          renderNode={(treeNode) => {
+            const item = treeNode.item;
+            if (item.type === "check") {
+              return (
+                <CheckItemRow
+                  item={item}
+                  onToggle={() =>
+                    handleCheck(item.templateItemId, item.checked)
+                  }
+                />
+              );
+            }
+
+            // Decision item: render question + two branch groups
+            const isReanswering = reanswering.has(item.templateItemId);
+            const yesActive = item.answer === "yes";
+            const noActive = item.answer === "no";
+            const unanswered = item.answer === null;
+            const yesInactiveKey = `${item.templateItemId}-yes`;
+            const noInactiveKey = `${item.templateItemId}-no`;
+
+            return (
+              <div>
+                <DecisionItemRow
+                  item={item}
+                  isReanswering={isReanswering}
+                  onAnswer={(a) => handleAnswer(item.templateItemId, a)}
+                  onReanswer={() => handleReanswer(item.templateItemId)}
+                />
+                {!unanswered && (
+                  <div style={{ marginTop: "8px" }}>
+                    <BranchGroup
+                      label={
+                        <span className="item-editor__branch-label--yes">
+                          {t("branch.yes")}
+                        </span>
+                      }
+                      collapsed={!yesActive && !expandedInactive.has(yesInactiveKey)}
+                      inactive={!yesActive}
+                      summary={branchSummary(item.yesBranch)}
+                      onToggleCollapse={() => toggleInactiveBranch(yesInactiveKey)}
+                    >
+                      {renderItems(item.yesBranch)}
+                    </BranchGroup>
+                    <BranchGroup
+                      label={
+                        <span className="item-editor__branch-label--no">
+                          {t("branch.no")}
+                        </span>
+                      }
+                      collapsed={!noActive && !expandedInactive.has(noInactiveKey)}
+                      inactive={!noActive}
+                      summary={branchSummary(item.noBranch)}
+                      onToggleCollapse={() => toggleInactiveBranch(noInactiveKey)}
+                    >
+                      {renderItems(item.noBranch)}
+                    </BranchGroup>
+                  </div>
+                )}
+              </div>
+            );
+          }}
+          ariaLabel="Checklist"
+        />
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [instanceId, reanswering, expandedInactive, state],
+  );
 
   return (
     <div>
@@ -112,34 +227,11 @@ export function InstanceRunner({ instanceId, onNavigate }: InstanceRunnerProps) 
         </div>
       </div>
 
-      {visible.length === 0 ? (
+      {instance.items.length === 0 ? (
         <p>{t("runner.empty")}</p>
       ) : (
         <div className="instance-runner__items">
-          {visible.map((item) => {
-            if (item.type === "check") {
-              return (
-                <CheckItemRow
-                  key={item.templateItemId}
-                  item={item}
-                  onToggle={() =>
-                    handleCheck(item.templateItemId, item.checked)
-                  }
-                />
-              );
-            } else {
-              const isReanswering = reanswering.has(item.templateItemId);
-              return (
-                <DecisionItemRow
-                  key={item.templateItemId}
-                  item={item}
-                  isReanswering={isReanswering}
-                  onAnswer={(a) => handleAnswer(item.templateItemId, a)}
-                  onReanswer={() => handleReanswer(item.templateItemId)}
-                />
-              );
-            }
-          })}
+          {renderItems(instance.items)}
         </div>
       )}
 

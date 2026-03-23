@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-lattice-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser producing an AST for Lattice source"
+
+[dependencies]
+coding-adventures-lattice-lexer = { path = "../lattice-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }

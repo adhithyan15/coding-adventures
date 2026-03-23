@@ -56,5 +56,30 @@
 
   "status.inProgress": "In Progress",
   "status.completed": "Completed",
-  "status.abandoned": "Abandoned"
+  "status.abandoned": "Abandoned",
+
+  "branch.yes": "If yes:",
+  "branch.no": "If no:",
+  "branch.summary": "{checks} steps",
+  "branch.summaryWithDecisions": "{checks} steps, {decisions} decisions",
+  "branch.clickToExpand": "click to expand",
+
+  "todos.title": "Todos",
+  "todos.empty": "No todos yet. Create your first one.",
+  "todos.newTodo": "New Todo",
+  "todos.delete": "Delete",
+  "todos.deleteConfirm": "Delete \"{title}\"?",
+  "todos.titlePlaceholder": "What needs to be done?",
+  "todos.descriptionPlaceholder": "Details (optional)",
+  "todos.status.todo": "To Do",
+  "todos.status.inProgress": "In Progress",
+  "todos.status.done": "Done",
+  "todos.editorTitleNew": "New Todo",
+  "todos.editorTitleEdit": "Edit Todo",
+  "nav.checklists": "Checklists",
+  "nav.todos": "Todos",
+
+  "todos.dueDate": "Due Date",
+  "todos.dueDateNone": "No due date",
+  "todos.overdue": "Overdue"
 }

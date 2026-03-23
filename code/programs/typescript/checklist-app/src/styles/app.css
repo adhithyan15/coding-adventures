@@ -13,6 +13,8 @@
 
 @import "@coding-adventures/ui-components/src/styles/theme.css";
 @import "@coding-adventures/ui-components/src/styles/accessibility.css";
+@import "@coding-adventures/ui-components/src/styles/tree.css";
+@import "@coding-adventures/ui-components/src/styles/date-picker.css";
 
 /* ── Reset ──────────────────────────────────────────────────────────────── */
 
@@ -604,4 +606,174 @@ textarea:focus {
   background: color-mix(in srgb, var(--danger-color) 20%, transparent);
   color: var(--danger-color);
   border: 1px solid var(--danger-color);
+}
+
+.status-badge--todo {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent, #58a6ff);
+  border: 1px solid var(--accent);
+}
+
+.status-badge--done {
+  background: color-mix(in srgb, var(--check-color) 20%, transparent);
+  color: var(--check-color);
+  border: 1px solid var(--check-color);
+}
+
+/* ── App navigation ─────────────────────────────────────────────────────── */
+
+.app-nav {
+  display: flex;
+  gap: 2px;
+}
+
+.app-nav__tab {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--tab-text, #8b949e);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.app-nav__tab:hover {
+  color: var(--tab-active-text, #ffffff);
+}
+
+.app-nav__tab--active {
+  color: var(--tab-active-text, #ffffff);
+  border-bottom-color: var(--accent, #58a6ff);
+}
+
+/* ── Todo list ──────────────────────────────────────────────────────────── */
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.todo-status-group__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.todo-status-group__count {
+  font-size: 0.8rem;
+  color: var(--tab-text, #8b949e);
+}
+
+.todo-status-group__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* ── Todo item ──────────────────────────────────────────────────────────── */
+
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--panel-bg, #161b22);
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: var(--card-radius);
+  transition: border-color 0.15s;
+}
+
+.todo-item:hover {
+  border-color: var(--accent, #58a6ff);
+}
+
+.todo-item--done {
+  opacity: 0.6;
+}
+
+.todo-item__toggle {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 2px solid var(--panel-border, #30363d);
+  border-radius: 50%;
+  color: var(--tab-text, #8b949e);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  padding: 0;
+}
+
+.todo-item--done .todo-item__toggle {
+  border-color: var(--check-color);
+  color: var(--check-color);
+  background: color-mix(in srgb, var(--check-color) 15%, transparent);
+}
+
+.todo-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-item__title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--tab-active-text, #ffffff);
+}
+
+.todo-item--done .todo-item__title {
+  text-decoration: line-through;
+  color: var(--tab-text, #8b949e);
+}
+
+.todo-item__description {
+  font-size: 0.85rem;
+  color: var(--tab-text, #8b949e);
+  margin-top: 2px;
+}
+
+.todo-item__actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+/* ── Todo status select ─────────────────────────────────────────────────── */
+
+.todo-status-select {
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: var(--panel-bg, #161b22);
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: var(--input-radius);
+  color: inherit;
+  padding: var(--spacing-sm) var(--spacing-md);
+  width: 100%;
+}
+
+.todo-status-select:focus {
+  outline: 2px solid var(--accent, #58a6ff);
+  outline-offset: 2px;
+}
+
+/* ── Todo due date badge ────────────────────────────────────────────────── */
+
+.todo-item__due {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--tab-text, #8b949e);
+  margin-top: 4px;
+}
+
+.todo-item__due--overdue {
+  color: var(--danger-color, #f87171);
+  font-weight: 600;
 }

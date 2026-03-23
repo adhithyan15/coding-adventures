@@ -108,6 +108,38 @@ export interface InstanceStats {
   durationMs: number | null;
 }
 
+// ── Todo types ─────────────────────────────────────────────────────────────
+//
+// A TodoItem is a simple task with a status lifecycle: todo → in-progress → done.
+// All fields use JSON-serializable primitives (string, number) so the data
+// works with IndexedDB, JSON export, REST APIs, and SQL databases.
+
+export type TodoStatus = "todo" | "in-progress" | "done";
+
+export interface TodoItem {
+  id: string;
+  title: string;
+  description: string;
+  status: TodoStatus;
+  /**
+   * Optional due date as an ISO 8601 date string (YYYY-MM-DD).
+   *
+   * Stored as a string (not a Date object or timestamp) because:
+   *   - JSON-serializable without conversion (IndexedDB, REST APIs, SQL)
+   *   - A due date is a calendar date, not a point in time — "2026-03-25"
+   *     means the same thing regardless of timezone
+   *   - The HTML <input type="date"> returns YYYY-MM-DD natively
+   *   - String comparison works for sorting: "2026-03-25" < "2026-04-01"
+   *
+   * null means no due date set.
+   */
+  dueDate: string | null;
+  /** Unix timestamp from Date.now() */
+  createdAt: number;
+  /** Unix timestamp, updated on every mutation */
+  updatedAt: number;
+}
+
 // ── Type guards ────────────────────────────────────────────────────────────
 //
 // These narrow the union types without relying on `as` casts. They are the
