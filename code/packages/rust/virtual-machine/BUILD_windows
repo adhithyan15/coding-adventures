@@ -1,1 +1,2 @@
-cargo test -p virtual-machine
+cargo test --target-dir target_isolated -p virtual-machine
+if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p virtual-machine --out Stdout --skip-clean; fi
