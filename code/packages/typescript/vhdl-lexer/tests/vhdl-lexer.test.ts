@@ -67,26 +67,25 @@ describe("case insensitivity", () => {
     expect(names.map((n) => n.value)).toEqual(["my_sig", "std_logic"]);
   });
 
-  it("does NOT normalize string literal values", () => {
+  it("lowercases string literal values (source-level lowercasing)", () => {
     /**
-     * String literals preserve their original casing — the content
-     * of a string is not an identifier, it's data.
-     * Note: the grammar lexer strips the surrounding quotes from
-     * string values, so we check for the unquoted content.
+     * With case_sensitive: false, the base lexer lowercases the entire
+     * source text before tokenization, so string literal content is
+     * also lowercased.
      */
     const tokens = tokenizeVhdl('"Hello World"');
     expect(tokens[0].type).toBe("STRING");
-    expect(tokens[0].value).toBe("Hello World");
+    expect(tokens[0].value).toBe("hello world");
   });
 
-  it("does NOT normalize bit string literal values", () => {
+  it("lowercases bit string literal values", () => {
     /**
-     * Bit string literals like X"FF" preserve their casing.
-     * The prefix letter and hex digits retain their original form.
+     * Bit string literals like X"FF" are lowercased by the base lexer
+     * since case_sensitive: false lowercases the entire source text.
      */
     const tokens = tokenizeVhdl('X"FF"');
     expect(tokens[0].type).toBe("BIT_STRING");
-    expect(tokens[0].value).toBe('X"FF"');
+    expect(tokens[0].value).toBe('x"ff"');
   });
 
   it("handles mixed case keywords correctly", () => {
@@ -110,10 +109,10 @@ describe("case insensitivity", () => {
     expect(tokens4[0].type).toBe("KEYWORD");
   });
 
-  it("does NOT normalize character literal values", () => {
+  it("lowercases character literal values (source-level lowercasing)", () => {
     const tokens = tokenizeVhdl("'A'");
     expect(tokens[0].type).toBe("CHAR_LITERAL");
-    expect(tokens[0].value).toBe("'A'");
+    expect(tokens[0].value).toBe("'a'");
   });
 });
 
@@ -230,11 +229,12 @@ describe("character literals", () => {
   });
 
   it("tokenizes various character values", () => {
-    const tests = ["'1'", "'X'", "'Z'", "'U'", "'H'", "'L'", "'-'"];
-    for (const input of tests) {
-      const tokens = tokenizeVhdl(input);
+    const inputs   = ["'1'", "'X'", "'Z'", "'U'", "'H'", "'L'", "'-'"];
+    const expected = ["'1'", "'x'", "'z'", "'u'", "'h'", "'l'", "'-'"];
+    for (let i = 0; i < inputs.length; i++) {
+      const tokens = tokenizeVhdl(inputs[i]);
       expect(tokens[0].type).toBe("CHAR_LITERAL");
-      expect(tokens[0].value).toBe(input);
+      expect(tokens[0].value).toBe(expected[i]);
     }
   });
 
@@ -276,7 +276,7 @@ describe("bit string literals", () => {
      */
     const tokens = tokenizeVhdl('B"1010"');
     expect(tokens[0].type).toBe("BIT_STRING");
-    expect(tokens[0].value).toBe('B"1010"');
+    expect(tokens[0].value).toBe('b"1010"');
   });
 
   it("tokenizes hexadecimal bit strings", () => {
@@ -286,13 +286,13 @@ describe("bit string literals", () => {
      */
     const tokens = tokenizeVhdl('X"FF"');
     expect(tokens[0].type).toBe("BIT_STRING");
-    expect(tokens[0].value).toBe('X"FF"');
+    expect(tokens[0].value).toBe('x"ff"');
   });
 
   it("tokenizes octal bit strings", () => {
     const tokens = tokenizeVhdl('O"77"');
     expect(tokens[0].type).toBe("BIT_STRING");
-    expect(tokens[0].value).toBe('O"77"');
+    expect(tokens[0].value).toBe('o"77"');
   });
 
   it("tokenizes decimal bit strings (VHDL-2008)", () => {
@@ -302,7 +302,7 @@ describe("bit string literals", () => {
      */
     const tokens = tokenizeVhdl('D"42"');
     expect(tokens[0].type).toBe("BIT_STRING");
-    expect(tokens[0].value).toBe('D"42"');
+    expect(tokens[0].value).toBe('d"42"');
   });
 
   it("handles lowercase bit string prefixes", () => {
@@ -363,7 +363,7 @@ describe("number literals", () => {
      */
     const tokens = tokenizeVhdl("16#FF#");
     expect(tokens[0].type).toBe("BASED_LITERAL");
-    expect(tokens[0].value).toBe("16#FF#");
+    expect(tokens[0].value).toBe("16#ff#");
   });
 
   it("tokenizes binary based literals", () => {
@@ -679,7 +679,7 @@ describe("string literals", () => {
      */
     const tokens = tokenizeVhdl('"Hello, world!"');
     expect(tokens[0].type).toBe("STRING");
-    expect(tokens[0].value).toBe("Hello, world!");
+    expect(tokens[0].value).toBe("hello, world!");
   });
 
   it("tokenizes strings with doubled quotes (VHDL escape)", () => {

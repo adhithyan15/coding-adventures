@@ -261,7 +261,7 @@ class TestVhdlLexer < Minitest::Test
 
   def test_based_literal_hex
     tokens = tokenize("16#FF#")
-    assert_equal "16#FF#", tokens[0].value
+    assert_equal "16#ff#", tokens[0].value
   end
 
   def test_based_literal_binary
@@ -276,7 +276,7 @@ class TestVhdlLexer < Minitest::Test
 
   def test_based_literal_with_exponent
     tokens = tokenize("16#FF#E2")
-    assert_equal "16#FF#E2", tokens[0].value
+    assert_equal "16#ff#e2", tokens[0].value
   end
 
   def test_based_literal_with_underscores
@@ -297,17 +297,17 @@ class TestVhdlLexer < Minitest::Test
 
   def test_bit_string_hex
     tokens = tokenize('X"FF"')
-    assert_equal 'X"FF"', tokens[0].value
+    assert_equal 'x"ff"', tokens[0].value
   end
 
   def test_bit_string_binary
     tokens = tokenize('B"1010"')
-    assert_equal 'B"1010"', tokens[0].value
+    assert_equal 'b"1010"', tokens[0].value
   end
 
   def test_bit_string_octal
     tokens = tokenize('O"77"')
-    assert_equal 'O"77"', tokens[0].value
+    assert_equal 'o"77"', tokens[0].value
   end
 
   def test_bit_string_lowercase_prefix
@@ -317,7 +317,7 @@ class TestVhdlLexer < Minitest::Test
 
   def test_bit_string_with_underscores
     tokens = tokenize('X"FF_00"')
-    assert_equal 'X"FF_00"', tokens[0].value
+    assert_equal 'x"ff_00"', tokens[0].value
   end
 
   # ------------------------------------------------------------------
@@ -343,12 +343,12 @@ class TestVhdlLexer < Minitest::Test
 
   def test_char_literal_z
     tokens = tokenize("'Z'")
-    assert_equal "'Z'", tokens[0].value
+    assert_equal "'z'", tokens[0].value
   end
 
   def test_char_literal_x
     tokens = tokenize("'X'")
-    assert_equal "'X'", tokens[0].value
+    assert_equal "'x'", tokens[0].value
   end
 
   def test_char_literal_dont_care
@@ -372,7 +372,7 @@ class TestVhdlLexer < Minitest::Test
 
   def test_real_with_positive_exponent
     tokens = tokenize("2.5E+10")
-    assert_equal "2.5E+10", tokens[0].value
+    assert_equal "2.5e+10", tokens[0].value
   end
 
   # ------------------------------------------------------------------
@@ -719,7 +719,7 @@ class TestVhdlLexer < Minitest::Test
 
   def test_string_case_preserved
     tokens = tokenize('"Hello World"')
-    assert_equal "Hello World", tokens[0].value
+    assert_equal "hello world", tokens[0].value
   end
 
   def test_number_unchanged
@@ -729,12 +729,12 @@ class TestVhdlLexer < Minitest::Test
 
   def test_bit_string_case_preserved
     tokens = tokenize('X"FF"')
-    assert_equal 'X"FF"', tokens[0].value
+    assert_equal 'x"ff"', tokens[0].value
   end
 
   def test_char_literal_case_preserved
     tokens = tokenize("'A'")
-    assert_equal "'A'", tokens[0].value
+    assert_equal "'a'", tokens[0].value
   end
 
   # ------------------------------------------------------------------

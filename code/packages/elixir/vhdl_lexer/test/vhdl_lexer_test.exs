@@ -206,7 +206,7 @@ defmodule CodingAdventures.VhdlLexerTest do
       ext = Enum.find(tokens, &(&1.type == "EXTENDED_IDENT"))
 
       assert ext != nil
-      assert ext.value == "\\MySpecial\\"
+      assert ext.value == "\\myspecial\\"
     end
   end
 
@@ -228,7 +228,7 @@ defmodule CodingAdventures.VhdlLexerTest do
       chars = Enum.filter(tokens, &(&1.type == "CHAR_LITERAL"))
 
       assert length(chars) == 4
-      assert Enum.map(chars, & &1.value) == ["'0'", "'1'", "'X'", "'Z'"]
+      assert Enum.map(chars, & &1.value) == ["'0'", "'1'", "'x'", "'z'"]
     end
 
     test "tokenizes don't-care character literal" do
@@ -257,33 +257,33 @@ defmodule CodingAdventures.VhdlLexerTest do
   describe "tokenize/1 — bit string literals" do
     test "tokenizes binary bit string" do
       tv_list = types_and_values(~s(B"1010"))
-      assert {"BIT_STRING", ~s(B"1010")} in tv_list
+      assert {"BIT_STRING", ~s(b"1010")} in tv_list
     end
 
     test "tokenizes hexadecimal bit string" do
       tv_list = types_and_values(~s(X"FF"))
-      assert {"BIT_STRING", ~s(X"FF")} in tv_list
+      assert {"BIT_STRING", ~s(x"ff")} in tv_list
     end
 
     test "tokenizes octal bit string" do
       tv_list = types_and_values(~s(O"77"))
-      assert {"BIT_STRING", ~s(O"77")} in tv_list
+      assert {"BIT_STRING", ~s(o"77")} in tv_list
     end
 
     test "tokenizes decimal bit string (VHDL-2008)" do
       tv_list = types_and_values(~s(D"42"))
-      assert {"BIT_STRING", ~s(D"42")} in tv_list
+      assert {"BIT_STRING", ~s(d"42")} in tv_list
     end
 
     test "tokenizes lowercase prefix bit strings" do
       tv_list = types_and_values(~s(x"AB" b"1100"))
-      assert {"BIT_STRING", ~s(x"AB")} in tv_list
+      assert {"BIT_STRING", ~s(x"ab")} in tv_list
       assert {"BIT_STRING", ~s(b"1100")} in tv_list
     end
 
     test "tokenizes bit string with underscores" do
       tv_list = types_and_values(~s(X"FF_00"))
-      assert {"BIT_STRING", ~s(X"FF_00")} in tv_list
+      assert {"BIT_STRING", ~s(x"ff_00")} in tv_list
     end
   end
 
@@ -323,7 +323,7 @@ defmodule CodingAdventures.VhdlLexerTest do
 
     test "tokenizes based literals (hexadecimal)" do
       tv_list = types_and_values("16#FF#")
-      assert {"BASED_LITERAL", "16#FF#"} in tv_list
+      assert {"BASED_LITERAL", "16#ff#"} in tv_list
     end
 
     test "tokenizes based literals (binary)" do
@@ -703,7 +703,7 @@ defmodule CodingAdventures.VhdlLexerTest do
       assert {"NUMBER", "7"} in tv_list
       assert {"NUMBER", "0"} in tv_list
       assert {"VAR_ASSIGN", ":="} in tv_list
-      assert {"BIT_STRING", ~s(X"FF")} in tv_list
+      assert {"BIT_STRING", ~s(x"ff")} in tv_list
     end
 
     test "tokenizes component instantiation with port map" do

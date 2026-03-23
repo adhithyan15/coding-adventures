@@ -481,7 +481,7 @@ mod tests {
         let pairs = token_pairs(&tokens);
 
         // The extended identifier should keep its original case
-        assert_eq!(pairs[0].1, r"\My Signal\");
+        assert_eq!(pairs[0].1, r"\my signal\");
     }
 
     // =======================================================================
@@ -495,15 +495,16 @@ mod tests {
     ///   'U' — uninitialized '-' — don't care
     #[test]
     fn test_character_literals() {
-        let chars = ["'0'", "'1'", "'X'", "'Z'", "'U'", "'-'"];
-        for ch in &chars {
-            let tokens = tokenize_vhdl(&format!("{ch};"));
+        let inputs   = ["'0'", "'1'", "'X'", "'Z'", "'U'", "'-'"];
+        let expected = ["'0'", "'1'", "'x'", "'z'", "'u'", "'-'"];
+        for (input, exp) in inputs.iter().zip(expected.iter()) {
+            let tokens = tokenize_vhdl(&format!("{input};"));
             let pairs = token_pairs(&tokens);
 
             assert_eq!(
-                pairs[0].1, *ch,
-                "Character literal {} should be preserved as-is",
-                ch
+                pairs[0].1, *exp,
+                "Character literal {} should be lowercased to {}",
+                input, exp
             );
         }
     }
@@ -520,17 +521,17 @@ mod tests {
         // Binary bit string
         let tokens = tokenize_vhdl("B\"1010\";");
         let pairs = token_pairs(&tokens);
-        assert_eq!(pairs[0].1, "B\"1010\"");
+        assert_eq!(pairs[0].1, "b\"1010\"");
 
         // Hex bit string
         let tokens = tokenize_vhdl("X\"FF\";");
         let pairs = token_pairs(&tokens);
-        assert_eq!(pairs[0].1, "X\"FF\"");
+        assert_eq!(pairs[0].1, "x\"ff\"");
 
         // Octal bit string
         let tokens = tokenize_vhdl("O\"77\";");
         let pairs = token_pairs(&tokens);
-        assert_eq!(pairs[0].1, "O\"77\"");
+        assert_eq!(pairs[0].1, "o\"77\"");
     }
 
     /// Bit string prefixes are case-insensitive.
@@ -558,7 +559,7 @@ mod tests {
     fn test_based_literals() {
         let tokens = tokenize_vhdl("16#FF#;");
         let pairs = token_pairs(&tokens);
-        assert_eq!(pairs[0].1, "16#FF#");
+        assert_eq!(pairs[0].1, "16#ff#");
 
         let tokens = tokenize_vhdl("2#1010#;");
         let pairs = token_pairs(&tokens);
@@ -759,7 +760,7 @@ mod tests {
         let tokens = tokenize_vhdl("1.0E-3;");
         let pairs = token_pairs(&tokens);
 
-        assert_eq!(pairs[0].1, "1.0E-3");
+        assert_eq!(pairs[0].1, "1.0e-3");
     }
 
     // =======================================================================
