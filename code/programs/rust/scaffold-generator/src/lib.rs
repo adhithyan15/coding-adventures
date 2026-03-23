@@ -794,12 +794,12 @@ class TestVersion:
 
     // --- BUILD ---
     let mut build_lines: Vec<String> = Vec::new();
-    build_lines.push("uv venv --quiet --clear".to_string());
+    build_lines.push("uv venv .venv --quiet --no-project".to_string());
     for dep in ordered_deps {
-        build_lines.push(format!("uv pip install -e ../{} --quiet", dep));
+        build_lines.push(format!("uv pip install --python .venv -e ../{} --quiet", dep));
     }
-    build_lines.push("uv pip install -e .[dev] --quiet".to_string());
-    build_lines.push(".venv/bin/python -m pytest tests/ -v".to_string());
+    build_lines.push("uv pip install --python .venv -e .[dev] --quiet".to_string());
+    build_lines.push("uv run --no-project python -m pytest tests/ -v".to_string());
     let build = build_lines.join("\n") + "\n";
 
     // Create directories
@@ -1216,20 +1216,8 @@ export default defineConfig({
         pkg_name = pkg_name,
     );
 
-    // --- BUILD --- chain install transitive deps leaf-to-root
-    let build = if !ordered_deps.is_empty() {
-        let mut parts: Vec<String> = ordered_deps
-            .iter()
-            .map(|dep| format!("cd ../{} && npm install --silent", dep))
-            .collect();
-        parts.push(format!(
-            "cd ../{} && npm install --silent",
-            pkg_name
-        ));
-        parts.join(" && \\\n") + "\nnpx vitest run --coverage\n"
-    } else {
-        "npm install --silent\nnpx vitest run --coverage\n".to_string()
-    };
+    // --- BUILD --- npm ci resolves file: deps transitively
+    let build = "npm ci --quiet\nnpx vitest run --coverage\n".to_string();
 
     // Create directories
     let src_dir = target_dir.join("src");

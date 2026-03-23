@@ -799,11 +799,11 @@ defmodule CodingAdventures.ScaffoldGenerator do
     """
 
     build_lines =
-      ["uv venv --quiet --clear"] ++
-        Enum.map(ordered_deps, fn dep -> "uv pip install -e ../#{dep} --quiet" end) ++
+      ["uv venv .venv --quiet --no-project"] ++
+        Enum.map(ordered_deps, fn dep -> "uv pip install --python .venv -e ../#{dep} --quiet" end) ++
         [
-          "uv pip install -e .[dev] --quiet",
-          ".venv/bin/python -m pytest tests/ -v"
+          "uv pip install --python .venv -e .[dev] --quiet",
+          "uv run --no-project python -m pytest tests/ -v"
         ]
 
     build_content = Enum.join(build_lines, "\n") <> "\n"
@@ -1140,16 +1140,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
     });
     """
 
-    build_content =
-      if length(ordered_deps) > 0 do
-        parts =
-          Enum.map(ordered_deps, fn dep -> "cd ../#{dep} && npm install --silent" end) ++
-            ["cd ../#{pkg_name} && npm install --silent"]
-
-        Enum.join(parts, " && \\\n") <> "\nnpx vitest run --coverage\n"
-      else
-        "npm install --silent\nnpx vitest run --coverage\n"
-      end
+    build_content = "npm ci --quiet\nnpx vitest run --coverage\n"
 
     # Create directories and write files
     src_dir = Path.join(target_dir, "src")

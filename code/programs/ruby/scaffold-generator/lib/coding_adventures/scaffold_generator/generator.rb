@@ -516,10 +516,10 @@ module CodingAdventures
                 assert __version__ == "0.1.0"
       PY
 
-      build_lines = ["uv venv --quiet --clear"]
-      ordered_deps.each { |dep| build_lines << "uv pip install -e ../#{dep} --quiet" }
-      build_lines << 'uv pip install -e .[dev] --quiet'
-      build_lines << ".venv/bin/python -m pytest tests/ -v"
+      build_lines = ["uv venv .venv --quiet --no-project"]
+      ordered_deps.each { |dep| build_lines << "uv pip install --python .venv -e ../#{dep} --quiet" }
+      build_lines << 'uv pip install --python .venv -e .[dev] --quiet'
+      build_lines << "uv run --no-project python -m pytest tests/ -v"
       build = build_lines.join("\n") + "\n"
 
       write_file(File.join(target_dir, "pyproject.toml"), pyproject)
@@ -811,13 +811,7 @@ module CodingAdventures
         });
       TS
 
-      if ordered_deps.any?
-        parts = ordered_deps.map { |dep| "cd ../#{dep} && npm install --silent" }
-        parts << "cd ../#{pkg_name} && npm install --silent"
-        build = parts.join(" && \\\n") + "\nnpx vitest run --coverage\n"
-      else
-        build = "npm install --silent\nnpx vitest run --coverage\n"
-      end
+      build = "npm ci --quiet\nnpx vitest run --coverage\n"
 
       write_file(File.join(target_dir, "package.json"), package_json)
       write_file(File.join(target_dir, "tsconfig.json"), tsconfig)

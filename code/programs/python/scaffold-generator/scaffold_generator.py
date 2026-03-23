@@ -348,11 +348,11 @@ class TestVersion:
         assert __version__ == "0.1.0"
 '''
 
-    build_lines = ["uv venv --quiet --clear"]
+    build_lines = ["uv venv .venv --quiet --no-project"]
     for dep in ordered_deps:
-        build_lines.append(f"uv pip install -e ../{dep} --quiet")
-    build_lines.append('uv pip install -e .[dev] --quiet')
-    build_lines.append(".venv/bin/python -m pytest tests/ -v")
+        build_lines.append(f"uv pip install --python .venv -e ../{dep} --quiet")
+    build_lines.append('uv pip install --python .venv -e .[dev] --quiet')
+    build_lines.append("uv run --no-project python -m pytest tests/ -v")
     build = "\n".join(build_lines) + "\n"
 
     _write_file(os.path.join(target_dir, "pyproject.toml"), pyproject)
@@ -608,12 +608,7 @@ describe("{pkg_name}", () => {{
 }});
 """
 
-    if ordered_deps:
-        parts = [f"cd ../{dep} && npm install --silent" for dep in ordered_deps]
-        parts.append(f"cd ../{pkg_name} && npm install --silent")
-        build = " && \\\n".join(parts) + "\nnpx vitest run --coverage\n"
-    else:
-        build = "npm install --silent\nnpx vitest run --coverage\n"
+    build = "npm ci --quiet\nnpx vitest run --coverage\n"
 
     _write_file(os.path.join(target_dir, "package.json"), package_json)
     _write_file(os.path.join(target_dir, "tsconfig.json"), tsconfig)

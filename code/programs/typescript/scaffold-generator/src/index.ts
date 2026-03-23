@@ -603,12 +603,12 @@ class TestVersion:
         assert __version__ == "0.1.0"
 `;
 
-  const buildLines = ["uv venv --quiet --clear"];
+  const buildLines = ["uv venv .venv --quiet --no-project"];
   for (const dep of orderedDeps) {
-    buildLines.push(`uv pip install -e ../${dep} --quiet`);
+    buildLines.push(`uv pip install --python .venv -e ../${dep} --quiet`);
   }
-  buildLines.push('uv pip install -e .[dev] --quiet');
-  buildLines.push(".venv/bin/python -m pytest tests/ -v");
+  buildLines.push('uv pip install --python .venv -e .[dev] --quiet');
+  buildLines.push("uv run --no-project python -m pytest tests/ -v");
   const build = buildLines.join("\n") + "\n";
 
   writeFile(path.join(targetDir, "pyproject.toml"), pyproject);
@@ -923,16 +923,7 @@ describe("${pkgName}", () => {
 });
 `;
 
-  let build: string;
-  if (orderedDeps.length > 0) {
-    const parts = orderedDeps.map(
-      (dep) => `cd ../${dep} && npm install --silent`,
-    );
-    parts.push(`cd ../${pkgName} && npm install --silent`);
-    build = parts.join(" && \\\n") + "\nnpx vitest run --coverage\n";
-  } else {
-    build = "npm install --silent\nnpx vitest run --coverage\n";
-  }
+  const build = "npm ci --quiet\nnpx vitest run --coverage\n";
 
   writeFile(path.join(targetDir, "package.json"), packageJson);
   writeFile(path.join(targetDir, "tsconfig.json"), tsconfig);

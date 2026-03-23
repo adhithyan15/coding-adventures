@@ -489,12 +489,12 @@ class TestVersion:
 
 	// BUILD
 	var buildLines []string
-	buildLines = append(buildLines, "uv venv --quiet --clear")
+	buildLines = append(buildLines, "uv venv .venv --quiet --no-project")
 	for _, dep := range orderedDeps {
-		buildLines = append(buildLines, fmt.Sprintf("uv pip install -e ../%s --quiet", dep))
+		buildLines = append(buildLines, fmt.Sprintf("uv pip install --python .venv -e ../%s --quiet", dep))
 	}
-	buildLines = append(buildLines, `uv pip install -e .[dev] --quiet`)
-	buildLines = append(buildLines, ".venv/bin/python -m pytest tests/ -v")
+	buildLines = append(buildLines, `uv pip install --python .venv -e .[dev] --quiet`)
+	buildLines = append(buildLines, "uv run --no-project python -m pytest tests/ -v")
 	build := strings.Join(buildLines, "\n") + "\n"
 
 	// Create directories
@@ -811,30 +811,8 @@ describe("%s", () => {
 });
 `, pkgName)
 
-	// BUILD — chain install transitive deps leaf-to-root
-	var buildLines []string
-	if len(orderedDeps) > 0 {
-		for _, dep := range orderedDeps {
-			buildLines = append(buildLines, fmt.Sprintf("cd ../%s && npm install --silent", dep))
-		}
-		buildLines = append(buildLines, fmt.Sprintf("cd ../%s && npm install --silent", pkgName))
-		build := strings.Join(buildLines, " && \\\n") + "\nnpx vitest run --coverage\n"
-		files := map[string]string{"BUILD": build}
-		// We'll add this to the files map below
-		_ = files
-	}
-
-	var build string
-	if len(orderedDeps) > 0 {
-		var parts []string
-		for _, dep := range orderedDeps {
-			parts = append(parts, fmt.Sprintf("cd ../%s && npm install --silent", dep))
-		}
-		parts = append(parts, fmt.Sprintf("cd ../%s && npm install --silent", pkgName))
-		build = strings.Join(parts, " && \\\n") + "\nnpx vitest run --coverage\n"
-	} else {
-		build = "npm install --silent\nnpx vitest run --coverage\n"
-	}
+	// BUILD — npm ci resolves file: deps transitively
+	build := "npm ci --quiet\nnpx vitest run --coverage\n"
 
 	// Create directories
 	srcDir := filepath.Join(targetDir, "src")
