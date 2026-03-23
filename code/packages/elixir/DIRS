@@ -17,3 +17,7 @@ bytecode_compiler
 starlark_ast_to_bytecode_compiler
 starlark_vm
 starlark_interpreter
+lattice_lexer
+lattice_parser
+lattice_ast_to_css
+lattice_transpiler

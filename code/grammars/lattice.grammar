@@ -38,11 +38,20 @@ stylesheet = { rule } ;
 rule = lattice_rule | at_rule | qualified_rule ;
 
 # Lattice-specific top-level constructs. These produce no direct CSS output —
-# they define variables, mixins, functions, or import modules.
+# they define variables, mixins, functions, or import modules. Control flow
+# (@if/@for/@each) is also valid at the top level, so that stylesheets may
+# write:
+#
+#   @if $mobile { body { font-size: 14px; } }
+#   @for $i from 1 through 12 { .col-#{$i} { width: ...; } }
+#
+# Placing lattice_control here (in addition to inside block_item) matches
+# the Sass/SCSS behaviour where control flow is allowed anywhere a rule is.
 lattice_rule = variable_declaration
              | mixin_definition
              | function_definition
-             | use_directive ;
+             | use_directive
+             | lattice_control ;
 
 # ============================================================================
 # Lattice: Variables
@@ -76,10 +85,20 @@ variable_declaration = VARIABLE COLON value_list SEMICOLON ;
 # Mixins can have parameters with optional defaults. The @include directive
 # expands the mixin body at the call site.
 
-# Note: name( is tokenized as a single FUNCTION token (e.g., "button("),
-# just like CSS functions (rgb(, calc(). So @mixin button(...) produces
-# AT_KEYWORD FUNCTION ... RPAREN, not AT_KEYWORD IDENT LPAREN ... RPAREN.
-mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
+# Two forms of mixin definition:
+#
+#   @mixin button($bg, $fg) { ... }  — FUNCTION form (name with parens).
+#     "button(" is tokenized as a single FUNCTION token. Grammar sees
+#     AT_KEYWORD FUNCTION ... RPAREN block.
+#
+#   @mixin centered { ... }          — IDENT form (name without parens).
+#     "centered" is tokenized as IDENT. Grammar sees AT_KEYWORD IDENT block.
+#     No parameters are allowed in this form.
+#
+# The FUNCTION form is tried first so that zero-param mixins WITH parens
+# (e.g., @mixin reset()) are also matched by the first alternative.
+mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
+                 | "@mixin" IDENT block ;
 
 mixin_params = mixin_param { COMMA mixin_param } ;
 
@@ -89,10 +108,12 @@ mixin_param = VARIABLE [ COLON value_list ] ;
 
 # @include expands a mixin. Two forms:
 #   @include button(red);     → AT_KEYWORD FUNCTION IDENT RPAREN SEMICOLON
+#   @include button();        → AT_KEYWORD FUNCTION RPAREN SEMICOLON (no args)
 #   @include clearfix;        → AT_KEYWORD IDENT SEMICOLON
-# The FUNCTION form handles calls with parens, the IDENT form handles
-# calls without parens. Both can optionally have a content block.
-include_directive = "@include" FUNCTION include_args RPAREN ( SEMICOLON | block )
+# The FUNCTION form handles calls with parens. include_args is optional so
+# that zero-argument includes (@include flex();) are valid.
+# The IDENT form handles calls without parens.
+include_directive = "@include" FUNCTION [ include_args ] RPAREN ( SEMICOLON | block )
                   | "@include" IDENT ( SEMICOLON | block ) ;
 
 include_args = value_list { COMMA value_list } ;
@@ -196,9 +217,14 @@ lattice_primary = VARIABLE | NUMBER | DIMENSION | PERCENTAGE
 # body is restricted to variable declarations, @return, and control flow
 # (no CSS declarations or nested rules).
 
-# Like mixins, name( is a FUNCTION token.
-function_definition = "@function" FUNCTION [ mixin_params ] RPAREN
-                      function_body ;
+# Two forms of function definition (same as mixin_definition):
+#
+#   @function spacing($n) { ... }  — FUNCTION form, "spacing(" is one token.
+#   @function triple { ... }       — IDENT form, no parameters.
+#
+# The FUNCTION form is tried first.
+function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body
+                    | "@function" IDENT function_body ;
 
 function_body = LBRACE { function_body_item } RBRACE ;
 
