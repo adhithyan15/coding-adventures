@@ -184,8 +184,9 @@ pub struct PyType_Slot {
 pub const METH_VARARGS: c_int = 0x0001;
 pub const METH_NOARGS: c_int = 0x0004;
 
-// Type flags
-pub const PY_TPFLAGS_DEFAULT: u32 = 0;
+// Type flags — Py_TPFLAGS_DEFAULT includes Py_TPFLAGS_HAVE_VERSION_TAG
+// which is required for type slots to work properly with PyType_FromSpec.
+pub const PY_TPFLAGS_DEFAULT: u32 = 1 << 18;
 
 // Module API version (Python 3)
 pub const PYTHON_API_VERSION: c_int = 1013;
