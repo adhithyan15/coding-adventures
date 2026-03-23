@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0 — The ALU tab
+
+### Added
+
+- **Tab 3: The ALU** — 8-bit Arithmetic Logic Unit with all 6 operations
+- `OperationSelector` — radio button group with Arithmetic (ADD, SUB) and Logic (AND, OR, XOR, NOT) grouping
+- `ResultDisplay` — 8-bit result as bit cells + decimal + hex + four condition flags
+- `FlagIndicator` — visual condition flag display (dot + abbreviation + description)
+  - Zero (Z), Carry (C), Negative (N), Overflow (V)
+- `ALUView` container with operation selector, operand inputs, result display
+  - B input hidden for NOT (unary operation)
+  - Auto-computes on input/operation change
+- 14 new i18n strings covering ALU operations and flags
+- ALU-specific CSS (operation selector, result bits, flag indicators)
+- 14 new tests (51 total)
+
+### Changed
+
+- `App.tsx` now renders ALUView when ALU tab is active
+
 ## 0.2.0 — Everything is Addition tab
 
 ### Added

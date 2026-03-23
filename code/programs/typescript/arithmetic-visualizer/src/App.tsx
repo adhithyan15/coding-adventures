@@ -22,6 +22,7 @@ import { useState } from "react";
 import { TabList, useTranslation } from "@coding-adventures/ui-components";
 import { BinaryAdders } from "./components/adders/BinaryAdders.js";
 import { EverythingIsAddition } from "./components/everything-is-addition/EverythingIsAddition.js";
+import { ALUView } from "./components/alu/ALUView.js";
 
 /** The four circuit categories, ordered from simple to complex. */
 type TabId = "adders" | "addition" | "alu" | "cpu";
@@ -54,9 +55,7 @@ export function App() {
       <main className="app__main">
         {activeTab === "adders" && <BinaryAdders />}
         {activeTab === "addition" && <EverythingIsAddition />}
-        {activeTab === "alu" && (
-          <p className="placeholder">{t("placeholder.comingSoon")}</p>
-        )}
+        {activeTab === "alu" && <ALUView />}
         {activeTab === "cpu" && (
           <p className="placeholder">{t("placeholder.comingSoon")}</p>
         )}

@@ -50,6 +50,23 @@
   "addition.mul.runningTotal": "Running Total",
   "addition.mul.insight": "Each 'multiply by one bit' is just an AND gate (bit × multiplicand). Each 'add to running total' is a ripple-carry adder. Multiplication is nothing more than conditional additions of shifted values. A 4-bit multiplier needs at most 3 additions.",
 
+  "alu.intro": "The ALU is where all operations come together. It takes two N-bit numbers and an operation code, routes them through the appropriate circuit (adder for arithmetic, gate arrays for logic), and produces a result plus four condition flags that the CPU uses for branching decisions.",
+  "alu.title": "8-bit ALU — One Circuit to Rule Them All",
+  "alu.panelLabel": "ALU operation panel",
+  "alu.opSelector": "Select ALU operation",
+  "alu.arithmetic": "Arithmetic",
+  "alu.logic": "Logic",
+  "alu.unaryNote": "NOT is unary — only uses operand A",
+  "alu.result": "Result",
+  "alu.flag.zero": "Zero",
+  "alu.flag.zeroDesc": "Result is all zeros",
+  "alu.flag.carry": "Carry",
+  "alu.flag.carryDesc": "Unsigned overflow",
+  "alu.flag.negative": "Negative",
+  "alu.flag.negativeDesc": "MSB is 1 (signed negative)",
+  "alu.flag.overflow": "Overflow",
+  "alu.flag.overflowDesc": "Signed overflow",
+
   "placeholder.comingSoon": "Coming soon",
 
   "footer.credit": "Built with gate-level arithmetic models"
