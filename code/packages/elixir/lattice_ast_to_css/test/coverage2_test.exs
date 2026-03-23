@@ -10,7 +10,7 @@ defmodule CodingAdventures.LatticeAstToCss.Coverage2Test do
   use ExUnit.Case
 
   alias CodingAdventures.LatticeParser
-  alias CodingAdventures.LatticeAstToCss.{Values, Evaluator, Emitter, Transformer, Scope}
+  alias CodingAdventures.LatticeAstToCss.{Values, Evaluator, Emitter, Transformer, Scope, Errors}
   alias CodingAdventures.Parser.ASTNode
   alias CodingAdventures.Lexer.Token
 
@@ -695,6 +695,77 @@ defmodule CodingAdventures.LatticeAstToCss.Coverage2Test do
       state = %Transformer.State{variables: scope, mixins: %{"m" => 1}}
       assert state.variables == scope
       assert state.mixins == %{"m" => 1}
+    end
+  end
+
+  # ===========================================================================
+  # Error constructors — intermediate-arity coverage
+  # Each error struct with default args (line \\ 0, column \\ 0) generates
+  # function clauses for every arity. The single-intermediate-arg arity is
+  # often the only uncovered clause. These tests exercise it directly.
+  # ===========================================================================
+
+  describe "Error constructors — intermediate arities" do
+    test "ReturnOutsideFunctionError.new/1 (line only)" do
+      e = Errors.ReturnOutsideFunctionError.new(7)
+      assert e.line == 7
+      assert e.column == 0
+      assert e.message =~ "return"
+    end
+
+    test "MissingReturnError.new/2 (name + line)" do
+      e = Errors.MissingReturnError.new("my_func", 12)
+      assert e.line == 12
+      assert e.column == 0
+    end
+
+    test "UndefinedVariableError.new/2 (name + line)" do
+      e = Errors.UndefinedVariableError.new("$foo", 3)
+      assert e.line == 3
+      assert e.column == 0
+      assert e.message =~ "foo"
+    end
+
+    test "UndefinedMixinError.new/2 (name + line)" do
+      e = Errors.UndefinedMixinError.new("btn", 5)
+      assert e.line == 5
+      assert e.column == 0
+    end
+
+    test "WrongArityError.new/5 (kind+name+expected+got+line)" do
+      e = Errors.WrongArityError.new("mixin", "btn", 2, 3, 9)
+      assert e.line == 9
+      assert e.column == 0
+    end
+
+    test "CircularReferenceError.new/3 (kind+chain+line)" do
+      e = Errors.CircularReferenceError.new("mixin", ["a", "b"], 4)
+      assert e.line == 4
+      assert e.column == 0
+    end
+
+    test "TypeErrorInExpression.new/4 (op+left+right+line)" do
+      e = Errors.TypeErrorInExpression.new("+", "px", "em", 2)
+      assert e.line == 2
+      assert e.column == 0
+    end
+
+    test "UnitMismatchError.new/3 (left_unit+right_unit+line)" do
+      e = Errors.UnitMismatchError.new("px", "em", 6)
+      assert e.line == 6
+      assert e.column == 0
+    end
+
+    test "UndefinedFunctionError.new/2 (name + line)" do
+      e = Errors.UndefinedFunctionError.new("spacing", 8)
+      assert e.line == 8
+      assert e.column == 0
+    end
+
+    test "ModuleNotFoundError.new/2 (module_name + line)" do
+      e = Errors.ModuleNotFoundError.new("utils", 1)
+      assert e.line == 1
+      assert e.column == 0
     end
   end
 end

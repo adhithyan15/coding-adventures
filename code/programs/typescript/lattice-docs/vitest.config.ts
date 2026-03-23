@@ -2,8 +2,17 @@ import { defineConfig } from "vitest/config";
 import path from "path";
 
 export default defineConfig({
-  // Use the Vite plugin pipeline so that `?raw` imports work in tests.
-  // Without this, importing grammar files as raw strings would fail.
+  server: {
+    fs: {
+      // Allow Vite to access files outside the package directory.
+      // browser-transpiler.ts imports lattice.tokens and lattice.grammar
+      // via `?raw` — these files live at code/grammars/ which is 4 levels
+      // above this package (code/programs/typescript/lattice-docs/).
+      // By default Vite only serves files within the project root; this
+      // setting explicitly allows the repo root so the ?raw imports resolve.
+      allow: [path.resolve(__dirname, "../../../.."), __dirname],
+    },
+  },
   test: {
     environment: "jsdom",
     globals: true,
