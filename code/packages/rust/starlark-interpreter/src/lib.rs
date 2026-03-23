@@ -1266,6 +1266,54 @@ fn value_to_starlark_value(value: &Value) -> Option<StarlarkValue> {
         Value::Bool(b) => Some(StarlarkValue::Bool(*b)),
         Value::Null => Some(StarlarkValue::None),
         Value::Code(_) => None, // Internal -- not exposed as a Starlark value.
+        Value::List(items) => {
+            let converted: Vec<StarlarkValue> = items
+                .iter()
+                .filter_map(value_to_starlark_value)
+                .collect();
+            Some(StarlarkValue::List(converted))
+        }
+        Value::Dict(pairs) => {
+            let converted: Vec<(StarlarkValue, StarlarkValue)> = pairs
+                .iter()
+                .filter_map(|(k, v)| {
+                    let sk = value_to_starlark_value(k)?;
+                    let sv = value_to_starlark_value(v)?;
+                    Some((sk, sv))
+                })
+                .collect();
+            Some(StarlarkValue::Dict(converted))
+        }
+    }
+}
+
+/// Convert a Starlark `StarlarkValue` to a generic VM `Value`.
+///
+/// The reverse of `value_to_starlark_value`. Used when injecting globals
+/// (like `_ctx`) that are constructed as StarlarkValues but need to be
+/// stored in the VM's variable map as `Value`.
+fn starlark_value_to_value(sv: &StarlarkValue) -> Value {
+    match sv {
+        StarlarkValue::Int(i) => Value::Int(*i),
+        StarlarkValue::Float(f) => Value::Float(*f),
+        StarlarkValue::String(s) => Value::Str(s.clone()),
+        StarlarkValue::Bool(b) => Value::Bool(*b),
+        StarlarkValue::None => Value::Null,
+        StarlarkValue::List(items) => {
+            Value::List(items.iter().map(starlark_value_to_value).collect())
+        }
+        StarlarkValue::Dict(pairs) => {
+            Value::Dict(
+                pairs
+                    .iter()
+                    .map(|(k, v)| (starlark_value_to_value(k), starlark_value_to_value(v)))
+                    .collect(),
+            )
+        }
+        StarlarkValue::Tuple(items) => {
+            // Tuples map to Lists in the generic VM (no separate tuple type).
+            Value::List(items.iter().map(starlark_value_to_value).collect())
+        }
     }
 }
 
@@ -1278,6 +1326,8 @@ fn value_type_name(value: &Value) -> &str {
         Value::Bool(_) => "bool",
         Value::Null => "NoneType",
         Value::Code(_) => "function",
+        Value::List(_) => "list",
+        Value::Dict(_) => "dict",
     }
 }
 
@@ -1293,6 +1343,8 @@ fn value_is_truthy(value: &Value) -> bool {
         Value::Float(f) => *f != 0.0,
         Value::Str(s) => !s.is_empty(),
         Value::Code(_) => true,
+        Value::List(items) => !items.is_empty(),
+        Value::Dict(pairs) => !pairs.is_empty(),
     }
 }
 

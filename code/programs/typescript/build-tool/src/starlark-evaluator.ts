@@ -85,6 +85,7 @@
 
 import * as fs from "node:fs";
 import { createRequire } from "node:module";
+import * as os from "node:os";
 import * as path from "node:path";
 
 // The starlark-interpreter types are defined inline (not imported) so this
@@ -111,6 +112,16 @@ type StarlarkResult = { variables: Record<string, unknown> };
  * @property testRunner - Test framework: "pytest", "vitest", "minitest", etc.
  * @property entryPoint - Binary entry point: "main.py", "src/index.ts", etc.
  */
+/** Schema version for the _ctx build context dict. */
+const CTX_SCHEMA_VERSION = 1;
+
+/** OS name normalization: os.platform() -> runtime.GOOS equivalents. */
+const OS_MAP: Record<string, string> = {
+  darwin: "darwin",
+  linux: "linux",
+  win32: "windows",
+};
+
 export interface Target {
   rule: string;
   name: string;
@@ -118,6 +129,7 @@ export interface Target {
   deps: string[];
   testRunner: string;
   entryPoint: string;
+  commands: Record<string, unknown>[];
 }
 
 /**
@@ -286,8 +298,20 @@ export function evaluateBuildFile(
   const { StarlarkInterpreter: Interpreter } = req(
     "@coding-adventures/starlark-interpreter",
   );
+  // Build the _ctx dict — build context injected into every Starlark scope.
+  const platform = os.platform();
+  const ctxDict = {
+    version: CTX_SCHEMA_VERSION,
+    os: OS_MAP[platform] ?? platform,
+    arch: os.arch(),
+    cpu_count: os.cpus().length,
+    ci: (process.env.CI ?? "") !== "",
+    repo_root: repoRoot,
+  };
+
   const interp = new Interpreter({
     fileResolver,
+    globals: { _ctx: ctxDict },
   });
 
   // Step 4: Execute the BUILD file.
@@ -365,6 +389,7 @@ function extractTargets(variables: Record<string, unknown>): Target[] {
       deps: getStringList(dict, "deps"),
       testRunner: getString(dict, "test_runner"),
       entryPoint: getString(dict, "entry_point"),
+      commands: getDictList(dict, "commands"),
     });
   }
 
@@ -538,4 +563,71 @@ export function generateCommands(target: Target): string[] {
     default:
       return [`echo 'Unknown rule: ${target.rule}'`];
   }
+}
+
+// ---------------------------------------------------------------------------
+// Dict List Extraction
+// ---------------------------------------------------------------------------
+
+function getDictList(
+  dict: Record<string, unknown>,
+  key: string,
+): Record<string, unknown>[] {
+  const v = dict[key];
+  if (!Array.isArray(v)) {
+    return [];
+  }
+  const result: Record<string, unknown>[] = [];
+  for (const item of v) {
+    if (typeof item === "object" && item !== null && !Array.isArray(item)) {
+      result.push(item as Record<string, unknown>);
+    }
+  }
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Command Rendering
+// ---------------------------------------------------------------------------
+
+const SHELL_META = new Set(` \t"'$\`\\|&;()<>!#*?[]{}`);
+
+function needsQuoting(arg: string): boolean {
+  for (const ch of arg) {
+    if (SHELL_META.has(ch)) return true;
+  }
+  return false;
+}
+
+function quoteArg(arg: string): string {
+  if (arg === "") return '""';
+  if (!needsQuoting(arg)) return arg;
+  const escaped = arg.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return `"${escaped}"`;
+}
+
+export function renderCommand(cmdDict: Record<string, unknown>): string {
+  const program = cmdDict["program"];
+  if (typeof program !== "string" || program === "") {
+    throw new Error(`command dict missing 'program' key: ${JSON.stringify(cmdDict)}`);
+  }
+  const parts = [quoteArg(program)];
+  const args = cmdDict["args"];
+  if (Array.isArray(args)) {
+    for (const arg of args) {
+      parts.push(quoteArg(String(arg)));
+    }
+  }
+  return parts.join(" ");
+}
+
+export function renderCommands(cmds: unknown[]): string[] {
+  const result: string[] = [];
+  for (const cmd of cmds) {
+    if (cmd == null) continue;
+    if (typeof cmd === "object" && !Array.isArray(cmd)) {
+      result.push(renderCommand(cmd as Record<string, unknown>));
+    }
+  }
+  return result;
 }

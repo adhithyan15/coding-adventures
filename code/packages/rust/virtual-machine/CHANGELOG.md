@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `List(Vec<Value>)` variant on the `Value` enum — represents an ordered, heterogeneous list of values (Phase 8: OS-Aware Starlark BUILD Rules).
+- `Dict(Vec<(Value, Value)>)` variant on the `Value` enum — represents a key-value mapping as an ordered pair list, matching Starlark dict semantics.
+- `Display` impl updated to render `List` as `[v1, v2, ...]` and `Dict` as `{k1: v1, k2: v2, ...}`.
+
 ## 0.1.0 — 2026-03-20
 
 ### Added

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- **`_ctx` build context injection** (`starlark.py`): The Starlark evaluator now injects a `_ctx` dict into every BUILD file evaluation. The dict carries `os` (e.g. `"macos"`, `"linux"`, `"windows"`) and `arch` (e.g. `"x86_64"`, `"arm64"`) keys, enabling OS-aware rule logic in BUILD files (Phase 8: OS-Aware Starlark BUILD Rules).
+- **`commands` field on `Target` dataclass**: Every resolved build target now carries an optional list of rendered shell command strings, replacing the raw Starlark `cmd` string.
+- **`render_command(cmd)`**: Converts a single Starlark command dict (`{"executable": ..., "args": [...]}`) into a quoted shell string.
+- **`render_commands(cmds)`**: Maps a list of command dicts through `render_command()` and returns a list of shell strings.
+- **`_quote_arg(arg)`**: Shell-safe quoting helper — wraps arguments containing spaces or special characters in double quotes.
+
 ## [0.2.0] - 2026-03-22
 
 ### Added

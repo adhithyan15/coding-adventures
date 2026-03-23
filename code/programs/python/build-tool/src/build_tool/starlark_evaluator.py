@@ -73,6 +73,8 @@ The same mapping is used for ``_binary`` variants of each rule.
 
 from __future__ import annotations
 
+import os
+import platform
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -105,6 +107,7 @@ class Target:
     deps: list[str] = field(default_factory=list)
     test_runner: str = ""
     entry_point: str = ""
+    commands: list[dict] = field(default_factory=list)
 
 
 # =========================================================================
@@ -151,6 +154,13 @@ class BuildResult:
 
 # Known rule function prefixes. If the first significant line starts with
 # any of these, the BUILD file is Starlark.
+# Schema version for the _ctx build context dict.
+# Bump this when making breaking changes to the _ctx structure.
+CTX_SCHEMA_VERSION = 1
+
+# OS name normalization: platform.system() -> runtime.GOOS equivalents.
+_OS_MAP = {"Darwin": "darwin", "Linux": "linux", "Windows": "windows"}
+
 KNOWN_RULES: tuple[str, ...] = (
     "py_library(",
     "py_binary(",
@@ -333,6 +343,7 @@ def extract_targets(variables: dict) -> list[Target]:
                 deps=_get_string_list(raw, "deps"),
                 test_runner=_get_string(raw, "test_runner"),
                 entry_point=_get_string(raw, "entry_point"),
+                commands=_get_dict_list(raw, "commands"),
             )
         )
 
@@ -422,8 +433,23 @@ def evaluate_build_file(
                 f'load("{label}"): file not found at {full_path}'
             ) from None
 
+    # Build the _ctx dict — the build context injected into every Starlark
+    # scope.  This is how Starlark code (cmd.star, rule files) accesses
+    # platform and environment information.  See spec 15 for the full schema.
+    ctx_dict = {
+        "version": CTX_SCHEMA_VERSION,
+        "os": _OS_MAP.get(platform.system(), platform.system().lower()),
+        "arch": platform.machine(),
+        "cpu_count": os.cpu_count() or 1,
+        "ci": os.environ.get("CI", "") != "",
+        "repo_root": str(repo_root),
+    }
+
     # Create the interpreter and evaluate.
-    interp = StarlarkInterpreter(file_resolver=file_resolver)
+    interp = StarlarkInterpreter(
+        file_resolver=file_resolver,
+        globals={"_ctx": ctx_dict},
+    )
 
     try:
         result = interp.interpret(source)
@@ -557,3 +583,90 @@ def generate_commands(target: Target) -> list[str]:
     # If we encounter a rule type we don't recognize, emit a diagnostic
     # echo so the build log makes it clear what happened.
     return [f"echo 'Unknown rule: {rule}'"]
+
+
+# =========================================================================
+# Dict List Extraction
+# =========================================================================
+
+
+def _get_dict_list(d: dict, key: str) -> list[dict]:
+    """Safely extract a list of dicts from a dict.
+
+    Returns ``[]`` if the key is missing or the value is not a list.
+    Non-dict elements in the list are silently skipped.
+    """
+    value = d.get(key)
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
+
+
+# =========================================================================
+# Command Rendering
+# =========================================================================
+#
+# When BUILD rules use cmd() from cmd.star, they produce structured command
+# dicts like:
+#
+#   {"type": "cmd", "program": "python", "args": ["-m", "pytest"]}
+#
+# render_command() turns these into shell strings:
+#
+#   python -m pytest
+
+# Characters that trigger quoting in shell strings.
+_SHELL_META = set(' \t"\'$`\\|&;()<>!#*?[]{}')
+
+
+def _needs_quoting(arg: str) -> bool:
+    """Check whether a shell argument needs quoting."""
+    return any(c in _SHELL_META for c in arg)
+
+
+def _quote_arg(arg: str) -> str:
+    """Quote a single shell argument if it contains metacharacters."""
+    if not arg:
+        return '""'
+    if not _needs_quoting(arg):
+        return arg
+    escaped = arg.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def render_command(cmd_dict: dict) -> str:
+    """Convert a single command dict to a shell string.
+
+    Parameters
+    ----------
+    cmd_dict : dict
+        A command dict with "program" and optional "args" keys.
+
+    Returns
+    -------
+    str
+        A shell-safe command string.
+    """
+    program = cmd_dict.get("program", "")
+    if not isinstance(program, str) or not program:
+        raise ValueError(f"command dict missing 'program' key: {cmd_dict}")
+
+    parts = [_quote_arg(program)]
+
+    args = cmd_dict.get("args")
+    if args and isinstance(args, list):
+        for arg in args:
+            parts.append(_quote_arg(str(arg)))
+
+    return " ".join(parts)
+
+
+def render_commands(cmds: list) -> list[str]:
+    """Convert a list of command dicts to shell strings, skipping None entries."""
+    result = []
+    for cmd in cmds:
+        if cmd is None:
+            continue
+        if isinstance(cmd, dict):
+            result.append(render_command(cmd))
+    return result

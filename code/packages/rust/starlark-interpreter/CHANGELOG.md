@@ -2,6 +2,14 @@
 
 All notable changes to the `starlark-interpreter` crate will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- `starlark_value_to_value()` — converts a `StarlarkValue` (Starlark runtime type) back into a `Value` (VM type), enabling round-trip conversion between the two type systems (Phase 8: OS-Aware Starlark BUILD Rules).
+- `value_to_starlark_value()` updated to handle the new `Value::List` and `Value::Dict` variants, recursively converting inner elements.
+- `value_is_truthy()` updated: empty `List` and empty `Dict` are falsy; non-empty are truthy, consistent with Python/Starlark semantics.
+- `value_type_name()` updated to return `"list"` for `Value::List` and `"dict"` for `Value::Dict`.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

@@ -74,12 +74,16 @@
 // This table is the same for `_binary` variants of each rule.
 
 use std::collections::HashMap;
+use std::env;
 use std::fs;
 use std::path::Path;
 
 use starlark_interpreter::{
     FsResolver, InterpreterResult, StarlarkInterpreter, StarlarkValue,
 };
+
+/// Schema version for the _ctx build context dict.
+const CTX_SCHEMA_VERSION: i64 = 1;
 
 // ---------------------------------------------------------------------------
 // Data types
@@ -127,6 +131,8 @@ pub struct Target {
     pub test_runner: String,
     /// Binary entry point: "main.py", "src/index.ts", etc.
     pub entry_point: String,
+    /// Structured command dicts from cmd.star.
+    pub commands: Vec<StarlarkValue>,
 }
 
 /// Holds all targets extracted from evaluating a single Starlark BUILD file.
@@ -300,7 +306,32 @@ pub fn evaluate_build_file(
     // We use a max recursion depth of 200 (matching the default). BUILD files
     // rarely have deep call stacks, but loaded .star files might define helper
     // functions that call each other.
-    let mut interp = StarlarkInterpreter::new(Some(&resolver), 200);
+    // Build the _ctx dict — the build context injected into every Starlark
+    // scope.  See spec 15 for the full schema.
+    //
+    // OS normalization: Rust's std::env::consts::OS returns "macos" on macOS,
+    // but we normalize to "darwin" to match Go's runtime.GOOS convention.
+    let os_name = match env::consts::OS {
+        "macos" => "darwin",
+        other => other,
+    };
+
+    use virtual_machine::Value;
+
+    let ctx_value = Value::Dict(vec![
+        (Value::Str("version".to_string()), Value::Int(CTX_SCHEMA_VERSION)),
+        (Value::Str("os".to_string()), Value::Str(os_name.to_string())),
+        (Value::Str("arch".to_string()), Value::Str(env::consts::ARCH.to_string())),
+        (Value::Str("cpu_count".to_string()), Value::Int(num_cpus::get() as i64)),
+        (Value::Str("ci".to_string()), Value::Bool(!env::var("CI").unwrap_or_default().is_empty())),
+        (Value::Str("repo_root".to_string()), Value::Str(repo_root.to_string_lossy().to_string())),
+    ]);
+
+    let mut globals = HashMap::new();
+    globals.insert("_ctx".to_string(), ctx_value);
+
+    let mut interp = StarlarkInterpreter::new(Some(&resolver), 200)
+        .with_globals(globals);
     let result = interp.interpret_source(&source).map_err(|e| {
         format!(
             "evaluating BUILD file {}: {}",
@@ -378,6 +409,7 @@ fn extract_targets(result: &InterpreterResult) -> Result<Vec<Target>, String> {
             deps: get_string_list_field(&map, "deps"),
             test_runner: get_string_field(&map, "test_runner"),
             entry_point: get_string_field(&map, "entry_point"),
+            commands: get_dict_list_field(&map, "commands"),
         });
     }
 
@@ -432,6 +464,92 @@ fn get_string_list_field(map: &HashMap<String, StarlarkValue>, key: &str) -> Vec
             .collect(),
         _ => Vec::new(),
     }
+}
+
+/// Safely extract a list of dicts from a dict.
+///
+/// Returns an empty vec if the key is missing or the value is not a list.
+/// Non-dict elements within the list are silently skipped.
+fn get_dict_list_field(map: &HashMap<String, StarlarkValue>, key: &str) -> Vec<StarlarkValue> {
+    match map.get(key) {
+        Some(StarlarkValue::List(items)) => items
+            .iter()
+            .filter(|item| matches!(item, StarlarkValue::Dict(_)))
+            .cloned()
+            .collect(),
+        _ => Vec::new(),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Command rendering
+// ---------------------------------------------------------------------------
+
+/// Characters that require shell quoting.
+const SHELL_META: &str = " \t\"'$`\\|&;()<>!#*?[]{}";
+
+/// Check whether a string needs shell quoting.
+fn needs_quoting(s: &str) -> bool {
+    s.is_empty() || s.chars().any(|c| SHELL_META.contains(c))
+}
+
+/// Quote a single argument for safe shell interpolation.
+///
+/// Returns the argument unchanged if it contains no special characters.
+/// Empty strings become `""`. Strings with special characters are wrapped
+/// in double quotes with internal backslashes and double quotes escaped.
+fn quote_arg(arg: &str) -> String {
+    if arg.is_empty() {
+        return "\"\"".to_string();
+    }
+    if !needs_quoting(arg) {
+        return arg.to_string();
+    }
+    let escaped = arg.replace('\\', "\\\\").replace('"', "\\\"");
+    format!("\"{}\"", escaped)
+}
+
+/// Render a single command dict to a shell-safe string.
+///
+/// A command dict has the form:
+/// ```text
+/// {"program": "cargo", "args": ["build", "--release"]}
+/// ```
+///
+/// Returns `Ok("cargo build --release")` or an error if `program` is missing.
+pub fn render_command(cmd: &StarlarkValue) -> Result<String, String> {
+    let pairs = match cmd {
+        StarlarkValue::Dict(pairs) => pairs,
+        _ => return Err("command is not a dict".to_string()),
+    };
+
+    let map = dict_to_hashmap(pairs);
+
+    let program = match map.get("program") {
+        Some(StarlarkValue::String(s)) if !s.is_empty() => s.clone(),
+        _ => return Err("command dict missing 'program' key".to_string()),
+    };
+
+    let mut parts = vec![quote_arg(&program)];
+
+    if let Some(StarlarkValue::List(args)) = map.get("args") {
+        for arg in args {
+            if let StarlarkValue::String(s) = arg {
+                parts.push(quote_arg(s));
+            }
+        }
+    }
+
+    Ok(parts.join(" "))
+}
+
+/// Render a list of command dicts to shell-safe strings.
+///
+/// Skips entries that are not dicts or that fail to render.
+pub fn render_commands(cmds: &[StarlarkValue]) -> Vec<String> {
+    cmds.iter()
+        .filter_map(|cmd| render_command(cmd).ok())
+        .collect()
 }
 
 // ---------------------------------------------------------------------------
@@ -797,6 +915,7 @@ mod tests {
             deps: Vec::new(),
             test_runner: String::new(),
             entry_point: String::new(),
+            commands: Vec::new(),
         }
     }
 
