@@ -237,6 +237,30 @@ defmodule CodingAdventures.VirtualMachine.GenericVM do
   end
 
   # ===========================================================================
+  # Global Injection
+  # ===========================================================================
+
+  @doc """
+  Pre-seed named variables into the VM's global scope.
+
+  These variables are available to the program as regular variables
+  but are set before execution begins. Useful for build context,
+  environment info, etc.
+
+  Injected globals are merged into `variables` — they don't replace
+  the map. If a key already exists, the injected value overwrites it.
+
+  ## Example
+
+      ctx = %{"os" => "darwin", "arch" => "arm64"}
+      vm = GenericVM.inject_globals(vm, %{"_ctx" => ctx})
+  """
+  @spec inject_globals(t(), map()) :: t()
+  def inject_globals(%__MODULE__{} = vm, globals) when is_map(globals) do
+    %{vm | variables: Map.merge(vm.variables, globals)}
+  end
+
+  # ===========================================================================
   # Configuration
   # ===========================================================================
 

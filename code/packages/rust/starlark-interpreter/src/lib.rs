@@ -500,6 +500,14 @@ pub struct StarlarkInterpreter<'a> {
     /// causing issues if `common.star` has side effects. With caching,
     /// `common.star` is evaluated once and both A and B get the same result.
     load_cache: HashMap<String, HashMap<String, StarlarkValue>>,
+
+    /// Pre-seeded variables injected into every VM instance.
+    ///
+    /// These are available in all Starlark scopes, including loaded files.
+    /// Use this for build context like `_ctx`. Since `interpret_bytecode()`
+    /// is called recursively for `load()` statements, globals are automatically
+    /// injected into every loaded file's VM instance.
+    globals: Option<HashMap<String, virtual_machine::Value>>,
 }
 
 impl<'a> StarlarkInterpreter<'a> {
@@ -517,7 +525,17 @@ impl<'a> StarlarkInterpreter<'a> {
             file_resolver,
             max_recursion_depth,
             load_cache: HashMap::new(),
+            globals: None,
         }
+    }
+
+    /// Set pre-seeded variables that will be injected into every VM instance.
+    ///
+    /// These globals are available in all Starlark scopes, including files
+    /// loaded via `load()`. Use this for build context like `_ctx`.
+    pub fn with_globals(mut self, globals: HashMap<String, virtual_machine::Value>) -> Self {
+        self.globals = Some(globals);
+        self
     }
 
     /// Execute pre-compiled bytecode and return the result.
@@ -540,6 +558,9 @@ impl<'a> StarlarkInterpreter<'a> {
         // Create a fresh VM with Starlark semantics.
         let mut vm = virtual_machine::GenericVM::new();
         vm.set_max_recursion_depth(Some(self.max_recursion_depth));
+        if let Some(ref globals) = self.globals {
+            vm.inject_globals(globals.clone());
+        }
 
         // Register all the standard Starlark opcode handlers.
         register_starlark_handlers(&mut vm);

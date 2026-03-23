@@ -148,6 +148,7 @@ defmodule CodingAdventures.StarlarkInterpreter.Interpreter do
     file_resolver = Keyword.get(opts, :file_resolver, nil)
     max_depth = Keyword.get(opts, :max_recursion_depth, 200)
     load_cache = Keyword.get(opts, :load_cache, %{})
+    globals = Keyword.get(opts, :globals, nil)
 
     # -----------------------------------------------------------------------
     # Step 1: Compile source to bytecode
@@ -160,6 +161,7 @@ defmodule CodingAdventures.StarlarkInterpreter.Interpreter do
     # Step 2: Create a VM with load() support
     # -----------------------------------------------------------------------
     vm = StarlarkVmFactory.create_starlark_vm(max_recursion_depth: max_depth)
+    vm = if globals, do: GenericVM.inject_globals(vm, globals), else: vm
 
     # Override LOAD_MODULE with our file-resolving handler
     vm = register_load_handler(vm, file_resolver, load_cache, opts)

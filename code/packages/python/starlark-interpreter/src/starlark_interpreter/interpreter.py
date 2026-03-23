@@ -168,6 +168,15 @@ class StarlarkInterpreter:
     max_recursion_depth: int = 200
     """Maximum call stack depth for function calls."""
 
+    globals: dict[str, Any] | None = None
+    """Pre-seeded variables injected into every VM instance.
+
+    These are available in all Starlark scopes, including loaded files.
+    Use this for build context like ``_ctx``. Since ``interpret()`` is
+    called recursively for ``load()`` statements, globals are automatically
+    injected into every loaded file's VM instance.
+    """
+
     _load_cache: dict[str, dict[str, Any]] = field(
         default_factory=dict, repr=False
     )
@@ -202,6 +211,8 @@ class StarlarkInterpreter:
 
         # Create a VM with load() support
         vm = create_starlark_vm(max_recursion_depth=self.max_recursion_depth)
+        if self.globals is not None:
+            vm.inject_globals(self.globals)
         self._register_load_handlers(vm)
 
         # Execute
@@ -309,6 +320,7 @@ def interpret(
     source: str,
     file_resolver: FileResolver = None,
     max_recursion_depth: int = 200,
+    globals: dict[str, Any] | None = None,
 ) -> StarlarkResult:
     """Execute Starlark source code and return the result.
 
@@ -323,6 +335,8 @@ def interpret(
         to content strings (for testing) or a callable.
     max_recursion_depth : int
         Maximum call stack depth. Default 200.
+    globals : dict, optional
+        Pre-seeded variables injected into every VM instance.
 
     Returns
     -------
@@ -340,6 +354,7 @@ def interpret(
     interp = StarlarkInterpreter(
         file_resolver=file_resolver,
         max_recursion_depth=max_recursion_depth,
+        globals=globals,
     )
     return interp.interpret(source)
 
@@ -348,6 +363,7 @@ def interpret_file(
     path: str,
     file_resolver: FileResolver = None,
     max_recursion_depth: int = 200,
+    globals: dict[str, Any] | None = None,
 ) -> StarlarkResult:
     """Execute a Starlark file by path.
 
@@ -359,6 +375,8 @@ def interpret_file(
         How to resolve ``load()`` paths.
     max_recursion_depth : int
         Maximum call stack depth. Default 200.
+    globals : dict, optional
+        Pre-seeded variables injected into every VM instance.
 
     Returns
     -------
@@ -368,5 +386,6 @@ def interpret_file(
     interp = StarlarkInterpreter(
         file_resolver=file_resolver,
         max_recursion_depth=max_recursion_depth,
+        globals=globals,
     )
     return interp.interpret_file(path)
