@@ -1,32 +1,19 @@
 """
-Directed Graph — Native Extension (Rust-backed via PyO3)
-=========================================================
+Directed Graph — Native Extension (Rust-backed via python-bridge)
+==================================================================
 
 A drop-in alternative to ``coding-adventures-directed-graph`` backed by
 a Rust implementation for better performance on large graphs.
 
-The API is identical to the pure Python version::
-
-    from directed_graph_native import DirectedGraph, CycleError
-
-    g = DirectedGraph()
-    g.add_edge("A", "B")
-    g.add_edge("B", "C")
-
-    print(g.topological_sort())    # ['A', 'B', 'C']
-    print(g.independent_groups())  # [['A'], ['B'], ['C']]
-
 All algorithms (topological sort, cycle detection, transitive closure,
 independent groups, affected nodes) run in Rust. Only the method call
-boundary crosses between Python and Rust — the hot loops stay in native
-code.
+boundary crosses between Python and Rust.
 """
 
-# The actual classes and exceptions are defined in Rust (src/lib.rs) and
-# compiled into a native extension module by maturin. This __init__.py
-# re-exports them so that `from directed_graph_native import DirectedGraph`
-# works naturally.
-from directed_graph_native.directed_graph_native import (
+# The native .so/.dylib/.pyd is compiled from Rust and placed in this
+# directory by the build process. It exports DirectedGraph class and
+# exception types via PyInit_directed_graph_native.
+from directed_graph_native.directed_graph_native import (  # type: ignore[import]
     CycleError,
     DirectedGraph,
     EdgeNotFoundError,

@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+gem "ca_sha1", path: "../sha1"
+gem "ca_md5", path: "../md5"
