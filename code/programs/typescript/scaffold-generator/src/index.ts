@@ -607,7 +607,7 @@ class TestVersion:
   for (const dep of orderedDeps) {
     buildLines.push(`uv pip install -e ../${dep} --quiet`);
   }
-  buildLines.push('uv pip install -e ".[dev]" --quiet');
+  buildLines.push('uv pip install -e .[dev] --quiet');
   buildLines.push(".venv/bin/python -m pytest tests/ -v");
   const build = buildLines.join("\n") + "\n";
 

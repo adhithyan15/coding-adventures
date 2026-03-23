@@ -802,7 +802,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
       ["uv venv --quiet --clear"] ++
         Enum.map(ordered_deps, fn dep -> "uv pip install -e ../#{dep} --quiet" end) ++
         [
-          "uv pip install -e \".[dev]\" --quiet",
+          "uv pip install -e .[dev] --quiet",
           ".venv/bin/python -m pytest tests/ -v"
         ]
 

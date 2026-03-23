@@ -493,7 +493,7 @@ class TestVersion:
 	for _, dep := range orderedDeps {
 		buildLines = append(buildLines, fmt.Sprintf("uv pip install -e ../%s --quiet", dep))
 	}
-	buildLines = append(buildLines, `uv pip install -e ".[dev]" --quiet`)
+	buildLines = append(buildLines, `uv pip install -e .[dev] --quiet`)
 	buildLines = append(buildLines, ".venv/bin/python -m pytest tests/ -v")
 	build := strings.Join(buildLines, "\n") + "\n"
 

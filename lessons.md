@@ -354,3 +354,39 @@ The Elixir Starlark AST-to-bytecode compiler can get stuck in an infinite loop i
 The `astral-sh/setup-uv@v4` action with `version: latest` resolved to uv `0.10.12`, which was missing the `aarch64-apple-darwin` binary (404 error). This caused all macOS CI runs to fail on the "Install uv" step. The fix is to pin to a known stable version series (e.g., `version: "0.6.x"`) rather than relying on `latest`.
 
 **Rule:** Always pin tool versions in CI actions. `latest` can resolve to broken or incomplete releases. Use version ranges like `"0.6.x"` that stay within a known-good series.
+
+---
+
+### 2026-03-22: Always use the scaffold generator for new packages
+
+When creating new packages, ALWAYS use the scaffold generator (`code/programs/go/scaffold-generator/`). It:
+1. Computes the full transitive dependency closure
+2. Orders installs in leaf-to-root order in the BUILD file
+3. Uses consistent naming conventions per language
+4. Creates all required files (BUILD, README.md, CHANGELOG.md, package metadata, tests)
+
+**Problem:** 22 Verilog/VHDL wrapper packages were hand-written by agents without using the scaffold generator. This led to:
+- Missing transitive dependencies in TypeScript BUILD files
+- Missing README.md and CHANGELOG.md files
+- Inconsistent BUILD file format across packages
+
+**Rule:** `scaffold-generator PACKAGE_NAME --language LANG --depends-on DEP1,DEP2` before writing any package code.
+
+---
+
+### 2026-03-22: Python BUILD files — do NOT quote .[dev] extras
+
+Newer versions of uv reject `".[dev]"` (quoted extras syntax) with "Quoted extras are not permitted." Use unquoted `.[dev]` instead.
+
+**Bad:**  `uv pip install -e ".[dev]" --quiet`
+**Good:** `uv pip install -e .[dev] --quiet`
+
+The scaffold generator has been updated to use the unquoted form. Existing packages using the quoted form may work on some uv versions but will break when uv is upgraded.
+
+---
+
+### 2026-03-22: Changing ALL BUILD files triggers full rebuild — avoid mass changes
+
+The build-tool uses diff-based change detection. Touching a BUILD file marks that package (and its dependents) for rebuild. Changing ALL 82 Python BUILD files in one commit forces a full rebuild of every Python package, exposing pre-existing broken BUILD files that were previously untested.
+
+**Rule:** When making a global change to BUILD files (like fixing a syntax issue), only change the files that are actually broken. Don't apply the fix to files that are working — they'll be fixed next time the scaffold generator is used.

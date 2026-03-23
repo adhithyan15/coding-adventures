@@ -798,7 +798,7 @@ class TestVersion:
     for dep in ordered_deps {
         build_lines.push(format!("uv pip install -e ../{} --quiet", dep));
     }
-    build_lines.push("uv pip install -e \".[dev]\" --quiet".to_string());
+    build_lines.push("uv pip install -e .[dev] --quiet".to_string());
     build_lines.push(".venv/bin/python -m pytest tests/ -v".to_string());
     let build = build_lines.join("\n") + "\n";
 

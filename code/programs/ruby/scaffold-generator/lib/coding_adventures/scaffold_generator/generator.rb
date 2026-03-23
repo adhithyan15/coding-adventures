@@ -518,7 +518,7 @@ module CodingAdventures
 
       build_lines = ["uv venv --quiet --clear"]
       ordered_deps.each { |dep| build_lines << "uv pip install -e ../#{dep} --quiet" }
-      build_lines << 'uv pip install -e ".[dev]" --quiet'
+      build_lines << 'uv pip install -e .[dev] --quiet'
       build_lines << ".venv/bin/python -m pytest tests/ -v"
       build = build_lines.join("\n") + "\n"
 

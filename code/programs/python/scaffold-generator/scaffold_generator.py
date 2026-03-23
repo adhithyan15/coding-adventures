@@ -351,7 +351,7 @@ class TestVersion:
     build_lines = ["uv venv --quiet --clear"]
     for dep in ordered_deps:
         build_lines.append(f"uv pip install -e ../{dep} --quiet")
-    build_lines.append('uv pip install -e ".[dev]" --quiet')
+    build_lines.append('uv pip install -e .[dev] --quiet')
     build_lines.append(".venv/bin/python -m pytest tests/ -v")
     build = "\n".join(build_lines) + "\n"
 
