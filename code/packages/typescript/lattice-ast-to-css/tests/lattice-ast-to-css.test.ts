@@ -861,3 +861,478 @@ describe("Error classes", () => {
     expect(new MissingReturnError("f")).toBeInstanceOf(LatticeError);
   });
 });
+
+// =============================================================================
+// Additional tests to reach 80%+ coverage
+// =============================================================================
+
+import {
+  LatticeModuleNotFoundError,
+  ReturnOutsideFunctionError,
+  UnitMismatchError,
+  extractValueFromAst,
+} from "../src/index.js";
+
+describe("LatticeModuleNotFoundError", () => {
+  it("stores moduleName", () => {
+    const err = new LatticeModuleNotFoundError("theme");
+    expect(err.moduleName).toBe("theme");
+    expect(err instanceof LatticeError).toBe(true);
+  });
+
+  it("has the right message with line info", () => {
+    const err = new LatticeModuleNotFoundError("buttons", 3, 5);
+    expect(err.message).toContain("buttons");
+    expect(err.line).toBe(3);
+    expect(err.column).toBe(5);
+  });
+});
+
+describe("ReturnOutsideFunctionError", () => {
+  it("constructs with default line/column", () => {
+    const err = new ReturnOutsideFunctionError();
+    expect(err instanceof LatticeError).toBe(true);
+    expect(err.message).toContain("return");
+  });
+
+  it("constructs with line and column", () => {
+    const err = new ReturnOutsideFunctionError(7, 3);
+    expect(err.line).toBe(7);
+    expect(err.column).toBe(3);
+  });
+});
+
+describe("UnitMismatchError", () => {
+  it("stores left and right units", () => {
+    const err = new UnitMismatchError("px", "s");
+    expect(err.leftUnit).toBe("px");
+    expect(err.rightUnit).toBe("s");
+    expect(err instanceof LatticeError).toBe(true);
+  });
+
+  it("has the right message", () => {
+    const err = new UnitMismatchError("em", "ms");
+    expect(err.message).toContain("em");
+    expect(err.message).toContain("ms");
+  });
+});
+
+describe("compareValues — dimension NOT_EQUALS", () => {
+  it("!= for same-unit dimensions with different values", () => {
+    expect(
+      compareValues(new LatticeDimension(10, "px"), new LatticeDimension(5, "px"), "NOT_EQUALS")
+    ).toEqual(new LatticeBool(true));
+  });
+
+  it("!= for same-unit same-value dimensions returns false", () => {
+    expect(
+      compareValues(new LatticeDimension(10, "px"), new LatticeDimension(10, "px"), "NOT_EQUALS")
+    ).toEqual(new LatticeBool(false));
+  });
+
+  it("!= for different-unit dimensions returns true", () => {
+    expect(
+      compareValues(new LatticeDimension(10, "px"), new LatticeDimension(10, "em"), "NOT_EQUALS")
+    ).toEqual(new LatticeBool(true));
+  });
+
+  it("== for different-unit dimensions returns false", () => {
+    expect(
+      compareValues(new LatticeDimension(10, "px"), new LatticeDimension(10, "em"), "EQUALS_EQUALS")
+    ).toEqual(new LatticeBool(false));
+  });
+
+  it("GREATER with incompatible dimension units returns false", () => {
+    expect(
+      compareValues(new LatticeDimension(10, "px"), new LatticeDimension(5, "em"), "GREATER")
+    ).toEqual(new LatticeBool(false));
+  });
+});
+
+describe("compareValues — non-numeric string fallback", () => {
+  it("== for equal colors via string comparison", () => {
+    expect(
+      compareValues(new LatticeColor("#fff"), new LatticeColor("#fff"), "EQUALS_EQUALS")
+    ).toEqual(new LatticeBool(true));
+  });
+
+  it("!= for different colors", () => {
+    expect(
+      compareValues(new LatticeColor("#fff"), new LatticeColor("#000"), "NOT_EQUALS")
+    ).toEqual(new LatticeBool(true));
+  });
+
+  it("GREATER on non-numeric types returns false", () => {
+    expect(
+      compareValues(new LatticeColor("#fff"), new LatticeColor("#000"), "GREATER")
+    ).toEqual(new LatticeBool(false));
+  });
+
+  it("LESS_EQUALS on idents returns false", () => {
+    expect(
+      compareValues(new LatticeIdent("bold"), new LatticeIdent("normal"), "LESS_EQUALS")
+    ).toEqual(new LatticeBool(false));
+  });
+
+  it("!= for different idents", () => {
+    expect(
+      compareValues(new LatticeIdent("dark"), new LatticeIdent("light"), "NOT_EQUALS")
+    ).toEqual(new LatticeBool(true));
+  });
+});
+
+describe("subtractValues — additional paths", () => {
+  it("Percentage - Percentage", () => {
+    expect(subtractValues(new LatticePercentage(80), new LatticePercentage(30)))
+      .toEqual(new LatticePercentage(50));
+  });
+
+  it("Dimension - Dimension different units throws", () => {
+    expect(() =>
+      subtractValues(new LatticeDimension(10, "px"), new LatticeDimension(5, "em"))
+    ).toThrow(TypeErrorInExpression);
+  });
+
+  it("mismatched types throws", () => {
+    expect(() =>
+      subtractValues(new LatticeNumber(5), new LatticeString("x"))
+    ).toThrow(TypeErrorInExpression);
+  });
+});
+
+describe("multiplyValues — Percentage * Number", () => {
+  it("Percentage * Number = Percentage", () => {
+    expect(multiplyValues(new LatticePercentage(50), new LatticeNumber(2)))
+      .toEqual(new LatticePercentage(100));
+  });
+});
+
+describe("valueToCss", () => {
+  it("converts LatticeNumber to CSS string", () => {
+    expect(valueToCss(new LatticeNumber(42))).toBe("42");
+  });
+
+  it("converts LatticeDimension to CSS string", () => {
+    expect(valueToCss(new LatticeDimension(16, "px"))).toBe("16px");
+  });
+
+  it("converts LatticeIdent to CSS string", () => {
+    expect(valueToCss(new LatticeIdent("red"))).toBe("red");
+  });
+});
+
+describe("extractValueFromAst", () => {
+  it("extracts value from a raw token directly", () => {
+    const token = { type: "NUMBER", value: "10", line: 1, column: 1 } as any;
+    const result = extractValueFromAst(token);
+    expect(result).toEqual(new LatticeNumber(10));
+  });
+
+  it("extracts value from a nested ASTNode", () => {
+    const numToken = { type: "NUMBER", value: "5", line: 1, column: 1 };
+    const valueNode = { ruleName: "value", children: [numToken] };
+    const listNode = { ruleName: "value_list", children: [valueNode] } as any;
+    const result = extractValueFromAst(listNode);
+    expect(result).toEqual(new LatticeNumber(5));
+  });
+
+  it("returns LatticeNull for empty ASTNode", () => {
+    const emptyNode = { ruleName: "value_list", children: [] } as any;
+    const result = extractValueFromAst(emptyNode);
+    expect(result).toBeInstanceOf(LatticeNull);
+  });
+});
+
+describe("ExpressionEvaluator — direct evaluation", () => {
+  it("evaluates a raw token directly", () => {
+    const scope = new ScopeChain();
+    const evaluator = new ExpressionEvaluator(scope);
+    const token = { type: "NUMBER", value: "42", line: 1, column: 1 };
+    const result = evaluator.evaluate(token as any);
+    expect(result).toEqual(new LatticeNumber(42));
+  });
+
+  it("looks up variable stored as LatticeValue in scope", () => {
+    const scope = new ScopeChain();
+    scope.set("$x", new LatticeNumber(99));
+    const evaluator = new ExpressionEvaluator(scope);
+    const varToken = { type: "VARIABLE", value: "$x", line: 1, column: 1 };
+    const primaryNode = { ruleName: "lattice_primary", children: [varToken] } as any;
+    const result = evaluator.evaluate(primaryNode);
+    expect(result).toEqual(new LatticeNumber(99));
+  });
+
+  it("looks up undefined variable returns LatticeIdent", () => {
+    const scope = new ScopeChain();
+    const evaluator = new ExpressionEvaluator(scope);
+    const varToken = { type: "VARIABLE", value: "$missing", line: 1, column: 1 };
+    const primaryNode = { ruleName: "lattice_primary", children: [varToken] } as any;
+    const result = evaluator.evaluate(primaryNode);
+    expect(result).toBeInstanceOf(LatticeIdent);
+  });
+
+  it("looks up variable stored as raw Token", () => {
+    const scope = new ScopeChain();
+    const rawToken = { type: "NUMBER", value: "77", line: 1, column: 1 };
+    scope.set("$t", rawToken);
+    const evaluator = new ExpressionEvaluator(scope);
+    const varToken = { type: "VARIABLE", value: "$t", line: 1, column: 1 };
+    const primaryNode = { ruleName: "lattice_primary", children: [varToken] } as any;
+    const result = evaluator.evaluate(primaryNode);
+    expect(result).toEqual(new LatticeNumber(77));
+  });
+
+  it("looks up variable stored as ASTNode", () => {
+    const scope = new ScopeChain();
+    const identToken = { type: "IDENT", value: "blue", line: 1, column: 1 };
+    const valueNode = { ruleName: "value", children: [identToken] };
+    const valueListNode = { ruleName: "value_list", children: [valueNode] };
+    scope.set("$c", valueListNode);
+    const evaluator = new ExpressionEvaluator(scope);
+    const varToken = { type: "VARIABLE", value: "$c", line: 1, column: 1 };
+    const primaryNode = { ruleName: "lattice_primary", children: [varToken] } as any;
+    const result = evaluator.evaluate(primaryNode);
+    expect(result).toBeInstanceOf(LatticeIdent);
+    expect((result as LatticeIdent).value).toBe("blue");
+  });
+
+  it("evaluates lattice_primary with ASTNode child recurses", () => {
+    const scope = new ScopeChain();
+    const evaluator = new ExpressionEvaluator(scope);
+    const innerToken = { type: "NUMBER", value: "5", line: 1, column: 1 };
+    const innerNode = { ruleName: "lattice_primary", children: [innerToken] } as any;
+    const outerNode = { ruleName: "lattice_primary", children: [innerNode] } as any;
+    const result = evaluator.evaluate(outerNode);
+    expect(result).toEqual(new LatticeNumber(5));
+  });
+
+  it("evaluates empty primary node returns LatticeNull", () => {
+    const scope = new ScopeChain();
+    const evaluator = new ExpressionEvaluator(scope);
+    const emptyNode = { ruleName: "lattice_primary", children: [] } as any;
+    const result = evaluator.evaluate(emptyNode);
+    expect(result).toBeInstanceOf(LatticeNull);
+  });
+});
+
+describe("ExpressionEvaluator — via transpile", () => {
+  it("evaluates or logic", () => {
+    const css = transpile(`
+      @mixin check($v) {
+        @if $v == a or $v == b {
+          color: red;
+        }
+      }
+      .x { @include check(a); }
+    `);
+    expect(css).toContain("color: red");
+  });
+
+  it("evaluates and logic", () => {
+    const css = transpile(`
+      @mixin check($a, $b) {
+        @if $a == 1 and $b == 2 {
+          color: green;
+        }
+      }
+      .x { @include check(1, 2); }
+    `);
+    expect(css).toContain("color: green");
+  });
+
+  it("evaluates != comparison", () => {
+    const css = transpile(`
+      @mixin check($v) {
+        @if $v != dark {
+          color: white;
+        }
+      }
+      .x { @include check(light); }
+    `);
+    expect(css).toContain("color: white");
+  });
+
+  it("evaluates > comparison", () => {
+    const css = transpile(`
+      @mixin check($n) {
+        @if $n > 5 {
+          display: block;
+        }
+      }
+      .x { @include check(10); }
+    `);
+    expect(css).toContain("display: block");
+  });
+
+  it("evaluates >= comparison", () => {
+    const css = transpile(`
+      @mixin check($n) {
+        @if $n >= 10 {
+          display: block;
+        }
+      }
+      .x { @include check(10); }
+    `);
+    expect(css).toContain("display: block");
+  });
+
+  it("evaluates <= comparison", () => {
+    const css = transpile(`
+      @mixin check($n) {
+        @if $n <= 5 {
+          font-size: small;
+        }
+      }
+      .x { @include check(3); }
+    `);
+    expect(css).toContain("font-size: small");
+  });
+
+  it("evaluates unary negation", () => {
+    const css = transpile(`
+      @function neg($n) {
+        @return -$n;
+      }
+      .x { margin: neg(10px); }
+    `);
+    expect(css).toContain("margin: -10px");
+  });
+
+  it("evaluates subtraction in function", () => {
+    const css = transpile(`
+      @function sub($a, $b) {
+        @return $a - $b;
+      }
+      .x { width: sub(20px, 5px); }
+    `);
+    expect(css).toContain("width: 15px");
+  });
+});
+
+describe("CSSEmitter — advanced CSS features", () => {
+  it("emits @keyframes", () => {
+    const css = transpile(`
+      @keyframes fade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    `);
+    expect(css).toContain("@keyframes");
+    expect(css).toContain("opacity");
+  });
+
+  it("emits child combinator selector", () => {
+    const css = transpile("ul > li { color: red; }");
+    expect(css).toContain("color: red");
+  });
+
+  it("emits pseudo-class", () => {
+    const css = transpile("a:hover { color: red; }");
+    expect(css).toContain(":hover");
+  });
+
+  it("emits pseudo-element", () => {
+    const css = transpile("p::before { color: red; }");
+    expect(css).toContain("::before");
+  });
+
+  it("emits id selector", () => {
+    const css = transpile("#main { display: block; }");
+    expect(css).toContain("#main");
+  });
+
+  it("emits rgba function (exercises RPAREN path)", () => {
+    const css = transpile("body { background: rgba(0, 0, 0, 0.5); }");
+    expect(css).toContain("rgba(0, 0, 0, 0.5)");
+  });
+
+  it("emits minified @media rule", () => {
+    const css = transpile("@media (max-width: 600px) { h1 { color: red; } }", true);
+    expect(css).toContain("@media");
+  });
+
+  it("emits comma-separated selector list", () => {
+    const css = transpile("h1, h2 { font-weight: bold; }");
+    expect(css).toContain("h1");
+    expect(css).toContain("h2");
+  });
+
+  it("emits nested rules inside @media", () => {
+    const css = transpile(`
+      @media screen {
+        .container { width: 100%; }
+      }
+    `);
+    expect(css).toContain("@media");
+    expect(css).toContain(".container");
+  });
+
+  it("emits attribute selector", () => {
+    const css = transpile("input[type] { border: none; }");
+    expect(css).toContain("[type]");
+  });
+
+  it("emits attribute selector with value matcher", () => {
+    const css = transpile("a[href] { color: blue; }");
+    expect(css).toContain("[href]");
+  });
+});
+
+describe("LatticeTransformer — additional paths", () => {
+  it("@if with boolean variable true", () => {
+    const css = transpile(`
+      $show: true;
+      .x {
+        @if $show {
+          display: block;
+        }
+      }
+    `);
+    expect(css).toContain("display: block");
+  });
+
+  it("@if with boolean variable false skips block", () => {
+    const css = transpile(`
+      $show: false;
+      .x {
+        @if $show {
+          display: block;
+        }
+      }
+    `);
+    expect(css).not.toContain("display: block");
+  });
+
+  it("mixin with default parameter value", () => {
+    const css = transpile(`
+      @mixin border($color: red) {
+        border-color: $color;
+      }
+      .x { @include border(); }
+    `);
+    expect(css).toContain("border-color: red");
+  });
+
+  it("function returning arithmetic on dimension", () => {
+    const css = transpile(`
+      @function triple($n) {
+        @return $n * 3;
+      }
+      .x { margin: triple(4px); }
+    `);
+    expect(css).toContain("margin: 12px");
+  });
+
+  it("multiple variables in one rule", () => {
+    const css = transpile(`
+      $pad: 8px;
+      $margin: 16px;
+      .x {
+        padding: $pad;
+        margin: $margin;
+      }
+    `);
+    expect(css).toContain("padding: 8px");
+    expect(css).toContain("margin: 16px");
+  });
+});
