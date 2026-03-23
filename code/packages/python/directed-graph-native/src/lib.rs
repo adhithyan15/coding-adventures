@@ -301,7 +301,7 @@ pub unsafe extern "C" fn PyInit_directed_graph_native() -> PyObjectPtr {
     // -- Module definition --------------------------------------------------
     static mut MODULE_DEF: PyModuleDef = PyModuleDef {
         m_base: PyModuleDef_Base {
-            ob_base: [0; std::mem::size_of::<usize>() * 4],
+            ob_base: [0; std::mem::size_of::<usize>() * 2],
             m_init: None,
             m_index: 0,
             m_copy: ptr::null_mut(),

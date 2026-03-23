@@ -126,10 +126,13 @@ extern "C" {
 // These must match Python's C struct layout exactly. The #[repr(C)]
 // attribute ensures Rust uses the same memory layout as C.
 
-/// Mirrors Python's PyModuleDef_Base (we only need the sentinel head).
+/// Mirrors Python's PyModuleDef_Base.
+///
+/// PyModuleDef_Base starts with PyObject (ob_refcnt + ob_type = 2 pointers),
+/// then m_init, m_index, m_copy. Total: 5 pointer-sized fields.
 #[repr(C)]
 pub struct PyModuleDef_Base {
-    pub ob_base: [u8; std::mem::size_of::<usize>() * 4], // PyObject_HEAD_INIT
+    pub ob_base: [u8; std::mem::size_of::<usize>() * 2], // PyObject: ob_refcnt + ob_type
     pub m_init: Option<unsafe extern "C" fn() -> PyObjectPtr>,
     pub m_index: isize,
     pub m_copy: PyObjectPtr,
