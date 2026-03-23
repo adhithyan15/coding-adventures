@@ -84,12 +84,12 @@ describe("Resolver", function()
         it("handles multiple packages across languages", function()
             local packages = {
                 {name = "python/arithmetic", path = "/fake/python/arithmetic", language = "python"},
-                {name = "lua/arithmetic", path = "/fake/lua/arithmetic", language = "lua"},
+                {name = "ruby/arithmetic", path = "/fake/ruby/arithmetic", language = "ruby"},
             }
             local known = Resolver.build_known_names(packages)
+            -- Python uses hyphens, Ruby uses underscores — different keys, no collision.
             assert.are.equal("python/arithmetic", known["coding-adventures-arithmetic"])
-            -- Lua arithmetic dir has no underscores, so rockspec name is same as Python.
-            -- This tests that both can coexist (last one wins for the same key).
+            assert.are.equal("ruby/arithmetic", known["coding_adventures_arithmetic"])
         end)
     end)
 
@@ -105,53 +105,56 @@ describe("Resolver", function()
         end)
 
         it("parses Lua rockspec dependencies", function()
-            -- Create temp directories with rockspec files.
-            local tmpdir_a = os.tmpname()
-            os.remove(tmpdir_a)
-            os.execute('mkdir -p "' .. tmpdir_a .. '"')
+            -- Create temp directories with predictable basenames so that
+            -- build_known_names maps them correctly. The basename of the
+            -- directory is used to construct the rockspec name:
+            --   dir "pkg_b" → rockspec name "coding-adventures-pkg-b"
+            local tmpbase = os.tmpname()
+            os.remove(tmpbase)
+            os.execute('mkdir -p "' .. tmpbase .. '/pkg_a"')
+            os.execute('mkdir -p "' .. tmpbase .. '/pkg_b"')
 
-            local tmpdir_b = os.tmpname()
-            os.remove(tmpdir_b)
-            os.execute('mkdir -p "' .. tmpdir_b .. '"')
+            local dir_a = tmpbase .. "/pkg_a"
+            local dir_b = tmpbase .. "/pkg_b"
 
-            -- Package B has no deps.
-            local f = io.open(tmpdir_b .. "/coding-adventures-b-0.1.0-1.rockspec", "w")
-            f:write('package = "coding-adventures-b"\n')
+            -- Package B has no internal deps.
+            local f = io.open(dir_b .. "/coding-adventures-pkg-b-0.1.0-1.rockspec", "w")
+            f:write('package = "coding-adventures-pkg-b"\n')
             f:write('dependencies = { "lua >= 5.4" }\n')
             f:close()
 
             -- Package A depends on B.
-            f = io.open(tmpdir_a .. "/coding-adventures-a-0.1.0-1.rockspec", "w")
-            f:write('package = "coding-adventures-a"\n')
+            -- build_known_names maps dir "pkg_b" → "coding-adventures-pkg-b"
+            f = io.open(dir_a .. "/coding-adventures-pkg-a-0.1.0-1.rockspec", "w")
+            f:write('package = "coding-adventures-pkg-a"\n')
             f:write('dependencies = {\n')
             f:write('    "lua >= 5.4",\n')
-            f:write('    "coding-adventures-b >= 0.1.0",\n')
+            f:write('    "coding-adventures-pkg-b >= 0.1.0",\n')
             f:write('}\n')
             f:close()
 
             local packages = {
-                {name = "lua/a", path = tmpdir_a, language = "lua", build_commands = {}},
-                {name = "lua/b", path = tmpdir_b, language = "lua", build_commands = {}},
+                {name = "lua/pkg_a", path = dir_a, language = "lua", build_commands = {}},
+                {name = "lua/pkg_b", path = dir_b, language = "lua", build_commands = {}},
             }
 
             local graph = Resolver.resolve_dependencies(packages)
 
             -- B should be a predecessor of A (B must build before A).
-            local preds = graph:predecessors("lua/a")
+            local preds = graph:predecessors("lua/pkg_a")
             local found_b = false
             for _, p in ipairs(preds) do
-                if p == "lua/b" then found_b = true end
+                if p == "lua/pkg_b" then found_b = true end
             end
-            assert.is_true(found_b, "lua/b should be a predecessor of lua/a")
+            assert.is_true(found_b, "lua/pkg_b should be a predecessor of lua/pkg_a")
 
             -- B should have no predecessors.
-            assert.are.equal(0, #graph:predecessors("lua/b"))
+            assert.are.equal(0, #graph:predecessors("lua/pkg_b"))
 
             -- Clean up.
-            os.remove(tmpdir_a .. "/coding-adventures-a-0.1.0-1.rockspec")
-            os.remove(tmpdir_b .. "/coding-adventures-b-0.1.0-1.rockspec")
-            os.execute('rmdir "' .. tmpdir_a .. '"')
-            os.execute('rmdir "' .. tmpdir_b .. '"')
+            os.remove(dir_a .. "/coding-adventures-pkg-a-0.1.0-1.rockspec")
+            os.remove(dir_b .. "/coding-adventures-pkg-b-0.1.0-1.rockspec")
+            os.execute('rm -rf "' .. tmpbase .. '"')
         end)
 
         it("handles packages with no metadata files", function()
