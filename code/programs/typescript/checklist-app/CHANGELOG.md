@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0] - Unreleased
+
+### Added
+
+- **Due dates** — optional YYYY-MM-DD due date on todo items, stored as
+  an ISO 8601 date string (JSON-serializable, timezone-agnostic)
+- **DatePicker** — shared component in `@coding-adventures/ui-components`
+  wrapping `<input type="date">` with dark theme styling and clear button
+- **Overdue highlighting** — todos past their due date shown in red in the list
+- **TodoEditor** — date picker field for setting/clearing due dates
+
 ## [0.4.0] - Unreleased
 
 ### Added

@@ -6,7 +6,7 @@
  */
 
 import { useState } from "react";
-import { useTranslation } from "@coding-adventures/ui-components";
+import { useTranslation, DatePicker } from "@coding-adventures/ui-components";
 import { useStore } from "@coding-adventures/store";
 import { store } from "../state.js";
 import { createTodoAction, updateTodoAction } from "../actions.js";
@@ -25,6 +25,7 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
   const [title, setTitle] = useState(existing?.title ?? "");
   const [description, setDescription] = useState(existing?.description ?? "");
   const [status, setStatus] = useState<TodoStatus>(existing?.status ?? "todo");
+  const [dueDate, setDueDate] = useState(existing?.dueDate ?? "");
   const [error, setError] = useState("");
 
   function handleSave() {
@@ -32,16 +33,18 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
       setError(t("editor.nameRequired"));
       return;
     }
+    const dueDateValue = dueDate || null;
     if (existing) {
       store.dispatch(
         updateTodoAction(existing.id, {
           title: title.trim(),
           description: description.trim(),
           status,
+          dueDate: dueDateValue,
         }),
       );
     } else {
-      store.dispatch(createTodoAction(title.trim(), description.trim()));
+      store.dispatch(createTodoAction(title.trim(), description.trim(), dueDateValue));
     }
     onNavigate("/todos");
   }
@@ -79,6 +82,18 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
           onChange={(e) => setDescription(e.target.value)}
           placeholder={t("todos.descriptionPlaceholder")}
           rows={3}
+        />
+      </div>
+
+      <div className="template-editor__field">
+        <label className="template-editor__label" htmlFor="todo-due">
+          {t("todos.dueDate")}
+        </label>
+        <DatePicker
+          value={dueDate}
+          onChange={setDueDate}
+          label={t("todos.dueDate")}
+          id="todo-due"
         />
       </div>
 

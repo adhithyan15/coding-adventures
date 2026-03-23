@@ -146,11 +146,11 @@ export function stateLoadAction(
   return { type: STATE_LOAD, templates, instances, todos };
 }
 
-export function createTodoAction(title: string, description: string) {
-  return { type: TODO_CREATE, title, description };
+export function createTodoAction(title: string, description: string, dueDate: string | null = null) {
+  return { type: TODO_CREATE, title, description, dueDate };
 }
 
-export function updateTodoAction(todoId: string, patch: { title?: string; description?: string; status?: TodoStatus }) {
+export function updateTodoAction(todoId: string, patch: { title?: string; description?: string; status?: TodoStatus; dueDate?: string | null }) {
   return { type: TODO_UPDATE, todoId, patch };
 }
 

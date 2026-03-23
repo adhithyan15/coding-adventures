@@ -24,6 +24,7 @@
  * @import "@coding-adventures/ui-components/src/styles/theme.css";
  * @import "@coding-adventures/ui-components/src/styles/accessibility.css";
  * @import "@coding-adventures/ui-components/src/styles/tree.css";
+ * @import "@coding-adventures/ui-components/src/styles/date-picker.css";
  * ```
  */
 
@@ -33,6 +34,7 @@ export type { TabListProps } from "./components/TabList.js";
 export type { SliderControlProps } from "./components/SliderControl.js";
 export type { TreeViewProps, TreeViewNode } from "./components/TreeView.js";
 export type { BranchGroupProps } from "./components/BranchGroup.js";
+export type { DatePickerProps } from "./components/DatePicker.js";
 export type { UseTabsOptions, TabProps } from "./hooks/useTabs.js";
 export type { LocaleMap } from "./i18n/index.js";
 
@@ -41,6 +43,7 @@ export { TabList } from "./components/TabList.js";
 export { SliderControl } from "./components/SliderControl.js";
 export { TreeView } from "./components/TreeView.js";
 export { BranchGroup } from "./components/BranchGroup.js";
+export { DatePicker } from "./components/DatePicker.js";
 
 // Hooks
 export { useTabs } from "./hooks/useTabs.js";

@@ -789,6 +789,79 @@ User action → dispatch(Action) → middleware chain → reducer(state, action)
 
 ---
 
+## V0.5 — Due Dates
+
+### Problem
+
+Todo items have no timeline. You can't see what's due today, what's
+overdue, or plan ahead.
+
+### Solution
+
+Add an optional `dueDate` field to `TodoItem` and a shared `DatePicker`
+component in `@coding-adventures/ui-components`.
+
+### Data Model Change
+
+```typescript
+interface TodoItem {
+  // ... existing fields ...
+  dueDate: string | null;  // ISO 8601 date: "YYYY-MM-DD" or null
+}
+```
+
+`dueDate` is a **string, not a Date object or timestamp**, because:
+- JSON-serializable without conversion (IndexedDB, REST, SQL all handle it)
+- A due date is a calendar date, not a point in time — "2026-03-25" means
+  the same thing in every timezone
+- The HTML `<input type="date">` returns YYYY-MM-DD natively
+- String comparison works for sorting: `"2026-03-25" < "2026-04-01"`
+
+### Shared Component: `DatePicker`
+
+**Package:** `@coding-adventures/ui-components`
+
+A thin, accessible wrapper around `<input type="date">` that integrates
+with the shared dark theme and provides a consistent API.
+
+```typescript
+interface DatePickerProps {
+  /** Current value as YYYY-MM-DD string, or empty string for no date. */
+  value: string;
+  /** Called with the new YYYY-MM-DD string on change. */
+  onChange: (value: string) => void;
+  /** Accessible label text. */
+  label: string;
+  /** HTML id for the input (for htmlFor on external labels). */
+  id?: string;
+  /** Placeholder text when no date is selected. */
+  placeholder?: string;
+  /** Additional CSS class. */
+  className?: string;
+}
+```
+
+The component renders a `<div>` containing:
+- The `<input type="date">` styled to match the dark theme
+- A "clear" button (✕) that resets the value to empty string
+- Proper `aria-label` and focus styling
+
+### UI Changes
+
+**TodoEditor**: date picker field between description and status selector.
+**TodoList**: due date shown on each item card, with overdue highlighting
+(red text if `dueDate < today` and status is not "done").
+
+### i18n
+
+```json
+"todos.dueDate": "Due Date",
+"todos.dueDateNone": "No due date",
+"todos.overdue": "Overdue"
+```
+
+---
+
 ## Future Extensions
 
 - **V1**: Web Crypto encryption layer on top of IndexedDB (PBKDF2 + AES-GCM)

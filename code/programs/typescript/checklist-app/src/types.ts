@@ -121,6 +121,19 @@ export interface TodoItem {
   title: string;
   description: string;
   status: TodoStatus;
+  /**
+   * Optional due date as an ISO 8601 date string (YYYY-MM-DD).
+   *
+   * Stored as a string (not a Date object or timestamp) because:
+   *   - JSON-serializable without conversion (IndexedDB, REST APIs, SQL)
+   *   - A due date is a calendar date, not a point in time — "2026-03-25"
+   *     means the same thing regardless of timezone
+   *   - The HTML <input type="date"> returns YYYY-MM-DD natively
+   *   - String comparison works for sorting: "2026-03-25" < "2026-04-01"
+   *
+   * null means no due date set.
+   */
+  dueDate: string | null;
   /** Unix timestamp from Date.now() */
   createdAt: number;
   /** Unix timestamp, updated on every mutation */
