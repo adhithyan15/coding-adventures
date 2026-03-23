@@ -55,7 +55,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
@@ -193,13 +192,7 @@ func chownFile(path string, spec ChownSpec, opts ChownOptions, stdout, stderr io
 		return 1
 	}
 
-	stat, ok := info.Sys().(*syscall.Stat_t)
-	oldUID := -1
-	oldGID := -1
-	if ok {
-		oldUID = int(stat.Uid)
-		oldGID = int(stat.Gid)
-	}
+	oldUID, oldGID := getFileOwnership(info)
 
 	uid := spec.UID
 	gid := spec.GID
@@ -336,8 +329,8 @@ func runChown(specPath string, argv []string, stdout io.Writer, stderr io.Writer
 				fmt.Fprintf(stderr, "chown: cannot stat reference file '%s': %s\n", refFile, err)
 				return 1
 			}
-			if stat, ok := refInfo.Sys().(*syscall.Stat_t); ok {
-				spec = ChownSpec{UID: int(stat.Uid), GID: int(stat.Gid)}
+			if refSpec, ok := getRefFileOwnership(refInfo); ok {
+				spec = refSpec
 			}
 		} else {
 			ownerGroup, _ := r.Arguments["owner_group"].(string)
