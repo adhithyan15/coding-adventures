@@ -1,0 +1,16 @@
+[project]
+name = "coding-adventures-wave-physics"
+version = "0.1.0"
+description = "Simple harmonic wave model for electromagnetic wave fundamentals"
+requires-python = ">=3.9"
+dependencies = ["coding-adventures-trig"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/wave_physics"]
