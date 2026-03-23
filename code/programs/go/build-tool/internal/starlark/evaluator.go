@@ -281,6 +281,44 @@ func getInterfaceList(dict map[string]interface{}, key string) []interface{} {
 	return list
 }
 
+// EnhanceInstallCommands replaces generic install commands in a rendered
+// command list with auto-discovered versions that include monorepo deps.
+//
+// When Starlark rules produce commands via cmd(), the install command is
+// generic (e.g., "uv pip install --system -e .[dev]").  This function
+// detects such commands and replaces them with the full transitive version
+// that includes -e flags for every monorepo dep.
+//
+// This allows Starlark rules to declare *intent* (install deps) while the
+// build tool handles the *mechanics* of monorepo dep discovery.
+func EnhanceInstallCommands(cmds []string, pkgPath string) []string {
+	if pkgPath == "" || len(cmds) == 0 {
+		return cmds
+	}
+
+	result := make([]string, len(cmds))
+	copy(result, cmds)
+
+	for i, cmd := range result {
+		// Replace generic Python install with transitive-aware version.
+		if strings.HasPrefix(cmd, "uv pip install") && !strings.Contains(cmd, "-e ../") {
+			enhanced := pyInstallCmd(pkgPath)
+			if enhanced != cmd {
+				result[i] = enhanced
+			}
+		}
+		// Replace generic npm install with transitive-aware version.
+		if cmd == "npm install --silent" || cmd == "npm install" {
+			enhanced := tsInstallCmd(pkgPath)
+			if enhanced != cmd {
+				result[i] = enhanced
+			}
+		}
+	}
+
+	return result
+}
+
 // GenerateCommands produces shell commands for a target, using the package
 // path to auto-discover monorepo deps from the language's dep file
 // (pyproject.toml, package.json, Gemfile, go.mod, mix.exs, Cargo.toml).

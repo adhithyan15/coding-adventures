@@ -184,7 +184,7 @@ func run() int {
 								if rerr != nil {
 									packages[i].BuildCommands = starlarkeval.GenerateCommands(t, packages[i].Path)
 								} else {
-									packages[i].BuildCommands = rendered
+									packages[i].BuildCommands = starlarkeval.EnhanceInstallCommands(rendered, packages[i].Path)
 								}
 							} else {
 								packages[i].BuildCommands = starlarkeval.GenerateCommands(t, packages[i].Path)
@@ -288,7 +288,7 @@ func run() int {
 							fmt.Fprintf(os.Stderr, "Warning: cmd render failed for %s: %v\n", pkg.Name, err)
 							pkg.BuildCommands = starlarkeval.GenerateCommands(t, pkg.Path)
 						} else {
-							pkg.BuildCommands = rendered
+							pkg.BuildCommands = starlarkeval.EnhanceInstallCommands(rendered, pkg.Path)
 						}
 					} else {
 						pkg.BuildCommands = starlarkeval.GenerateCommands(t, pkg.Path)

@@ -480,3 +480,41 @@ func TestTsInstallCmd(t *testing.T) {
 		t.Errorf("tsInstallCmd(leaf) = %q, want default", cmd)
 	}
 }
+
+// TestEnhanceInstallCommands verifies that rendered Starlark commands
+// get their install commands replaced with auto-discovered versions.
+func TestEnhanceInstallCommands(t *testing.T) {
+	// Create a temp package with monorepo deps.
+	parent := t.TempDir()
+	os.MkdirAll(parent+"/my-pkg", 0755)
+	os.MkdirAll(parent+"/dep-a", 0755)
+	os.WriteFile(parent+"/my-pkg/pyproject.toml", []byte(`[project]
+name = "coding-adventures-my-pkg"
+dependencies = ["coding-adventures-dep-a"]`), 0644)
+	os.WriteFile(parent+"/dep-a/pyproject.toml", []byte(`[project]
+name = "coding-adventures-dep-a"
+dependencies = []`), 0644)
+
+	cmds := []string{
+		`uv pip install --system -e .[dev]`,
+		`python -m pytest --cov --cov-report=term-missing`,
+	}
+
+	enhanced := EnhanceInstallCommands(cmds, parent+"/my-pkg")
+	if enhanced[0] == cmds[0] {
+		t.Errorf("install command not enhanced: %q", enhanced[0])
+	}
+	if !containsStr(enhanced[0], "-e ../dep-a") {
+		t.Errorf("enhanced command missing dep: %q", enhanced[0])
+	}
+	// Test command should be unchanged.
+	if enhanced[1] != cmds[1] {
+		t.Errorf("test command changed: %q", enhanced[1])
+	}
+
+	// Empty path should return commands unchanged.
+	unchanged := EnhanceInstallCommands(cmds, "")
+	if unchanged[0] != cmds[0] {
+		t.Errorf("empty path should not enhance: %q", unchanged[0])
+	}
+}
