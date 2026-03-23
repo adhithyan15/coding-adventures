@@ -528,10 +528,13 @@ describe("v7()", () => {
     expect(s).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   });
 
-  it("time ordering: two consecutive v7 UUIDs are ordered (first <= second)", () => {
+  it("time ordering: v7 UUIDs from different milliseconds are ordered", async () => {
     const a = v7();
+    // Wait 2ms so the next UUID lands in a later millisecond bucket.
+    // Without the delay both calls may resolve within the same ms, making
+    // the 48-bit timestamp prefix identical and ordering undefined.
+    await new Promise((resolve) => setTimeout(resolve, 2));
     const b = v7();
-    // compareTo returns -1 or 0 (0 is astronomically unlikely but valid)
     expect(a.compareTo(b)).toBeLessThanOrEqual(0);
   });
 
