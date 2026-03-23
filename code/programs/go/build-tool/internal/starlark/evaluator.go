@@ -43,6 +43,7 @@ import (
 	"strings"
 
 	interpreter "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-interpreter"
+	starlarkvm "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-vm"
 )
 
 // CtxSchemaVersion is the version of the _ctx build context schema.
@@ -164,10 +165,23 @@ func EvaluateBuildFile(buildFilePath, pkgDir, repoRoot string) (*BuildResult, er
 		}),
 	)
 
-	// Execute the BUILD file.
-	result, err := interp.Interpret(source)
-	if err != nil {
-		return nil, fmt.Errorf("evaluating BUILD file %s: %w", buildFilePath, err)
+	// Execute the BUILD file.  The VM may panic on type errors or
+	// unsupported operations — recover and return as an error.
+	var result *starlarkvm.StarlarkResult
+	var evalErr error
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				evalErr = fmt.Errorf("VM panic: %v", r)
+			}
+		}()
+		result, err = interp.Interpret(source)
+		if err != nil {
+			evalErr = fmt.Errorf("evaluating BUILD file %s: %w", buildFilePath, err)
+		}
+	}()
+	if evalErr != nil {
+		return nil, evalErr
 	}
 
 	// Extract _targets from the result's variables.
