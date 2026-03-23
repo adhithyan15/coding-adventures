@@ -1,0 +1,1 @@
+lua scaffold.lua --help
