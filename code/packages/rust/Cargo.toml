@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "activation-functions",
+    "actor",
     "arithmetic",
     "arm-simulator",
     "assembler",
@@ -39,6 +40,8 @@ members = [
     "jit-compiler",
     "json-lexer",
     "json-parser",
+    "json-serializer",
+    "json-value",
     "jvm-simulator",
     "lexer",
     "lisp-compiler",

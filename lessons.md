@@ -374,3 +374,25 @@ pub fn get_user_info() -> Result<UserInfo, String> {
 **Elixir/Python solution:** Provide `BUILD_windows` files that avoid Unix shell syntax (`2>/dev/null`) and handle dependency paths correctly.
 
 **Rule:** When writing tools that use OS-specific APIs, always add platform guards from the start. Don't wait for CI failures. Check: `syscall.Stat_t`, `syscall.Statfs`, `os.Chown`, `libc::getuid`, `libc::statvfs`, etc.
+
+---
+
+### 2026-03-23: uv pip install cannot resolve local editable deps on Windows
+
+When a Python package's `pyproject.toml` declares a dependency on another local package (e.g., `dependencies = ["coding-adventures-json-parser"]`), `uv pip install -e ../json-parser -e ".[dev]"` works on Linux/macOS but **fails on Windows** with "not found in the package registry." This is because uv on Windows doesn't resolve editable package names from the same command line during dependency resolution.
+
+**Workaround:** Remove unpublished local package dependencies from `pyproject.toml` (since BUILD files handle all transitive deps anyway). Document them in comments for future PyPI publishing. This makes `uv pip install -e ".[dev]"` succeed because there are no deps to resolve from PyPI.
+
+**Also learned:**
+- `".[dev]"` with double quotes works in `sh -c` (bash strips quotes) but fails in `cmd /C` (cmd.exe passes quotes literally to uv, causing "Failed to parse" error)
+- `.venv/bin/python` doesn't exist on Windows — use `uv run python` for cross-platform compatibility
+- Always provide `BUILD_windows` files for Python packages that have shell-specific syntax
+- The build tool's `GetBuildFileForPlatform` correctly selects `BUILD_windows` on Windows via `runtime.GOOS`
+
+---
+
+### 2026-03-23: .gitattributes eol=lf fixes Elixir heredoc CRLF test failures
+
+Elixir heredoc strings in test files (triple-quoted `"""`) embed literal line endings. When git's `autocrlf` converts `\n` to `\r\n` on Windows checkout, the heredoc strings contain `\r\n` but the serializer produces `\n`, causing test assertion failures.
+
+**Fix:** Add `.gitattributes` with `* text=auto eol=lf` to force LF line endings on all platforms. This prevents CRLF-related test failures across all languages (Elixir, Ruby, Python doctests, etc.).

@@ -1,0 +1,8 @@
+[package]
+name = "coding-adventures-json-serializer"
+version = "0.1.0"
+edition = "2021"
+description = "JSON serializer — converts JsonValue types into compact or pretty-printed JSON text"
+
+[dependencies]
+coding-adventures-json-value = { path = "../json-value" }
