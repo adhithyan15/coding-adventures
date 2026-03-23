@@ -4,6 +4,12 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-03-23: Plan-based execution must re-evaluate Starlark BUILD files
+
+When the Go build tool runs with `--plan-file` (CI build jobs), it re-reads platform-specific BUILD files using `ReadLines()`. For Starlark BUILD files, this passes raw Starlark source (e.g., `load(...)`) to the shell executor, causing `'load' is not recognized` on Windows. The fix: check `IsStarlark` and call `EvaluateBuildFile()` instead of `ReadLines()` for Starlark packages. Any code path that reads BUILD files must respect the Starlark/shell distinction.
+
+---
+
 ### 2026-03-18: Cannot create a PR when remote has no main branch
 
 When working with a completely empty GitHub repo, you can't create a PR because there's no base branch. The `gh pr create` command fails with "no history in common." Solution: push an initial commit to main first (even an empty one), then create PRs from feature branches. For the very first content, merging directly to main is acceptable.
