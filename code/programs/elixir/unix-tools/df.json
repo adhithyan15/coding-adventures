@@ -1,0 +1,108 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "df",
+  "display_name": "df",
+  "description": "Report file system disk space usage",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "all",
+      "short": "a",
+      "long": "all",
+      "description": "Include pseudo, duplicate, inaccessible file systems",
+      "type": "boolean"
+    },
+    {
+      "id": "human_readable",
+      "short": "h",
+      "long": "human-readable",
+      "description": "Print sizes in powers of 1024 (e.g., 1023M)",
+      "type": "boolean"
+    },
+    {
+      "id": "si",
+      "short": "H",
+      "long": "si",
+      "description": "Print sizes in powers of 1000 (e.g., 1.1G)",
+      "type": "boolean"
+    },
+    {
+      "id": "inodes",
+      "short": "i",
+      "long": "inodes",
+      "description": "List inode information instead of block usage",
+      "type": "boolean"
+    },
+    {
+      "id": "block_size",
+      "short": "B",
+      "long": "block-size",
+      "description": "Scale sizes by SIZE before printing them",
+      "type": "string",
+      "value_name": "SIZE"
+    },
+    {
+      "id": "local",
+      "short": "l",
+      "long": "local",
+      "description": "Limit listing to local file systems",
+      "type": "boolean"
+    },
+    {
+      "id": "portability",
+      "short": "P",
+      "long": "portability",
+      "description": "Use the POSIX output format",
+      "type": "boolean"
+    },
+    {
+      "id": "type",
+      "short": "t",
+      "long": "type",
+      "description": "Limit listing to file systems of TYPE",
+      "type": "string",
+      "value_name": "TYPE"
+    },
+    {
+      "id": "exclude_type",
+      "short": "x",
+      "long": "exclude-type",
+      "description": "Limit listing to file systems not of TYPE",
+      "type": "string",
+      "value_name": "TYPE"
+    },
+    {
+      "id": "print_type",
+      "short": "T",
+      "long": "print-type",
+      "description": "Print file system type",
+      "type": "boolean"
+    },
+    {
+      "id": "total",
+      "long": "total",
+      "description": "Elide all entries insignificant to available space, and produce a grand total",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Show information about the file system on which each FILE resides",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "size-format",
+      "flag_ids": ["human_readable", "si"],
+      "required": false
+    }
+  ]
+}

@@ -146,6 +146,7 @@ impl Parser {
             errors: scan_errors,
             help_requested,
             version_requested,
+            explicit_flags,
         } = self.scan(&remaining_argv, &classifier, &active_flags, &command_path)?;
 
         // Handle --help / -h early-return (§6.3)
@@ -198,6 +199,9 @@ impl Parser {
             }
             let default = if f.flag_type == "boolean" {
                 json!(false)
+            } else if f.flag_type == "count" {
+                // Count flags default to 0 when absent.
+                json!(0)
             } else if let Some(ref d) = f.default {
                 d.clone()
             } else {
@@ -215,6 +219,7 @@ impl Parser {
             command_path,
             flags: final_flags,
             arguments: pos_result.assignments,
+            explicit_flags,
         }))
     }
 
@@ -344,6 +349,7 @@ impl Parser {
         let mut pending_flag: Option<&FlagDef> = None;
         let mut help_requested = false;
         let mut version_requested = false;
+        let mut explicit_flags: Vec<String> = Vec::new();
 
         // Determine if this is traditional mode and if we're on the first token.
         let is_traditional = self.spec.parsing_mode == "traditional";
@@ -369,6 +375,9 @@ impl Parser {
                 match mode.as_str() {
                     MODE_FLAG_VALUE => {
                         // The entire token is the value for the pending flag.
+                        // Note: explicit_flags was already pushed when the flag
+                        // token was first seen (in SCANNING mode). We do not
+                        // push again here — the flag was already tracked.
                         if let Some(flag) = pending_flag {
                             let val = coerce_value(token, &flag.flag_type, &flag.enum_values);
                             match val {
@@ -406,15 +415,25 @@ impl Parser {
                                 // Check for builtin --help / --version first.
                                 if name == "help" {
                                     help_requested = true;
-                                    return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested });
+                                    return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested, explicit_flags });
                                 }
                                 if name == "version" {
                                     version_requested = true;
-                                    return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested });
+                                    return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested, explicit_flags });
                                 }
                                 if let Some(flag) = active_flags.iter().find(|f| f.long.as_deref() == Some(&name)) {
+                                    explicit_flags.push(flag.id.clone());
                                     if flag.flag_type == "boolean" {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
+                                    } else if flag.flag_type == "count" {
+                                        // Count flags increment a counter each time they appear.
+                                        increment_count_flag(&mut parsed_flags, flag);
+                                    } else if flag.default_when_present.is_some() {
+                                        // Enum flag with default_when_present: the token classifier
+                                        // treated it as boolean-like (no value token consumed).
+                                        // We use default_when_present as the value.
+                                        let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                        store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                     } else {
                                         pending_flag = Some(flag);
                                         let _ = mode_machine.switch_mode("needs_value");
@@ -433,6 +452,7 @@ impl Parser {
 
                             TokenEvent::LongFlagWithValue(name, value) => {
                                 if let Some(flag) = active_flags.iter().find(|f| f.long.as_deref() == Some(&name)) {
+                                    explicit_flags.push(flag.id.clone());
                                     let val = coerce_value(&value, &flag.flag_type, &flag.enum_values);
                                     match val {
                                         Ok(v) => store_flag_value(&mut parsed_flags, flag, v, &mut errors, command_path),
@@ -446,8 +466,14 @@ impl Parser {
 
                             TokenEvent::SingleDashLong(name) => {
                                 if let Some(flag) = active_flags.iter().find(|f| f.single_dash_long.as_deref() == Some(&name)) {
+                                    explicit_flags.push(flag.id.clone());
                                     if flag.flag_type == "boolean" {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
+                                    } else if flag.flag_type == "count" {
+                                        increment_count_flag(&mut parsed_flags, flag);
+                                    } else if flag.default_when_present.is_some() {
+                                        let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                        store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                     } else {
                                         pending_flag = Some(flag);
                                         let _ = mode_machine.switch_mode("needs_value");
@@ -464,10 +490,16 @@ impl Parser {
                                     // that happens to use the same short char), trigger help.
                                     if flag.id == "__builtin_help" {
                                         help_requested = true;
-                                        return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested });
+                                        return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested, explicit_flags });
                                     }
+                                    explicit_flags.push(flag.id.clone());
                                     if flag.flag_type == "boolean" {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
+                                    } else if flag.flag_type == "count" {
+                                        increment_count_flag(&mut parsed_flags, flag);
+                                    } else if flag.default_when_present.is_some() {
+                                        let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                        store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                     } else {
                                         pending_flag = Some(flag);
                                         let _ = mode_machine.switch_mode("needs_value");
@@ -480,6 +512,7 @@ impl Parser {
 
                             TokenEvent::ShortFlagWithValue(ch, value) => {
                                 if let Some(flag) = active_flags.iter().find(|f| f.short.as_deref() == Some(&ch.to_string())) {
+                                    explicit_flags.push(flag.id.clone());
                                     let val = coerce_value(&value, &flag.flag_type, &flag.enum_values);
                                     match val {
                                         Ok(v) => store_flag_value(&mut parsed_flags, flag, v, &mut errors, command_path),
@@ -493,13 +526,26 @@ impl Parser {
 
                             TokenEvent::StackedFlags(chars) => {
                                 // Each char is a short flag. All except possibly the
-                                // last are boolean; the last may be non-boolean (its
-                                // value comes from the next token).
+                                // last are boolean (or count); the last may be non-boolean
+                                // (its value comes from the next token).
+                                //
+                                // For count flags in a stack like `-vvv`, each `v`
+                                // increments the counter. This is the primary use case
+                                // for count flags.
                                 for (j, ch) in chars.iter().enumerate() {
                                     let is_last = j == chars.len() - 1;
                                     if let Some(flag) = active_flags.iter().find(|f| f.short.as_deref() == Some(&ch.to_string())) {
+                                        explicit_flags.push(flag.id.clone());
                                         if flag.flag_type == "boolean" {
                                             store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
+                                        } else if flag.flag_type == "count" {
+                                            // Count flag in a stack: increment counter.
+                                            increment_count_flag(&mut parsed_flags, flag);
+                                        } else if flag.default_when_present.is_some() {
+                                            // Enum with default_when_present in a stack:
+                                            // use default_when_present value.
+                                            let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                            store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                         } else if is_last {
                                             // Non-boolean last flag — value from next token.
                                             pending_flag = Some(flag);
@@ -555,6 +601,7 @@ impl Parser {
             errors,
             help_requested,
             version_requested,
+            explicit_flags,
         })
     }
 
@@ -608,6 +655,7 @@ impl Parser {
                 requires: Vec::new(),
                 required_unless: Vec::new(),
                 repeatable: false,
+                default_when_present: None,
             });
         }
         if self.spec.builtin_flags.version && self.spec.version.is_some() {
@@ -626,6 +674,7 @@ impl Parser {
                 requires: Vec::new(),
                 required_unless: Vec::new(),
                 repeatable: false,
+                default_when_present: None,
             });
         }
 
@@ -723,6 +772,22 @@ fn store_flag_value(
         } else {
             parsed_flags.insert(flag.id.clone(), value);
         }
+    }
+}
+
+/// Increment a count flag's value by 1.
+///
+/// Count flags start at 0 and increment with each occurrence.
+/// `-vvv` produces 3, `--verbose --verbose` produces 2.
+/// Unlike boolean flags, count flags never produce a `duplicate_flag` error
+/// — repeated occurrences are the whole point.
+fn increment_count_flag(parsed_flags: &mut HashMap<String, Value>, flag: &FlagDef) {
+    let entry = parsed_flags
+        .entry(flag.id.clone())
+        .or_insert_with(|| json!(0));
+    if let Value::Number(n) = entry {
+        let current = n.as_i64().unwrap_or(0);
+        *entry = json!(current + 1);
     }
 }
 
@@ -907,6 +972,8 @@ struct ScanResult {
     errors: Vec<ParseError>,
     help_requested: bool,
     version_requested: bool,
+    /// IDs of flags explicitly set by the user, in order of occurrence.
+    explicit_flags: Vec<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -1428,5 +1495,271 @@ mod tests {
         // --mesage doesn't match any ls flag within distance 2, so just an error
         // (or it might match something). Either way no panic.
         assert!(!errs.is_empty());
+    }
+
+    // =======================================================================
+    // v1.1 Feature Tests
+    // =======================================================================
+
+    // -----------------------------------------------------------------------
+    // Feature 1: Count type
+    // -----------------------------------------------------------------------
+
+    const VERBOSE_COUNT_SPEC: &str = r#"{
+        "cli_builder_spec_version": "1.0",
+        "name": "myapp",
+        "description": "An app with count flags",
+        "flags": [
+            {"id":"verbose","short":"v","long":"verbose","description":"Increase verbosity","type":"count"}
+        ],
+        "arguments": [
+            {"id":"file","name":"FILE","description":"Input file","type":"path","required":false}
+        ]
+    }"#;
+
+    #[test]
+    fn test_count_flag_absent_defaults_to_zero() {
+        // When the count flag is not provided, its default value is 0.
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp"]);
+        assert_eq!(r.flags["verbose"], json!(0));
+    }
+
+    #[test]
+    fn test_count_flag_single_long() {
+        // --verbose once = 1
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "--verbose"]);
+        assert_eq!(r.flags["verbose"], json!(1));
+    }
+
+    #[test]
+    fn test_count_flag_double_long() {
+        // --verbose --verbose = 2
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "--verbose", "--verbose"]);
+        assert_eq!(r.flags["verbose"], json!(2));
+    }
+
+    #[test]
+    fn test_count_flag_single_short() {
+        // -v = 1
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "-v"]);
+        assert_eq!(r.flags["verbose"], json!(1));
+    }
+
+    #[test]
+    fn test_count_flag_stacked_vvv() {
+        // -vvv = 3 (each v in the stack increments)
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "-vvv"]);
+        assert_eq!(r.flags["verbose"], json!(3));
+    }
+
+    #[test]
+    fn test_count_flag_mixed_long_and_short() {
+        // --verbose -v --verbose = 3
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "--verbose", "-v", "--verbose"]);
+        assert_eq!(r.flags["verbose"], json!(3));
+    }
+
+    #[test]
+    fn test_count_flag_with_positional() {
+        // -vv file.txt = count 2, file assigned
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "-vv", "file.txt"]);
+        assert_eq!(r.flags["verbose"], json!(2));
+        assert_eq!(r.arguments["file"], json!("file.txt"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Feature 2: Enum optional values (default_when_present)
+    // -----------------------------------------------------------------------
+
+    const COLOR_SPEC: &str = r#"{
+        "cli_builder_spec_version": "1.0",
+        "name": "ls",
+        "description": "List directory contents",
+        "flags": [
+            {"id":"color","long":"color","description":"Colorize output","type":"enum",
+             "enum_values":["always","auto","never"],
+             "default_when_present":"always","default":"auto"}
+        ],
+        "arguments": [
+            {"id":"path","name":"PATH","description":"Directory","type":"path","required":false}
+        ]
+    }"#;
+
+    #[test]
+    fn test_default_when_present_absent_uses_default() {
+        // When --color is not used at all, the default "auto" applies.
+        let r = parse_ok(COLOR_SPEC, &["ls"]);
+        assert_eq!(r.flags["color"], json!("auto"));
+    }
+
+    #[test]
+    fn test_default_when_present_bare_flag() {
+        // --color with no value uses default_when_present = "always"
+        let r = parse_ok(COLOR_SPEC, &["ls", "--color"]);
+        assert_eq!(r.flags["color"], json!("always"));
+    }
+
+    #[test]
+    fn test_default_when_present_with_equals_value() {
+        // --color=never explicitly sets "never"
+        let r = parse_ok(COLOR_SPEC, &["ls", "--color=never"]);
+        assert_eq!(r.flags["color"], json!("never"));
+    }
+
+    #[test]
+    fn test_default_when_present_bare_flag_before_positional() {
+        // --color /tmp — "always" used (because /tmp is not a valid enum value),
+        // and /tmp becomes a positional.
+        let r = parse_ok(COLOR_SPEC, &["ls", "--color", "/tmp"]);
+        assert_eq!(r.flags["color"], json!("always"));
+        assert_eq!(r.arguments["path"], json!("/tmp"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Feature 3: Flag presence detection (explicit_flags)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_explicit_flags_empty_when_no_flags_used() {
+        let r = parse_ok(ECHO_SPEC, &["echo", "hello"]);
+        assert!(r.explicit_flags.is_empty());
+    }
+
+    #[test]
+    fn test_explicit_flags_tracks_boolean_flag() {
+        let r = parse_ok(ECHO_SPEC, &["echo", "-n", "hello"]);
+        assert!(r.explicit_flags.contains(&"no-newline".to_string()));
+    }
+
+    #[test]
+    fn test_explicit_flags_tracks_stacked_flags() {
+        let r = parse_ok(LS_SPEC, &["ls", "-la"]);
+        assert!(r.explicit_flags.contains(&"long-listing".to_string()));
+        assert!(r.explicit_flags.contains(&"all".to_string()));
+    }
+
+    #[test]
+    fn test_explicit_flags_tracks_long_flags() {
+        let r = parse_ok(LS_SPEC, &["ls", "--all"]);
+        assert!(r.explicit_flags.contains(&"all".to_string()));
+    }
+
+    #[test]
+    fn test_explicit_flags_tracks_value_flags() {
+        let r = parse_ok(GIT_SPEC, &["git", "commit", "-m", "msg"]);
+        assert!(r.explicit_flags.contains(&"message".to_string()));
+    }
+
+    #[test]
+    fn test_explicit_flags_count_flag_appears_multiple_times() {
+        // -vvv should add "verbose" three times to explicit_flags
+        let r = parse_ok(VERBOSE_COUNT_SPEC, &["myapp", "-vvv"]);
+        let count = r.explicit_flags.iter().filter(|f| *f == "verbose").count();
+        assert_eq!(count, 3);
+    }
+
+    #[test]
+    fn test_explicit_flags_repeatable_flag() {
+        let r = parse_ok(GREP_SPEC, &["grep", "-e", "foo", "-e", "bar", "file.txt"]);
+        let count = r.explicit_flags.iter().filter(|f| *f == "regexp").count();
+        assert_eq!(count, 2);
+    }
+
+    // -----------------------------------------------------------------------
+    // Feature 4: int64 range validation
+    // -----------------------------------------------------------------------
+
+    const INT_SPEC: &str = r#"{
+        "cli_builder_spec_version": "1.0",
+        "name": "myapp",
+        "description": "App with integer flag",
+        "flags": [
+            {"id":"count","short":"c","long":"count","description":"Count","type":"integer"}
+        ]
+    }"#;
+
+    #[test]
+    fn test_integer_valid() {
+        let r = parse_ok(INT_SPEC, &["myapp", "-c", "42"]);
+        assert_eq!(r.flags["count"], json!(42));
+    }
+
+    #[test]
+    fn test_integer_negative() {
+        let r = parse_ok(INT_SPEC, &["myapp", "-c", "-100"]);
+        assert_eq!(r.flags["count"], json!(-100));
+    }
+
+    #[test]
+    fn test_integer_max_i64() {
+        let r = parse_ok(INT_SPEC, &["myapp", "-c", "9223372036854775807"]);
+        assert_eq!(r.flags["count"], json!(9223372036854775807_i64));
+    }
+
+    #[test]
+    fn test_integer_out_of_range() {
+        // 2^63 is out of i64 range
+        let errs = parse_err(INT_SPEC, &["myapp", "-c", "9223372036854775808"]);
+        assert!(errs.iter().any(|e| e.error_type == "invalid_value"));
+        // The error message should be informative about range
+        assert!(errs.iter().any(|e| e.message.contains("out of range") || e.message.contains("Invalid integer")));
+    }
+
+    #[test]
+    fn test_integer_non_numeric() {
+        let errs = parse_err(INT_SPEC, &["myapp", "-c", "abc"]);
+        assert!(errs.iter().any(|e| e.error_type == "invalid_value"));
+        assert!(errs.iter().any(|e| e.message.contains("Invalid integer")));
+    }
+
+    // -----------------------------------------------------------------------
+    // Spec validation: default_when_present
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_spec_dwp_on_non_enum_rejected() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "flags": [
+                {"id":"verbose","long":"verbose","description":"verbose","type":"boolean",
+                 "default_when_present":"yes"}
+            ]
+        }"#;
+        let err = load_spec_from_str(spec_json);
+        assert!(err.is_err());
+    }
+
+    #[test]
+    fn test_spec_dwp_not_in_enum_values_rejected() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "flags": [
+                {"id":"color","long":"color","description":"color","type":"enum",
+                 "enum_values":["always","never"],
+                 "default_when_present":"maybe"}
+            ]
+        }"#;
+        let err = load_spec_from_str(spec_json);
+        assert!(err.is_err());
+    }
+
+    #[test]
+    fn test_spec_dwp_valid() {
+        let spec_json = r#"{
+            "cli_builder_spec_version": "1.0",
+            "name": "x",
+            "description": "y",
+            "flags": [
+                {"id":"color","long":"color","description":"color","type":"enum",
+                 "enum_values":["always","auto","never"],
+                 "default_when_present":"always"}
+            ]
+        }"#;
+        let spec = load_spec_from_str(spec_json);
+        assert!(spec.is_ok());
     }
 }

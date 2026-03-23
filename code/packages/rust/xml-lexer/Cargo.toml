@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-xml-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "XML lexer — tokenizes XML source text using the grammar-driven lexer with pattern groups and an on-token callback for context-sensitive lexing"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

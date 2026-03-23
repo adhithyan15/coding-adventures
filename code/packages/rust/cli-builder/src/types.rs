@@ -160,6 +160,26 @@ pub struct FlagDef {
     /// If `true`, the flag may appear multiple times; result is an array.
     #[serde(default)]
     pub repeatable: bool,
+
+    /// Default value to use when an enum flag is present but no value follows.
+    ///
+    /// # When is this useful?
+    ///
+    /// Some flags have an "optional value" pattern. For example, `--color`
+    /// is equivalent to `--color=always`, but `--color=never` is also valid.
+    /// Without `default_when_present`, the parser would try to consume the
+    /// next token as the value, which may not be the user's intent.
+    ///
+    /// # Disambiguation rule
+    ///
+    /// When a flag with `default_when_present` is encountered and the next
+    /// token is a valid enum value, that token is consumed as the flag's value.
+    /// Otherwise, `default_when_present` is used and the next token is left
+    /// for subsequent parsing.
+    ///
+    /// Only valid for `type: "enum"` flags.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_when_present: Option<String>,
 }
 
 /// A positional argument definition (§2.3).
@@ -169,7 +189,9 @@ pub struct ArgumentDef {
     pub id: String,
 
     /// Display name in help (e.g. `"FILE"`, `"DEST"`).
-    pub name: String,
+    /// Accepts `display_name` (preferred) or `name` (backward compatibility).
+    #[serde(alias = "name")]
+    pub display_name: String,
 
     /// Human-readable description.
     pub description: String,
@@ -283,6 +305,7 @@ pub struct ExclusiveGroup {
 ///     command_path: vec!["git".into(), "commit".into()],
 ///     flags: HashMap::from([("message".into(), json!("initial commit"))]),
 ///     arguments: HashMap::new(),
+///     explicit_flags: vec!["message".into()],
 /// };
 /// ```
 #[derive(Debug, Clone)]
@@ -308,6 +331,22 @@ pub struct ParseResult {
     /// Variadic arguments → JSON array. Absent optional arguments → `null`
     /// (or `default` if set).
     pub arguments: HashMap<String, Value>,
+
+    /// IDs of flags that were explicitly set by the user on the command line.
+    ///
+    /// # Why track explicit flags?
+    ///
+    /// Programs often need to distinguish between "the user explicitly set
+    /// this flag" and "the flag has its default value because the user didn't
+    /// mention it." For example, `--color=auto` is the default, but if the
+    /// user says `--color=auto` explicitly, the program might want to know.
+    ///
+    /// Every time a flag token is consumed from argv, its ID is appended to
+    /// this Vec. A flag that appears multiple times will appear multiple
+    /// times in this list (e.g., `-vvv` adds `"verbose"` three times for
+    /// a count flag, or `-e foo -e bar` adds `"regexp"` twice for a
+    /// repeatable flag).
+    pub explicit_flags: Vec<String>,
 }
 
 /// The result of a `--help` or `-h` invocation (§7).

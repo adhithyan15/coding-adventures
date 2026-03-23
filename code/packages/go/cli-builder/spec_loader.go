@@ -236,6 +236,34 @@ func validateScope(scopeName string, scope map[string]any, globalFlagIDs map[str
 				return &SpecError{Message: fmt.Sprintf(
 					"in %s: flag %q has type \"enum\" but \"enum_values\" is missing or empty", scopeName, id)}
 			}
+
+			// v1.1 validation: default_when_present must be a valid enum value
+			//
+			// When a flag has default_when_present, it means the flag can be
+			// used without an explicit value (e.g., `--color` instead of
+			// `--color=always`). The default_when_present value is used in
+			// that case, so it must be a valid enum value.
+			if dwp := stringField(f, "default_when_present"); dwp != "" {
+				validDWP := false
+				for _, v := range ev {
+					if v == dwp {
+						validDWP = true
+						break
+					}
+				}
+				if !validDWP {
+					return &SpecError{Message: fmt.Sprintf(
+						"in %s: flag %q has default_when_present %q which is not in enum_values %v",
+						scopeName, id, dwp, ev)}
+				}
+			}
+		}
+
+		// v1.1 validation: default_when_present is only valid for enum flags
+		if stringField(f, "default_when_present") != "" && flagType != "enum" {
+			return &SpecError{Message: fmt.Sprintf(
+				"in %s: flag %q has default_when_present but type is %q (only enum flags support this)",
+				scopeName, id, flagType)}
 		}
 
 		// Rule 4: conflicts_with and requires must reference known IDs
@@ -267,8 +295,13 @@ func validateScope(scopeName string, scope map[string]any, globalFlagIDs map[str
 		}
 		argIDs[id] = true
 
-		if a["name"] == nil {
-			return &SpecError{Message: fmt.Sprintf("in %s: argument %q is missing required field \"name\"", scopeName, id)}
+		// Accept display_name (preferred) or name (backward compatibility).
+		// Normalize to display_name for downstream consumers.
+		if a["display_name"] == nil && a["name"] == nil {
+			return &SpecError{Message: fmt.Sprintf("in %s: argument %q is missing required field \"display_name\"", scopeName, id)}
+		}
+		if a["display_name"] == nil {
+			a["display_name"] = a["name"]
 		}
 		if _, ok := a["description"]; !ok {
 			return &SpecError{Message: fmt.Sprintf("in %s: argument %q is missing required field \"description\"", scopeName, id)}
@@ -400,6 +433,15 @@ func boolField(m map[string]any, key string, defaultVal bool) bool {
 func stringField(m map[string]any, key string) string {
 	s, _ := m[key].(string)
 	return s
+}
+
+// displayNameFallback returns the display_name of an argument map,
+// falling back to name for backward compatibility.
+func displayNameFallback(m map[string]any) string {
+	if dn := stringField(m, "display_name"); dn != "" {
+		return dn
+	}
+	return stringField(m, "name")
 }
 
 // getAllFlagsForScope returns the combined list of flags visible at a given

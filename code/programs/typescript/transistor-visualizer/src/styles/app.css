@@ -1,0 +1,273 @@
+/* ==========================================================================
+ * Main application styles for the Transistor Visualizer.
+ *
+ * Imports the shared theme and accessibility CSS from ui-components,
+ * then adds app-specific layout and styling.
+ * ========================================================================== */
+
+@import "@coding-adventures/ui-components/src/styles/theme.css";
+@import "@coding-adventures/ui-components/src/styles/accessibility.css";
+
+/* --- Base reset & body --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--body-text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* --- App layout ---
+ * Single column, centered, with max-width for readability. */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  gap: 1.5rem;
+}
+
+/* --- Header ---
+ * Title with a gradient effect and subtitle. */
+
+.app__header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.app__title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #e94560, #ff8844, #e94560);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.app__subtitle {
+  font-size: 0.95rem;
+  color: var(--tab-text);
+  margin-top: 0.3rem;
+}
+
+/* --- Main content area --- */
+
+.app__main {
+  flex: 1;
+}
+
+/* --- Footer --- */
+
+.app__footer {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+  color: var(--tab-text);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+/* --- Era section (shared across all 4 tabs) --- */
+
+.era {
+  padding: 1rem 0;
+}
+
+.era__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.era__diagram-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.era__narrative-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Era Header --- */
+
+.era-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.era-header__year {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+
+.era-header__text {
+  flex: 1;
+}
+
+.era-header__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.era-header__subtitle {
+  font-size: 0.9rem;
+  color: var(--tab-text);
+  font-style: italic;
+}
+
+.era-header__inventors {
+  font-size: 0.8rem;
+  color: var(--accent-dim);
+  margin-top: 0.15rem;
+}
+
+/* --- Narrative --- */
+
+.narrative {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.narrative__lead {
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.narrative__toggle {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.narrative__toggle:hover {
+  background: rgba(233, 69, 96, 0.1);
+}
+
+.narrative__details {
+  margin-top: 0.75rem;
+}
+
+.narrative__paragraph {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-top: 0.6rem;
+}
+
+/* --- Voltage Readout --- */
+
+.voltage-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.voltage-readout__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.voltage-readout__label {
+  font-size: 0.8rem;
+  color: var(--tab-text);
+}
+
+.voltage-readout__value {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--wire-high);
+}
+
+/* --- SVG diagrams (shared) --- */
+
+.triode-diagram,
+.npn-diagram,
+.nmos-diagram,
+.cmos-diagram {
+  width: 100%;
+  max-height: 400px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  .app__title {
+    font-size: 1.5rem;
+  }
+
+  .era__content {
+    grid-template-columns: 1fr;
+  }
+
+  .era-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem 0.5rem;
+  }
+
+  .app__title {
+    font-size: 1.25rem;
+  }
+
+  .tab-list__tab {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+}

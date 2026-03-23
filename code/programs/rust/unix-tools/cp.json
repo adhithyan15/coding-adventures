@@ -1,0 +1,145 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "cp",
+  "display_name": "cp",
+  "description": "Copy files and directories",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "archive",
+      "short": "a",
+      "long": "archive",
+      "description": "Same as -dR --preserve=all",
+      "type": "boolean"
+    },
+    {
+      "id": "force",
+      "short": "f",
+      "long": "force",
+      "description": "If an existing destination file cannot be opened, remove it and try again",
+      "type": "boolean"
+    },
+    {
+      "id": "interactive",
+      "short": "i",
+      "long": "interactive",
+      "description": "Prompt before overwrite",
+      "type": "boolean"
+    },
+    {
+      "id": "no_clobber",
+      "short": "n",
+      "long": "no-clobber",
+      "description": "Do not overwrite an existing file",
+      "type": "boolean"
+    },
+    {
+      "id": "recursive",
+      "short": "R",
+      "long": "recursive",
+      "description": "Copy directories recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "no_dereference",
+      "short": "d",
+      "description": "Same as --no-dereference --preserve=links",
+      "type": "boolean"
+    },
+    {
+      "id": "dereference",
+      "short": "L",
+      "long": "dereference",
+      "description": "Always follow symbolic links in SOURCE",
+      "type": "boolean"
+    },
+    {
+      "id": "preserve",
+      "long": "preserve",
+      "description": "Preserve the specified attributes (mode, ownership, timestamps, context, links, xattr, all)",
+      "type": "string",
+      "value_name": "ATTR_LIST"
+    },
+    {
+      "id": "no_preserve",
+      "long": "no-preserve",
+      "description": "Don't preserve the specified attributes",
+      "type": "string",
+      "value_name": "ATTR_LIST"
+    },
+    {
+      "id": "link",
+      "short": "l",
+      "long": "link",
+      "description": "Hard link files instead of copying",
+      "type": "boolean"
+    },
+    {
+      "id": "symbolic_link",
+      "short": "s",
+      "long": "symbolic-link",
+      "description": "Make symbolic links instead of copying",
+      "type": "boolean"
+    },
+    {
+      "id": "update",
+      "short": "u",
+      "long": "update",
+      "description": "Copy only when the SOURCE file is newer than the destination file or when the destination file is missing",
+      "type": "boolean"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Explain what is being done",
+      "type": "boolean"
+    },
+    {
+      "id": "target_directory",
+      "short": "t",
+      "long": "target-directory",
+      "description": "Copy all SOURCE arguments into DIRECTORY",
+      "type": "string",
+      "value_name": "DIRECTORY"
+    },
+    {
+      "id": "no_target_directory",
+      "short": "T",
+      "long": "no-target-directory",
+      "description": "Treat DEST as a normal file",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "sources",
+      "name": "SOURCE",
+      "description": "Source file(s) and destination. Last argument is the destination.",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 2
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "overwrite-mode",
+      "flag_ids": ["force", "interactive", "no_clobber"],
+      "required": false
+    },
+    {
+      "id": "target-mode",
+      "flag_ids": ["target_directory", "no_target_directory"],
+      "required": false
+    },
+    {
+      "id": "copy-mode",
+      "flag_ids": ["link", "symbolic_link"],
+      "required": false
+    }
+  ]
+}

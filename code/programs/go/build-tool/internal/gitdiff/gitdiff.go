@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 // GetChangedFiles runs `git diff --name-only <base>...HEAD` and returns
@@ -47,15 +48,24 @@ func GetChangedFiles(repoRoot, diffBase string) []string {
 }
 
 // MapFilesToPackages maps changed file paths to package names.
-// A file belongs to a package if its path starts with the package's
-// directory path relative to the repo root.
+//
+// For shell BUILD packages (or Starlark packages without declared srcs),
+// a file belongs to a package if its path starts with the package's
+// directory path — any file change triggers a rebuild (legacy behavior).
+//
+// For Starlark BUILD packages with declared srcs, we apply strict filtering:
+// only trigger a rebuild if the changed file matches one of the declared
+// source patterns (or is a BUILD file itself). This means editing README.md
+// or CHANGELOG.md in a Starlark package does NOT trigger a rebuild.
 func MapFilesToPackages(changedFiles []string, packages []discovery.Package, repoRoot string) map[string]bool {
 	changed := make(map[string]bool)
 
-	// Build relative path lookup
+	// Build relative path lookup with Starlark metadata.
 	type pkgInfo struct {
-		name    string
-		relPath string
+		name         string
+		relPath      string // repo-root-relative, platform separators
+		isStarlark   bool
+		declaredSrcs []string
 	}
 	var pkgPaths []pkgInfo
 
@@ -64,15 +74,50 @@ func MapFilesToPackages(changedFiles []string, packages []discovery.Package, rep
 		if err != nil {
 			continue
 		}
-		pkgPaths = append(pkgPaths, pkgInfo{name: pkg.Name, relPath: rel})
+		pkgPaths = append(pkgPaths, pkgInfo{
+			name:         pkg.Name,
+			relPath:      filepath.ToSlash(rel),
+			isStarlark:   pkg.IsStarlark,
+			declaredSrcs: pkg.DeclaredSrcs,
+		})
 	}
 
 	for _, f := range changedFiles {
+		// Normalize to forward slashes for consistent matching.
+		f = filepath.ToSlash(f)
+
 		for _, pkg := range pkgPaths {
-			if strings.HasPrefix(f, pkg.relPath+"/") || f == pkg.relPath {
+			if !strings.HasPrefix(f, pkg.relPath+"/") && f != pkg.relPath {
+				continue
+			}
+
+			// File is under this package's directory.
+			if !pkg.isStarlark || len(pkg.declaredSrcs) == 0 {
+				// Shell BUILD or no declared srcs: any file triggers rebuild.
 				changed[pkg.name] = true
 				break
 			}
+
+			// Starlark package with declared srcs: strict filtering.
+			// Get the file's path relative to the package directory.
+			relToPackage := strings.TrimPrefix(f, pkg.relPath+"/")
+
+			// BUILD file changes always trigger a rebuild — the build
+			// definition itself changed.
+			base := filepath.Base(relToPackage)
+			if base == "BUILD" || strings.HasPrefix(base, "BUILD_") {
+				changed[pkg.name] = true
+				break
+			}
+
+			// Check if the file matches any declared source pattern.
+			for _, pattern := range pkg.declaredSrcs {
+				if globmatch.MatchPath(pattern, relToPackage) {
+					changed[pkg.name] = true
+					break
+				}
+			}
+			break // file matched to this package, don't check others
 		}
 	}
 

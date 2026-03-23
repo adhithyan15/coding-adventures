@@ -33,8 +33,10 @@ mod cache;
 mod discovery;
 mod executor;
 mod gitdiff;
+pub mod glob_match;
 mod graph;
 mod hasher;
+pub mod plan;
 mod reporter;
 mod resolver;
 
@@ -83,6 +85,21 @@ struct Args {
     /// Path to cache file.
     #[arg(long, default_value = ".build-cache.json")]
     cache_file: String,
+
+    /// Emit a build plan (JSON) describing what would be built.
+    ///
+    /// When enabled, the tool writes a JSON file containing every package
+    /// that would be built, along with its commands and the reason for
+    /// rebuilding. This is useful for CI auditing and debugging.
+    #[arg(long)]
+    emit_plan: bool,
+
+    /// Path to the build plan file (used with --emit-plan).
+    ///
+    /// Defaults to "build-plan.json" in the repo root. The plan is
+    /// written as pretty-printed JSON for human readability.
+    #[arg(long, default_value = "build-plan.json")]
+    plan_file: String,
 }
 
 // ---------------------------------------------------------------------------
@@ -117,6 +134,76 @@ fn find_repo_root(start: Option<&str>) -> Option<PathBuf> {
             None => return None,
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+// Timestamp helper
+// ---------------------------------------------------------------------------
+
+/// Produces an ISO 8601 timestamp string for the current time.
+///
+/// We avoid pulling in a full datetime library (chrono) for this single use.
+/// Instead, we use `std::time::SystemTime` and format it manually. The
+/// output looks like "2026-03-22T10:30:00Z" — sufficient for build plan
+/// audit logs. The precision is seconds (no sub-second component).
+fn chrono_now_iso8601() -> String {
+    use std::time::SystemTime;
+
+    let now = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+
+    // Convert Unix timestamp to broken-down UTC components.
+    // This is the same algorithm used by gmtime() in C.
+    let secs_per_day: u64 = 86400;
+    let days = now / secs_per_day;
+    let day_secs = now % secs_per_day;
+
+    let hours = day_secs / 3600;
+    let minutes = (day_secs % 3600) / 60;
+    let seconds = day_secs % 60;
+
+    // Calculate year, month, day from days since epoch (1970-01-01).
+    let mut y = 1970u64;
+    let mut remaining_days = days;
+
+    loop {
+        let days_in_year = if is_leap_year(y) { 366 } else { 365 };
+        if remaining_days < days_in_year {
+            break;
+        }
+        remaining_days -= days_in_year;
+        y += 1;
+    }
+
+    let leap = is_leap_year(y);
+    let month_days: [u64; 12] = if leap {
+        [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    } else {
+        [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    };
+
+    let mut m = 0u64;
+    for (i, &md) in month_days.iter().enumerate() {
+        if remaining_days < md {
+            m = i as u64 + 1;
+            break;
+        }
+        remaining_days -= md;
+    }
+
+    let d = remaining_days + 1;
+
+    format!(
+        "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}Z",
+        y, m, d, hours, minutes, seconds
+    )
+}
+
+/// Helper for leap year calculation.
+fn is_leap_year(y: u64) -> bool {
+    (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
 }
 
 // ---------------------------------------------------------------------------
@@ -233,6 +320,74 @@ fn run() -> i32 {
 
     let build_cache = cache::BuildCache::new();
     build_cache.load(&cache_path);
+
+    // Step 7b: Emit build plan if requested.
+    //
+    // The plan is emitted BEFORE executing builds so that:
+    //   - In CI, the plan is available even if the build crashes.
+    //   - With --dry-run + --emit-plan, you get a plan without building.
+    if args.emit_plan {
+        let plan_entries: Vec<plan::PackageEntry> = packages
+            .iter()
+            .filter(|pkg| {
+                // Only include packages that would actually be built.
+                if args.force {
+                    return true;
+                }
+                if let Some(ref affected) = affected_set {
+                    return affected.contains(&pkg.name);
+                }
+                // Fallback: check cache.
+                let pkg_hash = package_hashes.get(&pkg.name).cloned().unwrap_or_default();
+                let dep_hash = deps_hashes.get(&pkg.name).cloned().unwrap_or_default();
+                build_cache.needs_build(&pkg.name, &pkg_hash, &dep_hash)
+            })
+            .map(|pkg| {
+                let reason = if args.force {
+                    "forced".to_string()
+                } else if let Some(ref affected) = affected_set {
+                    // Determine if this package changed directly or via dependency.
+                    let changed_files = gitdiff::get_changed_files(&repo_root, &args.diff_base);
+                    let directly_changed =
+                        gitdiff::map_files_to_packages(&changed_files, &packages, &repo_root);
+                    if directly_changed.contains(&pkg.name) {
+                        "changed".to_string()
+                    } else if affected.contains(&pkg.name) {
+                        "dependency_changed".to_string()
+                    } else {
+                        "cache_miss".to_string()
+                    }
+                } else {
+                    "cache_miss".to_string()
+                };
+
+                plan::PackageEntry {
+                    name: pkg.name.clone(),
+                    language: pkg.language.clone(),
+                    commands: pkg.build_commands.clone(),
+                    reason,
+                }
+            })
+            .collect();
+
+        let build_plan = plan::BuildPlan {
+            schema_version: plan::CURRENT_SCHEMA_VERSION,
+            created_at: chrono_now_iso8601(),
+            diff_base: args.diff_base.clone(),
+            packages: plan_entries,
+        };
+
+        let plan_path = if Path::new(&args.plan_file).is_absolute() {
+            args.plan_file.clone()
+        } else {
+            repo_root.join(&args.plan_file).to_string_lossy().to_string()
+        };
+
+        match plan::write_plan(&build_plan, &plan_path) {
+            Ok(()) => println!("Build plan written to {}", plan_path),
+            Err(e) => eprintln!("Warning: could not write build plan: {}", e),
+        }
+    }
 
     // Steps 8-9: Execute builds.
     let max_jobs = args.jobs.unwrap_or_else(num_cpus::get);

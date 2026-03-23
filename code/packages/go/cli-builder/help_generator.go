@@ -241,7 +241,11 @@ func (hg *HelpGenerator) buildUsageLine(programName string, isRoot bool) string 
 // argUsageToken returns the usage token for an argument, e.g. "<FILE>",
 // "[FILE]", "<FILE>...", "[FILE...]".
 func argUsageToken(a map[string]any) string {
-	name := stringField(a, "name")
+	// Prefer display_name, fall back to name for backward compatibility.
+	name := stringField(a, "display_name")
+	if name == "" {
+		name = stringField(a, "name")
+	}
 	required := boolField(a, "required", true)
 	variadic := boolField(a, "variadic", false)
 
@@ -281,13 +285,26 @@ func (hg *HelpGenerator) writeFlagLine(sb *strings.Builder, f map[string]any) {
 	}
 	sig := strings.Join(sigParts, ", ")
 
-	// Append value placeholder for non-boolean flags
-	if flagType != "boolean" && flagType != "" {
+	// Append value placeholder for non-boolean, non-count flags.
+	//
+	// For enum flags with default_when_present, the value is optional —
+	// show it as [=VALUE] instead of <VALUE> per v1.1 spec.
+	//
+	// Count flags, like booleans, consume no value token and therefore
+	// have no value placeholder in help output.
+	if flagType != "boolean" && flagType != "count" && flagType != "" {
 		vn := valueName
 		if vn == "" {
 			vn = strings.ToUpper(flagType)
 		}
-		sig = sig + " <" + vn + ">"
+		dwp := stringField(f, "default_when_present")
+		if flagType == "enum" && dwp != "" {
+			// Optional value — shown as [=VALUE] to indicate the value
+			// can be omitted (in which case default_when_present is used).
+			sig = sig + "[=" + vn + "]"
+		} else {
+			sig = sig + " <" + vn + ">"
+		}
 	}
 
 	// Build description suffix

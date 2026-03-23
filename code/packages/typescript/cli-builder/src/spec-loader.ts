@@ -299,6 +299,26 @@ export class SpecLoader {
       );
     }
 
+    // v1.1: default_when_present — only valid for enum flags.
+    // When present, the value must be a member of enum_values.
+    const defaultWhenPresent =
+      typeof raw["default_when_present"] === "string"
+        ? raw["default_when_present"]
+        : undefined;
+
+    if (defaultWhenPresent !== undefined) {
+      if (type !== "enum") {
+        throw new SpecError(
+          `Flag "${id}" at ${path} has default_when_present but type is "${type}" (must be "enum")`,
+        );
+      }
+      if (!enumValues.includes(defaultWhenPresent)) {
+        throw new SpecError(
+          `Flag "${id}" at ${path} has default_when_present "${defaultWhenPresent}" which is not in enum_values: ${enumValues.join(", ")}`,
+        );
+      }
+    }
+
     return {
       id,
       short,
@@ -311,6 +331,7 @@ export class SpecLoader {
       valueName:
         typeof raw["value_name"] === "string" ? raw["value_name"] : undefined,
       enumValues,
+      defaultWhenPresent,
       conflictsWith: Array.isArray(raw["conflicts_with"])
         ? (raw["conflicts_with"] as string[])
         : [],
@@ -355,7 +376,11 @@ export class SpecLoader {
     path: string,
   ): ArgDef {
     const id = this._requireString(raw, "id", path);
-    const name = this._requireString(raw, "name", path);
+    // Accept display_name (preferred) or name (backward compatibility).
+    const display_name =
+      typeof raw["display_name"] === "string"
+        ? raw["display_name"]
+        : this._requireString(raw, "name", path);
     const description = this._requireString(raw, "description", path);
     const type = this._parseValueType(raw["type"], path);
     const required = raw["required"] !== false; // defaults to true
@@ -381,7 +406,7 @@ export class SpecLoader {
 
     return {
       id,
-      name,
+      display_name,
       description,
       type,
       required,
@@ -595,6 +620,7 @@ export class SpecLoader {
   private _parseValueType(raw: unknown, path: string): ValueType {
     const valid: ValueType[] = [
       "boolean",
+      "count",
       "string",
       "integer",
       "float",

@@ -10,6 +10,8 @@ fn bool_flag(id: &str, short: Option<char>, long: Option<&str>) -> FlagInfo {
         long: long.map(|s| s.to_string()),
         single_dash_long: None,
         is_boolean: true,
+        is_count: false,
+        has_default_when_present: false,
     }
 }
 
@@ -20,6 +22,8 @@ fn str_flag(id: &str, short: Option<char>, long: Option<&str>) -> FlagInfo {
         long: long.map(|s| s.to_string()),
         single_dash_long: None,
         is_boolean: false,
+        is_count: false,
+        has_default_when_present: false,
     }
 }
 
@@ -30,6 +34,8 @@ fn sdl_flag(id: &str, sdl: &str, is_boolean: bool) -> FlagInfo {
         long: None,
         single_dash_long: Some(sdl.to_string()),
         is_boolean,
+        is_count: false,
+        has_default_when_present: false,
     }
 }
 

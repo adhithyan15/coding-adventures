@@ -28,7 +28,7 @@ defmodule CodingAdventures.CliBuilder.SpecLoader do
 
   @supported_versions ["1.0"]
   @valid_parsing_modes ~w[gnu posix subcommand_first traditional]
-  @valid_types ~w[boolean string integer float path file directory enum]
+  @valid_types ~w[boolean string integer float path file directory enum count]
 
   # ---------------------------------------------------------------------------
   # Public API
@@ -195,6 +195,37 @@ defmodule CodingAdventures.CliBuilder.SpecLoader do
         end
       end
 
+      # -----------------------------------------------------------------------
+      # default_when_present validation (v1.1)
+      #
+      # This field is only valid on enum-type flags. When present, it specifies
+      # the value to use when the flag appears without an argument (e.g.
+      # `--color` instead of `--color=always`). The value must be one of the
+      # declared enum_values.
+      # -----------------------------------------------------------------------
+      dwp = Map.get(flag, "default_when_present")
+
+      if dwp != nil do
+        flag_type = Map.get(flag, "type")
+        flag_id = Map.get(flag, "id")
+
+        unless flag_type == "enum" do
+          raise SpecError,
+            message:
+              "Flag #{inspect(flag_id)} has default_when_present but type is " <>
+                "#{inspect(flag_type)} (must be \"enum\")"
+        end
+
+        ev = Map.get(flag, "enum_values", [])
+
+        unless dwp in ev do
+          raise SpecError,
+            message:
+              "Flag #{inspect(flag_id)} has default_when_present #{inspect(dwp)} " <>
+                "which is not in enum_values: #{inspect(ev)}"
+        end
+      end
+
       %{
         "id" => Map.get(flag, "id"),
         "short" => Map.get(flag, "short"),
@@ -204,6 +235,7 @@ defmodule CodingAdventures.CliBuilder.SpecLoader do
         "type" => Map.get(flag, "type"),
         "required" => Map.get(flag, "required", false),
         "default" => Map.get(flag, "default"),
+        "default_when_present" => dwp,
         "value_name" => Map.get(flag, "value_name"),
         "enum_values" => Map.get(flag, "enum_values", []),
         "conflicts_with" => Map.get(flag, "conflicts_with", []),
@@ -223,17 +255,21 @@ defmodule CodingAdventures.CliBuilder.SpecLoader do
     |> Enum.map(fn {arg, idx} ->
       unless is_map(arg), do: raise(SpecError, message: "Argument at index #{idx} in #{scope_name} is not an object")
       require_field!(arg, "id", "string", "argument ##{idx} in #{scope_name}")
-      require_field!(arg, "name", "string", "argument #{inspect(Map.get(arg, "id"))} in #{scope_name}")
+      # Accept display_name (preferred) or name (backward compatibility).
+      unless Map.has_key?(arg, "display_name") or Map.has_key?(arg, "name") do
+        raise SpecError, message: "argument #{inspect(Map.get(arg, "id"))} in #{scope_name} is missing required field \"display_name\""
+      end
       require_field!(arg, "description", "string", "argument #{inspect(Map.get(arg, "id"))} in #{scope_name}")
       require_field_in!(arg, "type", @valid_types, "argument #{inspect(Map.get(arg, "id"))} in #{scope_name}")
 
       required = Map.get(arg, "required", true)
       variadic = Map.get(arg, "variadic", false)
       variadic_min_default = if required, do: 1, else: 0
+      display_name = Map.get(arg, "display_name", Map.get(arg, "name"))
 
       %{
         "id" => Map.get(arg, "id"),
-        "name" => Map.get(arg, "name"),
+        "display_name" => display_name,
         "description" => Map.get(arg, "description"),
         "type" => Map.get(arg, "type"),
         "required" => required,

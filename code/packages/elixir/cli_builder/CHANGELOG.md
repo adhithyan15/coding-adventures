@@ -2,6 +2,74 @@
 
 All notable changes to this package are documented here.
 
+## [1.1.0] — 2026-03-22
+
+### Added
+
+Four backwards-compatible features implementing CLI Builder spec v1.1:
+
+#### Feature 1: Count Type
+- New `"count"` flag type that increments a counter on each occurrence.
+- `-vvv` produces value 3 via stacked short flags; `--verbose --verbose`
+  produces 2 via repeated long flags.
+- Count flags consume no value token (like boolean flags) and can be
+  freely stacked with other boolean and count flags.
+- Default value when absent is `0`.
+
+#### Feature 2: Enum Optional Values (`default_when_present`)
+- New `"default_when_present"` field on enum flag definitions.
+- When an enum flag with this field is used without a value (e.g. `--color`
+  instead of `--color=always`), the parser uses `default_when_present`.
+- Disambiguation: if the next token is a valid enum value, it is consumed;
+  otherwise `default_when_present` is used and the token is left for
+  subsequent parsing.
+- Spec validation: rejects `default_when_present` on non-enum types and
+  rejects values not in `enum_values`.
+- Help generator shows `[=VALUE]` for enum flags with `default_when_present`.
+
+#### Feature 3: Flag Presence Detection (`explicit_flags`)
+- `ParseResult` now includes an `explicit_flags` field (list of flag IDs).
+- Every time a flag token is consumed from argv, its ID is appended.
+- Count flags appear once per occurrence (e.g. `-vvv` adds `"verbose"`
+  three times).
+- Enables callers to distinguish "user typed `--verbose`" from "verbose
+  defaulted to false".
+
+#### Feature 4: int64 Range Validation
+- Integer flag values are now range-checked against signed 64-bit bounds
+  `[-2^63, 2^63-1]`.
+- Values outside this range produce an `invalid_value` error with a
+  descriptive message.
+- Elixir's `Integer.parse/1` handles arbitrary precision, so the explicit
+  range check prevents silent overflow that would occur in fixed-width
+  languages.
+
+### Changed
+
+- `SpecLoader` now accepts `"count"` as a valid flag type.
+- `TokenClassifier` treats `"count"` like `"boolean"` for stacking purposes.
+- `HelpGenerator` suppresses value placeholder for count flags.
+- Version bumped to 1.1.0.
+
+## [0.3.0] — 2026-03-22
+
+### Added
+
+- `Validator` module with standalone, non-raising spec validation:
+  - `validate_spec/1` — validate a spec file on disk, returns `%{valid, errors}`.
+  - `validate_spec_string/1` — validate a spec from a JSON string.
+- 15 tests covering valid specs, invalid JSON, missing version, unsupported
+  version, missing required fields, flag with no short/long, nonexistent file,
+  invalid parsing mode, and missing flag type.
+
+## [0.2.0] — 2026-03-22
+
+### Changed
+
+- Arguments now use `display_name` instead of `name` for the display label in help text.
+  Both fields are accepted for backward compatibility — `display_name` is preferred, with
+  `name` as a fallback.
+
 ## [0.1.0] — 2026-03-21
 
 ### Added

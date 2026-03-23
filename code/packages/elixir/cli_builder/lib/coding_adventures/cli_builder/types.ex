@@ -10,9 +10,13 @@ defmodule CodingAdventures.CliBuilder.ParseResult do
     subcommands this is just `["program-name"]`.
   - `:flags` — map from flag `id` to parsed (and coerced) value. Every flag in
     scope is present: absent booleans are `false`, absent non-booleans are `nil`
-    (or the flag's `default` value if set).
+    (or the flag's `default` value if set). Count-type flags default to `0`.
   - `:arguments` — map from argument `id` to parsed value. Variadic arguments
     produce lists.
+  - `:explicit_flags` — list of flag IDs that the user explicitly set on the
+    command line (v1.1). This lets callers distinguish between "the user typed
+    `--verbose`" and "verbose defaulted to false". A flag ID appears once per
+    occurrence, so a count flag passed three times will appear three times.
 
   ## Example
 
@@ -20,18 +24,20 @@ defmodule CodingAdventures.CliBuilder.ParseResult do
         program: "git",
         command_path: ["git", "remote", "add"],
         flags: %{"verbose" => false, "dry-run" => false},
-        arguments: %{"name" => "origin", "url" => "https://github.com/user/repo"}
+        arguments: %{"name" => "origin", "url" => "https://github.com/user/repo"},
+        explicit_flags: []
       }
   """
 
   @enforce_keys [:program, :command_path, :flags, :arguments]
-  defstruct [:program, :command_path, :flags, :arguments]
+  defstruct [:program, :command_path, :flags, :arguments, explicit_flags: []]
 
   @type t :: %__MODULE__{
           program: String.t(),
           command_path: [String.t()],
           flags: %{String.t() => term()},
-          arguments: %{String.t() => term()}
+          arguments: %{String.t() => term()},
+          explicit_flags: [String.t()]
         }
 end
 

@@ -196,7 +196,8 @@ defmodule CodingAdventures.CliBuilder.HelpGenerator do
 
   # Format a single argument in usage synopsis style.
   defp format_arg_usage(arg) do
-    name = arg["name"]
+    # Prefer display_name, fall back to name for backward compatibility.
+    name = arg["display_name"] || arg["name"]
     required = arg["required"]
     variadic = arg["variadic"]
 
@@ -224,17 +225,54 @@ defmodule CodingAdventures.CliBuilder.HelpGenerator do
     long = flag["long"]
     sdl = flag["single_dash_long"]
     type = flag["type"]
-    value_name = flag["value_name"] || (if type != "boolean", do: type |> String.upcase(), else: nil)
+    # Count and boolean flags take no value argument, so they have no
+    # VALUE placeholder in help text.  Enum flags with default_when_present
+    # show [=VALUE] to indicate the value is optional.
+    dwp = flag["default_when_present"]
+
+    value_name =
+      flag["value_name"] ||
+        cond do
+          type in ["boolean", "count"] -> nil
+          type == "enum" and dwp != nil -> nil
+          true -> String.upcase(type)
+        end
     default = flag["default"]
     required = flag["required"]
     description = flag["description"]
 
     # Build the flag syntax part.
+    # For enum flags with default_when_present, show [=VALUE] to indicate the
+    # value is optional (the user can write `--color` or `--color=auto`).
+    optional_value_suffix =
+      if type == "enum" and dwp != nil do
+        vn = flag["value_name"] || "VALUE"
+        "[=#{vn}]"
+      else
+        nil
+      end
+
     parts =
       [
         if(short, do: "-#{short}", else: nil),
-        if(long, do: "--#{long}#{if value_name, do: " <#{value_name}>", else: ""}", else: nil),
-        if(sdl, do: "-#{sdl}#{if value_name, do: " <#{value_name}>", else: ""}", else: nil)
+        if long do
+          cond do
+            optional_value_suffix -> "--#{long} #{optional_value_suffix}"
+            value_name -> "--#{long} <#{value_name}>"
+            true -> "--#{long}"
+          end
+        else
+          nil
+        end,
+        if sdl do
+          cond do
+            optional_value_suffix -> "-#{sdl} #{optional_value_suffix}"
+            value_name -> "-#{sdl} <#{value_name}>"
+            true -> "-#{sdl}"
+          end
+        else
+          nil
+        end
       ]
       |> Enum.reject(&is_nil/1)
 
@@ -260,7 +298,8 @@ defmodule CodingAdventures.CliBuilder.HelpGenerator do
 
   # Format a single argument definition into an ARGUMENTS line.
   defp format_argument(arg) do
-    name = arg["name"]
+    # Prefer display_name, fall back to name for backward compatibility.
+    name = arg["display_name"] || arg["name"]
     required = arg["required"]
     variadic = arg["variadic"]
     description = arg["description"]

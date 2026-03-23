@@ -1,0 +1,998 @@
+/* ==========================================================================
+ * Gate-specific styles for the Logic Gates Visualizer.
+ *
+ * Covers gate cards, bit toggles, truth tables, wire labels, gate symbols,
+ * and the expandable CMOS transistor panel.
+ * ========================================================================== */
+
+/* --- Gate grid ---
+ * 2-column responsive grid for gate cards. Falls to 1 column on mobile. */
+
+.gate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+/* --- Intro paragraph --- */
+
+.fundamental-intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+/* --- Gate card ---
+ * Each card shows one gate: symbol, toggles, truth table, CMOS panel. */
+
+.gate-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gate-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.75rem;
+}
+
+.gate-card__name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.gate-card__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+/* --- Gate diagram area ---
+ * Houses the SVG symbol and input/output controls side by side. */
+
+.gate-card__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.gate-card__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.gate-card__output {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* --- Bit toggle ---
+ * Clickable button to flip a bit between 0 and 1. */
+
+.bit-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--panel-border);
+  background: transparent;
+  color: var(--tab-text);
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.bit-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bit-toggle--high {
+  border-color: #4caf50;
+  color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.bit-toggle--low {
+  border-color: #555;
+  color: #777;
+  background: rgba(100, 100, 100, 0.05);
+}
+
+.bit-toggle__label {
+  font-size: 0.7rem;
+  color: var(--tab-text);
+  text-align: center;
+  margin-top: 0.15rem;
+}
+
+/* --- Wire coloring ---
+ * Wires glow green when carrying a HIGH signal. */
+
+.wire--high {
+  color: #4caf50;
+}
+
+.wire--low {
+  color: #777;
+}
+
+/* --- Wire label ---
+ * Small inline indicator: colored dot + value. */
+
+.wire-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.wire-label__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.wire-label__dot--high {
+  background: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.wire-label__dot--low {
+  background: #555;
+}
+
+/* --- Truth table --- */
+
+.truth-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.truth-table caption {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--tab-text);
+  text-align: left;
+  padding-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.truth-table th {
+  padding: 0.3rem 0.6rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--tab-text);
+  border-bottom: 1px solid var(--panel-border);
+  font-size: 0.75rem;
+}
+
+.truth-table td {
+  padding: 0.3rem 0.6rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.truth-table__row--active {
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.truth-table__row--active td {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+/* --- CMOS panel ---
+ * Expandable panel showing transistor-level implementation. */
+
+.cmos-panel {
+  border-top: 1px solid var(--panel-border);
+  padding-top: 0.75rem;
+}
+
+.cmos-panel__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  padding: 0.35rem 0.65rem;
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.cmos-panel__toggle:hover {
+  background: rgba(79, 195, 247, 0.08);
+}
+
+.cmos-panel__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cmos-panel__arrow {
+  transition: transform 0.2s;
+  font-size: 0.7rem;
+}
+
+.cmos-panel__arrow--expanded {
+  transform: rotate(90deg);
+}
+
+.cmos-panel__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(79, 195, 247, 0.12);
+  color: var(--accent);
+  border-radius: 12px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: var(--mono);
+  margin-left: auto;
+}
+
+.cmos-panel__content {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}
+
+.cmos-panel__note {
+  font-size: 0.75rem;
+  color: var(--tab-text);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.cmos-panel__note--natural {
+  color: #81c784;
+}
+
+/* --- CMOS diagram SVG --- */
+
+.cmos-diagram-mini {
+  width: 100%;
+  max-height: 200px;
+}
+
+/* ==========================================================================
+ * NAND Universality — Tab 2 styles
+ * ========================================================================== */
+
+/* --- Universality section --- */
+
+.nand-universality {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.nand-universality__intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+/* --- NAND gate card --- */
+
+.nand-universality__nand-card {
+  background: rgba(233, 69, 96, 0.06);
+  border: 1px solid rgba(233, 69, 96, 0.25);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.nand-universality__nand-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e94560;
+  margin-bottom: 0.4rem;
+}
+
+.nand-universality__nand-description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+  margin-bottom: 0.6rem;
+}
+
+.nand-universality__nand-stats {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nand-universality__stat {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(233, 69, 96, 0.12);
+  color: #e94560;
+  border-radius: 12px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.nand-universality__stat--natural {
+  background: rgba(76, 175, 80, 0.12);
+  color: #81c784;
+}
+
+/* --- Derivation cards --- */
+
+.nand-universality__derivations {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.nand-derivation {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nand-derivation__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nand-derivation__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.nand-derivation__formula {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #e94560;
+  background: rgba(233, 69, 96, 0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.nand-derivation__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+/* --- Diagram area (inputs → SVG → output) --- */
+
+.nand-derivation__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.nand-derivation__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nand-derivation__svg {
+  flex: 1;
+  max-height: 160px;
+  min-width: 0;
+}
+
+.nand-derivation__output {
+  flex-shrink: 0;
+}
+
+/* --- Transistor cost comparison --- */
+
+.nand-derivation__cost {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nand-derivation__cost-item {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.nand-derivation__cost-item--nand {
+  background: rgba(233, 69, 96, 0.1);
+  color: #e94560;
+}
+
+.nand-derivation__cost-item--native {
+  background: rgba(76, 175, 80, 0.1);
+  color: #81c784;
+}
+
+/* --- Tradeoff note --- */
+
+.nand-universality__tradeoff {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.nand-universality__tradeoff-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--body-text);
+  margin-bottom: 0.4rem;
+}
+
+.nand-universality__tradeoff p {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+/* ==========================================================================
+ * Combinational Logic — Tab 3 styles
+ * ========================================================================== */
+
+.combinational {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.combinational__intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.combinational__circuits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Combinational circuit card --- */
+
+.combinational-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.combinational-card__header {
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.5rem;
+}
+
+.combinational-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.combinational-card__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+.combinational-card__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.combinational-card__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.combinational-card__inputs--row {
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.combinational-card__svg {
+  flex: 1;
+  max-height: 180px;
+  min-width: 0;
+}
+
+.combinational-card__output {
+  flex-shrink: 0;
+}
+
+.combinational-card__output-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+/* --- Decoder outputs --- */
+
+.decoder-output {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  color: #777;
+  background: rgba(100, 100, 100, 0.05);
+}
+
+.decoder-output--active {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.12);
+  font-weight: 700;
+}
+
+/* --- Encoder inputs --- */
+
+.encoder-input {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.encoder-input--winner {
+  /* Subtle glow around the winning input */
+}
+
+.encoder-input__crown {
+  color: #ffb74d;
+  font-size: 0.8rem;
+  margin-top: -0.2rem;
+}
+
+/* --- Encoder result --- */
+
+.encoder-result {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+}
+
+.encoder-result--valid {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.encoder-result--invalid {
+  color: #777;
+  background: rgba(100, 100, 100, 0.05);
+  font-style: italic;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 480px) {
+  .combinational-card__diagram {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .combinational-card__inputs--row {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .combinational-card__svg {
+    max-height: 140px;
+  }
+}
+
+/* ==========================================================================
+ * Sequential Logic — Tab 4 styles
+ * ========================================================================== */
+
+.sequential {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.sequential__intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--tab-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.sequential__circuits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Sequential circuit card --- */
+
+.sequential-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sequential-card__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.5rem;
+}
+
+.sequential-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.sequential-card__badge {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #ce93d8;
+  background: rgba(156, 39, 176, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.sequential-card__description {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+.sequential-card__diagram {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.sequential-card__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sequential-card__svg {
+  flex: 1;
+  max-height: 150px;
+  min-width: 0;
+}
+
+.sequential-card__outputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* --- State indicator --- */
+
+.sequential-card__state {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(76, 175, 80, 0.08);
+  color: #81c784;
+  text-align: center;
+}
+
+.sequential-card__state--forbidden {
+  background: rgba(244, 67, 54, 0.12);
+  color: #ef5350;
+}
+
+/* --- Clock pulse button --- */
+
+.clock-pulse-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ffb74d;
+  border-radius: 6px;
+  background: rgba(255, 183, 77, 0.08);
+  color: #ffb74d;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.clock-pulse-btn:hover {
+  background: rgba(255, 183, 77, 0.15);
+}
+
+.clock-pulse-btn:focus-visible {
+  outline: 2px solid #ffb74d;
+  outline-offset: 2px;
+}
+
+.clock-pulse-btn__icon {
+  font-size: 1rem;
+}
+
+.clock-pulse-btn__text {
+  font-size: 0.75rem;
+}
+
+/* --- Counter display --- */
+
+.counter-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.counter-display__bits {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.counter-bit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.counter-bit__label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #888;
+}
+
+.counter-bit__value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.counter-bit--high .counter-bit__value {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+}
+
+.counter-bit--low .counter-bit__value {
+  background: rgba(100, 100, 100, 0.08);
+  color: #666;
+  border: 1px solid rgba(100, 100, 100, 0.15);
+}
+
+.counter-display__decimal {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.counter-display__decimal-label {
+  color: #888;
+  font-size: 1rem;
+}
+
+.counter-display__decimal-value {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #4fc3f7;
+  min-width: 2ch;
+  text-align: right;
+}
+
+.counter-display__decimal-max {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* --- Counter controls --- */
+
+.counter-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.counter-controls__btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+  color: var(--tab-text);
+}
+
+.counter-controls__btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.counter-controls__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.counter-controls__btn--step {
+  border-color: #4fc3f7;
+  color: #4fc3f7;
+}
+
+.counter-controls__btn--step:hover {
+  background: rgba(79, 195, 247, 0.1);
+}
+
+.counter-controls__btn--auto {
+  border-color: #81c784;
+  color: #81c784;
+}
+
+.counter-controls__btn--auto:hover {
+  background: rgba(129, 199, 132, 0.1);
+}
+
+.counter-controls__btn--active {
+  background: rgba(129, 199, 132, 0.15);
+}
+
+.counter-controls__btn--reset {
+  border-color: #ef5350;
+  color: #ef5350;
+}
+
+.counter-controls__btn--reset:hover {
+  background: rgba(239, 83, 80, 0.1);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 480px) {
+  .sequential-card__diagram {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .counter-display {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .counter-controls {
+    flex-wrap: wrap;
+  }
+}
+
+/* --- Placeholder for future tabs --- */
+
+.placeholder {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--tab-text);
+  font-size: 1.1rem;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  .gate-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .gate-card {
+    padding: 0.75rem;
+  }
+
+  .gate-card__name {
+    font-size: 0.95rem;
+  }
+
+  .bit-toggle {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+}

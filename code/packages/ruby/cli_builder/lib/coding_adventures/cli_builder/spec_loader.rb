@@ -127,6 +127,8 @@ module CodingAdventures
       def normalize_arguments(args)
         args.map do |a|
           a = a.dup
+          # Accept display_name (preferred) or name (backward compatibility).
+          a["display_name"] ||= a["name"]
           a["required"] = a.key?("required") ? a["required"] : true
           a["variadic"] ||= false
           a["variadic_min"] = a.key?("variadic_min") ? a["variadic_min"] : (a["required"] ? 1 : 0)
@@ -231,6 +233,9 @@ module CodingAdventures
 
         # Rule 9: Flag dependency graph has no cycles
         validate_no_flag_cycles(all_flags, scope_name)
+
+        # Rule 10 (v1.1): default_when_present is valid for enum flags only
+        validate_default_when_present(all_flags, scope_name)
       end
 
       # ---------------------------------------------------------------------------
@@ -353,6 +358,48 @@ module CodingAdventures
             raise SpecError,
               "Item #{item["id"].inspect} in scope #{scope_name.inspect} has " \
               "type 'enum' but no enum_values"
+          end
+        end
+      end
+
+      # ---------------------------------------------------------------------------
+      # Rule 10: default_when_present validation (v1.1)
+      # ---------------------------------------------------------------------------
+      #
+      # When a flag specifies default_when_present, three constraints must hold:
+      #
+      #   1. The flag's type must be "enum". Using default_when_present on a
+      #      non-enum flag makes no sense — it's designed for the "flag present
+      #      without value" pattern, which only applies to enums.
+      #
+      #   2. The value must be one of enum_values. Otherwise, the parser would
+      #      produce a value that fails its own validation.
+      #
+      #   3. enum_values must not be empty. (This is already caught by Rule 7,
+      #      but we check it here too for a better error message.)
+
+      def validate_default_when_present(flags, scope_name)
+        flags.each do |f|
+          next unless f.key?("default_when_present")
+
+          unless f["type"] == "enum"
+            raise SpecError,
+              "Flag #{f["id"].inspect} in scope #{scope_name.inspect} has " \
+              "default_when_present but type is #{f["type"].inspect} (must be \"enum\")"
+          end
+
+          enum_values = f["enum_values"] || []
+          if enum_values.empty?
+            raise SpecError,
+              "Flag #{f["id"].inspect} in scope #{scope_name.inspect} has " \
+              "default_when_present but enum_values is empty"
+          end
+
+          unless enum_values.include?(f["default_when_present"])
+            raise SpecError,
+              "Flag #{f["id"].inspect} in scope #{scope_name.inspect} has " \
+              "default_when_present value #{f["default_when_present"].inspect} " \
+              "which is not in enum_values: #{enum_values.inspect}"
           end
         end
       end

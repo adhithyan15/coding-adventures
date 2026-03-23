@@ -66,12 +66,18 @@ class Package:
         path: Absolute path to the package directory.
         build_commands: Lines from the BUILD file (commands to execute).
         language: Inferred language -- "python", "ruby", "go", "rust", or "unknown".
+        is_starlark: Whether the BUILD file uses Starlark syntax.
+        declared_srcs: Glob patterns from the Starlark srcs field.
+        declared_deps: Qualified dependency names from the Starlark deps field.
     """
 
     name: str
     path: Path
     build_commands: list[str] = field(default_factory=list)
     language: str = "unknown"
+    is_starlark: bool = False
+    declared_srcs: list[str] = field(default_factory=list)
+    declared_deps: list[str] = field(default_factory=list)
 
 
 def _read_lines(filepath: Path) -> list[str]:

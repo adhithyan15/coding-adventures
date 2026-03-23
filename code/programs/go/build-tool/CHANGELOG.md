@@ -2,6 +2,41 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
+## [0.3.0] - 2026-03-22
+
+### Added
+
+- **Glob matching library** (`internal/globmatch/`): Pure string-matching glob utility supporting `**` (zero or more directory segments), `*`, `?`, and literal patterns. No filesystem access needed — matches patterns against path strings directly.
+- **Strict input filtering in git diff**: `MapFilesToPackages()` now respects Starlark `declared_srcs` patterns. For Starlark packages, only files matching declared source patterns (or BUILD files) trigger rebuilds. Editing `README.md` in a Starlark package no longer causes a spurious rebuild.
+- **Build plan artifact** (`internal/plan/`): Serializes discovery, resolution, and change detection results as a versioned JSON manifest (`schema_version: 1`). Enables CI detect job to compute the build plan once, upload as artifact, and have build jobs on all 3 platforms skip redundant computation.
+- **`--emit-plan` flag**: Writes the build plan JSON to a file and exits. Used by CI detect job.
+- **`--plan-file` flag**: Reads a previously emitted build plan, skipping discovery/resolution/diff. Used by CI build jobs.
+- **Cross-platform plan loading**: When loading a plan on a different OS than the detect job, re-reads platform-specific BUILD files to get correct commands (e.g., Windows gets `BUILD_windows` commands instead of Linux shell syntax).
+
+### Fixed
+
+- **`**` glob patterns in hasher**: `resolveDeclaredSrcs()` now uses `filepath.WalkDir` + `globmatch.MatchPath` instead of `filepath.Glob`, which silently failed on `**` patterns.
+
+### Changed
+
+- CI workflow now uploads/downloads build plan artifact between detect and build jobs, eliminating duplicate discovery/resolution computation on each platform.
+
+## [0.2.0] - 2026-03-22
+
+### Added
+
+- **`--detect-languages` flag**: Outputs which language toolchains CI needs based on git diff. Enables conditional toolchain installation in CI — only install Python if Python packages changed, etc. Go is always needed (build tool dependency).
+- **Starlark BUILD file evaluation**: BUILD files can now be written in Starlark instead of shell. The build tool detects Starlark BUILD files (via `load()` or rule calls) and evaluates them through the Go starlark-interpreter.
+- **Starlark evaluator** (`internal/starlark/evaluator.go`): Evaluates Starlark BUILD files, extracts targets with declared srcs/deps, generates shell commands from rule types.
+- **Strict input hashing**: When a package has declared srcs (from Starlark BUILD), only those files are hashed for change detection. Falls back to extension-based collection for shell BUILD files.
+- **12 rule types supported**: py_library, py_binary, go_library, go_binary, ruby_library, ruby_binary, ts_library, ts_binary, rust_library, rust_binary, elixir_library, elixir_binary.
+- **"starlark" language support**: Discovery and hasher recognize "starlark" as a first-class language alongside python/go/ruby/typescript/rust/elixir.
+- **TypeScript, Rust, Elixir extension mappings** in hasher (previously only python/ruby/go were mapped).
+
+### Dependencies
+
+- Added starlark-interpreter and its 10 transitive Go package dependencies via replace directives.
+
 ## [0.1.0] - 2026-03-18
 
 ### Added

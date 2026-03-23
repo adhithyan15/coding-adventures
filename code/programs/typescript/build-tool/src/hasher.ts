@@ -39,6 +39,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import type { Package } from "./discovery.js";
 import type { DirectedGraph } from "./resolver.js";
+import { matchPath } from "./glob-match.js";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -152,6 +153,75 @@ export function collectSourceFiles(pkg: Package): string[] {
   }
 
   // Sort by relative path for determinism.
+  files.sort((a, b) => {
+    const relA = path.relative(pkg.path, a);
+    const relB = path.relative(pkg.path, b);
+    return relA.localeCompare(relB);
+  });
+
+  return files;
+}
+
+/**
+ * Collect source files using declared glob patterns from a Starlark BUILD file.
+ *
+ * When a package declares explicit `srcs` patterns (e.g., "src/foo.py",
+ * "tests/*.test.ts"), we use those patterns to filter the file tree instead
+ * of relying on language-based extension matching.
+ *
+ * This fixes a subtle bug with the extension-based approach: it could miss
+ * files that are important to the build but have unusual extensions, and it
+ * could include files that the build doesn't actually use.
+ *
+ * The glob patterns are matched using the pure-string `matchPath()` function
+ * from glob-match.ts, which correctly handles `*`, `?`, and multi-segment
+ * wildcard patterns.
+ *
+ * BUILD files are always included regardless of the patterns, because a
+ * change to the BUILD file itself should always trigger a rebuild.
+ *
+ * @param pkg - The package to collect files for.
+ * @param patterns - Glob patterns relative to the package directory
+ *                   (e.g., ["src/foo.py", "tests/*.test.ts"]).
+ * @returns A sorted list of absolute paths.
+ */
+export function collectSourceFilesGlob(
+  pkg: Package,
+  patterns: string[],
+): string[] {
+  const files: string[] = [];
+
+  for (const filepath of walkFiles(pkg.path)) {
+    const basename = path.basename(filepath);
+
+    // Always include BUILD files.
+    if (
+      basename === "BUILD" ||
+      basename === "BUILD_mac" ||
+      basename === "BUILD_linux" ||
+      basename === "BUILD_windows" ||
+      basename === "BUILD_mac_and_linux"
+    ) {
+      files.push(filepath);
+      continue;
+    }
+
+    // Compute the path relative to the package directory and match
+    // against each declared source pattern.
+    //
+    // We use forward slashes for consistency, since glob patterns
+    // always use forward slashes regardless of platform.
+    const relPath = path.relative(pkg.path, filepath).split(path.sep).join("/");
+
+    for (const pattern of patterns) {
+      if (matchPath(pattern, relPath)) {
+        files.push(filepath);
+        break; // No need to check more patterns once we have a match.
+      }
+    }
+  }
+
+  // Sort by relative path for determinism (same as collectSourceFiles).
   files.sort((a, b) => {
     const relA = path.relative(pkg.path, a);
     const relB = path.relative(pkg.path, b);

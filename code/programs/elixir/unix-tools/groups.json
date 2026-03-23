@@ -1,0 +1,21 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "groups",
+  "display_name": "groups",
+  "description": "Print the groups a user is in",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [],
+  "arguments": [
+    {
+      "id": "users",
+      "name": "USERNAME",
+      "description": "Users to look up (default: current user)",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": []
+}

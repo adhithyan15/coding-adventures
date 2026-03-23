@@ -37,8 +37,17 @@
  * - What validation is applied (e.g., path existence checks for `file`)
  * - What the resulting TypeScript type is in ParseResult.arguments
  */
+/**
+ * The "count" type is new in v1.1. Like boolean, it consumes no value
+ * token from argv. Each occurrence of the flag increments an integer
+ * counter starting from 0. Common example: `-vvv` for verbosity level 3.
+ *
+ * Count flags participate in stacked short flags: `-vvv` is parsed as
+ * three separate occurrences of `-v`, each incrementing the counter by 1.
+ */
 export type ValueType =
   | "boolean"
+  | "count"
   | "string"
   | "integer"
   | "float"
@@ -87,6 +96,17 @@ export interface FlagDef {
   valueName?: string;
   /** Valid values when type is "enum". */
   enumValues: string[];
+  /**
+   * Default value to use when an enum flag is present but no value follows.
+   *
+   * New in v1.1. Only valid when `type` is "enum". When a flag like `--color`
+   * is used without an explicit value (no `=` and next token is not a valid
+   * enum member), this value is used instead of requiring a value token.
+   *
+   * Example: `--color` with `defaultWhenPresent: "always"` behaves like
+   * `--color=always`, while `--color=never` and `--color never` still work.
+   */
+  defaultWhenPresent?: string;
   /** IDs of flags that cannot be used alongside this one. */
   conflictsWith: string[];
   /** IDs of flags that must also be present when this flag is used. */
@@ -103,8 +123,8 @@ export interface FlagDef {
 export interface ArgDef {
   /** Unique identifier within the scope. Used as the key in ParseResult.arguments. */
   id: string;
-  /** Display name in help text (e.g., "FILE", "DEST"). */
-  name: string;
+  /** Display name in help text (e.g., "FILE", "DEST"). Accepts display_name (preferred) or name (backward compat). */
+  display_name: string;
   /** Human-readable description. */
   description: string;
   /** The value type. */
@@ -227,6 +247,25 @@ export interface ParseResult {
   flags: Record<string, unknown>;
   /** Map from argument ID to coerced value. Variadic args produce arrays. */
   arguments: Record<string, unknown>;
+  /**
+   * IDs of flags that were explicitly set by the user on the command line.
+   *
+   * New in v1.1. Every time a flag token is consumed from argv, the flag's
+   * ID is appended to this array. This lets callers distinguish between
+   * "user passed --color=auto" and "color defaulted to auto". A flag that
+   * appears multiple times (e.g., `-vvv` or `--include x --include y`)
+   * will appear multiple times in this array.
+   *
+   * @example
+   * ```typescript
+   * // tool --verbose --output=foo.txt
+   * result.explicitFlags // ["verbose", "output"]
+   *
+   * // tool -vvv
+   * result.explicitFlags // ["verbose", "verbose", "verbose"]
+   * ```
+   */
+  explicitFlags: string[];
 }
 
 /**

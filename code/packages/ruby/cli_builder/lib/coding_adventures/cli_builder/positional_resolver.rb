@@ -132,7 +132,7 @@ module CodingAdventures
             unless arg_def["required"] == false || required_unless_satisfied?(arg_def, parsed_flags)
               errors << ParseError.new(
                 error_type: "missing_required_argument",
-                message: "Missing required argument: <#{arg_def["name"]}>",
+                message: "Missing required argument: <#{arg_def["display_name"] || arg_def["name"]}>",
                 suggestion: nil,
                 context: []
               )
@@ -174,7 +174,7 @@ module CodingAdventures
             unless td["required"] == false
               errors << ParseError.new(
                 error_type: "missing_required_argument",
-                message: "Missing required argument: <#{td["name"]}>",
+                message: "Missing required argument: <#{td["display_name"] || td["name"]}>",
                 suggestion: nil,
                 context: []
               )
@@ -186,7 +186,7 @@ module CodingAdventures
               unless ld["required"] == false
                 errors << ParseError.new(
                   error_type: "missing_required_argument",
-                  message: "Missing required argument: <#{ld["name"]}>",
+                  message: "Missing required argument: <#{ld["display_name"] || ld["name"]}>",
                   suggestion: nil,
                   context: []
                 )
@@ -222,7 +222,7 @@ module CodingAdventures
 
             errors << ParseError.new(
               error_type: "missing_required_argument",
-              message: "Missing required argument: <#{ld["name"]}>",
+              message: "Missing required argument: <#{ld["display_name"] || ld["name"]}>",
               suggestion: nil,
               context: []
             )
@@ -249,7 +249,7 @@ module CodingAdventures
             unless td["required"] == false
               errors << ParseError.new(
                 error_type: "missing_required_argument",
-                message: "Missing required argument: <#{td["name"]}>",
+                message: "Missing required argument: <#{td["display_name"] || td["name"]}>",
                 suggestion: nil,
                 context: []
               )
@@ -269,14 +269,14 @@ module CodingAdventures
         if count < vmin
           errors << ParseError.new(
             error_type: "too_few_arguments",
-            message: "Expected at least #{vmin} <#{variadic_def["name"]}>, got #{count}",
+            message: "Expected at least #{vmin} <#{variadic_def["display_name"] || variadic_def["name"]}>, got #{count}",
             suggestion: nil,
             context: []
           )
         elsif vmax && count > vmax
           errors << ParseError.new(
             error_type: "too_many_arguments",
-            message: "Expected at most #{vmax} <#{variadic_def["name"]}>, got #{count}",
+            message: "Expected at most #{vmax} <#{variadic_def["display_name"] || variadic_def["name"]}>, got #{count}",
             suggestion: nil,
             context: []
           )
@@ -304,7 +304,7 @@ module CodingAdventures
           rescue ArgumentError
             errors << ParseError.new(
               error_type: "invalid_value",
-              message: "Invalid integer for <#{item_def["name"]}>: #{str.inspect}",
+              message: "Invalid integer for <#{item_def["display_name"] || item_def["name"]}>: #{str.inspect}",
               suggestion: nil,
               context: []
             )
@@ -316,7 +316,7 @@ module CodingAdventures
           rescue ArgumentError
             errors << ParseError.new(
               error_type: "invalid_value",
-              message: "Invalid float for <#{item_def["name"]}>: #{str.inspect}",
+              message: "Invalid float for <#{item_def["display_name"] || item_def["name"]}>: #{str.inspect}",
               suggestion: nil,
               context: []
             )
@@ -330,7 +330,7 @@ module CodingAdventures
           unless File.file?(str) && File.readable?(str)
             errors << ParseError.new(
               error_type: "invalid_value",
-              message: "Not a readable file for <#{item_def["name"]}>: #{str.inspect}",
+              message: "Not a readable file for <#{item_def["display_name"] || item_def["name"]}>: #{str.inspect}",
               suggestion: nil,
               context: []
             )
@@ -342,7 +342,7 @@ module CodingAdventures
           unless File.directory?(str)
             errors << ParseError.new(
               error_type: "invalid_value",
-              message: "Not a directory for <#{item_def["name"]}>: #{str.inspect}",
+              message: "Not a directory for <#{item_def["display_name"] || item_def["name"]}>: #{str.inspect}",
               suggestion: nil,
               context: []
             )
@@ -354,7 +354,7 @@ module CodingAdventures
           unless valid.include?(str)
             errors << ParseError.new(
               error_type: "invalid_enum_value",
-              message: "Invalid value #{str.inspect} for <#{item_def["name"]}>. " \
+              message: "Invalid value #{str.inspect} for <#{item_def["display_name"] || item_def["name"]}>. " \
                        "Must be one of: #{valid.join(", ")}",
               suggestion: nil,
               context: []

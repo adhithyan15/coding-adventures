@@ -1,0 +1,33 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "dirname",
+  "display_name": "dirname",
+  "description": "Strip last component from file name. Output each NAME with its last non-slash component and trailing slashes removed.",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "zero",
+      "short": "z",
+      "long": "zero",
+      "description": "End each output line with NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "names",
+      "description": "The pathname(s) to process",
+      "required": true,
+      "variadic": true,
+      "type": "string",
+      "min": 1,
+      "display_name": "NAME"
+    }
+  ],
+  "commands": []
+}

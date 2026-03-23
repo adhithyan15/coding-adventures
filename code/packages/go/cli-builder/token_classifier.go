@@ -213,7 +213,7 @@ func (tc *TokenClassifier) Classify(token string) TokenEvent {
 			firstChar := string(rest[0])
 			if flagDef, ok := tc.shortFlags[firstChar]; ok {
 				flagType := stringField(flagDef, "type")
-				if flagType == "boolean" {
+				if flagType == "boolean" || flagType == "count" {
 					if len(rest) == 1 {
 						// Just "-x" for a boolean flag
 						return TokenEvent{Kind: TokenShortFlag, Name: firstChar, Raw: raw}
@@ -277,10 +277,10 @@ func (tc *TokenClassifier) classifyStacked(chars string, raw string) TokenEvent 
 			return TokenEvent{Kind: TokenUnknownFlag, Name: ch, Raw: raw}
 		}
 		flagType := stringField(flagDef, "type")
-		if flagType != "boolean" && i < len(runes)-1 {
-			// Non-boolean flag in non-last position — invalid stack.
+		if flagType != "boolean" && flagType != "count" && i < len(runes)-1 {
+			// Non-boolean/non-count flag in non-last position — invalid stack.
 			// Per spec: "All characters in the stack except possibly the
-			// last must be boolean flags."
+			// last must be boolean or count flags."
 			return TokenEvent{Kind: TokenUnknownFlag, Name: ch, Raw: raw}
 		}
 		result = append(result, ch)

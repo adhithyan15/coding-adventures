@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/ui-components",
+  "version": "0.1.0",
+  "description": "Shared React UI components for interactive visualizations — accessible tabs, i18n, animation hooks, and dark theme.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["react", "ui-components", "accessibility", "i18n", "visualization"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "jsdom": "^25.0.0"
+  }
+}

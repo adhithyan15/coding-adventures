@@ -1,11 +1,71 @@
-//! # pwd — Library Module
+//! # Unix Tools — Library Module
 //!
-//! This module exposes the business logic functions (`get_physical_pwd` and
-//! `get_logical_pwd`) so they can be tested from integration tests in the
+//! This module exposes the business logic functions for all Unix tool
+//! implementations so they can be tested from integration tests in the
 //! `tests/` directory.
 //!
 //! The binary entry point is in `main.rs`, which calls these functions
 //! after CLI Builder has parsed the arguments.
+
+// --- Tool modules ---
+// Each tool has its own module with the business logic separated from
+// CLI parsing, making it independently testable.
+pub mod basename_tool;
+pub mod comm_tool;
+pub mod cut_tool;
+pub mod df_tool;
+pub mod du_tool;
+pub mod cat_tool;
+pub mod dirname_tool;
+pub mod echo_tool;
+pub mod expand_tool;
+pub mod false_tool;
+pub mod fold_tool;
+pub mod groups_tool;
+pub mod head_tool;
+pub mod id_tool;
+pub mod ln_tool;
+pub mod logname_tool;
+pub mod md5sum_tool;
+pub mod mkdir_tool;
+pub mod nl_tool;
+pub mod paste_tool;
+pub mod nproc_tool;
+pub mod printenv_tool;
+pub mod pwd_tool;
+pub mod realpath_tool;
+pub mod rev_tool;
+pub mod rm_tool;
+pub mod rmdir_tool;
+pub mod seq_tool;
+pub mod sha256sum_tool;
+pub mod sort_tool;
+pub mod sleep_tool;
+pub mod tail_tool;
+pub mod tee_tool;
+pub mod touch_tool;
+pub mod tr_tool;
+pub mod true_tool;
+pub mod uname_tool;
+pub mod tty_tool;
+pub mod unexpand_tool;
+pub mod uniq_tool;
+pub mod wc_tool;
+pub mod whoami_tool;
+pub mod yes_tool;
+pub mod cp_tool;
+pub mod mv_tool;
+pub mod ls_tool;
+pub mod grep_tool;
+pub mod join_tool;
+pub mod split_tool;
+pub mod diff_tool;
+pub mod cmp_tool;
+pub mod xargs_tool;
+pub mod env_tool;
+pub mod chmod_tool;
+pub mod chown_tool;
+pub mod tar_tool;
 
 use std::path::PathBuf;
 

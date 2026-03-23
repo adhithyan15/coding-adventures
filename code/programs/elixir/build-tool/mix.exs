@@ -19,7 +19,8 @@ defmodule BuildTool.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      {:coding_adventures_progress_bar, path: "../../../packages/elixir/progress_bar"}
+      {:coding_adventures_progress_bar, path: "../../../packages/elixir/progress_bar"},
+      {:coding_adventures_starlark_interpreter, path: "../../../packages/elixir/starlark_interpreter"}
     ]
   end
 end

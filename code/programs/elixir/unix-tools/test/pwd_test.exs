@@ -173,13 +173,24 @@ defmodule PwdTest do
     test "get_physical_pwd returns an absolute path string" do
       result = UnixTools.Pwd.get_physical_pwd()
       assert is_binary(result)
-      assert String.starts_with?(result, "/")
+
+      if :os.type() == {:win32, :nt} do
+        # Windows paths start with a drive letter like "C:\"
+        assert String.at(result, 1) == ":"
+      else
+        assert String.starts_with?(result, "/")
+      end
     end
 
     test "get_logical_pwd returns an absolute path string" do
       result = UnixTools.Pwd.get_logical_pwd()
       assert is_binary(result)
-      assert String.starts_with?(result, "/")
+
+      if :os.type() == {:win32, :nt} do
+        assert String.at(result, 1) == ":"
+      else
+        assert String.starts_with?(result, "/")
+      end
     end
 
     test "get_logical_pwd uses $PWD when it matches the real cwd" do
@@ -205,7 +216,12 @@ defmodule PwdTest do
         result = UnixTools.Pwd.get_logical_pwd()
         # Should fall back to physical path — still a valid absolute path
         assert is_binary(result)
-        assert String.starts_with?(result, "/")
+
+        if :os.type() == {:win32, :nt} do
+          assert String.at(result, 1) == ":"
+        else
+          assert String.starts_with?(result, "/")
+        end
       after
         if old_pwd, do: System.put_env("PWD", old_pwd), else: System.delete_env("PWD")
       end
@@ -218,7 +234,12 @@ defmodule PwdTest do
         System.delete_env("PWD")
         result = UnixTools.Pwd.get_logical_pwd()
         assert is_binary(result)
-        assert String.starts_with?(result, "/")
+
+        if :os.type() == {:win32, :nt} do
+          assert String.at(result, 1) == ":"
+        else
+          assert String.starts_with?(result, "/")
+        end
       after
         if old_pwd, do: System.put_env("PWD", old_pwd), else: System.delete_env("PWD")
       end

@@ -4,6 +4,55 @@ version = "1.0.0"
 description = "Unix tools reimplemented using CLI Builder"
 requires-python = ">=3.12"
 
+[tool.setuptools]
+py-modules = [
+    "pwd_tool",
+    "head_tool",
+    "tail_tool",
+    "basename_tool",
+    "dirname_tool",
+    "seq_tool",
+    "tee_tool",
+    "rev_tool",
+    "printenv_tool",
+    "mkdir_tool",
+    "rmdir_tool",
+    "touch_tool",
+    "ln_tool",
+    "rm_tool",
+    "realpath_tool",
+    "tr_tool",
+    "uniq_tool",
+    "expand_tool",
+    "unexpand_tool",
+    "fold_tool",
+    "nl_tool",
+    "sort_tool",
+    "cut_tool",
+    "paste_tool",
+    "comm_tool",
+    "uname_tool",
+    "id_tool",
+    "groups_tool",
+    "df_tool",
+    "du_tool",
+    "md5sum_tool",
+    "sha256sum_tool",
+    "cp_tool",
+    "mv_tool",
+    "ls_tool",
+    "grep_tool",
+    "join_tool",
+    "split_tool",
+    "diff_tool",
+    "cmp_tool",
+    "xargs_tool",
+    "env_tool",
+    "chmod_tool",
+    "chown_tool",
+    "tar_tool",
+]
+
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]
 

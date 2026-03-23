@@ -1,2 +1,2 @@
 cargo test -p brainfuck
-cargo tarpaulin -p brainfuck --out Stdout --skip-clean
+if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p brainfuck --out Stdout --skip-clean; fi

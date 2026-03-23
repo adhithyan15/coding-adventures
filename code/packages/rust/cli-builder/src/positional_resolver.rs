@@ -169,7 +169,7 @@ fn resolve_no_variadic(
             if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
-                    format!("Missing required argument: <{}>", def.name),
+                    format!("Missing required argument: <{}>", def.display_name),
                     command_path.to_vec(),
                 ));
             }
@@ -231,7 +231,7 @@ fn resolve_with_variadic_refs(
             if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
-                    format!("Missing required argument: <{}>", def.name),
+                    format!("Missing required argument: <{}>", def.display_name),
                     command_path.to_vec(),
                 ));
             }
@@ -259,7 +259,7 @@ fn resolve_with_variadic_refs(
             if def.required {
                 errors.push(ParseError::new(
                     "missing_required_argument",
-                    format!("Missing required argument: <{}>", def.name),
+                    format!("Missing required argument: <{}>", def.display_name),
                     command_path.to_vec(),
                 ));
             }
@@ -287,7 +287,7 @@ fn resolve_with_variadic_refs(
                 "too_few_arguments",
                 format!(
                     "Expected at least {} <{}>, got {}",
-                    v_min, variadic_def.name, count
+                    v_min, variadic_def.display_name, count
                 ),
                 command_path.to_vec(),
             ));
@@ -300,7 +300,7 @@ fn resolve_with_variadic_refs(
                 "too_many_arguments",
                 format!(
                     "Expected at most {} <{}>, got {}",
-                    v_max, variadic_def.name, count
+                    v_max, variadic_def.display_name, count
                 ),
                 command_path.to_vec(),
             ));
@@ -380,12 +380,17 @@ pub fn coerce_value(raw: &str, type_name: &str, enum_values: &[String]) -> Resul
                 Ok(Value::String(raw.to_string()))
             }
         }
-        "integer" => raw.parse::<i64>().map(|n| json!(n)).map_err(|_| {
-            ParseError::new(
-                "invalid_value",
-                format!("Invalid integer: {:?}", raw),
-                vec![],
-            )
+        "integer" => raw.parse::<i64>().map(|n| json!(n)).map_err(|e| {
+            // Provide a clear error message distinguishing parse failures from
+            // out-of-range values. Rust's i64 parse already validates the full
+            // -2^63..2^63-1 range, but the error message should be helpful.
+            let msg = if raw.chars().all(|c| c.is_ascii_digit() || c == '-' || c == '+') {
+                // Looks numeric but out of range
+                format!("Integer value {:?} is out of range (must fit in int64): {}", raw, e)
+            } else {
+                format!("Invalid integer: {:?}", raw)
+            };
+            ParseError::new("invalid_value", msg, vec![])
         }),
         "float" => raw.parse::<f64>().map(|n| json!(n)).map_err(|_| {
             ParseError::new(
@@ -477,7 +482,7 @@ mod tests {
     fn mk_arg(id: &str, name: &str, required: bool, variadic: bool, variadic_min: usize) -> ArgumentDef {
         ArgumentDef {
             id: id.to_string(),
-            name: name.to_string(),
+            display_name: name.to_string(),
             description: "".to_string(),
             arg_type: "string".to_string(),
             required,

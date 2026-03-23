@@ -1,0 +1,34 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "printenv",
+  "display_name": "printenv",
+  "description": "Print all or part of environment",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "null",
+      "short": "0",
+      "long": "null",
+      "description": "End each output line with NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "variables",
+      "description": "Environment variable names to print",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "variadic_min": 0,
+      "display_name": "VARIABLE"
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}

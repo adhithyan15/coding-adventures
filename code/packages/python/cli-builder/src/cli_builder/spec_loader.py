@@ -63,9 +63,13 @@ from cli_builder.errors import SpecError
 SUPPORTED_VERSION = "1.0"
 
 # Valid types for flag and argument values.
-VALID_TYPES = frozenset(
-    ["boolean", "string", "integer", "float", "path", "file", "directory", "enum"]
-)
+#
+# "count" is a v1.1 addition: like boolean, it consumes no value token.
+# Each occurrence increments a counter (e.g., -vvv → 3). Default is 0.
+VALID_TYPES = frozenset([
+    "boolean", "count", "string", "integer", "float",
+    "path", "file", "directory", "enum",
+])
 
 # Valid parsing modes.
 VALID_PARSING_MODES = frozenset(["posix", "gnu", "subcommand_first", "traditional"])
@@ -277,6 +281,28 @@ class SpecLoader:
                         f"missing or empty in scope '{scope_name}'"
                     )
 
+            # --- default_when_present validation (v1.1) ---
+            #
+            # ``default_when_present`` allows an enum flag to be used without
+            # a value: ``--color`` means ``--color=always`` when
+            # default_when_present is "always". The field is only valid for
+            # enum-typed flags, and its value must be one of the enum_values.
+            dwp = flag.get("default_when_present")
+            if dwp is not None:
+                if ftype != "enum":
+                    raise SpecError(
+                        f"Flag '{fid}' in scope '{scope_name}' has "
+                        f"'default_when_present' but type is '{ftype}' "
+                        f"(only 'enum' supports this field)"
+                    )
+                ev = flag.get("enum_values", [])
+                if dwp not in ev:
+                    raise SpecError(
+                        f"Flag '{fid}' in scope '{scope_name}' has "
+                        f"default_when_present='{dwp}' which is not in "
+                        f"enum_values: {ev}"
+                    )
+
             # --- Fill in defaults ---
             flag.setdefault("required", False)
             flag.setdefault("default", None)
@@ -344,11 +370,19 @@ class SpecLoader:
                 )
             seen_ids.add(aid)
 
-            for fname in ("name", "description"):
-                if not arg.get(fname):
-                    raise SpecError(
-                        f"Argument '{aid}' in scope '{scope_name}' is missing '{fname}'"
-                    )
+            # Accept display_name (preferred) or name (backward compatibility).
+            # Normalize to display_name for downstream consumers.
+            if not arg.get("display_name") and not arg.get("name"):
+                raise SpecError(
+                    f"Argument '{aid}' in scope '{scope_name}' is missing 'display_name'"
+                )
+            if not arg.get("display_name"):
+                arg["display_name"] = arg["name"]
+
+            if not arg.get("description"):
+                raise SpecError(
+                    f"Argument '{aid}' in scope '{scope_name}' is missing 'description'"
+                )
 
             atype = arg.get("type")
             if not atype:

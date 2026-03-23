@@ -273,8 +273,15 @@ fn append_arguments_section(out: &mut String, args: &[ArgumentDef]) {
 /// - `-o, --output <FILE>`
 /// - `-classpath <classpath>`
 fn format_flag_signature(f: &FlagDef) -> String {
-    let value_part = if f.flag_type == "boolean" {
+    let value_part = if f.flag_type == "boolean" || f.flag_type == "count" {
+        // Boolean and count flags consume no value — no value placeholder.
         String::new()
+    } else if f.default_when_present.is_some() {
+        // Enum flags with default_when_present show `[=VALUE]` to indicate
+        // the value is optional. The brackets convey "you may omit the value."
+        let upper = f.flag_type.to_uppercase();
+        let vn = f.value_name.as_deref().unwrap_or(&upper);
+        format!(" [={}]", vn)
     } else {
         let upper = f.flag_type.to_uppercase();
         let vn = f.value_name.as_deref().unwrap_or(&upper);
@@ -308,14 +315,14 @@ fn format_flag_signature(f: &FlagDef) -> String {
 fn format_arg_usage(a: &ArgumentDef) -> String {
     if a.variadic {
         if a.required {
-            format!("<{}...>", a.name)
+            format!("<{}...>", a.display_name)
         } else {
-            format!("[{}...]", a.name)
+            format!("[{}...]", a.display_name)
         }
     } else if a.required {
-        format!("<{}>", a.name)
+        format!("<{}>", a.display_name)
     } else {
-        format!("[{}]", a.name)
+        format!("[{}]", a.display_name)
     }
 }
 
@@ -349,6 +356,7 @@ fn builtin_flag_stubs(spec: &CliSpec) -> Vec<FlagDef> {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         });
     }
 
@@ -368,6 +376,7 @@ fn builtin_flag_stubs(spec: &CliSpec) -> Vec<FlagDef> {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         });
     }
 
@@ -548,6 +557,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let sig = format_flag_signature(&f);
         assert!(sig.contains("-v"));
@@ -572,6 +582,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let sig = format_flag_signature(&f);
         assert!(sig.contains("<FILE>"));
@@ -581,7 +592,7 @@ mod tests {
     fn test_format_arg_usage_required_variadic() {
         let a = ArgumentDef {
             id: "src".into(),
-            name: "SOURCE".into(),
+            display_name: "SOURCE".into(),
             description: "".into(),
             arg_type: "path".into(),
             required: true,
@@ -601,7 +612,7 @@ mod tests {
     fn test_format_arg_usage_optional_scalar() {
         let a = ArgumentDef {
             id: "p".into(),
-            name: "PATH".into(),
+            display_name: "PATH".into(),
             description: "".into(),
             arg_type: "path".into(),
             required: false,
@@ -625,7 +636,7 @@ mod tests {
     fn test_format_arg_usage_optional_variadic() {
         let a = ArgumentDef {
             id: "files".into(),
-            name: "FILE".into(),
+            display_name: "FILE".into(),
             description: "".into(),
             arg_type: "path".into(),
             required: false,
@@ -663,6 +674,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let sig = format_flag_signature(&f);
         assert!(sig.contains("-classpath"));
@@ -687,6 +699,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let sig = format_flag_signature(&f);
         assert!(sig.contains("-k"));
@@ -711,6 +724,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let sig = format_flag_signature(&f);
         assert!(sig.contains("<FILE>"), "expected <FILE> in sig: {}", sig);

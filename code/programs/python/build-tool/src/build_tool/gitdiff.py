@@ -34,6 +34,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from build_tool.glob_match import match_path
+
 
 def get_changed_files(
     repo_root: Path,
@@ -91,6 +93,7 @@ def map_files_to_packages(
     changed_files: list[str],
     package_paths: dict[str, Path],
     repo_root: Path,
+    packages: list | None = None,
 ) -> set[str]:
     """Map changed file paths to package names.
 
@@ -98,34 +101,102 @@ def map_files_to_packages(
     A file belongs to a package if its path starts with the package's
     directory path (relative to repo root).
 
+    Strict filtering for Starlark packages
+    ---------------------------------------
+
+    When ``packages`` is provided and a package has ``is_starlark=True``
+    with non-empty ``declared_srcs``, we apply **strict filtering**: the
+    changed file must either match one of the declared source patterns or
+    be a BUILD file. This prevents spurious rebuilds when, say, only
+    ``README.md`` changed in a Starlark package that declares
+    ``srcs = ["src/**/*.py"]``.
+
+    For shell packages (``is_starlark=False``), we keep the original
+    behavior: ANY changed file in the package directory triggers a rebuild.
+    This is because shell BUILD files don't declare their sources.
+
     Args:
         changed_files: File paths relative to repo root.
-        package_paths: Mapping of package name → absolute package directory.
+        package_paths: Mapping of package name -> absolute package directory.
         repo_root: The repository root directory.
+        packages: Optional list of Package objects for strict filtering.
 
     Returns:
         Set of package names that contain at least one changed file.
 
     Example::
 
-        changed_files = ["code/packages/python/logic-gates/src/gates.py"]
-        package_paths = {"python/logic-gates": Path("/repo/code/packages/python/logic-gates")}
-        → {"python/logic-gates"}
+        changed_files = [
+            "code/packages/python/logic-gates/src/gates.py"
+        ]
+        package_paths = {
+            "python/logic-gates": Path("/repo/code/.../logic-gates")
+        }
+        -> {"python/logic-gates"}
     """
     changed = set()
-    # Convert package paths to relative strings for prefix matching
+
+    # Build a lookup from package name to Package object for strict filtering.
+    pkg_by_name: dict = {}
+    if packages is not None:
+        for pkg in packages:
+            pkg_by_name[pkg.name] = pkg
+
+    # Convert package paths to relative strings for prefix matching.
+    # We normalize to forward slashes because git diff always outputs
+    # forward-slash paths, even on Windows.
     relative_pkg_paths: dict[str, str] = {}
     for name, abs_path in package_paths.items():
         try:
             rel = abs_path.relative_to(repo_root)
-            relative_pkg_paths[name] = str(rel)
+            relative_pkg_paths[name] = str(rel).replace("\\", "/")
         except ValueError:
             continue
 
     for filepath in changed_files:
         for pkg_name, pkg_rel_path in relative_pkg_paths.items():
             if filepath.startswith(pkg_rel_path + "/") or filepath == pkg_rel_path:
-                changed.add(pkg_name)
-                break  # a file belongs to at most one package
+                # The file is inside this package's directory.
+                #
+                # Now decide whether this change should trigger a rebuild.
+                # For Starlark packages with declared sources, only trigger
+                # if the file matches a declared src pattern or is a BUILD file.
+                pkg = pkg_by_name.get(pkg_name)
+
+                if pkg and pkg.is_starlark and pkg.declared_srcs:
+                    # Strict mode: check if the changed file matches any
+                    # declared source pattern.
+                    #
+                    # The file path relative to the package root is what we
+                    # match against declared_srcs patterns (which are relative
+                    # to the package directory).
+                    file_rel_to_pkg = filepath
+                    if filepath.startswith(pkg_rel_path + "/"):
+                        file_rel_to_pkg = filepath[len(pkg_rel_path) + 1 :]
+
+                    # BUILD files always trigger a rebuild regardless of
+                    # declared_srcs. A change to the build definition itself
+                    # obviously affects the package.
+                    if file_rel_to_pkg.startswith("BUILD"):
+                        changed.add(pkg_name)
+                        break
+
+                    # Check each declared source pattern.
+                    for pattern in pkg.declared_srcs:
+                        if match_path(pattern, file_rel_to_pkg):
+                            changed.add(pkg_name)
+                            break
+                    else:
+                        # No pattern matched -- this file change is not
+                        # relevant to the package's declared sources.
+                        # Skip it (don't add to changed set).
+                        break
+
+                    break
+                else:
+                    # Shell package or Starlark without declared_srcs:
+                    # any file change triggers a rebuild.
+                    changed.add(pkg_name)
+                    break
 
     return changed

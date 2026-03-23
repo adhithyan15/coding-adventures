@@ -58,6 +58,8 @@ export { TokenClassifier } from "./token-classifier.js";
 export { PositionalResolver, coerceValue } from "./positional-resolver.js";
 export { FlagValidator } from "./flag-validator.js";
 export { HelpGenerator } from "./help-generator.js";
+export { validateSpec, validateSpecObject } from "./validate.js";
+export type { ValidationResult } from "./validate.js";
 export { CliBuilderError, SpecError, ParseErrors } from "./errors.js";
 export type { ParseError } from "./errors.js";
 export type {
