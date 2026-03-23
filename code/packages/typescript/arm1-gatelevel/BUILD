@@ -1,5 +1,1 @@
-cd ../clock && npm install --silent && \
-cd ../logic-gates && npm install --silent && \
-cd ../arithmetic && npm install --silent && \
-cd ../arm1-gatelevel && npm install --silent
-npx vitest run --coverage
+cd ../clock && npm install --silent && cd ../logic-gates && npm install --silent && cd ../arithmetic && npm install --silent && cd ../arm1-gatelevel && npm install --silent && npx vitest run --coverage
