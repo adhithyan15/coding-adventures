@@ -78,8 +78,10 @@ fn which_python() -> Result<String, std::env::VarError> {
 }
 
 fn get_python_lib_dir(python: &str) -> Option<String> {
+    // On Windows, LIBDIR from sysconfig may be empty. Fall back to
+    // sys.base_prefix + "/libs" which is where pythonXY.lib lives.
     let output = std::process::Command::new(python)
-        .args(["-c", "import sysconfig; print(sysconfig.get_config_var('LIBDIR') or '')"])
+        .args(["-c", "import sysconfig, sys, os; d = sysconfig.get_config_var('LIBDIR') or ''; print(d if d and os.path.isdir(d) else os.path.join(sys.base_prefix, 'libs'))"])
         .output()
         .ok()?;
     let dir = String::from_utf8_lossy(&output.stdout).trim().to_string();
