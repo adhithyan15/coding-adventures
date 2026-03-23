@@ -489,12 +489,12 @@ class TestVersion:
 
 	// BUILD
 	var buildLines []string
-	buildLines = append(buildLines, "uv venv .venv --quiet --no-project")
+	buildLines = append(buildLines, "uv venv .venv --quiet --no-project --no-config")
 	for _, dep := range orderedDeps {
-		buildLines = append(buildLines, fmt.Sprintf("uv pip install --python .venv -e ../%s --quiet", dep))
+		buildLines = append(buildLines, fmt.Sprintf("uv pip install --no-config --python .venv -e ../%s --quiet", dep))
 	}
-	buildLines = append(buildLines, `uv pip install --python .venv -e .[dev] --quiet`)
-	buildLines = append(buildLines, "uv run --no-project python -m pytest tests/ -v")
+	buildLines = append(buildLines, `uv pip install --no-config --python .venv -e .[dev] --quiet`)
+	buildLines = append(buildLines, "uv run --no-project --no-config python -m pytest tests/ -v")
 	build := strings.Join(buildLines, "\n") + "\n"
 
 	// Create directories

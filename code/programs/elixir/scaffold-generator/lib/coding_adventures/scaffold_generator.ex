@@ -799,11 +799,11 @@ defmodule CodingAdventures.ScaffoldGenerator do
     """
 
     build_lines =
-      ["uv venv .venv --quiet --no-project"] ++
-        Enum.map(ordered_deps, fn dep -> "uv pip install --python .venv -e ../#{dep} --quiet" end) ++
+      ["uv venv .venv --quiet --no-project --no-config"] ++
+        Enum.map(ordered_deps, fn dep -> "uv pip install --no-config --python .venv -e ../#{dep} --quiet" end) ++
         [
-          "uv pip install --python .venv -e .[dev] --quiet",
-          "uv run --no-project python -m pytest tests/ -v"
+          "uv pip install --no-config --python .venv -e .[dev] --quiet",
+          "uv run --no-project --no-config python -m pytest tests/ -v"
         ]
 
     build_content = Enum.join(build_lines, "\n") <> "\n"

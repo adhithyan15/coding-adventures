@@ -184,11 +184,11 @@ func TestUnknownLanguage(t *testing.T) {
 func TestReadPythonDeps(t *testing.T) {
 	// Create a temp dir with a mock BUILD file
 	tmpDir := t.TempDir()
-	buildContent := `uv venv .venv --quiet --no-project
-uv pip install --python .venv -e ../logic-gates --quiet
-uv pip install --python .venv -e ../arithmetic --quiet
-uv pip install --python .venv -e .[dev] --quiet
-uv run --no-project python -m pytest tests/ -v
+	buildContent := `uv venv .venv --quiet --no-project --no-config
+uv pip install --no-config --python .venv -e ../logic-gates --quiet
+uv pip install --no-config --python .venv -e ../arithmetic --quiet
+uv pip install --no-config --python .venv -e .[dev] --quiet
+uv run --no-project --no-config python -m pytest tests/ -v
 `
 	os.WriteFile(filepath.Join(tmpDir, "BUILD"), []byte(buildContent), 0o644)
 
@@ -323,11 +323,11 @@ func TestTransitiveClosure(t *testing.T) {
 	os.MkdirAll(cDir, 0o755)
 
 	// A depends on B (Python BUILD style)
-	os.WriteFile(filepath.Join(aDir, "BUILD"), []byte("uv pip install --python .venv -e ../b --quiet\n"), 0o644)
+	os.WriteFile(filepath.Join(aDir, "BUILD"), []byte("uv pip install --no-config --python .venv -e ../b --quiet\n"), 0o644)
 	// B depends on C
-	os.WriteFile(filepath.Join(bDir, "BUILD"), []byte("uv pip install --python .venv -e ../c --quiet\n"), 0o644)
+	os.WriteFile(filepath.Join(bDir, "BUILD"), []byte("uv pip install --no-config --python .venv -e ../c --quiet\n"), 0o644)
 	// C has no deps
-	os.WriteFile(filepath.Join(cDir, "BUILD"), []byte("uv pip install --python .venv -e .[dev] --quiet\n"), 0o644)
+	os.WriteFile(filepath.Join(cDir, "BUILD"), []byte("uv pip install --no-config --python .venv -e .[dev] --quiet\n"), 0o644)
 
 	deps, err := transitiveClosure([]string{"b"}, "python", tmpDir)
 	if err != nil {
@@ -353,8 +353,8 @@ func TestTopologicalSort(t *testing.T) {
 	for _, name := range []string{"a", "b", "c", "d"} {
 		os.MkdirAll(filepath.Join(tmpDir, name), 0o755)
 	}
-	os.WriteFile(filepath.Join(tmpDir, "a", "BUILD"), []byte("uv pip install --python .venv -e ../b --quiet\nuv pip install --python .venv -e ../d --quiet\n"), 0o644)
-	os.WriteFile(filepath.Join(tmpDir, "b", "BUILD"), []byte("uv pip install --python .venv -e ../c --quiet\n"), 0o644)
+	os.WriteFile(filepath.Join(tmpDir, "a", "BUILD"), []byte("uv pip install --no-config --python .venv -e ../b --quiet\nuv pip install --no-config --python .venv -e ../d --quiet\n"), 0o644)
+	os.WriteFile(filepath.Join(tmpDir, "b", "BUILD"), []byte("uv pip install --no-config --python .venv -e ../c --quiet\n"), 0o644)
 	os.WriteFile(filepath.Join(tmpDir, "c", "BUILD"), []byte(""), 0o644)
 	os.WriteFile(filepath.Join(tmpDir, "d", "BUILD"), []byte(""), 0o644)
 

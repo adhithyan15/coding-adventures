@@ -794,12 +794,12 @@ class TestVersion:
 
     // --- BUILD ---
     let mut build_lines: Vec<String> = Vec::new();
-    build_lines.push("uv venv .venv --quiet --no-project".to_string());
+    build_lines.push("uv venv .venv --quiet --no-project --no-config".to_string());
     for dep in ordered_deps {
-        build_lines.push(format!("uv pip install --python .venv -e ../{} --quiet", dep));
+        build_lines.push(format!("uv pip install --no-config --python .venv -e ../{} --quiet", dep));
     }
-    build_lines.push("uv pip install --python .venv -e .[dev] --quiet".to_string());
-    build_lines.push("uv run --no-project python -m pytest tests/ -v".to_string());
+    build_lines.push("uv pip install --no-config --python .venv -e .[dev] --quiet".to_string());
+    build_lines.push("uv run --no-project --no-config python -m pytest tests/ -v".to_string());
     let build = build_lines.join("\n") + "\n";
 
     // Create directories

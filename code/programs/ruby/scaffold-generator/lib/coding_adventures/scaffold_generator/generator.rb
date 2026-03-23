@@ -516,10 +516,10 @@ module CodingAdventures
                 assert __version__ == "0.1.0"
       PY
 
-      build_lines = ["uv venv .venv --quiet --no-project"]
-      ordered_deps.each { |dep| build_lines << "uv pip install --python .venv -e ../#{dep} --quiet" }
-      build_lines << 'uv pip install --python .venv -e .[dev] --quiet'
-      build_lines << "uv run --no-project python -m pytest tests/ -v"
+      build_lines = ["uv venv .venv --quiet --no-project --no-config"]
+      ordered_deps.each { |dep| build_lines << "uv pip install --no-config --python .venv -e ../#{dep} --quiet" }
+      build_lines << 'uv pip install --no-config --python .venv -e .[dev] --quiet'
+      build_lines << "uv run --no-project --no-config python -m pytest tests/ -v"
       build = build_lines.join("\n") + "\n"
 
       write_file(File.join(target_dir, "pyproject.toml"), pyproject)

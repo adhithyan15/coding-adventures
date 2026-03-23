@@ -556,7 +556,7 @@ fn test_read_python_deps() {
     fs::create_dir_all(&dir).unwrap();
     fs::write(
         dir.join("BUILD"),
-        "uv venv .venv --quiet --no-project\nuv pip install --python .venv -e ../logic-gates --quiet\nuv pip install --python .venv -e ../arithmetic --quiet\nuv pip install --python .venv -e .[dev] --quiet\n",
+        "uv venv .venv --quiet --no-project --no-config\nuv pip install --no-config --python .venv -e ../logic-gates --quiet\nuv pip install --no-config --python .venv -e ../arithmetic --quiet\nuv pip install --no-config --python .venv -e .[dev] --quiet\n",
     )
     .unwrap();
 

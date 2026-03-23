@@ -205,10 +205,10 @@ describe("readDeps", () => {
   it("reads Python deps from BUILD file", () => {
     const pkgDir = path.join(tmpDir, "my-pkg");
     writeTestFile(pkgDir, "BUILD", [
-      "uv venv .venv --quiet --no-project",
-      "uv pip install --python .venv -e ../logic-gates --quiet",
-      "uv pip install --python .venv -e ../arithmetic --quiet",
-      "uv pip install --python .venv -e .[dev] --quiet",
+      "uv venv .venv --quiet --no-project --no-config",
+      "uv pip install --no-config --python .venv -e ../logic-gates --quiet",
+      "uv pip install --no-config --python .venv -e ../arithmetic --quiet",
+      "uv pip install --no-config --python .venv -e .[dev] --quiet",
     ].join("\n"));
 
     const deps = readDeps(pkgDir, "python");
@@ -391,7 +391,7 @@ describe("transitiveClosure", () => {
     // B depends on C
     const bDir = path.join(tmpDir, "b-pkg");
     fs.mkdirSync(bDir, { recursive: true });
-    writeTestFile(bDir, "BUILD", "uv pip install --python .venv -e ../c-pkg --quiet\n");
+    writeTestFile(bDir, "BUILD", "uv pip install --no-config --python .venv -e ../c-pkg --quiet\n");
 
     // A depends on B (we ask for transitive closure starting from [B])
     const result = transitiveClosure(["b-pkg"], "python", tmpDir);
@@ -407,12 +407,12 @@ describe("transitiveClosure", () => {
     // left depends on base
     const leftDir = path.join(tmpDir, "left");
     fs.mkdirSync(leftDir, { recursive: true });
-    writeTestFile(leftDir, "BUILD", "uv pip install --python .venv -e ../base --quiet\n");
+    writeTestFile(leftDir, "BUILD", "uv pip install --no-config --python .venv -e ../base --quiet\n");
 
     // right depends on base
     const rightDir = path.join(tmpDir, "right");
     fs.mkdirSync(rightDir, { recursive: true });
-    writeTestFile(rightDir, "BUILD", "uv pip install --python .venv -e ../base --quiet\n");
+    writeTestFile(rightDir, "BUILD", "uv pip install --no-config --python .venv -e ../base --quiet\n");
 
     // Both left and right depend on base; should appear only once
     const result = transitiveClosure(["left", "right"], "python", tmpDir);
@@ -453,7 +453,7 @@ describe("topologicalSort", () => {
     // mid depends on leaf
     const midDir = path.join(tmpDir, "mid");
     fs.mkdirSync(midDir, { recursive: true });
-    writeTestFile(midDir, "BUILD", "uv pip install --python .venv -e ../leaf --quiet\n");
+    writeTestFile(midDir, "BUILD", "uv pip install --no-config --python .venv -e ../leaf --quiet\n");
 
     const result = topologicalSort(["leaf", "mid"], "python", tmpDir);
     expect(result).toEqual(["leaf", "mid"]);
@@ -468,12 +468,12 @@ describe("topologicalSort", () => {
     // left depends on base
     const leftDir = path.join(tmpDir, "left");
     fs.mkdirSync(leftDir, { recursive: true });
-    writeTestFile(leftDir, "BUILD", "uv pip install --python .venv -e ../base --quiet\n");
+    writeTestFile(leftDir, "BUILD", "uv pip install --no-config --python .venv -e ../base --quiet\n");
 
     // right depends on base
     const rightDir = path.join(tmpDir, "right");
     fs.mkdirSync(rightDir, { recursive: true });
-    writeTestFile(rightDir, "BUILD", "uv pip install --python .venv -e ../base --quiet\n");
+    writeTestFile(rightDir, "BUILD", "uv pip install --no-config --python .venv -e ../base --quiet\n");
 
     const result = topologicalSort(
       ["base", "left", "right"],
@@ -489,11 +489,11 @@ describe("topologicalSort", () => {
     // A depends on B, B depends on A
     const aDir = path.join(tmpDir, "a-pkg");
     fs.mkdirSync(aDir, { recursive: true });
-    writeTestFile(aDir, "BUILD", "uv pip install --python .venv -e ../b-pkg --quiet\n");
+    writeTestFile(aDir, "BUILD", "uv pip install --no-config --python .venv -e ../b-pkg --quiet\n");
 
     const bDir = path.join(tmpDir, "b-pkg");
     fs.mkdirSync(bDir, { recursive: true });
-    writeTestFile(bDir, "BUILD", "uv pip install --python .venv -e ../a-pkg --quiet\n");
+    writeTestFile(bDir, "BUILD", "uv pip install --no-config --python .venv -e ../a-pkg --quiet\n");
 
     expect(() =>
       topologicalSort(["a-pkg", "b-pkg"], "python", tmpDir),

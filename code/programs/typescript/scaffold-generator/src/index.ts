@@ -603,12 +603,12 @@ class TestVersion:
         assert __version__ == "0.1.0"
 `;
 
-  const buildLines = ["uv venv .venv --quiet --no-project"];
+  const buildLines = ["uv venv .venv --quiet --no-project --no-config"];
   for (const dep of orderedDeps) {
-    buildLines.push(`uv pip install --python .venv -e ../${dep} --quiet`);
+    buildLines.push(`uv pip install --no-config --python .venv -e ../${dep} --quiet`);
   }
-  buildLines.push('uv pip install --python .venv -e .[dev] --quiet');
-  buildLines.push("uv run --no-project python -m pytest tests/ -v");
+  buildLines.push('uv pip install --no-config --python .venv -e .[dev] --quiet');
+  buildLines.push("uv run --no-project --no-config python -m pytest tests/ -v");
   const build = buildLines.join("\n") + "\n";
 
   writeFile(path.join(targetDir, "pyproject.toml"), pyproject);

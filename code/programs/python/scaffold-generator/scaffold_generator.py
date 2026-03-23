@@ -348,11 +348,11 @@ class TestVersion:
         assert __version__ == "0.1.0"
 '''
 
-    build_lines = ["uv venv .venv --quiet --no-project"]
+    build_lines = ["uv venv .venv --quiet --no-project --no-config"]
     for dep in ordered_deps:
-        build_lines.append(f"uv pip install --python .venv -e ../{dep} --quiet")
-    build_lines.append('uv pip install --python .venv -e .[dev] --quiet')
-    build_lines.append("uv run --no-project python -m pytest tests/ -v")
+        build_lines.append(f"uv pip install --no-config --python .venv -e ../{dep} --quiet")
+    build_lines.append('uv pip install --no-config --python .venv -e .[dev] --quiet')
+    build_lines.append("uv run --no-project --no-config python -m pytest tests/ -v")
     build = "\n".join(build_lines) + "\n"
 
     _write_file(os.path.join(target_dir, "pyproject.toml"), pyproject)
