@@ -1,0 +1,2 @@
+npm install --silent 2>NUL
+npx vitest run

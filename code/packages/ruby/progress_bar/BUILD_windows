@@ -1,0 +1,2 @@
+bundle install --quiet 2>NUL
+bundle exec rake test
