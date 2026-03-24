@@ -740,6 +740,59 @@ function parseLuaDeps(
 }
 
 // ===========================================================================
+// Dependency Parsing -- Perl
+// ===========================================================================
+
+/**
+ * Extract internal dependencies from a Perl cpanfile.
+ *
+ * A cpanfile declares dependencies with one `requires` per line:
+ *
+ *     requires 'coding-adventures-logic-gates';
+ *     requires 'coding-adventures-bitset', '>= 0.01';
+ *
+ * We scan for lines matching `requires 'coding-adventures-...'` and map
+ * them to internal package names. External deps are silently skipped.
+ *
+ * @param pkg - The Perl package to inspect.
+ * @param knownNames - Mapping from CPAN dist name to package name.
+ * @returns List of internal package names this package depends on.
+ */
+function parsePerlDeps(
+  pkg: Package,
+  knownNames: Map<string, string>,
+): string[] {
+  const cpanfilePath = nodePath.join(pkg.path, "cpanfile");
+  if (!fs.existsSync(cpanfilePath)) {
+    return [];
+  }
+
+  const text = fs.readFileSync(cpanfilePath, "utf-8");
+  const internalDeps: string[] = [];
+  const pattern = /requires\s+['"]coding-adventures-([^'"]+)['"]/;
+
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+
+    // Skip blank lines and comments.
+    if (!trimmed || trimmed.startsWith("#")) {
+      continue;
+    }
+
+    const match = trimmed.match(pattern);
+    if (match) {
+      const depName = `coding-adventures-${match[1]}`.toLowerCase();
+      const pkgName = knownNames.get(depName);
+      if (pkgName) {
+        internalDeps.push(pkgName);
+      }
+    }
+  }
+
+  return internalDeps;
+}
+
+// ===========================================================================
 // Known Names Mapping
 // ===========================================================================
 
@@ -829,6 +882,14 @@ export function buildKnownNames(packages: Package[]): Map<string, string> {
         known.set(rockName, pkg.name);
         break;
       }
+
+      case "perl": {
+        // Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
+        // This matches the Python convention exactly.
+        const cpanName = `coding-adventures-${dirName}`.toLowerCase();
+        known.set(cpanName, pkg.name);
+        break;
+      }
     }
   }
 
@@ -887,6 +948,9 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
         break;
       case "lua":
         deps = parseLuaDeps(pkg, knownNames);
+        break;
+      case "perl":
+        deps = parsePerlDeps(pkg, knownNames);
         break;
       default:
         deps = [];

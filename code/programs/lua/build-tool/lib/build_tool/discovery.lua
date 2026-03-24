@@ -33,7 +33,7 @@ local Discovery = {}
 -- KNOWN_LANGUAGES lists the language directory names we look for when
 -- inferring which ecosystem a package belongs to.
 local KNOWN_LANGUAGES = {
-    "python", "ruby", "go", "rust", "typescript", "elixir", "lua",
+    "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl",
 }
 
 -- SKIP_DIRS is the set of directory names that should never be traversed
