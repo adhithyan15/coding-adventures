@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@coding-adventures/cli-builder": ["../../../packages/typescript/cli-builder/src/index.ts"],
+      "@coding-adventures/state-machine": ["../../../packages/typescript/state-machine/src/index.ts"],
+      "@coding-adventures/directed-graph": ["../../../packages/typescript/directed-graph/src/index.ts"]
+    }
+  },
+  "include": ["index.ts"]
+}
