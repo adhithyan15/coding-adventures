@@ -423,3 +423,18 @@ go build -o scaffold-generator .
 ```
 
 The scaffold generator handles: correct directory naming per language (Ruby/Elixir use underscores), BUILD files for all platforms, `go.mod` with `replace` directives, TypeScript `package.json` with `src/index.ts` as main, Rust workspace membership, and transitive dependency resolution.
+
+---
+
+### 2026-03-23: Program BUILD files must NOT install dependency packages
+
+**Problem:** Program BUILD files like `logic-gates-visualizer/BUILD` contained lines like `cd ../../../packages/typescript/ui-components && npm install` to install dependency packages. When multiple programs built in parallel (the build tool runs independent packages concurrently), they all ran `npm install` on the same shared package directories simultaneously. This caused npm to corrupt `node_modules` with race conditions (`TAR_ENTRY_ERROR ENOENT`, `ENOTEMPTY`).
+
+**Root cause:** The build tool's dependency graph already ensures packages build in level order — dependencies build first at their own level, and their BUILD files handle `npm install`. Program BUILD files don't need to install dependencies; they only need `npm install` for their own `node_modules`.
+
+**Fix:** Program BUILD files should contain only:
+```
+npm install
+npx vitest run
+```
+Never `cd ../../../packages/... && npm install`. The build tool handles dependency ordering.
