@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] — 2026-03-24
+
+### Changed
+
+- **Package split** (spec TE00 — Document AST): the monolithic package has been
+  split into three constituent packages connected by the format-agnostic
+  Document AST IR:
+  - `@coding-adventures/document-ast` — pure type definitions (no runtime code)
+  - `@coding-adventures/commonmark-parser` — Markdown → DocumentNode
+  - `@coding-adventures/document-ast-to-html` — DocumentNode → HTML string
+- `@coding-adventures/commonmark` is now a **thin pipeline convenience package**
+  that re-exports `parse` and `toHtml` from the two constituent packages.
+- `toHtml` is now part of the public API of this package (previously unexported).
+- All AST types are now re-exported from `@coding-adventures/document-ast`.
+- `HtmlBlockNode { type: "html_block" }` → `RawBlockNode { type: "raw_block"; format: "html" }`
+- `HtmlInlineNode { type: "html_inline" }` → `RawInlineNode { type: "raw_inline"; format: "html" }`
+- `LinkDefinitionNode` removed from public types — link references are fully
+  resolved before the IR is produced and never appear in the output tree.
+- Version bumped to 0.2.0.
+
+### Preserved
+
+- All 652 CommonMark 0.31.2 spec examples still pass (100% conformity).
+- Public API: `parse(markdown: string): DocumentNode` and `toHtml(doc: DocumentNode): string`.
+
+---
+
 ## [0.1.0] - 2026-03-24
 
 ### Added
