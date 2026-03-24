@@ -3,14 +3,14 @@
 
 set -e
 
-# Very robust root detection: git > GITHUB_WORKSPACE > dirname walk
-if git rev-parse --show-toplevel >/dev/null 2>&1; then
-    REPO_ROOT=$(git rev-parse --show-toplevel)
-elif [ -n "$GITHUB_WORKSPACE" ]; then
-    REPO_ROOT="$GITHUB_WORKSPACE"
-else
-    REPO_ROOT=$(dirname $(dirname $(dirname $(dirname $(pwd -P)))))
-fi
+# Definitive root detection: walk up until go.mod and code/ are found
+REPO_ROOT=$(pwd -P)
+while [ "$REPO_ROOT" != "/" ]; do
+    if [ -f "$REPO_ROOT/go.mod" ] && [ -d "$REPO_ROOT/code" ]; then
+        break
+    fi
+    REPO_ROOT=$(dirname "$REPO_ROOT")
+done
 
 echo "DEBUG: REPO_ROOT=$REPO_ROOT"
 echo "DEBUG: PWD=$(pwd -P)"
