@@ -1,1 +1,1 @@
-cargo test -p starlark-compiler -- --nocapture
+cargo test --target-dir target_isolated -p starlark-compiler -- --nocapture

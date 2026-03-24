@@ -1,1 +1,1 @@
-cargo test -p device-driver-framework
+cargo test --target-dir target_isolated -p device-driver-framework

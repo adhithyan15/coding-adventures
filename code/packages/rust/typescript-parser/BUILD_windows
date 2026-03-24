@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-typescript-parser -- --nocapture
+cargo test --target-dir target_isolated -p coding-adventures-typescript-parser -- --nocapture

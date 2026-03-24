@@ -1,1 +1,1 @@
-cargo test -p display -- --nocapture
+cargo test --target-dir target_isolated -p display -- --nocapture

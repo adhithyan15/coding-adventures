@@ -1,1 +1,1 @@
-cargo test
+cargo test --target-dir target_isolated

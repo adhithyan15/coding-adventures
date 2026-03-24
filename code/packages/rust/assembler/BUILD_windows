@@ -1,1 +1,1 @@
-cargo test -p assembler -- --nocapture
+cargo test --target-dir target_isolated -p assembler -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p file-system
+cargo test --target-dir target_isolated -p file-system

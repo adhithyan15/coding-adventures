@@ -1,2 +1,2 @@
-mix deps.get
+mix deps.get 2>NUL
 mix test

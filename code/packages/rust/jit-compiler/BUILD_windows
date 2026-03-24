@@ -1,1 +1,1 @@
-cargo test -p jit-compiler -- --nocapture
+cargo test --target-dir target_isolated -p jit-compiler -- --nocapture

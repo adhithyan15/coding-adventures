@@ -1,1 +1,1 @@
-cargo test -p lisp-lexer -- --nocapture
+cargo test --target-dir target_isolated -p lisp-lexer -- --nocapture

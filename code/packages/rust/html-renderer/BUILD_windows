@@ -1,1 +1,1 @@
-cargo test -p html-renderer -- --nocapture
+cargo test --target-dir target_isolated -p html-renderer -- --nocapture

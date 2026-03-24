@@ -1,1 +1,1 @@
-cargo test -p actor
+cargo test --target-dir target_isolated -p actor

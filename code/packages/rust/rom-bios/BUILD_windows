@@ -1,1 +1,1 @@
-cargo test -p rom-bios
+cargo test --target-dir target_isolated -p rom-bios

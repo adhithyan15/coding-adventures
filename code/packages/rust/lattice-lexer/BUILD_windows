@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-lattice-lexer -- --nocapture
+cargo test --target-dir target_isolated -p coding-adventures-lattice-lexer -- --nocapture

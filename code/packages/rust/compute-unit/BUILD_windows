@@ -1,1 +1,1 @@
-cargo test -p compute-unit -- --nocapture
+cargo test --target-dir target_isolated -p compute-unit -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p os-kernel -- --nocapture
+cargo test --target-dir target_isolated -p os-kernel -- --nocapture

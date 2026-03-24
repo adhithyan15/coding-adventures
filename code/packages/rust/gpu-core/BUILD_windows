@@ -1,1 +1,1 @@
-cargo test -p gpu-core -- --nocapture
+cargo test --target-dir target_isolated -p gpu-core -- --nocapture

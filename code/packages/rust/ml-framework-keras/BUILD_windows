@@ -1,1 +1,1 @@
-cargo test -p ml-framework-keras -- --nocapture
+cargo test --target-dir target_isolated -p ml-framework-keras -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p logic-gates -- --nocapture
+cargo test --target-dir target_isolated -p logic-gates -- --nocapture
