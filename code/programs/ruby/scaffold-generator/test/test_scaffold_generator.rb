@@ -124,16 +124,14 @@ class TestDependencyReading < Minitest::Test
   end
 
   # --- Python ---
-  # Python BUILD files use: uv pip install --no-config --python .venv -e ../dep-name
+  # Python BUILD files use: pip install -e ../dep-name
 
   def test_read_python_deps
     pkg_dir = File.join(@tmpdir, "my-pkg")
     FileUtils.mkdir_p(pkg_dir)
     File.write(File.join(pkg_dir, "BUILD"), <<~BUILD)
-      uv venv .venv --quiet --no-project --no-config
-      uv pip install --no-config --python .venv -e ../logic-gates --quiet
-      uv pip install --no-config --python .venv -e ../arithmetic --quiet
-      uv pip install --no-config --python .venv -e .[dev] --quiet
+      pip install -e ../logic-gates -e ../arithmetic -e .[dev] --quiet
+      python -m pytest tests/ -v
     BUILD
     deps = SG.read_python_deps(pkg_dir)
     assert_equal %w[logic-gates arithmetic], deps
@@ -271,7 +269,7 @@ class TestDependencyReading < Minitest::Test
   def test_read_deps_dispatches_to_python
     pkg_dir = File.join(@tmpdir, "my-pkg")
     FileUtils.mkdir_p(pkg_dir)
-    File.write(File.join(pkg_dir, "BUILD"), "uv pip install --no-config --python .venv -e ../some-dep --quiet\n")
+    File.write(File.join(pkg_dir, "BUILD"), "pip install -e ../some-dep -e .[dev] --quiet\n")
     deps = SG.read_deps(pkg_dir, "python")
     assert_equal %w[some-dep], deps
   end
@@ -294,9 +292,9 @@ class TestTransitiveClosure < Minitest::Test
     # Create: A depends on B, B depends on C, C has no deps
     # Using Python format for simplicity
     %w[A B C].each { |d| FileUtils.mkdir_p(File.join(@tmpdir, d)) }
-    File.write(File.join(@tmpdir, "A", "BUILD"), "uv pip install --no-config --python .venv -e ../B --quiet\n")
-    File.write(File.join(@tmpdir, "B", "BUILD"), "uv pip install --no-config --python .venv -e ../C --quiet\n")
-    File.write(File.join(@tmpdir, "C", "BUILD"), "uv pip install --no-config --python .venv -e .[dev] --quiet\n")
+    File.write(File.join(@tmpdir, "A", "BUILD"), "pip install -e ../B -e .[dev] --quiet\n")
+    File.write(File.join(@tmpdir, "B", "BUILD"), "pip install -e ../C -e .[dev] --quiet\n")
+    File.write(File.join(@tmpdir, "C", "BUILD"), "pip install -e .[dev] --quiet\n")
   end
 
   def teardown
@@ -330,9 +328,9 @@ class TestTopologicalSort < Minitest::Test
   def setup
     @tmpdir = Dir.mktmpdir("scaffold-topo")
     %w[A B C].each { |d| FileUtils.mkdir_p(File.join(@tmpdir, d)) }
-    File.write(File.join(@tmpdir, "A", "BUILD"), "uv pip install --no-config --python .venv -e ../B --quiet\n")
-    File.write(File.join(@tmpdir, "B", "BUILD"), "uv pip install --no-config --python .venv -e ../C --quiet\n")
-    File.write(File.join(@tmpdir, "C", "BUILD"), "uv pip install --no-config --python .venv -e .[dev] --quiet\n")
+    File.write(File.join(@tmpdir, "A", "BUILD"), "pip install -e ../B -e .[dev] --quiet\n")
+    File.write(File.join(@tmpdir, "B", "BUILD"), "pip install -e ../C -e .[dev] --quiet\n")
+    File.write(File.join(@tmpdir, "C", "BUILD"), "pip install -e .[dev] --quiet\n")
   end
 
   def teardown
@@ -390,7 +388,7 @@ class TestGeneratePython < Minitest::Test
   def test_build_includes_dep_installs
     SG.generate_python(@tmpdir, "my-package", "A test", "", %w[logic-gates], %w[logic-gates])
     build = File.read(File.join(@tmpdir, "BUILD"))
-    assert_includes build, "uv pip install --no-config --python .venv -e ../logic-gates --quiet"
+    assert_includes build, "pip install -e ../logic-gates -e .[dev] --quiet"
   end
 end
 

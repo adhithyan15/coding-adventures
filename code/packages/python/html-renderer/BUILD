@@ -1,1 +1,2 @@
-echo "Shell package — no tests"
+pip install -e .[dev] --quiet
+python -m pytest tests/ -v

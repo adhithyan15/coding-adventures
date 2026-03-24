@@ -146,7 +146,7 @@ module CodingAdventures
     # Parse a Python BUILD file for `-e ../dep-name` entries.
     #
     # Python BUILD files install local dependencies with pip's editable
-    # mode: `uv pip install -e ../dep-name`. We scan each line for this
+    # mode: `pip install -e ../dep-name`. We scan each line for this
     # pattern and extract the directory name after `../`.
     #
     # @param pkg_dir [String] path to the package directory
@@ -157,22 +157,28 @@ module CodingAdventures
 
       deps = []
       File.readlines(build_path).each do |line|
-        # Match: -e ../dep-name or -e "../dep-name"
-        # We use character-by-character parsing like the Python implementation
-        # to handle all edge cases correctly.
-        idx = line.index("-e ../")
-        idx = line.index('-e "../') if idx.nil?
-        next if idx.nil?
+        # Find ALL -e ../ entries on each line (new format puts them all on one line)
+        remaining = line
+        loop do
+          idx = remaining.index("-e ../")
+          idx = remaining.index('-e "../') if idx.nil?
+          break if idx.nil?
 
-        rest = line[idx..]
-        rest = rest.sub("-e ../", "").sub('-e "../', "")
-        dep = ""
-        rest.each_char do |c|
-          break if [" ", '"', "'", "\n"].include?(c)
+          rest = remaining[idx..]
+          if rest.start_with?('-e "../')
+            rest = rest[7..] # skip `-e "../`
+          else
+            rest = rest[6..] # skip `-e ../`
+          end
+          dep = ""
+          rest.each_char do |c|
+            break if [" ", '"', "'", "\n"].include?(c)
 
-          dep += c
+            dep += c
+          end
+          deps << dep if !dep.empty? && dep != "."
+          remaining = remaining[(idx + 6)..]
         end
-        deps << dep if !dep.empty? && dep != "."
       end
       deps
     end
@@ -516,10 +522,11 @@ module CodingAdventures
                 assert __version__ == "0.1.0"
       PY
 
-      build_lines = ["uv venv .venv --quiet --no-project --no-config"]
-      ordered_deps.each { |dep| build_lines << "uv pip install --no-config --python .venv -e ../#{dep} --quiet" }
-      build_lines << 'uv pip install --no-config --python .venv -e .[dev] --quiet'
-      build_lines << "uv run --no-project --no-config python -m pytest tests/ -v"
+      install_parts = ["pip install"]
+      ordered_deps.each { |dep| install_parts << "-e ../#{dep}" }
+      install_parts.push("-e .[dev]", "--quiet")
+      build_lines = [install_parts.join(" ")]
+      build_lines << "python -m pytest tests/ -v"
       build = build_lines.join("\n") + "\n"
 
       write_file(File.join(target_dir, "pyproject.toml"), pyproject)

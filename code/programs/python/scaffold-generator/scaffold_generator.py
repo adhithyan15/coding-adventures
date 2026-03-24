@@ -93,13 +93,19 @@ def _read_python_deps(pkg_dir: str) -> list[str]:
     deps = []
     with open(build_path) as f:
         for line in f:
-            # Match: -e ../dep-name
-            idx = line.find("-e ../")
-            if idx < 0:
-                idx = line.find('-e "../')
-            if idx >= 0:
-                rest = line[idx:]
-                rest = rest.replace("-e ../", "", 1).replace('-e "../', "", 1)
+            # Find ALL -e ../ entries on each line (new format puts them all on one line)
+            remaining = line
+            while True:
+                idx = remaining.find("-e ../")
+                if idx < 0:
+                    idx = remaining.find('-e "../')
+                if idx < 0:
+                    break
+                rest = remaining[idx:]
+                if rest.startswith('-e "../'):
+                    rest = rest[7:]  # skip `-e "../`
+                else:
+                    rest = rest[6:]  # skip `-e ../`
                 dep = ""
                 for c in rest:
                     if c in (' ', '"', "'", '\n'):
@@ -107,6 +113,7 @@ def _read_python_deps(pkg_dir: str) -> list[str]:
                     dep += c
                 if dep and dep != ".":
                     deps.append(dep)
+                remaining = remaining[idx + 6:]
     return deps
 
 
@@ -348,11 +355,12 @@ class TestVersion:
         assert __version__ == "0.1.0"
 '''
 
-    build_lines = ["uv venv .venv --quiet --no-project --no-config"]
+    install_parts = ["pip install"]
     for dep in ordered_deps:
-        build_lines.append(f"uv pip install --no-config --python .venv -e ../{dep} --quiet")
-    build_lines.append('uv pip install --no-config --python .venv -e .[dev] --quiet')
-    build_lines.append("uv run --no-project --no-config python -m pytest tests/ -v")
+        install_parts.append(f"-e ../{dep}")
+    install_parts.extend(["-e .[dev]", "--quiet"])
+    build_lines = [" ".join(install_parts)]
+    build_lines.append("python -m pytest tests/ -v")
     build = "\n".join(build_lines) + "\n"
 
     _write_file(os.path.join(target_dir, "pyproject.toml"), pyproject)

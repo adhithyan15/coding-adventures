@@ -137,16 +137,23 @@ func readPythonDeps(pkgDir string) ([]string, error) {
 	}
 	var deps []string
 	for _, line := range strings.Split(string(data), "\n") {
-		// Look for patterns like: -e ../logic-gates or -e "../logic-gates"
-		idx := strings.Index(line, "-e ../")
-		if idx < 0 {
-			idx = strings.Index(line, "-e \"../")
-		}
-		if idx >= 0 {
+		// Find ALL occurrences of -e ../ on each line (new format puts them all on one line)
+		remaining := line
+		for {
+			idx := strings.Index(remaining, "-e ../")
+			if idx < 0 {
+				idx = strings.Index(remaining, "-e \"../")
+			}
+			if idx < 0 {
+				break
+			}
 			// Extract the path after ../
-			rest := line[idx:]
-			rest = strings.TrimPrefix(rest, "-e ../")
-			rest = strings.TrimPrefix(rest, "-e \"../")
+			rest := remaining[idx:]
+			if strings.HasPrefix(rest, "-e \"../") {
+				rest = rest[7:] // skip `-e "../`
+			} else {
+				rest = rest[6:] // skip `-e ../`
+			}
 			// Take until space, quote, or end
 			dep := ""
 			for _, c := range rest {
@@ -158,6 +165,8 @@ func readPythonDeps(pkgDir string) ([]string, error) {
 			if dep != "" && dep != "." {
 				deps = append(deps, dep)
 			}
+			// Advance past this match
+			remaining = remaining[idx+6:]
 		}
 	}
 	return deps, nil
@@ -489,12 +498,13 @@ class TestVersion:
 
 	// BUILD
 	var buildLines []string
-	buildLines = append(buildLines, "uv venv .venv --quiet --no-project --no-config")
+	installParts := []string{"pip install"}
 	for _, dep := range orderedDeps {
-		buildLines = append(buildLines, fmt.Sprintf("uv pip install --no-config --python .venv -e ../%s --quiet", dep))
+		installParts = append(installParts, fmt.Sprintf("-e ../%s", dep))
 	}
-	buildLines = append(buildLines, `uv pip install --no-config --python .venv -e .[dev] --quiet`)
-	buildLines = append(buildLines, "uv run --no-project --no-config python -m pytest tests/ -v")
+	installParts = append(installParts, "-e .[dev]", "--quiet")
+	buildLines = append(buildLines, strings.Join(installParts, " "))
+	buildLines = append(buildLines, "python -m pytest tests/ -v")
 	build := strings.Join(buildLines, "\n") + "\n"
 
 	// Create directories

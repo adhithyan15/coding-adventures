@@ -1,20 +1,2 @@
-uv venv .venv --quiet --no-project --no-config
-uv pip install --no-config --python .venv -e ../directed-graph --quiet
-uv pip install --no-config --python .venv -e ../state-machine --quiet
-uv pip install --no-config --python .venv -e ".[dev]" --quiet
-uv pip install --no-config --python .venv -e ../bootloader --quiet
-uv pip install --no-config --python .venv -e ../os-kernel --quiet
-uv pip install --no-config --python .venv -e ../riscv-simulator --quiet
-uv pip install --no-config --python .venv -e ../cpu-simulator --quiet
-uv pip install --no-config --python .venv -e ../logic-gates --quiet
-uv pip install --no-config --python .venv -e ../arithmetic --quiet
-uv pip install --no-config --python .venv -e ../display --quiet
-uv pip install --no-config --python .venv -e ../interrupt-handler --quiet
-uv pip install --no-config --python .venv -e ../rom-bios --quiet
-uv pip install --no-config --python .venv -e ../core --quiet
-uv pip install --no-config --python .venv -e ../cache --quiet
-uv pip install --no-config --python .venv -e ../branch-predictor --quiet
-uv pip install --no-config --python .venv -e ../cpu-pipeline --quiet
-uv pip install --no-config --python .venv -e ../hazard-detection --quiet
-uv pip install --no-config --python .venv -e ../clock --quiet
-uv run --no-project --no-config python -m pytest tests/ -v
+pip install -e ../directed-graph -e ../state-machine -e ../bootloader -e ../os-kernel -e ../riscv-simulator -e ../cpu-simulator -e ../logic-gates -e ../arithmetic -e ../display -e ../interrupt-handler -e ../rom-bios -e ../core -e ../cache -e ../branch-predictor -e ../cpu-pipeline -e ../hazard-detection -e ../clock -e .[dev] --quiet
+python -m pytest tests/ -v

@@ -171,7 +171,7 @@ export function readDeps(pkgDir: string, lang: string): string[] {
 /**
  * Parse BUILD file for `-e ../` entries (Python).
  *
- * Python BUILD files contain `uv pip install -e ../dep-name` lines.
+ * Python BUILD files contain `pip install -e ../dep-name` lines.
  * We extract the path after `../` as the dependency name.
  */
 function readPythonDeps(pkgDir: string): string[] {
@@ -182,13 +182,22 @@ function readPythonDeps(pkgDir: string): string[] {
   const content = fs.readFileSync(buildPath, "utf-8");
   const deps: string[] = [];
   for (const line of content.split("\n")) {
-    let idx = line.indexOf("-e ../");
-    if (idx < 0) {
-      idx = line.indexOf('-e "../');
-    }
-    if (idx >= 0) {
-      let rest = line.slice(idx);
-      rest = rest.replace("-e ../", "").replace('-e "../', "");
+    // Find ALL -e ../ entries on each line (new format puts them all on one line)
+    let remaining = line;
+    while (true) {
+      let idx = remaining.indexOf("-e ../");
+      if (idx < 0) {
+        idx = remaining.indexOf('-e "../');
+      }
+      if (idx < 0) {
+        break;
+      }
+      let rest = remaining.slice(idx);
+      if (rest.startsWith('-e "../')) {
+        rest = rest.slice(7); // skip `-e "../`
+      } else {
+        rest = rest.slice(6); // skip `-e ../`
+      }
       let dep = "";
       for (const c of rest) {
         if (c === " " || c === '"' || c === "'" || c === "\n") {
@@ -199,6 +208,7 @@ function readPythonDeps(pkgDir: string): string[] {
       if (dep && dep !== ".") {
         deps.push(dep);
       }
+      remaining = remaining.slice(idx + 6);
     }
   }
   return deps;
@@ -603,12 +613,13 @@ class TestVersion:
         assert __version__ == "0.1.0"
 `;
 
-  const buildLines = ["uv venv .venv --quiet --no-project --no-config"];
+  const installParts = ["pip install"];
   for (const dep of orderedDeps) {
-    buildLines.push(`uv pip install --no-config --python .venv -e ../${dep} --quiet`);
+    installParts.push(`-e ../${dep}`);
   }
-  buildLines.push('uv pip install --no-config --python .venv -e .[dev] --quiet');
-  buildLines.push("uv run --no-project --no-config python -m pytest tests/ -v");
+  installParts.push("-e .[dev]", "--quiet");
+  const buildLines = [installParts.join(" ")];
+  buildLines.push("python -m pytest tests/ -v");
   const build = buildLines.join("\n") + "\n";
 
   writeFile(path.join(targetDir, "pyproject.toml"), pyproject);

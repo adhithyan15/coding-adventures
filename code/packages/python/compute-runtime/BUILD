@@ -1,1 +1,2 @@
-uv venv .venv --quiet --no-project --no-config && uv pip install --no-config --python .venv -e ../logic-gates -e ../arithmetic -e ../clock -e ../fp-arithmetic -e ../gpu-core -e ../parallel-execution-engine -e ../compute-unit -e ../cache -e ../device-simulator -e ".[dev]" --quiet && uv run --no-project --no-config python -m pytest tests/ -v --tb=short
+pip install -e ../logic-gates -e ../arithmetic -e ../clock -e ../fp-arithmetic -e ../gpu-core -e ../parallel-execution-engine -e ../compute-unit -e ../cache -e ../device-simulator -e .[dev] --quiet
+python -m pytest tests/ -v --tb=short

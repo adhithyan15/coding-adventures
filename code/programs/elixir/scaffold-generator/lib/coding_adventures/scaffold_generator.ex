@@ -210,11 +210,12 @@ defmodule CodingAdventures.ScaffoldGenerator do
           content
           |> String.split("\n")
           |> Enum.flat_map(fn line ->
-            # Match patterns like: -e ../logic-gates or -e "../logic-gates"
-            case Regex.run(~r/-e\s+"?\.\.\/([a-z0-9][a-z0-9._-]*)"?/, line) do
+            # Find ALL -e ../ entries on each line (new format puts them all on one line)
+            Regex.scan(~r/-e\s+"?\.\.\/([a-z0-9][a-z0-9._-]*)"?/, line)
+            |> Enum.flat_map(fn
               [_, dep] when dep != "." -> [dep]
               _ -> []
-            end
+            end)
           end)
 
         {:ok, deps}
@@ -798,13 +799,15 @@ defmodule CodingAdventures.ScaffoldGenerator do
             assert __version__ == "0.1.0"
     """
 
-    build_lines =
-      ["uv venv .venv --quiet --no-project --no-config"] ++
-        Enum.map(ordered_deps, fn dep -> "uv pip install --no-config --python .venv -e ../#{dep} --quiet" end) ++
-        [
-          "uv pip install --no-config --python .venv -e .[dev] --quiet",
-          "uv run --no-project --no-config python -m pytest tests/ -v"
-        ]
+    install_parts =
+      ["pip install"] ++
+        Enum.map(ordered_deps, fn dep -> "-e ../#{dep}" end) ++
+        ["-e .[dev]", "--quiet"]
+
+    build_lines = [
+      Enum.join(install_parts, " "),
+      "python -m pytest tests/ -v"
+    ]
 
     build_content = Enum.join(build_lines, "\n") <> "\n"
 

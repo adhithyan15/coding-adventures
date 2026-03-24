@@ -1,1 +1,2 @@
-python3 hello_world.py
+pip install -e .[dev] --quiet
+python -m pytest tests/ -v

@@ -381,18 +381,25 @@ fn read_python_deps(pkg_dir: &Path) -> Vec<String> {
     };
     let mut deps = Vec::new();
     for line in content.lines() {
-        // Look for: -e ../package-name or -e "../package-name"
-        for prefix in &["-e ../", "-e \"../"] {
-            if let Some(idx) = line.find(prefix) {
-                let rest = &line[idx + prefix.len()..];
-                let dep: String = rest
-                    .chars()
-                    .take_while(|c| *c != ' ' && *c != '"' && *c != '\'')
-                    .collect();
-                if !dep.is_empty() && dep != "." {
-                    deps.push(dep);
-                }
+        // Find ALL -e ../ entries on each line (new format puts them all on one line)
+        let mut remaining = line;
+        loop {
+            let found = remaining.find("-e ../")
+                .map(|i| (i, 6usize))  // "-e ../" is 6 chars
+                .or_else(|| remaining.find("-e \"../").map(|i| (i, 7usize)));
+            let (idx, prefix_len) = match found {
+                Some(pair) => pair,
+                None => break,
+            };
+            let rest = &remaining[idx + prefix_len..];
+            let dep: String = rest
+                .chars()
+                .take_while(|c| *c != ' ' && *c != '"' && *c != '\'')
+                .collect();
+            if !dep.is_empty() && dep != "." {
+                deps.push(dep);
             }
+            remaining = &remaining[idx + 6..];
         }
     }
     deps
@@ -794,12 +801,14 @@ class TestVersion:
 
     // --- BUILD ---
     let mut build_lines: Vec<String> = Vec::new();
-    build_lines.push("uv venv .venv --quiet --no-project --no-config".to_string());
+    let mut install_parts: Vec<String> = vec!["pip install".to_string()];
     for dep in ordered_deps {
-        build_lines.push(format!("uv pip install --no-config --python .venv -e ../{} --quiet", dep));
+        install_parts.push(format!("-e ../{}", dep));
     }
-    build_lines.push("uv pip install --no-config --python .venv -e .[dev] --quiet".to_string());
-    build_lines.push("uv run --no-project --no-config python -m pytest tests/ -v".to_string());
+    install_parts.push("-e .[dev]".to_string());
+    install_parts.push("--quiet".to_string());
+    build_lines.push(install_parts.join(" "));
+    build_lines.push("python -m pytest tests/ -v".to_string());
     let build = build_lines.join("\n") + "\n";
 
     // Create directories

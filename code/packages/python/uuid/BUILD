@@ -1,5 +1,2 @@
-uv venv .venv --quiet --no-project --no-config
-uv pip install --no-config --python .venv -e ../md5 --quiet
-uv pip install --no-config --python .venv -e ../sha1 --quiet
-uv pip install --no-config --python .venv -e ".[dev]" --quiet
-uv run --no-project --no-config python -m pytest tests/ -v
+pip install -e ../md5 -e ../sha1 -e .[dev] --quiet
+python -m pytest tests/ -v
