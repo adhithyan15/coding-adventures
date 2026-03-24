@@ -1,5 +1,3 @@
-set -e
-cd code/packages/ruby/commonmark
 (cd ../document_ast && bundle install --quiet)
 (cd ../directed_graph && bundle install --quiet)
 (cd ../state_machine && bundle install --quiet)
