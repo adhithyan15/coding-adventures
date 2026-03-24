@@ -275,6 +275,17 @@ const HTML_BLOCK_6_OPEN = new RegExp(
 // Type 7: a complete open tag, closing tag, or processing instruction
 // that is NOT in the type 6 list. Ends on blank line.
 // (We detect type 7 after ruling out types 1-6)
+//
+// Pre-compiled at module load (not inside the function) to avoid ReDoS
+// amplification: constructing a RegExp on every call means V8 re-analyses
+// the pattern for potential catastrophic backtracking on every line.
+// The attribute group `(ATTR7)*` has repetition over a group with alternatives,
+// which historically triggered backtracking engines. Module-level compilation
+// gives V8 the chance to JIT-compile the pattern once and detect problematic
+// paths early.
+const _HTML_BLOCK_7_ATTR = String.raw`(?:\s+[a-zA-Z_:][a-zA-Z0-9_:.\-]*(?:\s*=\s*(?:[^\s"'=<>\x60]+|'[^'\n]*'|"[^"\n]*"))?)`;
+const HTML_BLOCK_7_OPEN_TAG  = new RegExp(String.raw`^<[A-Za-z][A-Za-z0-9\-]*(${_HTML_BLOCK_7_ATTR})*\s*/?>$`);
+const HTML_BLOCK_7_CLOSE_TAG = /^<\/[A-Za-z][A-Za-z0-9\-]*\s*>$/;
 
 function detectHtmlBlockType(line: string): 1 | 2 | 3 | 4 | 5 | 6 | 7 | null {
   const stripped = line.trimStart();
@@ -286,11 +297,7 @@ function detectHtmlBlockType(line: string): 1 | 2 | 3 | 4 | 5 | 6 | 7 | null {
   if (HTML_BLOCK_6_OPEN.test(stripped)) return 6;
 
   // Type 7: complete open or close tag with valid attribute syntax (spec §4.6).
-  // Attributes must be preceded by whitespace; attribute names must be valid;
-  // quoted values may not contain the quote char; no unescaped < or ` in values.
-  const ATTR7 = String.raw`(?:\s+[a-zA-Z_:][a-zA-Z0-9_:.\-]*(?:\s*=\s*(?:[^\s"'=<>\x60]+|'[^'\n]*'|"[^"\n]*"))?)`;
-  if (new RegExp(`^<[A-Za-z][A-Za-z0-9\\-]*(${ATTR7})*\\s*/?>$`).test(stripped) ||
-      /^<\/[A-Za-z][A-Za-z0-9\-]*\s*>$/.test(stripped)) {
+  if (HTML_BLOCK_7_OPEN_TAG.test(stripped) || HTML_BLOCK_7_CLOSE_TAG.test(stripped)) {
     return 7;
   }
   return null;
@@ -315,30 +322,78 @@ function isBlank(line: string): boolean {
   return /^\s*$/.test(line);
 }
 
-/** Count leading spaces, expanding tabs to the next 4-column tab stop. */
-function indentOf(line: string): number {
-  let col = 0;
+/**
+ * Count leading virtual spaces (expanding tabs to the next 4-column tab stop).
+ *
+ * `baseCol` is the virtual column of `line[0]` in the original document —
+ * necessary after partial-tab stripping, where the string may start mid-tab.
+ * Returns the number of virtual indentation spaces (relative to `baseCol`).
+ *
+ * Example: indentOf("  \tbar", 2) — the two spaces are at cols 2-3, the tab
+ * starts at col 4 and expands to col 8 (adds 4 virtual spaces). Returns 6.
+ */
+function indentOf(line: string, baseCol = 0): number {
+  let col = baseCol;
   for (const ch of line) {
     if (ch === " ") col++;
     else if (ch === "\t") col += 4 - (col % 4);
     else break;
   }
-  return col;
+  return col - baseCol;
 }
 
-/** Strip exactly `n` spaces of leading indentation. */
-function stripIndent(line: string, n: number): string {
+/**
+ * Strip exactly `n` virtual spaces of leading indentation, expanding tabs
+ * correctly relative to `baseCol` (the virtual column of `line[0]`).
+ *
+ * Returns `[strippedLine, nextBaseCol]` where `nextBaseCol` is the virtual
+ * column of `strippedLine[0]` — which is `baseCol` after advancing past the
+ * stripped indentation.
+ *
+ * **Partial-tab handling**: When a tab spans the strip boundary (the tab
+ * would expand past `n` virtual spaces), we consume the tab character and
+ * prepend the leftover expansion spaces to the result. This correctly
+ * represents the remaining part of the tab as explicit spaces.
+ *
+ * Example: stripIndent("\t\tbar", 2, 0)
+ *   First tab at col 0 → expands 4 spaces; we need 2 → leftover 2 spaces.
+ *   Returns ["  \tbar", 2]  (two spaces + second tab, base col = 2).
+ */
+function stripIndent(line: string, n: number, baseCol = 0): [string, number] {
   let remaining = n;
+  let col = baseCol;
   let i = 0;
   while (remaining > 0 && i < line.length) {
-    if (line[i] === " ") { i++; remaining--; }
+    if (line[i] === " ") { i++; remaining--; col++; }
     else if (line[i] === "\t") {
-      const w = 4 - (i % 4);
-      if (w <= remaining) { i++; remaining -= w; }
-      else break;
+      const w = 4 - (col % 4);
+      if (w <= remaining) { i++; remaining -= w; col += w; }
+      else {
+        // Partial tab: consume the tab character but prepend the leftover
+        // virtual spaces to the result so they are visible to the next pass.
+        const leftover = w - remaining;
+        return [" ".repeat(leftover) + line.slice(i + 1), col + remaining];
+      }
     } else break;
   }
-  return line.slice(i);
+  return [line.slice(i), col];
+}
+
+/**
+ * Compute the virtual column reached after consuming `charCount` characters
+ * from `line`, starting at virtual column `startCol`.
+ *
+ * Used to find the virtual column of the list-marker separator character so
+ * that a tab separator can be partially consumed (1 virtual space used as the
+ * required separator space, remainder prepended to the item content).
+ */
+function virtualColAfter(line: string, charCount: number, startCol = 0): number {
+  let col = startCol;
+  for (let i = 0; i < charCount && i < line.length; i++) {
+    if (line[i] === "\t") col += 4 - (col % 4);
+    else col++;
+  }
+  return col;
 }
 
 /** Extract the info string from a fenced code block opening line. */
@@ -617,6 +672,12 @@ export function parseBlocks(input: string): {
     //     and finalize any open leaf block (preventing setext heading confusion)
 
     let lineContent = rawLine;
+    // lineBaseCol tracks the virtual column of lineContent[0] in the original
+    // line after container markers have been stripped. This is needed for
+    // correct tab-stop calculations (tabs expand to the next multiple of 4
+    // relative to the column where they appear in the source, not relative to
+    // the start of the stripped string).
+    let lineBaseCol = 0;
     const newContainers: MutableBlock[] = [root];
     let lazyParagraphContinuation = false;
 
@@ -625,14 +686,44 @@ export function parseBlocks(input: string): {
       const container = openContainers[containerIdx]!;
 
       if (container.kind === "blockquote") {
-        const m = lineContent.match(/^ {0,3}>\s?/);
-        if (m) {
-          lineContent = lineContent.slice(m[0].length);
+        // Strip the blockquote marker `> ` (up to 3 leading spaces, `>`, then
+        // optionally 1 space). A tab after `>` is treated as the separator but
+        // only 1 virtual space of it is consumed; the remaining virtual spaces
+        // from the tab expansion are prepended to the content (CommonMark §2.1).
+        let bqI = 0;
+        let bqCol = lineBaseCol;
+        // Strip 0–3 leading spaces
+        while (bqI < 3 && bqI < lineContent.length && lineContent[bqI] === " ") {
+          bqI++; bqCol++;
+        }
+        if (bqI < lineContent.length && lineContent[bqI] === ">") {
+          bqI++; bqCol++;
+          if (bqI < lineContent.length) {
+            if (lineContent[bqI] === " ") {
+              bqI++; bqCol++;
+            } else if (lineContent[bqI] === "\t") {
+              // Tab at bqCol: expand to next tab stop, consume 1 virtual space
+              // as the required separator, prepend the rest to the content.
+              const w = 4 - (bqCol % 4);
+              bqI++; // consume the tab character
+              if (w > 1) {
+                // Partial tab: leftover (w-1) virtual spaces become content prefix
+                lineContent = " ".repeat(w - 1) + lineContent.slice(bqI);
+                lineBaseCol = bqCol + 1;
+                newContainers.push(container);
+                containerIdx++;
+                continue;
+              }
+              bqCol += w; // w === 1: tab exactly consumed as separator
+            }
+          }
+          lineContent = lineContent.slice(bqI);
+          lineBaseCol = bqCol;
           newContainers.push(container);
           containerIdx++;
         } else if (currentLeaf?.kind === "paragraph" && !origBlank
             && !isThematicBreak(lineContent)
-            && !(indentOf(lineContent) < 4 && lineContent.trimStart().match(/^(`{3,}|~{3,})/))
+            && !(indentOf(lineContent, lineBaseCol) < 4 && lineContent.trimStart().match(/^(`{3,}|~{3,})/))
             && !parseAtxHeading(lineContent)) {
           // Lazy continuation of paragraph inside blockquote — but NOT when a
           // line would start a new block construct (list marker, thematic break,
@@ -658,12 +749,17 @@ export function parseBlocks(input: string): {
         containerIdx++;
       } else if (container.kind === "list_item") {
         const item = container as MutableListItem;
-        const indent = indentOf(lineContent);
-        if (!origBlank && indent >= item.contentIndent) {
-          lineContent = stripIndent(lineContent, item.contentIndent);
+        // A line is blank for continuation purposes if the raw line was blank
+        // OR if it became blank after stripping outer container markers (e.g. a
+        // line `>>` inside a doubly-nested blockquote). This fixes blank-line
+        // propagation into list items that live inside blockquotes.
+        const effectiveBlank = origBlank || isBlank(lineContent);
+        const indent = indentOf(lineContent, lineBaseCol);
+        if (!effectiveBlank && indent >= item.contentIndent) {
+          [lineContent, lineBaseCol] = stripIndent(lineContent, item.contentIndent, lineBaseCol);
           newContainers.push(container);
           containerIdx++;
-        } else if (origBlank) {
+        } else if (effectiveBlank) {
           // Blank lines continue list items only when the item already has content.
           // A blank-start item (no content yet) is ended by a blank line.
           if (item.children.length > 0 || (currentLeaf !== null && item === openContainers[containerIdx])) {
@@ -675,7 +771,7 @@ export function parseBlocks(input: string): {
         } else if (currentLeaf?.kind === "paragraph" && !origBlank
             && !isThematicBreak(lineContent)
             && !parseListMarker(lineContent)
-            && !(indentOf(lineContent) < 4 && lineContent.trimStart().match(/^(`{3,}|~{3,})/))
+            && !(indentOf(lineContent, lineBaseCol) < 4 && lineContent.trimStart().match(/^(`{3,}|~{3,})/))
             && !parseAtxHeading(lineContent)) {
           // Lazy paragraph continuation for list items (CommonMark §5.4):
           // a line that doesn't meet the content indent can still lazily continue
@@ -735,13 +831,14 @@ export function parseBlocks(input: string): {
         const closingFenceRe = new RegExp(
           `^${fence.fence[0] === "`" ? "`" : "~"}{${fence.fenceLen},}\\s*$`
         );
-        if (indentOf(lineContent) < 4 && stripped.match(closingFenceRe) && !stripped.startsWith(fence.fence[0] === "`" ? "~" : "`")) {
+        if (indentOf(lineContent, lineBaseCol) < 4 && stripped.match(closingFenceRe) && !stripped.startsWith(fence.fence[0] === "`" ? "~" : "`")) {
           fence.closed = true;
           modal.switchMode("exit_fenced");
           currentLeaf = null;
         } else {
           // Strip the fence's base indentation (0-3 spaces) from each content line
-          fence.lines.push(stripIndent(lineContent, fence.baseIndent));
+          const [fenceLine] = stripIndent(lineContent, fence.baseIndent, lineBaseCol);
+          fence.lines.push(fenceLine);
         }
         lastLineWasBlank = origBlank;
         continue;
@@ -817,7 +914,8 @@ export function parseBlocks(input: string): {
       } else if (currentLeaf?.kind === "indented_code") {
         // Blank lines inside indented code are preserved with their stripped
         // indentation content (e.g. 6 spaces → 2 spaces after stripping 4).
-        (currentLeaf as MutableIndentedCode).lines.push(stripIndent(rawLine, 4));
+        const [blankCodeLine] = stripIndent(rawLine, 4);
+        (currentLeaf as MutableIndentedCode).lines.push(blankCodeLine);
       }
 
       // Mark blank line for list tightness tracking
@@ -857,7 +955,7 @@ export function parseBlocks(input: string): {
       (innerContainer as MutableListItem).hadBlankLine = true;
     }
 
-    const indent = indentOf(lineContent);
+    const indent = indentOf(lineContent, lineBaseCol);
 
     // 1. Fenced code block opener
     const fenceMatch = lineContent.trimStart().match(/^(`{3,}|~{3,})/);
@@ -1015,8 +1113,41 @@ export function parseBlocks(input: string): {
       }
 
       openContainers.push(bq);
-      // Strip the > marker (and optional following space)
-      lineContent = lineContent.replace(/^ {0,3}>\s?/, "");
+      // Strip the > marker (and optional following space/tab) with tab-aware
+      // virtual-column arithmetic (CommonMark §2.1):
+      //   - Up to 3 leading spaces, then `>`
+      //   - Optional separator: a space (consumed) or a tab (1 virtual space
+      //     consumed as the separator; any leftover expansion spaces prepended
+      //     to the content).
+      {
+        let bqI = 0;
+        let bqCol = lineBaseCol;
+        while (bqI < lineContent.length && lineContent[bqI] === " " && bqI - 0 < 3) {
+          bqI++; bqCol++;
+        }
+        if (bqI < lineContent.length && lineContent[bqI] === ">") {
+          bqI++; bqCol++;
+          if (bqI < lineContent.length) {
+            if (lineContent[bqI] === " ") {
+              bqI++; bqCol++;
+            } else if (lineContent[bqI] === "\t") {
+              const w = 4 - (bqCol % 4);
+              bqI++;
+              if (w > 1) {
+                // Tab provides w virtual spaces; 1 used as separator, w-1 leftover.
+                lineContent = " ".repeat(w - 1) + lineContent.slice(bqI);
+                lineBaseCol = bqCol + 1;
+                innerContainer = bq;
+                if (isBlank(lineContent)) { break blockDetect; }
+                continue blockDetect;
+              }
+              bqCol += w; // w === 1: tab exactly consumed as separator
+            }
+          }
+        }
+        lineContent = lineContent.slice(bqI);
+        lineBaseCol = bqCol;
+      }
       innerContainer = bq;
 
       // If content after stripping is blank, handle as blank inside the blockquote
@@ -1060,7 +1191,32 @@ export function parseBlocks(input: string): {
           }
         }
 
-        const itemContent = lineContent.slice(marker.markerLen);
+        // Compute the virtual column of itemContent[0] (after the full marker).
+        // This is needed for correct tab arithmetic in continued block detection.
+        let newLineBaseCol = virtualColAfter(lineContent, marker.markerLen, lineBaseCol);
+        let itemContent = lineContent.slice(marker.markerLen);
+
+        // Handle tab separator (CommonMark §2.1): when the separator after the
+        // list marker is a tab, that tab expands to `w` virtual spaces relative
+        // to the column where it appears. Only 1 of those virtual spaces is the
+        // required separator; the remaining `w-1` spaces are prepended to the
+        // item content so subsequent indentation checks are correct.
+        //
+        // Example: `-\t\tfoo` — the first `\t` is the separator at col 1,
+        //   expands to 3 virtual spaces; 1 used as separator, 2 prepended to
+        //   `\tfoo`, giving `"  \tfoo"` at lineBaseCol 2.
+        if (marker.spaceAfter === 1) {
+          const sepChar = lineContent[marker.markerLen - 1];
+          if (sepChar === "\t") {
+            const sepCol = virtualColAfter(lineContent, marker.markerLen - 1, lineBaseCol);
+            const w = 4 - (sepCol % 4);
+            if (w > 1) {
+              itemContent = " ".repeat(w - 1) + itemContent;
+              newLineBaseCol = sepCol + 1;
+            }
+          }
+        }
+
         const blankStart = isBlank(itemContent);
 
         // Empty list items (blank start) cannot interrupt a paragraph to start
@@ -1129,9 +1285,14 @@ export function parseBlocks(input: string): {
             // the indented-code detection threshold (4 spaces) is computed
             // relative to the item's content indent (W+1), not the full marker width.
             innerContainer = item;
-            lineContent = marker.spaceAfter >= 5
-              ? " ".repeat(marker.spaceAfter - 1) + itemContent
-              : itemContent;
+            if (marker.spaceAfter >= 5) {
+              // W+1 rule: virtual col starts at marker end minus the extra spaces
+              lineBaseCol = virtualColAfter(lineContent, marker.markerLen - marker.spaceAfter + 1, lineBaseCol);
+              lineContent = " ".repeat(marker.spaceAfter - 1) + itemContent;
+            } else {
+              lineBaseCol = newLineBaseCol;
+              lineContent = itemContent;
+            }
             continue blockDetect;
           }
           currentLeaf = null;
@@ -1143,7 +1304,7 @@ export function parseBlocks(input: string): {
 
     // 8. Indented code block (4+ spaces, but NOT inside a paragraph)
     if (indent >= 4 && currentLeaf?.kind !== "paragraph") {
-      const stripped = stripIndent(lineContent, 4);
+      const [stripped] = stripIndent(lineContent, 4, lineBaseCol);
       if (currentLeaf?.kind === "indented_code") {
         const icb = currentLeaf as MutableIndentedCode;
         // Do NOT remove trailing blank lines here — they may be followed by

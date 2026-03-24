@@ -248,7 +248,12 @@ export function isDigit(ch: string): boolean {
  * Two labels are equivalent if their normalized forms are equal.
  */
 export function normalizeLinkLabel(label: string): string {
-  return label.trim().replace(/\s+/g, " ").toLowerCase();
+  // CommonMark §4.7: normalize by trimming, collapsing whitespace, and
+  // Unicode case-folding. JavaScript's toLowerCase() handles most cases,
+  // but it does not apply the Unicode *full* case fold for ß (U+00DF) and
+  // ẞ (U+1E9E), which both fold to "ss" in Unicode Full Case Folding.
+  // Both ẞ.toLowerCase() and ß stay as-is in JS, so we post-process them.
+  return label.trim().replace(/\s+/g, " ").toLowerCase().replace(/ß/g, "ss");
 }
 
 /**

@@ -286,14 +286,60 @@ function renderInline(node: InlineNode): string {
   }
 }
 
+// ─── URL Sanitization ─────────────────────────────────────────────────────────
+//
+// CommonMark spec §C.3 intentionally leaves URL sanitization to the
+// implementor. Without scheme filtering, a renderer accepting user-controlled
+// Markdown is vulnerable to XSS via `javascript:` and `data:` URIs — both
+// are valid URL characters that HTML-escaping does not neutralize.
+//
+// The CommonMark spec explicitly allows arbitrary URL schemes in autolinks
+// (spec examples 596, 598, 599, 601 use irc://, made-up://, localhost:5001/,
+// etc.), so we cannot use a safe-scheme allowlist. Instead we use a targeted
+// blocklist of the schemes that are execution-capable in browsers:
+//
+//   javascript:  — executes JS in the browser's origin (universal risk)
+//   vbscript:    — executes VBScript (IE legacy, still blocked by practice)
+//   data:        — can embed scripts as data:text/html or data:text/javascript
+//
+// All other schemes (irc:, ftp:, mailto:, made-up:, etc.) are passed through.
+// Relative URLs (no scheme) are always passed through unchanged.
+
+const DANGEROUS_SCHEME = /^(?:javascript|vbscript|data):/i;
+
+/**
+ * Return the URL unchanged unless it uses an execution-capable scheme
+ * (`javascript:`, `vbscript:`, `data:`), in which case replace it with `""`
+ * (empty string), which renders as a harmless empty href/src.
+ *
+ * Strips C0 control characters (U+0000–U+001F) before scheme detection.
+ * The WHATWG URL parser silently removes TAB, LF, CR, and other C0 controls
+ * before parsing — so `"java\rscript:"` is equivalent to `"javascript:"` in
+ * a browser. Stripping here makes `sanitizeUrl` safe to call even without an
+ * upstream `normalizeUrl` pass.
+ *
+ * Note: the CommonMark spec (§2.3, §C.3) is intentionally silent on URL
+ * sanitization — this guard is added on top of spec compliance to make the
+ * renderer safe for use with user-supplied content.
+ */
+function sanitizeUrl(url: string): string {
+  // Remove C0 controls (browsers silently strip these before parsing the scheme).
+  const stripped = url.replace(/[\x00-\x1F]/g, "");
+  if (DANGEROUS_SCHEME.test(stripped)) {
+    return "";
+  }
+  return url;
+}
+
 /**
  * Render an inline link `[text](url "title")` or `[text][ref]`.
  *
- * The URL is HTML-escaped in the `href` attribute. The title (if present)
+ * The URL is sanitized to block dangerous schemes (javascript:, data:, …)
+ * and then HTML-escaped in the `href` attribute. The title (if present)
  * goes in a `title` attribute.
  */
 function renderLink(node: LinkNode): string {
-  const href = escapeHtml(node.destination);
+  const href = escapeHtml(sanitizeUrl(node.destination));
   const titleAttr = node.title !== null
     ? ` title="${escapeHtml(node.title)}"`
     : "";
@@ -308,7 +354,7 @@ function renderLink(node: LinkNode): string {
  * markup has already been stripped by the parser. We just HTML-escape it.
  */
 function renderImage(node: ImageNode): string {
-  const src   = escapeHtml(node.destination);
+  const src   = escapeHtml(sanitizeUrl(node.destination));
   const alt   = escapeHtml(node.alt);
   const titleAttr = node.title !== null
     ? ` title="${escapeHtml(node.title)}"`
@@ -325,7 +371,7 @@ function renderImage(node: ImageNode): string {
 function renderAutolink(node: AutolinkNode): string {
   const href = node.isEmail
     ? `mailto:${escapeHtml(node.destination)}`
-    : escapeHtml(normalizeUrl(node.destination));
+    : escapeHtml(sanitizeUrl(normalizeUrl(node.destination)));
   const text = escapeHtml(node.destination);
   return `<a href="${href}">${text}</a>`;
 }

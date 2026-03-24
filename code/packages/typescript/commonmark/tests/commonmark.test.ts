@@ -25,7 +25,7 @@
  * CommonMark compliance.
  */
 
-import { describe, it, expect, test } from "vitest";
+import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -72,38 +72,14 @@ describe("package", () => {
 //   - You can run a single section with `--grep "ATX headings"`
 //   - The output tree mirrors the spec's structure
 
-// Known spec failures — complex edge cases not yet implemented.
-// Using test.fails() documents these as expected failures so CI stays green
-// while keeping the failures visible in the test report.
-//
-// Tab expansion in list/blockquote continuation (complex virtual-column logic):
-//   5, 6, 7, 9
-// Deep nested container edge cases:
-//   259, 260
-// Nested image alt text extraction:
-//   520
-// Unicode multi-character case fold (ẞ→ss, JS toLowerCase() won't do it):
-//   540
-// HTML comment <!--> edge: cmark-specific boundary not matching spec prose:
-//   626
-const KNOWN_FAILURES = new Set([5, 6, 7, 9, 259, 260, 520, 540, 626]);
-
 for (const [section, examples] of bySection) {
   describe(`CommonMark spec — ${section}`, () => {
     for (const ex of examples) {
-      if (KNOWN_FAILURES.has(ex.example)) {
-        test.fails(`example ${ex.example}`, () => {
-          const ast = parse(ex.markdown);
-          const actual = toHtml(ast);
-          expect(actual).toBe(ex.html);
-        });
-      } else {
-        it(`example ${ex.example}`, () => {
-          const ast = parse(ex.markdown);
-          const actual = toHtml(ast);
-          expect(actual).toBe(ex.html);
-        });
-      }
+      it(`example ${ex.example}`, () => {
+        const ast = parse(ex.markdown);
+        const actual = toHtml(ast);
+        expect(actual).toBe(ex.html);
+      });
     }
   });
 }

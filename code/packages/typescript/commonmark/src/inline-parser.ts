@@ -285,6 +285,29 @@ export function parseInline(raw: string, linkRefs: LinkRefMap): InlineNode[] {
     // literal `]` text and deactivate the opener to avoid re-matching.
     if (ch === "]") {
       scanner.skip(1);
+
+      // CommonMark §6.3: when a link is formed inside brackets, the enclosing
+      // non-image `[` opener is deactivated (marked active=false). That `]`
+      // is the "matching" bracket for the deactivated opener. Per spec, such
+      // a `]` must NOT skip over the deactivated opener to find an outer `![`
+      // image opener — doing so would cause the image to absorb the wrong
+      // destination. Instead we consume the deactivated opener here (treating
+      // this `]` as its match), emit literal `]`, and remove it from the stack.
+      //
+      // Example: `![[[foo](uri1)](uri2)](uri3)`
+      //   After `[foo](uri1)` forms, the outer `[` is deactivated.
+      //   The `]` before `(uri2)` is its matching bracket → literal `]`.
+      //   The `]` before `(uri3)` then correctly closes the `![` image opener.
+      if (bracketStack.length > 0) {
+        const topIdx = bracketStack[bracketStack.length - 1]!;
+        const topTok = tokens[topIdx];
+        if (topTok?.kind === "bracket" && !(topTok as BracketToken).active && !(topTok as BracketToken).isImage) {
+          bracketStack.splice(bracketStack.length - 1, 1);
+          textBuf += "]";
+          continue;
+        }
+      }
+
       const openerStackIdx = findActiveBracketOpener(bracketStack, tokens);
 
       if (openerStackIdx === -1) {
@@ -677,8 +700,15 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
   if (scanner.match("!--")) {
     const contentStart = scanner.pos;
     if (scanner.peek() === ">" || scanner.peekSlice(2) === "->") {
-      scanner.pos = savedPos;
-      return null;
+      // CommonMark §6.6: comment content must not start with `>` or `->`.
+      // cmark's behaviour is to emit the opening `<!--` together with the
+      // invalid starter (`>` or `->`) as a raw HTML fragment rather than
+      // escaping `<` as `&lt;`. For example, `<!--> foo -->` produces
+      // `<!--> foo --&gt;` in the rendered HTML.
+      // Consume `>` (1 char) or `->` (2 chars) as part of the construct.
+      const invalid = scanner.peek() === ">" ? ">" : "->";
+      scanner.skip(invalid.length);
+      return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
     }
     while (!scanner.done) {
       if (scanner.match("-->")) {
@@ -1105,7 +1135,7 @@ function extractRawTextForLabel(tokens: InlineToken[]): string {
  * is used as the alt text, but all elements except the characters
  * themselves are stripped."
  */
-function extractPlainText(nodes: InlineNode[]): string {
+function extractPlainText(nodes: readonly InlineNode[]): string {
   let result = "";
   for (const node of nodes) {
     switch (node.type) {
@@ -1161,8 +1191,8 @@ export function resolveInlineContent(
     }
 
     // Recurse into container blocks
-    if ("children" in block && Array.isArray((block as { children: unknown[] }).children)) {
-      for (const child of (block as { children: BlockNode[] }).children) {
+    if ("children" in block && Array.isArray((block as { children: readonly unknown[] }).children)) {
+      for (const child of (block as { children: readonly BlockNode[] }).children) {
         walk(child);
       }
     }
