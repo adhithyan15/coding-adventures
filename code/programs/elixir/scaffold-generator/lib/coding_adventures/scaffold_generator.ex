@@ -566,7 +566,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
   defp find_repo_root("/"), do: {:error, "not inside a git repository"}
 
   defp find_repo_root(current_dir) do
-    if File.dir?(Path.join(current_dir, ".git")) do
+    if File.exists?(Path.join(current_dir, ".git")) do
       {:ok, current_dir}
     else
       find_repo_root(Path.dirname(current_dir))
