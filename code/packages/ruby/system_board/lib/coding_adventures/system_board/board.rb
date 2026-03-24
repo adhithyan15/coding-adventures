@@ -24,8 +24,16 @@ module CodingAdventures
         return if @powered
         rv = RiscvSimulator
 
-        mem_size = 0x10200000
-        @cpu = rv::RiscVSimulator.new(memory_size: mem_size)
+        # Use SparseMemory instead of a flat 258 MB array. This avoids
+        # "array size too big" errors on Windows CI where memory is limited.
+        # We map only the regions the system board actually uses:
+        #   - Low RAM (1 MB): boot protocol, bootloader, kernel, processes, stack
+        #   - Disk-mapped region (2 MB): memory-mapped disk image
+        sparse_mem = CpuSimulator::SparseMemory.new([
+          CpuSimulator::MemoryRegion.new(base: 0x00000000, size: 0x00100000, name: "RAM"),
+          CpuSimulator::MemoryRegion.new(base: DISK_MAPPED_BASE, size: 0x00200000, name: "DISK")
+        ])
+        @cpu = rv::RiscVSimulator.new(memory: sparse_mem)
         @interrupt_ctrl = InterruptHandler::InterruptController.new
 
         dc = @config.display_config
@@ -70,7 +78,7 @@ module CodingAdventures
         disk_data = @disk_image.data
         disk_data.each_with_index do |b, i|
           addr = DISK_MAPPED_BASE + i
-          @cpu.cpu.memory.write_byte(addr, b) if addr < mem_size
+          @cpu.cpu.memory.write_byte(addr, b) if addr < DISK_MAPPED_BASE + 0x00200000
         end
 
         idle_binary.bytes.each_with_index { |b, i| @cpu.cpu.memory.write_byte(OsKernel::DEFAULT_IDLE_PROCESS_BASE + i, b) }

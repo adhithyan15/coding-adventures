@@ -1,3 +1,1 @@
-uv venv --quiet --clear
-uv pip install -e ../directed-graph -e .[dev] --quiet
-uv run python -m pytest tests/ -v
+uv venv --quiet --clear && uv pip install -e ../directed-graph -e .[dev] --quiet && uv run python -m pytest tests/ -v

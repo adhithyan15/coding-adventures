@@ -21,13 +21,14 @@ module CodingAdventures
     class RiscVSimulator
       attr_reader :cpu, :csr
 
-      def initialize(memory_size: 65536)
+      def initialize(memory_size: 65536, memory: nil)
         @decoder = RiscVDecoder.new
         @csr = CSRFile.new
         @executor = RiscVExecutor.new(csr: @csr)
         @cpu = CpuSimulator::CPU.new(
           decoder: @decoder, executor: @executor,
-          num_registers: 32, bit_width: 32, memory_size: memory_size
+          num_registers: 32, bit_width: 32, memory_size: memory_size,
+          memory: memory
         )
       end
 
