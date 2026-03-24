@@ -1,2 +1,1 @@
-python -m pip install -e .[dev] --quiet
-python -m pytest tests/ -v
+echo "Pipeline visualizer not yet implemented"

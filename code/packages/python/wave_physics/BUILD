@@ -1,2 +1,3 @@
-python -m pip install -e ../trig -e . -e .[dev] --quiet
-python -m pytest tests/ -v
+uv venv --quiet --clear
+uv pip install -e ../trig -e . pytest --quiet
+.venv/bin/python -m pytest tests/ -v

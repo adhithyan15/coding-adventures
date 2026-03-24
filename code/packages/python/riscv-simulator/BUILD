@@ -1,2 +1,3 @@
-python -m pip install -e ../logic-gates -e ../arithmetic -e ../cpu-simulator -e .[dev] --quiet
-python -m pytest tests/ -v
+uv venv --quiet --clear
+uv pip install -e ../logic-gates -e ../arithmetic -e ../cpu-simulator -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v

@@ -1,2 +1,1 @@
-python -m pip install -e ../logic-gates -e ../arithmetic -e ../clock -e ../fp-arithmetic -e ../gpu-core -e ../parallel-execution-engine -e ../compute-unit -e ../cache -e ../device-simulator -e ../compute-runtime -e ../vendor-api-simulators -e ../blas-library -e .[dev] --quiet
-python -m pytest tests/ -v --tb=short
+uv venv --quiet --clear && uv pip install -e ../logic-gates -e ../arithmetic -e ../clock -e ../fp-arithmetic -e ../gpu-core -e ../parallel-execution-engine -e ../compute-unit -e ../cache -e ../device-simulator -e ../compute-runtime -e ../vendor-api-simulators -e ../blas-library -e ".[dev]" --quiet && .venv/bin/python -m pytest tests/ -v --tb=short

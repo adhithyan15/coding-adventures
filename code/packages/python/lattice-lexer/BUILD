@@ -1,2 +1,6 @@
-python -m pip install -e ../directed-graph -e ../grammar-tools -e ../lexer -e .[dev] --quiet
-python -m pytest tests/ -v
+uv venv --quiet --clear
+uv pip install -e ../directed-graph --quiet
+uv pip install -e ../grammar-tools --quiet
+uv pip install -e ../lexer --quiet
+uv pip install -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v

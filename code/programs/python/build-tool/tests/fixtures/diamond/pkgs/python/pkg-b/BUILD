@@ -1,1 +1,2 @@
-echo "building pkg-b"
+python -m pip install -e .[dev] --quiet
+python -m pytest tests/ -v

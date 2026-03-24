@@ -1,2 +1,11 @@
-python -m pip install -e ../directed-graph -e ../state-machine -e "../cpu-pipeline[dev]" -e "../cache[dev]" -e "../branch-predictor[dev]" -e "../hazard-detection[dev]" -e "../clock[dev]" -e "../cpu-simulator[dev]" -e .[dev] --quiet
-python -m pytest tests/ -v
+uv venv --quiet --clear
+uv pip install -e ../directed-graph --quiet
+uv pip install -e ../state-machine --quiet
+uv pip install -e ".[dev]" --quiet
+uv pip install -e "../cpu-pipeline[dev]" --quiet
+uv pip install -e "../cache[dev]" --quiet
+uv pip install -e "../branch-predictor[dev]" --quiet
+uv pip install -e "../hazard-detection[dev]" --quiet
+uv pip install -e "../clock[dev]" --quiet
+uv pip install -e "../cpu-simulator[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v
