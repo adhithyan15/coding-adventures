@@ -351,6 +351,11 @@ The `astral-sh/setup-uv@v4` action with `version: latest` resolved to uv `0.10.1
 
 ---
 
+### 2026-03-23: Never merge PRs without CI pass and explicit user sign-off
+
+Three PRs (#201, #203, #207) were squash-merged immediately after creation without waiting for CI to run or getting user approval. While the fixes happened to work, merging without CI verification risks shipping broken code to main.
+
+**Rule:** After creating a PR, wait for the full CI pipeline to pass. Report CI results to the user and only merge after receiving explicit approval. Even if a change looks trivial, CI catches regressions that are easy to miss — especially in a monorepo where changes can have far-reaching effects across packages and workflows.
 ### 2026-03-22: Unix-specific tools must compile on Windows CI
 
 Tools that use Unix-specific syscalls (syscall.Stat_t, libc::getgroups, libc::statvfs, etc.) will fail to compile on the Windows CI runner. This affected chown, df, ls, groups, id, uname, and tty tools across Go and Rust.
