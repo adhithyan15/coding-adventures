@@ -50,7 +50,7 @@
  * @module parser
  */
 
-import { ModalStateMachine, DFA, transitionKey } from "@coding-adventures/state-machine";
+import { ModalStateMachine, DFA, transitionKey } from "../../../../src/typescript/state-machine/index.js";
 import { SpecLoader } from "./spec-loader.js";
 import { TokenClassifier } from "./token-classifier.js";
 import { PositionalResolver, coerceValue } from "./positional-resolver.js";
