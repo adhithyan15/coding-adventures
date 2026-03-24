@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "Materialize standalone TypeScript package artifacts from shared monorepo source",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "scripts": {
-    "materialize-package": "node --experimental-strip-types src/index.ts",
-    "test": "node --test --experimental-strip-types tests/*.test.ts"
+    "build": "tsc -p tsconfig.json",
+    "materialize-package": "npm run build --silent && node dist/src/index.js",
+    "test": "npm run build --silent && node --test dist/tests/*.test.js"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
 }

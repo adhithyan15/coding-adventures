@@ -4,11 +4,25 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { collectPackageClosure, materializePackage } from "../src/materializer.ts";
+import { collectPackageClosure, materializePackage } from "../src/materializer.js";
 
 function repoRootFromHere(): string {
-  const testDir = path.dirname(fileURLToPath(import.meta.url));
-  return path.resolve(testDir, "..", "..", "..", "..", "..");
+  let current = path.dirname(fileURLToPath(import.meta.url));
+
+  while (true) {
+    const sharedSourceRoot = path.join(current, "code", "src", "typescript");
+    const shellRoot = path.join(current, "code", "packages", "typescript");
+
+    if (existsSync(sharedSourceRoot) && existsSync(shellRoot)) {
+      return current;
+    }
+
+    const parent = path.dirname(current);
+    if (parent === current) {
+      throw new Error("Could not locate repository root from materializer tests");
+    }
+    current = parent;
+  }
 }
 
 function tempOutputRoot(): string {

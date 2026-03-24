@@ -1,1 +1,1 @@
-cd ../../../programs/typescript/package-materializer && npm run test --silent
+cd ../../../programs/typescript/package-materializer && npm install --silent && npm run test --silent

@@ -18,11 +18,11 @@ Given a package name, this program:
 ## Usage
 
 ```bash
-node --experimental-strip-types src/index.ts typescript-lexer
+npm run materialize-package -- typescript-lexer
 ```
 
 Optional output root:
 
 ```bash
-node --experimental-strip-types src/index.ts typescript-lexer /tmp/materialized
+npm run materialize-package -- typescript-lexer /tmp/materialized
 ```
