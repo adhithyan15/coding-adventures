@@ -425,3 +425,20 @@ class TestFreezeMode:
         assert vm.is_frozen
         vm.set_frozen(False)
         assert not vm.is_frozen
+
+
+class TestGlobalsInjection:
+    """Test pre-seeding globals into the VM."""
+
+    def test_inject_globals_merges_and_overwrites(self):
+        vm = GenericVM()
+        vm.variables["existing"] = 1
+        vm.variables["ctx_os"] = "linux"
+
+        vm.inject_globals({"ctx_os": "darwin", "answer": 42})
+
+        assert vm.variables == {
+            "existing": 1,
+            "ctx_os": "darwin",
+            "answer": 42,
+        }

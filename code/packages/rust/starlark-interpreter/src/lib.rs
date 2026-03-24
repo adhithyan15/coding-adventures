@@ -2696,4 +2696,30 @@ mod tests {
         let result = interpret_bytecode(&code).unwrap();
         assert_eq!(result.get_int("direct_name"), Some(99));
     }
+
+    #[test]
+    fn test_with_globals_propagates_to_root_vm_and_loaded_modules() {
+        let resolver = DictResolver::new(vec![(
+            "//ctx.star".to_string(),
+            "loaded_os = ctx_os\n".to_string(),
+        )]);
+
+        let mut globals = HashMap::new();
+        globals.insert(
+            "ctx_os".to_string(),
+            Value::Str("darwin".to_string()),
+        );
+
+        let mut interp =
+            StarlarkInterpreter::new(Some(&resolver), 200).with_globals(globals);
+
+        let root_result = interp.interpret_source("main_os = ctx_os\n").unwrap();
+        assert_eq!(root_result.get_string("main_os"), Some("darwin"));
+
+        let loaded = interp.load_module("//ctx.star").unwrap();
+        assert_eq!(
+            loaded.get("loaded_os"),
+            Some(&StarlarkValue::String("darwin".to_string()))
+        );
+    }
 }

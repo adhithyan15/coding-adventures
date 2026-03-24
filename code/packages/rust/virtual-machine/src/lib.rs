@@ -1328,6 +1328,38 @@ mod tests {
         }
     }
 
+    #[test]
+    fn test_inject_globals_merges_and_overwrites_variables() {
+        let mut vm = GenericVM::new();
+        vm.variables
+            .insert("existing".to_string(), Value::Int(1));
+        vm.variables.insert(
+            "ctx_os".to_string(),
+            Value::Str("linux".to_string()),
+        );
+
+        let mut globals = HashMap::new();
+        globals.insert(
+            "ctx_os".to_string(),
+            Value::Str("darwin".to_string()),
+        );
+        globals.insert("answer".to_string(), Value::Int(42));
+        vm.inject_globals(globals);
+
+        match vm.variables.get("existing") {
+            Some(Value::Int(1)) => {}
+            other => panic!("Expected existing=1, got {:?}", other),
+        }
+        match vm.variables.get("ctx_os") {
+            Some(Value::Str(value)) => assert_eq!(value, "darwin"),
+            other => panic!("Expected ctx_os=darwin, got {:?}", other),
+        }
+        match vm.variables.get("answer") {
+            Some(Value::Int(42)) => {}
+            other => panic!("Expected answer=42, got {:?}", other),
+        }
+    }
+
     // ── VMError Display test ─────────────────────────────────────────────
 
     #[test]
