@@ -113,7 +113,7 @@ class TestStarlarkEvaluator < Minitest::Test
   end
 
   def test_detects_shell_pip_as_not_starlark
-    content = "pip install -e .\npytest\n"
+    content = "python -m pip install -e .\npytest\n"
     refute BuildTool::StarlarkEvaluator.starlark_build?(content)
   end
 

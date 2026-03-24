@@ -473,13 +473,27 @@ class Token:
     line: int
     column: int
 
+    @property
+    def type_name(self) -> str:
+        """Return the token type as a string, regardless of representation.
+
+        The ``type`` field can be either a ``TokenType`` enum member or a
+        plain string (for grammar-driven tokens that define custom types
+        like ``SIZED_NUMBER`` or ``SYSTEM_TASK``). This property provides
+        uniform access:
+
+        - ``TokenType.NAME`` → ``"NAME"``
+        - ``"SIZED_NUMBER"`` → ``"SIZED_NUMBER"``
+        """
+        return self.type.name if hasattr(self.type, "name") else self.type
+
     def __repr__(self) -> str:
         """Return a concise, readable representation of the token.
 
         Example: ``Token(NAME, 'x', 1:1)`` means "a NAME token with value
         'x' at line 1, column 1".
         """
-        return f"Token({self.type.name}, {self.value!r}, {self.line}:{self.column})"
+        return f"Token({self.type_name}, {self.value!r}, {self.line}:{self.column})"
 
 
 # ---------------------------------------------------------------------------

@@ -137,6 +137,7 @@ needed.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from grammar_tools import (
@@ -325,6 +326,42 @@ class GrammarParser:
         self._furthest_pos = 0
         self._furthest_expected: list[str] = []
 
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. See the lexer's hooks for the general pattern.
+        self._pre_parse_hooks: list[Callable[[list[Token]], list[Token]]] = []
+        self._post_parse_hooks: list[Callable[[ASTNode], ASTNode]] = []
+
+    def add_pre_parse(self, hook: Callable[[list[Token]], list[Token]]) -> None:
+        """Register a token transform to run before parsing.
+
+        The hook receives the token list and returns a (possibly modified)
+        token list. Runs after all lexer hooks have completed.
+
+        Use cases:
+        - Token-level disambiguation
+        - Injecting synthetic tokens for parser guidance
+
+        Args:
+            hook: A function list[Token] → list[Token].
+        """
+        self._pre_parse_hooks.append(hook)
+
+    def add_post_parse(self, hook: Callable[[ASTNode], ASTNode]) -> None:
+        """Register an AST transform to run after parsing.
+
+        The hook receives the root ASTNode and returns a (possibly modified)
+        ASTNode. Multiple hooks compose left-to-right.
+
+        Use cases:
+        - Lisp defmacro expansion
+        - Desugaring (syntactic sugar → core forms)
+        - AST optimization passes
+
+        Args:
+            hook: A function ASTNode → ASTNode.
+        """
+        self._post_parse_hooks.append(hook)
+
     def _grammar_references_newline(self) -> bool:
         """Check if any grammar rule references the NEWLINE token.
 
@@ -358,8 +395,20 @@ class GrammarParser:
     def parse(self) -> ASTNode:
         """Parse the token stream using the first grammar rule as entry point.
 
-        The first rule in a ``.grammar`` file is always the start symbol.
-        After parsing, we verify all tokens have been consumed.
+        The parsing pipeline has three stages:
+
+        1. **Pre-parse hooks** — transform the token list before parsing.
+           Each hook receives a token list and returns a token list. Multiple
+           hooks compose left-to-right (A → B → C).
+
+        2. **Core parsing** — the existing grammar-driven recursive descent
+           parser, using the first rule as the start symbol.
+
+        3. **Post-parse hooks** — transform the AST after parsing.
+           Each hook receives an ASTNode and returns an ASTNode.
+
+        When no hooks are registered, this is equivalent to the original
+        parse() — zero overhead.
 
         Returns:
             An ASTNode representing the complete parse tree.
@@ -368,6 +417,15 @@ class GrammarParser:
             GrammarParseError: If the grammar has no rules, the input doesn't
                 match, or there are unconsumed tokens.
         """
+        # Stage 1: Pre-parse hooks transform the token list.
+        # Common use cases: token disambiguation, injecting synthetic tokens.
+        # Each hook is list[Token] → list[Token].
+        if self._pre_parse_hooks:
+            tokens = self._tokens
+            for hook in self._pre_parse_hooks:
+                tokens = hook(tokens)
+            self._tokens = tokens
+
         if not self._grammar.rules:
             raise GrammarParseError("Grammar has no rules")
 
@@ -406,6 +464,13 @@ class GrammarParser:
                     tok,
                 )
 
+        # Stage 3: Post-parse hooks transform the AST.
+        # Common use cases: Lisp defmacro expansion, desugaring,
+        # AST optimization passes. Each hook is ASTNode → ASTNode.
+        if self._post_parse_hooks:
+            for hook in self._post_parse_hooks:
+                result = hook(result)
+
         return result
 
     # =========================================================================
@@ -443,13 +508,35 @@ class GrammarParser:
     # =========================================================================
 
     def _parse_rule(self, rule_name: str) -> ASTNode:
-        """Parse a named grammar rule with memoization.
+        """Parse a named grammar rule with memoization and left-recursion support.
 
-        This is the entry point for parsing any grammar rule. It first
-        checks the memo cache for a previously computed result. If found,
-        it restores the position and returns immediately.
+        This method implements the seed-and-grow technique from Warth et al.,
+        "Packrat Parsers Can Support Left Recursion" (2008). The algorithm
+        handles left-recursive rules like:
 
-        If not cached, it parses the rule, caches the result, and returns.
+            expression = expression PLUS term | term
+
+        Without this technique, a left-recursive rule would cause infinite
+        recursion: ``expression`` calls ``expression`` calls ``expression``...
+
+        The seed-and-grow algorithm breaks the cycle in three steps:
+
+        1. **Seed**: Before parsing the rule body, plant a failure entry in the
+           memo cache. If the rule references itself at the same position, the
+           memo check finds this failure entry and returns None, breaking the
+           infinite recursion.
+
+        2. **Initial parse**: Parse the rule body. The left-recursive alternative
+           fails (hits the seed), but a non-recursive alternative may succeed.
+           For ``expression = expression PLUS term | term``, the ``expression``
+           alternative fails, but ``term`` succeeds.
+
+        3. **Grow**: If the initial parse succeeded, iteratively re-parse the
+           rule body with the previous successful result cached. Each iteration
+           lets the left-recursive alternative consume more input:
+           - First grow: ``expression`` (= term) ``PLUS term`` → succeeds
+           - Second grow: ``expression`` (= term + term) ``PLUS term`` → succeeds
+           - ...until no more input is consumed.
 
         Args:
             rule_name: The name of the grammar rule to parse.
@@ -475,16 +562,42 @@ class GrammarParser:
                 )
             return ASTNode(rule_name=rule_name, children=cached_result)
 
-        # Not cached — parse the rule.
         start_pos = self._pos
         rule = self._rules[rule_name]
+
+        # Left-recursion guard: seed the memo with a failure entry BEFORE
+        # parsing the rule body. If the rule references itself (directly or
+        # indirectly) at the same position, the memo check above will find
+        # this failure entry and raise GrammarParseError, which the caller
+        # in _match_element catches and treats as "no match" — breaking the
+        # infinite recursion cycle.
+        self._memo[memo_key] = (None, start_pos)
+
         children = self._match_element(rule.body)
 
         # Cache the result.
         self._memo[memo_key] = (children, self._pos)
 
+        # If the initial parse succeeded, try to grow the match.
+        # This is the iterative growth phase of the seed-and-grow algorithm.
+        # Each iteration re-parses the rule body with the previous successful
+        # result cached, allowing the left-recursive alternative to consume
+        # more input.
+        if children is not None:
+            while True:
+                prev_end = self._pos
+                self._pos = start_pos
+                self._memo[memo_key] = (children, prev_end)
+                new_children = self._match_element(rule.body)
+                if new_children is None or self._pos <= prev_end:
+                    # Could not grow the match — restore the best result.
+                    self._pos = prev_end
+                    self._memo[memo_key] = (children, prev_end)
+                    break
+                children = new_children
+
         if children is None:
-            self._pos = start_pos  # Restore position on failure
+            self._pos = start_pos
             self._record_failure(rule_name)
             raise GrammarParseError(
                 f"Expected {rule_name}, got {self._current().value!r}",

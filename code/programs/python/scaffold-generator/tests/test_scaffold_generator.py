@@ -87,7 +87,7 @@ class TestReadDeps:
 
     def test_read_python_deps(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            build = "uv venv\nuv pip install -e ../logic-gates --quiet\nuv pip install -e ../arithmetic --quiet\n"
+            build = "python -m pip install -e ../logic-gates -e ../arithmetic -e .[dev] --quiet\npython -m pytest tests/ -v\n"
             with open(os.path.join(tmp, "BUILD"), "w") as f:
                 f.write(build)
             deps = read_deps(tmp, "python")
@@ -154,9 +154,9 @@ class TestDependencyResolution:
         for name in ["a", "b", "c"]:
             os.makedirs(os.path.join(tmp, name))
         with open(os.path.join(tmp, "a", "BUILD"), "w") as f:
-            f.write("uv pip install -e ../b --quiet\n")
+            f.write("python -m pip install -e ../b -e .[dev] --quiet\n")
         with open(os.path.join(tmp, "b", "BUILD"), "w") as f:
-            f.write("uv pip install -e ../c --quiet\n")
+            f.write("python -m pip install -e ../c -e .[dev] --quiet\n")
         with open(os.path.join(tmp, "c", "BUILD"), "w") as f:
             f.write("")
         return tmp
@@ -176,9 +176,9 @@ class TestDependencyResolution:
         for name in ["x", "y"]:
             os.makedirs(os.path.join(tmp, name))
         with open(os.path.join(tmp, "x", "BUILD"), "w") as f:
-            f.write("uv pip install -e ../y --quiet\n")
+            f.write("python -m pip install -e ../y -e .[dev] --quiet\n")
         with open(os.path.join(tmp, "y", "BUILD"), "w") as f:
-            f.write("uv pip install -e ../x --quiet\n")
+            f.write("python -m pip install -e ../x -e .[dev] --quiet\n")
         with pytest.raises(ValueError, match="circular"):
             topological_sort(["x", "y"], "python", tmp)
 
@@ -238,12 +238,12 @@ class TestGenerateTypeScript:
                 pkg = json.load(f)
             assert "@vitest/coverage-v8" in pkg["devDependencies"]
 
-    def test_build_chain_installs_deps(self) -> None:
+    def test_build_has_npm_ci(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             generate_typescript(tmp, "test-pkg", "A test", "", ["logic-gates"], ["logic-gates"])
             with open(os.path.join(tmp, "BUILD")) as f:
                 build = f.read()
-            assert "../logic-gates" in build
+            assert "npm ci --quiet" in build
 
 
 class TestGenerateRuby:
