@@ -129,6 +129,10 @@ defmodule CodingAdventures.DocumentAstToHtml do
     end
   end
 
+  # Fallback for unknown / malformed list_item shapes — kept grouped with the
+  # above clauses to silence the Elixir "clauses should be grouped" compiler warning.
+  defp render_list_item(_, _tight), do: ""
+
   # Renders the inner content of a tight list item following CommonMark rules:
   #
   # 1. Empty item:  `<li></li>`
@@ -188,8 +192,6 @@ defmodule CodingAdventures.DocumentAstToHtml do
       end
     "<li>\n#{init_html}#{last_html}</li>\n"
   end
-
-  defp render_list_item(_, _tight), do: ""
 
   # ── Inline Rendering ──────────────────────────────────────────────────────────
 

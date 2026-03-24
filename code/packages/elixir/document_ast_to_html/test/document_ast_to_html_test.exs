@@ -211,5 +211,118 @@ defmodule CodingAdventures.DocumentAstToHtmlTest do
       ])
       assert Renderer.render(doc) == "<p>line1\nline2</p>\n"
     end
+
+    test "autolink URL with characters needing percent-encoding" do
+      # Backslash is not a safe URL character, must be percent-encoded as %5C
+      doc = DocumentAst.document([
+        DocumentAst.paragraph([DocumentAst.autolink("https://example.com/a\\b", false)])
+      ])
+      html = Renderer.render(doc)
+      assert html =~ "href=\"https://example.com/a%5Cb\""
+    end
+
+    test "autolink URL with ampersand is html-escaped" do
+      doc = DocumentAst.document([
+        DocumentAst.paragraph([DocumentAst.autolink("https://example.com/?a=1&b=2", false)])
+      ])
+      html = Renderer.render(doc)
+      assert html =~ "href=\"https://example.com/?a=1&amp;b=2\""
+    end
+
+    test "unknown inline node type renders empty string" do
+      # A map with an unrecognized type falls through to the catch-all render_inline clause
+      doc = DocumentAst.document([
+        DocumentAst.paragraph([%{type: :unknown_inline_node}])
+      ])
+      assert Renderer.render(doc) == "<p></p>\n"
+    end
+  end
+
+  describe "list edge cases" do
+    test "empty list item" do
+      doc = DocumentAst.document([
+        DocumentAst.list(false, nil, false, [
+          DocumentAst.list_item([])
+        ])
+      ])
+      assert Renderer.render(doc) == "<ul>\n<li></li>\n</ul>\n"
+    end
+
+    test "loose list renders paragraphs with <p> tags" do
+      doc = DocumentAst.document([
+        DocumentAst.list(false, nil, false, [
+          DocumentAst.list_item([DocumentAst.paragraph([DocumentAst.text("a")])]),
+          DocumentAst.list_item([DocumentAst.paragraph([DocumentAst.text("b")])])
+        ])
+      ])
+      assert Renderer.render(doc) == "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ul>\n"
+    end
+
+    test "tight list item with paragraph followed by sublist" do
+      # Exercises the render_tight_list_item([%{type: :paragraph} | rest]) clause
+      sublist = DocumentAst.list(true, 1, true, [
+        DocumentAst.list_item([DocumentAst.paragraph([DocumentAst.text("sub")])])
+      ])
+      doc = DocumentAst.document([
+        DocumentAst.list(false, nil, true, [
+          DocumentAst.list_item([DocumentAst.paragraph([DocumentAst.text("parent")]), sublist])
+        ])
+      ])
+      html = Renderer.render(doc)
+      assert html =~ "<li>parent\n<ol>"
+      assert html =~ "<li>sub</li>"
+    end
+
+    test "tight list item starting with heading (non-paragraph first child)" do
+      # Exercises the render_tight_list_item(children) catch-all clause
+      doc = DocumentAst.document([
+        DocumentAst.list(false, nil, true, [
+          DocumentAst.list_item([
+            DocumentAst.heading(2, [DocumentAst.text("Bar")]),
+            DocumentAst.paragraph([DocumentAst.text("baz")])
+          ])
+        ])
+      ])
+      html = Renderer.render(doc)
+      assert html =~ "<li>\n<h2>Bar</h2>\nbaz</li>"
+    end
+
+    test "tight list item starting with code block (non-paragraph, non-tight-para last)" do
+      # Last child is a code_block, so its trailing \\n is kept before </li>
+      doc = DocumentAst.document([
+        DocumentAst.list(false, nil, true, [
+          DocumentAst.list_item([DocumentAst.code_block("elixir", "x = 1\n")])
+        ])
+      ])
+      html = Renderer.render(doc)
+      assert html =~ "<li>\n<pre><code class=\"language-elixir\">x = 1\n</code></pre>\n</li>"
+    end
+
+    test "code block with whitespace-only language omits class attribute" do
+      doc = DocumentAst.document([DocumentAst.code_block("   ", "code\n")])
+      assert Renderer.render(doc) == "<pre><code>code\n</code></pre>\n"
+    end
+
+    test "ordered list with start=0 includes start attribute" do
+      doc = DocumentAst.document([
+        DocumentAst.list(true, 0, false, [
+          DocumentAst.list_item([DocumentAst.paragraph([DocumentAst.text("zero")])])
+        ])
+      ])
+      html = Renderer.render(doc)
+      assert String.starts_with?(html, "<ol start=\"0\">")
+    end
+  end
+
+  describe "fallback rendering" do
+    test "unknown block node type renders empty string" do
+      doc = DocumentAst.document([%{type: :unknown_block}])
+      assert Renderer.render(doc) == ""
+    end
+
+    test "rendering a non-document node directly returns its fragment" do
+      assert Renderer.render(DocumentAst.thematic_break()) == "<hr />\n"
+      assert Renderer.render(DocumentAst.heading(3, [DocumentAst.text("Hi")])) == "<h3>Hi</h3>\n"
+    end
   end
 end
