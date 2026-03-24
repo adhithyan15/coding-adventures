@@ -622,11 +622,22 @@ class TestVersion:
   buildLines.push("python -m pytest tests/ -v");
   const build = buildLines.join("\n") + "\n";
 
+  const buildWinLines = ["uv venv --quiet --clear"];
+  if (orderedDeps.length > 0) {
+    const depFlags = orderedDeps.map((dep) => `-e ../${dep}`).join(" ");
+    buildWinLines.push(`uv pip install ${depFlags} --quiet`);
+  }
+  buildWinLines.push("uv pip install --no-deps -e .[dev] --quiet");
+  buildWinLines.push("uv pip install pytest pytest-cov ruff mypy --quiet");
+  buildWinLines.push("uv run --no-project python -m pytest tests/ -v");
+  const buildWindows = buildWinLines.join("\n") + "\n";
+
   writeFile(path.join(targetDir, "pyproject.toml"), pyproject);
   writeFile(path.join(targetDir, "src", snake, "__init__.py"), initPy);
   writeFile(path.join(targetDir, "tests", "__init__.py"), "");
   writeFile(path.join(targetDir, "tests", `test_${snake}.py`), testPy);
   writeFile(path.join(targetDir, "BUILD"), build);
+  writeFile(path.join(targetDir, "BUILD_windows"), buildWindows);
 }
 
 // -------------------------------------------------------------------------

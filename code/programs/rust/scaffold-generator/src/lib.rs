@@ -706,7 +706,8 @@ pub fn topological_sort(all_deps: &[String], lang: &str, base_dir: &Path) -> Res
 //     tests/
 //       __init__.py            -- makes tests a package
 //       test_my_package.py     -- test file
-//     BUILD                    -- CI build script
+//     BUILD                    -- CI build script (Unix)
+//     BUILD_windows            -- CI build script (Windows, uses uv)
 
 /// Generates a Python package scaffold.
 ///
@@ -811,6 +812,43 @@ class TestVersion:
     build_lines.push("python -m pytest tests/ -v".to_string());
     let build = build_lines.join("\n") + "\n";
 
+    // --- BUILD_windows ---
+    //
+    // The Windows build script uses `uv` instead of raw pip and differs from
+    // the Unix BUILD in several ways:
+    //
+    //   1. Dependencies are installed in ONE `uv pip install` call with
+    //      multiple `-e` flags instead of one per line.
+    //   2. The package itself is installed with `--no-deps` so that uv
+    //      doesn't try to resolve dependencies that are already installed
+    //      as editable packages from the previous step.
+    //   3. Test tools (pytest, ruff, mypy) are explicitly installed in a
+    //      separate command.
+    //   4. Tests run via `uv run --no-project python` instead of
+    //      `.venv/bin/python`.
+    let mut bw_lines: Vec<String> = Vec::new();
+    bw_lines.push("uv venv --quiet --clear".to_string());
+
+    // Install all transitive deps in one command (if any)
+    if !ordered_deps.is_empty() {
+        let mut dep_parts: Vec<String> = vec!["uv pip install".to_string()];
+        for dep in ordered_deps {
+            dep_parts.push(format!("-e ../{}", dep));
+        }
+        dep_parts.push("--quiet".to_string());
+        bw_lines.push(dep_parts.join(" "));
+    }
+
+    // Install the package itself with --no-deps
+    bw_lines.push("uv pip install --no-deps -e .[dev] --quiet".to_string());
+
+    // Explicitly install test tools
+    bw_lines.push("uv pip install pytest pytest-cov ruff mypy --quiet".to_string());
+
+    // Run tests
+    bw_lines.push("uv run --no-project python -m pytest tests/ -v".to_string());
+    let build_windows = bw_lines.join("\n") + "\n";
+
     // Create directories
     let src_dir = target_dir.join("src").join(&snake);
     let test_dir = target_dir.join("tests");
@@ -826,6 +864,7 @@ class TestVersion:
         &test_py,
     )?;
     fs::write(target_dir.join("BUILD"), &build)?;
+    fs::write(target_dir.join("BUILD_windows"), &build_windows)?;
 
     Ok(())
 }

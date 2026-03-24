@@ -363,11 +363,22 @@ class TestVersion:
     build_lines.append("python -m pytest tests/ -v")
     build = "\n".join(build_lines) + "\n"
 
+    # ── BUILD_windows: uses uv instead of pip, single-line dep installs ──
+    build_win_lines = ["uv venv --quiet --clear"]
+    if ordered_deps:
+        dep_flags = " ".join(f"-e ../{dep}" for dep in ordered_deps)
+        build_win_lines.append(f"uv pip install {dep_flags} --quiet")
+    build_win_lines.append("uv pip install --no-deps -e .[dev] --quiet")
+    build_win_lines.append("uv pip install pytest pytest-cov ruff mypy --quiet")
+    build_win_lines.append("uv run --no-project python -m pytest tests/ -v")
+    build_windows = "\n".join(build_win_lines) + "\n"
+
     _write_file(os.path.join(target_dir, "pyproject.toml"), pyproject)
     _write_file(os.path.join(target_dir, "src", snake, "__init__.py"), init_py)
     _write_file(os.path.join(target_dir, "tests", "__init__.py"), "")
     _write_file(os.path.join(target_dir, "tests", f"test_{snake}.py"), test_py)
     _write_file(os.path.join(target_dir, "BUILD"), build)
+    _write_file(os.path.join(target_dir, "BUILD_windows"), build_windows)
 
 
 def generate_go(

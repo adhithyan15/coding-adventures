@@ -507,6 +507,22 @@ class TestVersion:
 	buildLines = append(buildLines, "python -m pytest tests/ -v")
 	build := strings.Join(buildLines, "\n") + "\n"
 
+	// BUILD_windows
+	var buildWinLines []string
+	buildWinLines = append(buildWinLines, "uv venv --quiet --clear")
+	if len(orderedDeps) > 0 {
+		winInstallParts := []string{"uv pip install"}
+		for _, dep := range orderedDeps {
+			winInstallParts = append(winInstallParts, fmt.Sprintf("-e ../%s", dep))
+		}
+		winInstallParts = append(winInstallParts, "--quiet")
+		buildWinLines = append(buildWinLines, strings.Join(winInstallParts, " "))
+	}
+	buildWinLines = append(buildWinLines, "uv pip install --no-deps -e .[dev] --quiet")
+	buildWinLines = append(buildWinLines, "uv pip install pytest pytest-cov ruff mypy --quiet")
+	buildWinLines = append(buildWinLines, "uv run --no-project python -m pytest tests/ -v")
+	buildWindows := strings.Join(buildWinLines, "\n") + "\n"
+
 	// Create directories
 	srcDir := filepath.Join(targetDir, "src", snake)
 	testDir := filepath.Join(targetDir, "tests")
@@ -522,7 +538,8 @@ class TestVersion:
 		filepath.Join("src", snake, "__init__.py"): initPy,
 		filepath.Join("tests", "__init__.py"):      "",
 		filepath.Join("tests", "test_"+snake+".py"): testPy,
-		"BUILD": build,
+		"BUILD":         build,
+		"BUILD_windows": buildWindows,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {

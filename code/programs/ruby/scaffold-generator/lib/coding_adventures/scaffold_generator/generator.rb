@@ -529,11 +529,26 @@ module CodingAdventures
       build_lines << "python -m pytest tests/ -v"
       build = build_lines.join("\n") + "\n"
 
+      # BUILD_windows uses uv instead of pip and installs dependencies in a
+      # single line with multiple -e flags.  The package itself is installed
+      # with --no-deps to avoid re-resolving, and test tools are installed
+      # explicitly in a separate step.
+      bw_lines = ["uv venv --quiet --clear"]
+      dep_install = ["uv pip install"]
+      ordered_deps.each { |dep| dep_install << "-e ../#{dep}" }
+      dep_install << "--quiet"
+      bw_lines << dep_install.join(" ") if ordered_deps.any?
+      bw_lines << "uv pip install --no-deps -e .[dev] --quiet"
+      bw_lines << "uv pip install pytest pytest-cov ruff mypy --quiet"
+      bw_lines << "uv run --no-project python -m pytest tests/ -v"
+      build_windows = bw_lines.join("\n") + "\n"
+
       write_file(File.join(target_dir, "pyproject.toml"), pyproject)
       write_file(File.join(target_dir, "src", snake, "__init__.py"), init_py)
       write_file(File.join(target_dir, "tests", "__init__.py"), "")
       write_file(File.join(target_dir, "tests", "test_#{snake}.py"), test_py)
       write_file(File.join(target_dir, "BUILD"), build)
+      write_file(File.join(target_dir, "BUILD_windows"), build_windows)
     end
 
     # =====================================================================

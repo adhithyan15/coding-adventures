@@ -822,6 +822,34 @@ defmodule CodingAdventures.ScaffoldGenerator do
     File.write!(Path.join(test_dir, "__init__.py"), "")
     write_dedented(Path.join(test_dir, "test_#{snake}.py"), test_py)
     File.write!(Path.join(target_dir, "BUILD"), build_content)
+
+    # BUILD_windows uses uv instead of pip, installs deps in one line with
+    # multiple -e flags, uses --no-deps for the package itself, explicitly
+    # installs test tools, and runs via `uv run --no-project python`.
+    win_lines = ["uv venv --quiet --clear"]
+
+    win_dep_parts =
+      ["uv pip install"] ++
+        Enum.map(ordered_deps, fn dep -> "-e ../#{dep}" end) ++
+        ["--quiet"]
+
+    win_lines =
+      if length(ordered_deps) > 0 do
+        win_lines ++ [Enum.join(win_dep_parts, " ")]
+      else
+        win_lines
+      end
+
+    win_lines =
+      win_lines ++
+        [
+          "uv pip install --no-deps -e .[dev] --quiet",
+          "uv pip install pytest pytest-cov ruff mypy --quiet",
+          "uv run --no-project python -m pytest tests/ -v"
+        ]
+
+    win_content = Enum.join(win_lines, "\n") <> "\n"
+    File.write!(Path.join(target_dir, "BUILD_windows"), win_content)
   end
 
   # =========================================================================
