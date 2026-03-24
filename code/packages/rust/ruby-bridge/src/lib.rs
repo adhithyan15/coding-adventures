@@ -81,6 +81,17 @@ extern "C" {
         argc: c_int,
     );
 
+    // -- Allocator binding -------------------------------------------------
+    //
+    // rb_define_alloc_func tells Ruby how to allocate instances of a class.
+    // The alloc function receives the class and must return a new VALUE.
+    // This is called *before* `initialize` — it creates the raw object,
+    // then `initialize` fills it in.
+    pub fn rb_define_alloc_func(
+        klass: VALUE,
+        func: unsafe extern "C" fn(VALUE) -> VALUE,
+    );
+
     // -- Well-known classes ------------------------------------------------
     pub static rb_cObject: VALUE;
     pub static rb_eStandardError: VALUE;
@@ -161,6 +172,13 @@ pub fn define_method_raw(class: VALUE, name: &str, func: *const c_void, argc: i3
 pub fn define_singleton_method_raw(class: VALUE, name: &str, func: *const c_void, argc: i32) {
     let c_name = CString::new(name).expect("name must not contain NUL");
     unsafe { rb_define_singleton_method(class, c_name.as_ptr(), func, argc as c_int) }
+}
+
+/// Set the allocator function for a Ruby class. The alloc function
+/// is called before `initialize` and must return a new VALUE (typically
+/// created via `wrap_data`).
+pub fn define_alloc_func(class: VALUE, func: unsafe extern "C" fn(VALUE) -> VALUE) {
+    unsafe { rb_define_alloc_func(class, func) }
 }
 
 // ---------------------------------------------------------------------------
@@ -303,23 +321,56 @@ pub fn wrap_data<T>(class: VALUE, data: T) -> VALUE {
 
 /// Extract a reference to the Rust data inside a Ruby object.
 ///
+/// # How it works
+///
+/// Ruby's `rb_data_object_wrap` stores a void pointer inside an `RData`
+/// struct.  That struct has a well-known, ABI-stable layout:
+///
+/// ```text
+/// struct RData {
+///     struct RBasic basic;   // 2 machine words: flags + klass
+///     void (*dmark)(void*);  // GC mark function pointer
+///     void (*dfree)(void*);  // GC free function pointer
+///     void *data;            // <--- our Rust pointer lives here
+/// };
+/// ```
+///
+/// On a 64-bit system each field is 8 bytes, so `data` sits at byte
+/// offset `4 * 8 = 32`.  On 32-bit it would be `4 * 4 = 16`.  In both
+/// cases: **4 machine words from the start of the object**.
+///
+/// The C macro `DATA_PTR(obj)` does exactly this pointer arithmetic.
+/// We replicate it here so we don't need rb-sys or bindgen.
+///
 /// # Safety
-/// The VALUE must have been created by `wrap_data<T>` with the same type T.
+///
+/// The VALUE must have been created by `wrap_data<T>` with the same
+/// type `T`.  Passing a different type or a non-data VALUE is undefined
+/// behavior.
 pub unsafe fn unwrap_data<T>(obj: VALUE) -> &'static T {
-    // RDATA(obj)->data — we access it via the rb_data_object_wrap convention.
-    // The data pointer is at a fixed offset in the Ruby RData struct.
-    // For simplicity, we use a different approach: store the pointer and
-    // retrieve it via the internal struct layout.
-    //
-    // Actually, the safest way without rb-sys is to use the fact that
-    // rb_data_object_wrap stores the pointer, and we know the layout.
-    // But for maximum compatibility, we'll just re-read it via a helper.
-    //
-    // TODO: This needs the actual data extraction. For now, we'll use
-    // a static HashMap approach or revisit once we can test against Ruby.
-    //
-    // Temporary: store/retrieve via a side channel.
-    panic!("unwrap_data requires runtime testing against Ruby — implement with DATA_PTR macro equivalent")
+    // The data pointer is at offset 4 words into the RData struct:
+    //   word 0: flags  (RBasic.flags)
+    //   word 1: klass  (RBasic.klass)
+    //   word 2: dmark  (function pointer)
+    //   word 3: dfree  (function pointer)
+    //   word 4: data   (void*)  <--- we want this
+    let rdata_ptr = obj as *const usize;
+    let data_ptr = *rdata_ptr.add(4) as *const T;
+    &*data_ptr
+}
+
+/// Extract a mutable reference to the Rust data inside a Ruby object.
+///
+/// Same layout as [`unwrap_data`] but returns `&mut T`.
+///
+/// # Safety
+///
+/// Same requirements as `unwrap_data`, plus the caller must ensure no
+/// other references to the same data exist simultaneously.
+pub unsafe fn unwrap_data_mut<T>(obj: VALUE) -> &'static mut T {
+    let rdata_ptr = obj as *const usize;
+    let data_ptr = *rdata_ptr.add(4) as *mut T;
+    &mut *data_ptr
 }
 
 /// Free function called by Ruby's GC.

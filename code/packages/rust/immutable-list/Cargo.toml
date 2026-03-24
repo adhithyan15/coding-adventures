@@ -1,0 +1,10 @@
+[package]
+name = "immutable-list"
+version = "0.1.0"
+edition = "2021"
+description = "A persistent vector using a 32-way trie with structural sharing, inspired by Clojure's PersistentVector. Every mutation returns a new list; the original is unchanged. Near-constant-time push, get, set, and pop via a tail buffer and bit-partitioned index lookup."
+license = "MIT"
+
+[dependencies]
+# No dependencies -- this is a standalone foundation package.
+# Structural sharing is achieved via std::sync::Arc from the standard library.

@@ -83,6 +83,7 @@ pub fn get_logname() -> Result<String, String> {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn returns_a_login_name() {
         // In any reasonable test environment, $LOGNAME or $USER should be set.
@@ -92,6 +93,7 @@ mod tests {
         assert!(!name.is_empty(), "login name should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn login_name_has_no_whitespace() {
         let name = get_logname().unwrap();
@@ -102,6 +104,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn login_name_is_consistent() {
         // Calling get_logname twice should return the same value.

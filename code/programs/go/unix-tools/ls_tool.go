@@ -41,12 +41,9 @@ import (
 	"io"
 	"io/fs"
 	"os"
-	"os/user"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
-	"syscall"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
@@ -288,39 +285,17 @@ func formatLong(entry FileEntry, opts LsOptions) string {
 
 	// Inode number (optional, -i flag).
 	if opts.Inode {
-		inode := uint64(0)
-		if sys, ok := info.Sys().(*syscall.Stat_t); ok {
-			inode = sys.Ino
-		}
-		parts = append(parts, fmt.Sprintf("%8d", inode))
+		parts = append(parts, fmt.Sprintf("%8d", getInode(info)))
 	}
 
 	// File mode string (e.g., "-rw-r--r--").
 	parts = append(parts, info.Mode().String())
 
 	// Number of hard links.
-	nlink := uint64(1)
-	if sys, ok := info.Sys().(*syscall.Stat_t); ok {
-		nlink = uint64(sys.Nlink)
-	}
-	parts = append(parts, fmt.Sprintf("%3d", nlink))
+	parts = append(parts, fmt.Sprintf("%3d", getNlink(info)))
 
 	// Owner and group.
-	ownerName := "?"
-	groupName := "?"
-	if sys, ok := info.Sys().(*syscall.Stat_t); ok {
-		if opts.NumericUID {
-			ownerName = strconv.FormatUint(uint64(sys.Uid), 10)
-			groupName = strconv.FormatUint(uint64(sys.Gid), 10)
-		} else {
-			if u, err := user.LookupId(strconv.FormatUint(uint64(sys.Uid), 10)); err == nil {
-				ownerName = u.Username
-			}
-			if g, err := user.LookupGroupId(strconv.FormatUint(uint64(sys.Gid), 10)); err == nil {
-				groupName = g.Name
-			}
-		}
-	}
+	ownerName, groupName := getOwnerGroup(info, opts.NumericUID)
 	parts = append(parts, fmt.Sprintf("%-8s", ownerName))
 	if !opts.NoGroup {
 		parts = append(parts, fmt.Sprintf("%-8s", groupName))
@@ -379,11 +354,7 @@ func formatEntries(entries []FileEntry, opts LsOptions) string {
 	for _, entry := range entries {
 		name := entry.Name
 		if opts.Inode {
-			inode := uint64(0)
-			if sys, ok := entry.Info.Sys().(*syscall.Stat_t); ok {
-				inode = sys.Ino
-			}
-			name = fmt.Sprintf("%8d %s", inode, name)
+			name = fmt.Sprintf("%8d %s", getInode(entry.Info), name)
 		}
 		if opts.Classify {
 			name += classifySuffix(entry.Info)

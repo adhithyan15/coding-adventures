@@ -1,0 +1,237 @@
+/* ==========================================================================
+ * Styles for the "Everything is Addition" tab (Tab 2).
+ *
+ * Covers: subtraction transformation steps, multiplication long grid,
+ * step trace tables, insight callouts.
+ * ========================================================================== */
+
+/* --- Tab container --- */
+
+.addition {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.addition__intro {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--body-text);
+  max-width: 800px;
+}
+
+/* --- Addition card (subtraction, multiplication) --- */
+
+.addition-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.addition-card__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff8a65;
+}
+
+.addition-card__description {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--tab-text);
+}
+
+.addition-card__inputs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.addition-card__callout {
+  background: rgba(255, 183, 77, 0.08);
+  border-left: 3px solid #ffb74d;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--body-text);
+}
+
+/* --- Subtraction steps --- */
+
+.sub-step {
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+}
+
+.sub-step__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4fc3f7;
+  margin-bottom: 0.4rem;
+}
+
+.sub-step__equation {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--body-text);
+}
+
+.sub-step__transform {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sub-step__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sub-step__label {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--tab-text);
+  min-width: 7rem;
+  text-align: right;
+}
+
+.sub-step__bits {
+  display: flex;
+  gap: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.sub-step__note {
+  font-size: 0.8rem;
+  color: var(--tab-text);
+  font-style: italic;
+  margin-left: 0.5rem;
+}
+
+.bit--high {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+.bit--low {
+  color: #888;
+}
+
+/* --- Multiplication grid (long multiplication layout) --- */
+
+.mul__operator {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tab-text);
+  font-family: var(--mono);
+}
+
+.mul__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  max-width: 500px;
+  font-family: var(--mono);
+}
+
+.mul__row {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.mul__row-label {
+  width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--tab-text);
+}
+
+.mul__row--operand {
+  font-weight: 600;
+}
+
+.mul__row--partial {
+  font-size: 0.85rem;
+}
+
+.mul__row--active {
+  /* Active partial product row */
+}
+
+.mul__row--skip {
+  opacity: 0.5;
+}
+
+.mul__row--result {
+  font-weight: 700;
+}
+
+.mul__row-note {
+  font-size: 0.75rem;
+  color: var(--tab-text);
+  margin-left: 0.5rem;
+}
+
+.mul__cell {
+  width: 20px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.mul__cell--high {
+  color: #4caf50;
+}
+
+.mul__cell--low {
+  color: #555;
+}
+
+.mul__divider {
+  border-top: 1px solid var(--panel-border);
+  margin: 0.3rem 0;
+}
+
+.mul__equation {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--body-text);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 640px) {
+  .addition-card__inputs {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sub-step__row {
+    flex-wrap: wrap;
+  }
+
+  .sub-step__label {
+    min-width: auto;
+    text-align: left;
+  }
+}

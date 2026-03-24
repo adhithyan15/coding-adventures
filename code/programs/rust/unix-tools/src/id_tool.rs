@@ -72,6 +72,7 @@ pub struct IdInfo {
 ///     getpwuid()  → user name from UID
 ///     getgrgid()  → group name from GID
 /// ```
+#[cfg(unix)]
 pub fn get_user_info() -> Result<IdInfo, String> {
     unsafe {
         let uid = libc::getuid();
@@ -114,6 +115,12 @@ pub fn get_user_info() -> Result<IdInfo, String> {
     }
 }
 
+/// Non-Unix stub so the code compiles on all platforms.
+#[cfg(not(unix))]
+pub fn get_user_info() -> Result<IdInfo, String> {
+    Err("id: not supported on this platform".to_string())
+}
+
 /// Format the full id output (default, no flags).
 ///
 /// Produces the standard format:
@@ -143,8 +150,15 @@ pub fn format_id_full(info: &IdInfo) -> String {
 pub fn format_user_id(info: &IdInfo, show_name: bool, use_real: bool) -> String {
     let id = if use_real { info.uid } else { info.euid };
     if show_name {
-        unsafe {
-            uid_to_name(id).unwrap_or_else(|| id.to_string())
+        #[cfg(unix)]
+        {
+            unsafe {
+                uid_to_name(id).unwrap_or_else(|| id.to_string())
+            }
+        }
+        #[cfg(not(unix))]
+        {
+            id.to_string()
         }
     } else {
         id.to_string()
@@ -155,8 +169,15 @@ pub fn format_user_id(info: &IdInfo, show_name: bool, use_real: bool) -> String 
 pub fn format_group_id(info: &IdInfo, show_name: bool, use_real: bool) -> String {
     let id = if use_real { info.gid } else { info.egid };
     if show_name {
-        unsafe {
-            gid_to_name(id).unwrap_or_else(|| id.to_string())
+        #[cfg(unix)]
+        {
+            unsafe {
+                gid_to_name(id).unwrap_or_else(|| id.to_string())
+            }
+        }
+        #[cfg(not(unix))]
+        {
+            id.to_string()
         }
     } else {
         id.to_string()
@@ -183,6 +204,7 @@ pub fn format_groups(info: &IdInfo, show_name: bool) -> String {
 /// Convert a UID to a user name using `getpwuid()`.
 ///
 /// Returns None if the UID doesn't map to a known user.
+#[cfg(unix)]
 unsafe fn uid_to_name(uid: u32) -> Option<String> {
     let pw = libc::getpwuid(uid);
     if pw.is_null() {
@@ -198,6 +220,7 @@ unsafe fn uid_to_name(uid: u32) -> Option<String> {
 /// Convert a GID to a group name using `getgrgid()`.
 ///
 /// Returns None if the GID doesn't map to a known group.
+#[cfg(unix)]
 unsafe fn gid_to_name(gid: u32) -> Option<String> {
     let gr = libc::getgrgid(gid);
     if gr.is_null() {
@@ -218,30 +241,35 @@ unsafe fn gid_to_name(gid: u32) -> Option<String> {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn get_user_info_succeeds() {
         let info = get_user_info();
         assert!(info.is_ok(), "get_user_info should succeed");
     }
 
+    #[cfg(unix)]
     #[test]
     fn username_is_nonempty() {
         let info = get_user_info().unwrap();
         assert!(!info.username.is_empty(), "username should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn groupname_is_nonempty() {
         let info = get_user_info().unwrap();
         assert!(!info.groupname.is_empty(), "groupname should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn has_at_least_one_group() {
         let info = get_user_info().unwrap();
         assert!(!info.groups.is_empty(), "should have at least one group");
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_full_contains_uid() {
         let info = get_user_info().unwrap();
@@ -250,6 +278,7 @@ mod tests {
         assert!(output.contains("gid="), "full output should contain gid=");
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_user_id_numeric() {
         let info = get_user_info().unwrap();
@@ -258,6 +287,7 @@ mod tests {
         assert!(parsed.is_ok(), "user id should be numeric, got: {}", output);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_user_id_name() {
         let info = get_user_info().unwrap();
@@ -266,6 +296,7 @@ mod tests {
         assert_eq!(output, info.username);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_group_id_numeric() {
         let info = get_user_info().unwrap();
@@ -274,6 +305,7 @@ mod tests {
         assert!(parsed.is_ok(), "group id should be numeric, got: {}", output);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_groups_has_entries() {
         let info = get_user_info().unwrap();
@@ -281,6 +313,7 @@ mod tests {
         assert!(!output.is_empty(), "groups output should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_groups_names() {
         let info = get_user_info().unwrap();
@@ -288,6 +321,7 @@ mod tests {
         assert!(!output.is_empty(), "group names should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn real_vs_effective_uid() {
         let info = get_user_info().unwrap();

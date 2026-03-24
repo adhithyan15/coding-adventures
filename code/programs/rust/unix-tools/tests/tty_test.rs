@@ -161,6 +161,7 @@ mod builtins {
 mod business_logic {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn check_tty_in_test_env() {
         // Under cargo test, stdin is not a terminal.
@@ -205,6 +206,7 @@ mod business_logic {
         assert_eq!(format_tty_output(&result, true), "");
     }
 
+    #[cfg(unix)]
     #[test]
     fn exit_code_matches_tty_status() {
         let result = check_tty();

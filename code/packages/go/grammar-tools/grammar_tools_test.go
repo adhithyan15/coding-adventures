@@ -926,3 +926,396 @@ func TestParseGroupIncompleteDefinition(t *testing.T) {
 		t.Errorf("Expected 'Incomplete definition' error, got: %v", err)
 	}
 }
+
+// -----------------------------------------------------------------------
+// ErrorDefinitions: parsing and validation tests
+// -----------------------------------------------------------------------
+
+func TestParseErrorsSection(t *testing.T) {
+	// The errors: section populates ErrorDefinitions.
+	source := "NAME = /[a-z]+/\nerrors:\n  BAD_STRING = /\"[^\"\\n]*/\n  BAD_CHAR = /./\n"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse errors section: %v", err)
+	}
+	if len(grammar.ErrorDefinitions) != 2 {
+		t.Fatalf("Expected 2 error definitions, got %d", len(grammar.ErrorDefinitions))
+	}
+	if grammar.ErrorDefinitions[0].Name != "BAD_STRING" {
+		t.Errorf("Expected first error def 'BAD_STRING', got %q", grammar.ErrorDefinitions[0].Name)
+	}
+	if grammar.ErrorDefinitions[1].Name != "BAD_CHAR" {
+		t.Errorf("Expected second error def 'BAD_CHAR', got %q", grammar.ErrorDefinitions[1].Name)
+	}
+	if !grammar.ErrorDefinitions[0].IsRegex {
+		t.Error("Expected BAD_STRING to be a regex pattern")
+	}
+}
+
+func TestParseErrorsSectionLiteral(t *testing.T) {
+	// Error definitions support literal patterns.
+	source := "NAME = /[a-z]+/\nerrors:\n  BAD_EQ = \"==\"\n"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed: %v", err)
+	}
+	if len(grammar.ErrorDefinitions) != 1 {
+		t.Fatalf("Expected 1 error def, got %d", len(grammar.ErrorDefinitions))
+	}
+	if grammar.ErrorDefinitions[0].Pattern != "==" {
+		t.Errorf("Expected pattern '==', got %q", grammar.ErrorDefinitions[0].Pattern)
+	}
+}
+
+func TestParseErrorsSectionMissingEquals(t *testing.T) {
+	// Missing = in errors section raises an error.
+	_, err := ParseTokenGrammar("NAME = /x/\nerrors:\n  BAD_PATTERN\n")
+	if err == nil {
+		t.Fatal("Expected error for missing equals in errors section")
+	}
+	if !strings.Contains(err.Error(), "Expected error pattern") {
+		t.Errorf("Expected 'Expected error pattern' error, got: %v", err)
+	}
+}
+
+func TestParseErrorsSectionIncomplete(t *testing.T) {
+	// Missing pattern after = in errors section raises an error.
+	_, err := ParseTokenGrammar("NAME = /x/\nerrors:\n  BAD =\n")
+	if err == nil {
+		t.Fatal("Expected error for incomplete error definition")
+	}
+	if !strings.Contains(err.Error(), "Incomplete error pattern") {
+		t.Errorf("Expected 'Incomplete error pattern' error, got: %v", err)
+	}
+}
+
+func TestValidateErrorDefinitions(t *testing.T) {
+	// ValidateTokenGrammar checks error definitions for common problems.
+	grammar := &TokenGrammar{
+		ErrorDefinitions: []TokenDefinition{
+			{Name: "BAD1", Pattern: "[invalid", IsRegex: true, LineNumber: 5},
+		},
+		Groups: make(map[string]*PatternGroup),
+	}
+	issues := ValidateTokenGrammar(grammar)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "Invalid regex") && strings.Contains(issue, "BAD1") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected invalid-regex issue for BAD1 in error definitions, got: %v", issues)
+	}
+}
+
+func TestErrorDefinitionsNotInTokenNames(t *testing.T) {
+	// Error definitions are NOT included in TokenNames() — they are not
+	// normal tokens that the parser grammar references.
+	source := "NAME = /[a-z]+/\nerrors:\n  BAD_STRING = /\"[^\"\\n]*/\n"
+	grammar, err := ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed: %v", err)
+	}
+	names := grammar.TokenNames()
+	if names["BAD_STRING"] {
+		t.Error("TokenNames should NOT include error definition names")
+	}
+}
+
+// -----------------------------------------------------------------------
+// ValidateParserGrammar tests
+// -----------------------------------------------------------------------
+
+func TestValidateParserGrammarDuplicateRule(t *testing.T) {
+	// Two rules with the same name produce a duplicate error.
+	source := "expr = NUMBER ;\nexpr = NAME ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	issues := ValidateParserGrammar(grammar, nil)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "Duplicate rule name") && strings.Contains(issue, "expr") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected 'Duplicate rule name' issue, got: %v", issues)
+	}
+}
+
+func TestValidateParserGrammarUndefinedRule(t *testing.T) {
+	// A rule body that references an undefined rule produces an error.
+	source := "program = statement ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	issues := ValidateParserGrammar(grammar, nil)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "Undefined rule reference") && strings.Contains(issue, "statement") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected 'Undefined rule reference: statement', got: %v", issues)
+	}
+}
+
+func TestValidateParserGrammarUnreachableRule(t *testing.T) {
+	// A rule defined but never referenced is flagged as unreachable.
+	// The start rule (first rule) is exempt.
+	source := "program = NUMBER ;\northan = NAME ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	issues := ValidateParserGrammar(grammar, nil)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "unreachable") && strings.Contains(issue, "orthan") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected unreachable warning for 'orthan', got: %v", issues)
+	}
+}
+
+func TestValidateParserGrammarStartRuleNotUnreachable(t *testing.T) {
+	// The first (start) rule is never flagged as unreachable.
+	source := "program = NUMBER ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	issues := ValidateParserGrammar(grammar, nil)
+	for _, issue := range issues {
+		if strings.Contains(issue, "unreachable") && strings.Contains(issue, "program") {
+			t.Errorf("Start rule 'program' should not be flagged as unreachable, but got: %s", issue)
+		}
+	}
+}
+
+func TestValidateParserGrammarNonLowercaseRule(t *testing.T) {
+	// Rules with UPPERCASE names produce a convention error.
+	source := "Program = NUMBER ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	issues := ValidateParserGrammar(grammar, nil)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "should be lowercase") && strings.Contains(issue, "Program") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected 'should be lowercase' issue for 'Program', got: %v", issues)
+	}
+}
+
+func TestValidateParserGrammarUndefinedToken(t *testing.T) {
+	// When token names are provided, UPPERCASE refs not in the set produce errors.
+	source := "expr = SEMICOLON ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	tokenNames := map[string]bool{"NUMBER": true, "NAME": true}
+	issues := ValidateParserGrammar(grammar, tokenNames)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "Undefined token reference") && strings.Contains(issue, "SEMICOLON") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected 'Undefined token reference: SEMICOLON', got: %v", issues)
+	}
+}
+
+func TestValidateParserGrammarSyntheticTokensOK(t *testing.T) {
+	// Synthetic tokens (NEWLINE, INDENT, DEDENT, EOF) are always valid.
+	source := "stmt = NAME NEWLINE ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	tokenNames := map[string]bool{"NAME": true} // NEWLINE not in set
+	issues := ValidateParserGrammar(grammar, tokenNames)
+	for _, issue := range issues {
+		if strings.Contains(issue, "NEWLINE") {
+			t.Errorf("NEWLINE should be a valid synthetic token, but got issue: %s", issue)
+		}
+	}
+}
+
+func TestValidateParserGrammarClean(t *testing.T) {
+	// A well-formed grammar with all rules defined and referenced produces no issues.
+	source := "program = { statement } ;\nstatement = NAME NUMBER ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse: %v", err)
+	}
+	tokenNames := map[string]bool{"NAME": true, "NUMBER": true}
+	issues := ValidateParserGrammar(grammar, tokenNames)
+	if len(issues) != 0 {
+		t.Errorf("Expected no issues for clean grammar, got: %v", issues)
+	}
+}
+
+// -----------------------------------------------------------------------
+// RuleNames, RuleReferences, TokenReferences method tests
+// -----------------------------------------------------------------------
+
+func TestRuleNames(t *testing.T) {
+	source := "program = statement ;\nstatement = NAME ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed: %v", err)
+	}
+	names := grammar.RuleNames()
+	if !names["program"] || !names["statement"] {
+		t.Errorf("RuleNames should include 'program' and 'statement', got: %v", names)
+	}
+}
+
+func TestRuleReferences(t *testing.T) {
+	source := "program = statement ;\nstatement = NAME ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed: %v", err)
+	}
+	refs := grammar.RuleReferences()
+	if !refs["statement"] {
+		t.Errorf("RuleReferences should include 'statement', got: %v", refs)
+	}
+	if refs["program"] {
+		t.Error("RuleReferences should not include 'program' (it's defined, not referenced in bodies)")
+	}
+}
+
+func TestTokenReferences(t *testing.T) {
+	source := "expr = NUMBER PLUS NAME ;\n"
+	grammar, err := ParseParserGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed: %v", err)
+	}
+	refs := grammar.TokenReferences()
+	for _, expected := range []string{"NUMBER", "PLUS", "NAME"} {
+		if !refs[expected] {
+			t.Errorf("TokenReferences should include %q, got: %v", expected, refs)
+		}
+	}
+}
+
+// -----------------------------------------------------------------------
+// CrossValidate tests
+// -----------------------------------------------------------------------
+
+func TestCrossValidateMissingToken(t *testing.T) {
+	// Grammar references a token not in the token grammar → error.
+	tokenSource := "NAME = /[a-z]+/\n"
+	grammarSource := "expr = NAME SEMICOLON ;\n"
+
+	tokenGrammar, err := ParseTokenGrammar(tokenSource)
+	if err != nil {
+		t.Fatalf("Failed to parse tokens: %v", err)
+	}
+	parserGrammar, err := ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	issues := CrossValidate(tokenGrammar, parserGrammar)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "Error:") && strings.Contains(issue, "SEMICOLON") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected error for missing token 'SEMICOLON', got: %v", issues)
+	}
+}
+
+func TestCrossValidateUnusedToken(t *testing.T) {
+	// Token defined but not referenced in grammar → warning.
+	tokenSource := "NAME = /[a-z]+/\nUNUSED = /[0-9]+/\n"
+	grammarSource := "expr = NAME ;\n"
+
+	tokenGrammar, err := ParseTokenGrammar(tokenSource)
+	if err != nil {
+		t.Fatalf("Failed to parse tokens: %v", err)
+	}
+	parserGrammar, err := ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	issues := CrossValidate(tokenGrammar, parserGrammar)
+	found := false
+	for _, issue := range issues {
+		if strings.Contains(issue, "Warning:") && strings.Contains(issue, "UNUSED") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected warning for unused token 'UNUSED', got: %v", issues)
+	}
+}
+
+func TestCrossValidateClean(t *testing.T) {
+	// All tokens referenced, all references defined → no issues.
+	tokenSource := "NAME = /[a-z]+/\nNUMBER = /[0-9]+/\n"
+	grammarSource := "expr = NAME NUMBER ;\n"
+
+	tokenGrammar, err := ParseTokenGrammar(tokenSource)
+	if err != nil {
+		t.Fatalf("Failed to parse tokens: %v", err)
+	}
+	parserGrammar, err := ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	issues := CrossValidate(tokenGrammar, parserGrammar)
+	if len(issues) != 0 {
+		t.Errorf("Expected no issues for clean pair, got: %v", issues)
+	}
+}
+
+func TestCrossValidateSyntheticTokensAlwaysValid(t *testing.T) {
+	// NEWLINE, EOF are always valid synthetic tokens.
+	tokenSource := "NAME = /[a-z]+/\n"
+	grammarSource := "stmt = NAME NEWLINE ;\n"
+
+	tokenGrammar, err := ParseTokenGrammar(tokenSource)
+	if err != nil {
+		t.Fatalf("Failed to parse tokens: %v", err)
+	}
+	parserGrammar, err := ParseParserGrammar(grammarSource)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	issues := CrossValidate(tokenGrammar, parserGrammar)
+	for _, issue := range issues {
+		if strings.Contains(issue, "NEWLINE") {
+			t.Errorf("NEWLINE should be a valid synthetic token, but got issue: %s", issue)
+		}
+	}
+}

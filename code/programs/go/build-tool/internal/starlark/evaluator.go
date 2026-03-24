@@ -78,6 +78,7 @@ func IsStarlarkBuild(content string) bool {
 		"ts_library(", "ts_binary(",
 		"rust_library(", "rust_binary(",
 		"elixir_library(", "elixir_binary(",
+		"perl_library(", "perl_binary(",
 	}
 
 	for _, line := range strings.Split(content, "\n") {
@@ -291,6 +292,12 @@ func GenerateCommands(t Target) []string {
 		return []string{
 			"mix deps.get",
 			"mix test --cover",
+		}
+
+	case "perl_library", "perl_binary":
+		return []string{
+			"cpanm --installdeps --quiet .",
+			"prove -l -v t/",
 		}
 
 	default:

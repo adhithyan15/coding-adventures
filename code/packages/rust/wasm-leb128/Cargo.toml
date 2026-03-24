@@ -1,0 +1,7 @@
+[package]
+name = "wasm-leb128"
+version = "0.1.0"
+edition = "2021"
+description = "LEB128 variable-length integer encoding for WASM binary format"
+
+[dependencies]

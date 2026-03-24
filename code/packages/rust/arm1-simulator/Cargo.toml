@@ -1,0 +1,7 @@
+[package]
+name = "arm1-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "ARM1 (ARMv1) behavioral instruction set simulator"
+
+[dependencies]

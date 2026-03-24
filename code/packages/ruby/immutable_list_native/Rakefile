@@ -1,0 +1,84 @@
+# frozen_string_literal: true
+
+# --------------------------------------------------------------------------
+# Rakefile -- Build and test tasks for immutable_list_native
+# --------------------------------------------------------------------------
+#
+# Key tasks:
+#   rake compile   -- Build the Rust native extension
+#   rake test      -- Run the test suite (compiles first)
+#   rake clean     -- Remove build artifacts
+#
+# The compile task works on all platforms by calling cargo directly
+# and copying the resulting shared library to lib/. We don't use
+# extconf.rb + make because `make` is not reliably available on
+# Windows.
+
+require "rake/testtask"
+require "rbconfig"
+
+# -- Platform detection ----------------------------------------------------
+
+DLEXT = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/immutable_list_native", __dir__)
+LIB_DIR = File.expand_path("lib", __dir__)
+
+# Cargo produces different filenames per platform:
+#   Linux:   libimmutable_list_native.so
+#   macOS:   libimmutable_list_native.dylib
+#   Windows: immutable_list_native.dll
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+             when /darwin/
+               "libimmutable_list_native.dylib"
+             when /mingw|mswin|cygwin/
+               "immutable_list_native.dll"
+             else
+               "libimmutable_list_native.so"
+             end
+
+# Ruby expects the extension as:
+#   immutable_list_native.so (Linux), immutable_list_native.bundle (macOS),
+#   immutable_list_native.dll (Windows)
+TARGET = "immutable_list_native.#{DLEXT}"
+
+# -- Compile task -----------------------------------------------------------
+#
+# Runs cargo build --release in the ext directory and copies the resulting
+# shared library to lib/.
+
+desc "Compile the Rust native extension"
+task :compile do
+  cd EXT_DIR do
+    sh "cargo build --release"
+  end
+
+  # Copy the compiled library to lib/
+  src = File.join(EXT_DIR, "target", "release", CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/"
+end
+
+# -- Test task --------------------------------------------------------------
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/test_*.rb"]
+end
+
+# Tests depend on compilation
+task test: :compile
+
+# -- Clean task -------------------------------------------------------------
+
+desc "Remove build artifacts"
+task :clean do
+  cd EXT_DIR do
+    sh "cargo clean" if File.exist?("Cargo.toml")
+  end
+  rm_f Dir[File.join(LIB_DIR, "immutable_list_native.*")]
+end
+
+task default: :test

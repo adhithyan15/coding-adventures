@@ -259,7 +259,9 @@ export class TokenClassifier {
     if (firstFlag !== undefined) {
       const remainder = rest.slice(1);
 
-      if (firstFlag.type === "boolean") {
+      // v1.1: Count flags behave like booleans for token classification
+      // purposes — they consume no value token.
+      if (firstFlag.type === "boolean" || firstFlag.type === "count") {
         if (remainder.length === 0) {
           // "-x" where x is a boolean flag
           return { type: "SHORT_FLAG", char: firstChar };
@@ -318,8 +320,8 @@ export class TokenClassifier {
         };
       }
 
-      if (flag.type !== "boolean") {
-        // Non-boolean flag in the middle or at the end
+      if (flag.type !== "boolean" && flag.type !== "count") {
+        // Non-boolean/non-count flag in the middle or at the end
         const remainder = chars.slice(i + 1);
         if (remainder.length > 0) {
           // The remainder is the inline value for this non-boolean flag.
@@ -379,8 +381,8 @@ export class TokenClassifier {
         return null; // unknown char → not a valid stack
       }
       flagChars.push(c);
-      if (flag.type !== "boolean") {
-        // Non-boolean at the end of a stack: valid (value is next token)
+      if (flag.type !== "boolean" && flag.type !== "count") {
+        // Non-boolean/non-count at the end of a stack: valid (value is next token)
         // Return what we have so far including this char.
         break;
       }

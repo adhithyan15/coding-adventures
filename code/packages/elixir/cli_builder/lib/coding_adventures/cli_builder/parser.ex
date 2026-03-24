@@ -154,7 +154,7 @@ defmodule CodingAdventures.CliBuilder.Parser do
       {:version} ->
         {:ok, %VersionResult{version: spec["version"]}}
 
-      {:done, parsed_flags, positional_tokens, scan_errors} ->
+      {:done, parsed_flags, positional_tokens, scan_errors, explicit_flags} ->
         # -------------------------------------------------------------------------
         # Phase 3 — Validation
         # -------------------------------------------------------------------------
@@ -199,7 +199,8 @@ defmodule CodingAdventures.CliBuilder.Parser do
              program: program_name,
              command_path: command_path,
              flags: flags_with_defaults,
-             arguments: arg_assignments
+             arguments: arg_assignments,
+             explicit_flags: explicit_flags
            }}
         else
           {:error,
@@ -306,7 +307,7 @@ defmodule CodingAdventures.CliBuilder.Parser do
       active = build_active_flags_for_node(spec_node)
       flag_def = find_flag_def_for_token(flag_token, active)
 
-      if flag_def != nil and flag_def["type"] != "boolean" do
+      if flag_def != nil and flag_def["type"] not in ["boolean", "count"] do
         # Non-boolean flag: the next token is its value — defer both.
         case rest do
           [value | remainder] -> {[flag_token, value], remainder}
@@ -365,7 +366,16 @@ defmodule CodingAdventures.CliBuilder.Parser do
       pending_flag: nil,
       # Whether to collect all subsequent tokens as positionals (posix after first positional)
       command_path: command_path,
-      parsing_mode: parsing_mode
+      parsing_mode: parsing_mode,
+      # -----------------------------------------------------------------------
+      # explicit_flags (v1.1 — Feature 3: Flag Presence Detection)
+      #
+      # Every time a flag token is consumed from argv, its ID is appended here.
+      # This lets callers distinguish "user typed --verbose" from "verbose
+      # defaulted to false".  A flag may appear multiple times (e.g. count
+      # flags), so the list can contain duplicates.
+      # -----------------------------------------------------------------------
+      explicit_flags: []
     }
 
     scan_tokens(argv, active_flags, state)
@@ -389,7 +399,8 @@ defmodule CodingAdventures.CliBuilder.Parser do
         state
       end
 
-    {:done, state.parsed_flags, Enum.reverse(state.positional_tokens), state.errors}
+    {:done, state.parsed_flags, Enum.reverse(state.positional_tokens), state.errors,
+     Enum.reverse(state.explicit_flags)}
   end
 
   defp scan_tokens([token | rest], active_flags, state) do
@@ -401,7 +412,8 @@ defmodule CodingAdventures.CliBuilder.Parser do
         case coerce_flag_value(token, flag) do
           {:ok, value} ->
             new_flags = put_flag_value(state.parsed_flags, flag, value)
-            new_state = %{state | mode: :scanning, parsed_flags: new_flags, pending_flag: nil}
+            new_explicit = [flag["id"] | state.explicit_flags]
+            new_state = %{state | mode: :scanning, parsed_flags: new_flags, pending_flag: nil, explicit_flags: new_explicit}
             scan_tokens(rest, active_flags, new_state)
 
           {:error, msg} ->
@@ -492,11 +504,39 @@ defmodule CodingAdventures.CliBuilder.Parser do
         end
 
       flag ->
-        if flag["type"] == "boolean" do
-          new_flags = put_flag_value(state.parsed_flags, flag, true)
-          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags})
-        else
-          scan_tokens(rest, active_flags, %{state | mode: :flag_value, pending_flag: flag})
+        cond do
+          flag["type"] == "boolean" ->
+            new_flags = put_flag_value(state.parsed_flags, flag, true)
+            new_explicit = [flag["id"] | state.explicit_flags]
+            scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+
+          flag["type"] == "count" ->
+            # ---------------------------------------------------------------
+            # Count type (v1.1 — Feature 1)
+            #
+            # Each occurrence of a count flag increments a counter. Like a
+            # boolean flag, it consumes no value token. The counter starts
+            # at 0 (the default for absent count flags) and increments by 1
+            # for each occurrence.
+            # ---------------------------------------------------------------
+            new_flags = increment_count_flag(state.parsed_flags, flag)
+            new_explicit = [flag["id"] | state.explicit_flags]
+            scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+
+          true ->
+            # ---------------------------------------------------------------
+            # default_when_present (v1.1 — Feature 2)
+            #
+            # For enum flags with default_when_present, when the flag appears
+            # without a value (e.g. `--color` instead of `--color=always`),
+            # we peek at the next token. If it is a valid enum value, consume
+            # it; otherwise use default_when_present.
+            # ---------------------------------------------------------------
+            if flag["type"] == "enum" and flag["default_when_present"] != nil do
+              handle_enum_default_when_present(flag, rest, active_flags, state)
+            else
+              scan_tokens(rest, active_flags, %{state | mode: :flag_value, pending_flag: flag})
+            end
         end
     end
   end
@@ -519,7 +559,8 @@ defmodule CodingAdventures.CliBuilder.Parser do
         case coerce_flag_value(value, flag) do
           {:ok, coerced} ->
             new_flags = put_flag_value(state.parsed_flags, flag, coerced)
-            scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags})
+            new_explicit = [flag["id"] | state.explicit_flags]
+            scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
 
           {:error, msg} ->
             err = %ParseError{
@@ -549,11 +590,22 @@ defmodule CodingAdventures.CliBuilder.Parser do
 
       scan_tokens(rest, active_flags, %{state | errors: state.errors ++ [err]})
     else
-      if flag["type"] == "boolean" do
-        new_flags = put_flag_value(state.parsed_flags, flag, true)
-        scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags})
-      else
-        scan_tokens(rest, active_flags, %{state | mode: :flag_value, pending_flag: flag})
+      cond do
+        flag["type"] == "boolean" ->
+          new_flags = put_flag_value(state.parsed_flags, flag, true)
+          new_explicit = [flag["id"] | state.explicit_flags]
+          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+
+        flag["type"] == "count" ->
+          new_flags = increment_count_flag(state.parsed_flags, flag)
+          new_explicit = [flag["id"] | state.explicit_flags]
+          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+
+        flag["type"] == "enum" and flag["default_when_present"] != nil ->
+          handle_enum_default_when_present(flag, rest, active_flags, state)
+
+        true ->
+          scan_tokens(rest, active_flags, %{state | mode: :flag_value, pending_flag: flag})
       end
     end
   end
@@ -579,11 +631,22 @@ defmodule CodingAdventures.CliBuilder.Parser do
         end
 
       flag ->
-        if flag["type"] == "boolean" do
-          new_flags = put_flag_value(state.parsed_flags, flag, true)
-          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags})
-        else
-          scan_tokens(rest, active_flags, %{state | mode: :flag_value, pending_flag: flag})
+        cond do
+          flag["type"] == "boolean" ->
+            new_flags = put_flag_value(state.parsed_flags, flag, true)
+            new_explicit = [flag["id"] | state.explicit_flags]
+            scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+
+          flag["type"] == "count" ->
+            new_flags = increment_count_flag(state.parsed_flags, flag)
+            new_explicit = [flag["id"] | state.explicit_flags]
+            scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+
+          flag["type"] == "enum" and flag["default_when_present"] != nil ->
+            handle_enum_default_when_present(flag, rest, active_flags, state)
+
+          true ->
+            scan_tokens(rest, active_flags, %{state | mode: :flag_value, pending_flag: flag})
         end
     end
   end
@@ -604,7 +667,8 @@ defmodule CodingAdventures.CliBuilder.Parser do
       case coerce_flag_value(value, flag) do
         {:ok, coerced} ->
           new_flags = put_flag_value(state.parsed_flags, flag, coerced)
-          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags})
+          new_explicit = [flag["id"] | state.explicit_flags]
+          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
 
         {:error, msg} ->
           err = %ParseError{
@@ -622,8 +686,11 @@ defmodule CodingAdventures.CliBuilder.Parser do
   # --- Stacked flags ---
 
   defp handle_stacked_flags(chars, rest, active_flags, state) do
-    # Process each char in the stack.  All but possibly the last are boolean.
-    # The last may be non-boolean (it will consume the next token).
+    # Process each char in the stack.  All but possibly the last are boolean
+    # or count flags. The last may be non-boolean (it will consume the next token).
+    #
+    # Count flags (v1.1 Feature 1): in a stack like `-vvv`, each `v` is a
+    # separate occurrence that increments the counter.
     {new_state, _} =
       Enum.with_index(chars)
       |> Enum.reduce({state, rest}, fn {char, idx}, {st, remaining} ->
@@ -640,23 +707,33 @@ defmodule CodingAdventures.CliBuilder.Parser do
 
           {%{st | errors: st.errors ++ [err]}, remaining}
         else
-          if flag["type"] == "boolean" or is_last do
-            new_flags = put_flag_value(st.parsed_flags, flag, true)
-            {%{st | parsed_flags: new_flags}, remaining}
-          else
-            # Non-boolean flag in middle of stack — this should not happen
-            # if TokenClassifier worked correctly, but handle gracefully.
-            new_flags = put_flag_value(st.parsed_flags, flag, true)
-            {%{st | parsed_flags: new_flags}, remaining}
+          cond do
+            flag["type"] == "count" ->
+              # Count flags: increment, and record each occurrence
+              new_flags = increment_count_flag(st.parsed_flags, flag)
+              new_explicit = [flag["id"] | st.explicit_flags]
+              {%{st | parsed_flags: new_flags, explicit_flags: new_explicit}, remaining}
+
+            flag["type"] == "boolean" or is_last ->
+              new_flags = put_flag_value(st.parsed_flags, flag, true)
+              new_explicit = [flag["id"] | st.explicit_flags]
+              {%{st | parsed_flags: new_flags, explicit_flags: new_explicit}, remaining}
+
+            true ->
+              # Non-boolean, non-count flag in middle of stack — should not
+              # happen if TokenClassifier worked correctly, but handle gracefully.
+              new_flags = put_flag_value(st.parsed_flags, flag, true)
+              new_explicit = [flag["id"] | st.explicit_flags]
+              {%{st | parsed_flags: new_flags, explicit_flags: new_explicit}, remaining}
           end
         end
       end)
 
-    # Check if the last flag in the stack was non-boolean (needs next-token value).
+    # Check if the last flag in the stack was non-boolean/non-count (needs next-token value).
     last_char = List.last(chars)
     last_flag = lookup_flag_by_short(last_char, active_flags)
 
-    if last_flag != nil and last_flag["type"] != "boolean" do
+    if last_flag != nil and last_flag["type"] not in ["boolean", "count"] do
       scan_tokens(rest, active_flags, %{new_state | mode: :flag_value, pending_flag: last_flag})
     else
       scan_tokens(rest, active_flags, new_state)
@@ -772,8 +849,27 @@ defmodule CodingAdventures.CliBuilder.Parser do
 
       "integer" ->
         case Integer.parse(value) do
-          {n, ""} -> {:ok, n}
-          _ -> {:error, "Invalid integer for #{flag_label(flag)}: #{inspect(value)}"}
+          {n, ""} ->
+            # -----------------------------------------------------------------
+            # int64 range validation (v1.1 — Feature 4)
+            #
+            # Elixir's Integer.parse handles arbitrary-precision integers, but
+            # CLI Builder specifies int64 semantics. Values outside the signed
+            # 64-bit range [-2^63, 2^63-1] are rejected as invalid.
+            # -----------------------------------------------------------------
+            int64_min = -9_223_372_036_854_775_808
+            int64_max =  9_223_372_036_854_775_807
+
+            if n < int64_min or n > int64_max do
+              {:error,
+               "Value #{inspect(value)} for #{flag_label(flag)} is outside int64 range " <>
+                 "[#{int64_min}, #{int64_max}]"}
+            else
+              {:ok, n}
+            end
+
+          _ ->
+            {:error, "Invalid integer for #{flag_label(flag)}: #{inspect(value)}"}
         end
 
       "float" ->
@@ -806,6 +902,59 @@ defmodule CodingAdventures.CliBuilder.Parser do
           {:ok, value}
         end
     end
+  end
+
+  # ---------------------------------------------------------------------------
+  # default_when_present handler (v1.1 — Feature 2)
+  # ---------------------------------------------------------------------------
+
+  # Handle an enum flag that has `default_when_present` set. When such a flag
+  # appears without an inline `=value`, we peek at the next token:
+  #
+  # - If the next token is a valid enum value, consume it as the flag's value.
+  # - Otherwise, use `default_when_present` and leave the token for Phase 2
+  #   to process (it might be another flag or a positional argument).
+  #
+  # This mirrors the behaviour of `--color[=WHEN]` in GNU coreutils: you can
+  # write `--color` (gets "always"), `--color=auto`, or `--color auto`.
+  defp handle_enum_default_when_present(flag, rest, active_flags, state) do
+    valid_values = flag["enum_values"]
+    dwp = flag["default_when_present"]
+
+    case rest do
+      [next_token | remaining] ->
+        if next_token in valid_values do
+          # The next token is a valid enum value — consume it.
+          new_flags = put_flag_value(state.parsed_flags, flag, next_token)
+          new_explicit = [flag["id"] | state.explicit_flags]
+          scan_tokens(remaining, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+        else
+          # Not a valid enum value — use default_when_present and don't
+          # consume the token.
+          new_flags = put_flag_value(state.parsed_flags, flag, dwp)
+          new_explicit = [flag["id"] | state.explicit_flags]
+          scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+        end
+
+      [] ->
+        # No more tokens — use default_when_present.
+        new_flags = put_flag_value(state.parsed_flags, flag, dwp)
+        new_explicit = [flag["id"] | state.explicit_flags]
+        scan_tokens(rest, active_flags, %{state | parsed_flags: new_flags, explicit_flags: new_explicit})
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Count flag helper (v1.1 — Feature 1)
+  # ---------------------------------------------------------------------------
+
+  # Increment the counter for a count-type flag. If the flag has not been seen
+  # yet, it starts at 0 and becomes 1.  Each subsequent occurrence increments
+  # by 1.  This is used for flags like `-v -v -v` → 3 or `-vvv` → 3.
+  defp increment_count_flag(parsed_flags, flag) do
+    id = flag["id"]
+    current = Map.get(parsed_flags, id, 0)
+    Map.put(parsed_flags, id, current + 1)
   end
 
   # Store a flag value, respecting the `repeatable` field.
@@ -846,6 +995,11 @@ defmodule CodingAdventures.CliBuilder.Parser do
           case flag["type"] do
             "boolean" ->
               if explicit_default == nil, do: false, else: explicit_default
+
+            # Count flags (v1.1): default to 0 when absent, just as boolean
+            # flags default to false.
+            "count" ->
+              if explicit_default == nil, do: 0, else: explicit_default
 
             _ ->
               explicit_default

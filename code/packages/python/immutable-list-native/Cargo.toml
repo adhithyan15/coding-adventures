@@ -1,0 +1,20 @@
+[package]
+name = "immutable-list-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust immutable-list crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "immutable_list_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Our own zero-dependency Python C API bridge — replaces PyO3.
+python-bridge = { path = "../../rust/python-bridge" }
+
+# The core immutable list crate — persistent vector with structural sharing.
+immutable-list = { path = "../../rust/immutable-list" }
+
+# This crate is NOT part of the Rust workspace (it produces a cdylib
+# for Python, not a normal Rust library).
+[workspace]

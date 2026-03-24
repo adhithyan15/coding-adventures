@@ -123,7 +123,7 @@ defmodule UnixTools.Df do
           used: safe_parse_int(used_str),
           available: safe_parse_int(avail_str),
           use_percent: String.replace(pct_str, "%", ""),
-          mounted_on: Enum.join(mount_parts, " ")
+          mounted_on: Enum.join(mount_parts, " ") |> String.trim()
         }
 
       _ ->

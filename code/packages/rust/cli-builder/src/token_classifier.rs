@@ -92,17 +92,38 @@ pub struct FlagInfo {
     pub single_dash_long: Option<String>,
     /// Whether this is a boolean (no value) flag.
     pub is_boolean: bool,
+    /// Whether this is a count flag (no value, each occurrence increments).
+    ///
+    /// Count flags behave like booleans for token classification purposes:
+    /// they consume no value token. The difference is in the parser, which
+    /// increments a counter instead of setting `true`.
+    pub is_count: bool,
+    /// Whether this flag has `default_when_present` set (enum with optional value).
+    ///
+    /// For token classification, flags with `default_when_present` behave
+    /// like boolean flags: they don't necessarily consume a value token.
+    /// The parser performs disambiguation at a higher level.
+    pub has_default_when_present: bool,
 }
 
 impl FlagInfo {
     /// Build a `FlagInfo` from a `FlagDef`.
     pub fn from_flag_def(def: &FlagDef) -> Self {
+        let has_dwp = def.default_when_present.is_some();
         FlagInfo {
             id: def.id.clone(),
             short: def.short.as_ref().and_then(|s| s.chars().next()),
             long: def.long.clone(),
             single_dash_long: def.single_dash_long.clone(),
-            is_boolean: def.flag_type == "boolean",
+            // Count flags and boolean flags consume no value token.
+            // Enum flags with default_when_present are also treated as
+            // "boolean-like" for token classification — the parser handles
+            // the disambiguation of whether to consume the next token.
+            is_boolean: def.flag_type == "boolean"
+                || def.flag_type == "count"
+                || has_dwp,
+            is_count: def.flag_type == "count",
+            has_default_when_present: has_dwp,
         }
     }
 }
@@ -122,7 +143,7 @@ impl FlagInfo {
 /// # use cli_builder::token_classifier::{TokenClassifier, FlagInfo, TokenEvent};
 /// let flags = vec![
 ///     FlagInfo { id: "verbose".into(), short: Some('v'), long: Some("verbose".into()),
-///                single_dash_long: None, is_boolean: true },
+///                single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
 /// ];
 /// let tc = TokenClassifier::new(flags);
 /// let events = tc.classify("-v");
@@ -390,13 +411,13 @@ mod tests {
 
     fn make_flags() -> Vec<FlagInfo> {
         vec![
-            FlagInfo { id: "long-listing".into(), short: Some('l'), long: Some("long-listing".into()), single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "all".into(), short: Some('a'), long: Some("all".into()), single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "human-readable".into(), short: Some('h'), long: Some("human-readable".into()), single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "output".into(), short: Some('o'), long: Some("output".into()), single_dash_long: None, is_boolean: false },
-            FlagInfo { id: "classpath".into(), short: None, long: None, single_dash_long: Some("classpath".into()), is_boolean: false },
-            FlagInfo { id: "verbose-sdl".into(), short: None, long: None, single_dash_long: Some("verbose".into()), is_boolean: true },
-            FlagInfo { id: "help".into(), short: Some('h'), long: Some("help".into()), single_dash_long: None, is_boolean: true },
+            FlagInfo { id: "long-listing".into(), short: Some('l'), long: Some("long-listing".into()), single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "all".into(), short: Some('a'), long: Some("all".into()), single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "human-readable".into(), short: Some('h'), long: Some("human-readable".into()), single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "output".into(), short: Some('o'), long: Some("output".into()), single_dash_long: None, is_boolean: false, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "classpath".into(), short: None, long: None, single_dash_long: Some("classpath".into()), is_boolean: false, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "verbose-sdl".into(), short: None, long: None, single_dash_long: Some("verbose".into()), is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "help".into(), short: Some('h'), long: Some("help".into()), single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
         ]
     }
 
@@ -514,9 +535,9 @@ mod tests {
     #[test]
     fn test_traditional_mode_stack() {
         let flags = vec![
-            FlagInfo { id: "extract".into(), short: Some('x'), long: None, single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "verbose".into(), short: Some('v'), long: None, single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false },
+            FlagInfo { id: "extract".into(), short: Some('x'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "verbose".into(), short: Some('v'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false, is_count: false, has_default_when_present: false },
         ];
         let tc = TokenClassifier::new(flags);
         // "xvf" (no leading dash, not a subcommand) → STACKED_FLAGS(['x','v','f'])
@@ -563,6 +584,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let info = FlagInfo::from_flag_def(&def);
         assert_eq!(info.id, "verbose");
@@ -589,6 +611,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let info = FlagInfo::from_flag_def(&def);
         assert!(!info.is_boolean);
@@ -612,6 +635,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let info = FlagInfo::from_flag_def(&def);
         assert_eq!(info.single_dash_long, Some("classpath".to_string()));
@@ -637,6 +661,7 @@ mod tests {
             requires: vec![],
             required_unless: vec![],
             repeatable: false,
+            default_when_present: None,
         };
         let info = FlagInfo::from_flag_def(&def);
         assert!(info.short.is_none());
@@ -651,9 +676,9 @@ mod tests {
         // Flags: l=boolean, o=non-boolean, a=boolean
         // "-lox" → l is boolean, o is non-boolean in middle → StackedFlags(['l']) + ShortFlagWithValue('o', "x")
         let flags = vec![
-            FlagInfo { id: "long".into(), short: Some('l'), long: None, single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "output".into(), short: Some('o'), long: None, single_dash_long: None, is_boolean: false },
-            FlagInfo { id: "all".into(), short: Some('a'), long: None, single_dash_long: None, is_boolean: true },
+            FlagInfo { id: "long".into(), short: Some('l'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "output".into(), short: Some('o'), long: None, single_dash_long: None, is_boolean: false, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "all".into(), short: Some('a'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
         ];
         let tc = TokenClassifier::new(flags);
         let result = tc.classify("-lox");
@@ -668,8 +693,8 @@ mod tests {
         // "-ox" where o is non-boolean and first: results in ShortFlagWithValue directly
         // (bool_stack is empty, so just ShortFlagWithValue)
         let flags = vec![
-            FlagInfo { id: "output".into(), short: Some('o'), long: None, single_dash_long: None, is_boolean: false },
-            FlagInfo { id: "all".into(), short: Some('a'), long: None, single_dash_long: None, is_boolean: true },
+            FlagInfo { id: "output".into(), short: Some('o'), long: None, single_dash_long: None, is_boolean: false, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "all".into(), short: Some('a'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
         ];
         let tc = TokenClassifier::new(flags);
         // -oax: o is non-boolean, remainder "ax" — ShortFlagWithValue('o', "ax")
@@ -684,9 +709,9 @@ mod tests {
     #[test]
     fn test_traditional_nonboolean_in_middle_produces_stacked_then_with_value() {
         let flags = vec![
-            FlagInfo { id: "extract".into(), short: Some('x'), long: None, single_dash_long: None, is_boolean: true },
-            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false },
-            FlagInfo { id: "verbose".into(), short: Some('v'), long: None, single_dash_long: None, is_boolean: true },
+            FlagInfo { id: "extract".into(), short: Some('x'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false, is_count: false, has_default_when_present: false },
+            FlagInfo { id: "verbose".into(), short: Some('v'), long: None, single_dash_long: None, is_boolean: true, is_count: false, has_default_when_present: false },
         ];
         let tc = TokenClassifier::new(flags);
         // "xfv": x=boolean, f=non-boolean in middle, remaining "v" is inline value
@@ -701,7 +726,7 @@ mod tests {
     fn test_traditional_nonboolean_first_no_bool_stack() {
         // "farchive.tar" where f is non-boolean and first → ShortFlagWithValue directly
         let flags = vec![
-            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false },
+            FlagInfo { id: "file".into(), short: Some('f'), long: None, single_dash_long: None, is_boolean: false, is_count: false, has_default_when_present: false },
         ];
         let tc = TokenClassifier::new(flags);
         let result = tc.classify_traditional("farchive.tar", &[]);

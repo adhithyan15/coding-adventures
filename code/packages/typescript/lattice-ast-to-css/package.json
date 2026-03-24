@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/lattice-ast-to-css",
+  "version": "0.1.0",
+  "description": "Three-pass compiler: Lattice AST to clean CSS AST",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lattice-parser": "file:../lattice-parser",
+    "@coding-adventures/lattice-lexer": "file:../lattice-lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

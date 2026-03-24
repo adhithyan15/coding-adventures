@@ -1,0 +1,8 @@
+[package]
+name = "wasm-types"
+version = "0.1.0"
+edition = "2021"
+description = "WASM 1.0 type system: ValueType, FuncType, Limits, MemoryType, TableType, GlobalType, WasmModule"
+
+[dependencies]
+wasm-leb128 = { path = "../wasm-leb128" }

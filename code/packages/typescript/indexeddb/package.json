@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/indexeddb",
+  "version": "0.1.0",
+  "description": "Promise-based IndexedDB wrapper — raw API, no external dependencies",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -314,21 +314,31 @@ export class HelpGenerator {
    *   "-n, --lines <NUM>"
    *   "-classpath <classpath>"
    *   "--version"
+   *   "--color [=WHEN]"   (v1.1: enum with default_when_present)
+   *   "-v, --verbose"     (v1.1: count flag, shown like boolean)
    */
   private _flagSignature(flag: FlagDef): string {
     const parts: string[] = [];
 
+    // v1.1: Count flags display like boolean flags — they consume no value.
+    const noValueType = flag.type === "boolean" || flag.type === "count";
+
     if (flag.short) parts.push(`-${flag.short}`);
     if (flag.long) {
-      if (flag.type === "boolean") {
+      if (noValueType) {
         parts.push(`--${flag.long}`);
+      } else if (flag.defaultWhenPresent !== undefined) {
+        // v1.1: Enum with default_when_present — value is optional.
+        // Show as `--flag [=VALUE]` to indicate the value can be omitted.
+        const valName = flag.valueName ?? flag.type.toUpperCase();
+        parts.push(`--${flag.long} [=${valName}]`);
       } else {
         const valName = flag.valueName ?? flag.type.toUpperCase();
         parts.push(`--${flag.long} <${valName}>`);
       }
     }
     if (flag.singleDashLong) {
-      if (flag.type === "boolean") {
+      if (noValueType) {
         parts.push(`-${flag.singleDashLong}`);
       } else {
         const valName = flag.valueName ?? flag.type.toUpperCase();

@@ -2,6 +2,31 @@
 
 All notable changes to the `coding_adventures_cli_builder` gem will be documented in this file.
 
+## [1.1.0] - 2026-03-22
+
+### Added
+
+- **Count type** (`"type": "count"`): New flag type for flags like `-vvv` that count occurrences.
+  Each appearance increments a counter. In stacked short flags like `-vvv`, each character increments
+  independently. Consumes no value token (like boolean). Default is 0 when absent. Count flags are
+  inherently repeatable — no duplicate_flag error is raised.
+- **Enum optional values** (`default_when_present`): Enum flags can now specify a
+  `"default_when_present"` value used when the flag appears without a value (e.g., `--color` instead
+  of `--color=always`). Disambiguation: if the next token is a valid enum value, it is consumed;
+  otherwise `default_when_present` is used and the token remains unconsumed. Validated at spec load
+  time (must be enum type, value must be in enum_values).
+- **Flag presence detection** (`explicit_flags`): `ParseResult` now includes an `explicit_flags`
+  field (array of flag ID strings) tracking which flags were explicitly set by the user on the
+  command line. Flags filled in with defaults are NOT included. Each ID appears at most once.
+- **int64 range validation**: Integer flag values are now checked against the 64-bit signed integer
+  range (−2^63 to 2^63−1). Values outside this range produce an `invalid_value` error. This ensures
+  cross-language consistency with Go (int64), Rust (i64), etc.
+- **Help generator**: Count flags show no value placeholder (like boolean). Enum flags with
+  `default_when_present` show `[=VALUE]` instead of `<VALUE>` to indicate the value is optional.
+- **Spec validation**: New Rule 10 validates `default_when_present` — must be on enum type flags,
+  value must be in `enum_values`, and `enum_values` must not be empty.
+- Comprehensive test suite for all four v1.1 features (51 new test cases).
+
 ## [0.3.0] - 2026-03-22
 
 ### Added

@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/bitset",
+  "version": "0.1.0",
+  "description": "A compact bitset data structure using Uint32Array with ArrayList-style growth, bulk bitwise operations, and efficient set-bit iteration",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
