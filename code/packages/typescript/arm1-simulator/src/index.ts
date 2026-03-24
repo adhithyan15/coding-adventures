@@ -1179,7 +1179,7 @@ export class ARM1 {
   // Data Processing execution
   // =====================================================================
 
-  private executeDataProcessing(d: DecodedInstruction, trace: Trace): void {
+  private executeDataProcessing(d: DecodedInstruction, _trace: Trace): void {
     // Get first operand (Rn)
     let a = 0;
     if (d.opcode !== OP_MOV && d.opcode !== OP_MVN) {
@@ -1382,7 +1382,7 @@ export class ARM1 {
   // Branch execution
   // =====================================================================
 
-  private executeBranch(d: DecodedInstruction, trace: Trace): void {
+  private executeBranch(d: DecodedInstruction, _trace: Trace): void {
     // Current PC (already advanced by 4 in step)
     const branchBase = (this.pc + 4) >>> 0;
 

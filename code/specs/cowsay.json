@@ -1,0 +1,131 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "cowsay",
+  "display_name": "Cowsay Clone",
+  "description": "A configurable ASCII cow that speaks or thinks",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "eyes",
+      "short": "e",
+      "long": "eyes",
+      "description": "Choose eyes for the cow",
+      "type": "string",
+      "default": "oo",
+      "value_name": "EYES"
+    },
+    {
+      "id": "tongue",
+      "short": "T",
+      "long": "tongue",
+      "description": "Choose tongue for the cow",
+      "type": "string",
+      "default": "  ",
+      "value_name": "TONGUE"
+    },
+    {
+      "id": "cowfile",
+      "short": "f",
+      "long": "file",
+      "description": "Specify a particular cow picture file (.cow)",
+      "type": "string",
+      "default": "default",
+      "value_name": "COWFILE"
+    },
+    {
+      "id": "list",
+      "short": "l",
+      "description": "List all available cow files",
+      "type": "boolean"
+    },
+    {
+      "id": "nowrap",
+      "short": "n",
+      "description": "Disable word wrapping",
+      "type": "boolean"
+    },
+    {
+      "id": "width",
+      "short": "W",
+      "description": "Specify column at which to wrap the message",
+      "type": "integer",
+      "default": 40,
+      "value_name": "WIDTH"
+    },
+    {
+      "id": "think",
+      "long": "think",
+      "description": "Use a thought bubble instead of a speech bubble",
+      "type": "boolean"
+    },
+    {
+      "id": "borg",
+      "short": "b",
+      "description": "Borg mode: eyes '=='",
+      "type": "boolean"
+    },
+    {
+      "id": "dead",
+      "short": "d",
+      "description": "Dead mode: eyes 'XX', tongue 'U '",
+      "type": "boolean"
+    },
+    {
+      "id": "greedy",
+      "short": "g",
+      "description": "Greedy mode: eyes '$$'",
+      "type": "boolean"
+    },
+    {
+      "id": "paranoid",
+      "short": "p",
+      "description": "Paranoid mode: eyes '@@'",
+      "type": "boolean"
+    },
+    {
+      "id": "stoned",
+      "short": "s",
+      "description": "Stoned mode: eyes 'xx', tongue 'U '",
+      "type": "boolean"
+    },
+    {
+      "id": "tired",
+      "short": "t",
+      "description": "Tired mode: eyes '--'",
+      "type": "boolean"
+    },
+    {
+      "id": "wired",
+      "short": "w",
+      "description": "Wired mode: eyes 'OO'",
+      "type": "boolean"
+    },
+    {
+      "id": "youthful",
+      "short": "y",
+      "description": "Youthful mode: eyes '..'",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "message",
+      "name": "MESSAGE",
+      "description": "The message for the cow to say",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "mutually_exclusive_groups": [
+    {
+      "id": "modes",
+      "flag_ids": ["borg", "dead", "greedy", "paranoid", "stoned", "tired", "wired", "youthful"]
+    }
+  ]
+}

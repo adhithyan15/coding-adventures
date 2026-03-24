@@ -31,10 +31,8 @@ side-by-side is one of the most effective ways to understand HDL design.
 
 - **02-lexer.md**: Base lexer — we use `GrammarLexer` with `.tokens` files
 - **03-parser.md**: Base parser — we use `GrammarParser` with `.grammar` files
-- **lexer-parser-hooks.md**: The hook API is specified but not yet implemented
-  in the base lexer package. Hooks are applied directly in the wrapper:
-  Verilog preprocessor runs on source text before creating `GrammarLexer`;
-  VHDL case normalization runs on the token list after `GrammarLexer.tokenize()`
+- **lexer-parser-hooks.md**: We use `pre_tokenize` for Verilog preprocessor,
+  `post_tokenize` for VHDL case normalization
 - **F04-lexer-pattern-groups.md**: Not needed — both HDLs are context-free at
   the lexical level
 - **F01-fpga.md**: The FPGA package consumes HDL descriptions; this spec
@@ -1221,31 +1219,3 @@ Each wrapper follows the thin-wrapper pattern established by
 - For-generate
 - Type and subtype declarations
 - Expressions: operator precedence, `<=` disambiguation
-
----
-
-## Implementation Notes
-
-These notes capture divergences discovered during implementation:
-
-1. **Hook API not yet implemented**: The `pre_tokenize` / `post_tokenize` hooks
-   specified in `lexer-parser-hooks.md` are not yet available on `GrammarLexer`.
-   All wrappers apply hooks directly: preprocessor runs on source string before
-   lexer creation, case normalization runs on the returned token list. When the
-   hook API is implemented, wrappers can be refactored.
-
-2. **Left-recursion in Verilog grammar**: The `primary` rule has left recursion
-   (`primary = ... | primary LBRACKET expression ...`) for array indexing. The
-   Go and Rust grammar parsers were patched with left-recursion protection
-   (Warth et al. 2008 seed-and-grow technique). Other language parsers work
-   around it by avoiding constructs that trigger deep recursion in tests.
-
-3. **VHDL case normalization includes keyword promotion**: The grammar lexer
-   matches keywords case-sensitively against lowercase entries. When input is
-   `ENTITY`, the lexer emits `NAME("ENTITY")`. The post-tokenize normalization
-   step must both lowercase the value AND reclassify NAME tokens as KEYWORD
-   when the lowercased value matches a VHDL keyword.
-
-4. **BLOCK_COMMENT regex escaping**: The Verilog `BLOCK_COMMENT` regex required
-   escaping `/` inside a character class (`[^\/]` not `[^/]`) because the
-   grammar parser uses `/` as a regex delimiter.

@@ -551,6 +551,69 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       assert String.contains?(mix_content, "app: :coding_adventures_test_pkg")
     end
 
+    test "generated Elixir BUILD stays portable when package has deps" do
+      {tmp, config} = setup_scaffold_test("my-app", "elixir")
+
+      dep_b_dir = Path.join(tmp, "dep_b")
+      File.mkdir_p!(dep_b_dir)
+
+      File.write!(
+        Path.join(dep_b_dir, "mix.exs"),
+        """
+        defmodule CodingAdventures.DepB.MixProject do
+          use Mix.Project
+
+          def project do
+            [
+              app: :coding_adventures_dep_b,
+              version: "0.1.0",
+              elixir: "~> 1.14",
+              deps: []
+            ]
+          end
+        end
+        """
+      )
+
+      dep_a_dir = Path.join(tmp, "dep_a")
+      File.mkdir_p!(dep_a_dir)
+
+      File.write!(
+        Path.join(dep_a_dir, "mix.exs"),
+        """
+        defmodule CodingAdventures.DepA.MixProject do
+          use Mix.Project
+
+          def project do
+            [
+              app: :coding_adventures_dep_a,
+              version: "0.1.0",
+              elixir: "~> 1.14",
+              deps: deps()
+            ]
+          end
+
+          defp deps do
+            [
+              {:coding_adventures_dep_b, path: "../dep_b"}
+            ]
+          end
+        end
+        """
+      )
+
+      config = %{config | direct_deps: ["dep-a"], layer: 3, description: "An app with deps"}
+
+      assert {:ok, _messages} = ScaffoldGenerator.scaffold(config, "elixir")
+
+      target = Path.join(tmp, "my_app")
+      build_content = File.read!(Path.join(target, "BUILD"))
+
+      assert build_content == "mix deps.get --quiet && mix test --cover\n"
+      refute String.contains?(build_content, "cd ../")
+      refute String.contains?(build_content, "\\")
+    end
+
     test "generated Go go.mod contains correct module path" do
       {tmp, config} = setup_scaffold_test("test-pkg", "go")
 
