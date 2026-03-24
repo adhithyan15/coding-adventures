@@ -116,7 +116,7 @@ defmodule BuildTool.StarlarkEvaluator do
       iex> BuildTool.StarlarkEvaluator.starlark_build?("load(\\"//rules.star\\", \\"py_library\\")\\n")
       true
 
-      iex> BuildTool.StarlarkEvaluator.starlark_build?("pip install -e .\\npytest\\n")
+      iex> BuildTool.StarlarkEvaluator.starlark_build?("python -m pip install -e .\\npytest\\n")
       false
 
       iex> BuildTool.StarlarkEvaluator.starlark_build?("# comment\\npy_library(name = \\"x\\")\\n")

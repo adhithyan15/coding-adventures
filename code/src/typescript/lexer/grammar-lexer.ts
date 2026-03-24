@@ -434,6 +434,15 @@ export class GrammarLexer {
   /** Whether indentation mode is active. */
   private readonly _indentationMode: boolean;
 
+  /**
+   * Whether token matching is case-sensitive.
+   *
+   * When true (the default), the source is matched as-is. When false,
+   * the source is lowercased before matching so that patterns written
+   * in lowercase will match input regardless of case.
+   */
+  private readonly _caseSensitive: boolean;
+
   // -- Compiled patterns --
 
   /** Default group compiled patterns, in priority order. */
@@ -469,8 +478,9 @@ export class GrammarLexer {
   private _skipEnabled: boolean = true;
 
   constructor(source: string, grammar: TokenGrammar) {
-    this._source = source;
     this._grammar = grammar;
+    this._caseSensitive = grammar.caseSensitive !== false;
+    this._source = this._caseSensitive ? source : source.toLowerCase();
     this._keywordSet = new Set(grammar.keywords);
     this._reservedSet = new Set(grammar.reservedKeywords ?? []);
     this._indentationMode = grammar.mode === "indentation";

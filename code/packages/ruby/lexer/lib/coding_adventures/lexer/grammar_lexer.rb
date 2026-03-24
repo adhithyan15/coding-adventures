@@ -203,7 +203,13 @@ module CodingAdventures
       # @param source [String] the raw source code to tokenize
       # @param grammar [CodingAdventures::GrammarTools::TokenGrammar]
       def initialize(source, grammar)
-        @source = source
+        # Case sensitivity: when the grammar is case-insensitive, we
+        # lowercase the entire source before tokenization. This means
+        # all pattern matching happens against lowercase text, and token
+        # values are lowercase. Keyword promotion works automatically
+        # because both the source and keyword list are compared in the
+        # same case. Used by case-insensitive languages like VHDL and SQL.
+        @source = grammar.case_sensitive ? source : source.downcase
         @grammar = grammar
         @pos = 0
         @line = 1
@@ -235,6 +241,11 @@ module CodingAdventures
         # Whether the grammar has skip patterns. When skip patterns exist,
         # they replace the default whitespace-skipping behavior.
         @has_skip_patterns = !grammar.skip_definitions.empty?
+
+        # Case sensitivity mode. When false, the lexer lowercases input
+        # before matching and promotes NAME -> KEYWORD for lowercased values
+        # that match keywords. Used by case-insensitive languages like VHDL.
+        @case_sensitive = grammar.case_sensitive
 
         # Indentation mode state.
         @indentation_mode = grammar.mode == "indentation"
@@ -271,6 +282,11 @@ module CodingAdventures
         # Skip enabled flag -- can be toggled by callbacks for groups
         # where whitespace is significant (e.g., CDATA, raw content).
         @skip_enabled = true
+
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. Hooks compose left-to-right.
+        @pre_tokenize_hooks = []
+        @post_tokenize_hooks = []
       end
 
       # Register a callback that fires on every token match.
@@ -291,6 +307,20 @@ module CodingAdventures
         @on_token = callback
       end
 
+      # Register a text transform to run before tokenization.
+      # The hook receives the raw source string and returns a (possibly
+      # modified) source string. Multiple hooks compose left-to-right.
+      def add_pre_tokenize(hook)
+        @pre_tokenize_hooks << hook
+      end
+
+      # Register a token transform to run after tokenization.
+      # The hook receives the full token list and returns a (possibly
+      # modified) token list. Multiple hooks compose left-to-right.
+      def add_post_tokenize(hook)
+        @post_tokenize_hooks << hook
+      end
+
       # Tokenize the source code using the grammar's token definitions.
       #
       # Dispatches to the appropriate tokenization method based on whether
@@ -298,11 +328,24 @@ module CodingAdventures
       #
       # @return [Array<Token>] list of tokens, always ending with EOF
       def tokenize
-        if @indentation_mode
+        # Stage 1: Pre-tokenize hooks transform the source text.
+        unless @pre_tokenize_hooks.empty?
+          source = @source
+          @pre_tokenize_hooks.each { |hook| source = hook.call(source) }
+          @source = source
+        end
+
+        # Stage 2: Core tokenization.
+        tokens = if @indentation_mode
           tokenize_indentation
         else
           tokenize_standard
         end
+
+        # Stage 3: Post-tokenize hooks transform the token list.
+        @post_tokenize_hooks.each { |hook| tokens = hook.call(tokens) }
+
+        tokens
       end
 
       private

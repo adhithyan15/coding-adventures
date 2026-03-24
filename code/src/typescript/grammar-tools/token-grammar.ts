@@ -150,6 +150,9 @@ export interface TokenGrammar {
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
   readonly groups?: Readonly<Record<string, PatternGroup>>;
+  /** Controls whether the lexer matches case-sensitively. Defaults to true.
+   *  When false, the lexer lowercases source text before matching. */
+  readonly caseSensitive?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -247,6 +250,28 @@ export function effectiveTokenNames(grammar: TokenGrammar): Set<string> {
  * @param lineNumber - The 1-based line number for error reporting.
  * @returns A TokenDefinition.
  */
+function findClosingSlash(s: string): number {
+  let inBracket = false;
+  for (let i = 1; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === "\\") {
+      i++; // skip escaped character
+      continue;
+    }
+    if (ch === "[" && !inBracket) {
+      inBracket = true;
+    } else if (ch === "]" && inBracket) {
+      inBracket = false;
+    } else if (ch === "/" && !inBracket) {
+      return i;
+    }
+  }
+  // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+  // try the last / as a best-effort parse.
+  const last = s.lastIndexOf("/");
+  return last > 0 ? last : -1;
+}
+
 function parseDefinition(
   namePart: string,
   patternPart: string,
@@ -266,22 +291,10 @@ function parseDefinition(
 
   if (patternPart.startsWith("/")) {
     // Regex pattern — find the closing /
-    // The closing / is the last / in the pattern portion. We scan
-    // for the second / that ends the regex (not escaped).
-    const closingSlash = patternPart.indexOf("/", 1);
-    if (closingSlash === -1) {
-      throw new TokenGrammarError(
-        `Unclosed regex pattern for token '${namePart}'`,
-        lineNumber,
-      );
-    }
-
-    // The pattern could contain slashes inside character classes or
-    // groups. To find the true closing /, we look for the LAST / that
-    // could be the closer. Strategy: find the last / in the string,
-    // then check if what follows is either empty or "-> ALIAS".
-    let lastSlash = patternPart.lastIndexOf("/");
-    if (lastSlash === 0) {
+    // Use bracket-aware scan so that / inside [...] character classes
+    // is not mistaken for the closing delimiter.
+    const lastSlash = findClosingSlash(patternPart);
+    if (lastSlash <= 0) {
       throw new TokenGrammarError(
         `Unclosed regex pattern for token '${namePart}'`,
         lineNumber,
@@ -369,6 +382,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const groups: Record<string, PatternGroup> = {};
   let mode: string | undefined;
   let escapeMode: string | undefined;
+  let caseSensitive: boolean = true;
 
   // Section tracking. We use a string to track which section we're in,
   // since sections are mutually exclusive and we can only be in one at
@@ -429,6 +443,29 @@ export function parseTokenGrammar(source: string): TokenGrammar {
         );
       }
       escapeMode = escapesValue;
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- Case-sensitive directive ---
+    if (stripped.startsWith("case_sensitive:") || stripped.startsWith("case_sensitive :")) {
+      const csValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!csValue) {
+        throw new TokenGrammarError(
+          "Missing value after 'case_sensitive:'",
+          lineNumber,
+        );
+      }
+      if (csValue.toLowerCase() === "true") {
+        caseSensitive = true;
+      } else if (csValue.toLowerCase() === "false") {
+        caseSensitive = false;
+      } else {
+        throw new TokenGrammarError(
+          `Invalid case_sensitive value: '${csValue}' (must be 'true' or 'false')`,
+          lineNumber,
+        );
+      }
       currentSection = "definitions";
       continue;
     }
@@ -631,6 +668,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
     groups: hasGroups ? groups : undefined,
+    caseSensitive: caseSensitive ? undefined : false,
   };
 }
 

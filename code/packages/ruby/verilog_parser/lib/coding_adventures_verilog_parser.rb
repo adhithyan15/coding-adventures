@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+# ================================================================
+# coding_adventures_verilog_parser -- Top-Level Require File
+# ================================================================
+#
+# This is the entry point for the gem. When someone writes:
+#
+#   require "coding_adventures_verilog_parser"
+#
+# Ruby loads this file, which requires:
+#   1. The version constant (no dependencies)
+#   2. The parser module (depends on grammar_tools, lexer, parser,
+#      and verilog_lexer gems — all loaded via require statements
+#      in parser.rb)
+#
+# The public API is a single method:
+#   CodingAdventures::VerilogParser.parse(source)
+# ================================================================
+
+require_relative "coding_adventures/verilog_parser/version"
+require_relative "coding_adventures/verilog_parser/parser"
+
+module CodingAdventures
+  module VerilogParser
+  end
+end

@@ -325,20 +325,27 @@ func TestTokenizeConstantDeclaration(t *testing.T) {
 //   '-' — don't care
 
 func TestTokenizeCharacterLiterals(t *testing.T) {
-	tests := []string{"'0'", "'1'", "'X'", "'Z'", "'U'", "'H'", "'L'", "'-'"}
+	type charTest struct {
+		input    string
+		expected string
+	}
+	tests := []charTest{
+		{"'0'", "'0'"}, {"'1'", "'1'"}, {"'X'", "'x'"}, {"'Z'", "'z'"},
+		{"'U'", "'u'"}, {"'H'", "'h'"}, {"'L'", "'l'"}, {"'-'", "'-'"},
+	}
 
-	for _, ch := range tests {
-		tokens, err := TokenizeVhdl(ch)
+	for _, tt := range tests {
+		tokens, err := TokenizeVhdl(tt.input)
 		if err != nil {
-			t.Fatalf("Failed to tokenize %q: %v", ch, err)
+			t.Fatalf("Failed to tokenize %q: %v", tt.input, err)
 		}
 		tok := findToken(tokens, "CHAR_LITERAL")
 		if tok == nil {
-			t.Errorf("Expected CHAR_LITERAL for %q, got %v", ch, tokens)
+			t.Errorf("Expected CHAR_LITERAL for %q, got %v", tt.input, tokens)
 			continue
 		}
-		if tok.Value != ch {
-			t.Errorf("Expected value %q, got %q", ch, tok.Value)
+		if tok.Value != tt.expected {
+			t.Errorf("Expected value %q for input %q, got %q", tt.expected, tt.input, tok.Value)
 		}
 	}
 }
@@ -363,14 +370,14 @@ func TestTokenizeBitStrings(t *testing.T) {
 		source   string
 		expected string
 	}{
-		{`B"1010"`, `B"1010"`},
+		{`B"1010"`, `b"1010"`},
 		{`b"1010"`, `b"1010"`},
-		{`O"77"`, `O"77"`},
+		{`O"77"`, `o"77"`},
 		{`o"77"`, `o"77"`},
-		{`X"FF"`, `X"FF"`},
+		{`X"FF"`, `x"ff"`},
 		{`x"ff"`, `x"ff"`},
-		{`D"42"`, `D"42"`},
-		{`X"DEAD_BEEF"`, `X"DEAD_BEEF"`},
+		{`D"42"`, `d"42"`},
+		{`X"DEAD_BEEF"`, `x"dead_beef"`},
 	}
 
 	for _, tt := range tests {
@@ -408,10 +415,10 @@ func TestTokenizeBasedLiterals(t *testing.T) {
 		source   string
 		expected string
 	}{
-		{"16#FF#", "16#FF#"},
+		{"16#FF#", "16#ff#"},
 		{"2#1010#", "2#1010#"},
 		{"8#77#", "8#77#"},
-		{"16#FF#E2", "16#FF#E2"},
+		{"16#FF#E2", "16#ff#e2"},
 		{"2#1010_0011#", "2#1010_0011#"},
 	}
 
@@ -441,7 +448,7 @@ func TestTokenizeRealNumbers(t *testing.T) {
 		expected string
 	}{
 		{"3.14", "3.14"},
-		{"1.0E-3", "1.0E-3"},
+		{"1.0E-3", "1.0e-3"},
 		{"2.5e+10", "2.5e+10"},
 		{"1_000.5", "1_000.5"},
 	}

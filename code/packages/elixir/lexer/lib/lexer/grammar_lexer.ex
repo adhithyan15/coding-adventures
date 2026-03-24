@@ -235,6 +235,18 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
     `LexerContext`, and returns a list of action tuples. See the module
     documentation for the action types.
 
+  - `:pre_tokenize_hooks` — a list of functions `(String.t() -> String.t())`
+    that transform the source text before tokenization begins. Hooks are
+    applied in order (left to right) via `Enum.reduce/3`. This is useful
+    for source-level preprocessing — for example, stripping a BOM,
+    normalizing line endings, or expanding macros.
+
+  - `:post_tokenize_hooks` — a list of functions `([Token.t()] -> [Token.t()])`
+    that transform the token list after tokenization succeeds. Hooks are
+    applied in order (left to right) via `Enum.reduce/3`. This is useful
+    for post-processing — for example, filtering out comment tokens,
+    inserting synthetic tokens, or rewriting token types.
+
   ## Examples
 
       # Without callback (original behavior):
@@ -249,6 +261,14 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         end
       end
       {:ok, tokens} = GrammarLexer.tokenize(source, grammar, on_token: callback)
+
+      # With pre-tokenize hook (normalize line endings):
+      {:ok, tokens} = GrammarLexer.tokenize(source, grammar,
+        pre_tokenize_hooks: [&String.replace(&1, "\\r\\n", "\\n")])
+
+      # With post-tokenize hook (filter out NEWLINE tokens):
+      {:ok, tokens} = GrammarLexer.tokenize(source, grammar,
+        post_tokenize_hooks: [fn toks -> Enum.reject(toks, & &1.type == "NEWLINE") end])
   """
   @spec tokenize(String.t(), TokenGrammar.t(), keyword()) ::
           {:ok, [Token.t()]} | {:error, String.t()}
@@ -256,8 +276,36 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
   def tokenize(source, %TokenGrammar{} = grammar, opts) do
     on_token = Keyword.get(opts, :on_token, nil)
-    state = init_state(source, grammar, on_token)
-    tokenize_standard(state, [])
+    pre_tokenize_hooks = Keyword.get(opts, :pre_tokenize_hooks, [])
+    post_tokenize_hooks = Keyword.get(opts, :post_tokenize_hooks, [])
+
+    # Stage 1: Pre-tokenize hooks transform the source text.
+    # Each hook is a function (String.t() -> String.t()) that receives the
+    # source and returns a transformed version. Hooks run left to right,
+    # so the output of hook N becomes the input of hook N+1.
+    source = Enum.reduce(pre_tokenize_hooks, source, fn hook, src -> hook.(src) end)
+
+    # Case-insensitive mode: lowercase the entire source before matching.
+    # This mirrors the Python GrammarLexer behavior — keyword promotion and
+    # pattern matching both operate on the lowercased text, which is the
+    # correct behavior for case-insensitive languages like VHDL or SQL.
+    effective_source = if grammar.case_sensitive, do: source, else: String.downcase(source)
+
+    state = init_state(effective_source, grammar, on_token)
+
+    # Stage 2: Tokenize the source.
+    case tokenize_standard(state, []) do
+      {:ok, tokens} ->
+        # Stage 3: Post-tokenize hooks transform the token list.
+        # Each hook is a function ([Token.t()] -> [Token.t()]) that receives
+        # the token list and returns a transformed version. Only applied on
+        # success — errors pass through unchanged.
+        tokens = Enum.reduce(post_tokenize_hooks, tokens, fn hook, toks -> hook.(toks) end)
+        {:ok, tokens}
+
+      error ->
+        error
+    end
   end
 
   # -- Initialization ---------------------------------------------------------
