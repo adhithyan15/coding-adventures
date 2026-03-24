@@ -597,3 +597,94 @@ bundle exec rake test
 mix deps.get --quiet
 mix test --cover
 ```
+
+---
+
+### 2026-03-24: Python BUILD files — Windows requires a completely different pattern
+
+**Problem**: Python BUILD files that work on Linux/macOS fail on Windows because:
+
+1. **`.venv/bin/python` doesn't exist on Windows** — Windows uses `.venv\Scripts\python.exe`. Any BUILD file using `.venv/bin/python` will fail on Windows.
+2. **`uv pip install -e ".[dev]"` resolves transitive deps from PyPI on Windows** — Even when local editable deps are installed first, uv on Windows sometimes tries to resolve transitive dependencies from the package registry instead of using locally installed packages. This causes `No solution found when resolving dependencies` errors for packages that only exist locally.
+
+**Solution**: Every Python package needs TWO build files:
+
+**BUILD** (Linux/macOS):
+```
+uv venv --quiet --clear
+uv pip install -e ../dep-a -e ../dep-b -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v
+```
+
+**BUILD_windows** (Windows):
+```
+uv venv --quiet --clear
+uv pip install -e ../dep-a -e ../dep-b --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov ruff mypy --quiet
+uv run --no-project python -m pytest tests/ -v
+```
+
+Key differences in BUILD_windows:
+- Install local deps FIRST in a separate command
+- Use `--no-deps` when installing the package itself (prevents PyPI resolution)
+- Do NOT quote `.[dev]` (newer uv rejects `".[dev]"` on Windows)
+- Explicitly install test tools (pytest, etc.) in a separate command
+- Use `uv run --no-project python` instead of `.venv/bin/python`
+
+**Rule**: Every new Python package MUST have both BUILD and BUILD_windows files. The scaffold generator must generate both.
+
+---
+
+### 2026-03-24: Changing shared infrastructure packages triggers cascading rebuilds
+
+**Problem**: When you modify a widely-depended-on package (like `grammar-tools` or `lexer`), the build tool's diff detection marks ALL dependent packages for rebuild. If those downstream packages have broken BUILD files (e.g., missing BUILD_windows), the CI fails on packages you didn't intend to touch.
+
+**Impact**: A one-line change to `grammar-tools` can trigger rebuilds of 50+ packages across all languages. If even one of those packages has a broken BUILD file, CI fails.
+
+**Mitigation**:
+1. Before modifying shared infrastructure packages, check that ALL downstream packages have correct BUILD and BUILD_windows files
+2. Never mass-change BUILD files in a PR that also changes code — the blast radius is too large
+3. If CI fails on a package you didn't change, fix its BUILD file in a separate focused commit
+4. Use `./build-tool --list-affected --diff-base origin/main` to preview what will be rebuilt before pushing
+
+---
+
+### 2026-03-24: TypeScript shared source restructuring (code/src/)
+
+**Problem**: TypeScript packages were restructured so that the actual source lives in `code/src/typescript/` and package-level files in `code/packages/typescript/*/src/` are re-exports:
+```typescript
+export * from "../../../../src/typescript/grammar-tools/token-grammar.js";
+```
+
+**Impact**: If you modify a TypeScript package's `src/` file directly, you're editing a re-export stub — your changes will be overwritten or cause conflicts on merge with main. The actual implementation lives at `code/src/typescript/<package>/`.
+
+**Rule**: Always check if a TypeScript source file is a re-export before editing. If it is, apply changes to the shared source at `code/src/typescript/` instead.
+
+---
+
+### 2026-03-24: Always use the scaffold generator for new packages
+
+**Problem**: Hand-writing package scaffolding (BUILD, BUILD_windows, pyproject.toml, mix.exs, etc.) is error-prone. Missing or incorrect BUILD files cause CI failures that are hard to diagnose, especially on Windows where the pattern is different from Linux/macOS.
+
+**Solution**: Always use the scaffold generator at `code/programs/*/scaffold-generator/`. It:
+- Computes transitive dependency closures automatically
+- Generates correct BUILD and BUILD_windows files for all platforms
+- Creates properly structured pyproject.toml / package.json / mix.exs / Cargo.toml
+- Includes README.md, CHANGELOG.md, and test scaffolding
+
+If the scaffold generator wouldn't produce the right output for your use case, fix the scaffold generator FIRST, then use it. Never hand-write what can be generated.
+
+---
+
+### 2026-03-24: Regex delimiter escaping in .tokens files
+
+**Problem**: The `.tokens` file format uses `/` as regex delimiters (`/pattern/`). If a regex contains `/` inside a `[...]` character class (e.g., `[^/]`), the naive parser treats it as the closing delimiter and truncates the pattern.
+
+**Example**: `BLOCK_COMMENT = /\/\*([^*]|\*[^/])*\*\//` — the `[^/]` contains a `/` that was being misinterpreted as the closing delimiter.
+
+**Workaround before fix**: Escape as `[^\/]` — but this changes the regex semantics.
+
+**Proper fix**: All 6 language implementations of the `.tokens` parser now use bracket-aware scanning that tracks `[...]` depth and doesn't treat `/` inside character classes as the closing delimiter. The scanner also has a fallback to `lastIndexOf("/")` for edge cases like unclosed brackets.
+
+**Rule**: Never escape `/` inside `[...]` in .tokens files. The parser handles it correctly.
