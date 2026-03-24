@@ -348,3 +348,11 @@ The Elixir Starlark AST-to-bytecode compiler can get stuck in an infinite loop i
 The `astral-sh/setup-uv@v4` action with `version: latest` resolved to uv `0.10.12`, which was missing the `aarch64-apple-darwin` binary (404 error). This caused all macOS CI runs to fail on the "Install uv" step. The fix is to pin to a known stable version series (e.g., `version: "0.6.x"`) rather than relying on `latest`.
 
 **Rule:** Always pin tool versions in CI actions. `latest` can resolve to broken or incomplete releases. Use version ranges like `"0.6.x"` that stay within a known-good series.
+
+---
+
+### 2026-03-23: Never merge PRs without CI pass and explicit user sign-off
+
+Three PRs (#201, #203, #207) were squash-merged immediately after creation without waiting for CI to run or getting user approval. While the fixes happened to work, merging without CI verification risks shipping broken code to main.
+
+**Rule:** After creating a PR, wait for the full CI pipeline to pass. Report CI results to the user and only merge after receiving explicit approval. Even if a change looks trivial, CI catches regressions that are easy to miss — especially in a monorepo where changes can have far-reaching effects across packages and workflows.
