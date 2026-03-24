@@ -1,3 +1,1 @@
-cd ../cpu_simulator && mix deps.get --quiet && mix compile --quiet && \
-cd ../arm_simulator && mix deps.get --quiet && mix compile --quiet && \
-cd ../assembler && mix deps.get --quiet && mix test --cover
+mix deps.get --quiet && mix test --cover

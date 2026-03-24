@@ -1,4 +1,1 @@
-cd ../clock && mix deps.get --quiet && mix compile --quiet && \
-cd ../logic_gates && mix deps.get --quiet && mix compile --quiet && \
-cd ../arithmetic && mix deps.get --quiet && mix compile --quiet && \
-cd ../fp_arithmetic && mix deps.get --quiet && mix test --cover
+mix deps.get --quiet && mix test --cover

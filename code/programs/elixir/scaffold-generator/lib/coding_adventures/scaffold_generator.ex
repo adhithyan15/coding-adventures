@@ -1221,7 +1221,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
   # File generation -- Elixir
   # =========================================================================
 
-  defp generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps) do
+  defp generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, _ordered_deps) do
     snake = to_snake_case(pkg_name)
     camel = to_camel_case(pkg_name)
     base_dir = Path.dirname(target_dir)
@@ -1291,19 +1291,10 @@ defmodule CodingAdventures.ScaffoldGenerator do
 
     test_helper = "ExUnit.start()\n"
 
-    build_content =
-      if length(ordered_deps) > 0 do
-        parts =
-          Enum.map(ordered_deps, fn dep ->
-            dep_snake = to_snake_case(dep)
-            "cd ../#{dep_snake} && mix deps.get --quiet && mix compile --quiet"
-          end) ++
-            ["cd ../#{snake} && mix deps.get --quiet && mix test --cover"]
-
-        Enum.join(parts, " && \\\n") <> "\n"
-      else
-        "mix deps.get --quiet && mix test --cover\n"
-      end
+    # Let Mix resolve and compile local path dependencies itself during test.
+    # This keeps BUILD files portable across bash/cmd and avoids concurrent
+    # writes into shared sibling _build directories in CI.
+    build_content = "mix deps.get --quiet && mix test --cover\n"
 
     # Create directories and write files
     lib_dir = Path.join([target_dir, "lib", "coding_adventures"])
