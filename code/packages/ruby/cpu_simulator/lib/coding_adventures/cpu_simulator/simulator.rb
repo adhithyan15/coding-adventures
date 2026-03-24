@@ -182,7 +182,7 @@ module CodingAdventures
         raise ArgumentError, "Memory size must be at least 1 byte" if size < 1
 
         @size = size
-        @data = Array.new(size, 0)
+        @data = Hash.new(0)
       end
 
       # Read a single byte (0-255) from the given address.
@@ -229,7 +229,7 @@ module CodingAdventures
       # Return a slice of memory as an array of byte values.
       def dump(start = 0, length = 16)
         check_address(start, length)
-        @data[start, length]
+        Array.new(length) { |i| @data[start + i] }
       end
 
       private

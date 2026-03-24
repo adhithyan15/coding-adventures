@@ -21,9 +21,12 @@ end
 
 require "minitest/autorun"
 require "etc"
+require "rbconfig"
 require "coding_adventures_cli_builder"
 
 require_relative "../id_tool"
+
+if RbConfig::CONFIG['host_os'] !~ /mswin|mingw|cygwin/
 
 # ---------------------------------------------------------------------------
 # Helper module
@@ -317,4 +320,5 @@ class TestIdMainFunction < Minitest::Test
   ensure
     ARGV.replace(old_argv)
   end
+end
 end

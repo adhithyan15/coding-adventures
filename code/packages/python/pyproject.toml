@@ -37,6 +37,8 @@ members = [
     "ml-framework-torch",
     "ml-framework-keras",
     "ml-framework-tf",
+    "directed-graph",
+    "directed-graph-native",
 ]
 
 [tool.uv.sources]
@@ -72,6 +74,8 @@ coding-adventures-ml-framework-core = { workspace = true }
 coding-adventures-ml-framework-torch = { workspace = true }
 coding-adventures-ml-framework-keras = { workspace = true }
 coding-adventures-ml-framework-tf = { workspace = true }
+coding-adventures-directed-graph = { workspace = true }
+coding-adventures-directed-graph-native = { workspace = true }
 
 [dependency-groups]
 dev = [

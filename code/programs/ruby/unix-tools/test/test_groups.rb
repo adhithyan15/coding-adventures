@@ -20,9 +20,12 @@ end
 
 require "minitest/autorun"
 require "etc"
+require "rbconfig"
 require "coding_adventures_cli_builder"
 
 require_relative "../groups_tool"
+
+if RbConfig::CONFIG['host_os'] !~ /mswin|mingw|cygwin/
 
 # ---------------------------------------------------------------------------
 # Helper module
@@ -173,4 +176,5 @@ class TestGroupsMainFunction < Minitest::Test
   ensure
     ARGV.replace(old_argv)
   end
+end
 end
