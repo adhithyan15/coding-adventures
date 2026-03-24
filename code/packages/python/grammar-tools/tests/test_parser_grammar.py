@@ -368,3 +368,85 @@ expression = NUMBER ;
         grammar = parse_parser_grammar(source)
         issues = validate_parser_grammar(grammar)
         assert not any("unreachable" in i for i in issues)
+
+
+# ---------------------------------------------------------------------------
+# Magic comments
+# ---------------------------------------------------------------------------
+
+
+class TestMagicComments:
+    """Tests for magic comment directives (# @key value) in .grammar files.
+
+    Magic comments follow the same convention as in .tokens files. They are
+    comment lines of the form ``# @key value`` that carry metadata about
+    the grammar file without affecting EBNF parsing.
+
+    Recognised directives for .grammar files:
+        ``# @version N`` — sets ParserGrammar.version to the integer N.
+
+    All other ``@key`` directives are silently ignored for forward
+    compatibility.
+    """
+
+    def test_version_is_set(self) -> None:
+        """# @version 1 sets grammar.version to 1."""
+        source = "# @version 1\nprogram = NUMBER ;\n"
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 1
+
+    def test_version_larger_number(self) -> None:
+        """# @version 5 sets grammar.version to 5."""
+        source = "# @version 5\nprogram = NUMBER ;\n"
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 5
+
+    def test_version_default_zero(self) -> None:
+        """Without # @version, grammar.version defaults to 0."""
+        source = "program = NUMBER ;\n"
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 0
+
+    def test_unknown_magic_key_silently_ignored(self) -> None:
+        """An unrecognised @key does not raise an error."""
+        source = "# @future_directive foo\nprogram = NUMBER ;\n"
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 0
+        assert len(grammar.rules) == 1
+
+    def test_magic_comment_mixed_with_normal_comments(self) -> None:
+        """Magic comments and ordinary comments coexist peacefully."""
+        source = (
+            "# Ordinary comment\n"
+            "# @version 3\n"
+            "# Another ordinary comment\n"
+            "program = NUMBER ;\n"
+        )
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 3
+        assert len(grammar.rules) == 1
+
+    def test_magic_comment_does_not_affect_rules(self) -> None:
+        """Magic comments do not accidentally consume or corrupt EBNF rules."""
+        source = (
+            "# @version 2\n"
+            "program = { statement } ;\n"
+            "statement = NUMBER ;\n"
+        )
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 2
+        assert len(grammar.rules) == 2
+        assert grammar.rules[0].name == "program"
+        assert grammar.rules[1].name == "statement"
+
+    def test_version_non_integer_silently_ignored(self) -> None:
+        """A non-integer @version value is silently ignored (version stays 0)."""
+        source = "# @version bad\nprogram = NUMBER ;\n"
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 0
+
+    def test_magic_comment_extra_whitespace(self) -> None:
+        """Extra whitespace around the @ key and value is handled correctly."""
+        source = "#  @version   9\nprogram = NUMBER ;\n"
+        grammar = parse_parser_grammar(source)
+        assert grammar.version == 9

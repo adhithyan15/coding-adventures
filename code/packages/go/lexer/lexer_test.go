@@ -1403,3 +1403,104 @@ func TestPatternGroupMultiplePushPopSequence(t *testing.T) {
 		t.Error("Expected TAG_NAME with double push")
 	}
 }
+
+// ── Case-insensitive keyword tests ──────────────────────────────────────────
+
+// buildCaseInsensitiveGrammar creates a TokenGrammar with CaseInsensitive true
+// and a small keyword set, simulating what # @case_insensitive true produces.
+func buildCaseInsensitiveGrammar() *grammartools.TokenGrammar {
+	source := "# @case_insensitive true\nNAME = /[a-zA-Z_][a-zA-Z0-9_]*/\nskip:\n  WS = /[ \\t]+/\nkeywords:\n  SELECT\n  FROM\n  WHERE"
+	grammar, err := grammartools.ParseTokenGrammar(source)
+	if err != nil {
+		panic(err)
+	}
+	return grammar
+}
+
+func TestCaseInsensitiveKeywordLowercase(t *testing.T) {
+	// "select" (all lowercase) should produce a KEYWORD token with value "SELECT".
+	grammar := buildCaseInsensitiveGrammar()
+	lexer := NewGrammarLexer("select name from table1", grammar)
+	tokens := lexer.Tokenize()
+
+	if tokens[0].Type != TokenKeyword {
+		t.Errorf("Expected KEYWORD type, got %v", tokens[0].Type)
+	}
+	if tokens[0].Value != "SELECT" {
+		t.Errorf("Expected uppercase value 'SELECT', got %q", tokens[0].Value)
+	}
+}
+
+func TestCaseInsensitiveKeywordUppercase(t *testing.T) {
+	// "SELECT" (all uppercase) should also produce KEYWORD with value "SELECT".
+	grammar := buildCaseInsensitiveGrammar()
+	lexer := NewGrammarLexer("SELECT name FROM table1", grammar)
+	tokens := lexer.Tokenize()
+
+	if tokens[0].Type != TokenKeyword {
+		t.Errorf("Expected KEYWORD type, got %v", tokens[0].Type)
+	}
+	if tokens[0].Value != "SELECT" {
+		t.Errorf("Expected uppercase value 'SELECT', got %q", tokens[0].Value)
+	}
+}
+
+func TestCaseInsensitiveKeywordMixedCase(t *testing.T) {
+	// "Select", "From", "Where" (mixed case) should each produce KEYWORD with uppercase value.
+	grammar := buildCaseInsensitiveGrammar()
+	lexer := NewGrammarLexer("Select name From tbl Where col", grammar)
+	tokens := lexer.Tokenize()
+
+	keywords := []string{}
+	for _, tok := range tokens {
+		if tok.Type == TokenKeyword {
+			keywords = append(keywords, tok.Value)
+		}
+	}
+	if len(keywords) != 3 {
+		t.Fatalf("Expected 3 keywords, got %d: %v", len(keywords), keywords)
+	}
+	for _, kw := range keywords {
+		if kw != strings.ToUpper(kw) {
+			t.Errorf("Expected uppercase keyword value, got %q", kw)
+		}
+	}
+}
+
+func TestCaseInsensitiveIdentifierNotKeyword(t *testing.T) {
+	// A non-keyword identifier should remain a NAME token.
+	grammar := buildCaseInsensitiveGrammar()
+	lexer := NewGrammarLexer("myTable", grammar)
+	tokens := lexer.Tokenize()
+
+	if tokens[0].Type != TokenName {
+		t.Errorf("Expected NAME type, got %v", tokens[0].Type)
+	}
+	if tokens[0].Value != "myTable" {
+		t.Errorf("Expected original value 'myTable', got %q", tokens[0].Value)
+	}
+}
+
+func TestCaseSensitiveDefaultBehavior(t *testing.T) {
+	// Without # @case_insensitive true, behavior should be unchanged:
+	// keywords stored as-is and only exact matches promoted.
+	source := "NAME = /[a-zA-Z_]+/\nskip:\n  WS = /[ \\t]+/\nkeywords:\n  if\n  else"
+	grammar, err := grammartools.ParseTokenGrammar(source)
+	if err != nil {
+		t.Fatalf("Failed to parse grammar: %v", err)
+	}
+
+	lexer := NewGrammarLexer("if x else IF", grammar)
+	tokens := lexer.Tokenize()
+
+	// "if" and "else" should be KEYWORD; "IF" should be NAME (case-sensitive)
+	if tokens[0].Type != TokenKeyword || tokens[0].Value != "if" {
+		t.Errorf("Expected KEYWORD 'if', got type=%v value=%q", tokens[0].Type, tokens[0].Value)
+	}
+	if tokens[2].Type != TokenKeyword || tokens[2].Value != "else" {
+		t.Errorf("Expected KEYWORD 'else', got type=%v value=%q", tokens[2].Type, tokens[2].Value)
+	}
+	if tokens[3].Type != TokenName || tokens[3].Value != "IF" {
+		t.Errorf("Expected NAME 'IF' (case-sensitive), got type=%v value=%q", tokens[3].Type, tokens[3].Value)
+	}
+}

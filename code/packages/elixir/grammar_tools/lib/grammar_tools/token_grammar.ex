@@ -44,7 +44,9 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             escape_mode: nil,
             groups: %{},
             case_sensitive: true,
-            error_definitions: []
+            error_definitions: [],
+            version: 0,
+            case_insensitive: false
 
   @type token_definition :: %{
           name: String.t(),
@@ -76,7 +78,9 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           escape_mode: String.t() | nil,
           groups: %{optional(String.t()) => pattern_group()},
           case_sensitive: boolean(),
-          error_definitions: [token_definition()]
+          error_definitions: [token_definition()],
+          version: non_neg_integer(),
+          case_insensitive: boolean()
         }
 
   @doc """
@@ -98,8 +102,43 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           stripped = String.trim(line)
 
           cond do
-            # Blank lines and comments
-            stripped == "" or String.starts_with?(stripped, "#") ->
+            # Blank lines
+            stripped == "" ->
+              {:cont, acc}
+
+            # Magic comments — lines starting with "# @key value"
+            # These configure grammar-level options such as version number
+            # and case-insensitivity. Unknown keys are silently ignored for
+            # forward compatibility.
+            String.starts_with?(stripped, "#") and
+                Regex.match?(~r/^#\s*@\w+/, stripped) ->
+              case Regex.run(~r/^#\s*@(\w+)\s*(.*)$/, stripped) do
+                [_, key, value] ->
+                  grammar =
+                    case key do
+                      "version" ->
+                        case Integer.parse(String.trim(value)) do
+                          {n, _} -> %{acc.grammar | version: n}
+                          :error -> acc.grammar
+                        end
+
+                      "case_insensitive" ->
+                        ci = String.trim(value) == "true"
+                        %{acc.grammar | case_insensitive: ci}
+
+                      _ ->
+                        # Unknown magic comment key — silently ignore
+                        acc.grammar
+                    end
+
+                  {:cont, %{acc | grammar: grammar}}
+
+                _ ->
+                  {:cont, acc}
+              end
+
+            # Plain comments
+            String.starts_with?(stripped, "#") ->
               {:cont, acc}
 
             # Mode directive

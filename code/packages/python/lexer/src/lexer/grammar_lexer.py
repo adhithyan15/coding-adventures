@@ -271,15 +271,37 @@ class GrammarLexer:
         self._line = 1
         self._column = 1
 
+        # Case-insensitive mode — when True, keyword matching ignores case.
+        # Enabled via ``# @case_insensitive true`` in the .tokens file.
+        # When active:
+        #   - keywords are stored in uppercase in the keyword/reserved sets
+        #   - NAME values are compared via value.upper() against those sets
+        #   - matched keyword tokens have their value normalized to uppercase
+        self._case_insensitive = grammar.case_insensitive
+
         # Pre-compute keyword set for fast membership testing.
         # When the lexer matches a NAME token, it checks this set to decide
         # whether the value should be reclassified as a KEYWORD.
-        self._keyword_set = frozenset(grammar.keywords)
+        # In case-insensitive mode, every keyword is stored as uppercase so
+        # that ``value.upper()`` lookups will find a match regardless of the
+        # original casing in the source (e.g., "SELECT", "select", "Select"
+        # all map to the same uppercase entry).
+        if self._case_insensitive:
+            self._keyword_set = frozenset(kw.upper() for kw in grammar.keywords)
+        else:
+            self._keyword_set = frozenset(grammar.keywords)
 
         # Reserved keywords cause immediate lex errors. In Starlark, words
         # like "class" and "import" are reserved — using them is a syntax
         # error at lex time rather than a confusing parse error later.
-        self._reserved_set = frozenset(grammar.reserved_keywords)
+        # Apply the same uppercase normalisation in case-insensitive mode so
+        # that reserved-word detection is also case-insensitive.
+        if self._case_insensitive:
+            self._reserved_set = frozenset(
+                kw.upper() for kw in grammar.reserved_keywords
+            )
+        else:
+            self._reserved_set = frozenset(grammar.reserved_keywords)
 
         # Indentation mode flag. When active, the lexer maintains an
         # indentation stack and emits INDENT/DEDENT/NEWLINE tokens.
@@ -920,9 +942,19 @@ class GrammarLexer:
                         column=start_column,
                     )
                 else:
+                    # In case-insensitive mode, KEYWORD values are normalised
+                    # to uppercase so that "select", "SELECT", and "Select"
+                    # all produce a KEYWORD token with value "SELECT".
+                    # Non-keyword tokens (NAME, NUMBER, etc.) keep their
+                    # original casing from the source text.
+                    emit_value = value
+                    if self._case_insensitive and token_type in (
+                        TokenType.KEYWORD, "KEYWORD"
+                    ):
+                        emit_value = value.upper()
                     token = Token(
                         type=token_type,
-                        value=value,
+                        value=emit_value,
                         line=start_line,
                         column=start_column,
                     )
@@ -1025,7 +1057,10 @@ class GrammarLexer:
         # Reserved keyword check — error on reserved identifiers.
         # In Starlark, "class", "import", etc. are reserved. Using them
         # is a lex error rather than a confusing parse error.
-        if effective_name == "NAME" and value in self._reserved_set:
+        # In case-insensitive mode, compare the uppercased value so that
+        # "CLASS", "class", and "Class" all trigger the same error.
+        lookup_value = value.upper() if self._case_insensitive else value
+        if effective_name == "NAME" and lookup_value in self._reserved_set:
             raise LexerError(
                 f"Reserved keyword '{value}' cannot be used as an identifier",
                 line=self._line,
@@ -1034,7 +1069,9 @@ class GrammarLexer:
 
         # Keyword detection — reclassify NAME → KEYWORD when the value
         # matches a known keyword.
-        if effective_name == "NAME" and value in self._keyword_set:
+        # In case-insensitive mode we test against the uppercase lookup value
+        # (the set already stores entries in uppercase, see __init__).
+        if effective_name == "NAME" and lookup_value in self._keyword_set:
             try:
                 return TokenType.KEYWORD
             except (KeyError, AttributeError):

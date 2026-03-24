@@ -226,9 +226,13 @@ export interface GrammarRule {
  * Properties:
  *   rules: Ordered list of grammar rules. The first rule is the
  *       entry point (start symbol).
+ *   version: Grammar file version number, from `# @version N` magic comment.
+ *       Defaults to 0 (meaning "latest" or "unversioned"). See the
+ *       TokenGrammar documentation for a full explanation of magic comments.
  */
 export interface ParserGrammar {
   readonly rules: readonly GrammarRule[];
+  readonly version: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -652,18 +656,48 @@ class Parser {
 /**
  * Parse the text of a .grammar file into a ParserGrammar.
  *
- * This function tokenizes the source, then runs a recursive descent
+ * This function first scans all comment lines for magic comments
+ * (`# @key value`), then tokenizes the source for the recursive descent
  * parser over the token stream to produce an AST of grammar elements.
+ *
+ * Magic comments are lines of the form `# @key value`. Currently supported:
+ *   # @version N  — sets the version field (integer; default 0)
+ *
+ * Unknown keys are silently ignored. Magic comments can appear anywhere in
+ * the file — before, after, or between rules.
  *
  * @param source - The full text content of a .grammar file.
  * @returns A ParserGrammar containing all parsed rules.
  * @throws ParserGrammarError if the source cannot be parsed.
  */
 export function parseParserGrammar(source: string): ParserGrammar {
+  // --- Pre-scan: collect magic comments ---
+  // We walk the raw lines once before tokenizing, so that magic comments
+  // are picked up regardless of where in the file they appear.
+  let version = 0;
+  const magicCommentPattern = /^#\s*@(\w+)\s*(.*)$/;
+  for (const rawLine of source.split("\n")) {
+    const stripped = rawLine.trim();
+    if (!stripped.startsWith("#")) {
+      continue;
+    }
+    const magicMatch = magicCommentPattern.exec(stripped);
+    if (magicMatch) {
+      const key = magicMatch[1];
+      const value = magicMatch[2].trim();
+      if (key === "version") {
+        const parsed = parseInt(value, 10);
+        version = isNaN(parsed) ? 0 : parsed;
+      }
+      // Unknown keys silently ignored — forward-compatible.
+    }
+  }
+
+  // --- Main parse ---
   const tokens = tokenizeGrammar(source);
   const parser = new Parser(tokens);
   const rules = parser.parse();
-  return { rules };
+  return { rules, version };
 }
 
 // ---------------------------------------------------------------------------

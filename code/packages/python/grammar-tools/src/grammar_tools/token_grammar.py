@@ -66,6 +66,26 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+# ---------------------------------------------------------------------------
+# Magic comment regex
+# ---------------------------------------------------------------------------
+# Magic comments are special directives embedded in comment lines, using the
+# form:  # @key value
+#
+# They must appear as complete comment lines (the # is the first non-space
+# character on the line). The pattern captures:
+#   group 1 — the key (word characters only, e.g. "version")
+#   group 2 — the rest of the line after the key (the raw value string)
+#
+# Examples:
+#   # @version 1          → key="version", value="1"
+#   # @case_insensitive true  → key="case_insensitive", value="true"
+#
+# Unknown keys are silently ignored for forward compatibility: a newer
+# grammar file can contain directives that an older grammar-tools version
+# does not understand, and parsing will still succeed.
+_MAGIC_COMMENT_RE = re.compile(r'^#\s*@(\w+)\s*(.*)$')
+
 
 # ---------------------------------------------------------------------------
 # Exceptions
@@ -148,6 +168,16 @@ class TokenGrammar:
     """The complete contents of a parsed .tokens file.
 
     Attributes:
+        version: Schema version declared with ``# @version N``. Defaults
+            to 0 (unversioned). Tools can use this to detect whether a
+            file uses features that require a minimum grammar-tools
+            release. Forward-compatible: older tools that do not
+            understand a version simply ignore the field.
+        case_insensitive: When ``True`` (set via ``# @case_insensitive true``),
+            the lexer should treat all patterns as case-insensitive. This
+            is a global flag: it applies to every token definition in the
+            file. Useful for languages like SQL or HTML where keywords are
+            conventionally case-insensitive. Defaults to ``False``.
         definitions: Ordered list of token definitions. Order matters
             because the lexer uses first-match-wins semantics.
         keywords: List of reserved words from the keywords: section.
@@ -183,6 +213,8 @@ class TokenGrammar:
             by case-insensitive languages like VHDL.
     """
 
+    version: int = 0
+    case_insensitive: bool = False
     definitions: list[TokenDefinition] = field(default_factory=list)
     keywords: list[str] = field(default_factory=list)
     mode: str | None = None
@@ -442,8 +474,35 @@ def parse_token_grammar(source: str) -> TokenGrammar:
         line = raw_line.rstrip()
         stripped = line.strip()
 
-        # --- Blank lines and comments are always skipped ---
-        if stripped == "" or stripped.startswith("#"):
+        # --- Blank lines are always skipped ---
+        if stripped == "":
+            continue
+
+        # --- Comment lines: check for magic comments, then skip ---
+        # Regular comments (``# some text``) are silently ignored.
+        # Magic comments (``# @key value``) carry structured directives
+        # that configure grammar-level metadata. We scan every comment
+        # line with _MAGIC_COMMENT_RE before discarding it.
+        #
+        # Currently recognised keys:
+        #   @version N            — set grammar.version to integer N
+        #   @case_insensitive B   — set grammar.case_insensitive to bool
+        #
+        # Unknown keys are silently ignored so that files written for a
+        # newer grammar-tools version still parse correctly on older ones.
+        if stripped.startswith("#"):
+            magic = _MAGIC_COMMENT_RE.match(stripped)
+            if magic:
+                key = magic.group(1)
+                value = magic.group(2).strip()
+                if key == "version":
+                    try:
+                        grammar.version = int(value)
+                    except ValueError:
+                        pass  # Non-integer version — ignore silently
+                elif key == "case_insensitive":
+                    grammar.case_insensitive = (value == "true")
+                # All other keys are intentionally ignored (forward compat)
             continue
 
         # --- mode: directive ---

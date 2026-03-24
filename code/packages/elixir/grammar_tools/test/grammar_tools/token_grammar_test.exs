@@ -517,6 +517,108 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
   # Pattern Group Error Cases
   # ---------------------------------------------------------------------------
 
+  # ---------------------------------------------------------------------------
+  # Magic Comments
+  # ---------------------------------------------------------------------------
+  #
+  # Magic comments are special comment lines of the form `# @key value`.
+  # They configure grammar-level options that affect the lexer or tooling.
+  # They must be parsed without disturbing normal token definition parsing.
+  #
+  # Supported keys:
+  #   @version N            — integer schema version (default 0)
+  #   @case_insensitive B   — boolean flag (default false)
+
+  describe "parse/1 — magic comments" do
+    test "# @version 1 sets version to 1" do
+      source = """
+      # @version 1
+      NAME = /[a-zA-Z]+/
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.version == 1
+    end
+
+    test "missing version comment defaults to 0" do
+      {:ok, grammar} = TokenGrammar.parse("NAME = /[a-zA-Z]+/")
+      assert grammar.version == 0
+    end
+
+    test "# @version with a larger integer is stored correctly" do
+      source = "# @version 42\nNAME = /[a-zA-Z]+/"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.version == 42
+    end
+
+    test "# @case_insensitive true sets case_insensitive to true" do
+      source = """
+      # @case_insensitive true
+      NAME = /[a-zA-Z]+/
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.case_insensitive == true
+    end
+
+    test "# @case_insensitive false sets case_insensitive to false" do
+      source = """
+      # @case_insensitive false
+      NAME = /[a-zA-Z]+/
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.case_insensitive == false
+    end
+
+    test "missing case_insensitive comment defaults to false" do
+      {:ok, grammar} = TokenGrammar.parse("NAME = /[a-zA-Z]+/")
+      assert grammar.case_insensitive == false
+    end
+
+    test "unknown magic comment key is silently ignored" do
+      source = """
+      # @unknown_option foobar
+      NAME = /[a-zA-Z]+/
+      """
+
+      # Must parse successfully and not affect known fields
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.version == 0
+      assert grammar.case_insensitive == false
+      assert length(grammar.definitions) == 1
+    end
+
+    test "both version and case_insensitive can appear together" do
+      source = """
+      # @version 3
+      # @case_insensitive true
+      NAME = /[a-zA-Z]+/
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.version == 3
+      assert grammar.case_insensitive == true
+    end
+
+    test "magic comments do not interfere with other grammar content" do
+      source = """
+      # @version 2
+      NAME = /[a-zA-Z]+/
+      NUMBER = /[0-9]+/
+
+      keywords:
+        if
+        else
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.version == 2
+      assert length(grammar.definitions) == 2
+      assert grammar.keywords == ["if", "else"]
+    end
+  end
+
   describe "parse/1 — pattern group errors" do
     test "'group :' with no name raises an error" do
       source = "TEXT = /abc/\ngroup :\n  FOO = /x/\n"

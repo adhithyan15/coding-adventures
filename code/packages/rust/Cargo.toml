@@ -66,6 +66,8 @@ members = [
     "rom-bios",
     "ruby-lexer",
     "ruby-parser",
+    "sql-lexer",
+    "sql-parser",
     "starlark-ast-to-bytecode-compiler",
     "starlark-compiler",
     "starlark-interpreter",

@@ -756,6 +756,7 @@ mod tests {
                     line_number: 2,
                 },
             ],
+            version: 0,
         }
     }
 
@@ -810,7 +811,7 @@ mod tests {
     #[test]
     fn test_grammar_parse_empty_grammar() {
         let tokens = vec![tok(TokenType::Eof, "")];
-        let grammar = ParserGrammar { rules: vec![] };
+        let grammar = ParserGrammar { rules: vec![], version: 0 };
         let mut parser = GrammarParser::new(tokens, grammar);
         assert!(parser.parse().is_err());
     }
@@ -832,6 +833,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![tok(TokenType::Number, "42"), tok(TokenType::Eof, "")];
@@ -855,6 +857,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![tok(TokenType::Number, "42"), tok(TokenType::Eof, "")];
@@ -878,6 +881,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
         let tokens = vec![tok(TokenType::Name, "hello"), tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar);
@@ -906,6 +910,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![
@@ -993,6 +998,7 @@ mod tests {
                     line_number: 2,
                 },
             ],
+            version: 0,
         };
 
         let tokens = vec![
@@ -1028,6 +1034,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![
@@ -1062,6 +1069,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let parser = GrammarParser::new(vec![], grammar);

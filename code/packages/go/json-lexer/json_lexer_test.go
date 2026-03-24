@@ -1,6 +1,7 @@
 package jsonlexer
 
 import (
+	"os"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -727,5 +728,63 @@ func TestTokenizeJSONLineAndColumn(t *testing.T) {
 	}
 	if tokens[0].Column != 1 {
 		t.Errorf("Expected column 1, got %d", tokens[0].Column)
+	}
+}
+
+// =============================================================================
+// TestCreateJSONLexerErrorMissingFile
+// =============================================================================
+//
+// Verifies that CreateJSONLexer returns an error when the grammar file cannot
+// be found. Covers the os.ReadFile error path that is otherwise unreachable
+// in normal test runs.
+func TestCreateJSONLexerErrorMissingFile(t *testing.T) {
+	original := jsonTokensPath
+	jsonTokensPath = "/does/not/exist/json.tokens"
+	defer func() { jsonTokensPath = original }()
+
+	_, err := CreateJSONLexer(`{"key": "value"}`)
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestTokenizeJSONErrorPropagates
+// =============================================================================
+//
+// Verifies that TokenizeJSON propagates the error from CreateJSONLexer.
+// Covers the `if err != nil { return nil, err }` path inside TokenizeJSON.
+func TestTokenizeJSONErrorPropagates(t *testing.T) {
+	original := jsonTokensPath
+	jsonTokensPath = "/does/not/exist/json.tokens"
+	defer func() { jsonTokensPath = original }()
+
+	_, err := TokenizeJSON(`[1, 2, 3]`)
+	if err == nil {
+		t.Error("Expected error for missing grammar file, got nil")
+	}
+}
+
+// =============================================================================
+// TestCreateJSONLexerErrorInvalidGrammar
+// =============================================================================
+//
+// Verifies that CreateJSONLexer returns an error when the grammar file exists
+// but contains invalid content. Covers the ParseTokenGrammar error path.
+func TestCreateJSONLexerErrorInvalidGrammar(t *testing.T) {
+	tmp := t.TempDir()
+	badPath := tmp + "/bad.tokens"
+	if err := os.WriteFile(badPath, []byte("INVALID%%GRAMMAR\n"), 0o644); err != nil {
+		t.Fatalf("Failed to write temp grammar: %v", err)
+	}
+
+	original := jsonTokensPath
+	jsonTokensPath = badPath
+	defer func() { jsonTokensPath = original }()
+
+	_, err := CreateJSONLexer(`{"key": "value"}`)
+	if err == nil {
+		t.Error("Expected error for invalid grammar, got nil")
 	}
 }

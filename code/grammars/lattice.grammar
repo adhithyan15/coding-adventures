@@ -1,4 +1,5 @@
 # Parser grammar for Lattice — a CSS superset language
+# @version 1
 #
 # Lattice extends CSS3 with variables, mixins, control flow, functions, and
 # modules. This file is a standalone copy of all CSS grammar rules plus ~20
