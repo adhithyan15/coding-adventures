@@ -3,7 +3,6 @@ name = "coding-adventures-wave"
 version = "0.1.0"
 description = "Simple harmonic wave model from first principles"
 requires-python = ">=3.9"
-dependencies = ["coding-adventures-trig"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
