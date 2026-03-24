@@ -566,7 +566,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
   defp find_repo_root("/"), do: {:error, "not inside a git repository"}
 
   defp find_repo_root(current_dir) do
-    if File.dir?(Path.join(current_dir, ".git")) do
+    if File.exists?(Path.join(current_dir, ".git")) do
       {:ok, current_dir}
     else
       find_repo_root(Path.dirname(current_dir))
@@ -1221,15 +1221,17 @@ defmodule CodingAdventures.ScaffoldGenerator do
   # File generation -- Elixir
   # =========================================================================
 
-  defp generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps) do
+  defp generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, _ordered_deps) do
     snake = to_snake_case(pkg_name)
     camel = to_camel_case(pkg_name)
+    base_dir = Path.dirname(target_dir)
 
     dep_entries =
       direct_deps
       |> Enum.map(fn dep ->
         dep_snake = to_snake_case(dep)
-        "      {:coding_adventures_#{dep_snake}, path: \"../#{dep_snake}\"}"
+        dep_app = elixir_dep_app(base_dir, dep_snake)
+        "      {#{dep_app}, path: \"../#{dep_snake}\"}"
       end)
       |> Enum.join(",\n")
 
@@ -1289,19 +1291,10 @@ defmodule CodingAdventures.ScaffoldGenerator do
 
     test_helper = "ExUnit.start()\n"
 
-    build_content =
-      if length(ordered_deps) > 0 do
-        parts =
-          Enum.map(ordered_deps, fn dep ->
-            dep_snake = to_snake_case(dep)
-            "cd ../#{dep_snake} && mix deps.get --quiet && mix compile --quiet"
-          end) ++
-            ["cd ../#{snake} && mix deps.get --quiet && mix test --cover"]
-
-        Enum.join(parts, " && \\\n") <> "\n"
-      else
-        "mix deps.get --quiet && mix test --cover\n"
-      end
+    # Let Mix resolve and compile local path dependencies itself during test.
+    # This keeps BUILD files portable across bash/cmd and avoids concurrent
+    # writes into shared sibling _build directories in CI.
+    build_content = "mix deps.get --quiet && mix test --cover\n"
 
     # Create directories and write files
     lib_dir = Path.join([target_dir, "lib", "coding_adventures"])
@@ -1314,6 +1307,21 @@ defmodule CodingAdventures.ScaffoldGenerator do
     write_dedented(Path.join(test_dir, "#{snake}_test.exs"), test_exs)
     File.write!(Path.join(test_dir, "test_helper.exs"), test_helper)
     File.write!(Path.join(target_dir, "BUILD"), build_content)
+  end
+
+  defp elixir_dep_app(base_dir, dep_snake) do
+    mix_exs_path = Path.join([base_dir, dep_snake, "mix.exs"])
+
+    case File.read(mix_exs_path) do
+      {:ok, contents} ->
+        case Regex.run(~r/app:\s*:(\w+)/, contents) do
+          [_, app_name] -> ":#{app_name}"
+          _ -> ":coding_adventures_#{dep_snake}"
+        end
+
+      {:error, _reason} ->
+        ":coding_adventures_#{dep_snake}"
+    end
   end
 
   # =========================================================================
