@@ -1,4 +1,0 @@
-uv venv --quiet --clear
-uv pip install --no-deps -e ../trig --quiet
-uv pip install --no-deps -e . --quiet
-uv run --no-project python -m pytest tests/ -v
