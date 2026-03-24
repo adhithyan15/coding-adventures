@@ -1,2 +1,1 @@
-npm install --silent
-npx vitest run --coverage
+npm install --silent && npx vitest run --coverage

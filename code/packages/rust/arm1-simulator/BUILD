@@ -1,1 +1,1 @@
-cargo test -p arm1-simulator -- --nocapture
+cargo test -p arm1-simulator --verbose
