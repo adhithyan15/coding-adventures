@@ -103,6 +103,12 @@ module BuildTool
       changed = {}
       repo_root = Pathname(repo_root)
 
+      if changed_files.any? { |f| f.start_with?(".github/") || f.start_with?("code/programs/ruby/build-tool/") }
+        puts "Git diff: shared files changed -- rebuilding everything"
+        packages.each { |p| changed[p.name] = true }
+        return changed
+      end
+
       # Build a lookup table of package info with relative paths.
       #
       # We precompute relative paths once rather than computing them
