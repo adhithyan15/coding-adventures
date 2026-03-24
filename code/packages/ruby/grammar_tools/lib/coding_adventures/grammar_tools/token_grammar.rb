@@ -107,13 +107,18 @@ module CodingAdventures
     # reserved_keywords -- keywords that cause lex errors if used as identifiers
     # groups            -- hash of group_name => PatternGroup for named
     #                      pattern groups (context-sensitive lexing)
+    # case_sensitive    -- whether the lexer should match case-sensitively
+    #                      (default true). When false, the lexer lowercases
+    #                      the source text before matching. Used by
+    #                      case-insensitive languages like VHDL and SQL.
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :error_definitions, :reserved_keywords, :groups
-      attr_accessor :mode, :escape_mode
+      attr_accessor :mode, :escape_mode, :case_sensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
-                     reserved_keywords: [], escape_mode: nil, groups: {})
+                     reserved_keywords: [],
+                     escape_mode: nil, groups: {}, case_sensitive: true)
         @definitions = definitions
         @keywords = keywords
         @mode = mode
@@ -122,6 +127,7 @@ module CodingAdventures
         @reserved_keywords = reserved_keywords
         @escape_mode = escape_mode
         @groups = groups
+        @case_sensitive = case_sensitive
       end
 
       # Return the set of all defined token names (including aliases).
@@ -149,6 +155,34 @@ module CodingAdventures
       end
     end
 
+    # Scan a /pattern/ string starting at index 1 and return the index of
+    # the closing /. Skips escaped characters (\x) and does not treat /
+    # inside [...] character classes as the closing delimiter.
+    # Returns -1 if no closing slash is found.
+    def self.find_closing_slash(s)
+      in_bracket = false
+      i = 1
+      while i < s.length
+        ch = s[i]
+        if ch == "\\"
+          i += 2 # skip escaped character
+          next
+        end
+        if ch == "[" && !in_bracket
+          in_bracket = true
+        elsif ch == "]" && in_bracket
+          in_bracket = false
+        elsif ch == "/" && !in_bracket
+          return i
+        end
+        i += 1
+      end
+      # Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+      # try the last / as a best-effort parse.
+      last = s.rindex("/")
+      (last && last > 0) ? last : -1
+    end
+
     # Parse a single token definition's pattern and optional -> ALIAS suffix.
     #
     # Returns a TokenDefinition. The pattern_part may have a "-> ALIAS"
@@ -157,9 +191,11 @@ module CodingAdventures
       alias_name = nil
 
       if pattern_part.start_with?("/")
-        # Regex pattern -- find the closing /
-        last_slash = pattern_part.rindex("/")
-        if last_slash == 0
+        # Regex pattern — find the closing / by scanning character-by-character.
+        # We track bracket depth so that / inside [...] character classes is
+        # not mistaken for the closing delimiter. We also skip escaped chars.
+        last_slash = find_closing_slash(pattern_part)
+        if last_slash == -1
           raise TokenGrammarError.new(
             "Unclosed regex pattern for token #{name_part.inspect}",
             line_number
@@ -301,6 +337,24 @@ module CodingAdventures
             )
           end
           grammar.escape_mode = escape_value
+          current_section = nil
+          next
+        end
+
+        # case_sensitive: directive -- controls whether the lexer matches
+        # case-sensitively. ``case_sensitive: false`` makes the lexer
+        # lowercase the source text before matching. Used by
+        # case-insensitive languages like VHDL and SQL.
+        if stripped.start_with?("case_sensitive:")
+          cs_value = stripped[15..].strip.downcase
+          unless %w[true false].include?(cs_value)
+            raise TokenGrammarError.new(
+              "Invalid value for 'case_sensitive:': #{cs_value.inspect} " \
+              "(expected 'true' or 'false')",
+              line_number
+            )
+          end
+          grammar.case_sensitive = cs_value == "true"
           current_section = nil
           next
         end
