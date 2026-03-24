@@ -1,7 +1,8 @@
 uv venv --quiet --clear
-uv pip install -e ../clock --quiet
-uv pip install -e ../logic-gates --quiet
-uv pip install -e ../arithmetic --quiet
-uv pip install -e ../arm1-simulator --quiet
-uv pip install -e .[dev] --quiet
-uv run python -m pytest tests/ -v
+uv pip install --no-deps -e ../clock --quiet
+uv pip install --no-deps -e ../logic-gates --quiet
+uv pip install --no-deps -e ../arithmetic --quiet
+uv pip install --no-deps -e ../arm1-simulator --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov ruff mypy --quiet
+uv run --no-project python -m pytest tests/ -v
