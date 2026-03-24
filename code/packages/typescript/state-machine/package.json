@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Formal automata (DFA, NFA, PDA, Modal) for parsing, protocols, and hardware — with full execution tracing",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/packages/typescript/state-machine/src/index.js",
+  "types": "dist/packages/typescript/state-machine/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
