@@ -291,6 +291,15 @@ type GrammarLexer struct {
 	// postTokenizeHooks holds functions that transform the token list after
 	// tokenization. Multiple hooks compose left-to-right.
 	postTokenizeHooks []PostTokenizeHook
+
+	// caseInsensitive is true when the grammar was loaded with
+	// # @case_insensitive true. In this mode:
+	//   - The keyword set stores uppercase keyword values.
+	//   - Keyword lookup uses strings.ToUpper(value) before checking.
+	//   - Emitted KEYWORD tokens have their value normalized to uppercase.
+	// This allows SQL grammars to accept SELECT/select/Select etc. and
+	// still match grammar literals like "SELECT".
+	caseInsensitive bool
 }
 
 // NewGrammarLexer creates a new grammar-driven lexer.
@@ -307,14 +316,25 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 		src = strings.ToLower(source)
 	}
 
+	// Build keyword set. When case-insensitive mode is active, keywords
+	// are stored as uppercase so lookup can use strings.ToUpper(value).
 	keywordSet := make(map[string]struct{})
 	for _, kw := range grammar.Keywords {
-		keywordSet[kw] = struct{}{}
+		if grammar.CaseInsensitive {
+			keywordSet[strings.ToUpper(kw)] = struct{}{}
+		} else {
+			keywordSet[kw] = struct{}{}
+		}
 	}
 
+	// Build reserved keyword set (same case treatment as keyword set).
 	reservedSet := make(map[string]struct{})
 	for _, rk := range grammar.ReservedKeywords {
-		reservedSet[rk] = struct{}{}
+		if grammar.CaseInsensitive {
+			reservedSet[strings.ToUpper(rk)] = struct{}{}
+		} else {
+			reservedSet[rk] = struct{}{}
+		}
 	}
 
 	// Build alias map: definition name -> alias name.
@@ -405,8 +425,11 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 		groupPatterns:   groupPatterns,
 		groupStack:      []string{"default"},
 		onToken:         nil,
-		skipEnabled:     true,
-		aliasMap:        aliasMap,
+		skipEnabled:       true,
+		aliasMap:          aliasMap,
+		caseInsensitive:   grammar.CaseInsensitive,
+		preTokenizeHooks:  nil,
+		postTokenizeHooks: nil,
 	}
 }
 
@@ -465,16 +488,33 @@ func (l *GrammarLexer) advance() {
 // Returns (tokenType, typeName) where typeName is the effective name for
 // the parser (alias if present, otherwise the definition name).
 func (l *GrammarLexer) resolveTokenType(tokenName string, value string, alias string) (TokenType, string) {
-	// Reserved keyword check
+	// Reserved keyword check. In case-insensitive mode, compare using the
+	// uppercase form of the value (the reserved set stores uppercase keys).
 	if tokenName == "NAME" {
-		if _, ok := l.reservedSet[value]; ok {
+		lookupValue := value
+		if l.caseInsensitive {
+			lookupValue = strings.ToUpper(value)
+		}
+		if _, ok := l.reservedSet[lookupValue]; ok {
 			panic(fmt.Sprintf("LexerError at %d:%d: Reserved keyword %q cannot be used as an identifier", l.line, l.column, value))
 		}
 	}
 
-	// Regular keyword check
+	// Regular keyword check. In case-insensitive mode, the keyword set
+	// stores uppercase values. We compare strings.ToUpper(value) against
+	// the set and emit the keyword with its value normalized to uppercase.
+	// This means grammar rules can use "SELECT" and it matches select/SELECT/Select.
 	if tokenName == "NAME" {
-		if _, ok := l.keywordSet[value]; ok {
+		lookupValue := value
+		if l.caseInsensitive {
+			lookupValue = strings.ToUpper(value)
+		}
+		if _, ok := l.keywordSet[lookupValue]; ok {
+			if l.caseInsensitive {
+				// Normalize the emitted keyword value to uppercase so grammar
+				// literals like "SELECT" match regardless of input case.
+				return TokenKeyword, "KEYWORD"
+			}
 			return TokenKeyword, "KEYWORD"
 		}
 	}
@@ -585,6 +625,13 @@ func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
 			startCol := l.column
 
 			tType, typeName := l.resolveTokenType(p.Name, value, p.Alias)
+
+			// In case-insensitive mode, normalize KEYWORD token values to
+			// uppercase. This ensures grammar literals like "SELECT" match
+			// regardless of how the user typed the keyword (select/SELECT/Select).
+			if l.caseInsensitive && tType == TokenKeyword {
+				value = strings.ToUpper(value)
+			}
 
 			// Handle STRING tokens: strip quotes and optionally process escapes.
 			// When EscapeMode is "none", we strip the quotes but leave escape

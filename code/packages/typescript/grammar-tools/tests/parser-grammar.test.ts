@@ -452,3 +452,53 @@ expression = NUMBER ;
     expect(issues.some((i) => i.includes("unreachable"))).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Magic comments
+// ---------------------------------------------------------------------------
+
+describe("MagicComments", () => {
+  it("should set version from # @version magic comment", () => {
+    /**
+     * `# @version 1` sets the version field to 1.
+     *
+     * Versioning lets a parser generator tool refuse to process a grammar
+     * written for a newer schema than it understands.
+     */
+    const source = "# @version 1\nprogram = NUMBER ;";
+    const grammar = parseParserGrammar(source);
+    expect(grammar.version).toBe(1);
+  });
+
+  it("should default version to 0 when no magic comment present", () => {
+    /**
+     * When no `# @version` comment is present the field is 0, the
+     * sentinel meaning "unversioned / latest."
+     */
+    const source = "program = NUMBER ;";
+    const grammar = parseParserGrammar(source);
+    expect(grammar.version).toBe(0);
+  });
+
+  it("should silently ignore unknown magic comment keys", () => {
+    /**
+     * Keys we do not recognise are discarded without error so that
+     * older tool versions stay forward-compatible with newer grammar
+     * files that carry extra metadata.
+     */
+    const source = "# @unknown_key foo\nprogram = NUMBER ;";
+    const grammar = parseParserGrammar(source);
+    expect(grammar.rules).toHaveLength(1);
+    expect(grammar.version).toBe(0);
+  });
+
+  it("should parse magic comment that appears after rules", () => {
+    /**
+     * Magic comments are collected in a pre-scan pass over all lines,
+     * so they are effective regardless of where in the file they appear.
+     */
+    const source = "program = NUMBER ;\n# @version 5\n";
+    const grammar = parseParserGrammar(source);
+    expect(grammar.version).toBe(5);
+  });
+});

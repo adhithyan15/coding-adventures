@@ -1,4 +1,5 @@
 # Token definitions for a subset of Ruby
+# @version 1
 # Used by the grammar-driven lexer to tokenize Ruby source code.
 #
 # Format:

@@ -203,6 +203,13 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       # Maps group name → [{name, compiled_regex}, ...]
       # The "default" group always exists and uses the top-level definitions.
       :group_patterns,
+      # In Elixir, bare atoms (:field) must come before keyword pairs
+      # (field: default) in defstruct lists. That is why group_patterns
+      # appears above and case_insensitive / group_stack / etc. appear below.
+      # -- Case-insensitive keyword matching ---
+      # When true, keywords are stored as uppercase and matched
+      # case-insensitively. The emitted KEYWORD value is also uppercase.
+      case_insensitive: false,
       # The group stack. Bottom is always "default". Top is the active group.
       group_stack: ["default"],
       # -- Callback ---
@@ -352,15 +359,28 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         Map.put(acc, group_name, compiled)
       end)
 
+    # Build the keyword set. When case_insensitive is true, all keywords
+    # are stored as uppercase so that comparisons can be done with
+    # String.upcase(value) — a classic "normalize on insert" strategy.
+    keyword_set =
+      if grammar.case_insensitive do
+        grammar.keywords
+        |> Enum.map(&String.upcase/1)
+        |> MapSet.new()
+      else
+        MapSet.new(grammar.keywords)
+      end
+
     %State{
       source: source,
       patterns: patterns,
       skip_patterns: skip_patterns,
-      keyword_set: MapSet.new(grammar.keywords),
+      keyword_set: keyword_set,
       reserved_set: MapSet.new(grammar.reserved_keywords),
       alias_map: merged_alias_map,
       has_skip_patterns: length(grammar.skip_definitions) > 0,
       escape_mode: grammar.escape_mode,
+      case_insensitive: grammar.case_insensitive,
       group_patterns: group_patterns,
       group_stack: ["default"],
       on_token: on_token,
@@ -627,6 +647,17 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
                   match
                 end
 
+              # When case_insensitive is true, KEYWORD values are normalized to
+              # uppercase. This means "select", "SELECT", and "Select" all
+              # produce KEYWORD tokens with value "SELECT", making the emitted
+              # token stream uniform regardless of how the user typed the keyword.
+              value =
+                if token_type == "KEYWORD" and state.case_insensitive do
+                  String.upcase(value)
+                else
+                  value
+                end
+
               token = %Token{
                 type: token_type,
                 value: value,
@@ -662,13 +693,18 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
   defp resolve_token_type(token_name, value, state) do
     effective_name = Map.get(state.alias_map, token_name, token_name)
 
+    # When case_insensitive is true, compare against the keyword/reserved sets
+    # using the uppercased value. The keyword set was built with uppercase keys
+    # (see init_state), so this is a consistent "normalize on both sides" check.
+    lookup_value = if state.case_insensitive, do: String.upcase(value), else: value
+
     cond do
-      effective_name == "NAME" and MapSet.member?(state.reserved_set, value) ->
+      effective_name == "NAME" and MapSet.member?(state.reserved_set, lookup_value) ->
         {:error,
          "Line #{state.line}, column #{state.column}: " <>
            "Reserved keyword '#{value}' cannot be used as an identifier"}
 
-      effective_name == "NAME" and MapSet.member?(state.keyword_set, value) ->
+      effective_name == "NAME" and MapSet.member?(state.keyword_set, lookup_value) ->
         {:ok, "KEYWORD"}
 
       true ->

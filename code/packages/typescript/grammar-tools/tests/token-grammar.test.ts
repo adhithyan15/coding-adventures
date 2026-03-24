@@ -643,6 +643,8 @@ group tag:
     const grammar = {
       definitions: [],
       keywords: [],
+      version: 0,
+      caseInsensitive: false,
       groups: {
         tag: {
           name: "tag",
@@ -666,6 +668,8 @@ group tag:
     const grammar = {
       definitions: [],
       keywords: [],
+      version: 0,
+      caseInsensitive: false,
       groups: {
         empty: {
           name: "empty",
@@ -675,6 +679,119 @@ group tag:
     };
     const issues = validateTokenGrammar(grammar);
     expect(issues.some((i) => i.includes("Empty pattern group"))).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Magic comments
+// ---------------------------------------------------------------------------
+
+describe("MagicComments", () => {
+  it("should set version from # @version magic comment", () => {
+    /**
+     * `# @version 1` sets the version field to the integer 1.
+     *
+     * Version numbers let tooling refuse to process grammar files
+     * written for a different schema generation than the tool expects.
+     */
+    const source = "# @version 1\nNUMBER = /[0-9]+/";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.version).toBe(1);
+  });
+
+  it("should default version to 0 when no magic comment", () => {
+    /**
+     * When no `# @version` comment is present the field is 0.
+     *
+     * 0 is the sentinel for "unversioned / latest": tools that do not
+     * yet understand versioning can safely accept these files.
+     */
+    const source = "NUMBER = /[0-9]+/";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.version).toBe(0);
+  });
+
+  it("should set caseInsensitive = true from # @case_insensitive true", () => {
+    /**
+     * `# @case_insensitive true` enables case-insensitive matching.
+     *
+     * Useful for languages like SQL where keywords such as SELECT and
+     * select are interchangeable.
+     */
+    const source = "# @case_insensitive true\nNAME = /[a-z]+/";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.caseInsensitive).toBe(true);
+  });
+
+  it("should set caseInsensitive = false from # @case_insensitive false", () => {
+    /**
+     * Explicitly writing `# @case_insensitive false` leaves the field
+     * at its default value — but the comment is still valid and parsed.
+     */
+    const source = "# @case_insensitive false\nNAME = /[a-z]+/";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.caseInsensitive).toBe(false);
+  });
+
+  it("should default caseInsensitive to false when no magic comment", () => {
+    /**
+     * The overwhelming majority of languages are case-sensitive, so
+     * false is the correct default. No opt-out comment is needed.
+     */
+    const source = "NAME = /[a-z]+/";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.caseInsensitive).toBe(false);
+  });
+
+  it("should silently ignore unknown magic comment keys", () => {
+    /**
+     * Forward-compatibility: keys we don't recognise are discarded.
+     *
+     * This means a grammar written for a future version of the toolchain
+     * can still be parsed by an older version without errors.
+     */
+    const source = "# @unknown_key some_value\nNUMBER = /[0-9]+/";
+    // Should not throw and should still parse the token definition.
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.definitions).toHaveLength(1);
+    expect(grammar.version).toBe(0);
+    expect(grammar.caseInsensitive).toBe(false);
+  });
+
+  it("should parse both magic comments together", () => {
+    /**
+     * Multiple magic comments can coexist in the same file.
+     * Each is processed independently.
+     */
+    const source = [
+      "# @version 3",
+      "# @case_insensitive true",
+      "NAME = /[a-z]+/",
+    ].join("\n");
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.version).toBe(3);
+    expect(grammar.caseInsensitive).toBe(true);
+  });
+
+  it("should handle magic comments with extra whitespace", () => {
+    /**
+     * The spec says the regex is `/^#\s*@(\w+)\s*(.*)/`, so any amount
+     * of whitespace between `#` and `@`, or between the key and value,
+     * is accepted.
+     */
+    const source = "#   @version   42\nNUMBER = /[0-9]+/";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.version).toBe(42);
+  });
+
+  it("should parse a magic comment that appears after token definitions", () => {
+    /**
+     * Magic comments are scanned before the main parse loop, so their
+     * position in the file does not matter.
+     */
+    const source = "NUMBER = /[0-9]+/\n# @version 7\nPLUS = \"+\"";
+    const grammar = parseTokenGrammar(source);
+    expect(grammar.version).toBe(7);
   });
 });
 

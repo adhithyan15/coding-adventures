@@ -688,3 +688,39 @@ If the scaffold generator wouldn't produce the right output for your use case, f
 **Proper fix**: All 6 language implementations of the `.tokens` parser now use bracket-aware scanning that tracks `[...]` depth and doesn't treat `/` inside character classes as the closing delimiter. The scanner also has a fallback to `lastIndexOf("/")` for edge cases like unclosed brackets.
 
 **Rule**: Never escape `/` inside `[...]` in .tokens files. The parser handles it correctly.
+
+---
+
+### 2026-03-23: uv workspace membership causes shared venv on Windows, breaking parallel builds
+
+When a Python package is added to the `[tool.uv.workspace]` members list in `code/packages/python/pyproject.toml`, uv creates the virtual environment at the **workspace root** (`code/packages/python/.venv`) instead of the package directory. This causes two problems on Windows:
+
+**Problem 1 — Directed-graph resolution:** If any workspace member depends on a package that is NOT in the workspace sources (e.g., `state-machine` depends on `directed-graph`), uv tries to find it in PyPI, fails, and aborts. Example error: `coding-adventures-directed-graph was not found in the package registry and coding-adventures-state-machine depends on coding-adventures-directed-graph`.
+
+**Problem 2 — Shared venv race condition:** When multiple packages are workspace members and run `uv venv --quiet --clear` in parallel, they all clear and rebuild the SAME workspace-root venv. A package running `uv pip install -e .[dev]` installs only 1 package (itself) into the shared venv, then another parallel build clears it again. Result: `No module named pytest`.
+
+**Rules:**
+1. **Do NOT add new packages to the uv workspace members list** unless you explicitly want them to share a workspace-root venv.
+2. The correct fix for directed-graph resolution failures is to **remove the problematic workspace member** (e.g., `state-machine`) from the workspace — not to add the missing dep to the workspace.
+3. Packages that install deps via explicit `-e ../dep` paths in their BUILD files don't need to be workspace members. The workspace is only needed for packages that have no explicit dep paths (like `grammar-tools` which only does `uv pip install -e .[dev]`).
+4. **Grammar-tools is correctly a workspace member** since it has no runtime deps, so no workspace resolution issues arise (as long as other workspace members don't have unresolvable deps).
+
+---
+
+### 2026-03-23: Python BUILD_windows for packages with no runtime deps must use python -m venv + pip
+
+Packages where `pyproject.toml` has `dependencies = []` (no runtime deps) and the BUILD file only has `uv pip install -e ".[dev]"` fail on Windows with `No module named pytest` because:
+1. `uv venv --quiet --clear` creates the workspace-root venv (not package-local)
+2. `uv pip install -e .[dev]` installs pytest into that venv
+3. `uv run python -m pytest` syncs the project env (only runtime deps → 0 pkgs) → removes pytest
+
+**Fix for grammar-tools and similar no-dep packages:** Use `python -m venv` (creates package-local .venv) + direct pip paths:
+```
+python -m venv .venv --clear
+.venv\Scripts\pip install -e .[dev] --quiet
+.venv\Scripts\python -m pytest tests/ -v
+```
+
+**Critical quoting rule:** Use `.[dev]` WITHOUT double quotes in `BUILD_windows` files. Go's `exec.Command("cmd", "/C", command)` escapes arguments via Windows CreateProcess API, causing CMD to receive the literal string `".[dev]"` (with quotes) instead of `.[dev]`. Pip then rejects it: `ERROR: ".[dev]" is not a valid editable requirement`. The Unix BUILD files can use `".[dev]"` because bash strips quotes before passing to pip. Always check existing working BUILD_windows files (e.g., `lexer/BUILD_windows`) — they all use unquoted `.[dev]`.
+
+**Chain reaction rule:** When a low-level Python package (grammar-tools, lexer) changes, ALL packages that depend on it are added to the affected set by the build tool and will be rebuilt. This means every Python package in `git diff origin/main...HEAD` that has a BUILD_windows file using `uv run python -m pytest` will fail on Windows. Before pushing any Python changes, grep all modified packages' BUILD_windows files for `uv run python` and fix them with the `python -m venv` pattern above. In this PR, grammar-tools and lexer both changed → both needed BUILD_windows fixes independently.

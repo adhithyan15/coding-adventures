@@ -77,11 +77,17 @@ module CodingAdventures
     GrammarRule = Data.define(:name, :body, :line_number)
 
     # The complete contents of a parsed .grammar file.
+    #
+    # rules   -- ordered list of GrammarRule objects
+    # version -- integer schema version from "# @version N" magic comment;
+    #            defaults to 0 when the magic comment is absent
     class ParserGrammar
       attr_reader :rules
+      attr_accessor :version
 
-      def initialize(rules: [])
+      def initialize(rules: [], version: 0)
         @rules = rules
+        @version = version
       end
 
       def rule_names
@@ -332,11 +338,41 @@ module CodingAdventures
     end
 
     # Parse the text of a .grammar file into a ParserGrammar.
+    #
+    # Magic comments (lines of the form "# @key value") are extracted before
+    # EBNF tokenization. Currently recognised keys:
+    #
+    #   @version N  -- sets grammar.version to the integer N
+    #
+    # Unknown @key names are silently ignored so that newer extensions do not
+    # break older parsers. Plain comments ("# some text") are unaffected.
     def self.parse_parser_grammar(source)
+      # First pass: collect magic comment metadata from every comment line.
+      #
+      # We do this before tokenizing so that we can construct the final
+      # ParserGrammar with the correct version in one go.
+      parsed_version = 0
+
+      source.each_line do |raw_line|
+        stripped = raw_line.strip
+        next unless stripped.start_with?("#")
+
+        if (m = stripped.match(/^#\s*@(\w+)\s*(.*)/))
+          key = m[1]
+          value = m[2].strip
+          case key
+          when "version"
+            parsed_version = value.to_i
+          end
+          # Unknown keys: silently ignore
+        end
+      end
+
+      # Second pass: tokenize and parse EBNF rules.
       tokens = _tokenize_grammar(source)
       parser = EBNFParser.new(tokens)
       rules = parser.parse
-      ParserGrammar.new(rules: rules)
+      ParserGrammar.new(rules: rules, version: parsed_version)
     end
 
     # Check a parsed ParserGrammar for common problems.

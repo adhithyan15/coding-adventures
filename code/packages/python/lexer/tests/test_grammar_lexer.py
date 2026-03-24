@@ -1698,3 +1698,192 @@ PLUS   = "+"
         lexer._column = 1
         tokens = lexer.tokenize()
         assert any(_token_type_name(t) == "TAG_NAME" for t in tokens)
+
+
+# ---------------------------------------------------------------------------
+# Case-insensitive keyword support
+# ---------------------------------------------------------------------------
+#
+# When a grammar is created with ``# @case_insensitive true``, keyword
+# matching must ignore case.  The rules are:
+#
+# 1. Keywords in the .tokens ``keywords:`` section are stored uppercase.
+# 2. When a NAME token is matched, ``value.upper()`` is compared against the
+#    keyword set.
+# 3. If the value IS a keyword, the emitted token has ``value = value.upper()``
+#    (i.e., normalised to uppercase) regardless of how it appeared in the
+#    source.
+# 4. Without ``# @case_insensitive true`` the behaviour is unchanged —
+#    keyword matching is exact and values are emitted as-is.
+#
+# We build a minimal grammar inline (no .tokens file needed) to keep the
+# tests self-contained and fast.
+
+
+def _make_case_insensitive_grammar() -> TokenGrammar:
+    """Build a minimal grammar that enables case-insensitive keyword matching.
+
+    Grammar source (as it would appear in a .tokens file)::
+
+        # @case_insensitive true
+        NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+        WS     = /[ \\t]+/
+
+        skip:
+          WS
+
+        keywords:
+          select
+          from
+    """
+    grammar_source = (
+        "# @case_insensitive true\n"
+        "NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/\n"
+        "\n"
+        "skip:\n"
+        "  WS = /[ \\t]+/\n"
+        "\n"
+        "keywords:\n"
+        "  select\n"
+        "  from\n"
+    )
+    return parse_token_grammar(grammar_source)
+
+
+def _make_case_sensitive_grammar() -> TokenGrammar:
+    """Build a minimal grammar WITHOUT case-insensitive mode.
+
+    The keyword ``select`` is stored exactly as-is.  Only the exact string
+    ``"select"`` should be reclassified as KEYWORD — ``"SELECT"`` and
+    ``"Select"`` remain NAME tokens.
+    """
+    grammar_source = (
+        "NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/\n"
+        "\n"
+        "skip:\n"
+        "  WS = /[ \\t]+/\n"
+        "\n"
+        "keywords:\n"
+        "  select\n"
+    )
+    return parse_token_grammar(grammar_source)
+
+
+class TestCaseInsensitiveKeywords:
+    """Tests for ``# @case_insensitive true`` keyword handling in GrammarLexer.
+
+    All five variants required by the specification are covered:
+      1. Lowercase input → uppercase KEYWORD
+      2. Uppercase input → uppercase KEYWORD
+      3. Mixed-case input → uppercase KEYWORD
+      4. Case-sensitive grammar — exact-match only
+      5. Non-keyword identifier in case-insensitive grammar → NAME, original case
+    """
+
+    def test_lowercase_input_emits_uppercase_keyword(self) -> None:
+        """``"select"`` → KEYWORD with value ``"SELECT"`` (case-insensitive grammar).
+
+        Even though the source contains a lowercase ``select``, the lexer
+        must reclassify it as a keyword AND normalise the value to uppercase
+        because ``case_insensitive`` is True.
+        """
+        grammar = _make_case_insensitive_grammar()
+        tokens = GrammarLexer("select", grammar).tokenize()
+
+        # Filter out the EOF sentinel.
+        non_eof = [t for t in tokens if _token_type_name(t) != "EOF"]
+        assert len(non_eof) == 1
+
+        tok = non_eof[0]
+        assert _token_type_name(tok) == "KEYWORD", (
+            f"Expected KEYWORD, got {_token_type_name(tok)!r}"
+        )
+        assert tok.value == "SELECT", (
+            f"Expected value 'SELECT', got {tok.value!r}"
+        )
+
+    def test_uppercase_input_emits_uppercase_keyword(self) -> None:
+        """``"SELECT"`` → KEYWORD with value ``"SELECT"`` (case-insensitive grammar).
+
+        The source already uses uppercase; the lexer should still match it
+        as a keyword and emit the normalised uppercase value.
+        """
+        grammar = _make_case_insensitive_grammar()
+        tokens = GrammarLexer("SELECT", grammar).tokenize()
+
+        non_eof = [t for t in tokens if _token_type_name(t) != "EOF"]
+        assert len(non_eof) == 1
+
+        tok = non_eof[0]
+        assert _token_type_name(tok) == "KEYWORD"
+        assert tok.value == "SELECT"
+
+    def test_mixed_case_input_emits_uppercase_keyword(self) -> None:
+        """``"Select"`` → KEYWORD with value ``"SELECT"`` (case-insensitive grammar).
+
+        Mixed-case input that happens to match a keyword (case-insensitively)
+        must also be normalised to uppercase.
+        """
+        grammar = _make_case_insensitive_grammar()
+        tokens = GrammarLexer("Select", grammar).tokenize()
+
+        non_eof = [t for t in tokens if _token_type_name(t) != "EOF"]
+        assert len(non_eof) == 1
+
+        tok = non_eof[0]
+        assert _token_type_name(tok) == "KEYWORD"
+        assert tok.value == "SELECT"
+
+    def test_case_sensitive_grammar_exact_match_only(self) -> None:
+        """``"select"`` → KEYWORD in case-sensitive grammar; other casings → NAME.
+
+        Without ``# @case_insensitive true``, keyword matching is exact.
+        Only the string ``"select"`` is in the keyword set.  ``"SELECT"``
+        and ``"Select"`` must remain NAME tokens and their values must be
+        preserved verbatim.
+        """
+        grammar = _make_case_sensitive_grammar()
+
+        # Exact match — should be KEYWORD with original value.
+        tokens_lower = GrammarLexer("select", grammar).tokenize()
+        non_eof_lower = [t for t in tokens_lower if _token_type_name(t) != "EOF"]
+        assert len(non_eof_lower) == 1
+        assert _token_type_name(non_eof_lower[0]) == "KEYWORD"
+        assert non_eof_lower[0].value == "select"
+
+        # Uppercase — NOT a keyword; value preserved verbatim.
+        tokens_upper = GrammarLexer("SELECT", grammar).tokenize()
+        non_eof_upper = [t for t in tokens_upper if _token_type_name(t) != "EOF"]
+        assert len(non_eof_upper) == 1
+        assert _token_type_name(non_eof_upper[0]) == "NAME", (
+            "Case-sensitive grammar must not match 'SELECT' as a keyword"
+        )
+        assert non_eof_upper[0].value == "SELECT"
+
+        # Mixed case — NOT a keyword; value preserved verbatim.
+        tokens_mixed = GrammarLexer("Select", grammar).tokenize()
+        non_eof_mixed = [t for t in tokens_mixed if _token_type_name(t) != "EOF"]
+        assert len(non_eof_mixed) == 1
+        assert _token_type_name(non_eof_mixed[0]) == "NAME"
+        assert non_eof_mixed[0].value == "Select"
+
+    def test_non_keyword_identifier_preserves_original_case(self) -> None:
+        """Non-keyword identifiers keep their original casing in case-insensitive mode.
+
+        The grammar has ``select`` and ``from`` as keywords.  The identifier
+        ``myTable`` is not a keyword; it should be emitted as a NAME token
+        with its original mixed-case value untouched.
+        """
+        grammar = _make_case_insensitive_grammar()
+        tokens = GrammarLexer("myTable", grammar).tokenize()
+
+        non_eof = [t for t in tokens if _token_type_name(t) != "EOF"]
+        assert len(non_eof) == 1
+
+        tok = non_eof[0]
+        assert _token_type_name(tok) == "NAME", (
+            f"Non-keyword identifier should remain NAME, got {_token_type_name(tok)!r}"
+        )
+        assert tok.value == "myTable", (
+            f"Non-keyword value must preserve original case, got {tok.value!r}"
+        )

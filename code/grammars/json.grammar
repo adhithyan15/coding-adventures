@@ -1,4 +1,5 @@
 # Parser grammar for JSON (RFC 8259)
+# @version 1
 #
 # JSON is defined by exactly four grammar rules. The entry point is "value" —
 # any JSON text is a single value (an object, array, string, number, boolean,

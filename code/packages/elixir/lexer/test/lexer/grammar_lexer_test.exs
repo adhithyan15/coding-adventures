@@ -159,6 +159,127 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
     end
   end
 
+  # ---------------------------------------------------------------------------
+  # Case-Insensitive Keyword Matching
+  # ---------------------------------------------------------------------------
+  #
+  # When a grammar declares `case_insensitive: true`, keyword matching ignores
+  # case and the emitted KEYWORD value is normalized to uppercase. This is the
+  # "normalize on both sides" strategy:
+  #
+  # - The keyword set stores keywords as uppercase (done at grammar init time).
+  # - At match time, the matched value is uppercased before the set lookup.
+  # - When a KEYWORD token is emitted, its value is String.upcase(original).
+  #
+  # This means "select", "SELECT", and "Select" all produce:
+  #   %Token{type: "KEYWORD", value: "SELECT", ...}
+  #
+  # Non-keyword identifiers (NAMEs) are NOT affected — their value is left as-is.
+
+  describe "tokenize/2 — case-insensitive keywords" do
+    # Helper: a grammar with `case_insensitive: true` and keyword `select`.
+    defp ci_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        # @case_insensitive true
+
+        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+        keywords:
+          select
+        """)
+
+      g
+    end
+
+    test "lowercase keyword → KEYWORD with uppercase value" do
+      # "select" matches the keyword set (stored as "SELECT") because
+      # String.upcase("select") == "SELECT". The emitted value is "SELECT".
+      {:ok, tokens} = GrammarLexer.tokenize("select", ci_grammar())
+      [token, _eof] = tokens
+      assert token.type == "KEYWORD"
+      assert token.value == "SELECT"
+    end
+
+    test "uppercase keyword → KEYWORD with uppercase value" do
+      # "SELECT" also matches. The normalized lookup and normalized emit
+      # both produce "SELECT", so the output is identical to the lowercase case.
+      {:ok, tokens} = GrammarLexer.tokenize("SELECT", ci_grammar())
+      [token, _eof] = tokens
+      assert token.type == "KEYWORD"
+      assert token.value == "SELECT"
+    end
+
+    test "mixed-case keyword → KEYWORD with uppercase value" do
+      # "Select" is neither lowercase nor uppercase but still matches,
+      # because String.upcase("Select") == "SELECT" is in the keyword set.
+      {:ok, tokens} = GrammarLexer.tokenize("Select", ci_grammar())
+      [token, _eof] = tokens
+      assert token.type == "KEYWORD"
+      assert token.value == "SELECT"
+    end
+
+    test "non-keyword identifier → NAME with original case preserved" do
+      # Non-keyword identifiers are not uppercased. The NAME value is
+      # emitted exactly as it appeared in the source — case insensitivity
+      # only applies to the keyword set membership check.
+      {:ok, tokens} = GrammarLexer.tokenize("myVar", ci_grammar())
+      [token, _eof] = tokens
+      assert token.type == "NAME"
+      assert token.value == "myVar"
+    end
+
+    test "keyword and non-keyword in the same input" do
+      # Verify that keyword normalization and NAME passthrough work together
+      # in a single tokenization pass.
+      {:ok, tokens} = GrammarLexer.tokenize("select myTable", ci_grammar())
+      type_value_pairs =
+        tokens
+        |> Enum.reject(&(&1.type == "EOF"))
+        |> Enum.map(&{&1.type, &1.value})
+
+      assert type_value_pairs == [
+               {"KEYWORD", "SELECT"},
+               {"NAME", "myTable"}
+             ]
+    end
+
+    test "case_insensitive: false (default) preserves case-sensitive behavior" do
+      # The default grammar is case-sensitive. "Select" is not in the keyword
+      # set (which stores "select" as-is), so it becomes a NAME token.
+      {:ok, g} =
+        TokenGrammar.parse("""
+        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+        keywords:
+          select
+        """)
+
+      {:ok, tokens} = GrammarLexer.tokenize("Select", g)
+      [token, _eof] = tokens
+      # "Select" != "select" so it is treated as a plain identifier
+      assert token.type == "NAME"
+      assert token.value == "Select"
+    end
+
+    test "case_insensitive: false (default) still matches exact keyword" do
+      # In case-sensitive mode, "select" (exact match) is still a KEYWORD.
+      {:ok, g} =
+        TokenGrammar.parse("""
+        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+        keywords:
+          select
+        """)
+
+      {:ok, tokens} = GrammarLexer.tokenize("select", g)
+      [token, _eof] = tokens
+      assert token.type == "KEYWORD"
+      # Value is NOT uppercased — case_insensitive is false
+      assert token.value == "select"
+    end
+  end
+
   describe "tokenize/2 — reserved keywords" do
     test "reserved keywords produce errors" do
       {:ok, g} =
