@@ -1,0 +1,1 @@
+cargo build && cargo test --target-dir target_isolated --all-targets -- --nocapture

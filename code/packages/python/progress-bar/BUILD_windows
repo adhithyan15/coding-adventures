@@ -1,0 +1,3 @@
+pip install -e .[dev] > NUL 2>&1
+python -m pytest
+ruff check src/ tests/
