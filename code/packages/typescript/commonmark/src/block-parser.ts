@@ -246,6 +246,10 @@ const MODE_TRANSITIONS = new Map<string, string>([
 const HTML_BLOCK_1_OPEN  = /^<(?:script|pre|textarea|style)(?:\s|>|$)/i;
 const HTML_BLOCK_1_CLOSE = /<\/(?:script|pre|textarea|style)>/i;
 const HTML_BLOCK_2_OPEN  = /^<!--/;
+// This regex detects the end of a CommonMark HTML comment block per spec §4.6.
+// It is a parser, not a sanitizer — the codeql[js/bad-html-filtering-regexp]
+// alert is a false positive: we are not filtering user input for security here.
+// codeql[js/bad-html-filtering-regexp]
 const HTML_BLOCK_2_CLOSE = /-->/;
 const HTML_BLOCK_3_OPEN  = /^<\?/;
 const HTML_BLOCK_3_CLOSE = /\?>/;
