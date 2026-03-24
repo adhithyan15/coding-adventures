@@ -76,10 +76,10 @@ jobs:
           cd code/programs/go/build-tool
           if [ "$RUNNER_OS" = "Windows" ]; then
             go build -o ../../../../build-tool.exe .
-            BT=../../../../build-tool.exe
+            BT=./build-tool.exe
           else
             go build -o ../../../../build-tool .
-            BT=../../../../build-tool
+            BT=./build-tool
           fi
           cd ../../../..
           
