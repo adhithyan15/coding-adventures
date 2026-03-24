@@ -28,7 +28,7 @@ import {
   parseTokenGrammar,
   type TokenGrammar,
   type TokenDefinition,
-} from "@coding-adventures/grammar-tools";
+} from "../../../../src/typescript/grammar-tools/index.js";
 
 import { grammarTokenize, GrammarLexer, LexerContext } from "../src/grammar-lexer.js";
 import { tokenize, LexerError } from "../src/tokenizer.js";

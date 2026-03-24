@@ -141,6 +141,10 @@ export interface PatternGroup {
  *   groups: Named pattern groups for context-sensitive lexing. Each group
  *       contains an ordered list of token definitions that are only active
  *       when the group is at the top of the lexer's group stack.
+ *   caseSensitive: Whether the lexer should match patterns case-sensitively.
+ *       Defaults to true. When false, the lexer lowercases the source text
+ *       before matching and performs keyword promotion on the lowercased
+ *       values. Used by case-insensitive languages like VHDL or SQL.
  */
 export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
@@ -150,6 +154,7 @@ export interface TokenGrammar {
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
   readonly groups?: Readonly<Record<string, PatternGroup>>;
+  readonly caseSensitive?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -247,6 +252,34 @@ export function effectiveTokenNames(grammar: TokenGrammar): Set<string> {
  * @param lineNumber - The 1-based line number for error reporting.
  * @returns A TokenDefinition.
  */
+/**
+ * Scan a /pattern/ string starting at index 1 and return the index of
+ * the closing /. Skips escaped characters (\x) and does not treat /
+ * inside [...] character classes as the closing delimiter.
+ * Returns -1 if no closing slash is found.
+ */
+function findClosingSlash(s: string): number {
+  let inBracket = false;
+  for (let i = 1; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === "\\") {
+      i++; // skip escaped character
+      continue;
+    }
+    if (ch === "[" && !inBracket) {
+      inBracket = true;
+    } else if (ch === "]" && inBracket) {
+      inBracket = false;
+    } else if (ch === "/" && !inBracket) {
+      return i;
+    }
+  }
+  // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+  // try the last / as a best-effort parse.
+  const last = s.lastIndexOf("/");
+  return last > 0 ? last : -1;
+}
+
 function parseDefinition(
   namePart: string,
   patternPart: string,
@@ -265,23 +298,11 @@ function parseDefinition(
   }
 
   if (patternPart.startsWith("/")) {
-    // Regex pattern — find the closing /
-    // The closing / is the last / in the pattern portion. We scan
-    // for the second / that ends the regex (not escaped).
-    const closingSlash = patternPart.indexOf("/", 1);
-    if (closingSlash === -1) {
-      throw new TokenGrammarError(
-        `Unclosed regex pattern for token '${namePart}'`,
-        lineNumber,
-      );
-    }
-
-    // The pattern could contain slashes inside character classes or
-    // groups. To find the true closing /, we look for the LAST / that
-    // could be the closer. Strategy: find the last / in the string,
-    // then check if what follows is either empty or "-> ALIAS".
-    let lastSlash = patternPart.lastIndexOf("/");
-    if (lastSlash === 0) {
+    // Regex pattern — find the closing / by scanning character-by-character.
+    // We track bracket depth so that / inside [...] character classes is
+    // not mistaken for the closing delimiter. We also skip escaped chars.
+    const lastSlash = findClosingSlash(patternPart);
+    if (lastSlash === -1) {
       throw new TokenGrammarError(
         `Unclosed regex pattern for token '${namePart}'`,
         lineNumber,
@@ -369,6 +390,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const groups: Record<string, PatternGroup> = {};
   let mode: string | undefined;
   let escapeMode: string | undefined;
+  let caseSensitive: boolean = true;
 
   // Section tracking. We use a string to track which section we're in,
   // since sections are mutually exclusive and we can only be in one at
@@ -429,6 +451,24 @@ export function parseTokenGrammar(source: string): TokenGrammar {
         );
       }
       escapeMode = escapesValue;
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- case_sensitive: directive ---
+    // Controls whether the lexer should match case-sensitively.
+    // ``case_sensitive: false`` makes the lexer lowercase input before
+    // matching and perform keyword promotion on lowercased values.
+    if (stripped.startsWith("case_sensitive:")) {
+      const csValue = stripped.slice(stripped.indexOf(":") + 1).trim().toLowerCase();
+      if (csValue !== "true" && csValue !== "false") {
+        throw new TokenGrammarError(
+          `Invalid value for 'case_sensitive:': '${csValue}' ` +
+            "(expected 'true' or 'false')",
+          lineNumber,
+        );
+      }
+      caseSensitive = csValue === "true";
       currentSection = "definitions";
       continue;
     }
@@ -631,6 +671,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
     groups: hasGroups ? groups : undefined,
+    caseSensitive: caseSensitive ? undefined : false,
   };
 }
 

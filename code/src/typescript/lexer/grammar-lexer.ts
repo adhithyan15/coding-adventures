@@ -434,6 +434,16 @@ export class GrammarLexer {
   /** Whether indentation mode is active. */
   private readonly _indentationMode: boolean;
 
+  /**
+   * Whether the grammar is case-sensitive.
+   *
+   * When false, the lexer lowercases the source text before matching.
+   * This means token values will be lowercase and keyword promotion
+   * works because both the source and keywords are lowercase.
+   * Used by case-insensitive languages like VHDL or SQL.
+   */
+  private readonly _caseSensitive: boolean;
+
   // -- Compiled patterns --
 
   /** Default group compiled patterns, in priority order. */
@@ -468,8 +478,19 @@ export class GrammarLexer {
    */
   private _skipEnabled: boolean = true;
 
+  /** Pre-tokenize hooks: transform source text before lexing. */
+  private _preTokenizeHooks: Array<(source: string) => string> = [];
+
+  /** Post-tokenize hooks: transform token list after lexing. */
+  private _postTokenizeHooks: Array<(tokens: Token[]) => Token[]> = [];
+
   constructor(source: string, grammar: TokenGrammar) {
-    this._source = source;
+    // Case sensitivity: when the grammar is case-insensitive, we lowercase
+    // the entire source string before tokenization. This ensures that all
+    // pattern matching and keyword promotion works correctly — both the
+    // source and the keywords/patterns are compared in lowercase.
+    this._caseSensitive = grammar.caseSensitive !== false;
+    this._source = this._caseSensitive ? source : source.toLowerCase();
     this._grammar = grammar;
     this._keywordSet = new Set(grammar.keywords);
     this._reservedSet = new Set(grammar.reservedKeywords ?? []);
@@ -574,6 +595,28 @@ export class GrammarLexer {
     return this._groupStack.length;
   }
 
+  // -- Hook registration --
+
+  /**
+   * Register a text transform to run before tokenization.
+   *
+   * The hook receives the raw source string and returns a (possibly
+   * modified) source string. Multiple hooks compose left-to-right.
+   */
+  addPreTokenize(hook: (source: string) => string): void {
+    this._preTokenizeHooks.push(hook);
+  }
+
+  /**
+   * Register a token transform to run after tokenization.
+   *
+   * The hook receives the full token list (including EOF) and returns
+   * a (possibly modified) token list. Multiple hooks compose left-to-right.
+   */
+  addPostTokenize(hook: (tokens: Token[]) => Token[]): void {
+    this._postTokenizeHooks.push(hook);
+  }
+
   // -- Main tokenization entry point --
 
   /**
@@ -583,15 +626,37 @@ export class GrammarLexer {
    * indentation mode is active. Resets the group stack and skip flag
    * at the end so the lexer can be reused for multiple `tokenize()` calls.
    *
+   * Pre-tokenize hooks transform the source text before lexing begins.
+   * Post-tokenize hooks transform the token list after lexing completes.
+   *
    * @returns A list of Token objects, always ending with an EOF token.
    * @throws LexerError if an unexpected character is encountered, a
    *         reserved keyword is used, or indentation is inconsistent.
    */
   tokenize(): Token[] {
-    if (this._indentationMode) {
-      return this._tokenizeIndentation();
+    // Stage 1: Pre-tokenize hooks transform the source text.
+    if (this._preTokenizeHooks.length > 0) {
+      let source = this._source;
+      for (const hook of this._preTokenizeHooks) {
+        source = hook(source);
+      }
+      this._source = source;
     }
-    return this._tokenizeStandard();
+
+    // Stage 2: Core tokenization.
+    let tokens: Token[];
+    if (this._indentationMode) {
+      tokens = this._tokenizeIndentation();
+    } else {
+      tokens = this._tokenizeStandard();
+    }
+
+    // Stage 3: Post-tokenize hooks transform the token list.
+    for (const hook of this._postTokenizeHooks) {
+      tokens = hook(tokens);
+    }
+
+    return tokens;
   }
 
   // -- Standard (non-indentation) tokenization --
