@@ -490,7 +490,13 @@ export class GrammarLexer {
     this._grammar = grammar;
     this._caseInsensitive = grammar.caseInsensitive === true;
     this._caseSensitive = grammar.caseSensitive !== false && !this._caseInsensitive;
-    this._source = this._caseSensitive ? source : source.toLowerCase();
+    // Only lowercase the source for the legacy caseSensitive:false pattern-level mode.
+    // For caseInsensitive keyword mode we keep the original source and normalize per-token
+    // during keyword lookup, so non-keyword identifiers preserve their original casing.
+    this._source =
+      !this._caseSensitive && !this._caseInsensitive
+        ? source.toLowerCase()
+        : source;
     // When case-insensitive, store keywords in uppercase so lookups can use value.toUpperCase().
     this._keywordSet = new Set(
       this._caseInsensitive
