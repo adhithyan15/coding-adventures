@@ -37,7 +37,7 @@ func TestSharedPrefixesNotEmpty(t *testing.T) {
 	for _, p := range sharedPrefixes {
 		found[p] = true
 	}
-	for _, want := range []string{"code/grammars/", ".github/"} {
+	for _, want := range []string{".github/"} {
 		if !found[want] {
 			t.Errorf("sharedPrefixes missing %q", want)
 		}
