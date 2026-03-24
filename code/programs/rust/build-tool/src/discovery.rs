@@ -322,7 +322,7 @@ mod tests {
         .unwrap();
 
         let lines = read_lines(&file);
-        assert_eq!(lines, vec!["python -m pip install .", "pytest"]);
+        assert_eq!(lines, vec!["pip install .", "pytest"]);
 
         let _ = fs::remove_dir_all(&dir);
     }
