@@ -37,6 +37,7 @@
 - If implementation diverged from spec, update spec and note divergence in commit message
 - Push early and often — create PRs as soon as a branch has meaningful work, keep pushing commits into the same PR as work progresses
 - Keep the todo list updated — check off items as they're completed, add new items as they're discovered
+- **Before pushing code, always run `/security-review` to have a sub-agent perform a security code review. Do not push until the review passes.**
 - **After creating or pushing to a PR, always run `/babysit-pr` to monitor CI status and merge conflicts until the PR is green**
 
 ## Build System

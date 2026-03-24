@@ -57,7 +57,8 @@ defmodule BuildTool.Hasher do
     "go" => MapSet.new([".go"]),
     "rust" => MapSet.new([".rs", ".toml"]),
     "typescript" => MapSet.new([".ts", ".tsx", ".js", ".jsx", ".json"]),
-    "elixir" => MapSet.new([".ex", ".exs"])
+    "elixir" => MapSet.new([".ex", ".exs"]),
+    "perl" => MapSet.new([".pl", ".pm", ".t", ".xs"])
   }
 
   # ---------------------------------------------------------------------------
@@ -73,7 +74,8 @@ defmodule BuildTool.Hasher do
     "go" => MapSet.new(["go.mod", "go.sum"]),
     "rust" => MapSet.new(["Cargo.lock"]),
     "typescript" => MapSet.new(["package-lock.json", "tsconfig.json"]),
-    "elixir" => MapSet.new(["mix.lock"])
+    "elixir" => MapSet.new(["mix.lock"]),
+    "perl" => MapSet.new(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"])
   }
 
   # ---------------------------------------------------------------------------

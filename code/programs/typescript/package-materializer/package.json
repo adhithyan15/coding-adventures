@@ -1,0 +1,18 @@
+{
+  "name": "package-materializer",
+  "version": "1.0.0",
+  "description": "Materialize standalone TypeScript package artifacts from shared monorepo source",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "materialize-package": "npm run build --silent && node dist/src/index.js",
+    "test": "npm run build --silent && node --test dist/tests/*.test.js"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
+}

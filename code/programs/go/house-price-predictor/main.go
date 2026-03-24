@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	fmt.Println("\n--- Booting Multi-Variable Predictor: House Prices ---\n")
+	fmt.Println("\n--- Booting Multi-Variable Predictor: House Prices ---")
 
 	// 1. The Dataset (Inputs)
 	houseFeatures := matrix.New2D([][]float64{

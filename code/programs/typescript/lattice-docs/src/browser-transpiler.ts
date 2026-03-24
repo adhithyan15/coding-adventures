@@ -163,7 +163,7 @@ export function transpileLatticeBrowser(
     //   Pretty-print: 2-space indentation, blank lines between rules (default)
     //   Minified: no unnecessary whitespace, no line breaks
 
-    const emitter = new CSSEmitter({ indent, minified });
+    const emitter = new CSSEmitter(indent, minified);
     const css = emitter.emit(cssAst);
 
     return { success: true, css };

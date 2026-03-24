@@ -35,6 +35,7 @@ yarn-debug.log*
 yarn-error.log*
 *.tgz
 .npm
+.out/
 
 # Rust
 target/
@@ -55,9 +56,9 @@ Cargo.lock
 .env
 .env.local
 
-# Claude Code
-.claude/
-!.claude/skills/
+# Claude Code — only ignore machine-specific files
+.claude/worktrees/
+.claude/settings.local.json
 
 # Elixir
 _build/

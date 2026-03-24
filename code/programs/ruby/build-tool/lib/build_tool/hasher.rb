@@ -42,7 +42,8 @@ module BuildTool
     SOURCE_EXTENSIONS = {
       "python" => %w[.py .toml .cfg].freeze,
       "ruby"   => %w[.rb .gemspec].freeze,
-      "go"     => %w[.go].freeze
+      "go"     => %w[.go].freeze,
+      "perl"   => %w[.pl .pm .t .xs].freeze
     }.freeze
 
     # SPECIAL_FILENAMES -- Files to always include regardless of extension.
@@ -52,7 +53,8 @@ module BuildTool
     SPECIAL_FILENAMES = {
       "python" => [].freeze,
       "ruby"   => %w[Gemfile Rakefile].freeze,
-      "go"     => %w[go.mod go.sum].freeze
+      "go"     => %w[go.mod go.sum].freeze,
+      "perl"   => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze
     }.freeze
 
     module_function
