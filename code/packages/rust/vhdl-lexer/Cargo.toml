@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-vhdl-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "VHDL lexer — tokenizes VHDL (IEEE 1076-2008) source code using the grammar-driven lexer and the vhdl.tokens grammar file, with case-insensitive identifier normalization"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

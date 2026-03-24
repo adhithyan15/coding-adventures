@@ -54,6 +54,7 @@
 //!   following the Python/Starlark whitespace rules.
 
 use regex::Regex;
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
 use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
@@ -318,7 +319,8 @@ pub struct GrammarLexer<'a> {
     chars: Vec<char>,
 
     /// The original source string (for regex matching on slices).
-    source: &'a str,
+    /// When case_sensitive is false, this holds the lowercased copy.
+    source: Cow<'a, str>,
 
     /// Current byte position in the source string.
     byte_pos: usize,
@@ -382,6 +384,20 @@ pub struct GrammarLexer<'a> {
     /// via `LexerContext::set_skip_enabled()` for groups where whitespace
     /// is significant (e.g., CDATA, raw strings).
     skip_enabled: bool,
+
+    /// Whether the grammar is case-sensitive. When `false`, the source
+    /// string is lowercased before tokenization so that keywords and
+    /// patterns match regardless of case. This is useful for languages
+    /// like SQL and BASIC where `SELECT` and `select` are equivalent.
+    case_sensitive: bool,
+
+    /// Pre-tokenize hooks: transform source text before lexing.
+    /// Each hook is a function `String -> String`. Multiple hooks compose left-to-right.
+    pre_tokenize_hooks: Vec<Box<dyn Fn(String) -> String>>,
+
+    /// Post-tokenize hooks: transform token list after lexing.
+    /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    post_tokenize_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -391,6 +407,7 @@ impl<'a> GrammarLexer<'a> {
     /// anchored regex patterns. The "default" group contains the top-level
     /// definitions; named groups come from `group NAME:` sections.
     pub fn new(source: &'a str, grammar: &TokenGrammar) -> Self {
+        let case_sensitive = grammar.case_sensitive;
         let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
         let reserved_set: HashSet<String> = grammar.reserved_keywords.iter().cloned().collect();
         let patterns = compile_patterns(&grammar.definitions);
@@ -430,9 +447,19 @@ impl<'a> GrammarLexer<'a> {
         // Build the set of valid group names for validation.
         let group_names: HashSet<String> = group_patterns.keys().cloned().collect();
 
+        // When case_sensitive is false, lowercase the entire source so that
+        // patterns and keywords match regardless of the original casing. Both
+        // `source` (used for regex matching) and `chars` (used for indexed
+        // access) operate on the lowercased text.
+        let effective_source: Cow<'a, str> = if case_sensitive {
+            Cow::Borrowed(source)
+        } else {
+            Cow::Owned(source.to_lowercase())
+        };
+
         GrammarLexer {
-            chars: source.chars().collect(),
-            source,
+            chars: effective_source.chars().collect(),
+            source: effective_source,
             byte_pos: 0,
             char_pos: 0,
             line: 1,
@@ -448,6 +475,9 @@ impl<'a> GrammarLexer<'a> {
             group_stack: vec!["default".to_string()],
             on_token: None,
             skip_enabled: true,
+            case_sensitive,
+            pre_tokenize_hooks: Vec::new(),
+            post_tokenize_hooks: Vec::new(),
         }
     }
 
@@ -465,6 +495,22 @@ impl<'a> GrammarLexer<'a> {
     /// - The EOF token
     pub fn set_on_token(&mut self, callback: Option<OnTokenCallback>) {
         self.on_token = callback;
+    }
+
+    /// Register a text transform to run before tokenization.
+    ///
+    /// The hook receives the source string and returns a (possibly modified)
+    /// source string. Multiple hooks compose left-to-right.
+    pub fn add_pre_tokenize(&mut self, hook: Box<dyn Fn(String) -> String>) {
+        self.pre_tokenize_hooks.push(hook);
+    }
+
+    /// Register a token transform to run after tokenization.
+    ///
+    /// The hook receives the full token list and returns a (possibly modified)
+    /// token list. Multiple hooks compose left-to-right.
+    pub fn add_post_tokenize(&mut self, hook: Box<dyn Fn(Vec<Token>) -> Vec<Token>>) {
+        self.post_tokenize_hooks.push(hook);
     }
 
     // -----------------------------------------------------------------------
@@ -769,7 +815,7 @@ impl<'a> GrammarLexer<'a> {
                     let mut ctx = LexerContext {
                         group_names: &self.group_names,
                         group_stack: &self.group_stack,
-                        source: self.source,
+                        source: &self.source,
                         pos_after_token: self.byte_pos,
                         actions: Vec::new(),
                         suppressed: false,
@@ -1080,11 +1126,30 @@ impl<'a> GrammarLexer<'a> {
     /// Dispatches to either standard or indentation mode based on the
     /// grammar's mode directive.
     pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
-        if self.indent_mode {
-            self.tokenize_indentation()
-        } else {
-            self.tokenize_standard()
+        // Stage 1: Pre-tokenize hooks transform the source text.
+        if !self.pre_tokenize_hooks.is_empty() {
+            let mut source = self.source.clone().into_owned();
+            for hook in &self.pre_tokenize_hooks {
+                source = hook(source);
+            }
+            // Rebuild chars and source from the transformed text.
+            self.chars = source.chars().collect();
+            self.source = Cow::Owned(source);
         }
+
+        // Stage 2: Core tokenization.
+        let mut tokens = if self.indent_mode {
+            self.tokenize_indentation()?
+        } else {
+            self.tokenize_standard()?
+        };
+
+        // Stage 3: Post-tokenize hooks transform the token list.
+        for hook in &self.post_tokenize_hooks {
+            tokens = hook(tokens);
+        }
+
+        Ok(tokens)
     }
 }
 

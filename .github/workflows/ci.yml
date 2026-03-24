@@ -49,6 +49,7 @@ jobs:
       needs_rust: ${{ steps.detect.outputs.needs_rust }}
       needs_elixir: ${{ steps.detect.outputs.needs_elixir }}
       needs_lua: ${{ steps.detect.outputs.needs_lua }}
+      needs_perl: ${{ steps.detect.outputs.needs_perl }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -203,6 +204,20 @@ jobs:
           luarocks install luacov
           luarocks install luacheck
 
+      - name: Install cpanm and test dependencies (Perl)
+        if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get install -y cpanminus
+            # Pre-install Test2::V0 to the system Perl location (requires sudo).
+            # Without sudo, cpanm falls back to ~/perl5 which prove cannot find.
+            sudo cpanm --quiet --notest Test2::V0
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install cpanminus
+            cpanm --quiet --notest Test2::V0
+          fi
+
       - name: Install test runners
         shell: bash
         run: |
@@ -241,6 +256,10 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Lua: $(lua -v)"
             echo "LuaRocks: $(luarocks --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
+            echo "Perl: $(perl --version | head -2 | tail -1)"
+            echo "cpanm: $(cpanm --version)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────

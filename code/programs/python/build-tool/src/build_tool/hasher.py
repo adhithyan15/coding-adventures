@@ -45,6 +45,7 @@ SOURCE_EXTENSIONS: dict[str, set[str]] = {
     "python": {".py", ".toml", ".cfg"},
     "ruby": {".rb", ".gemspec"},
     "go": {".go"},
+    "perl": {".pl", ".pm", ".t", ".xs"},
 }
 
 # Special filenames to always include regardless of extension.
@@ -52,6 +53,7 @@ SPECIAL_FILENAMES: dict[str, set[str]] = {
     "python": set(),
     "ruby": {"Gemfile", "Rakefile"},
     "go": {"go.mod", "go.sum"},
+    "perl": {"Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"},
 }
 
 

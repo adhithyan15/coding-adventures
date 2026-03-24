@@ -1,3 +1,4 @@
-pip install -e .[dev] > NUL 2>&1
-python -m pytest
-ruff check src/ tests/
+uv venv --quiet --clear
+uv pip install -e .[dev] --quiet
+uv run python -m pytest
+uv run ruff check src/ tests/

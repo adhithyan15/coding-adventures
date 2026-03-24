@@ -150,6 +150,10 @@ pub struct PatternGroup {
 ///   The lexer maintains a stack of active groups and only tries patterns
 ///   from the group on top of the stack. Patterns outside any group belong
 ///   to the implicit "default" group (stored in `definitions`).
+/// - `case_sensitive` — Whether the lexer should perform case-sensitive
+///   matching. Defaults to `true`. When `false`, the lexer lowercases the
+///   source before tokenization so that keywords and patterns match
+///   regardless of case (useful for languages like SQL and BASIC).
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenGrammar {
     pub definitions: Vec<TokenDefinition>,
@@ -160,6 +164,7 @@ pub struct TokenGrammar {
     pub escapes: Option<String>,
     pub error_definitions: Vec<TokenDefinition>,
     pub groups: HashMap<String, PatternGroup>,
+    pub case_sensitive: bool,
 }
 
 // ===========================================================================
@@ -289,23 +294,34 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
     let (pattern_str, alias) = if after_eq.starts_with('/') {
-        // Regex pattern — find the closing slash, skipping escaped slashes (\/).
+        // Regex pattern — find the closing slash by scanning character-by-character.
+        // We track bracket depth so that / inside [...] character classes is
+        // not mistaken for the closing delimiter. We also skip escaped chars.
         let rest = &after_eq[1..];
         let close_idx = {
             let mut i = 0;
             let bytes = rest.as_bytes();
             let mut found = None;
+            let mut in_bracket = false;
             while i < bytes.len() {
                 if bytes[i] == b'\\' {
                     i += 2; // skip escaped character
-                } else if bytes[i] == b'/' {
+                } else if bytes[i] == b'[' && !in_bracket {
+                    in_bracket = true;
+                    i += 1;
+                } else if bytes[i] == b']' && in_bracket {
+                    in_bracket = false;
+                    i += 1;
+                } else if bytes[i] == b'/' && !in_bracket {
                     found = Some(i);
                     break;
                 } else {
                     i += 1;
                 }
             }
-            found
+            // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+            // try the last / as a best-effort parse.
+            found.or_else(|| rest.rfind('/').filter(|&idx| idx > 0))
         };
         match close_idx {
             Some(close_idx) => {
@@ -405,6 +421,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
     let mut escapes: Option<String> = None;
+    let mut case_sensitive: bool = true;
     let mut error_definitions = Vec::new();
     let mut groups: HashMap<String, PatternGroup> = HashMap::new();
 
@@ -532,6 +549,34 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             continue;
         }
 
+        // --- Case sensitivity directive ---
+        //
+        // The `case_sensitive:` directive controls whether the lexer performs
+        // case-sensitive or case-insensitive matching. When set to `false`,
+        // the lexer lowercases the source before tokenization, so keywords
+        // like `SELECT` and `select` match the same pattern. This is useful
+        // for languages like SQL, BASIC, and Pascal that are case-insensitive.
+        //
+        // Accepted values: "true" or "false". Defaults to true if omitted.
+        if stripped.starts_with("case_sensitive:") || stripped.starts_with("case_sensitive :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let cs_value = stripped[colon_idx + 1..].trim();
+            match cs_value {
+                "true" => case_sensitive = true,
+                "false" => case_sensitive = false,
+                _ => {
+                    return Err(TokenGrammarError {
+                        message: format!(
+                            "Invalid case_sensitive value: '{}' (expected 'true' or 'false')",
+                            cs_value
+                        ),
+                        line_number,
+                    });
+                }
+            }
+            continue;
+        }
+
         // --- Inside a section ---
         //
         // Each section type handles indented lines differently. A
@@ -607,6 +652,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         escapes,
         error_definitions,
         groups,
+        case_sensitive,
     })
 }
 
@@ -959,6 +1005,7 @@ keywords:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -983,6 +1030,7 @@ keywords:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1007,6 +1055,7 @@ keywords:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1210,6 +1259,7 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));
@@ -1399,6 +1449,7 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups,
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Invalid regex")));
@@ -1424,6 +1475,7 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups,
+            case_sensitive: true,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Empty pattern group")));

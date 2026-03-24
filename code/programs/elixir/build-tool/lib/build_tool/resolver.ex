@@ -167,6 +167,12 @@ defmodule BuildTool.Resolver do
 
           Map.put(acc, rockspec_name, pkg.name)
 
+        "perl" ->
+          # Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
+          # This matches the Python convention exactly.
+          cpan_name = "coding-adventures-" <> String.downcase(Path.basename(pkg.path))
+          Map.put(acc, cpan_name, pkg.name)
+
         _ ->
           acc
       end
@@ -191,6 +197,7 @@ defmodule BuildTool.Resolver do
       "rust" -> parse_rust_deps(pkg, known_names)
       "elixir" -> parse_elixir_deps(pkg, known_names)
       "lua" -> parse_lua_deps(pkg, known_names)
+      "perl" -> parse_perl_deps(pkg, known_names)
       _ -> []
     end
   end
@@ -628,6 +635,51 @@ defmodule BuildTool.Resolver do
 
   # Extracts quoted dependency names from a Lua rockspec line and maps them
   # to internal package names. Version specifiers (>=, ==, etc.) are stripped.
+  # ---------------------------------------------------------------------------
+  # Perl: cpanfile
+  # ---------------------------------------------------------------------------
+  #
+  # A cpanfile declares dependencies with one `requires` per line:
+  #
+  #     requires 'coding-adventures-logic-gates';
+  #     requires 'coding-adventures-bitset', '>= 0.01';
+  #
+  # We scan for lines matching `requires 'coding-adventures-...'` and map
+  # them to internal package names. External deps are silently skipped.
+
+  defp parse_perl_deps(pkg, known_names) do
+    cpanfile = Path.join(pkg.path, "cpanfile")
+
+    case File.read(cpanfile) do
+      {:ok, data} ->
+        pattern = ~r/requires\s+['"]coding-adventures-([^'"]+)['"]/
+
+        data
+        |> String.split("\n")
+        |> Enum.reject(fn line ->
+          trimmed = String.trim(line)
+          trimmed == "" or String.starts_with?(trimmed, "#")
+        end)
+        |> Enum.flat_map(fn line ->
+          case Regex.run(pattern, line) do
+            [_, dep_kebab] ->
+              dep_name = "coding-adventures-" <> String.downcase(dep_kebab)
+
+              case Map.get(known_names, dep_name) do
+                nil -> []
+                pkg_name -> [pkg_name]
+              end
+
+            _ ->
+              []
+          end
+        end)
+
+      {:error, _} ->
+        []
+    end
+  end
+
   defp extract_lua_deps(line, known_names) do
     ~r/"([^"]+)"/
     |> Regex.scan(line)

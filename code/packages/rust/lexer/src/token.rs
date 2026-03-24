@@ -258,6 +258,46 @@ pub struct Token {
     pub type_name: Option<std::string::String>,
 }
 
+impl Token {
+    /// Return the effective type name as a string.
+    ///
+    /// If `type_name` is set (grammar-driven tokens with custom types like
+    /// `SIZED_NUMBER`), returns that. Otherwise returns the `TokenType`
+    /// enum display name (e.g. `"Name"`, `"Number"`).
+    pub fn effective_type_name(&self) -> &str {
+        match &self.type_name {
+            Some(name) => name.as_str(),
+            None => match self.type_ {
+                TokenType::Name => "NAME",
+                TokenType::Number => "NUMBER",
+                TokenType::String => "STRING",
+                TokenType::Keyword => "KEYWORD",
+                TokenType::Plus => "PLUS",
+                TokenType::Minus => "MINUS",
+                TokenType::Star => "STAR",
+                TokenType::Slash => "SLASH",
+                TokenType::Equals => "EQUALS",
+                TokenType::EqualsEquals => "EQUALS_EQUALS",
+                TokenType::LParen => "LPAREN",
+                TokenType::RParen => "RPAREN",
+                TokenType::Comma => "COMMA",
+                TokenType::Colon => "COLON",
+                TokenType::Semicolon => "SEMICOLON",
+                TokenType::LBrace => "LBRACE",
+                TokenType::RBrace => "RBRACE",
+                TokenType::LBracket => "LBRACKET",
+                TokenType::RBracket => "RBRACKET",
+                TokenType::Dot => "DOT",
+                TokenType::Bang => "BANG",
+                TokenType::Newline => "NEWLINE",
+                TokenType::Indent => "INDENT",
+                TokenType::Dedent => "DEDENT",
+                TokenType::Eof => "EOF",
+            },
+        }
+    }
+}
+
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(

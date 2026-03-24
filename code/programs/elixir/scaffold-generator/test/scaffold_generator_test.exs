@@ -159,10 +159,8 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
     test "reads -e ../ entries from BUILD file" do
       tmp = create_tmp_dir()
       build_content = """
-      uv venv --quiet --clear
-      uv pip install -e ../logic-gates --quiet
-      uv pip install -e ../registers --quiet
-      uv pip install -e ".[dev]" --quiet
+      pip install -e ../logic-gates -e ../registers -e .[dev] --quiet
+      python -m pytest tests/ -v
       """
       File.write!(Path.join(tmp, "BUILD"), build_content)
 
@@ -329,17 +327,17 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       # Create package A that depends on B
       pkg_a = Path.join(tmp, "a")
       File.mkdir_p!(pkg_a)
-      File.write!(Path.join(pkg_a, "BUILD"), "uv pip install -e ../b --quiet\n")
+      File.write!(Path.join(pkg_a, "BUILD"), "pip install -e ../b -e .[dev] --quiet\n")
 
       # Create package B that depends on C
       pkg_b = Path.join(tmp, "b")
       File.mkdir_p!(pkg_b)
-      File.write!(Path.join(pkg_b, "BUILD"), "uv pip install -e ../c --quiet\n")
+      File.write!(Path.join(pkg_b, "BUILD"), "pip install -e ../c -e .[dev] --quiet\n")
 
       # Create package C with no deps
       pkg_c = Path.join(tmp, "c")
       File.mkdir_p!(pkg_c)
-      File.write!(Path.join(pkg_c, "BUILD"), "uv pip install -e \".[dev]\" --quiet\n")
+      File.write!(Path.join(pkg_c, "BUILD"), "pip install -e .[dev] --quiet\n")
 
       assert {:ok, all_deps} = ScaffoldGenerator.transitive_closure(["a"], "python", tmp)
       assert "a" in all_deps
@@ -358,13 +356,13 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
 
       # A -> B, A -> C, B -> D, C -> D
       File.mkdir_p!(Path.join(tmp, "a"))
-      File.write!(Path.join([tmp, "a", "BUILD"]), "uv pip install -e ../b --quiet\nuv pip install -e ../c --quiet\n")
+      File.write!(Path.join([tmp, "a", "BUILD"]), "pip install -e ../b -e ../c -e .[dev] --quiet\n")
 
       File.mkdir_p!(Path.join(tmp, "b"))
-      File.write!(Path.join([tmp, "b", "BUILD"]), "uv pip install -e ../d --quiet\n")
+      File.write!(Path.join([tmp, "b", "BUILD"]), "pip install -e ../d -e .[dev] --quiet\n")
 
       File.mkdir_p!(Path.join(tmp, "c"))
-      File.write!(Path.join([tmp, "c", "BUILD"]), "uv pip install -e ../d --quiet\n")
+      File.write!(Path.join([tmp, "c", "BUILD"]), "pip install -e ../d -e .[dev] --quiet\n")
 
       File.mkdir_p!(Path.join(tmp, "d"))
       File.write!(Path.join([tmp, "d", "BUILD"]), "echo done\n")
@@ -385,10 +383,10 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
 
       # A depends on B, B depends on C
       File.mkdir_p!(Path.join(tmp, "a"))
-      File.write!(Path.join([tmp, "a", "BUILD"]), "uv pip install -e ../b --quiet\n")
+      File.write!(Path.join([tmp, "a", "BUILD"]), "pip install -e ../b -e .[dev] --quiet\n")
 
       File.mkdir_p!(Path.join(tmp, "b"))
-      File.write!(Path.join([tmp, "b", "BUILD"]), "uv pip install -e ../c --quiet\n")
+      File.write!(Path.join([tmp, "b", "BUILD"]), "pip install -e ../c -e .[dev] --quiet\n")
 
       File.mkdir_p!(Path.join(tmp, "c"))
       File.write!(Path.join([tmp, "c", "BUILD"]), "echo done\n")
@@ -551,6 +549,69 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       mix_content = File.read!(Path.join(target, "mix.exs"))
       assert String.contains?(mix_content, "CodingAdventures.TestPkg.MixProject")
       assert String.contains?(mix_content, "app: :coding_adventures_test_pkg")
+    end
+
+    test "generated Elixir BUILD stays portable when package has deps" do
+      {tmp, config} = setup_scaffold_test("my-app", "elixir")
+
+      dep_b_dir = Path.join(tmp, "dep_b")
+      File.mkdir_p!(dep_b_dir)
+
+      File.write!(
+        Path.join(dep_b_dir, "mix.exs"),
+        """
+        defmodule CodingAdventures.DepB.MixProject do
+          use Mix.Project
+
+          def project do
+            [
+              app: :coding_adventures_dep_b,
+              version: "0.1.0",
+              elixir: "~> 1.14",
+              deps: []
+            ]
+          end
+        end
+        """
+      )
+
+      dep_a_dir = Path.join(tmp, "dep_a")
+      File.mkdir_p!(dep_a_dir)
+
+      File.write!(
+        Path.join(dep_a_dir, "mix.exs"),
+        """
+        defmodule CodingAdventures.DepA.MixProject do
+          use Mix.Project
+
+          def project do
+            [
+              app: :coding_adventures_dep_a,
+              version: "0.1.0",
+              elixir: "~> 1.14",
+              deps: deps()
+            ]
+          end
+
+          defp deps do
+            [
+              {:coding_adventures_dep_b, path: "../dep_b"}
+            ]
+          end
+        end
+        """
+      )
+
+      config = %{config | direct_deps: ["dep-a"], layer: 3, description: "An app with deps"}
+
+      assert {:ok, _messages} = ScaffoldGenerator.scaffold(config, "elixir")
+
+      target = Path.join(tmp, "my_app")
+      build_content = File.read!(Path.join(target, "BUILD"))
+
+      assert build_content == "mix deps.get --quiet && mix test --cover\n"
+      refute String.contains?(build_content, "cd ../")
+      refute String.contains?(build_content, "\\")
     end
 
     test "generated Go go.mod contains correct module path" do
@@ -726,12 +787,12 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
     # Create dep-b (leaf - no dependencies)
     dep_b_dir = Path.join(lang_dir, "dep-b")
     File.mkdir_p!(dep_b_dir)
-    File.write!(Path.join(dep_b_dir, "BUILD"), "uv pip install -e \".[dev]\" --quiet\n")
+    File.write!(Path.join(dep_b_dir, "BUILD"), "pip install -e .[dev] --quiet\n")
 
     # Create dep-a (depends on dep-b)
     dep_a_dir = Path.join(lang_dir, "dep-a")
     File.mkdir_p!(dep_a_dir)
-    File.write!(Path.join(dep_a_dir, "BUILD"), "uv pip install -e ../dep-b --quiet\nuv pip install -e \".[dev]\" --quiet\n")
+    File.write!(Path.join(dep_a_dir, "BUILD"), "pip install -e ../dep-b -e .[dev] --quiet\n")
 
     config = %Config{
       package_name: pkg_name,

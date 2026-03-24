@@ -1,0 +1,142 @@
+#!/usr/bin/env perl
+
+# build-tool -- Incremental Parallel Monorepo Build System (Perl Implementation)
+# ================================================================================
+#
+# This is the entry point for the Perl build tool. It parses command-line
+# arguments using Getopt::Long (a core module) and delegates to the
+# CodingAdventures::BuildTool orchestrator.
+#
+# Usage:
+#
+#   build-tool [options]
+#
+# Options:
+#   --root DIR           Repository root (default: current directory)
+#   --force              Rebuild all packages, ignore cache
+#   --dry-run            Show build plan without executing
+#   --jobs N             Max parallel builds (default: number of CPUs)
+#   --language LANG      Only build packages of this language
+#   --diff-base REF      Git ref for change detection (default: origin/main)
+#   --verbose            Extra output for debugging
+#   --help               Show this help
+#   --version            Show version
+#
+# Exit codes:
+#   0  All builds succeeded (or nothing to build)
+#   1  One or more builds failed
+#   2  Configuration error (bad flags, root not found)
+#
+# Architecture:
+#
+#   This script is intentionally thin. All business logic lives in
+#   lib/CodingAdventures/BuildTool.pm and its sub-modules under
+#   lib/CodingAdventures/BuildTool/. The separation of concerns makes
+#   each component testable in isolation.
+#
+#   Execution flow:
+#
+#     bin/build-tool       parse flags, call BuildTool->run()
+#         |
+#         v
+#     BuildTool.pm         orchestrate the pipeline
+#         |
+#         +-> Discovery    find packages via BUILD file walk
+#         +-> Resolver     parse deps, build graph
+#         +-> GitDiff      find changed packages (or --force all)
+#         +-> Executor     fork() and run BUILD commands
+#         +-> Reporter     print results
+
+use strict;
+use warnings;
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use Getopt::Long qw(GetOptions :config no_auto_abbrev);
+use CodingAdventures::BuildTool;
+
+# Parse command-line arguments.
+my %opts = (
+    root      => undef,
+    force     => 0,
+    dry_run   => 0,
+    jobs      => undef,
+    language  => undef,
+    diff_base => 'origin/main',
+    verbose   => 0,
+    help      => 0,
+    version   => 0,
+);
+
+GetOptions(
+    'root=s'       => \$opts{root},
+    'force'        => \$opts{force},
+    'dry-run'      => \$opts{dry_run},
+    'jobs=i'       => \$opts{jobs},
+    'language=s'   => \$opts{language},
+    'diff-base=s'  => \$opts{diff_base},
+    'verbose'      => \$opts{verbose},
+    'help'         => \$opts{help},
+    'version'      => \$opts{version},
+) or do {
+    print_usage();
+    exit 2;
+};
+
+if ($opts{help}) {
+    print_usage();
+    exit 0;
+}
+
+if ($opts{version}) {
+    printf "build-tool version %s (Perl %vd)\n",
+        $CodingAdventures::BuildTool::VERSION,
+        $^V;
+    exit 0;
+}
+
+# Validate --root: it must exist and be a directory.
+if (defined $opts{root} && !-d $opts{root}) {
+    die "Error: --root '$opts{root}' is not a directory.\n";
+}
+
+# Validate --jobs: must be a positive integer.
+if (defined $opts{jobs} && $opts{jobs} < 1) {
+    die "Error: --jobs must be a positive integer.\n";
+}
+
+# Create and run the build tool.
+my $bt = CodingAdventures::BuildTool->new(
+    root      => $opts{root}      // '.',
+    force     => $opts{force},
+    dry_run   => $opts{dry_run},
+    jobs      => $opts{jobs},
+    language  => $opts{language},
+    diff_base => $opts{diff_base},
+    verbose   => $opts{verbose},
+);
+
+exit $bt->run();
+
+# ---------------------------------------------------------------------------
+
+sub print_usage {
+    print <<~'END';
+        Usage: build-tool [options]
+
+        Options:
+          --root DIR           Repository root (default: current directory)
+          --force              Rebuild all packages, ignore cache
+          --dry-run            Show build plan without executing
+          --jobs N             Max parallel builds (default: number of CPUs)
+          --language LANG      Only build packages of this language
+          --diff-base REF      Git ref for change detection (default: origin/main)
+          --verbose            Extra output for debugging
+          --help               Show this help
+          --version            Show version
+
+        Exit codes:
+          0  All builds succeeded (or nothing to build)
+          1  One or more builds failed
+          2  Configuration error
+        END
+}

@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+require_relative "lib/coding_adventures/arm1_gatelevel/version"
+
+Gem::Specification.new do |spec|
+  spec.name          = "coding_adventures_arm1_gatelevel"
+  spec.version       = CodingAdventures::Arm1Gatelevel::VERSION
+  spec.authors       = ["Adhithya Rajasekaran"]
+  spec.summary       = "ARM1 gate-level simulator built from logic gates"
+  spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
+  spec.license       = "MIT"
+  spec.required_ruby_version = ">= 3.3.0"
+
+  spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.md"]
+  spec.require_paths = ["lib"]
+
+  spec.metadata = {
+    "source_code_uri"        => "https://github.com/adhithyan15/coding-adventures",
+    "rubygems_mfa_required"  => "true"
+  }
+
+  spec.add_dependency "coding_adventures_logic_gates", "~> 0.1"
+  spec.add_dependency "coding_adventures_arithmetic", "~> 0.1"
+  spec.add_dependency "coding_adventures_arm1_simulator", "~> 0.1"
+  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "rake", "~> 13.0"
+end

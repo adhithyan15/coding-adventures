@@ -104,13 +104,35 @@ module CodingAdventures
         # Furthest failure tracking for better error messages.
         @furthest_pos = 0
         @furthest_expected = []
+
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. Hooks compose left-to-right.
+        @pre_parse_hooks = []
+        @post_parse_hooks = []
       end
 
       # Whether newlines are significant in this grammar.
       attr_reader :newlines_significant
 
+      # Register a token transform to run before parsing begins.
+      # The hook receives the token list and returns a (possibly
+      # modified) token list. Multiple hooks compose left-to-right.
+      def add_pre_parse(hook)
+        @pre_parse_hooks << hook
+      end
+
+      # Register an AST transform to run after parsing completes.
+      # The hook receives the root ASTNode and returns a (possibly
+      # modified) ASTNode. Multiple hooks compose left-to-right.
+      def add_post_parse(hook)
+        @post_parse_hooks << hook
+      end
+
       # Parse using the first grammar rule as entry point.
       def parse
+        # Pre-parse hooks transform the token list before parsing.
+        @pre_parse_hooks.each { |hook| @tokens = hook.call(@tokens) }
+
         raise GrammarParseError.new("Grammar has no rules") if @grammar.rules.empty?
 
         entry_rule = @grammar.rules[0]
@@ -141,6 +163,9 @@ module CodingAdventures
             current
           )
         end
+
+        # Post-parse hooks transform the AST after parsing completes.
+        @post_parse_hooks.each { |hook| result = hook.call(result) }
 
         result
       end
@@ -188,7 +213,19 @@ module CodingAdventures
         end
       end
 
-      # Parse a named grammar rule with memoization.
+      # Parse a named grammar rule with memoization and left-recursion support.
+      #
+      # Implements the seed-and-grow technique from Warth et al.,
+      # "Packrat Parsers Can Support Left Recursion" (2008).
+      #
+      # The algorithm handles left-recursive rules like:
+      #   expression = expression PLUS term | term
+      #
+      # 1. Seed: plant a failure entry in the memo cache before parsing.
+      # 2. Initial parse: the left-recursive alternative fails (hits seed),
+      #    but a non-recursive alternative may succeed.
+      # 3. Grow: iteratively re-parse with previous result cached, letting
+      #    the left-recursive alternative consume more input each time.
       #
       # When trace mode is enabled, emits a [TRACE] line to $stderr for every
       # rule attempt (both hits and misses), whether the result is fresh or
@@ -219,13 +256,36 @@ module CodingAdventures
           return ASTNode.new(rule_name: rule_name, children: cached_result)
         end
 
-        # Not cached -- parse the rule.
         start_pos = @pos
         rule = @rules[rule_name]
+
+        # Left-recursion guard: seed the memo with a failure entry BEFORE
+        # parsing the rule body. If the rule references itself at the same
+        # position, the memo check above will find this failure entry and
+        # raise GrammarParseError, breaking the infinite recursion cycle.
+        @memo[memo_key] = [nil, start_pos]
+
         children = match_element(rule.body)
 
         # Cache the result.
         @memo[memo_key] = [children, @pos]
+
+        # If the initial parse succeeded, try to grow the match.
+        if children
+          loop do
+            prev_end = @pos
+            @pos = start_pos
+            @memo[memo_key] = [children, prev_end]
+            new_children = match_element(rule.body)
+            if new_children.nil? || @pos <= prev_end
+              # Could not grow — restore the best result.
+              @pos = prev_end
+              @memo[memo_key] = [children, prev_end]
+              break
+            end
+            children = new_children
+          end
+        end
 
         unless children
           @pos = start_pos
