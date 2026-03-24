@@ -1,5 +1,5 @@
 {
-  "name": "@coding-adventures/html-renderer",
+  "name": "@coding-adventures/pipeline-visualizer",
   "version": "0.1.0",
   "description": "Language-agnostic HTML visualization generator — reads pipeline JSON reports and produces self-contained HTML files",
   "type": "module",
