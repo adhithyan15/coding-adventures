@@ -1,3 +1,2 @@
-uv venv --quiet --clear
-uv pip install -e .[dev] --quiet
-uv run python -m pytest tests/ -v
+set UV_NO_CONFIG=1 && python -m pip install -e .[dev] --quiet
+python -m pytest tests/ -v
