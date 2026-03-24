@@ -443,6 +443,15 @@ export class GrammarLexer {
    */
   private readonly _caseSensitive: boolean;
 
+  /**
+   * Whether keyword matching is case-insensitive (from `grammar.caseInsensitive`).
+   *
+   * When true, NAME tokens are checked against the keyword set using their
+   * uppercased form, and keyword tokens are emitted with their value normalized
+   * to uppercase. Non-keyword identifiers retain their original casing.
+   */
+  private readonly _caseInsensitive: boolean;
+
   // -- Compiled patterns --
 
   /** Default group compiled patterns, in priority order. */
@@ -479,9 +488,15 @@ export class GrammarLexer {
 
   constructor(source: string, grammar: TokenGrammar) {
     this._grammar = grammar;
-    this._caseSensitive = grammar.caseSensitive !== false;
+    this._caseInsensitive = grammar.caseInsensitive === true;
+    this._caseSensitive = grammar.caseSensitive !== false && !this._caseInsensitive;
     this._source = this._caseSensitive ? source : source.toLowerCase();
-    this._keywordSet = new Set(grammar.keywords);
+    // When case-insensitive, store keywords in uppercase so lookups can use value.toUpperCase().
+    this._keywordSet = new Set(
+      this._caseInsensitive
+        ? grammar.keywords.map((k) => k.toUpperCase())
+        : grammar.keywords,
+    );
     this._reservedSet = new Set(grammar.reservedKeywords ?? []);
     this._indentationMode = grammar.mode === "indentation";
     this._hasSkipPatterns = (grammar.skipDefinitions ?? []).length > 0;
@@ -991,15 +1006,26 @@ export class GrammarLexer {
         const startLine = this._line;
         const startColumn = this._column;
 
+        // For case-insensitive grammars, normalize NAME tokens to uppercase for
+        // keyword lookup. Keywords are stored uppercase in _keywordSet.
+        const lookupValue = this._caseInsensitive ? value.toUpperCase() : value;
+
         const tokenType = resolveTokenType(
           name,
-          value,
+          lookupValue,
           this._keywordSet,
           this._reservedSet,
           alias,
           startLine,
           startColumn,
         );
+
+        // Keyword tokens are emitted with their normalized (uppercase) value so
+        // that `select`, `SELECT`, and `Select` all produce KEYWORD("SELECT").
+        // Non-keyword identifiers always keep their original casing.
+        if (this._caseInsensitive && tokenType === "KEYWORD") {
+          value = lookupValue;
+        }
 
         // Handle STRING tokens: strip quotes and optionally process escapes.
         // When escapeMode is "none", the lexer strips quotes but leaves escape
