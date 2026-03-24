@@ -522,7 +522,7 @@ module CodingAdventures
                 assert __version__ == "0.1.0"
       PY
 
-      install_parts = ["pip install"]
+      install_parts = ["python -m pip install"]
       ordered_deps.each { |dep| install_parts << "-e ../#{dep}" }
       install_parts.push("-e .[dev]", "--quiet")
       build_lines = [install_parts.join(" ")]

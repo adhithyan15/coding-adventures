@@ -205,7 +205,7 @@ describe("readDeps", () => {
   it("reads Python deps from BUILD file", () => {
     const pkgDir = path.join(tmpDir, "my-pkg");
     writeTestFile(pkgDir, "BUILD", [
-      "pip install -e ../logic-gates -e ../arithmetic -e .[dev] --quiet",
+      "python -m pip install -e ../logic-gates -e ../arithmetic -e .[dev] --quiet",
       "python -m pytest tests/ -v",
     ].join("\n"));
 
@@ -384,12 +384,12 @@ describe("transitiveClosure", () => {
     // C has no deps
     const cDir = path.join(tmpDir, "c-pkg");
     fs.mkdirSync(cDir, { recursive: true });
-    writeTestFile(cDir, "BUILD", "pip install -e .[dev] --quiet\n");
+    writeTestFile(cDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // B depends on C
     const bDir = path.join(tmpDir, "b-pkg");
     fs.mkdirSync(bDir, { recursive: true });
-    writeTestFile(bDir, "BUILD", "pip install -e ../c-pkg -e .[dev] --quiet\n");
+    writeTestFile(bDir, "BUILD", "python -m pip install -e ../c-pkg -e .[dev] --quiet\n");
 
     // A depends on B (we ask for transitive closure starting from [B])
     const result = transitiveClosure(["b-pkg"], "python", tmpDir);
@@ -400,17 +400,17 @@ describe("transitiveClosure", () => {
     // base has no deps
     const baseDir = path.join(tmpDir, "base");
     fs.mkdirSync(baseDir, { recursive: true });
-    writeTestFile(baseDir, "BUILD", "pip install -e .[dev] --quiet\n");
+    writeTestFile(baseDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // left depends on base
     const leftDir = path.join(tmpDir, "left");
     fs.mkdirSync(leftDir, { recursive: true });
-    writeTestFile(leftDir, "BUILD", "pip install -e ../base -e .[dev] --quiet\n");
+    writeTestFile(leftDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
     // right depends on base
     const rightDir = path.join(tmpDir, "right");
     fs.mkdirSync(rightDir, { recursive: true });
-    writeTestFile(rightDir, "BUILD", "pip install -e ../base -e .[dev] --quiet\n");
+    writeTestFile(rightDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
     // Both left and right depend on base; should appear only once
     const result = transitiveClosure(["left", "right"], "python", tmpDir);
@@ -436,7 +436,7 @@ describe("topologicalSort", () => {
   it("returns single dep as-is", () => {
     const depDir = path.join(tmpDir, "solo");
     fs.mkdirSync(depDir, { recursive: true });
-    writeTestFile(depDir, "BUILD", "pip install -e .[dev] --quiet\n");
+    writeTestFile(depDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     const result = topologicalSort(["solo"], "python", tmpDir);
     expect(result).toEqual(["solo"]);
@@ -446,12 +446,12 @@ describe("topologicalSort", () => {
     // leaf has no deps
     const leafDir = path.join(tmpDir, "leaf");
     fs.mkdirSync(leafDir, { recursive: true });
-    writeTestFile(leafDir, "BUILD", "pip install -e .[dev] --quiet\n");
+    writeTestFile(leafDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // mid depends on leaf
     const midDir = path.join(tmpDir, "mid");
     fs.mkdirSync(midDir, { recursive: true });
-    writeTestFile(midDir, "BUILD", "pip install -e ../leaf -e .[dev] --quiet\n");
+    writeTestFile(midDir, "BUILD", "python -m pip install -e ../leaf -e .[dev] --quiet\n");
 
     const result = topologicalSort(["leaf", "mid"], "python", tmpDir);
     expect(result).toEqual(["leaf", "mid"]);
@@ -461,17 +461,17 @@ describe("topologicalSort", () => {
     // base has no deps
     const baseDir = path.join(tmpDir, "base");
     fs.mkdirSync(baseDir, { recursive: true });
-    writeTestFile(baseDir, "BUILD", "pip install -e .[dev] --quiet\n");
+    writeTestFile(baseDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // left depends on base
     const leftDir = path.join(tmpDir, "left");
     fs.mkdirSync(leftDir, { recursive: true });
-    writeTestFile(leftDir, "BUILD", "pip install -e ../base -e .[dev] --quiet\n");
+    writeTestFile(leftDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
     // right depends on base
     const rightDir = path.join(tmpDir, "right");
     fs.mkdirSync(rightDir, { recursive: true });
-    writeTestFile(rightDir, "BUILD", "pip install -e ../base -e .[dev] --quiet\n");
+    writeTestFile(rightDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
     const result = topologicalSort(
       ["base", "left", "right"],
@@ -487,11 +487,11 @@ describe("topologicalSort", () => {
     // A depends on B, B depends on A
     const aDir = path.join(tmpDir, "a-pkg");
     fs.mkdirSync(aDir, { recursive: true });
-    writeTestFile(aDir, "BUILD", "pip install -e ../b-pkg -e .[dev] --quiet\n");
+    writeTestFile(aDir, "BUILD", "python -m pip install -e ../b-pkg -e .[dev] --quiet\n");
 
     const bDir = path.join(tmpDir, "b-pkg");
     fs.mkdirSync(bDir, { recursive: true });
-    writeTestFile(bDir, "BUILD", "pip install -e ../a-pkg -e .[dev] --quiet\n");
+    writeTestFile(bDir, "BUILD", "python -m pip install -e ../a-pkg -e .[dev] --quiet\n");
 
     expect(() =>
       topologicalSort(["a-pkg", "b-pkg"], "python", tmpDir),

@@ -801,7 +801,7 @@ class TestVersion:
 
     // --- BUILD ---
     let mut build_lines: Vec<String> = Vec::new();
-    let mut install_parts: Vec<String> = vec!["pip install".to_string()];
+    let mut install_parts: Vec<String> = vec!["python -m pip install".to_string()];
     for dep in ordered_deps {
         install_parts.push(format!("-e ../{}", dep));
     }

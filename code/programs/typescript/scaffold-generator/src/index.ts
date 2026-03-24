@@ -613,7 +613,7 @@ class TestVersion:
         assert __version__ == "0.1.0"
 `;
 
-  const installParts = ["pip install"];
+  const installParts = ["python -m pip install"];
   for (const dep of orderedDeps) {
     installParts.push(`-e ../${dep}`);
   }

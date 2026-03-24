@@ -1,2 +1,2 @@
-pip install -e ../wasm-leb128 -e ../wasm-types -e ../wasm-opcodes -e .[dev] --quiet
+python -m pip install -e ../wasm-leb128 -e ../wasm-types -e ../wasm-opcodes -e .[dev] --quiet
 python -m pytest tests/ -v

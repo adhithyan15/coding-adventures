@@ -355,7 +355,7 @@ class TestVersion:
         assert __version__ == "0.1.0"
 '''
 
-    install_parts = ["pip install"]
+    install_parts = ["python -m pip install"]
     for dep in ordered_deps:
         install_parts.append(f"-e ../{dep}")
     install_parts.extend(["-e .[dev]", "--quiet"])

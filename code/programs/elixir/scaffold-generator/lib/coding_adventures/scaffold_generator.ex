@@ -800,7 +800,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
     """
 
     install_parts =
-      ["pip install"] ++
+      ["python -m pip install"] ++
         Enum.map(ordered_deps, fn dep -> "-e ../#{dep}" end) ++
         ["-e .[dev]", "--quiet"]
 

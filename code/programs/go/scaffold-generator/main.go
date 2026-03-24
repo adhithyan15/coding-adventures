@@ -498,7 +498,7 @@ class TestVersion:
 
 	// BUILD
 	var buildLines []string
-	installParts := []string{"pip install"}
+	installParts := []string{"python -m pip install"}
 	for _, dep := range orderedDeps {
 		installParts = append(installParts, fmt.Sprintf("-e ../%s", dep))
 	}

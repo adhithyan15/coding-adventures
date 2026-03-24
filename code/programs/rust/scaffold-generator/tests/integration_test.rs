@@ -556,7 +556,7 @@ fn test_read_python_deps() {
     fs::create_dir_all(&dir).unwrap();
     fs::write(
         dir.join("BUILD"),
-        "pip install -e ../logic-gates -e ../arithmetic -e .[dev] --quiet\npython -m pytest tests/ -v\n",
+        "python -m pip install -e ../logic-gates -e ../arithmetic -e .[dev] --quiet\npython -m pytest tests/ -v\n",
     )
     .unwrap();
 
