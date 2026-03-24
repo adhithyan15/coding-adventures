@@ -246,9 +246,9 @@ const MODE_TRANSITIONS = new Map<string, string>([
 const HTML_BLOCK_1_OPEN  = /^<(?:script|pre|textarea|style)(?:\s|>|$)/i;
 const HTML_BLOCK_1_CLOSE = /<\/(?:script|pre|textarea|style)>/i;
 const HTML_BLOCK_2_OPEN  = /^<!--/;
-// CommonMark spec §4.6: type-2 HTML blocks end at the first `-->`.
-// This is a Markdown parser, not an HTML sanitizer — false positive below.
-const HTML_BLOCK_2_CLOSE = /-->/; // codeql[js/bad-html-filtering-regexp]
+// CommonMark spec §4.6: type-2 HTML blocks end at --> (standard comment close).
+// Also accept --!> per HTML5 §13.2.6.2, which some parsers treat as comment end.
+const HTML_BLOCK_2_CLOSE = /--!?>/;
 const HTML_BLOCK_3_OPEN  = /^<\?/;
 const HTML_BLOCK_3_CLOSE = /\?>/;
 const HTML_BLOCK_4_OPEN  = /^<![A-Z]/;
