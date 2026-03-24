@@ -57,6 +57,7 @@ Cargo.lock
 
 # Claude Code
 .claude/
+!.claude/skills/
 
 # Elixir
 _build/
