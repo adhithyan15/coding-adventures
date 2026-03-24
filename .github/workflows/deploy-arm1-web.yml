@@ -1,0 +1,63 @@
+# ================================================================
+# Deploy ARM1 Web Simulator to GitHub Pages
+# ================================================================
+#
+# Builds the Vite app and deploys it to the gh-pages branch
+# under the arm1-web/ subdirectory, preserving any other content
+# already on GitHub Pages.
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into arm1-web/ on that branch,
+# so the app is available at:
+#   https://<user>.github.io/coding-adventures/arm1-web/
+#
+# The Vite base path is set to /coding-adventures/arm1-web/ in
+# vite.config.ts so all asset URLs resolve correctly.
+
+name: Deploy ARM1 Web Simulator
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/arm1-web/**"
+      - "code/packages/typescript/arm1-simulator/**"
+      - ".github/workflows/deploy-arm1-web.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (arm1-simulator package)
+        run: |
+          cd code/packages/typescript/arm1-simulator && npm install
+
+      - name: Install dependencies (app)
+        run: |
+          cd code/programs/typescript/arm1-web
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/arm1-web
+          npm run build
+
+      - name: Deploy to GitHub Pages (arm1-web/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/arm1-web/dist
+          destination_dir: arm1-web
+          keep_files: true
