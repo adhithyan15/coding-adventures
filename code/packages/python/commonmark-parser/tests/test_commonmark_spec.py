@@ -35,7 +35,7 @@ from coding_adventures_commonmark_parser import parse
 # The file is committed alongside this test — no network access needed.
 _SPEC_PATH = os.path.join(os.path.dirname(__file__), "spec.json")
 
-with open(_SPEC_PATH) as f:
+with open(_SPEC_PATH, encoding="utf-8") as f:
     _SPEC_EXAMPLES = json.load(f)
 
 # Total expected: 652 examples
