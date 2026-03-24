@@ -24,7 +24,7 @@ defmodule CodingAdventures.BlasLibrary.MixProject do
     [
       {:coding_adventures_vendor_api_simulators, path: "../vendor_api_simulators"},
       {:coding_adventures_compute_runtime, path: "../compute_runtime"},
-      {:coding_adventures_matrix, path: "../matrix"}
+      {:matrix, path: "../matrix"}
     ]
   end
 end
