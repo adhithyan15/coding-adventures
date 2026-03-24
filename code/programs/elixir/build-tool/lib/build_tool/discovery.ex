@@ -86,7 +86,7 @@ defmodule BuildTool.Discovery do
   # Known languages
   # ---------------------------------------------------------------------------
 
-  @known_languages ["python", "ruby", "go", "rust", "typescript", "elixir", "lua"]
+  @known_languages ["python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl"]
 
   # ---------------------------------------------------------------------------
   # Public API

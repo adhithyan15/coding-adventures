@@ -55,8 +55,9 @@ Cargo.lock
 .env
 .env.local
 
-# Claude Code
-.claude/
+# Claude Code — only ignore machine-specific files
+.claude/worktrees/
+.claude/settings.local.json
 
 # Elixir
 _build/

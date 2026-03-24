@@ -54,6 +54,7 @@ fn source_extensions(language: &str) -> HashSet<&'static str> {
         "ruby" => [".rb", ".gemspec"].iter().cloned().collect(),
         "go" => [".go"].iter().cloned().collect(),
         "rust" => [".rs", ".toml"].iter().cloned().collect(),
+        "perl" => [".pl", ".pm", ".t", ".xs"].iter().cloned().collect(),
         _ => HashSet::new(),
     }
 }
@@ -66,6 +67,7 @@ fn special_filenames(language: &str) -> HashSet<&'static str> {
         "ruby" => ["Gemfile", "Rakefile"].iter().cloned().collect(),
         "go" => ["go.mod", "go.sum"].iter().cloned().collect(),
         "rust" => ["Cargo.toml", "Cargo.lock"].iter().cloned().collect(),
+        "perl" => ["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"].iter().cloned().collect(),
         _ => HashSet::new(),
     }
 }

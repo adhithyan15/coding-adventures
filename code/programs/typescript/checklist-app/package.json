@@ -39,6 +39,11 @@
     "electron-builder": "^26.8.1",
     "cross-env": "^7.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adhithyan15/coding-adventures.git",
+    "directory": "code/programs/typescript/checklist-app"
+  },
   "author": "Adhithya Rajasekaran",
   "license": "MIT"
 }

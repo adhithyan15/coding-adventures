@@ -4,15 +4,19 @@
 # then attaches the installers to a GitHub Release.
 #
 # Triggered by pushing a tag matching `checklist-v*`:
-#   git tag checklist-v0.6.0
-#   git push origin checklist-v0.6.0
+#   git tag checklist-v0.6.1
+#   git push origin checklist-v0.6.1
 #
 # The workflow:
-#   1. Checks out the code on macOS, Ubuntu, and Windows runners (in parallel)
-#   2. Installs all local package dependencies (indexeddb, store, ui-components)
-#   3. Builds the Vite renderer + TypeScript main process
-#   4. Packages with electron-builder (dmg/zip for macOS, nsis/portable for Windows, AppImage for Linux)
-#   5. Uploads all artifacts to the GitHub Release created by the tag
+#   1. Builds on macOS, Ubuntu, and Windows runners in parallel
+#   2. Uploads build artifacts per platform
+#   3. A single "release" job collects all artifacts and creates one GitHub Release
+#
+# Why a separate release job?
+# Each platform produces a `builder-debug.yml` file. If all three platforms
+# upload directly to the release, the second uploader tries to overwrite the
+# first's file — which fails on repositories with immutable releases enabled.
+# By collecting artifacts first and uploading once, we avoid the conflict.
 
 name: Release Checklist
 
@@ -27,6 +31,7 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: macos-latest
@@ -69,9 +74,35 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Upload only the platform-specific installer files, not builder-debug.yml
+      # or latest-*.yml which are duplicated across platforms.
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            code/programs/typescript/checklist-app/release/*.AppImage
+            code/programs/typescript/checklist-app/release/*.dmg
+            code/programs/typescript/checklist-app/release/*.dmg.blockmap
+            code/programs/typescript/checklist-app/release/*.zip
+            code/programs/typescript/checklist-app/release/*.zip.blockmap
+            code/programs/typescript/checklist-app/release/*.exe
+            code/programs/typescript/checklist-app/release/*.yml
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: code/programs/typescript/checklist-app/release/*
+          files: artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
