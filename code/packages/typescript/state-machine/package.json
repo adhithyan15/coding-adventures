@@ -21,9 +21,6 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {
-    "@coding-adventures/directed-graph": "file:../directed-graph"
-  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",
