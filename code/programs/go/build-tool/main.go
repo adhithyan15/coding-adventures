@@ -286,14 +286,33 @@ func run() int {
 		if !*force {
 			changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
 			if len(changedFiles) > 0 {
-				changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
-				if len(changedPkgs) > 0 {
-					affectedSet = graph.AffectedNodes(changedPkgs)
-					fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
-						len(changedPkgs), len(affectedSet))
+				sharedChanged := false
+				for _, f := range changedFiles {
+					for _, prefix := range sharedPrefixes {
+						if strings.HasPrefix(f, prefix) {
+							sharedChanged = true
+							break
+						}
+					}
+					if sharedChanged {
+						break
+					}
+				}
+
+				if sharedChanged {
+					fmt.Println("Git diff: shared files changed — rebuilding everything")
+					*force = true
+					affectedSet = nil
 				} else {
-					fmt.Println("Git diff: no package files changed — nothing to build")
-					affectedSet = make(map[string]bool) // empty = build nothing
+					changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
+					if len(changedPkgs) > 0 {
+						affectedSet = graph.AffectedNodes(changedPkgs)
+						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
+							len(changedPkgs), len(affectedSet))
+					} else {
+						fmt.Println("Git diff: no package files changed — nothing to build")
+						affectedSet = make(map[string]bool) // empty = build nothing
+					}
 				}
 			} else {
 				fmt.Println("Git diff unavailable — falling back to hash-based cache")
@@ -310,7 +329,7 @@ func run() int {
 	}
 
 	if *detectLanguages {
-		return detectNeededLanguages(packages, affectedSet, *force, repoRoot, *diffBase)
+		return detectNeededLanguages(packages, affectedSet, *force)
 	}
 
 	// Step 6: Hash all packages (needed for cache fallback).
@@ -383,15 +402,11 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 
 // sharedPrefixes are path prefixes that, when changed, mean ALL languages
 // need rebuilding. These are cross-cutting concerns:
-//   - code/grammars/ — shared grammar definitions used by all language lexers/parsers
 //   - .github/ — CI configuration affects all languages
 //   - code/programs/go/build-tool/ — the build tool itself
-//   - code/specs/ — specifications that drive implementations across languages
 var sharedPrefixes = []string{
-	"code/grammars/",
 	".github/",
 	"code/programs/go/build-tool/",
-	"code/specs/",
 }
 
 // detectNeededLanguages determines which language toolchains CI needs to
@@ -407,50 +422,22 @@ func detectNeededLanguages(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
 	force bool,
-	repoRoot string,
-	diffBase string,
 ) int {
 	needed := make(map[string]bool)
 
 	// Go is always needed — the build tool itself is Go.
 	needed["go"] = true
 
-	if force {
+	if force || affectedSet == nil {
 		// Force mode: all languages needed.
 		for _, lang := range allLanguages {
 			needed[lang] = true
 		}
-	} else if affectedSet == nil {
-		// Git diff unavailable (nil means no diff data). Be safe: need everything.
-		for _, lang := range allLanguages {
-			needed[lang] = true
-		}
 	} else {
-		// Check if shared files changed — if so, all languages are needed.
-		changedFiles := gitdiff.GetChangedFiles(repoRoot, diffBase)
-		sharedChanged := false
-		for _, f := range changedFiles {
-			for _, prefix := range sharedPrefixes {
-				if strings.HasPrefix(f, prefix) {
-					sharedChanged = true
-					break
-				}
-			}
-			if sharedChanged {
-				break
-			}
-		}
-
-		if sharedChanged {
-			for _, lang := range allLanguages {
-				needed[lang] = true
-			}
-		} else {
-			// Only mark languages that have affected packages.
-			for _, pkg := range packages {
-				if affectedSet[pkg.Name] {
-					needed[pkg.Language] = true
-				}
+		// Only mark languages that have affected packages.
+		for _, pkg := range packages {
+			if affectedSet[pkg.Name] {
+				needed[pkg.Language] = true
 			}
 		}
 	}
@@ -489,8 +476,6 @@ func computeLanguagesNeeded(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
 	force bool,
-	repoRoot string,
-	diffBase string,
 ) map[string]bool {
 	needed := make(map[string]bool)
 	needed["go"] = true
@@ -500,18 +485,6 @@ func computeLanguagesNeeded(
 			needed[lang] = true
 		}
 		return needed
-	}
-
-	changedFiles := gitdiff.GetChangedFiles(repoRoot, diffBase)
-	for _, f := range changedFiles {
-		for _, prefix := range sharedPrefixes {
-			if strings.HasPrefix(f, prefix) {
-				for _, lang := range allLanguages {
-					needed[lang] = true
-				}
-				return needed
-			}
-		}
 	}
 
 	for _, pkg := range packages {
@@ -575,7 +548,7 @@ func emitBuildPlan(
 	}
 
 	// Compute languages needed.
-	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force, repoRoot, diffBase)
+	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force)
 
 	bp := &plan.BuildPlan{
 		DiffBase:         diffBase,
