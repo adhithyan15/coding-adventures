@@ -2211,7 +2211,10 @@ export function decodeEntity(ref: string): string {
   }
 
   // Named reference: &name;
-  const decoded = NAMED_ENTITIES[inner];
+  // Guard with Object.hasOwn to prevent inherited Object properties (constructor,
+  // toString, valueOf, etc.) from leaking their function source into the output
+  // when someone writes "&constructor;" or similar in their Markdown.
+  const decoded = Object.hasOwn(NAMED_ENTITIES, inner) ? NAMED_ENTITIES[inner] : undefined;
   return decoded !== undefined ? decoded : ref;
 }
 

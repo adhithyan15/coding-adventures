@@ -1,2 +1,1 @@
-npm ci --quiet
-npx vitest run --coverage
+cd ../document-ast && npm install --silent && cd ../directed-graph && npm install --silent && cd ../state-machine && npm install --silent && cd ../document-ast-to-html && npm install --silent && cd ../commonmark-parser && npm install --silent && cd ../commonmark && npm install --silent && npx vitest run --coverage
