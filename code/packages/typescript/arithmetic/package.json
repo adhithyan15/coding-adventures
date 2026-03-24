@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/arithmetic",
-  "version": "0.1.0",
-  "description": "Half adder, full adder, ripple carry adder, and ALU implementations — Layer 2 of the computing stack",
+  "version": "0.3.0",
+  "description": "Half adder, full adder, ripple carry adder, ALU, and shift-and-add multiplier — Layer 2 of the computing stack",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

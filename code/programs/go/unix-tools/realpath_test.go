@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -85,6 +86,9 @@ func TestRealpathCanonicalizeExisting(t *testing.T) {
 }
 
 func TestRealpathCanonicalizeMissing(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Unix-style path test not applicable on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runRealpath(toolSpecPath(t, "realpath"), []string{"realpath", "-m", "/nonexistent/path/to/file"}, &stdout, &stderr)
 

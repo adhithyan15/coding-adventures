@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-lattice-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the Lattice CSS superset language"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

@@ -48,7 +48,7 @@ module BuildTool
     # KNOWN_LANGUAGES lists the language directory names we look for when
     # inferring which ecosystem a package belongs to. If a package lives
     # under a directory with one of these names, we tag it accordingly.
-    KNOWN_LANGUAGES = %w[python ruby go rust typescript elixir].freeze
+    KNOWN_LANGUAGES = %w[python ruby go rust typescript elixir lua perl].freeze
 
     # SKIP_DIRS is the set of directory names that should never be traversed
     # during package discovery. These are known to contain non-source files

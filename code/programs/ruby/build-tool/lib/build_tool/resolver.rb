@@ -345,6 +345,103 @@ module BuildTool
       internal_deps
     end
 
+    # parse_lua_deps -- Extract internal deps from .rockspec.
+    #
+    # LuaRocks rockspec files declare dependencies in a Lua table:
+    #
+    #   dependencies = {
+    #       "lua >= 5.4",
+    #       "coding-adventures-logic-gates >= 0.1.0",
+    #   }
+    #
+    # We scan for quoted strings inside the dependencies block and map them
+    # to internal package names, stripping version specifiers.
+    #
+    # @param package [Package] The Lua package.
+    # @param known_names [Hash<String, String>] Mapping from rockspec name to package name.
+    # @return [Array<String>] Internal dependency package names.
+    def parse_lua_deps(package, known_names)
+      rockspec_files = package.path.glob("*.rockspec").to_a
+      return [] if rockspec_files.empty?
+
+      text = rockspec_files.first.read
+      internal_deps = []
+      in_deps = false
+
+      text.lines.each do |line|
+        stripped = line.strip
+
+        unless in_deps
+          if stripped.include?("dependencies") && stripped.include?("=") && stripped.include?("{")
+            in_deps = true
+            if stripped.include?("}")
+              extract_lua_deps(stripped, known_names, internal_deps)
+              break
+            end
+            extract_lua_deps(stripped, known_names, internal_deps)
+          end
+          next
+        end
+
+        # Inside the dependencies block.
+        if stripped.include?("}")
+          extract_lua_deps(stripped, known_names, internal_deps)
+          break
+        end
+        extract_lua_deps(stripped, known_names, internal_deps)
+      end
+
+      internal_deps
+    end
+
+    # extract_lua_deps -- Extract dependency names from a line of a rockspec.
+    #
+    # @param line [String] A line from the rockspec file.
+    # @param known_names [Hash<String, String>] Name mapping.
+    # @param deps [Array<String>] Accumulator for found dependencies.
+    def extract_lua_deps(line, known_names, deps)
+      line.scan(/"([^"]+)"/).flatten.each do |dep_str|
+        dep_name = dep_str.split(/[>=<!~\s]/).first&.strip&.downcase
+        next unless dep_name
+
+        deps << known_names[dep_name] if known_names.key?(dep_name)
+      end
+    end
+
+    # parse_perl_deps -- Extract internal dependencies from a Perl cpanfile.
+    #
+    # A cpanfile declares dependencies with one `requires` per line:
+    #
+    #   requires 'coding-adventures-logic-gates';
+    #   requires 'coding-adventures-bitset', '>= 0.01';
+    #
+    # We scan for lines matching `requires 'coding-adventures-...'` and map
+    # them to internal package names. External deps are silently skipped.
+    #
+    # @param package [Package]
+    # @param known_names [Hash<String, String>]
+    # @return [Array<String>]
+    def parse_perl_deps(package, known_names)
+      cpanfile = package.path / "cpanfile"
+      return [] unless cpanfile.exist?
+
+      internal_deps = []
+      pattern = /requires\s+['"](coding-adventures-[^'"]+)['"]/
+
+      cpanfile.read.lines.each do |line|
+        stripped = line.strip
+        next if stripped.empty? || stripped.start_with?("#")
+
+        match = stripped.match(pattern)
+        if match
+          dep_name = match[1].downcase
+          internal_deps << known_names[dep_name] if known_names.key?(dep_name)
+        end
+      end
+
+      internal_deps
+    end
+
     # build_known_names -- Build ecosystem-specific name -> package name mapping.
     #
     # For Python: "coding-adventures-logic-gates" -> "python/logic-gates"
@@ -378,6 +475,14 @@ module BuildTool
         when "elixir"
           app_name = "coding_adventures_#{pkg.path.basename.to_s.gsub('-', '_')}".downcase
           known[app_name] = pkg.name
+        when "lua"
+          # Lua rockspec names use hyphens: "logic_gates" dir → "coding-adventures-logic-gates"
+          rockspec_name = "coding-adventures-#{pkg.path.basename.to_s.gsub('_', '-')}".downcase
+          known[rockspec_name] = pkg.name
+        when "perl"
+          # Perl CPAN dist names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+          cpan_name = "coding-adventures-#{pkg.path.basename}".downcase
+          known[cpan_name] = pkg.name
         end
       end
 
@@ -410,6 +515,8 @@ module BuildTool
                when "ruby"   then parse_ruby_deps(pkg, known_names)
                when "go"     then parse_go_deps(pkg, known_names)
                when "elixir" then parse_elixir_deps(pkg, known_names)
+               when "lua"    then parse_lua_deps(pkg, known_names)
+               when "perl"  then parse_perl_deps(pkg, known_names)
                else []
                end
 

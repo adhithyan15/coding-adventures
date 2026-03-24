@@ -1,0 +1,97 @@
+# Changelog
+
+## 0.4.0 — CPU Step-Through tab
+
+### Added
+
+- **Tab 4: CPU Step-Through** — Intel 4004 gate-level CPU executing real programs
+- `CpuView` — full CPU visualization with program loader, step controls, state dashboard
+- Program loader with 4 example programs:
+  1. "Count to 6" — INC loop with conditional jump
+  2. "Add Two Numbers" — 5 + 7 = 12 via LDM/XCH/ADD
+  3. "Fibonacci Sequence" — register-to-register arithmetic loop
+  4. "Conditional Branch" — SUB comparison with JCN branching
+- Step controls: Step (one instruction), Auto-Step (500ms interval), Reset
+- CPU state dashboard: accumulator, carry flag, PC (all update live)
+- Register grid: R0-R15 in 8-column layout, changed registers highlighted green
+- Current instruction panel: address, opcode, mnemonic, ACC before→after, carry before→after
+- ALU trace panel: per-bit full adder snapshots when arithmetic instructions execute
+- Execution trace history: scrollable list of all executed instructions with ALU markers
+- CPU halts and disables controls on HLT instruction
+- 24 new i18n strings, CPU-specific CSS
+- 15 new tests (66 total)
+
+### Changed
+
+- `App.tsx` now renders CpuView when CPU tab is active (no more placeholders)
+
+## 0.3.0 — The ALU tab
+
+### Added
+
+- **Tab 3: The ALU** — 8-bit Arithmetic Logic Unit with all 6 operations
+- `OperationSelector` — radio button group with Arithmetic (ADD, SUB) and Logic (AND, OR, XOR, NOT) grouping
+- `ResultDisplay` — 8-bit result as bit cells + decimal + hex + four condition flags
+- `FlagIndicator` — visual condition flag display (dot + abbreviation + description)
+  - Zero (Z), Carry (C), Negative (N), Overflow (V)
+- `ALUView` container with operation selector, operand inputs, result display
+  - B input hidden for NOT (unary operation)
+  - Auto-computes on input/operation change
+- 14 new i18n strings covering ALU operations and flags
+- ALU-specific CSS (operation selector, result bits, flag indicators)
+- 14 new tests (51 total)
+
+### Changed
+
+- `App.tsx` now renders ALUView when ALU tab is active
+
+## 0.2.0 — Everything is Addition tab
+
+### Added
+
+- **Tab 2: Everything is Addition** — the central insight of computer arithmetic
+- `SubtractionView` — interactive 3-step two's complement transformation
+  - Step 1: Show A − B as the problem
+  - Step 2: Negate B → NOT(B) + 1 = two's complement of B, with bit-by-bit display
+  - Step 3: Add A + (−B) through the SAME ripple-carry adder, with per-bit trace table
+  - Educational callout explaining why `NOT(x) + 1 = −x`
+- `MultiplicationView` — shift-and-add algorithm with long multiplication grid
+  - 4-bit inputs with MSB-first grid display (like pencil-and-paper multiplication)
+  - Per-step partial products: shows shifted multiplicand when bit=1, skip when bit=0
+  - Step trace table with running totals
+  - Active rows highlighted, skipped rows dimmed
+  - Educational callout about AND gates and conditional additions
+- `EverythingIsAddition` container stacking both views
+- 17 new i18n strings covering subtraction and multiplication content
+- Addition-specific CSS (transformation steps, long multiplication grid, callouts)
+- 17 new tests (37 total)
+
+### Changed
+
+- `App.tsx` now renders EverythingIsAddition when addition tab is active
+
+## 0.1.0 — App scaffold + Binary Adders tab
+
+### Added
+
+- **Project scaffold**: package.json, vite.config.ts, tsconfig.json, vitest.config.ts, BUILD, index.html
+- **App shell** with 4 tabs (Binary Adders, Everything is Addition, The ALU, CPU Step-Through)
+  - Only "Binary Adders" tab is implemented; others show "Coming soon" placeholder
+- **Shared components**:
+  - `BitToggle` — clickable 0/1 toggle button with keyboard accessibility
+  - `WireLabel` — inline wire value indicator (green=1, gray=0)
+  - `TruthTable` — interactive truth table with active row highlighting (supports multiple output columns)
+  - `BitGroup` — multi-bit input with MSB-first display and decimal conversion
+- **Tab 1: Binary Adders** — three visualizations building from simple to complex:
+  - `HalfAdderDiagram` — XOR + AND SVG with 2 input toggles, truth table (4 rows)
+  - `FullAdderDiagram` — two half adders + OR gate SVG with 3 inputs, intermediate values, truth table (8 rows)
+  - `RippleCarryDiagram` — 4 chained full adders using `rippleCarryAdderTraced()` for per-bit snapshots
+    - Two 4-bit BitGroup inputs with decimal display
+    - Equation display (e.g., "5 + 3 = 8")
+    - SVG chain of full adder boxes with carry arrows
+    - Per-adder snapshot table showing a, b, cIn, sum, cOut for each bit
+    - Overflow indicator when carry-out = 1
+- Full i18n: all visible text externalized to en.json
+- Accessibility: aria-labels, aria-current, aria-live, keyboard navigation
+- CSS: dark theme via ui-components, responsive layout
+- 20 tests covering all three adder diagrams

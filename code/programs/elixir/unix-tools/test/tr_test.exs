@@ -13,7 +13,7 @@ defmodule TrTest do
   use ExUnit.Case, async: true
 
   alias CodingAdventures.CliBuilder.Parser
-  alias CodingAdventures.CliBuilder.{ParseResult, HelpResult, VersionResult, ParseErrors}
+  alias CodingAdventures.CliBuilder.{ParseResult, HelpResult, VersionResult}
 
   # ---------------------------------------------------------------------------
   # Helper: locate the spec file

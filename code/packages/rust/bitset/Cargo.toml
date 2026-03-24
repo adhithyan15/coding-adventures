@@ -1,0 +1,9 @@
+[package]
+name = "bitset"
+version = "0.1.0"
+edition = "2021"
+description = "A compact bitset data structure that packs boolean values into 64-bit words for space-efficient storage and lightning-fast bulk bitwise operations."
+license = "MIT"
+
+[dependencies]
+# No dependencies — this is a standalone foundation package.

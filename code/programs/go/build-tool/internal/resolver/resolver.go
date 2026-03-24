@@ -1,6 +1,6 @@
 // Package resolver reads package metadata files (pyproject.toml, .gemspec,
-// go.mod, package.json) and extracts internal dependencies, building a
-// directed graph.
+// go.mod, package.json, .rockspec) and extracts internal dependencies,
+// building a directed graph.
 //
 // # Why dependency resolution matters
 //
@@ -379,6 +379,155 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	return internalDeps
 }
 
+// parseLuaDeps extracts internal dependencies from a Lua .rockspec file.
+//
+// LuaRocks rockspec files declare dependencies in a Lua table:
+//
+//	dependencies = {
+//	    "lua >= 5.4",
+//	    "coding-adventures-logic-gates >= 0.1.0",
+//	}
+//
+// We scan for quoted strings inside the dependencies block that start with
+// "coding-adventures-" and map them to internal package names. Version
+// specifiers are stripped. The rockspec format uses hyphens in package names,
+// matching the Python/PyPI convention.
+func parseLuaDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	// Find .rockspec files in the package directory.
+	entries, err := os.ReadDir(pkg.Path)
+	if err != nil {
+		return nil
+	}
+
+	var rockspecPath string
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".rockspec") {
+			rockspecPath = filepath.Join(pkg.Path, entry.Name())
+			break
+		}
+	}
+	if rockspecPath == "" {
+		return nil
+	}
+
+	data, err := os.ReadFile(rockspecPath)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Strategy: find the dependencies = { ... } block and extract quoted strings.
+	// We look for lines containing quoted strings inside the dependencies block.
+	inDeps := false
+	re := regexp.MustCompile(`"([^"]+)"`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		if !inDeps {
+			// Look for: dependencies = {
+			if strings.Contains(trimmed, "dependencies") && strings.Contains(trimmed, "=") && strings.Contains(trimmed, "{") {
+				inDeps = true
+				// Check if it's a single-line block: dependencies = { "foo", "bar" }
+				if strings.Contains(trimmed, "}") {
+					for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+						if len(match) >= 2 {
+							mapLuaDep(match[1], knownNames, &internalDeps)
+						}
+					}
+					break
+				}
+			}
+			continue
+		}
+
+		// We're inside the dependencies block.
+		if strings.Contains(trimmed, "}") {
+			// Extract any deps on the closing line too.
+			for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+				if len(match) >= 2 {
+					mapLuaDep(match[1], knownNames, &internalDeps)
+				}
+			}
+			break
+		}
+
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) >= 2 {
+				mapLuaDep(match[1], knownNames, &internalDeps)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
+// mapLuaDep strips version specifiers from a Lua dependency string and maps it
+// to an internal package name if it matches a known dependency.
+//
+// Input examples:
+//
+//	"coding-adventures-logic-gates >= 0.1.0"  →  "lua/logic_gates"
+//	"lua >= 5.4"                              →  (skipped, not in knownNames)
+func mapLuaDep(depStr string, knownNames map[string]string, deps *[]string) {
+	// Strip version specifiers: split on >=, <=, >, <, ==, ~=, spaces
+	depName := regexp.MustCompile(`[>=<!~\s]`).Split(depStr, 2)[0]
+	depName = strings.TrimSpace(strings.ToLower(depName))
+	if pkgName, ok := knownNames[depName]; ok {
+		*deps = append(*deps, pkgName)
+	}
+}
+
+// parsePerlDeps extracts internal dependencies from a Perl cpanfile.
+//
+// A cpanfile is Perl's declarative dependency file (like Gemfile or
+// package.json). It uses a Perl DSL with one `requires` per line:
+//
+//	requires 'coding-adventures-logic-gates';
+//	requires 'coding-adventures-bitset', '>= 0.01';
+//
+//	on 'test' => sub {
+//	    requires 'Test2::V0';
+//	};
+//
+// We scan for lines matching `requires 'coding-adventures-...'` and map
+// them to internal package names. External dependencies (e.g., 'Moo',
+// 'Test2::V0') are silently skipped. Comments are ignored.
+func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	cpanfile := filepath.Join(pkg.Path, "cpanfile")
+	data, err := os.ReadFile(cpanfile)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Match: requires 'coding-adventures-logic-gates';
+	// Or:    requires "coding-adventures-bitset", '>= 0.01';
+	re := regexp.MustCompile(`requires\s+['"]coding-adventures-([^'"]+)['"]`)
+
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		// Skip blank lines and comments.
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+
+		matches := re.FindStringSubmatch(trimmed)
+		if len(matches) >= 2 {
+			depName := "coding-adventures-" + strings.ToLower(matches[1])
+			if pkgName, ok := knownNames[depName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -388,6 +537,7 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 //   - Python: "coding-adventures-logic-gates" → "python/logic-gates"
 //   - Ruby:   "coding_adventures_logic_gates" → "ruby/logic_gates"
 //   - Go:     full module path → "go/module-name"
+//   - Perl:   "coding-adventures-logic-gates" → "perl/logic-gates"
 //
 // By building this mapping upfront, we can resolve dependencies across
 // languages without hard-coding specific package names.
@@ -436,6 +586,19 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
 			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
 			known[appName] = pkg.Name
+
+		case "lua":
+			// Lua rockspec names use hyphens: "logic_gates" → "coding-adventures-logic-gates"
+			// Note: Lua directory names use underscores, rockspec names use hyphens.
+			rockspecName := "coding-adventures-" + strings.ReplaceAll(
+				strings.ToLower(filepath.Base(pkg.Path)), "_", "-")
+			known[rockspecName] = pkg.Name
+
+		case "perl":
+			// Perl CPAN distribution names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+			// This matches the Python convention exactly.
+			cpanName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
+			known[cpanName] = pkg.Name
 		}
 	}
 
@@ -479,6 +642,10 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseRustDeps(pkg, knownNames)
 		case "elixir":
 			deps = parseElixirDeps(pkg, knownNames)
+		case "lua":
+			deps = parseLuaDeps(pkg, knownNames)
+		case "perl":
+			deps = parsePerlDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

@@ -83,6 +83,7 @@ pub struct UnameInfo {
 ///
 /// Each field is a null-terminated C string. We use `CStr::from_ptr`
 /// to safely convert them to Rust strings.
+#[cfg(unix)]
 pub fn get_system_info() -> Result<UnameInfo, String> {
     unsafe {
         let mut buf: libc::utsname = std::mem::zeroed();
@@ -99,6 +100,12 @@ pub fn get_system_info() -> Result<UnameInfo, String> {
             machine: cstr_to_string(buf.machine.as_ptr()),
         })
     }
+}
+
+/// Non-Unix stub so the code compiles on all platforms.
+#[cfg(not(unix))]
+pub fn get_system_info() -> Result<UnameInfo, String> {
+    Err("uname: not supported on this platform".to_string())
 }
 
 /// Format uname output based on which fields are requested.
@@ -178,6 +185,7 @@ pub fn format_uname(
 /// # Safety
 ///
 /// The pointer must point to a valid null-terminated C string.
+#[cfg(unix)]
 unsafe fn cstr_to_string(ptr: *const libc::c_char) -> String {
     std::ffi::CStr::from_ptr(ptr)
         .to_string_lossy()
@@ -192,30 +200,35 @@ unsafe fn cstr_to_string(ptr: *const libc::c_char) -> String {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn get_system_info_succeeds() {
         let info = get_system_info();
         assert!(info.is_ok(), "get_system_info should succeed");
     }
 
+    #[cfg(unix)]
     #[test]
     fn sysname_is_nonempty() {
         let info = get_system_info().unwrap();
         assert!(!info.sysname.is_empty(), "sysname should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn nodename_is_nonempty() {
         let info = get_system_info().unwrap();
         assert!(!info.nodename.is_empty(), "nodename should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn machine_is_nonempty() {
         let info = get_system_info().unwrap();
         assert!(!info.machine.is_empty(), "machine should not be empty");
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_default_shows_sysname() {
         let info = get_system_info().unwrap();
@@ -223,6 +236,7 @@ mod tests {
         assert_eq!(output, info.sysname);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_kernel_name_only() {
         let info = get_system_info().unwrap();
@@ -230,6 +244,7 @@ mod tests {
         assert_eq!(output, info.sysname);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_nodename_only() {
         let info = get_system_info().unwrap();
@@ -237,6 +252,7 @@ mod tests {
         assert_eq!(output, info.nodename);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_all_has_multiple_fields() {
         let info = get_system_info().unwrap();
@@ -246,6 +262,7 @@ mod tests {
         assert!(parts.len() >= 3, "uname -a should have multiple fields, got: {}", output);
     }
 
+    #[cfg(unix)]
     #[test]
     fn format_multiple_flags() {
         let info = get_system_info().unwrap();

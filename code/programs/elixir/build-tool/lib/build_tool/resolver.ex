@@ -1,8 +1,8 @@
 defmodule BuildTool.Resolver do
   @moduledoc """
   Reads package metadata files (pyproject.toml, .gemspec, go.mod,
-  package.json, Cargo.toml, mix.exs) and extracts internal dependencies,
-  building a directed graph.
+  package.json, Cargo.toml, mix.exs, .rockspec) and extracts internal
+  dependencies, building a directed graph.
 
   ## Why dependency resolution matters
 
@@ -32,6 +32,9 @@ defmodule BuildTool.Resolver do
 
     - **Elixir**: mix.exs uses atom names with "coding_adventures_" prefix.
       `":coding_adventures_logic_gates"` maps to `"elixir/logic-gates"`.
+
+    - **Lua**: .rockspec uses "coding-adventures-" prefix with hyphens.
+      `"coding-adventures-logic-gates"` maps to `"lua/logic_gates"`.
 
   External dependencies (those not matching the monorepo prefix) are silently
   skipped — we only care about internal build ordering.
@@ -154,6 +157,22 @@ defmodule BuildTool.Resolver do
 
           Map.put(acc, app_name, pkg.name)
 
+        "lua" ->
+          # Lua rockspec names: "logic_gates" -> "coding-adventures-logic-gates"
+          # Directory names use underscores, but rockspec names use hyphens
+          # with a "coding-adventures-" prefix, matching the Python convention.
+          rockspec_name =
+            "coding-adventures-" <>
+              String.replace(String.downcase(Path.basename(pkg.path)), "_", "-")
+
+          Map.put(acc, rockspec_name, pkg.name)
+
+        "perl" ->
+          # Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
+          # This matches the Python convention exactly.
+          cpan_name = "coding-adventures-" <> String.downcase(Path.basename(pkg.path))
+          Map.put(acc, cpan_name, pkg.name)
+
         _ ->
           acc
       end
@@ -177,6 +196,8 @@ defmodule BuildTool.Resolver do
       "typescript" -> parse_typescript_deps(pkg, known_names)
       "rust" -> parse_rust_deps(pkg, known_names)
       "elixir" -> parse_elixir_deps(pkg, known_names)
+      "lua" -> parse_lua_deps(pkg, known_names)
+      "perl" -> parse_perl_deps(pkg, known_names)
       _ -> []
     end
   end
@@ -531,5 +552,154 @@ defmodule BuildTool.Resolver do
       {:error, _} ->
         []
     end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Lua: .rockspec
+  # ---------------------------------------------------------------------------
+  #
+  # Lua packages use LuaRocks as their package manager. Each package has a
+  # .rockspec file that declares dependencies in a Lua table:
+  #
+  #   dependencies = {
+  #       "lua >= 5.4",
+  #       "coding-adventures-logic-gates >= 0.1.0",
+  #   }
+  #
+  # We scan for quoted strings inside the `dependencies = { ... }` block,
+  # strip version specifiers, and look them up in known_names. External
+  # dependencies (like "lua" itself) are silently skipped because they
+  # won't appear in known_names.
+
+  defp parse_lua_deps(pkg, known_names) do
+    # Find .rockspec files in the package directory.
+    case File.ls(pkg.path) do
+      {:ok, entries} ->
+        rockspec =
+          Enum.find(entries, fn entry -> String.ends_with?(entry, ".rockspec") end)
+
+        if rockspec do
+          rockspec_path = Path.join(pkg.path, rockspec)
+
+          case File.read(rockspec_path) do
+            {:ok, data} ->
+              data
+              |> String.split("\n")
+              |> parse_lua_deps_lines(known_names, false, [])
+
+            {:error, _} ->
+              []
+          end
+        else
+          []
+        end
+
+      {:error, _} ->
+        []
+    end
+  end
+
+  defp parse_lua_deps_lines([], _known, _in_deps, acc), do: Enum.reverse(acc)
+
+  defp parse_lua_deps_lines([line | rest], known, in_deps, acc) do
+    trimmed = String.trim(line)
+
+    cond do
+      not in_deps ->
+        # Look for the opening of `dependencies = {`
+        if String.starts_with?(trimmed, "dependencies") and String.contains?(trimmed, "=") and
+             String.contains?(trimmed, "{") do
+          if String.contains?(trimmed, "}") do
+            # Single-line dependencies block — extract and finish.
+            new_deps = extract_lua_deps(trimmed, known)
+            Enum.reverse(new_deps ++ acc)
+          else
+            # Multi-line block starts — extract any deps on this line and continue.
+            new_deps = extract_lua_deps(trimmed, known)
+            parse_lua_deps_lines(rest, known, true, new_deps ++ acc)
+          end
+        else
+          parse_lua_deps_lines(rest, known, false, acc)
+        end
+
+      # Closing brace ends the dependencies block.
+      String.contains?(trimmed, "}") ->
+        new_deps = extract_lua_deps(trimmed, known)
+        Enum.reverse(new_deps ++ acc)
+
+      true ->
+        new_deps = extract_lua_deps(trimmed, known)
+        parse_lua_deps_lines(rest, known, true, new_deps ++ acc)
+    end
+  end
+
+  # Extracts quoted dependency names from a Lua rockspec line and maps them
+  # to internal package names. Version specifiers (>=, ==, etc.) are stripped.
+  # ---------------------------------------------------------------------------
+  # Perl: cpanfile
+  # ---------------------------------------------------------------------------
+  #
+  # A cpanfile declares dependencies with one `requires` per line:
+  #
+  #     requires 'coding-adventures-logic-gates';
+  #     requires 'coding-adventures-bitset', '>= 0.01';
+  #
+  # We scan for lines matching `requires 'coding-adventures-...'` and map
+  # them to internal package names. External deps are silently skipped.
+
+  defp parse_perl_deps(pkg, known_names) do
+    cpanfile = Path.join(pkg.path, "cpanfile")
+
+    case File.read(cpanfile) do
+      {:ok, data} ->
+        pattern = ~r/requires\s+['"]coding-adventures-([^'"]+)['"]/
+
+        data
+        |> String.split("\n")
+        |> Enum.reject(fn line ->
+          trimmed = String.trim(line)
+          trimmed == "" or String.starts_with?(trimmed, "#")
+        end)
+        |> Enum.flat_map(fn line ->
+          case Regex.run(pattern, line) do
+            [_, dep_kebab] ->
+              dep_name = "coding-adventures-" <> String.downcase(dep_kebab)
+
+              case Map.get(known_names, dep_name) do
+                nil -> []
+                pkg_name -> [pkg_name]
+              end
+
+            _ ->
+              []
+          end
+        end)
+
+      {:error, _} ->
+        []
+    end
+  end
+
+  defp extract_lua_deps(line, known_names) do
+    ~r/"([^"]+)"/
+    |> Regex.scan(line)
+    |> Enum.flat_map(fn
+      [_, dep_str] ->
+        # Strip version specifiers: split on >=, <=, >, <, ==, ~= or whitespace.
+        dep_name =
+          dep_str
+          |> String.split(~r/[>=<!~\s]/, parts: 2)
+          |> hd()
+          |> String.trim()
+          |> String.downcase()
+
+        case Map.get(known_names, dep_name) do
+          nil -> []
+          pkg_name -> [pkg_name]
+        end
+
+      _ ->
+        []
+    end)
   end
 end

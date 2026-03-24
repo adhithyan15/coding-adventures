@@ -1,0 +1,14 @@
+[workspace]
+
+[package]
+name = "bitset-native-ruby"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "bitset_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
+bitset = { path = "../../../../rust/bitset" }

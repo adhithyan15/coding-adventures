@@ -83,17 +83,23 @@ mod cli_parsing {
 mod business_logic {
     use super::*;
 
+    // All tests in this module call get_user_info(), which uses
+    // libc::getuid/getgid/getgroups — Unix-only syscalls.
+
+    #[cfg(unix)]
     #[test]
     fn get_info_succeeds() {
         assert!(get_user_info().is_ok());
     }
 
+    #[cfg(unix)]
     #[test]
     fn username_nonempty() {
         let info = get_user_info().unwrap();
         assert!(!info.username.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn full_format_contains_uid() {
         let info = get_user_info().unwrap();
@@ -102,6 +108,7 @@ mod business_logic {
         assert!(output.contains("gid="));
     }
 
+    #[cfg(unix)]
     #[test]
     fn user_id_numeric() {
         let info = get_user_info().unwrap();
@@ -109,6 +116,7 @@ mod business_logic {
         assert!(output.parse::<u32>().is_ok());
     }
 
+    #[cfg(unix)]
     #[test]
     fn user_id_name() {
         let info = get_user_info().unwrap();
@@ -116,6 +124,7 @@ mod business_logic {
         assert_eq!(output, info.username);
     }
 
+    #[cfg(unix)]
     #[test]
     fn group_id_numeric() {
         let info = get_user_info().unwrap();
@@ -123,6 +132,7 @@ mod business_logic {
         assert!(output.parse::<u32>().is_ok());
     }
 
+    #[cfg(unix)]
     #[test]
     fn groups_nonempty() {
         let info = get_user_info().unwrap();
@@ -130,6 +140,7 @@ mod business_logic {
         assert!(!output.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn groups_names() {
         let info = get_user_info().unwrap();
@@ -137,6 +148,7 @@ mod business_logic {
         assert!(!output.is_empty());
     }
 
+    #[cfg(unix)]
     #[test]
     fn has_supplementary_groups() {
         let info = get_user_info().unwrap();

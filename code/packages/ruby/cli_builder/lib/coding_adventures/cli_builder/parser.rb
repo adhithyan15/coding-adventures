@@ -115,7 +115,7 @@ module CodingAdventures
         # Handle help/version short-circuits
         return scan_result if scan_result.is_a?(HelpResult) || scan_result.is_a?(VersionResult)
 
-        parsed_flags, positional_tokens, scan_errors, duplicate_flags = scan_result
+        parsed_flags, positional_tokens, scan_errors, duplicate_flags, explicit_flags = scan_result
 
         # Phase 3: Validate
         all_errors = scan_errors.dup
@@ -152,7 +152,8 @@ module CodingAdventures
           program: program,
           command_path: command_path,
           flags: finalized_flags,
-          arguments: parsed_args
+          arguments: parsed_args,
+          explicit_flags: explicit_flags.to_a
         )
       end
 
@@ -196,7 +197,7 @@ module CodingAdventures
             # the corresponding flag is non-boolean, skip one more token.
             flag = find_flag_for_routing_skip(token, command_path)
             i += 1
-            i += 1 if flag && flag["type"] != "boolean" && !token.include?("=") && !token.match?(/\A-[^-]/) && i < tokens.length
+            i += 1 if flag && !%w[boolean count].include?(flag["type"]) && !flag["default_when_present"] && !token.include?("=") && !token.match?(/\A-[^-]/) && i < tokens.length
             next
           end
 
@@ -273,7 +274,9 @@ module CodingAdventures
         positional_tokens = []
         scan_errors = []
         duplicate_flags = []
+        explicit_flags = Set.new
         pending_flag = nil
+        pending_flag_optional = false
         parsing_mode = @spec["parsing_mode"] || "gnu"
 
         # Build quick lookup maps
@@ -302,10 +305,11 @@ module CodingAdventures
             classified = classifier.classify(fake_token)
             if classified[:type] == :stacked_flags || classified[:type] == :short_flag
               result = process_classified(classified, parsed_flags, positional_tokens, scan_errors,
-                duplicate_flags, msm, parsing_mode, command_path, nil)
+                duplicate_flags, explicit_flags, msm, parsing_mode, command_path, nil)
               return result if result.is_a?(HelpResult) || result.is_a?(VersionResult)
               if result.is_a?(Hash) && result[:pending_flag]
                 pending_flag = result[:pending_flag]
+                pending_flag_optional = result[:optional_value]
               end
               next
             end
@@ -315,6 +319,42 @@ module CodingAdventures
 
           case msm.current_mode
           when "flag_value"
+            # ---------------------------------------------------------------------------
+            # default_when_present disambiguation (v1.1)
+            # ---------------------------------------------------------------------------
+            #
+            # When we're waiting for a value for an enum flag that has
+            # default_when_present, we first check whether the next token
+            # is a valid enum value:
+            #
+            #   --color auto      → "auto" is in enum_values, consume it
+            #   --color somefile   → "somefile" is NOT in enum_values,
+            #                        use default_when_present, leave token unconsumed
+            #   --color --verbose  → starts with "-", use default_when_present
+            #
+            # This matches GNU coreutils behavior for --color[=WHEN].
+            if pending_flag_optional && pending_flag["default_when_present"]
+              enum_values = pending_flag["enum_values"] || []
+              if token.start_with?("-") || !enum_values.include?(token)
+                # Token is not a valid enum value — use default_when_present
+                record_flag(pending_flag, pending_flag["default_when_present"], parsed_flags, duplicate_flags)
+                explicit_flags.add(pending_flag["id"])
+                pending_flag = nil
+                pending_flag_optional = false
+                msm.switch_mode("got_value")
+                # Re-process this token in scanning mode — it's not consumed
+                classified = classifier.classify(token)
+                result = process_classified(classified, parsed_flags, positional_tokens, scan_errors,
+                  duplicate_flags, explicit_flags, msm, parsing_mode, command_path, pending_flag)
+                return result if result.is_a?(HelpResult) || result.is_a?(VersionResult)
+                if result.is_a?(Hash) && result[:pending_flag]
+                  pending_flag = result[:pending_flag]
+                  pending_flag_optional = result[:optional_value]
+                end
+                next
+              end
+            end
+
             # This entire token is the value for the pending flag
             value = coerce_flag_value(token, pending_flag, scan_errors)
             if pending_flag["repeatable"]
@@ -326,7 +366,9 @@ module CodingAdventures
               end
               parsed_flags[pending_flag["id"]] = value
             end
+            explicit_flags.add(pending_flag["id"])
             pending_flag = nil
+            pending_flag_optional = false
             msm.switch_mode("got_value")
 
           when "end_of_flags"
@@ -336,7 +378,7 @@ module CodingAdventures
           when "scanning"
             classified = classifier.classify(token)
             result = process_classified(classified, parsed_flags, positional_tokens, scan_errors,
-              duplicate_flags, msm, parsing_mode, command_path, pending_flag)
+              duplicate_flags, explicit_flags, msm, parsing_mode, command_path, pending_flag)
 
             # Help/version short-circuits: return immediately
             return result if result.is_a?(HelpResult) || result.is_a?(VersionResult)
@@ -344,28 +386,54 @@ module CodingAdventures
             # Check if we need to enter flag_value mode
             if result.is_a?(Hash) && result[:pending_flag]
               pending_flag = result[:pending_flag]
+              pending_flag_optional = result[:optional_value]
             end
           end
         end
 
-        # If we're still in flag_value mode when tokens run out, the last flag had no value
+        # If we're still in flag_value mode when tokens run out, either:
+        #   - The flag has default_when_present → use that value (no error)
+        #   - The flag requires a value → error
         if msm.current_mode == "flag_value" && pending_flag
-          scan_errors << ParseError.new(
-            error_type: "missing_required_argument",
-            message: "#{flag_display_name(pending_flag)} requires a value but none was given",
-            suggestion: nil,
-            context: command_path
-          )
+          if pending_flag_optional && pending_flag["default_when_present"]
+            record_flag(pending_flag, pending_flag["default_when_present"], parsed_flags, duplicate_flags)
+            explicit_flags.add(pending_flag["id"])
+          else
+            scan_errors << ParseError.new(
+              error_type: "missing_required_argument",
+              message: "#{flag_display_name(pending_flag)} requires a value but none was given",
+              suggestion: nil,
+              context: command_path
+            )
+          end
         end
 
-        [parsed_flags, positional_tokens, scan_errors, duplicate_flags]
+        [parsed_flags, positional_tokens, scan_errors, duplicate_flags, explicit_flags]
       end
 
       # Process a single classified token, updating state in-place.
       # Returns { pending_flag: flag } if we need to enter flag_value mode,
       # or a HelpResult/VersionResult for short-circuits.
-      def process_classified(classified, parsed_flags, positional_tokens, scan_errors,
-                             duplicate_flags, msm, parsing_mode, command_path, _pending_flag)
+      # ---------------------------------------------------------------------------
+      # Process a single classified token
+      # ---------------------------------------------------------------------------
+      #
+      # This method dispatches on the token type and updates the parsing state.
+      # It handles all flag types (long, short, stacked, single-dash-long),
+      # positional arguments, end-of-flags, and unknown flags.
+      #
+      # v1.1 additions:
+      #   - Count type: like boolean, consumes no value. Each occurrence increments
+      #     the counter. In stacked flags, each character increments independently.
+      #   - default_when_present: enum flags with this field can appear without a
+      #     value. When they do, the default_when_present value is used instead of
+      #     entering flag_value mode.
+      #   - explicit_flags: every flag consumed from argv gets its ID added to the
+      #     explicit_flags set, so callers can distinguish user-provided values from
+      #     parser-filled defaults.
+
+      def process_classified(classified, parsed_flags, positional_tokens, scan_errors, # rubocop:disable Metrics/ParameterLists
+        duplicate_flags, explicit_flags, msm, parsing_mode, command_path, _pending_flag)
         case classified[:type]
         when :end_of_flags
           msm.switch_mode("see_double_dash")
@@ -376,6 +444,21 @@ module CodingAdventures
           return handle_help_version(flag, command_path) if builtin_flag?(flag)
           if flag["type"] == "boolean"
             record_flag(flag, true, parsed_flags, duplicate_flags)
+            explicit_flags.add(flag["id"])
+          elsif flag["type"] == "count"
+            # Count flags consume no value — just increment the counter.
+            # Unlike boolean flags which set true, count flags accumulate.
+            record_count_flag(flag, parsed_flags)
+            explicit_flags.add(flag["id"])
+          elsif flag["default_when_present"]
+            # Enum flag with default_when_present: use the default value
+            # when no value token follows. The caller (phase2_scanning) will
+            # handle the disambiguation of whether the next token is a valid
+            # enum value — but for bare --flag at end-of-argv or followed by
+            # another flag, we use default_when_present.
+            # We enter a special "need_value_optional" mode handled in phase2.
+            msm.switch_mode("need_value")
+            return {pending_flag: flag, optional_value: true}
           else
             msm.switch_mode("need_value")
             return {pending_flag: flag}
@@ -387,6 +470,7 @@ module CodingAdventures
           return handle_help_version(flag, command_path) if builtin_flag?(flag)
           value = coerce_flag_value(classified[:value], flag, scan_errors)
           record_flag(flag, value, parsed_flags, duplicate_flags)
+          explicit_flags.add(flag["id"])
           nil
 
         when :single_dash_long
@@ -394,6 +478,13 @@ module CodingAdventures
           return handle_help_version(flag, command_path) if builtin_flag?(flag)
           if flag["type"] == "boolean"
             record_flag(flag, true, parsed_flags, duplicate_flags)
+            explicit_flags.add(flag["id"])
+          elsif flag["type"] == "count"
+            record_count_flag(flag, parsed_flags)
+            explicit_flags.add(flag["id"])
+          elsif flag["default_when_present"]
+            msm.switch_mode("need_value")
+            return {pending_flag: flag, optional_value: true}
           else
             msm.switch_mode("need_value")
             return {pending_flag: flag}
@@ -405,6 +496,13 @@ module CodingAdventures
           return handle_help_version(flag, command_path) if builtin_flag?(flag)
           if flag["type"] == "boolean"
             record_flag(flag, true, parsed_flags, duplicate_flags)
+            explicit_flags.add(flag["id"])
+          elsif flag["type"] == "count"
+            record_count_flag(flag, parsed_flags)
+            explicit_flags.add(flag["id"])
+          elsif flag["default_when_present"]
+            msm.switch_mode("need_value")
+            return {pending_flag: flag, optional_value: true}
           else
             msm.switch_mode("need_value")
             return {pending_flag: flag}
@@ -416,6 +514,7 @@ module CodingAdventures
           return handle_help_version(flag, command_path) if builtin_flag?(flag)
           value = coerce_flag_value(classified[:value], flag, scan_errors)
           record_flag(flag, value, parsed_flags, duplicate_flags)
+          explicit_flags.add(flag["id"])
           nil
 
         when :stacked_flags
@@ -428,13 +527,27 @@ module CodingAdventures
             if is_last && last_value
               value = coerce_flag_value(last_value, flag, scan_errors)
               record_flag(flag, value, parsed_flags, duplicate_flags)
-            elsif is_last && flag["type"] != "boolean"
-              # Last flag in stack is non-boolean with no inline value
-              # → next token is the value
-              msm.switch_mode("need_value")
-              return {pending_flag: flag}
+              explicit_flags.add(flag["id"])
+            elsif flag["type"] == "count"
+              # Count flags in a stack: each character increments the counter.
+              # "-vvv" means v appears 3 times in the stack, so count = 3.
+              record_count_flag(flag, parsed_flags)
+              explicit_flags.add(flag["id"])
+            elsif is_last && !%w[boolean count].include?(flag["type"])
+              if flag["default_when_present"]
+                # Last flag in stack is an enum with default_when_present:
+                # use default_when_present since there's no inline value
+                record_flag(flag, flag["default_when_present"], parsed_flags, duplicate_flags)
+                explicit_flags.add(flag["id"])
+              else
+                # Last flag in stack is non-boolean with no inline value
+                # → next token is the value
+                msm.switch_mode("need_value")
+                return {pending_flag: flag}
+              end
             else
               record_flag(flag, true, parsed_flags, duplicate_flags)
+              explicit_flags.add(flag["id"])
             end
           end
           nil
@@ -475,6 +588,36 @@ module CodingAdventures
         end
       end
 
+      # ---------------------------------------------------------------------------
+      # Count flag recording (v1.1)
+      # ---------------------------------------------------------------------------
+      #
+      # Count flags are a special case: they don't take a value token, and each
+      # occurrence increments a counter by 1. In stacked short flags like "-vvv",
+      # each 'v' character calls this method once, producing a count of 3.
+      #
+      # Unlike regular flags, count flags are inherently repeatable — duplicates
+      # are expected and desired. We never add them to duplicate_flags.
+
+      def record_count_flag(flag, parsed_flags)
+        fid = flag["id"]
+        parsed_flags[fid] = (parsed_flags[fid] || 0) + 1
+      end
+
+      # ---------------------------------------------------------------------------
+      # int64 range constants (v1.1)
+      # ---------------------------------------------------------------------------
+      #
+      # Ruby's Integer is arbitrary-precision, so it can represent values far
+      # beyond what a 64-bit signed integer can hold. For cross-language
+      # consistency, we reject values outside the int64 range.
+      #
+      # The range is: −2^63 to 2^63 − 1
+      #   min = -9,223,372,036,854,775,808
+      #   max =  9,223,372,036,854,775,807
+      INT64_MIN = -(2**63)
+      INT64_MAX = (2**63) - 1
+
       def coerce_flag_value(str, flag, errors)
         type = flag["type"]
         case type
@@ -482,7 +625,20 @@ module CodingAdventures
           str == "true"
         when "integer"
           begin
-            Integer(str)
+            val = Integer(str)
+            # v1.1: Range check — reject values outside 64-bit signed integer range.
+            # Ruby happily handles arbitrary-precision integers, but for cross-language
+            # consistency (Go uses int64, Rust uses i64, etc.) we enforce the same limit.
+            if val < INT64_MIN || val > INT64_MAX
+              errors << ParseError.new(
+                error_type: "invalid_value",
+                message: "Integer value #{str.inspect} is out of range (must fit in 64 bits)",
+                suggestion: nil,
+                context: []
+              )
+              return nil
+            end
+            val
           rescue ArgumentError
             errors << ParseError.new(
               error_type: "invalid_value",
@@ -580,7 +736,7 @@ module CodingAdventures
         # Collect which short/long names are already claimed by user flags.
         # Builtin flags are only added when their names are not already in use.
         used_short = user_flags.map { |f| f["short"] }.compact.to_set
-        used_long  = user_flags.map { |f| f["long"] }.compact.to_set
+        used_long = user_flags.map { |f| f["long"] }.compact.to_set
 
         builtin_flags = []
         bf = @spec["builtin_flags"] || {}
@@ -631,17 +787,29 @@ module CodingAdventures
       # After validation, fill in defaults for flags that were not provided.
       # Boolean flags absent → false. Other flags absent → nil (or default value).
 
+      # ---------------------------------------------------------------------------
+      # Default finalization (v1.1 updated)
+      # ---------------------------------------------------------------------------
+      #
+      # After validation, fill in defaults for flags that were not provided:
+      #   - boolean absent → false (or specified default)
+      #   - count absent → 0 (or specified default)
+      #   - other absent → nil (or specified default)
+
       def finalize_flags(parsed_flags, active_flags)
         result = {}
         active_flags.each do |f|
           next if f["id"].start_with?("__") # Skip builtins in output
 
-          if parsed_flags.key?(f["id"])
-            result[f["id"]] = parsed_flags[f["id"]]
+          result[f["id"]] = if parsed_flags.key?(f["id"])
+            parsed_flags[f["id"]]
           elsif f["type"] == "boolean"
-            result[f["id"]] = f["default"].nil? ? false : f["default"]
+            f["default"].nil? ? false : f["default"]
+          elsif f["type"] == "count"
+            # Count flags default to 0 when absent (like boolean defaults to false).
+            f["default"].nil? ? 0 : f["default"]
           else
-            result[f["id"]] = f["default"]
+            f["default"]
           end
         end
         result
@@ -708,7 +876,6 @@ module CodingAdventures
         case result[:type]
         when :long_flag, :single_dash_long, :short_flag then result[:flag]
         when :stacked_flags then result[:flags].last
-        else nil
         end
       end
 
@@ -777,12 +944,12 @@ module CodingAdventures
             d = levenshtein(stripped, name)
             if d < best_dist
               best_dist = d
-              if f["long"]
-                best = "--#{f["long"]}"
+              best = if f["long"]
+                "--#{f["long"]}"
               elsif f["short"]
-                best = "-#{f["short"]}"
+                "-#{f["short"]}"
               else
-                best = "-#{f["single_dash_long"]}"
+                "-#{f["single_dash_long"]}"
               end
             end
           end
@@ -800,7 +967,7 @@ module CodingAdventures
         (1..m).each do |i|
           curr = [i]
           (1..n).each do |j|
-            cost = a[i - 1] == b[j - 1] ? 0 : 1
+            cost = (a[i - 1] == b[j - 1]) ? 0 : 1
             curr << [curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost].min
           end
           prev = curr

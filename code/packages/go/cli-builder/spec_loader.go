@@ -236,6 +236,34 @@ func validateScope(scopeName string, scope map[string]any, globalFlagIDs map[str
 				return &SpecError{Message: fmt.Sprintf(
 					"in %s: flag %q has type \"enum\" but \"enum_values\" is missing or empty", scopeName, id)}
 			}
+
+			// v1.1 validation: default_when_present must be a valid enum value
+			//
+			// When a flag has default_when_present, it means the flag can be
+			// used without an explicit value (e.g., `--color` instead of
+			// `--color=always`). The default_when_present value is used in
+			// that case, so it must be a valid enum value.
+			if dwp := stringField(f, "default_when_present"); dwp != "" {
+				validDWP := false
+				for _, v := range ev {
+					if v == dwp {
+						validDWP = true
+						break
+					}
+				}
+				if !validDWP {
+					return &SpecError{Message: fmt.Sprintf(
+						"in %s: flag %q has default_when_present %q which is not in enum_values %v",
+						scopeName, id, dwp, ev)}
+				}
+			}
+		}
+
+		// v1.1 validation: default_when_present is only valid for enum flags
+		if stringField(f, "default_when_present") != "" && flagType != "enum" {
+			return &SpecError{Message: fmt.Sprintf(
+				"in %s: flag %q has default_when_present but type is %q (only enum flags support this)",
+				scopeName, id, flagType)}
 		}
 
 		// Rule 4: conflicts_with and requires must reference known IDs

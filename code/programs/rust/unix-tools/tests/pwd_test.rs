@@ -282,6 +282,15 @@ mod unknown_flags {
 
 #[cfg(test)]
 mod business_logic {
+    /// Check whether a path is absolute (works on both Unix and Windows).
+    fn is_absolute_path(path: &str) -> bool {
+        // Unix: starts with /
+        // Windows: starts with drive letter like C:\ or UNC path \\?\ or \\server
+        path.starts_with('/')
+            || (path.len() >= 3 && path.as_bytes()[1] == b':')
+            || path.starts_with("\\\\")
+    }
+
     /// The physical pwd function should return an absolute path.
     #[test]
     fn physical_pwd_returns_absolute_path() {
@@ -291,7 +300,7 @@ mod business_logic {
         assert!(result.is_ok(), "get_physical_pwd should succeed");
         let path = result.unwrap();
         assert!(
-            path.starts_with('/'),
+            is_absolute_path(&path),
             "physical pwd should be absolute, got: {}",
             path
         );
@@ -304,7 +313,7 @@ mod business_logic {
         assert!(result.is_ok(), "get_logical_pwd should succeed");
         let path = result.unwrap();
         assert!(
-            path.starts_with('/'),
+            is_absolute_path(&path),
             "logical pwd should be absolute, got: {}",
             path
         );

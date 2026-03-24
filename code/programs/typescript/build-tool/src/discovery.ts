@@ -159,6 +159,8 @@ export function inferLanguage(dirPath: string): string {
     "rust",
     "typescript",
     "elixir",
+    "lua",
+    "perl",
   ];
   for (const lang of knownLanguages) {
     if (parts.includes(lang)) {

@@ -73,6 +73,7 @@ mod business_logic {
         assert!(Path::new(&result.unwrap()).is_absolute());
     }
 
+    #[cfg(unix)]
     #[test]
     fn resolve_missing_with_m() {
         let result = resolve_path("/nonexistent/path", false, true, false);
@@ -80,6 +81,7 @@ mod business_logic {
         assert_eq!(result.unwrap(), "/nonexistent/path");
     }
 
+    #[cfg(unix)]
     #[test]
     fn resolve_missing_with_e_fails() {
         let result = resolve_path("/nonexistent/path", true, false, false);

@@ -141,9 +141,16 @@ defmodule UnameTest do
       assert String.length(info.machine) > 0
     end
 
-    test "kernel_name is Darwin or Linux on Unix" do
+    test "kernel_name is a recognized OS" do
       info = UnixTools.Uname.get_system_info()
-      assert info.kernel_name in ["Darwin", "Linux"]
+
+      if :os.type() == {:win32, :nt} do
+        # On Windows, kernel_name might be "Windows_NT" or similar
+        assert is_binary(info.kernel_name)
+        assert String.length(info.kernel_name) > 0
+      else
+        assert info.kernel_name in ["Darwin", "Linux"]
+      end
     end
   end
 

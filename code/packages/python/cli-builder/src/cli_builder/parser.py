@@ -84,7 +84,7 @@ from cli_builder.flag_validator import FlagValidator
 from cli_builder.help_generator import HelpGenerator
 from cli_builder.positional_resolver import PositionalResolver, coerce_value
 from cli_builder.spec_loader import SpecLoader
-from cli_builder.token_classifier import TokenClassifier
+from cli_builder.token_classifier import TokenClassifier, _is_valueless_type
 from cli_builder.types import HelpResult, ParseResult, VersionResult
 
 
@@ -268,7 +268,7 @@ class Parser:
         if routing_errors:
             raise ParseErrors(routing_errors)
 
-        parsed_flags, positional_tokens, scan_errors = self._phase2_scanning(
+        parsed_flags, positional_tokens, scan_errors, explicit_flags = self._phase2_scanning(
             tokens, command_path, leaf_node_id, active_flags, consumed_indices
         )
 
@@ -310,6 +310,7 @@ class Parser:
             command_path=command_path,
             flags=final_flags,
             arguments=arguments,
+            explicit_flags=explicit_flags,
         )
 
     # =========================================================================
@@ -409,7 +410,7 @@ class Parser:
         leaf_node_id: str,
         active_flags: list[dict[str, Any]],
         consumed_indices: set[int] | None = None,
-    ) -> tuple[dict[str, Any] | HelpResult | VersionResult, list[str], list[ParseError]]:
+    ) -> tuple[dict[str, Any] | HelpResult | VersionResult, list[str], list[ParseError], list[str]]:
         """Scan tokens and produce parsed flags and positional tokens.
 
         Uses a ModalStateMachine with three modes:
@@ -430,7 +431,9 @@ class Parser:
                 falls back to name-based matching (legacy behaviour).
 
         Returns:
-            A 3-tuple of (parsed_flags_or_special_result, positional_tokens, errors).
+            A 4-tuple of (parsed_flags_or_special_result, positional_tokens,
+            errors, explicit_flags). The explicit_flags list tracks which flag
+            IDs were explicitly set by the user (v1.1 feature).
         """
         # Build the modal state machine.
         #
@@ -487,6 +490,14 @@ class Parser:
         pending_flag: dict[str, Any] | None = None
         flag_counts: dict[str, int] = {}  # for duplicate detection
 
+        # --- explicit_flags tracking (v1.1) ---
+        #
+        # Every time a flag is consumed from argv, its ID is appended here.
+        # This lets callers distinguish "flag was explicitly passed" from
+        # "flag has its default value". A flag that appears N times will
+        # appear N times in this list.
+        explicit_flags: list[str] = []
+
         # Which tokens were consumed as subcommand names (to skip)?
         # Prefer the index-based set from Phase 1, which correctly handles
         # alias tokens (e.g. "a" as alias for "add"). Fall back to name
@@ -529,7 +540,7 @@ class Parser:
                 if err:
                     errors.append(err)
                 else:
-                    self._set_flag(parsed_flags, flag_counts, pending_flag, coerced, errors, command_path)
+                    self._set_flag(parsed_flags, flag_counts, pending_flag, coerced, errors, command_path, explicit_flags)
                 pending_flag = None
                 modal.switch_mode("to_scanning")
                 continue
@@ -545,8 +556,8 @@ class Parser:
                 if stacked_result is not None:
                     for idx, (char, fdef) in enumerate(stacked_result):
                         is_last = idx == len(stacked_result) - 1
-                        if fdef.get("type") == "boolean":
-                            self._set_flag(parsed_flags, flag_counts, fdef, True, errors, command_path)
+                        if _is_valueless_type(fdef.get("type")):
+                            self._set_flag(parsed_flags, flag_counts, fdef, True, errors, command_path, explicit_flags)
                         elif is_last:
                             # Non-boolean last flag: consume next token as its value.
                             pending_flag = fdef
@@ -592,9 +603,54 @@ class Parser:
                     command_path, parsed_flags
                 )
                 if result is not None:
-                    return result, [], []
-                if flag_def.get("type") == "boolean":
-                    self._set_flag(parsed_flags, flag_counts, flag_def, True, errors, command_path)
+                    return result, [], [], []
+                if _is_valueless_type(flag_def.get("type")):
+                    # Boolean flags set to True; count flags increment via _set_flag.
+                    self._set_flag(parsed_flags, flag_counts, flag_def, True, errors, command_path, explicit_flags)
+                elif flag_def.get("default_when_present") is not None:
+                    # --- default_when_present disambiguation (v1.1) ---
+                    #
+                    # When an enum flag has ``default_when_present`` and appears
+                    # as ``--flag`` (no ``=value``), we must decide: does the
+                    # NEXT token serve as the flag's value, or is it a separate
+                    # argument?
+                    #
+                    # Rule: peek at the next unprocessed token. If it is a valid
+                    # enum value for this flag, consume it. Otherwise, use the
+                    # ``default_when_present`` value.
+                    #
+                    # We handle this by storing the flag def as pending and
+                    # switching to a special mode. However, since our modal
+                    # machine doesn't have a dedicated mode for this, we use
+                    # FLAG_VALUE mode but set a marker so we can disambiguate.
+                    #
+                    # Simpler approach: peek ahead in the token list directly.
+                    next_idx = tok_idx + 1
+                    # Find next unprocessed token (skip consumed subcommands)
+                    while next_idx < len(tokens) and next_idx in _consumed_indices:
+                        next_idx += 1
+                    if next_idx < len(tokens):
+                        next_token = tokens[next_idx]
+                        enum_values = flag_def.get("enum_values", [])
+                        if next_token in enum_values:
+                            # Consume the next token as the enum value.
+                            # Mark it so the main loop skips it.
+                            _consumed_indices.add(next_idx)
+                            self._set_flag(parsed_flags, flag_counts, flag_def, next_token, errors, command_path, explicit_flags)
+                        else:
+                            # Next token is not a valid enum value — use default.
+                            self._set_flag(
+                                parsed_flags, flag_counts, flag_def,
+                                flag_def["default_when_present"],
+                                errors, command_path, explicit_flags,
+                            )
+                    else:
+                        # No more tokens — use default_when_present.
+                        self._set_flag(
+                            parsed_flags, flag_counts, flag_def,
+                            flag_def["default_when_present"],
+                            errors, command_path, explicit_flags,
+                        )
                 else:
                     pending_flag = flag_def
                     modal.switch_mode("to_flag_value")
@@ -612,7 +668,7 @@ class Parser:
                 if err:
                     errors.append(err)
                 else:
-                    self._set_flag(parsed_flags, flag_counts, flag_def, coerced, errors, command_path)
+                    self._set_flag(parsed_flags, flag_counts, flag_def, coerced, errors, command_path, explicit_flags)
                 continue
 
             if event_type == "single_dash_long":
@@ -622,9 +678,9 @@ class Parser:
                     command_path, parsed_flags
                 )
                 if result is not None:
-                    return result, [], []
-                if flag_def.get("type") == "boolean":
-                    self._set_flag(parsed_flags, flag_counts, flag_def, True, errors, command_path)
+                    return result, [], [], []
+                if _is_valueless_type(flag_def.get("type")):
+                    self._set_flag(parsed_flags, flag_counts, flag_def, True, errors, command_path, explicit_flags)
                 else:
                     pending_flag = flag_def
                     modal.switch_mode("to_flag_value")
@@ -637,9 +693,9 @@ class Parser:
                     command_path, parsed_flags
                 )
                 if result is not None:
-                    return result, [], []
-                if flag_def.get("type") == "boolean":
-                    self._set_flag(parsed_flags, flag_counts, flag_def, True, errors, command_path)
+                    return result, [], [], []
+                if _is_valueless_type(flag_def.get("type")):
+                    self._set_flag(parsed_flags, flag_counts, flag_def, True, errors, command_path, explicit_flags)
                 else:
                     pending_flag = flag_def
                     modal.switch_mode("to_flag_value")
@@ -657,7 +713,7 @@ class Parser:
                 if err:
                     errors.append(err)
                 else:
-                    self._set_flag(parsed_flags, flag_counts, flag_def, coerced, errors, command_path)
+                    self._set_flag(parsed_flags, flag_counts, flag_def, coerced, errors, command_path, explicit_flags)
                 continue
 
             if event_type == "stacked_flags":
@@ -666,8 +722,9 @@ class Parser:
                 trailing_value = event.get("trailing_value")
                 for idx, (char, fdef) in enumerate(zip(chars, flag_defs)):
                     is_last = idx == len(chars) - 1
-                    if fdef.get("type") == "boolean":
-                        self._set_flag(parsed_flags, flag_counts, fdef, True, errors, command_path)
+                    if _is_valueless_type(fdef.get("type")):
+                        # Boolean sets True; count increments via _set_flag.
+                        self._set_flag(parsed_flags, flag_counts, fdef, True, errors, command_path, explicit_flags)
                     elif is_last and trailing_value:
                         coerced, err = coerce_value(
                             raw=trailing_value,
@@ -679,9 +736,9 @@ class Parser:
                         if err:
                             errors.append(err)
                         else:
-                            self._set_flag(parsed_flags, flag_counts, fdef, coerced, errors, command_path)
+                            self._set_flag(parsed_flags, flag_counts, fdef, coerced, errors, command_path, explicit_flags)
                     else:
-                        # Non-boolean at end without inline value → next token is value
+                        # Value-taking flag at end without inline value → next token is value
                         pending_flag = fdef
                         modal.switch_mode("to_flag_value")
                 continue
@@ -717,7 +774,7 @@ class Parser:
                 positional_tokens.append(event["value"])
                 continue
 
-        return parsed_flags, positional_tokens, errors
+        return parsed_flags, positional_tokens, errors, explicit_flags
 
     # =========================================================================
     # Helper methods
@@ -864,7 +921,12 @@ class Parser:
         if token.startswith("--"):
             name = token[2:]
             fdef = flag_lookup.get(name)
-            if fdef and fdef.get("type") != "boolean":
+            if fdef and not _is_valueless_type(fdef.get("type")):
+                # Enum flags with default_when_present might NOT consume
+                # a value token, but during routing we conservatively skip 1
+                # (the flag itself). The value ambiguity is resolved in Phase 2.
+                if fdef.get("default_when_present") is not None:
+                    return 1
                 return 2  # skip flag + value token
             return 1
 
@@ -872,7 +934,7 @@ class Parser:
         if token.startswith("-") and len(token) == 2:
             char = token[1]
             fdef = flag_lookup.get(char)
-            if fdef and fdef.get("type") != "boolean":
+            if fdef and not _is_valueless_type(fdef.get("type")):
                 return 2
             return 1
 
@@ -929,23 +991,51 @@ class Parser:
         value: Any,
         errors: list[ParseError],
         context: list[str],
+        explicit_flags: list[str] | None = None,
     ) -> None:
-        """Set a flag value in parsed_flags, handling repeatable and duplicate.
+        """Set a flag value in parsed_flags, handling repeatable, count, and duplicate.
 
-        If the flag is repeatable, appends to a list.
-        If non-repeatable and already set, records a duplicate_flag error.
+        === Count type (v1.1) ===
+
+        Count flags behave differently from all other types. Instead of storing
+        a value directly, each occurrence increments an integer counter. The
+        ``value`` parameter is ignored for count flags — what matters is how
+        many times the flag appears.
+
+        Example: ``-vvv`` produces three calls to ``_set_flag`` for the same
+        flag def, resulting in ``parsed_flags["verbose"] = 3``.
+
+        === Explicit flags tracking (v1.1) ===
+
+        Every call to ``_set_flag`` records the flag's ID in ``explicit_flags``
+        (if provided). This enables callers to distinguish user-supplied flags
+        from defaults.
 
         Args:
             parsed_flags: The accumulating parsed flags dict.
             flag_counts: Counter tracking how many times each flag was seen.
             flag_def: The flag's definition dict.
-            value: The coerced value to set.
+            value: The coerced value to set (ignored for count flags).
             errors: Error list to append to on duplicate.
             context: Command path context.
+            explicit_flags: List to append flag IDs to (v1.1 tracking).
         """
         fid = flag_def["id"]
         count = flag_counts.get(fid, 0) + 1
         flag_counts[fid] = count
+
+        # Track explicit usage (v1.1)
+        if explicit_flags is not None:
+            explicit_flags.append(fid)
+
+        # --- Count type: increment counter, no duplicate error ---
+        #
+        # Count flags are inherently repeatable — each occurrence adds 1.
+        # There is no "duplicate" error for count flags; that is their
+        # intended use pattern.
+        if flag_def.get("type") == "count":
+            parsed_flags[fid] = parsed_flags.get(fid, 0) + 1
+            return
 
         if flag_def.get("repeatable", False):
             if fid not in parsed_flags:
@@ -1096,6 +1186,9 @@ class Parser:
                 default = flag.get("default")
                 if flag.get("type") == "boolean":
                     result[fid] = default if default is not None else False
+                elif flag.get("type") == "count":
+                    # Count flags default to 0 when absent.
+                    result[fid] = default if default is not None else 0
                 else:
                     result[fid] = default
         return result

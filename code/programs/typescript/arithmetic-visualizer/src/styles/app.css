@@ -1,0 +1,221 @@
+/* ==========================================================================
+ * Main application styles for the Arithmetic Visualizer.
+ *
+ * Imports the shared theme and accessibility CSS from ui-components,
+ * then adds app-specific layout and styling.
+ * ========================================================================== */
+
+@import "@coding-adventures/ui-components/src/styles/theme.css";
+@import "@coding-adventures/ui-components/src/styles/accessibility.css";
+
+/* --- Base reset & body --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--body-text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* --- App layout --- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  gap: 1.5rem;
+}
+
+/* --- Header --- */
+
+.app__header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.app__title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff8a65, #ffb74d, #4fc3f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.app__subtitle {
+  font-size: 0.95rem;
+  color: var(--tab-text);
+  margin-top: 0.3rem;
+}
+
+/* --- Main content area --- */
+
+.app__main {
+  flex: 1;
+}
+
+/* --- Footer --- */
+
+.app__footer {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+  color: var(--tab-text);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+/* --- Placeholder for unimplemented tabs --- */
+
+.placeholder {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--tab-text);
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+/* --- Shared: bit toggle --- */
+
+.bit-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 2px solid;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent;
+}
+
+.bit-toggle--high {
+  border-color: #4caf50;
+  color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+
+.bit-toggle--low {
+  border-color: #555;
+  color: #888;
+}
+
+.bit-toggle:hover {
+  transform: scale(1.1);
+}
+
+.bit-toggle__label {
+  font-size: 0.7rem;
+  color: var(--tab-text);
+  margin-top: 2px;
+  font-family: var(--mono);
+}
+
+/* --- Shared: wire label --- */
+
+.wire-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.wire-label__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.wire-label__dot--high {
+  background: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.wire-label__dot--low {
+  background: #555;
+}
+
+.wire--high {
+  color: #4caf50;
+  stroke: #4caf50;
+}
+
+.wire--low {
+  color: #888;
+  stroke: #555;
+}
+
+/* --- Shared: truth table --- */
+
+.truth-table {
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  margin: 0.75rem auto;
+}
+
+.truth-table caption {
+  font-size: 0.75rem;
+  color: var(--tab-text);
+  margin-bottom: 0.3rem;
+  text-align: left;
+}
+
+.truth-table th,
+.truth-table td {
+  padding: 0.25rem 0.6rem;
+  text-align: center;
+  border: 1px solid var(--panel-border);
+}
+
+.truth-table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+}
+
+.truth-table__row--active {
+  background: rgba(76, 175, 80, 0.15);
+  outline: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  .app__title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem 0.5rem;
+  }
+
+  .app__title {
+    font-size: 1.25rem;
+  }
+
+  .tab-list__tab {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+}

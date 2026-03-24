@@ -53,12 +53,28 @@ module CodingAdventures
     #
     # Example:
     #   ParseResult.new(
-    #     program:      "git",
-    #     command_path: ["git", "remote", "add"],
-    #     flags:        { "verbose" => false, "dry-run" => false },
-    #     arguments:    { "name" => "origin", "url" => "https://example.com" }
+    #     program:        "git",
+    #     command_path:   ["git", "remote", "add"],
+    #     flags:          { "verbose" => false, "dry-run" => false },
+    #     arguments:      { "name" => "origin", "url" => "https://example.com" },
+    #     explicit_flags: ["verbose"]
     #   )
-    ParseResult = Struct.new(:program, :command_path, :flags, :arguments, keyword_init: true)
+    #
+    # === explicit_flags (v1.1) ===
+    #
+    # The explicit_flags field tracks which flags the user explicitly typed
+    # on the command line, as opposed to flags whose values come from defaults.
+    # This enables tools to distinguish "the user chose this value" from
+    # "the parser filled in the default." Common use cases:
+    #
+    #   - Config file merging: CLI flags override config only if explicitly set
+    #   - Warnings: "you didn't specify --format, defaulting to json"
+    #   - Conditional behavior based on whether the user made an active choice
+    #
+    # The list contains flag IDs (strings). Each ID appears at most once,
+    # even if the flag was repeated. Built-in flags (--help, --version) are
+    # never included because they trigger special result types, not ParseResult.
+    ParseResult = Struct.new(:program, :command_path, :flags, :arguments, :explicit_flags, keyword_init: true)
 
     # Result returned when the user requested help.
     #

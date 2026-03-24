@@ -216,6 +216,23 @@ fn validate_scope(
                 scope_name, f.id
             )));
         }
+        // default_when_present validation:
+        // - Only valid for "enum" flags.
+        // - The value must be one of enum_values.
+        if let Some(ref dwp) = f.default_when_present {
+            if f.flag_type != "enum" {
+                return Err(CliBuilderError::SpecError(format!(
+                    "{}: flag {:?} has default_when_present but type is {:?} (must be \"enum\")",
+                    scope_name, f.id, f.flag_type
+                )));
+            }
+            if !f.enum_values.iter().any(|v| v == dwp) {
+                return Err(CliBuilderError::SpecError(format!(
+                    "{}: flag {:?} default_when_present value {:?} is not in enum_values {:?}",
+                    scope_name, f.id, dwp, f.enum_values
+                )));
+            }
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -307,6 +324,21 @@ fn validate_flags_self_consistency(flags: &[FlagDef], scope_name: &str) -> Resul
                 "{}: flag {:?} has type \"enum\" but enum_values is empty",
                 scope_name, f.id
             )));
+        }
+        // default_when_present validation for global flags
+        if let Some(ref dwp) = f.default_when_present {
+            if f.flag_type != "enum" {
+                return Err(CliBuilderError::SpecError(format!(
+                    "{}: flag {:?} has default_when_present but type is {:?} (must be \"enum\")",
+                    scope_name, f.id, f.flag_type
+                )));
+            }
+            if !f.enum_values.iter().any(|v| v == dwp) {
+                return Err(CliBuilderError::SpecError(format!(
+                    "{}: flag {:?} default_when_present value {:?} is not in enum_values {:?}",
+                    scope_name, f.id, dwp, f.enum_values
+                )));
+            }
         }
     }
     Ok(())

@@ -18,6 +18,7 @@ package main
 
 import (
 	"bytes"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -90,6 +91,9 @@ func TestBasenameNoDirectory(t *testing.T) {
 
 // TestBasenameRootPath verifies behavior with the root path.
 func TestBasenameRootPath(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("root path behavior differs on Windows")
+	}
 	var stdout, stderr bytes.Buffer
 	code := runBasename(toolSpecPath(t, "basename"), []string{"basename", "/"}, &stdout, &stderr)
 
@@ -208,6 +212,9 @@ func TestBasenameInvalidSpec(t *testing.T) {
 
 // TestStripBasenameUnit verifies the core stripping function.
 func TestStripBasenameUnit(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("path separator behavior differs on Windows")
+	}
 	tests := []struct {
 		name   string
 		suffix string

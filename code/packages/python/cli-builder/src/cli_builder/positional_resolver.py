@@ -85,14 +85,36 @@ def coerce_value(
         return raw.lower() in ("true", "1", "yes"), None
 
     if arg_type == "integer":
+        # --- int64 range validation (v1.1) ---
+        #
+        # Python's int() handles arbitrary precision, but CLI Builder targets
+        # interoperability with languages that use 64-bit signed integers
+        # (Go int64, Rust i64, Java long, C int64_t). Values outside the
+        # representable range [-2^63, 2^63-1] are rejected as invalid.
+        #
+        # The range is:
+        #   min = -9_223_372_036_854_775_808
+        #   max =  9_223_372_036_854_775_807
+        INT64_MIN = -(2**63)
+        INT64_MAX = 2**63 - 1
         try:
-            return int(raw), None
+            value = int(raw)
         except ValueError:
             return None, ParseError(
                 error_type="invalid_value",
                 message=f"Invalid integer for argument '{arg_name}': '{raw}'",
                 context=context,
             )
+        if value < INT64_MIN or value > INT64_MAX:
+            return None, ParseError(
+                error_type="invalid_value",
+                message=(
+                    f"Integer value {raw} for argument '{arg_name}' is "
+                    f"outside int64 range [{INT64_MIN}, {INT64_MAX}]"
+                ),
+                context=context,
+            )
+        return value, None
 
     if arg_type == "float":
         try:
