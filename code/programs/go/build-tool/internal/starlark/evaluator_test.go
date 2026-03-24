@@ -225,6 +225,12 @@ func TestGenerateCommands(t *testing.T) {
 			wantHas: "mix",
 		},
 		{
+			name:    "perl_library",
+			target:  Target{Rule: "perl_library"},
+			wantLen: 2,
+			wantHas: "prove",
+		},
+		{
 			name:    "unknown rule",
 			target:  Target{Rule: "unknown_rule"},
 			wantLen: 1,

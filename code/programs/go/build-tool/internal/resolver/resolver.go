@@ -479,6 +479,55 @@ func mapLuaDep(depStr string, knownNames map[string]string, deps *[]string) {
 	}
 }
 
+// parsePerlDeps extracts internal dependencies from a Perl cpanfile.
+//
+// A cpanfile is Perl's declarative dependency file (like Gemfile or
+// package.json). It uses a Perl DSL with one `requires` per line:
+//
+//	requires 'coding-adventures-logic-gates';
+//	requires 'coding-adventures-bitset', '>= 0.01';
+//
+//	on 'test' => sub {
+//	    requires 'Test2::V0';
+//	};
+//
+// We scan for lines matching `requires 'coding-adventures-...'` and map
+// them to internal package names. External dependencies (e.g., 'Moo',
+// 'Test2::V0') are silently skipped. Comments are ignored.
+func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	cpanfile := filepath.Join(pkg.Path, "cpanfile")
+	data, err := os.ReadFile(cpanfile)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Match: requires 'coding-adventures-logic-gates';
+	// Or:    requires "coding-adventures-bitset", '>= 0.01';
+	re := regexp.MustCompile(`requires\s+['"]coding-adventures-([^'"]+)['"]`)
+
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		// Skip blank lines and comments.
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+
+		matches := re.FindStringSubmatch(trimmed)
+		if len(matches) >= 2 {
+			depName := "coding-adventures-" + strings.ToLower(matches[1])
+			if pkgName, ok := knownNames[depName]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -488,6 +537,7 @@ func mapLuaDep(depStr string, knownNames map[string]string, deps *[]string) {
 //   - Python: "coding-adventures-logic-gates" → "python/logic-gates"
 //   - Ruby:   "coding_adventures_logic_gates" → "ruby/logic_gates"
 //   - Go:     full module path → "go/module-name"
+//   - Perl:   "coding-adventures-logic-gates" → "perl/logic-gates"
 //
 // By building this mapping upfront, we can resolve dependencies across
 // languages without hard-coding specific package names.
@@ -543,6 +593,12 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 			rockspecName := "coding-adventures-" + strings.ReplaceAll(
 				strings.ToLower(filepath.Base(pkg.Path)), "_", "-")
 			known[rockspecName] = pkg.Name
+
+		case "perl":
+			// Perl CPAN distribution names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+			// This matches the Python convention exactly.
+			cpanName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
+			known[cpanName] = pkg.Name
 		}
 	}
 
@@ -588,6 +644,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseElixirDeps(pkg, knownNames)
 		case "lua":
 			deps = parseLuaDeps(pkg, knownNames)
+		case "perl":
+			deps = parsePerlDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {
