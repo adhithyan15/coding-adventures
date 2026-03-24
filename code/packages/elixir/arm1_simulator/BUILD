@@ -1,1 +1,1 @@
-mix deps.get --quiet && mix test --cover
+mix deps.get --quiet && mix test
