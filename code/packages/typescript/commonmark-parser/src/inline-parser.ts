@@ -72,9 +72,10 @@
 import { PushdownAutomaton } from "@coding-adventures/state-machine";
 import type {
   InlineNode, TextNode, EmphasisNode, StrongNode, CodeSpanNode,
-  LinkNode, ImageNode, AutolinkNode, HtmlInlineNode, HardBreakNode,
-  SoftBreakNode, LinkRefMap, BlockNode, DocumentNode,
-} from "./types.js";
+  LinkNode, ImageNode, AutolinkNode, RawInlineNode, HardBreakNode,
+  SoftBreakNode, BlockNode, DocumentNode,
+} from "@coding-adventures/document-ast";
+import type { LinkRefMap } from "./types.js";
 import {
   Scanner,
   isAsciiPunctuation,
@@ -685,7 +686,7 @@ function tryCodeSpan(scanner: Scanner): CodeSpanNode | null {
  * newlines inside tags (except in comments/PI/CDATA); comment content
  * cannot start with `>` or `->` and cannot contain `--`.
  */
-function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
+function tryHtmlInline(scanner: Scanner): RawInlineNode | null {
   if (scanner.peek() !== "<") return null;
   const savedPos = scanner.pos;
   scanner.skip(1); // consume `<`
@@ -708,14 +709,14 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
       // Consume `>` (1 char) or `->` (2 chars) as part of the construct.
       const invalid = scanner.peek() === ">" ? ">" : "->";
       scanner.skip(invalid.length);
-      return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+      return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
     }
     while (!scanner.done) {
       if (scanner.match("-->")) {
         // Check rule: content must not end with `-`
         const content = scanner.source.slice(contentStart, scanner.pos - 3);
         if (content.endsWith("-")) { scanner.pos = savedPos; return null; }
-        return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+        return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
       }
       scanner.skip(1);
     }
@@ -727,7 +728,7 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
   if (scanner.match("?")) {
     while (!scanner.done) {
       if (scanner.match("?>")) {
-        return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+        return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
       }
       scanner.skip(1);
     }
@@ -739,7 +740,7 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
   if (scanner.match("![CDATA[")) {
     while (!scanner.done) {
       if (scanner.match("]]>")) {
-        return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+        return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
       }
       scanner.skip(1);
     }
@@ -752,7 +753,7 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
     if (/[A-Z]/.test(scanner.peek())) {
       scanner.consumeWhile(c => c !== ">");
       if (scanner.match(">")) {
-        return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+        return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
       }
     }
     scanner.pos = savedPos;
@@ -766,7 +767,7 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
     if (tag.length === 0) { scanner.pos = savedPos; return null; }
     scanner.skipSpaces();
     if (!scanner.match(">")) { scanner.pos = savedPos; return null; }
-    return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+    return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
   }
 
   // Open tag: <tagname attr...> or <tagname attr.../>
@@ -836,7 +837,7 @@ function tryHtmlInline(scanner: Scanner): HtmlInlineNode | null {
 
     const selfClose = scanner.match("/>");
     if (!selfClose && !scanner.match(">")) { scanner.pos = savedPos; return null; }
-    return { type: "html_inline", value: scanner.source.slice(savedPos, scanner.pos) };
+    return { type: "raw_inline", format: "html", value: scanner.source.slice(savedPos, scanner.pos) };
   }
 
   scanner.pos = savedPos;

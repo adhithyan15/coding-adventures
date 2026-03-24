@@ -51,9 +51,9 @@ import { ModalStateMachine, DFA, transitionKey } from "@coding-adventures/state-
 import type {
   DocumentNode, BlockNode, HeadingNode, ParagraphNode,
   CodeBlockNode, BlockquoteNode, ListNode, ListItemNode,
-  ThematicBreakNode, HtmlBlockNode, LinkDefinitionNode,
-  LinkRefMap, LinkReference,
-} from "./types.js";
+  ThematicBreakNode, RawBlockNode,
+} from "@coding-adventures/document-ast";
+import type { LinkRefMap, LinkReference } from "./types.js";
 import { normalizeLinkLabel, normalizeUrl, isAsciiPunctuation } from "./scanner.js";
 import { decodeEntity, decodeEntities } from "./entities.js";
 
@@ -1611,21 +1611,19 @@ export function convertToAst(
         while (lines.length > 0 && lines[lines.length - 1]!.trim() === "") {
           lines.pop();
         }
+        // Document AST: raw HTML passes through as RawBlockNode { format: "html" }
         return {
-          type: "html_block",
+          type: "raw_block",
+          format: "html",
           value: lines.join("\n") + "\n",
-        } as HtmlBlockNode;
+        } as RawBlockNode;
       }
 
-      case "link_def": {
-        const ld = block as MutableLinkDef;
-        return {
-          type: "link_definition",
-          label: ld.label,
-          destination: ld.destination,
-          title: ld.title,
-        } as LinkDefinitionNode;
-      }
+      case "link_def":
+        // Link definitions are Markdown parse artifacts. They have already been
+        // resolved into linkRefs during Phase 1 and are NOT emitted into the
+        // Document AST IR (which only contains fully resolved LinkNode values).
+        return null as unknown as BlockNode;
 
       default:
         return null as unknown as BlockNode;
