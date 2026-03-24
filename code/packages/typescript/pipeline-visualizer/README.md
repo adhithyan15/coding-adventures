@@ -1,4 +1,4 @@
-# HTML Renderer
+# Pipeline Visualizer
 
 **Language-agnostic HTML visualization generator** for the computing stack.
 

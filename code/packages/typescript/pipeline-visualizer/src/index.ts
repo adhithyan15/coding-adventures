@@ -1,22 +1,22 @@
 /**
- * HTML Renderer — Language-agnostic HTML visualization generator.
- * ================================================================
+ * Pipeline Visualizer — Language-agnostic HTML visualization generator.
+ * ======================================================================
  *
  * This package reads JSON conforming to the PipelineReport contract
  * and generates self-contained HTML files. Any language that can
  * produce the JSON (Python, Ruby, TypeScript, etc.) can use this
- * renderer — it has no dependency on other coding-adventures packages.
+ * visualizer — it has no dependency on other coding-adventures packages.
  *
  * ```
  * Python packages ----> PipelineReport (JSON) --+
- * Ruby packages -----> PipelineReport (JSON) ---+--> HTML Renderer --> report.html
+ * Ruby packages -----> PipelineReport (JSON) ---+--> Pipeline Visualizer --> report.html
  * TypeScript pkgs ---> PipelineReport (JSON) --+
  * ```
  *
  * ## Quick Start
  *
  * ```typescript
- * import { HTMLRenderer } from "@coding-adventures/html-renderer";
+ * import { HTMLRenderer } from "@coding-adventures/pipeline-visualizer";
  *
  * const renderer = new HTMLRenderer();
  *
