@@ -1,0 +1,108 @@
+# Electron Release — Engram App
+#
+# Builds the Engram desktop app for macOS, Windows, and Linux,
+# then attaches the installers to a GitHub Release.
+#
+# Triggered by pushing a tag matching `engram-v*`:
+#   git tag engram-v0.1.0
+#   git push origin engram-v0.1.0
+#
+# The workflow:
+#   1. Builds on macOS, Ubuntu, and Windows runners in parallel
+#   2. Uploads build artifacts per platform
+#   3. A single "release" job collects all artifacts and creates one GitHub Release
+#
+# Why a separate release job?
+# Each platform produces a `builder-debug.yml` file. If all three platforms
+# upload directly to the release, the second uploader tries to overwrite the
+# first's file — which fails on repositories with immutable releases enabled.
+# By collecting artifacts first and uploading once, we avoid the conflict.
+
+name: Release Engram
+
+on:
+  push:
+    tags:
+      - "engram-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: mac
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: win
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install local package dependencies
+        shell: bash
+        run: |
+          cd code/packages/typescript/indexeddb && npm install
+          cd ../store && npm install
+          cd ../ui-components && npm install
+          cd ../../../programs/typescript/engram-app && npm install
+
+      - name: Build renderer (Vite) + main process (tsc)
+        working-directory: code/programs/typescript/engram-app
+        shell: bash
+        run: |
+          npm run build
+          npx tsc -p electron/tsconfig.json
+
+      - name: Package with electron-builder
+        working-directory: code/programs/typescript/engram-app
+        shell: bash
+        run: npx electron-builder --${{ matrix.platform }} --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload only the platform-specific installer files, not builder-debug.yml
+      # or latest-*.yml which are duplicated across platforms.
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            code/programs/typescript/engram-app/release/*.AppImage
+            code/programs/typescript/engram-app/release/*.dmg
+            code/programs/typescript/engram-app/release/*.dmg.blockmap
+            code/programs/typescript/engram-app/release/*.zip
+            code/programs/typescript/engram-app/release/*.zip.blockmap
+            code/programs/typescript/engram-app/release/*.exe
+            code/programs/typescript/engram-app/release/*.yml
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

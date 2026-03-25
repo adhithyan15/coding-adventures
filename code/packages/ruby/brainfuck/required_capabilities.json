@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/brainfuck",
+  "capabilities": [
+    "stdin:read:*",
+    "stdout:write:*"
+  ],
+  "justification": "Brainfuck . and , commands read stdin and write stdout via simulated I/O buffers."
+}

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/file_system",
+  "capabilities": [
+    "time:read:*"
+  ],
+  "justification": "Uses Time.now for inode created_at, modified_at, and accessed_at timestamps."
+}

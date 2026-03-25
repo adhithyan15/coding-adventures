@@ -1,0 +1,88 @@
+/*
+ * rating-buttons.css — Styles for the RatingButtons component.
+ *
+ * SM-2 rating color convention (matches Anki's visual language):
+ *
+ *   again  → red    (#f87171)  — stop: didn't know it, reset interval
+ *   hard   → orange (#fb923c)  — caution: slow growth
+ *   good   → green  (#4ade80)  — normal growth
+ *   easy   → blue   (#60a5fa)  — fast growth, long interval
+ *
+ * Outlined style by default (transparent background, colored border and text).
+ * Fills on hover to feel interactive without being visually overwhelming when
+ * all four buttons are visible at once.
+ */
+
+/* ── Container ──────────────────────────────────────────────────────────── */
+
+.rating-buttons {
+  display: flex;
+  gap: var(--spacing-sm, 8px);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Base button ────────────────────────────────────────────────────────── */
+
+.rating-buttons__btn {
+  flex: 1;
+  min-width: 80px;
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--input-radius, 6px);
+  border: 2px solid;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
+}
+
+.rating-buttons__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Again (red) ────────────────────────────────────────────────────────── */
+
+.rating-buttons__btn--again {
+  color: #f87171;
+  border-color: #f87171;
+}
+.rating-buttons__btn--again:hover:not(:disabled) {
+  background: #f87171;
+  color: #000;
+}
+
+/* ── Hard (orange) ──────────────────────────────────────────────────────── */
+
+.rating-buttons__btn--hard {
+  color: #fb923c;
+  border-color: #fb923c;
+}
+.rating-buttons__btn--hard:hover:not(:disabled) {
+  background: #fb923c;
+  color: #000;
+}
+
+/* ── Good (green) ───────────────────────────────────────────────────────── */
+
+.rating-buttons__btn--good {
+  color: #4ade80;
+  border-color: #4ade80;
+}
+.rating-buttons__btn--good:hover:not(:disabled) {
+  background: #4ade80;
+  color: #000;
+}
+
+/* ── Easy (blue) ────────────────────────────────────────────────────────── */
+
+.rating-buttons__btn--easy {
+  color: #60a5fa;
+  border-color: #60a5fa;
+}
+.rating-buttons__btn--easy:hover:not(:disabled) {
+  background: #60a5fa;
+  color: #000;
+}

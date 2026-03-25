@@ -1,4 +1,5 @@
 # Parser grammar for CSS3 (full specification subset)
+# @version 1
 #
 # This grammar stress-tests the parser infrastructure with:
 # - Complex selector syntax (type, class, ID, attribute, pseudo-class,

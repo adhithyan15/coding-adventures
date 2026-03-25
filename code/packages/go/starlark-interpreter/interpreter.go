@@ -241,6 +241,33 @@ func WithMaxRecursionDepth(depth int) InterpreterOption {
 	}
 }
 
+// WithGlobals sets pre-seeded variables that are injected into every VM
+// instance created by this interpreter -- including VMs created for
+// load() calls.  This is the mechanism for making build context (like
+// _ctx) available to all Starlark code.
+//
+// Example: injecting a build context dict into every Starlark scope:
+//
+//   interp := NewInterpreter(
+//       WithGlobals(map[string]interface{}{
+//           "_ctx": map[string]interface{}{
+//               "version": 1,
+//               "os":      "darwin",
+//               "arch":    "arm64",
+//           },
+//       }),
+//   )
+//
+// The globals are injected via GenericVM.InjectGlobals() after the VM
+// is created but before execution begins.  Since Interpret() is called
+// recursively for load() statements, globals are automatically available
+// in every loaded file without any extra wiring.
+func WithGlobals(globals map[string]interface{}) InterpreterOption {
+	return func(i *StarlarkInterpreter) {
+		i.Globals = globals
+	}
+}
+
 // ============================================================================
 // STARLARK INTERPRETER
 // ============================================================================
@@ -256,12 +283,18 @@ func WithMaxRecursionDepth(depth int) InterpreterOption {
 //   MaxRecursionDepth -- Maximum call stack depth for the VM.
 //                        Default is 200.
 //
+//   Globals           -- Pre-seeded variables injected into every VM
+//                        instance (including those for load() calls).
+//                        Use this for build context like _ctx.
+//                        nil means no globals are injected.
+//
 //   loadCache         -- Maps file labels to their executed variable maps.
 //                        Prevents re-executing the same file twice.
 //                        This is analogous to Python's sys.modules.
 type StarlarkInterpreter struct {
 	FileResolver      FileResolver
 	MaxRecursionDepth int
+	Globals           map[string]interface{}
 	loadCache         map[string]map[string]interface{}
 }
 
@@ -324,6 +357,15 @@ func (interp *StarlarkInterpreter) Interpret(source string) (*starlarkvm.Starlar
 	// Step 2: Create a fresh Starlark VM.
 	// CreateStarlarkVM registers all 59 opcode handlers and 23 builtins.
 	v := starlarkvm.CreateStarlarkVM(interp.MaxRecursionDepth)
+
+	// Step 2.5: Inject pre-seeded globals (e.g., _ctx) into the VM.
+	// This happens before execution so the globals are available as
+	// regular variables from the very first instruction.  Because
+	// Interpret() is called recursively for load() statements, every
+	// loaded file also gets these globals injected automatically.
+	if interp.Globals != nil {
+		v.InjectGlobals(interp.Globals)
+	}
 
 	// Step 3: Override the LOAD_MODULE handler to support load().
 	// The default handler (in starlark-vm/handlers.go) just pushes an

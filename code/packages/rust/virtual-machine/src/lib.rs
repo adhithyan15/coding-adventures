@@ -548,6 +548,31 @@ impl GenericVM {
         self.pc = target;
     }
 
+    // ── Global injection ──────────────────────────────────────────────────
+
+    /// Pre-seed named variables into the VM's global scope.
+    ///
+    /// These variables are available to the program as regular variables
+    /// but are set before execution begins. Useful for build context,
+    /// environment info, etc.
+    ///
+    /// Injected globals are merged into `variables` — they don't replace
+    /// the map. If a key already exists, the injected value overwrites it.
+    ///
+    /// # Example
+    ///
+    /// ```rust,ignore
+    /// use std::collections::HashMap;
+    /// let mut globals = HashMap::new();
+    /// globals.insert("_ctx".to_string(), Value::Dict(ctx_dict));
+    /// vm.inject_globals(globals);
+    /// ```
+    pub fn inject_globals(&mut self, globals: HashMap<String, Value>) {
+        for (key, value) in globals {
+            self.variables.insert(key, value);
+        }
+    }
+
     // ── Configuration ────────────────────────────────────────────────────
 
     /// Set the maximum recursion depth. Pass `None` for unlimited.
@@ -1300,6 +1325,38 @@ mod tests {
         match vm.variables.get("x") {
             Some(Value::Int(42)) => {}
             other => panic!("Expected x=42, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn test_inject_globals_merges_and_overwrites_variables() {
+        let mut vm = GenericVM::new();
+        vm.variables
+            .insert("existing".to_string(), Value::Int(1));
+        vm.variables.insert(
+            "ctx_os".to_string(),
+            Value::Str("linux".to_string()),
+        );
+
+        let mut globals = HashMap::new();
+        globals.insert(
+            "ctx_os".to_string(),
+            Value::Str("darwin".to_string()),
+        );
+        globals.insert("answer".to_string(), Value::Int(42));
+        vm.inject_globals(globals);
+
+        match vm.variables.get("existing") {
+            Some(Value::Int(1)) => {}
+            other => panic!("Expected existing=1, got {:?}", other),
+        }
+        match vm.variables.get("ctx_os") {
+            Some(Value::Str(value)) => assert_eq!(value, "darwin"),
+            other => panic!("Expected ctx_os=darwin, got {:?}", other),
+        }
+        match vm.variables.get("answer") {
+            Some(Value::Int(42)) => {}
+            other => panic!("Expected answer=42, got {:?}", other),
         }
     }
 

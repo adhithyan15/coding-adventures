@@ -114,7 +114,7 @@ Below Layer 7, everything converges. Whether instructions come from the VM
 | Package | Purpose |
 |---------|---------|
 | `pipeline` | Orchestrator — chains all layers together |
-| `html-renderer` | Generates visual HTML reports showing every stage |
+| `pipeline-visualizer` | Generates visual HTML reports showing every stage |
 
 ## ISA comparison
 

@@ -1,0 +1,345 @@
+/* ==========================================================================
+   ARM1 Web Simulator — Application Shell Styles
+   ==========================================================================
+   Dark theme inspired by silicon wafer photography and terminal green.
+
+   Colour palette:
+     --bg:          #0d1117   Very dark background (GitHub dark)
+     --surface:     #161b22   Panel / card background
+     --border:      #30363d   Subtle borders
+     --text:        #e6edf3   Primary text
+     --muted:       #8b949e   Secondary / label text
+     --accent:      #58a6ff   Blue accent (active tabs, links)
+     --green:       #3fb950   Signal high / set flag
+     --orange:      #f0883e   Register change / PC highlight
+     --red:         #f85149   Flag N / write highlight
+     --purple:      #bc8cff   Flag V / special
+     --yellow:      #ffa657   Flag C / carry
+   ========================================================================== */
+
+:root {
+  --bg:         #0d1117;
+  --surface:    #161b22;
+  --surface-2:  #1c2128;
+  --border:     #30363d;
+  --border-2:   #21262d;
+  --text:       #e6edf3;
+  --muted:      #8b949e;
+  --accent:     #58a6ff;
+  --green:      #3fb950;
+  --orange:     #f0883e;
+  --red:        #f85149;
+  --purple:     #bc8cff;
+  --yellow:     #ffa657;
+  --teal:       #39d353;
+  --font-mono:  "SF Mono", "Consolas", "Liberation Mono", "Menlo", monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   App Layout (CSS Grid)
+   ==========================================================================
+   Desktop layout:
+
+     header  (full width)
+     ┌──────────────────────┬───────────────┐
+     │  main panel          │ listing aside │
+     └──────────────────────┴───────────────┘
+     footer  (full width)
+   ========================================================================== */
+
+.app {
+  display: grid;
+  grid-template-areas:
+    "header  header"
+    "main    aside"
+    "footer  footer";
+  grid-template-columns: 1fr 280px;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.app-header {
+  grid-area: header;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px 0;
+}
+
+.header-title-group {
+  margin-bottom: 12px;
+}
+
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.app-subtitle {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Controls Bar
+   ========================================================================== */
+
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.control-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 6px;
+}
+
+.program-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.program-select {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.program-select:hover { border-color: var(--accent); }
+
+.program-expected {
+  font-size: 0.78rem;
+  color: var(--teal);
+  font-family: var(--font-mono);
+}
+
+.sim-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.btn {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+.btn:hover:not(:disabled) { background: var(--border-2); border-color: var(--muted); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-step   { border-color: var(--accent); color: var(--accent); }
+.btn-step:hover:not(:disabled) { background: rgba(88,166,255,0.1); }
+
+.btn-run    { border-color: var(--green); color: var(--green); }
+.btn-run:hover:not(:disabled) { background: rgba(63,185,80,0.1); }
+
+.btn-run-all { border-color: var(--teal); color: var(--teal); }
+.btn-run-all:hover:not(:disabled) { background: rgba(57,211,83,0.1); }
+
+.btn-reset  { border-color: var(--orange); color: var(--orange); }
+.btn-reset:hover:not(:disabled) { background: rgba(240,136,62,0.1); }
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+.status-ready   { background: rgba(139,148,158,0.15); color: var(--muted); border: 1px solid var(--border); }
+.status-running { background: rgba(63,185,80,0.15);   color: var(--green);  border: 1px solid var(--green);  }
+.status-halted  { background: rgba(248,81,73,0.15);   color: var(--red);    border: 1px solid var(--red);    }
+.status-cycles  { font-weight: 400; opacity: 0.8; }
+
+/* ==========================================================================
+   Tab Bar
+   ========================================================================== */
+
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-short { display: none; }
+@media (max-width: 700px) {
+  .tab-long  { display: none; }
+  .tab-short { display: inline; }
+}
+
+/* ==========================================================================
+   Main Panel + Aside
+   ========================================================================== */
+
+.tab-panel {
+  grid-area: main;
+  padding: 20px 24px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.listing-panel {
+  grid-area: aside;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+  font-size: 0.78rem;
+}
+
+.listing-title {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.listing-code { margin-bottom: 12px; }
+
+.listing-line pre {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: pre;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.listing-line.listing-active pre {
+  background: rgba(88,166,255,0.1);
+  color: var(--text);
+  border-left: 2px solid var(--accent);
+  padding-left: 4px;
+}
+
+.listing-description {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.app-footer {
+  grid-area: footer;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 10px 24px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.app-footer a { color: var(--accent); text-decoration: none; }
+.app-footer a:hover { text-decoration: underline; }
+
+/* ==========================================================================
+   Shared Component Utilities
+   ========================================================================== */
+
+.panel-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.panel-subtitle {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.no-data-message {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.mono { font-family: var(--font-mono); }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-areas:
+      "header"
+      "main"
+      "aside"
+      "footer";
+    grid-template-columns: 1fr;
+  }
+
+  .listing-panel {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .tab-panel { padding: 16px; }
+}

@@ -175,6 +175,67 @@ defmodule CodingAdventures.GrammarTools.ParserGrammarTest do
     end
   end
 
+  # ---------------------------------------------------------------------------
+  # Magic Comments
+  # ---------------------------------------------------------------------------
+  #
+  # Magic comments (`# @key value`) are extracted in a pre-pass before
+  # tokenisation, so they never interfere with EBNF rule parsing.
+  #
+  # Currently supported keys:
+  #   @version N  — integer schema version (default 0)
+
+  describe "parse/1 — magic comments" do
+    test "# @version 1 sets version to 1" do
+      source = """
+      # @version 1
+      value = NUMBER ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      assert grammar.version == 1
+    end
+
+    test "missing version comment defaults to 0" do
+      {:ok, grammar} = ParserGrammar.parse("value = NUMBER ;")
+      assert grammar.version == 0
+    end
+
+    test "magic comment does not appear as a rule" do
+      source = """
+      # @version 5
+      value = NUMBER ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      assert length(grammar.rules) == 1
+    end
+
+    test "unknown magic comment key is silently ignored" do
+      source = """
+      # @future_feature on
+      value = NUMBER ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      assert grammar.version == 0
+      assert length(grammar.rules) == 1
+    end
+
+    test "magic comment coexists with ordinary comments and rules" do
+      source = """
+      # @version 7
+      # Plain comment — not a magic comment
+      value = NUMBER | STRING ;
+      program = value ;
+      """
+
+      {:ok, grammar} = ParserGrammar.parse(source)
+      assert grammar.version == 7
+      assert length(grammar.rules) == 2
+    end
+  end
+
   describe "rule_references/1" do
     test "returns all lowercase references" do
       source = "object = LBRACE pair RBRACE ;"

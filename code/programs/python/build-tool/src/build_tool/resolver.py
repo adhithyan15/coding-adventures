@@ -343,6 +343,57 @@ def _extract_lua_deps(
 
 
 # ---------------------------------------------------------------------------
+# Perl dependency parsing
+# ---------------------------------------------------------------------------
+
+
+def _parse_perl_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from a Perl package's cpanfile.
+
+    A cpanfile declares dependencies with one ``requires`` per line::
+
+        requires 'coding-adventures-logic-gates';
+        requires 'coding-adventures-bitset', '>= 0.01';
+
+        on 'test' => sub {
+            requires 'Test2::V0';
+        };
+
+    We scan for lines matching ``requires 'coding-adventures-...'`` and map
+    them to internal package names. External deps are silently skipped.
+
+    Args:
+        package: The Perl package to inspect.
+        known_names: Mapping from CPAN dist name to package name.
+
+    Returns:
+        List of internal package names this package depends on.
+    """
+    cpanfile = package.path / "cpanfile"
+    if not cpanfile.exists():
+        return []
+
+    text = cpanfile.read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    pattern = re.compile(r"""requires\s+['"](coding-adventures-[^'"]+)['"]""")
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        # Skip blank lines and comments.
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = pattern.search(stripped)
+        if match:
+            dep_name = match.group(1).lower()
+            if dep_name in known_names:
+                internal_deps.append(known_names[dep_name])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -388,6 +439,12 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             rockspec_name = f"coding-adventures-{pkg.path.name.replace('_', '-')}".lower()
             known[rockspec_name] = pkg.name
 
+        elif pkg.language == "perl":
+            # Perl CPAN dist names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+            # This matches the Python convention exactly.
+            cpan_name = f"coding-adventures-{pkg.path.name}".lower()
+            known[cpan_name] = pkg.name
+
     return known
 
 
@@ -427,6 +484,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_elixir_deps(pkg, known_names)
         elif pkg.language == "lua":
             deps = _parse_lua_deps(pkg, known_names)
+        elif pkg.language == "perl":
+            deps = _parse_perl_deps(pkg, known_names)
         else:
             deps = []
 

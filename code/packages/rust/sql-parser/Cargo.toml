@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-sql-parser"
+version = "0.1.0"
+edition = "2021"
+description = "SQL parser — parses SQL source text into an AST using the grammar-driven parser and the sql.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-sql-lexer = { path = "../sql-lexer" }

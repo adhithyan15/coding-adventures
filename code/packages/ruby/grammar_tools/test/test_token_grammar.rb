@@ -663,4 +663,101 @@ class TestTokenGrammar < Minitest::Test
     end
     assert_includes error.message, "Incomplete definition"
   end
+
+  # -----------------------------------------------------------------------
+  # Magic comments
+  # -----------------------------------------------------------------------
+
+  def test_magic_version_sets_version
+    # A "# @version N" line should set grammar.version to N.
+    source = <<~TOKENS
+      # @version 1
+      NUMBER = /[0-9]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 1, grammar.version
+  end
+
+  def test_magic_version_default_is_zero
+    # When no @version comment is present the default must be 0 so that
+    # existing grammar files remain valid without any changes.
+    grammar = GT.parse_token_grammar("NUMBER = /[0-9]+/")
+    assert_equal 0, grammar.version
+  end
+
+  def test_magic_case_insensitive_true
+    # "# @case_insensitive true" should set case_insensitive to true.
+    source = <<~TOKENS
+      # @case_insensitive true
+      NAME = /[a-z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert grammar.case_insensitive
+  end
+
+  def test_magic_case_insensitive_false
+    # "# @case_insensitive false" should set case_insensitive to false
+    # (explicit opt-out is still valid).
+    source = <<~TOKENS
+      # @case_insensitive false
+      NAME = /[a-z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    refute grammar.case_insensitive
+  end
+
+  def test_magic_case_insensitive_default_is_false
+    # When the magic comment is absent, case_insensitive must default to false
+    # so that existing grammar files are unaffected.
+    grammar = GT.parse_token_grammar("NUMBER = /[0-9]+/")
+    refute grammar.case_insensitive
+  end
+
+  def test_magic_unknown_key_silently_ignored
+    # An unknown @key must not raise an error; it is simply ignored.
+    # This allows future extensions without breaking older parsers.
+    source = <<~TOKENS
+      # @unknown_key some_value
+      NUMBER = /[0-9]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 1, grammar.definitions.length
+  end
+
+  def test_magic_both_comments_together
+    # Both @version and @case_insensitive can appear in the same file.
+    source = <<~TOKENS
+      # @version 3
+      # @case_insensitive true
+      NAME = /[a-z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 3, grammar.version
+    assert grammar.case_insensitive
+  end
+
+  def test_magic_version_with_surrounding_content
+    # Magic comments should work regardless of where they appear in the file
+    # (before, between, or after token definitions).
+    source = <<~TOKENS
+      NUMBER = /[0-9]+/
+      # @version 2
+      NAME = /[a-z]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 2, grammar.version
+    assert_equal 2, grammar.definitions.length
+  end
+
+  def test_magic_plain_comment_still_ignored
+    # A plain comment (no @key) must still be skipped without any side-effects.
+    source = <<~TOKENS
+      # just a plain comment
+      NUMBER = /[0-9]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 0, grammar.version
+    refute grammar.case_insensitive
+    assert_equal 1, grammar.definitions.length
+  end
 end

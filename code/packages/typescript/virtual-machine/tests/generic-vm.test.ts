@@ -1366,4 +1366,19 @@ describe("GenericVM", () => {
       expect(vm.stack).toEqual([]);
     });
   });
+
+  describe("global injection", () => {
+    it("should merge injected globals into existing variables", () => {
+      const vm = new GenericVM();
+      vm.variables = { existing: 1, ctx_os: "linux" };
+
+      vm.injectGlobals({ ctx_os: "darwin", answer: 42 });
+
+      expect(vm.variables).toEqual({
+        existing: 1,
+        ctx_os: "darwin",
+        answer: 42,
+      });
+    });
+  });
 });

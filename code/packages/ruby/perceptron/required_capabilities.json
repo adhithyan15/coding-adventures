@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/perceptron",
+  "capabilities": [
+    "stdout:write:*"
+  ],
+  "justification": "Uses puts for epoch-by-epoch training loss logging as core training feedback."
+}

@@ -1,5 +1,5 @@
-uv venv --quiet --clear
-uv pip install -e ../directed-graph -e ../state-machine --quiet
-uv pip install pytest pytest-cov ruff mypy --quiet
-uv pip install -e . --no-deps --quiet
+python -m venv .venv --clear
+.venv\Scripts\pip install -e ../directed-graph -e ../state-machine --quiet
+.venv\Scripts\pip install pytest pytest-cov ruff mypy --quiet
+.venv\Scripts\pip install -e . --no-deps --quiet
 .venv\Scripts\python -m pytest tests/ -v

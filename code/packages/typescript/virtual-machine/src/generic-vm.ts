@@ -535,6 +535,33 @@ export class GenericVM {
   }
 
   // =======================================================================
+  // Global Injection
+  // =======================================================================
+
+  /**
+   * Pre-seed named variables into the VM's global scope.
+   *
+   * These variables are available to the program as regular variables
+   * but are set before execution begins. Useful for build context,
+   * environment info, etc.
+   *
+   * Injected globals are merged into ``variables`` — they don't replace
+   * the object. If a key already exists, the injected value overwrites it.
+   *
+   * @param globals - A record of variable names to values.
+   *
+   * @example
+   * ```typescript
+   * vm.injectGlobals({ _ctx: { os: "darwin", arch: "arm64" } });
+   * ```
+   */
+  injectGlobals(globals: Record<string, VMValue>): void {
+    for (const [key, value] of Object.entries(globals)) {
+      this.variables[key] = value;
+    }
+  }
+
+  // =======================================================================
   // Stack Operations
   // =======================================================================
 

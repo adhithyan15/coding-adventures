@@ -373,6 +373,7 @@ defmodule CodingAdventures.LatticeAstToCss.Values do
       {{:number, a}, {:number, b}, "GREATER"} -> {:bool, a > b}
       {{:number, a}, {:number, b}, "GREATER_EQUALS"} -> {:bool, a >= b}
       {{:number, a}, {:number, b}, "LESS_EQUALS"} -> {:bool, a <= b}
+      {{:number, a}, {:number, b}, "LESS"} -> {:bool, a < b}
 
       # Dimensions with same unit — numeric comparison
       {{:dimension, a, u}, {:dimension, b, u}, "EQUALS_EQUALS"} -> {:bool, a == b}
@@ -380,6 +381,7 @@ defmodule CodingAdventures.LatticeAstToCss.Values do
       {{:dimension, a, u}, {:dimension, b, u}, "GREATER"} -> {:bool, a > b}
       {{:dimension, a, u}, {:dimension, b, u}, "GREATER_EQUALS"} -> {:bool, a >= b}
       {{:dimension, a, u}, {:dimension, b, u}, "LESS_EQUALS"} -> {:bool, a <= b}
+      {{:dimension, a, u}, {:dimension, b, u}, "LESS"} -> {:bool, a < b}
 
       # Dimensions with DIFFERENT units — only equality works
       {{:dimension, _, _}, {:dimension, _, _}, "EQUALS_EQUALS"} -> {:bool, false}
@@ -391,6 +393,7 @@ defmodule CodingAdventures.LatticeAstToCss.Values do
       {{:percentage, a}, {:percentage, b}, "GREATER"} -> {:bool, a > b}
       {{:percentage, a}, {:percentage, b}, "GREATER_EQUALS"} -> {:bool, a >= b}
       {{:percentage, a}, {:percentage, b}, "LESS_EQUALS"} -> {:bool, a <= b}
+      {{:percentage, a}, {:percentage, b}, "LESS"} -> {:bool, a < b}
 
       # Fallback: string equality
       {_, _, "EQUALS_EQUALS"} -> {:bool, to_css(left) == to_css(right)}

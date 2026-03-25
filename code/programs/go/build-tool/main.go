@@ -164,11 +164,18 @@ func run() int {
 				// work on Windows (e.g., 2>/dev/null, shell quoting). By re-reading
 				// the BUILD file for the current platform, we get the correct
 				// commands for this runner's OS.
-				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
-				if platformBuild != "" {
-					platformCmds := discovery.ReadLines(platformBuild)
-					if len(platformCmds) > 0 {
-						packages[i].BuildCommands = platformCmds
+				//
+				// Skip this for Starlark packages: their commands come from
+				// Starlark evaluation, not from reading the BUILD file as shell.
+				// Reading a Starlark BUILD file as shell lines would produce
+				// load("...") as a command, which shells cannot execute.
+				if !packages[i].IsStarlark {
+					platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+					if platformBuild != "" {
+						platformCmds := discovery.ReadLines(platformBuild)
+						if len(platformCmds) > 0 {
+							packages[i].BuildCommands = platformCmds
+						}
 					}
 				}
 			}
@@ -379,7 +386,7 @@ func run() int {
 
 // allLanguages is the canonical list of supported languages in the monorepo.
 // The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua"}
+var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl"}
 
 // sharedPrefixes are path prefixes that, when changed, mean ALL languages
 // need rebuilding. These are cross-cutting concerns:

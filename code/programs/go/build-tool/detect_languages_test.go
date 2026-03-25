@@ -15,7 +15,7 @@ import (
 func TestAllLanguagesConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
-		"typescript": true, "rust": true, "elixir": true, "lua": true,
+		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
 	}
 	if len(allLanguages) != len(expected) {
 		t.Errorf("allLanguages has %d entries, want %d", len(allLanguages), len(expected))
@@ -37,7 +37,7 @@ func TestSharedPrefixesNotEmpty(t *testing.T) {
 	for _, p := range sharedPrefixes {
 		found[p] = true
 	}
-	for _, want := range []string{"code/grammars/", ".github/"} {
+	for _, want := range []string{".github/"} {
 		if !found[want] {
 			t.Errorf("sharedPrefixes missing %q", want)
 		}

@@ -447,6 +447,167 @@ func TestParseRustDepsNoCargoToml(t *testing.T) {
 	}
 }
 
+// ---------------------------------------------------------------------------
+// Tests for Perl dependency parsing
+// ---------------------------------------------------------------------------
+
+func TestParsePerlDepsSingleDep(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"bitset/cpanfile": `requires 'coding-adventures-logic-gates';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};
+`,
+		"logic-gates/cpanfile": `on 'test' => sub {
+    requires 'Test2::V0';
+};
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "perl/bitset", Path: filepath.Join(root, "bitset"), Language: "perl"},
+		{Name: "perl/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "perl"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parsePerlDeps(packages[0], known)
+
+	if len(deps) != 1 {
+		t.Fatalf("expected 1 dep, got %d: %v", len(deps), deps)
+	}
+	if deps[0] != "perl/logic-gates" {
+		t.Errorf("expected perl/logic-gates, got %s", deps[0])
+	}
+}
+
+func TestParsePerlDepsMultipleDeps(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"arithmetic/cpanfile": `requires 'coding-adventures-logic-gates';
+requires 'coding-adventures-bitset', '>= 0.01';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};
+`,
+		"logic-gates/cpanfile": "",
+		"bitset/cpanfile":      "",
+	})
+
+	packages := []discovery.Package{
+		{Name: "perl/arithmetic", Path: filepath.Join(root, "arithmetic"), Language: "perl"},
+		{Name: "perl/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "perl"},
+		{Name: "perl/bitset", Path: filepath.Join(root, "bitset"), Language: "perl"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parsePerlDeps(packages[0], known)
+
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParsePerlDepsExternalSkipped(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"my-pkg/cpanfile": `requires 'Moo';
+requires 'JSON::PP';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "perl/my-pkg", Path: filepath.Join(root, "my-pkg"), Language: "perl"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parsePerlDeps(packages[0], known)
+
+	if len(deps) != 0 {
+		t.Fatalf("expected 0 deps (all external), got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParsePerlDepsCommentSkipped(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"my-pkg/cpanfile": `# requires 'coding-adventures-logic-gates';
+requires 'coding-adventures-bitset';
+`,
+		"logic-gates/cpanfile": "",
+		"bitset/cpanfile":      "",
+	})
+
+	packages := []discovery.Package{
+		{Name: "perl/my-pkg", Path: filepath.Join(root, "my-pkg"), Language: "perl"},
+		{Name: "perl/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "perl"},
+		{Name: "perl/bitset", Path: filepath.Join(root, "bitset"), Language: "perl"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parsePerlDeps(packages[0], known)
+
+	if len(deps) != 1 {
+		t.Fatalf("expected 1 dep (comment skipped), got %d: %v", len(deps), deps)
+	}
+	if deps[0] != "perl/bitset" {
+		t.Errorf("expected perl/bitset, got %s", deps[0])
+	}
+}
+
+func TestParsePerlDepsMissingCpanfile(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"my-pkg/lib/Foo.pm": "package Foo; 1;",
+	})
+
+	packages := []discovery.Package{
+		{Name: "perl/my-pkg", Path: filepath.Join(root, "my-pkg"), Language: "perl"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parsePerlDeps(packages[0], known)
+
+	if len(deps) != 0 {
+		t.Fatalf("expected 0 deps (no cpanfile), got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParsePerlDepsDoubleQuotes(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"my-pkg/cpanfile":      `requires "coding-adventures-logic-gates";`,
+		"logic-gates/cpanfile": "",
+	})
+
+	packages := []discovery.Package{
+		{Name: "perl/my-pkg", Path: filepath.Join(root, "my-pkg"), Language: "perl"},
+		{Name: "perl/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "perl"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parsePerlDeps(packages[0], known)
+
+	if len(deps) != 1 {
+		t.Fatalf("expected 1 dep (double quotes), got %d: %v", len(deps), deps)
+	}
+}
+
+func TestBuildKnownNamesPerl(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "perl/logic-gates", Path: "/repo/code/packages/perl/logic-gates", Language: "perl"},
+		{Name: "perl/bitset", Path: "/repo/code/packages/perl/bitset", Language: "perl"},
+	}
+	known := BuildKnownNames(packages)
+
+	if known["coding-adventures-logic-gates"] != "perl/logic-gates" {
+		t.Errorf("expected perl/logic-gates, got %s", known["coding-adventures-logic-gates"])
+	}
+	if known["coding-adventures-bitset"] != "perl/bitset" {
+		t.Errorf("expected perl/bitset, got %s", known["coding-adventures-bitset"])
+	}
+}
+
 func TestBuildKnownNamesGo(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"directed-graph/go.mod": `module github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph

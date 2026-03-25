@@ -50,6 +50,18 @@ type memoEntry struct {
 	ok       bool
 }
 
+// ---------------------------------------------------------------------------
+// Hook Types — Pre/Post Parse Transforms
+// ---------------------------------------------------------------------------
+
+// PreParseHook transforms the token list before parsing.
+// Multiple hooks compose left-to-right.
+type PreParseHook func(tokens []lexer.Token) []lexer.Token
+
+// PostParseHook transforms the AST after parsing.
+// Multiple hooks compose left-to-right.
+type PostParseHook func(ast *ASTNode) *ASTNode
+
 // GrammarParser interprets grammar rules at runtime with packrat memoization.
 type GrammarParser struct {
 	tokens              []lexer.Token
@@ -62,6 +74,14 @@ type GrammarParser struct {
 	furthestPos         int
 	furthestExpected    []string
 	trace               bool // When true, print rule attempts to stderr
+
+	// preParseHooks holds functions that transform the token list before
+	// parsing. Multiple hooks compose left-to-right.
+	preParseHooks []PreParseHook
+
+	// postParseHooks holds functions that transform the AST after parsing.
+	// Multiple hooks compose left-to-right.
+	postParseHooks []PostParseHook
 }
 
 // NewGrammarParser creates a new grammar-driven parser with memoization.
@@ -99,6 +119,20 @@ func NewGrammarParserWithTrace(tokens []lexer.Token, grammar *grammartools.Parse
 	}
 	p.newlinesSignificant = p.grammarReferencesNewline()
 	return p
+}
+
+// AddPreParse registers a token transform to run before parsing.
+// The hook receives the token list and returns a (possibly modified) token
+// list. Multiple hooks compose left-to-right.
+func (p *GrammarParser) AddPreParse(hook PreParseHook) {
+	p.preParseHooks = append(p.preParseHooks, hook)
+}
+
+// AddPostParse registers an AST transform to run after parsing.
+// The hook receives the root AST node and returns a (possibly modified)
+// AST node. Multiple hooks compose left-to-right.
+func (p *GrammarParser) AddPostParse(hook PostParseHook) {
+	p.postParseHooks = append(p.postParseHooks, hook)
 }
 
 // NewlinesSignificant returns whether newlines are significant in this grammar.
@@ -222,6 +256,18 @@ func (p *GrammarParser) elementReferencesNewline(element grammartools.GrammarEle
 
 // Parse parses the token stream using the first grammar rule as entry point.
 func (p *GrammarParser) Parse() (*ASTNode, error) {
+	// Stage 1: Pre-parse hooks transform the token list.
+	// Each hook receives the output of the previous hook, composing
+	// left-to-right. This enables token-level transforms like filtering,
+	// rewriting, or injecting synthetic tokens before parsing begins.
+	if len(p.preParseHooks) > 0 {
+		tokens := p.tokens
+		for _, hook := range p.preParseHooks {
+			tokens = hook(tokens)
+		}
+		p.tokens = tokens
+	}
+
 	if len(p.grammar.Rules) == 0 {
 		return nil, fmt.Errorf("Grammar has no rules")
 	}
@@ -268,6 +314,13 @@ func (p *GrammarParser) Parse() (*ASTNode, error) {
 		}
 	}
 
+	// Stage 3: Post-parse hooks transform the AST.
+	// Each hook receives the root AST node and returns a (possibly modified)
+	// AST node. Hooks compose left-to-right.
+	for _, hook := range p.postParseHooks {
+		result = hook(result)
+	}
+
 	return result, nil
 }
 
@@ -298,12 +351,47 @@ func (p *GrammarParser) parseRule(ruleName string) *ASTNode {
 	}
 
 	startPos := p.pos
+
+	// Left-recursion guard: seed the memo with a failure entry BEFORE parsing
+	// the rule body. If the rule references itself (directly or indirectly)
+	// at the same position, the memo check above will find this failure entry
+	// and return nil, breaking the infinite recursion cycle.
+	//
+	// After the initial parse, if it succeeded, we iteratively try to grow
+	// the match. This is the standard technique for handling left recursion
+	// in packrat parsers (see Warth et al., "Packrat Parsers Can Support
+	// Left Recursion", 2008).
+	if hasIdx {
+		key := [2]int{idx, startPos}
+		p.memo[key] = &memoEntry{children: nil, endPos: startPos, ok: false}
+	}
+
 	children, ok := p.matchElement(rule.Body)
 
 	// Cache result
 	if hasIdx {
 		key := [2]int{idx, startPos}
 		p.memo[key] = &memoEntry{children: children, endPos: p.pos, ok: ok}
+
+		// If the initial parse succeeded and this rule might be left-recursive,
+		// iteratively try to grow the match. Each iteration re-parses the rule
+		// body with the previous successful result cached, allowing the
+		// left-recursive alternative to consume more input.
+		if ok {
+			for {
+				prevEnd := p.pos
+				p.pos = startPos
+				p.memo[key] = &memoEntry{children: children, endPos: prevEnd, ok: true}
+				newChildren, newOk := p.matchElement(rule.Body)
+				if !newOk || p.pos <= prevEnd {
+					// Could not grow the match — restore the best result.
+					p.pos = prevEnd
+					p.memo[key] = &memoEntry{children: children, endPos: prevEnd, ok: true}
+					break
+				}
+				children = newChildren
+			}
+		}
 	}
 
 	if !ok {

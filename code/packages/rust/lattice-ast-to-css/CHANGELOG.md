@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-03-25
+
+### Fixed
+
+- **Less-than operator `<`** — `compare_nums` now handles `"LESS"` so `@if $val < $min` evaluates correctly.
+- **Division operator `/` in expressions** — `eval_multiplicative` now dispatches on `*` vs `/`. New `divide` method with `LatticeError::ZeroDivision` guard mirrors `multiply`.
+- **Mixin parameter parsing with multiple defaults** — `extract_params` in `transformer.rs` now accepts `mixin_value_list` AST nodes in addition to `value_list`.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added — Lattice v2 Features

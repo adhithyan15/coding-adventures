@@ -1078,6 +1078,16 @@ export class StarlarkInterpreter {
   readonly createVMFn: CreateVMFn;
 
   /**
+   * Pre-seeded variables injected into every VM instance.
+   *
+   * These are available in all Starlark scopes, including loaded files.
+   * Use this for build context like ``_ctx``. Since ``interpret()`` is
+   * called recursively for ``load()`` statements, globals are automatically
+   * injected into every loaded file's VM instance.
+   */
+  readonly globals: Record<string, VMValue> | null;
+
+  /**
    * Cache of already-loaded files: label -> exported variables.
    *
    * Each file is evaluated at most once. Subsequent ``load()`` calls
@@ -1096,11 +1106,13 @@ export class StarlarkInterpreter {
     maxRecursionDepth?: number;
     compileFn?: CompileFn;
     createVMFn?: CreateVMFn;
+    globals?: Record<string, VMValue>;
   }) {
     this.fileResolver = options?.fileResolver ?? null;
     this.maxRecursionDepth = options?.maxRecursionDepth ?? 200;
     this.compileFn = options?.compileFn ?? null;
     this.createVMFn = options?.createVMFn ?? createMiniStarlarkVM;
+    this.globals = options?.globals ?? null;
   }
 
   /**
@@ -1142,6 +1154,9 @@ export class StarlarkInterpreter {
   interpretBytecode(code: CodeObject): StarlarkResult {
     // Create a VM with load() support
     const vm = this.createVMFn({ maxRecursionDepth: this.maxRecursionDepth });
+    if (this.globals) {
+      vm.injectGlobals(this.globals);
+    }
     this._registerLoadHandlers(vm);
 
     // Execute

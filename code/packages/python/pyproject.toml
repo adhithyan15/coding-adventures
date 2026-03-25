@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 
 [tool.uv.workspace]
 members = [
+    "directed-graph",
     "logic-gates",
     "arithmetic",
     "cpu-simulator",
@@ -48,6 +49,7 @@ coding-adventures-riscv-simulator = { workspace = true }
 coding-adventures-wasm-simulator = { workspace = true }
 coding-adventures-intel4004-simulator = { workspace = true }
 coding-adventures-assembler = { workspace = true }
+coding-adventures-directed-graph = { workspace = true }
 coding-adventures-lexer = { workspace = true }
 coding-adventures-parser = { workspace = true }
 coding-adventures-bytecode-compiler = { workspace = true }
