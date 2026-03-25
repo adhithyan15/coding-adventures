@@ -40,52 +40,48 @@
 #
 # ============================================================================
 
-_targets = []
-
-
 def elixir_binary(name, srcs = [], deps = [], entry_point = "lib/main.ex"):
-    """Register an Elixir binary (executable program) target.
-
-    Elixir binaries run on the BEAM VM via Mix. The build tool will:
-        mix deps.get                       — fetch dependencies
-        mix compile --warnings-as-errors   — compile with strict warnings
-        mix test --cover                   — run tests if they exist
-        mix run <entry_point>              — verify the program starts
-
-    Args:
-        name: The program name, matching the directory under
-              code/programs/elixir/. For example, "starlark-repl" maps to
-              code/programs/elixir/starlark-repl/.
-
-        srcs: File paths or glob patterns for change detection.
-              Typical: ["lib/**/*.ex", "mix.exs"]
-
-              Track mix.exs because dependency changes should trigger
-              a rebuild.
-
-        deps: Dependencies as "language/package-name" strings.
-              Examples:
-                  ["elixir/starlark-vm"]
-                  ["elixir/parser", "elixir/lexer"]
-
-              Mix handles transitive dependency resolution (like Cargo),
-              so direct deps are sufficient. But listing transitive deps
-              explicitly helps the build tool.
-
-        entry_point: The Elixir file to execute when running this program.
-              Defaults to "lib/main.ex".
-
-              Examples:
-                  "lib/main.ex"      — simple main module
-                  "lib/cli.ex"       — CLI entry point
-                  "lib/app.ex"       — OTP application entry point
-
-              Elixir doesn't have a rigid convention like Go's main() or
-              Rust's fn main(). The entry point is configurable because
-              Elixir programs vary: some are CLI tools, some are OTP
-              applications, some are escripts.
-    """
-    _targets.append({
+    # Register an Elixir binary (executable program) target.
+    #
+    # Elixir binaries run on the BEAM VM via Mix. The build tool will:
+    #     mix deps.get                       — fetch dependencies
+    #     mix compile --warnings-as-errors   — compile with strict warnings
+    #     mix test --cover                   — run tests if they exist
+    #     mix run <entry_point>              — verify the program starts
+    #
+    # Args:
+    #     name: The program name, matching the directory under
+    #           code/programs/elixir/. For example, "starlark-repl" maps to
+    #           code/programs/elixir/starlark-repl/.
+    #
+    #     srcs: File paths or glob patterns for change detection.
+    #           Typical: ["lib/**/*.ex", "mix.exs"]
+    #
+    #           Track mix.exs because dependency changes should trigger
+    #           a rebuild.
+    #
+    #     deps: Dependencies as "language/package-name" strings.
+    #           Examples:
+    #               ["elixir/starlark-vm"]
+    #               ["elixir/parser", "elixir/lexer"]
+    #
+    #           Mix handles transitive dependency resolution (like Cargo),
+    #           so direct deps are sufficient. But listing transitive deps
+    #           explicitly helps the build tool.
+    #
+    #     entry_point: The Elixir file to execute when running this program.
+    #           Defaults to "lib/main.ex".
+    #
+    #           Examples:
+    #               "lib/main.ex"      — simple main module
+    #               "lib/cli.ex"       — CLI entry point
+    #               "lib/app.ex"       — OTP application entry point
+    #
+    #           Elixir doesn't have a rigid convention like Go's main() or
+    #           Rust's fn main(). The entry point is configurable because
+    #           Elixir programs vary: some are CLI tools, some are OTP
+    #           applications, some are escripts.
+    return {
         # "elixir_binary" triggers Elixir binary-specific build logic:
         #   - mix deps.get for dependencies
         #   - mix compile for compilation
@@ -96,4 +92,8 @@ def elixir_binary(name, srcs = [], deps = [], entry_point = "lib/main.ex"):
         "srcs": srcs,
         "deps": deps,
         "entry_point": entry_point,
-    })
+        "commands": [
+            {"type": "cmd", "program": "mix", "args": ["deps.get"]},
+            {"type": "cmd", "program": "mix", "args": ["test", "--cover"]},
+        ],
+    }
