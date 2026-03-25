@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
                         "Demonstrates cross-language grammar reuse with case-insensitive keywords."
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 3.4.0"
+  spec.required_ruby_version = ">= 3.3.0"
   spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.md"]
   spec.require_paths = ["lib"]
   spec.metadata      = {

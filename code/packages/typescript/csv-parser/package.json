@@ -1,0 +1,21 @@
+{
+  "name": "@coding-adventures/csv-parser",
+  "version": "0.1.0",
+  "description": "CSV parser — a hand-rolled state machine parser for RFC 4180-style CSV",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["csv", "parser", "state-machine", "education"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

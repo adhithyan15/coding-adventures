@@ -119,7 +119,10 @@ members = [
     "commonmark-parser",
     "document-ast-to-html",
     "commonmark",
-    "document-ast-sanitizer",
-    "document-html-sanitizer",
+  "document-ast-sanitizer",
+  "document-html-sanitizer",
+    "csv-parser",
+    "sql-execution-engine",
+    "sql-csv-source",
     "event-loop",
 ]
