@@ -26,6 +26,8 @@ members = [
     "device-simulator",
     "directed-graph",
     "display",
+    "excel-lexer",
+    "excel-parser",
     "fp-arithmetic",
     "garbage-collector",
     "gpu-core",
