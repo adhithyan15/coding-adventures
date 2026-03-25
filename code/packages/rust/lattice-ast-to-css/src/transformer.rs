@@ -1243,13 +1243,70 @@ impl LatticeTransformer {
                                 named.insert(k, val);
                             }
                         } else {
-                            // Positional arg: find the value_list child
+                            // Positional arg: find the value_list child and split on COMMA tokens.
+                            // Bug #2 note: value_list greedily consumes commas (COMMA is in `value`),
+                            // so `button(blue, white)` arrives as one include_arg containing a
+                            // value_list with [value(blue), value(,), value(white)]. We split here.
                             for ac in &n.children {
                                 if let ASTNodeOrToken::Node(vn) = ac {
                                     if vn.rule_name == "value_list" {
-                                        let val = evaluate_arg_node(self, vn, scope);
-                                        if !val.is_empty() {
-                                            positional.push(val);
+                                        let mut current_children: Vec<ASTNodeOrToken> = Vec::new();
+                                        let mut found_comma = false;
+
+                                        for vc in &vn.children {
+                                            let is_comma = match vc {
+                                                ASTNodeOrToken::Node(val_node)
+                                                    if val_node.rule_name == "value" =>
+                                                {
+                                                    val_node.children.len() == 1
+                                                        && matches!(
+                                                            &val_node.children[0],
+                                                            ASTNodeOrToken::Token(t)
+                                                                if get_token_type_name(t) == "COMMA"
+                                                                   || t.value == ","
+                                                        )
+                                                }
+                                                ASTNodeOrToken::Token(t) => {
+                                                    get_token_type_name(t) == "COMMA"
+                                                        || t.value == ","
+                                                }
+                                                _ => false,
+                                            };
+
+                                            if is_comma {
+                                                found_comma = true;
+                                                if !current_children.is_empty() {
+                                                    let seg = GrammarASTNode {
+                                                        rule_name: "value_list".to_string(),
+                                                        children: current_children.clone(),
+                                                    };
+                                                    let val = evaluate_arg_node(self, &seg, scope);
+                                                    if !val.is_empty() {
+                                                        positional.push(val);
+                                                    }
+                                                    current_children.clear();
+                                                }
+                                            } else {
+                                                current_children.push(vc.clone());
+                                            }
+                                        }
+
+                                        // Push the final segment
+                                        if !current_children.is_empty() {
+                                            let seg = GrammarASTNode {
+                                                rule_name: "value_list".to_string(),
+                                                children: current_children,
+                                            };
+                                            let val = evaluate_arg_node(self, &seg, scope);
+                                            if !val.is_empty() {
+                                                positional.push(val);
+                                            }
+                                        } else if !found_comma {
+                                            // No commas at all — evaluate the whole value_list
+                                            let val = evaluate_arg_node(self, vn, scope);
+                                            if !val.is_empty() {
+                                                positional.push(val);
+                                            }
                                         }
                                         break;
                                     }
