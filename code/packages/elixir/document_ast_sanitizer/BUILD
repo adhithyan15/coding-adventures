@@ -1,4 +1,2 @@
-(cd ../document_ast && /Users/adhithya/.local/bin/mise exec -- mix deps.get --quiet && /Users/adhithya/.local/bin/mise exec -- mix compile --quiet)
-/Users/adhithya/.local/bin/mise exec -- mix deps.get --quiet
-/Users/adhithya/.local/bin/mise exec -- mix compile --quiet
-/Users/adhithya/.local/bin/mise exec -- mix test --cover
+cd ../document_ast && mix deps.get --quiet && mix compile --quiet
+mix deps.get --quiet && mix test --cover
