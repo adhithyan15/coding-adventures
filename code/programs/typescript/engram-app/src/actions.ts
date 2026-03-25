@@ -31,33 +31,34 @@ export const STATE_LOAD = "STATE_LOAD";
 
 // ── Action types ────────────────────────────────────────────────────────────
 
+import type { Action } from "@coding-adventures/store";
 import type { Card, CardProgress, Deck, Rating, Review, Session } from "./types.js";
 
-export interface DeckCreateAction {
+export interface DeckCreateAction extends Action {
   type: typeof DECK_CREATE;
   name: string;
   description: string;
 }
 
-export interface CardCreateAction {
+export interface CardCreateAction extends Action {
   type: typeof CARD_CREATE;
   deckId: string;
   front: string;
   back: string;
 }
 
-export interface SessionStartAction {
+export interface SessionStartAction extends Action {
   type: typeof SESSION_START;
   deckId: string;
   sessionId: string;
   queue: Card[];
 }
 
-export interface SessionRevealAction {
+export interface SessionRevealAction extends Action {
   type: typeof SESSION_REVEAL;
 }
 
-export interface SessionRateAction {
+export interface SessionRateAction extends Action {
   type: typeof SESSION_RATE;
   cardId: string;
   sessionId: string;
@@ -66,17 +67,17 @@ export interface SessionRateAction {
   now: number;
 }
 
-export interface SessionAdvanceAction {
+export interface SessionAdvanceAction extends Action {
   type: typeof SESSION_ADVANCE;
 }
 
-export interface SessionCompleteAction {
+export interface SessionCompleteAction extends Action {
   type: typeof SESSION_COMPLETE;
   sessionId: string;
   now: number;
 }
 
-export interface StateLoadAction {
+export interface StateLoadAction extends Action {
   type: typeof STATE_LOAD;
   decks: Deck[];
   cards: Card[];
