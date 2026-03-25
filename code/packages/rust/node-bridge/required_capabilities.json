@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/node-bridge",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "load",
+      "target": "libnode.*",
+      "justification": "Loads the Node.js shared library via extern \"C\" declarations to call the N-API."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "N-API",
+      "justification": "Calls N-API functions (napi_create_string_utf8, napi_create_function, etc.) through FFI."
+    }
+  ],
+  "justification": "FFI bridge to Node.js. Loads the Node shared library and calls N-API functions through raw extern \"C\" declarations."
+}

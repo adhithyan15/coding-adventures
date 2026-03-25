@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/ml-framework-keras",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "internal unsafe static and pointer operations",
+      "justification": "Uses unsafe for global backend static and raw pointer dereferencing in optimizer gradient application."
+    }
+  ],
+  "justification": "ML framework Keras-style API. Uses unsafe for global backend configuration and optimizer pointer operations."
+}
