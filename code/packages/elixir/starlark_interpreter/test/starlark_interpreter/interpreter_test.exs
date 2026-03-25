@@ -685,5 +685,24 @@ defmodule CodingAdventures.StarlarkInterpreter.InterpreterTest do
       result = Interpreter.interpret(source, max_recursion_depth: 200)
       assert result.variables["result"] == 10
     end
+
+    test "globals are available in main and loaded files" do
+      files = %{
+        "//ctx.star" => "loaded_os = ctx_os\n"
+      }
+
+      result =
+        Interpreter.interpret(
+          """
+          load("//ctx.star", "loaded_os")
+          main_os = ctx_os
+          """,
+          file_resolver: files,
+          globals: %{"ctx_os" => "darwin"}
+        )
+
+      assert result.variables["main_os"] == "darwin"
+      assert result.variables["loaded_os"] == "darwin"
+    end
   end
 end

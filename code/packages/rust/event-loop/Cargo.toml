@@ -1,0 +1,7 @@
+[package]
+name = "event-loop"
+version = "0.1.0"
+edition = "2021"
+description = "Pluggable generic event loop — the heartbeat of interactive applications"
+
+[dependencies]

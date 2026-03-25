@@ -566,3 +566,20 @@ class TestBuildFileSimulation:
         )
         assert result.variables["py"] == "py:mypy"
         assert result.variables["go"] == "go:mygo"
+
+
+class TestGlobalsInjection:
+    """Test globals injected into interpreter-created VMs."""
+
+    def test_globals_available_in_main_and_loaded_files(self):
+        files = {
+            "//ctx.star": "loaded_os = ctx_os\n",
+        }
+        result = interpret(
+            'load("//ctx.star", "loaded_os")\n'
+            "main_os = ctx_os\n",
+            file_resolver=files,
+            globals={"ctx_os": "darwin"},
+        )
+        assert result.variables["main_os"] == "darwin"
+        assert result.variables["loaded_os"] == "darwin"
