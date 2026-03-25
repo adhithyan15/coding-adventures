@@ -299,7 +299,7 @@ fn apply_select(
             let cols = source.schema(if primary_alias.is_empty() { primary_table } else { primary_alias })?;
             return Ok((cols, vec![]));
         }
-        let cols = all_bare_columns(&rows[0]);
+        let cols = source.schema(primary_table)?;
         let projected: Vec<HashMap<String, SqlValue>> = rows.iter()
             .map(|row| cols.iter().map(|c| (c.clone(), row.get(c).cloned().unwrap_or(None))).collect())
             .collect();
@@ -386,15 +386,6 @@ fn infer_col_name(node: &ASTNodeOrToken) -> String {
             node_text_from_ast(n)
         }
     }
-}
-
-fn all_bare_columns(row: &HashMap<String, SqlValue>) -> Vec<String> {
-    let mut cols: Vec<String> = row.keys()
-        .filter(|k| !k.contains('.') && !k.starts_with('_'))
-        .cloned()
-        .collect();
-    cols.sort(); // consistent ordering
-    cols
 }
 
 // ---------------------------------------------------------------------------
