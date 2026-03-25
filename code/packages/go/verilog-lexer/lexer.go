@@ -23,10 +23,10 @@
 package veriloglexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
+	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
@@ -68,7 +68,7 @@ func CreateVerilogLexerRaw(source string) (*lexer.GrammarLexer, error) {
 
 // createLexerFromSource loads the grammar and creates a GrammarLexer.
 func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
-	bytes, err := os.ReadFile(getGrammarPath())
+	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
 	if err != nil {
 		return nil, err
 	}

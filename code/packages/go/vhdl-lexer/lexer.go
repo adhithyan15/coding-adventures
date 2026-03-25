@@ -31,11 +31,11 @@
 package vhdllexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 
+	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
@@ -118,7 +118,7 @@ func normalizeCaseInsensitiveTokens(tokens []lexer.Token, keywordSet map[string]
 // grammar lexer (for exact-match keyword detection) and by our
 // normalization step (for reclassifying lowercased NAMEs as KEYWORDs).
 func loadGrammar() (*grammartools.TokenGrammar, error) {
-	bytes, err := os.ReadFile(getGrammarPath())
+	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
 	if err != nil {
 		return nil, err
 	}

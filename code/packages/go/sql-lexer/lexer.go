@@ -40,10 +40,10 @@
 package sqllexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
+	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
@@ -103,9 +103,9 @@ func getGrammarPath() string {
 //
 // Returns an error if the grammar file cannot be read or parsed.
 func CreateSQLLexer(source string) (*lexer.GrammarLexer, error) {
-	// Read the grammar file from disk. This file defines all token patterns,
-	// skip patterns (whitespace and comments), operators, and the keyword list.
-	bytes, err := os.ReadFile(getGrammarPath())
+	// Read the grammar file via the capability cage. This ensures the operation
+	// is covered by the declared fs:read capability in gen_capabilities.go.
+	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
 	if err != nil {
 		return nil, err
 	}
