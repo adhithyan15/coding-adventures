@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/eniac",
+  "version": "0.1.0",
+  "description": "ENIAC decimal arithmetic models — decade ring counters and accumulators built from vacuum tubes",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "eniac",
+    "vacuum-tube",
+    "decade-counter",
+    "decimal-arithmetic",
+    "computer-history",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/transistors": "file:../transistors"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
