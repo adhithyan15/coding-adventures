@@ -39,7 +39,7 @@ defmodule CodingAdventures.DocumentAstSanitizer.UrlUtils do
   # that PCRE2 happily matches in the character class.
   # U+200B = zero-width space, U+200C = zero-width non-joiner,
   # U+200D = zero-width joiner, U+2060 = word joiner, U+FEFF = BOM
-  @strip_pattern Regex.compile!("[\x00-\x1F#{<<0x200B::utf8, 0x200C::utf8, 0x200D::utf8, 0x2060::utf8, 0xFEFF::utf8>>}]", "u")
+  @strip_pattern Regex.compile!("[\\x00-\\x1F#{<<0x200B::utf8, 0x200C::utf8, 0x200D::utf8, 0x2060::utf8, 0xFEFF::utf8>>}]", "u")
 
   @doc """
   Strip C0 control characters and zero-width characters from a URL string.

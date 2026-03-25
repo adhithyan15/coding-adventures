@@ -13,7 +13,7 @@ defmodule CodingAdventures.DocumentHtmlSanitizer.UrlUtils do
   # Build the strip pattern using binary literals for zero-width characters
   # because Elixir's PCRE2 does not support \uXXXX escapes in regex.
   @strip_pattern Regex.compile!(
-    "[\x00-\x1F#{<<0x200B::utf8, 0x200C::utf8, 0x200D::utf8, 0x2060::utf8, 0xFEFF::utf8>>}]",
+    "[\\x00-\\x1F#{<<0x200B::utf8, 0x200C::utf8, 0x200D::utf8, 0x2060::utf8, 0xFEFF::utf8>>}]",
     "u"
   )
 
