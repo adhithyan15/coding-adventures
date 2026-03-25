@@ -3,7 +3,12 @@
   "version": 1,
   "package": "elixir/file_system",
   "capabilities": [
-    "time:read:*"
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the system clock for timestamp generation and time-based computations."
+    }
   ],
   "justification": "Reads System.system_time for file timestamp metadata in the simulated file system."
 }

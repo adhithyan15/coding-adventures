@@ -3,7 +3,12 @@
   "version": 1,
   "package": "ruby/xml_lexer",
   "capabilities": [
-    "fs:read:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    }
   ],
   "justification": "Uses File.read to load the XML token definition file (.tokens)."
 }

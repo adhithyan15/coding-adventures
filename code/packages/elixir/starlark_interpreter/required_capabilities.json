@@ -3,7 +3,12 @@
   "version": 1,
   "package": "elixir/starlark_interpreter",
   "capabilities": [
-    "fs:read:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    }
   ],
   "justification": "Reads Starlark source files from disk via File.read! for interpretation."
 }
