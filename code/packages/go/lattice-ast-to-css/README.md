@@ -68,6 +68,8 @@ Recursively walks remaining AST nodes with a `ScopeChain`:
 
 ## Supported Lattice Features
 
+### v1 Features
+
 | Feature | Example |
 |---------|---------|
 | Variables | `$primary: #4a90d9;` / `color: $primary;` |
@@ -80,9 +82,36 @@ Recursively walks remaining AST nodes with a `ScopeChain`:
 | Arithmetic | `$n * 2`, `10px + 5px`, `$x >= 0` |
 | CSS passthrough | All standard CSS passes through unchanged |
 
+### v2 Features
+
+| Feature | Example |
+|---------|---------|
+| `@while` loops | `@while $i <= 10 { ... }` |
+| `!default` flag | `$color: red !default;` |
+| `!global` flag | `$theme: dark !global;` |
+| `@content` blocks | `@include wrapper { ... }` + `@content;` |
+| `@at-root` | `@at-root .selector { ... }` |
+| `@extend` / `%placeholder` | `@extend %message-shared;` |
+| Variables in selectors | `.col-$i { ... }` |
+| `@each` over maps | `@each $k, $v in $map { ... }` |
+| Maps (`LatticeMap`) | `$theme: (primary: #4a90d9, secondary: #7b68ee)` |
+| 37 built-in functions | `lighten()`, `map-get()`, `math.div()`, etc. |
+
+### Built-in Functions
+
+**Map:** `map-get`, `map-keys`, `map-values`, `map-has-key`, `map-merge`, `map-remove`
+
+**Color:** `lighten`, `darken`, `saturate`, `desaturate`, `adjust-hue`, `complement`, `mix`, `rgba`, `red`, `green`, `blue`, `hue`, `saturation`, `lightness`
+
+**List:** `nth`, `length`, `join`, `append`, `index`
+
+**Type:** `type-of`, `unit`, `unitless`, `comparable`
+
+**Math:** `math.div`, `math.floor`, `math.ceil`, `math.round`, `math.abs`, `math.min`, `math.max`
+
 **Not supported:**
 - `#{}` string interpolation (requires modal lexing — by design)
-- Division operator `/` (ambiguous with CSS font shorthand — use `calc()`)
+- Division operator `/` (ambiguous with CSS font shorthand — use `math.div()`)
 - `@use` module loading from disk (stub: symbols collected but no file I/O)
 
 ## Emitter
@@ -114,8 +143,13 @@ Error types:
 | `UndefinedFunctionError` | Function call references unknown function |
 | `WrongArityError` | Wrong number of arguments to mixin/function |
 | `CircularReferenceError` | Mixin or function calls itself recursively |
-| `TypeError` | Arithmetic on incompatible types |
+| `TypeErrorInExpression` | Arithmetic on incompatible types |
+| `UnitMismatchError` | Adding incompatible CSS units |
 | `MissingReturnError` | `@function` body has no `@return` |
+| `MaxIterationError` | `@while` loop exceeds iteration limit (v2) |
+| `ExtendTargetNotFoundError` | `@extend` references unknown selector (v2) |
+| `RangeError` | Built-in function argument out of range (v2) |
+| `ZeroDivisionInExpressionError` | `math.div()` divides by zero (v2) |
 
 ## Scope Model
 

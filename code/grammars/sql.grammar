@@ -1,0 +1,87 @@
+# Parser grammar for SQL (ANSI SQL subset)
+# @version 1
+#
+# UPPERCASE identifiers reference token types from sql.tokens.
+# Quoted strings match keyword values (normalized to uppercase by the lexer
+# because sql.tokens uses @case_insensitive true).
+#
+# Entry point: program
+
+program           = statement { ";" statement } [ ";" ] ;
+
+statement         = select_stmt | insert_stmt | update_stmt
+                  | delete_stmt | create_table_stmt | drop_table_stmt ;
+
+# ── SELECT ───────────────────────────────────────────────────────────────────
+
+select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
+                    "FROM" table_ref { join_clause }
+                    [ where_clause ] [ group_clause ] [ having_clause ]
+                    [ order_clause ] [ limit_clause ] ;
+
+select_list       = STAR | select_item { "," select_item } ;
+select_item       = expr [ "AS" NAME ] ;
+
+table_ref         = table_name [ "AS" NAME ] ;
+table_name        = NAME [ "." NAME ] ;
+
+join_clause       = join_type "JOIN" table_ref "ON" expr ;
+join_type         = "CROSS" | "INNER" | ( "LEFT" [ "OUTER" ] )
+                  | ( "RIGHT" [ "OUTER" ] ) | ( "FULL" [ "OUTER" ] ) ;
+
+where_clause      = "WHERE" expr ;
+group_clause      = "GROUP" "BY" column_ref { "," column_ref } ;
+having_clause     = "HAVING" expr ;
+order_clause      = "ORDER" "BY" order_item { "," order_item } ;
+order_item        = expr [ "ASC" | "DESC" ] ;
+limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
+
+# ── INSERT / UPDATE / DELETE ─────────────────────────────────────────────────
+
+insert_stmt       = "INSERT" "INTO" NAME
+                    [ "(" NAME { "," NAME } ")" ]
+                    "VALUES" row_value { "," row_value } ;
+row_value         = "(" expr { "," expr } ")" ;
+
+update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
+                    [ where_clause ] ;
+assignment        = NAME "=" expr ;
+
+delete_stmt       = "DELETE" "FROM" NAME [ where_clause ] ;
+
+# ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
+
+create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
+                    "(" col_def { "," col_def } ")" ;
+col_def           = NAME NAME { col_constraint } ;
+col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
+                  | "UNIQUE" | ( "DEFAULT" primary ) ;
+
+drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
+
+# ── Expressions ───────────────────────────────────────────────────────────────
+
+expr              = or_expr ;
+or_expr           = and_expr { "OR" and_expr } ;
+and_expr          = not_expr { "AND" not_expr } ;
+not_expr          = "NOT" not_expr | comparison ;
+comparison        = additive [ cmp_op additive
+                  | "BETWEEN" additive "AND" additive
+                  | "NOT" "BETWEEN" additive "AND" additive
+                  | "IN" "(" value_list ")"
+                  | "NOT" "IN" "(" value_list ")"
+                  | "LIKE" additive
+                  | "NOT" "LIKE" additive
+                  | "IS" "NULL"
+                  | "IS" "NOT" "NULL" ] ;
+
+cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
+additive          = multiplicative { ( "+" | "-" ) multiplicative } ;
+multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
+unary             = "-" unary | primary ;
+primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
+                  | function_call | column_ref | "(" expr ")" ;
+
+column_ref        = NAME [ "." NAME ] ;
+function_call     = NAME "(" ( STAR | [ value_list ] ) ")" ;
+value_list        = expr { "," expr } ;

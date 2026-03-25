@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-23
+
+### Added — Lattice v2 Features
+
+- **New error types**: `MaxIterationError`, `ExtendTargetNotFoundError`,
+  `RangeError`, `ZeroDivisionInExpressionError` for v2 constructs
+- **Scope.set_global/3**: Walk up the scope chain and bind a variable in
+  the root scope (implements the `!global` flag)
+- **`{:map, items}` value type**: Ordered key-value maps as first-class
+  Lattice values with `map_get`, `map_keys`, `map_values`, `map_has_key?`,
+  `map_merge`, `map_remove` operations
+- **Color operations**: `color_to_rgb/1`, `color_from_rgb/4`,
+  `color_to_hsl/1`, `color_from_hsl/4` for HSL/RGB conversion
+- **Values.divide/2**: Division for number, dimension, and percentage types
+- **Values.type_name_of/1** and **Values.get_numeric_value/1** helpers
+- **Builtins module** with 31 built-in functions:
+  - Map: `map-get`, `map-keys`, `map-values`, `map-has-key`, `map-merge`,
+    `map-remove`
+  - Color: `lighten`, `darken`, `saturate`, `desaturate`, `adjust-hue`,
+    `complement`, `mix`, `rgba`, `red`, `green`, `blue`, `hue`,
+    `saturation`, `lightness`
+  - List: `nth`, `length`, `join`, `append`, `index`
+  - Type: `type-of`, `unit`, `unitless`, `comparable`
+  - Math: `math.div`, `math.floor`, `math.ceil`, `math.round`, `math.abs`,
+    `math.min`, `math.max`
+- **Transformer v2 features**:
+  - `!default` and `!global` variable flags at top-level and block-level
+  - `@while` loops with max-iteration guard (default 1000)
+  - `@content` blocks for mixins (content block passed at `@include` site)
+  - `@at-root` directive (hoists rules to stylesheet root in Pass 3)
+  - `@extend` directive with placeholder selector removal in Pass 3
+  - Property nesting (`font: { size: 14px; weight: bold; }`)
+  - Variables in selectors (`.col-$i` resolves `$i` in selector context)
+  - Built-in function dispatch (user-defined functions shadow built-ins)
+
+### Changed
+
+- State struct extended with `content_block_stack`, `content_scope_stack`,
+  `extend_map`, `at_root_rules`, `max_while_iterations`
+- `collect_variable/2` and `expand_variable_declaration/2` now parse
+  `BANG_DEFAULT`/`BANG_GLOBAL` tokens and `variable_flag` AST nodes
+- `expand_include/3` now detects trailing content blocks and pushes them
+  onto the content stack for `@content` resolution
+- `expand_function_call/4` now checks the Builtins registry before
+  falling through to CSS passthrough
+- `expand_control/3` now dispatches `while_directive` to `expand_while/3`
+- Pass 3 now removes placeholder-only rules and splices `@at-root` rules
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

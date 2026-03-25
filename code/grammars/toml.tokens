@@ -1,4 +1,5 @@
 # Token definitions for TOML (v1.0.0 — https://toml.io/en/v1.0.0)
+# @version 1
 #
 # TOML tokenization requires careful ordering because many patterns overlap:
 # multi-line strings vs single-line, dates vs bare keys, floats vs integers.

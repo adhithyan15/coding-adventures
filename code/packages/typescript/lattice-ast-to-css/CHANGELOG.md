@@ -40,6 +40,7 @@ All notable changes to this package will be documented in this file.
 - `divideValues(left, right)` exported from the package — divides two `LatticeValue` operands with
   the same unit rules as `multiplyValues`, raising `ZeroDivisionInExpressionError` on a zero divisor.
 
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

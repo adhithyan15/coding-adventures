@@ -23,7 +23,7 @@ describe("seedTemplates", () => {
   let s: Store<AppState>;
 
   beforeEach(() => {
-    s = new Store<AppState>({ templates: [], instances: [] }, reducer);
+    s = new Store<AppState>({ templates: [], instances: [], todos: [] }, reducer);
     seedTemplates(s);
   });
 

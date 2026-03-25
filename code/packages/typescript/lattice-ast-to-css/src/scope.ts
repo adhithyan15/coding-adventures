@@ -163,6 +163,37 @@ export class ScopeChain {
   }
 
   /**
+   * Bind a name to a value in the root (global) scope.
+   *
+   * Walks up the parent chain to find the root scope (the one with
+   * no parent), then sets the binding there. This implements the
+   * !global flag in Lattice variable declarations.
+   *
+   * When !global is used inside a deeply nested scope (e.g., inside
+   * a mixin inside a @for loop), the variable is set at the top level,
+   * making it visible everywhere:
+   *
+   *     $theme: light;
+   *
+   *     @mixin set-dark {
+   *         $theme: dark !global;
+   *         // Sets $theme in the root scope, not the mixin scope
+   *     }
+   *
+   * @param name - The variable name to bind globally.
+   * @param value - The value to associate with the name.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setGlobal(name: string, value: any): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let root: ScopeChain = this;
+    while (root.parent !== null) {
+      root = root.parent;
+    }
+    root.set(name, value);
+  }
+
+  /**
    * Create a new child scope with self as parent.
    *
    * The child inherits all bindings from the parent chain via get(),

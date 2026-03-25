@@ -340,3 +340,110 @@ func NewMissingReturnError(name string, line, col int) *MissingReturnError {
 		Name: name,
 	}
 }
+
+// ============================================================================
+// Lattice v2: New Error Types
+// ============================================================================
+//
+// These errors support features introduced in Lattice v2:
+//   - @while loops (MaxIterationError)
+//   - @extend directive (ExtendTargetNotFoundError)
+//   - Built-in functions (RangeError, ZeroDivisionInExpressionError)
+
+// MaxIterationError is raised when a @while loop exceeds the maximum iteration count.
+//
+// The max-iteration guard prevents infinite loops from consuming all CPU at
+// compile time. Lattice sets a configurable limit (default: 1000). If a @while
+// loop's condition remains truthy after this many iterations, compilation halts.
+//
+// Example:
+//
+//	$i: 1;
+//	@while $i <= 10 {
+//	    // forgot to increment $i — infinite loop
+//	    .item { display: block; }
+//	}
+type MaxIterationError struct {
+	LatticeError
+	MaxIterations int
+}
+
+// NewMaxIterationError creates a MaxIterationError.
+func NewMaxIterationError(maxIterations, line, col int) *MaxIterationError {
+	return &MaxIterationError{
+		LatticeError: LatticeError{
+			Message: fmt.Sprintf("@while loop exceeded maximum iteration count (%d)", maxIterations),
+			Line:    line,
+			Column:  col,
+		},
+		MaxIterations: maxIterations,
+	}
+}
+
+// ExtendTargetNotFoundError is raised when @extend references a selector
+// not found anywhere in the stylesheet.
+//
+// Example:
+//
+//	.success {
+//	    @extend %message-shared;  // Error if %message-shared is never defined
+//	}
+type ExtendTargetNotFoundError struct {
+	LatticeError
+	Target string
+}
+
+// NewExtendTargetNotFoundError creates an ExtendTargetNotFoundError.
+func NewExtendTargetNotFoundError(target string, line, col int) *ExtendTargetNotFoundError {
+	return &ExtendTargetNotFoundError{
+		LatticeError: LatticeError{
+			Message: fmt.Sprintf("@extend target '%s' was not found in the stylesheet", target),
+			Line:    line,
+			Column:  col,
+		},
+		Target: target,
+	}
+}
+
+// RangeError is raised when a value is outside the valid range for an operation.
+//
+// Used by built-in functions that require bounded inputs:
+//   - nth($list, $n) — index must be >= 1 and <= list length
+//   - lighten($color, $amount) — amount must be between 0% and 100%
+//   - mix($c1, $c2, $weight) — weight must be between 0% and 100%
+type RangeError struct {
+	LatticeError
+}
+
+// NewRangeError creates a RangeError with the given message.
+func NewRangeError(message string, line, col int) *RangeError {
+	return &RangeError{
+		LatticeError: LatticeError{
+			Message: message,
+			Line:    line,
+			Column:  col,
+		},
+	}
+}
+
+// ZeroDivisionInExpressionError is raised when math.div() encounters a zero divisor.
+//
+// Division by zero is undefined. Unlike CSS calc() which defers evaluation to
+// the browser, Lattice evaluates math.div() at compile time and must reject
+// zero divisors.
+//
+// Example: math.div(100px, 0)
+type ZeroDivisionInExpressionError struct {
+	LatticeError
+}
+
+// NewZeroDivisionInExpressionError creates a ZeroDivisionInExpressionError.
+func NewZeroDivisionInExpressionError(line, col int) *ZeroDivisionInExpressionError {
+	return &ZeroDivisionInExpressionError{
+		LatticeError: LatticeError{
+			Message: "Division by zero",
+			Line:    line,
+			Column:  col,
+		},
+	}
+}

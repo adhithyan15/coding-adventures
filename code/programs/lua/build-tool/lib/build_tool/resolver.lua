@@ -368,6 +368,48 @@ end
 -- =========================================================================
 -- Rosetta Stone: ecosystem name → internal package name
 -- =========================================================================
+-- Perl dependency parsing
+-- =========================================================================
+
+--- Extract internal dependencies from a Perl cpanfile.
+--
+-- A cpanfile declares dependencies with one `requires` per line:
+--
+--     requires 'coding-adventures-logic-gates';
+--     requires 'coding-adventures-bitset', '>= 0.01';
+--
+-- We scan for lines matching `requires 'coding-adventures-...'` and map
+-- them to internal package names. External deps are silently skipped.
+--
+-- @param pkg table The package record.
+-- @param known_names table Mapping from CPAN dist name to package name.
+-- @return table List of internal dependency package names.
+local function parse_perl_deps(pkg, known_names)
+    local text = read_file(pkg.path .. "/cpanfile")
+    if not text then return {} end
+
+    local deps = {}
+
+    for line in text:gmatch("[^\n]+") do
+        local trimmed = line:match("^%s*(.-)%s*$")
+
+        -- Skip blank lines and comments.
+        if trimmed ~= "" and not trimmed:match("^#") then
+            -- Match: requires 'coding-adventures-foo' or requires "coding-adventures-foo"
+            local dep_kebab = trimmed:match("requires%s+['\"]coding%-adventures%-([^'\"]+)['\"]")
+            if dep_kebab then
+                local dep_name = "coding-adventures-" .. dep_kebab:lower()
+                if known_names[dep_name] then
+                    deps[#deps + 1] = known_names[dep_name]
+                end
+            end
+        end
+    end
+
+    return deps
+end
+
+-- =========================================================================
 
 --- Build a mapping from ecosystem-specific dependency names to internal
 -- package names.
@@ -427,6 +469,12 @@ function Resolver.build_known_names(packages)
             -- Lua dirs use underscores, rockspec names use hyphens.
             local rockspec_name = "coding-adventures-" .. basename:gsub("_", "-")
             known[rockspec_name] = pkg.name
+
+        elseif pkg.language == "perl" then
+            -- Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
+            -- This matches the Python convention exactly.
+            local cpan_name = "coding-adventures-" .. basename
+            known[cpan_name] = pkg.name
         end
     end
 
@@ -465,6 +513,7 @@ function Resolver.resolve_dependencies(packages)
         rust       = parse_rust_deps,
         elixir     = parse_elixir_deps,
         lua        = parse_lua_deps,
+        perl       = parse_perl_deps,
     }
 
     -- Parse dependencies for each package and add edges.

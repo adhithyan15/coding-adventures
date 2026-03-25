@@ -1,0 +1,8 @@
+[package]
+name = "document-ast-to-html"
+version = "0.1.0"
+edition = "2021"
+description = "Render a Document AST to an HTML string — CommonMark-compliant HTML back-end"
+
+[dependencies]
+document-ast = { path = "../document-ast" }

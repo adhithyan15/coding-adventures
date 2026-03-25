@@ -26,7 +26,7 @@ import { initI18n } from "@coding-adventures/ui-components";
 import { IndexedDBStorage, MemoryStorage } from "@coding-adventures/indexeddb";
 import type { KVStorage } from "@coding-adventures/indexeddb";
 import { store } from "./state.js";
-import { stateLoadAction, STATE_LOAD } from "./actions.js";
+import { stateLoadAction } from "./actions.js";
 import { createPersistenceMiddleware } from "./persistence.js";
 import { seedTemplates } from "./seed.js";
 import { App } from "./App.js";

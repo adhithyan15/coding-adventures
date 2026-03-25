@@ -49,13 +49,14 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       # css_ast is a clean ASTNode tree with no Lattice nodes
   """
 
-  alias CodingAdventures.LatticeAstToCss.{Scope, Values, Evaluator}
+  alias CodingAdventures.LatticeAstToCss.{Scope, Values, Evaluator, Builtins}
   alias CodingAdventures.LatticeAstToCss.Errors.{
     UndefinedVariableError,
     UndefinedMixinError,
     CircularReferenceError,
     WrongArityError,
-    MissingReturnError
+    MissingReturnError,
+    MaxIterationError
   }
   alias CodingAdventures.Parser.ASTNode
   alias CodingAdventures.Lexer.Token
@@ -109,6 +110,9 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
   # - `mixin_stack` tracks current call stack for cycle detection
   # - `function_stack` tracks function call stack for cycle detection
 
+  # Maximum iterations for @while loops (prevents infinite loops)
+  @max_while_iterations 1000
+
   defmodule State do
     @moduledoc false
     defstruct [
@@ -116,7 +120,16 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       mixins: %{},
       functions: %{},
       mixin_stack: [],
-      function_stack: []
+      function_stack: [],
+      # Lattice v2: @content block tracking
+      content_block_stack: [],   # stack of content blocks (or nil)
+      content_scope_stack: [],   # stack of caller scopes for @content
+      # Lattice v2: @extend tracking
+      extend_map: %{},           # target selector -> list of extending selectors
+      # Lattice v2: @at-root hoisted rules
+      at_root_rules: [],         # rules collected from @at-root
+      # Lattice v2: max while iterations
+      max_while_iterations: 1000
     ]
   end
 
@@ -149,16 +162,30 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
   @spec transform(ASTNode.t()) :: {:ok, ASTNode.t()} | {:error, String.t()}
   def transform(%ASTNode{} = ast) do
     try do
-      state = %State{variables: Scope.new()}
+      state = %State{variables: Scope.new(), max_while_iterations: @max_while_iterations}
 
-      # Pass 1: collect symbols (mutates a copy of the AST's children)
+      # Pass 1: collect symbols (variables, mixins, functions, @extend)
       {pruned_ast, state} = collect_symbols(ast, state)
 
       # Pass 2: expand Lattice constructs
-      {expanded_ast, _state} = expand_node(pruned_ast, state.variables, state)
+      {expanded_ast, final_state} = expand_node(pruned_ast, state.variables, state)
 
-      # Pass 3: cleanup (remove empty nodes)
+      # Pass 3: cleanup + @extend selector merging + @at-root hoisting
       cleaned = cleanup(expanded_ast)
+
+      # Remove placeholder-only rules if @extend was used
+      cleaned = if map_size(final_state.extend_map) > 0 do
+        remove_placeholder_rules(cleaned)
+      else
+        cleaned
+      end
+
+      # Splice @at-root hoisted rules into root stylesheet
+      cleaned = if final_state.at_root_rules != [] do
+        splice_at_root_rules(cleaned, final_state.at_root_rules)
+      else
+        cleaned
+      end
 
       {:ok, cleaned}
     catch
@@ -228,18 +255,67 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
 
   defp try_collect_definition(_, _state), do: :not_definition
 
-  # variable_declaration = VARIABLE COLON value_list SEMICOLON ;
+  # variable_declaration = VARIABLE COLON value_list { variable_flag } SEMICOLON ;
+  # Lattice v2: handles !default and !global flags
   defp collect_variable(%ASTNode{children: children}, state) do
     name = find_token_value(children, "VARIABLE")
     value_node = find_child_by_rule(children, "value_list")
+    {is_default, is_global} = extract_variable_flags(children)
 
     if name && value_node do
-      new_vars = Scope.set(state.variables, name, value_node)
-      %{state | variables: new_vars}
+      cond do
+        is_default and is_global ->
+          # Check global scope only -- if not defined there, set globally
+          root = get_root_scope(state.variables)
+          if Scope.get(root, name) == :error do
+            new_vars = Scope.set_global(state.variables, name, value_node)
+            %{state | variables: new_vars}
+          else
+            state
+          end
+        is_default ->
+          # Only set if not already defined anywhere
+          if Scope.get(state.variables, name) == :error do
+            new_vars = Scope.set(state.variables, name, value_node)
+            %{state | variables: new_vars}
+          else
+            state
+          end
+        is_global ->
+          # Always set in global scope
+          new_vars = Scope.set_global(state.variables, name, value_node)
+          %{state | variables: new_vars}
+        true ->
+          new_vars = Scope.set(state.variables, name, value_node)
+          %{state | variables: new_vars}
+      end
     else
       state
     end
   end
+
+  # Extract !default and !global flags from variable_declaration children
+  defp extract_variable_flags(children) do
+    Enum.reduce(children, {false, false}, fn child, {is_def, is_glob} ->
+      case child do
+        %Token{type: "BANG_DEFAULT"} -> {true, is_glob}
+        %Token{type: "BANG_GLOBAL"} -> {is_def, true}
+        %ASTNode{rule_name: "variable_flag", children: flag_children} ->
+          Enum.reduce(flag_children, {is_def, is_glob}, fn fc, {d, g} ->
+            case fc do
+              %Token{type: "BANG_DEFAULT"} -> {true, g}
+              %Token{type: "BANG_GLOBAL"} -> {d, true}
+              _ -> {d, g}
+            end
+          end)
+        _ -> {is_def, is_glob}
+      end
+    end)
+  end
+
+  # Walk up the scope chain to find the root (global) scope
+  defp get_root_scope(%Scope{parent: nil} = scope), do: scope
+  defp get_root_scope(%Scope{parent: parent}), do: get_root_scope(parent)
 
   # mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
   defp collect_mixin(%ASTNode{children: children}, state) do
@@ -351,6 +427,10 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
 
       "function_args" ->
         expand_children(node, scope, state)
+
+      # Lattice v2: resolve variables in selector positions
+      r when r in ["compound_selector", "simple_selector", "class_selector"] ->
+        expand_selector_with_vars(node, scope, state)
 
       # ---------------------------------------------------------------------------
       # Top-level Lattice nodes (in stylesheet context — not inside blocks)
@@ -557,6 +637,11 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
             {new_item, new_st}
         end
 
+      # Lattice v2: handle property_nesting inside declaration_or_nested
+      %ASTNode{rule_name: "declaration_or_nested", children: [%ASTNode{rule_name: "property_nesting"} = pn | _]} ->
+        {result, new_st} = expand_property_nesting(pn, scope, state)
+        {result, new_st}
+
       _ ->
         expand_children(item, scope, state)
     end
@@ -604,18 +689,68 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
     expand_control(node, scope, state)
   end
 
+  # Lattice v2: @content directive
+  defp expand_lattice_block_item(%ASTNode{rule_name: "content_directive"}, _scope, state) do
+    expand_content(state)
+  end
+
+  # Lattice v2: @at-root directive
+  defp expand_lattice_block_item(%ASTNode{rule_name: "at_root_directive"} = node, scope, state) do
+    expand_at_root(node, scope, state)
+  end
+
+  # Lattice v2: @extend directive
+  defp expand_lattice_block_item(%ASTNode{rule_name: "extend_directive"} = node, scope, state) do
+    new_state = collect_extend(node, scope, state)
+    {nil, new_state}
+  end
+
   defp expand_lattice_block_item(node, scope, state) do
     expand_children(node, scope, state)
   end
 
   # Expand a variable_declaration by binding in the current scope.
   # Returns the updated scope (the node is not added to output).
+  # Lattice v2: handles !default and !global flags.
   defp expand_variable_declaration(%ASTNode{children: children}, scope) do
     name = find_token_value(children, "VARIABLE")
     value_node = find_child_by_rule(children, "value_list")
+    {is_default, is_global} = extract_variable_flags(children)
 
     if name && value_node do
-      Scope.set(scope, name, value_node)
+      # Try to evaluate the value as an expression (e.g. $i + 1 → {:number, 2}).
+      # This is critical for @while loops: without it, $i: $i + 1
+      # stores unevaluated AST tokens instead of the computed number, causing
+      # the loop condition to never change and looping forever.
+      stored_value =
+        try do
+          evaluated = Evaluator.evaluate(deep_copy(value_node), scope)
+          if is_tuple(evaluated) or evaluated == :null, do: evaluated, else: value_node
+        rescue
+          _ -> value_node
+        catch
+          _, _ -> value_node
+        end
+
+      cond do
+        is_default and is_global ->
+          root = get_root_scope(scope)
+          if Scope.get(root, name) == :error do
+            Scope.set_global(scope, name, stored_value)
+          else
+            scope
+          end
+        is_default ->
+          if Scope.get(scope, name) == :error do
+            Scope.set(scope, name, stored_value)
+          else
+            scope
+          end
+        is_global ->
+          Scope.set_global(scope, name, stored_value)
+        true ->
+          Scope.set(scope, name, stored_value)
+      end
     else
       scope
     end
@@ -668,16 +803,26 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
         func_name = String.trim_trailing(func_name_with_paren, "(")
 
         cond do
-          css_function?(func_name) ->
-            # CSS built-in — expand args but keep structure
-            expand_children(node, scope, state)
-
+          # User-defined function ALWAYS takes priority — even over CSS built-ins
+          # like scale(), translate(), etc. If the user defines @function scale(),
+          # their definition wins. This matches Sass behavior.
           Map.has_key?(state.functions, func_name) ->
-            # Lattice function — evaluate and replace
             evaluate_function_call(func_name, node, scope, state)
 
+          # CSS built-in that is NOT also a Lattice built-in — pass through
+          css_function?(func_name) and not Builtins.builtin?(func_name) ->
+            expand_children(node, scope, state)
+
+          # Lattice v2 built-in function
+          Builtins.builtin?(func_name) ->
+            evaluate_builtin_function(func_name, node, scope, state)
+
+          # CSS built-in that overlaps with Lattice built-in names
+          css_function?(func_name) ->
+            expand_children(node, scope, state)
+
           true ->
-            # Unknown function — pass through (might be a CSS function we don't recognize)
+            # Unknown function — pass through
             expand_children(node, scope, state)
         end
     end
@@ -690,7 +835,7 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
   # include_directive = "@include" FUNCTION include_args RPAREN ( SEMICOLON | block )
   #                   | "@include" IDENT ( SEMICOLON | block ) ;
   defp expand_include(%ASTNode{children: children}, scope, state) do
-    # Extract mixin name and args
+    # Extract mixin name, args, and content block
     mixin_name =
       case find_token(children, "FUNCTION") do
         nil ->
@@ -699,6 +844,9 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
         %Token{value: name_with_paren} ->
           String.trim_trailing(name_with_paren, "(")
       end
+
+    # Lattice v2: detect content block (trailing block after args)
+    content_block = find_child_by_rule(children, "block")
 
     if is_nil(mixin_name) do
       {[], state}
@@ -719,7 +867,6 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       raw_args = if args_node, do: parse_include_args(args_node), else: []
 
       # Expand variable references in the args using the current (caller) scope.
-      # e.g. @include button($primary) — $primary must resolve before binding.
       args = Enum.map(raw_args, fn arg ->
         {expanded_arg, _} = expand_value_list(arg, scope, state)
         expanded_arg
@@ -737,14 +884,23 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       mixin_scope = bind_params(mixin_def.params, mixin_def.defaults, args, scope)
 
       # Track call stack for cycle detection
-      new_state = %{state | mixin_stack: [mixin_name | state.mixin_stack]}
+      # Lattice v2: push content block and caller scope for @content
+      new_state = %{state |
+        mixin_stack: [mixin_name | state.mixin_stack],
+        content_block_stack: [content_block | state.content_block_stack],
+        content_scope_stack: [scope | state.content_scope_stack]
+      }
 
       # Clone and expand the mixin body
       body_clone = deep_copy(mixin_def.body)
       {expanded_body, _new_state2} = expand_node(body_clone, mixin_scope, new_state)
 
-      # Pop the call stack after expansion
-      final_state = %{state | mixin_stack: state.mixin_stack}
+      # Pop the call stack and content stacks after expansion
+      final_state = %{state |
+        mixin_stack: state.mixin_stack,
+        content_block_stack: state.content_block_stack,
+        content_scope_stack: state.content_scope_stack
+      }
 
       # Extract the block_contents children (the actual CSS to splice in)
       items = extract_block_contents_children(expanded_body)
@@ -828,12 +984,14 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
   # Control Flow Expansion
   # ---------------------------------------------------------------------------
 
-  # lattice_control = if_directive | for_directive | each_directive ;
+  # lattice_control = if_directive | for_directive | each_directive | while_directive ;
+  # Lattice v2 adds while_directive.
   defp expand_control(%ASTNode{children: [inner | _]}, scope, state) do
     case inner do
       %ASTNode{rule_name: "if_directive"} -> expand_if(inner, scope, state)
       %ASTNode{rule_name: "for_directive"} -> expand_for(inner, scope, state)
       %ASTNode{rule_name: "each_directive"} -> expand_each(inner, scope, state)
+      %ASTNode{rule_name: "while_directive"} -> expand_while(inner, scope, state)
       _ -> {[], state}
     end
   end
@@ -1293,6 +1451,388 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       children: [token]
     }
   end
+
+  # =====================================================================
+  # Lattice v2: @while Loops
+  # =====================================================================
+
+  # while_directive = "@while" lattice_expression block ;
+  # Evaluates condition, expands body, repeats. Uses enclosing scope
+  # (variable mutations persist across iterations).
+  defp expand_while(%ASTNode{children: children}, scope, state) do
+    condition = find_child_by_rule(children, "lattice_expression")
+    block = find_child_by_rule(children, "block")
+
+    if is_nil(condition) or is_nil(block) do
+      {[], state}
+    else
+      do_while_loop(condition, block, scope, state, 0, [])
+    end
+  end
+
+  defp do_while_loop(condition, block, scope, state, iteration, acc) do
+    cond_value = Evaluator.evaluate(deep_copy(condition), scope)
+
+    if not Values.truthy?(cond_value) do
+      {acc, state}
+    else
+      new_iteration = iteration + 1
+      if new_iteration > state.max_while_iterations do
+        throw({:lattice_error, MaxIterationError.new(state.max_while_iterations)})
+      end
+
+      {items, new_state} = expand_block_to_items(deep_copy(block), scope, state)
+      # Update the scope from state (variable mutations inside the body)
+      new_scope = new_state.variables
+      do_while_loop(condition, block, new_scope, new_state, new_iteration, acc ++ items)
+    end
+  end
+
+  # =====================================================================
+  # Lattice v2: $var in Selectors
+  # =====================================================================
+
+  # Resolve VARIABLE tokens in selector positions to their string values.
+  defp expand_selector_with_vars(%ASTNode{children: children} = node, scope, state) do
+    new_children = Enum.map(children, fn child ->
+      case child do
+        %Token{type: "VARIABLE", value: var_name} ->
+          case Scope.get(scope, var_name) do
+            :error ->
+              throw({:lattice_error, UndefinedVariableError.new(
+                var_name,
+                Map.get(child, :line, 0),
+                Map.get(child, :column, 0)
+              )})
+            {:ok, value} ->
+              css_text = cond do
+                is_tuple(value) or value == :null -> Values.to_css(value)
+                match?(%ASTNode{}, value) ->
+                  v = extract_value_from_ast_node(value, scope)
+                  Values.to_css(v)
+                true -> to_string(value)
+              end
+              css_text = css_text |> String.trim("\"") |> String.trim("'")
+              make_synthetic_token(css_text, child)
+          end
+
+        %ASTNode{} ->
+          {expanded, _} = expand_node(child, scope, state)
+          expanded
+
+        _ -> child
+      end
+    end)
+
+    {%{node | children: new_children}, state}
+  end
+
+  # =====================================================================
+  # Lattice v2: @content Blocks
+  # =====================================================================
+
+  # Replaces @content; with the content block from the current @include call.
+  # The content block is evaluated in the caller's scope.
+  defp expand_content(state) do
+    case state.content_block_stack do
+      [] -> {nil, state}
+      [nil | _] -> {nil, state}
+      [content_block | _] ->
+        caller_scope = case state.content_scope_stack do
+          [sc | _] -> sc
+          [] -> state.variables
+        end
+        {items, new_state} = expand_block_to_items(deep_copy(content_block), caller_scope, state)
+        {items, new_state}
+    end
+  end
+
+  # =====================================================================
+  # Lattice v2: @at-root
+  # =====================================================================
+
+  # Rules inside @at-root are hoisted to the stylesheet root level during Pass 3.
+  defp expand_at_root(%ASTNode{children: children}, scope, state) do
+    block = find_child_by_rule(children, "block")
+    selector_list = find_child_by_rule(children, "selector_list")
+
+    if is_nil(block) do
+      {nil, state}
+    else
+      if selector_list do
+        # Inline form: @at-root .selector { ... }
+        {expanded_sel, _} = expand_node(deep_copy(selector_list), scope, state)
+        {expanded_block, _} = expand_node(deep_copy(block), scope, state)
+        qr = %ASTNode{rule_name: "qualified_rule", children: [expanded_sel, expanded_block]}
+        new_state = %{state | at_root_rules: state.at_root_rules ++ [qr]}
+        {nil, new_state}
+      else
+        # Block form: @at-root { ... multiple rules ... }
+        {items, _} = expand_block_to_items(deep_copy(block), scope, state)
+        new_state = %{state | at_root_rules: state.at_root_rules ++ items}
+        {nil, new_state}
+      end
+    end
+  end
+
+  # =====================================================================
+  # Lattice v2: @extend and %placeholder
+  # =====================================================================
+
+  # Collect an @extend directive for later selector merging.
+  defp collect_extend(%ASTNode{children: children}, _scope, state) do
+    target = Enum.reduce(children, "", fn child, acc ->
+      case child do
+        %ASTNode{rule_name: "extend_target", children: target_children} ->
+          Enum.map_join(target_children, "", fn
+            %Token{value: v} -> v
+            _ -> ""
+          end)
+        _ -> acc
+      end
+    end)
+
+    if target != "" do
+      new_map = Map.update(state.extend_map, target, [], fn existing -> existing end)
+      %{state | extend_map: new_map}
+    else
+      state
+    end
+  end
+
+  # =====================================================================
+  # Lattice v2: Property Nesting
+  # =====================================================================
+
+  # property_nesting = property COLON block ;
+  # Flattens nested property declarations by prepending parent property name.
+  defp expand_property_nesting(%ASTNode{children: children}, scope, state) do
+    parent_prop = Enum.reduce(children, "", fn child, acc ->
+      case child do
+        %ASTNode{rule_name: "property", children: [%Token{value: v} | _]} -> v
+        _ -> acc
+      end
+    end)
+
+    block = find_child_by_rule(children, "block")
+
+    if parent_prop == "" or is_nil(block) do
+      {[], state}
+    else
+      {expanded_block, _} = expand_node(deep_copy(block), scope, state)
+      result = flatten_nested_props(expanded_block, parent_prop)
+      {result, state}
+    end
+  end
+
+  defp flatten_nested_props(%ASTNode{children: children}, prefix) do
+    Enum.flat_map(children, fn child ->
+      case child do
+        %ASTNode{rule_name: "block_contents"} ->
+          flatten_nested_props(child, prefix)
+        %ASTNode{rule_name: "block_item", children: [inner | _]} ->
+          flatten_nested_block_item(inner, prefix)
+        %ASTNode{rule_name: "declaration"} ->
+          [rewrite_declaration_prefix(child, prefix)]
+        _ -> []
+      end
+    end)
+  end
+
+  defp flatten_nested_block_item(%ASTNode{rule_name: "declaration_or_nested", children: [inner | _]}, prefix) do
+    case inner do
+      %ASTNode{rule_name: "declaration"} ->
+        [rewrite_declaration_prefix(inner, prefix)]
+      %ASTNode{rule_name: "property_nesting"} ->
+        expand_property_nesting_with_prefix(inner, prefix)
+      _ -> []
+    end
+  end
+
+  defp flatten_nested_block_item(_, _prefix), do: []
+
+  defp rewrite_declaration_prefix(%ASTNode{children: children} = decl, prefix) do
+    new_children = Enum.map(children, fn child ->
+      case child do
+        %ASTNode{rule_name: "property", children: [%Token{value: old_name} = t | rest]} ->
+          %{child | children: [%{t | value: "#{prefix}-#{old_name}"} | rest]}
+        _ -> child
+      end
+    end)
+    %{decl | children: new_children}
+  end
+
+  defp expand_property_nesting_with_prefix(%ASTNode{children: children}, prefix) do
+    sub_prop = Enum.reduce(children, "", fn child, acc ->
+      case child do
+        %ASTNode{rule_name: "property", children: [%Token{value: v} | _]} -> v
+        _ -> acc
+      end
+    end)
+
+    block = find_child_by_rule(children, "block")
+    new_prefix = "#{prefix}-#{sub_prop}"
+
+    if block do
+      flatten_nested_props(block, new_prefix)
+    else
+      []
+    end
+  end
+
+  # =====================================================================
+  # Lattice v2: Built-in Function Evaluation
+  # =====================================================================
+
+  defp evaluate_builtin_function(func_name, %ASTNode{children: children} = node, scope, state) do
+    # Collect and evaluate arguments
+    args_node = find_child_by_rule(children, "function_args")
+    args = if args_node do
+      collect_builtin_args(args_node, scope)
+    else
+      []
+    end
+
+    case Builtins.call(func_name, args) do
+      {:ok, :null} ->
+        # Null result -- pass through as CSS function
+        expand_children(node, scope, state)
+      {:ok, result} ->
+        css_text = Values.to_css(result)
+        {make_value_node(css_text, node), state}
+      {:error, _msg} ->
+        # On error, pass through as CSS
+        expand_children(node, scope, state)
+      :not_found ->
+        expand_children(node, scope, state)
+    end
+  end
+
+  # Collect evaluated arguments from function_args for built-in calls
+  defp collect_builtin_args(%ASTNode{children: children}, scope) do
+    # Split on COMMA tokens, evaluate each group
+    {args, current} = Enum.reduce(children, {[], []}, fn child, {args_acc, current_acc} ->
+      case child do
+        %Token{type: "COMMA"} ->
+          arg = evaluate_arg_group(current_acc, scope)
+          {[arg | args_acc], []}
+        %ASTNode{rule_name: "function_arg", children: arg_children} ->
+          # Check for COMMA inside function_arg
+          {sub_args, sub_current} = Enum.reduce(arg_children, {[], current_acc}, fn ac, {sa, sc} ->
+            case ac do
+              %Token{type: "COMMA"} ->
+                arg = evaluate_arg_group(sc, scope)
+                {[arg | sa], []}
+              _ ->
+                {sa, sc ++ [ac]}
+            end
+          end)
+          {sub_args ++ args_acc, sub_current}
+        _ ->
+          {args_acc, current_acc ++ [child]}
+      end
+    end)
+
+    final_args = if current != [] do
+      [evaluate_arg_group(current, scope) | args]
+    else
+      args
+    end
+
+    Enum.reverse(final_args)
+  end
+
+  defp evaluate_arg_group([], _scope), do: :null
+
+  defp evaluate_arg_group([single], scope) do
+    case single do
+      %Token{type: "VARIABLE", value: var_name} ->
+        case Scope.get(scope, var_name) do
+          {:ok, val} when is_tuple(val) or val == :null -> val
+          {:ok, %ASTNode{} = node} -> extract_value_from_ast_node(node, scope)
+          _ -> Values.token_to_value(single)
+        end
+      %Token{} -> Values.token_to_value(single)
+      %ASTNode{rule_name: "lattice_expression"} -> Evaluator.evaluate(single, scope)
+      %ASTNode{} -> Evaluator.evaluate(single, scope)
+      _ -> :null
+    end
+  end
+
+  defp evaluate_arg_group([first | _], scope) do
+    evaluate_arg_group([first], scope)
+  end
+
+  # =====================================================================
+  # Lattice v2: @extend Pass 3 — Remove placeholder-only rules
+  # =====================================================================
+
+  defp remove_placeholder_rules(nil), do: nil
+  defp remove_placeholder_rules(%Token{} = t), do: t
+
+  defp remove_placeholder_rules(%ASTNode{children: children} = node) do
+    new_children =
+      children
+      |> Enum.reject(&placeholder_only_rule?/1)
+      |> Enum.map(&remove_placeholder_rules/1)
+      |> Enum.reject(&is_nil/1)
+
+    %{node | children: new_children}
+  end
+
+  defp remove_placeholder_rules(other), do: other
+
+  defp placeholder_only_rule?(%ASTNode{rule_name: "qualified_rule"} = node) do
+    selector_text = extract_selector_text(node)
+    selectors = selector_text |> String.split(",") |> Enum.map(&String.trim/1) |> Enum.filter(& &1 != "")
+    selectors != [] and Enum.all?(selectors, &String.starts_with?(&1, "%"))
+  end
+
+  defp placeholder_only_rule?(%ASTNode{rule_name: "rule", children: [inner | _]}) do
+    placeholder_only_rule?(inner)
+  end
+
+  defp placeholder_only_rule?(_), do: false
+
+  defp extract_selector_text(%ASTNode{children: children}) do
+    sel_node = find_child_by_rule(children, "selector_list")
+    if sel_node, do: collect_text(sel_node), else: ""
+  end
+
+  defp collect_text(%Token{value: v}), do: v
+
+  defp collect_text(%ASTNode{children: children}) do
+    Enum.map_join(children, " ", &collect_text/1)
+  end
+
+  defp collect_text(_), do: ""
+
+  # =====================================================================
+  # Lattice v2: @at-root Pass 3 — Splice hoisted rules
+  # =====================================================================
+
+  defp splice_at_root_rules(%ASTNode{rule_name: "stylesheet", children: children} = root, rules) do
+    wrapped_rules = Enum.map(rules, fn rule ->
+      case rule do
+        %ASTNode{rule_name: "rule"} -> rule
+        %ASTNode{rule_name: r} when r in ["qualified_rule", "at_rule"] ->
+          %ASTNode{rule_name: "rule", children: [rule]}
+        _ -> rule
+      end
+    end)
+
+    %{root | children: children ++ wrapped_rules}
+  end
+
+  defp splice_at_root_rules(node, _rules), do: node
+
+  # =====================================================================
+  # Lattice v2: property_nesting inside block_item_inner
+  # =====================================================================
+
+  # Update expand_block_item_inner to handle property_nesting inside declaration_or_nested
+  # (This is already handled by the block_item dispatch above, but we need
+  # to also check for property_nesting in the declaration_or_nested path)
 
   # ---------------------------------------------------------------------------
   # Pass 3: Cleanup

@@ -137,16 +137,23 @@ func readPythonDeps(pkgDir string) ([]string, error) {
 	}
 	var deps []string
 	for _, line := range strings.Split(string(data), "\n") {
-		// Look for patterns like: -e ../logic-gates or -e "../logic-gates"
-		idx := strings.Index(line, "-e ../")
-		if idx < 0 {
-			idx = strings.Index(line, "-e \"../")
-		}
-		if idx >= 0 {
+		// Find ALL occurrences of -e ../ on each line (new format puts them all on one line)
+		remaining := line
+		for {
+			idx := strings.Index(remaining, "-e ../")
+			if idx < 0 {
+				idx = strings.Index(remaining, "-e \"../")
+			}
+			if idx < 0 {
+				break
+			}
 			// Extract the path after ../
-			rest := line[idx:]
-			rest = strings.TrimPrefix(rest, "-e ../")
-			rest = strings.TrimPrefix(rest, "-e \"../")
+			rest := remaining[idx:]
+			if strings.HasPrefix(rest, "-e \"../") {
+				rest = rest[7:] // skip `-e "../`
+			} else {
+				rest = rest[6:] // skip `-e ../`
+			}
 			// Take until space, quote, or end
 			dep := ""
 			for _, c := range rest {
@@ -158,6 +165,8 @@ func readPythonDeps(pkgDir string) ([]string, error) {
 			if dep != "" && dep != "." {
 				deps = append(deps, dep)
 			}
+			// Advance past this match
+			remaining = remaining[idx+6:]
 		}
 	}
 	return deps, nil
@@ -489,13 +498,30 @@ class TestVersion:
 
 	// BUILD
 	var buildLines []string
-	buildLines = append(buildLines, "uv venv --quiet --clear")
+	installParts := []string{"python -m pip install"}
 	for _, dep := range orderedDeps {
-		buildLines = append(buildLines, fmt.Sprintf("uv pip install -e ../%s --quiet", dep))
+		installParts = append(installParts, fmt.Sprintf("-e ../%s", dep))
 	}
-	buildLines = append(buildLines, `uv pip install -e ".[dev]" --quiet`)
-	buildLines = append(buildLines, ".venv/bin/python -m pytest tests/ -v")
+	installParts = append(installParts, "-e .[dev]", "--quiet")
+	buildLines = append(buildLines, strings.Join(installParts, " "))
+	buildLines = append(buildLines, "python -m pytest tests/ -v")
 	build := strings.Join(buildLines, "\n") + "\n"
+
+	// BUILD_windows
+	var buildWinLines []string
+	buildWinLines = append(buildWinLines, "uv venv --quiet --clear")
+	if len(orderedDeps) > 0 {
+		winInstallParts := []string{"uv pip install"}
+		for _, dep := range orderedDeps {
+			winInstallParts = append(winInstallParts, fmt.Sprintf("-e ../%s", dep))
+		}
+		winInstallParts = append(winInstallParts, "--quiet")
+		buildWinLines = append(buildWinLines, strings.Join(winInstallParts, " "))
+	}
+	buildWinLines = append(buildWinLines, "uv pip install --no-deps -e .[dev] --quiet")
+	buildWinLines = append(buildWinLines, "uv pip install pytest pytest-cov ruff mypy --quiet")
+	buildWinLines = append(buildWinLines, "uv run --no-project python -m pytest tests/ -v")
+	buildWindows := strings.Join(buildWinLines, "\n") + "\n"
 
 	// Create directories
 	srcDir := filepath.Join(targetDir, "src", snake)
@@ -512,7 +538,8 @@ class TestVersion:
 		filepath.Join("src", snake, "__init__.py"): initPy,
 		filepath.Join("tests", "__init__.py"):      "",
 		filepath.Join("tests", "test_"+snake+".py"): testPy,
-		"BUILD": build,
+		"BUILD":         build,
+		"BUILD_windows": buildWindows,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
@@ -811,30 +838,8 @@ describe("%s", () => {
 });
 `, pkgName)
 
-	// BUILD — chain install transitive deps leaf-to-root
-	var buildLines []string
-	if len(orderedDeps) > 0 {
-		for _, dep := range orderedDeps {
-			buildLines = append(buildLines, fmt.Sprintf("cd ../%s && npm install --silent", dep))
-		}
-		buildLines = append(buildLines, fmt.Sprintf("cd ../%s && npm install --silent", pkgName))
-		build := strings.Join(buildLines, " && \\\n") + "\nnpx vitest run --coverage\n"
-		files := map[string]string{"BUILD": build}
-		// We'll add this to the files map below
-		_ = files
-	}
-
-	var build string
-	if len(orderedDeps) > 0 {
-		var parts []string
-		for _, dep := range orderedDeps {
-			parts = append(parts, fmt.Sprintf("cd ../%s && npm install --silent", dep))
-		}
-		parts = append(parts, fmt.Sprintf("cd ../%s && npm install --silent", pkgName))
-		build = strings.Join(parts, " && \\\n") + "\nnpx vitest run --coverage\n"
-	} else {
-		build = "npm install --silent\nnpx vitest run --coverage\n"
-	}
+	// BUILD — npm ci resolves file: deps transitively
+	build := "npm ci --quiet\nnpx vitest run --coverage\n"
 
 	// Create directories
 	srcDir := filepath.Join(targetDir, "src")

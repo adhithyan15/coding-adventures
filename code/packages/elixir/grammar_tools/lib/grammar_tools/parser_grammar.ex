@@ -18,7 +18,8 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
       {:group, element}                   — ( A ) (grouping)
   """
 
-  defstruct rules: []
+  defstruct rules: [],
+            version: 0
 
   @type grammar_element ::
           {:rule_reference, String.t(), boolean()}
@@ -35,7 +36,7 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
           line_number: pos_integer()
         }
 
-  @type t :: %__MODULE__{rules: [grammar_rule()]}
+  @type t :: %__MODULE__{rules: [grammar_rule()], version: non_neg_integer()}
 
   @doc """
   Parse the text of a `.grammar` file into a `ParserGrammar` struct.
@@ -44,10 +45,39 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
   """
   @spec parse(String.t()) :: {:ok, t()} | {:error, String.t()}
   def parse(source) do
+    # Pre-pass: scan all lines for magic comments before tokenising.
+    #
+    # Magic comments have the form `# @key value` and configure grammar-level
+    # options.  We collect them in a single fold so the tokeniser never needs
+    # to know about them.  The tokeniser already skips every `#`-prefixed
+    # line, so there is no double-handling.
+    #
+    # Currently supported keys:
+    #   @version N  — non-negative integer schema/format version (default 0)
+    #
+    # Unknown keys are silently ignored for forward compatibility.
+    magic_opts =
+      source
+      |> String.split("\n")
+      |> Enum.reduce(%{version: 0}, fn raw_line, opts ->
+        stripped = String.trim(raw_line)
+
+        case Regex.run(~r/^#\s*@(\w+)\s*(.*)$/, stripped) do
+          [_, "version", value] ->
+            case Integer.parse(String.trim(value)) do
+              {n, _} -> %{opts | version: n}
+              :error -> opts
+            end
+
+          _ ->
+            opts
+        end
+      end)
+
     case tokenize(source) do
       {:ok, tokens} ->
         case parse_rules(tokens, []) do
-          {:ok, rules, _rest} -> {:ok, %__MODULE__{rules: rules}}
+          {:ok, rules, _rest} -> {:ok, %__MODULE__{rules: rules, version: magic_opts.version}}
           {:error, msg} -> {:error, msg}
         end
 

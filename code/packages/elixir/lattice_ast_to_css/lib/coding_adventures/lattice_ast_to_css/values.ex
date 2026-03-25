@@ -70,6 +70,7 @@ defmodule CodingAdventures.LatticeAstToCss.Values do
           | {:bool, boolean()}
           | :null
           | {:list, [lattice_value()]}
+          | {:map, [{String.t(), lattice_value()}]}
 
   # ---------------------------------------------------------------------------
   # Truthiness
@@ -250,6 +251,11 @@ defmodule CodingAdventures.LatticeAstToCss.Values do
     Enum.map_join(items, ", ", &to_css/1)
   end
 
+  def to_css({:map, items}) do
+    entries = Enum.map_join(items, ", ", fn {k, v} -> "#{k}: #{to_css(v)}" end)
+    "(#{entries})"
+  end
+
   # ---------------------------------------------------------------------------
   # Arithmetic
   # ---------------------------------------------------------------------------
@@ -410,6 +416,239 @@ defmodule CodingAdventures.LatticeAstToCss.Values do
   end
 
   defp format_number(n) when is_integer(n), do: Integer.to_string(n)
+
+  @doc """
+  Divide two Lattice values.
+
+  - `{:number, a} / {:number, b}` -> `{:number, a/b}`
+  - `{:dimension, a, u} / {:number, b}` -> `{:dimension, a/b, u}`
+  - `{:dimension, a, u} / {:dimension, b, u}` -> `{:number, a/b}` (units cancel)
+  - `{:percentage, a} / {:number, b}` -> `{:percentage, a/b}`
+  """
+  @spec divide(lattice_value(), lattice_value()) :: {:ok, lattice_value()} | {:error, String.t()}
+  def divide(_, {:number, b}) when b == 0, do: {:error, "Division by zero"}
+  def divide({:number, a}, {:number, b}), do: {:ok, {:number, a / b}}
+
+  def divide({:dimension, a, u}, {:number, b}) when b != 0 do
+    {:ok, {:dimension, a / b, u}}
+  end
+
+  def divide({:dimension, a, u}, {:dimension, b, u}) when b != 0 do
+    {:ok, {:number, a / b}}
+  end
+
+  def divide({:percentage, a}, {:number, b}) when b != 0 do
+    {:ok, {:percentage, a / b}}
+  end
+
+  def divide(left, right) do
+    {:error, "Cannot divide '#{to_css(left)}' and '#{to_css(right)}'"}
+  end
+
+  # ---------------------------------------------------------------------------
+  # Map Operations
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Get a value from a map by key. Returns `{:ok, value}` or `:error`.
+  """
+  @spec map_get({:map, [{String.t(), lattice_value()}]}, String.t()) :: {:ok, lattice_value()} | :error
+  def map_get({:map, items}, key) do
+    case Enum.find(items, fn {k, _v} -> k == key end) do
+      {_k, v} -> {:ok, v}
+      nil -> :error
+    end
+  end
+
+  @doc "Return all keys from a map as a list of idents."
+  @spec map_keys({:map, [{String.t(), lattice_value()}]}) :: {:list, [lattice_value()]}
+  def map_keys({:map, items}) do
+    {:list, Enum.map(items, fn {k, _v} -> {:ident, k} end)}
+  end
+
+  @doc "Return all values from a map as a list."
+  @spec map_values({:map, [{String.t(), lattice_value()}]}) :: {:list, [lattice_value()]}
+  def map_values({:map, items}) do
+    {:list, Enum.map(items, fn {_k, v} -> v end)}
+  end
+
+  @doc "Check if a key exists in a map."
+  @spec map_has_key?({:map, [{String.t(), lattice_value()}]}, String.t()) :: boolean()
+  def map_has_key?({:map, items}, key) do
+    Enum.any?(items, fn {k, _v} -> k == key end)
+  end
+
+  @doc "Merge two maps. The second map's values win on conflict."
+  @spec map_merge({:map, [{String.t(), lattice_value()}]}, {:map, [{String.t(), lattice_value()}]}) :: {:map, [{String.t(), lattice_value()}]}
+  def map_merge({:map, items1}, {:map, items2}) do
+    merged = Enum.reduce(items2, Map.new(items1), fn {k, v}, acc -> Map.put(acc, k, v) end)
+    {:map, Enum.to_list(merged)}
+  end
+
+  @doc "Remove keys from a map."
+  @spec map_remove({:map, [{String.t(), lattice_value()}]}, [String.t()]) :: {:map, [{String.t(), lattice_value()}]}
+  def map_remove({:map, items}, keys_to_remove) do
+    key_set = MapSet.new(keys_to_remove)
+    {:map, Enum.reject(items, fn {k, _v} -> MapSet.member?(key_set, k) end)}
+  end
+
+  # ---------------------------------------------------------------------------
+  # Color Operations (Lattice v2)
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Parse a hex color string to `{r, g, b, a}` where r/g/b are 0-255 and a is 0.0-1.0.
+
+  Handles #RGB, #RRGGBB, and #RRGGBBAA formats.
+  """
+  @spec color_to_rgb(String.t()) :: {integer(), integer(), integer(), float()}
+  def color_to_rgb(hex_str) do
+    h = String.trim_leading(hex_str, "#")
+    case String.length(h) do
+      3 ->
+        r = String.to_integer(String.duplicate(String.at(h, 0), 2), 16)
+        g = String.to_integer(String.duplicate(String.at(h, 1), 2), 16)
+        b = String.to_integer(String.duplicate(String.at(h, 2), 2), 16)
+        {r, g, b, 1.0}
+      6 ->
+        r = String.to_integer(String.slice(h, 0, 2), 16)
+        g = String.to_integer(String.slice(h, 2, 2), 16)
+        b = String.to_integer(String.slice(h, 4, 2), 16)
+        {r, g, b, 1.0}
+      8 ->
+        r = String.to_integer(String.slice(h, 0, 2), 16)
+        g = String.to_integer(String.slice(h, 2, 2), 16)
+        b = String.to_integer(String.slice(h, 4, 2), 16)
+        a = String.to_integer(String.slice(h, 6, 2), 16) / 255.0
+        {r, g, b, a}
+      _ ->
+        {0, 0, 0, 1.0}
+    end
+  end
+
+  @doc """
+  Convert RGB(A) components to a hex color string.
+
+  If alpha is 1.0, emits `#rrggbb`; otherwise emits `rgba(r, g, b, a)`.
+  """
+  @spec color_from_rgb(integer(), integer(), integer(), float()) :: {:color, String.t()}
+  def color_from_rgb(r, g, b, a \\ 1.0) do
+    r = max(0, min(255, round(r)))
+    g = max(0, min(255, round(g)))
+    b = max(0, min(255, round(b)))
+    a = max(0.0, min(1.0, a))
+
+    if a >= 1.0 do
+      hex = "#" <> hex_byte(r) <> hex_byte(g) <> hex_byte(b)
+      {:color, hex}
+    else
+      {:color, "rgba(#{r}, #{g}, #{b}, #{a})"}
+    end
+  end
+
+  defp hex_byte(n), do: n |> Integer.to_string(16) |> String.downcase() |> String.pad_leading(2, "0")
+
+  @doc """
+  Convert a hex color to HSL components `{h, s, l, a}` where
+  h is 0-360, s/l are 0-100, a is 0-1.
+  """
+  @spec color_to_hsl(String.t()) :: {float(), float(), float(), float()}
+  def color_to_hsl(hex_str) do
+    {r, g, b, a} = color_to_rgb(hex_str)
+    rf = r / 255.0
+    gf = g / 255.0
+    bf = b / 255.0
+    mx = max(rf, max(gf, bf))
+    mn = min(rf, min(gf, bf))
+    light = (mx + mn) / 2.0
+
+    if mx == mn do
+      {0.0, 0.0, light * 100.0, a}
+    else
+      d = mx - mn
+      sat = if light > 0.5, do: d / (2.0 - mx - mn), else: d / (mx + mn)
+
+      hue = cond do
+        mx == rf -> (gf - bf) / d + (if gf < bf, do: 6.0, else: 0.0)
+        mx == gf -> (bf - rf) / d + 2.0
+        true -> (rf - gf) / d + 4.0
+      end
+
+      {hue * 60.0, sat * 100.0, light * 100.0, a}
+    end
+  end
+
+  @doc """
+  Create a color from HSL(A) components.
+
+  h is 0-360, s/l are 0-100, a is 0-1.
+  """
+  @spec color_from_hsl(float(), float(), float(), float()) :: {:color, String.t()}
+  def color_from_hsl(h, s, l, a \\ 1.0) do
+    h = :math.fmod(h, 360.0)
+    h = if h < 0, do: h + 360.0, else: h
+    s = max(0.0, min(100.0, s)) / 100.0
+    l = max(0.0, min(100.0, l)) / 100.0
+
+    if s == 0.0 do
+      v = round(l * 255)
+      color_from_rgb(v, v, v, a)
+    else
+      q = if l < 0.5, do: l * (1 + s), else: l + s - l * s
+      p = 2 * l - q
+      h_norm = h / 360.0
+
+      r = round(hue_to_rgb(p, q, h_norm + 1.0 / 3.0) * 255)
+      g = round(hue_to_rgb(p, q, h_norm) * 255)
+      b = round(hue_to_rgb(p, q, h_norm - 1.0 / 3.0) * 255)
+
+      color_from_rgb(r, g, b, a)
+    end
+  end
+
+  defp hue_to_rgb(p, q, t) do
+    t = cond do
+      t < 0 -> t + 1
+      t > 1 -> t - 1
+      true -> t
+    end
+
+    cond do
+      t < 1.0 / 6.0 -> p + (q - p) * 6.0 * t
+      t < 1.0 / 2.0 -> q
+      t < 2.0 / 3.0 -> p + (q - p) * (2.0 / 3.0 - t) * 6.0
+      true -> p
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Type Name (for error messages)
+  # ---------------------------------------------------------------------------
+
+  @doc "Return the Lattice type name string for a value."
+  @spec type_name_of(lattice_value()) :: String.t()
+  def type_name_of({:number, _}), do: "number"
+  def type_name_of({:dimension, _, _}), do: "number"
+  def type_name_of({:percentage, _}), do: "number"
+  def type_name_of({:string, _}), do: "string"
+  def type_name_of({:ident, _}), do: "string"
+  def type_name_of({:color, _}), do: "color"
+  def type_name_of({:bool, _}), do: "bool"
+  def type_name_of(:null), do: "null"
+  def type_name_of({:list, _}), do: "list"
+  def type_name_of({:map, _}), do: "map"
+  def type_name_of(_), do: "unknown"
+
+  @doc "Extract the numeric value from a number-like lattice_value."
+  @spec get_numeric_value(lattice_value()) :: {:ok, float()} | :error
+  def get_numeric_value({:number, n}), do: {:ok, n}
+  def get_numeric_value({:dimension, n, _}), do: {:ok, n}
+  def get_numeric_value({:percentage, n}), do: {:ok, n}
+  def get_numeric_value(_), do: :error
+
+  # ---------------------------------------------------------------------------
+  # Helpers
+  # ---------------------------------------------------------------------------
 
   defp parse_float(s) do
     case Float.parse(s) do

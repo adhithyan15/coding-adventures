@@ -56,10 +56,14 @@ import {
   LatticeValue,
   LatticeNumber,
   LatticeNull,
+  LatticeIdent,
+  LatticeMap,
+  LatticeList,
   isTruthy,
   tokenToValue,
   valueToCss,
   extractValueFromAst,
+  BUILTIN_FUNCTIONS,
 } from "./values.js";
 import {
   UndefinedVariableError,
@@ -67,6 +71,7 @@ import {
   CircularReferenceError,
   WrongArityError,
   MissingReturnError,
+  MaxIterationError,
 } from "./errors.js";
 
 // =============================================================================
@@ -277,13 +282,32 @@ export class LatticeTransformer {
   /** Call stack for cycle detection in function evaluation. */
   private readonly functionStack: string[] = [];
 
+  /** Lattice v2: Maximum iterations for @while loops. */
+  private readonly maxWhileIterations: number;
+
+  /** Lattice v2: @extend tracking. Maps target selector -> extending selectors. */
+  private readonly extendMap: Map<string, string[]> = new Map();
+
+  /** Lattice v2: @at-root hoisted rules. Spliced into root in Pass 3. */
+  private readonly atRootRules: Array<ASTNode | Token> = [];
+
+  /** Lattice v2: @content block stack. Each entry is a block AST or null. */
+  private readonly contentBlockStack: Array<ASTNode | null> = [];
+
+  /** Lattice v2: Scope stack for @content evaluation (caller's scope). */
+  private readonly contentScopeStack: ScopeChain[] = [];
+
+  constructor(maxWhileIterations: number = 1000) {
+    this.maxWhileIterations = maxWhileIterations;
+  }
+
   /**
    * Transform a Lattice AST into a clean CSS AST.
    *
    * Runs the three-pass pipeline:
    * 1. Collect symbols (variables, mixins, functions)
    * 2. Expand all Lattice constructs
-   * 3. Clean up empty nodes
+   * 3. Clean up empty nodes, apply @extend, splice @at-root
    *
    * @param ast - The root "stylesheet" ASTNode from the parser.
    * @returns A clean CSS AST with no Lattice nodes.
@@ -295,8 +319,15 @@ export class LatticeTransformer {
     // Pass 2: Expand
     const result = this._expandNode(ast, this.variables);
 
-    // Pass 3: Cleanup
-    return this._cleanup(result as ASTNode) as ASTNode;
+    // Pass 3: Cleanup + @extend selector merging + @at-root hoisting
+    const cleaned = this._cleanup(result as ASTNode) as ASTNode;
+    if (this.extendMap.size > 0) {
+      this._applyExtends(cleaned);
+    }
+    if (this.atRootRules.length > 0) {
+      this._spliceAtRootRules(cleaned);
+    }
+    return cleaned;
   }
 
   // ===========================================================================
@@ -375,23 +406,63 @@ export class LatticeTransformer {
     setChildren(ast, newChildren);
   }
 
-  /** Extract variable name and value from a variable_declaration node. */
+  /**
+   * Extract variable name and value from a variable_declaration node.
+   *
+   * Lattice v2 adds !default and !global flags:
+   * - !default: only set the variable if it is not already defined.
+   * - !global: set the variable in the root (global) scope.
+   * - Both can appear together.
+   */
   private _collectVariable(node: ASTNode): void {
     let name: string | undefined;
     let valueNode: ASTNode | undefined;
+    let isDefault = false;
+    let isGlobal = false;
 
     for (const child of getChildren(node)) {
       if (!isASTNode(child)) {
-        if (tokenTypeName(child as Token) === "VARIABLE") {
+        const typeName = tokenTypeName(child as Token);
+        if (typeName === "VARIABLE") {
           name = (child as Token).value;
+        } else if (typeName === "BANG_DEFAULT") {
+          isDefault = true;
+        } else if (typeName === "BANG_GLOBAL") {
+          isGlobal = true;
         }
-      } else if ((child as ASTNode).ruleName === "value_list") {
-        valueNode = child as ASTNode;
+      } else {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "value_list") {
+          valueNode = childAst;
+        } else if (childAst.ruleName === "variable_flag") {
+          for (const fc of getChildren(childAst)) {
+            if (!isASTNode(fc)) {
+              const ft = tokenTypeName(fc as Token);
+              if (ft === "BANG_DEFAULT") isDefault = true;
+              else if (ft === "BANG_GLOBAL") isGlobal = true;
+            }
+          }
+        }
       }
     }
 
     if (name && valueNode) {
-      this.variables.set(name, valueNode);
+      if (isDefault && isGlobal) {
+        // Check global scope only -- if not defined there, set globally
+        let root: ScopeChain = this.variables;
+        while (root.parent !== null) root = root.parent;
+        if (root.get(name) === undefined) {
+          this.variables.setGlobal(name, valueNode);
+        }
+      } else if (isDefault) {
+        if (this.variables.get(name) === undefined) {
+          this.variables.set(name, valueNode);
+        }
+      } else if (isGlobal) {
+        this.variables.setGlobal(name, valueNode);
+      } else {
+        this.variables.set(name, valueNode);
+      }
     }
   }
 
@@ -547,6 +618,11 @@ export class LatticeTransformer {
         return this._expandChildren(ast, scope);
       case "function_args":
         return this._expandChildren(ast, scope);
+      // Lattice v2: resolve variables in selector positions
+      case "compound_selector":
+      case "simple_selector":
+      case "class_selector":
+        return this._expandSelectorWithVars(ast, scope);
       default:
         return this._expandChildren(ast, scope);
     }
@@ -778,6 +854,17 @@ export class LatticeTransformer {
           setChildren(innerAst, [result as ASTNode | Token]);
           return ast;
         }
+
+        // Lattice v2: handle property_nesting inside declaration_or_nested
+        if (innerAst.ruleName === "declaration_or_nested") {
+          const donChildren = getChildren(innerAst);
+          if (donChildren.length > 0 && isASTNode(donChildren[0])) {
+            if ((donChildren[0] as ASTNode).ruleName === "property_nesting") {
+              const result = this._expandPropertyNesting(donChildren[0] as ASTNode, scope);
+              return result.length > 0 ? result : null;
+            }
+          }
+        }
       }
       return this._expandChildren(ast, scope);
     }
@@ -812,7 +899,10 @@ export class LatticeTransformer {
   /**
    * Expand a lattice_block_item.
    *
-   * lattice_block_item = variable_declaration | include_directive | lattice_control ;
+   * lattice_block_item = variable_declaration | include_directive | lattice_control
+   *                    | content_directive | at_root_directive | extend_directive ;
+   *
+   * Lattice v2 adds: content_directive, at_root_directive, extend_directive.
    */
   private _expandLatticeBlockItem(
     node: ASTNode,
@@ -834,6 +924,13 @@ export class LatticeTransformer {
       return this._expandInclude(innerAst, scope);
     } else if (rule === "lattice_control") {
       return this._expandControl(innerAst, scope);
+    } else if (rule === "content_directive") {
+      return this._expandContent(scope);
+    } else if (rule === "at_root_directive") {
+      return this._expandAtRoot(innerAst, scope);
+    } else if (rule === "extend_directive") {
+      this._collectExtend(innerAst);
+      return null; // Remove from output
     }
 
     return this._expandChildren(node, scope);
@@ -843,25 +940,78 @@ export class LatticeTransformer {
    * Process a variable_declaration inside a block.
    *
    * Sets the variable in the current scope. The node is removed from output.
+   *
+   * Lattice v2: handles !default and !global flags.
    */
   private _expandVariableDeclaration(node: ASTNode, scope: ScopeChain): void {
     let name: string | undefined;
     let valueNode: ASTNode | undefined;
+    let isDefault = false;
+    let isGlobal = false;
 
     for (const child of getChildren(node)) {
       if (!isASTNode(child)) {
-        if (tokenTypeName(child as Token) === "VARIABLE") {
+        const typeName = tokenTypeName(child as Token);
+        if (typeName === "VARIABLE") {
           name = (child as Token).value;
+        } else if (typeName === "BANG_DEFAULT") {
+          isDefault = true;
+        } else if (typeName === "BANG_GLOBAL") {
+          isGlobal = true;
         }
-      } else if ((child as ASTNode).ruleName === "value_list") {
-        valueNode = child as ASTNode;
+      } else {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "value_list") {
+          valueNode = childAst;
+        } else if (childAst.ruleName === "variable_flag") {
+          for (const fc of getChildren(childAst)) {
+            if (!isASTNode(fc)) {
+              const ft = tokenTypeName(fc as Token);
+              if (ft === "BANG_DEFAULT") isDefault = true;
+              else if (ft === "BANG_GLOBAL") isGlobal = true;
+            }
+          }
+        }
       }
     }
 
     if (name && valueNode) {
-      // Expand the value first (it might contain variables)
-      const expandedValue = this._expandNode(deepClone(valueNode), scope);
-      scope.set(name, expandedValue ?? valueNode);
+      let expandedValue = this._expandNode(deepClone(valueNode), scope);
+      let value: unknown = expandedValue ?? valueNode;
+
+      // Try to evaluate as an expression (e.g. $i + 1 → LatticeNumber(2)).
+      // This is critical for @while loops: without it, $i: $i + 1
+      // stores unevaluated tokens instead of the computed number, causing
+      // the loop condition to never change and looping forever.
+      try {
+        const evaluator = new ExpressionEvaluator(scope);
+        const evaluated = evaluator.evaluate(
+          deepClone((expandedValue ?? valueNode) as ASTNode)
+        );
+        if (evaluated !== null && evaluated !== undefined) {
+          // Store the LatticeValue directly so _substituteVariable can
+          // convert it via the "kind" in value check.
+          value = evaluated;
+        }
+      } catch {
+        // Not a pure expression (e.g. Helvetica, sans-serif) — keep AST
+      }
+
+      if (isDefault && isGlobal) {
+        let root: ScopeChain = scope;
+        while (root.parent !== null) root = root.parent;
+        if (root.get(name) === undefined) {
+          scope.setGlobal(name, value);
+        }
+      } else if (isDefault) {
+        if (scope.get(name) === undefined) {
+          scope.set(name, value);
+        }
+      } else if (isGlobal) {
+        scope.setGlobal(name, value);
+      } else {
+        scope.set(name, value);
+      }
     }
   }
 
@@ -940,15 +1090,26 @@ export class LatticeTransformer {
       return this._expandChildren(node, scope);
     }
 
-    // Lattice function — evaluate (user functions shadow CSS built-ins)
+    // User-defined function ALWAYS takes priority — even over CSS built-ins
     if (this.functions.has(funcName)) {
       return this._evaluateFunctionCall(funcName, node, scope);
     }
 
-    // CSS built-in — expand args but keep structure
+    // CSS built-in that is NOT also a Lattice built-in — pass through
+    if (isCssFunction(funcName) && !BUILTIN_FUNCTIONS.has(funcName)) {
+      return this._expandChildren(node, scope);
+    }
+
+    // Lattice v2 built-in function
+    if (BUILTIN_FUNCTIONS.has(funcName)) {
+      return this._evaluateBuiltinFunction(funcName, node, scope);
+    }
+
+    // CSS built-in that overlaps with Lattice built-in names
     if (isCssFunction(funcName)) {
       return this._expandChildren(node, scope);
     }
+
 
     // Unknown function — pass through (might be a CSS function we don't know)
     return this._expandChildren(node, scope);
@@ -963,6 +1124,10 @@ export class LatticeTransformer {
    *
    * include_directive = "@include" FUNCTION include_args RPAREN ( SEMICOLON | block )
    *                   | "@include" IDENT ( SEMICOLON | block ) ;
+   *
+   * Lattice v2: if @include has a trailing block (not SEMICOLON), that block
+   * is the content block -- it replaces @content; in the mixin body.
+   * The content block is evaluated in the caller's scope.
    */
   private _expandInclude(
     node: ASTNode,
@@ -971,6 +1136,7 @@ export class LatticeTransformer {
     const children = getChildren(node);
     let mixinName: string | undefined;
     let argsNode: ASTNode | undefined;
+    let contentBlock: ASTNode | null = null;
 
     for (const child of children) {
       if (!isASTNode(child)) {
@@ -981,8 +1147,13 @@ export class LatticeTransformer {
         } else if (type === "IDENT") {
           mixinName = token.value;
         }
-      } else if ((child as ASTNode).ruleName === "include_args") {
-        argsNode = child as ASTNode;
+      } else {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "include_args") {
+          argsNode = childAst;
+        } else if (childAst.ruleName === "block") {
+          contentBlock = childAst;
+        }
       }
     }
 
@@ -1027,6 +1198,10 @@ export class LatticeTransformer {
       }
     }
 
+    // Lattice v2: push content block and caller scope for @content
+    this.contentBlockStack.push(contentBlock);
+    this.contentScopeStack.push(scope);
+
     // Clone and expand the mixin body
     this.mixinStack.push(mixinName);
     try {
@@ -1046,6 +1221,8 @@ export class LatticeTransformer {
       return [];
     } finally {
       this.mixinStack.pop();
+      this.contentBlockStack.pop();
+      this.contentScopeStack.pop();
     }
   }
 
@@ -1129,7 +1306,10 @@ export class LatticeTransformer {
   /**
    * Expand a lattice_control node.
    *
-   * lattice_control = if_directive | for_directive | each_directive ;
+   * lattice_control = if_directive | for_directive | each_directive
+   *                 | while_directive ;
+   *
+   * Lattice v2 adds while_directive.
    */
   private _expandControl(
     node: ASTNode,
@@ -1150,6 +1330,8 @@ export class LatticeTransformer {
         return this._expandFor(innerAst, scope);
       case "each_directive":
         return this._expandEach(innerAst, scope);
+      case "while_directive":
+        return this._expandWhile(innerAst, scope);
     }
 
     return null;
@@ -1296,6 +1478,10 @@ export class LatticeTransformer {
    *
    * each_directive = "@each" VARIABLE { COMMA VARIABLE } "in"
    *                  each_list block ;
+   *
+   * Lattice v2: when iterating over a map with two variables
+   * (@each $key, $value in $map), the first variable gets the key
+   * and the second gets the value for each entry.
    */
   private _expandEach(
     node: ASTNode,
@@ -1325,6 +1511,12 @@ export class LatticeTransformer {
 
     if (varNames.length === 0 || !eachList || !block) return [];
 
+    // Lattice v2: check if the each_list references a map or list variable
+    const resolved = this._resolveEachList(eachList, scope);
+    if (resolved !== null) {
+      return this._expandEachOverResolved(varNames, resolved, block, scope);
+    }
+
     // Extract list items from each_list
     // each_list = value { COMMA value } ;
     const items: Array<ASTNode | Token> = [];
@@ -1345,6 +1537,62 @@ export class LatticeTransformer {
 
       const expanded = this._expandBlockToItems(deepClone(block), loopScope);
       result.push(...expanded);
+    }
+
+    return result;
+  }
+
+  /**
+   * Try to resolve an each_list to a LatticeValue (map or list).
+   *
+   * If the each_list contains a single VARIABLE that resolves to a
+   * LatticeMap or LatticeList, return it. Otherwise return null.
+   */
+  private _resolveEachList(eachList: ASTNode, scope: ScopeChain): LatticeValue | null {
+    const varTokens: Token[] = [];
+    for (const child of getChildren(eachList)) {
+      if (isASTNode(child) && (child as ASTNode).ruleName === "value") {
+        for (const vc of getChildren(child as ASTNode)) {
+          if (!isASTNode(vc) && tokenTypeName(vc as Token) === "VARIABLE") {
+            varTokens.push(vc as Token);
+          }
+        }
+      }
+    }
+    if (varTokens.length === 1) {
+      const val = scope.get(varTokens[0].value);
+      if (val !== undefined && val !== null && typeof val === "object" && "kind" in val) {
+        const lv = val as LatticeValue;
+        if (lv.kind === "map" || lv.kind === "list") return lv;
+      }
+    }
+    return null;
+  }
+
+  /** Expand @each over a resolved LatticeMap or LatticeList. */
+  private _expandEachOverResolved(
+    varNames: string[],
+    collection: LatticeValue,
+    block: ASTNode,
+    scope: ScopeChain
+  ): Array<ASTNode | Token> {
+    const result: Array<ASTNode | Token> = [];
+
+    if (collection.kind === "map") {
+      for (const [key, value] of collection.items) {
+        const loopScope = scope.child();
+        loopScope.set(varNames[0], new LatticeIdent(key));
+        if (varNames.length >= 2) {
+          loopScope.set(varNames[1], value);
+        }
+        result.push(...this._expandBlockToItems(deepClone(block), loopScope));
+      }
+    } else if (collection.kind === "list") {
+      for (const item of collection.items) {
+        const loopScope = scope.child();
+        loopScope.set(varNames[0], item);
+        result.push(...this._expandBlockToItems(deepClone(block), loopScope));
+      }
     }
 
     return result;
@@ -1724,6 +1972,555 @@ export class LatticeTransformer {
     }
 
     return result;
+  }
+
+  // ===========================================================================
+  // Lattice v2: @while Loops
+  // ===========================================================================
+
+  /**
+   * Expand a @while loop.
+   *
+   * while_directive = "@while" lattice_expression block ;
+   *
+   * Evaluates the condition; if truthy, expands the block body. Repeats
+   * until the condition is falsy or max iterations exceeded.
+   *
+   * Variable scoping: @while uses the enclosing scope directly (not a child
+   * scope). Variable mutations inside the body persist across iterations.
+   */
+  private _expandWhile(
+    node: ASTNode,
+    scope: ScopeChain
+  ): Array<ASTNode | Token> {
+    const children = getChildren(node);
+    let condition: ASTNode | undefined;
+    let block: ASTNode | undefined;
+
+    for (const child of children) {
+      if (isASTNode(child)) {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "lattice_expression") {
+          condition = childAst;
+        } else if (childAst.ruleName === "block") {
+          block = childAst;
+        }
+      }
+    }
+
+    if (!condition || !block) return [];
+
+    const result: Array<ASTNode | Token> = [];
+    let iteration = 0;
+
+    while (true) {
+      const evaluator = new ExpressionEvaluator(scope);
+      const condValue = evaluator.evaluate(deepClone(condition));
+
+      if (!isTruthy(condValue)) break;
+
+      iteration++;
+      if (iteration > this.maxWhileIterations) {
+        throw new MaxIterationError(this.maxWhileIterations);
+      }
+
+      const expanded = this._expandBlockToItems(deepClone(block), scope);
+      result.push(...expanded);
+    }
+
+    return result;
+  }
+
+  // ===========================================================================
+  // Lattice v2: Variables in Selectors
+  // ===========================================================================
+
+  /**
+   * Resolve VARIABLE tokens in selector positions.
+   *
+   * When a VARIABLE token appears in a compound_selector, simple_selector,
+   * or class_selector, resolve it to its string value and create a
+   * synthetic IDENT token.
+   */
+  private _expandSelectorWithVars(
+    node: ASTNode,
+    scope: ScopeChain
+  ): ASTNode {
+    const newChildren: Array<ASTNode | Token> = [];
+
+    for (const child of getChildren(node)) {
+      if (!isASTNode(child)) {
+        const token = child as Token;
+        if (tokenTypeName(token) === "VARIABLE") {
+          const varName = token.value;
+          const value = scope.get(varName);
+          if (value === undefined) {
+            throw new UndefinedVariableError(
+              varName,
+              token.line ?? 0,
+              token.column ?? 0
+            );
+          }
+          let cssText: string;
+          if (value !== null && typeof value === "object" && "kind" in value) {
+            cssText = valueToCss(value as LatticeValue);
+          } else if (value !== null && typeof value === "object" && "ruleName" in value) {
+            const v = extractValueFromAst(value as ASTNode);
+            cssText = valueToCss(v);
+          } else {
+            cssText = String(value);
+          }
+          // Strip quotes from strings in selector context
+          cssText = cssText.replace(/^"|"$/g, "").replace(/^'|'$/g, "");
+          newChildren.push(makeSyntheticToken(cssText, token));
+        } else {
+          newChildren.push(child);
+        }
+      } else {
+        // Recurse into child AST nodes
+        const expanded = this._expandNode(child, scope);
+        if (expanded !== null) {
+          if (Array.isArray(expanded)) {
+            newChildren.push(...expanded);
+          } else {
+            newChildren.push(expanded as ASTNode | Token);
+          }
+        }
+      }
+    }
+
+    setChildren(node, newChildren);
+    return node;
+  }
+
+  // ===========================================================================
+  // Lattice v2: @content Blocks
+  // ===========================================================================
+
+  /**
+   * Expand a @content directive inside a mixin body.
+   *
+   * Replaces @content; with the content block from the current @include call.
+   * The content block is evaluated in the caller's scope, not the mixin's.
+   * If no content block was passed, produces an empty list.
+   */
+  private _expandContent(
+    scope: ScopeChain
+  ): Array<ASTNode | Token> {
+    if (this.contentBlockStack.length === 0) return [];
+
+    const contentBlock = this.contentBlockStack[this.contentBlockStack.length - 1];
+    if (contentBlock === null) return [];
+
+    const callerScope = this.contentScopeStack.length > 0
+      ? this.contentScopeStack[this.contentScopeStack.length - 1]
+      : scope;
+
+    return this._expandBlockToItems(deepClone(contentBlock), callerScope);
+  }
+
+  // ===========================================================================
+  // Lattice v2: @at-root
+  // ===========================================================================
+
+  /**
+   * Expand an @at-root directive.
+   *
+   * Rules inside @at-root are collected and hoisted to the stylesheet
+   * root level during Pass 3. They are removed from the current
+   * nesting context.
+   */
+  private _expandAtRoot(
+    node: ASTNode,
+    scope: ScopeChain
+  ): null {
+    const children = getChildren(node);
+    let block: ASTNode | undefined;
+    let selectorList: ASTNode | undefined;
+
+    for (const child of children) {
+      if (isASTNode(child)) {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "block") {
+          block = childAst;
+        } else if (childAst.ruleName === "selector_list") {
+          selectorList = childAst;
+        }
+      }
+    }
+
+    if (!block) return null;
+
+    if (selectorList) {
+      // Inline form: @at-root .selector { ... }
+      const expandedSel = this._expandNode(deepClone(selectorList), scope);
+      const expandedBlock = this._expandNode(deepClone(block), scope);
+      const qr = new SimpleASTNode("qualified_rule", [
+        expandedSel as ASTNode | Token,
+        expandedBlock as ASTNode | Token,
+      ]);
+      this.atRootRules.push(qr);
+    } else {
+      // Block form: @at-root { ... multiple rules ... }
+      const expanded = this._expandBlockToItems(deepClone(block), scope);
+      this.atRootRules.push(...expanded);
+    }
+
+    return null;
+  }
+
+  // ===========================================================================
+  // Lattice v2: @extend and %placeholder
+  // ===========================================================================
+
+  /**
+   * Collect an @extend directive for later selector merging.
+   *
+   * Records the extend relationship for Pass 3 processing.
+   */
+  private _collectExtend(node: ASTNode): void {
+    let target = "";
+
+    for (const child of getChildren(node)) {
+      if (isASTNode(child) && (child as ASTNode).ruleName === "extend_target") {
+        const parts: string[] = [];
+        for (const tc of getChildren(child as ASTNode)) {
+          if (!isASTNode(tc)) parts.push((tc as Token).value);
+        }
+        target = parts.join("");
+      }
+    }
+
+    if (target) {
+      if (!this.extendMap.has(target)) {
+        this.extendMap.set(target, []);
+      }
+    }
+  }
+
+  // ===========================================================================
+  // Lattice v2: Property Nesting
+  // ===========================================================================
+
+  /**
+   * Expand a property_nesting node.
+   *
+   * property_nesting = property COLON block ;
+   *
+   * Flattens nested property declarations by prepending the parent
+   * property name with a hyphen to each child declaration's property.
+   *
+   * Example:
+   *   font: { size: 14px; weight: bold; }
+   *   => font-size: 14px; font-weight: bold;
+   */
+  private _expandPropertyNesting(
+    node: ASTNode,
+    scope: ScopeChain
+  ): Array<ASTNode | Token> {
+    let parentProp = "";
+    let block: ASTNode | undefined;
+
+    for (const child of getChildren(node)) {
+      if (isASTNode(child)) {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "property") {
+          for (const pc of getChildren(childAst)) {
+            if (!isASTNode(pc)) parentProp = (pc as Token).value;
+          }
+        } else if (childAst.ruleName === "block") {
+          block = childAst;
+        }
+      }
+    }
+
+    if (!parentProp || !block) return [];
+
+    const expanded = this._expandNode(deepClone(block), scope);
+    const result: Array<ASTNode | Token> = [];
+    this._flattenNestedProps(expanded as ASTNode, parentProp, result);
+    return result;
+  }
+
+  /** Recursively flatten nested property declarations. */
+  private _flattenNestedProps(
+    node: ASTNode | Token,
+    prefix: string,
+    result: Array<ASTNode | Token>
+  ): void {
+    if (!isASTNode(node)) return;
+    for (const child of getChildren(node as ASTNode)) {
+      if (!isASTNode(child)) continue;
+      const childAst = child as ASTNode;
+      if (childAst.ruleName === "block_contents") {
+        this._flattenNestedProps(childAst, prefix, result);
+      } else if (childAst.ruleName === "block_item") {
+        this._flattenNestedBlockItem(childAst, prefix, result);
+      } else if (childAst.ruleName === "declaration") {
+        this._rewriteDeclarationPrefix(childAst, prefix, result);
+      }
+    }
+  }
+
+  /** Process a block_item inside a property nesting block. */
+  private _flattenNestedBlockItem(
+    node: ASTNode,
+    prefix: string,
+    result: Array<ASTNode | Token>
+  ): void {
+    const children = getChildren(node);
+    if (children.length === 0) return;
+    const inner = children[0];
+    if (!isASTNode(inner)) return;
+    const innerAst = inner as ASTNode;
+    if (innerAst.ruleName === "declaration_or_nested") {
+      for (const dc of getChildren(innerAst)) {
+        if (isASTNode(dc)) {
+          const dcAst = dc as ASTNode;
+          if (dcAst.ruleName === "declaration") {
+            this._rewriteDeclarationPrefix(dcAst, prefix, result);
+          } else if (dcAst.ruleName === "property_nesting") {
+            // Recursive nesting: accumulate prefix
+            const subResults = this._expandPropertyNestingWithPrefix(dcAst, prefix);
+            result.push(...subResults);
+          }
+        }
+      }
+    }
+  }
+
+  /** Rewrite a declaration's property name to include the prefix. */
+  private _rewriteDeclarationPrefix(
+    decl: ASTNode,
+    prefix: string,
+    result: Array<ASTNode | Token>
+  ): void {
+    for (const child of getChildren(decl)) {
+      if (isASTNode(child) && (child as ASTNode).ruleName === "property") {
+        for (const pc of getChildren(child as ASTNode)) {
+          if (!isASTNode(pc)) {
+            const token = pc as Token;
+            (token as { value: string }).value = `${prefix}-${token.value}`;
+          }
+        }
+      }
+    }
+    result.push(decl);
+  }
+
+  /** Expand nested property_nesting with an accumulated prefix. */
+  private _expandPropertyNestingWithPrefix(
+    node: ASTNode,
+    prefix: string
+  ): Array<ASTNode | Token> {
+    let subProp = "";
+    let block: ASTNode | undefined;
+
+    for (const child of getChildren(node)) {
+      if (isASTNode(child)) {
+        const childAst = child as ASTNode;
+        if (childAst.ruleName === "property") {
+          for (const pc of getChildren(childAst)) {
+            if (!isASTNode(pc)) subProp = (pc as Token).value;
+          }
+        } else if (childAst.ruleName === "block") {
+          block = childAst;
+        }
+      }
+    }
+
+    const newPrefix = `${prefix}-${subProp}`;
+    const result: Array<ASTNode | Token> = [];
+    if (block) {
+      this._flattenNestedProps(block, newPrefix, result);
+    }
+    return result;
+  }
+
+  // ===========================================================================
+  // Lattice v2: Built-in Function Evaluation
+  // ===========================================================================
+
+  /**
+   * Evaluate a Lattice v2 built-in function call.
+   *
+   * Uses ExpressionEvaluator to resolve arguments, then calls the registered
+   * built-in function handler. The result is converted back to an AST node.
+   */
+  private _evaluateBuiltinFunction(
+    funcName: string,
+    node: ASTNode,
+    scope: ScopeChain
+  ): ASTNode | Token {
+    const children = getChildren(node);
+    let args: LatticeValue[] = [];
+
+    // Collect and evaluate arguments
+    for (const child of children) {
+      if (isASTNode(child) && (child as ASTNode).ruleName === "function_args") {
+        const evaluator = new ExpressionEvaluator(scope);
+        args = this._collectBuiltinFunctionArgs(child as ASTNode, evaluator);
+        break;
+      }
+    }
+
+    const handler = BUILTIN_FUNCTIONS.get(funcName)!;
+    const result = handler(args);
+
+    if (result.kind === "null") {
+      // Null result -- pass through as CSS function
+      return this._expandChildren(node, scope);
+    }
+
+    const cssText = valueToCss(result);
+    return makeValueNode(cssText, node);
+  }
+
+  /** Collect evaluated arguments from function_args for built-in functions. */
+  private _collectBuiltinFunctionArgs(
+    node: ASTNode,
+    evaluator: ExpressionEvaluator
+  ): LatticeValue[] {
+    const args: LatticeValue[] = [];
+    const currentTokens: Token[] = [];
+
+    const flushTokens = () => {
+      if (currentTokens.length > 0) {
+        if (currentTokens.length === 1) {
+          const t = currentTokens[0];
+          if (tokenTypeName(t) === "VARIABLE") {
+            const val = evaluator["scope"].get(t.value);
+            if (val !== undefined && val !== null && typeof val === "object" && "kind" in val) {
+              args.push(val as LatticeValue);
+            } else if (val !== undefined && val !== null && typeof val === "object" && "ruleName" in val) {
+              args.push(extractValueFromAst(val as ASTNode));
+            } else {
+              args.push(tokenToValue(t));
+            }
+          } else {
+            args.push(tokenToValue(t));
+          }
+        } else {
+          args.push(tokenToValue(currentTokens[0]));
+        }
+        currentTokens.length = 0;
+      }
+    };
+
+    for (const child of getChildren(node)) {
+      if (!isASTNode(child)) {
+        if (tokenTypeName(child as Token) === "COMMA") {
+          flushTokens();
+          continue;
+        }
+      }
+      if (isASTNode(child) && (child as ASTNode).ruleName === "function_arg") {
+        for (const ic of getChildren(child as ASTNode)) {
+          if (!isASTNode(ic)) {
+            if (tokenTypeName(ic as Token) === "COMMA") {
+              flushTokens();
+              continue;
+            }
+            currentTokens.push(ic as Token);
+          } else {
+            // AST node (expression) -- evaluate directly
+            args.push(evaluator.evaluate(ic as ASTNode));
+            currentTokens.length = 0;
+          }
+        }
+      }
+    }
+    flushTokens();
+    return args;
+  }
+
+  // ===========================================================================
+  // Lattice v2: @extend Selector Merging (Pass 3)
+  // ===========================================================================
+
+  /**
+   * Apply @extend selector merging to the entire AST.
+   *
+   * This is a post-processing pass. Currently implements the simplified
+   * approach: remove placeholder-only rules from the output.
+   */
+  private _applyExtends(root: ASTNode): void {
+    this._removePlaceholderRules(root);
+  }
+
+  /**
+   * Remove rules whose selectors are exclusively placeholder selectors.
+   *
+   * Placeholder selectors (%name) exist only to be extended. Rules with
+   * only placeholder selectors should not appear in the CSS output.
+   */
+  private _removePlaceholderRules(node: ASTNode | Token): void {
+    if (!isASTNode(node)) return;
+
+    const newChildren: Array<ASTNode | Token> = [];
+    for (const child of getChildren(node as ASTNode)) {
+      if (child === null) continue;
+      if (this._isPlaceholderOnlyRule(child)) continue;
+      this._removePlaceholderRules(child);
+      newChildren.push(child);
+    }
+    setChildren(node as ASTNode, newChildren);
+  }
+
+  /** Check if a node is a qualified_rule with only placeholder selectors. */
+  private _isPlaceholderOnlyRule(node: ASTNode | Token): boolean {
+    if (!isASTNode(node)) return false;
+    const ast = node as ASTNode;
+    if (ast.ruleName === "qualified_rule") {
+      const selectorText = this._extractSelectorText(ast);
+      const selectors = selectorText.split(",").map(s => s.trim()).filter(s => s);
+      return selectors.length > 0 && selectors.every(s => s.startsWith("%"));
+    }
+    if (ast.ruleName === "rule") {
+      const children = getChildren(ast);
+      if (children.length > 0 && isASTNode(children[0])) {
+        return this._isPlaceholderOnlyRule(children[0]);
+      }
+    }
+    return false;
+  }
+
+  /** Extract selector text from a qualified_rule. */
+  private _extractSelectorText(node: ASTNode): string {
+    for (const child of getChildren(node)) {
+      if (isASTNode(child) && (child as ASTNode).ruleName === "selector_list") {
+        return this._collectText(child as ASTNode);
+      }
+    }
+    return "";
+  }
+
+  /** Recursively collect all token text from an AST node. */
+  private _collectText(node: ASTNode | Token): string {
+    if (!isASTNode(node)) return (node as Token).value;
+    const parts: string[] = [];
+    for (const child of getChildren(node as ASTNode)) {
+      parts.push(this._collectText(child));
+    }
+    return parts.join(" ");
+  }
+
+  // ===========================================================================
+  // Lattice v2: @at-root Hoisting (Pass 3)
+  // ===========================================================================
+
+  /**
+   * Splice @at-root hoisted rules into the root stylesheet.
+   *
+   * Rules collected during expansion via @at-root directives are
+   * appended to the root stylesheet's children list.
+   */
+  private _spliceAtRootRules(root: ASTNode): void {
+    for (const rule of this.atRootRules) {
+      if (rule !== null) {
+        getChildren(root).push(rule);
+      }
+    }
   }
 
   // ===========================================================================

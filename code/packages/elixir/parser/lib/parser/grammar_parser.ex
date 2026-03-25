@@ -68,6 +68,18 @@ defmodule CodingAdventures.Parser.GrammarParser do
 
   ## Options
 
+  - `:pre_parse_hooks` — a list of functions `([Token.t()] -> [Token.t()])`
+    that transform the token list before parsing begins. Hooks are applied
+    in order (left to right) via `Enum.reduce/3`. This is useful for
+    token-level preprocessing — for example, filtering out whitespace
+    tokens, injecting synthetic tokens, or reordering tokens.
+
+  - `:post_parse_hooks` — a list of functions `(ASTNode.t() -> ASTNode.t())`
+    that transform the AST after parsing succeeds. Hooks are applied in
+    order (left to right) via `Enum.reduce/3`. This is useful for AST
+    post-processing — for example, constant folding, dead code elimination,
+    or desugaring.
+
   - `trace: false` (default) — when set to `true`, emits a line to stderr
     for each rule attempt. This helps diagnose parse failures by showing
     which rules were tried at which token positions.
@@ -77,12 +89,37 @@ defmodule CodingAdventures.Parser.GrammarParser do
     [TRACE] rule 'name' at token 0 (TYPE "value") → match
     [TRACE] rule 'name' at token 1 (TYPE "value") → fail
     ```
+
+  ## Examples
+
+      # Without hooks (original behavior):
+      {:ok, ast} = GrammarParser.parse(tokens, grammar)
+
+      # With pre-parse hook (filter out NEWLINE tokens):
+      {:ok, ast} = GrammarParser.parse(tokens, grammar,
+        pre_parse_hooks: [fn toks -> Enum.reject(toks, & &1.type == "NEWLINE") end])
+
+      # With post-parse hook (annotate AST):
+      {:ok, ast} = GrammarParser.parse(tokens, grammar,
+        post_parse_hooks: [fn ast -> %{ast | metadata: :annotated} end])
   """
-  @spec parse([Token.t()], ParserGrammar.t(), keyword()) :: {:ok, ASTNode.t()} | {:error, String.t()}
-  def parse(tokens, %ParserGrammar{rules: rules}, opts \\ []) when is_list(tokens) do
+  @spec parse([Token.t()], ParserGrammar.t(), keyword()) ::
+          {:ok, ASTNode.t()} | {:error, String.t()}
+  def parse(tokens, grammar, opts \\ [])
+
+  def parse(tokens, %ParserGrammar{rules: rules} = _grammar, opts) when is_list(tokens) do
+    pre_parse_hooks = Keyword.get(opts, :pre_parse_hooks, [])
+    post_parse_hooks = Keyword.get(opts, :post_parse_hooks, [])
+
     if rules == [] do
       {:error, "Grammar has no rules"}
     else
+      # Stage 1: Pre-parse hooks transform the token list.
+      # Each hook is a function ([Token.t()] -> [Token.t()]) that receives
+      # the token list and returns a transformed version. Hooks run left to
+      # right, so the output of hook N becomes the input of hook N+1.
+      tokens = Enum.reduce(pre_parse_hooks, tokens, fn hook, toks -> hook.(toks) end)
+
       # Build lookup map: rule_name -> rule
       rule_map = Map.new(rules, fn r -> {r.name, r} end)
 
@@ -102,6 +139,7 @@ defmodule CodingAdventures.Parser.GrammarParser do
       token_count = length(tokens)
       entry_rule = hd(rules).name
 
+      # Stage 2: Parse the token list.
       case parse_rule(entry_rule, state) do
         {:ok, node, state} ->
           # Skip trailing newlines
@@ -113,6 +151,11 @@ defmodule CodingAdventures.Parser.GrammarParser do
           if state.pos < token_count and current.type != "EOF" do
             {:error, format_error(state, current)}
           else
+            # Stage 3: Post-parse hooks transform the AST.
+            # Each hook is a function (ASTNode.t() -> ASTNode.t()) that
+            # receives the AST and returns a transformed version. Only
+            # applied on success — errors pass through unchanged.
+            node = Enum.reduce(post_parse_hooks, node, fn hook, ast -> hook.(ast) end)
             {:ok, node}
           end
 

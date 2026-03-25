@@ -48,9 +48,16 @@ package latticeasttocss
 //   @mixin b { @include a; }    ← Circular mixin: a → b → a
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
+
+// MaxWhileIterations is the default maximum number of @while loop iterations.
+// Prevents infinite loops from consuming all CPU at compile time.
+const MaxWhileIterations = 1000
 
 // ============================================================================
 // Mixin and Function Definition Records
@@ -169,19 +176,28 @@ func isCSSFunction(name string) bool {
 //	cssAST, err := t.Transform(latticeAST)
 //	// cssAST now contains only CSS nodes; pass to CSSEmitter.Emit()
 type LatticeTransformer struct {
-	variables     *ScopeChain         // global variable scope
-	mixins        map[string]MixinDef // collected mixin definitions
+	variables     *ScopeChain            // global variable scope
+	mixins        map[string]MixinDef    // collected mixin definitions
 	functions     map[string]FunctionDef // collected function definitions
-	mixinStack    []string            // current mixin call chain (for cycle detection)
-	functionStack []string            // current function call chain
+	mixinStack    []string               // current mixin call chain (for cycle detection)
+	functionStack []string               // current function call chain
+
+	// Lattice v2 fields
+	maxWhileIterations int                    // max @while iterations (default: 1000)
+	extendMap          map[string][]string    // @extend target → extending selectors
+	atRootRules        []interface{}          // hoisted @at-root rules
+	contentBlockStack  []*parser.ASTNode      // @content block stack for @include
+	contentScopeStack  []*ScopeChain          // caller scope stack for @content evaluation
 }
 
 // NewLatticeTransformer creates a new transformer with empty registries.
 func NewLatticeTransformer() *LatticeTransformer {
 	return &LatticeTransformer{
-		variables: NewScopeChain(nil),
-		mixins:    make(map[string]MixinDef),
-		functions: make(map[string]FunctionDef),
+		variables:          NewScopeChain(nil),
+		mixins:             make(map[string]MixinDef),
+		functions:          make(map[string]FunctionDef),
+		maxWhileIterations: MaxWhileIterations,
+		extendMap:          make(map[string][]string),
 	}
 }
 
@@ -301,26 +317,79 @@ func (t *LatticeTransformer) collectSymbols(ast *parser.ASTNode) {
 // collectVariable extracts a variable name and its value_list from a
 // variable_declaration node and stores it in the global scope.
 //
-// Grammar: variable_declaration = VARIABLE COLON value_list SEMICOLON ;
+// Grammar: variable_declaration = VARIABLE COLON value_list { variable_flag } SEMICOLON ;
+//
+// Lattice v2 adds !default and !global flags:
+//   - !default: only set if not already defined anywhere in scope chain
+//   - !global: set in the root (global) scope
+//   - Both can appear together: check global scope; if not defined, set globally
 func (t *LatticeTransformer) collectVariable(node *parser.ASTNode) {
+	name, valueNode, isDefault, isGlobal := parseVariableDeclaration(node)
+
+	if name != "" && valueNode != nil {
+		t.setVariableWithFlags(t.variables, name, valueNode, isDefault, isGlobal)
+	}
+}
+
+// parseVariableDeclaration extracts name, value, and flags from a variable_declaration.
+func parseVariableDeclaration(node *parser.ASTNode) (string, *parser.ASTNode, bool, bool) {
 	var name string
 	var valueNode *parser.ASTNode
+	isDefault := false
+	isGlobal := false
 
 	for _, child := range node.Children {
 		switch c := child.(type) {
 		case lexer.Token:
-			if tokenTypeName(c) == "VARIABLE" {
+			tn := tokenTypeName(c)
+			if tn == "VARIABLE" {
 				name = c.Value
+			} else if tn == "BANG_DEFAULT" {
+				isDefault = true
+			} else if tn == "BANG_GLOBAL" {
+				isGlobal = true
 			}
 		case *parser.ASTNode:
 			if c.RuleName == "value_list" {
 				valueNode = c
+			} else if c.RuleName == "variable_flag" {
+				for _, fc := range c.Children {
+					if tok, ok := fc.(lexer.Token); ok {
+						ft := tokenTypeName(tok)
+						if ft == "BANG_DEFAULT" {
+							isDefault = true
+						} else if ft == "BANG_GLOBAL" {
+							isGlobal = true
+						}
+					}
+				}
 			}
 		}
 	}
+	return name, valueNode, isDefault, isGlobal
+}
 
-	if name != "" && valueNode != nil {
-		t.variables.Set(name, valueNode)
+// setVariableWithFlags sets a variable respecting !default and !global flags.
+func (t *LatticeTransformer) setVariableWithFlags(scope *ScopeChain, name string, value interface{}, isDefault, isGlobal bool) {
+	if isDefault && isGlobal {
+		// Check global scope only; if not defined there, set it globally
+		root := scope
+		for root.parent != nil {
+			root = root.parent
+		}
+		if _, ok := root.Get(name); !ok {
+			scope.SetGlobal(name, value)
+		}
+	} else if isDefault {
+		// Only set if not already defined anywhere
+		if !scope.Has(name) {
+			scope.Set(name, value)
+		}
+	} else if isGlobal {
+		// Always set in global scope
+		scope.SetGlobal(name, value)
+	} else {
+		scope.Set(name, value)
 	}
 }
 
@@ -662,6 +731,9 @@ func (t *LatticeTransformer) expandNode(node interface{}, scope *ScopeChain) int
 			return t.expandChildren(n, scope)
 		case "function_arg":
 			return t.expandChildren(n, scope)
+		// Lattice v2: resolve variables in selector positions
+		case "compound_selector", "simple_selector", "class_selector":
+			return t.expandSelectorWithVars(n, scope)
 		}
 
 		// Default: expand all children
@@ -836,7 +908,10 @@ func (t *LatticeTransformer) expandBlockItem(node *parser.ASTNode, scope *ScopeC
 
 // expandLatticeBlockItem handles lattice_block_item constructs.
 //
-// lattice_block_item = variable_declaration | include_directive | lattice_control ;
+// lattice_block_item = variable_declaration | include_directive | lattice_control
+//                    | content_directive | at_root_directive | extend_directive ;
+//
+// Lattice v2 adds: content_directive, at_root_directive, extend_directive.
 func (t *LatticeTransformer) expandLatticeBlockItem(node *parser.ASTNode, scope *ScopeChain) interface{} {
 	if len(node.Children) == 0 {
 		return node
@@ -857,6 +932,16 @@ func (t *LatticeTransformer) expandLatticeBlockItem(node *parser.ASTNode, scope 
 
 	case "lattice_control":
 		return t.expandControl(inner, scope)
+
+	case "content_directive":
+		return t.expandContent(inner, scope)
+
+	case "at_root_directive":
+		return t.expandAtRoot(inner, scope)
+
+	case "extend_directive":
+		t.collectExtend(inner, scope)
+		return nil // removed from output
 	}
 
 	return t.expandChildren(node, scope)
@@ -866,27 +951,31 @@ func (t *LatticeTransformer) expandLatticeBlockItem(node *parser.ASTNode, scope 
 //
 // Sets the variable in the current scope. The declaration node is removed
 // from CSS output (it has no CSS equivalent).
+//
+// Lattice v2: handles !default and !global flags.
 func (t *LatticeTransformer) expandVariableDeclaration(node *parser.ASTNode, scope *ScopeChain) {
-	var name string
-	var valueNode *parser.ASTNode
-
-	for _, child := range node.Children {
-		switch c := child.(type) {
-		case lexer.Token:
-			if tokenTypeName(c) == "VARIABLE" {
-				name = c.Value
-			}
-		case *parser.ASTNode:
-			if c.RuleName == "value_list" {
-				valueNode = c
-			}
-		}
-	}
+	name, valueNode, isDefault, isGlobal := parseVariableDeclaration(node)
 
 	if name != "" && valueNode != nil {
 		// Expand the value first (it might reference other variables)
 		expanded := t.expandNode(deepCloneAST(valueNode), scope)
-		scope.Set(name, expanded)
+
+		// Try to evaluate as an expression (e.g. $i + 1 → LatticeNumber(2)).
+		// This is critical for @while loops: without it, $i: $i + 1
+		// stores unevaluated tokens instead of the computed number, causing
+		// the loop condition to never change and looping forever.
+		func() {
+			defer func() { recover() }() // silently ignore evaluation failures
+			evaluator := NewExpressionEvaluator(scope)
+			evaluated := evaluator.Evaluate(expanded)
+			if evaluated != nil {
+				// Store the LatticeValue directly so substituteVariable can
+				// convert it via the LatticeValue type assertion branch.
+				expanded = evaluated
+			}
+		}()
+
+		t.setVariableWithFlags(scope, name, expanded, isDefault, isGlobal)
 	}
 }
 
@@ -957,13 +1046,23 @@ func (t *LatticeTransformer) expandFunctionCall(node *parser.ASTNode, scope *Sco
 		return t.expandChildren(node, scope)
 	}
 
-	// Lattice function takes priority — check before CSS built-ins.
+	// User-defined @function takes highest priority (Sass behavior).
 	// A user-defined @function named "scale" overrides the CSS transform "scale".
 	if _, ok := t.functions[funcName]; ok {
 		return t.evaluateFunctionCall(funcName, node, scope)
 	}
 
-	// CSS built-in — expand args but keep structure
+	// CSS built-in that is NOT also a Lattice built-in — pass through
+	if isCSSFunction(funcName) && !IsBuiltinFunction(funcName) {
+		return t.expandChildren(node, scope)
+	}
+
+	// Lattice v2 built-in function
+	if IsBuiltinFunction(funcName) {
+		return t.evaluateBuiltinFunctionCall(funcName, node, scope)
+	}
+
+	// CSS built-in that overlaps with Lattice built-in names
 	if isCSSFunction(funcName) {
 		return t.expandChildren(node, scope)
 	}
@@ -988,6 +1087,7 @@ func (t *LatticeTransformer) expandFunctionCall(node *parser.ASTNode, scope *Sco
 func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeChain) []interface{} {
 	var mixinName string
 	var argsNode *parser.ASTNode
+	var contentBlock *parser.ASTNode
 
 	for _, child := range node.Children {
 		switch c := child.(type) {
@@ -1003,6 +1103,9 @@ func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeCha
 		case *parser.ASTNode:
 			if c.RuleName == "include_args" {
 				argsNode = c
+			} else if c.RuleName == "block" {
+				// Lattice v2: trailing block is the @content block
+				contentBlock = c
 			}
 		}
 	}
@@ -1046,9 +1149,17 @@ func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeCha
 		}
 	}
 
+	// Lattice v2: push content block and caller scope for @content
+	t.contentBlockStack = append(t.contentBlockStack, contentBlock)
+	t.contentScopeStack = append(t.contentScopeStack, scope)
+
 	// Clone and expand the mixin body, tracking the call stack
 	t.mixinStack = append(t.mixinStack, mixinName)
-	defer func() { t.mixinStack = t.mixinStack[:len(t.mixinStack)-1] }()
+	defer func() {
+		t.mixinStack = t.mixinStack[:len(t.mixinStack)-1]
+		t.contentBlockStack = t.contentBlockStack[:len(t.contentBlockStack)-1]
+		t.contentScopeStack = t.contentScopeStack[:len(t.contentScopeStack)-1]
+	}()
 
 	bodyClone := deepCloneAST(mixinDef.Body)
 	expanded := t.expandNode(bodyClone, mixinScope)
@@ -1163,7 +1274,9 @@ func splitValueListOnCommas(node *parser.ASTNode) []interface{} {
 
 // expandControl dispatches to the appropriate control-flow handler.
 //
-// lattice_control = if_directive | for_directive | each_directive ;
+// lattice_control = if_directive | for_directive | each_directive | while_directive ;
+//
+// Lattice v2 adds while_directive.
 func (t *LatticeTransformer) expandControl(node *parser.ASTNode, scope *ScopeChain) []interface{} {
 	if len(node.Children) == 0 {
 		return nil
@@ -1181,6 +1294,8 @@ func (t *LatticeTransformer) expandControl(node *parser.ASTNode, scope *ScopeCha
 		return t.expandFor(inner, scope)
 	case "each_directive":
 		return t.expandEach(inner, scope)
+	case "while_directive":
+		return t.expandWhile(inner, scope)
 	}
 
 	return nil
@@ -1374,6 +1489,12 @@ func (t *LatticeTransformer) expandEach(node *parser.ASTNode, scope *ScopeChain)
 		return nil
 	}
 
+	// Lattice v2: check if the each_list contains a variable that resolves to a map or list
+	resolvedCollection := t.resolveEachList(eachListNode, scope)
+	if resolvedCollection != nil {
+		return t.expandEachOverResolved(varNames, resolvedCollection, block, scope)
+	}
+
 	// Extract items from each_list = value { COMMA value }
 	var items []interface{}
 	for _, child := range eachListNode.Children {
@@ -1392,6 +1513,60 @@ func (t *LatticeTransformer) expandEach(node *parser.ASTNode, scope *ScopeChain)
 		}
 		expanded := t.expandBlockToItems(deepCloneAST(block), loopScope)
 		result = append(result, expanded...)
+	}
+
+	return result
+}
+
+// resolveEachList checks if an each_list contains a single variable that
+// resolves to a LatticeMap or LatticeList.
+func (t *LatticeTransformer) resolveEachList(eachList *parser.ASTNode, scope *ScopeChain) LatticeValue {
+	var varTokens []lexer.Token
+	for _, child := range eachList.Children {
+		if ast, ok := child.(*parser.ASTNode); ok && ast.RuleName == "value" {
+			for _, vc := range ast.Children {
+				if tok, ok := vc.(lexer.Token); ok && tokenTypeName(tok) == "VARIABLE" {
+					varTokens = append(varTokens, tok)
+				}
+			}
+		}
+	}
+	if len(varTokens) == 1 {
+		val, ok := scope.Get(varTokens[0].Value)
+		if ok {
+			switch v := val.(type) {
+			case LatticeMap:
+				return v
+			case LatticeList:
+				return v
+			}
+		}
+	}
+	return nil
+}
+
+// expandEachOverResolved handles @each iteration over a resolved map or list.
+func (t *LatticeTransformer) expandEachOverResolved(varNames []string, collection LatticeValue, block *parser.ASTNode, scope *ScopeChain) []interface{} {
+	var result []interface{}
+
+	switch coll := collection.(type) {
+	case LatticeMap:
+		for _, entry := range coll.Items {
+			loopScope := scope.Child()
+			loopScope.Set(varNames[0], LatticeIdent{Value: entry.Key})
+			if len(varNames) >= 2 {
+				loopScope.Set(varNames[1], entry.Value)
+			}
+			expanded := t.expandBlockToItems(deepCloneAST(block), loopScope)
+			result = append(result, expanded...)
+		}
+	case LatticeList:
+		for _, item := range coll.Items {
+			loopScope := scope.Child()
+			loopScope.Set(varNames[0], item)
+			expanded := t.expandBlockToItems(deepCloneAST(block), loopScope)
+			result = append(result, expanded...)
+		}
 	}
 
 	return result
@@ -1746,6 +1921,308 @@ func (t *LatticeTransformer) makeValueListFromGroup(group []interface{}) *parser
 		RuleName: "value_list",
 		Children: children,
 	}
+}
+
+// ============================================================================
+// Lattice v2: @while Loops
+// ============================================================================
+
+// expandWhile expands a @while loop.
+//
+// Grammar: while_directive = "@while" lattice_expression block ;
+//
+// Evaluates condition repeatedly, expanding block body each iteration.
+// Uses the enclosing scope directly (not a child scope) so variable
+// mutations persist across iterations. Max-iteration guard prevents
+// infinite loops.
+func (t *LatticeTransformer) expandWhile(node *parser.ASTNode, scope *ScopeChain) []interface{} {
+	var condition *parser.ASTNode
+	var block *parser.ASTNode
+
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok {
+			switch ast.RuleName {
+			case "lattice_expression":
+				condition = ast
+			case "block":
+				block = ast
+			}
+		}
+	}
+
+	if condition == nil || block == nil {
+		return nil
+	}
+
+	var result []interface{}
+	iteration := 0
+
+	for {
+		eval := NewExpressionEvaluator(scope)
+		condValue := eval.Evaluate(deepCloneAST(condition))
+
+		if !condValue.Truthy() {
+			break
+		}
+
+		iteration++
+		if iteration > t.maxWhileIterations {
+			panic(NewMaxIterationError(t.maxWhileIterations, 0, 0))
+		}
+
+		expanded := t.expandBlockToItems(deepCloneAST(block), scope)
+		result = append(result, expanded...)
+	}
+
+	return result
+}
+
+// ============================================================================
+// Lattice v2: $var in Selectors
+// ============================================================================
+
+// expandSelectorWithVars resolves VARIABLE tokens in selector positions.
+//
+// When a VARIABLE token appears in a compound_selector, simple_selector,
+// or class_selector, resolve it to its string value and create a
+// synthetic IDENT token.
+func (t *LatticeTransformer) expandSelectorWithVars(node *parser.ASTNode, scope *ScopeChain) *parser.ASTNode {
+	newChildren := make([]interface{}, 0, len(node.Children))
+
+	for _, child := range node.Children {
+		switch c := child.(type) {
+		case lexer.Token:
+			if tokenTypeName(c) == "VARIABLE" {
+				val, ok := scope.Get(c.Value)
+				if !ok {
+					panic(NewUndefinedVariableError(c.Value, c.Line, c.Column))
+				}
+				var cssText string
+				if lv, ok := val.(LatticeValue); ok {
+					cssText = valueToCSSText(lv)
+				} else if ast, ok := val.(*parser.ASTNode); ok {
+					eval := NewExpressionEvaluator(scope)
+					v := eval.extractValueFromAST(ast)
+					cssText = valueToCSSText(v)
+				} else {
+					cssText = fmt.Sprintf("%v", val)
+				}
+				// Strip quotes from strings in selector context
+				cssText = strings.Trim(cssText, "\"'")
+				newChildren = append(newChildren, makeSyntheticToken(cssText, c))
+			} else {
+				newChildren = append(newChildren, child)
+			}
+		case *parser.ASTNode:
+			newChildren = append(newChildren, t.expandNode(c, scope))
+		default:
+			newChildren = append(newChildren, child)
+		}
+	}
+
+	node.Children = newChildren
+	return node
+}
+
+// ============================================================================
+// Lattice v2: @content Blocks
+// ============================================================================
+
+// expandContent expands a @content directive inside a mixin body.
+//
+// Replaces @content; with the content block from the current @include call.
+// The content block is evaluated in the caller's scope, not the mixin's scope.
+// If no content block was passed, produces an empty list.
+func (t *LatticeTransformer) expandContent(node *parser.ASTNode, scope *ScopeChain) []interface{} {
+	if len(t.contentBlockStack) == 0 {
+		return nil
+	}
+
+	contentBlock := t.contentBlockStack[len(t.contentBlockStack)-1]
+	if contentBlock == nil {
+		return nil
+	}
+
+	// Evaluate in the caller's scope
+	callerScope := scope
+	if len(t.contentScopeStack) > 0 {
+		callerScope = t.contentScopeStack[len(t.contentScopeStack)-1]
+	}
+
+	return t.expandBlockToItems(deepCloneAST(contentBlock), callerScope)
+}
+
+// ============================================================================
+// Lattice v2: @at-root
+// ============================================================================
+
+// expandAtRoot expands an @at-root directive.
+//
+// Rules inside @at-root are collected and hoisted to the stylesheet root
+// level during Pass 3. They are removed from the current nesting context.
+func (t *LatticeTransformer) expandAtRoot(node *parser.ASTNode, scope *ScopeChain) interface{} {
+	var block *parser.ASTNode
+	var selectorList *parser.ASTNode
+
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok {
+			switch ast.RuleName {
+			case "block":
+				block = ast
+			case "selector_list":
+				selectorList = ast
+			}
+		}
+	}
+
+	if block == nil {
+		return nil
+	}
+
+	if selectorList != nil {
+		// Inline form: @at-root .selector { ... }
+		expandedSel := t.expandNode(deepCloneAST(selectorList), scope)
+		expandedBlock := t.expandNode(deepCloneAST(block), scope)
+		qr := makeQualifiedRule(expandedSel, expandedBlock)
+		t.atRootRules = append(t.atRootRules, qr)
+	} else {
+		// Block form: @at-root { ... multiple rules ... }
+		expanded := t.expandBlockToItems(deepCloneAST(block), scope)
+		t.atRootRules = append(t.atRootRules, expanded...)
+	}
+
+	return nil // Remove from current position
+}
+
+// makeQualifiedRule creates a qualified_rule AST node from a selector and block.
+func makeQualifiedRule(selector, block interface{}) *parser.ASTNode {
+	return &parser.ASTNode{
+		RuleName: "qualified_rule",
+		Children: []interface{}{selector, block},
+	}
+}
+
+// ============================================================================
+// Lattice v2: @extend and %placeholder
+// ============================================================================
+
+// collectExtend records an @extend directive for later selector merging.
+func (t *LatticeTransformer) collectExtend(node *parser.ASTNode, scope *ScopeChain) {
+	var target string
+
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok && ast.RuleName == "extend_target" {
+			target = extractExtendTarget(ast)
+		}
+	}
+
+	if target != "" {
+		if _, exists := t.extendMap[target]; !exists {
+			t.extendMap[target] = []string{}
+		}
+	}
+}
+
+// extractExtendTarget gets the target selector string from an extend_target node.
+func extractExtendTarget(node *parser.ASTNode) string {
+	var parts []string
+	for _, child := range node.Children {
+		if tok, ok := child.(lexer.Token); ok {
+			parts = append(parts, tok.Value)
+		}
+	}
+	return strings.Join(parts, "")
+}
+
+// ============================================================================
+// Lattice v2: Built-in Function Evaluation
+// ============================================================================
+
+// evaluateBuiltinFunctionCall evaluates a Lattice v2 built-in function call.
+//
+// Uses the ExpressionEvaluator to resolve arguments, then calls the
+// registered built-in function handler. The result is converted back
+// to an AST node for emission.
+func (t *LatticeTransformer) evaluateBuiltinFunctionCall(funcName string, node *parser.ASTNode, scope *ScopeChain) interface{} {
+	var args []LatticeValue
+
+	// Collect and evaluate arguments
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok && ast.RuleName == "function_args" {
+			eval := NewExpressionEvaluator(scope)
+			args = eval.collectFunctionArgs(ast)
+			break
+		}
+	}
+
+	result := CallBuiltinFunction(funcName, args, scope)
+
+	if _, isNull := result.(LatticeNull); isNull {
+		// Null result — pass through as CSS function
+		return t.expandChildren(node, scope)
+	}
+
+	cssText := valueToCSSText(result)
+	return makeValueNode(cssText, node)
+}
+
+// collectFunctionArgs evaluates function arguments for built-in function calls.
+func (e *ExpressionEvaluator) collectFunctionArgs(node *parser.ASTNode) []LatticeValue {
+	var args []LatticeValue
+	var currentTokens []interface{}
+
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok && ast.RuleName == "function_arg" {
+			for _, ic := range ast.Children {
+				if tok, ok := ic.(lexer.Token); ok {
+					if tokenTypeName(tok) == "COMMA" {
+						if len(currentTokens) > 0 {
+							args = append(args, e.evalArgTokens(currentTokens))
+							currentTokens = nil
+						}
+						continue
+					}
+					currentTokens = append(currentTokens, ic)
+				} else if astChild, ok := ic.(*parser.ASTNode); ok {
+					// AST node (expression) — evaluate directly
+					args = append(args, e.Evaluate(astChild))
+					currentTokens = nil
+				}
+			}
+		}
+	}
+
+	if len(currentTokens) > 0 {
+		args = append(args, e.evalArgTokens(currentTokens))
+	}
+
+	return args
+}
+
+// evalArgTokens evaluates a sequence of tokens as a single argument value.
+func (e *ExpressionEvaluator) evalArgTokens(tokens []interface{}) LatticeValue {
+	if len(tokens) == 1 {
+		if tok, ok := tokens[0].(lexer.Token); ok {
+			if tokenTypeName(tok) == "VARIABLE" {
+				val, ok := e.scope.Get(tok.Value)
+				if ok {
+					if lv, ok := val.(LatticeValue); ok {
+						return lv
+					}
+					if ast, ok := val.(*parser.ASTNode); ok {
+						return e.extractValueFromAST(ast)
+					}
+				}
+			}
+			return tokenToValue(tok)
+		}
+	}
+	if len(tokens) > 0 {
+		if tok, ok := tokens[0].(lexer.Token); ok {
+			return tokenToValue(tok)
+		}
+	}
+	return LatticeNull{}
 }
 
 // ============================================================================

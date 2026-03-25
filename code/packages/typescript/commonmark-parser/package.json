@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/commonmark-parser",
+  "version": "0.1.0",
+  "description": "CommonMark 0.31.2 compliant Markdown parser — produces a Document AST from Markdown source text",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

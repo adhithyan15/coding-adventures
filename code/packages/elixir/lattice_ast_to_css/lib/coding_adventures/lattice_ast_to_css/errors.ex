@@ -332,4 +332,117 @@ defmodule CodingAdventures.LatticeAstToCss.Errors do
       }
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # Lattice v2: New Error Types
+  # ---------------------------------------------------------------------------
+
+  defmodule MaxIterationError do
+    @moduledoc """
+    Raised when a `@while` loop exceeds the maximum iteration count.
+
+    The max-iteration guard prevents infinite loops. Lattice sets a
+    configurable limit (default: 1000 iterations). If a `@while` loop's
+    condition remains truthy after this many iterations, compilation
+    halts with this error.
+
+    Example: `@while true { }` (no mutation to break the loop)
+    """
+    defstruct [:message, :max_iterations, line: 0, column: 0]
+
+    @type t :: %__MODULE__{
+            message: String.t(),
+            max_iterations: non_neg_integer(),
+            line: non_neg_integer(),
+            column: non_neg_integer()
+          }
+
+    def new(max_iterations \\ 1000, line \\ 0, column \\ 0) do
+      %__MODULE__{
+        message: "@while loop exceeded maximum iteration count (#{max_iterations})",
+        max_iterations: max_iterations,
+        line: line,
+        column: column
+      }
+    end
+  end
+
+  defmodule ExtendTargetNotFoundError do
+    @moduledoc """
+    Raised when `@extend` references a selector not found in the stylesheet.
+
+    Example: `@extend %message-shared;` where `%message-shared` is never defined
+    """
+    defstruct [:message, :target, line: 0, column: 0]
+
+    @type t :: %__MODULE__{
+            message: String.t(),
+            target: String.t(),
+            line: non_neg_integer(),
+            column: non_neg_integer()
+          }
+
+    def new(target, line \\ 0, column \\ 0) do
+      %__MODULE__{
+        message: "@extend target '#{target}' was not found in the stylesheet",
+        target: target,
+        line: line,
+        column: column
+      }
+    end
+  end
+
+  defmodule RangeError do
+    @moduledoc """
+    Raised when a value is outside the valid range for an operation.
+
+    Used by built-in functions that require bounded inputs:
+    - `nth($list, $n)` -- index must be >= 1 and <= list length
+    - `lighten($color, $amount)` -- amount must be between 0% and 100%
+
+    Example: `nth((a, b, c), 5)` -- index 5 out of bounds for list of length 3
+    """
+    defstruct [:message, line: 0, column: 0]
+
+    @type t :: %__MODULE__{
+            message: String.t(),
+            line: non_neg_integer(),
+            column: non_neg_integer()
+          }
+
+    def new(message, line \\ 0, column \\ 0) do
+      %__MODULE__{
+        message: message,
+        line: line,
+        column: column
+      }
+    end
+  end
+
+  defmodule ZeroDivisionInExpressionError do
+    @moduledoc """
+    Raised when `math.div()` encounters a zero divisor.
+
+    Division by zero is undefined. Unlike CSS `calc()` which defers
+    evaluation to the browser, Lattice evaluates `math.div()` at compile
+    time and must reject zero divisors.
+
+    Example: `math.div(100px, 0)`
+    """
+    defstruct [:message, line: 0, column: 0]
+
+    @type t :: %__MODULE__{
+            message: String.t(),
+            line: non_neg_integer(),
+            column: non_neg_integer()
+          }
+
+    def new(line \\ 0, column \\ 0) do
+      %__MODULE__{
+        message: "Division by zero",
+        line: line,
+        column: column
+      }
+    end
+  end
 end

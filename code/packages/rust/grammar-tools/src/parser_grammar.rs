@@ -191,9 +191,24 @@ pub struct GrammarRule {
 ///
 /// - `rules` — Ordered list of grammar rules. The first rule is the
 ///   entry point (start symbol) of the grammar.
+/// - `version` — The grammar version number, set by the `# @version N`
+///   magic comment at the top of the file. A value of `0` means "no
+///   version declared" (use latest semantics).
+///
+/// # Magic comments
+///
+/// Lines of the form `# @key value` before or between rules carry
+/// structured metadata. Unknown keys are silently ignored. Example:
+///
+/// ```text
+/// # @version 3
+/// expression = term { PLUS term } ;
+/// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct ParserGrammar {
     pub rules: Vec<GrammarRule>,
+    /// Grammar version declared via `# @version N`. Zero means unset.
+    pub version: u32,
 }
 
 // ===========================================================================
@@ -688,10 +703,42 @@ impl Parser {
 /// assert_eq!(grammar.rules[0].name, "expression");
 /// ```
 pub fn parse_parser_grammar(source: &str) -> Result<ParserGrammar, ParserGrammarError> {
+    // --- Pre-pass: scan source lines for magic comments ---
+    //
+    // Magic comments have the form `# @key value`. They must be processed
+    // before we feed the source into the tokenizer, because the tokenizer
+    // simply discards comment lines without inspecting their content.
+    //
+    // Parsing strategy (pure string ops, no regex):
+    //   1. Iterate over lines, trim each one.
+    //   2. If a line starts with '#', strip '#' and leading whitespace.
+    //   3. If the next character is '@', extract key and value.
+    //   4. Dispatch on key; unknown keys are silently ignored.
+    let mut version: u32 = 0;
+    for raw_line in source.split('\n') {
+        let stripped = raw_line.trim();
+        if stripped.starts_with('#') {
+            let after_hash = stripped[1..].trim_start();
+            if after_hash.starts_with('@') {
+                let rest = &after_hash[1..]; // skip '@'
+                let key_end = rest.find(|c: char| c.is_whitespace()).unwrap_or(rest.len());
+                let key = &rest[..key_end];
+                let value = rest[key_end..].trim();
+                if key == "version" {
+                    if let Ok(v) = value.parse::<u32>() {
+                        version = v;
+                    }
+                    // Malformed version values are silently ignored.
+                }
+                // Unknown keys are silently ignored for forward-compatibility.
+            }
+        }
+    }
+
     let tokens = tokenize_grammar(source)?;
     let mut parser = Parser::new(tokens);
     let rules = parser.parse()?;
-    Ok(ParserGrammar { rules })
+    Ok(ParserGrammar { rules, version })
 }
 
 // ===========================================================================
@@ -1145,5 +1192,38 @@ factor       = NUMBER | STRING | NAME | LPAREN expression RPAREN ;
         let refs = grammar_rule_references(&grammar);
         assert!(refs.contains("term"));
         assert_eq!(refs.len(), 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // Magic comments: ParserGrammar
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parser_magic_comment_version() {
+        // `# @version N` at the top of a .grammar file sets the version field.
+        let source = "# @version 1\nterm = NUMBER ;";
+        let grammar = parse_parser_grammar(source).unwrap();
+        assert_eq!(grammar.version, 1);
+        // Normal rules still parsed.
+        assert_eq!(grammar.rules.len(), 1);
+        assert_eq!(grammar.rules[0].name, "term");
+    }
+
+    #[test]
+    fn test_parser_magic_comment_version_default() {
+        // When no # @version line is present, version defaults to 0.
+        let source = "term = NUMBER ;";
+        let grammar = parse_parser_grammar(source).unwrap();
+        assert_eq!(grammar.version, 0);
+    }
+
+    #[test]
+    fn test_parser_magic_comment_unknown_key_silently_ignored() {
+        // Unknown `# @key value` lines are silently ignored for
+        // forward-compatibility.
+        let source = "# @future_directive foo\nterm = NUMBER ;";
+        let grammar = parse_parser_grammar(source).unwrap();
+        assert_eq!(grammar.version, 0);
+        assert_eq!(grammar.rules.len(), 1);
     }
 }

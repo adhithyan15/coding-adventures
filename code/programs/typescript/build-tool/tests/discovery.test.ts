@@ -257,13 +257,13 @@ describe("discoverPackages", () => {
 
   it("should discover a single package", () => {
     const pkgDir = path.join(tmpDir, "packages", "python", "logic-gates");
-    writeFile(path.join(pkgDir, "BUILD"), "pip install .\n");
+    writeFile(path.join(pkgDir, "BUILD"), "python -m pip install .\n");
 
     const packages = discoverPackages(tmpDir);
     expect(packages).toHaveLength(1);
     expect(packages[0].name).toBe("python/logic-gates");
     expect(packages[0].path).toBe(pkgDir);
-    expect(packages[0].buildCommands).toEqual(["pip install ."]);
+    expect(packages[0].buildCommands).toEqual(["python -m pip install ."]);
     expect(packages[0].language).toBe("python");
   });
 

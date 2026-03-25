@@ -55,7 +55,21 @@ import (
 //       go/
 //         json-lexer/
 //           lexer.go        <-- we are here (3 levels below code/)
+// jsonTokensPath is the path to the json.tokens file. It defaults to ""
+// which triggers automatic path discovery via runtime.Caller(0). Tests can
+// override this variable to exercise error-handling code paths without mocking.
+var jsonTokensPath = ""
+
+// getGrammarPath computes the absolute path to the json.tokens grammar file.
+//
+// If jsonTokensPath is non-empty (e.g., overridden by a test), that value is
+// returned directly. Otherwise, runtime.Caller(0) locates the source file and
+// navigates up three levels to the grammars/ directory.
 func getGrammarPath() string {
+	if jsonTokensPath != "" {
+		return jsonTokensPath
+	}
+
 	// runtime.Caller(0) returns the file path of the current source file.
 	// The underscore variables are: program counter, line number, and ok bool.
 	_, filename, _, _ := runtime.Caller(0)

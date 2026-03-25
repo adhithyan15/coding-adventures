@@ -146,7 +146,7 @@ module CodingAdventures
     # Parse a Python BUILD file for `-e ../dep-name` entries.
     #
     # Python BUILD files install local dependencies with pip's editable
-    # mode: `uv pip install -e ../dep-name`. We scan each line for this
+    # mode: `pip install -e ../dep-name`. We scan each line for this
     # pattern and extract the directory name after `../`.
     #
     # @param pkg_dir [String] path to the package directory
@@ -157,22 +157,28 @@ module CodingAdventures
 
       deps = []
       File.readlines(build_path).each do |line|
-        # Match: -e ../dep-name or -e "../dep-name"
-        # We use character-by-character parsing like the Python implementation
-        # to handle all edge cases correctly.
-        idx = line.index("-e ../")
-        idx = line.index('-e "../') if idx.nil?
-        next if idx.nil?
+        # Find ALL -e ../ entries on each line (new format puts them all on one line)
+        remaining = line
+        loop do
+          idx = remaining.index("-e ../")
+          idx = remaining.index('-e "../') if idx.nil?
+          break if idx.nil?
 
-        rest = line[idx..]
-        rest = rest.sub("-e ../", "").sub('-e "../', "")
-        dep = ""
-        rest.each_char do |c|
-          break if [" ", '"', "'", "\n"].include?(c)
+          rest = remaining[idx..]
+          if rest.start_with?('-e "../')
+            rest = rest[7..] # skip `-e "../`
+          else
+            rest = rest[6..] # skip `-e ../`
+          end
+          dep = ""
+          rest.each_char do |c|
+            break if [" ", '"', "'", "\n"].include?(c)
 
-          dep += c
+            dep += c
+          end
+          deps << dep if !dep.empty? && dep != "."
+          remaining = remaining[(idx + 6)..]
         end
-        deps << dep if !dep.empty? && dep != "."
       end
       deps
     end
@@ -516,17 +522,33 @@ module CodingAdventures
                 assert __version__ == "0.1.0"
       PY
 
-      build_lines = ["uv venv --quiet --clear"]
-      ordered_deps.each { |dep| build_lines << "uv pip install -e ../#{dep} --quiet" }
-      build_lines << 'uv pip install -e ".[dev]" --quiet'
-      build_lines << ".venv/bin/python -m pytest tests/ -v"
+      install_parts = ["python -m pip install"]
+      ordered_deps.each { |dep| install_parts << "-e ../#{dep}" }
+      install_parts.push("-e .[dev]", "--quiet")
+      build_lines = [install_parts.join(" ")]
+      build_lines << "python -m pytest tests/ -v"
       build = build_lines.join("\n") + "\n"
+
+      # BUILD_windows uses uv instead of pip and installs dependencies in a
+      # single line with multiple -e flags.  The package itself is installed
+      # with --no-deps to avoid re-resolving, and test tools are installed
+      # explicitly in a separate step.
+      bw_lines = ["uv venv --quiet --clear"]
+      dep_install = ["uv pip install"]
+      ordered_deps.each { |dep| dep_install << "-e ../#{dep}" }
+      dep_install << "--quiet"
+      bw_lines << dep_install.join(" ") if ordered_deps.any?
+      bw_lines << "uv pip install --no-deps -e .[dev] --quiet"
+      bw_lines << "uv pip install pytest pytest-cov ruff mypy --quiet"
+      bw_lines << "uv run --no-project python -m pytest tests/ -v"
+      build_windows = bw_lines.join("\n") + "\n"
 
       write_file(File.join(target_dir, "pyproject.toml"), pyproject)
       write_file(File.join(target_dir, "src", snake, "__init__.py"), init_py)
       write_file(File.join(target_dir, "tests", "__init__.py"), "")
       write_file(File.join(target_dir, "tests", "test_#{snake}.py"), test_py)
       write_file(File.join(target_dir, "BUILD"), build)
+      write_file(File.join(target_dir, "BUILD_windows"), build_windows)
     end
 
     # =====================================================================
@@ -811,13 +833,7 @@ module CodingAdventures
         });
       TS
 
-      if ordered_deps.any?
-        parts = ordered_deps.map { |dep| "cd ../#{dep} && npm install --silent" }
-        parts << "cd ../#{pkg_name} && npm install --silent"
-        build = parts.join(" && \\\n") + "\nnpx vitest run --coverage\n"
-      else
-        build = "npm install --silent\nnpx vitest run --coverage\n"
-      end
+      build = "npm ci --quiet\nnpx vitest run --coverage\n"
 
       write_file(File.join(target_dir, "package.json"), package_json)
       write_file(File.join(target_dir, "tsconfig.json"), tsconfig)

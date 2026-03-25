@@ -24,8 +24,10 @@ module CodingAdventures
         return if @powered
         rv = RiscvSimulator
 
-        mem_size = 0x10200000
+        mem_size = @config.memory_size
+        @disk_image = Bootloader::DiskImage.new
         @cpu = rv::RiscVSimulator.new(memory_size: mem_size)
+        @cpu.cpu.instance_variable_set(:@memory, build_memory_map(mem_size, @disk_image.size))
         @interrupt_ctrl = InterruptHandler::InterruptController.new
 
         dc = @config.display_config
@@ -33,7 +35,6 @@ module CodingAdventures
         @display = Display::DisplayDriver.new(dc, display_mem)
 
         @kernel = OsKernel::Kernel.new(@config.kernel_config, @interrupt_ctrl, @display)
-        @disk_image = Bootloader::DiskImage.new
 
         user_program = @config.user_program || OsKernel::Programs.generate_hello_world_program(USER_PROCESS_BASE)
         idle_binary = OsKernel::Programs.generate_idle_program
@@ -68,10 +69,7 @@ module CodingAdventures
         @disk_image.load_kernel(kernel_disk_data)
 
         disk_data = @disk_image.data
-        disk_data.each_with_index do |b, i|
-          addr = DISK_MAPPED_BASE + i
-          @cpu.cpu.memory.write_byte(addr, b) if addr < mem_size
-        end
+        disk_data.each_with_index { |b, i| @cpu.cpu.memory.write_byte(DISK_MAPPED_BASE + i, b) }
 
         idle_binary.bytes.each_with_index { |b, i| @cpu.cpu.memory.write_byte(OsKernel::DEFAULT_IDLE_PROCESS_BASE + i, b) }
         user_program.bytes.each_with_index { |b, i| @cpu.cpu.memory.write_byte(OsKernel::DEFAULT_USER_PROCESS_BASE + i, b) }
@@ -212,6 +210,15 @@ module CodingAdventures
         @cpu.cpu.memory.write_byte(address + 1, (value >> 8) & 0xFF)
         @cpu.cpu.memory.write_byte(address + 2, (value >> 16) & 0xFF)
         @cpu.cpu.memory.write_byte(address + 3, (value >> 24) & 0xFF)
+      end
+
+      private
+
+      def build_memory_map(memory_size, disk_size)
+        CpuSimulator::SparseMemory.new([
+          CpuSimulator::MemoryRegion.new(base: 0, size: memory_size, name: "RAM"),
+          CpuSimulator::MemoryRegion.new(base: DISK_MAPPED_BASE, size: disk_size, name: "Disk")
+        ])
       end
     end
 

@@ -34,8 +34,6 @@ import type {
   TemplateItem,
   Instance,
   InstanceItem,
-  CheckInstanceItem,
-  DecisionInstanceItem,
   DecisionAnswer,
   InstanceStats,
   TodoItem,

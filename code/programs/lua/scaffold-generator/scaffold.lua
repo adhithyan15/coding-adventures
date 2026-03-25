@@ -353,20 +353,12 @@ end)
 end
 
 --- Generate the BUILD file content.
+--
+-- Dependencies are resolved at test time via package.path in the test files
+-- (adding sibling package src/ directories). No luarocks install needed —
+-- the packages aren't published to LuaRocks, they're local siblings.
 local function generate_build(direct_deps, ordered_deps, pkg_name)
-    if #ordered_deps > 0 then
-        -- Packages with dependencies need luarocks to install them first.
-        local lines = {}
-        for _, dep in ipairs(ordered_deps) do
-            local dep_snake = to_snake_case(dep)
-            lines[#lines + 1] = string.format("cd ../%s && luarocks make --local --lua-version 5.4", dep_snake)
-        end
-        lines[#lines + 1] = "luarocks make --local --lua-version 5.4"
-        lines[#lines + 1] = "cd tests && busted . --verbose --pattern=test_"
-        return table.concat(lines, "\n") .. "\n"
-    else
-        return "cd tests && busted . --verbose --pattern=test_\n"
-    end
+    return "cd tests && busted . --verbose --pattern=test_\n"
 end
 
 --- Generate the README.md content.

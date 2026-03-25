@@ -1,0 +1,10 @@
+[package]
+name = "cowsay"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cli-builder = { path = "../../../packages/rust/cli-builder" }
+serde_json = "1.0"
+regex = "1.10"
+atty = "0.2"

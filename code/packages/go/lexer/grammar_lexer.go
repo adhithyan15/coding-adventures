@@ -51,6 +51,18 @@ type compiledPattern struct {
 // On-Token Callback Type
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Hook Types — Pre/Post Tokenization Transforms
+// ---------------------------------------------------------------------------
+
+// PreTokenizeHook transforms source text before tokenization.
+// Multiple hooks compose left-to-right: source flows through A → B → C.
+type PreTokenizeHook func(source string) string
+
+// PostTokenizeHook transforms the token list after tokenization.
+// Multiple hooks compose left-to-right.
+type PostTokenizeHook func(tokens []Token) []Token
+
 // OnTokenCallback is the function signature for on-token callbacks.
 //
 // The callback fires after each token match, before the token is added to
@@ -271,6 +283,23 @@ type GrammarLexer struct {
 	// aliasMap maps token definition names to their aliases. Used during
 	// group pattern compilation to register aliases from group definitions.
 	aliasMap map[string]string
+
+	// preTokenizeHooks holds functions that transform the source text before
+	// tokenization. Multiple hooks compose left-to-right (A → B → C).
+	preTokenizeHooks []PreTokenizeHook
+
+	// postTokenizeHooks holds functions that transform the token list after
+	// tokenization. Multiple hooks compose left-to-right.
+	postTokenizeHooks []PostTokenizeHook
+
+	// caseInsensitive is true when the grammar was loaded with
+	// # @case_insensitive true. In this mode:
+	//   - The keyword set stores uppercase keyword values.
+	//   - Keyword lookup uses strings.ToUpper(value) before checking.
+	//   - Emitted KEYWORD tokens have their value normalized to uppercase.
+	// This allows SQL grammars to accept SELECT/select/Select etc. and
+	// still match grammar literals like "SELECT".
+	caseInsensitive bool
 }
 
 // NewGrammarLexer creates a new grammar-driven lexer.
@@ -279,14 +308,33 @@ type GrammarLexer struct {
 // regexes. The compiled patterns are anchored to the start of the remaining
 // source (using ^) so that only matches at the current position are found.
 func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
-	keywordSet := make(map[string]struct{})
-	for _, kw := range grammar.Keywords {
-		keywordSet[kw] = struct{}{}
+	// Case-insensitive mode: lowercase the entire source before tokenization.
+	// This ensures keyword matching works because keywords in the .tokens file
+	// are already lowercase, and now the source text will be too.
+	src := source
+	if !grammar.CaseSensitive {
+		src = strings.ToLower(source)
 	}
 
+	// Build keyword set. When case-insensitive mode is active, keywords
+	// are stored as uppercase so lookup can use strings.ToUpper(value).
+	keywordSet := make(map[string]struct{})
+	for _, kw := range grammar.Keywords {
+		if grammar.CaseInsensitive {
+			keywordSet[strings.ToUpper(kw)] = struct{}{}
+		} else {
+			keywordSet[kw] = struct{}{}
+		}
+	}
+
+	// Build reserved keyword set (same case treatment as keyword set).
 	reservedSet := make(map[string]struct{})
 	for _, rk := range grammar.ReservedKeywords {
-		reservedSet[rk] = struct{}{}
+		if grammar.CaseInsensitive {
+			reservedSet[strings.ToUpper(rk)] = struct{}{}
+		} else {
+			reservedSet[rk] = struct{}{}
+		}
 	}
 
 	// Build alias map: definition name -> alias name.
@@ -361,7 +409,7 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 	}
 
 	return &GrammarLexer{
-		source:          source,
+		source:          src,
 		grammar:         grammar,
 		pos:             0,
 		line:            1,
@@ -377,9 +425,26 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 		groupPatterns:   groupPatterns,
 		groupStack:      []string{"default"},
 		onToken:         nil,
-		skipEnabled:     true,
-		aliasMap:        aliasMap,
+		skipEnabled:       true,
+		aliasMap:          aliasMap,
+		caseInsensitive:   grammar.CaseInsensitive,
+		preTokenizeHooks:  nil,
+		postTokenizeHooks: nil,
 	}
+}
+
+// AddPreTokenize registers a text transform to run before tokenization.
+// The hook receives the raw source string and returns a (possibly modified)
+// source string. Multiple hooks compose left-to-right.
+func (l *GrammarLexer) AddPreTokenize(hook PreTokenizeHook) {
+	l.preTokenizeHooks = append(l.preTokenizeHooks, hook)
+}
+
+// AddPostTokenize registers a token transform to run after tokenization.
+// The hook receives the full token list (including EOF) and returns a
+// (possibly modified) token list. Multiple hooks compose left-to-right.
+func (l *GrammarLexer) AddPostTokenize(hook PostTokenizeHook) {
+	l.postTokenizeHooks = append(l.postTokenizeHooks, hook)
 }
 
 // SetOnToken registers a callback that fires on every token match.
@@ -423,16 +488,33 @@ func (l *GrammarLexer) advance() {
 // Returns (tokenType, typeName) where typeName is the effective name for
 // the parser (alias if present, otherwise the definition name).
 func (l *GrammarLexer) resolveTokenType(tokenName string, value string, alias string) (TokenType, string) {
-	// Reserved keyword check
+	// Reserved keyword check. In case-insensitive mode, compare using the
+	// uppercase form of the value (the reserved set stores uppercase keys).
 	if tokenName == "NAME" {
-		if _, ok := l.reservedSet[value]; ok {
+		lookupValue := value
+		if l.caseInsensitive {
+			lookupValue = strings.ToUpper(value)
+		}
+		if _, ok := l.reservedSet[lookupValue]; ok {
 			panic(fmt.Sprintf("LexerError at %d:%d: Reserved keyword %q cannot be used as an identifier", l.line, l.column, value))
 		}
 	}
 
-	// Regular keyword check
+	// Regular keyword check. In case-insensitive mode, the keyword set
+	// stores uppercase values. We compare strings.ToUpper(value) against
+	// the set and emit the keyword with its value normalized to uppercase.
+	// This means grammar rules can use "SELECT" and it matches select/SELECT/Select.
 	if tokenName == "NAME" {
-		if _, ok := l.keywordSet[value]; ok {
+		lookupValue := value
+		if l.caseInsensitive {
+			lookupValue = strings.ToUpper(value)
+		}
+		if _, ok := l.keywordSet[lookupValue]; ok {
+			if l.caseInsensitive {
+				// Normalize the emitted keyword value to uppercase so grammar
+				// literals like "SELECT" match regardless of input case.
+				return TokenKeyword, "KEYWORD"
+			}
 			return TokenKeyword, "KEYWORD"
 		}
 	}
@@ -544,6 +626,13 @@ func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
 
 			tType, typeName := l.resolveTokenType(p.Name, value, p.Alias)
 
+			// In case-insensitive mode, normalize KEYWORD token values to
+			// uppercase. This ensures grammar literals like "SELECT" match
+			// regardless of how the user typed the keyword (select/SELECT/Select).
+			if l.caseInsensitive && tType == TokenKeyword {
+				value = strings.ToUpper(value)
+			}
+
 			// Handle STRING tokens: strip quotes and optionally process escapes.
 			// When EscapeMode is "none", we strip the quotes but leave escape
 			// sequences as raw text. This is used by grammars like TOML and CSS
@@ -624,10 +713,34 @@ func processEscapes(s string) string {
 // Dispatches to the appropriate tokenization method based on whether
 // indentation mode is active.
 func (l *GrammarLexer) Tokenize() []Token {
-	if l.indentMode {
-		return l.tokenizeIndentation()
+	// Stage 1: Pre-tokenize hooks transform the source text.
+	// Each hook receives the output of the previous hook, composing
+	// left-to-right. This enables source-level transforms like macro
+	// expansion or encoding normalization before any pattern matching.
+	if len(l.preTokenizeHooks) > 0 {
+		source := l.source
+		for _, hook := range l.preTokenizeHooks {
+			source = hook(source)
+		}
+		l.source = source
 	}
-	return l.tokenizeStandard()
+
+	// Stage 2: Core tokenization.
+	var tokens []Token
+	if l.indentMode {
+		tokens = l.tokenizeIndentation()
+	} else {
+		tokens = l.tokenizeStandard()
+	}
+
+	// Stage 3: Post-tokenize hooks transform the token list.
+	// Each hook receives the full token list (including EOF) and returns
+	// a (possibly modified) token list. Hooks compose left-to-right.
+	for _, hook := range l.postTokenizeHooks {
+		tokens = hook(tokens)
+	}
+
+	return tokens
 }
 
 // ---------------------------------------------------------------------------

@@ -119,6 +119,12 @@ pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
                 let rock_name = format!("coding-adventures-{}", dir_name.replace('_', "-"));
                 known.insert(rock_name, pkg.name.clone());
             }
+            "perl" => {
+                // Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
+                // This matches the Python convention exactly.
+                let cpan_name = format!("coding-adventures-{}", dir_name);
+                known.insert(cpan_name, pkg.name.clone());
+            }
             _ => {}
         }
     }
@@ -514,6 +520,62 @@ fn extract_lua_dep(
 }
 
 // ---------------------------------------------------------------------------
+// Perl dependency parsing
+// ---------------------------------------------------------------------------
+
+/// Extracts internal dependencies from a Perl cpanfile.
+///
+/// A cpanfile declares dependencies with one `requires` per line:
+///
+///     requires 'coding-adventures-logic-gates';
+///     requires 'coding-adventures-bitset', '>= 0.01';
+///
+/// We scan for lines containing `requires` followed by a quoted string
+/// starting with `coding-adventures-` and map them to internal package
+/// names. External deps are silently skipped.
+fn parse_perl_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let cpanfile = pkg.path.join("cpanfile");
+    let data = match fs::read_to_string(&cpanfile) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+    let prefix = "coding-adventures-";
+
+    for line in data.lines() {
+        let trimmed = line.trim();
+
+        // Skip blank lines and comments.
+        if trimmed.is_empty() || trimmed.starts_with('#') {
+            continue;
+        }
+
+        // Look for: requires 'coding-adventures-...' or requires "coding-adventures-..."
+        if !trimmed.contains("requires") {
+            continue;
+        }
+
+        // Find the quoted dependency name after "requires".
+        // Try both single and double quotes.
+        for quote in &['\'', '"'] {
+            if let Some(start) = trimmed.find(&format!("{}{}", quote, prefix)) {
+                let after_quote = start + 1; // skip the opening quote
+                if let Some(end) = trimmed[after_quote..].find(*quote) {
+                    let dep_name = trimmed[after_quote..after_quote + end].to_lowercase();
+                    if let Some(pkg_name) = known_names.get(&dep_name) {
+                        internal_deps.push(pkg_name.clone());
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -546,6 +608,7 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
             "rust" => parse_rust_deps(pkg, &known_names),
             "elixir" => parse_elixir_deps(pkg, &known_names),
             "lua" => parse_lua_deps(pkg, &known_names),
+            "perl" => parse_perl_deps(pkg, &known_names),
             _ => Vec::new(),
         };
 

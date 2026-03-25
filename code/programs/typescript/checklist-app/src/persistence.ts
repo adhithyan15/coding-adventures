@@ -35,7 +35,6 @@
 import type { KVStorage } from "@coding-adventures/indexeddb";
 import type { Middleware } from "@coding-adventures/store";
 import type { AppState } from "./reducer.js";
-import type { Template, Instance } from "./types.js";
 import {
   TEMPLATE_CREATE,
   TEMPLATE_UPDATE,
@@ -74,7 +73,7 @@ export function createPersistenceMiddleware(
         // The newly created template is the last one in the array
         const template = state.templates[state.templates.length - 1];
         if (template) {
-          storage.put<Template>("templates", template);
+          storage.put("templates", template);
         }
         break;
       }
@@ -83,7 +82,7 @@ export function createPersistenceMiddleware(
         const id = action.id as string;
         const template = state.templates.find((t) => t.id === id);
         if (template) {
-          storage.put<Template>("templates", template);
+          storage.put("templates", template);
         }
         break;
       }
@@ -98,7 +97,7 @@ export function createPersistenceMiddleware(
         // The newly created instance is the last one in the array
         const instance = state.instances[state.instances.length - 1];
         if (instance) {
-          storage.put<Instance>("instances", instance);
+          storage.put("instances", instance);
         }
         break;
       }
@@ -111,7 +110,7 @@ export function createPersistenceMiddleware(
         const instanceId = action.instanceId as string;
         const instance = state.instances.find((i) => i.id === instanceId);
         if (instance) {
-          storage.put<Instance>("instances", instance);
+          storage.put("instances", instance);
         }
         break;
       }

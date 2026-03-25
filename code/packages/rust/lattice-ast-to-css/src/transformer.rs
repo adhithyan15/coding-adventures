@@ -56,7 +56,7 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use lexer::token::{Token, TokenType};
 
 use crate::errors::LatticeError;
-use crate::evaluator::{ExpressionEvaluator, get_token_type_name};
+use crate::evaluator::{ExpressionEvaluator, get_token_type_name, is_builtin_function, evaluate_builtin};
 use crate::scope::{ScopeChain, ScopeValue};
 use crate::values::LatticeValue;
 
@@ -163,6 +163,9 @@ pub struct FunctionDef {
 ///
 /// Create one transformer per stylesheet. Call `transform(ast)` to run the
 /// three-pass pipeline and get back a CSS-only AST.
+/// Maximum number of iterations allowed in a @while loop (Lattice v2).
+const MAX_WHILE_ITERATIONS: usize = 1000;
+
 pub struct LatticeTransformer {
     /// Global variable scope (populated in Pass 1)
     pub variables: ScopeChain,
@@ -174,6 +177,18 @@ pub struct LatticeTransformer {
     mixin_stack: Vec<String>,
     /// Function call stack for cycle detection
     function_stack: Vec<String>,
+    /// Maximum @while iterations (Lattice v2)
+    max_while_iterations: usize,
+    /// @extend tracking: maps target selector → list of extending selectors (v2)
+    extend_map: HashMap<String, Vec<String>>,
+    /// @at-root hoisted rules collected during expansion (v2)
+    at_root_rules: Vec<GrammarASTNode>,
+    /// @content block stack for mixin content blocks (v2)
+    content_block_stack: Vec<Option<GrammarASTNode>>,
+    /// Scope stack for @content evaluation in the caller's scope (v2)
+    content_scope_stack: Vec<ScopeChain>,
+    /// Current selector context — tracks the selector path for @extend (v2)
+    current_selector: Option<String>,
 }
 
 impl LatticeTransformer {
@@ -185,6 +200,12 @@ impl LatticeTransformer {
             functions: HashMap::new(),
             mixin_stack: Vec::new(),
             function_stack: Vec::new(),
+            max_while_iterations: MAX_WHILE_ITERATIONS,
+            extend_map: HashMap::new(),
+            at_root_rules: Vec::new(),
+            content_block_stack: Vec::new(),
+            content_scope_stack: Vec::new(),
+            current_selector: None,
         }
     }
 
@@ -200,6 +221,19 @@ impl LatticeTransformer {
 
         // Pass 3: Cleanup — remove empty nodes
         ast = self.cleanup(ast);
+
+        // Lattice v2: Apply @extend selector merging
+        if !self.extend_map.is_empty() {
+            self.apply_extends(&mut ast);
+        }
+
+        // Lattice v2: Splice @at-root hoisted rules at the top level
+        if !self.at_root_rules.is_empty() {
+            let hoisted = std::mem::take(&mut self.at_root_rules);
+            for rule in hoisted {
+                ast.children.push(ASTNodeOrToken::Node(rule));
+            }
+        }
 
         Ok(ast)
     }
@@ -254,24 +288,61 @@ impl LatticeTransformer {
     }
 
     fn collect_variable(&mut self, node: &GrammarASTNode) -> Result<(), LatticeError> {
-        // variable_declaration = VARIABLE COLON value_list SEMICOLON ;
+        // variable_declaration = VARIABLE COLON value_list { variable_flag } SEMICOLON ;
+        // Lattice v2: supports !default and !global flags
         let mut name: Option<String> = None;
         let mut css_value: Option<String> = None;
+        let mut is_default = false;
+        let mut is_global = false;
 
         for child in &node.children {
             match child {
-                ASTNodeOrToken::Token(tok) if get_token_type_name(tok) == "VARIABLE" => {
-                    name = Some(tok.value.clone());
+                ASTNodeOrToken::Token(tok) => {
+                    let type_name = get_token_type_name(tok);
+                    if type_name == "VARIABLE" {
+                        name = Some(tok.value.clone());
+                    } else if type_name == "BANG_DEFAULT" || tok.value == "!default" {
+                        is_default = true;
+                    } else if type_name == "BANG_GLOBAL" || tok.value == "!global" {
+                        is_global = true;
+                    }
                 }
-                ASTNodeOrToken::Node(n) if n.rule_name == "value_list" => {
-                    css_value = Some(emit_raw_node(n));
+                ASTNodeOrToken::Node(n) => {
+                    if n.rule_name == "value_list" {
+                        css_value = Some(emit_raw_node(n));
+                    } else if n.rule_name == "variable_flag" {
+                        for fc in &n.children {
+                            if let ASTNodeOrToken::Token(ft) = fc {
+                                let ft_name = get_token_type_name(ft);
+                                if ft_name == "BANG_DEFAULT" || ft.value == "!default" {
+                                    is_default = true;
+                                } else if ft_name == "BANG_GLOBAL" || ft.value == "!global" {
+                                    is_global = true;
+                                }
+                            }
+                        }
+                    }
                 }
-                _ => {}
             }
         }
 
         if let (Some(n), Some(v)) = (name, css_value) {
-            self.variables.set(n, ScopeValue::Raw(v));
+            if is_default && is_global {
+                // Check global scope only — if not defined, set globally
+                if !self.variables.has(&n) {
+                    self.variables.set(n, ScopeValue::Raw(v));
+                }
+            } else if is_default {
+                // Only set if not already defined
+                if !self.variables.has(&n) {
+                    self.variables.set(n, ScopeValue::Raw(v));
+                }
+            } else if is_global {
+                // Always set in global scope
+                self.variables.set(n, ScopeValue::Raw(v));
+            } else {
+                self.variables.set(n, ScopeValue::Raw(v));
+            }
         }
         Ok(())
     }
@@ -358,6 +429,10 @@ impl LatticeTransformer {
             "function_args" | "function_arg" => self.expand_children(node, scope),
             // Top-level rule wrapper: check for lattice_rule containing control flow
             "rule" => self.expand_rule_node(node, scope),
+            // Lattice v2: resolve variables in selector positions
+            "compound_selector" | "simple_selector" | "class_selector" => {
+                self.expand_selector_with_vars(node, scope)
+            }
             _ => self.expand_children(node, scope),
         }
     }
@@ -595,7 +670,10 @@ impl LatticeTransformer {
     }
 
     /// Expand a lattice_block_item, which can be a variable declaration,
-    /// @include, or control flow.
+    /// @include, @content, @at-root, @extend, or control flow.
+    ///
+    /// Lattice v2 adds support for content_directive, at_root_directive,
+    /// and extend_directive.
     fn expand_lattice_block_item(
         &mut self,
         node: GrammarASTNode,
@@ -613,13 +691,204 @@ impl LatticeTransformer {
                 "lattice_control" => {
                     return self.expand_control(inner.clone(), scope);
                 }
+                // Lattice v2: @content
+                "content_directive" => {
+                    return self.expand_content_directive(scope);
+                }
+                // Lattice v2: @at-root
+                "at_root_directive" => {
+                    return self.expand_at_root(inner.clone(), scope);
+                }
+                // Lattice v2: @extend
+                "extend_directive" => {
+                    self.expand_extend(inner, scope);
+                    return Ok(vec![]);
+                }
                 _ => {}
             }
         }
         Ok(vec![node])
     }
 
+    // =========================================================================
+    // @content Expansion (Lattice v2)
+    // =========================================================================
+
+    fn expand_content_directive(
+        &mut self,
+        _scope: &ScopeChain,
+    ) -> Result<Vec<GrammarASTNode>, LatticeError> {
+        // @content is replaced with the content block passed to @include.
+        // If no content block was passed, produce nothing.
+        if let Some(Some(content_block)) = self.content_block_stack.last().cloned() {
+            let content_scope = self.content_scope_stack.last().cloned()
+                .unwrap_or_else(ScopeChain::new);
+            let expanded = self.expand_node(content_block, &content_scope)?;
+            Ok(extract_block_contents_items(&expanded))
+        } else {
+            Ok(vec![])
+        }
+    }
+
+    // =========================================================================
+    // @at-root Expansion (Lattice v2)
+    // =========================================================================
+
+    fn expand_at_root(
+        &mut self,
+        node: GrammarASTNode,
+        scope: &ScopeChain,
+    ) -> Result<Vec<GrammarASTNode>, LatticeError> {
+        // at_root_directive = "@at-root" ( block | selector_list block ) ;
+        // Collect the block children and hoist them to the root.
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "block" {
+                    let expanded = self.expand_node(n.clone(), scope)?;
+                    let items = extract_block_contents_items(&expanded);
+                    self.at_root_rules.extend(items);
+                }
+            }
+        }
+        Ok(vec![])
+    }
+
+    // =========================================================================
+    // @extend Expansion (Lattice v2)
+    // =========================================================================
+
+    fn expand_extend(
+        &mut self,
+        node: &GrammarASTNode,
+        _scope: &ScopeChain,
+    ) {
+        // extend_directive = "@extend" extend_target SEMICOLON ;
+        // extract_target could be PLACEHOLDER, DOT IDENT, or IDENT
+        let mut target = String::new();
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Token(tok) => {
+                    let type_name = get_token_type_name(tok);
+                    if type_name == "PLACEHOLDER" || type_name == "Dot"
+                        || type_name == "Ident" || type_name == "IDENT" {
+                        target.push_str(&tok.value);
+                    }
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "extend_target" => {
+                    target = emit_raw_node(n).trim().to_string();
+                }
+                _ => {}
+            }
+        }
+
+        if !target.is_empty() {
+            let extending = self.current_selector.clone().unwrap_or_default();
+            self.extend_map
+                .entry(target)
+                .or_default()
+                .push(extending);
+        }
+    }
+
+    /// Apply @extend selector merging in Pass 3 (Lattice v2).
+    ///
+    /// For each rule in the AST, check if its selector matches an extend target.
+    /// If so, append the extending selectors to the rule's selector list.
+    /// Also remove placeholder-only rules.
+    fn apply_extends(&self, ast: &mut GrammarASTNode) {
+        // Simple implementation: walk all qualified_rule nodes and check selectors
+        let mut new_children: Vec<ASTNodeOrToken> = Vec::new();
+        let mut children = std::mem::take(&mut ast.children);
+
+        for child in children.drain(..) {
+            match child {
+                ASTNodeOrToken::Node(mut n) => {
+                    if n.rule_name == "rule" || n.rule_name == "qualified_rule" {
+                        // Check if this rule's selector matches an extend target
+                        let selector_text = self.extract_selector_text(&n);
+                        let is_placeholder = selector_text.starts_with('%');
+
+                        // Check for extend matches
+                        let mut extended = false;
+                        for (target, extenders) in &self.extend_map {
+                            if selector_text.contains(target.as_str()) {
+                                // Add extending selectors to this rule
+                                self.add_selectors_to_rule(&mut n, extenders);
+                                extended = true;
+                            }
+                        }
+
+                        // Remove placeholder-only rules
+                        if is_placeholder && !extended {
+                            continue; // Skip this rule
+                        }
+                        if is_placeholder {
+                            // Remove the placeholder selector part but keep extended selectors
+                            // For simplicity, keep the rule with modified selectors
+                        }
+                    }
+                    new_children.push(ASTNodeOrToken::Node(n));
+                }
+                other => new_children.push(other),
+            }
+        }
+
+        ast.children = new_children;
+    }
+
+    /// Extract the selector text from a rule node.
+    fn extract_selector_text(&self, node: &GrammarASTNode) -> String {
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "selector_list" || n.rule_name == "complex_selector"
+                    || n.rule_name == "compound_selector" || n.rule_name == "qualified_rule" {
+                    return emit_raw_node(n);
+                }
+            }
+        }
+        // Fallback: look into inner nodes
+        if let Some(ASTNodeOrToken::Node(inner)) = node.children.first() {
+            return self.extract_selector_text(inner);
+        }
+        String::new()
+    }
+
+    /// Add extending selectors to a rule's selector list.
+    fn add_selectors_to_rule(&self, node: &mut GrammarASTNode, selectors: &[String]) {
+        // Find the selector_list and append new selectors
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "qualified_rule" {
+                    self.add_selectors_to_rule(n, selectors);
+                    return;
+                }
+                if n.rule_name == "selector_list" {
+                    for sel in selectors {
+                        if !sel.is_empty() {
+                            // Add comma + new selector tokens
+                            n.children.push(ASTNodeOrToken::Token(Token {
+                                type_: TokenType::Name,
+                                type_name: Some("Comma".to_string()),
+                                value: ",".to_string(),
+                                line: 0, column: 0,
+                            }));
+                            n.children.push(ASTNodeOrToken::Token(Token {
+                                type_: TokenType::Name,
+                                type_name: None,
+                                value: format!(" {}", sel),
+                                line: 0, column: 0,
+                            }));
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
     /// Process a variable declaration inside a block — sets the variable in scope.
+    ///
+    /// Lattice v2: handles !default and !global flags.
     fn expand_variable_declaration(
         &mut self,
         node: GrammarASTNode,
@@ -627,23 +896,64 @@ impl LatticeTransformer {
     ) -> Result<(), LatticeError> {
         let mut var_name: Option<String> = None;
         let mut value_text: Option<String> = None;
+        let mut is_default = false;
+        let mut is_global = false;
 
         for child in &node.children {
             match child {
-                ASTNodeOrToken::Token(tok) if get_token_type_name(tok) == "VARIABLE" => {
-                    var_name = Some(tok.value.clone());
+                ASTNodeOrToken::Token(tok) => {
+                    let type_name = get_token_type_name(tok);
+                    if type_name == "VARIABLE" {
+                        var_name = Some(tok.value.clone());
+                    } else if type_name == "BANG_DEFAULT" || tok.value == "!default" {
+                        is_default = true;
+                    } else if type_name == "BANG_GLOBAL" || tok.value == "!global" {
+                        is_global = true;
+                    }
                 }
-                ASTNodeOrToken::Node(n) if n.rule_name == "value_list" => {
-                    // Expand variables within the value before storing
-                    let expanded = self.expand_value_list(n.clone(), scope)?;
-                    value_text = Some(emit_raw_node(&expanded));
+                ASTNodeOrToken::Node(n) => {
+                    if n.rule_name == "value_list" {
+                        let expanded = self.expand_value_list(n.clone(), scope)?;
+                        // Try to evaluate as an expression (e.g. $i + 1 → 2).
+                        // This is critical for @while loops: without it,
+                        // $i: $i + 1 stores "1 + 1" instead of "2", causing
+                        // the loop condition to never change and looping forever.
+                        let evaluator = ExpressionEvaluator::new(scope);
+                        if let Ok(evaluated) = evaluator.evaluate_node(&expanded) {
+                            value_text = Some(evaluated.to_css_string());
+                        } else {
+                            value_text = Some(emit_raw_node(&expanded));
+                        }
+                    } else if n.rule_name == "variable_flag" {
+                        for fc in &n.children {
+                            if let ASTNodeOrToken::Token(ft) = fc {
+                                let ft_name = get_token_type_name(ft);
+                                if ft_name == "BANG_DEFAULT" || ft.value == "!default" {
+                                    is_default = true;
+                                } else if ft_name == "BANG_GLOBAL" || ft.value == "!global" {
+                                    is_global = true;
+                                }
+                            }
+                        }
+                    }
                 }
-                _ => {}
             }
         }
 
         if let (Some(name), Some(value)) = (var_name, value_text) {
-            scope.set(name, ScopeValue::Raw(value));
+            if is_default && is_global {
+                if !self.variables.has(&name) {
+                    self.variables.set(name, ScopeValue::Raw(value));
+                }
+            } else if is_default {
+                if !scope.has(&name) {
+                    scope.set(name, ScopeValue::Raw(value));
+                }
+            } else if is_global {
+                self.variables.set(name, ScopeValue::Raw(value));
+            } else {
+                scope.set(name, ScopeValue::Raw(value));
+            }
         }
         Ok(())
     }
@@ -715,14 +1025,26 @@ impl LatticeTransformer {
             return self.expand_children(node, scope);
         };
 
-        // CSS built-in: expand args but keep structure
-        if is_css_function(&func_name) {
+        // User-defined function ALWAYS takes priority — even over CSS built-ins
+        // like scale(), translate(), etc. If the user defines @function scale(),
+        // their definition wins. This matches Sass behavior.
+        if self.functions.contains_key(&func_name) {
+            return self.evaluate_function_call(&func_name.clone(), node, scope);
+        }
+
+        // CSS built-in that is NOT also a Lattice built-in — pass through
+        if is_css_function(&func_name) && !is_builtin_function(&func_name) {
             return self.expand_children(node, scope);
         }
 
-        // Lattice function: evaluate
-        if self.functions.contains_key(&func_name) {
-            return self.evaluate_function_call(&func_name.clone(), node, scope);
+        // Lattice v2: Built-in function evaluation
+        if is_builtin_function(&func_name) {
+            return self.evaluate_builtin_function_call(&func_name, node, scope);
+        }
+
+        // CSS built-in that overlaps with Lattice built-in names
+        if is_css_function(&func_name) {
+            return self.expand_children(node, scope);
         }
 
         // Unknown function: pass through
@@ -738,11 +1060,13 @@ impl LatticeTransformer {
         node: GrammarASTNode,
         scope: &ScopeChain,
     ) -> Result<Vec<GrammarASTNode>, LatticeError> {
-        // include_directive = "@include" FUNCTION include_args RPAREN ( SEMICOLON | block )
+        // include_directive = "@include" FUNCTION [ include_args ] RPAREN ( SEMICOLON | block )
         //                   | "@include" IDENT ( SEMICOLON | block )
+        // Lattice v2: the trailing block (if present) is a @content block.
 
         let mut mixin_name: Option<String> = None;
         let mut args_node: Option<GrammarASTNode> = None;
+        let mut content_block: Option<GrammarASTNode> = None;
 
         for child in &node.children {
             match child {
@@ -762,6 +1086,10 @@ impl LatticeTransformer {
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "include_args" => {
                     args_node = Some(n.clone());
+                }
+                // Lattice v2: content block for @content
+                ASTNodeOrToken::Node(n) if n.rule_name == "block" => {
+                    content_block = Some(n.clone());
                 }
                 _ => {}
             }
@@ -812,6 +1140,10 @@ impl LatticeTransformer {
             }
         }
 
+        // Lattice v2: push @content block and caller scope for @content expansion
+        self.content_block_stack.push(content_block);
+        self.content_scope_stack.push(scope.clone());
+
         // Expand the mixin body
         self.mixin_stack.push(mixin_name.clone());
         let result = (|| -> Result<Vec<GrammarASTNode>, LatticeError> {
@@ -823,6 +1155,10 @@ impl LatticeTransformer {
             Ok(items)
         })();
         self.mixin_stack.pop();
+
+        // Lattice v2: pop @content block and scope
+        self.content_block_stack.pop();
+        self.content_scope_stack.pop();
 
         result
     }
@@ -911,10 +1247,71 @@ impl LatticeTransformer {
                 "if_directive" => return self.expand_if(inner.clone(), scope),
                 "for_directive" => return self.expand_for(inner.clone(), scope),
                 "each_directive" => return self.expand_each(inner.clone(), scope),
+                "while_directive" => return self.expand_while(inner.clone(), scope),
                 _ => {}
             }
         }
         Ok(vec![])
+    }
+
+    // =========================================================================
+    // @while Expansion (Lattice v2)
+    // =========================================================================
+
+    fn expand_while(
+        &mut self,
+        node: GrammarASTNode,
+        scope: &ScopeChain,
+    ) -> Result<Vec<GrammarASTNode>, LatticeError> {
+        // while_directive = "@while" lattice_expression block ;
+        let mut expr_node: Option<GrammarASTNode> = None;
+        let mut block: Option<GrammarASTNode> = None;
+
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) if n.rule_name.contains("expression") || n.rule_name.contains("lattice") => {
+                    if expr_node.is_none() && n.rule_name != "block" {
+                        expr_node = Some(n.clone());
+                    }
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "block" => {
+                    block = Some(n.clone());
+                }
+                _ => {}
+            }
+        }
+
+        let (expr_node, block) = match (expr_node, block) {
+            (Some(e), Some(b)) => (e, b),
+            _ => return Ok(vec![]),
+        };
+
+        let mut result: Vec<GrammarASTNode> = Vec::new();
+        let loop_scope = scope.child();
+        let mut iterations = 0;
+
+        loop {
+            let evaluator = ExpressionEvaluator::new(&loop_scope);
+            let val = evaluator.evaluate_node(&expr_node)?;
+            if !val.is_truthy() {
+                break;
+            }
+
+            iterations += 1;
+            if iterations > self.max_while_iterations {
+                return Err(LatticeError::max_iteration(self.max_while_iterations, 0, 0));
+            }
+
+            let block_clone = block.clone();
+            let expanded = self.expand_node(block_clone, &loop_scope)?;
+            let items = extract_block_contents_items(&expanded);
+            result.extend(items);
+
+            // Re-read any variable mutations from the block expansion
+            // by expanding vars in the block contents scope
+        }
+
+        Ok(result)
     }
 
     fn expand_if(
@@ -1430,6 +1827,139 @@ impl LatticeTransformer {
     }
 
     // =========================================================================
+    // Built-in Function Evaluation (Lattice v2)
+    // =========================================================================
+
+    fn evaluate_builtin_function_call(
+        &mut self,
+        func_name: &str,
+        node: GrammarASTNode,
+        scope: &ScopeChain,
+    ) -> Result<GrammarASTNode, LatticeError> {
+        // Parse arguments and evaluate them as LatticeValues
+        let arg_strings = self.parse_function_call_args(&node, scope)?;
+        let mut args: Vec<LatticeValue> = Vec::new();
+        for arg_str in &arg_strings {
+            let trimmed = arg_str.trim();
+            // Try to convert the arg string to a LatticeValue
+            let val = if trimmed.starts_with('#') {
+                LatticeValue::Color(trimmed.to_string())
+            } else if trimmed.starts_with('$') {
+                // Variable reference — look up in scope
+                match scope.get(trimmed) {
+                    Some(sv) => match sv.as_lattice_value() {
+                        Some(v) => v.clone(),
+                        None => {
+                            let text = sv.to_css_text();
+                            parse_css_text_to_value(&text)
+                        }
+                    },
+                    None => LatticeValue::Ident(trimmed.to_string()),
+                }
+            } else if trimmed.ends_with('%') {
+                let num_str = trimmed.trim_end_matches('%');
+                match num_str.parse::<f64>() {
+                    Ok(n) => LatticeValue::Percentage(n),
+                    Err(_) => LatticeValue::Ident(trimmed.to_string()),
+                }
+            } else if let Ok(n) = trimmed.parse::<f64>() {
+                LatticeValue::Number(n)
+            } else {
+                // Could be a dimension, ident, string, etc.
+                parse_css_text_to_value(trimmed)
+            };
+            args.push(val);
+        }
+
+        let result = evaluate_builtin(func_name, &args)?;
+        Ok(make_value_node(&result.to_css_string(), &node))
+    }
+
+    // =========================================================================
+    // Property Nesting Expansion (Lattice v2)
+    // =========================================================================
+    //
+    // property_nesting = property COLON block ;
+    // e.g., font: { size: 14px; weight: bold; }
+    // becomes: font-size: 14px; font-weight: bold;
+
+    #[allow(dead_code)]
+    fn expand_property_nesting(
+        &mut self,
+        prefix: &str,
+        block: GrammarASTNode,
+        scope: &ScopeChain,
+    ) -> Result<Vec<GrammarASTNode>, LatticeError> {
+        let expanded = self.expand_node(block, scope)?;
+        let items = extract_block_contents_items(&expanded);
+        let mut result: Vec<GrammarASTNode> = Vec::new();
+
+        for item in items {
+            // Look for declaration nodes and prepend the prefix
+            let modified = self.prepend_property_prefix(&item, prefix);
+            result.push(modified);
+        }
+
+        Ok(result)
+    }
+
+    #[allow(dead_code)]
+    fn prepend_property_prefix(&self, node: &GrammarASTNode, prefix: &str) -> GrammarASTNode {
+        let mut new_node = node.clone();
+        // Walk into declaration nodes and prepend prefix to property name
+        if node.rule_name == "declaration" || node.rule_name == "block_item" {
+            let mut found_property = false;
+            for child in &mut new_node.children {
+                match child {
+                    ASTNodeOrToken::Token(tok) if !found_property => {
+                        let type_name = get_token_type_name(tok);
+                        if type_name == "Ident" || type_name == "IDENT" || type_name == "Name" {
+                            tok.value = format!("{}-{}", prefix, tok.value);
+                            found_property = true;
+                        }
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "declaration" => {
+                        *n = self.prepend_property_prefix(n, prefix);
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "block_item" || n.rule_name == "declaration_or_nested" => {
+                        *n = self.prepend_property_prefix(n, prefix);
+                    }
+                    _ => {}
+                }
+            }
+        }
+        new_node
+    }
+
+    // =========================================================================
+    // Variable in Selector Expansion (Lattice v2)
+    // =========================================================================
+    //
+    // In selector positions, $variable tokens are resolved to their CSS text
+    // values and concatenated with adjacent tokens.
+
+    fn expand_selector_with_vars(
+        &mut self,
+        mut node: GrammarASTNode,
+        scope: &ScopeChain,
+    ) -> Result<GrammarASTNode, LatticeError> {
+        let mut new_children: Vec<ASTNodeOrToken> = Vec::new();
+
+        for child in node.children.drain(..) {
+            match child {
+                ASTNodeOrToken::Token(tok) if get_token_type_name(&tok) == "VARIABLE" => {
+                    let substituted = self.substitute_variable(&tok, scope)?;
+                    new_children.push(substituted);
+                }
+                other => new_children.push(other),
+            }
+        }
+
+        node.children = new_children;
+        Ok(node)
+    }
+
+    // =========================================================================
     // Pass 3: Cleanup
     // =========================================================================
 
@@ -1644,6 +2174,46 @@ fn resolve_variable_in_text(text: &str, scope: &ScopeChain) -> String {
         }
     }
     trimmed.to_string()
+}
+
+/// Parse a CSS text string into a LatticeValue for built-in function args.
+///
+/// Tries to detect numbers, dimensions, percentages, colors, and strings.
+/// Falls back to Ident for anything unrecognized.
+fn parse_css_text_to_value(text: &str) -> LatticeValue {
+    let trimmed = text.trim();
+    if trimmed.is_empty() {
+        return LatticeValue::Null;
+    }
+    if trimmed.starts_with('#') {
+        return LatticeValue::Color(trimmed.to_string());
+    }
+    if trimmed.starts_with('"') && trimmed.ends_with('"') {
+        return LatticeValue::String(trimmed[1..trimmed.len()-1].to_string());
+    }
+    if trimmed == "true" { return LatticeValue::Bool(true); }
+    if trimmed == "false" { return LatticeValue::Bool(false); }
+    if trimmed == "null" { return LatticeValue::Null; }
+    if trimmed.ends_with('%') {
+        if let Ok(n) = trimmed[..trimmed.len()-1].parse::<f64>() {
+            return LatticeValue::Percentage(n);
+        }
+    }
+    // Try dimension: number followed by unit letters
+    if let Some(pos) = trimmed.find(|c: char| c.is_alphabetic()) {
+        if pos > 0 {
+            if let Ok(n) = trimmed[..pos].parse::<f64>() {
+                return LatticeValue::Dimension {
+                    value: n,
+                    unit: trimmed[pos..].to_string(),
+                };
+            }
+        }
+    }
+    if let Ok(n) = trimmed.parse::<f64>() {
+        return LatticeValue::Number(n);
+    }
+    LatticeValue::Ident(trimmed.to_string())
 }
 
 /// Find the AT_KEYWORD token value in an at_rule node.
