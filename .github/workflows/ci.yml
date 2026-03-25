@@ -198,6 +198,7 @@ jobs:
           luarocks install busted
           luarocks install luacov
           luarocks install luacheck
+          for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
 
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
