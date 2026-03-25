@@ -1,0 +1,5 @@
+uv venv --quiet --clear
+uv pip install pytest --quiet
+cargo build --release
+if exist target\release\commonmark_native.dll copy target\release\commonmark_native.dll src\commonmark_native\commonmark_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v
