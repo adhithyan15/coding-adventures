@@ -3,7 +3,12 @@
   "version": 1,
   "package": "rust/verilog-parser",
   "capabilities": [
-    "fs:read:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    }
   ],
   "justification": "Reads grammar rule definitions from code/grammars/*.grammar at runtime to configure the parser. The grammar file is loaded once at initialization via the filesystem."
 }

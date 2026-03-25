@@ -3,8 +3,18 @@
   "version": 1,
   "package": "elixir/brainfuck",
   "capabilities": [
-    "stdin:read:*",
-    "stdout:write:*"
+    {
+      "category": "stdin",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads user input from standard input during interactive program execution."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes output to standard output for user-facing display and program output."
+    }
   ],
   "justification": "Brainfuck programs read input via the , command (stdin) and produce output via the . command (stdout)."
 }

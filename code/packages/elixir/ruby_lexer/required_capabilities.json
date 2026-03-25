@@ -3,7 +3,12 @@
   "version": 1,
   "package": "elixir/ruby_lexer",
   "capabilities": [
-    "fs:read:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    }
   ],
   "justification": "Reads token pattern definitions from code/grammars/*.tokens at runtime to configure the tokenizer. The grammar file is loaded once at initialization via the filesystem."
 }

@@ -3,8 +3,18 @@
   "version": 1,
   "package": "elixir/grammar_tools",
   "capabilities": [
-    "fs:read:*",
-    "stdout:write:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes output to standard output for user-facing display and program output."
+    }
   ],
   "justification": "Mix task reads grammar files via File.read! and writes validation results to stdout via IO.puts/IO.write."
 }

@@ -3,7 +3,12 @@
   "version": 1,
   "package": "elixir/lattice_lexer",
   "capabilities": [
-    "fs:read:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    }
   ],
   "justification": "Reads token grammar definition file (lattice.tokens) via File.read! at initialization time."
 }

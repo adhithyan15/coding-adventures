@@ -3,7 +3,12 @@
   "version": 1,
   "package": "elixir/parser",
   "capabilities": [
-    "stdout:write:*"
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes output to standard output for user-facing display and program output."
+    }
   ],
   "justification": "Writes debug trace output to stderr via IO.write when tracing is enabled."
 }

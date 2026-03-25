@@ -3,7 +3,12 @@
   "version": 1,
   "package": "elixir/json_parser",
   "capabilities": [
-    "fs:read:*"
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    }
   ],
   "justification": "Reads parser grammar definition file (json.grammar) via File.read! at initialization time."
 }
