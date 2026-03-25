@@ -910,8 +910,10 @@ module CodingAdventures
               # Named arg: $param: value_list
               named[var_child.value] = val_list
             elsif val_list
-              # Positional arg
-              positional << val_list
+              # Positional arg: split on commas.
+              # value_list greedily consumes COMMA tokens, so button(blue, white)
+              # arrives as one include_arg wrapping value_list([blue, ,, white]).
+              split_value_list_on_commas(val_list).each { |part| positional << part }
             end
           end
 

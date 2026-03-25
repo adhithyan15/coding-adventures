@@ -1242,10 +1242,14 @@ func (t *LatticeTransformer) parseIncludeArgs(node *parser.ASTNode) ([]interface
 					}
 				}
 			}
-			// Positional: find value_list child
+			// Positional: find value_list child and split on commas.
+			// value_list greedily consumes COMMA tokens, so button(blue, white)
+			// arrives as one include_arg wrapping value_list([blue, ,, white]).
+			// splitValueListOnCommas splits it into [value_list(blue), value_list(white)].
 			for _, c := range children {
 				if vl, ok := c.(*parser.ASTNode); ok && (vl.RuleName == "value_list" || vl.RuleName == "mixin_value_list") {
-					positional = append(positional, vl)
+					parts := splitValueListOnCommas(vl)
+					positional = append(positional, parts...)
 					break
 				}
 			}

@@ -968,10 +968,13 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
             # Named argument: $param: value_list
             {pos, Map.put(named, var_token.value, value_node)}
           else
-            # Positional argument: find value_list child
+            # Positional argument: find value_list child and split on commas.
+            # value_list greedily consumes COMMA tokens, so button(blue, white)
+            # arrives as one include_arg wrapping value_list([blue, ,, white]).
+            # split_value_list_on_commas splits it into [value_list(blue), value_list(white)].
             case value_node do
               nil -> {pos, named}
-              vl -> {pos ++ [vl], named}
+              vl -> {pos ++ split_value_list_on_commas(vl), named}
             end
           end
         end)
