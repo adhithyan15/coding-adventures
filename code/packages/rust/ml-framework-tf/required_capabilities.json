@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/ml-framework-tf",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "internal unsafe pointer operations",
+      "justification": "Uses unsafe block for pointer counting in TensorFlow-style graph operations."
+    }
+  ],
+  "justification": "ML framework TensorFlow-style API. Uses unsafe for internal pointer operations."
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/ml-framework-core",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "internal unsafe static mutation",
+      "justification": "Uses unsafe blocks to read/write a global static GRAD_ENABLED flag for gradient computation control."
+    }
+  ],
+  "justification": "ML framework core. Uses unsafe for global gradient-enabled flag mutation."
+}
