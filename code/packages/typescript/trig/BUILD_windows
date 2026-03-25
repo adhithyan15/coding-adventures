@@ -1,2 +1,2 @@
 npm install --silent
-npm test
+npx jest --verbose
