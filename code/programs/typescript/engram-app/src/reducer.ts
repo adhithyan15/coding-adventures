@@ -17,8 +17,8 @@
  * reducer calls them and integrates the result into state.
  */
 
-import type { AppState, Card, CardProgress, Deck } from "./types.js";
-import type { AppAction } from "./actions.js";
+import type { Action } from "@coding-adventures/store";
+import type { AppState, Card, CardProgress, Deck, Rating } from "./types.js";
 import {
   DECK_CREATE,
   CARD_CREATE,
@@ -59,14 +59,14 @@ function generateId(): string {
 
 // ── Reducer ─────────────────────────────────────────────────────────────────
 
-export function reducer(state: AppState, action: AppAction): AppState {
+export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     // ── DECK_CREATE ──────────────────────────────────────────────────────────
     case DECK_CREATE: {
       const deck: Deck = {
         id: generateId(),
-        name: action.name,
-        description: action.description,
+        name: action.name as string,
+        description: action.description as string,
         createdAt: Date.now(),
       };
       return { ...state, decks: [...state.decks, deck] };
@@ -76,9 +76,9 @@ export function reducer(state: AppState, action: AppAction): AppState {
     case CARD_CREATE: {
       const card: Card = {
         id: generateId(),
-        deckId: action.deckId,
-        front: action.front,
-        back: action.back,
+        deckId: action.deckId as string,
+        front: action.front as string,
+        back: action.back as string,
         createdAt: Date.now(),
       };
       return { ...state, cards: [...state.cards, card] };
@@ -90,9 +90,12 @@ export function reducer(state: AppState, action: AppAction): AppState {
     // activeSession in memory. The queue is provided by the component via
     // buildSessionQueue() before dispatch.
     case SESSION_START: {
+      const sessionId = action.sessionId as string;
+      const deckId = action.deckId as string;
+      const queue = action.queue as Card[];
       const session = {
-        id: action.sessionId,
-        deckId: action.deckId,
+        id: sessionId,
+        deckId,
         status: "active" as const,
         startedAt: Date.now(),
         endedAt: null,
@@ -103,9 +106,9 @@ export function reducer(state: AppState, action: AppAction): AppState {
         ...state,
         sessions: [...state.sessions, session],
         activeSession: {
-          sessionId: action.sessionId,
-          deckId: action.deckId,
-          queue: action.queue,
+          sessionId,
+          deckId,
+          queue,
           currentIndex: 0,
           revealed: false,
         },
@@ -130,7 +133,11 @@ export function reducer(state: AppState, action: AppAction): AppState {
     case SESSION_RATE: {
       if (!state.activeSession) return state;
 
-      const { cardId, sessionId, reviewId, rating, now } = action;
+      const cardId = action.cardId as string;
+      const sessionId = action.sessionId as string;
+      const reviewId = action.reviewId as string;
+      const rating = action.rating as Rating;
+      const now = action.now as number;
       const isCorrect = rating !== "again";
 
       // ── 1. Upsert CardProgress ─────────────────────────────────────────────
@@ -194,12 +201,14 @@ export function reducer(state: AppState, action: AppAction): AppState {
     //
     // Marks the session as completed and clears the ephemeral activeSession.
     case SESSION_COMPLETE: {
+      const completeSessionId = action.sessionId as string;
+      const completeNow = action.now as number;
       const updatedSessions = state.sessions.map((s) => {
-        if (s.id !== action.sessionId) return s;
+        if (s.id !== completeSessionId) return s;
         return {
           ...s,
           status: "completed" as const,
-          endedAt: action.now,
+          endedAt: completeNow,
         };
       });
       return {
@@ -216,11 +225,11 @@ export function reducer(state: AppState, action: AppAction): AppState {
     case STATE_LOAD: {
       return {
         ...state,
-        decks: action.decks,
-        cards: action.cards,
-        cardProgress: action.cardProgress,
-        sessions: action.sessions,
-        reviews: action.reviews,
+        decks: action.decks as Deck[],
+        cards: action.cards as Card[],
+        cardProgress: action.cardProgress as CardProgress[],
+        sessions: action.sessions as AppState["sessions"],
+        reviews: action.reviews as AppState["reviews"],
         activeSession: null,
       };
     }

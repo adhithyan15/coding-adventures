@@ -10,7 +10,7 @@ import {
   completeSessionAction,
   stateLoadAction,
 } from "../actions.js";
-import type { AppState, Card } from "../types.js";
+import type { Card } from "../types.js";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
