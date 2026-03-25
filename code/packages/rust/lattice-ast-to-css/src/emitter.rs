@@ -578,6 +578,39 @@ impl CSSEmitter {
                 ASTNodeOrToken::Token(t) => self.emit_token(t),
             };
         }
+
+        // Bug #5: when a function_arg contains a nested function call (FUNCTION token,
+        // function_args node, RParen token), concatenate the parts WITHOUT a separator.
+        // Previously emit_default joined all children with " ", producing e.g. "rgb( 255,0,0 )"
+        // instead of the correct "rgb(255,0,0)".
+        let has_function_token = node.children.iter().any(|c| {
+            matches!(c, ASTNodeOrToken::Token(t) if get_token_type_name(t) == "FUNCTION")
+        });
+        let has_rparen = node.children.iter().any(|c| {
+            matches!(c, ASTNodeOrToken::Token(t) if {
+                let tn = get_token_type_name(t);
+                tn == "RParen" || t.value == ")"
+            })
+        });
+
+        if has_function_token && has_rparen {
+            // Nested function call — concatenate with no separator
+            let parts: Vec<String> = node.children.iter()
+                .map(|c| match c {
+                    ASTNodeOrToken::Node(n) => self.emit_node(n, depth),
+                    ASTNodeOrToken::Token(t) => {
+                        let tn = get_token_type_name(t);
+                        if tn == "RParen" || t.value == ")" {
+                            ")".to_string()
+                        } else {
+                            self.emit_token(t)
+                        }
+                    }
+                })
+                .collect();
+            return parts.concat();
+        }
+
         self.emit_default(node, depth)
     }
 

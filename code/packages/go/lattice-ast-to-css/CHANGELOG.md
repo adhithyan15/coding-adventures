@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.2] - 2026-03-25
+
+### Fixed
+
+- **Positional mixin args with commas** — `parseIncludeArgs` now calls `splitValueListOnCommas` in the `hasIncludeArgs` path. Previously, `@include button(blue, white)` was parsed as one argument causing `WrongArity` errors.
+
 ## [0.3.1] - 2026-03-25
 
 ### Fixed

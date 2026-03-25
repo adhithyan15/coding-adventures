@@ -795,19 +795,54 @@ module CodingAdventures
         end
 
         mixin_def = @mixins[mixin_name]
-        args = args_node ? parse_include_args(args_node) : []
+        raw_args = args_node ? parse_include_args(args_node) : []
 
-        # Arity check.
-        required = mixin_def.params.size - mixin_def.defaults.size
-        if args.size < required || args.size > mixin_def.params.size
-          raise LatticeWrongArityError.new("Mixin", mixin_name, mixin_def.params.size, args.size)
+        # Normalise raw_args into positional (Array) + named (Hash).
+        # parse_include_args returns either:
+        #   - A Hash { positional: [...], named: {...} }  (new grammar)
+        #   - An Array of value_list nodes                (legacy grammar)
+        positional_args, named_args = if raw_args.is_a?(Hash)
+          [raw_args[:positional] || [], raw_args[:named] || {}]
+        else
+          [raw_args, {}]
         end
 
-        # Create child scope with params bound.
+        # Arity check against combined positional + named count.
+        total_args = positional_args.size + named_args.size
+        required = mixin_def.params.size - mixin_def.defaults.size
+        if total_args < required || total_args > mixin_def.params.size
+          raise LatticeWrongArityError.new("Mixin", mixin_name, mixin_def.params.size, total_args)
+        end
+
+        # Pre-evaluate each arg in the CALLER's scope before binding to the
+        # mixin scope. This prevents infinite recursion when the mixin
+        # parameter name matches the caller's variable name.
+        #
+        # Example of the problem this fixes:
+        #   $color: red;
+        #   @mixin tint($color) { color: $color; }
+        #   .x { @include tint($color); }
+        #
+        # Without pre-evaluation: the mixin scope sets $color = $color AST node.
+        # When the mixin body references $color, it re-resolves using the mixin
+        # scope, which finds $color again → infinite recursion.
+        # With pre-evaluation: $color is expanded to "red" (a token) in the
+        # caller's scope first, so the mixin scope receives the concrete value.
+        evaluate_arg = lambda do |arg_node|
+          cloned = deep_copy(arg_node)
+          expanded = expand_node(cloned, scope)  # caller's scope
+          expanded || arg_node
+        end
+
+        # Create child scope with params bound (named takes priority over positional).
         mixin_scope = scope.child
-        mixin_def.params.each_with_index do |param_name, i|
-          if i < args.size
-            mixin_scope.set(param_name, args[i])
+        pos_idx = 0
+        mixin_def.params.each do |param_name|
+          if named_args.key?(param_name)
+            mixin_scope.set(param_name, evaluate_arg.call(named_args[param_name]))
+          elsif pos_idx < positional_args.size
+            mixin_scope.set(param_name, evaluate_arg.call(positional_args[pos_idx]))
+            pos_idx += 1
           elsif mixin_def.defaults.key?(param_name)
             mixin_scope.set(param_name, deep_copy(mixin_def.defaults[param_name]))
           end
@@ -840,7 +875,52 @@ module CodingAdventures
       end
 
       def parse_include_args(node)
-        # include_args = value_list { COMMA value_list } ;
+        # Two grammar forms:
+        #
+        # New grammar (v2+):
+        #   include_args = include_arg { COMMA include_arg } ;
+        #   include_arg  = VARIABLE COLON value_list | value_list ;
+        #
+        # Legacy grammar:
+        #   include_args = value_list { COMMA value_list } ;
+        #   (sometimes a single value_list with embedded commas)
+        #
+        # Returns { positional: [value_list, ...], named: { "$param" => value_list } }
+        # for the new grammar, or a plain Array for the legacy grammar (for
+        # backwards-compatible callers that expect an Array).
+        #
+        # expand_include handles both return shapes.
+
+        include_arg_nodes = node.children.select do |c|
+          c.respond_to?(:rule_name) && c.rule_name == "include_arg"
+        end
+
+        # New grammar: include_arg nodes present.
+        if include_arg_nodes.any?
+          positional = []
+          named = {}
+
+          include_arg_nodes.each do |arg_node|
+            children = arg_node.children
+            var_child = children.find { |c| !c.respond_to?(:rule_name) && token_type_name(c) == "VARIABLE" }
+            colon_child = children.find { |c| !c.respond_to?(:rule_name) && token_type_name(c) == "COLON" }
+            val_list = children.find { |c| c.respond_to?(:rule_name) && c.rule_name == "value_list" }
+
+            if var_child && colon_child && val_list
+              # Named arg: $param: value_list
+              named[var_child.value] = val_list
+            elsif val_list
+              # Positional arg: split on commas.
+              # value_list greedily consumes COMMA tokens, so button(blue, white)
+              # arrives as one include_arg wrapping value_list([blue, ,, white]).
+              split_value_list_on_commas(val_list).each { |part| positional << part }
+            end
+          end
+
+          return { positional: positional, named: named }
+        end
+
+        # Legacy grammar: look for bare value_list children.
         value_lists = node.children.select do |c|
           c.respond_to?(:rule_name) && c.rule_name == "value_list"
         end
@@ -1057,6 +1137,15 @@ module CodingAdventures
       end
 
       # Try to resolve an each_list to a LatticeMap or LatticeList.
+      #
+      # Three possible results:
+      #   1. Variable bound to a LatticeMap or LatticeList → return it directly.
+      #   2. Variable bound to an AST node that wraps a map_literal → convert
+      #      the map_literal to a LatticeMap and return it. This handles:
+      #        $colors: (primary: red, secondary: blue);
+      #        @each $key, $val in $colors { ... }
+      #      where $colors was stored as an un-evaluated AST node.
+      #   3. Otherwise → return nil (caller falls back to token-by-token iteration).
       def resolve_each_list(each_list, scope)
         var_tokens = []
         each_list.children.each do |child|
@@ -1068,11 +1157,72 @@ module CodingAdventures
             end
           end
         end
+
         if var_tokens.size == 1
           val = scope.get(var_tokens[0].value)
           return val if val.is_a?(LatticeMap) || val.is_a?(LatticeList)
+
+          # Bug #4: variable might be bound to an AST node that wraps a
+          # map_literal (e.g., $colors: (primary: red, secondary: blue);).
+          # The value stored in scope is a value_list or similar AST node.
+          if val.respond_to?(:rule_name)
+            map_lit = find_map_literal_in_ast(val)
+            return convert_map_literal_to_lattice_map(map_lit, scope) if map_lit
+          end
+        end
+
+        nil
+      end
+
+      # Recursively search an AST node for the first "map_literal" child.
+      def find_map_literal_in_ast(node)
+        return nil unless node.respond_to?(:rule_name)
+        return node if node.rule_name == "map_literal"
+
+        return nil unless node.respond_to?(:children)
+
+        node.children.each do |child|
+          result = find_map_literal_in_ast(child)
+          return result if result
         end
         nil
+      end
+
+      # Convert a map_literal AST node to a LatticeMap.
+      #
+      # map_literal = LPAREN map_entry COMMA map_entry { COMMA map_entry } RPAREN ;
+      # map_entry   = ( IDENT | STRING ) COLON lattice_expression ;
+      #
+      # Keys are extracted as plain strings (quotes stripped for STRING tokens).
+      # Values are evaluated using ExpressionEvaluator in the given scope.
+      def convert_map_literal_to_lattice_map(map_lit_node, scope)
+        items = []
+        evaluator = make_evaluator(scope)
+
+        map_lit_node.children.each do |child|
+          next unless child.respond_to?(:rule_name) && child.rule_name == "map_entry"
+
+          key = nil
+          value = nil
+
+          child.children.each do |entry_child|
+            if entry_child.respond_to?(:rule_name) && entry_child.rule_name == "lattice_expression"
+              value = evaluator.evaluate(entry_child)
+            elsif !entry_child.respond_to?(:rule_name)
+              type = token_type_name(entry_child)
+              if type == "IDENT"
+                key = entry_child.value
+              elsif type == "STRING"
+                # Strip surrounding quotes from string keys.
+                key = entry_child.value.gsub(/\A['"]|['"]\z/, "")
+              end
+            end
+          end
+
+          items << [key, value] if key && value
+        end
+
+        LatticeMap.new(items)
       end
 
       # Expand @each over a resolved LatticeMap or LatticeList.
