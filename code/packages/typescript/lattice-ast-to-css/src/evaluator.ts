@@ -41,6 +41,7 @@ import {
   addValues,
   subtractValues,
   multiplyValues,
+  divideValues,
   negateValue,
   compareValues,
   extractValueFromAst,
@@ -299,7 +300,7 @@ export class ExpressionEvaluator {
   }
 
   /**
-   * lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+   * lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
    */
   private _evalMultiplicative(node: ASTNode): LatticeValue {
     const children = node.children;
@@ -308,11 +309,14 @@ export class ExpressionEvaluator {
     let i = 1;
     while (i < children.length) {
       const child = children[i];
-      if (!isASTNode(child) && (child as Token).value === "*") {
-        i++;
-        if (i < children.length) {
-          const right = this.evaluate(children[i]);
-          result = multiplyValues(result, right);
+      if (!isASTNode(child)) {
+        const op = (child as Token).value;
+        if (op === "*" || op === "/") {
+          i++;
+          if (i < children.length) {
+            const right = this.evaluate(children[i]);
+            result = op === "*" ? multiplyValues(result, right) : divideValues(result, right);
+          }
         }
       }
       i++;

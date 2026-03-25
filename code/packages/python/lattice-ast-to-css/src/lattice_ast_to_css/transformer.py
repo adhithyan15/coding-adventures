@@ -463,7 +463,7 @@ class LatticeTransformer:
                     if not hasattr(pc, "rule_name"):
                         if _token_type_name(pc) == "VARIABLE":
                             param_name = pc.value  # type: ignore[attr-defined]
-                    elif pc.rule_name == "value_list":  # type: ignore[attr-defined]
+                    elif pc.rule_name in ("value_list", "mixin_value_list"):  # type: ignore[attr-defined]
                         default_value = pc
                 if param_name:
                     params.append(param_name)

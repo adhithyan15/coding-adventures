@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--
+  Coding Adventures — Landing Page
+  =================================
+  A single static HTML page that serves as the root index for
+  https://adhithyan15.github.io/coding-adventures/.
+
+  No build step. No framework. Just HTML + inline CSS + inline JS so the
+  workflow can deploy a single file without any npm install.
+
+  Design goals:
+  - Dark theme matching the sub-apps (transistors, logic-gates, lattice, busicom)
+  - Card grid — one card per deployed sub-app
+  - Responsive: 2-column on desktop, 1-column on mobile
+  - Accessible: semantic HTML, aria-labels, sufficient colour contrast
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coding Adventures</title>
+  <style>
+    /* ── Reset & base ────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0f1117;
+      --surface:     #1a1d27;
+      --surface-hover: #22263a;
+      --border:      #2e3248;
+      --accent:      #6c8ef5;
+      --accent-dim:  #3d5adc;
+      --text:        #e4e7f0;
+      --text-muted:  #8891b0;
+      --tag-bg:      #1e2540;
+      --tag-text:    #8fa8ff;
+      --radius:      12px;
+      --gap:         24px;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Layout ──────────────────────────────────────────────────────── */
+    .page {
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 64px 24px 48px;
+      width: 100%;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────── */
+    header { margin-bottom: 56px; }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── Section label ───────────────────────────────────────────────── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    /* ── Card grid ───────────────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: var(--gap);
+    }
+
+    /* ── App card ────────────────────────────────────────────────────── */
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s ease, border-color 0.15s ease,
+                  transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      /* subtle top-edge accent glow */
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .card:hover {
+      background: var(--surface-hover);
+      border-color: var(--accent-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(108, 142, 245, 0.12);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+
+    /* ── Tag row ─────────────────────────────────────────────────────── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid rgba(143, 168, 255, 0.15);
+      border-radius: 4px;
+      padding: 2px 8px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ──────────────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .page { padding: 40px 16px 32px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<main class="page">
+  <header>
+    <a class="logo" href="/coding-adventures/">
+      <span class="logo-icon" aria-hidden="true">⚡</span>
+      <span class="logo-text">coding-adventures</span>
+    </a>
+    <h1>Building computers<br>from first principles</h1>
+    <p class="subtitle">
+      Interactive visualizers and documentation that walk through the full
+      computing stack — from individual transistors all the way up to
+      programming languages. Every layer is explorable, every concept is live.
+    </p>
+  </header>
+
+  <p class="section-label">Interactive apps</p>
+
+  <nav class="grid" aria-label="Interactive applications">
+
+    <!-- Transistors -->
+    <a class="card" href="/coding-adventures/transistors/" aria-label="Transistor Visualizer">
+      <span class="card-icon" aria-hidden="true">🔬</span>
+      <div class="card-title">Transistor Visualizer</div>
+      <p class="card-desc">
+        An interactive tour through the history of electronic amplification —
+        from the 1906 vacuum tube triode through BJTs and MOSFETs to modern
+        CMOS. Each era includes real simulation models with live parameter
+        controls and annotated physics.
+      </p>
+      <div class="tags">
+        <span class="tag">Vacuum Tube</span>
+        <span class="tag">BJT</span>
+        <span class="tag">MOSFET</span>
+        <span class="tag">CMOS</span>
+        <span class="tag">Layer 0</span>
+      </div>
+    </a>
+
+    <!-- Logic Gates -->
+    <a class="card" href="/coding-adventures/logic-gates/" aria-label="Logic Gates Visualizer">
+      <span class="card-icon" aria-hidden="true">⚙️</span>
+      <div class="card-title">Logic Gates Visualizer</div>
+      <p class="card-desc">
+        Click-to-toggle interactive logic gates — NOT, AND, OR, XOR — with
+        live truth table highlighting, IEEE standard gate symbols, and
+        expandable CMOS transistor diagrams showing exactly how each gate is
+        physically built.
+      </p>
+      <div class="tags">
+        <span class="tag">Boolean Logic</span>
+        <span class="tag">Truth Tables</span>
+        <span class="tag">CMOS</span>
+        <span class="tag">Layer 1</span>
+      </div>
+    </a>
+
+    <!-- Busicom Calculator -->
+    <a class="card" href="/coding-adventures/busicom/" aria-label="Busicom 141-PF Calculator Simulator">
+      <span class="card-icon" aria-hidden="true">🧮</span>
+      <div class="card-title">Busicom 141-PF Calculator</div>
+      <p class="card-desc">
+        A faithful simulation of the 1971 Busicom 141-PF — the world's first
+        microprocessor-based calculator — powered by a cycle-accurate Intel
+        4004 CPU implementation. Watch the ALU, gate-level execution, and
+        transistor activity in real time as you type.
+      </p>
+      <div class="tags">
+        <span class="tag">Intel 4004</span>
+        <span class="tag">CPU Simulation</span>
+        <span class="tag">ALU</span>
+        <span class="tag">Layer 4</span>
+      </div>
+    </a>
+
+    <!-- Lattice Docs -->
+    <a class="card" href="/coding-adventures/lattice/" aria-label="Lattice CSS Language Documentation">
+      <span class="card-icon" aria-hidden="true">🎨</span>
+      <div class="card-title">Lattice Docs &amp; Playground</div>
+      <p class="card-desc">
+        Interactive documentation and live playground for Lattice — a CSS
+        superset that adds variables, mixins, control flow, functions, and
+        modules. The full transpiler runs in your browser; edits compile to
+        plain CSS in real time.
+      </p>
+      <div class="tags">
+        <span class="tag">CSS</span>
+        <span class="tag">Transpiler</span>
+        <span class="tag">Live Playground</span>
+        <span class="tag">Language</span>
+      </div>
+    </a>
+
+  </nav>
+</main>
+
+<footer>
+  <a href="https://github.com/adhithyan15/coding-adventures" target="_blank" rel="noopener noreferrer">
+    github.com/adhithyan15/coding-adventures
+  </a>
+</footer>
+
+</body>
+</html>

@@ -937,6 +937,49 @@ describe("LOAD_MODULE override", () => {
       "symbol 'missing_symbol' not found",
     );
   });
+
+  it("should inject globals into the main file and loaded files", () => {
+    const moduleCode: CodeObject = {
+      instructions: [
+        { opcode: Op.LOAD_NAME, operand: 0 },
+        { opcode: Op.STORE_NAME, operand: 1 },
+        { opcode: Op.HALT },
+      ],
+      constants: [],
+      names: ["ctx_os", "loaded_os"],
+    };
+
+    const mainCode: CodeObject = {
+      instructions: [
+        { opcode: Op.LOAD_MODULE, operand: 0 },
+        { opcode: Op.IMPORT_FROM, operand: 1 },
+        { opcode: Op.STORE_NAME, operand: 1 },
+        { opcode: Op.POP },
+        { opcode: Op.LOAD_NAME, operand: 2 },
+        { opcode: Op.STORE_NAME, operand: 3 },
+        { opcode: Op.HALT },
+      ],
+      constants: [],
+      names: ["//ctx.star", "loaded_os", "ctx_os", "main_os"],
+    };
+
+    const compileFn: CompileFn = (source: string) => {
+      if (source.includes("MODULE")) {
+        return moduleCode;
+      }
+      return mainCode;
+    };
+
+    const interp = new StarlarkInterpreter({
+      compileFn,
+      fileResolver: { "//ctx.star": "MODULE\n" },
+      globals: { ctx_os: "darwin" },
+    });
+
+    const result = interp.interpret("MAIN\n");
+    expect(result.variables["main_os"]).toBe("darwin");
+    expect(result.variables["loaded_os"]).toBe("darwin");
+  });
 });
 
 // =========================================================================

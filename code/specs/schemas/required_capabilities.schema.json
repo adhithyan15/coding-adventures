@@ -18,8 +18,8 @@
     },
     "package": {
       "type": "string",
-      "pattern": "^(python|ruby|go|typescript)/[a-z0-9][a-z0-9-]*$",
-      "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache."
+      "pattern": "^(python|ruby|go|typescript|rust|elixir|lua)/[a-z0-9][a-z0-9_-]*$",
+      "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache, rust/json-value, elixir/json_value, lua/grammar_tools."
     },
     "capabilities": {
       "type": "array",
@@ -86,7 +86,7 @@
         },
         "language": {
           "type": "string",
-          "enum": ["python", "ruby", "go", "typescript"],
+          "enum": ["python", "ruby", "go", "typescript", "rust", "elixir", "lua"],
           "description": "The language this exception applies to."
         },
         "justification": {

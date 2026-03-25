@@ -675,6 +675,48 @@ export function multiplyValues(left: LatticeValue, right: LatticeValue): Lattice
 }
 
 /**
+ * Divide two LatticeValues.
+ *
+ * Rules:
+ *   Number ÷ Number → Number
+ *   Dimension ÷ Number → Dimension (same unit)
+ *   Dimension ÷ Dimension (same unit) → Number (unitless ratio)
+ *   Percentage ÷ Number → Percentage
+ *   Zero divisor → ZeroDivisionInExpressionError
+ */
+export function divideValues(left: LatticeValue, right: LatticeValue): LatticeValue {
+  const getRightNum = (): number => {
+    if (right.kind === "number" || right.kind === "dimension" || right.kind === "percentage") {
+      if (right.value === 0) throw new ZeroDivisionInExpressionError();
+      return right.value;
+    }
+    throw new TypeErrorInExpression("divide", left.toString(), right.toString());
+  };
+  if (left.kind === "number" && right.kind === "number") {
+    if (right.value === 0) throw new ZeroDivisionInExpressionError();
+    return new LatticeNumber(left.value / right.value);
+  }
+  if (left.kind === "dimension" && right.kind === "number") {
+    if (right.value === 0) throw new ZeroDivisionInExpressionError();
+    return new LatticeDimension(left.value / right.value, left.unit);
+  }
+  if (left.kind === "dimension" && right.kind === "dimension" && left.unit === right.unit) {
+    if (right.value === 0) throw new ZeroDivisionInExpressionError();
+    return new LatticeNumber(left.value / right.value);
+  }
+  if (left.kind === "percentage" && right.kind === "number") {
+    if (right.value === 0) throw new ZeroDivisionInExpressionError();
+    return new LatticePercentage(left.value / right.value);
+  }
+  // Mixed types: try numeric coercion
+  const rv = getRightNum();
+  if (left.kind === "number" || left.kind === "dimension" || left.kind === "percentage") {
+    void rv; // already thrown if needed
+  }
+  throw new TypeErrorInExpression("divide", left.toString(), right.toString());
+}
+
+/**
  * Negate a LatticeValue.
  *
  * Only numeric values (Number, Dimension, Percentage) can be negated.
@@ -698,7 +740,7 @@ export function negateValue(value: LatticeValue): LatticeValue {
  * @param left - Left operand.
  * @param right - Right operand.
  * @param op - Operator token type string: "EQUALS_EQUALS", "NOT_EQUALS",
- *             "GREATER", "GREATER_EQUALS", "LESS_EQUALS".
+ *             "GREATER", "GREATER_EQUALS", "LESS", "LESS_EQUALS".
  * @returns LatticeBool result.
  */
 export function compareValues(
@@ -740,6 +782,8 @@ export function compareValues(
         return new LatticeBool(lv > rv);
       case "GREATER_EQUALS":
         return new LatticeBool(lv >= rv);
+      case "LESS":
+        return new LatticeBool(lv < rv);
       case "LESS_EQUALS":
         return new LatticeBool(lv <= rv);
     }

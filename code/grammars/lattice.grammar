@@ -105,8 +105,20 @@ mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
 mixin_params = mixin_param { COMMA mixin_param } ;
 
 # A parameter is a VARIABLE with an optional default value.
-# The default is a full value_list (can be multi-token: "Helvetica, sans-serif").
-mixin_param = VARIABLE [ COLON value_list ] ;
+# The default uses mixin_value_list (no COMMA) to prevent the comma that
+# separates parameters from being consumed as part of the default value.
+# For example, @mixin foo($bg: #fff, $radius: 4px) must parse $bg's default
+# as just "#fff", not "#fff, $radius".
+mixin_param = VARIABLE [ COLON mixin_value_list ] ;
+
+# mixin_value_list is identical to value_list except COMMA is excluded.
+# COMMA is the parameter separator in mixin_params and including it here
+# would cause greedy parsing to swallow adjacent parameter names.
+mixin_value_list = mixin_value { mixin_value } ;
+
+mixin_value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
+            | CUSTOM_PROPERTY | UNICODE_RANGE | function_call
+            | VARIABLE | SLASH | PLUS | MINUS ;
 
 # @include expands a mixin. Two forms:
 #   @include button(red);     → AT_KEYWORD FUNCTION IDENT RPAREN SEMICOLON
@@ -193,12 +205,14 @@ lattice_and_expr = lattice_comparison { "and" lattice_comparison } ;
 lattice_comparison = lattice_additive [ comparison_op lattice_additive ] ;
 
 comparison_op = EQUALS_EQUALS | NOT_EQUALS
-              | GREATER | GREATER_EQUALS | LESS_EQUALS ;
+              | GREATER | GREATER_EQUALS | LESS | LESS_EQUALS ;
 
 lattice_additive = lattice_multiplicative
                    { ( PLUS | MINUS ) lattice_multiplicative } ;
 
-lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+# Division (SLASH) is supported alongside multiplication (STAR).
+# Example: @return $px / 16 * 1rem; — divides first, then multiplies.
+lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
 
 lattice_unary = MINUS lattice_unary | lattice_primary ;
 

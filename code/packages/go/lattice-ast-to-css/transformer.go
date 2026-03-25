@@ -494,7 +494,7 @@ func extractParams(node *parser.ASTNode) ([]string, map[string]interface{}) {
 					paramName = c.Value
 				}
 			case *parser.ASTNode:
-				if c.RuleName == "value_list" {
+				if c.RuleName == "value_list" || c.RuleName == "mixin_value_list" {
 					defaultVal = c
 				}
 			}

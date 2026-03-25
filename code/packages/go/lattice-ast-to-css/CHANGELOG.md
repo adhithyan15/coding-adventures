@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.1] - 2026-03-25
+
+### Fixed
+
+- **Less-than operator `<`** — `numCompare` in `evaluator.go` now handles `"LESS"` so `@if $val < $min` evaluates correctly.
+- **Division operator `/` in expressions** — `evalMultiplicative` now dispatches on `*` vs `/`. New `divide` method mirrors `multiply` with a zero-division panic guard.
+- **Mixin parameter parsing with multiple defaults** — `extractParams` in `transformer.go` now accepts `mixin_value_list` AST nodes in addition to `value_list`.
+
 ## [0.3.0] - 2026-03-23
 
 ### Added — Lattice v2 Features

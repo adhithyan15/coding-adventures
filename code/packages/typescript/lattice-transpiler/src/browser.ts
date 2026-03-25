@@ -93,7 +93,7 @@ import type { TranspileOptions } from "./index.js";
  *
  * Verbatim copy of code/grammars/lattice.tokens
  * Defines all CSS token types plus 5 Lattice extensions:
- *   VARIABLE, EQUALS_EQUALS, NOT_EQUALS, GREATER_EQUALS, LESS_EQUALS
+ *   VARIABLE, EQUALS_EQUALS, NOT_EQUALS, GREATER, GREATER_EQUALS, LESS, LESS_EQUALS
  */
 const LATTICE_TOKENS_GRAMMAR = `# Token definitions for Lattice — a CSS superset language
 #
@@ -110,6 +110,7 @@ const LATTICE_TOKENS_GRAMMAR = `# Token definitions for Lattice — a CSS supers
 #   NOT_EQUALS     — != (inequality comparison)
 #   GREATER_EQUALS — >= (greater-or-equal comparison)
 #   LESS_EQUALS    — <= (less-or-equal comparison)
+#   LESS           — < (strict less-than comparison)
 #
 # Format:
 #   TOKEN_NAME = /regex/        — regex-based token pattern
@@ -207,6 +208,7 @@ EQUALS_EQUALS  = "=="
 NOT_EQUALS     = "!="
 GREATER_EQUALS = ">="
 LESS_EQUALS    = "<="
+LESS           = "<"
 
 # ============================================================================
 # Single-Character Delimiters and Operators
@@ -275,7 +277,15 @@ mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
 
 mixin_params = mixin_param { COMMA mixin_param } ;
 
-mixin_param = VARIABLE [ COLON value_list ] ;
+# mixin_value_list excludes COMMA so defaults don't consume param separators.
+mixin_param = VARIABLE [ COLON mixin_value_list ] ;
+
+mixin_value_list = mixin_value { mixin_value } ;
+
+mixin_value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
+            | CUSTOM_PROPERTY | UNICODE_RANGE | function_call
+            | VARIABLE
+            | SLASH | PLUS | MINUS ;
 
 include_directive = "@include" FUNCTION [ include_args ] RPAREN ( SEMICOLON | block )
                   | "@include" IDENT ( SEMICOLON | block ) ;
@@ -313,12 +323,13 @@ lattice_and_expr = lattice_comparison { "and" lattice_comparison } ;
 lattice_comparison = lattice_additive [ comparison_op lattice_additive ] ;
 
 comparison_op = EQUALS_EQUALS | NOT_EQUALS
-              | GREATER | GREATER_EQUALS | LESS_EQUALS ;
+              | GREATER | GREATER_EQUALS | LESS | LESS_EQUALS ;
 
 lattice_additive = lattice_multiplicative
                    { ( PLUS | MINUS ) lattice_multiplicative } ;
 
-lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+# Division (SLASH) is supported alongside multiplication (STAR).
+lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
 
 lattice_unary = MINUS lattice_unary | lattice_primary ;
 

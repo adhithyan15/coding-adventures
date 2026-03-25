@@ -1862,3 +1862,128 @@ describe("Transformer — function parameter types", () => {
     expect(css).toContain("width: 50%");
   });
 });
+
+// =============================================================================
+// Playground Bug Fixes — Regression tests for the three playground failures
+// =============================================================================
+
+describe("Playground fix — mixin with multiple default parameters", () => {
+  it("parses @mixin with two params both having defaults", () => {
+    const css = transpile(`
+      @mixin card($bg: #fff, $shadow: true) {
+        background: $bg;
+        border-radius: 8px;
+      }
+      .primary { @include card(#f0f4ff); }
+      .secondary { @include card(#f9fafb); }
+    `);
+    expect(css).toContain("background: #f0f4ff");
+    expect(css).toContain("background: #f9fafb");
+    expect(css).toContain("border-radius: 8px");
+    expect(css).not.toContain("@mixin");
+    expect(css).not.toContain("@include");
+  });
+
+  it("parses @mixin flex-center with $direction default", () => {
+    const css = transpile(`
+      @mixin flex-center($direction: row) {
+        display: flex;
+        flex-direction: $direction;
+      }
+      .hero { @include flex-center(column); }
+      .row  { @include flex-center(); }
+    `);
+    expect(css).toContain("flex-direction: column");
+    expect(css).toContain("flex-direction: row");
+  });
+
+  it("full playground Mixins example transpiles without error", () => {
+    const css = transpile(`
+      @mixin flex-center($direction: row) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: $direction;
+      }
+      @mixin card($bg: #fff, $shadow: true) {
+        background: $bg;
+        border-radius: 8px;
+        padding: 1.5rem;
+      }
+      .hero { @include flex-center(column); min-height: 100vh; }
+      .card-primary  { @include card(#f0f4ff); }
+      .card-secondary { @include card(#f9fafb); }
+    `);
+    expect(css).toContain("flex-direction: column");
+    expect(css).toContain("background: #f0f4ff");
+    expect(css).toContain("background: #f9fafb");
+  });
+});
+
+describe("Playground fix — division operator in expressions", () => {
+  it("evaluates division in @return", () => {
+    const css = transpile(`
+      @function rem($px) {
+        @return $px / 16 * 1rem;
+      }
+      .x { font-size: rem(14); }
+    `);
+    // 14 / 16 * 1rem = 0.875rem
+    expect(css).toContain("font-size: 0.875rem");
+  });
+
+  it("evaluates chained * and / in @return", () => {
+    const css = transpile(`
+      @function spacing($n) {
+        @return $n * 8px;
+      }
+      .x { padding: spacing(2); }
+    `);
+    expect(css).toContain("padding: 16px");
+  });
+
+  it("divides dimensions by number preserving unit", () => {
+    const css = transpile(`
+      @function half($v) {
+        @return $v / 2;
+      }
+      .x { width: half(100px); }
+    `);
+    expect(css).toContain("width: 50px");
+  });
+});
+
+describe("Playground fix — less-than operator in @if", () => {
+  it("evaluates $val < $min in @if", () => {
+    const css = transpile(`
+      @function clamp-between($val, $min, $max) {
+        @if $val < $min {
+          @return $min;
+        } @else if $val > $max {
+          @return $max;
+        } @else {
+          @return $val;
+        }
+      }
+      .x { border-radius: clamp-between(2px, 4px, 16px); }
+      .y { border-radius: clamp-between(20px, 4px, 16px); }
+      .z { border-radius: clamp-between(8px, 4px, 16px); }
+    `);
+    expect(css).toContain("border-radius: 4px");  // 2 clamped to min 4
+    expect(css).toContain("border-radius: 16px"); // 20 clamped to max 16
+    expect(css).toContain("border-radius: 8px");  // 8 in range
+  });
+
+  it("compares numbers with <", () => {
+    const css = transpile(`
+      $x: 5;
+      @if $x < 10 {
+        .small { color: red; }
+      } @else {
+        .large { color: blue; }
+      }
+    `);
+    expect(css).toContain("color: red");
+    expect(css).not.toContain("color: blue");
+  });
+});
