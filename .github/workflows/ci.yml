@@ -182,10 +182,19 @@ jobs:
           cd luarocks-install\luarocks-3.11.1-windows-64
           echo %CD%>> %GITHUB_PATH%
 
-      - name: Install Lua test tools
-        if: needs.detect.outputs.needs_lua == 'true'
+      - name: Install Lua test tools (Unix)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
         shell: bash
         run: |
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacheck
+
+      - name: Install Lua test tools (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           luarocks install busted
           luarocks install luacov
           luarocks install luacheck
