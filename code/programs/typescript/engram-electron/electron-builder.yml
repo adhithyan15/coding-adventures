@@ -9,10 +9,12 @@ directories:
   buildResources: build
 
 # Files included in the packaged app.
-# dist/ = Vite build output (the React renderer)
-# dist-electron/ = compiled main process
+#
+# renderer/ = engram-app Vite build output, copied here by the BUILD step.
+#             (git-ignored; populated by: cp -r ../engram-app/dist ./renderer)
+# dist-electron/ = compiled Electron main process
 files:
-  - dist/**/*
+  - renderer/**/*
   - dist-electron/**/*
   - package.json
 

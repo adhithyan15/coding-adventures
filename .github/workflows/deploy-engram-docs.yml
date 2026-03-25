@@ -1,0 +1,56 @@
+# ================================================================
+# Deploy Engram Docs to GitHub Pages
+# ================================================================
+#
+# Builds the engram-docs Vite SPA and deploys it to the gh-pages
+# branch under the engram-docs/ subdirectory, preserving all other
+# content already on GitHub Pages.
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into engram-docs/ on that branch,
+# making the docs available at:
+#   https://adhithyan15.github.io/coding-adventures/engram-docs/
+#
+# VITE_BASE is set at build time so all asset URLs resolve correctly
+# under the /coding-adventures/engram-docs/ path prefix.
+
+name: Deploy Engram Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/engram-docs/**"
+      - ".github/workflows/deploy-engram-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: cd code/programs/typescript/engram-docs && npm install
+
+      - name: Build
+        run: cd code/programs/typescript/engram-docs && npm run build
+        env:
+          VITE_BASE: /coding-adventures/engram-docs/
+
+      - name: Deploy to GitHub Pages (engram-docs/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/engram-docs/dist
+          destination_dir: engram-docs
+          keep_files: true
