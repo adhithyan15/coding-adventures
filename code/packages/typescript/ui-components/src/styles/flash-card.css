@@ -1,0 +1,107 @@
+/*
+ * flash-card.css — Styles for the FlashCard component.
+ *
+ * 3D flip animation overview:
+ *
+ *   .flash-card          — outer container, sets perspective depth
+ *   .flash-card__inner   — the rotating layer (transform-style: preserve-3d)
+ *   .flash-card__front   — front face, starts at rotateY(0deg)
+ *   .flash-card__back    — back face, starts at rotateY(180deg)
+ *
+ * Both faces use backface-visibility: hidden so only one face is visible
+ * at any time. When .flash-card__inner--revealed is applied, the inner
+ * container rotates 180°, hiding the front and revealing the back.
+ */
+
+/* ── Outer container ────────────────────────────────────────────────────── */
+
+.flash-card {
+  /* perspective sets the depth of the 3D scene. Lower values = more
+     dramatic foreshortening; 1000px is natural-looking for a card. */
+  perspective: 1000px;
+  width: 100%;
+  min-height: 220px;
+}
+
+/* ── Inner rotating layer ───────────────────────────────────────────────── */
+
+.flash-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+
+  /* preserve-3d: children exist in 3D space (not flattened onto the plane) */
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+}
+
+.flash-card__inner--revealed {
+  transform: rotateY(180deg);
+}
+
+/* ── Face shared styles ─────────────────────────────────────────────────── */
+
+.flash-card__front,
+.flash-card__back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl, 40px) var(--spacing-lg, 24px);
+  border-radius: var(--card-radius, 8px);
+  border: 1px solid var(--panel-border, #2a3a5e);
+
+  /* backface-visibility: hidden ensures each face is invisible when
+     rotated away from the viewer, preventing see-through artifacts */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* Safari */
+}
+
+/* ── Front face ─────────────────────────────────────────────────────────── */
+
+.flash-card__front {
+  background: var(--panel-bg, #16213e);
+}
+
+/* ── Back face ──────────────────────────────────────────────────────────── */
+
+.flash-card__back {
+  /* Starts rotated 180° so it faces away from the viewer at rest */
+  transform: rotateY(180deg);
+
+  /* Slightly lighter background to visually distinguish the answer side */
+  background: color-mix(in srgb, var(--panel-header, #0f3460) 60%, var(--panel-bg, #16213e));
+  border-color: var(--accent, #e94560);
+}
+
+/* ── Card text ──────────────────────────────────────────────────────────── */
+
+.flash-card__text {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--body-text, #e0ddd5);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── "Answer" label on back face ────────────────────────────────────────── */
+
+.flash-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent, #e94560);
+  margin-bottom: var(--spacing-md, 16px);
+}
+
+/* ── Reduced motion: skip animation ────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-card__inner {
+    transition: none;
+  }
+}
