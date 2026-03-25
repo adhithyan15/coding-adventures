@@ -122,4 +122,5 @@ members = [
   "document-ast-sanitizer",
   "document-html-sanitizer",
     "csv-parser",
+    "sql-execution-engine",
 ]
