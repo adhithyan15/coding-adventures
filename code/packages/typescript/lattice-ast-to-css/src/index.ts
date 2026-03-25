@@ -78,6 +78,7 @@ export {
   addValues,
   subtractValues,
   multiplyValues,
+  divideValues,
   negateValue,
   compareValues,
   typeNameOf,
