@@ -1,0 +1,92 @@
+# Parser grammar for Excel formulas
+# @version 1
+#
+# This grammar pushes the repository's generic PEG parser toward a much fuller
+# Excel formula surface area. It covers:
+# - prefix / infix / postfix operators
+# - array constants
+# - A1 row / column / cell references
+# - workbook / sheet / 3-D style prefixes
+# - name references
+# - bang references
+# - union, intersection, and range reference operators
+# - structured table references
+
+formula = ws [ EQUALS ws ] expression ws ;
+
+ws = { SPACE } ;
+req_space = SPACE { SPACE } ;
+
+expression = comparison_expr ;
+
+comparison_expr = concat_expr { ws comparison_op ws concat_expr } ;
+comparison_op = EQUALS | NOT_EQUALS | LESS_THAN | LESS_EQUALS
+              | GREATER_THAN | GREATER_EQUALS ;
+
+concat_expr = additive_expr { ws AMP ws additive_expr } ;
+additive_expr = multiplicative_expr { ws ( PLUS | MINUS ) ws multiplicative_expr } ;
+multiplicative_expr = power_expr { ws ( STAR | SLASH ) ws power_expr } ;
+power_expr = unary_expr { ws CARET ws unary_expr } ;
+unary_expr = { prefix_op ws } postfix_expr ;
+prefix_op = PLUS | MINUS ;
+postfix_expr = primary { ws PERCENT } ;
+
+primary = parenthesized_expression
+        | constant
+        | function_call
+        | structure_reference
+        | reference_expression
+        | bang_reference
+        | bang_name
+        | name_reference ;
+
+parenthesized_expression = LPAREN ws expression ws RPAREN ;
+
+constant = NUMBER | STRING | KEYWORD | ERROR_CONSTANT | array_constant ;
+
+array_constant = LBRACE ws array_row { ws SEMICOLON ws array_row } [ ws SEMICOLON ] ws RBRACE ;
+array_row = array_item { ws COMMA ws array_item } [ ws COMMA ] ;
+array_item = NUMBER | STRING | KEYWORD | ERROR_CONSTANT ;
+
+function_call = function_name LPAREN ws [ function_argument_list ] ws RPAREN ;
+function_name = FUNCTION_NAME | NAME ;
+function_argument_list = function_argument { ws COMMA ws function_argument } [ ws COMMA ] ;
+function_argument = [ expression ] ;
+
+reference_expression = union_reference ;
+union_reference = intersection_reference { ws COMMA ws intersection_reference } ;
+intersection_reference = range_reference { req_space range_reference } ;
+range_reference = reference_primary [ ws COLON ws reference_primary ] ;
+
+reference_primary = parenthesized_reference
+                  | prefixed_reference
+                  | external_reference
+                  | structure_reference
+                  | a1_reference
+                  | bang_reference
+                  | bang_name
+                  | name_reference ;
+
+parenthesized_reference = LPAREN ws reference_expression ws RPAREN ;
+prefixed_reference = REF_PREFIX ( a1_reference | name_reference | structure_reference ) ;
+external_reference = REF_PREFIX ;
+bang_reference = BANG ( CELL | COLUMN_REF | ROW_REF | NUMBER ) ;
+bang_name = BANG name_reference ;
+name_reference = NAME ;
+
+column_reference = [ DOLLAR ] ( COLUMN_REF | NAME ) ;
+row_reference = [ DOLLAR ] ( ROW_REF | NUMBER ) ;
+
+a1_reference = CELL | column_reference | row_reference | COLUMN_REF | ROW_REF | NAME | NUMBER ;
+
+structure_reference = [ table_name ] intra_table_reference ;
+table_name = TABLE_NAME | NAME ;
+intra_table_reference = STRUCTURED_KEYWORD
+                      | structured_column_range
+                      | LBRACKET ws [ inner_structure_reference ] ws RBRACKET ;
+inner_structure_reference = structured_keyword_list [ ws COMMA ws structured_column_range ]
+                          | structured_column_range ;
+structured_keyword_list = STRUCTURED_KEYWORD { ws COMMA ws STRUCTURED_KEYWORD } ;
+structured_column_range = structured_column [ ws COLON ws structured_column ] ;
+structured_column = STRUCTURED_COLUMN
+                  | AT STRUCTURED_COLUMN ;
