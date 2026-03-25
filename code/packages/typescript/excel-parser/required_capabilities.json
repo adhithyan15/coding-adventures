@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/excel-parser",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../grammars/excel.grammar",
+      "justification": "Reads the Excel parser grammar definition at runtime."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../grammars/excel.tokens",
+      "justification": "Indirectly reads the Excel token grammar through the lexer dependency."
+    }
+  ],
+  "justification": "Reads Excel grammar definition files at runtime."
+}
