@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "elixir/parser",
+  "capabilities": [
+    "stdout:write:*"
+  ],
+  "justification": "Writes debug trace output to stderr via IO.write when tracing is enabled."
+}
