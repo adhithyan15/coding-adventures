@@ -608,6 +608,29 @@ func TestGenerateCommonFiles(t *testing.T) {
 	if !strings.Contains(string(changelog), "0.1.0") {
 		t.Error("CHANGELOG missing version")
 	}
+
+	// required_capabilities.json exists and is well-formed
+	caps, err := os.ReadFile(filepath.Join(tmpDir, "required_capabilities.json"))
+	if err != nil {
+		t.Fatalf("cannot read required_capabilities.json: %v", err)
+	}
+	var capsObj map[string]any
+	if err := json.Unmarshal(caps, &capsObj); err != nil {
+		t.Fatalf("required_capabilities.json is not valid JSON: %v", err)
+	}
+	capsStr := string(caps)
+	if !strings.Contains(capsStr, `"$schema"`) {
+		t.Error("required_capabilities.json missing $schema")
+	}
+	if !strings.Contains(capsStr, `"python/test-pkg"`) {
+		t.Error("required_capabilities.json missing correct package path")
+	}
+	if !strings.Contains(capsStr, `"capabilities": []`) {
+		t.Error("required_capabilities.json missing capabilities array")
+	}
+	if !strings.Contains(capsStr, `"justification"`) {
+		t.Error("required_capabilities.json missing justification")
+	}
 }
 
 // =========================================================================

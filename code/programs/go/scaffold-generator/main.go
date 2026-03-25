@@ -1070,9 +1070,27 @@ All notable changes to this package will be documented in this file.
 	// Language-specific install/dev instructions
 	readme.WriteString("\n## Development\n\n```bash\n# Run tests\nbash BUILD\n```\n")
 
+	// required_capabilities.json
+	//
+	// The capability cage requires every package to declare its I/O surface.
+	// New packages start with an empty capabilities array — pure computation
+	// is the correct default. The developer fills in actual capabilities once
+	// they know whether the package needs filesystem, network, time, or stdio
+	// access. The justification field explains why the declaration is correct.
+	pkgDir := dirName(pkgName, lang)
+	capabilities := fmt.Sprintf(`{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "%s/%s",
+  "capabilities": [],
+  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+}
+`, lang, pkgDir)
+
 	files := map[string]string{
-		"README.md":    readme.String(),
-		"CHANGELOG.md": changelog,
+		"README.md":                    readme.String(),
+		"CHANGELOG.md":                 changelog,
+		"required_capabilities.json":   capabilities,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
