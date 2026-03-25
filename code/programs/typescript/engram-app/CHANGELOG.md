@@ -1,4 +1,22 @@
-# Changelog — Engram
+# Changelog — engram-app
+
+## 0.2.0 — 2026-03-25
+
+### Changed
+
+- **Extracted Electron into `engram-electron`** — this package is now a pure web app.
+  Electron deps (`electron`, `electron-builder`, `cross-env`) and electron-specific
+  scripts removed from `package.json`. The `electron/` directory and
+  `electron-builder.yml` have moved to the `engram-electron` package.
+
+- **Configurable Vite base path** — `vite.config.ts` now reads `VITE_BASE` env var
+  (default `"./"`) so the same source builds for both GitHub Pages
+  (`VITE_BASE=/coding-adventures/engram/`) and Electron (`"./"`).
+
+- **GitHub Pages deployment** — `deploy-engram.yml` workflow publishes the app to
+  `https://adhithyan15.github.io/coding-adventures/engram/` on every push to main.
+
+---
 
 ## 0.1.0 — 2026-03-25
 
