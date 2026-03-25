@@ -164,11 +164,18 @@ func run() int {
 				// work on Windows (e.g., 2>/dev/null, shell quoting). By re-reading
 				// the BUILD file for the current platform, we get the correct
 				// commands for this runner's OS.
-				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
-				if platformBuild != "" {
-					platformCmds := discovery.ReadLines(platformBuild)
-					if len(platformCmds) > 0 {
-						packages[i].BuildCommands = platformCmds
+				//
+				// Skip this for Starlark packages: their commands come from
+				// Starlark evaluation, not from reading the BUILD file as shell.
+				// Reading a Starlark BUILD file as shell lines would produce
+				// load("...") as a command, which shells cannot execute.
+				if !packages[i].IsStarlark {
+					platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+					if platformBuild != "" {
+						platformCmds := discovery.ReadLines(platformBuild)
+						if len(platformCmds) > 0 {
+							packages[i].BuildCommands = platformCmds
+						}
 					}
 				}
 			}
