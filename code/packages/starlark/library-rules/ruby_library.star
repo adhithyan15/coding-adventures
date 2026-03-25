@@ -46,54 +46,50 @@
 #
 # ============================================================================
 
-_targets = []
-
-
 def ruby_library(name, srcs = [], deps = [], test_runner = "minitest"):
-    """Register a Ruby library target for the build system.
-
-    Ruby libraries are built as gems with Bundler managing dependencies.
-    The build tool will run:
-        bundle install --quiet    — install gem dependencies
-        bundle exec rake test     — run the test suite via Rake
-
-    Args:
-        name: The package name, matching the directory under
-              code/packages/ruby/. For example, "logic-gates" corresponds
-              to code/packages/ruby/logic-gates/.
-
-              Note: Ruby gem names use underscores (coding_adventures_logic_gates)
-              but the directory and build target use hyphens (logic-gates).
-
-        srcs: File paths or glob patterns for change detection.
-              Typical patterns for Ruby:
-                  ["lib/**/*.rb"]                    — library source only
-                  ["lib/**/*.rb", "test/**/*.rb"]    — source and tests
-                  ["lib/**/*.rb", "*.gemspec"]       — source and gem metadata
-
-        deps: Dependencies as "language/package-name" strings.
-              These must match the path: references in the Gemfile.
-              Examples:
-                  ["ruby/transistors"]
-                  ["ruby/logic-gates", "ruby/arithmetic"]
-
-              IMPORTANT: Include transitive dependencies too! If your package
-              depends on A, and A depends on B, list BOTH A and B in deps.
-              This matches the Gemfile, which must also list both.
-
-        test_runner: Which test framework to use. Currently supported:
-
-              "minitest" — (default) Ruby's built-in test framework.
-                           Lightweight, fast, and included in Ruby stdlib.
-                           Runs via: bundle exec rake test
-
-              "rspec"    — Behavior-driven development framework.
-                           More expressive syntax (describe/it blocks).
-                           Runs via: bundle exec rspec
-
-              Most packages in this monorepo use minitest for simplicity.
-    """
-    _targets.append({
+    # Register a Ruby library target for the build system.
+    #
+    # Ruby libraries are built as gems with Bundler managing dependencies.
+    # The build tool will run:
+    #     bundle install --quiet    — install gem dependencies
+    #     bundle exec rake test     — run the test suite via Rake
+    #
+    # Args:
+    #     name: The package name, matching the directory under
+    #           code/packages/ruby/. For example, "logic-gates" corresponds
+    #           to code/packages/ruby/logic-gates/.
+    #
+    #           Note: Ruby gem names use underscores (coding_adventures_logic_gates)
+    #           but the directory and build target use hyphens (logic-gates).
+    #
+    #     srcs: File paths or glob patterns for change detection.
+    #           Typical patterns for Ruby:
+    #               ["lib/**/*.rb"]                    — library source only
+    #               ["lib/**/*.rb", "test/**/*.rb"]    — source and tests
+    #               ["lib/**/*.rb", "*.gemspec"]       — source and gem metadata
+    #
+    #     deps: Dependencies as "language/package-name" strings.
+    #           These must match the path: references in the Gemfile.
+    #           Examples:
+    #               ["ruby/transistors"]
+    #               ["ruby/logic-gates", "ruby/arithmetic"]
+    #
+    #           IMPORTANT: Include transitive dependencies too! If your package
+    #           depends on A, and A depends on B, list BOTH A and B in deps.
+    #           This matches the Gemfile, which must also list both.
+    #
+    #     test_runner: Which test framework to use. Currently supported:
+    #
+    #           "minitest" — (default) Ruby's built-in test framework.
+    #                        Lightweight, fast, and included in Ruby stdlib.
+    #                        Runs via: bundle exec rake test
+    #
+    #           "rspec"    — Behavior-driven development framework.
+    #                        More expressive syntax (describe/it blocks).
+    #                        Runs via: bundle exec rspec
+    #
+    #           Most packages in this monorepo use minitest for simplicity.
+    return {
         # "ruby_library" triggers Ruby-specific build logic:
         #   - bundle install to resolve gem dependencies
         #   - standardrb for linting (required by repo standards)
@@ -103,4 +99,8 @@ def ruby_library(name, srcs = [], deps = [], test_runner = "minitest"):
         "srcs": srcs,
         "deps": deps,
         "test_runner": test_runner,
-    })
+        "commands": [
+            {"type": "cmd", "program": "bundle", "args": ["install", "--quiet"]},
+            {"type": "cmd", "program": "bundle", "args": ["exec", "rake", "test"]},
+        ],
+    }
