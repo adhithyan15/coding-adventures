@@ -414,7 +414,7 @@ class TestNoStdlibCsv:
 
         source_file = _parser_mod.__file__
         assert source_file is not None
-        with open(source_file) as fh:
+        with open(source_file, encoding="utf-8") as fh:
             content = fh.read()
         # The parser must not delegate to the stdlib csv module.
         assert "import csv\n" not in content, "Found 'import csv' in parser.py"
@@ -426,7 +426,7 @@ class TestNoStdlibCsv:
 
         source_file = _pkg.__file__
         assert source_file is not None
-        with open(source_file) as fh:
+        with open(source_file, encoding="utf-8") as fh:
             content = fh.read()
         assert "import csv\n" not in content, "Found 'import csv' in __init__.py"
         assert "from csv import" not in content, "Found 'from csv import' in __init__.py"
