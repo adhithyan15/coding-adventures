@@ -159,7 +159,7 @@ Options:
   // Git is the source of truth -- no cache file needed.
   // Fallback: hash-based cache (for local dev when not on a branch).
   let affectedSet: Set<string> | null = null;
-  const force = values.force ?? false;
+  let force = values.force ?? false;
   const dryRun = values["dry-run"] ?? false;
   const diffBase = values["diff-base"] ?? "origin/main";
 
@@ -167,20 +167,29 @@ Options:
     // Try git-diff mode first (the default).
     const changedFiles = getChangedFiles(root, diffBase);
     if (changedFiles.length > 0) {
-      const packagePaths = new Map<string, string>();
-      for (const pkg of packages) {
-        packagePaths.set(pkg.name, pkg.path);
-      }
-      const changedPackages = mapFilesToPackages(changedFiles, packagePaths, root);
-      if (changedPackages.size > 0) {
-        affectedSet = graph.affectedNodes(changedPackages);
-        console.log(
-          `Git diff: ${changedPackages.size} packages changed, ` +
-            `${affectedSet.size} affected (including dependents)`,
-        );
+      const sharedPrefixes = [".github/", "code/programs/typescript/build-tool/"];
+      const sharedChanged = changedFiles.some(f => sharedPrefixes.some(p => f.startsWith(p)));
+
+      if (sharedChanged) {
+        console.log("Git diff: shared files changed -- rebuilding everything");
+        force = true;
+        affectedSet = null;
       } else {
-        console.log("Git diff: no package files changed -- nothing to build");
-        affectedSet = new Set();
+        const packagePaths = new Map<string, string>();
+        for (const pkg of packages) {
+          packagePaths.set(pkg.name, pkg.path);
+        }
+        const changedPackages = mapFilesToPackages(changedFiles, packagePaths, root);
+        if (changedPackages.size > 0) {
+          affectedSet = graph.affectedNodes(changedPackages);
+          console.log(
+            `Git diff: ${changedPackages.size} packages changed, ` +
+              `${affectedSet.size} affected (including dependents)`,
+          );
+        } else {
+          console.log("Git diff: no package files changed -- nothing to build");
+          affectedSet = new Set();
+        }
       }
     } else {
       console.log("Git diff unavailable -- falling back to hash-based cache");

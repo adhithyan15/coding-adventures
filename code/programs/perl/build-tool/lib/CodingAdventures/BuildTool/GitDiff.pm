@@ -91,6 +91,13 @@ sub affected_packages {
     my @changed_files = $self->changed_files();
     return () unless @changed_files;
 
+    for my $file (@changed_files) {
+        if ($file =~ /^\.github\// || $file =~ /^code\/programs\/perl\/build-tool\//) {
+            print "Git diff: shared files changed -- rebuilding everything\n";
+            return map { $_->{name} } @{$packages_ref};
+        }
+    }
+
     # Map changed files to packages.
     my %directly_affected;
     for my $file (@changed_files) {
