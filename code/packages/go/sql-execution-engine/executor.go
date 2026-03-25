@@ -1104,8 +1104,11 @@ func executeLimit(node *parser.ASTNode, result *QueryResult) *QueryResult {
 	rows := result.Rows
 
 	// Apply OFFSET.
+	// Compare against int64(len(rows)) to avoid narrowing int64→int on 32-bit
+	// platforms (CWE-190). len() always fits in int64 since slice length is
+	// bounded by addressable memory.
 	if offsetVal > 0 {
-		if int(offsetVal) >= len(rows) {
+		if offsetVal >= int64(len(rows)) {
 			rows = nil
 		} else {
 			rows = rows[offsetVal:]
@@ -1113,7 +1116,8 @@ func executeLimit(node *parser.ASTNode, result *QueryResult) *QueryResult {
 	}
 
 	// Apply LIMIT.
-	if limitVal >= 0 && int(limitVal) < len(rows) {
+	// Same int64 comparison to avoid narrowing conversion (CWE-190).
+	if limitVal >= 0 && limitVal < int64(len(rows)) {
 		rows = rows[:limitVal]
 	}
 
