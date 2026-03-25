@@ -573,13 +573,38 @@ class CSSEmitter:
         return result
 
     def _emit_function_arg(self, node: object, depth: int) -> str:
-        """Single argument in a function call."""
+        """Single argument in a function call.
+
+        When the argument is a nested function call — e.g. the children look
+        like ``FUNCTION function_args RPAREN`` — we must join the parts with
+        ``""`` (no spaces) so we get ``rgb(…)`` rather than ``rgb ( … )``.
+
+        The default handler falls through to ``_emit_default`` which joins
+        with spaces, producing broken CSS for nested function calls.
+        """
         children = node.children  # type: ignore[attr-defined]
         if len(children) == 1:
             child = children[0]
             if hasattr(child, "rule_name"):
                 return self._emit_node(child, depth)
             return child.value
+        # Nested function call: FUNCTION function_args RPAREN — no spaces
+        has_function_token = any(
+            not hasattr(c, "rule_name") and self._token_type(c) == "FUNCTION"
+            for c in children
+        )
+        if has_function_token:
+            parts: list[str] = []
+            for child in children:
+                if not hasattr(child, "rule_name"):
+                    type_name = self._token_type(child)
+                    if type_name == "RPAREN":
+                        parts.append(")")
+                    else:
+                        parts.append(child.value)  # type: ignore[attr-defined]
+                else:
+                    parts.append(self._emit_node(child, depth))
+            return "".join(parts)
         return self._emit_default(node, depth)
 
     # -----------------------------------------------------------------
