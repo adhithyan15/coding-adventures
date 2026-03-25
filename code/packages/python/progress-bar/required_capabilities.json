@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/progress-bar",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "monotonic",
+      "justification": "Uses time.monotonic() to measure elapsed time for ETA and rate calculations."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "stderr",
+      "justification": "Writes progress bar output to sys.stderr as its primary I/O mechanism."
+    }
+  ],
+  "justification": "Progress tracking requires monotonic time for ETA calculations and writes to stderr for display."
+}
