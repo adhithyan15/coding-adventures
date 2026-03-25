@@ -258,9 +258,9 @@ module CodingAdventures
       attr_reader :registers, :memory, :halted, :cycle
       attr_accessor :pc
 
-      def initialize(decoder:, executor:, num_registers: 16, bit_width: 32, memory_size: 65536)
+      def initialize(decoder:, executor:, num_registers: 16, bit_width: 32, memory_size: 65536, memory: nil)
         @registers = RegisterFile.new(num_registers: num_registers, bit_width: bit_width)
-        @memory = Memory.new(size: memory_size)
+        @memory = memory || Memory.new(size: memory_size)
         @pc = 0
         @halted = false
         @cycle = 0
