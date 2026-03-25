@@ -115,4 +115,8 @@ members = [
     "wasm-module-parser",
     "wasm-opcodes",
     "wasm-types",
+    "document-ast",
+    "commonmark-parser",
+    "document-ast-to-html",
+    "commonmark",
 ]
