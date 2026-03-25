@@ -153,6 +153,53 @@ jobs:
         with:
           version: "0.6.x"
 
+      # ── Lua must be set up BEFORE Ruby on Windows ──────────────
+      #
+      # Ruby's MSYS2 ships its own `link.exe` which shadows the MSVC
+      # linker that Lua needs to compile. By installing MSVC + Lua
+      # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
+
+      - name: Set up MSVC (required for Lua on Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Set up Lua
+        if: needs.detect.outputs.needs_lua == 'true'
+        uses: leafo/gh-actions-lua@v11
+        with:
+          luaVersion: "5.4"
+
+      - name: Set up LuaRocks (Unix)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Set up LuaRocks (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: cmd
+        run: |
+          curl -L -o luarocks.zip https://luarocks.github.io/luarocks/releases/luarocks-3.11.1-windows-64.zip
+          powershell -Command "Expand-Archive -Path luarocks.zip -DestinationPath luarocks-install"
+          cd luarocks-install\luarocks-3.11.1-windows-64
+          echo %CD%>> %GITHUB_PATH%
+
+      - name: Install Lua test tools (Unix)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        shell: bash
+        run: |
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacheck
+
+      - name: Install Lua test tools (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacheck
+          for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
+
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         uses: ruby/setup-ruby@v1
@@ -185,24 +232,6 @@ jobs:
         with:
           elixir-version: '1.16'
           otp-version: '26.0'
-
-      - name: Set up Lua
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-lua@v11
-        with:
-          luaVersion: "5.4"
-
-      - name: Set up LuaRocks
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@v4
-
-      - name: Install Lua test tools
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        shell: bash
-        run: |
-          luarocks install busted
-          luarocks install luacov
-          luarocks install luacheck
 
       - name: Install cpanm and test dependencies (Perl)
         if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
@@ -253,7 +282,7 @@ jobs:
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
+          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ]; then
             echo "Lua: $(lua -v)"
             echo "LuaRocks: $(luarocks --version)"
           fi
