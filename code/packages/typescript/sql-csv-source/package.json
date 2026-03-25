@@ -14,7 +14,14 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/csv-parser": "file:../csv-parser",
-    "@coding-adventures/sql-execution-engine": "file:../sql-execution-engine"
+    "@coding-adventures/sql-execution-engine": "file:../sql-execution-engine",
+    "coding-adventures-sql-parser": "file:../sql-parser",
+    "coding-adventures-sql-lexer": "file:../sql-lexer",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

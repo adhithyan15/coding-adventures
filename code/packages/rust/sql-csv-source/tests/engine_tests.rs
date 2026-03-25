@@ -26,7 +26,9 @@
 use std::path::PathBuf;
 
 use coding_adventures_sql_csv_source::CsvDataSource;
-use coding_adventures_sql_execution_engine::{execute, ExecutionError, SqlPrimitive, SqlValue};
+use coding_adventures_sql_execution_engine::{
+    execute, DataSource, ExecutionError, SqlPrimitive,
+};
 
 /// Return the path to the test fixtures directory.
 ///

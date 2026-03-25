@@ -18,14 +18,13 @@
 
 use std::collections::HashMap;
 
-use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::aggregate::compute_aggregates;
 use crate::data_source::{DataSource, SqlPrimitive, SqlValue};
 use crate::errors::ExecutionError;
-use crate::expression::{eval_expr, eval_node, node_text};
-use crate::join::{merge_rows, perform_join};
+use crate::expression::{eval_expr, node_text};
+use crate::join::perform_join;
 use crate::result::QueryResult;
 
 /// Execute a `select_stmt` AST node against a data source.

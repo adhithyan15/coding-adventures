@@ -61,7 +61,7 @@
 
 use std::collections::HashMap;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use coding_adventures_csv_parser::parse_csv;
 use coding_adventures_sql_execution_engine::{DataSource, ExecutionError, SqlPrimitive, SqlValue};
