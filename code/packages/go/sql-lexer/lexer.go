@@ -43,14 +43,23 @@ import (
 	"path/filepath"
 	"runtime"
 
+	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
+// sqlTokensPath is the path to the sql.tokens file. It defaults to "" which
+// triggers automatic path discovery via runtime.Caller(0). Tests can override
+// this variable to exercise error-handling code paths (e.g., by pointing at a
+// non-existent file or a file with invalid grammar syntax).
+var sqlTokensPath = ""
+
 // getGrammarPath computes the absolute path to the sql.tokens grammar file.
 //
-// runtime.Caller(0) locates this source file and navigates up three levels
-// (sql-lexer → go → packages → code) to reach the grammars directory.
+// If sqlTokensPath is non-empty (e.g., overridden by a test), that value is
+// returned directly. Otherwise, runtime.Caller(0) locates the source file and
+// navigates up three levels (sql-lexer → go → packages → code) to reach the
+// grammars directory.
 //
 // Directory structure:
 //
@@ -62,6 +71,10 @@ import (
 //	      sql-lexer/
 //	        lexer.go      <-- we are here (3 levels below code/)
 func getGrammarPath() string {
+	if sqlTokensPath != "" {
+		return sqlTokensPath
+	}
+
 	// runtime.Caller(0) returns the file path of this source file at runtime.
 	// The underscore variables are: program counter, line number, and ok bool.
 	_, filename, _, _ := runtime.Caller(0)
@@ -90,28 +103,25 @@ func getGrammarPath() string {
 //
 // Returns an error if the grammar file cannot be read or parsed.
 func CreateSQLLexer(source string) (*lexer.GrammarLexer, error) {
-	return StartNew[*lexer.GrammarLexer]("sqllexer.CreateSQLLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			// Read the grammar file via the declared fs:read capability.
-			// op.File.ReadFile enforces the path suffix declared in required_capabilities.json.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+	// Read the grammar file via the capability cage. This ensures the operation
+	// is covered by the declared fs:read capability in gen_capabilities.go.
+	bytes, err := cage.ReadFileAt(Manifest, "code/grammars/sql.tokens", getGrammarPath())
+	if err != nil {
+		return nil, err
+	}
 
-			// Parse the grammar file into a structured TokenGrammar object.
-			// The magic comment `# @case_insensitive true` sets grammar.CaseInsensitive
-			// to true, which the GrammarLexer reads to enable case-folding on keywords.
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+	// Parse the grammar file into a structured TokenGrammar object.
+	// The magic comment `# @case_insensitive true` sets grammar.CaseInsensitive
+	// to true, which the GrammarLexer reads to enable case-folding on keywords.
+	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+	if err != nil {
+		return nil, err
+	}
 
-			// Create the grammar-driven lexer. Because grammar.CaseInsensitive is true,
-			// the constructor stores all keywords as uppercase and sets up the
-			// case-folding lookup. SQL uses no indentation mode (no INDENT/DEDENT tokens).
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	// Create the grammar-driven lexer. Because grammar.CaseInsensitive is true,
+	// the constructor stores all keywords as uppercase and sets up the
+	// case-folding lookup. SQL uses no indentation mode (no INDENT/DEDENT tokens).
+	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
 // TokenizeSQL is a convenience function that tokenizes SQL text in a single

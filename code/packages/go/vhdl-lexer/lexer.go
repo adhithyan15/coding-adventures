@@ -31,16 +31,13 @@
 package vhdllexer
 
 import (
-	"fmt"
+	"path/filepath"
+	"runtime"
 	"strings"
 
+	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
-	vhdlv1987 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v1987"
-	vhdlv1993 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v1993"
-	vhdlv2002 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v2002"
-	vhdlv2008 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v2008"
-	vhdlv2019 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v2019"
 )
 
 // ============================================================================
@@ -53,46 +50,11 @@ import (
 // to lexer.go at compile time. From there, we navigate three levels up
 // (vhdl-lexer → go → packages → code) and into grammars/.
 
-const DefaultVersion = "2008"
-
-var supportedVersions = map[string]struct{}{
-	"1987": {},
-	"1993": {},
-	"2002": {},
-	"2008": {},
-	"2019": {},
-}
-
-func ResolveVersion(version string) (string, error) {
-	if version == "" {
-		return DefaultVersion, nil
-	}
-	if _, ok := supportedVersions[version]; !ok {
-		return "", fmt.Errorf("unknown VHDL version %q: valid versions are 1987, 1993, 2002, 2008, 2019", version)
-	}
-	return version, nil
-}
-
-func tokenGrammarForVersion(version string) (*grammartools.TokenGrammar, error) {
-	resolved, err := ResolveVersion(version)
-	if err != nil {
-		return nil, err
-	}
-
-	switch resolved {
-	case "1987":
-		return vhdlv1987.TokenGrammarData, nil
-	case "1993":
-		return vhdlv1993.TokenGrammarData, nil
-	case "2002":
-		return vhdlv2002.TokenGrammarData, nil
-	case "2008":
-		return vhdlv2008.TokenGrammarData, nil
-	case "2019":
-		return vhdlv2019.TokenGrammarData, nil
-	default:
-		return nil, fmt.Errorf("compiled VHDL token grammar missing version %q", resolved)
-	}
+func getGrammarPath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	parent := filepath.Dir(filename)
+	root := filepath.Join(parent, "..", "..", "..", "grammars")
+	return filepath.Join(root, "vhdl.tokens")
 }
 
 // ============================================================================
@@ -149,26 +111,31 @@ func normalizeCaseInsensitiveTokens(tokens []lexer.Token, keywordSet map[string]
 // Lexer Creation
 // ============================================================================
 
-// createLexerFromSource loads the VHDL grammar and creates a GrammarLexer.
+// loadGrammar reads and parses the vhdl.tokens grammar file.
 //
-// This is the internal workhorse: it reads the vhdl.tokens grammar file via
-// op.File.ReadFile (enforcing the fs:read capability in required_capabilities.json),
-// parses it into token patterns, and creates a GrammarLexer configured for
-// VHDL source code.
-func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
-	return createLexerFromSourceVersion(source, DefaultVersion)
-}
-
-func createLexerFromSourceVersion(source string, version string) (*lexer.GrammarLexer, error) {
-	grammar, err := tokenGrammarForVersion(version)
+// Returns the parsed grammar, which contains token definitions, skip
+// patterns, and the keyword list. The keyword list is used both by the
+// grammar lexer (for exact-match keyword detection) and by our
+// normalization step (for reclassifying lowercased NAMEs as KEYWORDs).
+func loadGrammar() (*grammartools.TokenGrammar, error) {
+	bytes, err := cage.ReadFileAt(Manifest, "code/grammars/vhdl.tokens", getGrammarPath())
 	if err != nil {
 		return nil, err
 	}
+	return grammartools.ParseTokenGrammar(string(bytes))
+}
 
-	return StartNew[*lexer.GrammarLexer]("vhdllexer.createLexerFromSource", nil,
-		func(_ *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+// createLexerFromSource loads the VHDL grammar and creates a GrammarLexer.
+//
+// This is the internal workhorse: it reads the vhdl.tokens grammar file,
+// parses it into token patterns, and creates a GrammarLexer configured
+// for VHDL source code.
+func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
+	grammar, err := loadGrammar()
+	if err != nil {
+		return nil, err
+	}
+	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
 // CreateVhdlLexer creates a GrammarLexer configured for VHDL source code.
@@ -184,13 +151,7 @@ func createLexerFromSourceVersion(source string, version string) (*lexer.Grammar
 //	if err != nil { ... }
 //	tokens := lex.Tokenize()
 func CreateVhdlLexer(source string) (*lexer.GrammarLexer, error) {
-	return CreateVhdlLexerVersion(source, DefaultVersion)
-}
-
-// CreateVhdlLexerVersion creates a GrammarLexer configured for the requested
-// VHDL edition.
-func CreateVhdlLexerVersion(source string, version string) (*lexer.GrammarLexer, error) {
-	return createLexerFromSourceVersion(source, version)
+	return createLexerFromSource(source)
 }
 
 // ============================================================================
@@ -200,9 +161,9 @@ func CreateVhdlLexerVersion(source string, version string) (*lexer.GrammarLexer,
 // TokenizeVhdl tokenizes VHDL source code with case normalization.
 //
 // This is the main entry point for tokenizing VHDL. It:
-//  1. Creates a grammar-driven lexer from the vhdl.tokens grammar
-//  2. Runs the lexer to produce raw tokens
-//  3. Normalizes NAME and KEYWORD values to lowercase
+//   1. Creates a grammar-driven lexer from the vhdl.tokens grammar
+//   2. Runs the lexer to produce raw tokens
+//   3. Normalizes NAME and KEYWORD values to lowercase
 //
 // The result is a flat list of Token objects, always ending with an EOF token.
 //
@@ -218,31 +179,23 @@ func CreateVhdlLexerVersion(source string, version string) (*lexer.GrammarLexer,
 //	`)
 //	// [Token(KEYWORD, "entity"), Token(NAME, "and_gate"), Token(KEYWORD, "is"), ...]
 func TokenizeVhdl(source string) ([]lexer.Token, error) {
-	return TokenizeVhdlVersion(source, DefaultVersion)
-}
-
-// TokenizeVhdlVersion tokenizes VHDL source code using the requested edition.
-func TokenizeVhdlVersion(source string, version string) ([]lexer.Token, error) {
-	grammar, err := tokenGrammarForVersion(version)
+	grammar, err := loadGrammar()
 	if err != nil {
 		return nil, err
 	}
 
-	return StartNew[[]lexer.Token]("vhdllexer.TokenizeVhdl", nil,
-		func(_ *Operation[[]lexer.Token], rf *ResultFactory[[]lexer.Token]) *OperationResult[[]lexer.Token] {
-			// Build the keyword set for post-tokenization reclassification.
-			// The grammar lexer only matches keywords by exact string equality,
-			// so "ENTITY" won't match "entity" in the keyword list. Our
-			// normalization step lowercases NAME tokens and checks this set
-			// to promote them to KEYWORD when they match.
-			keywordSet := make(map[string]struct{})
-			for _, kw := range grammar.Keywords {
-				keywordSet[kw] = struct{}{}
-			}
+	// Build the keyword set for post-tokenization reclassification.
+	// The grammar lexer only matches keywords by exact string equality,
+	// so "ENTITY" won't match "entity" in the keyword list. Our
+	// normalization step lowercases NAME tokens and checks this set
+	// to promote them to KEYWORD when they match.
+	keywordSet := make(map[string]struct{})
+	for _, kw := range grammar.Keywords {
+		keywordSet[kw] = struct{}{}
+	}
 
-			vhdlLexer := lexer.NewGrammarLexer(source, grammar)
-			tokens := vhdlLexer.Tokenize()
-			tokens = normalizeCaseInsensitiveTokens(tokens, keywordSet)
-			return rf.Generate(true, false, tokens)
-		}).GetResult()
+	vhdlLexer := lexer.NewGrammarLexer(source, grammar)
+	tokens := vhdlLexer.Tokenize()
+	tokens = normalizeCaseInsensitiveTokens(tokens, keywordSet)
+	return tokens, nil
 }

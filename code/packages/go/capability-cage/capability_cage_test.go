@@ -213,61 +213,39 @@ func TestGlob_LiteralRequiresExactMatch(t *testing.T) {
 	}
 }
 
-func TestGlob_StarExtensionMatchesSameDirectory(t *testing.T) {
+func TestGlob_StarInTargetIsLiteralNotWildcard(t *testing.T) {
+	// Wildcards are not supported — a "*" in the target is a literal character,
+	// not a glob pattern. "grammars/*.tokens" only matches the target string
+	// "grammars/*.tokens" literally. It does NOT expand to match real filenames.
 	m := cage.NewManifest([]cage.Capability{
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
 			Target: "grammars/*.tokens", Justification: "test"},
 	})
-	// Should match
-	allowed := []string{
+	// Real filenames do NOT match a literal-* target.
+	for _, p := range []string{
 		"grammars/verilog.tokens",
 		"grammars/python.tokens",
-		"grammars/ruby.tokens",
-	}
-	for _, p := range allowed {
-		if !m.Has(cage.CategoryFS, cage.ActionRead, p) {
-			t.Errorf("*.tokens should match %q", p)
-		}
-	}
-	// Should NOT match — star does not cross directory boundaries
-	denied := []string{
 		"grammars/sub/verilog.tokens",
-		"other/verilog.tokens",
-	}
-	for _, p := range denied {
+	} {
 		if m.Has(cage.CategoryFS, cage.ActionRead, p) {
-			t.Errorf("*.tokens should not match %q (crosses directory boundary)", p)
+			t.Errorf("* in target is literal, should not match real file %q", p)
 		}
 	}
 }
 
-func TestGlob_StarPrefixMatchesSameDirectory(t *testing.T) {
+func TestGlob_BareStarIsSpecialForNonPathCapabilities(t *testing.T) {
+	// Bare "*" (alone, no other characters) is the only wildcard form retained.
+	// It is intended for non-path capabilities like stdin/stdout/time where
+	// the "target" has no meaningful value to restrict.
 	m := cage.NewManifest([]cage.Capability{
-		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "grammars/verilog*", Justification: "test"},
+		{Category: cage.CategoryStdin, Action: cage.ActionRead, Target: "*",
+			Justification: "test"},
 	})
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog.tokens") {
-		t.Error("verilog* should match verilog.tokens")
+	if !m.Has(cage.CategoryStdin, cage.ActionRead, "*") {
+		t.Error("bare * should match *")
 	}
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog.grammar") {
-		t.Error("verilog* should match verilog.grammar")
-	}
-	if m.Has(cage.CategoryFS, cage.ActionRead, "grammars/python.tokens") {
-		t.Error("verilog* should not match python.tokens")
-	}
-}
-
-func TestGlob_MultiStarPattern(t *testing.T) {
-	// A pattern like "a*b*c" should match "aXbYc" but not "aXb/Yc".
-	m := cage.NewManifest([]cage.Capability{
-		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "pre*mid*suf", Justification: "test"},
-	})
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "preXmidYsuf") {
-		t.Error("multi-star pattern should match preXmidYsuf")
-	}
-	if m.Has(cage.CategoryFS, cage.ActionRead, "preXmid/Ysuf") {
-		t.Error("multi-star pattern should not cross / boundary")
+	if !m.Has(cage.CategoryStdin, cage.ActionRead, "stdin") {
+		t.Error("bare * should match any target value")
 	}
 }
 
@@ -275,6 +253,51 @@ func TestGlob_NoMatchOnEmptyCapabilities(t *testing.T) {
 	m := cage.EmptyManifest
 	if m.Has(cage.CategoryFS, cage.ActionRead, "anything") {
 		t.Error("empty manifest should match nothing")
+	}
+}
+
+func TestGlob_ExactMatchRequired(t *testing.T) {
+	// Targets are exact paths — no wildcards. Only the declared path matches.
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryFS, Action: cage.ActionRead,
+			Target: "code/grammars/verilog.tokens", Justification: "test"},
+	})
+	if !m.Has(cage.CategoryFS, cage.ActionRead, "code/grammars/verilog.tokens") {
+		t.Error("exact path should match itself")
+	}
+	// A different file in the same directory must not match.
+	if m.Has(cage.CategoryFS, cage.ActionRead, "code/grammars/vhdl.tokens") {
+		t.Error("exact match must not allow a different file in the same dir")
+	}
+	// A path that contains the declared path as a substring must not match.
+	if m.Has(cage.CategoryFS, cage.ActionRead, "other/code/grammars/verilog.tokens") {
+		t.Error("exact match must not allow prefix-extended paths")
+	}
+}
+
+func TestGlob_NoWildcardPatterns(t *testing.T) {
+	// A pattern containing * (other than bare "*") is treated as a literal
+	// string, not a glob — it will only match a target that literally contains *.
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryFS, Action: cage.ActionRead,
+			Target: "code/grammars/*.tokens", Justification: "test"},
+	})
+	// The literal "code/grammars/*.tokens" does NOT match real filenames.
+	if m.Has(cage.CategoryFS, cage.ActionRead, "code/grammars/verilog.tokens") {
+		t.Error("* in target is a literal character, not a wildcard")
+	}
+}
+
+func TestGlob_WindowsBackslashNormalized(t *testing.T) {
+	// On Windows, runtime paths use backslashes. The cage normalizes them
+	// so that forward-slash logical paths declared in Go source code match.
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryFS, Action: cage.ActionRead,
+			Target: "code/grammars/verilog.tokens", Justification: "test"},
+	})
+	if !m.Has(cage.CategoryFS, cage.ActionRead,
+		`code\grammars\verilog.tokens`) {
+		t.Error("backslash Windows path should match after normalization")
 	}
 }
 
@@ -331,6 +354,52 @@ func TestPathNormalization_CleansDoubleSlash(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 // 5. SecureFile wrappers — using a real temp directory
 // ─────────────────────────────────────────────────────────────────────────────
+
+func TestReadFileAt_AllowedUsesLogicalKeyNotOSPath(t *testing.T) {
+	// ReadFileAt checks the declared logical key against the manifest and reads
+	// from the OS path. This decouples the stable capability declaration from
+	// the machine-specific absolute OS path.
+	tmp := t.TempDir()
+	osPath := filepath.Join(tmp, "verilog.tokens")
+	_ = os.WriteFile(osPath, []byte("token data"), 0o644)
+
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryFS, Action: cage.ActionRead,
+			Target:        "code/grammars/verilog.tokens",
+			Justification: "reads the verilog grammar file"},
+	})
+
+	data, err := cage.ReadFileAt(m, "code/grammars/verilog.tokens", osPath)
+	if err != nil {
+		t.Fatalf("ReadFileAt returned error: %v", err)
+	}
+	if string(data) != "token data" {
+		t.Errorf("expected %q, got %q", "token data", string(data))
+	}
+}
+
+func TestReadFileAt_WrongLogicalKeyDenied(t *testing.T) {
+	// If the declared key doesn't match the manifest, ReadFileAt must deny
+	// access even if the OS path is valid.
+	tmp := t.TempDir()
+	osPath := filepath.Join(tmp, "verilog.tokens")
+	_ = os.WriteFile(osPath, []byte("token data"), 0o644)
+
+	m := cage.NewManifest([]cage.Capability{
+		{Category: cage.CategoryFS, Action: cage.ActionRead,
+			Target:        "code/grammars/verilog.tokens",
+			Justification: "reads the verilog grammar file"},
+	})
+
+	// Trying to read using a different logical key must fail.
+	_, err := cage.ReadFileAt(m, "code/grammars/vhdl.tokens", osPath)
+	if err == nil {
+		t.Fatal("ReadFileAt with wrong logical key should return error")
+	}
+	if !isViolation(err) {
+		t.Errorf("expected CapabilityViolationError, got %T: %v", err, err)
+	}
+}
 
 func TestReadFile_AllowedReturnsContents(t *testing.T) {
 	tmp := t.TempDir()
