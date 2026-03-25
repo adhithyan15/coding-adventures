@@ -118,7 +118,7 @@ func normalizeCaseInsensitiveTokens(tokens []lexer.Token, keywordSet map[string]
 // grammar lexer (for exact-match keyword detection) and by our
 // normalization step (for reclassifying lowercased NAMEs as KEYWORDs).
 func loadGrammar() (*grammartools.TokenGrammar, error) {
-	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
+	bytes, err := cage.ReadFileAt(Manifest, "code/grammars/vhdl.tokens", getGrammarPath())
 	if err != nil {
 		return nil, err
 	}

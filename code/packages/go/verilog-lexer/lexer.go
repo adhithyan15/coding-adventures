@@ -68,7 +68,7 @@ func CreateVerilogLexerRaw(source string) (*lexer.GrammarLexer, error) {
 
 // createLexerFromSource loads the grammar and creates a GrammarLexer.
 func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
-	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
+	bytes, err := cage.ReadFileAt(Manifest, "code/grammars/verilog.tokens", getGrammarPath())
 	if err != nil {
 		return nil, err
 	}

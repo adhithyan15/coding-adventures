@@ -3,7 +3,7 @@
 // Source: required_capabilities.json
 // Regenerate:
 //   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \
-//     --manifest=C:/Users/adhit/Downloads/coding-adventures/.claude/worktrees/optimistic-yonath/code/packages/go/verilog-lexer/required_capabilities.json
+//     --manifest=C:/Users/adhit/Downloads/coding-adventures/.claude/worktrees/optimistic-yonath/code/programs/go/capability-cage-generator/../../../packages/go/verilog-lexer/required_capabilities.json
 //
 // The JSON file is a development-time artifact; this file is what the
 // runtime enforces. Edit required_capabilities.json and re-run the
@@ -19,7 +19,7 @@ var Manifest = cage.NewManifest([]cage.Capability{
 	{
 		Category:      cage.CategoryFS,
 		Action:        cage.ActionRead,
-		Target:        "*",
-		Justification: "Reads grammar and token definition files from the filesystem to configure the package at initialization time.",
+		Target:        "code/grammars/verilog.tokens",
+		Justification: "Reads exactly code/grammars/verilog.tokens at initialization to build the Verilog tokenizer DFA. No other file access is permitted.",
 	},
 })

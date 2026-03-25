@@ -105,7 +105,7 @@ func getGrammarPath() string {
 func CreateSQLLexer(source string) (*lexer.GrammarLexer, error) {
 	// Read the grammar file via the capability cage. This ensures the operation
 	// is covered by the declared fs:read capability in gen_capabilities.go.
-	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
+	bytes, err := cage.ReadFileAt(Manifest, "code/grammars/sql.tokens", getGrammarPath())
 	if err != nil {
 		return nil, err
 	}

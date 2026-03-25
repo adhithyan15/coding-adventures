@@ -26,18 +26,42 @@ import "os"
 
 // ReadFile checks fs:read:{path} against m, then reads the named file.
 //
-// Returns CapabilityViolationError if the manifest does not declare
-// fs:read for the given path (subject to glob matching). Returns the
-// file contents and nil error on success.
-//
-// This is the most commonly used secure wrapper. Grammar-based lexers
-// and parsers typically call this once at initialization to load their
-// token/grammar definition file.
+// The path is used for BOTH the capability check and the OS read. This works
+// when the path in the manifest matches the path passed at runtime (e.g. when
+// both are relative paths). For packages that compute an absolute runtime path
+// using runtime.Caller (e.g. to find a grammar file next to the source), use
+// ReadFileAt instead, which separates the declared logical path from the
+// actual OS path.
 func ReadFile(m *Manifest, path string) ([]byte, error) {
 	if err := m.Check(CategoryFS, ActionRead, path); err != nil {
 		return nil, err
 	}
 	return defaultBackend.ReadFile(path)
+}
+
+// ReadFileAt checks fs:read:{declaredPath} against m, then reads osPath.
+//
+// Use this when the OS path is absolute or machine-specific (e.g. built with
+// runtime.Caller to locate a file next to the source) and the capability
+// should be declared using a stable, repo-relative logical identifier instead.
+//
+// Example:
+//
+//	// Manifest declares: Target: "code/grammars/verilog.tokens"
+//	// lexer.go calls:
+//	data, err := cage.ReadFileAt(Manifest,
+//	    "code/grammars/verilog.tokens", // capability key — checked against manifest
+//	    getGrammarPath(),               // actual OS path — used for the read
+//	)
+//
+// This is the correct function for grammar-backed lexers. The declared path is
+// always the same regardless of where the repo is checked out; the OS path
+// is computed at runtime and varies per machine.
+func ReadFileAt(m *Manifest, declaredPath, osPath string) ([]byte, error) {
+	if err := m.Check(CategoryFS, ActionRead, declaredPath); err != nil {
+		return nil, err
+	}
+	return defaultBackend.ReadFile(osPath)
 }
 
 // WriteFile checks fs:write:{path} against m, then writes data to the file.
