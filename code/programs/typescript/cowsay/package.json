@@ -1,0 +1,15 @@
+{
+  "name": "cowsay",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1"
+  }
+}

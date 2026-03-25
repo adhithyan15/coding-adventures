@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/document-ast",
+  "version": "0.1.0",
+  "description": "Format-agnostic Intermediate Representation (IR) for structured documents — the LLVM IR of document parsers and renderers",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

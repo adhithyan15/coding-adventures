@@ -26,10 +26,11 @@ require "coding_adventures_starlark_interpreter"
 
 class TestStarlarkInterpreter < Minitest::Test
   # Helper: interpret source via the module-level convenience method.
-  def interpret(source, file_resolver: nil)
+  def interpret(source, file_resolver: nil, globals: nil)
     CodingAdventures::StarlarkInterpreter.interpret(
       source,
-      file_resolver: file_resolver
+      file_resolver: file_resolver,
+      globals: globals
     )
   end
 
@@ -407,6 +408,27 @@ class TestStarlarkInterpreter < Minitest::Test
       file_resolver: resolver
     )
     refute_nil interp.file_resolver
+  end
+
+  def test_globals_available_in_main_and_loaded_files
+    resolver = ->(label) {
+      files = {
+        "//ctx.star" => "loaded_os = ctx_os\n"
+      }
+      files[label]
+    }
+
+    result = interpret(
+      <<~STARLARK,
+        load("//ctx.star", "loaded_os")
+        main_os = ctx_os
+      STARLARK
+      file_resolver: resolver,
+      globals: { "ctx_os" => "darwin" }
+    )
+
+    assert_equal "darwin", result.variables["main_os"]
+    assert_equal "darwin", result.variables["loaded_os"]
   end
 
   # ================================================================

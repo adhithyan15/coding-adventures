@@ -2,6 +2,14 @@
 
 All notable changes to this program will be documented in this file.
 
+## [1.1.0] - 2026-03-25
+
+### Added
+
+- `generateCommonFiles` now generates `required_capabilities.json` alongside README.md and CHANGELOG.md
+- New packages scaffold with empty capabilities and a "pure computation" default justification
+- `TestGenerateCommonFiles` now verifies the generated `required_capabilities.json` is valid JSON with all required fields
+
 ## [1.0.0] - 2026-03-21
 
 ### Added

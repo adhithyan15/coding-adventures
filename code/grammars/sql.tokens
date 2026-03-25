@@ -1,0 +1,97 @@
+# SQL Token Grammar — ANSI SQL subset
+# @version 1
+# @case_insensitive true
+#
+# Note: keyword values are normalized to uppercase when @case_insensitive
+# is true. Grammar literals like "SELECT" match select/SELECT/Select.
+#
+# Operator order: longest match first (<=  before  <,  >=  before  >,
+# !=  before  nothing).  NEQ_ANSI (<>) aliased to NOT_EQUALS so the grammar
+# references a single token type for both inequality spellings.
+
+NAME          = /[a-zA-Z_][a-zA-Z0-9_]*/
+NUMBER        = /[0-9]+(\.[0-9]+)?/
+STRING_SQ     = /'([^'\\]|\\.)*'/ -> STRING
+QUOTED_ID     = /`[^`]+`/ -> NAME
+
+LESS_EQUALS    = "<="
+GREATER_EQUALS = ">="
+NOT_EQUALS     = "!="
+NEQ_ANSI       = "<>" -> NOT_EQUALS
+
+EQUALS        = "="
+LESS_THAN     = "<"
+GREATER_THAN  = ">"
+PLUS          = "+"
+MINUS         = "-"
+STAR          = "*"
+SLASH         = "/"
+PERCENT       = "%"
+
+LPAREN        = "("
+RPAREN        = ")"
+COMMA         = ","
+SEMICOLON     = ";"
+DOT           = "."
+
+keywords:
+  SELECT
+  FROM
+  WHERE
+  GROUP
+  BY
+  HAVING
+  ORDER
+  LIMIT
+  OFFSET
+  INSERT
+  INTO
+  VALUES
+  UPDATE
+  SET
+  DELETE
+  CREATE
+  DROP
+  TABLE
+  IF
+  EXISTS
+  NOT
+  AND
+  OR
+  NULL
+  IS
+  IN
+  BETWEEN
+  LIKE
+  AS
+  DISTINCT
+  ALL
+  UNION
+  INTERSECT
+  EXCEPT
+  JOIN
+  INNER
+  LEFT
+  RIGHT
+  OUTER
+  CROSS
+  FULL
+  ON
+  ASC
+  DESC
+  TRUE
+  FALSE
+  CASE
+  WHEN
+  THEN
+  ELSE
+  END
+  PRIMARY
+  KEY
+  UNIQUE
+  DEFAULT
+
+skip:
+  WHITESPACE    = /[ \t\r\n]+/
+  LINE_COMMENT  = /--[^\n]*/
+  BLOCK_COMMENT = /\x2f\*([^*]|\*[^\x2f])*\*\x2f/

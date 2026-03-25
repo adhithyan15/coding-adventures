@@ -1,4 +1,5 @@
 # Token definitions for JSON (RFC 8259)
+# @version 1
 #
 # JSON is the simplest practical grammar for the grammar-driven infrastructure.
 # Unlike programming languages, JSON has no keywords, no comments, and no

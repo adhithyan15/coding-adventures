@@ -419,6 +419,23 @@ class TestGenericVM < Minitest::Test
     assert_equal [10, 20], vm.locals
   end
 
+  def test_inject_globals_merges_and_overwrites_variables
+    vm = GVM.new
+    vm.variables["existing"] = 1
+    vm.variables["ctx_os"] = "linux"
+
+    vm.inject_globals("ctx_os" => "darwin", "answer" => 42)
+
+    assert_equal(
+      {
+        "existing" => 1,
+        "ctx_os" => "darwin",
+        "answer" => 42
+      },
+      vm.variables
+    )
+  end
+
   # =====================================================================
   # Program ends without halt (PC past end)
   # =====================================================================

@@ -66,6 +66,26 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+# ---------------------------------------------------------------------------
+# Magic comment regex
+# ---------------------------------------------------------------------------
+# Magic comments are special directives embedded in comment lines, using the
+# form:  # @key value
+#
+# They must appear as complete comment lines (the # is the first non-space
+# character on the line). The pattern captures:
+#   group 1 — the key (word characters only, e.g. "version")
+#   group 2 — the rest of the line after the key (the raw value string)
+#
+# Examples:
+#   # @version 1          → key="version", value="1"
+#   # @case_insensitive true  → key="case_insensitive", value="true"
+#
+# Unknown keys are silently ignored for forward compatibility: a newer
+# grammar file can contain directives that an older grammar-tools version
+# does not understand, and parsing will still succeed.
+_MAGIC_COMMENT_RE = re.compile(r'^#\s*@(\w+)\s*(.*)$')
+
 
 # ---------------------------------------------------------------------------
 # Exceptions
@@ -148,6 +168,16 @@ class TokenGrammar:
     """The complete contents of a parsed .tokens file.
 
     Attributes:
+        version: Schema version declared with ``# @version N``. Defaults
+            to 0 (unversioned). Tools can use this to detect whether a
+            file uses features that require a minimum grammar-tools
+            release. Forward-compatible: older tools that do not
+            understand a version simply ignore the field.
+        case_insensitive: When ``True`` (set via ``# @case_insensitive true``),
+            the lexer should treat all patterns as case-insensitive. This
+            is a global flag: it applies to every token definition in the
+            file. Useful for languages like SQL or HTML where keywords are
+            conventionally case-insensitive. Defaults to ``False``.
         definitions: Ordered list of token definitions. Order matters
             because the lexer uses first-match-wins semantics.
         keywords: List of reserved words from the keywords: section.
@@ -176,8 +206,15 @@ class TokenGrammar:
             allows graceful degradation for malformed inputs — for example,
             CSS emits ``BAD_STRING`` for unclosed strings instead of
             crashing. Error tokens carry an ``is_error`` marker.
+        case_sensitive: Whether the lexer should match patterns
+            case-sensitively. Defaults to True. When False, the lexer
+            lowercases the source text before matching and performs
+            keyword promotion on the lowercased values. This is used
+            by case-insensitive languages like VHDL.
     """
 
+    version: int = 0
+    case_insensitive: bool = False
     definitions: list[TokenDefinition] = field(default_factory=list)
     keywords: list[str] = field(default_factory=list)
     mode: str | None = None
@@ -186,6 +223,7 @@ class TokenGrammar:
     escape_mode: str | None = None
     error_definitions: list[TokenDefinition] = field(default_factory=list)
     groups: dict[str, PatternGroup] = field(default_factory=dict)
+    case_sensitive: bool = True
 
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
@@ -233,6 +271,42 @@ class TokenGrammar:
 # ---------------------------------------------------------------------------
 
 
+def _find_closing_slash(pattern_part: str) -> int:
+    """Find the index of the closing ``/`` in a regex pattern string.
+
+    The string is expected to start with ``/``. We scan from index 1
+    looking for the first unescaped ``/`` that is NOT inside a ``[...]``
+    character class.
+
+    If the bracket-aware scan fails (e.g. an unclosed ``[``), we fall
+    back to finding the last ``/`` so the pattern can still be parsed
+    and validated downstream.
+
+    Returns the index of the closing ``/``, or ``-1`` if not found.
+    """
+    i = 1
+    in_bracket = False
+    n = len(pattern_part)
+    while i < n:
+        ch = pattern_part[i]
+        if ch == "\\":
+            # Escaped character — skip next
+            i += 2
+            continue
+        if ch == "[" and not in_bracket:
+            in_bracket = True
+        elif ch == "]" and in_bracket:
+            in_bracket = False
+        elif ch == "/" and not in_bracket:
+            return i
+        i += 1
+
+    # Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+    # try the last / as a best-effort parse.
+    last = pattern_part.rfind("/")
+    return last if last > 0 else -1
+
+
 def _parse_definition(
     pattern_part: str,
     name_part: str,
@@ -265,12 +339,11 @@ def _parse_definition(
     # the -> in the alias with characters inside a regex pattern.
     # Strategy: find the closing delimiter first, then check for ->.
     if pattern_part.startswith("/"):
-        # Regex pattern — find the closing /
-        # The pattern could contain escaped slashes, but our format
-        # doesn't support that (slashes inside regex use [/] or other
-        # workarounds). So we find the LAST / as the closing delimiter.
-        last_slash = pattern_part.rfind("/")
-        if last_slash == 0:
+        # Regex pattern — find the closing / by scanning character-by-character.
+        # We track bracket depth so that / inside [...] character classes is
+        # not mistaken for the closing delimiter. We also skip escaped chars.
+        last_slash = _find_closing_slash(pattern_part)
+        if last_slash == -1:
             raise TokenGrammarError(
                 f"Unclosed regex pattern for token {name_part!r}",
                 line_number,
@@ -401,8 +474,35 @@ def parse_token_grammar(source: str) -> TokenGrammar:
         line = raw_line.rstrip()
         stripped = line.strip()
 
-        # --- Blank lines and comments are always skipped ---
-        if stripped == "" or stripped.startswith("#"):
+        # --- Blank lines are always skipped ---
+        if stripped == "":
+            continue
+
+        # --- Comment lines: check for magic comments, then skip ---
+        # Regular comments (``# some text``) are silently ignored.
+        # Magic comments (``# @key value``) carry structured directives
+        # that configure grammar-level metadata. We scan every comment
+        # line with _MAGIC_COMMENT_RE before discarding it.
+        #
+        # Currently recognised keys:
+        #   @version N            — set grammar.version to integer N
+        #   @case_insensitive B   — set grammar.case_insensitive to bool
+        #
+        # Unknown keys are silently ignored so that files written for a
+        # newer grammar-tools version still parse correctly on older ones.
+        if stripped.startswith("#"):
+            magic = _MAGIC_COMMENT_RE.match(stripped)
+            if magic:
+                key = magic.group(1)
+                value = magic.group(2).strip()
+                if key == "version":
+                    try:
+                        grammar.version = int(value)
+                    except ValueError:
+                        pass  # Non-integer version — ignore silently
+                elif key == "case_insensitive":
+                    grammar.case_insensitive = (value == "true")
+                # All other keys are intentionally ignored (forward compat)
             continue
 
         # --- mode: directive ---
@@ -430,6 +530,22 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                     line_number,
                 )
             grammar.escape_mode = escape_value
+            current_section = None
+            continue
+
+        # --- case_sensitive: directive ---
+        # Controls whether the lexer should match case-sensitively.
+        # ``case_sensitive: false`` makes the lexer lowercase input before
+        # matching and perform keyword promotion on lowercased values.
+        if stripped.startswith("case_sensitive:"):
+            cs_value = stripped[15:].strip().lower()
+            if cs_value not in ("true", "false"):
+                raise TokenGrammarError(
+                    f"Invalid value for 'case_sensitive:': {cs_value!r} "
+                    "(expected 'true' or 'false')",
+                    line_number,
+                )
+            grammar.case_sensitive = cs_value == "true"
             current_section = None
             continue
 

@@ -93,13 +93,19 @@ def _read_python_deps(pkg_dir: str) -> list[str]:
     deps = []
     with open(build_path) as f:
         for line in f:
-            # Match: -e ../dep-name
-            idx = line.find("-e ../")
-            if idx < 0:
-                idx = line.find('-e "../')
-            if idx >= 0:
-                rest = line[idx:]
-                rest = rest.replace("-e ../", "", 1).replace('-e "../', "", 1)
+            # Find ALL -e ../ entries on each line (new format puts them all on one line)
+            remaining = line
+            while True:
+                idx = remaining.find("-e ../")
+                if idx < 0:
+                    idx = remaining.find('-e "../')
+                if idx < 0:
+                    break
+                rest = remaining[idx:]
+                if rest.startswith('-e "../'):
+                    rest = rest[7:]  # skip `-e "../`
+                else:
+                    rest = rest[6:]  # skip `-e ../`
                 dep = ""
                 for c in rest:
                     if c in (' ', '"', "'", '\n'):
@@ -107,6 +113,7 @@ def _read_python_deps(pkg_dir: str) -> list[str]:
                     dep += c
                 if dep and dep != ".":
                     deps.append(dep)
+                remaining = remaining[idx + 6:]
     return deps
 
 
@@ -348,18 +355,30 @@ class TestVersion:
         assert __version__ == "0.1.0"
 '''
 
-    build_lines = ["uv venv --quiet --clear"]
+    install_parts = ["python -m pip install"]
     for dep in ordered_deps:
-        build_lines.append(f"uv pip install -e ../{dep} --quiet")
-    build_lines.append('uv pip install -e ".[dev]" --quiet')
-    build_lines.append(".venv/bin/python -m pytest tests/ -v")
+        install_parts.append(f"-e ../{dep}")
+    install_parts.extend(["-e .[dev]", "--quiet"])
+    build_lines = [" ".join(install_parts)]
+    build_lines.append("python -m pytest tests/ -v")
     build = "\n".join(build_lines) + "\n"
+
+    # ── BUILD_windows: uses uv instead of pip, single-line dep installs ──
+    build_win_lines = ["uv venv --quiet --clear"]
+    if ordered_deps:
+        dep_flags = " ".join(f"-e ../{dep}" for dep in ordered_deps)
+        build_win_lines.append(f"uv pip install {dep_flags} --quiet")
+    build_win_lines.append("uv pip install --no-deps -e .[dev] --quiet")
+    build_win_lines.append("uv pip install pytest pytest-cov ruff mypy --quiet")
+    build_win_lines.append("uv run --no-project python -m pytest tests/ -v")
+    build_windows = "\n".join(build_win_lines) + "\n"
 
     _write_file(os.path.join(target_dir, "pyproject.toml"), pyproject)
     _write_file(os.path.join(target_dir, "src", snake, "__init__.py"), init_py)
     _write_file(os.path.join(target_dir, "tests", "__init__.py"), "")
     _write_file(os.path.join(target_dir, "tests", f"test_{snake}.py"), test_py)
     _write_file(os.path.join(target_dir, "BUILD"), build)
+    _write_file(os.path.join(target_dir, "BUILD_windows"), build_windows)
 
 
 def generate_go(
@@ -608,12 +627,7 @@ describe("{pkg_name}", () => {{
 }});
 """
 
-    if ordered_deps:
-        parts = [f"cd ../{dep} && npm install --silent" for dep in ordered_deps]
-        parts.append(f"cd ../{pkg_name} && npm install --silent")
-        build = " && \\\n".join(parts) + "\nnpx vitest run --coverage\n"
-    else:
-        build = "npm install --silent\nnpx vitest run --coverage\n"
+    build = "npm ci --quiet\nnpx vitest run --coverage\n"
 
     _write_file(os.path.join(target_dir, "package.json"), package_json)
     _write_file(os.path.join(target_dir, "tsconfig.json"), tsconfig)

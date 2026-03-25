@@ -15,8 +15,20 @@
 module CodingAdventures
   module Lexer
     Token = Data.define(:type, :value, :line, :column) do
+      # Return the token type as a string, regardless of representation.
+      #
+      # The type field can be either a TokenType symbol or a plain String
+      # (for grammar-driven tokens that define custom types like
+      # "SIZED_NUMBER" or "SYSTEM_TASK"). This method provides uniform access:
+      #
+      #   TokenType::NAME → "NAME"
+      #   "SIZED_NUMBER"  → "SIZED_NUMBER"
+      def type_name
+        type.is_a?(::String) ? type : type.to_s
+      end
+
       def to_s
-        "Token(#{type}, #{value.inspect}, #{line}:#{column})"
+        "Token(#{type_name}, #{value.inspect}, #{line}:#{column})"
       end
     end
   end

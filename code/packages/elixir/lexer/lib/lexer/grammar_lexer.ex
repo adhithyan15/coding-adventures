@@ -203,6 +203,13 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       # Maps group name → [{name, compiled_regex}, ...]
       # The "default" group always exists and uses the top-level definitions.
       :group_patterns,
+      # In Elixir, bare atoms (:field) must come before keyword pairs
+      # (field: default) in defstruct lists. That is why group_patterns
+      # appears above and case_insensitive / group_stack / etc. appear below.
+      # -- Case-insensitive keyword matching ---
+      # When true, keywords are stored as uppercase and matched
+      # case-insensitively. The emitted KEYWORD value is also uppercase.
+      case_insensitive: false,
       # The group stack. Bottom is always "default". Top is the active group.
       group_stack: ["default"],
       # -- Callback ---
@@ -235,6 +242,18 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
     `LexerContext`, and returns a list of action tuples. See the module
     documentation for the action types.
 
+  - `:pre_tokenize_hooks` — a list of functions `(String.t() -> String.t())`
+    that transform the source text before tokenization begins. Hooks are
+    applied in order (left to right) via `Enum.reduce/3`. This is useful
+    for source-level preprocessing — for example, stripping a BOM,
+    normalizing line endings, or expanding macros.
+
+  - `:post_tokenize_hooks` — a list of functions `([Token.t()] -> [Token.t()])`
+    that transform the token list after tokenization succeeds. Hooks are
+    applied in order (left to right) via `Enum.reduce/3`. This is useful
+    for post-processing — for example, filtering out comment tokens,
+    inserting synthetic tokens, or rewriting token types.
+
   ## Examples
 
       # Without callback (original behavior):
@@ -249,6 +268,14 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         end
       end
       {:ok, tokens} = GrammarLexer.tokenize(source, grammar, on_token: callback)
+
+      # With pre-tokenize hook (normalize line endings):
+      {:ok, tokens} = GrammarLexer.tokenize(source, grammar,
+        pre_tokenize_hooks: [&String.replace(&1, "\\r\\n", "\\n")])
+
+      # With post-tokenize hook (filter out NEWLINE tokens):
+      {:ok, tokens} = GrammarLexer.tokenize(source, grammar,
+        post_tokenize_hooks: [fn toks -> Enum.reject(toks, & &1.type == "NEWLINE") end])
   """
   @spec tokenize(String.t(), TokenGrammar.t(), keyword()) ::
           {:ok, [Token.t()]} | {:error, String.t()}
@@ -256,8 +283,36 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
   def tokenize(source, %TokenGrammar{} = grammar, opts) do
     on_token = Keyword.get(opts, :on_token, nil)
-    state = init_state(source, grammar, on_token)
-    tokenize_standard(state, [])
+    pre_tokenize_hooks = Keyword.get(opts, :pre_tokenize_hooks, [])
+    post_tokenize_hooks = Keyword.get(opts, :post_tokenize_hooks, [])
+
+    # Stage 1: Pre-tokenize hooks transform the source text.
+    # Each hook is a function (String.t() -> String.t()) that receives the
+    # source and returns a transformed version. Hooks run left to right,
+    # so the output of hook N becomes the input of hook N+1.
+    source = Enum.reduce(pre_tokenize_hooks, source, fn hook, src -> hook.(src) end)
+
+    # Case-insensitive mode: lowercase the entire source before matching.
+    # This mirrors the Python GrammarLexer behavior — keyword promotion and
+    # pattern matching both operate on the lowercased text, which is the
+    # correct behavior for case-insensitive languages like VHDL or SQL.
+    effective_source = if grammar.case_sensitive, do: source, else: String.downcase(source)
+
+    state = init_state(effective_source, grammar, on_token)
+
+    # Stage 2: Tokenize the source.
+    case tokenize_standard(state, []) do
+      {:ok, tokens} ->
+        # Stage 3: Post-tokenize hooks transform the token list.
+        # Each hook is a function ([Token.t()] -> [Token.t()]) that receives
+        # the token list and returns a transformed version. Only applied on
+        # success — errors pass through unchanged.
+        tokens = Enum.reduce(post_tokenize_hooks, tokens, fn hook, toks -> hook.(toks) end)
+        {:ok, tokens}
+
+      error ->
+        error
+    end
   end
 
   # -- Initialization ---------------------------------------------------------
@@ -304,15 +359,28 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         Map.put(acc, group_name, compiled)
       end)
 
+    # Build the keyword set. When case_insensitive is true, all keywords
+    # are stored as uppercase so that comparisons can be done with
+    # String.upcase(value) — a classic "normalize on insert" strategy.
+    keyword_set =
+      if grammar.case_insensitive do
+        grammar.keywords
+        |> Enum.map(&String.upcase/1)
+        |> MapSet.new()
+      else
+        MapSet.new(grammar.keywords)
+      end
+
     %State{
       source: source,
       patterns: patterns,
       skip_patterns: skip_patterns,
-      keyword_set: MapSet.new(grammar.keywords),
+      keyword_set: keyword_set,
       reserved_set: MapSet.new(grammar.reserved_keywords),
       alias_map: merged_alias_map,
       has_skip_patterns: length(grammar.skip_definitions) > 0,
       escape_mode: grammar.escape_mode,
+      case_insensitive: grammar.case_insensitive,
       group_patterns: group_patterns,
       group_stack: ["default"],
       on_token: on_token,
@@ -579,6 +647,17 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
                   match
                 end
 
+              # When case_insensitive is true, KEYWORD values are normalized to
+              # uppercase. This means "select", "SELECT", and "Select" all
+              # produce KEYWORD tokens with value "SELECT", making the emitted
+              # token stream uniform regardless of how the user typed the keyword.
+              value =
+                if token_type == "KEYWORD" and state.case_insensitive do
+                  String.upcase(value)
+                else
+                  value
+                end
+
               token = %Token{
                 type: token_type,
                 value: value,
@@ -614,13 +693,18 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
   defp resolve_token_type(token_name, value, state) do
     effective_name = Map.get(state.alias_map, token_name, token_name)
 
+    # When case_insensitive is true, compare against the keyword/reserved sets
+    # using the uppercased value. The keyword set was built with uppercase keys
+    # (see init_state), so this is a consistent "normalize on both sides" check.
+    lookup_value = if state.case_insensitive, do: String.upcase(value), else: value
+
     cond do
-      effective_name == "NAME" and MapSet.member?(state.reserved_set, value) ->
+      effective_name == "NAME" and MapSet.member?(state.reserved_set, lookup_value) ->
         {:error,
          "Line #{state.line}, column #{state.column}: " <>
            "Reserved keyword '#{value}' cannot be used as an identifier"}
 
-      effective_name == "NAME" and MapSet.member?(state.keyword_set, value) ->
+      effective_name == "NAME" and MapSet.member?(state.keyword_set, lookup_value) ->
         {:ok, "KEYWORD"}
 
       true ->

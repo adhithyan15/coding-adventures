@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/pipeline-visualizer",
+  "version": "0.1.0",
+  "description": "Language-agnostic HTML visualization generator — reads pipeline JSON reports and produces self-contained HTML files",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "html",
+    "visualization",
+    "renderer",
+    "computing-stack",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

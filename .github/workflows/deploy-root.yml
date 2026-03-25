@@ -1,0 +1,41 @@
+# ================================================================
+# Deploy Root Landing Page to GitHub Pages
+# ================================================================
+#
+# Deploys the single static index.html at
+# code/programs/static/landing-page/index.html
+# to the root of the gh-pages branch, so that
+#   https://adhithyan15.github.io/coding-adventures/
+# shows a summary page linking to all sub-apps instead of a 404.
+#
+# No build step — the file is plain HTML with embedded CSS.
+# keep_files: true preserves all existing sub-app content
+# (busicom/, logic-gates/, transistors/, lattice/) already on gh-pages.
+
+name: Deploy Root Landing Page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/static/landing-page/index.html"
+      - ".github/workflows/deploy-root.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages (root)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/static/landing-page
+          destination_dir: .
+          keep_files: true

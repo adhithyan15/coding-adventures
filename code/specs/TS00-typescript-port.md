@@ -123,7 +123,7 @@ All source files follow Knuth-style literate programming:
 | `intel4004-simulator` | Intel 4004 (4-bit, 1971) |
 | `jvm-simulator` | Java Virtual Machine bytecode |
 | `clr-simulator` | .NET CLR bytecode |
-| `html-renderer` | HTML visualization reports |
+| `pipeline-visualizer` | HTML visualization reports |
 | `clock` | Clock cycle simulation |
 
 ### Cross-Language Packages

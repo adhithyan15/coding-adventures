@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/uuid",
+  "capabilities": [
+    "time:read:*"
+  ],
+  "justification": "Uses Process.clock_gettime for wall-clock timestamps in UUID v1 and v7 generation."
+}

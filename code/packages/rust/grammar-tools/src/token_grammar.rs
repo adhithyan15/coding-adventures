@@ -150,6 +150,30 @@ pub struct PatternGroup {
 ///   The lexer maintains a stack of active groups and only tries patterns
 ///   from the group on top of the stack. Patterns outside any group belong
 ///   to the implicit "default" group (stored in `definitions`).
+/// - `case_sensitive` — Whether the lexer should perform case-sensitive
+///   matching. Defaults to `true`. When `false`, the lexer lowercases the
+///   source before tokenization so that keywords and patterns match
+///   regardless of case (useful for languages like SQL and BASIC).
+/// - `version` — The grammar version number, set by the `# @version N`
+///   magic comment. A value of `0` means "no version declared" (use latest
+///   semantics). This is useful when the grammar format evolves over time
+///   and tools need to know which dialect to apply.
+/// - `case_insensitive` — When `true`, the lexer should match tokens
+///   without regard to letter case. Set by the `# @case_insensitive true`
+///   magic comment. Defaults to `false` (case-sensitive matching).
+///
+/// # Magic comments
+///
+/// Magic comments are special `#` comment lines that carry structured
+/// metadata. They use the form `# @key value` where `key` is a word and
+/// `value` is the rest of the line after whitespace. Unknown keys are
+/// silently ignored for forward-compatibility. Example:
+///
+/// ```text
+/// # @version 2
+/// # @case_insensitive true
+/// NUMBER = /[0-9]+/
+/// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenGrammar {
     pub definitions: Vec<TokenDefinition>,
@@ -160,6 +184,11 @@ pub struct TokenGrammar {
     pub escapes: Option<String>,
     pub error_definitions: Vec<TokenDefinition>,
     pub groups: HashMap<String, PatternGroup>,
+    pub case_sensitive: bool,
+    /// Grammar version declared via `# @version N`. Zero means unset.
+    pub version: u32,
+    /// Whether matching is case-insensitive, declared via `# @case_insensitive true`.
+    pub case_insensitive: bool,
 }
 
 // ===========================================================================
@@ -289,23 +318,34 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
     let (pattern_str, alias) = if after_eq.starts_with('/') {
-        // Regex pattern — find the closing slash, skipping escaped slashes (\/).
+        // Regex pattern — find the closing slash by scanning character-by-character.
+        // We track bracket depth so that / inside [...] character classes is
+        // not mistaken for the closing delimiter. We also skip escaped chars.
         let rest = &after_eq[1..];
         let close_idx = {
             let mut i = 0;
             let bytes = rest.as_bytes();
             let mut found = None;
+            let mut in_bracket = false;
             while i < bytes.len() {
                 if bytes[i] == b'\\' {
                     i += 2; // skip escaped character
-                } else if bytes[i] == b'/' {
+                } else if bytes[i] == b'[' && !in_bracket {
+                    in_bracket = true;
+                    i += 1;
+                } else if bytes[i] == b']' && in_bracket {
+                    in_bracket = false;
+                    i += 1;
+                } else if bytes[i] == b'/' && !in_bracket {
                     found = Some(i);
                     break;
                 } else {
                     i += 1;
                 }
             }
-            found
+            // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+            // try the last / as a best-effort parse.
+            found.or_else(|| rest.rfind('/').filter(|&idx| idx > 0))
         };
         match close_idx {
             Some(close_idx) => {
@@ -405,8 +445,12 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
     let mut escapes: Option<String> = None;
+    let mut case_sensitive: bool = true;
     let mut error_definitions = Vec::new();
     let mut groups: HashMap<String, PatternGroup> = HashMap::new();
+    // Magic comment fields — set by `# @key value` lines.
+    let mut version: u32 = 0;
+    let mut case_insensitive: bool = false;
 
     // Track which section we are currently in.
     //
@@ -430,8 +474,48 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         let line = raw_line.trim_end();
         let stripped = line.trim();
 
-        // --- Blank lines and comments are always skipped ---
-        if stripped.is_empty() || stripped.starts_with('#') {
+        // --- Blank lines are always skipped ---
+        if stripped.is_empty() {
+            continue;
+        }
+
+        // --- Comment lines: magic comments or regular comments ---
+        //
+        // A magic comment has the form `# @key value` and carries structured
+        // metadata that affects how the grammar is interpreted. Any other `#`
+        // line is a regular comment and is silently ignored.
+        //
+        // Parsing strategy (no regex, pure string ops):
+        //   1. Strip the leading `#` and any whitespace after it.
+        //   2. If the next character is `@`, we have a magic comment.
+        //   3. Scan forward to collect the key (non-whitespace chars).
+        //   4. Skip whitespace, take the rest as the value.
+        if stripped.starts_with('#') {
+            // Step 1: get everything after '#'
+            let after_hash = stripped[1..].trim_start();
+            // Step 2: check for '@'
+            if after_hash.starts_with('@') {
+                // Step 3: key is the run of non-whitespace chars after '@'
+                let rest = &after_hash[1..]; // skip '@'
+                let key_end = rest.find(|c: char| c.is_whitespace()).unwrap_or(rest.len());
+                let key = &rest[..key_end];
+                // Step 4: value is the trimmed remainder
+                let value = rest[key_end..].trim();
+                match key {
+                    "version" => {
+                        if let Ok(v) = value.parse::<u32>() {
+                            version = v;
+                        }
+                        // Malformed version value is silently ignored.
+                    }
+                    "case_insensitive" => {
+                        case_insensitive = value == "true";
+                    }
+                    // Unknown keys are silently ignored for forward-compatibility.
+                    _ => {}
+                }
+            }
+            // Both magic comments and plain comments skip the rest of the loop.
             continue;
         }
 
@@ -532,6 +616,34 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             continue;
         }
 
+        // --- Case sensitivity directive ---
+        //
+        // The `case_sensitive:` directive controls whether the lexer performs
+        // case-sensitive or case-insensitive matching. When set to `false`,
+        // the lexer lowercases the source before tokenization, so keywords
+        // like `SELECT` and `select` match the same pattern. This is useful
+        // for languages like SQL, BASIC, and Pascal that are case-insensitive.
+        //
+        // Accepted values: "true" or "false". Defaults to true if omitted.
+        if stripped.starts_with("case_sensitive:") || stripped.starts_with("case_sensitive :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let cs_value = stripped[colon_idx + 1..].trim();
+            match cs_value {
+                "true" => case_sensitive = true,
+                "false" => case_sensitive = false,
+                _ => {
+                    return Err(TokenGrammarError {
+                        message: format!(
+                            "Invalid case_sensitive value: '{}' (expected 'true' or 'false')",
+                            cs_value
+                        ),
+                        line_number,
+                    });
+                }
+            }
+            continue;
+        }
+
         // --- Inside a section ---
         //
         // Each section type handles indented lines differently. A
@@ -607,6 +719,9 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         escapes,
         error_definitions,
         groups,
+        case_sensitive,
+        version,
+        case_insensitive,
     })
 }
 
@@ -959,6 +1074,9 @@ keywords:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -983,6 +1101,9 @@ keywords:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1007,6 +1128,9 @@ keywords:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1210,6 +1334,9 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));
@@ -1399,6 +1526,9 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups,
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Invalid regex")));
@@ -1424,6 +1554,9 @@ skip:
             escapes: None,
             error_definitions: vec![],
             groups,
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Empty pattern group")));
@@ -1526,5 +1659,82 @@ skip:
         let result = parse_token_grammar(source);
         assert!(result.is_err());
         assert!(result.unwrap_err().message.contains("Incomplete definition"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Magic comments: TokenGrammar
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_magic_comment_version() {
+        // `# @version N` sets the version field to N.
+        let source = "# @version 1\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 1);
+        // Normal definitions still parsed.
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_magic_comment_version_default() {
+        // When no # @version line is present, version defaults to 0.
+        let source = "NUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 0);
+    }
+
+    #[test]
+    fn test_magic_comment_case_insensitive_true() {
+        // `# @case_insensitive true` sets the flag to true.
+        let source = "# @case_insensitive true\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(grammar.case_insensitive);
+    }
+
+    #[test]
+    fn test_magic_comment_case_insensitive_false() {
+        // `# @case_insensitive false` sets the flag to false.
+        let source = "# @case_insensitive false\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(!grammar.case_insensitive);
+    }
+
+    #[test]
+    fn test_magic_comment_case_insensitive_default() {
+        // When no # @case_insensitive line is present, the flag defaults to false.
+        let source = "NUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(!grammar.case_insensitive);
+    }
+
+    #[test]
+    fn test_magic_comment_unknown_key_silently_ignored() {
+        // Unknown `# @key value` lines do not cause errors; they are
+        // forward-compatible placeholders for future features.
+        let source = "# @unknown_key some_value\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        // Defaults are untouched.
+        assert_eq!(grammar.version, 0);
+        assert!(!grammar.case_insensitive);
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_magic_comment_both_together() {
+        // Both magic comments can appear in the same file.
+        let source = "# @version 3\n# @case_insensitive true\nNAME = /[a-z]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 3);
+        assert!(grammar.case_insensitive);
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_regular_comment_not_treated_as_magic() {
+        // A plain `# comment` without `@` is just a comment — no fields set.
+        let source = "# Just a comment\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 0);
+        assert!(!grammar.case_insensitive);
     }
 }

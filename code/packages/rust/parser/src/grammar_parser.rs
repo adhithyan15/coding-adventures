@@ -168,6 +168,19 @@ pub struct GrammarParser {
 
     /// What was expected at the furthest position.
     furthest_expected: Vec<String>,
+    /// Set of (rule_index, pos) pairs currently being parsed.
+    /// Used to detect and break left recursion: if we try to parse a rule
+    /// at a position where we're already inside that same rule (but haven't
+    /// cached the result yet), we know it's left recursion and should fail.
+    in_progress: std::collections::HashSet<String>,
+
+    /// Pre-parse hooks: transform token list before parsing.
+    /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    pre_parse_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
+
+    /// Post-parse hooks: transform AST after parsing.
+    /// Each hook is a function `GrammarASTNode -> GrammarASTNode`. Multiple hooks compose left-to-right.
+    post_parse_hooks: Vec<Box<dyn Fn(GrammarASTNode) -> GrammarASTNode>>,
 
     /// When true, emit a `[TRACE]` line to stderr for every rule attempt.
     ///
@@ -244,6 +257,9 @@ impl GrammarParser {
             memo: HashMap::new(),
             furthest_pos: 0,
             furthest_expected: Vec::new(),
+            in_progress: std::collections::HashSet::new(),
+            pre_parse_hooks: Vec::new(),
+            post_parse_hooks: Vec::new(),
             trace,
         }
     }
@@ -251,6 +267,22 @@ impl GrammarParser {
     /// Whether newlines are treated as significant tokens in this grammar.
     pub fn is_newlines_significant(&self) -> bool {
         self.newlines_significant
+    }
+
+    /// Register a token transform to run before parsing.
+    ///
+    /// The hook receives the token list and returns a (possibly modified)
+    /// token list. Multiple hooks compose left-to-right.
+    pub fn add_pre_parse(&mut self, hook: Box<dyn Fn(Vec<Token>) -> Vec<Token>>) {
+        self.pre_parse_hooks.push(hook);
+    }
+
+    /// Register an AST transform to run after parsing.
+    ///
+    /// The hook receives the parsed AST root and returns a (possibly modified)
+    /// AST. Multiple hooks compose left-to-right.
+    pub fn add_post_parse(&mut self, hook: Box<dyn Fn(GrammarASTNode) -> GrammarASTNode>) {
+        self.post_parse_hooks.push(hook);
     }
 
     /// Get the current token without consuming it.
@@ -278,6 +310,15 @@ impl GrammarParser {
     ///
     /// Uses the first rule in the grammar as the entry point (start symbol).
     pub fn parse(&mut self) -> Result<GrammarASTNode, GrammarParseError> {
+        // Pre-parse hooks: transform the token list before parsing begins.
+        if !self.pre_parse_hooks.is_empty() {
+            let mut tokens = std::mem::take(&mut self.tokens);
+            for hook in &self.pre_parse_hooks {
+                tokens = hook(tokens);
+            }
+            self.tokens = tokens;
+        }
+
         if self.grammar.rules.is_empty() {
             return Err(GrammarParseError {
                 message: "Grammar has no rules".to_string(),
@@ -349,7 +390,13 @@ impl GrammarParser {
                     });
                 }
 
-                Ok(node)
+                // Post-parse hooks: transform the AST after parsing completes.
+                let mut result = node;
+                for hook in &self.post_parse_hooks {
+                    result = hook(result);
+                }
+
+                Ok(result)
             }
         }
     }
@@ -380,6 +427,17 @@ impl GrammarParser {
                     rule_name: rule_name.to_string(),
                     children: children.unwrap(),
                 });
+            }
+
+            // Left-recursion guard: if we're already trying to parse this
+            // rule at this position (but haven't finished and cached the
+            // result yet), then we've hit left recursion. Return None to
+            // break the cycle. This handles grammars with rules like:
+            //   primary = ... | primary LBRACKET expression RBRACKET
+            // where `primary` appears as the first element of an alternative.
+            if !self.in_progress.insert(key.clone()) {
+                // key was already present — left recursion detected
+                return None;
             }
         }
 
@@ -418,9 +476,10 @@ impl GrammarParser {
             );
         }
 
-        // Cache result.
+        // Cache result and remove from in_progress set.
         if let Some(&idx) = self.rule_index.get(rule_name) {
             let key = format!("{},{}", idx, start_pos);
+            self.in_progress.remove(&key);
             if let Some(ref result) = children {
                 self.memo.insert(key, MemoEntry {
                     children: Some(result.clone()),
@@ -697,6 +756,7 @@ mod tests {
                     line_number: 2,
                 },
             ],
+            version: 0,
         }
     }
 
@@ -751,7 +811,7 @@ mod tests {
     #[test]
     fn test_grammar_parse_empty_grammar() {
         let tokens = vec![tok(TokenType::Eof, "")];
-        let grammar = ParserGrammar { rules: vec![] };
+        let grammar = ParserGrammar { rules: vec![], version: 0 };
         let mut parser = GrammarParser::new(tokens, grammar);
         assert!(parser.parse().is_err());
     }
@@ -773,6 +833,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![tok(TokenType::Number, "42"), tok(TokenType::Eof, "")];
@@ -796,6 +857,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![tok(TokenType::Number, "42"), tok(TokenType::Eof, "")];
@@ -819,6 +881,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
         let tokens = vec![tok(TokenType::Name, "hello"), tok(TokenType::Eof, "")];
         let mut parser = GrammarParser::new(tokens, grammar);
@@ -847,6 +910,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![
@@ -934,6 +998,7 @@ mod tests {
                     line_number: 2,
                 },
             ],
+            version: 0,
         };
 
         let tokens = vec![
@@ -969,6 +1034,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let tokens = vec![
@@ -1003,6 +1069,7 @@ mod tests {
                 },
                 line_number: 1,
             }],
+            version: 0,
         };
 
         let parser = GrammarParser::new(vec![], grammar);

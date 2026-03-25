@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/actor",
+  "capabilities": [
+    "fs:read:*",
+    "fs:write:*",
+    "time:read:*"
+  ],
+  "justification": "Uses FileUtils.mkdir_p and File.open for persistent channel storage. Uses Process.clock_gettime for monotonic timestamps."
+}

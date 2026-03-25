@@ -1,0 +1,265 @@
+/*
+ * app.css — Engram app styles.
+ *
+ * Imports shared CSS from @coding-adventures/ui-components, then adds
+ * Engram-specific layout and component styles on top.
+ *
+ * BEM naming: block__element--modifier
+ * Color tokens: from theme.css (--body-bg, --panel-bg, --accent, etc.)
+ */
+
+@import "@coding-adventures/ui-components/src/styles/theme.css";
+@import "@coding-adventures/ui-components/src/styles/accessibility.css";
+@import "@coding-adventures/ui-components/src/styles/flash-card.css";
+@import "@coding-adventures/ui-components/src/styles/rating-buttons.css";
+@import "@coding-adventures/ui-components/src/styles/progress-bar.css";
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Engram-specific tokens ─────────────────────────────────────────────── */
+
+:root {
+  --card-radius: 8px;
+  --input-radius: 6px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+  --max-content-width: 680px;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+
+html {
+  font-family: var(--sans, system-ui, sans-serif);
+  background: var(--body-bg, #1a1a2e);
+  color: var(--body-text, #e0ddd5);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body {
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+}
+
+#root {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--input-radius);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: opacity 0.15s, background 0.15s;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── App header ─────────────────────────────────────────────────────────── */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--panel-border, #2a3a5e);
+}
+
+.app-header__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--tab-active-text, #ffffff);
+  letter-spacing: -0.02em;
+}
+
+/* ── Shared button styles ───────────────────────────────────────────────── */
+
+.btn--primary {
+  background: var(--accent, #e94560);
+  color: #fff;
+  font-weight: 600;
+}
+.btn--primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.btn--secondary {
+  background: var(--panel-bg, #16213e);
+  color: var(--tab-text, #8899aa);
+  border: 1px solid var(--panel-border, #2a3a5e);
+}
+.btn--secondary:hover:not(:disabled) {
+  background: var(--panel-header, #0f3460);
+}
+
+/* ── Card (deck list item) ──────────────────────────────────────────────── */
+
+.deck-card {
+  background: var(--panel-bg, #16213e);
+  border: 1px solid var(--panel-border, #2a3a5e);
+  border-radius: var(--card-radius);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  transition: border-color 0.15s;
+}
+.deck-card:hover {
+  border-color: var(--accent, #e94560);
+}
+
+.deck-card__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--tab-active-text, #ffffff);
+}
+
+.deck-card__description {
+  font-size: 0.875rem;
+  color: var(--tab-text, #8899aa);
+  flex: 1;
+}
+
+.deck-card__meta {
+  font-size: 0.8rem;
+  color: var(--tab-text, #8899aa);
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.deck-card__meta-due {
+  color: var(--accent, #e94560);
+  font-weight: 600;
+}
+
+.deck-card__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+}
+
+/* ── Deck list ──────────────────────────────────────────────────────────── */
+
+.deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.deck-list__empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--tab-text, #8899aa);
+}
+
+/* ── Study session ──────────────────────────────────────────────────────── */
+
+.study-session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.study-session__progress {
+  margin-bottom: var(--spacing-sm);
+}
+
+.study-session__card {
+  min-height: 260px;
+}
+
+.study-session__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-md);
+}
+
+/* ── Session complete ───────────────────────────────────────────────────── */
+
+.session-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.session-complete__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--tab-active-text, #ffffff);
+}
+
+.session-complete__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.stat-card {
+  background: var(--panel-bg, #16213e);
+  border: 1px solid var(--panel-border, #2a3a5e);
+  border-radius: var(--card-radius);
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent, #e94560);
+}
+
+.stat-card__label {
+  font-size: 0.8rem;
+  color: var(--tab-text, #8899aa);
+  margin-top: var(--spacing-xs);
+}
+
+.session-complete__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+/* ── Deck stats ─────────────────────────────────────────────────────────── */
+
+.deck-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.deck-stats__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--tab-active-text, #ffffff);
+}
+
+.deck-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.deck-stats__back {
+  margin-top: var(--spacing-md);
+}

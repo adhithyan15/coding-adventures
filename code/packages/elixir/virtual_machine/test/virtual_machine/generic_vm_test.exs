@@ -820,5 +820,18 @@ defmodule CodingAdventures.VirtualMachine.GenericVMTest do
       store_trace = Enum.at(traces, 1)
       assert store_trace.variables == %{"y" => 99}
     end
+
+    test "inject_globals merges and overwrites variables" do
+      vm =
+        GenericVM.new()
+        |> Map.put(:variables, %{"existing" => 1, "ctx_os" => "linux"})
+        |> GenericVM.inject_globals(%{"ctx_os" => "darwin", "answer" => 42})
+
+      assert vm.variables == %{
+               "existing" => 1,
+               "ctx_os" => "darwin",
+               "answer" => 42
+             }
+    end
   end
 end

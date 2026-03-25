@@ -67,16 +67,20 @@
 module CodingAdventures
   module StarlarkInterpreter
     class Interpreter
-      attr_reader :file_resolver, :max_recursion_depth
+      attr_reader :file_resolver, :max_recursion_depth, :globals
 
       # Create a new Starlark interpreter.
       #
       # @param file_resolver [Proc, nil] a callable that resolves load() labels
       #   to file contents. Receives a string label, returns contents or nil.
       # @param max_recursion_depth [Integer] maximum function call depth (default: 200)
-      def initialize(file_resolver: nil, max_recursion_depth: 200)
+      # @param globals [Hash, nil] pre-seeded variables injected into every VM
+      #   instance, including those created for load() calls. Use this for build
+      #   context like +_ctx+.
+      def initialize(file_resolver: nil, max_recursion_depth: 200, globals: nil)
         @file_resolver = file_resolver
         @max_recursion_depth = max_recursion_depth
+        @globals = globals
         @load_cache = {}
       end
 
@@ -91,6 +95,7 @@ module CodingAdventures
       def interpret(source)
         code = StarlarkAstToBytecodeCompiler::Compiler.compile_starlark(source)
         vm = StarlarkVM.create_starlark_vm(max_recursion_depth: @max_recursion_depth)
+        vm.inject_globals(@globals) if @globals
         register_load_handler(vm)
         traces = vm.execute(code)
         StarlarkVM::StarlarkResult.new(
@@ -179,10 +184,11 @@ module CodingAdventures
     # @example
     #   result = CodingAdventures::StarlarkInterpreter.interpret("x = 42\n")
     #   result.variables["x"]  # => 42
-    def self.interpret(source, file_resolver: nil, max_recursion_depth: 200)
+    def self.interpret(source, file_resolver: nil, max_recursion_depth: 200, globals: nil)
       interp = Interpreter.new(
         file_resolver: file_resolver,
-        max_recursion_depth: max_recursion_depth
+        max_recursion_depth: max_recursion_depth,
+        globals: globals
       )
       interp.interpret(source)
     end
@@ -193,10 +199,11 @@ module CodingAdventures
     # @param file_resolver [Proc, nil] optional load() resolver
     # @param max_recursion_depth [Integer] max call depth (default: 200)
     # @return [StarlarkVM::StarlarkResult]
-    def self.interpret_file(path, file_resolver: nil, max_recursion_depth: 200)
+    def self.interpret_file(path, file_resolver: nil, max_recursion_depth: 200, globals: nil)
       interp = Interpreter.new(
         file_resolver: file_resolver,
-        max_recursion_depth: max_recursion_depth
+        max_recursion_depth: max_recursion_depth,
+        globals: globals
       )
       interp.interpret_file(path)
     end

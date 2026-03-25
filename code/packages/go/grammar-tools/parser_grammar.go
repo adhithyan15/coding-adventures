@@ -2,6 +2,8 @@ package grammartools
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -52,9 +54,18 @@ type GrammarRule struct {
 	LineNumber int
 }
 
+// ParserGrammar represents the complete contents of a parsed .grammar file.
+//
+// Magic comments at the top configure the grammar:
+//
+//	# @version 1  — pins to format version 1 (default: 0, meaning latest)
 type ParserGrammar struct {
-	Rules []GrammarRule
+	Version int // From # @version N magic comment (0 = latest)
+	Rules   []GrammarRule
 }
+
+// parserMagicCommentRe matches magic comment lines: # @key value
+var parserMagicCommentRe = regexp.MustCompile(`^#\s*@(\w+)\s*(.*)$`)
 
 type internalToken struct {
 	kind  string
@@ -286,6 +297,26 @@ func (p *parser) parseElement() (GrammarElement, error) {
 }
 
 func ParseParserGrammar(source string) (*ParserGrammar, error) {
+	grammar := &ParserGrammar{}
+
+	// Scan for magic comments (# @key value) before tokenizing.
+	// Unknown keys are silently ignored for forward compatibility.
+	for _, line := range strings.Split(source, "\n") {
+		stripped := strings.TrimSpace(line)
+		if !strings.HasPrefix(stripped, "#") {
+			continue
+		}
+		if m := parserMagicCommentRe.FindStringSubmatch(stripped); m != nil {
+			key, value := m[1], strings.TrimSpace(m[2])
+			switch key {
+			case "version":
+				if n, err := strconv.Atoi(value); err == nil {
+					grammar.Version = n
+				}
+			}
+		}
+	}
+
 	tokens, err := tokenizeGrammar(source)
 	if err != nil {
 		return nil, err
@@ -295,7 +326,8 @@ func ParseParserGrammar(source string) (*ParserGrammar, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &ParserGrammar{Rules: rules}, nil
+	grammar.Rules = rules
+	return grammar, nil
 }
 
 // ---------------------------------------------------------------------------

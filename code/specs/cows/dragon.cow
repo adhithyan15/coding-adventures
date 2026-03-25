@@ -1,0 +1,14 @@
+$the_cow = <<EOC;
+      $thoughts                [/]  [/]
+       $thoughts              [/ /][/ /]
+        $thoughts            [/ /][/ /]
+         $thoughts   _______[/ /][/ /]
+          $thoughts [/      ]  [/ /]
+           $thoughts[      ]___[/ /]
+            $thoughts[          ]
+             $thoughts[          ]
+            [/      ]  [/]
+           [/      ]  [/ /]
+          [/      ]  [/ /]
+         [/______]__[/ /]
+EOC

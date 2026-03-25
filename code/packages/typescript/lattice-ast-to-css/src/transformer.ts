@@ -529,7 +529,7 @@ export class LatticeTransformer {
    * Extract parameter names and defaults from mixin_params.
    *
    * mixin_params = mixin_param { COMMA mixin_param } ;
-   * mixin_param = VARIABLE [ COLON value_list ] ;
+   * mixin_param = VARIABLE [ COLON mixin_value_list ] ;
    */
   private _extractParams(node: ASTNode): {
     params: string[];
@@ -550,7 +550,7 @@ export class LatticeTransformer {
             if (tokenTypeName(pc as Token) === "VARIABLE") {
               paramName = (pc as Token).value;
             }
-          } else if ((pc as ASTNode).ruleName === "value_list") {
+          } else if ((pc as ASTNode).ruleName === "value_list" || (pc as ASTNode).ruleName === "mixin_value_list") {
             defaultValue = pc as ASTNode;
           }
         }
@@ -1091,8 +1091,6 @@ export class LatticeTransformer {
     }
 
     // User-defined function ALWAYS takes priority — even over CSS built-ins
-    // like scale(), translate(), etc. If the user defines @function scale(),
-    // their definition wins. This matches Sass behavior.
     if (this.functions.has(funcName)) {
       return this._evaluateFunctionCall(funcName, node, scope);
     }
@@ -1111,6 +1109,7 @@ export class LatticeTransformer {
     if (isCssFunction(funcName)) {
       return this._expandChildren(node, scope);
     }
+
 
     // Unknown function — pass through (might be a CSS function we don't know)
     return this._expandChildren(node, scope);

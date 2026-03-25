@@ -21,7 +21,7 @@ import { TriodeDiagram } from "./TriodeDiagram.js";
 import {
   triodePlateCurrent,
   isConducting,
-} from "../../lib/vacuum-tube-model.js";
+} from "@coding-adventures/transistors";
 import "../../styles/vacuum-tube.css";
 
 export function VacuumTubeEra() {

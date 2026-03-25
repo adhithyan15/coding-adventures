@@ -735,6 +735,8 @@ class ExpressionEvaluator:
                 return LatticeBool(lv > rv)
             elif op == "GREATER_EQUALS":
                 return LatticeBool(lv >= rv)
+            elif op == "LESS":
+                return LatticeBool(lv < rv)
             elif op == "LESS_EQUALS":
                 return LatticeBool(lv <= rv)
 
@@ -805,17 +807,21 @@ class ExpressionEvaluator:
         raise TypeErrorInExpression("subtract", str(left), str(right))
 
     def _eval_lattice_multiplicative(self, node: object) -> LatticeValue:
-        """lattice_multiplicative = lattice_unary { STAR lattice_unary } ;"""
+        """lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;"""
         children = node.children  # type: ignore[attr-defined]
         result = self.evaluate(children[0])
 
         i = 1
         while i < len(children):
             child = children[i]
-            if hasattr(child, "value") and child.value == "*":  # type: ignore[attr-defined]
+            if hasattr(child, "value") and child.value in ("*", "/"):  # type: ignore[attr-defined]
+                op = child.value  # type: ignore[attr-defined]
                 i += 1
                 right = self.evaluate(children[i])
-                result = self._multiply(result, right)
+                if op == "*":
+                    result = self._multiply(result, right)
+                else:
+                    result = self._divide(result, right)
             i += 1
         return result
 
@@ -844,6 +850,29 @@ class ExpressionEvaluator:
             return LatticePercentage(left.value * right.value)
 
         raise TypeErrorInExpression("multiply", str(left), str(right))
+
+    def _divide(self, left: LatticeValue, right: LatticeValue) -> LatticeValue:
+        """Division.
+
+        - Number / Number → Number
+        - Dimension / Number → Dimension
+        - Dimension / Dimension (same unit) → Number (units cancel)
+        - Percentage / Number → Percentage
+        """
+        from lattice_ast_to_css.errors import ZeroDivisionInExpressionError
+        rv = right.value if hasattr(right, "value") else None  # type: ignore[attr-defined]
+        if rv == 0:
+            raise ZeroDivisionInExpressionError()
+        if isinstance(left, LatticeNumber) and isinstance(right, LatticeNumber):
+            return LatticeNumber(left.value / right.value)
+        if isinstance(left, LatticeDimension) and isinstance(right, LatticeNumber):
+            return LatticeDimension(left.value / right.value, left.unit)
+        if isinstance(left, LatticeDimension) and isinstance(right, LatticeDimension):
+            if left.unit == right.unit:
+                return LatticeNumber(left.value / right.value)
+        if isinstance(left, LatticePercentage) and isinstance(right, LatticeNumber):
+            return LatticePercentage(left.value / right.value)
+        raise TypeErrorInExpression("divide", str(left), str(right))
 
     def _eval_lattice_unary(self, node: object) -> LatticeValue:
         """lattice_unary = MINUS lattice_unary | lattice_primary ;"""

@@ -1,4 +1,5 @@
 # Token definitions for CSS3 (full specification subset)
+# @version 1
 #
 # CSS tokenization is significantly harder than JSON or Starlark because of
 # compound tokens (10px is one DIMENSION token, not NUMBER + IDENT), context-

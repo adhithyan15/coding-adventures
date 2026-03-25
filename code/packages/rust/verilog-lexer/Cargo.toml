@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-verilog-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Verilog lexer — tokenizes Verilog HDL source code using the grammar-driven lexer and the verilog.tokens grammar file, with optional preprocessor support for `define/`ifdef/`include directives"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

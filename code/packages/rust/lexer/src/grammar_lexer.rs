@@ -54,6 +54,7 @@
 //!   following the Python/Starlark whitespace rules.
 
 use regex::Regex;
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
 use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
@@ -318,7 +319,8 @@ pub struct GrammarLexer<'a> {
     chars: Vec<char>,
 
     /// The original source string (for regex matching on slices).
-    source: &'a str,
+    /// When case_sensitive is false, this holds the lowercased copy.
+    source: Cow<'a, str>,
 
     /// Current byte position in the source string.
     byte_pos: usize,
@@ -382,6 +384,32 @@ pub struct GrammarLexer<'a> {
     /// via `LexerContext::set_skip_enabled()` for groups where whitespace
     /// is significant (e.g., CDATA, raw strings).
     skip_enabled: bool,
+
+    /// Whether the grammar is case-sensitive. When `false`, the source
+    /// string is lowercased before tokenization so that keywords and
+    /// patterns match regardless of case. This is useful for languages
+    /// like SQL and BASIC where `SELECT` and `select` are equivalent.
+    case_sensitive: bool,
+
+    /// Pre-tokenize hooks: transform source text before lexing.
+    /// Each hook is a function `String -> String`. Multiple hooks compose left-to-right.
+    pre_tokenize_hooks: Vec<Box<dyn Fn(String) -> String>>,
+
+    /// Post-tokenize hooks: transform token list after lexing.
+    /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    post_tokenize_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
+
+    /// Whether keyword matching is case-insensitive.
+    ///
+    /// When `true` (set by `# @case_insensitive true` in the grammar file),
+    /// keywords are stored as uppercase strings in `keyword_set` and
+    /// `reserved_set`. During NAME token matching, the token value is
+    /// uppercased before the lookup, and if a keyword is found, the emitted
+    /// token value is normalized to uppercase.
+    ///
+    /// This means `select`, `SELECT`, and `Select` all produce a KEYWORD
+    /// token with value `"SELECT"` when `SELECT` is in the keyword list.
+    case_insensitive: bool,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -391,8 +419,22 @@ impl<'a> GrammarLexer<'a> {
     /// anchored regex patterns. The "default" group contains the top-level
     /// definitions; named groups come from `group NAME:` sections.
     pub fn new(source: &'a str, grammar: &TokenGrammar) -> Self {
-        let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
-        let reserved_set: HashSet<String> = grammar.reserved_keywords.iter().cloned().collect();
+        let case_sensitive = grammar.case_sensitive;
+        let case_insensitive = grammar.case_insensitive;
+
+        // When case-insensitive mode is on, store all keywords as uppercase
+        // so that lookups can be performed with value.to_uppercase(). This
+        // way "select", "SELECT", and "Select" all match the same entry.
+        let keyword_set: HashSet<String> = if case_insensitive {
+            grammar.keywords.iter().map(|kw| kw.to_uppercase()).collect()
+        } else {
+            grammar.keywords.iter().cloned().collect()
+        };
+        let reserved_set: HashSet<String> = if case_insensitive {
+            grammar.reserved_keywords.iter().map(|kw| kw.to_uppercase()).collect()
+        } else {
+            grammar.reserved_keywords.iter().cloned().collect()
+        };
         let patterns = compile_patterns(&grammar.definitions);
         let skip_patterns = compile_patterns(&grammar.skip_definitions);
         let indent_mode = grammar.mode.as_deref() == Some("indentation");
@@ -430,9 +472,19 @@ impl<'a> GrammarLexer<'a> {
         // Build the set of valid group names for validation.
         let group_names: HashSet<String> = group_patterns.keys().cloned().collect();
 
+        // When case_sensitive is false, lowercase the entire source so that
+        // patterns and keywords match regardless of the original casing. Both
+        // `source` (used for regex matching) and `chars` (used for indexed
+        // access) operate on the lowercased text.
+        let effective_source: Cow<'a, str> = if case_sensitive {
+            Cow::Borrowed(source)
+        } else {
+            Cow::Owned(source.to_lowercase())
+        };
+
         GrammarLexer {
-            chars: source.chars().collect(),
-            source,
+            chars: effective_source.chars().collect(),
+            source: effective_source,
             byte_pos: 0,
             char_pos: 0,
             line: 1,
@@ -448,6 +500,10 @@ impl<'a> GrammarLexer<'a> {
             group_stack: vec!["default".to_string()],
             on_token: None,
             skip_enabled: true,
+            case_sensitive,
+            pre_tokenize_hooks: Vec::new(),
+            post_tokenize_hooks: Vec::new(),
+            case_insensitive,
         }
     }
 
@@ -465,6 +521,22 @@ impl<'a> GrammarLexer<'a> {
     /// - The EOF token
     pub fn set_on_token(&mut self, callback: Option<OnTokenCallback>) {
         self.on_token = callback;
+    }
+
+    /// Register a text transform to run before tokenization.
+    ///
+    /// The hook receives the source string and returns a (possibly modified)
+    /// source string. Multiple hooks compose left-to-right.
+    pub fn add_pre_tokenize(&mut self, hook: Box<dyn Fn(String) -> String>) {
+        self.pre_tokenize_hooks.push(hook);
+    }
+
+    /// Register a token transform to run after tokenization.
+    ///
+    /// The hook receives the full token list and returns a (possibly modified)
+    /// token list. Multiple hooks compose left-to-right.
+    pub fn add_post_tokenize(&mut self, hook: Box<dyn Fn(Vec<Token>) -> Vec<Token>>) {
+        self.post_tokenize_hooks.push(hook);
     }
 
     // -----------------------------------------------------------------------
@@ -510,9 +582,20 @@ impl<'a> GrammarLexer<'a> {
         alias: Option<&str>,
         value: &str,
     ) -> Result<(TokenType, Option<String>), LexerError> {
+        // When case-insensitive mode is active, compare against the keyword
+        // and reserved sets using the uppercased form of the value. The sets
+        // were built with uppercase entries in GrammarLexer::new.
+        let lookup_key: String;
+        let lookup_value: &str = if self.case_insensitive {
+            lookup_key = value.to_uppercase();
+            &lookup_key
+        } else {
+            value
+        };
+
         // Check reserved keywords first — if a NAME matches a reserved word,
         // that's an error.
-        if token_name == "NAME" && self.reserved_set.contains(value) {
+        if token_name == "NAME" && self.reserved_set.contains(lookup_value) {
             return Err(LexerError {
                 message: format!("Reserved keyword '{}' cannot be used as an identifier", value),
                 line: self.line,
@@ -521,7 +604,9 @@ impl<'a> GrammarLexer<'a> {
         }
 
         // Keyword promotion: NAME tokens whose value is in the keyword set.
-        if token_name == "NAME" && self.keyword_set.contains(value) {
+        // When case-insensitive, emit the normalized (uppercase) form so that
+        // `select`, `SELECT`, and `Select` all produce the same token value.
+        if token_name == "NAME" && self.keyword_set.contains(lookup_value) {
             return Ok((TokenType::Keyword, Some("KEYWORD".to_string())));
         }
 
@@ -742,6 +827,11 @@ impl<'a> GrammarLexer<'a> {
                     } else {
                         Self::process_escapes(inner)
                     }
+                } else if self.case_insensitive && token_type == TokenType::Keyword {
+                    // In case-insensitive mode, normalize keyword values to
+                    // uppercase so that "select", "SELECT", and "Select" all
+                    // produce the same canonical token value ("SELECT").
+                    matched.to_uppercase()
                 } else {
                     matched.clone()
                 };
@@ -769,7 +859,7 @@ impl<'a> GrammarLexer<'a> {
                     let mut ctx = LexerContext {
                         group_names: &self.group_names,
                         group_stack: &self.group_stack,
-                        source: self.source,
+                        source: &self.source,
                         pos_after_token: self.byte_pos,
                         actions: Vec::new(),
                         suppressed: false,
@@ -1010,6 +1100,11 @@ impl<'a> GrammarLexer<'a> {
                     } else {
                         Self::process_escapes(inner)
                     }
+                } else if self.case_insensitive && token_type == TokenType::Keyword {
+                    // In case-insensitive mode, normalize keyword values to
+                    // uppercase so that "select", "SELECT", and "Select" all
+                    // produce the same canonical token value ("SELECT").
+                    matched.to_uppercase()
                 } else {
                     matched.clone()
                 };
@@ -1080,11 +1175,30 @@ impl<'a> GrammarLexer<'a> {
     /// Dispatches to either standard or indentation mode based on the
     /// grammar's mode directive.
     pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
-        if self.indent_mode {
-            self.tokenize_indentation()
-        } else {
-            self.tokenize_standard()
+        // Stage 1: Pre-tokenize hooks transform the source text.
+        if !self.pre_tokenize_hooks.is_empty() {
+            let mut source = self.source.clone().into_owned();
+            for hook in &self.pre_tokenize_hooks {
+                source = hook(source);
+            }
+            // Rebuild chars and source from the transformed text.
+            self.chars = source.chars().collect();
+            self.source = Cow::Owned(source);
         }
+
+        // Stage 2: Core tokenization.
+        let mut tokens = if self.indent_mode {
+            self.tokenize_indentation()?
+        } else {
+            self.tokenize_standard()?
+        };
+
+        // Stage 3: Post-tokenize hooks transform the token list.
+        for hook in &self.post_tokenize_hooks {
+            tokens = hook(tokens);
+        }
+
+        Ok(tokens)
     }
 }
 
@@ -2172,5 +2286,141 @@ PLUS = "+""#,
 
         // Should not crash and should still produce TAG_NAME.
         assert!(tokens.iter().any(|t| token_type_name(t) == "TAG_NAME"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Case-insensitive keyword support
+    // -----------------------------------------------------------------------
+
+    /// Build a small SQL-like grammar with case_insensitive mode enabled.
+    ///
+    /// The grammar declares `SELECT` and `FROM` as keywords. With
+    /// `# @case_insensitive true`, the lexer stores them as uppercase
+    /// internally and accepts any casing in source code.
+    fn case_insensitive_grammar() -> TokenGrammar {
+        // Note: indentation in skip: and keywords: sections MUST be preserved
+        // in the source string. Rust's \n\ continuation strips leading whitespace,
+        // so the indented content is written inline with explicit \n and spaces.
+        parse_token_grammar(
+            "# @case_insensitive true\nNAME = /[a-zA-Z_][a-zA-Z0-9_]*/\nskip:\n  WS = /[ \\t\\n]+/\nkeywords:\n  SELECT\n  FROM\n"
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn test_case_insensitive_lowercase_keyword() {
+        // Lowercase "select" must be promoted to KEYWORD with value "SELECT".
+        //
+        // Truth table row: input="select", case_insensitive=true
+        //   lookup key = "SELECT" (in keyword_set) → KEYWORD
+        //   emitted value = "SELECT"               (normalized)
+        let grammar = case_insensitive_grammar();
+        let tokens = GrammarLexer::new("select", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword,
+            "lowercase 'select' must be KEYWORD when case_insensitive=true");
+        assert_eq!(tokens[0].value, "SELECT",
+            "emitted value must be normalized to uppercase");
+    }
+
+    #[test]
+    fn test_case_insensitive_uppercase_keyword() {
+        // Uppercase "SELECT" must also be promoted and emitted as "SELECT".
+        //
+        // Truth table row: input="SELECT", case_insensitive=true
+        //   lookup key = "SELECT" (in keyword_set) → KEYWORD
+        //   emitted value = "SELECT"
+        let grammar = case_insensitive_grammar();
+        let tokens = GrammarLexer::new("SELECT", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword,
+            "uppercase 'SELECT' must be KEYWORD when case_insensitive=true");
+        assert_eq!(tokens[0].value, "SELECT",
+            "emitted value must be normalized to uppercase");
+    }
+
+    #[test]
+    fn test_case_insensitive_mixed_case_keyword() {
+        // Mixed-case "Select" must also be promoted and emitted as "SELECT".
+        //
+        // Truth table row: input="Select", case_insensitive=true
+        //   lookup key = "SELECT" (in keyword_set) → KEYWORD
+        //   emitted value = "SELECT"
+        let grammar = case_insensitive_grammar();
+        let tokens = GrammarLexer::new("Select", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword,
+            "mixed-case 'Select' must be KEYWORD when case_insensitive=true");
+        assert_eq!(tokens[0].value, "SELECT",
+            "emitted value must be normalized to uppercase");
+    }
+
+    #[test]
+    fn test_case_sensitive_default_keeps_original_value() {
+        // When case_insensitive=false (the default), keyword lookup is
+        // case-sensitive. "select" is a keyword; its emitted value stays
+        // "select" — no uppercasing is applied.
+        //
+        // Truth table row: input="select", case_insensitive=false
+        //   lookup key = "select" (in keyword_set) → KEYWORD
+        //   emitted value = "select"                (no normalization)
+        let grammar = parse_token_grammar(
+            "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/\nskip:\n  WS = /[ \\t\\n]+/\nkeywords:\n  select\n",
+        ).unwrap();
+        let tokens = GrammarLexer::new("select", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword,
+            "'select' must be KEYWORD when it is in the keyword list");
+        assert_eq!(tokens[0].value, "select",
+            "case-sensitive mode must not alter the emitted value");
+    }
+
+    #[test]
+    fn test_case_sensitive_uppercase_not_promoted() {
+        // When case_insensitive=false, "SELECT" is NOT a keyword if only
+        // "select" (lowercase) is in the keyword list.
+        //
+        // Truth table row: input="SELECT", case_insensitive=false, keyword="select"
+        //   lookup key = "SELECT" (not in keyword_set) → NAME
+        let grammar = parse_token_grammar(
+            "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/\nskip:\n  WS = /[ \\t\\n]+/\nkeywords:\n  select\n",
+        ).unwrap();
+        let tokens = GrammarLexer::new("SELECT", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Name,
+            "uppercase 'SELECT' must be NAME when grammar is case-sensitive and keyword is lowercase");
+        assert_eq!(tokens[0].value, "SELECT",
+            "NAME token value must preserve original casing");
+    }
+
+    #[test]
+    fn test_case_insensitive_non_keyword_identifier_preserves_case() {
+        // A non-keyword identifier must be emitted as NAME with its original
+        // case, even when case_insensitive=true. Only keywords are normalized.
+        //
+        // Truth table row: input="myTable", case_insensitive=true, keyword="SELECT"
+        //   lookup key = "MYTABLE" (not in keyword_set) → NAME
+        //   emitted value = "myTable"                    (no normalization)
+        let grammar = case_insensitive_grammar();
+        let tokens = GrammarLexer::new("myTable", &grammar).tokenize().unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Name,
+            "non-keyword identifier must be NAME even in case_insensitive mode");
+        assert_eq!(tokens[0].value, "myTable",
+            "NAME tokens must retain their original casing");
+    }
+
+    #[test]
+    fn test_case_insensitive_multiple_keywords_in_sequence() {
+        // A realistic SQL-like snippet: "select id from users" should produce
+        // KEYWORD("SELECT"), NAME("id"), KEYWORD("FROM"), NAME("users").
+        let grammar = case_insensitive_grammar();
+        let tokens = GrammarLexer::new("select id from users", &grammar).tokenize().unwrap();
+
+        let pairs: Vec<(TokenType, &str)> = tokens.iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| (t.type_, t.value.as_str()))
+            .collect();
+
+        assert_eq!(pairs, vec![
+            (TokenType::Keyword, "SELECT"),
+            (TokenType::Name,    "id"),
+            (TokenType::Keyword, "FROM"),
+            (TokenType::Name,    "users"),
+        ]);
     }
 }

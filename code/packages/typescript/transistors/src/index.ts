@@ -2,6 +2,7 @@
  * Transistors — Layer 2 of the computing stack.
  *
  * This package provides transistor-level circuit simulation including:
+ * - Vacuum tube triode (1906) with Child-Langmuir law — the historical predecessor
  * - MOSFET transistors (NMOS, PMOS) with region detection and current calculation
  * - BJT transistors (NPN, PNP) with Ebers-Moll model
  * - CMOS logic gates (NOT, NAND, NOR, AND, OR, XOR)
@@ -29,6 +30,14 @@ export type {
   PowerAnalysis,
   TimingAnalysis,
 } from "./types.js";
+
+// Vacuum tube (triode) — the historical predecessor to all transistors
+export {
+  defaultTriodeParams,
+  triodePlateCurrent,
+  isConducting,
+} from "./vacuum-tube.js";
+export type { TriodeParams } from "./vacuum-tube.js";
 
 // MOSFET transistors
 export { NMOS, PMOS } from "./mosfet.js";

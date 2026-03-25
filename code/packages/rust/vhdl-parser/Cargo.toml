@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-vhdl-parser"
+version = "0.1.0"
+edition = "2021"
+description = "VHDL parser — parses VHDL (IEEE 1076-2008) source code into an AST using the grammar-driven parser and the vhdl.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }
+coding-adventures-vhdl-lexer = { path = "../vhdl-lexer" }

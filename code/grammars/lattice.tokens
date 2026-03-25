@@ -1,4 +1,5 @@
 # Token definitions for Lattice — a CSS superset language
+# @version 1
 #
 # Lattice extends CSS with variables ($var), mixins (@mixin/@include),
 # control flow (@if/@for/@each), functions (@function/@return), and
@@ -188,6 +189,7 @@ COMMA     = ","
 DOT       = "."
 PLUS      = "+"
 GREATER   = ">"
+LESS      = "<"
 TILDE     = "~"
 STAR      = "*"
 PIPE      = "|"
