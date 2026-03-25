@@ -42,7 +42,7 @@
 // We extract the first argument (index 0) as a UTF-8 string, call the
 // corresponding Rust function, and return a new Python str.
 
-use std::ffi::{c_char, c_int};
+use std::ffi::c_char;
 use std::ptr;
 
 use python_bridge::*;
@@ -183,7 +183,7 @@ pub unsafe extern "C" fn PyInit_commonmark_native() -> PyObjectPtr {
             ml_meth: Some(py_markdown_to_html_safe),
             ml_flags: METH_VARARGS,
             ml_doc: b"Convert CommonMark Markdown to HTML, stripping raw HTML.\n\n\
-                      Safe for untrusted user-supplied Markdown — prevents XSS by\n\
+                      Safe for untrusted user-supplied Markdown -- prevents XSS by\n\
                       dropping all raw HTML blocks and inline HTML.\0"
                 .as_ptr() as *const c_char,
         },
