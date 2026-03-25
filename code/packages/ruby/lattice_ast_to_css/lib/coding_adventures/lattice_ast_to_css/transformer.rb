@@ -345,7 +345,7 @@ module CodingAdventures
 
           child.children.each do |pc|
             if pc.respond_to?(:rule_name)
-              default_value = pc if pc.rule_name == "value_list"
+              default_value = pc if pc.rule_name == "value_list" || pc.rule_name == "mixin_value_list"
             elsif token_type_name(pc) == "VARIABLE"
               param_name = pc.value
             end

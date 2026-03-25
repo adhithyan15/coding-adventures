@@ -107,7 +107,7 @@ defmodule CodingAdventures.LatticeAstToCss.Evaluator do
 
   defp eval_value_list(children, scope) do
     has_ops = Enum.any?(children, fn
-      %Token{value: v} when v in ["+", "-", "*"] -> true
+      %Token{value: v} when v in ["+", "-", "*", "/"] -> true
       _ -> false
     end)
 
@@ -238,7 +238,7 @@ defmodule CodingAdventures.LatticeAstToCss.Evaluator do
     eval_additive_rest(rest, acc, scope)
   end
 
-  # lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+  # lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
   defp eval_multiplicative([first | rest], scope) do
     initial = evaluate(first, scope)
     eval_multiplicative_rest(rest, initial, scope)
@@ -253,6 +253,18 @@ defmodule CodingAdventures.LatticeAstToCss.Evaluator do
 
     result =
       case Values.multiply(acc, right_val) do
+        {:ok, v} -> v
+        {:error, _} -> acc
+      end
+
+    eval_multiplicative_rest(rest, result, scope)
+  end
+
+  defp eval_multiplicative_rest([%Token{value: "/"} | [right | rest]], acc, scope) do
+    right_val = evaluate(right, scope)
+
+    result =
+      case Values.divide(acc, right_val) do
         {:ok, v} -> v
         {:error, _} -> acc
       end

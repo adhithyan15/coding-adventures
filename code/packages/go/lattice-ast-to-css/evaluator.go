@@ -1434,6 +1434,8 @@ func numCompare(lv, rv float64, opType string) bool {
 		return lv >= rv
 	case "LESS_EQUALS":
 		return lv <= rv
+	case "LESS":
+		return lv < rv
 	}
 	return false
 }
@@ -1520,22 +1522,27 @@ func (e *ExpressionEvaluator) subtract(left, right LatticeValue) LatticeValue {
 
 // evalMultiplicative handles:
 //
-//	lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+//	lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
 func (e *ExpressionEvaluator) evalMultiplicative(node *parser.ASTNode) LatticeValue {
 	result := e.Evaluate(node.Children[0])
 	i := 1
 	for i < len(node.Children) {
 		tok, ok := node.Children[i].(lexer.Token)
-		if !ok || tok.Value != "*" {
+		if !ok || (tok.Value != "*" && tok.Value != "/") {
 			i++
 			continue
 		}
+		op := tok.Value
 		i++
 		if i >= len(node.Children) {
 			break
 		}
 		right := e.Evaluate(node.Children[i])
-		result = e.multiply(result, right)
+		if op == "*" {
+			result = e.multiply(result, right)
+		} else {
+			result = e.divide(result, right)
+		}
 		i++
 	}
 	return result
@@ -1570,6 +1577,47 @@ func (e *ExpressionEvaluator) multiply(left, right LatticeValue) LatticeValue {
 		}
 	}
 	panic(NewTypeErrorInExpression("multiply", left.String(), right.String(), 0, 0))
+}
+
+// divide performs division with zero-division guard.
+//
+//	Number ÷ Number → Number
+//	Dimension ÷ Number → Dimension (same unit)
+//	Dimension ÷ Dimension (same unit) → Number (unitless ratio)
+//	Percentage ÷ Number → Percentage
+func (e *ExpressionEvaluator) divide(left, right LatticeValue) LatticeValue {
+	switch l := left.(type) {
+	case LatticeNumber:
+		if r, ok := right.(LatticeNumber); ok {
+			if r.Value == 0 {
+				panic(NewZeroDivisionInExpressionError(0, 0))
+			}
+			return LatticeNumber{Value: l.Value / r.Value}
+		}
+	case LatticeDimension:
+		switch r := right.(type) {
+		case LatticeNumber:
+			if r.Value == 0 {
+				panic(NewZeroDivisionInExpressionError(0, 0))
+			}
+			return LatticeDimension{Value: l.Value / r.Value, Unit: l.Unit}
+		case LatticeDimension:
+			if l.Unit == r.Unit {
+				if r.Value == 0 {
+					panic(NewZeroDivisionInExpressionError(0, 0))
+				}
+				return LatticeNumber{Value: l.Value / r.Value}
+			}
+		}
+	case LatticePercentage:
+		if r, ok := right.(LatticeNumber); ok {
+			if r.Value == 0 {
+				panic(NewZeroDivisionInExpressionError(0, 0))
+			}
+			return LatticePercentage{Value: l.Value / r.Value}
+		}
+	}
+	panic(NewTypeErrorInExpression("divide", left.String(), right.String(), 0, 0))
 }
 
 // evalUnary handles: lattice_unary = MINUS lattice_unary | lattice_primary ;

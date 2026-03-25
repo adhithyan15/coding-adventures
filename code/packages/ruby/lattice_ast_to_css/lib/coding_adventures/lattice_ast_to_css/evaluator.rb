@@ -606,6 +606,7 @@ module CodingAdventures
             end
           when "GREATER" then lv > rv
           when "GREATER_EQUALS" then lv >= rv
+          when "LESS" then lv < rv
           when "LESS_EQUALS" then lv <= rv
           else false
           end
@@ -684,10 +685,11 @@ module CodingAdventures
         i = 1
         while i < children.size
           child = children[i]
-          if child.respond_to?(:value) && child.value == "*"
+          if child.respond_to?(:value) && (child.value == "*" || child.value == "/")
+            op = child.value
             i += 1
             right = evaluate(children[i])
-            result = multiply(result, right)
+            result = op == "*" ? multiply(result, right) : divide(result, right)
           end
           i += 1
         end
@@ -712,6 +714,25 @@ module CodingAdventures
           return LatticePercentage.new(left.value * right.value)
         end
         raise LatticeTypeErrorInExpression.new("multiply", left.to_s, right.to_s)
+      end
+
+      # Division rules mirror multiplication in reverse.
+      def divide(left, right)
+        rv = right.respond_to?(:value) ? right.value : nil
+        raise LatticeZeroDivisionError.new if rv == 0
+        if left.is_a?(LatticeNumber) && right.is_a?(LatticeNumber)
+          return LatticeNumber.new(left.value / right.value.to_f)
+        end
+        if left.is_a?(LatticeDimension) && right.is_a?(LatticeNumber)
+          return LatticeDimension.new(left.value / right.value.to_f, left.unit)
+        end
+        if left.is_a?(LatticeDimension) && right.is_a?(LatticeDimension) && left.unit == right.unit
+          return LatticeNumber.new(left.value / right.value.to_f)
+        end
+        if left.is_a?(LatticePercentage) && right.is_a?(LatticeNumber)
+          return LatticePercentage.new(left.value / right.value.to_f)
+        end
+        raise LatticeTypeErrorInExpression.new("divide", left.to_s, right.to_s)
       end
 
       # lattice_unary = MINUS lattice_unary | lattice_primary ;

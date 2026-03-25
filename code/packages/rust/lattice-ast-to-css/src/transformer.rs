@@ -2132,7 +2132,7 @@ fn extract_params(node: &GrammarASTNode) -> (Vec<String>, HashMap<String, String
                         ASTNodeOrToken::Token(tok) if get_token_type_name(tok) == "VARIABLE" => {
                             param_name = Some(tok.value.clone());
                         }
-                        ASTNodeOrToken::Node(n) if n.rule_name == "value_list" => {
+                        ASTNodeOrToken::Node(n) if n.rule_name == "value_list" || n.rule_name == "mixin_value_list" => {
                             default_value = Some(emit_raw_node(n));
                         }
                         _ => {}

@@ -361,7 +361,7 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
 
     Enum.reduce(param_nodes, {[], %{}}, fn %ASTNode{children: pc}, {params, defaults} ->
       var_token = find_token(pc, "VARIABLE")
-      default_node = find_child_by_rule(pc, "value_list")
+      default_node = find_child_by_rule(pc, "mixin_value_list") || find_child_by_rule(pc, "value_list")
 
       if var_token do
         new_params = params ++ [var_token.value]

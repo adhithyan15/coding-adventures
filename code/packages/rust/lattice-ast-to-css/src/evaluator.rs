@@ -471,15 +471,20 @@ impl<'a> ExpressionEvaluator<'a> {
         };
 
         while let Some(op_child) = children.next() {
-            // Skip the "*" token
+            // Handle "*" and "/" tokens
             if let ASTNodeOrToken::Token(t) = op_child {
-                if t.value == "*" {
+                if t.value == "*" || t.value == "/" {
+                    let op = t.value.clone();
                     let right = match children.next() {
                         Some(ASTNodeOrToken::Node(n)) => self.evaluate_node(n)?,
                         Some(ASTNodeOrToken::Token(t)) => self.evaluate_token(t),
                         None => break,
                     };
-                    result = self.multiply(&result, &right)?;
+                    if op == "*" {
+                        result = self.multiply(&result, &right)?;
+                    } else {
+                        result = self.divide(&result, &right)?;
+                    }
                 }
             }
         }
@@ -507,6 +512,37 @@ impl<'a> ExpressionEvaluator<'a> {
                 Ok(LatticeValue::Percentage(l * r))
             }
             _ => Err(LatticeError::type_error("multiply",
+                &left.to_css_string(), &right.to_css_string(), 0, 0)),
+        }
+    }
+
+    /// Division: Number/Number → Number, Dimension/Number → Dimension,
+    /// Dimension/Dimension (same unit) → Number, Percentage/Number → Percentage.
+    fn divide(&self, left: &LatticeValue, right: &LatticeValue) -> Result<LatticeValue, LatticeError> {
+        // Zero-division guard
+        let is_zero = match right {
+            LatticeValue::Number(r) => *r == 0.0,
+            LatticeValue::Dimension { value: r, .. } => *r == 0.0,
+            LatticeValue::Percentage(r) => *r == 0.0,
+            _ => false,
+        };
+        if is_zero {
+            return Err(LatticeError::ZeroDivision { line: 0, column: 0 });
+        }
+        match (left, right) {
+            (LatticeValue::Number(l), LatticeValue::Number(r)) => {
+                Ok(LatticeValue::Number(l / r))
+            }
+            (LatticeValue::Dimension { value: lv, unit }, LatticeValue::Number(r)) => {
+                Ok(LatticeValue::Dimension { value: lv / r, unit: unit.clone() })
+            }
+            (LatticeValue::Dimension { value: lv, unit: lu }, LatticeValue::Dimension { value: rv, unit: ru }) if lu == ru => {
+                Ok(LatticeValue::Number(lv / rv))
+            }
+            (LatticeValue::Percentage(l), LatticeValue::Number(r)) => {
+                Ok(LatticeValue::Percentage(l / r))
+            }
+            _ => Err(LatticeError::type_error("divide",
                 &left.to_css_string(), &right.to_css_string(), 0, 0)),
         }
     }
@@ -1012,6 +1048,7 @@ fn compare_nums(l: f64, r: f64, op: &str) -> bool {
         "NOT_EQUALS" => l != r,
         "GREATER" => l > r,
         "GREATER_EQUALS" => l >= r,
+        "LESS" => l < r,
         "LESS_EQUALS" => l <= r,
         _ => false,
     }
