@@ -14,5 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Argument parsing (`get_cb_info`)
 - Data wrapping for Rust structs (`wrap_data`, `unwrap_data`)
 - Class definition (`define_class`, `method_property`)
+- Standalone function creation (`create_function`) — wraps `napi_create_function` (N-API v1) to create JS function values not attached to any class; needed for module-level exports
 - Error handling (`throw_error`)
 - Constants (`undefined`, `null`)

@@ -43,49 +43,19 @@
 // will raise a TypeError. We don't need to handle this ourselves — Ruby's
 // type coercion machinery does the right thing.
 
-use std::ffi::{c_char, c_int, c_void, CString};
+use std::ffi::c_void;
 
 use commonmark;
 use ruby_bridge::VALUE;
 
-// ---------------------------------------------------------------------------
-// Additional Ruby C API functions not in ruby-bridge
-// ---------------------------------------------------------------------------
-//
-// `rb_define_module_function` defines a function that is both a module-level
-// singleton method AND a private instance method (if the module is mixed in).
-// It's the idiomatic way to expose stateless utility functions in a module.
-//
-// `rb_path2class` looks up a Ruby class by its fully-qualified name string.
-// We use this instead of extern static `rb_eArgError` because the statics
-// have linking issues on Windows (MinGW Ruby + MSVC linker).
-
-extern "C" {
-    fn rb_define_module_function(
-        module: VALUE,
-        name: *const c_char,
-        func: *const c_void,
-        argc: c_int,
-    );
-    fn rb_path2class(path: *const c_char) -> VALUE;
-}
-
-/// Look up a Ruby class by its fully-qualified name.
-///
-/// Uses `rb_path2class` which always works regardless of platform. The
-/// extern static approach (`rb_cObject`, etc.) has linking issues on
-/// Windows when MinGW Ruby meets the MSVC linker.
-fn get_ruby_class(name: &str) -> VALUE {
-    let c_name = CString::new(name).expect("class name must not contain NUL");
-    unsafe { rb_path2class(c_name.as_ptr()) }
-}
-
 /// Raise an ArgumentError.
 ///
-/// We use `rb_path2class("ArgumentError")` instead of the `rb_eArgError`
-/// extern static for the same Windows portability reason.
+/// We use `ruby_bridge::path2class("ArgumentError")` instead of the
+/// `rb_eArgError` extern static because the statics have linking issues
+/// on Windows when MinGW Ruby meets the MSVC linker. `rb_path2class` is
+/// a regular function and links cleanly on all platforms.
 fn raise_arg_error(msg: &str) -> ! {
-    ruby_bridge::raise_error(get_ruby_class("ArgumentError"), msg)
+    ruby_bridge::raise_error(ruby_bridge::path2class("ArgumentError"), msg)
 }
 
 // ---------------------------------------------------------------------------
@@ -202,26 +172,24 @@ pub extern "C" fn Init_commonmark_native() {
 
     // -- markdown_to_html ---------------------------------------------------
     //
-    // `rb_define_module_function` with argc=1 means the function accepts
+    // `define_module_function_raw` with argc=1 means the function accepts
     // exactly one positional argument. The Ruby method signature is:
     //   def markdown_to_html(markdown) end
     //
     // The C function signature for argc=1 is:
     //   extern "C" fn(self_val: VALUE, arg: VALUE) -> VALUE
-    unsafe {
-        rb_define_module_function(
-            commonmark_native,
-            b"markdown_to_html\0".as_ptr() as *const c_char,
-            commonmark_markdown_to_html as *const c_void,
-            1,
-        );
+    ruby_bridge::define_module_function_raw(
+        commonmark_native,
+        "markdown_to_html",
+        commonmark_markdown_to_html as *const c_void,
+        1,
+    );
 
-        // -- markdown_to_html_safe ------------------------------------------
-        rb_define_module_function(
-            commonmark_native,
-            b"markdown_to_html_safe\0".as_ptr() as *const c_char,
-            commonmark_markdown_to_html_safe as *const c_void,
-            1,
-        );
-    }
+    // -- markdown_to_html_safe ----------------------------------------------
+    ruby_bridge::define_module_function_raw(
+        commonmark_native,
+        "markdown_to_html_safe",
+        commonmark_markdown_to_html_safe as *const c_void,
+        1,
+    );
 }

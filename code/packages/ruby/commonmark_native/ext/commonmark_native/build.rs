@@ -118,7 +118,7 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_eStandardError", true),
         ("rb_eArgError", true),
         ("rb_eRuntimeError", true),
-        // Functions from our lib.rs:
+        // Functions from ruby-bridge (define_module_function_raw, path2class):
         ("rb_define_module_function", false),
         ("rb_path2class", false),
     ];

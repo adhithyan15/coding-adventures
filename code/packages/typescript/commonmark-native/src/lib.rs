@@ -41,51 +41,6 @@
 
 use commonmark;
 use node_bridge::*;
-use std::ffi::{c_void, CString};
-use std::ptr;
-
-// ---------------------------------------------------------------------------
-// Extra N-API extern: napi_create_function
-// ---------------------------------------------------------------------------
-//
-// `napi_create_function` creates a JS function value that we can attach to
-// the exports object. node-bridge provides `define_class` for class-based
-// APIs, but for module-level functions we need to create standalone function
-// objects.
-//
-// N-API v1 (stable since Node.js 8.0.0):
-//   napi_status napi_create_function(
-//     napi_env env,
-//     const char* utf8name,     // function name (shown in stack traces)
-//     size_t length,            // byte length of name (or NAPI_AUTO_LENGTH)
-//     napi_callback cb,         // the function implementation
-//     void* data,               // optional user data passed to cb
-//     napi_value* result        // OUT: the new function value
-//   )
-
-extern "C" {
-    fn napi_create_function(
-        env: napi_env,
-        utf8name: *const std::ffi::c_char,
-        length: usize,
-        cb: napi_callback,
-        data: *const c_void,
-        result: *mut napi_value,
-    ) -> napi_status;
-}
-
-/// Create a JS function with the given name and callback.
-///
-/// The function is a standalone value — call `set_named_property` to attach
-/// it to an object (e.g., the module exports).
-unsafe fn create_function(env: napi_env, name: &str, cb: napi_callback) -> napi_value {
-    let c_name = CString::new(name).expect("function name must not contain NUL");
-    let mut result: napi_value = ptr::null_mut();
-    // NAPI_AUTO_LENGTH (usize::MAX) tells N-API to use strlen to find the end
-    // of the name string.
-    napi_create_function(env, c_name.as_ptr(), usize::MAX, cb, ptr::null(), &mut result);
-    result
-}
 
 // ---------------------------------------------------------------------------
 // markdownToHtml(markdown: string) -> string
@@ -204,12 +159,14 @@ pub unsafe extern "C" fn napi_register_module_v1(
     //
     // The name argument is what appears in stack traces -- we use the
     // camelCase JavaScript name for consistency with JS tooling.
-    let markdown_to_html_fn = create_function(env, "markdownToHtml", Some(node_markdown_to_html));
+    // `node_bridge::create_function` wraps `napi_create_function` (N-API v1).
+    let markdown_to_html_fn =
+        node_bridge::create_function(env, "markdownToHtml", Some(node_markdown_to_html));
     set_named_property(env, exports, "markdownToHtml", markdown_to_html_fn);
 
     // Create the markdownToHtmlSafe function and attach it to exports.
     let markdown_to_html_safe_fn =
-        create_function(env, "markdownToHtmlSafe", Some(node_markdown_to_html_safe));
+        node_bridge::create_function(env, "markdownToHtmlSafe", Some(node_markdown_to_html_safe));
     set_named_property(env, exports, "markdownToHtmlSafe", markdown_to_html_safe_fn);
 
     exports
