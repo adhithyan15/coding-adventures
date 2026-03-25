@@ -2,6 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "ruby/verilog_lexer",
-  "capabilities": [],
-  "justification": "Pure lexing. Text-in, token-stream-out with no filesystem, network, process, or environment access needed."
+  "capabilities": [
+    "fs:read:*"
+  ],
+  "justification": "Reads token pattern definitions from code/grammars/*.tokens at runtime to configure the tokenizer. The grammar file is loaded once at initialization via the filesystem."
 }
