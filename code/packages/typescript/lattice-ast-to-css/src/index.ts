@@ -50,6 +50,10 @@ export {
   TypeErrorInExpression,
   UnitMismatchError,
   MissingReturnError,
+  MaxIterationError,
+  ExtendTargetNotFoundError,
+  LatticeRangeError,
+  ZeroDivisionInExpressionError,
 } from "./errors.js";
 
 // Scope
@@ -66,6 +70,7 @@ export {
   LatticeBool,
   LatticeNull,
   LatticeList,
+  LatticeMap,
   isTruthy,
   tokenToValue,
   valueToCss,
@@ -73,8 +78,12 @@ export {
   addValues,
   subtractValues,
   multiplyValues,
+  divideValues,
   negateValue,
   compareValues,
+  typeNameOf,
+  getNumericValue,
+  BUILTIN_FUNCTIONS,
 } from "./values.js";
 export type { LatticeValue } from "./values.js";
 

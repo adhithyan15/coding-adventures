@@ -1,4 +1,5 @@
 # Parser grammar for Lattice — a CSS superset language
+# @version 1
 #
 # Lattice extends CSS3 with variables, mixins, control flow, functions, and
 # modules. This file is a standalone copy of all CSS grammar rules plus ~20
@@ -64,7 +65,8 @@ lattice_rule = variable_declaration
 #
 # Variables are referenced by their VARIABLE token ($name) in value positions.
 
-variable_declaration = VARIABLE COLON value_list SEMICOLON ;
+# v2: optional !default (set only if undefined) and !global (set in root scope)
+variable_declaration = VARIABLE COLON value_list [ BANG_DEFAULT | BANG_GLOBAL ] SEMICOLON ;
 
 # ============================================================================
 # Lattice: Mixins
@@ -103,8 +105,20 @@ mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
 mixin_params = mixin_param { COMMA mixin_param } ;
 
 # A parameter is a VARIABLE with an optional default value.
-# The default is a full value_list (can be multi-token: "Helvetica, sans-serif").
-mixin_param = VARIABLE [ COLON value_list ] ;
+# The default uses mixin_value_list (no COMMA) to prevent the comma that
+# separates parameters from being consumed as part of the default value.
+# For example, @mixin foo($bg: #fff, $radius: 4px) must parse $bg's default
+# as just "#fff", not "#fff, $radius".
+mixin_param = VARIABLE [ COLON mixin_value_list ] ;
+
+# mixin_value_list is identical to value_list except COMMA is excluded.
+# COMMA is the parameter separator in mixin_params and including it here
+# would cause greedy parsing to swallow adjacent parameter names.
+mixin_value_list = mixin_value { mixin_value } ;
+
+mixin_value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
+            | CUSTOM_PROPERTY | UNICODE_RANGE | function_call
+            | VARIABLE | SLASH | PLUS | MINUS ;
 
 # @include expands a mixin. Two forms:
 #   @include button(red);     → AT_KEYWORD FUNCTION IDENT RPAREN SEMICOLON
@@ -139,7 +153,7 @@ include_args = value_list { COMMA value_list } ;
 #     .text { color: $color; }
 #   }
 
-lattice_control = if_directive | for_directive | each_directive ;
+lattice_control = if_directive | for_directive | each_directive | while_directive ;
 
 # @if with optional @else if chains and @else.
 # "@else" "if" uses two literal matches: AT_KEYWORD(@else) then IDENT(if).
@@ -159,6 +173,11 @@ each_directive = "@each" VARIABLE { COMMA VARIABLE } "in"
                  each_list block ;
 
 each_list = value { COMMA value } ;
+
+# @while loops until condition is false (v2).
+# Max iteration guard (1000) enforced by transformer, not grammar.
+#   @while $i <= 12 { .col { width: $i * 8%; } $i: $i + 1; }
+while_directive = "@while" lattice_expression block ;
 
 # ============================================================================
 # Lattice: Expressions
@@ -186,20 +205,32 @@ lattice_and_expr = lattice_comparison { "and" lattice_comparison } ;
 lattice_comparison = lattice_additive [ comparison_op lattice_additive ] ;
 
 comparison_op = EQUALS_EQUALS | NOT_EQUALS
-              | GREATER | GREATER_EQUALS | LESS_EQUALS ;
+              | GREATER | GREATER_EQUALS | LESS | LESS_EQUALS ;
 
 lattice_additive = lattice_multiplicative
                    { ( PLUS | MINUS ) lattice_multiplicative } ;
 
-lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+# Division (SLASH) is supported alongside multiplication (STAR).
+# Example: @return $px / 16 * 1rem; — divides first, then multiplies.
+lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
 
 lattice_unary = MINUS lattice_unary | lattice_primary ;
 
+# v2: map_literal added as a primary expression value
 lattice_primary = VARIABLE | NUMBER | DIMENSION | PERCENTAGE
                 | STRING | IDENT | HASH
                 | "true" | "false" | "null"
                 | function_call
+                | map_literal
                 | LPAREN lattice_expression RPAREN ;
+
+# v2: Map literal — ordered key-value pairs in parentheses.
+#   $colors: (primary: #4a90d9, secondary: #e74c3c);
+# Keys can be identifiers or strings. Values are full expressions.
+# Disambiguated from parenthesized expressions by the key COLON pattern.
+map_literal = LPAREN map_entry COMMA map_entry { COMMA map_entry } RPAREN ;
+
+map_entry = ( IDENT | STRING ) COLON lattice_expression ;
 
 # ============================================================================
 # Lattice: Functions
@@ -291,11 +322,15 @@ combinator = GREATER | PLUS | TILDE ;
 compound_selector = simple_selector { subclass_selector }
                   | subclass_selector { subclass_selector } ;
 
-simple_selector = IDENT | STAR | AMPERSAND ;
+# VARIABLE added in v2 for $var-in-selectors: .col-$i { width: ...; }
+simple_selector = IDENT | STAR | AMPERSAND | VARIABLE ;
 
-subclass_selector = class_selector | id_selector
+# PLACEHOLDER added in v2 for @extend: %flex-center, %button-base
+subclass_selector = class_selector | id_selector | placeholder_selector
                   | attribute_selector | pseudo_class
                   | pseudo_element ;
+
+placeholder_selector = PLACEHOLDER ;
 
 class_selector = DOT IDENT ;
 
@@ -337,9 +372,31 @@ block_item = lattice_block_item | at_rule | declaration_or_nested ;
 # Lattice constructs valid inside blocks. These are different from top-level
 # lattice_rule — blocks can contain @include and control flow, but NOT
 # mixin/function definitions or @use directives.
+# v2 additions: @content, @extend, @at-root.
 lattice_block_item = variable_declaration
                    | include_directive
-                   | lattice_control ;
+                   | lattice_control
+                   | content_directive
+                   | extend_directive
+                   | at_root_directive ;
+
+# @content (v2) — emits the block passed to @include inside a mixin body.
+#   @mixin respond-to($bp) { @media (min-width: $bp) { @content; } }
+#   .sidebar { @include respond-to(768px) { width: 250px; } }
+content_directive = "@content" SEMICOLON ;
+
+# @extend (v2) — selector inheritance. The extending rule's selector is
+# appended to the extended rule's selector list. %placeholder rules are
+# removed from output (they only exist to be extended).
+#   %flex-center { display: flex; align-items: center; }
+#   .hero { @extend %flex-center; }
+#   → .hero { display: flex; align-items: center; }
+extend_directive = "@extend" selector_list SEMICOLON ;
+
+# @at-root (v2) — emit rules at stylesheet root, escaping nesting context.
+#   .parent { @at-root .child { color: red; } }
+#   → .child { color: red; }
+at_root_directive = "@at-root" ( selector_list block | block ) ;
 
 declaration_or_nested = declaration | qualified_rule ;
 
@@ -347,7 +404,11 @@ declaration_or_nested = declaration | qualified_rule ;
 # CSS: Declarations (unchanged from css.grammar)
 # ============================================================================
 
-declaration = property COLON value_list [ priority ] SEMICOLON ;
+# v2: property nesting — font: { size: 14px; weight: bold; }
+# The block form allows nested declarations where the parent property name
+# is prepended to each child property with a hyphen.
+declaration = property COLON value_list [ priority ] SEMICOLON
+            | property COLON block ;
 
 property = IDENT | CUSTOM_PROPERTY ;
 

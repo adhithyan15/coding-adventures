@@ -41,6 +41,7 @@ import {
   addValues,
   subtractValues,
   multiplyValues,
+  divideValues,
   negateValue,
   compareValues,
   extractValueFromAst,
@@ -120,6 +121,8 @@ export class ExpressionEvaluator {
         return this._evalPrimary(node as ASTNode);
       case "comparison_op":
         return tokenToValue((node as ASTNode).children[0] as Token);
+      case "value_list":
+        return this._evalValueList(node as ASTNode);
     }
 
     // For wrapper rules with a single child, unwrap.
@@ -242,6 +245,30 @@ export class ExpressionEvaluator {
   }
 
   /**
+   * value_list — produced by variable substitution.
+   *
+   * When `expand_variable_declaration` substitutes `$i + 1`, the evaluator
+   * receives a value_list AST node whose children are
+   * `[NUMBER(2), PLUS, NUMBER(1)]`.  If arithmetic operators are present
+   * we delegate to the existing additive handler; otherwise evaluate the
+   * first child.
+   */
+  private _evalValueList(node: ASTNode): LatticeValue {
+    const children = node.children;
+    if (children.length <= 1) {
+      return children.length === 0 ? new LatticeNull() : this.evaluate(children[0]);
+    }
+    const hasOps = children.some(
+      (c) => !isASTNode(c) && (c as Token).value !== undefined &&
+        ["+", "-", "*"].includes((c as Token).value),
+    );
+    if (hasOps) {
+      return this._evalAdditive(node);
+    }
+    return this.evaluate(children[0]);
+  }
+
+  /**
    * lattice_additive = lattice_multiplicative
    *                    { ( PLUS | MINUS ) lattice_multiplicative } ;
    */
@@ -273,7 +300,7 @@ export class ExpressionEvaluator {
   }
 
   /**
-   * lattice_multiplicative = lattice_unary { STAR lattice_unary } ;
+   * lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary } ;
    */
   private _evalMultiplicative(node: ASTNode): LatticeValue {
     const children = node.children;
@@ -282,11 +309,14 @@ export class ExpressionEvaluator {
     let i = 1;
     while (i < children.length) {
       const child = children[i];
-      if (!isASTNode(child) && (child as Token).value === "*") {
-        i++;
-        if (i < children.length) {
-          const right = this.evaluate(children[i]);
-          result = multiplyValues(result, right);
+      if (!isASTNode(child)) {
+        const op = (child as Token).value;
+        if (op === "*" || op === "/") {
+          i++;
+          if (i < children.length) {
+            const right = this.evaluate(children[i]);
+            result = op === "*" ? multiplyValues(result, right) : divideValues(result, right);
+          }
         }
       }
       i++;
