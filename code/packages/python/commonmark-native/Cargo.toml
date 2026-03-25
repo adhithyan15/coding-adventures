@@ -1,0 +1,20 @@
+[package]
+name = "commonmark-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust commonmark crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "commonmark_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Our own zero-dependency Python C API bridge — replaces PyO3.
+python-bridge = { path = "../../rust/python-bridge" }
+
+# The core commonmark crate — all Markdown parsing and rendering lives here.
+commonmark = { path = "../../rust/commonmark" }
+
+# This crate is NOT part of the Rust workspace (it produces a cdylib
+# for Python, not a normal Rust library).
+[workspace]
