@@ -448,6 +448,7 @@ When building native Python extensions via python-bridge, the slot numbers passe
 - `Py_nb_and` = 8 (NOT 1), `Py_nb_invert` = 27 (NOT 5), `Py_nb_or` = 31 (NOT 12), `Py_nb_xor` = 38 (NOT 17)
 
 **Rule:** Always verify slot numbers against the CPython source (`Include/typeslots.h`) or the official docs. Do not guess from memory. The numbers in `typeslots.h` are NOT sequential per category -- they are assigned globally across all protocols.
+
 ### 2026-03-23: Always use the scaffold generator to create new packages
 
 Hand-crafting multi-language packages causes 12+ recurring CI failure categories: missing BUILD files, TypeScript `main` pointing to `dist/` instead of `src/`, missing transitive dependencies, Ruby require ordering issues, Rust workspace `Cargo.toml` not updated, missing README or CHANGELOG, etc.
