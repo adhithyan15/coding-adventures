@@ -274,22 +274,43 @@ fn run() -> i32 {
 
     // Step 5: Git-diff change detection (default mode).
     // Git is the source of truth — no cache file needed for primary workflow.
-    let affected_set = if !args.force {
+    let mut force = args.force;
+    let affected_set = if !force {
         let changed_files = gitdiff::get_changed_files(&repo_root, &args.diff_base);
         if !changed_files.is_empty() {
-            let changed_pkgs =
-                gitdiff::map_files_to_packages(&changed_files, &packages, &repo_root);
-            if !changed_pkgs.is_empty() {
-                let affected = graph.affected_nodes(&changed_pkgs);
-                println!(
-                    "Git diff: {} packages changed, {} affected (including dependents)",
-                    changed_pkgs.len(),
-                    affected.len()
-                );
-                Some(affected)
+            let shared_prefixes = [".github/"];
+            let mut shared_changed = false;
+            for f in &changed_files {
+                for prefix in &shared_prefixes {
+                    if f.starts_with(prefix) {
+                        shared_changed = true;
+                        break;
+                    }
+                }
+                if shared_changed {
+                    break;
+                }
+            }
+
+            if shared_changed {
+                println!("Git diff: shared files changed — rebuilding everything");
+                force = true;
+                None
             } else {
-                println!("Git diff: no package files changed — nothing to build");
-                Some(std::collections::HashSet::new()) // empty = build nothing
+                let changed_pkgs =
+                    gitdiff::map_files_to_packages(&changed_files, &packages, &repo_root);
+                if !changed_pkgs.is_empty() {
+                    let affected = graph.affected_nodes(&changed_pkgs);
+                    println!(
+                        "Git diff: {} packages changed, {} affected (including dependents)",
+                        changed_pkgs.len(),
+                        affected.len()
+                    );
+                    Some(affected)
+                } else {
+                    println!("Git diff: no package files changed — nothing to build");
+                    Some(std::collections::HashSet::new()) // empty = build nothing
+                }
             }
         } else {
             println!("Git diff unavailable — falling back to hash-based cache");
@@ -331,7 +352,7 @@ fn run() -> i32 {
             .iter()
             .filter(|pkg| {
                 // Only include packages that would actually be built.
-                if args.force {
+                if force {
                     return true;
                 }
                 if let Some(ref affected) = affected_set {
@@ -343,7 +364,7 @@ fn run() -> i32 {
                 build_cache.needs_build(&pkg.name, &pkg_hash, &dep_hash)
             })
             .map(|pkg| {
-                let reason = if args.force {
+                let reason = if force {
                     "forced".to_string()
                 } else if let Some(ref affected) = affected_set {
                     // Determine if this package changed directly or via dependency.
@@ -398,7 +419,7 @@ fn run() -> i32 {
         &build_cache,
         &package_hashes,
         &deps_hashes,
-        args.force,
+        force,
         args.dry_run,
         max_jobs,
         affected_set.as_ref(),
