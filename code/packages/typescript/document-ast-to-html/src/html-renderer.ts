@@ -80,13 +80,27 @@ export interface RenderOptions {
    *
    * Default: `false` (raw HTML passes through verbatim — spec-compliant).
    *
+   * @deprecated Use `@coding-adventures/document-ast-sanitizer` instead.
+   *
+   * Before: `toHtml(doc, { sanitize: true })`
+   * After:  `toHtml(sanitize(doc, STRICT))` where `sanitize` and `STRICT`
+   *         are imported from `@coding-adventures/document-ast-sanitizer`.
+   *
+   * The boolean flag is too coarse — it cannot express policies like
+   * "allow HTML raw blocks but not LaTeX", "strip images but keep links",
+   * or "clamp headings to level 3". The dedicated sanitizer package supports
+   * all of these via a `SanitizationPolicy` object. See spec TE02.
+   *
+   * This option will be removed in v1.0.0.
+   *
    * @example
    * ```typescript
-   * // Safe: user-controlled Markdown → sanitize raw HTML
+   * // Before (deprecated):
    * const html = toHtml(parse(userInput), { sanitize: true });
    *
-   * // CommonMark-compliant: trusted Markdown only (e.g. documentation)
-   * const html = toHtml(parse(trustedMarkdown));
+   * // After (recommended):
+   * import { sanitize, STRICT } from "@coding-adventures/document-ast-sanitizer";
+   * const html = toHtml(sanitize(parse(userInput), STRICT));
    * ```
    */
   readonly sanitize?: boolean;
