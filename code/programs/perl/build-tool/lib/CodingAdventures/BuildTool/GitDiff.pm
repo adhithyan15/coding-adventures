@@ -92,7 +92,7 @@ sub affected_packages {
     return () unless @changed_files;
 
     for my $file (@changed_files) {
-        if ($file =~ /^\.github\// || $file =~ /^code\/programs\/perl\/build-tool\//) {
+        if ($file =~ /^\.github\//) {
             print "Git diff: shared files changed -- rebuilding everything\n";
             return map { $_->{name} } @{$packages_ref};
         }

@@ -278,7 +278,7 @@ fn run() -> i32 {
     let affected_set = if !force {
         let changed_files = gitdiff::get_changed_files(&repo_root, &args.diff_base);
         if !changed_files.is_empty() {
-            let shared_prefixes = [".github/", "code/programs/rust/build-tool/"];
+            let shared_prefixes = [".github/"];
             let mut shared_changed = false;
             for f in &changed_files {
                 for prefix in &shared_prefixes {

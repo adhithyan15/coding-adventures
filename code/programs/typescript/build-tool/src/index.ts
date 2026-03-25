@@ -167,7 +167,7 @@ Options:
     // Try git-diff mode first (the default).
     const changedFiles = getChangedFiles(root, diffBase);
     if (changedFiles.length > 0) {
-      const sharedPrefixes = [".github/", "code/programs/typescript/build-tool/"];
+      const sharedPrefixes = [".github/"];
       const sharedChanged = changedFiles.some(f => sharedPrefixes.some(p => f.startsWith(p)));
 
       if (sharedChanged) {

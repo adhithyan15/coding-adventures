@@ -43,10 +43,13 @@ func TestSharedPrefixesNotEmpty(t *testing.T) {
 		}
 	}
 
-	// Regression guard: code/grammars/ and code/specs/ must NOT be in sharedPrefixes.
-	// Having them there caused CI to install ALL language toolchains (5+ minutes)
-	// whenever any grammar or spec file was touched, even with 0 affected packages.
-	for _, dontWant := range []string{"code/grammars/", "code/specs/"} {
+	// Regression guard: the following paths must NOT be in sharedPrefixes.
+	// code/grammars/ and code/specs/ are shared data, not build infrastructure —
+	// changes there only affect packages that import them, not all languages.
+	// code/programs/go/build-tool/ is a program, not a shared library — changing
+	// it should only rebuild the build-tool package, not trigger a full 715-package
+	// rebuild that exposes pre-existing failures on every platform.
+	for _, dontWant := range []string{"code/grammars/", "code/specs/", "code/programs/go/build-tool/"} {
 		if found[dontWant] {
 			t.Errorf("sharedPrefixes must NOT contain %q — it causes spurious full-toolchain installs", dontWant)
 		}

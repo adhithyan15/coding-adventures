@@ -201,7 +201,7 @@ def main(argv: list[str] | None = None) -> int:
         changed_files = get_changed_files(root, args.diff_base)
         if changed_files:
             shared_changed = any(
-                f.startswith(".github/") or f.startswith("code/programs/python/build-tool/")
+                f.startswith(".github/")
                 for f in changed_files
             )
             if shared_changed:

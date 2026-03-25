@@ -175,7 +175,7 @@ defmodule BuildTool.CLI do
 
         if length(changed_files) > 0 do
           shared_changed = Enum.any?(changed_files, fn f ->
-            String.starts_with?(f, ".github/") or String.starts_with?(f, "code/programs/elixir/build-tool/")
+            String.starts_with?(f, ".github/")
           end)
 
           if shared_changed do

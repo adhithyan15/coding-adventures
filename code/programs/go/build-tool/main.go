@@ -410,7 +410,12 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 // sharedPrefixes are path prefixes that, when changed, mean ALL languages
 // need rebuilding. These are cross-cutting concerns:
 //   - .github/ — CI configuration affects all languages
-//   - code/programs/go/build-tool/ — the build tool itself
+//
+// Note: code/programs/go/build-tool/ is NOT here. The build tool is a program,
+// not a shared library. Changes to it only rebuild the build-tool package itself
+// (and any transitive dependents), not every package in the repo. If you change
+// the build tool's BUILD file parsing or discovery logic, any regressions will
+// be caught by the build tool's own test suite. Use --force for a full rebuild.
 //
 // Note: code/grammars/ and code/specs/ are NOT here. Those directories contain
 // shared data files, but modifying them only triggers rebuilds of packages that
@@ -418,7 +423,6 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 // waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
 var sharedPrefixes = []string{
 	".github/",
-	"code/programs/go/build-tool/",
 }
 
 // detectNeededLanguages determines which language toolchains CI needs to
