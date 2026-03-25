@@ -123,7 +123,6 @@ members = [
   "document-html-sanitizer",
     "csv-parser",
     "sql-execution-engine",
-    "document-ast-sanitizer",
-    "document-html-sanitizer",
+    "sql-csv-source",
     "event-loop",
 ]

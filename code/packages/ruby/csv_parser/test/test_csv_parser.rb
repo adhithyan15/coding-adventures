@@ -375,7 +375,7 @@ class CsvParserTest < Minitest::Test
   def test_parser_does_not_use_ruby_csv_class
     # Read the parser source file and assert there is no 'require "csv"'
     parser_file = File.expand_path(
-      "../../lib/coding_adventures/csv_parser/parser.rb",
+      "../lib/coding_adventures/csv_parser/parser.rb",
       __dir__
     )
     content = File.read(parser_file)
@@ -385,7 +385,7 @@ class CsvParserTest < Minitest::Test
 
   def test_main_module_does_not_use_ruby_csv_class
     main_file = File.expand_path(
-      "../../lib/coding_adventures/csv_parser.rb",
+      "../lib/coding_adventures/csv_parser.rb",
       __dir__
     )
     content = File.read(main_file)
