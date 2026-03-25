@@ -193,7 +193,7 @@ export class UUID {
    * Byte order follows RFC 4122 §4.1.2: big-endian, most significant byte first.
    */
   get bytes(): Uint8Array {
-    return new Uint8Array(this._bytes);
+    return this._bytes.slice();
   }
 
   /**
