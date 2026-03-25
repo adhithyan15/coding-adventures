@@ -1173,26 +1173,47 @@ export class LatticeTransformer {
 
     const mixinDef = this.mixins.get(mixinName)!;
 
-    // Parse arguments
-    const args = argsNode ? this._parseIncludeArgs(argsNode) : [];
+    // Parse arguments — returns positional list and named map
+    const { positional, named } = argsNode
+      ? this._parseIncludeArgs(argsNode)
+      : { positional: [] as Array<ASTNode | Token>, named: new Map<string, ASTNode | Token>() };
 
-    // Check arity
+    // Check arity (named args count toward total)
+    const totalArgs = positional.length + named.size;
     const required = mixinDef.params.length - mixinDef.defaults.size;
-    if (args.length < required || args.length > mixinDef.params.length) {
+    if (totalArgs < required || totalArgs > mixinDef.params.length) {
       throw new WrongArityError(
         "Mixin",
         mixinName,
         mixinDef.params.length,
-        args.length
+        totalArgs
       );
     }
 
-    // Create child scope with params bound
+    // Evaluate all arguments in the CALLER'S scope before binding them.
+    // This prevents infinite recursion when a positional arg is a variable
+    // with the same name as the mixin parameter (e.g. @include btn($color)
+    // where the outer scope has $color bound: without pre-evaluation,
+    // mixinScope.$color = value_list{VARIABLE($color)}, and expanding that
+    // calls substituteVariable($color, mixinScope) → same value_list → loop).
+    const evaluateArg = (argNode: ASTNode | Token): ASTNode | Token => {
+      const cloned = deepClone(argNode as ASTNode);
+      const exp = this._expandNode(cloned, scope);
+      if (exp === null) return argNode;
+      if (Array.isArray(exp)) return exp[0] ?? argNode;
+      return exp;
+    };
+
+    // Create child scope with params bound.
+    // Named args take priority; remaining params are filled from positional args.
     const mixinScope = scope.child();
+    let posIdx = 0;
     for (let i = 0; i < mixinDef.params.length; i++) {
       const paramName = mixinDef.params[i];
-      if (i < args.length) {
-        mixinScope.set(paramName, args[i]);
+      if (named.has(paramName)) {
+        mixinScope.set(paramName, evaluateArg(named.get(paramName)!));
+      } else if (posIdx < positional.length) {
+        mixinScope.set(paramName, evaluateArg(positional[posIdx++]));
       } else if (mixinDef.defaults.has(paramName)) {
         mixinScope.set(paramName, deepClone(mixinDef.defaults.get(paramName)! as ASTNode));
       }
@@ -1227,29 +1248,65 @@ export class LatticeTransformer {
   }
 
   /**
-   * Parse include_args into a list of value nodes.
+   * Parse include_args into positional and named argument collections.
    *
-   * include_args = value_list { COMMA value_list } ;
+   * include_args = include_arg { COMMA include_arg } ;
+   * include_arg  = VARIABLE COLON value_list | value_list ;
    *
-   * Due to grammar design, commas may be absorbed into a single value_list.
-   * So if we get only one value_list but it contains COMMA values,
-   * we split it on commas to produce multiple args.
+   * Named args ($param: value) are collected into the `named` map keyed by
+   * the full variable name (e.g. "$gap"). Unnamed args go into `positional`.
+   *
+   * Legacy: if include_args still contains bare value_list children (grammar
+   * before named-arg support), those are treated as positional. A single
+   * value_list that contains commas is split on those commas.
    */
-  private _parseIncludeArgs(node: ASTNode): Array<ASTNode | Token> {
-    const valueLists: ASTNode[] = [];
+  private _parseIncludeArgs(
+    node: ASTNode
+  ): { positional: Array<ASTNode | Token>; named: Map<string, ASTNode | Token> } {
+    const positional: Array<ASTNode | Token> = [];
+    const named = new Map<string, ASTNode | Token>();
 
     for (const child of getChildren(node)) {
-      if (isASTNode(child) && (child as ASTNode).ruleName === "value_list") {
-        valueLists.push(child as ASTNode);
+      if (!isASTNode(child)) continue;
+      const childAst = child as ASTNode;
+
+      if (childAst.ruleName === "include_arg") {
+        // Named arg: first child is VARIABLE, second is COLON, third is value_list
+        const argChildren = getChildren(childAst);
+        if (
+          argChildren.length >= 3 &&
+          !isASTNode(argChildren[0]) &&
+          tokenTypeName(argChildren[0] as Token) === "VARIABLE" &&
+          !isASTNode(argChildren[1]) &&
+          tokenTypeName(argChildren[1] as Token) === "COLON"
+        ) {
+          const varName = (argChildren[0] as Token).value; // e.g. "$gap"
+          // The value is the value_list node (third child)
+          const valueNode = argChildren[2];
+          named.set(varName, valueNode as ASTNode | Token);
+        } else {
+          // Positional: the include_arg wraps a value_list
+          const valueList = argChildren.find(
+            (c) => isASTNode(c) && (c as ASTNode).ruleName === "value_list"
+          ) as ASTNode | undefined;
+          if (valueList) positional.push(valueList);
+        }
+      } else if (childAst.ruleName === "value_list") {
+        // Legacy: bare value_list (old grammar without include_arg wrapper)
+        positional.push(childAst);
       }
     }
 
-    // If there's only one value_list, check if it contains commas and split
-    if (valueLists.length === 1) {
-      return this._splitValueListOnCommas(valueLists[0]);
+    // Legacy: if we collected only one positional value_list and it contains
+    // comma tokens, split it into multiple positional args.
+    if (positional.length === 1 && named.size === 0) {
+      const split = this._splitValueListOnCommas(positional[0] as ASTNode);
+      if (split.length > 1) {
+        return { positional: split, named };
+      }
     }
 
-    return valueLists;
+    return { positional, named };
   }
 
   /**
@@ -1546,7 +1603,16 @@ export class LatticeTransformer {
    * Try to resolve an each_list to a LatticeValue (map or list).
    *
    * If the each_list contains a single VARIABLE that resolves to a
-   * LatticeMap or LatticeList, return it. Otherwise return null.
+   * LatticeMap or LatticeList, return it.
+   *
+   * If the variable is stored as an AST node (e.g. value_list containing a
+   * map_literal), convert it on-the-fly to a LatticeMap. This handles the
+   * common pattern:
+   *
+   *   $colors: (red: #f00, blue: #00f);
+   *   @each $name, $color in $colors { ... }
+   *
+   * where $colors is stored as the raw value_list AST from Pass 1.
    */
   private _resolveEachList(eachList: ASTNode, scope: ScopeChain): LatticeValue | null {
     const varTokens: Token[] = [];
@@ -1565,8 +1631,75 @@ export class LatticeTransformer {
         const lv = val as LatticeValue;
         if (lv.kind === "map" || lv.kind === "list") return lv;
       }
+      // Variable stored as an AST node — check if it wraps a map_literal
+      if (val !== undefined && val !== null && typeof val === "object" && "ruleName" in val) {
+        const mapLit = this._findMapLiteralInAst(val as ASTNode);
+        if (mapLit) {
+          return this._convertMapLiteralToLatticeMap(mapLit, scope);
+        }
+      }
     }
     return null;
+  }
+
+  /**
+   * Recursively search for a map_literal node within an AST subtree.
+   * Used to unwrap value_list → value → map_literal nesting.
+   */
+  private _findMapLiteralInAst(node: ASTNode): ASTNode | null {
+    if (node.ruleName === "map_literal") return node;
+    for (const child of getChildren(node)) {
+      if (isASTNode(child)) {
+        const found = this._findMapLiteralInAst(child as ASTNode);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Convert a map_literal AST node to a LatticeMap.
+   *
+   * map_literal = LPAREN map_entry COMMA map_entry { COMMA map_entry } RPAREN ;
+   * map_entry   = ( IDENT | STRING ) COLON lattice_expression ;
+   *
+   * Each entry's value expression is evaluated in the given scope so that
+   * variable references resolve correctly:
+   *   $colors: (primary: $accent, secondary: $panel-bg);
+   */
+  private _convertMapLiteralToLatticeMap(node: ASTNode, scope: ScopeChain): LatticeMap {
+    const items: Array<readonly [string, LatticeValue]> = [];
+    const evaluator = new ExpressionEvaluator(scope);
+
+    for (const child of getChildren(node)) {
+      if (!isASTNode(child) || (child as ASTNode).ruleName !== "map_entry") continue;
+
+      let key: string | undefined;
+      let valueExpr: ASTNode | undefined;
+
+      for (const ec of getChildren(child as ASTNode)) {
+        if (!isASTNode(ec)) {
+          const t = ec as Token;
+          const tn = tokenTypeName(t);
+          if ((tn === "IDENT" || tn === "STRING") && key === undefined) {
+            // Strip surrounding quotes from string keys
+            key = t.value.replace(/^"|"$/g, "").replace(/^'|'$/g, "");
+          }
+        } else {
+          const ecAst = ec as ASTNode;
+          if (ecAst.ruleName === "lattice_expression" && valueExpr === undefined) {
+            valueExpr = ecAst;
+          }
+        }
+      }
+
+      if (key !== undefined && valueExpr !== undefined) {
+        const value = evaluator.evaluate(valueExpr);
+        items.push([key, value] as const);
+      }
+    }
+
+    return new LatticeMap(items);
   }
 
   /** Expand @each over a resolved LatticeMap or LatticeList. */

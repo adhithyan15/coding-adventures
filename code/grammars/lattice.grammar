@@ -130,7 +130,11 @@ mixin_value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
 include_directive = "@include" FUNCTION [ include_args ] RPAREN ( SEMICOLON | block )
                   | "@include" IDENT ( SEMICOLON | block ) ;
 
-include_args = value_list { COMMA value_list } ;
+include_args = include_arg { COMMA include_arg } ;
+
+# Named argument: $param: value  (e.g. @include btn($color: red))
+# Ordered before value_list so VARIABLE COLON is tried first.
+include_arg = VARIABLE COLON value_list | value_list ;
 
 # ============================================================================
 # Lattice: Control Flow
@@ -428,7 +432,8 @@ value_list = value { value } ;
 value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
       | CUSTOM_PROPERTY | UNICODE_RANGE | function_call
       | VARIABLE
-      | SLASH | COMMA | PLUS | MINUS ;
+      | SLASH | COMMA | PLUS | MINUS
+      | map_literal ;
 
 function_call = FUNCTION function_args RPAREN
               | URL_TOKEN ;
