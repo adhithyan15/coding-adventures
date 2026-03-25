@@ -378,6 +378,29 @@ class GenericVM:
     # Configuration
     # =====================================================================
 
+    def inject_globals(self, globals_dict: dict[str, Any]) -> None:
+        """Pre-seed named variables into the VM's global scope.
+
+        These variables are available to the program as regular variables
+        but are set before execution begins. Useful for build context,
+        environment info, etc.
+
+        Injected globals are merged into ``variables`` — they don't
+        replace the map. If a key already exists, the injected value
+        overwrites it.
+
+        Parameters
+        ----------
+        globals_dict : dict[str, Any]
+            A mapping of variable names to values.
+
+        Example::
+
+            vm.inject_globals({"_ctx": {"os": "darwin", "arch": "arm64"}})
+        """
+        for key, value in globals_dict.items():
+            self.variables[key] = value
+
     def set_max_recursion_depth(self, depth: int | None) -> None:
         """Set the maximum call stack depth.
 
