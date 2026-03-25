@@ -160,8 +160,8 @@ def parse_csv(source: str, delimiter: str = ",") -> list[dict[str, str]]:
         >>> parse_csv("a,b,c\\n1,,3")
         [{'a': '1', 'b': '', 'c': '3'}]
 
-        >>> parse_csv('id,val\\n1,"say ""hi"""')
-        [{'id': '1', 'val': 'say "hi"'}]
+        >>> parse_csv('id,val\\n1,"hello, world"')
+        [{'id': '1', 'val': 'hello, world'}]
 
         >>> parse_csv("name\\tage\\nAlice\\t30", delimiter="\\t")
         [{'name': 'Alice', 'age': '30'}]
