@@ -1,0 +1,7 @@
+[package]
+name = "coding-adventures-csv-parser"
+version = "0.1.0"
+edition = "2021"
+description = "CSV parser — a hand-rolled state machine parser for RFC 4180-style CSV files"
+
+[dependencies]

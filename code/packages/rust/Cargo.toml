@@ -121,4 +121,5 @@ members = [
     "commonmark",
   "document-ast-sanitizer",
   "document-html-sanitizer",
+    "csv-parser",
 ]
