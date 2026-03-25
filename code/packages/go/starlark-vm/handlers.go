@@ -1413,26 +1413,24 @@ func callFunction(v *vm.GenericVM, callable interface{}, args []interface{}, cod
 
 // handleCallFunctionKW calls a function with keyword arguments.
 //
-// Operand: total number of arguments (positional + keyword).
+// Operand: number of keyword argument PAIRS (kwCount).
 //
-// Stack layout (from bottom to top):
-//   [..., callable, arg1, ..., argN, kw_names_tuple]
+// Stack layout (from bottom to top, interleaved format):
+//   [..., callable, key1, val1, key2, val2, ...]
 //
-// The kw_names_tuple tells us which of the trailing arguments are
-// keyword arguments and what their names are.
+// Arguments are pushed as interleaved key-value pairs. Each keyword
+// argument is pushed as its name (string) followed by its value.
+// This is simpler than the tuple-of-names format because the compiler
+// can emit LOAD_CONST for each name and value in sequence.
 func handleCallFunctionKW(v *vm.GenericVM, instr vm.Instruction, code vm.CodeObject) *string {
-	argCount := instr.Operand.(int)
+	kwCount := instr.Operand.(int)
 
-	// Pop keyword names tuple.
-	kwNamesTuple := v.Pop()
-	kwNames, _ := kwNamesTuple.([]interface{})
-	numKW := len(kwNames)
-	numPos := argCount - numKW
-
-	// Pop all arguments.
-	allArgs := make([]interface{}, argCount)
-	for i := argCount - 1; i >= 0; i-- {
-		allArgs[i] = v.Pop()
+	// Pop key-value pairs from the stack (in reverse order).
+	kwNames := make([]string, kwCount)
+	kwValues := make([]interface{}, kwCount)
+	for i := kwCount - 1; i >= 0; i-- {
+		kwValues[i] = v.Pop()
+		kwNames[i] = fmt.Sprintf("%v", v.Pop())
 	}
 
 	// Pop callable.
@@ -1440,21 +1438,21 @@ func handleCallFunctionKW(v *vm.GenericVM, instr vm.Instruction, code vm.CodeObj
 
 	// If it's a StarlarkFunction, map keyword args to the right slots.
 	if fn, ok := callable.(*StarlarkFunction); ok {
-		posArgs := allArgs[:numPos]
-		kwArgs := allArgs[numPos:]
-
-		// Start with positional args.
 		finalArgs := make([]interface{}, fn.ParamCount)
-		for i := 0; i < numPos && i < fn.ParamCount; i++ {
-			finalArgs[i] = posArgs[i]
+
+		// Fill defaults first (from the function's default values).
+		// Defaults are right-aligned: if there are 4 params and 3 defaults,
+		// the defaults apply to params 1, 2, 3 (not 0, 1, 2).
+		defaultOffset := fn.ParamCount - len(fn.Defaults)
+		for i, def := range fn.Defaults {
+			finalArgs[defaultOffset+i] = def
 		}
 
-		// Map keyword args to parameter slots.
+		// Map keyword args to parameter slots by name.
 		for i, kwName := range kwNames {
-			name := fmt.Sprintf("%v", kwName)
 			for j, pname := range fn.ParamNames {
-				if pname == name {
-					finalArgs[j] = kwArgs[i]
+				if pname == kwName {
+					finalArgs[j] = kwValues[i]
 					break
 				}
 			}
@@ -1462,8 +1460,8 @@ func handleCallFunctionKW(v *vm.GenericVM, instr vm.Instruction, code vm.CodeObj
 
 		callFunction(v, callable, finalArgs, code)
 	} else {
-		// For builtins, just pass positional args.
-		callFunction(v, callable, allArgs[:numPos], code)
+		// For builtins, just pass keyword values.
+		callFunction(v, callable, kwValues, code)
 	}
 	return nil
 }
