@@ -61,13 +61,13 @@ function TemplateCard({ template, onRun, onEdit, onDelete }: TemplateCardProps) 
           : t("library.itemCount").replace("{count}", String(total))}
       </p>
       <div className="template-card__actions">
-        <button className="btn--primary" onClick={onRun}>
+        <button className="btn--primary" onClick={onRun} type="button">
           {t("library.run")}
         </button>
-        <button className="btn--secondary" onClick={onEdit}>
+        <button className="btn--secondary" onClick={onEdit} type="button">
           {t("library.edit")}
         </button>
-        <button className="btn--danger" onClick={onDelete}>
+        <button className="btn--danger" onClick={onDelete} type="button">
           {t("library.delete")}
         </button>
       </div>
@@ -106,6 +106,7 @@ export function TemplateLibrary({ onNavigate }: TemplateLibraryProps) {
         <button
           className="btn--primary"
           onClick={() => onNavigate("/template/new")}
+          type="button"
         >
           {t("library.newTemplate")}
         </button>

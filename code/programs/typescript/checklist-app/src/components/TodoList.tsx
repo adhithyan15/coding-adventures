@@ -132,6 +132,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
         <button
           className="btn--primary"
           onClick={() => onNavigate("/todos/new")}
+          type="button"
         >
           {t("todos.newTodo")}
         </button>

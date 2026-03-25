@@ -1,17 +1,25 @@
 /**
  * TemplateEditor — Screen 2: create or edit a checklist template.
  *
- * V0.2 uses the shared TreeView and BranchGroup components to render the
- * item tree with CSS connectors — "what you build is what you run."
+ * The editor maintains local draft state (DraftItem[]) while the user
+ * builds their template. Only when Save is pressed does it dispatch a
+ * TEMPLATE_CREATE or TEMPLATE_UPDATE action to the store. Cancel discards
+ * all changes without touching the store.
  *
- * V0.3 replaces direct state mutations with store.dispatch(action).
- * The editor still maintains local draft state (DraftItem[]) until Save
- * is pressed. Only then does it dispatch a TEMPLATE_CREATE or TEMPLATE_UPDATE
- * action. Cancel discards all changes (no action dispatched).
+ * === Draft vs. stored items ===
  *
- * Decision items show two BranchGroups (yes/no), each containing a nested
- * TreeView of its branch items. "Add step" buttons appear at the end of
- * each branch.
+ * TemplateItems (the stored representation) use stable IDs from crypto.randomUUID().
+ * DraftItems use temporary draftIds generated in this session. When the user
+ * saves, toTemplateItems() converts DraftItems to TemplateItems and the reducer
+ * assigns final UUIDs. This keeps the editor's local state independent from
+ * the persisted tree until the user commits.
+ *
+ * === Tree rendering ===
+ *
+ * The item tree uses TreeView and BranchGroup from @coding-adventures/ui-components —
+ * "what you build is what you run." Decision items show two BranchGroups
+ * (yes/no), each containing a nested EditorItemList. This means the editor
+ * mirrors the InstanceRunner's visual structure exactly.
  */
 
 import { useState } from "react";

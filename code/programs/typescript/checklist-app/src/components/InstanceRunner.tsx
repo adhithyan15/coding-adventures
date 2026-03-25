@@ -1,18 +1,33 @@
 /**
  * InstanceRunner — Screen 3: execute a checklist instance with tree view.
  *
- * V0.2 replaces the flat list with a recursive tree view via the shared
- * TreeView and BranchGroup components from @coding-adventures/ui-components.
+ * Renders the decision tree for an active instance. Each item in the tree
+ * is either a check item (a step to tick off) or a decision item (a yes/no
+ * question that gates one of two branches).
  *
- * V0.3 replaces the mutable appState singleton with the immutable store.
- * State is read via useStore(store) and mutations go through dispatch.
- * The setTick() hack for forcing re-renders is no longer needed because
- * useStore automatically re-renders when the store state changes.
+ * === Architecture ===
  *
- * The tree renders the full item structure with CSS connectors. Decision
- * nodes show two BranchGroups (yes/no). The active branch is fully
- * interactive; the inactive branch is dimmed and collapsed to a summary
- * line (expandable on click for review).
+ * State is read reactively via useStore(store). Mutations go through
+ * store.dispatch(action) — never direct state mutation. This means
+ * React sees a new state reference on every change and re-renders correctly.
+ *
+ * Local UI state (which inactive branches are expanded, which decisions are
+ * in re-answer mode) is kept in useState — it doesn't need to survive a
+ * page reload, so it never goes into the store.
+ *
+ * === Tree rendering ===
+ *
+ * The tree uses TreeView and BranchGroup from @coding-adventures/ui-components,
+ * which draw the connecting lines and manage collapsible branch groups.
+ * Decision nodes render two BranchGroups (yes/no). The active branch is
+ * fully interactive; the inactive branch is collapsed to a summary line
+ * (expandable on click for review).
+ *
+ * === Completion ===
+ *
+ * The Complete button is enabled only when all visible check items are
+ * checked and all visible decision items have an answer. This matches the
+ * aviation checklist model: you cannot sign off until every step is done.
  */
 
 import { useState, useCallback } from "react";
