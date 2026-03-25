@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-03-25
+
+### Fixed
+
+- **Positional mixin args with commas** — `parse_include_args/1` now calls `split_value_list_on_commas/1` in the new-grammar path. Previously, `@include button(blue, white)` was treated as one argument causing `WrongArity` errors.
+
 ## [0.2.1] - 2026-03-25
 
 ### Fixed

@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-03-25
+
+### Fixed
+
+- **Positional mixin args with commas** — `parse_include_args_named` now splits a positional `include_arg`'s `value_list` on COMMA tokens before evaluating. Previously, `@include button(blue, white)` was parsed as one argument (`blue, white`) instead of two, causing `WrongArity` errors for any mixin with ≥2 positional arguments.
+
 ## [0.2.1] - 2026-03-25
 
 ### Fixed
