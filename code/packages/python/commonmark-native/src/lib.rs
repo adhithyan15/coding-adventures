@@ -54,7 +54,7 @@ use python_bridge::*;
 // Converts a CommonMark Markdown string to HTML. Raw HTML blocks are passed
 // through unchanged — required for full CommonMark spec compliance.
 //
-// Raises ValueError if the argument is not a string.
+// Raises TypeError if the argument is missing or not a string.
 //
 // Examples
 // --------
@@ -82,7 +82,7 @@ unsafe extern "C" fn py_markdown_to_html(
         None => {
             // Set a Python ValueError — the caller will see this as an exception.
             set_error(
-                value_error_class(),
+                type_error_class(),
                 "markdown_to_html() requires a string argument",
             );
             // Returning null signals that an exception is active.
@@ -109,7 +109,7 @@ unsafe extern "C" fn py_markdown_to_html(
 // raw HTML nodes (RawBlockNode, RawInlineNode) are dropped before rendering.
 // This prevents XSS attacks while preserving all Markdown formatting.
 //
-// Raises ValueError if the argument is not a string.
+// Raises TypeError if the argument is missing or not a string.
 //
 // Examples
 // --------
@@ -129,7 +129,7 @@ unsafe extern "C" fn py_markdown_to_html_safe(
         Some(s) => s,
         None => {
             set_error(
-                value_error_class(),
+                type_error_class(),
                 "markdown_to_html_safe() requires a string argument",
             );
             return ptr::null_mut();

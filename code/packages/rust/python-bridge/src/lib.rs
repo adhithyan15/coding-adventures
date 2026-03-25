@@ -417,6 +417,15 @@ pub unsafe fn exception_class() -> PyObjectPtr {
     get_builtin_exception("Exception")
 }
 
+/// Get the built-in TypeError class.
+///
+/// Use for: wrong number of arguments, wrong argument type.
+/// Python convention: `TypeError` is raised for signature violations
+/// (e.g. "takes 1 argument (0 given)", "argument must be str not int").
+pub unsafe fn type_error_class() -> PyObjectPtr {
+    get_builtin_exception("TypeError")
+}
+
 /// Get the built-in ValueError class.
 pub unsafe fn value_error_class() -> PyObjectPtr {
     get_builtin_exception("ValueError")
