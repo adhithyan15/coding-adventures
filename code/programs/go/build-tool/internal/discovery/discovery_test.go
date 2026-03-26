@@ -109,6 +109,13 @@ func TestInferPackageName(t *testing.T) {
 	}
 }
 
+func TestInferPackageNameProgram(t *testing.T) {
+	name := inferPackageName("/repo/code/programs/go/grammar-tools", "go")
+	if name != "go/programs/grammar-tools" {
+		t.Fatalf("expected go/programs/grammar-tools, got %s", name)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Tests for getBuildFile / GetBuildFileForPlatform
 // ---------------------------------------------------------------------------
