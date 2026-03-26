@@ -313,40 +313,48 @@ export function dispatch(command: string, files: string[]): number {
 // main
 // ---------------------------------------------------------------------------
 
-const root = findRoot();
-const specPath = join(root, "code", "specs", "grammar-tools.json");
+// Only run the CLI when this file is the entry point, not when imported as a
+// module by tests. In ESM, `import.meta.url` matches `process.argv[1]` (after
+// resolving the file URL) when executed directly via Node.
+if (
+  process.argv[1] !== undefined &&
+  resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))
+) {
+  const root = findRoot();
+  const specPath = join(root, "code", "specs", "grammar-tools.json");
 
-const parser = new Parser(specPath, process.argv);
+  const parser = new Parser(specPath, process.argv);
 
-try {
-  const result = parser.parse();
+  try {
+    const result = parser.parse();
 
-  // HelpResult: has `text` but no `flags`
-  if ("text" in result && !("flags" in result)) {
-    process.stdout.write((result as { text: string }).text + "\n");
-    process.exit(0);
+    // HelpResult: has `text` but no `flags`
+    if ("text" in result && !("flags" in result)) {
+      process.stdout.write((result as { text: string }).text + "\n");
+      process.exit(0);
+    }
+
+    // VersionResult: has `version` but no `flags`
+    if ("version" in result && !("flags" in result)) {
+      process.stdout.write((result as { version: string }).version + "\n");
+      process.exit(0);
+    }
+
+    // ParseResult
+    const r = result as { flags: Record<string, unknown>; arguments: Record<string, unknown> };
+    const command = String(r.arguments["command"] ?? "");
+    const rawFiles = r.arguments["files"];
+    let files: string[] = [];
+    if (Array.isArray(rawFiles)) {
+      files = rawFiles.map(String);
+    } else if (typeof rawFiles === "string") {
+      files = [rawFiles];
+    }
+
+    process.exit(dispatch(command, files));
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    process.stderr.write(`error: ${message}\n`);
+    process.exit(2);
   }
-
-  // VersionResult: has `version` but no `flags`
-  if ("version" in result && !("flags" in result)) {
-    process.stdout.write((result as { version: string }).version + "\n");
-    process.exit(0);
-  }
-
-  // ParseResult
-  const r = result as { flags: Record<string, unknown>; arguments: Record<string, unknown> };
-  const command = String(r.arguments["command"] ?? "");
-  const rawFiles = r.arguments["files"];
-  let files: string[] = [];
-  if (Array.isArray(rawFiles)) {
-    files = rawFiles.map(String);
-  } else if (typeof rawFiles === "string") {
-    files = [rawFiles];
-  }
-
-  process.exit(dispatch(command, files));
-} catch (e: unknown) {
-  const message = e instanceof Error ? e.message : String(e);
-  process.stderr.write(`error: ${message}\n`);
-  process.exit(2);
 }
