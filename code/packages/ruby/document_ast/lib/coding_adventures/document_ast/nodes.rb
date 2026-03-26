@@ -138,6 +138,11 @@ module CodingAdventures
       def type = "list_item"
     end
 
+    # A GitHub Flavored Markdown task-list item.
+    TaskItemNode = Data.define(:checked, :children) do
+      def type = "task_item"
+    end
+
     # A visual separator between sections. Leaf node — no children.
     #
     # In HTML renders as <hr />. In RST ----. In plain text ---.
@@ -164,6 +169,21 @@ module CodingAdventures
     #   "rtf"      skip             skip              skip
     RawBlockNode = Data.define(:format, :value) do
       def type = "raw_block"
+    end
+
+    # A GitHub Flavored Markdown pipe table.
+    TableNode = Data.define(:align, :children) do
+      def type = "table"
+    end
+
+    # One row in a table.
+    TableRowNode = Data.define(:is_header, :children) do
+      def type = "table_row"
+    end
+
+    # One cell in a table.
+    TableCellNode = Data.define(:children) do
+      def type = "table_cell"
     end
 
     # ─── Inline Nodes ─────────────────────────────────────────────────────────
@@ -197,6 +217,11 @@ module CodingAdventures
     #   → <strong>bold</strong>
     StrongNode = Data.define(:children) do
       def type = "strong"
+    end
+
+    # Struck-through text. In HTML renders as <del>.
+    StrikethroughNode = Data.define(:children) do
+      def type = "strikethrough"
     end
 
     # Inline code. The value is raw — not decoded for HTML entities.

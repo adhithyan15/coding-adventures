@@ -60,6 +60,11 @@ defmodule CodingAdventures.DocumentAstTest do
       assert item == %{type: :list_item, children: []}
     end
 
+    test "task_item/2 creates a task list item" do
+      item = DocumentAst.task_item(true, [])
+      assert item == %{type: :task_item, checked: true, children: []}
+    end
+
     test "thematic_break/0 creates a thematic break" do
       tb = DocumentAst.thematic_break()
       assert tb == %{type: :thematic_break}
@@ -68,6 +73,20 @@ defmodule CodingAdventures.DocumentAstTest do
     test "raw_block/2 creates a raw block" do
       rb = DocumentAst.raw_block("html", "<div>raw</div>\n")
       assert rb == %{type: :raw_block, format: "html", value: "<div>raw</div>\n"}
+    end
+
+    test "table constructors create table nodes" do
+      cell = DocumentAst.table_cell([DocumentAst.text("a")])
+      row = DocumentAst.table_row(true, [cell])
+      table = DocumentAst.table([:left], [row])
+
+      assert table == %{
+               type: :table,
+               align: [:left],
+               children: [
+                 %{type: :table_row, is_header: true, children: [%{type: :table_cell, children: [%{type: :text, value: "a"}]}]}
+               ]
+             }
     end
   end
 
@@ -86,6 +105,11 @@ defmodule CodingAdventures.DocumentAstTest do
     test "strong/1 creates a strong node" do
       s = DocumentAst.strong([DocumentAst.text("bold")])
       assert s.type == :strong
+    end
+
+    test "strikethrough/1 creates a strikethrough node" do
+      s = DocumentAst.strikethrough([DocumentAst.text("gone")])
+      assert s == %{type: :strikethrough, children: [%{type: :text, value: "gone"}]}
     end
 
     test "code_span/1 creates a code span" do

@@ -18,9 +18,10 @@ defmodule CodingAdventures.DocumentAstSanitizer.Sanitizer do
      `SoftBreakNode`, `RawBlockNode` (if format allowed).
 
   2. **Container — recurse**: `DocumentNode`, `HeadingNode`, `ParagraphNode`,
-     `BlockquoteNode`, `ListNode`, `ListItemNode`, `EmphasisNode`, `StrongNode`,
-     `LinkNode`. Children are sanitized first; if all children are dropped, the
-     parent is dropped too (except `DocumentNode`).
+     `BlockquoteNode`, `ListNode`, `ListItemNode`, `TaskItemNode`, `TableNode`,
+     `TableRowNode`, `TableCellNode`, `EmphasisNode`, `StrongNode`,
+     `StrikethroughNode`, `LinkNode`. Children are sanitized first; if all
+     children are dropped, the parent is dropped too (except `DocumentNode`).
 
   3. **Convert**: `ImageNode` → `TextNode` (alt text), `CodeSpanNode` → `TextNode`.
 
@@ -43,6 +44,10 @@ defmodule CodingAdventures.DocumentAstSanitizer.Sanitizer do
   blockquote         otherwise                            recurse children
   list               always                               recurse children
   list_item          always                               recurse children
+  task_item          always                               recurse children
+  table              always                               recurse children
+  table_row          always                               recurse children
+  table_cell         always                               recurse children
   thematic_break     always                               keep as-is
   raw_block          allow_raw_block_formats == :drop_all drop
   raw_block          allow_raw_block_formats == :pass     keep as-is
@@ -50,6 +55,7 @@ defmodule CodingAdventures.DocumentAstSanitizer.Sanitizer do
   text               always                               keep as-is
   emphasis           always                               recurse children
   strong             always                               recurse children
+  strikethrough      always                               recurse children
   code_span          transform_code_span_to_text == true  convert to text node
   code_span          otherwise                            keep as-is
   link               drop_links == true                   promote children to parent
@@ -174,6 +180,26 @@ defmodule CodingAdventures.DocumentAstSanitizer.Sanitizer do
     if kids == [], do: {:drop, nil}, else: {:keep, %{node | children: kids}}
   end
 
+  defp sanitize_block(%{type: :task_item} = node, policy) do
+    kids = sanitize_block_children(node.children, policy)
+    if kids == [], do: {:drop, nil}, else: {:keep, %{node | children: kids}}
+  end
+
+  defp sanitize_block(%{type: :table} = node, policy) do
+    kids = sanitize_block_children(node.children, policy)
+    if kids == [], do: {:drop, nil}, else: {:keep, %{node | children: kids}}
+  end
+
+  defp sanitize_block(%{type: :table_row} = node, policy) do
+    kids = sanitize_block_children(node.children, policy)
+    if kids == [], do: {:drop, nil}, else: {:keep, %{node | children: kids}}
+  end
+
+  defp sanitize_block(%{type: :table_cell} = node, policy) do
+    kids = sanitize_inline_children(node.children, policy)
+    if kids == [], do: {:drop, nil}, else: {:keep, %{node | children: kids}}
+  end
+
   # Unknown block node type: drop it for safety (the spec requires explicit handling)
   defp sanitize_block(_unknown, _policy), do: {:drop, nil}
 
@@ -202,6 +228,11 @@ defmodule CodingAdventures.DocumentAstSanitizer.Sanitizer do
   end
 
   defp sanitize_inline(%{type: :strong} = node, policy) do
+    kids = sanitize_inline_children(node.children, policy)
+    if kids == [], do: {:drop, nil}, else: {:keep_one, %{node | children: kids}}
+  end
+
+  defp sanitize_inline(%{type: :strikethrough} = node, policy) do
     kids = sanitize_inline_children(node.children, policy)
     if kids == [], do: {:drop, nil}, else: {:keep_one, %{node | children: kids}}
   end

@@ -168,7 +168,7 @@ pub struct ListNode {
     /// Tight = no blank lines between items and no blank line inside any item.
     /// In HTML tight mode, paragraph content is rendered without `<p>` tags.
     pub tight: bool,
-    pub children: Vec<ListItemNode>,
+    pub children: Vec<ListChildNode>,
 }
 
 /// One item in a `ListNode`. Contains block-level content.
@@ -178,6 +178,13 @@ pub struct ListNode {
 /// `ListNode` controls this).
 #[derive(Debug, Clone, PartialEq)]
 pub struct ListItemNode {
+    pub children: Vec<BlockNode>,
+}
+
+/// A GitHub Flavored Markdown task-list item.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TaskItemNode {
+    pub checked: bool,
     pub children: Vec<BlockNode>,
 }
 
@@ -217,6 +224,42 @@ pub struct RawBlockNode {
     pub value: String,
 }
 
+/// Column alignment hint for GFM tables.
+#[derive(Debug, Clone, PartialEq)]
+pub enum TableAlignment {
+    Left,
+    Right,
+    Center,
+    None,
+}
+
+/// A GitHub Flavored Markdown pipe table.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TableNode {
+    pub align: Vec<TableAlignment>,
+    pub children: Vec<TableRowNode>,
+}
+
+/// One row in a table.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TableRowNode {
+    pub is_header: bool,
+    pub children: Vec<TableCellNode>,
+}
+
+/// One cell in a table.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TableCellNode {
+    pub children: Vec<InlineNode>,
+}
+
+/// Child node type for lists.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ListChildNode {
+    ListItem(ListItemNode),
+    TaskItem(TaskItemNode),
+}
+
 /// Union of all block node types.
 ///
 /// Use in `match node { BlockNode::Heading(h) => ..., ... }` for exhaustive
@@ -231,8 +274,12 @@ pub enum BlockNode {
     Blockquote(BlockquoteNode),
     List(ListNode),
     ListItem(ListItemNode),
+    TaskItem(TaskItemNode),
     ThematicBreak(ThematicBreakNode),
     RawBlock(RawBlockNode),
+    Table(TableNode),
+    TableRow(TableRowNode),
+    TableCell(TableCellNode),
 }
 
 // ─── Inline Nodes ─────────────────────────────────────────────────────────────
@@ -280,6 +327,12 @@ pub struct EmphasisNode {
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct StrongNode {
+    pub children: Vec<InlineNode>,
+}
+
+/// Text marked as deleted / struck through.
+#[derive(Debug, Clone, PartialEq)]
+pub struct StrikethroughNode {
     pub children: Vec<InlineNode>,
 }
 
@@ -419,6 +472,7 @@ pub enum InlineNode {
     Text(TextNode),
     Emphasis(EmphasisNode),
     Strong(StrongNode),
+    Strikethrough(StrikethroughNode),
     CodeSpan(CodeSpanNode),
     Link(LinkNode),
     Image(ImageNode),
@@ -442,7 +496,9 @@ mod tests {
     fn test_heading_node() {
         let h = HeadingNode {
             level: 1,
-            children: vec![InlineNode::Text(TextNode { value: "Hello".to_string() })],
+            children: vec![InlineNode::Text(TextNode {
+                value: "Hello".to_string(),
+            })],
         };
         assert_eq!(h.level, 1);
         assert_eq!(h.children.len(), 1);
@@ -451,7 +507,9 @@ mod tests {
     #[test]
     fn test_paragraph_node() {
         let p = ParagraphNode {
-            children: vec![InlineNode::Text(TextNode { value: "world".to_string() })],
+            children: vec![InlineNode::Text(TextNode {
+                value: "world".to_string(),
+            })],
         };
         if let InlineNode::Text(t) = &p.children[0] {
             assert_eq!(t.value, "world");
@@ -480,22 +538,58 @@ mod tests {
     #[test]
     fn test_block_node_enum_variants() {
         let doc = BlockNode::Document(DocumentNode { children: vec![] });
-        let heading = BlockNode::Heading(HeadingNode { level: 2, children: vec![] });
+        let heading = BlockNode::Heading(HeadingNode {
+            level: 2,
+            children: vec![],
+        });
         let thematic = BlockNode::ThematicBreak(ThematicBreakNode);
+        let task = BlockNode::TaskItem(TaskItemNode {
+            checked: true,
+            children: vec![],
+        });
         // Pattern match to verify exhaustive enum
-        match doc { BlockNode::Document(_) => {}, _ => panic!() }
-        match heading { BlockNode::Heading(_) => {}, _ => panic!() }
-        match thematic { BlockNode::ThematicBreak(_) => {}, _ => panic!() }
+        match doc {
+            BlockNode::Document(_) => {}
+            _ => panic!(),
+        }
+        match heading {
+            BlockNode::Heading(_) => {}
+            _ => panic!(),
+        }
+        match thematic {
+            BlockNode::ThematicBreak(_) => {}
+            _ => panic!(),
+        }
+        match task {
+            BlockNode::TaskItem(_) => {}
+            _ => panic!(),
+        }
     }
 
     #[test]
     fn test_inline_node_variants() {
-        let text = InlineNode::Text(TextNode { value: "hi".to_string() });
+        let text = InlineNode::Text(TextNode {
+            value: "hi".to_string(),
+        });
         let hard = InlineNode::HardBreak(HardBreakNode);
         let soft = InlineNode::SoftBreak(SoftBreakNode);
-        match text  { InlineNode::Text(_) => {}, _ => panic!() }
-        match hard  { InlineNode::HardBreak(_) => {}, _ => panic!() }
-        match soft  { InlineNode::SoftBreak(_) => {}, _ => panic!() }
+        let struck = InlineNode::Strikethrough(StrikethroughNode { children: vec![] });
+        match text {
+            InlineNode::Text(_) => {}
+            _ => panic!(),
+        }
+        match hard {
+            InlineNode::HardBreak(_) => {}
+            _ => panic!(),
+        }
+        match soft {
+            InlineNode::SoftBreak(_) => {}
+            _ => panic!(),
+        }
+        match struck {
+            InlineNode::Strikethrough(_) => {}
+            _ => panic!(),
+        }
     }
 
     #[test]

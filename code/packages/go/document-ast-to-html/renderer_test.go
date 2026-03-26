@@ -80,9 +80,9 @@ func TestToHtml(t *testing.T) {
 		{
 			name: "unordered_list_tight",
 			doc: &documentast.DocumentNode{Children: []documentast.BlockNode{
-				&documentast.ListNode{Ordered: false, Tight: true, Children: []*documentast.ListItemNode{
-					{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "foo"}}}}},
-					{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "bar"}}}}},
+				&documentast.ListNode{Ordered: false, Tight: true, Children: []documentast.ListChildNode{
+					&documentast.ListItemNode{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "foo"}}}}},
+					&documentast.ListItemNode{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "bar"}}}}},
 				}},
 			}},
 			want: "<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n",
@@ -90,8 +90,8 @@ func TestToHtml(t *testing.T) {
 		{
 			name: "ordered_list_start_1",
 			doc: &documentast.DocumentNode{Children: []documentast.BlockNode{
-				&documentast.ListNode{Ordered: true, Start: 1, Tight: true, Children: []*documentast.ListItemNode{
-					{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "item"}}}}},
+				&documentast.ListNode{Ordered: true, Start: 1, Tight: true, Children: []documentast.ListChildNode{
+					&documentast.ListItemNode{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "item"}}}}},
 				}},
 			}},
 			want: "<ol>\n<li>item</li>\n</ol>\n",
@@ -99,8 +99,8 @@ func TestToHtml(t *testing.T) {
 		{
 			name: "ordered_list_start_0",
 			doc: &documentast.DocumentNode{Children: []documentast.BlockNode{
-				&documentast.ListNode{Ordered: true, Start: 0, Tight: true, Children: []*documentast.ListItemNode{
-					{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "item"}}}}},
+				&documentast.ListNode{Ordered: true, Start: 0, Tight: true, Children: []documentast.ListChildNode{
+					&documentast.ListItemNode{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "item"}}}}},
 				}},
 			}},
 			want: "<ol start=\"0\">\n<li>item</li>\n</ol>\n",
@@ -108,8 +108,8 @@ func TestToHtml(t *testing.T) {
 		{
 			name: "ordered_list_start_3",
 			doc: &documentast.DocumentNode{Children: []documentast.BlockNode{
-				&documentast.ListNode{Ordered: true, Start: 3, Tight: true, Children: []*documentast.ListItemNode{
-					{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "item"}}}}},
+				&documentast.ListNode{Ordered: true, Start: 3, Tight: true, Children: []documentast.ListChildNode{
+					&documentast.ListItemNode{Children: []documentast.BlockNode{&documentast.ParagraphNode{Children: []documentast.InlineNode{&documentast.TextNode{Value: "item"}}}}},
 				}},
 			}},
 			want: "<ol start=\"3\">\n<li>item</li>\n</ol>\n",

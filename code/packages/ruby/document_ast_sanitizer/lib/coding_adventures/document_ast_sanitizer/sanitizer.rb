@@ -150,11 +150,31 @@ module CodingAdventures
         return [] if new_children.empty?
         [DocumentAst::ListItemNode.new(children: new_children)]
 
+      when "task_item"
+        new_children = sanitize_children(node.children, policy)
+        return [] if new_children.empty?
+        [DocumentAst::TaskItemNode.new(checked: node.checked, children: new_children)]
+
       when "thematic_break"
         [node]
 
       when "raw_block"
         sanitize_raw_block(node, policy.allow_raw_block_formats)
+
+      when "table"
+        new_children = sanitize_children(node.children, policy)
+        return [] if new_children.empty?
+        [DocumentAst::TableNode.new(align: node.align, children: new_children)]
+
+      when "table_row"
+        new_children = sanitize_children(node.children, policy)
+        return [] if new_children.empty?
+        [DocumentAst::TableRowNode.new(is_header: node.is_header, children: new_children)]
+
+      when "table_cell"
+        new_children = sanitize_children(node.children, policy)
+        return [] if new_children.empty?
+        [DocumentAst::TableCellNode.new(children: new_children)]
 
       # ── Inline nodes ───────────────────────────────────────────────────────
 
@@ -170,6 +190,11 @@ module CodingAdventures
         new_children = sanitize_children(node.children, policy)
         return [] if new_children.empty?
         [DocumentAst::StrongNode.new(children: new_children)]
+
+      when "strikethrough"
+        new_children = sanitize_children(node.children, policy)
+        return [] if new_children.empty?
+        [DocumentAst::StrikethroughNode.new(children: new_children)]
 
       when "code_span"
         if policy.transform_code_span_to_text

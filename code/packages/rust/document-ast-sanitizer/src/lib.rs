@@ -74,5 +74,7 @@ pub mod url_utils;
 
 // Re-export the most common items so callers don't need to reach into submodules.
 
-pub use policy::{passthrough, relaxed, strict, MaxHeadingLevel, RawFormatPolicy, SanitizationPolicy};
+pub use policy::{
+    passthrough, relaxed, strict, MaxHeadingLevel, RawFormatPolicy, SanitizationPolicy,
+};
 pub use sanitizer::sanitize;

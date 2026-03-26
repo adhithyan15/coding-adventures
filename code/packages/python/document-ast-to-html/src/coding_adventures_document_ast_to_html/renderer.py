@@ -35,6 +35,12 @@ from coding_adventures_document_ast import (
     ParagraphNode,
     RawBlockNode,
     RawInlineNode,
+    StrikethroughNode,
+    TableAlignment,
+    TableCellNode,
+    TableNode,
+    TableRowNode,
+    TaskItemNode,
 )
 
 # ─── Render Options ───────────────────────────────────────────────────────────
@@ -112,10 +118,14 @@ def _render_block(block: BlockNode, tight: bool, options: RenderOptions) -> str:
     elif block_type == "list_item":
         # ListItemNode is rendered by render_list; direct call uses non-tight
         return _render_list_item(block, tight=False, options=options)
+    elif block_type == "task_item":
+        return _render_task_item(block, tight=False, options=options)
     elif block_type == "thematic_break":
         return "<hr />\n"
     elif block_type == "raw_block":
         return _render_raw_block(block, options=options)
+    elif block_type == "table":
+        return _render_table(block, options=options)
     else:
         return ""
 
@@ -201,8 +211,14 @@ def _render_list(node: ListNode, options: RenderOptions) -> str:
     start_attr = ""
     if node["ordered"] and start is not None and start != 1 and isinstance(start, int):
         start_attr = f' start="{start}"'
-    items = "".join(_render_list_item(item, tight=node["tight"], options=options) for item in node["children"])
+    items = "".join(_render_list_child(item, tight=node["tight"], options=options) for item in node["children"])
     return f"<{tag}{start_attr}>\n{items}</{tag}>\n"
+
+
+def _render_list_child(node: ListItemNode | TaskItemNode, tight: bool, options: RenderOptions) -> str:
+    if node["type"] == "task_item":
+        return _render_task_item(node, tight=tight, options=options)
+    return _render_list_item(node, tight=tight, options=options)
 
 
 def _render_list_item(node: ListItemNode, tight: bool, options: RenderOptions) -> str:
@@ -238,6 +254,25 @@ def _render_list_item(node: ListItemNode, tight: bool, options: RenderOptions) -
     return f"<li>\n{inner}</li>\n"
 
 
+def _render_task_item(node: TaskItemNode, tight: bool, options: RenderOptions) -> str:
+    checkbox = '<input type="checkbox" disabled="" checked="" />' if node["checked"] else '<input type="checkbox" disabled="" />'
+
+    if not node["children"]:
+        return f"<li>{checkbox}</li>\n"
+
+    first_child = node["children"][0]
+    if tight and first_child["type"] == "paragraph":
+        first_content = _render_inlines(first_child["children"], options=options)
+        content = checkbox if not first_content else f"{checkbox} {first_content}"
+        if len(node["children"]) == 1:
+            return f"<li>{content}</li>\n"
+        rest = _render_blocks(node["children"][1:], tight=tight, options=options)
+        return f"<li>{content}\n{rest}</li>\n"
+
+    inner = _render_blocks(node["children"], tight=tight, options=options)
+    return f"<li>{checkbox}\n{inner}</li>\n"
+
+
 def _render_raw_block(node: RawBlockNode, options: RenderOptions) -> str:
     """Render a raw block node.
 
@@ -260,6 +295,51 @@ def _render_raw_block(node: RawBlockNode, options: RenderOptions) -> str:
     return ""
 
 
+def _render_table(node: TableNode, options: RenderOptions) -> str:
+    header = None
+    body_rows = []
+    for row in node["children"]:
+        if row["isHeader"] and header is None:
+            header = row
+        else:
+            body_rows.append(row)
+
+    parts = ["<table>\n"]
+    if header is not None:
+        parts.append("<thead>\n")
+        parts.append(_render_table_row(header, node["align"], options=options))
+        parts.append("</thead>\n")
+    if body_rows:
+        parts.append("<tbody>\n")
+        parts.extend(_render_table_row(row, node["align"], options=options) for row in body_rows)
+        parts.append("</tbody>\n")
+    parts.append("</table>\n")
+    return "".join(parts)
+
+
+def _render_table_row(
+    node: TableRowNode,
+    alignments: list[TableAlignment],
+    options: RenderOptions,
+) -> str:
+    cells = []
+    for index, cell in enumerate(node["children"]):
+        align = alignments[index] if index < len(alignments) else None
+        cells.append(_render_table_cell(cell, node["isHeader"], align, options=options))
+    return "<tr>\n" + "".join(cells) + "</tr>\n"
+
+
+def _render_table_cell(
+    node: TableCellNode,
+    header: bool,
+    align: TableAlignment,
+    options: RenderOptions,
+) -> str:
+    tag = "th" if header else "td"
+    align_attr = "" if align is None else f' align="{align}"'
+    return f"<{tag}{align_attr}>{_render_inlines(node['children'], options=options)}</{tag}>\n"
+
+
 # ─── Inline Rendering ─────────────────────────────────────────────────────────
 
 
@@ -278,6 +358,8 @@ def _render_inline(node: InlineNode, options: RenderOptions) -> str:
         return f"<em>{_render_inlines(node['children'], options=options)}</em>"
     elif node_type == "strong":
         return f"<strong>{_render_inlines(node['children'], options=options)}</strong>"
+    elif node_type == "strikethrough":
+        return f"<del>{_render_inlines(node['children'], options=options)}</del>"
     elif node_type == "code_span":
         return f"<code>{escape_html(node['value'])}</code>"
     elif node_type == "link":
