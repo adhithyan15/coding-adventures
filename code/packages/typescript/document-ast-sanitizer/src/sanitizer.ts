@@ -61,11 +61,16 @@ import type {
   BlockquoteNode,
   ListNode,
   ListItemNode,
+  TaskItemNode,
   ThematicBreakNode,
   RawBlockNode,
+  TableNode,
+  TableRowNode,
+  TableCellNode,
   TextNode,
   EmphasisNode,
   StrongNode,
+  StrikethroughNode,
   CodeSpanNode,
   LinkNode,
   ImageNode,
@@ -223,6 +228,9 @@ function sanitizeBlock(block: BlockNode, policy: ResolvedPolicy): BlockNode | nu
     case "list_item":
       return sanitizeListItem(block, policy);
 
+    case "task_item":
+      return sanitizeTaskItem(block, policy);
+
     case "thematic_break":
       // Leaf node — no children to sanitize, always kept.
       // A thematic break carries no content that could be dangerous.
@@ -230,6 +238,15 @@ function sanitizeBlock(block: BlockNode, policy: ResolvedPolicy): BlockNode | nu
 
     case "raw_block":
       return sanitizeRawBlock(block, policy);
+
+    case "table":
+      return sanitizeTable(block, policy);
+
+    case "table_row":
+      return sanitizeTableRow(block, policy);
+
+    case "table_cell":
+      return sanitizeTableCell(block, policy);
 
     default: {
       // TypeScript's never type ensures this is unreachable if all cases are handled.
@@ -347,9 +364,11 @@ function sanitizeBlockquote(node: BlockquoteNode, policy: ResolvedPolicy): Block
  * list itself is dropped.
  */
 function sanitizeList(node: ListNode, policy: ResolvedPolicy): BlockNode | null {
-  const sanitizedItems: ListItemNode[] = [];
+  const sanitizedItems: Array<ListItemNode | TaskItemNode> = [];
   for (const item of node.children) {
-    const sanitized = sanitizeListItem(item, policy);
+    const sanitized = item.type === "task_item"
+      ? sanitizeTaskItem(item, policy)
+      : sanitizeListItem(item, policy);
     if (sanitized !== null) {
       sanitizedItems.push(sanitized);
     }
@@ -379,6 +398,14 @@ function sanitizeListItem(node: ListItemNode, policy: ResolvedPolicy): ListItemN
   return { type: "list_item", children: sanitizedChildren };
 }
 
+function sanitizeTaskItem(node: TaskItemNode, policy: ResolvedPolicy): TaskItemNode | null {
+  const sanitizedChildren = sanitizeBlocks(node.children, policy);
+  if (sanitizedChildren.length === 0) {
+    return null;
+  }
+  return { type: "task_item", checked: node.checked, children: sanitizedChildren };
+}
+
 /**
  * Sanitize a RawBlockNode.
  *
@@ -399,6 +426,34 @@ function sanitizeRawBlock(node: RawBlockNode, policy: ResolvedPolicy): BlockNode
   // It's a string[] — check if the format is in the allowlist
   if ((p as readonly string[]).includes(node.format)) return node;
   return null;
+}
+
+function sanitizeTable(node: TableNode, policy: ResolvedPolicy): BlockNode | null {
+  const children = node.children
+    .map((row) => sanitizeTableRow(row, policy))
+    .filter((row): row is TableRowNode => row !== null);
+  if (children.length === 0) {
+    return null;
+  }
+  return { type: "table", align: [...node.align], children };
+}
+
+function sanitizeTableRow(node: TableRowNode, policy: ResolvedPolicy): TableRowNode | null {
+  const children = node.children
+    .map((cell) => sanitizeTableCell(cell, policy))
+    .filter((cell): cell is TableCellNode => cell !== null);
+  if (children.length === 0) {
+    return null;
+  }
+  return { type: "table_row", isHeader: node.isHeader, children };
+}
+
+function sanitizeTableCell(node: TableCellNode, policy: ResolvedPolicy): TableCellNode | null {
+  const children = sanitizeInlines(node.children, policy);
+  if (children.length === 0) {
+    return null;
+  }
+  return { type: "table_cell", children };
 }
 
 // ─── Inline Sanitization ──────────────────────────────────────────────────────
@@ -467,6 +522,9 @@ function sanitizeInline(
     case "strong":
       return sanitizeStrong(node, policy);
 
+    case "strikethrough":
+      return sanitizeStrikethrough(node, policy);
+
     case "code_span":
       return sanitizeCodeSpan(node, policy);
 
@@ -526,6 +584,12 @@ function sanitizeStrong(node: StrongNode, policy: ResolvedPolicy): InlineNode | 
   const children = sanitizeInlines(node.children, policy);
   if (children.length === 0) return null;
   return { type: "strong", children };
+}
+
+function sanitizeStrikethrough(node: StrikethroughNode, policy: ResolvedPolicy): InlineNode | null {
+  const children = sanitizeInlines(node.children, policy);
+  if (children.length === 0) return null;
+  return { type: "strikethrough", children };
 }
 
 /**

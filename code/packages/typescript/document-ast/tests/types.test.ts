@@ -14,9 +14,9 @@ import { describe, it, expect } from "vitest";
 import type {
   DocumentNode, BlockNode, InlineNode,
   HeadingNode, ParagraphNode, CodeBlockNode,
-  BlockquoteNode, ListNode, ListItemNode,
-  ThematicBreakNode, RawBlockNode,
-  TextNode, EmphasisNode, StrongNode, CodeSpanNode,
+  BlockquoteNode, ListNode, ListItemNode, TaskItemNode,
+  ThematicBreakNode, RawBlockNode, TableNode, TableRowNode, TableCellNode,
+  TextNode, EmphasisNode, StrongNode, StrikethroughNode, CodeSpanNode,
   LinkNode, ImageNode, AutolinkNode, RawInlineNode,
   HardBreakNode, SoftBreakNode,
 } from "../src/types.js";
@@ -149,6 +149,22 @@ describe("ListNode and ListItemNode", () => {
     expect(list.ordered).toBe(true);
     expect(list.start).toBe(42);
   });
+
+  it("accepts task items alongside regular list items", () => {
+    const task: TaskItemNode = {
+      type: "task_item",
+      checked: true,
+      children: [makePara(text("ship it"))],
+    };
+    const list: ListNode = {
+      type: "list",
+      ordered: false,
+      start: null,
+      tight: true,
+      children: [task],
+    };
+    expect(list.children[0]?.type).toBe("task_item");
+  });
 });
 
 describe("ThematicBreakNode", () => {
@@ -181,6 +197,37 @@ describe("RawBlockNode", () => {
   });
 });
 
+describe("TableNode family", () => {
+  it("stores alignment and rows", () => {
+    const header: TableRowNode = {
+      type: "table_row",
+      isHeader: true,
+      children: [{ type: "table_cell", children: [text("Name")] }],
+    };
+    const body: TableRowNode = {
+      type: "table_row",
+      isHeader: false,
+      children: [{ type: "table_cell", children: [text("Ada")] }],
+    };
+    const table: TableNode = {
+      type: "table",
+      align: ["left"],
+      children: [header, body],
+    };
+    expect(table.align).toEqual(["left"]);
+    expect(table.children).toHaveLength(2);
+    expect(table.children[0]?.children[0]?.type).toBe("table_cell");
+  });
+
+  it("table cells contain inline children", () => {
+    const cell: TableCellNode = {
+      type: "table_cell",
+      children: [{ type: "strong", children: [text("bold")] }],
+    };
+    expect(cell.children[0]?.type).toBe("strong");
+  });
+});
+
 // ─── Inline Node Tests ────────────────────────────────────────────────────────
 
 describe("TextNode", () => {
@@ -205,6 +252,16 @@ describe("StrongNode", () => {
     const em: EmphasisNode = { type: "emphasis", children: [text("x")] };
     const strong: StrongNode = { type: "strong", children: [em] };
     expect(strong.children[0]?.type).toBe("emphasis");
+  });
+});
+
+describe("StrikethroughNode", () => {
+  it("nests inline children", () => {
+    const strike: StrikethroughNode = {
+      type: "strikethrough",
+      children: [text("gone")],
+    };
+    expect(strike.children[0]?.type).toBe("text");
   });
 });
 
