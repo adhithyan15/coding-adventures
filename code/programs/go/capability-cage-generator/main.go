@@ -293,7 +293,10 @@ func emitHeader(b *strings.Builder, manifestPath string) {
 	fmt.Fprintf(b, "//   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \\\n")
 	// Sanitize the path: strip newlines and convert to forward slashes so the
 	// comment remains single-line and platform-independent in the generated file.
-	safePath := strings.ReplaceAll(filepath.ToSlash(manifestPath), "\n", "")
+	// Strip CR and LF from the path to prevent header/comment injection in the
+	// generated file. Both characters must be removed: stripping only LF leaves
+	// a bare CR on Windows-style paths, which can corrupt generated source.
+	safePath := strings.NewReplacer("\n", "", "\r", "").Replace(filepath.ToSlash(manifestPath))
 	fmt.Fprintf(b, "//     --manifest=%s\n", safePath)
 	fmt.Fprintf(b, "//\n")
 	fmt.Fprintf(b, "// The JSON file is a development-time artifact; this file is what the\n")
@@ -448,7 +451,13 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Exec runs the named executable with args.\n")
 		fmt.Fprintf(b, "// Only executables declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "// The name is cleaned with filepath.Clean before comparison.\n")
-		fmt.Fprintf(b, "// Note: only the executable name is enforced — not the arguments passed to it.\n")
+		fmt.Fprintf(b, "//\n")
+		fmt.Fprintf(b, "// SECURITY NOTE: Only the executable path is enforced — NOT the arguments.\n")
+		fmt.Fprintf(b, "// An attacker who controls args can potentially weaponize an allowed binary\n")
+		fmt.Fprintf(b, "// (e.g., pass -c 'malicious code' to an allowed interpreter).\n")
+		fmt.Fprintf(b, "// Callers are responsible for validating arguments before passing them here.\n")
+		fmt.Fprintf(b, "// If argument-level restriction is needed, declare narrower capabilities\n")
+		fmt.Fprintf(b, "// or enforce argument constraints in the calling code.\n")
 		fmt.Fprintf(b, "func (c *%s) Exec(name string, args ...string) ([]byte, error) {\n", typeName)
 		fmt.Fprintf(b, "\tname = filepath.Clean(name)\n")
 		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec")
@@ -648,7 +657,10 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "\t\t\tif op.rePanic && encounteredPanic {\n")
 	fmt.Fprintf(b, "\t\t\t\tpanic(panicValue)\n")
 	fmt.Fprintf(b, "\t\t\t}\n")
-	fmt.Fprintf(b, "\t\t\treturn result.ReturnValue, fmt.Errorf(\"operation %%q failed unexpectedly: %%v\", op.name, panicValue)\n")
+	// Do not include panicValue in the caller-facing error: it may contain
+	// sensitive data (credentials, paths, internal state). The structured log
+	// line above already records panic:true and the operation name for debugging.
+	fmt.Fprintf(b, "\t\t\treturn result.ReturnValue, fmt.Errorf(\"operation %%q failed unexpectedly (see log for details)\", op.name)\n")
 	fmt.Fprintf(b, "\t\t}\n")
 	fmt.Fprintf(b, "\t\tif result.Err != nil {\n")
 	fmt.Fprintf(b, "\t\t\treturn result.ReturnValue, result.Err\n")
