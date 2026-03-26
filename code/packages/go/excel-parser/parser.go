@@ -1,7 +1,6 @@
 package excelparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -23,17 +22,20 @@ func CreateExcelParser(source string) (*parser.GrammarParser, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
-	excelParser := parser.NewGrammarParser(tokens, grammar)
-	excelParser.AddPreParse(normalizeExcelReferenceTokens)
-	return excelParser, nil
+	return StartNew[*parser.GrammarParser]("excelparser.CreateExcelParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			excelParser := parser.NewGrammarParser(tokens, grammar)
+			excelParser.AddPreParse(normalizeExcelReferenceTokens)
+			return rf.Generate(true, false, excelParser)
+		}).GetResult()
 }
 
 func previousSignificantToken(tokens []lexer.Token, index int) *lexer.Token {

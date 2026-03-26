@@ -69,8 +69,8 @@ package sqlcsvsource
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -121,28 +121,29 @@ func New(dir string) *CSVDataSource {
 //
 // Returns *sqlengine.TableNotFoundError if the file does not exist.
 func (s *CSVDataSource) Schema(tableName string) ([]string, error) {
-	path := s.csvPath(tableName)
+	return StartNew[[]string]("sqlcsvsource.Schema", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			path := s.csvPath(tableName)
 
-	// Open just enough of the file to read the header line.
-	// We use a bufio.Scanner so we don't need to read the entire file
-	// to get the first line — important for large CSV files.
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, &sqlengine.TableNotFoundError{TableName: tableName}
-	}
-	defer f.Close()
+			// Read the file into memory, then use a bufio.Scanner on the
+			// in-memory buffer to extract just the header line.
+			data, err := op.File.ReadFile(path)
+			if err != nil {
+				return rf.Fail(nil, &sqlengine.TableNotFoundError{TableName: tableName})
+			}
 
-	scanner := bufio.NewScanner(f)
-	if !scanner.Scan() {
-		// Empty file or scanner error — no header.
-		if scanErr := scanner.Err(); scanErr != nil {
-			return nil, fmt.Errorf("reading schema for %q: %w", tableName, scanErr)
-		}
-		return nil, &sqlengine.TableNotFoundError{TableName: tableName}
-	}
+			scanner := bufio.NewScanner(bytes.NewReader(data))
+			if !scanner.Scan() {
+				// Empty file or scanner error — no header.
+				if scanErr := scanner.Err(); scanErr != nil {
+					return rf.Fail(nil, fmt.Errorf("reading schema for %q: %w", tableName, scanErr))
+				}
+				return rf.Fail(nil, &sqlengine.TableNotFoundError{TableName: tableName})
+			}
 
-	headerLine := scanner.Text()
-	return parseHeaderLine(headerLine), nil
+			headerLine := scanner.Text()
+			return rf.Generate(true, false, parseHeaderLine(headerLine))
+		}).GetResult()
 }
 
 // Scan returns all rows from the named table as typed-value maps.
@@ -162,31 +163,34 @@ func (s *CSVDataSource) Schema(tableName string) ([]string, error) {
 //
 // Returns *sqlengine.TableNotFoundError if the file does not exist.
 func (s *CSVDataSource) Scan(tableName string) ([]map[string]interface{}, error) {
-	path := s.csvPath(tableName)
+	return StartNew[[]map[string]interface{}]("sqlcsvsource.Scan", nil,
+		func(op *Operation[[]map[string]interface{}], rf *ResultFactory[[]map[string]interface{}]) *OperationResult[[]map[string]interface{}] {
+			path := s.csvPath(tableName)
 
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return nil, &sqlengine.TableNotFoundError{TableName: tableName}
-	}
+			content, err := op.File.ReadFile(path)
+			if err != nil {
+				return rf.Fail(nil, &sqlengine.TableNotFoundError{TableName: tableName})
+			}
 
-	// Parse the CSV file. csvparser.ParseCSV returns []map[string]string,
-	// where every value is a string. We then apply coerce() to each value.
-	strRows, err := csvparser.ParseCSV(string(content))
-	if err != nil {
-		return nil, fmt.Errorf("parsing CSV for table %q: %w", tableName, err)
-	}
+			// Parse the CSV file. csvparser.ParseCSV returns []map[string]string,
+			// where every value is a string. We then apply coerce() to each value.
+			strRows, err := csvparser.ParseCSV(string(content))
+			if err != nil {
+				return rf.Fail(nil, fmt.Errorf("parsing CSV for table %q: %w", tableName, err))
+			}
 
-	// Convert []map[string]string → []map[string]interface{} with type coercion.
-	result := make([]map[string]interface{}, len(strRows))
-	for i, strRow := range strRows {
-		typed := make(map[string]interface{}, len(strRow))
-		for col, val := range strRow {
-			typed[col] = coerce(val)
-		}
-		result[i] = typed
-	}
+			// Convert []map[string]string → []map[string]interface{} with type coercion.
+			result := make([]map[string]interface{}, len(strRows))
+			for i, strRow := range strRows {
+				typed := make(map[string]interface{}, len(strRow))
+				for col, val := range strRow {
+					typed[col] = coerce(val)
+				}
+				result[i] = typed
+			}
 
-	return result, nil
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------

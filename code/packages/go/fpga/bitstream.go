@@ -20,7 +20,6 @@ package fpga
 
 import (
 	"encoding/json"
-	"os"
 )
 
 // SliceConfig holds the configuration for one slice.
@@ -59,12 +58,18 @@ type Bitstream struct {
 
 // FromJSON loads a bitstream from a JSON file.
 func FromJSON(path string) (*Bitstream, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	return FromJSONBytes(data)
+	return StartNew[*Bitstream]("fpga.FromJSON", nil,
+		func(op *Operation[*Bitstream], rf *ResultFactory[*Bitstream]) *OperationResult[*Bitstream] {
+			data, err := op.File.ReadFile(path)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			bs, err := FromJSONBytes(data)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, bs)
+		}).GetResult()
 }
 
 // FromJSONBytes parses a bitstream from JSON bytes.

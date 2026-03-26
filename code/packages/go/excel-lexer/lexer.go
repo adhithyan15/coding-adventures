@@ -1,7 +1,6 @@
 package excellexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -17,23 +16,26 @@ func getGrammarPath() string {
 }
 
 func CreateExcelLexer(source string) (*lexer.GrammarLexer, error) {
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
-	for i, definition := range grammar.Definitions {
-		if definition.Name == "FUNCTION_NAME" || definition.Name == "TABLE_NAME" ||
-			definition.Name == "COLUMN_REF" || definition.Name == "ROW_REF" {
-			grammar.Definitions[i].Pattern = "a^"
-		}
-	}
-	excelLexer := lexer.NewGrammarLexer(source, grammar)
-	excelLexer.SetOnToken(ExcelOnToken)
-	return excelLexer, nil
+	return StartNew[*lexer.GrammarLexer]("excellexer.CreateExcelLexer", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			for i, definition := range grammar.Definitions {
+				if definition.Name == "FUNCTION_NAME" || definition.Name == "TABLE_NAME" ||
+					definition.Name == "COLUMN_REF" || definition.Name == "ROW_REF" {
+					grammar.Definitions[i].Pattern = "a^"
+				}
+			}
+			excelLexer := lexer.NewGrammarLexer(source, grammar)
+			excelLexer.SetOnToken(ExcelOnToken)
+			return rf.Generate(true, false, excelLexer)
+		}).GetResult()
 }
 
 func nextNonSpaceChar(ctx *lexer.LexerContext) string {

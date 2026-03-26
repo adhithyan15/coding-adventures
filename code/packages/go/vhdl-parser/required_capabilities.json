@@ -6,9 +6,9 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+      "target": "../../../grammars/vhdl.grammar",
+      "justification": "Reads VHDL EBNF grammar definition file to configure the parser at initialization time."
     }
   ],
-  "justification": "Reads grammar rule definitions from code/grammars/*.grammar at runtime to configure the parser. The grammar file is loaded once at initialization via the filesystem."
+  "justification": "Reads grammar definition files. No write, network, or process access needed."
 }

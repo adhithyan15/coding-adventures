@@ -4,7 +4,7 @@
 //   - generateSource: correct Go code emitted for various manifests
 //   - goPackageName: correct derivation from package field and .go files
 //   - processManifest: reads JSON, writes gen_capabilities.go
-//   - scopeableCategory / validateNoWildcards: wildcard rejection
+//   - scopeableCategory / isWildcardTarget: wildcard detection
 //   - --all mode: processes multiple packages
 //   - --dry-run mode: no files written
 //   - Error handling: invalid JSON, non-Go packages, missing files
@@ -40,72 +40,58 @@ func TestScopeableCategory_NonScopeable(t *testing.T) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// validateNoWildcards
+// isWildcardTarget
 // ─────────────────────────────────────────────────────────────────────────────
 
-func TestValidateNoWildcards_AllowsExactPaths(t *testing.T) {
-	mf := &manifestJSON{
-		Package: "go/verilog-lexer",
-		Capabilities: []capabilityJSON{
-			{Category: "fs", Action: "read", Target: "code/grammars/verilog.tokens"},
-		},
-	}
-	if err := validateNoWildcards(mf); err != nil {
-		t.Errorf("expected no error for exact path, got: %v", err)
+func TestIsWildcardTarget_Wildcard(t *testing.T) {
+	if !isWildcardTarget("*") {
+		t.Error("expected isWildcardTarget('*') = true")
 	}
 }
 
-func TestValidateNoWildcards_AllowsNonScopeableWildcard(t *testing.T) {
-	mf := &manifestJSON{
-		Package: "go/brainfuck",
-		Capabilities: []capabilityJSON{
-			{Category: "stdin", Action: "read", Target: "*"},
-			{Category: "stdout", Action: "write", Target: "*"},
-			{Category: "time", Action: "sleep", Target: "*"},
-		},
-	}
-	if err := validateNoWildcards(mf); err != nil {
-		t.Errorf("expected no error for non-scopeable wildcard, got: %v", err)
+func TestIsWildcardTarget_NotWildcard(t *testing.T) {
+	cases := []string{"../../../grammars/sql.tokens", "/absolute/path.txt", "./relative.txt", ""}
+	for _, c := range cases {
+		if isWildcardTarget(c) {
+			t.Errorf("expected isWildcardTarget(%q) = false, got true", c)
+		}
 	}
 }
 
-func TestValidateNoWildcards_RejectsWildcardInFS(t *testing.T) {
-	mf := &manifestJSON{
-		Package: "go/verilog-lexer",
-		Capabilities: []capabilityJSON{
-			{Category: "fs", Action: "read", Target: "*"},
-		},
-	}
-	err := validateNoWildcards(mf)
-	if err == nil {
-		t.Error("expected error for wildcard fs target, got nil")
-	}
-	if !strings.Contains(err.Error(), "wildcard") {
-		t.Errorf("error should mention 'wildcard', got: %v", err)
-	}
-}
+// TestGenerateSource_WildcardFSPermissive verifies that a wildcard fs:read
+// capability generates a ReadFile method that contains NO path restriction check
+// inside the method body — the _capabilityViolationError type is still defined
+// but is not referenced inside ReadFile.
+func TestGenerateSource_WildcardFSPermissive(t *testing.T) {
+	tmp := t.TempDir()
+	manifestPath := filepath.Join(tmp, "required_capabilities.json")
 
-func TestValidateNoWildcards_RejectsWildcardInNet(t *testing.T) {
 	mf := &manifestJSON{
-		Package: "go/http-client",
+		Package: "go/starlark-interpreter",
 		Capabilities: []capabilityJSON{
-			{Category: "net", Action: "connect", Target: "*"},
+			{Category: "fs", Action: "read", Target: "*",
+				Justification: "Reads arbitrary .star files for load() statement."},
 		},
 	}
-	if err := validateNoWildcards(mf); err == nil {
-		t.Error("expected error for wildcard net target, got nil")
+	src, err := generateSource(manifestPath, mf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
-}
 
-func TestValidateNoWildcards_RejectsWildcardInEnv(t *testing.T) {
-	mf := &manifestJSON{
-		Package: "go/config",
-		Capabilities: []capabilityJSON{
-			{Category: "env", Action: "read", Target: "*"},
-		},
+	// Must have the ReadFile method.
+	if !strings.Contains(src, "func (c *_FileCapabilities) ReadFile") {
+		t.Error("expected ReadFile method in generated source")
 	}
-	if err := validateNoWildcards(mf); err == nil {
-		t.Error("expected error for wildcard env target, got nil")
+	// ReadFile body must NOT contain a capability violation check (no path restriction).
+	readFileIdx := strings.Index(src, "func (c *_FileCapabilities) ReadFile(")
+	endIdx := strings.Index(src[readFileIdx:], "\n}\n")
+	readFileBody := src[readFileIdx : readFileIdx+endIdx]
+	if strings.Contains(readFileBody, "_capabilityViolationError") {
+		t.Error("wildcard fs:read ReadFile body should not contain _capabilityViolationError")
+	}
+	// Must NOT have sync/runtime (no pre-resolved path vars needed).
+	if strings.Contains(src, "sync.OnceValue") {
+		t.Error("wildcard target should not emit sync.OnceValue")
 	}
 }
 
@@ -360,23 +346,26 @@ func TestGenerateSource_WithRelativeFSRead(t *testing.T) {
 	}
 }
 
-func TestGenerateSource_WildcardInScopeableCategory_ReturnsError(t *testing.T) {
+// TestGenerateSource_WildcardFSScopeable verifies that a wildcard fs:read
+// capability on a scopeable category generates successfully (wildcards are
+// allowed for packages that accept user-provided paths).
+func TestGenerateSource_WildcardFSScopeable(t *testing.T) {
 	tmp := t.TempDir()
 	manifestPath := filepath.Join(tmp, "required_capabilities.json")
 
 	mf := &manifestJSON{
-		Package: "go/verilog-lexer",
+		Package: "go/starlark-interpreter",
 		Capabilities: []capabilityJSON{
 			{Category: "fs", Action: "read", Target: "*"},
 		},
 	}
 
-	_, err := generateSource(manifestPath, mf)
-	if err == nil {
-		t.Error("expected error for wildcard fs:read target, got nil")
+	src, err := generateSource(manifestPath, mf)
+	if err != nil {
+		t.Errorf("wildcard fs:read should generate successfully, got error: %v", err)
 	}
-	if !strings.Contains(err.Error(), "wildcard") {
-		t.Errorf("error should mention 'wildcard', got: %v", err)
+	if !strings.Contains(src, "func (c *_FileCapabilities) ReadFile") {
+		t.Error("expected ReadFile method in generated source")
 	}
 }
 
@@ -821,32 +810,36 @@ func TestProcessManifest_WritesGenCapabilities(t *testing.T) {
 	}
 }
 
-func TestProcessManifest_RejectsWildcardTarget(t *testing.T) {
+func TestProcessManifest_AllowsWildcardTarget(t *testing.T) {
 	tmp := t.TempDir()
 	manifestPath := filepath.Join(tmp, "required_capabilities.json")
 
 	manifest := `{
 		"version": 1,
-		"package": "go/test-pkg",
+		"package": "go/starlark-interpreter",
 		"capabilities": [
 			{
 				"category": "fs",
 				"action": "read",
 				"target": "*",
-				"justification": "Reads all files."
+				"justification": "Reads arbitrary .star files for load() statement."
 			}
 		]
 	}`
 	_ = os.WriteFile(manifestPath, []byte(manifest), 0o644) //nolint:cap
 
 	err := processManifest(manifestPath, false)
-	if err == nil {
-		t.Error("expected error for wildcard fs target, got nil")
+	if err != nil {
+		t.Errorf("wildcard fs target should be allowed, got error: %v", err)
 	}
-	// gen_capabilities.go should NOT be written.
+	// gen_capabilities.go should be written with a permissive ReadFile.
 	outPath := filepath.Join(tmp, "gen_capabilities.go")
-	if _, statErr := os.Stat(outPath); !os.IsNotExist(statErr) { //nolint:cap
-		t.Error("gen_capabilities.go should not be written when manifest has wildcard")
+	data, readErr := os.ReadFile(outPath) //nolint:cap
+	if readErr != nil {
+		t.Fatalf("gen_capabilities.go should be written, got error: %v", readErr)
+	}
+	if !strings.Contains(string(data), "func (c *_FileCapabilities) ReadFile(") {
+		t.Error("expected ReadFile method in generated file")
 	}
 }
 

@@ -47,7 +47,6 @@
 package tomllexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -120,27 +119,30 @@ func getGrammarPath() string {
 //
 // Returns an error if the grammar file cannot be read or parsed.
 func CreateTOMLLexer(source string) (*lexer.GrammarLexer, error) {
-	// Read the grammar file from disk. This file defines all token patterns,
-	// skip patterns, and literal tokens for TOML.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*lexer.GrammarLexer]("tomllexer.CreateTOMLLexer", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			// Read the grammar file from disk. This file defines all token patterns,
+			// skip patterns, and literal tokens for TOML.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Parse the grammar file into a structured TokenGrammar object.
-	// This extracts token definitions (with regex patterns), skip
-	// definitions, the escape mode ("none" for TOML), and the mode
-	// (which will be empty for TOML, meaning no indentation tracking).
-	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Parse the grammar file into a structured TokenGrammar object.
+			// This extracts token definitions (with regex patterns), skip
+			// definitions, the escape mode ("none" for TOML), and the mode
+			// (which will be empty for TOML, meaning no indentation tracking).
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Create the grammar-driven lexer. The GrammarLexer constructor compiles
-	// all regex patterns and initializes skip pattern matching. Since TOML
-	// has escapes: none, STRING tokens will have their quotes stripped but
-	// escape sequences will be left as raw text for the parser to handle.
-	return lexer.NewGrammarLexer(source, grammar), nil
+			// Create the grammar-driven lexer. The GrammarLexer constructor compiles
+			// all regex patterns and initializes skip pattern matching. Since TOML
+			// has escapes: none, STRING tokens will have their quotes stripped but
+			// escape sequences will be left as raw text for the parser to handle.
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 // TokenizeTOML is a convenience function that tokenizes TOML text in a single

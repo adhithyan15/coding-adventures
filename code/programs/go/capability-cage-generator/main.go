@@ -72,12 +72,12 @@ type capabilityJSON struct {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Wildcard validation
+// Wildcard policy
 // ─────────────────────────────────────────────────────────────────────────────
 
-// scopeableCategory returns true for categories that must declare exact targets.
-// Non-scopeable categories (time, stdin, stdout) accept "*" because they are
-// not path-based — there is nothing to narrow them to.
+// scopeableCategory returns true for categories where exact targets provide
+// meaningful runtime enforcement. Non-scopeable categories (time, stdin,
+// stdout) always use "*" because they are not path-based.
 func scopeableCategory(cat string) bool {
 	switch cat {
 	case "fs", "net", "proc", "env", "ffi":
@@ -86,20 +86,15 @@ func scopeableCategory(cat string) bool {
 	return false
 }
 
-// validateNoWildcards returns an error if any scopeable category uses "*" as
-// its target. Every fs/net/proc/env/ffi capability must name an exact path
-// or address so the cage can enforce it at runtime.
-func validateNoWildcards(mf *manifestJSON) error {
-	for _, cap := range mf.Capabilities {
-		if scopeableCategory(cap.Category) && cap.Target == "*" {
-			return fmt.Errorf(
-				"capability %q:%q in package %q declares a wildcard target %q — "+
-					"use an exact path instead (e.g., \"code/grammars/vhdl.tokens\")",
-				cap.Category, cap.Action, mf.Package, cap.Target,
-			)
-		}
-	}
-	return nil
+// isWildcardTarget reports whether a target is the unrestricted wildcard "*".
+// Wildcard targets are permitted for packages that accept user-provided paths
+// (e.g., a Starlark interpreter that load()s arbitrary .star files). These
+// packages declare their capability in the manifest for code-review visibility
+// but cannot enumerate exact paths at development time. The generated method
+// provides the capability gate (so OS calls are routed through op.File etc.)
+// but performs no runtime path restriction.
+func isWildcardTarget(target string) bool {
+	return target == "*"
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -207,6 +202,8 @@ func neededImports(caps []capabilityJSON) []string {
 			set[`"os"`] = true
 		case "net":
 			set[`"net"`] = true
+		case "time":
+			set[`"time"`] = true
 		}
 		if c.Category == "proc" && c.Action == "exec" {
 			set[`"os/exec"`] = true
@@ -417,6 +414,16 @@ func emitResolvedPathVars(b *strings.Builder, relTargets []string) map[string]st
 // comparison. Absolute targets use inline exact string equality. Mixed groups are
 // handled correctly — each target type uses its own comparison form.
 func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string, targetToVar map[string]string) {
+	// Wildcard target: no path restriction — the package declared an unconstrained
+	// capability (e.g. it accepts user-provided paths). The value of the generated
+	// method is routing all OS calls through op.File for code-review visibility;
+	// runtime enforcement is intentionally absent for wildcard capabilities.
+	for _, t := range targets {
+		if isWildcardTarget(t) {
+			return
+		}
+	}
+
 	if len(targets) == 1 {
 		t := targets[0]
 		if varName, ok := targetToVar[t]; ok {
@@ -501,6 +508,26 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
+	case "fs:open":
+		fmt.Fprintf(b, "// OpenFile opens the named file for reading.\n")
+		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		fmt.Fprintf(b, "func (c *%s) OpenFile(path string) (*os.File, error) {\n", typeName)
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "open", targetToVar)
+		fmt.Fprintf(b, "\treturn os.Open(path) //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "fs:mkdir":
+		fmt.Fprintf(b, "// MkdirAll creates a directory named path, along with any necessary parents.\n")
+		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		fmt.Fprintf(b, "func (c *%s) MkdirAll(path string, perm os.FileMode) error {\n", typeName)
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
+		emitScopedCheck(b, g.Targets, "path", false, "fs", "mkdir", targetToVar)
+		fmt.Fprintf(b, "\treturn os.MkdirAll(path, perm) //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
 	case "net:connect":
 		fmt.Fprintf(b, "// Connect opens a network connection to addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
@@ -548,6 +575,12 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "func (c *%s) Getenv(key string) (string, error) {\n", typeName)
 		emitScopedCheck(b, g.Targets, "key", true, "env", "read", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Getenv(key), nil //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "time:read":
+		fmt.Fprintf(b, "// Now returns the current local time.\n")
+		fmt.Fprintf(b, "func (c *%s) Now() time.Time {\n", typeName)
+		fmt.Fprintf(b, "\treturn time.Now() //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "time:sleep":
@@ -803,12 +836,7 @@ func emitCapabilityViolationError(b *strings.Builder) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // generateSource produces the content of gen_capabilities.go for a given manifest.
-// Returns an error if any scopeable capability declares a wildcard target.
 func generateSource(manifestPath string, mf *manifestJSON) (string, error) {
-	if err := validateNoWildcards(mf); err != nil {
-		return "", err
-	}
-
 	pkgName, err := goPackageName(manifestPath, mf.Package)
 	if err != nil {
 		return "", err

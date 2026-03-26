@@ -31,7 +31,6 @@ package clibuilder
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 )
@@ -43,17 +42,22 @@ import (
 // should treat a non-nil error as fatal — the library cannot parse argv
 // until the spec is corrected.
 func LoadSpec(specFilePath string) (map[string]any, error) {
-	data, err := os.ReadFile(specFilePath)
-	if err != nil {
-		return nil, &SpecError{Message: fmt.Sprintf("cannot read spec file %q: %v", specFilePath, err)}
-	}
-
-	var spec map[string]any
-	if err := json.Unmarshal(data, &spec); err != nil {
-		return nil, &SpecError{Message: fmt.Sprintf("invalid JSON in spec file %q: %v", specFilePath, err)}
-	}
-
-	return validateSpec(spec)
+	return StartNew[map[string]any]("clibuilder.LoadSpec", nil,
+		func(op *Operation[map[string]any], rf *ResultFactory[map[string]any]) *OperationResult[map[string]any] {
+			data, err := op.File.ReadFile(specFilePath)
+			if err != nil {
+				return rf.Fail(nil, &SpecError{Message: fmt.Sprintf("cannot read spec file %q: %v", specFilePath, err)})
+			}
+			var spec map[string]any
+			if err := json.Unmarshal(data, &spec); err != nil {
+				return rf.Fail(nil, &SpecError{Message: fmt.Sprintf("invalid JSON in spec file %q: %v", specFilePath, err)})
+			}
+			result, err := validateSpec(spec)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // LoadSpecFromBytes parses and validates a JSON spec from a byte slice.

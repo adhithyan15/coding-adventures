@@ -1,7 +1,6 @@
 package rubylexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -17,15 +16,18 @@ func getGrammarPath() string {
 }
 
 func CreateRubyLexer(source string) (*lexer.GrammarLexer, error) {
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
-	return lexer.NewGrammarLexer(source, grammar), nil
+	return StartNew[*lexer.GrammarLexer]("rubylexer.CreateRubyLexer", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 func TokenizeRuby(source string) ([]lexer.Token, error) {

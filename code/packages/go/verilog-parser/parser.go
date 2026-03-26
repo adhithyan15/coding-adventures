@@ -46,7 +46,6 @@
 package verilogparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -105,27 +104,30 @@ func CreateVerilogParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	// Step 2: Read the grammar specification from disk.
-	// The grammar file is a BNF-like text file that defines the syntax
-	// rules for Verilog (module_declaration, expression, statement, etc.).
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*parser.GrammarParser]("verilogparser.CreateVerilogParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Read the grammar specification from disk.
+			// The grammar file is a BNF-like text file that defines the syntax
+			// rules for Verilog (module_declaration, expression, statement, etc.).
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 3: Parse the grammar text into structured rule objects.
-	// ParseParserGrammar returns a ParserGrammar containing a list of
-	// GrammarRule objects, each with a name and body (the rule's definition
-	// expressed as GrammarElement nodes: Sequence, Alternation, etc.).
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Step 3: Parse the grammar text into structured rule objects.
+			// ParseParserGrammar returns a ParserGrammar containing a list of
+			// GrammarRule objects, each with a name and body (the rule's definition
+			// expressed as GrammarElement nodes: Sequence, Alternation, etc.).
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 4: Create the parser.
-	// NewGrammarParser builds a packrat parser with memoization that
-	// will interpret the grammar rules against the token stream.
-	return parser.NewGrammarParser(tokens, grammar), nil
+			// Step 4: Create the parser.
+			// NewGrammarParser builds a packrat parser with memoization that
+			// will interpret the grammar rules against the token stream.
+			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
+		}).GetResult()
 }
 
 // ParseVerilog tokenizes and parses Verilog source code in one step.

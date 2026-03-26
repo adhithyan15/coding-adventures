@@ -143,7 +143,6 @@ package starlarkinterpreter
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	starlarkcompiler "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-ast-to-bytecode-compiler"
@@ -399,20 +398,22 @@ func (interp *StarlarkInterpreter) Interpret(source string) (*starlarkvm.Starlar
 // This is because the Starlark grammar requires a trailing newline
 // (NEWLINE token) after the last statement.
 func (interp *StarlarkInterpreter) InterpretFile(path string) (*starlarkvm.StarlarkResult, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	source := string(data)
-
-	// Ensure trailing newline.  The lexer expects every line to end
-	// with a newline, including the last one.  Without this, the last
-	// statement might not be recognized.
-	if !strings.HasSuffix(source, "\n") {
-		source += "\n"
-	}
-
-	return interp.Interpret(source)
+	return StartNew[*starlarkvm.StarlarkResult]("starlarkinterpreter.InterpretFile", nil,
+		func(op *Operation[*starlarkvm.StarlarkResult], rf *ResultFactory[*starlarkvm.StarlarkResult]) *OperationResult[*starlarkvm.StarlarkResult] {
+			data, err := op.File.ReadFile(path)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			source := string(data)
+			if !strings.HasSuffix(source, "\n") {
+				source += "\n"
+			}
+			result, err := interp.Interpret(source)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // ============================================================================
