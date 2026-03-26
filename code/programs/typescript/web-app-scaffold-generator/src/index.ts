@@ -844,7 +844,7 @@ export async function runCli(argv: string[]): Promise<void> {
       packageDeps: command.packageDeps,
     }, command.force);
 
-    console.log(`Created visualization app at ${appDir(repoRoot, command.name)}`);
+    console.log(`Created visualization app at ${repoRelative(appDir(repoRoot, command.name), repoRoot)}`);
     return;
   }
 
@@ -863,7 +863,7 @@ export async function runCli(argv: string[]): Promise<void> {
     tagPrefix: command.tagPrefix,
   }, command.force);
 
-  console.log(`Created electron-wrapper app at ${appDir(repoRoot, command.name)}`);
+  console.log(`Created electron-wrapper app at ${repoRelative(appDir(repoRoot, command.name), repoRoot)}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

@@ -157,7 +157,7 @@ describe("runCli", () => {
     expect(fs.existsSync(path.join(appRoot, "package.json"))).toBe(true);
     expect(logs).toHaveLength(1);
     expect(logs[0]).toContain("Created visualization app at ");
-    expect(logs[0]).toContain("/code/programs/typescript/code39-visualizer");
+    expect(logs[0]).toContain("code/programs/typescript/code39-visualizer");
   });
 
   it("requires renderer-app for electron wrappers", async () => {
@@ -203,6 +203,6 @@ describe("runCli", () => {
     expect(fs.existsSync(path.join(appRoot, "electron", "main.ts"))).toBe(true);
     expect(logs).toHaveLength(1);
     expect(logs[0]).toContain("Created electron-wrapper app at ");
-    expect(logs[0]).toContain("/code/programs/typescript/code39-desktop");
+    expect(logs[0]).toContain("code/programs/typescript/code39-desktop");
   });
 });
