@@ -877,8 +877,8 @@ func TestListSanitizesChildren(t *testing.T) {
 	input := doc(&documentast.ListNode{
 		Ordered: false,
 		Tight:   true,
-		Children: []*documentast.ListItemNode{
-			{Children: []documentast.BlockNode{
+		Children: []documentast.ListChildNode{
+			&documentast.ListItemNode{Children: []documentast.BlockNode{
 				para(link("javascript:alert(1)", text("item 1"))),
 			}},
 		},
@@ -887,7 +887,7 @@ func TestListSanitizesChildren(t *testing.T) {
 	result := sanitizer.Sanitize(input, sanitizer.STRICT)
 
 	list := result.Children[0].(*documentast.ListNode)
-	item := list.Children[0]
+	item := list.Children[0].(*documentast.ListItemNode)
 	p := item.Children[0].(*documentast.ParagraphNode)
 	l := p.Children[0].(*documentast.LinkNode)
 

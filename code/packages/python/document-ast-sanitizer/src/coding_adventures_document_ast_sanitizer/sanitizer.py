@@ -36,7 +36,12 @@ from coding_adventures_document_ast import (
     ParagraphNode,
     RawBlockNode,
     RawInlineNode,
+    StrikethroughNode,
     StrongNode,
+    TableCellNode,
+    TableNode,
+    TableRowNode,
+    TaskItemNode,
     TextNode,
 )
 
@@ -151,12 +156,24 @@ def _sanitize_block(
     if node_type == "list_item":
         return _sanitize_list_item(node, policy)  # type: ignore[arg-type]
 
+    if node_type == "task_item":
+        return _sanitize_task_item(node, policy)  # type: ignore[arg-type]
+
     if node_type == "thematic_break":
         # Leaf node — always kept as-is.
         return node
 
     if node_type == "raw_block":
         return _sanitize_raw_block(node, policy)  # type: ignore[arg-type]
+
+    if node_type == "table":
+        return _sanitize_table(node, policy)  # type: ignore[arg-type]
+
+    if node_type == "table_row":
+        return _sanitize_table_row(node, policy)  # type: ignore[arg-type]
+
+    if node_type == "table_cell":
+        return _sanitize_table_cell(node, policy)  # type: ignore[arg-type]
 
     # Safety net: unknown node types are dropped rather than silently passed
     # through. This prevents future node types from bypassing sanitization.
@@ -265,7 +282,10 @@ def _sanitize_list(
     """
     safe_items = []
     for item in node["children"]:
-        sanitized_item = _sanitize_list_item(item, policy)
+        if item["type"] == "task_item":
+            sanitized_item = _sanitize_task_item(item, policy)
+        else:
+            sanitized_item = _sanitize_list_item(item, policy)
         if sanitized_item is not None:
             safe_items.append(sanitized_item)
     if not safe_items:
@@ -293,6 +313,16 @@ def _sanitize_list_item(
     return ListItemNode(type="list_item", children=safe_children)
 
 
+def _sanitize_task_item(
+    node: TaskItemNode,
+    policy: SanitizationPolicy,
+) -> TaskItemNode | None:
+    safe_children = _sanitize_block_list(node["children"], policy)
+    if not safe_children:
+        return None
+    return TaskItemNode(type="task_item", checked=node["checked"], children=safe_children)
+
+
 def _sanitize_raw_block(
     node: RawBlockNode,
     policy: SanitizationPolicy,
@@ -314,6 +344,44 @@ def _sanitize_raw_block(
     if node["format"] in fmt_policy:
         return node
     return None
+
+
+def _sanitize_table(
+    node: TableNode,
+    policy: SanitizationPolicy,
+) -> TableNode | None:
+    safe_rows = []
+    for row in node["children"]:
+        sanitized_row = _sanitize_table_row(row, policy)
+        if sanitized_row is not None:
+            safe_rows.append(sanitized_row)
+    if not safe_rows:
+        return None
+    return TableNode(type="table", align=list(node["align"]), children=safe_rows)
+
+
+def _sanitize_table_row(
+    node: TableRowNode,
+    policy: SanitizationPolicy,
+) -> TableRowNode | None:
+    safe_cells = []
+    for cell in node["children"]:
+        sanitized_cell = _sanitize_table_cell(cell, policy)
+        if sanitized_cell is not None:
+            safe_cells.append(sanitized_cell)
+    if not safe_cells:
+        return None
+    return TableRowNode(type="table_row", isHeader=node["isHeader"], children=safe_cells)
+
+
+def _sanitize_table_cell(
+    node: TableCellNode,
+    policy: SanitizationPolicy,
+) -> TableCellNode | None:
+    safe_children = _sanitize_inline_list(node["children"], policy)
+    if not safe_children:
+        return None
+    return TableCellNode(type="table_cell", children=safe_children)
 
 
 # ─── Inline-level helpers ─────────────────────────────────────────────────────
@@ -379,6 +447,9 @@ def _sanitize_inline(
     if node_type == "strong":
         return _sanitize_strong(node, policy)  # type: ignore[arg-type]
 
+    if node_type == "strikethrough":
+        return _sanitize_strikethrough(node, policy)  # type: ignore[arg-type]
+
     if node_type == "code_span":
         return _sanitize_code_span(node, policy)  # type: ignore[arg-type]
 
@@ -424,6 +495,16 @@ def _sanitize_strong(
     if not safe_children:
         return None
     return StrongNode(type="strong", children=safe_children)
+
+
+def _sanitize_strikethrough(
+    node: StrikethroughNode,
+    policy: SanitizationPolicy,
+) -> StrikethroughNode | None:
+    safe_children = _sanitize_inline_list(node["children"], policy)
+    if not safe_children:
+        return None
+    return StrikethroughNode(type="strikethrough", children=safe_children)
 
 
 def _sanitize_code_span(

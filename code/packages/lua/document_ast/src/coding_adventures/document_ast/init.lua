@@ -164,6 +164,15 @@ function M.list_item(children)
   return { type = "list_item", children = children or {} }
 end
 
+--- Create a task list item node.
+--
+-- @param checked   boolean — whether the checkbox is checked
+-- @param children  table   — list of block nodes
+-- @return table    { type="task_item", checked=…, children={…} }
+function M.task_item(checked, children)
+  return { type = "task_item", checked = checked == true, children = children or {} }
+end
+
 --- Create a thematic break node.
 --
 -- A visual separator between sections. Leaf node — no children.
@@ -197,6 +206,21 @@ end
 -- @return table  { type="raw_block", format=…, value=… }
 function M.raw_block(format, value)
   return { type = "raw_block", format = format, value = value or "" }
+end
+
+--- Create a table node.
+function M.table(align, children)
+  return { type = "table", align = align or {}, children = children or {} }
+end
+
+--- Create a table row node.
+function M.table_row(is_header, children)
+  return { type = "table_row", is_header = is_header == true, children = children or {} }
+end
+
+--- Create a table cell node.
+function M.table_cell(children)
+  return { type = "table_cell", children = children or {} }
 end
 
 -- ─── Inline Node Constructors ─────────────────────────────────────────────────
@@ -248,6 +272,11 @@ end
 -- @return table    { type="strong", children={…} }
 function M.strong(children)
   return { type = "strong", children = children or {} }
+end
+
+--- Create a strikethrough node.
+function M.strikethrough(children)
+  return { type = "strikethrough", children = children or {} }
 end
 
 --- Create a code span node.
@@ -380,8 +409,12 @@ M.BLOCK_TYPES = {
   blockquote = true,
   list = true,
   list_item = true,
+  task_item = true,
   thematic_break = true,
   raw_block = true,
+  table = true,
+  table_row = true,
+  table_cell = true,
 }
 
 --- The set of all inline node type strings.
@@ -389,6 +422,7 @@ M.INLINE_TYPES = {
   text = true,
   emphasis = true,
   strong = true,
+  strikethrough = true,
   code_span = true,
   link = true,
   image = true,

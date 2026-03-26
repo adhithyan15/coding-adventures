@@ -178,10 +178,18 @@ module CodingAdventures
         # ListItemNode is normally rendered inside render_list; if called
         # directly, use non-tight mode.
         render_list_item(block, tight: false, sanitize: sanitize)
+      when "task_item"
+        render_task_item(block, tight: false, sanitize: sanitize)
       when "thematic_break"
         "<hr />\n"
       when "raw_block"
         render_raw_block(block, sanitize: sanitize)
+      when "table"
+        render_table(block, sanitize: sanitize)
+      when "table_row"
+        render_table_row(block, sanitize: sanitize)
+      when "table_cell"
+        render_table_cell(block, header: false, sanitize: sanitize)
       else
         ""
       end
@@ -256,7 +264,8 @@ module CodingAdventures
         ""
       end
       items = node.children.map { |item|
-        render_list_item(item, tight: node.tight, sanitize: sanitize)
+        item.type == "task_item" ? render_task_item(item, tight: node.tight, sanitize: sanitize) :
+          render_list_item(item, tight: node.tight, sanitize: sanitize)
       }.join
       "<#{tag}#{start_attr}>\n#{items}</#{tag}>\n"
     end
@@ -294,6 +303,31 @@ module CodingAdventures
       "<li>\n#{inner}</li>\n"
     end
 
+    def self.render_task_item(node, tight:, sanitize:)
+      checkbox = if node.checked
+        "<input type=\"checkbox\" disabled=\"\" checked=\"\" />"
+      else
+        "<input type=\"checkbox\" disabled=\"\" />"
+      end
+
+      return "<li>#{checkbox}</li>\n" if node.children.empty?
+
+      if tight && node.children[0]&.type == "paragraph"
+        first_para = node.children[0]
+        first_content = render_inlines(first_para.children, sanitize: sanitize)
+        if node.children.length == 1
+          separator = first_content.empty? ? "" : " "
+          return "<li>#{checkbox}#{separator}#{first_content}</li>\n"
+        end
+        rest = render_blocks(node.children[1..], tight: tight, sanitize: sanitize)
+        separator = first_content.empty? ? "" : " "
+        return "<li>#{checkbox}#{separator}#{first_content}\n#{rest}</li>\n"
+      end
+
+      inner = render_blocks(node.children, tight: tight, sanitize: sanitize)
+      "<li>#{checkbox}\n#{inner}</li>\n"
+    end
+
     # Render a raw block node.
     #
     # If `sanitize` is true, always returns "" — raw HTML must not appear in
@@ -305,6 +339,40 @@ module CodingAdventures
       return "" if sanitize
       return node.value if node.format == "html"
       ""
+    end
+
+    def self.render_table(node, sanitize:)
+      return "<table>\n</table>\n" if node.children.empty?
+
+      header_rows = node.children.select(&:is_header)
+      body_rows = node.children.reject(&:is_header)
+
+      html = +"<table>\n"
+      unless header_rows.empty?
+        html << "<thead>\n"
+        header_rows.each { |row| html << render_table_row(row, sanitize: sanitize) }
+        html << "</thead>\n"
+      end
+      unless body_rows.empty?
+        html << "<tbody>\n"
+        body_rows.each { |row| html << render_table_row(row, sanitize: sanitize) }
+        html << "</tbody>\n"
+      end
+      html << "</table>\n"
+      html
+    end
+
+    def self.render_table_row(node, sanitize:)
+      cells = node.children.map { |cell|
+        render_table_cell(cell, header: node.is_header, sanitize: sanitize)
+      }.join
+      "<tr>\n#{cells}</tr>\n"
+    end
+
+    def self.render_table_cell(node, header:, sanitize:)
+      tag = header ? "th" : "td"
+      inner = render_inlines(node.children, sanitize: sanitize)
+      "<#{tag}>#{inner}</#{tag}>\n"
     end
 
     # ─── Inline Rendering ─────────────────────────────────────────────────────
@@ -321,6 +389,8 @@ module CodingAdventures
         "<em>#{render_inlines(node.children, sanitize: sanitize)}</em>"
       when "strong"
         "<strong>#{render_inlines(node.children, sanitize: sanitize)}</strong>"
+      when "strikethrough"
+        "<del>#{render_inlines(node.children, sanitize: sanitize)}</del>"
       when "code_span"
         # Code span content is HTML-escaped but not Markdown-processed.
         "<code>#{escape_html(node.value)}</code>"

@@ -95,6 +95,25 @@ defmodule CodingAdventures.DocumentAstToHtmlTest do
       doc = DocumentAst.document([DocumentAst.raw_block("latex", "\\textbf{hi}\n")])
       assert Renderer.render(doc) == ""
     end
+
+    test "table" do
+      doc =
+        DocumentAst.document([
+          DocumentAst.table([:left, :center], [
+            DocumentAst.table_row(true, [
+              DocumentAst.table_cell([DocumentAst.text("a")]),
+              DocumentAst.table_cell([DocumentAst.text("b")])
+            ]),
+            DocumentAst.table_row(false, [
+              DocumentAst.table_cell([DocumentAst.text("c")]),
+              DocumentAst.table_cell([DocumentAst.text("d")])
+            ])
+          ])
+        ])
+
+      assert Renderer.render(doc) ==
+               "<table>\n<thead>\n<tr>\n<th align=\"left\">a</th>\n<th align=\"center\">b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"left\">c</td>\n<td align=\"center\">d</td>\n</tr>\n</tbody>\n</table>\n"
+    end
   end
 
   describe "inline rendering" do
@@ -117,6 +136,13 @@ defmodule CodingAdventures.DocumentAstToHtmlTest do
         DocumentAst.paragraph([DocumentAst.strong([DocumentAst.text("bold")])])
       ])
       assert Renderer.render(doc) == "<p><strong>bold</strong></p>\n"
+    end
+
+    test "strikethrough" do
+      doc = DocumentAst.document([
+        DocumentAst.paragraph([DocumentAst.strikethrough([DocumentAst.text("gone")])])
+      ])
+      assert Renderer.render(doc) == "<p><del>gone</del></p>\n"
     end
 
     test "code span" do
@@ -239,6 +265,19 @@ defmodule CodingAdventures.DocumentAstToHtmlTest do
   end
 
   describe "list edge cases" do
+    test "tight task list items render checkboxes inline" do
+      doc =
+        DocumentAst.document([
+          DocumentAst.list(false, nil, true, [
+            DocumentAst.task_item(true, [DocumentAst.paragraph([DocumentAst.text("done")])]),
+            DocumentAst.task_item(false, [DocumentAst.paragraph([DocumentAst.text("todo")])])
+          ])
+        ])
+
+      assert Renderer.render(doc) ==
+               "<ul>\n<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> done</li>\n<li><input type=\"checkbox\" disabled=\"\" /> todo</li>\n</ul>\n"
+    end
+
     test "empty list item" do
       doc = DocumentAst.document([
         DocumentAst.list(false, nil, false, [

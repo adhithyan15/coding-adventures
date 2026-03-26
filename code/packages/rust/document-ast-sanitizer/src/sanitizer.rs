@@ -63,8 +63,9 @@
 
 use document_ast::{
     AutolinkNode, BlockNode, BlockquoteNode, CodeBlockNode, CodeSpanNode, DocumentNode,
-    EmphasisNode, HardBreakNode, HeadingNode, ImageNode, InlineNode, LinkNode, ListItemNode,
-    ListNode, ParagraphNode, RawBlockNode, RawInlineNode, SoftBreakNode, StrongNode, TextNode,
+    EmphasisNode, HardBreakNode, HeadingNode, ImageNode, InlineNode, LinkNode, ListChildNode,
+    ListItemNode, ListNode, ParagraphNode, RawBlockNode, RawInlineNode, SoftBreakNode,
+    StrikethroughNode, StrongNode, TableCellNode, TableNode, TableRowNode, TaskItemNode, TextNode,
     ThematicBreakNode,
 };
 
@@ -196,16 +197,28 @@ fn sanitize_block_node(node: &BlockNode, policy: &SanitizationPolicy) -> Vec<Blo
 
         // ── ListNode ──────────────────────────────────────────────────────
         BlockNode::List(list) => {
-            // Each list item is processed; items that become empty are dropped.
-            let items: Vec<ListItemNode> = list
+            let items: Vec<ListChildNode> = list
                 .children
                 .iter()
-                .filter_map(|item| {
-                    let children = sanitize_block_children(&item.children, policy);
-                    if children.is_empty() {
-                        None // drop empty list items
-                    } else {
-                        Some(ListItemNode { children })
+                .filter_map(|item| match item {
+                    ListChildNode::ListItem(item) => {
+                        let children = sanitize_block_children(&item.children, policy);
+                        if children.is_empty() {
+                            None
+                        } else {
+                            Some(ListChildNode::ListItem(ListItemNode { children }))
+                        }
+                    }
+                    ListChildNode::TaskItem(item) => {
+                        let children = sanitize_block_children(&item.children, policy);
+                        if children.is_empty() {
+                            None
+                        } else {
+                            Some(ListChildNode::TaskItem(TaskItemNode {
+                                checked: item.checked,
+                                children,
+                            }))
+                        }
                     }
                 })
                 .collect();
@@ -235,6 +248,18 @@ fn sanitize_block_node(node: &BlockNode, policy: &SanitizationPolicy) -> Vec<Blo
             }
         }
 
+        BlockNode::TaskItem(item) => {
+            let children = sanitize_block_children(&item.children, policy);
+            if children.is_empty() {
+                vec![]
+            } else {
+                vec![BlockNode::TaskItem(TaskItemNode {
+                    checked: item.checked,
+                    children,
+                })]
+            }
+        }
+
         // ── ThematicBreakNode ─────────────────────────────────────────────
         // A leaf node — no children, no content to check. Always keep.
         BlockNode::ThematicBreak(_) => {
@@ -250,6 +275,75 @@ fn sanitize_block_node(node: &BlockNode, policy: &SanitizationPolicy) -> Vec<Blo
                 })]
             } else {
                 vec![]
+            }
+        }
+
+        BlockNode::Table(table) => {
+            let rows: Vec<TableRowNode> = table
+                .children
+                .iter()
+                .filter_map(|row| {
+                    let cells: Vec<TableCellNode> = row
+                        .children
+                        .iter()
+                        .filter_map(|cell| {
+                            let children = sanitize_inline_children(&cell.children, policy);
+                            if children.is_empty() {
+                                None
+                            } else {
+                                Some(TableCellNode { children })
+                            }
+                        })
+                        .collect();
+                    if cells.is_empty() {
+                        None
+                    } else {
+                        Some(TableRowNode {
+                            is_header: row.is_header,
+                            children: cells,
+                        })
+                    }
+                })
+                .collect();
+            if rows.is_empty() {
+                vec![]
+            } else {
+                vec![BlockNode::Table(TableNode {
+                    align: table.align.clone(),
+                    children: rows,
+                })]
+            }
+        }
+
+        BlockNode::TableRow(row) => {
+            let cells: Vec<TableCellNode> = row
+                .children
+                .iter()
+                .filter_map(|cell| {
+                    let children = sanitize_inline_children(&cell.children, policy);
+                    if children.is_empty() {
+                        None
+                    } else {
+                        Some(TableCellNode { children })
+                    }
+                })
+                .collect();
+            if cells.is_empty() {
+                vec![]
+            } else {
+                vec![BlockNode::TableRow(TableRowNode {
+                    is_header: row.is_header,
+                    children: cells,
+                })]
+            }
+        }
+
+        BlockNode::TableCell(cell) => {
+            let children = sanitize_inline_children(&cell.children, policy);
+            if children.is_empty() {
+                vec![]
+            } else {
+                vec![BlockNode::TableCell(TableCellNode { children })]
             }
         }
     }
@@ -303,6 +397,15 @@ fn sanitize_inline_node(node: &InlineNode, policy: &SanitizationPolicy) -> Vec<I
             }
         }
 
+        InlineNode::Strikethrough(s) => {
+            let children = sanitize_inline_children(&s.children, policy);
+            if children.is_empty() {
+                vec![]
+            } else {
+                vec![InlineNode::Strikethrough(StrikethroughNode { children })]
+            }
+        }
+
         // ── CodeSpanNode ──────────────────────────────────────────────────
         InlineNode::CodeSpan(cs) => {
             if policy.transform_code_span_to_text {
@@ -325,8 +428,7 @@ fn sanitize_inline_node(node: &InlineNode, policy: &SanitizationPolicy) -> Vec<I
                 return sanitize_inline_children(&link.children, policy);
             }
 
-            let destination = if is_scheme_allowed(&link.destination, &policy.allowed_url_schemes)
-            {
+            let destination = if is_scheme_allowed(&link.destination, &policy.allowed_url_schemes) {
                 link.destination.clone()
             } else {
                 String::new() // inert placeholder — renders as <a href="">
@@ -412,7 +514,9 @@ mod tests {
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     fn text_node(s: &str) -> InlineNode {
-        InlineNode::Text(TextNode { value: s.to_string() })
+        InlineNode::Text(TextNode {
+            value: s.to_string(),
+        })
     }
 
     fn para(inlines: Vec<InlineNode>) -> BlockNode {
@@ -420,7 +524,10 @@ mod tests {
     }
 
     fn heading(level: u8, inlines: Vec<InlineNode>) -> BlockNode {
-        BlockNode::Heading(HeadingNode { level, children: inlines })
+        BlockNode::Heading(HeadingNode {
+            level,
+            children: inlines,
+        })
     }
 
     fn raw_block(format: &str, value: &str) -> BlockNode {
@@ -461,11 +568,41 @@ mod tests {
     }
 
     fn code_span(value: &str) -> InlineNode {
-        InlineNode::CodeSpan(CodeSpanNode { value: value.to_string() })
+        InlineNode::CodeSpan(CodeSpanNode {
+            value: value.to_string(),
+        })
     }
 
     fn doc(children: Vec<BlockNode>) -> DocumentNode {
         DocumentNode { children }
+    }
+
+    #[test]
+    fn gfm_nodes_preserved() {
+        let d = doc(vec![
+            BlockNode::List(ListNode {
+                ordered: false,
+                start: None,
+                tight: true,
+                children: vec![ListChildNode::TaskItem(TaskItemNode {
+                    checked: true,
+                    children: vec![para(vec![InlineNode::Strikethrough(StrikethroughNode {
+                        children: vec![text_node("done")],
+                    })])],
+                })],
+            }),
+            BlockNode::Table(TableNode {
+                align: vec![document_ast::TableAlignment::Left],
+                children: vec![TableRowNode {
+                    is_header: true,
+                    children: vec![TableCellNode {
+                        children: vec![text_node("A")],
+                    }],
+                }],
+            }),
+        ]);
+        let result = sanitize(&d, &strict());
+        assert_eq!(result.children.len(), 2);
     }
 
     // ─── Passthrough is identity ──────────────────────────────────────────────
@@ -485,9 +622,10 @@ mod tests {
 
     #[test]
     fn sanitize_does_not_mutate_input() {
-        let original = doc(vec![para(vec![
-            link("javascript:alert(1)", vec![text_node("click")]),
-        ])]);
+        let original = doc(vec![para(vec![link(
+            "javascript:alert(1)",
+            vec![text_node("click")],
+        )])]);
         let _ = sanitize(&original, &strict());
         // The original must still contain the original link
         if let BlockNode::Paragraph(p) = &original.children[0] {
@@ -598,7 +736,10 @@ mod tests {
 
     #[test]
     fn drop_images_removes_image_node() {
-        let d = doc(vec![para(vec![image("https://example.com/cat.png", "a cat")])]);
+        let d = doc(vec![para(vec![image(
+            "https://example.com/cat.png",
+            "a cat",
+        )])]);
         let policy = SanitizationPolicy {
             drop_images: true,
             ..passthrough()
@@ -609,7 +750,10 @@ mod tests {
 
     #[test]
     fn transform_image_to_text() {
-        let d = doc(vec![para(vec![image("https://example.com/cat.png", "a cat")])]);
+        let d = doc(vec![para(vec![image(
+            "https://example.com/cat.png",
+            "a cat",
+        )])]);
         let result = sanitize(&d, &strict()); // transform_image_to_text=true
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Text(t) = &p.children[0] {
@@ -622,7 +766,10 @@ mod tests {
 
     #[test]
     fn drop_images_takes_precedence_over_transform() {
-        let d = doc(vec![para(vec![image("https://example.com/cat.png", "a cat")])]);
+        let d = doc(vec![para(vec![image(
+            "https://example.com/cat.png",
+            "a cat",
+        )])]);
         let policy = SanitizationPolicy {
             drop_images: true,
             transform_image_to_text: true,
@@ -653,9 +800,10 @@ mod tests {
     #[test]
     fn drop_links_promotes_children() {
         // [click here](https://example.com) → "click here" (plain text)
-        let d = doc(vec![para(vec![
-            link("https://example.com", vec![text_node("click here")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "https://example.com",
+            vec![text_node("click here")],
+        )])]);
         let policy = SanitizationPolicy {
             drop_links: true,
             ..passthrough()
@@ -671,9 +819,10 @@ mod tests {
 
     #[test]
     fn javascript_link_gets_empty_destination() {
-        let d = doc(vec![para(vec![
-            link("javascript:alert(1)", vec![text_node("click me")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "javascript:alert(1)",
+            vec![text_node("click me")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -684,9 +833,10 @@ mod tests {
 
     #[test]
     fn https_link_kept_unchanged() {
-        let d = doc(vec![para(vec![
-            link("https://example.com", vec![text_node("link")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "https://example.com",
+            vec![text_node("link")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -697,9 +847,10 @@ mod tests {
 
     #[test]
     fn relative_link_kept_unchanged() {
-        let d = doc(vec![para(vec![
-            link("../docs/index.html", vec![text_node("docs")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "../docs/index.html",
+            vec![text_node("docs")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -710,9 +861,10 @@ mod tests {
 
     #[test]
     fn vbscript_link_blocked() {
-        let d = doc(vec![para(vec![
-            link("vbscript:MsgBox(1)", vec![text_node("click")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "vbscript:MsgBox(1)",
+            vec![text_node("click")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -723,9 +875,10 @@ mod tests {
 
     #[test]
     fn data_url_link_blocked() {
-        let d = doc(vec![para(vec![
-            link("data:text/html,<script>alert(1)</script>", vec![text_node("x")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "data:text/html,<script>alert(1)</script>",
+            vec![text_node("x")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -815,7 +968,10 @@ mod tests {
     fn paragraph_with_only_raw_inline_dropped_when_raw_denied() {
         // When the only child of a paragraph is dropped, the paragraph itself
         // should be dropped — no empty <p></p> in output
-        let d = doc(vec![para(vec![raw_inline("html", "<script>alert(1)</script>")])]);
+        let d = doc(vec![para(vec![raw_inline(
+            "html",
+            "<script>alert(1)</script>",
+        )])]);
         let result = sanitize(&d, &strict());
         assert!(result.children.is_empty());
     }
@@ -831,9 +987,10 @@ mod tests {
 
     #[test]
     fn xss_nul_byte_javascript_link_blocked() {
-        let d = doc(vec![para(vec![
-            link("java\x00script:alert(1)", vec![text_node("click")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "java\x00script:alert(1)",
+            vec![text_node("click")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -844,9 +1001,10 @@ mod tests {
 
     #[test]
     fn xss_zero_width_space_bypass_blocked() {
-        let d = doc(vec![para(vec![
-            link("\u{200B}javascript:alert(1)", vec![text_node("click")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "\u{200B}javascript:alert(1)",
+            vec![text_node("click")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {
@@ -857,9 +1015,10 @@ mod tests {
 
     #[test]
     fn xss_blob_url_blocked() {
-        let d = doc(vec![para(vec![
-            link("blob:https://origin/some-uuid", vec![text_node("x")]),
-        ])]);
+        let d = doc(vec![para(vec![link(
+            "blob:https://origin/some-uuid",
+            vec![text_node("x")],
+        )])]);
         let result = sanitize(&d, &strict());
         if let BlockNode::Paragraph(p) = &result.children[0] {
             if let InlineNode::Link(l) = &p.children[0] {

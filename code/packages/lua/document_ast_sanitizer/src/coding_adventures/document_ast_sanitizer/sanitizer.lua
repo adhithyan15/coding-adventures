@@ -141,6 +141,12 @@ sanitize_inline = function(node, policy)
     if #children == 0 then return nil end
     return { type = "strong", children = children }
 
+  -- ─── strikethrough — recurse ───────────────────────────────────────────
+  elseif t == "strikethrough" then
+    local children = sanitize_inlines(node.children, policy)
+    if #children == 0 then return nil end
+    return { type = "strikethrough", children = children }
+
   -- ─── code_span ─────────────────────────────────────────────────────────
   elseif t == "code_span" then
     if policy.transformCodeSpanToText then
@@ -313,6 +319,12 @@ sanitize_block = function(node, policy)
     if #children == 0 then return nil end
     return { type = "list_item", children = children }
 
+  -- ─── task_item ──────────────────────────────────────────────────────────
+  elseif t == "task_item" then
+    local children = sanitize_blocks(node.children, policy)
+    if #children == 0 then return nil end
+    return { type = "task_item", checked = node.checked, children = children }
+
   -- ─── thematic_break ────────────────────────────────────────────────────
   elseif t == "thematic_break" then
     -- Leaf node: always keep
@@ -326,6 +338,24 @@ sanitize_block = function(node, policy)
       return nil
     end
     return { type = "raw_block", format = node.format, value = node.value }
+
+  -- ─── table ──────────────────────────────────────────────────────────────
+  elseif t == "table" then
+    local children = sanitize_blocks(node.children, policy)
+    if #children == 0 then return nil end
+    return { type = "table", align = node.align, children = children }
+
+  -- ─── table_row ──────────────────────────────────────────────────────────
+  elseif t == "table_row" then
+    local children = sanitize_blocks(node.children, policy)
+    if #children == 0 then return nil end
+    return { type = "table_row", is_header = node.is_header, children = children }
+
+  -- ─── table_cell ─────────────────────────────────────────────────────────
+  elseif t == "table_cell" then
+    local children = sanitize_inlines(node.children, policy)
+    if #children == 0 then return nil end
+    return { type = "table_cell", children = children }
 
   -- ─── unknown node type ─────────────────────────────────────────────────
   else

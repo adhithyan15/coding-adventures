@@ -186,7 +186,11 @@ defmodule CodingAdventures.DocumentAstSanitizerTest do
         AST.paragraph([AST.text("hello"), AST.emphasis([AST.text("world")])]),
         AST.heading(1, [AST.text("Title")]),
         AST.code_block("elixir", "IO.puts \"hi\"\n"),
-        AST.thematic_break()
+        AST.thematic_break(),
+        AST.table([:left], [
+          AST.table_row(true, [AST.table_cell([AST.strikethrough([AST.text("x")])])]),
+          AST.table_row(false, [AST.table_cell([AST.text("y")])])
+        ])
       ])
       assert sanitize(d, Policy.passthrough()) == d
     end
@@ -214,6 +218,37 @@ defmodule CodingAdventures.DocumentAstSanitizerTest do
     test "always kept as-is" do
       d = doc([AST.thematic_break()])
       assert sanitize(d, Policy.strict()) == d
+    end
+  end
+
+  describe "task_item and table nodes" do
+    test "task items recurse into children" do
+      d = doc([
+        AST.list(false, nil, true, [
+          AST.task_item(true, [AST.paragraph([AST.text("x"), AST.raw_inline("html", "<span>x</span>")])])
+        ])
+      ])
+
+      p = %Policy{Policy.passthrough() | allow_raw_inline_formats: :drop_all}
+      assert sanitize(d, p) ==
+               doc([
+                 AST.list(false, nil, true, [
+                   AST.task_item(true, [AST.paragraph([AST.text("x")])])
+                 ])
+               ])
+    end
+
+    test "table cells sanitize inline content" do
+      d = doc([
+        AST.table([:left], [
+          AST.table_row(true, [
+            AST.table_cell([AST.raw_inline("html", "<em>x</em>")])
+          ])
+        ])
+      ])
+
+      p = %Policy{Policy.passthrough() | allow_raw_inline_formats: :drop_all}
+      assert sanitize(d, p) == doc([])
     end
   end
 

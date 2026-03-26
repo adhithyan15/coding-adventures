@@ -203,6 +203,34 @@ local function render_list_item(node, tight, options)
   return "<li>\n" .. inner .. "</li>\n"
 end
 
+local function render_task_item(node, tight, options)
+  local checkbox = node.checked
+      and '<input type="checkbox" disabled="" checked="" />'
+      or '<input type="checkbox" disabled="" />'
+
+  if #node.children == 0 then
+    return "<li>" .. checkbox .. "</li>\n"
+  end
+
+  if tight and node.children[1].type == "paragraph" then
+    local first_para = node.children[1]
+    local first_content = render_inlines(first_para.children, options)
+    local separator = first_content ~= "" and " " or ""
+    if #node.children == 1 then
+      return "<li>" .. checkbox .. separator .. first_content .. "</li>\n"
+    end
+    local rest_children = {}
+    for i = 2, #node.children do
+      rest_children[#rest_children + 1] = node.children[i]
+    end
+    local rest = render_blocks(rest_children, tight, options)
+    return "<li>" .. checkbox .. separator .. first_content .. "\n" .. rest .. "</li>\n"
+  end
+
+  local inner = render_blocks(node.children, tight, options)
+  return "<li>" .. checkbox .. "\n" .. inner .. "</li>\n"
+end
+
 local function render_list(node, options)
   local tag = node.ordered and "ol" or "ul"
   -- Only emit `start` when it's a valid integer and not 1
@@ -215,9 +243,56 @@ local function render_list(node, options)
   end
   local items = {}
   for _, item in ipairs(node.children) do
-    items[#items + 1] = render_list_item(item, node.tight, options)
+    if item.type == "task_item" then
+      items[#items + 1] = render_task_item(item, node.tight, options)
+    else
+      items[#items + 1] = render_list_item(item, node.tight, options)
+    end
   end
   return string.format("<%s%s>\n%s</%s>\n", tag, start_attr, table.concat(items), tag)
+end
+
+local function render_table_cell(node, header, options)
+  local tag = header and "th" or "td"
+  local inner = render_inlines(node.children, options)
+  return string.format("<%s>%s</%s>\n", tag, inner, tag)
+end
+
+local function render_table_row(node, options)
+  local cells = {}
+  for _, cell in ipairs(node.children) do
+    cells[#cells + 1] = render_table_cell(cell, node.is_header, options)
+  end
+  return "<tr>\n" .. table.concat(cells) .. "</tr>\n"
+end
+
+local function render_table(node, options)
+  local header_rows, body_rows = {}, {}
+  for _, row in ipairs(node.children) do
+    if row.is_header then
+      header_rows[#header_rows + 1] = row
+    else
+      body_rows[#body_rows + 1] = row
+    end
+  end
+
+  local parts = { "<table>\n" }
+  if #header_rows > 0 then
+    parts[#parts + 1] = "<thead>\n"
+    for _, row in ipairs(header_rows) do
+      parts[#parts + 1] = render_table_row(row, options)
+    end
+    parts[#parts + 1] = "</thead>\n"
+  end
+  if #body_rows > 0 then
+    parts[#parts + 1] = "<tbody>\n"
+    for _, row in ipairs(body_rows) do
+      parts[#parts + 1] = render_table_row(row, options)
+    end
+    parts[#parts + 1] = "</tbody>\n"
+  end
+  parts[#parts + 1] = "</table>\n"
+  return table.concat(parts)
 end
 
 --- Render a raw block node.
@@ -245,10 +320,18 @@ render_block = function(block, tight, options)
     return render_list(block, options)
   elseif t == "list_item" then
     return render_list_item(block, false, options)
+  elseif t == "task_item" then
+    return render_task_item(block, false, options)
   elseif t == "thematic_break" then
     return "<hr />\n"
   elseif t == "raw_block" then
     return render_raw_block(block, options)
+  elseif t == "table" then
+    return render_table(block, options)
+  elseif t == "table_row" then
+    return render_table_row(block, options)
+  elseif t == "table_cell" then
+    return render_table_cell(block, false, options)
   else
     return ""
   end
@@ -316,6 +399,8 @@ render_inline = function(node, options)
     return "<em>" .. render_inlines(node.children, options) .. "</em>"
   elseif t == "strong" then
     return "<strong>" .. render_inlines(node.children, options) .. "</strong>"
+  elseif t == "strikethrough" then
+    return "<del>" .. render_inlines(node.children, options) .. "</del>"
   elseif t == "code_span" then
     return "<code>" .. escape_html(node.value) .. "</code>"
   elseif t == "link" then

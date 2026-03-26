@@ -10,6 +10,7 @@ from coding_adventures_document_ast import (
     ListNode,
     ParagraphNode,
     RawBlockNode,
+    TableNode,
     ThematicBreakNode,
 )
 
@@ -138,6 +139,48 @@ class TestBlockRendering:
         options = RenderOptions(sanitize=True)
         assert to_html(make_doc(node), options) == ""
 
+    def test_task_list_item(self) -> None:
+        node: ListNode = {
+            "type": "list",
+            "ordered": False,
+            "start": None,
+            "tight": True,
+            "children": [
+                {
+                    "type": "task_item",
+                    "checked": True,
+                    "children": [
+                        {"type": "paragraph", "children": [{"type": "text", "value": "done"}]}
+                    ],
+                }
+            ],
+        }
+        html = to_html(make_doc(node))
+        assert '<input type="checkbox" disabled="" checked="" /> done' in html
+
+    def test_table(self) -> None:
+        node: TableNode = {
+            "type": "table",
+            "align": ["left"],
+            "children": [
+                {
+                    "type": "table_row",
+                    "isHeader": True,
+                    "children": [{"type": "table_cell", "children": [{"type": "text", "value": "A"}]}],
+                },
+                {
+                    "type": "table_row",
+                    "isHeader": False,
+                    "children": [{"type": "table_cell", "children": [{"type": "text", "value": "B"}]}],
+                },
+            ],
+        }
+        html = to_html(make_doc(node))
+        assert "<table>" in html
+        assert "<thead>" in html
+        assert '<th align="left">A</th>' in html
+        assert '<td align="left">B</td>' in html
+
 
 class TestInlineRendering:
     def test_text_escaping(self) -> None:
@@ -165,6 +208,15 @@ class TestInlineRendering:
             ],
         }
         assert "<strong>strong</strong>" in to_html(make_doc(node))
+
+    def test_strikethrough(self) -> None:
+        node: ParagraphNode = {
+            "type": "paragraph",
+            "children": [
+                {"type": "strikethrough", "children": [{"type": "text", "value": "gone"}]}
+            ],
+        }
+        assert "<del>gone</del>" in to_html(make_doc(node))
 
     def test_code_span(self) -> None:
         node: ParagraphNode = {

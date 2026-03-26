@@ -74,11 +74,19 @@ func sanitizeBlock(node documentast.BlockNode, policy SanitizationPolicy) docume
 		return sanitizeList(n, policy)
 	case *documentast.ListItemNode:
 		return sanitizeListItem(n, policy)
+	case *documentast.TaskItemNode:
+		return sanitizeTaskItem(n, policy)
 	case *documentast.ThematicBreakNode:
 		// ThematicBreakNode is a leaf with no content — always pass through.
 		return n
 	case *documentast.RawBlockNode:
 		return sanitizeRawBlock(n, policy)
+	case *documentast.TableNode:
+		return sanitizeTable(n, policy)
+	case *documentast.TableRowNode:
+		return sanitizeTableRow(n, policy)
+	case *documentast.TableCellNode:
+		return sanitizeTableCell(n, policy)
 	default:
 		// Unknown node type: drop silently (fail-safe principle).
 		// When new node types are added to the AST, this package must be
@@ -175,11 +183,19 @@ func sanitizeBlockquote(node *documentast.BlockquoteNode, policy SanitizationPol
 // sanitizeList recurses into each ListItemNode. A list with no surviving items
 // is dropped.
 func sanitizeList(node *documentast.ListNode, policy SanitizationPolicy) documentast.BlockNode {
-	items := make([]*documentast.ListItemNode, 0, len(node.Children))
+	items := make([]documentast.ListChildNode, 0, len(node.Children))
 	for _, item := range node.Children {
-		sanitized := sanitizeListItem(item, policy)
-		if sanitized != nil {
-			items = append(items, sanitized)
+		switch n := item.(type) {
+		case *documentast.ListItemNode:
+			sanitized := sanitizeListItem(n, policy)
+			if sanitized != nil {
+				items = append(items, sanitized)
+			}
+		case *documentast.TaskItemNode:
+			sanitized := sanitizeTaskItem(n, policy)
+			if sanitized != nil {
+				items = append(items, sanitized)
+			}
 		}
 	}
 	if len(items) == 0 {
@@ -199,6 +215,11 @@ func sanitizeList(node *documentast.ListNode, policy SanitizationPolicy) documen
 func sanitizeListItem(node *documentast.ListItemNode, policy SanitizationPolicy) *documentast.ListItemNode {
 	children := sanitizeBlocks(node.Children, policy)
 	return &documentast.ListItemNode{Children: children}
+}
+
+func sanitizeTaskItem(node *documentast.TaskItemNode, policy SanitizationPolicy) *documentast.TaskItemNode {
+	children := sanitizeBlocks(node.Children, policy)
+	return &documentast.TaskItemNode{Checked: node.Checked, Children: children}
 }
 
 // sanitizeRawBlock applies the AllowRawBlockFormats policy to a RawBlockNode.
@@ -224,6 +245,43 @@ func sanitizeRawBlock(node *documentast.RawBlockNode, policy SanitizationPolicy)
 	default:
 		return nil
 	}
+}
+
+func sanitizeTable(node *documentast.TableNode, policy SanitizationPolicy) documentast.BlockNode {
+	rows := make([]*documentast.TableRowNode, 0, len(node.Children))
+	for _, row := range node.Children {
+		sanitized := sanitizeTableRow(row, policy)
+		if sanitized != nil {
+			rows = append(rows, sanitized)
+		}
+	}
+	if len(rows) == 0 {
+		return nil
+	}
+	align := append([]documentast.TableAlignment(nil), node.Align...)
+	return &documentast.TableNode{Align: align, Children: rows}
+}
+
+func sanitizeTableRow(node *documentast.TableRowNode, policy SanitizationPolicy) *documentast.TableRowNode {
+	cells := make([]*documentast.TableCellNode, 0, len(node.Children))
+	for _, cell := range node.Children {
+		sanitized := sanitizeTableCell(cell, policy)
+		if sanitized != nil {
+			cells = append(cells, sanitized)
+		}
+	}
+	if len(cells) == 0 {
+		return nil
+	}
+	return &documentast.TableRowNode{IsHeader: node.IsHeader, Children: cells}
+}
+
+func sanitizeTableCell(node *documentast.TableCellNode, policy SanitizationPolicy) *documentast.TableCellNode {
+	children := sanitizeInlines(node.Children, policy)
+	if len(children) == 0 {
+		return nil
+	}
+	return &documentast.TableCellNode{Children: children}
 }
 
 // ─── Inline node sanitization ─────────────────────────────────────────────────
@@ -268,6 +326,8 @@ func sanitizeInline(node documentast.InlineNode, policy SanitizationPolicy) []do
 
 	case *documentast.StrongNode:
 		return sanitizeStrong(n, policy)
+	case *documentast.StrikethroughNode:
+		return sanitizeStrikethrough(n, policy)
 
 	case *documentast.CodeSpanNode:
 		return sanitizeCodeSpan(n, policy)
@@ -314,6 +374,14 @@ func sanitizeStrong(node *documentast.StrongNode, policy SanitizationPolicy) []d
 		return nil
 	}
 	return []documentast.InlineNode{&documentast.StrongNode{Children: children}}
+}
+
+func sanitizeStrikethrough(node *documentast.StrikethroughNode, policy SanitizationPolicy) []documentast.InlineNode {
+	children := sanitizeInlines(node.Children, policy)
+	if len(children) == 0 {
+		return nil
+	}
+	return []documentast.InlineNode{&documentast.StrikethroughNode{Children: children}}
 }
 
 // sanitizeCodeSpan either keeps the CodeSpanNode as-is or converts it to a
