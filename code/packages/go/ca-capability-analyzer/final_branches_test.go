@@ -8,6 +8,7 @@ import (
 	"go/token"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -86,8 +87,14 @@ func TestAnalyzeDir_FileInsteadOfDir(t *testing.T) {
 
 // TestLoadManifest_PermissionError verifies LoadManifest handles a non-"not found"
 // read error. We create the manifest but make it unreadable, then try to read it.
-// Skip on platforms that don't support permission changes (e.g., root users).
+// Skip on platforms that don't support Unix-style permission enforcement:
+//   - Windows: os.Chmod exists but does not enforce read-bit restrictions;
+//     the file remains readable regardless of the mode bits.
+//   - Root users: the superuser can read any file regardless of mode bits.
 func TestLoadManifest_PermissionError(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Windows does not enforce Unix-style file permission bits; chmod 0o000 leaves files readable")
+	}
 	if os.Getuid() == 0 {
 		t.Skip("running as root; permission tests not meaningful")
 	}
