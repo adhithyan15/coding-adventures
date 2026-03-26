@@ -38,7 +38,7 @@ hasCycle := g.HasCycle()            // cycle detection
 | `TransitiveClosure(node)` | All nodes reachable downstream | Dependency analysis |
 | `TransitiveDependents(node)` | All nodes that depend on this one | Impact analysis |
 
-## Operations
+## Capability Cage
 
 Every method is wrapped in an `Operation` — a closure that provides:
 
@@ -49,11 +49,9 @@ Every method is wrapped in an `Operation` — a closure that provides:
 - **Typed error preservation**: `rf.Fail(value, err)` returns typed errors intact so
   `errors.As` checks work correctly at the call site
 
-OS capabilities are accessed as namespace fields directly on `op` — `op.File.ReadFile(path)`,
-`op.Net.Connect(addr)`, etc. These fields only exist when the corresponding capability is
-declared in `required_capabilities.json`. Since this package declares zero OS capabilities,
-`Operation[T]` has no capability fields. Any OS access must be declared in the manifest —
-making it visible in code review and enforced at compile time.
+The `Cage` is injected into every operation callback. Since this package declares
+zero OS capabilities (`required_capabilities.json` is empty), `Cage` has no methods.
+Any OS access must be declared in the manifest — making it visible in code review.
 
 ## Where it fits
 

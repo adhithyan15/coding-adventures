@@ -11,9 +11,7 @@
 // no external runtime dependency, no shared cage package.
 //
 // The generated file contains:
-//   - _XxxCapabilities namespace structs: one per declared capability category,
-//     accessible as fields on Operation[T] (e.g., op.File, op.Net, op.Env).
-//     Fields only exist when declared — undeclared access is a compile error.
+//   - Cage: the OS-capability gate (methods only for declared capabilities)
 //   - OperationResult[T]: three-state outcome (success, expected failure, unexpected)
 //   - ResultFactory[T]: creates OperationResult values inside callbacks
 //   - Operation[T]: the unit of work with timing, logging, and panic recovery
@@ -138,65 +136,17 @@ func groupCapabilities(caps []capabilityJSON) []capabilityGroup {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Capability namespace naming
-// ─────────────────────────────────────────────────────────────────────────────
-
-// categoryFieldName returns the exported field name for a capability category
-// on Operation[T]. E.g., "fs" → "File", "net" → "Net".
-func categoryFieldName(cat string) string {
-	switch cat {
-	case "fs":
-		return "File"
-	case "net":
-		return "Net"
-	case "proc":
-		return "Proc"
-	case "env":
-		return "Env"
-	case "time":
-		return "Time"
-	case "stdin":
-		return "Stdin"
-	case "stdout":
-		return "Stdout"
-	default:
-		if len(cat) == 0 {
-			return "Unknown"
-		}
-		return strings.ToUpper(cat[:1]) + cat[1:]
-	}
-}
-
-// categoryTypeName returns the unexported struct type name for a capability
-// category. E.g., "fs" → "_FileCapabilities".
-func categoryTypeName(cat string) string {
-	return "_" + categoryFieldName(cat) + "Capabilities"
-}
-
-// uniqueCategories returns the distinct categories present in groups,
-// preserving first-occurrence order.
-func uniqueCategories(groups []capabilityGroup) []string {
-	seen := map[string]bool{}
-	var cats []string
-	for _, g := range groups {
-		if !seen[g.Category] {
-			seen[g.Category] = true
-			cats = append(cats, g.Category)
-		}
-	}
-	return cats
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Import computation
 // ─────────────────────────────────────────────────────────────────────────────
 
 // neededImports returns the sorted stdlib import paths required by the
-// generated code. Always includes fmt. Additional packages depend on which
-// capability categories are declared.
+// generated code. Always includes fmt, log, time. Additional packages
+// depend on which capability categories are declared.
 func neededImports(caps []capabilityJSON) []string {
 	set := map[string]bool{
-		`"fmt"`: true,
+		`"fmt"`:  true,
+		`"log"`:  true,
+		`"time"`: true,
 	}
 	for _, c := range caps {
 		switch c.Category {
@@ -210,18 +160,6 @@ func neededImports(caps []capabilityJSON) []string {
 		}
 		if c.Category == "proc" && c.Action == "exec" {
 			set[`"os/exec"`] = true
-		}
-		// Path-based categories (fs, proc) need filepath for path normalization
-		// in Cage methods to prevent bypass via ./foo, ../foo/bar, etc.
-		if c.Category == "fs" || (c.Category == "proc" && c.Action == "exec") {
-			set[`"path/filepath"`] = true
-		}
-		// Relative fs targets (../../grammars/foo.tokens) are resolved to
-		// canonical absolute paths at startup using runtime.Caller(0) and
-		// sync.OnceValue, then enforced with exact equality.
-		if c.Category == "fs" && isRelativeTarget(c.Target) {
-			set[`"runtime"`] = true
-			set[`"sync"`] = true
 		}
 	}
 	result := make([]string, 0, len(set))
@@ -292,13 +230,7 @@ func emitHeader(b *strings.Builder, manifestPath string) {
 	fmt.Fprintf(b, "// Source: required_capabilities.json\n")
 	fmt.Fprintf(b, "// Regenerate:\n")
 	fmt.Fprintf(b, "//   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \\\n")
-	// Sanitize the path: strip newlines and convert to forward slashes so the
-	// comment remains single-line and platform-independent in the generated file.
-	// Strip CR and LF from the path to prevent header/comment injection in the
-	// generated file. Both characters must be removed: stripping only LF leaves
-	// a bare CR on Windows-style paths, which can corrupt generated source.
-	safePath := strings.NewReplacer("\n", "", "\r", "").Replace(filepath.ToSlash(manifestPath))
-	fmt.Fprintf(b, "//     --manifest=%s\n", safePath)
+	fmt.Fprintf(b, "//     --manifest=%s\n", manifestPath)
 	fmt.Fprintf(b, "//\n")
 	fmt.Fprintf(b, "// The JSON file is a development-time artifact; this file is what the\n")
 	fmt.Fprintf(b, "// runtime enforces. Edit required_capabilities.json and re-run the\n")
@@ -319,126 +251,41 @@ func emitImports(b *strings.Builder, imports []string) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Code generation — capability namespace structs
+// Code generation — Cage
 // ─────────────────────────────────────────────────────────────────────────────
 
-// emitCapabilityStructs emits one namespace struct per capability category.
-// Each struct becomes a field on Operation[T] (e.g., op.File, op.Net).
-// The field only exists when the corresponding capability is declared —
-// accessing op.File in a zero-file-capability package is a compile error.
-func emitCapabilityStructs(b *strings.Builder, groups []capabilityGroup, targetToVar map[string]string) {
-	cats := uniqueCategories(groups)
-	for _, cat := range cats {
-		typeName := categoryTypeName(cat)
-		fieldName := categoryFieldName(cat)
-		fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
-		fmt.Fprintf(b, "// %s — op.%s capability namespace\n", typeName, fieldName)
-		fmt.Fprintf(b, "//\n")
-		fmt.Fprintf(b, "// Accessible via op.%s inside any Operation callback. The field only\n", fieldName)
-		fmt.Fprintf(b, "// exists when %s capabilities are declared in required_capabilities.json.\n", cat)
-		fmt.Fprintf(b, "// Undeclared categories produce a compile error at the call site.\n")
-		fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
-		fmt.Fprintf(b, "\n")
-		fmt.Fprintf(b, "type %s struct{}\n\n", typeName)
-		for _, g := range groups {
-			if g.Category == cat {
-				emitCapabilityMethod(b, g, typeName, targetToVar)
-			}
-		}
-	}
-}
-
-// isRelativeTarget returns true if the target starts with "./" or "../",
-// indicating a path relative to the package directory. Relative targets
-// are resolved to canonical absolute paths at startup using runtime.Caller(0)
-// and sync.OnceValue, then enforced with exact equality.
-func isRelativeTarget(target string) bool {
-	return strings.HasPrefix(target, "./") || strings.HasPrefix(target, "../")
-}
-
-// collectRelativeTargets returns the distinct relative targets across all groups,
-// preserving first-seen order. Used to emit _allowedPath_N vars.
-func collectRelativeTargets(groups []capabilityGroup) []string {
-	seen := map[string]bool{}
-	var result []string
-	for _, g := range groups {
-		for _, t := range g.Targets {
-			if isRelativeTarget(t) && !seen[t] {
-				seen[t] = true
-				result = append(result, t)
-			}
-		}
-	}
-	return result
-}
-
-// emitResolvedPathVars emits package-level sync.OnceValue vars that resolve
-// each relative target to its canonical absolute path at startup.
-//
-// Using runtime.Caller(0) from gen_capabilities.go — which lives in the same
-// directory as the rest of the package — ensures the resolved path matches
-// exactly what getGrammarPath() computes in the package's own source. The
-// path is cleaned with filepath.Clean to canonicalize separators and collapse
-// any remaining . or .. components.
-//
-// Returns a map from target string to the emitted variable name, so that
-// emitScopedCheck can reference the correct var.
-func emitResolvedPathVars(b *strings.Builder, relTargets []string) map[string]string {
-	targetToVar := make(map[string]string)
-	if len(relTargets) == 0 {
-		return targetToVar
-	}
+func emitCage(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
-	fmt.Fprintf(b, "// Resolved allowed paths — exact canonical paths, computed once at startup\n")
+	fmt.Fprintf(b, "// Cage — the OS-capability gate\n")
 	fmt.Fprintf(b, "//\n")
-	fmt.Fprintf(b, "// Each var below resolves a relative target from required_capabilities.json\n")
-	fmt.Fprintf(b, "// to its canonical absolute path, anchored to gen_capabilities.go's directory\n")
-	fmt.Fprintf(b, "// via runtime.Caller(0). Enforcement uses exact equality, so no other file\n")
-	fmt.Fprintf(b, "// — even one with the same name in a different directory — can pass the check.\n")
+	fmt.Fprintf(b, "// Cage is injected into every Operation callback. It is the ONLY way to\n")
+	fmt.Fprintf(b, "// perform OS-level operations. Methods exist only for capabilities that are\n")
+	fmt.Fprintf(b, "// declared in required_capabilities.json. Any undeclared OS operation must\n")
+	fmt.Fprintf(b, "// be added to the manifest — making it visible in code review and\n")
+	fmt.Fprintf(b, "// enforced at compile time (the method simply does not exist).\n")
 	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
 	fmt.Fprintf(b, "\n")
-	for i, t := range relTargets {
-		varName := fmt.Sprintf("_allowedPath_%d", i)
-		targetToVar[t] = varName
-		fmt.Fprintf(b, "var %s = sync.OnceValue(func() string {\n", varName)
-		fmt.Fprintf(b, "\t_, _file, _, _ := runtime.Caller(0)\n")
-		fmt.Fprintf(b, "\treturn filepath.Clean(filepath.Join(filepath.Dir(_file), %q))\n", t)
-		fmt.Fprintf(b, "})\n\n")
+	fmt.Fprintf(b, "type Cage struct{}\n")
+	fmt.Fprintf(b, "\n")
+	for _, g := range groups {
+		emitCageMethod(b, g)
 	}
-	return targetToVar
 }
 
-// emitScopedCheck emits the allowed-path check at the top of a capability method.
+// emitScopedCheck emits the allowed-path check at the top of a Cage method.
 // paramName is the method parameter to check (e.g., "path", "addr", "key").
 // twoReturns controls whether the violation returns (nil, err) or just (err).
-// targetToVar maps relative target strings to their _allowedPath_N variable names.
-//
-// Relative targets use pre-emitted sync.OnceValue vars for exact canonical path
-// comparison. Absolute targets use inline exact string equality. Mixed groups are
-// handled correctly — each target type uses its own comparison form.
-func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string, targetToVar map[string]string) {
+func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string) {
 	if len(targets) == 1 {
-		t := targets[0]
-		if varName, ok := targetToVar[t]; ok {
-			// Relative target: compare against the pre-resolved canonical path.
-			fmt.Fprintf(b, "\tif %s != %s() {\n", paramName, varName)
-		} else {
-			// Absolute target: exact equality.
-			fmt.Fprintf(b, "\tif %s != %q {\n", paramName, t)
-		}
+		fmt.Fprintf(b, "\tif %s != %q {\n", paramName, targets[0])
 	} else {
-		// Multiple targets: allowed if any one matches.
-		fmt.Fprintf(b, "\t_allowed := false\n")
+		fmt.Fprintf(b, "\tallowed := map[string]bool{\n")
 		for _, t := range targets {
-			if varName, ok := targetToVar[t]; ok {
-				fmt.Fprintf(b, "\tif %s == %s() {\n\t\t_allowed = true\n\t}\n", paramName, varName)
-			} else {
-				fmt.Fprintf(b, "\tif %s == %q {\n\t\t_allowed = true\n\t}\n", paramName, t)
-			}
+			fmt.Fprintf(b, "\t\t%q: true,\n", t)
 		}
-		fmt.Fprintf(b, "\tif !_allowed {\n")
+		fmt.Fprintf(b, "\t}\n")
+		fmt.Fprintf(b, "\tif !allowed[%s] {\n", paramName)
 	}
-
 	if twoReturns {
 		fmt.Fprintf(b, "\t\treturn nil, &_capabilityViolationError{category: %q, action: %q, requested: %s}\n", cat, action, paramName)
 	} else {
@@ -447,129 +294,109 @@ func emitScopedCheck(b *strings.Builder, targets []string, paramName string, two
 	fmt.Fprintf(b, "\t}\n")
 }
 
-func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string, targetToVar map[string]string) {
+func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	key := g.Category + ":" + g.Action
 	switch key {
 	case "fs:read":
 		fmt.Fprintf(b, "// ReadFile reads the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison to prevent\n")
-		fmt.Fprintf(b, "// bypass via ./foo, foo/../foo/bar, and similar path manipulations.\n")
-		fmt.Fprintf(b, "func (c *%s) ReadFile(path string) ([]byte, error) {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "read", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) ReadFile(path string) ([]byte, error) {\n")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "read")
 		fmt.Fprintf(b, "\treturn os.ReadFile(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:write":
 		fmt.Fprintf(b, "// WriteFile writes data to the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
-		fmt.Fprintf(b, "func (c *%s) WriteFile(path string, data []byte, perm os.FileMode) error {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "write", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) WriteFile(path string, data []byte, perm os.FileMode) error {\n")
+		emitScopedCheck(b, g.Targets, "path", false, "fs", "write")
 		fmt.Fprintf(b, "\treturn os.WriteFile(path, data, perm) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:create":
 		fmt.Fprintf(b, "// CreateFile creates or truncates the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
-		fmt.Fprintf(b, "func (c *%s) CreateFile(path string) (*os.File, error) {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "create", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) CreateFile(path string) (*os.File, error) {\n")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "create")
 		fmt.Fprintf(b, "\treturn os.Create(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:delete":
 		fmt.Fprintf(b, "// DeleteFile removes the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
-		fmt.Fprintf(b, "func (c *%s) DeleteFile(path string) error {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) DeleteFile(path string) error {\n")
+		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete")
 		fmt.Fprintf(b, "\treturn os.Remove(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:list":
 		fmt.Fprintf(b, "// ReadDir lists the contents of the directory at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
-		fmt.Fprintf(b, "func (c *%s) ReadDir(path string) ([]os.DirEntry, error) {\n", typeName)
-		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "list", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) ReadDir(path string) ([]os.DirEntry, error) {\n")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "list")
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "net:connect":
 		fmt.Fprintf(b, "// Connect opens a network connection to addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "func (c *%s) Connect(network, addr string) (net.Conn, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "addr", true, "net", "connect", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) Connect(network, addr string) (net.Conn, error) {\n")
+		emitScopedCheck(b, g.Targets, "addr", true, "net", "connect")
 		fmt.Fprintf(b, "\treturn net.Dial(network, addr) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "net:listen":
 		fmt.Fprintf(b, "// Listen opens a network listener on addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "func (c *%s) Listen(network, addr string) (net.Listener, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "addr", true, "net", "listen", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) Listen(network, addr string) (net.Listener, error) {\n")
+		emitScopedCheck(b, g.Targets, "addr", true, "net", "listen")
 		fmt.Fprintf(b, "\treturn net.Listen(network, addr) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "net:dns":
 		fmt.Fprintf(b, "// LookupHost resolves host to a list of IP addresses.\n")
 		fmt.Fprintf(b, "// Only hosts declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "func (c *%s) LookupHost(host string) ([]string, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "host", true, "net", "dns", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) LookupHost(host string) ([]string, error) {\n")
+		emitScopedCheck(b, g.Targets, "host", true, "net", "dns")
 		fmt.Fprintf(b, "\treturn net.LookupHost(host) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "proc:exec":
 		fmt.Fprintf(b, "// Exec runs the named executable with args.\n")
 		fmt.Fprintf(b, "// Only executables declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The name is cleaned with filepath.Clean before comparison.\n")
-		fmt.Fprintf(b, "//\n")
-		fmt.Fprintf(b, "// SECURITY NOTE: Only the executable path is enforced — NOT the arguments.\n")
-		fmt.Fprintf(b, "// An attacker who controls args can potentially weaponize an allowed binary\n")
-		fmt.Fprintf(b, "// (e.g., pass -c 'malicious code' to an allowed interpreter).\n")
-		fmt.Fprintf(b, "// Callers are responsible for validating arguments before passing them here.\n")
-		fmt.Fprintf(b, "// If argument-level restriction is needed, declare narrower capabilities\n")
-		fmt.Fprintf(b, "// or enforce argument constraints in the calling code.\n")
-		fmt.Fprintf(b, "func (c *%s) Exec(name string, args ...string) ([]byte, error) {\n", typeName)
-		fmt.Fprintf(b, "\tname = filepath.Clean(name)\n")
-		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) Exec(name string, args ...string) ([]byte, error) {\n")
+		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec")
 		fmt.Fprintf(b, "\treturn exec.Command(name, args...).Output() //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "env:read":
 		fmt.Fprintf(b, "// Getenv returns the value of the environment variable key.\n")
 		fmt.Fprintf(b, "// Only variables declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "func (c *%s) Getenv(key string) (string, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "key", true, "env", "read", targetToVar)
+		fmt.Fprintf(b, "func (c *Cage) Getenv(key string) (string, error) {\n")
+		emitScopedCheck(b, g.Targets, "key", true, "env", "read")
 		fmt.Fprintf(b, "\treturn os.Getenv(key), nil //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "time:sleep":
 		fmt.Fprintf(b, "// Sleep pauses the current goroutine for duration d.\n")
-		fmt.Fprintf(b, "func (c *%s) Sleep(d time.Duration) {\n", typeName)
+		fmt.Fprintf(b, "func (c *Cage) Sleep(d time.Duration) {\n")
 		fmt.Fprintf(b, "\ttime.Sleep(d)\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "stdin:read":
 		fmt.Fprintf(b, "// ReadStdin reads all bytes from standard input.\n")
-		fmt.Fprintf(b, "func (c *%s) ReadStdin() ([]byte, error) {\n", typeName)
+		fmt.Fprintf(b, "func (c *Cage) ReadStdin() ([]byte, error) {\n")
 		fmt.Fprintf(b, "\treturn io.ReadAll(os.Stdin) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "stdout:write":
 		fmt.Fprintf(b, "// WriteStdout writes data to standard output.\n")
-		fmt.Fprintf(b, "func (c *%s) WriteStdout(data []byte) (int, error) {\n", typeName)
+		fmt.Fprintf(b, "func (c *Cage) WriteStdout(data []byte) (int, error) {\n")
 		fmt.Fprintf(b, "\treturn os.Stdout.Write(data) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	default:
-		fmt.Fprintf(b, "// TODO: implement capability method for %s:%s\n\n", g.Category, g.Action)
+		fmt.Fprintf(b, "// TODO: implement Cage method for %s:%s\n\n", g.Category, g.Action)
 	}
 }
 
@@ -643,23 +470,17 @@ func emitResultFactory(b *strings.Builder) {
 // Code generation — Operation
 // ─────────────────────────────────────────────────────────────────────────────
 
-func emitOperation(b *strings.Builder, groups []capabilityGroup) {
+func emitOperation(b *strings.Builder) {
 	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
 	fmt.Fprintf(b, "// Operation — the unit of work\n")
 	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "type Operation[T any] struct {\n")
 	fmt.Fprintf(b, "\tname        string\n")
-	fmt.Fprintf(b, "\tcallback    func(*Operation[T], *ResultFactory[T]) *OperationResult[T]\n")
+	fmt.Fprintf(b, "\tcallback    func(*Cage, *Operation[T], *ResultFactory[T]) *OperationResult[T]\n")
 	fmt.Fprintf(b, "\tfallback    T\n")
 	fmt.Fprintf(b, "\tpropertyBag map[string]any\n")
 	fmt.Fprintf(b, "\trePanic     bool // if true, panics from the callback are re-panicked rather than caught\n")
-	// Emit one capability field per declared category (e.g., File *_FileCapabilities).
-	for _, cat := range uniqueCategories(groups) {
-		fieldName := categoryFieldName(cat)
-		typeName := categoryTypeName(cat)
-		fmt.Fprintf(b, "\t%-12s *%s\n", fieldName, typeName)
-	}
 	fmt.Fprintf(b, "}\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "// AddProperty attaches a named piece of metadata to this operation.\n")
@@ -681,14 +502,17 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "// GetResult executes the operation callback and returns (value, error).\n")
 	fmt.Fprintf(b, "//\n")
 	fmt.Fprintf(b, "// Execution model:\n")
-	fmt.Fprintf(b, "//  1. Call the callback with this Operation and a ResultFactory.\n")
-	fmt.Fprintf(b, "//  2. Recover any panic from the callback.\n")
-	fmt.Fprintf(b, "//     - If PanicOnUnexpected() was set: re-panic.\n")
+	fmt.Fprintf(b, "//  1. Record start time.\n")
+	fmt.Fprintf(b, "//  2. Call the callback with a fresh Cage, this Operation, and a ResultFactory.\n")
+	fmt.Fprintf(b, "//  3. Recover any panic from the callback.\n")
+	fmt.Fprintf(b, "//     - If PanicOnUnexpected() was set: re-panic after logging.\n")
 	fmt.Fprintf(b, "//     - Otherwise: use the fallback value, mark as unexpected failure.\n")
-	fmt.Fprintf(b, "//  3. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.\n")
+	fmt.Fprintf(b, "//  4. Record elapsed time and emit a structured log line.\n")
+	fmt.Fprintf(b, "//  5. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.\n")
 	fmt.Fprintf(b, "//     Expected failures with a typed Err field return that error directly\n")
 	fmt.Fprintf(b, "//     (preserving the type for errors.As checks).\n")
 	fmt.Fprintf(b, "func (op *Operation[T]) GetResult() (T, error) {\n")
+	fmt.Fprintf(b, "\tstart := time.Now()\n")
 	fmt.Fprintf(b, "\trf := &ResultFactory[T]{}\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tvar result *OperationResult[T]\n")
@@ -702,8 +526,10 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "\t\t\t\tpanicValue = r\n")
 	fmt.Fprintf(b, "\t\t\t}\n")
 	fmt.Fprintf(b, "\t\t}()\n")
-	fmt.Fprintf(b, "\t\tresult = op.callback(op, rf)\n")
+	fmt.Fprintf(b, "\t\tresult = op.callback(&Cage{}, op, rf)\n")
 	fmt.Fprintf(b, "\t}()\n")
+	fmt.Fprintf(b, "\n")
+	fmt.Fprintf(b, "\telapsed := time.Since(start)\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tif encounteredPanic {\n")
 	fmt.Fprintf(b, "\t\tresult = &OperationResult[T]{\n")
@@ -713,15 +539,17 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "\t\t}\n")
 	fmt.Fprintf(b, "\t}\n")
 	fmt.Fprintf(b, "\n")
+	fmt.Fprintf(b, "\tlog.Printf(`{\"op\":%%q,\"elapsedMs\":%%d,\"ok\":%%v,\"unexpected\":%%v,\"panic\":%%v,\"props\":%%v}`,\n")
+	fmt.Fprintf(b, "\t\top.name, elapsed.Milliseconds(),\n")
+	fmt.Fprintf(b, "\t\tresult.DidSucceed, result.DidFailUnexpectedly,\n")
+	fmt.Fprintf(b, "\t\tencounteredPanic, op.propertyBag)\n")
+	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tif !result.DidSucceed {\n")
 	fmt.Fprintf(b, "\t\tif result.DidFailUnexpectedly || encounteredPanic {\n")
 	fmt.Fprintf(b, "\t\t\tif op.rePanic && encounteredPanic {\n")
 	fmt.Fprintf(b, "\t\t\t\tpanic(panicValue)\n")
 	fmt.Fprintf(b, "\t\t\t}\n")
-	// Do not include panicValue in the caller-facing error: it may contain
-	// sensitive data (credentials, paths, internal state). The structured log
-	// line above already records panic:true and the operation name for debugging.
-	fmt.Fprintf(b, "\t\t\treturn result.ReturnValue, fmt.Errorf(\"operation %%q failed unexpectedly (see log for details)\", op.name)\n")
+	fmt.Fprintf(b, "\t\t\treturn result.ReturnValue, fmt.Errorf(\"operation %%q failed unexpectedly: %%v\", op.name, panicValue)\n")
 	fmt.Fprintf(b, "\t\t}\n")
 	fmt.Fprintf(b, "\t\tif result.Err != nil {\n")
 	fmt.Fprintf(b, "\t\t\treturn result.ReturnValue, result.Err\n")
@@ -736,7 +564,7 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 // Code generation — StartNew
 // ─────────────────────────────────────────────────────────────────────────────
 
-func emitStartNew(b *strings.Builder, groups []capabilityGroup) {
+func emitStartNew(b *strings.Builder) {
 	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
 	fmt.Fprintf(b, "// StartNew — creates an Operation (does not run it yet)\n")
 	fmt.Fprintf(b, "//\n")
@@ -749,27 +577,21 @@ func emitStartNew(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "//   fallback — Returned if the callback panics (and PanicOnUnexpected is false).\n")
 	fmt.Fprintf(b, "//              Use the zero value for T: nil, 0, \"\", false, etc.\n")
 	fmt.Fprintf(b, "//   fn       — The callback. Receives:\n")
-	fmt.Fprintf(b, "//                op — the operation (op.File, op.Net, etc. for OS access;\n")
-	fmt.Fprintf(b, "//                     op.AddProperty for metadata)\n")
-	fmt.Fprintf(b, "//                rf — the result factory (rf.Generate or rf.Fail)\n")
+	fmt.Fprintf(b, "//                cage  — the capability gate (only declared OS methods)\n")
+	fmt.Fprintf(b, "//                op    — the operation (call AddProperty for metadata)\n")
+	fmt.Fprintf(b, "//                rf    — the result factory (rf.Generate or rf.Fail)\n")
 	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "func StartNew[T any](\n")
 	fmt.Fprintf(b, "\tname string,\n")
 	fmt.Fprintf(b, "\tfallback T,\n")
-	fmt.Fprintf(b, "\tfn func(op *Operation[T], rf *ResultFactory[T]) *OperationResult[T],\n")
+	fmt.Fprintf(b, "\tfn func(cage *Cage, op *Operation[T], rf *ResultFactory[T]) *OperationResult[T],\n")
 	fmt.Fprintf(b, ") *Operation[T] {\n")
 	fmt.Fprintf(b, "\treturn &Operation[T]{\n")
 	fmt.Fprintf(b, "\t\tname:        name,\n")
 	fmt.Fprintf(b, "\t\tcallback:    fn,\n")
 	fmt.Fprintf(b, "\t\tfallback:    fallback,\n")
 	fmt.Fprintf(b, "\t\tpropertyBag: make(map[string]any),\n")
-	// Initialize capability fields so they are non-nil inside the callback.
-	for _, cat := range uniqueCategories(groups) {
-		fieldName := categoryFieldName(cat)
-		typeName := categoryTypeName(cat)
-		fmt.Fprintf(b, "\t\t%-12s &%s{},\n", fieldName+":", typeName)
-	}
 	fmt.Fprintf(b, "\t}\n")
 	fmt.Fprintf(b, "}\n\n")
 }
@@ -822,18 +644,11 @@ func generateSource(manifestPath string, mf *manifestJSON) (string, error) {
 	emitHeader(&b, manifestPath)
 	fmt.Fprintf(&b, "package %s\n\n", pkgName)
 	emitImports(&b, imports)
-
-	// Emit package-level sync.OnceValue vars for relative path targets,
-	// then pass the target→varName map into the struct emitter so that
-	// each capability method can reference the correct pre-resolved path.
-	relTargets := collectRelativeTargets(groups)
-	targetToVar := emitResolvedPathVars(&b, relTargets)
-
-	emitCapabilityStructs(&b, groups, targetToVar)
+	emitCage(&b, groups)
 	emitOperationResult(&b)
 	emitResultFactory(&b)
-	emitOperation(&b, groups)
-	emitStartNew(&b, groups)
+	emitOperation(&b)
+	emitStartNew(&b)
 	emitCapabilityViolationError(&b)
 
 	return b.String(), nil

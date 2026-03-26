@@ -3,7 +3,7 @@
 // Source: required_capabilities.json
 // Regenerate:
 //   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \
-//     --manifest=/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/fervent-gould/code/packages/go/directed-graph/required_capabilities.json
+//     --manifest=../../../packages/go/directed-graph/required_capabilities.json
 //
 // The JSON file is a development-time artifact; this file is what the
 // runtime enforces. Edit required_capabilities.json and re-run the
@@ -13,7 +13,21 @@ package directedgraph
 
 import (
 	"fmt"
+	"log"
+	"time"
 )
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Cage — the OS-capability gate
+//
+// Cage is injected into every Operation callback. It is the ONLY way to
+// perform OS-level operations. Methods exist only for capabilities that are
+// declared in required_capabilities.json. Any undeclared OS operation must
+// be added to the manifest — making it visible in code review and
+// enforced at compile time (the method simply does not exist).
+// ─────────────────────────────────────────────────────────────────────────────
+
+type Cage struct{}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // OperationResult — three-state outcome
@@ -75,7 +89,7 @@ func (f *ResultFactory[T]) Fail(value T, err error) *OperationResult[T] {
 
 type Operation[T any] struct {
 	name        string
-	callback    func(*Operation[T], *ResultFactory[T]) *OperationResult[T]
+	callback    func(*Cage, *Operation[T], *ResultFactory[T]) *OperationResult[T]
 	fallback    T
 	propertyBag map[string]any
 	rePanic     bool // if true, panics from the callback are re-panicked rather than caught
@@ -100,14 +114,17 @@ func (op *Operation[T]) PanicOnUnexpected() *Operation[T] {
 // GetResult executes the operation callback and returns (value, error).
 //
 // Execution model:
-//  1. Call the callback with this Operation and a ResultFactory.
-//  2. Recover any panic from the callback.
-//     - If PanicOnUnexpected() was set: re-panic.
+//  1. Record start time.
+//  2. Call the callback with a fresh Cage, this Operation, and a ResultFactory.
+//  3. Recover any panic from the callback.
+//     - If PanicOnUnexpected() was set: re-panic after logging.
 //     - Otherwise: use the fallback value, mark as unexpected failure.
-//  3. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
+//  4. Record elapsed time and emit a structured log line.
+//  5. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
 //     Expected failures with a typed Err field return that error directly
 //     (preserving the type for errors.As checks).
 func (op *Operation[T]) GetResult() (T, error) {
+	start := time.Now()
 	rf := &ResultFactory[T]{}
 
 	var result *OperationResult[T]
@@ -121,8 +138,10 @@ func (op *Operation[T]) GetResult() (T, error) {
 				panicValue = r
 			}
 		}()
-		result = op.callback(op, rf)
+		result = op.callback(&Cage{}, op, rf)
 	}()
+
+	elapsed := time.Since(start)
 
 	if encounteredPanic {
 		result = &OperationResult[T]{
@@ -132,12 +151,17 @@ func (op *Operation[T]) GetResult() (T, error) {
 		}
 	}
 
+	log.Printf(`{"op":%q,"elapsedMs":%d,"ok":%v,"unexpected":%v,"panic":%v,"props":%v}`,
+		op.name, elapsed.Milliseconds(),
+		result.DidSucceed, result.DidFailUnexpectedly,
+		encounteredPanic, op.propertyBag)
+
 	if !result.DidSucceed {
 		if result.DidFailUnexpectedly || encounteredPanic {
 			if op.rePanic && encounteredPanic {
 				panic(panicValue)
 			}
-			return result.ReturnValue, fmt.Errorf("operation %q failed unexpectedly (see log for details)", op.name)
+			return result.ReturnValue, fmt.Errorf("operation %q failed unexpectedly: %v", op.name, panicValue)
 		}
 		if result.Err != nil {
 			return result.ReturnValue, result.Err
@@ -159,15 +183,15 @@ func (op *Operation[T]) GetResult() (T, error) {
 //   fallback — Returned if the callback panics (and PanicOnUnexpected is false).
 //              Use the zero value for T: nil, 0, "", false, etc.
 //   fn       — The callback. Receives:
-//                op — the operation (op.File, op.Net, etc. for OS access;
-//                     op.AddProperty for metadata)
-//                rf — the result factory (rf.Generate or rf.Fail)
+//                cage  — the capability gate (only declared OS methods)
+//                op    — the operation (call AddProperty for metadata)
+//                rf    — the result factory (rf.Generate or rf.Fail)
 // ─────────────────────────────────────────────────────────────────────────────
 
 func StartNew[T any](
 	name string,
 	fallback T,
-	fn func(op *Operation[T], rf *ResultFactory[T]) *OperationResult[T],
+	fn func(cage *Cage, op *Operation[T], rf *ResultFactory[T]) *OperationResult[T],
 ) *Operation[T] {
 	return &Operation[T]{
 		name:        name,
