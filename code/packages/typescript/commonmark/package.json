@@ -14,7 +14,9 @@
   "dependencies": {
     "@coding-adventures/document-ast": "file:../document-ast",
     "@coding-adventures/commonmark-parser": "file:../commonmark-parser",
-    "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html"
+    "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
