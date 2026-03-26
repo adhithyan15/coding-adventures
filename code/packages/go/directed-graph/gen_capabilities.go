@@ -3,7 +3,7 @@
 // Source: required_capabilities.json
 // Regenerate:
 //   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \
-//     --manifest=../../../packages/go/directed-graph/required_capabilities.json
+//     --manifest=/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/fervent-gould/code/packages/go/directed-graph/required_capabilities.json
 //
 // The JSON file is a development-time artifact; this file is what the
 // runtime enforces. Edit required_capabilities.json and re-run the
@@ -12,10 +12,7 @@
 package directedgraph
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
-	"time"
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -74,15 +71,6 @@ func (f *ResultFactory[T]) Fail(value T, err error) *OperationResult[T] {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Operation — the unit of work
-//
-// Operation[T] is the core abstraction. Every public function wraps its
-// body in StartNew[T](...).GetResult(). OS-level capabilities are accessed
-// via namespace fields on the operation itself (e.g., op.File.ReadFile,
-// op.Net.Connect). Fields only exist when declared in required_capabilities.json
-// — accessing an undeclared namespace is a compile error.
-//
-// This package declares zero OS capabilities, so Operation[T] has no
-// capability fields.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Operation[T any] struct {
@@ -112,17 +100,14 @@ func (op *Operation[T]) PanicOnUnexpected() *Operation[T] {
 // GetResult executes the operation callback and returns (value, error).
 //
 // Execution model:
-//  1. Record start time.
-//  2. Call the callback with this Operation and a ResultFactory.
-//  3. Recover any panic from the callback.
-//     - If PanicOnUnexpected() was set: re-panic after logging.
+//  1. Call the callback with this Operation and a ResultFactory.
+//  2. Recover any panic from the callback.
+//     - If PanicOnUnexpected() was set: re-panic.
 //     - Otherwise: use the fallback value, mark as unexpected failure.
-//  4. Record elapsed time and emit a structured log line.
-//  5. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
+//  3. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
 //     Expected failures with a typed Err field return that error directly
 //     (preserving the type for errors.As checks).
 func (op *Operation[T]) GetResult() (T, error) {
-	start := time.Now()
 	rf := &ResultFactory[T]{}
 
 	var result *OperationResult[T]
@@ -139,8 +124,6 @@ func (op *Operation[T]) GetResult() (T, error) {
 		result = op.callback(op, rf)
 	}()
 
-	elapsed := time.Since(start)
-
 	if encounteredPanic {
 		result = &OperationResult[T]{
 			DidSucceed:          false,
@@ -149,23 +132,11 @@ func (op *Operation[T]) GetResult() (T, error) {
 		}
 	}
 
-	propsJSON, _propsErr := json.Marshal(op.propertyBag)
-	if _propsErr != nil {
-		propsJSON = []byte(`"<unmarshalable>"`)
-	}
-	log.Printf(`{"op":%q,"elapsedMs":%d,"ok":%v,"unexpected":%v,"panic":%v,"props":%s}`,
-		op.name, elapsed.Milliseconds(),
-		result.DidSucceed, result.DidFailUnexpectedly,
-		encounteredPanic, propsJSON)
-
 	if !result.DidSucceed {
 		if result.DidFailUnexpectedly || encounteredPanic {
 			if op.rePanic && encounteredPanic {
 				panic(panicValue)
 			}
-			// Do not include panicValue in the caller-facing error: it may contain
-			// sensitive data (credentials, paths, internal state). The structured log
-			// line above already records panic:true and the operation name for debugging.
 			return result.ReturnValue, fmt.Errorf("operation %q failed unexpectedly (see log for details)", op.name)
 		}
 		if result.Err != nil {

@@ -206,12 +206,6 @@ func TestGenerateSource_EmptyCapabilities(t *testing.T) {
 	if !strings.Contains(src, `"fmt"`) {
 		t.Error("expected fmt import")
 	}
-	if !strings.Contains(src, `"log"`) {
-		t.Error("expected log import")
-	}
-	if !strings.Contains(src, `"time"`) {
-		t.Error("expected time import")
-	}
 	// Zero capabilities: no capability namespace structs, no Cage type.
 	if strings.Contains(src, "type Cage struct{}") {
 		t.Error("must not emit 'type Cage struct{}' — Cage is replaced by namespace fields on Operation[T]")

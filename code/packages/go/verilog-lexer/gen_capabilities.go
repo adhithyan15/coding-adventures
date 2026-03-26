@@ -12,13 +12,10 @@
 package veriloglexer
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -130,17 +127,14 @@ func (op *Operation[T]) PanicOnUnexpected() *Operation[T] {
 // GetResult executes the operation callback and returns (value, error).
 //
 // Execution model:
-//  1. Record start time.
-//  2. Call the callback with this Operation and a ResultFactory.
-//  3. Recover any panic from the callback.
-//     - If PanicOnUnexpected() was set: re-panic after logging.
+//  1. Call the callback with this Operation and a ResultFactory.
+//  2. Recover any panic from the callback.
+//     - If PanicOnUnexpected() was set: re-panic.
 //     - Otherwise: use the fallback value, mark as unexpected failure.
-//  4. Record elapsed time and emit a structured log line.
-//  5. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
+//  3. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
 //     Expected failures with a typed Err field return that error directly
 //     (preserving the type for errors.As checks).
 func (op *Operation[T]) GetResult() (T, error) {
-	start := time.Now()
 	rf := &ResultFactory[T]{}
 
 	var result *OperationResult[T]
@@ -157,8 +151,6 @@ func (op *Operation[T]) GetResult() (T, error) {
 		result = op.callback(op, rf)
 	}()
 
-	elapsed := time.Since(start)
-
 	if encounteredPanic {
 		result = &OperationResult[T]{
 			DidSucceed:          false,
@@ -166,15 +158,6 @@ func (op *Operation[T]) GetResult() (T, error) {
 			ReturnValue:         op.fallback,
 		}
 	}
-
-	propsJSON, _propsErr := json.Marshal(op.propertyBag)
-	if _propsErr != nil {
-		propsJSON = []byte(`"<unmarshalable>"`)
-	}
-	log.Printf(`{"op":%q,"elapsedMs":%d,"ok":%v,"unexpected":%v,"panic":%v,"props":%s}`,
-		op.name, elapsed.Milliseconds(),
-		result.DidSucceed, result.DidFailUnexpectedly,
-		encounteredPanic, propsJSON)
 
 	if !result.DidSucceed {
 		if result.DidFailUnexpectedly || encounteredPanic {
