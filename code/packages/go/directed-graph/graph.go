@@ -33,9 +33,9 @@
 // # Operations
 //
 // Every public method is wrapped in an Operation, giving each call
-// automatic timing, structured logging, and panic recovery. The Cage
-// is injected into every callback but has no methods for this package
-// (directed-graph declares zero OS capabilities).
+// automatic timing, structured logging, and panic recovery. This
+// package declares zero OS capabilities, so no op.File / op.Net
+// namespace fields are available inside callbacks.
 //
 // From the caller's perspective, the public API is unchanged — every
 // method has the same signature as before. Operations are an internal
@@ -105,7 +105,7 @@ func NewAllowSelfLoops() *Graph {
 // AddNode adds a node to the graph. No-op if the node already exists.
 func (g *Graph) AddNode(node string) {
 	_, _ = StartNew[struct{}]("directed-graph.AddNode", struct{}{},
-		func(_ *Cage, op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
 			op.AddProperty("node", node)
 			if _, ok := g.forward[node]; !ok {
 				g.forward[node] = make(map[string]bool)
@@ -133,7 +133,7 @@ func (g *Graph) AddEdge(from, to string) {
 	// PanicOnUnexpected lets the self-loop panic propagate to the caller.
 	// This preserves the documented panic behavior for programming errors.
 	_, _ = StartNew[struct{}]("directed-graph.AddEdge", struct{}{},
-		func(_ *Cage, op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
 			op.AddProperty("from", from)
 			op.AddProperty("to", to)
 			if from == to && !g.allowSelfLoops {
@@ -157,7 +157,7 @@ func (g *Graph) AddEdge(from, to string) {
 // Returns an error if the node doesn't exist.
 func (g *Graph) RemoveNode(node string) error {
 	_, err := StartNew[struct{}]("directed-graph.RemoveNode", struct{}{},
-		func(_ *Cage, op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
 			op.AddProperty("node", node)
 			if _, exists := g.forward[node]; !exists {
 				return rf.Fail(struct{}{}, &NodeNotFoundError{Node: node})
@@ -181,7 +181,7 @@ func (g *Graph) RemoveNode(node string) error {
 // Returns an error if the edge doesn't exist.
 func (g *Graph) RemoveEdge(from, to string) error {
 	_, err := StartNew[struct{}]("directed-graph.RemoveEdge", struct{}{},
-		func(_ *Cage, op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
 			op.AddProperty("from", from)
 			op.AddProperty("to", to)
 			succs, ok := g.forward[from]
@@ -198,7 +198,7 @@ func (g *Graph) RemoveEdge(from, to string) error {
 // HasNode returns true if the node exists in the graph.
 func (g *Graph) HasNode(node string) bool {
 	result, _ := StartNew[bool]("directed-graph.HasNode", false,
-		func(_ *Cage, op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
 			op.AddProperty("node", node)
 			_, ok := g.forward[node]
 			return rf.Generate(true, false, ok)
@@ -209,7 +209,7 @@ func (g *Graph) HasNode(node string) bool {
 // HasEdge returns true if there's an edge from 'from' to 'to'.
 func (g *Graph) HasEdge(from, to string) bool {
 	result, _ := StartNew[bool]("directed-graph.HasEdge", false,
-		func(_ *Cage, op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
 			op.AddProperty("from", from)
 			op.AddProperty("to", to)
 			if succs, ok := g.forward[from]; ok {
@@ -223,7 +223,7 @@ func (g *Graph) HasEdge(from, to string) bool {
 // Nodes returns all nodes in sorted order (deterministic).
 func (g *Graph) Nodes() []string {
 	result, _ := StartNew[[]string]("directed-graph.Nodes", nil,
-		func(_ *Cage, _ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+		func(_ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
 			nodes := make([]string, 0, len(g.forward))
 			for n := range g.forward {
 				nodes = append(nodes, n)
@@ -237,7 +237,7 @@ func (g *Graph) Nodes() []string {
 // Edges returns all edges as [from, to] pairs, sorted deterministically.
 func (g *Graph) Edges() [][2]string {
 	result, _ := StartNew[[][2]string]("directed-graph.Edges", nil,
-		func(_ *Cage, _ *Operation[[][2]string], rf *ResultFactory[[][2]string]) *OperationResult[[][2]string] {
+		func(_ *Operation[[][2]string], rf *ResultFactory[[][2]string]) *OperationResult[[][2]string] {
 			var edges [][2]string
 			for from, succs := range g.forward {
 				for to := range succs {
@@ -258,7 +258,7 @@ func (g *Graph) Edges() [][2]string {
 // Predecessors returns the direct parents of a node (nodes with edges TO this node).
 func (g *Graph) Predecessors(node string) ([]string, error) {
 	return StartNew[[]string]("directed-graph.Predecessors", nil,
-		func(_ *Cage, op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
 			op.AddProperty("node", node)
 			preds, ok := g.reverse[node]
 			if !ok {
@@ -276,7 +276,7 @@ func (g *Graph) Predecessors(node string) ([]string, error) {
 // Successors returns the direct children of a node (nodes this node has edges TO).
 func (g *Graph) Successors(node string) ([]string, error) {
 	return StartNew[[]string]("directed-graph.Successors", nil,
-		func(_ *Cage, op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
 			op.AddProperty("node", node)
 			succs, ok := g.forward[node]
 			if !ok {
@@ -294,7 +294,7 @@ func (g *Graph) Successors(node string) ([]string, error) {
 // Size returns the number of nodes in the graph.
 func (g *Graph) Size() int {
 	result, _ := StartNew[int]("directed-graph.Size", 0,
-		func(_ *Cage, _ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
 			return rf.Generate(true, false, len(g.forward))
 		}).GetResult()
 	return result
@@ -312,7 +312,7 @@ func (g *Graph) Size() int {
 // Returns a CycleError if the graph contains a cycle.
 func (g *Graph) TopologicalSort() ([]string, error) {
 	return StartNew[[]string]("directed-graph.TopologicalSort", nil,
-		func(_ *Cage, _ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+		func(_ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
 			// Compute in-degrees.
 			inDegree := make(map[string]int, len(g.forward))
 			for node := range g.forward {
@@ -360,7 +360,7 @@ func (g *Graph) TopologicalSort() ([]string, error) {
 // Uses DFS with three-color marking (white/gray/black).
 func (g *Graph) HasCycle() bool {
 	result, _ := StartNew[bool]("directed-graph.HasCycle", false,
-		func(_ *Cage, _ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+		func(_ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
 			const (
 				white = 0 // unvisited
 				gray  = 1 // in current DFS path
@@ -408,7 +408,7 @@ func (g *Graph) HasCycle() bool {
 // by following edges forward (downstream).
 func (g *Graph) TransitiveClosure(node string) (map[string]bool, error) {
 	return StartNew[map[string]bool]("directed-graph.TransitiveClosure", nil,
-		func(_ *Cage, op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
 			op.AddProperty("node", node)
 			if _, exists := g.forward[node]; !exists {
 				return rf.Fail(nil, &NodeNotFoundError{Node: node})
@@ -461,7 +461,7 @@ func (g *Graph) TransitiveDependents(node string) (map[string]bool, error) {
 // Returns a CycleError if the graph contains a cycle.
 func (g *Graph) IndependentGroups() ([][]string, error) {
 	return StartNew[[][]string]("directed-graph.IndependentGroups", nil,
-		func(_ *Cage, _ *Operation[[][]string], rf *ResultFactory[[][]string]) *OperationResult[[][]string] {
+		func(_ *Operation[[][]string], rf *ResultFactory[[][]string]) *OperationResult[[][]string] {
 			inDegree := make(map[string]int, len(g.forward))
 			for node := range g.forward {
 				inDegree[node] = len(g.reverse[node])
@@ -513,7 +513,7 @@ func (g *Graph) IndependentGroups() ([][]string, error) {
 // affected set includes logic-gates + arithmetic + cpu-simulator + ...
 func (g *Graph) AffectedNodes(changed map[string]bool) map[string]bool {
 	result, _ := StartNew[map[string]bool]("directed-graph.AffectedNodes", nil,
-		func(_ *Cage, _ *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+		func(_ *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
 			affected := make(map[string]bool)
 			for node := range changed {
 				if _, exists := g.forward[node]; !exists {
@@ -533,7 +533,7 @@ func (g *Graph) AffectedNodes(changed map[string]bool) map[string]bool {
 // AffectedNodesList is a convenience wrapper that returns a sorted slice.
 func (g *Graph) AffectedNodesList(changed map[string]bool) []string {
 	result, _ := StartNew[[]string]("directed-graph.AffectedNodesList", nil,
-		func(_ *Cage, _ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+		func(_ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
 			affected := g.AffectedNodes(changed)
 			nodes := make([]string, 0, len(affected))
 			for n := range affected {

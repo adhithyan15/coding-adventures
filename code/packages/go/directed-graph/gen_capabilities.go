@@ -19,18 +19,6 @@ import (
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Cage — the OS-capability gate
-//
-// Cage is injected into every Operation callback. It is the ONLY way to
-// perform OS-level operations. Methods exist only for capabilities that are
-// declared in required_capabilities.json. Any undeclared OS operation must
-// be added to the manifest — making it visible in code review and
-// enforced at compile time (the method simply does not exist).
-// ─────────────────────────────────────────────────────────────────────────────
-
-type Cage struct{}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // OperationResult — three-state outcome
 //
 // Every Operation callback returns one of three outcomes:
@@ -86,11 +74,20 @@ func (f *ResultFactory[T]) Fail(value T, err error) *OperationResult[T] {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Operation — the unit of work
+//
+// Operation[T] is the core abstraction. Every public function wraps its
+// body in StartNew[T](...).GetResult(). OS-level capabilities are accessed
+// via namespace fields on the operation itself (e.g., op.File.ReadFile,
+// op.Net.Connect). Fields only exist when declared in required_capabilities.json
+// — accessing an undeclared namespace is a compile error.
+//
+// This package declares zero OS capabilities, so Operation[T] has no
+// capability fields.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Operation[T any] struct {
 	name        string
-	callback    func(*Cage, *Operation[T], *ResultFactory[T]) *OperationResult[T]
+	callback    func(*Operation[T], *ResultFactory[T]) *OperationResult[T]
 	fallback    T
 	propertyBag map[string]any
 	rePanic     bool // if true, panics from the callback are re-panicked rather than caught
@@ -116,7 +113,7 @@ func (op *Operation[T]) PanicOnUnexpected() *Operation[T] {
 //
 // Execution model:
 //  1. Record start time.
-//  2. Call the callback with a fresh Cage, this Operation, and a ResultFactory.
+//  2. Call the callback with this Operation and a ResultFactory.
 //  3. Recover any panic from the callback.
 //     - If PanicOnUnexpected() was set: re-panic after logging.
 //     - Otherwise: use the fallback value, mark as unexpected failure.
@@ -139,7 +136,7 @@ func (op *Operation[T]) GetResult() (T, error) {
 				panicValue = r
 			}
 		}()
-		result = op.callback(&Cage{}, op, rf)
+		result = op.callback(op, rf)
 	}()
 
 	elapsed := time.Since(start)
@@ -188,15 +185,15 @@ func (op *Operation[T]) GetResult() (T, error) {
 //   fallback — Returned if the callback panics (and PanicOnUnexpected is false).
 //              Use the zero value for T: nil, 0, "", false, etc.
 //   fn       — The callback. Receives:
-//                cage  — the capability gate (only declared OS methods)
-//                op    — the operation (call AddProperty for metadata)
-//                rf    — the result factory (rf.Generate or rf.Fail)
+//                op — the operation (op.File, op.Net, etc. for OS access;
+//                     op.AddProperty for metadata)
+//                rf — the result factory (rf.Generate or rf.Fail)
 // ─────────────────────────────────────────────────────────────────────────────
 
 func StartNew[T any](
 	name string,
 	fallback T,
-	fn func(cage *Cage, op *Operation[T], rf *ResultFactory[T]) *OperationResult[T],
+	fn func(op *Operation[T], rf *ResultFactory[T]) *OperationResult[T],
 ) *Operation[T] {
 	return &Operation[T]{
 		name:        name,
