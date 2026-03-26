@@ -38,6 +38,23 @@ hasCycle := g.HasCycle()            // cycle detection
 | `TransitiveClosure(node)` | All nodes reachable downstream | Dependency analysis |
 | `TransitiveDependents(node)` | All nodes that depend on this one | Impact analysis |
 
+## Operations
+
+Every method is wrapped in an `Operation` — a closure that provides:
+
+- **Automatic timing**: every call records elapsed milliseconds
+- **Structured logging**: JSON log line per call with operation name, timing, outcome, and metadata
+- **Panic recovery**: unexpected panics are caught, logged, and converted to errors
+  (except `AddEdge` which uses `PanicOnUnexpected()` to preserve its self-loop panic contract)
+- **Typed error preservation**: `rf.Fail(value, err)` returns typed errors intact so
+  `errors.As` checks work correctly at the call site
+
+OS capabilities are accessed as namespace fields directly on `op` — `op.File.ReadFile(path)`,
+`op.Net.Connect(addr)`, etc. These fields only exist when the corresponding capability is
+declared in `required_capabilities.json`. Since this package declares zero OS capabilities,
+`Operation[T]` has no capability fields. Any OS access must be declared in the manifest —
+making it visible in code review and enforced at compile time.
+
 ## Where it fits
 
 ```
@@ -54,7 +71,7 @@ go test ./... -v
 go test ./... -cover
 ```
 
-39 tests, 94% coverage.
+39 tests, 95% coverage.
 
 ## Implementations
 

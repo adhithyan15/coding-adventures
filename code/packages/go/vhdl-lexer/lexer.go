@@ -35,7 +35,6 @@ import (
 	"runtime"
 	"strings"
 
-	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
@@ -111,31 +110,25 @@ func normalizeCaseInsensitiveTokens(tokens []lexer.Token, keywordSet map[string]
 // Lexer Creation
 // ============================================================================
 
-// loadGrammar reads and parses the vhdl.tokens grammar file.
-//
-// Returns the parsed grammar, which contains token definitions, skip
-// patterns, and the keyword list. The keyword list is used both by the
-// grammar lexer (for exact-match keyword detection) and by our
-// normalization step (for reclassifying lowercased NAMEs as KEYWORDs).
-func loadGrammar() (*grammartools.TokenGrammar, error) {
-	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	return grammartools.ParseTokenGrammar(string(bytes))
-}
-
 // createLexerFromSource loads the VHDL grammar and creates a GrammarLexer.
 //
-// This is the internal workhorse: it reads the vhdl.tokens grammar file,
-// parses it into token patterns, and creates a GrammarLexer configured
-// for VHDL source code.
+// This is the internal workhorse: it reads the vhdl.tokens grammar file via
+// op.File.ReadFile (enforcing the fs:read capability in required_capabilities.json),
+// parses it into token patterns, and creates a GrammarLexer configured for
+// VHDL source code.
 func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
-	grammar, err := loadGrammar()
-	if err != nil {
-		return nil, err
-	}
-	return lexer.NewGrammarLexer(source, grammar), nil
+	return StartNew[*lexer.GrammarLexer]("vhdllexer.createLexerFromSource", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 // CreateVhdlLexer creates a GrammarLexer configured for VHDL source code.
@@ -179,23 +172,30 @@ func CreateVhdlLexer(source string) (*lexer.GrammarLexer, error) {
 //	`)
 //	// [Token(KEYWORD, "entity"), Token(NAME, "and_gate"), Token(KEYWORD, "is"), ...]
 func TokenizeVhdl(source string) ([]lexer.Token, error) {
-	grammar, err := loadGrammar()
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[[]lexer.Token]("vhdllexer.TokenizeVhdl", nil,
+		func(op *Operation[[]lexer.Token], rf *ResultFactory[[]lexer.Token]) *OperationResult[[]lexer.Token] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Build the keyword set for post-tokenization reclassification.
-	// The grammar lexer only matches keywords by exact string equality,
-	// so "ENTITY" won't match "entity" in the keyword list. Our
-	// normalization step lowercases NAME tokens and checks this set
-	// to promote them to KEYWORD when they match.
-	keywordSet := make(map[string]struct{})
-	for _, kw := range grammar.Keywords {
-		keywordSet[kw] = struct{}{}
-	}
+			// Build the keyword set for post-tokenization reclassification.
+			// The grammar lexer only matches keywords by exact string equality,
+			// so "ENTITY" won't match "entity" in the keyword list. Our
+			// normalization step lowercases NAME tokens and checks this set
+			// to promote them to KEYWORD when they match.
+			keywordSet := make(map[string]struct{})
+			for _, kw := range grammar.Keywords {
+				keywordSet[kw] = struct{}{}
+			}
 
-	vhdlLexer := lexer.NewGrammarLexer(source, grammar)
-	tokens := vhdlLexer.Tokenize()
-	tokens = normalizeCaseInsensitiveTokens(tokens, keywordSet)
-	return tokens, nil
+			vhdlLexer := lexer.NewGrammarLexer(source, grammar)
+			tokens := vhdlLexer.Tokenize()
+			tokens = normalizeCaseInsensitiveTokens(tokens, keywordSet)
+			return rf.Generate(true, false, tokens)
+		}).GetResult()
 }

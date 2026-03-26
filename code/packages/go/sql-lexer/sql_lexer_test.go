@@ -1,7 +1,6 @@
 package sqllexer
 
 import (
-	"os"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -424,67 +423,22 @@ func TestCreateSQLLexer(t *testing.T) {
 }
 
 // =============================================================================
-// TestCreateSQLLexerErrorMissingFile
+// TestCapabilityEnforcement_RejectsUnauthorizedPath
 // =============================================================================
 //
-// Verifies that CreateSQLLexer returns an error when the grammar file cannot
-// be found. This exercises the os.ReadFile error path in CreateSQLLexer that
-// is otherwise unreachable in normal operation.
+// Verifies that the generated ReadFile enforcement returns a capability
+// violation error when a caller passes a path that does not match the
+// canonical resolved grammar path (_allowedPath_0).
 //
-// We use the package-level sqlTokensPath override to point at a non-existent
-// file, then restore it after the test. This is the standard Go pattern for
-// testing file-path-dependent code without mocking.
-func TestCreateSQLLexerErrorMissingFile(t *testing.T) {
-	original := sqlTokensPath
-	sqlTokensPath = "/does/not/exist/sql.tokens"
-	defer func() { sqlTokensPath = original }()
-
-	_, err := CreateSQLLexer("SELECT 1")
+// This test directly exercises _FileCapabilities.ReadFile from gen_capabilities.go,
+// which is accessible from this in-package test. The enforcement uses exact
+// canonical path comparison (sync.OnceValue + runtime.Caller), so any path
+// other than the real grammar file is rejected before os.ReadFile is called.
+func TestCapabilityEnforcement_RejectsUnauthorizedPath(t *testing.T) {
+	fc := &_FileCapabilities{}
+	_, err := fc.ReadFile("/not/the/grammar/path.tokens")
 	if err == nil {
-		t.Error("Expected error for missing grammar file, got nil")
-	}
-}
-
-// =============================================================================
-// TestTokenizeSQLErrorMissingFile
-// =============================================================================
-//
-// Verifies that TokenizeSQL propagates the error from CreateSQLLexer when the
-// grammar file is missing. This covers the error return path in TokenizeSQL.
-func TestTokenizeSQLErrorMissingFile(t *testing.T) {
-	original := sqlTokensPath
-	sqlTokensPath = "/does/not/exist/sql.tokens"
-	defer func() { sqlTokensPath = original }()
-
-	_, err := TokenizeSQL("SELECT 1")
-	if err == nil {
-		t.Error("Expected error for missing grammar file, got nil")
-	}
-}
-
-// =============================================================================
-// TestCreateSQLLexerErrorInvalidGrammar
-// =============================================================================
-//
-// Verifies that CreateSQLLexer returns an error when the grammar file exists
-// but contains invalid content. This exercises the ParseTokenGrammar error path.
-//
-// We write a temporary file with invalid grammar content and point the lexer at it.
-func TestCreateSQLLexerErrorInvalidGrammar(t *testing.T) {
-	// Write a temp file with invalid grammar content (malformed token definition)
-	tmp := t.TempDir()
-	badGrammarPath := tmp + "/bad.tokens"
-	if err := os.WriteFile(badGrammarPath, []byte("INVALID%%GRAMMAR\n"), 0o644); err != nil {
-		t.Fatalf("Failed to create temp grammar file: %v", err)
-	}
-
-	original := sqlTokensPath
-	sqlTokensPath = badGrammarPath
-	defer func() { sqlTokensPath = original }()
-
-	_, err := CreateSQLLexer("SELECT 1")
-	if err == nil {
-		t.Error("Expected error for invalid grammar content, got nil")
+		t.Error("expected capability violation error for unauthorized path, got nil")
 	}
 }
 
