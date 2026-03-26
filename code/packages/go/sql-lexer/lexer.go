@@ -43,7 +43,6 @@ import (
 	"path/filepath"
 	"runtime"
 
-	cage "github.com/adhithyan15/coding-adventures/code/packages/go/capability-cage"
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
@@ -103,25 +102,28 @@ func getGrammarPath() string {
 //
 // Returns an error if the grammar file cannot be read or parsed.
 func CreateSQLLexer(source string) (*lexer.GrammarLexer, error) {
-	// Read the grammar file via the capability cage. This ensures the operation
-	// is covered by the declared fs:read capability in gen_capabilities.go.
-	bytes, err := cage.ReadFile(Manifest, getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*lexer.GrammarLexer]("sqllexer.CreateSQLLexer", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			// Read the grammar file via the declared fs:read capability.
+			// op.File.ReadFile enforces the path suffix declared in required_capabilities.json.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Parse the grammar file into a structured TokenGrammar object.
-	// The magic comment `# @case_insensitive true` sets grammar.CaseInsensitive
-	// to true, which the GrammarLexer reads to enable case-folding on keywords.
-	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Parse the grammar file into a structured TokenGrammar object.
+			// The magic comment `# @case_insensitive true` sets grammar.CaseInsensitive
+			// to true, which the GrammarLexer reads to enable case-folding on keywords.
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Create the grammar-driven lexer. Because grammar.CaseInsensitive is true,
-	// the constructor stores all keywords as uppercase and sets up the
-	// case-folding lookup. SQL uses no indentation mode (no INDENT/DEDENT tokens).
-	return lexer.NewGrammarLexer(source, grammar), nil
+			// Create the grammar-driven lexer. Because grammar.CaseInsensitive is true,
+			// the constructor stores all keywords as uppercase and sets up the
+			// case-folding lookup. SQL uses no indentation mode (no INDENT/DEDENT tokens).
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 // TokenizeSQL is a convenience function that tokenizes SQL text in a single

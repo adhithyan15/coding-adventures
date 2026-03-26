@@ -222,6 +222,11 @@ func neededImports(caps []capabilityJSON) []string {
 		if c.Category == "fs" || (c.Category == "proc" && c.Action == "exec") {
 			set[`"path/filepath"`] = true
 		}
+		// Relative fs targets (../../grammars/foo.tokens) use suffix matching,
+		// which requires strings.HasSuffix in the generated enforcement code.
+		if c.Category == "fs" && isRelativeTarget(c.Target) {
+			set[`"strings"`] = true
+		}
 	}
 	result := make([]string, 0, len(set))
 	for imp := range set {
@@ -347,20 +352,79 @@ func emitCapabilityStructs(b *strings.Builder, groups []capabilityGroup) {
 	}
 }
 
+// isRelativeTarget returns true if the target starts with "./" or "../",
+// indicating a path relative to the package directory. Relative targets
+// use suffix matching instead of exact equality in the generated enforcement
+// code, because the runtime path computed via runtime.Caller is absolute.
+func isRelativeTarget(target string) bool {
+	return strings.HasPrefix(target, "./") || strings.HasPrefix(target, "../")
+}
+
+// relativeToSuffix converts a relative target like "../../grammars/sql.tokens"
+// into the stable suffix "/grammars/sql.tokens" used for runtime enforcement.
+// It strips all leading ../ and ./ components, then prepends "/" so that
+// strings.HasSuffix(filepath.ToSlash(absPath), suffix) works correctly.
+func relativeToSuffix(target string) string {
+	rel := target
+	for {
+		if after, ok := strings.CutPrefix(rel, "../"); ok {
+			rel = after
+		} else if after, ok := strings.CutPrefix(rel, "./"); ok {
+			rel = after
+		} else {
+			break
+		}
+	}
+	return "/" + strings.ReplaceAll(rel, "\\", "/")
+}
+
 // emitScopedCheck emits the allowed-path check at the top of a Cage method.
 // paramName is the method parameter to check (e.g., "path", "addr", "key").
 // twoReturns controls whether the violation returns (nil, err) or just (err).
+//
+// For relative fs targets (e.g., "../../grammars/sql.tokens"), suffix matching
+// is used instead of exact equality, because the runtime path computed via
+// runtime.Caller is absolute while the declared target is relative. The suffix
+// "/grammars/sql.tokens" matches any absolute path ending with that component.
 func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string) {
-	if len(targets) == 1 {
-		fmt.Fprintf(b, "\tif %s != %q {\n", paramName, targets[0])
-	} else {
-		fmt.Fprintf(b, "\tallowed := map[string]bool{\n")
-		for _, t := range targets {
-			fmt.Fprintf(b, "\t\t%q: true,\n", t)
+	anyRelative := false
+	for _, t := range targets {
+		if isRelativeTarget(t) {
+			anyRelative = true
+			break
 		}
-		fmt.Fprintf(b, "\t}\n")
-		fmt.Fprintf(b, "\tif !allowed[%s] {\n", paramName)
 	}
+
+	if anyRelative {
+		// Relative targets: convert to slash form then check suffix.
+		fmt.Fprintf(b, "\t_slashPath := filepath.ToSlash(%s)\n", paramName)
+		if len(targets) == 1 {
+			fmt.Fprintf(b, "\tif !strings.HasSuffix(_slashPath, %q) {\n", relativeToSuffix(targets[0]))
+		} else {
+			fmt.Fprintf(b, "\t_allowedSuffix := false\n")
+			fmt.Fprintf(b, "\tfor _, _suf := range []string{\n")
+			for _, t := range targets {
+				fmt.Fprintf(b, "\t\t%q,\n", relativeToSuffix(t))
+			}
+			fmt.Fprintf(b, "\t} {\n")
+			fmt.Fprintf(b, "\t\tif strings.HasSuffix(_slashPath, _suf) { _allowedSuffix = true; break }\n")
+			fmt.Fprintf(b, "\t}\n")
+			fmt.Fprintf(b, "\tif !_allowedSuffix {\n")
+		}
+	} else {
+		// Absolute/non-relative targets: exact equality.
+		if len(targets) == 1 {
+			fmt.Fprintf(b, "\tif %s != %q {\n", paramName, targets[0])
+		} else {
+			fmt.Fprintf(b, "\tallowed := map[string]bool{\n")
+			for _, t := range targets {
+				fmt.Fprintf(b, "\t\t%q: true,\n", t)
+			}
+			fmt.Fprintf(b, "\t}\n")
+			fmt.Fprintf(b, "\tif !allowed[%s] {\n", paramName)
+		}
+	}
+
 	if twoReturns {
 		fmt.Fprintf(b, "\t\treturn nil, &_capabilityViolationError{category: %q, action: %q, requested: %s}\n", cat, action, paramName)
 	} else {
