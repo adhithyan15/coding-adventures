@@ -69,11 +69,11 @@ defmodule GrammarTools.CLI do
         command = result.arguments["command"]
         files = result.arguments["files"] || []
         exit_code = dispatch(command, files)
-        if exit_code != 0, do: System.halt(exit_code)
+        if exit_code != 0, do: exit(exit_code)
 
       {:error, %ParseErrors{message: msg}} ->
         IO.puts(:stderr, "error: #{msg}")
-        System.halt(2)
+        exit(2)
     end
   end
 
@@ -144,7 +144,7 @@ defmodule GrammarTools.CLI do
     # Step 1: parse and validate the .tokens file
     unless File.exists?(tokens_path) do
       IO.puts(:stderr, "Error: File not found: #{tokens_path}")
-      System.halt(1)
+      exit(1)
     end
 
     IO.write("Validating #{Path.basename(tokens_path)} ... ")
@@ -154,7 +154,7 @@ defmodule GrammarTools.CLI do
         {:error, msg} ->
           IO.puts("PARSE ERROR")
           IO.puts("  #{msg}")
-          System.halt(1)
+          exit(1)
 
         {:ok, tg} ->
           token_issues = TokenGrammar.validate_token_grammar(tg)
@@ -181,7 +181,7 @@ defmodule GrammarTools.CLI do
     # Step 2: parse and validate the .grammar file
     unless File.exists?(grammar_path) do
       IO.puts(:stderr, "Error: File not found: #{grammar_path}")
-      System.halt(1)
+      exit(1)
     end
 
     IO.write("Validating #{Path.basename(grammar_path)} ... ")
@@ -191,7 +191,7 @@ defmodule GrammarTools.CLI do
         {:error, msg} ->
           IO.puts("PARSE ERROR")
           IO.puts("  #{msg}")
-          System.halt(1)
+          exit(1)
 
         {:ok, pg} ->
           tg_token_names = TokenGrammar.token_names(token_grammar)
@@ -258,7 +258,7 @@ defmodule GrammarTools.CLI do
   def validate_tokens_only(tokens_path) do
     unless File.exists?(tokens_path) do
       IO.puts(:stderr, "Error: File not found: #{tokens_path}")
-      System.halt(1)
+      exit(1)
     end
 
     IO.write("Validating #{Path.basename(tokens_path)} ... ")
@@ -312,7 +312,7 @@ defmodule GrammarTools.CLI do
   def validate_grammar_only(grammar_path) do
     unless File.exists?(grammar_path) do
       IO.puts(:stderr, "Error: File not found: #{grammar_path}")
-      System.halt(1)
+      exit(1)
     end
 
     IO.write("Validating #{Path.basename(grammar_path)} ... ")
