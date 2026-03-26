@@ -95,8 +95,38 @@ defmodule CodingAdventures.DocumentAstToHtml do
         ""
       end
 
-    inner = Enum.map_join(items, "", &render_list_item(&1, tight))
+    inner = Enum.map_join(items, "", &render_list_child(&1, tight))
     "<#{tag}#{start_attr}>\n#{inner}</#{tag}>\n"
+  end
+
+  defp render_block(%{type: :task_item} = node, tight) do
+    render_task_item(node, tight)
+  end
+
+  defp render_block(%{type: :table, align: alignments, children: rows}, _tight) do
+    {header_rows, body_rows} = Enum.split_with(rows, & &1.is_header)
+
+    parts = ["<table>\n"]
+
+    parts =
+      if header_rows == [] do
+        parts
+      else
+        parts ++ ["<thead>\n", Enum.map_join(header_rows, "", &render_table_row(&1, alignments)), "</thead>\n"]
+      end
+
+    parts =
+      if body_rows == [] do
+        parts
+      else
+        parts ++ ["<tbody>\n", Enum.map_join(body_rows, "", &render_table_row(&1, alignments)), "</tbody>\n"]
+      end
+
+    IO.iodata_to_binary(parts ++ ["</table>\n"])
+  end
+
+  defp render_block(%{type: :table_row, children: children} = row, _tight) do
+    render_table_row(row, List.duplicate(nil, length(children)))
   end
 
   defp render_block(%{type: :thematic_break}, _tight) do
@@ -115,6 +145,16 @@ defmodule CodingAdventures.DocumentAstToHtml do
   # Fallback for unknown node types
   defp render_block(_, _tight), do: ""
 
+  defp render_list_child(%{type: :list_item} = node, tight) do
+    render_list_item(node, tight)
+  end
+
+  defp render_list_child(%{type: :task_item} = node, tight) do
+    render_task_item(node, tight)
+  end
+
+  defp render_list_child(_, _tight), do: ""
+
   defp render_list_item(%{type: :list_item, children: []}, _tight) do
     # Empty list item — no children, no newlines
     "<li></li>\n"
@@ -132,6 +172,35 @@ defmodule CodingAdventures.DocumentAstToHtml do
   # Fallback for unknown / malformed list_item shapes — kept grouped with the
   # above clauses to silence the Elixir "clauses should be grouped" compiler warning.
   defp render_list_item(_, _tight), do: ""
+
+  defp render_task_item(%{type: :task_item, checked: checked, children: []}, _tight) do
+    checkbox = if checked, do: "<input type=\"checkbox\" disabled=\"\" checked=\"\" />", else: "<input type=\"checkbox\" disabled=\"\" />"
+    "<li>#{checkbox}</li>\n"
+  end
+
+  defp render_task_item(%{type: :task_item, checked: checked, children: children}, tight) do
+    checkbox = if checked, do: "<input type=\"checkbox\" disabled=\"\" checked=\"\" />", else: "<input type=\"checkbox\" disabled=\"\" />"
+    first_child = List.first(children)
+
+    cond do
+      tight && first_child != nil && first_child.type == :paragraph ->
+        first_content = render_inlines(first_child.children)
+        content = if first_content == "", do: checkbox, else: "#{checkbox} #{first_content}"
+
+        if length(children) == 1 do
+          "<li>#{content}</li>\n"
+        else
+          rest = children |> tl() |> Enum.map_join("", &render_block(&1, tight))
+          "<li>#{content}\n#{rest}</li>\n"
+        end
+
+      true ->
+        inner = Enum.map_join(children, "", &render_block(&1, tight))
+        "<li>#{checkbox}\n#{inner}</li>\n"
+    end
+  end
+
+  defp render_task_item(_, _tight), do: ""
 
   # Renders the inner content of a tight list item following CommonMark rules:
   #
@@ -193,6 +262,23 @@ defmodule CodingAdventures.DocumentAstToHtml do
     "<li>\n#{init_html}#{last_html}</li>\n"
   end
 
+  defp render_table_row(%{type: :table_row, is_header: is_header, children: cells}, alignments) do
+    inner =
+      cells
+      |> Enum.with_index()
+      |> Enum.map_join("", fn {cell, index} ->
+        render_table_cell(cell, is_header, Enum.at(alignments, index))
+      end)
+
+    "<tr>\n#{inner}</tr>\n"
+  end
+
+  defp render_table_cell(%{type: :table_cell, children: children}, is_header, align) do
+    tag = if is_header, do: "th", else: "td"
+    align_attr = if align in [:left, :center, :right], do: " align=\"#{align}\"", else: ""
+    "<#{tag}#{align_attr}>#{render_inlines(children)}</#{tag}>\n"
+  end
+
   # ── Inline Rendering ──────────────────────────────────────────────────────────
 
   defp render_inlines(nodes) do
@@ -209,6 +295,10 @@ defmodule CodingAdventures.DocumentAstToHtml do
 
   defp render_inline(%{type: :strong, children: children}) do
     "<strong>#{render_inlines(children)}</strong>"
+  end
+
+  defp render_inline(%{type: :strikethrough, children: children}) do
+    "<del>#{render_inlines(children)}</del>"
   end
 
   defp render_inline(%{type: :code_span, value: value}) do

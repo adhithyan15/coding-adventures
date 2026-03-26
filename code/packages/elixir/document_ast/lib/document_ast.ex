@@ -31,10 +31,12 @@ defmodule CodingAdventures.DocumentAst do
   OOP, just data.
 
   Block node types: `:document`, `:heading`, `:paragraph`, `:code_block`,
-  `:blockquote`, `:list`, `:list_item`, `:thematic_break`, `:raw_block`
+  `:blockquote`, `:list`, `:list_item`, `:task_item`, `:thematic_break`,
+  `:raw_block`, `:table`, `:table_row`, `:table_cell`
 
   Inline node types: `:text`, `:emphasis`, `:strong`, `:code_span`,
-  `:link`, `:image`, `:autolink`, `:raw_inline`, `:hard_break`, `:soft_break`
+  `:link`, `:image`, `:autolink`, `:raw_inline`, `:hard_break`, `:soft_break`,
+  `:strikethrough`
 
   ## No `link_definition` in the IR
 
@@ -92,12 +94,37 @@ defmodule CodingAdventures.DocumentAst do
           children: [block_node()]
         }
 
+  @type task_item_node :: %{
+          type: :task_item,
+          checked: boolean(),
+          children: [block_node()]
+        }
+
   @type thematic_break_node :: %{type: :thematic_break}
 
   @type raw_block_node :: %{
           type: :raw_block,
           format: String.t(),
           value: String.t()
+        }
+
+  @type table_alignment :: :left | :center | :right | nil
+
+  @type table_cell_node :: %{
+          type: :table_cell,
+          children: [inline_node()]
+        }
+
+  @type table_row_node :: %{
+          type: :table_row,
+          is_header: boolean(),
+          children: [table_cell_node()]
+        }
+
+  @type table_node :: %{
+          type: :table,
+          align: [table_alignment()],
+          children: [table_row_node()]
         }
 
   @type block_node ::
@@ -108,8 +135,12 @@ defmodule CodingAdventures.DocumentAst do
           | blockquote_node()
           | list_node()
           | list_item_node()
+          | task_item_node()
           | thematic_break_node()
           | raw_block_node()
+          | table_node()
+          | table_row_node()
+          | table_cell_node()
 
   @type text_node :: %{type: :text, value: String.t()}
   @type emphasis_node :: %{type: :emphasis, children: [inline_node()]}
@@ -144,6 +175,7 @@ defmodule CodingAdventures.DocumentAst do
 
   @type hard_break_node :: %{type: :hard_break}
   @type soft_break_node :: %{type: :soft_break}
+  @type strikethrough_node :: %{type: :strikethrough, children: [inline_node()]}
 
   @type inline_node ::
           text_node()
@@ -156,6 +188,7 @@ defmodule CodingAdventures.DocumentAst do
           | raw_inline_node()
           | hard_break_node()
           | soft_break_node()
+          | strikethrough_node()
 
   @type ast_node :: block_node() | inline_node()
 
@@ -251,6 +284,17 @@ defmodule CodingAdventures.DocumentAst do
   end
 
   @doc """
+  Create a task list item node.
+
+      iex> CodingAdventures.DocumentAst.task_item(true, [])
+      %{type: :task_item, checked: true, children: []}
+  """
+  @spec task_item(boolean(), [block_node()]) :: task_item_node()
+  def task_item(checked, children) when is_list(children) do
+    %{type: :task_item, checked: checked == true, children: children}
+  end
+
+  @doc """
   Create a thematic break node (horizontal rule).
 
       iex> CodingAdventures.DocumentAst.thematic_break()
@@ -273,6 +317,39 @@ defmodule CodingAdventures.DocumentAst do
   @spec raw_block(String.t(), String.t()) :: raw_block_node()
   def raw_block(format, value) do
     %{type: :raw_block, format: format, value: value}
+  end
+
+  @doc """
+  Create a table node.
+
+      iex> CodingAdventures.DocumentAst.table([:left], [])
+      %{type: :table, align: [:left], children: []}
+  """
+  @spec table([table_alignment()], [table_row_node()]) :: table_node()
+  def table(align, children) when is_list(align) and is_list(children) do
+    %{type: :table, align: align, children: children}
+  end
+
+  @doc """
+  Create a table row node.
+
+      iex> CodingAdventures.DocumentAst.table_row(true, [])
+      %{type: :table_row, is_header: true, children: []}
+  """
+  @spec table_row(boolean(), [table_cell_node()]) :: table_row_node()
+  def table_row(is_header, children) when is_list(children) do
+    %{type: :table_row, is_header: is_header == true, children: children}
+  end
+
+  @doc """
+  Create a table cell node.
+
+      iex> CodingAdventures.DocumentAst.table_cell([])
+      %{type: :table_cell, children: []}
+  """
+  @spec table_cell([inline_node()]) :: table_cell_node()
+  def table_cell(children) when is_list(children) do
+    %{type: :table_cell, children: children}
   end
 
   # ── Inline node constructors ─────────────────────────────────────────────────
@@ -311,6 +388,17 @@ defmodule CodingAdventures.DocumentAst do
   @spec strong([inline_node()]) :: strong_node()
   def strong(children) when is_list(children) do
     %{type: :strong, children: children}
+  end
+
+  @doc """
+  Create a strikethrough node (`<del>`).
+
+      iex> CodingAdventures.DocumentAst.strikethrough([CodingAdventures.DocumentAst.text("gone")])
+      %{type: :strikethrough, children: [%{type: :text, value: "gone"}]}
+  """
+  @spec strikethrough([inline_node()]) :: strikethrough_node()
+  def strikethrough(children) when is_list(children) do
+    %{type: :strikethrough, children: children}
   end
 
   @doc """

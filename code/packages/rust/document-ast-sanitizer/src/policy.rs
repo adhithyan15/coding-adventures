@@ -123,7 +123,6 @@ pub enum MaxHeadingLevel {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SanitizationPolicy {
     // ─── Raw node handling ──────────────────────────────────────────────────
-
     /// Controls which `RawBlockNode` formats survive.
     /// Default: `Passthrough` (all raw block formats kept).
     pub allow_raw_block_formats: RawFormatPolicy,
@@ -133,7 +132,6 @@ pub struct SanitizationPolicy {
     pub allow_raw_inline_formats: RawFormatPolicy,
 
     // ─── URL scheme policy ──────────────────────────────────────────────────
-
     /// Allowlist of URL schemes permitted in `LinkNode.destination`,
     /// `ImageNode.destination`, and `AutolinkNode.destination`.
     ///
@@ -147,7 +145,6 @@ pub struct SanitizationPolicy {
     pub allowed_url_schemes: Option<Vec<String>>,
 
     // ─── Node type policy ───────────────────────────────────────────────────
-
     /// If `true`, all `LinkNode` instances are removed. Their text children
     /// are **promoted** to the parent container — the text is preserved, only
     /// the hyperlink wrapper is removed.

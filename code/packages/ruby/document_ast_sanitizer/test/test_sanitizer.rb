@@ -81,8 +81,30 @@ module CodingAdventures
       ListItemNode.new(children: children)
     end
 
+    def task_item(*children, checked: false)
+      TaskItemNode.new(checked: checked, children: children)
+    end
+
     def sanitize(document, policy)
       DocumentAstSanitizer.sanitize(document, policy)
+    end
+
+    def test_gfm_nodes_preserved
+      document = doc(
+        list(task_item(para(StrikethroughNode.new(children: [txt("done")])), checked: true)),
+        TableNode.new(
+          align: [nil],
+          children: [
+            TableRowNode.new(
+              is_header: true,
+              children: [TableCellNode.new(children: [txt("A")])]
+            )
+          ]
+        )
+      )
+
+      result = sanitize(document, DocumentAstSanitizer::PASSTHROUGH)
+      assert_equal document, result
     end
 
     # ─── 1. Policy presets ────────────────────────────────────────────────────

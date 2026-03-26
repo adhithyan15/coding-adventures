@@ -1,0 +1,2 @@
+bash ../_windows_cargo.sh build --manifest-path Cargo.toml
+bash ../_windows_cargo.sh test --manifest-path Cargo.toml -- --nocapture

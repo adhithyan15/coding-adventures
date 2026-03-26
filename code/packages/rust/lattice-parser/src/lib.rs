@@ -283,6 +283,13 @@ mod tests {
             "Expected 'mixin_definition' in AST");
     }
 
+    #[test]
+    fn test_mixin_definition_without_parens() {
+        let ast = parse_lattice("@mixin flex-center { display: flex; }");
+        assert!(find_rule(&ast, "mixin_definition"),
+            "Expected 'mixin_definition' in AST");
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: @include directive
     // -----------------------------------------------------------------------

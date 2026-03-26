@@ -1,0 +1,13 @@
+[package]
+name = "gfm-parser"
+version = "0.1.0"
+edition = "2021"
+description = "GitHub Flavored Markdown parser producing a Document AST"
+
+[dependencies]
+document-ast = { path = "../document-ast" }
+unicode-general-category = "0.6"
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

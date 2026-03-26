@@ -406,12 +406,34 @@ mod tests {
     fn test_undefined_mixin_error() {
         let result = transform_lattice(".btn { @include nonexistent; }");
         match result {
-            Err(LatticeError::UndefinedMixin { name, .. }) => {
+            Err(LatticeError::UndefinedMixin { name, line, column, .. }) => {
                 assert_eq!(name, "nonexistent");
+                assert!(line > 0);
+                assert!(column > 0);
             }
             Ok(css) => panic!("Expected error, got: {css}"),
             Err(e) => panic!("Unexpected error type: {e}"),
         }
+    }
+
+    #[test]
+    fn test_undefined_mixin_suggestion() {
+        let result = transform_lattice("@mixin button { color: red; } .btn { @include buton; }");
+        match result {
+            Err(LatticeError::UndefinedMixin { name, suggestion, .. }) => {
+                assert_eq!(name, "buton");
+                assert_eq!(suggestion, Some("button".to_string()));
+            }
+            Ok(css) => panic!("Expected error, got: {css}"),
+            Err(e) => panic!("Unexpected error type: {e}"),
+        }
+    }
+
+    #[test]
+    fn test_mixin_without_parens_definition() {
+        let css = transform_lattice("@mixin button { color: red; } .btn { @include button; }")
+            .expect("mixin without parens should compile");
+        assert!(css.contains("color: red;"));
     }
 
     // -----------------------------------------------------------------------

@@ -995,10 +995,10 @@ fn resolve_block(block: FinalBlock, link_refs: &LinkRefMap) -> Option<BlockNode>
             Some(BlockNode::Blockquote(BlockquoteNode { children: c }))
         }
         FinalBlock::List { ordered, start, tight, items } => {
-            let list_items: Vec<ListItemNode> = items.into_iter().filter_map(|item| {
+            let list_items: Vec<ListChildNode> = items.into_iter().filter_map(|item| {
                 if let FinalBlock::ListItem { children } = item {
                     let c = resolve_blocks(children, link_refs);
-                    Some(ListItemNode { children: c })
+                    Some(ListChildNode::ListItem(ListItemNode { children: c }))
                 } else { None }
             }).collect();
             Some(BlockNode::List(ListNode {

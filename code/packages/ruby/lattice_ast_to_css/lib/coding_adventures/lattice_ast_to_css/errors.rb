@@ -114,11 +114,14 @@ module CodingAdventures
     #
     # Example: @include nonexistent;
     class LatticeUndefinedMixinError < LatticeError
-      attr_reader :name
+      attr_reader :name, :suggestion
 
-      def initialize(name, line = 0, column = 0)
+      def initialize(name, line = 0, column = 0, suggestion = nil)
         @name = name
-        super("Undefined mixin '#{name}'", line, column)
+        @suggestion = suggestion
+        message = "Undefined mixin '#{name}'"
+        message += ". Did you mean '#{suggestion}'?" if suggestion
+        super(message, line, column)
       end
     end
 

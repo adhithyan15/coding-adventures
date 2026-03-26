@@ -167,6 +167,40 @@ module CodingAdventures
         assert_equal "<ul>\n<li></li>\n</ul>\n", render_block(list)
       end
 
+      def test_task_list_item
+        list = ListNode.new(
+          ordered: false,
+          start: nil,
+          tight: true,
+          children: [
+            TaskItemNode.new(
+              checked: true,
+              children: [ParagraphNode.new(children: [txt("done")])]
+            )
+          ]
+        )
+        assert_equal "<ul>\n<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> done</li>\n</ul>\n",
+          render_block(list)
+      end
+
+      def test_table
+        table = TableNode.new(
+          align: [nil],
+          children: [
+            TableRowNode.new(
+              is_header: true,
+              children: [TableCellNode.new(children: [txt("A")])]
+            ),
+            TableRowNode.new(
+              is_header: false,
+              children: [TableCellNode.new(children: [txt("B")])]
+            )
+          ]
+        )
+        assert_equal "<table>\n<thead>\n<tr>\n<th>A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>B</td>\n</tr>\n</tbody>\n</table>\n",
+          render_block(table)
+      end
+
       # ─── Raw Block ──────────────────────────────────────────────────────────
 
       def test_raw_block_html_format
@@ -208,6 +242,13 @@ module CodingAdventures
           StrongNode.new(children: [txt("bold")])
         ])
         assert_equal "<p><strong>bold</strong></p>\n", render_block(node)
+      end
+
+      def test_strikethrough
+        node = ParagraphNode.new(children: [
+          StrikethroughNode.new(children: [txt("gone")])
+        ])
+        assert_equal "<p><del>gone</del></p>\n", render_block(node)
       end
 
       # ─── Code Span ──────────────────────────────────────────────────────────
