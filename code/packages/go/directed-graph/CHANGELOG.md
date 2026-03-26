@@ -5,6 +5,30 @@ All notable changes to the directed-graph Go package will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-03-26
+
+### Added
+- `gen_capabilities.go`: self-contained Operation + Cage infrastructure generated per-package
+  - `Cage` struct (zero methods — this package declares no OS capabilities)
+  - `OperationResult[T]`: three-state outcome (success, expected failure, unexpected failure)
+  - `ResultFactory[T]`: `Generate()` for common results; `Fail()` for typed expected errors
+  - `Operation[T]`: unit of work with timing, structured logging, and panic recovery
+  - `PanicOnUnexpected()`: opt-in re-panic for operations that signal errors via panics
+  - `StartNew[T]()`: constructs an Operation without executing it
+  - `_capabilityViolationError`: returned if an undeclared OS op were attempted
+- All public graph methods now wrapped in `StartNew` internally:
+  - Every call is timed, logged as structured JSON, and panic-safe
+  - Typed error returns preserved via `rf.Fail()` — `errors.As` checks unaffected
+  - `AddEdge` uses `PanicOnUnexpected()` so self-loop panics still propagate to callers
+  - Public API and all existing tests unchanged
+
+### Changed
+- Internal function bodies replaced with Operation callbacks; no change to callers
+- `capability-cage-generator` updated to emit self-contained Operation + Cage code
+  with no dependency on any shared cage package (supply chain isolation)
+- Wildcards now rejected for scopeable categories (fs, net, proc, env, ffi) at
+  generation time — exact paths required
+
 ## [0.1.0] - 2026-03-18
 
 ### Added
