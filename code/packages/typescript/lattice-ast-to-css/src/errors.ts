@@ -80,47 +80,6 @@ export class LatticeError extends Error {
   }
 }
 
-function levenshteinDistance(left: string, right: string): number {
-  const rows = left.length + 1;
-  const cols = right.length + 1;
-  const matrix = Array.from({ length: rows }, () => Array<number>(cols).fill(0));
-
-  for (let row = 0; row < rows; row += 1) {
-    matrix[row]![0] = row;
-  }
-
-  for (let col = 0; col < cols; col += 1) {
-    matrix[0]![col] = col;
-  }
-
-  for (let row = 1; row < rows; row += 1) {
-    for (let col = 1; col < cols; col += 1) {
-      const substitutionCost = left[row - 1] === right[col - 1] ? 0 : 1;
-      matrix[row]![col] = Math.min(
-        matrix[row - 1]![col]! + 1,
-        matrix[row]![col - 1]! + 1,
-        matrix[row - 1]![col - 1]! + substitutionCost,
-      );
-    }
-  }
-
-  return matrix[rows - 1]![cols - 1]!;
-}
-
-function formatSuggestions(name: string, available: string[]): string[] {
-  return [...available]
-    .map((candidate) => ({
-      candidate,
-      distance: levenshteinDistance(name, candidate),
-    }))
-    .filter(({ candidate, distance }) =>
-      candidate.includes(name) || name.includes(candidate) || distance <= 3,
-    )
-    .sort((left, right) => left.distance - right.distance || left.candidate.localeCompare(right.candidate))
-    .slice(0, 3)
-    .map(({ candidate }) => candidate);
-}
-
 // =============================================================================
 // Pass 1: Module Resolution Errors
 // =============================================================================
@@ -193,30 +152,10 @@ export class UndefinedVariableError extends LatticeError {
  */
 export class UndefinedMixinError extends LatticeError {
   readonly name: string;
-  readonly suggestions: string[];
 
-  constructor(
-    name: string,
-    line: number = 0,
-    column: number = 0,
-    availableMixins: string[] = [],
-  ) {
-    const suggestions = formatSuggestions(name, availableMixins);
-    const lines = [`Undefined mixin '${name}'.`];
-
-    if (availableMixins.length === 0) {
-      lines.push("No mixins are currently defined in scope.");
-    } else if (suggestions.length > 0) {
-      lines.push(`Did you mean ${suggestions.map((candidate) => `'${candidate}'`).join(" or ")}?`);
-    } else {
-      lines.push(`Defined mixins in scope: ${availableMixins.sort().join(", ")}.`);
-    }
-
-    lines.push("If this is a zero-argument mixin, both `@mixin card() { ... }` and `@mixin card { ... }` are valid.");
-
-    super(lines.join(" "), line, column);
+  constructor(name: string, line: number = 0, column: number = 0) {
+    super(`Undefined mixin '${name}'`, line, column);
     this.name = name;
-    this.suggestions = suggestions;
   }
 }
 
