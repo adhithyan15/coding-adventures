@@ -3,7 +3,7 @@
 // Source: required_capabilities.json
 // Regenerate:
 //   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \
-//     --manifest=/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/fervent-gould/code/packages/go/actor/required_capabilities.json
+//     --manifest=code/packages/go/actor/required_capabilities.json
 //
 // The JSON file is a development-time artifact; this file is what the
 // runtime enforces. Edit required_capabilities.json and re-run the
@@ -29,17 +29,18 @@ import (
 type _FileCapabilities struct{}
 
 // ReadFile reads the file at path.
-// Only paths declared in required_capabilities.json are permitted.
-// The path is cleaned with filepath.Clean before comparison to prevent
-// bypass via ./foo, foo/../foo/bar, and similar path manipulations.
+// This package declared a wildcard capability ("*").
+// No runtime path restriction is enforced — all paths are permitted.
+// The path is cleaned with filepath.Clean before use.
 func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
 	path = filepath.Clean(path)
 	return os.ReadFile(path) //nolint:cap
 }
 
 // WriteFile writes data to the file at path.
-// Only paths declared in required_capabilities.json are permitted.
-// The path is cleaned with filepath.Clean before comparison.
+// This package declared a wildcard capability ("*").
+// No runtime path restriction is enforced — all paths are permitted.
+// The path is cleaned with filepath.Clean before use.
 func (c *_FileCapabilities) WriteFile(path string, data []byte, perm os.FileMode) error {
 	path = filepath.Clean(path)
 	return os.WriteFile(path, data, perm) //nolint:cap

@@ -207,7 +207,9 @@ func (c *Channel) Persist(directory string) error {
 				buf.Write(msg.ToBytes())
 			}
 
-			if err := op.File.WriteFile(path, buf.Bytes(), 0o644); err != nil {
+			// Use 0o600 (owner read/write only) — channel logs may contain
+			// sensitive message payloads and should not be world-readable.
+			if err := op.File.WriteFile(path, buf.Bytes(), 0o600); err != nil {
 				return rf.Fail(struct{}{}, fmt.Errorf("actor: failed to write channel file %s: %w", path, err))
 			}
 			return rf.Generate(true, false, struct{}{})
