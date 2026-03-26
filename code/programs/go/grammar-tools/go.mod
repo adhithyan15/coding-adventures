@@ -1,6 +1,6 @@
 module github.com/adhithyan15/coding-adventures/code/programs/go/grammar-tools
 
-go 1.22
+go 1.23
 
 require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder v0.0.0
