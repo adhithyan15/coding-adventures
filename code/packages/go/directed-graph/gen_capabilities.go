@@ -163,7 +163,10 @@ func (op *Operation[T]) GetResult() (T, error) {
 			if op.rePanic && encounteredPanic {
 				panic(panicValue)
 			}
-			return result.ReturnValue, fmt.Errorf("operation %q failed unexpectedly: %v", op.name, panicValue)
+			// Do not include panicValue in the caller-facing error: it may contain
+			// sensitive data (credentials, paths, internal state). The structured log
+			// line above already records panic:true and the operation name for debugging.
+			return result.ReturnValue, fmt.Errorf("operation %q failed unexpectedly (see log for details)", op.name)
 		}
 		if result.Err != nil {
 			return result.ReturnValue, result.Err
