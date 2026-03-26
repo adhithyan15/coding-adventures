@@ -541,23 +541,49 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 //
 // By building this mapping upfront, we can resolve dependencies across
 // languages without hard-coding specific package names.
+//
+// When a library package and a program share the same external dep name
+// (e.g., the grammar-tools library and the grammar-tools program both use
+// Cargo crate name "grammar-tools"), the LIBRARY always takes priority. This
+// prevents a program that depends on its own library from resolving the dep
+// to itself and creating a self-loop.
 func buildKnownNames(packages []discovery.Package) map[string]string {
 	known := make(map[string]string)
+
+	// setKnown inserts key→value, letting library packages overwrite programs
+	// but never letting programs overwrite library packages.
+	setKnown := func(key, value, pkgPath string) {
+		existing, exists := known[key]
+		if !exists {
+			known[key] = value
+			return
+		}
+		// Key already set. Allow the overwrite only if the current pkg is
+		// a library (not a program) — that is, when the existing entry came
+		// from a program and we now have the definitive library entry.
+		_ = existing
+		normalized := filepath.ToSlash(pkgPath)
+		if !strings.Contains(normalized, "/programs/") {
+			known[key] = value
+		}
+	}
 
 	for _, pkg := range packages {
 		switch pkg.Language {
 		case "python":
 			// Convert dir name to PyPI name: "logic-gates" → "coding-adventures-logic-gates"
 			pypiName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			known[pypiName] = pkg.Name
+			setKnown(pypiName, pkg.Name, pkg.Path)
 
 		case "ruby":
 			// Convert dir name to gem name: "logic_gates" → "coding_adventures_logic_gates"
 			gemName := "coding_adventures_" + strings.ToLower(filepath.Base(pkg.Path))
-			known[gemName] = pkg.Name
+			setKnown(gemName, pkg.Name, pkg.Path)
 
 		case "go":
-			// For Go, read the module path from go.mod.
+			// For Go, read the module path from go.mod.  Go module paths are
+			// unique across packages and programs (they include the full path),
+			// so the standard map write is safe here.
 			goMod := filepath.Join(pkg.Path, "go.mod")
 			data, err := os.ReadFile(goMod)
 			if err != nil {
@@ -574,31 +600,31 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 		case "typescript":
 			// Convert dir name to npm scoped name: "logic-gates" → "@coding-adventures/logic-gates"
 			npmName := "@coding-adventures/" + strings.ToLower(filepath.Base(pkg.Path))
-			known[npmName] = pkg.Name
+			setKnown(npmName, pkg.Name, pkg.Path)
 
 		case "rust":
 			// Rust crate names use the directory name directly (kebab-case).
 			// "logic-gates" → "logic-gates"
 			crateName := strings.ToLower(filepath.Base(pkg.Path))
-			known[crateName] = pkg.Name
+			setKnown(crateName, pkg.Name, pkg.Path)
 
 		case "elixir":
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
 			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
-			known[appName] = pkg.Name
+			setKnown(appName, pkg.Name, pkg.Path)
 
 		case "lua":
 			// Lua rockspec names use hyphens: "logic_gates" → "coding-adventures-logic-gates"
 			// Note: Lua directory names use underscores, rockspec names use hyphens.
 			rockspecName := "coding-adventures-" + strings.ReplaceAll(
 				strings.ToLower(filepath.Base(pkg.Path)), "_", "-")
-			known[rockspecName] = pkg.Name
+			setKnown(rockspecName, pkg.Name, pkg.Path)
 
 		case "perl":
 			// Perl CPAN distribution names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
 			// This matches the Python convention exactly.
 			cpanName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			known[cpanName] = pkg.Name
+			setKnown(cpanName, pkg.Name, pkg.Path)
 		}
 	}
 
