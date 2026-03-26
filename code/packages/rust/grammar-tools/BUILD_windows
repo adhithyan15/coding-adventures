@@ -1,2 +1,2 @@
-cargo build -p grammar-tools
+set RUSTFLAGS=-C linker=lld-link
 cargo test -p grammar-tools -- --nocapture
