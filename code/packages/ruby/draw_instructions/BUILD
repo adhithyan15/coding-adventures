@@ -1,1 +1,1 @@
-ruby -Ilib:test test/test_draw_instructions.rb
+ruby -Ilib test/test_draw_instructions.rb
