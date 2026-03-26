@@ -532,6 +532,21 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
+      # ── Fix Windows PATH: remove Ruby MSYS2 linker conflict ──
+      #
+      # Ruby's setup-ruby installs MSYS2 which puts a Unix 'link' binary at
+      # C:\hostedtoolcache\windows\Ruby\<ver>\x64\msys64\usr\bin\link.exe.
+      # This shadows MSVC's link.exe, causing Rust packages (e.g. wasm-bindgen
+      # deps in wasm/immutable-list) to fail with "extra operand" linker errors,
+      # which then cascade into 194 package failures. Strip all msys64 bin
+      # directories from PATH so Rust uses the correct MSVC linker.
+      - name: Fix linker PATH on Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          CLEAN_PATH=$(echo "$PATH" | tr ':' '\n' | grep -iv 'msys64' | tr '\n' ':' | sed 's/:$//')
+          echo "PATH=$CLEAN_PATH" >> "$GITHUB_ENV"
+
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
         shell: pwsh
