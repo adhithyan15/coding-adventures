@@ -39,9 +39,13 @@
 package executor
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -53,6 +57,7 @@ import (
 )
 
 // BuildResult holds the outcome of building a single package.
+
 type BuildResult struct {
 	PackageName string  // Qualified name, e.g. "python/logic-gates"
 	Status      string  // "built", "failed", "skipped", "dep-skipped", "would-build"
@@ -76,6 +81,50 @@ func runPackageBuild(pkg discovery.Package) BuildResult {
 	var allStdout, allStderr []string
 
 	for _, command := range pkg.BuildCommands {
+		if strings.HasPrefix(command, "@check-go-coverage") {
+			parts := strings.Fields(command)
+			if len(parts) == 3 {
+				thresh, _ := strconv.ParseFloat(parts[2], 64)
+				err := checkGoCoverage(pkg.Path, parts[1], thresh)
+				if err != nil {
+					elapsed := time.Since(start).Seconds()
+					allStderr = append(allStderr, err.Error()+"\n")
+					return BuildResult{
+						PackageName: pkg.Name,
+						Status:      "failed",
+						Duration:    elapsed,
+						Stdout:      strings.Join(allStdout, ""),
+						Stderr:      strings.Join(allStderr, ""),
+						ReturnCode:  1,
+					}
+				}
+				allStdout = append(allStdout, fmt.Sprintf("Go coverage check passed for %s\n", pkg.Name))
+			}
+			continue
+		}
+
+		if strings.HasPrefix(command, "@check-lua-coverage") {
+			parts := strings.Fields(command)
+			if len(parts) == 3 {
+				thresh, _ := strconv.ParseFloat(parts[2], 64)
+				err := checkLuaCoverage(pkg.Path, parts[1], thresh)
+				if err != nil {
+					elapsed := time.Since(start).Seconds()
+					allStderr = append(allStderr, err.Error()+"\n")
+					return BuildResult{
+						PackageName: pkg.Name,
+						Status:      "failed",
+						Duration:    elapsed,
+						Stdout:      strings.Join(allStdout, ""),
+						Stderr:      strings.Join(allStderr, ""),
+						ReturnCode:  1,
+					}
+				}
+				allStdout = append(allStdout, fmt.Sprintf("Lua coverage check passed for %s\n", pkg.Name))
+			}
+			continue
+		}
+
 		cmd := shellCommand(command)
 		cmd.Dir = pkg.Path
 
@@ -367,3 +416,98 @@ func collectTransitivePredecessors(node string, graph *directedgraph.Graph) map[
 
 	return visited
 }
+
+// checkGoCoverage parses coverage.out, ignores _tokens.go / _grammar.go
+// returns error if coverage < threshold.
+func checkGoCoverage(dir, file string, threshold float64) error {
+	f, err := os.Open(filepath.Join(dir, file))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil // e.g. no tests matched
+		}
+		return err
+	}
+	defer f.Close()
+
+	var totalStatements, coveredStatements int
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "mode:") {
+			continue
+		}
+		parts := strings.Fields(line)
+		if len(parts) < 3 {
+			continue
+		}
+		filePart := parts[0]
+		if strings.Contains(filePart, "_tokens.go") || strings.Contains(filePart, "_grammar.go") {
+			continue
+		}
+		stmts, _ := strconv.Atoi(parts[1])
+		covered, _ := strconv.Atoi(parts[2])
+		totalStatements += stmts
+		if covered > 0 {
+			coveredStatements += stmts
+		}
+	}
+	if totalStatements == 0 {
+		return nil // No testable code
+	}
+	coverage := float64(coveredStatements) / float64(totalStatements) * 100
+	if coverage < threshold {
+		return fmt.Errorf("Go coverage %.2f%% is below the threshold of %.2f%%", coverage, threshold)
+	}
+	return nil
+}
+
+// checkLuaCoverage parses luacov.report.out, ignores _tokens.lua / _grammar.lua
+// returns error if coverage < threshold.
+func checkLuaCoverage(dir, file string, threshold float64) error {
+	f, err := os.Open(filepath.Join(dir, file))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil // no luacov report
+		}
+		return err
+	}
+	defer f.Close()
+
+	var totalHits, totalMissed int
+	scanner := bufio.NewScanner(f)
+	inSummary := false
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "Summary") {
+			inSummary = true
+			continue
+		}
+		if !inSummary || strings.HasPrefix(line, "-") || strings.HasPrefix(line, "File") || strings.HasPrefix(line, "Total") {
+			continue
+		}
+		// A summary line: `src/file.lua 10 2 83.33%`
+		parts := strings.Fields(line)
+		if len(parts) < 4 {
+			continue
+		}
+		filePart := parts[0]
+		if strings.Contains(filePart, "_tokens.lua") || strings.Contains(filePart, "_grammar.lua") {
+			continue
+		}
+		hits, _ := strconv.Atoi(parts[1])
+		missed, _ := strconv.Atoi(parts[2])
+		totalHits += hits
+		totalMissed += missed
+	}
+
+	totalStatements := totalHits + totalMissed
+	if totalStatements == 0 {
+		return nil // No testable code
+	}
+	coverage := float64(totalHits) / float64(totalStatements) * 100
+	if coverage < threshold {
+		return fmt.Errorf("Lua coverage %.2f%% is below the threshold of %.2f%%", coverage, threshold)
+	}
+	return nil
+}
+

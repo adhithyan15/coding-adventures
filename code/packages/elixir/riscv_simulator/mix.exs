@@ -3,7 +3,7 @@ defmodule CodingAdventures.RiscvSimulator.MixProject do
   def project do
     [app: :coding_adventures_riscv_simulator, version: "0.1.0", elixir: "~> 1.14",
      start_permanent: Mix.env() == :prod, deps: deps(),
-     test_coverage: [summary: [threshold: 80]]]
+     test_coverage: [summary: [threshold: 80], ignore_modules: [~r/.*Tokens$/, ~r/.*Grammar$/]]]
   end
   def application, do: [extra_applications: [:logger]]
   defp deps, do: [{:coding_adventures_cpu_simulator, path: "../cpu_simulator"}]

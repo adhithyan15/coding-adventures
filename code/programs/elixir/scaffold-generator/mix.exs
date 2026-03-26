@@ -9,9 +9,7 @@ defmodule CodingAdventures.ScaffoldGenerator.MixProject do
       start_permanent: Mix.env() == :prod,
       escript: [main_module: CodingAdventures.ScaffoldGenerator.CLI],
       deps: deps(),
-      test_coverage: [
-        summary: [threshold: 80]
-      ]
+      test_coverage: [summary: [threshold: 80], ignore_modules: [~r/.*Tokens$/, ~r/.*Grammar$/]]
     ]
   end
 

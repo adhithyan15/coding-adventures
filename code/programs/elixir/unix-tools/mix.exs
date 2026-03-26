@@ -8,6 +8,7 @@ defmodule UnixTools.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       escript: [main_module: UnixTools.Pwd],
+      test_coverage: [summary: [threshold: 80], ignore_modules: [~r/.*Tokens$/, ~r/.*Grammar$/]],
       deps: deps()
     ]
   end

@@ -12,6 +12,8 @@
 # gotcha -- the Python equivalent (coverage.py) has the same requirement.
 require "simplecov"
 SimpleCov.start do
+  add_filter %r{_tokens\\.rb$}
+  add_filter %r{_grammar\\.rb$}
   add_filter "/test/"
   enable_coverage :branch
   minimum_coverage 80

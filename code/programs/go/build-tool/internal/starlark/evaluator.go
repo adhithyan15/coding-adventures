@@ -266,7 +266,8 @@ func GenerateCommands(t Target) []string {
 	case "go_library", "go_binary":
 		return []string{
 			"go build ./...",
-			"go test ./... -v -cover",
+			"go test ./... -v -coverprofile=coverage.out",
+			"@check-go-coverage coverage.out 80",
 			"go vet ./...",
 		}
 
@@ -286,6 +287,7 @@ func GenerateCommands(t Target) []string {
 		return []string{
 			"cargo build",
 			"cargo test",
+			`if [ "$RUNNER_OS" = "Linux" ]; then cargo tarpaulin --ignore-tests --fail-under 80 --exclude-files "src/*_tokens.rs" "src/*_grammar.rs"; fi`,
 		}
 
 	case "elixir_library", "elixir_binary":

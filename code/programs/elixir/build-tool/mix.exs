@@ -8,6 +8,7 @@ defmodule BuildTool.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       escript: [main_module: BuildTool.CLI],
+      test_coverage: [summary: [threshold: 80], ignore_modules: [~r/.*Tokens$/, ~r/.*Grammar$/]],
       deps: deps()
     ]
   end

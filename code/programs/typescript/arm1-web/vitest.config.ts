@@ -8,6 +8,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test-setup.ts"],
     coverage: {
+      exclude: ["**/*-tokens.ts", "**/*-grammar.ts"],
       provider: "v8",
       reporter: ["text", "lcov"],
     },
