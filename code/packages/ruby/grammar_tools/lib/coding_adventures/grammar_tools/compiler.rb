@@ -65,6 +65,9 @@ module CodingAdventures
       #
       # Returns a String of valid Ruby source code. Write it to a .rb file.
       def compile_token_grammar(grammar, source_file = "")
+        # Strip newlines so a crafted filename cannot break out of the comment
+        # line and inject arbitrary code into the generated file.
+        source_file = source_file.gsub(/[\r\n]/, "_")
         source_line = source_file.empty? ? "" : "# Source: #{source_file}\n"
 
         defs_src   = token_def_list_src(grammar.definitions, "    ")
@@ -109,6 +112,8 @@ module CodingAdventures
       #
       # Returns a String of valid Ruby source code.
       def compile_parser_grammar(grammar, source_file = "")
+        # Strip newlines so a crafted filename cannot break out of the comment line.
+        source_file = source_file.gsub(/[\r\n]/, "_")
         source_line = source_file.empty? ? "" : "# Source: #{source_file}\n"
 
         if grammar.rules.empty?

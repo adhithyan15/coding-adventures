@@ -73,6 +73,9 @@ export function compileTokenGrammar(
   grammar: TokenGrammar,
   sourceFile = ""
 ): string {
+  // Strip newlines so a crafted filename cannot break out of the comment line
+  // and inject arbitrary code into the generated file.
+  sourceFile = sourceFile.replace(/[\r\n]/g, "_");
   const sourceLine = sourceFile
     ? `// Source: ${sourceFile}\n`
     : "";
@@ -120,6 +123,8 @@ export function compileParserGrammar(
   grammar: ParserGrammar,
   sourceFile = ""
 ): string {
+  // Strip newlines so a crafted filename cannot break out of the comment line.
+  sourceFile = sourceFile.replace(/[\r\n]/g, "_");
   const sourceLine = sourceFile
     ? `// Source: ${sourceFile}\n`
     : "";

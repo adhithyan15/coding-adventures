@@ -72,6 +72,9 @@ defmodule CodingAdventures.GrammarTools.Compiler do
   """
   @spec compile_token_grammar(TokenGrammar.t(), String.t()) :: String.t()
   def compile_token_grammar(%TokenGrammar{} = grammar, source_file \\ "") do
+    # Strip newlines so a crafted filename cannot break out of the comment line
+    # and inject arbitrary code into the generated file.
+    source_file = String.replace(source_file, ~r/[\r\n]/, "_")
     source_line = if source_file == "", do: "", else: "# Source: #{source_file}\n"
     defs_src = token_def_list_src(grammar.definitions, "      ")
     skip_src = token_def_list_src(grammar.skip_definitions, "      ")
@@ -117,6 +120,8 @@ defmodule CodingAdventures.GrammarTools.Compiler do
   """
   @spec compile_parser_grammar(ParserGrammar.t(), String.t()) :: String.t()
   def compile_parser_grammar(%ParserGrammar{} = grammar, source_file \\ "") do
+    # Strip newlines so a crafted filename cannot break out of the comment line.
+    source_file = String.replace(source_file, ~r/[\r\n]/, "_")
     source_line = if source_file == "", do: "", else: "# Source: #{source_file}\n"
 
     rules_src =

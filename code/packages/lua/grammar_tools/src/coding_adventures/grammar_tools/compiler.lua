@@ -60,6 +60,9 @@ local M = {}
 -- @return string of valid Lua source code
 function M.compile_token_grammar(grammar, source_file)
     source_file = source_file or ""
+    -- Strip newlines so a crafted filename cannot break out of the comment line
+    -- and inject arbitrary code into the generated file.
+    source_file = source_file:gsub("[\r\n]", "_")
     local source_line = source_file ~= "" and ("-- Source: " .. source_file .. "\n") or ""
 
     local defs_src = token_def_list_src(grammar.definitions or {}, "      ")
@@ -105,6 +108,8 @@ end
 -- @return string of valid Lua source code
 function M.compile_parser_grammar(grammar, source_file)
     source_file = source_file or ""
+    -- Strip newlines so a crafted filename cannot break out of the comment line.
+    source_file = source_file:gsub("[\r\n]", "_")
     local source_line = source_file ~= "" and ("-- Source: " .. source_file .. "\n") or ""
 
     local rules_src

@@ -68,6 +68,10 @@ use crate::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
 ///
 /// Returns a `String` of valid Rust source code.  Write it to a `.rs` file.
 pub fn compile_token_grammar(grammar: &TokenGrammar, source_file: &str) -> String {
+    // Strip newlines so a crafted filename cannot break out of the comment line
+    // and inject arbitrary code into the generated file.
+    let source_file = source_file.replace('\n', "_").replace('\r', "_");
+    let source_file = source_file.as_str();
     let source_line = if source_file.is_empty() {
         String::new()
     } else {
@@ -133,6 +137,9 @@ pub fn token_grammar() -> TokenGrammar {{
 ///
 /// Returns a `String` of valid Rust source code.
 pub fn compile_parser_grammar(grammar: &ParserGrammar, source_file: &str) -> String {
+    // Strip newlines so a crafted filename cannot break out of the comment line.
+    let source_file = source_file.replace('\n', "_").replace('\r', "_");
+    let source_file = source_file.as_str();
     let source_line = if source_file.is_empty() {
         String::new()
     } else {
@@ -266,11 +273,19 @@ fn groups_src(
         .iter()
         .map(|(name, group)| {
             let defs_lit = token_def_vec_src(&group.definitions, &inner2);
+            // Sanitize the group name to a valid Rust identifier fragment:
+            // keep only ASCII alphanumeric chars and underscores, replace all
+            // others with '_'.  This prevents a crafted group name from
+            // breaking out of the `let mut __g_<safe>` identifier context.
+            let safe: String = name
+                .chars()
+                .map(|c| if c.is_ascii_alphanumeric() || c == '_' { c } else { '_' })
+                .collect();
             format!(
                 "{inner}let mut __g_{safe} = PatternGroup {{ name: {name}.to_string(), definitions: {defs} }};\n\
                  {inner}__map.insert({name}.to_string(), __g_{safe});",
                 inner = inner,
-                safe = name.replace('-', "_"),
+                safe = safe,
                 name = rust_string_lit(name),
                 defs = defs_lit,
             )

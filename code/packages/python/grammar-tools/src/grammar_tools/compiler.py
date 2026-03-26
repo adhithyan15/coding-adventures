@@ -189,6 +189,9 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
         code = compile_token_grammar(grammar, "json.tokens")
         Path("json_tokens.py").write_text(code)
     """
+    # Strip newlines so a crafted filename cannot break out of the comment line
+    # and inject arbitrary statements into the generated file.
+    source_file = source_file.replace("\n", "_").replace("\r", "_")
     source_line = f"# Source: {source_file}\n" if source_file else ""
 
     # Build the groups dict source. The dict maps str → PatternGroup.
@@ -346,6 +349,8 @@ def compile_parser_grammar(grammar: ParserGrammar, source_file: str = "") -> str
         code = compile_parser_grammar(grammar, "json.grammar")
         Path("json_parser.py").write_text(code)
     """
+    # Strip newlines so a crafted filename cannot break out of the comment line.
+    source_file = source_file.replace("\n", "_").replace("\r", "_")
     source_line = f"# Source: {source_file}\n" if source_file else ""
 
     i1 = _I

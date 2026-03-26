@@ -146,6 +146,11 @@ func CompileTokenGrammar(grammar *TokenGrammar, sourceFile, pkgName string) stri
 	const alias = "gt"
 	indent := "\t"
 
+	// Strip newlines so a crafted filename cannot break out of the comment line
+	// and inject arbitrary code into the generated file.
+	sourceFile = strings.ReplaceAll(sourceFile, "\n", "_")
+	sourceFile = strings.ReplaceAll(sourceFile, "\r", "_")
+
 	sourceLine := ""
 	if sourceFile != "" {
 		sourceLine = fmt.Sprintf("// Source: %s\n", sourceFile)
@@ -281,6 +286,10 @@ func CompileParserGrammar(grammar *ParserGrammar, sourceFile, pkgName string) st
 	const importPath = "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	const alias = "gt"
 	indent := "\t"
+
+	// Strip newlines so a crafted filename cannot break out of the comment line.
+	sourceFile = strings.ReplaceAll(sourceFile, "\n", "_")
+	sourceFile = strings.ReplaceAll(sourceFile, "\r", "_")
 
 	sourceLine := ""
 	if sourceFile != "" {
