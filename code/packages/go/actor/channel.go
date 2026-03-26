@@ -248,6 +248,7 @@ func Recover(directory, name string) (*Channel, error) {
 
 			reader := bytes.NewReader(data)
 
+			var parseErr error
 			for {
 				msg, err := FromReader(reader)
 				if err != nil {
@@ -257,16 +258,24 @@ func Recover(directory, name string) (*Channel, error) {
 					}
 					if err == io.ErrUnexpectedEOF {
 						// Truncated message — crash happened mid-write.
-						// Discard the incomplete message and stop.
+						// Discard the incomplete message and stop. This is
+						// expected after an unclean shutdown and is not an error.
 						break
 					}
-					// Other errors (bad magic, version too new) — stop but
-					// keep what we've recovered so far.
+					// Other errors (bad magic bytes, unrecognized version,
+					// future wire-format incompatibility) — stop and surface
+					// the error so callers can distinguish clean recovery
+					// from partial/corrupt recovery. Messages read so far
+					// are still returned alongside the error.
+					parseErr = fmt.Errorf("actor: log parse error in %s after %d messages: %w", path, len(ch.log), err)
 					break
 				}
 				ch.log = append(ch.log, msg)
 			}
 
+			if parseErr != nil {
+				return rf.Fail(ch, parseErr)
+			}
 			return rf.Generate(true, false, ch)
 		}).GetResult()
 }
