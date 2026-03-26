@@ -216,10 +216,12 @@ func neededImports(caps []capabilityJSON) []string {
 		if c.Category == "fs" || (c.Category == "proc" && c.Action == "exec") {
 			set[`"path/filepath"`] = true
 		}
-		// Relative fs targets (../../grammars/foo.tokens) use suffix matching,
-		// which requires strings.HasSuffix in the generated enforcement code.
+		// Relative fs targets (../../grammars/foo.tokens) are resolved to
+		// canonical absolute paths at startup using runtime.Caller(0) and
+		// sync.OnceValue, then enforced with exact equality.
 		if c.Category == "fs" && isRelativeTarget(c.Target) {
-			set[`"strings"`] = true
+			set[`"runtime"`] = true
+			set[`"sync"`] = true
 		}
 	}
 	result := make([]string, 0, len(set))
@@ -324,7 +326,7 @@ func emitImports(b *strings.Builder, imports []string) {
 // Each struct becomes a field on Operation[T] (e.g., op.File, op.Net).
 // The field only exists when the corresponding capability is declared —
 // accessing op.File in a zero-file-capability package is a compile error.
-func emitCapabilityStructs(b *strings.Builder, groups []capabilityGroup) {
+func emitCapabilityStructs(b *strings.Builder, groups []capabilityGroup, targetToVar map[string]string) {
 	cats := uniqueCategories(groups)
 	for _, cat := range cats {
 		typeName := categoryTypeName(cat)
@@ -340,7 +342,7 @@ func emitCapabilityStructs(b *strings.Builder, groups []capabilityGroup) {
 		fmt.Fprintf(b, "type %s struct{}\n\n", typeName)
 		for _, g := range groups {
 			if g.Category == cat {
-				emitCapabilityMethod(b, g, typeName)
+				emitCapabilityMethod(b, g, typeName, targetToVar)
 			}
 		}
 	}
@@ -348,75 +350,93 @@ func emitCapabilityStructs(b *strings.Builder, groups []capabilityGroup) {
 
 // isRelativeTarget returns true if the target starts with "./" or "../",
 // indicating a path relative to the package directory. Relative targets
-// use suffix matching instead of exact equality in the generated enforcement
-// code, because the runtime path computed via runtime.Caller is absolute.
+// are resolved to canonical absolute paths at startup using runtime.Caller(0)
+// and sync.OnceValue, then enforced with exact equality.
 func isRelativeTarget(target string) bool {
 	return strings.HasPrefix(target, "./") || strings.HasPrefix(target, "../")
 }
 
-// relativeToSuffix converts a relative target like "../../grammars/sql.tokens"
-// into the stable suffix "/grammars/sql.tokens" used for runtime enforcement.
-// It strips all leading ../ and ./ components, then prepends "/" so that
-// strings.HasSuffix(filepath.ToSlash(absPath), suffix) works correctly.
-func relativeToSuffix(target string) string {
-	rel := target
-	for {
-		if after, ok := strings.CutPrefix(rel, "../"); ok {
-			rel = after
-		} else if after, ok := strings.CutPrefix(rel, "./"); ok {
-			rel = after
-		} else {
-			break
+// collectRelativeTargets returns the distinct relative targets across all groups,
+// preserving first-seen order. Used to emit _allowedPath_N vars.
+func collectRelativeTargets(groups []capabilityGroup) []string {
+	seen := map[string]bool{}
+	var result []string
+	for _, g := range groups {
+		for _, t := range g.Targets {
+			if isRelativeTarget(t) && !seen[t] {
+				seen[t] = true
+				result = append(result, t)
+			}
 		}
 	}
-	return "/" + strings.ReplaceAll(rel, "\\", "/")
+	return result
 }
 
-// emitScopedCheck emits the allowed-path check at the top of a Cage method.
+// emitResolvedPathVars emits package-level sync.OnceValue vars that resolve
+// each relative target to its canonical absolute path at startup.
+//
+// Using runtime.Caller(0) from gen_capabilities.go — which lives in the same
+// directory as the rest of the package — ensures the resolved path matches
+// exactly what getGrammarPath() computes in the package's own source. The
+// path is cleaned with filepath.Clean to canonicalize separators and collapse
+// any remaining . or .. components.
+//
+// Returns a map from target string to the emitted variable name, so that
+// emitScopedCheck can reference the correct var.
+func emitResolvedPathVars(b *strings.Builder, relTargets []string) map[string]string {
+	targetToVar := make(map[string]string)
+	if len(relTargets) == 0 {
+		return targetToVar
+	}
+	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
+	fmt.Fprintf(b, "// Resolved allowed paths — exact canonical paths, computed once at startup\n")
+	fmt.Fprintf(b, "//\n")
+	fmt.Fprintf(b, "// Each var below resolves a relative target from required_capabilities.json\n")
+	fmt.Fprintf(b, "// to its canonical absolute path, anchored to gen_capabilities.go's directory\n")
+	fmt.Fprintf(b, "// via runtime.Caller(0). Enforcement uses exact equality, so no other file\n")
+	fmt.Fprintf(b, "// — even one with the same name in a different directory — can pass the check.\n")
+	fmt.Fprintf(b, "// ─────────────────────────────────────────────────────────────────────────────\n")
+	fmt.Fprintf(b, "\n")
+	for i, t := range relTargets {
+		varName := fmt.Sprintf("_allowedPath_%d", i)
+		targetToVar[t] = varName
+		fmt.Fprintf(b, "var %s = sync.OnceValue(func() string {\n", varName)
+		fmt.Fprintf(b, "\t_, _file, _, _ := runtime.Caller(0)\n")
+		fmt.Fprintf(b, "\treturn filepath.Clean(filepath.Join(filepath.Dir(_file), %q))\n", t)
+		fmt.Fprintf(b, "})\n\n")
+	}
+	return targetToVar
+}
+
+// emitScopedCheck emits the allowed-path check at the top of a capability method.
 // paramName is the method parameter to check (e.g., "path", "addr", "key").
 // twoReturns controls whether the violation returns (nil, err) or just (err).
+// targetToVar maps relative target strings to their _allowedPath_N variable names.
 //
-// For relative fs targets (e.g., "../../grammars/sql.tokens"), suffix matching
-// is used instead of exact equality, because the runtime path computed via
-// runtime.Caller is absolute while the declared target is relative. The suffix
-// "/grammars/sql.tokens" matches any absolute path ending with that component.
-func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string) {
-	anyRelative := false
-	for _, t := range targets {
-		if isRelativeTarget(t) {
-			anyRelative = true
-			break
-		}
-	}
-
-	if anyRelative {
-		// Relative targets: convert to slash form then check suffix.
-		fmt.Fprintf(b, "\t_slashPath := filepath.ToSlash(%s)\n", paramName)
-		if len(targets) == 1 {
-			fmt.Fprintf(b, "\tif !strings.HasSuffix(_slashPath, %q) {\n", relativeToSuffix(targets[0]))
+// Relative targets use pre-emitted sync.OnceValue vars for exact canonical path
+// comparison. Absolute targets use inline exact string equality. Mixed groups are
+// handled correctly — each target type uses its own comparison form.
+func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string, targetToVar map[string]string) {
+	if len(targets) == 1 {
+		t := targets[0]
+		if varName, ok := targetToVar[t]; ok {
+			// Relative target: compare against the pre-resolved canonical path.
+			fmt.Fprintf(b, "\tif %s != %s() {\n", paramName, varName)
 		} else {
-			fmt.Fprintf(b, "\t_allowedSuffix := false\n")
-			fmt.Fprintf(b, "\tfor _, _suf := range []string{\n")
-			for _, t := range targets {
-				fmt.Fprintf(b, "\t\t%q,\n", relativeToSuffix(t))
-			}
-			fmt.Fprintf(b, "\t} {\n")
-			fmt.Fprintf(b, "\t\tif strings.HasSuffix(_slashPath, _suf) { _allowedSuffix = true; break }\n")
-			fmt.Fprintf(b, "\t}\n")
-			fmt.Fprintf(b, "\tif !_allowedSuffix {\n")
+			// Absolute target: exact equality.
+			fmt.Fprintf(b, "\tif %s != %q {\n", paramName, t)
 		}
 	} else {
-		// Absolute/non-relative targets: exact equality.
-		if len(targets) == 1 {
-			fmt.Fprintf(b, "\tif %s != %q {\n", paramName, targets[0])
-		} else {
-			fmt.Fprintf(b, "\tallowed := map[string]bool{\n")
-			for _, t := range targets {
-				fmt.Fprintf(b, "\t\t%q: true,\n", t)
+		// Multiple targets: allowed if any one matches.
+		fmt.Fprintf(b, "\t_allowed := false\n")
+		for _, t := range targets {
+			if varName, ok := targetToVar[t]; ok {
+				fmt.Fprintf(b, "\tif %s == %s() {\n\t\t_allowed = true\n\t}\n", paramName, varName)
+			} else {
+				fmt.Fprintf(b, "\tif %s == %q {\n\t\t_allowed = true\n\t}\n", paramName, t)
 			}
-			fmt.Fprintf(b, "\t}\n")
-			fmt.Fprintf(b, "\tif !allowed[%s] {\n", paramName)
 		}
+		fmt.Fprintf(b, "\tif !_allowed {\n")
 	}
 
 	if twoReturns {
@@ -427,7 +447,7 @@ func emitScopedCheck(b *strings.Builder, targets []string, paramName string, two
 	fmt.Fprintf(b, "\t}\n")
 }
 
-func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string) {
+func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string, targetToVar map[string]string) {
 	key := g.Category + ":" + g.Action
 	switch key {
 	case "fs:read":
@@ -437,7 +457,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// bypass via ./foo, foo/../foo/bar, and similar path manipulations.\n")
 		fmt.Fprintf(b, "func (c *%s) ReadFile(path string) ([]byte, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "read")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "read", targetToVar)
 		fmt.Fprintf(b, "\treturn os.ReadFile(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -447,7 +467,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *%s) WriteFile(path string, data []byte, perm os.FileMode) error {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "write")
+		emitScopedCheck(b, g.Targets, "path", false, "fs", "write", targetToVar)
 		fmt.Fprintf(b, "\treturn os.WriteFile(path, data, perm) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -457,7 +477,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *%s) CreateFile(path string) (*os.File, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "create")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "create", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Create(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -467,7 +487,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *%s) DeleteFile(path string) error {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete")
+		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Remove(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -477,7 +497,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *%s) ReadDir(path string) ([]os.DirEntry, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
-		emitScopedCheck(b, g.Targets, "path", true, "fs", "list")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "list", targetToVar)
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -485,7 +505,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Connect opens a network connection to addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) Connect(network, addr string) (net.Conn, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "addr", true, "net", "connect")
+		emitScopedCheck(b, g.Targets, "addr", true, "net", "connect", targetToVar)
 		fmt.Fprintf(b, "\treturn net.Dial(network, addr) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -493,7 +513,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Listen opens a network listener on addr.\n")
 		fmt.Fprintf(b, "// Only addresses declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) Listen(network, addr string) (net.Listener, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "addr", true, "net", "listen")
+		emitScopedCheck(b, g.Targets, "addr", true, "net", "listen", targetToVar)
 		fmt.Fprintf(b, "\treturn net.Listen(network, addr) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -501,7 +521,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// LookupHost resolves host to a list of IP addresses.\n")
 		fmt.Fprintf(b, "// Only hosts declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) LookupHost(host string) ([]string, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "host", true, "net", "dns")
+		emitScopedCheck(b, g.Targets, "host", true, "net", "dns", targetToVar)
 		fmt.Fprintf(b, "\treturn net.LookupHost(host) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -518,7 +538,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// or enforce argument constraints in the calling code.\n")
 		fmt.Fprintf(b, "func (c *%s) Exec(name string, args ...string) ([]byte, error) {\n", typeName)
 		fmt.Fprintf(b, "\tname = filepath.Clean(name)\n")
-		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec")
+		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec", targetToVar)
 		fmt.Fprintf(b, "\treturn exec.Command(name, args...).Output() //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -526,7 +546,7 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "// Getenv returns the value of the environment variable key.\n")
 		fmt.Fprintf(b, "// Only variables declared in required_capabilities.json are permitted.\n")
 		fmt.Fprintf(b, "func (c *%s) Getenv(key string) (string, error) {\n", typeName)
-		emitScopedCheck(b, g.Targets, "key", true, "env", "read")
+		emitScopedCheck(b, g.Targets, "key", true, "env", "read", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Getenv(key), nil //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
@@ -802,7 +822,14 @@ func generateSource(manifestPath string, mf *manifestJSON) (string, error) {
 	emitHeader(&b, manifestPath)
 	fmt.Fprintf(&b, "package %s\n\n", pkgName)
 	emitImports(&b, imports)
-	emitCapabilityStructs(&b, groups)
+
+	// Emit package-level sync.OnceValue vars for relative path targets,
+	// then pass the target→varName map into the struct emitter so that
+	// each capability method can reference the correct pre-resolved path.
+	relTargets := collectRelativeTargets(groups)
+	targetToVar := emitResolvedPathVars(&b, relTargets)
+
+	emitCapabilityStructs(&b, groups, targetToVar)
 	emitOperationResult(&b)
 	emitResultFactory(&b)
 	emitOperation(&b, groups)

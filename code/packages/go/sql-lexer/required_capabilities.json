@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/sql.tokens",
+      "target": "../../../grammars/sql.tokens",
       "justification": "Reads the SQL token grammar file from the filesystem to configure the lexer at initialization time."
     }
   ],

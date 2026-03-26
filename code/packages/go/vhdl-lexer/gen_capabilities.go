@@ -15,8 +15,23 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
+	"runtime"
+	"sync"
 )
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Resolved allowed paths — exact canonical paths, computed once at startup
+//
+// Each var below resolves a relative target from required_capabilities.json
+// to its canonical absolute path, anchored to gen_capabilities.go's directory
+// via runtime.Caller(0). Enforcement uses exact equality, so no other file
+// — even one with the same name in a different directory — can pass the check.
+// ─────────────────────────────────────────────────────────────────────────────
+
+var _allowedPath_0 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/vhdl.tokens"))
+})
 
 // ─────────────────────────────────────────────────────────────────────────────
 // _FileCapabilities — op.File capability namespace
@@ -34,8 +49,7 @@ type _FileCapabilities struct{}
 // bypass via ./foo, foo/../foo/bar, and similar path manipulations.
 func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
 	path = filepath.Clean(path)
-	_slashPath := filepath.ToSlash(path)
-	if !strings.HasSuffix(_slashPath, "/grammars/vhdl.tokens") {
+	if path != _allowedPath_0() {
 		return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
 	}
 	return os.ReadFile(path) //nolint:cap

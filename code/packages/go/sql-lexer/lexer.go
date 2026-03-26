@@ -47,18 +47,10 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
-// sqlTokensPath is the path to the sql.tokens file. It defaults to "" which
-// triggers automatic path discovery via runtime.Caller(0). Tests can override
-// this variable to exercise error-handling code paths (e.g., by pointing at a
-// non-existent file or a file with invalid grammar syntax).
-var sqlTokensPath = ""
-
 // getGrammarPath computes the absolute path to the sql.tokens grammar file.
 //
-// If sqlTokensPath is non-empty (e.g., overridden by a test), that value is
-// returned directly. Otherwise, runtime.Caller(0) locates the source file and
-// navigates up three levels (sql-lexer → go → packages → code) to reach the
-// grammars directory.
+// runtime.Caller(0) locates this source file and navigates up three levels
+// (sql-lexer → go → packages → code) to reach the grammars directory.
 //
 // Directory structure:
 //
@@ -70,10 +62,6 @@ var sqlTokensPath = ""
 //	      sql-lexer/
 //	        lexer.go      <-- we are here (3 levels below code/)
 func getGrammarPath() string {
-	if sqlTokensPath != "" {
-		return sqlTokensPath
-	}
-
 	// runtime.Caller(0) returns the file path of this source file at runtime.
 	// The underscore variables are: program counter, line number, and ok bool.
 	_, filename, _, _ := runtime.Caller(0)

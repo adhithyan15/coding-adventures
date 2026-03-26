@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/verilog.tokens",
+      "target": "../../../grammars/verilog.tokens",
       "justification": "Reads the Verilog token grammar file from the filesystem to configure the lexer at initialization time."
     }
   ],
