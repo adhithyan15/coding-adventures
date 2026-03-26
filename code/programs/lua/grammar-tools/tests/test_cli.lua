@@ -117,6 +117,62 @@ describe("validate_grammar_only", function()
 end)
 
 -- ---------------------------------------------------------------------------
+-- compile_tokens_command
+-- ---------------------------------------------------------------------------
+
+describe("compile_tokens_command", function()
+    it("returns 1 for missing file", function()
+        assert.equals(1, cli.compile_tokens_command("/nonexistent/x.tokens", nil))
+    end)
+
+    it("returns 0 for valid json.tokens", function()
+        if not exists("json.tokens") then return end
+        assert.equals(0, cli.compile_tokens_command(grammar_path("json.tokens"), nil))
+    end)
+
+    it("writes output file when path given", function()
+        if not exists("json.tokens") then return end
+        local out = os.tmpname() .. "_tokens.lua"
+        assert.equals(0, cli.compile_tokens_command(grammar_path("json.tokens"), out))
+        local f = io.open(out, "r")
+        assert.is_not_nil(f)
+        local content = f:read("*a")
+        f:close()
+        os.remove(out)
+        assert.is_truthy(content:find("DO NOT EDIT"))
+        assert.is_truthy(content:find("token_grammar"))
+    end)
+end)
+
+-- ---------------------------------------------------------------------------
+-- compile_grammar_command
+-- ---------------------------------------------------------------------------
+
+describe("compile_grammar_command", function()
+    it("returns 1 for missing file", function()
+        assert.equals(1, cli.compile_grammar_command("/nonexistent/x.grammar", nil))
+    end)
+
+    it("returns 0 for valid json.grammar", function()
+        if not exists("json.grammar") then return end
+        assert.equals(0, cli.compile_grammar_command(grammar_path("json.grammar"), nil))
+    end)
+
+    it("writes output file when path given", function()
+        if not exists("json.grammar") then return end
+        local out = os.tmpname() .. "_grammar.lua"
+        assert.equals(0, cli.compile_grammar_command(grammar_path("json.grammar"), out))
+        local f = io.open(out, "r")
+        assert.is_not_nil(f)
+        local content = f:read("*a")
+        f:close()
+        os.remove(out)
+        assert.is_truthy(content:find("DO NOT EDIT"))
+        assert.is_truthy(content:find("parser_grammar"))
+    end)
+end)
+
+-- ---------------------------------------------------------------------------
 -- dispatch
 -- ---------------------------------------------------------------------------
 
@@ -137,6 +193,14 @@ describe("dispatch", function()
         assert.equals(2, cli.dispatch("validate-grammar", {}))
     end)
 
+    it("returns 2 for compile-tokens with no files", function()
+        assert.equals(2, cli.dispatch("compile-tokens", {}))
+    end)
+
+    it("returns 2 for compile-grammar with no files", function()
+        assert.equals(2, cli.dispatch("compile-grammar", {}))
+    end)
+
     it("dispatches validate correctly", function()
         if not exists("json.tokens") or not exists("json.grammar") then return end
         assert.equals(0, cli.dispatch("validate", {
@@ -153,5 +217,15 @@ describe("dispatch", function()
     it("dispatches validate-grammar correctly", function()
         if not exists("json.grammar") then return end
         assert.equals(0, cli.dispatch("validate-grammar", { grammar_path("json.grammar") }))
+    end)
+
+    it("dispatches compile-tokens correctly", function()
+        if not exists("json.tokens") then return end
+        assert.equals(0, cli.dispatch("compile-tokens", { grammar_path("json.tokens") }))
+    end)
+
+    it("dispatches compile-grammar correctly", function()
+        if not exists("json.grammar") then return end
+        assert.equals(0, cli.dispatch("compile-grammar", { grammar_path("json.grammar") }))
     end)
 end)

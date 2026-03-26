@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0] - 2026-03-26
+
+### Added
+- `Compiler` module (`lib/coding_adventures/grammar_tools/compiler.rb`) with:
+  - `compile_token_grammar(grammar, source_file = "") → String` — generates Ruby source
+    embedding a `TokenGrammar` as native `GT::TokenGrammar.new(...)` call.
+  - `compile_parser_grammar(grammar, source_file = "") → String` — generates Ruby source
+    embedding a `ParserGrammar` as native `GT::ParserGrammar.new(...)` call.
+  - All grammar element types supported: `RuleReference`, `Literal`, `Sequence`,
+    `Alternation`, `Repetition`, `OptionalElement`, `Group`.
+- Module-level convenience wrappers on `GrammarTools`:
+  `GrammarTools.compile_token_grammar(...)` and `GrammarTools.compile_parser_grammar(...)`.
+- `test/test_compiler.rb` — 30 tests covering output structure, round-trip fidelity for
+  all grammar features: aliases, skip/error defs, groups, keywords, mode, escape_mode,
+  case_insensitive, version, special regex chars, full JSON grammar round-trip.
+
 ## [0.3.0] - 2026-03-23
 
 ### Added

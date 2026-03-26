@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0] - 2026-03-26
+
+### Added
+- `compiler.go` — `CompileTokenGrammar(grammar *TokenGrammar, sourceFile, pkgName string) string`
+  and `CompileParserGrammar(grammar *ParserGrammar, sourceFile, pkgName string) string`.
+  Both functions generate Go source code that embeds the grammar as native Go data structures.
+  Uses raw string literals (backtick) for most patterns; falls back to double-quoted strings
+  when a pattern contains a backtick.
+- 34 new tests in `compiler_test.go` covering header structure, field encoding, all grammar
+  element types, and edge cases.
+
 ## [0.3.0] - Unreleased
 
 ### Added

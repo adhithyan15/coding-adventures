@@ -1,4 +1,4 @@
-"""grammar-tools CLI — validate .tokens and .grammar files.
+"""grammar-tools CLI — validate and compile .tokens and .grammar files.
 
 This program wraps the grammar_tools library behind a user-friendly command-line
 interface built with cli_builder. It is the Python counterpart of the Elixir
@@ -11,13 +11,15 @@ Usage
     grammar-tools validate <file.tokens> <file.grammar>
     grammar-tools validate-tokens <file.tokens>
     grammar-tools validate-grammar <file.grammar>
+    grammar-tools compile-tokens <file.tokens> [-o <output.py>]
+    grammar-tools compile-grammar <file.grammar> [-o <output.py>]
     grammar-tools --help
 
 Exit codes
 ----------
 
-0  All checks passed.
-1  One or more validation errors found.
+0  All checks passed / compilation succeeded.
+1  One or more validation errors found / compile error.
 2  Usage error (wrong number of arguments, unknown command).
 
 Why cli_builder?
@@ -28,6 +30,18 @@ parsing "for free". The grammar-tools commands themselves are very simple
 (a positional COMMAND and 1–2 file paths), so the spec JSON is small, but
 wiring in cli_builder ensures the tool behaves consistently with all other
 CLI tools in this repo.
+
+Compile commands
+----------------
+
+The compile commands convert .tokens and .grammar files into Python source
+code that embeds the grammar as native data structures. This eliminates
+runtime file I/O and parsing in downstream packages.
+
+    grammar-tools compile-tokens json.tokens -o json_tokens.py
+    grammar-tools compile-grammar json.grammar -o json_parser.py
+
+Without ``-o``, the generated code is printed to stdout.
 """
 
 from __future__ import annotations
@@ -66,6 +80,7 @@ sys.path.insert(0, str(ROOT / "code" / "packages" / "python" / "state-machine" /
 sys.path.insert(0, str(ROOT / "code" / "packages" / "python" / "cli-builder" / "src"))
 
 from cli_builder import Parser, ParseResult, HelpResult, VersionResult, ParseErrors  # noqa: E402
+from grammar_tools.compiler import compile_parser_grammar, compile_token_grammar  # noqa: E402
 from grammar_tools.cross_validator import cross_validate  # noqa: E402
 from grammar_tools.parser_grammar import (  # noqa: E402
     ParserGrammarError,
@@ -103,9 +118,11 @@ def _print_usage() -> None:
     print("Usage: grammar-tools <command> [args...]")
     print()
     print("Commands:")
-    print("  validate <file.tokens> <file.grammar>  Validate a token/grammar pair")
-    print("  validate-tokens <file.tokens>           Validate just a .tokens file")
-    print("  validate-grammar <file.grammar>         Validate just a .grammar file")
+    print("  validate <file.tokens> <file.grammar>      Validate a token/grammar pair")
+    print("  validate-tokens <file.tokens>               Validate just a .tokens file")
+    print("  validate-grammar <file.grammar>             Validate just a .grammar file")
+    print("  compile-tokens <file.tokens> [-o <out.py>] Compile tokens to Python")
+    print("  compile-grammar <file.grammar> [-o <out.py>] Compile grammar to Python")
     print()
     print("Run 'grammar-tools --help' for full help text.")
 
@@ -302,12 +319,108 @@ def validate_grammar_only(grammar_path: str) -> int:
 
 
 # ---------------------------------------------------------------------------
+# compile-tokens — compile a .tokens file to Python source code
+# ---------------------------------------------------------------------------
+
+
+def compile_tokens_command(tokens_path: str, output_path: str | None) -> int:
+    """Parse and compile a .tokens file into Python source code.
+
+    The generated Python file embeds the ``TokenGrammar`` as native data
+    structures, eliminating runtime file I/O and parsing in downstream
+    packages.
+
+    Writes to *output_path* if given, otherwise prints to stdout.
+
+    Returns 0 on success, 1 if the file cannot be parsed or is invalid.
+    """
+    tokens_file = Path(tokens_path)
+    if not tokens_file.exists():
+        print(f"Error: File not found: {tokens_path}", file=sys.stderr)
+        return 1
+
+    print(f"Compiling {tokens_file.name} ...", end=" ", file=sys.stderr)
+    try:
+        token_grammar = parse_token_grammar(tokens_file.read_text())
+    except TokenGrammarError as e:
+        print("PARSE ERROR", file=sys.stderr)
+        print(f"  {e}", file=sys.stderr)
+        return 1
+
+    issues = validate_token_grammar(token_grammar)
+    errors = _count_errors(issues)
+    if errors:
+        print(f"{errors} error(s)", file=sys.stderr)
+        _print_issues(issues)
+        return 1
+
+    code = compile_token_grammar(token_grammar, tokens_file.name)
+
+    if output_path:
+        Path(output_path).write_text(code)
+        print(f"OK → {output_path}", file=sys.stderr)
+    else:
+        print("OK", file=sys.stderr)
+        print(code, end="")
+
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# compile-grammar — compile a .grammar file to Python source code
+# ---------------------------------------------------------------------------
+
+
+def compile_grammar_command(grammar_path: str, output_path: str | None) -> int:
+    """Parse and compile a .grammar file into Python source code.
+
+    The generated Python file embeds the ``ParserGrammar`` as native data
+    structures, eliminating runtime file I/O and parsing in downstream
+    packages.
+
+    Writes to *output_path* if given, otherwise prints to stdout.
+
+    Returns 0 on success, 1 if the file cannot be parsed or is invalid.
+    """
+    grammar_file = Path(grammar_path)
+    if not grammar_file.exists():
+        print(f"Error: File not found: {grammar_path}", file=sys.stderr)
+        return 1
+
+    print(f"Compiling {grammar_file.name} ...", end=" ", file=sys.stderr)
+    try:
+        parser_grammar = parse_parser_grammar(grammar_file.read_text())
+    except ParserGrammarError as e:
+        print("PARSE ERROR", file=sys.stderr)
+        print(f"  {e}", file=sys.stderr)
+        return 1
+
+    issues = validate_parser_grammar(parser_grammar)
+    errors = _count_errors(issues)
+    if errors:
+        print(f"{errors} error(s)", file=sys.stderr)
+        _print_issues(issues)
+        return 1
+
+    code = compile_parser_grammar(parser_grammar, grammar_file.name)
+
+    if output_path:
+        Path(output_path).write_text(code)
+        print(f"OK → {output_path}", file=sys.stderr)
+    else:
+        print("OK", file=sys.stderr)
+        print(code, end="")
+
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # dispatch — map command → function
 # ---------------------------------------------------------------------------
 
 
-def dispatch(command: str, files: list[str]) -> int:
-    """Dispatch a parsed command to the appropriate validation function.
+def dispatch(command: str, files: list[str], output: str | None = None) -> int:
+    """Dispatch a parsed command to the appropriate function.
 
     Returns an exit code (0, 1, or 2).
     """
@@ -343,6 +456,28 @@ def dispatch(command: str, files: list[str]) -> int:
             _print_usage()
             return 2
         return validate_grammar_only(files[0])
+
+    if command == "compile-tokens":
+        if len(files) != 1:
+            print(
+                "Error: 'compile-tokens' requires one argument: <tokens>",
+                file=sys.stderr,
+            )
+            print(file=sys.stderr)
+            _print_usage()
+            return 2
+        return compile_tokens_command(files[0], output)
+
+    if command == "compile-grammar":
+        if len(files) != 1:
+            print(
+                "Error: 'compile-grammar' requires one argument: <grammar>",
+                file=sys.stderr,
+            )
+            print(file=sys.stderr)
+            _print_usage()
+            return 2
+        return compile_grammar_command(files[0], output)
 
     print(f"Error: Unknown command '{command}'", file=sys.stderr)
     print(file=sys.stderr)
@@ -382,8 +517,8 @@ def main() -> int:
         print(result.version)
         return 0
 
-    # ParseResult — extract command and files.
-    flags = result.flags  # noqa: F841 (no flags defined for this tool)
+    # ParseResult — extract command, files, and optional --output flag.
+    flags = result.flags
     args = result.arguments
 
     command = args.get("command", "")
@@ -395,7 +530,9 @@ def main() -> int:
     else:
         files = list(files_raw)
 
-    return dispatch(command, files)
+    output = flags.get("output") if flags else None
+
+    return dispatch(command, files, output)
 
 
 if __name__ == "__main__":

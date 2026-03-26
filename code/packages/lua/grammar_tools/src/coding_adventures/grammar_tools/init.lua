@@ -1527,4 +1527,12 @@ function grammar_tools.cross_validate(token_grammar, parser_grammar)
     return issues
 end
 
+-- ===========================================================================
+-- Compiler delegations
+-- ===========================================================================
+
+local Compiler = require("coding_adventures.grammar_tools.compiler")
+grammar_tools.compile_token_grammar  = Compiler.compile_token_grammar
+grammar_tools.compile_parser_grammar = Compiler.compile_parser_grammar
+
 return grammar_tools

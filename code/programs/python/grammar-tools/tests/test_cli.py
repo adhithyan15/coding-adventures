@@ -14,6 +14,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from main import (  # noqa: E402
     ROOT,
+    compile_grammar_command,
+    compile_tokens_command,
     dispatch,
     validate_command,
     validate_grammar_only,
@@ -130,3 +132,121 @@ class TestDispatch:
         grammar = GRAMMARS_DIR / "json.grammar"
         if grammar.exists():
             assert dispatch("validate-grammar", [str(grammar)]) == 0
+
+    def test_compile_tokens_no_files_returns_2(self) -> None:
+        assert dispatch("compile-tokens", []) == 2
+
+    def test_compile_grammar_no_files_returns_2(self) -> None:
+        assert dispatch("compile-grammar", []) == 2
+
+    def test_compile_tokens_dispatches_correctly(self) -> None:
+        tokens = GRAMMARS_DIR / "json.tokens"
+        if tokens.exists():
+            assert dispatch("compile-tokens", [str(tokens)]) == 0
+
+    def test_compile_grammar_dispatches_correctly(self) -> None:
+        grammar = GRAMMARS_DIR / "json.grammar"
+        if grammar.exists():
+            assert dispatch("compile-grammar", [str(grammar)]) == 0
+
+
+# ---------------------------------------------------------------------------
+# compile_tokens_command
+# ---------------------------------------------------------------------------
+
+
+class TestCompileTokensCommand:
+    def test_returns_0_on_valid_tokens(self) -> None:
+        tokens = GRAMMARS_DIR / "json.tokens"
+        if tokens.exists():
+            assert compile_tokens_command(str(tokens), None) == 0
+
+    def test_returns_1_on_missing_file(self) -> None:
+        assert compile_tokens_command("/nonexistent/x.tokens", None) == 1
+
+    def test_writes_output_file_when_path_given(self) -> None:
+        tokens = GRAMMARS_DIR / "json.tokens"
+        if not tokens.exists():
+            return
+        with tempfile.NamedTemporaryFile(
+            suffix=".py", mode="w", delete=False
+        ) as f:
+            out_path = f.name
+        try:
+            result = compile_tokens_command(str(tokens), out_path)
+            assert result == 0
+            content = Path(out_path).read_text()
+            assert "TOKEN_GRAMMAR" in content
+            assert "TokenGrammar" in content
+            assert "DO NOT EDIT" in content
+        finally:
+            os.unlink(out_path)
+
+    def test_generated_code_is_executable(self) -> None:
+        """The generated Python code can be exec'd without errors."""
+        tokens = GRAMMARS_DIR / "json.tokens"
+        if not tokens.exists():
+            return
+        with tempfile.NamedTemporaryFile(
+            suffix=".py", mode="w", delete=False
+        ) as f:
+            out_path = f.name
+        try:
+            assert compile_tokens_command(str(tokens), out_path) == 0
+            code = Path(out_path).read_text()
+            namespace: dict = {}
+            exec(code, namespace)  # noqa: S102
+            assert "TOKEN_GRAMMAR" in namespace
+        finally:
+            os.unlink(out_path)
+
+
+# ---------------------------------------------------------------------------
+# compile_grammar_command
+# ---------------------------------------------------------------------------
+
+
+class TestCompileGrammarCommand:
+    def test_returns_0_on_valid_grammar(self) -> None:
+        grammar = GRAMMARS_DIR / "json.grammar"
+        if grammar.exists():
+            assert compile_grammar_command(str(grammar), None) == 0
+
+    def test_returns_1_on_missing_file(self) -> None:
+        assert compile_grammar_command("/nonexistent/x.grammar", None) == 1
+
+    def test_writes_output_file_when_path_given(self) -> None:
+        grammar = GRAMMARS_DIR / "json.grammar"
+        if not grammar.exists():
+            return
+        with tempfile.NamedTemporaryFile(
+            suffix=".py", mode="w", delete=False
+        ) as f:
+            out_path = f.name
+        try:
+            result = compile_grammar_command(str(grammar), out_path)
+            assert result == 0
+            content = Path(out_path).read_text()
+            assert "PARSER_GRAMMAR" in content
+            assert "ParserGrammar" in content
+            assert "DO NOT EDIT" in content
+        finally:
+            os.unlink(out_path)
+
+    def test_generated_code_is_executable(self) -> None:
+        """The generated Python code can be exec'd without errors."""
+        grammar = GRAMMARS_DIR / "json.grammar"
+        if not grammar.exists():
+            return
+        with tempfile.NamedTemporaryFile(
+            suffix=".py", mode="w", delete=False
+        ) as f:
+            out_path = f.name
+        try:
+            assert compile_grammar_command(str(grammar), out_path) == 0
+            code = Path(out_path).read_text()
+            namespace: dict = {}
+            exec(code, namespace)  # noqa: S102
+            assert "PARSER_GRAMMAR" in namespace
+        finally:
+            os.unlink(out_path)

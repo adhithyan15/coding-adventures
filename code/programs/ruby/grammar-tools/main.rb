@@ -74,9 +74,11 @@ def print_usage
   $stderr.puts "Usage: grammar-tools <command> [args...]"
   $stderr.puts
   $stderr.puts "Commands:"
-  $stderr.puts "  validate <file.tokens> <file.grammar>  Validate a token/grammar pair"
-  $stderr.puts "  validate-tokens <file.tokens>           Validate just a .tokens file"
-  $stderr.puts "  validate-grammar <file.grammar>         Validate just a .grammar file"
+  $stderr.puts "  validate <file.tokens> <file.grammar>        Validate a token/grammar pair"
+  $stderr.puts "  validate-tokens <file.tokens>                 Validate just a .tokens file"
+  $stderr.puts "  validate-grammar <file.grammar>               Validate just a .grammar file"
+  $stderr.puts "  compile-tokens <file.tokens> [-o out.rb]     Compile tokens to Ruby"
+  $stderr.puts "  compile-grammar <file.grammar> [-o out.rb]   Compile grammar to Ruby"
   $stderr.puts
   $stderr.puts "Run 'grammar-tools --help' for full help text."
 end
@@ -257,10 +259,88 @@ def validate_grammar_only(grammar_path)
 end
 
 # ---------------------------------------------------------------------------
+# compile-tokens — compile a .tokens file to Ruby source code
+# ---------------------------------------------------------------------------
+
+def compile_tokens_command(tokens_path, output_path)
+  unless File.exist?(tokens_path)
+    $stderr.puts "Error: File not found: #{tokens_path}"
+    return 1
+  end
+
+  $stderr.print "Compiling #{File.basename(tokens_path)} ... "
+  begin
+    token_grammar = GT.parse_token_grammar(File.read(tokens_path))
+  rescue GT::TokenGrammarError => e
+    $stderr.puts "PARSE ERROR"
+    $stderr.puts "  #{e}"
+    return 1
+  end
+
+  issues = GT.validate_token_grammar(token_grammar)
+  errors = count_errors(issues)
+  if errors > 0
+    $stderr.puts "#{errors} error(s)"
+    print_issues(issues)
+    return 1
+  end
+
+  code = GT.compile_token_grammar(token_grammar, File.basename(tokens_path))
+
+  if output_path
+    File.write(output_path, code)
+    $stderr.puts "OK \u2192 #{output_path}"
+  else
+    $stderr.puts "OK"
+    print code
+  end
+  0
+end
+
+# ---------------------------------------------------------------------------
+# compile-grammar — compile a .grammar file to Ruby source code
+# ---------------------------------------------------------------------------
+
+def compile_grammar_command(grammar_path, output_path)
+  unless File.exist?(grammar_path)
+    $stderr.puts "Error: File not found: #{grammar_path}"
+    return 1
+  end
+
+  $stderr.print "Compiling #{File.basename(grammar_path)} ... "
+  begin
+    parser_grammar = GT.parse_parser_grammar(File.read(grammar_path))
+  rescue GT::ParserGrammarError => e
+    $stderr.puts "PARSE ERROR"
+    $stderr.puts "  #{e}"
+    return 1
+  end
+
+  issues = GT.validate_parser_grammar(parser_grammar)
+  errors = count_errors(issues)
+  if errors > 0
+    $stderr.puts "#{errors} error(s)"
+    print_issues(issues)
+    return 1
+  end
+
+  code = GT.compile_parser_grammar(parser_grammar, File.basename(grammar_path))
+
+  if output_path
+    File.write(output_path, code)
+    $stderr.puts "OK \u2192 #{output_path}"
+  else
+    $stderr.puts "OK"
+    print code
+  end
+  0
+end
+
+# ---------------------------------------------------------------------------
 # dispatch
 # ---------------------------------------------------------------------------
 
-def dispatch(command, files)
+def dispatch(command, files, output_path = nil)
   case command
   when "validate"
     if files.length != 2
@@ -288,6 +368,24 @@ def dispatch(command, files)
       return 2
     end
     validate_grammar_only(files[0])
+
+  when "compile-tokens"
+    if files.length != 1
+      $stderr.puts "Error: 'compile-tokens' requires one argument: <tokens>"
+      $stderr.puts
+      print_usage
+      return 2
+    end
+    compile_tokens_command(files[0], output_path)
+
+  when "compile-grammar"
+    if files.length != 1
+      $stderr.puts "Error: 'compile-grammar' requires one argument: <grammar>"
+      $stderr.puts
+      print_usage
+      return 2
+    end
+    compile_grammar_command(files[0], output_path)
 
   else
     $stderr.puts "Error: Unknown command '#{command}'"
@@ -325,11 +423,13 @@ def main
   end
 
   # ParseResult
-  args    = result.arguments
-  command = args["command"].to_s
-  files   = Array(args["files"])
+  args        = result.arguments
+  flags       = result.flags
+  command     = args["command"].to_s
+  files       = Array(args["files"])
+  output_path = flags&.dig("output")
 
-  exit dispatch(command, files)
+  exit dispatch(command, files, output_path)
 end
 
 main if __FILE__ == $0

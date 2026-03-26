@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-03-26
+
+### Added
+- `src/compiler.rs` — Grammar compiler module with:
+  - `compile_token_grammar(grammar: &TokenGrammar, source_file: &str) → String` — generates
+    Rust source with a `pub fn token_grammar() -> TokenGrammar` function.
+  - `compile_parser_grammar(grammar: &ParserGrammar, source_file: &str) → String` — generates
+    Rust source with a `pub fn parser_grammar() -> ParserGrammar` function.
+  - All `GrammarElement` variants: `RuleReference`, `TokenReference`, `Literal`, `Sequence`,
+    `Alternation`, `Repetition`, `Optional`, `Group`.
+  - `rust_string_lit` uses raw strings (`r#"..."#`) to avoid backslash clutter in patterns;
+    falls back to escaped strings if the value contains `"#`.
+  - Groups rendered as inline `HashMap` construction block.
+- `compiler` module exported from `lib.rs` as `pub mod compiler`.
+- 25 inline tests in `src/compiler.rs` covering header, field content, and all element types.
+
 ## [0.3.0] - 2026-03-23
 
 ### Added

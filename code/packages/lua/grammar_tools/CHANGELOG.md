@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-26
+
+### Added
+- `compiler.lua` — new `Compiler` sub-module with:
+  - `compile_token_grammar(grammar, source_file)` — generates Lua source code
+    embedding a `TokenGrammar` as native Lua data structures. Generated file
+    returns `{ token_grammar = token_grammar }` where `token_grammar()` returns
+    a fully-populated `TokenGrammar` instance without file I/O.
+  - `compile_parser_grammar(grammar, source_file)` — generates Lua source code
+    embedding a `ParserGrammar`. Handles all seven element types: `rule_reference`,
+    `literal`, `sequence`, `alternation`, `repetition`, `optional`, `group`.
+  - Uses `string.format("%q", s)` throughout for correct Lua string escaping.
+  - Group keys are sorted for deterministic output.
+- Delegations on the top-level `grammar_tools` module:
+  `compile_token_grammar` and `compile_parser_grammar`.
+- `tests/test_compiler.lua` — 25+ tests covering output structure and full
+  round-trip fidelity for all grammar features.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

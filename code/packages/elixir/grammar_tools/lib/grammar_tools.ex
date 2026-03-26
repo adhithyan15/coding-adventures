@@ -13,9 +13,11 @@ defmodule CodingAdventures.GrammarTools do
   - `CrossValidator` — validates cross-references between tokens and grammar
   """
 
-  alias CodingAdventures.GrammarTools.{TokenGrammar, ParserGrammar, CrossValidator}
+  alias CodingAdventures.GrammarTools.{TokenGrammar, ParserGrammar, CrossValidator, Compiler}
 
   defdelegate parse_token_grammar(source), to: TokenGrammar, as: :parse
   defdelegate parse_parser_grammar(source), to: ParserGrammar, as: :parse
   defdelegate cross_validate(token_grammar, parser_grammar), to: CrossValidator, as: :validate
+  defdelegate compile_token_grammar(grammar, source_file \\ ""), to: Compiler
+  defdelegate compile_parser_grammar(grammar, source_file \\ ""), to: Compiler
 end
