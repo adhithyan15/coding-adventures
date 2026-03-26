@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Grammar-tools library (no gem deps of its own).
+gem "coding_adventures_grammar_tools", path: "../../../packages/ruby/grammar_tools"
+
+# CLI Builder and its transitive dependencies.
+gem "coding_adventures_cli_builder",  path: "../../../packages/ruby/cli_builder"
+gem "coding_adventures_state_machine", path: "../../../packages/ruby/state_machine"
+gem "coding_adventures_directed_graph", path: "../../../packages/ruby/directed_graph"
+
+group :test do
+  gem "minitest", "~> 5.0"
+  gem "rake",     "~> 13.0"
+end
