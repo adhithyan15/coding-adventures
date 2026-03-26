@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/commonmark",
+  "name": "@coding-adventures/gfm",
   "version": "0.2.0",
-  "description": "CommonMark 0.31.2 pipeline convenience package — parse Markdown and render to HTML via the Document AST",
+  "description": "GitHub Flavored Markdown pipeline convenience package — parse Markdown and render to HTML via the Document AST",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/document-ast": "file:../document-ast",
-    "@coding-adventures/commonmark-parser": "file:../commonmark-parser",
+    "@coding-adventures/gfm-parser": "file:../gfm-parser",
     "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
     "@coding-adventures/directed-graph": "file:../directed-graph",
     "@coding-adventures/state-machine": "file:../state-machine"

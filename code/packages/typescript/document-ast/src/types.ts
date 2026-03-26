@@ -167,7 +167,7 @@ export interface ListNode {
    * In HTML tight mode, paragraph content is rendered without `<p>` tags.
    */
   readonly tight: boolean;
-  readonly children: readonly ListItemNode[];
+  readonly children: readonly ListChildNode[];
 }
 
 /**
@@ -179,6 +179,19 @@ export interface ListNode {
  */
 export interface ListItemNode {
   readonly type: "list_item";
+  readonly children: readonly BlockNode[];
+}
+
+/**
+ * A GitHub Flavored Markdown task-list item.
+ *
+ * Semantically this is still a list item, but the checked state is important
+ * enough to preserve in the IR so HTML-ish back-ends can render a checkbox and
+ * non-HTML back-ends can expose the task state in their own way.
+ */
+export interface TaskItemNode {
+  readonly type: "task_item";
+  readonly checked: boolean;
   readonly children: readonly BlockNode[];
 }
 
@@ -227,6 +240,42 @@ export interface RawBlockNode {
 }
 
 /**
+ * A GitHub Flavored Markdown pipe table.
+ *
+ * Tables are block-level nodes with row children. Alignment information lives
+ * on the table because it is defined column-wise by the delimiter row.
+ */
+export interface TableNode {
+  readonly type: "table";
+  readonly align: readonly TableAlignment[];
+  readonly children: readonly TableRowNode[];
+}
+
+/**
+ * One row inside a table. Header rows render as `<th>` cells; body rows render
+ * as `<td>` cells.
+ */
+export interface TableRowNode {
+  readonly type: "table_row";
+  readonly isHeader: boolean;
+  readonly children: readonly TableCellNode[];
+}
+
+/**
+ * A single table cell containing inline content.
+ */
+export interface TableCellNode {
+  readonly type: "table_cell";
+  readonly children: readonly InlineNode[];
+}
+
+/** Column alignment hint for GFM tables. */
+export type TableAlignment = "left" | "right" | "center" | null;
+
+/** Child node type for lists. */
+export type ListChildNode = ListItemNode | TaskItemNode;
+
+/**
  * Union of all block node types.
  *
  * Use in `switch (node.type)` with an exhaustive `default: assertNever(node)`
@@ -244,8 +293,12 @@ export type BlockNode =
   | BlockquoteNode
   | ListNode
   | ListItemNode
+  | TaskItemNode
   | ThematicBreakNode
-  | RawBlockNode;
+  | RawBlockNode
+  | TableNode
+  | TableRowNode
+  | TableCellNode;
 
 // ─── Inline Nodes ─────────────────────────────────────────────────────────────
 //
@@ -305,6 +358,18 @@ export interface EmphasisNode {
  */
 export interface StrongNode {
   readonly type: "strong";
+  readonly children: readonly InlineNode[];
+}
+
+/**
+ * Text marked as deleted / struck through.
+ *
+ * GFM renders this as `<del>`. Keeping it as a distinct node moves the
+ * Document AST a little closer to an HTML-ish document tree while still
+ * preserving format-agnostic semantics.
+ */
+export interface StrikethroughNode {
+  readonly type: "strikethrough";
   readonly children: readonly InlineNode[];
 }
 
@@ -475,6 +540,7 @@ export type InlineNode =
   | TextNode
   | EmphasisNode
   | StrongNode
+  | StrikethroughNode
   | CodeSpanNode
   | LinkNode
   | ImageNode

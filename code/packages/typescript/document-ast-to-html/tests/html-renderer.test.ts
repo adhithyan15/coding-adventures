@@ -146,6 +146,22 @@ describe("toHtml — ListNode (unordered, tight)", () => {
     }));
     expect(result).toBe("<ul>\n<li>a</li>\n<li>b</li>\n</ul>\n");
   });
+
+  it("renders task items with disabled checkboxes", () => {
+    const result = toHtml(doc({
+      type: "list",
+      ordered: false,
+      start: null,
+      tight: true,
+      children: [
+        { type: "task_item", checked: false, children: [para(text("todo"))] },
+        { type: "task_item", checked: true, children: [para(text("done"))] },
+      ],
+    }));
+    expect(result).toBe(
+      '<ul>\n<li><input type="checkbox" disabled="" /> todo</li>\n<li><input type="checkbox" disabled="" checked="" /> done</li>\n</ul>\n',
+    );
+  });
 });
 
 describe("toHtml — ListNode (ordered, loose)", () => {
@@ -219,6 +235,36 @@ describe("toHtml — RawBlockNode", () => {
   });
 });
 
+describe("toHtml — TableNode", () => {
+  it("renders header and body rows", () => {
+    const result = toHtml(doc({
+      type: "table",
+      align: ["left", "center"],
+      children: [
+        {
+          type: "table_row",
+          isHeader: true,
+          children: [
+            { type: "table_cell", children: [text("Name")] },
+            { type: "table_cell", children: [text("Role")] },
+          ],
+        },
+        {
+          type: "table_row",
+          isHeader: false,
+          children: [
+            { type: "table_cell", children: [text("Ada")] },
+            { type: "table_cell", children: [text("Math")] },
+          ],
+        },
+      ],
+    }));
+    expect(result).toBe(
+      "<table>\n<thead>\n<tr>\n<th align=\"left\">Name</th>\n<th align=\"center\">Role</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"left\">Ada</td>\n<td align=\"center\">Math</td>\n</tr>\n</tbody>\n</table>\n",
+    );
+  });
+});
+
 // ─── Inline node rendering ────────────────────────────────────────────────────
 
 describe("toHtml — inline nodes", () => {
@@ -236,6 +282,14 @@ describe("toHtml — inline nodes", () => {
       children: [text("bold")],
     })));
     expect(result).toBe("<p><strong>bold</strong></p>\n");
+  });
+
+  it("renders StrikethroughNode", () => {
+    const result = toHtml(doc(para({
+      type: "strikethrough",
+      children: [text("gone")],
+    })));
+    expect(result).toBe("<p><del>gone</del></p>\n");
   });
 
   it("renders CodeSpanNode", () => {

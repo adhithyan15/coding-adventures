@@ -53,8 +53,9 @@
 import type {
   DocumentNode, BlockNode, InlineNode,
   HeadingNode, ParagraphNode, CodeBlockNode, BlockquoteNode,
-  ListNode, ListItemNode, RawBlockNode,
-  TextNode, EmphasisNode, StrongNode, CodeSpanNode,
+  ListNode, ListItemNode, TaskItemNode, RawBlockNode,
+  TableNode, TableRowNode, TableCellNode,
+  TextNode, EmphasisNode, StrongNode, StrikethroughNode, CodeSpanNode,
   LinkNode, ImageNode, AutolinkNode, RawInlineNode,
 } from "@coding-adventures/document-ast";
 import { escapeHtml } from "./entities.js";
@@ -172,11 +173,23 @@ function renderBlock(block: BlockNode, tight: boolean, options: RenderOptions): 
       // ListItemNode is rendered by renderList; direct call uses non-tight
       return renderListItem(block, false, options);
 
+    case "task_item":
+      return renderTaskItem(block, false, options);
+
     case "thematic_break":
       return "<hr />\n";
 
     case "raw_block":
       return renderRawBlock(block, options);
+
+    case "table":
+      return renderTable(block, options);
+
+    case "table_row":
+      return renderTableRow(block, options);
+
+    case "table_cell":
+      return renderTableCell(block, false, null, options);
 
     default:
       return "";
@@ -274,7 +287,9 @@ function renderList(node: ListNode, options: RenderOptions): string {
       ? ` start="${node.start}"`
       : "";
   const items = node.children
-    .map(item => renderListItem(item, node.tight, options))
+    .map(item => item.type === "task_item"
+      ? renderTaskItem(item, node.tight, options)
+      : renderListItem(item, node.tight, options))
     .join("");
   return `<${tag}${startAttr}>\n${items}</${tag}>\n`;
 }
@@ -316,6 +331,29 @@ function renderListItem(node: ListItemNode, tight: boolean, options: RenderOptio
   return `<li>\n${inner}</li>\n`;
 }
 
+function renderTaskItem(node: TaskItemNode, tight: boolean, options: RenderOptions): string {
+  const checkbox = node.checked
+    ? '<input type="checkbox" disabled="" checked="" /> '
+    : '<input type="checkbox" disabled="" /> ';
+
+  if (node.children.length === 0) {
+    return `<li>${checkbox}</li>\n`;
+  }
+
+  if (tight && node.children[0]?.type === "paragraph") {
+    const firstPara = node.children[0] as ParagraphNode;
+    const firstContent = renderInlines(firstPara.children, options);
+    if (node.children.length === 1) {
+      return `<li>${checkbox}${firstContent}</li>\n`;
+    }
+    const rest = renderBlocks(node.children.slice(1), tight, options);
+    return `<li>${checkbox}${firstContent}\n${rest}</li>\n`;
+  }
+
+  const inner = renderBlocks(node.children, tight, options);
+  return `<li>${checkbox}\n${inner}</li>\n`;
+}
+
 /**
  * Render a raw block node.
  *
@@ -340,6 +378,40 @@ function renderRawBlock(node: RawBlockNode, options: RenderOptions): string {
   return "";
 }
 
+function renderTable(node: TableNode, options: RenderOptions): string {
+  const headerRows = node.children.filter((row) => row.isHeader);
+  const bodyRows = node.children.filter((row) => !row.isHeader);
+  const thead = headerRows.length > 0
+    ? `<thead>\n${headerRows.map((row) => renderTableRow(row, options, node.align)).join("")}</thead>\n`
+    : "";
+  const tbody = bodyRows.length > 0
+    ? `<tbody>\n${bodyRows.map((row) => renderTableRow(row, options, node.align)).join("")}</tbody>\n`
+    : "";
+  return `<table>\n${thead}${tbody}</table>\n`;
+}
+
+function renderTableRow(
+  node: TableRowNode,
+  options: RenderOptions,
+  alignments: readonly ("left" | "right" | "center" | null)[] = [],
+): string {
+  const cells = node.children
+    .map((cell, index) => renderTableCell(cell, node.isHeader, alignments[index] ?? null, options))
+    .join("");
+  return `<tr>\n${cells}</tr>\n`;
+}
+
+function renderTableCell(
+  node: TableCellNode,
+  isHeader: boolean,
+  alignment: "left" | "right" | "center" | null,
+  options: RenderOptions,
+): string {
+  const tag = isHeader ? "th" : "td";
+  const alignAttr = alignment === null ? "" : ` align="${alignment}"`;
+  return `<${tag}${alignAttr}>${renderInlines(node.children, options)}</${tag}>\n`;
+}
+
 // ─── Inline Rendering ─────────────────────────────────────────────────────────
 
 function renderInlines(nodes: readonly InlineNode[], options: RenderOptions): string {
@@ -357,6 +429,9 @@ function renderInline(node: InlineNode, options: RenderOptions): string {
 
     case "strong":
       return `<strong>${renderInlines(node.children, options)}</strong>`;
+
+    case "strikethrough":
+      return `<del>${renderInlines(node.children, options)}</del>`;
 
     case "code_span":
       // Code span content is escaped but not Markdown-processed
