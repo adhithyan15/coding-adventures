@@ -18,8 +18,12 @@ func TestBlockNodeTypes(t *testing.T) {
 		{"blockquote", &BlockquoteNode{}, "blockquote"},
 		{"list", &ListNode{}, "list"},
 		{"list_item", &ListItemNode{}, "list_item"},
+		{"task_item", &TaskItemNode{}, "task_item"},
 		{"thematic_break", &ThematicBreakNode{}, "thematic_break"},
 		{"raw_block", &RawBlockNode{Format: "html"}, "raw_block"},
+		{"table", &TableNode{}, "table"},
+		{"table_row", &TableRowNode{}, "table_row"},
+		{"table_cell", &TableCellNode{}, "table_cell"},
 	}
 
 	for _, tt := range tests {
@@ -41,6 +45,7 @@ func TestInlineNodeTypes(t *testing.T) {
 		{"text", &TextNode{Value: "hello"}, "text"},
 		{"emphasis", &EmphasisNode{}, "emphasis"},
 		{"strong", &StrongNode{}, "strong"},
+		{"strikethrough", &StrikethroughNode{}, "strikethrough"},
 		{"code_span", &CodeSpanNode{Value: "x"}, "code_span"},
 		{"link", &LinkNode{Destination: "/"}, "link"},
 		{"image", &ImageNode{Destination: "img.png"}, "image"},
@@ -76,7 +81,7 @@ func TestListNodeFields(t *testing.T) {
 		Ordered:  true,
 		Start:    3,
 		Tight:    false,
-		Children: []*ListItemNode{item},
+		Children: []ListChildNode{item},
 	}
 	if !list.Ordered {
 		t.Error("expected Ordered = true")

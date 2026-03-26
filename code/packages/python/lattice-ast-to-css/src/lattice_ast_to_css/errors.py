@@ -112,9 +112,19 @@ class UndefinedMixinError(LatticeError):
     Example: @include nonexistent;
     """
 
-    def __init__(self, name: str, line: int = 0, column: int = 0) -> None:
+    def __init__(
+        self,
+        name: str,
+        line: int = 0,
+        column: int = 0,
+        suggestion: str | None = None,
+    ) -> None:
         self.name = name
-        super().__init__(f"Undefined mixin '{name}'", line, column)
+        self.suggestion = suggestion
+        message = f"Undefined mixin '{name}'"
+        if suggestion:
+            message += f". Did you mean '{suggestion}'?"
+        super().__init__(message, line, column)
 
 
 class UndefinedFunctionError(LatticeError):

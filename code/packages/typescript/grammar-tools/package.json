@@ -4,9 +4,6 @@
   "description": "Define and validate .tokens and .grammar file formats — grammar-driven lexer and parser generation",
   "type": "module",
   "main": "src/index.ts",
-  "bin": {
-    "grammar-tools": "./dist/cli.js"
-  },
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

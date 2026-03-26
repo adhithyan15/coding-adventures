@@ -175,6 +175,20 @@ describe("document_ast_sanitizer", function()
       assert.equals("link", link.type)
       assert.equals("javascript:alert(1)", link.destination)
     end)
+
+    it("preserves GFM nodes", function()
+      local d = doc(
+        ast.list(false, nil, true, {
+          ast.task_item(true, { ast.paragraph({ ast.strikethrough({ ast.text("done") }) }) })
+        }),
+        ast.table({ nil }, {
+          ast.table_row(true, { ast.table_cell({ ast.text("A") }) })
+        })
+      )
+      local out = S.sanitize(d, S.PASSTHROUGH)
+      assert.equals("task_item", out.children[1].children[1].type)
+      assert.equals("table", out.children[2].type)
+    end)
   end)
 
   -- ─── Raw block handling ───────────────────────────────────────────────────

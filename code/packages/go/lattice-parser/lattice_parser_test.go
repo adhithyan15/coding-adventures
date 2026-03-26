@@ -185,6 +185,15 @@ func TestParseMixinDefinition(t *testing.T) {
 	}
 }
 
+func TestParseMixinDefinitionWithoutParens(t *testing.T) {
+	source := "@mixin flex-center { display: flex; justify-content: center; }"
+	ast := mustParse(t, source)
+	node := findRule(ast, "mixin_definition")
+	if node == nil {
+		t.Error("no mixin_definition found in AST")
+	}
+}
+
 func TestParseMixinWithParams(t *testing.T) {
 	// @mixin button($bg) { background: $bg; }
 	source := "@mixin button($bg) { background: $bg; }"

@@ -1,0 +1,10 @@
+# On Windows, Ruby's MSYS2 ships its own `link.exe` which shadows the MSVC
+# linker. The MSVC dev environment step runs before Ruby in CI, but
+# `ruby/setup-ruby` prepends MSYS2 to PATH afterward, overriding it.
+#
+# lld-link is the MSVC-compatible LLVM linker that ships with Visual Studio
+# 2022 (at VC\Tools\Llvm\x64\bin\lld-link.exe). It is already in PATH via
+# the `ilammy/msvc-dev-cmd` step and is NOT overridden by MSYS2. Using it
+# as the linker avoids the MSYS2 `link.exe` conflict entirely.
+[target.x86_64-pc-windows-msvc]
+linker = "lld-link"

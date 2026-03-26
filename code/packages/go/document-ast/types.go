@@ -64,6 +64,12 @@ type BlockNode interface {
 	blockNode() // marker method, prevents accidental implementation
 }
 
+// ListChildNode is a list child that can appear inside a ListNode.
+type ListChildNode interface {
+	BlockNode
+	listChildNode()
+}
+
 // InlineNode is any node that appears inside block nodes that contain prose:
 // headings, paragraphs, and list items.
 type InlineNode interface {
@@ -199,7 +205,7 @@ type ListNode struct {
 	// Tight = no blank lines between items and no blank line inside any item.
 	// In HTML tight mode, paragraph content is rendered without <p> tags.
 	Tight    bool
-	Children []*ListItemNode
+	Children []ListChildNode
 }
 
 func (n *ListNode) NodeType() string { return "list" }
@@ -216,6 +222,17 @@ type ListItemNode struct {
 
 func (n *ListItemNode) NodeType() string { return "list_item" }
 func (n *ListItemNode) blockNode()       {}
+func (n *ListItemNode) listChildNode()   {}
+
+// TaskItemNode is a GitHub Flavored Markdown task-list item.
+type TaskItemNode struct {
+	Checked  bool
+	Children []BlockNode
+}
+
+func (n *TaskItemNode) NodeType() string { return "task_item" }
+func (n *TaskItemNode) blockNode()       {}
+func (n *TaskItemNode) listChildNode()   {}
 
 // ThematicBreakNode is a visual separator between sections. Leaf node — no children.
 //
@@ -257,6 +274,42 @@ type RawBlockNode struct {
 
 func (n *RawBlockNode) NodeType() string { return "raw_block" }
 func (n *RawBlockNode) blockNode()       {}
+
+// TableAlignment is a column alignment hint for GFM tables.
+type TableAlignment string
+
+const (
+	TableAlignLeft   TableAlignment = "left"
+	TableAlignRight  TableAlignment = "right"
+	TableAlignCenter TableAlignment = "center"
+	TableAlignNone   TableAlignment = ""
+)
+
+// TableNode is a GitHub Flavored Markdown pipe table.
+type TableNode struct {
+	Align    []TableAlignment
+	Children []*TableRowNode
+}
+
+func (n *TableNode) NodeType() string { return "table" }
+func (n *TableNode) blockNode()       {}
+
+// TableRowNode is one row in a table.
+type TableRowNode struct {
+	IsHeader bool
+	Children []*TableCellNode
+}
+
+func (n *TableRowNode) NodeType() string { return "table_row" }
+func (n *TableRowNode) blockNode()       {}
+
+// TableCellNode is a single table cell containing inline content.
+type TableCellNode struct {
+	Children []InlineNode
+}
+
+func (n *TableCellNode) NodeType() string { return "table_cell" }
+func (n *TableCellNode) blockNode()       {}
 
 // ─── Inline Node Types ────────────────────────────────────────────────────────
 
@@ -302,6 +355,14 @@ type StrongNode struct {
 
 func (n *StrongNode) NodeType() string { return "strong" }
 func (n *StrongNode) inlineNode()      {}
+
+// StrikethroughNode marks text as deleted / struck through.
+type StrikethroughNode struct {
+	Children []InlineNode
+}
+
+func (n *StrikethroughNode) NodeType() string { return "strikethrough" }
+func (n *StrikethroughNode) inlineNode()      {}
 
 // CodeSpanNode is inline code. The value is raw — not decoded for HTML entities
 // and not processed for Markdown. Leading and trailing spaces are stripped when

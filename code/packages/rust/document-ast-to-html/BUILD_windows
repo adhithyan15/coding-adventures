@@ -1,0 +1,1 @@
+bash ../_windows_cargo.sh test -p document-ast-to-html -- --nocapture

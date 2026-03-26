@@ -66,11 +66,10 @@
 //! ```
 
 use document_ast::{
-    BlockNode, DocumentNode, InlineNode,
-    HeadingNode, ParagraphNode, CodeBlockNode, BlockquoteNode,
-    ListNode, ListItemNode, RawBlockNode,
-    TextNode, EmphasisNode, StrongNode, CodeSpanNode,
-    LinkNode, ImageNode, AutolinkNode, RawInlineNode,
+    AutolinkNode, BlockNode, BlockquoteNode, CodeBlockNode, CodeSpanNode, DocumentNode,
+    EmphasisNode, HeadingNode, ImageNode, InlineNode, LinkNode, ListChildNode, ListItemNode,
+    ListNode, ParagraphNode, RawBlockNode, RawInlineNode, StrikethroughNode, StrongNode,
+    TableAlignment, TableCellNode, TableNode, TableRowNode, TaskItemNode, TextNode,
 };
 
 // ─── Render Options ───────────────────────────────────────────────────────────
@@ -132,7 +131,10 @@ pub fn to_html(document: &DocumentNode, options: &RenderOptions) -> String {
 // ─── Block Rendering ──────────────────────────────────────────────────────────
 
 fn render_blocks(blocks: &[BlockNode], tight: bool, options: &RenderOptions) -> String {
-    blocks.iter().map(|b| render_block(b, tight, options)).collect()
+    blocks
+        .iter()
+        .map(|b| render_block(b, tight, options))
+        .collect()
 }
 
 fn render_block(block: &BlockNode, tight: bool, options: &RenderOptions) -> String {
@@ -144,8 +146,12 @@ fn render_block(block: &BlockNode, tight: bool, options: &RenderOptions) -> Stri
         BlockNode::Blockquote(b) => render_blockquote(b, options),
         BlockNode::List(l) => render_list(l, options),
         BlockNode::ListItem(item) => render_list_item(item, false, options),
+        BlockNode::TaskItem(item) => render_task_item(item, false, options),
         BlockNode::ThematicBreak(_) => "<hr />\n".to_string(),
         BlockNode::RawBlock(r) => render_raw_block(r, options),
+        BlockNode::Table(t) => render_table(t, options),
+        BlockNode::TableRow(r) => render_table_row(r, &[], options),
+        BlockNode::TableCell(c) => render_table_cell(c, false, &TableAlignment::None, options),
     }
 }
 
@@ -243,10 +249,17 @@ fn render_list(node: &ListNode, options: &RenderOptions) -> String {
     let items: String = node
         .children
         .iter()
-        .map(|item| render_list_item(item, node.tight, options))
+        .map(|item| render_list_child(item, node.tight, options))
         .collect();
 
     format!("<{0}{1}>\n{2}</{0}>\n", tag, start_attr, items)
+}
+
+fn render_list_child(node: &ListChildNode, tight: bool, options: &RenderOptions) -> String {
+    match node {
+        ListChildNode::ListItem(item) => render_list_item(item, tight, options),
+        ListChildNode::TaskItem(item) => render_task_item(item, tight, options),
+    }
 }
 
 /// Render a single list item.
@@ -277,14 +290,42 @@ fn render_list_item(node: &ListItemNode, tight: bool, options: &RenderOptions) -
     // Loose or non-paragraph first child: block-level format with newlines.
     let inner = render_blocks(&node.children, tight, options);
     let last_child = node.children.last();
-    if tight
-        && matches!(last_child, Some(BlockNode::Paragraph(_)))
-        && inner.ends_with('\n')
-    {
+    if tight && matches!(last_child, Some(BlockNode::Paragraph(_))) && inner.ends_with('\n') {
         // Strip trailing \n so it is flush with </li>
         return format!("<li>\n{}</li>\n", &inner[..inner.len() - 1]);
     }
     format!("<li>\n{}</li>\n", inner)
+}
+
+fn render_task_item(node: &TaskItemNode, tight: bool, options: &RenderOptions) -> String {
+    let checkbox = if node.checked {
+        "<input type=\"checkbox\" disabled=\"\" checked=\"\" />"
+    } else {
+        "<input type=\"checkbox\" disabled=\"\" />"
+    };
+
+    if node.children.is_empty() {
+        return format!("<li>{}</li>\n", checkbox);
+    }
+
+    if tight {
+        if let Some(BlockNode::Paragraph(first_para)) = node.children.first() {
+            let first_content = render_inlines(&first_para.children, options);
+            let content = if first_content.is_empty() {
+                checkbox.to_string()
+            } else {
+                format!("{} {}", checkbox, first_content)
+            };
+            if node.children.len() == 1 {
+                return format!("<li>{}</li>\n", content);
+            }
+            let rest = render_blocks(&node.children[1..], tight, options);
+            return format!("<li>{}\n{}</li>\n", content, rest);
+        }
+    }
+
+    let inner = render_blocks(&node.children, tight, options);
+    format!("<li>{}\n{}</li>\n", checkbox, inner)
 }
 
 /// Render a raw block node.
@@ -301,6 +342,62 @@ fn render_raw_block(node: &RawBlockNode, options: &RenderOptions) -> String {
     String::new()
 }
 
+fn render_table(node: &TableNode, options: &RenderOptions) -> String {
+    let mut out = String::from("<table>\n");
+    let header = node.children.iter().find(|row| row.is_header);
+    let body_rows: Vec<&TableRowNode> = node.children.iter().filter(|row| !row.is_header).collect();
+
+    if let Some(row) = header {
+        out.push_str("<thead>\n");
+        out.push_str(&render_table_row(row, &node.align, options));
+        out.push_str("</thead>\n");
+    }
+
+    if !body_rows.is_empty() {
+        out.push_str("<tbody>\n");
+        for row in body_rows {
+            out.push_str(&render_table_row(row, &node.align, options));
+        }
+        out.push_str("</tbody>\n");
+    }
+
+    out.push_str("</table>\n");
+    out
+}
+
+fn render_table_row(
+    node: &TableRowNode,
+    align: &[TableAlignment],
+    options: &RenderOptions,
+) -> String {
+    let mut out = String::from("<tr>\n");
+    for (index, cell) in node.children.iter().enumerate() {
+        let alignment = align.get(index).unwrap_or(&TableAlignment::None);
+        out.push_str(&render_table_cell(cell, node.is_header, alignment, options));
+    }
+    out.push_str("</tr>\n");
+    out
+}
+
+fn render_table_cell(
+    node: &TableCellNode,
+    header: bool,
+    align: &TableAlignment,
+    options: &RenderOptions,
+) -> String {
+    let tag = if header { "th" } else { "td" };
+    let align_attr = match align {
+        TableAlignment::Left => " align=\"left\"",
+        TableAlignment::Right => " align=\"right\"",
+        TableAlignment::Center => " align=\"center\"",
+        TableAlignment::None => "",
+    };
+    format!(
+        "<{tag}{align_attr}>{}</{tag}>\n",
+        render_inlines(&node.children, options)
+    )
+}
+
 // ─── Inline Rendering ─────────────────────────────────────────────────────────
 
 fn render_inlines(nodes: &[InlineNode], options: &RenderOptions) -> String {
@@ -312,6 +409,7 @@ fn render_inline(node: &InlineNode, options: &RenderOptions) -> String {
         InlineNode::Text(t) => render_text(t),
         InlineNode::Emphasis(e) => render_emphasis(e, options),
         InlineNode::Strong(s) => render_strong(s, options),
+        InlineNode::Strikethrough(s) => render_strikethrough(s, options),
         InlineNode::CodeSpan(c) => render_code_span(c),
         InlineNode::Link(l) => render_link(l, options),
         InlineNode::Image(img) => render_image(img),
@@ -339,7 +437,14 @@ fn render_emphasis(node: &EmphasisNode, options: &RenderOptions) -> String {
 }
 
 fn render_strong(node: &StrongNode, options: &RenderOptions) -> String {
-    format!("<strong>{}</strong>", render_inlines(&node.children, options))
+    format!(
+        "<strong>{}</strong>",
+        render_inlines(&node.children, options)
+    )
+}
+
+fn render_strikethrough(node: &StrikethroughNode, options: &RenderOptions) -> String {
+    format!("<del>{}</del>", render_inlines(&node.children, options))
 }
 
 /// Render a code span — content is HTML-escaped but not Markdown-processed.
@@ -583,7 +688,9 @@ mod tests {
     use super::*;
     use document_ast::*;
 
-    fn opts() -> RenderOptions { RenderOptions::default() }
+    fn opts() -> RenderOptions {
+        RenderOptions::default()
+    }
 
     #[test]
     fn test_escape_html() {
@@ -616,7 +723,9 @@ mod tests {
     fn test_paragraph() {
         let doc = DocumentNode {
             children: vec![BlockNode::Paragraph(ParagraphNode {
-                children: vec![InlineNode::Text(TextNode { value: "Hello".into() })],
+                children: vec![InlineNode::Text(TextNode {
+                    value: "Hello".into(),
+                })],
             })],
         };
         assert_eq!(to_html(&doc, &opts()), "<p>Hello</p>\n");
@@ -627,7 +736,9 @@ mod tests {
         let doc = DocumentNode {
             children: vec![BlockNode::Heading(HeadingNode {
                 level: 2,
-                children: vec![InlineNode::Text(TextNode { value: "Title".into() })],
+                children: vec![InlineNode::Text(TextNode {
+                    value: "Title".into(),
+                })],
             })],
         };
         assert_eq!(to_html(&doc, &opts()), "<h2>Title</h2>\n");
@@ -663,16 +774,20 @@ mod tests {
                 start: None,
                 tight: true,
                 children: vec![
-                    ListItemNode {
+                    ListChildNode::ListItem(ListItemNode {
                         children: vec![BlockNode::Paragraph(ParagraphNode {
-                            children: vec![InlineNode::Text(TextNode { value: "item 1".into() })],
+                            children: vec![InlineNode::Text(TextNode {
+                                value: "item 1".into(),
+                            })],
                         })],
-                    },
-                    ListItemNode {
+                    }),
+                    ListChildNode::ListItem(ListItemNode {
                         children: vec![BlockNode::Paragraph(ParagraphNode {
-                            children: vec![InlineNode::Text(TextNode { value: "item 2".into() })],
+                            children: vec![InlineNode::Text(TextNode {
+                                value: "item 2".into(),
+                            })],
                         })],
-                    },
+                    }),
                 ],
             })],
         };
@@ -687,11 +802,13 @@ mod tests {
                 ordered: true,
                 start: Some(1),
                 tight: false,
-                children: vec![ListItemNode {
+                children: vec![ListChildNode::ListItem(ListItemNode {
                     children: vec![BlockNode::Paragraph(ParagraphNode {
-                        children: vec![InlineNode::Text(TextNode { value: "item".into() })],
+                        children: vec![InlineNode::Text(TextNode {
+                            value: "item".into(),
+                        })],
                     })],
-                }],
+                })],
             })],
         };
         let html = to_html(&doc, &opts());
@@ -729,14 +846,85 @@ mod tests {
                     InlineNode::Emphasis(EmphasisNode {
                         children: vec![InlineNode::Text(TextNode { value: "em".into() })],
                     }),
-                    InlineNode::Text(TextNode { value: " and ".into() }),
+                    InlineNode::Text(TextNode {
+                        value: " and ".into(),
+                    }),
                     InlineNode::Strong(StrongNode {
-                        children: vec![InlineNode::Text(TextNode { value: "strong".into() })],
+                        children: vec![InlineNode::Text(TextNode {
+                            value: "strong".into(),
+                        })],
                     }),
                 ],
             })],
         };
-        assert_eq!(to_html(&doc, &opts()), "<p><em>em</em> and <strong>strong</strong></p>\n");
+        assert_eq!(
+            to_html(&doc, &opts()),
+            "<p><em>em</em> and <strong>strong</strong></p>\n"
+        );
+    }
+
+    #[test]
+    fn test_strikethrough() {
+        let doc = DocumentNode {
+            children: vec![BlockNode::Paragraph(ParagraphNode {
+                children: vec![InlineNode::Strikethrough(StrikethroughNode {
+                    children: vec![InlineNode::Text(TextNode {
+                        value: "gone".into(),
+                    })],
+                })],
+            })],
+        };
+        assert_eq!(to_html(&doc, &opts()), "<p><del>gone</del></p>\n");
+    }
+
+    #[test]
+    fn test_task_list() {
+        let doc = DocumentNode {
+            children: vec![BlockNode::List(ListNode {
+                ordered: false,
+                start: None,
+                tight: true,
+                children: vec![ListChildNode::TaskItem(TaskItemNode {
+                    checked: true,
+                    children: vec![BlockNode::Paragraph(ParagraphNode {
+                        children: vec![InlineNode::Text(TextNode {
+                            value: "done".into(),
+                        })],
+                    })],
+                })],
+            })],
+        };
+        assert_eq!(
+            to_html(&doc, &opts()),
+            "<ul>\n<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> done</li>\n</ul>\n"
+        );
+    }
+
+    #[test]
+    fn test_table() {
+        let doc = DocumentNode {
+            children: vec![BlockNode::Table(TableNode {
+                align: vec![TableAlignment::Left],
+                children: vec![
+                    TableRowNode {
+                        is_header: true,
+                        children: vec![TableCellNode {
+                            children: vec![InlineNode::Text(TextNode { value: "A".into() })],
+                        }],
+                    },
+                    TableRowNode {
+                        is_header: false,
+                        children: vec![TableCellNode {
+                            children: vec![InlineNode::Text(TextNode { value: "B".into() })],
+                        }],
+                    },
+                ],
+            })],
+        };
+        assert_eq!(
+            to_html(&doc, &opts()),
+            "<table>\n<thead>\n<tr>\n<th align=\"left\">A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"left\">B</td>\n</tr>\n</tbody>\n</table>\n"
+        );
     }
 
     #[test]
@@ -746,7 +934,9 @@ mod tests {
                 children: vec![InlineNode::Link(LinkNode {
                     destination: "https://example.com".into(),
                     title: Some("Example".into()),
-                    children: vec![InlineNode::Text(TextNode { value: "click".into() })],
+                    children: vec![InlineNode::Text(TextNode {
+                        value: "click".into(),
+                    })],
                 })],
             })],
         };

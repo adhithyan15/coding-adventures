@@ -44,7 +44,12 @@ from coding_adventures_document_ast import (
     RawBlockNode,
     RawInlineNode,
     SoftBreakNode,
+    StrikethroughNode,
     StrongNode,
+    TableCellNode,
+    TableNode,
+    TableRowNode,
+    TaskItemNode,
     TextNode,
     ThematicBreakNode,
 )
@@ -127,6 +132,11 @@ def strong(*children) -> StrongNode:
     return StrongNode(type="strong", children=list(children))
 
 
+def strikethrough(*children) -> StrikethroughNode:
+    """Build a StrikethroughNode."""
+    return StrikethroughNode(type="strikethrough", children=list(children))
+
+
 def blockquote(*children) -> BlockquoteNode:
     """Build a BlockquoteNode."""
     return BlockquoteNode(type="blockquote", children=list(children))
@@ -140,6 +150,22 @@ def list_node(ordered=False, start=None, tight=True, *items) -> ListNode:
 def list_item(*children) -> ListItemNode:
     """Build a ListItemNode."""
     return ListItemNode(type="list_item", children=list(children))
+
+
+def task_item(checked: bool, *children) -> TaskItemNode:
+    return TaskItemNode(type="task_item", checked=checked, children=list(children))
+
+
+def table_cell(*children) -> TableCellNode:
+    return TableCellNode(type="table_cell", children=list(children))
+
+
+def table_row(is_header: bool, *cells) -> TableRowNode:
+    return TableRowNode(type="table_row", isHeader=is_header, children=list(cells))
+
+
+def table(*rows, align=None) -> TableNode:
+    return TableNode(type="table", align=list(align or []), children=list(rows))
 
 
 def thematic_break() -> ThematicBreakNode:
@@ -1081,3 +1107,42 @@ class TestSanitizationPolicyDefaults:
         custom = dataclasses.replace(RELAXED, min_heading_level=2)
         assert custom.min_heading_level == 2
         assert custom.allow_raw_block_formats == RELAXED.allow_raw_block_formats
+
+
+class TestGfmNodes:
+    def test_strikethrough_recurses(self):
+        result = sanitize(doc(para(strikethrough(text("gone")))), STRICT)
+        node = result["children"][0]["children"][0]
+        assert node["type"] == "strikethrough"
+        assert node["children"][0]["value"] == "gone"
+
+    def test_empty_strikethrough_is_dropped(self):
+        policy = dataclasses.replace(STRICT, allow_raw_inline_formats="drop-all")
+        result = sanitize(doc(para(strikethrough(raw_inline("html", "<b>x</b>")))), policy)
+        assert result["children"] == []
+
+    def test_task_item_is_preserved(self):
+        result = sanitize(
+            doc(list_node(False, None, True, task_item(True, para(text("done"))))),
+            STRICT,
+        )
+        item = result["children"][0]["children"][0]
+        assert item["type"] == "task_item"
+        assert item["checked"] is True
+
+    def test_table_is_preserved(self):
+        result = sanitize(
+            doc(table(table_row(True, table_cell(text("A"))), align=["left"])),
+            STRICT,
+        )
+        tbl = result["children"][0]
+        assert tbl["type"] == "table"
+        assert tbl["children"][0]["children"][0]["children"][0]["value"] == "A"
+
+    def test_empty_table_cell_drops_row_and_table(self):
+        policy = dataclasses.replace(STRICT, allow_raw_inline_formats="drop-all")
+        result = sanitize(
+            doc(table(table_row(True, table_cell(raw_inline("html", "<b>x</b>"))), align=[None])),
+            policy,
+        )
+        assert result["children"] == []

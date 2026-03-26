@@ -214,7 +214,10 @@ mod tests {
     #[test]
     fn strip_bom() {
         // U+FEFF
-        assert_eq!(strip_control_chars("\u{FEFF}https://example.com"), "https://example.com");
+        assert_eq!(
+            strip_control_chars("\u{FEFF}https://example.com"),
+            "https://example.com"
+        );
     }
 
     #[test]
@@ -315,7 +318,10 @@ mod tests {
     #[test]
     fn data_url_blocked_by_default() {
         let schemes = Some(vec!["http".to_string(), "https".to_string()]);
-        assert!(!is_scheme_allowed("data:text/html,<script>alert(1)</script>", &schemes));
+        assert!(!is_scheme_allowed(
+            "data:text/html,<script>alert(1)</script>",
+            &schemes
+        ));
     }
 
     #[test]

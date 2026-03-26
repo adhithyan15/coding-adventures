@@ -174,6 +174,23 @@ describe("document_ast_to_html", function()
       local list = ast.list(false, nil, true, { ast.list_item({}) })
       assert.equals("<ul>\n<li></li>\n</ul>\n", render(doc_of(list)))
     end)
+
+    it("task list item", function()
+      local list = ast.list(false, nil, true, {
+        ast.task_item(true, { para(ast.text("done")) })
+      })
+      assert.equals('<ul>\n<li><input type="checkbox" disabled="" checked="" /> done</li>\n</ul>\n', render(doc_of(list)))
+    end)
+  end)
+
+  describe("table()", function()
+    it("renders header and body rows", function()
+      local table_node = ast.table({ nil }, {
+        ast.table_row(true, { ast.table_cell({ ast.text("A") }) }),
+        ast.table_row(false, { ast.table_cell({ ast.text("B") }) }),
+      })
+      assert.equals("<table>\n<thead>\n<tr>\n<th>A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>B</td>\n</tr>\n</tbody>\n</table>\n", render(doc_of(table_node)))
+    end)
   end)
 
   -- ─── Thematic break ───────────────────────────────────────────────────────
@@ -230,6 +247,13 @@ describe("document_ast_to_html", function()
     it("renders as <strong>", function()
       local p = para(ast.strong({ ast.text("bold") }))
       assert.equals("<p><strong>bold</strong></p>\n", render(doc_of(p)))
+    end)
+  end)
+
+  describe("strikethrough()", function()
+    it("renders as <del>", function()
+      local p = para(ast.strikethrough({ ast.text("gone") }))
+      assert.equals("<p><del>gone</del></p>\n", render(doc_of(p)))
     end)
   end)
 

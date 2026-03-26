@@ -158,6 +158,13 @@ module CodingAdventures
       end
     end
 
+    class TestTaskItemNode < Minitest::Test
+      def test_type_tag
+        item = TaskItemNode.new(checked: true, children: [])
+        assert_equal "task_item", item.type
+      end
+    end
+
     class TestThematicBreakNode < Minitest::Test
       def test_type_tag
         tb = ThematicBreakNode.new
@@ -184,6 +191,23 @@ module CodingAdventures
       def test_non_html_format
         rb = RawBlockNode.new(format: "latex", value: "\\textbf{x}\n")
         assert_equal "latex", rb.format
+      end
+    end
+
+    class TestTableNodes < Minitest::Test
+      def test_table_type_tag
+        table = TableNode.new(align: ["left"], children: [])
+        assert_equal "table", table.type
+      end
+
+      def test_table_row_type_tag
+        row = TableRowNode.new(is_header: true, children: [])
+        assert_equal "table_row", row.type
+      end
+
+      def test_table_cell_type_tag
+        cell = TableCellNode.new(children: [TextNode.new(value: "A")])
+        assert_equal "table_cell", cell.type
       end
     end
 
@@ -221,6 +245,13 @@ module CodingAdventures
       def test_type_tag
         st = StrongNode.new(children: [])
         assert_equal "strong", st.type
+      end
+    end
+
+    class TestStrikethroughNode < Minitest::Test
+      def test_type_tag
+        node = StrikethroughNode.new(children: [TextNode.new(value: "gone")])
+        assert_equal "strikethrough", node.type
       end
     end
 

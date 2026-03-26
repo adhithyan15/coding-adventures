@@ -110,7 +110,7 @@ defmodule CodingAdventures.LatticeAstToCss.Errors do
 
     Example: `color: $nonexistent;`
     """
-    defstruct [:message, :name, line: 0, column: 0]
+    defstruct [:message, :name, :suggestion, line: 0, column: 0]
 
     @type t :: %__MODULE__{
             message: String.t(),
@@ -135,19 +135,27 @@ defmodule CodingAdventures.LatticeAstToCss.Errors do
 
     Example: `@include nonexistent;`
     """
-    defstruct [:message, :name, line: 0, column: 0]
+    defstruct [:message, :name, :suggestion, line: 0, column: 0]
 
     @type t :: %__MODULE__{
             message: String.t(),
             name: String.t(),
+            suggestion: String.t() | nil,
             line: non_neg_integer(),
             column: non_neg_integer()
           }
 
-    def new(name, line \\ 0, column \\ 0) do
+    def new(name, line \\ 0, column \\ 0, suggestion \\ nil) do
+      message =
+        case suggestion do
+          nil -> "Undefined mixin '#{name}'"
+          suggested_name -> "Undefined mixin '#{name}'. Did you mean '#{suggested_name}'?"
+        end
+
       %__MODULE__{
-        message: "Undefined mixin '#{name}'",
+        message: message,
         name: name,
+        suggestion: suggestion,
         line: line,
         column: column
       }

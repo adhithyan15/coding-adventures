@@ -129,9 +129,24 @@ func inferLanguage(path string) string {
 	return "unknown"
 }
 
-// inferPackageName builds a qualified package name like "python/logic-gates"
-// from the language and the directory's basename.
+// inferPackageName builds a qualified package name from the language and
+// directory path.
+//
+// For packages (under code/packages/):
+//
+//	"python/logic-gates"
+//
+// For programs (under code/programs/), a "programs/" infix is included so
+// that programs and packages with the same directory basename (e.g.,
+// code/packages/go/grammar-tools and code/programs/go/grammar-tools) receive
+// distinct names and do not create a self-loop in the dependency graph:
+//
+//	"go/programs/grammar-tools"
 func inferPackageName(path, language string) string {
+	normalized := filepath.ToSlash(path)
+	if strings.Contains(normalized, "/programs/") {
+		return language + "/programs/" + filepath.Base(path)
+	}
 	return language + "/" + filepath.Base(path)
 }
 

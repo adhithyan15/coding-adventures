@@ -15,12 +15,15 @@
 //	BlockquoteNode    → <blockquote>\n…</blockquote>
 //	ListNode          → <ul> or <ol [start="N"]>
 //	ListItemNode      → <li>…</li>
+//	TaskItemNode      → <li><input type="checkbox" … /> …</li>
 //	ThematicBreakNode → <hr />
 //	RawBlockNode      → verbatim if format="html", skipped otherwise
+//	TableNode         → <table>…</table>
 //
 //	TextNode          → HTML-escaped text
 //	EmphasisNode      → <em>…</em>
 //	StrongNode        → <strong>…</strong>
+//	StrikethroughNode → <del>…</del>
 //	CodeSpanNode      → <code>…</code>
 //	LinkNode          → <a href="…" [title="…"]>…</a>
 //	ImageNode         → <img src="…" alt="…" [title="…"] />
@@ -111,10 +114,18 @@ func renderBlock(block documentast.BlockNode, tight bool, opts RenderOptions) st
 		return renderList(b, opts)
 	case *documentast.ListItemNode:
 		return renderListItem(b, false, opts)
+	case *documentast.TaskItemNode:
+		return renderTaskItem(b, false, opts)
 	case *documentast.ThematicBreakNode:
 		return "<hr />\n"
 	case *documentast.RawBlockNode:
 		return renderRawBlock(b, opts)
+	case *documentast.TableNode:
+		return renderTable(b, opts)
+	case *documentast.TableRowNode:
+		return renderTableRow(b, nil, opts)
+	case *documentast.TableCellNode:
+		return renderTableCell(b, false, documentast.TableAlignNone, opts)
 	default:
 		return ""
 	}
@@ -193,12 +204,23 @@ func renderList(node *documentast.ListNode, opts RenderOptions) string {
 	b.WriteString(startAttr)
 	b.WriteString(">\n")
 	for _, item := range node.Children {
-		b.WriteString(renderListItem(item, node.Tight, opts))
+		b.WriteString(renderListChild(item, node.Tight, opts))
 	}
 	b.WriteString("</")
 	b.WriteString(tag)
 	b.WriteString(">\n")
 	return b.String()
+}
+
+func renderListChild(node documentast.ListChildNode, tight bool, opts RenderOptions) string {
+	switch n := node.(type) {
+	case *documentast.ListItemNode:
+		return renderListItem(n, tight, opts)
+	case *documentast.TaskItemNode:
+		return renderTaskItem(n, tight, opts)
+	default:
+		return ""
+	}
 }
 
 // renderListItem renders a single list item.
@@ -237,6 +259,35 @@ func renderListItem(node *documentast.ListItemNode, tight bool, opts RenderOptio
 	return "<li>\n" + inner + "</li>\n"
 }
 
+func renderTaskItem(node *documentast.TaskItemNode, tight bool, opts RenderOptions) string {
+	checkbox := `<input type="checkbox" disabled="" />`
+	if node.Checked {
+		checkbox = `<input type="checkbox" disabled="" checked="" />`
+	}
+
+	if len(node.Children) == 0 {
+		return "<li>" + checkbox + "</li>\n"
+	}
+
+	if tight {
+		if firstPara, ok := node.Children[0].(*documentast.ParagraphNode); ok {
+			firstContent := renderInlines(firstPara.Children, opts)
+			content := checkbox
+			if firstContent != "" {
+				content += " " + firstContent
+			}
+			if len(node.Children) == 1 {
+				return "<li>" + content + "</li>\n"
+			}
+			rest := renderBlocks(node.Children[1:], tight, opts)
+			return "<li>" + content + "\n" + rest + "</li>\n"
+		}
+	}
+
+	inner := renderBlocks(node.Children, tight, opts)
+	return "<li>" + checkbox + "\n" + inner + "</li>\n"
+}
+
 // renderRawBlock renders a raw block node.
 //
 // If opts.Sanitize is true, the node is always skipped.
@@ -254,6 +305,66 @@ func renderRawBlock(node *documentast.RawBlockNode, opts RenderOptions) string {
 		return node.Value
 	}
 	return ""
+}
+
+func renderTable(node *documentast.TableNode, opts RenderOptions) string {
+	var header *documentast.TableRowNode
+	bodyRows := make([]*documentast.TableRowNode, 0, len(node.Children))
+	for _, row := range node.Children {
+		if row.IsHeader && header == nil {
+			header = row
+			continue
+		}
+		bodyRows = append(bodyRows, row)
+	}
+
+	var b strings.Builder
+	b.WriteString("<table>\n")
+	if header != nil {
+		b.WriteString("<thead>\n")
+		b.WriteString(renderTableRow(header, node.Align, opts))
+		b.WriteString("</thead>\n")
+	}
+	if len(bodyRows) > 0 {
+		b.WriteString("<tbody>\n")
+		for _, row := range bodyRows {
+			b.WriteString(renderTableRow(row, node.Align, opts))
+		}
+		b.WriteString("</tbody>\n")
+	}
+	b.WriteString("</table>\n")
+	return b.String()
+}
+
+func renderTableRow(node *documentast.TableRowNode, align []documentast.TableAlignment, opts RenderOptions) string {
+	var b strings.Builder
+	b.WriteString("<tr>\n")
+	for idx, cell := range node.Children {
+		colAlign := documentast.TableAlignNone
+		if idx < len(align) {
+			colAlign = align[idx]
+		}
+		b.WriteString(renderTableCell(cell, node.IsHeader, colAlign, opts))
+	}
+	b.WriteString("</tr>\n")
+	return b.String()
+}
+
+func renderTableCell(node *documentast.TableCellNode, header bool, align documentast.TableAlignment, opts RenderOptions) string {
+	tag := "td"
+	if header {
+		tag = "th"
+	}
+	alignAttr := ""
+	switch align {
+	case documentast.TableAlignLeft:
+		alignAttr = ` align="left"`
+	case documentast.TableAlignRight:
+		alignAttr = ` align="right"`
+	case documentast.TableAlignCenter:
+		alignAttr = ` align="center"`
+	}
+	return "<" + tag + alignAttr + ">" + renderInlines(node.Children, opts) + "</" + tag + ">\n"
 }
 
 // ─── Inline Rendering ─────────────────────────────────────────────────────────
@@ -274,6 +385,8 @@ func renderInline(node documentast.InlineNode, opts RenderOptions) string {
 		return "<em>" + renderInlines(n.Children, opts) + "</em>"
 	case *documentast.StrongNode:
 		return "<strong>" + renderInlines(n.Children, opts) + "</strong>"
+	case *documentast.StrikethroughNode:
+		return "<del>" + renderInlines(n.Children, opts) + "</del>"
 	case *documentast.CodeSpanNode:
 		return "<code>" + EscapeHtml(n.Value) + "</code>"
 	case *documentast.LinkNode:

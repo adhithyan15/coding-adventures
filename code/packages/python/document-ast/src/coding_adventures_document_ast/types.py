@@ -164,7 +164,7 @@ class ListNode(TypedDict):
     """Opening number for ordered lists. None for unordered lists."""
     tight: Required[bool]
     """Tight = no blank lines between items and no blank line inside any item."""
-    children: Required[list[ListItemNode]]
+    children: Required[list[ListChildNode]]
 
 
 class ListItemNode(TypedDict):
@@ -176,6 +176,14 @@ class ListItemNode(TypedDict):
     """
 
     type: Required[Literal["list_item"]]
+    children: Required[list[BlockNode]]
+
+
+class TaskItemNode(TypedDict):
+    """A GitHub Flavored Markdown task-list item."""
+
+    type: Required[Literal["task_item"]]
+    checked: Required[bool]
     children: Required[list[BlockNode]]
 
 
@@ -221,6 +229,35 @@ class RawBlockNode(TypedDict):
     """Raw content — never HTML-encoded or otherwise processed."""
 
 
+TableAlignment = Literal["left", "right", "center"] | None
+
+
+class TableNode(TypedDict):
+    """A GitHub Flavored Markdown pipe table."""
+
+    type: Required[Literal["table"]]
+    align: Required[list[TableAlignment]]
+    children: Required[list[TableRowNode]]
+
+
+class TableRowNode(TypedDict):
+    """One row inside a table."""
+
+    type: Required[Literal["table_row"]]
+    isHeader: Required[bool]
+    children: Required[list[TableCellNode]]
+
+
+class TableCellNode(TypedDict):
+    """A single table cell containing inline content."""
+
+    type: Required[Literal["table_cell"]]
+    children: Required[list[InlineNode]]
+
+
+ListChildNode = ListItemNode | TaskItemNode
+
+
 # Union of all block node types.
 # Use in isinstance() / node["type"] == checks for type narrowing.
 #
@@ -235,8 +272,12 @@ BlockNode = (
     | BlockquoteNode
     | ListNode
     | ListItemNode
+    | TaskItemNode
     | ThematicBreakNode
     | RawBlockNode
+    | TableNode
+    | TableRowNode
+    | TableCellNode
 )
 
 
@@ -298,6 +339,13 @@ class StrongNode(TypedDict):
     """
 
     type: Required[Literal["strong"]]
+    children: Required[list[InlineNode]]
+
+
+class StrikethroughNode(TypedDict):
+    """Text marked as deleted / struck through."""
+
+    type: Required[Literal["strikethrough"]]
     children: Required[list[InlineNode]]
 
 
@@ -462,6 +510,7 @@ InlineNode = (
     TextNode
     | EmphasisNode
     | StrongNode
+    | StrikethroughNode
     | CodeSpanNode
     | LinkNode
     | ImageNode

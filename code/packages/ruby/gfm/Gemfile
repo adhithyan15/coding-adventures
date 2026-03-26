@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "coding_adventures_document_ast", path: "../document_ast"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"
+gem "coding_adventures_gfm_parser", path: "../gfm_parser"
+gem "coding_adventures_document_ast_to_html", path: "../document_ast_to_html"
+
+gemspec
