@@ -100,6 +100,7 @@ pub enum LatticeError {
     /// Example: `@include nonexistent;` when no `@mixin nonexistent` exists.
     UndefinedMixin {
         name: String,
+        suggestion: Option<String>,
         line: usize,
         column: usize,
     },
@@ -249,8 +250,14 @@ impl fmt::Display for LatticeError {
             LatticeError::UndefinedVariable { name, line, column } => {
                 write!(f, "Undefined variable '{name}' at line {line}, column {column}")
             }
-            LatticeError::UndefinedMixin { name, line, column } => {
-                write!(f, "Undefined mixin '{name}' at line {line}, column {column}")
+            LatticeError::UndefinedMixin { name, suggestion, line, column } => {
+                match suggestion {
+                    Some(suggested_name) => write!(
+                        f,
+                        "Undefined mixin '{name}'. Did you mean '{suggested_name}'? at line {line}, column {column}"
+                    ),
+                    None => write!(f, "Undefined mixin '{name}' at line {line}, column {column}"),
+                }
             }
             LatticeError::UndefinedFunction { name, line, column } => {
                 write!(f, "Undefined function '{name}' at line {line}, column {column}")
@@ -329,9 +336,15 @@ impl LatticeError {
     }
 
     /// Create an `UndefinedMixin` error.
-    pub fn undefined_mixin(name: impl Into<String>, line: usize, column: usize) -> Self {
+    pub fn undefined_mixin(
+        name: impl Into<String>,
+        line: usize,
+        column: usize,
+        suggestion: Option<String>,
+    ) -> Self {
         LatticeError::UndefinedMixin {
             name: name.into(),
+            suggestion,
             line,
             column,
         }

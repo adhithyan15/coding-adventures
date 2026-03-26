@@ -407,6 +407,32 @@ defmodule CodingAdventures.LatticeAstToCssTest do
       assert {:error, msg} = result
       assert msg =~ "Undefined mixin"
     end
+
+    test "undefined mixin suggests a nearby name" do
+      source = """
+      @mixin button {
+        color: red;
+      }
+
+      .box { @include buton; }
+      """
+
+      {:ok, ast} = LatticeParser.parse(source)
+      assert {:error, msg} = Transformer.transform(ast)
+      assert msg =~ "Did you mean 'button'?"
+    end
+
+    test "mixin definition without parens is collected" do
+      source = """
+      @mixin button {
+        color: red;
+      }
+
+      .box { @include button; }
+      """
+
+      assert transpile!(source) =~ "color: red"
+    end
   end
 
   describe "Transformer: @if control flow" do

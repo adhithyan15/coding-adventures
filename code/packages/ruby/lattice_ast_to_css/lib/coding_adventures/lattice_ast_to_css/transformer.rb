@@ -764,6 +764,7 @@ module CodingAdventures
         mixin_name = nil
         args_node = nil
         content_block = nil
+        mixin_token = nil
 
         node.children.each do |child|
           if child.respond_to?(:rule_name)
@@ -777,8 +778,10 @@ module CodingAdventures
             type = token_type_name(child)
             if type == "FUNCTION"
               mixin_name = child.value.chomp("(")
+              mixin_token = child
             elsif type == "IDENT"
               mixin_name = child.value
+              mixin_token = child
             end
           end
         end
@@ -786,7 +789,12 @@ module CodingAdventures
         return [] if mixin_name.nil?
 
         unless @mixins.key?(mixin_name)
-          raise LatticeUndefinedMixinError.new(mixin_name)
+          raise LatticeUndefinedMixinError.new(
+            mixin_name,
+            mixin_token&.line || 0,
+            mixin_token&.column || 0,
+            closest_name(mixin_name, @mixins.keys)
+          )
         end
 
         # Cycle detection.
@@ -1919,6 +1927,43 @@ module CodingAdventures
         return nil if token.respond_to?(:rule_name)
 
         token.respond_to?(:value) ? token.value : nil
+      end
+
+      def levenshtein_distance(left, right)
+        return 0 if left == right
+        return right.length if left.empty?
+        return left.length if right.empty?
+
+        previous = (0..right.length).to_a
+        left.each_char.with_index(1) do |left_char, left_index|
+          current = [left_index]
+          right.each_char.with_index(1) do |right_char, right_index|
+            insertion = current[right_index - 1] + 1
+            deletion = previous[right_index] + 1
+            substitution = previous[right_index - 1] + (left_char == right_char ? 0 : 1)
+            current << [insertion, deletion, substitution].min
+          end
+          previous = current
+        end
+        previous[-1]
+      end
+
+      def closest_name(name, candidates)
+        best_match = nil
+        best_distance = nil
+
+        candidates.each do |candidate|
+          distance = levenshtein_distance(name, candidate)
+          if best_distance.nil? || distance < best_distance
+            best_match = candidate
+            best_distance = distance
+          end
+        end
+
+        return nil if best_match.nil? || best_distance.nil?
+
+        threshold = [2, name.length / 3].max
+        best_distance <= threshold ? best_match : nil
       end
 
       # Deep copy an AST node by marshaling. This is a simple portable

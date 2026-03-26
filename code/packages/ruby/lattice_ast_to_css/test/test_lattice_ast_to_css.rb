@@ -88,6 +88,12 @@ class TestErrorClasses < Minitest::Test
     assert_includes err.message, "button"
   end
 
+  def test_undefined_mixin_error_with_suggestion
+    err = ATC::LatticeUndefinedMixinError.new("buton", 3, 1, "button")
+    assert_equal "button", err.suggestion
+    assert_includes err.message, "Did you mean 'button'?"
+  end
+
   def test_undefined_function_error
     err = ATC::LatticeUndefinedFunctionError.new("spacing", 1, 5)
     assert_equal "spacing", err.name
@@ -448,9 +454,20 @@ class TestTransformerMixins < Minitest::Test
   end
 
   def test_undefined_mixin_raises
-    assert_raises(ATC::LatticeUndefinedMixinError) do
+    error = assert_raises(ATC::LatticeUndefinedMixinError) do
       transpile("h1 { @include nonexistent; }")
     end
+    assert_operator error.line, :>, 0
+    assert_operator error.column, :>, 0
+  end
+
+  def test_undefined_mixin_suggests_nearby_name
+    source = "@mixin button { color: red; }\nh1 { @include buton; }"
+    error = assert_raises(ATC::LatticeUndefinedMixinError) do
+      transpile(source)
+    end
+    assert_equal "button", error.suggestion
+    assert_includes error.message, "Did you mean 'button'?"
   end
 
   def test_wrong_arity_raises

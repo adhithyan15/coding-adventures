@@ -104,6 +104,11 @@ class TestUndefinedMixinError:
         err = UndefinedMixinError("clearfix")
         assert err.name == "clearfix"
 
+    def test_suggestion_attribute(self) -> None:
+        err = UndefinedMixinError("buton", suggestion="button")
+        assert err.suggestion == "button"
+        assert "Did you mean 'button'?" in str(err)
+
 
 class TestUndefinedFunctionError:
     """Test undefined function errors."""

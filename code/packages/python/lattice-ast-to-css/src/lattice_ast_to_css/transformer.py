@@ -112,6 +112,47 @@ def _get_token_value(child: object) -> str | None:
     return child.value  # type: ignore[attr-defined]
 
 
+def _levenshtein_distance(left: str, right: str) -> int:
+    """Compute a small Levenshtein distance for suggestion generation."""
+    if left == right:
+        return 0
+    if not left:
+        return len(right)
+    if not right:
+        return len(left)
+
+    previous = list(range(len(right) + 1))
+    for left_index, left_char in enumerate(left, start=1):
+        current = [left_index]
+        for right_index, right_char in enumerate(right, start=1):
+            insertion = current[right_index - 1] + 1
+            deletion = previous[right_index] + 1
+            substitution = previous[right_index - 1] + (left_char != right_char)
+            current.append(min(insertion, deletion, substitution))
+        previous = current
+    return previous[-1]
+
+
+def _closest_name(name: str, candidates: list[str]) -> str | None:
+    """Return the nearest candidate when it is plausibly a typo."""
+    best_match: str | None = None
+    best_distance: int | None = None
+
+    for candidate in candidates:
+        distance = _levenshtein_distance(name, candidate)
+        if best_distance is None or distance < best_distance:
+            best_match = candidate
+            best_distance = distance
+
+    if best_match is None or best_distance is None:
+        return None
+
+    threshold = max(2, len(name) // 3)
+    if best_distance > threshold:
+        return None
+    return best_match
+
+
 # ---------------------------------------------------------------------------
 # Mixin / Function Definition Records
 # ---------------------------------------------------------------------------
@@ -400,7 +441,8 @@ class LatticeTransformer:
     def _collect_mixin(self, node: object) -> None:
         """Extract mixin name, params, and body from a mixin_definition node.
 
-        mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
+        mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
+                         | "@mixin" IDENT block ;
         """
         children = node.children  # type: ignore[attr-defined]
         name = None
@@ -414,6 +456,8 @@ class LatticeTransformer:
                 if type_name == "FUNCTION":
                     # FUNCTION token is "name(" — strip the paren
                     name = child.value.rstrip("(")  # type: ignore[attr-defined]
+                elif type_name == "IDENT" and name is None:
+                    name = child.value  # type: ignore[attr-defined]
             elif child.rule_name == "mixin_params":  # type: ignore[attr-defined]
                 params, defaults = self._extract_params(child)
             elif child.rule_name == "block":  # type: ignore[attr-defined]
@@ -425,7 +469,8 @@ class LatticeTransformer:
     def _collect_function(self, node: object) -> None:
         """Extract function name, params, and body from a function_definition node.
 
-        function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body ;
+        function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body
+                            | "@function" IDENT function_body ;
         """
         children = node.children  # type: ignore[attr-defined]
         name = None
@@ -438,6 +483,8 @@ class LatticeTransformer:
                 type_name = _token_type_name(child)
                 if type_name == "FUNCTION":
                     name = child.value.rstrip("(")  # type: ignore[attr-defined]
+                elif type_name == "IDENT" and name is None:
+                    name = child.value  # type: ignore[attr-defined]
             elif child.rule_name == "mixin_params":  # type: ignore[attr-defined]
                 params, defaults = self._extract_params(child)
             elif child.rule_name == "function_body":  # type: ignore[attr-defined]
@@ -841,14 +888,17 @@ class LatticeTransformer:
         mixin_name = None
         args_node = None
         content_block = None
+        mixin_token = None
 
         for child in children:
             if not hasattr(child, "rule_name"):
                 type_name = _token_type_name(child)
                 if type_name == "FUNCTION":
                     mixin_name = child.value.rstrip("(")  # type: ignore[attr-defined]
+                    mixin_token = child
                 elif type_name == "IDENT":
                     mixin_name = child.value  # type: ignore[attr-defined]
+                    mixin_token = child
             elif hasattr(child, "rule_name"):
                 child_rule = child.rule_name  # type: ignore[attr-defined]
                 if child_rule == "include_args":
@@ -860,7 +910,13 @@ class LatticeTransformer:
             return []
 
         if mixin_name not in self.mixins:
-            raise UndefinedMixinError(mixin_name)
+            suggestion = _closest_name(mixin_name, list(self.mixins.keys()))
+            raise UndefinedMixinError(
+                mixin_name,
+                getattr(mixin_token, "line", 0),
+                getattr(mixin_token, "column", 0),
+                suggestion=suggestion,
+            )
 
         # Cycle detection
         if mixin_name in self._mixin_stack:
