@@ -271,7 +271,8 @@ variable_declaration = VARIABLE COLON value_list SEMICOLON ;
 # Lattice: Mixins
 # ============================================================================
 
-mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
+mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
+                 | "@mixin" IDENT block ;
 
 mixin_params = mixin_param { COMMA mixin_param } ;
 
@@ -280,7 +281,9 @@ mixin_param = VARIABLE [ COLON value_list ] ;
 include_directive = "@include" FUNCTION [ include_args ] RPAREN ( SEMICOLON | block )
                   | "@include" IDENT ( SEMICOLON | block ) ;
 
-include_args = value_list { COMMA value_list } ;
+include_args = include_arg { COMMA include_arg } ;
+
+include_arg = VARIABLE COLON value_list | value_list ;
 
 # ============================================================================
 # Lattice: Control Flow
