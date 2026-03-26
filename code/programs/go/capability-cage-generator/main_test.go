@@ -212,9 +212,12 @@ func TestGenerateSource_EmptyCapabilities(t *testing.T) {
 	if !strings.Contains(src, `"time"`) {
 		t.Error("expected time import")
 	}
-	// Must declare Cage with no methods (zero capabilities).
-	if !strings.Contains(src, "type Cage struct{}") {
-		t.Error("expected 'type Cage struct{}'")
+	// Zero capabilities: no capability namespace structs, no Cage type.
+	if strings.Contains(src, "type Cage struct{}") {
+		t.Error("must not emit 'type Cage struct{}' — Cage is replaced by namespace fields on Operation[T]")
+	}
+	if strings.Contains(src, "_FileCapabilities") || strings.Contains(src, "_NetCapabilities") {
+		t.Error("zero-cap package must not emit capability namespace structs")
 	}
 	// Must include Operation infrastructure.
 	if !strings.Contains(src, "type OperationResult[T any] struct") {
@@ -287,9 +290,13 @@ func TestGenerateSource_WithFSRead(t *testing.T) {
 	if !strings.Contains(src, `"os"`) {
 		t.Error("expected os import for fs:read capability")
 	}
-	// Must have ReadFile method on Cage.
-	if !strings.Contains(src, "func (c *Cage) ReadFile(path string) ([]byte, error)") {
-		t.Error("expected ReadFile method on Cage")
+	// Must have ReadFile method on _FileCapabilities namespace struct.
+	if !strings.Contains(src, "func (c *_FileCapabilities) ReadFile(path string) ([]byte, error)") {
+		t.Error("expected ReadFile method on _FileCapabilities")
+	}
+	// Must have File field on Operation[T].
+	if !strings.Contains(src, "File") || !strings.Contains(src, "_FileCapabilities") {
+		t.Error("expected File field of type *_FileCapabilities on Operation[T]")
 	}
 	// Must check against exact declared path.
 	if !strings.Contains(src, `"code/grammars/verilog.tokens"`) {
@@ -346,7 +353,7 @@ func TestGenerateSource_MultipleTargetsSameAction(t *testing.T) {
 		t.Error("expected vhdl.grammar in allowed paths")
 	}
 	// Should only have one ReadFile method (merged).
-	count := strings.Count(src, "func (c *Cage) ReadFile(")
+	count := strings.Count(src, "func (c *_FileCapabilities) ReadFile(")
 	if count != 1 {
 		t.Errorf("expected 1 ReadFile method, got %d", count)
 	}
@@ -368,14 +375,14 @@ func TestGenerateSource_WithTimeCapability(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !strings.Contains(src, "func (c *Cage) Sleep(d time.Duration)") {
-		t.Error("expected Sleep method on Cage")
+	if !strings.Contains(src, "func (c *_TimeCapabilities) Sleep(d time.Duration)") {
+		t.Error("expected Sleep method on _TimeCapabilities")
 	}
 	// time:sleep with "*" target is allowed (non-scopeable).
 	if strings.Contains(src, "_capabilityViolationError{") {
 		// The violation error type should be defined, but not used inside Sleep.
 		// Check that Sleep itself doesn't have a path check.
-		sleepIdx := strings.Index(src, "func (c *Cage) Sleep(")
+		sleepIdx := strings.Index(src, "func (c *_TimeCapabilities) Sleep(")
 		endIdx := strings.Index(src[sleepIdx:], "\n}\n")
 		sleepBody := src[sleepIdx : sleepIdx+endIdx]
 		if strings.Contains(sleepBody, "_capabilityViolationError") {
@@ -400,8 +407,8 @@ func TestGenerateSource_WithStdinCapability(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !strings.Contains(src, "func (c *Cage) ReadStdin() ([]byte, error)") {
-		t.Error("expected ReadStdin method on Cage")
+	if !strings.Contains(src, "func (c *_StdinCapabilities) ReadStdin() ([]byte, error)") {
+		t.Error("expected ReadStdin method on _StdinCapabilities")
 	}
 	if !strings.Contains(src, `"io"`) {
 		t.Error("expected io import for stdin:read")
@@ -427,8 +434,8 @@ func TestGenerateSource_WithStdoutCapability(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !strings.Contains(src, "func (c *Cage) WriteStdout(data []byte) (int, error)") {
-		t.Error("expected WriteStdout method on Cage")
+	if !strings.Contains(src, "func (c *_StdoutCapabilities) WriteStdout(data []byte) (int, error)") {
+		t.Error("expected WriteStdout method on _StdoutCapabilities")
 	}
 }
 
@@ -447,8 +454,8 @@ func TestGenerateSource_WithFSWrite(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) WriteFile(") {
-		t.Error("expected WriteFile method on Cage")
+	if !strings.Contains(src, "func (c *_FileCapabilities) WriteFile(") {
+		t.Error("expected WriteFile method on _FileCapabilities")
 	}
 	if !strings.Contains(src, `"config/output.json"`) {
 		t.Error("expected declared path in WriteFile allowed check")
@@ -467,8 +474,8 @@ func TestGenerateSource_WithFSCreate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) CreateFile(") {
-		t.Error("expected CreateFile method")
+	if !strings.Contains(src, "func (c *_FileCapabilities) CreateFile(") {
+		t.Error("expected CreateFile method on _FileCapabilities")
 	}
 }
 
@@ -484,8 +491,8 @@ func TestGenerateSource_WithFSDelete(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) DeleteFile(") {
-		t.Error("expected DeleteFile method")
+	if !strings.Contains(src, "func (c *_FileCapabilities) DeleteFile(") {
+		t.Error("expected DeleteFile method on _FileCapabilities")
 	}
 }
 
@@ -501,8 +508,8 @@ func TestGenerateSource_WithFSList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) ReadDir(") {
-		t.Error("expected ReadDir method")
+	if !strings.Contains(src, "func (c *_FileCapabilities) ReadDir(") {
+		t.Error("expected ReadDir method on _FileCapabilities")
 	}
 }
 
@@ -518,8 +525,8 @@ func TestGenerateSource_WithNetConnect(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) Connect(") {
-		t.Error("expected Connect method")
+	if !strings.Contains(src, "func (c *_NetCapabilities) Connect(") {
+		t.Error("expected Connect method on _NetCapabilities")
 	}
 	if !strings.Contains(src, `"net"`) {
 		t.Error("expected net import")
@@ -538,8 +545,8 @@ func TestGenerateSource_WithNetListen(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) Listen(") {
-		t.Error("expected Listen method")
+	if !strings.Contains(src, "func (c *_NetCapabilities) Listen(") {
+		t.Error("expected Listen method on _NetCapabilities")
 	}
 }
 
@@ -555,8 +562,8 @@ func TestGenerateSource_WithNetDNS(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) LookupHost(") {
-		t.Error("expected LookupHost method")
+	if !strings.Contains(src, "func (c *_NetCapabilities) LookupHost(") {
+		t.Error("expected LookupHost method on _NetCapabilities")
 	}
 }
 
@@ -572,8 +579,8 @@ func TestGenerateSource_WithProcExec(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) Exec(") {
-		t.Error("expected Exec method")
+	if !strings.Contains(src, "func (c *_ProcCapabilities) Exec(") {
+		t.Error("expected Exec method on _ProcCapabilities")
 	}
 	if !strings.Contains(src, `"os/exec"`) {
 		t.Error("expected os/exec import")
@@ -592,8 +599,8 @@ func TestGenerateSource_WithEnvRead(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(src, "func (c *Cage) Getenv(") {
-		t.Error("expected Getenv method")
+	if !strings.Contains(src, "func (c *_EnvCapabilities) Getenv(") {
+		t.Error("expected Getenv method on _EnvCapabilities")
 	}
 	if !strings.Contains(src, `"APP_CONFIG"`) {
 		t.Error("expected declared env var in Getenv allowed check")
@@ -754,8 +761,8 @@ func TestProcessManifest_WritesGenCapabilities(t *testing.T) {
 	if !strings.Contains(src, "package veriloglexer") {
 		t.Error("expected package declaration")
 	}
-	if !strings.Contains(src, "func (c *Cage) ReadFile(") {
-		t.Error("expected ReadFile method on Cage")
+	if !strings.Contains(src, "func (c *_FileCapabilities) ReadFile(") {
+		t.Error("expected ReadFile method on _FileCapabilities")
 	}
 	if !strings.Contains(src, "func StartNew[T any](") {
 		t.Error("expected StartNew function")
