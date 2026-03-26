@@ -8,8 +8,12 @@ export function installLatticeStyles(): void {
     return;
   }
 
-  const style = document.createElement("style");
-  style.id = STYLE_ELEMENT_ID;
-  style.textContent = transpileLatticeInBrowser(latticeSource);
-  document.head.append(style);
+  try {
+    const style = document.createElement("style");
+    style.id = STYLE_ELEMENT_ID;
+    style.textContent = transpileLatticeInBrowser(latticeSource);
+    document.head.append(style);
+  } catch (error) {
+    console.error("Failed to install Lattice styles", error);
+  }
 }

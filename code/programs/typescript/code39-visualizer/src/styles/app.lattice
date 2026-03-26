@@ -9,14 +9,14 @@ $valid: #1f7a42;
 $invalid: #a12424;
 $surface: rgba(255, 255, 255, 0.7);
 
-@mixin elevated-panel {
+@mixin elevated-panel() {
   border: 1px solid $border;
   border-radius: 28px;
   background: $panel;
   box-shadow: 0 24px 80px rgba(22, 18, 13, 0.08);
 }
 
-@mixin label-text {
+@mixin label-text() {
   font-family: "IBM Plex Sans", "Trebuchet MS", sans-serif;
 }
 

@@ -258,10 +258,14 @@ export function installLatticeStyles(): void {
     return;
   }
 
-  const style = document.createElement("style");
-  style.id = STYLE_ELEMENT_ID;
-  style.textContent = transpileLatticeInBrowser(latticeSource);
-  document.head.append(style);
+  try {
+    const style = document.createElement("style");
+    style.id = STYLE_ELEMENT_ID;
+    style.textContent = transpileLatticeInBrowser(latticeSource);
+    document.head.append(style);
+  } catch (error) {
+    console.error("Failed to install Lattice styles", error);
+  }
 }
 `;
 }
@@ -297,7 +301,7 @@ $accent-deep: #7f2d15;
 $border: rgba(24, 21, 19, 0.16);
 $panel: rgba(255, 252, 247, 0.9);
 
-@mixin panel-surface {
+@mixin panel-surface() {
   border: 1px solid $border;
   background: $panel;
   border-radius: 28px;
