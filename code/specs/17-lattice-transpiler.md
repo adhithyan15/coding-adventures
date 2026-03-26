@@ -132,14 +132,15 @@ and `function_arg` alternatives).
 #### Mixins
 
 ```ebnf
-mixin_definition  = "@mixin" IDENT LPAREN [ mixin_params ] RPAREN block ;
+mixin_definition  = "@mixin" FUNCTION [ mixin_params ] RPAREN block
+                  | "@mixin" IDENT block ;
 mixin_params      = mixin_param { COMMA mixin_param } ;
 mixin_param       = VARIABLE [ COLON value_list ] ;
 include_directive = "@include" IDENT [ LPAREN include_args RPAREN ] ( SEMICOLON | block ) ;
 include_args      = value_list { COMMA value_list } ;
 ```
 
-Mixins with no parameters: `@mixin clearfix() { ... }`
+Mixins with no parameters: `@mixin clearfix() { ... }` or `@mixin clearfix { ... }`
 Mixins with defaults: `@mixin button($bg, $fg: white) { ... }`
 Include with content block: `@include responsive() { font-size: 18px; }`
 
