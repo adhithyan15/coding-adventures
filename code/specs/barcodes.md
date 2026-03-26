@@ -27,13 +27,9 @@ separate spec files:
 
 - [draw-instructions.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/draw-instructions.md)
 - [draw-instructions-svg.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/draw-instructions-svg.md)
-- [barcode-1d.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/barcode-1d.md)
 - [code39.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/code39.md)
 - [upc-a.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/upc-a.md)
 - [ean-13.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/ean-13.md)
-- [codabar.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/codabar.md)
-- [itf.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/itf.md)
-- [code128.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/code128.md)
 
 Additional symbologies should follow the same pattern.
 
@@ -43,7 +39,7 @@ Every barcode implementation in this repo should separate:
 
 1. input validation and normalization
 2. symbology-specific encoding
-3. expansion into machine-readable bar/space or module structure
+3. expansion into machine-readable bar/space structure
 4. translation into backend-neutral draw instructions
 5. rendering into a native output format
 
@@ -86,43 +82,6 @@ The package should still expose intermediate structures for the visualizer:
 - encoded symbols
 - run/module sequence
 - draw-scene metadata
-
-## Shared 1D Decision
-
-All linear symbologies should target a shared 1D barcode abstraction before
-they target draw instructions.
-
-That means the pipeline for UPC-A, EAN-13, Codabar, ITF, Code 39, and Code 128
-should look like:
-
-```text
-input
-  -> normalize and validate
-  -> encode symbology symbols
-  -> expand into linear runs with numeric module widths
-  -> translate runs into draw instructions
-  -> render with SVG or another backend
-```
-
-This matters because wide/narrow formats and module-based retail formats are
-different at the symbology level, but they become the same kind of geometry:
-a left-to-right stream of bars and spaces with widths measured in modules.
-
-The shared 1D package should own:
-
-- a generic run model with numeric widths
-- quiet-zone handling
-- default bar rendering into draw instructions
-- optional human-readable labels
-- layout metadata that visualizers can inspect
-
-Format-specific packages should own:
-
-- allowed character set
-- checksum rules
-- start/stop and guard patterns
-- parity or code-set rules
-- symbol tables
 
 ## Future Extensions
 
