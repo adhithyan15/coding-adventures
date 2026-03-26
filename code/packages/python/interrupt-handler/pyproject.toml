@@ -53,6 +53,7 @@ testpaths = ["tests"]
 addopts = "--cov=interrupt_handler --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["*/*_tokens.py", "*/*_grammar.py"]
 source = ["src/interrupt_handler"]
 
 [tool.coverage.report]

@@ -10,6 +10,8 @@
 require "simplecov"
 
 SimpleCov.start do
+  add_filter %r{_tokens\\.rb$}
+  add_filter %r{_grammar\\.rb$}
   # Track coverage for the lib directory only (not test files themselves).
   add_filter "/test/"
 

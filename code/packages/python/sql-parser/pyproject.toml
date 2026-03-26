@@ -53,6 +53,7 @@ testpaths = ["tests"]
 addopts = "--cov=sql_parser --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["*/*_tokens.py", "*/*_grammar.py"]
 source = ["src/sql_parser"]
 
 [tool.coverage.report]

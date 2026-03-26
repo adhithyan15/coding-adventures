@@ -14,6 +14,8 @@
 require "simplecov"
 
 SimpleCov.start do
+  add_filter %r{_tokens\\.rb$}
+  add_filter %r{_grammar\\.rb$}
   # Track coverage for our Ruby entry point and version file
   add_filter "/test/"
   add_filter "/ext/"
