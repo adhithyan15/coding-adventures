@@ -49,7 +49,6 @@
 package sqlparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -58,21 +57,10 @@ import (
 	sqllexer "github.com/adhithyan15/coding-adventures/code/packages/go/sql-lexer"
 )
 
-// sqlGrammarPath is the path to the sql.grammar file. It defaults to "" which
-// triggers automatic path discovery via runtime.Caller(0). Tests can override
-// this variable to point at a different file (or a non-existent path) to
-// exercise error-handling code paths without mocking.
-//
-// This pattern is equivalent to dependency injection for file paths: the
-// default is the real production path, and tests can swap it temporarily.
-var sqlGrammarPath = ""
-
 // getGrammarPath computes the absolute path to the sql.grammar file.
 //
-// If sqlGrammarPath is non-empty (e.g., overridden by a test), that value is
-// returned directly. Otherwise, this uses runtime.Caller(0) to locate the
-// source file at compile/run time and navigates up 3 levels to the grammars/
-// directory.
+// This uses runtime.Caller(0) to locate the source file at compile/run time
+// and navigates up 3 levels to the grammars/ directory.
 //
 // Directory structure:
 //
@@ -84,10 +72,6 @@ var sqlGrammarPath = ""
 //	      sql-parser/
 //	        parser.go    <-- we are here (3 levels below code/)
 func getGrammarPath() string {
-	if sqlGrammarPath != "" {
-		return sqlGrammarPath
-	}
-
 	// runtime.Caller(0) returns the file path of this source file at runtime.
 	_, filename, _, _ := runtime.Caller(0)
 
@@ -123,26 +107,31 @@ func CreateSQLParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	// Step 2: Read the parser grammar file.
-	// This file defines the SQL syntax rules in EBNF notation, including
-	// statement types, expression precedence hierarchy, and DDL/DML forms.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	// Steps 2–4 run inside a capability-scoped Operation so that all file I/O
+	// is audited against the declared allowlist in required_capabilities.json.
+	return StartNew[*parser.GrammarParser]("sqlparser.CreateSQLParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Read the parser grammar file.
+			// This file defines the SQL syntax rules in EBNF notation, including
+			// statement types, expression precedence hierarchy, and DDL/DML forms.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 3: Parse the grammar file into a structured ParserGrammar object.
-	// This extracts all rules (select_stmt, where_clause, expr, etc.) and
-	// builds a rule lookup table for the recursive descent parser.
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Step 3: Parse the grammar file into a structured ParserGrammar object.
+			// This extracts all rules (select_stmt, where_clause, expr, etc.) and
+			// builds a rule lookup table for the recursive descent parser.
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 4: Create the grammar-driven parser.
-	// The first rule in sql.grammar ("program") becomes the entry point.
-	// The packrat memoization cache is initialized here.
-	return parser.NewGrammarParser(tokens, grammar), nil
+			// Step 4: Create the grammar-driven parser.
+			// The first rule in sql.grammar ("program") becomes the entry point.
+			// The packrat memoization cache is initialized here.
+			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
+		}).GetResult()
 }
 
 // ParseSQL is a convenience function that parses SQL text into an AST in a

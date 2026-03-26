@@ -56,7 +56,6 @@
 package tomlparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -116,25 +115,28 @@ func CreateTOMLParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	// Step 2: Read the parser grammar file.
-	// This file defines the syntax rules in EBNF notation.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*parser.GrammarParser]("tomlparser.CreateTOMLParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Read the parser grammar file.
+			// This file defines the syntax rules in EBNF notation.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 3: Parse the grammar file into a structured ParserGrammar object.
-	// This extracts all rules, each with a name and a body (a tree of
-	// grammar elements: sequences, alternations, repetitions, etc.).
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Step 3: Parse the grammar file into a structured ParserGrammar object.
+			// This extracts all rules, each with a name and a body (a tree of
+			// grammar elements: sequences, alternations, repetitions, etc.).
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 4: Create the grammar-driven parser.
-	// This builds a rule lookup table and initializes the memoization cache.
-	// The first rule in the grammar ("document") becomes the entry point.
-	return parser.NewGrammarParser(tokens, grammar), nil
+			// Step 4: Create the grammar-driven parser.
+			// This builds a rule lookup table and initializes the memoization cache.
+			// The first rule in the grammar ("document") becomes the entry point.
+			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
+		}).GetResult()
 }
 
 // ParseTOML is a convenience function that parses TOML text into an AST in a

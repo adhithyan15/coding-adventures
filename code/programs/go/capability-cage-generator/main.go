@@ -72,12 +72,12 @@ type capabilityJSON struct {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Wildcard validation
+// Wildcard policy
 // ─────────────────────────────────────────────────────────────────────────────
 
-// scopeableCategory returns true for categories that must declare exact targets.
-// Non-scopeable categories (time, stdin, stdout) accept "*" because they are
-// not path-based — there is nothing to narrow them to.
+// scopeableCategory returns true for categories where exact targets provide
+// meaningful runtime enforcement. Non-scopeable categories (time, stdin,
+// stdout) always use "*" because they are not path-based.
 func scopeableCategory(cat string) bool {
 	switch cat {
 	case "fs", "net", "proc", "env", "ffi":
@@ -86,20 +86,25 @@ func scopeableCategory(cat string) bool {
 	return false
 }
 
-// validateNoWildcards returns an error if any scopeable category uses "*" as
-// its target. Every fs/net/proc/env/ffi capability must name an exact path
-// or address so the cage can enforce it at runtime.
-func validateNoWildcards(mf *manifestJSON) error {
-	for _, cap := range mf.Capabilities {
-		if scopeableCategory(cap.Category) && cap.Target == "*" {
-			return fmt.Errorf(
-				"capability %q:%q in package %q declares a wildcard target %q — "+
-					"use an exact path instead (e.g., \"code/grammars/vhdl.tokens\")",
-				cap.Category, cap.Action, mf.Package, cap.Target,
-			)
+// isWildcardTarget reports whether a target is the unrestricted wildcard "*".
+// Wildcard targets are permitted for packages that accept user-provided paths
+// (e.g., a Starlark interpreter that load()s arbitrary .star files). These
+// packages declare their capability in the manifest for code-review visibility
+// but cannot enumerate exact paths at development time. The generated method
+// provides the capability gate (so OS calls are routed through op.File etc.)
+// but performs no runtime path restriction.
+func isWildcardTarget(target string) bool {
+	return target == "*"
+}
+
+// hasWildcard returns true if any target in the slice is a wildcard.
+func hasWildcard(targets []string) bool {
+	for _, t := range targets {
+		if isWildcardTarget(t) {
+			return true
 		}
 	}
-	return nil
+	return false
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -207,6 +212,8 @@ func neededImports(caps []capabilityJSON) []string {
 			set[`"os"`] = true
 		case "net":
 			set[`"net"`] = true
+		case "time":
+			set[`"time"`] = true
 		}
 		if c.Category == "proc" && c.Action == "exec" {
 			set[`"os/exec"`] = true
@@ -292,12 +299,20 @@ func emitHeader(b *strings.Builder, manifestPath string) {
 	fmt.Fprintf(b, "// Source: required_capabilities.json\n")
 	fmt.Fprintf(b, "// Regenerate:\n")
 	fmt.Fprintf(b, "//   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \\\n")
-	// Sanitize the path: strip newlines and convert to forward slashes so the
-	// comment remains single-line and platform-independent in the generated file.
-	// Strip CR and LF from the path to prevent header/comment injection in the
-	// generated file. Both characters must be removed: stripping only LF leaves
-	// a bare CR on Windows-style paths, which can corrupt generated source.
-	safePath := strings.NewReplacer("\n", "", "\r", "").Replace(filepath.ToSlash(manifestPath))
+	// Sanitize the path before embedding in the generated file comment.
+	// Strip all ASCII control characters (0x00–0x1f, 0x7f) and Unicode
+	// line terminators (\u2028, \u2029) to prevent comment/header injection.
+	// These characters could otherwise: break the single-line comment, inject
+	// additional Go source lines, or confuse terminals via ANSI sequences.
+	// Also convert to forward slashes for platform-independent output.
+	rawPath := filepath.ToSlash(manifestPath)
+	var safePathBuilder strings.Builder
+	for _, r := range rawPath {
+		if r >= 0x20 && r != 0x7f && r != '\u2028' && r != '\u2029' {
+			safePathBuilder.WriteRune(r)
+		}
+	}
+	safePath := safePathBuilder.String()
 	fmt.Fprintf(b, "//     --manifest=%s\n", safePath)
 	fmt.Fprintf(b, "//\n")
 	fmt.Fprintf(b, "// The JSON file is a development-time artifact; this file is what the\n")
@@ -417,6 +432,16 @@ func emitResolvedPathVars(b *strings.Builder, relTargets []string) map[string]st
 // comparison. Absolute targets use inline exact string equality. Mixed groups are
 // handled correctly — each target type uses its own comparison form.
 func emitScopedCheck(b *strings.Builder, targets []string, paramName string, twoReturns bool, cat, action string, targetToVar map[string]string) {
+	// Wildcard target: no path restriction — the package declared an unconstrained
+	// capability (e.g. it accepts user-provided paths). The value of the generated
+	// method is routing all OS calls through op.File for code-review visibility;
+	// runtime enforcement is intentionally absent for wildcard capabilities.
+	for _, t := range targets {
+		if isWildcardTarget(t) {
+			return
+		}
+	}
+
 	if len(targets) == 1 {
 		t := targets[0]
 		if varName, ok := targetToVar[t]; ok {
@@ -451,10 +476,17 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 	key := g.Category + ":" + g.Action
 	switch key {
 	case "fs:read":
-		fmt.Fprintf(b, "// ReadFile reads the file at path.\n")
-		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison to prevent\n")
-		fmt.Fprintf(b, "// bypass via ./foo, foo/../foo/bar, and similar path manipulations.\n")
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// ReadFile reads the file at path.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// ReadFile reads the file at path.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison to prevent\n")
+			fmt.Fprintf(b, "// bypass via ./foo, foo/../foo/bar, and similar path manipulations.\n")
+		}
 		fmt.Fprintf(b, "func (c *%s) ReadFile(path string) ([]byte, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", true, "fs", "read", targetToVar)
@@ -462,9 +494,16 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:write":
-		fmt.Fprintf(b, "// WriteFile writes data to the file at path.\n")
-		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// WriteFile writes data to the file at path.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// WriteFile writes data to the file at path.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		}
 		fmt.Fprintf(b, "func (c *%s) WriteFile(path string, data []byte, perm os.FileMode) error {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", false, "fs", "write", targetToVar)
@@ -472,9 +511,16 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:create":
-		fmt.Fprintf(b, "// CreateFile creates or truncates the file at path.\n")
-		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// CreateFile creates or truncates the file at path.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// CreateFile creates or truncates the file at path.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		}
 		fmt.Fprintf(b, "func (c *%s) CreateFile(path string) (*os.File, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", true, "fs", "create", targetToVar)
@@ -482,9 +528,16 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:delete":
-		fmt.Fprintf(b, "// DeleteFile removes the file at path.\n")
-		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// DeleteFile removes the file at path.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// DeleteFile removes the file at path.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		}
 		fmt.Fprintf(b, "func (c *%s) DeleteFile(path string) error {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete", targetToVar)
@@ -492,13 +545,54 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "}\n\n")
 
 	case "fs:list":
-		fmt.Fprintf(b, "// ReadDir lists the contents of the directory at path.\n")
-		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
-		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// ReadDir lists the contents of the directory at path.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// ReadDir lists the contents of the directory at path.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		}
 		fmt.Fprintf(b, "func (c *%s) ReadDir(path string) ([]os.DirEntry, error) {\n", typeName)
 		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", true, "fs", "list", targetToVar)
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "fs:open":
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// OpenFile opens the named file for reading.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// OpenFile opens the named file for reading.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		}
+		fmt.Fprintf(b, "func (c *%s) OpenFile(path string) (*os.File, error) {\n", typeName)
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
+		emitScopedCheck(b, g.Targets, "path", true, "fs", "open", targetToVar)
+		fmt.Fprintf(b, "\treturn os.Open(path) //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "fs:mkdir":
+		if hasWildcard(g.Targets) {
+			fmt.Fprintf(b, "// MkdirAll creates a directory named path, along with any necessary parents.\n")
+			fmt.Fprintf(b, "// This package declared a wildcard capability (\"*\").\n")
+			fmt.Fprintf(b, "// No runtime path restriction is enforced — all paths are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before use.\n")
+		} else {
+			fmt.Fprintf(b, "// MkdirAll creates a directory named path, along with any necessary parents.\n")
+			fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+			fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
+		}
+		fmt.Fprintf(b, "func (c *%s) MkdirAll(path string, perm os.FileMode) error {\n", typeName)
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
+		emitScopedCheck(b, g.Targets, "path", false, "fs", "mkdir", targetToVar)
+		fmt.Fprintf(b, "\treturn os.MkdirAll(path, perm) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "net:connect":
@@ -548,6 +642,12 @@ func emitCapabilityMethod(b *strings.Builder, g capabilityGroup, typeName string
 		fmt.Fprintf(b, "func (c *%s) Getenv(key string) (string, error) {\n", typeName)
 		emitScopedCheck(b, g.Targets, "key", true, "env", "read", targetToVar)
 		fmt.Fprintf(b, "\treturn os.Getenv(key), nil //nolint:cap\n")
+		fmt.Fprintf(b, "}\n\n")
+
+	case "time:read":
+		fmt.Fprintf(b, "// Now returns the current local time.\n")
+		fmt.Fprintf(b, "func (c *%s) Now() time.Time {\n", typeName)
+		fmt.Fprintf(b, "\treturn time.Now() //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
 
 	case "time:sleep":
@@ -803,15 +903,17 @@ func emitCapabilityViolationError(b *strings.Builder) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // generateSource produces the content of gen_capabilities.go for a given manifest.
-// Returns an error if any scopeable capability declares a wildcard target.
 func generateSource(manifestPath string, mf *manifestJSON) (string, error) {
-	if err := validateNoWildcards(mf); err != nil {
-		return "", err
-	}
-
 	pkgName, err := goPackageName(manifestPath, mf.Package)
 	if err != nil {
 		return "", err
+	}
+	// Validate the package name is a legal Go identifier before embedding it
+	// in generated source. A package name must be all lowercase letters and
+	// digits, starting with a letter. This prevents injection if a malicious
+	// or malformed .go file or manifest supplies a crafted package name.
+	if !regexp.MustCompile(`^[a-z][a-z0-9]*$`).MatchString(pkgName) {
+		return "", fmt.Errorf("derived Go package name %q is not a valid identifier (must match ^[a-z][a-z0-9]*$)", pkgName)
 	}
 
 	groups := groupCapabilities(mf.Capabilities)

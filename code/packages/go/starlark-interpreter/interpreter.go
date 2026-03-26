@@ -143,7 +143,6 @@ package starlarkinterpreter
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	starlarkcompiler "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-ast-to-bytecode-compiler"
@@ -399,20 +398,22 @@ func (interp *StarlarkInterpreter) Interpret(source string) (*starlarkvm.Starlar
 // This is because the Starlark grammar requires a trailing newline
 // (NEWLINE token) after the last statement.
 func (interp *StarlarkInterpreter) InterpretFile(path string) (*starlarkvm.StarlarkResult, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	source := string(data)
-
-	// Ensure trailing newline.  The lexer expects every line to end
-	// with a newline, including the last one.  Without this, the last
-	// statement might not be recognized.
-	if !strings.HasSuffix(source, "\n") {
-		source += "\n"
-	}
-
-	return interp.Interpret(source)
+	return StartNew[*starlarkvm.StarlarkResult]("starlarkinterpreter.InterpretFile", nil,
+		func(op *Operation[*starlarkvm.StarlarkResult], rf *ResultFactory[*starlarkvm.StarlarkResult]) *OperationResult[*starlarkvm.StarlarkResult] {
+			data, err := op.File.ReadFile(path)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			source := string(data)
+			if !strings.HasSuffix(source, "\n") {
+				source += "\n"
+			}
+			result, err := interp.Interpret(source)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // ============================================================================
@@ -455,7 +456,19 @@ func (interp *StarlarkInterpreter) registerLoadHandler(v *vm.GenericVM) {
 		// Check the cache first.  If we've already executed this file,
 		// reuse the cached variables.  This prevents infinite loops
 		// (A loads B loads A) and avoids redundant work.
-		if _, cached := interp.loadCache[label]; !cached {
+		//
+		// Cycle detection: we use a two-phase cache protocol.  Before
+		// starting execution we store a nil sentinel (meaning "in progress").
+		// If a recursive load() call encounters the nil sentinel, it means
+		// we are already executing that file — a circular dependency — and
+		// we panic rather than recurse infinitely and exhaust the Go stack.
+		cached, exists := interp.loadCache[label]
+		if exists && cached == nil {
+			// nil sentinel means this file is currently being executed
+			// by an outer Interpret call on the Go call stack.
+			panic(fmt.Sprintf("load(): circular dependency detected: %s", label))
+		}
+		if !exists {
 			// No cache entry -- we need to resolve and execute the file.
 
 			// Guard: if no file resolver is configured, we can't load anything.
@@ -474,12 +487,19 @@ func (interp *StarlarkInterpreter) registerLoadHandler(v *vm.GenericVM) {
 				contents += "\n"
 			}
 
+			// Mark this label as "in progress" before recursing so that
+			// any re-entrant load() call for the same file detects the cycle.
+			interp.loadCache[label] = nil
+
 			// Recursively interpret the loaded file.
 			// This creates a NEW VM instance for the loaded file,
 			// so it gets its own variable scope.  The loaded file's
 			// variables become the "module" that IMPORT_FROM extracts from.
 			result, interpErr := interp.Interpret(contents)
 			if interpErr != nil {
+				// Clear the sentinel on error so the label can be retried
+				// if the caller catches the panic and tries again.
+				delete(interp.loadCache, label)
 				panic(fmt.Sprintf("error loading %s: %v", label, interpErr))
 			}
 

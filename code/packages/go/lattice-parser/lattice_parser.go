@@ -78,7 +78,6 @@
 package latticeparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -134,26 +133,29 @@ func CreateLatticeParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	// Step 2: Read the parser grammar file from disk.
-	// This file defines the full Lattice/CSS syntax in EBNF-like notation.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*parser.GrammarParser]("latticeparser.CreateLatticeParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Read the parser grammar file from disk.
+			// This file defines the full Lattice/CSS syntax in EBNF-like notation.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 3: Parse the grammar file into a structured ParserGrammar object.
-	// This extracts all rules with their names and bodies (sequences,
-	// alternations, repetitions, optionals, and literals).
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Step 3: Parse the grammar file into a structured ParserGrammar object.
+			// This extracts all rules with their names and bodies (sequences,
+			// alternations, repetitions, optionals, and literals).
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 4: Create the grammar-driven parser.
-	// The parser builds a rule lookup table and initializes its memoization
-	// cache. The first rule in the grammar ("stylesheet") becomes the entry
-	// point when Parse() is called.
-	return parser.NewGrammarParser(tokens, grammar), nil
+			// Step 4: Create the grammar-driven parser.
+			// The parser builds a rule lookup table and initializes its memoization
+			// cache. The first rule in the grammar ("stylesheet") becomes the entry
+			// point when Parse() is called.
+			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
+		}).GetResult()
 }
 
 // ParseLattice is the main entry point: parse Lattice source text and return

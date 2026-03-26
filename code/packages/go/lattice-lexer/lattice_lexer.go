@@ -55,7 +55,6 @@
 package latticelexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -173,32 +172,35 @@ func stripErrorsSection(grammarText string) string {
 //
 // Returns an error if the grammar file cannot be read or parsed.
 func CreateLatticeLexer(source string) (*lexer.GrammarLexer, error) {
-	// Read the grammar file from disk.
-	// This file is part of the repository at code/grammars/lattice.tokens.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*lexer.GrammarLexer]("latticelexer.CreateLatticeLexer", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			// Read the grammar file from disk.
+			// This file is part of the repository at code/grammars/lattice.tokens.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Strip the "errors:" section before parsing. The Go grammar-tools parser
-	// does not yet handle "errors:" as a section header (it is reserved but
-	// not implemented). The errors section defines lex-error patterns for
-	// bad strings/URLs — useful for IDEs but not needed for compilation.
-	grammarText := stripErrorsSection(string(bytes))
+			// Strip the "errors:" section before parsing. The Go grammar-tools parser
+			// does not yet handle "errors:" as a section header (it is reserved but
+			// not implemented). The errors section defines lex-error patterns for
+			// bad strings/URLs — useful for IDEs but not needed for compilation.
+			grammarText := stripErrorsSection(string(bytes))
 
-	// Parse the grammar file into a structured TokenGrammar object.
-	// ParseTokenGrammar extracts: token definitions (with regex patterns),
-	// skip patterns (for whitespace/comments), and type aliases
-	// (e.g., STRING_DQ -> STRING).
-	grammar, err := grammartools.ParseTokenGrammar(grammarText)
-	if err != nil {
-		return nil, err
-	}
+			// Parse the grammar file into a structured TokenGrammar object.
+			// ParseTokenGrammar extracts: token definitions (with regex patterns),
+			// skip patterns (for whitespace/comments), and type aliases
+			// (e.g., STRING_DQ -> STRING).
+			grammar, err := grammartools.ParseTokenGrammar(grammarText)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Create the grammar-driven lexer with the Lattice token definitions.
-	// The GrammarLexer compiles all regexes at construction time, so
-	// repeated calls to Tokenize() are efficient.
-	return lexer.NewGrammarLexer(source, grammar), nil
+			// Create the grammar-driven lexer with the Lattice token definitions.
+			// The GrammarLexer compiles all regexes at construction time, so
+			// repeated calls to Tokenize() are efficient.
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 // TokenizeLatticeLexer is a convenience function that tokenizes Lattice source
