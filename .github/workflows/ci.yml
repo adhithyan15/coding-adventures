@@ -532,29 +532,29 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
-      # ── Fix Windows linker conflict: remove Ruby MSYS2's 'link' ────
+      # ── Pin Rust to MSVC linker on Windows ─────────────────────
       #
-      # Ruby's setup-ruby installs MSYS2 which puts a GNU 'link' binary at
-      # C:\hostedtoolcache\windows\Ruby\<ver>\x64\msys64\usr\bin\link.exe.
-      # This is a GNU hard-link utility (unrelated to linking object files) that
-      # shadows MSVC's link.exe via PATH, causing ALL Rust packages (wasm/,
-      # ruby/*_native) to fail with "extra operand" linker errors.
+      # Ruby's setup-ruby adds msys64/usr/bin to the front of PATH, which
+      # contains a GNU 'link' hard-link utility that shadows MSVC's link.exe.
+      # Rust's x86_64-pc-windows-msvc target calls link.exe for linking —
+      # if it picks up the MSYS2 one, ALL Rust packages fail with
+      # "extra operand" linker errors.
       #
-      # Fix: delete the file using PowerShell (not bash/find). Bash via MSYS2
-      # cannot reliably delete Windows files — the 'find -delete' step printed
-      # success but left the file intact due to MSYS2 filesystem translation.
-      # PowerShell uses native Windows I/O and removes it correctly.
-      #
-      # We keep the rest of MSYS2 intact: msys64/mingw64/bin has gcc.exe and
-      # ld.exe that Ruby native Rust extensions need for the MinGW toolchain.
-      - name: Fix linker conflict on Windows
+      # Deleting or removing the file from PATH is unreliable (hard links,
+      # file locks, MSYS2/Windows filesystem translation issues). Instead,
+      # we use CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER to pin Cargo to
+      # the absolute path of the real MSVC link.exe, bypassing PATH entirely.
+      # vswhere.exe is always present on GitHub Actions Windows runners.
+      - name: Pin Rust to MSVC linker on Windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Get-ChildItem "C:\hostedtoolcache\windows\Ruby" -Recurse -Filter "link.exe" |
-            Where-Object { $_.FullName -like "*msys64\usr\bin*" } |
-            Remove-Item -Force
-          Write-Host "Removed Ruby MSYS2 link.exe to prevent shadowing MSVC linker"
+          $vsInstall = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $msvcVer = Get-ChildItem "$vsInstall\VC\Tools\MSVC" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+          $linkExe = "$($msvcVer.FullName)\bin\HostX64\x64\link.exe"
+          if (-not (Test-Path $linkExe)) { Write-Error "MSVC link.exe not found: $linkExe"; exit 1 }
+          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linkExe" >> $env:GITHUB_ENV
+          Write-Host "Pinned Rust MSVC linker to: $linkExe"
 
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
