@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-sql-execution-engine"
+version = "0.1.0"
+edition = "2021"
+description = "SQL execution engine — executes SELECT queries against pluggable data sources"
+
+[dependencies]
+coding-adventures-sql-parser = { path = "../sql-parser" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

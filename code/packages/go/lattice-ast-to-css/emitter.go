@@ -715,10 +715,19 @@ func (e *CSSEmitter) emitFunctionCall(node *parser.ASTNode, sb *strings.Builder)
 //
 // Grammar: function_args = { function_arg } ;
 //
-// Arguments are emitted comma-separated.
+// Arguments are emitted comma-separated. Each argument may be a simple value
+// token or a nested function call (FUNCTION function_args RPAREN). Nested
+// function calls are joined with "" (no spaces) to produce e.g. "rgb(0,0,0)".
 func (e *CSSEmitter) emitFunctionArgs(node *parser.ASTNode, sb *strings.Builder) {
-	var groups [][]string
+	var groups []string
 	var current []string
+
+	flushGroup := func() {
+		if len(current) > 0 {
+			groups = append(groups, strings.Join(current, " "))
+			current = nil
+		}
+	}
 
 	for _, child := range node.Children {
 		ast, ok := child.(*parser.ASTNode)
@@ -727,34 +736,85 @@ func (e *CSSEmitter) emitFunctionArgs(node *parser.ASTNode, sb *strings.Builder)
 		}
 		if ast.RuleName == "function_arg" {
 			if e.isFunctionArgComma(ast) {
-				groups = append(groups, current)
-				current = nil
+				flushGroup()
 			} else {
-				for _, argChild := range ast.Children {
-					if tok, ok := argChild.(lexer.Token); ok {
-						text := e.valueTokenText(tok)
-						if text != "" {
-							current = append(current, text)
+				// Check if this function_arg contains a nested function call
+				// (structure: FUNCTION token, function_args node, RPAREN token)
+				nestedText := e.emitFunctionArgNested(ast)
+				if nestedText != "" {
+					current = append(current, nestedText)
+				} else {
+					for _, argChild := range ast.Children {
+						if tok, ok := argChild.(lexer.Token); ok {
+							text := e.valueTokenText(tok)
+							if text != "" {
+								current = append(current, text)
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-	if len(current) > 0 {
-		groups = append(groups, current)
-	}
+	flushGroup()
 
 	sep := ", "
 	if e.minify {
 		sep = ","
 	}
+	sb.WriteString(strings.Join(groups, sep))
+}
 
-	groupStrs := make([]string, 0, len(groups))
-	for _, g := range groups {
-		groupStrs = append(groupStrs, strings.Join(g, " "))
+// emitFunctionArgNested checks if a function_arg node represents a nested
+// function call (FUNCTION function_args RPAREN) and, if so, returns the
+// serialized text with parts joined by "" (no spaces).
+//
+// Returns "" if the arg is not a nested function call.
+func (e *CSSEmitter) emitFunctionArgNested(node *parser.ASTNode) string {
+	hasFunctionToken := false
+	hasFunctionArgs := false
+	hasRParen := false
+
+	for _, child := range node.Children {
+		switch c := child.(type) {
+		case lexer.Token:
+			tn := tokenTypeName(c)
+			if tn == "FUNCTION" {
+				hasFunctionToken = true
+			} else if tn == "RPAREN" {
+				hasRParen = true
+			}
+		case *parser.ASTNode:
+			if c.RuleName == "function_args" {
+				hasFunctionArgs = true
+			}
+		}
 	}
-	sb.WriteString(strings.Join(groupStrs, sep))
+
+	if !hasFunctionToken || !hasFunctionArgs || !hasRParen {
+		return ""
+	}
+
+	// It is a nested function call — serialize without spaces between parts
+	var parts []string
+	for _, child := range node.Children {
+		switch c := child.(type) {
+		case lexer.Token:
+			tn := tokenTypeName(c)
+			if tn == "FUNCTION" {
+				parts = append(parts, c.Value) // includes "("
+			} else if tn == "RPAREN" {
+				parts = append(parts, ")")
+			}
+		case *parser.ASTNode:
+			if c.RuleName == "function_args" {
+				var argSB strings.Builder
+				e.emitFunctionArgs(c, &argSB)
+				parts = append(parts, argSB.String())
+			}
+		}
+	}
+	return strings.Join(parts, "")
 }
 
 // isFunctionArgComma reports whether a function_arg contains only a COMMA token.

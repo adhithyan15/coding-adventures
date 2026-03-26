@@ -234,4 +234,63 @@ class TestParserGrammar < Minitest::Test
     assert grammar.rules.length > 5
     assert_equal "program", grammar.rules[0].name
   end
+
+  # -----------------------------------------------------------------------
+  # Magic comments
+  # -----------------------------------------------------------------------
+
+  def test_magic_version_sets_version
+    # A "# @version N" magic comment should set grammar.version to N.
+    source = <<~GRAMMAR
+      # @version 1
+      program = { statement } ;
+      statement = NUMBER ;
+    GRAMMAR
+    grammar = GT.parse_parser_grammar(source)
+    assert_equal 1, grammar.version
+    # Rules must still be parsed correctly.
+    assert_equal 2, grammar.rules.length
+  end
+
+  def test_magic_version_default_is_zero
+    # When no @version comment is present the default must be 0 so that
+    # existing grammar files remain valid without any changes.
+    source = "factor = NUMBER ;"
+    grammar = GT.parse_parser_grammar(source)
+    assert_equal 0, grammar.version
+  end
+
+  def test_magic_unknown_key_silently_ignored
+    # An unknown @key must not raise an error and must not affect the rules.
+    source = <<~GRAMMAR
+      # @future_option yes
+      factor = NUMBER ;
+    GRAMMAR
+    grammar = GT.parse_parser_grammar(source)
+    assert_equal 1, grammar.rules.length
+    assert_equal 0, grammar.version
+  end
+
+  def test_magic_plain_comment_still_ignored
+    # A plain comment (no @key) must continue to be silently ignored.
+    source = <<~GRAMMAR
+      # ordinary comment
+      factor = NUMBER ;
+    GRAMMAR
+    grammar = GT.parse_parser_grammar(source)
+    assert_equal 0, grammar.version
+    assert_equal 1, grammar.rules.length
+  end
+
+  def test_magic_version_mid_file
+    # @version may appear anywhere in the file, not just at the top.
+    source = <<~GRAMMAR
+      program = { statement } ;
+      # @version 5
+      statement = NUMBER ;
+    GRAMMAR
+    grammar = GT.parse_parser_grammar(source)
+    assert_equal 5, grammar.version
+    assert_equal 2, grammar.rules.length
+  end
 end

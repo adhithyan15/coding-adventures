@@ -3,6 +3,7 @@ package grammartools
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -40,7 +41,14 @@ type PatternGroup struct {
 }
 
 // TokenGrammar represents the complete contents of a parsed .tokens file.
+//
+// Magic comments at the top of the file configure the grammar:
+//
+//	# @version 1           — pins to format version 1 (default: 0, meaning latest)
+//	# @case_insensitive true  — keywords matched case-insensitively (default: false)
 type TokenGrammar struct {
+	Version          int                      // From # @version N magic comment (0 = latest)
+	CaseInsensitive  bool                     // From # @case_insensitive true magic comment
 	Definitions      []TokenDefinition
 	Keywords         []string
 	Mode             string                   // Lexer mode (e.g. "indentation")
@@ -49,6 +57,7 @@ type TokenGrammar struct {
 	ErrorDefinitions []TokenDefinition        // Error recovery patterns tried when no normal token matches
 	ReservedKeywords []string                 // Keywords that cause lex errors
 	Groups           map[string]*PatternGroup // Named pattern groups for context-sensitive lexing
+	CaseSensitive    bool                     // Whether the lexer should match case-sensitively (default true)
 }
 
 // TokenNames returns the set of all defined token names (including aliases).
@@ -105,14 +114,44 @@ func (g *TokenGrammar) EffectiveTokenNames() map[string]bool {
 	return names
 }
 
+// findClosingSlash scans a /pattern/ string starting at index 1 and returns
+// the index of the closing /. It skips escaped characters (\x) and does not
+// treat / inside [...] character classes as the closing delimiter.
+// Returns -1 if no closing slash is found.
+func findClosingSlash(s string) int {
+	inBracket := false
+	for i := 1; i < len(s); i++ {
+		ch := s[i]
+		if ch == '\\' {
+			i++ // skip escaped character
+			continue
+		}
+		if ch == '[' && !inBracket {
+			inBracket = true
+		} else if ch == ']' && inBracket {
+			inBracket = false
+		} else if ch == '/' && !inBracket {
+			return i
+		}
+	}
+	// Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+	// try the last / as a best-effort parse.
+	if last := strings.LastIndex(s, "/"); last > 0 {
+		return last
+	}
+	return -1
+}
+
 // parseDefinition parses a single pattern with optional -> ALIAS suffix.
 func parseDefinition(patternPart, namePart string, lineNumber int) (TokenDefinition, error) {
 	defn := TokenDefinition{Name: namePart, LineNumber: lineNumber}
 
 	if strings.HasPrefix(patternPart, "/") {
-		// Regex pattern -- find the closing /
-		lastSlash := strings.LastIndex(patternPart, "/")
-		if lastSlash == 0 {
+		// Regex pattern — find the closing / by scanning character-by-character.
+		// We track bracket depth so that / inside [...] character classes is
+		// not mistaken for the closing delimiter. We also skip escaped chars.
+		lastSlash := findClosingSlash(patternPart)
+		if lastSlash == -1 {
 			return defn, fmt.Errorf("Line %d: Unclosed regex pattern for token %q", lineNumber, namePart)
 		}
 		defn.Pattern = patternPart[1:lastSlash]
@@ -164,6 +203,12 @@ func parseDefinition(patternPart, namePart string, lineNumber int) (TokenDefinit
 	return defn, nil
 }
 
+// magicCommentRe matches magic comment lines of the form: # @key value
+// The first capture group is the key (e.g. "version", "case_insensitive").
+// The second capture group is the value (e.g. "1", "true").
+// Unknown keys are silently ignored for forward compatibility.
+var magicCommentRe = regexp.MustCompile(`^#\s*@(\w+)\s*(.*)$`)
+
 // groupNameRe matches valid group names: lowercase identifiers like "tag"
 // or "cdata_section". Group names must start with a lowercase letter or
 // underscore, followed by lowercase letters, digits, or underscores.
@@ -195,7 +240,8 @@ var reservedGroupNames = map[string]bool{
 // groups and only tries patterns from the group on top of the stack.
 func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 	grammar := &TokenGrammar{
-		Groups: make(map[string]*PatternGroup),
+		Groups:        make(map[string]*PatternGroup),
+		CaseSensitive: true,
 	}
 	lines := strings.Split(source, "\n")
 	var currentSection string // "keywords", "reserved", "skip", or "group:NAME"
@@ -205,7 +251,23 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 		line := strings.TrimRight(rawLine, " \t\r")
 		stripped := strings.TrimSpace(line)
 
-		if stripped == "" || strings.HasPrefix(stripped, "#") {
+		if stripped == "" {
+			continue
+		}
+		if strings.HasPrefix(stripped, "#") {
+			// Magic comments: # @key value — configure the grammar.
+			// Unknown keys are silently ignored for forward compatibility.
+			if m := magicCommentRe.FindStringSubmatch(stripped); m != nil {
+				key, value := m[1], strings.TrimSpace(m[2])
+				switch key {
+				case "version":
+					if n, err := strconv.Atoi(value); err == nil {
+						grammar.Version = n
+					}
+				case "case_insensitive":
+					grammar.CaseInsensitive = (value == "true")
+				}
+			}
 			continue
 		}
 
@@ -230,6 +292,20 @@ func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 				return nil, fmt.Errorf("Line %d: Missing value after 'escapes:'", lineNumber)
 			}
 			grammar.EscapeMode = escapeValue
+			currentSection = ""
+			continue
+		}
+
+		// case_sensitive: directive — controls whether the lexer should match
+		// case-sensitively. When false, the lexer lowercases the source text
+		// before matching. Defaults to true when not specified.
+		if strings.HasPrefix(stripped, "case_sensitive:") {
+			csValue := strings.TrimSpace(stripped[15:])
+			csLower := strings.ToLower(csValue)
+			if csLower != "true" && csLower != "false" {
+				return nil, fmt.Errorf("Line %d: Invalid value for 'case_sensitive:': %q (expected 'true' or 'false')", lineNumber, csValue)
+			}
+			grammar.CaseSensitive = csLower == "true"
 			currentSection = ""
 			continue
 		}

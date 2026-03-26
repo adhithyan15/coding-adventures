@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1] - 2026-03-25
+
+### Fixed
+
+- **Less-than operator `<`** — `_compare` now handles `"LESS"` so `@if $val < $min` evaluates correctly.
+- **Division operator `/` in expressions** — `_eval_lattice_multiplicative` now dispatches on `*` vs `/`. New `_divide` method with zero-division guard mirrors `_multiply`.
+- **Mixin parameter parsing with multiple defaults** — `_extract_params` in `transformer.py` now accepts `mixin_value_list` nodes in addition to `value_list`.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added — Lattice v2 Features

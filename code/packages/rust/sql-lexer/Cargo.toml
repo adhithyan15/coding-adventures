@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-sql-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "SQL lexer — tokenizes SQL source text using the grammar-driven lexer and the sql.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

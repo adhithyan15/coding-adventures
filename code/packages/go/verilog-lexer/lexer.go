@@ -23,7 +23,6 @@
 package veriloglexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -67,16 +66,21 @@ func CreateVerilogLexerRaw(source string) (*lexer.GrammarLexer, error) {
 }
 
 // createLexerFromSource loads the grammar and creates a GrammarLexer.
+// The grammar file read is routed through op.File.ReadFile, which enforces
+// the fs:read capability declared in required_capabilities.json.
 func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
-	return lexer.NewGrammarLexer(source, grammar), nil
+	return StartNew[*lexer.GrammarLexer]("veriloglexer.createLexerFromSource", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 // TokenizeVerilog tokenizes Verilog source code with preprocessing enabled.

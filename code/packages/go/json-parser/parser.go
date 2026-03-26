@@ -39,7 +39,6 @@
 package jsonparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -50,18 +49,18 @@ import (
 
 // getGrammarPath computes the absolute path to the json.grammar file.
 //
-// This uses the same runtime.Caller(0) technique as the json-lexer package.
-// We navigate up 3 levels from this source file to reach the code/ directory,
-// then down into grammars/.
+// This uses runtime.Caller(0) to locate the source file and navigates up
+// 3 levels to the grammars/ directory.
 //
 // Directory structure:
-//   code/
-//     grammars/
-//       json.grammar       <-- this is what we want
-//     packages/
-//       go/
-//         json-parser/
-//           parser.go      <-- we are here (3 levels below code/)
+//
+//	code/
+//	  grammars/
+//	    json.grammar       <-- this is what we want
+//	  packages/
+//	    go/
+//	      json-parser/
+//	        parser.go      <-- we are here (3 levels below code/)
 func getGrammarPath() string {
 	// runtime.Caller(0) returns the file path of this source file at runtime.
 	_, filename, _, _ := runtime.Caller(0)
@@ -98,25 +97,30 @@ func CreateJSONParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	// Step 2: Read the parser grammar file.
-	// This file defines the syntax rules in EBNF notation.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	// Steps 2–4 run inside a capability-scoped Operation so that all file I/O
+	// is audited against the declared allowlist in required_capabilities.json.
+	return StartNew[*parser.GrammarParser]("jsonparser.CreateJSONParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Read the parser grammar file.
+			// This file defines the syntax rules in EBNF notation.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 3: Parse the grammar file into a structured ParserGrammar object.
-	// This extracts all rules, each with a name and a body (a tree of
-	// grammar elements: sequences, alternations, repetitions, etc.).
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Step 3: Parse the grammar file into a structured ParserGrammar object.
+			// This extracts all rules, each with a name and a body (a tree of
+			// grammar elements: sequences, alternations, repetitions, etc.).
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 4: Create the grammar-driven parser.
-	// This builds a rule lookup table and initializes the memoization cache.
-	// The first rule in the grammar ("value") becomes the entry point.
-	return parser.NewGrammarParser(tokens, grammar), nil
+			// Step 4: Create the grammar-driven parser.
+			// This builds a rule lookup table and initializes the memoization cache.
+			// The first rule in the grammar ("value") becomes the entry point.
+			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
+		}).GetResult()
 }
 
 // ParseJSON is a convenience function that parses JSON text into an AST in a

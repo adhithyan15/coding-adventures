@@ -1,0 +1,12 @@
+[package]
+name = "coding_adventures_document_html_sanitizer"
+version = "0.1.0"
+edition = "2021"
+description = "Regex-based HTML string sanitizer — strips dangerous elements, attributes, and URLs from an opaque HTML string with no document-ast dependency"
+
+[lib]
+name = "coding_adventures_document_html_sanitizer"
+path = "src/lib.rs"
+
+[dependencies]
+regex = "1"

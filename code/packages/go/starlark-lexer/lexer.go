@@ -30,7 +30,6 @@
 package starlarklexer
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -84,25 +83,28 @@ func getGrammarPath() string {
 //
 // Returns an error if the grammar file cannot be read or parsed.
 func CreateStarlarkLexer(source string) (*lexer.GrammarLexer, error) {
-	// Read the grammar file from disk. This file defines all token patterns,
-	// keywords, reserved words, skip patterns, and the indentation mode flag.
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
+	return StartNew[*lexer.GrammarLexer]("starlarklexer.CreateStarlarkLexer", nil,
+		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
+			// Read the grammar file from disk. This file defines all token patterns,
+			// keywords, reserved words, skip patterns, and the indentation mode flag.
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Parse the grammar file into a structured TokenGrammar object.
-	// This extracts keywords, reserved keywords, token definitions (with
-	// regex patterns and type aliases), skip definitions, and the mode.
-	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
+			// Parse the grammar file into a structured TokenGrammar object.
+			// This extracts keywords, reserved keywords, token definitions (with
+			// regex patterns and type aliases), skip definitions, and the mode.
+			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Create the grammar-driven lexer. The GrammarLexer constructor compiles
-	// all regex patterns, builds keyword/reserved-keyword lookup sets, and
-	// initializes the indentation stack if mode is "indentation".
-	return lexer.NewGrammarLexer(source, grammar), nil
+			// Create the grammar-driven lexer. The GrammarLexer constructor compiles
+			// all regex patterns, builds keyword/reserved-keyword lookup sets, and
+			// initializes the indentation stack if mode is "indentation".
+			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
+		}).GetResult()
 }
 
 // TokenizeStarlark is a convenience function that tokenizes Starlark source code

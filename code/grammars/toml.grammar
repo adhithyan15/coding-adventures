@@ -1,4 +1,5 @@
 # Parser grammar for TOML (v1.0.0)
+# @version 1
 #
 # TOML has ~12 grammar rules — more than JSON (4 rules) but far fewer than
 # CSS (36 rules). The grammar is context-free; semantic constraints (key

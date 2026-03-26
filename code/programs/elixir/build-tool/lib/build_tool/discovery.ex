@@ -46,7 +46,7 @@ defmodule BuildTool.Discovery do
       %{
         name: "python/logic-gates",       # qualified name
         path: "/repo/code/packages/...",   # absolute path on disk
-        build_commands: ["pip install", "pytest"],  # lines from BUILD
+        build_commands: ["python -m pip install", "pytest"],  # lines from BUILD
         language: "python"                 # inferred language
       }
   """
@@ -125,7 +125,7 @@ defmodule BuildTool.Discovery do
   ## Example
 
       iex> BuildTool.Discovery.read_lines("/path/to/BUILD")
-      ["pip install -e .", "pytest"]
+      ["python -m pip install -e .", "pytest"]
   """
   def read_lines(filepath) do
     case File.read(filepath) do

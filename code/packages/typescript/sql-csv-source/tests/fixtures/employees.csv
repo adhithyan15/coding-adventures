@@ -1,0 +1,5 @@
+id,name,dept_id,salary,active
+1,Alice,1,90000,true
+2,Bob,2,75000,true
+3,Carol,1,95000,false
+4,Dave,,60000,true

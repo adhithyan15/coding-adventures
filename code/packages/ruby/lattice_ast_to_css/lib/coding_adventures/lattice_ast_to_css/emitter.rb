@@ -486,13 +486,34 @@ module CodingAdventures
       end
 
       # function_arg = single argument.
+      #
+      # When function_arg has multiple children (nested function call):
+      #   FUNCTION token (includes "(") + function_args node + RPAREN token
+      # These must be joined with "" (no spaces) so "rgb(255, 0, 0)" doesn't
+      # become "rgb( 255, 0, 0 )".
       def emit_function_arg(node, depth)
         children = node.children
         if children.size == 1
           child = children[0]
           return child.respond_to?(:rule_name) ? emit_node(child, depth) : child.value
         end
-        emit_default(node, depth)
+
+        # Multi-child: nested function call — join without spaces.
+        # FUNCTION token value already includes "(" (e.g., "rgb(").
+        # RPAREN token emits ")".
+        # Other children (function_args ASTNode) recurse normally.
+        parts = children.map do |child|
+          if child.respond_to?(:rule_name)
+            emit_node(child, depth)
+          else
+            case token_type(child)
+            when "FUNCTION" then child.value
+            when "RPAREN" then ")"
+            else child.value
+            end
+          end
+        end
+        parts.join("")
       end
 
       # ============================================================

@@ -52,6 +52,16 @@ type Token struct {
 	TypeName string // Grammar-driven token name (e.g. "INT", "FLOAT"). Empty for hand-written lexer tokens.
 }
 
+// EffectiveTypeName returns the token type as a string. If TypeName is set
+// (grammar-driven tokens with custom types like "SIZED_NUMBER"), it returns
+// that. Otherwise it returns the TokenType enum name (e.g. "Name", "Number").
+func (t Token) EffectiveTypeName() string {
+	if t.TypeName != "" {
+		return t.TypeName
+	}
+	return t.Type.String()
+}
+
 func (t Token) String() string {
 	return fmt.Sprintf("Token(%s, %q, %d:%d)", t.Type, t.Value, t.Line, t.Column)
 }

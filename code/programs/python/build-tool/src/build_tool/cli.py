@@ -200,17 +200,26 @@ def main(argv: list[str] | None = None) -> int:
         # Try git-diff mode first (the default)
         changed_files = get_changed_files(root, args.diff_base)
         if changed_files:
-            package_paths = {pkg.name: pkg.path for pkg in packages}
-            changed_packages = map_files_to_packages(
-                changed_files, package_paths, root, packages
+            shared_changed = any(
+                f.startswith(".github/")
+                for f in changed_files
             )
-            if changed_packages:
-                affected_set = graph.affected_nodes(changed_packages)
-                print(f"Git diff: {len(changed_packages)} packages changed, "
-                      f"{len(affected_set)} affected (including dependents)")
+            if shared_changed:
+                print("Git diff: shared files changed -- rebuilding everything")
+                args.force = True
+                affected_set = None
             else:
-                print("Git diff: no package files changed -- nothing to build")
-                affected_set = set()
+                package_paths = {pkg.name: pkg.path for pkg in packages}
+                changed_packages = map_files_to_packages(
+                    changed_files, package_paths, root, packages
+                )
+                if changed_packages:
+                    affected_set = graph.affected_nodes(changed_packages)
+                    print(f"Git diff: {len(changed_packages)} packages changed, "
+                          f"{len(affected_set)} affected (including dependents)")
+                else:
+                    print("Git diff: no package files changed -- nothing to build")
+                    affected_set = set()
         else:
             print("Git diff unavailable -- falling back to hash-based cache")
 

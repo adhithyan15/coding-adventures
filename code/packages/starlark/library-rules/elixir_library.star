@@ -52,51 +52,47 @@
 #
 # ============================================================================
 
-_targets = []
-
-
 def elixir_library(name, srcs = [], deps = []):
-    """Register an Elixir library target for the build system.
-
-    Elixir libraries use Mix for building and ExUnit for testing. The build
-    tool will run:
-        mix deps.get          — fetch dependencies
-        mix compile --warnings-as-errors — compile with strict warnings
-        mix test --cover      — run tests with built-in coverage
-
-    Elixir's coverage tool is built into OTP (the Erlang runtime), so no
-    extra package is needed — just pass --cover to mix test.
-
-    Args:
-        name: The package name, matching the directory under
-              code/packages/elixir/. For example, "logic-gates" maps to
-              code/packages/elixir/logic-gates/.
-
-              Elixir module names use CamelCase (LogicGates), but the
-              Mix project name and directory use snake_case/hyphens.
-
-        srcs: File paths or glob patterns for change detection.
-              Typical patterns:
-                  ["lib/**/*.ex"]                         — source only
-                  ["lib/**/*.ex", "test/**/*.exs"]        — source and tests
-                  ["lib/**/*.ex", "mix.exs"]              — source and config
-
-              Note: Elixir source files use .ex extension, test files use
-              .exs (the "s" stands for "script" — these files are interpreted
-              rather than compiled to .beam).
-
-        deps: Dependencies as "language/package-name" strings.
-              These must match the path references in mix.exs.
-              Examples:
-                  ["elixir/transistors"]
-                  ["elixir/logic-gates", "elixir/arithmetic"]
-
-              Mix handles transitive dependency resolution (like Cargo),
-              so you technically only need direct deps. But listing
-              transitive deps explicitly gives the build tool better
-              change propagation information.
-    """
-    _targets.append({
+    # Register an Elixir library target for the build system.
+    #
+    # Elixir libraries use Mix for building and ExUnit for testing. The build
+    # tool will run:
+    #     mix deps.get          — fetch dependencies
+    #     mix compile --warnings-as-errors — compile with strict warnings
+    #     mix test --cover      — run tests with built-in coverage
+    #
+    # Elixir's coverage tool is built into OTP (the Erlang runtime), so no
+    # extra package is needed — just pass --cover to mix test.
+    #
+    # Args:
+    #     name: The package name, matching the directory under
+    #           code/packages/elixir/. For example, "logic-gates" maps to
+    #           code/packages/elixir/logic-gates/.
+    #
+    #           Elixir module names use CamelCase (LogicGates), but the
+    #           Mix project name and directory use snake_case/hyphens.
+    #
+    #     srcs: File paths or glob patterns for change detection.
+    #           Typical patterns:
+    #               ["lib/**/*.ex"]                         — source only
+    #               ["lib/**/*.ex", "test/**/*.exs"]        — source and tests
+    #               ["lib/**/*.ex", "mix.exs"]              — source and config
+    #
+    #           Note: Elixir source files use .ex extension, test files use
+    #           .exs (the "s" stands for "script" — these files are interpreted
+    #           rather than compiled to .beam).
+    #
+    #     deps: Dependencies as "language/package-name" strings.
+    #           These must match the path references in mix.exs.
+    #           Examples:
+    #               ["elixir/transistors"]
+    #               ["elixir/logic-gates", "elixir/arithmetic"]
+    #
+    #           Mix handles transitive dependency resolution (like Cargo),
+    #           so you technically only need direct deps. But listing
+    #           transitive deps explicitly gives the build tool better
+    #           change propagation information.
+    return {
         # "elixir_library" triggers Elixir-specific build logic:
         #   - mix deps.get for dependency resolution
         #   - mix compile for compilation (Elixir -> BEAM bytecode)
@@ -106,4 +102,8 @@ def elixir_library(name, srcs = [], deps = []):
         "name": name,
         "srcs": srcs,
         "deps": deps,
-    })
+        "commands": [
+            {"type": "cmd", "program": "mix", "args": ["deps.get"]},
+            {"type": "cmd", "program": "mix", "args": ["test", "--cover"]},
+        ],
+    }

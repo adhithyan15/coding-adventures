@@ -356,6 +356,86 @@ class TestGrammarLexer < Minitest::Test
     end
     assert_includes error.message, "Reserved"
   end
+
+  # -----------------------------------------------------------------------
+  # Case-insensitive keyword matching
+  # -----------------------------------------------------------------------
+  #
+  # When the grammar declares `# @case_insensitive true`, keywords are
+  # stored in uppercase and incoming NAME tokens are compared against the
+  # uppercase set. The emitted KEYWORD token always carries the uppercased
+  # value, regardless of how the identifier was written in the source.
+  #
+  # Default grammars (no magic comment) are case-sensitive: "SELECT" is
+  # just a NAME when "select" is the declared keyword.
+  # -----------------------------------------------------------------------
+
+  # Helper that builds a case-insensitive grammar with "select" as a keyword.
+  def case_insensitive_grammar
+    make_grammar(<<~TOKENS)
+      # @case_insensitive true
+      NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+      NUMBER = /[0-9]+/
+
+      keywords:
+        select
+        from
+    TOKENS
+  end
+
+  # Lowercase input matches the keyword and is normalised to uppercase.
+  def test_case_insensitive_lowercase_keyword
+    tokens = GL.new("select", case_insensitive_grammar).tokenize
+    kw = tokens[0]
+    assert_equal TT::KEYWORD, kw.type,
+      "expected KEYWORD but got #{kw.type}"
+    assert_equal "SELECT", kw.value,
+      "expected value 'SELECT' but got '#{kw.value}'"
+  end
+
+  # Uppercase input also matches and is emitted as uppercase.
+  def test_case_insensitive_uppercase_keyword
+    tokens = GL.new("SELECT", case_insensitive_grammar).tokenize
+    kw = tokens[0]
+    assert_equal TT::KEYWORD, kw.type,
+      "expected KEYWORD but got #{kw.type}"
+    assert_equal "SELECT", kw.value,
+      "expected value 'SELECT' but got '#{kw.value}'"
+  end
+
+  # Mixed-case input matches and is normalised to uppercase.
+  def test_case_insensitive_mixed_case_keyword
+    tokens = GL.new("Select", case_insensitive_grammar).tokenize
+    kw = tokens[0]
+    assert_equal TT::KEYWORD, kw.type,
+      "expected KEYWORD but got #{kw.type}"
+    assert_equal "SELECT", kw.value,
+      "expected value 'SELECT' but got '#{kw.value}'"
+  end
+
+  # Without the magic comment, keyword matching is case-sensitive.
+  # "SELECT" (all-caps) does not match the lowercase keyword "select".
+  def test_case_sensitive_default_no_match
+    grammar = make_grammar(<<~TOKENS)
+      NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+      keywords:
+        select
+    TOKENS
+    tokens = GL.new("SELECT", grammar).tokenize
+    assert_equal TT::NAME, tokens[0].type,
+      "expected NAME (case-sensitive mode) but got #{tokens[0].type}"
+  end
+
+  # Non-keyword identifiers in a case-insensitive grammar retain their
+  # original casing in the emitted NAME token.
+  def test_case_insensitive_non_keyword_preserves_case
+    tokens = GL.new("myTable", case_insensitive_grammar).tokenize
+    tok = tokens[0]
+    assert_equal TT::NAME, tok.type,
+      "expected NAME but got #{tok.type}"
+    assert_equal "myTable", tok.value,
+      "expected original value 'myTable' but got '#{tok.value}'"
+  end
 end
 
 # =========================================================================

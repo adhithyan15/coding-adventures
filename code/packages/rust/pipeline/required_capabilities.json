@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/pipeline",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads source files to feed through the compilation pipeline."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes compiled output artifacts."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Uses std::time::Instant to measure compilation stage timings and SystemTime for timestamps."
+    }
+  ],
+  "justification": "Starlark compilation pipeline. Reads source files, writes output, and measures stage timings."
+}

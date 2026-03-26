@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
                         "transitive closure, and independent group computation for parallel builds."
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 3.4.0"
+  spec.required_ruby_version = ">= 3.3.0"
   spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.md"]
   spec.require_paths = ["lib"]
   spec.metadata      = {

@@ -141,6 +141,26 @@ export interface PatternGroup {
  *   groups: Named pattern groups for context-sensitive lexing. Each group
  *       contains an ordered list of token definitions that are only active
  *       when the group is at the top of the lexer's group stack.
+ *   version: Grammar file version number, from `# @version N` magic comment.
+ *       Defaults to 0 (meaning "latest" or "unversioned").
+ *   caseInsensitive: Whether the lexer should match tokens case-insensitively,
+ *       from `# @case_insensitive true` magic comment. Defaults to false.
+ *
+ * Magic comments
+ * --------------
+ *
+ * Lines beginning with `# @key value` are "magic comments." They look like
+ * ordinary comments but carry structured metadata for tooling. This is the
+ * same convention used by many languages (Python's `# type:`, PHP's
+ * `// @var`, etc.) — keeping metadata in comments means the file stays
+ * human-readable and backward-compatible with tools that just skip comments.
+ *
+ * Supported magic comments:
+ *   # @version N             — integer schema version (default 0 = latest)
+ *   # @case_insensitive true — enable case-insensitive matching (default false)
+ *
+ * Unknown keys are silently ignored, making it easy to add new metadata in
+ * the future without breaking older parsers.
  */
 export interface TokenGrammar {
   readonly definitions: readonly TokenDefinition[];
@@ -150,6 +170,13 @@ export interface TokenGrammar {
   readonly skipDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
   readonly groups?: Readonly<Record<string, PatternGroup>>;
+  /** Controls whether the lexer matches case-sensitively. Defaults to true.
+   *  When false, the lexer lowercases source text before matching. */
+  readonly caseSensitive?: boolean;
+  /** Grammar file version number from `# @version N` magic comment. Defaults to 0. */
+  readonly version: number;
+  /** Whether the lexer should match case-insensitively, from `# @case_insensitive true`. */
+  readonly caseInsensitive: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -247,6 +274,28 @@ export function effectiveTokenNames(grammar: TokenGrammar): Set<string> {
  * @param lineNumber - The 1-based line number for error reporting.
  * @returns A TokenDefinition.
  */
+function findClosingSlash(s: string): number {
+  let inBracket = false;
+  for (let i = 1; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === "\\") {
+      i++; // skip escaped character
+      continue;
+    }
+    if (ch === "[" && !inBracket) {
+      inBracket = true;
+    } else if (ch === "]" && inBracket) {
+      inBracket = false;
+    } else if (ch === "/" && !inBracket) {
+      return i;
+    }
+  }
+  // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+  // try the last / as a best-effort parse.
+  const last = s.lastIndexOf("/");
+  return last > 0 ? last : -1;
+}
+
 function parseDefinition(
   namePart: string,
   patternPart: string,
@@ -266,22 +315,10 @@ function parseDefinition(
 
   if (patternPart.startsWith("/")) {
     // Regex pattern — find the closing /
-    // The closing / is the last / in the pattern portion. We scan
-    // for the second / that ends the regex (not escaped).
-    const closingSlash = patternPart.indexOf("/", 1);
-    if (closingSlash === -1) {
-      throw new TokenGrammarError(
-        `Unclosed regex pattern for token '${namePart}'`,
-        lineNumber,
-      );
-    }
-
-    // The pattern could contain slashes inside character classes or
-    // groups. To find the true closing /, we look for the LAST / that
-    // could be the closer. Strategy: find the last / in the string,
-    // then check if what follows is either empty or "-> ALIAS".
-    let lastSlash = patternPart.lastIndexOf("/");
-    if (lastSlash === 0) {
+    // Use bracket-aware scan so that / inside [...] character classes
+    // is not mistaken for the closing delimiter.
+    const lastSlash = findClosingSlash(patternPart);
+    if (lastSlash <= 0) {
       throw new TokenGrammarError(
         `Unclosed regex pattern for token '${namePart}'`,
         lineNumber,
@@ -369,6 +406,18 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const groups: Record<string, PatternGroup> = {};
   let mode: string | undefined;
   let escapeMode: string | undefined;
+  let caseSensitive: boolean = true;
+
+  // Magic comment state. These are collected from `# @key value` lines
+  // anywhere in the file before being used in the returned grammar.
+  // We initialize to the defaults so callers always see well-typed values.
+  let version = 0;
+  let caseInsensitive = false;
+
+  // Regex that matches a magic comment: `# @key optional_value`
+  // Group 1: the key  (word characters only)
+  // Group 2: the rest of the line after the key (may be empty)
+  const magicCommentPattern = /^#\s*@(\w+)\s*(.*)$/;
 
   // Section tracking. We use a string to track which section we're in,
   // since sections are mutually exclusive and we can only be in one at
@@ -400,8 +449,29 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     const line = lines[i].replace(/\s+$/, "");
     const stripped = line.trim();
 
-    // Blank lines and comments are always skipped
-    if (stripped === "" || stripped.startsWith("#")) {
+    // Blank lines are always skipped.
+    if (stripped === "") {
+      continue;
+    }
+
+    // Lines starting with '#' are comments — but magic comments (`# @key value`)
+    // carry structured metadata we need to extract before discarding the line.
+    // We check for the magic pattern first; non-magic comments are skipped.
+    if (stripped.startsWith("#")) {
+      const magicMatch = magicCommentPattern.exec(stripped);
+      if (magicMatch) {
+        const key = magicMatch[1];
+        const value = magicMatch[2].trim();
+        if (key === "version") {
+          // Parse the version as a decimal integer. NaN falls back to 0
+          // so a malformed `# @version abc` is treated as "unversioned."
+          const parsed = parseInt(value, 10);
+          version = isNaN(parsed) ? 0 : parsed;
+        } else if (key === "case_insensitive") {
+          caseInsensitive = value === "true";
+        }
+        // Unknown keys are silently ignored — forward-compatible design.
+      }
       continue;
     }
 
@@ -429,6 +499,29 @@ export function parseTokenGrammar(source: string): TokenGrammar {
         );
       }
       escapeMode = escapesValue;
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- Case-sensitive directive ---
+    if (stripped.startsWith("case_sensitive:") || stripped.startsWith("case_sensitive :")) {
+      const csValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!csValue) {
+        throw new TokenGrammarError(
+          "Missing value after 'case_sensitive:'",
+          lineNumber,
+        );
+      }
+      if (csValue.toLowerCase() === "true") {
+        caseSensitive = true;
+      } else if (csValue.toLowerCase() === "false") {
+        caseSensitive = false;
+      } else {
+        throw new TokenGrammarError(
+          `Invalid case_sensitive value: '${csValue}' (must be 'true' or 'false')`,
+          lineNumber,
+        );
+      }
       currentSection = "definitions";
       continue;
     }
@@ -631,6 +724,9 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     skipDefinitions: skipDefinitions.length > 0 ? skipDefinitions : undefined,
     reservedKeywords: reservedKeywords.length > 0 ? reservedKeywords : undefined,
     groups: hasGroups ? groups : undefined,
+    caseSensitive: caseSensitive ? undefined : false,
+    version,
+    caseInsensitive,
   };
 }
 

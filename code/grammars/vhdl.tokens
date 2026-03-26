@@ -11,8 +11,8 @@
 # VHDL-specific lexing challenges:
 #
 #   1. Case insensitivity — ENTITY, Entity, and entity are identical.
-#      The wrapper package normalizes all identifiers to lowercase via
-#      a post_tokenize hook.
+#      The case_sensitive: false directive makes the lexer lowercase all
+#      input before matching, handling this automatically.
 #
 #   2. The '<=' operator — means BOTH "signal assignment" and "less than
 #      or equal." We emit a single LESS_EQUALS token; the grammar context
@@ -31,6 +31,11 @@
 
 # No backslash escapes — VHDL uses "" for escaped quotes inside strings.
 escapes: none
+
+# VHDL is case-insensitive: ENTITY, Entity, and entity are identical.
+# The lexer lowercases all source text before matching, so patterns and
+# keywords only need to handle lowercase forms.
+case_sensitive: false
 
 # ============================================================================
 # Skip Patterns

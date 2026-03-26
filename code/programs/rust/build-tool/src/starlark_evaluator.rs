@@ -198,7 +198,7 @@ const KNOWN_RULES: &[&str] = &[
 /// assert!(is_starlark_build("load(\"//rules/python.star\", \"py_library\")\n"));
 /// assert!(is_starlark_build("py_library(name = \"foo\")\n"));
 /// assert!(is_starlark_build("def my_rule():\n    pass\n"));
-/// assert!(!is_starlark_build("pip install .\npytest\n"));
+/// assert!(!is_starlark_build("python -m pip install .\npytest\n"));
 /// assert!(!is_starlark_build("go build ./...\n"));
 /// assert!(!is_starlark_build("# comment\n\necho hello\n"));
 /// ```
@@ -615,7 +615,7 @@ mod tests {
 
     #[test]
     fn test_rejects_shell_commands() {
-        assert!(!is_starlark_build("pip install .\npytest\n"));
+        assert!(!is_starlark_build("python -m pip install .\npytest\n"));
         assert!(!is_starlark_build("go build ./...\n"));
         assert!(!is_starlark_build("bundle install\n"));
         assert!(!is_starlark_build("npm install\n"));

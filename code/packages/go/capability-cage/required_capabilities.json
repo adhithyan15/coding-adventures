@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/capability-cage",
+  "capabilities": [],
+  "justification": "Pure computation. The capability-cage library itself performs no OS I/O — it only checks manifests and delegates to the injected Backend. The OpenBackend implementation calls stdlib but is gated behind the manifest check. The cage library has zero OS access requirements of its own."
+}

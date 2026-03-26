@@ -53,9 +53,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
-	"time"
 )
 
 // Channel is a one-way, append-only, ordered message log.
@@ -79,12 +77,16 @@ type Channel struct {
 //
 //	ch := NewChannel("ch_001", "email-summaries")
 func NewChannel(id, name string) *Channel {
-	return &Channel{
-		id:        id,
-		name:      name,
-		log:       make([]*Message, 0),
-		createdAt: time.Now().UnixNano(),
-	}
+	ch, _ := StartNew[*Channel]("actor.NewChannel", nil,
+		func(op *Operation[*Channel], rf *ResultFactory[*Channel]) *OperationResult[*Channel] {
+			return rf.Generate(true, false, &Channel{
+				id:        id,
+				name:      name,
+				log:       make([]*Message, 0),
+				createdAt: op.Time.Now().UnixNano(),
+			})
+		}).GetResult()
+	return ch
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -194,32 +196,25 @@ func (c *Channel) Slice(start, end int) []*Message {
 // Each message is written using the Message wire format, concatenated
 // end-to-end. This allows sequential reading during recovery.
 func (c *Channel) Persist(directory string) error {
-	// Ensure the directory exists.
-	if err := os.MkdirAll(directory, 0o755); err != nil {
-		return fmt.Errorf("actor: failed to create directory %s: %w", directory, err)
-	}
+	_, err := StartNew[struct{}]("actor.Persist", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			path := filepath.Join(directory, c.name+".log")
 
-	path := filepath.Join(directory, c.name+".log")
-	f, err := os.Create(path)
-	if err != nil {
-		return fmt.Errorf("actor: failed to create channel file %s: %w", path, err)
-	}
-	defer f.Close()
+			// Assemble all message bytes in memory so we can write
+			// the complete log in a single WriteFile call.
+			var buf bytes.Buffer
+			for _, msg := range c.log {
+				buf.Write(msg.ToBytes())
+			}
 
-	// Write each message in wire format, one after another.
-	for _, msg := range c.log {
-		data := msg.ToBytes()
-		if _, err := f.Write(data); err != nil {
-			return fmt.Errorf("actor: failed to write message to %s: %w", path, err)
-		}
-	}
-
-	// Flush to disk to survive crashes.
-	if err := f.Sync(); err != nil {
-		return fmt.Errorf("actor: failed to sync channel file %s: %w", path, err)
-	}
-
-	return nil
+			// Use 0o600 (owner read/write only) — channel logs may contain
+			// sensitive message payloads and should not be world-readable.
+			if err := op.File.WriteFile(path, buf.Bytes(), 0o600); err != nil {
+				return rf.Fail(struct{}{}, fmt.Errorf("actor: failed to write channel file %s: %w", path, err))
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // Recover reconstructs a channel from a binary log file on disk.
@@ -236,47 +231,51 @@ func (c *Channel) Persist(directory string) error {
 // This function is the Go equivalent of a Python classmethod — it creates
 // and returns a new Channel instance.
 func Recover(directory, name string) (*Channel, error) {
-	ch := NewChannel("recovered_"+name, name)
+	return StartNew[*Channel]("actor.Recover", nil,
+		func(op *Operation[*Channel], rf *ResultFactory[*Channel]) *OperationResult[*Channel] {
+			ch := NewChannel("recovered_"+name, name)
 
-	path := filepath.Join(directory, name+".log")
-	f, err := os.Open(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			// File doesn't exist — return empty channel. This is fine.
-			return ch, nil
-		}
-		return nil, fmt.Errorf("actor: failed to open channel file %s: %w", path, err)
-	}
-	defer f.Close()
+			path := filepath.Join(directory, name+".log")
 
-	// Read all the file data into memory, then parse messages from it.
-	// This approach handles truncated writes gracefully: if we encounter
-	// an incomplete message, we simply stop reading.
-	data, err := io.ReadAll(f)
-	if err != nil {
-		return nil, fmt.Errorf("actor: failed to read channel file %s: %w", path, err)
-	}
-
-	reader := bytes.NewReader(data)
-
-	for {
-		msg, err := FromReader(reader)
-		if err != nil {
-			if err == io.EOF {
-				// Clean end of file — all messages read.
-				break
+			// Read all the file data into memory, then parse messages from it.
+			// This approach handles truncated writes gracefully: if we encounter
+			// an incomplete message, we simply stop reading.
+			data, err := op.File.ReadFile(path)
+			if err != nil {
+				// File doesn't exist — return empty channel. This is fine.
+				return rf.Generate(true, false, ch)
 			}
-			if err == io.ErrUnexpectedEOF {
-				// Truncated message — crash happened mid-write.
-				// Discard the incomplete message and stop.
-				break
-			}
-			// Other errors (bad magic, version too new) — stop but
-			// keep what we've recovered so far.
-			break
-		}
-		ch.log = append(ch.log, msg)
-	}
 
-	return ch, nil
+			reader := bytes.NewReader(data)
+
+			var parseErr error
+			for {
+				msg, err := FromReader(reader)
+				if err != nil {
+					if err == io.EOF {
+						// Clean end of file — all messages read.
+						break
+					}
+					if err == io.ErrUnexpectedEOF {
+						// Truncated message — crash happened mid-write.
+						// Discard the incomplete message and stop. This is
+						// expected after an unclean shutdown and is not an error.
+						break
+					}
+					// Other errors (bad magic bytes, unrecognized version,
+					// future wire-format incompatibility) — stop and surface
+					// the error so callers can distinguish clean recovery
+					// from partial/corrupt recovery. Messages read so far
+					// are still returned alongside the error.
+					parseErr = fmt.Errorf("actor: log parse error in %s after %d messages: %w", path, len(ch.log), err)
+					break
+				}
+				ch.log = append(ch.log, msg)
+			}
+
+			if parseErr != nil {
+				return rf.Fail(ch, parseErr)
+			}
+			return rf.Generate(true, false, ch)
+		}).GetResult()
 }

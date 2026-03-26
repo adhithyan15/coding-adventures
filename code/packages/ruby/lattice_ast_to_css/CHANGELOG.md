@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-03-25
+
+### Fixed
+
+- **Positional mixin args with commas** — `parse_include_args` now calls `split_value_list_on_commas` in the new-grammar path. Previously, `@include button(blue, white)` was treated as one argument causing `WrongArity` errors.
+
+## [0.2.1] - 2026-03-25
+
+### Fixed
+
+- **Less-than operator `<`** — `compare` now handles `"LESS"` so `@if $val < $min` evaluates correctly.
+- **Division operator `/` in expressions** — `eval_lattice_multiplicative` now dispatches on `*` vs `/`. New `divide` method with `LatticeZeroDivisionError` guard mirrors `multiply`.
+- **Mixin parameter parsing with multiple defaults** — `extract_params` in `transformer.rb` now accepts `mixin_value_list` nodes in addition to `value_list`.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

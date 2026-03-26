@@ -485,3 +485,4 @@ func TestParseJSONAllValueTypes(t *testing.T) {
 		t.Fatalf("Expected root rule 'value', got %q", program.RuleName)
 	}
 }
+

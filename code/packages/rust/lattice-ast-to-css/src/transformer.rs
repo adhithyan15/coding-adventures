@@ -1184,28 +1184,39 @@ impl LatticeTransformer {
 
         let mixin_def = self.mixins[&mixin_name].clone();
 
-        // Parse arguments
-        let args = if let Some(a) = args_node {
-            self.parse_include_args(a, scope)?
+        // Bug #2: Parse arguments — now returns (positional, named) split.
+        // Bug #3: Named and positional args are pre-evaluated in the CALLER'S scope
+        //         before being bound into the mixin scope. This prevents infinite
+        //         recursion when the mixin parameter name shadows a caller variable
+        //         of the same name (e.g. `@include foo($color: $color)`).
+        let (positional, named) = if let Some(a) = args_node {
+            self.parse_include_args_named(a, scope)?
         } else {
-            vec![]
+            (vec![], HashMap::new())
         };
 
-        // Arity check
+        // Arity check: count only args that aren't covered by named args
+        let total_provided = positional.len() + named.len();
         let required = mixin_def.params.len() - mixin_def.defaults.len();
-        if args.len() < required || args.len() > mixin_def.params.len() {
+        if total_provided < required || total_provided > mixin_def.params.len() {
             return Err(LatticeError::wrong_arity(
                 "Mixin", &mixin_name,
-                mixin_def.params.len(), args.len(),
+                mixin_def.params.len(), total_provided,
                 0, 0,
             ));
         }
 
-        // Build the mixin scope
+        // Build the mixin scope: named args take priority, then positional, then defaults.
+        // Bug #3: each arg value was already evaluated in the caller's scope inside
+        //         parse_include_args_named, so we just store the result string here.
         let mut mixin_scope = scope.child();
-        for (i, param_name) in mixin_def.params.iter().enumerate() {
-            if i < args.len() {
-                mixin_scope.set(param_name.clone(), ScopeValue::Raw(args[i].clone()));
+        let mut pos_idx = 0usize;
+        for param_name in &mixin_def.params {
+            if let Some(val) = named.get(param_name) {
+                mixin_scope.set(param_name.clone(), ScopeValue::Raw(val.clone()));
+            } else if pos_idx < positional.len() {
+                mixin_scope.set(param_name.clone(), ScopeValue::Raw(positional[pos_idx].clone()));
+                pos_idx += 1;
             } else if let Some(default) = mixin_def.defaults.get(param_name) {
                 mixin_scope.set(param_name.clone(), ScopeValue::Raw(default.clone()));
             }
@@ -1234,74 +1245,212 @@ impl LatticeTransformer {
         result
     }
 
-    /// Parse include arguments into CSS text strings.
-    fn parse_include_args(
+    /// Parse include arguments, returning (positional_args, named_args).
+    ///
+    /// Bug #2: handles the updated grammar where include_args may contain
+    /// `include_arg` nodes of the form `VARIABLE COLON value_list` (named) or
+    /// just `value_list` (positional).
+    ///
+    /// Bug #3: each argument value is evaluated in the CALLER'S scope before
+    /// being returned, so that mixin parameter names cannot shadow caller
+    /// variable names during argument evaluation (prevents infinite recursion).
+    fn parse_include_args_named(
         &mut self,
         node: GrammarASTNode,
         scope: &ScopeChain,
-    ) -> Result<Vec<String>, LatticeError> {
-        // include_args = value_list { COMMA value_list } ;
-        // Due to grammar design, args may be in a single value_list with commas inside.
+    ) -> Result<(Vec<String>, HashMap<String, String>), LatticeError> {
+        let mut positional: Vec<String> = Vec::new();
+        let mut named: HashMap<String, String> = HashMap::new();
 
-        let mut args: Vec<String> = Vec::new();
-        let mut current_arg: Vec<String> = Vec::new();
-
-        let mut process_child = |child: &ASTNodeOrToken| {
-            match child {
-                ASTNodeOrToken::Token(tok) => {
-                    let type_name = get_token_type_name(tok);
-                    if type_name == "Comma" || tok.value == "," {
-                        if !current_arg.is_empty() {
-                            args.push(current_arg.join(" "));
-                            current_arg.clear();
-                        }
-                    } else if type_name != "Semicolon" && tok.value != ";" {
-                        current_arg.push(tok.value.clone());
-                    }
-                }
-                ASTNodeOrToken::Node(n) => {
-                    let text = emit_raw_node(n);
-                    if !text.is_empty() {
-                        current_arg.push(text);
-                    }
-                }
+        // Helper: expand a value_list node in the caller scope and return its CSS text.
+        // This is Bug #3 — we evaluate in the CALLER scope (passed as `scope`) so that
+        // if the mixin param name matches a caller variable (e.g. $color: $color),
+        // the right-hand side $color resolves to the caller's value, not to the param.
+        let evaluate_arg_node = |transformer: &mut LatticeTransformer, n: &GrammarASTNode, scope: &ScopeChain| -> String {
+            let cloned = n.clone();
+            match transformer.expand_value_list(cloned, scope) {
+                Ok(expanded) => emit_raw_node(&expanded),
+                Err(_) => emit_raw_node(n),
             }
         };
 
-        // Flatten the include_args structure
-        fn collect_tokens(node: &GrammarASTNode, out: &mut Vec<ASTNodeOrToken>) {
+        // Check if any children are include_arg nodes (updated grammar).
+        let has_include_arg_nodes = node.children.iter().any(|c| {
+            matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "include_arg")
+        });
+
+        if has_include_arg_nodes {
+            // Bug #2: new grammar — include_args = include_arg { COMMA include_arg }
             for child in &node.children {
                 match child {
-                    ASTNodeOrToken::Token(_) => out.push(child.clone()),
-                    ASTNodeOrToken::Node(n) => {
-                        if n.rule_name == "value_list" || n.rule_name == "value" {
-                            collect_tokens(n, out);
+                    ASTNodeOrToken::Node(n) if n.rule_name == "include_arg" => {
+                        // include_arg = VARIABLE COLON value_list   (named)
+                        //             | value_list                   (positional)
+                        let first_is_var = n.children.iter().any(|c| {
+                            matches!(c, ASTNodeOrToken::Token(t) if get_token_type_name(t) == "VARIABLE")
+                        });
+                        let has_colon = n.children.iter().any(|c| {
+                            matches!(c, ASTNodeOrToken::Token(t)
+                                if get_token_type_name(t) == "Colon" || t.value == ":")
+                        });
+
+                        if first_is_var && has_colon {
+                            // Named arg: key = VARIABLE value, val = value_list
+                            let mut key: Option<String> = None;
+                            let mut val_node: Option<&GrammarASTNode> = None;
+                            for ac in &n.children {
+                                match ac {
+                                    ASTNodeOrToken::Token(t) if get_token_type_name(t) == "VARIABLE" => {
+                                        key = Some(t.value.clone());
+                                    }
+                                    ASTNodeOrToken::Node(vn) if vn.rule_name == "value_list" => {
+                                        val_node = Some(vn);
+                                    }
+                                    _ => {}
+                                }
+                            }
+                            if let (Some(k), Some(vn)) = (key, val_node) {
+                                let val = evaluate_arg_node(self, vn, scope);
+                                named.insert(k, val);
+                            }
                         } else {
-                            out.push(child.clone());
+                            // Positional arg: find the value_list child and split on COMMA tokens.
+                            // Bug #2 note: value_list greedily consumes commas (COMMA is in `value`),
+                            // so `button(blue, white)` arrives as one include_arg containing a
+                            // value_list with [value(blue), value(,), value(white)]. We split here.
+                            for ac in &n.children {
+                                if let ASTNodeOrToken::Node(vn) = ac {
+                                    if vn.rule_name == "value_list" {
+                                        let mut current_children: Vec<ASTNodeOrToken> = Vec::new();
+                                        let mut found_comma = false;
+
+                                        for vc in &vn.children {
+                                            let is_comma = match vc {
+                                                ASTNodeOrToken::Node(val_node)
+                                                    if val_node.rule_name == "value" =>
+                                                {
+                                                    val_node.children.len() == 1
+                                                        && matches!(
+                                                            &val_node.children[0],
+                                                            ASTNodeOrToken::Token(t)
+                                                                if get_token_type_name(t) == "COMMA"
+                                                                   || t.value == ","
+                                                        )
+                                                }
+                                                ASTNodeOrToken::Token(t) => {
+                                                    get_token_type_name(t) == "COMMA"
+                                                        || t.value == ","
+                                                }
+                                                _ => false,
+                                            };
+
+                                            if is_comma {
+                                                found_comma = true;
+                                                if !current_children.is_empty() {
+                                                    let seg = GrammarASTNode {
+                                                        rule_name: "value_list".to_string(),
+                                                        children: current_children.clone(),
+                                                    };
+                                                    let val = evaluate_arg_node(self, &seg, scope);
+                                                    if !val.is_empty() {
+                                                        positional.push(val);
+                                                    }
+                                                    current_children.clear();
+                                                }
+                                            } else {
+                                                current_children.push(vc.clone());
+                                            }
+                                        }
+
+                                        // Push the final segment
+                                        if !current_children.is_empty() {
+                                            let seg = GrammarASTNode {
+                                                rule_name: "value_list".to_string(),
+                                                children: current_children,
+                                            };
+                                            let val = evaluate_arg_node(self, &seg, scope);
+                                            if !val.is_empty() {
+                                                positional.push(val);
+                                            }
+                                        } else if !found_comma {
+                                            // No commas at all — evaluate the whole value_list
+                                            let val = evaluate_arg_node(self, vn, scope);
+                                            if !val.is_empty() {
+                                                positional.push(val);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Commas between include_arg nodes — skip
+                    ASTNodeOrToken::Token(t) if get_token_type_name(t) == "Comma" || t.value == "," => {}
+                    _ => {}
+                }
+            }
+        } else {
+            // Legacy grammar: include_args = value_list { COMMA value_list }
+            // or a single value_list containing comma-separated values.
+            let mut args: Vec<String> = Vec::new();
+            let mut current_arg: Vec<String> = Vec::new();
+
+            fn collect_tokens_flat(node: &GrammarASTNode, out: &mut Vec<ASTNodeOrToken>) {
+                for child in &node.children {
+                    match child {
+                        ASTNodeOrToken::Token(_) => out.push(child.clone()),
+                        ASTNodeOrToken::Node(n) => {
+                            if n.rule_name == "value_list" || n.rule_name == "value" {
+                                collect_tokens_flat(n, out);
+                            } else {
+                                out.push(child.clone());
+                            }
                         }
                     }
                 }
             }
+
+            let mut flat: Vec<ASTNodeOrToken> = Vec::new();
+            collect_tokens_flat(&node, &mut flat);
+
+            for child in &flat {
+                match child {
+                    ASTNodeOrToken::Token(tok) => {
+                        let type_name = get_token_type_name(tok);
+                        if type_name == "Comma" || tok.value == "," {
+                            if !current_arg.is_empty() {
+                                args.push(current_arg.join(" "));
+                                current_arg.clear();
+                            }
+                        } else if type_name != "Semicolon" && tok.value != ";" {
+                            // Bug #3: expand variable references in the CALLER's scope
+                            if type_name == "VARIABLE" {
+                                let expanded = expand_variables_in_text(&tok.value, scope);
+                                current_arg.push(expanded);
+                            } else {
+                                current_arg.push(tok.value.clone());
+                            }
+                        }
+                    }
+                    ASTNodeOrToken::Node(n) => {
+                        let text = emit_raw_node(n);
+                        if !text.is_empty() {
+                            current_arg.push(text);
+                        }
+                    }
+                }
+            }
+
+            if !current_arg.is_empty() {
+                args.push(current_arg.join(" "));
+            }
+
+            // Bug #3: expand any remaining variable references in caller scope
+            positional = args.iter().map(|a| expand_variables_in_text(a, scope)).collect();
         }
 
-        let mut flat: Vec<ASTNodeOrToken> = Vec::new();
-        collect_tokens(&node, &mut flat);
-
-        for child in &flat {
-            process_child(child);
-        }
-
-        if !current_arg.is_empty() {
-            args.push(current_arg.join(" "));
-        }
-
-        // Now expand variables in each arg
-        let expanded: Vec<String> = args.iter().map(|a| {
-            // Simple variable substitution in the arg text
-            expand_variables_in_text(a, scope)
-        }).collect();
-
-        Ok(expanded)
+        Ok((positional, named))
     }
 
     // =========================================================================
@@ -1577,8 +1726,9 @@ impl LatticeTransformer {
             _ => return Ok(vec![]),
         };
 
-        // Extract list items from each_list
-        let items: Vec<String> = collect_each_list_items(&each_list);
+        // Bug #4: Extract list items, passing scope so variables pointing to
+        // LatticeValue::Map or LatticeValue::List can be iterated correctly.
+        let items: Vec<String> = collect_each_list_items(&each_list, scope);
 
         let mut result: Vec<GrammarASTNode> = Vec::new();
         for item in &items {
@@ -2096,14 +2246,55 @@ fn extract_block_contents_items(block: &GrammarASTNode) -> Vec<GrammarASTNode> {
 }
 
 /// Collect all non-empty value items from an `each_list` node.
-fn collect_each_list_items(node: &GrammarASTNode) -> Vec<String> {
+///
+/// Bug #4: when the each_list contains a single VARIABLE that resolves to a
+/// `LatticeValue::Map` or `LatticeValue::List` in scope, return its items
+/// rather than the raw variable token text.
+fn collect_each_list_items(node: &GrammarASTNode, scope: &ScopeChain) -> Vec<String> {
+    // Check for the special case: a single VARIABLE token that resolves to a
+    // map or list in scope. This handles `@each $key, $val in $my-map { }`.
+    let non_comma_children: Vec<&ASTNodeOrToken> = node.children.iter().filter(|c| {
+        !matches!(c, ASTNodeOrToken::Token(t) if get_token_type_name(t) == "Comma" || t.value == ",")
+    }).collect();
+
+    if non_comma_children.len() == 1 {
+        if let Some(ASTNodeOrToken::Token(tok)) = non_comma_children.first() {
+            let type_name = get_token_type_name(tok);
+            if type_name == "VARIABLE" {
+                if let Some(scope_val) = scope.get(&tok.value) {
+                    match scope_val {
+                        ScopeValue::Evaluated(LatticeValue::Map(entries)) => {
+                            // Iterate over map entries — emit each as "key value" pair
+                            return entries.iter()
+                                .map(|(k, v)| format!("{} {}", k, v.to_css_string()))
+                                .collect();
+                        }
+                        ScopeValue::Evaluated(LatticeValue::List(items)) => {
+                            return items.iter().map(|v| v.to_css_string()).collect();
+                        }
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+
     let mut items: Vec<String> = Vec::new();
     for child in &node.children {
         match child {
             ASTNodeOrToken::Token(tok) => {
                 let type_name = get_token_type_name(tok);
                 if type_name != "Comma" && tok.value != "," {
-                    items.push(tok.value.clone());
+                    // Bug #4: resolve VARIABLE tokens via scope when possible
+                    if type_name == "VARIABLE" {
+                        if let Some(sv) = scope.get(&tok.value) {
+                            items.push(sv.to_css_text());
+                        } else {
+                            items.push(tok.value.clone());
+                        }
+                    } else {
+                        items.push(tok.value.clone());
+                    }
                 }
             }
             ASTNodeOrToken::Node(n) if n.rule_name == "value" => {
@@ -2203,7 +2394,7 @@ fn extract_params(node: &GrammarASTNode) -> (Vec<String>, HashMap<String, String
                         ASTNodeOrToken::Token(tok) if get_token_type_name(tok) == "VARIABLE" => {
                             param_name = Some(tok.value.clone());
                         }
-                        ASTNodeOrToken::Node(n) if n.rule_name == "value_list" => {
+                        ASTNodeOrToken::Node(n) if n.rule_name == "value_list" || n.rule_name == "mixin_value_list" => {
                             default_value = Some(emit_raw_node(n));
                         }
                         _ => {}

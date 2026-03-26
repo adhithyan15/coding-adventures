@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coding-adventures-commonmark-native"
+version = "0.1.0"
+description = "Rust-backed CommonMark Markdown to HTML converter for Python -- native extension via python-bridge (zero deps)"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

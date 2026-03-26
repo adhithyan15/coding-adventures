@@ -510,7 +510,7 @@ class LatticeTransformer:
                     if not hasattr(pc, "rule_name"):
                         if _token_type_name(pc) == "VARIABLE":
                             param_name = pc.value  # type: ignore[attr-defined]
-                    elif pc.rule_name == "value_list":  # type: ignore[attr-defined]
+                    elif pc.rule_name in ("value_list", "mixin_value_list"):  # type: ignore[attr-defined]
                         default_value = pc
                 if param_name:
                     params.append(param_name)
@@ -926,21 +926,44 @@ class LatticeTransformer:
 
         mixin_def = self.mixins[mixin_name]
 
-        # Parse arguments
-        args = self._parse_include_args(args_node) if args_node else []
+        # Parse arguments — returns (positional, named)
+        if args_node:
+            positional, named = self._parse_include_args(args_node)
+        else:
+            positional, named = [], {}
 
         # Check arity
+        total_args = len(positional) + len(named)
         required = len(mixin_def.params) - len(mixin_def.defaults)
-        if len(args) < required or len(args) > len(mixin_def.params):
+        if total_args < required or total_args > len(mixin_def.params):
             raise WrongArityError(
-                "Mixin", mixin_name, len(mixin_def.params), len(args)
+                "Mixin", mixin_name, len(mixin_def.params), total_args
             )
+
+        # Pre-evaluate each arg in the CALLER's scope before binding to the
+        # mixin scope.  This prevents infinite recursion when a mixin
+        # parameter has the same name as a variable in the caller's scope
+        # (Bug #3): e.g., ``@include foo($color: $color)`` would loop forever
+        # if we evaluated ``$color`` inside the mixin scope where ``$color``
+        # resolves to the same unevaluated AST node.
+        def _eval_arg_in_caller(arg_node: object) -> object:
+            cloned = copy.deepcopy(arg_node)
+            result = self._expand_node(cloned, scope)
+            if result is None:
+                return arg_node
+            if isinstance(result, list):
+                return result[0] if result else arg_node
+            return result
 
         # Create child scope with params bound
         mixin_scope = scope.child()
-        for i, param_name in enumerate(mixin_def.params):
-            if i < len(args):
-                mixin_scope.set(param_name, args[i])
+        pos_idx = 0
+        for param_name in mixin_def.params:
+            if param_name in named:
+                mixin_scope.set(param_name, _eval_arg_in_caller(named[param_name]))
+            elif pos_idx < len(positional):
+                mixin_scope.set(param_name, _eval_arg_in_caller(positional[pos_idx]))
+                pos_idx += 1
             elif param_name in mixin_def.defaults:
                 mixin_scope.set(param_name, copy.deepcopy(mixin_def.defaults[param_name]))
 
@@ -966,27 +989,60 @@ class LatticeTransformer:
             self._content_block_stack.pop()
             self._content_scope_stack.pop()
 
-    def _parse_include_args(self, node: object) -> list[object]:
-        """Parse include_args into a list of value_list nodes.
+    def _parse_include_args(
+        self, node: object
+    ) -> tuple[list[object], dict[str, object]]:
+        """Parse include_args into positional and named arg buckets.
 
-        include_args = value_list { COMMA value_list } ;
+        The grammar was updated so:
+            include_args = include_arg { COMMA include_arg }
+            include_arg  = VARIABLE COLON value_list | value_list
 
-        Due to grammar design, commas may be absorbed into a single
-        value_list (since COMMA is a valid value token). So if we get
-        only one value_list but it contains COMMA values, we split it
-        on commas to produce multiple args.
+        Named args look like ``$color: red``; positional args are bare
+        ``value_list`` nodes.  For backward compat with grammars that
+        don't wrap children in ``include_arg`` nodes, bare ``value_list``
+        children are also accepted.
+
+        Returns a tuple ``(positional, named)`` where:
+        - ``positional`` is a list of ``value_list`` nodes (or similar)
+        - ``named`` is a ``{param_name: value_list_node}`` dict
         """
-        value_lists: list[object] = []
+        positional: list[object] = []
+        named: dict[str, object] = {}
+
         for child in node.children:  # type: ignore[attr-defined]
-            if hasattr(child, "rule_name") and child.rule_name == "value_list":  # type: ignore[attr-defined]
-                value_lists.append(child)
+            if not hasattr(child, "rule_name"):
+                continue
+            rule = child.rule_name  # type: ignore[attr-defined]
+            if rule == "include_arg":
+                arg_children = child.children  # type: ignore[attr-defined]
+                # Named arg: VARIABLE COLON value_list
+                if (
+                    len(arg_children) >= 3
+                    and not hasattr(arg_children[0], "rule_name")
+                    and _token_type_name(arg_children[0]) == "VARIABLE"
+                    and not hasattr(arg_children[1], "rule_name")
+                    and _token_type_name(arg_children[1]) == "COLON"
+                ):
+                    param_name = arg_children[0].value  # type: ignore[attr-defined]
+                    named[param_name] = arg_children[2]
+                else:
+                    # Positional — find the value_list child
+                    for ac in arg_children:
+                        if hasattr(ac, "rule_name") and ac.rule_name == "value_list":  # type: ignore[attr-defined]
+                            positional.append(ac)
+                            break
+            elif rule == "value_list":
+                # Legacy: bare value_list directly in include_args
+                positional.append(child)
 
-        # If there's only one value_list, check if it contains commas
-        # and split on them to produce multiple args
-        if len(value_lists) == 1:
-            return self._split_value_list_on_commas(value_lists[0])
+        # Legacy: if a single positional value_list contains commas, split it
+        if len(positional) == 1 and not named:
+            split = self._split_value_list_on_commas(positional[0])
+            if len(split) > 1:
+                return split, named
 
-        return value_lists
+        return positional, named
 
     def _split_value_list_on_commas(self, node: object) -> list[object]:
         """Split a value_list into multiple value_lists at COMMA boundaries.
@@ -1244,6 +1300,9 @@ class LatticeTransformer:
         If the each_list contains a single VARIABLE that resolves to a
         LatticeMap or LatticeList, return it. Otherwise return None
         to fall through to the default token-based iteration.
+
+        Bug #4: If the variable resolves to an AST node (not yet a LatticeMap),
+        check whether that node wraps a ``map_literal`` and convert it on the fly.
         """
         children = each_list.children  # type: ignore[attr-defined]
         # Check for single-variable each_list
@@ -1257,7 +1316,52 @@ class LatticeTransformer:
             val = scope.get(var_tokens[0].value)  # type: ignore[attr-defined]
             if isinstance(val, (LatticeMap, LatticeList)):
                 return val
+            # Bug #4: val may be an AST node that wraps a map_literal
+            if hasattr(val, "rule_name"):
+                map_lit = self._find_map_literal_in_ast(val)
+                if map_lit is not None:
+                    return self._convert_map_literal_to_lattice_map(map_lit, scope)
         return None
+
+    def _find_map_literal_in_ast(self, node: object) -> object | None:
+        """Depth-first search for the first ``map_literal`` node in an AST subtree."""
+        if not hasattr(node, "rule_name"):
+            return None
+        if node.rule_name == "map_literal":  # type: ignore[attr-defined]
+            return node
+        for child in node.children:  # type: ignore[attr-defined]
+            if hasattr(child, "rule_name"):
+                found = self._find_map_literal_in_ast(child)
+                if found is not None:
+                    return found
+        return None
+
+    def _convert_map_literal_to_lattice_map(
+        self, node: object, scope: ScopeChain
+    ) -> LatticeMap:
+        """Convert a ``map_literal`` AST node to a ``LatticeMap`` value.
+
+        map_literal = LBRACE map_entry { COMMA map_entry } RBRACE
+        map_entry   = ( IDENT | STRING ) COLON lattice_expression
+        """
+        evaluator = ExpressionEvaluator(scope)
+        items: list[tuple[str, LatticeValue]] = []
+        for child in node.children:  # type: ignore[attr-defined]
+            if not hasattr(child, "rule_name") or child.rule_name != "map_entry":  # type: ignore[attr-defined]
+                continue
+            key: str | None = None
+            value_expr: object | None = None
+            for ec in child.children:  # type: ignore[attr-defined]
+                if not hasattr(ec, "rule_name"):
+                    tn = _token_type_name(ec)
+                    if tn in ("IDENT", "STRING") and key is None:
+                        raw = ec.value  # type: ignore[attr-defined]
+                        key = raw.strip('"').strip("'")
+                elif ec.rule_name == "lattice_expression" and value_expr is None:  # type: ignore[attr-defined]
+                    value_expr = ec
+            if key is not None and value_expr is not None:
+                items.append((key, evaluator.evaluate(value_expr)))
+        return LatticeMap(items)
 
     def _expand_each_over_resolved(
         self,

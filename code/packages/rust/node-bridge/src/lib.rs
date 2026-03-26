@@ -165,6 +165,23 @@ extern "C" {
         result: *mut napi_value,
     ) -> napi_status;
 
+    // -- Function creation -------------------------------------------------
+    //
+    // napi_create_function creates a standalone JS function that is NOT
+    // attached to any class. This is the right primitive for module-level
+    // exports (e.g. `module.exports.markdownToHtml = <function>`).
+    // `utf8name` sets the function's `.name` property; `length` is
+    // NAPI_AUTO_LENGTH (usize::MAX) to use strlen. `data` is a user context
+    // pointer passed to the callback; pass null if unused.
+    pub fn napi_create_function(
+        env: napi_env,
+        utf8name: *const c_char,
+        length: usize,
+        cb: napi_callback,
+        data: *const c_void,
+        result: *mut napi_value,
+    ) -> napi_status;
+
     // -- Property setting --------------------------------------------------
     pub fn napi_set_named_property(
         env: napi_env,
@@ -434,4 +451,32 @@ pub fn set_named_property(env: napi_env, object: napi_value, name: &str, value: 
         unsafe { napi_set_named_property(env, object, c_name.as_ptr(), value) },
         "napi_set_named_property",
     );
+}
+
+// ---------------------------------------------------------------------------
+// Safe wrappers — Standalone function creation
+// ---------------------------------------------------------------------------
+
+/// Create a standalone JS function (not attached to any class).
+///
+/// Use this to expose module-level functions on the addon's exports object:
+///
+/// ```rust,ignore
+/// let f = create_function(env, "markdownToHtml", Some(my_callback));
+/// set_named_property(env, exports, "markdownToHtml", f);
+/// ```
+///
+/// The function's `.name` property in JS will be set to `name`.
+/// `data` context pointer is `null` — the callback can retrieve it via
+/// `napi_get_cb_info` if needed.
+pub fn create_function(env: napi_env, name: &str, cb: napi_callback) -> napi_value {
+    let c_name = CString::new(name).expect("name must not contain NUL");
+    let mut result: napi_value = ptr::null_mut();
+    check_status(
+        unsafe {
+            napi_create_function(env, c_name.as_ptr(), usize::MAX, cb, ptr::null(), &mut result)
+        },
+        "napi_create_function",
+    );
+    result
 }

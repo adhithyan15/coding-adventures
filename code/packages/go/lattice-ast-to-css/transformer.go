@@ -568,7 +568,7 @@ func extractParams(node *parser.ASTNode) ([]string, map[string]interface{}) {
 					paramName = c.Value
 				}
 			case *parser.ASTNode:
-				if c.RuleName == "value_list" {
+				if c.RuleName == "value_list" || c.RuleName == "mixin_value_list" {
 					defaultVal = c
 				}
 			}
@@ -1216,23 +1216,41 @@ func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeCha
 		}
 	}
 
-	// Parse call arguments
-	var args []interface{}
+	// Parse call arguments (positional and named)
+	var positional []interface{}
+	named := map[string]interface{}{}
 	if argsNode != nil {
-		args = t.parseIncludeArgs(argsNode)
+		positional, named = t.parseIncludeArgs(argsNode)
 	}
 
-	// Check arity: required = total params - params with defaults
+	// Pre-evaluate each arg in the CALLER's scope before binding to mixin scope.
+	// This prevents infinite recursion when a mixin param name matches a caller variable.
+	// e.g., @include gap($gap: $gap) — without pre-eval, the mixin scope sees itself.
+	evaluateArg := func(argNode interface{}) interface{} {
+		if ast, ok := argNode.(*parser.ASTNode); ok {
+			cloned := deepCloneAST(ast)
+			return t.expandNode(cloned, scope) // caller's scope
+		}
+		return argNode
+	}
+
+	// Check arity against positional + named counts
+	totalProvided := len(positional) + len(named)
 	required := len(mixinDef.Params) - len(mixinDef.Defaults)
-	if len(args) < required || len(args) > len(mixinDef.Params) {
-		panic(NewWrongArityError("Mixin", mixinName, len(mixinDef.Params), len(args), 0, 0))
+	if totalProvided < required || totalProvided > len(mixinDef.Params) {
+		panic(NewWrongArityError("Mixin", mixinName, len(mixinDef.Params), totalProvided, 0, 0))
 	}
 
 	// Create a child scope for the mixin expansion, bind parameters
+	// Named args take priority; positional args fill remaining slots in order.
 	mixinScope := scope.Child()
-	for i, paramName := range mixinDef.Params {
-		if i < len(args) {
-			mixinScope.Set(paramName, args[i])
+	posIdx := 0
+	for _, paramName := range mixinDef.Params {
+		if val, ok := named[paramName]; ok {
+			mixinScope.Set(paramName, evaluateArg(val))
+		} else if posIdx < len(positional) {
+			mixinScope.Set(paramName, evaluateArg(positional[posIdx]))
+			posIdx++
 		} else if defVal, ok := mixinDef.Defaults[paramName]; ok {
 			mixinScope.Set(paramName, deepCloneRaw(defVal))
 		}
@@ -1271,14 +1289,64 @@ func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeCha
 	return nil
 }
 
-// parseIncludeArgs parses include_args into a list of value nodes.
+// parseIncludeArgs parses include_args into positional and named argument slices.
 //
-// include_args = value_list { COMMA value_list } ;
+// The grammar was updated so include_args = include_arg { COMMA include_arg }
+// where include_arg = VARIABLE COLON value_list | value_list.
 //
-// Because COMMA is a valid value token in the grammar, args may be packed
-// into a single value_list. We split on COMMA value nodes.
-func (t *LatticeTransformer) parseIncludeArgs(node *parser.ASTNode) []interface{} {
-	// Collect all value_list children
+// Named args (e.g., $gap: 8px) are returned separately from positional args.
+// Legacy form: a single value_list with internal commas is split on those commas.
+//
+// Returns (positional []interface{}, named map[string]interface{}).
+func (t *LatticeTransformer) parseIncludeArgs(node *parser.ASTNode) ([]interface{}, map[string]interface{}) {
+	positional := []interface{}{}
+	named := map[string]interface{}{}
+
+	// Check for include_arg children (new grammar form)
+	hasIncludeArgs := false
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok && ast.RuleName == "include_arg" {
+			hasIncludeArgs = true
+			break
+		}
+	}
+
+	if hasIncludeArgs {
+		for _, child := range node.Children {
+			ast, ok := child.(*parser.ASTNode)
+			if !ok || ast.RuleName != "include_arg" {
+				continue
+			}
+			// include_arg = VARIABLE COLON value_list  (named)
+			//             | value_list                  (positional)
+			children := ast.Children
+			if len(children) >= 3 {
+				// Check if first child is VARIABLE and second is COLON
+				if tok, ok := children[0].(lexer.Token); ok && tokenTypeName(tok) == "VARIABLE" {
+					if colon, ok := children[1].(lexer.Token); ok && tokenTypeName(colon) == "COLON" {
+						if vl, ok := children[2].(*parser.ASTNode); ok {
+							named[tok.Value] = vl
+							continue
+						}
+					}
+				}
+			}
+			// Positional: find value_list child and split on commas.
+			// value_list greedily consumes COMMA tokens, so button(blue, white)
+			// arrives as one include_arg wrapping value_list([blue, ,, white]).
+			// splitValueListOnCommas splits it into [value_list(blue), value_list(white)].
+			for _, c := range children {
+				if vl, ok := c.(*parser.ASTNode); ok && (vl.RuleName == "value_list" || vl.RuleName == "mixin_value_list") {
+					parts := splitValueListOnCommas(vl)
+					positional = append(positional, parts...)
+					break
+				}
+			}
+		}
+		return positional, named
+	}
+
+	// Legacy form: collect all value_list children and split on commas
 	var valueLists []*parser.ASTNode
 	for _, child := range node.Children {
 		if ast, ok := child.(*parser.ASTNode); ok && ast.RuleName == "value_list" {
@@ -1287,19 +1355,20 @@ func (t *LatticeTransformer) parseIncludeArgs(node *parser.ASTNode) []interface{
 	}
 
 	if len(valueLists) == 0 {
-		return nil
+		return positional, named
 	}
 
-	// If there's only one value_list, check if it has COMMA values and split
+	var raw []interface{}
 	if len(valueLists) == 1 {
-		return splitValueListOnCommas(valueLists[0])
+		raw = splitValueListOnCommas(valueLists[0])
+	} else {
+		raw = make([]interface{}, len(valueLists))
+		for i, vl := range valueLists {
+			raw[i] = vl
+		}
 	}
-
-	result := make([]interface{}, len(valueLists))
-	for i, vl := range valueLists {
-		result[i] = vl
-	}
-	return result
+	positional = append(positional, raw...)
+	return positional, named
 }
 
 // splitValueListOnCommas splits a value_list into multiple lists at COMMA boundaries.
@@ -1609,6 +1678,9 @@ func (t *LatticeTransformer) expandEach(node *parser.ASTNode, scope *ScopeChain)
 
 // resolveEachList checks if an each_list contains a single variable that
 // resolves to a LatticeMap or LatticeList.
+//
+// Lattice v2: if the variable's scope value is an AST node wrapping a
+// map_literal, we convert it to a LatticeMap on the fly.
 func (t *LatticeTransformer) resolveEachList(eachList *parser.ASTNode, scope *ScopeChain) LatticeValue {
 	var varTokens []lexer.Token
 	for _, child := range eachList.Children {
@@ -1628,10 +1700,73 @@ func (t *LatticeTransformer) resolveEachList(eachList *parser.ASTNode, scope *Sc
 				return v
 			case LatticeList:
 				return v
+			case *parser.ASTNode:
+				// The variable holds an unevaluated AST node — check if it wraps a map_literal
+				mapLit := findMapLiteralInAST(v)
+				if mapLit != nil {
+					return convertMapLiteralToLatticeMap(mapLit, scope)
+				}
 			}
 		}
 	}
 	return nil
+}
+
+// findMapLiteralInAST recursively searches an AST subtree for a node with
+// RuleName == "map_literal".
+func findMapLiteralInAST(node *parser.ASTNode) *parser.ASTNode {
+	if node == nil {
+		return nil
+	}
+	if node.RuleName == "map_literal" {
+		return node
+	}
+	for _, child := range node.Children {
+		if ast, ok := child.(*parser.ASTNode); ok {
+			if found := findMapLiteralInAST(ast); found != nil {
+				return found
+			}
+		}
+	}
+	return nil
+}
+
+// convertMapLiteralToLatticeMap converts a map_literal AST node to a LatticeMap.
+//
+// Grammar: map_literal = LPAREN map_entry { COMMA map_entry } [ COMMA ] RPAREN ;
+//          map_entry   = ( IDENT | STRING ) COLON lattice_expression ;
+func convertMapLiteralToLatticeMap(mapLit *parser.ASTNode, scope *ScopeChain) LatticeMap {
+	var items []MapEntry
+	eval := NewExpressionEvaluator(scope)
+
+	for _, child := range mapLit.Children {
+		ast, ok := child.(*parser.ASTNode)
+		if !ok || ast.RuleName != "map_entry" {
+			continue
+		}
+		var key string
+		var valueExpr interface{}
+		seenColon := false
+		for _, ec := range ast.Children {
+			switch c := ec.(type) {
+			case lexer.Token:
+				tn := tokenTypeName(c)
+				if !seenColon && (tn == "IDENT" || tn == "STRING") {
+					key = strings.Trim(c.Value, "\"'")
+				} else if tn == "COLON" {
+					seenColon = true
+				}
+			case *parser.ASTNode:
+				if seenColon && valueExpr == nil {
+					valueExpr = c
+				}
+			}
+		}
+		if key != "" && valueExpr != nil {
+			items = append(items, MapEntry{Key: key, Value: eval.Evaluate(valueExpr)})
+		}
+	}
+	return LatticeMap{Items: items}
 }
 
 // expandEachOverResolved handles @each iteration over a resolved map or list.

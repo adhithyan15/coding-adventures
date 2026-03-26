@@ -164,11 +164,18 @@ func run() int {
 				// work on Windows (e.g., 2>/dev/null, shell quoting). By re-reading
 				// the BUILD file for the current platform, we get the correct
 				// commands for this runner's OS.
-				platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
-				if platformBuild != "" {
-					platformCmds := discovery.ReadLines(platformBuild)
-					if len(platformCmds) > 0 {
-						packages[i].BuildCommands = platformCmds
+				//
+				// Skip this for Starlark packages: their commands come from
+				// Starlark evaluation, not from reading the BUILD file as shell.
+				// Reading a Starlark BUILD file as shell lines would produce
+				// load("...") as a command, which shells cannot execute.
+				if !packages[i].IsStarlark {
+					platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+					if platformBuild != "" {
+						platformCmds := discovery.ReadLines(platformBuild)
+						if len(platformCmds) > 0 {
+							packages[i].BuildCommands = platformCmds
+						}
 					}
 				}
 			}
@@ -286,14 +293,33 @@ func run() int {
 		if !*force {
 			changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
 			if len(changedFiles) > 0 {
-				changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
-				if len(changedPkgs) > 0 {
-					affectedSet = graph.AffectedNodes(changedPkgs)
-					fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
-						len(changedPkgs), len(affectedSet))
+				sharedChanged := false
+				for _, f := range changedFiles {
+					for _, prefix := range sharedPrefixes {
+						if strings.HasPrefix(f, prefix) {
+							sharedChanged = true
+							break
+						}
+					}
+					if sharedChanged {
+						break
+					}
+				}
+
+				if sharedChanged {
+					fmt.Println("Git diff: shared files changed — rebuilding everything")
+					*force = true
+					affectedSet = nil
 				} else {
-					fmt.Println("Git diff: no package files changed — nothing to build")
-					affectedSet = make(map[string]bool) // empty = build nothing
+					changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
+					if len(changedPkgs) > 0 {
+						affectedSet = graph.AffectedNodes(changedPkgs)
+						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
+							len(changedPkgs), len(affectedSet))
+					} else {
+						fmt.Println("Git diff: no package files changed — nothing to build")
+						affectedSet = make(map[string]bool) // empty = build nothing
+					}
 				}
 			} else {
 				fmt.Println("Git diff unavailable — falling back to hash-based cache")
@@ -310,7 +336,7 @@ func run() int {
 	}
 
 	if *detectLanguages {
-		return detectNeededLanguages(packages, affectedSet, *force, repoRoot, *diffBase)
+		return detectNeededLanguages(packages, affectedSet, *force)
 	}
 
 	// Step 6: Hash all packages (needed for cache fallback).
@@ -383,15 +409,20 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 
 // sharedPrefixes are path prefixes that, when changed, mean ALL languages
 // need rebuilding. These are cross-cutting concerns:
-//   - code/grammars/ — shared grammar definitions used by all language lexers/parsers
 //   - .github/ — CI configuration affects all languages
-//   - code/programs/go/build-tool/ — the build tool itself
-//   - code/specs/ — specifications that drive implementations across languages
+//
+// Note: code/programs/go/build-tool/ is NOT here. The build tool is a program,
+// not a shared library. Changes to it only rebuild the build-tool package itself
+// (and any transitive dependents), not every package in the repo. If you change
+// the build tool's BUILD file parsing or discovery logic, any regressions will
+// be caught by the build tool's own test suite. Use --force for a full rebuild.
+//
+// Note: code/grammars/ and code/specs/ are NOT here. Those directories contain
+// shared data files, but modifying them only triggers rebuilds of packages that
+// actually import them. Installing all toolchains for a grammar file change would
+// waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
 var sharedPrefixes = []string{
-	"code/grammars/",
 	".github/",
-	"code/programs/go/build-tool/",
-	"code/specs/",
 }
 
 // detectNeededLanguages determines which language toolchains CI needs to
@@ -401,56 +432,29 @@ var sharedPrefixes = []string{
 //
 // Go is always needed because the build tool is written in Go.
 //
-// If --force is set, or if shared files (grammars, CI, build tool source)
-// changed, all languages are marked as needed.
+// By the time this is called, shared-file detection has already run in run():
+// if shared files changed, force=true and affectedSet=nil. So here we only
+// need to check force/nil and then look at individual package languages.
 func detectNeededLanguages(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
 	force bool,
-	repoRoot string,
-	diffBase string,
 ) int {
 	needed := make(map[string]bool)
 
 	// Go is always needed — the build tool itself is Go.
 	needed["go"] = true
 
-	if force {
-		// Force mode: all languages needed.
-		for _, lang := range allLanguages {
-			needed[lang] = true
-		}
-	} else if affectedSet == nil {
-		// Git diff unavailable (nil means no diff data). Be safe: need everything.
+	if force || affectedSet == nil {
+		// Force mode or shared files changed: all languages needed.
 		for _, lang := range allLanguages {
 			needed[lang] = true
 		}
 	} else {
-		// Check if shared files changed — if so, all languages are needed.
-		changedFiles := gitdiff.GetChangedFiles(repoRoot, diffBase)
-		sharedChanged := false
-		for _, f := range changedFiles {
-			for _, prefix := range sharedPrefixes {
-				if strings.HasPrefix(f, prefix) {
-					sharedChanged = true
-					break
-				}
-			}
-			if sharedChanged {
-				break
-			}
-		}
-
-		if sharedChanged {
-			for _, lang := range allLanguages {
-				needed[lang] = true
-			}
-		} else {
-			// Only mark languages that have affected packages.
-			for _, pkg := range packages {
-				if affectedSet[pkg.Name] {
-					needed[pkg.Language] = true
-				}
+		// Only mark languages that have affected packages.
+		for _, pkg := range packages {
+			if affectedSet[pkg.Name] {
+				needed[pkg.Language] = true
 			}
 		}
 	}
@@ -483,14 +487,15 @@ func detectNeededLanguages(
 }
 
 // computeLanguagesNeeded determines which language toolchains are needed
-// based on affected packages, force mode, and shared file changes.
+// based on affected packages and force mode.
 // Extracted for reuse by both detectNeededLanguages and emitBuildPlan.
+//
+// Shared-file detection has already been applied in run() before this is called:
+// if shared files changed, force=true and affectedSet=nil.
 func computeLanguagesNeeded(
 	packages []discovery.Package,
 	affectedSet map[string]bool,
 	force bool,
-	repoRoot string,
-	diffBase string,
 ) map[string]bool {
 	needed := make(map[string]bool)
 	needed["go"] = true
@@ -500,18 +505,6 @@ func computeLanguagesNeeded(
 			needed[lang] = true
 		}
 		return needed
-	}
-
-	changedFiles := gitdiff.GetChangedFiles(repoRoot, diffBase)
-	for _, f := range changedFiles {
-		for _, prefix := range sharedPrefixes {
-			if strings.HasPrefix(f, prefix) {
-				for _, lang := range allLanguages {
-					needed[lang] = true
-				}
-				return needed
-			}
-		}
 	}
 
 	for _, pkg := range packages {
@@ -575,7 +568,7 @@ func emitBuildPlan(
 	}
 
 	// Compute languages needed.
-	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force, repoRoot, diffBase)
+	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force)
 
 	bp := &plan.BuildPlan{
 		DiffBase:         diffBase,

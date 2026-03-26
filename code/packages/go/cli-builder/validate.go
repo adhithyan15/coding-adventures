@@ -39,7 +39,6 @@ package clibuilder
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 )
 
 // =========================================================================
@@ -87,20 +86,24 @@ type ValidationResult struct {
 // whether validation passed or failed. This makes the API simpler for
 // callers who only care about correctness.
 func ValidateSpec(specFilePath string) ValidationResult {
-	// --- Step 1: Read the file ---
-	//
-	// If the file doesn't exist or can't be read, that's a validation
-	// failure, not a panic. We wrap the OS error in a friendly message.
-	data, err := os.ReadFile(specFilePath)
-	if err != nil {
-		return ValidationResult{
-			Valid:  false,
-			Errors: []string{fmt.Sprintf("cannot read spec file %q: %v", specFilePath, err)},
-		}
-	}
+	result, _ := StartNew[ValidationResult]("clibuilder.ValidateSpec", ValidationResult{},
+		func(op *Operation[ValidationResult], rf *ResultFactory[ValidationResult]) *OperationResult[ValidationResult] {
+			// --- Step 1: Read the file ---
+			//
+			// If the file doesn't exist or can't be read, that's a validation
+			// failure, not a panic. We wrap the OS error in a friendly message.
+			data, err := op.File.ReadFile(specFilePath)
+			if err != nil {
+				return rf.Generate(true, false, ValidationResult{
+					Valid:  false,
+					Errors: []string{fmt.Sprintf("cannot read spec file %q: %v", specFilePath, err)},
+				})
+			}
 
-	// --- Step 2: Delegate to the byte-slice validator ---
-	return ValidateSpecBytes(data)
+			// --- Step 2: Delegate to the byte-slice validator ---
+			return rf.Generate(true, false, ValidateSpecBytes(data))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

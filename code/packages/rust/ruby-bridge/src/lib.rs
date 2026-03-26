@@ -80,6 +80,18 @@ extern "C" {
         func: *const c_void,
         argc: c_int,
     );
+    // rb_define_module_function defines a function callable both as a module
+    // method and as a private instance method. This is the Ruby idiom for
+    // module-level utility functions (e.g. `Math.sqrt` / `include Math; sqrt`).
+    pub fn rb_define_module_function(
+        module: VALUE,
+        name: *const c_char,
+        func: *const c_void,
+        argc: c_int,
+    );
+    // rb_path2class looks up a class or module by its fully-qualified Ruby
+    // constant path (e.g. "Encoding::UndefinedConversionError").
+    pub fn rb_path2class(path: *const c_char) -> VALUE;
 
     // -- Allocator binding -------------------------------------------------
     //
@@ -166,6 +178,28 @@ pub fn define_class_under(parent: VALUE, name: &str, superclass: VALUE) -> VALUE
 pub fn define_method_raw(class: VALUE, name: &str, func: *const c_void, argc: i32) {
     let c_name = CString::new(name).expect("name must not contain NUL");
     unsafe { rb_define_method(class, c_name.as_ptr(), func, argc as c_int) }
+}
+
+/// Define a module function — callable both as `Module.method(args)` and
+/// as a free function when the module is included/extended.
+///
+/// This is the idiomatic way to expose stateless utility functions from
+/// a module (analogous to Python `@staticmethod` or Node.js module exports).
+///
+/// `argc` specifies the number of required arguments. Use `-1` for variadic.
+pub fn define_module_function_raw(module: VALUE, name: &str, func: *const c_void, argc: i32) {
+    let c_name = CString::new(name).expect("name must not contain NUL");
+    unsafe { rb_define_module_function(module, c_name.as_ptr(), func, argc as c_int) }
+}
+
+/// Look up a Ruby class or module by its fully-qualified constant path.
+///
+/// For example, `path2class("CodingAdventures::CommonmarkNative")` returns
+/// the VALUE for that module. Raises `ArgumentError` in Ruby if the constant
+/// does not exist.
+pub fn path2class(path: &str) -> VALUE {
+    let c_path = CString::new(path).expect("path must not contain NUL");
+    unsafe { rb_path2class(c_path.as_ptr()) }
 }
 
 /// Bind a singleton (class-level) method.

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.7.0] - Unreleased
+
+### Changed
+
+- **BUILD file** — now chains shared package installs (indexeddb → store →
+  ui-components → checklist-app) before running Vitest, matching the engram-app
+  pattern. Without this, CI fails when shared packages aren't installed first.
+- **package.json** — bumped to 0.7.0.
+- **InstanceRunner, TemplateEditor** — replaced V0.2/V0.3 historical version
+  annotations with clean current-state documentation describing the architecture
+  as it stands today.
+- **TemplateLibrary, TodoList** — added missing `type="button"` attributes to all
+  buttons (Run, Edit, Delete, New Checklist, New Todo). Buttons default to
+  `type="submit"` which can trigger form submission unexpectedly; explicit
+  `type="button"` is always correct for action buttons outside forms.
+
 ## [0.6.0] - Unreleased
 
 ### Added

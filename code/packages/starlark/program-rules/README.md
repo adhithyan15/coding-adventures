@@ -26,7 +26,7 @@ Each `.star` file defines a **build rule** for programs (binaries) — code that
 | `rust_binary.star` | `rust_binary()` | Rust | N/A (always `src/main.rs`) |
 | `elixir_binary.star` | `elixir_binary()` | Elixir | `lib/main.ex` |
 
-Note: Go and Rust don't need entry_point parameters because their conventions are rigid — Go always uses `func main()` in `package main`, and Rust always uses `fn main()` in `src/main.rs`.
+Note: Go and Rust do not need entry_point parameters because their conventions are rigid — Go always uses `func main()` in `package main`, and Rust always uses `fn main()` in `src/main.rs`.
 
 ## Usage
 
@@ -57,15 +57,15 @@ Most binary rules also have:
 ## How This Fits in the Stack
 
 ```
-BUILD files (per-program)          — "I am a Go binary called build-tool"
+BUILD files (per-program)          -- "I am a Go binary called build-tool"
     |
     v
-Program rules (.star)              — "Here's what go_binary means"  <-- YOU ARE HERE
+Program rules (.star)              -- "Here's what go_binary means"  <-- YOU ARE HERE
     |
     v
-Build tool (Go program)            — "I'll compile it, test it, validate it"
+Build tool (Go program)            -- "I'll compile it, test it, validate it"
     |
     v
-Language toolchains                — "I'll produce the actual executable"
+Language toolchains                -- "I'll produce the actual executable"
 (go build, cargo build, etc.)
 ```

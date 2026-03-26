@@ -575,13 +575,30 @@ defmodule CodingAdventures.LatticeAstToCss.Emitter do
     |> String.replace(" ,", ",")
   end
 
-  # function_arg — single argument
-  defp emit_function_arg([child | _], depth, min, indent) do
+  # function_arg — single or multiple children
+  #
+  # When a function_arg contains a single token or AST node, emit it directly.
+  # When it contains multiple children (e.g., a nested function call structured as
+  # FUNCTION, function_args, RPAREN), join the parts with NO space — otherwise
+  # "rgb( 255, 0, 0 )" would become "rgb ( 255, 0, 0 )" with an unwanted space.
+  defp emit_function_arg([child], depth, min, indent) do
     case child do
       %ASTNode{} -> emit_node(child, depth, min, indent)
       %Token{value: v} -> v
       _ -> ""
     end
+  end
+
+  defp emit_function_arg([_ | _] = children, depth, min, indent) do
+    parts = Enum.map(children, fn child ->
+      case child do
+        %Token{type: "RPAREN"} -> ")"
+        %ASTNode{} -> emit_node(child, depth, min, indent)
+        %Token{value: v} -> v
+        _ -> ""
+      end
+    end)
+    Enum.join(parts, "")
   end
 
   defp emit_function_arg([], _depth, _min, _indent), do: ""

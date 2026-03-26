@@ -755,7 +755,19 @@ export class CSSEmitter {
       }
       return this._emitNode(child, depth);
     }
-    return this._emitDefault(node, depth);
+    // Nested function call: FUNCTION function_args RPAREN
+    // Must be joined without spaces to produce e.g. minmax(130px, 1fr)
+    // rather than minmax( 130px, 1fr ) from the default space-join.
+    const parts: string[] = [];
+    for (const child of children) {
+      if (!isASTNode(child)) {
+        const tok = child as Token;
+        parts.push(tokenType(tok) === "RPAREN" ? ")" : tok.value);
+      } else {
+        parts.push(this._emitNode(child, depth));
+      }
+    }
+    return parts.join("");
   }
 
   // ---------------------------------------------------------------------------

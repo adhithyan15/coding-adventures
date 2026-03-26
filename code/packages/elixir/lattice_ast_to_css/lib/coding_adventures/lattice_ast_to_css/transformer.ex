@@ -379,7 +379,7 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
 
     Enum.reduce(param_nodes, {[], %{}}, fn %ASTNode{children: pc}, {params, defaults} ->
       var_token = find_token(pc, "VARIABLE")
-      default_node = find_child_by_rule(pc, "value_list")
+      default_node = find_child_by_rule(pc, "mixin_value_list") || find_child_by_rule(pc, "value_list")
 
       if var_token do
         new_params = params ++ [var_token.value]
@@ -887,24 +887,43 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
 
       mixin_def = state.mixins[mixin_name]
       args_node = find_child_by_rule(children, "include_args")
-      raw_args = if args_node, do: parse_include_args(args_node), else: []
+      {positional_raw, named_raw} = if args_node, do: parse_include_args(args_node), else: {[], %{}}
 
-      # Expand variable references in the args using the current (caller) scope.
-      args = Enum.map(raw_args, fn arg ->
-        {expanded_arg, _} = expand_value_list(arg, scope, state)
-        expanded_arg
-      end)
+      # Bug #3 fix: pre-evaluate each arg in the CALLER's scope before binding to
+      # the mixin scope. This prevents infinite recursion when the mixin parameter
+      # name matches a variable name in the caller's scope.
+      #
+      # Without this fix, a caller like:
+      #   $color: red;
+      #   @include button($color: $color)   ← named arg with same name as param
+      # could cause the mixin scope to reference itself when expanding $color,
+      # leading to a circular lookup.
+      eval_arg = fn arg_node ->
+        cloned = deep_copy(arg_node)
+        try do
+          {expanded, _} = expand_value_list(cloned, scope, state)
+          expanded
+        rescue
+          _ -> arg_node
+        catch
+          _, _ -> arg_node
+        end
+      end
 
-      # Check arity
+      positional = Enum.map(positional_raw, eval_arg)
+      named = Map.new(named_raw, fn {k, v} -> {k, eval_arg.(v)} end)
+
+      # Check arity (positional args count)
+      total_provided = length(positional) + map_size(named)
       required = length(mixin_def.params) - map_size(mixin_def.defaults)
-      if length(args) < required or length(args) > length(mixin_def.params) do
+      if total_provided < required or total_provided > length(mixin_def.params) do
         throw({:lattice_error, WrongArityError.new(
-          "Mixin", mixin_name, length(mixin_def.params), length(args)
+          "Mixin", mixin_name, length(mixin_def.params), total_provided
         )})
       end
 
-      # Create child scope with params bound
-      mixin_scope = bind_params(mixin_def.params, mixin_def.defaults, args, scope)
+      # Create child scope with params bound (named args take priority over positional)
+      mixin_scope = bind_params(mixin_def.params, mixin_def.defaults, positional, named, scope)
 
       # Track call stack for cycle detection
       # Lattice v2: push content block and caller scope for @content
@@ -939,19 +958,64 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
     end)
   end
 
-  # Parse include_args = value_list { COMMA value_list }
-  # Due to grammar ambiguity, commas may appear inside a single value_list.
-  # We split on commas to produce multiple arg value_lists.
+  # Parse include_args into {positional, named} where:
+  #   positional = [value_list_node, ...]
+  #   named      = %{"$param_name" => value_list_node, ...}
+  #
+  # Grammar updated for v2:
+  #   include_args = include_arg { COMMA include_arg }
+  #   include_arg  = VARIABLE COLON value_list | value_list
+  #
+  # Legacy (pre-v2): include_args = value_list { COMMA value_list }
+  # For backwards compatibility we also handle the old form.
+  #
+  # If the node contains include_arg children, parse each one:
+  #   - If include_arg starts with VARIABLE + COLON → named arg
+  #   - Otherwise → positional arg (find value_list child)
+  # If the node contains only value_list children (legacy form), split on commas.
   defp parse_include_args(%ASTNode{children: children}) do
-    value_lists = Enum.filter(children, fn
-      %ASTNode{rule_name: "value_list"} -> true
+    include_args = Enum.filter(children, fn
+      %ASTNode{rule_name: "include_arg"} -> true
       _ -> false
     end)
 
-    case value_lists do
-      [] -> []
-      [single] -> split_value_list_on_commas(single)
-      multiple -> multiple
+    case include_args do
+      [_ | _] ->
+        # New grammar: parse each include_arg node
+        Enum.reduce(include_args, {[], %{}}, fn %ASTNode{children: ic}, {pos, named} ->
+          var_token = find_token(ic, "VARIABLE")
+          colon_token = find_token(ic, "COLON")
+          value_node = find_child_by_rule(ic, "value_list")
+
+          if var_token && colon_token && value_node do
+            # Named argument: $param: value_list
+            {pos, Map.put(named, var_token.value, value_node)}
+          else
+            # Positional argument: find value_list child and split on commas.
+            # value_list greedily consumes COMMA tokens, so button(blue, white)
+            # arrives as one include_arg wrapping value_list([blue, ,, white]).
+            # split_value_list_on_commas splits it into [value_list(blue), value_list(white)].
+            case value_node do
+              nil -> {pos, named}
+              vl -> {pos ++ split_value_list_on_commas(vl), named}
+            end
+          end
+        end)
+
+      [] ->
+        # Legacy form: only value_list children
+        value_lists = Enum.filter(children, fn
+          %ASTNode{rule_name: "value_list"} -> true
+          _ -> false
+        end)
+
+        positional = case value_lists do
+          [] -> []
+          [single] -> split_value_list_on_commas(single)
+          multiple -> multiple
+        end
+
+        {positional, %{}}
     end
   end
 
@@ -987,20 +1051,47 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
     end
   end
 
-  # Bind parameter names to argument values in a new child scope
-  defp bind_params(params, defaults, args, parent_scope) do
+  # Bind parameter names to argument values in a new child scope.
+  #
+  # Priority order (matching Sass behavior):
+  #   1. Named args  — @include m($color: blue)
+  #   2. Positional  — @include m(blue)
+  #   3. Defaults    — from mixin definition
+  #   4. :null       — missing optional args
+  #
+  # Named args are matched by parameter name; positional args fill in order,
+  # skipping any parameters already claimed by a named arg.
+  defp bind_params(params, defaults, positional, named, parent_scope) do
     scope = Scope.child(parent_scope)
 
-    Enum.reduce(Enum.with_index(params), scope, fn {param_name, i}, sc ->
-      value =
-        cond do
-          i < length(args) -> Enum.at(args, i)
-          Map.has_key?(defaults, param_name) -> deep_copy(defaults[param_name])
-          true -> :null
-        end
+    pos_idx = 0
+    {scope, _} = Enum.reduce(params, {scope, pos_idx}, fn param_name, {sc, pi} ->
+      cond do
+        Map.has_key?(named, param_name) ->
+          # Named arg wins — don't advance positional index
+          {Scope.set(sc, param_name, named[param_name]), pi}
 
-      Scope.set(sc, param_name, value)
+        pi < length(positional) ->
+          # Positional arg
+          {Scope.set(sc, param_name, Enum.at(positional, pi)), pi + 1}
+
+        Map.has_key?(defaults, param_name) ->
+          # Use the default value
+          {Scope.set(sc, param_name, deep_copy(defaults[param_name])), pi}
+
+        true ->
+          # Missing optional arg
+          {Scope.set(sc, param_name, :null), pi}
+      end
     end)
+
+    scope
+  end
+
+  # Legacy arity-2 bind_params — positional only, no named args
+  # Kept so any internal callers (function evaluation) still compile.
+  defp bind_params(params, defaults, args, parent_scope) do
+    bind_params(params, defaults, args, %{}, parent_scope)
   end
 
   # ---------------------------------------------------------------------------
@@ -1157,18 +1248,151 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
     if var_names == [] or is_nil(each_list) or is_nil(block) do
       {[], state}
     else
-      items = extract_each_list_items(each_list)
-      primary_var = hd(var_names)
+      # Bug #4 fix: Try to resolve the each_list to a map/list Lattice value.
+      # If the each_list is a single VARIABLE that resolves to a {:map, _} or
+      # {:list, _} value (or an AST node wrapping a map_literal), iterate over it
+      # structurally instead of as raw value tokens.
+      case resolve_each_list(each_list, scope) do
+        {:map, map_items} ->
+          primary_var = hd(var_names)
+          secondary_var = Enum.at(var_names, 1)
 
-      {result, final_state} = Enum.reduce(items, {[], state}, fn item, {acc, st} ->
-        item_value = extract_value_token(item)
-        loop_scope = Scope.set(Scope.child(scope), primary_var, item_value)
-        {new_items, new_st} = expand_block_to_items(deep_copy(block), loop_scope, st)
-        {acc ++ new_items, new_st}
+          {result, final_state} = Enum.reduce(map_items, {[], state}, fn {k, v}, {acc, st} ->
+            loop_scope =
+              scope
+              |> Scope.child()
+              |> Scope.set(primary_var, {:ident, k})
+              |> (fn sc ->
+                if secondary_var do
+                  Scope.set(sc, secondary_var, v)
+                else
+                  sc
+                end
+              end).()
+            {new_items, new_st} = expand_block_to_items(deep_copy(block), loop_scope, st)
+            {acc ++ new_items, new_st}
+          end)
+
+          {result, final_state}
+
+        {:list, list_items} ->
+          primary_var = hd(var_names)
+
+          {result, final_state} = Enum.reduce(list_items, {[], state}, fn item, {acc, st} ->
+            loop_scope = Scope.set(Scope.child(scope), primary_var, item)
+            {new_items, new_st} = expand_block_to_items(deep_copy(block), loop_scope, st)
+            {acc ++ new_items, new_st}
+          end)
+
+          {result, final_state}
+
+        nil ->
+          # Fall through to plain value iteration
+          items = extract_each_list_items(each_list)
+          primary_var = hd(var_names)
+
+          {result, final_state} = Enum.reduce(items, {[], state}, fn item, {acc, st} ->
+            item_value = extract_value_token(item)
+            loop_scope = Scope.set(Scope.child(scope), primary_var, item_value)
+            {new_items, new_st} = expand_block_to_items(deep_copy(block), loop_scope, st)
+            {acc ++ new_items, new_st}
+          end)
+
+          {result, final_state}
+      end
+    end
+  end
+
+  # Try to resolve an each_list to a {:map, _} or {:list, _} Lattice value.
+  #
+  # If the each_list contains exactly one value node wrapping a VARIABLE token,
+  # look up the variable in scope. If it resolves to a map or list value (or
+  # an AST node that wraps a map_literal), return it. Otherwise return nil.
+  defp resolve_each_list(%ASTNode{children: children}, scope) do
+    # Collect VARIABLE tokens from value children
+    var_tokens =
+      Enum.flat_map(children, fn
+        %ASTNode{rule_name: "value", children: vc} ->
+          Enum.filter(vc, fn
+            %Token{type: "VARIABLE"} -> true
+            _ -> false
+          end)
+        _ -> []
       end)
 
-      {result, final_state}
+    case var_tokens do
+      [%Token{value: var_name}] ->
+        case Scope.get(scope, var_name) do
+          {:ok, {:map, _} = map_val} -> map_val
+          {:ok, {:list, _} = list_val} -> list_val
+          {:ok, %ASTNode{} = ast_node} ->
+            # Bug #4: scope value is an AST node — check if it wraps a map_literal
+            case find_map_literal_in_ast(ast_node) do
+              nil -> nil
+              map_lit -> convert_map_literal_to_lattice_map(map_lit, scope)
+            end
+          _ -> nil
+        end
+      _ ->
+        nil
     end
+  end
+
+  # Recursively search for a map_literal rule node inside an AST subtree
+  defp find_map_literal_in_ast(%ASTNode{rule_name: "map_literal"} = node), do: node
+  defp find_map_literal_in_ast(%ASTNode{children: children}) do
+    Enum.find_value(children, fn
+      %ASTNode{} = child -> find_map_literal_in_ast(child)
+      _ -> nil
+    end)
+  end
+  defp find_map_literal_in_ast(_), do: nil
+
+  # Convert a map_literal AST node to a {:map, [{key, value}]} Lattice value.
+  #
+  # map_literal = LPAREN map_entry COMMA map_entry { COMMA map_entry } RPAREN
+  # map_entry   = ( IDENT | STRING ) COLON lattice_expression
+  defp convert_map_literal_to_lattice_map(%ASTNode{children: children}, scope) do
+    entries =
+      children
+      |> Enum.filter(fn
+        %ASTNode{rule_name: "map_entry"} -> true
+        _ -> false
+      end)
+      |> Enum.map(fn %ASTNode{children: ec} ->
+        # Key: first IDENT or STRING token
+        key =
+          Enum.find_value(ec, fn
+            %Token{type: "IDENT", value: v} -> v
+            %Token{type: "STRING", value: v} ->
+              # Strip surrounding quotes if present
+              v |> String.trim("\"") |> String.trim("'")
+            _ -> nil
+          end)
+
+        # Value: evaluate the lattice_expression or value_list child
+        val_node = find_child_by_rule(ec, "lattice_expression") ||
+                   find_child_by_rule(ec, "value_list") ||
+                   find_child_by_rule(ec, "value")
+
+        val =
+          if val_node do
+            try do
+              Evaluator.evaluate(val_node, scope)
+            rescue
+              _ -> :null
+            catch
+              _, _ -> :null
+            end
+          else
+            :null
+          end
+
+        {key, val}
+      end)
+      |> Enum.reject(fn {k, _} -> is_nil(k) end)
+
+    {:map, entries}
   end
 
   # each_list = value { COMMA value } ;

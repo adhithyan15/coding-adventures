@@ -1,7 +1,6 @@
 package rubyparser
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -22,15 +21,18 @@ func CreateRubyParser(source string) (*parser.GrammarParser, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
-	}
-	return parser.NewGrammarParser(tokens, grammar), nil
+	return StartNew[*parser.GrammarParser]("rubyparser.CreateRubyParser", nil,
+		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			bytes, err := op.File.ReadFile(getGrammarPath())
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			grammar, err := grammartools.ParseParserGrammar(string(bytes))
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
+		}).GetResult()
 }
 
 func ParseRuby(source string) (*parser.ASTNode, error) {

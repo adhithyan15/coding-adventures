@@ -2,6 +2,45 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-03-25
+
+### Fixed
+
+- **Mixin parameter parsing with multiple defaults** — `@mixin card($bg: #fff, $shadow: true)` now
+  parses correctly. Previously `value_list` in `mixin_param` greedily consumed the comma separator
+  between parameters, causing the entire `mixin_definition` to fail to parse and silently fall
+  through to a generic CSS `at_rule`. The grammar now uses a new `mixin_value_list` / `mixin_value`
+  pair (identical to `value_list` / `value` except COMMA is excluded) so parameter defaults never
+  consume the comma that separates adjacent parameters.
+
+- **Less-than operator `<`** — Added `LESS` token to `lattice.tokens` and `LESS` alternative to
+  `comparison_op` in `lattice.grammar`. Previously `@if $val < $min` raised a `LexerError:
+  Unexpected character: "<"` because `<` was not a defined token. `compareValues` in `values.ts`
+  now handles the `"LESS"` operator type.
+
+- **Division operator `/` in expressions** — `@return $px / 16 * 1rem` now evaluates correctly.
+  Previously `/` was not part of `lattice_multiplicative` so the expression parser stopped at
+  `$px`, leaving `/ 16 * 1rem` unparsed and causing the entire `@function` definition to fall
+  through to `at_rule` (never registered). Changes:
+  - Grammar: `lattice_multiplicative = lattice_unary { ( STAR | SLASH ) lattice_unary }`
+  - New `divideValues` export in `values.ts` with zero-division guard
+  - `ExpressionEvaluator._evalMultiplicative` now dispatches on `*` vs `/`
+
+- **User functions shadow CSS built-ins of the same name** — `_expandFunctionCall` in
+  `transformer.ts` now checks the user function registry before the CSS built-in list. Previously
+  `isCssFunction` was checked first; since `rem` appears in the CSS math built-ins list, a
+  user-defined `@function rem($px)` would silently pass through as a plain CSS `rem()` call
+  instead of being evaluated. User functions now take priority.
+
+  These three bugs caused the Mixins, Functions, and Full Example tabs in the live playground at
+  `https://adhithyan15.github.io/coding-adventures/lattice/` to show errors or silently wrong output.
+
+### Added
+
+- `divideValues(left, right)` exported from the package — divides two `LatticeValue` operands with
+  the same unit rules as `multiplyValues`, raising `ZeroDivisionInExpressionError` on a zero divisor.
+
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

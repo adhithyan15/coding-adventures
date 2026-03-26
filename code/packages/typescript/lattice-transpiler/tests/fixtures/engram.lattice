@@ -1,0 +1,643 @@
+// engram.lattice — Engram app styles rewritten in Lattice.
+//
+// This file is a stress test for the Lattice transpiler. It exercises:
+//   - Variables (including in multi-value properties and CSS custom props)
+//   - Mixins with default parameters that reference other variables
+//   - @each over a plain list and over a map (two-variable destructuring)
+//   - @media queries at top level and inside rules
+//   - Color functions: darken(), lighten(), mix()
+//   - CSS function pass-through: rgba(), color-mix(), var(), rect()
+//   - Nested rules with & (parent selector)
+//   - @extend / %placeholder selectors
+//   - !important in values
+//   - Negative dimensions (-1px)
+//   - Vendor-prefixed properties (-webkit-backface-visibility)
+//   - CSS custom properties declared in :root
+
+// ============================================================================
+// Design Tokens
+// ============================================================================
+
+$body-bg:       #1a1a2e;
+$body-text:     #e0ddd5;
+$panel-bg:      #16213e;
+$panel-border:  #2a3a5e;
+$panel-header:  #0f3460;
+$accent:        #e94560;
+$accent-dim:    #943040;
+$wire-high:     #00ff88;
+$wire-low:      #444444;
+$tab-text:      #8899aa;
+$tab-active-text: #ffffff;
+
+// Derived colors — tests Lattice color functions
+$accent-hover:  darken($accent, 10);
+$panel-hover:   lighten($panel-header, 5);
+$mixed-bg:      mix($panel-header, $panel-bg, 50);
+
+// Spacing scale
+$spacing-xs:    4px;
+$spacing-sm:    8px;
+$spacing-md:    16px;
+$spacing-lg:    24px;
+$spacing-xl:    40px;
+
+// Radii and layout
+$card-radius:   8px;
+$input-radius:  6px;
+$max-width:     680px;
+
+// SM-2 rating colors as a map — tests map literal parsing
+$rating-colors: (again: #f87171, hard: #fb923c, good: #4ade80, easy: #60a5fa);
+
+// ============================================================================
+// Mixins
+// ============================================================================
+
+// flex-column: default gap references a variable — tests mixin default + var ref
+@mixin flex-column($gap: $spacing-md) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+// flex-row: same pattern
+@mixin flex-row($gap: $spacing-sm) {
+  display: flex;
+  gap: $gap;
+}
+
+// panel-card: tests multi-value padding in a mixin
+@mixin panel-card($padding: $spacing-md) {
+  background: $panel-bg;
+  border: 1px solid $panel-border;
+  border-radius: $card-radius;
+  padding: $padding;
+}
+
+// btn-outlined: tests & parent selector inside a mixin
+@mixin btn-outlined($color) {
+  color: $color;
+  border-color: $color;
+  &:hover:not(:disabled) {
+    background: $color;
+    color: #000000;
+  }
+}
+
+// ============================================================================
+// Placeholders (@extend targets)
+// ============================================================================
+
+// card-face: shared styles for both faces of the flash card
+%card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // Multi-value padding using two different spacing variables
+  padding: $spacing-xl $spacing-lg;
+  border-radius: $card-radius;
+  border: 1px solid $panel-border;
+  backface-visibility: hidden;
+  // Vendor-prefixed property — tests that -webkit- prefix parses as IDENT
+  -webkit-backface-visibility: hidden;
+}
+
+// ============================================================================
+// Theme — CSS Custom Properties
+// ============================================================================
+//
+// Tests variable substitution inside :root custom property declarations.
+
+:root {
+  --body-bg: $body-bg;
+  --body-text: $body-text;
+  --panel-bg: $panel-bg;
+  --panel-border: $panel-border;
+  --panel-header: $panel-header;
+  --accent: $accent;
+  --accent-hover: $accent-hover;
+  --accent-dim: $accent-dim;
+  --wire-high: $wire-high;
+  --wire-low: $wire-low;
+  // rgba() pass-through with literal values
+  --wire-glow: rgba(0, 255, 136, 0.3);
+  --tab-bg: $panel-header;
+  --tab-active: $accent;
+  --tab-text: $tab-text;
+  --tab-active-text: $tab-active-text;
+  // Font stacks: quoted strings with commas — stress test for value_list parsing
+  --mono: "SF Mono", "Cascadia Code", "Fira Code", Consolas, monospace;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --card-radius: $card-radius;
+  --input-radius: $input-radius;
+  --spacing-xs: $spacing-xs;
+  --spacing-sm: $spacing-sm;
+  --spacing-md: $spacing-md;
+  --spacing-lg: $spacing-lg;
+  --spacing-xl: $spacing-xl;
+  --max-content-width: $max-width;
+}
+
+// ============================================================================
+// Reset
+// ============================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// ============================================================================
+// Base
+// ============================================================================
+
+html {
+  // var() pass-through — CSS function, not Lattice
+  font-family: var(--sans, system-ui, sans-serif);
+  background: $body-bg;
+  color: $body-text;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body {
+  min-height: 100vh;
+  padding: $spacing-lg;
+}
+
+#root {
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: $input-radius;
+  // Multi-value shorthand with two variables — key stress test
+  padding: $spacing-sm $spacing-md;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+// ============================================================================
+// Accessibility
+// ============================================================================
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  // Negative dimension — tests that -1px parses correctly
+  margin: -1px;
+  overflow: hidden;
+  // rect() CSS function with 4 args — tests function_call pass-through
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-ring:focus-visible,
+[role="tab"]:focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+
+// @media with !important values — tests priority keyword
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ============================================================================
+// Tab List
+// ============================================================================
+
+.tab-list {
+  @include flex-row($gap: 2px);
+  justify-content: center;
+  background: $panel-border;
+  border-radius: $card-radius;
+  padding: 3px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tab-list__tab {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: $tab-text;
+  font-family: var(--sans, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.tab-list__tab:hover {
+  // rgba() with literal args — CSS pass-through
+  background: rgba(233, 69, 96, 0.15);
+  color: #dddddd;
+}
+
+.tab-list__tab--active {
+  background: $accent;
+  color: $tab-active-text;
+  font-weight: 600;
+}
+
+// ============================================================================
+// Slider Control
+// ============================================================================
+
+.slider-control {
+  @include flex-column($gap: 0.25rem);
+}
+
+.slider-control__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $body-text;
+}
+
+.slider-control__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slider-control__input {
+  flex: 1;
+  accent-color: $accent;
+}
+
+.slider-control__value {
+  font-family: var(--mono, monospace);
+  font-size: 0.9rem;
+  min-width: 4rem;
+  text-align: right;
+  color: $wire-high;
+}
+
+.slider-control__unit {
+  color: $tab-text;
+  margin-left: 0.15rem;
+  font-size: 0.8rem;
+}
+
+// ============================================================================
+// App Header
+// ============================================================================
+
+.app-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid $panel-border;
+}
+
+.app-header__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $tab-active-text;
+  // Negative number in dimension value — tests sign handling
+  letter-spacing: -0.02em;
+}
+
+// ============================================================================
+// Button Variants
+// ============================================================================
+
+.btn--primary {
+  background: $accent;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn--primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.btn--secondary {
+  background: $panel-bg;
+  color: $tab-text;
+  border: 1px solid $panel-border;
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: $panel-header;
+}
+
+// ============================================================================
+// Flash Card — tests @extend with %placeholder
+// ============================================================================
+
+.flash-card {
+  perspective: 1000px;
+  width: 100%;
+  min-height: 220px;
+}
+
+.flash-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+}
+
+.flash-card__inner--revealed {
+  transform: rotateY(180deg);
+}
+
+// Both faces extend the shared placeholder
+.flash-card__front {
+  @extend %card-face;
+  background: $panel-bg;
+}
+
+.flash-card__back {
+  @extend %card-face;
+  transform: rotateY(180deg);
+  // color-mix() with Lattice variables — tests CSS pass-through + var substitution
+  background: color-mix(in srgb, $panel-header 60%, $panel-bg);
+  border-color: $accent;
+}
+
+.flash-card__text {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: $body-text;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.flash-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: $accent;
+  margin-bottom: $spacing-md;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-card__inner {
+    transition: none;
+  }
+}
+
+// ============================================================================
+// Progress Bar
+// ============================================================================
+
+.progress-bar {
+  width: 100%;
+}
+
+.progress-bar__track {
+  width: 100%;
+  height: 8px;
+  background: $panel-border;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: $accent;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar__fill--complete {
+  // Lighten the green slightly using the Lattice lighten() function
+  background: lighten(#4ade80, 5);
+}
+
+.progress-bar__label {
+  font-size: 0.8rem;
+  color: $tab-text;
+  margin-top: 4px;
+  text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar__fill {
+    transition: none;
+  }
+}
+
+// ============================================================================
+// Rating Buttons — @each over map (two-variable destructuring)
+// ============================================================================
+//
+// This exercises @each $key, $value in $map, which destructures each map
+// entry into two loop variables. It also exercises the btn-outlined mixin
+// that contains a nested & rule.
+
+.rating-buttons {
+  @include flex-row($gap: $spacing-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.rating-buttons__btn {
+  flex: 1;
+  min-width: 80px;
+  padding: $spacing-sm $spacing-md;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: $input-radius;
+  border: 2px solid;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
+}
+
+.rating-buttons__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+// @each $name, $color in $rating-colors — map destructuring stress test.
+// For each entry the loop variable $name gets the key (again/hard/good/easy)
+// and $color gets the hex value.
+@each $name, $color in $rating-colors {
+  .rating-buttons__btn--$name {
+    @include btn-outlined($color);
+  }
+}
+
+// ============================================================================
+// Deck Card
+// ============================================================================
+
+.deck-card {
+  @include panel-card($padding: $spacing-lg);
+  @include flex-column($gap: $spacing-sm);
+  transition: border-color 0.15s;
+}
+
+.deck-card:hover {
+  border-color: $accent;
+}
+
+.deck-card__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $tab-active-text;
+}
+
+.deck-card__description {
+  font-size: 0.875rem;
+  color: $tab-text;
+  flex: 1;
+}
+
+.deck-card__meta {
+  font-size: 0.8rem;
+  color: $tab-text;
+  @include flex-row($gap: $spacing-md);
+}
+
+.deck-card__meta-due {
+  color: $accent;
+  font-weight: 600;
+}
+
+.deck-card__actions {
+  @include flex-row($gap: $spacing-sm);
+  margin-top: $spacing-xs;
+}
+
+// ============================================================================
+// Deck List
+// ============================================================================
+
+.deck-list {
+  @include flex-column($gap: $spacing-md);
+}
+
+.deck-list__empty {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $tab-text;
+}
+
+// ============================================================================
+// Study Session
+// ============================================================================
+
+.study-session {
+  @include flex-column($gap: $spacing-lg);
+}
+
+.study-session__progress {
+  margin-bottom: $spacing-sm;
+}
+
+.study-session__card {
+  min-height: 260px;
+}
+
+.study-session__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: $spacing-md;
+}
+
+// ============================================================================
+// Session Complete
+// ============================================================================
+
+.session-complete {
+  @include flex-column($gap: $spacing-lg);
+  align-items: center;
+  // Multi-value padding: variable + literal zero — another shorthand test
+  padding: $spacing-xl 0;
+  text-align: center;
+}
+
+.session-complete__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: $tab-active-text;
+}
+
+.session-complete__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+  width: 100%;
+}
+
+.stat-card {
+  @include panel-card($padding: $spacing-md);
+  text-align: center;
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $accent;
+}
+
+.stat-card__label {
+  font-size: 0.8rem;
+  color: $tab-text;
+  margin-top: $spacing-xs;
+}
+
+.session-complete__actions {
+  @include flex-row($gap: $spacing-sm);
+}
+
+// ============================================================================
+// Deck Stats
+// ============================================================================
+
+.deck-stats {
+  @include flex-column($gap: $spacing-lg);
+}
+
+.deck-stats__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $tab-active-text;
+}
+
+.deck-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: $spacing-md;
+}
+
+.deck-stats__back {
+  margin-top: $spacing-md;
+}

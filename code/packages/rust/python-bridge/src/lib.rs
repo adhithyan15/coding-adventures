@@ -349,8 +349,22 @@ pub unsafe fn py_none() -> PyObjectPtr {
 // ---------------------------------------------------------------------------
 
 /// Extract one string argument from a Python args tuple.
+///
+/// Returns `None` (with no active exception) if the index is out of range
+/// or if the item is not a str. This is important: callers that return an
+/// error on `None` typically call API functions like `value_error_class()`
+/// which must NOT be called while a Python exception is already active.
+///
+/// `PyTuple_GetItem` sets an `IndexError` on out-of-range access. We clear
+/// it here so that the caller can safely set its own exception.
 pub unsafe fn parse_arg_str(args: PyObjectPtr, index: isize) -> Option<String> {
     let arg = PyTuple_GetItem(args, index);
+    if arg.is_null() {
+        // PyTuple_GetItem set an IndexError — clear it so the caller can
+        // safely call any Python API function to set a different error.
+        PyErr_Clear();
+        return None;
+    }
     str_from_py(arg)
 }
 
@@ -401,6 +415,15 @@ unsafe fn get_builtin_exception(name: &str) -> PyObjectPtr {
 /// Get the built-in Exception class.
 pub unsafe fn exception_class() -> PyObjectPtr {
     get_builtin_exception("Exception")
+}
+
+/// Get the built-in TypeError class.
+///
+/// Use for: wrong number of arguments, wrong argument type.
+/// Python convention: `TypeError` is raised for signature violations
+/// (e.g. "takes 1 argument (0 given)", "argument must be str not int").
+pub unsafe fn type_error_class() -> PyObjectPtr {
+    get_builtin_exception("TypeError")
 }
 
 /// Get the built-in ValueError class.

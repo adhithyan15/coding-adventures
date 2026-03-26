@@ -167,30 +167,39 @@ defmodule BuildTool.CLI do
     graph = Resolver.resolve_dependencies(packages)
 
     # Step 5: Git-diff change detection (default mode).
-    affected_set =
+    {affected_set, force_override} =
       if force do
-        nil
+        {nil, force}
       else
         changed_files = GitDiff.get_changed_files(repo_root, diff_base)
 
         if length(changed_files) > 0 do
-          changed_pkgs = GitDiff.map_files_to_packages(changed_files, packages, repo_root)
+          shared_changed = Enum.any?(changed_files, fn f ->
+            String.starts_with?(f, ".github/")
+          end)
 
-          if MapSet.size(changed_pkgs) > 0 do
-            affected = DirectedGraph.affected_nodes(graph, changed_pkgs)
-
-            IO.puts(
-              "Git diff: #{MapSet.size(changed_pkgs)} packages changed, #{MapSet.size(affected)} affected (including dependents)"
-            )
-
-            affected
+          if shared_changed do
+            IO.puts("Git diff: shared files changed — rebuilding everything")
+            {nil, true}
           else
-            IO.puts("Git diff: no package files changed — nothing to build")
-            MapSet.new()
+            changed_pkgs = GitDiff.map_files_to_packages(changed_files, packages, repo_root)
+
+            if MapSet.size(changed_pkgs) > 0 do
+              affected = DirectedGraph.affected_nodes(graph, changed_pkgs)
+
+              IO.puts(
+                "Git diff: #{MapSet.size(changed_pkgs)} packages changed, #{MapSet.size(affected)} affected (including dependents)"
+              )
+
+              {affected, force}
+            else
+              IO.puts("Git diff: no package files changed — nothing to build")
+              {MapSet.new(), force}
+            end
           end
         else
           IO.puts("Git diff unavailable — falling back to hash-based cache")
-          nil
+          {nil, force}
         end
       end
 
@@ -198,10 +207,10 @@ defmodule BuildTool.CLI do
     # This is used by CI to compute the plan in a fast "detect" job and
     # share it across build jobs on multiple platforms.
     if emit_plan_path != nil do
-      return_emit_plan(packages, graph, repo_root, diff_base, force, affected_set,
+      return_emit_plan(packages, graph, repo_root, diff_base, force_override, affected_set,
         emit_plan_path)
     else
-      do_execute_builds(packages, graph, repo_root, force, dry_run, jobs, diff_base,
+      do_execute_builds(packages, graph, repo_root, force_override, dry_run, jobs, diff_base,
         cache_file, affected_set)
     end
   end

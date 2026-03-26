@@ -17,7 +17,7 @@ func TestRoundTrip(t *testing.T) {
 				Name:          "python/foo",
 				RelPath:       "code/packages/python/foo",
 				Language:      "python",
-				BuildCommands: []string{"pip install .", "pytest"},
+				BuildCommands: []string{"python -m pip install .", "pytest"},
 				IsStarlark:    true,
 				DeclaredSrcs:  []string{"src/**/*.py"},
 				DeclaredDeps:  []string{"python/bar"},

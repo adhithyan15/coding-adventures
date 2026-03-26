@@ -210,11 +210,12 @@ defmodule CodingAdventures.ScaffoldGenerator do
           content
           |> String.split("\n")
           |> Enum.flat_map(fn line ->
-            # Match patterns like: -e ../logic-gates or -e "../logic-gates"
-            case Regex.run(~r/-e\s+"?\.\.\/([a-z0-9][a-z0-9._-]*)"?/, line) do
+            # Find ALL -e ../ entries on each line (new format puts them all on one line)
+            Regex.scan(~r/-e\s+"?\.\.\/([a-z0-9][a-z0-9._-]*)"?/, line)
+            |> Enum.flat_map(fn
               [_, dep] when dep != "." -> [dep]
               _ -> []
-            end
+            end)
           end)
 
         {:ok, deps}
@@ -798,13 +799,15 @@ defmodule CodingAdventures.ScaffoldGenerator do
             assert __version__ == "0.1.0"
     """
 
-    build_lines =
-      ["uv venv --quiet --clear"] ++
-        Enum.map(ordered_deps, fn dep -> "uv pip install -e ../#{dep} --quiet" end) ++
-        [
-          "uv pip install -e \".[dev]\" --quiet",
-          ".venv/bin/python -m pytest tests/ -v"
-        ]
+    install_parts =
+      ["python -m pip install"] ++
+        Enum.map(ordered_deps, fn dep -> "-e ../#{dep}" end) ++
+        ["-e .[dev]", "--quiet"]
+
+    build_lines = [
+      Enum.join(install_parts, " "),
+      "python -m pytest tests/ -v"
+    ]
 
     build_content = Enum.join(build_lines, "\n") <> "\n"
 
@@ -819,6 +822,34 @@ defmodule CodingAdventures.ScaffoldGenerator do
     File.write!(Path.join(test_dir, "__init__.py"), "")
     write_dedented(Path.join(test_dir, "test_#{snake}.py"), test_py)
     File.write!(Path.join(target_dir, "BUILD"), build_content)
+
+    # BUILD_windows uses uv instead of pip, installs deps in one line with
+    # multiple -e flags, uses --no-deps for the package itself, explicitly
+    # installs test tools, and runs via `uv run --no-project python`.
+    win_lines = ["uv venv --quiet --clear"]
+
+    win_dep_parts =
+      ["uv pip install"] ++
+        Enum.map(ordered_deps, fn dep -> "-e ../#{dep}" end) ++
+        ["--quiet"]
+
+    win_lines =
+      if length(ordered_deps) > 0 do
+        win_lines ++ [Enum.join(win_dep_parts, " ")]
+      else
+        win_lines
+      end
+
+    win_lines =
+      win_lines ++
+        [
+          "uv pip install --no-deps -e .[dev] --quiet",
+          "uv pip install pytest pytest-cov ruff mypy --quiet",
+          "uv run --no-project python -m pytest tests/ -v"
+        ]
+
+    win_content = Enum.join(win_lines, "\n") <> "\n"
+    File.write!(Path.join(target_dir, "BUILD_windows"), win_content)
   end
 
   # =========================================================================
@@ -1140,16 +1171,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
     });
     """
 
-    build_content =
-      if length(ordered_deps) > 0 do
-        parts =
-          Enum.map(ordered_deps, fn dep -> "cd ../#{dep} && npm install --silent" end) ++
-            ["cd ../#{pkg_name} && npm install --silent"]
-
-        Enum.join(parts, " && \\\n") <> "\nnpx vitest run --coverage\n"
-      else
-        "npm install --silent\nnpx vitest run --coverage\n"
-      end
+    build_content = "npm ci --quiet\nnpx vitest run --coverage\n"
 
     # Create directories and write files
     src_dir = Path.join(target_dir, "src")

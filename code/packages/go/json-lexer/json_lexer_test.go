@@ -729,3 +729,4 @@ func TestTokenizeJSONLineAndColumn(t *testing.T) {
 		t.Errorf("Expected column 1, got %d", tokens[0].Column)
 	}
 }
+

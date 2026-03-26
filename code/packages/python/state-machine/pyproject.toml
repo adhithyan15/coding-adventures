@@ -7,7 +7,10 @@ name = "coding-adventures-state-machine"
 version = "0.1.0"
 description = "Formal state machines (DFA, NFA, PDA, Modal) — foundation for parsers, protocols, and hardware"
 requires-python = ">=3.12"
-dependencies = ["coding-adventures-directed-graph"]
+# Runtime dependency: coding-adventures-directed-graph
+# Declared via BUILD file's -e ../directed-graph for local development and CI.
+# When publishing to PyPI, restore: dependencies = ["coding-adventures-directed-graph"]
+dependencies = []
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"

@@ -1,0 +1,61 @@
+/*
+ * progress-bar.css — Styles for the shared ProgressBar component.
+ *
+ * The bar is a two-div structure:
+ *   .progress-bar__track  — the full-width grey rail
+ *   .progress-bar__fill   — the colored fill, width driven by inline style
+ *
+ * The fill transitions smoothly on width change (0.3s ease) so that
+ * progress updates feel animated rather than jumping.
+ *
+ * --complete modifier: turns the fill green to signal 100% done.
+ *
+ * An optional .progress-bar__label renders below the track for
+ * human-readable context (e.g. "3 / 20 cards").
+ */
+
+/* ── Container ──────────────────────────────────────────────────────────── */
+
+.progress-bar {
+  width: 100%;
+}
+
+/* ── Track ──────────────────────────────────────────────────────────────── */
+
+.progress-bar__track {
+  width: 100%;
+  height: 8px;
+  background: var(--panel-border, #2a3a5e);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* ── Fill ───────────────────────────────────────────────────────────────── */
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--accent, #e94560);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar__fill--complete {
+  background: #4ade80; /* green — matches --check-color in checklist-app */
+}
+
+/* ── Label ──────────────────────────────────────────────────────────────── */
+
+.progress-bar__label {
+  font-size: 0.8rem;
+  color: var(--tab-text, #8899aa);
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar__fill {
+    transition: none;
+  }
+}

@@ -626,6 +626,124 @@ func TestBuiltinFunctions(t *testing.T) {
 }
 
 // ════════════════════════════════════════════════════════════════════════
+// TEST: InjectGlobals
+// ════════════════════════════════════════════════════════════════════════
+//
+// InjectGlobals pre-seeds variables into the VM's global scope before
+// execution begins.  This is the mechanism for passing build context
+// (like _ctx with OS info) into Starlark programs.
+
+func TestInjectGlobals(t *testing.T) {
+	t.Run("injected globals are accessible as variables", func(t *testing.T) {
+		vm := NewGenericVM()
+		registerStandardHandlers(vm)
+
+		vm.InjectGlobals(map[string]interface{}{
+			"greeting": "hello",
+		})
+
+		// LOAD_NAME "greeting" should find the injected value
+		code := AssembleCode(
+			[]Instruction{
+				{Opcode: OpLoadName, Operand: 0}, // load "greeting"
+				{Opcode: OpPrint},
+				{Opcode: OpHalt},
+			},
+			nil,
+			[]string{"greeting"},
+		)
+
+		vm.Execute(code)
+
+		if len(vm.Output) != 1 || vm.Output[0] != "hello" {
+			t.Errorf("expected output ['hello'], got %v", vm.Output)
+		}
+	})
+
+	t.Run("injected dict is accessible via subscript", func(t *testing.T) {
+		vm := NewGenericVM()
+
+		// Inject a nested dict (like _ctx)
+		vm.InjectGlobals(map[string]interface{}{
+			"_ctx": map[string]interface{}{
+				"os":   "darwin",
+				"arch": "arm64",
+			},
+		})
+
+		// Verify the injected dict exists and has the right structure
+		ctx, ok := vm.Variables["_ctx"]
+		if !ok {
+			t.Fatal("expected _ctx to be in Variables")
+		}
+		ctxMap, ok := ctx.(map[string]interface{})
+		if !ok {
+			t.Fatal("expected _ctx to be a map")
+		}
+		if ctxMap["os"] != "darwin" {
+			t.Errorf("expected os=darwin, got %v", ctxMap["os"])
+		}
+		if ctxMap["arch"] != "arm64" {
+			t.Errorf("expected arch=arm64, got %v", ctxMap["arch"])
+		}
+	})
+
+	t.Run("inject overwrites existing variable", func(t *testing.T) {
+		vm := NewGenericVM()
+		vm.Variables["x"] = 1
+
+		vm.InjectGlobals(map[string]interface{}{
+			"x": 2,
+		})
+
+		if vm.Variables["x"] != 2 {
+			t.Errorf("expected x=2 after overwrite, got %v", vm.Variables["x"])
+		}
+	})
+
+	t.Run("inject does not remove unrelated variables", func(t *testing.T) {
+		vm := NewGenericVM()
+		vm.Variables["existing"] = "keep me"
+
+		vm.InjectGlobals(map[string]interface{}{
+			"new_var": "added",
+		})
+
+		if vm.Variables["existing"] != "keep me" {
+			t.Error("existing variable should not be removed by InjectGlobals")
+		}
+		if vm.Variables["new_var"] != "added" {
+			t.Error("new variable should be added by InjectGlobals")
+		}
+	})
+
+	t.Run("inject nil globals is a no-op", func(t *testing.T) {
+		vm := NewGenericVM()
+		vm.Variables["x"] = 1
+
+		vm.InjectGlobals(nil)
+
+		if vm.Variables["x"] != 1 {
+			t.Error("nil globals should not affect existing variables")
+		}
+	})
+
+	t.Run("inject multiple globals at once", func(t *testing.T) {
+		vm := NewGenericVM()
+
+		vm.InjectGlobals(map[string]interface{}{
+			"a": 1,
+			"b": "two",
+			"c": true,
+		})
+
+		if vm.Variables["a"] != 1 || vm.Variables["b"] != "two" || vm.Variables["c"] != true {
+			t.Errorf("expected a=1, b=two, c=true, got %v", vm.Variables)
+		}
+	})
+}
+
+// ════════════════════════════════════════════════════════════════════════
 // TEST: Configuration (Frozen, Max Recursion Depth)
 // ════════════════════════════════════════════════════════════════════════
 

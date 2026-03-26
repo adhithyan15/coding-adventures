@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-sql-csv-source"
+version = "0.1.0"
+edition = "2021"
+description = "SQL CSV DataSource — connects the SQL execution engine to CSV files"
+
+[dependencies]
+coding-adventures-csv-parser = { path = "../csv-parser" }
+coding-adventures-sql-execution-engine = { path = "../sql-execution-engine" }

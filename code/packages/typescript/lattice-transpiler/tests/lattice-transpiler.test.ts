@@ -213,14 +213,24 @@ describe("variable substitution", () => {
 
 describe("mixin expansion", () => {
   it("expands a simple mixin (no args)", () => {
-    // Mixin names must use FUNCTION token syntax: flex(
-    // because the grammar rule is: @mixin FUNCTION [...params] RPAREN block
     const css = transpileLattice(`
       @mixin flex() {
         display: flex;
         align-items: center;
       }
       .box { @include flex(); }
+    `);
+    expect(normalize(css)).toContain("display: flex");
+    expect(normalize(css)).toContain("align-items: center");
+  });
+
+  it("expands a zero-argument mixin defined without parentheses", () => {
+    const css = transpileLattice(`
+      @mixin flex {
+        display: flex;
+        align-items: center;
+      }
+      .box { @include flex; }
     `);
     expect(normalize(css)).toContain("display: flex");
     expect(normalize(css)).toContain("align-items: center");
@@ -277,6 +287,15 @@ describe("mixin expansion", () => {
     expect(() => transpileLattice(".btn { @include ghost; }")).toThrow(
       UndefinedMixinError
     );
+  });
+
+  it("includes suggestions in UndefinedMixinError messages", () => {
+    expect(() =>
+      transpileLattice(`
+        @mixin spacing() { margin: 8px; }
+        .btn { @include spacin(); }
+      `)
+    ).toThrow(/Did you mean 'spacing'\?/);
   });
 
   it("throws WrongArityError for too few arguments", () => {
@@ -578,6 +597,16 @@ describe("transpileLatticeInBrowser", () => {
     const css = transpileLatticeInBrowser(`
       @mixin flex() { display: flex; }
       .box { @include flex(); }
+    `);
+    expect(normalize(css)).toContain("display: flex");
+  });
+
+  it("supports zero-argument mixins defined without parentheses in the browser bundle", () => {
+    const css = transpileLatticeInBrowser(`
+      @mixin flex {
+        display: flex;
+      }
+      .box { @include flex; }
     `);
     expect(normalize(css)).toContain("display: flex");
   });
