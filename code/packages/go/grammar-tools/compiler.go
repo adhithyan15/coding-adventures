@@ -142,6 +142,6 @@ func compileGrammarElement(el GrammarElement) string {
 	case Group:
 		return fmt.Sprintf("grammartools.Group{Element: %s}", compileGrammarElement(v.Element))
 	default:
-		panic(fmt.Sprintf("unknown GrammarElement type: %%T", v))
+		panic(fmt.Sprintf("unknown GrammarElement type: %T", v))
 	}
 }
