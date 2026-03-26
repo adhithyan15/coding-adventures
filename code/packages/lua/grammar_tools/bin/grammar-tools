@@ -1,0 +1,110 @@
+#!/usr/bin/env lua
+-- CLI for grammar-tools in Lua
+
+local grammar_tools = require("coding_adventures.grammar_tools")
+
+local function print_usage()
+    print("Usage: lua bin/grammar-tools <command> [args...]")
+    print()
+    print("Commands:")
+    print("  compile-tokens <file.tokens> <export_name> Compile just a .tokens file to lua")
+    print("  compile-grammar <file.grammar> <export_name> Compile just a .grammar file to lua")
+    print()
+end
+
+local function count_errors(issues)
+    local n = 0
+    for _, issue in ipairs(issues) do
+        if not issue:match("^Warning") then
+            n = n + 1
+        end
+    end
+    return n
+end
+
+local function print_issues(issues)
+    for _, issue in ipairs(issues) do
+        print("  " .. issue)
+    end
+end
+
+local args = {...}
+if #args == 0 or args[1] == "--help" or args[1] == "-h" then
+    print_usage()
+    os.exit(0)
+end
+
+local command = args[1]
+
+if command == "compile-tokens" then
+    if #args ~= 3 then
+        print("Error: 'compile-tokens' requires two arguments: <tokens> <export_name>")
+        print()
+        print_usage()
+        os.exit(2)
+    end
+
+    local file = io.open(args[2], "r")
+    if not file then
+        print(string.format("Error: File not found: %s", args[2]))
+        os.exit(1)
+    end
+    local source = file:read("*a")
+    file:close()
+
+    local tg, err = grammar_tools.parse_token_grammar(source)
+    if err then
+        print("PARSE ERROR")
+        print("  " .. err)
+        os.exit(1)
+    end
+
+    local issues = grammar_tools.validate_token_grammar(tg)
+    if count_errors(issues) > 0 then
+        print("Error: Cannot compile invalid grammar file.")
+        print_issues(issues)
+        os.exit(1)
+    end
+
+    io.write(grammar_tools.compile_tokens_to_lua(tg, args[3]))
+    os.exit(0)
+
+elseif command == "compile-grammar" then
+    if #args ~= 3 then
+        print("Error: 'compile-grammar' requires two arguments: <grammar> <export_name>")
+        print()
+        print_usage()
+        os.exit(2)
+    end
+
+    local file = io.open(args[2], "r")
+    if not file then
+        print(string.format("Error: File not found: %s", args[2]))
+        os.exit(1)
+    end
+    local source = file:read("*a")
+    file:close()
+
+    local pg, err = grammar_tools.parse_parser_grammar(source)
+    if err then
+        print("PARSE ERROR")
+        print("  " .. err)
+        os.exit(1)
+    end
+
+    local issues = grammar_tools.validate_parser_grammar(pg)
+    if count_errors(issues) > 0 then
+        print("Error: Cannot compile invalid grammar file.")
+        print_issues(issues)
+        os.exit(1)
+    end
+
+    io.write(grammar_tools.compile_parser_to_lua(pg, args[3]))
+    os.exit(0)
+
+else
+    print(string.format("Error: Unknown command '%s'", command))
+    print()
+    print_usage()
+    os.exit(2)
+end

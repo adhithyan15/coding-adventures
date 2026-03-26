@@ -75,6 +75,58 @@ func run(args []string) int {
 		}
 		return validateGrammarOnly(args[1])
 
+	case "compile-tokens":
+		if len(args) != 4 {
+			fmt.Fprintln(os.Stderr, "Error: 'compile-tokens' requires three arguments: <tokens> <pkg_name> <var_name>")
+			fmt.Fprintln(os.Stderr)
+			printUsage()
+			return 2
+		}
+		source, ok := readFile(args[1])
+		if !ok {
+			return 1
+		}
+		tg, err := grammartools.ParseTokenGrammar(source)
+		if err != nil {
+			fmt.Println("PARSE ERROR")
+			fmt.Println(" ", err)
+			return 1
+		}
+		issues := grammartools.ValidateTokenGrammar(tg)
+		if countErrors(issues) > 0 {
+			fmt.Println("Error: Cannot compile invalid grammar file.")
+			printIssues(issues)
+			return 1
+		}
+		fmt.Print(grammartools.CompileTokensToGo(tg, args[2], args[3]))
+		return 0
+
+	case "compile-grammar":
+		if len(args) != 4 {
+			fmt.Fprintln(os.Stderr, "Error: 'compile-grammar' requires three arguments: <grammar> <pkg_name> <var_name>")
+			fmt.Fprintln(os.Stderr)
+			printUsage()
+			return 2
+		}
+		source, ok := readFile(args[1])
+		if !ok {
+			return 1
+		}
+		pg, err := grammartools.ParseParserGrammar(source)
+		if err != nil {
+			fmt.Println("PARSE ERROR")
+			fmt.Println(" ", err)
+			return 1
+		}
+		issues := grammartools.ValidateParserGrammar(pg, nil)
+		if countErrors(issues) > 0 {
+			fmt.Println("Error: Cannot compile invalid grammar file.")
+			printIssues(issues)
+			return 1
+		}
+		fmt.Print(grammartools.CompileParserToGo(pg, args[2], args[3]))
+		return 0
+
 	default:
 		fmt.Fprintf(os.Stderr, "Error: Unknown command '%s'\n", command)
 		fmt.Fprintln(os.Stderr)
@@ -91,11 +143,14 @@ func printUsage() {
 	fmt.Fprintln(os.Stderr, "  validate <file.tokens> <file.grammar>   Validate a token/grammar pair")
 	fmt.Fprintln(os.Stderr, "  validate-tokens <file.tokens>            Validate just a .tokens file")
 	fmt.Fprintln(os.Stderr, "  validate-grammar <file.grammar>          Validate just a .grammar file")
+	fmt.Fprintln(os.Stderr, "  compile-tokens <file.tokens> <pkg_name> <var_name>          Compile just a .tokens file")
+	fmt.Fprintln(os.Stderr, "  compile-grammar <file.grammar> <pkg_name> <var_name>        Compile just a .grammar file")
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Examples:")
 	fmt.Fprintln(os.Stderr, "  grammar-tools validate css.tokens css.grammar")
 	fmt.Fprintln(os.Stderr, "  grammar-tools validate-tokens css.tokens")
 	fmt.Fprintln(os.Stderr, "  grammar-tools validate-grammar css.grammar")
+	fmt.Fprintln(os.Stderr, "  grammar-tools compile-tokens json.tokens jsontokens JsonTokens")
 }
 
 // countErrors counts how many issues are actual errors (not warnings).

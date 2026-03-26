@@ -60,6 +60,7 @@ import {
   validateParserGrammar,
 } from "./parser-grammar.js";
 import { crossValidate } from "./cross-validator.js";
+import { compileTokensToTypeScript, compileParserToTypeScript } from "./compiler.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -321,6 +322,8 @@ export function printUsage(): void {
   process.stdout.write("  validate <file.tokens> <file.grammar>  Validate a token/grammar pair\n");
   process.stdout.write("  validate-tokens <file.tokens>           Validate just a .tokens file\n");
   process.stdout.write("  validate-grammar <file.grammar>         Validate just a .grammar file\n");
+  process.stdout.write("  compile-tokens <file.tokens> <exportName> Compile tokens into typescript code\n");
+  process.stdout.write("  compile-grammar <file.grammar> <exportName> Compile grammar into typescript code\n");
   process.stdout.write("\n");
   process.stdout.write("Examples:\n");
   process.stdout.write("  grammar-tools validate css.tokens css.grammar\n");
@@ -380,6 +383,56 @@ export function main(): number {
       return 2;
     }
     return validateGrammarOnly(args[1]);
+  }
+
+  if (command === "compile-tokens") {
+    if (args.length !== 3) {
+      process.stdout.write("Error: 'compile-tokens' requires two arguments: <tokens> <exportName>\n\n");
+      printUsage();
+      return 2;
+    }
+    const tokensText = readFile(args[1]);
+    if (tokensText === null) return 1;
+    let tg;
+    try {
+      tg = parseTokenGrammar(tokensText);
+      const issues = validateTokenGrammar(tg);
+      if (countErrors(issues) > 0) {
+        process.stdout.write("Error: Cannot compile invalid grammar file.\n");
+        printIssues(issues);
+        return 1;
+      }
+      process.stdout.write(compileTokensToTypeScript(tg, args[2]));
+      return 0;
+    } catch (e) {
+      process.stdout.write(`PARSE ERROR\n  ${e instanceof Error ? e.message : String(e)}\n`);
+      return 1;
+    }
+  }
+
+  if (command === "compile-grammar") {
+    if (args.length !== 3) {
+      process.stdout.write("Error: 'compile-grammar' requires two arguments: <grammar> <exportName>\n\n");
+      printUsage();
+      return 2;
+    }
+    const grammarText = readFile(args[1]);
+    if (grammarText === null) return 1;
+    let pg;
+    try {
+      pg = parseParserGrammar(grammarText);
+      const issues = validateParserGrammar(pg);
+      if (countErrors(issues) > 0) {
+        process.stdout.write("Error: Cannot compile invalid grammar file.\n");
+        printIssues(issues);
+        return 1;
+      }
+      process.stdout.write(compileParserToTypeScript(pg, args[2]));
+      return 0;
+    } catch (e) {
+      process.stdout.write(`PARSE ERROR\n  ${e instanceof Error ? e.message : String(e)}\n`);
+      return 1;
+    }
   }
 
   process.stdout.write(`Error: Unknown command '${command}'\n\n`);

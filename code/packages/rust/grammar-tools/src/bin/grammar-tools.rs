@@ -55,6 +55,7 @@ use std::process;
 use grammar_tools::cross_validator::cross_validate;
 use grammar_tools::parser_grammar::{parse_parser_grammar, validate_parser_grammar};
 use grammar_tools::token_grammar::{parse_token_grammar, token_names, validate_token_grammar};
+use grammar_tools::compiler::{compile_tokens_to_rust, compile_parser_to_rust};
 
 // ===========================================================================
 // Count errors (vs warnings)
@@ -332,11 +333,15 @@ fn print_usage() {
     println!("  validate <file.tokens> <file.grammar>  Validate a token/grammar pair");
     println!("  validate-tokens <file.tokens>           Validate just a .tokens file");
     println!("  validate-grammar <file.grammar>         Validate just a .grammar file");
+    println!("  compile-tokens <file.tokens> <export_name> Compile just a .tokens file to rust");
+    println!("  compile-grammar <file.grammar> <export_name> Compile just a .grammar file to rust");
     println!();
     println!("Examples:");
     println!("  grammar-tools validate css.tokens css.grammar");
     println!("  grammar-tools validate-tokens css.tokens");
     println!("  grammar-tools validate-grammar css.grammar");
+    println!("  grammar-tools compile-tokens json.tokens json_tokens");
+    println!("  grammar-tools compile-grammar json.grammar json_grammar");
     println!();
     println!("Exit codes:");
     println!("  0   All checks passed");
@@ -401,6 +406,76 @@ fn main() {
                     2
                 } else {
                     validate_grammar_only(&rest[0])
+                }
+            }
+
+            "compile-tokens" => {
+                if rest.len() != 2 {
+                    eprintln!(
+                        "Error: 'compile-tokens' requires two arguments: <tokens> <export_name>"
+                    );
+                    eprintln!();
+                    print_usage();
+                    2
+                } else {
+                    match std::fs::read_to_string(&rest[0]) {
+                        Ok(s) => match parse_token_grammar(&s) {
+                            Ok(g) => {
+                                let issues = validate_token_grammar(&g);
+                                if count_errors(&issues) > 0 {
+                                    eprintln!("Error: Cannot compile invalid grammar file.");
+                                    print_issues(&issues);
+                                    1
+                                } else {
+                                    print!("{}", compile_tokens_to_rust(&g, &rest[1]));
+                                    0
+                                }
+                            }
+                            Err(e) => {
+                                eprintln!("PARSE ERROR\n  {}", e);
+                                1
+                            }
+                        },
+                        Err(e) => {
+                            eprintln!("ERROR\n  {}", e);
+                            1
+                        }
+                    }
+                }
+            }
+
+            "compile-grammar" => {
+                if rest.len() != 2 {
+                    eprintln!(
+                        "Error: 'compile-grammar' requires two arguments: <grammar> <export_name>"
+                    );
+                    eprintln!();
+                    print_usage();
+                    2
+                } else {
+                    match std::fs::read_to_string(&rest[0]) {
+                        Ok(s) => match parse_parser_grammar(&s) {
+                            Ok(g) => {
+                                let issues = validate_parser_grammar(&g, None::<&HashSet<String>>);
+                                if count_errors(&issues) > 0 {
+                                    eprintln!("Error: Cannot compile invalid grammar file.");
+                                    print_issues(&issues);
+                                    1
+                                } else {
+                                    print!("{}", compile_parser_to_rust(&g, &rest[1]));
+                                    0
+                                }
+                            }
+                            Err(e) => {
+                                eprintln!("PARSE ERROR\n  {}", e);
+                                1
+                            }
+                        },
+                        Err(e) => {
+                            eprintln!("ERROR\n  {}", e);
+                            1
+                        }
+                    }
                 }
             }
 

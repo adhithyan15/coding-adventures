@@ -1527,4 +1527,132 @@ function grammar_tools.cross_validate(token_grammar, parser_grammar)
     return issues
 end
 
+-- ============================================================================
+-- compile_tokens_to_lua — Generate Lua code for a TokenGrammar
+-- ============================================================================
+function grammar_tools.compile_tokens_to_lua(grammar, export_name)
+    local lines = {}
+    table.insert(lines, "-- AUTO-GENERATED FILE - DO NOT EDIT")
+    table.insert(lines, "local grammar_tools = require(\"coding_adventures.grammar_tools\")")
+    table.insert(lines, "local TokenGrammar = grammar_tools.TokenGrammar")
+    table.insert(lines, "local TokenDefinition = grammar_tools.TokenDefinition")
+    table.insert(lines, "local PatternGroup = grammar_tools.PatternGroup")
+    table.insert(lines, "")
+    table.insert(lines, "local " .. export_name .. " = TokenGrammar.new()")
+    table.insert(lines, export_name .. ".version = " .. tostring(grammar.version or 0))
+    table.insert(lines, export_name .. ".case_insensitive = " .. tostring(grammar.case_insensitive or false))
+    table.insert(lines, export_name .. ".case_sensitive = " .. tostring(grammar.case_sensitive == nil and true or grammar.case_sensitive))
+    table.insert(lines, export_name .. ".mode = string.format(%q, " .. string.format("%q", grammar.mode or "") .. ")")
+    table.insert(lines, export_name .. ".escape_mode = string.format(%q, " .. string.format("%q", grammar.escape_mode or "") .. ")")
+    
+    table.insert(lines, export_name .. ".keywords = {")
+    for _, kw in ipairs(grammar.keywords) do
+        table.insert(lines, "    " .. string.format("%q", kw) .. ",")
+    end
+    table.insert(lines, "}")
+    
+    table.insert(lines, export_name .. ".reserved_keywords = {")
+    for _, kw in ipairs(grammar.reserved_keywords) do
+        table.insert(lines, "    " .. string.format("%q", kw) .. ",")
+    end
+    table.insert(lines, "}")
+
+    local function compile_def(d)
+        local alias = '""'
+        if d.alias and d.alias ~= "" then alias = string.format("%q", d.alias) end
+        return string.format("TokenDefinition.new({name=%q, pattern=%q, is_regex=%s, line_number=%d, alias=%s})", 
+            d.name, d.pattern, tostring(d.is_regex), d.line_number, alias)
+    end
+
+    table.insert(lines, export_name .. ".definitions = {")
+    for _, defn in ipairs(grammar.definitions) do
+        table.insert(lines, "    " .. compile_def(defn) .. ",")
+    end
+    table.insert(lines, "}")
+
+    table.insert(lines, export_name .. ".skip_definitions = {")
+    for _, defn in ipairs(grammar.skip_definitions) do
+        table.insert(lines, "    " .. compile_def(defn) .. ",")
+    end
+    table.insert(lines, "}")
+    
+    table.insert(lines, export_name .. ".error_definitions = {")
+    for _, defn in ipairs(grammar.error_definitions) do
+        table.insert(lines, "    " .. compile_def(defn) .. ",")
+    end
+    table.insert(lines, "}")
+
+    table.insert(lines, export_name .. ".groups = {}")
+    local sorted_group_names = sorted_keys(grammar.groups)
+    for _, gname in ipairs(sorted_group_names) do
+        local group = grammar.groups[gname]
+        table.insert(lines, "do")
+        table.insert(lines, "    local g = PatternGroup.new(" .. string.format("%q", group.name) .. ")")
+        table.insert(lines, "    g.definitions = {")
+        for _, defn in ipairs(group.definitions) do
+            table.insert(lines, "        " .. compile_def(defn) .. ",")
+        end
+        table.insert(lines, "    }")
+        table.insert(lines, "    " .. export_name .. ".groups[" .. string.format("%q", gname) .. "] = g")
+        table.insert(lines, "end")
+    end
+
+    table.insert(lines, "return " .. export_name)
+    return table.concat(lines, "\n") .. "\n"
+end
+
+-- ============================================================================
+-- compile_parser_to_lua — Generate Lua code for a ParserGrammar
+-- ============================================================================
+function grammar_tools.compile_parser_to_lua(grammar, export_name)
+    local lines = {}
+    table.insert(lines, "-- AUTO-GENERATED FILE - DO NOT EDIT")
+    table.insert(lines, "local grammar_tools = require(\"coding_adventures.grammar_tools\")")
+    table.insert(lines, "local ParserGrammar = grammar_tools.ParserGrammar")
+    table.insert(lines, "local GrammarRule = grammar_tools.GrammarRule")
+    table.insert(lines, "local make_rule_reference = grammar_tools.make_rule_reference")
+    table.insert(lines, "local make_literal = grammar_tools.make_literal")
+    table.insert(lines, "local make_sequence = grammar_tools.make_sequence")
+    table.insert(lines, "local make_alternation = grammar_tools.make_alternation")
+    table.insert(lines, "local make_repetition = grammar_tools.make_repetition")
+    table.insert(lines, "local make_optional = grammar_tools.make_optional")
+    table.insert(lines, "local make_group = grammar_tools.make_group")
+    table.insert(lines, "")
+
+    local function compile_el(el)
+        if el.type == "rule_reference" then
+            return string.format("make_rule_reference(%q, %s)", el.name, tostring(el.is_token))
+        elseif el.type == "literal" then
+            return string.format("make_literal(%q)", el.value)
+        elseif el.type == "sequence" then
+            local elems = {}
+            for _, e in ipairs(el.elements) do table.insert(elems, compile_el(e)) end
+            return string.format("make_sequence({ %s })", table.concat(elems, ", "))
+        elseif el.type == "alternation" then
+            local elems = {}
+            for _, e in ipairs(el.choices) do table.insert(elems, compile_el(e)) end
+            return string.format("make_alternation({ %s })", table.concat(elems, ", "))
+        elseif el.type == "repetition" then
+            return string.format("make_repetition(%s)", compile_el(el.element))
+        elseif el.type == "optional" then
+            return string.format("make_optional(%s)", compile_el(el.element))
+        elseif el.type == "group" then
+            return string.format("make_group(%s)", compile_el(el.element))
+        end
+        return "nil"
+    end
+
+    table.insert(lines, "local " .. export_name .. " = ParserGrammar.new()")
+    table.insert(lines, export_name .. ".version = " .. tostring(grammar.version or 0))
+    table.insert(lines, export_name .. ".rules = {")
+    for _, rule in ipairs(grammar.rules) do
+        table.insert(lines, string.format("    GrammarRule.new(%q, %s, %d),", 
+            rule.name, compile_el(rule.body), rule.line_number))
+    end
+    table.insert(lines, "}")
+    
+    table.insert(lines, "return " .. export_name)
+    return table.concat(lines, "\n") .. "\n"
+end
+
 return grammar_tools

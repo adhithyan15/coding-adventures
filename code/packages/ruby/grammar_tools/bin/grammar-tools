@@ -39,6 +39,7 @@
 
 $LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
 require "coding_adventures_grammar_tools"
+require "coding_adventures/grammar_tools/compiler"
 
 GT = CodingAdventures::GrammarTools
 
@@ -249,14 +250,17 @@ def print_usage
   puts "Usage: grammar-tools <command> [args...]"
   puts
   puts "Commands:"
-  puts "  validate <file.tokens> <file.grammar>  Validate a token/grammar pair"
+  puts "  validate <file.tokens> <file.grammar>   Validate a token/grammar pair"
   puts "  validate-tokens <file.tokens>           Validate just a .tokens file"
   puts "  validate-grammar <file.grammar>         Validate just a .grammar file"
+  puts "  compile-tokens <file.tokens> <module>   Compile .tokens into Ruby code"
+  puts "  compile-grammar <file.grammar> <module> Compile .grammar into Ruby code"
   puts
   puts "Examples:"
   puts "  grammar-tools validate css.tokens css.grammar"
   puts "  grammar-tools validate-tokens css.tokens"
   puts "  grammar-tools validate-grammar css.grammar"
+  puts "  grammar-tools compile-tokens json.tokens JsonTokens > json_tokens.rb"
 end
 
 # Main entry point -- parse ARGV and dispatch.
@@ -296,6 +300,64 @@ when "validate-grammar"
     exit 2
   end
   exit validate_grammar_only(args[1])
+
+when "compile-tokens"
+  if args.length != 3
+    puts "Error: 'compile-tokens' requires two arguments: <tokens> <module_name>"
+    puts
+    print_usage
+    exit 2
+  end
+  tokens_path = args[1]
+  module_name = args[2]
+  unless File.exist?(tokens_path)
+    puts "Error: File not found: #{tokens_path}"
+    exit 1
+  end
+  begin
+    grammar = GT.parse_token_grammar(File.read(tokens_path))
+    issues = GT.validate_token_grammar(grammar)
+    if count_errors(issues) > 0
+      puts "Error: Cannot compile invalid grammar file:"
+      print_issues(issues)
+      exit 1
+    end
+    print GT::Compiler.compile_tokens_to_ruby(grammar, module_name)
+    exit 0
+  rescue GT::TokenGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    exit 1
+  end
+
+when "compile-grammar"
+  if args.length != 3
+    puts "Error: 'compile-grammar' requires two arguments: <grammar> <module_name>"
+    puts
+    print_usage
+    exit 2
+  end
+  grammar_path = args[1]
+  module_name = args[2]
+  unless File.exist?(grammar_path)
+    puts "Error: File not found: #{grammar_path}"
+    exit 1
+  end
+  begin
+    grammar = GT.parse_parser_grammar(File.read(grammar_path))
+    issues = GT.validate_parser_grammar(grammar)
+    if count_errors(issues) > 0
+      puts "Error: Cannot compile invalid grammar file:"
+      print_issues(issues)
+      exit 1
+    end
+    print GT::Compiler.compile_parser_to_ruby(grammar, module_name)
+    exit 0
+  rescue GT::ParserGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    exit 1
+  end
 
 else
   puts "Error: Unknown command '#{command}'"

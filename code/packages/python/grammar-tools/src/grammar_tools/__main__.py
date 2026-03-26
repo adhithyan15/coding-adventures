@@ -82,6 +82,7 @@ from grammar_tools.token_grammar import (
     parse_token_grammar,
     validate_token_grammar,
 )
+from grammar_tools.compiler import compile_tokens_to_python, compile_parser_to_python
 
 
 def _count_errors(issues: list[str]) -> int:
@@ -281,11 +282,14 @@ def print_usage() -> None:
     print("  validate <file.tokens> <file.grammar>  Validate a token/grammar pair")
     print("  validate-tokens <file.tokens>           Validate just a .tokens file")
     print("  validate-grammar <file.grammar>         Validate just a .grammar file")
+    print("  compile-tokens <file.tokens> <export_name> Compile just a .tokens file to python")
+    print("  compile-grammar <file.grammar> <export_name> Compile just a .grammar file to python")
     print()
     print("Examples:")
     print("  python -m grammar_tools validate css.tokens css.grammar")
     print("  python -m grammar_tools validate-tokens css.tokens")
     print("  python -m grammar_tools validate-grammar css.grammar")
+    print("  python -m grammar_tools compile-tokens json.tokens JsonTokens")
 
 
 def main() -> int:
@@ -328,6 +332,54 @@ def main() -> int:
             print_usage()
             return 2
         return validate_grammar_only(args[1])
+        
+    elif command == "compile-tokens":
+        if len(args) != 3:
+            print("Error: 'compile-tokens' requires two arguments: <tokens> <export_name>")
+            print()
+            print_usage()
+            return 2
+        tokens_file = Path(args[1])
+        if not tokens_file.exists():
+            print(f"Error: File not found: {args[1]}")
+            return 1
+        try:
+            tg = parse_token_grammar(tokens_file.read_text())
+        except TokenGrammarError as e:
+            print("PARSE ERROR")
+            print(f"  {e}")
+            return 1
+        issues = validate_token_grammar(tg)
+        if _count_errors(issues) > 0:
+            print("Error: Cannot compile invalid grammar file.")
+            _print_issues(issues)
+            return 1
+        print(compile_tokens_to_python(tg, args[2]), end="")
+        return 0
+
+    elif command == "compile-grammar":
+        if len(args) != 3:
+            print("Error: 'compile-grammar' requires two arguments: <grammar> <export_name>")
+            print()
+            print_usage()
+            return 2
+        grammar_file = Path(args[1])
+        if not grammar_file.exists():
+            print(f"Error: File not found: {args[1]}")
+            return 1
+        try:
+            pg = parse_parser_grammar(grammar_file.read_text())
+        except ParserGrammarError as e:
+            print("PARSE ERROR")
+            print(f"  {e}")
+            return 1
+        issues = validate_parser_grammar(pg)
+        if _count_errors(issues) > 0:
+            print("Error: Cannot compile invalid grammar file.")
+            _print_issues(issues)
+            return 1
+        print(compile_parser_to_python(pg, args[2]), end="")
+        return 0
 
     else:
         print(f"Error: Unknown command '{command}'")
