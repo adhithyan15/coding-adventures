@@ -475,9 +475,13 @@ export class LatticeTransformer {
 
     for (const child of getChildren(node)) {
       if (!isASTNode(child)) {
-        if (tokenTypeName(child as Token) === "FUNCTION") {
+        const token = child as Token;
+        const type = tokenTypeName(token);
+        if (type === "FUNCTION") {
           // FUNCTION token is "name(" — strip the paren
-          name = (child as Token).value.replace(/\($/, "");
+          name = token.value.replace(/\($/, "");
+        } else if (type === "IDENT") {
+          name = token.value;
         }
       } else {
         const childAst = child as ASTNode;
@@ -1135,6 +1139,7 @@ export class LatticeTransformer {
   ): Array<ASTNode | Token> {
     const children = getChildren(node);
     let mixinName: string | undefined;
+    let mixinToken: Token | undefined;
     let argsNode: ASTNode | undefined;
     let contentBlock: ASTNode | null = null;
 
@@ -1144,8 +1149,10 @@ export class LatticeTransformer {
         const type = tokenTypeName(token);
         if (type === "FUNCTION") {
           mixinName = token.value.replace(/\($/, "");
+          mixinToken = token;
         } else if (type === "IDENT") {
           mixinName = token.value;
+          mixinToken = token;
         }
       } else {
         const childAst = child as ASTNode;
@@ -1160,7 +1167,12 @@ export class LatticeTransformer {
     if (mixinName === undefined) return [];
 
     if (!this.mixins.has(mixinName)) {
-      throw new UndefinedMixinError(mixinName);
+      throw new UndefinedMixinError(
+        mixinName,
+        mixinToken?.line ?? 0,
+        mixinToken?.column ?? 0,
+        [...this.mixins.keys()],
+      );
     }
 
     // Cycle detection

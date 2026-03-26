@@ -199,9 +199,10 @@ class TestMixinDefinition:
         mixin = _find_rule(ast, "mixin_definition")
         params = _collect_rules(mixin, "mixin_param")
         assert len(params) == 2
-        # Second param should have a value_list (the default)
+        # Defaults intentionally use mixin_value_list so commas remain available
+        # as parameter separators.
         second_param = params[1]
-        value_list = _collect_rules(second_param, "value_list")
+        value_list = _collect_rules(second_param, "mixin_value_list")
         assert len(value_list) == 1
 
     def test_mixin_with_body(self) -> None:
@@ -525,7 +526,7 @@ class TestFunctionDefinition:
         source = "@function spacing($n: 1) { @return $n * 8px; }"
         ast = parse_lattice(source)
         param = _find_rule(ast, "mixin_param")
-        value_list = _find_rule(param, "value_list")
+        value_list = _find_rule(param, "mixin_value_list")
         assert value_list is not None
 
 
