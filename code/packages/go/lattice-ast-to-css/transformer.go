@@ -164,6 +164,76 @@ func isCSSFunction(name string) bool {
 	return cssFunctions[clean]
 }
 
+func levenshteinDistance(left, right string) int {
+	if left == right {
+		return 0
+	}
+	if left == "" {
+		return len(right)
+	}
+	if right == "" {
+		return len(left)
+	}
+
+	previous := make([]int, len(right)+1)
+	for i := range previous {
+		previous[i] = i
+	}
+
+	for i, leftRune := range left {
+		current := make([]int, len(right)+1)
+		current[0] = i + 1
+		for j, rightRune := range right {
+			insertion := current[j] + 1
+			deletion := previous[j+1] + 1
+			substitution := previous[j]
+			if leftRune != rightRune {
+				substitution++
+			}
+			current[j+1] = minInt(insertion, deletion, substitution)
+		}
+		previous = current
+	}
+
+	return previous[len(previous)-1]
+}
+
+func closestName(name string, candidates []string) string {
+	best := ""
+	bestDistance := -1
+
+	for _, candidate := range candidates {
+		distance := levenshteinDistance(name, candidate)
+		if bestDistance == -1 || distance < bestDistance {
+			best = candidate
+			bestDistance = distance
+		}
+	}
+
+	if bestDistance == -1 {
+		return ""
+	}
+
+	threshold := len(name) / 3
+	if threshold < 2 {
+		threshold = 2
+	}
+	if bestDistance > threshold {
+		return ""
+	}
+	return best
+}
+
+func minInt(values ...int) int {
+	best := values[0]
+	for _, value := range values[1:] {
+		if value < best {
+			best = value
+		}
+	}
+	return best
+}
+
 // ============================================================================
 // Transformer
 // ============================================================================
@@ -411,6 +481,8 @@ func (t *LatticeTransformer) collectMixin(node *parser.ASTNode) {
 			if tokenTypeName(c) == "FUNCTION" {
 				// Strip the trailing "(" from the FUNCTION token
 				name = trimTrailingParen(c.Value)
+			} else if tokenTypeName(c) == "IDENT" && name == "" {
+				name = c.Value
 			}
 		case *parser.ASTNode:
 			switch c.RuleName {
@@ -446,6 +518,8 @@ func (t *LatticeTransformer) collectFunction(node *parser.ASTNode) {
 		case lexer.Token:
 			if tokenTypeName(c) == "FUNCTION" {
 				name = trimTrailingParen(c.Value)
+			} else if tokenTypeName(c) == "IDENT" && name == "" {
+				name = c.Value
 			}
 		case *parser.ASTNode:
 			switch c.RuleName {
@@ -1086,6 +1160,8 @@ func (t *LatticeTransformer) expandFunctionCall(node *parser.ASTNode, scope *Sco
 // These items are spliced into the parent block_contents.
 func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeChain) []interface{} {
 	var mixinName string
+	var mixinToken lexer.Token
+	var hasMixinToken bool
 	var argsNode *parser.ASTNode
 	var contentBlock *parser.ASTNode
 
@@ -1095,9 +1171,13 @@ func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeCha
 			switch tokenTypeName(c) {
 			case "FUNCTION":
 				mixinName = trimTrailingParen(c.Value)
+				mixinToken = c
+				hasMixinToken = true
 			case "IDENT":
 				if mixinName == "" {
 					mixinName = c.Value
+					mixinToken = c
+					hasMixinToken = true
 				}
 			}
 		case *parser.ASTNode:
@@ -1116,7 +1196,16 @@ func (t *LatticeTransformer) expandInclude(node *parser.ASTNode, scope *ScopeCha
 
 	mixinDef, ok := t.mixins[mixinName]
 	if !ok {
-		panic(NewUndefinedMixinError(mixinName, 0, 0))
+		line, col := 0, 0
+		if hasMixinToken {
+			line = mixinToken.Line
+			col = mixinToken.Column
+		}
+		candidates := make([]string, 0, len(t.mixins))
+		for name := range t.mixins {
+			candidates = append(candidates, name)
+		}
+		panic(NewUndefinedMixinError(mixinName, line, col, closestName(mixinName, candidates)))
 	}
 
 	// Cycle detection: if mixinName is already on the stack, we have a cycle
@@ -2365,4 +2454,3 @@ func deepCloneRaw(val interface{}) interface{} {
 	}
 	return val
 }
-

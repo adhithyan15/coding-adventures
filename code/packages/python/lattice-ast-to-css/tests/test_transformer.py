@@ -139,6 +139,16 @@ class TestMixins:
         assert "@mixin" not in result
         assert "@include" not in result
 
+    def test_mixin_without_parens_definition(self) -> None:
+        """The IDENT-form mixin definition is collected and expanded."""
+        result = _compile("""
+            @mixin bold {
+                font-weight: bold;
+            }
+            h1 { @include bold; }
+        """)
+        assert "font-weight: bold;" in result
+
     def test_mixin_with_param(self) -> None:
         """@mixin with params, @include passes args."""
         result = _compile("""
@@ -192,8 +202,19 @@ class TestMixinErrors:
     """Test error handling for mixins."""
 
     def test_undefined_mixin(self) -> None:
-        with pytest.raises(UndefinedMixinError):
+        with pytest.raises(UndefinedMixinError) as exc_info:
             _compile("h1 { @include nonexistent; }")
+        assert exc_info.value.line == 1
+        assert exc_info.value.column > 0
+
+    def test_undefined_mixin_suggests_nearby_name(self) -> None:
+        with pytest.raises(UndefinedMixinError) as exc_info:
+            _compile("""
+                @mixin button() { color: red; }
+                h1 { @include buton; }
+            """)
+        assert exc_info.value.suggestion == "button"
+        assert "Did you mean 'button'?" in str(exc_info.value)
 
     def test_circular_mixin(self) -> None:
         """Circular mixin reference raises CircularReferenceError."""

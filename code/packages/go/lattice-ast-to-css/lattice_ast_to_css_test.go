@@ -523,6 +523,43 @@ func TestUndefinedMixin(t *testing.T) {
 	if err == nil {
 		t.Error("expected error for undefined mixin, got nil")
 	}
+	typed, ok := err.(*UndefinedMixinError)
+	if !ok {
+		t.Fatalf("expected UndefinedMixinError, got %T", err)
+	}
+	if typed.Line == 0 || typed.Column == 0 {
+		t.Fatalf("expected source position on undefined mixin error, got %d:%d", typed.Line, typed.Column)
+	}
+}
+
+func TestUndefinedMixinSuggestion(t *testing.T) {
+	err := transpileErr(`
+		@mixin button() { color: red; }
+		.a { @include buton; }
+	`)
+	typed, ok := err.(*UndefinedMixinError)
+	if !ok {
+		t.Fatalf("expected UndefinedMixinError, got %T", err)
+	}
+	if typed.Suggestion != "button" {
+		t.Fatalf("expected suggestion 'button', got %q", typed.Suggestion)
+	}
+	if !strings.Contains(err.Error(), "Did you mean 'button'?") {
+		t.Fatalf("expected suggestion in error message, got %q", err.Error())
+	}
+}
+
+func TestMixinWithoutParensDefinition(t *testing.T) {
+	css, err := TranspileLattice(`
+		@mixin button { color: red; }
+		.a { @include button; }
+	`)
+	if err != nil {
+		t.Fatalf("expected mixin without parens to compile, got %v", err)
+	}
+	if !strings.Contains(css, "color: red;") {
+		t.Fatalf("expected expanded mixin body, got %q", css)
+	}
 }
 
 // TestCircularMixinReference verifies that circular @mixin references produce an error.
@@ -772,6 +809,7 @@ func TestErrorMessages(t *testing.T) {
 	}{
 		{NewUndefinedVariableError("$color", 5, 10), "$color"},
 		{NewUndefinedMixinError("flex-center", 3, 1), "flex-center"},
+		{NewUndefinedMixinError("flec-center", 3, 1, "flex-center"), "Did you mean 'flex-center'?"},
 		{NewUndefinedFunctionError("spacing", 7, 5), "spacing"},
 		{NewWrongArityError("Mixin", "button", 2, 3, 1, 1), "button"},
 		{NewCircularReferenceError("mixin", []string{"a", "b", "a"}, 2, 1), "a → b → a"},

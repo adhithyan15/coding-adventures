@@ -317,10 +317,19 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
   defp get_root_scope(%Scope{parent: nil} = scope), do: scope
   defp get_root_scope(%Scope{parent: parent}), do: get_root_scope(parent)
 
-  # mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
+  # mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
+  #                  | "@mixin" IDENT block ;
   defp collect_mixin(%ASTNode{children: children}, state) do
     func_token = find_token(children, "FUNCTION")
-    name = if func_token, do: String.trim_trailing(func_token.value, "("), else: nil
+    ident_token = find_token(children, "IDENT")
+
+    name =
+      cond do
+        func_token -> String.trim_trailing(func_token.value, "(")
+        ident_token -> ident_token.value
+        true -> nil
+      end
+
     params_node = find_child_by_rule(children, "mixin_params")
     body = find_child_by_rule(children, "block")
 
@@ -333,10 +342,19 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
     end
   end
 
-  # function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body ;
+  # function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body
+  #                     | "@function" IDENT function_body ;
   defp collect_function(%ASTNode{children: children}, state) do
     func_token = find_token(children, "FUNCTION")
-    name = if func_token, do: String.trim_trailing(func_token.value, "("), else: nil
+    ident_token = find_token(children, "IDENT")
+
+    name =
+      cond do
+        func_token -> String.trim_trailing(func_token.value, "(")
+        ident_token -> ident_token.value
+        true -> nil
+      end
+
     params_node = find_child_by_rule(children, "mixin_params")
     body = find_child_by_rule(children, "function_body")
 
@@ -836,6 +854,8 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
   #                   | "@include" IDENT ( SEMICOLON | block ) ;
   defp expand_include(%ASTNode{children: children}, scope, state) do
     # Extract mixin name, args, and content block
+    mixin_token = find_token(children, "FUNCTION") || find_token(children, "IDENT")
+
     mixin_name =
       case find_token(children, "FUNCTION") do
         nil ->
@@ -852,7 +872,10 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       {[], state}
     else
       unless Map.has_key?(state.mixins, mixin_name) do
-        throw({:lattice_error, UndefinedMixinError.new(mixin_name)})
+        suggestion = closest_name(mixin_name, Map.keys(state.mixins))
+        line = if mixin_token, do: mixin_token.line, else: 0
+        column = if mixin_token, do: mixin_token.column, else: 0
+        throw({:lattice_error, UndefinedMixinError.new(mixin_name, line, column, suggestion)})
       end
 
       if mixin_name in state.mixin_stack do
@@ -1881,6 +1904,58 @@ defmodule CodingAdventures.LatticeAstToCss.Transformer do
       %ASTNode{rule_name: ^rule_name} -> true
       _ -> false
     end)
+  end
+
+  defp closest_name(_name, []), do: nil
+
+  defp closest_name(name, candidates) do
+    {candidate, distance} =
+      Enum.reduce(candidates, {nil, nil}, fn candidate, {best_candidate, best_distance} ->
+        current_distance = levenshtein_distance(name, candidate)
+
+        if is_nil(best_distance) or current_distance < best_distance do
+          {candidate, current_distance}
+        else
+          {best_candidate, best_distance}
+        end
+      end)
+
+    threshold = max(2, div(String.length(name), 3))
+
+    if is_nil(candidate) or is_nil(distance) or distance > threshold do
+      nil
+    else
+      candidate
+    end
+  end
+
+  defp levenshtein_distance(left, right) do
+    if left == right do
+      0
+    else
+      initial = Enum.to_list(0..String.length(right))
+
+      {_index, final_row} =
+        left
+        |> String.graphemes()
+        |> Enum.with_index(1)
+        |> Enum.reduce({0, initial}, fn {left_char, left_index}, {_prev_index, previous} ->
+          current =
+            right
+            |> String.graphemes()
+            |> Enum.with_index(1)
+            |> Enum.reduce([left_index], fn {right_char, right_index}, row ->
+              insertion = Enum.at(row, right_index - 1) + 1
+              deletion = Enum.at(previous, right_index) + 1
+              substitution = Enum.at(previous, right_index - 1) + if(left_char == right_char, do: 0, else: 1)
+              row ++ [Enum.min([insertion, deletion, substitution])]
+            end)
+
+          {left_index, current}
+        end)
+
+      List.last(final_row)
+    end
   end
 
   # Deep copy an ASTNode or Token (since Elixir is immutable, this is

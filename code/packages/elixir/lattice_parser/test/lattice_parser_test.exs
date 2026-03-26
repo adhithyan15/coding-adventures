@@ -120,6 +120,12 @@ defmodule CodingAdventures.LatticeParserTest do
       assert length(mixin_defs) > 0
     end
 
+    test "simple mixin without parens" do
+      ast = parse!("@mixin clearfix { content: ''; }")
+      mixin_defs = find_all(ast, "mixin_definition")
+      assert length(mixin_defs) > 0
+    end
+
     test "mixin with one parameter" do
       ast = parse!("@mixin button($bg) { background: $bg; }")
       mixin_defs = find_all(ast, "mixin_definition")

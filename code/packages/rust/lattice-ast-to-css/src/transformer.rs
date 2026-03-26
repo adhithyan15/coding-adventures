@@ -79,6 +79,53 @@ fn is_css_function(name: &str) -> bool {
     CSS_FUNCTION_NAMES.contains(&clean)
 }
 
+fn levenshtein_distance(left: &str, right: &str) -> usize {
+    if left == right {
+        return 0;
+    }
+    if left.is_empty() {
+        return right.chars().count();
+    }
+    if right.is_empty() {
+        return left.chars().count();
+    }
+
+    let right_chars: Vec<char> = right.chars().collect();
+    let mut previous: Vec<usize> = (0..=right_chars.len()).collect();
+
+    for (left_index, left_char) in left.chars().enumerate() {
+        let mut current = vec![left_index + 1];
+        for (right_index, right_char) in right_chars.iter().enumerate() {
+            let insertion = current[right_index] + 1;
+            let deletion = previous[right_index + 1] + 1;
+            let substitution = previous[right_index] + usize::from(left_char != *right_char);
+            current.push(insertion.min(deletion).min(substitution));
+        }
+        previous = current;
+    }
+
+    previous[right_chars.len()]
+}
+
+fn closest_name(name: &str, candidates: impl Iterator<Item = String>) -> Option<String> {
+    let mut best_match: Option<String> = None;
+    let mut best_distance: Option<usize> = None;
+
+    for candidate in candidates {
+        let distance = levenshtein_distance(name, &candidate);
+        if best_distance.is_none() || distance < best_distance.unwrap() {
+            best_match = Some(candidate);
+            best_distance = Some(distance);
+        }
+    }
+
+    let threshold = std::cmp::max(2, name.chars().count() / 3);
+    match (best_match, best_distance) {
+        (Some(candidate), Some(distance)) if distance <= threshold => Some(candidate),
+        _ => None,
+    }
+}
+
 /// All CSS built-in function names as a constant slice.
 ///
 /// We use a const slice instead of a HashSet to avoid runtime allocation
@@ -348,7 +395,8 @@ impl LatticeTransformer {
     }
 
     fn collect_mixin(&mut self, node: &GrammarASTNode) -> Result<(), LatticeError> {
-        // mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block ;
+        // mixin_definition = "@mixin" FUNCTION [ mixin_params ] RPAREN block
+        //                  | "@mixin" IDENT block ;
         let mut name: Option<String> = None;
         let mut params: Vec<String> = Vec::new();
         let mut defaults: HashMap<String, String> = HashMap::new();
@@ -358,6 +406,13 @@ impl LatticeTransformer {
             match child {
                 ASTNodeOrToken::Token(tok) if get_token_type_name(tok) == "FUNCTION" => {
                     name = Some(tok.value.trim_end_matches('(').to_string());
+                }
+                ASTNodeOrToken::Token(tok)
+                    if (get_token_type_name(tok) == "Ident"
+                        || get_token_type_name(tok) == "IDENT")
+                        && name.is_none() =>
+                {
+                    name = Some(tok.value.clone());
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "mixin_params" => {
                     let (p, d) = extract_params(n);
@@ -378,7 +433,8 @@ impl LatticeTransformer {
     }
 
     fn collect_function(&mut self, node: &GrammarASTNode) -> Result<(), LatticeError> {
-        // function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body ;
+        // function_definition = "@function" FUNCTION [ mixin_params ] RPAREN function_body
+        //                     | "@function" IDENT function_body ;
         let mut name: Option<String> = None;
         let mut params: Vec<String> = Vec::new();
         let mut defaults: HashMap<String, String> = HashMap::new();
@@ -388,6 +444,13 @@ impl LatticeTransformer {
             match child {
                 ASTNodeOrToken::Token(tok) if get_token_type_name(tok) == "FUNCTION" => {
                     name = Some(tok.value.trim_end_matches('(').to_string());
+                }
+                ASTNodeOrToken::Token(tok)
+                    if (get_token_type_name(tok) == "Ident"
+                        || get_token_type_name(tok) == "IDENT")
+                        && name.is_none() =>
+                {
+                    name = Some(tok.value.clone());
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "mixin_params" => {
                     let (p, d) = extract_params(n);
@@ -1065,6 +1128,7 @@ impl LatticeTransformer {
         // Lattice v2: the trailing block (if present) is a @content block.
 
         let mut mixin_name: Option<String> = None;
+        let mut mixin_token: Option<Token> = None;
         let mut args_node: Option<GrammarASTNode> = None;
         let mut content_block: Option<GrammarASTNode> = None;
 
@@ -1075,10 +1139,12 @@ impl LatticeTransformer {
                     match type_name.as_str() {
                         "FUNCTION" => {
                             mixin_name = Some(tok.value.trim_end_matches('(').to_string());
+                            mixin_token = Some(tok.clone());
                         }
                         "Ident" | "IDENT" => {
                             if mixin_name.is_none() {
                                 mixin_name = Some(tok.value.clone());
+                                mixin_token = Some(tok.clone());
                             }
                         }
                         _ => {}
@@ -1101,7 +1167,12 @@ impl LatticeTransformer {
         };
 
         if !self.mixins.contains_key(&mixin_name) {
-            return Err(LatticeError::undefined_mixin(&mixin_name, 0, 0));
+            let (line, column) = match mixin_token {
+                Some(ref token) => (token.line, token.column),
+                None => (0, 0),
+            };
+            let suggestion = closest_name(&mixin_name, self.mixins.keys().cloned());
+            return Err(LatticeError::undefined_mixin(&mixin_name, line, column, suggestion));
         }
 
         // Cycle detection

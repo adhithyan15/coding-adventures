@@ -147,18 +147,28 @@ func NewUndefinedVariableError(name string, line, col int) *UndefinedVariableErr
 //	.btn { @include nonexistent; }   ← error: 'nonexistent' was never @mixin-defined
 type UndefinedMixinError struct {
 	LatticeError
-	Name string
+	Name       string
+	Suggestion string
 }
 
 // NewUndefinedMixinError creates an UndefinedMixinError.
-func NewUndefinedMixinError(name string, line, col int) *UndefinedMixinError {
+func NewUndefinedMixinError(name string, line, col int, suggestion ...string) *UndefinedMixinError {
+	match := ""
+	if len(suggestion) > 0 {
+		match = suggestion[0]
+	}
+	message := fmt.Sprintf("Undefined mixin '%s'", name)
+	if match != "" {
+		message = fmt.Sprintf("%s. Did you mean '%s'?", message, match)
+	}
 	return &UndefinedMixinError{
 		LatticeError: LatticeError{
-			Message: fmt.Sprintf("Undefined mixin '%s'", name),
+			Message: message,
 			Line:    line,
 			Column:  col,
 		},
-		Name: name,
+		Name:       name,
+		Suggestion: match,
 	}
 }
 

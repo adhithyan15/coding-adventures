@@ -213,6 +213,12 @@ class TestMixinDefinition:
         decl = _find_rule(block, "declaration")
         assert decl is not None
 
+    def test_mixin_without_parens(self) -> None:
+        """@mixin clearfix {} uses the IDENT grammar branch."""
+        ast = parse_lattice("@mixin clearfix { content: ''; }")
+        mixin = _find_rule(ast, "mixin_definition")
+        assert mixin is not None
+
 
 # ===========================================================================
 # Include Directive Tests
