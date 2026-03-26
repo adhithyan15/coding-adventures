@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-excel-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Excel formula parser — parses Excel formulas into an AST using the grammar-driven parser and the excel.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-excel-lexer = { path = "../excel-lexer" }

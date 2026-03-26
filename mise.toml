@@ -1,4 +1,5 @@
 [tools]
 go = "latest"
+python = "3.12"
 ruby = "3.4"
 rust = "stable"

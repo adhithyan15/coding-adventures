@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 # --------------------------------------------------------------------------
 # graph.rb — The directed-graph data structure and its algorithms
 # --------------------------------------------------------------------------
@@ -44,9 +42,21 @@ module CodingAdventures
       # The two hashes use `Hash.new { |h, k| h[k] = Set.new }` so that
       # accessing a missing key automatically creates an empty Set for it.
       # This eliminates nil-checks throughout the code.
-      def initialize
+      #
+      # == The allow_self_loops flag
+      #
+      # By default, self-loops (edges where source == target) are forbidden
+      # because they represent cycles of length 1, which break topological
+      # sort and most DAG algorithms.  However, some use cases — like labeled
+      # graphs modeling state machines — genuinely need self-loops (e.g. a
+      # state that transitions back to itself on certain inputs).
+      #
+      # Pass `allow_self_loops: true` to permit them.  When self-loops are
+      # allowed, the node appears in its own successor *and* predecessor sets.
+      def initialize(allow_self_loops: false)
         @forward = {}
         @reverse = {}
+        @allow_self_loops = allow_self_loops
       end
 
       # ------------------------------------------------------------------
@@ -73,14 +83,16 @@ module CodingAdventures
       # just like `git` creates branches on first commit.
       #
       # Self-loops (source == target) are rejected with a CycleError
-      # because they are always cycles of length 1 and break topological
-      # sort.
+      # by default, because they are cycles of length 1 and break
+      # topological sort.  If the graph was constructed with
+      # `allow_self_loops: true`, self-loops are permitted — the node
+      # will appear in both its own successor and predecessor sets.
       #
       # Duplicate edges are silently ignored (Set semantics).
       #
-      # Raises CycleError if source == target (self-loop).
+      # Raises CycleError if source == target and self-loops are disabled.
       def add_edge(source, target)
-        if source == target
+        if source == target && !@allow_self_loops
           raise CycleError, "Self-loop detected: #{source.inspect} -> #{target.inspect}"
         end
 
@@ -127,7 +139,7 @@ module CodingAdventures
         end
         unless has_edge?(source, target)
           raise EdgeNotFoundError,
-                "Edge not found: #{source.inspect} -> #{target.inspect}"
+            "Edge not found: #{source.inspect} -> #{target.inspect}"
         end
 
         @forward[source].delete(target)
@@ -194,6 +206,11 @@ module CodingAdventures
       # Returns the number of nodes in the graph.
       def size
         @forward.size
+      end
+
+      # Returns true if self-loops are permitted in this graph.
+      def allow_self_loops?
+        @allow_self_loops
       end
 
       # ------------------------------------------------------------------

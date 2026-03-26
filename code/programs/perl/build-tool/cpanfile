@@ -1,0 +1,29 @@
+# cpanfile -- Dependency declarations for the Perl build tool
+# ============================================================
+#
+# cpanfile is a simple, declarative format for listing CPAN dependencies.
+# It is read by `cpanm --installdeps .` and by Carton. We prefer it over
+# Makefile.PL's PREREQ_PM because it is language-agnostic and human-readable.
+#
+# The build tool uses only Perl core modules at runtime. The only test
+# dependency from CPAN is Test2::V0 — a modern testing framework.
+
+# Runtime dependencies — all core modules, listed for documentation.
+# `cpanm --installdeps` will skip these because they are bundled with Perl.
+requires 'perl', '5.026';
+requires 'Digest::SHA';
+requires 'JSON::PP', '2.00';
+requires 'File::Find';
+requires 'File::Spec';
+requires 'File::Basename';
+requires 'Getopt::Long', '2.00';
+requires 'POSIX';
+requires 'Cwd';
+requires 'File::Path', '2.00';
+requires 'Scalar::Util';
+requires 'List::Util';
+
+# Test dependencies — must be installed from CPAN.
+on 'test' => sub {
+    requires 'Test2::V0', '0.000159';
+};

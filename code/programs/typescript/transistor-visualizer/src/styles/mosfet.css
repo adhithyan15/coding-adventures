@@ -1,0 +1,14 @@
+/* ==========================================================================
+ * MOSFET era styles.
+ *
+ * Purple-blue tones for the field-effect revolution.
+ * ========================================================================== */
+
+.era--mosfet .era-header__year {
+  background: #5544aa;
+}
+
+.era--mosfet .nmos-diagram {
+  background: #141018;
+  border-color: #2a2a3e;
+}

@@ -34,12 +34,27 @@ import sys
 from pathlib import Path
 
 from build_tool.cache import BuildCache
-from build_tool.discovery import discover_packages
+from build_tool.discovery import Package, discover_packages
 from build_tool.executor import execute_builds
 from build_tool.gitdiff import get_changed_files, map_files_to_packages
 from build_tool.hasher import hash_deps, hash_package
+from build_tool.plan import (
+    BuildPlan,
+    PackageEntry,
+    read_plan,
+    write_plan,
+)
 from build_tool.reporter import print_report
-from build_tool.resolver import resolve_dependencies
+from build_tool.resolver import DirectedGraph, resolve_dependencies
+
+# Optional progress bar integration. When the progress bar package is
+# installed, builds get a real-time terminal UI showing which packages are
+# building and overall completion. When unavailable, builds work identically
+# but without the visual feedback.
+try:
+    from progress_bar import Tracker
+except ImportError:
+    Tracker = None  # type: ignore[assignment, misc]
 
 
 def _find_repo_root(start: Path | None = None) -> Path | None:
@@ -110,7 +125,24 @@ def main(argv: list[str] | None = None) -> int:
         "--cache-file",
         type=Path,
         default=Path(".build-cache.json"),
-        help="Path to the build cache file (used as fallback when git diff unavailable)",
+        help="Path to the build cache file (fallback for git diff)",
+    )
+    parser.add_argument(
+        "--emit-plan",
+        type=str,
+        default=None,
+        help="Write build plan JSON to this path and exit (used by CI detect job)",
+    )
+    parser.add_argument(
+        "--plan-file",
+        type=str,
+        default=None,
+        help="Read build plan JSON, skip discovery/resolution/diff",
+    )
+    parser.add_argument(
+        "--detect-languages",
+        action="store_true",
+        help="Output which language toolchains are needed based on git diff, then exit",
     )
 
     args = parser.parse_args(argv)
@@ -125,6 +157,12 @@ def main(argv: list[str] | None = None) -> int:
             return 1
 
     root = root.resolve()
+
+    # --plan-file mode: read a pre-computed plan and skip discovery,
+    # resolution, and change detection. This is the fast path for CI
+    # build jobs that received a plan from the detect job.
+    if args.plan_file is not None:
+        return _run_from_plan(args, root)
 
     # The build starts from code/ directory
     code_root = root / "code"
@@ -154,7 +192,7 @@ def main(argv: list[str] | None = None) -> int:
     # Step 5: Determine which packages need building
     #
     # Default mode: git-diff based change detection.
-    # Git is the source of truth — no cache file needed.
+    # Git is the source of truth -- no cache file needed.
     # Fallback: hash-based cache (for local dev when not on a branch).
     affected_set: set[str] | None = None
 
@@ -162,17 +200,33 @@ def main(argv: list[str] | None = None) -> int:
         # Try git-diff mode first (the default)
         changed_files = get_changed_files(root, args.diff_base)
         if changed_files:
-            package_paths = {pkg.name: pkg.path for pkg in packages}
-            changed_packages = map_files_to_packages(changed_files, package_paths, root)
-            if changed_packages:
-                affected_set = graph.affected_nodes(changed_packages)
-                print(f"Git diff: {len(changed_packages)} packages changed, "
-                      f"{len(affected_set)} affected (including dependents)")
+            shared_changed = any(
+                f.startswith(".github/")
+                for f in changed_files
+            )
+            if shared_changed:
+                print("Git diff: shared files changed -- rebuilding everything")
+                args.force = True
+                affected_set = None
             else:
-                print("Git diff: no package files changed — nothing to build")
-                affected_set = set()
+                package_paths = {pkg.name: pkg.path for pkg in packages}
+                changed_packages = map_files_to_packages(
+                    changed_files, package_paths, root, packages
+                )
+                if changed_packages:
+                    affected_set = graph.affected_nodes(changed_packages)
+                    print(f"Git diff: {len(changed_packages)} packages changed, "
+                          f"{len(affected_set)} affected (including dependents)")
+                else:
+                    print("Git diff: no package files changed -- nothing to build")
+                    affected_set = set()
         else:
-            print("Git diff unavailable — falling back to hash-based cache")
+            print("Git diff unavailable -- falling back to hash-based cache")
+
+    # --emit-plan mode: serialize the plan and exit without building.
+    # This is the fast path for CI detect jobs.
+    if args.emit_plan is not None:
+        return _emit_plan(args, root, packages, graph, affected_set)
 
     # Step 6: Hash all packages (needed for cache fallback)
     package_hashes: dict[str, str] = {}
@@ -191,6 +245,15 @@ def main(argv: list[str] | None = None) -> int:
     cache.load(cache_path)
 
     # Steps 8-9: Execute builds
+    # Set up the progress bar tracker. We only show the progress bar during
+    # real builds (not dry runs), and only when the progress bar package is
+    # installed. The tracker writes to stderr so it doesn't interfere with
+    # structured output on stdout.
+    tracker = None
+    if not args.dry_run and Tracker is not None:
+        tracker = Tracker(total=len(packages), writer=sys.stderr)
+        tracker.start()
+
     results = execute_builds(
         packages=packages,
         graph=graph,
@@ -201,7 +264,11 @@ def main(argv: list[str] | None = None) -> int:
         dry_run=args.dry_run,
         max_jobs=args.jobs,
         affected_set=affected_set,
+        tracker=tracker,
     )
+
+    if tracker:
+        tracker.stop()
 
     # Step 10: Save cache (as secondary record, not primary mechanism)
     if not args.dry_run:
@@ -213,6 +280,245 @@ def main(argv: list[str] | None = None) -> int:
     # Step 11: Exit code
     has_failures = any(r.status == "failed" for r in results.values())
     return 1 if has_failures else 0
+
+
+def _emit_plan(
+    args: argparse.Namespace,
+    root: Path,
+    packages: list[Package],
+    graph: DirectedGraph,
+    affected_set: set[str] | None,
+) -> int:
+    """Serialize the build plan to JSON and exit.
+
+    This is the ``--emit-plan`` code path. It constructs a ``BuildPlan``
+    from the discovery, resolution, and change detection results, writes
+    it to the specified path, and exits without building anything.
+
+    If ``--detect-languages`` is also set, language flags are printed to
+    stdout after writing the plan.
+
+    Args:
+        args: Parsed CLI arguments.
+        root: Repository root directory.
+        packages: Discovered packages.
+        graph: Dependency graph.
+        affected_set: Set of affected package names, or None for "all".
+
+    Returns:
+        Exit code: 0 on success, 1 on failure.
+    """
+    # Convert affected_set to a sorted list (or None for "all").
+    affected_list: list[str] | None = None
+    if affected_set is not None:
+        affected_list = sorted(affected_set)
+
+    # Build PackageEntry list from discovered packages.
+    package_entries: list[PackageEntry] = []
+    for pkg in packages:
+        try:
+            rel_path = str(pkg.path.relative_to(root)).replace("\\", "/")
+        except ValueError:
+            rel_path = str(pkg.path).replace("\\", "/")
+
+        package_entries.append(
+            PackageEntry(
+                name=pkg.name,
+                rel_path=rel_path,
+                language=pkg.language,
+                build_commands=pkg.build_commands,
+                is_starlark=pkg.is_starlark,
+                declared_srcs=pkg.declared_srcs,
+                declared_deps=pkg.declared_deps,
+            )
+        )
+
+    # Determine which languages are needed. A language is "needed" if
+    # at least one affected package uses that language.
+    languages_needed: dict[str, bool] = {}
+    for pkg in packages:
+        lang = pkg.language
+        if lang not in languages_needed:
+            languages_needed[lang] = False
+        if affected_set is None or pkg.name in affected_set:
+            languages_needed[lang] = True
+
+    # Build the plan.
+    bp = BuildPlan(
+        schema_version=1,
+        diff_base=args.diff_base,
+        force=args.force,
+        affected_packages=affected_list,
+        packages=package_entries,
+        dependency_edges=graph.edges(),
+        languages_needed=languages_needed,
+    )
+
+    try:
+        write_plan(bp, args.emit_plan)
+        print(f"Build plan written to {args.emit_plan} ({len(packages)} packages)")
+    except Exception as exc:
+        print(f"Error writing build plan: {exc}", file=sys.stderr)
+        return 1
+
+    # If --detect-languages was also set, output language flags.
+    if args.detect_languages:
+        _output_language_flags(languages_needed)
+
+    return 0
+
+
+def _run_from_plan(args: argparse.Namespace, root: Path) -> int:
+    """Load a build plan from file and run the build.
+
+    This is the ``--plan-file`` code path. It reads a pre-computed plan,
+    reconstructs the packages and dependency graph, and runs the build
+    without re-doing discovery or change detection.
+
+    On any error (missing file, invalid JSON, unsupported version), it
+    falls back to the normal discovery flow by returning a special sentinel
+    that triggers re-execution.
+
+    Args:
+        args: Parsed CLI arguments.
+        root: Repository root directory.
+
+    Returns:
+        Exit code: 0 for success, 1 if any builds failed.
+    """
+    try:
+        bp = read_plan(args.plan_file)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"Warning: could not load plan ({exc}), falling back to normal flow",
+              file=sys.stderr)
+        # Fall back to normal flow by clearing the plan-file flag and re-running.
+        args.plan_file = None
+        return main(_rebuild_argv(args))
+
+    # Reconstruct Package objects from the plan entries.
+    packages: list[Package] = []
+    for pe in bp.packages:
+        # Convert the relative path back to an absolute path.
+        pkg_path = root / pe.rel_path
+
+        packages.append(
+            Package(
+                name=pe.name,
+                path=pkg_path,
+                build_commands=pe.build_commands,
+                language=pe.language,
+                is_starlark=pe.is_starlark,
+                declared_srcs=pe.declared_srcs,
+                declared_deps=pe.declared_deps,
+            )
+        )
+
+    # Filter by language if specified.
+    if args.language != "all":
+        packages = [p for p in packages if p.language == args.language]
+        if not packages:
+            print(f"No {args.language} packages found in plan.", file=sys.stderr)
+            return 0
+
+    # Reconstruct the dependency graph from the plan's edges.
+    graph = DirectedGraph()
+    for pkg in packages:
+        graph.add_node(pkg.name)
+    for from_node, to_node in bp.dependency_edges:
+        if graph.has_node(from_node) and graph.has_node(to_node):
+            graph.add_edge(from_node, to_node)
+
+    # Reconstruct the affected set.
+    affected_set: set[str] | None = None
+    if bp.affected_packages is not None:
+        affected_set = set(bp.affected_packages)
+
+    print(f"Loaded plan: {len(packages)} packages")
+
+    # From here, the flow is identical to the normal build path:
+    # hash, cache, execute, report.
+
+    # Hash all packages
+    package_hashes: dict[str, str] = {}
+    deps_hashes: dict[str, str] = {}
+    from build_tool.hasher import hash_deps, hash_package
+
+    for pkg in packages:
+        package_hashes[pkg.name] = hash_package(pkg)
+        deps_hashes[pkg.name] = hash_deps(pkg.name, graph, package_hashes)
+
+    # Load cache
+    cache_path = args.cache_file
+    if not cache_path.is_absolute():
+        cache_path = root / cache_path
+
+    cache = BuildCache()
+    cache.load(cache_path)
+
+    # Execute builds
+    tracker = None
+    if not args.dry_run and Tracker is not None:
+        tracker = Tracker(total=len(packages), writer=sys.stderr)
+        tracker.start()
+
+    results = execute_builds(
+        packages=packages,
+        graph=graph,
+        cache=cache,
+        package_hashes=package_hashes,
+        deps_hashes=deps_hashes,
+        force=bp.force or args.force,
+        dry_run=args.dry_run,
+        max_jobs=args.jobs,
+        affected_set=affected_set,
+        tracker=tracker,
+    )
+
+    if tracker:
+        tracker.stop()
+
+    if not args.dry_run:
+        cache.save(cache_path)
+
+    print_report(results)
+
+    has_failures = any(r.status == "failed" for r in results.values())
+    return 1 if has_failures else 0
+
+
+def _rebuild_argv(args: argparse.Namespace) -> list[str]:
+    """Reconstruct argv from parsed args (for fallback re-execution).
+
+    When --plan-file fails, we need to re-run main() without the
+    --plan-file flag. This helper rebuilds the argument list.
+    """
+    argv: list[str] = []
+    if args.root is not None:
+        argv.extend(["--root", str(args.root)])
+    if args.force:
+        argv.append("--force")
+    if args.dry_run:
+        argv.append("--dry-run")
+    if args.jobs is not None:
+        argv.extend(["--jobs", str(args.jobs)])
+    if args.language != "all":
+        argv.extend(["--language", args.language])
+    argv.extend(["--diff-base", args.diff_base])
+    argv.extend(["--cache-file", str(args.cache_file)])
+    return argv
+
+
+def _output_language_flags(languages_needed: dict[str, bool]) -> None:
+    """Print language flags to stdout for CI consumption.
+
+    Output format matches the Go build tool::
+
+        need_python=true
+        need_go=false
+        need_ruby=true
+    """
+    for lang, needed in sorted(languages_needed.items()):
+        print(f"need_{lang}={'true' if needed else 'false'}")
 
 
 if __name__ == "__main__":

@@ -277,6 +277,81 @@ describe("Multi-Node Operations", () => {
 // These tests verify that the graph throws the right errors for
 // invalid operations.
 
+describe("Self-Loop Flag", () => {
+  it("default Graph rejects self-loops", () => {
+    /** By default, self-loops should be rejected. */
+    const g = new Graph();
+    expect(() => g.addEdge("A", "A")).toThrow("Self-loops are not allowed");
+  });
+
+  it("allowSelfLoops property defaults to false", () => {
+    /** The allowSelfLoops getter should report the flag value. */
+    const g = new Graph();
+    expect(g.allowSelfLoops).toBe(false);
+  });
+
+  it("allowSelfLoops: true permits self-loops", () => {
+    /** When the flag is true, self-loops should be accepted. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    expect(g.hasEdge("A", "A")).toBe(true);
+    expect(g.allowSelfLoops).toBe(true);
+  });
+
+  it("self-loop node is own successor and predecessor", () => {
+    /** A node with a self-loop should appear in its own neighbor lists. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    expect(g.successors("A")).toContain("A");
+    expect(g.predecessors("A")).toContain("A");
+  });
+
+  it("self-loop appears in edges list", () => {
+    /** Self-loop should be listed as an edge. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    expect(g.edges()).toEqual([["A", "A"]]);
+  });
+
+  it("self-loop with other edges", () => {
+    /** Self-loop should coexist with normal edges. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    g.addEdge("A", "B");
+    expect(g.hasEdge("A", "A")).toBe(true);
+    expect(g.hasEdge("A", "B")).toBe(true);
+    expect(g.size).toBe(2);
+  });
+
+  it("remove self-loop keeps node", () => {
+    /** Removing a self-loop should keep the node. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    g.removeEdge("A", "A");
+    expect(g.hasEdge("A", "A")).toBe(false);
+    expect(g.hasNode("A")).toBe(true);
+  });
+
+  it("remove node with self-loop", () => {
+    /** Removing a node should clean up its self-loop. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    g.addEdge("A", "B");
+    g.removeNode("A");
+    expect(g.hasNode("A")).toBe(false);
+    expect(g.hasNode("B")).toBe(true);
+    expect(g.edges()).toEqual([]);
+  });
+
+  it("duplicate self-loop is idempotent", () => {
+    /** Adding the same self-loop twice should be a no-op. */
+    const g = new Graph({ allowSelfLoops: true });
+    g.addEdge("A", "A");
+    g.addEdge("A", "A");
+    expect(g.edges()).toEqual([["A", "A"]]);
+  });
+});
+
 describe("Error Conditions", () => {
   it("self-loop throws Error", () => {
     /** A self-loop (A -> A) should throw Error. */

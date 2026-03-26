@@ -32,9 +32,11 @@ hashes, then produces a single hash representing the state of all dependencies.
 from __future__ import annotations
 
 import hashlib
+import os
 from pathlib import Path
 
 from build_tool.discovery import Package
+from build_tool.glob_match import match_path
 from build_tool.resolver import DirectedGraph
 
 # Source file extensions that matter for each language.
@@ -43,6 +45,7 @@ SOURCE_EXTENSIONS: dict[str, set[str]] = {
     "python": {".py", ".toml", ".cfg"},
     "ruby": {".rb", ".gemspec"},
     "go": {".go"},
+    "perl": {".pl", ".pm", ".t", ".xs"},
 }
 
 # Special filenames to always include regardless of extension.
@@ -50,40 +53,93 @@ SPECIAL_FILENAMES: dict[str, set[str]] = {
     "python": set(),
     "ruby": {"Gemfile", "Rakefile"},
     "go": {"go.mod", "go.sum"},
+    "perl": {"Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"},
 }
 
 
 def _collect_source_files(package: Package) -> list[Path]:
     """Collect all source files in a package directory.
 
-    Files are filtered by the language's relevant extensions and special
-    filenames. The BUILD file is always included.
+    There are two collection modes:
+
+    1. **Starlark mode** (``package.is_starlark`` and ``package.declared_srcs``):
+       Walk the directory tree with ``os.walk()`` and test each file against
+       the declared source patterns using ``glob_match.match_path()``. BUILD
+       files are always included.
+
+       This fixes a bug with Python's ``pathlib.Path.glob("**/*.py")`` which
+       does NOT match files in the immediate directory (only subdirectories).
+       By using ``os.walk()`` + ``match_path()``, we correctly handle ``**``
+       as "zero or more directory levels", matching the Bazel/Go semantics.
+
+    2. **Extension mode** (shell BUILD files or no declared_srcs):
+       Walk the directory tree and filter by the language's relevant file
+       extensions and special filenames. This is the original behavior.
+
+    In both modes, BUILD files are always included, and the result is sorted
+    by relative path for deterministic hashing.
 
     Returns a sorted list of absolute paths.
     """
-    extensions = SOURCE_EXTENSIONS.get(package.language, set())
-    special_names = SPECIAL_FILENAMES.get(package.language, set())
-
     files: list[Path] = []
+    pkg_root = str(package.path)
 
-    for filepath in package.path.rglob("*"):
-        if not filepath.is_file():
-            continue
+    if package.is_starlark and package.declared_srcs:
+        # Starlark mode: use os.walk + glob_match for precise source matching.
+        #
+        # os.walk gives us (dirpath, dirnames, filenames) tuples. We compute
+        # each file's path relative to the package root and test it against
+        # every declared source pattern.
+        #
+        # This replaces pathlib.glob/rglob which has inconsistent behavior
+        # with ** patterns across Python versions and platforms.
+        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+            for filename in filenames:
+                abs_path = Path(dirpath) / filename
 
-        # Always include BUILD files
-        if filepath.name in ("BUILD", "BUILD_mac", "BUILD_linux"):
-            files.append(filepath)
-            continue
+                # Always include BUILD files (a change to the build definition
+                # itself should always trigger a rebuild).
+                if filename in ("BUILD", "BUILD_mac", "BUILD_linux",
+                                "BUILD_windows", "BUILD_mac_and_linux"):
+                    files.append(abs_path)
+                    continue
 
-        # Check extension
-        if filepath.suffix in extensions:
-            files.append(filepath)
-            continue
+                # Compute the file's path relative to the package root.
+                # os.path.relpath gives us a platform-native path, but we
+                # need forward slashes for glob matching consistency.
+                rel_path = os.path.relpath(abs_path, pkg_root).replace(
+                    os.sep, "/"
+                )
 
-        # Check special filenames
-        if filepath.name in special_names:
-            files.append(filepath)
-            continue
+                # Test against each declared source pattern.
+                for pattern in package.declared_srcs:
+                    if match_path(pattern, rel_path):
+                        files.append(abs_path)
+                        break
+    else:
+        # Extension mode: filter by language-specific extensions.
+        extensions = SOURCE_EXTENSIONS.get(package.language, set())
+        special_names = SPECIAL_FILENAMES.get(package.language, set())
+
+        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+            for filename in filenames:
+                abs_path = Path(dirpath) / filename
+
+                # Always include BUILD files
+                if filename in ("BUILD", "BUILD_mac", "BUILD_linux",
+                                "BUILD_windows", "BUILD_mac_and_linux"):
+                    files.append(abs_path)
+                    continue
+
+                # Check extension
+                if Path(filename).suffix in extensions:
+                    files.append(abs_path)
+                    continue
+
+                # Check special filenames
+                if filename in special_names:
+                    files.append(abs_path)
+                    continue
 
     # Sort by relative path for determinism
     files.sort(key=lambda f: str(f.relative_to(package.path)))

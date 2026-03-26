@@ -1,2 +1,3 @@
-bundle install
-ruby -Ilib:test test/test_gradient_descent.rb
+bundle config set path vendor/bundle
+bundle install --quiet --full-index
+bundle exec rake test

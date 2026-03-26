@@ -1,0 +1,13 @@
+{
+  "name": "activation-functions",
+  "version": "1.0.0",
+  "description": "Functional strict mathematical evaluators",
+  "main": "dist/activations.js",
+  "types": "dist/activations.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

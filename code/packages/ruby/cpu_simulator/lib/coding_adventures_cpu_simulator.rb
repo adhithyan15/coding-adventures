@@ -11,3 +11,4 @@
 
 require_relative "coding_adventures/cpu_simulator/version"
 require_relative "coding_adventures/cpu_simulator/simulator"
+require_relative "coding_adventures/cpu_simulator/sparse_memory"

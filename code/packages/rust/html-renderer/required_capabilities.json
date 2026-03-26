@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/html-renderer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads HTML template and asset files for rendering."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Uses SystemTime for cache timestamps in rendered output."
+    }
+  ],
+  "justification": "HTML renderer. Reads template files and uses system time for cache management."
+}

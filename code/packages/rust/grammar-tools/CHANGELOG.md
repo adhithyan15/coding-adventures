@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-03-23
+
+### Added
+
+- `src/bin/grammar-tools.rs` — CLI binary exposing three subcommands:
+  - `grammar-tools validate <file.tokens> <file.grammar>` — validate a pair of files
+  - `grammar-tools validate-tokens <file.tokens>` — validate only the tokens file
+  - `grammar-tools validate-grammar <file.grammar>` — validate only the grammar file
+  - `grammar-tools --help` — print usage information
+- Output format mirrors the Python `python -m grammar_tools` implementation:
+  - `Validating <file> ... OK (N tokens, M skip, K error)` on success
+  - `Validating <file> ... P error(s)` with indented details on failure
+  - `All checks passed.` / `Found N error(s). Fix them and try again.` summary
+- Exit codes: 0 = success, 1 = validation errors, 2 = usage errors
+- `[[bin]]` entry added to `Cargo.toml` (`name = "grammar-tools"`)
+- `tests/cli_tests.rs` — 14 integration tests invoking the binary via
+  `std::process::Command`, covering all subcommands, missing files, wrong
+  argument counts, unknown commands, and cross-validation warnings
+
+## [0.2.0] - 2026-03-21
+
+### Added
+
+- `PatternGroup` struct for named sets of token definitions (context-sensitive lexing)
+- `groups: HashMap<String, PatternGroup>` field on `TokenGrammar`
+- `group NAME:` section parsing in `parse_token_grammar()` with validation:
+  - Group name must match `[a-z_][a-z0-9_]*`
+  - Reserved names (`default`, `skip`, `keywords`, `reserved`, `errors`) rejected
+  - Duplicate group names rejected
+  - Group definitions use same definition parser as other sections
+- `effective_token_names()` function (returns alias names where present)
+- `token_names()` now includes names from all pattern groups
+- Group validation in `validate_token_grammar()`: bad regex, empty groups, naming conventions
+- Comprehensive test suite for pattern groups (parsing, validation, error cases)
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

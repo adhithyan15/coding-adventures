@@ -1,0 +1,255 @@
+/* ==========================================================================
+ * Styles for the ALU tab (Tab 3).
+ *
+ * Covers: operation selector, result display, condition flags.
+ * ========================================================================== */
+
+/* --- ALU view container --- */
+
+.alu-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.alu-view__intro {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--body-text);
+  max-width: 800px;
+}
+
+.alu-view__panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alu-view__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff8a65;
+}
+
+/* --- Operand inputs --- */
+
+.alu-view__operands {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.alu-view__op-symbol {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffb74d;
+  font-family: var(--mono);
+  min-width: 2rem;
+  text-align: center;
+}
+
+.alu-view__unary-note {
+  font-size: 0.85rem;
+  color: var(--tab-text);
+  font-style: italic;
+}
+
+/* --- Operation selector --- */
+
+.op-selector {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.op-selector__group {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.op-selector__group-label {
+  font-size: 0.75rem;
+  color: var(--tab-text);
+  margin-right: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.op-selector__btn {
+  padding: 0.4rem 0.8rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--body-text);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.op-selector__btn:hover {
+  border-color: #ffb74d;
+  color: #ffb74d;
+}
+
+.op-selector__btn--active {
+  border-color: #ffb74d;
+  background: rgba(255, 183, 77, 0.15);
+  color: #ffb74d;
+}
+
+/* --- Result display --- */
+
+.result-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.result-display__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--tab-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.result-display__bits {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.result-display__bit {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid;
+}
+
+.result-display__bit--high {
+  border-color: #4caf50;
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.result-display__bit--low {
+  border-color: #555;
+  color: #888;
+  background: transparent;
+}
+
+.result-display__values {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.result-display__decimal {
+  color: var(--body-text);
+  font-weight: 600;
+}
+
+.result-display__hex {
+  color: var(--tab-text);
+}
+
+/* --- Condition flags --- */
+
+.result-display__flags {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.flag-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  min-width: 100px;
+  transition: all 0.15s ease;
+}
+
+.flag-indicator--active {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.flag-indicator__badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.flag-indicator__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.flag-indicator__dot--set {
+  background: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.flag-indicator__dot--clear {
+  background: #555;
+}
+
+.flag-indicator__abbr {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--body-text);
+}
+
+.flag-indicator__name {
+  font-size: 0.75rem;
+  color: var(--body-text);
+  font-weight: 600;
+}
+
+.flag-indicator__desc {
+  font-size: 0.7rem;
+  color: var(--tab-text);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 640px) {
+  .alu-view__operands {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .op-selector {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .result-display__flags {
+    flex-direction: column;
+  }
+}

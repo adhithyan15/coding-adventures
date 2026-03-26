@@ -1,0 +1,12 @@
+.triode-tab { display: flex; flex-direction: column; gap: 1.5rem; }
+.triode-tab__intro { font-size: 0.95rem; line-height: 1.7; max-width: 800px; }
+.triode-svg { width: 100%; max-width: 280px; height: auto; margin: 0 auto; }
+.triode-controls { display: flex; flex-direction: column; gap: 0.3rem; max-width: 300px; }
+.triode-slider__label { font-family: var(--mono); font-size: 0.85rem; color: var(--tab-text); }
+.triode-slider { width: 100%; accent-color: #ff8a65; }
+.triode-readouts { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.triode-readout { display: flex; flex-direction: column; gap: 0.15rem; }
+.triode-readout__label { font-size: 0.75rem; color: var(--tab-text); text-transform: uppercase; letter-spacing: 0.05em; }
+.triode-readout__value { font-family: var(--mono); font-size: 1rem; font-weight: 700; }
+.triode-readout__value--on { color: #ff8a65; }
+.triode-readout__value--off { color: #666; }

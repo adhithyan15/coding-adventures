@@ -1,0 +1,52 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "tr",
+  "display_name": "tr",
+  "description": "Translate or delete characters",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "complement",
+      "short": "c",
+      "long": "complement",
+      "description": "Use the complement of SET1",
+      "type": "boolean"
+    },
+    {
+      "id": "delete",
+      "short": "d",
+      "long": "delete",
+      "description": "Delete characters in SET1, do not translate",
+      "type": "boolean"
+    },
+    {
+      "id": "squeeze_repeats",
+      "short": "s",
+      "long": "squeeze-repeats",
+      "description": "Replace each sequence of a repeated character that is listed in the last specified SET with a single occurrence",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "set1",
+      "description": "Set of characters to translate from",
+      "type": "string",
+      "required": true,
+      "display_name": "SET1"
+    },
+    {
+      "id": "set2",
+      "description": "Set of characters to translate to",
+      "type": "string",
+      "required": false,
+      "display_name": "SET2"
+    }
+  ],
+  "commands": []
+}

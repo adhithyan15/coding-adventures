@@ -4,5 +4,6 @@ Gem::Specification.new do |spec|
   spec.authors       = ["User"]
   spec.summary       = "Gradient descent mathematical optimizations"
   spec.require_paths = ["lib"]
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "minitest", "~> 5.0"
 end

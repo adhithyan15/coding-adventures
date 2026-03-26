@@ -1,0 +1,48 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "basename",
+  "display_name": "basename",
+  "description": "Strip directory and suffix from filenames. Print NAME with any leading directory components removed. If specified, also remove a trailing SUFFIX.",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "multiple",
+      "short": "a",
+      "long": "multiple",
+      "description": "Support multiple arguments and treat each as a NAME",
+      "type": "boolean"
+    },
+    {
+      "id": "suffix",
+      "short": "s",
+      "long": "suffix",
+      "description": "Remove a trailing SUFFIX; implies -a",
+      "type": "string",
+      "value_name": "SUFFIX"
+    },
+    {
+      "id": "zero",
+      "short": "z",
+      "long": "zero",
+      "description": "End each output line with NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "name",
+      "description": "The pathname(s) to strip",
+      "required": true,
+      "variadic": true,
+      "type": "string",
+      "min": 1,
+      "display_name": "NAME"
+    }
+  ],
+  "commands": []
+}

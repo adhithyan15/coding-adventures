@@ -31,6 +31,7 @@
 
 require "digest/sha2"
 require "pathname"
+require_relative "glob_match"
 
 module BuildTool
   module Hasher
@@ -41,7 +42,8 @@ module BuildTool
     SOURCE_EXTENSIONS = {
       "python" => %w[.py .toml .cfg].freeze,
       "ruby"   => %w[.rb .gemspec].freeze,
-      "go"     => %w[.go].freeze
+      "go"     => %w[.go].freeze,
+      "perl"   => %w[.pl .pm .t .xs].freeze
     }.freeze
 
     # SPECIAL_FILENAMES -- Files to always include regardless of extension.
@@ -51,20 +53,57 @@ module BuildTool
     SPECIAL_FILENAMES = {
       "python" => [].freeze,
       "ruby"   => %w[Gemfile Rakefile].freeze,
-      "go"     => %w[go.mod go.sum].freeze
+      "go"     => %w[go.mod go.sum].freeze,
+      "perl"   => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze
     }.freeze
 
     module_function
 
     # collect_source_files -- Gather all source files in a package directory.
     #
-    # Files are filtered by the language's relevant extensions and special
-    # filenames. BUILD files are always included. Returns a sorted list of
-    # Pathname objects (sorted by relative path for determinism).
+    # There are two modes of operation:
+    #
+    # 1. **Extension-based** (shell BUILD or Starlark without declared_srcs):
+    #    Files are filtered by the language's relevant extensions and special
+    #    filenames. BUILD files are always included.
+    #
+    # 2. **Glob-based** (Starlark with declared_srcs):
+    #    Files are matched against the declared source glob patterns using
+    #    the GlobMatch module. BUILD files are always included. This mode
+    #    is more precise -- only files explicitly declared in the Starlark
+    #    BUILD file are considered for hashing.
+    #
+    # Returns a sorted list of Pathname objects (sorted by relative path
+    # for determinism).
     #
     # @param package [Package] The package to scan.
     # @return [Array<Pathname>] Sorted absolute paths to source files.
     def collect_source_files(package)
+      # Check if this package has declared_srcs (Starlark metadata).
+      # The Package struct might not have this field (older code), so we
+      # use respond_to? for safety.
+      declared_srcs = if package.respond_to?(:declared_srcs)
+                        package.declared_srcs || []
+                      else
+                        []
+                      end
+
+      if declared_srcs.any?
+        collect_source_files_glob(package, declared_srcs)
+      else
+        collect_source_files_extension(package)
+      end
+    end
+
+    # collect_source_files_extension -- Extension-based file collection.
+    #
+    # The original algorithm: filter by language extensions and special
+    # filenames. Used for shell BUILD packages and Starlark packages
+    # without declared_srcs.
+    #
+    # @param package [Package] The package to scan.
+    # @return [Array<Pathname>] Sorted absolute paths to source files.
+    def collect_source_files_extension(package)
       extensions = SOURCE_EXTENSIONS.fetch(package.language, [])
       special_names = SPECIAL_FILENAMES.fetch(package.language, [])
 
@@ -95,6 +134,42 @@ module BuildTool
       end
 
       # Sort by relative path for determinism, matching the Python behavior.
+      files.sort_by { |f| f.relative_path_from(package.path).to_s }
+    end
+
+    # collect_source_files_glob -- Glob-based file collection.
+    #
+    # For Starlark packages with declared_srcs, we match each file in the
+    # package directory against the declared source patterns. BUILD files
+    # are always included regardless of patterns.
+    #
+    # This uses the GlobMatch module for ** support, ensuring consistent
+    # behavior with git_diff's strict filtering and the Go build tool.
+    #
+    # @param package [Package] The package to scan.
+    # @param declared_srcs [Array<String>] Glob patterns from Starlark srcs.
+    # @return [Array<Pathname>] Sorted absolute paths to source files.
+    def collect_source_files_glob(package, declared_srcs)
+      files = []
+
+      package.path.find do |filepath|
+        next unless filepath.file?
+
+        basename = filepath.basename.to_s
+
+        # Always include BUILD files.
+        if basename == "BUILD" || basename.start_with?("BUILD_")
+          files << filepath
+          next
+        end
+
+        # Match against declared source patterns.
+        rel = filepath.relative_path_from(package.path).to_s
+        if declared_srcs.any? { |pattern| GlobMatch.match_path?(pattern, rel) }
+          files << filepath
+        end
+      end
+
       files.sort_by { |f| f.relative_path_from(package.path).to_s }
     end
 

@@ -1,0 +1,276 @@
+# Parser grammar for CSS3 (full specification subset)
+# @version 1
+#
+# This grammar stress-tests the parser infrastructure with:
+# - Complex selector syntax (type, class, ID, attribute, pseudo-class,
+#   pseudo-element, combinators, nesting)
+# - Diverse at-rules (@media, @import, @keyframes, @font-face, etc.)
+# - Nested structures (media queries contain rule sets, rule sets contain
+#   declarations and nested rules)
+# - Operator precedence in calc() expressions
+# - CSS nesting with & ampersand reference
+# - !important priority annotation
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from css.tokens
+# lowercase names reference other grammar rules
+#
+# Notation:
+#   |       alternation (try each choice, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional (zero or one)
+#   ( x )   grouping
+#   "lit"   literal match (matches a token whose text value is that string)
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A CSS stylesheet is a sequence of rules. Each rule is either an at-rule
+# (@media, @import, etc.) or a qualified rule (selector + declaration block).
+
+stylesheet = { rule } ;
+
+rule = at_rule | qualified_rule ;
+
+# ============================================================================
+# At-Rules
+# ============================================================================
+#
+# CSS at-rules share a common structure:
+#   AT_KEYWORD prelude (SEMICOLON | block)
+#
+# Examples:
+#   @import "file.css";                    — prelude + semicolon
+#   @charset "UTF-8";                      — prelude + semicolon
+#   @media screen and (min-width: 768px) { } — prelude + block
+#   @keyframes name { }                    — prelude + block
+#   @font-face { }                         — empty prelude + block
+#
+# The grammar does NOT distinguish @media from @import at the syntactic
+# level. All at-rules follow the same pattern. Semantic analysis (post-parse)
+# differentiates them and validates their prelude structure.
+
+at_rule = AT_KEYWORD at_prelude ( SEMICOLON | block ) ;
+
+# The at-rule prelude is a flexible sequence of tokens. It can contain
+# identifiers, strings, numbers, dimensions, functions, parenthesized
+# groups, and more. This flexibility lets the grammar handle all CSS
+# at-rules without encoding each one's specific prelude format.
+at_prelude = { at_prelude_token } ;
+
+at_prelude_token = IDENT | STRING | NUMBER | DIMENSION | PERCENTAGE
+                 | HASH | CUSTOM_PROPERTY | UNICODE_RANGE
+                 | function_in_prelude | paren_block
+                 | COLON | COMMA | SLASH | DOT | STAR | PLUS | MINUS
+                 | GREATER | TILDE | PIPE | EQUALS | AMPERSAND
+                 | CDO | CDC ;
+
+# Functions and parenthesized groups in preludes can contain nested tokens.
+function_in_prelude = FUNCTION at_prelude_tokens RPAREN ;
+paren_block = LPAREN at_prelude_tokens RPAREN ;
+at_prelude_tokens = { at_prelude_token } ;
+
+# ============================================================================
+# Qualified Rules (Selector + Declaration Block)
+# ============================================================================
+#
+# A qualified rule is the bread and butter of CSS:
+#   h1 { color: red; }
+#   .class > p:hover { font-size: 16px; }
+#
+# The selector list comes first, then a block of declarations.
+
+qualified_rule = selector_list block ;
+
+# ============================================================================
+# Selectors (Full CSS3)
+# ============================================================================
+#
+# CSS selectors are comma-separated:
+#   h1, h2, h3 { }
+#
+# Each is a "complex selector" — compound selectors joined by combinators.
+
+selector_list = complex_selector { COMMA complex_selector } ;
+
+# Complex selectors chain compound selectors with combinators:
+#   div > p + span ~ a
+#
+# The descendant combinator (space) is tricky: since whitespace is skipped
+# by the lexer, two adjacent compound_selectors with no explicit combinator
+# imply a descendant relationship. The grammar handles this by making the
+# combinator optional between compound selectors.
+complex_selector = compound_selector { [ combinator ] compound_selector } ;
+
+# Combinators express relationships between elements:
+#   >  child combinator         (div > p)
+#   +  adjacent sibling         (h1 + p)
+#   ~  general sibling          (h1 ~ p)
+#   || column combinator        (col || td) — CSS Selectors Level 4
+combinator = GREATER | PLUS | TILDE ;
+
+# A compound selector is a chain of simple selectors with no whitespace:
+#   div.class#id[attr]:hover::before
+#   .class#id       — no type selector, starts with subclass
+#   #header         — just an ID selector
+#   :hover          — just a pseudo-class
+#
+# A compound selector optionally starts with a type selector (element name
+# or *), followed by zero or more subclass selectors. Alternatively, it
+# can start directly with one or more subclass selectors (no type selector).
+# The two alternatives ensure at least one selector component is present.
+compound_selector = simple_selector { subclass_selector }
+                  | subclass_selector { subclass_selector } ;
+
+# Simple selectors: the foundation.
+#   div     — type selector (element name)
+#   *       — universal selector (any element)
+#   &       — nesting selector (CSS Nesting Module)
+simple_selector = IDENT | STAR | AMPERSAND ;
+
+# Subclass selectors refine the match:
+#   .class        — class selector
+#   #id           — ID selector (tokenized as HASH)
+#   [attr=val]    — attribute selector
+#   :hover        — pseudo-class
+#   ::before      — pseudo-element
+subclass_selector = class_selector | id_selector
+                  | attribute_selector | pseudo_class
+                  | pseudo_element ;
+
+# Class selector: a dot followed by an identifier.
+#   .main-content  .active  .btn-primary
+class_selector = DOT IDENT ;
+
+# ID selector: a hash token.
+#   #header  #nav  #content
+# The HASH token already includes the # character.
+id_selector = HASH ;
+
+# Attribute selectors match based on element attributes:
+#   [disabled]              — has attribute
+#   [type="text"]           — exact match
+#   [class~="warning"]      — space-separated word match
+#   [lang|="en"]            — hyphen-separated prefix match
+#   [href^="https"]         — starts with
+#   [src$=".png"]           — ends with
+#   [title*="hello"]        — substring match
+#   [type="text" i]         — case-insensitive (the trailing IDENT is "i" or "s")
+attribute_selector = LBRACKET IDENT [ attr_matcher attr_value [ IDENT ] ] RBRACKET ;
+
+attr_matcher = EQUALS | TILDE_EQUALS | PIPE_EQUALS
+             | CARET_EQUALS | DOLLAR_EQUALS | STAR_EQUALS ;
+
+attr_value = IDENT | STRING ;
+
+# Pseudo-classes express dynamic state or structural position:
+#   :hover        — simple pseudo-class (just a name)
+#   :nth-child(2n+1)  — functional with An+B microsyntax
+#   :not(.class)  — functional with selector list
+#   :is(.a, .b)   — functional with selector list (forgiving)
+pseudo_class = COLON FUNCTION pseudo_class_args RPAREN
+             | COLON IDENT ;
+
+# Pseudo-class function arguments can be:
+#   - A selector list: :not(.class), :is(.a, .b), :where(.x)
+#   - An An+B expression: :nth-child(2n+1), :nth-of-type(odd)
+#   - Any tokens: :lang(en-US)
+# We use a flexible approach: any sequence of tokens inside the parens.
+pseudo_class_args = { pseudo_class_arg } ;
+
+pseudo_class_arg = IDENT | NUMBER | DIMENSION | STRING | HASH
+                 | PLUS | COMMA | DOT | STAR | COLON | AMPERSAND
+                 | FUNCTION pseudo_class_args RPAREN
+                 | LBRACKET pseudo_class_args RBRACKET ;
+
+# Pseudo-elements create virtual elements:
+#   ::before  ::after  ::first-line  ::first-letter  ::placeholder
+pseudo_element = COLON_COLON IDENT ;
+
+# ============================================================================
+# Declaration Block
+# ============================================================================
+#
+# A block is a curly-brace-delimited container for declarations and
+# nested rules. Allowing qualified_rule and at_rule inside blocks
+# enables CSS Nesting.
+
+block = LBRACE block_contents RBRACE ;
+
+block_contents = { block_item } ;
+
+# A block can contain declarations, nested qualified rules, or nested
+# at-rules. This supports both traditional CSS and CSS Nesting:
+#   .parent {
+#     color: red;              /* declaration */
+#     & .child { color: blue; } /* nested rule */
+#     @media print { ... }     /* nested at-rule */
+#   }
+block_item = at_rule | declaration_or_nested ;
+
+# Disambiguation: both declarations and nested rules start with tokens
+# that look similar (IDENT for property name vs IDENT for type selector).
+# A declaration has IDENT COLON ...; a nested rule has selectors { ... }.
+# We try declaration first (it's more common and fails fast if no COLON).
+declaration_or_nested = declaration | qualified_rule ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+#
+# A declaration is a property-value pair:
+#   color: red;
+#   font-size: 16px;
+#   --custom-var: 42px;
+#   margin: 10px 20px !important;
+#
+# The property can be a regular identifier or a custom property (--name).
+
+declaration = property COLON value_list [ priority ] SEMICOLON ;
+
+property = IDENT | CUSTOM_PROPERTY ;
+
+# !important — the priority annotation.
+# Parsed as BANG followed by a literal match on the IDENT value "important".
+# This tests the infrastructure's literal matching mechanism.
+priority = BANG "important" ;
+
+# ============================================================================
+# Values
+# ============================================================================
+#
+# CSS values are extraordinarily diverse. A value list is a sequence of
+# individual values, optionally separated by commas (font-family) or
+# whitespace (margin shorthand) or slashes (font shorthand: 16px/1.5).
+#
+# Rather than trying to encode every possible CSS value syntax, we define
+# value as any token that can appear in a declaration value position.
+
+value_list = value { value } ;
+
+value = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
+      | CUSTOM_PROPERTY | UNICODE_RANGE | function_call
+      | SLASH | COMMA | PLUS | MINUS ;
+
+# Function calls in values:
+#   rgb(255, 0, 0)
+#   calc(100% - 20px)
+#   var(--main-color, blue)
+#   linear-gradient(to right, red, blue)
+#
+# The FUNCTION token includes the opening paren (e.g., "rgb("), so we
+# only need to match the arguments and closing RPAREN.
+#
+# URL_TOKEN is a special case — it's a single token for url(unquoted-path).
+function_call = FUNCTION function_args RPAREN
+              | URL_TOKEN ;
+
+# Function arguments can contain any value-like tokens, including nested
+# function calls. This supports calc(100% - var(--x, 20px)).
+function_args = { function_arg } ;
+
+function_arg = DIMENSION | PERCENTAGE | NUMBER | STRING | IDENT | HASH
+             | CUSTOM_PROPERTY | COMMA | SLASH | PLUS | MINUS | STAR
+             | FUNCTION function_args RPAREN ;

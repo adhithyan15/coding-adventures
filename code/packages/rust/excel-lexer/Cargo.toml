@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-excel-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Excel formula lexer — tokenizes Excel formulas using the grammar-driven lexer and the excel.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

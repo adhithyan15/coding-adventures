@@ -1,0 +1,5 @@
+{
+  "name": "mansion-classifier",
+  "version": "1.0.0",
+  "scripts": { "start": "npx ts-node --transpileOnly src/index.ts" }
+}

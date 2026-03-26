@@ -1,0 +1,124 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "join",
+  "display_name": "join",
+  "description": "Join lines of two files on a common field",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "field1",
+      "short": "1",
+      "description": "Join on this FIELD of file 1",
+      "type": "integer",
+      "value_name": "FIELD"
+    },
+    {
+      "id": "field2",
+      "short": "2",
+      "description": "Join on this FIELD of file 2",
+      "type": "integer",
+      "value_name": "FIELD"
+    },
+    {
+      "id": "join_field",
+      "short": "j",
+      "description": "Equivalent to -1 FIELD -2 FIELD",
+      "type": "integer",
+      "value_name": "FIELD"
+    },
+    {
+      "id": "unpaired",
+      "short": "a",
+      "description": "Also print unpairable lines from file FILENUM (1 or 2)",
+      "type": "string",
+      "value_name": "FILENUM",
+      "repeatable": true
+    },
+    {
+      "id": "only_unpaired",
+      "short": "v",
+      "description": "Like -a FILENUM, but suppress joined output lines",
+      "type": "string",
+      "value_name": "FILENUM"
+    },
+    {
+      "id": "empty",
+      "short": "e",
+      "description": "Replace missing input fields with EMPTY",
+      "type": "string",
+      "value_name": "EMPTY"
+    },
+    {
+      "id": "format",
+      "short": "o",
+      "description": "Obey FORMAT while constructing output line",
+      "type": "string",
+      "value_name": "FORMAT"
+    },
+    {
+      "id": "separator",
+      "short": "t",
+      "description": "Use CHAR as input and output field separator",
+      "type": "string",
+      "value_name": "CHAR"
+    },
+    {
+      "id": "ignore_case",
+      "short": "i",
+      "long": "ignore-case",
+      "description": "Ignore differences in case when comparing fields",
+      "type": "boolean"
+    },
+    {
+      "id": "check_order",
+      "long": "check-order",
+      "description": "Check that the input is correctly sorted",
+      "type": "boolean"
+    },
+    {
+      "id": "nocheck_order",
+      "long": "nocheck-order",
+      "description": "Do not check that the input is correctly sorted",
+      "type": "boolean"
+    },
+    {
+      "id": "header",
+      "long": "header",
+      "description": "Treat the first line in each file as field headers",
+      "type": "boolean"
+    },
+    {
+      "id": "zero_terminated",
+      "short": "z",
+      "long": "zero-terminated",
+      "description": "Line delimiter is NUL, not newline",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "file1",
+      "name": "FILE1",
+      "description": "First sorted file",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "file2",
+      "name": "FILE2",
+      "description": "Second sorted file",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "order-check",
+      "flag_ids": ["check_order", "nocheck_order"],
+      "required": false
+    }
+  ]
+}

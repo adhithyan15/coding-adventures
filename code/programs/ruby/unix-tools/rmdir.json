@@ -1,0 +1,45 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "rmdir",
+  "display_name": "rmdir",
+  "description": "Remove empty directories",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "parents",
+      "short": "p",
+      "long": "parents",
+      "description": "Remove DIRECTORY and its ancestors",
+      "type": "boolean"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Output a diagnostic for every directory processed",
+      "type": "boolean"
+    },
+    {
+      "id": "ignore_fail_on_non_empty",
+      "long": "ignore-fail-on-non-empty",
+      "description": "Ignore each failure that is solely because a directory is non-empty",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "directories",
+      "description": "Directories to remove",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "display_name": "DIRECTORY"
+    }
+  ],
+  "commands": []
+}

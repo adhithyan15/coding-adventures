@@ -92,10 +92,117 @@ language-agnostic, and data-driven. Having both lets us:
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 
 from grammar_tools import TokenGrammar
 
 from lexer.tokenizer import LexerError, Token, TokenType
+
+# ---------------------------------------------------------------------------
+# Lexer Context — Callback Interface for Group Transitions
+# ---------------------------------------------------------------------------
+
+
+class LexerContext:
+    """Interface that on-token callbacks use to control the lexer.
+
+    When a callback is registered via ``GrammarLexer.set_on_token()``, it
+    receives a ``LexerContext`` on every token match. The context provides
+    controlled access to the group stack, token emission, and skip control.
+
+    Methods that modify state (push/pop/emit/suppress) take effect after
+    the callback returns — they do not interrupt the current match.
+
+    Example — XML lexer callback::
+
+        def xml_hook(token, ctx):
+            if token.type == "OPEN_TAG_START":
+                ctx.push_group("tag")
+            elif token.type in ("TAG_CLOSE", "SELF_CLOSE"):
+                ctx.pop_group()
+    """
+
+    def __init__(
+        self,
+        lexer: GrammarLexer,
+        source: str,
+        pos_after_token: int,
+    ) -> None:
+        self._lexer = lexer
+        self._source = source
+        self._pos_after = pos_after_token
+        self._suppressed = False
+        self._emitted: list[Token] = []
+        self._group_actions: list[tuple[str, str]] = []
+        self._skip_enabled: bool | None = None  # None = no change
+
+    def push_group(self, group_name: str) -> None:
+        """Push a pattern group onto the stack.
+
+        The pushed group becomes active for the next token match.
+        Raises ValueError if the group name is not defined in the grammar.
+        """
+        if group_name not in self._lexer._group_patterns:
+            raise ValueError(
+                f"Unknown pattern group: {group_name!r}. "
+                f"Available groups: {sorted(self._lexer._group_patterns.keys())}"
+            )
+        self._group_actions.append(("push", group_name))
+
+    def pop_group(self) -> None:
+        """Pop the current group from the stack.
+
+        If only the default group remains, this is a no-op. The default
+        group is the floor and cannot be popped.
+        """
+        self._group_actions.append(("pop", ""))
+
+    def active_group(self) -> str:
+        """Return the name of the currently active group."""
+        return self._lexer._group_stack[-1]
+
+    def group_stack_depth(self) -> int:
+        """Return the depth of the group stack (always >= 1)."""
+        return len(self._lexer._group_stack)
+
+    def emit(self, token: Token) -> None:
+        """Inject a synthetic token after the current one.
+
+        Emitted tokens do NOT trigger the callback (prevents infinite
+        loops). Multiple emit() calls produce tokens in call order.
+        """
+        self._emitted.append(token)
+
+    def suppress(self) -> None:
+        """Suppress the current token — do not include it in output."""
+        self._suppressed = True
+
+    def peek(self, offset: int = 1) -> str:
+        """Peek at a source character past the current token.
+
+        Args:
+            offset: Number of characters ahead (1 = immediately after token).
+
+        Returns:
+            The character, or '' if past EOF.
+        """
+        idx = self._pos_after + offset - 1
+        if 0 <= idx < len(self._source):
+            return self._source[idx]
+        return ""
+
+    def peek_str(self, length: int) -> str:
+        """Peek at the next ``length`` characters past the current token."""
+        return self._source[self._pos_after:self._pos_after + length]
+
+    def set_skip_enabled(self, enabled: bool) -> None:
+        """Toggle skip pattern processing.
+
+        When disabled, skip patterns (whitespace, comments) are not tried.
+        Useful for groups where whitespace is significant (e.g., CDATA).
+        """
+        self._skip_enabled = enabled
+
 
 # ---------------------------------------------------------------------------
 # The Grammar-Driven Lexer
@@ -153,21 +260,48 @@ class GrammarLexer:
             grammar: A ``TokenGrammar`` object (typically parsed from a
                 ``.tokens`` file using ``grammar_tools.parse_token_grammar``).
         """
-        self._source = source
+        # For case-insensitive languages, lowercase the source text so that
+        # regex patterns match regardless of input casing. We keep the original
+        # source for position tracking but use the lowercased version for all
+        # pattern matching. Token values are extracted from the lowercased
+        # source, which is the correct behavior for case-insensitive languages.
+        self._source = source.lower() if not grammar.case_sensitive else source
         self._grammar = grammar
         self._pos = 0
         self._line = 1
         self._column = 1
 
+        # Case-insensitive mode — when True, keyword matching ignores case.
+        # Enabled via ``# @case_insensitive true`` in the .tokens file.
+        # When active:
+        #   - keywords are stored in uppercase in the keyword/reserved sets
+        #   - NAME values are compared via value.upper() against those sets
+        #   - matched keyword tokens have their value normalized to uppercase
+        self._case_insensitive = grammar.case_insensitive
+
         # Pre-compute keyword set for fast membership testing.
         # When the lexer matches a NAME token, it checks this set to decide
         # whether the value should be reclassified as a KEYWORD.
-        self._keyword_set = frozenset(grammar.keywords)
+        # In case-insensitive mode, every keyword is stored as uppercase so
+        # that ``value.upper()`` lookups will find a match regardless of the
+        # original casing in the source (e.g., "SELECT", "select", "Select"
+        # all map to the same uppercase entry).
+        if self._case_insensitive:
+            self._keyword_set = frozenset(kw.upper() for kw in grammar.keywords)
+        else:
+            self._keyword_set = frozenset(grammar.keywords)
 
         # Reserved keywords cause immediate lex errors. In Starlark, words
         # like "class" and "import" are reserved — using them is a syntax
         # error at lex time rather than a confusing parse error later.
-        self._reserved_set = frozenset(grammar.reserved_keywords)
+        # Apply the same uppercase normalisation in case-insensitive mode so
+        # that reserved-word detection is also case-insensitive.
+        if self._case_insensitive:
+            self._reserved_set = frozenset(
+                kw.upper() for kw in grammar.reserved_keywords
+            )
+        else:
+            self._reserved_set = frozenset(grammar.reserved_keywords)
 
         # Indentation mode flag. When active, the lexer maintains an
         # indentation stack and emits INDENT/DEDENT/NEWLINE tokens.
@@ -176,6 +310,16 @@ class GrammarLexer:
         # Whether the grammar has skip patterns defined. When skip patterns
         # exist, they replace the default whitespace-skipping behavior.
         self._has_skip_patterns = len(grammar.skip_definitions) > 0
+
+        # Escape mode controls STRING token processing.
+        # None = standard (strip quotes + process escapes).
+        # "none" = strip quotes only, no escape processing.
+        self._escape_mode = grammar.escape_mode
+
+        # Case sensitivity mode. When False, the lexer lowercases input
+        # before matching and promotes NAME → KEYWORD for lowercased values
+        # that match keywords. Used by case-insensitive languages like VHDL.
+        self._case_sensitive = grammar.case_sensitive
 
         # Build alias map: definition name → alias name.
         # For example, STRING_DQ → STRING. When we match STRING_DQ, we
@@ -206,13 +350,131 @@ class GrammarLexer:
             else:
                 self._skip_patterns.append(re.compile(re.escape(defn.pattern)))
 
+        # Compile error patterns (error recovery tokens).
+        # These are tried as a last resort when no normal token matches.
+        # Error tokens allow graceful degradation for malformed inputs —
+        # for example, CSS emits BAD_STRING for unclosed strings instead
+        # of crashing with a LexerError.
+        self._error_patterns: list[tuple[str, re.Pattern[str]]] = []
+        for defn in grammar.error_definitions:
+            if defn.is_regex:
+                pattern = re.compile(defn.pattern)
+            else:
+                pattern = re.compile(re.escape(defn.pattern))
+            self._error_patterns.append((defn.name, pattern))
+
+        # --- Pattern groups ---
+        # Compile per-group patterns. The "default" group uses the
+        # top-level definitions. Named groups use their own definitions.
+        # When no groups are defined, _group_patterns has only "default".
+        self._group_patterns: dict[str, list[tuple[str, re.Pattern[str]]]] = {
+            "default": list(self._patterns),
+        }
+        for group_name, group in grammar.groups.items():
+            compiled: list[tuple[str, re.Pattern[str]]] = []
+            for defn in group.definitions:
+                if defn.is_regex:
+                    pat = re.compile(defn.pattern)
+                else:
+                    pat = re.compile(re.escape(defn.pattern))
+                compiled.append((defn.name, pat))
+                # Register aliases from group definitions
+                if defn.alias:
+                    self._alias_map[defn.name] = defn.alias
+            self._group_patterns[group_name] = compiled
+
+        # The group stack. Bottom is always "default". Top is the active
+        # group whose patterns are tried during token matching.
+        self._group_stack: list[str] = ["default"]
+
+        # On-token callback — None means no callback (zero overhead).
+        self._on_token: (
+            Callable[[Token, LexerContext], None] | None
+        ) = None
+
+        # Skip enabled flag — can be toggled by callbacks for groups
+        # where whitespace is significant (e.g., CDATA, comments).
+        self._skip_enabled: bool = True
+
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. Hooks compose left-to-right: if three pre_tokenize hooks
+        # A, B, C are registered, source flows through A → B → C.
+        # When no hooks are registered, zero overhead — the existing tokenize()
+        # path executes unchanged.
+        self._pre_tokenize_hooks: list[Callable[[str], str]] = []
+        self._post_tokenize_hooks: list[Callable[[list[Token]], list[Token]]] = []
+
+    def set_on_token(
+        self,
+        callback: Callable[[Token, LexerContext], None] | None,
+    ) -> None:
+        """Register a callback that fires on every token match.
+
+        The callback receives the matched token and a ``LexerContext``.
+        It can use the context to push/pop groups, emit extra tokens,
+        or suppress the current token.
+
+        Only one callback can be registered. Pass None to clear.
+
+        The callback is NOT invoked for:
+        - Skip pattern matches (they produce no tokens)
+        - Tokens emitted via ``context.emit()`` (prevents infinite loops)
+        - The EOF token
+        """
+        self._on_token = callback
+
+    def add_pre_tokenize(self, hook: Callable[[str], str]) -> None:
+        """Register a text transform to run before tokenization.
+
+        The hook receives the raw source string and returns a (possibly
+        modified) source string. Multiple hooks compose left-to-right:
+        source flows through A → B → C before tokenization.
+
+        Use cases:
+        - COBOL/FORTRAN column stripping
+        - C #include file insertion
+        - Line continuation / splicing
+
+        Args:
+            hook: A function str → str.
+        """
+        self._pre_tokenize_hooks.append(hook)
+
+    def add_post_tokenize(self, hook: Callable[[list[Token]], list[Token]]) -> None:
+        """Register a token transform to run after tokenization.
+
+        The hook receives the full token list (including EOF) and returns
+        a (possibly modified) token list. Multiple hooks compose left-to-right.
+
+        Use cases:
+        - C #define macro expansion
+        - Token filtering or reclassification
+        - Inserting synthetic tokens
+
+        Args:
+            hook: A function list[Token] → list[Token].
+        """
+        self._post_tokenize_hooks.append(hook)
+
     # -- Main tokenization entry point ----------------------------------------
 
     def tokenize(self) -> list[Token]:
         """Tokenize the source code using the grammar's token definitions.
 
-        Dispatches to the appropriate tokenization method based on whether
-        indentation mode is active.
+        The tokenization pipeline has three stages:
+
+        1. **Pre-tokenize hooks** — transform the source text before lexing.
+           Each hook receives a string and returns a string. Multiple hooks
+           compose left-to-right (A → B → C).
+
+        2. **Core tokenization** — the existing grammar-driven lexer logic,
+           dispatching to standard or indentation mode.
+
+        3. **Post-tokenize hooks** — transform the token list after lexing.
+           Each hook receives a token list and returns a token list.
+
+        When no hooks are registered, this is equivalent to the original
+        tokenize() — zero overhead.
 
         Returns:
             A list of ``Token`` objects, always ending with an EOF token.
@@ -221,9 +483,29 @@ class GrammarLexer:
             LexerError: If an unexpected character is encountered, a reserved
                 keyword is used, or indentation is inconsistent.
         """
+        # Stage 1: Pre-tokenize hooks transform the source text.
+        # Common use cases: COBOL column stripping, C #include resolution,
+        # line continuation splicing. Each hook is str → str.
+        if self._pre_tokenize_hooks:
+            source = self._source
+            for hook in self._pre_tokenize_hooks:
+                source = hook(source)
+            self._source = source
+
+        # Stage 2: Core tokenization — dispatch to standard or indentation mode.
         if self._indentation_mode:
-            return self._tokenize_indentation()
-        return self._tokenize_standard()
+            tokens = self._tokenize_indentation()
+        else:
+            tokens = self._tokenize_standard()
+
+        # Stage 3: Post-tokenize hooks transform the token list.
+        # Common use cases: C #define expansion, token filtering,
+        # conditional compilation. Each hook is list[Token] → list[Token].
+        if self._post_tokenize_hooks:
+            for hook in self._post_tokenize_hooks:
+                tokens = hook(tokens)
+
+        return tokens
 
     # -- Standard (non-indentation) tokenization ------------------------------
 
@@ -233,12 +515,20 @@ class GrammarLexer:
         The algorithm:
 
         1. While there are characters left:
-           a. If skip patterns exist, try them (consume silently).
+           a. If skip patterns exist and skip is enabled, try them.
            b. If no skip patterns, use default whitespace skip.
            c. If the current character is a newline, emit NEWLINE.
-           d. Try each token pattern (first match wins).
-           e. If nothing matches, raise LexerError.
+           d. Try active group's token patterns (first match wins).
+           e. If callback registered, invoke it and process actions.
+           f. If nothing matches, try error patterns as fallback.
+           g. If still nothing, raise LexerError.
         2. Append EOF.
+
+        When pattern groups are active, the lexer uses ``_group_stack[-1]``
+        to determine which set of patterns to try. When a callback is
+        registered via ``set_on_token()``, it fires after each token match
+        and can push/pop groups, emit extra tokens, or suppress the
+        current token.
         """
         tokens: list[Token] = []
 
@@ -246,10 +536,11 @@ class GrammarLexer:
             char = self._source[self._pos]
 
             # --- Skip patterns (grammar-defined) ---
-            # When the grammar has skip patterns, they take over whitespace
-            # handling. The lexer tries each skip pattern before token patterns.
+            # When the grammar has skip patterns AND skip is enabled, they
+            # take over whitespace handling. The callback can disable skip
+            # processing for groups where whitespace is significant (CDATA).
             if self._has_skip_patterns:
-                if self._try_skip():
+                if self._skip_enabled and self._try_skip():
                     continue
             else:
                 # --- Default whitespace skip ---
@@ -271,10 +562,50 @@ class GrammarLexer:
                 self._advance()
                 continue
 
-            # --- Try each token pattern (first match wins) ---
-            token = self._try_match_token()
+            # --- Try active group's token patterns (first match wins) ---
+            # The active group is the top of the group stack. When no
+            # groups are defined, this is always "default" (the top-level
+            # definitions), preserving backward compatibility.
+            active_group = self._group_stack[-1]
+            token = self._try_match_token_in_group(active_group)
             if token is not None:
-                tokens.append(token)
+                # --- Invoke on-token callback ---
+                # The callback can push/pop groups, emit extra tokens,
+                # suppress the current token, or toggle skip processing.
+                # Emitted tokens do NOT re-trigger the callback.
+                if self._on_token is not None:
+                    ctx = LexerContext(self, self._source, self._pos)
+                    self._on_token(token, ctx)
+
+                    # Apply suppression: if the callback suppressed this
+                    # token, don't add it to the output.
+                    if not ctx._suppressed:
+                        tokens.append(token)
+
+                    # Append any tokens emitted by the callback.
+                    tokens.extend(ctx._emitted)
+
+                    # Apply group stack actions in order.
+                    for action, group_name in ctx._group_actions:
+                        if action == "push":
+                            self._group_stack.append(group_name)
+                        elif action == "pop" and len(self._group_stack) > 1:
+                            self._group_stack.pop()
+
+                    # Apply skip toggle if the callback changed it.
+                    if ctx._skip_enabled is not None:
+                        self._skip_enabled = ctx._skip_enabled
+                else:
+                    tokens.append(token)
+                continue
+
+            # --- Try error patterns as fallback ---
+            # Error patterns allow graceful degradation: instead of crashing,
+            # the lexer emits an error token (e.g., BAD_STRING for unclosed
+            # strings). The parser can then handle or report these tokens.
+            error_token = self._try_match_error_token()
+            if error_token is not None:
+                tokens.append(error_token)
                 continue
 
             raise LexerError(
@@ -290,6 +621,10 @@ class GrammarLexer:
             line=self._line,
             column=self._column,
         ))
+
+        # Reset group stack for reuse (in case tokenize is called again).
+        self._group_stack = ["default"]
+        self._skip_enabled = True
 
         return tokens
 
@@ -400,6 +735,12 @@ class GrammarLexer:
             token = self._try_match_token()
             if token is not None:
                 tokens.append(token)
+                continue
+
+            # --- Try error patterns as fallback ---
+            error_token = self._try_match_error_token()
+            if error_token is not None:
+                tokens.append(error_token)
                 continue
 
             raise LexerError(
@@ -548,16 +889,31 @@ class GrammarLexer:
     def _try_match_token(self) -> Token | None:
         """Try to match a token pattern at the current position.
 
-        Tries each compiled pattern in priority order (first match wins).
-        Handles keyword detection, reserved word checking, aliases, and
-        string escape processing.
+        Uses the default group's patterns (``self._patterns``). This method
+        is used by the indentation tokenizer which does not support groups.
+
+        Returns:
+            A Token if a pattern matched, None otherwise.
+        """
+        return self._try_match_token_in_group("default")
+
+    def _try_match_token_in_group(self, group_name: str) -> Token | None:
+        """Try to match a token pattern from a specific group.
+
+        Tries each compiled pattern in the named group in priority order
+        (first match wins). Handles keyword detection, reserved word
+        checking, aliases, and string escape processing.
+
+        Args:
+            group_name: The pattern group to use (e.g., "default", "tag").
 
         Returns:
             A Token if a pattern matched, None otherwise.
         """
         remaining = self._source[self._pos:]
+        patterns = self._group_patterns.get(group_name, self._patterns)
 
-        for token_name, pattern in self._patterns:
+        for token_name, pattern in patterns:
             match = pattern.match(remaining)
             if match:
                 value = match.group(0)
@@ -570,10 +926,15 @@ class GrammarLexer:
                 # Handle STRING tokens: strip quotes and process escapes.
                 # We check the effective type (after alias resolution) so
                 # that STRING_DQ -> STRING still gets escape processing.
+                #
+                # Escape mode controls what happens to STRING values:
+                # - None (default): strip quotes AND process escape sequences
+                # - "none": strip quotes only, leave escapes as-is
                 effective_name = self._alias_map.get(token_name, token_name)
                 if effective_name == "STRING" or token_name == "STRING":
                     inner = value[1:-1]
-                    inner = self._process_escapes(inner)
+                    if self._escape_mode != "none":
+                        inner = self._process_escapes(inner)
                     token = Token(
                         type=token_type,
                         value=inner,
@@ -581,14 +942,62 @@ class GrammarLexer:
                         column=start_column,
                     )
                 else:
+                    # In case-insensitive mode, KEYWORD values are normalised
+                    # to uppercase so that "select", "SELECT", and "Select"
+                    # all produce a KEYWORD token with value "SELECT".
+                    # Non-keyword tokens (NAME, NUMBER, etc.) keep their
+                    # original casing from the source text.
+                    emit_value = value
+                    if self._case_insensitive and token_type in (
+                        TokenType.KEYWORD, "KEYWORD"
+                    ):
+                        emit_value = value.upper()
                     token = Token(
                         type=token_type,
-                        value=value,
+                        value=emit_value,
                         line=start_line,
                         column=start_column,
                     )
 
                 # Advance position by the number of characters matched.
+                for _ in range(len(value)):
+                    self._advance()
+
+                return token
+
+        return None
+
+    def _try_match_error_token(self) -> Token | None:
+        """Try to match an error pattern at the current position.
+
+        Error patterns are a fallback — they are only tried when no normal
+        token pattern matches. This allows graceful degradation for malformed
+        inputs. For example, CSS can emit a ``BAD_STRING`` token for an
+        unclosed string instead of crashing with a ``LexerError``.
+
+        Error tokens are emitted with the pattern name as the token type
+        (e.g., ``"BAD_STRING"``). Downstream consumers can check for these
+        error token types and report or recover accordingly.
+
+        Returns:
+            A Token if an error pattern matched, None otherwise.
+        """
+        remaining = self._source[self._pos:]
+
+        for error_name, pattern in self._error_patterns:
+            match = pattern.match(remaining)
+            if match:
+                value = match.group(0)
+                start_line = self._line
+                start_column = self._column
+
+                token = Token(
+                    type=error_name,
+                    value=value,
+                    line=start_line,
+                    column=start_column,
+                )
+
                 for _ in range(len(value)):
                     self._advance()
 
@@ -648,7 +1057,10 @@ class GrammarLexer:
         # Reserved keyword check — error on reserved identifiers.
         # In Starlark, "class", "import", etc. are reserved. Using them
         # is a lex error rather than a confusing parse error.
-        if effective_name == "NAME" and value in self._reserved_set:
+        # In case-insensitive mode, compare the uppercased value so that
+        # "CLASS", "class", and "Class" all trigger the same error.
+        lookup_value = value.upper() if self._case_insensitive else value
+        if effective_name == "NAME" and lookup_value in self._reserved_set:
             raise LexerError(
                 f"Reserved keyword '{value}' cannot be used as an identifier",
                 line=self._line,
@@ -657,7 +1069,9 @@ class GrammarLexer:
 
         # Keyword detection — reclassify NAME → KEYWORD when the value
         # matches a known keyword.
-        if effective_name == "NAME" and value in self._keyword_set:
+        # In case-insensitive mode we test against the uppercase lookup value
+        # (the set already stores entries in uppercase, see __init__).
+        if effective_name == "NAME" and lookup_value in self._keyword_set:
             try:
                 return TokenType.KEYWORD
             except (KeyError, AttributeError):
@@ -697,10 +1111,46 @@ class GrammarLexer:
         i = 0
         while i < len(s):
             if s[i] == "\\" and i + 1 < len(s):
-                escape_map = {"n": "\n", "t": "\t", "\\": "\\", '"': '"'}
                 next_char = s[i + 1]
-                result.append(escape_map.get(next_char, next_char))
-                i += 2
+
+                # Standard escape sequences. This map covers all escapes
+                # defined by JSON (RFC 8259 section 7) and most programming
+                # languages. Previously only \n, \t, \\, and \" were handled;
+                # \b, \f, \r, and \/ were added for JSON support.
+                escape_map = {
+                    "n": "\n",      # line feed
+                    "t": "\t",      # tab
+                    "r": "\r",      # carriage return
+                    "b": "\b",      # backspace
+                    "f": "\f",      # form feed
+                    "\\": "\\",     # literal backslash
+                    '"': '"',       # literal double quote
+                    "/": "/",       # solidus (JSON allows \/ as an escape)
+                }
+
+                if next_char in escape_map:
+                    result.append(escape_map[next_char])
+                    i += 2
+                elif next_char == "u" and i + 5 < len(s):
+                    # Unicode escape: \uXXXX where XXXX is exactly 4 hex digits.
+                    # This is required by JSON (RFC 8259) and supported by most
+                    # programming languages. We validate that the 4 characters
+                    # after \u are valid hex digits, then convert to the
+                    # corresponding Unicode character.
+                    hex_str = s[i + 2 : i + 6]
+                    if len(hex_str) == 4 and all(
+                        c in "0123456789abcdefABCDEF" for c in hex_str
+                    ):
+                        result.append(chr(int(hex_str, 16)))
+                        i += 6
+                    else:
+                        # Invalid hex digits — pass through as-is.
+                        result.append(next_char)
+                        i += 2
+                else:
+                    # Unknown escape — pass through the escaped character.
+                    result.append(next_char)
+                    i += 2
             else:
                 result.append(s[i])
                 i += 1

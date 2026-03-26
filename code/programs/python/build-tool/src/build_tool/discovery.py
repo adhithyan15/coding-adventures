@@ -66,12 +66,18 @@ class Package:
         path: Absolute path to the package directory.
         build_commands: Lines from the BUILD file (commands to execute).
         language: Inferred language -- "python", "ruby", "go", "rust", or "unknown".
+        is_starlark: Whether the BUILD file uses Starlark syntax.
+        declared_srcs: Glob patterns from the Starlark srcs field.
+        declared_deps: Qualified dependency names from the Starlark deps field.
     """
 
     name: str
     path: Path
     build_commands: list[str] = field(default_factory=list)
     language: str = "unknown"
+    is_starlark: bool = False
+    declared_srcs: list[str] = field(default_factory=list)
+    declared_deps: list[str] = field(default_factory=list)
 
 
 def _read_lines(filepath: Path) -> list[str]:
@@ -100,7 +106,7 @@ def _infer_language(path: Path) -> str:
     "go", or "rust" that sits under "packages" or "programs".
     """
     parts = path.parts
-    for lang in ("python", "ruby", "go", "rust", "typescript", "elixir"):
+    for lang in ("python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl"):
         if lang in parts:
             return lang
     return "unknown"
@@ -117,13 +123,19 @@ def _infer_package_name(path: Path, language: str) -> str:
 def _get_build_file(directory: Path) -> Path | None:
     """Return the appropriate BUILD file for the current platform.
 
-    Priority:
-    1. BUILD_mac on macOS, BUILD_linux on Linux
-    2. BUILD (fallback)
-    3. None if no BUILD file exists
+    Priority (most specific wins):
+    1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+    2. Shared: BUILD_mac_and_linux (macOS or Linux — for Unix-like systems)
+    3. Generic: BUILD (all platforms)
+    4. None if no BUILD file exists
+
+    This layering lets packages provide Windows-specific build commands via
+    BUILD_windows while sharing a single BUILD_mac_and_linux for the common
+    Unix case, falling back to BUILD when no platform differences exist.
     """
     system = platform.system()
 
+    # Step 1: Check for the most specific platform file.
     if system == "Darwin":
         platform_build = directory / "BUILD_mac"
         if platform_build.exists():
@@ -134,6 +146,18 @@ def _get_build_file(directory: Path) -> Path | None:
         if platform_build.exists():
             return platform_build
 
+    if system == "Windows":
+        platform_build = directory / "BUILD_windows"
+        if platform_build.exists():
+            return platform_build
+
+    # Step 2: Check for the shared Unix file (macOS + Linux).
+    if system in ("Darwin", "Linux"):
+        shared_build = directory / "BUILD_mac_and_linux"
+        if shared_build.exists():
+            return shared_build
+
+    # Step 3: Fall back to the generic BUILD file.
     generic_build = directory / "BUILD"
     if generic_build.exists():
         return generic_build

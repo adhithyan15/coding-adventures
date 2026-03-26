@@ -48,12 +48,43 @@ languages like Starlark (a Python subset), we added four extensions:
 4. **reserved:** section — keywords that are syntax errors if used as
    identifiers. Unlike regular keywords (which produce KEYWORD tokens),
    reserved words cause immediate lex errors.
+
+5. **group NAME:** section — defines a named set of token patterns
+   (a "pattern group"). Groups enable context-sensitive lexing: the
+   lexer maintains a stack of active groups and only tries patterns from
+   the group on top of the stack. Language-specific callback code
+   pushes/pops groups in response to matched tokens. For example, an
+   XML lexer pushes a "tag" group when it sees ``<`` and pops it on
+   ``>``, so attribute-related patterns are only active inside tags.
+   Patterns outside any group section belong to the implicit "default"
+   group. The grammar file contains no transition logic — just pattern
+   definitions labeled by group.
 """
 
 from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+
+# ---------------------------------------------------------------------------
+# Magic comment regex
+# ---------------------------------------------------------------------------
+# Magic comments are special directives embedded in comment lines, using the
+# form:  # @key value
+#
+# They must appear as complete comment lines (the # is the first non-space
+# character on the line). The pattern captures:
+#   group 1 — the key (word characters only, e.g. "version")
+#   group 2 — the rest of the line after the key (the raw value string)
+#
+# Examples:
+#   # @version 1          → key="version", value="1"
+#   # @case_insensitive true  → key="case_insensitive", value="true"
+#
+# Unknown keys are silently ignored for forward compatibility: a newer
+# grammar file can contain directives that an older grammar-tools version
+# does not understand, and parsing will still succeed.
+_MAGIC_COMMENT_RE = re.compile(r'^#\s*@(\w+)\s*(.*)$')
 
 
 # ---------------------------------------------------------------------------
@@ -106,11 +137,47 @@ class TokenDefinition:
     alias: str | None = None
 
 
+@dataclass(frozen=True)
+class PatternGroup:
+    """A named set of token definitions that are active together.
+
+    When this group is at the top of the lexer's group stack, only these
+    patterns are tried during token matching. Skip patterns are global
+    and always tried regardless of the active group.
+
+    Pattern groups enable context-sensitive lexing. For example, an XML
+    lexer defines a "tag" group with patterns for attribute names, equals
+    signs, and attribute values. These patterns are only active inside
+    tags — the callback pushes the "tag" group when ``<`` is matched and
+    pops it when ``>`` is matched.
+
+    Attributes:
+        name: The group name, e.g. "tag" or "cdata". Must be a lowercase
+            identifier matching ``[a-z_][a-z0-9_]*``.
+        definitions: Ordered list of token definitions in this group.
+            Order matters (first-match-wins), just like the top-level
+            definitions list.
+    """
+
+    name: str
+    definitions: list[TokenDefinition]
+
+
 @dataclass
 class TokenGrammar:
     """The complete contents of a parsed .tokens file.
 
     Attributes:
+        version: Schema version declared with ``# @version N``. Defaults
+            to 0 (unversioned). Tools can use this to detect whether a
+            file uses features that require a minimum grammar-tools
+            release. Forward-compatible: older tools that do not
+            understand a version simply ignore the field.
+        case_insensitive: When ``True`` (set via ``# @case_insensitive true``),
+            the lexer should treat all patterns as case-insensitive. This
+            is a global flag: it applies to every token definition in the
+            file. Useful for languages like SQL or HTML where keywords are
+            conventionally case-insensitive. Defaults to ``False``.
         definitions: Ordered list of token definitions. Order matters
             because the lexer uses first-match-wins semantics.
         keywords: List of reserved words from the keywords: section.
@@ -126,13 +193,37 @@ class TokenGrammar:
             tokens), reserved words cause an immediate lex error. This
             catches mistakes like ``class Foo`` in Starlark at lex time
             instead of producing a confusing parse error.
+        escape_mode: Controls how the lexer processes STRING token values.
+            None (default) uses standard escape processing (JSON-style
+            escapes like backslash-n, backslash-t, backslash-uXXXX).
+            The string "none" disables escape processing — quotes are
+            stripped but escape sequences are left as-is. This is useful
+            for languages like CSS where escape semantics differ from the
+            standard set and should be handled post-parse.
+        error_definitions: Token definitions for error recovery patterns.
+            When the lexer fails to match any normal token or skip pattern,
+            it tries these patterns before raising ``LexerError``. This
+            allows graceful degradation for malformed inputs — for example,
+            CSS emits ``BAD_STRING`` for unclosed strings instead of
+            crashing. Error tokens carry an ``is_error`` marker.
+        case_sensitive: Whether the lexer should match patterns
+            case-sensitively. Defaults to True. When False, the lexer
+            lowercases the source text before matching and performs
+            keyword promotion on the lowercased values. This is used
+            by case-insensitive languages like VHDL.
     """
 
+    version: int = 0
+    case_insensitive: bool = False
     definitions: list[TokenDefinition] = field(default_factory=list)
     keywords: list[str] = field(default_factory=list)
     mode: str | None = None
     skip_definitions: list[TokenDefinition] = field(default_factory=list)
     reserved_keywords: list[str] = field(default_factory=list)
+    escape_mode: str | None = None
+    error_definitions: list[TokenDefinition] = field(default_factory=list)
+    groups: dict[str, PatternGroup] = field(default_factory=dict)
+    case_sensitive: bool = True
 
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
@@ -141,12 +232,18 @@ class TokenGrammar:
         (since that is the name the parser grammar references). The original
         definition name is also included for completeness.
 
+        Includes names from all pattern groups, since group tokens can
+        also appear in parser grammars.
+
         This is useful for cross-validation: the parser grammar references
         tokens by name, and we need to check that every referenced token
         actually exists.
         """
         names = set()
-        for d in self.definitions:
+        all_defs = list(self.definitions)
+        for group in self.groups.values():
+            all_defs.extend(group.definitions)
+        for d in all_defs:
             names.add(d.name)
             if d.alias:
                 names.add(d.alias)
@@ -160,13 +257,54 @@ class TokenGrammar:
         what the parser grammar references.
 
         For definitions without aliases, this returns the definition name.
+
+        Includes names from all pattern groups.
         """
-        return {d.alias if d.alias else d.name for d in self.definitions}
+        all_defs = list(self.definitions)
+        for group in self.groups.values():
+            all_defs.extend(group.definitions)
+        return {d.alias if d.alias else d.name for d in all_defs}
 
 
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
+
+
+def _find_closing_slash(pattern_part: str) -> int:
+    """Find the index of the closing ``/`` in a regex pattern string.
+
+    The string is expected to start with ``/``. We scan from index 1
+    looking for the first unescaped ``/`` that is NOT inside a ``[...]``
+    character class.
+
+    If the bracket-aware scan fails (e.g. an unclosed ``[``), we fall
+    back to finding the last ``/`` so the pattern can still be parsed
+    and validated downstream.
+
+    Returns the index of the closing ``/``, or ``-1`` if not found.
+    """
+    i = 1
+    in_bracket = False
+    n = len(pattern_part)
+    while i < n:
+        ch = pattern_part[i]
+        if ch == "\\":
+            # Escaped character — skip next
+            i += 2
+            continue
+        if ch == "[" and not in_bracket:
+            in_bracket = True
+        elif ch == "]" and in_bracket:
+            in_bracket = False
+        elif ch == "/" and not in_bracket:
+            return i
+        i += 1
+
+    # Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+    # try the last / as a best-effort parse.
+    last = pattern_part.rfind("/")
+    return last if last > 0 else -1
 
 
 def _parse_definition(
@@ -201,12 +339,11 @@ def _parse_definition(
     # the -> in the alias with characters inside a regex pattern.
     # Strategy: find the closing delimiter first, then check for ->.
     if pattern_part.startswith("/"):
-        # Regex pattern — find the closing /
-        # The pattern could contain escaped slashes, but our format
-        # doesn't support that (slashes inside regex use [/] or other
-        # workarounds). So we find the LAST / as the closing delimiter.
-        last_slash = pattern_part.rfind("/")
-        if last_slash == 0:
+        # Regex pattern — find the closing / by scanning character-by-character.
+        # We track bracket depth so that / inside [...] character classes is
+        # not mistaken for the closing delimiter. We also skip escaped chars.
+        last_slash = _find_closing_slash(pattern_part)
+        if last_slash == -1:
             raise TokenGrammarError(
                 f"Unclosed regex pattern for token {name_part!r}",
                 line_number,
@@ -328,14 +465,44 @@ def parse_token_grammar(source: str) -> TokenGrammar:
     # Section tracking. We use a string to track which section we're in,
     # since sections are mutually exclusive and we can only be in one at
     # a time (or in no section = definition mode).
-    current_section: str | None = None  # "keywords", "reserved", "skip"
+    #
+    # For pattern groups, current_section is "group:NAME" where NAME is
+    # the group name. This distinguishes groups from other sections.
+    current_section: str | None = None  # "keywords", "reserved", "skip", "group:NAME"
 
     for line_number, raw_line in enumerate(lines, start=1):
         line = raw_line.rstrip()
         stripped = line.strip()
 
-        # --- Blank lines and comments are always skipped ---
-        if stripped == "" or stripped.startswith("#"):
+        # --- Blank lines are always skipped ---
+        if stripped == "":
+            continue
+
+        # --- Comment lines: check for magic comments, then skip ---
+        # Regular comments (``# some text``) are silently ignored.
+        # Magic comments (``# @key value``) carry structured directives
+        # that configure grammar-level metadata. We scan every comment
+        # line with _MAGIC_COMMENT_RE before discarding it.
+        #
+        # Currently recognised keys:
+        #   @version N            — set grammar.version to integer N
+        #   @case_insensitive B   — set grammar.case_insensitive to bool
+        #
+        # Unknown keys are silently ignored so that files written for a
+        # newer grammar-tools version still parse correctly on older ones.
+        if stripped.startswith("#"):
+            magic = _MAGIC_COMMENT_RE.match(stripped)
+            if magic:
+                key = magic.group(1)
+                value = magic.group(2).strip()
+                if key == "version":
+                    try:
+                        grammar.version = int(value)
+                    except ValueError:
+                        pass  # Non-integer version — ignore silently
+                elif key == "case_insensitive":
+                    grammar.case_insensitive = (value == "true")
+                # All other keys are intentionally ignored (forward compat)
             continue
 
         # --- mode: directive ---
@@ -351,6 +518,72 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = None
             continue
 
+        # --- escapes: directive ---
+        # Controls how STRING tokens are processed. "none" disables
+        # escape processing (quotes are stripped but escapes are left
+        # as-is). Useful for CSS where escape semantics differ from JSON.
+        if stripped.startswith("escapes:"):
+            escape_value = stripped[8:].strip()
+            if not escape_value:
+                raise TokenGrammarError(
+                    "Missing value after 'escapes:'",
+                    line_number,
+                )
+            grammar.escape_mode = escape_value
+            current_section = None
+            continue
+
+        # --- case_sensitive: directive ---
+        # Controls whether the lexer should match case-sensitively.
+        # ``case_sensitive: false`` makes the lexer lowercase input before
+        # matching and perform keyword promotion on lowercased values.
+        if stripped.startswith("case_sensitive:"):
+            cs_value = stripped[15:].strip().lower()
+            if cs_value not in ("true", "false"):
+                raise TokenGrammarError(
+                    f"Invalid value for 'case_sensitive:': {cs_value!r} "
+                    "(expected 'true' or 'false')",
+                    line_number,
+                )
+            grammar.case_sensitive = cs_value == "true"
+            current_section = None
+            continue
+
+        # --- Group headers ---
+        # Pattern groups are declared with ``group NAME:`` where NAME is
+        # a lowercase identifier. All subsequent indented lines belong to
+        # that group, just like skip: or errors: sections.
+        if stripped.startswith("group ") and stripped.endswith(":"):
+            group_name = stripped[6:-1].strip()
+            if not group_name:
+                raise TokenGrammarError(
+                    "Missing group name after 'group'",
+                    line_number,
+                )
+            if not re.match(r"^[a-z_][a-z0-9_]*$", group_name):
+                raise TokenGrammarError(
+                    f"Invalid group name: {group_name!r} "
+                    "(must be a lowercase identifier like 'tag' or 'cdata')",
+                    line_number,
+                )
+            reserved_names = {"default", "skip", "keywords", "reserved", "errors"}
+            if group_name in reserved_names:
+                raise TokenGrammarError(
+                    f"Reserved group name: {group_name!r} "
+                    f"(cannot use {', '.join(sorted(reserved_names))})",
+                    line_number,
+                )
+            if group_name in grammar.groups:
+                raise TokenGrammarError(
+                    f"Duplicate group name: {group_name!r}",
+                    line_number,
+                )
+            grammar.groups[group_name] = PatternGroup(
+                name=group_name, definitions=[]
+            )
+            current_section = f"group:{group_name}"
+            continue
+
         # --- Section headers ---
         if stripped in ("keywords:", "keywords :"):
             current_section = "keywords"
@@ -362,6 +595,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
 
         if stripped in ("skip:", "skip :"):
             current_section = "skip"
+            continue
+
+        if stripped in ("errors:", "errors :"):
+            current_section = "errors"
             continue
 
         # --- Inside a section ---
@@ -396,6 +633,60 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                         skip_pattern, skip_name, line_number
                     )
                     grammar.skip_definitions.append(defn)
+                elif current_section == "errors":
+                    # Errors section contains token definitions for
+                    # error recovery — patterns tried as a fallback when
+                    # no normal token matches (e.g., BAD_STRING for
+                    # unclosed strings in CSS).
+                    if "=" not in stripped:
+                        raise TokenGrammarError(
+                            f"Expected error pattern definition "
+                            f"(NAME = pattern), got: {stripped!r}",
+                            line_number,
+                        )
+                    eq_index = stripped.index("=")
+                    err_name = stripped[:eq_index].strip()
+                    err_pattern = stripped[eq_index + 1 :].strip()
+                    if not err_name or not err_pattern:
+                        raise TokenGrammarError(
+                            f"Incomplete error pattern definition: "
+                            f"{stripped!r}",
+                            line_number,
+                        )
+                    defn = _parse_definition(
+                        err_pattern, err_name, line_number
+                    )
+                    grammar.error_definitions.append(defn)
+                elif current_section is not None and current_section.startswith("group:"):
+                    # Group section contains token definitions,
+                    # same format as skip: and errors: sections.
+                    group_name = current_section[6:]
+                    if "=" not in stripped:
+                        raise TokenGrammarError(
+                            f"Expected token definition in group "
+                            f"'{group_name}' (NAME = pattern), "
+                            f"got: {stripped!r}",
+                            line_number,
+                        )
+                    eq_index = stripped.index("=")
+                    g_name = stripped[:eq_index].strip()
+                    g_pattern = stripped[eq_index + 1 :].strip()
+                    if not g_name or not g_pattern:
+                        raise TokenGrammarError(
+                            f"Incomplete definition in group "
+                            f"'{group_name}': {stripped!r}",
+                            line_number,
+                        )
+                    defn = _parse_definition(
+                        g_pattern, g_name, line_number
+                    )
+                    # PatternGroup is frozen, so we need to create a new
+                    # one with the updated definitions list.
+                    old_group = grammar.groups[group_name]
+                    grammar.groups[group_name] = PatternGroup(
+                        name=group_name,
+                        definitions=[*old_group.definitions, defn],
+                    )
                 continue
             else:
                 # Non-indented line — exit section, fall through
@@ -536,11 +827,42 @@ def validate_token_grammar(grammar: TokenGrammar) -> list[str]:
     # Validate skip definitions
     issues.extend(_validate_definitions(grammar.skip_definitions, "skip pattern"))
 
+    # Validate error definitions
+    issues.extend(_validate_definitions(grammar.error_definitions, "error pattern"))
+
     # Validate mode
     if grammar.mode is not None and grammar.mode != "indentation":
         issues.append(
             f"Unknown lexer mode '{grammar.mode}' "
             f"(only 'indentation' is supported)"
+        )
+
+    # Validate escape mode
+    if grammar.escape_mode is not None and grammar.escape_mode != "none":
+        issues.append(
+            f"Unknown escape mode '{grammar.escape_mode}' "
+            f"(only 'none' is supported)"
+        )
+
+    # Validate pattern groups
+    for group_name, group in grammar.groups.items():
+        # Group name format
+        if not re.match(r"^[a-z_][a-z0-9_]*$", group_name):
+            issues.append(
+                f"Invalid group name '{group_name}' "
+                f"(must be a lowercase identifier)"
+            )
+
+        # Empty group warning
+        if not group.definitions:
+            issues.append(
+                f"Empty pattern group '{group_name}' "
+                f"(has no token definitions)"
+            )
+
+        # Validate definitions within the group
+        issues.extend(
+            _validate_definitions(group.definitions, f"group '{group_name}' token")
         )
 
     return issues

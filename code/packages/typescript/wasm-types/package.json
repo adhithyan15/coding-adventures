@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/wasm-types",
+  "version": "0.1.0",
+  "description": "WASM 1.0 type system: ValueType, FuncType, Limits, MemoryType, TableType, GlobalType, WasmModule",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/wasm-leb128": "file:../wasm-leb128"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

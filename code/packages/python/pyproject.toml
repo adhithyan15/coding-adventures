@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 
 [tool.uv.workspace]
 members = [
+    "directed-graph",
     "logic-gates",
     "arithmetic",
     "cpu-simulator",
@@ -14,12 +15,13 @@ members = [
     "intel4004-simulator",
     "assembler",
     "grammar-tools",
+    "state-machine",
     "jit-compiler",
     "lexer",
     "parser",
     "bytecode-compiler",
     "virtual-machine",
-    "pipeline",
+    "compiler-pipeline",
     "html-renderer",
     "clr-simulator",
     "fp-arithmetic",
@@ -28,7 +30,14 @@ members = [
     "parallel-execution-engine",
     "compute-unit",
     "device-simulator",
+    "cache",
     "compute-runtime",
+    "vendor-api-simulators",
+    "blas-library",
+    "ml-framework-core",
+    "ml-framework-torch",
+    "ml-framework-keras",
+    "ml-framework-tf",
 ]
 
 [tool.uv.sources]
@@ -40,13 +49,15 @@ coding-adventures-riscv-simulator = { workspace = true }
 coding-adventures-wasm-simulator = { workspace = true }
 coding-adventures-intel4004-simulator = { workspace = true }
 coding-adventures-assembler = { workspace = true }
+coding-adventures-directed-graph = { workspace = true }
 coding-adventures-lexer = { workspace = true }
 coding-adventures-parser = { workspace = true }
 coding-adventures-bytecode-compiler = { workspace = true }
 coding-adventures-virtual-machine = { workspace = true }
 coding-adventures-grammar-tools = { workspace = true }
+coding-adventures-state-machine = { workspace = true }
 coding-adventures-jit-compiler = { workspace = true }
-coding-adventures-pipeline = { workspace = true }
+coding-adventures-compiler-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
 coding-adventures-clr-simulator = { workspace = true }
 coding-adventures-fp-arithmetic = { workspace = true }
@@ -55,4 +66,18 @@ coding-adventures-gpu-core = { workspace = true }
 coding-adventures-parallel-execution-engine = { workspace = true }
 coding-adventures-compute-unit = { workspace = true }
 coding-adventures-device-simulator = { workspace = true }
+coding-adventures-cache = { workspace = true }
 coding-adventures-compute-runtime = { workspace = true }
+coding-adventures-vendor-api-simulators = { workspace = true }
+coding-adventures-blas-library = { workspace = true }
+coding-adventures-ml-framework-core = { workspace = true }
+coding-adventures-ml-framework-torch = { workspace = true }
+coding-adventures-ml-framework-keras = { workspace = true }
+coding-adventures-ml-framework-tf = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.15.7",
+]

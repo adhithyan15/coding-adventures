@@ -40,7 +40,7 @@
 //! grammar is actually used to build a lexer. We do validate that regex
 //! patterns compile during the optional [`validate_token_grammar`] pass.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 
 // ===========================================================================
@@ -97,6 +97,31 @@ pub struct TokenDefinition {
     pub alias: Option<String>,
 }
 
+/// A named set of token definitions that are active together.
+///
+/// When this group is at the top of the lexer's group stack, only these
+/// patterns are tried during token matching. Skip patterns are global
+/// and always tried regardless of the active group.
+///
+/// Pattern groups enable context-sensitive lexing. For example, an XML
+/// lexer defines a "tag" group with patterns for attribute names, equals
+/// signs, and attribute values. These patterns are only active inside
+/// tags — the callback pushes the "tag" group when `<` is matched and
+/// pops it when `>` is matched.
+///
+/// # Fields
+///
+/// - `name` — The group name, e.g. `"tag"` or `"cdata"`. Must be a
+///   lowercase identifier matching `[a-z_][a-z0-9_]*`.
+/// - `definitions` — Ordered list of token definitions in this group.
+///   Order matters (first-match-wins), just like the top-level
+///   definitions list.
+#[derive(Debug, Clone, PartialEq)]
+pub struct PatternGroup {
+    pub name: String,
+    pub definitions: Vec<TokenDefinition>,
+}
+
 /// The complete contents of a parsed `.tokens` file.
 ///
 /// # Fields
@@ -115,6 +140,40 @@ pub struct TokenDefinition {
 /// - `reserved_keywords` — Keywords from the `reserved:` section. Unlike
 ///   regular keywords, these cause a lexer error if encountered in source
 ///   code (they are reserved for future use).
+/// - `escapes` — Optional escape mode directive (e.g. `"none"` for CSS,
+///   which uses hex escapes that differ from JSON's `\uXXXX` format).
+/// - `error_definitions` — Token definitions from the `errors:` section.
+///   These patterns match malformed input (e.g. unclosed strings) and
+///   produce error tokens for graceful degradation.
+/// - `groups` — Named pattern groups from `group NAME:` sections. Each
+///   group defines a set of token patterns for context-sensitive lexing.
+///   The lexer maintains a stack of active groups and only tries patterns
+///   from the group on top of the stack. Patterns outside any group belong
+///   to the implicit "default" group (stored in `definitions`).
+/// - `case_sensitive` — Whether the lexer should perform case-sensitive
+///   matching. Defaults to `true`. When `false`, the lexer lowercases the
+///   source before tokenization so that keywords and patterns match
+///   regardless of case (useful for languages like SQL and BASIC).
+/// - `version` — The grammar version number, set by the `# @version N`
+///   magic comment. A value of `0` means "no version declared" (use latest
+///   semantics). This is useful when the grammar format evolves over time
+///   and tools need to know which dialect to apply.
+/// - `case_insensitive` — When `true`, the lexer should match tokens
+///   without regard to letter case. Set by the `# @case_insensitive true`
+///   magic comment. Defaults to `false` (case-sensitive matching).
+///
+/// # Magic comments
+///
+/// Magic comments are special `#` comment lines that carry structured
+/// metadata. They use the form `# @key value` where `key` is a word and
+/// `value` is the rest of the line after whitespace. Unknown keys are
+/// silently ignored for forward-compatibility. Example:
+///
+/// ```text
+/// # @version 2
+/// # @case_insensitive true
+/// NUMBER = /[0-9]+/
+/// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenGrammar {
     pub definitions: Vec<TokenDefinition>,
@@ -122,6 +181,14 @@ pub struct TokenGrammar {
     pub mode: Option<String>,
     pub skip_definitions: Vec<TokenDefinition>,
     pub reserved_keywords: Vec<String>,
+    pub escapes: Option<String>,
+    pub error_definitions: Vec<TokenDefinition>,
+    pub groups: HashMap<String, PatternGroup>,
+    pub case_sensitive: bool,
+    /// Grammar version declared via `# @version N`. Zero means unset.
+    pub version: u32,
+    /// Whether matching is case-insensitive, declared via `# @case_insensitive true`.
+    pub case_insensitive: bool,
 }
 
 // ===========================================================================
@@ -135,14 +202,45 @@ pub struct TokenGrammar {
 /// actually exists in the token grammar. Aliases are included because
 /// grammars typically reference the alias name (e.g. `STRING`) rather
 /// than the raw definition name (e.g. `STRING_DQ`).
+///
+/// Includes names from all pattern groups, since group tokens can
+/// also appear in parser grammars.
 pub fn token_names(grammar: &TokenGrammar) -> HashSet<String> {
-    let mut names: HashSet<String> = grammar.definitions.iter().map(|d| d.name.clone()).collect();
-    for defn in &grammar.definitions {
+    // Collect definitions from the top-level list and all groups into
+    // a single iterator so we handle them uniformly.
+    let all_defs = grammar
+        .definitions
+        .iter()
+        .chain(grammar.groups.values().flat_map(|g| g.definitions.iter()));
+
+    let mut names = HashSet::new();
+    for defn in all_defs {
+        names.insert(defn.name.clone());
         if let Some(alias) = &defn.alias {
             names.insert(alias.clone());
         }
     }
     names
+}
+
+/// Return the set of token names as the parser will see them.
+///
+/// For definitions with aliases, this returns the alias (not the
+/// definition name), because that is what the lexer will emit and
+/// what the parser grammar references.
+///
+/// For definitions without aliases, this returns the definition name.
+///
+/// Includes names from all pattern groups.
+pub fn effective_token_names(grammar: &TokenGrammar) -> HashSet<String> {
+    let all_defs = grammar
+        .definitions
+        .iter()
+        .chain(grammar.groups.values().flat_map(|g| g.definitions.iter()));
+
+    all_defs
+        .map(|d| d.alias.as_ref().unwrap_or(&d.name).clone())
+        .collect()
 }
 
 // ===========================================================================
@@ -220,9 +318,36 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
     let (pattern_str, alias) = if after_eq.starts_with('/') {
-        // Regex pattern — find the closing slash.
+        // Regex pattern — find the closing slash by scanning character-by-character.
+        // We track bracket depth so that / inside [...] character classes is
+        // not mistaken for the closing delimiter. We also skip escaped chars.
         let rest = &after_eq[1..];
-        match rest.find('/') {
+        let close_idx = {
+            let mut i = 0;
+            let bytes = rest.as_bytes();
+            let mut found = None;
+            let mut in_bracket = false;
+            while i < bytes.len() {
+                if bytes[i] == b'\\' {
+                    i += 2; // skip escaped character
+                } else if bytes[i] == b'[' && !in_bracket {
+                    in_bracket = true;
+                    i += 1;
+                } else if bytes[i] == b']' && in_bracket {
+                    in_bracket = false;
+                    i += 1;
+                } else if bytes[i] == b'/' && !in_bracket {
+                    found = Some(i);
+                    break;
+                } else {
+                    i += 1;
+                }
+            }
+            // Fallback: if bracket-aware scan found nothing (e.g. unclosed [),
+            // try the last / as a best-effort parse.
+            found.or_else(|| rest.rfind('/').filter(|&idx| idx > 0))
+        };
+        match close_idx {
             Some(close_idx) => {
                 let regex_body = &rest[..close_idx];
                 if regex_body.is_empty() {
@@ -319,32 +444,161 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut mode: Option<String> = None;
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
+    let mut escapes: Option<String> = None;
+    let mut case_sensitive: bool = true;
+    let mut error_definitions = Vec::new();
+    let mut groups: HashMap<String, PatternGroup> = HashMap::new();
+    // Magic comment fields — set by `# @key value` lines.
+    let mut version: u32 = 0;
+    let mut case_insensitive: bool = false;
 
     // Track which section we are currently in.
-    // Sections: "definitions" (default), "keywords", "skip", "reserved"
-    let mut current_section = "definitions";
+    //
+    // Sections: "definitions" (default), "keywords", "skip", "reserved",
+    // "errors", or "group:NAME" for pattern groups.
+    //
+    // We use a String rather than &str because group sections carry dynamic
+    // names (e.g. "group:tag", "group:cdata").
+    let mut current_section = String::from("definitions");
+
+    // Reserved group names that cannot be used. These overlap with built-in
+    // section names and would cause ambiguity or confusion.
+    let reserved_group_names: HashSet<&str> =
+        ["default", "skip", "keywords", "reserved", "errors"].iter().copied().collect();
+
+    // Regex for validating group names: lowercase identifiers only.
+    let group_name_re = regex::Regex::new(r"^[a-z_][a-z0-9_]*$").unwrap();
 
     for (i, raw_line) in source.split('\n').enumerate() {
         let line_number = i + 1;
         let line = raw_line.trim_end();
         let stripped = line.trim();
 
-        // --- Blank lines and comments are always skipped ---
-        if stripped.is_empty() || stripped.starts_with('#') {
+        // --- Blank lines are always skipped ---
+        if stripped.is_empty() {
+            continue;
+        }
+
+        // --- Comment lines: magic comments or regular comments ---
+        //
+        // A magic comment has the form `# @key value` and carries structured
+        // metadata that affects how the grammar is interpreted. Any other `#`
+        // line is a regular comment and is silently ignored.
+        //
+        // Parsing strategy (no regex, pure string ops):
+        //   1. Strip the leading `#` and any whitespace after it.
+        //   2. If the next character is `@`, we have a magic comment.
+        //   3. Scan forward to collect the key (non-whitespace chars).
+        //   4. Skip whitespace, take the rest as the value.
+        if stripped.starts_with('#') {
+            // Step 1: get everything after '#'
+            let after_hash = stripped[1..].trim_start();
+            // Step 2: check for '@'
+            if after_hash.starts_with('@') {
+                // Step 3: key is the run of non-whitespace chars after '@'
+                let rest = &after_hash[1..]; // skip '@'
+                let key_end = rest.find(|c: char| c.is_whitespace()).unwrap_or(rest.len());
+                let key = &rest[..key_end];
+                // Step 4: value is the trimmed remainder
+                let value = rest[key_end..].trim();
+                match key {
+                    "version" => {
+                        if let Ok(v) = value.parse::<u32>() {
+                            version = v;
+                        }
+                        // Malformed version value is silently ignored.
+                    }
+                    "case_insensitive" => {
+                        case_insensitive = value == "true";
+                    }
+                    // Unknown keys are silently ignored for forward-compatibility.
+                    _ => {}
+                }
+            }
+            // Both magic comments and plain comments skip the rest of the loop.
+            continue;
+        }
+
+        // --- Group headers ---
+        //
+        // Pattern groups are declared with `group NAME:` where NAME is
+        // a lowercase identifier. All subsequent indented lines belong to
+        // that group, just like skip: or errors: sections.
+        if stripped.starts_with("group ") && stripped.ends_with(':') {
+            let group_name = stripped[6..stripped.len() - 1].trim();
+            if group_name.is_empty() {
+                return Err(TokenGrammarError {
+                    message: "Missing group name after 'group'".to_string(),
+                    line_number,
+                });
+            }
+            if !group_name_re.is_match(group_name) {
+                return Err(TokenGrammarError {
+                    message: format!(
+                        "Invalid group name: '{}' \
+                         (must be a lowercase identifier like 'tag' or 'cdata')",
+                        group_name
+                    ),
+                    line_number,
+                });
+            }
+            if reserved_group_names.contains(group_name) {
+                return Err(TokenGrammarError {
+                    message: format!(
+                        "Reserved group name: '{}' \
+                         (cannot use default, errors, keywords, reserved, skip)",
+                        group_name
+                    ),
+                    line_number,
+                });
+            }
+            if groups.contains_key(group_name) {
+                return Err(TokenGrammarError {
+                    message: format!("Duplicate group name: '{}'", group_name),
+                    line_number,
+                });
+            }
+            groups.insert(
+                group_name.to_string(),
+                PatternGroup {
+                    name: group_name.to_string(),
+                    definitions: Vec::new(),
+                },
+            );
+            current_section = format!("group:{}", group_name);
             continue;
         }
 
         // --- Section headers ---
         if stripped == "keywords:" || stripped == "keywords :" {
-            current_section = "keywords";
+            current_section = String::from("keywords");
             continue;
         }
         if stripped == "skip:" || stripped == "skip :" {
-            current_section = "skip";
+            current_section = String::from("skip");
             continue;
         }
         if stripped == "reserved:" || stripped == "reserved :" {
-            current_section = "reserved";
+            current_section = String::from("reserved");
+            continue;
+        }
+        if stripped == "errors:" || stripped == "errors :" {
+            current_section = String::from("errors");
+            continue;
+        }
+
+        // --- Escapes directive ---
+        //
+        // The `escapes:` directive tells the lexer how to handle escape
+        // sequences in string tokens. For example, `escapes: none` means
+        // the lexer should strip quotes but leave escape sequences as raw
+        // text (used by CSS, where hex escapes differ from JSON's \uXXXX).
+        if stripped.starts_with("escapes:") || stripped.starts_with("escapes :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let escapes_value = stripped[colon_idx + 1..].trim();
+            if !escapes_value.is_empty() {
+                escapes = Some(escapes_value.to_string());
+            }
             continue;
         }
 
@@ -362,44 +616,93 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             continue;
         }
 
+        // --- Case sensitivity directive ---
+        //
+        // The `case_sensitive:` directive controls whether the lexer performs
+        // case-sensitive or case-insensitive matching. When set to `false`,
+        // the lexer lowercases the source before tokenization, so keywords
+        // like `SELECT` and `select` match the same pattern. This is useful
+        // for languages like SQL, BASIC, and Pascal that are case-insensitive.
+        //
+        // Accepted values: "true" or "false". Defaults to true if omitted.
+        if stripped.starts_with("case_sensitive:") || stripped.starts_with("case_sensitive :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let cs_value = stripped[colon_idx + 1..].trim();
+            match cs_value {
+                "true" => case_sensitive = true,
+                "false" => case_sensitive = false,
+                _ => {
+                    return Err(TokenGrammarError {
+                        message: format!(
+                            "Invalid case_sensitive value: '{}' (expected 'true' or 'false')",
+                            cs_value
+                        ),
+                        line_number,
+                    });
+                }
+            }
+            continue;
+        }
+
         // --- Inside a section ---
-        match current_section {
-            "keywords" => {
-                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
-                if first_char == b' ' || first_char == b'\t' {
-                    if !stripped.is_empty() {
+        //
+        // Each section type handles indented lines differently. A
+        // non-indented line exits the current section and falls through
+        // to be parsed as a top-level token definition.
+        let in_section = current_section != "definitions";
+        if in_section {
+            let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
+            if first_char == b' ' || first_char == b'\t' {
+                if !stripped.is_empty() {
+                    if current_section == "keywords" {
                         keywords.push(stripped.to_string());
-                    }
-                    continue;
-                } else {
-                    // Non-indented line — exit keywords section, fall through
-                    current_section = "definitions";
-                }
-            }
-            "reserved" => {
-                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
-                if first_char == b' ' || first_char == b'\t' {
-                    if !stripped.is_empty() {
+                    } else if current_section == "reserved" {
                         reserved_keywords.push(stripped.to_string());
-                    }
-                    continue;
-                } else {
-                    current_section = "definitions";
-                }
-            }
-            "skip" => {
-                let first_char = line.as_bytes().first().copied().unwrap_or(b' ');
-                if first_char == b' ' || first_char == b'\t' {
-                    if !stripped.is_empty() {
+                    } else if current_section == "skip" {
                         let defn = parse_definition(stripped, line_number)?;
                         skip_definitions.push(defn);
+                    } else if current_section == "errors" {
+                        let defn = parse_definition(stripped, line_number)?;
+                        error_definitions.push(defn);
+                    } else if let Some(group_name) = current_section.strip_prefix("group:") {
+                        // Group section — parse token definitions just like
+                        // skip: and errors: sections. The definition format is
+                        // identical: `NAME = /pattern/` or `NAME = "literal"`.
+                        if !stripped.contains('=') {
+                            return Err(TokenGrammarError {
+                                message: format!(
+                                    "Expected token definition in group '{}' \
+                                     (NAME = pattern), got: '{}'",
+                                    group_name, stripped
+                                ),
+                                line_number,
+                            });
+                        }
+                        let eq_index = stripped.find('=').unwrap();
+                        let g_name = stripped[..eq_index].trim();
+                        let g_pattern = stripped[eq_index + 1..].trim();
+                        if g_name.is_empty() || g_pattern.is_empty() {
+                            return Err(TokenGrammarError {
+                                message: format!(
+                                    "Incomplete definition in group '{}': '{}'",
+                                    group_name, stripped
+                                ),
+                                line_number,
+                            });
+                        }
+                        let defn = parse_definition(stripped, line_number)?;
+                        // We need the owned group_name to look up in the map.
+                        let gn = group_name.to_string();
+                        if let Some(group) = groups.get_mut(&gn) {
+                            group.definitions.push(defn);
+                        }
                     }
-                    continue;
-                } else {
-                    current_section = "definitions";
                 }
+                continue;
+            } else {
+                // Non-indented line — exit section, fall through
+                current_section = String::from("definitions");
             }
-            _ => {} // "definitions" — fall through to parse as definition
         }
 
         // --- Token definition ---
@@ -413,6 +716,12 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         mode,
         skip_definitions,
         reserved_keywords,
+        escapes,
+        error_definitions,
+        groups,
+        case_sensitive,
+        version,
+        case_insensitive,
     })
 }
 
@@ -494,11 +803,54 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
     // Validate skip definitions.
     validate_definitions(&grammar.skip_definitions, &mut seen_names, &mut issues);
 
+    // Validate error definitions.
+    validate_definitions(&grammar.error_definitions, &mut seen_names, &mut issues);
+
     // Validate mode value if present.
     if let Some(ref mode) = grammar.mode {
         if mode != "indentation" {
             issues.push(format!("Unknown mode '{}' (expected 'indentation')", mode));
         }
+    }
+
+    // Validate escape mode if present.
+    if let Some(ref esc) = grammar.escapes {
+        if esc != "none" {
+            issues.push(format!(
+                "Unknown escape mode '{}' (only 'none' is supported)",
+                esc
+            ));
+        }
+    }
+
+    // Validate pattern groups.
+    //
+    // Each group gets its own duplicate-name tracking (group definitions
+    // are independent namespaces from the top-level definitions in terms
+    // of the lexer's matching logic). However, we use a fresh seen_names
+    // per group to catch duplicates *within* a single group.
+    let group_name_re = regex::Regex::new(r"^[a-z_][a-z0-9_]*$").unwrap();
+    for (group_name, group) in &grammar.groups {
+        // Group name format validation.
+        if !group_name_re.is_match(group_name) {
+            issues.push(format!(
+                "Invalid group name '{}' (must be a lowercase identifier)",
+                group_name
+            ));
+        }
+
+        // Empty group warning.
+        if group.definitions.is_empty() {
+            issues.push(format!(
+                "Empty pattern group '{}' (has no token definitions)",
+                group_name
+            ));
+        }
+
+        // Validate definitions within the group.
+        let mut group_seen: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
+        validate_definitions(&group.definitions, &mut group_seen, &mut issues);
     }
 
     issues
@@ -719,6 +1071,12 @@ keywords:
             mode: None,
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -740,6 +1098,12 @@ keywords:
             mode: None,
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -761,6 +1125,12 @@ keywords:
             mode: None,
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -961,8 +1331,410 @@ skip:
             mode: Some("unknown".to_string()),
             skip_definitions: vec![],
             reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups: HashMap::new(),
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));
+    }
+
+    // -----------------------------------------------------------------------
+    // Pattern groups: happy paths
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_basic_group() {
+        // A simple group section is parsed into a PatternGroup with the
+        // correct name and definitions.
+        let source = concat!(
+            "TEXT = /[^<]+/\n",
+            "TAG_OPEN = \"<\"\n",
+            "\n",
+            "group tag:\n",
+            "  TAG_NAME = /[a-zA-Z]+/\n",
+            "  TAG_CLOSE = \">\"\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        // Default-group patterns (top-level definitions).
+        assert_eq!(grammar.definitions.len(), 2);
+        assert_eq!(grammar.definitions[0].name, "TEXT");
+        assert_eq!(grammar.definitions[1].name, "TAG_OPEN");
+
+        // Named group.
+        assert!(grammar.groups.contains_key("tag"));
+        let group = &grammar.groups["tag"];
+        assert_eq!(group.name, "tag");
+        assert_eq!(group.definitions.len(), 2);
+        assert_eq!(group.definitions[0].name, "TAG_NAME");
+        assert_eq!(group.definitions[1].name, "TAG_CLOSE");
+    }
+
+    #[test]
+    fn test_multiple_groups() {
+        // Multiple groups can coexist in the same file.
+        let source = concat!(
+            "TEXT = /[^<]+/\n",
+            "\n",
+            "group tag:\n",
+            "  TAG_NAME = /[a-zA-Z]+/\n",
+            "\n",
+            "group cdata:\n",
+            "  CDATA_TEXT = /[^]]+/\n",
+            "  CDATA_END = \"]]>\"\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        assert_eq!(grammar.groups.len(), 2);
+        assert!(grammar.groups.contains_key("tag"));
+        assert!(grammar.groups.contains_key("cdata"));
+        assert_eq!(grammar.groups["tag"].definitions.len(), 1);
+        assert_eq!(grammar.groups["cdata"].definitions.len(), 2);
+    }
+
+    #[test]
+    fn test_group_with_alias() {
+        // Definitions inside groups support the -> ALIAS suffix.
+        let source = concat!(
+            "TEXT = /[^<]+/\n",
+            "\n",
+            "group tag:\n",
+            "  ATTR_VALUE_DQ = /\"[^\"]*\"/ -> ATTR_VALUE\n",
+            "  ATTR_VALUE_SQ = /'[^']*'/ -> ATTR_VALUE\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        let group = &grammar.groups["tag"];
+        assert_eq!(group.definitions[0].name, "ATTR_VALUE_DQ");
+        assert_eq!(group.definitions[0].alias, Some("ATTR_VALUE".to_string()));
+        assert_eq!(group.definitions[1].name, "ATTR_VALUE_SQ");
+        assert_eq!(group.definitions[1].alias, Some("ATTR_VALUE".to_string()));
+    }
+
+    #[test]
+    fn test_group_with_literal_patterns() {
+        // Groups support both regex and literal patterns.
+        let source = concat!(
+            "TEXT = /[^<]+/\n",
+            "\n",
+            "group tag:\n",
+            "  EQUALS = \"=\"\n",
+            "  TAG_NAME = /[a-zA-Z]+/\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        let group = &grammar.groups["tag"];
+        assert!(!group.definitions[0].is_regex);
+        assert_eq!(group.definitions[0].pattern, "=");
+        assert!(group.definitions[1].is_regex);
+    }
+
+    #[test]
+    fn test_no_groups_backward_compat() {
+        // Files without groups have an empty groups map — backward
+        // compatibility is preserved.
+        let source = "NUMBER = /[0-9]+/\nPLUS = \"+\"\n";
+        let grammar = parse_token_grammar(source).unwrap();
+
+        assert!(grammar.groups.is_empty());
+        assert_eq!(grammar.definitions.len(), 2);
+    }
+
+    #[test]
+    fn test_groups_with_skip_section() {
+        // skip: and group: sections coexist correctly.
+        let source = concat!(
+            "skip:\n",
+            "  WS = /[ \\t]+/\n",
+            "\n",
+            "TEXT = /[^<]+/\n",
+            "\n",
+            "group tag:\n",
+            "  TAG_NAME = /[a-zA-Z]+/\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        assert_eq!(grammar.skip_definitions.len(), 1);
+        assert_eq!(grammar.definitions.len(), 1);
+        assert_eq!(grammar.groups.len(), 1);
+    }
+
+    #[test]
+    fn test_token_names_includes_groups() {
+        // token_names() includes names from all groups, plus aliases.
+        let source = concat!(
+            "TEXT = /[^<]+/\n",
+            "\n",
+            "group tag:\n",
+            "  TAG_NAME = /[a-zA-Z]+/\n",
+            "  ATTR_DQ = /\"[^\"]*\"/ -> ATTR_VALUE\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        let names = token_names(&grammar);
+        assert!(names.contains("TEXT"));
+        assert!(names.contains("TAG_NAME"));
+        assert!(names.contains("ATTR_DQ"));
+        assert!(names.contains("ATTR_VALUE"));
+    }
+
+    #[test]
+    fn test_effective_token_names_includes_groups() {
+        // effective_token_names() returns alias names from groups,
+        // replacing the raw definition names.
+        let source = concat!(
+            "TEXT = /[^<]+/\n",
+            "\n",
+            "group tag:\n",
+            "  ATTR_DQ = /\"[^\"]*\"/ -> ATTR_VALUE\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+
+        let names = effective_token_names(&grammar);
+        assert!(names.contains("TEXT"));
+        assert!(names.contains("ATTR_VALUE"));
+        assert!(!names.contains("ATTR_DQ")); // alias replaces name
+    }
+
+    #[test]
+    fn test_group_validates_definitions() {
+        // Definitions in groups are validated (e.g. bad regex is caught).
+        let mut groups = HashMap::new();
+        groups.insert(
+            "tag".to_string(),
+            PatternGroup {
+                name: "tag".to_string(),
+                definitions: vec![TokenDefinition {
+                    name: "BAD".to_string(),
+                    pattern: "[invalid".to_string(),
+                    is_regex: true,
+                    line_number: 5,
+                    alias: None,
+                }],
+            },
+        );
+        let grammar = TokenGrammar {
+            definitions: vec![],
+            keywords: vec![],
+            mode: None,
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups,
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
+        };
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.iter().any(|i| i.contains("Invalid regex")));
+    }
+
+    #[test]
+    fn test_empty_group_warning() {
+        // An empty group produces a validation warning.
+        let mut groups = HashMap::new();
+        groups.insert(
+            "empty".to_string(),
+            PatternGroup {
+                name: "empty".to_string(),
+                definitions: vec![],
+            },
+        );
+        let grammar = TokenGrammar {
+            definitions: vec![],
+            keywords: vec![],
+            mode: None,
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups,
+case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
+        };
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.iter().any(|i| i.contains("Empty pattern group")));
+    }
+
+    // -----------------------------------------------------------------------
+    // Pattern groups: error cases
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_missing_group_name() {
+        // "group :" with no name raises an error.
+        let source = "TEXT = /abc/\ngroup :\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Missing group name"));
+    }
+
+    #[test]
+    fn test_invalid_group_name_uppercase() {
+        // Uppercase group names are rejected.
+        let source = "TEXT = /abc/\ngroup Tag:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Invalid group name"));
+    }
+
+    #[test]
+    fn test_invalid_group_name_starts_with_digit() {
+        // Group names starting with a digit are rejected.
+        let source = "TEXT = /abc/\ngroup 1tag:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Invalid group name"));
+    }
+
+    #[test]
+    fn test_reserved_group_name_default() {
+        // "group default:" is rejected as reserved.
+        let source = "TEXT = /abc/\ngroup default:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved group name"));
+    }
+
+    #[test]
+    fn test_reserved_group_name_skip() {
+        // "group skip:" is rejected as reserved.
+        let source = "TEXT = /abc/\ngroup skip:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved group name"));
+    }
+
+    #[test]
+    fn test_reserved_group_name_keywords() {
+        // "group keywords:" is rejected as reserved.
+        let source = "TEXT = /abc/\ngroup keywords:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved group name"));
+    }
+
+    #[test]
+    fn test_duplicate_group_name() {
+        // Two groups with the same name raises an error.
+        let source = concat!(
+            "TEXT = /abc/\n",
+            "group tag:\n",
+            "  FOO = /x/\n",
+            "group tag:\n",
+            "  BAR = /y/\n",
+        );
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Duplicate group name"));
+    }
+
+    #[test]
+    fn test_bad_definition_in_group() {
+        // Invalid definition inside a group raises an error.
+        let source = concat!(
+            "TEXT = /abc/\n",
+            "group tag:\n",
+            "  not a definition\n",
+        );
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Expected token definition"));
+    }
+
+    #[test]
+    fn test_incomplete_definition_in_group() {
+        // Missing pattern in group definition raises an error.
+        let source = concat!(
+            "TEXT = /abc/\n",
+            "group tag:\n",
+            "  FOO = \n",
+        );
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Incomplete definition"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Magic comments: TokenGrammar
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_magic_comment_version() {
+        // `# @version N` sets the version field to N.
+        let source = "# @version 1\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 1);
+        // Normal definitions still parsed.
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_magic_comment_version_default() {
+        // When no # @version line is present, version defaults to 0.
+        let source = "NUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 0);
+    }
+
+    #[test]
+    fn test_magic_comment_case_insensitive_true() {
+        // `# @case_insensitive true` sets the flag to true.
+        let source = "# @case_insensitive true\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(grammar.case_insensitive);
+    }
+
+    #[test]
+    fn test_magic_comment_case_insensitive_false() {
+        // `# @case_insensitive false` sets the flag to false.
+        let source = "# @case_insensitive false\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(!grammar.case_insensitive);
+    }
+
+    #[test]
+    fn test_magic_comment_case_insensitive_default() {
+        // When no # @case_insensitive line is present, the flag defaults to false.
+        let source = "NUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(!grammar.case_insensitive);
+    }
+
+    #[test]
+    fn test_magic_comment_unknown_key_silently_ignored() {
+        // Unknown `# @key value` lines do not cause errors; they are
+        // forward-compatible placeholders for future features.
+        let source = "# @unknown_key some_value\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        // Defaults are untouched.
+        assert_eq!(grammar.version, 0);
+        assert!(!grammar.case_insensitive);
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_magic_comment_both_together() {
+        // Both magic comments can appear in the same file.
+        let source = "# @version 3\n# @case_insensitive true\nNAME = /[a-z]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 3);
+        assert!(grammar.case_insensitive);
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_regular_comment_not_treated_as_magic() {
+        // A plain `# comment` without `@` is just a comment — no fields set.
+        let source = "# Just a comment\nNUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.version, 0);
+        assert!(!grammar.case_insensitive);
     }
 }

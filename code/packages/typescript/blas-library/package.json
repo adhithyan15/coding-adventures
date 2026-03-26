@@ -1,0 +1,46 @@
+{
+  "name": "@coding-adventures/blas-library",
+  "version": "0.1.0",
+  "description": "Pluggable BLAS library with 7 swappable backends (CPU, CUDA, OpenCL, Metal, Vulkan, WebGPU, OpenGL) — Layer 3 of the accelerator computing stack.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "blas",
+    "linear-algebra",
+    "matrix",
+    "vector",
+    "gpu",
+    "cuda",
+    "opencl",
+    "metal",
+    "vulkan",
+    "webgpu",
+    "opengl",
+    "machine-learning",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/vendor-api-simulators": "file:../vendor-api-simulators",
+    "@coding-adventures/compute-runtime": "file:../compute-runtime",
+    "@coding-adventures/device-simulator": "file:../device-simulator",
+    "@coding-adventures/compute-unit": "file:../compute-unit",
+    "@coding-adventures/parallel-execution-engine": "file:../parallel-execution-engine",
+    "@coding-adventures/gpu-core": "file:../gpu-core",
+    "@coding-adventures/fp-arithmetic": "file:../fp-arithmetic",
+    "@coding-adventures/clock": "file:../clock",
+    "@coding-adventures/arithmetic": "file:../arithmetic",
+    "@coding-adventures/logic-gates": "file:../logic-gates"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

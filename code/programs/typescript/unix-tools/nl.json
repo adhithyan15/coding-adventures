@@ -1,0 +1,115 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "nl",
+  "display_name": "nl",
+  "description": "Number lines of files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "body_numbering",
+      "short": "b",
+      "long": "body-numbering",
+      "description": "Use STYLE for numbering body lines",
+      "type": "enum",
+      "enum_values": ["a", "t", "n", "pBRE"],
+      "value_name": "STYLE",
+      "default": "t"
+    },
+    {
+      "id": "header_numbering",
+      "short": "h",
+      "long": "header-numbering",
+      "description": "Use STYLE for numbering header lines",
+      "type": "enum",
+      "enum_values": ["a", "t", "n", "pBRE"],
+      "value_name": "STYLE",
+      "default": "n"
+    },
+    {
+      "id": "footer_numbering",
+      "short": "f",
+      "long": "footer-numbering",
+      "description": "Use STYLE for numbering footer lines",
+      "type": "enum",
+      "enum_values": ["a", "t", "n", "pBRE"],
+      "value_name": "STYLE",
+      "default": "n"
+    },
+    {
+      "id": "line_increment",
+      "short": "i",
+      "long": "line-increment",
+      "description": "Line number increment at each line",
+      "type": "integer",
+      "value_name": "NUMBER",
+      "default": 1
+    },
+    {
+      "id": "number_format",
+      "short": "n",
+      "long": "number-format",
+      "description": "Insert line numbers according to FORMAT",
+      "type": "enum",
+      "enum_values": ["ln", "rn", "rz"],
+      "value_name": "FORMAT",
+      "default": "rn"
+    },
+    {
+      "id": "number_width",
+      "short": "w",
+      "long": "number-width",
+      "description": "Use NUMBER columns for line numbers",
+      "type": "integer",
+      "value_name": "NUMBER",
+      "default": 6
+    },
+    {
+      "id": "number_separator",
+      "short": "s",
+      "long": "number-separator",
+      "description": "Add STRING after (possible) line number",
+      "type": "string",
+      "value_name": "STRING",
+      "default": "\t"
+    },
+    {
+      "id": "starting_line_number",
+      "short": "v",
+      "long": "starting-line-number",
+      "description": "First line number on each logical page",
+      "type": "integer",
+      "value_name": "NUMBER",
+      "default": 1
+    },
+    {
+      "id": "section_delimiter",
+      "short": "d",
+      "long": "section-delimiter",
+      "description": "Use CC for logical page delimiters",
+      "type": "string",
+      "value_name": "CC",
+      "default": "\\:"
+    },
+    {
+      "id": "no_renumber",
+      "short": "p",
+      "long": "no-renumber",
+      "description": "Do not reset line numbers for each section",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to number. Use '-' for stdin.",
+      "type": "string",
+      "required": false,
+      "variadic": true,
+      "default": "-"
+    }
+  ],
+  "commands": []
+}

@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-ruby-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Ruby lexer — tokenizes Ruby source code using the grammar-driven lexer and the ruby.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

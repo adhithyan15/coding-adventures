@@ -28,9 +28,9 @@ import {
   parseTokenGrammar,
   type TokenGrammar,
   type TokenDefinition,
-} from "@coding-adventures/grammar-tools";
+} from "../../../../src/typescript/grammar-tools/index.js";
 
-import { grammarTokenize } from "../src/grammar-lexer.js";
+import { grammarTokenize, GrammarLexer, LexerContext } from "../src/grammar-lexer.js";
 import { tokenize, LexerError } from "../src/tokenizer.js";
 import type { Token } from "../src/token.js";
 import type { LexerConfig } from "../src/tokenizer.js";
@@ -668,5 +668,534 @@ describe("grammarTokenize — indentation mode", () => {
     const tokens = grammarTokenize("x\n\ny\n", grammar);
     const nameTokens = tokens.filter((t) => t.type === "NAME");
     expect(nameTokens).toHaveLength(2);
+  });
+});
+
+// ============================================================================
+// Helper — create a grammar with pattern groups for testing
+// ============================================================================
+
+/**
+ * Create a grammar with pattern groups for testing.
+ *
+ * This simulates a simplified XML-like grammar:
+ * - Default group: TEXT and OPEN_TAG
+ * - tag group: TAG_NAME, EQUALS, VALUE, TAG_CLOSE
+ *
+ * The grammar uses skip patterns for whitespace and no keywords.
+ */
+function makeGroupGrammar(): TokenGrammar {
+  const source = `\
+escapes: none
+
+skip:
+  WS = /[ \\t\\r\\n]+/
+
+TEXT      = /[^<]+/
+OPEN_TAG  = "<"
+
+group tag:
+  TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+  EQUALS    = "="
+  VALUE     = /"[^"]*"/
+  TAG_CLOSE = ">"
+`;
+  return parseTokenGrammar(source);
+}
+
+// ============================================================================
+// LexerContext — unit tests for the callback interface
+// ============================================================================
+
+describe("LexerContext", () => {
+  it("pushGroup() records a push action", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    ctx.pushGroup("tag");
+    expect(ctx._groupActions).toEqual([["push", "tag"]]);
+  });
+
+  it("pushGroup() with unknown name throws", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    expect(() => ctx.pushGroup("nonexistent")).toThrow("Unknown pattern group");
+  });
+
+  it("popGroup() records a pop action", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    ctx.popGroup();
+    expect(ctx._groupActions).toEqual([["pop", ""]]);
+  });
+
+  it("activeGroup() returns the top of the lexer group stack", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    expect(ctx.activeGroup()).toBe("default");
+  });
+
+  it("groupStackDepth() returns the length of the group stack", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    expect(ctx.groupStackDepth()).toBe(1);
+  });
+
+  it("emit() appends a synthetic token to the emitted list", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    const synthetic: Token = { type: "SYNTHETIC", value: "!", line: 1, column: 1 };
+    ctx.emit(synthetic);
+    expect(ctx._emitted).toEqual([synthetic]);
+  });
+
+  it("suppress() sets the suppressed flag", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    expect(ctx._suppressed).toBe(false);
+    ctx.suppress();
+    expect(ctx._suppressed).toBe(true);
+  });
+
+  it("peek() reads characters from the source after the token", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("hello", grammar);
+    // Suppose token ended at position 3 (consumed "hel")
+    const ctx = new LexerContext(lexer, "hello", 3);
+    expect(ctx.peek(1)).toBe("l");
+    expect(ctx.peek(2)).toBe("o");
+    expect(ctx.peek(3)).toBe(""); // past EOF
+  });
+
+  it("peekStr() reads a substring from the source after the token", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("hello world", grammar);
+    const ctx = new LexerContext(lexer, "hello world", 5);
+    expect(ctx.peekStr(6)).toBe(" world");
+  });
+
+  it("setSkipEnabled() records the new skip state", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    expect(ctx._skipEnabled).toBeNull(); // no change by default
+    ctx.setSkipEnabled(false);
+    expect(ctx._skipEnabled).toBe(false);
+  });
+
+  it("multiple pushGroup() calls are recorded in order", () => {
+    const grammar = makeGroupGrammar();
+    const lexer = new GrammarLexer("x", grammar);
+    const ctx = new LexerContext(lexer, "x", 1);
+    ctx.pushGroup("tag");
+    ctx.pushGroup("tag");
+    expect(ctx._groupActions).toEqual([["push", "tag"], ["push", "tag"]]);
+  });
+});
+
+// ============================================================================
+// Pattern Group Tokenization — integration tests
+// ============================================================================
+
+describe("GrammarLexer — pattern group tokenization", () => {
+  it("without a callback, only default group patterns are used", () => {
+    const grammar = makeGroupGrammar();
+    const tokens = new GrammarLexer("hello", grammar).tokenize();
+    // TEXT pattern matches in default group
+    expect(tokens[0].type).toBe("TEXT");
+    expect(tokens[0].value).toBe("hello");
+  });
+
+  it("callback can push/pop groups to switch pattern sets", () => {
+    // Simulates: <div> where < triggers push("tag"), > triggers pop().
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("<div>hello", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.pushGroup("tag");
+      } else if (token.type === "TAG_CLOSE") {
+        ctx.popGroup();
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["OPEN_TAG", "<"],
+      ["TAG_NAME", "div"],
+      ["TAG_CLOSE", ">"],
+      ["TEXT", "hello"],
+    ]);
+  });
+
+  it("callback handles tag with attributes", () => {
+    // Simulates: <div class="main">
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer('<div class="main">', grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.pushGroup("tag");
+      } else if (token.type === "TAG_CLOSE") {
+        ctx.popGroup();
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["OPEN_TAG", "<"],
+      ["TAG_NAME", "div"],
+      ["TAG_NAME", "class"],
+      ["EQUALS", "="],
+      ["VALUE", '"main"'],
+      ["TAG_CLOSE", ">"],
+    ]);
+  });
+
+  it("group stack handles nested structures", () => {
+    // Simulates: <a>text<b>inner</b></a> with push/pop on < and >.
+    const source = `\
+escapes: none
+
+skip:
+  WS = /[ \\t\\r\\n]+/
+
+TEXT             = /[^<]+/
+CLOSE_TAG_START  = "</"
+OPEN_TAG         = "<"
+
+group tag:
+  TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+  TAG_CLOSE = ">"
+  SLASH     = "/"
+`;
+    const grammar = parseTokenGrammar(source);
+
+    const lexer = new GrammarLexer("<a>text<b>inner</b></a>", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG" || token.type === "CLOSE_TAG_START") {
+        ctx.pushGroup("tag");
+      } else if (token.type === "TAG_CLOSE") {
+        ctx.popGroup();
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["OPEN_TAG", "<"],
+      ["TAG_NAME", "a"],
+      ["TAG_CLOSE", ">"],
+      ["TEXT", "text"],
+      ["OPEN_TAG", "<"],
+      ["TAG_NAME", "b"],
+      ["TAG_CLOSE", ">"],
+      ["TEXT", "inner"],
+      ["CLOSE_TAG_START", "</"],
+      ["TAG_NAME", "b"],
+      ["TAG_CLOSE", ">"],
+      ["CLOSE_TAG_START", "</"],
+      ["TAG_NAME", "a"],
+      ["TAG_CLOSE", ">"],
+    ]);
+  });
+
+  it("callback can suppress tokens (remove from output)", () => {
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("<hello", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.suppress();
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const nonEof = tokens.filter((t) => t.type !== "EOF").map((t) => t.type);
+    // OPEN_TAG was suppressed, only TEXT remains
+    expect(nonEof).toEqual(["TEXT"]);
+  });
+
+  it("callback can emit synthetic tokens after the current one", () => {
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("<hello", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.emit({
+          type: "MARKER",
+          value: "[start]",
+          line: token.line,
+          column: token.column,
+        });
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["OPEN_TAG", "<"],
+      ["MARKER", "[start]"],
+      ["TEXT", "hello"],
+    ]);
+  });
+
+  it("suppress + emit = token replacement", () => {
+    // The current token is swallowed, but emitted tokens still output.
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("<hello", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.suppress();
+        ctx.emit({
+          type: "REPLACED",
+          value: "<",
+          line: token.line,
+          column: token.column,
+        });
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["REPLACED", "<"],
+      ["TEXT", "hello"],
+    ]);
+  });
+
+  it("popping when only default remains is a no-op (no crash)", () => {
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("hello", grammar);
+    lexer.setOnToken((_token, ctx) => {
+      ctx.popGroup(); // Should be safe even at the bottom
+    });
+    const tokens = lexer.tokenize();
+
+    // Should still produce TEXT token without crashing
+    expect(tokens[0].type).toBe("TEXT");
+  });
+
+  it("callback can disable skip patterns for significant whitespace", () => {
+    // Grammar with a group that captures whitespace as a token
+    const source = `\
+escapes: none
+
+skip:
+  WS = /[ \\t]+/
+
+TEXT      = /[^<]+/
+START     = "<!"
+
+group raw:
+  RAW_TEXT = /[^>]+/
+  END      = ">"
+`;
+    const grammar = parseTokenGrammar(source);
+
+    const lexer = new GrammarLexer("<! hello world >after", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "START") {
+        ctx.pushGroup("raw");
+        ctx.setSkipEnabled(false);
+      } else if (token.type === "END") {
+        ctx.popGroup();
+        ctx.setSkipEnabled(true);
+      }
+    });
+    const tokens = lexer.tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["START", "<!"],
+      ["RAW_TEXT", " hello world "],
+      ["END", ">"],
+      ["TEXT", "after"],
+    ]);
+  });
+
+  it("a grammar with no groups behaves identically (backward compat)", () => {
+    const source = `\
+NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+NUMBER = /[0-9]+/
+PLUS   = "+"
+`;
+    const grammar = parseTokenGrammar(source);
+    const tokens = new GrammarLexer("x + 1", grammar).tokenize();
+
+    const pairs = tokens
+      .filter((t) => t.type !== "NEWLINE" && t.type !== "EOF")
+      .map((t) => [t.type, t.value]);
+    expect(pairs).toEqual([
+      ["NAME", "x"],
+      ["PLUS", "+"],
+      ["NUMBER", "1"],
+    ]);
+  });
+
+  it("passing null to setOnToken clears the callback", () => {
+    const grammar = makeGroupGrammar();
+    const called: string[] = [];
+
+    const lexer = new GrammarLexer("hello", grammar);
+    lexer.setOnToken((token, _ctx) => {
+      called.push(token.type);
+    });
+    lexer.setOnToken(null);
+    lexer.tokenize();
+
+    expect(called).toEqual([]);
+  });
+
+  it("group stack resets between tokenize() calls", () => {
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("<div", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.pushGroup("tag");
+      }
+    });
+
+    // First call: pushes "tag" group
+    const tokens1 = lexer.tokenize();
+    expect(tokens1.some((t) => t.type === "TAG_NAME")).toBe(true);
+
+    // Second call with a new instance should start fresh from "default"
+    const lexer2 = new GrammarLexer("<div", grammar);
+    lexer2.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        ctx.pushGroup("tag");
+      }
+    });
+    const tokens2 = lexer2.tokenize();
+    expect(tokens2.some((t) => t.type === "TAG_NAME")).toBe(true);
+  });
+
+  it("multiple push/pop in one callback are applied in order", () => {
+    const grammar = makeGroupGrammar();
+
+    const lexer = new GrammarLexer("<div", grammar);
+    lexer.setOnToken((token, ctx) => {
+      if (token.type === "OPEN_TAG") {
+        // Push tag twice (stacking)
+        ctx.pushGroup("tag");
+        ctx.pushGroup("tag");
+      }
+    });
+    // Should not crash with double push
+    const tokens = lexer.tokenize();
+    expect(tokens.some((t) => t.type === "TAG_NAME")).toBe(true);
+  });
+
+  it("grammarTokenize wrapper still works with group grammars", () => {
+    // The convenience function should work transparently
+    const grammar = makeGroupGrammar();
+    const tokens = grammarTokenize("hello", grammar);
+    expect(tokens[0].type).toBe("TEXT");
+    expect(tokens[0].value).toBe("hello");
+  });
+});
+
+// ============================================================================
+// Case-insensitive keyword tests
+// ============================================================================
+
+/**
+ * Build a minimal grammar with `# @case_insensitive true`.
+ *
+ * Tokens defined:
+ *   - NAME  — [a-zA-Z_][a-zA-Z0-9_]*  (regex)
+ *   - COMMA — ","                       (literal)
+ * Skip: whitespace [ \t\r]+
+ * Keywords: select, from
+ */
+function makeCaseInsensitiveGrammar(): TokenGrammar {
+  // .tokens format: NAME = /pattern/ at top level (no "tokens:" section header).
+  // Indented lines under skip: and keywords: belong to those sections.
+  const source = [
+    "# @case_insensitive true",
+    "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/",
+    "skip:",
+    "  WS = /[ \\t\\r\\n]+/",
+    "keywords:",
+    "  select",
+    "  from",
+  ].join("\n");
+  return parseTokenGrammar(source);
+}
+
+describe("GrammarLexer — case-insensitive keywords", () => {
+  it("lowercase 'select' is emitted as KEYWORD with value 'SELECT'", () => {
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("select", grammar).tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("SELECT");
+  });
+
+  it("uppercase 'SELECT' is emitted as KEYWORD with value 'SELECT'", () => {
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("SELECT", grammar).tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("SELECT");
+  });
+
+  it("mixed-case 'Select' is emitted as KEYWORD with value 'SELECT'", () => {
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("Select", grammar).tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("SELECT");
+  });
+
+  it("non-keyword identifier retains its original casing in case-insensitive grammar", () => {
+    // 'myTable' is not in the keywords list, so it stays as NAME with original case
+    const grammar = makeCaseInsensitiveGrammar();
+    const tokens = new GrammarLexer("myTable", grammar).tokenize();
+    expect(tokens[0].type).toBe("NAME");
+    expect(tokens[0].value).toBe("myTable");
+  });
+
+  it("case-sensitive grammar (default) does not promote mixed-case identifier to KEYWORD", () => {
+    // Build the same grammar without the @case_insensitive directive
+    const source = [
+      "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/",
+      "skip:",
+      "  WS = /[ \\t\\r]+/",
+      "keywords:",
+      "  select",
+    ].join("\n");
+    const grammar = parseTokenGrammar(source);
+
+    // 'SELECT' (all caps) should NOT match the lowercase keyword entry
+    const tokens = new GrammarLexer("SELECT", grammar).tokenize();
+    expect(tokens[0].type).toBe("NAME");
+    expect(tokens[0].value).toBe("SELECT");
+
+    // 'select' (exact match) should still be a KEYWORD
+    const tokens2 = new GrammarLexer("select", grammar).tokenize();
+    expect(tokens2[0].type).toBe("KEYWORD");
+    expect(tokens2[0].value).toBe("select");
   });
 });

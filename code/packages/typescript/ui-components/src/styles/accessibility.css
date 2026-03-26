@@ -1,0 +1,121 @@
+/* ==========================================================================
+ * Accessibility utilities shared across all visualization apps.
+ * ========================================================================== */
+
+/* --- Screen-reader only ---
+ * Hides content visually but keeps it accessible to screen readers.
+ * Use for labels, descriptions, and state announcements.
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Focus ring ---
+ * Consistent visible focus indicator for interactive elements.
+ * Applied via .focus-ring class or :focus-visible pseudo-class.
+ */
+.focus-ring:focus-visible,
+[role="tab"]:focus-visible {
+  outline: 2px solid var(--accent, #e94560);
+  outline-offset: 2px;
+}
+
+/* --- Reduced motion ---
+ * Disables CSS animations and transitions for users who prefer reduced motion.
+ * JS animations should check useReducedMotion() separately.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Tab list default styling ---
+ * Basic styling for the TabList component. Apps can override with
+ * their own className props.
+ */
+.tab-list {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  background: var(--panel-border, #2a3a5e);
+  border-radius: 8px;
+  padding: 3px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tab-list__tab {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--tab-text, #8899aa);
+  font-family: var(--sans, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.tab-list__tab:hover {
+  background: rgba(233, 69, 96, 0.15);
+  color: #ddd;
+}
+
+.tab-list__tab--active {
+  background: var(--tab-active, #e94560);
+  color: var(--tab-active-text, #ffffff);
+  font-weight: 600;
+}
+
+/* --- Slider control default styling --- */
+.slider-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.slider-control__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--body-text, #e0ddd5);
+}
+
+.slider-control__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slider-control__input {
+  flex: 1;
+  accent-color: var(--accent, #e94560);
+}
+
+.slider-control__value {
+  font-family: var(--mono, monospace);
+  font-size: 0.9rem;
+  min-width: 4rem;
+  text-align: right;
+  color: var(--wire-high, #00ff88);
+}
+
+.slider-control__unit {
+  color: var(--tab-text, #8899aa);
+  margin-left: 0.15rem;
+  font-size: 0.8rem;
+}

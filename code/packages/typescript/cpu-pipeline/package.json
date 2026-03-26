@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/cpu-pipeline",
+  "version": "0.1.0",
+  "description": "Configurable N-stage CPU instruction pipeline simulator — the assembly line at the heart of every processor",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "cpu-pipeline",
+    "pipeline",
+    "computer-architecture",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

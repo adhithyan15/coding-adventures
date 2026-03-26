@@ -1,1 +1,3 @@
-bundle install --quiet && bundle exec rake test
+bundle config set path vendor/bundle
+bundle install --quiet --full-index
+bundle exec rake test

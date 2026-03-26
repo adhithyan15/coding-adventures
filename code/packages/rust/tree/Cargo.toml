@@ -1,0 +1,8 @@
+[package]
+name = "tree"
+version = "0.1.0"
+edition = "2021"
+description = "A rooted tree data structure backed by a directed graph with traversals, LCA, and ASCII visualization"
+
+[dependencies]
+directed-graph = { path = "../directed-graph" }

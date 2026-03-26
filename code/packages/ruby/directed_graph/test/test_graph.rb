@@ -263,6 +263,93 @@ module CodingAdventures
         g.add_node("A")
         refute g.has_edge?("A", "B")
       end
+
+      # ----------------------------------------------------------------
+      # allow_self_loops flag
+      # ----------------------------------------------------------------
+      #
+      # The allow_self_loops flag controls whether edges from a node to
+      # itself are permitted.  By default they are rejected with a
+      # CycleError, but when enabled they behave like any other edge.
+
+      def test_default_disallows_self_loops
+        g = Graph.new
+        refute g.allow_self_loops?
+      end
+
+      def test_allow_self_loops_flag_true
+        g = Graph.new(allow_self_loops: true)
+        assert g.allow_self_loops?
+      end
+
+      def test_self_loop_allowed_when_flag_true
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        assert g.has_edge?("A", "A")
+      end
+
+      def test_self_loop_node_is_own_successor
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        assert_includes g.successors("A"), "A"
+      end
+
+      def test_self_loop_node_is_own_predecessor
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        assert_includes g.predecessors("A"), "A"
+      end
+
+      def test_self_loop_appears_in_edges
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        assert_includes g.edges, ["A", "A"]
+      end
+
+      def test_self_loop_size_is_one
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        assert_equal 1, g.size
+      end
+
+      def test_self_loop_with_other_edges
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        g.add_edge("A", "B")
+        assert g.has_edge?("A", "A")
+        assert g.has_edge?("A", "B")
+        assert_equal 2, g.size
+      end
+
+      def test_remove_self_loop
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        g.remove_edge("A", "A")
+        refute g.has_edge?("A", "A")
+        assert g.has_node?("A")
+      end
+
+      def test_remove_node_with_self_loop
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        g.add_edge("A", "B")
+        g.remove_node("A")
+        refute g.has_node?("A")
+        assert g.has_node?("B")
+        assert_equal [], g.edges
+      end
+
+      def test_self_loop_duplicate_is_noop
+        g = Graph.new(allow_self_loops: true)
+        g.add_edge("A", "A")
+        g.add_edge("A", "A")
+        assert_equal [["A", "A"]], g.edges
+      end
+
+      def test_self_loop_still_raises_when_flag_false
+        g = Graph.new(allow_self_loops: false)
+        assert_raises(CycleError) { g.add_edge("A", "A") }
+      end
     end
   end
 end

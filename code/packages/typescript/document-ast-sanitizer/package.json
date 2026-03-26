@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/document-ast-sanitizer",
+  "version": "0.1.0",
+  "description": "Policy-driven AST sanitizer for the Document AST — removes or neutralises dangerous content before rendering",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -19,11 +19,8 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {
-    "@coding-adventures/lexer": "file:../lexer",
-    "@coding-adventures/grammar-tools": "file:../grammar-tools"
-  },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",
     "@vitest/coverage-v8": "^3.0.0"

@@ -1,0 +1,83 @@
+# ================================================================
+# Deploy CommonMark Live Demo to GitHub Pages
+# ================================================================
+#
+# Builds the Vite app and deploys it to the gh-pages branch
+# under the commonmark/ subdirectory, preserving other content
+# (e.g., arithmetic/, busicom/, logic-gates/) already on GitHub Pages.
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into commonmark/ on that
+# branch, so the app is available at:
+#   https://adhithyan15.github.io/coding-adventures/commonmark/
+#
+# The Vite base path is set to /coding-adventures/commonmark/ in
+# vite.config.ts so all asset URLs resolve correctly.
+#
+# Dependency install order (leaf → root):
+#   directed-graph        — no local deps
+#   document-ast          — no local deps
+#   state-machine         — depends on directed-graph
+#   document-ast-to-html  — depends on document-ast
+#   commonmark-parser     — depends on document-ast, document-ast-to-html,
+#                           directed-graph, state-machine
+#   commonmark            — depends on document-ast, commonmark-parser,
+#                           document-ast-to-html
+
+name: Deploy CommonMark Live Demo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/commonmark-demo/**"
+      - "code/packages/typescript/commonmark/**"
+      - "code/packages/typescript/commonmark-parser/**"
+      - "code/packages/typescript/document-ast-to-html/**"
+      - "code/packages/typescript/document-ast/**"
+      - "code/packages/typescript/directed-graph/**"
+      - "code/packages/typescript/state-machine/**"
+      - ".github/workflows/deploy-commonmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (packages, leaf → root)
+        run: |
+          cd code/packages/typescript/directed-graph && npm install
+          cd ../document-ast && npm install
+          cd ../state-machine && npm install
+          cd ../document-ast-to-html && npm install
+          cd ../commonmark-parser && npm install
+          cd ../commonmark && npm install
+
+      - name: Install dependencies (app)
+        run: |
+          cd code/programs/typescript/commonmark-demo
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/commonmark-demo
+          npm run build
+
+      - name: Deploy to GitHub Pages (commonmark/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/commonmark-demo/dist
+          destination_dir: commonmark
+          keep_files: true

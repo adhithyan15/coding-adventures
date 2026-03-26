@@ -1,0 +1,20 @@
+[package]
+name = "directed-graph-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust directed-graph crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "directed_graph_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Our own zero-dependency Python C API bridge — replaces PyO3.
+python-bridge = { path = "../../rust/python-bridge" }
+
+# The core directed-graph crate — all algorithms live here.
+directed-graph = { path = "../../rust/directed-graph" }
+
+# This crate is NOT part of the Rust workspace (it produces a cdylib
+# for Python, not a normal Rust library).
+[workspace]

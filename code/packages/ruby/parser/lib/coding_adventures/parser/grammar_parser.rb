@@ -69,11 +69,30 @@ module CodingAdventures
       TT = CodingAdventures::Lexer::TokenType
       GT = CodingAdventures::GrammarTools
 
-      def initialize(tokens, grammar)
+      # Initialize a grammar-driven parser.
+      #
+      # Arguments:
+      #   tokens  -- flat array of Token objects from the lexer
+      #   grammar -- ParserGrammar produced by GT.parse_parser_grammar
+      #
+      # Keyword arguments:
+      #   trace: false  -- when true, emit a [TRACE] line to $stderr for
+      #                    every rule attempt. Useful for debugging why a
+      #                    parse is failing or succeeding.
+      #
+      # Trace format:
+      #
+      #   [TRACE] rule 'qualified_rule' at token 5 (IDENT "h1") → match
+      #   [TRACE] rule 'at_rule' at token 5 (IDENT "h1") → fail
+      #
+      # The token index is the position *before* the attempt. The type and
+      # value shown are those of the token at that position.
+      def initialize(tokens, grammar, trace: false)
         @tokens = tokens
         @grammar = grammar
         @pos = 0
         @rules = {}
+        @trace = trace
         grammar.rules.each { |rule| @rules[rule.name] = rule }
 
         # Detect whether newlines are significant in this grammar.
@@ -85,13 +104,35 @@ module CodingAdventures
         # Furthest failure tracking for better error messages.
         @furthest_pos = 0
         @furthest_expected = []
+
+        # Transform hooks — pluggable pipeline stages for language-specific
+        # processing. Hooks compose left-to-right.
+        @pre_parse_hooks = []
+        @post_parse_hooks = []
       end
 
       # Whether newlines are significant in this grammar.
       attr_reader :newlines_significant
 
+      # Register a token transform to run before parsing begins.
+      # The hook receives the token list and returns a (possibly
+      # modified) token list. Multiple hooks compose left-to-right.
+      def add_pre_parse(hook)
+        @pre_parse_hooks << hook
+      end
+
+      # Register an AST transform to run after parsing completes.
+      # The hook receives the root ASTNode and returns a (possibly
+      # modified) ASTNode. Multiple hooks compose left-to-right.
+      def add_post_parse(hook)
+        @post_parse_hooks << hook
+      end
+
       # Parse using the first grammar rule as entry point.
       def parse
+        # Pre-parse hooks transform the token list before parsing.
+        @pre_parse_hooks.each { |hook| @tokens = hook.call(@tokens) }
+
         raise GrammarParseError.new("Grammar has no rules") if @grammar.rules.empty?
 
         entry_rule = @grammar.rules[0]
@@ -122,6 +163,9 @@ module CodingAdventures
             current
           )
         end
+
+        # Post-parse hooks transform the AST after parsing completes.
+        @post_parse_hooks.each { |hook| result = hook.call(result) }
 
         result
       end
@@ -169,11 +213,32 @@ module CodingAdventures
         end
       end
 
-      # Parse a named grammar rule with memoization.
+      # Parse a named grammar rule with memoization and left-recursion support.
+      #
+      # Implements the seed-and-grow technique from Warth et al.,
+      # "Packrat Parsers Can Support Left Recursion" (2008).
+      #
+      # The algorithm handles left-recursive rules like:
+      #   expression = expression PLUS term | term
+      #
+      # 1. Seed: plant a failure entry in the memo cache before parsing.
+      # 2. Initial parse: the left-recursive alternative fails (hits seed),
+      #    but a non-recursive alternative may succeed.
+      # 3. Grow: iteratively re-parse with previous result cached, letting
+      #    the left-recursive alternative consume more input each time.
+      #
+      # When trace mode is enabled, emits a [TRACE] line to $stderr for every
+      # rule attempt (both hits and misses), whether the result is fresh or
+      # served from the memo cache. This makes the full parse history visible
+      # without changing the parse result.
       def parse_rule(rule_name)
         unless @rules.key?(rule_name)
           raise GrammarParseError.new("Undefined rule: #{rule_name}")
         end
+
+        # Capture position and token info for trace output.
+        attempt_pos = @pos
+        tok = current
 
         # Check memo cache.
         memo_key = [rule_name, @pos]
@@ -181,32 +246,73 @@ module CodingAdventures
           cached_result, cached_end_pos = @memo[memo_key]
           @pos = cached_end_pos
           if cached_result.nil?
+            emit_trace(rule_name, attempt_pos, tok, :fail) if @trace
             raise GrammarParseError.new(
               "Expected #{rule_name}, got #{current.value.inspect}",
               current
             )
           end
+          emit_trace(rule_name, attempt_pos, tok, :match) if @trace
           return ASTNode.new(rule_name: rule_name, children: cached_result)
         end
 
-        # Not cached -- parse the rule.
         start_pos = @pos
         rule = @rules[rule_name]
+
+        # Left-recursion guard: seed the memo with a failure entry BEFORE
+        # parsing the rule body. If the rule references itself at the same
+        # position, the memo check above will find this failure entry and
+        # raise GrammarParseError, breaking the infinite recursion cycle.
+        @memo[memo_key] = [nil, start_pos]
+
         children = match_element(rule.body)
 
         # Cache the result.
         @memo[memo_key] = [children, @pos]
 
+        # If the initial parse succeeded, try to grow the match.
+        if children
+          loop do
+            prev_end = @pos
+            @pos = start_pos
+            @memo[memo_key] = [children, prev_end]
+            new_children = match_element(rule.body)
+            if new_children.nil? || @pos <= prev_end
+              # Could not grow — restore the best result.
+              @pos = prev_end
+              @memo[memo_key] = [children, prev_end]
+              break
+            end
+            children = new_children
+          end
+        end
+
         unless children
           @pos = start_pos
           record_failure(rule_name)
+          emit_trace(rule_name, attempt_pos, tok, :fail) if @trace
           raise GrammarParseError.new(
             "Expected #{rule_name}, got #{current.value.inspect}",
             current
           )
         end
 
+        emit_trace(rule_name, attempt_pos, tok, :match) if @trace
         ASTNode.new(rule_name: rule_name, children: children)
+      end
+
+      # Emit a single trace line to $stderr.
+      #
+      # Format:
+      #   [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail
+      #
+      # The arrow uses the Unicode right arrow (→) to visually separate the
+      # context from the outcome, matching the Python trace format.
+      def emit_trace(rule_name, pos, tok, outcome)
+        type_str = tok.type.to_s
+        val_str = tok.value.to_s
+        result_str = (outcome == :match) ? "match" : "fail"
+        warn "[TRACE] rule '#{rule_name}' at token #{pos} (#{type_str} \"#{val_str}\") \u2192 #{result_str}"
       end
 
       # Try to match a grammar element against the token stream.

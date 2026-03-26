@@ -3,3 +3,7 @@ name = "branch-predictor"
 version = "0.1.0"
 edition = "2021"
 description = "Pluggable branch prediction algorithms for CPU simulation"
+
+[dependencies]
+state-machine = { path = "../state-machine" }
+directed-graph = { path = "../directed-graph" }

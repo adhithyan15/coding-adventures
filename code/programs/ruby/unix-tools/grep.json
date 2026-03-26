@@ -1,0 +1,260 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "grep",
+  "display_name": "grep",
+  "description": "Print lines that match patterns",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "extended_regexp",
+      "short": "E",
+      "long": "extended-regexp",
+      "description": "Interpret PATTERNS as extended regular expressions",
+      "type": "boolean"
+    },
+    {
+      "id": "fixed_strings",
+      "short": "F",
+      "long": "fixed-strings",
+      "description": "Interpret PATTERNS as fixed strings, not regular expressions",
+      "type": "boolean"
+    },
+    {
+      "id": "basic_regexp",
+      "short": "G",
+      "long": "basic-regexp",
+      "description": "Interpret PATTERNS as basic regular expressions (default)",
+      "type": "boolean"
+    },
+    {
+      "id": "perl_regexp",
+      "short": "P",
+      "long": "perl-regexp",
+      "description": "Interpret PATTERNS as Perl-compatible regular expressions",
+      "type": "boolean"
+    },
+    {
+      "id": "regexp",
+      "short": "e",
+      "long": "regexp",
+      "description": "Use PATTERNS for matching",
+      "type": "string",
+      "value_name": "PATTERNS",
+      "repeatable": true
+    },
+    {
+      "id": "file",
+      "short": "f",
+      "long": "file",
+      "description": "Take PATTERNS from FILE",
+      "type": "string",
+      "value_name": "FILE",
+      "repeatable": true
+    },
+    {
+      "id": "ignore_case",
+      "short": "i",
+      "long": "ignore-case",
+      "description": "Ignore case distinctions in patterns and data",
+      "type": "boolean"
+    },
+    {
+      "id": "invert_match",
+      "short": "v",
+      "long": "invert-match",
+      "description": "Select non-matching lines",
+      "type": "boolean"
+    },
+    {
+      "id": "word_regexp",
+      "short": "w",
+      "long": "word-regexp",
+      "description": "Select only those lines containing matches that form whole words",
+      "type": "boolean"
+    },
+    {
+      "id": "line_regexp",
+      "short": "x",
+      "long": "line-regexp",
+      "description": "Select only those matches that exactly match the whole line",
+      "type": "boolean"
+    },
+    {
+      "id": "count",
+      "short": "c",
+      "long": "count",
+      "description": "Print a count of matching lines for each input file",
+      "type": "boolean"
+    },
+    {
+      "id": "files_with_matches",
+      "short": "l",
+      "long": "files-with-matches",
+      "description": "Print only names of files with selected lines",
+      "type": "boolean"
+    },
+    {
+      "id": "files_without_match",
+      "short": "L",
+      "long": "files-without-match",
+      "description": "Print only names of files with no selected lines",
+      "type": "boolean"
+    },
+    {
+      "id": "max_count",
+      "short": "m",
+      "long": "max-count",
+      "description": "Stop reading a file after NUM matching lines",
+      "type": "integer",
+      "value_name": "NUM"
+    },
+    {
+      "id": "only_matching",
+      "short": "o",
+      "long": "only-matching",
+      "description": "Print only the matched (non-empty) parts of a matching line",
+      "type": "boolean"
+    },
+    {
+      "id": "quiet",
+      "short": "q",
+      "long": "quiet",
+      "description": "Suppress all normal output",
+      "type": "boolean"
+    },
+    {
+      "id": "line_number",
+      "short": "n",
+      "long": "line-number",
+      "description": "Prefix each line of output with the 1-based line number",
+      "type": "boolean"
+    },
+    {
+      "id": "with_filename",
+      "short": "H",
+      "long": "with-filename",
+      "description": "Print the file name for each match",
+      "type": "boolean"
+    },
+    {
+      "id": "no_filename",
+      "short": "h",
+      "long": "no-filename",
+      "description": "Suppress the prefixing of file names on output",
+      "type": "boolean"
+    },
+    {
+      "id": "after_context",
+      "short": "A",
+      "long": "after-context",
+      "description": "Print NUM lines of trailing context after matching lines",
+      "type": "integer",
+      "value_name": "NUM"
+    },
+    {
+      "id": "before_context",
+      "short": "B",
+      "long": "before-context",
+      "description": "Print NUM lines of leading context before matching lines",
+      "type": "integer",
+      "value_name": "NUM"
+    },
+    {
+      "id": "context",
+      "short": "C",
+      "long": "context",
+      "description": "Print NUM lines of output context",
+      "type": "integer",
+      "value_name": "NUM"
+    },
+    {
+      "id": "recursive",
+      "short": "r",
+      "long": "recursive",
+      "description": "Read all files under each directory, recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "dereference_recursive",
+      "short": "R",
+      "long": "dereference-recursive",
+      "description": "Like -r but follow all symlinks",
+      "type": "boolean"
+    },
+    {
+      "id": "include",
+      "long": "include",
+      "description": "Search only files matching GLOB",
+      "type": "string",
+      "value_name": "GLOB",
+      "repeatable": true
+    },
+    {
+      "id": "exclude",
+      "long": "exclude",
+      "description": "Skip files matching GLOB",
+      "type": "string",
+      "value_name": "GLOB",
+      "repeatable": true
+    },
+    {
+      "id": "exclude_dir",
+      "long": "exclude-dir",
+      "description": "Skip directories matching GLOB",
+      "type": "string",
+      "value_name": "GLOB",
+      "repeatable": true
+    },
+    {
+      "id": "color",
+      "long": "color",
+      "description": "Use markers to highlight the matching strings",
+      "type": "enum",
+      "enum_values": ["always", "auto", "never"],
+      "default": "auto"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "pattern",
+      "name": "PATTERN",
+      "description": "Pattern to search for (if -e is not used)",
+      "type": "string",
+      "required": false,
+      "required_unless_flag": ["regexp", "file"]
+    },
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files to search. Use '-' for stdin.",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "regex-mode",
+      "flag_ids": ["extended_regexp", "fixed_strings", "basic_regexp", "perl_regexp"],
+      "required": false
+    },
+    {
+      "id": "output-files-mode",
+      "flag_ids": ["files_with_matches", "files_without_match"],
+      "required": false
+    },
+    {
+      "id": "filename-mode",
+      "flag_ids": ["with_filename", "no_filename"],
+      "required": false
+    },
+    {
+      "id": "recurse-mode",
+      "flag_ids": ["recursive", "dereference_recursive"],
+      "required": false
+    }
+  ]
+}

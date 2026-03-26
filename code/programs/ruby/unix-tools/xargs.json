@@ -1,0 +1,122 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "xargs",
+  "display_name": "xargs",
+  "description": "Build and execute command lines from standard input",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "null",
+      "short": "0",
+      "long": "null",
+      "description": "Items are separated by a null character, not whitespace; disables quote and backslash processing",
+      "type": "boolean"
+    },
+    {
+      "id": "arg_file",
+      "short": "a",
+      "long": "arg-file",
+      "description": "Read items from FILE instead of standard input",
+      "type": "string",
+      "value_name": "FILE"
+    },
+    {
+      "id": "delimiter",
+      "short": "d",
+      "long": "delimiter",
+      "description": "Items in the input stream are separated by DELIM",
+      "type": "string",
+      "value_name": "DELIM"
+    },
+    {
+      "id": "eof",
+      "short": "E",
+      "long": "eof",
+      "description": "Set end of file string to EOF_STR",
+      "type": "string",
+      "value_name": "EOF_STR"
+    },
+    {
+      "id": "replace",
+      "short": "I",
+      "long": "replace",
+      "description": "Replace occurrences of REPLACE_STR in the initial arguments with names read from stdin",
+      "type": "string",
+      "value_name": "REPLACE_STR"
+    },
+    {
+      "id": "max_lines",
+      "short": "L",
+      "long": "max-lines",
+      "description": "Use at most MAX_LINES non-blank input lines per command line",
+      "type": "integer",
+      "value_name": "MAX_LINES"
+    },
+    {
+      "id": "max_args",
+      "short": "n",
+      "long": "max-args",
+      "description": "Use at most MAX_ARGS arguments per command line",
+      "type": "integer",
+      "value_name": "MAX_ARGS"
+    },
+    {
+      "id": "max_procs",
+      "short": "P",
+      "long": "max-procs",
+      "description": "Run up to MAX_PROCS processes at a time (0 = as many as possible)",
+      "type": "integer",
+      "value_name": "MAX_PROCS",
+      "default": 1
+    },
+    {
+      "id": "interactive",
+      "short": "p",
+      "long": "interactive",
+      "description": "Prompt the user before running each command line",
+      "type": "boolean"
+    },
+    {
+      "id": "no_run_if_empty",
+      "short": "r",
+      "long": "no-run-if-empty",
+      "description": "If the standard input does not contain any nonblanks, do not run the command",
+      "type": "boolean"
+    },
+    {
+      "id": "max_chars",
+      "short": "s",
+      "long": "max-chars",
+      "description": "Use at most MAX_CHARS characters per command line",
+      "type": "integer",
+      "value_name": "MAX_CHARS"
+    },
+    {
+      "id": "verbose",
+      "short": "t",
+      "long": "verbose",
+      "description": "Print the command line on standard error before executing it",
+      "type": "boolean"
+    },
+    {
+      "id": "exit",
+      "short": "x",
+      "long": "exit",
+      "description": "Exit if the size is exceeded",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "command",
+      "name": "COMMAND",
+      "description": "Command to execute (default: /bin/echo)",
+      "type": "string",
+      "required": false,
+      "variadic": true
+    }
+  ],
+  "commands": []
+}

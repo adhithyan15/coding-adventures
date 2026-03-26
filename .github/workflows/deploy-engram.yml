@@ -1,0 +1,65 @@
+# ================================================================
+# Deploy Engram to GitHub Pages
+# ================================================================
+#
+# Builds the engram-app Vite SPA and deploys it to the gh-pages
+# branch under the engram/ subdirectory, preserving all other
+# content already on GitHub Pages (logic-gates/, transistors/, etc.).
+#
+# Pages is configured to serve from the gh-pages branch (legacy mode).
+# The peaceiris action pushes built assets into engram/ on that branch,
+# making the app available at:
+#   https://adhithyan15.github.io/coding-adventures/engram/
+#
+# VITE_BASE is set at build time so Vite resolves all asset URLs relative
+# to /coding-adventures/engram/ rather than the default "./".
+
+name: Deploy Engram
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/engram-app/**"
+      - "code/packages/typescript/ui-components/**"
+      - "code/packages/typescript/store/**"
+      - "code/packages/typescript/indexeddb/**"
+      - ".github/workflows/deploy-engram.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install package dependencies
+        run: |
+          cd code/packages/typescript/indexeddb && npm install
+          cd ../store && npm install
+          cd ../ui-components && npm install
+
+      - name: Install app dependencies
+        run: cd code/programs/typescript/engram-app && npm install
+
+      - name: Build for GitHub Pages
+        run: cd code/programs/typescript/engram-app && npm run build
+        env:
+          VITE_BASE: /coding-adventures/engram/
+
+      - name: Deploy to GitHub Pages (engram/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/engram-app/dist
+          destination_dir: engram
+          keep_files: true

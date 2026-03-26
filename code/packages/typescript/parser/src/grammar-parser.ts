@@ -119,8 +119,31 @@ interface MemoEntry {
 // THE GRAMMAR-DRIVEN PARSER
 // =============================================================================
 
+/**
+ * Options for configuring a GrammarParser instance.
+ *
+ * Properties:
+ *   trace: When true, the parser emits a ``[TRACE]`` line to ``process.stderr``
+ *       for each rule attempt, reporting the rule name, the current token
+ *       index, the current token (type + value), and whether the rule
+ *       matched or failed.
+ *
+ *       Example output::
+ *
+ *           [TRACE] rule 'qualified_rule' at token 5 (IDENT "h1") → match
+ *           [TRACE] rule 'at_rule' at token 5 (IDENT "h1") → fail
+ *
+ *       Trace output goes to stderr so it does not interfere with any
+ *       structured output written to stdout by the caller. This mirrors
+ *       the convention used by many parser generators (yacc's ``YYDEBUG``,
+ *       ANTLR's ``DiagnosticErrorListener``, etc.).
+ */
+export interface GrammarParserOptions {
+  readonly trace?: boolean;
+}
+
 export class GrammarParser {
-  private readonly tokens: readonly Token[];
+  private tokens: readonly Token[];
   private readonly grammar: ParserGrammar;
   private pos: number;
   private readonly rules: ReadonlyMap<string, GrammarRule>;
@@ -140,13 +163,23 @@ export class GrammarParser {
   /** What was expected at the furthest position. */
   private furthestExpected: string[];
 
-  constructor(tokens: readonly Token[], grammar: ParserGrammar) {
+  /** Pre-parse hooks: transform token list before parsing. */
+  private _preParseHooks: Array<(tokens: Token[]) => Token[]> = [];
+
+  /** Post-parse hooks: transform AST after parsing. */
+  private _postParseHooks: Array<(ast: ASTNode) => ASTNode> = [];
+
+  /** Whether trace mode is enabled. */
+  private readonly trace: boolean;
+
+  constructor(tokens: readonly Token[], grammar: ParserGrammar, options?: GrammarParserOptions) {
     this.tokens = tokens;
     this.grammar = grammar;
     this.pos = 0;
     this.memo = new Map();
     this.furthestPos = 0;
     this.furthestExpected = [];
+    this.trace = options?.trace ?? false;
 
     const ruleMap = new Map<string, GrammarRule>();
     const ruleIndex = new Map<string, number>();
@@ -168,9 +201,38 @@ export class GrammarParser {
   }
 
   /**
+   * Register a token transform to run before parsing.
+   *
+   * The hook receives the token list and returns a (possibly modified)
+   * token list. Multiple hooks compose left-to-right.
+   */
+  addPreParse(hook: (tokens: Token[]) => Token[]): void {
+    this._preParseHooks.push(hook);
+  }
+
+  /**
+   * Register an AST transform to run after parsing.
+   *
+   * The hook receives the final AST and returns a (possibly modified)
+   * AST. Multiple hooks compose left-to-right.
+   */
+  addPostParse(hook: (ast: ASTNode) => ASTNode): void {
+    this._postParseHooks.push(hook);
+  }
+
+  /**
    * Parse the token stream using the first grammar rule as entry point.
    */
   parse(): ASTNode {
+    // Stage 1: Pre-parse hooks transform the token list.
+    if (this._preParseHooks.length > 0) {
+      let mutableTokens = [...this.tokens];
+      for (const hook of this._preParseHooks) {
+        mutableTokens = hook(mutableTokens);
+      }
+      this.tokens = mutableTokens;
+    }
+
     if (this.grammar.rules.length === 0) {
       throw new GrammarParseError("Grammar has no rules");
     }
@@ -223,7 +285,13 @@ export class GrammarParser {
       );
     }
 
-    return result;
+    // Stage 2: Post-parse hooks transform the AST.
+    let ast: ASTNode = result;
+    for (const hook of this._postParseHooks) {
+      ast = hook(ast);
+    }
+
+    return ast;
   }
 
   // =========================================================================
@@ -306,7 +374,38 @@ export class GrammarParser {
     }
 
     const startPos = this.pos;
-    const children = this.matchElement(rule.body);
+
+    // Left-recursion guard: seed the memo with a failure entry BEFORE
+    // parsing the rule body. If the rule references itself (directly or
+    // indirectly) at the same position, the memo check above will find
+    // this failure entry and return null, breaking the infinite recursion.
+    //
+    // After the initial parse, if it succeeded, we iteratively try to
+    // grow the match. This is the standard technique for handling left
+    // recursion in packrat parsers (Warth et al., "Packrat Parsers Can
+    // Support Left Recursion", 2008).
+    if (idx !== undefined) {
+      const key = `${idx},${startPos}`;
+      this.memo.set(key, { children: null, endPos: startPos, ok: false });
+    }
+
+    // Emit a [TRACE] line before attempting the rule (if trace mode is on).
+    // We capture the current token here, before matchElement() advances pos,
+    // so the trace line shows the token *at the point of attempt*, not after.
+    // Format: [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail
+    if (this.trace) {
+      const tok = this.current();
+      process.stderr.write(
+        `[TRACE] rule '${ruleName}' at token ${startPos} (${tok.type} "${tok.value}") → `
+      );
+    }
+
+    let children = this.matchElement(rule.body);
+
+    // Emit the match/fail outcome, completing the line started above.
+    if (this.trace) {
+      process.stderr.write(children !== null ? "match\n" : "fail\n");
+    }
 
     // Cache result
     if (idx !== undefined) {
@@ -315,6 +414,26 @@ export class GrammarParser {
         this.memo.set(key, { children, endPos: this.pos, ok: true });
       } else {
         this.memo.set(key, { children: null, endPos: this.pos, ok: false });
+      }
+
+      // If the initial parse succeeded, iteratively try to grow the match.
+      // Each iteration re-parses the rule body with the previous successful
+      // result cached, allowing the left-recursive alternative to consume
+      // more input.
+      if (children !== null) {
+        for (;;) {
+          const prevEnd = this.pos;
+          this.pos = startPos;
+          this.memo.set(key, { children, endPos: prevEnd, ok: true });
+          const newChildren = this.matchElement(rule.body);
+          if (newChildren === null || this.pos <= prevEnd) {
+            // Could not grow the match — restore the best result.
+            this.pos = prevEnd;
+            this.memo.set(key, { children, endPos: prevEnd, ok: true });
+            break;
+          }
+          children = newChildren;
+        }
       }
     }
 

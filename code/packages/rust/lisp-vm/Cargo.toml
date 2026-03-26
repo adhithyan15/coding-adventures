@@ -1,0 +1,10 @@
+[package]
+name = "lisp-vm"
+version = "0.1.0"
+edition = "2021"
+description = "Executes compiled Lisp bytecode — a virtual machine for McCarthy's 1960 Lisp with GC, closures, and tail call optimization"
+
+[dependencies]
+lisp-lexer = { path = "../lisp-lexer" }
+lisp-parser = { path = "../lisp-parser" }
+lisp-compiler = { path = "../lisp-compiler" }

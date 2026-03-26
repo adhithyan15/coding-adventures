@@ -48,7 +48,7 @@ module BuildTool
     # KNOWN_LANGUAGES lists the language directory names we look for when
     # inferring which ecosystem a package belongs to. If a package lives
     # under a directory with one of these names, we tag it accordingly.
-    KNOWN_LANGUAGES = %w[python ruby go rust typescript elixir].freeze
+    KNOWN_LANGUAGES = %w[python ruby go rust typescript elixir lua perl].freeze
 
     # SKIP_DIRS is the set of directory names that should never be traversed
     # during package discovery. These are known to contain non-source files
@@ -102,27 +102,65 @@ module BuildTool
 
     # get_build_file -- Return the appropriate BUILD file for the current platform.
     #
-    # Priority:
-    #   1. BUILD_mac on macOS, BUILD_linux on Linux
-    #   2. BUILD (fallback)
-    #   3. nil if no BUILD file exists
+    # Priority (most specific wins):
+    #   1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+    #   2. Shared: BUILD_mac_and_linux (macOS or Linux — for Unix-like systems)
+    #   3. Generic: BUILD (all platforms)
+    #   4. nil if no BUILD file exists
+    #
+    # This layering lets packages provide Windows-specific build commands via
+    # BUILD_windows while sharing a single BUILD_mac_and_linux for the common
+    # Unix case, falling back to BUILD when no platform differences exist.
     #
     # We use `RUBY_PLATFORM` to detect the OS. On macOS it contains "darwin";
-    # on Linux it contains "linux".
+    # on Linux it contains "linux"; on Windows it contains "mingw" or "mswin".
     #
     # @param directory [Pathname] The directory to check.
     # @return [Pathname, nil] The BUILD file path, or nil.
     def get_build_file(directory)
-      if RUBY_PLATFORM.include?("darwin")
+      os = if RUBY_PLATFORM.include?("darwin")
+             "darwin"
+           elsif RUBY_PLATFORM.include?("linux")
+             "linux"
+           elsif RUBY_PLATFORM =~ /mingw|mswin|cygwin/
+             "windows"
+           else
+             "unknown"
+           end
+      get_build_file_for_platform(directory, os)
+    end
+
+    # get_build_file_for_platform -- Like get_build_file but accepts an explicit
+    # OS name. This is useful for testing platform-specific behavior without
+    # running on that platform.
+    #
+    # @param directory [Pathname] The directory to check.
+    # @param os [String] The OS name: "darwin", "linux", or "windows".
+    # @return [Pathname, nil] The BUILD file path, or nil.
+    def get_build_file_for_platform(directory, os)
+      # Step 1: Check for the most specific platform file.
+      if os == "darwin"
         platform_build = directory / "BUILD_mac"
         return platform_build if platform_build.exist?
       end
 
-      if RUBY_PLATFORM.include?("linux")
+      if os == "linux"
         platform_build = directory / "BUILD_linux"
         return platform_build if platform_build.exist?
       end
 
+      if os == "windows"
+        platform_build = directory / "BUILD_windows"
+        return platform_build if platform_build.exist?
+      end
+
+      # Step 2: Check for the shared Unix file (macOS + Linux).
+      if os == "darwin" || os == "linux"
+        shared_build = directory / "BUILD_mac_and_linux"
+        return shared_build if shared_build.exist?
+      end
+
+      # Step 3: Fall back to the generic BUILD file.
       generic_build = directory / "BUILD"
       return generic_build if generic_build.exist?
 

@@ -1,0 +1,68 @@
+# Token definitions for Excel formulas
+# @version 1
+# @case_insensitive true
+#
+# This grammar aims to cover the broad Excel formula surface area:
+# literals, array constants, reference operators, A1-style references,
+# sheet/workbook-qualified references, function calls, names, and
+# structured table references.
+
+skip:
+  NONSPACE_WHITESPACE = /[\t\r\n]+/
+
+SPACE = / +/
+
+REF_PREFIX_QUOTED   = /(\[[^\]]+\])?'([^']|'')*'!/ -> REF_PREFIX
+REF_PREFIX_BARE     = /(\[[^\]]+\])?[A-Za-z_\\][A-Za-z0-9_\.]*(?::[A-Za-z_\\][A-Za-z0-9_\.]*)*!/ -> REF_PREFIX
+
+STRING            = /"([^"]|"")*"/
+ERROR_CONSTANT    = /#NULL!|#DIV\/0!|#VALUE!|#REF!|#NAME\?|#NUM!|#N\/A|#SPILL!|#CALC!|#GETTING_DATA/
+NUMBER            = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)?/
+
+STRUCTURED_KEYWORD = /\[#(?:All|Data|Headers|Totals|This Row)\]/
+STRUCTURED_COLUMN  = /\[(?:[^\[\]]|\]\])+\]/
+
+# Order matters: more specific reference tokens must come before NAME.
+CELL              = /\$?[A-Za-z]{1,3}\$?[0-9]{1,7}/
+
+NOT_EQUALS        = "<>"
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+
+PLUS              = "+"
+MINUS             = "-"
+STAR              = "*"
+SLASH             = "/"
+CARET             = "^"
+AMP               = "&"
+PERCENT           = "%"
+EQUALS            = "="
+LESS_THAN         = "<"
+GREATER_THAN      = ">"
+BANG              = "!"
+DOLLAR            = "$"
+LPAREN            = "("
+RPAREN            = ")"
+LBRACE            = "{"
+RBRACE            = "}"
+LBRACKET          = "["
+RBRACKET          = "]"
+COMMA             = ","
+SEMICOLON         = ";"
+COLON             = ":"
+AT                = "@"
+
+NAME              = /[A-Za-z_\\][A-Za-z0-9_\.]*/
+
+# These token types are produced by the Excel wrapper's context-sensitive
+# hook / normalization passes, not by direct matching. We declare them here
+# with never-match regexes so grammar validation can still reason about the
+# full token vocabulary used by excel.grammar.
+FUNCTION_NAME     = /(?!.)/
+TABLE_NAME        = /(?!.)/
+COLUMN_REF        = /(?!.)/
+ROW_REF           = /(?!.)/
+
+keywords:
+  TRUE
+  FALSE

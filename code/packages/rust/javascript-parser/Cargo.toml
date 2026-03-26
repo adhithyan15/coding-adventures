@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-javascript-parser"
+version = "0.1.0"
+edition = "2021"
+description = "JavaScript parser — parses JavaScript source code into an AST using the grammar-driven parser and the javascript.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-javascript-lexer = { path = "../javascript-lexer" }

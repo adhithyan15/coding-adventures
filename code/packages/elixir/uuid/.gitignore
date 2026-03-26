@@ -1,0 +1,2 @@
+_build/\ncover/\ndeps/\n.elixir_ls/\n*.beam\n
+cover/

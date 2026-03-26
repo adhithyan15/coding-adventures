@@ -39,6 +39,7 @@ use std::path::Path;
 use sha2::{Digest, Sha256};
 
 use crate::discovery::Package;
+use crate::glob_match;
 use crate::graph::Graph;
 
 // ---------------------------------------------------------------------------
@@ -53,6 +54,7 @@ fn source_extensions(language: &str) -> HashSet<&'static str> {
         "ruby" => [".rb", ".gemspec"].iter().cloned().collect(),
         "go" => [".go"].iter().cloned().collect(),
         "rust" => [".rs", ".toml"].iter().cloned().collect(),
+        "perl" => [".pl", ".pm", ".t", ".xs"].iter().cloned().collect(),
         _ => HashSet::new(),
     }
 }
@@ -65,6 +67,7 @@ fn special_filenames(language: &str) -> HashSet<&'static str> {
         "ruby" => ["Gemfile", "Rakefile"].iter().cloned().collect(),
         "go" => ["go.mod", "go.sum"].iter().cloned().collect(),
         "rust" => ["Cargo.toml", "Cargo.lock"].iter().cloned().collect(),
+        "perl" => ["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"].iter().cloned().collect(),
         _ => HashSet::new(),
     }
 }
@@ -77,22 +80,98 @@ fn special_filenames(language: &str) -> HashSet<&'static str> {
 /// the package's language. Files are sorted by their relative path for
 /// deterministic hashing.
 ///
-/// The collection rules:
-///   - BUILD, BUILD_mac, BUILD_linux are always included.
-///   - Files matching the language's extensions are included.
-///   - Special filenames (go.mod, Gemfile, etc.) are included.
-///   - Everything else is ignored.
+/// The collection rules depend on whether explicit `srcs` glob patterns
+/// are provided (from Starlark BUILD files):
+///
+///   **With srcs patterns** (Starlark mode):
+///     - Walk the entire package directory.
+///     - For each file, compute its path relative to the package root.
+///     - Test the relative path against each glob pattern using `glob_match`.
+///     - BUILD files are always included regardless of patterns.
+///
+///   **Without srcs patterns** (legacy shell BUILD mode):
+///     - BUILD, BUILD_mac, BUILD_linux are always included.
+///     - Files matching the language's extensions are included.
+///     - Special filenames (go.mod, Gemfile, etc.) are included.
+///     - Everything else is ignored.
+///
+/// The glob-based approach correctly handles `**` patterns like
+/// `src/**/*.py`, which match files at any depth under `src/`. The old
+/// extension-based approach could not express this — it included ALL
+/// `.py` files in the entire package tree, even if the BUILD file only
+/// declared `src/**/*.py` as sources.
 fn collect_source_files(pkg: &Package) -> Vec<std::path::PathBuf> {
-    let extensions = source_extensions(&pkg.language);
-    let specials = special_filenames(&pkg.language);
+    collect_source_files_with_patterns(pkg, &[])
+}
 
+/// Variant of `collect_source_files` that accepts explicit glob patterns.
+///
+/// When `srcs_patterns` is non-empty, files are matched against the
+/// patterns using `glob_match::match_path`. BUILD files are always
+/// included regardless of patterns (they define the package itself).
+///
+/// When `srcs_patterns` is empty, falls back to extension-based matching.
+///
+/// # Why separate this function?
+///
+/// Starlark BUILD files declare explicit `srcs` patterns:
+///
+/// ```text
+/// py_library(
+///     name = "logic-gates",
+///     srcs = ["src/**/*.py"],
+/// )
+/// ```
+///
+/// When available, these patterns are more precise than extension-based
+/// matching. A package might have `.py` files in `scripts/` that are
+/// NOT part of the library. Using `srcs = ["src/**/*.py"]` excludes
+/// them from hashing, preventing spurious rebuilds.
+pub fn collect_source_files_with_patterns(
+    pkg: &Package,
+    srcs_patterns: &[String],
+) -> Vec<std::path::PathBuf> {
     let mut files = Vec::new();
 
-    // Walk the package directory recursively.
-    walk_for_files(&pkg.path, &extensions, &specials, &mut files);
+    if srcs_patterns.is_empty() {
+        // Legacy mode: extension-based matching.
+        let extensions = source_extensions(&pkg.language);
+        let specials = special_filenames(&pkg.language);
+        walk_for_files(&pkg.path, &extensions, &specials, &mut files);
+    } else {
+        // Starlark mode: glob-based matching.
+        walk_all_files(&pkg.path, &mut files);
 
-    // Sort by relative path for determinism. Two developers with different
-    // absolute paths to the repo should get the same hash.
+        // Filter files using glob patterns. We compute relative paths
+        // because the patterns are relative to the package root.
+        files.retain(|f| {
+            let rel = match f.strip_prefix(&pkg.path) {
+                Ok(r) => r.to_string_lossy().replace('\\', "/"),
+                Err(_) => return false,
+            };
+
+            // BUILD files are always included — they define the package.
+            let filename = f
+                .file_name()
+                .map(|n| n.to_string_lossy().to_string())
+                .unwrap_or_default();
+            if filename == "BUILD"
+                || filename == "BUILD_mac"
+                || filename == "BUILD_linux"
+                || filename == "BUILD_windows"
+                || filename == "BUILD_mac_and_linux"
+            {
+                return true;
+            }
+
+            // Check if any pattern matches.
+            srcs_patterns
+                .iter()
+                .any(|pat| glob_match::match_path(pat, &rel))
+        });
+    }
+
+    // Sort by relative path for determinism.
     files.sort_by(|a, b| {
         let rel_a = a.strip_prefix(&pkg.path).unwrap_or(a);
         let rel_b = b.strip_prefix(&pkg.path).unwrap_or(b);
@@ -143,6 +222,29 @@ fn walk_for_files(
             if specials.contains(name.as_str()) {
                 files.push(path);
             }
+        }
+    }
+}
+
+/// Recursively walks a directory collecting ALL files (no filtering).
+///
+/// This is used in Starlark mode where filtering happens after collection
+/// via glob pattern matching. We collect everything first, then filter,
+/// because glob patterns can be arbitrarily complex (`src/**/*.py`,
+/// `tests/test_*.py`, etc.) and we don't want to bake pattern awareness
+/// into the directory walker.
+fn walk_all_files(dir: &Path, files: &mut Vec<std::path::PathBuf>) {
+    let entries = match fs::read_dir(dir) {
+        Ok(e) => e,
+        Err(_) => return,
+    };
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            walk_all_files(&path, files);
+        } else if path.is_file() {
+            files.push(path);
         }
     }
 }
@@ -391,5 +493,103 @@ mod tests {
         assert!(preds.contains("A"));
         assert!(preds.contains("B"));
         assert!(!preds.contains("C"));
+    }
+
+    #[test]
+    fn test_collect_source_files_with_glob_patterns() {
+        // Create a temp package with a src/ directory and some extra files.
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_glob_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(dir.join("src")).unwrap();
+
+        // Source files that should be matched by "src/**/*.py".
+        fs::write(dir.join("src/gates.py"), "pass").unwrap();
+        fs::write(dir.join("src/__init__.py"), "").unwrap();
+
+        // A file that should NOT match "src/**/*.py".
+        fs::write(dir.join("scripts/helper.py"), "pass")
+            .unwrap_or_else(|_| {
+                fs::create_dir_all(dir.join("scripts")).unwrap();
+                fs::write(dir.join("scripts/helper.py"), "pass").unwrap();
+            });
+
+        // BUILD file — always included.
+        fs::write(dir.join("BUILD"), "pytest").unwrap();
+
+        let pkg = Package {
+            name: "python/test-glob".to_string(),
+            path: dir.clone(),
+            build_commands: vec!["pytest".to_string()],
+            language: "python".to_string(),
+        };
+
+        let patterns = vec!["src/**/*.py".to_string()];
+        let files = collect_source_files_with_patterns(&pkg, &patterns);
+
+        // Should include BUILD + src/gates.py + src/__init__.py
+        // Should NOT include scripts/helper.py
+        let rel_paths: Vec<String> = files
+            .iter()
+            .map(|f| {
+                f.strip_prefix(&dir)
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/")
+            })
+            .collect();
+
+        assert!(rel_paths.contains(&"BUILD".to_string()));
+        assert!(rel_paths.contains(&"src/gates.py".to_string()));
+        assert!(rel_paths.contains(&"src/__init__.py".to_string()));
+        assert!(
+            !rel_paths.contains(&"scripts/helper.py".to_string()),
+            "scripts/helper.py should be excluded by glob pattern"
+        );
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_collect_source_files_empty_patterns_uses_extensions() {
+        // When patterns are empty, fall back to extension-based matching.
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_nopattern_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+
+        fs::write(dir.join("main.py"), "print('hello')").unwrap();
+        fs::write(dir.join("BUILD"), "pytest").unwrap();
+        fs::write(dir.join("README.md"), "# Readme").unwrap();
+
+        let pkg = Package {
+            name: "python/test-ext".to_string(),
+            path: dir.clone(),
+            build_commands: vec!["pytest".to_string()],
+            language: "python".to_string(),
+        };
+
+        let files = collect_source_files_with_patterns(&pkg, &[]);
+
+        let rel_paths: Vec<String> = files
+            .iter()
+            .map(|f| {
+                f.strip_prefix(&dir)
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/")
+            })
+            .collect();
+
+        assert!(rel_paths.contains(&"main.py".to_string()));
+        assert!(rel_paths.contains(&"BUILD".to_string()));
+        // README.md has no matching extension — should be excluded.
+        assert!(!rel_paths.contains(&"README.md".to_string()));
+
+        let _ = fs::remove_dir_all(&dir);
     }
 }

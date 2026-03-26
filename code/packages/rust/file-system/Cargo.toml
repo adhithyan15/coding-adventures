@@ -1,0 +1,5 @@
+[package]
+name = "file-system"
+version = "0.1.0"
+edition = "2021"
+description = "D15 File System -- inode-based VFS with directories, file descriptors, and block I/O"

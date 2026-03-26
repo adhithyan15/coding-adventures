@@ -117,7 +117,7 @@ fn infer_language(path: &Path) -> String {
     let path_str = path.to_string_lossy().replace('\\', "/");
     let parts: Vec<&str> = path_str.split('/').collect();
 
-    for lang in &["python", "ruby", "go", "rust", "typescript", "elixir"] {
+    for lang in &["python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl"] {
         for part in &parts {
             if part == lang {
                 return lang.to_string();
@@ -140,40 +140,23 @@ fn infer_package_name(path: &Path, language: &str) -> String {
 /// Returns the path to the appropriate BUILD file for the current
 /// platform, or None if none exists.
 ///
-/// Priority:
-///  1. BUILD_mac on macOS (Darwin)
-///  2. BUILD_linux on Linux
-///  3. BUILD (cross-platform fallback)
+/// Priority (most specific wins):
+///  1. Platform-specific: BUILD_mac (macOS), BUILD_linux (Linux), BUILD_windows (Windows)
+///  2. Shared: BUILD_mac_and_linux (macOS or Linux — for Unix-like systems)
+///  3. Generic: BUILD (all platforms)
 ///  4. None if no BUILD file exists
+///
+/// This layering lets packages provide Windows-specific build commands via
+/// BUILD_windows while sharing a single BUILD_mac_and_linux for the common
+/// Unix case, falling back to BUILD when no platform differences exist.
 fn get_build_file(directory: &Path) -> Option<PathBuf> {
-    let os = std::env::consts::OS;
-
-    if os == "macos" {
-        let platform_build = directory.join("BUILD_mac");
-        if platform_build.is_file() {
-            return Some(platform_build);
-        }
-    }
-
-    if os == "linux" {
-        let platform_build = directory.join("BUILD_linux");
-        if platform_build.is_file() {
-            return Some(platform_build);
-        }
-    }
-
-    let generic_build = directory.join("BUILD");
-    if generic_build.is_file() {
-        return Some(generic_build);
-    }
-
-    None
+    get_build_file_for_os(directory, std::env::consts::OS)
 }
 
-/// Like `get_build_file` but accepts an explicit OS name for testing
-/// platform-specific behavior without running on that platform.
-#[cfg(test)]
-pub fn get_build_file_for_platform(directory: &Path, os: &str) -> Option<PathBuf> {
+/// Shared implementation for both runtime and test use. The `os` parameter
+/// should be "macos", "darwin", "linux", or "windows".
+fn get_build_file_for_os(directory: &Path, os: &str) -> Option<PathBuf> {
+    // Step 1: Check for the most specific platform file.
     if os == "macos" || os == "darwin" {
         let platform_build = directory.join("BUILD_mac");
         if platform_build.is_file() {
@@ -188,12 +171,35 @@ pub fn get_build_file_for_platform(directory: &Path, os: &str) -> Option<PathBuf
         }
     }
 
+    if os == "windows" {
+        let platform_build = directory.join("BUILD_windows");
+        if platform_build.is_file() {
+            return Some(platform_build);
+        }
+    }
+
+    // Step 2: Check for the shared Unix file (macOS + Linux).
+    if os == "macos" || os == "darwin" || os == "linux" {
+        let shared_build = directory.join("BUILD_mac_and_linux");
+        if shared_build.is_file() {
+            return Some(shared_build);
+        }
+    }
+
+    // Step 3: Fall back to the generic BUILD file.
     let generic_build = directory.join("BUILD");
     if generic_build.is_file() {
         return Some(generic_build);
     }
 
     None
+}
+
+/// Like `get_build_file` but accepts an explicit OS name for testing
+/// platform-specific behavior without running on that platform.
+#[cfg(test)]
+pub fn get_build_file_for_platform(directory: &Path, os: &str) -> Option<PathBuf> {
+    get_build_file_for_os(directory, os)
 }
 
 // ---------------------------------------------------------------------------
@@ -383,10 +389,88 @@ mod tests {
         assert!(result.is_some());
         assert!(result.unwrap().ends_with("BUILD_linux"));
 
-        // Test fallback to generic BUILD.
+        // Test fallback to generic BUILD when no windows-specific file.
         let result = get_build_file_for_platform(&dir, "windows");
         assert!(result.is_some());
         assert!(result.unwrap().ends_with("BUILD"));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_build_windows_preferred() {
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_win_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+
+        fs::write(dir.join("BUILD"), "generic").unwrap();
+        fs::write(dir.join("BUILD_windows"), "windows").unwrap();
+
+        // Windows should prefer BUILD_windows.
+        let result = get_build_file_for_platform(&dir, "windows");
+        assert!(result.is_some());
+        assert!(result.unwrap().ends_with("BUILD_windows"));
+
+        // macOS should NOT use BUILD_windows — falls back to BUILD.
+        let result = get_build_file_for_platform(&dir, "darwin");
+        assert!(result.is_some());
+        let path = result.unwrap();
+        assert!(path.ends_with("BUILD") && !path.to_string_lossy().contains("windows"));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_build_mac_and_linux() {
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_maclinux_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+
+        fs::write(dir.join("BUILD"), "generic").unwrap();
+        fs::write(dir.join("BUILD_mac_and_linux"), "unix").unwrap();
+
+        // macOS should use BUILD_mac_and_linux.
+        let result = get_build_file_for_platform(&dir, "darwin");
+        assert!(result.is_some());
+        assert!(result.unwrap().ends_with("BUILD_mac_and_linux"));
+
+        // Linux should use BUILD_mac_and_linux.
+        let result = get_build_file_for_platform(&dir, "linux");
+        assert!(result.is_some());
+        assert!(result.unwrap().ends_with("BUILD_mac_and_linux"));
+
+        // Windows should NOT use BUILD_mac_and_linux — falls back to BUILD.
+        let result = get_build_file_for_platform(&dir, "windows");
+        assert!(result.is_some());
+        let path = result.unwrap();
+        assert!(path.ends_with("BUILD") && !path.to_string_lossy().contains("mac_and_linux"));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_build_mac_overrides_mac_and_linux() {
+        let dir = std::env::temp_dir().join(format!(
+            "build_tool_override_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+
+        fs::write(dir.join("BUILD"), "generic").unwrap();
+        fs::write(dir.join("BUILD_mac"), "mac").unwrap();
+        fs::write(dir.join("BUILD_mac_and_linux"), "unix").unwrap();
+
+        // BUILD_mac is more specific than BUILD_mac_and_linux.
+        let result = get_build_file_for_platform(&dir, "darwin");
+        assert!(result.is_some());
+        assert!(result.unwrap().ends_with("BUILD_mac"));
 
         let _ = fs::remove_dir_all(&dir);
     }

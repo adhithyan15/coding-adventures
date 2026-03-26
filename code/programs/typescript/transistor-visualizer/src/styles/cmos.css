@@ -1,0 +1,118 @@
+/* ==========================================================================
+ * CMOS era styles.
+ *
+ * Modern accent tones for the technology that powers everything.
+ * ========================================================================== */
+
+.era--cmos .era-header__year {
+  background: #228855;
+}
+
+.era--cmos .cmos-diagram {
+  background: #101618;
+  border-color: #2a3a3e;
+}
+
+/* --- CMOS toggle button --- */
+
+.cmos-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cmos-toggle__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--body-text);
+}
+
+.cmos-toggle__button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--panel-border);
+  background: #cc4444;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.cmos-toggle__button--high {
+  background: #44aa44;
+  border-color: #66cc66;
+}
+
+.cmos-toggle__button:hover {
+  opacity: 0.9;
+}
+
+/* --- VTC Chart --- */
+
+.vtc-chart {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.vtc-chart__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--body-text);
+}
+
+.vtc-chart__svg {
+  width: 100%;
+  max-height: 220px;
+}
+
+/* --- Scaling Timeline --- */
+
+.scaling-timeline {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.scaling-timeline__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--body-text);
+}
+
+.scaling-timeline__table-wrapper {
+  overflow-x: auto;
+}
+
+.scaling-timeline__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.scaling-timeline__table th {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--panel-border);
+  color: var(--tab-text);
+  font-weight: 600;
+}
+
+.scaling-timeline__table td {
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid rgba(42, 58, 94, 0.3);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.scaling-timeline__node {
+  font-weight: 600;
+  color: var(--accent);
+}

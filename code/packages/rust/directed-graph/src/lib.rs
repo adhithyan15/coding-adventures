@@ -40,5 +40,8 @@
 //! ```
 
 pub mod graph;
+pub mod labeled_graph;
+pub mod visualization;
 
 pub use graph::{Graph, GraphError};
+pub use labeled_graph::LabeledDirectedGraph;

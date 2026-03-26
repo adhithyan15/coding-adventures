@@ -1,0 +1,5 @@
+[package]
+name = "garbage-collector"
+version = "0.1.0"
+edition = "2021"
+description = "Mark-and-sweep garbage collector simulation — heap objects, tracing GC, symbol interning"

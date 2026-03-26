@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/brainfuck",
+  "version": "0.1.0",
+  "description": "Brainfuck interpreter built on the pluggable GenericVM",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/virtual-machine": "file:../virtual-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

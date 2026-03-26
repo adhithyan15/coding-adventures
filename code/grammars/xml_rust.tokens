@@ -1,0 +1,104 @@
+# XML Token Grammar (Rust-compatible)
+# @version 1
+# ====================================
+#
+# This is a Rust-compatible variant of the xml.tokens grammar. The original
+# grammar uses negative lookahead patterns (e.g., `(?!->)`) which Python's
+# regex engine supports but Rust's `regex` crate does not.
+#
+# This file replaces lookahead patterns with equivalent alternations:
+#
+# - COMMENT_TEXT: `([^-]|-(?!->))+`  -->  `([^-]+|-[^-]|--[^>])+`
+# - CDATA_TEXT:   `([^\]]|\](?!\]>))+` -->  `([^\]]+|\][^\]]|\]\][^>])+`
+# - PI_TEXT:      `([^?]|\?(?!>))+`  -->  `([^?]+|\?[^>])+`
+#
+# How the alternatives work (using COMMENT_TEXT as an example):
+#
+# The end delimiter is `-->` (dash-dash-greater-than). We need to match
+# everything that is NOT the start of that delimiter:
+#
+# - `[^-]+`   matches any run of non-dash characters
+# - `-[^-]`   matches a single dash followed by a non-dash (so `-` in
+#              "a-b" is fine, but `--` is not matched here)
+# - `--[^>]`  matches two dashes followed by a non-greater-than character
+#              (so `--x` is fine, but `-->` is not matched here)
+#
+# When the lexer reaches `-->`, none of the three alternatives match, so
+# COMMENT_TEXT fails and the lexer falls through to COMMENT_END which
+# matches the `-->` delimiter.
+#
+# All other patterns are identical to xml.tokens.
+
+escapes: none
+
+# Skip patterns — whitespace is consumed silently in the default group
+# and inside tags. Callbacks disable skip for comment/cdata/pi groups
+# where whitespace is significant content.
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+
+# -----------------------------------------------------------------------
+# Default group (implicit) — content between tags
+# -----------------------------------------------------------------------
+
+TEXT              = /[^<&]+/
+ENTITY_REF        = /&[a-zA-Z][a-zA-Z0-9]*;/
+CHAR_REF          = /&#[0-9]+;|&#x[0-9a-fA-F]+;/
+COMMENT_START     = "<!--"
+CDATA_START       = "<![CDATA["
+PI_START          = "<?"
+CLOSE_TAG_START   = "</"
+OPEN_TAG_START    = "<"
+
+# -----------------------------------------------------------------------
+# Tag group — inside <tag ...> or </tag>
+# -----------------------------------------------------------------------
+
+group tag:
+  TAG_NAME        = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+  ATTR_EQUALS     = "="
+  ATTR_VALUE_DQ   = /"[^"]*"/ -> ATTR_VALUE
+  ATTR_VALUE_SQ   = /'[^']*'/ -> ATTR_VALUE
+  TAG_CLOSE       = ">"
+  SELF_CLOSE      = "/>"
+  SLASH           = "/"
+
+# -----------------------------------------------------------------------
+# Comment group — inside <!-- ... -->
+# -----------------------------------------------------------------------
+#
+# Rust-compatible: replaced `(-(?!->))` with explicit alternatives.
+# The three branches cover every character except the `-->` sequence:
+# - [^-]+     : runs of non-dash characters
+# - -[^-]     : a dash not followed by another dash
+# - --[^>]    : two dashes not followed by greater-than
+
+group comment:
+  COMMENT_TEXT    = /([^-]+|-[^-]|--[^>])+/
+  COMMENT_END     = "-->"
+
+# -----------------------------------------------------------------------
+# CDATA group — inside <![CDATA[ ... ]]>
+# -----------------------------------------------------------------------
+#
+# Rust-compatible: replaced `(\](?!\]>))` with explicit alternatives.
+# - [^\]]+    : runs of non-bracket characters
+# - \][^\]]   : a bracket not followed by another bracket
+# - \]\][^>]  : two brackets not followed by greater-than
+
+group cdata:
+  CDATA_TEXT      = /([^\]]+|\][^\]]|\]\][^>])+/
+  CDATA_END       = "]]>"
+
+# -----------------------------------------------------------------------
+# Processing instruction group — inside <? ... ?>
+# -----------------------------------------------------------------------
+#
+# Rust-compatible: replaced `(\?(?!>))` with explicit alternatives.
+# - [^?]+     : runs of non-question-mark characters
+# - \?[^>]    : a question mark not followed by greater-than
+
+group pi:
+  PI_TARGET       = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+  PI_TEXT         = /([^?]+|\?[^>])+/
+  PI_END          = "?>"

@@ -1,4 +1,5 @@
 # Token definitions for Starlark
+# @version 1
 # A deterministic subset of Python designed for configuration files.
 #
 # Starlark specification: https://github.com/bazelbuild/starlark/blob/master/spec.md

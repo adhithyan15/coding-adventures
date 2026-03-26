@@ -1,0 +1,86 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "chown",
+  "display_name": "chown",
+  "description": "Change file owner and group",
+  "version": "1.0.0",
+  "parsing_mode": "posix",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "recursive",
+      "short": "R",
+      "long": "recursive",
+      "description": "Operate on files and directories recursively",
+      "type": "boolean"
+    },
+    {
+      "id": "verbose",
+      "short": "v",
+      "long": "verbose",
+      "description": "Output a diagnostic for every file processed",
+      "type": "boolean"
+    },
+    {
+      "id": "changes",
+      "short": "c",
+      "long": "changes",
+      "description": "Like verbose but report only when a change is made",
+      "type": "boolean"
+    },
+    {
+      "id": "silent",
+      "short": "f",
+      "long": "silent",
+      "description": "Suppress most error messages",
+      "type": "boolean"
+    },
+    {
+      "id": "dereference",
+      "long": "dereference",
+      "description": "Affect the referent of each symbolic link, rather than the link itself (default)",
+      "type": "boolean"
+    },
+    {
+      "id": "no_dereference",
+      "short": "h",
+      "long": "no-dereference",
+      "description": "Affect symbolic links instead of any referenced file",
+      "type": "boolean"
+    },
+    {
+      "id": "reference",
+      "long": "reference",
+      "description": "Use RFILE's owner and group rather than specifying OWNER:GROUP",
+      "type": "string",
+      "value_name": "RFILE"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "owner_group",
+      "name": "OWNER[:GROUP]",
+      "description": "New owner and optionally group, in the form OWNER, OWNER:GROUP, OWNER:, :GROUP, or OWNER.GROUP",
+      "type": "string",
+      "required": true,
+      "required_unless_flag": ["reference"]
+    },
+    {
+      "id": "files",
+      "name": "FILE",
+      "description": "Files or directories to change",
+      "type": "string",
+      "required": true,
+      "variadic": true,
+      "variadic_min": 1
+    }
+  ],
+  "commands": [],
+  "mutually_exclusive_groups": [
+    {
+      "id": "deref-mode",
+      "flag_ids": ["dereference", "no_dereference"],
+      "required": false
+    }
+  ]
+}

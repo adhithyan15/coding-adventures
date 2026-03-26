@@ -1,0 +1,42 @@
+# Parser grammar for JSON (RFC 8259)
+# @version 1
+#
+# JSON is defined by exactly four grammar rules. The entry point is "value" —
+# any JSON text is a single value (an object, array, string, number, boolean,
+# or null).
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from json.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional (zero or one)
+#   ( x )   grouping
+#   "lit"   literal token match
+#
+# The grammar is recursive: value references object and array, which reference
+# value again. This mutual recursion allows JSON to represent arbitrarily deep
+# nested structures like [{"a": [1, {"b": 2}]}].
+
+# A JSON value is one of seven things: an object, an array, a string, a
+# number, true, false, or null. The order of alternatives matters for the
+# backtracking parser — we put compound structures (object, array) first
+# since they start with unambiguous delimiters ({ and [).
+value    = object | array | STRING | NUMBER | TRUE | FALSE | NULL ;
+
+# An object is a comma-separated list of key-value pairs wrapped in braces.
+# The [ pair { COMMA pair } ] pattern means "zero or more comma-separated
+# pairs" — the outer [ ] makes the contents optional (allowing {}), and
+# the inner { COMMA pair } handles additional pairs after the first.
+object   = LBRACE [ pair { COMMA pair } ] RBRACE ;
+
+# A pair is a string key, a colon, and a value. JSON keys must be strings —
+# no bare identifiers, no numbers, no expressions.
+pair     = STRING COLON value ;
+
+# An array is a comma-separated list of values wrapped in brackets. Same
+# [ x { COMMA x } ] pattern as objects.
+array    = LBRACKET [ value { COMMA value } ] RBRACKET ;

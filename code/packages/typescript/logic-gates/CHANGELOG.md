@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 - 2026-03-22
+
+### Fixed
+
+- Fixed TypeScript type error in `priorityEncoder` where `reduce` initial value type conflicted with `Bit[]` array type.
+
 ## 0.1.0 - 2026-03-19
 
 - Initial TypeScript port from Python implementation

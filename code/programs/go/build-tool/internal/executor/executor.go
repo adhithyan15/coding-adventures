@@ -29,16 +29,25 @@
 //
 // If a package fails, all its transitive dependents are marked "dep-skipped".
 // There is no point building something whose dependency is broken.
+//
+// # Progress tracking
+//
+// The executor accepts an optional progress.Tracker that receives events
+// as packages are skipped, started, and finished. This powers a real-time
+// progress bar in the terminal. The tracker is nil-safe — all Send calls
+// are no-ops when tracker is nil, so callers don't need to guard.
 package executor
 
 import (
 	"fmt"
 	"os/exec"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
+	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
@@ -59,14 +68,15 @@ type BuildResult struct {
 // This is because BUILD files are scripts: later commands may depend on
 // earlier ones (e.g., "install dependencies" before "run tests").
 //
-// We use os/exec with shell execution (sh -c) so that BUILD commands can
-// use shell features like pipes, redirects, and environment variables.
+// We use os/exec with shell execution so that BUILD commands can use
+// shell features like pipes, redirects, and environment variables.
+// On Windows, we use "cmd /C"; on Unix, "sh -c".
 func runPackageBuild(pkg discovery.Package) BuildResult {
 	start := time.Now()
 	var allStdout, allStderr []string
 
 	for _, command := range pkg.BuildCommands {
-		cmd := exec.Command("sh", "-c", command)
+		cmd := shellCommand(command)
 		cmd.Dir = pkg.Path
 
 		var stdout, stderr strings.Builder
@@ -105,6 +115,28 @@ func runPackageBuild(pkg discovery.Package) BuildResult {
 	}
 }
 
+// shellCommand returns an exec.Cmd that runs the given command string in
+// the platform-appropriate shell. On Windows this is "cmd /C command"; on
+// Unix (macOS, Linux) it is "sh -c command".
+//
+// This is the same approach used by the Rust build tool (which uses
+// cfg!(target_os = "windows") to select between cmd and sh). Python's
+// subprocess.run(shell=True) and Node's child_process.exec() handle this
+// automatically, but Go requires explicit selection.
+func shellCommand(command string) *exec.Cmd {
+	return shellCommandForOS(command, runtime.GOOS)
+}
+
+// shellCommandForOS is the testable version of shellCommand that accepts
+// an explicit OS name. This allows tests to verify Windows behavior on
+// non-Windows hosts.
+func shellCommandForOS(command string, goos string) *exec.Cmd {
+	if goos == "windows" {
+		return exec.Command("cmd", "/C", command)
+	}
+	return exec.Command("sh", "-c", command)
+}
+
 // ExecuteBuilds runs BUILD commands for packages respecting dependency order.
 //
 // This is the main orchestrator. It:
@@ -115,6 +147,7 @@ func runPackageBuild(pkg discovery.Package) BuildResult {
 //  5. In dry-run mode, marks packages as "would-build"
 //  6. Otherwise, launches goroutines with semaphore-limited concurrency
 //  7. Updates the cache after each build
+//  8. Sends progress events to the tracker (if non-nil)
 //
 // The function returns a map from package name to BuildResult.
 func ExecuteBuilds(
@@ -127,6 +160,7 @@ func ExecuteBuilds(
 	dryRun bool,
 	maxJobs int,
 	affectedSet map[string]bool,
+	tracker *progress.Tracker,
 ) map[string]BuildResult {
 	// Build a lookup from name to Package for quick access.
 	pkgByName := make(map[string]discovery.Package)
@@ -188,6 +222,7 @@ func ExecuteBuilds(
 					Status:      "dep-skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -200,6 +235,7 @@ func ExecuteBuilds(
 					Status:      "skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -214,6 +250,7 @@ func ExecuteBuilds(
 					Status:      "skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -224,6 +261,7 @@ func ExecuteBuilds(
 					Status:      "would-build",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
 
@@ -259,7 +297,9 @@ func ExecuteBuilds(
 				semaphore <- struct{}{}        // acquire
 				defer func() { <-semaphore }() // release
 
+				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
 				result := runPackageBuild(p)
+				tracker.Send(progress.Event{Type: progress.Finished, Name: p.Name, Status: result.Status})
 
 				resultsMu.Lock()
 				results[p.Name] = result

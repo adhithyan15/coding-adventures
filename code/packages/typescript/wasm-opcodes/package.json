@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/wasm-opcodes",
+  "version": "0.1.0",
+  "description": "Complete WASM 1.0 opcode table with metadata (name, immediates, stack effects, category)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/wasm-types": "file:../wasm-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -1,0 +1,15 @@
+[package]
+name = "starlark-vm"
+version = "0.1.0"
+edition = "2021"
+description = "Executes compiled Starlark bytecode — opcode handlers, built-in functions, VM factory"
+
+[dependencies]
+starlark-compiler = { path = "../starlark-compiler" }
+virtual-machine = { path = "../virtual-machine" }
+bytecode-compiler = { path = "../bytecode-compiler" }
+coding-adventures-starlark-lexer = { path = "../starlark-lexer" }
+coding-adventures-starlark-parser = { path = "../starlark-parser" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+grammar-tools = { path = "../grammar-tools" }

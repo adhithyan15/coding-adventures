@@ -1,0 +1,49 @@
+# Cargo.toml -- WASM ImmutableList Extension
+# ============================================
+#
+# This crate wraps the pure-Rust `immutable-list` library for use in browsers
+# and Deno via WebAssembly. It uses wasm-bindgen to generate JavaScript bindings
+# that expose a `WasmImmutableList` class with camelCase methods.
+#
+# Why a separate crate?
+#
+# The core `immutable-list` crate has zero dependencies (only std::sync::Arc)
+# and compiles to any target. This crate adds wasm-bindgen (a large dependency
+# tree) and the #[wasm_bindgen] procedural macros. Keeping them separate means
+# the core library stays lean for Rust-only consumers.
+#
+# Build with:
+#   wasm-pack build --target web     (for browsers)
+#   wasm-pack build --target nodejs  (for Node.js/Deno)
+#   cargo test                       (for native unit tests)
+
+# This crate is NOT part of the main Rust workspace at code/packages/rust/.
+# It lives in code/packages/wasm/ and declares its own workspace root.
+[workspace]
+
+[package]
+name = "immutable-list-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the immutable-list library via wasm-bindgen"
+license = "MIT"
+
+[lib]
+# cdylib produces a .wasm file that wasm-pack can process.
+# rlib is needed for cargo test (native unit tests).
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# wasm-bindgen provides the #[wasm_bindgen] macro that generates JS glue code.
+wasm-bindgen = "0.2"
+
+# js-sys provides Rust bindings to JavaScript built-in objects (Array, etc.).
+js-sys = "0.3"
+
+# The core immutable-list library, referenced by relative path.
+immutable-list = { path = "../../rust/immutable-list" }
+
+[dev-dependencies]
+# wasm-bindgen-test is used for in-browser/Node WASM tests (not used here
+# because we guard our tests with #[cfg(not(target_arch = "wasm32"))]).
+# wasm-bindgen-test = "0.3"

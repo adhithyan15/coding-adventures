@@ -2,13 +2,21 @@
 
 ## Working Principles
 
-1. **Always plan first** — Enter plan mode for any non-trivial task. Spec it out in detail.
-2. **Ask questions** — Clarify requirements before implementing. Don't assume.
-3. **Feature branches for everything** — Never commit directly to main.
-4. **Commit frequently** — Small, focused commits with detailed log messages explaining what and why.
-5. **Protect files** — Never force-delete. Always ensure files can be retrieved via git.
-6. **Check lessons.md first** — Before starting any work, review lessons.md to avoid repeating mistakes.
-7. **Document mistakes** — If a mistake is made, add it to lessons.md immediately.
+1. **Pull from origin/main first** — Before starting any work, run `git fetch origin && git merge origin/main` to ensure the worktree is up to date. The repo moves fast; reasoning about stale state causes CI failures and merge conflicts.
+2. **Always plan first** — Enter plan mode for any non-trivial task. Spec it out in detail.
+3. **Ask questions** — Clarify requirements before implementing. Don't assume.
+4. **Feature branches for everything** — Never commit directly to main.
+5. **Commit frequently** — Small, focused commits with detailed log messages explaining what and why.
+6. **Protect files** — Never force-delete. Always ensure files can be retrieved via git.
+7. **Check lessons.md first** — Before starting ANY implementation work, read lessons.md cover to cover. Key lessons that recur:
+   - BUILD files must install ALL transitive dependencies in leaf-to-root order
+   - Elixir reserved words (`after`, `rescue`, etc.) cannot be variables
+   - Rust workspace: run `cargo build --workspace` to catch missing exports
+   - Ruby require ordering: dependencies must be required before own modules
+   - TypeScript: chain-install transitive `file:` deps in BUILD files
+   - Go: run `go mod tidy` in ALL transitively dependent packages after adding a new module
+   - Every package needs BUILD, README.md, CHANGELOG.md in every language
+8. **Document mistakes** — If a mistake is made or a CI failure occurs, add it to lessons.md immediately. Don't wait until later.
 
 ## Repo Standards
 
@@ -30,6 +38,8 @@
 - If implementation diverged from spec, update spec and note divergence in commit message
 - Push early and often — create PRs as soon as a branch has meaningful work, keep pushing commits into the same PR as work progresses
 - Keep the todo list updated — check off items as they're completed, add new items as they're discovered
+- **Before pushing code, always run `/security-review` to have a sub-agent perform a security code review. Do not push until the review passes.**
+- **After creating or pushing to a PR, always run `/babysit-pr` to monitor CI status and merge conflicts until the PR is green**
 
 ## Build System
 

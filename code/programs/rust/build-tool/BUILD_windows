@@ -1,0 +1,1 @@
+cargo build --release && cargo test --target-dir target_isolated -- --nocapture

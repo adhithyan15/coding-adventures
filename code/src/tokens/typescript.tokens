@@ -1,0 +1,109 @@
+# Token definitions for a subset of TypeScript
+# Used by the grammar-driven lexer to tokenize TypeScript source code.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#
+# Order matters: first match wins. Multi-character tokens
+# must come before single-character ones (e.g., === before ==).
+#
+# TypeScript is a strict superset of JavaScript. Every valid JavaScript
+# program is also valid TypeScript. TypeScript adds:
+# - Type annotations: `let x: number = 1`
+# - Interfaces: `interface Foo { bar: string }`
+# - Generics: `Array<number>`
+# - Access modifiers: `public`, `private`, `protected`
+# - `enum`, `type`, `namespace`, `declare`, `readonly`
+#
+# This file starts as a copy of javascript.tokens with TypeScript-specific
+# keywords added. As more TypeScript features are implemented, new tokens
+# (e.g., for generics angle brackets) can be added here.
+
+# Literals
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# Multi-character operators (must come before single-char versions)
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+# Single-character operators
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# Delimiters
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# Keywords section — names that are reserved in TypeScript
+# Includes all JavaScript keywords plus TypeScript-specific ones
+keywords:
+  let
+  const
+  var
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  class
+  import
+  export
+  from
+  as
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  # TypeScript-specific keywords
+  interface
+  type
+  enum
+  namespace
+  declare
+  readonly
+  public
+  private
+  protected
+  abstract
+  implements
+  extends
+  keyof
+  infer
+  never
+  unknown
+  any
+  void
+  number
+  string
+  boolean
+  object
+  symbol
+  bigint

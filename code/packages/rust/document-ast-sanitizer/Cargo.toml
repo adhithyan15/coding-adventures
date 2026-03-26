@@ -1,0 +1,12 @@
+[package]
+name = "coding_adventures_document_ast_sanitizer"
+version = "0.1.0"
+edition = "2021"
+description = "Policy-driven AST sanitization — transforms a DocumentNode tree per caller-defined policy, stripping unsafe content before rendering"
+
+[lib]
+name = "coding_adventures_document_ast_sanitizer"
+path = "src/lib.rs"
+
+[dependencies]
+document-ast = { path = "../document-ast" }

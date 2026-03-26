@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "elixir/grammar_tools",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes output to standard output for user-facing display and program output."
+    }
+  ],
+  "justification": "Mix task reads grammar files via File.read! and writes validation results to stdout via IO.puts/IO.write."
+}

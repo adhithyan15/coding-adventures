@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-typescript-parser"
+version = "0.1.0"
+edition = "2021"
+description = "TypeScript parser — parses TypeScript source code into an AST using the grammar-driven parser and the typescript.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-typescript-lexer = { path = "../typescript-lexer" }

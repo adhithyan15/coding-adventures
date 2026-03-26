@@ -1,0 +1,130 @@
+# XML Token Grammar
+# @version 1
+# =================
+#
+# This grammar defines the lexical structure of XML 1.0. Unlike most
+# programming languages, XML is *context-sensitive* at the lexical level:
+# the same character has different meaning depending on position.
+#
+# For example, the equals sign `=` is:
+# - An attribute delimiter inside a tag: <div class="main">
+# - Plain text content outside a tag: 1 + 1 = 2
+#
+# To handle this, we use **pattern groups**. Each group defines a set
+# of token patterns that are active only when that group is pushed onto
+# the lexer's group stack. A callback function (written in the host
+# language, not in this grammar file) controls when to push and pop
+# groups based on which tokens are matched.
+#
+# Groups defined:
+# - default (implicit): Content between tags — text, entities, tag openers
+# - tag: Inside a tag — names, attributes, closing delimiters
+# - comment: Inside <!-- ... -->
+# - cdata: Inside <![CDATA[ ... ]]>
+# - pi: Inside <? ... ?>
+#
+# The callback logic is straightforward:
+# - OPEN_TAG_START or CLOSE_TAG_START → push("tag")
+# - TAG_CLOSE or SELF_CLOSE → pop()
+# - COMMENT_START → push("comment"), disable skip
+# - COMMENT_END → pop(), enable skip
+# - CDATA_START → push("cdata"), disable skip
+# - CDATA_END → pop(), enable skip
+# - PI_START → push("pi"), disable skip
+# - PI_END → pop(), enable skip
+
+escapes: none
+
+# Skip patterns — whitespace is consumed silently in the default group
+# and inside tags. Callbacks disable skip for comment/cdata/pi groups
+# where whitespace is significant content.
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+
+# -----------------------------------------------------------------------
+# Default group (implicit) — content between tags
+# -----------------------------------------------------------------------
+#
+# When the lexer is in the default group, it recognizes text content,
+# entity references, character references, and the opening delimiters
+# for tags, comments, CDATA sections, and processing instructions.
+#
+# Pattern order matters! Longer/more-specific patterns must come first
+# so they match before shorter ones. For example, COMMENT_START ("<!--")
+# must precede OPEN_TAG_START ("<") or the lexer would match "<" first
+# and never see "<!--".
+
+TEXT              = /[^<&]+/
+ENTITY_REF        = /&[a-zA-Z][a-zA-Z0-9]*;/
+CHAR_REF          = /&#[0-9]+;|&#x[0-9a-fA-F]+;/
+COMMENT_START     = "<!--"
+CDATA_START       = "<![CDATA["
+PI_START          = "<?"
+CLOSE_TAG_START   = "</"
+OPEN_TAG_START    = "<"
+
+# -----------------------------------------------------------------------
+# Tag group — inside <tag ...> or </tag>
+# -----------------------------------------------------------------------
+#
+# When a tag opener is matched (OPEN_TAG_START or CLOSE_TAG_START),
+# the callback pushes the "tag" group. Inside this group, the lexer
+# recognizes tag names, attribute names (same pattern as tag names),
+# the equals sign, quoted attribute values, and tag closers.
+#
+# Attribute values can be double-quoted or single-quoted. Both variants
+# alias to ATTR_VALUE so the parser sees a uniform token type.
+
+group tag:
+  TAG_NAME        = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+  ATTR_EQUALS     = "="
+  ATTR_VALUE_DQ   = /"[^"]*"/ -> ATTR_VALUE
+  ATTR_VALUE_SQ   = /'[^']*'/ -> ATTR_VALUE
+  TAG_CLOSE       = ">"
+  SELF_CLOSE      = "/>"
+  SLASH           = "/"
+
+# -----------------------------------------------------------------------
+# Comment group — inside <!-- ... -->
+# -----------------------------------------------------------------------
+#
+# XML comments can contain any text except the sequence "-->" which
+# ends the comment. The regex uses a negative lookahead pattern:
+# match any character that isn't part of "-->".
+#
+# Skip patterns are disabled in this group (via callback) so that
+# whitespace inside comments is preserved as part of COMMENT_TEXT.
+
+group comment:
+  COMMENT_TEXT    = /([^-]|-(?!->))+/
+  COMMENT_END     = "-->"
+
+# -----------------------------------------------------------------------
+# CDATA group — inside <![CDATA[ ... ]]>
+# -----------------------------------------------------------------------
+#
+# CDATA sections contain raw character data — no entity processing,
+# no tag recognition. Everything is literal text until "]]>" is seen.
+#
+# The regex matches any character that isn't part of the "]]>" sequence.
+# Skip patterns are disabled so whitespace is preserved.
+
+group cdata:
+  CDATA_TEXT      = /([^\]]|\](?!\]>))+/
+  CDATA_END       = "]]>"
+
+# -----------------------------------------------------------------------
+# Processing instruction group — inside <? ... ?>
+# -----------------------------------------------------------------------
+#
+# Processing instructions (PIs) like <?xml version="1.0"?> contain
+# a target name and optional content. The content is everything up
+# to the closing "?>" delimiter.
+#
+# The regex matches any character that isn't part of "?>".
+# Skip patterns are disabled so whitespace is preserved.
+
+group pi:
+  PI_TARGET       = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+  PI_TEXT         = /([^?]|\?(?!>))+/
+  PI_END          = "?>"

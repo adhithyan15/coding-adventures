@@ -1,0 +1,5 @@
+[package]
+name = "process-manager"
+version = "0.1.0"
+edition = "2021"
+description = "D14 Process Manager -- fork, exec, wait, signals, priority scheduling"
