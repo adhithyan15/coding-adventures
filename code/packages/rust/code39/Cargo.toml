@@ -1,0 +1,8 @@
+[package]
+name = "code39"
+version = "0.1.0"
+edition = "2021"
+description = "Dependency-free Code 39 encoder that emits backend-neutral draw instructions"
+
+[dependencies]
+draw-instructions = { path = "../draw-instructions" }
