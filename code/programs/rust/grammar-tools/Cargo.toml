@@ -1,0 +1,8 @@
+[package]
+name = "grammar-tools-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+grammar-tools = { path = "../../../packages/rust/grammar-tools" }
+cli-builder = { path = "../../../packages/rust/cli-builder" }

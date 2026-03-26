@@ -1,0 +1,40 @@
+# AUTO-GENERATED FILE - DO NOT EDIT
+from grammar_tools.token_grammar import TokenGrammar, TokenDefinition, PatternGroup
+
+TomlTokens = TokenGrammar(
+    version=1,
+    case_insensitive=False,
+    case_sensitive=True,
+    escape_mode="none",
+    definitions=[
+        TokenDefinition(name="ML_BASIC_STRING", pattern="\"\"\"([^\\\\]|\\\\(.|\\n)|\\n)*?\"\"\"", is_regex=True, line_number=60),
+        TokenDefinition(name="ML_LITERAL_STRING", pattern="'''[\\s\\S]*?'''", is_regex=True, line_number=61),
+        TokenDefinition(name="BASIC_STRING", pattern="\"([^\"\\\\\\n]|\\\\.)*\"", is_regex=True, line_number=70),
+        TokenDefinition(name="LITERAL_STRING", pattern="'[^'\\n]*'", is_regex=True, line_number=71),
+        TokenDefinition(name="OFFSET_DATETIME", pattern="\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})", is_regex=True, line_number=91),
+        TokenDefinition(name="LOCAL_DATETIME", pattern="\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?", is_regex=True, line_number=92),
+        TokenDefinition(name="LOCAL_DATE", pattern="\\d{4}-\\d{2}-\\d{2}", is_regex=True, line_number=93),
+        TokenDefinition(name="LOCAL_TIME", pattern="\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?", is_regex=True, line_number=94),
+        TokenDefinition(name="FLOAT_SPECIAL", pattern="[+-]?(inf|nan)", is_regex=True, line_number=109, alias="FLOAT"),
+        TokenDefinition(name="FLOAT_EXP", pattern="[+-]?([0-9](_?[0-9])*)(\\.[0-9](_?[0-9])*)?[eE][+-]?[0-9](_?[0-9])*", is_regex=True, line_number=110, alias="FLOAT"),
+        TokenDefinition(name="FLOAT_DEC", pattern="[+-]?([0-9](_?[0-9])*)\\.([0-9](_?[0-9])*)", is_regex=True, line_number=111, alias="FLOAT"),
+        TokenDefinition(name="HEX_INTEGER", pattern="0x[0-9a-fA-F](_?[0-9a-fA-F])*", is_regex=True, line_number=123, alias="INTEGER"),
+        TokenDefinition(name="OCT_INTEGER", pattern="0o[0-7](_?[0-7])*", is_regex=True, line_number=124, alias="INTEGER"),
+        TokenDefinition(name="BIN_INTEGER", pattern="0b[01](_?[01])*", is_regex=True, line_number=125, alias="INTEGER"),
+        TokenDefinition(name="INTEGER", pattern="[+-]?[0-9](_?[0-9])*", is_regex=True, line_number=126),
+        TokenDefinition(name="TRUE", pattern="true", is_regex=False, line_number=137),
+        TokenDefinition(name="FALSE", pattern="false", is_regex=False, line_number=138),
+        TokenDefinition(name="BARE_KEY", pattern="[A-Za-z0-9_-]+", is_regex=True, line_number=152),
+        TokenDefinition(name="EQUALS", pattern="=", is_regex=False, line_number=162),
+        TokenDefinition(name="DOT", pattern=".", is_regex=False, line_number=163),
+        TokenDefinition(name="COMMA", pattern=",", is_regex=False, line_number=164),
+        TokenDefinition(name="LBRACKET", pattern="[", is_regex=False, line_number=165),
+        TokenDefinition(name="RBRACKET", pattern="]", is_regex=False, line_number=166),
+        TokenDefinition(name="LBRACE", pattern="{", is_regex=False, line_number=167),
+        TokenDefinition(name="RBRACE", pattern="}", is_regex=False, line_number=168),
+    ],
+    skip_definitions=[
+        TokenDefinition(name="COMMENT", pattern="#[^\\n]*", is_regex=True, line_number=28),
+        TokenDefinition(name="WHITESPACE", pattern="[ \\t]+", is_regex=True, line_number=29),
+    ],
+)

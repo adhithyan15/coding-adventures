@@ -1,0 +1,15 @@
+{
+  "name": "grammar-tools-cli",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node-esm cli.ts"
+  },
+  "dependencies": {
+    "@coding-adventures/cli-builder": "file:../../../packages/typescript/cli-builder",
+    "@coding-adventures/state-machine": "file:../../../packages/typescript/state-machine",
+    "@coding-adventures/directed-graph": "file:../../../packages/typescript/directed-graph",
+    "@types/node": "^25.5.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0"
+  }
+}

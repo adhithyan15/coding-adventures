@@ -1,0 +1,430 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# ==========================================================================
+# grammar-tools -- CLI validation tool for .tokens and .grammar files
+# ==========================================================================
+#
+# This is the command-line interface for grammar_tools validation. It wraps
+# the library functions validate_token_grammar, validate_parser_grammar, and
+# cross_validate with a user-friendly output format.
+#
+# Think of it like a compiler's -fsyntax-only flag: it reads and validates
+# grammar files without generating any output, reporting exactly what is
+# wrong when something fails.
+#
+# Usage
+# -----
+#
+#   grammar-tools validate <file.tokens> <file.grammar>
+#   grammar-tools validate-tokens <file.tokens>
+#   grammar-tools validate-grammar <file.grammar>
+#   grammar-tools --help
+#
+# Exit codes
+# ----------
+#
+#   0 -- all checks passed
+#   1 -- one or more validation errors found
+#   2 -- bad usage (wrong number of arguments, unknown command)
+#
+# Why no external gems?
+# ---------------------
+#
+# Argument parsing is done with plain ARGV. The built-in Array and String
+# methods are more than enough for three subcommands with simple positional
+# arguments. Adding a gem like OptionParser or Thor would introduce a
+# dependency on the PATH just to call --help.
+# ==========================================================================
+
+$LOAD_PATH.unshift(File.expand_path("../../../packages/ruby/grammar_tools/lib", __dir__))
+$LOAD_PATH.unshift(File.expand_path("../../../packages/ruby/state_machine/lib", __dir__))
+$LOAD_PATH.unshift(File.expand_path("../../../packages/ruby/directed_graph/lib", __dir__))
+$LOAD_PATH.unshift(File.expand_path("../../../packages/ruby/cli_builder/lib", __dir__))
+require "coding_adventures_grammar_tools"
+require "coding_adventures/grammar_tools/compiler"
+require "coding_adventures_cli_builder"
+
+GT = CodingAdventures::GrammarTools
+
+# Count issues that are actual errors (not warnings).
+#
+# Issues beginning with "Warning:" are informational and do not cause
+# the tool to exit with a non-zero status. Everything else counts as an
+# error.
+def count_errors(issues)
+  issues.count { |i| !i.start_with?("Warning:") }
+end
+
+# Print a list of issues with two-space indentation.
+def print_issues(issues)
+  issues.each { |i| puts "  #{i}" }
+end
+
+# Validate a .tokens file and a .grammar file together.
+#
+# Runs three checks in sequence:
+#   1. Parse and validate the .tokens file
+#   2. Parse and validate the .grammar file
+#   3. Cross-validate the two for consistency
+#
+# Returns 0 on success, 1 if any errors are found.
+def validate_command(tokens_path, grammar_path)
+  total_errors = 0
+
+  # ------------------------------------------------------------------
+  # Step 1: parse and validate the .tokens file
+  # ------------------------------------------------------------------
+  tokens_file = tokens_path
+  unless File.exist?(tokens_file)
+    puts "Error: File not found: #{tokens_path}"
+    return 1
+  end
+
+  print "Validating #{File.basename(tokens_file)} ... "
+  begin
+    token_grammar = GT.parse_token_grammar(File.read(tokens_file))
+  rescue GT::TokenGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    return 1
+  end
+
+  token_issues = GT.validate_token_grammar(token_grammar)
+  token_errors = count_errors(token_issues)
+  n_tokens = token_grammar.definitions.length
+  n_skip = token_grammar.skip_definitions.length
+  n_error = token_grammar.respond_to?(:error_definitions) ? token_grammar.error_definitions.length : 0
+
+  if token_errors > 0
+    puts "#{token_errors} error(s)"
+    print_issues(token_issues)
+    total_errors += token_errors
+  else
+    parts = ["#{n_tokens} tokens"]
+    parts << "#{n_skip} skip" if n_skip > 0
+    parts << "#{n_error} error" if n_error > 0
+    puts "OK (#{parts.join(", ")})"
+  end
+
+  # ------------------------------------------------------------------
+  # Step 2: parse and validate the .grammar file
+  # ------------------------------------------------------------------
+  grammar_file = grammar_path
+  unless File.exist?(grammar_file)
+    puts "Error: File not found: #{grammar_path}"
+    return 1
+  end
+
+  print "Validating #{File.basename(grammar_file)} ... "
+  begin
+    parser_grammar = GT.parse_parser_grammar(File.read(grammar_file))
+  rescue GT::ParserGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    return 1
+  end
+
+  # Pass known token names so undefined token references are flagged.
+  grammar_issues = GT.validate_parser_grammar(
+    parser_grammar,
+    token_names: token_grammar.token_names
+  )
+  grammar_errors = count_errors(grammar_issues)
+  n_rules = parser_grammar.rules.length
+
+  if grammar_errors > 0
+    puts "#{grammar_errors} error(s)"
+    print_issues(grammar_issues)
+    total_errors += grammar_errors
+  else
+    puts "OK (#{n_rules} rules)"
+  end
+
+  # ------------------------------------------------------------------
+  # Step 3: cross-validate
+  # ------------------------------------------------------------------
+  print "Cross-validating ... "
+  cross_issues = GT.cross_validate(token_grammar, parser_grammar)
+  cross_errors = count_errors(cross_issues)
+  cross_warnings = cross_issues.length - cross_errors
+
+  if cross_errors > 0
+    puts "#{cross_errors} error(s)"
+    print_issues(cross_issues)
+    total_errors += cross_errors
+  elsif cross_warnings > 0
+    puts "OK (#{cross_warnings} warning(s))"
+    print_issues(cross_issues)
+  else
+    puts "OK"
+  end
+
+  # ------------------------------------------------------------------
+  # Summary
+  # ------------------------------------------------------------------
+  puts ""
+  if total_errors > 0
+    puts "Found #{total_errors} error(s). Fix them and try again."
+    1
+  else
+    puts "All checks passed."
+    0
+  end
+end
+
+# Validate just a .tokens file (no grammar file required).
+#
+# Returns 0 on success, 1 if any errors are found.
+def validate_tokens_only(tokens_path)
+  unless File.exist?(tokens_path)
+    puts "Error: File not found: #{tokens_path}"
+    return 1
+  end
+
+  print "Validating #{File.basename(tokens_path)} ... "
+  begin
+    token_grammar = GT.parse_token_grammar(File.read(tokens_path))
+  rescue GT::TokenGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    return 1
+  end
+
+  issues = GT.validate_token_grammar(token_grammar)
+  errors = count_errors(issues)
+  n_tokens = token_grammar.definitions.length
+
+  if errors > 0
+    puts "#{errors} error(s)"
+    print_issues(issues)
+    puts ""
+    puts "Found #{errors} error(s). Fix them and try again."
+    1
+  else
+    puts "OK (#{n_tokens} tokens)"
+    puts ""
+    puts "All checks passed."
+    0
+  end
+end
+
+# Validate just a .grammar file (no tokens file required).
+#
+# Without a tokens file, only rule-level issues are detected. Token
+# reference checks are skipped because there is nothing to check against.
+#
+# Returns 0 on success, 1 if any errors are found.
+def validate_grammar_only(grammar_path)
+  unless File.exist?(grammar_path)
+    puts "Error: File not found: #{grammar_path}"
+    return 1
+  end
+
+  print "Validating #{File.basename(grammar_path)} ... "
+  begin
+    parser_grammar = GT.parse_parser_grammar(File.read(grammar_path))
+  rescue GT::ParserGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    return 1
+  end
+
+  # No token_names supplied -- only rule-level checks run.
+  issues = GT.validate_parser_grammar(parser_grammar)
+  errors = count_errors(issues)
+  n_rules = parser_grammar.rules.length
+
+  if errors > 0
+    puts "#{errors} error(s)"
+    print_issues(issues)
+    puts ""
+    puts "Found #{errors} error(s). Fix them and try again."
+    1
+  else
+    puts "OK (#{n_rules} rules)"
+    puts ""
+    puts "All checks passed."
+    0
+  end
+end
+
+def compile_tokens_only(tokens_path, module_name)
+  unless File.exist?(tokens_path)
+    puts "Error: File not found: #{tokens_path}"
+    return 1
+  end
+  begin
+    grammar = GT.parse_token_grammar(File.read(tokens_path))
+    issues = GT.validate_token_grammar(grammar)
+    if count_errors(issues) > 0
+      puts "Error: Cannot compile invalid grammar file:"
+      print_issues(issues)
+      return 1
+    end
+    print GT::Compiler.compile_tokens_to_ruby(grammar, module_name)
+    0
+  rescue GT::TokenGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    1
+  end
+end
+
+def compile_grammar_only(grammar_path, module_name)
+  unless File.exist?(grammar_path)
+    puts "Error: File not found: #{grammar_path}"
+    return 1
+  end
+  begin
+    grammar = GT.parse_parser_grammar(File.read(grammar_path))
+    issues = GT.validate_parser_grammar(grammar)
+    if count_errors(issues) > 0
+      puts "Error: Cannot compile invalid grammar file:"
+      print_issues(issues)
+      return 1
+    end
+    print GT::Compiler.compile_parser_to_ruby(grammar, module_name)
+    0
+  rescue GT::ParserGrammarError => e
+    puts "PARSE ERROR"
+    puts "  #{e}"
+    1
+  end
+end
+
+def to_camel_case(snake_str)
+  snake_str.split('_').map(&:capitalize).join
+end
+
+def find_monorepo_root
+  current_dir = Dir.pwd
+  loop do
+    return current_dir if File.directory?(File.join(current_dir, "code", "grammars"))
+    parent = File.dirname(current_dir)
+    break if parent == current_dir
+    current_dir = parent
+  end
+  nil
+end
+
+def generate_command
+  has_errors = false
+  monorepo_root = find_monorepo_root
+  unless monorepo_root
+    puts "Error: could not find monorepo root"
+    return 1
+  end
+
+  grammars_dir = File.join(monorepo_root, "code", "grammars")
+  lang_dir = File.join(monorepo_root, "code", "packages", "ruby")
+
+  Dir.foreach(grammars_dir) do |file|
+    file_path = File.join(grammars_dir, file)
+    next unless File.file?(file_path)
+
+    ext = File.extname(file)
+    next unless [".tokens", ".grammar"].include?(ext)
+
+    is_tokens = ext == ".tokens"
+    kind = is_tokens ? "lexer" : "parser"
+    gn = File.basename(file, ext)
+
+    possible_dirs = [
+      File.join(lang_dir, "#{gn}-#{kind}"),
+      File.join(lang_dir, "#{gn}_#{kind}")
+    ]
+
+    target_dir = possible_dirs.find { |d| File.directory?(d) }
+    next unless target_dir
+
+    puts "Generating for #{file} ..."
+
+    var_suffix = is_tokens ? "Tokens" : "Grammar"
+    export_name = to_camel_case(gn.tr('-', '_')) + var_suffix
+    fname_base = is_tokens ? "#{gn.tr('-', '_')}_tokens.rb" : "#{gn.tr('-', '_')}_grammar.rb"
+    out_path = File.join(target_dir, "lib", fname_base)
+
+    source = File.read(file_path)
+    code = ""
+    begin
+      if is_tokens
+        tg = GT.parse_token_grammar(source)
+        issues = GT.validate_token_grammar(tg)
+        if count_errors(issues) > 0
+          puts "Error: Cannot compile invalid grammar file #{file}"
+          print_issues(issues)
+          has_errors = true
+          next
+        end
+        code = GT::Compiler.compile_tokens_to_ruby(tg, export_name)
+      else
+        pg = GT.parse_parser_grammar(source)
+        issues = GT.validate_parser_grammar(pg)
+        if count_errors(issues) > 0
+          puts "Error: Cannot compile invalid grammar file #{file}"
+          print_issues(issues)
+          has_errors = true
+          next
+        end
+        code = GT::Compiler.compile_parser_to_ruby(pg, export_name)
+      end
+    rescue => e
+      puts "Error: parse failed for #{file}: #{e.message}"
+      has_errors = true
+      next
+    end
+
+    begin
+      File.write(out_path, code)
+      puts "  -> Saved #{out_path}"
+    rescue => e
+      puts "Error writing #{out_path}: #{e.message}"
+      has_errors = true
+    end
+  end
+
+  has_errors ? 1 : 0
+end
+
+# Main entry point -- parse with cli-builder and dispatch.
+spec_path = File.expand_path("../../../specs/grammar-tools.cli.json", __dir__)
+begin
+  result = CodingAdventures::CliBuilder::Parser.new(spec_path, ARGV).parse
+  case result
+  when CodingAdventures::CliBuilder::HelpResult
+    puts result.text
+    exit 0
+  when CodingAdventures::CliBuilder::VersionResult
+    puts result.version
+    exit 0
+  when CodingAdventures::CliBuilder::ParseResult
+    cmd = result.command_path.last
+    case cmd
+    when "validate"
+      exit validate_command(result.arguments["tokens_file"], result.arguments["grammar_file"])
+    when "validate-tokens"
+      exit validate_tokens_only(result.arguments["tokens_file"])
+    when "validate-grammar"
+      exit validate_grammar_only(result.arguments["grammar_file"])
+    when "compile-tokens"
+      exit compile_tokens_only(result.arguments["tokens_file"], result.arguments["export_name"])
+    when "compile-grammar"
+      exit compile_grammar_only(result.arguments["grammar_file"], result.arguments["export_name"])
+    when "generate"
+      exit generate_command
+    else
+      puts "Error: Unknown command '#{cmd}'"
+      exit 2
+    end
+  end
+rescue CodingAdventures::CliBuilder::ParseErrors => e
+  e.errors.each do |err|
+    puts "Error: #{err.message}"
+    puts "  #{err.suggestion}" if err.suggestion
+  end
+  exit 2
+rescue StandardError => e
+  puts "Error: #{e.message}"
+  exit 1
+end

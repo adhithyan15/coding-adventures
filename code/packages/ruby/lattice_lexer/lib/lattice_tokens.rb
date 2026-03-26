@@ -1,0 +1,79 @@
+# frozen_string_literal: true
+# AUTO-GENERATED FILE - DO NOT EDIT
+require "coding_adventures_grammar_tools"
+
+module CodingAdventures
+  module LatticeTokens
+    def self.grammar
+      @grammar ||= CodingAdventures::GrammarTools::TokenGrammar.new(
+        definitions: [
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "STRING_DQ", pattern: "\"([^\"\\\\\\n]|\\\\.)*\"", is_regex: true, line_number: 66, alias_name: "STRING"),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "STRING_SQ", pattern: "'([^'\\\\\\n]|\\\\.)*'", is_regex: true, line_number: 67, alias_name: "STRING"),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "VARIABLE", pattern: "\\$[a-zA-Z_][a-zA-Z0-9_-]*", is_regex: true, line_number: 83, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "PLACEHOLDER", pattern: "%[a-zA-Z_][a-zA-Z0-9_-]*", is_regex: true, line_number: 93, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "DIMENSION", pattern: "-?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?[a-zA-Z]+", is_regex: true, line_number: 102, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "PERCENTAGE", pattern: "-?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?%", is_regex: true, line_number: 103, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "NUMBER", pattern: "-?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?", is_regex: true, line_number: 104, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "HASH", pattern: "#[a-zA-Z0-9_-]+", is_regex: true, line_number: 110, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "AT_KEYWORD", pattern: "@-?[a-zA-Z][a-zA-Z0-9-]*", is_regex: true, line_number: 127, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "URL_TOKEN", pattern: "url\\([^)'\"]*\\)", is_regex: true, line_number: 133, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "FUNCTION", pattern: "-?[a-zA-Z_][a-zA-Z0-9_-]*\\(", is_regex: true, line_number: 139, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "CDO", pattern: "<!--", is_regex: false, line_number: 145, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "CDC", pattern: "-->", is_regex: false, line_number: 146, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "UNICODE_RANGE", pattern: "[Uu]\\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?", is_regex: true, line_number: 152, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "CUSTOM_PROPERTY", pattern: "--[a-zA-Z_][a-zA-Z0-9_-]*", is_regex: true, line_number: 153, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "IDENT", pattern: "-?[a-zA-Z_][a-zA-Z0-9_-]*", is_regex: true, line_number: 154, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "COLON_COLON", pattern: "::", is_regex: false, line_number: 163, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "TILDE_EQUALS", pattern: "~=", is_regex: false, line_number: 164, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "PIPE_EQUALS", pattern: "|=", is_regex: false, line_number: 165, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "CARET_EQUALS", pattern: "^=", is_regex: false, line_number: 166, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "DOLLAR_EQUALS", pattern: "$=", is_regex: false, line_number: 167, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "STAR_EQUALS", pattern: "*=", is_regex: false, line_number: 168, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "EQUALS_EQUALS", pattern: "==", is_regex: false, line_number: 171, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "NOT_EQUALS", pattern: "!=", is_regex: false, line_number: 172, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "GREATER_EQUALS", pattern: ">=", is_regex: false, line_number: 173, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "LESS_EQUALS", pattern: "<=", is_regex: false, line_number: 174, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "LBRACE", pattern: "{", is_regex: false, line_number: 180, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "RBRACE", pattern: "}", is_regex: false, line_number: 181, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "LPAREN", pattern: "(", is_regex: false, line_number: 182, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "RPAREN", pattern: ")", is_regex: false, line_number: 183, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "LBRACKET", pattern: "[", is_regex: false, line_number: 184, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "RBRACKET", pattern: "]", is_regex: false, line_number: 185, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "SEMICOLON", pattern: ";", is_regex: false, line_number: 186, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "COLON", pattern: ":", is_regex: false, line_number: 187, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "COMMA", pattern: ",", is_regex: false, line_number: 188, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "DOT", pattern: ".", is_regex: false, line_number: 189, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "PLUS", pattern: "+", is_regex: false, line_number: 190, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "GREATER", pattern: ">", is_regex: false, line_number: 191, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "LESS", pattern: "<", is_regex: false, line_number: 192, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "TILDE", pattern: "~", is_regex: false, line_number: 193, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "STAR", pattern: "*", is_regex: false, line_number: 194, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "PIPE", pattern: "|", is_regex: false, line_number: 195, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "BANG_DEFAULT", pattern: "!default", is_regex: false, line_number: 198, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "BANG_GLOBAL", pattern: "!global", is_regex: false, line_number: 199, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "BANG", pattern: "!", is_regex: false, line_number: 200, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "SLASH", pattern: "/", is_regex: false, line_number: 201, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "EQUALS", pattern: "=", is_regex: false, line_number: 202, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "AMPERSAND", pattern: "&", is_regex: false, line_number: 203, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "MINUS", pattern: "-", is_regex: false, line_number: 204, alias_name: nil),
+        ],
+        keywords: [],
+        mode: nil,
+        skip_definitions: [
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "LINE_COMMENT", pattern: "\\/\\/[^\\n]*", is_regex: true, line_number: 55, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "COMMENT", pattern: "\\/\\*[\\s\\S]*?\\*\\/", is_regex: true, line_number: 56, alias_name: nil),
+          CodingAdventures::GrammarTools::TokenDefinition.new(name: "WHITESPACE", pattern: "[ \\t\\r\\n]+", is_regex: true, line_number: 57, alias_name: nil),
+        ],
+        error_definitions: [
+        ],
+        reserved_keywords: [],
+        escape_mode: "none",
+        groups: {
+        },
+        case_sensitive: true,
+        version: 1,
+        case_insensitive: false
+      )
+    end
+  end
+end

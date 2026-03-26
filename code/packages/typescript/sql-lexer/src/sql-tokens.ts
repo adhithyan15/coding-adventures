@@ -1,0 +1,36 @@
+// AUTO-GENERATED FILE - DO NOT EDIT
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
+
+export const SqlTokens: TokenGrammar = {
+  definitions: [
+    { name: "NAME", pattern: "[a-zA-Z_][a-zA-Z0-9_]*", isRegex: true, lineNumber: 12 },
+    { name: "NUMBER", pattern: "[0-9]+(\\.[0-9]+)?", isRegex: true, lineNumber: 13 },
+    { name: "STRING_SQ", pattern: "'([^'\\\\]|\\\\.)*'", isRegex: true, lineNumber: 14, alias: "STRING" },
+    { name: "QUOTED_ID", pattern: "`[^`]+`", isRegex: true, lineNumber: 15, alias: "NAME" },
+    { name: "LESS_EQUALS", pattern: "<=", isRegex: false, lineNumber: 17 },
+    { name: "GREATER_EQUALS", pattern: ">=", isRegex: false, lineNumber: 18 },
+    { name: "NOT_EQUALS", pattern: "!=", isRegex: false, lineNumber: 19 },
+    { name: "NEQ_ANSI", pattern: "<>", isRegex: false, lineNumber: 20, alias: "NOT_EQUALS" },
+    { name: "EQUALS", pattern: "=", isRegex: false, lineNumber: 22 },
+    { name: "LESS_THAN", pattern: "<", isRegex: false, lineNumber: 23 },
+    { name: "GREATER_THAN", pattern: ">", isRegex: false, lineNumber: 24 },
+    { name: "PLUS", pattern: "+", isRegex: false, lineNumber: 25 },
+    { name: "MINUS", pattern: "-", isRegex: false, lineNumber: 26 },
+    { name: "STAR", pattern: "*", isRegex: false, lineNumber: 27 },
+    { name: "SLASH", pattern: "/", isRegex: false, lineNumber: 28 },
+    { name: "PERCENT", pattern: "%", isRegex: false, lineNumber: 29 },
+    { name: "LPAREN", pattern: "(", isRegex: false, lineNumber: 31 },
+    { name: "RPAREN", pattern: ")", isRegex: false, lineNumber: 32 },
+    { name: "COMMA", pattern: ",", isRegex: false, lineNumber: 33 },
+    { name: "SEMICOLON", pattern: ";", isRegex: false, lineNumber: 34 },
+    { name: "DOT", pattern: ".", isRegex: false, lineNumber: 35 },
+  ],
+  keywords: ["SELECT","FROM","WHERE","GROUP","BY","HAVING","ORDER","LIMIT","OFFSET","INSERT","INTO","VALUES","UPDATE","SET","DELETE","CREATE","DROP","TABLE","IF","EXISTS","NOT","AND","OR","NULL","IS","IN","BETWEEN","LIKE","AS","DISTINCT","ALL","UNION","INTERSECT","EXCEPT","JOIN","INNER","LEFT","RIGHT","OUTER","CROSS","FULL","ON","ASC","DESC","TRUE","FALSE","CASE","WHEN","THEN","ELSE","END","PRIMARY","KEY","UNIQUE","DEFAULT"],
+  skipDefinitions: [
+    { name: "WHITESPACE", pattern: "[ \\t\\r\\n]+", isRegex: true, lineNumber: 95 },
+    { name: "LINE_COMMENT", pattern: "--[^\\n]*", isRegex: true, lineNumber: 96 },
+    { name: "BLOCK_COMMENT", pattern: "\\x2f\\*([^*]|\\*[^\\x2f])*\\*\\x2f", isRegex: true, lineNumber: 97 },
+  ],
+  version: 1,
+  caseInsensitive: true
+};

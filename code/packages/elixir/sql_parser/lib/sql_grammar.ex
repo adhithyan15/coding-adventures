@@ -1,0 +1,49 @@
+# AUTO-GENERATED FILE - DO NOT EDIT
+defmodule SqlGrammar do
+  alias CodingAdventures.GrammarTools.ParserGrammar
+
+  def grammar do
+    %ParserGrammar{
+      version: 1,
+      rules: [
+        %{name: "program", line_number: 10, body: {:sequence, [{:rule_reference, "statement", false}, {:repetition, {:sequence, [{:literal, ";"}, {:rule_reference, "statement", false}]}}, {:optional, {:literal, ";"}}]}},
+        %{name: "statement", line_number: 12, body: {:alternation, [{:rule_reference, "select_stmt", false}, {:rule_reference, "insert_stmt", false}, {:rule_reference, "update_stmt", false}, {:rule_reference, "delete_stmt", false}, {:rule_reference, "create_table_stmt", false}, {:rule_reference, "drop_table_stmt", false}]}},
+        %{name: "select_stmt", line_number: 17, body: {:sequence, [{:literal, "SELECT"}, {:optional, {:alternation, [{:literal, "DISTINCT"}, {:literal, "ALL"}]}}, {:rule_reference, "select_list", false}, {:literal, "FROM"}, {:rule_reference, "table_ref", false}, {:repetition, {:rule_reference, "join_clause", false}}, {:optional, {:rule_reference, "where_clause", false}}, {:optional, {:rule_reference, "group_clause", false}}, {:optional, {:rule_reference, "having_clause", false}}, {:optional, {:rule_reference, "order_clause", false}}, {:optional, {:rule_reference, "limit_clause", false}}]}},
+        %{name: "select_list", line_number: 22, body: {:alternation, [{:rule_reference, "STAR", true}, {:sequence, [{:rule_reference, "select_item", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "select_item", false}]}}]}]}},
+        %{name: "select_item", line_number: 23, body: {:sequence, [{:rule_reference, "expr", false}, {:optional, {:sequence, [{:literal, "AS"}, {:rule_reference, "NAME", true}]}}]}},
+        %{name: "table_ref", line_number: 25, body: {:sequence, [{:rule_reference, "table_name", false}, {:optional, {:sequence, [{:literal, "AS"}, {:rule_reference, "NAME", true}]}}]}},
+        %{name: "table_name", line_number: 26, body: {:sequence, [{:rule_reference, "NAME", true}, {:optional, {:sequence, [{:literal, "."}, {:rule_reference, "NAME", true}]}}]}},
+        %{name: "join_clause", line_number: 28, body: {:sequence, [{:rule_reference, "join_type", false}, {:literal, "JOIN"}, {:rule_reference, "table_ref", false}, {:literal, "ON"}, {:rule_reference, "expr", false}]}},
+        %{name: "join_type", line_number: 29, body: {:alternation, [{:literal, "CROSS"}, {:literal, "INNER"}, {:group, {:sequence, [{:literal, "LEFT"}, {:optional, {:literal, "OUTER"}}]}}, {:group, {:sequence, [{:literal, "RIGHT"}, {:optional, {:literal, "OUTER"}}]}}, {:group, {:sequence, [{:literal, "FULL"}, {:optional, {:literal, "OUTER"}}]}}]}},
+        %{name: "where_clause", line_number: 32, body: {:sequence, [{:literal, "WHERE"}, {:rule_reference, "expr", false}]}},
+        %{name: "group_clause", line_number: 33, body: {:sequence, [{:literal, "GROUP"}, {:literal, "BY"}, {:rule_reference, "column_ref", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "column_ref", false}]}}]}},
+        %{name: "having_clause", line_number: 34, body: {:sequence, [{:literal, "HAVING"}, {:rule_reference, "expr", false}]}},
+        %{name: "order_clause", line_number: 35, body: {:sequence, [{:literal, "ORDER"}, {:literal, "BY"}, {:rule_reference, "order_item", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "order_item", false}]}}]}},
+        %{name: "order_item", line_number: 36, body: {:sequence, [{:rule_reference, "expr", false}, {:optional, {:alternation, [{:literal, "ASC"}, {:literal, "DESC"}]}}]}},
+        %{name: "limit_clause", line_number: 37, body: {:sequence, [{:literal, "LIMIT"}, {:rule_reference, "NUMBER", true}, {:optional, {:sequence, [{:literal, "OFFSET"}, {:rule_reference, "NUMBER", true}]}}]}},
+        %{name: "insert_stmt", line_number: 41, body: {:sequence, [{:literal, "INSERT"}, {:literal, "INTO"}, {:rule_reference, "NAME", true}, {:optional, {:sequence, [{:literal, "("}, {:rule_reference, "NAME", true}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "NAME", true}]}}, {:literal, ")"}]}}, {:literal, "VALUES"}, {:rule_reference, "row_value", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "row_value", false}]}}]}},
+        %{name: "row_value", line_number: 44, body: {:sequence, [{:literal, "("}, {:rule_reference, "expr", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "expr", false}]}}, {:literal, ")"}]}},
+        %{name: "update_stmt", line_number: 46, body: {:sequence, [{:literal, "UPDATE"}, {:rule_reference, "NAME", true}, {:literal, "SET"}, {:rule_reference, "assignment", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "assignment", false}]}}, {:optional, {:rule_reference, "where_clause", false}}]}},
+        %{name: "assignment", line_number: 48, body: {:sequence, [{:rule_reference, "NAME", true}, {:literal, "="}, {:rule_reference, "expr", false}]}},
+        %{name: "delete_stmt", line_number: 50, body: {:sequence, [{:literal, "DELETE"}, {:literal, "FROM"}, {:rule_reference, "NAME", true}, {:optional, {:rule_reference, "where_clause", false}}]}},
+        %{name: "create_table_stmt", line_number: 54, body: {:sequence, [{:literal, "CREATE"}, {:literal, "TABLE"}, {:optional, {:sequence, [{:literal, "IF"}, {:literal, "NOT"}, {:literal, "EXISTS"}]}}, {:rule_reference, "NAME", true}, {:literal, "("}, {:rule_reference, "col_def", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "col_def", false}]}}, {:literal, ")"}]}},
+        %{name: "col_def", line_number: 56, body: {:sequence, [{:rule_reference, "NAME", true}, {:rule_reference, "NAME", true}, {:repetition, {:rule_reference, "col_constraint", false}}]}},
+        %{name: "col_constraint", line_number: 57, body: {:alternation, [{:group, {:sequence, [{:literal, "NOT"}, {:literal, "NULL"}]}}, {:literal, "NULL"}, {:group, {:sequence, [{:literal, "PRIMARY"}, {:literal, "KEY"}]}}, {:literal, "UNIQUE"}, {:group, {:sequence, [{:literal, "DEFAULT"}, {:rule_reference, "primary", false}]}}]}},
+        %{name: "drop_table_stmt", line_number: 60, body: {:sequence, [{:literal, "DROP"}, {:literal, "TABLE"}, {:optional, {:sequence, [{:literal, "IF"}, {:literal, "EXISTS"}]}}, {:rule_reference, "NAME", true}]}},
+        %{name: "expr", line_number: 64, body: {:rule_reference, "or_expr", false}},
+        %{name: "or_expr", line_number: 65, body: {:sequence, [{:rule_reference, "and_expr", false}, {:repetition, {:sequence, [{:literal, "OR"}, {:rule_reference, "and_expr", false}]}}]}},
+        %{name: "and_expr", line_number: 66, body: {:sequence, [{:rule_reference, "not_expr", false}, {:repetition, {:sequence, [{:literal, "AND"}, {:rule_reference, "not_expr", false}]}}]}},
+        %{name: "not_expr", line_number: 67, body: {:alternation, [{:sequence, [{:literal, "NOT"}, {:rule_reference, "not_expr", false}]}, {:rule_reference, "comparison", false}]}},
+        %{name: "comparison", line_number: 68, body: {:sequence, [{:rule_reference, "additive", false}, {:optional, {:alternation, [{:sequence, [{:rule_reference, "cmp_op", false}, {:rule_reference, "additive", false}]}, {:sequence, [{:literal, "BETWEEN"}, {:rule_reference, "additive", false}, {:literal, "AND"}, {:rule_reference, "additive", false}]}, {:sequence, [{:literal, "NOT"}, {:literal, "BETWEEN"}, {:rule_reference, "additive", false}, {:literal, "AND"}, {:rule_reference, "additive", false}]}, {:sequence, [{:literal, "IN"}, {:literal, "("}, {:rule_reference, "value_list", false}, {:literal, ")"}]}, {:sequence, [{:literal, "NOT"}, {:literal, "IN"}, {:literal, "("}, {:rule_reference, "value_list", false}, {:literal, ")"}]}, {:sequence, [{:literal, "LIKE"}, {:rule_reference, "additive", false}]}, {:sequence, [{:literal, "NOT"}, {:literal, "LIKE"}, {:rule_reference, "additive", false}]}, {:sequence, [{:literal, "IS"}, {:literal, "NULL"}]}, {:sequence, [{:literal, "IS"}, {:literal, "NOT"}, {:literal, "NULL"}]}]}}]}},
+        %{name: "cmp_op", line_number: 78, body: {:alternation, [{:literal, "="}, {:rule_reference, "NOT_EQUALS", true}, {:literal, "<"}, {:literal, ">"}, {:literal, "<="}, {:literal, ">="}]}},
+        %{name: "additive", line_number: 79, body: {:sequence, [{:rule_reference, "multiplicative", false}, {:repetition, {:sequence, [{:group, {:alternation, [{:literal, "+"}, {:literal, "-"}]}}, {:rule_reference, "multiplicative", false}]}}]}},
+        %{name: "multiplicative", line_number: 80, body: {:sequence, [{:rule_reference, "unary", false}, {:repetition, {:sequence, [{:group, {:alternation, [{:rule_reference, "STAR", true}, {:literal, "/"}, {:literal, "%"}]}}, {:rule_reference, "unary", false}]}}]}},
+        %{name: "unary", line_number: 81, body: {:alternation, [{:sequence, [{:literal, "-"}, {:rule_reference, "unary", false}]}, {:rule_reference, "primary", false}]}},
+        %{name: "primary", line_number: 82, body: {:alternation, [{:rule_reference, "NUMBER", true}, {:rule_reference, "STRING", true}, {:literal, "NULL"}, {:literal, "TRUE"}, {:literal, "FALSE"}, {:rule_reference, "function_call", false}, {:rule_reference, "column_ref", false}, {:sequence, [{:literal, "("}, {:rule_reference, "expr", false}, {:literal, ")"}]}]}},
+        %{name: "column_ref", line_number: 85, body: {:sequence, [{:rule_reference, "NAME", true}, {:optional, {:sequence, [{:literal, "."}, {:rule_reference, "NAME", true}]}}]}},
+        %{name: "function_call", line_number: 86, body: {:sequence, [{:rule_reference, "NAME", true}, {:literal, "("}, {:group, {:alternation, [{:rule_reference, "STAR", true}, {:optional, {:rule_reference, "value_list", false}}]}}, {:literal, ")"}]}},
+        %{name: "value_list", line_number: 87, body: {:sequence, [{:rule_reference, "expr", false}, {:repetition, {:sequence, [{:literal, ","}, {:rule_reference, "expr", false}]}}]}}
+      ]
+    }
+  end
+end

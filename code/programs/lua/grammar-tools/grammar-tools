@@ -1,0 +1,249 @@
+#!/usr/bin/env lua
+-- CLI for grammar-tools in Lua
+
+-- Setup package path to find the library module
+local script_dir = arg[0]:match("^(.*)/") or "."
+package.path = script_dir .. "/../../../packages/lua/grammar_tools/src/?.lua;" ..
+               script_dir .. "/../../../packages/lua/grammar_tools/src/?/init.lua;" .. package.path
+
+local grammar_tools = require("coding_adventures.grammar_tools")
+
+local function print_usage()
+    print("Usage: lua bin/grammar-tools <command> [args...]")
+    print()
+    print("Commands:")
+    print("  compile-tokens <file.tokens> <export_name> Compile just a .tokens file to lua")
+    print("  compile-grammar <file.grammar> <export_name> Compile just a .grammar file to lua")
+    print()
+end
+
+local function count_errors(issues)
+    local n = 0
+    for _, issue in ipairs(issues) do
+        if not issue:match("^Warning") then
+            n = n + 1
+        end
+    end
+    return n
+end
+
+local function print_issues(issues)
+    for _, issue in ipairs(issues) do
+        print("  " .. issue)
+    end
+end
+
+local args = {...}
+if #args == 0 or args[1] == "--help" or args[1] == "-h" then
+    print_usage()
+    os.exit(0)
+end
+
+local command = args[1]
+
+if command == "compile-tokens" then
+    if #args ~= 3 then
+        print("Error: 'compile-tokens' requires two arguments: <tokens> <export_name>")
+        print()
+        print_usage()
+        os.exit(2)
+    end
+
+    local file = io.open(args[2], "r")
+    if not file then
+        print(string.format("Error: File not found: %s", args[2]))
+        os.exit(1)
+    end
+    local source = file:read("*a")
+    file:close()
+
+    local tg, err = grammar_tools.parse_token_grammar(source)
+    if err then
+        print("PARSE ERROR")
+        print("  " .. err)
+        os.exit(1)
+    end
+
+    local issues = grammar_tools.validate_token_grammar(tg)
+    if count_errors(issues) > 0 then
+        print("Error: Cannot compile invalid grammar file.")
+        print_issues(issues)
+        os.exit(1)
+    end
+
+    io.write(grammar_tools.compile_tokens_to_lua(tg, args[3]))
+    os.exit(0)
+
+elseif command == "compile-grammar" then
+    if #args ~= 3 then
+        print("Error: 'compile-grammar' requires two arguments: <grammar> <export_name>")
+        print()
+        print_usage()
+        os.exit(2)
+    end
+
+    local file = io.open(args[2], "r")
+    if not file then
+        print(string.format("Error: File not found: %s", args[2]))
+        os.exit(1)
+    end
+    local source = file:read("*a")
+    file:close()
+
+    local pg, err = grammar_tools.parse_parser_grammar(source)
+    if err then
+        print("PARSE ERROR")
+        print("  " .. err)
+        os.exit(1)
+    end
+
+    local issues = grammar_tools.validate_parser_grammar(pg)
+    if count_errors(issues) > 0 then
+        print("Error: Cannot compile invalid grammar file.")
+        print_issues(issues)
+        os.exit(1)
+    end
+
+    io.write(grammar_tools.compile_parser_to_lua(pg, args[3]))
+    os.exit(0)
+
+elseif command == "generate" then
+    local p_pwd = io.popen("pwd")
+    local pwd = p_pwd:read("*a"):gsub("%s+", "")
+    p_pwd:close()
+    
+    local root_dir = pwd:match("^(.*)/code")
+    if root_dir then
+        root_dir = root_dir .. "/code"
+    else
+        root_dir = script_dir .. "/../../.."
+    end
+    
+    local grammars_dir = root_dir .. "/grammars"
+    local lua_pkg_dir = root_dir .. "/packages/lua"
+    print("Looking for grammars in: " .. grammars_dir)
+    
+    local cmd = 'find "' .. grammars_dir .. '" -type f \\( -name "*.tokens" -o -name "*.grammar" \\)'
+    local p = io.popen(cmd)
+    if not p then
+        print("Error running find")
+        os.exit(1)
+    end
+    
+    local has_errors = false
+    for path in p:lines() do
+        local file_name = path:match("^.+/(.+)$")
+        if file_name then
+            local stem, ext = file_name:match("^(.*)%.(.-)$")
+            if ext == "tokens" or ext == "grammar" then
+                local is_tokens = ext == "tokens"
+                local kind = is_tokens and "lexer" or "parser"
+                
+                local pkg_name_hyphen = stem .. "-" .. kind
+                local pkg_name_under = stem .. "_" .. kind
+                local target_dir = nil
+                
+                -- Check if package directory exists
+                local f = io.open(lua_pkg_dir .. "/" .. pkg_name_hyphen .. "/src", "r")
+                if f then
+                    target_dir = lua_pkg_dir .. "/" .. pkg_name_hyphen
+                    f:close()
+                else
+                    f = io.open(lua_pkg_dir .. "/" .. pkg_name_under .. "/src", "r")
+                    if f then
+                        target_dir = lua_pkg_dir .. "/" .. pkg_name_under
+                        f:close()
+                    end
+                end
+                
+                if target_dir then
+                    print("Generating for " .. file_name .. " ...")
+                    
+                    local src_f = io.open(path, "r")
+                    local source = src_f:read("*a")
+                    src_f:close()
+                    
+                    local export_name = ""
+                    local capitalize_next = true
+                    for i = 1, #stem do
+                        local c = stem:sub(i, i)
+                        if c == "_" or c == "-" then
+                            capitalize_next = true
+                        else
+                            if capitalize_next then
+                                export_name = export_name .. string.upper(c)
+                                capitalize_next = false
+                            else
+                                export_name = export_name .. string.lower(c)
+                            end
+                        end
+                    end
+                    
+                    local fname_base
+                    if is_tokens then
+                        export_name = export_name .. "Tokens"
+                        fname_base = stem:gsub("-", "_") .. "_tokens.lua"
+                        
+                        local tg, err = grammar_tools.parse_token_grammar(source)
+                        if err then
+                            print("PARSE ERROR: " .. err)
+                            has_errors = true
+                        else
+                            local issues = grammar_tools.validate_token_grammar(tg)
+                            if count_errors(issues) > 0 then
+                                print("Error: Invalid grammar")
+                                print_issues(issues)
+                                has_errors = true
+                            else
+                                local code = grammar_tools.compile_tokens_to_lua(tg, export_name)
+                                local out_path = target_dir .. "/src/" .. fname_base
+                                os.execute("mkdir -p " .. target_dir .. "/src")
+                                local out_f = io.open(out_path, "w")
+                                out_f:write(code)
+                                out_f:close()
+                                print("  -> Saved " .. out_path)
+                            end
+                        end
+                    else
+                        export_name = export_name .. "Grammar"
+                        fname_base = stem:gsub("-", "_") .. "_grammar.lua"
+                        
+                        local pg, err = grammar_tools.parse_parser_grammar(source)
+                        if err then
+                            print("PARSE ERROR: " .. err)
+                            has_errors = true
+                        else
+                            local issues = grammar_tools.validate_parser_grammar(pg)
+                            if count_errors(issues) > 0 then
+                                print("Error: Invalid grammar")
+                                print_issues(issues)
+                                has_errors = true
+                            else
+                                local code = grammar_tools.compile_parser_to_lua(pg, export_name)
+                                local out_path = target_dir .. "/src/" .. fname_base
+                                os.execute("mkdir -p " .. target_dir .. "/src")
+                                local out_f = io.open(out_path, "w")
+                                out_f:write(code)
+                                out_f:close()
+                                print("  -> Saved " .. out_path)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    p:close()
+    
+    if has_errors then
+        os.exit(1)
+    else
+        os.exit(0)
+    end
+
+else
+    print(string.format("Error: Unknown command '%s'", command))
+    print()
+    print_usage()
+    os.exit(2)
+end

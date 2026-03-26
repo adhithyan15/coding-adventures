@@ -1,0 +1,59 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "grammar-tools",
+  "display_name": "Grammar Tools",
+  "description": "Parser and validator for .tokens and .grammar files",
+  "version": "1.0.0",
+  "parsing_mode": "gnu",
+  "commands": [
+    {
+      "id": "cmd-validate",
+      "name": "validate",
+      "description": "Validate a token/grammar pair",
+      "arguments": [
+        { "id": "tokens_file", "display_name": "TOKENS_FILE", "description": "Path to .tokens file", "type": "path", "required": true },
+        { "id": "grammar_file", "display_name": "GRAMMAR_FILE", "description": "Path to .grammar file", "type": "path", "required": true }
+      ]
+    },
+    {
+      "id": "cmd-validate-tokens",
+      "name": "validate-tokens",
+      "description": "Validate just a .tokens file",
+      "arguments": [
+        { "id": "tokens_file", "display_name": "TOKENS_FILE", "description": "Path to .tokens file", "type": "path", "required": true }
+      ]
+    },
+    {
+      "id": "cmd-validate-grammar",
+      "name": "validate-grammar",
+      "description": "Validate just a .grammar file",
+      "arguments": [
+        { "id": "grammar_file", "display_name": "GRAMMAR_FILE", "description": "Path to .grammar file", "type": "path", "required": true }
+      ]
+    },
+    {
+      "id": "cmd-compile-tokens",
+      "name": "compile-tokens",
+      "description": "Compile just a .tokens file",
+      "arguments": [
+        { "id": "tokens_file", "display_name": "TOKENS_FILE", "description": "Path to .tokens file", "type": "path", "required": true },
+        { "id": "export_name", "display_name": "EXPORT_NAME", "description": "Name of the exported object/variable", "type": "string", "required": true }
+      ]
+    },
+    {
+      "id": "cmd-compile-grammar",
+      "name": "compile-grammar",
+      "description": "Compile just a .grammar file",
+      "arguments": [
+        { "id": "grammar_file", "display_name": "GRAMMAR_FILE", "description": "Path to .grammar file", "type": "path", "required": true },
+        { "id": "export_name", "display_name": "EXPORT_NAME", "description": "Name of the exported object/variable", "type": "string", "required": true }
+      ]
+    },
+    {
+      "id": "cmd-generate",
+      "name": "generate",
+      "description": "Find and compile all .tokens and .grammar files in the repository",
+      "arguments": []
+    }
+  ]
+}
