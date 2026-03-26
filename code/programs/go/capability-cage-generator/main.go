@@ -192,17 +192,11 @@ func uniqueCategories(groups []capabilityGroup) []string {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // neededImports returns the sorted stdlib import paths required by the
-// generated code. Always includes encoding/json, fmt, log, time. Additional
-// packages depend on which capability categories are declared.
-//
-// encoding/json is always included so that the property bag in GetResult can
-// be marshaled to valid JSON — preventing log injection via unescaped values.
+// generated code. Always includes fmt. Additional packages depend on which
+// capability categories are declared.
 func neededImports(caps []capabilityJSON) []string {
 	set := map[string]bool{
-		`"encoding/json"`: true,
-		`"fmt"`:           true,
-		`"log"`:           true,
-		`"time"`:          true,
+		`"fmt"`: true,
 	}
 	for _, c := range caps {
 		switch c.Category {
@@ -667,17 +661,14 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "// GetResult executes the operation callback and returns (value, error).\n")
 	fmt.Fprintf(b, "//\n")
 	fmt.Fprintf(b, "// Execution model:\n")
-	fmt.Fprintf(b, "//  1. Record start time.\n")
-	fmt.Fprintf(b, "//  2. Call the callback with this Operation and a ResultFactory.\n")
-	fmt.Fprintf(b, "//  3. Recover any panic from the callback.\n")
-	fmt.Fprintf(b, "//     - If PanicOnUnexpected() was set: re-panic after logging.\n")
+	fmt.Fprintf(b, "//  1. Call the callback with this Operation and a ResultFactory.\n")
+	fmt.Fprintf(b, "//  2. Recover any panic from the callback.\n")
+	fmt.Fprintf(b, "//     - If PanicOnUnexpected() was set: re-panic.\n")
 	fmt.Fprintf(b, "//     - Otherwise: use the fallback value, mark as unexpected failure.\n")
-	fmt.Fprintf(b, "//  4. Record elapsed time and emit a structured log line.\n")
-	fmt.Fprintf(b, "//  5. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.\n")
+	fmt.Fprintf(b, "//  3. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.\n")
 	fmt.Fprintf(b, "//     Expected failures with a typed Err field return that error directly\n")
 	fmt.Fprintf(b, "//     (preserving the type for errors.As checks).\n")
 	fmt.Fprintf(b, "func (op *Operation[T]) GetResult() (T, error) {\n")
-	fmt.Fprintf(b, "\tstart := time.Now()\n")
 	fmt.Fprintf(b, "\trf := &ResultFactory[T]{}\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tvar result *OperationResult[T]\n")
@@ -694,8 +685,6 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "\t\tresult = op.callback(op, rf)\n")
 	fmt.Fprintf(b, "\t}()\n")
 	fmt.Fprintf(b, "\n")
-	fmt.Fprintf(b, "\telapsed := time.Since(start)\n")
-	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tif encounteredPanic {\n")
 	fmt.Fprintf(b, "\t\tresult = &OperationResult[T]{\n")
 	fmt.Fprintf(b, "\t\t\tDidSucceed:          false,\n")
@@ -703,18 +692,6 @@ func emitOperation(b *strings.Builder, groups []capabilityGroup) {
 	fmt.Fprintf(b, "\t\t\tReturnValue:         op.fallback,\n")
 	fmt.Fprintf(b, "\t\t}\n")
 	fmt.Fprintf(b, "\t}\n")
-	fmt.Fprintf(b, "\n")
-	// Marshal the property bag to JSON to prevent log injection.
-	// An unescaped %v on a map[string]any would allow node names containing
-	// quotes, newlines, or closing braces to corrupt structured log records.
-	fmt.Fprintf(b, "\tpropsJSON, _propsErr := json.Marshal(op.propertyBag)\n")
-	fmt.Fprintf(b, "\tif _propsErr != nil {\n")
-	fmt.Fprintf(b, "\t\tpropsJSON = []byte(`\"<unmarshalable>\"`)\n")
-	fmt.Fprintf(b, "\t}\n")
-	fmt.Fprintf(b, "\tlog.Printf(`{\"op\":%%q,\"elapsedMs\":%%d,\"ok\":%%v,\"unexpected\":%%v,\"panic\":%%v,\"props\":%%s}`,\n")
-	fmt.Fprintf(b, "\t\top.name, elapsed.Milliseconds(),\n")
-	fmt.Fprintf(b, "\t\tresult.DidSucceed, result.DidFailUnexpectedly,\n")
-	fmt.Fprintf(b, "\t\tencounteredPanic, propsJSON)\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tif !result.DidSucceed {\n")
 	fmt.Fprintf(b, "\t\tif result.DidFailUnexpectedly || encounteredPanic {\n")
