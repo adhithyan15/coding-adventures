@@ -325,21 +325,31 @@ func TestGenerateSource_WithRelativeFSRead(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	// Must import strings for suffix matching.
-	if !strings.Contains(src, `"strings"`) {
-		t.Error("expected strings import for relative fs:read target")
+	// Must import runtime and sync for the resolved-path vars.
+	if !strings.Contains(src, `"runtime"`) {
+		t.Error("expected runtime import for relative fs:read target")
 	}
-	// Must use suffix matching, not exact equality.
-	if !strings.Contains(src, "strings.HasSuffix") {
-		t.Error("expected strings.HasSuffix for relative target enforcement")
+	if !strings.Contains(src, `"sync"`) {
+		t.Error("expected sync import for relative fs:read target")
 	}
-	// The normalized suffix should appear: ../../grammars/sql.tokens → /grammars/sql.tokens
-	if !strings.Contains(src, `"/grammars/sql.tokens"`) {
-		t.Error("expected normalized suffix /grammars/sql.tokens in generated code")
+	// Must use sync.OnceValue for canonical path resolution.
+	if !strings.Contains(src, "sync.OnceValue") {
+		t.Error("expected sync.OnceValue for relative target enforcement")
 	}
-	// Must NOT use exact equality with the raw relative path.
-	if strings.Contains(src, `"../../grammars/sql.tokens"`) {
-		t.Error("must not emit raw relative path as exact-equality target")
+	// Must use runtime.Caller to anchor the path.
+	if !strings.Contains(src, "runtime.Caller(0)") {
+		t.Error("expected runtime.Caller(0) in generated path resolution")
+	}
+	// The relative path should appear in the filepath.Join call (to navigate to the target).
+	if !strings.Contains(src, `"../../grammars/sql.tokens"`) {
+		t.Error("expected relative path ../../grammars/sql.tokens in filepath.Join call")
+	}
+	// Must use exact equality (_allowedPath_0()), not suffix matching.
+	if strings.Contains(src, "strings.HasSuffix") {
+		t.Error("must not emit strings.HasSuffix — exact canonical path comparison required")
+	}
+	if !strings.Contains(src, "_allowedPath_0") {
+		t.Error("expected _allowedPath_0 var for first relative target")
 	}
 	// Must still have ReadFile method and capability violation error.
 	if !strings.Contains(src, "func (c *_FileCapabilities) ReadFile(path string) ([]byte, error)") {

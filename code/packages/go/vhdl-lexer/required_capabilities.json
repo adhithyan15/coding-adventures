@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/vhdl.tokens",
+      "target": "../../../grammars/vhdl.tokens",
       "justification": "Reads the VHDL token grammar file from the filesystem to configure the lexer at initialization time."
     }
   ],
