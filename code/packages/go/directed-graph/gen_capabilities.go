@@ -12,6 +12,7 @@
 package directedgraph
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -151,10 +152,14 @@ func (op *Operation[T]) GetResult() (T, error) {
 		}
 	}
 
-	log.Printf(`{"op":%q,"elapsedMs":%d,"ok":%v,"unexpected":%v,"panic":%v,"props":%v}`,
+	propsJSON, _propsErr := json.Marshal(op.propertyBag)
+	if _propsErr != nil {
+		propsJSON = []byte(`"<unmarshalable>"`)
+	}
+	log.Printf(`{"op":%q,"elapsedMs":%d,"ok":%v,"unexpected":%v,"panic":%v,"props":%s}`,
 		op.name, elapsed.Milliseconds(),
 		result.DidSucceed, result.DidFailUnexpectedly,
-		encounteredPanic, op.propertyBag)
+		encounteredPanic, propsJSON)
 
 	if !result.DidSucceed {
 		if result.DidFailUnexpectedly || encounteredPanic {

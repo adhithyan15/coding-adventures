@@ -140,13 +140,17 @@ func groupCapabilities(caps []capabilityJSON) []capabilityGroup {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // neededImports returns the sorted stdlib import paths required by the
-// generated code. Always includes fmt, log, time. Additional packages
-// depend on which capability categories are declared.
+// generated code. Always includes encoding/json, fmt, log, time. Additional
+// packages depend on which capability categories are declared.
+//
+// encoding/json is always included so that the property bag in GetResult can
+// be marshaled to valid JSON — preventing log injection via unescaped values.
 func neededImports(caps []capabilityJSON) []string {
 	set := map[string]bool{
-		`"fmt"`:  true,
-		`"log"`:  true,
-		`"time"`: true,
+		`"encoding/json"`: true,
+		`"fmt"`:           true,
+		`"log"`:           true,
+		`"time"`:          true,
 	}
 	for _, c := range caps {
 		switch c.Category {
@@ -160,6 +164,11 @@ func neededImports(caps []capabilityJSON) []string {
 		}
 		if c.Category == "proc" && c.Action == "exec" {
 			set[`"os/exec"`] = true
+		}
+		// Path-based categories (fs, proc) need filepath for path normalization
+		// in Cage methods to prevent bypass via ./foo, ../foo/bar, etc.
+		if c.Category == "fs" || (c.Category == "proc" && c.Action == "exec") {
+			set[`"path/filepath"`] = true
 		}
 	}
 	result := make([]string, 0, len(set))
@@ -230,7 +239,10 @@ func emitHeader(b *strings.Builder, manifestPath string) {
 	fmt.Fprintf(b, "// Source: required_capabilities.json\n")
 	fmt.Fprintf(b, "// Regenerate:\n")
 	fmt.Fprintf(b, "//   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \\\n")
-	fmt.Fprintf(b, "//     --manifest=%s\n", manifestPath)
+	// Sanitize the path: strip newlines and convert to forward slashes so the
+	// comment remains single-line and platform-independent in the generated file.
+	safePath := strings.ReplaceAll(filepath.ToSlash(manifestPath), "\n", "")
+	fmt.Fprintf(b, "//     --manifest=%s\n", safePath)
 	fmt.Fprintf(b, "//\n")
 	fmt.Fprintf(b, "// The JSON file is a development-time artifact; this file is what the\n")
 	fmt.Fprintf(b, "// runtime enforces. Edit required_capabilities.json and re-run the\n")
@@ -300,7 +312,10 @@ func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	case "fs:read":
 		fmt.Fprintf(b, "// ReadFile reads the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison to prevent\n")
+		fmt.Fprintf(b, "// bypass via ./foo, foo/../foo/bar, and similar path manipulations.\n")
 		fmt.Fprintf(b, "func (c *Cage) ReadFile(path string) ([]byte, error) {\n")
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", true, "fs", "read")
 		fmt.Fprintf(b, "\treturn os.ReadFile(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
@@ -308,7 +323,9 @@ func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	case "fs:write":
 		fmt.Fprintf(b, "// WriteFile writes data to the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *Cage) WriteFile(path string, data []byte, perm os.FileMode) error {\n")
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", false, "fs", "write")
 		fmt.Fprintf(b, "\treturn os.WriteFile(path, data, perm) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
@@ -316,7 +333,9 @@ func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	case "fs:create":
 		fmt.Fprintf(b, "// CreateFile creates or truncates the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *Cage) CreateFile(path string) (*os.File, error) {\n")
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", true, "fs", "create")
 		fmt.Fprintf(b, "\treturn os.Create(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
@@ -324,7 +343,9 @@ func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	case "fs:delete":
 		fmt.Fprintf(b, "// DeleteFile removes the file at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *Cage) DeleteFile(path string) error {\n")
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", false, "fs", "delete")
 		fmt.Fprintf(b, "\treturn os.Remove(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
@@ -332,7 +353,9 @@ func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	case "fs:list":
 		fmt.Fprintf(b, "// ReadDir lists the contents of the directory at path.\n")
 		fmt.Fprintf(b, "// Only paths declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The path is cleaned with filepath.Clean before comparison.\n")
 		fmt.Fprintf(b, "func (c *Cage) ReadDir(path string) ([]os.DirEntry, error) {\n")
+		fmt.Fprintf(b, "\tpath = filepath.Clean(path)\n")
 		emitScopedCheck(b, g.Targets, "path", true, "fs", "list")
 		fmt.Fprintf(b, "\treturn os.ReadDir(path) //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
@@ -364,7 +387,10 @@ func emitCageMethod(b *strings.Builder, g capabilityGroup) {
 	case "proc:exec":
 		fmt.Fprintf(b, "// Exec runs the named executable with args.\n")
 		fmt.Fprintf(b, "// Only executables declared in required_capabilities.json are permitted.\n")
+		fmt.Fprintf(b, "// The name is cleaned with filepath.Clean before comparison.\n")
+		fmt.Fprintf(b, "// Note: only the executable name is enforced — not the arguments passed to it.\n")
 		fmt.Fprintf(b, "func (c *Cage) Exec(name string, args ...string) ([]byte, error) {\n")
+		fmt.Fprintf(b, "\tname = filepath.Clean(name)\n")
 		emitScopedCheck(b, g.Targets, "name", true, "proc", "exec")
 		fmt.Fprintf(b, "\treturn exec.Command(name, args...).Output() //nolint:cap\n")
 		fmt.Fprintf(b, "}\n\n")
@@ -539,10 +565,17 @@ func emitOperation(b *strings.Builder) {
 	fmt.Fprintf(b, "\t\t}\n")
 	fmt.Fprintf(b, "\t}\n")
 	fmt.Fprintf(b, "\n")
-	fmt.Fprintf(b, "\tlog.Printf(`{\"op\":%%q,\"elapsedMs\":%%d,\"ok\":%%v,\"unexpected\":%%v,\"panic\":%%v,\"props\":%%v}`,\n")
+	// Marshal the property bag to JSON to prevent log injection.
+	// An unescaped %v on a map[string]any would allow node names containing
+	// quotes, newlines, or closing braces to corrupt structured log records.
+	fmt.Fprintf(b, "\tpropsJSON, _propsErr := json.Marshal(op.propertyBag)\n")
+	fmt.Fprintf(b, "\tif _propsErr != nil {\n")
+	fmt.Fprintf(b, "\t\tpropsJSON = []byte(`\"<unmarshalable>\"`)\n")
+	fmt.Fprintf(b, "\t}\n")
+	fmt.Fprintf(b, "\tlog.Printf(`{\"op\":%%q,\"elapsedMs\":%%d,\"ok\":%%v,\"unexpected\":%%v,\"panic\":%%v,\"props\":%%s}`,\n")
 	fmt.Fprintf(b, "\t\top.name, elapsed.Milliseconds(),\n")
 	fmt.Fprintf(b, "\t\tresult.DidSucceed, result.DidFailUnexpectedly,\n")
-	fmt.Fprintf(b, "\t\tencounteredPanic, op.propertyBag)\n")
+	fmt.Fprintf(b, "\t\tencounteredPanic, propsJSON)\n")
 	fmt.Fprintf(b, "\n")
 	fmt.Fprintf(b, "\tif !result.DidSucceed {\n")
 	fmt.Fprintf(b, "\t\tif result.DidFailUnexpectedly || encounteredPanic {\n")
