@@ -249,6 +249,39 @@ h3 {
   min-width: max-content;
 }
 
+.barcode-legend {
+  margin-top: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.barcode-legend-track {
+  position: relative;
+  height: 42px;
+  min-width: max-content;
+}
+
+.barcode-legend-item {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  border-top: 1px dashed rgba(22, 18, 13, 0.12);
+}
+
+.barcode-legend-item span {
+  @include label-text();
+  padding-top: 8px;
+  font-size: 0.92rem;
+}
+
+.barcode-legend-item.start-stop span {
+  color: $accent-deep;
+  font-weight: 700;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

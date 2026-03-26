@@ -11,6 +11,8 @@ describe("App", () => {
     expect(screen.getByDisplayValue("CODE39-123")).toBeInTheDocument();
     expect(screen.getByText("The current input is valid Code 39 data.")).toBeInTheDocument();
     expect(container.querySelector("svg")).not.toBeNull();
+    expect(screen.getByLabelText("encoded symbol alignment")).toBeInTheDocument();
+    expect(screen.getAllByText("*").length).toBeGreaterThan(0);
   });
 
   it("normalizes lowercase input before rendering", () => {

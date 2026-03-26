@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  DEFAULT_RENDER_CONFIG,
   drawCode39,
   encodeCode39,
   expandCode39Runs,
@@ -17,22 +18,70 @@ interface BarcodeModel {
   normalized: string;
   encodedCharacters: EncodedCharacter[];
   runs: BarcodeRun[];
+  symbolLayouts: SymbolLayout[];
   svg: string;
   width: number;
   height: number;
+}
+
+interface SymbolLayout {
+  char: string;
+  start: number;
+  width: number;
+  center: number;
+  isStartStop: boolean;
+}
+
+function runWidth(run: BarcodeRun): number {
+  return run.width === "wide" ? DEFAULT_RENDER_CONFIG.wideUnit : DEFAULT_RENDER_CONFIG.narrowUnit;
+}
+
+function buildSymbolLayouts(
+  encodedCharacters: EncodedCharacter[],
+  runs: BarcodeRun[],
+): SymbolLayout[] {
+  const quietZone = DEFAULT_RENDER_CONFIG.quietZoneUnits * DEFAULT_RENDER_CONFIG.narrowUnit;
+  const layouts: SymbolLayout[] = [];
+  let cursorX = quietZone;
+
+  encodedCharacters.forEach((encodedCharacter, sourceIndex) => {
+    const symbolRuns = runs.filter((run) => run.sourceIndex === sourceIndex && !run.isInterCharacterGap);
+    const width = symbolRuns.reduce((sum, run) => sum + runWidth(run), 0);
+
+    layouts.push({
+      char: encodedCharacter.char,
+      start: cursorX,
+      width,
+      center: cursorX + width / 2,
+      isStartStop: encodedCharacter.isStartStop,
+    });
+
+    cursorX += width;
+
+    if (sourceIndex < encodedCharacters.length - 1) {
+      cursorX += DEFAULT_RENDER_CONFIG.narrowUnit;
+    }
+  });
+
+  return layouts;
 }
 
 function buildBarcodeModel(input: string): BarcodeModel {
   const normalized = normalizeCode39(input);
   const encodedCharacters = encodeCode39(normalized);
   const runs = expandCode39Runs(normalized);
-  const scene = drawCode39(normalized);
+  const symbolLayouts = buildSymbolLayouts(encodedCharacters, runs);
+  const scene = drawCode39(normalized, {
+    ...DEFAULT_RENDER_CONFIG,
+    includeHumanReadableText: false,
+  });
 
   return {
     input,
     normalized,
     encodedCharacters,
     runs,
+    symbolLayouts,
     svg: renderSvg(scene),
     width: scene.width,
     height: scene.height,
@@ -142,6 +191,25 @@ export function App() {
                 className="barcode-frame"
                 dangerouslySetInnerHTML={{ __html: model.svg }}
               />
+              <div className="barcode-legend" aria-label="encoded symbol alignment">
+                <div
+                  className="barcode-legend-track"
+                  style={{ width: `${model.width}px` }}
+                >
+                  {model.symbolLayouts.map((layout, index) => (
+                    <div
+                      key={`${layout.char}-${index}`}
+                      className={`barcode-legend-item${layout.isStartStop ? " start-stop" : ""}`}
+                      style={{
+                        left: `${layout.start}px`,
+                        width: `${layout.width}px`,
+                      }}
+                    >
+                      <span>{layout.char}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <dl className="stats" aria-label="barcode statistics">
                 <div>
