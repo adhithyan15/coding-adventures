@@ -532,25 +532,27 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
-      # ── Fix Windows PATH: remove Ruby MSYS2 usr/bin linker conflict ──
+      # ── Fix Windows linker conflict: remove Ruby MSYS2's 'link' ────
       #
-      # Ruby's setup-ruby installs MSYS2 which puts a Unix 'link' binary at
+      # Ruby's setup-ruby installs MSYS2 which puts a GNU 'link' binary at
       # C:\hostedtoolcache\windows\Ruby\<ver>\x64\msys64\usr\bin\link.exe.
-      # This GNU hard-link utility shares the name with MSVC's link.exe and
-      # shadows it, causing Rust packages (e.g. wasm-bindgen deps in
-      # wasm/immutable-list) to fail with "extra operand" linker errors that
-      # cascade into ~194 package failures.
+      # This is a GNU hard-link utility (unrelated to linking object files) that
+      # shadows MSVC's link.exe, causing Rust packages to fail with "extra
+      # operand" linker errors (cascading into ~194 package failures).
       #
-      # Surgical fix: remove only msys64/usr/bin (where the fake 'link' lives).
-      # We must keep msys64/mingw64/bin intact — it contains gcc.exe and ld.exe
-      # which Ruby native extensions in Rust (bitset_native, immutable_list_native,
-      # directed_graph_native) need to link against the MinGW ABI that Ruby uses.
-      - name: Fix linker PATH on Windows
+      # Fix: delete only the offending file. PATH manipulation via GITHUB_ENV
+      # does not work here — writing a POSIX-format PATH on Windows corrupts the
+      # Windows Path variable (cmd.exe can't read /c/... paths), which causes
+      # every cmd /C "mix ..." or "npm ..." to fail with "command not found".
+      #
+      # We keep the rest of MSYS2 intact: msys64/mingw64/bin has gcc.exe and
+      # ld.exe that Ruby native extensions in Rust (bitset_native, etc.) need.
+      - name: Fix linker conflict on Windows
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          CLEAN_PATH=$(echo "$PATH" | tr ':' '\n' | grep -iv 'msys64/usr/bin' | tr '\n' ':' | sed 's/:$//')
-          echo "PATH=$CLEAN_PATH" >> "$GITHUB_ENV"
+          find /c/hostedtoolcache/windows/Ruby -path "*/msys64/usr/bin/link.exe" -delete 2>/dev/null || true
+          echo "Removed Ruby MSYS2 link.exe to prevent shadowing MSVC linker"
 
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
