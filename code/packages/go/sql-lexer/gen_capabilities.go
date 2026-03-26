@@ -12,26 +12,14 @@
 package sqllexer
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
-	"runtime"
-	"sync"
+	"strings"
+	"time"
 )
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Resolved allowed paths — exact canonical paths, computed once at startup
-//
-// Each var below resolves a relative target from required_capabilities.json
-// to its canonical absolute path, anchored to gen_capabilities.go's directory
-// via runtime.Caller(0). Enforcement uses exact equality, so no other file
-// — even one with the same name in a different directory — can pass the check.
-// ─────────────────────────────────────────────────────────────────────────────
-
-var _allowedPath_0 = sync.OnceValue(func() string {
-	_, _file, _, _ := runtime.Caller(0)
-	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/sql.tokens"))
-})
 
 // ─────────────────────────────────────────────────────────────────────────────
 // _FileCapabilities — op.File capability namespace
@@ -49,7 +37,8 @@ type _FileCapabilities struct{}
 // bypass via ./foo, foo/../foo/bar, and similar path manipulations.
 func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
 	path = filepath.Clean(path)
-	if path != _allowedPath_0() {
+	_slashPath := filepath.ToSlash(path)
+	if !strings.HasSuffix(_slashPath, "/grammars/sql.tokens") {
 		return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
 	}
 	return os.ReadFile(path) //nolint:cap
@@ -141,14 +130,17 @@ func (op *Operation[T]) PanicOnUnexpected() *Operation[T] {
 // GetResult executes the operation callback and returns (value, error).
 //
 // Execution model:
-//  1. Call the callback with this Operation and a ResultFactory.
-//  2. Recover any panic from the callback.
-//     - If PanicOnUnexpected() was set: re-panic.
+//  1. Record start time.
+//  2. Call the callback with this Operation and a ResultFactory.
+//  3. Recover any panic from the callback.
+//     - If PanicOnUnexpected() was set: re-panic after logging.
 //     - Otherwise: use the fallback value, mark as unexpected failure.
-//  3. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
+//  4. Record elapsed time and emit a structured log line.
+//  5. Return (ReturnValue, nil) on success; (ReturnValue, error) on failure.
 //     Expected failures with a typed Err field return that error directly
 //     (preserving the type for errors.As checks).
 func (op *Operation[T]) GetResult() (T, error) {
+	start := time.Now()
 	rf := &ResultFactory[T]{}
 
 	var result *OperationResult[T]
@@ -165,6 +157,8 @@ func (op *Operation[T]) GetResult() (T, error) {
 		result = op.callback(op, rf)
 	}()
 
+	elapsed := time.Since(start)
+
 	if encounteredPanic {
 		result = &OperationResult[T]{
 			DidSucceed:          false,
@@ -172,6 +166,15 @@ func (op *Operation[T]) GetResult() (T, error) {
 			ReturnValue:         op.fallback,
 		}
 	}
+
+	propsJSON, _propsErr := json.Marshal(op.propertyBag)
+	if _propsErr != nil {
+		propsJSON = []byte(`"<unmarshalable>"`)
+	}
+	log.Printf(`{"op":%q,"elapsedMs":%d,"ok":%v,"unexpected":%v,"panic":%v,"props":%s}`,
+		op.name, elapsed.Milliseconds(),
+		result.DidSucceed, result.DidFailUnexpectedly,
+		encounteredPanic, propsJSON)
 
 	if !result.DidSucceed {
 		if result.DidFailUnexpectedly || encounteredPanic {

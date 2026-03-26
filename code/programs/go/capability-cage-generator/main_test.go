@@ -308,6 +308,54 @@ func TestGenerateSource_WithFSRead(t *testing.T) {
 	}
 }
 
+func TestGenerateSource_WithRelativeFSRead(t *testing.T) {
+	tmp := t.TempDir()
+	manifestPath := filepath.Join(tmp, "required_capabilities.json")
+
+	_ = os.WriteFile(filepath.Join(tmp, "lexer.go"),
+		[]byte("package sqllexer\n"), 0o644) //nolint:cap
+
+	mf := &manifestJSON{
+		Package: "go/sql-lexer",
+		Capabilities: []capabilityJSON{
+			{
+				Category:      "fs",
+				Action:        "read",
+				Target:        "../../grammars/sql.tokens",
+				Justification: "Reads SQL token grammar file at startup.",
+			},
+		},
+	}
+
+	src, err := generateSource(manifestPath, mf)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	// Must import strings for suffix matching.
+	if !strings.Contains(src, `"strings"`) {
+		t.Error("expected strings import for relative fs:read target")
+	}
+	// Must use suffix matching, not exact equality.
+	if !strings.Contains(src, "strings.HasSuffix") {
+		t.Error("expected strings.HasSuffix for relative target enforcement")
+	}
+	// The normalized suffix should appear: ../../grammars/sql.tokens → /grammars/sql.tokens
+	if !strings.Contains(src, `"/grammars/sql.tokens"`) {
+		t.Error("expected normalized suffix /grammars/sql.tokens in generated code")
+	}
+	// Must NOT use exact equality with the raw relative path.
+	if strings.Contains(src, `"../../grammars/sql.tokens"`) {
+		t.Error("must not emit raw relative path as exact-equality target")
+	}
+	// Must still have ReadFile method and capability violation error.
+	if !strings.Contains(src, "func (c *_FileCapabilities) ReadFile(path string) ([]byte, error)") {
+		t.Error("expected ReadFile method")
+	}
+	if !strings.Contains(src, "_capabilityViolationError") {
+		t.Error("expected _capabilityViolationError")
+	}
+}
+
 func TestGenerateSource_WildcardInScopeableCategory_ReturnsError(t *testing.T) {
 	tmp := t.TempDir()
 	manifestPath := filepath.Join(tmp, "required_capabilities.json")
