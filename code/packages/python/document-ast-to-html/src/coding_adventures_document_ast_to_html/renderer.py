@@ -18,8 +18,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from coding_adventures_commonmark_parser.entities import escape_html
-from coding_adventures_commonmark_parser.scanner import normalize_url
 from coding_adventures_document_ast import (
     AutolinkNode,
     BlockNode,
@@ -42,6 +40,37 @@ from coding_adventures_document_ast import (
     TableRowNode,
     TaskItemNode,
 )
+
+_URL_SAFE = frozenset(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    "0123456789-._~:/?#@!$&'()*+,;=%"
+)
+
+_HEX_RE = re.compile(r"[0-9A-Fa-f]{2}")
+
+
+def escape_html(value: str | None) -> str:
+    if value is None:
+        return ""
+    return (
+        value.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
+
+def normalize_url(url: str) -> str:
+    result: list[str] = []
+    index = 0
+    while index < len(url):
+        ch = url[index]
+        if ch in _URL_SAFE or (ch == "%" and index + 2 < len(url) and _HEX_RE.match(url, index + 1)):
+            result.append(ch)
+        else:
+            result.extend(f"%{byte:02X}" for byte in ch.encode("utf-8"))
+        index += 1
+    return "".join(result)
 
 # ─── Render Options ───────────────────────────────────────────────────────────
 

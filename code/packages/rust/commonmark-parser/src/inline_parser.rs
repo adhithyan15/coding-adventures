@@ -294,7 +294,7 @@ pub fn parse_inline(raw: &str, link_refs: &LinkRefMap) -> Vec<InlineNode> {
         }
 
         // 8. Emphasis/strong delimiter run
-        if ch == '*' || ch == '_' || (ch == '~' && scanner.peek_at(1) == '~') {
+        if ch == '*' || ch == '_' {
             flush_text(&mut tokens, &mut text_buf);
             let delim = scan_delimiter_run(&mut scanner, ch);
             tokens.push(Token::Delim(delim));
@@ -398,8 +398,6 @@ fn scan_delimiter_run(scanner: &mut Scanner, char: char) -> DelimToken {
 
     let (can_open, can_close) = if char == '*' {
         (left_flanking, right_flanking)
-    } else if char == '~' {
-        (count >= 2 && left_flanking, count >= 2 && right_flanking)
     } else {
         // `_` rules: stricter to avoid intra-word
         let can_open = left_flanking && (!right_flanking || before_punctuation);
@@ -452,16 +450,14 @@ fn resolve_emphasis(mut tokens: Vec<Token>) -> Vec<InlineNode> {
             _ => { i += 1; continue; }
         };
 
-        let use_len = if closer.ch == '~' || (opener_count >= 2 && closer_count >= 2) { 2 } else { 1 };
+        let use_len = if opener_count >= 2 && closer_count >= 2 { 2 } else { 1 };
         let is_strong = use_len == 2;
 
         // Collect inner tokens and resolve recursively
         let inner_slice: Vec<Token> = tokens[opener_idx + 1..i].to_vec();
         let inner_nodes = resolve_emphasis(inner_slice);
 
-        let emph_node: InlineNode = if closer.ch == '~' {
-            InlineNode::Strikethrough(StrikethroughNode { children: inner_nodes })
-        } else if is_strong {
+        let emph_node: InlineNode = if is_strong {
             InlineNode::Strong(StrongNode { children: inner_nodes })
         } else {
             InlineNode::Emphasis(EmphasisNode { children: inner_nodes })
@@ -951,7 +947,6 @@ fn extract_plain_text(nodes: &[InlineNode]) -> String {
             InlineNode::SoftBreak(_) => result.push(' '),
             InlineNode::Emphasis(e) => result.push_str(&extract_plain_text(&e.children)),
             InlineNode::Strong(s) => result.push_str(&extract_plain_text(&s.children)),
-            InlineNode::Strikethrough(s) => result.push_str(&extract_plain_text(&s.children)),
             InlineNode::Link(l) => result.push_str(&extract_plain_text(&l.children)),
             InlineNode::Image(img) => result.push_str(&img.alt),
             InlineNode::Autolink(a) => result.push_str(&a.destination),
@@ -978,145 +973,6 @@ fn resolve_blocks(blocks: Vec<FinalBlock>, link_refs: &LinkRefMap) -> Vec<BlockN
     blocks.into_iter().filter_map(|b| resolve_block(b, link_refs)).collect()
 }
 
-fn resolve_list_item(children: Vec<FinalBlock>, link_refs: &LinkRefMap) -> ListChildNode {
-    if let Some((checked, adjusted_children)) = extract_task_item(children) {
-        let c = resolve_blocks(adjusted_children, link_refs);
-        ListChildNode::TaskItem(TaskItemNode { checked, children: c })
-    } else {
-        let c = resolve_blocks(children, link_refs);
-        ListChildNode::ListItem(ListItemNode { children: c })
-    }
-}
-
-fn extract_task_item(children: Vec<FinalBlock>) -> Option<(bool, Vec<FinalBlock>)> {
-    let mut iter = children.into_iter();
-    let first = iter.next()?;
-    match first {
-        FinalBlock::Paragraph { raw_content } => {
-            let rest = raw_content.strip_prefix("[ ]").map(|s| (false, s))
-                .or_else(|| raw_content.strip_prefix("[x]").map(|s| (true, s)))
-                .or_else(|| raw_content.strip_prefix("[X]").map(|s| (true, s)))?;
-            let suffix = rest.1;
-            if !suffix.is_empty() && !suffix.starts_with(' ') && !suffix.starts_with('\t') {
-                return None;
-            }
-            let mut next_children = vec![FinalBlock::Paragraph { raw_content: suffix.trim_start_matches([' ', '\t']).to_string() }];
-            next_children.extend(iter);
-            Some((rest.0, next_children))
-        }
-        other => {
-            let mut out = vec![other];
-            out.extend(iter);
-            let _ = out;
-            None
-        }
-    }
-}
-
-fn try_parse_table_block(raw: &str, link_refs: &LinkRefMap) -> Option<TableNode> {
-    let lines: Vec<&str> = raw.split('\n').collect();
-    if lines.len() < 2 {
-        return None;
-    }
-    let header = split_table_row(lines[0])?;
-    let delimiter = split_table_row(lines[1])?;
-    if header.is_empty() || header.len() != delimiter.len() {
-        return None;
-    }
-    let mut align = Vec::with_capacity(delimiter.len());
-    for cell in &delimiter {
-        let trimmed = cell.trim();
-        if !(trimmed.starts_with(':') || trimmed.starts_with('-')) || trimmed.chars().filter(|c| *c == '-').count() < 3 {
-            return None;
-        }
-        if !trimmed.chars().all(|c| c == ':' || c == '-') {
-            return None;
-        }
-        let left = trimmed.starts_with(':');
-        let right = trimmed.ends_with(':');
-        align.push(match (left, right) {
-            (true, true) => TableAlignment::Center,
-            (true, false) => TableAlignment::Left,
-            (false, true) => TableAlignment::Right,
-            (false, false) => TableAlignment::None,
-        });
-    }
-
-    let mut rows = Vec::new();
-    for line in lines.iter().skip(2) {
-        if line.trim().is_empty() {
-            return None;
-        }
-        let cells = split_table_row(line)?;
-        rows.push(normalize_table_row(cells, header.len()));
-    }
-
-    let make_row = |cells: Vec<String>, is_header: bool| TableRowNode {
-        is_header,
-        children: cells
-            .into_iter()
-            .map(|content| TableCellNode { children: parse_inline(&content, link_refs) })
-            .collect(),
-    };
-
-    let mut children = vec![make_row(normalize_table_row(header, delimiter.len()), true)];
-    children.extend(rows.into_iter().map(|row| make_row(row, false)));
-    Some(TableNode { align, children })
-}
-
-fn split_table_row(line: &str) -> Option<Vec<String>> {
-    if !line.contains('|') {
-        return None;
-    }
-    let trimmed = line.trim();
-    let had_outer_pipe = trimmed.starts_with('|') || trimmed.ends_with('|');
-    let mut slice = trimmed;
-    if let Some(rest) = slice.strip_prefix('|') {
-        slice = rest;
-    }
-    if let Some(rest) = slice.strip_suffix('|') {
-        slice = rest;
-    }
-
-    let mut cells = Vec::new();
-    let mut current = String::new();
-    let mut escaped = false;
-    let mut pipe_count = 0;
-    for ch in slice.chars() {
-        if escaped {
-            current.push(ch);
-            escaped = false;
-            continue;
-        }
-        if ch == '\\' {
-            current.push(ch);
-            escaped = true;
-            continue;
-        }
-        if ch == '|' {
-            pipe_count += 1;
-            cells.push(current.trim().to_string());
-            current.clear();
-            continue;
-        }
-        current.push(ch);
-    }
-    cells.push(current.trim().to_string());
-    if pipe_count == 0 && !had_outer_pipe {
-        None
-    } else {
-        Some(cells)
-    }
-}
-
-fn normalize_table_row(mut cells: Vec<String>, width: usize) -> Vec<String> {
-    cells.truncate(width);
-    while cells.len() < width {
-        cells.push(String::new());
-    }
-    cells
-}
-
 fn resolve_block(block: FinalBlock, link_refs: &LinkRefMap) -> Option<BlockNode> {
     match block {
         FinalBlock::Heading { level, raw_content } => {
@@ -1124,9 +980,6 @@ fn resolve_block(block: FinalBlock, link_refs: &LinkRefMap) -> Option<BlockNode>
             Some(BlockNode::Heading(HeadingNode { level, children }))
         }
         FinalBlock::Paragraph { raw_content } => {
-            if let Some(table) = try_parse_table_block(&raw_content, link_refs) {
-                return Some(BlockNode::Table(table));
-            }
             let children = parse_inline(&raw_content, link_refs);
             Some(BlockNode::Paragraph(ParagraphNode { children }))
         }
@@ -1144,7 +997,8 @@ fn resolve_block(block: FinalBlock, link_refs: &LinkRefMap) -> Option<BlockNode>
         FinalBlock::List { ordered, start, tight, items } => {
             let list_items: Vec<ListChildNode> = items.into_iter().filter_map(|item| {
                 if let FinalBlock::ListItem { children } = item {
-                    Some(resolve_list_item(children, link_refs))
+                    let c = resolve_blocks(children, link_refs);
+                    Some(ListChildNode::ListItem(ListItemNode { children: c }))
                 } else { None }
             }).collect();
             Some(BlockNode::List(ListNode {
