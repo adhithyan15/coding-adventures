@@ -262,6 +262,39 @@ dependencies = []
 	}
 }
 
+func TestResolveDependenciesKeepsLanguageScopedNameMappings(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"elixir/document_ast_sanitizer/mix.exs": `defmodule X do
+  def project, do: [app: :x, version: "0.1.0", deps: deps()]
+  defp deps, do: [{:coding_adventures_document_ast, path: "../document_ast"}]
+end
+`,
+		"elixir/document_ast/mix.exs": `defmodule X do
+  def project, do: [app: :coding_adventures_document_ast, version: "0.1.0", deps: []]
+end
+`,
+		"ruby/document_ast/document_ast.gemspec": `Gem::Specification.new do |spec|
+  spec.name = "coding_adventures_document_ast"
+end
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "elixir/document_ast_sanitizer", Path: filepath.Join(root, "elixir/document_ast_sanitizer"), Language: "elixir"},
+		{Name: "elixir/document_ast", Path: filepath.Join(root, "elixir/document_ast"), Language: "elixir"},
+		{Name: "ruby/document_ast", Path: filepath.Join(root, "ruby/document_ast"), Language: "ruby"},
+	}
+
+	graph := ResolveDependencies(packages)
+
+	if !graph.HasEdge("elixir/document_ast", "elixir/document_ast_sanitizer") {
+		t.Fatal("expected Elixir dependency to resolve to the Elixir package")
+	}
+	if graph.HasEdge("ruby/document_ast", "elixir/document_ast_sanitizer") {
+		t.Fatal("did not expect Elixir dependency to resolve to the Ruby package")
+	}
+}
+
 func TestResolveDiamondDeps(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg-a/pyproject.toml": `[project]
@@ -335,6 +368,9 @@ func TestBuildKnownNamesTypescript(t *testing.T) {
 	if known["@coding-adventures/logic-gates"] != "typescript/logic-gates" {
 		t.Fatalf("expected typescript/logic-gates, got %s", known["@coding-adventures/logic-gates"])
 	}
+	if known["logic-gates"] != "typescript/logic-gates" {
+		t.Fatalf("expected unscoped mapping for typescript/logic-gates, got %s", known["logic-gates"])
+	}
 }
 
 func TestParseTypescriptDeps(t *testing.T) {
@@ -351,6 +387,39 @@ func TestParseTypescriptDeps(t *testing.T) {
 }`,
 		"pkg-c/package.json": `{
   "name": "@coding-adventures/pkg-c"
+}`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "typescript/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "typescript"},
+		{Name: "typescript/pkg-b", Path: filepath.Join(root, "pkg-b"), Language: "typescript"},
+		{Name: "typescript/pkg-c", Path: filepath.Join(root, "pkg-c"), Language: "typescript"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseTypescriptDeps(packages[0], known)
+
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParseTypescriptDepsIncludesDevDependenciesAndUnscopedNames(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/package.json": `{
+  "name": "pkg-a",
+  "dependencies": {
+    "@coding-adventures/pkg-b": "file:../pkg-b"
+  },
+  "devDependencies": {
+    "pkg-c": "file:../pkg-c"
+  }
+}`,
+		"pkg-b/package.json": `{
+  "name": "@coding-adventures/pkg-b"
+}`,
+		"pkg-c/package.json": `{
+  "name": "pkg-c"
 }`,
 	})
 

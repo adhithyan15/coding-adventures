@@ -90,7 +90,7 @@ func parsePythonDeps(pkg discovery.Package, knownNames map[string]string) []stri
 					if strings.Contains(afterEq, "]") {
 						// Single-line array
 						extractDeps(afterEq, knownNames, &internalDeps)
-						break
+						continue
 					}
 					// Multi-line array starts here
 					inDeps = true
@@ -103,7 +103,8 @@ func parsePythonDeps(pkg discovery.Package, knownNames map[string]string) []stri
 		// We're inside a multi-line dependencies array.
 		if strings.Contains(trimmed, "]") {
 			extractDeps(trimmed, knownNames, &internalDeps)
-			break
+			inDeps = false
+			continue
 		}
 		extractDeps(trimmed, knownNames, &internalDeps)
 	}
@@ -254,20 +255,17 @@ func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []
 	text := string(data)
 	var internalDeps []string
 
-	// We need to only look inside "dependencies": { ... } blocks, not at
-	// the top-level "name" field. Strategy: find lines inside a dependencies
-	// block and extract @coding-adventures/ references from those lines.
-	//
-	// We scan line by line looking for "dependencies" keys, then collect
-	// entries until we hit a closing brace.
+	// We look inside both "dependencies" and "devDependencies" blocks so the
+	// graph reflects local build/test prerequisites too.
 	inDeps := false
-	re := regexp.MustCompile(`"(@coding-adventures/[^"]+)"`)
+	re := regexp.MustCompile(`"([^"]+)"\s*:`)
 	for _, line := range strings.Split(text, "\n") {
 		trimmed := strings.TrimSpace(line)
 
 		if !inDeps {
-			// Look for "dependencies": { or "dependencies":{
-			if strings.Contains(trimmed, `"dependencies"`) && strings.Contains(trimmed, "{") {
+			if (strings.Contains(trimmed, `"dependencies"`) ||
+				strings.Contains(trimmed, `"devDependencies"`)) &&
+				strings.Contains(trimmed, "{") {
 				inDeps = true
 			}
 			continue
@@ -283,7 +281,7 @@ func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []
 			if len(match) < 2 {
 				continue
 			}
-			depName := strings.ToLower(match[1])
+			depName := strings.ToLower(strings.TrimSpace(match[1]))
 			if pkgName, ok := knownNames[depName]; ok {
 				internalDeps = append(internalDeps, pkgName)
 			}
@@ -548,6 +546,10 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 // prevents a program that depends on its own library from resolving the dep
 // to itself and creating a self-loop.
 func buildKnownNames(packages []discovery.Package) map[string]string {
+	return buildKnownNamesForLanguage(packages, "")
+}
+
+func buildKnownNamesForLanguage(packages []discovery.Package, language string) map[string]string {
 	known := make(map[string]string)
 
 	// setKnown inserts key→value, letting library packages overwrite programs
@@ -569,6 +571,9 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 	}
 
 	for _, pkg := range packages {
+		if language != "" && pkg.Language != language {
+			continue
+		}
 		switch pkg.Language {
 		case "python":
 			// Convert dir name to PyPI name: "logic-gates" → "coding-adventures-logic-gates"
@@ -601,6 +606,16 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 			// Convert dir name to npm scoped name: "logic-gates" → "@coding-adventures/logic-gates"
 			npmName := "@coding-adventures/" + strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(npmName, pkg.Name, pkg.Path)
+			setKnown(strings.ToLower(filepath.Base(pkg.Path)), pkg.Name, pkg.Path)
+
+			packageJSON := filepath.Join(pkg.Path, "package.json")
+			data, err := os.ReadFile(packageJSON)
+			if err == nil {
+				re := regexp.MustCompile(`"name"\s*:\s*"([^"]+)"`)
+				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
+					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path)
+				}
+			}
 
 		case "rust":
 			// Rust crate names use the directory name directly (kebab-case).
@@ -650,11 +665,17 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 	}
 
 	// Build the ecosystem-specific name mapping table.
-	knownNames := buildKnownNames(packages)
+	knownNamesByLanguage := make(map[string]map[string]string)
+	for _, pkg := range packages {
+		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
+			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
+		}
+	}
 
 	// Parse dependencies for each package and add edges.
 	for _, pkg := range packages {
 		var deps []string
+		knownNames := knownNamesByLanguage[pkg.Language]
 		switch pkg.Language {
 		case "python":
 			deps = parsePythonDeps(pkg, knownNames)
