@@ -2,6 +2,21 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
+## [0.4.0] - 2026-03-27
+
+### Changed
+
+- **Windows executor switched from `cmd /C` to `pwsh -Command`**: The Windows
+  shell runner now uses PowerShell 7 instead of `cmd.exe`. This eliminates the
+  long-standing path-corruption bug where `cmd.exe` would strip outer
+  double-quotes from arguments, causing `uv pip install -e "../../../packages/foo"`
+  to fail because the trailing `"` was URL-encoded as `%22` by uv. PowerShell
+  handles double-quoted strings correctly — quotes are preserved and passed
+  through to the child process, not stripped. PowerShell also supports the `&&`
+  operator for fail-fast command chaining (same idiom as bash), and
+  forward-slash paths work without modification. PowerShell 7 (`pwsh`) is
+  pre-installed on all GitHub Actions Windows runners.
+
 ## [0.3.0] - 2026-03-22
 
 ### Added

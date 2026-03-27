@@ -4,6 +4,33 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-03-27: Use PowerShell (pwsh) on Windows — never cmd.exe
+
+The build tool executor originally used `cmd /C` on Windows. `cmd.exe` has a
+design flaw from 1987: it strips the outermost double-quote pair from arguments
+before passing them to child processes. This corrupts paths like:
+
+  `uv pip install -e "../../../packages/python/foo" --quiet`
+
+The trailing `"` is left behind as a literal character, which uv then
+URL-encodes as `%22`, producing an invalid path that fails at runtime.
+
+**The fix:** Use `pwsh -Command` instead of `cmd /C`. PowerShell 7 (`pwsh`):
+- Preserves double-quoted strings (no stripping)
+- Supports `&&` for fail-fast chaining (same as bash)
+- Handles forward-slash paths (`../foo`) without requiring backslashes
+- Is pre-installed on all GitHub Actions Windows runners
+
+**BUILD_windows files:** Many existing `BUILD_windows` files only exist to work
+around cmd.exe quoting (e.g., removing double quotes from paths). With
+PowerShell, these files are no longer needed for that purpose. A follow-up
+cleanup pass should delete `BUILD_windows` files that are identical to their
+`BUILD` counterpart (those files are pure redundancy). Real platform differences
+(`.venv\Scripts\python` vs `.venv/bin/python`, `2>/dev/null` redirects, uv
+workspace behavior) still warrant separate `BUILD_windows` files.
+
+---
+
 ### 2026-03-18: Cannot create a PR when remote has no main branch
 
 When working with a completely empty GitHub repo, you can't create a PR because there's no base branch. The `gh pr create` command fails with "no history in common." Solution: push an initial commit to main first (even an empty one), then create PRs from feature branches. For the very first content, merging directly to main is acceptable.
