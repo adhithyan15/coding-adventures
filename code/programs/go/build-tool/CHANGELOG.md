@@ -4,6 +4,20 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [0.4.0] - 2026-03-27
 
+### Fixed
+
+- **Starlark packages now use `BUILD_windows` overrides on Windows**: The plan
+  loader previously skipped re-reading `BUILD_windows` for Starlark packages,
+  causing those packages to use Starlark-generated commands even when a
+  platform-specific shell override existed. For example, `elixir/arithmetic`
+  has a Starlark `BUILD` (generates `mix test --cover`) and a shell
+  `BUILD_windows` (uses `mix test` without `--cover`). On Windows, Erlang's
+  code coverage module causes failures, so the `BUILD_windows` override is
+  essential. The fix: if a platform-specific override (BUILD_windows, BUILD_mac,
+  etc.) exists and differs from the generic BUILD file, always use it regardless
+  of `is_starlark`. Only skip re-reading when the platform resolves to the
+  generic BUILD file itself (which may be Starlark).
+
 ### Changed
 
 - **Windows executor switched from `cmd /C` to `pwsh -Command`**: The Windows
