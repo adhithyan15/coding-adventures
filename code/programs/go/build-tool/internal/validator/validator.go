@@ -13,6 +13,7 @@ package validator
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -40,8 +41,12 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 	}
 
 	pathToPkg := make(map[string]string, len(packages))
+	pythonKnownNames := make(map[string]string)
 	for _, pkg := range packages {
 		pathToPkg[filepath.Clean(pkg.Path)] = pkg.Name
+		if pkg.Language == "python" {
+			pythonKnownNames["coding-adventures-"+strings.ToLower(filepath.Base(pkg.Path))] = pkg.Name
+		}
 	}
 
 	var problems []string
@@ -56,11 +61,12 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		}
 
 		prereqs := transitivePredecessors(graph, pkg.Name)
+		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames)
 		delete(referenced, pkg.Name) // Self-references are allowed.
 
 		var hidden []string
 		for dep := range referenced {
-			if !prereqs[dep] {
+			if !prereqs[dep] && !allowedDirectRefs[dep] {
 				hidden = append(hidden, dep)
 			}
 		}
@@ -155,4 +161,79 @@ func transitivePredecessors(graph *directedgraph.Graph, node string) map[string]
 	}
 
 	return visited
+}
+
+func allowedDirectRefsFromMetadata(pkg discovery.Package, pythonKnownNames map[string]string) map[string]bool {
+	if pkg.Language != "python" {
+		return nil
+	}
+	return parsePythonOptionalDeps(pkg, pythonKnownNames)
+}
+
+func parsePythonOptionalDeps(pkg discovery.Package, knownNames map[string]string) map[string]bool {
+	pyproject := filepath.Join(pkg.Path, "pyproject.toml")
+	data, err := os.ReadFile(pyproject)
+	if err != nil {
+		return nil
+	}
+
+	allowed := make(map[string]bool)
+	inOptional := false
+	inArray := false
+	re := regexp.MustCompile(`["']([^"']+)["']`)
+
+	for _, line := range strings.Split(string(data), "\n") {
+		trimmed := strings.TrimSpace(line)
+
+		if !inArray && strings.HasPrefix(trimmed, "[") && strings.HasSuffix(trimmed, "]") {
+			inOptional = trimmed == "[project.optional-dependencies]"
+			continue
+		}
+
+		if !inOptional {
+			continue
+		}
+
+		if !inArray {
+			if !strings.Contains(trimmed, "=") {
+				continue
+			}
+			afterEq := strings.TrimSpace(strings.SplitN(trimmed, "=", 2)[1])
+			if !strings.HasPrefix(afterEq, "[") {
+				continue
+			}
+			for dep := range extractMetadataDeps(afterEq, knownNames, re) {
+				allowed[dep] = true
+			}
+			if strings.Contains(afterEq, "]") {
+				continue
+			}
+			inArray = true
+			continue
+		}
+
+		for dep := range extractMetadataDeps(trimmed, knownNames, re) {
+			allowed[dep] = true
+		}
+		if strings.Contains(trimmed, "]") {
+			inArray = false
+		}
+	}
+
+	return allowed
+}
+
+func extractMetadataDeps(line string, knownNames map[string]string, re *regexp.Regexp) map[string]bool {
+	found := make(map[string]bool)
+	for _, match := range re.FindAllStringSubmatch(line, -1) {
+		if len(match) < 2 {
+			continue
+		}
+		depName := regexp.MustCompile(`[>=<!~\s;]`).Split(match[1], 2)[0]
+		depName = strings.TrimSpace(strings.ToLower(depName))
+		if pkgName, ok := knownNames[depName]; ok {
+			found[pkgName] = true
+		}
+	}
+	return found
 }
