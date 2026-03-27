@@ -53,6 +53,7 @@ testpaths = ["tests"]
 addopts = "--cov=css_parser --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 source = ["src/css_parser"]
 
 [tool.coverage.report]
