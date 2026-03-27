@@ -1,5 +1,16 @@
 # Changelog — grammar-tools (Python program)
 
+## [2.0.0] - 2026-03-26
+
+### Added
+- **`compile-tokens` command**: parses a `.tokens` file and generates Python source code
+  embedding the `TokenGrammar` as native data structures. Output goes to stdout or to
+  a file with `-o <path>`.
+- **`compile-grammar` command**: same as above but for `.grammar` files, generating
+  `ParserGrammar` source code.
+- **`--output` / `-o` flag**: optional output file path for compile commands.
+- 8 new CLI tests covering dispatch, output file writing, and exec-ability of generated code.
+
 ## [1.0.0] - 2026-03-26
 
 ### Added

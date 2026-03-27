@@ -21,7 +21,7 @@
  *   2  Usage error (wrong number of arguments, unknown command).
  */
 
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 import { basename, join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { Parser } from "@coding-adventures/cli-builder";
@@ -30,11 +30,13 @@ import {
   parseTokenGrammar,
   validateTokenGrammar,
   tokenNames,
+  compileTokenGrammar,
 } from "@coding-adventures/grammar-tools";
 import {
   ParserGrammarError,
   parseParserGrammar,
   validateParserGrammar,
+  compileParserGrammar,
 } from "@coding-adventures/grammar-tools";
 import { crossValidate } from "@coding-adventures/grammar-tools";
 
@@ -60,9 +62,11 @@ function printUsage(): void {
   process.stderr.write("Usage: grammar-tools <command> [args...]\n");
   process.stderr.write("\n");
   process.stderr.write("Commands:\n");
-  process.stderr.write("  validate <file.tokens> <file.grammar>  Validate a token/grammar pair\n");
-  process.stderr.write("  validate-tokens <file.tokens>           Validate just a .tokens file\n");
-  process.stderr.write("  validate-grammar <file.grammar>         Validate just a .grammar file\n");
+  process.stderr.write("  validate <file.tokens> <file.grammar>        Validate a token/grammar pair\n");
+  process.stderr.write("  validate-tokens <file.tokens>                 Validate just a .tokens file\n");
+  process.stderr.write("  validate-grammar <file.grammar>               Validate just a .grammar file\n");
+  process.stderr.write("  compile-tokens <file.tokens> [-o out.ts]     Compile tokens to TypeScript\n");
+  process.stderr.write("  compile-grammar <file.grammar> [-o out.ts]   Compile grammar to TypeScript\n");
   process.stderr.write("\n");
   process.stderr.write("Run 'grammar-tools --help' for full help text.\n");
 }
@@ -269,10 +273,110 @@ export function validateGrammarOnly(grammarPath: string): number {
 }
 
 // ---------------------------------------------------------------------------
+// compile-tokens — compile a .tokens file to TypeScript source
+// ---------------------------------------------------------------------------
+
+export function compileTokensCommand(
+  tokensPath: string,
+  outputPath: string | undefined
+): number {
+  if (!existsSync(tokensPath)) {
+    process.stderr.write(`Error: File not found: ${tokensPath}\n`);
+    return 1;
+  }
+
+  process.stderr.write(`Compiling ${basename(tokensPath)} ... `);
+  let tokenGrammar;
+  try {
+    tokenGrammar = parseTokenGrammar(readFileSync(tokensPath, "utf-8"));
+  } catch (e) {
+    if (e instanceof TokenGrammarError) {
+      process.stderr.write("PARSE ERROR\n");
+      process.stderr.write(`  ${e.message}\n`);
+      return 1;
+    }
+    throw e;
+  }
+
+  const issues = validateTokenGrammar(tokenGrammar);
+  const errors = issues.filter((i) => !i.startsWith("Warning:")).length;
+  if (errors > 0) {
+    process.stderr.write(`${errors} error(s)\n`);
+    for (const issue of issues) {
+      process.stderr.write(`  ${issue}\n`);
+    }
+    return 1;
+  }
+
+  const code = compileTokenGrammar(tokenGrammar, basename(tokensPath));
+
+  if (outputPath) {
+    writeFileSync(outputPath, code, "utf-8");
+    process.stderr.write(`OK \u2192 ${outputPath}\n`);
+  } else {
+    process.stderr.write("OK\n");
+    process.stdout.write(code);
+  }
+  return 0;
+}
+
+// ---------------------------------------------------------------------------
+// compile-grammar — compile a .grammar file to TypeScript source
+// ---------------------------------------------------------------------------
+
+export function compileGrammarCommand(
+  grammarPath: string,
+  outputPath: string | undefined
+): number {
+  if (!existsSync(grammarPath)) {
+    process.stderr.write(`Error: File not found: ${grammarPath}\n`);
+    return 1;
+  }
+
+  process.stderr.write(`Compiling ${basename(grammarPath)} ... `);
+  let parserGrammar;
+  try {
+    parserGrammar = parseParserGrammar(readFileSync(grammarPath, "utf-8"));
+  } catch (e) {
+    if (e instanceof ParserGrammarError) {
+      process.stderr.write("PARSE ERROR\n");
+      process.stderr.write(`  ${e.message}\n`);
+      return 1;
+    }
+    throw e;
+  }
+
+  const issues = validateParserGrammar(parserGrammar, undefined);
+  const errors = issues.filter((i) => !i.startsWith("Warning:")).length;
+  if (errors > 0) {
+    process.stderr.write(`${errors} error(s)\n`);
+    for (const issue of issues) {
+      process.stderr.write(`  ${issue}\n`);
+    }
+    return 1;
+  }
+
+  const code = compileParserGrammar(parserGrammar, basename(grammarPath));
+
+  if (outputPath) {
+    writeFileSync(outputPath, code, "utf-8");
+    process.stderr.write(`OK \u2192 ${outputPath}\n`);
+  } else {
+    process.stderr.write("OK\n");
+    process.stdout.write(code);
+  }
+  return 0;
+}
+
+// ---------------------------------------------------------------------------
 // dispatch
 // ---------------------------------------------------------------------------
 
-export function dispatch(command: string, files: string[]): number {
+export function dispatch(
+  command: string,
+  files: string[],
+  outputPath?: string
+): number {
   switch (command) {
     case "validate":
       if (files.length !== 2) {
@@ -300,6 +404,24 @@ export function dispatch(command: string, files: string[]): number {
         return 2;
       }
       return validateGrammarOnly(files[0]);
+
+    case "compile-tokens":
+      if (files.length !== 1) {
+        process.stderr.write("Error: 'compile-tokens' requires one argument: <tokens>\n");
+        process.stderr.write("\n");
+        printUsage();
+        return 2;
+      }
+      return compileTokensCommand(files[0], outputPath);
+
+    case "compile-grammar":
+      if (files.length !== 1) {
+        process.stderr.write("Error: 'compile-grammar' requires one argument: <grammar>\n");
+        process.stderr.write("\n");
+        printUsage();
+        return 2;
+      }
+      return compileGrammarCommand(files[0], outputPath);
 
     default:
       process.stderr.write(`Error: Unknown command '${command}'\n`);
@@ -350,8 +472,10 @@ if (
     } else if (typeof rawFiles === "string") {
       files = [rawFiles];
     }
+    const outputPath =
+      typeof r.flags["output"] === "string" ? r.flags["output"] : undefined;
 
-    process.exit(dispatch(command, files));
+    process.exit(dispatch(command, files, outputPath));
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     process.stderr.write(`error: ${message}\n`);

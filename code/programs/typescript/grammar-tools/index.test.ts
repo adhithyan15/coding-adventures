@@ -1,9 +1,17 @@
 import { describe, it, expect } from "vitest";
-import { existsSync } from "fs";
+import { existsSync, readFileSync, mkdirSync } from "fs";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { tmpdir } from "os";
 
-import { dispatch, validateCommand, validateTokensOnly, validateGrammarOnly } from "./index.js";
+import {
+  dispatch,
+  validateCommand,
+  validateTokensOnly,
+  validateGrammarOnly,
+  compileTokensCommand,
+  compileGrammarCommand,
+} from "./index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -120,5 +128,77 @@ describe("dispatch", () => {
   it("validate-grammar dispatches correctly", () => {
     if (!exists("json.grammar")) return;
     expect(dispatch("validate-grammar", [grammarPath("json.grammar")])).toBe(0);
+  });
+
+  it("compile-tokens with no files returns 2", () => {
+    expect(dispatch("compile-tokens", [])).toBe(2);
+  });
+
+  it("compile-grammar with no files returns 2", () => {
+    expect(dispatch("compile-grammar", [])).toBe(2);
+  });
+
+  it("compile-tokens dispatches correctly", () => {
+    if (!exists("json.tokens")) return;
+    expect(dispatch("compile-tokens", [grammarPath("json.tokens")])).toBe(0);
+  });
+
+  it("compile-grammar dispatches correctly", () => {
+    if (!exists("json.grammar")) return;
+    expect(dispatch("compile-grammar", [grammarPath("json.grammar")])).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compileTokensCommand
+// ---------------------------------------------------------------------------
+
+describe("compileTokensCommand", () => {
+  it("returns 1 for missing file", () => {
+    expect(compileTokensCommand("/nonexistent/x.tokens", undefined)).toBe(1);
+  });
+
+  it("returns 0 and writes file when output path given", () => {
+    if (!exists("json.tokens")) return;
+    const outDir = join(tmpdir(), "grammar-tools-ts-test");
+    mkdirSync(outDir, { recursive: true });
+    const outPath = join(outDir, "json-tokens.ts");
+    const result = compileTokensCommand(grammarPath("json.tokens"), outPath);
+    expect(result).toBe(0);
+    const content = readFileSync(outPath, "utf-8");
+    expect(content).toContain("TOKEN_GRAMMAR");
+    expect(content).toContain("DO NOT EDIT");
+  });
+
+  it("returns 0 for valid file with no output path (stdout)", () => {
+    if (!exists("json.tokens")) return;
+    expect(compileTokensCommand(grammarPath("json.tokens"), undefined)).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compileGrammarCommand
+// ---------------------------------------------------------------------------
+
+describe("compileGrammarCommand", () => {
+  it("returns 1 for missing file", () => {
+    expect(compileGrammarCommand("/nonexistent/x.grammar", undefined)).toBe(1);
+  });
+
+  it("returns 0 and writes file when output path given", () => {
+    if (!exists("json.grammar")) return;
+    const outDir = join(tmpdir(), "grammar-tools-ts-test");
+    mkdirSync(outDir, { recursive: true });
+    const outPath = join(outDir, "json-grammar.ts");
+    const result = compileGrammarCommand(grammarPath("json.grammar"), outPath);
+    expect(result).toBe(0);
+    const content = readFileSync(outPath, "utf-8");
+    expect(content).toContain("PARSER_GRAMMAR");
+    expect(content).toContain("DO NOT EDIT");
+  });
+
+  it("returns 0 for valid file with no output path (stdout)", () => {
+    if (!exists("json.grammar")) return;
+    expect(compileGrammarCommand(grammarPath("json.grammar"), undefined)).toBe(0);
   });
 });

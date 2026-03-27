@@ -268,11 +268,103 @@ local function validate_grammar_only(grammar_path)
 end
 
 -- ---------------------------------------------------------------------------
+-- compile_tokens_command — compile a .tokens file to Lua source code
+-- ---------------------------------------------------------------------------
+
+--- Compile a .tokens file to Lua source code.
+--
+-- Reads and parses the .tokens file, then calls compile_token_grammar to
+-- produce Lua source code that embeds the grammar as native Lua data.
+-- Generated code is written to output_path (if given) or printed to stdout.
+-- Status messages go to stderr.
+--
+-- Returns 0 on success, 1 on error.
+local function compile_tokens_command(tokens_path, output_path)
+    local tf, err = io.open(tokens_path, "r")
+    if not tf then
+        io.stderr:write("Error: cannot open '" .. tokens_path .. "': " .. (err or "unknown error") .. "\n")
+        return 1
+    end
+    local source = tf:read("*a")
+    tf:close()
+
+    local ok, token_grammar = pcall(grammar_tools.parse_token_grammar, source)
+    if not ok then
+        io.stderr:write("Parse error in '" .. tokens_path .. "': " .. tostring(token_grammar) .. "\n")
+        return 1
+    end
+
+    local code = grammar_tools.compile_token_grammar(token_grammar, basename(tokens_path))
+
+    if output_path then
+        local out, werr = io.open(output_path, "w")
+        if not out then
+            io.stderr:write("Error: cannot write '" .. output_path .. "': " .. (werr or "unknown error") .. "\n")
+            return 1
+        end
+        out:write(code)
+        out:close()
+        io.stderr:write("Compiled " .. basename(tokens_path) .. " → " .. output_path .. "\n")
+    else
+        io.write(code)
+        io.stderr:write("Compiled " .. basename(tokens_path) .. " to stdout.\n")
+    end
+    return 0
+end
+
+-- ---------------------------------------------------------------------------
+-- compile_grammar_command — compile a .grammar file to Lua source code
+-- ---------------------------------------------------------------------------
+
+--- Compile a .grammar file to Lua source code.
+--
+-- Reads and parses the .grammar file, then calls compile_parser_grammar to
+-- produce Lua source code that embeds the grammar as native Lua data.
+-- Generated code is written to output_path (if given) or printed to stdout.
+-- Status messages go to stderr.
+--
+-- Returns 0 on success, 1 on error.
+local function compile_grammar_command(grammar_path, output_path)
+    local gf, err = io.open(grammar_path, "r")
+    if not gf then
+        io.stderr:write("Error: cannot open '" .. grammar_path .. "': " .. (err or "unknown error") .. "\n")
+        return 1
+    end
+    local source = gf:read("*a")
+    gf:close()
+
+    local ok, parser_grammar = pcall(grammar_tools.parse_parser_grammar, source)
+    if not ok then
+        io.stderr:write("Parse error in '" .. grammar_path .. "': " .. tostring(parser_grammar) .. "\n")
+        return 1
+    end
+
+    local code = grammar_tools.compile_parser_grammar(parser_grammar, basename(grammar_path))
+
+    if output_path then
+        local out, werr = io.open(output_path, "w")
+        if not out then
+            io.stderr:write("Error: cannot write '" .. output_path .. "': " .. (werr or "unknown error") .. "\n")
+            return 1
+        end
+        out:write(code)
+        out:close()
+        io.stderr:write("Compiled " .. basename(grammar_path) .. " → " .. output_path .. "\n")
+    else
+        io.write(code)
+        io.stderr:write("Compiled " .. basename(grammar_path) .. " to stdout.\n")
+    end
+    return 0
+end
+
+-- ---------------------------------------------------------------------------
 -- dispatch — route command + files to the right function
 -- ---------------------------------------------------------------------------
 
 --- Dispatch a command name and file list.  Returns an exit code (0, 1, 2).
-local function dispatch(command, files)
+--
+-- output_path is optional; when provided it is passed to the compile commands.
+local function dispatch(command, files, output_path)
     if command == "validate" then
         if #files ~= 2 then
             io.stderr:write("Error: 'validate' requires exactly two files: <tokens> <grammar>\n")
@@ -294,6 +386,20 @@ local function dispatch(command, files)
         end
         return validate_grammar_only(files[1])
 
+    elseif command == "compile-tokens" then
+        if #files ~= 1 then
+            io.stderr:write("Error: 'compile-tokens' requires exactly one file: <tokens>\n")
+            return 2
+        end
+        return compile_tokens_command(files[1], output_path)
+
+    elseif command == "compile-grammar" then
+        if #files ~= 1 then
+            io.stderr:write("Error: 'compile-grammar' requires exactly one file: <grammar>\n")
+            return 2
+        end
+        return compile_grammar_command(files[1], output_path)
+
     else
         io.stderr:write("Error: unknown command '" .. tostring(command) .. "'\n")
         return 2
@@ -305,16 +411,21 @@ end
 -- ---------------------------------------------------------------------------
 
 local function print_usage()
-    print("Usage: lua main.lua <command> [files...]")
+    print("Usage: lua main.lua <command> [options] [files...]")
     print()
     print("Commands:")
     print("  validate <tokens> <grammar>   Validate a token/grammar pair")
     print("  validate-tokens <tokens>      Validate just a .tokens file")
     print("  validate-grammar <grammar>    Validate just a .grammar file")
+    print("  compile-tokens <tokens>       Compile a .tokens file to Lua source")
+    print("  compile-grammar <grammar>     Compile a .grammar file to Lua source")
+    print()
+    print("Options:")
+    print("  -o, --output <file>           Write generated code to file (compile commands only)")
     print()
     print("Exit codes:")
-    print("  0   All checks passed")
-    print("  1   One or more validation errors found")
+    print("  0   All checks passed / code compiled")
+    print("  1   One or more errors found")
     print("  2   Usage error")
 end
 
@@ -335,11 +446,20 @@ local function main()
 
     local command = arg[1]
     local files = {}
-    for i = 2, #arg do
-        files[#files + 1] = arg[i]
+    local output_path = nil
+    local i = 2
+    while i <= #arg do
+        local a = arg[i]
+        if a == "-o" or a == "--output" then
+            i = i + 1
+            output_path = arg[i]
+        else
+            files[#files + 1] = a
+        end
+        i = i + 1
     end
 
-    return dispatch(command, files)
+    return dispatch(command, files, output_path)
 end
 
 -- ---------------------------------------------------------------------------
@@ -350,6 +470,8 @@ local M = {
     validate_command      = validate_command,
     validate_tokens_only  = validate_tokens_only,
     validate_grammar_only = validate_grammar_only,
+    compile_tokens_command  = compile_tokens_command,
+    compile_grammar_command = compile_grammar_command,
     dispatch              = dispatch,
     main                  = main,
 }

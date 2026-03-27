@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-03-26
+
+### Added
+- `src/compiler.ts` — Grammar compiler with:
+  - `compileTokenGrammar(grammar, sourceFile?) → string` — generates TypeScript source
+    embedding a `TokenGrammar` as a typed object literal `export const TOKEN_GRAMMAR: TokenGrammar = {...}`.
+  - `compileParserGrammar(grammar, sourceFile?) → string` — generates TypeScript source
+    embedding a `ParserGrammar` as `export const PARSER_GRAMMAR: ParserGrammar = {...}`.
+  - All grammar element types supported via discriminated union `type:` fields:
+    `rule_reference`, `token_reference`, `literal`, `sequence`, `alternation`,
+    `repetition`, `optional`, `group`.
+- Both functions exported from `src/index.ts`.
+- `tests/compiler.test.ts` — 31 tests covering output structure, round-trip fidelity for
+  all grammar features: aliases, skip defs, groups, keywords, mode, escapeMode,
+  caseInsensitive, version, special regex chars, full JSON grammar round-trip.
+  Round-trip uses `new Function()` after stripping ESM imports from generated code.
+
 ## [0.3.0] - 2026-03-23
 
 ### Added

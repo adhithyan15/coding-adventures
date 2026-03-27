@@ -135,5 +135,75 @@ defmodule GrammarTools.CLITest do
     test "validate-grammar with no files halts with code 2" do
       assert catch_exit(GrammarTools.CLI.main(["validate-grammar"])) == 2
     end
+
+    test "compile-tokens with no files halts with code 2" do
+      assert catch_exit(GrammarTools.CLI.main(["compile-tokens"])) == 2
+    end
+
+    test "compile-grammar with no files halts with code 2" do
+      assert catch_exit(GrammarTools.CLI.main(["compile-grammar"])) == 2
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # compile_tokens_command/2
+  # ---------------------------------------------------------------------------
+
+  describe "compile_tokens_command/2" do
+    test "returns 1 for missing file" do
+      assert catch_exit(CLI.compile_tokens_command("/nonexistent/x.tokens", nil)) == 1
+    end
+
+    test "returns 0 for valid json.tokens" do
+      tokens = Path.join(@grammars_dir, "json.tokens")
+
+      if File.exists?(tokens) do
+        assert CLI.compile_tokens_command(tokens, nil) == 0
+      end
+    end
+
+    test "writes output file when path given" do
+      tokens = Path.join(@grammars_dir, "json.tokens")
+
+      if File.exists?(tokens) do
+        out = Path.join(System.tmp_dir!(), "test_json_tokens.ex")
+        assert CLI.compile_tokens_command(tokens, out) == 0
+        content = File.read!(out)
+        assert String.contains?(content, "DO NOT EDIT")
+        assert String.contains?(content, "token_grammar")
+        File.rm(out)
+      end
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # compile_grammar_command/2
+  # ---------------------------------------------------------------------------
+
+  describe "compile_grammar_command/2" do
+    test "returns 1 for missing file" do
+      assert catch_exit(CLI.compile_grammar_command("/nonexistent/x.grammar", nil)) == 1
+    end
+
+    test "returns 0 for valid json.grammar" do
+      grammar = Path.join(@grammars_dir, "json.grammar")
+
+      if File.exists?(grammar) do
+        assert CLI.compile_grammar_command(grammar, nil) == 0
+      end
+    end
+
+    test "writes output file when path given" do
+      grammar = Path.join(@grammars_dir, "json.grammar")
+
+      if File.exists?(grammar) do
+        out = Path.join(System.tmp_dir!(), "test_json_grammar.ex")
+        assert CLI.compile_grammar_command(grammar, out) == 0
+        content = File.read!(out)
+        assert String.contains?(content, "DO NOT EDIT")
+        assert String.contains?(content, "parser_grammar")
+        File.rm(out)
+      end
+    end
   end
 end

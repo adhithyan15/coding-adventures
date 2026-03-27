@@ -48,3 +48,6 @@ export {
 
 // Cross-validation
 export { crossValidate } from "./cross-validator.js";
+
+// Compiler
+export { compileTokenGrammar, compileParserGrammar } from "./compiler.js";

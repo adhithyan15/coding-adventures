@@ -13,6 +13,7 @@ of a programming language's surface syntax that can be used to generate
 lexers and parsers for any target language.
 """
 
+from grammar_tools.compiler import compile_parser_grammar, compile_token_grammar
 from grammar_tools.cross_validator import cross_validate
 from grammar_tools.parser_grammar import (
     Alternation,
@@ -39,6 +40,9 @@ from grammar_tools.token_grammar import (
 )
 
 __all__ = [
+    # Compiler
+    "compile_token_grammar",
+    "compile_parser_grammar",
     # Token grammar
     "PatternGroup",
     "TokenDefinition",

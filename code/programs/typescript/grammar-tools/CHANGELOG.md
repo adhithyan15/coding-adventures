@@ -1,5 +1,14 @@
 # Changelog — grammar-tools (TypeScript program)
 
+## [2.0.0] - 2026-03-26
+
+### Added
+- `compile-tokens <file.tokens> [-o out.ts]` — compiles a `.tokens` file to TypeScript source.
+- `compile-grammar <file.grammar> [-o out.ts]` — compiles a `.grammar` file to TypeScript source.
+- `--output` / `-o` flag — write generated code to a file instead of stdout.
+- Status messages ("Compiling X... OK → path") go to stderr; generated code goes to stdout.
+- 8 new CLI tests for compile commands.
+
 ## [1.0.0] - 2026-03-26
 
 ### Added

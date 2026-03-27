@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0] - 2026-03-26
+
+### Added
+- `CodingAdventures.GrammarTools.Compiler` module (`lib/grammar_tools/compiler.ex`) with:
+  - `compile_token_grammar/2` — generates Elixir source with `def token_grammar/0 → %TokenGrammar{}`.
+  - `compile_parser_grammar/2` — generates Elixir source with `def parser_grammar/0 → %ParserGrammar{}`.
+  - Supports all grammar element tagged tuple types: `:rule_reference`, `:literal`, `:sequence`,
+    `:alternation`, `:repetition`, `:optional`, `:group`.
+  - Uses Elixir's `inspect/1` for string literals — correct quoting and escaping with zero
+    manual logic.
+- Convenience delegations on `CodingAdventures.GrammarTools`:
+  `compile_token_grammar/1,2` and `compile_parser_grammar/1,2`.
+- `test/grammar_tools/compiler_test.exs` — 30 tests covering output structure, round-trip
+  fidelity for all grammar features, and full JSON grammar round-trip.
+  Round-trip tests use `Code.eval_string/1` wrapping generated code in a fresh module.
+
 ## [0.3.0] - 2026-03-23
 
 ### Added

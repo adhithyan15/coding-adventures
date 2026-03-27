@@ -1,5 +1,14 @@
 # Changelog — grammar-tools (Elixir program)
 
+## [2.0.0] - 2026-03-26
+
+### Added
+- `compile-tokens <file.tokens> [-o out.ex]` — compiles a `.tokens` file to Elixir source code.
+- `compile-grammar <file.grammar> [-o out.ex]` — compiles a `.grammar` file to Elixir source code.
+- `--output` / `-o` flag — write generated code to a file instead of stdout.
+- Status messages go to stderr; generated code goes to stdout.
+- 8 new tests for compile commands and dispatch routing.
+
 ## [1.0.0] - 2026-03-26
 
 ### Added

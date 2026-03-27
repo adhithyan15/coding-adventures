@@ -49,7 +49,7 @@ defmodule GrammarTools.CLI do
 
   alias CodingAdventures.CliBuilder
   alias CodingAdventures.CliBuilder.{ParseResult, HelpResult, VersionResult, ParseErrors}
-  alias CodingAdventures.GrammarTools.{TokenGrammar, ParserGrammar, CrossValidator}
+  alias CodingAdventures.GrammarTools.{TokenGrammar, ParserGrammar, CrossValidator, Compiler}
 
   # The main/1 function is the escript entry point.
   # argv is the list of command-line arguments as strings.
@@ -68,7 +68,8 @@ defmodule GrammarTools.CLI do
       {:ok, %ParseResult{} = result} ->
         command = result.arguments["command"]
         files = result.arguments["files"] || []
-        exit_code = dispatch(command, files)
+        output_path = result.flags["output"]
+        exit_code = dispatch(command, files, output_path)
         if exit_code != 0, do: exit(exit_code)
 
       {:error, %ParseErrors{message: msg}} ->
@@ -84,40 +85,62 @@ defmodule GrammarTools.CLI do
   # Dispatch to the appropriate validation function based on the command name.
   #
   # Returns 0 on success, 1 on validation errors, 2 on usage errors.
-  defp dispatch("validate", [tokens_path, grammar_path]) do
+  defp dispatch("validate", [tokens_path, grammar_path], _output_path) do
     validate_command(tokens_path, grammar_path)
   end
 
-  defp dispatch("validate", _) do
+  defp dispatch("validate", _, _) do
     IO.puts(:stderr, "Error: 'validate' requires two arguments: <tokens> <grammar>")
     IO.puts(:stderr, "")
     print_usage()
     2
   end
 
-  defp dispatch("validate-tokens", [tokens_path]) do
+  defp dispatch("validate-tokens", [tokens_path], _output_path) do
     validate_tokens_only(tokens_path)
   end
 
-  defp dispatch("validate-tokens", _) do
+  defp dispatch("validate-tokens", _, _) do
     IO.puts(:stderr, "Error: 'validate-tokens' requires one argument: <tokens>")
     IO.puts(:stderr, "")
     print_usage()
     2
   end
 
-  defp dispatch("validate-grammar", [grammar_path]) do
+  defp dispatch("validate-grammar", [grammar_path], _output_path) do
     validate_grammar_only(grammar_path)
   end
 
-  defp dispatch("validate-grammar", _) do
+  defp dispatch("validate-grammar", _, _) do
     IO.puts(:stderr, "Error: 'validate-grammar' requires one argument: <grammar>")
     IO.puts(:stderr, "")
     print_usage()
     2
   end
 
-  defp dispatch(unknown, _) do
+  defp dispatch("compile-tokens", [tokens_path], output_path) do
+    compile_tokens_command(tokens_path, output_path)
+  end
+
+  defp dispatch("compile-tokens", _, _) do
+    IO.puts(:stderr, "Error: 'compile-tokens' requires one argument: <tokens>")
+    IO.puts(:stderr, "")
+    print_usage()
+    2
+  end
+
+  defp dispatch("compile-grammar", [grammar_path], output_path) do
+    compile_grammar_command(grammar_path, output_path)
+  end
+
+  defp dispatch("compile-grammar", _, _) do
+    IO.puts(:stderr, "Error: 'compile-grammar' requires one argument: <grammar>")
+    IO.puts(:stderr, "")
+    print_usage()
+    2
+  end
+
+  defp dispatch(unknown, _, _) do
     IO.puts(:stderr, "Error: Unknown command '#{unknown}'")
     IO.puts(:stderr, "")
     print_usage()
@@ -344,6 +367,104 @@ defmodule GrammarTools.CLI do
   end
 
   # ---------------------------------------------------------------------------
+  # compile-tokens — compile a .tokens file to Elixir source
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Compile a `.tokens` file to Elixir source code.
+
+  Parses and validates the file, then generates Elixir source that embeds the
+  grammar as native data structures.  When `output_path` is given, writes the
+  result to that file; otherwise prints it to stdout.
+
+  Returns 0 on success, 1 on error.
+  """
+  def compile_tokens_command(tokens_path, output_path) do
+    unless File.exists?(tokens_path) do
+      IO.puts(:stderr, "Error: File not found: #{tokens_path}")
+      exit(1)
+    end
+
+    IO.write(:stderr, "Compiling #{Path.basename(tokens_path)} ... ")
+
+    case TokenGrammar.parse(File.read!(tokens_path)) do
+      {:error, msg} ->
+        IO.puts(:stderr, "PARSE ERROR")
+        IO.puts(:stderr, "  #{msg}")
+        1
+
+      {:ok, tg} ->
+        issues = TokenGrammar.validate_token_grammar(tg)
+        errors = count_errors(issues)
+
+        if errors > 0 do
+          IO.puts(:stderr, "#{errors} error(s)")
+          Enum.each(issues, fn i -> IO.puts(:stderr, "  #{i}") end)
+          1
+        else
+          code = Compiler.compile_token_grammar(tg, Path.basename(tokens_path))
+
+          if output_path do
+            File.write!(output_path, code)
+            IO.puts(:stderr, "OK \u2192 #{output_path}")
+          else
+            IO.puts(:stderr, "OK")
+            IO.write(code)
+          end
+
+          0
+        end
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # compile-grammar — compile a .grammar file to Elixir source
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Compile a `.grammar` file to Elixir source code.
+
+  Returns 0 on success, 1 on error.
+  """
+  def compile_grammar_command(grammar_path, output_path) do
+    unless File.exists?(grammar_path) do
+      IO.puts(:stderr, "Error: File not found: #{grammar_path}")
+      exit(1)
+    end
+
+    IO.write(:stderr, "Compiling #{Path.basename(grammar_path)} ... ")
+
+    case ParserGrammar.parse(File.read!(grammar_path)) do
+      {:error, msg} ->
+        IO.puts(:stderr, "PARSE ERROR")
+        IO.puts(:stderr, "  #{msg}")
+        1
+
+      {:ok, pg} ->
+        issues = ParserGrammar.validate_parser_grammar(pg)
+        errors = count_errors(issues)
+
+        if errors > 0 do
+          IO.puts(:stderr, "#{errors} error(s)")
+          Enum.each(issues, fn i -> IO.puts(:stderr, "  #{i}") end)
+          1
+        else
+          code = Compiler.compile_parser_grammar(pg, Path.basename(grammar_path))
+
+          if output_path do
+            File.write!(output_path, code)
+            IO.puts(:stderr, "OK \u2192 #{output_path}")
+          else
+            IO.puts(:stderr, "OK")
+            IO.write(code)
+          end
+
+          0
+        end
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # Helpers
   # ---------------------------------------------------------------------------
 
@@ -371,9 +492,11 @@ defmodule GrammarTools.CLI do
     IO.puts(:stderr, "Usage: grammar-tools <command> [args...]")
     IO.puts(:stderr, "")
     IO.puts(:stderr, "Commands:")
-    IO.puts(:stderr, "  validate <file.tokens> <file.grammar>  Validate a token/grammar pair")
-    IO.puts(:stderr, "  validate-tokens <file.tokens>           Validate just a .tokens file")
-    IO.puts(:stderr, "  validate-grammar <file.grammar>         Validate just a .grammar file")
+    IO.puts(:stderr, "  validate <file.tokens> <file.grammar>        Validate a token/grammar pair")
+    IO.puts(:stderr, "  validate-tokens <file.tokens>                 Validate just a .tokens file")
+    IO.puts(:stderr, "  validate-grammar <file.grammar>               Validate just a .grammar file")
+    IO.puts(:stderr, "  compile-tokens <file.tokens> [-o out.ex]     Compile tokens to Elixir")
+    IO.puts(:stderr, "  compile-grammar <file.grammar> [-o out.ex]   Compile grammar to Elixir")
     IO.puts(:stderr, "")
     IO.puts(:stderr, "Run 'grammar-tools --help' for full help text.")
   end
