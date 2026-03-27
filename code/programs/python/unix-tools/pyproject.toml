@@ -3,6 +3,11 @@ name = "coding-adventures-unix-tools"
 version = "1.0.0"
 description = "Unix tools reimplemented using CLI Builder"
 requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-cli-builder",
+    "coding-adventures-directed-graph",
+    "coding-adventures-state-machine",
+]
 
 [tool.setuptools]
 py-modules = [

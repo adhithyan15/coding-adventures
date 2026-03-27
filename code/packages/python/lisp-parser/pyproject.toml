@@ -11,7 +11,7 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["lisp", "parser", "ast", "grammar-driven", "computer-science", "education"]
-dependencies = []
+dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-lexer", "coding-adventures-lisp-lexer", "coding-adventures-parser", "coding-adventures-state-machine"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

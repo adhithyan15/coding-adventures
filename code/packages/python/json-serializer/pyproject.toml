@@ -15,7 +15,7 @@ keywords = ["json", "serializer", "pretty-print", "computer-science", "education
 # Declared via [tool.uv.sources] for local development; BUILD file handles
 # transitive installation for CI. When publishing to PyPI, restore this line:
 #   "coding-adventures-json-value",
-dependencies = []
+dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-json-lexer", "coding-adventures-json-parser", "coding-adventures-json-value", "coding-adventures-lexer", "coding-adventures-parser", "coding-adventures-state-machine"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

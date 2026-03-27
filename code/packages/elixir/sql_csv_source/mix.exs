@@ -25,6 +25,7 @@ defmodule CodingAdventures.SqlCsvSource.MixProject do
       {:coding_adventures_parser, path: "../parser"},
       {:coding_adventures_lexer, path: "../lexer"},
       {:coding_adventures_sql_lexer, path: "../sql_lexer"}
+      {:coding_adventures_csv_parser, path: "../csv_parser"},
     ]
   end
 end

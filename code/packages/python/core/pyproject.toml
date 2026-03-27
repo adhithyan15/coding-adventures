@@ -11,6 +11,7 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["cpu", "core", "processor", "pipeline", "computer-architecture", "education"]
+dependencies = ["coding-adventures-directed-graph", "coding-adventures-state-machine"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",

@@ -3,6 +3,11 @@ name = "coding-adventures-scaffold-generator"
 version = "1.0.0"
 description = "Generate CI-ready package scaffolding for the coding-adventures monorepo"
 requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-cli-builder",
+    "coding-adventures-directed-graph",
+    "coding-adventures-state-machine",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]

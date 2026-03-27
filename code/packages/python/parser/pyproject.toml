@@ -20,7 +20,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = ["coding-adventures-lexer", "coding-adventures-grammar-tools"]
+dependencies = ["coding-adventures-directed-graph", "coding-adventures-grammar-tools", "coding-adventures-lexer"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/lang_parser"]

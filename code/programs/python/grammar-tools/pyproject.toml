@@ -5,6 +5,12 @@ description = "CLI program for validating .tokens and .grammar files"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = [
+    "coding-adventures-cli-builder",
+    "coding-adventures-directed-graph",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-state-machine",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0"]

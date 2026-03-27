@@ -11,6 +11,7 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["system-board", "boot", "computer", "riscv", "education"]
+dependencies = ["coding-adventures-arithmetic", "coding-adventures-bootloader", "coding-adventures-branch-predictor", "coding-adventures-cache", "coding-adventures-clock", "coding-adventures-core", "coding-adventures-cpu-pipeline", "coding-adventures-cpu-simulator", "coding-adventures-directed-graph", "coding-adventures-display", "coding-adventures-hazard-detection", "coding-adventures-interrupt-handler", "coding-adventures-logic-gates", "coding-adventures-os-kernel", "coding-adventures-riscv-simulator", "coding-adventures-rom-bios", "coding-adventures-state-machine"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",
