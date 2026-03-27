@@ -407,9 +407,17 @@ func run() int {
 // The order is stable and matches the order used in CI toolchain setup.
 var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl"}
 
-// sharedPrefixes are path prefixes that, when changed, mean ALL languages
-// need rebuilding. These are cross-cutting concerns:
-//   - .github/ — CI configuration affects all languages
+// sharedPrefixes are repo paths that, when changed, mean ALL languages
+// need rebuilding. Keep this list intentionally narrow: only changes to
+// shared build infrastructure should fan out across the whole monorepo.
+//
+// In particular, deployment-only workflows under .github/workflows/ should
+// NOT trigger a full rebuild. They do not affect package dependency graphs
+// or language toolchain selection, and treating them as global changes wastes
+// several minutes of CI time.
+//
+// Today the only GitHub workflow that affects incremental build behavior is:
+//   - .github/workflows/ci.yml — the main monorepo build/test pipeline
 //
 // Note: code/programs/go/build-tool/ is NOT here. The build tool is a program,
 // not a shared library. Changes to it only rebuild the build-tool package itself
@@ -422,7 +430,7 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 // actually import them. Installing all toolchains for a grammar file change would
 // waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
 var sharedPrefixes = []string{
-	".github/",
+	".github/workflows/ci.yml",
 }
 
 // detectNeededLanguages determines which language toolchains CI needs to
