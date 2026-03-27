@@ -183,6 +183,17 @@ module CodingAdventures
         assert_equal [0xAB, 0, 0, 0], mem.dump(0, 4)
       end
 
+      def test_large_sparse_memory
+        mem = Memory.new(size: 0x1_0000_0000)
+
+        mem.write_byte(0, 0x12)
+        mem.write_byte(0xFFFF_FFFF, 0x34)
+
+        assert_equal 0x12, mem.read_byte(0)
+        assert_equal 0x34, mem.read_byte(0xFFFF_FFFF)
+        assert_equal [0x34], mem.dump(0xFFFF_FFFF, 1)
+      end
+
       def test_invalid_size
         assert_raises(ArgumentError) { Memory.new(size: 0) }
       end
