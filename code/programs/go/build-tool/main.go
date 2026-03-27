@@ -86,6 +86,51 @@ func main() {
 	os.Exit(run())
 }
 
+// expandAffectedSetWithPrereqs ensures all transitive prerequisites of the
+// currently affected packages are also scheduled. This matters on fresh CI
+// runners: some package BUILD steps materialize local dependency state
+// (for example sibling TypeScript file: dependencies under node_modules),
+// and dependents may fail if those prerequisite packages are skipped just
+// because their own sources didn't change.
+func expandAffectedSetWithPrereqs(
+	graph *directedgraph.Graph,
+	affectedSet map[string]bool,
+) map[string]bool {
+	if graph == nil || affectedSet == nil {
+		return affectedSet
+	}
+
+	expanded := make(map[string]bool, len(affectedSet))
+	for name := range affectedSet {
+		expanded[name] = true
+	}
+
+	queue := make([]string, 0, len(affectedSet))
+	for name := range affectedSet {
+		queue = append(queue, name)
+	}
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		preds, err := graph.Predecessors(current)
+		if err != nil {
+			continue
+		}
+
+		for _, pred := range preds {
+			if expanded[pred] {
+				continue
+			}
+			expanded[pred] = true
+			queue = append(queue, pred)
+		}
+	}
+
+	return expanded
+}
+
 // run contains the actual logic, separated from main() so we can
 // return an exit code cleanly.
 func run() int {
@@ -314,7 +359,8 @@ func run() int {
 					changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
 					if len(changedPkgs) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
-						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents)\n",
+						affectedSet = expandAffectedSetWithPrereqs(graph, affectedSet)
+						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents and prerequisites)\n",
 							len(changedPkgs), len(affectedSet))
 					} else {
 						fmt.Println("Git diff: no package files changed — nothing to build")

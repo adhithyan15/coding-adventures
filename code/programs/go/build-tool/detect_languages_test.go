@@ -8,6 +8,7 @@ package main
 import (
 	"testing"
 
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
 
@@ -183,5 +184,36 @@ func TestGoAlwaysNeeded(t *testing.T) {
 
 	if !needed["go"] {
 		t.Error("Go should always be needed (build tool is Go)")
+	}
+}
+
+func TestExpandAffectedSetWithPrereqs(t *testing.T) {
+	graph := directedgraph.New()
+	for _, name := range []string{
+		"typescript/logic-gates",
+		"typescript/arithmetic",
+		"typescript/arithmetic-visualizer",
+	} {
+		graph.AddNode(name)
+	}
+
+	// logic-gates -> arithmetic -> arithmetic-visualizer
+	graph.AddEdge("typescript/logic-gates", "typescript/arithmetic")
+	graph.AddEdge("typescript/arithmetic", "typescript/arithmetic-visualizer")
+
+	affected := map[string]bool{
+		"typescript/arithmetic-visualizer": true,
+	}
+
+	expanded := expandAffectedSetWithPrereqs(graph, affected)
+
+	for _, want := range []string{
+		"typescript/logic-gates",
+		"typescript/arithmetic",
+		"typescript/arithmetic-visualizer",
+	} {
+		if !expanded[want] {
+			t.Fatalf("expanded affected set missing %q", want)
+		}
 	}
 }
