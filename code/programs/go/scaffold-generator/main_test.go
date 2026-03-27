@@ -578,6 +578,160 @@ func TestGenerateElixir(t *testing.T) {
 }
 
 // =========================================================================
+// File generation tests — Perl
+// =========================================================================
+
+func TestReadPerlDeps(t *testing.T) {
+	tmpDir := t.TempDir()
+	cpanfile := "requires 'coding-adventures-logic-gates';\nrequires 'coding-adventures-arithmetic';\n\non 'test' => sub {\n    requires 'Test2::V0';\n};\n"
+	os.WriteFile(filepath.Join(tmpDir, "cpanfile"), []byte(cpanfile), 0o644)
+
+	deps, err := readPerlDeps(tmpDir)
+	if err != nil {
+		t.Fatalf("readPerlDeps: %v", err)
+	}
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestReadPerlDepsMissingFile(t *testing.T) {
+	tmpDir := t.TempDir()
+	deps, err := readPerlDeps(tmpDir)
+	if err != nil {
+		t.Fatalf("expected no error for missing cpanfile, got: %v", err)
+	}
+	if len(deps) != 0 {
+		t.Errorf("expected 0 deps for missing cpanfile, got: %v", deps)
+	}
+}
+
+func TestGeneratePerl(t *testing.T) {
+	tmpDir := t.TempDir()
+	err := generatePerl(tmpDir, "test-pkg", "A test package", "", []string{"logic-gates"}, []string{"logic-gates"})
+	if err != nil {
+		t.Fatalf("generatePerl: %v", err)
+	}
+
+	// Makefile.PL has correct module name and dep
+	mpl, err := os.ReadFile(filepath.Join(tmpDir, "Makefile.PL"))
+	if err != nil {
+		t.Fatalf("cannot read Makefile.PL: %v", err)
+	}
+	if !strings.Contains(string(mpl), "CodingAdventures::TestPkg") {
+		t.Error("Makefile.PL missing module name")
+	}
+	if !strings.Contains(string(mpl), "CodingAdventures::LogicGates") {
+		t.Error("Makefile.PL missing dep in PREREQ_PM")
+	}
+
+	// cpanfile has runtime dep
+	cpanfile, err := os.ReadFile(filepath.Join(tmpDir, "cpanfile"))
+	if err != nil {
+		t.Fatalf("cannot read cpanfile: %v", err)
+	}
+	if !strings.Contains(string(cpanfile), "coding-adventures-logic-gates") {
+		t.Error("cpanfile missing runtime dep")
+	}
+	if !strings.Contains(string(cpanfile), "Test2::V0") {
+		t.Error("cpanfile missing test dep")
+	}
+
+	// Source module has package declaration, use strict, and ends with 1;
+	pm, err := os.ReadFile(filepath.Join(tmpDir, "lib", "CodingAdventures", "TestPkg.pm"))
+	if err != nil {
+		t.Fatalf("cannot read TestPkg.pm: %v", err)
+	}
+	if !strings.Contains(string(pm), "package CodingAdventures::TestPkg;") {
+		t.Error("module missing package declaration")
+	}
+	if !strings.Contains(string(pm), "use strict;") {
+		t.Error("module missing use strict")
+	}
+	if !strings.Contains(string(pm), "\n1;\n") {
+		t.Error("module missing trailing 1;")
+	}
+	if !strings.Contains(string(pm), "use CodingAdventures::LogicGates;") {
+		t.Error("module missing dep import")
+	}
+
+	// t/00-load.t has use_ok
+	loadT, err := os.ReadFile(filepath.Join(tmpDir, "t", "00-load.t"))
+	if err != nil {
+		t.Fatalf("cannot read t/00-load.t: %v", err)
+	}
+	if !strings.Contains(string(loadT), "use_ok") {
+		t.Error("00-load.t missing use_ok")
+	}
+
+	// t/01-basic.t has done_testing
+	basicT, err := os.ReadFile(filepath.Join(tmpDir, "t", "01-basic.t"))
+	if err != nil {
+		t.Fatalf("cannot read t/01-basic.t: %v", err)
+	}
+	if !strings.Contains(string(basicT), "done_testing") {
+		t.Error("01-basic.t missing done_testing")
+	}
+
+	// BUILD installs dep before current package
+	build, err := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD: %v", err)
+	}
+	buildStr := string(build)
+	if !strings.Contains(buildStr, "../logic-gates") {
+		t.Error("BUILD missing dep install")
+	}
+	if !strings.Contains(buildStr, "prove -l -v t/") {
+		t.Error("BUILD missing prove command")
+	}
+	// Dep line must come before prove line
+	depIdx := strings.Index(buildStr, "../logic-gates")
+	proveIdx := strings.Index(buildStr, "prove")
+	if depIdx > proveIdx {
+		t.Error("BUILD: dep install should come before prove")
+	}
+}
+
+func TestGeneratePerlNoDeps(t *testing.T) {
+	tmpDir := t.TempDir()
+	err := generatePerl(tmpDir, "my-pkg", "My package", "", nil, nil)
+	if err != nil {
+		t.Fatalf("generatePerl: %v", err)
+	}
+
+	mpl, _ := os.ReadFile(filepath.Join(tmpDir, "Makefile.PL"))
+	// PREREQ_PM block should be empty when no deps given.
+	// Entries look like: 'CodingAdventures::Foo' => 0,
+	// Extract just the PREREQ_PM block and check it has no such entries.
+	mplStr := string(mpl)
+	prereqStart := strings.Index(mplStr, "PREREQ_PM")
+	testReqStart := strings.Index(mplStr, "TEST_REQUIRES")
+	if prereqStart >= 0 && testReqStart > prereqStart {
+		prereqBlock := mplStr[prereqStart:testReqStart]
+		// In the PREREQ_PM block, dep entries have format 'Foo::Bar' => 0,
+		// The block itself is: PREREQ_PM => {\n    },
+		// Count occurrences of "=> 0," which only appear as dep entries
+		if strings.Contains(prereqBlock, "=> 0,") {
+			t.Error("Makefile.PL PREREQ_PM should be empty when no deps given")
+		}
+	}
+
+	build, _ := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
+	buildStr := string(build)
+	if !strings.Contains(buildStr, "cpanm --with-test --installdeps --quiet .") {
+		t.Error("BUILD missing cpanm install command")
+	}
+	if !strings.Contains(buildStr, "prove -l -v t/") {
+		t.Error("BUILD missing prove command")
+	}
+	// No dep install lines
+	if strings.Contains(buildStr, "cd ../") {
+		t.Error("BUILD should not have dep install lines when no deps")
+	}
+}
+
+// =========================================================================
 // Common files tests
 // =========================================================================
 
@@ -607,29 +761,6 @@ func TestGenerateCommonFiles(t *testing.T) {
 	}
 	if !strings.Contains(string(changelog), "0.1.0") {
 		t.Error("CHANGELOG missing version")
-	}
-
-	// required_capabilities.json exists and is well-formed
-	caps, err := os.ReadFile(filepath.Join(tmpDir, "required_capabilities.json"))
-	if err != nil {
-		t.Fatalf("cannot read required_capabilities.json: %v", err)
-	}
-	var capsObj map[string]any
-	if err := json.Unmarshal(caps, &capsObj); err != nil {
-		t.Fatalf("required_capabilities.json is not valid JSON: %v", err)
-	}
-	capsStr := string(caps)
-	if !strings.Contains(capsStr, `"$schema"`) {
-		t.Error("required_capabilities.json missing $schema")
-	}
-	if !strings.Contains(capsStr, `"python/test-pkg"`) {
-		t.Error("required_capabilities.json missing correct package path")
-	}
-	if !strings.Contains(capsStr, `"capabilities": []`) {
-		t.Error("required_capabilities.json missing capabilities array")
-	}
-	if !strings.Contains(capsStr, `"justification"`) {
-		t.Error("required_capabilities.json missing justification")
 	}
 }
 

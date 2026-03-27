@@ -307,6 +307,27 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       tmp = create_tmp_dir()
       assert {:ok, []} = ScaffoldGenerator.read_deps(tmp, "elixir")
     end
+
+    test "reads Perl deps from cpanfile" do
+      tmp = create_tmp_dir()
+      File.write!(Path.join(tmp, "cpanfile"), """
+      requires 'coding-adventures-logic-gates';
+      requires 'coding-adventures-arithmetic';
+      on 'test' => sub {
+          requires 'Test2::V0';
+      };
+      """)
+
+      assert {:ok, deps} = ScaffoldGenerator.read_deps(tmp, "perl")
+      assert "logic-gates" in deps
+      assert "arithmetic" in deps
+      assert length(deps) == 2
+    end
+
+    test "returns empty list when no cpanfile" do
+      tmp = create_tmp_dir()
+      assert {:ok, []} = ScaffoldGenerator.read_deps(tmp, "perl")
+    end
   end
 
   # =========================================================================
@@ -508,6 +529,21 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       assert File.exists?(Path.join([target, "lib", "coding_adventures", "test_pkg.ex"]))
       assert File.exists?(Path.join([target, "test", "test_pkg_test.exs"]))
       assert File.exists?(Path.join([target, "test", "test_helper.exs"]))
+      assert File.exists?(Path.join(target, "BUILD"))
+      assert File.exists?(Path.join(target, "README.md"))
+    end
+
+    test "generates Perl package structure" do
+      {tmp, config} = setup_scaffold_test("test-pkg", "perl")
+
+      assert {:ok, _messages} = ScaffoldGenerator.scaffold(config, "perl")
+
+      target = Path.join(tmp, "test-pkg")
+      assert File.exists?(Path.join(target, "Makefile.PL"))
+      assert File.exists?(Path.join(target, "cpanfile"))
+      assert File.exists?(Path.join([target, "lib", "CodingAdventures", "TestPkg.pm"]))
+      assert File.exists?(Path.join([target, "t", "00-load.t"]))
+      assert File.exists?(Path.join([target, "t", "01-basic.t"]))
       assert File.exists?(Path.join(target, "BUILD"))
       assert File.exists?(Path.join(target, "README.md"))
     end

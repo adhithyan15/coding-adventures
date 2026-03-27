@@ -25,6 +25,7 @@
 --     --help                    Show help
 
 local VALID_NAME_PATTERN = "^[a-z][a-z0-9]*%-?[a-z0-9%-]*$"
+local VALID_LANGUAGES = { lua = true, perl = true }
 
 -- =========================================================================
 -- Name normalization
@@ -181,6 +182,33 @@ local function read_lua_deps(pkg_dir)
     return deps
 end
 
+--- Read direct dependencies of a Perl package from its cpanfile.
+--
+-- Scans for lines matching:
+--   requires 'coding-adventures-<name>';
+--
+-- @param pkg_dir string Path to the package directory.
+-- @return table List of kebab-case dependency names.
+local function read_perl_deps(pkg_dir)
+    local cpanfile_path = pkg_dir .. "/cpanfile"
+    local f = io.open(cpanfile_path, "r")
+    if not f then return {} end
+    local text = f:read("*a")
+    f:close()
+
+    local deps = {}
+    for line in text:gmatch("[^\n]+") do
+        -- Skip comment lines
+        if not line:match("^%s*#") then
+            local name = line:match("requires%s+['\"]coding%-adventures%-([^'\"]+)['\"]")
+            if name then
+                deps[#deps + 1] = name
+            end
+        end
+    end
+    return deps
+end
+
 --- Compute all transitive dependencies via BFS.
 --
 -- @param direct_deps table List of direct dependency names (kebab-case).
@@ -281,9 +309,197 @@ local function topological_sort(all_deps, base_dir)
     return result
 end
 
+--- Read dependencies for a given language.
+--
+-- @param pkg_dir string Path to the package directory.
+-- @param lang string "lua" or "perl".
+-- @return table List of kebab-case dependency names.
+local function read_deps(pkg_dir, lang)
+    if lang == "perl" then
+        return read_perl_deps(pkg_dir)
+    else
+        return read_lua_deps(pkg_dir)
+    end
+end
+
 -- =========================================================================
 -- File generation
 -- =========================================================================
+
+-- =========================================================================
+-- Perl file generation
+-- =========================================================================
+
+--- Convert kebab-case to CamelCase for Perl module names.
+-- "logic-gates" → "LogicGates"
+local function to_camel_case(kebab)
+    local result = kebab:gsub("(%a)([%w]*)", function(first, rest)
+        return first:upper() .. rest
+    end):gsub("%-", "")
+    return result
+end
+
+--- Generate Perl package files.
+--
+-- @param target_dir string Target directory path.
+-- @param pkg_name string Kebab-case package name.
+-- @param description string Package description.
+-- @param layer_ctx string Layer context string.
+-- @param direct_deps table Direct dependency names.
+-- @param ordered_deps table Transitive deps in install order.
+local function generate_perl_files(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+    local camel = to_camel_case(pkg_name)
+
+    -- PREREQ_PM entries
+    local prereq_pm_str = ""
+    if #direct_deps > 0 then
+        local entries = {}
+        for _, dep in ipairs(direct_deps) do
+            entries[#entries + 1] = string.format("        'CodingAdventures::%s' => 0,", to_camel_case(dep))
+        end
+        prereq_pm_str = "    PREREQ_PM        => {\n" .. table.concat(entries, "\n") .. "\n    },\n"
+    end
+
+    local makefile_pl = string.format([[use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+    NAME             => 'CodingAdventures::%s',
+    VERSION_FROM     => 'lib/CodingAdventures/%s.pm',
+    ABSTRACT         => '%s',
+    AUTHOR           => 'coding-adventures',
+    LICENSE          => 'mit',
+    MIN_PERL_VERSION => '5.026000',
+%s    TEST_REQUIRES    => {
+        'Test2::V0' => 0,
+    },
+    META_MERGE       => {
+        'meta-spec' => { version => 2 },
+        resources   => {
+            repository => {
+                type => 'git',
+                url  => 'https://github.com/adhithyan15/coding-adventures.git',
+                web  => 'https://github.com/adhithyan15/coding-adventures',
+            },
+        },
+    },
+);
+]], camel, camel, description, prereq_pm_str)
+
+    local cpanfile_dep_lines = ""
+    for _, dep in ipairs(direct_deps) do
+        cpanfile_dep_lines = cpanfile_dep_lines .. string.format("requires 'coding-adventures-%s';\n", dep)
+    end
+    local cpanfile = string.format([[# Runtime dependencies
+%s
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};
+]], cpanfile_dep_lines)
+
+    local dep_uses = ""
+    for _, dep in ipairs(direct_deps) do
+        dep_uses = dep_uses .. string.format("use CodingAdventures::%s;\n", to_camel_case(dep))
+    end
+    if dep_uses ~= "" then dep_uses = dep_uses .. "\n" end
+
+    local module_pm = string.format([[package CodingAdventures::%s;
+
+# ============================================================================
+# CodingAdventures::%s — %s
+# ============================================================================
+#
+# This module is part of the coding-adventures project, an educational
+# computing stack built from logic gates up through interpreters and
+# compilers.
+#
+# %s
+#
+# Usage:
+#
+#   use CodingAdventures::%s;
+#
+# ============================================================================
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
+%s# TODO: Implement %s
+
+1;
+
+__END__
+
+=head1 NAME
+
+CodingAdventures::%s - %s
+
+=head1 SYNOPSIS
+
+    use CodingAdventures::%s;
+
+=head1 DESCRIPTION
+
+%s
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 AUTHOR
+
+coding-adventures
+
+=head1 LICENSE
+
+MIT
+
+=cut
+]], camel, camel, description, layer_ctx, camel, dep_uses, camel, camel, description, camel, description)
+
+    local load_t = string.format([[use strict;
+use warnings;
+use Test2::V0;
+
+use_ok('CodingAdventures::%s');
+
+# Verify the module exports a version number.
+ok(CodingAdventures::%s->VERSION, 'has a VERSION');
+
+done_testing;
+]], camel, camel)
+
+    local basic_t = string.format([[use strict;
+use warnings;
+use Test2::V0;
+
+use CodingAdventures::%s;
+
+# TODO: Replace this placeholder with real tests.
+ok(1, '%s module loaded successfully');
+
+done_testing;
+]], camel, camel)
+
+    local build_lines = {}
+    for _, dep in ipairs(ordered_deps) do
+        build_lines[#build_lines + 1] = string.format("cd ../%s && cpanm --with-test --installdeps --quiet .", dep)
+    end
+    build_lines[#build_lines + 1] = "cpanm --with-test --installdeps --quiet ."
+    build_lines[#build_lines + 1] = "prove -l -v t/"
+    local build = table.concat(build_lines, "\n") .. "\n"
+
+    write_file(target_dir .. "/Makefile.PL", makefile_pl)
+    write_file(target_dir .. "/cpanfile", cpanfile)
+    write_file(target_dir .. "/lib/CodingAdventures/" .. camel .. ".pm", module_pm)
+    write_file(target_dir .. "/t/00-load.t", load_t)
+    write_file(target_dir .. "/t/01-basic.t", basic_t)
+    write_file(target_dir .. "/BUILD", build)
+end
 
 --- Generate the rockspec file content.
 local function generate_rockspec(pkg_name, description, direct_deps)
@@ -440,7 +656,7 @@ local function find_repo_root()
     end
 end
 
---- Scaffold a single Lua package.
+--- Scaffold a package (Lua or Perl).
 local function scaffold_one(opts)
     local pkg_name = opts.pkg_name
     local description = opts.description
@@ -449,11 +665,14 @@ local function scaffold_one(opts)
     local dry_run = opts.dry_run
     local repo_root = opts.repo_root
     local pkg_type = opts.pkg_type
+    local lang = opts.lang or "lua"
 
-    local snake = to_snake_case(pkg_name)
     local base_category = pkg_type == "library" and "packages" or "programs"
-    local base_dir = repo_root .. "/code/" .. base_category .. "/lua"
-    local target_dir = base_dir .. "/" .. snake
+    local base_dir = repo_root .. "/code/" .. base_category .. "/" .. lang
+
+    -- Perl uses kebab-case dirs; Lua uses snake_case.
+    local dir_fn = (lang == "perl") and function(n) return n end or to_snake_case
+    local target_dir = base_dir .. "/" .. dir_fn(pkg_name)
 
     -- Check if directory already exists.
     if dir_exists(target_dir) then
@@ -462,45 +681,116 @@ local function scaffold_one(opts)
 
     -- Check that all direct dependencies exist.
     for _, dep in ipairs(direct_deps) do
-        local dep_dir = base_dir .. "/" .. to_snake_case(dep)
+        local dep_dir = base_dir .. "/" .. dir_fn(dep)
         if not dir_exists(dep_dir) then
             error("dependency '" .. dep .. "' not found at " .. dep_dir)
         end
     end
 
-    -- Compute transitive deps and install order.
-    local all_deps = transitive_closure(direct_deps, base_dir)
-    local ordered_deps = topological_sort(all_deps, base_dir)
+    -- Compute transitive deps and install order using the appropriate reader.
+    local all_deps, ordered_deps
+    if lang == "perl" then
+        -- For Perl, build transitive closure using read_perl_deps.
+        local visited = {}
+        local visited_set = {}
+        local queue = {}
+        for _, dep in ipairs(direct_deps) do
+            if not visited_set[dep] then queue[#queue + 1] = dep end
+        end
+        while #queue > 0 do
+            local dep = table.remove(queue, 1)
+            if not visited_set[dep] then
+                visited_set[dep] = true
+                visited[#visited + 1] = dep
+                local dep_dir = base_dir .. "/" .. dep
+                local sub_deps = read_perl_deps(dep_dir)
+                for _, dd in ipairs(sub_deps) do
+                    if not visited_set[dd] then queue[#queue + 1] = dd end
+                end
+            end
+        end
+        table.sort(visited)
+        all_deps = visited
+
+        -- Topological sort for Perl deps.
+        local dep_set = {}
+        for _, d in ipairs(all_deps) do dep_set[d] = true end
+        local graph = {}
+        local in_degree = {}
+        for _, d in ipairs(all_deps) do
+            graph[d] = {}
+            in_degree[d] = 0
+        end
+        for _, d in ipairs(all_deps) do
+            local sub = read_perl_deps(base_dir .. "/" .. d)
+            for _, dd in ipairs(sub) do
+                if dep_set[dd] then
+                    graph[d][#graph[d] + 1] = dd
+                    in_degree[d] = in_degree[d] + 1
+                end
+            end
+        end
+        local sort_queue = {}
+        for _, d in ipairs(all_deps) do
+            if in_degree[d] == 0 then sort_queue[#sort_queue + 1] = d end
+        end
+        table.sort(sort_queue)
+        ordered_deps = {}
+        while #sort_queue > 0 do
+            local node = table.remove(sort_queue, 1)
+            ordered_deps[#ordered_deps + 1] = node
+            for _, d in ipairs(all_deps) do
+                for _, dd in ipairs(graph[d]) do
+                    if dd == node then
+                        in_degree[d] = in_degree[d] - 1
+                        if in_degree[d] == 0 then
+                            sort_queue[#sort_queue + 1] = d
+                            table.sort(sort_queue)
+                        end
+                        break
+                    end
+                end
+            end
+        end
+    else
+        all_deps = transitive_closure(direct_deps, base_dir)
+        ordered_deps = topological_sort(all_deps, base_dir)
+    end
 
     local layer_ctx = layer > 0 and ("Layer " .. layer .. " in the computing stack.") or ""
 
     if dry_run then
-        print("[dry-run] Would create Lua package at: " .. target_dir)
+        print(string.format("[dry-run] Would create %s package at: %s", lang, target_dir))
         print("  Direct deps: " .. table.concat(direct_deps, ", "))
         print("  All transitive deps: " .. table.concat(all_deps, ", "))
         print("  Install order: " .. table.concat(ordered_deps, ", "))
         return
     end
 
-    -- Generate all files.
-    write_file(
-        target_dir .. "/coding-adventures-" .. pkg_name .. "-0.1.0-1.rockspec",
-        generate_rockspec(pkg_name, description, direct_deps)
-    )
-    write_file(
-        target_dir .. "/src/coding_adventures/" .. snake .. "/init.lua",
-        generate_init_lua(pkg_name, description, layer_ctx)
-    )
-    write_file(
-        target_dir .. "/tests/test_" .. snake .. ".lua",
-        generate_test_lua(pkg_name)
-    )
-    write_file(target_dir .. "/BUILD", generate_build(direct_deps, ordered_deps, pkg_name))
-    write_file(target_dir .. "/BUILD_windows", 'echo "Skipping Lua on Windows CI"\n')
+    if lang == "perl" then
+        generate_perl_files(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+    else
+        local snake = to_snake_case(pkg_name)
+        -- Generate all Lua files.
+        write_file(
+            target_dir .. "/coding-adventures-" .. pkg_name .. "-0.1.0-1.rockspec",
+            generate_rockspec(pkg_name, description, direct_deps)
+        )
+        write_file(
+            target_dir .. "/src/coding_adventures/" .. snake .. "/init.lua",
+            generate_init_lua(pkg_name, description, layer_ctx)
+        )
+        write_file(
+            target_dir .. "/tests/test_" .. snake .. ".lua",
+            generate_test_lua(pkg_name)
+        )
+        write_file(target_dir .. "/BUILD", generate_build(direct_deps, ordered_deps, pkg_name))
+        write_file(target_dir .. "/BUILD_windows", 'echo "Skipping Lua on Windows CI"\n')
+    end
     write_file(target_dir .. "/README.md", generate_readme(pkg_name, description, layer, direct_deps))
     write_file(target_dir .. "/CHANGELOG.md", generate_changelog())
 
-    print("Created Lua package at: " .. target_dir)
+    print(string.format("Created %s package at: %s", lang, target_dir))
 end
 
 -- =========================================================================
@@ -511,6 +801,7 @@ local function parse_args()
     local opts = {
         pkg_name = nil,
         pkg_type = "library",
+        lang = "lua",
         direct_deps = {},
         layer = 0,
         description = "",
@@ -520,7 +811,7 @@ local function parse_args()
     if #arg == 0 or arg[1] == "--help" or arg[1] == "-h" then
         print("Usage: lua scaffold.lua PACKAGE_NAME [options]")
         print()
-        print("Generate a CI-ready Lua package for the coding-adventures monorepo.")
+        print("Generate a CI-ready package for the coding-adventures monorepo.")
         print()
         print("Arguments:")
         print("  PACKAGE_NAME             Kebab-case package name (e.g., logic-gates)")
@@ -530,6 +821,7 @@ local function parse_args()
         print("  --layer N                Layer number for README context")
         print("  --description \"text\"     One-line package description")
         print("  --type library|program   Package type (default: library)")
+        print("  --language lua|perl      Target language (default: lua)")
         print("  --dry-run                Print what would be generated")
         print("  --help                   Show this help")
         os.exit(0)
@@ -542,8 +834,8 @@ local function parse_args()
         if arg[i] == "--depends-on" or arg[i] == "-d" then
             i = i + 1
             if arg[i] then
-                for dep in arg[i]:gmatch("([^,]+)") do
-                    dep = dep:match("^%s*(.-)%s*$")
+                for raw_dep in arg[i]:gmatch("([^,]+)") do
+                    local dep = raw_dep:match("^%s*(.-)%s*$")
                     if dep ~= "" then
                         opts.direct_deps[#opts.direct_deps + 1] = dep
                     end
@@ -558,6 +850,9 @@ local function parse_args()
         elseif arg[i] == "--type" or arg[i] == "-t" then
             i = i + 1
             opts.pkg_type = arg[i] or "library"
+        elseif arg[i] == "--language" or arg[i] == "-l" then
+            i = i + 1
+            opts.lang = arg[i] or "lua"
         elseif arg[i] == "--dry-run" then
             opts.dry_run = true
         end
@@ -567,6 +862,12 @@ local function parse_args()
     -- Validate package name.
     if not opts.pkg_name:match(VALID_NAME_PATTERN) then
         io.stderr:write("scaffold-generator: invalid package name '" .. opts.pkg_name .. "' (must be kebab-case)\n")
+        os.exit(1)
+    end
+
+    -- Validate language.
+    if not VALID_LANGUAGES[opts.lang] then
+        io.stderr:write("scaffold-generator: unknown language '" .. opts.lang .. "' (valid: lua, perl)\n")
         os.exit(1)
     end
 

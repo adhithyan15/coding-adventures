@@ -646,6 +646,44 @@ fn test_read_deps_missing_file() {
     assert!(read_deps(&dir, "typescript").is_empty());
     assert!(read_deps(&dir, "rust").is_empty());
     assert!(read_deps(&dir, "elixir").is_empty());
+    assert!(read_deps(&dir, "perl").is_empty());
+}
+
+#[test]
+fn test_read_perl_deps() {
+    let dir = temp_dir("read-perl");
+    fs::create_dir_all(&dir).unwrap();
+    fs::write(
+        dir.join("cpanfile"),
+        "requires 'coding-adventures-logic-gates';\nrequires 'coding-adventures-arithmetic';\n",
+    )
+    .unwrap();
+
+    let deps = read_deps(&dir, "perl");
+    assert_eq!(deps, vec!["logic-gates", "arithmetic"]);
+}
+
+#[test]
+fn test_run_dry_run_perl() {
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    let code = run(
+        argv(&[
+            "scaffold-generator",
+            "--dry-run",
+            "-l",
+            "perl",
+            "--description",
+            "A test Perl package",
+            "test-perl-pkg-xyz",
+        ]),
+        &mut stdout,
+        &mut stderr,
+    );
+    assert_eq!(code, 0, "stderr: {}", String::from_utf8_lossy(&stderr));
+    let output = String::from_utf8(stdout).unwrap();
+    assert!(output.contains("[dry-run]"));
+    assert!(output.contains("test-perl-pkg-xyz"));
 }
 
 // =========================================================================

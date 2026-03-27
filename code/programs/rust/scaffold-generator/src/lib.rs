@@ -57,7 +57,7 @@ use std::path::{Path, PathBuf};
 const VERSION: &str = "1.0.0";
 
 /// All six supported target languages, in canonical order.
-const VALID_LANGUAGES: &[&str] = &["python", "go", "ruby", "typescript", "rust", "elixir"];
+const VALID_LANGUAGES: &[&str] = &["python", "go", "ruby", "typescript", "rust", "elixir", "perl"];
 
 // =========================================================================
 // Name normalization
@@ -364,6 +364,7 @@ pub fn read_deps(pkg_dir: &Path, lang: &str) -> Vec<String> {
         "typescript" => read_typescript_deps(pkg_dir),
         "rust" => read_rust_deps(pkg_dir),
         "elixir" => read_elixir_deps(pkg_dir),
+        "perl" => read_perl_deps(pkg_dir),
         _ => Vec::new(),
     }
 }
@@ -547,6 +548,45 @@ fn read_elixir_deps(pkg_dir: &Path) -> Vec<String> {
             let dep = dep.replace('_', "-");
             if !dep.is_empty() {
                 deps.push(dep);
+            }
+        }
+    }
+    deps
+}
+
+/// Reads direct dependencies from a Perl cpanfile.
+///
+/// Scans for lines matching:
+///   requires 'coding-adventures-<name>';
+/// and returns the kebab-case package names.
+fn read_perl_deps(pkg_dir: &Path) -> Vec<String> {
+    let cpanfile_path = pkg_dir.join("cpanfile");
+    let content = match fs::read_to_string(&cpanfile_path) {
+        Ok(c) => c,
+        Err(_) => return Vec::new(),
+    };
+    let mut deps = Vec::new();
+    for line in content.lines() {
+        let trimmed = line.trim();
+        if trimmed.starts_with('#') {
+            continue;
+        }
+        // Match: requires 'coding-adventures-<name>'
+        if let Some(rest) = trimmed.strip_prefix("requires") {
+            let rest = rest.trim();
+            if let Some(inner) = rest
+                .strip_prefix('\'')
+                .or_else(|| rest.strip_prefix('"'))
+            {
+                if let Some(name_with_prefix) = inner.strip_prefix("coding-adventures-") {
+                    let name: String = name_with_prefix
+                        .chars()
+                        .take_while(|c| *c != '\'' && *c != '"')
+                        .collect();
+                    if !name.is_empty() {
+                        deps.push(name);
+                    }
+                }
             }
         }
     }
@@ -1160,7 +1200,7 @@ fn generate_typescript(
     description: &str,
     layer_ctx: &str,
     direct_deps: &[String],
-    ordered_deps: &[String],
+    _ordered_deps: &[String],
 ) -> io::Result<()> {
     // --- package.json ---
     let deps_json = if direct_deps.is_empty() {
@@ -1497,6 +1537,179 @@ fn generate_elixir(
 }
 
 // =========================================================================
+// Perl scaffolding
+// =========================================================================
+
+/// Generates Perl package scaffolding.
+///
+/// Creates:
+///   - Makefile.PL (ExtUtils::MakeMaker build config)
+///   - cpanfile (declarative dependency spec)
+///   - lib/CodingAdventures/<Camel>.pm (module)
+///   - t/00-load.t (load test)
+///   - t/01-basic.t (basic placeholder test)
+///   - BUILD (chain-install deps then prove)
+fn generate_perl(
+    target_dir: &Path,
+    pkg_name: &str,
+    description: &str,
+    layer_ctx: &str,
+    direct_deps: &[String],
+    ordered_deps: &[String],
+) -> io::Result<()> {
+    let camel = to_camel_case(pkg_name);
+
+    // Makefile.PL PREREQ_PM entries
+    let prereq_pm_entries: String = direct_deps
+        .iter()
+        .map(|dep| {
+            format!(
+                "        'CodingAdventures::{}' => 0,\n",
+                to_camel_case(dep)
+            )
+        })
+        .collect();
+    let prereq_pm_str = if prereq_pm_entries.is_empty() {
+        String::new()
+    } else {
+        format!("    PREREQ_PM        => {{\n{prereq_pm_entries}    }},\n")
+    };
+
+    let makefile_pl = format!(
+        "use strict;\n\
+         use warnings;\n\
+         use ExtUtils::MakeMaker;\n\n\
+         WriteMakefile(\n\
+         \x20   NAME             => 'CodingAdventures::{camel}',\n\
+         \x20   VERSION_FROM     => 'lib/CodingAdventures/{camel}.pm',\n\
+         \x20   ABSTRACT         => '{description}',\n\
+         \x20   AUTHOR           => 'coding-adventures',\n\
+         \x20   LICENSE          => 'mit',\n\
+         \x20   MIN_PERL_VERSION => '5.026000',\n\
+         {prereq_pm_str}\x20   TEST_REQUIRES    => {{\n\
+         \x20       'Test2::V0' => 0,\n\
+         \x20   }},\n\
+         \x20   META_MERGE       => {{\n\
+         \x20       'meta-spec' => {{ version => 2 }},\n\
+         \x20       resources   => {{\n\
+         \x20           repository => {{\n\
+         \x20               type => 'git',\n\
+         \x20               url  => 'https://github.com/adhithyan15/coding-adventures.git',\n\
+         \x20               web  => 'https://github.com/adhithyan15/coding-adventures',\n\
+         \x20           }},\n\
+         \x20       }},\n\
+         \x20   }},\n\
+         );\n"
+    );
+
+    let cpanfile_deps: String = direct_deps
+        .iter()
+        .map(|dep| format!("requires 'coding-adventures-{dep}';\n"))
+        .collect();
+    let cpanfile = format!(
+        "# Runtime dependencies\n\
+         {cpanfile_deps}\n\
+         # Test dependencies\n\
+         on 'test' => sub {{\n\
+         \x20   requires 'Test2::V0';\n\
+         }};\n"
+    );
+
+    let dep_uses: String = direct_deps
+        .iter()
+        .map(|dep| format!("use CodingAdventures::{};\n", to_camel_case(dep)))
+        .collect();
+    let dep_uses_block = if dep_uses.is_empty() {
+        String::new()
+    } else {
+        format!("{dep_uses}\n")
+    };
+    let module_pm = format!(
+        "package CodingAdventures::{camel};\n\n\
+         # ============================================================================\n\
+         # CodingAdventures::{camel} — {description}\n\
+         # ============================================================================\n\
+         #\n\
+         # This module is part of the coding-adventures project, an educational\n\
+         # computing stack built from logic gates up through interpreters and\n\
+         # compilers.\n\
+         #\n\
+         # {layer_ctx}\n\
+         #\n\
+         # Usage:\n\
+         #\n\
+         #   use CodingAdventures::{camel};\n\
+         #\n\
+         # ============================================================================\n\n\
+         use strict;\n\
+         use warnings;\n\n\
+         our $VERSION = '0.01';\n\n\
+         {dep_uses_block}# TODO: Implement {camel}\n\n\
+         1;\n\n\
+         __END__\n\n\
+         =head1 NAME\n\n\
+         CodingAdventures::{camel} - {description}\n\n\
+         =head1 SYNOPSIS\n\n\
+         \x20   use CodingAdventures::{camel};\n\n\
+         =head1 DESCRIPTION\n\n\
+         {description}\n\n\
+         =head1 VERSION\n\n\
+         Version 0.01\n\n\
+         =head1 AUTHOR\n\n\
+         coding-adventures\n\n\
+         =head1 LICENSE\n\n\
+         MIT\n\n\
+         =cut\n"
+    );
+
+    let load_t = format!(
+        "use strict;\n\
+         use warnings;\n\
+         use Test2::V0;\n\n\
+         use_ok('CodingAdventures::{camel}');\n\n\
+         # Verify the module exports a version number.\n\
+         ok(CodingAdventures::{camel}->VERSION, 'has a VERSION');\n\n\
+         done_testing;\n"
+    );
+
+    let basic_t = format!(
+        "use strict;\n\
+         use warnings;\n\
+         use Test2::V0;\n\n\
+         use CodingAdventures::{camel};\n\n\
+         # TODO: Replace this placeholder with real tests.\n\
+         ok(1, '{camel} module loaded successfully');\n\n\
+         done_testing;\n"
+    );
+
+    let mut build_lines: Vec<String> = ordered_deps
+        .iter()
+        .map(|dep| format!("cd ../{dep} && cpanm --with-test --installdeps --quiet .\n"))
+        .collect();
+    build_lines.push("cpanm --with-test --installdeps --quiet .\n".to_string());
+    build_lines.push("prove -l -v t/\n".to_string());
+    let build = build_lines.join("");
+
+    // Create directories
+    let lib_dir = target_dir
+        .join("lib")
+        .join("CodingAdventures");
+    let t_dir = target_dir.join("t");
+    fs::create_dir_all(&lib_dir)?;
+    fs::create_dir_all(&t_dir)?;
+
+    // Write files
+    fs::write(target_dir.join("Makefile.PL"), &makefile_pl)?;
+    fs::write(target_dir.join("cpanfile"), &cpanfile)?;
+    fs::write(lib_dir.join(format!("{camel}.pm")), &module_pm)?;
+    fs::write(t_dir.join("00-load.t"), &load_t)?;
+    fs::write(t_dir.join("01-basic.t"), &basic_t)?;
+    fs::write(target_dir.join("BUILD"), &build)?;
+
+    Ok(())
+}
+
+// =========================================================================
 // Common files (README, CHANGELOG)
 // =========================================================================
 //
@@ -1805,6 +2018,15 @@ fn scaffold(
         )
         .map_err(io_err)?,
         "elixir" => generate_elixir(
+            &target_dir,
+            &cfg.package_name,
+            &cfg.description,
+            &layer_ctx,
+            &cfg.direct_deps,
+            &ordered_deps,
+        )
+        .map_err(io_err)?,
+        "perl" => generate_perl(
             &target_dir,
             &cfg.package_name,
             &cfg.description,
