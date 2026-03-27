@@ -19,6 +19,11 @@
 # Tiered strategy:
 # - Every push: Linux only (fast feedback)
 # - PRs to main: Linux + macOS + Windows (thorough validation)
+#
+# Windows shell: The build tool uses 'pwsh -Command' (PowerShell 7) on Windows
+# instead of 'cmd /C'. cmd.exe strips outer double-quotes from arguments,
+# corrupting paths passed to tools like uv. PowerShell preserves quotes,
+# supports '&&' chaining, and handles forward-slash paths correctly.
 
 name: CI
 
