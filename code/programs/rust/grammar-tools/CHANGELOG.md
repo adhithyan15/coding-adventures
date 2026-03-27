@@ -1,5 +1,13 @@
 # Changelog — grammar-tools (Rust program)
 
+## [2.1.0] - 2026-03-26
+
+### Added
+- `--force` / `-f` flag — skip grammar validation and compile anyway. Used when patterns
+  (e.g. lookahead `(?!...)` in `excel.tokens`, `xml.tokens`) are known to be handled at
+  runtime by the consuming package. Without `--force`, any unsupported regex pattern causes
+  the compile command to exit 1.
+
 ## [2.0.0] - 2026-03-26
 
 ### Added

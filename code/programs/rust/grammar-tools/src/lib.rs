@@ -336,7 +336,7 @@ pub fn validate_grammar_only(grammar_path: &str) -> i32 {
 /// either writes the result to `output_path` or prints it to stdout.
 ///
 /// Returns `0` on success, `1` on error.
-pub fn compile_tokens_command(tokens_path: &str, output_path: Option<&str>) -> i32 {
+pub fn compile_tokens_command(tokens_path: &str, output_path: Option<&str>, force: bool) -> i32 {
     let tokens_filename = Path::new(tokens_path)
         .file_name()
         .and_then(|n| n.to_str())
@@ -362,12 +362,14 @@ pub fn compile_tokens_command(tokens_path: &str, output_path: Option<&str>) -> i
         }
     };
 
-    let issues = validate_token_grammar(&token_grammar);
-    let errors = count_errors(&issues);
-    if errors > 0 {
-        eprintln!("{} error(s)", errors);
-        print_issues(&issues);
-        return 1;
+    if !force {
+        let issues = validate_token_grammar(&token_grammar);
+        let errors = count_errors(&issues);
+        if errors > 0 {
+            eprintln!("{} error(s)", errors);
+            print_issues(&issues);
+            return 1;
+        }
     }
 
     let code = compile_token_grammar(&token_grammar, tokens_filename);
@@ -395,7 +397,7 @@ pub fn compile_tokens_command(tokens_path: &str, output_path: Option<&str>) -> i
 /// Compile a `.grammar` file to Rust source code.
 ///
 /// Returns `0` on success, `1` on error.
-pub fn compile_grammar_command(grammar_path: &str, output_path: Option<&str>) -> i32 {
+pub fn compile_grammar_command(grammar_path: &str, output_path: Option<&str>, force: bool) -> i32 {
     let grammar_filename = Path::new(grammar_path)
         .file_name()
         .and_then(|n| n.to_str())
@@ -421,12 +423,14 @@ pub fn compile_grammar_command(grammar_path: &str, output_path: Option<&str>) ->
         }
     };
 
-    let issues = validate_parser_grammar(&parser_grammar, None::<&HashSet<String>>);
-    let errors = count_errors(&issues);
-    if errors > 0 {
-        eprintln!("{} error(s)", errors);
-        print_issues(&issues);
-        return 1;
+    if !force {
+        let issues = validate_parser_grammar(&parser_grammar, None::<&HashSet<String>>);
+        let errors = count_errors(&issues);
+        if errors > 0 {
+            eprintln!("{} error(s)", errors);
+            print_issues(&issues);
+            return 1;
+        }
     }
 
     let code = compile_parser_grammar(&parser_grammar, grammar_filename);
@@ -454,7 +458,7 @@ pub fn compile_grammar_command(grammar_path: &str, output_path: Option<&str>) ->
 /// Dispatch a parsed command name and file list to the appropriate function.
 ///
 /// Returns an exit code (0, 1, or 2).
-pub fn dispatch(command: &str, files: &[String], output_path: Option<&str>) -> i32 {
+pub fn dispatch(command: &str, files: &[String], output_path: Option<&str>, force: bool) -> i32 {
     match command {
         "validate" => {
             if files.len() != 2 {
@@ -482,14 +486,14 @@ pub fn dispatch(command: &str, files: &[String], output_path: Option<&str>) -> i
                 eprintln!("Error: 'compile-tokens' requires exactly one file: <tokens>");
                 return 2;
             }
-            compile_tokens_command(&files[0], output_path)
+            compile_tokens_command(&files[0], output_path, force)
         }
         "compile-grammar" => {
             if files.len() != 1 {
                 eprintln!("Error: 'compile-grammar' requires exactly one file: <grammar>");
                 return 2;
             }
-            compile_grammar_command(&files[0], output_path)
+            compile_grammar_command(&files[0], output_path, force)
         }
         other => {
             eprintln!("Error: unknown command '{}'", other);
@@ -570,7 +574,14 @@ pub fn run(argv: Vec<String>) -> i32 {
                 .get("output")
                 .and_then(|v| v.as_str().map(|s| s.to_string()));
 
-            dispatch(&command, &files, output_path.as_deref())
+            // Extract the optional --force flag.
+            let force = result
+                .flags
+                .get("force")
+                .and_then(|v| v.as_bool())
+                .unwrap_or(false);
+
+            dispatch(&command, &files, output_path.as_deref(), force)
         }
         Err(e) => {
             eprintln!("Error: {}", e);
@@ -682,32 +693,32 @@ mod tests {
 
     #[test]
     fn dispatch_unknown_command_returns_2() {
-        assert_eq!(dispatch("unknown", &[], None), 2);
+        assert_eq!(dispatch("unknown", &[], None, false), 2);
     }
 
     #[test]
     fn dispatch_validate_wrong_file_count_returns_2() {
-        assert_eq!(dispatch("validate", &["one.tokens".to_string()], None), 2);
+        assert_eq!(dispatch("validate", &["one.tokens".to_string()], None, false), 2);
     }
 
     #[test]
     fn dispatch_validate_tokens_no_files_returns_2() {
-        assert_eq!(dispatch("validate-tokens", &[], None), 2);
+        assert_eq!(dispatch("validate-tokens", &[], None, false), 2);
     }
 
     #[test]
     fn dispatch_validate_grammar_no_files_returns_2() {
-        assert_eq!(dispatch("validate-grammar", &[], None), 2);
+        assert_eq!(dispatch("validate-grammar", &[], None, false), 2);
     }
 
     #[test]
     fn dispatch_compile_tokens_no_files_returns_2() {
-        assert_eq!(dispatch("compile-tokens", &[], None), 2);
+        assert_eq!(dispatch("compile-tokens", &[], None, false), 2);
     }
 
     #[test]
     fn dispatch_compile_grammar_no_files_returns_2() {
-        assert_eq!(dispatch("compile-grammar", &[], None), 2);
+        assert_eq!(dispatch("compile-grammar", &[], None, false), 2);
     }
 
     #[test]
@@ -720,6 +731,7 @@ mod tests {
                 "validate",
                 &[grammar_path("json.tokens"), grammar_path("json.grammar")],
                 None,
+                false,
             ),
             0
         );
@@ -731,7 +743,7 @@ mod tests {
             return;
         }
         assert_eq!(
-            dispatch("validate-tokens", &[grammar_path("json.tokens")], None),
+            dispatch("validate-tokens", &[grammar_path("json.tokens")], None, false),
             0
         );
     }
@@ -742,7 +754,7 @@ mod tests {
             return;
         }
         assert_eq!(
-            dispatch("validate-grammar", &[grammar_path("json.grammar")], None),
+            dispatch("validate-grammar", &[grammar_path("json.grammar")], None, false),
             0
         );
     }
@@ -753,7 +765,7 @@ mod tests {
 
     #[test]
     fn compile_tokens_command_missing_returns_1() {
-        assert_eq!(compile_tokens_command("/nonexistent/x.tokens", None), 1);
+        assert_eq!(compile_tokens_command("/nonexistent/x.tokens", None, false), 1);
     }
 
     #[test]
@@ -761,7 +773,7 @@ mod tests {
         if !exists("json.tokens") {
             return;
         }
-        assert_eq!(compile_tokens_command(&grammar_path("json.tokens"), None), 0);
+        assert_eq!(compile_tokens_command(&grammar_path("json.tokens"), None, false), 0);
     }
 
     #[test]
@@ -773,6 +785,7 @@ mod tests {
         let result = compile_tokens_command(
             &grammar_path("json.tokens"),
             Some(out.to_str().unwrap()),
+            false,
         );
         assert_eq!(result, 0);
         let content = std::fs::read_to_string(&out).unwrap();
@@ -786,7 +799,7 @@ mod tests {
             return;
         }
         assert_eq!(
-            dispatch("compile-tokens", &[grammar_path("json.tokens")], None),
+            dispatch("compile-tokens", &[grammar_path("json.tokens")], None, false),
             0
         );
     }
@@ -797,7 +810,7 @@ mod tests {
 
     #[test]
     fn compile_grammar_command_missing_returns_1() {
-        assert_eq!(compile_grammar_command("/nonexistent/x.grammar", None), 1);
+        assert_eq!(compile_grammar_command("/nonexistent/x.grammar", None, false), 1);
     }
 
     #[test]
@@ -806,7 +819,7 @@ mod tests {
             return;
         }
         assert_eq!(
-            compile_grammar_command(&grammar_path("json.grammar"), None),
+            compile_grammar_command(&grammar_path("json.grammar"), None, false),
             0
         );
     }
@@ -820,6 +833,7 @@ mod tests {
         let result = compile_grammar_command(
             &grammar_path("json.grammar"),
             Some(out.to_str().unwrap()),
+            false,
         );
         assert_eq!(result, 0);
         let content = std::fs::read_to_string(&out).unwrap();
@@ -833,7 +847,7 @@ mod tests {
             return;
         }
         assert_eq!(
-            dispatch("compile-grammar", &[grammar_path("json.grammar")], None),
+            dispatch("compile-grammar", &[grammar_path("json.grammar")], None, false),
             0
         );
     }

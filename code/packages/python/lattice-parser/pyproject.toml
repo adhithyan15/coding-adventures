@@ -29,6 +29,7 @@ testpaths = ["tests"]
 addopts = "--cov=lattice_parser --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 source = ["src/lattice_parser"]
 
 [tool.coverage.report]

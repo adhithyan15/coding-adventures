@@ -54,6 +54,7 @@ testpaths = ["tests"]
 addopts = "--cov=typescript_parser --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 source = ["src/typescript_parser"]
 
 [tool.coverage.report]

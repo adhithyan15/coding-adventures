@@ -1,5 +1,12 @@
 # Changelog — grammar-tools (Go program)
 
+## [2.1.0] - 2026-03-26
+
+### Added
+- `--package` / `-p` flag for `compile-tokens` and `compile-grammar` commands — sets the Go
+  package name in generated output. Defaults to `"generated"` when omitted. Required when writing
+  to a real package directory so the generated file has the correct `package` declaration.
+
 ## [2.0.0] - 2026-03-26
 
 ### Added
