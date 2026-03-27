@@ -48,6 +48,7 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/reporter"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
 	starlarkeval "github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/starlark"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/validator"
 )
 
 // findRepoRoot walks up from the given directory (or cwd) looking for
@@ -145,6 +146,7 @@ func run() int {
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
 	emitPlan := flag.String("emit-plan", "", "Write build plan JSON to this path (used by CI detect job)")
 	planFile := flag.String("plan-file", "", "Read build plan JSON, skip discovery/resolution/diff (used by CI build job)")
+	validateBuildFiles := flag.Bool("validate-build-files", false, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
 
 	flag.Parse()
 
@@ -370,6 +372,13 @@ func run() int {
 			} else {
 				fmt.Println("Git diff unavailable — falling back to hash-based cache")
 			}
+		}
+	}
+
+	if *validateBuildFiles {
+		if err := validator.ValidateBuildFiles(packages, graph); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return 1
 		}
 	}
 
