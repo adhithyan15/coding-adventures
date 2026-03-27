@@ -41,7 +41,9 @@ import (
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 )
 
-// defaultPkgName is used in generated Go files when no package name is given.
+// defaultPkgName is the Go package name used in generated files when --package
+// is not specified.  Callers that write to a real package directory should
+// always pass --package to get a correct package declaration.
 const defaultPkgName = "generated"
 
 // ============================================================================
@@ -75,8 +77,8 @@ func printUsage() {
 	fmt.Fprintln(os.Stderr, "  validate <file.tokens> <file.grammar>       Validate a token/grammar pair")
 	fmt.Fprintln(os.Stderr, "  validate-tokens <file.tokens>                Validate just a .tokens file")
 	fmt.Fprintln(os.Stderr, "  validate-grammar <file.grammar>              Validate just a .grammar file")
-	fmt.Fprintln(os.Stderr, "  compile-tokens <file.tokens> [-o out.go]    Compile tokens to Go")
-	fmt.Fprintln(os.Stderr, "  compile-grammar <file.grammar> [-o out.go]  Compile grammar to Go")
+	fmt.Fprintln(os.Stderr, "  compile-tokens <file.tokens> [-o out.go] [-p pkg]    Compile tokens to Go")
+	fmt.Fprintln(os.Stderr, "  compile-grammar <file.grammar> [-o out.go] [-p pkg]  Compile grammar to Go")
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Run 'grammar-tools --help' for full help text.")
 }
@@ -299,7 +301,7 @@ func validateGrammarOnly(grammarPath string) int {
 // printed to stdout.
 //
 // Returns 0 on success, 1 on error.
-func compileTokensCommand(tokensPath, outputPath string) int {
+func compileTokensCommand(tokensPath, outputPath, pkgName string, force bool) int {
 	content, err := os.ReadFile(tokensPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: File not found: %s\n", tokensPath)
@@ -314,14 +316,16 @@ func compileTokensCommand(tokensPath, outputPath string) int {
 		return 1
 	}
 
-	issues := grammartools.ValidateTokenGrammar(tokenGrammar)
-	if n := countErrors(issues); n > 0 {
-		fmt.Fprintf(os.Stderr, "%d error(s)\n", n)
-		printIssues(issues)
-		return 1
+	if !force {
+		issues := grammartools.ValidateTokenGrammar(tokenGrammar)
+		if n := countErrors(issues); n > 0 {
+			fmt.Fprintf(os.Stderr, "%d error(s)\n", n)
+			printIssues(issues)
+			return 1
+		}
 	}
 
-	code := grammartools.CompileTokenGrammar(tokenGrammar, filepath.Base(tokensPath), defaultPkgName)
+	code := grammartools.CompileTokenGrammar(tokenGrammar, filepath.Base(tokensPath), pkgName)
 
 	if outputPath != "" {
 		if err := os.WriteFile(outputPath, []byte(code), 0o644); err != nil {
@@ -341,7 +345,7 @@ func compileTokensCommand(tokensPath, outputPath string) int {
 // ============================================================================
 
 // compileGrammarCommand parses and compiles a .grammar file into Go source code.
-func compileGrammarCommand(grammarPath, outputPath string) int {
+func compileGrammarCommand(grammarPath, outputPath, pkgName string, force bool) int {
 	content, err := os.ReadFile(grammarPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: File not found: %s\n", grammarPath)
@@ -356,14 +360,16 @@ func compileGrammarCommand(grammarPath, outputPath string) int {
 		return 1
 	}
 
-	issues := grammartools.ValidateParserGrammar(parserGrammar, nil)
-	if n := countErrors(issues); n > 0 {
-		fmt.Fprintf(os.Stderr, "%d error(s)\n", n)
-		printIssues(issues)
-		return 1
+	if !force {
+		issues := grammartools.ValidateParserGrammar(parserGrammar, nil)
+		if n := countErrors(issues); n > 0 {
+			fmt.Fprintf(os.Stderr, "%d error(s)\n", n)
+			printIssues(issues)
+			return 1
+		}
 	}
 
-	code := grammartools.CompileParserGrammar(parserGrammar, filepath.Base(grammarPath), defaultPkgName)
+	code := grammartools.CompileParserGrammar(parserGrammar, filepath.Base(grammarPath), pkgName)
 
 	if outputPath != "" {
 		if err := os.WriteFile(outputPath, []byte(code), 0o644); err != nil {
@@ -382,7 +388,7 @@ func compileGrammarCommand(grammarPath, outputPath string) int {
 // dispatch
 // ============================================================================
 
-func dispatch(command string, files []string, outputPath string) int {
+func dispatch(command string, files []string, outputPath, pkgName string, force bool) int {
 	switch command {
 	case "validate":
 		if len(files) != 2 {
@@ -418,7 +424,7 @@ func dispatch(command string, files []string, outputPath string) int {
 			printUsage()
 			return 2
 		}
-		return compileTokensCommand(files[0], outputPath)
+		return compileTokensCommand(files[0], outputPath, pkgName, force)
 
 	case "compile-grammar":
 		if len(files) != 1 {
@@ -427,7 +433,7 @@ func dispatch(command string, files []string, outputPath string) int {
 			printUsage()
 			return 2
 		}
-		return compileGrammarCommand(files[0], outputPath)
+		return compileGrammarCommand(files[0], outputPath, pkgName, force)
 
 	default:
 		fmt.Fprintf(os.Stderr, "Error: Unknown command '%s'\n", command)
@@ -484,7 +490,12 @@ func main() {
 		}
 
 		outputPath, _ := r.Flags["output"].(string)
+		pkgName, _ := r.Flags["package"].(string)
+		if pkgName == "" {
+			pkgName = defaultPkgName
+		}
+		force, _ := r.Flags["force"].(bool)
 
-		os.Exit(dispatch(command, files, outputPath))
+		os.Exit(dispatch(command, files, outputPath, pkgName, force))
 	}
 }

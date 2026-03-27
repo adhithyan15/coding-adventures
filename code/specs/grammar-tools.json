@@ -12,10 +12,26 @@
   "flags": [
     {
       "id": "output",
-      "long": "--output",
-      "short": "-o",
+      "long": "output",
+      "short": "o",
       "description": "Write output to this file path instead of stdout (used with compile-tokens and compile-grammar)",
       "type": "string",
+      "required": false
+    },
+    {
+      "id": "package",
+      "long": "package",
+      "short": "p",
+      "description": "Go package name to use in generated output (used with compile-tokens and compile-grammar; defaults to 'generated')",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "force",
+      "long": "force",
+      "short": "f",
+      "description": "Skip grammar validation and compile anyway (used when patterns are known to be handled at runtime by the consuming package)",
+      "type": "boolean",
       "required": false
     }
   ],

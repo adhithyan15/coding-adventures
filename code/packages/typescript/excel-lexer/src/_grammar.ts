@@ -1,0 +1,267 @@
+// AUTO-GENERATED FILE — DO NOT EDIT
+// Source: excel.tokens
+// Regenerate with: grammar-tools compile-tokens excel.tokens
+//
+// This file embeds a TokenGrammar as native TypeScript object literals.
+// Import it directly instead of reading and parsing the .tokens file at
+// runtime.
+
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
+
+export const TOKEN_GRAMMAR: TokenGrammar = {
+  version: 1,
+  caseInsensitive: true,
+  caseSensitive: true,
+  definitions: [
+    {
+      name: "SPACE",
+      pattern: " +",
+      isRegex: true,
+      lineNumber: 13,
+    },
+    {
+      name: "REF_PREFIX_QUOTED",
+      pattern: "(\\[[^\\]]+\\])?'([^']|'')*'!",
+      isRegex: true,
+      lineNumber: 15,
+      alias: "REF_PREFIX",
+    },
+    {
+      name: "REF_PREFIX_BARE",
+      pattern: "(\\[[^\\]]+\\])?[A-Za-z_\\\\][A-Za-z0-9_\\.]*(?::[A-Za-z_\\\\][A-Za-z0-9_\\.]*)*!",
+      isRegex: true,
+      lineNumber: 16,
+      alias: "REF_PREFIX",
+    },
+    {
+      name: "STRING",
+      pattern: "\"([^\"]|\"\")*\"",
+      isRegex: true,
+      lineNumber: 18,
+    },
+    {
+      name: "ERROR_CONSTANT",
+      pattern: "#NULL!|#DIV\\/0!|#VALUE!|#REF!|#NAME\\?|#NUM!|#N\\/A|#SPILL!|#CALC!|#GETTING_DATA",
+      isRegex: true,
+      lineNumber: 19,
+    },
+    {
+      name: "NUMBER",
+      pattern: "[0-9]+\\.[0-9]*([eE][+-]?[0-9]+)?|\\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)?",
+      isRegex: true,
+      lineNumber: 20,
+    },
+    {
+      name: "STRUCTURED_KEYWORD",
+      pattern: "\\[#(?:All|Data|Headers|Totals|This Row)\\]",
+      isRegex: true,
+      lineNumber: 22,
+    },
+    {
+      name: "STRUCTURED_COLUMN",
+      pattern: "\\[(?:[^\\[\\]]|\\]\\])+\\]",
+      isRegex: true,
+      lineNumber: 23,
+    },
+    {
+      name: "CELL",
+      pattern: "\\$?[A-Za-z]{1,3}\\$?[0-9]{1,7}",
+      isRegex: true,
+      lineNumber: 26,
+    },
+    {
+      name: "NOT_EQUALS",
+      pattern: "<>",
+      isRegex: false,
+      lineNumber: 28,
+    },
+    {
+      name: "LESS_EQUALS",
+      pattern: "<=",
+      isRegex: false,
+      lineNumber: 29,
+    },
+    {
+      name: "GREATER_EQUALS",
+      pattern: ">=",
+      isRegex: false,
+      lineNumber: 30,
+    },
+    {
+      name: "PLUS",
+      pattern: "+",
+      isRegex: false,
+      lineNumber: 32,
+    },
+    {
+      name: "MINUS",
+      pattern: "-",
+      isRegex: false,
+      lineNumber: 33,
+    },
+    {
+      name: "STAR",
+      pattern: "*",
+      isRegex: false,
+      lineNumber: 34,
+    },
+    {
+      name: "SLASH",
+      pattern: "/",
+      isRegex: false,
+      lineNumber: 35,
+    },
+    {
+      name: "CARET",
+      pattern: "^",
+      isRegex: false,
+      lineNumber: 36,
+    },
+    {
+      name: "AMP",
+      pattern: "&",
+      isRegex: false,
+      lineNumber: 37,
+    },
+    {
+      name: "PERCENT",
+      pattern: "%",
+      isRegex: false,
+      lineNumber: 38,
+    },
+    {
+      name: "EQUALS",
+      pattern: "=",
+      isRegex: false,
+      lineNumber: 39,
+    },
+    {
+      name: "LESS_THAN",
+      pattern: "<",
+      isRegex: false,
+      lineNumber: 40,
+    },
+    {
+      name: "GREATER_THAN",
+      pattern: ">",
+      isRegex: false,
+      lineNumber: 41,
+    },
+    {
+      name: "BANG",
+      pattern: "!",
+      isRegex: false,
+      lineNumber: 42,
+    },
+    {
+      name: "DOLLAR",
+      pattern: "$",
+      isRegex: false,
+      lineNumber: 43,
+    },
+    {
+      name: "LPAREN",
+      pattern: "(",
+      isRegex: false,
+      lineNumber: 44,
+    },
+    {
+      name: "RPAREN",
+      pattern: ")",
+      isRegex: false,
+      lineNumber: 45,
+    },
+    {
+      name: "LBRACE",
+      pattern: "{",
+      isRegex: false,
+      lineNumber: 46,
+    },
+    {
+      name: "RBRACE",
+      pattern: "}",
+      isRegex: false,
+      lineNumber: 47,
+    },
+    {
+      name: "LBRACKET",
+      pattern: "[",
+      isRegex: false,
+      lineNumber: 48,
+    },
+    {
+      name: "RBRACKET",
+      pattern: "]",
+      isRegex: false,
+      lineNumber: 49,
+    },
+    {
+      name: "COMMA",
+      pattern: ",",
+      isRegex: false,
+      lineNumber: 50,
+    },
+    {
+      name: "SEMICOLON",
+      pattern: ";",
+      isRegex: false,
+      lineNumber: 51,
+    },
+    {
+      name: "COLON",
+      pattern: ":",
+      isRegex: false,
+      lineNumber: 52,
+    },
+    {
+      name: "AT",
+      pattern: "@",
+      isRegex: false,
+      lineNumber: 53,
+    },
+    {
+      name: "NAME",
+      pattern: "[A-Za-z_\\\\][A-Za-z0-9_\\.]*",
+      isRegex: true,
+      lineNumber: 55,
+    },
+    {
+      name: "FUNCTION_NAME",
+      pattern: "(?!.)",
+      isRegex: true,
+      lineNumber: 61,
+    },
+    {
+      name: "TABLE_NAME",
+      pattern: "(?!.)",
+      isRegex: true,
+      lineNumber: 62,
+    },
+    {
+      name: "COLUMN_REF",
+      pattern: "(?!.)",
+      isRegex: true,
+      lineNumber: 63,
+    },
+    {
+      name: "ROW_REF",
+      pattern: "(?!.)",
+      isRegex: true,
+      lineNumber: 64,
+    },
+  ],
+  keywords: ["TRUE","FALSE"],
+  mode: undefined,
+  escapeMode: undefined,
+  skipDefinitions: [
+    {
+      name: "NONSPACE_WHITESPACE",
+      pattern: "[\\t\\r\\n]+",
+      isRegex: true,
+      lineNumber: 11,
+    },
+  ],
+  reservedKeywords: [],
+  errorDefinitions: [],
+  groups: {},
+};

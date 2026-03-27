@@ -1,0 +1,222 @@
+// AUTO-GENERATED FILE — DO NOT EDIT
+// Source: javascript.tokens
+// Regenerate with: grammar-tools compile-tokens javascript.tokens
+//
+// This file embeds a TokenGrammar as native Rust data structures.
+// Call `token_grammar()` instead of reading and parsing the .tokens file.
+
+use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+use std::collections::HashMap;
+
+pub fn token_grammar() -> TokenGrammar {
+    TokenGrammar {
+        definitions: vec![
+            TokenDefinition {
+                name: r#"NAME"#.to_string(),
+                pattern: r#"[a-zA-Z_$][a-zA-Z0-9_$]*"#.to_string(),
+                is_regex: true,
+                line_number: 23,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NUMBER"#.to_string(),
+                pattern: r#"[0-9]+"#.to_string(),
+                is_regex: true,
+                line_number: 24,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"STRING"#.to_string(),
+                pattern: r#""([^"\\]|\\.)*""#.to_string(),
+                is_regex: true,
+                line_number: 25,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"STRICT_EQUALS"#.to_string(),
+                pattern: r#"==="#.to_string(),
+                is_regex: false,
+                line_number: 28,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"STRICT_NOT_EQUALS"#.to_string(),
+                pattern: r#"!=="#.to_string(),
+                is_regex: false,
+                line_number: 29,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"EQUALS_EQUALS"#.to_string(),
+                pattern: r#"=="#.to_string(),
+                is_regex: false,
+                line_number: 30,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"NOT_EQUALS"#.to_string(),
+                pattern: r#"!="#.to_string(),
+                is_regex: false,
+                line_number: 31,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LESS_EQUALS"#.to_string(),
+                pattern: r#"<="#.to_string(),
+                is_regex: false,
+                line_number: 32,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"GREATER_EQUALS"#.to_string(),
+                pattern: r#">="#.to_string(),
+                is_regex: false,
+                line_number: 33,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"ARROW"#.to_string(),
+                pattern: r#"=>"#.to_string(),
+                is_regex: false,
+                line_number: 34,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"EQUALS"#.to_string(),
+                pattern: r#"="#.to_string(),
+                is_regex: false,
+                line_number: 37,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"PLUS"#.to_string(),
+                pattern: r#"+"#.to_string(),
+                is_regex: false,
+                line_number: 38,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"MINUS"#.to_string(),
+                pattern: r#"-"#.to_string(),
+                is_regex: false,
+                line_number: 39,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"STAR"#.to_string(),
+                pattern: r#"*"#.to_string(),
+                is_regex: false,
+                line_number: 40,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"SLASH"#.to_string(),
+                pattern: r#"/"#.to_string(),
+                is_regex: false,
+                line_number: 41,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LESS_THAN"#.to_string(),
+                pattern: r#"<"#.to_string(),
+                is_regex: false,
+                line_number: 42,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"GREATER_THAN"#.to_string(),
+                pattern: r#">"#.to_string(),
+                is_regex: false,
+                line_number: 43,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"BANG"#.to_string(),
+                pattern: r#"!"#.to_string(),
+                is_regex: false,
+                line_number: 44,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LPAREN"#.to_string(),
+                pattern: r#"("#.to_string(),
+                is_regex: false,
+                line_number: 47,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RPAREN"#.to_string(),
+                pattern: r#")"#.to_string(),
+                is_regex: false,
+                line_number: 48,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LBRACE"#.to_string(),
+                pattern: r#"{"#.to_string(),
+                is_regex: false,
+                line_number: 49,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RBRACE"#.to_string(),
+                pattern: r#"}"#.to_string(),
+                is_regex: false,
+                line_number: 50,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"LBRACKET"#.to_string(),
+                pattern: r#"["#.to_string(),
+                is_regex: false,
+                line_number: 51,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"RBRACKET"#.to_string(),
+                pattern: r#"]"#.to_string(),
+                is_regex: false,
+                line_number: 52,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"COMMA"#.to_string(),
+                pattern: r#","#.to_string(),
+                is_regex: false,
+                line_number: 53,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"COLON"#.to_string(),
+                pattern: r#":"#.to_string(),
+                is_regex: false,
+                line_number: 54,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"SEMICOLON"#.to_string(),
+                pattern: r#";"#.to_string(),
+                is_regex: false,
+                line_number: 55,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"DOT"#.to_string(),
+                pattern: r#"."#.to_string(),
+                is_regex: false,
+                line_number: 56,
+                alias: None,
+            },
+        ],
+        keywords: vec![r#"let"#.to_string(), r#"const"#.to_string(), r#"var"#.to_string(), r#"if"#.to_string(), r#"else"#.to_string(), r#"while"#.to_string(), r#"for"#.to_string(), r#"do"#.to_string(), r#"function"#.to_string(), r#"return"#.to_string(), r#"class"#.to_string(), r#"import"#.to_string(), r#"export"#.to_string(), r#"from"#.to_string(), r#"as"#.to_string(), r#"new"#.to_string(), r#"this"#.to_string(), r#"typeof"#.to_string(), r#"instanceof"#.to_string(), r#"true"#.to_string(), r#"false"#.to_string(), r#"null"#.to_string(), r#"undefined"#.to_string()],
+        mode: None,
+        skip_definitions: vec![],
+        reserved_keywords: vec![],
+        escapes: None,
+        error_definitions: vec![],
+        groups: HashMap::new(),
+        case_sensitive: true,
+        version: 1,
+        case_insensitive: false,
+    }
+}

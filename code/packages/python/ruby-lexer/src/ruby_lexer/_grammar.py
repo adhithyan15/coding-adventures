@@ -1,0 +1,166 @@
+# AUTO-GENERATED FILE — DO NOT EDIT
+# Source: ruby.tokens
+# Regenerate with: grammar-tools compile-tokens <source.tokens>
+#
+# This file embeds a TokenGrammar as native Python data structures.
+# Downstream packages import TOKEN_GRAMMAR directly instead of
+# reading and parsing the .tokens file at runtime.
+
+from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar
+
+# fmt: off  # noqa: E501 — generated code may have long lines
+
+TOKEN_GRAMMAR = TokenGrammar(
+    version=1,
+    case_insensitive=False,
+    case_sensitive=True,
+    definitions=[
+        TokenDefinition(
+            name='NAME',
+            pattern='[a-zA-Z_][a-zA-Z0-9_]*',
+            is_regex=True,
+            line_number=23,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='NUMBER',
+            pattern='[0-9]+',
+            is_regex=True,
+            line_number=24,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='STRING',
+            pattern='"([^"\\\\]|\\\\.)*"',
+            is_regex=True,
+            line_number=25,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='EQUALS_EQUALS',
+            pattern='==',
+            is_regex=False,
+            line_number=28,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='DOT_DOT',
+            pattern='..',
+            is_regex=False,
+            line_number=29,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='HASH_ROCKET',
+            pattern='=>',
+            is_regex=False,
+            line_number=30,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='NOT_EQUALS',
+            pattern='!=',
+            is_regex=False,
+            line_number=31,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='LESS_EQUALS',
+            pattern='<=',
+            is_regex=False,
+            line_number=32,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='GREATER_EQUALS',
+            pattern='>=',
+            is_regex=False,
+            line_number=33,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='EQUALS',
+            pattern='=',
+            is_regex=False,
+            line_number=36,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='PLUS',
+            pattern='+',
+            is_regex=False,
+            line_number=37,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='MINUS',
+            pattern='-',
+            is_regex=False,
+            line_number=38,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='STAR',
+            pattern='*',
+            is_regex=False,
+            line_number=39,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='SLASH',
+            pattern='/',
+            is_regex=False,
+            line_number=40,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='LESS_THAN',
+            pattern='<',
+            is_regex=False,
+            line_number=43,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='GREATER_THAN',
+            pattern='>',
+            is_regex=False,
+            line_number=44,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='LPAREN',
+            pattern='(',
+            is_regex=False,
+            line_number=47,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='RPAREN',
+            pattern=')',
+            is_regex=False,
+            line_number=48,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='COMMA',
+            pattern=',',
+            is_regex=False,
+            line_number=49,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='COLON',
+            pattern=':',
+            is_regex=False,
+            line_number=50,
+            alias=None,
+        ),
+    ],
+    keywords=['if', 'else', 'elsif', 'end', 'while', 'for', 'do', 'def', 'return', 'class', 'module', 'require', 'puts', 'true', 'false', 'nil', 'and', 'or', 'not', 'then', 'unless', 'until', 'yield', 'begin', 'rescue', 'ensure'],
+    mode=None,
+    escape_mode=None,
+    skip_definitions=[],
+    reserved_keywords=[],
+    error_definitions=[],
+    groups={},
+)
