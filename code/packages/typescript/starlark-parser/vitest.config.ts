@@ -1,12 +1,12 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig, configDefaults } from "vitest/config";
 
 export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      // _grammar.ts is a generated data file — exclude it from coverage
-      // so the threshold applies only to hand-written logic.
-      exclude: ["src/_grammar.ts"],
+      // Extend vitest's default exclusions with _grammar.ts — a generated data
+      // file that has no testable logic and should not count toward the threshold.
+      exclude: [...(configDefaults.coverage.exclude ?? []), "src/_grammar.ts"],
       thresholds: {
         lines: 80,
       },
