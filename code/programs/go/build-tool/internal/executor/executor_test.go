@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
@@ -297,6 +298,85 @@ func TestExecuteBuildsParallelLevel(t *testing.T) {
 	}
 	if results["python/pkg-b"].Status != "built" {
 		t.Fatalf("expected pkg-b built, got %s", results["python/pkg-b"].Status)
+	}
+}
+
+func TestBuildResourceKeysIncludesSelfAndReferencedPackages(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"shared/BUILD": "echo shared",
+		"pkg-a/BUILD":  "cd ../shared && npm install",
+	})
+
+	pkg := discovery.Package{
+		Name:          "typescript/pkg-a",
+		Path:          filepath.Join(root, "pkg-a"),
+		BuildCommands: []string{"cd ../shared && npm install"},
+		Language:      "typescript",
+	}
+
+	pathToPkg := map[string]string{
+		filepath.Join(root, "pkg-a"):  "typescript/pkg-a",
+		filepath.Join(root, "shared"): "typescript/shared",
+	}
+
+	keys := buildResourceKeys(pkg, pathToPkg)
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "typescript/pkg-a") {
+		t.Fatalf("expected keys to include self, got %v", keys)
+	}
+	if !strings.Contains(joined, "typescript/shared") {
+		t.Fatalf("expected keys to include referenced package, got %v", keys)
+	}
+}
+
+func TestExecuteBuildsSerializesSharedBuildResources(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("uses shell commands that are only asserted on Unix runners")
+	}
+
+	root := makeFixture(t, map[string]string{
+		"shared/BUILD": "echo shared",
+		"pkg-a/BUILD":  "cd ../shared && mkdir .lockdir && sleep 1 && rmdir .lockdir",
+		"pkg-b/BUILD":  "cd ../shared && mkdir .lockdir && sleep 1 && rmdir .lockdir",
+	})
+
+	packages := []discovery.Package{
+		{Name: "typescript/shared", Path: filepath.Join(root, "shared"), BuildCommands: []string{"echo shared"}, Language: "typescript"},
+		{Name: "typescript/pkg-a", Path: filepath.Join(root, "pkg-a"), BuildCommands: []string{"cd ../shared && mkdir .lockdir && sleep 1 && rmdir .lockdir"}, Language: "typescript"},
+		{Name: "typescript/pkg-b", Path: filepath.Join(root, "pkg-b"), BuildCommands: []string{"cd ../shared && mkdir .lockdir && sleep 1 && rmdir .lockdir"}, Language: "typescript"},
+	}
+
+	graph := directedgraph.New()
+	for _, pkg := range packages {
+		graph.AddNode(pkg.Name)
+	}
+
+	bc := cache.New()
+	results := ExecuteBuilds(
+		packages,
+		graph,
+		bc,
+		map[string]string{
+			"typescript/shared": "hs",
+			"typescript/pkg-a":  "ha",
+			"typescript/pkg-b":  "hb",
+		},
+		map[string]string{
+			"typescript/shared": "ds",
+			"typescript/pkg-a":  "da",
+			"typescript/pkg-b":  "db",
+		},
+		true,
+		false,
+		3,
+		nil,
+		nil,
+	)
+
+	for _, name := range []string{"typescript/shared", "typescript/pkg-a", "typescript/pkg-b"} {
+		if results[name].Status != "built" {
+			t.Fatalf("expected %s to build successfully, got %s (stderr: %s)", name, results[name].Status, results[name].Stderr)
+		}
 	}
 }
 

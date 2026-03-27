@@ -41,7 +41,10 @@ package executor
 import (
 	"fmt"
 	"os/exec"
+	"path/filepath"
+	"regexp"
 	"runtime"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -164,9 +167,12 @@ func ExecuteBuilds(
 ) map[string]BuildResult {
 	// Build a lookup from name to Package for quick access.
 	pkgByName := make(map[string]discovery.Package)
+	pathToPkg := make(map[string]string, len(packages))
 	for _, p := range packages {
 		pkgByName[p.Name] = p
+		pathToPkg[filepath.Clean(p.Path)] = p.Name
 	}
+	resourceLocker := newBuildResourceLocker()
 
 	// Get the parallel execution levels from the dependency graph.
 	groups, err := graph.IndependentGroups()
@@ -296,6 +302,8 @@ func ExecuteBuilds(
 				defer wg.Done()
 				semaphore <- struct{}{}        // acquire
 				defer func() { <-semaphore }() // release
+				releaseResources := resourceLocker.Acquire(buildResourceKeys(p, pathToPkg))
+				defer releaseResources()
 
 				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
 				result := runPackageBuild(p)
@@ -366,4 +374,69 @@ func collectTransitivePredecessors(node string, graph *directedgraph.Graph) map[
 	}
 
 	return visited
+}
+
+var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;()]+)+`)
+
+type buildResourceLocker struct {
+	mu    sync.Mutex
+	locks map[string]*sync.Mutex
+}
+
+func newBuildResourceLocker() *buildResourceLocker {
+	return &buildResourceLocker{locks: make(map[string]*sync.Mutex)}
+}
+
+func (l *buildResourceLocker) Acquire(keys []string) func() {
+	if len(keys) == 0 {
+		return func() {}
+	}
+
+	sort.Strings(keys)
+	acquired := make([]*sync.Mutex, 0, len(keys))
+	for _, key := range keys {
+		lock := l.lockFor(key)
+		lock.Lock()
+		acquired = append(acquired, lock)
+	}
+
+	return func() {
+		for i := len(acquired) - 1; i >= 0; i-- {
+			acquired[i].Unlock()
+		}
+	}
+}
+
+func (l *buildResourceLocker) lockFor(key string) *sync.Mutex {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	lock, ok := l.locks[key]
+	if !ok {
+		lock = &sync.Mutex{}
+		l.locks[key] = lock
+	}
+	return lock
+}
+
+func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []string {
+	keys := map[string]bool{
+		pkg.Name: true,
+	}
+
+	for _, command := range pkg.BuildCommands {
+		for _, raw := range relPathRe.FindAllString(command, -1) {
+			normalized := strings.ReplaceAll(raw, "\\", "/")
+			abs := filepath.Clean(filepath.Join(pkg.Path, filepath.FromSlash(normalized)))
+			if name, ok := pathToPkg[abs]; ok {
+				keys[name] = true
+			}
+		}
+	}
+
+	result := make([]string, 0, len(keys))
+	for key := range keys {
+		result = append(result, key)
+	}
+	return result
 }
