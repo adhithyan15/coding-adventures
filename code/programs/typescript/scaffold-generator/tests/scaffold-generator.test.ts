@@ -31,6 +31,7 @@ import {
   generateTypeScript,
   generateRust,
   generateElixir,
+  generatePerl,
   generateCommonFiles,
   updateRustWorkspace,
   findRepoRoot,
@@ -341,6 +342,28 @@ describe("readDeps", () => {
     const pkgDir = path.join(tmpDir, "no-mix");
     fs.mkdirSync(pkgDir, { recursive: true });
     expect(readDeps(pkgDir, "elixir")).toEqual([]);
+  });
+
+  // --- Perl ---
+
+  it("reads Perl deps from cpanfile", () => {
+    const pkgDir = path.join(tmpDir, "my-pkg");
+    writeTestFile(pkgDir, "cpanfile", [
+      "requires 'coding-adventures-logic-gates';",
+      "requires 'coding-adventures-arithmetic';",
+      "on 'test' => sub {",
+      "    requires 'Test2::V0';",
+      "};",
+    ].join("\n"));
+
+    const deps = readDeps(pkgDir, "perl");
+    expect(deps).toEqual(["logic-gates", "arithmetic"]);
+  });
+
+  it("returns empty for Perl package with no cpanfile", () => {
+    const pkgDir = path.join(tmpDir, "no-cpanfile");
+    fs.mkdirSync(pkgDir, { recursive: true });
+    expect(readDeps(pkgDir, "perl")).toEqual([]);
   });
 
   // --- Unknown language ---
@@ -845,6 +868,73 @@ describe("generateElixir", () => {
 });
 
 // =========================================================================
+// 6b. generatePerl tests
+// =========================================================================
+
+describe("generatePerl", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    removeDir(tmpDir);
+  });
+
+  it("creates Makefile.PL with package name", () => {
+    generatePerl(tmpDir, "my-pkg", "A test package", "", [], []);
+    const content = fs.readFileSync(path.join(tmpDir, "Makefile.PL"), "utf-8");
+    expect(content).toContain("CodingAdventures::MyPkg");
+  });
+
+  it("creates cpanfile", () => {
+    generatePerl(tmpDir, "my-pkg", "A test package", "", [], []);
+    expect(fs.existsSync(path.join(tmpDir, "cpanfile"))).toBe(true);
+  });
+
+  it("creates module .pm file", () => {
+    generatePerl(tmpDir, "my-pkg", "A test package", "", [], []);
+    expect(
+      fs.existsSync(path.join(tmpDir, "lib", "CodingAdventures", "MyPkg.pm")),
+    ).toBe(true);
+  });
+
+  it("creates test files", () => {
+    generatePerl(tmpDir, "my-pkg", "A test package", "", [], []);
+    expect(fs.existsSync(path.join(tmpDir, "t", "00-load.t"))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, "t", "01-basic.t"))).toBe(true);
+  });
+
+  it("Makefile.PL includes direct dep", () => {
+    generatePerl(tmpDir, "my-pkg", "A test", "", ["logic-gates"], ["logic-gates"]);
+    const content = fs.readFileSync(path.join(tmpDir, "Makefile.PL"), "utf-8");
+    expect(content).toContain("CodingAdventures::LogicGates");
+  });
+
+  it("cpanfile includes direct dep", () => {
+    generatePerl(tmpDir, "my-pkg", "A test", "", ["logic-gates"], ["logic-gates"]);
+    const content = fs.readFileSync(path.join(tmpDir, "cpanfile"), "utf-8");
+    expect(content).toContain("coding-adventures-logic-gates");
+  });
+
+  it("BUILD chains transitive dep installs", () => {
+    generatePerl(tmpDir, "my-pkg", "A test", "", ["logic-gates"], ["logic-gates"]);
+    const content = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
+    expect(content).toContain("../logic-gates");
+    expect(content).toContain("prove -l -v t/");
+  });
+
+  it("BUILD without deps has only self-install and prove", () => {
+    generatePerl(tmpDir, "my-pkg", "A test", "", [], []);
+    const content = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
+    const cdLines = content.split("\n").filter((l) => l.startsWith("cd ../"));
+    expect(cdLines).toHaveLength(0);
+    expect(content).toContain("prove -l -v t/");
+  });
+});
+
+// =========================================================================
 // 7. Common files tests
 // =========================================================================
 
@@ -983,14 +1073,15 @@ describe("findRepoRoot", () => {
 // =========================================================================
 
 describe("VALID_LANGUAGES", () => {
-  it("contains all 6 supported languages", () => {
-    expect(VALID_LANGUAGES).toHaveLength(6);
+  it("contains all 7 supported languages", () => {
+    expect(VALID_LANGUAGES).toHaveLength(7);
     expect(VALID_LANGUAGES).toContain("python");
     expect(VALID_LANGUAGES).toContain("go");
     expect(VALID_LANGUAGES).toContain("ruby");
     expect(VALID_LANGUAGES).toContain("typescript");
     expect(VALID_LANGUAGES).toContain("rust");
     expect(VALID_LANGUAGES).toContain("elixir");
+    expect(VALID_LANGUAGES).toContain("perl");
   });
 });
 

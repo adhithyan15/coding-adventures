@@ -26,6 +26,7 @@ from scaffold_generator import (  # noqa: E402
     generate_typescript,
     generate_rust,
     generate_elixir,
+    generate_perl,
     generate_common_files,
 )
 
@@ -134,6 +135,18 @@ class TestReadDeps:
                 f.write(mix)
             deps = read_deps(tmp, "elixir")
             assert deps == ["logic-gates"]
+
+    def test_read_perl_deps(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            cpanfile = "requires 'coding-adventures-logic-gates';\nrequires 'coding-adventures-arithmetic';\n"
+            with open(os.path.join(tmp, "cpanfile"), "w") as f:
+                f.write(cpanfile)
+            deps = read_deps(tmp, "perl")
+            assert deps == ["logic-gates", "arithmetic"]
+
+    def test_read_perl_deps_missing_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            assert read_deps(tmp, "perl") == []
 
     def test_missing_file_returns_empty(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -304,6 +317,54 @@ class TestGenerateElixir:
             with open(os.path.join(tmp, "BUILD")) as f:
                 build = f.read()
             assert "../logic_gates" in build
+
+
+class TestGeneratePerl:
+    """Verify Perl file generation."""
+
+    def test_makefile_pl_has_dep(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_perl(tmp, "test-pkg", "A test", "", ["logic-gates"], ["logic-gates"])
+            with open(os.path.join(tmp, "Makefile.PL")) as f:
+                content = f.read()
+            assert "CodingAdventures::LogicGates" in content
+
+    def test_cpanfile_has_dep(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_perl(tmp, "test-pkg", "A test", "", ["logic-gates"], ["logic-gates"])
+            with open(os.path.join(tmp, "cpanfile")) as f:
+                content = f.read()
+            assert "coding-adventures-logic-gates" in content
+
+    def test_module_file_created(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_perl(tmp, "test-pkg", "A test", "", [], [])
+            module_path = os.path.join(tmp, "lib", "CodingAdventures", "TestPkg.pm")
+            assert os.path.exists(module_path)
+
+    def test_test_files_created(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_perl(tmp, "test-pkg", "A test", "", [], [])
+            assert os.path.exists(os.path.join(tmp, "t", "00-load.t"))
+            assert os.path.exists(os.path.join(tmp, "t", "01-basic.t"))
+
+    def test_build_chain_installs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_perl(tmp, "test-pkg", "A test", "", ["logic-gates"], ["logic-gates"])
+            with open(os.path.join(tmp, "BUILD")) as f:
+                build = f.read()
+            assert "../logic-gates" in build
+            assert "prove -l -v t/" in build
+
+    def test_build_no_deps(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_perl(tmp, "test-pkg", "A test", "", [], [])
+            with open(os.path.join(tmp, "BUILD")) as f:
+                build = f.read()
+            # When no deps, BUILD only has self-install and prove
+            prereq_lines = [l for l in build.splitlines() if l.startswith("cd ../")]
+            assert prereq_lines == []
+            assert "prove -l -v t/" in build
 
 
 class TestCommonFiles:

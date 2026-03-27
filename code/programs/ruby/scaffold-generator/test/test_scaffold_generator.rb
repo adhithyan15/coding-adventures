@@ -263,6 +263,27 @@ class TestDependencyReading < Minitest::Test
     assert_equal [], SG.read_elixir_deps(File.join(@tmpdir, "nonexistent"))
   end
 
+  # --- Perl ---
+  # Perl cpanfile uses: requires 'coding-adventures-<name>';
+
+  def test_read_perl_deps
+    pkg_dir = File.join(@tmpdir, "my-pkg")
+    FileUtils.mkdir_p(pkg_dir)
+    File.write(File.join(pkg_dir, "cpanfile"), <<~CPAN)
+      requires 'coding-adventures-logic-gates';
+      requires 'coding-adventures-arithmetic';
+      on 'test' => sub {
+          requires 'Test2::V0';
+      };
+    CPAN
+    deps = SG.read_perl_deps(pkg_dir)
+    assert_equal %w[logic-gates arithmetic], deps
+  end
+
+  def test_read_perl_deps_no_cpanfile
+    assert_equal [], SG.read_perl_deps(File.join(@tmpdir, "nonexistent"))
+  end
+
   # --- read_deps dispatcher ---
   # Verify the dispatcher correctly routes to language-specific readers
 
@@ -638,6 +659,69 @@ class TestGenerateElixir < Minitest::Test
     SG.generate_elixir(@tmpdir, "my-package", "A test", "", %w[logic-gates], %w[logic-gates])
     content = File.read(File.join(@tmpdir, "mix.exs"))
     assert_includes content, ':coding_adventures_logic_gates, path: "../logic_gates"'
+  end
+end
+
+# ===========================================================================
+# Test: File Generation - Perl
+# ===========================================================================
+
+class TestGeneratePerl < Minitest::Test
+  def setup
+    @tmpdir = Dir.mktmpdir("scaffold-perl")
+  end
+
+  def teardown
+    FileUtils.rm_rf(@tmpdir)
+  end
+
+  def test_generates_makefile_pl
+    SG.generate_perl(@tmpdir, "my-package", "A test package", "", [], [])
+    assert File.exist?(File.join(@tmpdir, "Makefile.PL"))
+    content = File.read(File.join(@tmpdir, "Makefile.PL"))
+    assert_includes content, "CodingAdventures::MyPackage"
+  end
+
+  def test_generates_cpanfile
+    SG.generate_perl(@tmpdir, "my-package", "A test package", "", [], [])
+    assert File.exist?(File.join(@tmpdir, "cpanfile"))
+  end
+
+  def test_generates_module_file
+    SG.generate_perl(@tmpdir, "my-package", "A test package", "", [], [])
+    assert File.exist?(File.join(@tmpdir, "lib", "CodingAdventures", "MyPackage.pm"))
+  end
+
+  def test_generates_test_files
+    SG.generate_perl(@tmpdir, "my-package", "A test package", "", [], [])
+    assert File.exist?(File.join(@tmpdir, "t", "00-load.t"))
+    assert File.exist?(File.join(@tmpdir, "t", "01-basic.t"))
+  end
+
+  def test_makefile_pl_has_dep
+    SG.generate_perl(@tmpdir, "my-package", "A test", "", %w[logic-gates], %w[logic-gates])
+    content = File.read(File.join(@tmpdir, "Makefile.PL"))
+    assert_includes content, "CodingAdventures::LogicGates"
+  end
+
+  def test_cpanfile_has_dep
+    SG.generate_perl(@tmpdir, "my-package", "A test", "", %w[logic-gates], %w[logic-gates])
+    content = File.read(File.join(@tmpdir, "cpanfile"))
+    assert_includes content, "coding-adventures-logic-gates"
+  end
+
+  def test_build_chain_installs
+    SG.generate_perl(@tmpdir, "my-package", "A test", "", %w[logic-gates], %w[logic-gates])
+    build = File.read(File.join(@tmpdir, "BUILD"))
+    assert_includes build, "../logic-gates"
+    assert_includes build, "prove -l -v t/"
+  end
+
+  def test_build_no_deps
+    SG.generate_perl(@tmpdir, "my-package", "A test", "", [], [])
+    build = File.read(File.join(@tmpdir, "BUILD"))
+    refute_includes build, "cd ../"
+    assert_includes build, "prove -l -v t/"
   end
 end
 

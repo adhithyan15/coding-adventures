@@ -53,6 +53,7 @@ export const VALID_LANGUAGES = [
   "typescript",
   "rust",
   "elixir",
+  "perl",
 ] as const;
 
 /**
@@ -160,6 +161,7 @@ export function readDeps(pkgDir: string, lang: string): string[] {
     typescript: readTypeScriptDeps,
     rust: readRustDeps,
     elixir: readElixirDeps,
+    perl: readPerlDeps,
   };
   const reader = readers[lang];
   if (!reader) {
@@ -371,6 +373,24 @@ function readElixirDeps(pkgDir: string): string[] {
       if (dep) {
         deps.push(dep);
       }
+    }
+  }
+  return deps;
+}
+
+function readPerlDeps(pkgDir: string): string[] {
+  const cpanfilePath = path.join(pkgDir, "cpanfile");
+  if (!fs.existsSync(cpanfilePath)) {
+    return [];
+  }
+  const content = fs.readFileSync(cpanfilePath, "utf-8");
+  const deps: string[] = [];
+  const re = /requires\s+['"]coding-adventures-([^'"]+)['"]/;
+  for (const line of content.split("\n")) {
+    if (line.trim().startsWith("#")) continue;
+    const m = line.match(re);
+    if (m) {
+      deps.push(m[1]);
     }
   }
   return deps;
@@ -1116,6 +1136,177 @@ end
 }
 
 // -------------------------------------------------------------------------
+// Perl
+// -------------------------------------------------------------------------
+
+/**
+ * Generate Perl package scaffolding.
+ *
+ * Creates:
+ *   - Makefile.PL (ExtUtils::MakeMaker build config)
+ *   - cpanfile (declarative dependency spec)
+ *   - lib/CodingAdventures/<Camel>.pm (module)
+ *   - t/00-load.t (load test)
+ *   - t/01-basic.t (basic placeholder test)
+ *   - BUILD (chain-install deps then prove)
+ */
+export function generatePerl(
+  targetDir: string,
+  pkgName: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+  orderedDeps: string[],
+): void {
+  const camel = toCamelCase(pkgName);
+
+  const prereqPmEntries = directDeps
+    .map((dep) => `        'CodingAdventures::${toCamelCase(dep)}' => 0,`)
+    .join("\n");
+  const prereqPmStr = prereqPmEntries
+    ? `    PREREQ_PM        => {\n${prereqPmEntries}\n    },\n`
+    : "";
+
+  const makefilePl = `use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+    NAME             => 'CodingAdventures::${camel}',
+    VERSION_FROM     => 'lib/CodingAdventures/${camel}.pm',
+    ABSTRACT         => '${description}',
+    AUTHOR           => 'coding-adventures',
+    LICENSE          => 'mit',
+    MIN_PERL_VERSION => '5.026000',
+${prereqPmStr}    TEST_REQUIRES    => {
+        'Test2::V0' => 0,
+    },
+    META_MERGE       => {
+        'meta-spec' => { version => 2 },
+        resources   => {
+            repository => {
+                type => 'git',
+                url  => 'https://github.com/adhithyan15/coding-adventures.git',
+                web  => 'https://github.com/adhithyan15/coding-adventures',
+            },
+        },
+    },
+);
+`;
+
+  const cpanfileDeps = directDeps
+    .map((dep) => `requires 'coding-adventures-${dep}';`)
+    .join("\n");
+  const cpanfile = `# Runtime dependencies
+${cpanfileDeps ? cpanfileDeps + "\n" : ""}
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};
+`;
+
+  const depUses = directDeps
+    .map((dep) => `use CodingAdventures::${toCamelCase(dep)};`)
+    .join("\n");
+  const modulePm = `package CodingAdventures::${camel};
+
+# ============================================================================
+# CodingAdventures::${camel} — ${description}
+# ============================================================================
+#
+# This module is part of the coding-adventures project, an educational
+# computing stack built from logic gates up through interpreters and
+# compilers.
+#
+# ${layerCtx}
+#
+# Usage:
+#
+#   use CodingAdventures::${camel};
+#
+# ============================================================================
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
+${depUses ? depUses + "\n\n" : ""}# TODO: Implement ${camel}
+
+1;
+
+__END__
+
+=head1 NAME
+
+CodingAdventures::${camel} - ${description}
+
+=head1 SYNOPSIS
+
+    use CodingAdventures::${camel};
+
+=head1 DESCRIPTION
+
+${description}
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 AUTHOR
+
+coding-adventures
+
+=head1 LICENSE
+
+MIT
+
+=cut
+`;
+
+  const loadT = `use strict;
+use warnings;
+use Test2::V0;
+
+use_ok('CodingAdventures::${camel}');
+
+# Verify the module exports a version number.
+ok(CodingAdventures::${camel}->VERSION, 'has a VERSION');
+
+done_testing;
+`;
+
+  const basicT = `use strict;
+use warnings;
+use Test2::V0;
+
+use CodingAdventures::${camel};
+
+# TODO: Replace this placeholder with real tests.
+ok(1, '${camel} module loaded successfully');
+
+done_testing;
+`;
+
+  const buildLines = orderedDeps.map(
+    (dep) => `cd ../${dep} && cpanm --with-test --installdeps --quiet .\n`,
+  );
+  buildLines.push("cpanm --with-test --installdeps --quiet .\n");
+  buildLines.push("prove -l -v t/\n");
+  const build = buildLines.join("");
+
+  writeFile(path.join(targetDir, "Makefile.PL"), makefilePl);
+  writeFile(path.join(targetDir, "cpanfile"), cpanfile);
+  writeFile(
+    path.join(targetDir, "lib", "CodingAdventures", `${camel}.pm`),
+    modulePm,
+  );
+  writeFile(path.join(targetDir, "t", "00-load.t"), loadT);
+  writeFile(path.join(targetDir, "t", "01-basic.t"), basicT);
+  writeFile(path.join(targetDir, "BUILD"), build);
+}
+
+// -------------------------------------------------------------------------
 // Common files (README.md + CHANGELOG.md)
 // -------------------------------------------------------------------------
 
@@ -1330,6 +1521,15 @@ export function scaffoldOne(
       generateRust(targetDir, pkgName, description, layerCtx, directDeps),
     elixir: () =>
       generateElixir(
+        targetDir,
+        pkgName,
+        description,
+        layerCtx,
+        directDeps,
+        orderedDeps,
+      ),
+    perl: () =>
+      generatePerl(
         targetDir,
         pkgName,
         description,

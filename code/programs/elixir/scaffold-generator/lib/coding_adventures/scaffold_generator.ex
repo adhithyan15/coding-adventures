@@ -49,7 +49,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
   # Constants
   # =========================================================================
 
-  @valid_languages ~w(python go ruby typescript rust elixir)
+  @valid_languages ~w(python go ruby typescript rust elixir perl)
 
   @kebab_case_re ~r/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/
 
@@ -193,6 +193,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
         "typescript" -> read_typescript_deps(pkg_dir)
         "rust" -> read_rust_deps(pkg_dir)
         "elixir" -> read_elixir_deps(pkg_dir)
+        "perl" -> read_perl_deps(pkg_dir)
         other -> {:error, "unknown language: #{other}"}
       end
 
@@ -359,6 +360,31 @@ defmodule CodingAdventures.ScaffoldGenerator do
               end
             else
               []
+            end
+          end)
+
+        {:ok, deps}
+
+      {:error, _} ->
+        {:ok, []}
+    end
+  end
+
+  # -- Perl: reads cpanfile for requires 'coding-adventures-*' entries ------
+
+  defp read_perl_deps(pkg_dir) do
+    cpanfile_path = Path.join(pkg_dir, "cpanfile")
+
+    case File.read(cpanfile_path) do
+      {:ok, content} ->
+        deps =
+          content
+          |> String.split("\n")
+          |> Enum.reject(&String.starts_with?(String.trim(&1), "#"))
+          |> Enum.flat_map(fn line ->
+            case Regex.run(~r/requires\s+['"]coding-adventures-([^'"]+)['"]/, line) do
+              [_, name] -> [name]
+              _ -> []
             end
           end)
 
@@ -727,6 +753,9 @@ defmodule CodingAdventures.ScaffoldGenerator do
 
       "elixir" ->
         generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+
+      "perl" ->
+        generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
     end
   end
 
@@ -1344,6 +1373,181 @@ defmodule CodingAdventures.ScaffoldGenerator do
       {:error, _reason} ->
         ":coding_adventures_#{dep_snake}"
     end
+  end
+
+  # =========================================================================
+  # File generation -- Perl
+  # =========================================================================
+
+  defp generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps) do
+    camel = to_camel_case(pkg_name)
+
+    prereq_pm_entries =
+      direct_deps
+      |> Enum.map(fn dep -> "        'CodingAdventures::#{to_camel_case(dep)}' => 0," end)
+      |> Enum.join("\n")
+
+    prereq_pm_str =
+      if prereq_pm_entries != "" do
+        "    PREREQ_PM        => {\n#{prereq_pm_entries}\n    },\n"
+      else
+        ""
+      end
+
+    makefile_pl = """
+    use strict;
+    use warnings;
+    use ExtUtils::MakeMaker;
+
+    WriteMakefile(
+        NAME             => 'CodingAdventures::#{camel}',
+        VERSION_FROM     => 'lib/CodingAdventures/#{camel}.pm',
+        ABSTRACT         => '#{description}',
+        AUTHOR           => 'coding-adventures',
+        LICENSE          => 'mit',
+        MIN_PERL_VERSION => '5.026000',
+    #{prereq_pm_str}    TEST_REQUIRES    => {
+            'Test2::V0' => 0,
+        },
+        META_MERGE       => {
+            'meta-spec' => { version => 2 },
+            resources   => {
+                repository => {
+                    type => 'git',
+                    url  => 'https://github.com/adhithyan15/coding-adventures.git',
+                    web  => 'https://github.com/adhithyan15/coding-adventures',
+                },
+            },
+        },
+    );
+    """
+
+    cpanfile_deps =
+      direct_deps
+      |> Enum.map(fn dep -> "requires 'coding-adventures-#{dep}';" end)
+      |> Enum.join("\n")
+
+    cpanfile_content = """
+    # Runtime dependencies
+    #{if cpanfile_deps != "", do: cpanfile_deps <> "\n", else: ""}
+    # Test dependencies
+    on 'test' => sub {
+        requires 'Test2::V0';
+    };
+    """
+
+    dep_uses =
+      direct_deps
+      |> Enum.map(fn dep -> "use CodingAdventures::#{to_camel_case(dep)};" end)
+      |> Enum.join("\n")
+
+    dep_uses_block = if dep_uses != "", do: dep_uses <> "\n\n", else: ""
+
+    module_pm = """
+    package CodingAdventures::#{camel};
+
+    # ============================================================================
+    # CodingAdventures::#{camel} — #{description}
+    # ============================================================================
+    #
+    # This module is part of the coding-adventures project, an educational
+    # computing stack built from logic gates up through interpreters and
+    # compilers.
+    #
+    # #{layer_ctx}
+    #
+    # Usage:
+    #
+    #   use CodingAdventures::#{camel};
+    #
+    # ============================================================================
+
+    use strict;
+    use warnings;
+
+    our $VERSION = '0.01';
+
+    #{dep_uses_block}# TODO: Implement #{camel}
+
+    1;
+
+    __END__
+
+    =head1 NAME
+
+    CodingAdventures::#{camel} - #{description}
+
+    =head1 SYNOPSIS
+
+        use CodingAdventures::#{camel};
+
+    =head1 DESCRIPTION
+
+    #{description}
+
+    =head1 VERSION
+
+    Version 0.01
+
+    =head1 AUTHOR
+
+    coding-adventures
+
+    =head1 LICENSE
+
+    MIT
+
+    =cut
+    """
+
+    load_t = """
+    use strict;
+    use warnings;
+    use Test2::V0;
+
+    use_ok('CodingAdventures::#{camel}');
+
+    # Verify the module exports a version number.
+    ok(CodingAdventures::#{camel}->VERSION, 'has a VERSION');
+
+    done_testing;
+    """
+
+    basic_t = """
+    use strict;
+    use warnings;
+    use Test2::V0;
+
+    use CodingAdventures::#{camel};
+
+    # TODO: Replace this placeholder with real tests.
+    ok(1, '#{camel} module loaded successfully');
+
+    done_testing;
+    """
+
+    build_lines =
+      Enum.map(ordered_deps, fn dep ->
+        "cd ../#{dep} && cpanm --with-test --installdeps --quiet .\n"
+      end) ++
+        [
+          "cpanm --with-test --installdeps --quiet .\n",
+          "prove -l -v t/\n"
+        ]
+
+    build_content = Enum.join(build_lines)
+
+    lib_dir = Path.join([target_dir, "lib", "CodingAdventures"])
+    t_dir = Path.join(target_dir, "t")
+    File.mkdir_p!(lib_dir)
+    File.mkdir_p!(t_dir)
+
+    write_dedented(Path.join(target_dir, "Makefile.PL"), makefile_pl)
+    write_dedented(Path.join(target_dir, "cpanfile"), cpanfile_content)
+    write_dedented(Path.join(lib_dir, "#{camel}.pm"), module_pm)
+    write_dedented(Path.join(t_dir, "00-load.t"), load_t)
+    write_dedented(Path.join(t_dir, "01-basic.t"), basic_t)
+    File.write!(Path.join(target_dir, "BUILD"), build_content)
   end
 
   # =========================================================================

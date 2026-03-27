@@ -39,7 +39,7 @@ module CodingAdventures
     # =====================================================================
 
     # The list of all supported target languages.
-    VALID_LANGUAGES = %w[python go ruby typescript rust elixir].freeze
+    VALID_LANGUAGES = %w[python go ruby typescript rust elixir perl].freeze
 
     # Validates that a package name is kebab-case: lowercase letters and
     # digits, segments separated by single hyphens.
@@ -139,6 +139,7 @@ module CodingAdventures
       when "typescript" then read_ts_deps(pkg_dir)
       when "rust"    then read_rust_deps(pkg_dir)
       when "elixir"  then read_elixir_deps(pkg_dir)
+      when "perl"    then read_perl_deps(pkg_dir)
       else []
       end
     end
@@ -323,6 +324,28 @@ module CodingAdventures
           dep = dep.tr("_", "-")
           deps << dep unless dep.empty?
         end
+      end
+      deps
+    end
+
+    # Read direct dependencies of a Perl package from its cpanfile.
+    #
+    # Scans for lines matching:
+    #   requires 'coding-adventures-<name>';
+    # and returns the kebab-case package names.
+    #
+    # @param pkg_dir [String] path to the package directory
+    # @return [Array<String>] kebab-case dependency names
+    def self.read_perl_deps(pkg_dir)
+      cpanfile_path = File.join(pkg_dir, "cpanfile")
+      return [] unless File.exist?(cpanfile_path)
+
+      deps = []
+      File.readlines(cpanfile_path).each do |line|
+        next if line.strip.start_with?("#")
+
+        m = line.match(/requires\s+['"]coding-adventures-([^'"]+)['"]/)
+        deps << m[1] if m
       end
       deps
     end
@@ -995,6 +1018,159 @@ module CodingAdventures
       write_file(File.join(target_dir, "BUILD"), build)
     end
 
+    # Generate Perl package scaffolding.
+    #
+    # @param target_dir [String] path where files will be written
+    # @param pkg_name [String] kebab-case package name
+    # @param description [String] one-line description
+    # @param layer_ctx [String] layer context string for docs
+    # @param direct_deps [Array<String>] direct dependency names
+    # @param ordered_deps [Array<String>] all deps in install order
+    def self.generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+      camel = to_camel_case(pkg_name)
+
+      prereq_pm_entries = direct_deps.map { |dep| "        'CodingAdventures::#{to_camel_case(dep)}' => 0," }.join("\n")
+      prereq_pm_str = prereq_pm_entries.empty? ? "" : "    PREREQ_PM        => {\n#{prereq_pm_entries}\n    },\n"
+
+      makefile_pl = <<~PERL
+        use strict;
+        use warnings;
+        use ExtUtils::MakeMaker;
+
+        WriteMakefile(
+            NAME             => 'CodingAdventures::#{camel}',
+            VERSION_FROM     => 'lib/CodingAdventures/#{camel}.pm',
+            ABSTRACT         => '#{description}',
+            AUTHOR           => 'coding-adventures',
+            LICENSE          => 'mit',
+            MIN_PERL_VERSION => '5.026000',
+        #{prereq_pm_str}    TEST_REQUIRES    => {
+                'Test2::V0' => 0,
+            },
+            META_MERGE       => {
+                'meta-spec' => { version => 2 },
+                resources   => {
+                    repository => {
+                        type => 'git',
+                        url  => 'https://github.com/adhithyan15/coding-adventures.git',
+                        web  => 'https://github.com/adhithyan15/coding-adventures',
+                    },
+                },
+            },
+        );
+      PERL
+
+      cpanfile_deps = direct_deps.map { |dep| "requires 'coding-adventures-#{dep}';" }.join("\n")
+      cpanfile_deps += "\n" unless cpanfile_deps.empty?
+      cpanfile = <<~CPAN
+        # Runtime dependencies
+        #{cpanfile_deps}
+        # Test dependencies
+        on 'test' => sub {
+            requires 'Test2::V0';
+        };
+      CPAN
+
+      dep_uses = direct_deps.map { |dep| "use CodingAdventures::#{to_camel_case(dep)};" }.join("\n")
+      dep_uses += "\n\n" unless dep_uses.empty?
+      module_pm = <<~PM
+        package CodingAdventures::#{camel};
+
+        # ============================================================================
+        # CodingAdventures::#{camel} — #{description}
+        # ============================================================================
+        #
+        # This module is part of the coding-adventures project, an educational
+        # computing stack built from logic gates up through interpreters and
+        # compilers.
+        #
+        # #{layer_ctx}
+        #
+        # Usage:
+        #
+        #   use CodingAdventures::#{camel};
+        #
+        # ============================================================================
+
+        use strict;
+        use warnings;
+
+        our $VERSION = '0.01';
+
+        #{dep_uses}# TODO: Implement #{camel}
+
+        1;
+
+        __END__
+
+        =head1 NAME
+
+        CodingAdventures::#{camel} - #{description}
+
+        =head1 SYNOPSIS
+
+            use CodingAdventures::#{camel};
+
+        =head1 DESCRIPTION
+
+        #{description}
+
+        =head1 VERSION
+
+        Version 0.01
+
+        =head1 AUTHOR
+
+        coding-adventures
+
+        =head1 LICENSE
+
+        MIT
+
+        =cut
+      PM
+
+      load_t = <<~TEST
+        use strict;
+        use warnings;
+        use Test2::V0;
+
+        use_ok('CodingAdventures::#{camel}');
+
+        # Verify the module exports a version number.
+        ok(CodingAdventures::#{camel}->VERSION, 'has a VERSION');
+
+        done_testing;
+      TEST
+
+      basic_t = <<~TEST
+        use strict;
+        use warnings;
+        use Test2::V0;
+
+        use CodingAdventures::#{camel};
+
+        # TODO: Replace this placeholder with real tests.
+        ok(1, '#{camel} module loaded successfully');
+
+        done_testing;
+      TEST
+
+      build_lines = ordered_deps.map { |dep| "cd ../#{dep} && cpanm --with-test --installdeps --quiet .\n" }
+      build_lines << "cpanm --with-test --installdeps --quiet .\n"
+      build_lines << "prove -l -v t/\n"
+      build = build_lines.join
+
+      write_file(File.join(target_dir, "Makefile.PL"), makefile_pl)
+      write_file(File.join(target_dir, "cpanfile"), cpanfile)
+      FileUtils.mkdir_p(File.join(target_dir, "lib", "CodingAdventures"))
+      write_file(File.join(target_dir, "lib", "CodingAdventures", "#{camel}.pm"), module_pm)
+      FileUtils.mkdir_p(File.join(target_dir, "t"))
+      write_file(File.join(target_dir, "t", "00-load.t"), load_t)
+      write_file(File.join(target_dir, "t", "01-basic.t"), basic_t)
+      write_file(File.join(target_dir, "BUILD"), build)
+    end
+
     # =====================================================================
     # Common Files (README.md, CHANGELOG.md)
     # =====================================================================
@@ -1151,6 +1327,8 @@ module CodingAdventures
         generate_rust(target_dir, pkg_name, description, layer_ctx, direct_deps)
       when "elixir"
         generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+      when "perl"
+        generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
       end
 
       generate_common_files(target_dir, pkg_name, description, lang, layer, direct_deps)

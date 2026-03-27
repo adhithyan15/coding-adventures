@@ -38,7 +38,7 @@ from pathlib import Path
 
 SPEC_FILE = str(Path(__file__).parent.parent.parent / "scaffold-generator.json")
 
-VALID_LANGUAGES = ["python", "go", "ruby", "typescript", "rust", "elixir"]
+VALID_LANGUAGES = ["python", "go", "ruby", "typescript", "rust", "elixir", "perl"]
 KEBAB_RE = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
 
 
@@ -81,6 +81,7 @@ def read_deps(pkg_dir: str, lang: str) -> list[str]:
         "typescript": _read_ts_deps,
         "rust": _read_rust_deps,
         "elixir": _read_elixir_deps,
+        "perl": _read_perl_deps,
     }
     return readers[lang](pkg_dir)
 
@@ -216,6 +217,22 @@ def _read_elixir_deps(pkg_dir: str) -> list[str]:
                 dep = dep.replace("_", "-")
                 if dep:
                     deps.append(dep)
+    return deps
+
+
+def _read_perl_deps(pkg_dir: str) -> list[str]:
+    """Parse cpanfile for requires 'coding-adventures-X' entries."""
+    import re
+    cpanfile_path = os.path.join(pkg_dir, "cpanfile")
+    if not os.path.exists(cpanfile_path):
+        return []
+    deps = []
+    pattern = re.compile(r"requires\s+['\"]coding-adventures-([^'\"]+)['\"]")
+    with open(cpanfile_path) as f:
+        for line in f:
+            m = pattern.search(line)
+            if m:
+                deps.append(m.group(1))
     return deps
 
 
@@ -750,6 +767,153 @@ end
     _write_file(os.path.join(target_dir, "BUILD"), build)
 
 
+def generate_perl(
+    target_dir: str, pkg_name: str, description: str,
+    layer_ctx: str, direct_deps: list[str], ordered_deps: list[str],
+) -> None:
+    """Generate Perl package files."""
+    camel = to_camel_case(pkg_name)
+
+    # Makefile.PL
+    prereq_lines = "".join(
+        f"        'CodingAdventures::{to_camel_case(dep)}' => 0,\n"
+        for dep in direct_deps
+    )
+    makefile_pl = (
+        "use strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\nWriteMakefile(\n"
+        f"    NAME             => 'CodingAdventures::{camel}',\n"
+        f"    VERSION_FROM     => 'lib/CodingAdventures/{camel}.pm',\n"
+        f"    ABSTRACT         => '{description}',\n"
+        "    AUTHOR           => 'coding-adventures',\n"
+        "    LICENSE          => 'mit',\n"
+        "    MIN_PERL_VERSION => '5.026000',\n"
+        "    PREREQ_PM        => {\n"
+        f"{prereq_lines}"
+        "    },\n"
+        "    TEST_REQUIRES    => {\n        'Test2::V0' => 0,\n    },\n"
+        "    META_MERGE       => {\n        'meta-spec' => { version => 2 },\n"
+        "        resources   => {\n            repository => {\n"
+        "                type => 'git',\n"
+        "                url  => 'https://github.com/adhithyan15/coding-adventures.git',\n"
+        "                web  => 'https://github.com/adhithyan15/coding-adventures',\n"
+        "            },\n        },\n    },\n);\n"
+    )
+
+    # cpanfile
+    runtime_lines = "".join(
+        f"requires 'coding-adventures-{dep}';\n" for dep in direct_deps
+    )
+    cpanfile = (
+        ("# Runtime dependencies\n" + runtime_lines + "\n" if direct_deps else "")
+        + "# Test dependencies\non 'test' => sub {\n    requires 'Test2::V0';\n};\n"
+    )
+
+    # Source module
+    layer_line = f"#\n# {layer_ctx}\n" if layer_ctx else ""
+    dep_imports = "".join(
+        f"use CodingAdventures::{to_camel_case(dep)};\n" for dep in direct_deps
+    )
+    module = f"""package CodingAdventures::{camel};
+
+# ============================================================================
+# CodingAdventures::{camel} — {description}
+# ============================================================================
+#
+# This module is part of the coding-adventures project, an educational
+# computing stack built from logic gates up through interpreters and
+# compilers.
+#{layer_line}#
+# Usage:
+#
+#   use CodingAdventures::{camel};
+#
+# ============================================================================
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
+{dep_imports}
+# TODO: Implement {camel}
+
+1;
+
+__END__
+
+=head1 NAME
+
+CodingAdventures::{camel} - {description}
+
+=head1 SYNOPSIS
+
+    use CodingAdventures::{camel};
+
+=head1 DESCRIPTION
+
+{description}
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 AUTHOR
+
+coding-adventures
+
+=head1 LICENSE
+
+MIT
+
+=cut
+"""
+
+    # t/00-load.t
+    load_t = f"""use strict;
+use warnings;
+use Test2::V0;
+
+use_ok('CodingAdventures::{camel}');
+
+# Verify the module exports a version number.
+ok(CodingAdventures::{camel}->VERSION, 'has a VERSION');
+
+done_testing;
+"""
+
+    # t/01-basic.t
+    basic_t = f"""use strict;
+use warnings;
+use Test2::V0;
+
+use CodingAdventures::{camel};
+
+# TODO: Replace this placeholder with real tests.
+ok(1, '{camel} module loaded successfully');
+
+done_testing;
+"""
+
+    # BUILD
+    build_lines = [
+        f"cd ../{dep} && cpanm --with-test --installdeps --quiet .\n"
+        for dep in ordered_deps
+    ]
+    build_lines.append("cpanm --with-test --installdeps --quiet .\n")
+    build_lines.append("prove -l -v t/\n")
+    build = "".join(build_lines)
+
+    os.makedirs(os.path.join(target_dir, "lib", "CodingAdventures"), exist_ok=True)
+    os.makedirs(os.path.join(target_dir, "t"), exist_ok=True)
+
+    _write_file(os.path.join(target_dir, "Makefile.PL"), makefile_pl)
+    _write_file(os.path.join(target_dir, "cpanfile"), cpanfile)
+    _write_file(os.path.join(target_dir, "lib", "CodingAdventures", f"{camel}.pm"), module)
+    _write_file(os.path.join(target_dir, "t", "00-load.t"), load_t)
+    _write_file(os.path.join(target_dir, "t", "01-basic.t"), basic_t)
+    _write_file(os.path.join(target_dir, "BUILD"), build)
+
+
 def generate_common_files(
     target_dir: str, pkg_name: str, description: str,
     lang: str, layer: int, direct_deps: list[str],
@@ -858,6 +1022,7 @@ def scaffold_one(
         "typescript": lambda: generate_typescript(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps),
         "rust": lambda: generate_rust(target_dir, pkg_name, description, layer_ctx, direct_deps),
         "elixir": lambda: generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps),
+        "perl": lambda: generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps),
     }
     generators[lang]()
     generate_common_files(target_dir, pkg_name, description, lang, layer, direct_deps)
