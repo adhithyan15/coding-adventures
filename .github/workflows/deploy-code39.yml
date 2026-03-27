@@ -27,8 +27,10 @@ jobs:
 
       - name: Install renderer dependencies
         run: |
-          cd code/packages/typescript/code39 && npm install
-          cd code/packages/typescript/draw-instructions-svg && npm install
+          cd code/packages/typescript/code39
+          npm install
+          cd ../draw-instructions-svg
+          npm install
 
       - name: Install app dependencies
         run: |
