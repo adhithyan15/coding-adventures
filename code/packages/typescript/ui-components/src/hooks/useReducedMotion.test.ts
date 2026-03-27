@@ -60,7 +60,7 @@ describe("useReducedMotion", () => {
      * Default case: the user has no motion preference.
      * matchMedia("(prefers-reduced-motion: reduce)").matches is false.
      */
-    window.matchMedia = createMatchMediaMock(false) as typeof window.matchMedia;
+    window.matchMedia = createMatchMediaMock(false) as unknown as typeof window.matchMedia;
     const { result } = renderHook(() => useReducedMotion());
     expect(result.current).toBe(false);
   });
@@ -70,7 +70,7 @@ describe("useReducedMotion", () => {
      * The user has explicitly requested reduced motion in their OS settings.
      * Animations should be disabled or replaced with static alternatives.
      */
-    window.matchMedia = createMatchMediaMock(true) as typeof window.matchMedia;
+    window.matchMedia = createMatchMediaMock(true) as unknown as typeof window.matchMedia;
     const { result } = renderHook(() => useReducedMotion());
     expect(result.current).toBe(true);
   });
@@ -81,7 +81,7 @@ describe("useReducedMotion", () => {
      * (e.g., toggling "Reduce motion" in System Preferences). The hook
      * subscribes to change events so it stays in sync.
      */
-    window.matchMedia = createMatchMediaMock(false) as typeof window.matchMedia;
+    window.matchMedia = createMatchMediaMock(false) as unknown as typeof window.matchMedia;
     const { result } = renderHook(() => useReducedMotion());
 
     expect(result.current).toBe(false);
