@@ -486,6 +486,12 @@ export class GrammarLexer {
    */
   private _skipEnabled: boolean = true;
 
+  /** Pre-tokenize hooks: transform source text before lexing. */
+  private _preTokenizeHooks: Array<(source: string) => string> = [];
+
+  /** Post-tokenize hooks: transform token list after lexing. */
+  private _postTokenizeHooks: Array<(tokens: Token[]) => Token[]> = [];
+
   constructor(source: string, grammar: TokenGrammar) {
     this._grammar = grammar;
     this._caseInsensitive = grammar.caseInsensitive === true;
@@ -605,6 +611,28 @@ export class GrammarLexer {
     return this._groupStack.length;
   }
 
+  // -- Hook registration --
+
+  /**
+   * Register a text transform to run before tokenization.
+   *
+   * The hook receives the raw source string and returns a (possibly
+   * modified) source string. Multiple hooks compose left-to-right.
+   */
+  addPreTokenize(hook: (source: string) => string): void {
+    this._preTokenizeHooks.push(hook);
+  }
+
+  /**
+   * Register a token transform to run after tokenization.
+   *
+   * The hook receives the full token list (including EOF) and returns
+   * a (possibly modified) token list. Multiple hooks compose left-to-right.
+   */
+  addPostTokenize(hook: (tokens: Token[]) => Token[]): void {
+    this._postTokenizeHooks.push(hook);
+  }
+
   // -- Main tokenization entry point --
 
   /**
@@ -614,15 +642,37 @@ export class GrammarLexer {
    * indentation mode is active. Resets the group stack and skip flag
    * at the end so the lexer can be reused for multiple `tokenize()` calls.
    *
+   * Pre-tokenize hooks transform the source text before lexing begins.
+   * Post-tokenize hooks transform the token list after lexing completes.
+   *
    * @returns A list of Token objects, always ending with an EOF token.
    * @throws LexerError if an unexpected character is encountered, a
    *         reserved keyword is used, or indentation is inconsistent.
    */
   tokenize(): Token[] {
-    if (this._indentationMode) {
-      return this._tokenizeIndentation();
+    // Stage 1: Pre-tokenize hooks transform the source text.
+    if (this._preTokenizeHooks.length > 0) {
+      let source = this._source;
+      for (const hook of this._preTokenizeHooks) {
+        source = hook(source);
+      }
+      this._source = source;
     }
-    return this._tokenizeStandard();
+
+    // Stage 2: Core tokenization.
+    let tokens: Token[];
+    if (this._indentationMode) {
+      tokens = this._tokenizeIndentation();
+    } else {
+      tokens = this._tokenizeStandard();
+    }
+
+    // Stage 3: Post-tokenize hooks transform the token list.
+    for (const hook of this._postTokenizeHooks) {
+      tokens = hook(tokens);
+    }
+
+    return tokens;
   }
 
   // -- Standard (non-indentation) tokenization --
