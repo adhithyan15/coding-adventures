@@ -1200,7 +1200,7 @@ fn generate_typescript(
     description: &str,
     layer_ctx: &str,
     direct_deps: &[String],
-    ordered_deps: &[String],
+    _ordered_deps: &[String],
 ) -> io::Result<()> {
     // --- package.json ---
     let deps_json = if direct_deps.is_empty() {
