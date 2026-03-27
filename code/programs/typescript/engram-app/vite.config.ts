@@ -3,6 +3,9 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    preserveSymlinks: true,
+  },
   // Base path is configurable via VITE_BASE environment variable.
   //
   // Default "./" uses relative paths — works everywhere:

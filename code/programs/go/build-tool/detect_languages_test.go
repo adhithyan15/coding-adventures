@@ -8,6 +8,7 @@ package main
 import (
 	"testing"
 
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
 
@@ -27,8 +28,9 @@ func TestAllLanguagesConstant(t *testing.T) {
 	}
 }
 
-// TestSharedPrefixesNotEmpty ensures shared prefixes are configured.
-func TestSharedPrefixesNotEmpty(t *testing.T) {
+// TestSharedPrefixesAreNarrow ensures only true shared build infrastructure
+// forces all-language rebuilds.
+func TestSharedPrefixesAreNarrow(t *testing.T) {
 	if len(sharedPrefixes) == 0 {
 		t.Error("sharedPrefixes should not be empty")
 	}
@@ -37,7 +39,7 @@ func TestSharedPrefixesNotEmpty(t *testing.T) {
 	for _, p := range sharedPrefixes {
 		found[p] = true
 	}
-	for _, want := range []string{".github/"} {
+	for _, want := range []string{".github/workflows/ci.yml"} {
 		if !found[want] {
 			t.Errorf("sharedPrefixes missing %q", want)
 		}
@@ -49,7 +51,15 @@ func TestSharedPrefixesNotEmpty(t *testing.T) {
 	// code/programs/go/build-tool/ is a program, not a shared library — changing
 	// it should only rebuild the build-tool package, not trigger a full 715-package
 	// rebuild that exposes pre-existing failures on every platform.
-	for _, dontWant := range []string{"code/grammars/", "code/specs/", "code/programs/go/build-tool/"} {
+	// Deployment workflows are intentionally excluded so GitHub Pages changes
+	// do not trigger a full-force rebuild of the monorepo.
+	for _, dontWant := range []string{
+		".github/",
+		".github/workflows/deploy-electronics-visualizers.yml",
+		"code/grammars/",
+		"code/specs/",
+		"code/programs/go/build-tool/",
+	} {
 		if found[dontWant] {
 			t.Errorf("sharedPrefixes must NOT contain %q — it causes spurious full-toolchain installs", dontWant)
 		}
@@ -174,5 +184,36 @@ func TestGoAlwaysNeeded(t *testing.T) {
 
 	if !needed["go"] {
 		t.Error("Go should always be needed (build tool is Go)")
+	}
+}
+
+func TestExpandAffectedSetWithPrereqs(t *testing.T) {
+	graph := directedgraph.New()
+	for _, name := range []string{
+		"typescript/logic-gates",
+		"typescript/arithmetic",
+		"typescript/arithmetic-visualizer",
+	} {
+		graph.AddNode(name)
+	}
+
+	// logic-gates -> arithmetic -> arithmetic-visualizer
+	graph.AddEdge("typescript/logic-gates", "typescript/arithmetic")
+	graph.AddEdge("typescript/arithmetic", "typescript/arithmetic-visualizer")
+
+	affected := map[string]bool{
+		"typescript/arithmetic-visualizer": true,
+	}
+
+	expanded := expandAffectedSetWithPrereqs(graph, affected)
+
+	for _, want := range []string{
+		"typescript/logic-gates",
+		"typescript/arithmetic",
+		"typescript/arithmetic-visualizer",
+	} {
+		if !expanded[want] {
+			t.Fatalf("expanded affected set missing %q", want)
+		}
 	}
 }

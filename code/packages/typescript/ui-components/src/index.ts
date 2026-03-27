@@ -60,6 +60,7 @@ export { ProgressBar } from "./components/ProgressBar.js";
 // Hooks
 export { useTabs } from "./hooks/useTabs.js";
 export { useAnimationFrame, useAutoStep } from "./hooks/useAnimationFrame.js";
+export { useAnimatedNumber } from "./hooks/useAnimatedNumber.js";
 export { useReducedMotion } from "./hooks/useReducedMotion.js";
 
 // i18n

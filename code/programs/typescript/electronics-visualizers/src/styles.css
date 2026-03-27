@@ -1,0 +1,503 @@
+:root {
+  --bg: #f6f0e4;
+  --panel: rgba(255, 252, 246, 0.9);
+  --panel-strong: #fffaf0;
+  --ink: #1f2430;
+  --muted: #5b6170;
+  --accent: #b4511f;
+  --accent-2: #1d6a73;
+  --plot-primary: #c55a11;
+  --plot-secondary: #0f7a84;
+  --board: #2d6d58;
+  --board-dark: #1d4e3f;
+  --scope: #141c20;
+  --scope-glow: rgba(24, 216, 186, 0.18);
+  --border: rgba(31, 36, 48, 0.12);
+  --shadow: 0 20px 60px rgba(72, 48, 16, 0.12);
+  font-family:
+    "IBM Plex Sans",
+    "Segoe UI",
+    sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(232, 181, 139, 0.45), transparent 28%),
+    radial-gradient(circle at top right, rgba(29, 106, 115, 0.22), transparent 24%),
+    linear-gradient(180deg, #f7efe0 0%, #f2e9d8 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+code {
+  font-family:
+    "IBM Plex Mono",
+    "Cascadia Code",
+    monospace;
+}
+
+.app-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.hero,
+.control-card,
+.bench-card,
+.scope-shell,
+.plot-card {
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(255, 250, 240, 0.92), rgba(249, 238, 221, 0.88));
+}
+
+.hero h1 {
+  margin: 8px 0 12px;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.hero__eyebrow {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hero__subtitle {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.mode-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 22px 0;
+}
+
+.tab {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 10px 18px;
+  cursor: pointer;
+}
+
+.tab--active {
+  background: var(--accent);
+  color: white;
+  border-color: transparent;
+}
+
+.control-card,
+.bench-card {
+  background: var(--panel);
+  padding: 24px;
+}
+
+.control-card h2,
+.bench-card h2,
+.scope-shell h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--panel-strong);
+  border: 1px solid rgba(31, 36, 48, 0.08);
+}
+
+.slider-control__label {
+  font-size: 0.95rem;
+}
+
+.slider-control__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.slider-control__input {
+  flex: 1;
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.slider-control__value {
+  min-width: 84px;
+  text-align: right;
+  font-weight: 700;
+  font-family:
+    "IBM Plex Mono",
+    "Cascadia Code",
+    monospace;
+}
+
+.slider-control__unit {
+  margin-left: 6px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.control input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.control__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.main-stage {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 20px;
+}
+
+.bench-header,
+.scope-shell__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.bench-badge {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(180, 81, 31, 0.12);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.bench-visual {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.supply {
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #e7ebee, #cfd6dc);
+  border: 1px solid rgba(31, 36, 48, 0.18);
+}
+
+.supply__screen {
+  min-height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #0f1417;
+  color: #7bff95;
+  font-family:
+    "IBM Plex Mono",
+    "Cascadia Code",
+    monospace;
+  font-size: 1.05rem;
+  box-shadow: inset 0 0 0 1px rgba(123, 255, 149, 0.12);
+}
+
+.supply__knob {
+  width: 52px;
+  height: 52px;
+  margin: 18px auto 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fbfdff, #95a3af 70%);
+  border: 1px solid rgba(31, 36, 48, 0.2);
+}
+
+.supply__label {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.board {
+  position: relative;
+  min-height: 330px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    linear-gradient(135deg, var(--board), var(--board-dark));
+  overflow: hidden;
+}
+
+.board::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, 0.08) 2px, transparent 2px);
+  background-size: 32px 32px;
+  opacity: 0.5;
+}
+
+.board__trace {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  height: 10px;
+  background: linear-gradient(90deg, #e2b86f, #f6d48d);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgba(126, 82, 18, 0.18);
+}
+
+.board__trace--top {
+  top: 90px;
+}
+
+.board__trace--bottom {
+  top: 230px;
+}
+
+.board__resistor {
+  position: absolute;
+  left: 50%;
+  top: 160px;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.board__resistor-body {
+  width: 180px;
+  height: 44px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      #cbaf73 0 14%,
+      #7b4d1f 14% 18%,
+      #cbaf73 18% 40%,
+      #cf7727 40% 44%,
+      #cbaf73 44% 66%,
+      #733aa8 66% 70%,
+      #cbaf73 70% 86%,
+      #96581d 86% 90%,
+      #cbaf73 90% 100%
+    );
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.board__resistor-text {
+  color: #f4f7f6;
+  font-weight: 700;
+}
+
+.probe {
+  position: absolute;
+  padding: 12px 14px;
+  border-radius: 16px;
+  min-width: 148px;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.probe span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.probe strong {
+  display: block;
+  margin-top: 4px;
+}
+
+.probe--voltage {
+  left: 28px;
+  top: 26px;
+  border-left: 6px solid var(--plot-primary);
+}
+
+.probe--current {
+  right: 28px;
+  bottom: 24px;
+  border-left: 6px solid var(--plot-secondary);
+}
+
+.scope-shell {
+  background: linear-gradient(180deg, rgba(20, 28, 32, 0.98), rgba(16, 23, 26, 0.98));
+  color: #e8f0ee;
+  padding: 24px;
+}
+
+.scope-shell__header p {
+  margin: 0;
+  color: #9fb0af;
+}
+
+.plot-stack {
+  display: grid;
+  gap: 20px;
+  margin-top: 18px;
+}
+
+.plot-card {
+  padding: 18px 18px 10px;
+  background:
+    radial-gradient(circle at top left, var(--scope-glow), transparent 30%),
+    var(--scope);
+  border-color: rgba(102, 125, 130, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(123, 255, 149, 0.04);
+}
+
+.plot-card__header h3 {
+  margin: 0;
+  color: #d9ebe8;
+}
+
+.plot-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.scope-readout {
+  min-width: 132px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(137, 191, 181, 0.18);
+  text-align: right;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.scope-readout--pulse {
+  transform: scale(1.06);
+  background: rgba(24, 216, 186, 0.14);
+  border-color: rgba(24, 216, 186, 0.6);
+  box-shadow:
+    0 0 0 4px rgba(24, 216, 186, 0.12),
+    0 0 24px rgba(24, 216, 186, 0.28);
+}
+
+.scope-readout__label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #95a9a6;
+}
+
+.scope-readout strong {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1.05;
+  color: #f2fffd;
+}
+
+.scope-readout__units {
+  display: block;
+  font-size: 0.82rem;
+  color: #95a9a6;
+}
+
+.plot-card__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 59px,
+      rgba(99, 180, 166, 0.08) 60px
+    );
+}
+
+.plot-card__axis {
+  stroke: rgba(137, 191, 181, 0.32);
+  stroke-width: 2;
+}
+
+.plot-card__grid {
+  stroke: rgba(137, 191, 181, 0.12);
+  stroke-width: 1.5;
+}
+
+.plot-card__tick {
+  fill: #96aca8;
+  font-size: 12px;
+  font-family:
+    "IBM Plex Mono",
+    "Cascadia Code",
+    monospace;
+}
+
+.plot-card__axis-label {
+  fill: #d7ebe8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.plot-card__series--voltage {
+  stroke: var(--plot-primary);
+  color: var(--plot-primary);
+  background: var(--plot-primary);
+}
+
+.plot-card__series--current {
+  stroke: var(--plot-secondary);
+  color: var(--plot-secondary);
+  background: var(--plot-secondary);
+}
+
+@media (max-width: 980px) {
+  .main-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .bench-visual {
+    grid-template-columns: 1fr;
+  }
+}
