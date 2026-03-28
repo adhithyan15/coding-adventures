@@ -19,16 +19,20 @@
  * back to MemoryStorage — an in-memory implementation of the same KVStorage
  * interface. The app works identically; it just loses persistence on reload.
  *
- * === IDB schema: version 2 ===
+ * === IDB schema: version 3 ===
  *
  * Version 1: { "todos": { keyPath: "id" } }
  *   — tasks stored under "todos" (legacy name, kept for backward compat)
  *
- * Version 2 (this release):
+ * Version 2:
  *   + "views"     : { keyPath: "id" }  — SavedView records
  *   + "calendars" : { keyPath: "id" }  — CalendarSettings records
  *
- * The "todos" store is unchanged — existing task data survives the upgrade.
+ * Version 3 (this release):
+ *   + "events"    : { keyPath: "id" }  — append-only audit event log
+ *   + "snapshots" : { keyPath: "id" }  — periodic state snapshots for compaction
+ *
+ * All existing stores are unchanged — no data migration needed.
  * The onupgradeneeded handler inside IndexedDBStorage uses
  * `if (!db.objectStoreNames.contains(...))` to guard against re-creation.
  *
@@ -50,6 +54,7 @@ import type { KVStorage } from "@coding-adventures/indexeddb";
 import { store } from "./state.js";
 import { stateLoadAction, setActiveViewAction } from "./actions.js";
 import { createPersistenceMiddleware } from "./persistence.js";
+import { createAuditMiddleware, compactEventLog, COMPACT_THRESHOLD } from "./audit.js";
 import { seedTasks, seedViews, seedCalendars, VIEW_ID_ALL_TASKS } from "./seed.js";
 import { App } from "./App.js";
 import type { Task } from "./types.js";
@@ -67,7 +72,7 @@ async function init() {
   try {
     const idbStorage = new IndexedDBStorage({
       dbName: "todo-app",
-      version: 2,
+      version: 3,
       stores: [
         // "todos" kept as-is for backward compat with v1 task data
         {
@@ -79,14 +84,24 @@ async function init() {
             { name: "category", keyPath: "category" },
           ],
         },
-        // New in v2: persisted views
+        // v2: persisted views
         {
           name: "views",
           keyPath: "id",
         },
-        // New in v2: persisted calendar settings
+        // v2: persisted calendar settings
         {
           name: "calendars",
+          keyPath: "id",
+        },
+        // v3: append-only audit event log
+        {
+          name: "events",
+          keyPath: "id",
+        },
+        // v3: periodic state snapshots (for log compaction)
+        {
+          name: "snapshots",
           keyPath: "id",
         },
       ],
@@ -99,6 +114,8 @@ async function init() {
       { name: "todos",     keyPath: "id" },
       { name: "views",     keyPath: "id" },
       { name: "calendars", keyPath: "id" },
+      { name: "events",    keyPath: "id" },
+      { name: "snapshots", keyPath: "id" },
     ]);
     await memStorage.open();
     storage = memStorage;
@@ -118,10 +135,48 @@ async function init() {
   // the task already has a dueTime value.
   const tasks = rawTasks.map((t) => ({ dueTime: null, ...t }));
 
-  // ── 3. Attach persistence middleware BEFORE dispatching any actions ────
+  // ── 3. Register middlewares — order matters ─────────────────────────────
   //
-  // Must be registered before seed dispatches so seeded data is persisted.
+  // Middleware runs in registration order. We register:
+  //   1. Audit first  — Write-Ahead Log: records intent BEFORE reducer runs.
+  //   2. Persistence second — writes new state to IDB AFTER reducer runs.
+  //
+  // This ordering guarantees that if the app crashes mid-dispatch, the audit
+  // log always has the event (it was written before the reducer), so recovery
+  // is possible via replay.
+  //
+  // Must be registered before seed dispatches so seeded data is audited and
+  // persisted.
+  store.use(createAuditMiddleware(storage));
   store.use(createPersistenceMiddleware(storage));
+
+  // ── 3a. Compact event log if it has grown large ─────────────────────────
+  //
+  // Check the event count BEFORE hydrating state (before any new events are
+  // written). If it exceeds COMPACT_THRESHOLD, take a snapshot and trim old
+  // events. We do this here (before React mounts) so compaction doesn't race
+  // with user actions.
+  const existingEvents = await storage.getAll("events");
+  if (existingEvents.length > COMPACT_THRESHOLD) {
+    // We compact against the CURRENT state before STATE_LOAD fires.
+    // After hydration the state will be fuller, but this still trims most
+    // old events. The next compaction cycle will catch any stragglers.
+    await compactEventLog(storage, store.getState());
+  }
+
+  // ── 3b. Compact on page hide (background tab / close) ──────────────────
+  //
+  // The visibilitychange event fires when the user switches tabs or closes
+  // the page. This is the right moment for housekeeping because:
+  //   1. The page is still alive (not yet unloaded) — writes can complete.
+  //   2. The user is not waiting for UI responsiveness.
+  //   3. On mobile, the page may be killed after backgrounding — this is
+  //      often our last chance to write before eviction.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      compactEventLog(storage, store.getState());
+    }
+  });
 
   if (tasks.length > 0 && views.length > 0) {
     // Returning user — load all persisted data.
