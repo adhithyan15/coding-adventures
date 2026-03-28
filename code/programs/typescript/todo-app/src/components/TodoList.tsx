@@ -28,10 +28,10 @@ import { useStore } from "@coding-adventures/store";
 import { store } from "../state.js";
 import {
   toggleStatusAction,
-  deleteTodoAction,
+  deleteTaskAction,
   clearCompletedAction,
 } from "../actions.js";
-import type { FilterState, TodoItem } from "../types.js";
+import type { FilterState, Task } from "../types.js";
 import { getUniqueCategories, PRIORITY_WEIGHT } from "../types.js";
 import { TodoCard } from "./TodoCard.js";
 import { FilterBar } from "./FilterBar.js";
@@ -62,7 +62,7 @@ const defaultFilters: FilterState = {
  * Returns a new array (never mutates the input). Each filter is applied
  * as a boolean predicate. An item must pass ALL predicates to be included.
  */
-function applyFilters(todos: TodoItem[], filters: FilterState): TodoItem[] {
+function applyFilters(todos: Task[], filters: FilterState): Task[] {
   return todos.filter((todo) => {
     // Status filter
     if (filters.status !== null && todo.status !== filters.status) {
@@ -102,7 +102,7 @@ function applyFilters(todos: TodoItem[], filters: FilterState): TodoItem[] {
  * Creates a new sorted array (never mutates). Null values (e.g., no due date)
  * are pushed to the end regardless of sort direction.
  */
-function applySorting(todos: TodoItem[], filters: FilterState): TodoItem[] {
+function applySorting(todos: Task[], filters: FilterState): Task[] {
   const sorted = [...todos];
   const dir = filters.sortDirection === "asc" ? 1 : -1;
 
@@ -140,18 +140,18 @@ export function TodoList({ onNavigate }: TodoListProps) {
 
   // ── Derived data (memoized for performance) ─────────────────────────────
   const categories = useMemo(
-    () => getUniqueCategories(state.todos),
-    [state.todos],
+    () => getUniqueCategories(state.tasks),
+    [state.tasks],
   );
 
   const filteredTodos = useMemo(
-    () => applySorting(applyFilters(state.todos, filters), filters),
-    [state.todos, filters],
+    () => applySorting(applyFilters(state.tasks, filters), filters),
+    [state.tasks, filters],
   );
 
-  const todoCount = state.todos.filter((t) => t.status === "todo").length;
-  const inProgressCount = state.todos.filter((t) => t.status === "in-progress").length;
-  const doneCount = state.todos.filter((t) => t.status === "done").length;
+  const todoCount = state.tasks.filter((t) => t.status === "todo").length;
+  const inProgressCount = state.tasks.filter((t) => t.status === "in-progress").length;
+  const doneCount = state.tasks.filter((t) => t.status === "done").length;
 
   // ── Handlers ────────────────────────────────────────────────────────────
   const handleToggleStatus = useCallback((id: string) => {
@@ -166,7 +166,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
   );
 
   const handleDelete = useCallback((id: string) => {
-    store.dispatch(deleteTodoAction(id));
+    store.dispatch(deleteTaskAction(id));
   }, []);
 
   const handleClearCompleted = useCallback(() => {
@@ -178,7 +178,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
       {/* ── Summary stats ──────────────────────────────────────────────── */}
       <div className="todo-list__summary" id="summary-bar">
         <div className="todo-list__stat">
-          <span className="todo-list__stat-value" id="stat-total">{state.todos.length}</span>
+          <span className="todo-list__stat-value" id="stat-total">{state.tasks.length}</span>
           <span className="todo-list__stat-label">Total</span>
         </div>
         <div className="todo-list__stat">
@@ -200,7 +200,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
         filters={filters}
         categories={categories}
         onFilterChange={setFilters}
-        todoCount={state.todos.length}
+        todoCount={state.tasks.length}
         filteredCount={filteredTodos.length}
       />
 
@@ -229,7 +229,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
       {/* ── Todo cards ─────────────────────────────────────────────────── */}
       {filteredTodos.length === 0 ? (
         <EmptyState
-          hasNoTodos={state.todos.length === 0}
+          hasNoTodos={state.tasks.length === 0}
           onCreateClick={() => onNavigate("/new")}
         />
       ) : (

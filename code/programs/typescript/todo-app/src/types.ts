@@ -1,7 +1,7 @@
 /**
  * types.ts — All TypeScript interfaces for the todo app.
  *
- * The data model is intentionally flat and simple. Each TodoItem is a
+ * The data model is intentionally flat and simple. Each Task is a
  * self-contained record that can be stored in IndexedDB, serialized to
  * JSON, or sent over a REST API without transformation.
  *
@@ -25,6 +25,12 @@
  *   - Created/updated times are instants. Timestamps are unambiguous.
  *   - HTML <input type="date"> returns YYYY-MM-DD natively, no conversion.
  *   - String comparison works for sorting: "2026-03-25" < "2026-04-01".
+ *
+ * DUE TIME is stored separately as "HH:MM" (24-hour) or null.
+ *   - Keeping it separate from dueDate lets you have a deadline date with
+ *     no specific time (all-day) vs. a precise time-boxed appointment.
+ *   - The calendar's agenda view places timed tasks in hour slots and
+ *     untimed tasks in an "All Day" section at the top.
  */
 
 // ── Priority ──────────────────────────────────────────────────────────────
@@ -53,15 +59,25 @@ export const PRIORITY_WEIGHT: Record<Priority, number> = {
 
 // ── Status ────────────────────────────────────────────────────────────────
 
-export type TodoStatus = "todo" | "in-progress" | "done";
+export type TaskStatus = "todo" | "in-progress" | "done";
 
-// ── TodoItem ──────────────────────────────────────────────────────────────
+/**
+ * @deprecated Use TaskStatus instead.
+ * Kept temporarily for any legacy references.
+ */
+export type TodoStatus = TaskStatus;
+
+// ── Task ──────────────────────────────────────────────────────────────────
 //
 // The central data structure. Every field uses JSON-serializable primitives
 // (string, number, null) so the record works with IndexedDB, JSON export,
 // REST APIs, and SQL databases without adapters.
+//
+// Previously named "TodoItem" — renamed to "Task" to reflect that this data
+// model is the foundation for views, the constraint engine, and future features
+// like projects, assignments, and scheduling.
 
-export interface TodoItem {
+export interface Task {
   /** Unique identifier. Generated via crypto.randomUUID(). */
   id: string;
 
@@ -72,7 +88,7 @@ export interface TodoItem {
   description: string;
 
   /** Current lifecycle status. Determines which column/filter shows this item. */
-  status: TodoStatus;
+  status: TaskStatus;
 
   /** Urgency level. Affects visual styling (color, badge) and sort order. */
   priority: Priority;
@@ -91,6 +107,21 @@ export interface TodoItem {
    * Used for overdue detection: compare with new Date().toISOString().slice(0,10).
    */
   dueDate: string | null;
+
+  /**
+   * Due time as "HH:MM" 24-hour string, or null if no specific time.
+   *
+   * Kept separate from dueDate so you can have:
+   *   - dueDate: "2026-03-28", dueTime: null  → all-day deadline
+   *   - dueDate: "2026-03-28", dueTime: "14:30" → specific appointment
+   *
+   * The agenda view uses dueTime to place tasks in hour slots.
+   * Tasks without a dueTime appear in an "All Day" section.
+   *
+   * Backward compatibility: existing tasks loaded from IndexedDB without
+   * this field are normalized to { dueTime: null, ...task } on startup.
+   */
+  dueTime: string | null;
 
   /** Unix timestamp from Date.now(). Set once at creation, never changes. */
   createdAt: number;
@@ -111,22 +142,31 @@ export interface TodoItem {
   sortOrder: number;
 }
 
+/**
+ * @deprecated Use Task instead.
+ * Kept as a type alias for any legacy references during the transition.
+ */
+export type TodoItem = Task;
+
 // ── Filter & Sort ─────────────────────────────────────────────────────────
 //
-// These types describe the current view state (which items are visible and
-// in what order). They are NOT persisted — they reset to defaults on page
-// reload. This is intentional: the user's data is persistent, but the view
-// is ephemeral.
+// SortField and SortDirection are used by list and kanban views to order tasks.
 
 export type SortField = "createdAt" | "dueDate" | "priority" | "title" | "updatedAt";
 export type SortDirection = "asc" | "desc";
 
+/**
+ * FilterState — ephemeral UI filter state (not persisted).
+ *
+ * This is used by the legacy TodoList component for its local filter bar.
+ * New view-based filtering uses TaskFilter from views.ts instead.
+ */
 export interface FilterState {
   /** Free-text search. Matches against title and description (case-insensitive). */
   search: string;
 
   /** Filter by status. null = show all statuses. */
-  status: TodoStatus | null;
+  status: TaskStatus | null;
 
   /** Filter by priority. null = show all priorities. */
   priority: Priority | null;
@@ -158,36 +198,36 @@ export function todayDateString(): string {
 }
 
 /**
- * isOverdue — true if the todo has a due date that's in the past.
+ * isOverdue — true if the task has a due date that's in the past.
  *
- * A todo is overdue if:
+ * A task is overdue if:
  *   1. It has a due date (not null)
  *   2. The due date is before today (string comparison works for ISO dates)
  *   3. It is NOT already done (completed items can't be overdue)
  */
-export function isOverdue(todo: TodoItem): boolean {
-  if (!todo.dueDate || todo.status === "done") return false;
-  return todo.dueDate < todayDateString();
+export function isOverdue(task: Task): boolean {
+  if (!task.dueDate || task.status === "done") return false;
+  return task.dueDate < todayDateString();
 }
 
 /**
- * isDueToday — true if the todo is due today and not yet done.
+ * isDueToday — true if the task is due today and not yet done.
  */
-export function isDueToday(todo: TodoItem): boolean {
-  if (!todo.dueDate || todo.status === "done") return false;
-  return todo.dueDate === todayDateString();
+export function isDueToday(task: Task): boolean {
+  if (!task.dueDate || task.status === "done") return false;
+  return task.dueDate === todayDateString();
 }
 
 /**
- * getUniqueCategories — extracts all unique categories from a todo list.
+ * getUniqueCategories — extracts all unique categories from a task list.
  *
  * Returns sorted, non-empty category strings. Used for the filter dropdown.
  */
-export function getUniqueCategories(todos: TodoItem[]): string[] {
+export function getUniqueCategories(tasks: Task[]): string[] {
   const categories = new Set<string>();
-  for (const todo of todos) {
-    if (todo.category.trim() !== "") {
-      categories.add(todo.category.trim().toLowerCase());
+  for (const task of tasks) {
+    if (task.category.trim() !== "") {
+      categories.add(task.category.trim().toLowerCase());
     }
   }
   return Array.from(categories).sort();

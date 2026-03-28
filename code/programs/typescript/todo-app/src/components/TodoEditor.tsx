@@ -29,7 +29,7 @@
 import { useState, useEffect } from "react";
 import { useStore } from "@coding-adventures/store";
 import { store } from "../state.js";
-import { createTodoAction, updateTodoAction } from "../actions.js";
+import { createTaskAction, updateTaskAction } from "../actions.js";
 import { getUniqueCategories } from "../types.js";
 import type { Priority } from "../types.js";
 
@@ -42,9 +42,9 @@ interface TodoEditorProps {
 
 export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
   const state = useStore(store);
-  const existingTodo = todoId ? state.todos.find((t) => t.id === todoId) : undefined;
+  const existingTodo = todoId ? state.tasks.find((t) => t.id === todoId) : undefined;
   const isEditing = Boolean(existingTodo);
-  const categories = getUniqueCategories(state.todos);
+  const categories = getUniqueCategories(state.tasks);
 
   // ── Form state ──────────────────────────────────────────────────────────
   const [title, setTitle] = useState("");
@@ -95,7 +95,7 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
     if (isEditing && todoId) {
       // Update existing todo
       store.dispatch(
-        updateTodoAction(todoId, {
+        updateTaskAction(todoId, {
           title: trimmedTitle,
           description: description.trim(),
           priority,
@@ -104,14 +104,15 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
         }),
       );
     } else {
-      // Create new todo
+      // Create new task
       store.dispatch(
-        createTodoAction(
+        createTaskAction(
           trimmedTitle,
           description.trim(),
           priority,
           category.trim(),
           dueDate || null,
+          null,
         ),
       );
     }

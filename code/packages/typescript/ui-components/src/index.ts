@@ -44,7 +44,7 @@ export type { DatePickerProps } from "./components/DatePicker.js";
 export type { FlashCardProps } from "./components/FlashCard.js";
 export type { RatingButtonsProps, Rating } from "./components/RatingButtons.js";
 export type { ProgressBarProps } from "./components/ProgressBar.js";
-export type { CalendarViewProps, CalendarItem } from "./components/CalendarView.js";
+export type { CalendarViewProps, CalendarItem, CalendarViewGranularity, DayOfWeek } from "./components/CalendarView.js";
 export type { UseTabsOptions, TabProps } from "./hooks/useTabs.js";
 export type { LocaleMap } from "./i18n/index.js";
 

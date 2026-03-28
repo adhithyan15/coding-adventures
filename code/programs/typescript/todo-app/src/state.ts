@@ -6,9 +6,9 @@
  * store.dispatch(action).
  *
  * The store is created with an empty initial state. On startup, main.tsx
- * loads data from IndexedDB and dispatches STATE_LOAD to hydrate it.
- * Until then, the app renders with an empty todo list (which shows
- * the empty state component).
+ * loads tasks, views, and calendars from IndexedDB and dispatches STATE_LOAD
+ * to hydrate. Until then, the app renders with empty collections (showing
+ * appropriate empty states).
  */
 
 import { Store } from "@coding-adventures/store";
@@ -18,4 +18,7 @@ import type { AppState } from "./reducer.js";
 export type { AppState };
 
 /** The singleton store used by the running app. */
-export const store = new Store<AppState>({ todos: [] }, reducer);
+export const store = new Store<AppState>(
+  { tasks: [], views: [], calendars: [], activeViewId: "" },
+  reducer,
+);
