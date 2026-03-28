@@ -1,0 +1,257 @@
+/* ==========================================================================
+ * CalendarView — default dark-theme stylesheet.
+ *
+ * This file uses CSS custom properties declared in theme.css. Import it
+ * in any consuming app that already imports theme.css.
+ *
+ * If your app uses a different design-token system, override these class
+ * names with your own variables instead of importing this file.
+ *
+ * BEM naming convention:
+ *   .calendar-view               — root wrapper
+ *   .calendar-view__header       — nav row (prev · month label · next · today)
+ *   .calendar-view__nav-btn      — ‹ and › navigation buttons
+ *   .calendar-view__month-label  — "March 2026" heading
+ *   .calendar-view__today-btn    — "Today" jump button
+ *   .calendar-view__grid         — the 7-column grid
+ *   .calendar-view__row          — one week row (also the header row)
+ *   .calendar-view__row--header  — modifier: day-of-week header row
+ *   .calendar-view__day-header   — a single column header (Sun, Mon…)
+ *   .calendar-view__cell         — one day cell
+ *   .calendar-view__cell--current-month  — day belongs to the visible month
+ *   .calendar-view__cell--other-month    — overflow day from prev/next month
+ *   .calendar-view__cell--today  — today's date cell
+ *   .calendar-view__cell--has-items — cell that contains at least one item
+ *   .calendar-view__day-number   — the numeric date label inside a cell
+ *   .calendar-view__items        — <ul> of items inside a cell
+ *   .calendar-view__item         — <li> wrapping each rendered item
+ * ========================================================================== */
+
+/* ── Root ──────────────────────────────────────────────────────────────── */
+
+.calendar-view {
+  width: 100%;
+  font-family: var(--sans, system-ui, sans-serif);
+  color: var(--body-text, #e0ddd5);
+}
+
+/* ── Header: prev / month label / next / today ─────────────────────────── */
+
+.calendar-view__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.calendar-view__month-label {
+  flex: 1;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--body-text, #e0ddd5);
+  margin: 0;
+}
+
+/* ── Navigation buttons (‹ ›) ──────────────────────────────────────────── */
+
+.calendar-view__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--panel-border, #2a3a5e);
+  border-radius: 6px;
+  background: var(--panel-bg, #16213e);
+  color: var(--body-text, #e0ddd5);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.calendar-view__nav-btn:hover {
+  background: var(--panel-header, #0f3460);
+  border-color: var(--accent, #e94560);
+  color: var(--accent, #e94560);
+}
+
+.calendar-view__nav-btn:focus-visible {
+  outline: 2px solid var(--accent, #e94560);
+  outline-offset: 2px;
+}
+
+/* ── "Today" jump button ────────────────────────────────────────────────── */
+
+.calendar-view__today-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--panel-border, #2a3a5e);
+  border-radius: 6px;
+  background: var(--panel-bg, #16213e);
+  color: var(--body-text, #e0ddd5);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.calendar-view__today-btn:hover {
+  background: var(--panel-header, #0f3460);
+  border-color: var(--accent, #e94560);
+  color: var(--accent, #e94560);
+}
+
+.calendar-view__today-btn:focus-visible {
+  outline: 2px solid var(--accent, #e94560);
+  outline-offset: 2px;
+}
+
+/* ── Grid shell ─────────────────────────────────────────────────────────── */
+
+.calendar-view__grid {
+  border: 1px solid var(--panel-border, #2a3a5e);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ── Week rows ──────────────────────────────────────────────────────────── */
+
+.calendar-view__row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--panel-border, #2a3a5e);
+}
+
+/* Remove the border after the last week row */
+.calendar-view__row:last-child {
+  border-bottom: none;
+}
+
+/* ── Day-of-week header row (Sun Mon … Sat) ─────────────────────────────── */
+
+.calendar-view__row--header {
+  background: var(--panel-header, #0f3460);
+}
+
+.calendar-view__day-header {
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--tab-text, #8899aa);
+  border-right: 1px solid var(--panel-border, #2a3a5e);
+}
+
+.calendar-view__day-header:last-child {
+  border-right: none;
+}
+
+/* ── Day cells ──────────────────────────────────────────────────────────── */
+
+.calendar-view__cell {
+  min-height: 88px;
+  padding: 6px;
+  background: var(--panel-bg, #16213e);
+  border-right: 1px solid var(--panel-border, #2a3a5e);
+  vertical-align: top;
+  transition: background 0.12s ease;
+}
+
+.calendar-view__cell:last-child {
+  border-right: none;
+}
+
+/* Days that overflow from the previous or next month — dimmed */
+.calendar-view__cell--other-month {
+  background: var(--body-bg, #1a1a2e);
+  opacity: 0.45;
+}
+
+/*
+ * Today's cell — subtle highlight + accent border on the day number.
+ * We use rgba(accent, 0.08) as a very soft background so items are still
+ * clearly readable. The day number itself gets a solid accent circle.
+ */
+.calendar-view__cell--today {
+  background: rgba(233, 69, 96, 0.06);
+}
+
+/* ── Day number ─────────────────────────────────────────────────────────── */
+
+.calendar-view__day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--body-text, #e0ddd5);
+  margin-bottom: 4px;
+  /* Ensures the circle stays tight regardless of 1 vs 2 digit numbers */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Today's day number gets a filled accent circle */
+.calendar-view__cell--today .calendar-view__day-number {
+  background: var(--accent, #e94560);
+  color: #ffffff;
+}
+
+/* Other-month day numbers are muted */
+.calendar-view__cell--other-month .calendar-view__day-number {
+  color: var(--tab-text, #8899aa);
+}
+
+/* ── Items list inside a cell ───────────────────────────────────────────── */
+
+.calendar-view__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/*
+ * Each item is a thin chip. The caller's renderItem function controls the
+ * exact markup, but we constrain it to overflow gracefully. A single line
+ * of text is ideal; anything longer is clipped with an ellipsis.
+ */
+.calendar-view__item {
+  font-size: 0.7rem;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Responsive: shrink cells on small screens ──────────────────────────── */
+
+@media (max-width: 640px) {
+  .calendar-view__cell {
+    min-height: 56px;
+    padding: 4px;
+  }
+
+  .calendar-view__day-number {
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+  }
+
+  .calendar-view__item {
+    font-size: 0.62rem;
+  }
+
+  .calendar-view__month-label {
+    font-size: 0.95rem;
+  }
+}

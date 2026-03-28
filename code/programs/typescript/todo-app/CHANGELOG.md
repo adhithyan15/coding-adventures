@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-28
+
+### Added
+
+- **Calendar view** (`#/calendar`) — read-only monthly grid showing todos by due date
+  - Each todo appears as a compact priority-coloured chip in its due-date cell
+  - Completed todos shown with strikethrough and reduced opacity
+  - Month navigation (‹ ›) and "Today" jump button
+  - Today's cell highlighted with accent colour
+  - Overflow days from adjacent months shown at reduced opacity
+  - Powered by the new generic `CalendarView` component from `@coding-adventures/ui-components`
+- **App navigation bar** — "☰ List" and "📅 Calendar" buttons in the header
+  - Active route highlighted with accent colour and `aria-current="page"`
+  - `/`, `/new`, `/edit/:id` all map to "List" as the active nav item
+- **`TodoCalendar` component** — wires `CalendarView` to the todo store with `useStore`
+- **Calendar and chip styles** in `app.lattice` — priority-coloured chips matching the app's dark theme
+
 ## [0.1.0] - 2026-03-28
 
 ### Added
