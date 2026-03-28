@@ -1305,6 +1305,7 @@ playwright-report/
 blob-report/
 `;
 
+
   const build = "npm ci --quiet\\nnpx vitest run --coverage\\n";
 
   fs.mkdirSync(path.join(targetDir, "src", "__tests__"), { recursive: true });
