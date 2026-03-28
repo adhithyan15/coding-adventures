@@ -101,7 +101,7 @@ import { decodeEntity, decodeEntities } from "./entities.js";
 // bracket deactivation rules require non-standard stack operations.
 // The PDA is here as a learning artifact.
 
-const _BRACKET_PDA_ILLUSTRATION = new PushdownAutomaton(
+export const BRACKET_PDA_ILLUSTRATION = new PushdownAutomaton(
   new Set(["scan", "nested", "done"]),
   new Set(["[", "]"]),
   new Set(["$", "["]),
@@ -319,17 +319,12 @@ export function parseInline(raw: string, linkRefs: LinkRefMap): InlineNode[] {
       const openerTokenIdx = bracketStack[openerStackIdx]!;
       const opener = tokens[openerTokenIdx] as BracketToken;
 
-      // IMPORTANT: flush textBuf before collecting inner tokens, otherwise
-      // characters accumulated in textBuf won't appear in innerTokensBefore.
+      // IMPORTANT: flush textBuf before examining inner tokens, otherwise
+      // characters accumulated in textBuf won't appear in the token list.
       // For example, in `[foo][]`, "foo" would still be in textBuf when we
       // hit `]`, so we must flush it now.
       flushText();
 
-      // Collect the inner text (between opener and here) from the token list.
-      // We need this to:
-      //   a) render the link text / image alt
-      //   b) use as the label for collapsed/shortcut reference links
-      const innerTokensBefore = tokens.slice(openerTokenIdx + 1);
       // Use raw source text for the label — spec §4.7 says no backslash
       // escaping is performed when matching labels, so we must compare
       // the un-processed source (e.g. `\]` stays `\]`, not `]`).
@@ -637,7 +632,6 @@ function tryCodeSpan(scanner: Scanner): CodeSpanNode | null {
   let content = "";
   while (!scanner.done) {
     if (scanner.peek() === "`") {
-      const closePos = scanner.pos;
       const closeTicks = scanner.consumeWhile(c => c === "`");
       if (closeTicks.length === tickLen) {
         // Matching close found
@@ -1119,7 +1113,7 @@ function findActiveBracketOpener(
  * Extract a raw text string from a token list for use as a link label.
  * This is a simplified version that concatenates text values from node tokens.
  */
-function extractRawTextForLabel(tokens: InlineToken[]): string {
+export function extractRawTextForLabel(tokens: InlineToken[]): string {
   return tokens.flatMap(t => {
     if (t.kind === "node") return [extractPlainText([t.node])];
     if (t.kind === "delimiter") return [t.char.repeat(t.count)];

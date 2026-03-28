@@ -55,7 +55,7 @@ import type {
   HeadingNode, ParagraphNode, CodeBlockNode, BlockquoteNode,
   ListNode, ListItemNode, TaskItemNode, RawBlockNode,
   TableNode, TableRowNode, TableCellNode,
-  TextNode, EmphasisNode, StrongNode, StrikethroughNode, CodeSpanNode,
+  TextNode,
   LinkNode, ImageNode, AutolinkNode, RawInlineNode,
 } from "@coding-adventures/document-ast";
 import { escapeHtml } from "./entities.js";
