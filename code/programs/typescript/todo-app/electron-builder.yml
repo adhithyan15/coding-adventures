@@ -1,0 +1,38 @@
+# electron-builder configuration
+# Docs: https://www.electron.build/configuration
+
+appId: com.codingadventures.todo
+productName: Todo
+
+directories:
+  output: release
+  buildResources: build
+
+# Files included in the packaged app
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+
+# ── macOS ──────────────────────────────────────────────────────────────────
+mac:
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+
+# ── Windows ────────────────────────────────────────────────────────────────
+win:
+  target:
+    - nsis
+    - portable
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+# ── Linux ──────────────────────────────────────────────────────────────────
+linux:
+  category: Utility
+  target:
+    - AppImage

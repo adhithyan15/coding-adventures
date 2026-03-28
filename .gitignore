@@ -36,6 +36,8 @@ yarn-error.log*
 *.tgz
 .npm
 .out/
+*.out
+*.tsbuildinfo
 
 # Rust
 target/

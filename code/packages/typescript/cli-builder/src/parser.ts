@@ -665,6 +665,7 @@ export class Parser {
                   parsedFlags,
                   positionalTokens,
                   earlyReturn: { text: helpGen.generate(), commandPath: fullCommandPath },
+                  explicitFlags: explicitFlags,
                 };
               }
 
@@ -726,6 +727,7 @@ export class Parser {
                   parsedFlags,
                   positionalTokens,
                   earlyReturn: { text: helpGen.generate(), commandPath: fullCommandPath },
+                  explicitFlags: explicitFlags,
                 };
               }
 

@@ -404,34 +404,42 @@ describe("transitiveClosure", () => {
   });
 
   it("follows transitive dependencies via BFS", () => {
+    // resolveDepDir looks under repoRoot/code/packages/lang/ so we create the
+    // packages there to match the production path resolution behaviour.
+    const pkgBase = path.join(tmpDir, "code", "packages", "python");
+
     // C has no deps
-    const cDir = path.join(tmpDir, "c-pkg");
+    const cDir = path.join(pkgBase, "c-pkg");
     fs.mkdirSync(cDir, { recursive: true });
     writeTestFile(cDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // B depends on C
-    const bDir = path.join(tmpDir, "b-pkg");
+    const bDir = path.join(pkgBase, "b-pkg");
     fs.mkdirSync(bDir, { recursive: true });
     writeTestFile(bDir, "BUILD", "python -m pip install -e ../c-pkg -e .[dev] --quiet\n");
 
-    // A depends on B (we ask for transitive closure starting from [B])
+    // Ask for transitive closure starting from [b-pkg]; should include c-pkg
     const result = transitiveClosure(["b-pkg"], "python", tmpDir);
     expect(result).toEqual(["b-pkg", "c-pkg"]);
   });
 
   it("deduplicates deps found through multiple paths", () => {
+    // resolveDepDir looks under repoRoot/code/packages/lang/ so we create the
+    // packages there to match the production path resolution behaviour.
+    const pkgBase = path.join(tmpDir, "code", "packages", "python");
+
     // base has no deps
-    const baseDir = path.join(tmpDir, "base");
+    const baseDir = path.join(pkgBase, "base");
     fs.mkdirSync(baseDir, { recursive: true });
     writeTestFile(baseDir, "BUILD", "python -m pip install -e .[dev] --quiet\n");
 
     // left depends on base
-    const leftDir = path.join(tmpDir, "left");
+    const leftDir = path.join(pkgBase, "left");
     fs.mkdirSync(leftDir, { recursive: true });
     writeTestFile(leftDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
     // right depends on base
-    const rightDir = path.join(tmpDir, "right");
+    const rightDir = path.join(pkgBase, "right");
     fs.mkdirSync(rightDir, { recursive: true });
     writeTestFile(rightDir, "BUILD", "python -m pip install -e ../base -e .[dev] --quiet\n");
 
@@ -507,12 +515,16 @@ describe("topologicalSort", () => {
   });
 
   it("detects circular dependencies", () => {
+    // resolveDepDir looks under repoRoot/code/packages/lang/ so we create the
+    // packages there to match the production path resolution behaviour.
+    const pkgBase = path.join(tmpDir, "code", "packages", "python");
+
     // A depends on B, B depends on A
-    const aDir = path.join(tmpDir, "a-pkg");
+    const aDir = path.join(pkgBase, "a-pkg");
     fs.mkdirSync(aDir, { recursive: true });
     writeTestFile(aDir, "BUILD", "python -m pip install -e ../b-pkg -e .[dev] --quiet\n");
 
-    const bDir = path.join(tmpDir, "b-pkg");
+    const bDir = path.join(pkgBase, "b-pkg");
     fs.mkdirSync(bDir, { recursive: true });
     writeTestFile(bDir, "BUILD", "python -m pip install -e ../a-pkg -e .[dev] --quiet\n");
 

@@ -400,7 +400,7 @@ combinator = GREATER | PLUS | TILDE ;
 compound_selector = simple_selector { subclass_selector }
                   | subclass_selector { subclass_selector } ;
 
-simple_selector = IDENT | STAR | AMPERSAND ;
+simple_selector = IDENT | STAR | AMPERSAND | VARIABLE | PERCENTAGE ;
 
 subclass_selector = class_selector | id_selector
                   | attribute_selector | pseudo_class
