@@ -774,6 +774,88 @@ input, select, textarea {
   border-top: 1px solid $border-subtle;
 }
 
+// ── Task Activity History ──────────────────────────────────────────────────
+//
+// Rendered below the edit form in TodoEditor. Shows a vertical timeline of
+// audit events (create, update, status changes) for the task being edited.
+
+.history {
+  margin-top: $space-xl;
+  padding-top: $space-lg;
+  border-top: 1px solid $border-subtle;
+}
+
+.history__heading {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-muted;
+  margin: 0 0 $space-md 0;
+}
+
+// The timeline list. We use `ol` (ordered list) because history is ordered.
+// Reset the default list markers — we draw our own dots via ::before.
+.history__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+
+  // Vertical connector line running through all dots.
+  // Starts at the center of the first dot and stops at the last dot.
+  &::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: $border-subtle;
+  }
+}
+
+.history__item {
+  display: flex;
+  align-items: baseline;
+  gap: $space-sm;
+  padding: 5px 0 5px $space-xl;
+  position: relative;
+}
+
+// The filled circle dot on the timeline connector.
+.history__dot {
+  position: absolute;
+  left: 1px;
+  top: 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: $radius-full;
+  background: $accent-primary;
+  border: 2px solid $bg-surface;
+  flex-shrink: 0;
+}
+
+.history__label {
+  flex: 1;
+  font-size: 0.85rem;
+  color: $text-secondary;
+}
+
+.history__loading {
+  font-size: 0.85rem;
+  color: $text-muted;
+  padding: $space-xs 0 $space-xs $space-xl;
+  margin: 0;
+}
+
+.history__time {
+  font-size: 0.75rem;
+  color: $text-muted;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 // ── Empty State ────────────────────────────────────────────────────────────
 
 .empty-state {

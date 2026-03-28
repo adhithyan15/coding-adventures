@@ -1,0 +1,106 @@
+{
+  "app": {
+    "title": "Tasks"
+  },
+  "task": {
+    "form": {
+      "headingNew": "New Task",
+      "headingEdit": "Edit Task",
+      "submitNew": "Create Task",
+      "submitEdit": "Save Changes",
+      "cancel": "Cancel",
+      "titleLabel": "Title",
+      "titleRequired": "*",
+      "titleError": "Title is required",
+      "titlePlaceholder": "What needs to be done?",
+      "descLabel": "Description",
+      "descPlaceholder": "Add details, notes, or context...",
+      "priorityLabel": "Priority",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "e.g. work, personal",
+      "dueDateLabel": "Due Date",
+      "history": {
+        "heading": "Activity",
+        "loading": "Loading…",
+        "eventCreated": "Task created",
+        "eventUpdated": "Task updated",
+        "eventUpdatedFields": "Updated: {fields}",
+        "eventStatusToggled": "Status toggled",
+        "eventStatusSet": "Status set to {status}",
+        "eventDeleted": "Task deleted",
+        "timeJustNow": "Just now",
+        "timeMinutes": "{n}m ago",
+        "timeHours": "{n}h ago"
+      },
+      "notFound": {
+        "heading": "Task not found",
+        "body": "The task you're looking for doesn't exist or was deleted.",
+        "back": "Back to list"
+      }
+    },
+    "card": {
+      "editTitle": "Edit",
+      "deleteTitle": "Delete",
+      "overdueLabel": "⚠ Overdue",
+      "dueTodayLabel": "📅 Due today",
+      "priorityLow": "Low",
+      "priorityMedium": "Medium",
+      "priorityHigh": "High",
+      "priorityUrgent": "Urgent",
+      "timeJustNow": "Just now",
+      "timeYesterday": "Yesterday"
+    },
+    "list": {
+      "statTotal": "Total",
+      "statTodo": "Todo",
+      "statInProgress": "In Progress",
+      "statDone": "Done"
+    },
+    "empty": {
+      "noTasksHeading": "No tasks yet",
+      "noTasksBody": "Create your first task and start getting things done. All data stays on your device — no account needed.",
+      "noTasksButton": "Create your first task",
+      "noMatchesHeading": "No matches",
+      "noMatchesBody": "No tasks match your current filters. Try adjusting or clearing them."
+    }
+  },
+  "filter": {
+    "searchPlaceholder": "Search tasks…",
+    "clearFilters": "Clear filters",
+    "statusAll": "All Status",
+    "statusTodo": "Todo",
+    "statusProgress": "In Progress",
+    "statusDone": "Done",
+    "priorityAll": "All Priority",
+    "priorityLow": "Low",
+    "priorityMedium": "Medium",
+    "priorityHigh": "High",
+    "priorityUrgent": "Urgent",
+    "categoryAll": "All Categories",
+    "sortCreated": "Created",
+    "sortUpdated": "Updated",
+    "sortDueDate": "Due Date",
+    "sortPriority": "Priority",
+    "sortTitle": "Title",
+    "sortAscending": "Ascending",
+    "sortDescending": "Descending"
+  },
+  "calendar": {
+    "heading": "Calendar",
+    "subtitle": "Tasks due each day"
+  },
+  "board": {
+    "comingSoonHeading": "Board view coming soon",
+    "comingSoonBody": "We're building a full Kanban board where tasks are organised into columns by status, priority, category, or any other field you choose.",
+    "comingSoonHint": "Your tasks are safe. Switch to \"All Tasks\" to see them now."
+  },
+  "view": {
+    "error": {
+      "notFoundHeading": "View not found",
+      "notFoundBody": "This view doesn't exist or has been removed.",
+      "notFoundButton": "Go to All Tasks",
+      "unknownTypeHeading": "Unknown view type",
+      "unknownTypeBody": "This view type is not supported in this version of the app."
+    }
+  }
+}

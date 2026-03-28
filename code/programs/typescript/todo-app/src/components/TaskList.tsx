@@ -1,10 +1,10 @@
 /**
- * TodoList.tsx — Main list view with filtering, sorting, and summary stats.
+ * TaskList.tsx — Main list view with filtering, sorting, and summary stats.
  *
  * This is the primary screen of the app. It displays:
- *   1. A summary bar showing counts (total, active, completed)
+ *   1. A summary bar showing counts (total, todo, in-progress, done)
  *   2. A FilterBar for search, status, priority, category, and sort
- *   3. The list of TodoCards matching the current filters
+ *   3. The list of TaskCards matching the current filters
  *   4. An EmptyState when no items match
  *
  * === Filtering logic ===
@@ -33,11 +33,12 @@ import {
 } from "../actions.js";
 import type { FilterState, Task } from "../types.js";
 import { getUniqueCategories, PRIORITY_WEIGHT } from "../types.js";
-import { TodoCard } from "./TodoCard.js";
+import { TaskCard } from "./TaskCard.js";
 import { FilterBar } from "./FilterBar.js";
 import { EmptyState } from "./EmptyState.js";
+import { t } from "../strings.js";
 
-interface TodoListProps {
+interface TaskListProps {
   onNavigate: (path: string) => void;
 }
 
@@ -57,27 +58,27 @@ const defaultFilters: FilterState = {
 };
 
 /**
- * applyFilters — filters the todo list based on the current filter state.
+ * applyFilters — filters the task list based on the current filter state.
  *
  * Returns a new array (never mutates the input). Each filter is applied
  * as a boolean predicate. An item must pass ALL predicates to be included.
  */
-function applyFilters(todos: Task[], filters: FilterState): Task[] {
-  return todos.filter((todo) => {
+function applyFilters(tasks: Task[], filters: FilterState): Task[] {
+  return tasks.filter((task) => {
     // Status filter
-    if (filters.status !== null && todo.status !== filters.status) {
+    if (filters.status !== null && task.status !== filters.status) {
       return false;
     }
 
     // Priority filter
-    if (filters.priority !== null && todo.priority !== filters.priority) {
+    if (filters.priority !== null && task.priority !== filters.priority) {
       return false;
     }
 
     // Category filter (case-insensitive)
     if (
       filters.category !== "" &&
-      todo.category.toLowerCase() !== filters.category.toLowerCase()
+      task.category.toLowerCase() !== filters.category.toLowerCase()
     ) {
       return false;
     }
@@ -85,8 +86,8 @@ function applyFilters(todos: Task[], filters: FilterState): Task[] {
     // Search filter (case-insensitive substring match)
     if (filters.search !== "") {
       const query = filters.search.toLowerCase();
-      const matchesTitle = todo.title.toLowerCase().includes(query);
-      const matchesDescription = todo.description.toLowerCase().includes(query);
+      const matchesTitle = task.title.toLowerCase().includes(query);
+      const matchesDescription = task.description.toLowerCase().includes(query);
       if (!matchesTitle && !matchesDescription) {
         return false;
       }
@@ -102,8 +103,8 @@ function applyFilters(todos: Task[], filters: FilterState): Task[] {
  * Creates a new sorted array (never mutates). Null values (e.g., no due date)
  * are pushed to the end regardless of sort direction.
  */
-function applySorting(todos: Task[], filters: FilterState): Task[] {
-  const sorted = [...todos];
+function applySorting(tasks: Task[], filters: FilterState): Task[] {
+  const sorted = [...tasks];
   const dir = filters.sortDirection === "asc" ? 1 : -1;
 
   sorted.sort((a, b) => {
@@ -134,7 +135,7 @@ function applySorting(todos: Task[], filters: FilterState): Task[] {
   return sorted;
 }
 
-export function TodoList({ onNavigate }: TodoListProps) {
+export function TaskList({ onNavigate }: TaskListProps) {
   const state = useStore(store);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
@@ -144,14 +145,14 @@ export function TodoList({ onNavigate }: TodoListProps) {
     [state.tasks],
   );
 
-  const filteredTodos = useMemo(
+  const filteredTasks = useMemo(
     () => applySorting(applyFilters(state.tasks, filters), filters),
     [state.tasks, filters],
   );
 
-  const todoCount = state.tasks.filter((t) => t.status === "todo").length;
-  const inProgressCount = state.tasks.filter((t) => t.status === "in-progress").length;
-  const doneCount = state.tasks.filter((t) => t.status === "done").length;
+  const todoCount = state.tasks.filter((task) => task.status === "todo").length;
+  const inProgressCount = state.tasks.filter((task) => task.status === "in-progress").length;
+  const doneCount = state.tasks.filter((task) => task.status === "done").length;
 
   // ── Handlers ────────────────────────────────────────────────────────────
   const handleToggleStatus = useCallback((id: string) => {
@@ -179,19 +180,19 @@ export function TodoList({ onNavigate }: TodoListProps) {
       <div className="todo-list__summary" id="summary-bar">
         <div className="todo-list__stat">
           <span className="todo-list__stat-value" id="stat-total">{state.tasks.length}</span>
-          <span className="todo-list__stat-label">Total</span>
+          <span className="todo-list__stat-label">{t("task.list.statTotal")}</span>
         </div>
         <div className="todo-list__stat">
           <span className="todo-list__stat-value todo-list__stat-value--todo" id="stat-todo">{todoCount}</span>
-          <span className="todo-list__stat-label">Todo</span>
+          <span className="todo-list__stat-label">{t("task.list.statTodo")}</span>
         </div>
         <div className="todo-list__stat">
           <span className="todo-list__stat-value todo-list__stat-value--progress" id="stat-in-progress">{inProgressCount}</span>
-          <span className="todo-list__stat-label">In Progress</span>
+          <span className="todo-list__stat-label">{t("task.list.statInProgress")}</span>
         </div>
         <div className="todo-list__stat">
           <span className="todo-list__stat-value todo-list__stat-value--done" id="stat-done">{doneCount}</span>
-          <span className="todo-list__stat-label">Done</span>
+          <span className="todo-list__stat-label">{t("task.list.statDone")}</span>
         </div>
       </div>
 
@@ -201,7 +202,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
         categories={categories}
         onFilterChange={setFilters}
         todoCount={state.tasks.length}
-        filteredCount={filteredTodos.length}
+        filteredCount={filteredTasks.length}
       />
 
       {/* ── Action bar ─────────────────────────────────────────────────── */}
@@ -212,7 +213,7 @@ export function TodoList({ onNavigate }: TodoListProps) {
           type="button"
           id="create-todo-btn"
         >
-          + New Todo
+          + {t("task.form.headingNew")}
         </button>
         {doneCount > 0 && (
           <button
@@ -226,18 +227,18 @@ export function TodoList({ onNavigate }: TodoListProps) {
         )}
       </div>
 
-      {/* ── Todo cards ─────────────────────────────────────────────────── */}
-      {filteredTodos.length === 0 ? (
+      {/* ── Task cards ─────────────────────────────────────────────────── */}
+      {filteredTasks.length === 0 ? (
         <EmptyState
           hasNoTodos={state.tasks.length === 0}
           onCreateClick={() => onNavigate("/new")}
         />
       ) : (
         <div className="todo-list__cards" id="todo-cards">
-          {filteredTodos.map((todo) => (
-            <TodoCard
-              key={todo.id}
-              todo={todo}
+          {filteredTasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              todo={task}
               onToggleStatus={handleToggleStatus}
               onEdit={handleEdit}
               onDelete={handleDelete}

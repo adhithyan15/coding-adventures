@@ -35,8 +35,9 @@ import { useState, useEffect, useMemo } from "react";
 import { useStore } from "@coding-adventures/store";
 import { store } from "./state.js";
 import { setActiveViewAction } from "./actions.js";
-import { TodoEditor } from "./components/TodoEditor.js";
+import { TaskEditor } from "./components/TaskEditor.js";
 import { ViewRenderer } from "./components/ViewRenderer.js";
+import { t } from "./strings.js";
 import { VIEW_ID_ALL_TASKS } from "./seed.js";
 import type { SavedView } from "./views.js";
 
@@ -78,13 +79,13 @@ function renderScreen(
 ): React.ReactNode {
   // #/new — Create new task
   if (path === "/new") {
-    return <TodoEditor onNavigate={onNavigate} />;
+    return <TaskEditor onNavigate={onNavigate} />;
   }
 
   // #/edit/:id — Edit existing task
   const editMatch = path.match(/^\/edit\/([^/]+)$/);
   if (editMatch) {
-    return <TodoEditor todoId={editMatch[1]} onNavigate={onNavigate} />;
+    return <TaskEditor todoId={editMatch[1]} onNavigate={onNavigate} />;
   }
 
   // #/view/:id — Show a named view
@@ -174,7 +175,7 @@ export function App() {
             id="app-title"
           >
             <span className="app-header__icon">✓</span>
-            Todo
+            {t("app.title")}
           </h1>
 
           {/* Dynamic view tabs */}

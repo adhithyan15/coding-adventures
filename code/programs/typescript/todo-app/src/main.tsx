@@ -55,6 +55,7 @@ import { store } from "./state.js";
 import { stateLoadAction, setActiveViewAction } from "./actions.js";
 import { createPersistenceMiddleware } from "./persistence.js";
 import { createAuditMiddleware, compactEventLog, COMPACT_THRESHOLD } from "./audit.js";
+import { initStorage } from "./storage.js";
 import { seedTasks, seedViews, seedCalendars, VIEW_ID_ALL_TASKS } from "./seed.js";
 import { App } from "./App.js";
 import type { Task } from "./types.js";
@@ -134,6 +135,13 @@ async function init() {
   // Pattern: { dueTime: null, ...t } — the default is overridden if
   // the task already has a dueTime value.
   const tasks = rawTasks.map((t) => ({ dueTime: null, ...t }));
+
+  // ── 2b. Expose storage to the rest of the app ───────────────────────────
+  //
+  // Components that need to query IndexedDB directly (e.g., the task history
+  // panel in TodoEditor) import getStorage() from storage.ts. We initialize
+  // it here, before React mounts, so it's ready on the first render.
+  initStorage(storage);
 
   // ── 3. Register middlewares — order matters ─────────────────────────────
   //

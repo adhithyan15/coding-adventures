@@ -1,14 +1,14 @@
 /**
- * TodoCalendar.tsx — Calendar view screen for the todo app.
+ * TaskCalendar.tsx — Calendar view screen for the task app.
  *
  * This component wires the generic `CalendarView` from `@coding-adventures/ui-components`
- * to the todo app's store and data model.
+ * to the task store and data model.
  *
  * === What it renders ===
  *
- * A read-only monthly grid. Each day cell shows the todos whose `dueDate`
- * matches that day. Each todo is rendered as a compact "chip" — a one-line
- * label colour-coded by priority. Completed todos are shown with reduced
+ * A read-only monthly grid. Each day cell shows the tasks whose `dueDate`
+ * matches that day. Each task is rendered as a compact "chip" — a one-line
+ * label colour-coded by priority. Completed tasks are shown with reduced
  * opacity and a strikethrough.
  *
  * The view is intentionally read-only for now. There are no click handlers
@@ -19,20 +19,20 @@
  *
  * `useStore(store)` is the reactive hook from `@coding-adventures/store`.
  * It re-renders this component whenever the store dispatches an action that
- * changes `state.todos`. This means the calendar stays in sync with the
- * list view — completing a todo there immediately updates the chip here.
+ * changes `state.tasks`. This means the calendar stays in sync with the
+ * list view — completing a task there immediately updates the chip here.
  *
  * === Layout ===
  *
- * The outer `.todo-calendar` div adds a page heading ("Calendar") and a
- * subtitle ("Tasks due each day"). The `CalendarView` component fills the
- * remaining width.
+ * The outer `.todo-calendar` div adds a page heading and subtitle.
+ * The `CalendarView` component fills the remaining width.
  */
 
 import { useStore } from "@coding-adventures/store";
 import { CalendarView } from "@coding-adventures/ui-components";
 import { store } from "../state.js";
-import type { TodoItem } from "../types.js";
+import { t } from "../strings.js";
+import type { Task } from "../types.js";
 
 // ── Priority colour mapping ──────────────────────────────────────────────────
 //
@@ -45,49 +45,49 @@ import type { TodoItem } from "../types.js";
 //   high    → orange chip
 //   urgent  → red chip (animated pulse)
 
-const PRIORITY_CLASS: Record<TodoItem["priority"], string> = {
-  low: "cal-chip--low",
+const PRIORITY_CLASS: Record<Task["priority"], string> = {
+  low:    "cal-chip--low",
   medium: "cal-chip--medium",
-  high: "cal-chip--high",
+  high:   "cal-chip--high",
   urgent: "cal-chip--urgent",
 };
 
 // ── Props ────────────────────────────────────────────────────────────────────
 
-interface TodoCalendarProps {
+interface TaskCalendarProps {
   onNavigate: (path: string) => void;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function TodoCalendar({ onNavigate: _onNavigate }: TodoCalendarProps) {
-  // Subscribe to the store. Re-renders whenever todos change.
+export function TaskCalendar({ onNavigate: _onNavigate }: TaskCalendarProps) {
+  // Subscribe to the store. Re-renders whenever tasks change.
   const state = useStore(store);
 
   return (
     <div className="todo-calendar" id="todo-calendar">
       {/* Page heading */}
       <div className="todo-calendar__heading">
-        <h2 className="todo-calendar__title">Calendar</h2>
-        <p className="todo-calendar__subtitle">Tasks due each day</p>
+        <h2 className="todo-calendar__title">{t("calendar.heading")}</h2>
+        <p className="todo-calendar__subtitle">{t("calendar.subtitle")}</p>
       </div>
 
-      {/* Generic calendar — items are TodoItems, renderItem draws chips */}
-      <CalendarView<TodoItem>
-        items={state.todos}
-        ariaLabel="Todo calendar"
-        renderItem={(todo) => (
+      {/* Generic calendar — items are Tasks, renderItem draws chips */}
+      <CalendarView<Task>
+        items={state.tasks}
+        ariaLabel={t("calendar.heading")}
+        renderItem={(task) => (
           <span
             className={[
               "cal-chip",
-              PRIORITY_CLASS[todo.priority],
-              todo.status === "done" ? "cal-chip--done" : "",
+              PRIORITY_CLASS[task.priority],
+              task.status === "done" ? "cal-chip--done" : "",
             ]
               .filter(Boolean)
               .join(" ")}
-            title={todo.title}
+            title={task.title}
           >
-            {todo.title}
+            {task.title}
           </span>
         )}
       />

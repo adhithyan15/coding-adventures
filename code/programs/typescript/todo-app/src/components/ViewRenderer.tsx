@@ -6,7 +6,7 @@
  *   1. Looks up the SavedView in the store
  *   2. Reads its config.type discriminant
  *   3. Renders the appropriate renderer component:
- *        "list"     → TodoList (existing list view)
+ *        "list"     → TaskList (existing list view)
  *        "kanban"   → KanbanView (stub in V1)
  *        "calendar" → CalendarViewWrapper
  *
@@ -28,10 +28,11 @@
 
 import { useStore } from "@coding-adventures/store";
 import { store } from "../state.js";
-import { TodoList } from "./TodoList.js";
+import { TaskList } from "./TaskList.js";
 import { KanbanView } from "./KanbanView.js";
 import { CalendarViewWrapper } from "./CalendarViewWrapper.js";
-import type { ListViewConfig, KanbanViewConfig, CalendarViewConfig } from "../views.js";
+import { t } from "../strings.js";
+import type { KanbanViewConfig, CalendarViewConfig } from "../views.js";
 
 interface ViewRendererProps {
   viewId: string;
@@ -47,15 +48,15 @@ export function ViewRenderer({ viewId, onNavigate }: ViewRendererProps) {
     return (
       <div className="empty-state" id="view-not-found">
         <div className="empty-state__icon">🔍</div>
-        <h2>View not found</h2>
-        <p>This view doesn't exist or has been removed.</p>
+        <h2>{t("view.error.notFoundHeading")}</h2>
+        <p>{t("view.error.notFoundBody")}</p>
         <button
           type="button"
           className="btn btn--primary"
           onClick={() => onNavigate("/view/all-tasks")}
           id="back-to-all-tasks-btn"
         >
-          Go to All Tasks
+          {t("view.error.notFoundButton")}
         </button>
       </div>
     );
@@ -65,10 +66,9 @@ export function ViewRenderer({ viewId, onNavigate }: ViewRendererProps) {
   const { config } = view;
 
   if (config.type === "list") {
-    // Reuse the existing TodoList component for the list view.
-    // The list view has its own local filter state + sort UI built in.
+    // TaskList owns its own filter state + sort UI.
     // In future, we can pass the saved ListViewConfig to pre-populate it.
-    return <TodoList onNavigate={onNavigate} />;
+    return <TaskList onNavigate={onNavigate} />;
   }
 
   if (config.type === "kanban") {
@@ -89,8 +89,8 @@ export function ViewRenderer({ viewId, onNavigate }: ViewRendererProps) {
   return (
     <div className="empty-state">
       <div className="empty-state__icon">⚠️</div>
-      <h2>Unknown view type</h2>
-      <p>This view type is not supported in this version of the app.</p>
+      <h2>{t("view.error.unknownTypeHeading")}</h2>
+      <p>{t("view.error.unknownTypeBody")}</p>
     </div>
   );
 }

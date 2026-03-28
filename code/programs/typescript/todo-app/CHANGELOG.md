@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] - 2026-03-28
+
+### Added
+
+- **i18n string catalog** (`src/strings.en.json` + `src/strings.ts`) — every user-visible string
+  in the app is now keyed in a flat JSON catalog. Swapping to `strings.fr.json` translates the
+  entire app. The `t(key, params?)` accessor is fully type-safe via `NestedKeys<T>` — invalid
+  keys are TypeScript errors, not runtime surprises. Interpolation uses `{key}` syntax.
+
+### Changed
+
+- **Component renames** — all `Todo`-prefixed components renamed to `Task` to match the internal
+  action/type rename done in Views Engine V1:
+  - `TodoEditor` → `TaskEditor` (`src/components/TaskEditor.tsx`)
+  - `TodoCard` → `TaskCard` (`src/components/TaskCard.tsx`)
+  - `TodoList` → `TaskList` (`src/components/TaskList.tsx`)
+  - `TodoCalendar` → `TaskCalendar` (`src/components/TaskCalendar.tsx`)
+- All components updated to use `t()` for every user-visible string (labels, placeholders,
+  button text, error messages, filter options, history descriptions).
+- App title changed from "Todo" to "Tasks" (matches the Task API rename).
+- `ViewRenderer.tsx` updated to import `TaskList` (was `TodoList`).
+- `ViewRenderer.test.tsx` mock updated from `TodoList.js` to `TaskList.js`.
+
+## [0.5.0] - 2026-03-28
+
+### Added
+
+- **Task activity history panel** — when editing a task, a vertical timeline appears below the
+  form showing every action taken on that task, oldest to newest: creation, field updates (with
+  the specific changed field names listed), and status changes. Reads from the audit log via
+  `getActivitiesForEntity`. Uses relative timestamps ("3m ago", "2h ago") for recent events
+  and absolute date/time for older ones.
+- **Storage singleton** (`src/storage.ts`) — `initStorage` / `getStorage` pattern lets components
+  query IndexedDB directly (e.g., the history panel) without prop-drilling or React Context overhead.
+  `initStorage` is called in `main.tsx` before React mounts so `getStorage()` is always ready.
+
+### Fixed
+
+- **Default due date = today** — new tasks now pre-fill the due date field with today's date in
+  local timezone. Previously the field was blank, which caused tasks to not appear in the "Today"
+  view unless the user remembered to set the date manually. The date is computed in local time
+  (not UTC), so users in negative UTC offsets no longer see yesterday's date pre-filled at night.
+
 ## [0.4.0] - 2026-03-28
 
 ### Added
