@@ -2,6 +2,59 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.7.0] - 2026-03-28
+
+### Added
+
+- **Graph-based Projects** (`src/graph.ts`, `src/types.ts`) — introduces Projects as
+  first-class entities backed by a Directed Acyclic Graph (DAG). Every project and task
+  is a node; "contains" edges link projects to their tasks and subprojects.
+  - `GraphEdge` type with v7 (time-sortable) UUIDs for edge IDs
+  - `buildGraph(projects, tasks, edges)` — reconstructs in-memory `LabeledDirectedGraph`
+    from the flat persisted edge list
+  - `wouldCreateCycle(graph, fromId, toId)` — cycle detection via `transitiveClosure`
+  - `getProjectTaskIds`, `getSubprojectIds`, `getTaskProjectIds` — DAG query helpers
+  - `newEdgeId()` — v7 UUID factory using `@coding-adventures/uuid`
+- **`Project` type** (`src/types.ts`) — `{ id, name, isBuiltIn, createdAt, updatedAt }`
+- **Three new action constants** (`src/actions.ts`):
+  - `PROJECT_UPSERT` / `projectUpsertAction(project)`
+  - `EDGE_ADD` / `edgeAddAction(edge)` — cycle-safe; reducer silently rejects cycles
+  - `EDGE_REMOVE` / `edgeRemoveAction(edgeId)`
+- **`createTaskAction` gains `projectId` parameter** (default `"default"`) — the reducer
+  creates the task AND its "contains" edge atomically in a single dispatch
+- **`AppState` expanded** — new `projects: Project[]` and `edges: GraphEdge[]` fields
+- **IDB schema v4** (`src/main.tsx`) — two new stores:
+  - `"projects"` (keyPath: `"id"`) — Project entity storage
+  - `"edges"` (keyPath: `"id"`, indexes: `fromId`, `toId`) — edge storage
+- **v3 → v4 data migration** — on first launch after upgrade: seeds the Default project,
+  creates "contains" edges from `"default"` to every existing task
+- **Default project seeding** (`src/seed.ts`) — `PROJECT_ID_DEFAULT = "default"`,
+  `seedDefaultProject(store)` — dispatches `PROJECT_UPSERT` for the built-in Default project
+- **Comprehensive tests** — `src/__tests__/graph.test.ts` (29 tests), plus new suites in
+  `reducer.test.ts`, `persistence.test.ts`, and `actions.test.ts`
+- **Vitest Web Crypto polyfill** (`src/__tests__/setup.ts`) — ensures
+  `globalThis.crypto.getRandomValues` is always available across test workers;
+  fixes tests that stub `crypto` for deterministic UUIDs while also needing `v7()`
+
+### Changed
+
+- `TASK_CREATE` in reducer now atomically creates both the task and a "contains" edge
+- `TASK_DELETE` in reducer now cascade-removes all edges where `fromId` or `toId`
+  matches the deleted task
+- `TASK_DELETE` in persistence middleware now cascade-deletes edges from IndexedDB
+- `TASK_CREATE` in persistence middleware now persists the auto-generated edge
+- `STATE_LOAD` action and `stateLoadAction()` creator now accept `projects` and `edges`
+- All `vi.stubGlobal("crypto", ...)` calls in `reducer.test.ts` updated to include
+  `getRandomValues` so `newEdgeId()` / `v7()` continue to work during crypto mocks
+- `vitest.config.ts` updated: `setupFiles`, `src/graph.ts` added to coverage includes
+
+### Dependencies
+
+- Added `@coding-adventures/directed-graph` (file: `../../../packages/typescript/directed-graph`)
+- Added `@coding-adventures/uuid` (file: `../../../packages/typescript/uuid`)
+- `BUILD` updated: installs transitive `file:` deps in leaf-to-root order:
+  `sha1 → md5 → uuid → directed-graph → todo-app`
+
 ## [0.6.0] - 2026-03-28
 
 ### Added

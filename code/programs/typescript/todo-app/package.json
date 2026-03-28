@@ -18,9 +18,11 @@
     "electron:build:linux": "npm run build && tsc -p electron/tsconfig.json && electron-builder --linux"
   },
   "dependencies": {
+    "@coding-adventures/directed-graph": "file:../../../packages/typescript/directed-graph",
     "@coding-adventures/indexeddb": "file:../../../packages/typescript/indexeddb",
     "@coding-adventures/store": "file:../../../packages/typescript/store",
     "@coding-adventures/ui-components": "file:../../../packages/typescript/ui-components",
+    "@coding-adventures/uuid": "file:../../../packages/typescript/uuid",
     "@coding-adventures/vite-plugin-lattice": "file:../../../packages/typescript/vite-plugin-lattice",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -33,6 +33,13 @@ import {
   VIEW_UPSERT,
   VIEW_SET_ACTIVE,
   CALENDAR_UPSERT,
+  // Graph / project action creators
+  PROJECT_UPSERT,
+  EDGE_ADD,
+  EDGE_REMOVE,
+  projectUpsertAction,
+  edgeAddAction,
+  edgeRemoveAction,
   // Legacy TODO_* aliases — must still work and resolve to the same values
   TODO_CREATE,
   TODO_UPDATE,
@@ -44,7 +51,8 @@ import {
   updateTodoAction,
   deleteTodoAction,
 } from "../actions.js";
-import type { Task } from "../types.js";
+import type { Task, Project } from "../types.js";
+import type { GraphEdge } from "../graph.js";
 
 describe("action creators", () => {
   // ── createTaskAction ─────────────────────────────────────────────────────
@@ -83,6 +91,16 @@ describe("action creators", () => {
     it("defaults dueTime to null when omitted", () => {
       const action = createTaskAction("No time", "", "low", "", null);
       expect(action.dueTime).toBeNull();
+    });
+
+    it("defaults projectId to 'default' when omitted", () => {
+      const action = createTaskAction("Task", "", "medium", "", null);
+      expect(action.projectId).toBe("default");
+    });
+
+    it("includes an explicit projectId when provided", () => {
+      const action = createTaskAction("Task", "", "medium", "", null, null, "proj-42");
+      expect(action.projectId).toBe("proj-42");
     });
   });
 
@@ -258,6 +276,83 @@ describe("action creators", () => {
     });
   });
 
+  // ── projectUpsertAction ──────────────────────────────────────────────────
+
+  describe("projectUpsertAction", () => {
+    it("creates an action with PROJECT_UPSERT type", () => {
+      const project: Project = { id: "p1", name: "My Project", isBuiltIn: false, createdAt: 0, updatedAt: 0 };
+      const action = projectUpsertAction(project);
+      expect(action.type).toBe(PROJECT_UPSERT);
+    });
+
+    it("includes the project payload by reference", () => {
+      const project: Project = { id: "default", name: "Default", isBuiltIn: true, createdAt: 0, updatedAt: 0 };
+      const action = projectUpsertAction(project);
+      expect(action.project).toBe(project); // same reference, not a copy
+    });
+
+    it("works for a built-in project (isBuiltIn: true)", () => {
+      const project: Project = { id: "default", name: "Default", isBuiltIn: true, createdAt: 0, updatedAt: 0 };
+      const action = projectUpsertAction(project);
+      expect((action.project as Project).isBuiltIn).toBe(true);
+    });
+
+    it("works for a user-created project (isBuiltIn: false)", () => {
+      const project: Project = { id: "user-p1", name: "Work", isBuiltIn: false, createdAt: 1000, updatedAt: 2000 };
+      const action = projectUpsertAction(project);
+      expect((action.project as Project).name).toBe("Work");
+      expect((action.project as Project).isBuiltIn).toBe(false);
+    });
+  });
+
+  // ── edgeAddAction ────────────────────────────────────────────────────────
+
+  describe("edgeAddAction", () => {
+    it("creates an action with EDGE_ADD type", () => {
+      const edge: GraphEdge = { id: "e1", fromId: "p1", toId: "t1", label: "contains", createdAt: 0 };
+      const action = edgeAddAction(edge);
+      expect(action.type).toBe(EDGE_ADD);
+    });
+
+    it("includes the edge payload by reference", () => {
+      const edge: GraphEdge = { id: "e1", fromId: "default", toId: "task-42", label: "contains", createdAt: 0 };
+      const action = edgeAddAction(edge);
+      expect(action.edge).toBe(edge);
+    });
+
+    it("preserves all edge fields", () => {
+      const edge: GraphEdge = { id: "e-abc", fromId: "proj-1", toId: "task-5", label: "contains", createdAt: 9999 };
+      const action = edgeAddAction(edge);
+      const payload = action.edge as GraphEdge;
+      expect(payload.id).toBe("e-abc");
+      expect(payload.fromId).toBe("proj-1");
+      expect(payload.toId).toBe("task-5");
+      expect(payload.label).toBe("contains");
+      expect(payload.createdAt).toBe(9999);
+    });
+  });
+
+  // ── edgeRemoveAction ─────────────────────────────────────────────────────
+
+  describe("edgeRemoveAction", () => {
+    it("creates an action with EDGE_REMOVE type", () => {
+      const action = edgeRemoveAction("e1");
+      expect(action.type).toBe(EDGE_REMOVE);
+    });
+
+    it("includes the edgeId", () => {
+      const action = edgeRemoveAction("my-edge-uuid");
+      expect(action.edgeId).toBe("my-edge-uuid");
+    });
+
+    it("works with any string edge ID", () => {
+      const ids = ["e1", "e-abc-123", "00000000-0000-7000-0000-000000000001"];
+      for (const id of ids) {
+        expect(edgeRemoveAction(id).edgeId).toBe(id);
+      }
+    });
+  });
+
   // ── Legacy TODO_* alias constants ────────────────────────────────────────
 
   describe("legacy TODO_* alias constants", () => {
@@ -312,7 +407,7 @@ describe("action creators", () => {
   // ── Action type constants ─────────────────────────────────────────────────
 
   describe("action type constants", () => {
-    it("all TASK_* action types are unique strings", () => {
+    it("all action type constants are unique strings", () => {
       const types = [
         TASK_CREATE,
         TASK_UPDATE,
@@ -324,6 +419,9 @@ describe("action creators", () => {
         VIEW_UPSERT,
         VIEW_SET_ACTIVE,
         CALENDAR_UPSERT,
+        PROJECT_UPSERT,
+        EDGE_ADD,
+        EDGE_REMOVE,
       ];
       const uniqueTypes = new Set(types);
       expect(uniqueTypes.size).toBe(types.length);
@@ -341,6 +439,9 @@ describe("action creators", () => {
         VIEW_UPSERT,
         VIEW_SET_ACTIVE,
         CALENDAR_UPSERT,
+        PROJECT_UPSERT,
+        EDGE_ADD,
+        EDGE_REMOVE,
       ];
       for (const t of types) {
         expect(t).toBeTypeOf("string");

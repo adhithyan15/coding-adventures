@@ -27,6 +27,7 @@ import {
   upsertViewAction,
   upsertCalendarAction,
   setActiveViewAction,
+  projectUpsertAction,
 } from "./actions.js";
 import type { SavedView } from "./views.js";
 import { DEFAULT_TASK_FILTER } from "./views.js";
@@ -41,6 +42,50 @@ export const VIEW_ID_BOARD = "board";
 export const VIEW_ID_TODAY = "today";
 export const VIEW_ID_THIS_WEEK = "this-week";
 export const VIEW_ID_THIS_MONTH = "this-month";
+
+// ── Built-in project IDs ──────────────────────────────────────────────────
+//
+// The default project always uses the stable id "default". All tasks that
+// don't have an explicit project assignment are placed here automatically.
+
+/**
+ * PROJECT_ID_DEFAULT — stable id for the built-in "Default" project.
+ *
+ * Referenced in:
+ *   - createTaskAction (default projectId value)
+ *   - main.tsx migration logic (create edges from "default" → existing tasks)
+ *   - graph helpers (identify the default container)
+ *
+ * Do not change this value — it appears in persisted IDB records.
+ */
+export const PROJECT_ID_DEFAULT = "default";
+
+// ── seedDefaultProject ────────────────────────────────────────────────────
+
+/**
+ * seedDefaultProject — dispatches a PROJECT_UPSERT for the built-in default
+ * project.
+ *
+ * Called from main.tsx during:
+ *   1. First visit (no data in IndexedDB yet).
+ *   2. v3→v4 migration (existing tasks, no projects in IDB yet).
+ *
+ * The project uses the stable id PROJECT_ID_DEFAULT ("default") and
+ * isBuiltIn: true to prevent deletion from the UI. createdAt/updatedAt
+ * are set to 0 (epoch) as a sentinel value indicating a built-in entity,
+ * similar to how built-in views work.
+ */
+export function seedDefaultProject(store: Store<AppState>): void {
+  store.dispatch(
+    projectUpsertAction({
+      id: PROJECT_ID_DEFAULT,
+      name: "Default",
+      isBuiltIn: true,
+      createdAt: 0,
+      updatedAt: 0,
+    }),
+  );
+}
 
 // ── seedTasks ─────────────────────────────────────────────────────────────
 

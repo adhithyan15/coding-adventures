@@ -17,7 +17,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createPersistenceMiddleware } from "../persistence.js";
 import type { AppState } from "../reducer.js";
-import type { Task } from "../types.js";
+import type { Task, Project } from "../types.js";
+import type { GraphEdge } from "../graph.js";
 import {
   TASK_CREATE,
   TASK_UPDATE,
@@ -28,6 +29,9 @@ import {
   STATE_LOAD,
   VIEW_UPSERT,
   CALENDAR_UPSERT,
+  PROJECT_UPSERT,
+  EDGE_ADD,
+  EDGE_REMOVE,
 } from "../actions.js";
 
 // ── Mock Storage ─────────────────────────────────────────────────────────────
@@ -76,10 +80,11 @@ function makeTask(overrides: Partial<Task> = {}): Task {
 
 /**
  * makeState — builds a full AppState for the mock store.
- * The middleware reads `state.tasks` so this must match the real AppState shape.
+ * The middleware reads `state.tasks` and `state.edges` so this must match
+ * the real AppState shape including projects and edges.
  */
-function makeState(tasks: Task[] = []): AppState {
-  return { tasks, views: [], calendars: [], activeViewId: "" };
+function makeState(tasks: Task[] = [], edges: GraphEdge[] = []): AppState {
+  return { tasks, views: [], calendars: [], projects: [], edges, activeViewId: "" };
 }
 
 // ── Tests ────────────────────────────────────────────────────────────────────
@@ -260,6 +265,105 @@ describe("createPersistenceMiddleware", () => {
 
       expect(storage.put).not.toHaveBeenCalled();
       expect(storage.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("PROJECT_UPSERT", () => {
+    it("persists the project to the projects store", () => {
+      const project: Project = {
+        id: "default",
+        name: "Default",
+        isBuiltIn: true,
+        createdAt: 0,
+        updatedAt: 0,
+      };
+      const store = createMockStore(makeState());
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: PROJECT_UPSERT, project }, next);
+
+      expect(storage.put).toHaveBeenCalledWith("projects", project);
+    });
+  });
+
+  describe("EDGE_ADD", () => {
+    const makeEdge = (id = "e1"): GraphEdge => ({
+      id,
+      fromId: "p1",
+      toId: "t1",
+      label: "contains",
+      createdAt: 0,
+    });
+
+    it("persists the edge when the reducer accepted it (edge present in state)", () => {
+      const edge = makeEdge();
+      // State has the edge (reducer accepted it)
+      const store = createMockStore(makeState([], [edge]));
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: EDGE_ADD, edge }, next);
+
+      expect(storage.put).toHaveBeenCalledWith("edges", edge);
+    });
+
+    it("does NOT persist the edge when the reducer rejected it (cycle or duplicate)", () => {
+      const edge = makeEdge();
+      // State does NOT have the edge (reducer rejected the cycle)
+      const store = createMockStore(makeState([], []));
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: EDGE_ADD, edge }, next);
+
+      expect(storage.put).not.toHaveBeenCalledWith("edges", edge);
+    });
+  });
+
+  describe("EDGE_REMOVE", () => {
+    it("deletes the edge from storage by id", () => {
+      const store = createMockStore(makeState());
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: EDGE_REMOVE, edgeId: "e1" }, next);
+
+      expect(storage.delete).toHaveBeenCalledWith("edges", "e1");
+    });
+  });
+
+  describe("TASK_CREATE persists edge", () => {
+    it("persists both the task and its auto-created edge", () => {
+      const task = makeTask({ id: "new-task" });
+      const edge: GraphEdge = { id: "e-auto", fromId: "default", toId: "new-task", label: "contains", createdAt: 0 };
+      const store = createMockStore(makeState([task], [edge]));
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: TASK_CREATE, id: "new-task" }, next);
+
+      expect(storage.put).toHaveBeenCalledWith("todos", task);
+      expect(storage.put).toHaveBeenCalledWith("edges", edge);
+    });
+  });
+
+  describe("TASK_DELETE cascade edges", () => {
+    it("deletes the task and all edges referencing it from storage", async () => {
+      const storedEdges: GraphEdge[] = [
+        { id: "e1", fromId: "p1", toId: "del-task", label: "contains", createdAt: 0 },
+        { id: "e2", fromId: "p2", toId: "del-task", label: "contains", createdAt: 0 },
+        { id: "e3", fromId: "p1", toId: "other", label: "contains", createdAt: 0 },
+      ];
+      storage.getAll.mockResolvedValue(storedEdges as any);
+
+      const store = createMockStore(makeState());
+      const middleware = createPersistenceMiddleware(storage);
+      middleware(store, { type: TASK_DELETE, taskId: "del-task" }, next);
+
+      expect(storage.delete).toHaveBeenCalledWith("todos", "del-task");
+
+      // Cascade: edges e1 and e2 should be deleted, e3 should not
+      await vi.waitFor(() => {
+        expect(storage.delete).toHaveBeenCalledWith("edges", "e1");
+        expect(storage.delete).toHaveBeenCalledWith("edges", "e2");
+      });
+      expect(storage.delete).not.toHaveBeenCalledWith("edges", "e3");
     });
   });
 

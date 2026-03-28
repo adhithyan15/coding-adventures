@@ -29,9 +29,11 @@
  */
 
 import type { Action } from "@coding-adventures/store";
-import type { Task, TaskStatus } from "./types.js";
+import type { Task, TaskStatus, Project } from "./types.js";
 import type { SavedView } from "./views.js";
 import type { CalendarSettings } from "./calendar-settings.js";
+import type { GraphEdge } from "./graph.js";
+import { buildGraph, wouldCreateCycle, newEdgeId } from "./graph.js";
 import {
   TASK_CREATE,
   TASK_UPDATE,
@@ -43,14 +45,35 @@ import {
   VIEW_UPSERT,
   VIEW_SET_ACTIVE,
   CALENDAR_UPSERT,
+  PROJECT_UPSERT,
+  EDGE_ADD,
+  EDGE_REMOVE,
 } from "./actions.js";
 
 // ── State ─────────────────────────────────────────────────────────────────
+//
+// AppState is a plain serializable object. Every field is a JSON-safe
+// primitive or array. Class instances (like LabeledDirectedGraph) are never
+// stored here — they are derived/rebuilt from `edges` on demand.
 
 export interface AppState {
   tasks: Task[];
   views: SavedView[];
   calendars: CalendarSettings[];
+  /**
+   * All persisted projects. At least one project (the "default" built-in)
+   * always exists after the first visit or v3→v4 migration.
+   */
+  projects: Project[];
+  /**
+   * All persisted graph edges. Flat serializable records that encode the
+   * DAG topology. The in-memory LabeledDirectedGraph is rebuilt from this
+   * array whenever graph queries are needed (via buildGraph()).
+   *
+   * In V1, all edges have label: "contains" and represent project→task or
+   * project→subproject containment relationships.
+   */
+  edges: GraphEdge[];
   /**
    * The id of the currently displayed view.
    * Set on first load to the "All Tasks" view id, then updated whenever
@@ -106,7 +129,22 @@ export function reducer(state: AppState, action: Action): AppState {
         completedAt: null,
         sortOrder: now,
       };
-      return { ...state, tasks: [...state.tasks, newTask] };
+      // Atomically create a "contains" edge from the project to this task.
+      // A brand-new task node has no outgoing edges, so it can never form a
+      // cycle — the cycle check is skipped here for performance.
+      const projectId = (action.projectId as string | undefined) ?? "default";
+      const newEdge: GraphEdge = {
+        id: newEdgeId(),
+        fromId: projectId,
+        toId: newTask.id,
+        label: "contains",
+        createdAt: now,
+      };
+      return {
+        ...state,
+        tasks: [...state.tasks, newTask],
+        edges: [...state.edges, newEdge],
+      };
     }
 
     // ── TASK_UPDATE ──────────────────────────────────────────────────────
@@ -128,12 +166,17 @@ export function reducer(state: AppState, action: Action): AppState {
 
     // ── TASK_DELETE ──────────────────────────────────────────────────────
     //
-    // Remove by ID. filter() returns a new array, satisfying immutability.
+    // Remove by ID. Cascade-remove all edges that reference this task as
+    // either the source (fromId) or the target (toId) to keep the graph
+    // consistent. filter() returns new arrays, satisfying immutability.
     case TASK_DELETE: {
       const taskId = action.taskId as string;
       return {
         ...state,
         tasks: state.tasks.filter((task) => task.id !== taskId),
+        edges: state.edges.filter(
+          (e) => e.fromId !== taskId && e.toId !== taskId,
+        ),
       };
     }
 
@@ -225,16 +268,66 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, calendars: newCalendars };
     }
 
+    // ── PROJECT_UPSERT ───────────────────────────────────────────────────
+    //
+    // Add a new project or replace an existing one (matched by id).
+    // Same upsert pattern as VIEW_UPSERT and CALENDAR_UPSERT.
+    case PROJECT_UPSERT: {
+      const project = action.project as Project;
+      const existing = state.projects.findIndex((p) => p.id === project.id);
+      const newProjects =
+        existing >= 0
+          ? state.projects.map((p) => (p.id === project.id ? project : p))
+          : [...state.projects, project];
+      return { ...state, projects: newProjects };
+    }
+
+    // ── EDGE_ADD ─────────────────────────────────────────────────────────
+    //
+    // Add a directed edge to the graph. Enforce the DAG invariant: if the
+    // edge would create a cycle, return state unchanged (silent no-op).
+    //
+    // The cycle check builds a temporary in-memory graph from state.edges
+    // and calls wouldCreateCycle(). This is O(V + E) per add — acceptable
+    // for V1 dataset sizes. Optimize with incremental graph updates later.
+    case EDGE_ADD: {
+      const edge = action.edge as GraphEdge;
+      // Don't add duplicate edges (same fromId + toId + label)
+      const isDuplicate = state.edges.some(
+        (e) => e.fromId === edge.fromId && e.toId === edge.toId && e.label === edge.label,
+      );
+      if (isDuplicate) return state;
+      // Cycle check using the current in-memory graph
+      const graph = buildGraph(state.projects, state.tasks, state.edges);
+      if (wouldCreateCycle(graph, edge.fromId, edge.toId)) return state;
+      return { ...state, edges: [...state.edges, edge] };
+    }
+
+    // ── EDGE_REMOVE ──────────────────────────────────────────────────────
+    //
+    // Remove an edge by its stable id. Idempotent: no-op if id not found.
+    case EDGE_REMOVE: {
+      const edgeId = action.edgeId as string;
+      return {
+        ...state,
+        edges: state.edges.filter((e) => e.id !== edgeId),
+      };
+    }
+
     // ── STATE_LOAD ───────────────────────────────────────────────────────
     //
     // Replace the entire state with data from IndexedDB. Called once on
     // startup. No merge logic — IndexedDB is the source of truth.
+    // Projects and edges default to [] for backward compat with callers
+    // that haven't been updated to pass the new fields yet.
     case STATE_LOAD: {
       const tasks = action.tasks as Task[];
       const views = (action.views as SavedView[]) || [];
       const calendars = (action.calendars as CalendarSettings[]) || [];
       const activeViewId = (action.activeViewId as string) || "";
-      return { tasks, views, calendars, activeViewId };
+      const projects = (action.projects as Project[]) || [];
+      const edges = (action.edges as GraphEdge[]) || [];
+      return { tasks, views, calendars, activeViewId, projects, edges };
     }
 
     // ── Unknown action ───────────────────────────────────────────────────

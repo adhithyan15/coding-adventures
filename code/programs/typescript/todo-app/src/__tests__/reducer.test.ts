@@ -7,9 +7,11 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
+import { webcrypto } from "node:crypto";
 import { reducer } from "../reducer.js";
 import type { AppState } from "../reducer.js";
-import type { Task } from "../types.js";
+import type { Task, Project } from "../types.js";
+import type { GraphEdge } from "../graph.js";
 import {
   createTaskAction,
   updateTaskAction,
@@ -18,6 +20,9 @@ import {
   setStatusAction,
   stateLoadAction,
   clearCompletedAction,
+  projectUpsertAction,
+  edgeAddAction,
+  edgeRemoveAction,
   // Legacy aliases still work — test that they do
   createTodoAction,
   updateTodoAction,
@@ -46,10 +51,11 @@ function makeTask(overrides: Partial<Task> = {}): Task {
 
 /**
  * makeState — builds a full AppState with sensible defaults for views,
- * calendars, and activeViewId so tests only need to specify tasks.
+ * calendars, projects, edges, and activeViewId so tests only need to
+ * specify tasks.
  */
 function makeState(tasks: Task[] = []): AppState {
-  return { tasks, views: [], calendars: [], activeViewId: "" };
+  return { tasks, views: [], calendars: [], projects: [], edges: [], activeViewId: "" };
 }
 
 // ── Test Suites ─────────────────────────────────────────────────────────────
@@ -61,7 +67,7 @@ describe("reducer", () => {
     it("adds a new task to an empty list", () => {
       // Mock crypto.randomUUID for deterministic testing
       const mockUUID = "mock-uuid-123";
-      vi.stubGlobal("crypto", { randomUUID: () => mockUUID });
+      vi.stubGlobal("crypto", { randomUUID: () => mockUUID, getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const state = makeState();
       const action = createTaskAction("Buy milk", "From the store", "high", "shopping", "2026-04-01");
@@ -86,7 +92,7 @@ describe("reducer", () => {
     });
 
     it("appends to existing list", () => {
-      vi.stubGlobal("crypto", { randomUUID: () => "uuid-2" });
+      vi.stubGlobal("crypto", { randomUUID: () => "uuid-2", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const existing = makeTask({ id: "existing-1" });
       const state = makeState([existing]);
@@ -101,7 +107,7 @@ describe("reducer", () => {
     });
 
     it("defaults to medium priority when empty", () => {
-      vi.stubGlobal("crypto", { randomUUID: () => "uuid-3" });
+      vi.stubGlobal("crypto", { randomUUID: () => "uuid-3", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const state = makeState();
       // Include id field — now that createTaskAction pre-generates the UUID,
@@ -116,7 +122,7 @@ describe("reducer", () => {
     });
 
     it("does not mutate the original state", () => {
-      vi.stubGlobal("crypto", { randomUUID: () => "uuid-4" });
+      vi.stubGlobal("crypto", { randomUUID: () => "uuid-4", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const state = makeState();
       const action = createTaskAction("Immutable test", "", "low", "", null);
@@ -130,7 +136,7 @@ describe("reducer", () => {
     });
 
     it("legacy createTodoAction alias produces the same result", () => {
-      vi.stubGlobal("crypto", { randomUUID: () => "legacy-uuid" });
+      vi.stubGlobal("crypto", { randomUUID: () => "legacy-uuid", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const state = makeState();
       const action = createTodoAction("Legacy task", "desc", "high", "cat", "2026-04-01");
@@ -436,6 +442,213 @@ describe("reducer", () => {
     });
   });
 
+  // ── PROJECT_UPSERT ───────────────────────────────────────────────────────
+
+  describe("PROJECT_UPSERT", () => {
+    const makeProject = (overrides: Partial<Project> = {}): Project => ({
+      id: "p1",
+      name: "Test Project",
+      isBuiltIn: false,
+      createdAt: 0,
+      updatedAt: 0,
+      ...overrides,
+    });
+
+    it("adds a new project when none exists with that id", () => {
+      const state = makeState();
+      const project = makeProject({ id: "new-project" });
+      const newState = reducer(state, projectUpsertAction(project));
+      expect(newState.projects).toHaveLength(1);
+      expect(newState.projects[0]!.id).toBe("new-project");
+    });
+
+    it("replaces an existing project with the same id", () => {
+      const existing = makeProject({ id: "p1", name: "Old Name" });
+      const state = { ...makeState(), projects: [existing] };
+      const updated = makeProject({ id: "p1", name: "New Name" });
+      const newState = reducer(state, projectUpsertAction(updated));
+      expect(newState.projects).toHaveLength(1);
+      expect(newState.projects[0]!.name).toBe("New Name");
+    });
+
+    it("does not mutate existing state", () => {
+      const state = { ...makeState(), projects: [makeProject({ id: "p1" })] };
+      Object.freeze(state.projects);
+      expect(() =>
+        reducer(state, projectUpsertAction(makeProject({ id: "p2" }))),
+      ).not.toThrow();
+    });
+  });
+
+  // ── EDGE_ADD ─────────────────────────────────────────────────────────────
+
+  describe("EDGE_ADD", () => {
+    const makeEdge = (fromId: string, toId: string, id = "e1"): GraphEdge => ({
+      id,
+      fromId,
+      toId,
+      label: "contains",
+      createdAt: 0,
+    });
+
+    it("adds a valid edge to state.edges", () => {
+      const project: Project = { id: "p1", name: "P1", isBuiltIn: false, createdAt: 0, updatedAt: 0 };
+      const task = makeTask({ id: "t1" });
+      const state = { ...makeState([task]), projects: [project] };
+      const edge = makeEdge("p1", "t1");
+      const newState = reducer(state, edgeAddAction(edge));
+      expect(newState.edges).toHaveLength(1);
+      expect(newState.edges[0]!.id).toBe("e1");
+    });
+
+    it("is a no-op when the edge would create a cycle", () => {
+      // p1 → t1 exists; trying to add t1 → p1 should be rejected
+      const project: Project = { id: "p1", name: "P1", isBuiltIn: false, createdAt: 0, updatedAt: 0 };
+      const task = makeTask({ id: "t1" });
+      const existingEdge = makeEdge("p1", "t1", "existing");
+      const state = { ...makeState([task]), projects: [project], edges: [existingEdge] };
+      const cycleEdge = makeEdge("t1", "p1", "cycle-attempt");
+      const newState = reducer(state, edgeAddAction(cycleEdge));
+      expect(newState.edges).toHaveLength(1); // unchanged
+      expect(newState).toBe(state) // same reference
+    });
+
+    it("is a no-op for self-loops", () => {
+      const project: Project = { id: "p1", name: "P1", isBuiltIn: false, createdAt: 0, updatedAt: 0 };
+      const state = { ...makeState(), projects: [project] };
+      const selfLoop = makeEdge("p1", "p1", "self");
+      const newState = reducer(state, edgeAddAction(selfLoop));
+      expect(newState.edges).toHaveLength(0);
+    });
+
+    it("is a no-op for duplicate edges", () => {
+      const project: Project = { id: "p1", name: "P1", isBuiltIn: false, createdAt: 0, updatedAt: 0 };
+      const task = makeTask({ id: "t1" });
+      const existingEdge = makeEdge("p1", "t1", "e1");
+      const state = { ...makeState([task]), projects: [project], edges: [existingEdge] };
+      const duplicate = makeEdge("p1", "t1", "e2"); // same from/to, different id
+      const newState = reducer(state, edgeAddAction(duplicate));
+      expect(newState.edges).toHaveLength(1); // still just one
+    });
+  });
+
+  // ── EDGE_REMOVE ──────────────────────────────────────────────────────────
+
+  describe("EDGE_REMOVE", () => {
+    const makeEdge = (id: string): GraphEdge => ({
+      id,
+      fromId: "p1",
+      toId: "t1",
+      label: "contains",
+      createdAt: 0,
+    });
+
+    it("removes an edge by id", () => {
+      const edge = makeEdge("e1");
+      const state = { ...makeState(), edges: [edge] };
+      const newState = reducer(state, edgeRemoveAction("e1"));
+      expect(newState.edges).toHaveLength(0);
+    });
+
+    it("is a no-op when edge id does not exist", () => {
+      const edge = makeEdge("e1");
+      const state = { ...makeState(), edges: [edge] };
+      const newState = reducer(state, edgeRemoveAction("non-existent"));
+      expect(newState.edges).toHaveLength(1);
+    });
+
+    it("only removes the targeted edge, not others", () => {
+      const edges: GraphEdge[] = [
+        { id: "e1", fromId: "p1", toId: "t1", label: "contains", createdAt: 0 },
+        { id: "e2", fromId: "p1", toId: "t2", label: "contains", createdAt: 0 },
+        { id: "e3", fromId: "p1", toId: "t3", label: "contains", createdAt: 0 },
+      ];
+      const state = { ...makeState(), edges };
+      const newState = reducer(state, edgeRemoveAction("e2"));
+      expect(newState.edges).toHaveLength(2);
+      expect(newState.edges.map((e) => e.id)).toEqual(["e1", "e3"]);
+    });
+  });
+
+  // ── TASK_CREATE (atomic edge) ─────────────────────────────────────────────
+
+  describe("TASK_CREATE atomic edge", () => {
+    it("creates a 'contains' edge from default project to the new task", () => {
+      vi.stubGlobal("crypto", { randomUUID: () => "task-uuid", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
+      const state = makeState();
+      const action = createTaskAction("Test", "", "low", "", null);
+      const newState = reducer(state, action);
+
+      // Should have one edge
+      expect(newState.edges).toHaveLength(1);
+      const edge = newState.edges[0]!;
+      expect(edge.fromId).toBe("default");
+      expect(edge.toId).toBe("task-uuid");
+      expect(edge.label).toBe("contains");
+
+      vi.unstubAllGlobals();
+    });
+
+    it("creates edge from explicit projectId when provided", () => {
+      vi.stubGlobal("crypto", { randomUUID: () => "task-2", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
+      const state = makeState();
+      const action = createTaskAction("T", "", "low", "", null, null, "my-project");
+      const newState = reducer(state, action);
+
+      expect(newState.edges[0]!.fromId).toBe("my-project");
+      expect(newState.edges[0]!.toId).toBe("task-2");
+
+      vi.unstubAllGlobals();
+    });
+
+    it("task and edge are both appended atomically", () => {
+      vi.stubGlobal("crypto", { randomUUID: () => "atomic-id", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
+      const state = makeState();
+      const action = createTaskAction("A", "", "low", "", null);
+      const newState = reducer(state, action);
+
+      expect(newState.tasks).toHaveLength(1);
+      expect(newState.edges).toHaveLength(1);
+      expect(newState.tasks[0]!.id).toBe("atomic-id");
+      expect(newState.edges[0]!.toId).toBe("atomic-id");
+
+      vi.unstubAllGlobals();
+    });
+  });
+
+  // ── TASK_DELETE cascade ───────────────────────────────────────────────────
+
+  describe("TASK_DELETE cascade", () => {
+    it("removes all edges where toId matches the deleted task", () => {
+      const task = makeTask({ id: "del-task" });
+      const edges: GraphEdge[] = [
+        { id: "e1", fromId: "p1", toId: "del-task", label: "contains", createdAt: 0 },
+        { id: "e2", fromId: "p2", toId: "del-task", label: "contains", createdAt: 0 },
+        { id: "e3", fromId: "p1", toId: "other-task", label: "contains", createdAt: 0 },
+      ];
+      const state = { ...makeState([task]), edges };
+      const newState = reducer(state, deleteTaskAction("del-task"));
+
+      expect(newState.tasks).toHaveLength(0);
+      expect(newState.edges).toHaveLength(1); // e3 survives
+      expect(newState.edges[0]!.id).toBe("e3");
+    });
+
+    it("removes edges where fromId matches (if task was a project too)", () => {
+      const task = makeTask({ id: "del-task" });
+      const edges: GraphEdge[] = [
+        { id: "e1", fromId: "del-task", toId: "child", label: "contains", createdAt: 0 },
+        { id: "e2", fromId: "parent", toId: "del-task", label: "contains", createdAt: 0 },
+        { id: "e3", fromId: "other", toId: "other2", label: "contains", createdAt: 0 },
+      ];
+      const state = { ...makeState([task]), edges };
+      const newState = reducer(state, deleteTaskAction("del-task"));
+
+      expect(newState.edges).toHaveLength(1); // only e3 survives
+      expect(newState.edges[0]!.id).toBe("e3");
+    });
+  });
+
   // ── Unknown actions ──────────────────────────────────────────────────────
 
   describe("unknown actions", () => {
@@ -452,7 +665,7 @@ describe("reducer", () => {
 
   describe("immutability", () => {
     it("never mutates the input state object", () => {
-      vi.stubGlobal("crypto", { randomUUID: () => "imm-uuid" });
+      vi.stubGlobal("crypto", { randomUUID: () => "imm-uuid", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const original = makeTask({ id: "imm-1" });
       const state = makeState([original]);
@@ -473,7 +686,7 @@ describe("reducer", () => {
     });
 
     it("returns a new state reference on every mutation", () => {
-      vi.stubGlobal("crypto", { randomUUID: () => "ref-uuid" });
+      vi.stubGlobal("crypto", { randomUUID: () => "ref-uuid", getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b), subtle: webcrypto.subtle });
 
       const state = makeState([makeTask({ id: "ref-1" })]);
 

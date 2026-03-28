@@ -50,6 +50,8 @@ import type { Middleware } from "@coding-adventures/store";
 import type { AppState } from "./reducer.js";
 import type { SavedView } from "./views.js";
 import type { CalendarSettings } from "./calendar-settings.js";
+import type { Project } from "./types.js";
+import type { GraphEdge } from "./graph.js";
 import {
   TASK_CREATE,
   TASK_UPDATE,
@@ -59,6 +61,9 @@ import {
   TASK_CLEAR_COMPLETED,
   VIEW_UPSERT,
   CALENDAR_UPSERT,
+  PROJECT_UPSERT,
+  EDGE_ADD,
+  EDGE_REMOVE,
 } from "./actions.js";
 
 /**
@@ -85,11 +90,21 @@ export function createPersistenceMiddleware(
 
     switch (action.type) {
 
-      // ── Create: the new task is the last item in the array ──────────
+      // ── Create: persist the new task AND the auto-created "contains" edge
       case TASK_CREATE: {
         const task = state.tasks[state.tasks.length - 1];
         if (task) {
-          storage.put("todos", task);
+          storage.put("todos", task).catch((err: unknown) => {
+            console.warn("[persistence] Failed to persist task:", err);
+          });
+          // Persist the auto-created project→task edge. It's the edge whose
+          // toId matches the new task's id.
+          const edge = state.edges.find((e) => e.toId === task.id);
+          if (edge) {
+            storage.put("edges", edge).catch((err: unknown) => {
+              console.warn("[persistence] Failed to persist task edge:", err);
+            });
+          }
         }
         break;
       }
@@ -106,10 +121,30 @@ export function createPersistenceMiddleware(
         break;
       }
 
-      // ── Delete: remove from storage by ID ───────────────────────────
+      // ── Delete: remove task from storage AND cascade-delete its edges ──
+      //
+      // The reducer already removed the edges from state. We find which edges
+      // were deleted by reading all edges from storage and deleting those
+      // whose fromId or toId matched the deleted task.
       case TASK_DELETE: {
         const taskId = action.taskId as string;
-        storage.delete("todos", taskId);
+        storage.delete("todos", taskId).catch((err: unknown) => {
+          console.warn("[persistence] Failed to delete task:", err);
+        });
+        // Cascade: delete all edges referencing this task from IDB.
+        // We can't diff old vs new state here (next() already ran), so
+        // we query storage for edges matching the taskId and delete them.
+        storage.getAll<GraphEdge>("edges").then((storedEdges) => {
+          for (const e of storedEdges) {
+            if (e.fromId === taskId || e.toId === taskId) {
+              storage.delete("edges", e.id).catch((err: unknown) => {
+                console.warn("[persistence] Failed to delete edge:", err);
+              });
+            }
+          }
+        }).catch((err: unknown) => {
+          console.warn("[persistence] Failed to read edges for cascade delete:", err);
+        });
         break;
       }
 
@@ -144,7 +179,42 @@ export function createPersistenceMiddleware(
       // ── Calendar upsert: persist the calendar ────────────────────────
       case CALENDAR_UPSERT: {
         const calendar = action.calendar as CalendarSettings;
-        storage.put("calendars", calendar);
+        storage.put("calendars", calendar).catch((err: unknown) => {
+          console.warn("[persistence] Failed to persist calendar:", err);
+        });
+        break;
+      }
+
+      // ── Project upsert: persist the project ──────────────────────────
+      case PROJECT_UPSERT: {
+        const project = action.project as Project;
+        storage.put("projects", project).catch((err: unknown) => {
+          console.warn("[persistence] Failed to persist project:", err);
+        });
+        break;
+      }
+
+      // ── Edge add: persist the edge if the reducer accepted it ────────
+      //
+      // The reducer performs a cycle check and may silently reject the edge.
+      // We verify it was accepted by checking if it's present in new state.
+      case EDGE_ADD: {
+        const edge = action.edge as GraphEdge;
+        const edgeAccepted = state.edges.some((e) => e.id === edge.id);
+        if (edgeAccepted) {
+          storage.put("edges", edge).catch((err: unknown) => {
+            console.warn("[persistence] Failed to persist edge:", err);
+          });
+        }
+        break;
+      }
+
+      // ── Edge remove: delete from storage by ID ───────────────────────
+      case EDGE_REMOVE: {
+        const edgeId = action.edgeId as string;
+        storage.delete("edges", edgeId).catch((err: unknown) => {
+          console.warn("[persistence] Failed to delete edge:", err);
+        });
         break;
       }
 

@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    setupFiles: ["./src/__tests__/setup.ts"],
     exclude: ["e2e/**", "node_modules/**", "playwright-report/**"],
     coverage: {
       provider: "v8",
@@ -22,6 +23,7 @@ export default defineConfig({
       include: [
         "src/actions.ts",
         "src/calendar-settings.ts",
+        "src/graph.ts",
         "src/persistence.ts",
         "src/reducer.ts",
         "src/types.ts",
