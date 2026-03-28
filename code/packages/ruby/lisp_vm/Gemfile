@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+gem "coding_adventures_virtual_machine", path: "../virtual_machine"
+gem "coding_adventures_garbage_collector", path: "../garbage_collector"

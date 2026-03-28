@@ -812,3 +812,101 @@ The build tool already handles dependency ordering (it builds sha1 → md5 →
 uuid → directed-graph → todo-app in topological order), so manually
 chaining installs in the BUILD file is not needed. Each package's own BUILD
 file runs `npm install` at the right time.
+
+---
+
+### 2026-03-28: GenericVM handlers MUST call advance_pc
+
+Every opcode handler registered with `GenericVM.register_opcode` must call
+`vn.advance_pc` at the end, or the VM will loop forever on the same instruction.
+
+**Exceptions:**
+- `HALT` — sets `vn.halted = true`, the while-loop condition stops execution
+- Unconditional `JUMP` — calls `vn.jump_to(instr.operand)` instead
+- Conditional jumps (`JUMP_IF_FALSE`, `JUMP_IF_TRUE`) — call `vn.advance_pc`
+  when NOT jumping, and `vn.jump_to` when jumping
+
+**Pattern for normal (non-jump) handler:**
+```ruby
+vm.register_opcode(OP::SOME_OP, lambda do |vn, instr, code|
+  # ... do the operation ...
+  vn.advance_pc
+  nil
+end)
+```
+
+**Pattern for conditional jump:**
+```ruby
+vm.register_opcode(OP::JUMP_IF_FALSE, lambda do |vn, instr, _c|
+  cond = vn.stack.pop
+  if cond == NIL || cond == false
+    vn.jump_to(instr.operand)
+  else
+    vn.advance_pc
+  end
+  nil
+end)
+```
+
+See `code/packages/ruby/starlark_vm/lib/coding_adventures/starlark_vm/handlers.rb`
+for the canonical reference implementation.
+
+---
+
+### 2026-03-28: CALL_FUNCTION stack order — closure is on top
+
+When the lisp compiler emits a function call `(fn arg0 arg1)`, it pushes
+args first, then the closure:
+
+```
+stack: bottom → [arg0, arg1, ..., closure] ← top
+```
+
+The CALL_FUNCTION handler must pop the closure FIRST (top of stack), then
+pop the args:
+
+```ruby
+vm.register_opcode(LispOp::CALL_FUNCTION, lambda do |vn, instr, _code|
+  arg_count    = instr.operand
+  closure_addr = vn.stack.pop          # top = closure
+  args         = []
+  arg_count.times { args.unshift(vn.stack.pop) }  # then args
+  ...
+end)
+```
+
+Getting this order wrong causes `deref(arg_value)` which raises `KeyError`
+because the arg value (e.g., `42`) is not a valid heap address.
+
+---
+
+### 2026-03-28: GrammarLexer strips surrounding quotes from string tokens
+
+When a `.tokens` grammar file defines a string pattern like:
+
+```
+STRING = /"([^"\\]|\\.)*"/
+```
+
+The `GrammarLexer` uses the capture group (the content without quotes) as the
+token value. Tests that assert the raw quoted string (`'"hello"'`) will fail —
+the actual value is `"hello"` (without quotes).
+
+Fix tests to expect the unquoted content:
+```ruby
+# Wrong:
+assert_equal '"serif"', tok.value
+# Correct:
+assert_equal "serif", tok.value
+```
+
+---
+
+### 2026-03-28: Ruby module naming — StarlarkVM not StarlarkVm
+
+The starlark_vm Ruby package uses `CodingAdventures::StarlarkVM` (capital VM),
+not `StarlarkVm`. Calling `CodingAdventures::StarlarkVm.create_starlark_vm`
+raises `NameError: uninitialized constant CodingAdventures::StarlarkVm`.
+
+Always verify the exact module constant name by reading the gem's entry point
+file (`lib/coding_adventures_starlark_vm.rb`) before referencing it.
