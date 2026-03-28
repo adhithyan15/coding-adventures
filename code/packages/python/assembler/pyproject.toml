@@ -27,7 +27,16 @@ Repository = "https://github.com/adhithyan15/coding-adventures"
 Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/06-assembler.md"
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10", "coding-adventures-arm-simulator"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "coding-adventures-arm-simulator",
+    "coding-adventures-arithmetic",
+    "coding-adventures-cpu-simulator",
+    "coding-adventures-logic-gates",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/assembler"]
