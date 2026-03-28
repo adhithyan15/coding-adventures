@@ -1,3 +1,2 @@
-bundle config set path vendor/bundle
-bundle install --quiet --full-index
-bundle exec rake test
+gem install minitest simplecov rake --quiet
+ruby -Ilib -Itest -e "Dir['test/test_*.rb'].sort.each { |f| require_relative f }"
