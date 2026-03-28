@@ -4,7 +4,7 @@
  * ViewRenderer is a "router inside the views engine": given a viewId, it
  * looks up the view in the store, reads config.type, and renders the right
  * component:
- *   "list"     → TodoList
+ *   "list"     → TaskList
  *   "kanban"   → KanbanView
  *   "calendar" → CalendarViewWrapper
  *
@@ -32,13 +32,16 @@ vi.mock("@coding-adventures/store", () => ({
   useStore: vi.fn(),
 }));
 
+// Use real strings — the t() function just returns strings from the JSON catalog.
+// No mock needed; importing it directly works fine in the test environment.
+
 vi.mock("../state.js", () => ({
   store: { getState: vi.fn(), dispatch: vi.fn(), subscribe: vi.fn(), use: vi.fn() },
 }));
 
-vi.mock("../components/TodoList.js", () => ({
-  TodoList: ({ onNavigate: _onNavigate }: { onNavigate: () => void }) => (
-    <div data-testid="todo-list">TodoList</div>
+vi.mock("../components/TaskList.js", () => ({
+  TaskList: ({ onNavigate: _onNavigate }: { onNavigate: () => void }) => (
+    <div data-testid="todo-list">TaskList</div>
   ),
 }));
 
@@ -131,7 +134,7 @@ beforeEach(() => {
 describe("ViewRenderer", () => {
   // ── List view ──────────────────────────────────────────────────────────────
 
-  it("renders TodoList for a list view config", () => {
+  it("renders TaskList for a list view config", () => {
     const listView = makeListView("all-tasks");
     mockUseStore.mockReturnValue(makeAppState([listView]));
 
@@ -139,7 +142,7 @@ describe("ViewRenderer", () => {
     expect(screen.getByTestId("todo-list")).toBeInTheDocument();
   });
 
-  it("does not render KanbanView or CalendarViewWrapper for a list view", () => {
+  it("does not render KanbanView or CalendarViewWrapper for a list view config", () => {
     const listView = makeListView("all-tasks");
     mockUseStore.mockReturnValue(makeAppState([listView]));
 
@@ -158,7 +161,7 @@ describe("ViewRenderer", () => {
     expect(screen.getByTestId("kanban-view")).toBeInTheDocument();
   });
 
-  it("does not render TodoList or CalendarViewWrapper for a kanban view", () => {
+  it("does not render TaskList or CalendarViewWrapper for a kanban view", () => {
     const kanbanView = makeKanbanView("board");
     mockUseStore.mockReturnValue(makeAppState([kanbanView]));
 
@@ -177,7 +180,7 @@ describe("ViewRenderer", () => {
     expect(screen.getByTestId("calendar-view-wrapper")).toBeInTheDocument();
   });
 
-  it("does not render TodoList or KanbanView for a calendar view", () => {
+  it("does not render TaskList or KanbanView for a calendar view", () => {
     const calView = makeCalendarView("this-month");
     mockUseStore.mockReturnValue(makeAppState([calView]));
 

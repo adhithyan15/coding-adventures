@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] - 2026-03-28
+
+### Added
+
+- **i18n string catalog** (`src/strings.en.json` + `src/strings.ts`) — every user-visible string
+  in the app is now keyed in a flat JSON catalog. Swapping to `strings.fr.json` translates the
+  entire app. The `t(key, params?)` accessor is fully type-safe via `NestedKeys<T>` — invalid
+  keys are TypeScript errors, not runtime surprises. Interpolation uses `{key}` syntax.
+
+### Changed
+
+- **Component renames** — all `Todo`-prefixed components renamed to `Task` to match the internal
+  action/type rename done in Views Engine V1:
+  - `TodoEditor` → `TaskEditor` (`src/components/TaskEditor.tsx`)
+  - `TodoCard` → `TaskCard` (`src/components/TaskCard.tsx`)
+  - `TodoList` → `TaskList` (`src/components/TaskList.tsx`)
+  - `TodoCalendar` → `TaskCalendar` (`src/components/TaskCalendar.tsx`)
+- All components updated to use `t()` for every user-visible string (labels, placeholders,
+  button text, error messages, filter options, history descriptions).
+- App title changed from "Todo" to "Tasks" (matches the Task API rename).
+- `ViewRenderer.tsx` updated to import `TaskList` (was `TodoList`).
+- `ViewRenderer.test.tsx` mock updated from `TodoList.js` to `TaskList.js`.
+
 ## [0.5.0] - 2026-03-28
 
 ### Added

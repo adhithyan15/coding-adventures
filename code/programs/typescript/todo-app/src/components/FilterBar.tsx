@@ -16,6 +16,7 @@
  */
 
 import type { FilterState, SortField, SortDirection, TodoStatus, Priority } from "../types.js";
+import { t } from "../strings.js";
 
 interface FilterBarProps {
   filters: FilterState;
@@ -68,11 +69,11 @@ export function FilterBar({
         <input
           type="text"
           className="filter-bar__search-input"
-          placeholder="Search todos..."
+          placeholder={t("filter.searchPlaceholder")}
           value={filters.search}
           onChange={(e) => updateFilter({ search: e.target.value })}
           id="search-input"
-          aria-label="Search todos"
+          aria-label={t("filter.searchPlaceholder")}
         />
         {filters.search && (
           <button
@@ -100,10 +101,10 @@ export function FilterBar({
           id="status-filter"
           aria-label="Filter by status"
         >
-          <option value="all">All Status</option>
-          <option value="todo">Todo</option>
-          <option value="in-progress">In Progress</option>
-          <option value="done">Done</option>
+          <option value="all">{t("filter.statusAll")}</option>
+          <option value="todo">{t("filter.statusTodo")}</option>
+          <option value="in-progress">{t("filter.statusProgress")}</option>
+          <option value="done">{t("filter.statusDone")}</option>
         </select>
 
         <select
@@ -117,11 +118,11 @@ export function FilterBar({
           id="priority-filter"
           aria-label="Filter by priority"
         >
-          <option value="all">All Priority</option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="urgent">Urgent</option>
+          <option value="all">{t("filter.priorityAll")}</option>
+          <option value="low">{t("filter.priorityLow")}</option>
+          <option value="medium">{t("filter.priorityMedium")}</option>
+          <option value="high">{t("filter.priorityHigh")}</option>
+          <option value="urgent">{t("filter.priorityUrgent")}</option>
         </select>
 
         {categories.length > 0 && (
@@ -132,7 +133,7 @@ export function FilterBar({
             id="category-filter"
             aria-label="Filter by category"
           >
-            <option value="">All Categories</option>
+            <option value="">{t("filter.categoryAll")}</option>
             {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -149,11 +150,11 @@ export function FilterBar({
           id="sort-field"
           aria-label="Sort by"
         >
-          <option value="createdAt">Created</option>
-          <option value="updatedAt">Updated</option>
-          <option value="dueDate">Due Date</option>
-          <option value="priority">Priority</option>
-          <option value="title">Title</option>
+          <option value="createdAt">{t("filter.sortCreated")}</option>
+          <option value="updatedAt">{t("filter.sortUpdated")}</option>
+          <option value="dueDate">{t("filter.sortDueDate")}</option>
+          <option value="priority">{t("filter.sortPriority")}</option>
+          <option value="title">{t("filter.sortTitle")}</option>
         </select>
 
         <button
@@ -164,7 +165,7 @@ export function FilterBar({
             })
           }
           type="button"
-          title={filters.sortDirection === "asc" ? "Ascending" : "Descending"}
+          title={filters.sortDirection === "asc" ? t("filter.sortAscending") : t("filter.sortDescending")}
           id="sort-direction-btn"
           aria-label={`Sort ${filters.sortDirection === "asc" ? "ascending" : "descending"}`}
         >
@@ -178,7 +179,7 @@ export function FilterBar({
             type="button"
             id="clear-filters-btn"
           >
-            Clear filters
+            {t("filter.clearFilters")}
           </button>
         )}
       </div>

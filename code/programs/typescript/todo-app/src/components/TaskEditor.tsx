@@ -1,5 +1,5 @@
 /**
- * TodoEditor.tsx — Create and edit form for tasks.
+ * TaskEditor.tsx — Create and edit form for tasks.
  *
  * This component handles both creating new tasks and editing existing ones.
  * The mode is determined by the `todoId` prop:
@@ -31,8 +31,15 @@
  * getActivitiesForEntity(storage, taskId) and renders a timeline of
  * every action taken on this task — creation, updates, status changes.
  *
- * This is the first consumer of the audit log we built in audit.ts.
- * Future consumers: streak detection, activity feeds, crash recovery.
+ * The history panel transitions through explicit async states:
+ *   idle → loading → ready
+ * so the form never blocks on the IDB query.
+ *
+ * === String catalog ===
+ *
+ * All user-visible text comes from t() (src/strings.ts), keyed into
+ * strings.en.json. Swapping the catalog to strings.fr.json translates
+ * the entire component without touching this file.
  */
 
 import { useState, useEffect } from "react";
@@ -42,11 +49,12 @@ import { createTaskAction, updateTaskAction } from "../actions.js";
 import { getUniqueCategories } from "../types.js";
 import { getActivitiesForEntity } from "../audit.js";
 import { getStorage } from "../storage.js";
+import { t } from "../strings.js";
 import type { Priority } from "../types.js";
 import type { AuditEvent } from "../audit.js";
 
-interface TodoEditorProps {
-  /** If provided, edit this todo. If undefined, create a new one. */
+interface TaskEditorProps {
+  /** If provided, edit this task. If undefined, create a new one. */
   todoId?: string;
   /** Navigate back to list after save/cancel. */
   onNavigate: (path: string) => void;
@@ -78,61 +86,58 @@ function todayLocal(): string {
 /**
  * describeEvent — converts an AuditEvent into a human-readable summary.
  *
- * Rather than showing raw action type names like "TASK_UPDATE", we
- * generate friendly descriptions:
+ * Translates raw action type names to prose via the string catalog.
+ * For TASK_UPDATE, the patch field lists exactly which fields changed.
  *
- *   TASK_CREATE           → "Task created"
- *   TASK_UPDATE (title)   → "Updated: title"
- *   TASK_UPDATE (multi)   → "Updated: priority, due date"
- *   TASK_TOGGLE_STATUS    → "Status toggled"
- *   TASK_SET_STATUS       → "Status set to done"
- *   TASK_DELETE           → "Task deleted"
- *
- * The patch field in TASK_UPDATE tells us exactly which fields changed,
- * so we can list them by name.
+ * Field name → display label mapping:
+ *   title       → "title"
+ *   description → "description"
+ *   priority    → "priority"
+ *   category    → "category"
+ *   dueDate     → "due date"
+ *   dueTime     → "due time"
  */
 function describeEvent(event: AuditEvent): string {
   const action = event.action as Record<string, unknown>;
 
   switch (event.actionType) {
     case "TASK_CREATE":
-      return "Task created";
+      return t("task.form.history.eventCreated");
 
     case "TASK_UPDATE": {
-      // The patch is a partial record of just the changed fields.
       const patch = action.patch as Record<string, unknown> | undefined;
-      if (!patch) return "Task updated";
+      if (!patch) return t("task.form.history.eventUpdated");
 
-      // Only mention fields that are actually present (were set by the user).
       const changed = Object.keys(patch).filter((k) => k in patch);
-      if (changed.length === 0) return "Task updated";
+      if (changed.length === 0) return t("task.form.history.eventUpdated");
 
       // Map field names to user-friendly labels.
       const labels: Record<string, string> = {
-        title: "title",
+        title:       "title",
         description: "description",
-        priority: "priority",
-        category: "category",
-        dueDate: "due date",
-        dueTime: "due time",
+        priority:    "priority",
+        category:    "category",
+        dueDate:     "due date",
+        dueTime:     "due time",
       };
       const readable = changed.map((f) => labels[f] ?? f);
-      return `Updated: ${readable.join(", ")}`;
+      return t("task.form.history.eventUpdatedFields", { fields: readable.join(", ") });
     }
 
     case "TASK_TOGGLE_STATUS":
-      return "Status toggled";
+      return t("task.form.history.eventStatusToggled");
 
     case "TASK_SET_STATUS": {
       const status = action.status as string | undefined;
-      return status ? `Status set to ${status}` : "Status changed";
+      return status
+        ? t("task.form.history.eventStatusSet", { status })
+        : t("task.form.history.eventStatusToggled");
     }
 
     case "TASK_DELETE":
-      return "Task deleted";
+      return t("task.form.history.eventDeleted");
 
     default:
-      // Fallback: show a cleaned-up version of the action type string.
       return event.actionType.toLowerCase().replace(/_/g, " ");
   }
 }
@@ -145,16 +150,13 @@ function describeEvent(event: AuditEvent): string {
  *   < 1h   → "5m ago"
  *   < 24h  → "3h ago"
  *   older  → "Mar 28, 2:45 PM"
- *
- * We use relative labels for recent events because "3m ago" is more
- * meaningful than "2:47:32 PM" when glancing at a history list.
  */
 function formatRelativeTime(timestamp: number): string {
   const diff = Date.now() - timestamp;
 
-  if (diff < 60_000) return "Just now";
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
-  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+  if (diff < 60_000) return t("task.form.history.timeJustNow");
+  if (diff < 3_600_000) return t("task.form.history.timeMinutes", { n: Math.floor(diff / 60_000) });
+  if (diff < 86_400_000) return t("task.form.history.timeHours", { n: Math.floor(diff / 3_600_000) });
 
   return new Date(timestamp).toLocaleString(undefined, {
     month: "short",
@@ -166,9 +168,9 @@ function formatRelativeTime(timestamp: number): string {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
+export function TaskEditor({ todoId, onNavigate }: TaskEditorProps) {
   const state = useStore(store);
-  const existingTodo = todoId ? state.tasks.find((t) => t.id === todoId) : undefined;
+  const existingTodo = todoId ? state.tasks.find((task) => task.id === todoId) : undefined;
   const isEditing = Boolean(existingTodo);
   const categories = getUniqueCategories(state.tasks);
 
@@ -185,13 +187,9 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
   // ── Activity history (edit mode only) ───────────────────────────────────
   //
   // Three states form the async boundary for history loading:
-  //   "loading"  — IDB query in flight; show a skeleton/spinner
-  //   "ready"    — query resolved; events array (may be empty)
-  //   "idle"     — not in edit mode; don't query at all
-  //
-  // We use an explicit status string rather than a boolean isLoading flag
-  // so that future states (e.g., "error") can be added without changing
-  // the shape of the state.
+  //   "idle"     — not in edit mode; no query issued; no section rendered
+  //   "loading"  — IDB query in flight; show a "Loading…" placeholder
+  //   "ready"    — query resolved; render the event list (or nothing if empty)
   const [history, setHistory] = useState<AuditEvent[]>([]);
   const [historyStatus, setHistoryStatus] = useState<"idle" | "loading" | "ready">("idle");
 
@@ -211,11 +209,8 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
   // Async boundary: the form renders immediately (no blocking) and the
   // history section transitions through: idle → loading → ready.
   //
-  // We use a `cancelled` flag to guard against setting state on an
-  // unmounted component (e.g., user navigates away before IDB resolves).
-  // This is the standard pattern for async effects in React — without it,
-  // a slow IDB query could resolve after navigation and try to setState
-  // on a component that no longer exists.
+  // The `cancelled` flag prevents setState on an unmounted component
+  // (user navigates away before IDB resolves).
   //
   //   ┌──────────┐  mount/todoId   ┌─────────┐  IDB resolves  ┌───────┐
   //   │   idle   │ ──────────────▶ │ loading │ ─────────────▶ │ ready │
@@ -239,7 +234,6 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
       .catch(() => {
         if (cancelled) return;
         // Silently swallow storage errors — history is informational only.
-        // The form still works; we just show an empty history.
         setHistory([]);
         setHistoryStatus("ready");
       });
@@ -249,19 +243,19 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
     };
   }, [todoId]);
 
-  // ── If editing a todo that doesn't exist, show error ────────────────────
+  // ── If editing a task that doesn't exist, show error ─────────────────────
   if (todoId && !existingTodo) {
     return (
       <div className="empty-state" id="todo-not-found">
         <div className="empty-state__icon">❓</div>
-        <h2>Task not found</h2>
-        <p>The task you're looking for doesn't exist or was deleted.</p>
+        <h2>{t("task.form.notFound.heading")}</h2>
+        <p>{t("task.form.notFound.body")}</p>
         <button
           className="btn btn--primary"
           onClick={() => onNavigate("/")}
           type="button"
         >
-          Back to list
+          {t("task.form.notFound.back")}
         </button>
       </div>
     );
@@ -277,7 +271,6 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
     }
 
     if (isEditing && todoId) {
-      // Update existing todo
       store.dispatch(
         updateTaskAction(todoId, {
           title: trimmedTitle,
@@ -288,7 +281,6 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
         }),
       );
     } else {
-      // Create new task
       store.dispatch(
         createTaskAction(
           trimmedTitle,
@@ -312,13 +304,13 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
     <div className="editor" id="todo-editor">
       <form className="editor__form" onSubmit={handleSubmit}>
         <h2 className="editor__heading">
-          {isEditing ? "Edit Task" : "New Task"}
+          {isEditing ? t("task.form.headingEdit") : t("task.form.headingNew")}
         </h2>
 
         {/* ── Title ──────────────────────────────────────────────────── */}
         <div className={`editor__field ${titleError ? "editor__field--error" : ""}`}>
           <label htmlFor="todo-title" className="editor__label">
-            Title <span className="editor__required">*</span>
+            {t("task.form.titleLabel")} <span className="editor__required">{t("task.form.titleRequired")}</span>
           </label>
           <input
             type="text"
@@ -329,13 +321,13 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
               setTitle(e.target.value);
               if (e.target.value.trim()) setTitleError(false);
             }}
-            placeholder="What needs to be done?"
+            placeholder={t("task.form.titlePlaceholder")}
             maxLength={200}
             autoFocus
           />
           {titleError && (
             <span className="editor__error" id="title-error">
-              Title is required
+              {t("task.form.titleError")}
             </span>
           )}
         </div>
@@ -343,14 +335,14 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
         {/* ── Description ────────────────────────────────────────────── */}
         <div className="editor__field">
           <label htmlFor="todo-description" className="editor__label">
-            Description
+            {t("task.form.descLabel")}
           </label>
           <textarea
             id="todo-description"
             className="editor__textarea"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Add details, notes, or context..."
+            placeholder={t("task.form.descPlaceholder")}
             rows={4}
           />
         </div>
@@ -359,7 +351,7 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
         <div className="editor__row">
           <div className="editor__field">
             <label htmlFor="todo-priority" className="editor__label">
-              Priority
+              {t("task.form.priorityLabel")}
             </label>
             <select
               id="todo-priority"
@@ -367,16 +359,16 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
               value={priority}
               onChange={(e) => setPriority(e.target.value as Priority)}
             >
-              <option value="low">🟢 Low</option>
-              <option value="medium">🟡 Medium</option>
-              <option value="high">🟠 High</option>
-              <option value="urgent">🔴 Urgent</option>
+              <option value="low">🟢 {t("task.card.priorityLow")}</option>
+              <option value="medium">🟡 {t("task.card.priorityMedium")}</option>
+              <option value="high">🟠 {t("task.card.priorityHigh")}</option>
+              <option value="urgent">🔴 {t("task.card.priorityUrgent")}</option>
             </select>
           </div>
 
           <div className="editor__field">
             <label htmlFor="todo-category" className="editor__label">
-              Category
+              {t("task.form.categoryLabel")}
             </label>
             <input
               type="text"
@@ -384,7 +376,7 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
               className="editor__input"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g. work, personal"
+              placeholder={t("task.form.categoryPlaceholder")}
               list="category-suggestions"
             />
             <datalist id="category-suggestions">
@@ -398,7 +390,7 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
         {/* ── Due date ───────────────────────────────────────────────── */}
         <div className="editor__field">
           <label htmlFor="todo-due-date" className="editor__label">
-            Due Date
+            {t("task.form.dueDateLabel")}
           </label>
           <input
             type="date"
@@ -417,32 +409,34 @@ export function TodoEditor({ todoId, onNavigate }: TodoEditorProps) {
             onClick={handleCancel}
             id="cancel-btn"
           >
-            Cancel
+            {t("task.form.cancel")}
           </button>
           <button
             type="submit"
             className="btn btn--primary"
             id="save-btn"
           >
-            {isEditing ? "Save Changes" : "Create Task"}
+            {isEditing ? t("task.form.submitEdit") : t("task.form.submitNew")}
           </button>
         </div>
       </form>
 
       {/* ── Activity history (edit mode only) ────────────────────────────── */}
       {/*
-       * We only show history when editing an existing task, because a new
-       * task has no events yet (the CREATE event is written asynchronously
-       * by the audit middleware after dispatch, so it wouldn't be available
-       * here anyway).
-       *
-       * The history loads asynchronously from IndexedDB. If there are no
-       * events yet (first edit, or audit log was compacted), we show nothing
-       * rather than a "no history" message — to keep the UI clean.
+       * Shows in edit mode only (new tasks have no history yet).
+       * Transitions through idle → loading → ready async states.
+       * "loading" shows a placeholder. "ready" with empty events shows nothing.
        */}
-      {isEditing && history.length > 0 && (
+      {isEditing && historyStatus === "loading" && (
         <section className="history" aria-label="Task activity history">
-          <h3 className="history__heading">Activity</h3>
+          <h3 className="history__heading">{t("task.form.history.heading")}</h3>
+          <p className="history__loading">{t("task.form.history.loading")}</p>
+        </section>
+      )}
+
+      {isEditing && historyStatus === "ready" && history.length > 0 && (
+        <section className="history" aria-label="Task activity history">
+          <h3 className="history__heading">{t("task.form.history.heading")}</h3>
           <ol className="history__list">
             {history.map((event) => (
               <li key={event.id} className="history__item">

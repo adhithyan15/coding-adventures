@@ -22,6 +22,7 @@
 
 import type { Task } from "../types.js";
 import type { KanbanViewConfig } from "../views.js";
+import { t } from "../strings.js";
 
 interface KanbanViewProps {
   tasks: Task[];
@@ -41,14 +42,9 @@ export function KanbanView({ tasks: _tasks, config: _config }: KanbanViewProps) 
     <div className="kanban-view kanban-view--stub" id="kanban-view">
       <div className="empty-state" id="kanban-coming-soon">
         <div className="empty-state__icon">🗂️</div>
-        <h2>Board view coming soon</h2>
-        <p>
-          We're building a full Kanban board where tasks are organised into columns
-          by status, priority, category, or any other field you choose.
-        </p>
-        <p className="empty-state__hint">
-          Your tasks are safe. Switch to "All Tasks" to see them now.
-        </p>
+        <h2>{t("board.comingSoonHeading")}</h2>
+        <p>{t("board.comingSoonBody")}</p>
+        <p className="empty-state__hint">{t("board.comingSoonHint")}</p>
       </div>
     </div>
   );

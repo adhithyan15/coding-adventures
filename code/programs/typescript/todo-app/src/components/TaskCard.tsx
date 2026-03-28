@@ -1,7 +1,7 @@
 /**
- * TodoCard.tsx — Individual todo item card.
+ * TaskCard.tsx — Individual task item card.
  *
- * Displays a single todo with its status, priority, title, description,
+ * Displays a single task with its status, priority, title, description,
  * category, and due date. Provides actions: toggle status, edit, delete.
  *
  * === Visual design ===
@@ -26,8 +26,9 @@
 
 import type { Task } from "../types.js";
 import { isOverdue, isDueToday } from "../types.js";
+import { t } from "../strings.js";
 
-interface TodoCardProps {
+interface TaskCardProps {
   todo: Task;
   onToggleStatus: (id: string) => void;
   onEdit: (id: string) => void;
@@ -35,14 +36,14 @@ interface TodoCardProps {
 }
 
 /**
- * priorityLabel — maps priority to a human-readable label with emoji.
+ * priorityLabel — maps priority to the locale string for that priority level.
  */
 function priorityLabel(priority: Task["priority"]): string {
   switch (priority) {
-    case "low": return "Low";
-    case "medium": return "Medium";
-    case "high": return "High";
-    case "urgent": return "Urgent";
+    case "low":    return t("task.card.priorityLow");
+    case "medium": return t("task.card.priorityMedium");
+    case "high":   return t("task.card.priorityHigh");
+    case "urgent": return t("task.card.priorityUrgent");
   }
 }
 
@@ -53,9 +54,9 @@ function priorityLabel(priority: Task["priority"]): string {
  */
 function statusIcon(status: Task["status"]): string {
   switch (status) {
-    case "todo": return "○";
+    case "todo":        return "○";
     case "in-progress": return "◐";
-    case "done": return "✓";
+    case "done":        return "✓";
   }
 }
 
@@ -67,7 +68,7 @@ function statusIcon(status: Task["status"]): string {
  */
 function formatDate(dateStr: string): string {
   try {
-    // Parse as local date (not UTC) by replacing hyphens
+    // Parse as local date (not UTC) by splitting the components
     const [year, month, day] = dateStr.split("-").map(Number);
     const date = new Date(year!, month! - 1, day);
     return date.toLocaleDateString(undefined, {
@@ -83,7 +84,8 @@ function formatDate(dateStr: string): string {
 /**
  * formatTimestamp — converts a Unix timestamp to relative time.
  *
- * Shows "Just now", "5 min ago", "2 hours ago", "Yesterday", or the date.
+ * Shows "Just now", "5m ago", "2h ago", "Yesterday", or the date.
+ * Recent labels come from the string catalog for i18n.
  */
 function formatTimestamp(timestamp: number): string {
   const now = Date.now();
@@ -93,10 +95,10 @@ function formatTimestamp(timestamp: number): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (seconds < 60) return "Just now";
+  if (seconds < 60) return t("task.card.timeJustNow");
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
-  if (days === 1) return "Yesterday";
+  if (days === 1) return t("task.card.timeYesterday");
   if (days < 7) return `${days}d ago`;
 
   return new Date(timestamp).toLocaleDateString(undefined, {
@@ -105,7 +107,7 @@ function formatTimestamp(timestamp: number): string {
   });
 }
 
-export function TodoCard({ todo, onToggleStatus, onEdit, onDelete }: TodoCardProps) {
+export function TaskCard({ todo, onToggleStatus, onEdit, onDelete }: TaskCardProps) {
   const overdue = isOverdue(todo);
   const dueToday = isDueToday(todo);
   const isDone = todo.status === "done";
@@ -155,7 +157,11 @@ export function TodoCard({ todo, onToggleStatus, onEdit, onDelete }: TodoCardPro
               className={`todo-card__due ${overdue ? "todo-card__due--overdue" : ""} ${dueToday ? "todo-card__due--today" : ""}`}
               title={`Due: ${todo.dueDate}`}
             >
-              {overdue ? "⚠ Overdue" : dueToday ? "📅 Due today" : `📅 ${formatDate(todo.dueDate)}`}
+              {overdue
+                ? t("task.card.overdueLabel")
+                : dueToday
+                  ? t("task.card.dueTodayLabel")
+                  : `📅 ${formatDate(todo.dueDate)}`}
             </span>
           )}
 
@@ -171,7 +177,7 @@ export function TodoCard({ todo, onToggleStatus, onEdit, onDelete }: TodoCardPro
           className="todo-card__action"
           onClick={() => onEdit(todo.id)}
           type="button"
-          title="Edit"
+          title={t("task.card.editTitle")}
           aria-label={`Edit "${todo.title}"`}
           id={`edit-todo-${todo.id}`}
         >
@@ -181,7 +187,7 @@ export function TodoCard({ todo, onToggleStatus, onEdit, onDelete }: TodoCardPro
           className="todo-card__action todo-card__action--delete"
           onClick={() => onDelete(todo.id)}
           type="button"
-          title="Delete"
+          title={t("task.card.deleteTitle")}
           aria-label={`Delete "${todo.title}"`}
           id={`delete-todo-${todo.id}`}
         >

@@ -842,6 +842,13 @@ input, select, textarea {
   color: $text-secondary;
 }
 
+.history__loading {
+  font-size: 0.85rem;
+  color: $text-muted;
+  padding: $space-xs 0 $space-xs $space-xl;
+  margin: 0;
+}
+
 .history__time {
   font-size: 0.75rem;
   color: $text-muted;
