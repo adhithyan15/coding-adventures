@@ -196,6 +196,49 @@ export function getDeviceId(): string {
 // ── Vector Clock ──────────────────────────────────────────────────────────────
 
 /**
+ * parseClock — safely deserializes a VectorClock from a localStorage JSON string.
+ *
+ * Plain `JSON.parse` on localStorage values is risky because:
+ *   1. Any same-origin script (including browser extensions) can write to
+ *      localStorage. A malicious value like `{"__proto__":{"x":1}}` can
+ *      pollute Object.prototype in some engine versions.
+ *   2. An adversarially large clock (thousands of device keys) makes
+ *      clockSum() — which iterates all values — slow enough to freeze the
+ *      synchronous middleware dispatch loop (ReDoS-style DoS).
+ *
+ * This function validates:
+ *   - The parsed value is a plain object (not array, not null)
+ *   - It has at most MAX_CLOCK_ENTRIES device entries
+ *   - Every key is a string, every value is a non-negative integer
+ *
+ * If validation fails, it returns {} (fresh clock) rather than crashing.
+ */
+const MAX_CLOCK_ENTRIES = 100;
+
+function parseClock(raw: string | null): VectorClock {
+  if (!raw) return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (
+      typeof parsed !== "object" ||
+      parsed === null ||
+      Array.isArray(parsed) ||
+      Object.keys(parsed as object).length > MAX_CLOCK_ENTRIES
+    ) {
+      return {};
+    }
+    for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+      if (typeof k !== "string" || typeof v !== "number" || !Number.isInteger(v) || v < 0) {
+        return {};
+      }
+    }
+    return parsed as VectorClock;
+  } catch {
+    return {};
+  }
+}
+
+/**
  * nextClockTick — increment this device's sequence number and persist.
  *
  * Each dispatch on this device advances the clock by 1. The returned clock
@@ -216,9 +259,9 @@ export function getDeviceId(): string {
  * device's entry, writes back, and returns the new clock — all synchronously.
  */
 export function nextClockTick(deviceId: string): VectorClock {
-  // Read current clock, or initialize to empty if first use.
-  const raw = localStorage.getItem(VECTOR_CLOCK_KEY);
-  const clock: VectorClock = raw ? (JSON.parse(raw) as VectorClock) : {};
+  // Read and validate clock — parseClock() guards against prototype pollution
+  // and oversized clocks written by a malicious same-origin script.
+  const clock: VectorClock = parseClock(localStorage.getItem(VECTOR_CLOCK_KEY));
 
   // Increment this device's sequence number (start from 0 if missing).
   clock[deviceId] = (clock[deviceId] ?? 0) + 1;
@@ -374,7 +417,15 @@ export function createAuditMiddleware(storage: KVStorage): Middleware<AppState> 
     // Fire-and-forget write to the "events" store.
     // We do NOT await because dispatch is synchronous. The write happens
     // asynchronously in the background, just like persistence middleware.
-    storage.put("events", event);
+    //
+    // We attach a .catch() so that storage quota errors (e.g., IDB is full)
+    // are surfaced to the console rather than silently swallowed. This
+    // preserves the non-blocking dispatch contract while ensuring failures
+    // are visible during development and don't violate the WAL guarantee
+    // silently in production.
+    storage.put("events", event).catch((err: unknown) => {
+      console.warn("[audit] WAL write failed — event not persisted:", err);
+    });
 
     // NOW apply the reducer. State changes AFTER the log entry exists.
     next();
@@ -513,9 +564,9 @@ export async function getRecentActivities(
  * @param state   — the current AppState to snapshot
  */
 export async function compactEventLog(storage: KVStorage, state: AppState): Promise<void> {
-  // Read the current clock from localStorage (synchronous).
-  const raw = localStorage.getItem(VECTOR_CLOCK_KEY);
-  const currentClock: VectorClock = raw ? (JSON.parse(raw) as VectorClock) : {};
+  // Read and validate the current clock. parseClock() guards against malformed
+  // values that could be written by a same-origin script.
+  const currentClock: VectorClock = parseClock(localStorage.getItem(VECTOR_CLOCK_KEY));
   const currentClockSum = clockSum(currentClock);
 
   // Write the state snapshot to IDB.
