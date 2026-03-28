@@ -19,32 +19,46 @@
  * For a todo app, losing one edit on a crash is acceptable. For a banking
  * app, you'd want await + error handling + retry.
  *
+ * === Store layout ===
+ *
+ * The IndexedDB database has three stores:
+ *   "todos"     — Task records (store name is "todos" for backward compat)
+ *   "views"     — SavedView records
+ *   "calendars" — CalendarSettings records
+ *
  * === Selective persistence ===
  *
  * The middleware inspects action.type to decide WHAT to write:
  *
- *   TODO_CREATE         → put the newly created todo
- *   TODO_UPDATE         → put the updated todo
- *   TODO_DELETE         → delete the todo by ID
- *   TODO_TOGGLE_STATUS  → put the updated todo
- *   TODO_SET_STATUS     → put the updated todo
- *   TODO_CLEAR_COMPLETED → delete all completed todos
+ *   TASK_CREATE         → put the newly created task into "todos"
+ *   TASK_UPDATE         → put the updated task into "todos"
+ *   TASK_DELETE         → delete the task from "todos" by ID
+ *   TASK_TOGGLE_STATUS  → put the updated task into "todos"
+ *   TASK_SET_STATUS     → put the updated task into "todos"
+ *   TASK_CLEAR_COMPLETED → delete all completed tasks from "todos"
+ *   VIEW_UPSERT         → put the view into "views"
+ *   CALENDAR_UPSERT     → put the calendar into "calendars"
+ *   VIEW_SET_ACTIVE     → no-op (activeViewId is ephemeral; reconstructed from URL)
  *   STATE_LOAD          → no-op (data came FROM storage)
  *
  * Only changed records are written — not the entire state. This minimizes
- * I/O and makes persistence efficient even with thousands of todos.
+ * I/O and makes persistence efficient even with thousands of tasks.
  */
 
 import type { KVStorage } from "@coding-adventures/indexeddb";
 import type { Middleware } from "@coding-adventures/store";
 import type { AppState } from "./reducer.js";
+import type { SavedView } from "./views.js";
+import type { CalendarSettings } from "./calendar-settings.js";
 import {
-  TODO_CREATE,
-  TODO_UPDATE,
-  TODO_DELETE,
-  TODO_TOGGLE_STATUS,
-  TODO_SET_STATUS,
-  TODO_CLEAR_COMPLETED,
+  TASK_CREATE,
+  TASK_UPDATE,
+  TASK_DELETE,
+  TASK_TOGGLE_STATUS,
+  TASK_SET_STATUS,
+  TASK_CLEAR_COMPLETED,
+  VIEW_UPSERT,
+  CALENDAR_UPSERT,
 } from "./actions.js";
 
 /**
@@ -70,65 +84,71 @@ export function createPersistenceMiddleware(
     const state = store.getState();
 
     switch (action.type) {
-      // ── Create: the new todo is the last item in the array ────────
-      case TODO_CREATE: {
-        const todo = state.todos[state.todos.length - 1];
-        if (todo) {
-          storage.put("todos", todo);
+
+      // ── Create: the new task is the last item in the array ──────────
+      case TASK_CREATE: {
+        const task = state.tasks[state.tasks.length - 1];
+        if (task) {
+          storage.put("todos", task);
         }
         break;
       }
 
-      // ── Update / Toggle / Set status: find by ID and persist ──────
-      case TODO_UPDATE:
-      case TODO_TOGGLE_STATUS:
-      case TODO_SET_STATUS: {
-        const todoId = action.todoId as string;
-        const todo = state.todos.find((t) => t.id === todoId);
-        if (todo) {
-          storage.put("todos", todo);
+      // ── Update / Toggle / Set status: find by ID and persist ────────
+      case TASK_UPDATE:
+      case TASK_TOGGLE_STATUS:
+      case TASK_SET_STATUS: {
+        const taskId = action.taskId as string;
+        const task = state.tasks.find((t) => t.id === taskId);
+        if (task) {
+          storage.put("todos", task);
         }
         break;
       }
 
-      // ── Delete: remove from storage by ID ─────────────────────────
-      case TODO_DELETE: {
-        const todoId = action.todoId as string;
-        storage.delete("todos", todoId);
+      // ── Delete: remove from storage by ID ───────────────────────────
+      case TASK_DELETE: {
+        const taskId = action.taskId as string;
+        storage.delete("todos", taskId);
         break;
       }
 
-      // ── Clear completed: delete all done todos from storage ───────
+      // ── Clear completed: delete all done tasks from storage ─────────
       //
-      // We need to know which todos were removed. Compare the IDs in
+      // We need to know which tasks were removed. Compare the IDs in
       // the new state against the old state. But we don't have the old
-      // state in middleware (next() already ran). Instead, we track
-      // the remaining IDs and delete everything else.
+      // state in middleware (next() already ran).
       //
-      // Simpler approach: we re-read all records from storage and delete
-      // those with status "done". But that would require awaiting.
-      //
-      // Simplest approach: before calling next(), snapshot the done IDs.
-      // But middleware runs AFTER next() in our pattern.
-      //
-      // Pragmatic approach: Since we're fire-and-forget, we'll re-write
-      // ALL remaining todos. This is fine for a todo app (typically < 100
-      // items). A more sophisticated approach would use a pre-dispatch hook.
-      case TODO_CLEAR_COMPLETED: {
-        // Read all from storage, delete the ones not in current state
+      // Pragmatic approach: re-read all records from storage and delete
+      // those not present in the current state. Fine for a small list.
+      case TASK_CLEAR_COMPLETED: {
         storage.getAll("todos").then((stored) => {
-          const currentIds = new Set(state.todos.map((t) => t.id));
+          const currentIds = new Set(state.tasks.map((t) => t.id));
           for (const record of stored) {
-            const storedTodo = record as { id: string };
-            if (!currentIds.has(storedTodo.id)) {
-              storage.delete("todos", storedTodo.id);
+            const storedTask = record as { id: string };
+            if (!currentIds.has(storedTask.id)) {
+              storage.delete("todos", storedTask.id);
             }
           }
         });
         break;
       }
 
-      // STATE_LOAD: data came from storage, no need to write back.
+      // ── View upsert: persist the view ────────────────────────────────
+      case VIEW_UPSERT: {
+        const view = action.view as SavedView;
+        storage.put("views", view);
+        break;
+      }
+
+      // ── Calendar upsert: persist the calendar ────────────────────────
+      case CALENDAR_UPSERT: {
+        const calendar = action.calendar as CalendarSettings;
+        storage.put("calendars", calendar);
+        break;
+      }
+
+      // STATE_LOAD, VIEW_SET_ACTIVE: data came from storage or is ephemeral.
       default:
         break;
     }

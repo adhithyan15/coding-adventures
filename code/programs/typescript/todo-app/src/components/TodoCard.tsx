@@ -24,11 +24,11 @@
  *   - Future: subtle grey badge with the date
  */
 
-import type { TodoItem } from "../types.js";
+import type { Task } from "../types.js";
 import { isOverdue, isDueToday } from "../types.js";
 
 interface TodoCardProps {
-  todo: TodoItem;
+  todo: Task;
   onToggleStatus: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
@@ -37,7 +37,7 @@ interface TodoCardProps {
 /**
  * priorityLabel — maps priority to a human-readable label with emoji.
  */
-function priorityLabel(priority: TodoItem["priority"]): string {
+function priorityLabel(priority: Task["priority"]): string {
   switch (priority) {
     case "low": return "Low";
     case "medium": return "Medium";
@@ -51,7 +51,7 @@ function priorityLabel(priority: TodoItem["priority"]): string {
  *
  * The icon doubles as a button — clicking it cycles the status.
  */
-function statusIcon(status: TodoItem["status"]): string {
+function statusIcon(status: Task["status"]): string {
   switch (status) {
     case "todo": return "○";
     case "in-progress": return "◐";

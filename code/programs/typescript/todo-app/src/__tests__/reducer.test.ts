@@ -9,20 +9,24 @@
 import { describe, it, expect, vi } from "vitest";
 import { reducer } from "../reducer.js";
 import type { AppState } from "../reducer.js";
-import type { TodoItem } from "../types.js";
+import type { Task } from "../types.js";
 import {
-  createTodoAction,
-  updateTodoAction,
-  deleteTodoAction,
+  createTaskAction,
+  updateTaskAction,
+  deleteTaskAction,
   toggleStatusAction,
   setStatusAction,
   stateLoadAction,
   clearCompletedAction,
+  // Legacy aliases still work — test that they do
+  createTodoAction,
+  updateTodoAction,
+  deleteTodoAction,
 } from "../actions.js";
 
 // ── Test Helpers ────────────────────────────────────────────────────────────
 
-function makeTodo(overrides: Partial<TodoItem> = {}): TodoItem {
+function makeTask(overrides: Partial<Task> = {}): Task {
   return {
     id: "test-id-1",
     title: "Test Todo",
@@ -31,6 +35,7 @@ function makeTodo(overrides: Partial<TodoItem> = {}): TodoItem {
     priority: "medium",
     category: "test",
     dueDate: null,
+    dueTime: null,
     createdAt: 1000,
     updatedAt: 1000,
     completedAt: null,
@@ -39,39 +44,43 @@ function makeTodo(overrides: Partial<TodoItem> = {}): TodoItem {
   };
 }
 
-function makeState(todos: TodoItem[] = []): AppState {
-  return { todos };
+/**
+ * makeState — builds a full AppState with sensible defaults for views,
+ * calendars, and activeViewId so tests only need to specify tasks.
+ */
+function makeState(tasks: Task[] = []): AppState {
+  return { tasks, views: [], calendars: [], activeViewId: "" };
 }
 
 // ── Test Suites ─────────────────────────────────────────────────────────────
 
 describe("reducer", () => {
-  // ── TODO_CREATE ─────────────────────────────────────────────────────────
+  // ── TASK_CREATE ──────────────────────────────────────────────────────────
 
-  describe("TODO_CREATE", () => {
-    it("adds a new todo to an empty list", () => {
+  describe("TASK_CREATE", () => {
+    it("adds a new task to an empty list", () => {
       // Mock crypto.randomUUID for deterministic testing
       const mockUUID = "mock-uuid-123";
       vi.stubGlobal("crypto", { randomUUID: () => mockUUID });
 
       const state = makeState();
-      const action = createTodoAction("Buy milk", "From the store", "high", "shopping", "2026-04-01");
+      const action = createTaskAction("Buy milk", "From the store", "high", "shopping", "2026-04-01");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(1);
+      expect(newState.tasks).toHaveLength(1);
 
-      const todo = newState.todos[0]!;
-      expect(todo.id).toBe(mockUUID);
-      expect(todo.title).toBe("Buy milk");
-      expect(todo.description).toBe("From the store");
-      expect(todo.status).toBe("todo");
-      expect(todo.priority).toBe("high");
-      expect(todo.category).toBe("shopping");
-      expect(todo.dueDate).toBe("2026-04-01");
-      expect(todo.completedAt).toBeNull();
-      expect(todo.createdAt).toBeTypeOf("number");
-      expect(todo.updatedAt).toBeTypeOf("number");
-      expect(todo.sortOrder).toBeTypeOf("number");
+      const task = newState.tasks[0]!;
+      expect(task.id).toBe(mockUUID);
+      expect(task.title).toBe("Buy milk");
+      expect(task.description).toBe("From the store");
+      expect(task.status).toBe("todo");
+      expect(task.priority).toBe("high");
+      expect(task.category).toBe("shopping");
+      expect(task.dueDate).toBe("2026-04-01");
+      expect(task.completedAt).toBeNull();
+      expect(task.createdAt).toBeTypeOf("number");
+      expect(task.updatedAt).toBeTypeOf("number");
+      expect(task.sortOrder).toBeTypeOf("number");
 
       vi.unstubAllGlobals();
     });
@@ -79,14 +88,14 @@ describe("reducer", () => {
     it("appends to existing list", () => {
       vi.stubGlobal("crypto", { randomUUID: () => "uuid-2" });
 
-      const existing = makeTodo({ id: "existing-1" });
+      const existing = makeTask({ id: "existing-1" });
       const state = makeState([existing]);
-      const action = createTodoAction("Second todo", "", "low", "", null);
+      const action = createTaskAction("Second task", "", "low", "", null);
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(2);
-      expect(newState.todos[0]!.id).toBe("existing-1");
-      expect(newState.todos[1]!.id).toBe("uuid-2");
+      expect(newState.tasks).toHaveLength(2);
+      expect(newState.tasks[0]!.id).toBe("existing-1");
+      expect(newState.tasks[1]!.id).toBe("uuid-2");
 
       vi.unstubAllGlobals();
     });
@@ -95,10 +104,10 @@ describe("reducer", () => {
       vi.stubGlobal("crypto", { randomUUID: () => "uuid-3" });
 
       const state = makeState();
-      const action = { type: "TODO_CREATE", title: "Task", description: "", priority: "", category: "", dueDate: null };
+      const action = { type: "TASK_CREATE", title: "Task", description: "", priority: "", category: "", dueDate: null, dueTime: null };
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.priority).toBe("medium");
+      expect(newState.tasks[0]!.priority).toBe("medium");
 
       vi.unstubAllGlobals();
     });
@@ -107,34 +116,47 @@ describe("reducer", () => {
       vi.stubGlobal("crypto", { randomUUID: () => "uuid-4" });
 
       const state = makeState();
-      const action = createTodoAction("Immutable test", "", "low", "", null);
+      const action = createTaskAction("Immutable test", "", "low", "", null);
       const newState = reducer(state, action);
 
-      expect(state.todos).toHaveLength(0);
-      expect(newState.todos).toHaveLength(1);
+      expect(state.tasks).toHaveLength(0);
+      expect(newState.tasks).toHaveLength(1);
       expect(state).not.toBe(newState);
+
+      vi.unstubAllGlobals();
+    });
+
+    it("legacy createTodoAction alias produces the same result", () => {
+      vi.stubGlobal("crypto", { randomUUID: () => "legacy-uuid" });
+
+      const state = makeState();
+      const action = createTodoAction("Legacy task", "desc", "high", "cat", "2026-04-01");
+      const newState = reducer(state, action);
+
+      expect(newState.tasks).toHaveLength(1);
+      expect(newState.tasks[0]!.title).toBe("Legacy task");
 
       vi.unstubAllGlobals();
     });
   });
 
-  // ── TODO_UPDATE ─────────────────────────────────────────────────────────
+  // ── TASK_UPDATE ──────────────────────────────────────────────────────────
 
-  describe("TODO_UPDATE", () => {
-    it("updates title of an existing todo", () => {
-      const todo = makeTodo({ id: "u-1" });
-      const state = makeState([todo]);
-      const action = updateTodoAction("u-1", { title: "Updated title" });
+  describe("TASK_UPDATE", () => {
+    it("updates title of an existing task", () => {
+      const task = makeTask({ id: "u-1" });
+      const state = makeState([task]);
+      const action = updateTaskAction("u-1", { title: "Updated title" });
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.title).toBe("Updated title");
-      expect(newState.todos[0]!.description).toBe("Test description"); // unchanged
+      expect(newState.tasks[0]!.title).toBe("Updated title");
+      expect(newState.tasks[0]!.description).toBe("Test description"); // unchanged
     });
 
     it("updates multiple fields at once", () => {
-      const todo = makeTodo({ id: "u-2" });
-      const state = makeState([todo]);
-      const action = updateTodoAction("u-2", {
+      const task = makeTask({ id: "u-2" });
+      const state = makeState([task]);
+      const action = updateTaskAction("u-2", {
         title: "New title",
         priority: "urgent",
         category: "work",
@@ -142,252 +164,280 @@ describe("reducer", () => {
       });
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.title).toBe("New title");
-      expect(newState.todos[0]!.priority).toBe("urgent");
-      expect(newState.todos[0]!.category).toBe("work");
-      expect(newState.todos[0]!.dueDate).toBe("2026-12-31");
+      expect(newState.tasks[0]!.title).toBe("New title");
+      expect(newState.tasks[0]!.priority).toBe("urgent");
+      expect(newState.tasks[0]!.category).toBe("work");
+      expect(newState.tasks[0]!.dueDate).toBe("2026-12-31");
     });
 
     it("bumps updatedAt timestamp", () => {
-      const todo = makeTodo({ id: "u-3", updatedAt: 1000 });
-      const state = makeState([todo]);
-      const action = updateTodoAction("u-3", { title: "Changed" });
+      const task = makeTask({ id: "u-3", updatedAt: 1000 });
+      const state = makeState([task]);
+      const action = updateTaskAction("u-3", { title: "Changed" });
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.updatedAt).toBeGreaterThan(1000);
+      expect(newState.tasks[0]!.updatedAt).toBeGreaterThan(1000);
     });
 
-    it("leaves non-matching todos unchanged", () => {
-      const todo1 = makeTodo({ id: "u-4a", title: "Keep me" });
-      const todo2 = makeTodo({ id: "u-4b", title: "Change me" });
-      const state = makeState([todo1, todo2]);
-      const action = updateTodoAction("u-4b", { title: "Changed" });
+    it("leaves non-matching tasks unchanged", () => {
+      const task1 = makeTask({ id: "u-4a", title: "Keep me" });
+      const task2 = makeTask({ id: "u-4b", title: "Change me" });
+      const state = makeState([task1, task2]);
+      const action = updateTaskAction("u-4b", { title: "Changed" });
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.title).toBe("Keep me");
-      expect(newState.todos[1]!.title).toBe("Changed");
+      expect(newState.tasks[0]!.title).toBe("Keep me");
+      expect(newState.tasks[1]!.title).toBe("Changed");
     });
 
     it("does nothing for non-existent ID", () => {
-      const todo = makeTodo({ id: "u-5" });
-      const state = makeState([todo]);
-      const action = updateTodoAction("non-existent", { title: "Ghost" });
+      const task = makeTask({ id: "u-5" });
+      const state = makeState([task]);
+      const action = updateTaskAction("non-existent", { title: "Ghost" });
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(1);
-      expect(newState.todos[0]!.title).toBe("Test Todo"); // unchanged
+      expect(newState.tasks).toHaveLength(1);
+      expect(newState.tasks[0]!.title).toBe("Test Todo"); // unchanged
+    });
+
+    it("legacy updateTodoAction alias produces the same result", () => {
+      const task = makeTask({ id: "legacy-u-1" });
+      const state = makeState([task]);
+      const action = updateTodoAction("legacy-u-1", { title: "Legacy update" });
+      const newState = reducer(state, action);
+
+      expect(newState.tasks[0]!.title).toBe("Legacy update");
     });
   });
 
-  // ── TODO_DELETE ─────────────────────────────────────────────────────────
+  // ── TASK_DELETE ──────────────────────────────────────────────────────────
 
-  describe("TODO_DELETE", () => {
-    it("removes a todo by ID", () => {
-      const todo = makeTodo({ id: "d-1" });
-      const state = makeState([todo]);
-      const action = deleteTodoAction("d-1");
+  describe("TASK_DELETE", () => {
+    it("removes a task by ID", () => {
+      const task = makeTask({ id: "d-1" });
+      const state = makeState([task]);
+      const action = deleteTaskAction("d-1");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(0);
+      expect(newState.tasks).toHaveLength(0);
     });
 
-    it("removes only the matching todo", () => {
-      const todo1 = makeTodo({ id: "d-2a" });
-      const todo2 = makeTodo({ id: "d-2b" });
-      const todo3 = makeTodo({ id: "d-2c" });
-      const state = makeState([todo1, todo2, todo3]);
-      const action = deleteTodoAction("d-2b");
+    it("removes only the matching task", () => {
+      const task1 = makeTask({ id: "d-2a" });
+      const task2 = makeTask({ id: "d-2b" });
+      const task3 = makeTask({ id: "d-2c" });
+      const state = makeState([task1, task2, task3]);
+      const action = deleteTaskAction("d-2b");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(2);
-      expect(newState.todos.map((t) => t.id)).toEqual(["d-2a", "d-2c"]);
+      expect(newState.tasks).toHaveLength(2);
+      expect(newState.tasks.map((t) => t.id)).toEqual(["d-2a", "d-2c"]);
     });
 
     it("does nothing for non-existent ID", () => {
-      const todo = makeTodo({ id: "d-3" });
-      const state = makeState([todo]);
-      const action = deleteTodoAction("ghost");
+      const task = makeTask({ id: "d-3" });
+      const state = makeState([task]);
+      const action = deleteTaskAction("ghost");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(1);
+      expect(newState.tasks).toHaveLength(1);
     });
 
     it("handles deleting from empty list", () => {
       const state = makeState();
-      const action = deleteTodoAction("any-id");
+      const action = deleteTaskAction("any-id");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(0);
+      expect(newState.tasks).toHaveLength(0);
+    });
+
+    it("legacy deleteTodoAction alias produces the same result", () => {
+      const task = makeTask({ id: "legacy-d-1" });
+      const state = makeState([task]);
+      const action = deleteTodoAction("legacy-d-1");
+      const newState = reducer(state, action);
+
+      expect(newState.tasks).toHaveLength(0);
     });
   });
 
-  // ── TODO_TOGGLE_STATUS ──────────────────────────────────────────────────
+  // ── TASK_TOGGLE_STATUS ───────────────────────────────────────────────────
 
-  describe("TODO_TOGGLE_STATUS", () => {
+  describe("TASK_TOGGLE_STATUS", () => {
     it("cycles todo → in-progress", () => {
-      const todo = makeTodo({ id: "t-1", status: "todo" });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "t-1", status: "todo" });
+      const state = makeState([task]);
       const action = toggleStatusAction("t-1");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.status).toBe("in-progress");
-      expect(newState.todos[0]!.completedAt).toBeNull();
+      expect(newState.tasks[0]!.status).toBe("in-progress");
+      expect(newState.tasks[0]!.completedAt).toBeNull();
     });
 
     it("cycles in-progress → done", () => {
-      const todo = makeTodo({ id: "t-2", status: "in-progress" });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "t-2", status: "in-progress" });
+      const state = makeState([task]);
       const action = toggleStatusAction("t-2");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.status).toBe("done");
-      expect(newState.todos[0]!.completedAt).toBeTypeOf("number");
+      expect(newState.tasks[0]!.status).toBe("done");
+      expect(newState.tasks[0]!.completedAt).toBeTypeOf("number");
     });
 
     it("cycles done → todo", () => {
-      const todo = makeTodo({ id: "t-3", status: "done", completedAt: 5000 });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "t-3", status: "done", completedAt: 5000 });
+      const state = makeState([task]);
       const action = toggleStatusAction("t-3");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.status).toBe("todo");
-      expect(newState.todos[0]!.completedAt).toBeNull();
+      expect(newState.tasks[0]!.status).toBe("todo");
+      expect(newState.tasks[0]!.completedAt).toBeNull();
     });
 
     it("full cycle: todo → in-progress → done → todo", () => {
-      const todo = makeTodo({ id: "t-4", status: "todo" });
-      let state = makeState([todo]);
+      const task = makeTask({ id: "t-4", status: "todo" });
+      let state = makeState([task]);
 
       state = reducer(state, toggleStatusAction("t-4"));
-      expect(state.todos[0]!.status).toBe("in-progress");
+      expect(state.tasks[0]!.status).toBe("in-progress");
 
       state = reducer(state, toggleStatusAction("t-4"));
-      expect(state.todos[0]!.status).toBe("done");
+      expect(state.tasks[0]!.status).toBe("done");
 
       state = reducer(state, toggleStatusAction("t-4"));
-      expect(state.todos[0]!.status).toBe("todo");
+      expect(state.tasks[0]!.status).toBe("todo");
     });
 
     it("bumps updatedAt on toggle", () => {
-      const todo = makeTodo({ id: "t-5", updatedAt: 1000 });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "t-5", updatedAt: 1000 });
+      const state = makeState([task]);
       const action = toggleStatusAction("t-5");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.updatedAt).toBeGreaterThan(1000);
+      expect(newState.tasks[0]!.updatedAt).toBeGreaterThan(1000);
     });
   });
 
-  // ── TODO_SET_STATUS ─────────────────────────────────────────────────────
+  // ── TASK_SET_STATUS ──────────────────────────────────────────────────────
 
-  describe("TODO_SET_STATUS", () => {
+  describe("TASK_SET_STATUS", () => {
     it("sets status to done with completedAt", () => {
-      const todo = makeTodo({ id: "s-1", status: "todo" });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "s-1", status: "todo" });
+      const state = makeState([task]);
       const action = setStatusAction("s-1", "done");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.status).toBe("done");
-      expect(newState.todos[0]!.completedAt).toBeTypeOf("number");
+      expect(newState.tasks[0]!.status).toBe("done");
+      expect(newState.tasks[0]!.completedAt).toBeTypeOf("number");
     });
 
     it("clears completedAt when moving away from done", () => {
-      const todo = makeTodo({ id: "s-2", status: "done", completedAt: 5000 });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "s-2", status: "done", completedAt: 5000 });
+      const state = makeState([task]);
       const action = setStatusAction("s-2", "in-progress");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.status).toBe("in-progress");
-      expect(newState.todos[0]!.completedAt).toBeNull();
+      expect(newState.tasks[0]!.status).toBe("in-progress");
+      expect(newState.tasks[0]!.completedAt).toBeNull();
     });
 
     it("can set same status (idempotent)", () => {
-      const todo = makeTodo({ id: "s-3", status: "in-progress" });
-      const state = makeState([todo]);
+      const task = makeTask({ id: "s-3", status: "in-progress" });
+      const state = makeState([task]);
       const action = setStatusAction("s-3", "in-progress");
       const newState = reducer(state, action);
 
-      expect(newState.todos[0]!.status).toBe("in-progress");
+      expect(newState.tasks[0]!.status).toBe("in-progress");
     });
   });
 
-  // ── STATE_LOAD ──────────────────────────────────────────────────────────
+  // ── STATE_LOAD ───────────────────────────────────────────────────────────
 
   describe("STATE_LOAD", () => {
-    it("replaces all todos with loaded data", () => {
-      const existing = makeTodo({ id: "old-1" });
+    it("replaces all tasks with loaded data", () => {
+      const existing = makeTask({ id: "old-1" });
       const state = makeState([existing]);
 
-      const loadedTodos = [
-        makeTodo({ id: "loaded-1", title: "Loaded 1" }),
-        makeTodo({ id: "loaded-2", title: "Loaded 2" }),
+      const loadedTasks = [
+        makeTask({ id: "loaded-1", title: "Loaded 1" }),
+        makeTask({ id: "loaded-2", title: "Loaded 2" }),
       ];
-      const action = stateLoadAction(loadedTodos);
+      const action = stateLoadAction(loadedTasks, [], [], "");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(2);
-      expect(newState.todos[0]!.id).toBe("loaded-1");
-      expect(newState.todos[1]!.id).toBe("loaded-2");
+      expect(newState.tasks).toHaveLength(2);
+      expect(newState.tasks[0]!.id).toBe("loaded-1");
+      expect(newState.tasks[1]!.id).toBe("loaded-2");
     });
 
     it("handles loading empty array", () => {
-      const existing = makeTodo({ id: "old-2" });
+      const existing = makeTask({ id: "old-2" });
       const state = makeState([existing]);
-      const action = stateLoadAction([]);
+      const action = stateLoadAction([], [], [], "");
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(0);
+      expect(newState.tasks).toHaveLength(0);
+    });
+
+    it("hydrates views and calendars from loaded state", () => {
+      const state = makeState();
+      const action = stateLoadAction([], [], [], "all-tasks");
+      const newState = reducer(state, action);
+
+      expect(newState.activeViewId).toBe("all-tasks");
+      expect(newState.views).toHaveLength(0);
+      expect(newState.calendars).toHaveLength(0);
     });
   });
 
-  // ── TODO_CLEAR_COMPLETED ────────────────────────────────────────────────
+  // ── TASK_CLEAR_COMPLETED ─────────────────────────────────────────────────
 
-  describe("TODO_CLEAR_COMPLETED", () => {
-    it("removes all done todos", () => {
-      const todos = [
-        makeTodo({ id: "cc-1", status: "todo" }),
-        makeTodo({ id: "cc-2", status: "done" }),
-        makeTodo({ id: "cc-3", status: "in-progress" }),
-        makeTodo({ id: "cc-4", status: "done" }),
+  describe("TASK_CLEAR_COMPLETED", () => {
+    it("removes all done tasks", () => {
+      const tasks = [
+        makeTask({ id: "cc-1", status: "todo" }),
+        makeTask({ id: "cc-2", status: "done" }),
+        makeTask({ id: "cc-3", status: "in-progress" }),
+        makeTask({ id: "cc-4", status: "done" }),
       ];
-      const state = makeState(todos);
+      const state = makeState(tasks);
       const action = clearCompletedAction();
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(2);
-      expect(newState.todos.map((t) => t.id)).toEqual(["cc-1", "cc-3"]);
+      expect(newState.tasks).toHaveLength(2);
+      expect(newState.tasks.map((t) => t.id)).toEqual(["cc-1", "cc-3"]);
     });
 
-    it("does nothing when no completed todos", () => {
-      const todos = [
-        makeTodo({ id: "cc-5", status: "todo" }),
-        makeTodo({ id: "cc-6", status: "in-progress" }),
+    it("does nothing when no completed tasks", () => {
+      const tasks = [
+        makeTask({ id: "cc-5", status: "todo" }),
+        makeTask({ id: "cc-6", status: "in-progress" }),
       ];
-      const state = makeState(todos);
+      const state = makeState(tasks);
       const action = clearCompletedAction();
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(2);
+      expect(newState.tasks).toHaveLength(2);
     });
 
     it("handles all completed (empties the list)", () => {
-      const todos = [
-        makeTodo({ id: "cc-7", status: "done" }),
-        makeTodo({ id: "cc-8", status: "done" }),
+      const tasks = [
+        makeTask({ id: "cc-7", status: "done" }),
+        makeTask({ id: "cc-8", status: "done" }),
       ];
-      const state = makeState(todos);
+      const state = makeState(tasks);
       const action = clearCompletedAction();
       const newState = reducer(state, action);
 
-      expect(newState.todos).toHaveLength(0);
+      expect(newState.tasks).toHaveLength(0);
     });
   });
 
-  // ── Unknown actions ─────────────────────────────────────────────────────
+  // ── Unknown actions ──────────────────────────────────────────────────────
 
   describe("unknown actions", () => {
     it("returns state unchanged for unknown action types", () => {
-      const state = makeState([makeTodo()]);
+      const state = makeState([makeTask()]);
       const action = { type: "UNKNOWN_ACTION" };
       const newState = reducer(state, action);
 
@@ -395,23 +445,23 @@ describe("reducer", () => {
     });
   });
 
-  // ── Immutability checks ─────────────────────────────────────────────────
+  // ── Immutability checks ──────────────────────────────────────────────────
 
   describe("immutability", () => {
     it("never mutates the input state object", () => {
       vi.stubGlobal("crypto", { randomUUID: () => "imm-uuid" });
 
-      const original = makeTodo({ id: "imm-1" });
+      const original = makeTask({ id: "imm-1" });
       const state = makeState([original]);
 
       // Freeze the state to catch any mutations
       Object.freeze(state);
-      Object.freeze(state.todos);
+      Object.freeze(state.tasks);
 
       // All these should work without throwing (no mutations)
-      expect(() => reducer(state, createTodoAction("New", "", "low", "", null))).not.toThrow();
-      expect(() => reducer(state, updateTodoAction("imm-1", { title: "Changed" }))).not.toThrow();
-      expect(() => reducer(state, deleteTodoAction("imm-1"))).not.toThrow();
+      expect(() => reducer(state, createTaskAction("New", "", "low", "", null))).not.toThrow();
+      expect(() => reducer(state, updateTaskAction("imm-1", { title: "Changed" }))).not.toThrow();
+      expect(() => reducer(state, deleteTaskAction("imm-1"))).not.toThrow();
       expect(() => reducer(state, toggleStatusAction("imm-1"))).not.toThrow();
       expect(() => reducer(state, setStatusAction("imm-1", "done"))).not.toThrow();
       expect(() => reducer(state, clearCompletedAction())).not.toThrow();
@@ -422,11 +472,11 @@ describe("reducer", () => {
     it("returns a new state reference on every mutation", () => {
       vi.stubGlobal("crypto", { randomUUID: () => "ref-uuid" });
 
-      const state = makeState([makeTodo({ id: "ref-1" })]);
+      const state = makeState([makeTask({ id: "ref-1" })]);
 
-      const s1 = reducer(state, createTodoAction("X", "", "low", "", null));
-      const s2 = reducer(state, updateTodoAction("ref-1", { title: "Y" }));
-      const s3 = reducer(state, deleteTodoAction("ref-1"));
+      const s1 = reducer(state, createTaskAction("X", "", "low", "", null));
+      const s2 = reducer(state, updateTaskAction("ref-1", { title: "Y" }));
+      const s3 = reducer(state, deleteTaskAction("ref-1"));
       const s4 = reducer(state, toggleStatusAction("ref-1"));
 
       expect(s1).not.toBe(state);

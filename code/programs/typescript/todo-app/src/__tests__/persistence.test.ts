@@ -7,23 +7,30 @@
  *
  * We mock KVStorage to test the middleware in isolation — no actual
  * IndexedDB is needed.
+ *
+ * Note on action field names:
+ *   The new API uses `taskId` (not `todoId`). The middleware reads
+ *   `action.taskId` to find the affected record. Tests must use `taskId`
+ *   in action payloads to match what the middleware expects.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createPersistenceMiddleware } from "../persistence.js";
 import type { AppState } from "../reducer.js";
-import type { TodoItem } from "../types.js";
+import type { Task } from "../types.js";
 import {
-  TODO_CREATE,
-  TODO_UPDATE,
-  TODO_DELETE,
-  TODO_TOGGLE_STATUS,
-  TODO_SET_STATUS,
-  TODO_CLEAR_COMPLETED,
+  TASK_CREATE,
+  TASK_UPDATE,
+  TASK_DELETE,
+  TASK_TOGGLE_STATUS,
+  TASK_SET_STATUS,
+  TASK_CLEAR_COMPLETED,
   STATE_LOAD,
+  VIEW_UPSERT,
+  CALENDAR_UPSERT,
 } from "../actions.js";
 
-// ── Mock Storage ────────────────────────────────────────────────────────────
+// ── Mock Storage ─────────────────────────────────────────────────────────────
 
 function createMockStorage() {
   return {
@@ -36,7 +43,7 @@ function createMockStorage() {
   };
 }
 
-// ── Mock Store ──────────────────────────────────────────────────────────────
+// ── Mock Store ───────────────────────────────────────────────────────────────
 
 function createMockStore(state: AppState) {
   return {
@@ -47,9 +54,9 @@ function createMockStore(state: AppState) {
   };
 }
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-function makeTodo(overrides: Partial<TodoItem> = {}): TodoItem {
+function makeTask(overrides: Partial<Task> = {}): Task {
   return {
     id: "test-id",
     title: "Test",
@@ -58,6 +65,7 @@ function makeTodo(overrides: Partial<TodoItem> = {}): TodoItem {
     priority: "medium",
     category: "",
     dueDate: null,
+    dueTime: null,
     createdAt: 0,
     updatedAt: 0,
     completedAt: null,
@@ -66,7 +74,15 @@ function makeTodo(overrides: Partial<TodoItem> = {}): TodoItem {
   };
 }
 
-// ── Tests ───────────────────────────────────────────────────────────────────
+/**
+ * makeState — builds a full AppState for the mock store.
+ * The middleware reads `state.tasks` so this must match the real AppState shape.
+ */
+function makeState(tasks: Task[] = []): AppState {
+  return { tasks, views: [], calendars: [], activeViewId: "" };
+}
+
+// ── Tests ────────────────────────────────────────────────────────────────────
 
 describe("createPersistenceMiddleware", () => {
   let storage: ReturnType<typeof createMockStorage>;
@@ -79,110 +95,110 @@ describe("createPersistenceMiddleware", () => {
 
   it("calls next() for every action (never blocks the reducer)", () => {
     const middleware = createPersistenceMiddleware(storage);
-    const store = createMockStore({ todos: [] });
+    const store = createMockStore(makeState());
 
     middleware(store, { type: "ANY_ACTION" }, next);
     expect(next).toHaveBeenCalledOnce();
   });
 
-  describe("TODO_CREATE", () => {
-    it("persists the newly created todo (last item in array)", () => {
-      const newTodo = makeTodo({ id: "new-1", title: "New" });
-      const store = createMockStore({ todos: [newTodo] });
+  describe("TASK_CREATE", () => {
+    it("persists the newly created task (last item in array)", () => {
+      const newTask = makeTask({ id: "new-1", title: "New" });
+      const store = createMockStore(makeState([newTask]));
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_CREATE }, next);
+      middleware(store, { type: TASK_CREATE }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", newTodo);
+      expect(storage.put).toHaveBeenCalledWith("todos", newTask);
     });
 
-    it("persists the last item when multiple todos exist", () => {
-      const old = makeTodo({ id: "old-1" });
-      const newest = makeTodo({ id: "newest-1" });
-      const store = createMockStore({ todos: [old, newest] });
+    it("persists the last item when multiple tasks exist", () => {
+      const old = makeTask({ id: "old-1" });
+      const newest = makeTask({ id: "newest-1" });
+      const store = createMockStore(makeState([old, newest]));
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_CREATE }, next);
+      middleware(store, { type: TASK_CREATE }, next);
 
       expect(storage.put).toHaveBeenCalledWith("todos", newest);
     });
   });
 
-  describe("TODO_UPDATE", () => {
-    it("persists the updated todo", () => {
-      const todo = makeTodo({ id: "upd-1", title: "Updated" });
-      const store = createMockStore({ todos: [todo] });
+  describe("TASK_UPDATE", () => {
+    it("persists the updated task", () => {
+      const task = makeTask({ id: "upd-1", title: "Updated" });
+      const store = createMockStore(makeState([task]));
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_UPDATE, todoId: "upd-1" }, next);
+      middleware(store, { type: TASK_UPDATE, taskId: "upd-1" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", todo);
+      expect(storage.put).toHaveBeenCalledWith("todos", task);
     });
 
-    it("does nothing if todo not found", () => {
-      const store = createMockStore({ todos: [] });
+    it("does nothing if task not found", () => {
+      const store = createMockStore(makeState([]));
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_UPDATE, todoId: "ghost" }, next);
+      middleware(store, { type: TASK_UPDATE, taskId: "ghost" }, next);
 
       expect(storage.put).not.toHaveBeenCalled();
     });
   });
 
-  describe("TODO_TOGGLE_STATUS", () => {
-    it("persists the toggled todo", () => {
-      const todo = makeTodo({ id: "tog-1", status: "in-progress" });
-      const store = createMockStore({ todos: [todo] });
+  describe("TASK_TOGGLE_STATUS", () => {
+    it("persists the toggled task", () => {
+      const task = makeTask({ id: "tog-1", status: "in-progress" });
+      const store = createMockStore(makeState([task]));
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_TOGGLE_STATUS, todoId: "tog-1" }, next);
+      middleware(store, { type: TASK_TOGGLE_STATUS, taskId: "tog-1" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", todo);
+      expect(storage.put).toHaveBeenCalledWith("todos", task);
     });
   });
 
-  describe("TODO_SET_STATUS", () => {
-    it("persists the status-changed todo", () => {
-      const todo = makeTodo({ id: "set-1", status: "done" });
-      const store = createMockStore({ todos: [todo] });
+  describe("TASK_SET_STATUS", () => {
+    it("persists the status-changed task", () => {
+      const task = makeTask({ id: "set-1", status: "done" });
+      const store = createMockStore(makeState([task]));
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_SET_STATUS, todoId: "set-1" }, next);
+      middleware(store, { type: TASK_SET_STATUS, taskId: "set-1" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", todo);
+      expect(storage.put).toHaveBeenCalledWith("todos", task);
     });
   });
 
-  describe("TODO_DELETE", () => {
-    it("deletes the todo from storage by ID", () => {
-      const store = createMockStore({ todos: [] }); // already removed by reducer
+  describe("TASK_DELETE", () => {
+    it("deletes the task from storage by ID", () => {
+      const store = createMockStore(makeState([])); // already removed by reducer
       const middleware = createPersistenceMiddleware(storage);
 
-      middleware(store, { type: TODO_DELETE, todoId: "del-1" }, next);
+      middleware(store, { type: TASK_DELETE, taskId: "del-1" }, next);
 
       expect(storage.delete).toHaveBeenCalledWith("todos", "del-1");
     });
   });
 
-  describe("TODO_CLEAR_COMPLETED", () => {
+  describe("TASK_CLEAR_COMPLETED", () => {
     it("reads all from storage and deletes removed items", async () => {
-      // Current state has 2 items (the not-done ones)
+      // Current state has 2 items (the not-done ones, after reducer ran)
       const remaining = [
-        makeTodo({ id: "rem-1", status: "todo" }),
-        makeTodo({ id: "rem-2", status: "in-progress" }),
+        makeTask({ id: "rem-1", status: "todo" }),
+        makeTask({ id: "rem-2", status: "in-progress" }),
       ];
-      const store = createMockStore({ todos: remaining });
+      const store = createMockStore(makeState(remaining));
 
       // Storage still has 4 items (2 done ones haven't been cleaned yet)
       storage.getAll.mockResolvedValue([
-        makeTodo({ id: "rem-1" }),
-        makeTodo({ id: "rem-2" }),
-        makeTodo({ id: "done-1", status: "done" }),
-        makeTodo({ id: "done-2", status: "done" }),
+        makeTask({ id: "rem-1" }),
+        makeTask({ id: "rem-2" }),
+        makeTask({ id: "done-1", status: "done" }),
+        makeTask({ id: "done-2", status: "done" }),
       ]);
 
       const middleware = createPersistenceMiddleware(storage);
-      middleware(store, { type: TODO_CLEAR_COMPLETED }, next);
+      middleware(store, { type: TASK_CLEAR_COMPLETED }, next);
 
       // Wait for the async getAll+delete chain
       await vi.waitFor(() => {
@@ -193,9 +209,51 @@ describe("createPersistenceMiddleware", () => {
     });
   });
 
+  describe("VIEW_UPSERT", () => {
+    it("persists the view to the views store", () => {
+      const view = {
+        id: "v-1",
+        name: "My View",
+        config: { type: "list" as const, filter: { statusFilter: null, priorityFilter: null, categoryFilter: "", searchQuery: "" }, sortField: "createdAt" as const, sortDirection: "desc" as const },
+        sortOrder: 0,
+        isBuiltIn: false,
+        createdAt: 0,
+        updatedAt: 0,
+      };
+      const store = createMockStore(makeState());
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: VIEW_UPSERT, view }, next);
+
+      expect(storage.put).toHaveBeenCalledWith("views", view);
+    });
+  });
+
+  describe("CALENDAR_UPSERT", () => {
+    it("persists the calendar to the calendars store", () => {
+      const calendar = {
+        id: "gregorian",
+        name: "Gregorian",
+        weekStartsOn: 0 as const,
+        weeklySchedule: {},
+        dateOverrides: [],
+        timezone: "UTC",
+        isBuiltIn: true,
+        createdAt: 0,
+        updatedAt: 0,
+      };
+      const store = createMockStore(makeState());
+      const middleware = createPersistenceMiddleware(storage);
+
+      middleware(store, { type: CALENDAR_UPSERT, calendar }, next);
+
+      expect(storage.put).toHaveBeenCalledWith("calendars", calendar);
+    });
+  });
+
   describe("STATE_LOAD", () => {
     it("does not write to storage (data came FROM storage)", () => {
-      const store = createMockStore({ todos: [makeTodo()] });
+      const store = createMockStore(makeState([makeTask()]));
       const middleware = createPersistenceMiddleware(storage);
 
       middleware(store, { type: STATE_LOAD }, next);
@@ -207,7 +265,7 @@ describe("createPersistenceMiddleware", () => {
 
   describe("unknown actions", () => {
     it("does not write to storage for unknown actions", () => {
-      const store = createMockStore({ todos: [] });
+      const store = createMockStore(makeState());
       const middleware = createPersistenceMiddleware(storage);
 
       middleware(store, { type: "CUSTOM_UNRELATED_ACTION" }, next);
