@@ -1,4 +1,5 @@
 uv venv --quiet --clear
-uv pip install -e "../../../packages/python/progress-bar" --quiet
-uv pip install -e ".[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+uv pip install --no-deps -e ../../../packages/python/progress-bar --quiet
+uv pip install --no-deps -e . --quiet
+uv pip install pytest pytest-cov ruff mypy --quiet
+uv run --no-project python -m pytest tests/ -v
