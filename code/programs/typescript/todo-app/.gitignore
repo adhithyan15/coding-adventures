@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-electron/
+release/
+.npm-cache/
+.DS_Store
+test-results/
+playwright-report/

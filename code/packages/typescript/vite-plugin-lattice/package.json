@@ -1,0 +1,34 @@
+{
+  "name": "@coding-adventures/vite-plugin-lattice",
+  "version": "0.1.0",
+  "description": "Vite plugin that transpiles Lattice CSS superset files to plain CSS at build time",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lattice-transpiler": "file:../lattice-transpiler",
+    "@coding-adventures/lattice-ast-to-css": "file:../lattice-ast-to-css",
+    "@coding-adventures/lattice-parser": "file:../lattice-parser",
+    "@coding-adventures/lattice-lexer": "file:../lattice-lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "vite": "^6.0.0"
+  },
+  "peerDependencies": {
+    "vite": ">=5.0.0"
+  }
+}

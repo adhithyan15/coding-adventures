@@ -132,6 +132,24 @@ export function dirName(kebab: string, lang: string): string {
   return kebab;
 }
 
+/**
+ * Resolve the absolute directory path for a dependency.
+ * Dependencies may live in either 'packages' or 'programs'.
+ * 'packages' is preferred since it is the standard module location.
+ */
+export function resolveDepDir(repoRoot: string, lang: string, dep: string): string {
+  const dName = dirName(dep, lang);
+  const pkgDir = path.join(repoRoot, "code", "packages", lang, dName);
+  const progDir = path.join(repoRoot, "code", "programs", lang, dName);
+  if (fs.existsSync(pkgDir)) {
+    return pkgDir;
+  }
+  if (fs.existsSync(progDir)) {
+    return progDir;
+  }
+  return pkgDir; // Default to packages for clearer error messages
+}
+
 // =========================================================================
 // Dependency resolution
 // =========================================================================
@@ -422,7 +440,7 @@ function readPerlDeps(pkgDir: string): string[] {
 export function transitiveClosure(
   directDeps: string[],
   lang: string,
-  baseDir: string,
+  repoRoot: string,
 ): string[] {
   const visited = new Set<string>();
   const queue = [...directDeps];
@@ -433,7 +451,7 @@ export function transitiveClosure(
       continue;
     }
     visited.add(dep);
-    const depDir = path.join(baseDir, dirName(dep, lang));
+    const depDir = resolveDepDir(repoRoot, lang, dep);
     for (const dd of readDeps(depDir, lang)) {
       if (!visited.has(dd)) {
         queue.push(dd);
@@ -473,7 +491,7 @@ export function transitiveClosure(
 export function topologicalSort(
   allDeps: string[],
   lang: string,
-  baseDir: string,
+  repoRoot: string,
 ): string[] {
   const depSet = new Set(allDeps);
 
@@ -481,7 +499,7 @@ export function topologicalSort(
   const graph: Record<string, string[]> = {};
   for (const dep of allDeps) {
     graph[dep] = [];
-    const depDir = path.join(baseDir, dirName(dep, lang));
+    const depDir = resolveDepDir(repoRoot, lang, dep);
     for (const dd of readDeps(depDir, lang)) {
       if (depSet.has(dd)) {
         graph[dep].push(dd);
@@ -881,6 +899,36 @@ end
 export function generateTypeScript(
   targetDir: string,
   pkgName: string,
+  pkgType: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+  orderedDeps: string[],
+): void {
+  if (pkgType === "program") {
+    generateTypeScriptProgram(
+      targetDir,
+      pkgName,
+      description,
+      layerCtx,
+      directDeps,
+      orderedDeps,
+    );
+  } else {
+    generateTypeScriptLibrary(
+      targetDir,
+      pkgName,
+      description,
+      layerCtx,
+      directDeps,
+      orderedDeps,
+    );
+  }
+}
+
+export function generateTypeScriptLibrary(
+  targetDir: string,
+  pkgName: string,
   description: string,
   layerCtx: string,
   directDeps: string[],
@@ -972,6 +1020,310 @@ describe("${pkgName}", () => {
   writeFile(path.join(targetDir, "vitest.config.ts"), vitestConfig);
   writeFile(path.join(targetDir, "src", "index.ts"), indexTs);
   writeFile(path.join(targetDir, "tests", `${pkgName}.test.ts`), testTs);
+  writeFile(path.join(targetDir, "BUILD"), build);
+}
+
+export function generateTypeScriptProgram(
+  targetDir: string,
+  pkgName: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+  orderedDeps: string[],
+): void {
+  // package.json dependencies
+  let depsJSON = "";
+  if (directDeps.length > 0) {
+    const depEntries = directDeps.map(
+      (dep) => `    "@coding-adventures/${dep}": "file:../${dep}"`
+    );
+    depsJSON = depEntries.join(",\n");
+  }
+
+  const packageJSON = `{
+  "name": "@coding-adventures/${pkgName}",
+  "private": true,
+  "version": "0.1.0",
+  "description": "${description}",
+  "type": "module",
+  "main": "electron/main.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "electron:dev": "electron . --enable-logging",
+    "electron:build": "vite build && electron-builder"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+${depsJSON}
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "@testing-library/react": "^16.0.0",
+    "@types/node": "^22.13.5",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^3.0.0",
+    "electron": "^34.3.0",
+    "electron-builder": "^25.1.8",
+    "jsdom": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.4.1",
+    "vitest": "^3.0.0"
+  },
+  "build": {
+    "appId": "com.coding-adventures.${pkgName}",
+    "productName": "${toCamelCase(pkgName)} App",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/main.ts"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    }
+  }
+}
+`;
+
+  const viteConfig = `import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  base: "./",
+});
+`;
+
+  const vitestConfig = `import { defineConfig } from "vitest/config";
+import path from "path";
+
+export default defineConfig({
+  test: {
+    environment: "jsdom",
+    globals: true,
+    exclude: ["e2e/**", "node_modules/**", "playwright-report/**"],
+    coverage: {
+      provider: "v8",
+      thresholds: {
+        lines: 80,
+      },
+    },
+  },
+});
+`;
+
+  const playwrightConfig = `import { defineConfig, devices } from "@playwright/test";
+
+export default defineConfig({
+  testDir: "./e2e",
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: "html",
+  use: {
+    baseURL: "http://localhost:5173",
+    trace: "on-first-retry",
+    video: "on-first-retry",
+  },
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+    },
+  ],
+  webServer: {
+    command: "npm run dev",
+    port: 5173,
+    reuseExistingServer: !process.env.CI,
+  },
+});
+`;
+
+  const indexHtml = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${toCamelCase(pkgName)} App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+`;
+
+  const mainTsx = `import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { App } from "./App";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+`;
+
+  const appTsx = `export function App() {
+  return (
+    <div style={{ fontFamily: "sans-serif", padding: "2rem", textAlign: "center" }}>
+      <h1>${toCamelCase(pkgName)} Web/Desktop App</h1>
+      <p>Scaffolded by coding-adventures.</p>
+    </div>
+  );
+}
+`;
+
+  const electronMainTs = `import { app, BrowserWindow } from "electron";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1000,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  const isDev = !app.isPackaged;
+
+  if (isDev) {
+    win.loadURL("http://localhost:5173");
+  } else {
+    win.loadFile(path.join(__dirname, "../dist/index.html"));
+  }
+}
+
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+`;
+
+  const electronTsConfig = `{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "../dist-electron"
+  },
+  "include": [
+    "main.ts"
+  ]
+}
+`;
+
+  const tsConfig = `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
+`;
+
+  const e2eTest = `import { test, expect } from "@playwright/test";
+
+test("loads the application", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("h1")).toBeVisible();
+});
+`;
+
+  const appTestTsx = `import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { App } from "../App";
+
+describe("App", () => {
+  it("renders the heading", () => {
+    render(<App />);
+    expect(screen.getByText(/${toCamelCase(pkgName)} Web\\/Desktop App/i)).toBeTruthy();
+  });
+});
+`;
+
+  // =========================================================================
+  // Scaffolding: GitIgnore
+  // =========================================================================
+  // The .gitignore file ensures that any build artifacts or local dependency
+  // caches (such as .npm-cache) are not erroneously committed by the user.
+  //
+  // +-----------------+       +-------------------+       +-----------------+
+  // |  node_modules/  |       |  Playwright E2E   |       | Electron Build  |
+  // |  .npm-cache/    | ----> |  test-results/    | ----> | dist/           |
+  // |                 |       |                   |       | release/        |
+  // +-----------------+       +-------------------+       +-----------------+
+  //
+  const gitignore = `node_modules/
+dist/
+dist-electron/
+release/
+.npm-cache/
+.DS_Store
+test-results/
+playwright-report/
+blob-report/
+`;
+
+  const build = "npm ci --quiet\\nnpx vitest run --coverage\\n";
+
+  fs.mkdirSync(path.join(targetDir, "src", "__tests__"), { recursive: true });
+  fs.mkdirSync(path.join(targetDir, "electron"), { recursive: true });
+  fs.mkdirSync(path.join(targetDir, "e2e"), { recursive: true });
+
+  writeFile(path.join(targetDir, "package.json"), packageJSON);
+  writeFile(path.join(targetDir, "tsconfig.json"), tsConfig);
+  writeFile(path.join(targetDir, "vite.config.ts"), viteConfig);
+  writeFile(path.join(targetDir, "vitest.config.ts"), vitestConfig);
+  writeFile(path.join(targetDir, "playwright.config.ts"), playwrightConfig);
+  writeFile(path.join(targetDir, "index.html"), indexHtml);
+  writeFile(path.join(targetDir, "src", "main.tsx"), mainTsx);
+  writeFile(path.join(targetDir, "src", "App.tsx"), appTsx);
+  writeFile(path.join(targetDir, "src", "__tests__", "App.test.tsx"), appTestTsx);
+  writeFile(path.join(targetDir, "electron", "main.ts"), electronMainTs);
+  writeFile(path.join(targetDir, "electron", "tsconfig.json"), electronTsConfig);
+  writeFile(path.join(targetDir, "e2e", "app.spec.ts"), e2eTest);
+  writeFile(path.join(targetDir, ".gitignore"), gitignore);
   writeFile(path.join(targetDir, "BUILD"), build);
 }
 
@@ -1457,7 +1809,7 @@ export function scaffoldOne(
   }
 
   for (const dep of directDeps) {
-    const depDir = path.join(baseDir, dirName(dep, lang));
+    const depDir = resolveDepDir(repoRoot, lang, dep);
     if (!fs.existsSync(depDir)) {
       throw new Error(
         `dependency '${dep}' not found for ${lang} at ${depDir}`,
@@ -1465,8 +1817,8 @@ export function scaffoldOne(
     }
   }
 
-  const allDeps = transitiveClosure(directDeps, lang, baseDir);
-  const orderedDeps = topologicalSort(allDeps, lang, baseDir);
+  const allDeps = transitiveClosure(directDeps, lang, repoRoot);
+  const orderedDeps = topologicalSort(allDeps, lang, repoRoot);
 
   const layerCtx = layer > 0 ? `Layer ${layer} in the computing stack.` : "";
 
@@ -1512,6 +1864,7 @@ export function scaffoldOne(
       generateTypeScript(
         targetDir,
         pkgName,
+        pkgType,
         description,
         layerCtx,
         directDeps,
@@ -1579,7 +1932,6 @@ export function scaffoldOne(
 export function main(argv: string[] = process.argv): void {
   const specFile = path.resolve(
     path.dirname(new URL(import.meta.url).pathname),
-    "..",
     "..",
     "..",
     "..",
