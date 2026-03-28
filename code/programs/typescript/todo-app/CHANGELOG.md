@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] - 2026-03-28
+
+### Added
+
+- **Task activity history panel** — when editing a task, a vertical timeline appears below the
+  form showing every action taken on that task, oldest to newest: creation, field updates (with
+  the specific changed field names listed), and status changes. Reads from the audit log via
+  `getActivitiesForEntity`. Uses relative timestamps ("3m ago", "2h ago") for recent events
+  and absolute date/time for older ones.
+- **Storage singleton** (`src/storage.ts`) — `initStorage` / `getStorage` pattern lets components
+  query IndexedDB directly (e.g., the history panel) without prop-drilling or React Context overhead.
+  `initStorage` is called in `main.tsx` before React mounts so `getStorage()` is always ready.
+
+### Fixed
+
+- **Default due date = today** — new tasks now pre-fill the due date field with today's date in
+  local timezone. Previously the field was blank, which caused tasks to not appear in the "Today"
+  view unless the user remembered to set the date manually. The date is computed in local time
+  (not UTC), so users in negative UTC offsets no longer see yesterday's date pre-filled at night.
+
 ## [0.4.0] - 2026-03-28
 
 ### Added
