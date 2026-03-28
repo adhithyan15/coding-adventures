@@ -29,9 +29,10 @@
  */
 
 import type { Action } from "@coding-adventures/store";
-import type { Task, TaskStatus, Priority } from "./types.js";
+import type { Task, TaskStatus, Priority, Project } from "./types.js";
 import type { SavedView } from "./views.js";
 import type { CalendarSettings } from "./calendar-settings.js";
+import type { GraphEdge } from "./graph.js";
 
 // ── Task action type constants ─────────────────────────────────────────────
 
@@ -72,6 +73,33 @@ export const VIEW_SET_ACTIVE = "VIEW_SET_ACTIVE";
  */
 export const CALENDAR_UPSERT = "CALENDAR_UPSERT";
 
+// ── Project action type constants ──────────────────────────────────────────
+
+/**
+ * Upsert a Project into the store (add if new, replace if id exists).
+ * Used for seeding the default project and future user-created projects.
+ */
+export const PROJECT_UPSERT = "PROJECT_UPSERT";
+
+// ── Graph edge action type constants ───────────────────────────────────────
+
+/**
+ * Add a directed edge to the application graph.
+ *
+ * The reducer performs a cycle check before applying the edge.
+ * If adding the edge would create a cycle in the DAG, the action
+ * is a silent no-op and state is returned unchanged.
+ */
+export const EDGE_ADD = "EDGE_ADD";
+
+/**
+ * Remove a directed edge by its stable id.
+ *
+ * Does nothing if the edge id does not exist (idempotent).
+ * Used when reassigning tasks between projects or deleting project containment.
+ */
+export const EDGE_REMOVE = "EDGE_REMOVE";
+
 // ── Bootstrap action ──────────────────────────────────────────────────────
 
 /**
@@ -104,6 +132,7 @@ export function createTaskAction(
   category: string,
   dueDate: string | null,
   dueTime: string | null = null,
+  projectId: string = "default",
 ): Action {
   return {
     type: TASK_CREATE,
@@ -114,6 +143,7 @@ export function createTaskAction(
     category,
     dueDate,
     dueTime,
+    projectId,
   };
 }
 
@@ -196,21 +226,81 @@ export function upsertCalendarAction(calendar: CalendarSettings): Action {
   return { type: CALENDAR_UPSERT, calendar };
 }
 
+// ── Project action creator functions ──────────────────────────────────────
+
+/**
+ * projectUpsertAction — adds or replaces a Project in the store.
+ *
+ * If a project with the same id already exists, it is replaced entirely.
+ * This is used during initial seeding (default project) and future user
+ * project creation/renaming.
+ *
+ * Note: This does NOT cascade-create a node in the graph. The graph is
+ * rebuilt from state.edges on demand. Just dispatching this action is
+ * sufficient to make the project queryable in graph helpers once edges
+ * referencing it are also added.
+ */
+export function projectUpsertAction(project: Project): Action {
+  return { type: PROJECT_UPSERT, project };
+}
+
+// ── Graph edge action creator functions ────────────────────────────────────
+
+/**
+ * edgeAddAction — adds a directed edge to the application graph.
+ *
+ * The reducer performs a cycle check via wouldCreateCycle() before appending
+ * the edge. If the edge would introduce a cycle, the action is a no-op.
+ *
+ * Typical usage (project contains task):
+ *   store.dispatch(edgeAddAction({
+ *     id: newEdgeId(),
+ *     fromId: "project-uuid",
+ *     toId: "task-uuid",
+ *     label: "contains",
+ *     createdAt: Date.now(),
+ *   }));
+ *
+ * Note: createTaskAction already auto-creates a "contains" edge from the
+ * specified projectId to the new task. Direct use of edgeAddAction is only
+ * needed for project reassignment or subproject nesting.
+ */
+export function edgeAddAction(edge: GraphEdge): Action {
+  return { type: EDGE_ADD, edge };
+}
+
+/**
+ * edgeRemoveAction — removes an edge by its stable id.
+ *
+ * Does nothing if no edge with that id exists (idempotent).
+ *
+ * Use this to:
+ *   - Reassign a task from one project to another (remove old edge, add new).
+ *   - Remove a subproject relationship.
+ *   - Clean up stale edges (future: sync conflict resolution).
+ */
+export function edgeRemoveAction(edgeId: string): Action {
+  return { type: EDGE_REMOVE, edgeId };
+}
+
 // ── Bootstrap action creator ──────────────────────────────────────────────
 
 /**
  * stateLoadAction — hydrates the store from IndexedDB on startup.
  *
- * Called once in main.tsx after loading tasks, views, and calendars.
- * activeViewId is set to the first view's id if no preference is stored.
+ * Called once in main.tsx after loading tasks, views, calendars, projects,
+ * and edges. activeViewId is set to the first view's id if no preference
+ * is stored.
  */
 export function stateLoadAction(
   tasks: Task[],
   views: SavedView[],
   calendars: CalendarSettings[],
   activeViewId: string,
+  projects: Project[] = [],
+  edges: GraphEdge[] = [],
 ): Action {
-  return { type: STATE_LOAD, tasks, views, calendars, activeViewId };
+  return { type: STATE_LOAD, tasks, views, calendars, activeViewId, projects, edges };
 }
 
 // ── Legacy aliases (for backward compatibility during the transition) ──────

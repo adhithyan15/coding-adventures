@@ -19,20 +19,30 @@
  * back to MemoryStorage — an in-memory implementation of the same KVStorage
  * interface. The app works identically; it just loses persistence on reload.
  *
- * === IDB schema: version 3 ===
+ * === IDB schema versions ===
  *
  * Version 1: { "todos": { keyPath: "id" } }
- *   — tasks stored under "todos" (legacy name, kept for backward compat)
+ *   — tasks stored under "todos" (legacy name from initial launch)
  *
  * Version 2:
  *   + "views"     : { keyPath: "id" }  — SavedView records
  *   + "calendars" : { keyPath: "id" }  — CalendarSettings records
  *
- * Version 3 (this release):
+ * Version 3:
  *   + "events"    : { keyPath: "id" }  — append-only audit event log
  *   + "snapshots" : { keyPath: "id" }  — periodic state snapshots for compaction
  *
- * All existing stores are unchanged — no data migration needed.
+ * Version 4:
+ *   + "projects"  : { keyPath: "id" }  — Project entities (default + user)
+ *   + "edges"     : { keyPath: "id",   — Directed graph edges (contains, …)
+ *                     indexes: ["fromId", "toId"] }
+ *
+ * Version 5 (this release):
+ *   ~ "todos" renamed to "tasks" — store name now matches the domain
+ *     language used throughout the codebase (Task, not Todo).
+ *     Migration: IndexedDBStorage copies all "todos" records into "tasks"
+ *     and deletes "todos" via the StoreSchema.renamedFrom mechanism.
+ *
  * The onupgradeneeded handler inside IndexedDBStorage uses
  * `if (!db.objectStoreNames.contains(...))` to guard against re-creation.
  *
@@ -52,15 +62,17 @@ import { createRoot } from "react-dom/client";
 import { IndexedDBStorage, MemoryStorage } from "@coding-adventures/indexeddb";
 import type { KVStorage } from "@coding-adventures/indexeddb";
 import { store } from "./state.js";
-import { stateLoadAction, setActiveViewAction } from "./actions.js";
+import { stateLoadAction, setActiveViewAction, edgeAddAction } from "./actions.js";
 import { createPersistenceMiddleware } from "./persistence.js";
 import { createAuditMiddleware, compactEventLog, COMPACT_THRESHOLD } from "./audit.js";
 import { initStorage } from "./storage.js";
-import { seedTasks, seedViews, seedCalendars, VIEW_ID_ALL_TASKS } from "./seed.js";
+import { seedTasks, seedViews, seedCalendars, seedDefaultProject, VIEW_ID_ALL_TASKS, PROJECT_ID_DEFAULT } from "./seed.js";
+import { newEdgeId } from "./graph.js";
 import { App } from "./App.js";
-import type { Task } from "./types.js";
+import type { Task, Project } from "./types.js";
 import type { SavedView } from "./views.js";
 import type { CalendarSettings } from "./calendar-settings.js";
+import type { GraphEdge } from "./graph.js";
 import "./styles/app.lattice";
 
 async function init() {
@@ -73,12 +85,15 @@ async function init() {
   try {
     const idbStorage = new IndexedDBStorage({
       dbName: "todo-app",
-      version: 3,
+      version: 5,
       stores: [
-        // "todos" kept as-is for backward compat with v1 task data
+        // "todos" renamed to "tasks" in v5 — renamedFrom triggers a cursor
+        // migration: all records are copied from "todos" → "tasks" and the
+        // old store is deleted. Safe to re-run: guard is inside IndexedDBStorage.
         {
-          name: "todos",
+          name: "tasks",
           keyPath: "id",
+          renamedFrom: "todos",
           indexes: [
             { name: "status",   keyPath: "status" },
             { name: "priority", keyPath: "priority" },
@@ -105,6 +120,20 @@ async function init() {
           name: "snapshots",
           keyPath: "id",
         },
+        // v4: project entities (default + user-created)
+        {
+          name: "projects",
+          keyPath: "id",
+        },
+        // v4: directed graph edges (project→task "contains", future: depends-on)
+        {
+          name: "edges",
+          keyPath: "id",
+          indexes: [
+            { name: "fromId", keyPath: "fromId" },
+            { name: "toId",   keyPath: "toId" },
+          ],
+        },
       ],
     });
     await idbStorage.open();
@@ -112,11 +141,13 @@ async function init() {
   } catch {
     // Fallback for environments without IndexedDB
     const memStorage = new MemoryStorage([
-      { name: "todos",     keyPath: "id" },
+      { name: "tasks",     keyPath: "id" },
       { name: "views",     keyPath: "id" },
       { name: "calendars", keyPath: "id" },
       { name: "events",    keyPath: "id" },
       { name: "snapshots", keyPath: "id" },
+      { name: "projects",  keyPath: "id" },
+      { name: "edges",     keyPath: "id" },
     ]);
     await memStorage.open();
     storage = memStorage;
@@ -124,11 +155,13 @@ async function init() {
 
   // ── 2. Load existing data ───────────────────────────────────────────────
   //
-  // Load from all three stores in parallel for performance.
-  const [rawTasks, views, calendars] = await Promise.all([
-    storage.getAll<Task>("todos"),
+  // Load from all stores in parallel for performance.
+  const [rawTasks, views, calendars, projects, edges] = await Promise.all([
+    storage.getAll<Task>("tasks"),
     storage.getAll<SavedView>("views"),
     storage.getAll<CalendarSettings>("calendars"),
+    storage.getAll<Project>("projects"),
+    storage.getAll<GraphEdge>("edges"),
   ]);
 
   // Normalize tasks: fill in dueTime for records written before v2.
@@ -194,13 +227,13 @@ async function init() {
     const defaultView = [...views].sort((a, b) => a.sortOrder - b.sortOrder)[0];
     const storedActiveViewId = defaultView?.id ?? VIEW_ID_ALL_TASKS;
     store.dispatch(
-      stateLoadAction(tasks, views, calendars, storedActiveViewId),
+      stateLoadAction(tasks, views, calendars, storedActiveViewId, projects, edges),
     );
   } else if (tasks.length > 0 && views.length === 0) {
     // User has tasks from v1 but no views yet (upgrading from v1→v2)
     // Seed views and calendars, keep existing tasks
     store.dispatch(
-      stateLoadAction(tasks, [], calendars, ""),
+      stateLoadAction(tasks, [], calendars, "", projects, edges),
     );
     seedViews(store);
     if (calendars.length === 0) {
@@ -212,6 +245,42 @@ async function init() {
     seedTasks(store);
     seedViews(store);
     seedCalendars(store);
+  }
+
+  // ── 4b. Migrate projects (v3→v4 upgrade or first visit) ────────────────
+  //
+  // If no projects exist in state, this is either the first visit or a
+  // v3→v4 upgrade. In both cases:
+  //   1. Seed the default project.
+  //   2. Create "contains" edges from the default project to every task.
+  //
+  // This runs AFTER the main hydration dispatch so store.getState().tasks
+  // already contains the full task list when we iterate.
+  //
+  // On first visit, seedTasks() already dispatched TASK_CREATE actions that
+  // atomically created edges. But projects.length === 0 still triggers this
+  // branch, which would create duplicate edges. We guard by checking
+  // store.getState().projects after the main dispatch.
+  if (store.getState().projects.length === 0) {
+    seedDefaultProject(store);
+    const now = Date.now();
+    for (const task of store.getState().tasks) {
+      // Only create an edge if one doesn't already exist for this task
+      const alreadyLinked = store
+        .getState()
+        .edges.some((e) => e.toId === task.id && e.fromId === PROJECT_ID_DEFAULT);
+      if (!alreadyLinked) {
+        store.dispatch(
+          edgeAddAction({
+            id: newEdgeId(),
+            fromId: PROJECT_ID_DEFAULT,
+            toId: task.id,
+            label: "contains",
+            createdAt: now,
+          }),
+        );
+      }
+    }
   }
 
   // ── 4. Mount React ──────────────────────────────────────────────────────

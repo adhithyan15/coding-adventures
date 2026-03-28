@@ -725,3 +725,90 @@ python -m venv .venv --clear
 **Critical quoting rule:** Use `.[dev]` WITHOUT double quotes in `BUILD_windows` files. Go's `exec.Command("cmd", "/C", command)` escapes arguments via Windows CreateProcess API, causing CMD to receive the literal string `".[dev]"` (with quotes) instead of `.[dev]`. Pip then rejects it: `ERROR: ".[dev]" is not a valid editable requirement`. The Unix BUILD files can use `".[dev]"` because bash strips quotes before passing to pip. Always check existing working BUILD_windows files (e.g., `lexer/BUILD_windows`) — they all use unquoted `.[dev]`.
 
 **Chain reaction rule:** When a low-level Python package (grammar-tools, lexer) changes, ALL packages that depend on it are added to the affected set by the build tool and will be rebuilt. This means every Python package in `git diff origin/main...HEAD` that has a BUILD_windows file using `uv run python -m pytest` will fail on Windows. Before pushing any Python changes, grep all modified packages' BUILD_windows files for `uv run python` and fix them with the `python -m venv` pattern above. In this PR, grammar-tools and lexer both changed → both needed BUILD_windows fixes independently.
+
+---
+
+### 2026-03-28: Vitest + jsdom: vi.stubGlobal("crypto", ...) must include getRandomValues
+
+When a test stubs the global `crypto` to control `randomUUID` for deterministic
+IDs, the stub object must also include `getRandomValues` — any library that uses
+the Web Crypto API (e.g., `@coding-adventures/uuid`'s `v7()`) will fail with
+`crypto.getRandomValues is not a function` if the stub doesn't provide it.
+
+**Wrong:**
+```typescript
+vi.stubGlobal("crypto", { randomUUID: () => "mock-uuid" });
+// breaks newEdgeId() → v7() → crypto.getRandomValues
+```
+
+**Correct:**
+```typescript
+import { webcrypto } from "node:crypto";
+vi.stubGlobal("crypto", {
+  randomUUID: () => "mock-uuid",
+  getRandomValues: (b: Uint8Array) => webcrypto.getRandomValues(b),
+  subtle: webcrypto.subtle,
+});
+```
+
+Note: `{ ...webcrypto }` and `Object.create(webcrypto)` do NOT work because
+`webcrypto`'s methods are on the prototype and require `this` to be an actual
+`Crypto` internal slot holder. Always bind with `.bind(webcrypto)` or pass
+through an arrow function as shown above.
+
+Also add a `setupFiles` entry in vitest.config.ts that calls
+`vi.stubGlobal("crypto", webcrypto)` unconditionally, so all test workers get
+a functional Web Crypto API regardless of jsdom's setup order.
+
+---
+
+### 2026-03-28: BUILD file validator requires ALL transitive deps listed in leaf-to-root order
+
+The build tool's validator checks that every package referenced transitively by
+a program is listed as an explicit prerequisite in the BUILD file. When a new
+dependency is added (e.g., `directed-graph` which pulls in `uuid` → `md5` + `sha1`),
+all transitive packages must be added to the program's BUILD file in leaf-to-root
+order, not just the immediate dependency.
+
+**Example — adding directed-graph to todo-app:**
+```
+# Wrong: only lists the direct dep
+cd ../../../packages/typescript/directed-graph && npm install --quiet
+
+# Correct: lists all transitives first
+cd ../../../packages/typescript/md5 && npm install --quiet
+cd ../../../packages/typescript/sha1 && npm install --quiet
+cd ../../../packages/typescript/uuid && npm install --quiet
+cd ../../../packages/typescript/directed-graph && npm install --quiet
+```
+
+**Rule:** When merging main into a feature branch that introduced new transitive
+deps via the build system update, expect this validator error and add the missing
+refs immediately.
+
+---
+
+### 2026-03-28: BUILD files must not use backslash line continuations
+
+The CI build runner executes each line of a BUILD file as a separate `sh -c`
+command. Backslash line continuations (`cmd1 && \` / `cmd2`) cause `sh` to
+see `\` as a standalone command and fail with `sh: 1: \: not found`.
+
+**Wrong:**
+```
+cd ../sha1 && npm install --quiet && \
+cd ../md5 && npm install --quiet && \
+cd ../todo-app && npm install --quiet && \
+npx vitest run
+```
+
+**Correct — one command per line:**
+```
+npm install --quiet
+npx vitest run
+```
+
+The build tool already handles dependency ordering (it builds sha1 → md5 →
+uuid → directed-graph → todo-app in topological order), so manually
+chaining installs in the BUILD file is not needed. Each package's own BUILD
+file runs `npm install` at the right time.

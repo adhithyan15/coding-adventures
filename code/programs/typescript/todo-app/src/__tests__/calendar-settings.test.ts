@@ -139,6 +139,12 @@ describe("intervalHours", () => {
   it("calculates 9-hour workday", () => {
     expect(intervalHours({ start: "09:00", end: "18:00" })).toBe(9);
   });
+
+  it("calculates full 24-hour day (00:00–24:00)", () => {
+    // "24:00" is the end-of-day sentinel used by the 24/7 Gregorian calendar.
+    // intervalHours: (24*60 + 0 − (0*60 + 0)) / 60 = 1440 / 60 = 24
+    expect(intervalHours({ start: "00:00", end: "24:00" })).toBe(24);
+  });
 });
 
 // ── effectiveSchedule ─────────────────────────────────────────────────────────
@@ -358,24 +364,46 @@ describe("createGregorianCalendar", () => {
     expect(createGregorianCalendar().id).toBe("gregorian");
   });
 
+  it("has name 'Gregorian'", () => {
+    expect(createGregorianCalendar().name).toBe("Gregorian");
+  });
+
   it("has weekStartsOn=0 (Sunday)", () => {
     expect(createGregorianCalendar().weekStartsOn).toBe(0);
   });
 
-  it("Mon–Fri are working days (8h each)", () => {
+  // The V2 default is 24/7 — all 7 days, midnight-to-midnight.
+  // We use a full week of dates: 2026-03-15 (Sun) through 2026-03-21 (Sat).
+  it("all 7 days of the week are working days", () => {
     const cal = createGregorianCalendar();
-    // 2026-03-16..20 are Mon–Fri
-    const dates = ["2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20"];
-    for (const d of dates) {
+    const allSevenDays = [
+      "2026-03-15", // Sunday
+      "2026-03-16", // Monday
+      "2026-03-17", // Tuesday
+      "2026-03-18", // Wednesday
+      "2026-03-19", // Thursday
+      "2026-03-20", // Friday
+      "2026-03-21", // Saturday
+    ];
+    for (const d of allSevenDays) {
       expect(isWorkingDay(d, cal)).toBe(true);
-      expect(workingHoursOnDate(d, cal)).toBe(8);
     }
   });
 
-  it("Saturday and Sunday are non-working", () => {
+  it("each day has exactly 24 working hours (00:00–24:00)", () => {
     const cal = createGregorianCalendar();
-    expect(isWorkingDay("2026-03-21", cal)).toBe(false); // Saturday
-    expect(isWorkingDay("2026-03-22", cal)).toBe(false); // Sunday
+    const allSevenDays = [
+      "2026-03-15", // Sunday
+      "2026-03-16", // Monday
+      "2026-03-17", // Tuesday
+      "2026-03-18", // Wednesday
+      "2026-03-19", // Thursday
+      "2026-03-20", // Friday
+      "2026-03-21", // Saturday
+    ];
+    for (const d of allSevenDays) {
+      expect(workingHoursOnDate(d, cal)).toBe(24);
+    }
   });
 
   it("is marked as built-in", () => {

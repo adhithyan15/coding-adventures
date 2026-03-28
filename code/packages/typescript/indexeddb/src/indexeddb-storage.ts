@@ -66,8 +66,26 @@ export class IndexedDBStorage implements KVStorage {
       // onupgradeneeded fires BEFORE onsuccess. This is the only place
       // where we can create or modify object stores. The transaction
       // is a special "versionchange" transaction that allows schema changes.
+      //
+      // We run in two phases:
+      //
+      //   Phase 1 (synchronous): Create any new stores declared in the schema.
+      //     Guarded by objectStoreNames.contains() so re-running on a later
+      //     upgrade is always a no-op.
+      //
+      //   Phase 2 (async cursor loop): For any store that declares renamedFrom,
+      //     if the OLD store still exists (first upgrade after a rename), copy
+      //     every record from the old store to the new store via a cursor, then
+      //     delete the old store once the cursor is exhausted.
+      //
+      //     The versionchange transaction stays open until ALL pending requests
+      //     — including cursor continuations — complete. So deleting the old
+      //     store inside the cursor's onsuccess handler is safe: the transaction
+      //     is still alive, and we only delete AFTER the last record is copied.
       request.onupgradeneeded = () => {
         const db = request.result;
+
+        // ── Phase 1: Create new stores ───────────────────────────────────────
         for (const schema of this.config.stores) {
           // Don't recreate existing stores (happens when upgrading versions)
           if (!db.objectStoreNames.contains(schema.name)) {
@@ -83,6 +101,46 @@ export class IndexedDBStorage implements KVStorage {
               }
             }
           }
+        }
+
+        // ── Phase 2: Migrate renamed stores ──────────────────────────────────
+        //
+        // The versionchange transaction is accessible via request.transaction.
+        // It is valid for the entire duration of onupgradeneeded, including
+        // all async callbacks (cursor onsuccess), until the transaction commits.
+        const tx = request.transaction;
+        if (!tx) return; // safety: should always be set during onupgradeneeded
+
+        for (const schema of this.config.stores) {
+          if (!schema.renamedFrom) continue;
+          // Guard: only migrate if the OLD store still exists.
+          // If it was already deleted on a previous version upgrade, skip.
+          if (!db.objectStoreNames.contains(schema.renamedFrom)) continue;
+
+          // Capture both store references before the cursor opens so we
+          // can access them in the async callback without closure issues.
+          const oldStoreName = schema.renamedFrom;
+          const oldStore = tx.objectStore(oldStoreName);
+          const newStore = tx.objectStore(schema.name);
+
+          // Open a cursor on every record in the old store.
+          // onsuccess fires once per record (cursor advances), then fires
+          // one final time with cursor = null when exhausted.
+          const cursorReq = oldStore.openCursor();
+          cursorReq.onsuccess = (event) => {
+            const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+
+            if (cursor) {
+              // Copy this record to the new store, then advance the cursor.
+              newStore.put(cursor.value);
+              cursor.continue();
+            } else {
+              // Cursor exhausted — all records copied. Now it is safe to
+              // delete the old store. deleteObjectStore() is valid here
+              // because the versionchange transaction is still active.
+              db.deleteObjectStore(oldStoreName);
+            }
+          };
         }
       };
 

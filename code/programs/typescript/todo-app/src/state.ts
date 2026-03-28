@@ -19,6 +19,6 @@ export type { AppState };
 
 /** The singleton store used by the running app. */
 export const store = new Store<AppState>(
-  { tasks: [], views: [], calendars: [], activeViewId: "" },
+  { tasks: [], views: [], calendars: [], projects: [], edges: [], activeViewId: "" },
   reducer,
 );

@@ -148,6 +148,40 @@ export interface Task {
  */
 export type TodoItem = Task;
 
+// ── Project ────────────────────────────────────────────────────────────────
+//
+// A Project is a named collection of tasks and/or subprojects.
+// Projects and tasks are both nodes in the application's directed acyclic
+// graph (DAG). The graph layer (graph.ts) maintains the edges between them.
+//
+// In V1, projects are UI-invisible — a default project is seeded automatically
+// and all tasks are assigned to it. Future releases will expose project
+// selection in the task editor and project-scoped views.
+
+/**
+ * Project — a first-class persisted entity that groups tasks and subprojects.
+ *
+ * id         — stable UUID. Used as fromId in "contains" graph edges.
+ *              The built-in default project always has id === "default".
+ *
+ * name       — display name shown in future project-scoped views.
+ *              Example: "Work", "Home", "Side Project Alpha".
+ *
+ * isBuiltIn  — true for the seeded "Default" project. Built-in projects
+ *              cannot be deleted from the UI (enforced by UI layer, not
+ *              reducer — the reducer allows any PROJECT_UPSERT).
+ *
+ * createdAt  — Unix timestamp (ms). Immutable after creation.
+ * updatedAt  — Unix timestamp (ms). Bumped on every PROJECT_UPSERT.
+ */
+export interface Project {
+  id: string;
+  name: string;
+  isBuiltIn: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
 // ── Filter & Sort ─────────────────────────────────────────────────────────
 //
 // SortField and SortDirection are used by list and kanban views to order tasks.
