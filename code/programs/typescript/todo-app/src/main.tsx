@@ -124,10 +124,12 @@ async function init() {
   store.use(createPersistenceMiddleware(storage));
 
   if (tasks.length > 0 && views.length > 0) {
-    // Returning user — load all persisted data
-    // Restore their last active view; fall back to "all-tasks" if missing
-    const storedActiveViewId =
-      views.find((v) => v.id !== undefined)?.id || VIEW_ID_ALL_TASKS;
+    // Returning user — load all persisted data.
+    // We don't persist activeViewId to IDB yet, so we default to the view
+    // with the lowest sortOrder (the leftmost tab), which is the most
+    // natural starting point. Fall back to VIEW_ID_ALL_TASKS if no views.
+    const defaultView = [...views].sort((a, b) => a.sortOrder - b.sortOrder)[0];
+    const storedActiveViewId = defaultView?.id ?? VIEW_ID_ALL_TASKS;
     store.dispatch(
       stateLoadAction(tasks, views, calendars, storedActiveViewId),
     );

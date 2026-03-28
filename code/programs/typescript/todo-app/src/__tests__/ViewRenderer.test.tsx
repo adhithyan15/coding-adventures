@@ -195,11 +195,13 @@ describe("ViewRenderer", () => {
     expect(screen.getByText("View not found")).toBeInTheDocument();
   });
 
-  it("shows the unknown viewId in the error message", () => {
+  it("shows a generic 'doesn't exist' message (does not reflect URL input)", () => {
     mockUseStore.mockReturnValue(makeAppState([]));
 
     render(<ViewRenderer viewId="my-deleted-view" onNavigate={noop} />);
-    expect(screen.getByText(/my-deleted-view/)).toBeInTheDocument();
+    // The error message should NOT reflect the raw viewId from the URL
+    expect(screen.queryByText(/my-deleted-view/)).not.toBeInTheDocument();
+    expect(screen.getByText(/doesn't exist or has been removed/)).toBeInTheDocument();
   });
 
   it("renders 'Go to All Tasks' button in the not-found state", () => {

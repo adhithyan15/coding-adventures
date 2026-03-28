@@ -48,7 +48,7 @@ export function ViewRenderer({ viewId, onNavigate }: ViewRendererProps) {
       <div className="empty-state" id="view-not-found">
         <div className="empty-state__icon">🔍</div>
         <h2>View not found</h2>
-        <p>The view "{viewId}" doesn't exist or has been removed.</p>
+        <p>This view doesn't exist or has been removed.</p>
         <button
           type="button"
           className="btn btn--primary"
