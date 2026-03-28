@@ -104,7 +104,10 @@ describe("reducer", () => {
       vi.stubGlobal("crypto", { randomUUID: () => "uuid-3" });
 
       const state = makeState();
-      const action = { type: "TASK_CREATE", title: "Task", description: "", priority: "", category: "", dueDate: null, dueTime: null };
+      // Include id field — now that createTaskAction pre-generates the UUID,
+      // raw action objects used in tests must also carry it. The reducer uses
+      // action.id if present, falling back to crypto.randomUUID() otherwise.
+      const action = { type: "TASK_CREATE", id: "uuid-3", title: "Task", description: "", priority: "", category: "", dueDate: null, dueTime: null };
       const newState = reducer(state, action);
 
       expect(newState.tasks[0]!.priority).toBe("medium");

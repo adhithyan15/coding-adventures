@@ -88,8 +88,14 @@ export const STATE_LOAD = "STATE_LOAD";
 /**
  * createTaskAction — builds an action to create a new task.
  *
- * The reducer assigns id, createdAt, updatedAt, completedAt, sortOrder.
- * The caller only provides user-editable fields.
+ * The ID is generated HERE, at action-creation time, so that:
+ *   1. The audit middleware can record the entity ID BEFORE the reducer runs
+ *      (the reducer hasn't assigned an ID yet when the middleware sees the action).
+ *   2. Callers that want to reference the task immediately (e.g., to navigate
+ *      to the new task's detail page) can read the ID from the returned action.
+ *   3. Tests can inject a deterministic UUID via `vi.stubGlobal("crypto", ...)`.
+ *
+ * The reducer reads `action.id` and uses it instead of generating its own UUID.
  */
 export function createTaskAction(
   title: string,
@@ -101,6 +107,7 @@ export function createTaskAction(
 ): Action {
   return {
     type: TASK_CREATE,
+    id: crypto.randomUUID(),   // Pre-generate the UUID at action creation time
     title,
     description,
     priority,
