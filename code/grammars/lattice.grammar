@@ -327,7 +327,8 @@ compound_selector = simple_selector { subclass_selector }
                   | subclass_selector { subclass_selector } ;
 
 # VARIABLE added in v2 for $var-in-selectors: .col-$i { width: ...; }
-simple_selector = IDENT | STAR | AMPERSAND | VARIABLE ;
+# PERCENTAGE added for @keyframes: 0% { opacity: 0; }
+simple_selector = IDENT | STAR | AMPERSAND | VARIABLE | PERCENTAGE ;
 
 # PLACEHOLDER added in v2 for @extend: %flex-center, %button-base
 subclass_selector = class_selector | id_selector | placeholder_selector
