@@ -1,2 +1,2 @@
 gem install minitest simplecov rake --quiet
-ruby -Ilib -Itest -e "Dir['test/test_*.rb'].sort.each { |f| require_relative f }"
+ruby -S rake test
