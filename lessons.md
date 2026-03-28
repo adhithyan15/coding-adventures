@@ -759,3 +759,30 @@ through an arrow function as shown above.
 Also add a `setupFiles` entry in vitest.config.ts that calls
 `vi.stubGlobal("crypto", webcrypto)` unconditionally, so all test workers get
 a functional Web Crypto API regardless of jsdom's setup order.
+
+---
+
+### 2026-03-28: BUILD files must not use backslash line continuations
+
+The CI build runner executes each line of a BUILD file as a separate `sh -c`
+command. Backslash line continuations (`cmd1 && \` / `cmd2`) cause `sh` to
+see `\` as a standalone command and fail with `sh: 1: \: not found`.
+
+**Wrong:**
+```
+cd ../sha1 && npm install --quiet && \
+cd ../md5 && npm install --quiet && \
+cd ../todo-app && npm install --quiet && \
+npx vitest run
+```
+
+**Correct — one command per line:**
+```
+npm install --quiet
+npx vitest run
+```
+
+The build tool already handles dependency ordering (it builds sha1 → md5 →
+uuid → directed-graph → todo-app in topological order), so manually
+chaining installs in the BUILD file is not needed. Each package's own BUILD
+file runs `npm install` at the right time.
