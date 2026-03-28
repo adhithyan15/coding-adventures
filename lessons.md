@@ -762,6 +762,32 @@ a functional Web Crypto API regardless of jsdom's setup order.
 
 ---
 
+### 2026-03-28: BUILD file validator requires ALL transitive deps listed in leaf-to-root order
+
+The build tool's validator checks that every package referenced transitively by
+a program is listed as an explicit prerequisite in the BUILD file. When a new
+dependency is added (e.g., `directed-graph` which pulls in `uuid` → `md5` + `sha1`),
+all transitive packages must be added to the program's BUILD file in leaf-to-root
+order, not just the immediate dependency.
+
+**Example — adding directed-graph to todo-app:**
+```
+# Wrong: only lists the direct dep
+cd ../../../packages/typescript/directed-graph && npm install --quiet
+
+# Correct: lists all transitives first
+cd ../../../packages/typescript/md5 && npm install --quiet
+cd ../../../packages/typescript/sha1 && npm install --quiet
+cd ../../../packages/typescript/uuid && npm install --quiet
+cd ../../../packages/typescript/directed-graph && npm install --quiet
+```
+
+**Rule:** When merging main into a feature branch that introduced new transitive
+deps via the build system update, expect this validator error and add the missing
+refs immediately.
+
+---
+
 ### 2026-03-28: BUILD files must not use backslash line continuations
 
 The CI build runner executes each line of a BUILD file as a separate `sh -c`
