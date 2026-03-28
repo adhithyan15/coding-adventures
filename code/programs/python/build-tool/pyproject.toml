@@ -19,13 +19,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = ["coding-adventures-progress-bar"]
-
 [project.scripts]
 build-tool = "build_tool.cli:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "coding-adventures-progress-bar",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/build_tool"]
