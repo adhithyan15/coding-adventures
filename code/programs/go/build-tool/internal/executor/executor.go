@@ -425,6 +425,12 @@ func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []str
 	}
 
 	for _, command := range pkg.BuildCommands {
+		if pkg.Language == "elixir" && strings.Contains(command, "mix deps.get") {
+			// Hex persists a shared cache under ~/.hex, which is not safe for
+			// concurrent writes across packages in CI.
+			keys["global:hex-cache"] = true
+		}
+
 		for _, raw := range relPathRe.FindAllString(command, -1) {
 			normalized := strings.ReplaceAll(raw, "\\", "/")
 			abs := filepath.Clean(filepath.Join(pkg.Path, filepath.FromSlash(normalized)))

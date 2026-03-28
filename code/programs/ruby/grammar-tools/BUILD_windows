@@ -1,0 +1,2 @@
+bundle install --quiet --full-index --gemfile=%CD%\Gemfile
+bundle exec --gemfile=%CD%\Gemfile ruby -Itest test/test_cli.rb

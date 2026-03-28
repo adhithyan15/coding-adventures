@@ -295,6 +295,31 @@ end
 	}
 }
 
+func TestResolveElixirDepsSupportsPlainAppAtoms(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"elixir/sql_csv_source/mix.exs": `defmodule X do
+  def project, do: [app: :coding_adventures_sql_csv_source, version: "0.1.0", deps: deps()]
+  defp deps, do: [{:csv_parser, path: "../csv_parser"}]
+end
+`,
+		"elixir/csv_parser/mix.exs": `defmodule X do
+  def project, do: [app: :csv_parser, version: "0.1.0", deps: []]
+end
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "elixir/sql_csv_source", Path: filepath.Join(root, "elixir/sql_csv_source"), Language: "elixir"},
+		{Name: "elixir/csv_parser", Path: filepath.Join(root, "elixir/csv_parser"), Language: "elixir"},
+	}
+
+	graph := ResolveDependencies(packages)
+
+	if !graph.HasEdge("elixir/csv_parser", "elixir/sql_csv_source") {
+		t.Fatal("expected Elixir dependency with plain app atom to resolve")
+	}
+}
+
 func TestResolveDiamondDeps(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg-a/pyproject.toml": `[project]

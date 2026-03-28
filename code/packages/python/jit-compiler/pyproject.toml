@@ -24,6 +24,14 @@ dependencies = [
     "coding-adventures-assembler",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "coding-adventures-arithmetic",
+    "coding-adventures-arm-simulator",
+    "coding-adventures-cpu-simulator",
+    "coding-adventures-logic-gates",
+]
+
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"

@@ -329,6 +329,27 @@ func TestBuildResourceKeysIncludesSelfAndReferencedPackages(t *testing.T) {
 	}
 }
 
+func TestBuildResourceKeysIncludesGlobalHexCacheForElixirDepsGet(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "mix deps.get && mix test",
+	})
+
+	pkg := discovery.Package{
+		Name:          "elixir/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"mix deps.get && mix test"},
+		Language:      "elixir",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "elixir/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:hex-cache") {
+		t.Fatalf("expected keys to include global Hex cache lock, got %v", keys)
+	}
+}
+
 func TestExecuteBuildsSerializesSharedBuildResources(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("uses shell commands that are only asserted on Unix runners")

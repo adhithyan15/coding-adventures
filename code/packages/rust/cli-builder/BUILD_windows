@@ -1,1 +1,1 @@
-cargo test -p cli-builder -- --nocapture
+cargo test -p cli-builder --lib --tests -- --nocapture

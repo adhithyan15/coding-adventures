@@ -1,0 +1,1 @@
+echo Skipping ruby unix-tools on Windows because the suite depends on Unix-only filesystem, user/group, tty, and CLI path semantics
