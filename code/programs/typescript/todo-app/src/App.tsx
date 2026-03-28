@@ -6,18 +6,30 @@
  * listens to via useState + useEffect to re-render the active screen.
  *
  * Route table:
- *   #/                → TodoList (main view)
- *   #/new             → TodoEditor (create)
- *   #/edit/:id        → TodoEditor (edit existing)
+ *   #/           → TodoList (main list view)
+ *   #/calendar   → TodoCalendar (monthly calendar view)
+ *   #/new        → TodoEditor (create)
+ *   #/edit/:id   → TodoEditor (edit existing)
  *
  * The navigate(path) function is passed down to every screen component.
  * Components call it instead of touching window.location directly. This
  * keeps navigation logic testable and centralised.
+ *
+ * === Navigation bar ===
+ *
+ * The app header now contains a two-item nav bar:
+ *   • List       — goes to #/
+ *   • Calendar   — goes to #/calendar
+ *
+ * The active nav item gets the `.app-nav__item--active` modifier class.
+ * We compute the active route from the current path rather than storing
+ * it separately, so the nav always reflects the real URL.
  */
 
 import { useState, useEffect } from "react";
 import { TodoList } from "./components/TodoList.js";
 import { TodoEditor } from "./components/TodoEditor.js";
+import { TodoCalendar } from "./components/TodoCalendar.js";
 
 // ── Router ─────────────────────────────────────────────────────────────────
 
@@ -42,6 +54,11 @@ function renderScreen(
   // #/ — Main todo list
   if (path === "/" || path === "") {
     return <TodoList onNavigate={onNavigate} />;
+  }
+
+  // #/calendar — Monthly calendar view
+  if (path === "/calendar") {
+    return <TodoCalendar onNavigate={onNavigate} />;
   }
 
   // #/new — Create new todo
@@ -73,6 +90,22 @@ function renderScreen(
   );
 }
 
+/**
+ * activeNavRoute — maps any path to the top-level nav key.
+ *
+ * The list route covers /, /new, and /edit/:id because those are all
+ * actions within the list context. The calendar is its own top-level route.
+ */
+function activeNavRoute(path: string): "list" | "calendar" | null {
+  if (path === "/" || path === "" || path === "/new" || path.startsWith("/edit/")) {
+    return "list";
+  }
+  if (path === "/calendar") {
+    return "calendar";
+  }
+  return null;
+}
+
 // ── App ────────────────────────────────────────────────────────────────────
 
 export function App() {
@@ -93,10 +126,13 @@ export function App() {
     setPath(newPath);
   }
 
+  const activeNav = activeNavRoute(path);
+
   return (
     <div className="app" id="todo-app">
       <header className="app-header" id="app-header">
         <div className="app-header__content">
+          {/* Brand */}
           <h1
             className="app-header__title"
             onClick={() => handleNavigate("/")}
@@ -105,7 +141,36 @@ export function App() {
             <span className="app-header__icon">✓</span>
             Todo
           </h1>
-          <p className="app-header__subtitle">Offline Task Manager</p>
+
+          {/* Top-level navigation */}
+          <nav className="app-nav" aria-label="Main navigation">
+            <button
+              type="button"
+              className={[
+                "app-nav__item",
+                activeNav === "list" ? "app-nav__item--active" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => handleNavigate("/")}
+              aria-current={activeNav === "list" ? "page" : undefined}
+            >
+              ☰ List
+            </button>
+            <button
+              type="button"
+              className={[
+                "app-nav__item",
+                activeNav === "calendar" ? "app-nav__item--active" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => handleNavigate("/calendar")}
+              aria-current={activeNav === "calendar" ? "page" : undefined}
+            >
+              📅 Calendar
+            </button>
+          </nav>
         </div>
       </header>
       <main className="app-main" id="app-main">

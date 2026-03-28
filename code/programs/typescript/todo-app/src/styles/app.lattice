@@ -814,6 +814,287 @@ input, select, textarea {
   100% { transform: rotate(360deg); }
 }
 
+// ── App Navigation ──────────────────────────────────────────────────────────
+// Two-item nav bar in the header: "List" and "Calendar".
+// The active item is highlighted with the accent colour.
+
+.app-nav {
+  display: flex;
+  gap: $space-xs;
+  margin-left: auto;
+}
+
+.app-nav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 6px $space-md;
+  border-radius: $radius-md;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $text-secondary;
+  border: 1px solid transparent;
+  transition: all $transition-fast;
+  cursor: pointer;
+  background: transparent;
+}
+
+.app-nav__item:hover {
+  color: $text-primary;
+  background: $bg-hover;
+  border-color: $border-subtle;
+}
+
+.app-nav__item--active {
+  color: $accent-primary;
+  background: rgba(124, 106, 239, 0.1);
+  border-color: rgba(124, 106, 239, 0.3);
+  font-weight: 600;
+}
+
+.app-nav__item:focus-visible {
+  @include focus-ring();
+}
+
+// ── Calendar Screen ─────────────────────────────────────────────────────────
+
+.todo-calendar {
+  // No max-width constraint — the 7-column grid needs all available space.
+}
+
+.todo-calendar__heading {
+  margin-bottom: $space-lg;
+}
+
+.todo-calendar__title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.todo-calendar__subtitle {
+  font-size: 0.85rem;
+  color: $text-muted;
+  margin-top: $space-xs;
+}
+
+// ── CalendarView overrides (match todo app design tokens) ──────────────────
+//
+// The CalendarView component from @coding-adventures/ui-components uses
+// CSS class names without any assumptions about design tokens. We override
+// those classes here using the todo app's Lattice variables so the calendar
+// looks native to this app's dark theme.
+
+.calendar-view {
+  font-family: $font-sans;
+  color: $text-primary;
+}
+
+.calendar-view__header {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin-bottom: $space-lg;
+}
+
+.calendar-view__month-label {
+  flex: 1;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $text-primary;
+  margin: 0;
+}
+
+.calendar-view__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-md;
+  background: $bg-surface;
+  color: $text-secondary;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all $transition-fast;
+}
+
+.calendar-view__nav-btn:hover {
+  background: $bg-hover;
+  color: $text-primary;
+  border-color: $border-medium;
+}
+
+.calendar-view__nav-btn:focus-visible {
+  @include focus-ring();
+}
+
+.calendar-view__today-btn {
+  padding: 5px $space-md;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-md;
+  background: $bg-surface;
+  color: $text-secondary;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-fast;
+  white-space: nowrap;
+}
+
+.calendar-view__today-btn:hover {
+  background: $bg-hover;
+  color: $accent-primary;
+  border-color: rgba(124, 106, 239, 0.4);
+}
+
+.calendar-view__today-btn:focus-visible {
+  @include focus-ring();
+}
+
+.calendar-view__grid {
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.calendar-view__row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid $border-subtle;
+}
+
+.calendar-view__row:last-child {
+  border-bottom: none;
+}
+
+.calendar-view__row--header {
+  background: $bg-elevated;
+}
+
+.calendar-view__day-header {
+  padding: $space-sm $space-xs;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: $text-muted;
+  border-right: 1px solid $border-subtle;
+}
+
+.calendar-view__day-header:last-child {
+  border-right: none;
+}
+
+.calendar-view__cell {
+  min-height: 88px;
+  padding: $space-sm;
+  background: $bg-surface;
+  border-right: 1px solid $border-subtle;
+  vertical-align: top;
+  transition: background $transition-fast;
+}
+
+.calendar-view__cell:last-child {
+  border-right: none;
+}
+
+.calendar-view__cell--other-month {
+  background: $bg-base;
+  opacity: 0.4;
+}
+
+.calendar-view__cell--today {
+  background: rgba(124, 106, 239, 0.06);
+}
+
+.calendar-view__day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: $radius-full;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $text-secondary;
+  margin-bottom: $space-xs;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar-view__cell--today .calendar-view__day-number {
+  background: $accent-primary;
+  color: white;
+}
+
+.calendar-view__cell--other-month .calendar-view__day-number {
+  color: $text-muted;
+}
+
+.calendar-view__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.calendar-view__item {
+  font-size: 0.7rem;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Calendar chips (todo items inside day cells) ────────────────────────────
+//
+// Each chip is a compact one-line label showing the todo's title.
+// Color-coded by priority; completed todos are dimmed with strikethrough.
+
+.cal-chip {
+  display: block;
+  padding: 1px $space-sm;
+  border-radius: $radius-sm;
+  font-size: 0.7rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+.cal-chip--low {
+  background: rgba(100, 116, 139, 0.15);
+  color: $priority-low;
+}
+
+.cal-chip--medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: $priority-medium;
+}
+
+.cal-chip--high {
+  background: rgba(249, 115, 22, 0.15);
+  color: $priority-high;
+}
+
+.cal-chip--urgent {
+  background: rgba(239, 68, 68, 0.15);
+  color: $priority-urgent;
+}
+
+.cal-chip--done {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
 // ── Responsive ─────────────────────────────────────────────────────────────
 
 @media (max-width: 640px) {
@@ -835,5 +1116,30 @@ input, select, textarea {
 
   .todo-card__actions {
     opacity: 1;
+  }
+
+  .calendar-view__cell {
+    min-height: 56px;
+    padding: $space-xs;
+  }
+
+  .calendar-view__day-number {
+    width: 18px;
+    height: 18px;
+    font-size: 0.68rem;
+  }
+
+  .calendar-view__item {
+    font-size: 0.62rem;
+  }
+
+  .cal-chip {
+    font-size: 0.62rem;
+    padding: 1px $space-xs;
+  }
+
+  .app-nav__item {
+    padding: 5px $space-sm;
+    font-size: 0.8rem;
   }
 }
