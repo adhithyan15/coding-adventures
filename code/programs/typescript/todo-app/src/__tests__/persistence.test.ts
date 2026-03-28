@@ -114,7 +114,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_CREATE }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", newTask);
+      expect(storage.put).toHaveBeenCalledWith("tasks", newTask);
     });
 
     it("persists the last item when multiple tasks exist", () => {
@@ -125,7 +125,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_CREATE }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", newest);
+      expect(storage.put).toHaveBeenCalledWith("tasks", newest);
     });
   });
 
@@ -137,7 +137,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_UPDATE, taskId: "upd-1" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", task);
+      expect(storage.put).toHaveBeenCalledWith("tasks", task);
     });
 
     it("does nothing if task not found", () => {
@@ -158,7 +158,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_TOGGLE_STATUS, taskId: "tog-1" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", task);
+      expect(storage.put).toHaveBeenCalledWith("tasks", task);
     });
   });
 
@@ -170,7 +170,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_SET_STATUS, taskId: "set-1" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", task);
+      expect(storage.put).toHaveBeenCalledWith("tasks", task);
     });
   });
 
@@ -181,7 +181,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_DELETE, taskId: "del-1" }, next);
 
-      expect(storage.delete).toHaveBeenCalledWith("todos", "del-1");
+      expect(storage.delete).toHaveBeenCalledWith("tasks", "del-1");
     });
   });
 
@@ -207,9 +207,9 @@ describe("createPersistenceMiddleware", () => {
 
       // Wait for the async getAll+delete chain
       await vi.waitFor(() => {
-        expect(storage.getAll).toHaveBeenCalledWith("todos");
-        expect(storage.delete).toHaveBeenCalledWith("todos", "done-1");
-        expect(storage.delete).toHaveBeenCalledWith("todos", "done-2");
+        expect(storage.getAll).toHaveBeenCalledWith("tasks");
+        expect(storage.delete).toHaveBeenCalledWith("tasks", "done-1");
+        expect(storage.delete).toHaveBeenCalledWith("tasks", "done-2");
       });
     });
   });
@@ -338,7 +338,7 @@ describe("createPersistenceMiddleware", () => {
 
       middleware(store, { type: TASK_CREATE, id: "new-task" }, next);
 
-      expect(storage.put).toHaveBeenCalledWith("todos", task);
+      expect(storage.put).toHaveBeenCalledWith("tasks", task);
       expect(storage.put).toHaveBeenCalledWith("edges", edge);
     });
   });
@@ -356,7 +356,7 @@ describe("createPersistenceMiddleware", () => {
       const middleware = createPersistenceMiddleware(storage);
       middleware(store, { type: TASK_DELETE, taskId: "del-task" }, next);
 
-      expect(storage.delete).toHaveBeenCalledWith("todos", "del-task");
+      expect(storage.delete).toHaveBeenCalledWith("tasks", "del-task");
 
       // Cascade: edges e1 and e2 should be deleted, e3 should not
       await vi.waitFor(() => {

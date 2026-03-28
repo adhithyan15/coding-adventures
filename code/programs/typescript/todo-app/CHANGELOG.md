@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] - 2026-03-28
+
+### Changed
+
+- **IDB store renamed: `"todos"` → `"tasks"`** (`src/main.tsx`) — the IndexedDB
+  object store that holds Task records was originally named `"todos"` (from the
+  initial launch before the codebase was renamed Todo→Task). It is now named
+  `"tasks"` to match the domain language used throughout every other file.
+  - IDB version bumped `4 → 5`; the `StoreSchema.renamedFrom: "todos"` field
+    triggers an automatic cursor-based migration inside `IndexedDBStorage`:
+    all records are copied from `"todos"` to `"tasks"`, then the old store is
+    deleted — atomically within the versionchange transaction.
+  - No data loss for existing users: every task is preserved.
+  - `src/persistence.ts` — all six `"todos"` store references updated to `"tasks"`
+  - `src/__tests__/persistence.test.ts` — all nine assertion strings updated
+
+- **Default calendar changed to 24/7** (`src/calendar-settings.ts`) —
+  `createGregorianCalendar()` now produces a schedule that includes all 7
+  days of the week (Sun–Sat), each with hours `00:00–24:00` (24 h/day).
+  Previously it defaulted to Mon–Fri 09:00–17:00, which silently hid
+  weekend tasks from scheduling views for users with non-standard schedules.
+  - Calendar `name` simplified from `"Gregorian (Mon–Fri, 9–5)"` to
+    `"Gregorian"` — the schedule is now implicit, not embedded in the name.
+  - Existing persisted calendars are **unaffected** — `seedCalendars` only
+    runs when `calendars.length === 0` (first visit).
+  - `src/__tests__/calendar-settings.test.ts` updated to assert all 7 days
+    are working and each returns `workingHoursOnDate = 24`. Also adds a new
+    `intervalHours({ start: "00:00", end: "24:00" }) = 24` test.
+
+### Dependencies
+
+- `@coding-adventures/indexeddb` updated to use new `renamedFrom` field
+
 ## [0.7.0] - 2026-03-28
 
 ### Added

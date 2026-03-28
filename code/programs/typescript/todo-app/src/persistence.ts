@@ -22,7 +22,7 @@
  * === Store layout ===
  *
  * The IndexedDB database has three stores:
- *   "todos"     — Task records (store name is "todos" for backward compat)
+ *   "tasks"     — Task records (renamed from "todos" in IDB v5)
  *   "views"     — SavedView records
  *   "calendars" — CalendarSettings records
  *
@@ -30,12 +30,12 @@
  *
  * The middleware inspects action.type to decide WHAT to write:
  *
- *   TASK_CREATE         → put the newly created task into "todos"
- *   TASK_UPDATE         → put the updated task into "todos"
- *   TASK_DELETE         → delete the task from "todos" by ID
- *   TASK_TOGGLE_STATUS  → put the updated task into "todos"
- *   TASK_SET_STATUS     → put the updated task into "todos"
- *   TASK_CLEAR_COMPLETED → delete all completed tasks from "todos"
+ *   TASK_CREATE         → put the newly created task into "tasks"
+ *   TASK_UPDATE         → put the updated task into "tasks"
+ *   TASK_DELETE         → delete the task from "tasks" by ID
+ *   TASK_TOGGLE_STATUS  → put the updated task into "tasks"
+ *   TASK_SET_STATUS     → put the updated task into "tasks"
+ *   TASK_CLEAR_COMPLETED → delete all completed tasks from "tasks"
  *   VIEW_UPSERT         → put the view into "views"
  *   CALENDAR_UPSERT     → put the calendar into "calendars"
  *   VIEW_SET_ACTIVE     → no-op (activeViewId is ephemeral; reconstructed from URL)
@@ -94,7 +94,7 @@ export function createPersistenceMiddleware(
       case TASK_CREATE: {
         const task = state.tasks[state.tasks.length - 1];
         if (task) {
-          storage.put("todos", task).catch((err: unknown) => {
+          storage.put("tasks", task).catch((err: unknown) => {
             console.warn("[persistence] Failed to persist task:", err);
           });
           // Persist the auto-created project→task edge. It's the edge whose
@@ -116,7 +116,7 @@ export function createPersistenceMiddleware(
         const taskId = action.taskId as string;
         const task = state.tasks.find((t) => t.id === taskId);
         if (task) {
-          storage.put("todos", task);
+          storage.put("tasks", task);
         }
         break;
       }
@@ -128,7 +128,7 @@ export function createPersistenceMiddleware(
       // whose fromId or toId matched the deleted task.
       case TASK_DELETE: {
         const taskId = action.taskId as string;
-        storage.delete("todos", taskId).catch((err: unknown) => {
+        storage.delete("tasks", taskId).catch((err: unknown) => {
           console.warn("[persistence] Failed to delete task:", err);
         });
         // Cascade: delete all edges referencing this task from IDB.
@@ -157,12 +157,12 @@ export function createPersistenceMiddleware(
       // Pragmatic approach: re-read all records from storage and delete
       // those not present in the current state. Fine for a small list.
       case TASK_CLEAR_COMPLETED: {
-        storage.getAll("todos").then((stored) => {
+        storage.getAll("tasks").then((stored) => {
           const currentIds = new Set(state.tasks.map((t) => t.id));
           for (const record of stored) {
             const storedTask = record as { id: string };
             if (!currentIds.has(storedTask.id)) {
-              storage.delete("todos", storedTask.id);
+              storage.delete("tasks", storedTask.id);
             }
           }
         });

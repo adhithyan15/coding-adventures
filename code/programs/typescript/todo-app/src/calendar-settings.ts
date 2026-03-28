@@ -330,10 +330,25 @@ export function intervalHours(interval: TimeInterval): number {
 // ── Default Calendar ───────────────────────────────────────────────────────
 
 /**
- * GREGORIAN_CALENDAR — V1 default.
+ * createGregorianCalendar — the built-in default calendar.
  *
- * Standard Monday–Friday, 9am–5pm. Timezone defaults to the user's browser
- * timezone via Intl. No holidays pre-loaded (user adds their own in future).
+ * V2 default: all 7 days, 00:00–24:00 (24 working hours per day).
+ *
+ * Why 24/7 instead of Mon–Fri 9–5?
+ *
+ *   The app is used by people in radically different contexts:
+ *   freelancers, students, shift workers, people in non-Western locales,
+ *   and anyone who simply tracks personal tasks. A Mon–Fri 9–5 default
+ *   silently hides weekend tasks from scheduling views and makes the
+ *   app feel wrong for everyone who doesn't work those hours.
+ *
+ *   A 24/7 calendar is the neutral, no-assumptions baseline. Users who
+ *   want a specific work schedule can create a custom calendar in a
+ *   future release; the UI for that is not yet shipped.
+ *
+ *   "00:00"–"24:00" works with intervalHours: (24*60 − 0) / 60 = 24h.
+ *   The "24:00" end time is a common convention for midnight-end-of-day
+ *   (used in ISO 8601 and HTML <input type="time"> in some browsers).
  *
  * This is a FACTORY FUNCTION (not a plain const) because the timezone
  * must be read at runtime — calling Intl at module load time is fine, but
@@ -343,15 +358,16 @@ export function createGregorianCalendar(): CalendarSettings {
   const now = Date.now();
   return {
     id: "gregorian",
-    name: "Gregorian (Mon–Fri, 9–5)",
+    name: "Gregorian",
     weekStartsOn: 0, // Sunday — the most globally recognized week start
     weeklySchedule: {
-      1: { hours: [{ start: "09:00", end: "17:00" }] }, // Monday
-      2: { hours: [{ start: "09:00", end: "17:00" }] }, // Tuesday
-      3: { hours: [{ start: "09:00", end: "17:00" }] }, // Wednesday
-      4: { hours: [{ start: "09:00", end: "17:00" }] }, // Thursday
-      5: { hours: [{ start: "09:00", end: "17:00" }] }, // Friday
-      // Saturday (6) and Sunday (0) absent = non-working
+      0: { hours: [{ start: "00:00", end: "24:00" }] }, // Sunday
+      1: { hours: [{ start: "00:00", end: "24:00" }] }, // Monday
+      2: { hours: [{ start: "00:00", end: "24:00" }] }, // Tuesday
+      3: { hours: [{ start: "00:00", end: "24:00" }] }, // Wednesday
+      4: { hours: [{ start: "00:00", end: "24:00" }] }, // Thursday
+      5: { hours: [{ start: "00:00", end: "24:00" }] }, // Friday
+      6: { hours: [{ start: "00:00", end: "24:00" }] }, // Saturday
     },
     dateOverrides: [],
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

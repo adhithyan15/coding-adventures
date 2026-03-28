@@ -19,10 +19,10 @@
  * back to MemoryStorage — an in-memory implementation of the same KVStorage
  * interface. The app works identically; it just loses persistence on reload.
  *
- * === IDB schema: version 3 ===
+ * === IDB schema versions ===
  *
  * Version 1: { "todos": { keyPath: "id" } }
- *   — tasks stored under "todos" (legacy name, kept for backward compat)
+ *   — tasks stored under "todos" (legacy name from initial launch)
  *
  * Version 2:
  *   + "views"     : { keyPath: "id" }  — SavedView records
@@ -32,14 +32,17 @@
  *   + "events"    : { keyPath: "id" }  — append-only audit event log
  *   + "snapshots" : { keyPath: "id" }  — periodic state snapshots for compaction
  *
- * Version 4 (this release):
+ * Version 4:
  *   + "projects"  : { keyPath: "id" }  — Project entities (default + user)
  *   + "edges"     : { keyPath: "id",   — Directed graph edges (contains, …)
  *                     indexes: ["fromId", "toId"] }
  *
- * All existing stores are unchanged — no data migration needed for stored
- * data. The only data migration is seeding the default project and creating
- * "contains" edges for existing tasks if none exist yet (handled in init()).
+ * Version 5 (this release):
+ *   ~ "todos" renamed to "tasks" — store name now matches the domain
+ *     language used throughout the codebase (Task, not Todo).
+ *     Migration: IndexedDBStorage copies all "todos" records into "tasks"
+ *     and deletes "todos" via the StoreSchema.renamedFrom mechanism.
+ *
  * The onupgradeneeded handler inside IndexedDBStorage uses
  * `if (!db.objectStoreNames.contains(...))` to guard against re-creation.
  *
@@ -82,12 +85,15 @@ async function init() {
   try {
     const idbStorage = new IndexedDBStorage({
       dbName: "todo-app",
-      version: 4,
+      version: 5,
       stores: [
-        // "todos" kept as-is for backward compat with v1 task data
+        // "todos" renamed to "tasks" in v5 — renamedFrom triggers a cursor
+        // migration: all records are copied from "todos" → "tasks" and the
+        // old store is deleted. Safe to re-run: guard is inside IndexedDBStorage.
         {
-          name: "todos",
+          name: "tasks",
           keyPath: "id",
+          renamedFrom: "todos",
           indexes: [
             { name: "status",   keyPath: "status" },
             { name: "priority", keyPath: "priority" },
@@ -135,7 +141,7 @@ async function init() {
   } catch {
     // Fallback for environments without IndexedDB
     const memStorage = new MemoryStorage([
-      { name: "todos",     keyPath: "id" },
+      { name: "tasks",     keyPath: "id" },
       { name: "views",     keyPath: "id" },
       { name: "calendars", keyPath: "id" },
       { name: "events",    keyPath: "id" },
@@ -151,7 +157,7 @@ async function init() {
   //
   // Load from all stores in parallel for performance.
   const [rawTasks, views, calendars, projects, edges] = await Promise.all([
-    storage.getAll<Task>("todos"),
+    storage.getAll<Task>("tasks"),
     storage.getAll<SavedView>("views"),
     storage.getAll<CalendarSettings>("calendars"),
     storage.getAll<Project>("projects"),
