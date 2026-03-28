@@ -146,7 +146,7 @@ func run() int {
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
 	emitPlan := flag.String("emit-plan", "", "Write build plan JSON to this path (used by CI detect job)")
 	planFile := flag.String("plan-file", "", "Read build plan JSON, skip discovery/resolution/diff (used by CI build job)")
-	validateBuildFiles := flag.Bool("validate-build-files", false, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
+	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
 
 	flag.Parse()
 

@@ -348,8 +348,10 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 // Elixir mix.exs declares internal path dependencies usually like:
 //
 //	{:coding_adventures_logic_gates, path: "../logic-gates"}
+//	{:csv_parser, path: "../csv_parser"}
 //
-// We use a regex to capture the atom name starting with `coding_adventures_`.
+// We capture the dependency atom for path-based local deps, regardless of
+// whether it uses the conventional `coding_adventures_` prefix.
 func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	mixExs := filepath.Join(pkg.Path, "mix.exs")
 	data, err := os.ReadFile(mixExs)
@@ -360,7 +362,7 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 	text := string(data)
 	var internalDeps []string
 
-	re := regexp.MustCompile(`\{:(coding_adventures_[a-z0-9_]+)`)
+	re := regexp.MustCompile(`\{:([a-z0-9_]+),\s*path:\s*"[^"]+"`)
 	for _, line := range strings.Split(text, "\n") {
 		trimmed := strings.TrimSpace(line)
 		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
@@ -625,8 +627,19 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 
 		case "elixir":
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
-			appName := "coding_adventures_" + strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
+			baseName := strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
+			appName := "coding_adventures_" + baseName
 			setKnown(appName, pkg.Name, pkg.Path)
+			setKnown(baseName, pkg.Name, pkg.Path)
+
+			mixExs := filepath.Join(pkg.Path, "mix.exs")
+			data, err := os.ReadFile(mixExs)
+			if err == nil {
+				re := regexp.MustCompile(`app:\s*:([a-z0-9_]+)`)
+				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
+					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path)
+				}
+			}
 
 		case "lua":
 			// Lua rockspec names use hyphens: "logic_gates" → "coding-adventures-logic-gates"

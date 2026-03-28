@@ -1,3 +1,2 @@
-bundle config set path vendor/bundle
-bundle install --quiet --full-index
-bundle exec rake test
+gem install minitest simplecov rake --quiet
+ruby -S rake test

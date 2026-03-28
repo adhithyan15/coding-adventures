@@ -1,11 +1,13 @@
 uv venv --quiet --clear
-uv pip install -e ../directed-graph --quiet
-uv pip install -e ../state-machine --quiet
-uv pip install -e ".[dev]" --quiet
-uv pip install -e "../cpu-pipeline[dev]" --quiet
-uv pip install -e "../cache[dev]" --quiet
-uv pip install -e "../branch-predictor[dev]" --quiet
-uv pip install -e "../hazard-detection[dev]" --quiet
-uv pip install -e "../clock[dev]" --quiet
-uv pip install -e "../cpu-simulator[dev]" --quiet
-.venv/bin/python -m pytest tests/ -v
+uv pip install --no-deps -e ../directed-graph --quiet
+uv pip install --no-deps -e ../state-machine --quiet
+uv pip install --no-deps -e ../branch-predictor --quiet
+uv pip install --no-deps -e ../hazard-detection --quiet
+uv pip install --no-deps -e ../clock --quiet
+uv pip install --no-deps -e ../cache --quiet
+uv pip install --no-deps -e ../arithmetic --quiet
+uv pip install --no-deps -e ../cpu-simulator --quiet
+uv pip install --no-deps -e ../cpu-pipeline --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov ruff mypy --quiet
+uv run --no-project python -m pytest tests/ -v
