@@ -1282,6 +1282,29 @@ describe("App", () => {
 });
 `;
 
+  // =========================================================================
+  // Scaffolding: GitIgnore
+  // =========================================================================
+  // The .gitignore file ensures that any build artifacts or local dependency
+  // caches (such as .npm-cache) are not erroneously committed by the user.
+  //
+  // +-----------------+       +-------------------+       +-----------------+
+  // |  node_modules/  |       |  Playwright E2E   |       | Electron Build  |
+  // |  .npm-cache/    | ----> |  test-results/    | ----> | dist/           |
+  // |                 |       |                   |       | release/        |
+  // +-----------------+       +-------------------+       +-----------------+
+  //
+  const gitignore = `node_modules/
+dist/
+dist-electron/
+release/
+.npm-cache/
+.DS_Store
+test-results/
+playwright-report/
+blob-report/
+`;
+
   const build = "npm ci --quiet\\nnpx vitest run --coverage\\n";
 
   fs.mkdirSync(path.join(targetDir, "src", "__tests__"), { recursive: true });
@@ -1300,6 +1323,7 @@ describe("App", () => {
   writeFile(path.join(targetDir, "electron", "main.ts"), electronMainTs);
   writeFile(path.join(targetDir, "electron", "tsconfig.json"), electronTsConfig);
   writeFile(path.join(targetDir, "e2e", "app.spec.ts"), e2eTest);
+  writeFile(path.join(targetDir, ".gitignore"), gitignore);
   writeFile(path.join(targetDir, "BUILD"), build);
 }
 
