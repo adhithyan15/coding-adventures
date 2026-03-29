@@ -296,14 +296,12 @@ function AriaOverlay<T>({
   columns,
   data,
   colLayouts,
-  rowCount,
   getCellTabIndex,
   setFocusedCell,
 }: {
   columns: ColumnDef<T>[];
   data: T[];
   colLayouts: ColumnLayout[];
-  rowCount: number;
   getCellTabIndex: (row: number, col: number) => 0 | -1;
   setFocusedCell: (pos: { row: number; col: number }) => void;
 }): ReactNode {
@@ -390,7 +388,7 @@ export function CanvasTable<T>({
   // Total rows = 1 header + data.length body rows
   const totalRows = 1 + data.length;
 
-  const { focusedCell, setFocusedCell, onKeyDown, getCellTabIndex } =
+  const { setFocusedCell, onKeyDown, getCellTabIndex } =
     useGridKeyboard({
       rowCount: totalRows,
       colCount: columns.length,
@@ -401,14 +399,6 @@ export function CanvasTable<T>({
 
   // Compute column layout (memoized by reference)
   const colLayouts = computeColumnLayout(columns, widthRef.current);
-
-  // Canvas width is the sum of all column widths (at minimum the container)
-  const totalContentWidth = colLayouts.reduce(
-    (sum, l) => sum + l.width,
-    0,
-  );
-  const canvasLogicalWidth = Math.max(totalContentWidth, widthRef.current);
-  const canvasLogicalHeight = ROW_HEIGHT + data.length * ROW_HEIGHT;
 
   // ---------------------------------------------------------------------------
   // Resize observer
@@ -492,7 +482,6 @@ export function CanvasTable<T>({
         columns={columns}
         data={data}
         colLayouts={overlayLayouts}
-        rowCount={totalRows}
         getCellTabIndex={getCellTabIndex}
         setFocusedCell={setFocusedCell}
       />
