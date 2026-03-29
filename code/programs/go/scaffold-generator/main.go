@@ -52,7 +52,7 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift"}
 
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
@@ -127,6 +127,8 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readPerlDeps(pkgDir)
 	case "lua":
 		return readLuaDeps(pkgDir)
+	case "swift":
+		return readSwiftDeps(pkgDir)
 	default:
 		return nil, fmt.Errorf("unknown language: %s", lang)
 	}
@@ -358,6 +360,24 @@ func readLuaDeps(pkgDir string) ([]string, error) {
 	re := regexp.MustCompile(`"coding-adventures-([a-z0-9-]+)\s*>=`)
 	var deps []string
 	for _, line := range strings.Split(string(rockspecData), "\n") {
+		m := re.FindStringSubmatch(line)
+		if len(m) == 2 {
+			deps = append(deps, m[1])
+		}
+	}
+	return deps, nil
+}
+
+// readSwiftDeps reads Package.swift for .package(path: "../dep-name") entries.
+func readSwiftDeps(pkgDir string) ([]string, error) {
+	manifestPath := filepath.Join(pkgDir, "Package.swift")
+	data, err := os.ReadFile(manifestPath)
+	if err != nil {
+		return nil, nil // no Package.swift = no deps
+	}
+	re := regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\./([^"]+)"`)
+	var deps []string
+	for _, line := range strings.Split(string(data), "\n") {
 		m := re.FindStringSubmatch(line)
 		if len(m) == 2 {
 			deps = append(deps, m[1])
@@ -1398,6 +1418,179 @@ end)
 }
 
 // =========================================================================
+// Swift
+// =========================================================================
+//
+// Swift Package Manager (SPM) is the official build tool shipped with Swift.
+// Package structure:
+//
+//   my-package/
+//   ├── BUILD                         # swift test --enable-code-coverage --verbose
+//   ├── Package.swift                 # SPM manifest
+//   ├── Sources/MyPackage/MyPackage.swift
+//   └── Tests/MyPackageTests/MyPackageTests.swift
+//
+// Naming: directory = kebab-case; target = PascalCase; no namespace prefix.
+// The same BUILD command works on macOS, Linux, and Windows.
+
+func generateSwift(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	pascal := toCamelCase(pkgName)
+
+	// -----------------------------------------------------------------------
+	// BUILD — identical regardless of dependency count.
+	// SPM resolves local path deps automatically from Package.swift.
+	// -----------------------------------------------------------------------
+	build := "swift test --enable-code-coverage --verbose\n"
+
+	// -----------------------------------------------------------------------
+	// Package.swift
+	// -----------------------------------------------------------------------
+	var pkg strings.Builder
+	pkg.WriteString("// swift-tools-version: 5.9\n")
+	pkg.WriteString("// ============================================================================\n")
+	fmt.Fprintf(&pkg, "// Package.swift — %s\n", description)
+	pkg.WriteString("// ============================================================================\n")
+	pkg.WriteString("//\n")
+	pkg.WriteString("// This is the Swift Package Manager manifest for this package.\n")
+	pkg.WriteString("// It is part of the coding-adventures project, an educational computing stack\n")
+	pkg.WriteString("// built from logic gates up through interpreters and compilers.\n")
+	pkg.WriteString("//\n")
+	pkg.WriteString("// Local monorepo dependencies are declared via relative path references so\n")
+	pkg.WriteString("// that SPM resolves them from the local filesystem.\n")
+	pkg.WriteString("//\n")
+	pkg.WriteString("import PackageDescription\n\n")
+	pkg.WriteString("let package = Package(\n")
+	fmt.Fprintf(&pkg, "    name: %q,\n", pkgName)
+	pkg.WriteString("    products: [\n")
+	fmt.Fprintf(&pkg, "        .library(name: %q, targets: [%q]),\n", pascal, pascal)
+	pkg.WriteString("    ],\n")
+
+	if len(directDeps) > 0 {
+		pkg.WriteString("    dependencies: [\n")
+		for _, dep := range directDeps {
+			fmt.Fprintf(&pkg, "        .package(path: \"../%s\"),\n", dep)
+		}
+		pkg.WriteString("    ],\n")
+	}
+
+	pkg.WriteString("    targets: [\n")
+	pkg.WriteString("        .target(\n")
+	fmt.Fprintf(&pkg, "            name: %q", pascal)
+	if len(directDeps) > 0 {
+		pkg.WriteString(",\n            dependencies: [\n")
+		for _, dep := range directDeps {
+			depPascal := toCamelCase(dep)
+			fmt.Fprintf(&pkg, "                .product(name: %q, package: %q),\n", depPascal, dep)
+		}
+		pkg.WriteString("            ]")
+	}
+	pkg.WriteString("\n        ),\n")
+	pkg.WriteString("        .testTarget(\n")
+	fmt.Fprintf(&pkg, "            name: %q,\n", pascal+"Tests")
+	fmt.Fprintf(&pkg, "            dependencies: [%q]\n", pascal)
+	pkg.WriteString("        ),\n")
+	pkg.WriteString("    ]\n")
+	pkg.WriteString(")\n")
+
+	// -----------------------------------------------------------------------
+	// Sources/<Pascal>/<Pascal>.swift
+	// -----------------------------------------------------------------------
+	layerComment := ""
+	if layerCtx != "" {
+		layerComment = fmt.Sprintf("// %s\n//\n", layerCtx)
+	}
+	var depImports strings.Builder
+	for _, dep := range directDeps {
+		fmt.Fprintf(&depImports, "import %s\n", toCamelCase(dep))
+	}
+	sourceSuffix := ""
+	if depImports.Len() > 0 {
+		sourceSuffix = depImports.String() + "\n"
+	}
+	sourceSwift := fmt.Sprintf(`// %s.swift
+// Part of coding-adventures — an educational computing stack built from
+// logic gates up through interpreters and compilers.
+//
+// ============================================================================
+// %s — %s
+// ============================================================================
+//
+%s// Usage:
+//
+//   import %s
+//
+// ============================================================================
+
+%s/// %s is the primary type exported by this module.
+///
+/// TODO: Replace this stub with the real implementation.
+public struct %s {
+    /// Creates a new %s instance.
+    public init() {}
+}
+`, pascal, pascal, description, layerComment, pascal, sourceSuffix, pascal, pascal, pascal)
+
+	// -----------------------------------------------------------------------
+	// Tests/<Pascal>Tests/<Pascal>Tests.swift
+	// -----------------------------------------------------------------------
+	testSwift := fmt.Sprintf(`import XCTest
+@testable import %s
+
+/// %sTests — unit tests for the %s module.
+///
+/// These are stub tests generated by the scaffold generator.
+/// Replace them with real tests that exercise the actual implementation.
+final class %sTests: XCTestCase {
+
+    /// Verifies the module loads and its primary type can be instantiated.
+    func testModuleLoads() {
+        // This test confirms that the module compiles and its public API
+        // is accessible. Replace it with meaningful tests.
+        let _ = %s()
+        XCTAssertTrue(true, "%s instantiated successfully")
+    }
+}
+`, pascal, pascal, pascal, pascal, pascal, pascal)
+
+	// -----------------------------------------------------------------------
+	// required_capabilities.json
+	// -----------------------------------------------------------------------
+	capJSON := fmt.Sprintf(`{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "swift/%s",
+  "capabilities": [],
+  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+}
+`, pkgName)
+
+	// -----------------------------------------------------------------------
+	// Write all files
+	// -----------------------------------------------------------------------
+	sourcePath := filepath.Join("Sources", pascal, pascal+".swift")
+	testPath := filepath.Join("Tests", pascal+"Tests", pascal+"Tests.swift")
+
+	files := map[string]string{
+		"BUILD":                    build,
+		"Package.swift":            pkg.String(),
+		sourcePath:                 sourceSwift,
+		testPath:                   testSwift,
+		"required_capabilities.json": capJSON,
+	}
+
+	for path, content := range files {
+		fullPath := filepath.Join(targetDir, path)
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(fullPath, []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// =========================================================================
 // Common files (README, CHANGELOG)
 // =========================================================================
 
@@ -1605,6 +1798,10 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		}
 	case "lua":
 		if err := generateLua(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
+			return err
+		}
+	case "swift":
+		if err := generateSwift(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
 			return err
 		}
 	}

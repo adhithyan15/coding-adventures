@@ -528,6 +528,46 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 	return internalDeps
 }
 
+// parseSwiftDeps extracts internal dependencies from a Swift Package.swift file.
+//
+// Swift Package Manager uses relative path references for local (monorepo)
+// dependencies. The declaration always appears on a single line in
+// scaffold-generated files:
+//
+//	.package(path: "../logic-gates"),
+//
+// We scan for this pattern and map the directory name back to our internal
+// package name. External dependencies (declared with `url:`) are silently
+// skipped because they don't match the `path: "../"` prefix.
+func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	manifest := filepath.Join(pkg.Path, "Package.swift")
+	data, err := os.ReadFile(manifest)
+	if err != nil {
+		return nil
+	}
+
+	// Match: .package(path: "../logic-gates"),
+	// Captures the directory name: "logic-gates"
+	re := regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\.\/([^"]+)"`)
+
+	var internalDeps []string
+	for _, line := range strings.Split(string(data), "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "//") {
+			continue
+		}
+		matches := re.FindStringSubmatch(trimmed)
+		if len(matches) >= 2 {
+			depDir := strings.ToLower(matches[1])
+			if pkgName, ok := knownNames[depDir]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -653,6 +693,13 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// This matches the Python convention exactly.
 			cpanName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(cpanName, pkg.Name, pkg.Path)
+
+		case "swift":
+			// Swift SPM package names are the kebab-case directory name, matching
+			// the `name:` field in Package.swift. .package(path: "../logic-gates")
+			// references the directory name "logic-gates" directly.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path)
 		}
 	}
 
@@ -706,6 +753,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseLuaDeps(pkg, knownNames)
 		case "perl":
 			deps = parsePerlDeps(pkg, knownNames)
+		case "swift":
+			deps = parseSwiftDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

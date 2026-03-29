@@ -20,7 +20,7 @@
       "id": "language",
       "short": "l",
       "long": "language",
-      "description": "Target language(s). Comma-separated or 'all' for all 6 languages",
+      "description": "Target language(s). Comma-separated or 'all' for all 9 languages: python, go, ruby, typescript, rust, elixir, perl, lua, swift",
       "type": "string",
       "default": "all"
     },
