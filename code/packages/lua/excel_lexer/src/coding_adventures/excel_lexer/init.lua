@@ -242,13 +242,20 @@ end
 --   -- tokens[2].type  → "CELL"
 --   -- tokens[2].value → "a1"   (lowercased)
 function M.tokenize(source)
-    local grammar = get_grammar()
-    -- Normalize to lowercase to handle Excel's case-insensitivity.
-    -- excel.tokens has @case_insensitive true; since the GrammarLexer uses
-    -- case-sensitive Lua patterns, we pre-lowercase the input.
+    local grammar    = get_grammar()
     local normalized = source:lower()
-    local gl = lexer_pkg.GrammarLexer.new(normalized, grammar)
-    return gl:tokenize()
+    local gl         = lexer_pkg.GrammarLexer.new(normalized, grammar)
+    local raw        = gl:tokenize()
+    local tokens     = {}
+    for _, tok in ipairs(raw) do
+        tokens[#tokens + 1] = {
+            type  = tok.type_name,
+            value = tok.value,
+            line  = tok.line,
+            col   = tok.column,
+        }
+    end
+    return tokens
 end
 
 --- Return the cached (or freshly loaded) TokenGrammar for Excel formulas.

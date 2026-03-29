@@ -203,7 +203,19 @@ end
 function M.tokenize(source)
     local grammar = get_grammar()
     local gl      = lexer_pkg.GrammarLexer.new(source, grammar)
-    return gl:tokenize()
+    local raw     = gl:tokenize()
+    local tokens  = {}
+    for _, tok in ipairs(raw) do
+        if tok.type_name ~= "NEWLINE" then
+            tokens[#tokens + 1] = {
+                type  = tok.type_name,
+                value = tok.value,
+                line  = tok.line,
+                col   = tok.column,
+            }
+        end
+    end
+    return tokens
 end
 
 --- Return the cached (or freshly loaded) TokenGrammar for Ruby.
