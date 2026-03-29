@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-29
+
+### Added
+
+- `CMOSXnor` gate (`CMOSGates.swift`): XNOR implemented as XOR followed by an Inverter.
+  Transistor count = `CMOSXor.transistorCount + 2` (14 transistors at runtime).
+  Exposes `evaluate(va:vb:) -> GateOutput` and `evaluateDigital(_:_:) -> Int`.
+- `CMOSXnorTests` (`TransistorsTests.swift`): truth table (all 4 input combinations),
+  analog evaluation, and transistor count assertion.
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

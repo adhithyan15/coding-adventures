@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-03-29
+
+### Changed
+
+- **XOR now delegates to `cmos_xor`**: The inline 4-NAND construction previously
+  embedded in `XOR` is now provided by `cmos_xor` in the transistors package.
+  The logic-gates `XOR` sub simply calls `cmos_xor($a, $b)`.
+- **XNOR now delegates to `cmos_xnor`**: Previously called `cmos_not(XOR($a, $b))`;
+  now calls `cmos_xnor($a, $b)` directly from the transistors package.
+- **Updated import**: `use CodingAdventures::Transistors` now imports
+  `cmos_xor` and `cmos_xnor` in addition to the existing five functions.
+
 ## [0.2.0] - 2026-03-28
 
 ### Changed

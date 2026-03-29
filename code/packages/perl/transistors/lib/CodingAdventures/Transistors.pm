@@ -84,7 +84,7 @@ our $VERSION = '0.01';
 use Exporter 'import';
 our @EXPORT_OK = qw(
     nmos  pmos  npn  pnp
-    cmos_not  cmos_nand  cmos_nor  cmos_and  cmos_or
+    cmos_not  cmos_nand  cmos_nor  cmos_and  cmos_or  cmos_xor  cmos_xnor
     ttl_not   ttl_nand
     MOSFET_CUTOFF  MOSFET_LINEAR  MOSFET_SATURATION
     BJT_CUTOFF     BJT_ACTIVE     BJT_SATURATION
@@ -499,6 +499,60 @@ sub cmos_or {
     die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
     die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
     return cmos_not( cmos_nor( $a, $b ) );
+}
+
+# cmos_xor — CMOS XOR gate (built from 4 NAND gates).
+#
+# ## Circuit (16 transistors — 4 NAND gates of 4 transistors each)
+#
+# The 4-NAND construction for XOR:
+#   Let C  = NAND(A, B)           # middle NAND
+#   Let D  = NAND(A, C)           # upper NAND
+#   Let E  = NAND(B, C)           # lower NAND
+#   XOR    = NAND(D, E)           # output NAND
+#
+# Truth table:
+#   A | B | XOR
+#   --|---|----
+#   0 | 0 |  0
+#   0 | 1 |  1
+#   1 | 0 |  1
+#   1 | 1 |  0
+#
+# @param  $a, $b   Inputs (0 or 1).
+# @return          0 or 1.
+
+sub cmos_xor {
+    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
+    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    # 4-NAND XOR construction:
+    my $c = cmos_nand( $a, $b );                  # NAND(A, B)
+    my $d = cmos_nand( $a, $c );                  # NAND(A, NAND(A,B))
+    my $e = cmos_nand( $b, $c );                  # NAND(B, NAND(A,B))
+    return cmos_nand( $d, $e );                   # NAND(D, E)
+}
+
+# cmos_xnor — CMOS XNOR gate (XOR followed by Inverter = 18 transistors).
+#
+# XNOR(A, B) = NOT(XOR(A, B))
+#
+# Truth table:
+#   A | B | XNOR
+#   --|---|-----
+#   0 | 0 |  1    (same — equal)
+#   0 | 1 |  0    (different)
+#   1 | 0 |  0    (different)
+#   1 | 1 |  1    (same — equal)
+#
+# @param  $a, $b   Inputs (0 or 1).
+# @return          0 or 1.
+
+sub cmos_xnor {
+    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
+    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    return cmos_not( cmos_xor( $a, $b ) );
 }
 
 # ============================================================================

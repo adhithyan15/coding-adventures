@@ -291,6 +291,32 @@ final class CMOSXorTests: XCTestCase {
     }
 }
 
+final class CMOSXnorTests: XCTestCase {
+    func testTruthTable() {
+        let gate = CMOSXnor()
+        XCTAssertEqual(gate.evaluateDigital(0, 0), 1) // same → 1
+        XCTAssertEqual(gate.evaluateDigital(0, 1), 0) // different → 0
+        XCTAssertEqual(gate.evaluateDigital(1, 0), 0) // different → 0
+        XCTAssertEqual(gate.evaluateDigital(1, 1), 1) // same → 1
+    }
+
+    func testAnalogEvaluation() {
+        let gate = CMOSXnor()
+        let out00 = gate.evaluate(va: 0.0, vb: 0.0)
+        XCTAssertEqual(out00.logicValue, 1)
+        let out11 = gate.evaluate(va: 1.8, vb: 1.8)
+        XCTAssertEqual(out11.logicValue, 1)
+        let out01 = gate.evaluate(va: 0.0, vb: 1.8)
+        XCTAssertEqual(out01.logicValue, 0)
+    }
+
+    func testTransistorCount() {
+        let gate = CMOSXnor()
+        let out = gate.evaluate(va: 0.0, vb: 0.0)
+        XCTAssertGreaterThan(out.transistorCount, 0)
+    }
+}
+
 // MARK: - TTL Gate Tests
 
 final class TTLNandTests: XCTestCase {

@@ -434,3 +434,56 @@ public struct CMOSXor {
         return evaluate(va: va, vb: vb).logicValue
     }
 }
+
+// ============================================================================
+// CMOS XNOR Gate — XOR followed by an Inverter
+// ============================================================================
+//
+// XNOR(A, B) = NOT(XOR(A, B))
+//
+// Truth table:
+//
+//   A | B | XNOR
+//   --|---|-----
+//   0 | 0 |  1    (same — equal)
+//   0 | 1 |  0    (different)
+//   1 | 0 |  0    (different)
+//   1 | 1 |  1    (same — equal)
+//
+// Transistor count: CMOSXor transistorCount + 2 (XOR + Inverter).
+// XNOR is the "equivalence" gate — it answers "are A and B equal?"
+//
+public struct CMOSXnor {
+
+    let circuit: CircuitParams
+    private let xorGate: CMOSXor
+    private let inverter: CMOSInverter
+
+    public init(circuit: CircuitParams = .cmos18) {
+        self.circuit = circuit
+        self.xorGate = CMOSXor(circuit: circuit)
+        self.inverter = CMOSInverter(circuit: circuit)
+    }
+
+    /// Evaluates XNOR using XOR followed by an Inverter.
+    public func evaluate(va: Double, vb: Double) -> GateOutput {
+        let xorOut = xorGate.evaluate(va: va, vb: vb)
+        let result = inverter.evaluate(inputVoltage: xorOut.voltage)
+        let totalCurrent = xorOut.currentDraw + result.currentDraw
+        return GateOutput(
+            logicValue: result.logicValue,
+            voltage: result.voltage,
+            currentDraw: totalCurrent,
+            powerDissipation: totalCurrent * circuit.vdd,
+            propagationDelay: xorOut.propagationDelay + result.propagationDelay,
+            transistorCount: xorOut.transistorCount + 2
+        )
+    }
+
+    /// Evaluates XNOR with digital (0/1) inputs.
+    public func evaluateDigital(_ a: Int, _ b: Int) -> Int {
+        let va = a == 1 ? circuit.vdd : 0.0
+        let vb = b == 1 ? circuit.vdd : 0.0
+        return evaluate(va: va, vb: vb).logicValue
+    }
+}

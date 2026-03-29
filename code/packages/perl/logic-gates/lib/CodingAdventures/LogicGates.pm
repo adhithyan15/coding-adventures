@@ -65,17 +65,14 @@ our $VERSION = '0.02';
 # computation through a transistor physics simulation rather than using
 # Perl's native bitwise operators.
 #
-#   cmos_not(a)    — 2 transistors (CMOS inverter)
-#   cmos_nand(a,b) — 4 transistors (natural CMOS primitive)
-#   cmos_nor(a,b)  — 4 transistors (natural CMOS primitive)
-#   cmos_and(a,b)  — 6 transistors (NAND + inverter)
-#   cmos_or(a,b)   — 6 transistors (NOR + inverter)
-#
-# Note: the transistors package does not have a cmos_xor function.
-# XOR is implemented here using the 4-NAND construction:
-#   let C = cmos_nand(A, B)
-#   XOR(A, B) = cmos_nand(cmos_nand(A, C), cmos_nand(B, C))
-use CodingAdventures::Transistors qw(cmos_not cmos_nand cmos_nor cmos_and cmos_or);
+#   NOT  → cmos_not(a)       (2 transistors: CMOS inverter)
+#   NAND → cmos_nand(a, b)   (4 transistors: natural CMOS primitive)
+#   NOR  → cmos_nor(a, b)    (4 transistors: natural CMOS primitive)
+#   AND  → cmos_and(a, b)    (6 transistors: NAND + inverter)
+#   OR   → cmos_or(a, b)     (6 transistors: NOR + inverter)
+#   XOR  → cmos_xor(a, b)    (16 transistors: 4 NAND gates)
+#   XNOR → cmos_xnor(a, b)   (18 transistors: XOR + inverter)
+use CodingAdventures::Transistors qw(cmos_not cmos_nand cmos_nor cmos_and cmos_or cmos_xor cmos_xnor);
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
@@ -211,12 +208,8 @@ sub XOR {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    # The transistors package has no cmos_xor function, so we construct
-    # XOR from 4 NAND gates (the standard CMOS XOR cell):
-    #   let C = NAND(A, B)
-    #   XOR(A, B) = NAND(NAND(A, C), NAND(B, C))
-    my $c = cmos_nand( $a, $b );
-    return cmos_nand( cmos_nand( $a, $c ), cmos_nand( $b, $c ) );
+    # Delegate to cmos_xor — the CMOS 4-NAND XOR construction (16 transistors).
+    return cmos_xor( $a, $b );
 }
 
 # NAND — returns 0 only when BOTH inputs are 1.
@@ -294,8 +287,8 @@ sub XNOR {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    # XNOR = NOT(XOR(a, b)). Route through the transistors-backed NOT and XOR.
-    return cmos_not( XOR( $a, $b ) );
+    # Delegate to cmos_xnor — XOR followed by an inverter (18 transistors).
+    return cmos_xnor( $a, $b );
 }
 
 # ============================================================================
