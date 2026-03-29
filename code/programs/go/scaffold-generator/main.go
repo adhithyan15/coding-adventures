@@ -1195,17 +1195,19 @@ MIT
 `, camel, camel, description, layerLine, camel, depImports.String(), camel, camel, description, camel, description)
 
 	// t/00-load.t
+	// Note: Test2::V0 does NOT export use_ok (that is a Test::More function).
+	// Use eval { require ... } instead, which works with Test2::V0.
 	loadT := fmt.Sprintf(`use strict;
 use warnings;
 use Test2::V0;
 
-use_ok('CodingAdventures::%s');
+ok( eval { require CodingAdventures::%s; 1 }, 'CodingAdventures::%s loads' );
 
 # Verify the module exports a version number.
 ok(CodingAdventures::%s->VERSION, 'has a VERSION');
 
 done_testing;
-`, camel, camel)
+`, camel, camel, camel)
 
 	// t/01-basic.t
 	basicT := fmt.Sprintf(`use strict;
@@ -1221,12 +1223,19 @@ done_testing;
 `, camel, camel)
 
 	// BUILD — install transitive deps leaf-first, then this package, then test
+	// Note: cpanm on Strawberry Perl (Windows) does NOT support --with-test.
+	// Use plain --installdeps which reads Makefile.PL and cpanfile sections.
 	var build strings.Builder
 	for _, dep := range orderedDeps {
-		fmt.Fprintf(&build, "cd ../%s && cpanm --with-test --installdeps --quiet .\n", dep)
+		fmt.Fprintf(&build, "cd ../%s && cpanm --installdeps --quiet .\n", dep)
 	}
-	build.WriteString("cpanm --with-test --installdeps --quiet .\n")
+	build.WriteString("cpanm --installdeps --quiet .\n")
 	build.WriteString("prove -l -v t/\n")
+
+	// BUILD_windows — Perl is not tested on Windows CI (setup step skips it).
+	// A no-op BUILD_windows prevents the build-tool from falling back to BUILD
+	// and failing with "Unknown option: --with-test" on Strawberry Perl.
+	buildWindows := "echo Perl testing is not supported on Windows - skipping\n"
 
 	// Create directories
 	libDir := filepath.Join(targetDir, "lib", "CodingAdventures")
@@ -1245,6 +1254,7 @@ done_testing;
 		filepath.Join("t", "00-load.t"):                       loadT,
 		filepath.Join("t", "01-basic.t"):                      basicT,
 		"BUILD":                                                build.String(),
+		"BUILD_windows":                                        buildWindows,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {

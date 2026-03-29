@@ -975,3 +975,15 @@ case. The BUILD file for Lua only contains:
 cd tests && busted . --verbose --pattern=test_
 ```
 Dep installation is handled by CI's luarocks commands, not the BUILD file.
+
+---
+
+### 2026-03-28: Perl BUILD files — cpanm --with-test is NOT valid on Strawberry Perl (Windows)
+
+The scaffold generator initially generated BUILD files with `cpanm --with-test --installdeps --quiet .`.
+This fails on Windows CI with Strawberry Perl because `--with-test` is a `cpm` option, NOT a `cpanm` option.
+Use `cpanm --installdeps --quiet .` instead.
+
+Also: Perl packages need a `BUILD_windows` file that is a no-op (`echo Perl testing is not supported on Windows - skipping`)
+because the CI workflow skips Perl setup on Windows (`if: runner.os != 'Windows'`). Without BUILD_windows,
+the build-tool falls back to BUILD and runs cpanm on Strawberry Perl, which fails.
