@@ -910,3 +910,80 @@ raises `NameError: uninitialized constant CodingAdventures::StarlarkVm`.
 
 Always verify the exact module constant name by reading the gem's entry point
 file (`lib/coding_adventures_starlark_vm.rb`) before referencing it.
+
+---
+
+### 2026-03-28: Lua test files need package.path setup for local src/ directory
+
+When running `busted . --verbose` from the `tests/` subdirectory, Lua cannot
+find modules in the `src/` directory because it's not in `package.path`.
+Always add this at the top of every Lua test file (before the first `require`):
+
+```lua
+package.path = "../src/?.lua;" .. "../src/?/init.lua;" .. package.path
+```
+
+This pattern was established by the existing arithmetic package. Every new
+Lua test file must include it.
+
+---
+
+### 2026-03-28: Perl Test2::V0 does not export use_ok — use eval+require instead
+
+The `t/00-load.t` scaffold uses `use_ok('Module::Name')`, which is a
+`Test::More` function not available in `Test2::V0`. This causes the test to
+fail with a "No plan found in TAP output" error.
+
+Fix: replace `use_ok(...)` with:
+```perl
+ok( eval { require Module::Name; 1 }, 'Module::Name loads' );
+```
+
+---
+
+### 2026-03-28: Perl bitwise NOT needs 0xFFFFFFFF mask on 64-bit systems
+
+Perl's `~$x` produces a 64-bit bitwise complement on 64-bit platforms.
+For 32-bit arithmetic (MD5, bitset, etc.), always mask after NOT:
+```perl
+(~$x) & 0xFFFFFFFF
+```
+Without the mask, `~0` = 18446744073709551615 (0xFFFFFFFFFFFFFFFF), not 0xFFFFFFFF.
+
+---
+
+### 2026-03-28: Perl >> on negative integers is NOT arithmetic right shift
+
+In Perl, `$x >> 7` on a negative integer does NOT sign-extend. For signed
+LEB128 encoding (and other algorithms needing arithmetic shift), use:
+```perl
+use POSIX 'floor';
+$remaining = floor($remaining / 128.0);
+```
+Or equivalently: `int(($remaining - ($remaining % 128)) / 128)` with careful
+sign handling. Test with -1: `(-1 >> 7)` in Perl is a large positive number,
+not -1.
+
+---
+
+### 2026-03-28: Lua scaffold generator support — snake_case directories
+
+Lua packages use snake_case directory names (like Ruby/Elixir), not kebab-case.
+The scaffold generator's `dirName()` now includes `"lua"` in the snake_case
+case. The BUILD file for Lua only contains:
+```
+cd tests && busted . --verbose --pattern=test_
+```
+Dep installation is handled by CI's luarocks commands, not the BUILD file.
+
+---
+
+### 2026-03-28: Perl BUILD files — cpanm --with-test is NOT valid on Strawberry Perl (Windows)
+
+The scaffold generator initially generated BUILD files with `cpanm --with-test --installdeps --quiet .`.
+This fails on Windows CI with Strawberry Perl because `--with-test` is a `cpm` option, NOT a `cpanm` option.
+Use `cpanm --installdeps --quiet .` instead.
+
+Also: Perl packages need a `BUILD_windows` file that is a no-op (`echo Perl testing is not supported on Windows - skipping`)
+because the CI workflow skips Perl setup on Windows (`if: runner.os != 'Windows'`). Without BUILD_windows,
+the build-tool falls back to BUILD and runs cpanm on Strawberry Perl, which fails.

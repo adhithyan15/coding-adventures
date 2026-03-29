@@ -655,13 +655,16 @@ func TestGeneratePerl(t *testing.T) {
 		t.Error("module missing dep import")
 	}
 
-	// t/00-load.t has use_ok
+	// t/00-load.t uses eval{require} (Test2::V0 does not export use_ok)
 	loadT, err := os.ReadFile(filepath.Join(tmpDir, "t", "00-load.t"))
 	if err != nil {
 		t.Fatalf("cannot read t/00-load.t: %v", err)
 	}
-	if !strings.Contains(string(loadT), "use_ok") {
-		t.Error("00-load.t missing use_ok")
+	if !strings.Contains(string(loadT), "require CodingAdventures::TestPkg") {
+		t.Error("00-load.t missing module require")
+	}
+	if !strings.Contains(string(loadT), "done_testing") {
+		t.Error("00-load.t missing done_testing")
 	}
 
 	// t/01-basic.t has done_testing
@@ -719,7 +722,7 @@ func TestGeneratePerlNoDeps(t *testing.T) {
 
 	build, _ := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
 	buildStr := string(build)
-	if !strings.Contains(buildStr, "cpanm --with-test --installdeps --quiet .") {
+	if !strings.Contains(buildStr, "cpanm --installdeps --quiet .") {
 		t.Error("BUILD missing cpanm install command")
 	}
 	if !strings.Contains(buildStr, "prove -l -v t/") {

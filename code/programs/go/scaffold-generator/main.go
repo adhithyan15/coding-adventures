@@ -52,7 +52,7 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua"}
 
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
@@ -88,10 +88,10 @@ func toJoinedLower(kebab string) string {
 }
 
 // dirName returns the directory name for a package in a given language.
-// Ruby and Elixir use snake_case directories; others use kebab-case.
+// Ruby, Elixir, and Lua use snake_case directories; others use kebab-case.
 func dirName(kebab, lang string) string {
 	switch lang {
-	case "ruby", "elixir":
+	case "ruby", "elixir", "lua":
 		return toSnakeCase(kebab)
 	default:
 		return kebab
@@ -125,6 +125,8 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readElixirDeps(pkgDir)
 	case "perl":
 		return readPerlDeps(pkgDir)
+	case "lua":
+		return readLuaDeps(pkgDir)
 	default:
 		return nil, fmt.Errorf("unknown language: %s", lang)
 	}
@@ -324,6 +326,38 @@ func readPerlDeps(pkgDir string) ([]string, error) {
 	re := regexp.MustCompile(`requires\s+['"]coding-adventures-([^'"]+)['"]`)
 	var deps []string
 	for _, line := range strings.Split(string(data), "\n") {
+		m := re.FindStringSubmatch(line)
+		if len(m) == 2 {
+			deps = append(deps, m[1])
+		}
+	}
+	return deps, nil
+}
+
+// readLuaDeps reads the rockspec for coding-adventures-* dependency entries.
+func readLuaDeps(pkgDir string) ([]string, error) {
+	// Find the rockspec file (coding-adventures-{name}-0.1.0-1.rockspec)
+	entries, err := os.ReadDir(pkgDir)
+	if err != nil {
+		return nil, nil
+	}
+	var rockspecData []byte
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".rockspec") {
+			rockspecData, err = os.ReadFile(filepath.Join(pkgDir, e.Name()))
+			if err != nil {
+				return nil, nil
+			}
+			break
+		}
+	}
+	if rockspecData == nil {
+		return nil, nil
+	}
+	// Parse lines like: "coding-adventures-logic-gates >= 0.1.0",
+	re := regexp.MustCompile(`"coding-adventures-([a-z0-9-]+)\s*>=`)
+	var deps []string
+	for _, line := range strings.Split(string(rockspecData), "\n") {
 		m := re.FindStringSubmatch(line)
 		if len(m) == 2 {
 			deps = append(deps, m[1])
@@ -1161,17 +1195,19 @@ MIT
 `, camel, camel, description, layerLine, camel, depImports.String(), camel, camel, description, camel, description)
 
 	// t/00-load.t
+	// Note: Test2::V0 does NOT export use_ok (that is a Test::More function).
+	// Use eval { require ... } instead, which works with Test2::V0.
 	loadT := fmt.Sprintf(`use strict;
 use warnings;
 use Test2::V0;
 
-use_ok('CodingAdventures::%s');
+ok( eval { require CodingAdventures::%s; 1 }, 'CodingAdventures::%s loads' );
 
 # Verify the module exports a version number.
 ok(CodingAdventures::%s->VERSION, 'has a VERSION');
 
 done_testing;
-`, camel, camel)
+`, camel, camel, camel)
 
 	// t/01-basic.t
 	basicT := fmt.Sprintf(`use strict;
@@ -1187,12 +1223,19 @@ done_testing;
 `, camel, camel)
 
 	// BUILD — install transitive deps leaf-first, then this package, then test
+	// Note: cpanm on Strawberry Perl (Windows) does NOT support --with-test.
+	// Use plain --installdeps which reads Makefile.PL and cpanfile sections.
 	var build strings.Builder
 	for _, dep := range orderedDeps {
-		fmt.Fprintf(&build, "cd ../%s && cpanm --with-test --installdeps --quiet .\n", dep)
+		fmt.Fprintf(&build, "cd ../%s && cpanm --installdeps --quiet .\n", dep)
 	}
-	build.WriteString("cpanm --with-test --installdeps --quiet .\n")
+	build.WriteString("cpanm --installdeps --quiet .\n")
 	build.WriteString("prove -l -v t/\n")
+
+	// BUILD_windows — Perl is not tested on Windows CI (setup step skips it).
+	// A no-op BUILD_windows prevents the build-tool from falling back to BUILD
+	// and failing with "Unknown option: --with-test" on Strawberry Perl.
+	buildWindows := "echo Perl testing is not supported on Windows - skipping\n"
 
 	// Create directories
 	libDir := filepath.Join(targetDir, "lib", "CodingAdventures")
@@ -1211,7 +1254,141 @@ done_testing;
 		filepath.Join("t", "00-load.t"):                       loadT,
 		filepath.Join("t", "01-basic.t"):                      basicT,
 		"BUILD":                                                build.String(),
+		"BUILD_windows":                                        buildWindows,
 	}
+	for path, content := range files {
+		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// =========================================================================
+// File generation — Lua
+// =========================================================================
+//
+// Lua packages follow this layout:
+//
+//   {snake_name}/
+//     coding-adventures-{kebab}-0.1.0-1.rockspec  — LuaRocks package metadata
+//     BUILD                                        — busted test runner command
+//     BUILD_windows                                — same (busted works on Windows)
+//     required_capabilities.json                   — capability declarations
+//     src/coding_adventures/{snake}/init.lua       — main module
+//     tests/test_{snake}.lua                       — test suite
+//
+// The BUILD file only needs one command:
+//   cd tests && busted . --verbose --pattern=test_
+//
+// LuaRocks dep install is handled by the CI workflow, not BUILD.
+
+func generateLua(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
+	snake := toSnakeCase(pkgName)
+
+	// rockspec
+	var rockspec strings.Builder
+	fmt.Fprintf(&rockspec, "package = %q\n", "coding-adventures-"+pkgName)
+	fmt.Fprintf(&rockspec, "version = \"0.1.0-1\"\n")
+	rockspec.WriteString("source = {\n    url = \"git://github.com/adhithyan15/coding-adventures.git\",\n}\n")
+	rockspec.WriteString("description = {\n")
+	fmt.Fprintf(&rockspec, "    summary = %q,\n", description)
+	rockspec.WriteString("    license = \"MIT\",\n}\n")
+	rockspec.WriteString("dependencies = {\n    \"lua >= 5.4\",\n")
+	for _, dep := range directDeps {
+		fmt.Fprintf(&rockspec, "    \"coding-adventures-%s >= 0.1.0\",\n", dep)
+	}
+	rockspec.WriteString("}\n")
+	rockspec.WriteString("build = {\n    type = \"builtin\",\n    modules = {\n")
+	fmt.Fprintf(&rockspec, "        [\"coding_adventures.%s\"] = \"src/coding_adventures/%s/init.lua\",\n", snake, snake)
+	rockspec.WriteString("    },\n}\n")
+
+	// BUILD — just the busted command
+	build := "cd tests && busted . --verbose --pattern=test_\n"
+
+	// required_capabilities.json
+	capJSON := fmt.Sprintf(`{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "lua/%s",
+  "capabilities": [],
+  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+}
+`, snake)
+
+	// src/coding_adventures/{snake}/init.lua
+	layerComment := ""
+	if layerCtx != "" {
+		layerComment = fmt.Sprintf("-- %s\n", layerCtx)
+	}
+	var depRequires strings.Builder
+	for _, dep := range directDeps {
+		depSnake := toSnakeCase(dep)
+		fmt.Fprintf(&depRequires, "local %s = require(\"coding_adventures.%s\")\n", depSnake, depSnake)
+	}
+	initLua := fmt.Sprintf(`-- %s — %s
+--
+-- This module is part of the coding-adventures project, an educational
+-- computing stack built from logic gates up through interpreters.
+--%s--
+-- Usage:
+--
+--   local m = require("coding_adventures.%s")
+--
+-- ============================================================================
+
+%s
+local M = {}
+
+M.VERSION = "0.1.0"
+
+-- TODO: Implement %s
+
+return M
+`, pkgName, description, func() string {
+		if layerComment != "" {
+			return "\n" + layerComment
+		}
+		return ""
+	}(), snake, depRequires.String(), pkgName)
+
+	// tests/test_{snake}.lua
+	testLua := fmt.Sprintf(`-- Tests for %s
+
+local m = require("coding_adventures.%s")
+
+describe("%s", function()
+    it("has a VERSION", function()
+        assert.is_not_nil(m.VERSION)
+        assert.equals("0.1.0", m.VERSION)
+    end)
+
+    -- TODO: Add real tests
+end)
+`, pkgName, snake, pkgName)
+
+	// Create directories
+	srcDir := filepath.Join(targetDir, "src", "coding_adventures", snake)
+	testDir := filepath.Join(targetDir, "tests")
+	if err := os.MkdirAll(srcDir, 0o755); err != nil {
+		return err
+	}
+	if err := os.MkdirAll(testDir, 0o755); err != nil {
+		return err
+	}
+
+	rockspecFilename := fmt.Sprintf("coding-adventures-%s-0.1.0-1.rockspec", pkgName)
+	files := map[string]string{
+		rockspecFilename:                                build, // placeholder, overwritten below
+		"BUILD":                                         build,
+		"BUILD_windows":                                 build,
+		"required_capabilities.json":                    capJSON,
+		filepath.Join("src", "coding_adventures", snake, "init.lua"): initLua,
+		filepath.Join("tests", "test_"+snake+".lua"):                 testLua,
+	}
+	// Fix: rockspec content is not "build", write it separately
+	files[rockspecFilename] = rockspec.String()
+
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
 			return err
@@ -1424,6 +1601,10 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		}
 	case "perl":
 		if err := generatePerl(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
+			return err
+		}
+	case "lua":
+		if err := generateLua(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
 			return err
 		}
 	}
