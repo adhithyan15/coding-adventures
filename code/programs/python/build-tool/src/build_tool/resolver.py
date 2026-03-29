@@ -124,20 +124,22 @@ class DirectedGraph:
         return result
 
     def affected_nodes(self, changed: set[str]) -> set[str]:
-        """Return all nodes in ``changed`` plus their transitive dependents.
+        """Return all nodes in ``changed`` plus all downstream packages.
 
-        A node is "affected" if it is in the changed set OR if any of its
-        transitive dependencies (predecessors in our graph) changed.
+        In this graph, edges flow dep -> pkg (a dependency must be built before
+        the packages that use it). When a dep changes, every package that
+        (transitively) depends on it also needs rebuilding — those are reachable
+        via forward traversal (transitive_closure).
 
         Args:
             changed: Package names whose source files changed.
 
         Returns:
-            The changed set plus all packages that transitively depend on them.
+            The changed set plus all packages that transitively use them.
         """
         result: set[str] = set(changed)
         for name in changed:
-            result |= self.transitive_dependents(name)
+            result |= self.transitive_closure(name)
         return result
 
     def independent_groups(self) -> list[list[str]]:
