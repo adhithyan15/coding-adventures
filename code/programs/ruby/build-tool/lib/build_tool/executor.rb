@@ -135,6 +135,11 @@ module BuildTool
     # If a package fails, all its transitive dependents are marked as
     # "dep-skipped" using the graph's `transitive_dependents` method.
     #
+    # The `affected_set` parameter comes from git-diff change detection. When
+    # non-nil, only packages in the set (plus any that failed their last
+    # build) are rebuilt. nil means "rebuild everything" (force or shared
+    # files changed). An empty Hash means "nothing changed, build nothing".
+    #
     # @param packages [Array<Package>] All discovered packages.
     # @param graph [DirectedGraph] The dependency graph.
     # @param cache [BuildCache] The build cache (for skip detection).
@@ -143,9 +148,12 @@ module BuildTool
     # @param force [Boolean] Rebuild everything regardless of cache.
     # @param dry_run [Boolean] Don't build, just report what would build.
     # @param max_jobs [Integer, nil] Max parallel workers (nil = 8).
+    # @param affected_set [Hash<String, Boolean>, nil] Packages to rebuild
+    #   from git diff. nil = all packages; {} = nothing changed.
     # @return [Hash<String, BuildResult>]
     def execute_builds(packages:, graph:, cache:, package_hashes:, deps_hashes:,
-                       force: false, dry_run: false, max_jobs: nil, tracker: nil)
+                       force: false, dry_run: false, max_jobs: nil, tracker: nil,
+                       affected_set: nil)
       # Build a lookup from name to Package.
       pkg_by_name = packages.each_with_object({}) { |p, h| h[p.name] = p }
 
@@ -167,6 +175,16 @@ module BuildTool
 
           if dep_failed
             results[name] = BuildResult.new(package_name: name, status: "dep-skipped")
+            tracker&.send_event(CodingAdventures::ProgressBar::Event.new(
+              type: CodingAdventures::ProgressBar::EventType::SKIPPED, name: name
+            ))
+            next
+          end
+
+          # Check git-diff affected set. If affected_set is non-nil and this
+          # package is not in it, skip it (git says nothing changed).
+          unless force || affected_set.nil? || affected_set.key?(name)
+            results[name] = BuildResult.new(package_name: name, status: "skipped")
             tracker&.send_event(CodingAdventures::ProgressBar::Event.new(
               type: CodingAdventures::ProgressBar::EventType::SKIPPED, name: name
             ))

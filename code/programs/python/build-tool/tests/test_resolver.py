@@ -14,6 +14,9 @@ from build_tool.resolver import (
     _parse_ruby_deps,
     _parse_go_deps,
     _parse_lua_deps,
+    _parse_typescript_deps,
+    _parse_rust_deps,
+    _parse_swift_deps,
     resolve_dependencies,
 )
 

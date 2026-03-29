@@ -40,10 +40,14 @@ module BuildTool
     # If any file with one of these extensions changes, the package needs
     # rebuilding. We use a frozen hash of frozen sets for safety.
     SOURCE_EXTENSIONS = {
-      "python" => %w[.py .toml .cfg].freeze,
-      "ruby"   => %w[.rb .gemspec].freeze,
-      "go"     => %w[.go].freeze,
-      "perl"   => %w[.pl .pm .t .xs].freeze
+      "python"     => %w[.py .toml .cfg].freeze,
+      "ruby"       => %w[.rb .gemspec].freeze,
+      "go"         => %w[.go].freeze,
+      "typescript" => %w[.ts .tsx .json].freeze,
+      "rust"       => %w[.rs .toml].freeze,
+      "elixir"     => %w[.ex .exs].freeze,
+      "starlark"   => %w[.star].freeze,
+      "perl"       => %w[.pl .pm .t .xs].freeze
     }.freeze
 
     # SPECIAL_FILENAMES -- Files to always include regardless of extension.
@@ -51,10 +55,14 @@ module BuildTool
     # These are ecosystem-specific config files that affect the build but
     # don't have a standard source extension.
     SPECIAL_FILENAMES = {
-      "python" => [].freeze,
-      "ruby"   => %w[Gemfile Rakefile].freeze,
-      "go"     => %w[go.mod go.sum].freeze,
-      "perl"   => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze
+      "python"     => [].freeze,
+      "ruby"       => %w[Gemfile Rakefile].freeze,
+      "go"         => %w[go.mod go.sum].freeze,
+      "typescript" => %w[package.json tsconfig.json vitest.config.ts].freeze,
+      "rust"       => %w[Cargo.toml Cargo.lock].freeze,
+      "elixir"     => %w[mix.exs mix.lock].freeze,
+      "starlark"   => [].freeze,
+      "perl"       => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze
     }.freeze
 
     module_function
