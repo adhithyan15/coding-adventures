@@ -4,6 +4,35 @@ All notable changes to the `logic-gates` package will be documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] - 2026-03-29
+
+### Changed
+
+- **XNOR now delegates to `CMOSXnor`**: XNOR previously composed XOR and NOT at
+  the logic-gates level (`_cmosXor.EvaluateDigital` + `_cmosNot.EvaluateDigital`).
+  It now delegates directly to `transistors.NewCMOSXnor(nil).EvaluateDigital`,
+  the dedicated 8-transistor CMOS XNOR gate added in transistors v0.2.0.
+- Added `_cmosXnor` package-level var alongside the existing gate singletons.
+
+## [0.3.0] - 2026-03-28
+
+### Changed
+
+- **Transistor-backed gate implementations**: All seven primitive gate functions
+  (AND, OR, NOT, XOR, NAND, NOR, XNOR) now delegate their digital evaluation to
+  the `transistors` package's CMOS gate models (`CMOSAnd`, `CMOSOr`,
+  `CMOSInverter`, `CMOSXor`, `CMOSNand`, `CMOSNor`). The public API is unchanged
+  — inputs and outputs are still 0/1 integers — but the implementation path now
+  routes through transistor-physics simulation.
+- **New dependency**: `go.mod` now requires
+  `github.com/adhithyan15/coding-adventures/code/packages/go/transistors` via a
+  local `replace` directive.
+- **XNOR composition**: XNOR is implemented as NOT(XOR(a,b)) using the
+  transistors-backed XOR and NOT, since the transistors package has no dedicated
+  XNOR gate.
+- **BUILD updated**: `cd ../transistors && go mod download` runs before tests to
+  ensure the local transistors module is available.
+
 ## [0.2.0] - 2026-03-21
 
 ### Added

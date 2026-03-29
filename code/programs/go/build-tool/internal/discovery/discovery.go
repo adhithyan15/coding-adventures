@@ -88,6 +88,7 @@ var skipDirs = map[string]bool{
 	"target":        true,
 	".claude":       true,
 	"Pods":          true,
+	".build":        true, // Swift Package Manager build artefacts and dependency checkouts
 }
 
 // readLines reads a file and returns non-blank, non-comment lines.

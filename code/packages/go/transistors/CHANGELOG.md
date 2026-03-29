@@ -4,6 +4,15 @@ All notable changes to the `transistors` package will be documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-03-29
+
+### Added
+
+- **`CMOSXnor` gate** (`cmos_gates.go`): XNOR implemented as XOR followed by an
+  Inverter (8 transistors total). Includes `Evaluate` (analog voltages) and
+  `EvaluateDigital` (0/1 inputs) methods. Truth table: (0,0)→1, (0,1)→0,
+  (1,0)→0, (1,1)→1.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

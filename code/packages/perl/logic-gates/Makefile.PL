@@ -10,6 +10,7 @@ WriteMakefile(
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
     PREREQ_PM        => {
+        'CodingAdventures::Transistors' => '0.01',
     },
     TEST_REQUIRES    => {
         'Test2::V0' => 0,

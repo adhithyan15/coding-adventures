@@ -266,4 +266,65 @@ defmodule CodingAdventures.Transistors.CMOSGatesTest do
       end
     end
   end
+
+  # ===========================================================================
+  # CMOS XNOR Tests
+  # ===========================================================================
+
+  describe "CMOS XNOR truth table" do
+    test "XNOR(0,0) = 1" do
+      assert CMOSGates.xnor_evaluate_digital(0, 0) == 1
+    end
+
+    test "XNOR(0,1) = 0" do
+      assert CMOSGates.xnor_evaluate_digital(0, 1) == 0
+    end
+
+    test "XNOR(1,0) = 0" do
+      assert CMOSGates.xnor_evaluate_digital(1, 0) == 0
+    end
+
+    test "XNOR(1,1) = 1" do
+      assert CMOSGates.xnor_evaluate_digital(1, 1) == 1
+    end
+  end
+
+  describe "CMOS XNOR is inverse of XOR" do
+    test "XNOR(a,b) = NOT(XOR(a,b)) for all inputs" do
+      for a <- [0, 1], b <- [0, 1] do
+        xor_result = CMOSGates.xor_evaluate_digital(a, b)
+        xnor_result = CMOSGates.xnor_evaluate_digital(a, b)
+        assert xnor_result == CMOSGates.inverter_evaluate_digital(xor_result)
+      end
+    end
+  end
+
+  describe "CMOS XNOR transistor count" do
+    test "uses XOR transistors + 2 (inverter)" do
+      params = %CircuitParams{}
+      result = CMOSGates.xnor_evaluate(0.0, 0.0, params)
+      xor_result = CMOSGates.xor_evaluate(0.0, 0.0, params)
+      assert result.transistor_count == xor_result.transistor_count + 2
+    end
+  end
+
+  describe "CMOS XNOR validation" do
+    test "rejects invalid input for first argument" do
+      assert_raise ArgumentError, fn ->
+        CMOSGates.xnor_evaluate_digital(2, 0)
+      end
+    end
+
+    test "rejects invalid input for second argument" do
+      assert_raise ArgumentError, fn ->
+        CMOSGates.xnor_evaluate_digital(0, 2)
+      end
+    end
+
+    test "rejects boolean input" do
+      assert_raise ArgumentError, fn ->
+        CMOSGates.xnor_evaluate_digital(true, 0)
+      end
+    end
+  end
 end

@@ -493,4 +493,64 @@ function CMOSXor:evaluate_from_nands(a, b)
     return self:evaluate_digital(a, b)
 end
 
+-- ==========================================================================
+-- CMOS XNOR -- XOR + Inverter = 8 transistors
+-- ==========================================================================
+--
+-- XNOR(A, B) = NOT(XOR(A, B))
+--
+-- XNOR is called the "equivalence gate": it outputs 1 when both inputs
+-- have the SAME value (both LOW or both HIGH).  This makes it the
+-- natural hardware primitive for bit-equality tests.
+--
+-- Construction: chain the 6-transistor CMOSXor with the 2-transistor
+-- CMOSInverter, exactly mirroring how CMOSAnd = NAND + Inverter and
+-- CMOSOr = NOR + Inverter are built.
+--
+--   Truth table:
+--     A | B | XOR | XNOR
+--     --|---|-----|-----
+--     0 | 0 |  0  |  1   (same -- equal)
+--     0 | 1 |  1  |  0   (different)
+--     1 | 0 |  1  |  0   (different)
+--     1 | 1 |  0  |  1   (same -- equal)
+--
+-- Transistor count: CMOSXor (6) + CMOSInverter (2) = 8.
+
+local CMOSXnor = {}
+CMOSXnor.__index = CMOSXnor
+
+function cmos.CMOSXnor(circuit_params)
+    local self = setmetatable({}, CMOSXnor)
+    self.circuit  = circuit_params or types.CircuitParams()
+    self.xor_gate = cmos.CMOSXor(self.circuit)
+    self.inv      = cmos.CMOSInverter(self.circuit)
+    return self
+end
+
+--- XNOR = NOT(XOR(A, B)).
+function CMOSXnor:evaluate(va, vb)
+    local xor_out = self.xor_gate:evaluate(va, vb)
+    local inv_out = self.inv:evaluate(xor_out.voltage)
+    return types.GateOutput({
+        logic_value       = inv_out.logic_value,
+        voltage           = inv_out.voltage,
+        current_draw      = xor_out.current_draw + inv_out.current_draw,
+        power_dissipation = xor_out.power_dissipation + inv_out.power_dissipation,
+        propagation_delay = xor_out.propagation_delay + inv_out.propagation_delay,
+        transistor_count  = 8,
+    })
+end
+
+function CMOSXnor:evaluate_digital(a, b)
+    local err = types.validate_bit(a, "a")
+    if err then return nil, err end
+    err = types.validate_bit(b, "b")
+    if err then return nil, err end
+    local vdd = self.circuit.vdd
+    local va  = a == 1 and vdd or 0.0
+    local vb  = b == 1 and vdd or 0.0
+    return self:evaluate(va, vb).logic_value, nil
+end
+
 return cmos

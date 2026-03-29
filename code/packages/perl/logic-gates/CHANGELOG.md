@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-03-29
+
+### Changed
+
+- **XOR now delegates to `cmos_xor`**: The inline 4-NAND construction previously
+  embedded in `XOR` is now provided by `cmos_xor` in the transistors package.
+  The logic-gates `XOR` sub simply calls `cmos_xor($a, $b)`.
+- **XNOR now delegates to `cmos_xnor`**: Previously called `cmos_not(XOR($a, $b))`;
+  now calls `cmos_xnor($a, $b)` directly from the transistors package.
+- **Updated import**: `use CodingAdventures::Transistors` now imports
+  `cmos_xor` and `cmos_xnor` in addition to the existing five functions.
+
+## [0.2.0] - 2026-03-28
+
+### Changed
+
+- **Transistor-backed gate implementations**: All seven primitive gates (AND, OR,
+  NOT, XOR, NAND, NOR, XNOR) now delegate their digital evaluation to
+  `CodingAdventures::Transistors` CMOS functions (`cmos_and`, `cmos_or`,
+  `cmos_not`, `cmos_nand`, `cmos_nor`) instead of using Perl's bitwise operators.
+- **XOR via 4 NAND gates**: The transistors package does not have `cmos_xor`, so
+  XOR is constructed from the 4-NAND construction:
+  `let C = cmos_nand(A,B); XOR = cmos_nand(cmos_nand(A,C), cmos_nand(B,C))`.
+- **XNOR composition**: `XNOR` calls `cmos_not(XOR(a, b))`.
+- **New dependency**: `CodingAdventures::Transistors` added to `Makefile.PL`
+  `PREREQ_PM` and `cpanfile`.
+- **BUILD updated**: transistors is installed before logic-gates tests run.
+- Version bumped from 0.01 to 0.02.
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

@@ -51,6 +51,23 @@
 module CodingAdventures
   module LogicGates
     # -----------------------------------------------------------------------
+    # CMOS gate instances — shared, allocated once at module load time.
+    # -----------------------------------------------------------------------
+    # Each of the seven primitive gates delegates its digital evaluation to
+    # a CMOS transistor model from CodingAdventures::Transistors. Using a
+    # module-level constant avoids allocating a new object on every call
+    # while still exercising the full transistor simulation.
+    #
+    # Default circuit parameters: 3.3 V Vdd, 180 nm CMOS process node.
+    CMOS_INVERTER = CodingAdventures::Transistors::CMOSInverter.new
+    CMOS_NAND     = CodingAdventures::Transistors::CMOSNand.new
+    CMOS_NOR      = CodingAdventures::Transistors::CMOSNor.new
+    CMOS_AND      = CodingAdventures::Transistors::CMOSAnd.new
+    CMOS_OR       = CodingAdventures::Transistors::CMOSOr.new
+    CMOS_XOR      = CodingAdventures::Transistors::CMOSXor.new
+    CMOS_XNOR     = CodingAdventures::Transistors::CMOSXnor.new
+
+    # -----------------------------------------------------------------------
     # Input validation
     # -----------------------------------------------------------------------
     # Every gate checks that its inputs are valid binary values (0 or 1).
@@ -121,7 +138,8 @@ module CodingAdventures
     # @raise [ArgumentError] if a is not 0 or 1
     def self.not_gate(a)
       validate_bit(a, "a")
-      a == 0 ? 1 : 0
+      # Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+      CMOS_INVERTER.evaluate_digital(a)
     end
 
     # The AND gate.
@@ -152,7 +170,8 @@ module CodingAdventures
     def self.and_gate(a, b)
       validate_bit(a, "a")
       validate_bit(b, "b")
-      (a == 1 && b == 1) ? 1 : 0
+      # Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+      CMOS_AND.evaluate_digital(a, b)
     end
 
     # The OR gate.
@@ -182,7 +201,8 @@ module CodingAdventures
     def self.or_gate(a, b)
       validate_bit(a, "a")
       validate_bit(b, "b")
-      (a == 1 || b == 1) ? 1 : 0
+      # Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+      CMOS_OR.evaluate_digital(a, b)
     end
 
     # The XOR gate (Exclusive OR).
@@ -219,7 +239,8 @@ module CodingAdventures
     def self.xor_gate(a, b)
       validate_bit(a, "a")
       validate_bit(b, "b")
-      a != b ? 1 : 0
+      # Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+      CMOS_XOR.evaluate_digital(a, b)
     end
 
     # =====================================================================
@@ -263,7 +284,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 0 if both inputs are 1, else 1
     def self.nand_gate(a, b)
-      not_gate(and_gate(a, b))
+      # Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
+      CMOS_NAND.evaluate_digital(a, b)
     end
 
     # The NOR gate (NOT OR).
@@ -289,7 +311,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if both inputs are 0, else 0
     def self.nor_gate(a, b)
-      not_gate(or_gate(a, b))
+      # Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
+      CMOS_NOR.evaluate_digital(a, b)
     end
 
     # The XNOR gate (Exclusive NOR, also called "equivalence gate").
@@ -317,7 +340,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if inputs are the same, else 0
     def self.xnor_gate(a, b)
-      not_gate(xor_gate(a, b))
+      # Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
+      CMOS_XNOR.evaluate_digital(a, b)
     end
 
     # =====================================================================

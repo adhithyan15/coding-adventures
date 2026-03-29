@@ -5,3 +5,4 @@ source "https://rubygems.org"
 gemspec
 
 gem "coding_adventures_logic_gates", path: "../logic_gates"
+gem "coding_adventures_transistors", path: "../transistors"

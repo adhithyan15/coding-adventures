@@ -282,3 +282,40 @@ func TestCMOSXor_RejectsInvalidInput(t *testing.T) {
 		t.Error("EvaluateDigital(0, 2) should return error")
 	}
 }
+
+// ===========================================================================
+// CMOS XNOR Tests
+// ===========================================================================
+
+func TestCMOSXnor_TruthTable(t *testing.T) {
+	xnorGate := NewCMOSXnor(nil)
+	cases := [][3]int{{0, 0, 1}, {0, 1, 0}, {1, 0, 0}, {1, 1, 1}}
+	for _, c := range cases {
+		val, err := xnorGate.EvaluateDigital(c[0], c[1])
+		if err != nil {
+			t.Fatal(err)
+		}
+		if val != c[2] {
+			t.Errorf("XNOR(%d, %d) = %d, want %d", c[0], c[1], val, c[2])
+		}
+	}
+}
+
+func TestCMOSXnor_TransistorCount(t *testing.T) {
+	// XNOR uses 8 transistors (6 for XOR + 2 for Inverter).
+	xnorGate := NewCMOSXnor(nil)
+	result := xnorGate.Evaluate(0.0, 0.0)
+	if result.TransistorCount != 8 {
+		t.Errorf("TransistorCount = %d, want 8", result.TransistorCount)
+	}
+}
+
+func TestCMOSXnor_RejectsInvalidInput(t *testing.T) {
+	xnorGate := NewCMOSXnor(nil)
+	if _, err := xnorGate.EvaluateDigital(2, 0); err == nil {
+		t.Error("EvaluateDigital(2, 0) should return error")
+	}
+	if _, err := xnorGate.EvaluateDigital(0, -1); err == nil {
+		t.Error("EvaluateDigital(0, -1) should return error")
+	}
+}
