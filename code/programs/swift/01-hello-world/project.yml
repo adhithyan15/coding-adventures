@@ -1,0 +1,40 @@
+name: HelloWorld
+options:
+  bundleIdPrefix: com.adhithyan15
+  deploymentTarget:
+    iOS: "18.0"
+    watchOS: "11.0"
+  xcodeVersion: "16.0"
+
+targets:
+  HelloWorld:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - Sources/HelloWorld
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.adhithyan15.helloworld
+        PRODUCT_NAME: HelloWorld
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    scheme:
+      testTargets: []
+
+  HelloWorldWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - Sources/HelloWorldWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.adhithyan15.helloworld.watchkitapp
+        PRODUCT_NAME: HelloWorldWatch
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_WKApplication: YES
