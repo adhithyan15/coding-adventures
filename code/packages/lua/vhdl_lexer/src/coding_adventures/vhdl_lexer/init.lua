@@ -119,16 +119,21 @@ local function get_script_dir()
     if src:sub(1, 1) == "@" then
         src = src:sub(2)
     end
-    -- If the path is relative, resolve it against CWD so that dirname
-    -- navigation works correctly when tests run from a subdirectory
-    -- (e.g., busted adds ../src to package.path, making paths relative).
-    if src:sub(1, 1) ~= "/" and src:sub(2, 2) ~= ":"           then
-        local f = io.popen("pwd")
-        local cwd = f and f:read("*l") or "."
+    -- Extract the directory portion of the source path (may be relative
+    -- and may contain .. when busted uses ../src in package.path).
+    local dir = src:match("(.+)/[^/]+$") or "."
+    -- Resolve to an absolute normalised path. Using 'cd dir && pwd' correctly
+    -- resolves any .. components -- unlike string-based dirname traversal.
+    -- Skip on Windows drive paths (C:\...) and fall back to the raw string.
+    if dir:sub(2, 2) ~= ":" then
+        local f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
+        local resolved = f and f:read("*l")
         if f then f:close() end
-        src = cwd .. "/" .. src
+        if resolved and resolved ~= "" then
+            return resolved
+        end
     end
-    return dirname(src)
+    return dir
 end
 
 --- Walk up `levels` directory levels from `path`.
