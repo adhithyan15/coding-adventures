@@ -23,8 +23,8 @@ defmodule CodingAdventures.LogicGates.Gates do
       NOR  → nor_evaluate_digital/2       (4 transistors)
       AND  → and_evaluate_digital/2       (6 transistors = NAND + inverter)
       OR   → or_evaluate_digital/2        (6 transistors = NOR + inverter)
-      XOR  → xor_evaluate_digital/2       (16 transistors = 4 NANDs)
-      XNOR → NOT(XOR(a,b)) composed from the above
+      XOR  → xor_evaluate_digital/2        (16 transistors = 4 NANDs)
+      XNOR → xnor_evaluate_digital/2       (18 transistors = XOR + Inverter)
 
   The public API is unchanged — inputs and outputs are still 0/1 integers.
 
@@ -349,10 +349,10 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec xnor_gate(0 | 1, 0 | 1) :: 0 | 1
   def xnor_gate(a, b) when is_bit(a) and is_bit(b) do
-    # XNOR = NOT(XOR(a, b)). The transistors package has no dedicated XNOR gate,
-    # so we compose it from the transistors-backed XOR and NOT.
-    # Both calls use CMOS transistor simulation, preserving the physical model.
-    CMOSGates.inverter_evaluate_digital(CMOSGates.xor_evaluate_digital(a, b))
+    # Delegate to the dedicated CMOS XNOR gate (XOR + Inverter) in the transistors package.
+    # CMOSGates.xnor_evaluate_digital/2 computes NOT(XOR(A, B)) in a single call,
+    # routing through the full transistor simulation.
+    CMOSGates.xnor_evaluate_digital(a, b)
   end
 
   def xnor_gate(a, b) do

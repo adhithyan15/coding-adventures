@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-03-29
+
+### Added
+
+- `xnor_evaluate/3` — analog CMOS XNOR gate evaluation (XOR + Inverter).
+  Returns a full `GateOutput` struct including voltage, current, power,
+  propagation delay, and transistor count.
+- `xnor_evaluate_digital/3` — digital (0/1) XNOR gate evaluation.
+  XNOR(A, B) = NOT(XOR(A, B)); outputs 1 when A equals B.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

@@ -15,7 +15,7 @@
 //! | AND  | `CMOSAnd` (NAND+NOT)    | 6           |
 //! | OR   | `CMOSOr`  (NOR+NOT)     | 6           |
 //! | XOR  | `CMOSXor` (4 NANDs)     | 16          |
-//! | XNOR | NOT(XOR(a,b)) composed  | 18          |
+//! | XNOR | `CMOSXnor` (XOR+NOT)     | 8           |
 //!
 //! # What is a logic gate?
 //!
@@ -33,7 +33,7 @@
 //! error margins for distinguishing between voltage levels would make it
 //! unreliable. Binary gives us two clean, easily distinguishable states.
 
-use transistors::cmos_gates::{CMOSAnd, CMOSInverter, CMOSNand, CMOSNor, CMOSOr, CMOSXor};
+use transistors::cmos_gates::{CMOSAnd, CMOSInverter, CMOSNand, CMOSNor, CMOSOr, CMOSXnor, CMOSXor};
 
 // ===========================================================================
 // Input validation
@@ -324,9 +324,8 @@ pub fn nor_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn xnor_gate(a: u8, b: u8) -> u8 {
-    // XNOR = NOT(XOR(a, b)). Compose from transistors-backed XOR and NOT.
-    let xor = CMOSXor::new(None).evaluate_digital(a, b).unwrap();
-    CMOSInverter::new(None, None, None).evaluate_digital(xor).unwrap()
+    // Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
+    CMOSXnor::new(None).evaluate_digital(a, b).unwrap()
 }
 
 // ===========================================================================

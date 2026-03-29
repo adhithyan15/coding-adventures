@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-03-29
+
+### Changed
+
+- `xnor_gate` now delegates to `CMOSXnor::new(None).evaluate_digital(a, b)`
+  instead of composing `CMOSXor` and `CMOSInverter` inline. Behaviour is
+  identical; the call site is simpler and the transistor count (8) is now
+  self-documenting through `CMOSXnor::TRANSISTOR_COUNT`.
+
 ## [0.2.0] - 2026-03-28
 
 ### Changed

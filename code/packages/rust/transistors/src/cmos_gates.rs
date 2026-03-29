@@ -537,3 +537,64 @@ impl CMOSXor {
         self.evaluate_digital(a, b)
     }
 }
+
+/// CMOS XNOR gate: XOR followed by an Inverter = 8 transistors.
+///
+/// XNOR(A, B) = NOT(XOR(A, B))
+///
+/// XNOR is the "equivalence" gate — it outputs 1 when A and B are equal,
+/// and 0 when they differ. This makes it the key building block for
+/// comparator circuits that check bit-for-bit equality.
+///
+/// Truth table:
+///
+/// | A | B | XNOR |
+/// |---|---|------|
+/// | 0 | 0 |  1   |
+/// | 0 | 1 |  0   |
+/// | 1 | 0 |  0   |
+/// | 1 | 1 |  1   |
+///
+/// Transistor count: `CMOSXor::TRANSISTOR_COUNT` (6) + 2 (Inverter) = 8.
+pub struct CMOSXnor {
+    circuit: CircuitParams,
+    xor_gate: CMOSXor,
+    inverter: CMOSInverter,
+}
+
+impl CMOSXnor {
+    pub const TRANSISTOR_COUNT: usize = CMOSXor::TRANSISTOR_COUNT + 2;
+
+    pub fn new(circuit_params: Option<CircuitParams>) -> Self {
+        let c = circuit_params.unwrap_or_default();
+        Self {
+            xor_gate: CMOSXor::new(Some(c.clone())),
+            inverter: CMOSInverter::new(Some(c.clone()), None, None),
+            circuit: c,
+        }
+    }
+
+    /// XNOR = NOT(XOR(A, B)).
+    pub fn evaluate(&self, va: f64, vb: f64) -> GateOutput {
+        let xor_out = self.xor_gate.evaluate(va, vb);
+        let inv_out = self.inverter.evaluate(xor_out.voltage);
+        GateOutput {
+            logic_value: inv_out.logic_value,
+            voltage: inv_out.voltage,
+            current_draw: xor_out.current_draw + inv_out.current_draw,
+            power_dissipation: xor_out.power_dissipation + inv_out.power_dissipation,
+            propagation_delay: xor_out.propagation_delay + inv_out.propagation_delay,
+            transistor_count: Self::TRANSISTOR_COUNT,
+        }
+    }
+
+    /// Evaluate with digital inputs.
+    pub fn evaluate_digital(&self, a: u8, b: u8) -> Result<u8, String> {
+        validate_bit(a, "a")?;
+        validate_bit(b, "b")?;
+        let vdd = self.circuit.vdd;
+        let va = if a == 1 { vdd } else { 0.0 };
+        let vb = if b == 1 { vdd } else { 0.0 };
+        Ok(self.evaluate(va, vb).logic_value)
+    }
+}
