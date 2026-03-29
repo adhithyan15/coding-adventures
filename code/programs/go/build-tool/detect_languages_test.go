@@ -17,6 +17,7 @@ func TestAllLanguagesConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
+		"swift": true,
 	}
 	if len(allLanguages) != len(expected) {
 		t.Errorf("allLanguages has %d entries, want %d", len(allLanguages), len(expected))

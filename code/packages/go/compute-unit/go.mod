@@ -9,7 +9,10 @@ require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/parallel-execution-engine v0.0.0
 )
 
-require github.com/adhithyan15/coding-adventures/code/packages/go/logic-gates v0.0.0 // indirect
+require (
+	github.com/adhithyan15/coding-adventures/code/packages/go/logic-gates v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/transistors v0.0.0 // indirect
+)
 
 replace (
 	github.com/adhithyan15/coding-adventures/code/packages/go/clock => ../clock
@@ -17,4 +20,5 @@ replace (
 	github.com/adhithyan15/coding-adventures/code/packages/go/gpu-core => ../gpu-core
 	github.com/adhithyan15/coding-adventures/code/packages/go/logic-gates => ../logic-gates
 	github.com/adhithyan15/coding-adventures/code/packages/go/parallel-execution-engine => ../parallel-execution-engine
+	github.com/adhithyan15/coding-adventures/code/packages/go/transistors => ../transistors
 )

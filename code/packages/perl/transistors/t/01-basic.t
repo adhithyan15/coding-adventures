@@ -9,7 +9,7 @@ ok( eval { require CodingAdventures::Transistors; 1 }, 'CodingAdventures::Transi
 
 use CodingAdventures::Transistors qw(
     nmos  pmos  npn  pnp
-    cmos_not  cmos_nand  cmos_nor  cmos_and  cmos_or
+    cmos_not  cmos_nand  cmos_nor  cmos_and  cmos_or  cmos_xor  cmos_xnor
     ttl_not   ttl_nand
     MOSFET_CUTOFF  MOSFET_LINEAR  MOSFET_SATURATION
     BJT_CUTOFF     BJT_ACTIVE     BJT_SATURATION
@@ -158,8 +158,51 @@ for my $a (0, 1) {
 }
 
 # ===========================================================================
-# 11. TTL NAND — full truth table
+# 11. CMOS XOR — full truth table (4-NAND construction)
 # ===========================================================================
+
+is( cmos_xor(0, 0), 0, 'cmos_xor(0,0) = 0' );
+is( cmos_xor(0, 1), 1, 'cmos_xor(0,1) = 1' );
+is( cmos_xor(1, 0), 1, 'cmos_xor(1,0) = 1' );
+is( cmos_xor(1, 1), 0, 'cmos_xor(1,1) = 0' );
+
+# XOR is commutative: cmos_xor(A,B) = cmos_xor(B,A)
+for my $a (0, 1) {
+    for my $b (0, 1) {
+        is( cmos_xor($a, $b), cmos_xor($b, $a),
+            "cmos_xor($a,$b) is commutative" );
+    }
+}
+
+# XOR(A,A) = 0 (same inputs cancel)
+is( cmos_xor(0, 0), 0, 'cmos_xor(0,0): same inputs → 0' );
+is( cmos_xor(1, 1), 0, 'cmos_xor(1,1): same inputs → 0' );
+
+# ===========================================================================
+# 12. CMOS XNOR — full truth table (XOR + inverter)
+# ===========================================================================
+
+is( cmos_xnor(0, 0), 1, 'cmos_xnor(0,0) = 1' );
+is( cmos_xnor(0, 1), 0, 'cmos_xnor(0,1) = 0' );
+is( cmos_xnor(1, 0), 0, 'cmos_xnor(1,0) = 0' );
+is( cmos_xnor(1, 1), 1, 'cmos_xnor(1,1) = 1' );
+
+# XNOR = NOT(XOR): verify against truth table
+for my $a (0, 1) {
+    for my $b (0, 1) {
+        is( cmos_xnor($a, $b), cmos_not( cmos_xor($a, $b) ),
+            "cmos_xnor($a,$b) = NOT(XOR($a,$b))" );
+    }
+}
+
+# XNOR(A,A) = 1 (same inputs are always equal)
+is( cmos_xnor(0, 0), 1, 'cmos_xnor(0,0): same inputs → 1' );
+is( cmos_xnor(1, 1), 1, 'cmos_xnor(1,1): same inputs → 1' );
+
+# ===========================================================================
+# 13. TTL NAND — full truth table
+# ===========================================================================
+
 
 is( ttl_nand(0, 0), 1, 'ttl_nand(0,0) = 1' );
 is( ttl_nand(0, 1), 1, 'ttl_nand(0,1) = 1' );
@@ -175,7 +218,7 @@ for my $a (0, 1) {
 }
 
 # ===========================================================================
-# 12. TTL NOT (RTL inverter) — full truth table
+# 14. TTL NOT (RTL inverter) — full truth table
 # ===========================================================================
 
 is( ttl_not(0), 1, 'ttl_not(0) = 1' );
@@ -186,15 +229,19 @@ is( ttl_not(0), cmos_not(0), 'ttl_not(0) agrees with cmos_not(0)' );
 is( ttl_not(1), cmos_not(1), 'ttl_not(1) agrees with cmos_not(1)' );
 
 # ===========================================================================
-# 13. Invalid input handling
+# 15. Invalid input handling
 # ===========================================================================
 
-ok( eval { cmos_not(2);      0 } // 1, 'cmos_not(2) dies' );
-ok( eval { cmos_nand(0, 2);  0 } // 1, 'cmos_nand(0,2) dies' );
-ok( eval { cmos_nor(-1, 0);  0 } // 1, 'cmos_nor(-1,0) dies' );
-ok( eval { cmos_and(0, 3);   0 } // 1, 'cmos_and(0,3) dies' );
-ok( eval { cmos_or(2, 0);    0 } // 1, 'cmos_or(2,0) dies' );
-ok( eval { ttl_nand(0, 2);   0 } // 1, 'ttl_nand(0,2) dies' );
-ok( eval { ttl_not(2);       0 } // 1, 'ttl_not(2) dies' );
+ok( eval { cmos_not(2);       0 } // 1, 'cmos_not(2) dies' );
+ok( eval { cmos_nand(0, 2);   0 } // 1, 'cmos_nand(0,2) dies' );
+ok( eval { cmos_nor(-1, 0);   0 } // 1, 'cmos_nor(-1,0) dies' );
+ok( eval { cmos_and(0, 3);    0 } // 1, 'cmos_and(0,3) dies' );
+ok( eval { cmos_or(2, 0);     0 } // 1, 'cmos_or(2,0) dies' );
+ok( eval { cmos_xor(2, 0);    0 } // 1, 'cmos_xor(2,0) dies' );
+ok( eval { cmos_xor(0, -1);   0 } // 1, 'cmos_xor(0,-1) dies' );
+ok( eval { cmos_xnor(2, 0);   0 } // 1, 'cmos_xnor(2,0) dies' );
+ok( eval { cmos_xnor(0, -1);  0 } // 1, 'cmos_xnor(0,-1) dies' );
+ok( eval { ttl_nand(0, 2);    0 } // 1, 'ttl_nand(0,2) dies' );
+ok( eval { ttl_not(2);        0 } // 1, 'ttl_not(2) dies' );
 
 done_testing;

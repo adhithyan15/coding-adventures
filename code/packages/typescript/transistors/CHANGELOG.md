@@ -2,6 +2,15 @@
 
 All notable changes to `@coding-adventures/transistors` will be documented in this file.
 
+## [0.3.0] - 2026-03-29
+
+### Added
+
+- **`CMOSXnor` gate** (`cmos_gates.ts`): XNOR implemented as XOR followed by an
+  Inverter (8 transistors total: `CMOSXor.TRANSISTOR_COUNT` + 2). Exported from
+  `index.ts` alongside the other CMOS gate classes. Truth table: (0,0)→1,
+  (0,1)→0, (1,0)→0, (1,1)→1.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

@@ -10,6 +10,7 @@ import {
   CMOSAnd,
   CMOSOr,
   CMOSXor,
+  CMOSXnor,
 } from "../src/cmos_gates.js";
 
 describe("CMOSInverter", () => {
@@ -175,5 +176,27 @@ describe("CMOSXor", () => {
   it("should reject invalid digital input", () => {
     const xorGate = new CMOSXor();
     expect(() => xorGate.evaluateDigital(0, 2)).toThrow();
+  });
+});
+
+describe("CMOSXnor", () => {
+  it("should implement XNOR truth table", () => {
+    const xnorGate = new CMOSXnor();
+    expect(xnorGate.evaluateDigital(0, 0)).toBe(1);
+    expect(xnorGate.evaluateDigital(0, 1)).toBe(0);
+    expect(xnorGate.evaluateDigital(1, 0)).toBe(0);
+    expect(xnorGate.evaluateDigital(1, 1)).toBe(1);
+  });
+
+  it("should report transistor count of 8", () => {
+    const xnorGate = new CMOSXnor();
+    const result = xnorGate.evaluate(0.0, 0.0);
+    expect(result.transistorCount).toBe(8);
+  });
+
+  it("should reject invalid digital input", () => {
+    const xnorGate = new CMOSXnor();
+    expect(() => xnorGate.evaluateDigital(2, 0)).toThrow();
+    expect(() => xnorGate.evaluateDigital(0, -1)).toThrow();
   });
 });

@@ -38,6 +38,33 @@
 export type Bit = 0 | 1;
 
 // ---------------------------------------------------------------------------
+// CMOS gate instances — physical transistor models
+// ---------------------------------------------------------------------------
+// Each of the seven primitive gate functions delegates its digital evaluation
+// to a CMOS transistor simulation from @coding-adventures/transistors. Using
+// module-level singleton instances avoids allocating a new object on every
+// call while still exercising the full transistor physics model.
+//
+// Default circuit parameters: 3.3 V Vdd, 180 nm CMOS process node.
+import {
+  CMOSInverter,
+  CMOSNand,
+  CMOSNor,
+  CMOSAnd,
+  CMOSOr,
+  CMOSXor,
+  CMOSXnor,
+} from "@coding-adventures/transistors";
+
+const _cmosNot  = new CMOSInverter();
+const _cmosNand = new CMOSNand();
+const _cmosNor  = new CMOSNor();
+const _cmosAnd  = new CMOSAnd();
+const _cmosOr   = new CMOSOr();
+const _cmosXor  = new CMOSXor();
+const _cmosXnor = new CMOSXnor();
+
+// ---------------------------------------------------------------------------
 // Input validation
 // ---------------------------------------------------------------------------
 // Every gate checks that its inputs are valid binary values (0 or 1).
@@ -91,7 +118,8 @@ export function validateBit(value: unknown, name: string = "input"): asserts val
  */
 export function NOT(a: Bit): Bit {
   validateBit(a, "a");
-  return a === 0 ? 1 : 0;
+  // Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+  return _cmosNot.evaluateDigital(a) as Bit;
 }
 
 /**
@@ -123,7 +151,8 @@ export function NOT(a: Bit): Bit {
 export function AND(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
-  return (a === 1 && b === 1) ? 1 : 0;
+  // Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+  return _cmosAnd.evaluateDigital(a, b) as Bit;
 }
 
 /**
@@ -155,7 +184,8 @@ export function AND(a: Bit, b: Bit): Bit {
 export function OR(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
-  return (a === 1 || b === 1) ? 1 : 0;
+  // Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+  return _cmosOr.evaluateDigital(a, b) as Bit;
 }
 
 /**
@@ -193,7 +223,8 @@ export function OR(a: Bit, b: Bit): Bit {
 export function XOR(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
-  return a !== b ? 1 : 0;
+  // Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+  return _cmosXor.evaluateDigital(a, b) as Bit;
 }
 
 // ===========================================================================
@@ -237,7 +268,8 @@ export function XOR(a: Bit, b: Bit): Bit {
  * NAND(1, 0) // => 1
  */
 export function NAND(a: Bit, b: Bit): Bit {
-  return NOT(AND(a, b));
+  // Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
+  return _cmosNand.evaluateDigital(a, b) as Bit;
 }
 
 /**
@@ -265,7 +297,8 @@ export function NAND(a: Bit, b: Bit): Bit {
  * NOR(0, 1) // => 0
  */
 export function NOR(a: Bit, b: Bit): Bit {
-  return NOT(OR(a, b));
+  // Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
+  return _cmosNor.evaluateDigital(a, b) as Bit;
 }
 
 /**
@@ -294,7 +327,8 @@ export function NOR(a: Bit, b: Bit): Bit {
  * XNOR(1, 0) // => 0
  */
 export function XNOR(a: Bit, b: Bit): Bit {
-  return NOT(XOR(a, b));
+  // Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
+  return _cmosXnor.evaluateDigital(a, b) as Bit;
 }
 
 // ===========================================================================

@@ -21,6 +21,8 @@ defmodule CodingAdventures.LogicGates.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:coding_adventures_transistors, path: "../transistors"}
+    ]
   end
 end

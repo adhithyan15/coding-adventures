@@ -577,5 +577,82 @@ module CodingAdventures
         evaluate_digital(a, b)
       end
     end
+
+    # CMOS XNOR gate: XOR followed by an Inverter = 8 transistors.
+    #
+    # XNOR(A, B) = NOT(XOR(A, B))
+    #
+    # XNOR is sometimes called the "equivalence gate" because it outputs 1
+    # when both inputs have the SAME value. It is the bitwise equality check:
+    # "are these two bits the same?"
+    #
+    # === Construction ===
+    #
+    # We chain CMOSXor (6 transistors) with CMOSInverter (2 transistors):
+    #
+    #     A ---+
+    #          |  CMOSXor  |-- XOR_out --  CMOSInverter -- XNOR_out
+    #     B ---+
+    #
+    # This mirrors the CMOSAnd (NAND + Inverter) and CMOSOr (NOR + Inverter)
+    # patterns used throughout this file.
+    #
+    # === Truth Table ===
+    #
+    #     A | B | XOR | XNOR
+    #     --|---|-----|-----
+    #     0 | 0 |  0  |  1    (same — equal)
+    #     0 | 1 |  1  |  0    (different)
+    #     1 | 0 |  1  |  0    (different)
+    #     1 | 1 |  0  |  1    (same — equal)
+    #
+    # === Transistor Count ===
+    #
+    # CMOSXor::TRANSISTOR_COUNT (6) + CMOSInverter::TRANSISTOR_COUNT (2) = 8.
+    class CMOSXnor
+      TRANSISTOR_COUNT = CMOSXor::TRANSISTOR_COUNT + CMOSInverter::TRANSISTOR_COUNT
+
+      # @return [CircuitParams] the circuit parameters
+      attr_reader :circuit
+
+      # Create a new CMOS XNOR gate.
+      def initialize(circuit_params = nil)
+        @circuit = circuit_params || CircuitParams.new
+        @xor_gate = CMOSXor.new(circuit_params)
+        @inv = CMOSInverter.new(circuit_params)
+      end
+
+      # Evaluate XNOR = NOT(XOR(A, B)).
+      #
+      # @param va [Float] Input A voltage (V).
+      # @param vb [Float] Input B voltage (V).
+      # @return [GateOutput] with voltage and power details.
+      def evaluate(va, vb)
+        xor_out = @xor_gate.evaluate(va, vb)
+        inv_out = @inv.evaluate(xor_out.voltage)
+        GateOutput.new(
+          logic_value: inv_out.logic_value,
+          voltage: inv_out.voltage,
+          current_draw: xor_out.current_draw + inv_out.current_draw,
+          power_dissipation: xor_out.power_dissipation + inv_out.power_dissipation,
+          propagation_delay: xor_out.propagation_delay + inv_out.propagation_delay,
+          transistor_count: TRANSISTOR_COUNT
+        )
+      end
+
+      # Evaluate with digital inputs (0 or 1).
+      #
+      # @param a [Integer] first digital input (0 or 1)
+      # @param b [Integer] second digital input (0 or 1)
+      # @return [Integer] digital output (0 or 1)
+      def evaluate_digital(a, b)
+        Transistors.validate_bit(a, "a")
+        Transistors.validate_bit(b, "b")
+        vdd = @circuit.vdd
+        va = a == 1 ? vdd : 0.0
+        vb = b == 1 ? vdd : 0.0
+        evaluate(va, vb).logic_value
+      end
+    end
   end
 end

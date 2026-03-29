@@ -1,3 +1,4 @@
+cd ../transistors && npm install --silent
 cd ../display && npm install --silent
 cd ../interrupt-handler && npm install --silent
 cd ../logic-gates && npm install --silent

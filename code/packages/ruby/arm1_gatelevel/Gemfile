@@ -7,4 +7,5 @@ gemspec
 # Bundler needs to know where to find each gem locally.
 gem "coding_adventures_arithmetic", path: "../arithmetic"
 gem "coding_adventures_logic_gates", path: "../logic_gates"
+gem "coding_adventures_transistors", path: "../transistors"
 gem "coding_adventures_arm1_simulator", path: "../arm1_simulator"

@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-29
+
+### Added
+
+- `cmos_xor($a, $b)` — CMOS XOR gate using the 4-NAND construction (16 transistors
+  total: 4 NAND gates of 4 transistors each). Exported via `@EXPORT_OK`.
+- `cmos_xnor($a, $b)` — CMOS XNOR gate as XOR followed by an inverter (18 transistors:
+  16 for XOR + 2 for NOT). Exported via `@EXPORT_OK`.
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

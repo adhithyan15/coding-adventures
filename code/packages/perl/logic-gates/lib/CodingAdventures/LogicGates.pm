@@ -58,7 +58,21 @@ package CodingAdventures::LogicGates;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
+
+# Import CMOS digital evaluation functions from the transistors package.
+# Each of the seven primitive gates delegates its evaluation here, routing
+# computation through a transistor physics simulation rather than using
+# Perl's native bitwise operators.
+#
+#   NOT  → cmos_not(a)       (2 transistors: CMOS inverter)
+#   NAND → cmos_nand(a, b)   (4 transistors: natural CMOS primitive)
+#   NOR  → cmos_nor(a, b)    (4 transistors: natural CMOS primitive)
+#   AND  → cmos_and(a, b)    (6 transistors: NAND + inverter)
+#   OR   → cmos_or(a, b)     (6 transistors: NOR + inverter)
+#   XOR  → cmos_xor(a, b)    (16 transistors: 4 NAND gates)
+#   XNOR → cmos_xnor(a, b)   (18 transistors: XOR + inverter)
+use CodingAdventures::Transistors qw(cmos_not cmos_nand cmos_nor cmos_and cmos_or cmos_xor cmos_xnor);
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
@@ -117,7 +131,8 @@ sub AND {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    return $a & $b;
+    # Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+    return cmos_and( $a, $b );
 }
 
 # OR — returns 1 when AT LEAST ONE input is 1.
@@ -141,7 +156,8 @@ sub OR {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    return $a | $b;
+    # Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+    return cmos_or( $a, $b );
 }
 
 # NOT — inverts its input: 0 becomes 1, 1 becomes 0.
@@ -163,7 +179,8 @@ sub OR {
 sub NOT {
     my $a = ( @_ == 2 ) ? $_[1] : $_[0];
     _validate_bit( $a, 'a' );
-    return $a == 0 ? 1 : 0;
+    # Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+    return cmos_not( $a );
 }
 
 # XOR (exclusive OR) — returns 1 when inputs DIFFER.
@@ -191,7 +208,8 @@ sub XOR {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    return $a ^ $b;
+    # Delegate to cmos_xor — the CMOS 4-NAND XOR construction (16 transistors).
+    return cmos_xor( $a, $b );
 }
 
 # NAND — returns 0 only when BOTH inputs are 1.
@@ -217,7 +235,8 @@ sub NAND {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    return NOT( AND( $a, $b ) );
+    # Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
+    return cmos_nand( $a, $b );
 }
 
 # NOR — returns 1 only when BOTH inputs are 0.
@@ -243,7 +262,8 @@ sub NOR {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    return NOT( OR( $a, $b ) );
+    # Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
+    return cmos_nor( $a, $b );
 }
 
 # XNOR (exclusive NOR) — returns 1 when inputs are the SAME.
@@ -267,7 +287,8 @@ sub XNOR {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
     _validate_bit( $a, 'a' );
     _validate_bit( $b, 'b' );
-    return NOT( XOR( $a, $b ) );
+    # Delegate to cmos_xnor — XOR followed by an inverter (18 transistors).
+    return cmos_xnor( $a, $b );
 }
 
 # ============================================================================

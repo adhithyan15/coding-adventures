@@ -1,1 +1,2 @@
+REM Prerequisite (not installed on Windows): ../transistors
 echo Perl testing is not supported on Windows - skipping
