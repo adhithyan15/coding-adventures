@@ -1,1 +1,1 @@
-mix run -e "HelloWorld.main()"
+elixir hello_world.exs

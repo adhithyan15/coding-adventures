@@ -21,7 +21,7 @@ Source code (this file)
 ## Usage
 
 ```bash
-mix run -e "HelloWorld.main()"
+elixir hello_world.exs
 ```
 
 ## How it fits in the stack
