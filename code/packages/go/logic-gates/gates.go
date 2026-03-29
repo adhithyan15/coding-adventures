@@ -51,7 +51,25 @@
 // equivalent of "the chip does something unpredictable."
 package logicgates
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/adhithyan15/coding-adventures/code/packages/go/transistors"
+)
+
+// cmosAnd, cmosOr, cmosNot, cmosXor, cmosNand, cmosNor are package-level
+// CMOS gate instances created once at startup. Using default circuit parameters
+// (3.3 V Vdd, 180 nm CMOS node). All seven fundamental gates now delegate their
+// digital evaluation to these CMOS transistor models, reflecting the physical
+// reality that logic gates are built from transistors.
+var (
+	_cmosAnd  = transistors.NewCMOSAnd(nil)
+	_cmosOr   = transistors.NewCMOSOr(nil)
+	_cmosNot  = transistors.NewCMOSInverter(nil, nil, nil)
+	_cmosXor  = transistors.NewCMOSXor(nil)
+	_cmosNand = transistors.NewCMOSNand(nil, nil, nil)
+	_cmosNor  = transistors.NewCMOSNor(nil, nil, nil)
+)
 
 // =========================================================================
 // Input Validation
@@ -118,7 +136,14 @@ func validateBits(values []int, name string) {
 func AND(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	return a & b
+	// Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+	// EvaluateDigital returns (int, error); panic on error since we've
+	// already validated inputs, making an error impossible.
+	result, err := _cmosAnd.EvaluateDigital(a, b)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: AND CMOS evaluation error: %v", err))
+	}
+	return result
 }
 
 // OR returns 1 when AT LEAST ONE input is 1.
@@ -153,7 +178,12 @@ func AND(a, b int) int {
 func OR(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	return a | b
+	// Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+	result, err := _cmosOr.EvaluateDigital(a, b)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: OR CMOS evaluation error: %v", err))
+	}
+	return result
 }
 
 // NOT inverts its input: 0 becomes 1, 1 becomes 0.
@@ -185,10 +215,12 @@ func OR(a, b int) int {
 // signals, complementary outputs, building other gates.
 func NOT(a int) int {
 	validateBit(a, "a")
-	if a == 0 {
-		return 1
+	// Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+	result, err := _cmosNot.EvaluateDigital(a)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: NOT CMOS evaluation error: %v", err))
 	}
-	return 0
+	return result
 }
 
 // XOR (exclusive OR) returns 1 when inputs DIFFER.
@@ -216,7 +248,12 @@ func NOT(a int) int {
 func XOR(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	return a ^ b
+	// Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+	result, err := _cmosXor.EvaluateDigital(a, b)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: XOR CMOS evaluation error: %v", err))
+	}
+	return result
 }
 
 // NAND returns 0 only when BOTH inputs are 1.
@@ -248,7 +285,12 @@ func XOR(a, b int) int {
 func NAND(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	return NOT(AND(a, b))
+	// Delegate to the CMOS NAND gate (4 transistors — the natural CMOS gate).
+	result, err := _cmosNand.EvaluateDigital(a, b)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: NAND CMOS evaluation error: %v", err))
+	}
+	return result
 }
 
 // NOR returns 1 only when BOTH inputs are 0.
@@ -273,7 +315,12 @@ func NAND(a, b int) int {
 func NOR(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	return NOT(OR(a, b))
+	// Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS gate).
+	result, err := _cmosNor.EvaluateDigital(a, b)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: NOR CMOS evaluation error: %v", err))
+	}
+	return result
 }
 
 // XNOR returns 1 when inputs are the SAME.
@@ -295,7 +342,18 @@ func NOR(a, b int) int {
 func XNOR(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	return NOT(XOR(a, b))
+	// XNOR = NOT(XOR(a, b)). The transistors package does not have a dedicated
+	// XNOR gate, so we compose it from the transistors-backed XOR and NOT. Both
+	// delegates use the CMOS transistor simulation, preserving the physical model.
+	xorResult, err := _cmosXor.EvaluateDigital(a, b)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: XNOR XOR CMOS evaluation error: %v", err))
+	}
+	notResult, err := _cmosNot.EvaluateDigital(xorResult)
+	if err != nil {
+		panic(fmt.Sprintf("logicgates: XNOR NOT CMOS evaluation error: %v", err))
+	}
+	return notResult
 }
 
 // =========================================================================

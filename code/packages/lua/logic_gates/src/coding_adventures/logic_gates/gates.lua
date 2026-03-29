@@ -38,7 +38,22 @@
 -- the valid range cause undefined behavior — our error is the software
 -- equivalent of "the chip does something unpredictable."
 
+-- The CMOS gate module from the transistors package. Each of the seven
+-- primitive gate functions delegates its digital evaluation to a CMOS
+-- transistor model here, reflecting the physical reality that logic gates
+-- are built from transistor pairs.
+local cmos = require("coding_adventures.transistors.cmos_gates")
+
 local gates = {}
+
+-- Module-level CMOS gate instances, shared across all calls to avoid
+-- repeated object construction. Uses default circuit parameters (3.3 V Vdd).
+local _cmos_not  = cmos.CMOSInverter()
+local _cmos_nand = cmos.CMOSNand()
+local _cmos_nor  = cmos.CMOSNor()
+local _cmos_and  = cmos.CMOSAnd()
+local _cmos_or   = cmos.CMOSOr()
+local _cmos_xor  = cmos.CMOSXor()
 
 -- =========================================================================
 -- Input Validation
@@ -109,7 +124,10 @@ end
 function gates.AND(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    return a & b
+    -- Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+    local result, err = _cmos_and:evaluate_digital(a, b)
+    if err then error("logic_gates: AND CMOS evaluation error: " .. tostring(err)) end
+    return result
 end
 
 --- OR returns 1 when AT LEAST ONE input is 1.
@@ -142,7 +160,10 @@ end
 function gates.OR(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    return a | b
+    -- Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+    local result, err = _cmos_or:evaluate_digital(a, b)
+    if err then error("logic_gates: OR CMOS evaluation error: " .. tostring(err)) end
+    return result
 end
 
 --- NOT inverts its input: 0 becomes 1, 1 becomes 0.
@@ -162,10 +183,10 @@ end
 -- @return number The NOT of A.
 function gates.NOT(a)
     validate_bit(a, "a")
-    if a == 0 then
-        return 1
-    end
-    return 0
+    -- Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+    local result, err = _cmos_not:evaluate_digital(a)
+    if err then error("logic_gates: NOT CMOS evaluation error: " .. tostring(err)) end
+    return result
 end
 
 --- XOR (exclusive OR) returns 1 when inputs DIFFER.
@@ -191,7 +212,10 @@ end
 function gates.XOR(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    return a ~ b
+    -- Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+    local result, err = _cmos_xor:evaluate_digital(a, b)
+    if err then error("logic_gates: XOR CMOS evaluation error: " .. tostring(err)) end
+    return result
 end
 
 --- NAND returns 0 only when BOTH inputs are 1.
@@ -214,7 +238,10 @@ end
 function gates.NAND(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    return gates.NOT(gates.AND(a, b))
+    -- Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
+    local result, err = _cmos_nand:evaluate_digital(a, b)
+    if err then error("logic_gates: NAND CMOS evaluation error: " .. tostring(err)) end
+    return result
 end
 
 --- NOR returns 1 only when BOTH inputs are 0.
@@ -238,7 +265,10 @@ end
 function gates.NOR(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    return gates.NOT(gates.OR(a, b))
+    -- Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
+    local result, err = _cmos_nor:evaluate_digital(a, b)
+    if err then error("logic_gates: NOR CMOS evaluation error: " .. tostring(err)) end
+    return result
 end
 
 --- XNOR returns 1 when inputs are the SAME.
@@ -261,7 +291,12 @@ end
 function gates.XNOR(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    return gates.NOT(gates.XOR(a, b))
+    -- XNOR = NOT(XOR(a, b)). Compose from transistors-backed XOR and NOT.
+    local xor_result, err1 = _cmos_xor:evaluate_digital(a, b)
+    if err1 then error("logic_gates: XNOR XOR CMOS evaluation error: " .. tostring(err1)) end
+    local result, err2 = _cmos_not:evaluate_digital(xor_result)
+    if err2 then error("logic_gates: XNOR NOT CMOS evaluation error: " .. tostring(err2)) end
+    return result
 end
 
 -- =========================================================================

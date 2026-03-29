@@ -13,6 +13,11 @@
 #   CodingAdventures::LogicGates.not_gate(0)      # => 1
 #   CodingAdventures::LogicGates.nand_xor(1, 0)   # => 1
 
+# Transistors must be loaded before gates — gate implementations delegate
+# their CMOS digital evaluation to CodingAdventures::Transistors::CMOSInverter,
+# CMOSNand, CMOSNor, CMOSAnd, CMOSOr, and CMOSXor.
+require "coding_adventures_transistors"
+
 require_relative "coding_adventures/logic_gates/version"
 require_relative "coding_adventures/logic_gates/gates"
 require_relative "coding_adventures/logic_gates/sequential"
