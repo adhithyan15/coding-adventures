@@ -1,6 +1,3 @@
-requires 'CodingAdventures::WasmLeb128', '0.01';
-requires 'CodingAdventures::WasmTypes',  '0.01';
-
-on 'test' => sub {
-    requires 'Test2::V0';
-};
+requires 'coding-adventures-wasm-leb128', '0.01';
+requires 'coding-adventures-wasm-types', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };

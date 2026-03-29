@@ -1,7 +1,2 @@
-requires 'CodingAdventures::GrammarTools';
-requires 'CodingAdventures::Lexer';
-requires 'CodingAdventures::VerilogLexer';
-
-on 'test' => sub {
-    requires 'Test2::V0';
-};
+requires 'coding-adventures-verilog-lexer', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };

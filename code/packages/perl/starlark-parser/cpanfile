@@ -1,7 +1,2 @@
-requires 'CodingAdventures::GrammarTools';
-requires 'CodingAdventures::Lexer';
-requires 'CodingAdventures::StarlarkLexer';
-
-on 'test' => sub {
-    requires 'Test2::V0';
-};
+requires 'coding-adventures-starlark-lexer', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };

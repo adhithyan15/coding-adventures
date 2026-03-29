@@ -1,5 +1,2 @@
-requires 'CodingAdventures::LatticeParser';
-
-on 'test' => sub {
-    requires 'Test2::V0';
-};
+requires 'coding-adventures-lattice-parser', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };
