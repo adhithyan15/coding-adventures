@@ -1,6 +1,3 @@
+cd ../wasm-leb128 && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-cd ../wasm-leb128 && cpanm --notest --nodeps --quiet . && cd -
-cd ../wasm-types && cpanm --notest --nodeps --quiet . && cd -
-cd ../wasm-module-parser && cpanm --notest --nodeps --quiet . && cd -
-cpanm --notest --nodeps --quiet .
-prove -l -v t/
+PERL5LIB=$(cd ../wasm-types && pwd)/lib:$(cd ../wasm-module-parser && pwd)/lib:${PERL5LIB:-} prove -l -v t/

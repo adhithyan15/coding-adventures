@@ -1,7 +1,3 @@
+cd ../grammar-tools && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-cd ../grammar-tools && cpanm --notest --nodeps --quiet . && cd -
-cd ../json-lexer && cpanm --notest --nodeps --quiet . && cd -
-cd ../json-parser && cpanm --notest --nodeps --quiet . && cd -
-cd ../json-value && cpanm --notest --nodeps --quiet . && cd -
-cpanm --notest --nodeps --quiet .
-prove -l -v t/
+PERL5LIB=$(cd ../json-lexer && pwd)/lib:$(cd ../json-parser && pwd)/lib:$(cd ../json-value && pwd)/lib:${PERL5LIB:-} prove -l -v t/

@@ -1,7 +1,3 @@
+cd ../grammar-tools && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-cd ../grammar-tools && cpanm --notest --nodeps --quiet . && cd -
-cd ../lattice-lexer && cpanm --notest --nodeps --quiet . && cd -
-cd ../lattice-parser && cpanm --notest --nodeps --quiet . && cd -
-cd ../lattice-ast-to-css && cpanm --notest --nodeps --quiet . && cd -
-cpanm --notest --nodeps --quiet .
-prove -l -v t/
+PERL5LIB=$(cd ../lattice-lexer && pwd)/lib:$(cd ../lattice-parser && pwd)/lib:$(cd ../lattice-ast-to-css && pwd)/lib:${PERL5LIB:-} prove -l -v t/

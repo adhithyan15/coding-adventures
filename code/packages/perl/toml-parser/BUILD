@@ -1,5 +1,3 @@
+cd ../grammar-tools && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-cd ../grammar-tools && cpanm --notest --nodeps --quiet . && cd -
-cd ../toml-lexer && cpanm --notest --nodeps --quiet . && cd -
-cpanm --notest --nodeps --quiet .
-prove -l -v t/
+PERL5LIB=$(cd ../toml-lexer && pwd)/lib:${PERL5LIB:-} prove -l -v t/
