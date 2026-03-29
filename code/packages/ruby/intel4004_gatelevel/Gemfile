@@ -7,6 +7,7 @@ gemspec
 # Local path dependencies for development -- when published to RubyGems, the
 # gemspec's add_dependency handles the real version-pinned dependencies.
 gem "coding_adventures_logic_gates", path: "../logic_gates"
+gem "coding_adventures_transistors", path: "../transistors"
 gem "coding_adventures_arithmetic", path: "../arithmetic"
 
 group :development, :test do
