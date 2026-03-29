@@ -201,10 +201,12 @@ end
 function wave.square_wave(frequency, amplitude, sample_rate, num_samples)
     local samples = {}
     for i = 0, num_samples - 1 do
-        local t     = i / sample_rate
-        local angle = wave.TWO_PI * frequency * t
-        local s     = trig.sin(angle)
-        if s >= 0 then
+        local t = i / sample_rate
+        -- Use phase-based calculation instead of sin-sign to avoid floating-point
+        -- precision issues. sin(π) returns ~1.2e-16 (positive) in Lua, not exactly
+        -- zero, which would incorrectly keep +amplitude at the half-period boundary.
+        local phase = (t * frequency) % 1.0  -- fractional position in [0,1)
+        if phase < 0.5 then
             samples[i + 1] = amplitude
         else
             samples[i + 1] = -amplitude

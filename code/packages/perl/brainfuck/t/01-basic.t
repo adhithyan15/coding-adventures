@@ -20,9 +20,9 @@ subtest 'validate() — no brackets' => sub {
 };
 
 subtest 'validate() — properly nested' => sub {
-    ok(validate("[[][]]"), 'nested [] valid');
-    ok(validate("[[[]]]"), 'deeply nested valid');
-    ok(validate("[]"),     'empty loop valid');
+    my ($ok1) = validate("[[][]]"); ok($ok1, 'nested [] valid');
+    my ($ok2) = validate("[[[]]]"); ok($ok2, 'deeply nested valid');
+    my ($ok3) = validate("[]");     ok($ok3, 'empty loop valid');
 };
 
 subtest 'validate() — lone [' => sub {

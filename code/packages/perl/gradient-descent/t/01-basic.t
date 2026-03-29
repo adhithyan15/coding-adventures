@@ -180,7 +180,7 @@ subtest 'train() — reduces loss vs. initial weights' => sub {
         learning_rate => 0.1, max_iterations => 100,
     );
     my $init_loss = $gd->compute_loss([0.0], \@INPUTS, \@TARGETS, \&mse);
-    my ($trained, _) = $gd->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
+    my ($trained, ) = $gd->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
     my $final_loss = $gd->compute_loss($trained, \@INPUTS, \@TARGETS, \&mse);
     ok($final_loss < $init_loss, 'final loss < initial loss');
 };
@@ -189,8 +189,8 @@ subtest 'train() — higher lr converges faster' => sub {
     my $gd_fast = CodingAdventures::GradientDescent->new(learning_rate => 0.2, max_iterations => 500);
     my $gd_slow = CodingAdventures::GradientDescent->new(learning_rate => 0.001, max_iterations => 500);
 
-    my ($w_fast, _) = $gd_fast->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
-    my ($w_slow, _) = $gd_slow->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
+    my ($w_fast, ) = $gd_fast->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
+    my ($w_slow, ) = $gd_slow->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
 
     my $loss_fast = $gd_fast->compute_loss($w_fast, \@INPUTS, \@TARGETS, \&mse);
     my $loss_slow = $gd_slow->compute_loss($w_slow, \@INPUTS, \@TARGETS, \&mse);

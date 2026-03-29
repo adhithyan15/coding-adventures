@@ -186,10 +186,12 @@ sub square_wave {
     my ($frequency, $amplitude, $sample_rate, $num_samples) = @_;
     my @samples;
     for my $i ( 0 .. $num_samples - 1 ) {
-        my $t     = $i / $sample_rate;
-        my $angle = $TWO_PI * $frequency * $t;
-        my $s     = sin_approx($angle);
-        push @samples, ($s >= 0) ? $amplitude : -$amplitude;
+        my $t = $i / $sample_rate;
+        # Use phase-based calculation instead of sin-sign to avoid floating-point
+        # precision issues. sin(pi) returns a tiny positive near-zero value, which
+        # would incorrectly keep +amplitude at the half-period boundary.
+        my $phase = ( $t * $frequency ) - floor( $t * $frequency );
+        push @samples, ( $phase < 0.5 ) ? $amplitude : -$amplitude;
     }
     return @samples;
 }

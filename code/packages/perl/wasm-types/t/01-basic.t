@@ -115,7 +115,8 @@ subtest 'encode_val_type' => sub {
     is([encode_val_type(0x70)], [0x70], 'encode funcref = [0x70]');
     is([encode_val_type(0x6F)], [0x6F], 'encode externref = [0x6F]');
 
-    is(scalar( encode_val_type(0x7F) ), 1, 'returns exactly 1 byte');
+    my @vt_bytes = encode_val_type(0x7F);
+    is(scalar(@vt_bytes), 1, 'returns exactly 1 byte');
 
     # Error on invalid type
     ok(dies { encode_val_type(0x42) }, 'dies on invalid val type 0x42');

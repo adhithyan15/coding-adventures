@@ -71,7 +71,7 @@ our $VERSION = '0.01';
 
 use File::Basename qw(dirname);
 use File::Spec;
-use CodingAdventures::GrammarTools qw(parse_token_grammar);
+use CodingAdventures::GrammarTools;
 
 # ============================================================================
 # Grammar and rule caches (package-level)
@@ -107,7 +107,7 @@ sub _grammar {
     my $content = do { local $/; <$fh> };
     close $fh;
 
-    my ($grammar, $err) = parse_token_grammar($content);
+    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
     die "CodingAdventures::XmlLexer: failed to parse xml.tokens: $err"
         unless $grammar;
 

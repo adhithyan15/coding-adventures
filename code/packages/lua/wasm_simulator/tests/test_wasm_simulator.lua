@@ -896,14 +896,17 @@ describe("wasm_simulator", function()
             -- end
             -- i32.const 100
             -- end
+            -- Note: 100 = 0x64, but as a single-byte signed LEB128, 0x64 has
+            -- bit 6 set → sign-extended to -28. Use two-byte encoding 0xE4,0x00
+            -- instead (continuation bit set in 0xE4, sign bit clear in 0x00).
             local body = b(
-                0x02, 0x40,       -- block (void)
-                0x41, 0x01,       --   i32.const 1
-                0x0D, 0x00,       --   br_if 0
-                0x41, 0x07, 0x1A, --   i32.const 7; drop (skipped)
-                0x0B,             -- end (block)
-                0x41, 0x64,       -- i32.const 100
-                0x0B              -- end (function)
+                0x02, 0x40,             -- block (void)
+                0x41, 0x01,             --   i32.const 1
+                0x0D, 0x00,             --   br_if 0
+                0x41, 0x07, 0x1A,       --   i32.const 7; drop (skipped)
+                0x0B,                   -- end (block)
+                0x41, 0xE4, 0x00,       -- i32.const 100 (two-byte signed LEB128)
+                0x0B                    -- end (function)
             )
             local wasm = WASM_HEADER
                 .. type_sec({{params={}, results={0x7F}}})

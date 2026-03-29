@@ -83,7 +83,7 @@ our $VERSION = '0.01';
 
 use File::Basename qw(dirname);
 use File::Spec;
-use CodingAdventures::GrammarTools qw(parse_token_grammar);
+use CodingAdventures::GrammarTools;
 
 # ============================================================================
 # Grammar loading and caching
@@ -118,7 +118,7 @@ sub _grammar {
     my $content = do { local $/; <$fh> };
     close $fh;
 
-    my ($grammar, $err) = parse_token_grammar($content);
+    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
     die "CodingAdventures::TypescriptLexer: failed to parse typescript.tokens: $err"
         unless $grammar;
 
