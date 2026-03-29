@@ -8,8 +8,10 @@
  * domain logic. That separation is the whole reason this package exists.
  */
 import type {
+  DrawClipInstruction,
   DrawGroupInstruction,
   DrawInstruction,
+  DrawLineInstruction,
   DrawMetadata,
   DrawRectInstruction,
   DrawRenderer,
@@ -49,12 +51,53 @@ function metadataToAttributes(metadata?: DrawMetadata): string {
 
 /** Serialize one rectangle instruction into one SVG `<rect>`. */
 function renderRect(instruction: DrawRectInstruction): string {
-  return `  <rect x="${instruction.x}" y="${instruction.y}" width="${instruction.width}" height="${instruction.height}" fill="${xmlEscape(instruction.fill)}"${metadataToAttributes(instruction.metadata)} />`;
+  const strokeAttrs = instruction.stroke !== undefined
+    ? ` stroke="${xmlEscape(instruction.stroke)}" stroke-width="${instruction.strokeWidth ?? 1}"`
+    : "";
+  return `  <rect x="${instruction.x}" y="${instruction.y}" width="${instruction.width}" height="${instruction.height}" fill="${xmlEscape(instruction.fill)}"${strokeAttrs}${metadataToAttributes(instruction.metadata)} />`;
 }
 
 /** Serialize one text instruction into one SVG `<text>`. */
 function renderText(instruction: DrawTextInstruction): string {
-  return `  <text x="${instruction.x}" y="${instruction.y}" text-anchor="${instruction.align}" font-family="${xmlEscape(instruction.fontFamily)}" font-size="${instruction.fontSize}" fill="${xmlEscape(instruction.fill)}"${metadataToAttributes(instruction.metadata)}>${xmlEscape(instruction.value)}</text>`;
+  const weightAttr = instruction.fontWeight !== undefined && instruction.fontWeight !== "normal"
+    ? ` font-weight="${instruction.fontWeight}"`
+    : "";
+  return `  <text x="${instruction.x}" y="${instruction.y}" text-anchor="${instruction.align}" font-family="${xmlEscape(instruction.fontFamily)}" font-size="${instruction.fontSize}" fill="${xmlEscape(instruction.fill)}"${weightAttr}${metadataToAttributes(instruction.metadata)}>${xmlEscape(instruction.value)}</text>`;
+}
+
+/**
+ * Serialize a line instruction into one SVG `<line>`.
+ *
+ * SVG `<line>` uses x1/y1/x2/y2 attributes — a direct 1:1 mapping from
+ * our DrawLineInstruction fields.
+ */
+function renderLine(instruction: DrawLineInstruction): string {
+  return `  <line x1="${instruction.x1}" y1="${instruction.y1}" x2="${instruction.x2}" y2="${instruction.y2}" stroke="${xmlEscape(instruction.stroke)}" stroke-width="${instruction.strokeWidth}"${metadataToAttributes(instruction.metadata)} />`;
+}
+
+/**
+ * Serialize a clip instruction into an SVG `<g>` with a `<clipPath>`.
+ *
+ * SVG clipping uses a `<clipPath>` element containing a `<rect>` that
+ * defines the clip region, referenced by `clip-path="url(#id)"` on a
+ * `<g>` that wraps the clipped children. We generate unique IDs using
+ * a counter to avoid collisions.
+ */
+let clipIdCounter = 0;
+
+function renderClip(instruction: DrawClipInstruction): string {
+  const id = `clip-${++clipIdCounter}`;
+  const children = instruction.children.map(renderInstruction).join("\n");
+  return [
+    `  <defs>`,
+    `    <clipPath id="${id}">`,
+    `      <rect x="${instruction.x}" y="${instruction.y}" width="${instruction.width}" height="${instruction.height}" />`,
+    `    </clipPath>`,
+    `  </defs>`,
+    `  <g clip-path="url(#${id})"${metadataToAttributes(instruction.metadata)}>`,
+    children,
+    `  </g>`,
+  ].join("\n");
 }
 
 /** Serialize a group recursively into an SVG `<g>`. */
@@ -72,11 +115,18 @@ function renderInstruction(instruction: DrawInstruction): string {
       return renderText(instruction);
     case "group":
       return renderGroup(instruction);
+    case "line":
+      return renderLine(instruction);
+    case "clip":
+      return renderClip(instruction);
   }
 }
 
 export const SVG_RENDERER: DrawRenderer<string> = {
   render(scene: DrawScene): string {
+    // Reset the clip ID counter for deterministic output across renders.
+    clipIdCounter = 0;
+
     // The scene-level label becomes the SVG accessibility label when present.
     const instructions = scene.instructions.map(renderInstruction).join("\n");
     const label = scene.metadata?.label === undefined

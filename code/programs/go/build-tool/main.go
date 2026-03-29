@@ -460,7 +460,7 @@ func run() int {
 
 // allLanguages is the canonical list of supported languages in the monorepo.
 // The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl"}
+var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift"}
 
 // sharedPrefixes are repo paths that, when changed, mean ALL languages
 // need rebuilding. Keep this list intentionally narrow: only changes to

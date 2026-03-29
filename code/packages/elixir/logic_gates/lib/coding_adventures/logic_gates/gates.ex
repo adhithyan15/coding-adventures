@@ -11,6 +11,23 @@ defmodule CodingAdventures.LogicGates.Gates do
   This module implements the seven fundamental gates, proves that all of them
   can be built from a single gate type (NAND), and provides multi-input variants.
 
+  ## Physical implementation via CMOS transistors
+
+  The seven primitive gate functions (not_gate, and_gate, or_gate, xor_gate,
+  nand_gate, nor_gate, xnor_gate) now delegate their digital evaluation to
+  `CodingAdventures.Transistors.CMOSGates`. This reflects the physical reality
+  that logic gates are built from transistor pairs:
+
+      NOT  → inverter_evaluate_digital/1  (2 transistors)
+      NAND → nand_evaluate_digital/2      (4 transistors)
+      NOR  → nor_evaluate_digital/2       (4 transistors)
+      AND  → and_evaluate_digital/2       (6 transistors = NAND + inverter)
+      OR   → or_evaluate_digital/2        (6 transistors = NOR + inverter)
+      XOR  → xor_evaluate_digital/2        (16 transistors = 4 NANDs)
+      XNOR → xnor_evaluate_digital/2       (18 transistors = XOR + Inverter)
+
+  The public API is unchanged — inputs and outputs are still 0/1 integers.
+
   ## The Four Fundamental Gates
 
   These are the building blocks. NOT, AND, OR, and XOR are the four gates
@@ -21,6 +38,8 @@ defmodule CodingAdventures.LogicGates.Gates do
   input can only be 0 or 1, a two-input gate has exactly 4 possible input
   combinations (2 x 2 = 4), making it easy to verify correctness.
   """
+
+  alias CodingAdventures.Transistors.CMOSGates
 
   # ---------------------------------------------------------------------------
   # Input validation
@@ -84,10 +103,10 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec not_gate(0 | 1) :: 0 | 1
   def not_gate(a) when is_bit(a) do
-    # Elixir's Bitwise XOR with 1 flips the bit:
-    #   0 XOR 1 = 1
-    #   1 XOR 1 = 0
-    Bitwise.bxor(a, 1)
+    # Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+    # When input is HIGH, NMOS conducts and pulls output to GND (logic 0).
+    # When input is LOW,  PMOS conducts and pulls output to Vdd (logic 1).
+    CMOSGates.inverter_evaluate_digital(a)
   end
 
   def not_gate(a), do: validate_bit!(a, "a") && raise("unreachable")
@@ -124,7 +143,9 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec and_gate(0 | 1, 0 | 1) :: 0 | 1
   def and_gate(a, b) when is_bit(a) and is_bit(b) do
-    Bitwise.band(a, b)
+    # Delegate to the CMOS AND gate (NAND followed by an inverter = 6 transistors).
+    # In CMOS, AND is NOT the primitive — NAND is. Adding an inverter stage gives AND.
+    CMOSGates.and_evaluate_digital(a, b)
   end
 
   def and_gate(a, b) do
@@ -163,7 +184,9 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec or_gate(0 | 1, 0 | 1) :: 0 | 1
   def or_gate(a, b) when is_bit(a) and is_bit(b) do
-    Bitwise.bor(a, b)
+    # Delegate to the CMOS OR gate (NOR followed by an inverter = 6 transistors).
+    # In CMOS, OR = NOT(NOR). The NOR is the natural gate; an inverter stage gives OR.
+    CMOSGates.or_evaluate_digital(a, b)
   end
 
   def or_gate(a, b) do
@@ -203,7 +226,9 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec xor_gate(0 | 1, 0 | 1) :: 0 | 1
   def xor_gate(a, b) when is_bit(a) and is_bit(b) do
-    Bitwise.bxor(a, b)
+    # Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+    # Construction: let C = NAND(A,B); XOR = NAND(NAND(A,C), NAND(B,C))
+    CMOSGates.xor_evaluate_digital(a, b)
   end
 
   def xor_gate(a, b) do
@@ -249,7 +274,9 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec nand_gate(0 | 1, 0 | 1) :: 0 | 1
   def nand_gate(a, b) when is_bit(a) and is_bit(b) do
-    not_gate(and_gate(a, b))
+    # Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
+    # NAND is cheaper than AND in silicon: 4 vs 6 transistors, no inverter stage.
+    CMOSGates.nand_evaluate_digital(a, b)
   end
 
   def nand_gate(a, b) do
@@ -284,7 +311,9 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec nor_gate(0 | 1, 0 | 1) :: 0 | 1
   def nor_gate(a, b) when is_bit(a) and is_bit(b) do
-    not_gate(or_gate(a, b))
+    # Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
+    # NOR is the gate used in SR latches; two cross-coupled NOR gates make a latch.
+    CMOSGates.nor_evaluate_digital(a, b)
   end
 
   def nor_gate(a, b) do
@@ -320,7 +349,10 @@ defmodule CodingAdventures.LogicGates.Gates do
   """
   @spec xnor_gate(0 | 1, 0 | 1) :: 0 | 1
   def xnor_gate(a, b) when is_bit(a) and is_bit(b) do
-    not_gate(xor_gate(a, b))
+    # Delegate to the dedicated CMOS XNOR gate (XOR + Inverter) in the transistors package.
+    # CMOSGates.xnor_evaluate_digital/2 computes NOT(XOR(A, B)) in a single call,
+    # routing through the full transistor simulation.
+    CMOSGates.xnor_evaluate_digital(a, b)
   end
 
   def xnor_gate(a, b) do

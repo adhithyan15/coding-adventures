@@ -3,7 +3,8 @@ resolver.py -- Dependency Resolution from Package Metadata
 ==========================================================
 
 This module reads package metadata files (pyproject.toml for Python, .gemspec
-for Ruby, go.mod for Go) and extracts internal dependencies. It builds a
+for Ruby, go.mod for Go, package.json for TypeScript, Cargo.toml for Rust,
+Package.swift for Swift) and extracts internal dependencies. It builds a
 directed graph where edges represent "A depends on B".
 
 Dependency mapping conventions
@@ -22,6 +23,15 @@ monorepo:
 
 - **Go**: Module paths in go.mod include the repo path. We map module paths
   to ``go/X`` based on the last path component.
+
+- **TypeScript**: package.json uses ``@coding-adventures/`` scoped npm names.
+  ``@coding-adventures/logic-gates`` maps to ``typescript/logic-gates``.
+
+- **Rust**: Cargo.toml uses path-based local dependencies.
+  The crate name (key before ``=``) maps to ``rust/crate-name``.
+
+- **Swift**: Package.swift uses ``.package(path: "../dep-name")`` relative
+  path references. The directory name maps to ``swift/dep-name``.
 
 External dependencies (those not matching the monorepo prefix) are silently
 skipped.
@@ -104,6 +114,33 @@ class DirectedGraph:
                     visited.add(predecessor)
                     stack.append(predecessor)
         return visited
+
+    def edges(self) -> list[tuple[str, str]]:
+        """Return all directed edges as (from, to) tuples."""
+        result: list[tuple[str, str]] = []
+        for node, successors in self._forward.items():
+            for succ in successors:
+                result.append((node, succ))
+        return result
+
+    def affected_nodes(self, changed: set[str]) -> set[str]:
+        """Return all nodes in ``changed`` plus all downstream packages.
+
+        In this graph, edges flow dep -> pkg (a dependency must be built before
+        the packages that use it). When a dep changes, every package that
+        (transitively) depends on it also needs rebuilding — those are reachable
+        via forward traversal (transitive_closure).
+
+        Args:
+            changed: Package names whose source files changed.
+
+        Returns:
+            The changed set plus all packages that transitively use them.
+        """
+        result: set[str] = set(changed)
+        for name in changed:
+            result |= self.transitive_closure(name)
+        return result
 
     def independent_groups(self) -> list[list[str]]:
         """Partition nodes into parallel execution levels (Kahn's algorithm)."""
@@ -343,6 +380,165 @@ def _extract_lua_deps(
 
 
 # ---------------------------------------------------------------------------
+# TypeScript dependency parsing
+# ---------------------------------------------------------------------------
+
+
+def _parse_typescript_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from a TypeScript package's package.json.
+
+    TypeScript packages declare dependencies in package.json::
+
+        "dependencies": {
+            "@coding-adventures/logic-gates": "file:../logic-gates"
+        }
+
+    We scan both ``dependencies`` and ``devDependencies`` blocks for keys
+    matching the ``@coding-adventures/`` prefix (or bare name fallback) and
+    map them to internal package names.
+
+    Args:
+        package: The TypeScript package to inspect.
+        known_names: Mapping from npm name to package name.
+
+    Returns:
+        List of internal dependency package names.
+    """
+    package_json = package.path / "package.json"
+    if not package_json.exists():
+        return []
+
+    text = package_json.read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    in_deps = False
+    key_re = re.compile(r'"([^"]+)"\s*:')
+    for line in text.splitlines():
+        stripped = line.strip()
+
+        if not in_deps:
+            if ('"dependencies"' in stripped or '"devDependencies"' in stripped) and "{" in stripped:
+                in_deps = True
+            continue
+
+        if "}" in stripped:
+            in_deps = False
+            continue
+
+        for match in key_re.finditer(stripped):
+            dep_name = match.group(1).strip().lower()
+            if dep_name in known_names:
+                internal_deps.append(known_names[dep_name])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
+# Rust dependency parsing
+# ---------------------------------------------------------------------------
+
+
+def _parse_rust_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from a Rust package's Cargo.toml.
+
+    Rust Cargo.toml declares workspace-local dependencies with path references::
+
+        [dependencies]
+        logic-gates = { path = "../logic-gates" }
+
+    We look for lines in the ``[dependencies]`` section that contain
+    ``path =`` and extract the crate name (the key before ``=``). We then
+    look up that name in the known names mapping.
+
+    Args:
+        package: The Rust package to inspect.
+        known_names: Mapping from crate name to package name.
+
+    Returns:
+        List of internal dependency package names.
+    """
+    cargo_toml = package.path / "Cargo.toml"
+    if not cargo_toml.exists():
+        return []
+
+    text = cargo_toml.read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    in_deps = False
+    for line in text.splitlines():
+        stripped = line.strip()
+
+        # Detect section headers like [dependencies] or [dev-dependencies].
+        if stripped.startswith("["):
+            in_deps = stripped == "[dependencies]"
+            continue
+
+        if not in_deps:
+            continue
+
+        # Look for lines like: logic-gates = { path = "../logic-gates" }
+        if "path" in stripped and "=" in stripped:
+            parts = stripped.split("=", 1)
+            if len(parts) >= 2:
+                crate_name = parts[0].strip().lower()
+                if crate_name in known_names:
+                    internal_deps.append(known_names[crate_name])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
+# Swift dependency parsing
+# ---------------------------------------------------------------------------
+
+# Matches: .package(path: "../dep-name")
+_SWIFT_DEP_RE = re.compile(r'\.package\s*\(\s*path\s*:\s*"\.\./([^"]+)"')
+
+
+def _parse_swift_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from a Swift Package.swift file.
+
+    Swift Package Manager uses relative path references for local (monorepo)
+    dependencies. The declaration always appears on a single line::
+
+        .package(path: "../logic-gates"),
+
+    We scan for this pattern and map the directory name back to our internal
+    package name. External dependencies (declared with ``url:``) are silently
+    skipped because they don't match the ``path: "../"`` prefix.
+
+    Args:
+        package: The Swift package to inspect.
+        known_names: Mapping from directory name to package name.
+
+    Returns:
+        List of internal dependency package names.
+    """
+    manifest = package.path / "Package.swift"
+    if not manifest.exists():
+        return []
+
+    text = manifest.read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("//"):
+            continue
+        match = _SWIFT_DEP_RE.search(stripped)
+        if match:
+            dep_dir = match.group(1).lower()
+            # Guard against path traversal: reject any segment containing
+            # a path separator or additional ".." components.
+            if "/" in dep_dir or "\\" in dep_dir or dep_dir == "..":
+                continue
+            if dep_dir in known_names:
+                internal_deps.append(known_names[dep_dir])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
 # Perl dependency parsing
 # ---------------------------------------------------------------------------
 
@@ -401,26 +597,45 @@ def _parse_perl_deps(package: Package, known_names: dict[str, str]) -> list[str]
 def _build_known_names(packages: list[Package]) -> dict[str, str]:
     """Build a mapping from ecosystem-specific dependency names to package names.
 
-    For Python: "coding-adventures-logic-gates" -> "python/logic-gates"
-    For Ruby:   "coding_adventures_logic_gates" -> "ruby/logic_gates"
-    For Go:     module paths -> "go/module-name"
+    For Python:     "coding-adventures-logic-gates" -> "python/logic-gates"
+    For Ruby:       "coding_adventures_logic_gates" -> "ruby/logic_gates"
+    For Go:         module paths -> "go/module-name"
+    For TypeScript: "@coding-adventures/logic-gates" -> "typescript/logic-gates"
+    For Rust:       "logic-gates" (crate name) -> "rust/logic-gates"
+    For Swift:      "logic-gates" (dir name) -> "swift/logic-gates"
+
+    Library packages take priority over programs when the same ecosystem name
+    maps to both. This prevents a program that depends on its own library from
+    resolving the dep to itself and creating a self-loop.
     """
     known: dict[str, str] = {}
+
+    def _set_known(key: str, value: str, pkg_path: Path) -> None:
+        """Insert key→value, letting library packages overwrite programs."""
+        if key not in known:
+            known[key] = value
+            return
+        # Key already set. Allow overwrite only if the current pkg is a
+        # library (not a program) — i.e., when the existing entry came from
+        # a program and we now have the definitive library entry.
+        if "/programs/" not in str(pkg_path).replace("\\", "/"):
+            known[key] = value
 
     for pkg in packages:
         if pkg.language == "python":
             # Convert package dir name to pypi name: "logic-gates" -> "coding-adventures-logic-gates"
             pypi_name = f"coding-adventures-{pkg.path.name}".lower()
-            known[pypi_name] = pkg.name
+            _set_known(pypi_name, pkg.name, pkg.path)
 
         elif pkg.language == "ruby":
             # Convert package dir name to gem name: "logic_gates" -> "coding_adventures_logic_gates"
             gem_name = f"coding_adventures_{pkg.path.name}".lower()
-            known[gem_name] = pkg.name
+            _set_known(gem_name, pkg.name, pkg.path)
 
         elif pkg.language == "go":
-            # For Go, we'd need to know the module path. For now, use a
-            # convention-based approach.
+            # For Go, read the module path from go.mod. Go module paths are
+            # unique across packages and programs, so the standard map write
+            # is safe here.
             go_mod = pkg.path / "go.mod"
             if go_mod.exists():
                 text = go_mod.read_text(encoding="utf-8")
@@ -430,20 +645,54 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
                         known[module_path] = pkg.name
                         break
 
+        elif pkg.language == "typescript":
+            # Convert dir name to npm scoped name: "logic-gates" -> "@coding-adventures/logic-gates"
+            npm_name = f"@coding-adventures/{pkg.path.name}".lower()
+            _set_known(npm_name, pkg.name, pkg.path)
+            _set_known(pkg.path.name.lower(), pkg.name, pkg.path)
+
+            # Also read the actual "name" field from package.json for accuracy.
+            package_json = pkg.path / "package.json"
+            if package_json.exists():
+                name_match = re.search(r'"name"\s*:\s*"([^"]+)"', package_json.read_text(encoding="utf-8"))
+                if name_match:
+                    _set_known(name_match.group(1).strip().lower(), pkg.name, pkg.path)
+
+        elif pkg.language == "rust":
+            # Rust crate names use the directory name directly (kebab-case).
+            crate_name = pkg.path.name.lower()
+            _set_known(crate_name, pkg.name, pkg.path)
+
         elif pkg.language == "elixir":
-            app_name = f"coding_adventures_{pkg.path.name.replace('-', '_')}".lower()
-            known[app_name] = pkg.name
+            # Elixir mix names replace hyphens with underscores.
+            base_name = pkg.path.name.replace("-", "_").lower()
+            app_name = f"coding_adventures_{base_name}"
+            _set_known(app_name, pkg.name, pkg.path)
+            _set_known(base_name, pkg.name, pkg.path)
+
+            # Also read the actual app name from mix.exs for accuracy.
+            mix_exs = pkg.path / "mix.exs"
+            if mix_exs.exists():
+                app_match = re.search(r"app:\s*:([a-z0-9_]+)", mix_exs.read_text(encoding="utf-8"))
+                if app_match:
+                    _set_known(app_match.group(1).strip().lower(), pkg.name, pkg.path)
 
         elif pkg.language == "lua":
             # Lua rockspec names use hyphens: "logic_gates" dir → "coding-adventures-logic-gates"
             rockspec_name = f"coding-adventures-{pkg.path.name.replace('_', '-')}".lower()
-            known[rockspec_name] = pkg.name
+            _set_known(rockspec_name, pkg.name, pkg.path)
 
         elif pkg.language == "perl":
             # Perl CPAN dist names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
             # This matches the Python convention exactly.
             cpan_name = f"coding-adventures-{pkg.path.name}".lower()
-            known[cpan_name] = pkg.name
+            _set_known(cpan_name, pkg.name, pkg.path)
+
+        elif pkg.language == "swift":
+            # Swift SPM package names are the kebab-case directory name.
+            # .package(path: "../logic-gates") references the directory name directly.
+            dir_base = pkg.path.name.lower()
+            _set_known(dir_base, pkg.name, pkg.path)
 
     return known
 
@@ -469,7 +718,7 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
     for pkg in packages:
         graph.add_node(pkg.name)
 
-    # Build the name-mapping table.
+    # Build the name-mapping table (single global map for cross-language deps).
     known_names = _build_known_names(packages)
 
     # Parse dependencies for each package.
@@ -480,12 +729,18 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_ruby_deps(pkg, known_names)
         elif pkg.language == "go":
             deps = _parse_go_deps(pkg, known_names)
+        elif pkg.language == "typescript":
+            deps = _parse_typescript_deps(pkg, known_names)
+        elif pkg.language == "rust":
+            deps = _parse_rust_deps(pkg, known_names)
         elif pkg.language == "elixir":
             deps = _parse_elixir_deps(pkg, known_names)
         elif pkg.language == "lua":
             deps = _parse_lua_deps(pkg, known_names)
         elif pkg.language == "perl":
             deps = _parse_perl_deps(pkg, known_names)
+        elif pkg.language == "swift":
+            deps = _parse_swift_deps(pkg, known_names)
         else:
             deps = []
 

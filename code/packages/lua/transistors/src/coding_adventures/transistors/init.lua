@@ -98,6 +98,7 @@ return {
     CMOSAnd      = cmos_gates.CMOSAnd,
     CMOSOr       = cmos_gates.CMOSOr,
     CMOSXor      = cmos_gates.CMOSXor,
+    CMOSXnor     = cmos_gates.CMOSXnor,
 
     -- ======================================================================
     -- TTL / RTL gates

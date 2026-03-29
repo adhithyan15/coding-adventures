@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-03-29
+
+### Added
+
+- `CMOSXnor` class: XNOR gate implemented as XOR + Inverter (8 transistors total).
+  Exposes both `evaluate(va, vb)` (analog) and `evaluate_digital(a, b)` (digital)
+  interfaces, consistent with all other composed CMOS gate classes.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

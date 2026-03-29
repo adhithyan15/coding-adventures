@@ -27,18 +27,14 @@ jobs:
 
       - name: Install renderer dependencies
         run: |
-          cd code/packages/typescript/code39 && npm install
-          cd code/packages/typescript/draw-instructions-svg && npm install
+          (cd code/packages/typescript/code39 && npm install)
+          (cd code/packages/typescript/draw-instructions-svg && npm install)
 
       - name: Install app dependencies
-        run: |
-          cd code/programs/typescript/code39-visualizer
-          npm install
+        run: (cd code/programs/typescript/code39-visualizer && npm install)
 
       - name: Build
-        run: |
-          cd code/programs/typescript/code39-visualizer
-          npm run build
+        run: (cd code/programs/typescript/code39-visualizer && npm run build)
 
       - name: Deploy to GitHub Pages (code39/ subdirectory)
         uses: peaceiris/actions-gh-pages@v4

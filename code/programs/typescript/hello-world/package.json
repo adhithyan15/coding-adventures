@@ -1,0 +1,12 @@
+{
+  "name": "hello-world",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "npx tsx hello_world.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
+  }
+}

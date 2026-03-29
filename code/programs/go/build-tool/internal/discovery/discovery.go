@@ -88,6 +88,7 @@ var skipDirs = map[string]bool{
 	"target":        true,
 	".claude":       true,
 	"Pods":          true,
+	".build":        true, // Swift Package Manager build artefacts and dependency checkouts
 }
 
 // readLines reads a file and returns non-blank, non-comment lines.
@@ -119,7 +120,7 @@ func readLines(filepath string) []string {
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "lua", "starlark", "perl"} {
+	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "lua", "starlark", "perl", "swift"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang

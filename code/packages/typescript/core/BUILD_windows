@@ -1,3 +1,4 @@
+cd ../transistors && npm install --silent
 cd ../clock && npm install --silent
 cd ../cpu-pipeline && npm install --silent
 cd ../directed-graph && npm install --silent

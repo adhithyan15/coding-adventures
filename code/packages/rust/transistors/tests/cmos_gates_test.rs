@@ -1,6 +1,6 @@
 //! Tests for CMOS logic gates built from transistors.
 
-use transistors::cmos_gates::{CMOSAnd, CMOSInverter, CMOSNand, CMOSNor, CMOSOr, CMOSXor};
+use transistors::cmos_gates::{CMOSAnd, CMOSInverter, CMOSNand, CMOSNor, CMOSOr, CMOSXnor, CMOSXor};
 use transistors::types::CircuitParams;
 
 // =========================================================================
@@ -211,4 +211,45 @@ fn xor_evaluate_from_nands() {
 fn xor_rejects_invalid_input() {
     let xor_gate = CMOSXor::new(None);
     assert!(xor_gate.evaluate_digital(0, 2).is_err());
+}
+
+// =========================================================================
+// CMOS XNOR Tests
+// =========================================================================
+
+#[test]
+fn xnor_truth_table() {
+    let xnor_gate = CMOSXnor::new(None);
+    assert_eq!(xnor_gate.evaluate_digital(0, 0).unwrap(), 1);
+    assert_eq!(xnor_gate.evaluate_digital(0, 1).unwrap(), 0);
+    assert_eq!(xnor_gate.evaluate_digital(1, 0).unwrap(), 0);
+    assert_eq!(xnor_gate.evaluate_digital(1, 1).unwrap(), 1);
+}
+
+#[test]
+fn xnor_is_inverse_of_xor() {
+    // XNOR(a, b) should be the complement of XOR(a, b) for all inputs
+    let xnor_gate = CMOSXnor::new(None);
+    let xor_gate = CMOSXor::new(None);
+    let inv = CMOSInverter::new(None, None, None);
+    for a in 0..=1u8 {
+        for b in 0..=1u8 {
+            let xor_out = xor_gate.evaluate_digital(a, b).unwrap();
+            let not_xor = inv.evaluate_digital(xor_out).unwrap();
+            assert_eq!(xnor_gate.evaluate_digital(a, b).unwrap(), not_xor);
+        }
+    }
+}
+
+#[test]
+fn xnor_transistor_count() {
+    // XNOR = XOR + Inverter, so count should be XOR count + 2
+    assert_eq!(CMOSXnor::TRANSISTOR_COUNT, CMOSXor::TRANSISTOR_COUNT + 2);
+}
+
+#[test]
+fn xnor_rejects_invalid_input() {
+    let xnor_gate = CMOSXnor::new(None);
+    assert!(xnor_gate.evaluate_digital(2, 0).is_err());
+    assert!(xnor_gate.evaluate_digital(0, 2).is_err());
 }

@@ -1,3 +1,4 @@
+cd ../transistors && npm ci --quiet
 cd ../clock && npm ci --quiet
 cd ../fp-arithmetic && npm ci --quiet
 cd ../logic-gates && npm ci --quiet

@@ -551,3 +551,63 @@ export class CMOSXor {
     return this.evaluateDigital(a, b);
   }
 }
+
+/**
+ * CMOS XNOR gate: XOR + Inverter = 8 transistors.
+ *
+ * XNOR(A, B) = NOT(XOR(A, B))
+ *
+ * XNOR is the "equivalence" gate — it outputs 1 when both inputs are the
+ * same value (both 0 or both 1), and 0 when they differ.
+ *
+ * Truth table:
+ *
+ *     A | B | XNOR
+ *     --|---|-----
+ *     0 | 0 |  1    (same)
+ *     0 | 1 |  0    (different)
+ *     1 | 0 |  0    (different)
+ *     1 | 1 |  1    (same)
+ *
+ * Transistor count: 8 (6 for XOR + 2 for Inverter).
+ *
+ * Use case: equality comparators — if XNOR(a, b) = 1 then a === b.
+ */
+export class CMOSXnor {
+  static readonly TRANSISTOR_COUNT = 8;
+
+  readonly circuit: CircuitParams;
+  private readonly _xorGate: CMOSXor;
+  private readonly _inv: CMOSInverter;
+
+  constructor(circuitParams?: Partial<CircuitParams>) {
+    this.circuit = { ...defaultCircuitParams(), ...circuitParams };
+    this._xorGate = new CMOSXor(circuitParams);
+    this._inv = new CMOSInverter(circuitParams);
+  }
+
+  /** XNOR = NOT(XOR(A, B)). */
+  evaluate(va: number, vb: number): GateOutput {
+    const xorOut = this._xorGate.evaluate(va, vb);
+    const invOut = this._inv.evaluate(xorOut.voltage);
+    return {
+      logicValue: invOut.logicValue,
+      voltage: invOut.voltage,
+      currentDraw: xorOut.currentDraw + invOut.currentDraw,
+      powerDissipation:
+        (xorOut.currentDraw + invOut.currentDraw) * this.circuit.vdd,
+      propagationDelay: xorOut.propagationDelay + invOut.propagationDelay,
+      transistorCount: CMOSXnor.TRANSISTOR_COUNT,
+    };
+  }
+
+  /** Evaluate with digital inputs. */
+  evaluateDigital(a: number, b: number): number {
+    validateBit(a, "a");
+    validateBit(b, "b");
+    const vdd = this.circuit.vdd;
+    const va = a === 1 ? vdd : 0.0;
+    const vb = b === 1 ? vdd : 0.0;
+    return this.evaluate(va, vb).logicValue;
+  }
+}

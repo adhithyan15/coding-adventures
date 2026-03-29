@@ -1,0 +1,9 @@
+# Runtime dependency: logic gates delegate CMOS evaluation to the transistors package.
+# Uses the CPAN distribution name (coding-adventures-transistors) which is the
+# monorepo-internal naming convention the build tool resolver expects.
+requires 'coding-adventures-transistors', '0.01';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};

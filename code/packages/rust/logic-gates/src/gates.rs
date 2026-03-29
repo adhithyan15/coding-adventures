@@ -1,5 +1,22 @@
 //! Logic Gates — the seven fundamental gates, NAND-derived gates, and multi-input variants.
 //!
+//! # Transistor-backed implementations
+//!
+//! Each of the seven primitive gate functions now delegates its digital evaluation to a
+//! CMOS transistor model from the `transistors` crate. The public API is unchanged —
+//! inputs and outputs remain `u8` values of 0 or 1 — but the computation now routes
+//! through a physical transistor simulation:
+//!
+//! | Gate | CMOS model              | Transistors |
+//! |------|-------------------------|-------------|
+//! | NOT  | `CMOSInverter`          | 2           |
+//! | NAND | `CMOSNand`              | 4           |
+//! | NOR  | `CMOSNor`               | 4           |
+//! | AND  | `CMOSAnd` (NAND+NOT)    | 6           |
+//! | OR   | `CMOSOr`  (NOR+NOT)     | 6           |
+//! | XOR  | `CMOSXor` (4 NANDs)     | 16          |
+//! | XNOR | `CMOSXnor` (XOR+NOT)     | 8           |
+//!
 //! # What is a logic gate?
 //!
 //! A logic gate is the simplest possible decision-making element. It takes
@@ -15,6 +32,8 @@
 //! You could theoretically build a computer using base-3 or base-10, but the
 //! error margins for distinguishing between voltage levels would make it
 //! unreliable. Binary gives us two clean, easily distinguishable states.
+
+use transistors::cmos_gates::{CMOSAnd, CMOSInverter, CMOSNand, CMOSNor, CMOSOr, CMOSXnor, CMOSXor};
 
 // ===========================================================================
 // Input validation
@@ -78,7 +97,12 @@ fn validate_bit(value: u8, name: &str) {
 #[inline]
 pub fn not_gate(a: u8) -> u8 {
     validate_bit(a, "a");
-    if a == 0 { 1 } else { 0 }
+    // Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+    // evaluate_digital returns Ok(0) or Ok(1); unwrap is safe because we've
+    // already validated that a is 0 or 1.
+    CMOSInverter::new(None, None, None)
+        .evaluate_digital(a)
+        .unwrap()
 }
 
 /// The AND gate — returns 1 only if both inputs are 1.
@@ -108,7 +132,10 @@ pub fn not_gate(a: u8) -> u8 {
 pub fn and_gate(a: u8, b: u8) -> u8 {
     validate_bit(a, "a");
     validate_bit(b, "b");
-    if a == 1 && b == 1 { 1 } else { 0 }
+    // Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+    CMOSAnd::new(None)
+        .evaluate_digital(a, b)
+        .unwrap()
 }
 
 /// The OR gate — returns 1 if either input is 1 (or both).
@@ -138,7 +165,10 @@ pub fn and_gate(a: u8, b: u8) -> u8 {
 pub fn or_gate(a: u8, b: u8) -> u8 {
     validate_bit(a, "a");
     validate_bit(b, "b");
-    if a == 1 || b == 1 { 1 } else { 0 }
+    // Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+    CMOSOr::new(None)
+        .evaluate_digital(a, b)
+        .unwrap()
 }
 
 /// The XOR gate (Exclusive OR) — returns 1 if the inputs are different.
@@ -183,7 +213,10 @@ pub fn or_gate(a: u8, b: u8) -> u8 {
 pub fn xor_gate(a: u8, b: u8) -> u8 {
     validate_bit(a, "a");
     validate_bit(b, "b");
-    if a != b { 1 } else { 0 }
+    // Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+    CMOSXor::new(None)
+        .evaluate_digital(a, b)
+        .unwrap()
 }
 
 // ===========================================================================
@@ -228,7 +261,10 @@ pub fn xor_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn nand_gate(a: u8, b: u8) -> u8 {
-    not_gate(and_gate(a, b))
+    // Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
+    CMOSNand::new(None, None, None)
+        .evaluate_digital(a, b)
+        .unwrap()
 }
 
 /// The NOR gate (NOT OR) — outputs 1 only when both inputs are 0.
@@ -256,7 +292,10 @@ pub fn nand_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn nor_gate(a: u8, b: u8) -> u8 {
-    not_gate(or_gate(a, b))
+    // Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
+    CMOSNor::new(None, None, None)
+        .evaluate_digital(a, b)
+        .unwrap()
 }
 
 /// The XNOR gate (Exclusive NOR, also called "equivalence gate").
@@ -285,7 +324,8 @@ pub fn nor_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn xnor_gate(a: u8, b: u8) -> u8 {
-    not_gate(xor_gate(a, b))
+    // Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
+    CMOSXnor::new(None).evaluate_digital(a, b).unwrap()
 }
 
 // ===========================================================================

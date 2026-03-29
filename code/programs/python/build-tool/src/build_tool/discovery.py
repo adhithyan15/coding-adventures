@@ -66,6 +66,7 @@ class Package:
         path: Absolute path to the package directory.
         build_commands: Lines from the BUILD file (commands to execute).
         language: Inferred language -- "python", "ruby", "go", "rust", or "unknown".
+        build_content: Raw BUILD file content (used for Starlark detection).
         is_starlark: Whether the BUILD file uses Starlark syntax.
         declared_srcs: Glob patterns from the Starlark srcs field.
         declared_deps: Qualified dependency names from the Starlark deps field.
@@ -75,6 +76,7 @@ class Package:
     path: Path
     build_commands: list[str] = field(default_factory=list)
     language: str = "unknown"
+    build_content: str = ""
     is_starlark: bool = False
     declared_srcs: list[str] = field(default_factory=list)
     declared_deps: list[str] = field(default_factory=list)
@@ -198,8 +200,12 @@ def _walk_dirs(directory: Path, packages: list[Package]) -> None:
     build_file = _get_build_file(directory)
 
     if build_file is not None:
-        # This directory is a package. Read the BUILD commands.
+        # This directory is a package. Read the BUILD commands and raw content.
         commands = _read_lines(build_file)
+        try:
+            content = build_file.read_text(encoding="utf-8")
+        except OSError:
+            content = ""
         language = _infer_language(directory)
         name = _infer_package_name(directory, language)
 
@@ -209,6 +215,7 @@ def _walk_dirs(directory: Path, packages: list[Package]) -> None:
                 path=directory,
                 build_commands=commands,
                 language=language,
+                build_content=content,
             )
         )
         return

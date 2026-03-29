@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-29
+
+### Added
+
+- `CMOSXnor` class: XNOR gate implemented as XOR + Inverter (8 transistors total).
+  Exposes both `evaluate(va, vb)` (analog) and `evaluate_digital(a, b)` (digital)
+  interfaces. Exported via `cmos_gates.CMOSXnor` and re-exported from `init.lua`
+  as `T.CMOSXnor`.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

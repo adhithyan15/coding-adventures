@@ -440,4 +440,54 @@ defmodule CodingAdventures.Transistors.CMOSGates do
   def xor_evaluate_from_nands(a, b, circuit_params \\ %CircuitParams{}) do
     xor_evaluate_digital(a, b, circuit_params)
   end
+
+  # ===========================================================================
+  # CMOS XNOR gate — 8 transistors (XOR + Inverter)
+  # ===========================================================================
+  # XNOR(A, B) = NOT(XOR(A, B))
+  # The "equivalence" gate: outputs 1 when A and B are equal.
+
+  @doc """
+  Evaluates a CMOS XNOR gate (XOR followed by an Inverter).
+
+  XNOR(A, B) = NOT(XOR(A, B))
+
+  Truth table:
+
+  | A | B | XNOR |
+  |---|---|------|
+  | 0 | 0 |  1   |
+  | 0 | 1 |  0   |
+  | 1 | 0 |  0   |
+  | 1 | 1 |  1   |
+
+  Transistor count: xor_transistor_count + 2 (XOR + Inverter).
+  XNOR is the "equivalence" gate — it answers "are A and B equal?"
+  """
+  def xnor_evaluate(va, vb, circuit_params \\ %CircuitParams{}) do
+    xor_out = xor_evaluate(va, vb, circuit_params)
+    inv_out = inverter_evaluate(xor_out.voltage, circuit_params)
+
+    %GateOutput{
+      logic_value: inv_out.logic_value,
+      voltage: inv_out.voltage,
+      current_draw: xor_out.current_draw + inv_out.current_draw,
+      power_dissipation: xor_out.power_dissipation + inv_out.power_dissipation,
+      propagation_delay: xor_out.propagation_delay + inv_out.propagation_delay,
+      transistor_count: xor_out.transistor_count + 2
+    }
+  end
+
+  @doc """
+  Evaluates a CMOS XNOR gate with digital (0/1) inputs.
+  """
+  def xnor_evaluate_digital(a, b, circuit_params \\ %CircuitParams{}) do
+    validate_bit!(a, "a")
+    validate_bit!(b, "b")
+    vdd = circuit_params.vdd
+    va = if a == 1, do: vdd, else: 0.0
+    vb = if b == 1, do: vdd, else: 0.0
+    result = xnor_evaluate(va, vb, circuit_params)
+    result.logic_value
+  end
 end

@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.3.0 — 2026-03-29
+
+### Added
+
+- `Table` component — unified entry point with `renderer` prop ("html" | "canvas")
+- `DataTable` component — HTML `<table>` backend with full semantic markup
+  - `<thead>/<tbody>/<th scope="col">/<td>` for native screen reader support
+  - BEM class names (`.table__cell--header`, `.table__cell--align-right`, etc.)
+  - Scrollable region wrapper (`role="region"`, `tabindex="0"`) for keyboard scrolling
+  - Column widths, alignment modifiers, optional caption
+- `CanvasTable` component — Canvas 2D rendering backend with ARIA grid overlay
+  - DPR-aware rendering for crisp text on retina displays
+  - CSS custom property theme bridge via `useCanvasTheme` hook
+  - Transparent ARIA grid overlay with `role="grid"`, `role="row"`, `role="gridcell"`
+  - `aria-rowcount`, `aria-colcount`, `aria-rowindex`, `aria-colindex` for full position reporting
+  - Keyboard navigation via `useGridKeyboard` hook (Arrow keys, Home/End, Ctrl+Home/End)
+  - ResizeObserver for responsive canvas sizing
+- `useCanvasTheme` hook — reads CSS custom properties from a DOM element for Canvas drawing
+- `useGridKeyboard` hook — WAI-ARIA grid keyboard navigation with roving tabindex
+- Shared types: `ColumnDef<T>`, `CellAlignment`, `RowKeyFn<T>`, `TableBaseProps<T>`, `TableProps<T>`
+- `resolveCellValue` utility — consistent cell value extraction for both backends
+- `table.css` — dark theme stylesheet for DataTable and CanvasTable overlay
+- Spec: `code/specs/table.md` — full specification covering both backends and accessibility
+- Column resizing via drag-to-resize handles on both backends
+  - `resizable` prop enables resize handles on header cells
+  - `onColumnResize` callback fires with column id and new width
+  - Mouse drag: grab the column border and drag to adjust width
+  - Keyboard: focus the resize handle, use Arrow keys (10px) or Shift+Arrow (50px)
+  - Screen reader: `role="separator"` with `aria-valuenow`, `aria-valuemin`, `aria-label`
+  - RTL support: drag delta and arrow keys flip automatically based on text direction
+  - `useColumnResize` hook manages drag lifecycle and keyboard resize for both backends
+  - Minimum column width: 40px
+
 ## 0.2.0 — 2026-03-28
 
 ### Added

@@ -1,1 +1,3 @@
+cd ..\transistors && luarocks make coding-adventures-transistors-0.1.0-1.rockspec
+cd ..\logic_gates
 cd tests && busted . --verbose --pattern=test_
