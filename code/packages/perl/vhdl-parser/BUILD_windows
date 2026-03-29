@@ -1,7 +1,3 @@
-cd ../state-machine && cpanm --notest --quiet . && cd -
-cd ../directed-graph && cpanm --notest --quiet . && cd -
 cd ../grammar-tools && cpanm --notest --quiet . && cd -
-cd ../lexer && cpanm --notest --quiet . && cd -
-cd ../vhdl-lexer && cpanm --notest --quiet . && cd -
-cpanm --installdeps --quiet .
-prove -l -v t/
+cpanm --notest --quiet Test2::V0
+PERL5LIB=$(cd ../vhdl-lexer && pwd)/lib:${PERL5LIB:-} prove -l -v t/
