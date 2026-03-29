@@ -1,3 +1,2 @@
-cd ../virtual-machine && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-prove -l -v t/
+PERL5LIB=$(cd ../virtual-machine && pwd)/lib:${PERL5LIB:-} prove -l -v t/

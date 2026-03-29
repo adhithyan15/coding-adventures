@@ -1,3 +1,2 @@
-cd ../trig && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-prove -l -v t/
+PERL5LIB=$(cd ../trig && pwd)/lib:${PERL5LIB:-} prove -l -v t/

@@ -1,4 +1,2 @@
-cd ../matrix && cpanm --notest --quiet . && cd -
-cd ../loss-functions && cpanm --notest --quiet . && cd -
 cpanm --notest --quiet Test2::V0
-prove -l -v t/
+PERL5LIB=$(cd ../matrix && pwd)/lib:$(cd ../loss-functions && pwd)/lib:${PERL5LIB:-} prove -l -v t/
