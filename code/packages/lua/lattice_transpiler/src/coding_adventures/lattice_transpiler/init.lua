@@ -123,6 +123,13 @@ end
 --     io.write(css)
 --   end
 function M.transpile_file(path)
+    -- Reject path traversal attempts. A path containing ".." could escape
+    -- the intended directory and read arbitrary files. Callers that need
+    -- to compile files from sibling directories should resolve the path
+    -- themselves before passing it here.
+    if path:find("%.%.") then
+        return nil, "lattice_transpiler: path traversal not allowed: " .. path
+    end
     -- Open and read the file
     local f, open_err = io.open(path, "r")
     if not f then

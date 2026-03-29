@@ -89,10 +89,24 @@ our $NAMESPACE_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 
 # _random_bytes($n) → list of $n random integers in [0, 255]
 #
-# Uses Perl's rand(), which returns a float in [0, 1).
-# int(rand(256)) gives a uniform integer in [0, 255].
+# Attempts to read from /dev/urandom (a cryptographically secure source
+# available on Linux, macOS, and *BSD). Falls back to rand() if
+# /dev/urandom is not available (e.g., Windows).
+#
+# NOTE: When using UUID v4 as security tokens (session IDs, CSRF tokens,
+# password-reset links), ensure /dev/urandom is available. rand() is a
+# predictable PRNG and is NOT suitable for security-sensitive UUID generation.
 sub _random_bytes {
     my ($n) = @_;
+    if (open my $fh, '<:raw', '/dev/urandom') {
+        my $buf;
+        if (read($fh, $buf, $n) == $n) {
+            close $fh;
+            return map { ord(substr($buf, $_, 1)) } 0 .. $n - 1;
+        }
+        close $fh;
+    }
+    # Fallback: rand() (not cryptographically secure)
     return map { int(rand(256)) } 1 .. $n;
 }
 

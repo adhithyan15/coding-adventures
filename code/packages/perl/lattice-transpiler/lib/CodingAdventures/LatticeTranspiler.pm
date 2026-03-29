@@ -125,6 +125,12 @@ On failure: returns C<(undef, $error_message)>.
 sub transpile_file {
     my ($class, $path) = @_;
 
+    # Reject path traversal attempts. A path containing ".." could escape
+    # the intended directory and read arbitrary files.
+    if ($path =~ m{\.\.}) {
+        return (undef, "LatticeTranspiler: path traversal not allowed: $path");
+    }
+
     # Open and read the file
     open(my $fh, '<', $path)
         or return (undef, "LatticeTranspiler: cannot open '$path': $!");

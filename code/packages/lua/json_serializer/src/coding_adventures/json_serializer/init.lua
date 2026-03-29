@@ -624,7 +624,15 @@ function M._validate_value(value, schema, path, errors)
                 path, #value, schema.maxLength)
         end
         if schema.pattern then
-            if not value:match(schema.pattern) then
+            -- Guard against ReDoS: reject patterns longer than 200 characters.
+            -- A well-formed JSON Schema pattern should be concise; a 200-char
+            -- limit stops adversarial catastrophic-backtracking patterns like
+            -- (a+)+$ without impacting legitimate schema validation use cases.
+            if #schema.pattern > 200 then
+                errors[#errors + 1] = string.format(
+                    "%s: schema pattern too long (max 200 chars)",
+                    path)
+            elseif not value:match(schema.pattern) then
                 errors[#errors + 1] = string.format(
                     "%s: string does not match pattern %q",
                     path, schema.pattern)

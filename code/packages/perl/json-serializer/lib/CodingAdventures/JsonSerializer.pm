@@ -598,7 +598,15 @@ sub _validate_value {
         }
         if (exists $schema->{pattern}) {
             my $pat = $schema->{pattern};
-            unless ($value =~ $pat) {
+            # Guard against ReDoS: reject patterns longer than 200 characters.
+            # A well-formed JSON Schema pattern should be concise; a 200-char
+            # limit stops adversarial catastrophic-backtracking patterns like
+            # (a+)+$ without impacting legitimate schema validation use cases.
+            if (length($pat) > 200) {
+                push @$errors, sprintf(
+                    "%s: schema pattern too long (max 200 chars)",
+                    $path);
+            } elsif ($value !~ $pat) {
                 push @$errors, sprintf(
                     "%s: string does not match pattern",
                     $path);

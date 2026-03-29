@@ -96,8 +96,8 @@ M.NAMESPACE_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
 -- ============================================================================
 
 -- We combine os.time() (seconds since epoch) with os.clock() (CPU time) to
--- get a more unique seed than os.time() alone. On most systems os.clock()
--- has sub-second resolution, so two calls in the same second still differ.
+-- get a more unique seed than os.time() alone. This fallback is used only
+-- when /dev/urandom is unavailable (e.g., Windows without a CSPRNG adapter).
 math.randomseed(os.time() + math.floor(os.clock() * 1e6))
 
 -- Discard the first few values — many LCG-based PRNGs have poor initial
@@ -110,9 +110,29 @@ for _ = 1, 3 do math.random() end
 
 --- random_bytes(n) → table of n random integers in [0, 255]
 --
--- Generates n pseudo-random bytes using Lua's math.random.
--- math.random(0, 255) returns a uniformly distributed integer in [0, 255].
+-- Attempts to read from /dev/urandom (a cryptographically secure source
+-- available on Linux, macOS, and *BSD). Falls back to math.random if
+-- /dev/urandom is not available (e.g., Windows).
+--
+-- NOTE: When using UUID v4 as security tokens (session IDs, CSRF tokens,
+-- password-reset links), ensure /dev/urandom is available. math.random is
+-- a predictable PRNG seeded from wall-clock time and is NOT suitable for
+-- security-sensitive UUID generation.
 local function random_bytes(n)
+    -- Try /dev/urandom first (CSPRNG on POSIX systems)
+    local f = io.open("/dev/urandom", "rb")
+    if f then
+        local data = f:read(n)
+        f:close()
+        if data and #data == n then
+            local t = {}
+            for i = 1, n do
+                t[i] = data:byte(i)
+            end
+            return t
+        end
+    end
+    -- Fallback: math.random (not cryptographically secure)
     local t = {}
     for i = 1, n do
         t[i] = math.random(0, 255)

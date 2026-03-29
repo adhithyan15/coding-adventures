@@ -990,7 +990,12 @@ sub new {
     # ------------------------------------------------------------------
     if (@{ $module->{memories} }) {
         my $mem_def  = $module->{memories}[0];
-        $self->{memory} = make_memory($mem_def->{limits}{min});
+        # Cap initial pages to prevent resource exhaustion from malicious
+        # Wasm binaries that set limits.min to the spec maximum (65535 pages
+        # = 4 GiB). 64 pages (4 MiB) is sufficient for all simulator tests.
+        my $initial = $mem_def->{limits}{min};
+        $initial = MAX_PAGES if $initial > MAX_PAGES;
+        $self->{memory} = make_memory($initial);
     } else {
         $self->{memory} = make_memory(0);
     }

@@ -1223,7 +1223,12 @@ function Instance.new(module)
     -- immediately; max is an upper bound we enforce in memory.grow.
     if #module.memories > 0 then
         local mem_def = module.memories[1]
-        self.memory = make_memory(mem_def.limits.min)
+        -- Cap initial pages to prevent resource exhaustion from malicious
+        -- Wasm binaries that set limits.min to the spec maximum (65535 pages
+        -- = 4 GiB). 64 pages (4 MiB) is sufficient for all simulator tests.
+        local MAX_PAGES = 64
+        local initial_pages = math.min(mem_def.limits.min, MAX_PAGES)
+        self.memory = make_memory(initial_pages)
     else
         -- No memory section: allocate zero pages (will trap on any access)
         self.memory = make_memory(0)
