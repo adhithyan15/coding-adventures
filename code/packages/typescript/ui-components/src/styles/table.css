@@ -1,0 +1,191 @@
+/**
+ * table.css — styles for the DataTable (HTML backend) and the CanvasTable
+ * ARIA grid overlay.
+ *
+ * === Design Tokens ===
+ *
+ * All colors reference CSS custom properties from theme.css, with hardcoded
+ * fallbacks for standalone usage. This keeps the table visually consistent
+ * with the rest of the dark theme.
+ *
+ * === BEM Structure ===
+ *
+ * .table                         — outer region wrapper (scrollable)
+ * .table--canvas                 — modifier for Canvas backend container
+ * .table__grid                   — the <table> element
+ * .table__caption                — optional <caption>
+ * .table__head / .table__body    — row group sections
+ * .table__row                    — a <tr>
+ * .table__row--header            — header row modifier
+ * .table__cell                   — a <th> or <td>
+ * .table__cell--header           — header cell modifier
+ * .table__cell--align-left       — left-aligned text (default)
+ * .table__cell--align-center     — center-aligned text
+ * .table__cell--align-right      — right-aligned text
+ * .table__a11y-overlay           — transparent ARIA grid over canvas
+ */
+
+/* ---------------------------------------------------------------------------
+ * Design tokens
+ * ------------------------------------------------------------------------- */
+
+:root {
+  --table-header-bg: var(--panel-header, #0f3460);
+  --table-header-text: var(--tab-active-text, #ffffff);
+  --table-row-bg: var(--panel-bg, #16213e);
+  --table-row-alt-bg: rgba(255, 255, 255, 0.02);
+  --table-border-color: var(--panel-border, #2a3a5e);
+  --table-text: var(--body-text, #e0e0e0);
+  --table-cell-padding-y: 8px;
+  --table-cell-padding-x: 12px;
+  --table-font-size: 0.9rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * Container — scrollable region
+ * ------------------------------------------------------------------------- */
+
+.table {
+  overflow-x: auto;
+  border: 1px solid var(--table-border-color);
+  border-radius: 6px;
+  font-size: var(--table-font-size);
+  color: var(--table-text);
+}
+
+/* Focus ring when keyboard-scrolling the region */
+.table:focus-visible {
+  outline: 2px solid var(--accent, #e94560);
+  outline-offset: -2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Canvas backend container — relative positioning for overlay
+ * ------------------------------------------------------------------------- */
+
+.table--canvas {
+  position: relative;
+  overflow: hidden;
+}
+
+.table--canvas canvas {
+  display: block;
+}
+
+/* ---------------------------------------------------------------------------
+ * Table grid
+ * ------------------------------------------------------------------------- */
+
+.table__grid {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Caption
+ * ------------------------------------------------------------------------- */
+
+.table__caption {
+  caption-side: top;
+  padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+  font-weight: 600;
+  text-align: left;
+  color: var(--table-header-text);
+}
+
+/* ---------------------------------------------------------------------------
+ * Rows
+ * ------------------------------------------------------------------------- */
+
+.table__row--header {
+  background: var(--table-header-bg);
+}
+
+/* Alternating row backgrounds for visual rhythm */
+.table__body .table__row:nth-child(even) {
+  background: var(--table-row-alt-bg);
+}
+
+/* ---------------------------------------------------------------------------
+ * Cells
+ * ------------------------------------------------------------------------- */
+
+.table__cell {
+  padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+  border-bottom: 1px solid var(--table-border-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table__cell--header {
+  font-weight: 600;
+  color: var(--table-header-text);
+  background: var(--table-header-bg);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Alignment modifiers */
+.table__cell--align-left {
+  text-align: left;
+}
+
+.table__cell--align-center {
+  text-align: center;
+}
+
+.table__cell--align-right {
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------------------
+ * ARIA grid overlay (Canvas backend accessibility layer)
+ *
+ * The overlay is positioned on top of the canvas. Each cell div is absolutely
+ * positioned to match its corresponding canvas cell. The overlay is fully
+ * transparent so the canvas shows through — screen readers and keyboard
+ * navigation interact with the overlay, not the canvas.
+ * ------------------------------------------------------------------------- */
+
+.table__a11y-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Gridcells need pointer-events for focus/click */
+.table__a11y-overlay [role="gridcell"],
+.table__a11y-overlay [role="columnheader"] {
+  pointer-events: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: transparent;
+  font-size: 0;
+  position: absolute;
+}
+
+/* Focus ring on the active gridcell */
+.table__a11y-overlay [role="gridcell"]:focus-visible,
+.table__a11y-overlay [role="columnheader"]:focus-visible {
+  outline: 2px solid var(--accent, #e94560);
+  outline-offset: -2px;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion
+ * ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .table__cell,
+  .table__a11y-overlay [role="gridcell"] {
+    transition: none;
+  }
+}
