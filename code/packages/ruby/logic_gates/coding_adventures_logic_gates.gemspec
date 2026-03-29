@@ -17,8 +17,10 @@ Gem::Specification.new do |spec|
     "source_code_uri" => "https://github.com/adhithyan15/coding-adventures",
     "rubygems_mfa_required" => "true"
   }
-  # Runtime dependency: logic gates delegate CMOS evaluation to the transistors gem.
-  spec.add_dependency "coding_adventures_transistors", ">= 0.1.0"
+  # Note: coding_adventures_transistors is a monorepo-internal dependency.
+  # It is not published to RubyGems, so it is not declared here as a gemspec
+  # dependency. The build system installs it from the local path before this
+  # package is built. See BUILD and Gemfile for the local path reference.
   # Development dependencies
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "simplecov", "~> 0.22"
