@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme — inherits from Material3. The Compose theme in
+         Theme.kt handles runtime theming; this XML theme is only
+         needed for the window background before Compose renders. -->
+    <style name="Theme.HelloWorld" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
