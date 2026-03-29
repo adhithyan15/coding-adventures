@@ -397,9 +397,6 @@ export function CanvasTable<T>({
   // Track container width for responsive sizing
   const widthRef = useRef(800);
 
-  // Compute column layout (memoized by reference)
-  const colLayouts = computeColumnLayout(columns, widthRef.current);
-
   // ---------------------------------------------------------------------------
   // Resize observer
   // ---------------------------------------------------------------------------
