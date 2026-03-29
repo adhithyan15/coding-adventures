@@ -569,6 +569,7 @@ final class TypesTests: XCTestCase {
     }
 
     func testVersionDefined() {
-        XCTAssertFalse(version.isEmpty)
+        let v: String = Transistors.version
+        XCTAssertFalse(v.isEmpty)
     }
 }
