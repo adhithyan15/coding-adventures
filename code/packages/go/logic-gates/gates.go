@@ -57,7 +57,7 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/packages/go/transistors"
 )
 
-// cmosAnd, cmosOr, cmosNot, cmosXor, cmosNand, cmosNor are package-level
+// cmosAnd, cmosOr, cmosNot, cmosXor, cmosXnor, cmosNand, cmosNor are package-level
 // CMOS gate instances created once at startup. Using default circuit parameters
 // (3.3 V Vdd, 180 nm CMOS node). All seven fundamental gates now delegate their
 // digital evaluation to these CMOS transistor models, reflecting the physical
@@ -67,6 +67,7 @@ var (
 	_cmosOr   = transistors.NewCMOSOr(nil)
 	_cmosNot  = transistors.NewCMOSInverter(nil, nil, nil)
 	_cmosXor  = transistors.NewCMOSXor(nil)
+	_cmosXnor = transistors.NewCMOSXnor(nil)
 	_cmosNand = transistors.NewCMOSNand(nil, nil, nil)
 	_cmosNor  = transistors.NewCMOSNor(nil, nil, nil)
 )
@@ -342,18 +343,12 @@ func NOR(a, b int) int {
 func XNOR(a, b int) int {
 	validateBit(a, "a")
 	validateBit(b, "b")
-	// XNOR = NOT(XOR(a, b)). The transistors package does not have a dedicated
-	// XNOR gate, so we compose it from the transistors-backed XOR and NOT. Both
-	// delegates use the CMOS transistor simulation, preserving the physical model.
-	xorResult, err := _cmosXor.EvaluateDigital(a, b)
+	// Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
+	result, err := _cmosXnor.EvaluateDigital(a, b)
 	if err != nil {
-		panic(fmt.Sprintf("logicgates: XNOR XOR CMOS evaluation error: %v", err))
+		panic(fmt.Sprintf("logicgates: XNOR CMOS evaluation error: %v", err))
 	}
-	notResult, err := _cmosNot.EvaluateDigital(xorResult)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: XNOR NOT CMOS evaluation error: %v", err))
-	}
-	return notResult
+	return result
 }
 
 // =========================================================================

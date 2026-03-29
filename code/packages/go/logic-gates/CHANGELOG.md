@@ -4,6 +4,16 @@ All notable changes to the `logic-gates` package will be documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] - 2026-03-29
+
+### Changed
+
+- **XNOR now delegates to `CMOSXnor`**: XNOR previously composed XOR and NOT at
+  the logic-gates level (`_cmosXor.EvaluateDigital` + `_cmosNot.EvaluateDigital`).
+  It now delegates directly to `transistors.NewCMOSXnor(nil).EvaluateDigital`,
+  the dedicated 8-transistor CMOS XNOR gate added in transistors v0.2.0.
+- Added `_cmosXnor` package-level var alongside the existing gate singletons.
+
 ## [0.3.0] - 2026-03-28
 
 ### Changed

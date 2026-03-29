@@ -54,6 +54,7 @@ export {
   CMOSAnd,
   CMOSOr,
   CMOSXor,
+  CMOSXnor,
 } from "./cmos_gates.js";
 
 // TTL logic gates

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.3 - 2026-03-29
+
+### Changed
+
+- **XNOR now delegates to `CMOSXnor`**: XNOR previously composed XOR and NOT at
+  the logic-gates level (`_cmosNot.evaluateDigital(_cmosXor.evaluateDigital(a, b))`).
+  It now delegates directly to the dedicated `CMOSXnor` instance
+  (`_cmosXnor.evaluateDigital(a, b)`), the 8-transistor CMOS XNOR gate added in
+  `@coding-adventures/transistors` v0.3.0.
+- Added `CMOSXnor` to the import and `_cmosXnor` module-level singleton.
+
 ## 0.1.2 - 2026-03-28
 
 ### Changed

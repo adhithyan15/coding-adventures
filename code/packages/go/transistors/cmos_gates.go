@@ -633,3 +633,78 @@ func (g *CMOSXor) EvaluateDigital(a, b int) (int, error) {
 func (g *CMOSXor) EvaluateFromNands(a, b int) (int, error) {
 	return g.EvaluateDigital(a, b)
 }
+
+// ===========================================================================
+// CMOS XNOR — 8 transistors (XOR + Inverter)
+// ===========================================================================
+
+// CMOSXnor is a CMOS XNOR gate: XOR followed by an Inverter.
+//
+// XNOR(A, B) = NOT(XOR(A, B))
+//
+// Truth table:
+//
+//	A | B | XNOR
+//	--|---|-----
+//	0 | 0 |  1    (same)
+//	0 | 1 |  0    (different)
+//	1 | 0 |  0    (different)
+//	1 | 1 |  1    (same)
+//
+// Transistor count: 8 (6 for XOR + 2 for Inverter).
+// XNOR is the "equivalence" gate — it answers "are A and B equal?"
+type CMOSXnor struct {
+	Circuit  CircuitParams
+	xorGate  *CMOSXor
+	inverter *CMOSInverter
+}
+
+// NewCMOSXnor creates a CMOS XNOR gate.
+func NewCMOSXnor(circuit *CircuitParams) *CMOSXnor {
+	var c CircuitParams
+	if circuit != nil {
+		c = *circuit
+	} else {
+		c = DefaultCircuitParams()
+	}
+	return &CMOSXnor{
+		Circuit:  c,
+		xorGate:  NewCMOSXor(&c),
+		inverter: NewCMOSInverter(&c, nil, nil),
+	}
+}
+
+// Evaluate evaluates XNOR using XOR followed by an Inverter.
+func (g *CMOSXnor) Evaluate(va, vb float64) GateOutput {
+	xorOut := g.xorGate.Evaluate(va, vb)
+	result := g.inverter.Evaluate(xorOut.Voltage)
+
+	return GateOutput{
+		LogicValue:       result.LogicValue,
+		Voltage:          result.Voltage,
+		CurrentDraw:      xorOut.CurrentDraw + result.CurrentDraw,
+		PowerDissipation: (xorOut.CurrentDraw + result.CurrentDraw) * g.Circuit.Vdd,
+		PropagationDelay: xorOut.PropagationDelay + result.PropagationDelay,
+		TransistorCount:  8,
+	}
+}
+
+// EvaluateDigital evaluates with digital inputs.
+func (g *CMOSXnor) EvaluateDigital(a, b int) (int, error) {
+	if err := validateBit(a, "a"); err != nil {
+		return 0, err
+	}
+	if err := validateBit(b, "b"); err != nil {
+		return 0, err
+	}
+	vdd := g.Circuit.Vdd
+	va := 0.0
+	if a == 1 {
+		va = vdd
+	}
+	vb := 0.0
+	if b == 1 {
+		vb = vdd
+	}
+	return g.Evaluate(va, vb).LogicValue, nil
+}

@@ -53,6 +53,7 @@ import {
   CMOSAnd,
   CMOSOr,
   CMOSXor,
+  CMOSXnor,
 } from "@coding-adventures/transistors";
 
 const _cmosNot  = new CMOSInverter();
@@ -61,6 +62,7 @@ const _cmosNor  = new CMOSNor();
 const _cmosAnd  = new CMOSAnd();
 const _cmosOr   = new CMOSOr();
 const _cmosXor  = new CMOSXor();
+const _cmosXnor = new CMOSXnor();
 
 // ---------------------------------------------------------------------------
 // Input validation
@@ -325,8 +327,8 @@ export function NOR(a: Bit, b: Bit): Bit {
  * XNOR(1, 0) // => 0
  */
 export function XNOR(a: Bit, b: Bit): Bit {
-  // XNOR = NOT(XOR(a, b)). Compose from the transistors-backed XOR and NOT.
-  return _cmosNot.evaluateDigital(_cmosXor.evaluateDigital(a, b)) as Bit;
+  // Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
+  return _cmosXnor.evaluateDigital(a, b) as Bit;
 }
 
 // ===========================================================================
