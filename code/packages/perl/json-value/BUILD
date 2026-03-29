@@ -1,5 +1,6 @@
-cd ../grammar-tools && cpanm --notest --quiet . && cd -
-cd ../json-lexer && cpanm --notest --quiet . && cd -
-cd ../json-parser && cpanm --notest --quiet . && cd -
-cpanm --installdeps --quiet .
+cpanm --notest --quiet Test2::V0
+cd ../grammar-tools && cpanm --notest --nodeps --quiet . && cd -
+cd ../json-lexer && cpanm --notest --nodeps --quiet . && cd -
+cd ../json-parser && cpanm --notest --nodeps --quiet . && cd -
+cpanm --notest --nodeps --quiet .
 prove -l -v t/

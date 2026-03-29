@@ -9,7 +9,7 @@ use Test2::V0;
 # If this fails, all other tests are moot. Running this separately ensures
 # fast feedback on syntax errors or missing dependencies.
 
-use_ok('CodingAdventures::ActivationFunctions');
+ok(eval { require CodingAdventures::ActivationFunctions; 1 }, 'CodingAdventures::ActivationFunctions loads');
 
 # Verify all exported functions exist in the module's namespace
 my @expected_exports = qw(

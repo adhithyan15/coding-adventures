@@ -214,7 +214,7 @@ describe("GradientDescent", function()
 
         it("converges to w ≈ 2.0 for y = 2x with analytical gradient", function()
             local gd = gd_mod.new({
-                learning_rate  = 0.1,
+                learning_rate  = 0.01,
                 max_iterations = 2000,
                 tolerance      = 1e-8,
             })
@@ -236,7 +236,7 @@ describe("GradientDescent", function()
         end)
 
         it("reduces loss compared to initial weights", function()
-            local gd = gd_mod.new({ learning_rate = 0.1, max_iterations = 100 })
+            local gd = gd_mod.new({ learning_rate = 0.01, max_iterations = 100 })
             local initial_loss = gd:compute_loss({0.0}, INPUTS, TARGETS, mse)
             local trained_w, _  = gd:train({0.0}, INPUTS, TARGETS, mse, mse_gradient)
             local final_loss   = gd:compute_loss(trained_w, INPUTS, TARGETS, mse)
@@ -245,7 +245,7 @@ describe("GradientDescent", function()
 
         it("higher learning rate converges in fewer iterations for simple problems", function()
             -- Fast learner: large lr
-            local gd_fast = gd_mod.new({ learning_rate = 0.2, max_iterations = 500 })
+            local gd_fast = gd_mod.new({ learning_rate = 0.05, max_iterations = 500 })
             local w_fast, _ = gd_fast:train({0.0}, INPUTS, TARGETS, mse, mse_gradient)
             local loss_fast  = gd_fast:compute_loss(w_fast, INPUTS, TARGETS, mse)
 

@@ -6,7 +6,7 @@ use Test2::V0;
 # Smoke test: does the module compile and load?
 # ---------------------------------------------------------------------------
 
-use_ok('CodingAdventures::GradientDescent');
+ok(eval { require CodingAdventures::GradientDescent; 1 }, 'CodingAdventures::GradientDescent loads');
 
 my @methods = qw(new step compute_loss numerical_gradient train);
 for my $m (@methods) {

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test2::V0;
 
-use_ok('CodingAdventures::Perceptron');
+ok(eval { require CodingAdventures::Perceptron; 1 }, 'CodingAdventures::Perceptron loads');
 
 my @methods = qw(new predict train_step train step sigmoid sigmoid_derivative);
 for my $m (@methods) {

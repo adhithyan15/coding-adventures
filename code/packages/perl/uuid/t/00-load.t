@@ -6,7 +6,7 @@ use Test2::V0;
 # Smoke test: verify the module loads and exports the expected symbols.
 # ---------------------------------------------------------------------------
 
-use_ok('CodingAdventures::UUID');
+ok(eval { require CodingAdventures::UUID; 1 }, 'CodingAdventures::UUID loads');
 
 my @expected_exports = qw(
     generate_v1  generate_v3  generate_v4  generate_v5  generate_v7

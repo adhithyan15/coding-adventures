@@ -1,6 +1,7 @@
-cd ../grammar-tools && cpanm --notest --quiet . && cd -
-cd ../lattice-lexer && cpanm --notest --quiet . && cd -
-cd ../lattice-parser && cpanm --notest --quiet . && cd -
-cd ../lattice-ast-to-css && cpanm --notest --quiet . && cd -
-cpanm --installdeps --quiet .
+cpanm --notest --quiet Test2::V0
+cd ../grammar-tools && cpanm --notest --nodeps --quiet . && cd -
+cd ../lattice-lexer && cpanm --notest --nodeps --quiet . && cd -
+cd ../lattice-parser && cpanm --notest --nodeps --quiet . && cd -
+cd ../lattice-ast-to-css && cpanm --notest --nodeps --quiet . && cd -
+cpanm --notest --nodeps --quiet .
 prove -l -v t/

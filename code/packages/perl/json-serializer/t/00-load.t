@@ -6,7 +6,7 @@ use Test2::V0;
 # 00-load.t — smoke test: module loads without errors
 # ============================================================================
 
-use_ok 'CodingAdventures::JsonSerializer';
+ok(eval { require CodingAdventures::JsonSerializer; 1 }, 'CodingAdventures::JsonSerializer loads');
 
 ok( defined &CodingAdventures::JsonSerializer::encode,        'encode defined' );
 ok( defined &CodingAdventures::JsonSerializer::decode,        'decode defined' );

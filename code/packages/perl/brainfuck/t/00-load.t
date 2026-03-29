@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test2::V0;
 
-use_ok('CodingAdventures::Brainfuck');
+ok(eval { require CodingAdventures::Brainfuck; 1 }, 'CodingAdventures::Brainfuck loads');
 
 # Verify exported functions exist
 my @fns = qw(validate compile_to_opcodes run_opcodes interpret);

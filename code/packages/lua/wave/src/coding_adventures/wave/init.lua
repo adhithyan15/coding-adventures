@@ -31,7 +31,7 @@
 --
 -- ## Relationship to the Trig Package
 --
--- This module depends on coding_adventures.trig for sin_approx and cos_approx,
+-- This module depends on coding_adventures.trig for sin and cos,
 -- which are computed from first principles via Maclaurin series (rather than
 -- using Lua's standard math.sin/cos). This preserves the educational "from
 -- scratch" philosophy of the coding-adventures stack.
@@ -59,7 +59,7 @@ wave.VERSION = "0.1.0"
 -- Dependencies
 -- ============================================================================
 
--- We use the trig package for sin_approx and cos_approx.
+-- We use the trig package for sin and cos.
 -- These functions compute trigonometric values via Maclaurin series from first
 -- principles, without calling Lua's standard math.sin / math.cos.
 local trig = require("coding_adventures.trig")
@@ -124,7 +124,7 @@ function wave.sine_wave(frequency, amplitude, phase, sample_rate, num_samples)
         local t = i / sample_rate
         -- Instantaneous angle in radians: 2π * f * t + phase_offset
         local angle = wave.TWO_PI * frequency * t + phase
-        samples[i + 1] = amplitude * trig.sin_approx(angle)
+        samples[i + 1] = amplitude * trig.sin(angle)
     end
     return samples
 end
@@ -160,7 +160,7 @@ function wave.cosine_wave(frequency, amplitude, phase, sample_rate, num_samples)
     for i = 0, num_samples - 1 do
         local t     = i / sample_rate
         local angle = wave.TWO_PI * frequency * t + phase
-        samples[i + 1] = amplitude * trig.cos_approx(angle)
+        samples[i + 1] = amplitude * trig.cos(angle)
     end
     return samples
 end
@@ -203,7 +203,7 @@ function wave.square_wave(frequency, amplitude, sample_rate, num_samples)
     for i = 0, num_samples - 1 do
         local t     = i / sample_rate
         local angle = wave.TWO_PI * frequency * t
-        local s     = trig.sin_approx(angle)
+        local s     = trig.sin(angle)
         if s >= 0 then
             samples[i + 1] = amplitude
         else

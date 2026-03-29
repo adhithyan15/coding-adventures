@@ -586,7 +586,8 @@ describe("wasm_simulator", function()
 
         it("drop discards top of stack", function()
             -- Body: i32.const 99; i32.const 42; drop; end  → result is 99
-            local body = b(0x41, 0x63, 0x41, 0x2A, 0x1A, 0x0B)
+            -- Note: 99 in signed LEB128 requires two bytes: 0xE3, 0x00
+            local body = b(0x41, 0xE3, 0x00, 0x41, 0x2A, 0x1A, 0x0B)
             local wasm = WASM_HEADER
                 .. type_sec({{params={}, results={0x7F}}})
                 .. func_sec({0})
@@ -874,7 +875,7 @@ describe("wasm_simulator", function()
                 0x0C, 0x00,   --   br 0            (jump to end of block)
                 0x41, 0xFF, 0x00,   --   i32.const 127 (skipped)
                 0x0B,         -- end (block)
-                0x41, 0x63,   -- i32.const 99
+                0x41, 0xE3, 0x00,   -- i32.const 99 (two-byte signed LEB128)
                 0x0B          -- end (function)
             )
             local wasm = WASM_HEADER
