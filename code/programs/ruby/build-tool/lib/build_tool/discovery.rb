@@ -40,9 +40,22 @@ module BuildTool
   #   name            -- A qualified name like "python/logic-gates".
   #   path            -- Absolute path (Pathname) to the package directory.
   #   build_commands  -- Lines from the BUILD file (commands to execute).
-  #   language        -- Inferred language: "python", "ruby", "go", "rust", or "unknown".
+  #   language        -- Inferred language: "python", "ruby", "go", "rust", etc.
+  #   build_content   -- Raw BUILD file content (for Starlark detection).
+  #   is_starlark     -- Whether the BUILD file uses Starlark syntax.
+  #   declared_srcs   -- Glob patterns from the Starlark srcs field.
+  #   declared_deps   -- Qualified names from the Starlark deps field.
   # --------------------------------------------------------------------------
-  Package = Data.define(:name, :path, :build_commands, :language)
+  Package = Data.define(
+    :name, :path, :build_commands, :language,
+    :build_content, :is_starlark, :declared_srcs, :declared_deps
+  ) do
+    def initialize(name:, path:, build_commands:, language:,
+                   build_content: "", is_starlark: false,
+                   declared_srcs: [], declared_deps: [])
+      super
+    end
+  end
 
   module Discovery
     # KNOWN_LANGUAGES lists the language directory names we look for when
@@ -197,8 +210,13 @@ module BuildTool
       build_file = get_build_file(directory)
 
       if build_file
-        # This directory is a package. Read the BUILD commands.
+        # This directory is a package. Read the BUILD commands and raw content.
         commands = read_lines(build_file)
+        content = begin
+          build_file.read
+        rescue StandardError
+          ""
+        end
         language = infer_language(directory)
         name = infer_package_name(directory, language)
 
@@ -206,7 +224,8 @@ module BuildTool
           name: name,
           path: directory,
           build_commands: commands,
-          language: language
+          language: language,
+          build_content: content
         )
         return
       end

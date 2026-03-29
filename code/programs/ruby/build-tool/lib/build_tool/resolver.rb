@@ -4,7 +4,8 @@
 # ==========================================================
 #
 # This module reads package metadata files (pyproject.toml for Python, .gemspec
-# for Ruby, go.mod for Go) and extracts internal dependencies. It builds a
+# for Ruby, go.mod for Go, package.json for TypeScript, Cargo.toml for Rust,
+# Package.swift for Swift) and extracts internal dependencies. It builds a
 # directed graph where edges represent "A depends on B".
 #
 # Dependency mapping conventions
@@ -23,6 +24,15 @@
 #
 # - **Go**: Module paths in go.mod include the repo path. We map module paths
 #   to `go/X` based on the last path component.
+#
+# - **TypeScript**: package.json uses `@coding-adventures/` scoped npm names.
+#   `@coding-adventures/logic-gates` maps to `typescript/logic-gates`.
+#
+# - **Rust**: Cargo.toml uses path-based local dependencies.
+#   The crate name (key before `=`) maps to `rust/crate-name`.
+#
+# - **Swift**: Package.swift uses `.package(path: "../dep-name")` relative
+#   path references. The directory name maps to `swift/dep-name`.
 #
 # External dependencies (those not matching the monorepo prefix) are silently
 # skipped.
@@ -408,6 +418,138 @@ module BuildTool
       end
     end
 
+    # parse_typescript_deps -- Extract internal deps from package.json.
+    #
+    # TypeScript packages declare dependencies in package.json:
+    #
+    #   "dependencies": {
+    #       "@coding-adventures/logic-gates": "file:../logic-gates"
+    #   }
+    #
+    # We scan both `dependencies` and `devDependencies` blocks for keys
+    # matching `@coding-adventures/` prefix and map them to package names.
+    #
+    # @param package [Package] The TypeScript package.
+    # @param known_names [Hash<String, String>] Mapping from npm name to package name.
+    # @return [Array<String>] Internal dependency package names.
+    def parse_typescript_deps(package, known_names)
+      package_json = package.path / "package.json"
+      return [] unless package_json.exist?
+
+      text = package_json.read
+      internal_deps = []
+      in_deps = false
+      key_re = /"([^"]+)"\s*:/
+
+      text.lines.each do |line|
+        stripped = line.strip
+
+        unless in_deps
+          if (stripped.include?('"dependencies"') || stripped.include?('"devDependencies"')) &&
+             stripped.include?("{")
+            in_deps = true
+          end
+          next
+        end
+
+        if stripped.include?("}")
+          in_deps = false
+          next
+        end
+
+        stripped.scan(key_re).flatten.each do |dep_name|
+          dep_name = dep_name.strip.downcase
+          internal_deps << known_names[dep_name] if known_names.key?(dep_name)
+        end
+      end
+
+      internal_deps
+    end
+
+    # parse_rust_deps -- Extract internal deps from Cargo.toml.
+    #
+    # Rust Cargo.toml declares workspace-local dependencies with path references:
+    #
+    #   [dependencies]
+    #   logic-gates = { path = "../logic-gates" }
+    #
+    # We look for lines in the [dependencies] section that contain `path =`
+    # and extract the crate name (the key before `=`).
+    #
+    # @param package [Package] The Rust package.
+    # @param known_names [Hash<String, String>] Mapping from crate name to package name.
+    # @return [Array<String>] Internal dependency package names.
+    def parse_rust_deps(package, known_names)
+      cargo_toml = package.path / "Cargo.toml"
+      return [] unless cargo_toml.exist?
+
+      text = cargo_toml.read
+      internal_deps = []
+      in_deps = false
+
+      text.lines.each do |line|
+        stripped = line.strip
+
+        if stripped.start_with?("[")
+          in_deps = stripped == "[dependencies]"
+          next
+        end
+
+        next unless in_deps
+
+        # Look for lines like: logic-gates = { path = "../logic-gates" }
+        if stripped.include?("path") && stripped.include?("=")
+          parts = stripped.split("=", 2)
+          if parts.size >= 2
+            crate_name = parts.first.strip.downcase
+            internal_deps << known_names[crate_name] if known_names.key?(crate_name)
+          end
+        end
+      end
+
+      internal_deps
+    end
+
+    # SWIFT_DEP_RE -- Matches .package(path: "../dep-name") in Package.swift.
+    SWIFT_DEP_RE = /\.package\s*\(\s*path\s*:\s*"\.\.\/(.*?)"/
+
+    # parse_swift_deps -- Extract internal deps from Package.swift.
+    #
+    # Swift Package Manager uses relative path references for local (monorepo)
+    # dependencies. The declaration always appears on a single line:
+    #
+    #   .package(path: "../logic-gates"),
+    #
+    # We scan for this pattern and map the directory name back to our internal
+    # package name. External dependencies (declared with `url:`) are silently
+    # skipped because they don't match the `path: "../"` prefix.
+    #
+    # @param package [Package] The Swift package.
+    # @param known_names [Hash<String, String>] Mapping from dir name to package name.
+    # @return [Array<String>] Internal dependency package names.
+    def parse_swift_deps(package, known_names)
+      manifest = package.path / "Package.swift"
+      return [] unless manifest.exist?
+
+      internal_deps = []
+
+      manifest.read.lines.each do |line|
+        stripped = line.strip
+        next if stripped.empty? || stripped.start_with?("//")
+
+        match = SWIFT_DEP_RE.match(stripped)
+        next unless match
+
+        dep_dir = match[1].downcase
+        # Guard against path traversal: reject segments with separators or "..".
+        next if dep_dir.include?("/") || dep_dir.include?("\\") || dep_dir == ".."
+
+        internal_deps << known_names[dep_dir] if known_names.key?(dep_dir)
+      end
+
+      internal_deps
+    end
+
     # parse_perl_deps -- Extract internal dependencies from a Perl cpanfile.
     #
     # A cpanfile declares dependencies with one `requires` per line:
@@ -444,24 +586,44 @@ module BuildTool
 
     # build_known_names -- Build ecosystem-specific name -> package name mapping.
     #
-    # For Python: "coding-adventures-logic-gates" -> "python/logic-gates"
-    # For Ruby:   "coding_adventures_logic_gates" -> "ruby/logic_gates"
-    # For Go:     module paths -> "go/module-name"
+    # For Python:     "coding-adventures-logic-gates" -> "python/logic-gates"
+    # For Ruby:       "coding_adventures_logic_gates" -> "ruby/logic_gates"
+    # For Go:         module paths -> "go/module-name"
+    # For TypeScript: "@coding-adventures/logic-gates" -> "typescript/logic-gates"
+    # For Rust:       "logic-gates" (crate name) -> "rust/logic-gates"
+    # For Swift:      "logic-gates" (dir name) -> "swift/logic-gates"
+    #
+    # Library packages take priority over programs when the same ecosystem name
+    # maps to both. This prevents a program that depends on its own library from
+    # resolving the dep to itself and creating a self-loop.
     #
     # @param packages [Array<Package>]
     # @return [Hash<String, String>]
     def build_known_names(packages)
       known = {}
 
+      # set_known inserts key->value, letting library packages overwrite programs
+      # but never letting programs overwrite library packages.
+      set_known = lambda do |key, value, pkg_path|
+        unless known.key?(key)
+          known[key] = value
+          next
+        end
+        # Allow overwrite only if the current pkg is a library (not a program).
+        known[key] = value unless pkg_path.to_s.tr("\\", "/").include?("/programs/")
+      end
+
       packages.each do |pkg|
         case pkg.language
         when "python"
           pypi_name = "coding-adventures-#{pkg.path.basename}".downcase
-          known[pypi_name] = pkg.name
+          set_known.call(pypi_name, pkg.name, pkg.path)
         when "ruby"
           gem_name = "coding_adventures_#{pkg.path.basename}".downcase
-          known[gem_name] = pkg.name
+          set_known.call(gem_name, pkg.name, pkg.path)
         when "go"
+          # For Go, read the module path from go.mod. Module paths are unique
+          # across packages and programs so no priority logic needed.
           go_mod = pkg.path / "go.mod"
           if go_mod.exist?
             go_mod.read.lines.each do |line|
@@ -472,17 +634,47 @@ module BuildTool
               end
             end
           end
+        when "typescript"
+          # Convert dir name to npm scoped name: "logic-gates" -> "@coding-adventures/logic-gates"
+          npm_name = "@coding-adventures/#{pkg.path.basename}".downcase
+          set_known.call(npm_name, pkg.name, pkg.path)
+          set_known.call(pkg.path.basename.to_s.downcase, pkg.name, pkg.path)
+
+          # Also read the actual "name" field from package.json for accuracy.
+          package_json = pkg.path / "package.json"
+          if package_json.exist?
+            match = package_json.read.match(/"name"\s*:\s*"([^"]+)"/)
+            set_known.call(match[1].strip.downcase, pkg.name, pkg.path) if match
+          end
+        when "rust"
+          # Rust crate names use the directory name directly (kebab-case).
+          crate_name = pkg.path.basename.to_s.downcase
+          set_known.call(crate_name, pkg.name, pkg.path)
         when "elixir"
-          app_name = "coding_adventures_#{pkg.path.basename.to_s.gsub('-', '_')}".downcase
-          known[app_name] = pkg.name
+          # Elixir mix names replace hyphens with underscores.
+          base_name = pkg.path.basename.to_s.gsub("-", "_").downcase
+          app_name = "coding_adventures_#{base_name}"
+          set_known.call(app_name, pkg.name, pkg.path)
+          set_known.call(base_name, pkg.name, pkg.path)
+
+          # Also read the actual app name from mix.exs for accuracy.
+          mix_exs = pkg.path / "mix.exs"
+          if mix_exs.exist?
+            match = mix_exs.read.match(/app:\s*:([a-z0-9_]+)/)
+            set_known.call(match[1].strip.downcase, pkg.name, pkg.path) if match
+          end
         when "lua"
-          # Lua rockspec names use hyphens: "logic_gates" dir → "coding-adventures-logic-gates"
+          # Lua rockspec names use hyphens: "logic_gates" dir -> "coding-adventures-logic-gates"
           rockspec_name = "coding-adventures-#{pkg.path.basename.to_s.gsub('_', '-')}".downcase
-          known[rockspec_name] = pkg.name
+          set_known.call(rockspec_name, pkg.name, pkg.path)
         when "perl"
-          # Perl CPAN dist names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+          # Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
           cpan_name = "coding-adventures-#{pkg.path.basename}".downcase
-          known[cpan_name] = pkg.name
+          set_known.call(cpan_name, pkg.name, pkg.path)
+        when "swift"
+          # Swift SPM package names are the kebab-case directory name.
+          dir_base = pkg.path.basename.to_s.downcase
+          set_known.call(dir_base, pkg.name, pkg.path)
         end
       end
 
@@ -511,12 +703,15 @@ module BuildTool
       # Parse dependencies for each package and add edges.
       packages.each do |pkg|
         deps = case pkg.language
-               when "python" then parse_python_deps(pkg, known_names)
-               when "ruby"   then parse_ruby_deps(pkg, known_names)
-               when "go"     then parse_go_deps(pkg, known_names)
-               when "elixir" then parse_elixir_deps(pkg, known_names)
-               when "lua"    then parse_lua_deps(pkg, known_names)
-               when "perl"  then parse_perl_deps(pkg, known_names)
+               when "python"     then parse_python_deps(pkg, known_names)
+               when "ruby"       then parse_ruby_deps(pkg, known_names)
+               when "go"         then parse_go_deps(pkg, known_names)
+               when "typescript" then parse_typescript_deps(pkg, known_names)
+               when "rust"       then parse_rust_deps(pkg, known_names)
+               when "elixir"     then parse_elixir_deps(pkg, known_names)
+               when "lua"        then parse_lua_deps(pkg, known_names)
+               when "perl"       then parse_perl_deps(pkg, known_names)
+               when "swift"      then parse_swift_deps(pkg, known_names)
                else []
                end
 

@@ -7,24 +7,30 @@ modules: discovery, resolution, hashing, caching, execution, and reporting.
 
 Usage::
 
-    build-tool                        # Auto-detect root, build changed packages
-    build-tool --root /path/to/repo   # Specify root explicitly
-    build-tool --force                # Rebuild everything
-    build-tool --dry-run              # Show what would build without building
-    build-tool --jobs 4               # Limit parallel workers
-    build-tool --language python      # Only build Python packages
+    build-tool                         # Auto-detect root, build changed packages
+    build-tool --root /path/to/repo    # Specify root explicitly
+    build-tool --force                 # Rebuild everything
+    build-tool --dry-run               # Show what would build without building
+    build-tool --jobs 4                # Limit parallel workers
+    build-tool --language python       # Only build Python packages
+    build-tool --diff-base origin/main # Git ref for change detection
+    build-tool --detect-languages      # Output needed language toolchains
+    build-tool --emit-plan plan.json   # Write build plan and exit
+    build-tool --plan-file plan.json   # Read plan, skip discovery
 
 The flow is:
 1. Discover packages (walk recursive BUILD files)
-2. Filter by language if specified
-3. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod)
-4. Hash all packages
-5. Load cache, determine what needs building
-6. If --dry-run, print what would build and exit
-7. Execute builds (parallel by level)
-8. Update and save cache
-9. Print report
-10. Exit with code 1 if any builds failed
+2. Evaluate Starlark BUILD files
+3. Filter by language if specified
+4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, etc.)
+5. Git-diff change detection (default mode)
+6. Emit plan or detect languages (early exit modes)
+7. Hash all packages
+8. Load cache, determine what needs building
+9. Execute builds (parallel by level)
+10. Update and save cache
+11. Print report
+12. Exit with code 1 if any builds failed
 """
 
 from __future__ import annotations
@@ -46,6 +52,11 @@ from build_tool.plan import (
 )
 from build_tool.reporter import print_report
 from build_tool.resolver import DirectedGraph, resolve_dependencies
+from build_tool.starlark_evaluator import (
+    evaluate_build_file,
+    generate_commands,
+    is_starlark_build,
+)
 
 # Optional progress bar integration. When the progress bar package is
 # installed, builds get a real-time terminal UI showing which packages are
@@ -55,6 +66,49 @@ try:
     from progress_bar import Tracker
 except ImportError:
     Tracker = None  # type: ignore[assignment, misc]
+
+
+# ALL_LANGUAGES is the canonical list of supported languages in the monorepo.
+# The order is stable and matches the order used in CI toolchain setup.
+ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift"]
+
+# SHARED_PREFIXES are repo paths that, when changed, mean ALL languages need
+# rebuilding. Only the CI workflow itself fans out to a full rebuild.
+SHARED_PREFIXES = [".github/workflows/ci.yml"]
+
+
+def _expand_affected_set_with_prereqs(
+    graph: DirectedGraph,
+    affected_set: set[str] | None,
+) -> set[str] | None:
+    """Ensure all transitive prerequisites of affected packages are also scheduled.
+
+    This matters on fresh CI runners: some package BUILD steps materialize
+    local dependency state (for example sibling TypeScript file: dependencies
+    under node_modules), and dependents may fail if those prerequisite packages
+    are skipped just because their own sources didn't change.
+
+    Args:
+        graph: The dependency graph.
+        affected_set: Packages from git diff, or None for "all".
+
+    Returns:
+        Expanded set with all transitive prerequisites included.
+    """
+    if affected_set is None:
+        return None
+
+    expanded = set(affected_set)
+    queue = list(affected_set)
+
+    while queue:
+        current = queue.pop(0)
+        for pred in graph.predecessors(current):
+            if pred not in expanded:
+                expanded.add(pred)
+                queue.append(pred)
+
+    return expanded
 
 
 def _find_repo_root(start: Path | None = None) -> Path | None:
@@ -111,7 +165,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--language",
-        choices=["python", "ruby", "go", "all"],
+        choices=["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "all"],
         default="all",
         help="Only build packages of this language",
     )
@@ -177,6 +231,54 @@ def main(argv: list[str] | None = None) -> int:
         print("No packages found.", file=sys.stderr)
         return 0
 
+    # Step 2b: Evaluate Starlark BUILD files.
+    #
+    # For each discovered package, check if its BUILD file is Starlark.
+    # If so, evaluate it through the Python starlark-interpreter to extract
+    # declared targets (with srcs, deps, build commands). This replaces the
+    # raw shell command lines with generated commands from the rule.
+    starlark_count = 0
+    updated_packages: list[Package] = []
+    for pkg in packages:
+        if is_starlark_build(pkg.build_content):
+            try:
+                result = evaluate_build_file(
+                    str(pkg.path / "BUILD"),
+                    str(pkg.path),
+                    str(root),
+                )
+                if result.targets:
+                    t = result.targets[0]
+                    pkg = Package(
+                        name=pkg.name,
+                        path=pkg.path,
+                        build_commands=generate_commands(t),
+                        language=pkg.language,
+                        build_content=pkg.build_content,
+                        is_starlark=True,
+                        declared_srcs=t.srcs,
+                        declared_deps=t.deps,
+                    )
+                    starlark_count += 1
+                else:
+                    pkg = Package(
+                        name=pkg.name,
+                        path=pkg.path,
+                        build_commands=pkg.build_commands,
+                        language=pkg.language,
+                        build_content=pkg.build_content,
+                        is_starlark=True,
+                        declared_srcs=pkg.declared_srcs,
+                        declared_deps=pkg.declared_deps,
+                    )
+            except Exception as exc:
+                print(f"Warning: Starlark eval failed for {pkg.name}: {exc}", file=sys.stderr)
+        updated_packages.append(pkg)
+    packages = updated_packages
+
+    if starlark_count:
+        print(f"Evaluated {starlark_count} Starlark BUILD files")
+
     # Step 3: Filter by language
     if args.language != "all":
         packages = [p for p in packages if p.language == args.language]
@@ -201,8 +303,9 @@ def main(argv: list[str] | None = None) -> int:
         changed_files = get_changed_files(root, args.diff_base)
         if changed_files:
             shared_changed = any(
-                f.startswith(".github/")
+                f == prefix or f.startswith(prefix + "/")
                 for f in changed_files
+                for prefix in SHARED_PREFIXES
             )
             if shared_changed:
                 print("Git diff: shared files changed -- rebuilding everything")
@@ -215,8 +318,9 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 if changed_packages:
                     affected_set = graph.affected_nodes(changed_packages)
+                    affected_set = _expand_affected_set_with_prereqs(graph, affected_set)
                     print(f"Git diff: {len(changed_packages)} packages changed, "
-                          f"{len(affected_set)} affected (including dependents)")
+                          f"{len(affected_set)} affected (including dependents and prerequisites)")
                 else:
                     print("Git diff: no package files changed -- nothing to build")
                     affected_set = set()
@@ -227,6 +331,19 @@ def main(argv: list[str] | None = None) -> int:
     # This is the fast path for CI detect jobs.
     if args.emit_plan is not None:
         return _emit_plan(args, root, packages, graph, affected_set)
+
+    # --detect-languages standalone mode: output language flags and exit.
+    if args.detect_languages:
+        languages_needed: dict[str, bool] = {"go": True}
+        if args.force or affected_set is None:
+            for lang in ALL_LANGUAGES:
+                languages_needed[lang] = True
+        else:
+            for pkg in packages:
+                if pkg.name in affected_set:
+                    languages_needed[pkg.language] = True
+        _output_language_flags(languages_needed)
+        return 0
 
     # Step 6: Hash all packages (needed for cache fallback)
     package_hashes: dict[str, str] = {}
@@ -509,16 +626,39 @@ def _rebuild_argv(args: argparse.Namespace) -> list[str]:
 
 
 def _output_language_flags(languages_needed: dict[str, bool]) -> None:
-    """Print language flags to stdout for CI consumption.
+    """Print language flags to stdout and $GITHUB_OUTPUT for CI consumption.
 
     Output format matches the Go build tool::
 
-        need_python=true
-        need_go=false
-        need_ruby=true
+        needs_python=true
+        needs_go=false
+        needs_ruby=true
+
+    Go is always needed because the build tool is written in Go.
     """
-    for lang, needed in sorted(languages_needed.items()):
-        print(f"need_{lang}={'true' if needed else 'false'}")
+    import os
+
+    gh_output_path = os.environ.get("GITHUB_OUTPUT", "")
+    gh_file = None
+    if gh_output_path:
+        try:
+            gh_file = open(gh_output_path, "a", encoding="utf-8")  # noqa: SIM115
+        except OSError as exc:
+            print(f"Warning: could not open $GITHUB_OUTPUT: {exc}", file=sys.stderr)
+
+    # Always output all known languages in stable order.
+    all_needed = {"go": True}  # Go is always needed
+    all_needed.update(languages_needed)
+
+    for lang in ALL_LANGUAGES:
+        value = all_needed.get(lang, False)
+        line = f"needs_{lang}={'true' if value else 'false'}"
+        print(line)
+        if gh_file is not None:
+            gh_file.write(line + "\n")
+
+    if gh_file is not None:
+        gh_file.close()
 
 
 if __name__ == "__main__":
