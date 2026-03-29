@@ -1,0 +1,6 @@
+requires 'CodingAdventures::Lexer';
+requires 'CodingAdventures::PythonLexer';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};

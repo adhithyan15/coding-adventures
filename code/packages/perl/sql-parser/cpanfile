@@ -1,0 +1,7 @@
+requires 'CodingAdventures::GrammarTools';
+requires 'CodingAdventures::Lexer';
+requires 'CodingAdventures::SqlLexer';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};

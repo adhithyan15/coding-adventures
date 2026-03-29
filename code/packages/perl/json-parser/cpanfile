@@ -1,0 +1,5 @@
+requires 'CodingAdventures::JsonLexer';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};

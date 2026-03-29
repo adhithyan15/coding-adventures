@@ -1,0 +1,3 @@
+cd ../matrix && luarocks make --local coding-adventures-matrix-0.1.0-1.rockspec && cd -
+cd ../activation_functions && luarocks make --local coding-adventures-activation-functions-0.1.0-1.rockspec && cd -
+cd tests && busted . --verbose --pattern=test_

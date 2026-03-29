@@ -1,0 +1,3 @@
+requires 'coding-adventures-matrix', '0.01';
+requires 'coding-adventures-activation-functions', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };
