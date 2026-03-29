@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   VERSION,
   createScene,
+  drawClip,
   drawGroup,
+  drawLine,
   drawRect,
   drawText,
   renderWith,
@@ -50,6 +52,65 @@ describe("helpers", () => {
       background: "#ffffff",
       metadata: { kind: "demo" },
     });
+  });
+
+  it("creates a rectangle with stroke options", () => {
+    expect(
+      drawRect(0, 0, 10, 10, "#fff", { stroke: "#f00", strokeWidth: 2 }),
+    ).toMatchObject({
+      kind: "rect",
+      fill: "#fff",
+      stroke: "#f00",
+      strokeWidth: 2,
+    });
+  });
+
+  it("creates a rectangle with metadata (backward compat)", () => {
+    const rect = drawRect(0, 0, 10, 10, "#000", { bar: true });
+    expect(rect.metadata).toEqual({ bar: true });
+    expect(rect.stroke).toBeUndefined();
+  });
+
+  it("creates a line instruction", () => {
+    expect(drawLine(0, 0, 100, 0, "#333", 2)).toMatchObject({
+      kind: "line",
+      x1: 0,
+      y1: 0,
+      x2: 100,
+      y2: 0,
+      stroke: "#333",
+      strokeWidth: 2,
+    });
+  });
+
+  it("creates a line with defaults", () => {
+    const line = drawLine(10, 20, 30, 40);
+    expect(line.stroke).toBe("#000000");
+    expect(line.strokeWidth).toBe(1);
+  });
+
+  it("creates a clip instruction", () => {
+    const inner = drawRect(5, 5, 10, 10);
+    const clip = drawClip(0, 0, 50, 50, [inner]);
+    expect(clip).toMatchObject({
+      kind: "clip",
+      x: 0,
+      y: 0,
+      width: 50,
+      height: 50,
+    });
+    expect(clip.children).toHaveLength(1);
+    expect(clip.children[0]!.kind).toBe("rect");
+  });
+
+  it("creates text with fontWeight", () => {
+    const text = drawText(10, 20, "Header", { fontWeight: "bold" });
+    expect(text.fontWeight).toBe("bold");
+  });
+
+  it("creates text with default fontWeight undefined", () => {
+    const text = drawText(10, 20, "Normal");
+    expect(text.fontWeight).toBeUndefined();
   });
 });
 
