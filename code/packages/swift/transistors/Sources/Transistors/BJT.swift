@@ -1,5 +1,7 @@
 // BJT.swift
 // Part of coding-adventures — an educational computing stack.
+
+import Foundation
 //
 // ============================================================================
 // BJT — Bipolar Junction Transistor
