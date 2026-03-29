@@ -219,4 +219,58 @@ describe("DataTable", () => {
       expect(screen.getByText("3")).toBeTruthy();
     });
   });
+
+  describe("column resizing", () => {
+    it("does not render resize handles when resizable is false", () => {
+      const { container } = render(
+        <DataTable columns={columns} data={data} />,
+      );
+      expect(container.querySelector(".table__resize-handle")).toBeNull();
+    });
+
+    it("renders resize handles when resizable is true", () => {
+      const { container } = render(
+        <DataTable columns={columns} data={data} resizable />,
+      );
+      const handles = container.querySelectorAll(".table__resize-handle");
+      expect(handles).toHaveLength(2); // one per column
+    });
+
+    it("resize handles have role=separator", () => {
+      render(<DataTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators).toHaveLength(2);
+    });
+
+    it("resize handles have accessible labels", () => {
+      render(<DataTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators[0]!.getAttribute("aria-label")).toBe(
+        "Resize Name column",
+      );
+      expect(separators[1]!.getAttribute("aria-label")).toBe(
+        "Resize Age column",
+      );
+    });
+
+    it("resize handles have aria-valuenow and aria-valuemin", () => {
+      render(<DataTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators[0]!.getAttribute("aria-valuemin")).toBe("40");
+      expect(separators[0]!.getAttribute("aria-valuenow")).toBeTruthy();
+    });
+
+    it("resize handles are focusable", () => {
+      render(<DataTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators[0]!.tabIndex).toBe(0);
+    });
+
+    it("applies table--resizing class during drag is false initially", () => {
+      const { container } = render(
+        <DataTable columns={columns} data={data} resizable />,
+      );
+      expect(container.querySelector(".table--resizing")).toBeNull();
+    });
+  });
 });

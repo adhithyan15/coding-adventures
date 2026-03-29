@@ -49,6 +49,7 @@ export type { CalendarViewProps, CalendarItem, CalendarViewGranularity, DayOfWee
 export type { TableProps, TableBaseProps, ColumnDef, CellAlignment, RowKeyFn } from "./components/Table.js";
 export type { CanvasTheme } from "./hooks/useCanvasTheme.js";
 export type { CellPosition, UseGridKeyboardOptions, UseGridKeyboardReturn } from "./hooks/useGridKeyboard.js";
+export type { UseColumnResizeOptions, UseColumnResizeReturn } from "./hooks/useColumnResize.js";
 export type { UseTabsOptions, TabProps } from "./hooks/useTabs.js";
 export type { LocaleMap } from "./i18n/index.js";
 
@@ -74,6 +75,7 @@ export { useAnimatedNumber } from "./hooks/useAnimatedNumber.js";
 export { useReducedMotion } from "./hooks/useReducedMotion.js";
 export { useCanvasTheme } from "./hooks/useCanvasTheme.js";
 export { useGridKeyboard } from "./hooks/useGridKeyboard.js";
+export { useColumnResize, MIN_COL_WIDTH } from "./hooks/useColumnResize.js";
 
 // i18n
 export {
