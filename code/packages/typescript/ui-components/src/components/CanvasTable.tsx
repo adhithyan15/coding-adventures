@@ -270,7 +270,6 @@ function AriaOverlay<T>({
   getCellTabIndex,
   setFocusedCell,
   resizable,
-  getColumnWidth,
   startResize,
   handleResizeKeyDown,
 }: {
@@ -280,7 +279,6 @@ function AriaOverlay<T>({
   getCellTabIndex: (row: number, col: number) => 0 | -1;
   setFocusedCell: (pos: { row: number; col: number }) => void;
   resizable: boolean;
-  getColumnWidth: (id: string, defaultWidth: number) => number;
   startResize: (colId: string, clientX: number, currentWidth: number) => void;
   handleResizeKeyDown: (
     colId: string,
@@ -563,7 +561,6 @@ export function CanvasTable<T>({
         getCellTabIndex={getCellTabIndex}
         setFocusedCell={setFocusedCell}
         resizable={resizable}
-        getColumnWidth={getColumnWidth}
         startResize={startResize}
         handleResizeKeyDown={handleResizeKeyDown}
       />
