@@ -1,0 +1,58 @@
+name: Build Swift Apps
+
+# Run on every push and pull request that touches a Swift app.
+on:
+  push:
+    paths:
+      - 'code/programs/swift/**'
+      - '.github/workflows/build-swift.yml'
+  pull_request:
+    paths:
+      - 'code/programs/swift/**'
+      - '.github/workflows/build-swift.yml'
+
+jobs:
+  build-hello-world:
+    name: Hello World
+    # macos-15 is the latest GitHub-hosted macOS runner (Apple Silicon).
+    # It ships with Xcode 16.x. When Xcode 26 runners become available
+    # on GitHub Actions, update this to macos-16.
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        # Pin to the Xcode version available on this runner.
+        # Run `ls /Applications/Xcode*` on the runner to see what's installed.
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: code/programs/swift/01-hello-world
+        run: xcodegen generate
+
+      - name: Build iOS app
+        working-directory: code/programs/swift/01-hello-world
+        run: |
+          xcodebuild build \
+            -scheme HelloWorld \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Build watchOS app
+        # Use generic/platform to avoid needing a watchOS runtime installed.
+        # The runner has Xcode but watchOS simulator runtimes are not
+        # pre-installed. generic/platform compiles and links without
+        # booting a simulator, which is all we need for a build check.
+        working-directory: code/programs/swift/01-hello-world
+        run: |
+          xcodebuild build \
+            -scheme HelloWorldWatch \
+            -destination 'generic/platform=watchOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
