@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-03-29
+
+### Changed
+
+- `XNOR` now delegates directly to `_cmos_xnor:evaluate_digital` (a dedicated
+  `CMOSXnor` instance) rather than composing `_cmos_xor` and `_cmos_not` inline.
+  Added `_cmos_xnor` module-level singleton alongside the other CMOS instances.
+
 ## [0.2.0] - 2026-03-28
 
 ### Changed

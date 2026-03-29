@@ -782,6 +782,57 @@ describe("CMOSXor", function()
 end)
 
 -- =========================================================================
+-- CMOS XNOR
+-- =========================================================================
+
+describe("CMOSXnor", function()
+    local gate
+
+    before_each(function()
+        gate = T.CMOSXnor()
+    end)
+
+    describe("truth table (XNOR)", function()
+        local cases = {
+            { 0, 0, 1 },
+            { 0, 1, 0 },
+            { 1, 0, 0 },
+            { 1, 1, 1 },
+        }
+        for _, c in ipairs(cases) do
+            it(string.format("%d XNOR %d = %d", c[1], c[2], c[3]), function()
+                local val, err = gate:evaluate_digital(c[1], c[2])
+                assert.is_nil(err)
+                assert.are.equal(c[3], val)
+            end)
+        end
+    end)
+
+    it("XNOR is inverse of XOR", function()
+        -- XNOR(a, b) = NOT(XOR(a, b)) for all input combinations.
+        local xor_gate = T.CMOSXor()
+        local inv      = T.CMOSInverter()
+        for _, c in ipairs({{0,0},{0,1},{1,0},{1,1}}) do
+            local xnor_val, _ = gate:evaluate_digital(c[1], c[2])
+            local xor_val, _  = xor_gate:evaluate_digital(c[1], c[2])
+            local not_xor, _  = inv:evaluate_digital(xor_val)
+            assert.are.equal(not_xor, xnor_val)
+        end
+    end)
+
+    it("analog: reports 8 transistors", function()
+        local out = gate:evaluate(0.0, 3.3)
+        assert.are.equal(8, out.transistor_count)
+    end)
+
+    it("rejects invalid inputs", function()
+        local val, err = gate:evaluate_digital(0, 3)
+        assert.is_nil(val)
+        assert.is_not_nil(err)
+    end)
+end)
+
+-- =========================================================================
 -- TTL NAND
 -- =========================================================================
 

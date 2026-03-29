@@ -54,6 +54,7 @@ local _cmos_nor  = cmos.CMOSNor()
 local _cmos_and  = cmos.CMOSAnd()
 local _cmos_or   = cmos.CMOSOr()
 local _cmos_xor  = cmos.CMOSXor()
+local _cmos_xnor = cmos.CMOSXnor()
 
 -- =========================================================================
 -- Input Validation
@@ -291,11 +292,9 @@ end
 function gates.XNOR(a, b)
     validate_bit(a, "a")
     validate_bit(b, "b")
-    -- XNOR = NOT(XOR(a, b)). Compose from transistors-backed XOR and NOT.
-    local xor_result, err1 = _cmos_xor:evaluate_digital(a, b)
-    if err1 then error("logic_gates: XNOR XOR CMOS evaluation error: " .. tostring(err1)) end
-    local result, err2 = _cmos_not:evaluate_digital(xor_result)
-    if err2 then error("logic_gates: XNOR NOT CMOS evaluation error: " .. tostring(err2)) end
+    -- Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
+    local result, err = _cmos_xnor:evaluate_digital(a, b)
+    if err then error("logic_gates: XNOR CMOS evaluation error: " .. tostring(err)) end
     return result
 end
 

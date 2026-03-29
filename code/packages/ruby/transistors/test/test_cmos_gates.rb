@@ -189,5 +189,44 @@ module CodingAdventures
         assert_raises(ArgumentError) { xor_gate.evaluate_digital(0, 2) }
       end
     end
+
+    class TestCMOSXnor < Minitest::Test
+      # Test CMOS XNOR gate truth table (XNOR = NOT XOR = equivalence gate).
+
+      def test_truth_table
+        # XNOR outputs 1 when inputs are the SAME, 0 when different.
+        xnor_gate = CMOSXnor.new
+        assert_equal 1, xnor_gate.evaluate_digital(0, 0)
+        assert_equal 0, xnor_gate.evaluate_digital(0, 1)
+        assert_equal 0, xnor_gate.evaluate_digital(1, 0)
+        assert_equal 1, xnor_gate.evaluate_digital(1, 1)
+      end
+
+      def test_xnor_is_inverse_of_xor
+        # XNOR(a, b) = NOT(XOR(a, b)) for all input combinations.
+        xnor_gate = CMOSXnor.new
+        xor_gate = CMOSXor.new
+        inv = CMOSInverter.new
+        [0, 1].each do |a|
+          [0, 1].each do |b|
+            assert_equal inv.evaluate_digital(xor_gate.evaluate_digital(a, b)),
+                         xnor_gate.evaluate_digital(a, b)
+          end
+        end
+      end
+
+      def test_transistor_count
+        # XNOR = XOR (6) + Inverter (2) = 8 transistors.
+        xnor_gate = CMOSXnor.new
+        result = xnor_gate.evaluate(0.0, 0.0)
+        assert_equal 8, result.transistor_count
+      end
+
+      def test_rejects_invalid_input
+        xnor_gate = CMOSXnor.new
+        assert_raises(ArgumentError) { xnor_gate.evaluate_digital(0, 2) }
+        assert_raises(TypeError) { xnor_gate.evaluate_digital(true, 0) }
+      end
+    end
   end
 end

@@ -65,6 +65,7 @@ module CodingAdventures
     CMOS_AND      = CodingAdventures::Transistors::CMOSAnd.new
     CMOS_OR       = CodingAdventures::Transistors::CMOSOr.new
     CMOS_XOR      = CodingAdventures::Transistors::CMOSXor.new
+    CMOS_XNOR     = CodingAdventures::Transistors::CMOSXnor.new
 
     # -----------------------------------------------------------------------
     # Input validation
@@ -339,8 +340,8 @@ module CodingAdventures
     # @param b [Integer] second input bit (0 or 1)
     # @return [Integer] 1 if inputs are the same, else 0
     def self.xnor_gate(a, b)
-      # XNOR = NOT(XOR(a, b)). Compose from the transistors-backed XOR and NOT.
-      CMOS_INVERTER.evaluate_digital(CMOS_XOR.evaluate_digital(a, b))
+      # Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
+      CMOS_XNOR.evaluate_digital(a, b)
     end
 
     # =====================================================================
