@@ -1,0 +1,50 @@
+name: Build Kotlin Apps
+
+on:
+  push:
+    paths:
+      - 'code/programs/kotlin/**'
+      - '.github/workflows/build-kotlin.yml'
+  pull_request:
+    paths:
+      - 'code/programs/kotlin/**'
+      - '.github/workflows/build-kotlin.yml'
+
+jobs:
+  build-hello-world:
+    name: Hello World (Android)
+    # Ubuntu is faster and cheaper than macOS for Android builds.
+    # Unlike iOS, Android doesn't require macOS — Gradle runs anywhere.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('code/programs/kotlin/01-hello-world/**/*.gradle*', 'code/programs/kotlin/01-hello-world/**/libs.versions.toml') }}
+          restore-keys: gradle-
+
+      - name: Build debug APK
+        working-directory: code/programs/kotlin/01-hello-world
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello-world-debug
+          path: code/programs/kotlin/01-hello-world/app/build/outputs/apk/debug/app-debug.apk

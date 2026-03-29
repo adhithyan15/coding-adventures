@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml — the app's identity card.
+
+  Every Android app has a manifest. It tells the OS:
+  - What the app is called and what its package name is
+  - Which Activities exist and which one to launch first
+  - What permissions the app needs (none for Hello World)
+
+  This is roughly equivalent to the Info.plist on iOS, but more
+  focused on the app's component structure.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:label="Hello World"
+        android:theme="@style/Theme.HelloWorld"
+        android:supportsRtl="true">
+
+        <!-- The main Activity. intent-filter with MAIN + LAUNCHER
+             tells the OS this is the screen to show when the user
+             taps the app icon. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
