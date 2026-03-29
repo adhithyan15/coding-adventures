@@ -21,6 +21,22 @@
 //
 // ============================================================================
 
+// MARK: - Internal Helpers
+
+// log2Ceil computes ⌈log₂(n)⌉ using bit shifting — no Foundation import needed.
+// This is the number of bits required to represent n distinct values.
+// For encoder/priority-encoder output widths: log2Ceil(4) = 2, log2Ceil(8) = 3.
+private func log2Ceil(_ n: Int) -> Int {
+    guard n > 1 else { return 0 }
+    var bits = 0
+    var v = n - 1
+    while v > 0 {
+        v >>= 1
+        bits += 1
+    }
+    return bits
+}
+
 // MARK: - Multiplexer (MUX)
 
 // ============================================================================
@@ -307,7 +323,7 @@ public func encoder(inputs: [Int]) throws -> [Int] {
     }
 
     let activeIndex = inputs.firstIndex(of: 1)!
-    let n = Int(log2(Double(inputs.count)).rounded(.up))  // number of output bits
+    let n = log2Ceil(inputs.count)  // number of output bits
 
     // Convert activeIndex to binary (LSB first)
     return (0..<n).map { bit in (activeIndex >> bit) & 1 }
@@ -349,11 +365,11 @@ public func priorityEncoder(inputs: [Int]) throws -> (output: [Int], valid: Int)
     // Find the highest-priority (highest-index) active input
     guard let activeIndex = inputs.indices.reversed().first(where: { inputs[$0] == 1 }) else {
         // No input active: valid=0, output is all zeros
-        let n = Int(log2(Double(inputs.count)).rounded(.up))
+        let n = log2Ceil(inputs.count)
         return (output: Array(repeating: 0, count: n), valid: 0)
     }
 
-    let n = Int(log2(Double(inputs.count)).rounded(.up))
+    let n = log2Ceil(inputs.count)
     let output = (0..<n).map { bit in (activeIndex >> bit) & 1 }
     return (output: output, valid: 1)
 }
