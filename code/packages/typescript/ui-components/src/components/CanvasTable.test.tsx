@@ -270,4 +270,46 @@ describe("CanvasTable", () => {
       expect(el!.classList.contains("table--canvas")).toBe(true);
     });
   });
+
+  describe("column resizing", () => {
+    it("does not render resize handles when resizable is false", () => {
+      const { container } = render(
+        <CanvasTable columns={columns} data={data} />,
+      );
+      expect(container.querySelector(".table__resize-handle")).toBeNull();
+    });
+
+    it("renders resize handles when resizable is true", () => {
+      const { container } = render(
+        <CanvasTable columns={columns} data={data} resizable />,
+      );
+      const handles = container.querySelectorAll(".table__resize-handle");
+      expect(handles).toHaveLength(2);
+    });
+
+    it("resize handles have role=separator with accessible labels", () => {
+      render(<CanvasTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators).toHaveLength(2);
+      expect(separators[0]!.getAttribute("aria-label")).toBe(
+        "Resize Name column",
+      );
+      expect(separators[1]!.getAttribute("aria-label")).toBe(
+        "Resize Age column",
+      );
+    });
+
+    it("resize handles have aria-valuenow and aria-valuemin", () => {
+      render(<CanvasTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators[0]!.getAttribute("aria-valuemin")).toBe("40");
+      expect(separators[0]!.getAttribute("aria-valuenow")).toBeTruthy();
+    });
+
+    it("resize handles are focusable", () => {
+      render(<CanvasTable columns={columns} data={data} resizable />);
+      const separators = screen.getAllByRole("separator");
+      expect(separators[0]!.tabIndex).toBe(0);
+    });
+  });
 });

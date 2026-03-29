@@ -23,6 +23,8 @@
  * .table__cell--align-center     — center-aligned text
  * .table__cell--align-right      — right-aligned text
  * .table__a11y-overlay           — transparent ARIA grid over canvas
+ * .table__resize-handle          — column resize drag handle
+ * .table--resizing               — applied during active drag
  */
 
 /* ---------------------------------------------------------------------------
@@ -177,6 +179,50 @@
   outline: 2px solid var(--accent, #e94560);
   outline-offset: -2px;
   z-index: 2;
+}
+
+/* ---------------------------------------------------------------------------
+ * Column resize handle
+ *
+ * A thin, invisible grab zone at the inline-end edge (right in LTR, left in
+ * RTL) of each header cell. On hover it shows a colored bar so the user
+ * knows it's draggable. Uses logical properties for bidi support.
+ * ------------------------------------------------------------------------- */
+
+.table__resize-handle {
+  position: absolute;
+  top: 0;
+  inset-inline-end: -2px;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 3;
+  user-select: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.table__resize-handle:hover {
+  background: var(--accent, #e94560);
+  opacity: 0.5;
+}
+
+.table__resize-handle:focus-visible {
+  background: var(--accent, #e94560);
+  opacity: 0.7;
+  outline: none;
+}
+
+/* During an active drag, prevent text selection and force resize cursor */
+.table--resizing {
+  user-select: none;
+  cursor: col-resize !important;
+}
+
+/* Resize handles in the ARIA overlay need pointer-events */
+.table__a11y-overlay .table__resize-handle {
+  pointer-events: auto;
 }
 
 /* ---------------------------------------------------------------------------

@@ -23,6 +23,15 @@
 - `resolveCellValue` utility — consistent cell value extraction for both backends
 - `table.css` — dark theme stylesheet for DataTable and CanvasTable overlay
 - Spec: `code/specs/table.md` — full specification covering both backends and accessibility
+- Column resizing via drag-to-resize handles on both backends
+  - `resizable` prop enables resize handles on header cells
+  - `onColumnResize` callback fires with column id and new width
+  - Mouse drag: grab the column border and drag to adjust width
+  - Keyboard: focus the resize handle, use Arrow keys (10px) or Shift+Arrow (50px)
+  - Screen reader: `role="separator"` with `aria-valuenow`, `aria-valuemin`, `aria-label`
+  - RTL support: drag delta and arrow keys flip automatically based on text direction
+  - `useColumnResize` hook manages drag lifecycle and keyboard resize for both backends
+  - Minimum column width: 40px
 
 ## 0.2.0 — 2026-03-28
 

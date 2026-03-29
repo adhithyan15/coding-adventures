@@ -131,6 +131,15 @@ export interface TableBaseProps<T> {
 
   /** CSS class for the outermost container element. Default: "table". */
   className?: string;
+
+  /** Enable column resizing by dragging header borders. Default: false. */
+  resizable?: boolean;
+
+  /**
+   * Called when a column is resized (on mouseup or keyboard step).
+   * Receives the column id and new width in pixels.
+   */
+  onColumnResize?: (columnId: string, width: number) => void;
 }
 
 /**

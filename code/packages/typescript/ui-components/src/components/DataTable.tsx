@@ -13,8 +13,9 @@
  *     <thead class="table__head">
  *       <tr class="table__row table__row--header">
  *         <th class="table__cell table__cell--header table__cell--align-left"
- *             scope="col" style="width: 200px">
+ *             scope="col" style="width: 200px; position: relative">
  *           Name
+ *           <div class="table__resize-handle" role="separator" ... />
  *         </th>
  *       </tr>
  *     </thead>
@@ -27,15 +28,17 @@
  * </div>
  * ```
  *
- * === Why the Wrapping <div>? ===
+ * === Column Resizing ===
  *
- * The outer `<div role="region" tabindex="0">` serves two purposes:
+ * When `resizable` is true, each header cell contains a resize handle — a
+ * thin `<div>` at the right edge (or left edge in RTL) with
+ * `role="separator"`. Users can:
  *
- * 1. **Scrollable container** — when the table overflows horizontally, this
- *    div scrolls independently. Without it, the whole page scrolls.
- *
- * 2. **Keyboard scrollable** — `tabindex="0"` makes the container focusable,
- *    so keyboard users can scroll with arrow keys when the table overflows.
+ * - **Mouse drag**: click and drag the handle to adjust column width
+ * - **Keyboard**: focus the handle, then use Left/Right arrows (10px steps)
+ *   or Shift+Arrow (50px steps)
+ * - **Screen reader**: hears "Resize [Column] column, separator, [width]"
+ *   via `aria-label` and `aria-valuenow`
  *
  * === Accessibility ===
  *
@@ -59,12 +62,22 @@
  *     { name: "Bob", age: 25 },
  *   ]}
  *   ariaLabel="People"
+ *   resizable
  * />
  * ```
  */
 
+import { useRef, useEffect, useState } from "react";
 import type { TableBaseProps, ColumnDef } from "./Table.js";
 import { resolveCellValue } from "./Table.js";
+import { useColumnResize, MIN_COL_WIDTH } from "../hooks/useColumnResize.js";
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+/** Default column width in pixels when resizable is true and no width is set. */
+const DEFAULT_RESIZABLE_WIDTH = 150;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -102,6 +115,19 @@ function toWidthStyle(width: string | number | undefined): string | undefined {
   return width;
 }
 
+/**
+ * Resolves the numeric pixel width of a column for resize purposes.
+ * Falls back to DEFAULT_RESIZABLE_WIDTH if no width is set.
+ */
+function resolveNumericWidth<T>(col: ColumnDef<T>): number {
+  if (typeof col.width === "number") return col.width;
+  if (typeof col.width === "string") {
+    const parsed = parseInt(col.width, 10);
+    if (!isNaN(parsed)) return parsed;
+  }
+  return DEFAULT_RESIZABLE_WIDTH;
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -113,12 +139,35 @@ export function DataTable<T>({
   ariaLabel,
   caption,
   className = "table",
+  resizable = false,
+  onColumnResize,
 }: TableBaseProps<T>) {
   const getKey = rowKey ?? ((_row: T, index: number) => index);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Detect text direction for RTL support
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const dir = getComputedStyle(el).direction;
+    setDirection(dir === "rtl" ? "rtl" : "ltr");
+  }, []);
+
+  const { getColumnWidth, startResize, handleResizeKeyDown, isResizing } =
+    useColumnResize({ direction, onColumnResize });
+
+  const containerClass = [
+    className,
+    isResizing ? "table--resizing" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div
-      className={className}
+      ref={containerRef}
+      className={containerClass}
       role="region"
       aria-label={ariaLabel}
       tabIndex={0}
@@ -131,15 +180,43 @@ export function DataTable<T>({
         <thead className="table__head">
           <tr className="table__row table__row--header">
             {columns.map((col) => {
-              const widthStyle = toWidthStyle(col.width);
+              const baseWidth = resolveNumericWidth(col);
+              const effectiveWidth = resizable
+                ? getColumnWidth(col.id, baseWidth)
+                : undefined;
+              const widthStyle = resizable
+                ? `${effectiveWidth}px`
+                : toWidthStyle(col.width);
+
               return (
                 <th
                   key={col.id}
                   className={cellClass(col, true)}
                   scope="col"
-                  style={widthStyle !== undefined ? { width: widthStyle } : undefined}
+                  style={{
+                    ...(widthStyle !== undefined ? { width: widthStyle } : {}),
+                    ...(resizable ? { position: "relative" as const } : {}),
+                  }}
                 >
                   {col.header}
+                  {resizable && (
+                    <div
+                      className="table__resize-handle"
+                      role="separator"
+                      aria-orientation="vertical"
+                      aria-label={`Resize ${col.header} column`}
+                      aria-valuenow={effectiveWidth}
+                      aria-valuemin={MIN_COL_WIDTH}
+                      tabIndex={0}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        startResize(col.id, e.clientX, effectiveWidth!);
+                      }}
+                      onKeyDown={(e) =>
+                        handleResizeKeyDown(col.id, effectiveWidth!, e)
+                      }
+                    />
+                  )}
                 </th>
               );
             })}
@@ -149,11 +226,25 @@ export function DataTable<T>({
         <tbody className="table__body">
           {data.map((row, rowIndex) => (
             <tr key={getKey(row, rowIndex)} className="table__row">
-              {columns.map((col) => (
-                <td key={col.id} className={cellClass(col, false)}>
-                  {resolveCellValue(col, row, rowIndex)}
-                </td>
-              ))}
+              {columns.map((col) => {
+                const baseWidth = resolveNumericWidth(col);
+                const effectiveWidth = resizable
+                  ? getColumnWidth(col.id, baseWidth)
+                  : undefined;
+                const widthStyle = resizable
+                  ? `${effectiveWidth}px`
+                  : toWidthStyle(col.width);
+
+                return (
+                  <td
+                    key={col.id}
+                    className={cellClass(col, false)}
+                    style={widthStyle !== undefined ? { width: widthStyle } : undefined}
+                  >
+                    {resolveCellValue(col, row, rowIndex)}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
