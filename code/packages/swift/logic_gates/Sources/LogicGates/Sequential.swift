@@ -120,16 +120,25 @@ public func srLatch(set: Int, reset: Int, q: Int = 0, qBar: Int = 1) throws -> L
     try validateBit(qBar, name: "qBar")
 
     // The cross-coupled NOR equations:
-    //   Q_new    = NOR(R, Q̄_old)
-    //   Q̄_new  = NOR(S, Q_new)
+    //   Q    = NOR(R, Q̄)
+    //   Q̄   = NOR(S, Q)
     //
-    // We evaluate the first equation using the previous Q̄, then feed
-    // Q_new into the second equation. This sequential evaluation models
-    // the signal propagation through the physical circuit.
-    let newQ    = try norGate(reset, qBar)
-    let newQBar = try norGate(set, newQ)
+    // In the real circuit both gates settle simultaneously via feedback.
+    // A single-pass evaluation is not enough: starting from Q=0, Q̄=1
+    // with S=1, R=0 gives NOR(0,1)=0 on the first pass — wrong — because
+    // Q̄ has not yet been updated by S. We therefore iterate to convergence
+    // (at most 3 passes for any valid SR latch input combination).
+    var curQ    = q
+    var curQBar = qBar
+    for _ in 0..<3 {
+        let newQ    = try norGate(reset, curQBar)
+        let newQBar = try norGate(set, newQ)
+        if newQ == curQ && newQBar == curQBar { break }
+        curQ    = newQ
+        curQBar = newQBar
+    }
 
-    return LatchState(q: newQ, qBar: newQBar)
+    return LatchState(q: curQ, qBar: curQBar)
 }
 
 // ============================================================================
