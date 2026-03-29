@@ -368,6 +368,10 @@ func readLuaDeps(pkgDir string) ([]string, error) {
 	return deps, nil
 }
 
+// swiftDepRe matches .package(path: "../dep-name") in Package.swift.
+// Compiled once at package level to avoid repeated regex compilation.
+var swiftDepRe = regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\./([^"]+)"`)
+
 // readSwiftDeps reads Package.swift for .package(path: "../dep-name") entries.
 func readSwiftDeps(pkgDir string) ([]string, error) {
 	manifestPath := filepath.Join(pkgDir, "Package.swift")
@@ -375,12 +379,17 @@ func readSwiftDeps(pkgDir string) ([]string, error) {
 	if err != nil {
 		return nil, nil // no Package.swift = no deps
 	}
-	re := regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\./([^"]+)"`)
 	var deps []string
 	for _, line := range strings.Split(string(data), "\n") {
-		m := re.FindStringSubmatch(line)
+		m := swiftDepRe.FindStringSubmatch(line)
 		if len(m) == 2 {
-			deps = append(deps, m[1])
+			depDir := m[1]
+			// Guard against path traversal: reject any segment containing
+			// a path separator or additional ".." components.
+			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+				continue
+			}
+			deps = append(deps, depDir)
 		}
 	}
 	return deps, nil
@@ -1878,6 +1887,14 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 		// Validate package name
 		if !kebabCaseRe.MatchString(pkgName) {
 			fmt.Fprintf(stderr, "scaffold-generator: invalid package name %q (must be kebab-case: lowercase, digits, hyphens)\n", pkgName)
+			return 1
+		}
+
+		// Validate description: no newlines or control characters that could
+		// corrupt generated source files (e.g. Swift block-comment terminators
+		// or JSON escape sequences).
+		if strings.ContainsAny(description, "\n\r") {
+			fmt.Fprintf(stderr, "scaffold-generator: description must not contain newline characters\n")
 			return 1
 		}
 

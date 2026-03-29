@@ -528,6 +528,10 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 	return internalDeps
 }
 
+// swiftDepRe matches .package(path: "../dep-name") in Package.swift.
+// Compiled once at package level to avoid repeated regex compilation.
+var swiftDepRe = regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\.\/([^"]+)"`)
+
 // parseSwiftDeps extracts internal dependencies from a Swift Package.swift file.
 //
 // Swift Package Manager uses relative path references for local (monorepo)
@@ -546,19 +550,20 @@ func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []strin
 		return nil
 	}
 
-	// Match: .package(path: "../logic-gates"),
-	// Captures the directory name: "logic-gates"
-	re := regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\.\/([^"]+)"`)
-
 	var internalDeps []string
 	for _, line := range strings.Split(string(data), "\n") {
 		trimmed := strings.TrimSpace(line)
 		if trimmed == "" || strings.HasPrefix(trimmed, "//") {
 			continue
 		}
-		matches := re.FindStringSubmatch(trimmed)
+		matches := swiftDepRe.FindStringSubmatch(trimmed)
 		if len(matches) >= 2 {
 			depDir := strings.ToLower(matches[1])
+			// Guard against path traversal: reject any segment containing
+			// a path separator or additional ".." components.
+			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+				continue
+			}
 			if pkgName, ok := knownNames[depDir]; ok {
 				internalDeps = append(internalDeps, pkgName)
 			}
