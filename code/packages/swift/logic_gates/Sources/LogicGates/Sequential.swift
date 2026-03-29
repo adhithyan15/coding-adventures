@@ -304,10 +304,20 @@ public func register(
     for i in 0..<n {
         let cq  = i < currentQ.count  ? currentQ[i]  : 0
         let cmq = i < currentMQ.count ? currentMQ[i] : 0
-        let s = try dFlipFlop(
-            data: data[i], clock: clock,
+
+        // Two-phase evaluation: first run the master-sample phase (clock=0)
+        // so the master latch sees the current D value, then run the actual
+        // clock phase. This correctly captures D on the first rising edge
+        // even when no prior clock=0 state has been explicitly provided.
+        let phase1 = try dFlipFlop(
+            data: data[i], clock: 0,
             q: cq, qBar: 1 - cq,
             masterQ: cmq, masterQBar: 1 - cmq
+        )
+        let s = try dFlipFlop(
+            data: data[i], clock: clock,
+            q: phase1.q, qBar: phase1.qBar,
+            masterQ: phase1.masterQ, masterQBar: 1 - phase1.masterQ
         )
         newQ.append(s.q)
         states.append(s)
@@ -364,9 +374,16 @@ public func shiftRegister(
     var states: [FlipFlopState] = []
 
     for i in 0..<n {
+        // Two-phase evaluation: same reasoning as register — let master sample
+        // D during clock=0 phase, then apply actual clock.
+        let phase1 = try dFlipFlop(
+            data: data[i], clock: 0,
+            q: q[i], qBar: 1 - q[i]
+        )
         let s = try dFlipFlop(
             data: data[i], clock: clock,
-            q: q[i], qBar: 1 - q[i]
+            q: phase1.q, qBar: phase1.qBar,
+            masterQ: phase1.masterQ, masterQBar: 1 - phase1.masterQ
         )
         newQ.append(s.q)
         states.append(s)
