@@ -166,3 +166,4 @@ LBRACKET = "["
 RBRACKET = "]"
 LBRACE   = "{"
 RBRACE   = "}"
+NEWLINE  = /\r?\n/

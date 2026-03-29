@@ -124,8 +124,8 @@ subtest 'mixin with default parameter' => sub {
 
 subtest 'mixin definition not in output' => sub {
     my $css = compile('@mixin flex { display: flex; } .box { @include flex; }');
-    unlike( $css, qr/@mixin/,   '@mixin not in CSS output' );
-    unlike( $css, qr/@include/, '@include not in CSS output' );
+    unlike( $css, qr/\@mixin/,   '@mixin not in CSS output' );
+    unlike( $css, qr/\@include/, '@include not in CSS output' );
 };
 
 # ============================================================================

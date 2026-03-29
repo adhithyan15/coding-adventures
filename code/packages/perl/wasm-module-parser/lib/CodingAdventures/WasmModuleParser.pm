@@ -79,7 +79,13 @@ use CodingAdventures::WasmTypes  qw(decode_limits);
 our $VERSION = '0.01';
 
 use Exporter 'import';
-our @EXPORT_OK = qw(parse parse_header parse_section get_section);
+our @EXPORT_OK = qw(
+    parse parse_header parse_section get_section
+    SECTION_CUSTOM SECTION_TYPE SECTION_IMPORT SECTION_FUNCTION
+    SECTION_TABLE SECTION_MEMORY SECTION_GLOBAL SECTION_EXPORT
+    SECTION_START SECTION_ELEMENT SECTION_CODE SECTION_DATA
+    MODULE_MAGIC MODULE_VERSION
+);
 
 # ============================================================================
 # Constants — Section IDs

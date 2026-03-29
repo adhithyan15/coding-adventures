@@ -155,7 +155,7 @@ subtest 'numerical_gradient() — returns correct length' => sub {
 
 subtest 'train() — converges to w ≈ 2.0 for y=2x (analytical)' => sub {
     my $gd = CodingAdventures::GradientDescent->new(
-        learning_rate  => 0.1,
+        learning_rate  => 0.05,
         max_iterations => 2000,
         tolerance      => 1e-8,
     );
@@ -177,7 +177,7 @@ subtest 'train() — converges using numerical gradient' => sub {
 
 subtest 'train() — reduces loss vs. initial weights' => sub {
     my $gd = CodingAdventures::GradientDescent->new(
-        learning_rate => 0.1, max_iterations => 100,
+        learning_rate => 0.05, max_iterations => 100,
     );
     my $init_loss = $gd->compute_loss([0.0], \@INPUTS, \@TARGETS, \&mse);
     my ($trained, ) = $gd->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
@@ -186,8 +186,8 @@ subtest 'train() — reduces loss vs. initial weights' => sub {
 };
 
 subtest 'train() — higher lr converges faster' => sub {
-    my $gd_fast = CodingAdventures::GradientDescent->new(learning_rate => 0.2, max_iterations => 500);
-    my $gd_slow = CodingAdventures::GradientDescent->new(learning_rate => 0.001, max_iterations => 500);
+    my $gd_fast = CodingAdventures::GradientDescent->new(learning_rate => 0.07, max_iterations => 500);
+    my $gd_slow = CodingAdventures::GradientDescent->new(learning_rate => 0.01, max_iterations => 500);
 
     my ($w_fast, ) = $gd_fast->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
     my ($w_slow, ) = $gd_slow->train([0.0], \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
@@ -199,7 +199,7 @@ subtest 'train() — higher lr converges faster' => sub {
 };
 
 subtest 'train() — does not mutate original weight array' => sub {
-    my $gd = CodingAdventures::GradientDescent->new(learning_rate => 0.1, max_iterations => 10);
+    my $gd = CodingAdventures::GradientDescent->new(learning_rate => 0.05, max_iterations => 10);
     my $initial = [0.0];
     $gd->train($initial, \@INPUTS, \@TARGETS, \&mse, \&mse_gradient);
     ok(near($initial->[0], 0.0), 'original weight unchanged');

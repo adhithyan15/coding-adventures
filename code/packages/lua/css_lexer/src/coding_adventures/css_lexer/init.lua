@@ -138,7 +138,7 @@ local function get_script_dir()
     -- If the path is relative, resolve it against CWD so that dirname
     -- navigation works correctly when tests run from a subdirectory
     -- (e.g., busted adds ../src to package.path, making paths relative).
-    if src:sub(1, 1) ~= "/" and not src:match("^%a:[/\]") then
+    if src:sub(1, 1) ~= "/" and src:sub(2, 2) ~= ":" then
         local f = io.popen("pwd")
         local cwd = f and f:read("*l") or "."
         if f then f:close() end

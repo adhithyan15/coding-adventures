@@ -103,10 +103,10 @@ subtest 'predict() — w={1,1}, b=-1.5 correctly classifies AND' => sub {
     my $p = CodingAdventures::Perceptron->new(
         n_inputs => 2, weights => [1.0, 1.0], bias => -1.5
     );
-    is($p->predict([0,0]), 0, '(0,0) → 0');
-    is($p->predict([0,1]), 0, '(0,1) → 0');
-    is($p->predict([1,0]), 0, '(1,0) → 0');
-    is($p->predict([1,1]), 1, '(1,1) → 1');
+    my ($r00) = $p->predict([0,0]); is($r00, 0, '(0,0) → 0');
+    my ($r01) = $p->predict([0,1]); is($r01, 0, '(0,1) → 0');
+    my ($r10) = $p->predict([1,0]); is($r10, 0, '(1,0) → 0');
+    my ($r11) = $p->predict([1,1]); is($r11, 1, '(1,1) → 1');
 };
 
 subtest 'predict() — returns pre-activation z' => sub {

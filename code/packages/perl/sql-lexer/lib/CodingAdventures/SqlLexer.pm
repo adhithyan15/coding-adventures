@@ -109,6 +109,7 @@ use CodingAdventures::GrammarTools;
 my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
 my $_rules;        # arrayref of { name => str, pat => qr// }
 my $_skip_rules;   # arrayref of qr// patterns for skip definitions
+my $_keyword_map;  # hashref mapping uppercase keyword → promoted token type
 
 # --- _grammars_dir() ----------------------------------------------------------
 #
@@ -195,6 +196,12 @@ sub _build_rules {
                     : $defn->name;
         push @rules, { name => $type, pat => $pat };
     }
+
+    # Build keyword lookup map. SQL is case-insensitive; keywords in the grammar
+    # are uppercase (SELECT, FROM, etc.). We look up uc($value) at tokenize time.
+    my %kw_map;
+    $kw_map{$_} = $_ for @{ $grammar->keywords };
+    $_keyword_map = \%kw_map;
 
     $_skip_rules = \@skip_rules;
     $_rules      = \@rules;
@@ -289,8 +296,12 @@ sub tokenize {
             if ($source =~ /$rule->{pat}/gc) {
                 my $value = $&;
 
+                my $tok_type = $rule->{name};
+                if ($tok_type eq 'NAME' && exists $_keyword_map->{uc($value)}) {
+                    $tok_type = $_keyword_map->{uc($value)};
+                }
                 push @tokens, {
-                    type  => $rule->{name},
+                    type  => $tok_type,
                     value => $value,
                     line  => $line,
                     col   => $col,

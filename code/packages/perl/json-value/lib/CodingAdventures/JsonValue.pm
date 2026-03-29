@@ -128,7 +128,7 @@ sub _unescape_string {
     $s =~ s/\\u([0-9a-fA-F]{4})/encode_utf8(chr(hex($1)))/ge;
 
     # Replace remaining single-character escape sequences.
-    $s =~ s/\\(["\\/ntrfb])/_unescape_char($1)/ge;
+    $s =~ s|\\(["\\/ntrfb])|_unescape_char($1)|ge;
 
     return $s;
 }

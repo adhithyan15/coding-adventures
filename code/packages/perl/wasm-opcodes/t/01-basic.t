@@ -8,7 +8,7 @@ use CodingAdventures::WasmOpcodes qw(opcode_name is_valid_opcode get_opcode_info
 # OPCODES table sanity
 # ---------------------------------------------------------------------------
 
-ok(defined %CodingAdventures::WasmOpcodes::OPCODES, 'OPCODES hash is defined');
+ok(%CodingAdventures::WasmOpcodes::OPCODES, 'OPCODES hash is defined');
 ok(scalar keys %CodingAdventures::WasmOpcodes::OPCODES >= 40,
    'OPCODES has at least 40 entries');
 

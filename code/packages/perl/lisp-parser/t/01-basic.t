@@ -311,7 +311,7 @@ subtest 'let bindings' => sub {
 subtest 'program with quoted data' => sub {
     my $src = "(define colors '(red green blue))\n(car colors)";
     my $ast = CodingAdventures::LispParser->parse($src);
-    is( count_nodes($ast, 'list'),   2, 'two lists' );
+    is( count_nodes($ast, 'list'),   3, 'three lists (two top-level plus list inside quoted form)' );
     is( count_nodes($ast, 'quoted'), 1, 'one quoted form' );
 };
 
