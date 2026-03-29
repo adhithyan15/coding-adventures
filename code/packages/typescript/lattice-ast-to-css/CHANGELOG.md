@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-03-29
+
+### Fixed
+
+- **Function arguments not resolved in caller scope** — calling a `@function` with a variable
+  argument (e.g. `space($i)` inside a `@for` loop) previously produced a compile-time error
+  `Cannot multiply '$i' and '0.25rem'`. The bug was in `_parseFunctionCallArgs`: VARIABLE tokens
+  were converted to `LatticeIdent("$i")` via `tokenToValue` without consulting the caller scope,
+  so the unresolved ident reached the function body and failed arithmetic. The fix passes the
+  caller `ScopeChain` into `_parseFunctionCallArgs` so VARIABLE tokens are looked up and replaced
+  with their concrete `LatticeValue` before being bound to the function parameter. This is the
+  same pattern the mixin `evaluateArg` helper already used.
+
 ## [0.2.1] - 2026-03-25
 
 ### Fixed

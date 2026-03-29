@@ -737,6 +737,38 @@ describe("LatticeTransformer — @function", () => {
     const css = transpile(".x { color: rgb(255, 0, 0); }");
     expect(css).toContain("rgb(255, 0, 0)");
   });
+
+  it("resolves loop variable passed as function argument", () => {
+    // Regression: calling space($i) inside @for previously failed with
+    // "Cannot multiply '$i' and '0.25rem'" because the VARIABLE token was
+    // converted to LatticeIdent("$i") instead of being resolved to its value
+    // in the caller scope before being passed to the function.
+    const css = transpile(`
+      @function space($n) {
+        @return $n * 0.25rem;
+      }
+      @for $i from 1 through 3 {
+        .box { padding: space($i); }
+      }
+    `);
+    // All three iterations should compile without error and produce correct values
+    expect(css).toContain("padding: 0.25rem");
+    expect(css).toContain("padding: 0.5rem");
+    expect(css).toContain("padding: 0.75rem");
+  });
+
+  it("resolves variable argument passed to function from outer scope", () => {
+    // Variables defined in the surrounding scope should also be resolved
+    // when passed as function arguments.
+    const css = transpile(`
+      @function double($n) {
+        @return $n * 2;
+      }
+      $size: 4px;
+      .box { width: double($size); }
+    `);
+    expect(css).toContain("width: 8px");
+  });
 });
 
 // =============================================================================
