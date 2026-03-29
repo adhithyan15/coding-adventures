@@ -12,7 +12,12 @@ Shared React UI components for interactive visualizations in the coding-adventur
 | `useAnimationFrame` | Hook | requestAnimationFrame loop with delta timing |
 | `useAutoStep` | Hook | Rate-limited stepping for simulations (N iterations/sec) |
 | `useReducedMotion` | Hook | Detects `prefers-reduced-motion` preference |
+| `useCanvasTheme` | Hook | Reads CSS custom properties for Canvas 2D rendering |
+| `useGridKeyboard` | Hook | WAI-ARIA grid keyboard navigation (arrow keys, Home/End) |
 | `useTranslation` | Hook | React hook for the i18n system |
+| `Table` | Component | Unified table with switchable HTML/Canvas backends |
+| `DataTable` | Component | HTML `<table>` backend — semantic, accessible |
+| `CanvasTable` | Component | Canvas 2D backend with ARIA grid overlay |
 | `initI18n` | Function | Initialize locale data at app startup |
 | `translate` | Function | Look up a translation key (non-hook version) |
 | `theme.css` | CSS | Shared dark theme variables |
@@ -191,6 +196,46 @@ function Visualization() {
     : <AnimatedVisualization />;
 }
 ```
+
+### Table
+
+The `Table` component renders tabular data with two interchangeable rendering backends. Use the HTML backend for accessibility and simplicity, or the Canvas backend for large datasets.
+
+```tsx
+import { Table } from "@coding-adventures/ui-components";
+
+interface Person { name: string; age: number; }
+
+const columns = [
+  { id: "name", header: "Name", accessor: "name" as const },
+  { id: "age", header: "Age", accessor: "age" as const, align: "right" as const },
+];
+
+const people: Person[] = [
+  { name: "Alice", age: 30 },
+  { name: "Bob", age: 25 },
+];
+
+// HTML backend (default) — semantic <table>, accessible out of the box:
+<Table<Person> columns={columns} data={people} ariaLabel="People" />
+
+// Canvas backend — 2D canvas rendering with ARIA grid overlay:
+<Table<Person> columns={columns} data={people} renderer="canvas" ariaLabel="People" />
+```
+
+You can also import the backends directly:
+
+```tsx
+import { DataTable, CanvasTable } from "@coding-adventures/ui-components";
+
+// HTML backend only (tree-shakes out Canvas code):
+<DataTable columns={columns} data={people} />
+
+// Canvas backend only (tree-shakes out HTML code):
+<CanvasTable columns={columns} data={people} />
+```
+
+Column definitions support property-key accessors (`accessor: "name"`) and function accessors (`accessor: (row) => row.first + " " + row.last`) for computed columns. Columns accept `width` (CSS string or pixel number) and `align` ("left", "center", "right").
 
 ### CSS Styles
 
