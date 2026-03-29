@@ -1,3 +1,5 @@
+cd ../wasm-leb128 && cpanm --notest --quiet . && cd -
+cd ../wasm-types && cpanm --notest --quiet . && cd -
 cd ../wasm-module-parser && cpanm --notest --quiet . && cd -
 cpanm --installdeps --quiet .
 prove -l -v t/
