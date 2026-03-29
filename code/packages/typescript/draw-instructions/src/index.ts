@@ -36,7 +36,16 @@ export const VERSION = "0.1.0";
 export type DrawMetadataValue = string | number | boolean;
 export type DrawMetadata = Record<string, DrawMetadataValue>;
 
-/** A filled rectangle in scene coordinates. */
+/**
+ * A rectangle in scene coordinates.
+ *
+ * Rectangles can be filled, stroked, or both. A filled rectangle with no
+ * stroke draws a solid block of color. A stroked rectangle with no fill
+ * draws an outline. Both together draw a filled box with a visible border.
+ *
+ * The table component uses filled rects for header/row backgrounds and
+ * stroked rects for focus rings.
+ */
 export interface DrawRectInstruction {
   kind: "rect";
   x: number;
@@ -44,10 +53,20 @@ export interface DrawRectInstruction {
   width: number;
   height: number;
   fill: string;
+  /** Optional border color. When set, a stroke is drawn around the rect. */
+  stroke?: string;
+  /** Border thickness in scene units. Only meaningful when stroke is set. */
+  strokeWidth?: number;
   metadata?: DrawMetadata;
 }
 
-/** A text label positioned directly in scene coordinates. */
+/**
+ * A text label positioned directly in scene coordinates.
+ *
+ * The table component uses text instructions for header labels and cell
+ * values. Bold text (fontWeight: "bold") distinguishes headers from body
+ * cells.
+ */
 export interface DrawTextInstruction {
   kind: "text";
   x: number;
@@ -57,6 +76,8 @@ export interface DrawTextInstruction {
   fontFamily: string;
   fontSize: number;
   align: "start" | "middle" | "end";
+  /** Font weight. Default: "normal". Headers typically use "bold". */
+  fontWeight?: "normal" | "bold";
   metadata?: DrawMetadata;
 }
 
@@ -75,10 +96,50 @@ export interface DrawGroupInstruction {
   metadata?: DrawMetadata;
 }
 
+/**
+ * A straight line segment between two points.
+ *
+ * Lines are the backbone of grid rendering. A table's horizontal and
+ * vertical grid lines are each one DrawLineInstruction. Lines are always
+ * stroked (never filled).
+ */
+export interface DrawLineInstruction {
+  kind: "line";
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  stroke: string;
+  strokeWidth: number;
+  metadata?: DrawMetadata;
+}
+
+/**
+ * A clipping region that constrains its children.
+ *
+ * Any drawing by children that falls outside the clip rectangle is
+ * invisible. This is how the table prevents cell text from bleeding
+ * into adjacent columns — each cell's text is wrapped in a clip
+ * instruction bounded to the cell's dimensions.
+ *
+ * Clip instructions nest: a child clip intersects with its parent.
+ */
+export interface DrawClipInstruction {
+  kind: "clip";
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  children: DrawInstruction[];
+  metadata?: DrawMetadata;
+}
+
 export type DrawInstruction =
   | DrawRectInstruction
   | DrawTextInstruction
-  | DrawGroupInstruction;
+  | DrawGroupInstruction
+  | DrawLineInstruction
+  | DrawClipInstruction;
 
 export interface DrawScene {
   width: number;
@@ -100,16 +161,58 @@ export interface DrawRenderer<Output> {
   render(scene: DrawScene): Output;
 }
 
-/** Convenience constructor for filled rectangles. */
+/**
+ * Convenience constructor for rectangles.
+ *
+ * The basic form creates a filled rectangle. The last parameter accepts
+ * either a metadata object (backward compatible) or an options object
+ * with stroke, strokeWidth, and metadata.
+ */
 export function drawRect(
   x: number,
   y: number,
   width: number,
   height: number,
   fill: string = "#000000",
-  metadata?: DrawMetadata,
+  metadataOrOptions?: DrawMetadata | {
+    stroke?: string;
+    strokeWidth?: number;
+    metadata?: DrawMetadata;
+  },
 ): DrawRectInstruction {
-  return { kind: "rect", x, y, width, height, fill, metadata };
+  // Backward compatibility: if the 6th arg has `stroke` or `strokeWidth`,
+  // it's the new options form. Otherwise treat it as metadata directly.
+  if (
+    metadataOrOptions !== undefined &&
+    ("stroke" in metadataOrOptions || "strokeWidth" in metadataOrOptions)
+  ) {
+    const opts = metadataOrOptions as {
+      stroke?: string;
+      strokeWidth?: number;
+      metadata?: DrawMetadata;
+    };
+    return {
+      kind: "rect",
+      x,
+      y,
+      width,
+      height,
+      fill,
+      stroke: opts.stroke,
+      strokeWidth: opts.strokeWidth,
+      metadata: opts.metadata,
+    };
+  }
+
+  return {
+    kind: "rect",
+    x,
+    y,
+    width,
+    height,
+    fill,
+    metadata: metadataOrOptions as DrawMetadata | undefined,
+  };
 }
 
 /**
@@ -134,8 +237,44 @@ export function drawText(
     fontFamily: options.fontFamily ?? "monospace",
     fontSize: options.fontSize ?? 16,
     align: options.align ?? "middle",
+    fontWeight: options.fontWeight,
     metadata: options.metadata,
   };
+}
+
+/**
+ * Convenience constructor for a line segment.
+ *
+ * Lines are always stroked. Use these for grid lines, separators, and
+ * borders.
+ */
+export function drawLine(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  stroke: string = "#000000",
+  strokeWidth: number = 1,
+  metadata?: DrawMetadata,
+): DrawLineInstruction {
+  return { kind: "line", x1, y1, x2, y2, stroke, strokeWidth, metadata };
+}
+
+/**
+ * Convenience constructor for a clip region.
+ *
+ * Everything drawn by `children` is clipped to the rectangle defined by
+ * (x, y, width, height). Content outside the rectangle is invisible.
+ */
+export function drawClip(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  children: DrawInstruction[],
+  metadata?: DrawMetadata,
+): DrawClipInstruction {
+  return { kind: "clip", x, y, width, height, children, metadata };
 }
 
 /** Convenience constructor for a group of instructions. */
