@@ -390,7 +390,7 @@ subtest 'stack operations' => sub {
         . type_sec([{params=>[], results=>[0x7F]}])
         . func_sec([0])
         . export_sec([export_func_entry('f', 0)])
-        . code_sec([code_entry([], b(0x41, 0x63, 0x41, 0x2A, 0x1A, 0x0B))]);
+        . code_sec([code_entry([], b(0x41, 0xE3, 0x00, 0x41, 0x2A, 0x1A, 0x0B))]);
     is((new_instance($drop_wasm)->call('f'))[0], 99, 'drop: discards top');
 
     # select with condition=1 picks val1
@@ -601,7 +601,7 @@ subtest 'br jumps out of block' => sub {
         0x0C, 0x00,         #   br 0 (exit block)
         0x41, 0xFF, 0x00,   #   i32.const 127 (skipped)
         0x0B,               # end (block)
-        0x41, 0x63,         # i32.const 99
+        0x41, 0xE3, 0x00,   # i32.const 99 (SLEB128: 0xE3 0x00)
         0x0B                # end (function)
     );
     my $wasm = $WASM_HEADER
@@ -619,7 +619,7 @@ subtest 'br_if taken' => sub {
         0x0D, 0x00,         # br_if 0 (taken: condition=1)
         0x41, 0x07, 0x1A,   # skipped
         0x0B,
-        0x41, 0x64,         # i32.const 100
+        0x41, 0xE4, 0x00,   # i32.const 100 (SLEB128: 0xE4 0x00)
         0x0B
     );
     my $wasm = $WASM_HEADER
