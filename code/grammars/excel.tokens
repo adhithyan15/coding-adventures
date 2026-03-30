@@ -17,8 +17,15 @@ REF_PREFIX_BARE     = /[A-Za-z_][A-Za-z0-9_.]*!/ -> REF_PREFIX
 
 STRING            = /"([^"]|"")*"/
 ERROR_CONSTANT    = /#[a-z0-9\/\?!]+/
-NUMBER_DOT        = /\.[0-9]+[eE]?[-+]?[0-9]*/ -> NUMBER
-NUMBER            = /[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/
+# Numeric literals. Split into exponent and plain variants so that the
+# sign characters + and - are NOT consumed unless preceded by [eE].
+# The single merged pattern /[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/ is wrong:
+# [eE]? can match empty so [-+]? then grabs + from "1+2", producing a
+# single "1+2" NUMBER token and breaking additive expression parsing.
+NUMBER_DOT_EXP    = /\.[0-9]+[eE][-+]?[0-9]+/  -> NUMBER
+NUMBER_DOT        = /\.[0-9]+/                   -> NUMBER
+NUMBER_EXP        = /[0-9]+\.?[0-9]*[eE][-+]?[0-9]+/ -> NUMBER
+NUMBER            = /[0-9]+\.?[0-9]*/
 
 STRUCTURED_KEYWORD = /\[#[a-z ]+\]/
 STRUCTURED_COLUMN  = /\[[^\[\]]+\]/

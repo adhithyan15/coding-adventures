@@ -1085,6 +1085,9 @@ sub _parse_sequential_statement {
     if ($type eq 'NULL') {
         return $self->_parse_null_statement();
     }
+    if ($type eq 'WAIT') {
+        return $self->_parse_wait_statement();
+    }
 
     # NAME LESS_EQUALS → signal assignment
     # NAME VAR_ASSIGN  → variable assignment
@@ -1284,6 +1287,56 @@ sub _parse_null_statement {
     push @ch, $self->_leaf($self->_expect('NULL'));
     push @ch, $self->_leaf($self->_expect('SEMICOLON'));
     return $self->_node('null_statement', @ch);
+}
+
+# wait_statement = "wait"
+#                  [ "on" sensitivity_list ]
+#                  [ "until" expression ]
+#                  [ "for" time_expression ]
+#                  SEMICOLON ;
+#
+# time_expression = expression [ NAME ]   -- e.g., 10 ns, 1.5 us
+#
+# The WAIT statement suspends a process until a condition is met.
+# Common forms:
+#   wait;                  -- wait forever (or until another signal change)
+#   wait for 10 ns;        -- timeout clause (absolute time delay)
+#   wait until clk = '1';  -- condition clause
+#   wait on a, b;          -- sensitivity clause
+sub _parse_wait_statement {
+    my ($self) = @_;
+    my @ch;
+    push @ch, $self->_leaf($self->_expect('WAIT'));
+
+    # Optional sensitivity clause: ON sensitivity_list
+    if ($self->_check('ON')) {
+        push @ch, $self->_leaf($self->_advance());
+        # Consume NAME tokens separated by commas
+        push @ch, $self->_leaf($self->_expect('NAME'));
+        while ($self->_check('COMMA')) {
+            push @ch, $self->_leaf($self->_advance());
+            push @ch, $self->_leaf($self->_expect('NAME'));
+        }
+    }
+
+    # Optional condition clause: UNTIL expression
+    if ($self->_check('UNTIL')) {
+        push @ch, $self->_leaf($self->_advance());
+        push @ch, $self->_parse_expression();
+    }
+
+    # Optional timeout clause: FOR time_expression
+    if ($self->_check('FOR')) {
+        push @ch, $self->_leaf($self->_advance());
+        push @ch, $self->_parse_expression();
+        # Optional time unit (NAME like ns, us, ms, sec)
+        if ($self->_check('NAME')) {
+            push @ch, $self->_leaf($self->_advance());
+        }
+    }
+
+    push @ch, $self->_leaf($self->_expect('SEMICOLON'));
+    return $self->_node('wait_statement', @ch);
 }
 
 # ============================================================================

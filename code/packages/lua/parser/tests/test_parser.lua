@@ -66,35 +66,37 @@ local function eof(line, column)
 end
 
 --- Helper: build a grammar rule element (mimics grammar-tools output).
--- Grammar-tools produces tables with a `kind` field and type-specific data.
+-- Grammar-tools produces tables with a `type` field and type-specific data.
+-- Note: grammar-tools uses `type` (not `kind`) for element discrimination.
+-- The `kind` field is only used by ASTNode objects (parsed output).
 local grammar = {}
 
 function grammar.rule_ref(name, is_token)
-    return { kind = "rule_reference", name = name, is_token = is_token }
+    return { type = "rule_reference", name = name, is_token = is_token }
 end
 
 function grammar.literal(value)
-    return { kind = "literal", value = value }
+    return { type = "literal", value = value }
 end
 
 function grammar.sequence(elements)
-    return { kind = "sequence", elements = elements }
+    return { type = "sequence", elements = elements }
 end
 
 function grammar.alternation(choices)
-    return { kind = "alternation", choices = choices }
+    return { type = "alternation", choices = choices }
 end
 
 function grammar.repetition(element)
-    return { kind = "repetition", element = element }
+    return { type = "repetition", element = element }
 end
 
 function grammar.optional(element)
-    return { kind = "optional", element = element }
+    return { type = "optional", element = element }
 end
 
 function grammar.group(element)
-    return { kind = "group", element = element }
+    return { type = "group", element = element }
 end
 
 --- Helper: build a ParserGrammar table from rules.
