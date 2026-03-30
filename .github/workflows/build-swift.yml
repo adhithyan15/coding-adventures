@@ -86,35 +86,54 @@ jobs:
 
       - name: Create iOS test simulator
         # macos-15 runners do not pre-create simulator devices — only the runtime
-        # is bundled with Xcode. We discover the available runtime dynamically
-        # (never hard-code the version — runner images vary) then create a device.
+        # is bundled with Xcode. We use Python to discover the available iOS runtime
+        # and pick a *compatible* iPhone device type from the runtime's own
+        # supportedDeviceTypes list, which is ordered newest-first.
+        # This avoids the two failure modes seen previously:
+        #   1. Hard-coded runtime ID (wrong version on actual runner)
+        #   2. Picking last device type alphabetically (old model, incompatible)
         run: |
-          # Find the first available iOS runtime bundled with this Xcode install.
-          RUNTIME=$(xcrun simctl list runtimes -j \
-            | python3 -c "
-          import json, sys
-          rts = [r for r in json.load(sys.stdin)['runtimes']
-                 if 'iOS' in r['name'] and r.get('isAvailable', False)]
-          print(rts[-1]['identifier'] if rts else '')
-          ")
-          if [ -z "$RUNTIME" ]; then
-            echo '##[error] No available iOS runtime found. All runtimes:'
-            xcrun simctl list runtimes
-            exit 1
-          fi
-          echo "Using runtime: $RUNTIME"
+          python3 - <<'PYEOF'
+          import json, subprocess, sys
 
-          # Find the latest iPhone device type available.
-          DEVICE_TYPE=$(xcrun simctl list devicetypes -j \
-            | python3 -c "
-          import json, sys
-          types = [d['identifier'] for d in json.load(sys.stdin)['devicetypes']
-                   if 'iPhone' in d['name']]
-          print(types[-1] if types else '')
-          ")
-          echo "Using device type: $DEVICE_TYPE"
+          # Step 1: find the newest available iOS runtime.
+          runtimes = json.loads(
+              subprocess.check_output(['xcrun', 'simctl', 'list', 'runtimes', '-j']))
+          ios_rts = [r for r in runtimes['runtimes']
+                     if 'iOS' in r['name'] and r.get('isAvailable', False)]
+          if not ios_rts:
+              print('ERROR: no available iOS runtime', file=sys.stderr)
+              subprocess.run(['xcrun', 'simctl', 'list', 'runtimes'])
+              sys.exit(1)
+          runtime = ios_rts[-1]   # newest (highest version number)
+          print(f"Runtime: {runtime['name']}  {runtime['identifier']}")
 
-          xcrun simctl create "CI_iPhone" "$DEVICE_TYPE" "$RUNTIME"
+          # Step 2: pick the first compatible iPhone from the runtime's own
+          # supportedDeviceTypes (ordered newest-first, so index 0 = latest model).
+          supported = runtime.get('supportedDeviceTypes', [])
+          iphones = [d for d in supported if 'iPhone' in d.get('name', '')]
+          if not iphones:
+              # Older Xcode may omit supportedDeviceTypes — fall back.
+              all_dt = json.loads(
+                  subprocess.check_output(['xcrun', 'simctl', 'list', 'devicetypes', '-j']))
+              iphones = [d for d in all_dt['devicetypes']
+                         if 'iPhone' in d.get('name', '')]
+          if not iphones:
+              print('ERROR: no iPhone device type found', file=sys.stderr)
+              sys.exit(1)
+          device = iphones[0]   # newest compatible iPhone
+          print(f"Device:  {device['name']}  {device['identifier']}")
+
+          # Step 3: create the simulator device.
+          r = subprocess.run(
+              ['xcrun', 'simctl', 'create', 'CI_iPhone',
+               device['identifier'], runtime['identifier']],
+              capture_output=True, text=True)
+          if r.returncode != 0:
+              print(f'simctl create failed:\n{r.stderr}', file=sys.stderr)
+              sys.exit(1)
+          print(f'Created UDID: {r.stdout.strip()}')
+          PYEOF
           xcrun simctl list devices | grep CI_iPhone
 
       - name: Run unit tests
