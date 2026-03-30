@@ -106,7 +106,7 @@ describe("plain CSS pass-through", function()
     it("passes through multiple declarations", function()
         local css = compile("p { color: black; font-size: 16px; }")
         assert.is_truthy(css:find("color: black"))
-        assert.is_truthy(css:find("font-size: 16px"))
+        assert.is_truthy(css:find("font-size: 16px", 1, true))
     end)
 
     it("passes through a class selector", function()
@@ -145,7 +145,7 @@ describe("variable expansion", function()
 
     it("expands a dimension variable", function()
         local css = compile("$size: 16px; body { font-size: $size; }")
-        assert.is_truthy(css:find("font-size: 16px"))
+        assert.is_truthy(css:find("font-size: 16px", 1, true))
     end)
 
     it("expands variable inside a nested rule", function()
@@ -293,7 +293,7 @@ describe("@if control flow", function()
                 .small { font-size: 12px; }
             }
         ]])
-        assert.is_truthy(css:find("font-size: 12px"))
+        assert.is_truthy(css:find("font-size: 12px", 1, true))
     end)
 
     it("numeric comparison: greater than or equal", function()
@@ -303,7 +303,7 @@ describe("@if control flow", function()
                 .big { font-size: 18px; }
             }
         ]])
-        assert.is_truthy(css:find("font-size: 18px"))
+        assert.is_truthy(css:find("font-size: 18px", 1, true))
     end)
 end)
 

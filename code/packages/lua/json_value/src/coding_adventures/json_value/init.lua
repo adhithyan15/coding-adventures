@@ -243,10 +243,32 @@ function M.evaluate(ast)
     if rule == "value" then
         -- Find the first non-punctuation child.  In the grammar-driven AST,
         -- value has exactly one child: the matched alternative.
+        --
+        -- The child is either:
+        --   (a) an ASTNode (rule match for "object" or "array") — has rule_name
+        --   (b) a raw token table (token match for STRING/NUMBER/TRUE/FALSE/NULL)
+        --       — has "type" and "value" fields, but NO rule_name
         for _, child in ipairs(ast.children) do
-            if type(child) == "table" and child.rule_name then
+            if type(child) ~= "table" then goto next_value_child end
+            if child.rule_name then
                 return M.evaluate(child)
+            elseif child.type then
+                -- raw token child (STRING, NUMBER, TRUE, FALSE, NULL)
+                local ttype = child.type
+                local tval  = child.value
+                if ttype == "STRING" then
+                    return unescape_string(tval)
+                elseif ttype == "NUMBER" then
+                    return tonumber(tval)
+                elseif ttype == "TRUE" then
+                    return true
+                elseif ttype == "FALSE" then
+                    return false
+                elseif ttype == "NULL" then
+                    return M.null
+                end
             end
+            ::next_value_child::
         end
         error("json_value.evaluate: empty value node")
 
@@ -370,16 +392,16 @@ function M._evaluate_pair(pair_node)
     for _, child in ipairs(pair_node.children) do
         if type(child) ~= "table" then goto continue end
 
-        if child.rule_name == "token" then
-            -- The first token child with type STRING is the key.
-            local tok = type(child.token) == "function" and child:token() or child.token
-            if tok and tok.type == "STRING" and not key_node then
+        if child.rule_name then
+            -- ASTNode child (rule match): only "value" is semantically meaningful.
+            if child.rule_name == "value" then
+                value_node = child
+            end
+        else
+            -- Raw token child (token match): STRING is the key; COLON is ignored.
+            if child.type == "STRING" and not key_node then
                 key_node = child
             end
-            -- COLON tokens are intentionally ignored.
-
-        elseif child.rule_name == "value" then
-            value_node = child
         end
 
         ::continue::
@@ -392,8 +414,8 @@ function M._evaluate_pair(pair_node)
         error("json_value._evaluate_pair: no value found in pair node")
     end
 
-    local tok = type(key_node.token) == "function" and key_node:token() or key_node.token
-    local key = unescape_string(tok.value)
+    -- key_node is a raw token table — access .value directly
+    local key = unescape_string(key_node.value)
     local val = M.evaluate(value_node)
     return key, val
 end

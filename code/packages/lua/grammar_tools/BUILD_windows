@@ -1,1 +1,4 @@
+cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec
+cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec
+luarocks make --local coding-adventures-grammar-tools-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
