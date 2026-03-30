@@ -56,3 +56,40 @@ jobs:
             -destination 'generic/platform=watchOS Simulator' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
+
+  build-06-notifications:
+    name: "06 — Notifications"
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: code/programs/swift/06-notifications
+        run: xcodegen generate
+
+      - name: Build iOS app
+        working-directory: code/programs/swift/06-notifications
+        run: |
+          xcodebuild build \
+            -scheme WaterNotify \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run unit tests
+        # Tests use MockNotificationCenter so no real UNUserNotificationCenter
+        # is needed — they run cleanly in a booted simulator.
+        working-directory: code/programs/swift/06-notifications
+        run: |
+          xcodebuild test \
+            -scheme WaterNotifyTests \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            CODE_SIGNING_ALLOWED=NO
