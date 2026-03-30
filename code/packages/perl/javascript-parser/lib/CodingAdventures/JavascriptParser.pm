@@ -417,9 +417,18 @@ sub _parse_for_stmt {
     # --- Update expression ---
     # The update is an expression (e.g. i++, i = i + 1).
     # Since ++ is not a token in the lexer, "i++" tokenizes as NAME PLUS PLUS.
-    # We just parse as a plain expression.
+    # Assignment (i = i + 1) requires lookahead: NAME EQUALS (not EQUALS_EQUALS).
     if (!$self->_check('RPAREN')) {
-        push @ch, $self->_node('for_update', $self->_parse_expression());
+        my $next = $self->_peek_ahead(1);
+        if ($self->_check('NAME') && $next && $next->{type} eq 'EQUALS') {
+            my @upd_ch;
+            push @upd_ch, $self->_leaf($self->_advance());    # NAME
+            push @upd_ch, $self->_leaf($self->_advance());    # EQUALS
+            push @upd_ch, $self->_parse_expression();
+            push @ch, $self->_node('for_update', $self->_node('assign_expr', @upd_ch));
+        } else {
+            push @ch, $self->_node('for_update', $self->_parse_expression());
+        }
     } else {
         push @ch, $self->_node('for_update');
     }

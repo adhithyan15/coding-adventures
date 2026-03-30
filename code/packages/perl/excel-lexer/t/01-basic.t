@@ -235,11 +235,15 @@ subtest 'arithmetic operators +-*/^&' => sub {
 };
 
 subtest 'comparison operators = <> <= >= < >' => sub {
+    # '<>' is the NOT_EQUALS operator, so '<>' and '<' + '>' can't coexist
+    # in a single string — we test them separately.
     is(
-        types_of('=<><=>=<>'),
-        [qw(EQUALS NOT_EQUALS LESS_EQUALS GREATER_EQUALS LESS_THAN GREATER_THAN)],
-        'all comparison operator types in order'
+        types_of('=<><=>='),
+        [qw(EQUALS NOT_EQUALS LESS_EQUALS GREATER_EQUALS)],
+        'EQUALS NOT_EQUALS LESS_EQUALS GREATER_EQUALS'
     );
+    is( types_of('<'), [qw(LESS_THAN)],    'standalone LESS_THAN' );
+    is( types_of('>'), [qw(GREATER_THAN)], 'standalone GREATER_THAN' );
 };
 
 subtest 'PERCENT postfix 50%' => sub {

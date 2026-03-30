@@ -624,10 +624,10 @@ sub _parse_custom_section {
     my ($name, $nc) = _read_string($bytes, $offset);
     my $pos = $offset + $nc;
 
-    # All remaining bytes in the section are the custom data
-    my $data_size = $section_end - $pos;
-    my @data = $data_size > 0
-        ? @{$bytes}[$pos .. $pos + $data_size - 1]
+    # All remaining bytes in the section are the custom data.
+    # $section_end is the inclusive index of the last byte in the section.
+    my @data = $pos <= $section_end
+        ? @{$bytes}[$pos .. $section_end]
         : ();
 
     return { name => $name, data => \@data };

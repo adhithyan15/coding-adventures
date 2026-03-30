@@ -294,9 +294,12 @@ sub _parse_description {
     if ($self->_check('MODULE')) {
         return $self->_node('description', $self->_parse_module_declaration());
     }
-    # Skip any unknown top-level token to avoid infinite loops
-    my $tok = $self->_advance();
-    return $self->_node('description', $self->_leaf($tok));
+    my $tok = $self->_peek();
+    die sprintf(
+        "CodingAdventures::VerilogParser: parse error at line %d col %d: "
+      . "unexpected token %s ('%s') at top level\n",
+        $tok->{line}, $tok->{col}, $tok->{type}, $tok->{value}
+    );
 }
 
 # module_declaration = "module" NAME [ parameter_port_list ]

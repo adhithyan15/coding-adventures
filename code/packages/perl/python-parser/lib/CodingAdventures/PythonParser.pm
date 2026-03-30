@@ -487,14 +487,20 @@ sub _parse_from_import_stmt {
     return $self->_node('from_import_stmt', @ch);
 }
 
-# block = NEWLINE INDENT { statement } DEDENT ;
+# block = NEWLINE INDENT { statement } DEDENT
+#       | statement ;   ← single-line form: def f(): return x
 #
-# Python blocks are delimited by INDENT/DEDENT tokens emitted by the lexer.
-# A block is always preceded by a COLON at the header line and followed by
-# a NEWLINE before the INDENT.
+# Python allows both the indented multi-line form and a single-statement
+# inline form (e.g., `def f(): return x`). We detect which form by
+# checking whether the next token is NEWLINE or the start of a statement.
 sub _parse_block {
     my ($self) = @_;
     my @ch;
+    # Single-line form: body follows immediately on the same line.
+    if (!$self->_check('NEWLINE') && !$self->_check('EOF')) {
+        push @ch, $self->_parse_statement();
+        return $self->_node('block', @ch);
+    }
     push @ch, $self->_leaf($self->_expect('NEWLINE'));
     push @ch, $self->_leaf($self->_expect('INDENT'));
     $self->_skip_newlines();

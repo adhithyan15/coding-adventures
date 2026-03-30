@@ -278,6 +278,14 @@ sub _encode_value {
     }
 
     # ------------------------------------------------------------------
+    # _ForcedString sentinel: a number coerced to string type by a schema.
+    # Must be serialized as a JSON string, not a number.
+    # ------------------------------------------------------------------
+    if (ref($value) eq 'CodingAdventures::JsonSerializer::_ForcedString') {
+        return _encode_string($$value);
+    }
+
+    # ------------------------------------------------------------------
     # Blessed reference (other than Null): treat as hashref/arrayref
     # after dereferencing.  This handles objects blessed into user classes.
     # ------------------------------------------------------------------
@@ -410,7 +418,8 @@ sub _encode_object {
 
 sub _looks_like_number {
     my ($s) = @_;
-    return $s =~ /\A-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\z/;
+    return $s =~ /\A-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\z/
+        || $s =~ /\A-?(?:nan|inf(?:inity)?)\z/i;
 }
 
 # ============================================================================
@@ -784,11 +793,16 @@ sub _coerce_value {
     if (exists $schema->{type} && $schema->{type} eq 'string'
             && !ref($value) && defined($value)
             && _looks_like_number($value)) {
-        # Format integer without decimal; float with up to 14 significant digits
+        # Format integer without decimal; float with up to 14 significant digits.
+        # Wrap in a _ForcedString sentinel so _encode_value treats it as a string
+        # and does not re-detect it as a number via _looks_like_number.
+        my $str;
         if ($value =~ /\A-?(?:0|[1-9]\d*)\z/) {
-            return "$value";    # already an integer string
+            $str = "$value";
+        } else {
+            $str = sprintf('%.14g', $value);
         }
-        return sprintf('%.14g', $value);
+        return bless \$str, 'CodingAdventures::JsonSerializer::_ForcedString';
     }
 
     # ------------------------------------------------------------------

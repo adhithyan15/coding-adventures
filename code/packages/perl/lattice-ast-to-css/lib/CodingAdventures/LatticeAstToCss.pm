@@ -150,12 +150,12 @@ sub _set_var {
 
 sub _is_token {
     my ($node) = @_;
-    return ref($node) && $node->can('type') && !$node->can('rule_name');
+    return ref($node) && $node->can('is_leaf') && $node->is_leaf;
 }
 
 sub _is_node {
     my ($node) = @_;
-    return ref($node) && $node->can('rule_name');
+    return ref($node) && $node->can('rule_name') && !$node->is_leaf;
 }
 
 sub _find_child {

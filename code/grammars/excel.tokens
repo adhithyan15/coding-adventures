@@ -16,10 +16,10 @@ REF_PREFIX_QUOTED   = /(\[[^\]]+\])?'([^']|'')*'!/ -> REF_PREFIX
 REF_PREFIX_BARE     = /(\[[^\]]+\])?[A-Za-z_\\][A-Za-z0-9_\.]*(?::[A-Za-z_\\][A-Za-z0-9_\.]*)*!/ -> REF_PREFIX
 
 STRING            = /"([^"]|"")*"/
-ERROR_CONSTANT    = /#NULL!|#DIV\/0!|#VALUE!|#REF!|#NAME\?|#NUM!|#N\/A|#SPILL!|#CALC!|#GETTING_DATA/
+ERROR_CONSTANT    = /#null!|#div\/0!|#value!|#ref!|#name\?|#num!|#n\/a|#spill!|#calc!|#getting_data/
 NUMBER            = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)?/
 
-STRUCTURED_KEYWORD = /\[#(?:All|Data|Headers|Totals|This Row)\]/
+STRUCTURED_KEYWORD = /\[#(?:all|data|headers|totals|this row)\]/
 STRUCTURED_COLUMN  = /\[(?:[^\[\]]|\]\])+\]/
 
 # Order matters: more specific reference tokens must come before NAME.

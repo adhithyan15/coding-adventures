@@ -477,7 +477,8 @@ sub tokenize {
     }
 
     # Sentinel EOF token — always present as the last element.
-    push @tokens, { type => 'EOF', value => '', line => $line_num, col => $col // 1 };
+    # $line_num was incremented after processing the last line, so subtract 1.
+    push @tokens, { type => 'EOF', value => '', line => $line_num - 1, col => $col // 1 };
 
     return \@tokens;
 }

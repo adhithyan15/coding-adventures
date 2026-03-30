@@ -74,6 +74,10 @@ sub children  { $_[0]->{children} || [] }
 sub is_leaf   { $_[0]->{is_leaf}  || 0  }
 sub token     { $_[0]->{token} }
 
+# Convenience accessors for leaf nodes — delegate into the token hashref.
+sub type  { $_[0]->{token} ? $_[0]->{token}{type}  : undef }
+sub value { $_[0]->{token} ? $_[0]->{token}{value} : undef }
+
 1;
 
 __END__
