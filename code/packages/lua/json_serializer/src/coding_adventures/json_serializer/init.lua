@@ -664,11 +664,11 @@ function M._validate_value(value, schema, path, errors)
     -- We do NOT apply array constraints to empty tables with schema.type
     -- == "object" or with schema.required (which implies an object).
     -- ----------------------------------------------------------------
-    local treat_as_array = is_sequence(value)
+    local treat_as_array = type(value) == "table" and (is_sequence(value)
         or (table_count(value) == 0
             and schema.type == "array"
             and not schema.required
-            and not schema.properties)
+            and not schema.properties))
     if type(value) == "table" and treat_as_array then
         local n = #value
         if schema.minItems and n < schema.minItems then
