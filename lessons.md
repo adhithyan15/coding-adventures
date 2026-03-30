@@ -987,3 +987,12 @@ Use `cpanm --installdeps --quiet .` instead.
 Also: Perl packages need a `BUILD_windows` file that is a no-op (`echo Perl testing is not supported on Windows - skipping`)
 because the CI workflow skips Perl setup on Windows (`if: runner.os != 'Windows'`). Without BUILD_windows,
 the build-tool falls back to BUILD and runs cpanm on Strawberry Perl, which fails.
+
+---
+
+### 2026-03-29: Vitest coverage includes build scripts by default
+
+When adding build scripts (like `scripts/build-all-browsers.ts`) to a TypeScript package, vitest's v8 coverage provider includes them in the coverage report. If the script isn't imported by any test, it shows 0% coverage and can pull the overall coverage below the threshold, failing CI.
+
+**Solution:** Add `"scripts/**"` to the vitest config's `coverage.exclude` array, alongside other non-testable files like `dist/**` and `vite.config.ts`.
+
