@@ -140,19 +140,21 @@ end
 
 --- Unescape a raw JSON string token value into a plain Lua string.
 --
--- `raw` is the token value as it appears in the source, including the
--- surrounding double quotes, e.g. `'"hello\\nworld"'`.
+-- `raw` is the token value as stored by the lexer.  The `json.tokens` grammar
+-- sets `escapes: none`, which tells the GrammarLexer to strip the surrounding
+-- double-quote characters but leave all `\X` escape sequences as literal text.
+-- So `raw` is already unquoted: for JSON source `"hello\nworld"`, the token
+-- value is `hello\nworld` (no enclosing quotes, backslash-n still two chars).
 --
 -- Steps:
---   1. Strip the leading and trailing `"` characters.
---   2. Replace each recognised escape sequence with its decoded equivalent.
+--   1. Replace each recognised `\X` escape with its decoded equivalent.
+--   2. Replace `\uXXXX` Unicode escapes with UTF-8 byte sequences.
 --
--- @param raw  string  The raw JSON string token (with quotes).
--- @return string      The decoded Lua string (no surrounding quotes).
+-- @param raw  string  The raw JSON string token (quotes already stripped by lexer).
+-- @return string      The decoded Lua string.
 local function unescape_string(raw)
-    -- Strip surrounding double quotes.
-    -- The token always starts and ends with '"' (guaranteed by the JSON lexer).
-    local s = raw:sub(2, -2)
+    -- Quotes are already stripped by the GrammarLexer (escapes: none mode).
+    local s = raw
 
     -- Replace each escape sequence in a single gsub pass.
     -- The pattern `\\(.)` matches a literal backslash followed by any char.
