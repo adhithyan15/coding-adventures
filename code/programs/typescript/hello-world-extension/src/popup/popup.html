@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  Popup HTML
+  ==========
+
+  This is the page that appears when the user clicks the extension's
+  toolbar icon. It's a regular HTML page — nothing special about it
+  except that it runs inside the extension's context, which gives its
+  JavaScript access to the browser extension API.
+
+  Key things to know:
+  - The popup is created fresh every time the icon is clicked
+  - It's destroyed when the user clicks outside of it
+  - Its size is determined by its content (up to ~800x600 on Chrome)
+  - It has its own viewport — scrolling is independent of the page
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+  <title>Hello World</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Hello World!</h1>
+    <p>This is my first browser extension.</p>
+    <p class="info">
+      It works on Chrome, Firefox, and Safari — all from the same
+      TypeScript codebase.
+    </p>
+    <p id="browser-info" class="info"></p>
+  </div>
+  <script type="module" src="popup.ts"></script>
+</body>
+</html>
