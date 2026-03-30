@@ -420,6 +420,13 @@ func (l *buildResourceLocker) lockFor(key string) *sync.Mutex {
 }
 
 func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []string {
+	return buildResourceKeysForOS(pkg, pathToPkg, runtime.GOOS)
+}
+
+// buildResourceKeysForOS is the testable version of buildResourceKeys that
+// accepts an explicit OS name. This allows tests to verify Windows-specific
+// lock key behaviour on non-Windows hosts.
+func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, goos string) []string {
 	keys := map[string]bool{
 		pkg.Name: true,
 	}
@@ -429,6 +436,16 @@ func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []str
 			// Hex persists a shared cache under ~/.hex, which is not safe for
 			// concurrent writes across packages in CI.
 			keys["global:hex-cache"] = true
+		}
+
+		if pkg.Language == "lua" && goos == "windows" && strings.Contains(command, "luarocks make") {
+			// On Windows, luarocks requires exclusive write access to the local
+			// rocks tree (~\AppData\Roaming\luarocks). Any two concurrent
+			// `luarocks make` invocations race for that lock and one will fail
+			// with "command 'make' requires exclusive write access". A global
+			// lock key serialises ALL Lua packages that call luarocks make on
+			// Windows regardless of which dependencies they are installing.
+			keys["global:luarocks-windows"] = true
 		}
 
 		for _, raw := range relPathRe.FindAllString(command, -1) {

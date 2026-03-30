@@ -693,7 +693,7 @@ describe("GrammarLexer", function()
             local tokens = gl:tokenize()
 
             assert.are.equal(TokenType.Keyword, tokens[1].type)
-            assert.are.equal("KEYWORD", tokens[1].type_name)
+            assert.are.equal("DEF", tokens[1].type_name)
             assert.are.equal("def", tokens[1].value)
 
             assert.are.equal(TokenType.Name, tokens[2].type)
@@ -701,7 +701,7 @@ describe("GrammarLexer", function()
             assert.are.equal("foo", tokens[2].value)
 
             assert.are.equal(TokenType.Keyword, tokens[3].type)
-            assert.are.equal("KEYWORD", tokens[3].type_name)
+            assert.are.equal("RETURN", tokens[3].type_name)
             assert.are.equal("return", tokens[3].value)
         end)
     end)
@@ -1318,7 +1318,7 @@ describe("GrammarLexer triple-quoted strings", function()
     it("strips triple quotes from string tokens", function()
         local grammar = {
             definitions = {
-                { name = "STRING", pattern = '""".-"""', is_regex = true },
+                { name = "STRING", pattern = '""".*?"""', is_regex = true },
             },
         }
         local gl = GrammarLexer.new('"""hello"""', grammar)

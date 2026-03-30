@@ -1,0 +1,106 @@
+# XML Token Grammar (Lua-compatible)
+# @version 1
+# ====================================
+#
+# This is a Lua-compatible variant of the xml.tokens grammar.  The original
+# grammar uses negative lookahead patterns (e.g., `(?!->)`) and top-level
+# alternation (`|`) which Lua's pattern engine does not support.
+#
+# Two adaptations are made:
+#
+#   1. CHAR_REF with top-level alternation is split into two definitions:
+#      CHAR_REF_HEX and CHAR_REF_DEC, both aliased to CHAR_REF.
+#
+#   2. Comment/CDATA/PI groups replace lookahead-based patterns with a
+#      sentinel-first, single-char-fallback approach:
+#
+#      - The end-delimiter token is listed FIRST (highest priority).
+#      - A "bulk" pattern matches runs of safe characters.
+#      - A single-char fallback for the ambiguous character is listed LAST.
+#
+#      Example for comments (end delimiter is "-->"):
+#        COMMENT_END  = "-->"       (highest priority — tried first)
+#        COMMENT_TEXT = /[^-]+/     (greedy run of non-dash chars)
+#        COMMENT_DASH = /-/ → COMMENT_TEXT  (single dash that is not part of -->)
+#
+#      When the lexer reaches "-->", COMMENT_END wins immediately.
+#      When it reaches "-" followed by anything other than "->", COMMENT_DASH
+#      consumes just the dash and loops back, never accidentally swallowing "-->".
+#
+# All other patterns are identical to xml.tokens.
+
+escapes: none
+
+# Skip patterns — whitespace is silently consumed in the default group and
+# inside tags.  Callbacks disable skip for comment/cdata/pi groups where
+# whitespace is significant content.
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+
+# -----------------------------------------------------------------------
+# Default group (implicit) — content between tags
+# -----------------------------------------------------------------------
+
+TEXT              = /[^<&]+/
+ENTITY_REF        = /&[a-zA-Z][a-zA-Z0-9]*;/
+CHAR_REF_HEX      = /&#x[0-9a-fA-F]+;/ -> CHAR_REF
+CHAR_REF_DEC      = /&#[0-9]+;/        -> CHAR_REF
+COMMENT_START     = "<!--"
+CDATA_START       = "<![CDATA["
+PI_START          = "<?"
+CLOSE_TAG_START   = "</"
+OPEN_TAG_START    = "<"
+
+# -----------------------------------------------------------------------
+# Tag group — inside <tag ...> or </tag>
+# -----------------------------------------------------------------------
+
+group tag:
+  TAG_NAME        = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+  ATTR_EQUALS     = "="
+  ATTR_VALUE_DQ   = /"[^"]*"/ -> ATTR_VALUE
+  ATTR_VALUE_SQ   = /'[^']*'/ -> ATTR_VALUE
+  TAG_CLOSE       = ">"
+  SELF_CLOSE      = "/>"
+  SLASH           = "/"
+
+# -----------------------------------------------------------------------
+# Comment group — inside <!-- ... -->
+# -----------------------------------------------------------------------
+#
+# The end delimiter "-->" is listed first so it wins over any single-char
+# fallback.  COMMENT_TEXT greedily consumes runs of non-dash characters.
+# COMMENT_DASH consumes one "-" at a time when it does not start "-->".
+
+group comment:
+  COMMENT_END     = "-->"
+  COMMENT_TEXT    = /[^-]+/
+  COMMENT_DASH    = /-/ -> COMMENT_TEXT
+
+# -----------------------------------------------------------------------
+# CDATA group — inside <![CDATA[ ... ]]>
+# -----------------------------------------------------------------------
+#
+# CDATA_END is listed first.  CDATA_TEXT greedily consumes runs of
+# non-bracket characters.  CDATA_BRACK consumes one "]" at a time when
+# it does not start "]]>".
+
+group cdata:
+  CDATA_END       = "]]>"
+  CDATA_TEXT      = /[^\]]+/
+  CDATA_BRACK     = /]/ -> CDATA_TEXT
+
+# -----------------------------------------------------------------------
+# Processing instruction group — inside <? ... ?>
+# -----------------------------------------------------------------------
+#
+# PI_END is listed first.  PI_TARGET matches the instruction target name
+# (e.g., "xml" in "<?xml ...?>").  PI_TEXT greedily consumes runs of
+# non-question-mark characters.  PI_QMARK consumes one "?" at a time
+# when it does not start "?>".
+
+group pi:
+  PI_END          = "?>"
+  PI_TARGET       = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+  PI_TEXT         = /[^?]+/
+  PI_QMARK        = /\?/ -> PI_TEXT

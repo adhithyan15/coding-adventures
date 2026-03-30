@@ -22,8 +22,8 @@
 program      = { statement } ;
 statement    = assignment | method_call | expression_stmt ;
 assignment   = NAME EQUALS expression ;
-method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
+method_call  = ( NAME | PUTS ) LPAREN [ expression { COMMA expression } ] RPAREN ;
 expression_stmt = expression ;
 expression   = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
-factor       = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;
+factor       = NUMBER | STRING | NAME | TRUE | FALSE | NIL | PUTS | LPAREN expression RPAREN ;
