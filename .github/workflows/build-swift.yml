@@ -84,6 +84,23 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
 
+      - name: Create iOS test simulator
+        # macos-15 runners do not pre-create simulator devices — only the runtime
+        # is bundled with Xcode. We create one explicitly so the test destination
+        # is always available, regardless of which runner image we land on.
+        # Xcode 16.2 bundles iOS 18.2; fall back to iOS 17.x if needed.
+        run: |
+          xcrun simctl create "CI_iPhone" \
+            "com.apple.CoreSimulator.SimDeviceType.iPhone-16" \
+            "com.apple.CoreSimulator.SimRuntime.iOS-18-2" \
+          || xcrun simctl create "CI_iPhone" \
+            "com.apple.CoreSimulator.SimDeviceType.iPhone-16" \
+            "com.apple.CoreSimulator.SimRuntime.iOS-18-0" \
+          || xcrun simctl create "CI_iPhone" \
+            "com.apple.CoreSimulator.SimDeviceType.iPhone-15" \
+            "com.apple.CoreSimulator.SimRuntime.iOS-17-5"
+          xcrun simctl list devices | grep CI_iPhone
+
       - name: Run unit tests
         # Tests use MockNotificationCenter so no real UNUserNotificationCenter
         # is needed — they run cleanly in a booted simulator.
@@ -91,5 +108,5 @@ jobs:
         run: |
           xcodebuild test \
             -scheme WaterNotifyTests \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=CI_iPhone' \
             CODE_SIGNING_ALLOWED=NO
