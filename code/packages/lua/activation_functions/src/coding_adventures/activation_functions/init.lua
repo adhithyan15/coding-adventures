@@ -196,13 +196,20 @@ end
 --
 -- ## Implementation
 --
--- Lua's standard math library provides math.tanh, which is computed by
--- the underlying C runtime. We use it directly for accuracy and speed.
+-- Lua 5.4 removed math.tanh from the standard library. We implement it
+-- directly using the exponential identity:
+--
+--     tanh(x) = (e^x − e^(−x)) / (e^x + e^(−x))
+--
+-- This is equivalent to what math.tanh provided in Lua 5.1–5.3 and
+-- matches the C runtime implementation.
 --
 -- @param x  any real number
 -- @return   tanh value in (-1, 1)
 function M.tanh_activation(x)
-    return math.tanh(x)
+    local ep = math.exp(x)
+    local en = math.exp(-x)
+    return (ep - en) / (ep + en)
 end
 
 --- tanh_derivative(x) → derivative at x
@@ -226,7 +233,7 @@ end
 -- @param x  any real number
 -- @return   derivative of tanh at x
 function M.tanh_derivative(x)
-    local t = math.tanh(x)
+    local t = M.tanh_activation(x)
     return 1.0 - t * t
 end
 
