@@ -48,7 +48,7 @@
 --   code/packages/lua/xml_lexer/src/coding_adventures/xml_lexer/init.lua
 --
 -- 6 directory levels up from `script_dir` reaches `code/`.
--- Then we descend into `grammars/xml.tokens`.
+-- Then we descend into `grammars/xml_lua.tokens`.
 
 local grammar_tools = require("coding_adventures.grammar_tools")
 local lexer_pkg     = require("coding_adventures.lexer")
@@ -125,7 +125,7 @@ local function get_grammar()
     --           → xml_lexer_pkg/ (4) → lua/ (5) → packages/ (6) → code/
     local script_dir  = get_script_dir()
     local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/xml.tokens"
+    local tokens_path = repo_root .. "/grammars/xml_lua.tokens"
 
     local f, open_err = io.open(tokens_path, "r")
     if not f then
