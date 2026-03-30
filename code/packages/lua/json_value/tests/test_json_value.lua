@@ -454,7 +454,7 @@ describe("to_json string escaping", function()
     it("escapes control chars with \\uXXXX", function()
         -- U+0001 (SOH) has no short form
         local s = jv.to_json("\x01")
-        assert.matches("\\\\u0001", s)
+        assert.matches("\\u0001", s)
     end)
 end)
 
