@@ -1,0 +1,412 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01A634FFF74FEE60C28F7671 /* WaterPersistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C8BCDB405DAA2E2FF1770 /* WaterPersistTests.swift */; };
+		6A98AADDB4F68F5833D579EA /* WaterEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D6D474265CC5184F72DFB4 /* WaterEntry.swift */; };
+		A1A49C817EA2CF6932D716C8 /* DayFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AB31EA1A4B0A1292B684B1 /* DayFilter.swift */; };
+		B86D561E4CA90C000CC3E183 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF446E8A1418FE9282791730 /* ContentView.swift */; };
+		C68D0A58C7B3B48C0F937B35 /* WaterPersistApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C67925CD0D71EB027E36316 /* WaterPersistApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		016404229BA517E6F4A45B70 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F8D4406EC4EBE85FF48B176B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CA52D2189FC0D4C81B8CB3A;
+			remoteInfo = WaterPersist;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		01AB31EA1A4B0A1292B684B1 /* DayFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayFilter.swift; sourceTree = "<group>"; };
+		278C8BCDB405DAA2E2FF1770 /* WaterPersistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterPersistTests.swift; sourceTree = "<group>"; };
+		2D1B4C6055D68B8CF5A081D5 /* WaterPersist.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WaterPersist.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		65D6D474265CC5184F72DFB4 /* WaterEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterEntry.swift; sourceTree = "<group>"; };
+		6C67925CD0D71EB027E36316 /* WaterPersistApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterPersistApp.swift; sourceTree = "<group>"; };
+		708C171844786532801FA893 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9C82AEBF9438A54FA426378D /* WaterPersistTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WaterPersistTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF446E8A1418FE9282791730 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0D64B53194C3863E052DE03F = {
+			isa = PBXGroup;
+			children = (
+				667ACDC7BE5EE4B2F79524C7 /* WaterPersist */,
+				781881D4744259DF06BE13CA /* WaterPersistTests */,
+				5A875093889C3675FF10E7BB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5A875093889C3675FF10E7BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2D1B4C6055D68B8CF5A081D5 /* WaterPersist.app */,
+				9C82AEBF9438A54FA426378D /* WaterPersistTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		667ACDC7BE5EE4B2F79524C7 /* WaterPersist */ = {
+			isa = PBXGroup;
+			children = (
+				DF446E8A1418FE9282791730 /* ContentView.swift */,
+				01AB31EA1A4B0A1292B684B1 /* DayFilter.swift */,
+				708C171844786532801FA893 /* Info.plist */,
+				65D6D474265CC5184F72DFB4 /* WaterEntry.swift */,
+				6C67925CD0D71EB027E36316 /* WaterPersistApp.swift */,
+			);
+			name = WaterPersist;
+			path = Sources/WaterPersist;
+			sourceTree = "<group>";
+		};
+		781881D4744259DF06BE13CA /* WaterPersistTests */ = {
+			isa = PBXGroup;
+			children = (
+				278C8BCDB405DAA2E2FF1770 /* WaterPersistTests.swift */,
+			);
+			name = WaterPersistTests;
+			path = Sources/WaterPersistTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		02ED895AA23290B8B954EE5C /* WaterPersistTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3314FB14CBADD981E53D3626 /* Build configuration list for PBXNativeTarget "WaterPersistTests" */;
+			buildPhases = (
+				3FF3EFCDF2DD6155C8A23C07 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7FB83CDB91A25151DBBDE7D8 /* PBXTargetDependency */,
+			);
+			name = WaterPersistTests;
+			packageProductDependencies = (
+			);
+			productName = WaterPersistTests;
+			productReference = 9C82AEBF9438A54FA426378D /* WaterPersistTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5CA52D2189FC0D4C81B8CB3A /* WaterPersist */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B6786710AF6ABA492D38848 /* Build configuration list for PBXNativeTarget "WaterPersist" */;
+			buildPhases = (
+				204234F281C9956EE690056D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WaterPersist;
+			packageProductDependencies = (
+			);
+			productName = WaterPersist;
+			productReference = 2D1B4C6055D68B8CF5A081D5 /* WaterPersist.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F8D4406EC4EBE85FF48B176B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					5CA52D2189FC0D4C81B8CB3A = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 8B3C5027AA4513EE8FE0E4B9 /* Build configuration list for PBXProject "WaterPersist" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 0D64B53194C3863E052DE03F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5A875093889C3675FF10E7BB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5CA52D2189FC0D4C81B8CB3A /* WaterPersist */,
+				02ED895AA23290B8B954EE5C /* WaterPersistTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		204234F281C9956EE690056D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B86D561E4CA90C000CC3E183 /* ContentView.swift in Sources */,
+				A1A49C817EA2CF6932D716C8 /* DayFilter.swift in Sources */,
+				6A98AADDB4F68F5833D579EA /* WaterEntry.swift in Sources */,
+				C68D0A58C7B3B48C0F937B35 /* WaterPersistApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3FF3EFCDF2DD6155C8A23C07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01A634FFF74FEE60C28F7671 /* WaterPersistTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7FB83CDB91A25151DBBDE7D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CA52D2189FC0D4C81B8CB3A /* WaterPersist */;
+			targetProxy = 016404229BA517E6F4A45B70 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		05D76898C744E69195C6C123 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		312869A816B1D214665DEED8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		601BC823BC497462DC1E6E35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/WaterPersist/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.waterpersist;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7266EC3107BC6490AA22D45E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.waterpersisttests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WaterPersist.app/WaterPersist";
+			};
+			name = Release;
+		};
+		997A5016A7FAB374FBD22B1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/WaterPersist/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.waterpersist;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FE6EDE1ECDE3B073CDB2BEE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.waterpersisttests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WaterPersist.app/WaterPersist";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3314FB14CBADD981E53D3626 /* Build configuration list for PBXNativeTarget "WaterPersistTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE6EDE1ECDE3B073CDB2BEE7 /* Debug */,
+				7266EC3107BC6490AA22D45E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5B6786710AF6ABA492D38848 /* Build configuration list for PBXNativeTarget "WaterPersist" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				997A5016A7FAB374FBD22B1B /* Debug */,
+				601BC823BC497462DC1E6E35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8B3C5027AA4513EE8FE0E4B9 /* Build configuration list for PBXProject "WaterPersist" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				312869A816B1D214665DEED8 /* Debug */,
+				05D76898C744E69195C6C123 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F8D4406EC4EBE85FF48B176B /* Project object */;
+}
