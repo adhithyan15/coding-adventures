@@ -143,6 +143,9 @@ local function get_script_dir()
     if src:sub(1, 1) == "@" then
         src = src:sub(2)
     end
+    -- Normalize Windows backslashes to forward slashes for cross-platform
+    -- path handling (on Linux/macOS this is a no-op).
+    src = src:gsub("\\", "/")
     local dir = src:match("(.+)/[^/]+$") or "."
     if dir:sub(2, 2) ~= ":" then
         local f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")

@@ -91,7 +91,8 @@ LITERAL_STRING = /'[^'\n]*'/
 OFFSET_DATETIME = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/
 LOCAL_DATETIME  = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?/
 LOCAL_DATE      = /\d{4}-\d{2}-\d{2}/
-LOCAL_TIME      = /\d{2}:\d{2}:\d{2}(\.\d+)?/
+LOCAL_TIME_FRAC = /\d{2}:\d{2}:\d{2}\.\d+/ -> LOCAL_TIME
+LOCAL_TIME      = /\d{2}:\d{2}:\d{2}/
 
 # ============================================================================
 # Float Literals (MUST come before INTEGER)

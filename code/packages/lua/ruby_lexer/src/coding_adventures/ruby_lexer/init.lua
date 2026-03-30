@@ -97,6 +97,9 @@ local function get_script_dir()
     if src:sub(1, 1) == "@" then
         src = src:sub(2)
     end
+    -- Normalize Windows backslashes to forward slashes for cross-platform
+    -- path handling (on Linux/macOS this is a no-op).
+    src = src:gsub("\\", "/")
     -- Extract the directory portion of the source path (may be relative
     -- and may contain .. when busted uses ../src in package.path).
     local dir = src:match("(.+)/[^/]+$") or "."

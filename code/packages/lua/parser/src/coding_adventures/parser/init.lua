@@ -597,8 +597,12 @@ function GrammarParseError.new(message, token)
 end
 
 function GrammarParseError:error_string()
-    return string.format("Parse error at %d:%d: %s",
-        self.tok.line, self.tok.column, self.message)
+    if self.tok then
+        return string.format("Parse error at %d:%d: %s",
+            self.tok.line, self.tok.column, self.message)
+    else
+        return string.format("Parse error: %s", self.message)
+    end
 end
 
 GrammarParseError.__tostring = GrammarParseError.error_string

@@ -1042,26 +1042,105 @@ local function pcre_to_lua(s)
 
         -- ---- ( for groups ----
         elseif c == "(" then
-            -- Lookahead / non-capturing group (?...)
+            -- Check for (?...) — lookahead or non-capturing group
             if i+1 <= len and s:sub(i+1,i+1) == "?" then
-                local depth = 1; local j = i+2
-                -- Skip specifier: !, =, :, <!, <=
-                if j <= len then
-                    local sp = s:sub(j,j)
-                    if sp == "!" or sp == "=" or sp == ":" then
+                local sp = (i+2 <= len) and s:sub(i+2,i+2) or ""
+
+                if sp == ":" then
+                    -- Non-capturing group (?:...) — process like a regular
+                    -- capturing group: scan for alternation, emit approximation.
+                    local start_inner = i+3  -- position after '(?:'
+                    local depth = 1; local j = start_inner; local has_alt = false
+                    while j <= len and depth > 0 do
+                        local jc = s:sub(j,j)
+                        if jc == "(" then
+                            depth = depth+1
+                        elseif jc == ")" then
+                            depth = depth-1
+                        elseif jc == "|" and depth == 1 then
+                            has_alt = true
+                        elseif jc == "[" then
+                            j = j+1
+                            if j <= len and s:sub(j,j) == "^" then j = j+1 end
+                            if j <= len and s:sub(j,j) == "]" then j = j+1 end
+                            while j <= len and s:sub(j,j) ~= "]" do
+                                if s:sub(j,j) == "\\" then j = j+1 end
+                                j = j+1
+                            end
+                        elseif jc == "\\" then
+                            j = j+1
+                        end
                         j = j+1
-                    elseif sp == "<" and j+1 <= len then
-                        j = j+2
                     end
-                end
-                while j <= len and depth > 0 do
-                    if     s:sub(j,j) == "(" then depth = depth+1
-                    elseif s:sub(j,j) == ")" then depth = depth-1
+                    local group_end = j  -- position after closing ')'
+
+                    if has_alt then
+                        -- Alternation inside (?:...) — approximate with any-char.
+                        -- Adjust for quantifier that follows the closing ')'.
+                        local qc = s:sub(group_end, group_end)
+                        local qs2 = ""
+                        local adv = 0
+                        if qc == "*" then
+                            if group_end < len and s:sub(group_end+1,group_end+1) == "?" then
+                                qs2 = "-"; adv = 1
+                            else
+                                qs2 = "-"
+                            end
+                        elseif qc == "+" then
+                            qs2 = "+"; adv = 0
+                        elseif qc == "?" then
+                            qs2 = "?"; adv = 0
+                        elseif qc == "-" then
+                            qs2 = "-"; adv = 0
+                        end
+                        if qs2 ~= "" then
+                            result[#result+1] = "[%s%S]" .. qs2
+                            i = group_end + 1 + adv
+                        else
+                            -- No quantifier: non-greedy to handle multi-char alternatives.
+                            result[#result+1] = "[%s%S]-"
+                            i = group_end
+                        end
+                    else
+                        -- No alternation: inline the content via recursive conversion.
+                        local inner = s:sub(start_inner, group_end - 2)
+                        local qc2 = s:sub(group_end, group_end)
+                        if qc2 == "?" then
+                            result[#result+1] = "[%s%S]?"; i = group_end + 1
+                        elseif qc2 == "*" then
+                            if group_end < len and s:sub(group_end+1,group_end+1) == "?" then
+                                result[#result+1] = "[%s%S]-"; i = group_end + 2
+                            else
+                                result[#result+1] = "[%s%S]-"; i = group_end + 1
+                            end
+                        elseif qc2 == "+" then
+                            result[#result+1] = "[%s%S]+"; i = group_end + 1
+                        else
+                            -- No quantifier: inline the inner content directly.
+                            result[#result+1] = pcre_to_lua(inner)
+                            i = group_end
+                        end
                     end
-                    j = j+1
+
+                else
+                    -- Lookahead (?=...) (?!...) (?<...) — drop entirely
+                    local depth = 1; local j = i+2
+                    if j <= len then
+                        if sp == "!" or sp == "=" then
+                            j = j+1
+                        elseif sp == "<" and j+1 <= len then
+                            j = j+2
+                        end
+                    end
+                    while j <= len and depth > 0 do
+                        if     s:sub(j,j) == "(" then depth = depth+1
+                        elseif s:sub(j,j) == ")" then depth = depth-1
+                        end
+                        j = j+1
+                    end
+                    -- Emit nothing — lookaheads have no Lua equivalent
+                    i = j
                 end
-                -- Emit nothing — lookaheads have no Lua equivalent
-                i = j
 
             else
                 -- Regular capturing group — scan for alternation

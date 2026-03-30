@@ -282,7 +282,10 @@ describe("multi-line basic strings (triple-double-quoted)", function()
         local src = '"""hello\nworld"""'
         local tokens = toml_lexer.tokenize(src)
         assert.are.equal("ML_BASIC_STRING", tokens[1].type)
-        assert.are.equal(src, tokens[1].value)
+        -- The lexer strips the triple-quote delimiters and returns only the
+        -- inner content (escape_mode = "none" skips escape processing but
+        -- still removes the surrounding """ delimiters).
+        assert.are.equal("hello\nworld", tokens[1].value)
     end)
 end)
 
@@ -291,7 +294,8 @@ describe("multi-line literal strings (triple-single-quoted)", function()
         local src = "'''hello\nworld'''"
         local tokens = toml_lexer.tokenize(src)
         assert.are.equal("ML_LITERAL_STRING", tokens[1].type)
-        assert.are.equal(src, tokens[1].value)
+        -- Same as ML_BASIC_STRING: inner content only (no ''' delimiters).
+        assert.are.equal("hello\nworld", tokens[1].value)
     end)
 end)
 

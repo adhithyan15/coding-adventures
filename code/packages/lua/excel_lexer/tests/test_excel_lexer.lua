@@ -302,7 +302,10 @@ describe("operator tokens", function()
     end)
 
     it("tokenizes comparison operators = <> <= >= < >", function()
-        local tokens = excel_lexer.tokenize("=<><=>=<>")
+        -- Use a space between < and > so they tokenise as two separate tokens
+        -- (LESS_THAN then GREATER_THAN) rather than the two-char NOT_EQUALS "<>".
+        -- types() filters out SPACE tokens, so the space is invisible in the result.
+        local tokens = excel_lexer.tokenize("=<><=>=< >")
         local t = types(tokens)
         -- EQUALS, NOT_EQUALS, LESS_EQUALS, GREATER_EQUALS, LESS_THAN, GREATER_THAN
         assert.are.same(

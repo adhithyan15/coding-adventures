@@ -486,8 +486,9 @@ function grammar_tools.parse_token_grammar(source)
 
         -- case_sensitive: directive (e.g., "case_sensitive: false")
         -- "case_sensitive: false" is equivalent to "case_insensitive: true".
-        if stripped:sub(1, 14) == "case_sensitive:" then
-            local cs_value = stripped:sub(15):match("^%s*(.-)%s*$")
+        -- "case_sensitive:" is 15 characters; value starts at position 16.
+        if stripped:sub(1, 15) == "case_sensitive:" then
+            local cs_value = stripped:sub(16):match("^%s*(.-)%s*$")
             if cs_value == "false" then
                 grammar.case_insensitive = true
             end
