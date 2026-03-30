@@ -31,17 +31,20 @@ package com.codingadventures.waternotify
  * We use the index (0–7) as the id. String identifiers like "watersync_morning"
  * are kept as `tag` for readability in logs.
  *
- * SCIENCE BEHIND THE BODY TEXTS:
- * ───────────────────────────────
- * Each reminder body references a concrete physiological fact:
- *   7 AM  — you lose ~500 ml overnight through respiration (insensible loss)
- *   9 AM  — brain is 75% water; 1–2% dehydration reduces focus
- *   11 AM — kidneys continuously filter ~180 L/day; hydration is critical
- *   1 PM  — water before meals aids gastric enzyme activity
- *   3 PM  — afternoon energy dip is often mild dehydration, not caffeine deficit
- *   5 PM  — muscles are ~75% water; pre-exercise hydration improves performance
- *   7 PM  — liver + kidneys metabolise overnight; keep supply up
- *   9 PM  — late water disrupts REM sleep; wrap up intake for the night
+ * FACT ROTATION:
+ * ──────────────
+ * Body text is drawn from WATER_FACTS — see WaterFacts.kt.
+ * Each slot uses WATER_FACTS[id % WATER_FACTS.size], giving 8 distinct facts
+ * across the day. Facts 8–9 are reserved for future slots or UI use.
+ *
+ *   7 AM  — overnight fluid loss (~500 ml)
+ *   9 AM  — brain 75% water; 1–2% dehydration reduces focus
+ *   11 AM — kidneys filter ~180 L/day; hydration maintains GFR
+ *   1 PM  — blood ~90% water; dehydration strains the heart
+ *   3 PM  — afternoon slump is dehydration, not caffeine deficit
+ *   5 PM  — synovial fluid; joint lubrication depends on hydration
+ *   7 PM  — water as thermostat; core temp rises when dehydrated
+ *   9 PM  — late drinking causes nocturia, fragments REM sleep
  */
 data class HydrationReminder(
     /** Numeric ID (0–7). Used as NotificationManager.notify() id and PendingIntent requestCode. */
@@ -71,60 +74,68 @@ data class HydrationReminder(
  * to protect sleep quality — good UX acknowledges biological limits.
  */
 val HYDRATION_REMINDERS: List<HydrationReminder> = listOf(
+    // Slot 0 — 07:00  overnight fluid loss (~500 ml insensible loss)
     HydrationReminder(
         id = 0,
         tag = "watersync_morning",
         hour = 7,
         title = "Good morning! Start hydrated",
-        body = "You lose around 500 ml overnight just breathing. Two glasses now restores your baseline before the day begins."
+        body = WATER_FACTS[0]
     ),
+    // Slot 1 — 09:00  brain is 75% water; 1–2% dehydration impairs cognition
     HydrationReminder(
         id = 1,
         tag = "watersync_mid_morning",
         hour = 9,
         title = "Mid-morning check-in",
-        body = "Your brain is 75% water. Even mild dehydration — just 1–2% fluid loss — reduces focus and reaction time."
+        body = WATER_FACTS[1]
     ),
+    // Slot 2 — 11:00  kidneys filter ~180 L/day; hydration maintains GFR
     HydrationReminder(
         id = 2,
         tag = "watersync_late_morning",
         hour = 11,
         title = "Nearly noon",
-        body = "Water helps your kidneys flush waste continuously. Staying topped up keeps them running at full efficiency."
+        body = WATER_FACTS[2]
     ),
+    // Slot 3 — 13:00  blood ~90% water; dehydration thickens it
     HydrationReminder(
         id = 3,
         tag = "watersync_lunch",
         hour = 13,
         title = "Lunchtime hydration",
-        body = "A glass before meals aids digestion and gives your stomach a head start on breaking down food."
+        body = WATER_FACTS[3]
     ),
+    // Slot 4 — 15:00  3 pm slump = dehydration, not caffeine deficit
     HydrationReminder(
         id = 4,
         tag = "watersync_afternoon",
         hour = 15,
         title = "Afternoon slump?",
-        body = "The 3pm energy dip is often dehydration in disguise. A glass of water works faster than another coffee."
+        body = WATER_FACTS[4]
     ),
+    // Slot 5 — 17:00  synovial fluid; joint lubrication depends on hydration
     HydrationReminder(
         id = 5,
         tag = "watersync_late_afternoon",
         hour = 17,
         title = "Late afternoon",
-        body = "Muscles are about 75% water. If you exercise after work, start hydrating now — not when you arrive."
+        body = WATER_FACTS[5]
     ),
+    // Slot 6 — 19:00  water as thermostat; core temp rises when dehydrated
     HydrationReminder(
         id = 6,
         tag = "watersync_evening",
         hour = 19,
         title = "Evening reminder",
-        body = "Your liver and kidneys work through the night processing today. Keep them well supplied."
+        body = WATER_FACTS[6]
     ),
+    // Slot 7 — 21:00  late drinking causes nocturia, fragments REM sleep
     HydrationReminder(
         id = 7,
         tag = "watersync_night",
         hour = 21,
         title = "Last call for today",
-        body = "Good time to stop for the night. Late drinking can interrupt sleep. Log your final glass and you are done."
+        body = WATER_FACTS[7]
     )
 )
