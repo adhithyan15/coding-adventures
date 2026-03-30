@@ -1,0 +1,97 @@
+# ================================================================
+# CodeQL Code Scanning
+# ================================================================
+#
+# Replaces GitHub's default CodeQL setup so we can control build
+# modes per language. The default auto-setup tried to auto-build
+# Swift (which requires a specific xcodebuild invocation or SPM
+# command) and failed because the repo has both an Xcode project
+# and multiple SPM packages.
+#
+# Key decision: use build-mode: none for Swift (and all other
+# interpreted / non-compiled languages). This tells CodeQL to
+# extract source-level facts without compiling, which is fully
+# supported since CodeQL 2.15 and gives good results for the kind
+# of checks we care about (injection, path traversal, etc.).
+#
+# Languages covered:
+#   javascript-typescript — TypeScript packages and the Vite demos
+#   python                — Python packages and build tools
+#   ruby                  — Ruby packages and the Ruby build tool
+#   go                    — Go build tool and programs
+#   swift                 — Swift packages and the Hello-World app
+#
+# Rust is NOT listed because CodeQL does not support it yet.
+
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly scan at 03:17 UTC on Mondays
+    - cron: "17 3 * * 1"
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── Interpreted languages — no build step needed ─────────────
+          - language: javascript-typescript
+            runner: ubuntu-latest
+            build-mode: none
+          - language: python
+            runner: ubuntu-latest
+            build-mode: none
+          - language: ruby
+            runner: ubuntu-latest
+            build-mode: none
+
+          # ── Go — autobuild works fine for a standard module layout ───
+          - language: go
+            runner: ubuntu-latest
+            build-mode: autobuild
+
+          # ── Swift — build-mode: none is no longer supported as of
+          #    CodeQL 2.25.1. autobuild detects Xcode projects and SPM
+          #    packages automatically; it handles multiple projects in
+          #    the same repo by building each one it finds. ────────────
+          - language: swift
+            runner: macos-latest
+            build-mode: autobuild
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Initialise the CodeQL database for the target language.
+      # build-mode is passed straight from the matrix.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      # The autobuild step is only meaningful when build-mode is
+      # 'autobuild'. For 'none' it is a no-op, but we keep the step
+      # unconditional so the workflow stays easy to read and extend.
+      - name: Autobuild
+        if: matrix.build-mode == 'autobuild'
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}

@@ -132,4 +132,5 @@ members = [
     "sql-execution-engine",
     "sql-csv-source",
     "event-loop",
+  "caesar-cipher",
 ]

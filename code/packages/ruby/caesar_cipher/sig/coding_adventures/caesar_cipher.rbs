@@ -1,0 +1,17 @@
+module CodingAdventures
+  module CaesarCipher
+    VERSION: String
+
+    ALPHABET_SIZE: Integer
+    UPPER_A: Integer
+    LOWER_A: Integer
+
+    ENGLISH_FREQUENCIES: Hash[String, Float]
+
+    def self.encrypt: (String text, Integer shift) -> String
+    def self.decrypt: (String text, Integer shift) -> String
+    def self.rot13: (String text) -> String
+    def self.brute_force: (String ciphertext) -> Array[[Integer, String]]
+    def self.frequency_analysis: (String ciphertext) -> [Integer, String]
+  end
+end
