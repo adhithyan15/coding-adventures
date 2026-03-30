@@ -9,8 +9,6 @@ description = {
 }
 dependencies = {
     "lua >= 5.4",
-    "coding-adventures-matrix >= 0.1.0",
-    "coding-adventures-activation-functions >= 0.1.0",
 }
 build = {
     type = "builtin",

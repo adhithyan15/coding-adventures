@@ -85,12 +85,18 @@ local function get_script_dir()
     -- Resolve to an absolute normalised path. Using 'cd dir && pwd' correctly
     -- resolves any .. components -- unlike string-based dirname traversal.
     -- Skip on Windows drive paths (C:\...) and fall back to the raw string.
-    if dir:sub(2, 2) ~= ":" then
-        local f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
+    if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
+        local is_win = package.config:sub(1, 1) == "\\"
+        local f
+        if is_win then
+            f = io.popen('cd /d "' .. dir:gsub("/", "\\") .. '" 2>nul && cd')
+        else
+            f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
+        end
         local resolved = f and f:read("*l")
         if f then f:close() end
         if resolved and resolved ~= "" then
-            return resolved
+            return (resolved:gsub("\\", "/"):gsub("%c+$", ""))
         end
     end
     return dir

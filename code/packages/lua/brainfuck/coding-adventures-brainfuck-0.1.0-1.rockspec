@@ -9,7 +9,6 @@ description = {
 }
 dependencies = {
     "lua >= 5.4",
-    "coding-adventures-virtual-machine >= 0.1.0",
 }
 build = {
     type = "builtin",

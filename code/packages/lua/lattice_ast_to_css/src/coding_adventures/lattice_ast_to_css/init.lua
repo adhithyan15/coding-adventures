@@ -98,7 +98,7 @@ local CSS_FUNCTIONS = {
     ["cubic-bezier"]=true, steps=true,
     path=true, polygon=true, circle=true, ellipse=true, inset=true,
     ["image-set"]=true, ["cross-fade"]=true,
-    ["fit-content"]=true, minmax=true, repeat=true,
+    ["fit-content"]=true, minmax=true, ["repeat"]=true,
     blur=true, brightness=true, contrast=true, ["drop-shadow"]=true,
     grayscale=true, ["hue-rotate"]=true, invert=true, opacity=true,
     saturate=true, sepia=true,

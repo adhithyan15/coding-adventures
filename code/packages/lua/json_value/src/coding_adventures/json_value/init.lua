@@ -372,7 +372,7 @@ function M._evaluate_pair(pair_node)
 
         if child.rule_name == "token" then
             -- The first token child with type STRING is the key.
-            local tok = child:token and child:token() or child.token
+            local tok = type(child.token) == "function" and child:token() or child.token
             if tok and tok.type == "STRING" and not key_node then
                 key_node = child
             end
@@ -392,7 +392,7 @@ function M._evaluate_pair(pair_node)
         error("json_value._evaluate_pair: no value found in pair node")
     end
 
-    local tok = key_node:token and key_node:token() or key_node.token
+    local tok = type(key_node.token) == "function" and key_node:token() or key_node.token
     local key = unescape_string(tok.value)
     local val = M.evaluate(value_node)
     return key, val
