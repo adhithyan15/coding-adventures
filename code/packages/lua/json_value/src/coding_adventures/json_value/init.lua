@@ -313,7 +313,7 @@ function M.evaluate(ast)
     -- type to produce the appropriate Lua value.
     -- ------------------------------------------------------------------
     elseif rule == "token" then
-        local tok = ast:token and ast:token() or ast.token
+        local tok = type(ast.token) == "function" and ast:token() or ast.token
         if not tok then
             -- Fallback: some AST implementations store token directly
             tok = ast._token or ast[1]

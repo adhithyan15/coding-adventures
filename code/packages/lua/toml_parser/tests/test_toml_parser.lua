@@ -334,7 +334,7 @@ end)
 
 describe("multi-section document", function()
     it("parses a realistic TOML config", function()
-        local src = [[
+        local src = [=[
 [database]
 server = "192.168.1.1"
 ports = [5432, 5433]
@@ -351,7 +351,7 @@ sku = 738594937
 [[products]]
 name = "Gadget"
 sku = 284758393
-]]
+]=]
         local ast = toml_parser.parse(src)
         assert.are.equal("document", ast.rule_name)
         -- Should find table_header nodes

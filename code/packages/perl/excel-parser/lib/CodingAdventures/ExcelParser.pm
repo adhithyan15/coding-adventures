@@ -513,7 +513,7 @@ sub _parse_primary {
         return _node('cell', token => $cell_tok);
     }
 
-    # ---- NAME — function call or named range --------------------------------
+    # ---- NAME — function call, column range (B:C), or named range -----------
 
     if ( $t->{type} eq 'NAME' ) {
         my $name_tok = _advance();
@@ -527,6 +527,29 @@ sub _parse_primary {
             _skip_spaces();
             _expect('RPAREN');
             return _node('call', name => $name_tok, args => $args);
+        }
+
+        # Column range: B:C or B:$C (NAME COLON NAME/CELL)
+        if ( _check('COLON') ) {
+            _advance();    # consume :
+            _skip_spaces();
+            my $end_ref;
+            if ( _check('NAME') ) {
+                $end_ref = _node('name', token => _advance());
+            } elsif ( _check('CELL') ) {
+                $end_ref = _node('cell', token => _advance());
+            } else {
+                my $tok = _peek();
+                die sprintf(
+                    "CodingAdventures::ExcelParser: Expected NAME or CELL after COLON "
+                  . "in range, got %s ('%s') at line %d col %d",
+                    $tok->{type}, $tok->{value}, $tok->{line}, $tok->{col}
+                );
+            }
+            return _node('range',
+                start_ref => _node('name', token => $name_tok),
+                end_ref   => $end_ref,
+            );
         }
 
         return _node('name', token => $name_tok);

@@ -90,8 +90,8 @@ end
 local function leaf_values(node)
     if type(node) ~= "table" then return {} end
     local out = {}
-    if node:is_leaf and node:is_leaf() then
-        local tok = node:token and node:token()
+    if type(node.is_leaf) == "function" and node:is_leaf() then
+        local tok = type(node.token) == "function" and node:token() or nil
         if tok then out[#out + 1] = tok.value end
     elseif node.children then
         for _, child in ipairs(node.children) do

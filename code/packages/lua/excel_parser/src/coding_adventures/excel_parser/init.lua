@@ -563,7 +563,7 @@ parse_primary = function()
         return node("cell", { token = cell_tok })
     end
 
-    -- ---- NAME — function call or named range --------------------------------
+    -- ---- NAME — function call, column range (B:C), or named range -----------
     if t.type == "NAME" then
         local name_tok = advance()
         skip_spaces()
@@ -575,6 +575,27 @@ parse_primary = function()
             skip_spaces()
             expect("RPAREN")
             return node("call", { name = name_tok, args = args })
+        end
+
+        -- Column range: B:C or B:$C or $B:C (NAME COLON NAME/CELL)
+        if check("COLON") then
+            advance()  -- consume :
+            skip_spaces()
+            local end_ref
+            if check("NAME") then
+                end_ref = node("name", { token = advance() })
+            elseif check("CELL") then
+                end_ref = node("cell", { token = advance() })
+            else
+                error(string.format(
+                    "excel_parser: expected NAME or CELL after COLON in range, got %s at line %d col %d",
+                    peek().type, peek().line, peek().col
+                ))
+            end
+            return node("range", {
+                start_ref = node("name", { token = name_tok }),
+                end_ref   = end_ref,
+            })
         end
 
         return node("name", { token = name_tok })

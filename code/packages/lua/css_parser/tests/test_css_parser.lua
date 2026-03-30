@@ -58,8 +58,9 @@ local css_parser = require("coding_adventures.css_parser")
 local function collect_values(node)
     local out = {}
     local function walk(n)
-        if n.is_leaf and n.token then
-            out[#out + 1] = n.token.value
+        if type(n.is_leaf) == "function" and n:is_leaf() then
+            local tok = n:token()
+            if tok then out[#out + 1] = tok.value end
         elseif n.children then
             for _, child in ipairs(n.children) do
                 walk(child)
@@ -76,8 +77,9 @@ end
 local function collect_types(node)
     local out = {}
     local function walk(n)
-        if n.is_leaf and n.token then
-            out[#out + 1] = n.token.type
+        if type(n.is_leaf) == "function" and n:is_leaf() then
+            local tok = n:token()
+            if tok then out[#out + 1] = tok.type end
         elseif n.children then
             for _, child in ipairs(n.children) do
                 walk(child)

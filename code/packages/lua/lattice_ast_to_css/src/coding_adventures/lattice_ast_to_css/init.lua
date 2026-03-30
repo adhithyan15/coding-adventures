@@ -85,7 +85,7 @@ local CSS_FUNCTIONS = {
     round=true, mod=true, rem=true, sin=true, cos=true, tan=true,
     asin=true, acos=true, atan=true, atan2=true, pow=true, sqrt=true,
     hypot=true, log=true, exp=true, var=true, env=true,
-    url=true, format=true, local=true,
+    url=true, format=true, ["local"]=true,
     ["linear-gradient"]=true, ["radial-gradient"]=true,
     ["conic-gradient"]=true, ["repeating-linear-gradient"]=true,
     ["repeating-radial-gradient"]=true, ["repeating-conic-gradient"]=true,
