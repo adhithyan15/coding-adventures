@@ -1,1 +1,2 @@
+REM prereqs: ../grammar-tools ../json-lexer
 echo Perl testing is not supported on Windows - skipping

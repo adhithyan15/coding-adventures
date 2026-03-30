@@ -1,2 +1,2 @@
-cd ../virtual_machine && luarocks make --local coding-adventures-virtual-machine-0.1.0-1.rockspec && cd -
+cd ../virtual_machine && luarocks make --local coding-adventures-virtual-machine-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
