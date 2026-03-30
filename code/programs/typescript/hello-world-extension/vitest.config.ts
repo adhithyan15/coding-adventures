@@ -10,6 +10,7 @@ export default defineConfig({
         "vitest.config.ts",
         "src/background/service-worker.ts",
         "dist/**",
+        "scripts/**",
       ],
       thresholds: {
         lines: 80,
