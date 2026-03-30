@@ -101,6 +101,30 @@ export function expandTemplate(
 }
 
 /**
+ * Escape a string for safe inclusion in JSON templates.
+ *
+ * User-provided values (name, description) are inserted into JSON
+ * templates via `{{variable}}` placeholders. If these values contain
+ * characters like `"`, `\`, or newlines, the resulting JSON would be
+ * malformed — or worse, a crafted value could inject additional JSON
+ * fields (e.g., adding extra permissions to the manifest).
+ *
+ * This function escapes the dangerous characters so the value stays
+ * safely inside its JSON string quotes.
+ *
+ * @param s - The raw string to escape
+ * @returns The JSON-safe string
+ */
+export function jsonSafeString(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/\t/g, "\\t");
+}
+
+/**
  * Generate all files for a new extension project.
  *
  * This function does NOT write to disk — it returns an array of
@@ -126,10 +150,21 @@ export function expandTemplate(
  * ```
  */
 export function generateFiles(options: ScaffoldOptions): GeneratedFile[] {
+  // JSON-escape user-provided values to prevent content injection.
+  // If a user provides a description like:
+  //   "cool", "permissions": ["<all_urls>"]
+  // the unescaped value would break the JSON structure and inject
+  // additional manifest fields. Escaping quotes and backslashes
+  // prevents this.
+  const safeName = jsonSafeString(options.name);
+  const safeDescription = jsonSafeString(options.description);
+
   const variables: Record<string, string> = {
-    name: options.name,
-    description: options.description,
-    geckoId: options.geckoId ?? `${options.name}@coding-adventures`,
+    name: safeName,
+    description: safeDescription,
+    geckoId: options.geckoId
+      ? jsonSafeString(options.geckoId)
+      : `${safeName}@coding-adventures`,
     date: new Date().toISOString().split("T")[0],
   };
 
@@ -168,8 +203,30 @@ export function generateFiles(options: ScaffoldOptions): GeneratedFile[] {
  * @throws {Error} If the target directory already exists
  */
 export function scaffold(options: ScaffoldOptions): string {
+  // Validate extension name to prevent path traversal attacks.
+  // Only allow alphanumeric characters, hyphens, and underscores.
+  // Names like "../../../etc/malicious" would write files outside
+  // the intended output directory.
+  const NAME_PATTERN = /^[a-zA-Z0-9_-]+$/;
+  if (!NAME_PATTERN.test(options.name)) {
+    throw new Error(
+      `Invalid extension name "${options.name}". ` +
+        "Name must contain only letters, numbers, hyphens, and underscores.",
+    );
+  }
+
   const outputDir = options.outputDir ?? process.cwd();
   const extensionDir = path.join(outputDir, options.name);
+
+  // Double-check: resolved path must be inside the output directory.
+  // Belt-and-suspenders defense against path traversal.
+  const resolved = path.resolve(extensionDir);
+  const resolvedOutput = path.resolve(outputDir);
+  if (!resolved.startsWith(resolvedOutput + path.sep) && resolved !== resolvedOutput) {
+    throw new Error(
+      "Extension name would create files outside the output directory.",
+    );
+  }
 
   // Safety check: don't overwrite existing projects
   if (fs.existsSync(extensionDir)) {

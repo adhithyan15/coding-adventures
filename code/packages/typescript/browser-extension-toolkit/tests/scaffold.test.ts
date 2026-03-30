@@ -4,6 +4,7 @@ import * as path from "node:path";
 import * as os from "node:os";
 import {
   expandTemplate,
+  jsonSafeString,
   generateFiles,
   scaffold,
 } from "../src/scaffold/scaffold";
@@ -52,6 +53,39 @@ describe("expandTemplate", () => {
 
   it("handles empty variables", () => {
     expect(expandTemplate("no vars here", {})).toBe("no vars here");
+  });
+});
+
+describe("jsonSafeString", () => {
+  it("escapes double quotes", () => {
+    expect(jsonSafeString('hello "world"')).toBe('hello \\"world\\"');
+  });
+
+  it("escapes backslashes", () => {
+    expect(jsonSafeString("path\\to\\file")).toBe("path\\\\to\\\\file");
+  });
+
+  it("escapes newlines", () => {
+    expect(jsonSafeString("line1\nline2")).toBe("line1\\nline2");
+  });
+
+  it("escapes carriage returns and tabs", () => {
+    expect(jsonSafeString("a\rb\tc")).toBe("a\\rb\\tc");
+  });
+
+  it("handles strings with no special characters", () => {
+    expect(jsonSafeString("hello world")).toBe("hello world");
+  });
+
+  it("prevents JSON injection via description", () => {
+    // An attacker might try to inject additional JSON fields
+    const malicious = 'cool", "permissions": ["<all_urls>"]';
+    const escaped = jsonSafeString(malicious);
+    // The escaped string should be safely containable in JSON quotes
+    const json = `{"description": "${escaped}"}`;
+    const parsed = JSON.parse(json);
+    expect(parsed.description).toBe(malicious);
+    expect(parsed.permissions).toBeUndefined();
   });
 });
 
@@ -258,6 +292,54 @@ describe("scaffold", () => {
     );
     expect(pkg.name).toBe("content-test");
     expect(pkg.description).toBe("Testing content");
+  });
+
+  it("rejects names with path traversal characters", () => {
+    expect(() =>
+      scaffold({
+        name: "../../../etc/malicious",
+        description: "Test",
+        outputDir: tmpDir,
+      }),
+    ).toThrow("Invalid extension name");
+  });
+
+  it("rejects names with dots", () => {
+    expect(() =>
+      scaffold({
+        name: "..evil",
+        description: "Test",
+        outputDir: tmpDir,
+      }),
+    ).toThrow("Invalid extension name");
+  });
+
+  it("rejects names with spaces", () => {
+    expect(() =>
+      scaffold({
+        name: "my extension",
+        description: "Test",
+        outputDir: tmpDir,
+      }),
+    ).toThrow("Invalid extension name");
+  });
+
+  it("accepts valid kebab-case names", () => {
+    const result = scaffold({
+      name: "valid-extension-name",
+      description: "Test",
+      outputDir: tmpDir,
+    });
+    expect(fs.existsSync(result)).toBe(true);
+  });
+
+  it("accepts names with underscores", () => {
+    const result = scaffold({
+      name: "valid_name_123",
+      description: "Test",
+      outputDir: tmpDir,
+    });
+    expect(fs.existsSync(result)).toBe(true);
   });
 });
 
