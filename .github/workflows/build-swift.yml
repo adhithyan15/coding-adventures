@@ -84,6 +84,19 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
 
+      - name: Build macOS app (Mac Catalyst)
+        # Mac Catalyst lets the iOS app run natively on macOS with no code
+        # rewrite. SUPPORTS_MACCATALYST = YES is set in project.yml.
+        # We compile here to catch any iOS-only API usage that breaks on
+        # the macOS SDK (e.g. UIKit symbols unavailable under Catalyst).
+        working-directory: code/programs/swift/06-notifications
+        run: |
+          xcodebuild build \
+            -scheme WaterNotify \
+            -destination 'generic/platform=macOS,variant=Mac Catalyst' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
+
       - name: Run unit tests
         # Tests use MockNotificationCenter so no real UNUserNotificationCenter
         # is needed. We run under Mac Catalyst instead of an iOS Simulator because

@@ -133,9 +133,15 @@ struct ContentView: View {
     // ── Notification denied banner ────────────────────────────────────────
     //
     // Shown only when the user explicitly denied notification permission.
-    // Tapping it opens the iOS Settings app directly to this app's page.
+    // Tapping/clicking it opens Settings (iOS) or System Settings (macOS).
     // It is not an alert — it lives inline and is easy to dismiss by scrolling
     // past it. We do not interrupt the user with an alert sheet.
+    //
+    // MAC CATALYST NOTE:
+    //   UIApplication.openSettingsURLString works on Mac Catalyst and opens
+    //   the app's page in System Settings → Notifications. We adjust the
+    //   copy to match macOS affordances ("Click" vs "Tap", "System Settings"
+    //   vs "Settings") using a compile-time #if targetEnvironment check.
 
     @ViewBuilder
     private var notificationDeniedBanner: some View {
@@ -149,9 +155,17 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Reminders disabled")
                         .font(.caption.weight(.semibold))
+                    // Platform-aware copy: iOS users tap; Mac users click.
+                    // macOS 13+ calls it "System Settings", not "Settings".
+                    #if targetEnvironment(macCatalyst)
+                    Text("Click to open System Settings and enable notifications")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    #else
                     Text("Tap to open Settings and enable notifications")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
+                    #endif
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
