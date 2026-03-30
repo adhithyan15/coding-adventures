@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  strings.xml — all human-visible text in one place.
+
+  Centralising strings here (rather than hard-coding them in Kotlin) enables:
+    1. Localisation: Android can swap this file for strings_fr.xml, strings_ja.xml
+       etc. without changing any Kotlin code.
+    2. Consistency: the app name appears in one place, not scattered across files.
+    3. IDE tooling: Android Studio flags missing translations at compile time.
+
+  WEAROS NOTE: Notification body strings are shorter than iOS/Android equivalents
+  because WearOS notification tiles have limited vertical space (~2 lines of body).
+-->
+<resources>
+    <!-- The human-readable name shown in the app launcher and About screen. -->
+    <string name="app_name">WaterWear</string>
+
+    <!-- Notification channel metadata (shown in Settings > Apps > WaterWear > Notifications) -->
+    <string name="notification_channel_id">waterwear_reminders</string>
+    <string name="notification_channel_name">Hydration Reminders</string>
+    <string name="notification_channel_description">Daily reminders to drink water throughout the day</string>
+
+    <!--
+      Notification titles and bodies — 8 daily reminders.
+
+      The schedule matches the iOS and Android stages for consistency.
+      Bodies are shortened vs iOS/Android to fit WearOS tile constraints.
+      A WearOS notification tile shows approximately 40 characters of body text
+      before truncating to "..." — so we front-load the key fact.
+    -->
+
+    <!-- 07:00 — Wake-up hydration -->
+    <string name="notif_morning_title">Good morning!</string>
+    <string name="notif_morning_body">Two glasses now restores your baseline. You lose ~500ml overnight.</string>
+
+    <!-- 09:00 — Mid-morning focus -->
+    <string name="notif_mid_morning_title">Time to hydrate</string>
+    <string name="notif_mid_morning_body">Brain is 75% water. Dehydration reduces focus.</string>
+
+    <!-- 11:00 — Pre-lunch -->
+    <string name="notif_late_morning_title">Nearly noon</string>
+    <string name="notif_late_morning_body">Keep kidneys flushing waste efficiently.</string>
+
+    <!-- 13:00 — Lunchtime -->
+    <string name="notif_lunch_title">Lunchtime</string>
+    <string name="notif_lunch_body">A glass before meals aids digestion.</string>
+
+    <!-- 15:00 — Afternoon energy -->
+    <string name="notif_afternoon_title">Afternoon slump?</string>
+    <string name="notif_afternoon_body">Dehydration causes the 3pm energy dip.</string>
+
+    <!-- 17:00 — Pre-workout -->
+    <string name="notif_late_afternoon_title">Late afternoon</string>
+    <string name="notif_late_afternoon_body">Hydrate before your workout, not after.</string>
+
+    <!-- 19:00 — Evening -->
+    <string name="notif_evening_title">Evening reminder</string>
+    <string name="notif_evening_body">Liver works overnight — keep it supplied.</string>
+
+    <!-- 21:00 — Last call -->
+    <string name="notif_night_title">Last call</string>
+    <string name="notif_night_body">Stop here. Late drinking interrupts sleep.</string>
+</resources>
