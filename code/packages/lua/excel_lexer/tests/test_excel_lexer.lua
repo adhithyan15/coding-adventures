@@ -410,7 +410,7 @@ describe("AT and NAME tokens", function()
     it("tokenizes a bare NAME identifier", function()
         local tokens = excel_lexer.tokenize("MyNamedRange")
         assert.are.equal("NAME", tokens[1].type)
-        assert.are.equal("mynamerange", tokens[1].value:lower())
+        assert.are.equal("mynamedrange", tokens[1].value:lower())
     end)
 end)
 

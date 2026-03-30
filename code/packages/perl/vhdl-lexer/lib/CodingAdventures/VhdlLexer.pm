@@ -266,6 +266,10 @@ sub tokenize {
 
     _build_rules();
 
+    # Normalize to lowercase for case-insensitive matching.
+    # VHDL is case-insensitive (ENTITY = Entity = entity).
+    $source = lc($source);
+
     my @tokens;
     my $line = 1;
     my $col  = 1;

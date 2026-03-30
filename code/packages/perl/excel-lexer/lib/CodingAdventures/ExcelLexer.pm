@@ -197,9 +197,10 @@ sub _build_rules {
     }
 
     # Build keyword lookup map. Excel source is lowercased before tokenizing,
-    # so keys are lowercased; grammar keywords are uppercase (TRUE, FALSE).
+    # so keys are lowercased. Grammar keywords are stored in lowercase (e.g.
+    # "true", "false") but must emit uppercase token types (TRUE, FALSE).
     my %kw_map;
-    $kw_map{lc($_)} = $_ for @{ $grammar->keywords };
+    $kw_map{lc($_)} = uc($_) for @{ $grammar->keywords };
     $_keyword_map = \%kw_map;
 
     $_skip_rules = \@skip_rules;

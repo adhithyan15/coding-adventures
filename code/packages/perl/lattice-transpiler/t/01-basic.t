@@ -65,7 +65,7 @@ subtest 'mixin expansion' => sub {
     );
     is( $err, undef,              'no error' );
     like  ( $css, qr/display: flex/, 'mixin body expanded' );
-    unlike( $css, qr/@mixin/,        '@mixin not in output' );
+    unlike( $css, qr/\@mixin/,        '@mixin not in output' );
 };
 
 subtest '@if truthy branch' => sub {

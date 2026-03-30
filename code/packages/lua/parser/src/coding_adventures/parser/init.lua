@@ -173,6 +173,13 @@ function parser.token_type_name(token)
     if token.type_name and token.type_name ~= "" then
         return token.type_name
     end
+    -- Grammar-driven lexers return tokens with a string 'type' field
+    -- (not a numeric enum). Handle that case here so GrammarParser works
+    -- with both the hand-written parser's numeric token types and the
+    -- grammar-driven lexers' string token types.
+    if type(token.type) == "string" and token.type ~= "" then
+        return token.type
+    end
     return type_name_map[token.type] or "UNKNOWN"
 end
 
