@@ -987,3 +987,13 @@ Use `cpanm --installdeps --quiet .` instead.
 Also: Perl packages need a `BUILD_windows` file that is a no-op (`echo Perl testing is not supported on Windows - skipping`)
 because the CI workflow skips Perl setup on Windows (`if: runner.os != 'Windows'`). Without BUILD_windows,
 the build-tool falls back to BUILD and runs cpanm on Strawberry Perl, which fails.
+
+---
+
+### 2026-03-29: Swift IS available on Windows — don't skip it
+
+When Swift's `BUILD` file (`swift test`) failed on Windows CI with "'swift' is not recognized", the initial reaction was to create a `BUILD_windows` that skips tests. This was wrong — Swift has been available on Windows since Swift 5.3 (2020). The real issue was that the CI workflow had no Swift setup step.
+
+**Fix:** Add `swift-actions/setup-swift@v3` to the CI workflow with a `needs_swift` conditional (matching the pattern used for Python, Ruby, etc.). The build tool already emits `needs_swift=true|false` — the CI workflow just wasn't reading it.
+
+**Rule:** When a language tool is missing on a CI runner, investigate whether it can be installed via an action before skipping. Don't assume a language isn't supported on a platform — check first. Swift runs on macOS, Linux, and Windows.
