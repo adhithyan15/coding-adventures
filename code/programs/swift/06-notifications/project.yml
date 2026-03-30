@@ -24,6 +24,13 @@ targets:
         CURRENT_PROJECT_VERSION: 1
         SWIFT_VERSION: 5.9
         CODE_SIGN_STYLE: Automatic
+        # Mac Catalyst support lets CI run tests with
+        # -destination 'platform=macOS,variant=Mac Catalyst'.
+        # The macos-15 runner ships Xcode 16.2 (iOS 18.2 SDK) but its
+        # bundled simulator runtime is iOS 26.x — an incompatible pair.
+        # Mac Catalyst runs tests natively on the host macOS with no
+        # simulator runtime required, sidestepping the SDK mismatch.
+        SUPPORTS_MACCATALYST: YES
     info:
       path: Sources/WaterNotify/Info.plist
       properties:
@@ -44,3 +51,6 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.codingadventures.waternotifytests
         SWIFT_VERSION: 5.9
         GENERATE_INFOPLIST_FILE: YES
+        # Must match the app target — WaterNotifyTests is hosted inside
+        # WaterNotify.app and must target the same platform variant.
+        SUPPORTS_MACCATALYST: YES
