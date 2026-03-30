@@ -4,32 +4,24 @@
 #
 # Replaces GitHub's default CodeQL setup so we can control build
 # modes per language. The default auto-setup tried to auto-build
-# Swift and failed because the repo contains both an Xcode project
-# (01-hello-world, which needs signing) and multiple standalone SPM
-# packages (logic_gates, transistors) with no common root workspace.
+# Swift (which requires a specific xcodebuild invocation or SPM
+# command) and failed because the repo has both an Xcode project
+# and multiple SPM packages.
 #
-# Build mode decisions per language:
+# Key decision: use build-mode: none for Swift (and all other
+# interpreted / non-compiled languages). This tells CodeQL to
+# extract source-level facts without compiling, which is fully
+# supported since CodeQL 2.15 and gives good results for the kind
+# of checks we care about (injection, path traversal, etc.).
 #
-#   javascript-typescript — build-mode: none
-#     TypeScript/JS is interpreted; no compilation needed for CodeQL.
+# Languages covered:
+#   javascript-typescript — TypeScript packages and the Vite demos
+#   python                — Python packages and build tools
+#   ruby                  — Ruby packages and the Ruby build tool
+#   go                    — Go build tool and programs
+#   swift                 — Swift packages and the Hello-World app
 #
-#   python — build-mode: none
-#     Python is interpreted; no build step needed.
-#
-#   ruby — build-mode: none
-#     Ruby is interpreted; no build step needed.
-#
-#   go — build-mode: autobuild
-#     The Go build tool lives in a standard module layout; autobuild
-#     finds and compiles it without any extra config.
-#
-#   swift — build-mode: manual
-#     CodeQL 2.25.1 does NOT support build-mode: none for Swift
-#     (only autobuild and manual are accepted). We use manual so we
-#     can selectively run `swift build` on just the SPM packages,
-#     skipping the Xcode project which requires code-signing.
-#
-# Rust is NOT listed — CodeQL has no Rust extractor yet.
+# Rust is NOT listed because CodeQL does not support it yet.
 
 name: CodeQL
 
@@ -48,35 +40,53 @@ permissions:
   security-events: write
 
 jobs:
-  # ── Non-Swift languages (ubuntu, build-mode matrix) ─────────────────
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
+          # ── Interpreted languages — no build step needed ─────────────
           - language: javascript-typescript
+            runner: ubuntu-latest
             build-mode: none
           - language: python
+            runner: ubuntu-latest
             build-mode: none
           - language: ruby
+            runner: ubuntu-latest
             build-mode: none
+
+          # ── Go — autobuild works fine for a standard module layout ───
           - language: go
+            runner: ubuntu-latest
+            build-mode: autobuild
+
+          # ── Swift — build-mode: none is no longer supported as of
+          #    CodeQL 2.25.1. autobuild detects Xcode projects and SPM
+          #    packages automatically; it handles multiple projects in
+          #    the same repo by building each one it finds. ────────────
+          - language: swift
+            runner: macos-latest
             build-mode: autobuild
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Initialise the CodeQL database for the target language.
+      # build-mode is passed straight from the matrix.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
-      # Only runs when build-mode is autobuild (i.e. Go).
+      # The autobuild step is only meaningful when build-mode is
+      # 'autobuild'. For 'none' it is a no-op, but we keep the step
+      # unconditional so the workflow stays easy to read and extend.
       - name: Autobuild
         if: matrix.build-mode == 'autobuild'
         uses: github/codeql-action/autobuild@v3
@@ -85,37 +95,3 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: /language:${{ matrix.language }}
-
-  # ── Swift (macos-latest, manual build of SPM packages only) ─────────
-  #
-  # Kept as a separate job because:
-  #   1. Swift requires a macOS runner (no Linux Swift toolchain on GH).
-  #   2. build-mode: manual needs explicit build steps that differ from
-  #      all other languages — mixing it into the matrix would require
-  #      conditionals on every step, making the workflow harder to read.
-  analyze-swift:
-    name: Analyze (swift)
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: swift
-          build-mode: manual
-
-      # Build each SPM package so CodeQL can trace the compilation.
-      # The Xcode project (01-hello-world) is intentionally skipped
-      # because it requires code-signing which is unavailable in CI.
-      - name: Build Swift SPM packages
-        run: |
-          swift build --package-path code/packages/swift/transistors
-          swift build --package-path code/packages/swift/logic_gates
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: /language:swift
