@@ -14,5 +14,8 @@
  *    `@coding-adventures/browser-extension-toolkit`
  */
 
-export { getBrowserAPI } from "@coding-adventures/browser-extension-toolkit";
-export type { BrowserAPI } from "@coding-adventures/browser-extension-toolkit";
+// Import directly from the browser-api module (not the toolkit's barrel
+// index.ts) to avoid pulling in Node.js-only modules like scaffold.ts
+// which use `node:fs` and `node:path` — those can't be bundled for the browser.
+export { getBrowserAPI } from "@coding-adventures/browser-extension-toolkit/src/browser-api.js";
+export type { BrowserAPI } from "@coding-adventures/browser-extension-toolkit/src/browser-api.js";
