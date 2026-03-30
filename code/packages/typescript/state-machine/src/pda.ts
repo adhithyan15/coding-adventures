@@ -222,6 +222,16 @@ export class PushdownAutomaton {
     return this._states;
   }
 
+  /** The finite set of valid input symbols. */
+  get inputAlphabet(): ReadonlySet<string> {
+    return this._inputAlphabet;
+  }
+
+  /** The finite set of valid stack symbols. */
+  get stackAlphabet(): ReadonlySet<string> {
+    return this._stackAlphabet;
+  }
+
   /** The current state. */
   get currentState(): string {
     return this._current;

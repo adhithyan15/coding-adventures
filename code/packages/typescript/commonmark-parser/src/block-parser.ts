@@ -53,9 +53,9 @@ import type {
   CodeBlockNode, BlockquoteNode, ListNode, ListItemNode,
   ThematicBreakNode, RawBlockNode,
 } from "@coding-adventures/document-ast";
-import type { LinkRefMap, LinkReference } from "./types.js";
+import type { LinkRefMap } from "./types.js";
 import { normalizeLinkLabel, normalizeUrl, isAsciiPunctuation } from "./scanner.js";
-import { decodeEntity, decodeEntities } from "./entities.js";
+import { decodeEntities } from "./entities.js";
 
 /** Apply backslash escapes — only for ASCII punctuation characters. */
 function applyBackslashEscapes(s: string): string {
@@ -1438,12 +1438,12 @@ function finalizeBlock(
 }
 
 /** Process a single line of content inside a container (for blockquotes/lists). */
-function processLineInContainer(
+export function processLineInContainer(
   lineContent: string,
   container: MutableBlock,
   currentLeaf: MutableBlock | null,
   linkRefs: LinkRefMap,
-  lastLineWasBlank: boolean,
+  _lastLineWasBlank: boolean,
 ): { currentLeaf: MutableBlock | null } {
   if (isBlank(lineContent)) {
     if (currentLeaf?.kind === "paragraph") {
