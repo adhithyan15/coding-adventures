@@ -378,12 +378,6 @@ sub parse_token_grammar {
             next;
         }
 
-        # case_sensitive: directive — silently accepted, ignored
-        if ($stripped =~ /^case_sensitive\s*:/) {
-            $current_section = '';
-            next;
-        }
-
         # escapes: directive
         if (substr($stripped, 0, 8) eq 'escapes:') {
             my $escape_value = substr($stripped, 8);

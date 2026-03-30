@@ -88,15 +88,10 @@ LITERAL_STRING = /'[^'\n]*'/
 # This works because token patterns are tried before skip patterns consume
 # the space at each position.
 
-OFFSET_DATETIME_FRAC_TZ = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+[+-]\d{2}:\d{2}/ -> OFFSET_DATETIME
-OFFSET_DATETIME_FRAC_Z  = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+Z/ -> OFFSET_DATETIME
-OFFSET_DATETIME_TZ      = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/ -> OFFSET_DATETIME
-OFFSET_DATETIME_Z       = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}Z/ -> OFFSET_DATETIME
-LOCAL_DATETIME_FRAC     = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+/ -> LOCAL_DATETIME
-LOCAL_DATETIME          = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}/
+OFFSET_DATETIME = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/
+LOCAL_DATETIME  = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?/
 LOCAL_DATE      = /\d{4}-\d{2}-\d{2}/
-LOCAL_TIME_FRAC = /\d{2}:\d{2}:\d{2}\.\d+/ -> LOCAL_TIME
-LOCAL_TIME      = /\d{2}:\d{2}:\d{2}/
+LOCAL_TIME      = /\d{2}:\d{2}:\d{2}(\.\d+)?/
 
 # ============================================================================
 # Float Literals (MUST come before INTEGER)
@@ -111,10 +106,9 @@ LOCAL_TIME      = /\d{2}:\d{2}:\d{2}/
 # All float variants emit the same FLOAT token type via -> alias.
 # Underscore separators are allowed between digits: 1_000.0
 
-FLOAT_INF     = /[+-]?inf/ -> FLOAT
-FLOAT_NAN     = /[+-]?nan/ -> FLOAT
-FLOAT_EXP     = /[+-]?[0-9][0-9_]*\.?[0-9_]*[eE][+-]?[0-9][0-9_]*/ -> FLOAT
-FLOAT_DEC     = /[+-]?[0-9][0-9_]*\.[0-9][0-9_]*/ -> FLOAT
+FLOAT_SPECIAL = /[+-]?(inf|nan)/ -> FLOAT
+FLOAT_EXP     = /[+-]?([0-9](_?[0-9])*)(\.[0-9](_?[0-9])*)?[eE][+-]?[0-9](_?[0-9])*/ -> FLOAT
+FLOAT_DEC     = /[+-]?([0-9](_?[0-9])*)\.([0-9](_?[0-9])*)/ -> FLOAT
 
 # ============================================================================
 # Integer Literals (hex/oct/bin BEFORE decimal)
@@ -126,10 +120,10 @@ FLOAT_DEC     = /[+-]?[0-9][0-9_]*\.[0-9][0-9_]*/ -> FLOAT
 # All integer variants emit the same INTEGER token type.
 # Underscore separators are allowed between digits: 1_000
 
-HEX_INTEGER = /0x[0-9a-fA-F][0-9a-fA-F_]*/ -> INTEGER
-OCT_INTEGER = /0o[0-7][0-7_]*/ -> INTEGER
-BIN_INTEGER = /0b[01][01_]*/ -> INTEGER
-INTEGER     = /[+-]?[0-9][0-9_]*/
+HEX_INTEGER = /0x[0-9a-fA-F](_?[0-9a-fA-F])*/ -> INTEGER
+OCT_INTEGER = /0o[0-7](_?[0-7])*/ -> INTEGER
+BIN_INTEGER = /0b[01](_?[01])*/ -> INTEGER
+INTEGER     = /[+-]?[0-9](_?[0-9])*/
 
 # ============================================================================
 # Boolean Literals
@@ -172,4 +166,3 @@ LBRACKET = "["
 RBRACKET = "]"
 LBRACE   = "{"
 RBRACE   = "}"
-NEWLINE  = /\r?\n/

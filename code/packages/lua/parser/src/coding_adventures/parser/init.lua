@@ -173,13 +173,6 @@ function parser.token_type_name(token)
     if token.type_name and token.type_name ~= "" then
         return token.type_name
     end
-    -- Grammar-driven lexers return tokens with a string 'type' field
-    -- (not a numeric enum). Handle that case here so GrammarParser works
-    -- with both the hand-written parser's numeric token types and the
-    -- grammar-driven lexers' string token types.
-    if type(token.type) == "string" and token.type ~= "" then
-        return token.type
-    end
     return type_name_map[token.type] or "UNKNOWN"
 end
 
@@ -604,14 +597,8 @@ function GrammarParseError.new(message, token)
 end
 
 function GrammarParseError:error_string()
-    if self.tok and self.tok.line then
-        -- Tokens may use either 'column' or 'col' depending on the lexer.
-        local col = self.tok.column or self.tok.col or 0
-        return string.format("Parse error at %d:%d: %s",
-            self.tok.line, col, self.message)
-    else
-        return string.format("Parse error: %s", self.message)
-    end
+    return string.format("Parse error at %d:%d: %s",
+        self.tok.line, self.tok.column, self.message)
 end
 
 GrammarParseError.__tostring = GrammarParseError.error_string
@@ -752,37 +739,33 @@ end
 --- Recursively check if a grammar element references NEWLINE.
 -- Grammar elements come in several kinds (from grammar-tools):
 --
---   type="rule_reference"  -- references a rule or token by name
---   type="literal"         -- matches a literal string value
---   type="sequence"        -- all elements must match in order
---   type="alternation"     -- one of several choices must match
---   type="repetition"      -- zero or more matches of the element
---   type="optional"        -- zero or one match of the element
---   type="group"           -- parenthesized grouping
---
--- Note: grammar-tools (grammar_tools package) uses the 'type' field for
--- grammar element discrimination, NOT 'kind'. The 'kind' field is used by
--- AST nodes (ASTNode). Do not confuse the two.
+--   kind="rule_reference"  -- references a rule or token by name
+--   kind="literal"         -- matches a literal string value
+--   kind="sequence"        -- all elements must match in order
+--   kind="alternation"     -- one of several choices must match
+--   kind="repetition"      -- zero or more matches of the element
+--   kind="optional"        -- zero or one match of the element
+--   kind="group"           -- parenthesized grouping
 function GrammarParser:_element_references_newline(element)
-    if element.type == "rule_reference" then
+    if element.kind == "rule_reference" then
         return element.is_token and element.name == "NEWLINE"
-    elseif element.type == "sequence" then
+    elseif element.kind == "sequence" then
         for _, sub in ipairs(element.elements) do
             if self:_element_references_newline(sub) then
                 return true
             end
         end
-    elseif element.type == "alternation" then
+    elseif element.kind == "alternation" then
         for _, choice in ipairs(element.choices) do
             if self:_element_references_newline(choice) then
                 return true
             end
         end
-    elseif element.type == "repetition" then
+    elseif element.kind == "repetition" then
         return self:_element_references_newline(element.element)
-    elseif element.type == "optional" then
+    elseif element.kind == "optional" then
         return self:_element_references_newline(element.element)
-    elseif element.type == "group" then
+    elseif element.kind == "group" then
         return self:_element_references_newline(element.element)
     end
     return false
@@ -918,7 +901,7 @@ end
 function GrammarParser:_match_element(element)
     local save_pos = self.pos
 
-    if element.type == "sequence" then
+    if element.kind == "sequence" then
         local children = {}
         for _, sub in ipairs(element.elements) do
             local res, ok = self:_match_element(sub)
@@ -932,7 +915,7 @@ function GrammarParser:_match_element(element)
         end
         return children, true
 
-    elseif element.type == "alternation" then
+    elseif element.kind == "alternation" then
         for _, choice in ipairs(element.choices) do
             self.pos = save_pos
             local res, ok = self:_match_element(choice)
@@ -943,7 +926,7 @@ function GrammarParser:_match_element(element)
         self.pos = save_pos
         return nil, false
 
-    elseif element.type == "repetition" then
+    elseif element.kind == "repetition" then
         -- Zero or more matches. Always succeeds (with zero matches minimum).
         local children = {}
         while true do
@@ -959,7 +942,7 @@ function GrammarParser:_match_element(element)
         end
         return children, true
 
-    elseif element.type == "optional" then
+    elseif element.kind == "optional" then
         -- Zero or one match. Always succeeds.
         local res, ok = self:_match_element(element.element)
         if not ok then
@@ -967,10 +950,10 @@ function GrammarParser:_match_element(element)
         end
         return res, true
 
-    elseif element.type == "group" then
+    elseif element.kind == "group" then
         return self:_match_element(element.element)
 
-    elseif element.type == "rule_reference" then
+    elseif element.kind == "rule_reference" then
         if element.is_token then
             return self:_match_token_reference(element)
         end
@@ -981,7 +964,7 @@ function GrammarParser:_match_element(element)
         self.pos = save_pos
         return nil, false
 
-    elseif element.type == "literal" then
+    elseif element.kind == "literal" then
         local token = self:current()
         -- Skip insignificant newlines before literal matching
         if not self.newlines_significant then

@@ -89,13 +89,7 @@ STRING_SQ            = /[bB]?'([^'\\]|\\.)*'/                                   
 # one token, not INT(0) NAME(xFF).
 
 # Floats: 3.14, .5, 5., 1e10, 1.5e-3
-# Patterns ordered so that the most specific form matches first:
-#   1. Integer with mandatory exponent (1e10, 1E-3)   — no decimal point
-#   2. Leading-dot form (.5, .5e10)                   — starts with dot
-#   3. Standard form (3.14, 3., 3.14e-5)              — digit dot digit*
-FLOAT_EXP   = /[0-9]+[eE][+-]?[0-9]+/  -> FLOAT
-FLOAT_DOT   = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> FLOAT
-FLOAT       = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> FLOAT
+FLOAT       = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+/
 
 # Integers: hex, octal, decimal
 INT_HEX     = /0[xX][0-9a-fA-F]+/     -> INT

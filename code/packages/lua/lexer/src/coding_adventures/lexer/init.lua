@@ -883,404 +883,19 @@ end
 local GrammarLexer = {}
 GrammarLexer.__index = GrammarLexer
 
---- Convert a PCRE-style regex pattern string to a Lua pattern string.
---
--- Grammar files use PCRE-style regex syntax (e.g. \s, \d, *?, {n,m}).
--- Lua's string.find uses its own pattern syntax that differs in several
--- important ways. This function bridges the gap by converting the most
--- common PCRE constructs found in the .tokens grammar files.
---
--- Conversions performed:
---   \t \r \n            → actual tab, CR, LF bytes
---   \s \S \d \D         → %s %S %d %D  (Lua character classes)
---   \w                  → [%w_]  (alphanumeric + underscore)
---   \W                  → [^%w_]
---   \/ \* \+ \. \?      → / %* %+ %. %?  (unescape PCRE-escaped punctuation)
---   \( \) \[ \] \^      → %( %) %[ %] %^
---   \$ \{ \} \-         → %$ %{ %} %-
---   \xNN                → character with hex code NN
---   *?                  → -   (non-greedy in Lua)
---   - (outside [...])   → %-  (literal hyphen; in Lua bare - is a quantifier)
---   (A|B)*              → [%s%S]-  (any-char non-greedy, approximation)
---   (A|B)+              → [%s%S]+
---   (A|B)?              → [%s%S]?
---   (?!...) (?=...)     → (dropped — no Lua equivalent)
---   {n}  {n,m}          → expanded repetition of the preceding item
---
--- This is intentionally NOT a complete PCRE-to-Lua translator. Constructs
--- that cannot be approximated (backreferences, lookaheads, top-level |)
--- are left as-is or silently dropped. The goal is "good enough for the
--- grammar files used in this monorepo", not theoretical completeness.
---
--- @param s string  PCRE pattern string (without surrounding //).
--- @return string   Equivalent Lua pattern string.
-local function pcre_to_lua(s)
-    local result = {}
-    local i = 1
-    local len = #s
-
-    -- Collect and convert a [...] character class starting at position `start`.
-    -- Returns (converted_class_string, position_after_closing_bracket).
-    local function collect_class(start)
-        local buf = {"["}
-        local j = start + 1
-        if j <= len and s:sub(j,j) == "^" then
-            buf[#buf+1] = "^"; j = j+1
-        end
-        -- ] as first char = literal ] (not end of class)
-        if j <= len and s:sub(j,j) == "]" then
-            buf[#buf+1] = "]"; j = j+1
-        end
-        while j <= len and s:sub(j,j) ~= "]" do
-            local bc = s:sub(j,j)
-            if bc == "\\" and j < len then
-                local bnc = s:sub(j+1,j+1)
-                if     bnc == "t"  then buf[#buf+1] = "\t";  j = j+2
-                elseif bnc == "r"  then buf[#buf+1] = "\r";  j = j+2
-                elseif bnc == "n"  then buf[#buf+1] = "\n";  j = j+2
-                elseif bnc == "s"  then buf[#buf+1] = "%s";  j = j+2
-                elseif bnc == "S"  then buf[#buf+1] = "%S";  j = j+2
-                elseif bnc == "d"  then buf[#buf+1] = "%d";  j = j+2
-                elseif bnc == "D"  then buf[#buf+1] = "%D";  j = j+2
-                elseif bnc == "w"  then buf[#buf+1] = "%w";  j = j+2
-                elseif bnc == "/"  then buf[#buf+1] = "/";   j = j+2
-                elseif bnc == "'"  then buf[#buf+1] = "'";   j = j+2
-                elseif bnc == '"'  then buf[#buf+1] = '"';   j = j+2
-                elseif bnc == "\\" then buf[#buf+1] = "\\";  j = j+2
-                elseif bnc == "-"  then buf[#buf+1] = "%-";  j = j+2
-                elseif bnc == "["  then buf[#buf+1] = "%[";  j = j+2
-                elseif bnc == "]"  then buf[#buf+1] = "%]";  j = j+2
-                elseif bnc == "x" and j+3 <= len
-                       and s:sub(j+2,j+3):match("^%x%x$") then
-                    buf[#buf+1] = string.char(tonumber(s:sub(j+2,j+3),16))
-                    j = j+4
-                else
-                    -- Unknown escape inside class: strip backslash, keep char
-                    buf[#buf+1] = bnc; j = j+2
-                end
-            else
-                buf[#buf+1] = bc; j = j+1
-            end
-        end
-        buf[#buf+1] = "]"
-        return table.concat(buf), j+1  -- j+1 skips the closing ]
-    end
-
-    while i <= len do
-        local c = s:sub(i, i)
-
-        -- ---- Backslash escape sequences ----
-        if c == "\\" and i < len then
-            local nc = s:sub(i+1, i+1)
-            if     nc == "t"  then result[#result+1] = "\t";     i = i+2
-            elseif nc == "r"  then result[#result+1] = "\r";     i = i+2
-            elseif nc == "n"  then result[#result+1] = "\n";     i = i+2
-            elseif nc == "s"  then result[#result+1] = "%s";     i = i+2
-            elseif nc == "S"  then result[#result+1] = "%S";     i = i+2
-            elseif nc == "d"  then result[#result+1] = "%d";     i = i+2
-            elseif nc == "D"  then result[#result+1] = "%D";     i = i+2
-            elseif nc == "w"  then result[#result+1] = "[%w_]";  i = i+2
-            elseif nc == "W"  then result[#result+1] = "[^%w_]"; i = i+2
-            elseif nc == "/"  then result[#result+1] = "/";      i = i+2
-            elseif nc == "*"  then result[#result+1] = "%*";     i = i+2
-            elseif nc == "+"  then result[#result+1] = "%+";     i = i+2
-            elseif nc == "."  then result[#result+1] = "%.";     i = i+2
-            elseif nc == "?"  then result[#result+1] = "%?";     i = i+2
-            elseif nc == "("  then result[#result+1] = "%(";     i = i+2
-            elseif nc == ")"  then result[#result+1] = "%)";     i = i+2
-            elseif nc == "["  then result[#result+1] = "%[";     i = i+2
-            elseif nc == "]"  then result[#result+1] = "%]";     i = i+2
-            elseif nc == "^"  then result[#result+1] = "%^";     i = i+2
-            elseif nc == "$"  then result[#result+1] = "%$";     i = i+2
-            elseif nc == "{"  then result[#result+1] = "%{";     i = i+2
-            elseif nc == "}"  then result[#result+1] = "%}";     i = i+2
-            elseif nc == "-"  then result[#result+1] = "%-";     i = i+2
-            elseif nc == "x" and i+3 <= len
-                   and s:sub(i+2,i+3):match("^%x%x$") then
-                result[#result+1] = string.char(tonumber(s:sub(i+2,i+3),16))
-                i = i+4
-            else
-                -- Unknown escape: emit the backslash and advance by 1
-                -- (the next char will be processed on the next iteration)
-                result[#result+1] = c; i = i+1
-            end
-
-        -- ---- Character class [...] ----
-        elseif c == "[" then
-            local class_str, new_i = collect_class(i)
-            result[#result+1] = class_str
-            i = new_i
-
-        -- ---- *? non-greedy → Lua's - quantifier ----
-        elseif c == "*" and i < len and s:sub(i+1,i+1) == "?" then
-            result[#result+1] = "-"; i = i+2
-
-        -- ---- {n} / {n,m} quantifier expansion ----
-        elseif c == "{" then
-            local j = i+1
-            while j <= len and s:sub(j,j) ~= "}" do j = j+1 end
-            if j <= len then
-                local qs = s:sub(i+1, j-1)
-                local n, m
-                local a, b = qs:match("^(%d+),(%d+)$")
-                if a then
-                    n, m = tonumber(a), tonumber(b)
-                else
-                    local a2 = qs:match("^(%d+)$")
-                    if a2 then n, m = tonumber(a2), tonumber(a2) end
-                end
-                if n then
-                    local prev = table.remove(result)  -- pop preceding item
-                    if prev then
-                        for _ = 1, n       do result[#result+1] = prev end
-                        for _ = 1, (m - n) do result[#result+1] = prev .. "?" end
-                    end
-                    i = j+1
-                else
-                    result[#result+1] = "%{"; i = i+1
-                end
-            else
-                result[#result+1] = "%{"; i = i+1
-            end
-
-        -- ---- ( for groups ----
-        elseif c == "(" then
-            -- Check for (?...) — lookahead or non-capturing group
-            if i+1 <= len and s:sub(i+1,i+1) == "?" then
-                local sp = (i+2 <= len) and s:sub(i+2,i+2) or ""
-
-                if sp == ":" then
-                    -- Non-capturing group (?:...) — process like a regular
-                    -- capturing group: scan for alternation, emit approximation.
-                    local start_inner = i+3  -- position after '(?:'
-                    local depth = 1; local j = start_inner; local has_alt = false
-                    while j <= len and depth > 0 do
-                        local jc = s:sub(j,j)
-                        if jc == "(" then
-                            depth = depth+1
-                        elseif jc == ")" then
-                            depth = depth-1
-                        elseif jc == "|" and depth == 1 then
-                            has_alt = true
-                        elseif jc == "[" then
-                            j = j+1
-                            if j <= len and s:sub(j,j) == "^" then j = j+1 end
-                            if j <= len and s:sub(j,j) == "]" then j = j+1 end
-                            while j <= len and s:sub(j,j) ~= "]" do
-                                if s:sub(j,j) == "\\" then j = j+1 end
-                                j = j+1
-                            end
-                        elseif jc == "\\" then
-                            j = j+1
-                        end
-                        j = j+1
-                    end
-                    local group_end = j  -- position after closing ')'
-
-                    if has_alt then
-                        -- Alternation inside (?:...) — approximate with any-char.
-                        -- Adjust for quantifier that follows the closing ')'.
-                        local qc = s:sub(group_end, group_end)
-                        local qs2 = ""
-                        local adv = 0
-                        if qc == "*" then
-                            if group_end < len and s:sub(group_end+1,group_end+1) == "?" then
-                                qs2 = "-"; adv = 1
-                            else
-                                qs2 = "-"
-                            end
-                        elseif qc == "+" then
-                            qs2 = "+"; adv = 0
-                        elseif qc == "?" then
-                            qs2 = "?"; adv = 0
-                        elseif qc == "-" then
-                            qs2 = "-"; adv = 0
-                        end
-                        if qs2 ~= "" then
-                            result[#result+1] = "[%s%S]" .. qs2
-                            i = group_end + 1 + adv
-                        else
-                            -- No quantifier: non-greedy to handle multi-char alternatives.
-                            result[#result+1] = "[%s%S]-"
-                            i = group_end
-                        end
-                    else
-                        -- No alternation: inline the content via recursive conversion.
-                        local inner = s:sub(start_inner, group_end - 2)
-                        local qc2 = s:sub(group_end, group_end)
-                        if qc2 == "?" then
-                            result[#result+1] = "[%s%S]?"; i = group_end + 1
-                        elseif qc2 == "*" then
-                            if group_end < len and s:sub(group_end+1,group_end+1) == "?" then
-                                result[#result+1] = "[%s%S]-"; i = group_end + 2
-                            else
-                                result[#result+1] = "[%s%S]-"; i = group_end + 1
-                            end
-                        elseif qc2 == "+" then
-                            result[#result+1] = "[%s%S]+"; i = group_end + 1
-                        else
-                            -- No quantifier: inline the inner content directly.
-                            result[#result+1] = pcre_to_lua(inner)
-                            i = group_end
-                        end
-                    end
-
-                else
-                    -- Lookahead (?=...) (?!...) (?<...) — drop entirely
-                    local depth = 1; local j = i+2
-                    if j <= len then
-                        if sp == "!" or sp == "=" then
-                            j = j+1
-                        elseif sp == "<" and j+1 <= len then
-                            j = j+2
-                        end
-                    end
-                    while j <= len and depth > 0 do
-                        if     s:sub(j,j) == "(" then depth = depth+1
-                        elseif s:sub(j,j) == ")" then depth = depth-1
-                        end
-                        j = j+1
-                    end
-                    -- Emit nothing — lookaheads have no Lua equivalent
-                    i = j
-                end
-
-            else
-                -- Regular capturing group — scan for alternation
-                local depth = 1; local j = i+1; local has_alt = false
-                while j <= len and depth > 0 do
-                    local jc = s:sub(j,j)
-                    if jc == "(" then
-                        depth = depth+1
-                    elseif jc == ")" then
-                        depth = depth-1
-                    elseif jc == "|" and depth == 1 then
-                        has_alt = true
-                    elseif jc == "[" then
-                        -- Skip character class (avoid spurious | detection)
-                        j = j+1
-                        if j <= len and s:sub(j,j) == "^" then j = j+1 end
-                        if j <= len and s:sub(j,j) == "]" then j = j+1 end
-                        while j <= len and s:sub(j,j) ~= "]" do
-                            if s:sub(j,j) == "\\" then j = j+1 end
-                            j = j+1
-                        end
-                    elseif jc == "\\" then
-                        j = j+1  -- skip escaped char
-                    end
-                    j = j+1
-                end
-                local group_end = j  -- position after )
-
-                if has_alt then
-                    -- Replace (A|B)QUANT with any-character approximation.
-                    -- Non-greedy (-) is used by default to avoid over-matching.
-                    local qc = s:sub(group_end, group_end)
-                    local qs2 = ""
-                    local adv = 0
-                    if qc == "*" then
-                        if group_end < len and s:sub(group_end+1,group_end+1) == "?" then
-                            qs2 = "-"; adv = 1
-                        else
-                            qs2 = "-"  -- default to non-greedy for token patterns
-                        end
-                    elseif qc == "+" then
-                        qs2 = "+"; adv = 0
-                    elseif qc == "?" then
-                        qs2 = "?"; adv = 0
-                    elseif qc == "-" then
-                        qs2 = "-"; adv = 0
-                    end
-                    if qs2 ~= "" then
-                        result[#result+1] = "[%s%S]" .. qs2
-                        i = group_end + 1 + adv
-                    else
-                        result[#result+1] = "[%s%S]"
-                        i = group_end
-                    end
-                else
-                    -- Non-alternation group: check the quantifier that follows
-                    -- the closing paren to decide how to emit.
-                    --
-                    -- In PCRE, `(A)?` means "optionally match A".
-                    -- In Lua, `(A)?` is INVALID: `?` after `)` is a literal `?`.
-                    -- So we must handle each quantifier specially.
-                    --
-                    -- Strategy: emit a "match-anything" approximation for the
-                    -- quantified group (we can't faithfully replicate PCRE group
-                    -- semantics in Lua patterns, but for our grammar use-case an
-                    -- approximation is fine because the token ordering in the
-                    -- grammar file ensures the right rule wins first).
-                    local qc2 = s:sub(group_end, group_end)
-                    if qc2 == "?" then
-                        -- (A)? — optional group, skip it entirely (emit nothing).
-                        -- The content can appear zero times, so we just allow
-                        -- the rest of the pattern to match without it.
-                        i = group_end + 1
-                    elseif qc2 == "*" then
-                        if group_end < len and s:sub(group_end+1,group_end+1) == "?" then
-                            result[#result+1] = "[%s%S]-"; i = group_end + 2
-                        else
-                            result[#result+1] = "[%s%S]-"; i = group_end + 1
-                        end
-                    elseif qc2 == "+" then
-                        result[#result+1] = "[%s%S]+"; i = group_end + 1
-                    else
-                        -- No quantifier after the group.
-                        -- Keep `(` as a Lua capture start; the body will be
-                        -- re-processed as we advance i by 1.
-                        result[#result+1] = "("; i = i+1
-                    end
-                end
-            end
-
-        -- ---- ) closing paren ----
-        elseif c == ")" then
-            result[#result+1] = ")"; i = i+1
-
-        -- ---- | top-level alternation (outside parens) ----
-        -- Lua has no alternation operator. Emit | as a literal character;
-        -- this will produce incorrect matches for patterns that rely on it,
-        -- but at least won't crash. Most test inputs don't contain |.
-        elseif c == "|" then
-            result[#result+1] = "|"; i = i+1
-
-        -- ---- - outside a character class ----
-        -- In PCRE, bare - is a literal hyphen.
-        -- In Lua patterns, bare - is the non-greedy quantifier.
-        -- Escape it to %-.
-        elseif c == "-" then
-            result[#result+1] = "%-"; i = i+1
-
-        -- ---- Lua magic character: % must be doubled to %% ----
-        -- In PCRE, % is not special. In Lua patterns, % is the escape
-        -- prefix for magic characters. A literal % in the pattern string
-        -- (e.g. from CSS PERCENTAGE = /...%/) would leave a bare % at the
-        -- end of a character class or pattern and cause "malformed pattern".
-        elseif c == "%" then
-            result[#result+1] = "%%"; i = i+1
-
-        -- ---- All other characters pass through unchanged ----
-        else
-            result[#result+1] = c; i = i+1
-        end
-    end
-
-    return table.concat(result)
-end
-
 --- Compile a single token definition into a Lua pattern string.
 --
--- If is_regex is true, the PCRE pattern is converted to a Lua pattern
--- via pcre_to_lua() and anchored to the start of the remaining source (^).
+-- If is_regex is true, the pattern is used as-is (Lua patterns).
 -- If is_regex is false, the pattern is escaped for literal matching.
+--
+-- All patterns are anchored to the start of the remaining source (^).
 --
 -- @param defn table Token definition with name, pattern, is_regex, alias.
 -- @return table Compiled pattern with name, pattern_str, alias.
 local function compile_pattern(defn)
     local pat_str
     if defn.is_regex then
-        pat_str = "^" .. pcre_to_lua(defn.pattern)
+        pat_str = "^" .. defn.pattern
     else
         -- Escape magic characters for literal matching
         pat_str = "^" .. defn.pattern:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
@@ -1317,14 +932,10 @@ local function resolve_token_type(token_name, value, alias, keyword_set, reserve
         end
     end
 
-    -- Regular keyword check: return the uppercased keyword value as type_name
-    -- so that "var" → type_name = "VAR", "if" → "IF", etc.
-    -- For case-insensitive grammars the keyword_set also contains lowercase
-    -- versions of all keywords (inserted by GrammarLexer.new), so looking up
-    -- value:lower() finds a match regardless of input capitalisation.
+    -- Regular keyword check
     if token_name == "NAME" then
-        if keyword_set[value] or keyword_set[value:lower()] then
-            return TokenType.Keyword, value:upper()
+        if keyword_set[value] then
+            return TokenType.Keyword, "KEYWORD"
         end
     end
 
@@ -1373,17 +984,10 @@ end
 -- @param grammar table A TokenGrammar table.
 -- @return GrammarLexer
 function GrammarLexer.new(source, grammar)
-    -- Build keyword set.
-    -- For case-insensitive grammars (grammar.case_insensitive == true) we
-    -- also insert a lowercase version of each keyword so that the resolver
-    -- can look up value:lower() and still find a match regardless of how
-    -- the keyword was written in the grammar file (e.g. "SELECT" vs "select").
+    -- Build keyword set
     local keyword_set = {}
     for _, kw in ipairs(grammar.keywords or {}) do
         keyword_set[kw] = true
-        if grammar.case_insensitive then
-            keyword_set[kw:lower()] = true
-        end
     end
 
     -- Build reserved set
@@ -1406,12 +1010,12 @@ function GrammarLexer.new(source, grammar)
         patterns[#patterns + 1] = compile_pattern(defn)
     end
 
-    -- Compile skip patterns (also apply PCRE-to-Lua conversion)
+    -- Compile skip patterns
     local skip_patterns = {}
     for _, defn in ipairs(grammar.skip_definitions or {}) do
         local pat_str
         if defn.is_regex then
-            pat_str = "^" .. pcre_to_lua(defn.pattern)
+            pat_str = "^" .. defn.pattern
         else
             pat_str = "^" .. defn.pattern:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
         end
@@ -1458,7 +1062,6 @@ function GrammarLexer.new(source, grammar)
         _skip_enabled     = true,
         _alias_map        = alias_map,
         _escape_mode      = grammar.escape_mode or "",
-        _case_insensitive = grammar.case_insensitive or false,
     }, GrammarLexer)
 end
 
@@ -1537,7 +1140,7 @@ function GrammarLexer:_try_match_token_in_group(group_name)
                 if #value >= 2 then
                     local quote = value:sub(1, 1)
                     if quote == '"' or quote == "'" then
-                        -- Check for triple-quoted strings (don't apply escape-scanner)
+                        -- Check for triple-quoted strings
                         if #value >= 6 and value:sub(1, 3) == quote:rep(3) then
                             local inner = value:sub(4, #value - 3)
                             if self._escape_mode ~= "none" then
@@ -1545,27 +1148,6 @@ function GrammarLexer:_try_match_token_in_group(group_name)
                             end
                             value = inner
                         else
-                            -- For single-quoted strings, the regex approximation for
-                            -- patterns like /"([^"\\]|\\.)*"/ (converted to ".."-style
-                            -- non-greedy) may stop prematurely at an escaped quote like
-                            -- \" inside the string. Scan forward to find the true end.
-                            local true_end = e
-                            local k = 2  -- skip opening quote
-                            while k <= #remaining do
-                                local c = remaining:sub(k, k)
-                                if c == "\\" then
-                                    k = k + 2  -- skip backslash and escaped char
-                                elseif c == quote then
-                                    true_end = k  -- found the real closing quote
-                                    break
-                                else
-                                    k = k + 1
-                                end
-                            end
-                            if true_end > e then
-                                e = true_end
-                                value = remaining:sub(1, e)
-                            end
                             local inner = value:sub(2, #value - 1)
                             if self._escape_mode ~= "none" then
                                 inner = process_escapes(inner)

@@ -43,10 +43,8 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use POSIX qw(floor);
-use Exporter 'import';
 
 our $VERSION = '0.01';
-our @EXPORT_OK = qw(encode_unsigned encode_signed decode_unsigned decode_signed);
 
 # ---------------------------------------------------------------------------
 # encode_unsigned($value) -> @bytes

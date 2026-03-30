@@ -13,22 +13,14 @@ skip:
 SPACE = / +/
 
 REF_PREFIX_QUOTED   = /(\[[^\]]+\])?'([^']|'')*'!/ -> REF_PREFIX
-REF_PREFIX_BARE     = /[A-Za-z_][A-Za-z0-9_.]*!/ -> REF_PREFIX
+REF_PREFIX_BARE     = /(\[[^\]]+\])?[A-Za-z_\\][A-Za-z0-9_\.]*(?::[A-Za-z_\\][A-Za-z0-9_\.]*)*!/ -> REF_PREFIX
 
 STRING            = /"([^"]|"")*"/
-ERROR_CONSTANT    = /#[a-z0-9\/\?!]+/
-# Numeric literals. Split into exponent and plain variants so that the
-# sign characters + and - are NOT consumed unless preceded by [eE].
-# The single merged pattern /[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/ is wrong:
-# [eE]? can match empty so [-+]? then grabs + from "1+2", producing a
-# single "1+2" NUMBER token and breaking additive expression parsing.
-NUMBER_DOT_EXP    = /\.[0-9]+[eE][-+]?[0-9]+/  -> NUMBER
-NUMBER_DOT        = /\.[0-9]+/                   -> NUMBER
-NUMBER_EXP        = /[0-9]+\.?[0-9]*[eE][-+]?[0-9]+/ -> NUMBER
-NUMBER            = /[0-9]+\.?[0-9]*/
+ERROR_CONSTANT    = /#NULL!|#DIV\/0!|#VALUE!|#REF!|#NAME\?|#NUM!|#N\/A|#SPILL!|#CALC!|#GETTING_DATA/
+NUMBER            = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)?/
 
-STRUCTURED_KEYWORD = /\[#[a-z ]+\]/
-STRUCTURED_COLUMN  = /\[[^\[\]]+\]/
+STRUCTURED_KEYWORD = /\[#(?:All|Data|Headers|Totals|This Row)\]/
+STRUCTURED_COLUMN  = /\[(?:[^\[\]]|\]\])+\]/
 
 # Order matters: more specific reference tokens must come before NAME.
 CELL              = /\$?[A-Za-z]{1,3}\$?[0-9]{1,7}/
@@ -66,11 +58,11 @@ NAME              = /[A-Za-z_\\][A-Za-z0-9_\.]*/
 # hook / normalization passes, not by direct matching. We declare them here
 # with never-match regexes so grammar validation can still reason about the
 # full token vocabulary used by excel.grammar.
-FUNCTION_NAME     = /[^\s\S]/
-TABLE_NAME        = /[^\s\S]/
-COLUMN_REF        = /[^\s\S]/
-ROW_REF           = /[^\s\S]/
+FUNCTION_NAME     = /(?!.)/
+TABLE_NAME        = /(?!.)/
+COLUMN_REF        = /(?!.)/
+ROW_REF           = /(?!.)/
 
 keywords:
-  true
-  false
+  TRUE
+  FALSE

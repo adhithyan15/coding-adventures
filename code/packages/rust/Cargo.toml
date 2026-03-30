@@ -133,4 +133,5 @@ members = [
     "sql-csv-source",
     "event-loop",
   "caesar-cipher",
+  "atbash-cipher",
 ]

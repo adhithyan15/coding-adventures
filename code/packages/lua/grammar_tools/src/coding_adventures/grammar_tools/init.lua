@@ -472,30 +472,6 @@ function grammar_tools.parse_token_grammar(source)
             goto continue
         end
 
-        -- case_insensitive: directive (e.g., "case_insensitive: true")
-        -- Marks the grammar as case-insensitive; the lexer will fold
-        -- keyword lookups to lowercase so "SELECT" matches "select".
-        if stripped:sub(1, 17) == "case_insensitive:" then
-            local ci_value = stripped:sub(18):match("^%s*(.-)%s*$")
-            if ci_value == "true" then
-                grammar.case_insensitive = true
-            end
-            current_section = ""
-            goto continue
-        end
-
-        -- case_sensitive: directive (e.g., "case_sensitive: false")
-        -- "case_sensitive: false" is equivalent to "case_insensitive: true".
-        -- "case_sensitive:" is 15 characters; value starts at position 16.
-        if stripped:sub(1, 15) == "case_sensitive:" then
-            local cs_value = stripped:sub(16):match("^%s*(.-)%s*$")
-            if cs_value == "false" then
-                grammar.case_insensitive = true
-            end
-            current_section = ""
-            goto continue
-        end
-
         -- Group headers — "group NAME:" declares a named pattern group
         if stripped:sub(1, 6) == "group " and stripped:sub(-1) == ":" then
             local group_name = stripped:sub(7, -2):match("^%s*(.-)%s*$")
