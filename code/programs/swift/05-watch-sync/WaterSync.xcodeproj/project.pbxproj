@@ -1,0 +1,421 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		24D6EE29F6F3B479CC6182E4 /* SyncPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB4DC9B1047C0179550C117 /* SyncPayload.swift */; };
+		3A8FB83B4B5236476EEF63C5 /* WaterSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F8242F46DFB53EA2C73B9 /* WaterSyncApp.swift */; };
+		3DDFD4104A546A85C387EFBF /* WaterEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D3D0388BDDF5591C92A23C /* WaterEntry.swift */; };
+		45F6A7433F2695EF58A3D6C0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E7DBB61990E75A3E10C819 /* ContentView.swift */; };
+		61DE55B8ABC08BB8AB82CBD6 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7B0EAC75577D7C2E60B6A /* WatchConnectivityManager.swift */; };
+		78FA1091397FFDB55CD825DB /* WaterEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D3D0388BDDF5591C92A23C /* WaterEntry.swift */; };
+		79BD7563D53FE3F5C3ED3AE1 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136D2365202FB2C810D81D10 /* ConnectivityManager.swift */; };
+		7D4F5558A04BCBC949627239 /* SyncPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB4DC9B1047C0179550C117 /* SyncPayload.swift */; };
+		C101A0F07AC9A610789FF5D4 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20E9CDF0E0D18AED283AC66 /* WatchContentView.swift */; };
+		EB99052BF06DA05F0A8DAA52 /* WaterSyncWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E33561A3364C8DFB7A4AAB7 /* WaterSyncWatchApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		136D2365202FB2C810D81D10 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
+		1BB4DC9B1047C0179550C117 /* SyncPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncPayload.swift; sourceTree = "<group>"; };
+		1E33561A3364C8DFB7A4AAB7 /* WaterSyncWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterSyncWatchApp.swift; sourceTree = "<group>"; };
+		24E7B0EAC75577D7C2E60B6A /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		3EE376E3406637EDB48F06FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A20E9CDF0E0D18AED283AC66 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
+		D1E7DBB61990E75A3E10C819 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D42F8242F46DFB53EA2C73B9 /* WaterSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterSyncApp.swift; sourceTree = "<group>"; };
+		D6FCA829D848C54F4783250E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DAA467E837BBF37171600309 /* WaterSyncWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WaterSyncWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E05002003100A27E8A5D59A0 /* WaterSync.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WaterSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0D3D0388BDDF5591C92A23C /* WaterEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterEntry.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		25CF46ED16839ED1FC16F27A = {
+			isa = PBXGroup;
+			children = (
+				85D75D00175BD01B2C6DC402 /* Shared */,
+				C70BE09129958C2A0605E9E2 /* WaterSync */,
+				A958763313729BBBD3E2E5D1 /* WaterSyncWatch */,
+				59B50A70C2890583DF90DDD0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		59B50A70C2890583DF90DDD0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E05002003100A27E8A5D59A0 /* WaterSync.app */,
+				DAA467E837BBF37171600309 /* WaterSyncWatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		85D75D00175BD01B2C6DC402 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				1BB4DC9B1047C0179550C117 /* SyncPayload.swift */,
+				F0D3D0388BDDF5591C92A23C /* WaterEntry.swift */,
+			);
+			name = Shared;
+			path = Sources/Shared;
+			sourceTree = "<group>";
+		};
+		A958763313729BBBD3E2E5D1 /* WaterSyncWatch */ = {
+			isa = PBXGroup;
+			children = (
+				D6FCA829D848C54F4783250E /* Info.plist */,
+				24E7B0EAC75577D7C2E60B6A /* WatchConnectivityManager.swift */,
+				A20E9CDF0E0D18AED283AC66 /* WatchContentView.swift */,
+				1E33561A3364C8DFB7A4AAB7 /* WaterSyncWatchApp.swift */,
+			);
+			name = WaterSyncWatch;
+			path = Sources/WaterSyncWatch;
+			sourceTree = "<group>";
+		};
+		C70BE09129958C2A0605E9E2 /* WaterSync */ = {
+			isa = PBXGroup;
+			children = (
+				136D2365202FB2C810D81D10 /* ConnectivityManager.swift */,
+				D1E7DBB61990E75A3E10C819 /* ContentView.swift */,
+				3EE376E3406637EDB48F06FC /* Info.plist */,
+				D42F8242F46DFB53EA2C73B9 /* WaterSyncApp.swift */,
+			);
+			name = WaterSync;
+			path = Sources/WaterSync;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1C01EEE9832B1A9297BD70A7 /* WaterSyncWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DED265A4D53546222979F6FA /* Build configuration list for PBXNativeTarget "WaterSyncWatch" */;
+			buildPhases = (
+				09C863AC6DD7FD61FADB5EAD /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WaterSyncWatch;
+			packageProductDependencies = (
+			);
+			productName = WaterSyncWatch;
+			productReference = DAA467E837BBF37171600309 /* WaterSyncWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8B644E26C1F1B6095112F8DA /* WaterSync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00B90E8EEB8FD86CBAD6BBFE /* Build configuration list for PBXNativeTarget "WaterSync" */;
+			buildPhases = (
+				C083899D808DF8654FDD60E4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WaterSync;
+			packageProductDependencies = (
+			);
+			productName = WaterSync;
+			productReference = E05002003100A27E8A5D59A0 /* WaterSync.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D4515F030A54716221329466 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					1C01EEE9832B1A9297BD70A7 = {
+						ProvisioningStyle = Automatic;
+					};
+					8B644E26C1F1B6095112F8DA = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5B7249191038DC7662BBFAF4 /* Build configuration list for PBXProject "WaterSync" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 25CF46ED16839ED1FC16F27A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 59B50A70C2890583DF90DDD0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8B644E26C1F1B6095112F8DA /* WaterSync */,
+				1C01EEE9832B1A9297BD70A7 /* WaterSyncWatch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		09C863AC6DD7FD61FADB5EAD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				24D6EE29F6F3B479CC6182E4 /* SyncPayload.swift in Sources */,
+				61DE55B8ABC08BB8AB82CBD6 /* WatchConnectivityManager.swift in Sources */,
+				C101A0F07AC9A610789FF5D4 /* WatchContentView.swift in Sources */,
+				3DDFD4104A546A85C387EFBF /* WaterEntry.swift in Sources */,
+				EB99052BF06DA05F0A8DAA52 /* WaterSyncWatchApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C083899D808DF8654FDD60E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79BD7563D53FE3F5C3ED3AE1 /* ConnectivityManager.swift in Sources */,
+				45F6A7433F2695EF58A3D6C0 /* ContentView.swift in Sources */,
+				7D4F5558A04BCBC949627239 /* SyncPayload.swift in Sources */,
+				78FA1091397FFDB55CD825DB /* WaterEntry.swift in Sources */,
+				3A8FB83B4B5236476EEF63C5 /* WaterSyncApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1834CC02977EFA57ADD8B132 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/WaterSync/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.watersync;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6D94D79E8CF01E08F76FC6FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		72A675708ABE9C104379DF68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/WaterSyncWatch/Info.plist;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.watersync.watchapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		939897DA070E49B02A42E64F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		97F45A672123B1C1BA14F637 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/WaterSyncWatch/Info.plist;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.watersync.watchapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		A713137035C14519CCA2CA1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/WaterSync/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codingadventures.watersync;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00B90E8EEB8FD86CBAD6BBFE /* Build configuration list for PBXNativeTarget "WaterSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A713137035C14519CCA2CA1D /* Debug */,
+				1834CC02977EFA57ADD8B132 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5B7249191038DC7662BBFAF4 /* Build configuration list for PBXProject "WaterSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				939897DA070E49B02A42E64F /* Debug */,
+				6D94D79E8CF01E08F76FC6FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DED265A4D53546222979F6FA /* Build configuration list for PBXNativeTarget "WaterSyncWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72A675708ABE9C104379DF68 /* Debug */,
+				97F45A672123B1C1BA14F637 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D4515F030A54716221329466 /* Project object */;
+}
