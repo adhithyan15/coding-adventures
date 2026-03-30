@@ -2,6 +2,21 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
+## [0.3.1] - 2026-03-30
+
+### Fixed
+
+- **Windows Lua luarocks serialisation**: `buildResourceKeys` now adds a
+  `global:luarocks-windows` lock key for every Lua package command that
+  contains `luarocks make` when running on Windows. On Windows, luarocks
+  requires exclusive write access to the local rocks tree
+  (`~\AppData\Roaming\luarocks`); any two concurrent `luarocks make` calls
+  race for that file lock and one fails with "command 'make' requires
+  exclusive write access". The global lock key ensures all Lua luarocks
+  installs are fully serialised on Windows while leaving Linux/macOS
+  unaffected. This mirrors the existing `global:hex-cache` serialisation
+  used for Elixir `mix deps.get`.
+
 ## [0.3.0] - 2026-03-22
 
 ### Added
