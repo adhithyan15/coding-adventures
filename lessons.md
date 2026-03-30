@@ -1005,3 +1005,5 @@ When Swift's `BUILD` file (`swift test`) failed on Windows CI with "'swift' is n
 **Fix:** Add `swift-actions/setup-swift@v3` to the CI workflow with a `needs_swift` conditional (matching the pattern used for Python, Ruby, etc.). The build tool already emits `needs_swift=true|false` — the CI workflow just wasn't reading it.
 
 **Rule:** When a language tool is missing on a CI runner, investigate whether it can be installed via an action before skipping. Don't assume a language isn't supported on a platform — check first. Swift runs on macOS, Linux, and Windows.
+
+**Update (same day):** `swift-actions/setup-swift@v3` does NOT support Windows yet — it throws "Windows is not supported yet" at runtime. While Swift itself runs on Windows, the GitHub Action for setting it up doesn't. Until it does, Swift packages need `BUILD_windows` files that skip with an explanatory message, and the CI workflow must gate the setup step with `runner.os != 'Windows'`.
