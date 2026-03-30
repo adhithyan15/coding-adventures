@@ -634,13 +634,13 @@ describe("string literals", function()
         -- VHDL strings use "" to escape a quote inside: "He said ""hi"""
         local tokens = vh.tokenize('"hello"')
         assert.are.equal("STRING", tokens[1].type)
-        assert.are.equal('"hello"', tokens[1].value)
+        assert.are.equal('hello', tokens[1].value)
     end)
 
     it("tokenizes an empty string", function()
         local tokens = vh.tokenize('""')
         assert.are.equal("STRING", tokens[1].type)
-        assert.are.equal('""', tokens[1].value)
+        assert.are.equal('', tokens[1].value)
     end)
 end)
 

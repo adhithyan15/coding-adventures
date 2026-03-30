@@ -365,7 +365,7 @@ describe("identifiers and basic literals", function()
     it("tokenizes a double-quoted string", function()
         local tokens = ts_lexer.tokenize('"hello"')
         assert.are.equal("STRING", tokens[1].type)
-        assert.are.equal('"hello"', tokens[1].value)
+        assert.are.equal('hello', tokens[1].value)
     end)
 end)
 

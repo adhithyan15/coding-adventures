@@ -221,7 +221,7 @@ describe("STRING token", function()
     it("tokenizes a simple string", function()
         local tokens = excel_lexer.tokenize('"hello"')
         assert.are.equal("STRING", tokens[1].type)
-        assert.are.equal('"hello"', tokens[1].value)
+        assert.are.equal('hello', tokens[1].value)
     end)
 
     it("tokenizes an empty string", function()

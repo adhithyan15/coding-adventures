@@ -13,14 +13,15 @@ skip:
 SPACE = / +/
 
 REF_PREFIX_QUOTED   = /(\[[^\]]+\])?'([^']|'')*'!/ -> REF_PREFIX
-REF_PREFIX_BARE     = /(\[[^\]]+\])?[A-Za-z_\\][A-Za-z0-9_\.]*(?::[A-Za-z_\\][A-Za-z0-9_\.]*)*!/ -> REF_PREFIX
+REF_PREFIX_BARE     = /[A-Za-z_][A-Za-z0-9_.]*!/ -> REF_PREFIX
 
 STRING            = /"([^"]|"")*"/
-ERROR_CONSTANT    = /#null!|#div\/0!|#value!|#ref!|#name\?|#num!|#n\/a|#spill!|#calc!|#getting_data/
-NUMBER            = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+([eE][+-]?[0-9]+)?/
+ERROR_CONSTANT    = /#[a-z0-9\/\?!]+/
+NUMBER_DOT        = /\.[0-9]+[eE]?[-+]?[0-9]*/ -> NUMBER
+NUMBER            = /[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/
 
-STRUCTURED_KEYWORD = /\[#(?:all|data|headers|totals|this row)\]/
-STRUCTURED_COLUMN  = /\[(?:[^\[\]]|\]\])+\]/
+STRUCTURED_KEYWORD = /\[#[a-z ]+\]/
+STRUCTURED_COLUMN  = /\[[^\[\]]+\]/
 
 # Order matters: more specific reference tokens must come before NAME.
 CELL              = /\$?[A-Za-z]{1,3}\$?[0-9]{1,7}/
@@ -58,10 +59,10 @@ NAME              = /[A-Za-z_\\][A-Za-z0-9_\.]*/
 # hook / normalization passes, not by direct matching. We declare them here
 # with never-match regexes so grammar validation can still reason about the
 # full token vocabulary used by excel.grammar.
-FUNCTION_NAME     = /(?!.)/
-TABLE_NAME        = /(?!.)/
-COLUMN_REF        = /(?!.)/
-ROW_REF           = /(?!.)/
+FUNCTION_NAME     = /[^\s\S]/
+TABLE_NAME        = /[^\s\S]/
+COLUMN_REF        = /[^\s\S]/
+ROW_REF           = /[^\s\S]/
 
 keywords:
   TRUE

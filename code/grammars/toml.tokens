@@ -106,9 +106,10 @@ LOCAL_TIME      = /\d{2}:\d{2}:\d{2}(\.\d+)?/
 # All float variants emit the same FLOAT token type via -> alias.
 # Underscore separators are allowed between digits: 1_000.0
 
-FLOAT_SPECIAL = /[+-]?(inf|nan)/ -> FLOAT
-FLOAT_EXP     = /[+-]?([0-9](_?[0-9])*)(\.[0-9](_?[0-9])*)?[eE][+-]?[0-9](_?[0-9])*/ -> FLOAT
-FLOAT_DEC     = /[+-]?([0-9](_?[0-9])*)\.([0-9](_?[0-9])*)/ -> FLOAT
+FLOAT_INF     = /[+-]?inf/ -> FLOAT
+FLOAT_NAN     = /[+-]?nan/ -> FLOAT
+FLOAT_EXP     = /[+-]?[0-9][0-9_]*\.?[0-9_]*[eE][+-]?[0-9][0-9_]*/ -> FLOAT
+FLOAT_DEC     = /[+-]?[0-9][0-9_]*\.[0-9][0-9_]*/ -> FLOAT
 
 # ============================================================================
 # Integer Literals (hex/oct/bin BEFORE decimal)

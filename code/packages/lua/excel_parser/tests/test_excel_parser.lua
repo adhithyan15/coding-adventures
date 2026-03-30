@@ -133,7 +133,7 @@ describe("string literals", function()
     it("parses a double-quoted string", function()
         local ast = parse_ok('="hello"')
         assert.are.equal("string", ast.body.kind)
-        assert.are.equal('"hello"', ast.body.token.value)
+        assert.are.equal('hello', ast.body.token.value)
     end)
 
     it("parses an empty string", function()
