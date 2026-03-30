@@ -1,1 +1,1 @@
-set "LUA_PATH=../src/?.lua;../src/?/init.lua;;" && cd tests && busted . --verbose --pattern=test_
+cd tests && busted . --verbose --pattern=test_
