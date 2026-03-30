@@ -65,5 +65,5 @@ COLUMN_REF        = /[^\s\S]/
 ROW_REF           = /[^\s\S]/
 
 keywords:
-  TRUE
-  FALSE
+  true
+  false

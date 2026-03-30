@@ -158,7 +158,7 @@ end
 -- @param gl  GrammarLexer  The lexer to configure.
 local function attach_xml_callbacks(gl)
     gl:set_on_token(function(token, ctx)
-        local t = token.type
+        local t = token.type_name
 
         -- Entering a tag: switch to "tag" group so we recognise
         -- TAG_NAME, ATTR_VALUE, TAG_CLOSE, etc.

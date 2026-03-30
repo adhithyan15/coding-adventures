@@ -1170,6 +1170,14 @@ local function pcre_to_lua(s)
         elseif c == "-" then
             result[#result+1] = "%-"; i = i+1
 
+        -- ---- Lua magic character: % must be doubled to %% ----
+        -- In PCRE, % is not special. In Lua patterns, % is the escape
+        -- prefix for magic characters. A literal % in the pattern string
+        -- (e.g. from CSS PERCENTAGE = /...%/) would leave a bare % at the
+        -- end of a character class or pattern and cause "malformed pattern".
+        elseif c == "%" then
+            result[#result+1] = "%%"; i = i+1
+
         -- ---- All other characters pass through unchanged ----
         else
             result[#result+1] = c; i = i+1
@@ -1229,8 +1237,11 @@ local function resolve_token_type(token_name, value, alias, keyword_set, reserve
 
     -- Regular keyword check: return the uppercased keyword value as type_name
     -- so that "var" → type_name = "VAR", "if" → "IF", etc.
+    -- For case-insensitive grammars the keyword_set also contains lowercase
+    -- versions of all keywords (inserted by GrammarLexer.new), so looking up
+    -- value:lower() finds a match regardless of input capitalisation.
     if token_name == "NAME" then
-        if keyword_set[value] then
+        if keyword_set[value] or keyword_set[value:lower()] then
             return TokenType.Keyword, value:upper()
         end
     end
@@ -1280,10 +1291,17 @@ end
 -- @param grammar table A TokenGrammar table.
 -- @return GrammarLexer
 function GrammarLexer.new(source, grammar)
-    -- Build keyword set
+    -- Build keyword set.
+    -- For case-insensitive grammars (grammar.case_insensitive == true) we
+    -- also insert a lowercase version of each keyword so that the resolver
+    -- can look up value:lower() and still find a match regardless of how
+    -- the keyword was written in the grammar file (e.g. "SELECT" vs "select").
     local keyword_set = {}
     for _, kw in ipairs(grammar.keywords or {}) do
         keyword_set[kw] = true
+        if grammar.case_insensitive then
+            keyword_set[kw:lower()] = true
+        end
     end
 
     -- Build reserved set
@@ -1358,6 +1376,7 @@ function GrammarLexer.new(source, grammar)
         _skip_enabled     = true,
         _alias_map        = alias_map,
         _escape_mode      = grammar.escape_mode or "",
+        _case_insensitive = grammar.case_insensitive or false,
     }, GrammarLexer)
 end
 

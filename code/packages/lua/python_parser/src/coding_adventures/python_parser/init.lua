@@ -130,14 +130,28 @@ end
 
 --- Return the absolute directory of this source file.
 -- Lua prepends "@" to the source path in debug info — we strip it.
--- @return string
+-- When busted runs tests with a relative path containing ".." (e.g.,
+-- "../src/coding_adventures/python_parser/init.lua"), bare dirname
+-- traversal produces a path like "." after enough up() steps and the
+-- grammar file cannot be found.  We resolve to an absolute path via
+-- "cd <dir> && pwd" so that up() always has an absolute anchor.
+-- @return string Absolute directory of this init.lua file.
 local function get_script_dir()
     local info = debug.getinfo(1, "S")
     local src  = info.source
     if src:sub(1, 1) == "@" then
         src = src:sub(2)
     end
-    return dirname(src)
+    local dir = src:match("(.+)/[^/]+$") or "."
+    if dir:sub(2, 2) ~= ":" then
+        local f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
+        local resolved = f and f:read("*l")
+        if f then f:close() end
+        if resolved and resolved ~= "" then
+            return resolved
+        end
+    end
+    return dir
 end
 
 --- Walk up `levels` directory levels from `path`.
