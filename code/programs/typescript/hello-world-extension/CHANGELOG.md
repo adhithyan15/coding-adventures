@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 — 2026-03-29
+
+### Added
+- Multi-browser build script (`npm run build:release`) producing `dist/chrome/`, `dist/firefox/`, `dist/safari/`
+- GitHub Actions release workflow — push a tag `hello-world-extension-v*` to get downloadable zip files for each browser
+
 ## 0.1.0 — 2026-03-29
 
 ### Added

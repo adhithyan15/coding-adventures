@@ -1,0 +1,81 @@
+# Release — Hello World Extension
+#
+# Builds the Hello World browser extension for Chrome, Firefox, and Safari,
+# then attaches the zip files to a GitHub Release.
+#
+# Triggered by pushing a tag matching `hello-world-extension-v*`:
+#   git tag hello-world-extension-v0.1.0
+#   git push origin hello-world-extension-v0.1.0
+#
+# The workflow:
+#   1. Installs dependencies (toolkit + extension)
+#   2. Builds with Vite and runs the multi-browser build script
+#   3. Zips each browser directory (chrome, firefox, safari)
+#   4. Creates a GitHub Release with all three zips attached
+#
+# Why a single build job?
+# Browser extensions are just HTML, CSS, and JavaScript — they're
+# platform-independent. Unlike Electron apps that need per-OS builds,
+# we only need one build on Ubuntu to produce output that works everywhere.
+
+name: Release Hello World Extension
+
+on:
+  push:
+    tags:
+      - "hello-world-extension-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install toolkit dependencies
+        working-directory: code/packages/typescript/browser-extension-toolkit
+        run: npm install --silent
+
+      - name: Install extension dependencies
+        working-directory: code/programs/typescript/hello-world-extension
+        run: npm install --silent
+
+      - name: Build for all browsers
+        working-directory: code/programs/typescript/hello-world-extension
+        run: npm run build:release
+
+      - name: Zip browser extensions
+        working-directory: code/programs/typescript/hello-world-extension/dist
+        run: |
+          zip -r ../hello-world-extension-chrome.zip chrome/
+          zip -r ../hello-world-extension-firefox.zip firefox/
+          zip -r ../hello-world-extension-safari.zip safari/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            code/programs/typescript/hello-world-extension/hello-world-extension-chrome.zip
+            code/programs/typescript/hello-world-extension/hello-world-extension-firefox.zip
+            code/programs/typescript/hello-world-extension/hello-world-extension-safari.zip
+          body: |
+            ## Hello World Extension ${{ github.ref_name }}
+
+            Download the zip for your browser, unzip it, and load it:
+
+            | Browser | File | How to load |
+            |---------|------|-------------|
+            | Chrome | `hello-world-extension-chrome.zip` | `chrome://extensions` → Developer mode → Load unpacked |
+            | Firefox | `hello-world-extension-firefox.zip` | `about:debugging` → Load Temporary Add-on |
+            | Safari | `hello-world-extension-safari.zip` | Unzip, then run `xcrun safari-web-extension-converter <dir>` |
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
