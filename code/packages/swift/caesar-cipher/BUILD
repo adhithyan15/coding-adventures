@@ -1,1 +1,1 @@
-swift test
+xcrun swift test

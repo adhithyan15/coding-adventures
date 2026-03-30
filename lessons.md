@@ -1007,3 +1007,19 @@ When Swift's `BUILD` file (`swift test`) failed on Windows CI with "'swift' is n
 **Rule:** When a language tool is missing on a CI runner, investigate whether it can be installed via an action before skipping. Don't assume a language isn't supported on a platform — check first. Swift runs on macOS, Linux, and Windows.
 
 **Update (same day):** `swift-actions/setup-swift@v3` does NOT support Windows yet — it throws "Windows is not supported yet" at runtime. But that doesn't mean Swift can't run on Windows CI! Instead of skipping, install Swift directly via `winget install --id Swift.Toolchain` (following https://www.swift.org/install/windows/). The CI workflow uses `swift-actions/setup-swift` on macOS/Linux and `winget` on Windows. Don't skip a platform just because one action doesn't support it — there's always a manual install path.
+
+---
+
+### 2026-03-30: Swift BUILD files must use `xcrun swift test`, not `swift test`
+
+When `swift-actions/setup-swift` installs a Swift toolchain on macOS CI runners, the XCTest framework lives inside the Xcode app bundle, not on the toolchain's rpath. Running bare `swift test` fails with `Library not loaded: @rpath/XCTestCore.framework`. Using `xcrun swift test` instead resolves framework paths through Xcode automatically.
+
+**Rule:** Always use `xcrun swift test` (and `xcrun swift build`) in Swift BUILD files. The `xcrun` wrapper resolves framework paths via DEVELOPER_DIR, making it work regardless of how the toolchain was installed.
+
+---
+
+### 2026-03-30: Lua BUILD_windows must use Windows cmd syntax for environment variables
+
+Unix-style inline env vars (`LUA_PATH=... lua`) don't work on Windows cmd.exe — you get "'LUA_PATH' is not recognized as an internal or external command". Use `set "LUA_PATH=..." && lua ...` instead.
+
+**Rule:** When a BUILD_windows file needs to set environment variables, use `set "VAR=value" && command` syntax, not Unix-style `VAR=value command`.
