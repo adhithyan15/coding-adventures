@@ -1,0 +1,25 @@
+name: WaterCounter
+options:
+  bundleIdPrefix: com.codingadventures
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+
+targets:
+  WaterCounter:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - Sources/WaterCounter
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.codingadventures.watercounter
+        PRODUCT_NAME: WaterCounter
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    scheme:
+      testTargets: []
