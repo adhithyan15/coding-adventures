@@ -18,6 +18,10 @@ package com.codingadventures.waterwear
  *   WearOS notification tiles show approximately 40 characters of body text before
  *   truncating. Bodies are kept concise — the key health fact comes first.
  *   Users can swipe to expand, but the primary message must land in line 1.
+ *
+ * FACT ROTATION:
+ *   Body text is drawn from WATER_FACTS — see WaterFacts.kt (concise watch versions).
+ *   8 daily slots use WATER_FACTS[0..7]. Facts 8–9 are reserved for future use.
  */
 
 /** One scheduled hydration reminder. */
@@ -49,52 +53,60 @@ data class NotificationItem(
  * consistency — all devices remind the user at the same time.
  */
 val NOTIFICATION_SCHEDULE = listOf(
+    // Slot 0 — 07:00  overnight fluid loss
     NotificationItem(
         tag   = "waterwear_morning",
         hour  = 7,
         title = "Good morning!",
-        body  = "Two glasses now restores your baseline. You lose ~500ml overnight."
+        body  = WATER_FACTS[0]
     ),
+    // Slot 1 — 09:00  brain 75% water; dehydration reduces focus
     NotificationItem(
         tag   = "waterwear_mid_morning",
         hour  = 9,
         title = "Time to hydrate",
-        body  = "Brain is 75% water. Dehydration reduces focus."
+        body  = WATER_FACTS[1]
     ),
+    // Slot 2 — 11:00  kidneys filter 180 L/day
     NotificationItem(
         tag   = "waterwear_late_morning",
         hour  = 11,
         title = "Nearly noon",
-        body  = "Keep kidneys flushing waste efficiently."
+        body  = WATER_FACTS[2]
     ),
+    // Slot 3 — 13:00  blood 90% water; dehydration strains the heart
     NotificationItem(
         tag   = "waterwear_lunch",
         hour  = 13,
         title = "Lunchtime",
-        body  = "A glass before meals aids digestion."
+        body  = WATER_FACTS[3]
     ),
+    // Slot 4 — 15:00  3 pm slump = dehydration
     NotificationItem(
         tag   = "waterwear_afternoon",
         hour  = 15,
         title = "Afternoon slump?",
-        body  = "Dehydration causes the 3pm energy dip."
+        body  = WATER_FACTS[4]
     ),
+    // Slot 5 — 17:00  synovial fluid; joint lubrication
     NotificationItem(
         tag   = "waterwear_late_afternoon",
         hour  = 17,
         title = "Late afternoon",
-        body  = "Hydrate before your workout, not after."
+        body  = WATER_FACTS[5]
     ),
+    // Slot 6 — 19:00  water regulates temperature
     NotificationItem(
         tag   = "waterwear_evening",
         hour  = 19,
         title = "Evening reminder",
-        body  = "Liver works overnight — keep it supplied."
+        body  = WATER_FACTS[6]
     ),
+    // Slot 7 — 21:00  late drinking disrupts REM sleep
     NotificationItem(
         tag   = "waterwear_night",
         hour  = 21,
         title = "Last call",
-        body  = "Stop here. Late drinking interrupts sleep."
+        body  = WATER_FACTS[7]
     )
 )
