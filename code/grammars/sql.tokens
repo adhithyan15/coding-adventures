@@ -10,7 +10,7 @@
 # references a single token type for both inequality spellings.
 
 NAME          = /[a-zA-Z_][a-zA-Z0-9_]*/
-NUMBER        = /[0-9]+(\.[0-9]+)?/
+NUMBER        = /[0-9]+\.?[0-9]*/
 STRING_SQ     = /'([^'\\]|\\.)*'/ -> STRING
 QUOTED_ID     = /`[^`]+`/ -> NAME
 
