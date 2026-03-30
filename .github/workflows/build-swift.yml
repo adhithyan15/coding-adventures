@@ -86,19 +86,35 @@ jobs:
 
       - name: Create iOS test simulator
         # macos-15 runners do not pre-create simulator devices — only the runtime
-        # is bundled with Xcode. We create one explicitly so the test destination
-        # is always available, regardless of which runner image we land on.
-        # Xcode 16.2 bundles iOS 18.2; fall back to iOS 17.x if needed.
+        # is bundled with Xcode. We discover the available runtime dynamically
+        # (never hard-code the version — runner images vary) then create a device.
         run: |
-          xcrun simctl create "CI_iPhone" \
-            "com.apple.CoreSimulator.SimDeviceType.iPhone-16" \
-            "com.apple.CoreSimulator.SimRuntime.iOS-18-2" \
-          || xcrun simctl create "CI_iPhone" \
-            "com.apple.CoreSimulator.SimDeviceType.iPhone-16" \
-            "com.apple.CoreSimulator.SimRuntime.iOS-18-0" \
-          || xcrun simctl create "CI_iPhone" \
-            "com.apple.CoreSimulator.SimDeviceType.iPhone-15" \
-            "com.apple.CoreSimulator.SimRuntime.iOS-17-5"
+          # Find the first available iOS runtime bundled with this Xcode install.
+          RUNTIME=$(xcrun simctl list runtimes -j \
+            | python3 -c "
+          import json, sys
+          rts = [r for r in json.load(sys.stdin)['runtimes']
+                 if 'iOS' in r['name'] and r.get('isAvailable', False)]
+          print(rts[-1]['identifier'] if rts else '')
+          ")
+          if [ -z "$RUNTIME" ]; then
+            echo '##[error] No available iOS runtime found. All runtimes:'
+            xcrun simctl list runtimes
+            exit 1
+          fi
+          echo "Using runtime: $RUNTIME"
+
+          # Find the latest iPhone device type available.
+          DEVICE_TYPE=$(xcrun simctl list devicetypes -j \
+            | python3 -c "
+          import json, sys
+          types = [d['identifier'] for d in json.load(sys.stdin)['devicetypes']
+                   if 'iPhone' in d['name']]
+          print(types[-1] if types else '')
+          ")
+          echo "Using device type: $DEVICE_TYPE"
+
+          xcrun simctl create "CI_iPhone" "$DEVICE_TYPE" "$RUNTIME"
           xcrun simctl list devices | grep CI_iPhone
 
       - name: Run unit tests
