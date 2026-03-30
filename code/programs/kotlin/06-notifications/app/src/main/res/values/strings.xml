@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    strings.xml — localised string resources.
+
+    Android's resource system separates string literals from code so that:
+      1. The app can be translated into multiple languages by providing alternate
+         res/values-fr/, res/values-ja/ etc. directories — no code changes needed.
+      2. String constants are centralised, preventing copy-paste drift.
+      3. Lint can warn you if you hardcode a string in a layout XML or code that
+         should be in resources.
+
+    For a learning project we use only English, but the structure is correct
+    for future localisation. Compose code can reference these via
+    stringResource(R.string.app_name) if needed.
+-->
+<resources>
+    <string name="app_name">WaterNotify</string>
+    <string name="notification_channel_name">Hydration Reminders</string>
+    <string name="notification_channel_description">Daily reminders to drink water throughout the day</string>
+    <string name="log_drink">Log a Drink</string>
+    <string name="log_another">Log Another</string>
+    <string name="amount_ml">+250 ml</string>
+    <string name="goal_met">Daily goal reached!</string>
+    <string name="notifications_scheduled">8 daily reminders scheduled</string>
+    <string name="glasses_label">of 8 glasses</string>
+    <string name="ml_label">ml of 2000 ml</string>
+</resources>
