@@ -1014,7 +1014,10 @@ When Swift's `BUILD` file (`swift test`) failed on Windows CI with "'swift' is n
 
 When `swift-actions/setup-swift` installs a Swift toolchain on macOS CI runners, the XCTest framework lives inside the Xcode app bundle, not on the toolchain's rpath. Running bare `swift test` fails with `Library not loaded: @rpath/XCTestCore.framework`. Using `xcrun swift test` instead resolves framework paths through Xcode automatically.
 
-**Rule:** Always use `xcrun swift test` (and `xcrun swift build`) in Swift BUILD files. The `xcrun` wrapper resolves framework paths via DEVELOPER_DIR, making it work regardless of how the toolchain was installed.
+**Rule:** Use `xcrun swift test` on macOS (resolves XCTest framework paths via DEVELOPER_DIR) but `xcrun` doesn't exist on Linux. BUILD files must be platform-aware:
+```
+if command -v xcrun >/dev/null 2>&1; then xcrun swift test; else swift test; fi
+```
 
 ---
 
