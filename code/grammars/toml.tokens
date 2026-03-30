@@ -88,8 +88,12 @@ LITERAL_STRING = /'[^'\n]*'/
 # This works because token patterns are tried before skip patterns consume
 # the space at each position.
 
-OFFSET_DATETIME = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/
-LOCAL_DATETIME  = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?/
+OFFSET_DATETIME_FRAC_TZ = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+[+-]\d{2}:\d{2}/ -> OFFSET_DATETIME
+OFFSET_DATETIME_FRAC_Z  = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+Z/ -> OFFSET_DATETIME
+OFFSET_DATETIME_TZ      = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/ -> OFFSET_DATETIME
+OFFSET_DATETIME_Z       = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}Z/ -> OFFSET_DATETIME
+LOCAL_DATETIME_FRAC     = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}\.\d+/ -> LOCAL_DATETIME
+LOCAL_DATETIME          = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}/
 LOCAL_DATE      = /\d{4}-\d{2}-\d{2}/
 LOCAL_TIME_FRAC = /\d{2}:\d{2}:\d{2}\.\d+/ -> LOCAL_TIME
 LOCAL_TIME      = /\d{2}:\d{2}:\d{2}/

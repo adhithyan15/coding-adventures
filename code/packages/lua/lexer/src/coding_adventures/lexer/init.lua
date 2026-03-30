@@ -947,6 +947,9 @@ local function pcre_to_lua(s)
                 elseif bnc == "'"  then buf[#buf+1] = "'";   j = j+2
                 elseif bnc == '"'  then buf[#buf+1] = '"';   j = j+2
                 elseif bnc == "\\" then buf[#buf+1] = "\\";  j = j+2
+                elseif bnc == "-"  then buf[#buf+1] = "%-";  j = j+2
+                elseif bnc == "["  then buf[#buf+1] = "%[";  j = j+2
+                elseif bnc == "]"  then buf[#buf+1] = "%]";  j = j+2
                 elseif bnc == "x" and j+3 <= len
                        and s:sub(j+2,j+3):match("^%x%x$") then
                     buf[#buf+1] = string.char(tonumber(s:sub(j+2,j+3),16))
@@ -1534,7 +1537,7 @@ function GrammarLexer:_try_match_token_in_group(group_name)
                 if #value >= 2 then
                     local quote = value:sub(1, 1)
                     if quote == '"' or quote == "'" then
-                        -- Check for triple-quoted strings
+                        -- Check for triple-quoted strings (don't apply escape-scanner)
                         if #value >= 6 and value:sub(1, 3) == quote:rep(3) then
                             local inner = value:sub(4, #value - 3)
                             if self._escape_mode ~= "none" then
@@ -1542,6 +1545,27 @@ function GrammarLexer:_try_match_token_in_group(group_name)
                             end
                             value = inner
                         else
+                            -- For single-quoted strings, the regex approximation for
+                            -- patterns like /"([^"\\]|\\.)*"/ (converted to ".."-style
+                            -- non-greedy) may stop prematurely at an escaped quote like
+                            -- \" inside the string. Scan forward to find the true end.
+                            local true_end = e
+                            local k = 2  -- skip opening quote
+                            while k <= #remaining do
+                                local c = remaining:sub(k, k)
+                                if c == "\\" then
+                                    k = k + 2  -- skip backslash and escaped char
+                                elseif c == quote then
+                                    true_end = k  -- found the real closing quote
+                                    break
+                                else
+                                    k = k + 1
+                                end
+                            end
+                            if true_end > e then
+                                e = true_end
+                                value = remaining:sub(1, e)
+                            end
                             local inner = value:sub(2, #value - 1)
                             if self._escape_mode ~= "none" then
                                 inner = process_escapes(inner)

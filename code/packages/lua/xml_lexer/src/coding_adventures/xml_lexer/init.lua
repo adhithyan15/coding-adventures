@@ -226,6 +226,7 @@ end
 function M.tokenize(source)
     local grammar = get_grammar()
     local gl      = lexer_pkg.GrammarLexer.new(source, grammar)
+    attach_xml_callbacks(gl)
     local raw     = gl:tokenize()
     local tokens  = {}
     for _, tok in ipairs(raw) do

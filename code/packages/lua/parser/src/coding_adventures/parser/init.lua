@@ -597,9 +597,11 @@ function GrammarParseError.new(message, token)
 end
 
 function GrammarParseError:error_string()
-    if self.tok then
+    if self.tok and self.tok.line then
+        -- Tokens may use either 'column' or 'col' depending on the lexer.
+        local col = self.tok.column or self.tok.col or 0
         return string.format("Parse error at %d:%d: %s",
-            self.tok.line, self.tok.column, self.message)
+            self.tok.line, col, self.message)
     else
         return string.format("Parse error: %s", self.message)
     end
