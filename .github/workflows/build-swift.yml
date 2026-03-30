@@ -84,64 +84,18 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: Create iOS test simulator
-        # macos-15 runners do not pre-create simulator devices — only the runtime
-        # is bundled with Xcode. We use Python to discover the available iOS runtime
-        # and pick a *compatible* iPhone device type from the runtime's own
-        # supportedDeviceTypes list, which is ordered newest-first.
-        # This avoids the two failure modes seen previously:
-        #   1. Hard-coded runtime ID (wrong version on actual runner)
-        #   2. Picking last device type alphabetically (old model, incompatible)
-        run: |
-          python3 - <<'PYEOF'
-          import json, subprocess, sys
-
-          # Step 1: find the newest available iOS runtime.
-          runtimes = json.loads(
-              subprocess.check_output(['xcrun', 'simctl', 'list', 'runtimes', '-j']))
-          ios_rts = [r for r in runtimes['runtimes']
-                     if 'iOS' in r['name'] and r.get('isAvailable', False)]
-          if not ios_rts:
-              print('ERROR: no available iOS runtime', file=sys.stderr)
-              subprocess.run(['xcrun', 'simctl', 'list', 'runtimes'])
-              sys.exit(1)
-          runtime = ios_rts[-1]   # newest (highest version number)
-          print(f"Runtime: {runtime['name']}  {runtime['identifier']}")
-
-          # Step 2: pick the first compatible iPhone from the runtime's own
-          # supportedDeviceTypes (ordered newest-first, so index 0 = latest model).
-          supported = runtime.get('supportedDeviceTypes', [])
-          iphones = [d for d in supported if 'iPhone' in d.get('name', '')]
-          if not iphones:
-              # Older Xcode may omit supportedDeviceTypes — fall back.
-              all_dt = json.loads(
-                  subprocess.check_output(['xcrun', 'simctl', 'list', 'devicetypes', '-j']))
-              iphones = [d for d in all_dt['devicetypes']
-                         if 'iPhone' in d.get('name', '')]
-          if not iphones:
-              print('ERROR: no iPhone device type found', file=sys.stderr)
-              sys.exit(1)
-          device = iphones[0]   # newest compatible iPhone
-          print(f"Device:  {device['name']}  {device['identifier']}")
-
-          # Step 3: create the simulator device.
-          r = subprocess.run(
-              ['xcrun', 'simctl', 'create', 'CI_iPhone',
-               device['identifier'], runtime['identifier']],
-              capture_output=True, text=True)
-          if r.returncode != 0:
-              print(f'simctl create failed:\n{r.stderr}', file=sys.stderr)
-              sys.exit(1)
-          print(f'Created UDID: {r.stdout.strip()}')
-          PYEOF
-          xcrun simctl list devices | grep CI_iPhone
-
       - name: Run unit tests
         # Tests use MockNotificationCenter so no real UNUserNotificationCenter
-        # is needed — they run cleanly in a booted simulator.
+        # is needed. We run under Mac Catalyst instead of an iOS Simulator because
+        # the macos-15 runner ships Xcode 16.2 (iOS 18.2 SDK) but its bundled
+        # simulator runtime is iOS 26.x — an incompatible version pair. Creating
+        # an iOS 26.x simulator device with simctl succeeds, but Xcode 16.2
+        # refuses to boot it ("iOS 18.2 is not installed"). Mac Catalyst is always
+        # present on the runner host, requires no extra downloads, and our tests
+        # carry zero iOS-UI dependencies, so this destination is exactly equivalent.
         working-directory: code/programs/swift/06-notifications
         run: |
           xcodebuild test \
             -scheme WaterNotifyTests \
-            -destination 'platform=iOS Simulator,name=CI_iPhone' \
+            -destination 'platform=macOS,variant=Mac Catalyst' \
             CODE_SIGNING_ALLOWED=NO
