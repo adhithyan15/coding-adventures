@@ -64,11 +64,13 @@ jobs:
             runner: ubuntu-latest
             build-mode: autobuild
 
-          # ── Swift — autobuild fails against multi-package repos;
-          #    build-mode: none performs source-level extraction instead ─
+          # ── Swift — build-mode: none is no longer supported as of
+          #    CodeQL 2.25.1. autobuild detects Xcode projects and SPM
+          #    packages automatically; it handles multiple projects in
+          #    the same repo by building each one it finds. ────────────
           - language: swift
             runner: macos-latest
-            build-mode: none
+            build-mode: autobuild
 
     steps:
       - name: Checkout
