@@ -470,11 +470,12 @@ end)
 
 describe("brfalse.s", function()
     it("branches when value is 0", function()
-        -- push 0, brfalse.s +1 (skip push 42), push 99, ret → stack=[99]
+        -- push 0, brfalse.s +2 (skip push 42), push 99, ret → stack=[99]
+        -- encode_ldc_i4(42) produces 2 bytes (ldc.i4.s + 0x2A), so offset must be 2
         local code = clr.assemble({
             clr.encode_ldc_i4(0),
-            { clr.BRFALSE_S, 1 },   -- skip next 1-byte instruction
-            clr.encode_ldc_i4(42),  -- skipped
+            { clr.BRFALSE_S, 2 },   -- skip next 2-byte instruction (ldc.i4.s 42)
+            clr.encode_ldc_i4(42),  -- skipped (2 bytes: ldc.i4.s + operand)
             clr.encode_ldc_i4(99),
             { clr.RET },
         })
@@ -486,10 +487,10 @@ describe("brfalse.s", function()
     end)
 
     it("does not branch when value is non-zero", function()
-        -- push 1, brfalse.s +1 (not taken), push 42, push 99, ret → stack=[42,99]
+        -- push 1, brfalse.s +2 (not taken), push 42, push 99, ret → stack=[42,99]
         local code = clr.assemble({
             clr.encode_ldc_i4(1),
-            { clr.BRFALSE_S, 1 },
+            { clr.BRFALSE_S, 2 },
             clr.encode_ldc_i4(42),
             clr.encode_ldc_i4(99),
             { clr.RET },
@@ -518,10 +519,11 @@ end)
 
 describe("brtrue.s", function()
     it("branches when value is non-zero", function()
-        -- push 1, brtrue.s +1 (skip push 42), push 99, ret → stack=[99]
+        -- push 1, brtrue.s +2 (skip push 42), push 99, ret → stack=[99]
+        -- encode_ldc_i4(42) is 2 bytes so offset must be 2
         local code = clr.assemble({
             clr.encode_ldc_i4(1),
-            { clr.BRTRUE_S, 1 },
+            { clr.BRTRUE_S, 2 },
             clr.encode_ldc_i4(42),
             clr.encode_ldc_i4(99),
             { clr.RET },
@@ -535,7 +537,7 @@ describe("brtrue.s", function()
     it("does not branch when value is 0", function()
         local code = clr.assemble({
             clr.encode_ldc_i4(0),
-            { clr.BRTRUE_S, 1 },
+            { clr.BRTRUE_S, 2 },
             clr.encode_ldc_i4(42),
             clr.encode_ldc_i4(99),
             { clr.RET },

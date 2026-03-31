@@ -341,10 +341,11 @@ subtest 'br.s unconditional branch' => sub {
 };
 
 subtest 'brfalse.s branches on 0' => sub {
-    # push 0, brfalse.s +1, push 42 (skipped), push 99, ret → [99]
+    # push 0, brfalse.s +2, push 42 (skipped, 2-byte ldc.i4.s), push 99, ret → [99]
+    # encode_ldc_i4(42) produces 2 bytes (ldc.i4.s + operand), so offset must be 2
     my $code = CodingAdventures::ClrSimulator::assemble([
         CodingAdventures::ClrSimulator::encode_ldc_i4(0),
-        [CodingAdventures::ClrSimulator::BRFALSE_S, 1],
+        [CodingAdventures::ClrSimulator::BRFALSE_S, 2],
         CodingAdventures::ClrSimulator::encode_ldc_i4(42),
         CodingAdventures::ClrSimulator::encode_ldc_i4(99),
         [CodingAdventures::ClrSimulator::RET],
@@ -359,7 +360,7 @@ subtest 'brfalse.s branches on 0' => sub {
 subtest 'brfalse.s does not branch on non-zero' => sub {
     my $code = CodingAdventures::ClrSimulator::assemble([
         CodingAdventures::ClrSimulator::encode_ldc_i4(1),
-        [CodingAdventures::ClrSimulator::BRFALSE_S, 1],
+        [CodingAdventures::ClrSimulator::BRFALSE_S, 2],
         CodingAdventures::ClrSimulator::encode_ldc_i4(42),
         CodingAdventures::ClrSimulator::encode_ldc_i4(99),
         [CodingAdventures::ClrSimulator::RET],
@@ -386,9 +387,10 @@ subtest 'brfalse.s treats null as false' => sub {
 };
 
 subtest 'brtrue.s branches on non-zero' => sub {
+    # encode_ldc_i4(42) produces 2 bytes, so offset must be 2 to skip it
     my $code = CodingAdventures::ClrSimulator::assemble([
         CodingAdventures::ClrSimulator::encode_ldc_i4(1),
-        [CodingAdventures::ClrSimulator::BRTRUE_S, 1],
+        [CodingAdventures::ClrSimulator::BRTRUE_S, 2],
         CodingAdventures::ClrSimulator::encode_ldc_i4(42),
         CodingAdventures::ClrSimulator::encode_ldc_i4(99),
         [CodingAdventures::ClrSimulator::RET],
@@ -402,7 +404,7 @@ subtest 'brtrue.s branches on non-zero' => sub {
 subtest 'brtrue.s does not branch on 0' => sub {
     my $code = CodingAdventures::ClrSimulator::assemble([
         CodingAdventures::ClrSimulator::encode_ldc_i4(0),
-        [CodingAdventures::ClrSimulator::BRTRUE_S, 1],
+        [CodingAdventures::ClrSimulator::BRTRUE_S, 2],
         CodingAdventures::ClrSimulator::encode_ldc_i4(42),
         CodingAdventures::ClrSimulator::encode_ldc_i4(99),
         [CodingAdventures::ClrSimulator::RET],

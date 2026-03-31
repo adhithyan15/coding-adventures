@@ -90,7 +90,9 @@ subtest 'bipush with positive value' => sub {
         CodingAdventures::JvmSimulator::RETURN,
     ]);
     is($traces->[0]{opcode}, 'bipush', 'opcode name');
-    is($sim->{stack}, [], 'stack empty after return (RETURN pops nothing)');
+    # RETURN is a void return — it does NOT pop the stack. The 42 pushed by
+    # bipush remains on the stack after RETURN halts the simulator.
+    is($sim->{stack}, [42], 'bipush 42 remains on stack (RETURN does not pop)');
     # Re-run and inspect before return
     my $sim2 = SIM();
     $sim2->load([CodingAdventures::JvmSimulator::BIPUSH, 42, CodingAdventures::JvmSimulator::RETURN]);

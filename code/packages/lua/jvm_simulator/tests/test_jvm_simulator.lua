@@ -337,14 +337,13 @@ end)
 
 describe("if_icmpeq", function()
     it("branches when a == b", function()
-        -- Push 5, 5. if_icmpeq +2. push 1. push 2. return → stack = [2]
-        -- if_icmpeq at PC=2 with offset=5 → target = 2+5 = 7
-        -- PC: 0=iconst_5, 1=iconst_5, 2=if_icmpeq hi lo, 5=iconst_1, 6=iconst_2, 7=return
-        -- To skip iconst_1: offset = 7-2 = 5 (hi=0, lo=5)
+        -- Push 5, 5. if_icmpeq +4. push 1 (skipped). push 2. return → stack = [2]
+        -- Layout: PC 0=iconst_5, 1=iconst_5, 2=if_icmpeq hi lo (3 bytes), 5=iconst_1, 6=iconst_2, 7=return
+        -- instruction_pc=2, target=6 (iconst_2), offset=6-2=4 → bytes 0x00, 0x04
         local code = {
             jvm.ICONST_5,              -- pc 0
             jvm.ICONST_5,              -- pc 1
-            jvm.IF_ICMPEQ, 0x00, 0x05, -- pc 2: if 5==5 jump to 2+5=7
+            jvm.IF_ICMPEQ, 0x00, 0x04, -- pc 2: if 5==5 jump to 2+4=6
             jvm.ICONST_1,              -- pc 5 (skipped)
             jvm.ICONST_2,              -- pc 6
             jvm.RETURN,                -- pc 7
@@ -360,8 +359,8 @@ describe("if_icmpeq", function()
         local code = {
             jvm.ICONST_3,              -- pc 0
             jvm.ICONST_5,              -- pc 1
-            jvm.IF_ICMPEQ, 0x00, 0x05, -- pc 2: 3 != 5, fall through
-            jvm.ICONST_1,              -- pc 5: executes
+            jvm.IF_ICMPEQ, 0x00, 0x04, -- pc 2: 3 != 5, fall through to pc 5
+            jvm.ICONST_1,              -- pc 5: executes (fall-through)
             jvm.ICONST_2,              -- pc 6
             jvm.RETURN,                -- pc 7
         }
@@ -379,11 +378,11 @@ end)
 
 describe("if_icmpgt", function()
     it("branches when a > b", function()
-        -- Push 5, 3. if_icmpgt → 5 > 3, branch
+        -- Push 5, 3. if_icmpgt at PC=2, offset=4 → target=6 (iconst_2). iconst_1 skipped.
         local code = {
             jvm.ICONST_5,              -- pc 0
             jvm.ICONST_3,              -- pc 1
-            jvm.IF_ICMPGT, 0x00, 0x05, -- pc 2: 5>3, jump to 2+5=7
+            jvm.IF_ICMPGT, 0x00, 0x04, -- pc 2: 5>3, jump to 2+4=6
             jvm.ICONST_1,              -- pc 5 (skipped)
             jvm.ICONST_2,              -- pc 6
             jvm.RETURN,                -- pc 7
@@ -399,7 +398,7 @@ describe("if_icmpgt", function()
         local code = {
             jvm.ICONST_2,              -- pc 0
             jvm.ICONST_5,              -- pc 1
-            jvm.IF_ICMPGT, 0x00, 0x05, -- pc 2: 2>5 is false, fall through
+            jvm.IF_ICMPGT, 0x00, 0x04, -- pc 2: 2>5 is false, fall through to pc 5
             jvm.ICONST_1,              -- pc 5
             jvm.ICONST_2,              -- pc 6
             jvm.RETURN,                -- pc 7

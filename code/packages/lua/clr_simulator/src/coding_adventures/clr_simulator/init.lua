@@ -142,18 +142,18 @@ M.CLT_BYTE   = 0x04   -- clt second byte: push 1 if a < b
 -- @param description string  — plain-English description
 -- @return table (trace record)
 local function make_trace(pc, opcode, before, sim, description)
-    -- Deep copy the locals so the trace is a snapshot, not a live reference.
-    local locals_copy = {}
-    for i, v in ipairs(sim.locals) do
-        locals_copy[i] = v
+    -- Deep copy locals (use numeric for-loop since ipairs stops at nil slots).
+    local locals_copy = setmetatable({}, {__len = function() return #sim.locals end})
+    for i = 1, #sim.locals do
+        locals_copy[i] = sim.locals[i]
     end
     return {
-        pc          = pc,
-        opcode      = opcode,
+        pc           = pc,
+        opcode       = opcode,
         stack_before = before,
-        stack_after  = {table.unpack(sim.stack)},
-        locals      = locals_copy,
-        description = description,
+        stack_after  = copy_stack(sim.stack),
+        locals       = locals_copy,
+        description  = description,
     }
 end
 
@@ -176,7 +176,7 @@ end
 -- @return table — new simulator instance
 function M.new()
     return {
-        stack    = {},
+        stack    = new_stack(),
         locals   = {},
         pc       = 0,
         bytecode = {},
@@ -193,12 +193,16 @@ end
 function M.load(sim, bytecode, opts)
     opts = opts or {}
     local num_locals = opts.num_locals or 16
-    local new_locals = {}
+    -- We need a locals table whose # operator returns num_locals even when all
+    -- slots are nil. Lua's # operator stops at the first nil in a sequence, so
+    -- a table of all-nil slots returns 0. The fix: attach a metatable with a
+    -- __len metamethod that always returns the declared slot count.
+    local new_locals = setmetatable({}, {__len = function() return num_locals end})
     for i = 1, num_locals do
         new_locals[i] = nil
     end
     return {
-        stack    = {},
+        stack    = new_stack(),
         locals   = new_locals,
         pc       = 0,
         bytecode = bytecode,
@@ -239,26 +243,45 @@ end
 -- ============================================================================
 -- Stack Helpers
 -- ============================================================================
+--
+-- The CLR stack must support nil as a valid value (via ldnull). Plain Lua
+-- tables cannot count nil entries with '#'. We solve this by storing a '_n'
+-- field that tracks the logical size, and attaching a __len metamethod so
+-- that '#stack' returns '_n' even when some slots hold nil.
+--
+-- Example: after ldnull, stack[1]==nil but #stack==1.
+
+local STACK_MT = {__len = function(t) return t._n end}
+
+local function new_stack()
+    return setmetatable({_n = 0}, STACK_MT)
+end
+
+local function copy_stack(s)
+    local c = setmetatable({_n = s._n}, STACK_MT)
+    for i = 1, s._n do c[i] = s[i] end
+    return c
+end
 
 -- Pop the top value from the stack; raises on underflow.
 local function pop(sim)
-    if #sim.stack == 0 then
+    if sim.stack._n == 0 then
         error("Stack underflow")
     end
-    local val = sim.stack[#sim.stack]
-    local new_stack = {}
-    for i = 1, #sim.stack - 1 do
-        new_stack[i] = sim.stack[i]
-    end
-    sim.stack = new_stack
+    local s = copy_stack(sim.stack)
+    local val = s[s._n]
+    s[s._n] = nil  -- clear slot (optional but tidy)
+    s._n = s._n - 1
+    sim.stack = s
     return sim, val
 end
 
--- Push a value onto the stack.
+-- Push a value onto the stack (nil-safe via explicit index).
 local function push(sim, val)
-    local new_stack = {table.unpack(sim.stack)}
-    new_stack[#new_stack + 1] = val
-    sim.stack = new_stack
+    local s = copy_stack(sim.stack)
+    s._n = s._n + 1
+    s[s._n] = val
+    sim.stack = s
     return sim
 end
 
@@ -301,7 +324,7 @@ function M.step(sim)
         error(string.format("PC (%d) is beyond end of bytecode (%d bytes)", sim.pc, #sim.bytecode))
     end
 
-    local stack_before = {table.unpack(sim.stack)}
+    local stack_before = copy_stack(sim.stack)
     local opcode = byte_at(sim.bytecode, sim.pc)
 
     -- ---- nop ----------------------------------------------------------------

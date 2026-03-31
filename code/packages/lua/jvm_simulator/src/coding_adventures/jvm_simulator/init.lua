@@ -170,7 +170,9 @@ function M.load(sim, bytecode, opts)
     opts = opts or {}
     local num_locals = opts.num_locals or 16
     local constants  = opts.constants or {}
-    local new_locals = {}
+    -- Use a __len metatable so that #sim.locals returns num_locals even when
+    -- all slots are nil. Plain Lua tables with nil values return 0 from #.
+    local new_locals = setmetatable({}, {__len = function() return num_locals end})
     for i = 1, num_locals do
         new_locals[i] = nil
     end
