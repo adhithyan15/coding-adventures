@@ -358,7 +358,7 @@ sub validate {
     my $val = $flags->{$id};
 
     # Required check
-    if ($f->{required} && (!defined $val || $val eq '' || $val == 0)) {
+    if ($f->{required} && (!defined $val || $val eq '' || $val eq '0')) {
       if (@{$f->{required_unless} // []}) {
         my $has = grep { defined $flags->{$_} && $flags->{$_} && $flags->{$_} ne '0' }
                   @{$f->{required_unless}};

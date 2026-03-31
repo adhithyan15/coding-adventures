@@ -118,7 +118,7 @@ sub evaluate {
         $out_a_comb = $lut_a_result ^ $carry_in;        # XOR: sum bit
         $carry_mid  = $lut_a_result & $carry_in;        # AND: carry propagate
         $out_b_comb = $lut_b_result ^ $carry_mid;
-        $carry_out  = $carry_mid;  # carry from lut_a stage passes to slice carry output
+        $carry_out  = $lut_b_result & $carry_mid;  # carry propagates through both stages
     } else {
         $out_a_comb = $lut_a_result;
         $out_b_comb = $lut_b_result;

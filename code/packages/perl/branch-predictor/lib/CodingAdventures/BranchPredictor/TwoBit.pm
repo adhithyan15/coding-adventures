@@ -58,6 +58,7 @@ my %PREDICTS_TAKEN = (WT, 1, ST, 1);
 
 sub new {
     my ($class, %args) = @_;
+    $class = ref($class) if ref($class);
     return bless {
         table_size    => $args{table_size}    // 1024,
         initial_state => $args{initial_state} // WNT,

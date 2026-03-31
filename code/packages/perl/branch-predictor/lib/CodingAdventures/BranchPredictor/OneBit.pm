@@ -40,6 +40,7 @@ our $VERSION = '0.01';
 
 sub new {
     my ($class, %args) = @_;
+    $class = ref($class) if ref($class);
     my $table_size = $args{table_size} // 1024;
     return bless {
         table_size => $table_size,

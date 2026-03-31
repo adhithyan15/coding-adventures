@@ -28,6 +28,7 @@ our $VERSION = '0.01';
 
 sub new {
     my ($class, %args) = @_;
+    $class = ref($class) if ref($class);
     return bless {
         size    => $args{size} // 256,
         entries => {},

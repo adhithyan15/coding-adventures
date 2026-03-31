@@ -31,6 +31,7 @@ use CodingAdventures::BranchPredictor::Prediction;
 
 sub new {
     my ($class) = @_;
+    $class = ref($class) if ref($class);
     return bless { stats => CodingAdventures::BranchPredictor::Stats->new() }, $class;
 }
 
@@ -66,6 +67,7 @@ use CodingAdventures::BranchPredictor::Prediction;
 
 sub new {
     my ($class) = @_;
+    $class = ref($class) if ref($class);
     return bless { stats => CodingAdventures::BranchPredictor::Stats->new() }, $class;
 }
 
@@ -105,6 +107,7 @@ use CodingAdventures::BranchPredictor::Prediction;
 
 sub new {
     my ($class) = @_;
+    $class = ref($class) if ref($class);
     return bless {
         targets => {},   # pc -> last known target
         stats   => CodingAdventures::BranchPredictor::Stats->new(),

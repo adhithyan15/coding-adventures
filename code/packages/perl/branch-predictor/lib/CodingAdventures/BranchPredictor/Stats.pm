@@ -25,6 +25,7 @@ our $VERSION = '0.01';
 # Create a new Stats object with all counters at zero.
 sub new {
     my ($class) = @_;
+    $class = ref($class) if ref($class);  # handle instance invocant (e.g. from reset())
     return bless {
         predictions => 0,
         correct     => 0,
