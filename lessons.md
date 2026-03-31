@@ -996,3 +996,15 @@ When adding build scripts (like `scripts/build-all-browsers.ts`) to a TypeScript
 
 **Solution:** Add `"scripts/**"` to the vitest config's `coverage.exclude` array, alongside other non-testable files like `dist/**` and `vite.config.ts`.
 
+---
+
+### 2026-03-31: tsc -b follows imports into nested node_modules for .ts source files
+
+When TypeScript packages export `.ts` source (not compiled `.d.ts`), `tsc -b` follows import chains into `node_modules`. With `file:` dependencies, npm creates copies (not symlinks on Windows), and the chain goes multiple levels deep: `node_modules/@scope/a/node_modules/@scope/b/node_modules/@scope/c/...`. At that depth, transitive deps aren't installed, causing `Cannot find module` errors.
+
+`skipLibCheck: true` does NOT help because these are `.ts` files, not `.d.ts` declaration files. The `include: ["src"]` tsconfig option also doesn't help because `tsc -b` follows imports regardless.
+
+**Fix:** Remove `tsc -b` from Vite app build scripts. Vite handles TypeScript compilation for bundling, and type checking happens through vitest. Change `"build": "tsc -b && vite build"` to `"build": "vite build"`.
+
+**Rule:** For Vite-based TypeScript programs that use `file:` dependencies, never use `tsc -b` in the build script. Rely on Vite's TypeScript handling for production builds.
+
