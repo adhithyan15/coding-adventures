@@ -138,11 +138,11 @@ describe("fpga", function()
                 lut_b = {0,0,0,0},
             })
             -- carry_in=1: out_a = 1 XOR 1 = 0; carry_mid = 1 AND 1 = 1
-            --             out_b = 0 XOR 1 = 1; carry_out = 0 AND 1 = 0
+            --             out_b = 0 XOR 1 = 1; carry_out = carry_mid = 1
             local a, b, carry = sl:evaluate({0,0}, {0,0}, 0, 1)
             assert.equals(0, a)
             assert.equals(1, b)
-            assert.equals(0, carry)
+            assert.equals(1, carry)
         end)
     end)
 

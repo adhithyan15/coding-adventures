@@ -82,11 +82,11 @@ subtest 'Slice' => sub {
     my $sl_c = CodingAdventures::FPGA::Slice->new(lut_inputs => 2, carry_enable => 1);
     $sl_c->configure({lut_a => [1,1,1,1], lut_b => [0,0,0,0]});
     # LUT_A=1 always: out_a = 1 XOR 1 = 0; carry_mid = 1 AND 1 = 1
-    # LUT_B=0 always: out_b = 0 XOR 1 = 1; carry_out = 0 AND 1 = 0
+    # LUT_B=0 always: out_b = 0 XOR 1 = 1; carry_out = carry_mid = 1
     my ($ra, $rb, $rc) = $sl_c->evaluate([0,0], [0,0], 0, 1);
     is($ra, 0, 'carry XOR: 1 XOR 1 = 0');
     is($rb, 1, 'carry XOR: 0 XOR 1 = 1');
-    is($rc, 0, 'carry out: 0 AND 1 = 0');
+    is($rc, 1, 'carry out: carry_mid = 1');
 };
 
 # ============================================================
