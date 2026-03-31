@@ -298,15 +298,18 @@ function M.write_word(cpu, addr, value)
 end
 
 -- Reads a single byte from memory.
+-- Byte accesses use the full 32-bit address (MASK32), not PC_MASK, because
+-- byte addresses are not constrained to word alignment — any byte offset is valid.
 function M.read_byte(cpu, addr)
-    addr = addr & M.PC_MASK
+    addr = addr & M.MASK32
     if addr >= cpu.mem_size then return 0 end
     return cpu.memory[addr] or 0
 end
 
 -- Writes a single byte to memory.
+-- Same reasoning as read_byte: use MASK32, not PC_MASK.
 function M.write_byte(cpu, addr, value)
-    addr = addr & M.PC_MASK
+    addr = addr & M.MASK32
     if addr >= cpu.mem_size then return end
     cpu.memory[addr] = value & 0xFF
 end
