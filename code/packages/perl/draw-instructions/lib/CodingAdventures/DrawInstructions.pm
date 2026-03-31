@@ -26,10 +26,11 @@ package CodingAdventures::DrawInstructions;
 # Every instruction is a hashref with at minimum a `kind` key.  The
 # currently defined kinds are:
 #
-#   rect   — filled rectangle
-#   text   — positioned text string
+#   rect   — filled rectangle (with optional stroke outline)
+#   text   — positioned text string (with optional font_weight)
 #   line   — straight line segment
 #   circle — filled circle
+#   clip   — rectangular clipping region that masks its children
 #   group  — ordered list of child instructions
 #
 # All instructions carry a `metadata` field (hashref) for renderer-specific
@@ -52,7 +53,7 @@ use warnings;
 our $VERSION = '0.01';
 
 # ============================================================================
-# draw_rect($x, $y, $width, $height, $fill [, $metadata])
+# draw_rect($x, $y, $width, $height, $fill [, %opts])
 # ============================================================================
 #
 # Creates a rectangle instruction.
@@ -62,34 +63,72 @@ our $VERSION = '0.01';
 #   $width        — width of the rectangle
 #   $height       — height of the rectangle
 #   $fill         — CSS colour string (e.g., "#ff0000" or "red")
-#   $metadata     — optional hashref of extra data (default: {})
+#   %opts         — optional named parameters:
+#     stroke       — stroke colour for outline (default: undef)
+#     stroke_width — width of the stroke line (default: undef)
+#     metadata     — hashref of extra data (default: {})
 #
 # Returns a hashref:
 #   {
-#     kind     => "rect",
-#     x        => $x,
-#     y        => $y,
-#     width    => $width,
-#     height   => $height,
-#     fill     => $fill,
-#     metadata => $metadata,
+#     kind         => "rect",
+#     x            => $x,
+#     y            => $y,
+#     width        => $width,
+#     height       => $height,
+#     fill         => $fill,
+#     stroke       => $stroke,        # undef when not set
+#     stroke_width => $stroke_width,   # undef when not set
+#     metadata     => $metadata,
 #   }
+#
+# When stroke is undef the rectangle is filled only.  When stroke is set
+# to a CSS colour string the renderer should draw an outline with the
+# given stroke_width.
+#
+# Examples:
+#
+#   # Plain filled rectangle (backwards-compatible positional call):
+#   my $r1 = draw_rect(10, 20, 100, 50, "#ff0000");
+#
+#   # Rectangle with a 2-pixel black outline:
+#   my $r2 = draw_rect(10, 20, 100, 50, "#ff0000",
+#                       stroke => "#000000", stroke_width => 2);
+#
+#   # Legacy call with metadata hashref as sixth argument still works:
+#   my $r3 = draw_rect(10, 20, 100, 50, "#ff0000", { id => "box" });
+#
 sub draw_rect {
-    my ($x, $y, $width, $height, $fill, $metadata) = @_;
-    $metadata //= {};
+    my ($x, $y, $width, $height, $fill, @rest) = @_;
+
+    # Backwards compatibility: if the sixth argument is a hashref, treat it
+    # as the legacy metadata-only call style.
+    my %opts;
+    if (@rest == 1 && ref $rest[0] eq 'HASH') {
+        %opts = (metadata => $rest[0]);
+    } else {
+        %opts = @rest;
+    }
+
+    my $metadata     = $opts{metadata}     // {};
+    my $stroke       = $opts{stroke};
+    my $stroke_width = $opts{stroke_width};
+
     return {
-        kind     => 'rect',
-        x        => $x,
-        y        => $y,
-        width    => $width,
-        height   => $height,
-        fill     => $fill,
-        metadata => $metadata,
+        kind         => 'rect',
+        x            => $x,
+        y            => $y,
+        width        => $width,
+        height       => $height,
+        fill         => $fill,
+        stroke       => $stroke,
+        stroke_width => $stroke_width,
+        metadata     => $metadata,
     };
 }
 
 # ============================================================================
-# draw_text($x, $y, $value [, $fill, $font_family, $font_size, $align, $metadata])
+# draw_text($x, $y, $value [, $fill, $font_family, $font_size, $align,
+#           $font_weight, $metadata])
 # ============================================================================
 #
 # Creates a text instruction.
@@ -101,21 +140,30 @@ sub draw_rect {
 #   $font_family  — font (default: "monospace")
 #   $font_size    — size in pixels (default: 16)
 #   $align        — text alignment: "start", "middle", or "end" (default: "middle")
+#   $font_weight  — font weight: "normal" or "bold" (default: undef)
 #   $metadata     — optional hashref (default: {})
+#
+# The optional font_weight field controls the weight of the rendered text.
+# Accepted values are "normal" and "bold".  Renderers should map this to
+# the equivalent backend attribute (e.g. CSS font-weight).  When undef
+# (the default) the renderer should use its own default weight.
 #
 # In practice the most common usage just passes x, y, and value:
 #
 #   my $t = draw_text(10, 20, "Hello");
 #
-# For extra styling pass a hashref as the last argument:
+# For extra styling pass all positional arguments:
 #
-#   my $t = draw_text(10, 20, "Hi", "#ff0000", "sans-serif", 12, "start", {});
+#   my $t = draw_text(10, 20, "Hi", "#ff0000", "sans-serif", 12, "start",
+#                     "bold", {});
 sub draw_text {
-    my ($x, $y, $value, $fill, $font_family, $font_size, $align, $metadata) = @_;
+    my ($x, $y, $value, $fill, $font_family, $font_size, $align,
+        $font_weight, $metadata) = @_;
     $fill        //= '#000000';
     $font_family //= 'monospace';
     $font_size   //= 16;
     $align       //= 'middle';
+    # font_weight stays undef when not supplied
     $metadata    //= {};
     return {
         kind        => 'text',
@@ -126,7 +174,58 @@ sub draw_text {
         font_family => $font_family,
         font_size   => $font_size,
         align       => $align,
+        font_weight => $font_weight,
         metadata    => $metadata,
+    };
+}
+
+# ============================================================================
+# draw_clip($x, $y, $width, $height, \@children [, $metadata])
+# ============================================================================
+#
+# Creates a rectangular clipping region that masks its children.
+#
+# Everything drawn by the child instructions is clipped to the rectangle
+# defined by ($x, $y, $width, $height).  Content outside that rectangle is
+# hidden.  Renderers typically translate this into an SVG <clipPath> or a
+# Canvas save/clip/restore sequence.
+#
+# Parameters:
+#   $x, $y        — top-left corner of the clipping rectangle
+#   $width        — width of the clipping rectangle
+#   $height       — height of the clipping rectangle
+#   \@children    — arrayref of instruction hashrefs to clip
+#   $metadata     — optional hashref (default: {})
+#
+# Returns:
+#   {
+#     kind     => "clip",
+#     x        => $x,
+#     y        => $y,
+#     width    => $width,
+#     height   => $height,
+#     children => \@children,
+#     metadata => $metadata,
+#   }
+#
+# Example:
+#
+#   # A large rectangle clipped to an 80x80 window:
+#   my $clipped = draw_clip(10, 10, 80, 80, [
+#       draw_rect(0, 0, 200, 200, "#ff0000"),
+#   ]);
+#
+sub draw_clip {
+    my ($x, $y, $width, $height, $children, $metadata) = @_;
+    $metadata //= {};
+    return {
+        kind     => 'clip',
+        x        => $x,
+        y        => $y,
+        width    => $width,
+        height   => $height,
+        children => $children,
+        metadata => $metadata,
     };
 }
 
@@ -252,9 +351,14 @@ CodingAdventures::DrawInstructions - Backend-neutral drawing instruction set for
     use CodingAdventures::DrawInstructions;
 
     my $rect = CodingAdventures::DrawInstructions::draw_rect(10, 20, 100, 50, "#ff0000");
+    my $outlined = CodingAdventures::DrawInstructions::draw_rect(
+        10, 20, 100, 50, "#ff0000", stroke => "#000", stroke_width => 2);
     my $text = CodingAdventures::DrawInstructions::draw_text(10, 20, "Hello");
+    my $bold = CodingAdventures::DrawInstructions::draw_text(
+        10, 20, "Bold", "#000", "sans-serif", 14, "start", "bold");
     my $line = CodingAdventures::DrawInstructions::draw_line(0, 0, 100, 100, "#000000");
     my $circ = CodingAdventures::DrawInstructions::draw_circle(50, 50, 25, "#0000ff");
+    my $clip = CodingAdventures::DrawInstructions::draw_clip(10, 10, 80, 80, [$rect]);
     my $grp  = CodingAdventures::DrawInstructions::draw_group([$rect, $text]);
     my $scene = CodingAdventures::DrawInstructions::create_scene(800, 600, [$grp], "#ffffff");
 
@@ -269,9 +373,13 @@ SVG, Canvas 2D, or any other target.
 
 =over 4
 
-=item draw_rect($x, $y, $width, $height, $fill [, $metadata])
+=item draw_rect($x, $y, $width, $height, $fill [, %opts])
 
-=item draw_text($x, $y, $value [, $fill, $font_family, $font_size, $align, $metadata])
+Optional keys in %opts: stroke, stroke_width, metadata.
+
+=item draw_text($x, $y, $value [, $fill, $font_family, $font_size, $align, $font_weight, $metadata])
+
+=item draw_clip($x, $y, $width, $height, \@children [, $metadata])
 
 =item draw_group(\@children [, $metadata])
 
