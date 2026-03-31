@@ -28,6 +28,17 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
     g
   end
 
+  # A minimal STRING grammar with escape processing enabled.
+  #
+  # The JSON grammar uses `escapes: none` because JSON escape decoding is the
+  # parser's responsibility — the lexer hands raw token text to the parser.
+  # These tests use a grammar without that flag so the lexer's own
+  # escape-processing path (process_escapes/1) is exercised.
+  defp escape_processing_grammar do
+    {:ok, g} = TokenGrammar.parse(~S(STRING = /"([^"\\]|\\.)*"/))
+    g
+  end
+
   # Helper to create a grammar with pattern groups for testing.
   #
   # This simulates a simplified XML-like grammar:
@@ -306,8 +317,14 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
   end
 
   describe "tokenize/2 — string escape processing" do
-    test "processes standard escapes via JSON grammar" do
-      g = json_grammar()
+    # These tests use escape_processing_grammar/0, not json_grammar/0.
+    # The JSON grammar intentionally declares `escapes: none` so that the
+    # lexer passes raw escape text to the parser for semantic decoding.
+    # escape_processing_grammar/0 omits that flag, routing STRING tokens
+    # through process_escapes/1 inside the lexer.
+
+    test "processes standard escapes (\\n, \\t, etc.)" do
+      g = escape_processing_grammar()
       source = ~S("hello\nworld")
       {:ok, tokens} = GrammarLexer.tokenize(source, g)
       [token, _eof] = tokens
@@ -315,8 +332,8 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       assert token.value == "hello\nworld"
     end
 
-    test "processes unicode escapes via JSON grammar" do
-      g = json_grammar()
+    test "processes unicode escapes (\\uXXXX)" do
+      g = escape_processing_grammar()
       source = ~S("caf\u00E9")
       {:ok, tokens} = GrammarLexer.tokenize(source, g)
       [token, _eof] = tokens
