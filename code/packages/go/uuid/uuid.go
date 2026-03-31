@@ -54,6 +54,11 @@
 //	Field:       time_low    | time_mid | time_hi+ver | clk_seq | node
 //
 // This matches the wire format defined in RFC 4122 section 4.1.2.
+//
+// # Operations
+//
+// Every public function and method is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package uuid
 
 import (
@@ -121,35 +126,45 @@ var hexRE = regexp.MustCompile(
 //
 // Returns UUIDError if the string does not match any accepted format.
 func Parse(s string) (UUID, error) {
-	// The regex captures exactly five hex groups. If it does not match, the
-	// string is not a valid UUID in any of our accepted forms.
-	m := hexRE.FindStringSubmatch(s)
-	if m == nil {
-		return UUID{}, &UUIDError{msg: fmt.Sprintf("invalid UUID string: %q", s)}
-	}
+	return StartNew[UUID]("uuid.Parse", UUID{},
+		func(op *Operation[UUID], rf *ResultFactory[UUID]) *OperationResult[UUID] {
+			op.AddProperty("s", s)
 
-	// Reassemble the five groups into a flat 32-character hex string. This
-	// normalises all formats into one canonical sequence we can decode with
-	// hex.DecodeString.
-	joined := m[1] + m[2] + m[3] + m[4] + m[5]
-	b, err := hex.DecodeString(joined)
-	if err != nil {
-		// Should never happen given the regex already validated hex characters,
-		// but we handle it defensively.
-		return UUID{}, &UUIDError{msg: fmt.Sprintf("hex decode failed: %v", err)}
-	}
+			// The regex captures exactly five hex groups. If it does not match, the
+			// string is not a valid UUID in any of our accepted forms.
+			m := hexRE.FindStringSubmatch(s)
+			if m == nil {
+				return rf.Fail(UUID{}, &UUIDError{msg: fmt.Sprintf("invalid UUID string: %q", s)})
+			}
 
-	var u UUID
-	copy(u[:], b)
-	return u, nil
+			// Reassemble the five groups into a flat 32-character hex string. This
+			// normalises all formats into one canonical sequence we can decode with
+			// hex.DecodeString.
+			joined := m[1] + m[2] + m[3] + m[4] + m[5]
+			b, err := hex.DecodeString(joined)
+			if err != nil {
+				// Should never happen given the regex already validated hex characters,
+				// but we handle it defensively.
+				return rf.Fail(UUID{}, &UUIDError{msg: fmt.Sprintf("hex decode failed: %v", err)})
+			}
+
+			var u UUID
+			copy(u[:], b)
+			return rf.Generate(true, false, u)
+		}).GetResult()
 }
 
 // IsValid returns true if s is a valid UUID string in any format Parse accepts.
 // It is a convenience wrapper around Parse for use in validation-only contexts
 // where you do not need the UUID value.
 func IsValid(s string) bool {
-	_, err := Parse(s)
-	return err == nil
+	result, _ := StartNew[bool]("uuid.IsValid", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("s", s)
+			_, err := Parse(s)
+			return rf.Generate(true, false, err == nil)
+		}).GetResult()
+	return result
 }
 
 // ─── Formatting ──────────────────────────────────────────────────────────────
@@ -163,21 +178,32 @@ func IsValid(s string) bool {
 // rather than hex-encoding all 16 bytes at once, to avoid a second pass for
 // inserting hyphens.
 func (u UUID) String() string {
-	// hex.EncodeToString allocates; for a hot path you would use a pre-allocated
-	// buffer, but clarity wins here since this is a learning package.
-	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x",
-		u[0:4],  // time_low  (4 bytes = 8 hex chars)
-		u[4:6],  // time_mid  (2 bytes = 4 hex chars)
-		u[6:8],  // time_hi   (2 bytes = 4 hex chars, includes version nibble)
-		u[8:10], // clock_seq (2 bytes = 4 hex chars, includes variant bits)
-		u[10:], // node      (6 bytes = 12 hex chars)
-	)
+	result, _ := StartNew[string]("uuid.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			// hex.EncodeToString allocates; for a hot path you would use a pre-allocated
+			// buffer, but clarity wins here since this is a learning package.
+			s := fmt.Sprintf("%08x-%04x-%04x-%04x-%012x",
+				u[0:4],  // time_low  (4 bytes = 8 hex chars)
+				u[4:6],  // time_mid  (2 bytes = 4 hex chars)
+				u[6:8],  // time_hi   (2 bytes = 4 hex chars, includes version nibble)
+				u[8:10], // clock_seq (2 bytes = 4 hex chars, includes variant bits)
+				u[10:],  // node      (6 bytes = 12 hex chars)
+			)
+			return rf.Generate(true, false, s)
+		}).GetResult()
+	return result
 }
 
 // Bytes returns the UUID as a 16-byte slice. Callers receive a slice into the
 // array, so mutations will affect the original UUID. Use copy if you need an
 // independent copy.
-func (u UUID) Bytes() []byte { return u[:] }
+func (u UUID) Bytes() []byte {
+	result, _ := StartNew[[]byte]("uuid.Bytes", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			return rf.Generate(true, false, u[:])
+		}).GetResult()
+	return result
+}
 
 // ToInt returns the UUID as a pair of uint64 values representing the high and
 // low 64-bit halves of the 128-bit integer, in big-endian order.
@@ -185,9 +211,17 @@ func (u UUID) Bytes() []byte { return u[:] }
 // This is useful when you need to store a UUID in two 64-bit database columns
 // or compare UUIDs as integers.
 func (u UUID) ToInt() (hi, lo uint64) {
-	hi = binary.BigEndian.Uint64(u[0:8])
-	lo = binary.BigEndian.Uint64(u[8:16])
-	return
+	type toIntResult struct {
+		hi uint64
+		lo uint64
+	}
+	result, _ := StartNew[toIntResult]("uuid.ToInt", toIntResult{},
+		func(op *Operation[toIntResult], rf *ResultFactory[toIntResult]) *OperationResult[toIntResult] {
+			h := binary.BigEndian.Uint64(u[0:8])
+			l := binary.BigEndian.Uint64(u[8:16])
+			return rf.Generate(true, false, toIntResult{hi: h, lo: l})
+		}).GetResult()
+	return result.hi, result.lo
 }
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
@@ -201,10 +235,14 @@ func (u UUID) ToInt() (hi, lo uint64) {
 //	        ^^^^ = version nibble
 //	             ^^^^ = high 4 bits of time_hi (v1) or random (v4)
 func (u UUID) Version() int {
-	// Shift right by 4 to move the high nibble to the low nibble position, then
-	// mask to ensure we only keep the 4 version bits (in case of sign extension
-	// on platforms where byte is signed, though Go's byte is always unsigned).
-	return int(u[6]>>4) & 0xF
+	result, _ := StartNew[int]("uuid.Version", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			// Shift right by 4 to move the high nibble to the low nibble position, then
+			// mask to ensure we only keep the 4 version bits (in case of sign extension
+			// on platforms where byte is signed, though Go's byte is always unsigned).
+			return rf.Generate(true, false, int(u[6]>>4)&0xF)
+		}).GetResult()
+	return result
 }
 
 // Variant returns a human-readable string describing the UUID variant field.
@@ -217,26 +255,44 @@ func (u UUID) Version() int {
 //
 // All UUIDs generated by this package will return "rfc4122".
 func (u UUID) Variant() string {
-	b := u[8]
-	switch {
-	case b>>7 == 0: // 0xxxxxxx
-		return "ncs"
-	case b>>6 == 0b10: // 10xxxxxx
-		return "rfc4122"
-	case b>>5 == 0b110: // 110xxxxx
-		return "microsoft"
-	default: // 111xxxxx
-		return "reserved"
-	}
+	result, _ := StartNew[string]("uuid.Variant", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			b := u[8]
+			var variant string
+			switch {
+			case b>>7 == 0: // 0xxxxxxx
+				variant = "ncs"
+			case b>>6 == 0b10: // 10xxxxxx
+				variant = "rfc4122"
+			case b>>5 == 0b110: // 110xxxxx
+				variant = "microsoft"
+			default: // 111xxxxx
+				variant = "reserved"
+			}
+			return rf.Generate(true, false, variant)
+		}).GetResult()
+	return result
 }
 
 // IsNil returns true if the UUID is the nil UUID (all 128 bits zero). The nil
 // UUID is the UUID equivalent of a null pointer — it signals "no UUID assigned".
-func (u UUID) IsNil() bool { return u == Nil }
+func (u UUID) IsNil() bool {
+	result, _ := StartNew[bool]("uuid.IsNil", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, u == Nil)
+		}).GetResult()
+	return result
+}
 
 // IsMax returns true if the UUID is the max UUID (all 128 bits one, i.e., all
 // bytes 0xFF). Defined in RFC 9562 as a complement to the nil UUID.
-func (u UUID) IsMax() bool { return u == Max }
+func (u UUID) IsMax() bool {
+	result, _ := StartNew[bool]("uuid.IsMax", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, u == Max)
+		}).GetResult()
+	return result
+}
 
 // ─── Sentinel Values ─────────────────────────────────────────────────────────
 
@@ -334,17 +390,20 @@ func setVersionVariant(raw []byte, version int) {
 // UUIDs are unpredictable. On Linux this is /dev/urandom via getrandom(2); on
 // Windows it is CryptGenRandom.
 func V4() (UUID, error) {
-	var u UUID
+	return StartNew[UUID]("uuid.V4", UUID{},
+		func(op *Operation[UUID], rf *ResultFactory[UUID]) *OperationResult[UUID] {
+			var u UUID
 
-	// Fill all 16 bytes with cryptographically secure random data.
-	if _, err := rand.Read(u[:]); err != nil {
-		return UUID{}, &UUIDError{msg: fmt.Sprintf("crypto/rand failed: %v", err)}
-	}
+			// Fill all 16 bytes with cryptographically secure random data.
+			if _, err := rand.Read(u[:]); err != nil {
+				return rf.Fail(UUID{}, &UUIDError{msg: fmt.Sprintf("crypto/rand failed: %v", err)})
+			}
 
-	// Stamp version and variant into the appropriate bytes, overwriting the
-	// random bits that occupied those positions.
-	setVersionVariant(u[:], 4)
-	return u, nil
+			// Stamp version and variant into the appropriate bytes, overwriting the
+			// random bits that occupied those positions.
+			setVersionVariant(u[:], 4)
+			return rf.Generate(true, false, u)
+		}).GetResult()
 }
 
 // ─── UUID v5: SHA-1 Name-Based ───────────────────────────────────────────────
@@ -369,20 +428,26 @@ func V4() (UUID, error) {
 //
 //	V5(NamespaceDNS, "python.org") = "886313e1-3b8a-5372-9b90-0c9aee199e5d"
 func V5(namespace UUID, name string) UUID {
-	// Step 1: Build the hash input = namespace_bytes || name_bytes.
-	// append creates a new slice, so namespace is not mutated.
-	data := append(namespace[:], []byte(name)...)
+	result, _ := StartNew[UUID]("uuid.V5", UUID{},
+		func(op *Operation[UUID], rf *ResultFactory[UUID]) *OperationResult[UUID] {
+			op.AddProperty("name", name)
 
-	// Step 2: SHA-1 hash. Sum1 returns [20]byte.
-	digest := sha1pkg.Sum1(data)
+			// Step 1: Build the hash input = namespace_bytes || name_bytes.
+			// append creates a new slice, so namespace is not mutated.
+			data := append(namespace[:], []byte(name)...)
 
-	// Step 3: Take the first 16 bytes.
-	var raw [16]byte
-	copy(raw[:], digest[:16])
+			// Step 2: SHA-1 hash. Sum1 returns [20]byte.
+			digest := sha1pkg.Sum1(data)
 
-	// Step 4: Stamp version 5 and RFC 4122 variant.
-	setVersionVariant(raw[:], 5)
-	return UUID(raw)
+			// Step 3: Take the first 16 bytes.
+			var raw [16]byte
+			copy(raw[:], digest[:16])
+
+			// Step 4: Stamp version 5 and RFC 4122 variant.
+			setVersionVariant(raw[:], 5)
+			return rf.Generate(true, false, UUID(raw))
+		}).GetResult()
+	return result
 }
 
 // ─── UUID v3: MD5 Name-Based ─────────────────────────────────────────────────
@@ -403,17 +468,23 @@ func V5(namespace UUID, name string) UUID {
 //
 //	V3(NamespaceDNS, "python.org") = "6fa459ea-ee8a-3ca4-894e-db77e160355e"
 func V3(namespace UUID, name string) UUID {
-	// Step 1: Build the hash input.
-	data := append(namespace[:], []byte(name)...)
+	result, _ := StartNew[UUID]("uuid.V3", UUID{},
+		func(op *Operation[UUID], rf *ResultFactory[UUID]) *OperationResult[UUID] {
+			op.AddProperty("name", name)
 
-	// Step 2: MD5 hash. SumMD5 returns [16]byte — exactly the size we need.
-	digest := md5pkg.SumMD5(data)
+			// Step 1: Build the hash input.
+			data := append(namespace[:], []byte(name)...)
 
-	// Step 3: Stamp version 3 and RFC 4122 variant directly into the digest.
-	// We can do this in-place because digest is a value (array), not a slice
-	// pointing to shared memory.
-	setVersionVariant(digest[:], 3)
-	return UUID(digest)
+			// Step 2: MD5 hash. SumMD5 returns [16]byte — exactly the size we need.
+			digest := md5pkg.SumMD5(data)
+
+			// Step 3: Stamp version 3 and RFC 4122 variant directly into the digest.
+			// We can do this in-place because digest is a value (array), not a slice
+			// pointing to shared memory.
+			setVersionVariant(digest[:], 3)
+			return rf.Generate(true, false, UUID(digest))
+		}).GetResult()
+	return result
 }
 
 // ─── UUID v1: Time-Based ─────────────────────────────────────────────────────
@@ -459,65 +530,68 @@ var (
 // a random 48-bit node ID and set the multicast bit (bit 0 of byte 10) to
 // signal that this is a random node, not an actual IEEE 802 address.
 func V1() (UUID, error) {
-	// Initialize the clock sequence once with random data. The clock sequence
-	// exists to guarantee uniqueness even if the clock goes backwards (e.g., NTP
-	// adjustment) or if two processes generate UUIDs within the same 100ns tick.
-	v1Once.Do(func() {
-		var buf [2]byte
-		if _, err := rand.Read(buf[:]); err != nil {
-			// In the unlikely event of CSPRNG failure, use a non-zero default.
-			v1Clock = 0x1234
-			return
-		}
-		// Only 14 bits are used for the clock sequence (the top 2 bits of byte 8
-		// are overwritten by the variant stamp). Mask to 14 bits.
-		v1Clock = binary.BigEndian.Uint16(buf[:]) & 0x3FFF
-	})
+	return StartNew[UUID]("uuid.V1", UUID{},
+		func(op *Operation[UUID], rf *ResultFactory[UUID]) *OperationResult[UUID] {
+			// Initialize the clock sequence once with random data. The clock sequence
+			// exists to guarantee uniqueness even if the clock goes backwards (e.g., NTP
+			// adjustment) or if two processes generate UUIDs within the same 100ns tick.
+			v1Once.Do(func() {
+				var buf [2]byte
+				if _, err := rand.Read(buf[:]); err != nil {
+					// In the unlikely event of CSPRNG failure, use a non-zero default.
+					v1Clock = 0x1234
+					return
+				}
+				// Only 14 bits are used for the clock sequence (the top 2 bits of byte 8
+				// are overwritten by the variant stamp). Mask to 14 bits.
+				v1Clock = binary.BigEndian.Uint16(buf[:]) & 0x3FFF
+			})
 
-	v1Mu.Lock()
-	clock := v1Clock
-	v1Mu.Unlock()
+			v1Mu.Lock()
+			clock := v1Clock
+			v1Mu.Unlock()
 
-	// Compute the 60-bit timestamp: nanoseconds since Unix epoch → 100ns ticks
-	// → shift to Gregorian epoch.
-	now := uint64(time.Now().UnixNano()/100) + gregorianOffset
+			// Compute the 60-bit timestamp: nanoseconds since Unix epoch → 100ns ticks
+			// → shift to Gregorian epoch.
+			now := uint64(time.Now().UnixNano()/100) + gregorianOffset
 
-	// Split the 60-bit timestamp into three fields:
-	//   time_low:  bits  0-31  (least significant 32 bits)
-	//   time_mid:  bits 32-47
-	//   time_hi:   bits 48-59  (most significant 12 bits)
-	timeLow := uint32(now & 0xFFFFFFFF)
-	timeMid := uint16((now >> 32) & 0xFFFF)
-	timeHi := uint16((now >> 48) & 0x0FFF)
+			// Split the 60-bit timestamp into three fields:
+			//   time_low:  bits  0-31  (least significant 32 bits)
+			//   time_mid:  bits 32-47
+			//   time_hi:   bits 48-59  (most significant 12 bits)
+			timeLow := uint32(now & 0xFFFFFFFF)
+			timeMid := uint16((now >> 32) & 0xFFFF)
+			timeHi := uint16((now >> 48) & 0x0FFF)
 
-	// Stamp version 1 into time_hi. The version nibble occupies bits 12-15 of
-	// the time_hi_and_version field. Setting 0x1000 = 0001 0000 0000 0000
-	// places a '1' in the 13th bit position (0-indexed from 0).
-	timeHiAndVersion := 0x1000 | timeHi
+			// Stamp version 1 into time_hi. The version nibble occupies bits 12-15 of
+			// the time_hi_and_version field. Setting 0x1000 = 0001 0000 0000 0000
+			// places a '1' in the 13th bit position (0-indexed from 0).
+			timeHiAndVersion := 0x1000 | timeHi
 
-	// Pack into UUID bytes using big-endian byte order (network byte order).
-	var u UUID
-	binary.BigEndian.PutUint32(u[0:4], timeLow)
-	binary.BigEndian.PutUint16(u[4:6], timeMid)
-	binary.BigEndian.PutUint16(u[6:8], timeHiAndVersion)
+			// Pack into UUID bytes using big-endian byte order (network byte order).
+			var u UUID
+			binary.BigEndian.PutUint32(u[0:4], timeLow)
+			binary.BigEndian.PutUint16(u[4:6], timeMid)
+			binary.BigEndian.PutUint16(u[6:8], timeHiAndVersion)
 
-	// Clock sequence: the top 2 bits of byte 8 encode the RFC 4122 variant (10).
-	// Byte 8: 1 0 | clock[13] clock[12] ... clock[8]   (6 high bits of clock)
-	// Byte 9: clock[7] ... clock[0]                     (8 low bits of clock)
-	u[8] = 0x80 | byte(clock>>8)&0x3F // variant=10, clock_seq high 6 bits
-	u[9] = byte(clock & 0xFF)         // clock_seq low 8 bits
+			// Clock sequence: the top 2 bits of byte 8 encode the RFC 4122 variant (10).
+			// Byte 8: 1 0 | clock[13] clock[12] ... clock[8]   (6 high bits of clock)
+			// Byte 9: clock[7] ... clock[0]                     (8 low bits of clock)
+			u[8] = 0x80 | byte(clock>>8)&0x3F // variant=10, clock_seq high 6 bits
+			u[9] = byte(clock & 0xFF)         // clock_seq low 8 bits
 
-	// Generate a 6-byte random node ID.
-	if _, err := rand.Read(u[10:]); err != nil {
-		return UUID{}, &UUIDError{msg: fmt.Sprintf("crypto/rand failed for node: %v", err)}
-	}
+			// Generate a 6-byte random node ID.
+			if _, err := rand.Read(u[10:]); err != nil {
+				return rf.Fail(UUID{}, &UUIDError{msg: fmt.Sprintf("crypto/rand failed for node: %v", err)})
+			}
 
-	// Set the multicast bit (LSB of first byte of node) to signal this is a
-	// randomly generated node ID, not a real IEEE 802 MAC address.
-	// RFC 4122 section 4.5: "Set the multicast bit of the node ID."
-	u[10] |= 0x01
+			// Set the multicast bit (LSB of first byte of node) to signal this is a
+			// randomly generated node ID, not a real IEEE 802 MAC address.
+			// RFC 4122 section 4.5: "Set the multicast bit of the node ID."
+			u[10] |= 0x01
 
-	return u, nil
+			return rf.Generate(true, false, u)
+		}).GetResult()
 }
 
 // ─── UUID v7: Time-Ordered Random ────────────────────────────────────────────
@@ -552,43 +626,46 @@ func V1() (UUID, error) {
 //	Byte 8: 10 | rand_b[61:56]    (variant + 6 random bits)
 //	Bytes 9-15: rand_b[55:0]      (56 random bits = 7 bytes)
 func V7() (UUID, error) {
-	// Unix timestamp in milliseconds (48 bits, good until year 10895).
-	tsMs := uint64(time.Now().UnixNano() / 1_000_000)
+	return StartNew[UUID]("uuid.V7", UUID{},
+		func(op *Operation[UUID], rf *ResultFactory[UUID]) *OperationResult[UUID] {
+			// Unix timestamp in milliseconds (48 bits, good until year 10895).
+			tsMs := uint64(time.Now().UnixNano() / 1_000_000)
 
-	// Generate 10 bytes of randomness for rand_a (12 bits) and rand_b (62 bits).
-	// We need bytes 6-15: that is 10 bytes. We generate them all at once for
-	// efficiency.
-	var rnd [10]byte
-	if _, err := rand.Read(rnd[:]); err != nil {
-		return UUID{}, &UUIDError{msg: fmt.Sprintf("crypto/rand failed: %v", err)}
-	}
+			// Generate 10 bytes of randomness for rand_a (12 bits) and rand_b (62 bits).
+			// We need bytes 6-15: that is 10 bytes. We generate them all at once for
+			// efficiency.
+			var rnd [10]byte
+			if _, err := rand.Read(rnd[:]); err != nil {
+				return rf.Fail(UUID{}, &UUIDError{msg: fmt.Sprintf("crypto/rand failed: %v", err)})
+			}
 
-	var u UUID
+			var u UUID
 
-	// Bytes 0-5: 48-bit big-endian millisecond timestamp.
-	// We write the timestamp as a 64-bit value and take the high 6 bytes, which
-	// corresponds to the most-significant 48 bits.
-	u[0] = byte(tsMs >> 40)
-	u[1] = byte(tsMs >> 32)
-	u[2] = byte(tsMs >> 24)
-	u[3] = byte(tsMs >> 16)
-	u[4] = byte(tsMs >> 8)
-	u[5] = byte(tsMs)
+			// Bytes 0-5: 48-bit big-endian millisecond timestamp.
+			// We write the timestamp as a 64-bit value and take the high 6 bytes, which
+			// corresponds to the most-significant 48 bits.
+			u[0] = byte(tsMs >> 40)
+			u[1] = byte(tsMs >> 32)
+			u[2] = byte(tsMs >> 24)
+			u[3] = byte(tsMs >> 16)
+			u[4] = byte(tsMs >> 8)
+			u[5] = byte(tsMs)
 
-	// Byte 6: version nibble (0111 = 7) in the high 4 bits, plus 4 random bits
-	// from rand_a in the low 4 bits.
-	u[6] = 0x70 | (rnd[0] & 0x0F)
+			// Byte 6: version nibble (0111 = 7) in the high 4 bits, plus 4 random bits
+			// from rand_a in the low 4 bits.
+			u[6] = 0x70 | (rnd[0] & 0x0F)
 
-	// Byte 7: 8 random bits (low 8 bits of rand_a).
-	u[7] = rnd[1]
+			// Byte 7: 8 random bits (low 8 bits of rand_a).
+			u[7] = rnd[1]
 
-	// Byte 8: variant bits (10) in top 2 bits, plus 6 random bits from rand_b.
-	u[8] = 0x80 | (rnd[2] & 0x3F)
+			// Byte 8: variant bits (10) in top 2 bits, plus 6 random bits from rand_b.
+			u[8] = 0x80 | (rnd[2] & 0x3F)
 
-	// Bytes 9-15: 56 random bits (7 bytes of rand_b).
-	copy(u[9:], rnd[3:10])
+			// Bytes 9-15: 56 random bits (7 bytes of rand_b).
+			copy(u[9:], rnd[3:10])
 
-	return u, nil
+			return rf.Generate(true, false, u)
+		}).GetResult()
 }
 
 // ─── Comparison ──────────────────────────────────────────────────────────────
@@ -600,5 +677,9 @@ func V7() (UUID, error) {
 //	 0 if u == v
 //	+1 if u > v
 func Compare(u, v UUID) int {
-	return strings.Compare(string(u[:]), string(v[:]))
+	result, _ := StartNew[int]("uuid.Compare", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, strings.Compare(string(u[:]), string(v[:])))
+		}).GetResult()
+	return result
 }

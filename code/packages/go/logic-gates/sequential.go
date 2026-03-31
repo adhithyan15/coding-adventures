@@ -145,40 +145,49 @@ type CounterState struct {
 // operations, one step is sufficient to reach the new stable state.
 // For the hold state (S=0, R=0), the outputs remain unchanged.
 func SRLatch(set, reset, q, qBar int) (int, int) {
-	validateBit(set, "set")
-	validateBit(reset, "reset")
-	validateBit(q, "q")
-	validateBit(qBar, "qBar")
+	type srResult struct{ q, qBar int }
+	result, _ := StartNew[srResult]("logic-gates.SRLatch", srResult{},
+		func(op *Operation[srResult], rf *ResultFactory[srResult]) *OperationResult[srResult] {
+			op.AddProperty("set", set)
+			op.AddProperty("reset", reset)
+			op.AddProperty("q", q)
+			op.AddProperty("qBar", qBar)
+			validateBit(set, "set")
+			validateBit(reset, "reset")
+			validateBit(q, "q")
+			validateBit(qBar, "qBar")
 
-	// The SR latch equations (NOR-based):
-	//   Q    = NOR(Reset, Q̄)
-	//   Q̄    = NOR(Set,   Q)
-	//
-	// In real hardware, these two NOR gates evaluate simultaneously
-	// through analog feedback until the circuit reaches a stable
-	// state. We simulate this by iterating: compute both gates
-	// using current values, then repeat until nothing changes.
-	//
-	// Convergence is guaranteed for valid inputs (S=0/R=0, S=1/R=0,
-	// S=0/R=1) because each iteration moves toward the stable point.
-	// For S=1/R=1 (invalid), both outputs converge to 0.
-	// Maximum iterations is bounded at 10 as a safety net, though
-	// in practice it converges in 2-3 iterations.
-	currentQ := q
-	currentQBar := qBar
+			// The SR latch equations (NOR-based):
+			//   Q    = NOR(Reset, Q̄)
+			//   Q̄    = NOR(Set,   Q)
+			//
+			// In real hardware, these two NOR gates evaluate simultaneously
+			// through analog feedback until the circuit reaches a stable
+			// state. We simulate this by iterating: compute both gates
+			// using current values, then repeat until nothing changes.
+			//
+			// Convergence is guaranteed for valid inputs (S=0/R=0, S=1/R=0,
+			// S=0/R=1) because each iteration moves toward the stable point.
+			// For S=1/R=1 (invalid), both outputs converge to 0.
+			// Maximum iterations is bounded at 10 as a safety net, though
+			// in practice it converges in 2-3 iterations.
+			currentQ := q
+			currentQBar := qBar
 
-	for i := 0; i < 10; i++ {
-		newQ := NOR(reset, currentQBar)
-		newQBar := NOR(set, newQ)
+			for i := 0; i < 10; i++ {
+				newQ := NOR(reset, currentQBar)
+				newQBar := NOR(set, newQ)
 
-		if newQ == currentQ && newQBar == currentQBar {
-			break // Stable state reached
-		}
-		currentQ = newQ
-		currentQBar = newQBar
-	}
+				if newQ == currentQ && newQBar == currentQBar {
+					break // Stable state reached
+				}
+				currentQ = newQ
+				currentQBar = newQBar
+			}
 
-	return currentQ, currentQBar
+			return rf.Generate(true, false, srResult{q: currentQ, qBar: currentQBar})
+		}).PanicOnUnexpected().GetResult()
+	return result.q, result.qBar
 }
 
 // =========================================================================
@@ -229,21 +238,31 @@ func SRLatch(set, reset, q, qBar int) (int, int) {
 //
 // Returns the new (q, qBar) after one evaluation.
 func DLatch(data, enable, q, qBar int) (int, int) {
-	validateBit(data, "data")
-	validateBit(enable, "enable")
-	validateBit(q, "q")
-	validateBit(qBar, "qBar")
+	type dlResult struct{ q, qBar int }
+	result, _ := StartNew[dlResult]("logic-gates.DLatch", dlResult{},
+		func(op *Operation[dlResult], rf *ResultFactory[dlResult]) *OperationResult[dlResult] {
+			op.AddProperty("data", data)
+			op.AddProperty("enable", enable)
+			op.AddProperty("q", q)
+			op.AddProperty("qBar", qBar)
+			validateBit(data, "data")
+			validateBit(enable, "enable")
+			validateBit(q, "q")
+			validateBit(qBar, "qBar")
 
-	// Generate Set and Reset from Data and Enable:
-	//   Set   = Data AND Enable
-	//   Reset = NOT(Data) AND Enable
-	//
-	// When Enable=0: both Set and Reset are 0 → hold state.
-	// When Enable=1: exactly one of Set/Reset is 1 → valid.
-	set := AND(data, enable)
-	reset := AND(NOT(data), enable)
+			// Generate Set and Reset from Data and Enable:
+			//   Set   = Data AND Enable
+			//   Reset = NOT(Data) AND Enable
+			//
+			// When Enable=0: both Set and Reset are 0 → hold state.
+			// When Enable=1: exactly one of Set/Reset is 1 → valid.
+			set := AND(data, enable)
+			reset := AND(NOT(data), enable)
 
-	return SRLatch(set, reset, q, qBar)
+			newQ, newQBar := SRLatch(set, reset, q, qBar)
+			return rf.Generate(true, false, dlResult{q: newQ, qBar: newQBar})
+		}).PanicOnUnexpected().GetResult()
+	return result.q, result.qBar
 }
 
 // =========================================================================
@@ -296,32 +315,42 @@ func DLatch(data, enable, q, qBar int) (int, int) {
 //	q, _, state = DFlipFlop(1, 0, state)  // clock LOW: slave outputs 1
 //	// q is now 1
 func DFlipFlop(data, clock int, state *FlipFlopState) (int, int, *FlipFlopState) {
-	validateBit(data, "data")
-	validateBit(clock, "clock")
-
-	if state == nil {
-		state = &FlipFlopState{
-			MasterQ:    0,
-			MasterQBar: 1,
-			SlaveQ:     0,
-			SlaveQBar:  1,
-		}
+	type dffResult struct {
+		q, qBar  int
+		newState *FlipFlopState
 	}
+	result, _ := StartNew[dffResult]("logic-gates.DFlipFlop", dffResult{},
+		func(op *Operation[dffResult], rf *ResultFactory[dffResult]) *OperationResult[dffResult] {
+			op.AddProperty("data", data)
+			op.AddProperty("clock", clock)
+			validateBit(data, "data")
+			validateBit(clock, "clock")
 
-	// Master latch: enabled when clock = 1
-	masterQ, masterQBar := DLatch(data, clock, state.MasterQ, state.MasterQBar)
+			if state == nil {
+				state = &FlipFlopState{
+					MasterQ:    0,
+					MasterQBar: 1,
+					SlaveQ:     0,
+					SlaveQBar:  1,
+				}
+			}
 
-	// Slave latch: enabled when clock = 0 (NOT clock)
-	slaveQ, slaveQBar := DLatch(masterQ, NOT(clock), state.SlaveQ, state.SlaveQBar)
+			// Master latch: enabled when clock = 1
+			masterQ, masterQBar := DLatch(data, clock, state.MasterQ, state.MasterQBar)
 
-	newState := &FlipFlopState{
-		MasterQ:    masterQ,
-		MasterQBar: masterQBar,
-		SlaveQ:     slaveQ,
-		SlaveQBar:  slaveQBar,
-	}
+			// Slave latch: enabled when clock = 0 (NOT clock)
+			slaveQ, slaveQBar := DLatch(masterQ, NOT(clock), state.SlaveQ, state.SlaveQBar)
 
-	return slaveQ, slaveQBar, newState
+			newState := &FlipFlopState{
+				MasterQ:    masterQ,
+				MasterQBar: masterQBar,
+				SlaveQ:     slaveQ,
+				SlaveQBar:  slaveQBar,
+			}
+
+			return rf.Generate(true, false, dffResult{q: slaveQ, qBar: slaveQBar, newState: newState})
+		}).PanicOnUnexpected().GetResult()
+	return result.q, result.qBar, result.newState
 }
 
 // =========================================================================
@@ -358,39 +387,48 @@ func DFlipFlop(data, clock int, state *FlipFlopState) (int, int, *FlipFlopState)
 //   - outputs: the N-bit output (Q from each flip-flop)
 //   - newState: updated state for the next call
 func Register(data []int, clock int, state []FlipFlopState) ([]int, []FlipFlopState) {
-	validateBit(clock, "clock")
-	validateBits(data, "data")
-
-	n := len(data)
-	if n == 0 {
-		panic("logicgates: Register requires at least 1 bit of data")
+	type regResult struct {
+		outputs  []int
+		newState []FlipFlopState
 	}
+	result, _ := StartNew[regResult]("logic-gates.Register", regResult{},
+		func(op *Operation[regResult], rf *ResultFactory[regResult]) *OperationResult[regResult] {
+			op.AddProperty("clock", clock)
+			validateBit(clock, "clock")
+			validateBits(data, "data")
 
-	// Initialize state if nil
-	if state == nil {
-		state = make([]FlipFlopState, n)
-		for i := range state {
-			state[i] = FlipFlopState{0, 1, 0, 1}
-		}
-	}
+			n := len(data)
+			if n == 0 {
+				panic("logicgates: Register requires at least 1 bit of data")
+			}
 
-	if len(state) != n {
-		panic("logicgates: Register data and state length mismatch")
-	}
+			// Initialize state if nil
+			if state == nil {
+				state = make([]FlipFlopState, n)
+				for i := range state {
+					state[i] = FlipFlopState{0, 1, 0, 1}
+				}
+			}
 
-	outputs := make([]int, n)
-	newState := make([]FlipFlopState, n)
+			if len(state) != n {
+				panic("logicgates: Register data and state length mismatch")
+			}
 
-	// Each bit gets its own flip-flop, all sharing the same clock.
-	// In hardware, these all evaluate simultaneously (parallelism!).
-	for i := 0; i < n; i++ {
-		s := state[i]
-		q, _, ns := DFlipFlop(data[i], clock, &s)
-		outputs[i] = q
-		newState[i] = *ns
-	}
+			outputs := make([]int, n)
+			newState := make([]FlipFlopState, n)
 
-	return outputs, newState
+			// Each bit gets its own flip-flop, all sharing the same clock.
+			// In hardware, these all evaluate simultaneously (parallelism!).
+			for i := 0; i < n; i++ {
+				s := state[i]
+				q, _, ns := DFlipFlop(data[i], clock, &s)
+				outputs[i] = q
+				newState[i] = *ns
+			}
+
+			return rf.Generate(true, false, regResult{outputs: outputs, newState: newState})
+		}).PanicOnUnexpected().GetResult()
+	return result.outputs, result.newState
 }
 
 // =========================================================================
@@ -431,67 +469,79 @@ func Register(data []int, clock int, state []FlipFlopState) ([]int, []FlipFlopSt
 //   - serialOut: the bit that was shifted out
 //   - newState: updated state for the next call
 func ShiftRegister(serialIn, clock int, state []FlipFlopState, direction string) ([]int, int, []FlipFlopState) {
-	validateBit(serialIn, "serialIn")
-	validateBit(clock, "clock")
-
-	if direction != "left" && direction != "right" {
-		panic("logicgates: ShiftRegister direction must be \"left\" or \"right\"")
+	type srResult struct {
+		outputs   []int
+		serialOut int
+		newState  []FlipFlopState
 	}
+	result, _ := StartNew[srResult]("logic-gates.ShiftRegister", srResult{},
+		func(op *Operation[srResult], rf *ResultFactory[srResult]) *OperationResult[srResult] {
+			op.AddProperty("serialIn", serialIn)
+			op.AddProperty("clock", clock)
+			op.AddProperty("direction", direction)
+			validateBit(serialIn, "serialIn")
+			validateBit(clock, "clock")
 
-	if state == nil || len(state) == 0 {
-		panic("logicgates: ShiftRegister requires non-empty state")
-	}
-
-	n := len(state)
-	outputs := make([]int, n)
-	newState := make([]FlipFlopState, n)
-
-	// Capture current outputs before shifting (to determine serialOut)
-	currentOutputs := make([]int, n)
-	for i := 0; i < n; i++ {
-		currentOutputs[i] = state[i].SlaveQ
-	}
-
-	if direction == "left" {
-		// Left shift: bit 0 gets serialIn, bit i gets old bit i-1
-		// Serial out is the MSB (last bit)
-		//
-		//   serialIn → [0] → [1] → [2] → serialOut
-		//
-		// Each flip-flop's data input is the PREVIOUS flip-flop's
-		// current output (before this clock edge).
-		for i := 0; i < n; i++ {
-			var dataIn int
-			if i == 0 {
-				dataIn = serialIn
-			} else {
-				dataIn = currentOutputs[i-1]
+			if direction != "left" && direction != "right" {
+				panic("logicgates: ShiftRegister direction must be \"left\" or \"right\"")
 			}
-			s := state[i]
-			q, _, ns := DFlipFlop(dataIn, clock, &s)
-			outputs[i] = q
-			newState[i] = *ns
-		}
-		return outputs, currentOutputs[n-1], newState
-	}
 
-	// Right shift: last bit gets serialIn, bit i gets old bit i+1
-	// Serial out is the LSB (first bit)
-	//
-	//   serialOut ← [0] ← [1] ← [2] ← serialIn
-	for i := n - 1; i >= 0; i-- {
-		var dataIn int
-		if i == n-1 {
-			dataIn = serialIn
-		} else {
-			dataIn = currentOutputs[i+1]
-		}
-		s := state[i]
-		q, _, ns := DFlipFlop(dataIn, clock, &s)
-		outputs[i] = q
-		newState[i] = *ns
-	}
-	return outputs, currentOutputs[0], newState
+			if state == nil || len(state) == 0 {
+				panic("logicgates: ShiftRegister requires non-empty state")
+			}
+
+			n := len(state)
+			outputs := make([]int, n)
+			newState := make([]FlipFlopState, n)
+
+			// Capture current outputs before shifting (to determine serialOut)
+			currentOutputs := make([]int, n)
+			for i := 0; i < n; i++ {
+				currentOutputs[i] = state[i].SlaveQ
+			}
+
+			if direction == "left" {
+				// Left shift: bit 0 gets serialIn, bit i gets old bit i-1
+				// Serial out is the MSB (last bit)
+				//
+				//   serialIn → [0] → [1] → [2] → serialOut
+				//
+				// Each flip-flop's data input is the PREVIOUS flip-flop's
+				// current output (before this clock edge).
+				for i := 0; i < n; i++ {
+					var dataIn int
+					if i == 0 {
+						dataIn = serialIn
+					} else {
+						dataIn = currentOutputs[i-1]
+					}
+					s := state[i]
+					q, _, ns := DFlipFlop(dataIn, clock, &s)
+					outputs[i] = q
+					newState[i] = *ns
+				}
+				return rf.Generate(true, false, srResult{outputs: outputs, serialOut: currentOutputs[n-1], newState: newState})
+			}
+
+			// Right shift: last bit gets serialIn, bit i gets old bit i+1
+			// Serial out is the LSB (first bit)
+			//
+			//   serialOut ← [0] ← [1] ← [2] ← serialIn
+			for i := n - 1; i >= 0; i-- {
+				var dataIn int
+				if i == n-1 {
+					dataIn = serialIn
+				} else {
+					dataIn = currentOutputs[i+1]
+				}
+				s := state[i]
+				q, _, ns := DFlipFlop(dataIn, clock, &s)
+				outputs[i] = q
+				newState[i] = *ns
+			}
+			return rf.Generate(true, false, srResult{outputs: outputs, serialOut: currentOutputs[0], newState: newState})
+		}).PanicOnUnexpected().GetResult()
+	return result.outputs, result.serialOut, result.newState
 }
 
 // =========================================================================
@@ -535,53 +585,63 @@ func ShiftRegister(serialIn, clock int, state []FlipFlopState, direction string)
 //   - outputs: the current N-bit count (LSB first)
 //   - newState: updated state for the next call
 func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
-	validateBit(clock, "clock")
-	validateBit(reset, "reset")
-
-	if state == nil {
-		panic("logicgates: Counter requires non-nil state")
+	type ctrResult struct {
+		outputs  []int
+		newState *CounterState
 	}
+	result, _ := StartNew[ctrResult]("logic-gates.Counter", ctrResult{},
+		func(op *Operation[ctrResult], rf *ResultFactory[ctrResult]) *OperationResult[ctrResult] {
+			op.AddProperty("clock", clock)
+			op.AddProperty("reset", reset)
+			validateBit(clock, "clock")
+			validateBit(reset, "reset")
 
-	width := state.Width
-	if width < 1 {
-		panic("logicgates: Counter width must be at least 1")
-	}
+			if state == nil {
+				panic("logicgates: Counter requires non-nil state")
+			}
 
-	// Initialize bits if empty
-	if len(state.Bits) == 0 {
-		state.Bits = make([]int, width)
-	}
+			width := state.Width
+			if width < 1 {
+				panic("logicgates: Counter width must be at least 1")
+			}
 
-	// Asynchronous reset: immediately clear all bits
-	if reset == 1 {
-		newBits := make([]int, width)
-		newState := &CounterState{Bits: newBits, Width: width}
-		return newBits, newState
-	}
+			// Initialize bits if empty
+			if len(state.Bits) == 0 {
+				state.Bits = make([]int, width)
+			}
 
-	// On clock = 1, increment the counter
-	// On clock = 0, hold the current value
-	if clock == 0 {
-		output := make([]int, width)
-		copy(output, state.Bits)
-		newState := &CounterState{Bits: output, Width: width}
-		return output, newState
-	}
+			// Asynchronous reset: immediately clear all bits
+			if reset == 1 {
+				newBits := make([]int, width)
+				newState := &CounterState{Bits: newBits, Width: width}
+				return rf.Generate(true, false, ctrResult{outputs: newBits, newState: newState})
+			}
 
-	// Increment using ripple carry:
-	//   new_bit[i] = XOR(old_bit[i], carry[i])
-	//   carry[i+1] = AND(old_bit[i], carry[i])
-	//   carry[0] = 1 (we're adding 1)
-	//
-	// This is exactly how binary addition works, one bit at a time.
-	newBits := make([]int, width)
-	carry := 1 // Start with carry = 1 (adding 1 to the counter)
+			// On clock = 1, increment the counter
+			// On clock = 0, hold the current value
+			if clock == 0 {
+				output := make([]int, width)
+				copy(output, state.Bits)
+				newState := &CounterState{Bits: output, Width: width}
+				return rf.Generate(true, false, ctrResult{outputs: output, newState: newState})
+			}
 
-	for i := 0; i < width; i++ {
-		newBits[i] = XOR(state.Bits[i], carry)
-		carry = AND(state.Bits[i], carry)
-	}
+			// Increment using ripple carry:
+			//   new_bit[i] = XOR(old_bit[i], carry[i])
+			//   carry[i+1] = AND(old_bit[i], carry[i])
+			//   carry[0] = 1 (we're adding 1)
+			//
+			// This is exactly how binary addition works, one bit at a time.
+			newBits := make([]int, width)
+			carry := 1 // Start with carry = 1 (adding 1 to the counter)
 
-	newState := &CounterState{Bits: newBits, Width: width}
-	return newBits, newState
+			for i := 0; i < width; i++ {
+				newBits[i] = XOR(state.Bits[i], carry)
+				carry = AND(state.Bits[i], carry)
+			}
+
+			newState := &CounterState{Bits: newBits, Width: width}
+			return rf.Generate(true, false, ctrResult{outputs: newBits, newState: newState})
+		}).PanicOnUnexpected().GetResult()
+	return result.outputs, result.newState
 }

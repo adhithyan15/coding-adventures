@@ -39,6 +39,11 @@
 //	bitmask    = 1 << (i % 64)  (a mask with only bit i set)
 //
 // These are the heart of the entire implementation.
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package bitset
 
 import (
@@ -194,10 +199,15 @@ func bitmask(i int) uint64 {
 // NewBitset(0) is valid and creates an empty bitset with length=0,
 // capacity=0.
 func NewBitset(size int) *Bitset {
-	return &Bitset{
-		words:  make([]uint64, wordsNeeded(size)),
-		length: size,
-	}
+	result, _ := StartNew[*Bitset]("bitset.NewBitset", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			op.AddProperty("size", size)
+			return rf.Generate(true, false, &Bitset{
+				words:  make([]uint64, wordsNeeded(size)),
+				length: size,
+			})
+		}).GetResult()
+	return result
 }
 
 // BitsetFromInteger creates a bitset from a non-negative integer.
@@ -221,20 +231,25 @@ func NewBitset(size int) *Bitset {
 //	// bs.Test(1) == false  (bit 1 = 0)
 //	// bs.Test(2) == true   (bit 2 = 1)
 func BitsetFromInteger(value uint64) *Bitset {
-	// Special case: zero produces an empty bitset.
-	if value == 0 {
-		return NewBitset(0)
-	}
+	result, _ := StartNew[*Bitset]("bitset.BitsetFromInteger", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			op.AddProperty("value", value)
+			// Special case: zero produces an empty bitset.
+			if value == 0 {
+				return rf.Generate(true, false, NewBitset(0))
+			}
 
-	// The logical length is the position of the highest set bit + 1.
-	// bits.Len64 returns the number of bits needed to represent value,
-	// which is exactly position_of_highest_set_bit + 1.
-	length := bits.Len64(value)
+			// The logical length is the position of the highest set bit + 1.
+			// bits.Len64 returns the number of bits needed to represent value,
+			// which is exactly position_of_highest_set_bit + 1.
+			length := bits.Len64(value)
 
-	return &Bitset{
-		words:  []uint64{value},
-		length: length,
-	}
+			return rf.Generate(true, false, &Bitset{
+				words:  []uint64{value},
+				length: length,
+			})
+		}).GetResult()
+	return result
 }
 
 // BitsetFromBinaryStr creates a bitset from a string of '0' and '1'
@@ -259,39 +274,42 @@ func BitsetFromInteger(value uint64) *Bitset {
 //
 // An empty string produces an empty bitset with length=0.
 func BitsetFromBinaryStr(s string) (*Bitset, error) {
-	// Validate: every character must be '0' or '1'.
-	for _, ch := range s {
-		if ch != '0' && ch != '1' {
-			return nil, &BitsetError{
-				Message: fmt.Sprintf("invalid binary string: %q", s),
+	return StartNew[*Bitset]("bitset.BitsetFromBinaryStr", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			// Validate: every character must be '0' or '1'.
+			for _, ch := range s {
+				if ch != '0' && ch != '1' {
+					return rf.Fail(nil, &BitsetError{
+						Message: fmt.Sprintf("invalid binary string: %q", s),
+					})
+				}
 			}
-		}
-	}
 
-	// Empty string produces an empty bitset.
-	if len(s) == 0 {
-		return NewBitset(0), nil
-	}
+			// Empty string produces an empty bitset.
+			if len(s) == 0 {
+				return rf.Generate(true, false, NewBitset(0))
+			}
 
-	// The string length is the logical length of the bitset.
-	length := len(s)
-	bs := NewBitset(length)
+			// The string length is the logical length of the bitset.
+			length := len(s)
+			bs := NewBitset(length)
 
-	// Walk the string from right to left (LSB to MSB).
-	// The rightmost character (index len(s)-1) is bit 0.
-	// The leftmost character (index 0) is bit len(s)-1.
-	for i := 0; i < len(s); i++ {
-		charIdx := len(s) - 1 - i // bit index (0 = rightmost = LSB)
-		if s[charIdx] == '1' {
-			wi := wordIndex(i)
-			bs.words[wi] |= bitmask(i)
-		}
-	}
+			// Walk the string from right to left (LSB to MSB).
+			// The rightmost character (index len(s)-1) is bit 0.
+			// The leftmost character (index 0) is bit len(s)-1.
+			for i := 0; i < len(s); i++ {
+				charIdx := len(s) - 1 - i // bit index (0 = rightmost = LSB)
+				if s[charIdx] == '1' {
+					wi := wordIndex(i)
+					bs.words[wi] |= bitmask(i)
+				}
+			}
 
-	// Clean trailing bits defensively.
-	bs.cleanTrailingBits()
+			// Clean trailing bits defensively.
+			bs.cleanTrailingBits()
 
-	return bs, nil
+			return rf.Generate(true, false, bs)
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
@@ -329,8 +347,13 @@ func BitsetFromBinaryStr(s string) (*Bitset, error) {
 //
 // OR is idempotent: setting an already-set bit is a no-op.
 func (b *Bitset) Set(i int) {
-	b.ensureCapacity(i)
-	b.words[wordIndex(i)] |= bitmask(i)
+	_, _ = StartNew[struct{}]("bitset.Set", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("i", i)
+			b.ensureCapacity(i)
+			b.words[wordIndex(i)] |= bitmask(i)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Clear sets bit i to 0. No-op if i >= length (does not grow).
@@ -349,10 +372,15 @@ func (b *Bitset) Set(i int) {
 //	^mask    = 0b...1101_1111   (everything except bit 5)
 //	result   = 0b...0000_0100   (bit 5 cleared, bit 2 preserved)
 func (b *Bitset) Clear(i int) {
-	if i >= b.length {
-		return // out of range: nothing to clear
-	}
-	b.words[wordIndex(i)] &^= bitmask(i)
+	_, _ = StartNew[struct{}]("bitset.Clear", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("i", i)
+			if i >= b.length {
+				return rf.Generate(true, false, struct{}{}) // out of range: nothing to clear
+			}
+			b.words[wordIndex(i)] &^= bitmask(i)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Test returns whether bit i is set. Returns false if i >= length.
@@ -373,10 +401,15 @@ func (b *Bitset) Clear(i int) {
 //	mask     = 0b...0000_1000   (bit 3)
 //	result   = 0b...0000_0000   (zero -> bit 3 is not set)
 func (b *Bitset) Test(i int) bool {
-	if i >= b.length {
-		return false // out of range: conceptually zero
-	}
-	return (b.words[wordIndex(i)] & bitmask(i)) != 0
+	result, _ := StartNew[bool]("bitset.Test", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("i", i)
+			if i >= b.length {
+				return rf.Generate(true, false, false) // out of range: conceptually zero
+			}
+			return rf.Generate(true, false, (b.words[wordIndex(i)]&bitmask(i)) != 0)
+		}).GetResult()
+	return result
 }
 
 // Toggle flips bit i (0 becomes 1, 1 becomes 0). Auto-grows if i >= length.
@@ -389,12 +422,17 @@ func (b *Bitset) Test(i int) bool {
 //	mask     = 0b...0010_0000   (bit 5)
 //	result   = 0b...0000_0100   (bit 5 flipped to 0)
 func (b *Bitset) Toggle(i int) {
-	b.ensureCapacity(i)
-	b.words[wordIndex(i)] ^= bitmask(i)
+	_, _ = StartNew[struct{}]("bitset.Toggle", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("i", i)
+			b.ensureCapacity(i)
+			b.words[wordIndex(i)] ^= bitmask(i)
 
-	// Toggle might have set a bit in the last word's trailing region.
-	// Clean trailing bits to maintain the invariant.
-	b.cleanTrailingBits()
+			// Toggle might have set a bit in the last word's trailing region.
+			// Clean trailing bits to maintain the invariant.
+			b.cleanTrailingBits()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
@@ -426,20 +464,22 @@ func (b *Bitset) Toggle(i int) {
 //
 // AND is used for intersection: elements that are in both sets.
 func (b *Bitset) And(other *Bitset) *Bitset {
-	resultLen := max(b.length, other.length)
-	maxWords := max(len(b.words), len(other.words))
-	resultWords := make([]uint64, maxWords)
+	result, _ := StartNew[*Bitset]("bitset.And", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			resultLen := max(b.length, other.length)
+			maxWords := max(len(b.words), len(other.words))
+			resultWords := make([]uint64, maxWords)
 
-	for i := 0; i < maxWords; i++ {
-		// If one bitset is shorter, its missing words are zero.
-		// AND with zero produces zero, which is correct.
-		a := wordAt(b.words, i)
-		bw := wordAt(other.words, i)
-		resultWords[i] = a & bw
-	}
+			for i := 0; i < maxWords; i++ {
+				a := wordAt(b.words, i)
+				bw := wordAt(other.words, i)
+				resultWords[i] = a & bw
+			}
 
-	result := &Bitset{words: resultWords, length: resultLen}
-	result.cleanTrailingBits()
+			res := &Bitset{words: resultWords, length: resultLen}
+			res.cleanTrailingBits()
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -456,18 +496,22 @@ func (b *Bitset) And(other *Bitset) *Bitset {
 //
 // OR is used for union: elements that are in either set.
 func (b *Bitset) Or(other *Bitset) *Bitset {
-	resultLen := max(b.length, other.length)
-	maxWords := max(len(b.words), len(other.words))
-	resultWords := make([]uint64, maxWords)
+	result, _ := StartNew[*Bitset]("bitset.Or", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			resultLen := max(b.length, other.length)
+			maxWords := max(len(b.words), len(other.words))
+			resultWords := make([]uint64, maxWords)
 
-	for i := 0; i < maxWords; i++ {
-		a := wordAt(b.words, i)
-		bw := wordAt(other.words, i)
-		resultWords[i] = a | bw
-	}
+			for i := 0; i < maxWords; i++ {
+				a := wordAt(b.words, i)
+				bw := wordAt(other.words, i)
+				resultWords[i] = a | bw
+			}
 
-	result := &Bitset{words: resultWords, length: resultLen}
-	result.cleanTrailingBits()
+			res := &Bitset{words: resultWords, length: resultLen}
+			res.cleanTrailingBits()
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -484,18 +528,22 @@ func (b *Bitset) Or(other *Bitset) *Bitset {
 //
 // XOR is used for symmetric difference: elements in either set but not both.
 func (b *Bitset) Xor(other *Bitset) *Bitset {
-	resultLen := max(b.length, other.length)
-	maxWords := max(len(b.words), len(other.words))
-	resultWords := make([]uint64, maxWords)
+	result, _ := StartNew[*Bitset]("bitset.Xor", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			resultLen := max(b.length, other.length)
+			maxWords := max(len(b.words), len(other.words))
+			resultWords := make([]uint64, maxWords)
 
-	for i := 0; i < maxWords; i++ {
-		a := wordAt(b.words, i)
-		bw := wordAt(other.words, i)
-		resultWords[i] = a ^ bw
-	}
+			for i := 0; i < maxWords; i++ {
+				a := wordAt(b.words, i)
+				bw := wordAt(other.words, i)
+				resultWords[i] = a ^ bw
+			}
 
-	result := &Bitset{words: resultWords, length: resultLen}
-	result.cleanTrailingBits()
+			res := &Bitset{words: resultWords, length: resultLen}
+			res.cleanTrailingBits()
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -513,20 +561,24 @@ func (b *Bitset) Xor(other *Bitset) *Bitset {
 // Bits beyond length remain zero (clean-trailing-bits invariant).
 // The result has the same length as the input.
 func (b *Bitset) Not() *Bitset {
-	resultWords := make([]uint64, len(b.words))
-	for i, w := range b.words {
-		resultWords[i] = ^w
-	}
+	result, _ := StartNew[*Bitset]("bitset.Not", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			resultWords := make([]uint64, len(b.words))
+			for i, w := range b.words {
+				resultWords[i] = ^w
+			}
 
-	// Critical: clean trailing bits! The NOT operation flipped ALL bits
-	// in every word, including the trailing bits beyond length that were
-	// zero. We must zero them out again to maintain the invariant.
-	//
-	//     Before NOT: word[3] = 0b00000000_XXXXXXXX  (trailing bits are 0)
-	//     After  NOT: word[3] = 0b11111111_xxxxxxxx  (trailing bits are 1!)
-	//     After clean: word[3] = 0b00000000_xxxxxxxx  (trailing bits zeroed)
-	result := &Bitset{words: resultWords, length: b.length}
-	result.cleanTrailingBits()
+			// Critical: clean trailing bits! The NOT operation flipped ALL bits
+			// in every word, including the trailing bits beyond length that were
+			// zero. We must zero them out again to maintain the invariant.
+			//
+			//     Before NOT: word[3] = 0b00000000_XXXXXXXX  (trailing bits are 0)
+			//     After  NOT: word[3] = 0b11111111_xxxxxxxx  (trailing bits are 1!)
+			//     After clean: word[3] = 0b00000000_xxxxxxxx  (trailing bits zeroed)
+			res := &Bitset{words: resultWords, length: b.length}
+			res.cleanTrailingBits()
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -546,20 +598,24 @@ func (b *Bitset) Not() *Bitset {
 //
 // AND-NOT is used for set difference: elements in A but not in B.
 func (b *Bitset) AndNot(other *Bitset) *Bitset {
-	resultLen := max(b.length, other.length)
-	maxWords := max(len(b.words), len(other.words))
-	resultWords := make([]uint64, maxWords)
+	result, _ := StartNew[*Bitset]("bitset.AndNot", nil,
+		func(op *Operation[*Bitset], rf *ResultFactory[*Bitset]) *OperationResult[*Bitset] {
+			resultLen := max(b.length, other.length)
+			maxWords := max(len(b.words), len(other.words))
+			resultWords := make([]uint64, maxWords)
 
-	for i := 0; i < maxWords; i++ {
-		a := wordAt(b.words, i)
-		bw := wordAt(other.words, i)
-		// a &^ bw: keep bits from a that are NOT in bw
-		// Go's &^ operator is "AND NOT" (bit clear).
-		resultWords[i] = a &^ bw
-	}
+			for i := 0; i < maxWords; i++ {
+				a := wordAt(b.words, i)
+				bw := wordAt(other.words, i)
+				// a &^ bw: keep bits from a that are NOT in bw
+				// Go's &^ operator is "AND NOT" (bit clear).
+				resultWords[i] = a &^ bw
+			}
 
-	result := &Bitset{words: resultWords, length: resultLen}
-	result.cleanTrailingBits()
+			res := &Bitset{words: resultWords, length: resultLen}
+			res.cleanTrailingBits()
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -577,11 +633,15 @@ func (b *Bitset) AndNot(other *Bitset) *Bitset {
 // For a bitset with N bits, this runs in O(N/64) time -- we process
 // 64 bits per loop iteration.
 func (b *Bitset) Popcount() int {
-	count := 0
-	for _, w := range b.words {
-		count += bits.OnesCount64(w)
-	}
-	return count
+	result, _ := StartNew[int]("bitset.Popcount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			count := 0
+			for _, w := range b.words {
+				count += bits.OnesCount64(w)
+			}
+			return rf.Generate(true, false, count)
+		}).GetResult()
+	return result
 }
 
 // Len returns the logical length: the number of addressable bits.
@@ -589,7 +649,11 @@ func (b *Bitset) Popcount() int {
 // This is the value passed to NewBitset(size), or the highest bit index + 1
 // after any auto-growth operations.
 func (b *Bitset) Len() int {
-	return b.length
+	result, _ := StartNew[int]("bitset.Len", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, b.length)
+		}).GetResult()
+	return result
 }
 
 // Capacity returns the allocated size in bits (always a multiple of 64).
@@ -597,7 +661,11 @@ func (b *Bitset) Len() int {
 // Capacity >= Len(). The difference (Capacity - Len) is "slack space" --
 // bits that exist in memory but are always zero.
 func (b *Bitset) Capacity() int {
-	return len(b.words) * bitsPerWord
+	result, _ := StartNew[int]("bitset.Capacity", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(b.words)*bitsPerWord)
+		}).GetResult()
+	return result
 }
 
 // Any returns true if at least one bit is set.
@@ -606,12 +674,16 @@ func (b *Bitset) Capacity() int {
 // without scanning the rest. This is O(1) in the best case
 // (first word is non-zero) and O(N/64) in the worst case.
 func (b *Bitset) Any() bool {
-	for _, w := range b.words {
-		if w != 0 {
-			return true
-		}
-	}
-	return false
+	result, _ := StartNew[bool]("bitset.Any", false,
+		func(_ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			for _, w := range b.words {
+				if w != 0 {
+					return rf.Generate(true, false, true)
+				}
+			}
+			return rf.Generate(true, false, false)
+		}).GetResult()
+	return result
 }
 
 // All returns true if ALL bits in 0..length are set.
@@ -628,36 +700,44 @@ func (b *Bitset) Any() bool {
 // For the last word, we only check the bits within length. We create
 // a mask of the valid bits and check that all valid bits are set.
 func (b *Bitset) All() bool {
-	// Vacuous truth: all bits of nothing are set.
-	if b.length == 0 {
-		return true
-	}
+	result, _ := StartNew[bool]("bitset.All", false,
+		func(_ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			// Vacuous truth: all bits of nothing are set.
+			if b.length == 0 {
+				return rf.Generate(true, false, true)
+			}
 
-	numWords := len(b.words)
+			numWords := len(b.words)
 
-	// Check all full words (all bits must be 1 = max uint64).
-	for i := 0; i < numWords-1; i++ {
-		if b.words[i] != ^uint64(0) {
-			return false
-		}
-	}
+			// Check all full words (all bits must be 1 = max uint64).
+			for i := 0; i < numWords-1; i++ {
+				if b.words[i] != ^uint64(0) {
+					return rf.Generate(true, false, false)
+				}
+			}
 
-	// Check the last word: only the bits within length matter.
-	remaining := bitOffset(b.length)
-	if remaining == 0 {
-		// length is a multiple of 64, so the last word is a full word.
-		return b.words[numWords-1] == ^uint64(0)
-	}
+			// Check the last word: only the bits within length matter.
+			remaining := bitOffset(b.length)
+			if remaining == 0 {
+				// length is a multiple of 64, so the last word is a full word.
+				return rf.Generate(true, false, b.words[numWords-1] == ^uint64(0))
+			}
 
-	// Create a mask for the valid bits: (1 << remaining) - 1
-	// Example: remaining = 8 -> mask = 0xFF (bits 0-7)
-	mask := (uint64(1) << uint(remaining)) - 1
-	return b.words[numWords-1] == mask
+			// Create a mask for the valid bits: (1 << remaining) - 1
+			// Example: remaining = 8 -> mask = 0xFF (bits 0-7)
+			mask := (uint64(1) << uint(remaining)) - 1
+			return rf.Generate(true, false, b.words[numWords-1] == mask)
+		}).GetResult()
+	return result
 }
 
 // None returns true if no bits are set. Equivalent to !Any().
 func (b *Bitset) None() bool {
-	return !b.Any()
+	result, _ := StartNew[bool]("bitset.None", false,
+		func(_ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, !b.Any())
+		}).GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------
@@ -693,28 +773,32 @@ func (b *Bitset) None() bool {
 // This is O(k) where k is the number of set bits, and it skips zero
 // words entirely, making it very efficient for sparse bitsets.
 func (b *Bitset) IterSetBits() []int {
-	result := make([]int, 0)
+	result, _ := StartNew[[]int]("bitset.IterSetBits", nil,
+		func(_ *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			indices := make([]int, 0)
 
-	for wordIdx, w := range b.words {
-		baseIndex := wordIdx * bitsPerWord
-		// Process each set bit in this word using the trailing-zeros trick.
-		for w != 0 {
-			// Find the lowest set bit.
-			bitPos := bits.TrailingZeros64(w)
-			index := baseIndex + bitPos
+			for wordIdx, w := range b.words {
+				baseIndex := wordIdx * bitsPerWord
+				// Process each set bit in this word using the trailing-zeros trick.
+				for w != 0 {
+					// Find the lowest set bit.
+					bitPos := bits.TrailingZeros64(w)
+					index := baseIndex + bitPos
 
-			// Only include bits within length (don't include trailing garbage).
-			if index >= b.length {
-				break
+					// Only include bits within length (don't include trailing garbage).
+					if index >= b.length {
+						break
+					}
+
+					indices = append(indices, index)
+
+					// Clear the lowest set bit: word &= word - 1
+					w &= w - 1
+				}
 			}
 
-			result = append(result, index)
-
-			// Clear the lowest set bit: word &= word - 1
-			w &= w - 1
-		}
-	}
-
+			return rf.Generate(true, false, indices)
+		}).GetResult()
 	return result
 }
 
@@ -729,21 +813,24 @@ func (b *Bitset) IterSetBits() []int {
 //
 // Returns 0 for an empty bitset.
 func (b *Bitset) ToInteger() (uint64, error) {
-	// Empty bitset = 0.
-	if len(b.words) == 0 {
-		return 0, nil
-	}
-
-	// Check that all words beyond the first are zero.
-	for i := 1; i < len(b.words); i++ {
-		if b.words[i] != 0 {
-			return 0, &BitsetError{
-				Message: "bitset value exceeds uint64 range",
+	return StartNew[uint64]("bitset.ToInteger", 0,
+		func(_ *Operation[uint64], rf *ResultFactory[uint64]) *OperationResult[uint64] {
+			// Empty bitset = 0.
+			if len(b.words) == 0 {
+				return rf.Generate(true, false, uint64(0))
 			}
-		}
-	}
 
-	return b.words[0], nil
+			// Check that all words beyond the first are zero.
+			for i := 1; i < len(b.words); i++ {
+				if b.words[i] != 0 {
+					return rf.Fail(uint64(0), &BitsetError{
+						Message: "bitset value exceeds uint64 range",
+					})
+				}
+			}
+
+			return rf.Generate(true, false, b.words[0])
+		}).GetResult()
 }
 
 // ToBinaryStr converts the bitset to a string of '0' and '1' characters
@@ -757,22 +844,26 @@ func (b *Bitset) ToInteger() (uint64, error) {
 //	bs := BitsetFromInteger(5)  // binary 101
 //	bs.ToBinaryStr()            // returns "101"
 func (b *Bitset) ToBinaryStr() string {
-	if b.length == 0 {
-		return ""
-	}
+	result, _ := StartNew[string]("bitset.ToBinaryStr", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if b.length == 0 {
+				return rf.Generate(true, false, "")
+			}
 
-	// Build the string from the highest bit (length-1) down to bit 0.
-	// This produces conventional binary notation: MSB on the left.
-	var sb strings.Builder
-	sb.Grow(b.length)
-	for i := b.length - 1; i >= 0; i-- {
-		if b.Test(i) {
-			sb.WriteByte('1')
-		} else {
-			sb.WriteByte('0')
-		}
-	}
-	return sb.String()
+			// Build the string from the highest bit (length-1) down to bit 0.
+			// This produces conventional binary notation: MSB on the left.
+			var sb strings.Builder
+			sb.Grow(b.length)
+			for i := b.length - 1; i >= 0; i-- {
+				if b.Test(i) {
+					sb.WriteByte('1')
+				} else {
+					sb.WriteByte('0')
+				}
+			}
+			return rf.Generate(true, false, sb.String())
+		}).GetResult()
+	return result
 }
 
 // String returns a human-readable representation like "Bitset(101)".
@@ -780,7 +871,11 @@ func (b *Bitset) ToBinaryStr() string {
 // This implements the fmt.Stringer interface so bitsets print nicely
 // with fmt.Println, fmt.Sprintf, etc.
 func (b *Bitset) String() string {
-	return fmt.Sprintf("Bitset(%s)", b.ToBinaryStr())
+	result, _ := StartNew[string]("bitset.String", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("Bitset(%s)", b.ToBinaryStr()))
+		}).GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------
@@ -796,21 +891,25 @@ func (b *Bitset) String() string {
 // logical content will have identical word vectors (up to the number of
 // words needed for the longer one).
 func (b *Bitset) Equal(other *Bitset) bool {
-	if b.length != other.length {
-		return false
-	}
+	result, _ := StartNew[bool]("bitset.Equal", false,
+		func(_ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			if b.length != other.length {
+				return rf.Generate(true, false, false)
+			}
 
-	// Compare word-by-word. If one has more words allocated, the
-	// extra words must all be zero (due to clean-trailing-bits).
-	maxWords := max(len(b.words), len(other.words))
-	for i := 0; i < maxWords; i++ {
-		a := wordAt(b.words, i)
-		bw := wordAt(other.words, i)
-		if a != bw {
-			return false
-		}
-	}
-	return true
+			// Compare word-by-word. If one has more words allocated, the
+			// extra words must all be zero (due to clean-trailing-bits).
+			maxWords := max(len(b.words), len(other.words))
+			for i := 0; i < maxWords; i++ {
+				a := wordAt(b.words, i)
+				bw := wordAt(other.words, i)
+				if a != bw {
+					return rf.Generate(true, false, false)
+				}
+			}
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------

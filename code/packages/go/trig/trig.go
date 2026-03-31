@@ -27,6 +27,11 @@
 // Since sin and cos are periodic (they repeat every 2*pi), we can always reduce
 // any input to the range [-pi, pi] without changing the result. This is called
 // "range reduction" and it's a critical step in every real trig implementation.
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package trig
 
 // ============================================================================
@@ -147,31 +152,37 @@ func rangeReduce(x float64) float64 {
 //	...
 //	sum converges to 0.5000
 func Sin(x float64) float64 {
-	// Step 1: Range reduction.
-	// Bring x into [-pi, pi] so the series converges quickly.
-	x = rangeReduce(x)
+	result, _ := StartNew[float64]("trig.Sin", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
 
-	// Step 2: Initialize the series.
-	// The first term of the Maclaurin series for sin is just x itself.
-	term := x   // Current term in the series: starts at x (the n=0 term)
-	sum := term // Running total: accumulates all terms
+			// Step 1: Range reduction.
+			// Bring x into [-pi, pi] so the series converges quickly.
+			x = rangeReduce(x)
 
-	// Step 3: Accumulate terms.
-	// We compute 20 terms, which is more than enough for double precision.
-	// (In practice, the series converges in about 10-12 terms for |x| <= pi,
-	// but extra terms cost almost nothing and ensure accuracy.)
-	for n := 1; n <= 20; n++ {
-		// Compute the ratio between consecutive terms:
-		//   term_n = term_{n-1} * (-x^2) / ((2n)(2n+1))
-		//
-		// The denominator (2n)(2n+1) grows quadratically, so each term
-		// shrinks rapidly. The minus sign creates the alternating pattern.
-		denom := float64(2*n) * float64(2*n+1)
-		term = term * (-x * x) / denom
-		sum += term
-	}
+			// Step 2: Initialize the series.
+			// The first term of the Maclaurin series for sin is just x itself.
+			term := x   // Current term in the series: starts at x (the n=0 term)
+			sum := term // Running total: accumulates all terms
 
-	return sum
+			// Step 3: Accumulate terms.
+			// We compute 20 terms, which is more than enough for double precision.
+			// (In practice, the series converges in about 10-12 terms for |x| <= pi,
+			// but extra terms cost almost nothing and ensure accuracy.)
+			for n := 1; n <= 20; n++ {
+				// Compute the ratio between consecutive terms:
+				//   term_n = term_{n-1} * (-x^2) / ((2n)(2n+1))
+				//
+				// The denominator (2n)(2n+1) grows quadratically, so each term
+				// shrinks rapidly. The minus sign creates the alternating pattern.
+				denom := float64(2*n) * float64(2*n+1)
+				term = term * (-x * x) / denom
+				sum += term
+			}
+
+			return rf.Generate(true, false, sum)
+		}).GetResult()
+	return result
 }
 
 // ============================================================================
@@ -213,28 +224,34 @@ func Sin(x float64) float64 {
 // This holds for ALL values of x. Our test suite verifies this identity
 // as a way to check that both functions are implemented correctly.
 func Cos(x float64) float64 {
-	// Step 1: Range reduction.
-	x = rangeReduce(x)
+	result, _ := StartNew[float64]("trig.Cos", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
 
-	// Step 2: Initialize the series.
-	// The first term of the Maclaurin series for cos is 1 (the constant term).
-	term := 1.0 // Current term: starts at 1 (the n=0 term)
-	sum := term  // Running total
+			// Step 1: Range reduction.
+			x = rangeReduce(x)
 
-	// Step 3: Accumulate terms.
-	// Same strategy as Sin, but with even-power denominators.
-	for n := 1; n <= 20; n++ {
-		// The ratio between consecutive cosine terms:
-		//   term_n = term_{n-1} * (-x^2) / ((2n-1)(2n))
-		//
-		// Why (2n-1)(2n)? Because:
-		//   (2n)! / (2(n-1))! = (2n-1)(2n)
-		denom := float64(2*n-1) * float64(2*n)
-		term = term * (-x * x) / denom
-		sum += term
-	}
+			// Step 2: Initialize the series.
+			// The first term of the Maclaurin series for cos is 1 (the constant term).
+			term := 1.0 // Current term: starts at 1 (the n=0 term)
+			sum := term // Running total
 
-	return sum
+			// Step 3: Accumulate terms.
+			// Same strategy as Sin, but with even-power denominators.
+			for n := 1; n <= 20; n++ {
+				// The ratio between consecutive cosine terms:
+				//   term_n = term_{n-1} * (-x^2) / ((2n-1)(2n))
+				//
+				// Why (2n-1)(2n)? Because:
+				//   (2n)! / (2(n-1))! = (2n-1)(2n)
+				denom := float64(2*n-1) * float64(2*n)
+				term = term * (-x * x) / denom
+				sum += term
+			}
+
+			return rf.Generate(true, false, sum)
+		}).GetResult()
+	return result
 }
 
 // ============================================================================
@@ -264,7 +281,12 @@ func Cos(x float64) float64 {
 //	Radians(180) = pi    (a straight line)
 //	Radians(360) = 2*pi  (a full circle)
 func Radians(deg float64) float64 {
-	return deg * PI / 180.0
+	result, _ := StartNew[float64]("trig.Radians", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("deg", deg)
+			return rf.Generate(true, false, deg*PI/180.0)
+		}).GetResult()
+	return result
 }
 
 // Degrees converts an angle from radians to degrees.
@@ -280,5 +302,10 @@ func Radians(deg float64) float64 {
 //	Degrees(pi)     = 180
 //	Degrees(2*pi)   = 360
 func Degrees(rad float64) float64 {
-	return rad * 180.0 / PI
+	result, _ := StartNew[float64]("trig.Degrees", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("rad", rad)
+			return rf.Generate(true, false, rad*180.0/PI)
+		}).GetResult()
+	return result
 }

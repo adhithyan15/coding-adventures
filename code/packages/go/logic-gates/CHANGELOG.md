@@ -4,6 +4,19 @@ All notable changes to the `logic-gates` package will be documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] - 2026-03-31
+
+### Changed
+
+- **Operations system integration**: All public gate functions and combinational/
+  sequential circuit functions (`AND`, `OR`, `NOT`, `XOR`, `NAND`, `NOR`, `XNOR`,
+  `NAND_NOT`, `NAND_AND`, `NAND_OR`, `NAND_XOR`, `ANDn`, `ORn`, `Mux2`, `Mux4`,
+  `MuxN`, `Demux`, `Decoder`, `Encoder`, `PriorityEncoder`, `TriState`, `SRLatch`,
+  `DLatch`, `DFlipFlop`, `Register`, `ShiftRegister`, `Counter`) are now wrapped
+  with `StartNew[T]` from the package's Operations infrastructure. Multi-return
+  functions use inline helper structs. Each call gains automatic timing,
+  structured logging, and panic recovery.
+
 ## [0.4.0] - 2026-03-29
 
 ### Changed

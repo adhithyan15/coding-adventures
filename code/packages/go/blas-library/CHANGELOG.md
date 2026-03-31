@@ -2,6 +2,17 @@
 
 All notable changes to the Go BLAS Library package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- **Operations system integration**: All public constructor functions and registry
+  methods (`NewVector`, `NewVectorWithSize`, `NewMatrix`, `MustMatrix`, `MustVector`,
+  `Zeros`, `NewBackendRegistry`, `Register`, `Get`, `GetBest`, `ListAvailable`,
+  `SetPriority`, `CreateBlas`) are now wrapped with `StartNew[T]` from the
+  package's Operations infrastructure. Each call gains automatic timing,
+  structured logging, and panic recovery.
+
 ## [0.1.0] - 2026-03-20
 
 ### Added

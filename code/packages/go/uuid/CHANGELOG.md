@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- **Operations system integration**: All public functions and methods (`Parse`,
+  `IsValid`, `V4`, `V5`, `V3`, `V1`, `V7`, `Compare`, `String`, `Bytes`,
+  `ToInt`, `Version`, `Variant`, `IsNil`, `IsMax`) are now wrapped with
+  `StartNew[T]` from the package's Operations infrastructure. Multi-return
+  functions (`ToInt`) use inline helper structs. Each call gains automatic
+  timing, structured logging, and panic recovery.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
