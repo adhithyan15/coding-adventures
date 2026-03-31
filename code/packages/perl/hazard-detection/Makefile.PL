@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::HazardDetection',
     VERSION_FROM     => 'lib/CodingAdventures/HazardDetection.pm',
-    ABSTRACT         => 'Pipeline hazard detection: RAW, control, and structural hazards',
+    ABSTRACT         => 'Pipeline hazard detection — data, control, and structural hazards',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',

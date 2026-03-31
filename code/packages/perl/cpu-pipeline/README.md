@@ -1,6 +1,6 @@
 # CodingAdventures::CpuPipeline (Perl)
 
-Configurable N-stage CPU instruction pipeline.
+Configurable N-stage CPU instruction pipeline simulator.
 Part of the [coding-adventures](https://github.com/adhithyan15/coding-adventures) project.
 
 ## Synopsis
@@ -8,25 +8,24 @@ Part of the [coding-adventures](https://github.com/adhithyan15/coding-adventures
 ```perl
 use CodingAdventures::CpuPipeline;
 
-my @mem = (0xFF, (0x01) x 255);  # HALT at address 0
-
+my $config = CodingAdventures::CpuPipeline->classic_5_stage();
 my $result = CodingAdventures::CpuPipeline::Pipeline->new(
-    CodingAdventures::CpuPipeline::PipelineConfig->classic_5_stage(),
-    sub { $mem[$_[0]] // 0 },           # fetch
-    sub { my ($raw, $tok) = @_;         # decode
-          $tok->{opcode}  = $raw == 0xFF ? 'HALT' : 'NOP';
-          $tok->{is_halt} = $raw == 0xFF ? 1 : 0;
-          $tok },
-    sub { $_[0] },   # execute
-    sub { $_[0] },   # memory
-    sub { },         # writeback
+    $config,
+    sub { 0 },        # fetch:     (pc) → raw instruction
+    sub { $_[1] },    # decode:    (raw, token) → decoded token
+    sub { $_[0] },    # execute:   (token) → token with alu_result
+    sub { $_[0] },    # memory:    (token) → token with mem_data
+    sub { },          # writeback: (token) → void
 );
 my $p = $result->{pipeline};
-$p->run(100);
-printf "Halted: %d\n", $p->is_halted();
-printf "IPC: %.3f\n",  $p->get_stats()->ipc();
+$p->run(10);
+printf "IPC: %.3f\n", $p->stats()->ipc();
 ```
 
-## Dependencies
+## Description
 
-None (no external Perl dependencies).
+A CPU pipeline overlaps the execution of multiple instructions. The classic
+5-stage RISC pipeline (IF→ID→EX→MEM→WB) achieves up to 5x throughput
+improvement over a single-cycle design.
+
+See `code/specs/D04-pipeline.md` for the full specification.

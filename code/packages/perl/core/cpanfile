@@ -1,5 +1,5 @@
-requires 'coding-adventures-cpu-pipeline',  '0.01';
-requires 'coding-adventures-cpu-simulator', '0.01';
+requires 'CodingAdventures::CpuPipeline',  '0.01';
+requires 'CodingAdventures::CpuSimulator', '0.01';
 
 on 'test' => sub {
     requires 'Test2::V0';
