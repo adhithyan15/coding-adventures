@@ -41,7 +41,7 @@ subtest 'PipelineSlot: custom fields' => sub {
     is($s->{pc},         0x100,  'pc=0x100');
     is($s->{dest_reg},   3,      'dest_reg=3');
     is($s->{dest_value}, 42,     'dest_value=42');
-    is_deeply($s->{source_regs}, [1, 2], 'source_regs=[1,2]');
+    is($s->{source_regs}, [1, 2], 'source_regs=[1,2]');
     is($s->{mem_read},   1,      'mem_read=1');
 };
 

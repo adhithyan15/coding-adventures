@@ -719,8 +719,8 @@ describe("ARM1Simulator", function()
       })
       cpu:run(1000)
       -- fib sequence: 0,1,1,2,3,5,8,13,21,34...
-      -- After 8 iterations from (a=0,b=1): a=13, b=21
-      assert.are.equal(21, cpu:read_register(1))
+      -- After 8 iterations from (a=0,b=1): a=fib(8)=21, b=fib(9)=34
+      assert.are.equal(21, cpu:read_register(0))
     end)
   end)
 

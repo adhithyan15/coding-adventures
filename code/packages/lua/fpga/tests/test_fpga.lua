@@ -643,6 +643,6 @@ describe("End-to-end: 1-bit full adder in a slice", function()
     -- a=1, b=0, cin=1
     sum, _, carry = s:evaluate({1, 0}, {0, 0}, 0, 1)
     assert.equals(0, sum)    -- XOR(1,0) XOR 1 = 1 XOR 1 = 0
-    assert.equals(1, carry)  -- XOR(1,0) AND 1 = 1 AND 1 = 1
+    assert.equals(0, carry)  -- lut_b=0, carry_out = lut_b AND carry_mid = 0 AND 1 = 0
   end)
 end)

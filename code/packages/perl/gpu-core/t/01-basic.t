@@ -321,7 +321,7 @@ subtest 'loop: sum 1+2+3+4 = 10' => sub {
     $pkg->limm(3, 5.0),    # R3 = limit
     $pkg->fadd(0, 0, 1),   # sum += i
     $pkg->fadd(1, 1, 2),   # i += 1
-    $pkg->blt(1, 3, -2),   # if i < 5: back 2
+    $pkg->blt(1, 3, -3),   # if i < 5: back 3 (next_pc = pc+1+(-3) = pc-2 = loop body)
     $pkg->halt,
   ]);
   $core->run;

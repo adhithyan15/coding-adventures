@@ -66,7 +66,7 @@ sub new {
     }, $class;
 }
 
-sub _index { $_[0]->{_table}; $_[1] % $_[0]->{table_size} }
+sub _index { $_[1] % $_[0]->{table_size} }
 
 sub _get_state {
     my ($self, $idx) = @_;

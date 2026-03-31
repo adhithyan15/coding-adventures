@@ -1235,10 +1235,10 @@ sub encode_ldm {
     my $inst = ($condition << 28) | 0x08100000;
     $inst |= ($rn << 16) | $reg_list;
     $inst |= (1 << 21) if $write_back;
-    if    ($bt_mode eq 'IA') { $inst |= (1 << 23) }
-    elsif ($bt_mode eq 'IB') { $inst |= (1 << 24) | (1 << 23) }
-    elsif ($bt_mode eq 'DB') { $inst |= (1 << 24) }
-    # DA: no P or U bits
+    if    (defined $bt_mode && $bt_mode eq 'IA') { $inst |= (1 << 23) }
+    elsif (defined $bt_mode && $bt_mode eq 'IB') { $inst |= (1 << 24) | (1 << 23) }
+    elsif (defined $bt_mode && $bt_mode eq 'DB') { $inst |= (1 << 24) }
+    # DA or undef: no P or U bits
     return _mask32($inst);
 }
 
@@ -1251,8 +1251,15 @@ sub encode_ldm {
 sub encode_stm {
     shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
-    my $inst = encode_ldm($condition, $rn, $reg_list, $write_back, $bt_mode);
-    return _mask32($inst & _bnot32(1 << 20));
+    # Build STM directly (same as encode_ldm but with L=0 instead of L=1)
+    my $inst = ($condition << 28) | 0x08000000;  # bits 27:25=100, L=0
+    $inst |= ($rn << 16) | $reg_list;
+    $inst |= (1 << 21) if $write_back;
+    if    (defined $bt_mode && $bt_mode eq 'IA') { $inst |= (1 << 23) }
+    elsif (defined $bt_mode && $bt_mode eq 'IB') { $inst |= (1 << 24) | (1 << 23) }
+    elsif (defined $bt_mode && $bt_mode eq 'DB') { $inst |= (1 << 24) }
+    # DA or undef: no P or U bits
+    return _mask32($inst);
 }
 
 1;

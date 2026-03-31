@@ -37,7 +37,8 @@ sub new {
 # Returns a NEW Stats object (immutable style).
 sub record {
     my ($self, $correct_guess) = @_;
-    my $new = $self->new();
+    my $class = ref($self) || $self;
+    my $new = $class->new();
     $new->{predictions} = $self->{predictions} + 1;
     if ($correct_guess) {
         $new->{correct}   = $self->{correct} + 1;

@@ -259,7 +259,7 @@ subtest 'SimulatedNIC — send and receive' => sub {
     $n->inject_rx([0x01, 0x02]);
     my ($st, $self, $pkt) = $n->receive();
     is($st, 'ok', 'ok');
-    is_deeply($pkt, [0x01, 0x02], 'packet correct');
+    is($pkt, [0x01, 0x02], 'packet correct');
     is(scalar @{ $n->{rx_queue} }, 0, 'rx empty');
 };
 
@@ -288,7 +288,7 @@ subtest 'SimulatedNIC — ioctl get_mac' => sub {
     my $n = $NIC->new(mac_address => $mac);
     my ($st, $got) = $n->ioctl('get_mac');
     is($st, 'ok', 'ok');
-    is_deeply($got, $mac, 'mac correct');
+    is($got, $mac, 'mac correct');
 };
 
 subtest 'SimulatedNIC — ioctl unsupported' => sub {

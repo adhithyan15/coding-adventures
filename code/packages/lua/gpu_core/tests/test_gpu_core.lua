@@ -577,16 +577,16 @@ describe("GPUCore complete programs", function()
   it("BEQ branches correctly on equality", function()
     local core = gpu_core.GPUCore.new()
     -- R0 and R1 are both 5.0
-    -- BEQ R0, R1, +1 should skip the LIMM
+    -- BEQ R0, R1, +2 should skip the LIMM
     -- PC 0: limm R0=5
     -- PC 1: limm R1=5
-    -- PC 2: BEQ 0,1 +1  → skip PC 3
+    -- PC 2: BEQ 0,1 +2  → next_pc = 2+2 = 4, skips PC 3
     -- PC 3: limm R2=99  (should be skipped)
     -- PC 4: halt
     core:load_program({
       gpu_core.limm(0, 5.0),
       gpu_core.limm(1, 5.0),
-      gpu_core.beq(0, 1, 1),
+      gpu_core.beq(0, 1, 2),
       gpu_core.limm(2, 99.0),
       gpu_core.halt(),
     })

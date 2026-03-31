@@ -683,8 +683,9 @@ local function eval_expr(node, row)
 
   elseif kind == "is_null" then
     local v = eval_expr(node.operand, row)
-    local result = (v == nil)
-    return node.negated and not result or result
+    local is_null = (v == nil)
+    -- IS NULL returns true when v is nil; IS NOT NULL returns true when v is not nil
+    return node.negated ~= is_null
 
   elseif kind == "in_expr" then
     local v = eval_expr(node.operand, row)
@@ -1199,26 +1200,26 @@ end
 --- Execute multiple SQL statements.
 -- @param sql         SQL string with one or more semicolon-separated SELECT statements.
 -- @param data_source DataSource object.
--- @return            ok=true, list_of_results  OR  ok=false, err_msg
+-- @return            results, nil  OR  nil, err_msg
 function M.execute_all(sql, data_source)
   local ast, err = parse_sql(sql)
   if not ast then
-    return false, "Parse error: " .. tostring(err)
+    return nil, "Parse error: " .. tostring(err)
   end
 
   local results = {}
   for _, stmt in ipairs(ast.statements) do
     if stmt.kind ~= "select_stmt" then
-      return false, "Only SELECT statements are supported"
+      return nil, "Only SELECT statements are supported"
     end
     local ok, result = pcall(execute_select, stmt, data_source)
     if not ok then
-      return false, tostring(result)
+      return nil, tostring(result)
     end
     results[#results + 1] = result
   end
 
-  return true, results
+  return results, nil
 end
 
 --- InMemoryDataSource — a simple in-memory DataSource for testing.

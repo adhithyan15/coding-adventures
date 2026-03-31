@@ -24,7 +24,7 @@ subtest 'LUT: construction' => sub {
 subtest 'LUT: configure AND gate' => sub {
     my $lut = CodingAdventures::FPGA::LUT->new(2);
     $lut->configure([0, 0, 0, 1]);
-    is_deeply $lut->{truth_table}, [0, 0, 0, 1], 'AND truth table';
+    is $lut->{truth_table}, [0, 0, 0, 1], 'AND truth table';
 };
 
 subtest 'LUT: evaluate AND' => sub {
@@ -271,7 +271,7 @@ subtest 'Bitstream: parses CLB config' => sub {
     });
     my $cfg = $bs->clb_config('0_0');
     ok defined($cfg), 'config defined';
-    is_deeply $cfg->{slice_0}{lut_a}, [0,0,0,1], 'lut_a correct';
+    is $cfg->{slice_0}{lut_a}, [0,0,0,1], 'lut_a correct';
 };
 
 subtest 'Bitstream: parses routing config' => sub {
@@ -342,7 +342,7 @@ subtest 'Fabric: load_bitstream configures CLB' => sub {
         io      => {},
     });
     $f->load_bitstream($bs);
-    is_deeply $f->{clbs}{'0_0'}{slice_0}{lut_a}{truth_table}, [0,0,0,1], 'lut_a configured';
+    is $f->{clbs}{'0_0'}{slice_0}{lut_a}{truth_table}, [0,0,0,1], 'lut_a configured';
 };
 
 subtest 'Fabric: load_bitstream configures routing' => sub {
