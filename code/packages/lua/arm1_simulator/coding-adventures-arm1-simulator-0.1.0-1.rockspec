@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "ARM1 (ARMv1) behavioral instruction set simulator — complete ARMv1 ISA with barrel shifter, ALU, and encoding helpers",
+    summary = "ARM1 (ARMv1) behavioral instruction set simulator — the chip that launched ARM's 250 billion device legacy",
     license = "MIT",
 }
 dependencies = {
