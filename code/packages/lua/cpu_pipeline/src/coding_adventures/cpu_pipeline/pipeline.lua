@@ -195,11 +195,14 @@ function Pipeline:step()
         stalled, flushing = true, false
         self:_apply_stall(hazard, n)
     else
-        -- forward_from_ex, forward_from_mem, or none
+        -- Shift stages first, then apply forwarding to the new decode-stage
+        -- token.  Forwarding takes effect in the same cycle that the token
+        -- enters the decode stage (i.e., after the shift from IF→ID), so the
+        -- correct order is: shift then annotate the token now sitting at ID.
+        self:_shift_stages(n)
         if hazard.action == "forward_from_ex" or hazard.action == "forward_from_mem" then
             self:_apply_forwarding(hazard)
         end
-        self:_shift_stages(n)
     end
 
     -- -----------------------------------------------------------------------

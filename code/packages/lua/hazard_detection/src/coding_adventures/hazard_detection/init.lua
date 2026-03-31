@@ -264,7 +264,13 @@ function StructuralHazardDetector.new(opts)
     local self = setmetatable({}, StructuralHazardDetector)
     self.num_alus     = opts.num_alus     or 1
     self.num_fp_units = opts.num_fp_units or 1
-    self.split_caches = opts.split_caches ~= nil and opts.split_caches or true
+    -- Use explicit nil check so that passing split_caches=false is respected.
+    -- The classic Lua idiom `x ~= nil and x or default` fails when x=false.
+    if opts.split_caches ~= nil then
+        self.split_caches = opts.split_caches
+    else
+        self.split_caches = true  -- default: split caches (no memory port conflict)
+    end
     return self
 end
 

@@ -115,7 +115,7 @@ sub detect {
     my $worst = $Result->new(reason => 'no data dependencies detected');
     for my $src (@srcs) {
         my $r = $self->_check_single_register($src, $ex_slot, $mem_slot);
-        $worst = $Result::->_pick_higher_priority($worst, $r);
+        $worst = $worst->_pick_higher_priority($r);
     }
     return $worst;
 }
@@ -160,23 +160,6 @@ sub _check_single_register {
 
     return $Result->new(reason => sprintf 'R%d has no pending writes', $src);
 }
-
-# Allow pick_higher_priority to be called as class method on Result
-package CodingAdventures::HazardDetection::HazardResult;
-sub _pick_higher_priority {
-    my ($class_or_a, $b) = @_;
-    # Can be called as Result->_pick_higher_priority($a, $b) or $a->_pick_higher_priority($b)
-    if (ref $class_or_a) {
-        my $a = $class_or_a;
-        return $b->_priority > $a->_priority ? $b : $a;
-    } else {
-        # class method: $_[1] = $a, $_[2] = $b
-        my $a = $_[1]; $b = $_[2];
-        return $b->_priority > $a->_priority ? $b : $a;
-    }
-}
-
-package CodingAdventures::HazardDetection::DataHazardDetector;
 
 1;
 
