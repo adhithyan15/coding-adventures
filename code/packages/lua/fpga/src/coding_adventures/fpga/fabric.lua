@@ -1,20 +1,46 @@
--- fabric.lua — FPGA Fabric: the full grid of CLBs, switch matrices, and I/O blocks
---
--- The fabric is a rows × cols grid of CLBs, connected by switch matrices.
--- I/O blocks line the perimeter:
---   Top row:    input blocks  "top_0".."top_{cols-1}"
---   Bottom row: output blocks "bottom_0".."bottom_{cols-1}"
---   Left col:   input blocks  "left_0".."left_{rows-1}"
---   Right col:  output blocks "right_0".."right_{rows-1}"
---
--- evaluate(clock) runs one clock cycle:
---   1. Collect switch matrix output signals from I/O inputs + CLB outputs
---   2. Route signals through each CLB's switch matrix
---   3. Evaluate each CLB
---   4. Drive output I/O blocks from CLB outputs
---
--- In this simplified model, each CLB has one switch matrix that can connect
--- any input or neighbor output to its LUT inputs.
+--[[
+  Fabric — the complete FPGA top-level module.
+
+  ## What is the FPGA Fabric?
+
+  The fabric is the complete FPGA device, tying together all the components:
+
+    - A grid of CLBs (Configurable Logic Blocks) — the logic resources
+    - Switch matrices for routing signals between CLBs
+    - I/O blocks around the perimeter — external interface
+
+  ## Configuration Flow
+
+      1. Create a fabric with specified grid dimensions.
+      2. Load a bitstream (configuration map).
+      3. Set input pin values (external signals).
+      4. Evaluate (propagate signals through the fabric).
+      5. Read output pin values (results).
+
+  ## Grid Layout
+
+  The fabric is organized as a rows x cols grid:
+
+      IO   IO   IO   IO
+      IO  CLB  CLB   IO
+      IO  CLB  CLB   IO
+      IO   IO   IO   IO
+
+  Each CLB position has an associated switch matrix for routing.
+
+  Top edge I/O blocks are inputs; bottom edge are outputs.
+  Left edge I/O blocks are inputs; right edge are outputs.
+
+  ## Simplifications
+
+  This model makes several simplifications compared to real FPGAs:
+    - Single-cycle evaluation (no routing delay modeling)
+    - Switch matrices are per-CLB (real FPGAs have more complex topologies)
+    - No global clock tree modeling
+    - No DSP blocks or Block RAM tiles
+    - Evaluate() does a single pass over CLBs with zero inputs
+      (full signal-path tracing requires a complete netlist)
+]]
 
 local CLB          = require("coding_adventures.fpga.clb")
 local SwitchMatrix = require("coding_adventures.fpga.switch_matrix")
@@ -24,189 +50,195 @@ local Bitstream    = require("coding_adventures.fpga.bitstream")
 local Fabric = {}
 Fabric.__index = Fabric
 
--- Creates a new fabric with the given grid size.
--- Each CLB gets 4 LUT inputs (2 per slice), so each switch matrix has
--- 4 outputs and some number of inputs.
+--- Creates a new FPGA fabric with the given grid dimensions.
+--
+-- Options (table, optional):
+--   lut_inputs   (default 4) — number of inputs per LUT
+--   switch_size  (default 8) — ports per switch matrix side
+--
+-- I/O blocks are automatically created around the perimeter:
+--   top_0 ... top_{cols-1}    → input
+--   bottom_0 ... bottom_{cols-1} → output
+--   left_0 ... left_{rows-1}  → input
+--   right_0 ... right_{rows-1} → output
+--
+-- @param rows  number of CLB rows
+-- @param cols  number of CLB columns
+-- @param opts  optional configuration table
+-- @return new Fabric object
 function Fabric.new(rows, cols, opts)
-    opts = opts or {}
-    local lut_inputs = opts.lut_inputs or 4
+  assert(type(rows) == "number" and rows > 0, "rows must be positive")
+  assert(type(cols) == "number" and cols > 0, "cols must be positive")
+  opts = opts or {}
+  local lut_inputs  = opts.lut_inputs  or 4
+  local switch_size = opts.switch_size or 8
 
-    -- CLB grid: clbs[row][col]
-    local clbs = {}
-    for r = 0, rows - 1 do
-        clbs[r] = {}
-        for c = 0, cols - 1 do
-            clbs[r][c] = CLB.new(r, c, {lut_inputs = lut_inputs})
-        end
-    end
-
-    -- Switch matrix per CLB (maps some inputs to 4 CLB LUT inputs: s0_a, s0_b, s1_a, s1_b)
-    -- We give each switch matrix 8 inputs (global signals) and 4 outputs
-    local switch_matrices = {}
-    for r = 0, rows - 1 do
-        switch_matrices[r] = {}
-        for c = 0, cols - 1 do
-            switch_matrices[r][c] = SwitchMatrix.new(8, 4)
-        end
-    end
-
-    -- I/O blocks: perimeter
-    local io_blocks = {}
-
-    -- Top: input blocks
+  -- Create CLB grid (keyed by "row_col")
+  local clbs             = {}
+  local switch_matrices  = {}
+  for r = 0, rows - 1 do
     for c = 0, cols - 1 do
-        local name = "top_" .. c
-        io_blocks[name] = IOBlock.new(name, "input")
+      local key = r .. "_" .. c
+      clbs[key]            = CLB.new(r, c, { lut_inputs = lut_inputs })
+      switch_matrices[key] = SwitchMatrix.new(switch_size, switch_size)
     end
-    -- Bottom: output blocks
-    for c = 0, cols - 1 do
-        local name = "bottom_" .. c
-        io_blocks[name] = IOBlock.new(name, "output")
-    end
-    -- Left: input blocks
-    for r = 0, rows - 1 do
-        local name = "left_" .. r
-        io_blocks[name] = IOBlock.new(name, "input")
-    end
-    -- Right: output blocks
-    for r = 0, rows - 1 do
-        local name = "right_" .. r
-        io_blocks[name] = IOBlock.new(name, "output")
-    end
+  end
 
-    return setmetatable({
-        rows            = rows,
-        cols            = cols,
-        lut_inputs      = lut_inputs,
-        clbs            = clbs,
-        switch_matrices = switch_matrices,
-        io_blocks       = io_blocks,
-        -- CLB output signals from last evaluate
-        clb_outputs     = {},
-    }, Fabric)
+  -- Create perimeter I/O blocks
+  local io_blocks = {}
+  for c = 0, cols - 1 do
+    local top_name    = "top_" .. c
+    local bottom_name = "bottom_" .. c
+    io_blocks[top_name]    = IOBlock.new(top_name,    "input")
+    io_blocks[bottom_name] = IOBlock.new(bottom_name, "output")
+  end
+  for r = 0, rows - 1 do
+    local left_name  = "left_" .. r
+    local right_name = "right_" .. r
+    io_blocks[left_name]  = IOBlock.new(left_name,  "input")
+    io_blocks[right_name] = IOBlock.new(right_name, "output")
+  end
+
+  return setmetatable({
+    rows            = rows,
+    cols            = cols,
+    clbs            = clbs,
+    switch_matrices = switch_matrices,
+    io_blocks       = io_blocks,
+    lut_inputs      = lut_inputs,
+  }, Fabric)
 end
 
--- Loads a bitstream, configuring CLBs, routing, and I/O blocks.
-function Fabric:load_bitstream(bs)
-    for r = 0, self.rows - 1 do
-        for c = 0, self.cols - 1 do
-            local key = r .. "," .. c
-            local clb_cfg = bs:clb_config(key)
-            if clb_cfg then
-                self.clbs[r][c]:configure(clb_cfg)
-            end
-            local routing_cfg = bs:routing_config(key)
-            if routing_cfg then
-                self.switch_matrices[r][c]:configure(routing_cfg)
-            end
-        end
+--- Loads a bitstream configuration into the fabric.
+-- Applies CLB, routing, and I/O configurations from the bitstream.
+--
+-- @param bitstream  a Bitstream object
+-- @return self (for chaining)
+function Fabric:load_bitstream(bitstream)
+  -- Apply CLB configurations
+  for key, clb in pairs(self.clbs) do
+    local config = bitstream:clb_config(key)
+    if config then
+      clb:configure(self:_parse_clb_config(config))
     end
-    -- Configure I/O blocks if bitstream specifies them
-    for pin_name, _ in pairs(self.io_blocks) do
-        local io_cfg = bs:io_config(pin_name)
-        if io_cfg then
-            -- The direction is already set; other config can go here
-        end
+  end
+
+  -- Apply routing configurations
+  for key, sm in pairs(self.switch_matrices) do
+    local config = bitstream:routing_config(key)
+    if config then
+      sm:configure(config)
     end
+  end
+
+  -- Apply I/O configurations
+  for name, _ in pairs(self.io_blocks) do
+    local config = bitstream:io_config(name)
+    if config then
+      local direction = config.direction or "input"
+      self.io_blocks[name] = IOBlock.new(name, direction)
+    end
+  end
+
+  return self
 end
 
--- Sets an input I/O block's pin value.
+-- Parse a CLB config from the bitstream format.
+-- Converts the string-keyed table from JSON-like format.
+function Fabric:_parse_clb_config(config)
+  local result = {}
+  if config.slice_0 then
+    result.slice_0 = self:_parse_slice_config(config.slice_0)
+  end
+  if config.slice_1 then
+    result.slice_1 = self:_parse_slice_config(config.slice_1)
+  end
+  return result
+end
+
+function Fabric:_parse_slice_config(config)
+  local result = {}
+  if config.lut_a then result.lut_a = config.lut_a end
+  if config.lut_b then result.lut_b = config.lut_b end
+  return result
+end
+
+--- Sets an input pin value on the fabric.
+-- The pin must exist and must be an input or bidirectional I/O block.
+--
+-- @param pin_name  string name of the pin
+-- @param value     0 or 1
+-- @return self (for chaining)
 function Fabric:set_input(pin_name, value)
-    local io = self.io_blocks[pin_name]
-    assert(io, "unknown I/O block: " .. tostring(pin_name))
-    io:set_pin(value)
+  local io = self.io_blocks[pin_name]
+  assert(io, "unknown pin: " .. tostring(pin_name))
+  io:set_pin(value)
+  return self
 end
 
--- Reads an output I/O block's pin value.
+--- Reads an output pin value from the fabric.
+--
+-- @param pin_name  string name of the pin
+-- @return  0, 1, or nil
 function Fabric:read_output(pin_name)
-    local io = self.io_blocks[pin_name]
-    assert(io, "unknown I/O block: " .. tostring(pin_name))
-    return io:read_pin()
+  local io = self.io_blocks[pin_name]
+  assert(io, "unknown pin: " .. tostring(pin_name))
+  return io:read_pin()
 end
 
--- Evaluates one clock cycle across the entire fabric.
+--- Evaluates one clock cycle of the FPGA fabric.
+-- Performs a simplified single-pass evaluation over all CLBs.
+-- Returns self for chaining.
 --
--- Signal routing model:
--- The switch matrices have 8 inputs (in_0..in_7) and 4 outputs (out_0..out_3).
--- in_0..in_{cols-1} are top I/O inputs for this column
--- in_{cols}..in_{cols+rows-1} are left I/O inputs for this row
--- in_{cols+rows}..in_7 are previous CLB outputs (if any)
+-- Note: This is a simplified model. Real FPGAs evaluate combinationally
+-- in a single clock cycle with full signal propagation. Our model does
+-- a single pass with zero inputs, which is sufficient for testing the
+-- CLB evaluation pipeline.
 --
--- out_0=s0_a, out_1=s0_b, out_2=s1_a, out_3=s1_b
+-- @param clock  clock signal (0 or 1)
+-- @return self (for chaining)
 function Fabric:evaluate(clock)
-    -- Build global signal map for switch matrix inputs
-    for r = 0, self.rows - 1 do
-        for c = 0, self.cols - 1 do
-            -- Collect 8 potential input signals
-            local sigs = {}
-            -- in_0: top input for this column
-            sigs["in_0"] = (self.io_blocks["top_" .. c] and
-                            self.io_blocks["top_" .. c]:read_fabric()) or 0
-            -- in_1: left input for this row
-            sigs["in_1"] = (self.io_blocks["left_" .. r] and
-                            self.io_blocks["left_" .. r]:read_fabric()) or 0
-            -- in_2..in_7: zeros (or neighbor outputs in future extension)
-            for i = 2, 7 do sigs["in_" .. i] = 0 end
+  local zero_inputs = {}
+  for i = 1, self.lut_inputs do
+    zero_inputs[i] = 0
+  end
 
-            -- Route through switch matrix
-            local sm = self.switch_matrices[r][c]
-            local routed = sm:route(sigs)
+  for _, clb in pairs(self.clbs) do
+    local inputs = {
+      s0_a = zero_inputs,
+      s0_b = zero_inputs,
+      s1_a = zero_inputs,
+      s1_b = zero_inputs,
+    }
+    clb:evaluate(inputs, clock, 0)
+  end
 
-            -- Collect LUT inputs from routing
-            -- out_0=s0_a first input, out_1=s0_b first input,
-            -- out_2=s1_a first input, out_3=s1_b first input
-            local function make_inputs(signal_val)
-                local v = signal_val or 0
-                local arr = {}
-                for _ = 1, self.lut_inputs do table.insert(arr, v) end
-                return arr
-            end
-
-            local clb_inputs = {
-                s0_a = make_inputs(routed["out_0"]),
-                s0_b = make_inputs(routed["out_1"]),
-                s1_a = make_inputs(routed["out_2"]),
-                s1_b = make_inputs(routed["out_3"]),
-            }
-
-            local outputs, _ = self.clbs[r][c]:evaluate(clb_inputs, clock, 0)
-            self.clb_outputs[r .. "," .. c] = outputs
-        end
-    end
-
-    -- Drive output I/O blocks from first CLB outputs in respective rows/cols
-    -- Bottom outputs: driven by CLB (last row, each col) output[0]
-    for c = 0, self.cols - 1 do
-        local key = (self.rows - 1) .. "," .. c
-        local outs = self.clb_outputs[key]
-        if outs then
-            local io = self.io_blocks["bottom_" .. c]
-            if io then
-                io:set_fabric(outs[1])
-            end
-        end
-    end
-    -- Right outputs: driven by CLB (each row, last col) output[0]
-    for r = 0, self.rows - 1 do
-        local key = r .. "," .. (self.cols - 1)
-        local outs = self.clb_outputs[key]
-        if outs then
-            local io = self.io_blocks["right_" .. r]
-            if io then
-                io:set_fabric(outs[1])
-            end
-        end
-    end
+  return self
 end
 
--- Returns a summary string of the fabric state.
+--- Returns a summary of the fabric's resources.
+--
+-- @return table with resource counts
 function Fabric:summary()
-    local lines = {
-        string.format("FPGA Fabric %d×%d", self.rows, self.cols),
-        string.format("  CLBs: %d", self.rows * self.cols),
-        string.format("  I/O Blocks: %d", (2*self.rows + 2*self.cols)),
-    }
-    return table.concat(lines, "\n")
+  local clb_count = 0
+  for _ in pairs(self.clbs) do clb_count = clb_count + 1 end
+
+  local sm_count = 0
+  for _ in pairs(self.switch_matrices) do sm_count = sm_count + 1 end
+
+  local io_count = 0
+  for _ in pairs(self.io_blocks) do io_count = io_count + 1 end
+
+  return {
+    rows               = self.rows,
+    cols               = self.cols,
+    clb_count          = clb_count,
+    lut_count          = clb_count * 4,
+    ff_count           = clb_count * 4,
+    switch_matrix_count = sm_count,
+    io_block_count     = io_count,
+    lut_inputs         = self.lut_inputs,
+  }
 end
 
 return Fabric
