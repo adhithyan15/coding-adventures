@@ -719,7 +719,7 @@ class TestVhdlLexer < Minitest::Test
 
   def test_string_case_preserved
     tokens = tokenize('"Hello World"')
-    assert_equal "hello world", tokens[0].value
+    assert_equal "Hello World", tokens[0].value
   end
 
   def test_number_unchanged
