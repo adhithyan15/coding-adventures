@@ -1887,3 +1887,18 @@ class TestCaseInsensitiveKeywords:
         assert tok.value == "myTable", (
             f"Non-keyword value must preserve original case, got {tok.value!r}"
         )
+
+    def test_string_literal_preserves_original_case(self) -> None:
+        """STRING values keep their original casing in case-insensitive mode."""
+        grammar = parse_token_grammar(
+            "# @case_insensitive true\n"
+            "STRING = /'[^']*'/\n"
+        )
+        tokens = GrammarLexer("'Ada'", grammar).tokenize()
+
+        non_eof = [t for t in tokens if _token_type_name(t) != "EOF"]
+        assert len(non_eof) == 1
+
+        tok = non_eof[0]
+        assert _token_type_name(tok) == "STRING"
+        assert tok.value == "Ada"
