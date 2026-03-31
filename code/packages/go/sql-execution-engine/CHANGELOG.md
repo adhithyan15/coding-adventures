@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- `TestWhereLike` and `TestArithmetic` now pass. Both tests used string literals
+  in WHERE clauses (e.g. `WHERE name LIKE 'A%'` and `WHERE name = 'Alice'`).
+  The underlying SQL grammar is case-insensitive, so the Go `GrammarLexer` was
+  lowercasing the entire source before tokenization — turning `'Alice'` into
+  `'alice'`. This caused the WHERE predicate to never match because the in-memory
+  test data stores names with original case. The fix is in the shared
+  `go/lexer` package (GrammarLexer now stores an `originalSource` field and
+  extracts STRING bodies from it).
+
 ## [0.1.0] — 2026-03-25
 
 ### Added
