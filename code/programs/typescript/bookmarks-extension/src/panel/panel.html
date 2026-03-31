@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <!--
+    Bookmarks Extension — Side Panel UI
+    =====================================
+
+    This panel opens in the browser's side panel area (Chrome: sidePanel
+    API, Firefox: sidebar_action). Unlike a popup, the side panel:
+
+    - Stays open while the user browses (not destroyed on click-away)
+    - Has more vertical space (fills the browser's side area)
+    - Can update as the user navigates to different tabs
+
+    The panel has two views, toggled by a tab bar at the top:
+
+    1. Add/Edit View — save or update a bookmark for the current tab
+    2. List View — browse, search, edit, and delete saved bookmarks
+  -->
+
+  <div class="container">
+    <!-- Tab navigation — switches between the two views -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-tab="add">Add</button>
+      <button class="tab-btn" data-tab="list">Bookmarks</button>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- Add / Edit View                                               -->
+    <!-- ============================================================ -->
+    <div id="add-view" class="view active">
+      <div class="field">
+        <label for="bookmark-url">URL</label>
+        <input type="text" id="bookmark-url" readonly>
+      </div>
+
+      <div class="field">
+        <label for="bookmark-title">Title</label>
+        <input type="text" id="bookmark-title" placeholder="Page title">
+      </div>
+
+      <div class="field">
+        <label for="bookmark-note">Note</label>
+        <textarea id="bookmark-note" rows="6" placeholder="Why are you saving this?"></textarea>
+      </div>
+
+      <button id="save-btn" class="primary-btn">Save Bookmark</button>
+
+      <div id="status-message" class="status" aria-live="polite"></div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- Bookmarks List View                                           -->
+    <!-- ============================================================ -->
+    <div id="list-view" class="view">
+      <div class="field">
+        <input type="text" id="search-input" placeholder="Search bookmarks...">
+      </div>
+
+      <div id="bookmarks-list"></div>
+
+      <div id="empty-state" class="empty-state">
+        No bookmarks saved yet.
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="panel.ts"></script>
+</body>
+</html>

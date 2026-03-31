@@ -170,6 +170,8 @@ export function transformManifest(
       // `browser_specific_settings` key is Firefox-specific and triggers
       // a warning in Chrome's extension console. Remove it for a clean build.
       delete result.browser_specific_settings;
+      // Chrome doesn't support Firefox's sidebar_action — remove it.
+      delete result.sidebar_action;
       break;
 
     case "firefox":
@@ -187,6 +189,14 @@ export function transformManifest(
             "  }",
         );
       }
+      // Firefox doesn't support Chrome's side_panel API — remove it
+      // and strip the sidePanel permission.
+      delete result.side_panel;
+      if (Array.isArray(result.permissions)) {
+        result.permissions = result.permissions.filter(
+          (p) => p !== "sidePanel",
+        );
+      }
       break;
 
     case "safari":
@@ -195,6 +205,14 @@ export function transformManifest(
       // `safari-web-extension-converter` which only cares about standard
       // MV3 fields.
       delete result.browser_specific_settings;
+      // Safari doesn't support either sidebar API natively.
+      delete result.sidebar_action;
+      delete result.side_panel;
+      if (Array.isArray(result.permissions)) {
+        result.permissions = result.permissions.filter(
+          (p) => p !== "sidePanel",
+        );
+      }
       break;
   }
 
