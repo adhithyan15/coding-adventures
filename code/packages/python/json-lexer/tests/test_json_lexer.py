@@ -2,12 +2,28 @@
 
 These tests verify that the grammar-driven lexer, configured with
 ``json.tokens``, correctly tokenizes JSON text per RFC 8259.
+
+Escape Sequence Testing Note
+-----------------------------
+
+The JSON grammar (``json.tokens``) uses ``escapes: none``, which instructs
+the lexer to strip surrounding quotes from STRING tokens but leave escape
+sequences (``\\n``, ``\\t``, ``\\uXXXX``, etc.) as raw text. This is by
+design: the JSON *parser* is responsible for processing escape sequences,
+not the lexer. The lexer's job is pure tokenization.
+
+The ``TestStringEscapes`` class tests escape *processing* behaviour. It uses
+a separate helper grammar that omits ``escapes: none``, so the
+``GrammarLexer`` performs its default escape processing. This lets us verify
+that the lexer *engine* handles JSON escape sequences correctly without
+changing the semantics of ``json.tokens``.
 """
 
 from __future__ import annotations
 
 import pytest
 
+from grammar_tools import parse_token_grammar
 from json_lexer import create_json_lexer, tokenize_json
 from lexer import GrammarLexer, Token
 
@@ -30,6 +46,49 @@ def token_types(source: str) -> list[str]:
 def token_values(source: str) -> list[str]:
     """Tokenize and return just the values (excluding EOF)."""
     tokens = tokenize_json(source)
+    return [
+        t.value
+        for t in tokens
+        if (t.type if isinstance(t.type, str) else t.type.name) != "EOF"
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Helper grammar for escape processing tests
+# ---------------------------------------------------------------------------
+#
+# The real JSON grammar uses ``escapes: none`` because escape decoding is the
+# parser's job. For the TestStringEscapes class we need a grammar that DOES
+# process escapes so we can verify the lexer engine handles them correctly.
+# This grammar is identical to json.tokens except it omits ``escapes: none``.
+
+_ESCAPE_PROCESSING_GRAMMAR_SRC = r"""
+STRING   = /"([^"\\]|\\["\\\x2fbfnrt]|\\u[0-9a-fA-F]{4})*"/
+NUMBER   = /-?[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/
+TRUE     = "true"
+FALSE    = "false"
+NULL     = "null"
+LBRACE   = "{"
+RBRACE   = "}"
+LBRACKET = "["
+RBRACKET = "]"
+COLON    = ":"
+COMMA    = ","
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+"""
+
+
+def _escape_grammar() -> object:
+    """Return a TokenGrammar that processes escape sequences in strings."""
+    return parse_token_grammar(_ESCAPE_PROCESSING_GRAMMAR_SRC)
+
+
+def escape_token_values(source: str) -> list[str]:
+    """Tokenize using the escape-processing grammar and return non-EOF values."""
+    grammar = _escape_grammar()
+    lexer = GrammarLexer(source, grammar)
+    tokens = lexer.tokenize()
     return [
         t.value
         for t in tokens
@@ -153,56 +212,64 @@ class TestPrimitiveValues:
 
 
 class TestStringEscapes:
-    """Tests for JSON string escape sequences per RFC 8259 section 7."""
+    r"""Tests for JSON string escape sequences per RFC 8259 section 7.
+
+    These tests use the ``escape_processing_grammar()`` helper (defined at
+    module level) rather than the real JSON grammar. The real JSON grammar
+    has ``escapes: none`` because escape decoding is the *parser's*
+    responsibility. Here we want to test that the *lexer engine* correctly
+    handles every JSON escape form, so we use a grammar without
+    ``escapes: none``.
+    """
 
     def test_escape_quote(self) -> None:
         r"""Escaped double quote: \" becomes "."""
-        values = token_values(r'"He said \"hi\""')
+        values = escape_token_values(r'"He said \"hi\""')
         assert values == ['He said "hi"']
 
     def test_escape_backslash(self) -> None:
         r"""Escaped backslash: \\ becomes \."""
-        values = token_values(r'"path\\to\\file"')
+        values = escape_token_values(r'"path\\to\\file"')
         assert values == ["path\\to\\file"]
 
     def test_escape_solidus(self) -> None:
         r"""Escaped solidus: \/ becomes /."""
-        values = token_values(r'"a\/b"')
+        values = escape_token_values(r'"a\/b"')
         assert values == ["a/b"]
 
     def test_escape_backspace(self) -> None:
         r"""Escaped backspace: \b becomes backspace character."""
-        values = token_values(r'"a\bb"')
+        values = escape_token_values(r'"a\bb"')
         assert values == ["a\bb"]
 
     def test_escape_form_feed(self) -> None:
         r"""Escaped form feed: \f becomes form feed character."""
-        values = token_values(r'"a\fb"')
+        values = escape_token_values(r'"a\fb"')
         assert values == ["a\fb"]
 
     def test_escape_newline(self) -> None:
         r"""Escaped newline: \n becomes newline character."""
-        values = token_values(r'"line1\nline2"')
+        values = escape_token_values(r'"line1\nline2"')
         assert values == ["line1\nline2"]
 
     def test_escape_carriage_return(self) -> None:
         r"""Escaped carriage return: \r becomes CR character."""
-        values = token_values(r'"a\rb"')
+        values = escape_token_values(r'"a\rb"')
         assert values == ["a\rb"]
 
     def test_escape_tab(self) -> None:
         r"""Escaped tab: \t becomes tab character."""
-        values = token_values(r'"col1\tcol2"')
+        values = escape_token_values(r'"col1\tcol2"')
         assert values == ["col1\tcol2"]
 
     def test_escape_unicode(self) -> None:
         r"""Unicode escape: \u0041 becomes 'A'."""
-        values = token_values(r'"Hello \u0041"')
+        values = escape_token_values(r'"Hello \u0041"')
         assert values == ["Hello A"]
 
     def test_escape_unicode_non_ascii(self) -> None:
         r"""Unicode escape for non-ASCII: \u00E9 becomes 'e' with acute."""
-        values = token_values(r'"\u00E9"')
+        values = escape_token_values(r'"\u00E9"')
         assert values == ["\u00e9"]
 
 

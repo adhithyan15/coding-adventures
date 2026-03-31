@@ -2,6 +2,17 @@
 
 All notable changes to the json-lexer package will be documented in this file.
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- `TestTokenizeJSONStringWithEscapes` now uses a local `escapeProcessingGrammarSrc`
+  helper (identical to `json.tokens` but without `escapes: none`) instead of the
+  real JSON grammar. The real JSON grammar intentionally leaves escape sequences
+  raw for the parser to decode; the test was incorrectly expecting the lexer to
+  process them. The test now correctly targets the lexer engine's escape
+  processing capability while leaving the JSON grammar semantics unchanged.
+
 ## [0.1.0] - 2026-03-20
 
 ### Added
