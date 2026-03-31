@@ -284,13 +284,46 @@ module CodingAdventures
         [name, expr_node]
       end
 
+      # Pass-through rule names whose single-child wrappers we unwrap when
+      # inferring column names.  The parser nests function_call inside several
+      # layers of expression rules before we reach it.
+      PASS_THROUGH_RULES = %w[
+        expr or_expr and_expr not_expr comparison
+        additive multiplicative unary primary
+      ].freeze
+
       def infer_col_name(node)
         return "?" unless node
         return node.value if node.is_a?(Token)
 
-        if node.rule_name == "column_ref"
-          tokens = node.children.select { |c| c.is_a?(Token) }
-          return tokens.last&.value || "?"
+        # Unwrap single-child pass-through rules to reach the real node.
+        # The parser wraps function_call inside expr → or_expr → … → primary.
+        unwrapped = node
+        while unwrapped.is_a?(ASTNode) &&
+              PASS_THROUGH_RULES.include?(unwrapped.rule_name) &&
+              unwrapped.children.length == 1
+          unwrapped = unwrapped.children[0]
+        end
+
+        return unwrapped.value if unwrapped.is_a?(Token)
+
+        if unwrapped.rule_name == "column_ref"
+          # Return the full dotted text (e.g. "employees.name") so callers can
+          # look up the value under the qualified key in the row context.
+          return node_text(unwrapped)
+        end
+
+        if unwrapped.rule_name == "function_call"
+          # Normalise the function name to uppercase so the output column label
+          # matches the aggregate storage key produced by compute_aggregates
+          # (which always uses uppercase, e.g. "SUM(salary)").  The SQL lexer
+          # emits function names in lowercase due to case-insensitive mode.
+          func_token = unwrapped.children[0]
+          if func_token.is_a?(Token)
+            rest = unwrapped.children[1..].map { |c| node_text(c) }.join
+            return func_token.value.upcase + rest
+          end
+          return node_text(unwrapped)
         end
 
         node_text(node)
