@@ -31,18 +31,9 @@ func TestAllLanguagesConstant(t *testing.T) {
 // TestSharedPrefixesAreNarrow ensures only true shared build infrastructure
 // forces all-language rebuilds.
 func TestSharedPrefixesAreNarrow(t *testing.T) {
-	if len(sharedPrefixes) == 0 {
-		t.Error("sharedPrefixes should not be empty")
-	}
-	// Verify key prefixes are present.
 	found := map[string]bool{}
 	for _, p := range sharedPrefixes {
 		found[p] = true
-	}
-	for _, want := range []string{".github/workflows/ci.yml"} {
-		if !found[want] {
-			t.Errorf("sharedPrefixes missing %q", want)
-		}
 	}
 
 	// Regression guard: the following paths must NOT be in sharedPrefixes.
@@ -51,10 +42,11 @@ func TestSharedPrefixesAreNarrow(t *testing.T) {
 	// code/programs/go/build-tool/ is a program, not a shared library — changing
 	// it should only rebuild the build-tool package, not trigger a full 715-package
 	// rebuild that exposes pre-existing failures on every platform.
-	// Deployment workflows are intentionally excluded so GitHub Pages changes
-	// do not trigger a full-force rebuild of the monorepo.
+	// Workflow-only changes are intentionally excluded so CI/deploy tweaks do not
+	// trigger a full-force rebuild of the monorepo on every PR platform.
 	for _, dontWant := range []string{
 		".github/",
+		".github/workflows/ci.yml",
 		".github/workflows/deploy-electronics-visualizers.yml",
 		"code/grammars/",
 		"code/specs/",

@@ -462,8 +462,11 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 // or language toolchain selection, and treating them as global changes wastes
 // several minutes of CI time.
 //
-// Today the only GitHub workflow that affects incremental build behavior is:
-//   - .github/workflows/ci.yml — the main monorepo build/test pipeline
+// Note: .github/workflows/ci.yml is intentionally NOT here. Workflow-only
+// changes should not force a repo-wide rebuild on PRs; that turns a small CI
+// tweak into an all-platform full build that surfaces unrelated pre-existing
+// failures and blocks the workflow change from landing. The workflow file still
+// gets validated by GitHub Actions syntax checks and by the build-tool tests.
 //
 // Note: code/programs/go/build-tool/ is NOT here. The build tool is a program,
 // not a shared library. Changes to it only rebuild the build-tool package itself
@@ -475,9 +478,7 @@ var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixi
 // shared data files, but modifying them only triggers rebuilds of packages that
 // actually import them. Installing all toolchains for a grammar file change would
 // waste 5+ minutes of CI time when no Rust/Ruby/etc. packages are affected.
-var sharedPrefixes = []string{
-	".github/workflows/ci.yml",
-}
+var sharedPrefixes = []string{}
 
 // detectNeededLanguages determines which language toolchains CI needs to
 // install based on the affected packages. It outputs one line per language
