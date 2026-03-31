@@ -276,7 +276,7 @@ end
 -- section), but they are referenced inside closures created during
 -- _register_all_handlers(). Forward-declaring them here as locals ensures
 -- that the closures capture the correct upvalue binding (not the global).
--- The actual function bodies are assigned later via "local function _foo()".
+-- The actual function bodies are assigned later via "_foo = function(...)".
 
 local _pass_through
 local _compile_store
@@ -1240,7 +1240,7 @@ _get_token_value = function(children)
 end
 
 --- Find first token node in children.
-local function _find_first_token(children)
+_find_first_token = function(children)
     for _, child in ipairs(children or {}) do
         if child.node_kind == "token" then
             return child
@@ -1251,7 +1251,7 @@ end
 
 --- Strip surrounding quotes from a string literal token value.
 -- Handles "...", '...', """...""", '''...'''
-local function _strip_quotes(s)
+_strip_quotes = function(s)
     if not s then return "" end
     -- Triple-quoted
     if s:sub(1, 3) == '"""' and s:sub(-3) == '"""' then
