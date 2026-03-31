@@ -2,8 +2,8 @@
  * SQL Parser -- parses SQL text into ASTs using the grammar-driven approach.
  *
  * This module is a **thin wrapper** around the generic `GrammarParser` from the
- * `@coding-adventures/parser` package. It loads the `sql.grammar` file and
- * delegates all parsing work to the generic engine.
+ * `@coding-adventures/parser` package. It uses a pre-compiled grammar object
+ * (from `_grammar.ts`) and delegates all parsing work to the generic engine.
  *
  * How It Works
  * ------------
@@ -16,10 +16,11 @@
  *      This means `select`, `SELECT`, and `Select` all produce KEYWORD("SELECT"),
  *      and the parser grammar can always compare against uppercase strings.
  *
- *   2. **Parsing** -- The GrammarParser reads the sql.grammar file, which defines
- *      the syntax rules for SQL statements (SELECT, INSERT, UPDATE, DELETE, CREATE,
- *      DROP) and expressions (arithmetic, comparisons, BETWEEN, IN, LIKE, IS NULL).
- *      It applies recursive descent with backtracking to produce an AST.
+ *   2. **Parsing** -- The GrammarParser uses a pre-compiled grammar object that
+ *      defines the syntax rules for SQL statements (SELECT, INSERT, UPDATE,
+ *      DELETE, CREATE, DROP) and expressions (arithmetic, comparisons, BETWEEN,
+ *      IN, LIKE, IS NULL). It applies recursive descent with backtracking to
+ *      produce an AST.
  *
  * The AST Structure
  * -----------------
@@ -82,42 +83,18 @@
  *   Level 6: AND
  *   Level 7 (lowest): OR
  *
- * Locating the Grammar File
- * -------------------------
+ * Browser Compatibility
+ * ---------------------
  *
- * The `sql.grammar` file lives in `code/grammars/` at the repository root.
- *
- *     src/ -> sql-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * This module uses a pre-compiled grammar object imported from `_grammar.ts`.
+ * No file system access is needed at runtime — it works in Node.js, browsers,
+ * edge runtimes, and any other JavaScript environment.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeSQL } from "coding-adventures-sql-lexer";
-
-/**
- * Resolve __dirname for ESM modules.
- * See the sql-lexer tokenizer.ts for a detailed explanation.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname  = .../sql-parser/src/
- *   ..          = .../sql-parser/
- *   ../..       = .../typescript/
- *   ../../..    = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const SQL_GRAMMAR_PATH = join(GRAMMARS_DIR, "sql.grammar");
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 /**
  * Create a configured SQL parser for the given source text.
@@ -142,8 +119,7 @@ export function createSQLParser(source: string): ASTNode {
  *
  * This function orchestrates the full parsing pipeline:
  *   1. Tokenize the source using the sql-lexer (keywords normalized to uppercase)
- *   2. Read and parse the sql.grammar file
- *   3. Run the grammar-driven parser to produce an AST
+ *   2. Parse with the pre-compiled grammar object using recursive descent
  *
  * The top-level grammar rule is `program`, which matches one or more SQL
  * statements separated by semicolons. Every valid SQL input produces an AST
@@ -182,21 +158,13 @@ export function parseSQL(source: string): ASTNode {
   const tokens = tokenizeSQL(source);
 
   /**
-   * Step 2: Load the grammar.
-   * The grammar file defines the SQL syntax rules in EBNF-like notation.
-   * parseParserGrammar converts the text into a structured object that
-   * the GrammarParser can use for recursive descent.
+   * Step 2: Parse.
+   * The PARSER_GRAMMAR object is a pre-compiled ParserGrammar containing
+   * the SQL syntax rules in structured form. The GrammarParser takes the
+   * token array and grammar rules, then performs recursive descent with
+   * backtracking to produce an AST. The starting rule is determined by
+   * the grammar (the first rule defined, which for sql.grammar is "program").
    */
-  const grammarText = readFileSync(SQL_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-
-  /**
-   * Step 3: Parse.
-   * The GrammarParser takes the token array and grammar rules, then
-   * performs recursive descent with backtracking to produce an AST.
-   * The starting rule is determined by the grammar (the first rule
-   * defined, which for sql.grammar is "program").
-   */
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   return parser.parse();
 }
