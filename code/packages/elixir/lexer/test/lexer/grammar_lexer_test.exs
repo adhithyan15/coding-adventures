@@ -10,7 +10,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
   defp simple_grammar do
     {:ok, g} =
       TokenGrammar.parse("""
-      NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+      NAME   = /[a-zA-Z_][a-zA-Z_0-9]*/
       NUMBER = /[0-9]+/
       PLUS   = "+"
       MINUS  = "-"
@@ -58,7 +58,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       OPEN_TAG  = "<"
 
       group tag:
-        TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+        TAG_NAME  = /[a-zA-Z_][a-zA-Z_0-9]*/
         EQUALS    = "="
         VALUE     = /"[^"]*"/
         TAG_CLOSE = ">"
@@ -156,7 +156,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
     test "reclassifies NAME as KEYWORD" do
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
         NUMBER = /[0-9]+/
 
         keywords:
@@ -194,7 +194,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
         TokenGrammar.parse("""
         # @case_insensitive true
 
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         keywords:
           select
@@ -260,7 +260,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       # set (which stores "select" as-is), so it becomes a NAME token.
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         keywords:
           select
@@ -277,7 +277,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       # In case-sensitive mode, "select" (exact match) is still a KEYWORD.
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         keywords:
           select
@@ -295,7 +295,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
     test "reserved keywords produce errors" do
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         reserved:
           class
@@ -597,7 +597,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
         OPEN_TAG         = "<"
 
         group tag:
-          TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+          TAG_NAME  = /[a-zA-Z_][a-zA-Z_0-9]*/
           TAG_CLOSE = ">"
           SLASH     = "/"
         """)
@@ -798,7 +798,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       # = same behavior as the original GrammarLexer.
       {:ok, grammar} =
         TokenGrammar.parse("""
-        NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME   = /[a-zA-Z_][a-zA-Z_0-9]*/
         NUMBER = /[0-9]+/
         PLUS   = "+"
         """)
