@@ -501,18 +501,57 @@ def _extract_select_item_name(
 
 
 def _infer_column_name(node: ASTNode | Token) -> str:
-    """Infer an output column name from an expression node."""
+    """Infer an output column name from an expression node.
+
+    For aggregate function calls (COUNT, SUM, AVG, MIN, MAX) we normalise the
+    function name to uppercase so that the column label in the result matches
+    the key stored by ``compute_aggregates`` (e.g. ``SUM(salary)`` not
+    ``sum(salary)``).  SQL keywords are lowercased by the lexer, so the raw
+    AST text would otherwise produce lowercase labels.
+
+    The parser wraps the function_call inside several pass-through rules
+    (``expr`` → ``or_expr`` → ``and_expr`` → ... → ``primary``).  We unwrap
+    those single-child pass-through nodes before checking the rule name.
+    """
     if isinstance(node, Token):
         return node.value
-    if node.rule_name == "column_ref":
-        # Use the last NAME token (the column part, not the table prefix)
-        tokens = [c for c in node.children if isinstance(c, Token)]
-        if tokens:
-            return tokens[-1].value
-    if node.rule_name == "function_call":
+
+    # Unwrap single-child pass-through rules to reach the real node.
+    _PASS_THROUGH = frozenset({
+        "expr", "or_expr", "and_expr", "not_expr", "comparison",
+        "additive", "multiplicative", "unary", "primary",
+    })
+    unwrapped = node
+    while (
+        isinstance(unwrapped, ASTNode)
+        and unwrapped.rule_name in _PASS_THROUGH
+        and len(unwrapped.children) == 1
+    ):
+        unwrapped = unwrapped.children[0]
+
+    if isinstance(unwrapped, Token):
+        return unwrapped.value
+
+    if unwrapped.rule_name == "column_ref":
+        # For a simple unqualified column reference (e.g. ``salary``), return
+        # just the column name.  For a qualified reference (e.g.
+        # ``employees.name``), return the full dotted text so that callers can
+        # look up the value under the qualified key in the row context.
+        return _node_text(unwrapped)
+
+    if unwrapped.rule_name == "function_call":
         # e.g. COUNT(*) → "COUNT(*)"
-        return _node_text(node)
-    # For expressions, return the full text
+        # The function name token is the first child (a NAME token that the
+        # SQL lexer emits in lowercase).  Uppercase it so that the output
+        # column name matches the aggregate storage key used by
+        # ``compute_aggregates`` (which always uppercases the function name).
+        func_token = unwrapped.children[0]
+        if isinstance(func_token, Token):
+            rest = "".join(_node_text(c) for c in unwrapped.children[1:])
+            return func_token.value.upper() + rest
+        return _node_text(unwrapped)
+
+    # For expressions, return the full text (from the original node).
     return _node_text(node)
 
 

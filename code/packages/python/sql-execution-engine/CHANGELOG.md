@@ -1,5 +1,17 @@
 # Changelog — coding-adventures-sql-execution-engine
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- **Aggregate column names now use uppercase function names**: When a query
+  contained an aggregate like `SUM(salary)`, the output column was labelled
+  `sum(salary)` (lowercase) because the SQL lexer normalises keywords to
+  lowercase in case-insensitive mode. The SELECT projection now calls
+  `.upper()` on the function name token when building the inferred column
+  label for `function_call` nodes. Tests `TestGroupBy.test_group_by_dept_sum`
+  and `TestHaving` now pass.
+
 ## [0.1.0] — 2026-03-25
 
 ### Added
