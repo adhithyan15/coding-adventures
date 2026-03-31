@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- Wrapped all public functions and methods (`NewVirtualMachine`, `Execute`, `Step`, `AssembleCode`, `NewGenericVM`, `RegisterOpcode`, `RegisterBuiltin`, `GetBuiltin`, `Push`, `Pop`, `Peek`, `PushFrame`, `PopFrame`, `AdvancePC`, `JumpTo`, `InjectGlobals`, `SetMaxRecursionDepth`, `MaxRecursionDepth`, `SetFrozen`, `IsFrozen`, `Reset`) with the Operations system (`StartNew[T]`), providing automatic timing, structured logging, and panic recovery. Public API signatures unchanged.
+
 ## [0.1.0] - Unreleased
 
 ### Added

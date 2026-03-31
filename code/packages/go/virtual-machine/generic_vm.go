@@ -116,10 +116,10 @@ import (
 //
 // Example handler for a hypothetical "NOP" opcode:
 //
-//   func nopHandler(vm *GenericVM, instr Instruction, code CodeObject) *string {
-//       vm.AdvancePC()  // move to next instruction
-//       return nil      // no output
-//   }
+//	func nopHandler(vm *GenericVM, instr Instruction, code CodeObject) *string {
+//	    vm.AdvancePC()  // move to next instruction
+//	    return nil      // no output
+//	}
 type OpcodeHandler func(vm *GenericVM, instr Instruction, code CodeObject) *string
 
 // BuiltinFunction represents a built-in callable that opcode handlers
@@ -179,22 +179,27 @@ type GenericVM struct {
 //
 // Usage:
 //
-//   vm := NewGenericVM()
-//   vm.RegisterOpcode(OpLoadConst, myLoadConstHandler)
-//   vm.RegisterOpcode(OpHalt, myHaltHandler)
-//   traces := vm.Execute(code)
+//	vm := NewGenericVM()
+//	vm.RegisterOpcode(OpLoadConst, myLoadConstHandler)
+//	vm.RegisterOpcode(OpHalt, myHaltHandler)
+//	traces := vm.Execute(code)
 func NewGenericVM() *GenericVM {
-	return &GenericVM{
-		Stack:     []interface{}{},
-		Variables: make(map[string]interface{}),
-		Locals:    []interface{}{},
-		PC:        0,
-		Halted:    false,
-		Output:    []string{},
-		CallStack: []map[string]interface{}{},
-		handlers:  make(map[OpCode]OpcodeHandler),
-		builtins:  make(map[string]BuiltinFunction),
-	}
+	result, _ := StartNew[*GenericVM]("virtual-machine.NewGenericVM", nil,
+		func(op *Operation[*GenericVM], rf *ResultFactory[*GenericVM]) *OperationResult[*GenericVM] {
+			vm := &GenericVM{
+				Stack:     []interface{}{},
+				Variables: make(map[string]interface{}),
+				Locals:    []interface{}{},
+				PC:        0,
+				Halted:    false,
+				Output:    []string{},
+				CallStack: []map[string]interface{}{},
+				handlers:  make(map[OpCode]OpcodeHandler),
+				builtins:  make(map[string]BuiltinFunction),
+			}
+			return rf.Generate(true, false, vm)
+		}).GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -209,18 +214,23 @@ func NewGenericVM() *GenericVM {
 //
 // Example:
 //
-//   vm.RegisterOpcode(OpAdd, func(vm *GenericVM, instr Instruction, code CodeObject) *string {
-//       b := vm.Pop().(int)
-//       a := vm.Pop().(int)
-//       vm.Push(a + b)
-//       vm.AdvancePC()
-//       return nil
-//   })
+//	vm.RegisterOpcode(OpAdd, func(vm *GenericVM, instr Instruction, code CodeObject) *string {
+//	    b := vm.Pop().(int)
+//	    a := vm.Pop().(int)
+//	    vm.Push(a + b)
+//	    vm.AdvancePC()
+//	    return nil
+//	})
 func (vm *GenericVM) RegisterOpcode(opcode OpCode, handler OpcodeHandler) {
-	if vm.frozen {
-		panic("FrozenVMError: cannot register opcodes on a frozen VM")
-	}
-	vm.handlers[opcode] = handler
+	_, _ = StartNew[struct{}]("virtual-machine.RegisterOpcode", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("opcode", opcode)
+			if vm.frozen {
+				panic("FrozenVMError: cannot register opcodes on a frozen VM")
+			}
+			vm.handlers[opcode] = handler
+			return rf.Generate(true, false, struct{}{})
+		}).PanicOnUnexpected().GetResult()
 }
 
 // RegisterBuiltin adds a named built-in function that opcode handlers
@@ -228,18 +238,23 @@ func (vm *GenericVM) RegisterOpcode(opcode OpCode, handler OpcodeHandler) {
 //
 // Example:
 //
-//   vm.RegisterBuiltin("len", func(args ...interface{}) interface{} {
-//       s := args[0].(string)
-//       return len(s)
-//   })
+//	vm.RegisterBuiltin("len", func(args ...interface{}) interface{} {
+//	    s := args[0].(string)
+//	    return len(s)
+//	})
 func (vm *GenericVM) RegisterBuiltin(name string, impl func(args ...interface{}) interface{}) {
-	if vm.frozen {
-		panic("FrozenVMError: cannot register builtins on a frozen VM")
-	}
-	vm.builtins[name] = BuiltinFunction{
-		Name:           name,
-		Implementation: impl,
-	}
+	_, _ = StartNew[struct{}]("virtual-machine.RegisterBuiltin", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("name", name)
+			if vm.frozen {
+				panic("FrozenVMError: cannot register builtins on a frozen VM")
+			}
+			vm.builtins[name] = BuiltinFunction{
+				Name:           name,
+				Implementation: impl,
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).PanicOnUnexpected().GetResult()
 }
 
 // GetBuiltin retrieves a registered built-in function by name.
@@ -248,16 +263,21 @@ func (vm *GenericVM) RegisterBuiltin(name string, impl func(args ...interface{})
 // This is typically called from within an opcode handler when it needs
 // to invoke a built-in:
 //
-//   builtin := vm.GetBuiltin("len")
-//   if builtin != nil {
-//       result := builtin.Implementation("hello")
-//   }
+//	builtin := vm.GetBuiltin("len")
+//	if builtin != nil {
+//	    result := builtin.Implementation("hello")
+//	}
 func (vm *GenericVM) GetBuiltin(name string) *BuiltinFunction {
-	b, ok := vm.builtins[name]
-	if !ok {
-		return nil
-	}
-	return &b
+	result, _ := StartNew[*BuiltinFunction]("virtual-machine.GetBuiltin", nil,
+		func(op *Operation[*BuiltinFunction], rf *ResultFactory[*BuiltinFunction]) *OperationResult[*BuiltinFunction] {
+			op.AddProperty("name", name)
+			b, ok := vm.builtins[name]
+			if !ok {
+				return rf.Generate(true, false, nil)
+			}
+			return rf.Generate(true, false, &b)
+		}).GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -277,18 +297,26 @@ func (vm *GenericVM) GetBuiltin(name string) *BuiltinFunction {
 
 // Push places a value on top of the operand stack.
 func (vm *GenericVM) Push(value interface{}) {
-	vm.Stack = append(vm.Stack, value)
+	_, _ = StartNew[struct{}]("virtual-machine.Push", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			vm.Stack = append(vm.Stack, value)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Pop removes and returns the top value from the operand stack.
 // Panics with "StackUnderflowError" if the stack is empty.
 func (vm *GenericVM) Pop() interface{} {
-	if len(vm.Stack) == 0 {
-		panic("StackUnderflowError")
-	}
-	val := vm.Stack[len(vm.Stack)-1]
-	vm.Stack = vm.Stack[:len(vm.Stack)-1]
-	return val
+	result, _ := StartNew[interface{}]("virtual-machine.Pop", nil,
+		func(op *Operation[interface{}], rf *ResultFactory[interface{}]) *OperationResult[interface{}] {
+			if len(vm.Stack) == 0 {
+				panic("StackUnderflowError")
+			}
+			val := vm.Stack[len(vm.Stack)-1]
+			vm.Stack = vm.Stack[:len(vm.Stack)-1]
+			return rf.Generate(true, false, val)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // Peek returns the top value from the operand stack WITHOUT removing it.
@@ -297,10 +325,14 @@ func (vm *GenericVM) Pop() interface{} {
 // This is useful when a handler needs to inspect the top of stack
 // without consuming it — for example, a DUP instruction.
 func (vm *GenericVM) Peek() interface{} {
-	if len(vm.Stack) == 0 {
-		panic("StackUnderflowError")
-	}
-	return vm.Stack[len(vm.Stack)-1]
+	result, _ := StartNew[interface{}]("virtual-machine.Peek", nil,
+		func(op *Operation[interface{}], rf *ResultFactory[interface{}]) *OperationResult[interface{}] {
+			if len(vm.Stack) == 0 {
+				panic("StackUnderflowError")
+			}
+			return rf.Generate(true, false, vm.Stack[len(vm.Stack)-1])
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -324,30 +356,38 @@ func (vm *GenericVM) Peek() interface{} {
 //
 // Truth table for recursion depth checking:
 //
-//   maxRecursionDepth | len(CallStack) | Action
-//   ──────────────────┼────────────────┼────────────────
-//   nil               | any            | allow (unlimited)
-//   ptr to 0          | 0              | panic (no calls allowed)
-//   ptr to 3          | 2              | allow (2 < 3)
-//   ptr to 3          | 3              | panic (3 >= 3)
+//	maxRecursionDepth | len(CallStack) | Action
+//	──────────────────┼────────────────┼────────────────
+//	nil               | any            | allow (unlimited)
+//	ptr to 0          | 0              | panic (no calls allowed)
+//	ptr to 3          | 2              | allow (2 < 3)
+//	ptr to 3          | 3              | panic (3 >= 3)
 func (vm *GenericVM) PushFrame(frame map[string]interface{}) {
-	if vm.maxRecursionDepth != nil {
-		if len(vm.CallStack) >= *vm.maxRecursionDepth {
-			panic("MaxRecursionError")
-		}
-	}
-	vm.CallStack = append(vm.CallStack, frame)
+	_, _ = StartNew[struct{}]("virtual-machine.PushFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if vm.maxRecursionDepth != nil {
+				if len(vm.CallStack) >= *vm.maxRecursionDepth {
+					panic("MaxRecursionError")
+				}
+			}
+			vm.CallStack = append(vm.CallStack, frame)
+			return rf.Generate(true, false, struct{}{})
+		}).PanicOnUnexpected().GetResult()
 }
 
 // PopFrame removes and returns the top frame from the call stack.
 // Panics with "CallStackUnderflowError" if the call stack is empty.
 func (vm *GenericVM) PopFrame() map[string]interface{} {
-	if len(vm.CallStack) == 0 {
-		panic("CallStackUnderflowError")
-	}
-	frame := vm.CallStack[len(vm.CallStack)-1]
-	vm.CallStack = vm.CallStack[:len(vm.CallStack)-1]
-	return frame
+	result, _ := StartNew[map[string]interface{}]("virtual-machine.PopFrame", nil,
+		func(op *Operation[map[string]interface{}], rf *ResultFactory[map[string]interface{}]) *OperationResult[map[string]interface{}] {
+			if len(vm.CallStack) == 0 {
+				panic("CallStackUnderflowError")
+			}
+			frame := vm.CallStack[len(vm.CallStack)-1]
+			vm.CallStack = vm.CallStack[:len(vm.CallStack)-1]
+			return rf.Generate(true, false, frame)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -361,7 +401,11 @@ func (vm *GenericVM) PopFrame() map[string]interface{} {
 // AdvancePC increments the program counter by 1.
 // This is the normal "move to next instruction" operation.
 func (vm *GenericVM) AdvancePC() {
-	vm.PC++
+	_, _ = StartNew[struct{}]("virtual-machine.AdvancePC", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			vm.PC++
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // JumpTo sets the program counter to an arbitrary target address.
@@ -369,13 +413,18 @@ func (vm *GenericVM) AdvancePC() {
 //
 // Example: a conditional jump handler might do:
 //
-//   if condition {
-//       vm.JumpTo(target)
-//   } else {
-//       vm.AdvancePC()
-//   }
+//	if condition {
+//	    vm.JumpTo(target)
+//	} else {
+//	    vm.AdvancePC()
+//	}
 func (vm *GenericVM) JumpTo(target int) {
-	vm.PC = target
+	_, _ = StartNew[struct{}]("virtual-machine.JumpTo", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("target", target)
+			vm.PC = target
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -407,22 +456,34 @@ func (vm *GenericVM) JumpTo(target int) {
 //	})
 //	// Now the program can access _ctx["os"] as a regular variable.
 func (vm *GenericVM) InjectGlobals(globals map[string]interface{}) {
-	for k, v := range globals {
-		vm.Variables[k] = v
-	}
+	_, _ = StartNew[struct{}]("virtual-machine.InjectGlobals", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for k, v := range globals {
+				vm.Variables[k] = v
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SetMaxRecursionDepth configures the maximum call stack depth.
 // Pass nil for unlimited recursion.  Pass a pointer to 0 to disallow
 // any function calls.
 func (vm *GenericVM) SetMaxRecursionDepth(depth *int) {
-	vm.maxRecursionDepth = depth
+	_, _ = StartNew[struct{}]("virtual-machine.SetMaxRecursionDepth", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			vm.maxRecursionDepth = depth
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // MaxRecursionDepth returns the current max recursion depth setting.
 // Returns nil if unlimited.
 func (vm *GenericVM) MaxRecursionDepth() *int {
-	return vm.maxRecursionDepth
+	result, _ := StartNew[*int]("virtual-machine.MaxRecursionDepth", nil,
+		func(op *Operation[*int], rf *ResultFactory[*int]) *OperationResult[*int] {
+			return rf.Generate(true, false, vm.maxRecursionDepth)
+		}).GetResult()
+	return result
 }
 
 // SetFrozen locks or unlocks the VM's handler/builtin registration.
@@ -430,12 +491,21 @@ func (vm *GenericVM) MaxRecursionDepth() *int {
 // This is useful for sandboxing: configure the VM, freeze it, then hand
 // it to untrusted code that can execute but not modify the instruction set.
 func (vm *GenericVM) SetFrozen(frozen bool) {
-	vm.frozen = frozen
+	_, _ = StartNew[struct{}]("virtual-machine.SetFrozen", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frozen", frozen)
+			vm.frozen = frozen
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // IsFrozen returns whether the VM is currently frozen.
 func (vm *GenericVM) IsFrozen() bool {
-	return vm.frozen
+	result, _ := StartNew[bool]("virtual-machine.IsFrozen", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, vm.frozen)
+		}).GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -449,68 +519,77 @@ func (vm *GenericVM) IsFrozen() bool {
 //
 // This is the main entry point for running bytecode programs.
 //
-//   vm := NewGenericVM()
-//   // ... register handlers ...
-//   traces := vm.Execute(code)
-//   for _, t := range traces {
-//       fmt.Printf("PC=%d  %s\n", t.PC, t.Description)
-//   }
+//	vm := NewGenericVM()
+//	// ... register handlers ...
+//	traces := vm.Execute(code)
+//	for _, t := range traces {
+//	    fmt.Printf("PC=%d  %s\n", t.PC, t.Description)
+//	}
 func (vm *GenericVM) Execute(code CodeObject) []VMTrace {
-	var traces []VMTrace
-	for !vm.Halted && vm.PC < len(code.Instructions) {
-		traces = append(traces, vm.Step(code))
-	}
-	return traces
+	result, _ := StartNew[[]VMTrace]("virtual-machine.GenericVM.Execute", nil,
+		func(op *Operation[[]VMTrace], rf *ResultFactory[[]VMTrace]) *OperationResult[[]VMTrace] {
+			var traces []VMTrace
+			for !vm.Halted && vm.PC < len(code.Instructions) {
+				traces = append(traces, vm.Step(code))
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // Step executes exactly one instruction and returns a VMTrace describing
 // what happened.  This is the fetch-decode-execute cycle in one call.
 //
 // The process:
-//   1. FETCH:   Read code.Instructions[vm.PC].
-//   2. SNAPSHOT: Copy the stack before execution (for the trace).
-//   3. DECODE:  Look up the handler for instr.Opcode.
-//   4. EXECUTE: Call the handler.  The handler modifies VM state
-//               (stack, variables, PC, etc.) and optionally returns output.
-//   5. TRACE:   Build a VMTrace with before/after snapshots.
+//  1. FETCH:   Read code.Instructions[vm.PC].
+//  2. SNAPSHOT: Copy the stack before execution (for the trace).
+//  3. DECODE:  Look up the handler for instr.Opcode.
+//  4. EXECUTE: Call the handler.  The handler modifies VM state
+//     (stack, variables, PC, etc.) and optionally returns output.
+//  5. TRACE:   Build a VMTrace with before/after snapshots.
 //
 // If no handler is registered for the opcode, Step panics with
 // "InvalidOpcodeError".
 //
 // The description field in the trace uses the hex format of the opcode:
-//   "Executed opcode 0x01" for OpLoadConst (0x01).
+// "Executed opcode 0x01" for OpLoadConst (0x01).
 func (vm *GenericVM) Step(code CodeObject) VMTrace {
-	// 1. FETCH
-	instr := code.Instructions[vm.PC]
-	pcBefore := vm.PC
+	result, _ := StartNew[VMTrace]("virtual-machine.GenericVM.Step", VMTrace{},
+		func(op *Operation[VMTrace], rf *ResultFactory[VMTrace]) *OperationResult[VMTrace] {
+			op.AddProperty("pc", vm.PC)
+			// 1. FETCH
+			instr := code.Instructions[vm.PC]
+			pcBefore := vm.PC
 
-	// 2. SNAPSHOT — capture stack state before the handler runs
-	stackBefore := vm.copyStack()
+			// 2. SNAPSHOT — capture stack state before the handler runs
+			stackBefore := vm.copyStack()
 
-	// 3. DECODE — find the handler for this opcode
-	handler, ok := vm.handlers[instr.Opcode]
-	if !ok {
-		panic(fmt.Sprintf("InvalidOpcodeError: no handler registered for opcode 0x%02x", instr.Opcode))
-	}
+			// 3. DECODE — find the handler for this opcode
+			handler, ok := vm.handlers[instr.Opcode]
+			if !ok {
+				panic(fmt.Sprintf("InvalidOpcodeError: no handler registered for opcode 0x%02x", instr.Opcode))
+			}
 
-	// 4. EXECUTE — run the handler
-	outputVal := handler(vm, instr, code)
+			// 4. EXECUTE — run the handler
+			outputVal := handler(vm, instr, code)
 
-	// If the handler produced output, record it
-	if outputVal != nil {
-		vm.Output = append(vm.Output, *outputVal)
-	}
+			// If the handler produced output, record it
+			if outputVal != nil {
+				vm.Output = append(vm.Output, *outputVal)
+			}
 
-	// 5. TRACE — build the execution record
-	return VMTrace{
-		PC:          pcBefore,
-		Instruction: instr,
-		StackBefore: stackBefore,
-		StackAfter:  vm.copyStack(),
-		Variables:   vm.copyMap(vm.Variables),
-		Output:      outputVal,
-		Description: fmt.Sprintf("Executed opcode 0x%02x", instr.Opcode),
-	}
+			// 5. TRACE — build the execution record
+			return rf.Generate(true, false, VMTrace{
+				PC:          pcBefore,
+				Instruction: instr,
+				StackBefore: stackBefore,
+				StackAfter:  vm.copyStack(),
+				Variables:   vm.copyMap(vm.Variables),
+				Output:      outputVal,
+				Description: fmt.Sprintf("Executed opcode 0x%02x", instr.Opcode),
+			})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -524,19 +603,23 @@ func (vm *GenericVM) Step(code CodeObject) VMTrace {
 // This lets you reuse a configured VM to run multiple programs without
 // re-registering all the opcodes.
 //
-//   vm := NewGenericVM()
-//   // ... register handlers ...
-//   vm.Execute(program1)
-//   vm.Reset()
-//   vm.Execute(program2)  // handlers are still registered
+//	vm := NewGenericVM()
+//	// ... register handlers ...
+//	vm.Execute(program1)
+//	vm.Reset()
+//	vm.Execute(program2)  // handlers are still registered
 func (vm *GenericVM) Reset() {
-	vm.Stack = []interface{}{}
-	vm.Variables = make(map[string]interface{})
-	vm.Locals = []interface{}{}
-	vm.PC = 0
-	vm.Halted = false
-	vm.Output = []string{}
-	vm.CallStack = []map[string]interface{}{}
+	_, _ = StartNew[struct{}]("virtual-machine.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			vm.Stack = []interface{}{}
+			vm.Variables = make(map[string]interface{})
+			vm.Locals = []interface{}{}
+			vm.PC = 0
+			vm.Halted = false
+			vm.Output = []string{}
+			vm.CallStack = []map[string]interface{}{}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ════════════════════════════════════════════════════════════════════════

@@ -20,9 +20,13 @@ type PageTable struct {
 
 // NewPageTable creates an empty page table.
 func NewPageTable() *PageTable {
-	return &PageTable{
-		entries: make(map[int]*PageTableEntry),
-	}
+	result, _ := StartNew[*PageTable]("virtual-memory.NewPageTable", nil,
+		func(op *Operation[*PageTable], rf *ResultFactory[*PageTable]) *OperationResult[*PageTable] {
+			return rf.Generate(true, false, &PageTable{
+				entries: make(map[int]*PageTableEntry),
+			})
+		}).GetResult()
+	return result
 }
 
 // MapPage creates a mapping from a virtual page number to a physical frame.
@@ -38,40 +42,72 @@ func NewPageTable() *PageTable {
 //   - executable: Whether the CPU can fetch instructions from this page
 //   - user: Whether user-mode code can access this page
 func (pt *PageTable) MapPage(vpn, frame int, writable, executable, user bool) {
-	pt.entries[vpn] = &PageTableEntry{
-		FrameNumber:    frame,
-		Present:        true,
-		Writable:       writable,
-		Executable:     executable,
-		UserAccessible: user,
-	}
+	_, _ = StartNew[struct{}]("virtual-memory.PageTable.MapPage", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("vpn", vpn)
+			op.AddProperty("frame", frame)
+			pt.entries[vpn] = &PageTableEntry{
+				FrameNumber:    frame,
+				Present:        true,
+				Writable:       writable,
+				Executable:     executable,
+				UserAccessible: user,
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // UnmapPage removes a mapping for the given virtual page number.
 // Returns the removed PTE (so the caller can free the physical frame)
 // and a boolean indicating whether the VPN was actually mapped.
 func (pt *PageTable) UnmapPage(vpn int) (*PageTableEntry, bool) {
-	pte, ok := pt.entries[vpn]
-	if !ok {
-		return nil, false
+	type unmapResult struct {
+		pte *PageTableEntry
+		ok  bool
 	}
-	delete(pt.entries, vpn)
-	return pte, true
+	res, _ := StartNew[unmapResult]("virtual-memory.PageTable.UnmapPage", unmapResult{nil, false},
+		func(op *Operation[unmapResult], rf *ResultFactory[unmapResult]) *OperationResult[unmapResult] {
+			op.AddProperty("vpn", vpn)
+			pte, ok := pt.entries[vpn]
+			if !ok {
+				return rf.Generate(true, false, unmapResult{nil, false})
+			}
+			delete(pt.entries, vpn)
+			return rf.Generate(true, false, unmapResult{pte, true})
+		}).GetResult()
+	return res.pte, res.ok
 }
 
 // Lookup finds the PTE for a virtual page number.
 // Returns the PTE and true if found, or nil and false if the VPN is not mapped.
 func (pt *PageTable) Lookup(vpn int) (*PageTableEntry, bool) {
-	pte, ok := pt.entries[vpn]
-	return pte, ok
+	type lookupResult struct {
+		pte *PageTableEntry
+		ok  bool
+	}
+	res, _ := StartNew[lookupResult]("virtual-memory.PageTable.Lookup", lookupResult{nil, false},
+		func(op *Operation[lookupResult], rf *ResultFactory[lookupResult]) *OperationResult[lookupResult] {
+			op.AddProperty("vpn", vpn)
+			pte, ok := pt.entries[vpn]
+			return rf.Generate(true, false, lookupResult{pte, ok})
+		}).GetResult()
+	return res.pte, res.ok
 }
 
 // Entries returns the internal map for iteration (e.g., during fork/clone).
 func (pt *PageTable) Entries() map[int]*PageTableEntry {
-	return pt.entries
+	result, _ := StartNew[map[int]*PageTableEntry]("virtual-memory.PageTable.Entries", nil,
+		func(op *Operation[map[int]*PageTableEntry], rf *ResultFactory[map[int]*PageTableEntry]) *OperationResult[map[int]*PageTableEntry] {
+			return rf.Generate(true, false, pt.entries)
+		}).GetResult()
+	return result
 }
 
 // MappedCount returns the number of currently mapped pages.
 func (pt *PageTable) MappedCount() int {
-	return len(pt.entries)
+	result, _ := StartNew[int]("virtual-memory.PageTable.MappedCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(pt.entries))
+		}).GetResult()
+	return result
 }

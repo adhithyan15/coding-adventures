@@ -76,261 +76,275 @@ type VirtualMachine struct {
 }
 
 func NewVirtualMachine() *VirtualMachine {
-	return &VirtualMachine{
-		Stack:     []interface{}{},
-		Variables: make(map[string]interface{}),
-		Locals:    []interface{}{},
-		PC:        0,
-		Halted:    false,
-		Output:    []string{},
-		CallStack: []CallFrame{},
-	}
+	result, _ := StartNew[*VirtualMachine]("virtual-machine.NewVirtualMachine", nil,
+		func(op *Operation[*VirtualMachine], rf *ResultFactory[*VirtualMachine]) *OperationResult[*VirtualMachine] {
+			vm := &VirtualMachine{
+				Stack:     []interface{}{},
+				Variables: make(map[string]interface{}),
+				Locals:    []interface{}{},
+				PC:        0,
+				Halted:    false,
+				Output:    []string{},
+				CallStack: []CallFrame{},
+			}
+			return rf.Generate(true, false, vm)
+		}).GetResult()
+	return result
 }
 
 func (vm *VirtualMachine) Execute(code CodeObject) []VMTrace {
-	var traces []VMTrace
-	for !vm.Halted && vm.PC < len(code.Instructions) {
-		traces = append(traces, vm.Step(code))
-	}
-	return traces
+	result, _ := StartNew[[]VMTrace]("virtual-machine.Execute", nil,
+		func(op *Operation[[]VMTrace], rf *ResultFactory[[]VMTrace]) *OperationResult[[]VMTrace] {
+			var traces []VMTrace
+			for !vm.Halted && vm.PC < len(code.Instructions) {
+				traces = append(traces, vm.Step(code))
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 func (vm *VirtualMachine) Step(code CodeObject) VMTrace {
-	instr := code.Instructions[vm.PC]
-	pcBefore := vm.PC
-	stackBefore := vm.copyStack()
+	result, _ := StartNew[VMTrace]("virtual-machine.Step", VMTrace{},
+		func(op *Operation[VMTrace], rf *ResultFactory[VMTrace]) *OperationResult[VMTrace] {
+			op.AddProperty("pc", vm.PC)
+			instr := code.Instructions[vm.PC]
+			pcBefore := vm.PC
+			stackBefore := vm.copyStack()
 
-	var outputVal *string
-	desc := ""
+			var outputVal *string
+			desc := ""
 
-	switch instr.Opcode {
-	case OpLoadConst:
-		idx := instr.Operand.(int)
-		if idx < 0 || idx >= len(code.Constants) {
-			panic(fmt.Sprintf("InvalidOperandError: LOAD_CONST %d out of bounds", idx))
-		}
-		val := code.Constants[idx]
-		vm.Stack = append(vm.Stack, val)
-		vm.PC++
-		desc = fmt.Sprintf("Push constant %v onto the stack", val)
+			switch instr.Opcode {
+			case OpLoadConst:
+				idx := instr.Operand.(int)
+				if idx < 0 || idx >= len(code.Constants) {
+					panic(fmt.Sprintf("InvalidOperandError: LOAD_CONST %d out of bounds", idx))
+				}
+				val := code.Constants[idx]
+				vm.Stack = append(vm.Stack, val)
+				vm.PC++
+				desc = fmt.Sprintf("Push constant %v onto the stack", val)
 
-	case OpPop:
-		vm.pop()
-		vm.PC++
-		desc = "Discard top of stack"
+			case OpPop:
+				vm.pop()
+				vm.PC++
+				desc = "Discard top of stack"
 
-	case OpDup:
-		if len(vm.Stack) == 0 {
-			panic("StackUnderflowError: DUP empty stack")
-		}
-		vm.Stack = append(vm.Stack, vm.Stack[len(vm.Stack)-1])
-		vm.PC++
-		desc = "Duplicate top of stack"
+			case OpDup:
+				if len(vm.Stack) == 0 {
+					panic("StackUnderflowError: DUP empty stack")
+				}
+				vm.Stack = append(vm.Stack, vm.Stack[len(vm.Stack)-1])
+				vm.PC++
+				desc = "Duplicate top of stack"
 
-	case OpStoreName:
-		idx := instr.Operand.(int)
-		name := code.Names[idx]
-		val := vm.pop()
-		vm.Variables[name] = val
-		vm.PC++
-		desc = fmt.Sprintf("Store %v into variable '%s'", val, name)
+			case OpStoreName:
+				idx := instr.Operand.(int)
+				name := code.Names[idx]
+				val := vm.pop()
+				vm.Variables[name] = val
+				vm.PC++
+				desc = fmt.Sprintf("Store %v into variable '%s'", val, name)
 
-	case OpLoadName:
-		idx := instr.Operand.(int)
-		name := code.Names[idx]
-		val, ok := vm.Variables[name]
-		if !ok {
-			panic(fmt.Sprintf("UndefinedNameError: Variable '%s' is not defined", name))
-		}
-		vm.Stack = append(vm.Stack, val)
-		vm.PC++
-		desc = fmt.Sprintf("Push variable '%s' onto the stack", name)
+			case OpLoadName:
+				idx := instr.Operand.(int)
+				name := code.Names[idx]
+				val, ok := vm.Variables[name]
+				if !ok {
+					panic(fmt.Sprintf("UndefinedNameError: Variable '%s' is not defined", name))
+				}
+				vm.Stack = append(vm.Stack, val)
+				vm.PC++
+				desc = fmt.Sprintf("Push variable '%s' onto the stack", name)
 
-	case OpStoreLocal:
-		idx := instr.Operand.(int)
-		val := vm.pop()
-		for len(vm.Locals) <= idx {
-			vm.Locals = append(vm.Locals, nil)
-		}
-		vm.Locals[idx] = val
-		vm.PC++
-		desc = fmt.Sprintf("Store %v into local slot %d", val, idx)
+			case OpStoreLocal:
+				idx := instr.Operand.(int)
+				val := vm.pop()
+				for len(vm.Locals) <= idx {
+					vm.Locals = append(vm.Locals, nil)
+				}
+				vm.Locals[idx] = val
+				vm.PC++
+				desc = fmt.Sprintf("Store %v into local slot %d", val, idx)
 
-	case OpLoadLocal:
-		idx := instr.Operand.(int)
-		if idx < 0 || idx >= len(vm.Locals) {
-			panic(fmt.Sprintf("InvalidOperandError: LOAD_LOCAL %d uninitialized", idx))
-		}
-		vm.Stack = append(vm.Stack, vm.Locals[idx])
-		vm.PC++
-		desc = fmt.Sprintf("Push local slot %d onto the stack", idx)
+			case OpLoadLocal:
+				idx := instr.Operand.(int)
+				if idx < 0 || idx >= len(vm.Locals) {
+					panic(fmt.Sprintf("InvalidOperandError: LOAD_LOCAL %d uninitialized", idx))
+				}
+				vm.Stack = append(vm.Stack, vm.Locals[idx])
+				vm.PC++
+				desc = fmt.Sprintf("Push local slot %d onto the stack", idx)
 
-	case OpAdd:
-		b := vm.pop()
-		a := vm.pop()
-		res := vm.add(a, b)
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Pop %v and %v, push sum %v", b, a, res)
+			case OpAdd:
+				b := vm.pop()
+				a := vm.pop()
+				res := vm.add(a, b)
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Pop %v and %v, push sum %v", b, a, res)
 
-	case OpSub:
-		b := vm.pop().(int)
-		a := vm.pop().(int)
-		res := a - b
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Pop %v and %v, push difference %v", b, a, res)
+			case OpSub:
+				b := vm.pop().(int)
+				a := vm.pop().(int)
+				res := a - b
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Pop %v and %v, push difference %v", b, a, res)
 
-	case OpMul:
-		b := vm.pop().(int)
-		a := vm.pop().(int)
-		res := a * b
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Pop %v and %v, push product %v", b, a, res)
+			case OpMul:
+				b := vm.pop().(int)
+				a := vm.pop().(int)
+				res := a * b
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Pop %v and %v, push product %v", b, a, res)
 
-	case OpDiv:
-		b := vm.pop().(int)
-		a := vm.pop().(int)
-		if b == 0 {
-			panic("DivisionByZeroError: Division by zero")
-		}
-		res := a / b
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Pop %v and %v, push quotient %v", b, a, res)
+			case OpDiv:
+				b := vm.pop().(int)
+				a := vm.pop().(int)
+				if b == 0 {
+					panic("DivisionByZeroError: Division by zero")
+				}
+				res := a / b
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Pop %v and %v, push quotient %v", b, a, res)
 
-	case OpCmpEq:
-		b := vm.pop()
-		a := vm.pop()
-		res := 0
-		if a == b {
-			res = 1
-		}
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Compare %v == %v", a, b)
+			case OpCmpEq:
+				b := vm.pop()
+				a := vm.pop()
+				res := 0
+				if a == b {
+					res = 1
+				}
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Compare %v == %v", a, b)
 
-	case OpCmpLt:
-		b := vm.pop().(int)
-		a := vm.pop().(int)
-		res := 0
-		if a < b {
-			res = 1
-		}
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Compare %v < %v", a, b)
+			case OpCmpLt:
+				b := vm.pop().(int)
+				a := vm.pop().(int)
+				res := 0
+				if a < b {
+					res = 1
+				}
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Compare %v < %v", a, b)
 
-	case OpCmpGt:
-		b := vm.pop().(int)
-		a := vm.pop().(int)
-		res := 0
-		if a > b {
-			res = 1
-		}
-		vm.Stack = append(vm.Stack, res)
-		vm.PC++
-		desc = fmt.Sprintf("Compare %v > %v", a, b)
+			case OpCmpGt:
+				b := vm.pop().(int)
+				a := vm.pop().(int)
+				res := 0
+				if a > b {
+					res = 1
+				}
+				vm.Stack = append(vm.Stack, res)
+				vm.PC++
+				desc = fmt.Sprintf("Compare %v > %v", a, b)
 
-	case OpJump:
-		target := instr.Operand.(int)
-		vm.PC = target
-		desc = fmt.Sprintf("Jump to instruction %d", target)
+			case OpJump:
+				target := instr.Operand.(int)
+				vm.PC = target
+				desc = fmt.Sprintf("Jump to instruction %d", target)
 
-	case OpJumpIfFalse:
-		target := instr.Operand.(int)
-		val := vm.pop()
-		if vm.isFalsy(val) {
-			vm.PC = target
-		} else {
-			vm.PC++
-		}
-		desc = fmt.Sprintf("Pop %v, conditional jump", val)
+			case OpJumpIfFalse:
+				target := instr.Operand.(int)
+				val := vm.pop()
+				if vm.isFalsy(val) {
+					vm.PC = target
+				} else {
+					vm.PC++
+				}
+				desc = fmt.Sprintf("Pop %v, conditional jump", val)
 
-	case OpJumpIfTrue:
-		target := instr.Operand.(int)
-		val := vm.pop()
-		if !vm.isFalsy(val) {
-			vm.PC = target
-		} else {
-			vm.PC++
-		}
-		desc = fmt.Sprintf("Pop %v, conditional jump", val)
+			case OpJumpIfTrue:
+				target := instr.Operand.(int)
+				val := vm.pop()
+				if !vm.isFalsy(val) {
+					vm.PC = target
+				} else {
+					vm.PC++
+				}
+				desc = fmt.Sprintf("Pop %v, conditional jump", val)
 
-	case OpCall:
-		idx := instr.Operand.(int)
-		funcName := code.Names[idx]
-		funcObj, ok := vm.Variables[funcName]
-		if !ok {
-			panic(fmt.Sprintf("UndefinedNameError: Function '%s' is not defined", funcName))
-		}
-		funcCode, ok := funcObj.(CodeObject)
-		if !ok {
-			panic("VMError: Object is not callable")
-		}
+			case OpCall:
+				idx := instr.Operand.(int)
+				funcName := code.Names[idx]
+				funcObj, ok := vm.Variables[funcName]
+				if !ok {
+					panic(fmt.Sprintf("UndefinedNameError: Function '%s' is not defined", funcName))
+				}
+				funcCode, ok := funcObj.(CodeObject)
+				if !ok {
+					panic("VMError: Object is not callable")
+				}
 
-		frame := CallFrame{
-			ReturnAddress:  vm.PC + 1,
-			SavedVariables: vm.copyMap(vm.Variables),
-			SavedLocals:    vm.copyStackArr(vm.Locals),
-		}
-		vm.CallStack = append(vm.CallStack, frame)
+				frame := CallFrame{
+					ReturnAddress:  vm.PC + 1,
+					SavedVariables: vm.copyMap(vm.Variables),
+					SavedLocals:    vm.copyStackArr(vm.Locals),
+				}
+				vm.CallStack = append(vm.CallStack, frame)
 
-		vm.Locals = []interface{}{}
-		savedPc := vm.PC
-		vm.PC = 0
-		
-		for !vm.Halted && vm.PC < len(funcCode.Instructions) {
-			if funcCode.Instructions[vm.PC].Opcode == OpReturn {
-				break
+				vm.Locals = []interface{}{}
+				savedPc := vm.PC
+				vm.PC = 0
+
+				for !vm.Halted && vm.PC < len(funcCode.Instructions) {
+					if funcCode.Instructions[vm.PC].Opcode == OpReturn {
+						break
+					}
+					vm.Step(funcCode)
+				}
+
+				popped := vm.CallStack[len(vm.CallStack)-1]
+				vm.CallStack = vm.CallStack[:len(vm.CallStack)-1]
+				vm.PC = popped.ReturnAddress
+				vm.Locals = popped.SavedLocals
+				desc = fmt.Sprintf("Call function '%s'", funcName)
+				_ = savedPc
+
+			case OpReturn:
+				if len(vm.CallStack) > 0 {
+					popped := vm.CallStack[len(vm.CallStack)-1]
+					vm.CallStack = vm.CallStack[:len(vm.CallStack)-1]
+					vm.PC = popped.ReturnAddress
+					vm.Locals = popped.SavedLocals
+				} else {
+					vm.Halted = true
+				}
+				desc = "Return from function"
+
+			case OpPrint:
+				val := vm.pop()
+				strVal := fmt.Sprintf("%v", val)
+				vm.Output = append(vm.Output, strVal)
+				outputVal = &strVal
+				vm.PC++
+				desc = fmt.Sprintf("Print %v", val)
+
+			case OpHalt:
+				vm.Halted = true
+				desc = "Halt execution"
+
+			default:
+				panic(fmt.Sprintf("InvalidOpcodeError: Unknown opcode %d", instr.Opcode))
 			}
-			vm.Step(funcCode)
-		}
 
-		popped := vm.CallStack[len(vm.CallStack)-1]
-		vm.CallStack = vm.CallStack[:len(vm.CallStack)-1]
-		vm.PC = popped.ReturnAddress
-		vm.Locals = popped.SavedLocals
-		desc = fmt.Sprintf("Call function '%s'", funcName)
-		_ = savedPc
-
-	case OpReturn:
-		if len(vm.CallStack) > 0 {
-			popped := vm.CallStack[len(vm.CallStack)-1]
-			vm.CallStack = vm.CallStack[:len(vm.CallStack)-1]
-			vm.PC = popped.ReturnAddress
-			vm.Locals = popped.SavedLocals
-		} else {
-			vm.Halted = true
-		}
-		desc = "Return from function"
-
-	case OpPrint:
-		val := vm.pop()
-		strVal := fmt.Sprintf("%v", val)
-		vm.Output = append(vm.Output, strVal)
-		outputVal = &strVal
-		vm.PC++
-		desc = fmt.Sprintf("Print %v", val)
-
-	case OpHalt:
-		vm.Halted = true
-		desc = "Halt execution"
-
-	default:
-		panic(fmt.Sprintf("InvalidOpcodeError: Unknown opcode %d", instr.Opcode))
-	}
-
-	return VMTrace{
-		PC:          pcBefore,
-		Instruction: instr,
-		StackBefore: stackBefore,
-		StackAfter:  vm.copyStack(),
-		Variables:   vm.copyMap(vm.Variables),
-		Output:      outputVal,
-		Description: desc,
-	}
+			return rf.Generate(true, false, VMTrace{
+				PC:          pcBefore,
+				Instruction: instr,
+				StackBefore: stackBefore,
+				StackAfter:  vm.copyStack(),
+				Variables:   vm.copyMap(vm.Variables),
+				Output:      outputVal,
+				Description: desc,
+			})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 func (vm *VirtualMachine) pop() interface{} {
@@ -388,15 +402,19 @@ func (vm *VirtualMachine) copyMap(m map[string]interface{}) map[string]interface
 }
 
 func AssembleCode(instructions []Instruction, constants []interface{}, names []string) CodeObject {
-	if constants == nil {
-		constants = []interface{}{}
-	}
-	if names == nil {
-		names = []string{}
-	}
-	return CodeObject{
-		Instructions: instructions,
-		Constants:    constants,
-		Names:        names,
-	}
+	result, _ := StartNew[CodeObject]("virtual-machine.AssembleCode", CodeObject{},
+		func(op *Operation[CodeObject], rf *ResultFactory[CodeObject]) *OperationResult[CodeObject] {
+			if constants == nil {
+				constants = []interface{}{}
+			}
+			if names == nil {
+				names = []string{}
+			}
+			return rf.Generate(true, false, CodeObject{
+				Instructions: instructions,
+				Constants:    constants,
+				Names:        names,
+			})
+		}).GetResult()
+	return result
 }
