@@ -1,0 +1,3 @@
+source "https://rubygems.org"
+gemspec
+gem "coding_adventures_draw_instructions", path: "../draw-instructions"
