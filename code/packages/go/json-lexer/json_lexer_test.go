@@ -37,7 +37,7 @@ skip:
 
 // tokenizeWithEscapeProcessing tokenizes source using the escape-processing
 // grammar (no "escapes: none"), so escape sequences are decoded by the lexer.
-func tokenizeWithEscapeProcessing(source string) ([]*lexer.Token, error) {
+func tokenizeWithEscapeProcessing(source string) ([]lexer.Token, error) {
 	grammar, err := grammartools.ParseTokenGrammar(escapeProcessingGrammarSrc)
 	if err != nil {
 		return nil, err
