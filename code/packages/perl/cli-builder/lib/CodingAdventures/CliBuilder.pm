@@ -96,12 +96,12 @@ sub classify {
     my $rest = $1;
 
     # Rule 1: single-dash-long exact match
-    return { kind => 'single_dash_long', name => $rest } if exists $sdl{$rest};
+    return { kind => 'single_dash_long', name => $rest } if exists $sdl->{$rest};
 
     # Rule 2: first char is a known short flag
     my $first = substr($rest, 0, 1);
-    if (exists $short{$first}) {
-      my $f         = $short{$first};
+    if (exists $short->{$first}) {
+      my $f         = $short->{$first};
       my $remainder = substr($rest, 1);
 
       if ($remainder eq '') {
@@ -111,7 +111,7 @@ sub classify {
         my @chars = ($first);
         my $ok    = 1;
         for my $ch (split //, $remainder) {
-          if (exists $short{$ch}) {
+          if (exists $short->{$ch}) {
             push @chars, $ch;
           } else {
             $ok = 0; last;

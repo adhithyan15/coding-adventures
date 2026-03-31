@@ -138,7 +138,7 @@ sub _pick_higher_priority {
 
 package CodingAdventures::HazardDetection::DataHazardDetector;
 
-use CodingAdventures::HazardDetection::HazardResult;
+# HazardResult is defined later in this same file; no separate require needed.
 
 sub new { return bless {}, $_[0] }
 

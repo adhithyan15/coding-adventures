@@ -77,7 +77,7 @@ subtest 'Memory: dump returns correct slice' => sub {
     my $m = $Memory->new(16);
     $m->load_bytes(2, [0xAA, 0xBB, 0xCC]);
     my $bytes = $m->dump(2, 3);
-    is_deeply($bytes, [0xAA, 0xBB, 0xCC], 'dump returns correct bytes');
+    is($bytes, [0xAA, 0xBB, 0xCC], 'dump returns correct bytes');
 };
 
 subtest 'Memory: out-of-bounds read dies' => sub {
@@ -129,7 +129,7 @@ subtest 'SparseMemory: load_bytes and dump' => sub {
     my $m = $SparseMemory->new(65536);
     $m->load_bytes(200, [0x11, 0x22, 0x33]);
     my $bytes = $m->dump(200, 3);
-    is_deeply($bytes, [0x11, 0x22, 0x33], 'sparse dump correct');
+    is($bytes, [0x11, 0x22, 0x33], 'sparse dump correct');
 };
 
 # ============================================================================

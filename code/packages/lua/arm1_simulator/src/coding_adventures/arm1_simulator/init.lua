@@ -1277,12 +1277,13 @@ end
 --- Creates a Branch or Branch-with-Link instruction.
 function ARM1Simulator.encode_branch(condition, link, offset)
   -- offset is in bytes, relative to the current instruction address.
-  -- ARM pipeline: target = (PC+8) + encoded*4, and execute_branch computes
-  -- branch_base = (PC+4)+4 = PC+8 after step() advances PC by 4.
-  -- So encoded = (offset - 8) / 4 to compensate: target = PC+8+(offset-8) = PC+offset.
+  -- offset is relative to PC+8 (the pipeline prefetch base).
+  -- execute_branch computes branch_base = (PC+4)+4 = PC+8 after step() advances PC.
+  -- target = branch_base + branch_offset = (PC+8) + offset.
+  -- So encoded = offset / 4.
   local inst = (condition << 28) | 0x0A000000
   if link then inst = inst | 0x01000000 end
-  local encoded = math.floor((offset - 8) / 4) & 0x00FFFFFF
+  local encoded = math.floor(offset / 4) & 0x00FFFFFF
   return mask32(inst | encoded)
 end
 

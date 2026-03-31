@@ -454,12 +454,12 @@ function GenericISA:execute(instr, registers, memory)
 
   elseif op == "BEQ" then
     -- if Rs1 == Rs2 then PC = current_pc + offset
-    -- Core computes: next_pc = current_pc + 1 + next_pc_offset
-    -- So next_pc_offset = immediate - 1 to get target = current_pc + immediate
+    -- Core computes: next_pc = current_pc + next_pc_offset (when next_pc_offset != 0)
+    -- or current_pc + 1 (sequential). So next_pc_offset = immediate for taken branch.
     local a = registers:read(instr.rs1)
     local b = registers:read(instr.rs2)
     if a == b then
-      result.next_pc_offset = math.floor(instr.immediate) - 1
+      result.next_pc_offset = math.floor(instr.immediate)
       result.description = string.format("BEQ R%d, R%d: %g == %g → taken (offset %d)",
         instr.rs1, instr.rs2, a, b, result.next_pc_offset)
     else
@@ -472,7 +472,7 @@ function GenericISA:execute(instr, registers, memory)
     local a = registers:read(instr.rs1)
     local b = registers:read(instr.rs2)
     if a < b then
-      result.next_pc_offset = math.floor(instr.immediate) - 1
+      result.next_pc_offset = math.floor(instr.immediate)
       result.description = string.format("BLT R%d, R%d: %g < %g → taken (offset %d)",
         instr.rs1, instr.rs2, a, b, result.next_pc_offset)
     else
@@ -485,7 +485,7 @@ function GenericISA:execute(instr, registers, memory)
     local a = registers:read(instr.rs1)
     local b = registers:read(instr.rs2)
     if a ~= b then
-      result.next_pc_offset = math.floor(instr.immediate) - 1
+      result.next_pc_offset = math.floor(instr.immediate)
       result.description = string.format("BNE R%d, R%d: %g != %g → taken (offset %d)",
         instr.rs1, instr.rs2, a, b, result.next_pc_offset)
     else
@@ -611,9 +611,12 @@ function GPUCore:step()
   if result.jmp_target ~= nil then
     -- Absolute jump
     next_pc = result.jmp_target
+  elseif result.next_pc_offset ~= 0 then
+    -- Branch taken: PC = current_pc + offset (offset encodes the target directly)
+    next_pc = current_pc + result.next_pc_offset
   else
-    -- Sequential + optional branch offset
-    next_pc = current_pc + 1 + result.next_pc_offset
+    -- Sequential execution
+    next_pc = current_pc + 1
   end
 
   self.pc = next_pc

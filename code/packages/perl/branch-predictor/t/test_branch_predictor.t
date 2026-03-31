@@ -233,10 +233,10 @@ subtest 'OneBit — reset' => sub {
 # TwoBit
 # ============================================================================
 
-my $SNT = CodingAdventures::BranchPredictor::TwoBit::SNT;
-my $WNT = CodingAdventures::BranchPredictor::TwoBit::WNT;
-my $WT  = CodingAdventures::BranchPredictor::TwoBit::WT;
-my $ST  = CodingAdventures::BranchPredictor::TwoBit::ST;
+my $SNT = CodingAdventures::BranchPredictor::TwoBit::SNT();
+my $WNT = CodingAdventures::BranchPredictor::TwoBit::WNT();
+my $WT  = CodingAdventures::BranchPredictor::TwoBit::WT();
+my $ST  = CodingAdventures::BranchPredictor::TwoBit::ST();
 
 subtest 'TwoBit — starts in WNT (predicts not taken)' => sub {
     my $p = $TwoBit->new();

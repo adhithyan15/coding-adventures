@@ -715,7 +715,7 @@ sub _decode {
         my $raw_off = $instruction & 0x00FFFFFF;
         # Sign-extend from 24 bits
         if ($raw_off >> 23) {
-            $raw_off |= 0xFFFFFFFF_FF000000;  # sign extend (64-bit Perl)
+            $raw_off -= (1 << 24);  # sign extend from 24 bits (portable)
         }
         # Convert to signed and shift left by 2
         # In Perl: use the fact that the value is already signed 64-bit
@@ -1110,6 +1110,7 @@ Creates a MOV Rd, #imm8 instruction word.
 =cut
 
 sub encode_mov_imm {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $rd, $imm8) = @_;
     my $inst = ($condition << 28) | 0x03A00000;
     $inst |= ($rd << 12) | $imm8;
@@ -1125,6 +1126,7 @@ Creates a data processing instruction with register operand.
 =cut
 
 sub encode_alu_reg {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $opcode, $s, $rd, $rn, $rm) = @_;
     my $s_bit = $s ? 1 : 0;
     my $inst = ($condition << 28) | ($opcode << 21) | ($s_bit << 20);
@@ -1141,6 +1143,7 @@ Creates a data processing instruction with shifted register operand.
 =cut
 
 sub encode_alu_reg_shift {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $opcode, $s, $rd, $rn, $rm, $shift_type, $shift_imm) = @_;
     my $s_bit = $s ? 1 : 0;
     my $inst = ($condition << 28) | ($opcode << 21) | ($s_bit << 20);
@@ -1157,10 +1160,11 @@ Creates a B or BL instruction with the given byte offset.
 =cut
 
 sub encode_branch {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $link, $offset) = @_;
     my $inst = ($condition << 28) | 0x0A000000;
     $inst |= 0x01000000 if $link;
-    my $encoded = int(($offset - 8) / 4) & 0x00FFFFFF;
+    my $encoded = int($offset / 4) & 0x00FFFFFF;
     return _mask32($inst | $encoded);
 }
 
@@ -1173,6 +1177,7 @@ Creates the pseudo-halt instruction (SWI 0x123456).
 =cut
 
 sub encode_halt {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     return _mask32((COND_AL << 28) | 0x0F000000 | HALT_SWI);
 }
 
@@ -1183,6 +1188,7 @@ sub encode_halt {
 =cut
 
 sub encode_ldr {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $rd, $rn, $offset, $pre_index) = @_;
     my $inst = ($condition << 28) | 0x04100000;
     $inst |= ($rd << 12) | ($rn << 16);
@@ -1202,6 +1208,7 @@ sub encode_ldr {
 =cut
 
 sub encode_str {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $rd, $rn, $offset, $pre_index) = @_;
     my $inst = ($condition << 28) | 0x04000000;
     $inst |= ($rd << 12) | ($rn << 16);
@@ -1223,6 +1230,7 @@ Creates an LDM instruction. $mode is "IA", "IB", "DA", or "DB".
 =cut
 
 sub encode_ldm {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
     my $inst = ($condition << 28) | 0x08100000;
     $inst |= ($rn << 16) | $reg_list;
@@ -1241,6 +1249,7 @@ sub encode_ldm {
 =cut
 
 sub encode_stm {
+    shift if !ref($_[0]);  # discard class invocant when called as method
     my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
     my $inst = encode_ldm($condition, $rn, $reg_list, $write_back, $bt_mode);
     return _mask32($inst & _bnot32(1 << 20));

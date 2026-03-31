@@ -650,10 +650,9 @@ describe("ARM1Simulator", function()
       local sub_imm_inst = (ARM1.COND_AL << 28) | (1 << 25) | (ARM1.OP_SUB << 21) | (1 << 20) | (1 << 16) | (1 << 12) | 1
       sub_imm_inst = sub_imm_inst & 0xFFFFFFFF
 
-      -- BNE -8 bytes: branch offset = -8 (back 2 instructions)
-      -- encoded offset = -8/4 = -2, in 24-bit two's complement
-      -- -2 in 24-bit = 0xFFFFFE
-      local bne = ARM1.encode_branch(ARM1.COND_NE, false, -8)
+      -- BNE back to ADD at 0x08: branch_base = 0x10+8 = 0x18, offset = 0x08-0x18 = -16
+      -- encoded = -16/4 = -4, in 24-bit two's complement = 0xFFFFFC
+      local bne = ARM1.encode_branch(ARM1.COND_NE, false, -16)
 
       cpu:load_instructions({
         ARM1.encode_mov_imm(ARM1.COND_AL, 0, 0),   -- 0x00: MOV R0, #0
@@ -703,7 +702,9 @@ describe("ARM1Simulator", function()
 
       local sub_imm = (ARM1.COND_AL << 28) | (1 << 25) | (ARM1.OP_SUB << 21) | (1 << 20) | (2 << 16) | (2 << 12) | 1
       sub_imm = sub_imm & 0xFFFFFFFF
-      local bne = ARM1.encode_branch(ARM1.COND_NE, false, -16)
+      -- BNE back to R3=a+b at 0x0C: branch_base = 0x1C+8 = 0x24, offset = 0x0C-0x24 = -24
+      -- encoded = -24/4 = -6, in 24-bit two's complement = 0xFFFFFA
+      local bne = ARM1.encode_branch(ARM1.COND_NE, false, -24)
 
       cpu:load_instructions({
         ARM1.encode_mov_imm(ARM1.COND_AL, 0, 0),                            -- 0x00: a=0

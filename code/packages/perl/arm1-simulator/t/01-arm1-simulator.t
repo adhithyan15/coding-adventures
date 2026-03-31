@@ -321,7 +321,7 @@ subtest 'sum 1 to 10' => sub {
     my $sub_imm = ($ARM1->COND_AL << 28) | (1 << 25) | ($ARM1->OP_SUB << 21) | (1 << 20) | (1 << 16) | (1 << 12) | 1;
     $sub_imm &= 0xFFFFFFFF;
 
-    my $bne = $ARM1->encode_branch($ARM1->COND_NE, 0, -8);
+    my $bne = $ARM1->encode_branch($ARM1->COND_NE, 0, -16);
 
     $cpu->load_instructions([
         $ARM1->encode_mov_imm($ARM1->COND_AL, 0, 0),

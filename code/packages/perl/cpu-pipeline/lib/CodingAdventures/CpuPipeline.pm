@@ -124,8 +124,12 @@ sub to_string {
 }
 
 sub clone {
-    my ($self) = @_;
-    return undef unless defined $self;
+    my $self = shift;
+    # Handle Token->clone(undef) class method call: discard class invocant
+    if (!ref($self) && @_) {
+        $self = shift;
+    }
+    return undef unless defined $self && ref $self;
     my %copy = %$self;
     $copy{stage_entered} = { %{ $self->{stage_entered} } };
     return bless \%copy, ref($self);

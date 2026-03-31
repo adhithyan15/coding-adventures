@@ -671,8 +671,8 @@ function Parser.parse(spec, argv)
       end
     end
   end
-  -- If we consumed all tokens in routing:
-  if in_routing then remaining_argv = {} end
+  -- remaining_argv already contains all flag tokens collected during routing.
+  -- No need to clear it — flags like --help and -h must still be processed.
 
   -- ── Build flag lookups for current command scope ─────────────────────────
   local all_flag_defs = {}

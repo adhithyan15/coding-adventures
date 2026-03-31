@@ -303,9 +303,9 @@ function Parser:parse_select()
   end
   if self:match("LIMIT") then
     limit = self:parse_primary().value
-    if self:match("OFFSET") then
-      offset = self:parse_primary().value
-    end
+  end
+  if self:match("OFFSET") then
+    offset = self:parse_primary().value
   end
 
   return {
@@ -1137,7 +1137,13 @@ local function execute_select(stmt, ds)
         elseif ia == nil then return ord.direction == "ASC"
         elseif ib == nil then return ord.direction ~= "ASC"
         elseif ia ~= ib then
-          if ord.direction == "ASC" then return ia < ib else return ia > ib end
+          -- Coerce to same type for comparison: numbers compare numerically,
+          -- mixed types convert both to string to avoid "compare number with string"
+          local a_cmp, b_cmp = ia, ib
+          if type(ia) ~= type(ib) then
+            a_cmp = tostring(ia); b_cmp = tostring(ib)
+          end
+          if ord.direction == "ASC" then return a_cmp < b_cmp else return a_cmp > b_cmp end
         end
       end
       return false

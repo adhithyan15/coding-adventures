@@ -1,2 +1,5 @@
-cpanm --installdeps --quiet .
-PERL5LIB=$(cd ../transistors && pwd)/lib:$(cd ../logic-gates && pwd)/lib:$(cd ../block-ram && pwd)/lib:${PERL5LIB:-} prove -l -v t/
+cpanm --notest --quiet Test2::V0
+(cd ../transistors && cpanm --notest --quiet .)
+(cd ../logic-gates && cpanm --notest --quiet .)
+(cd ../block-ram && cpanm --notest --quiet .)
+prove -l -v t/
