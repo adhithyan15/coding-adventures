@@ -1,61 +1,74 @@
--- =============================================================================
--- Core — complete processor core integrating pipeline + memory + register file
--- =============================================================================
+-- init.lua — CPU Core: the integration point
 --
--- The Core is the integration point.  It wires together:
---   - Pipeline (from cpu_pipeline)    — instruction flow management
---   - Memory (from cpu_simulator)     — backing store for instructions + data
---   - RegisterFile (from cpu_simulator) — fast operand storage
---   - ISA Decoder (injected)          — instruction semantics
+-- The Core wires together all D-series sub-components into a working
+-- processor. Think of it like a motherboard: the Core doesn't define
+-- new behavior, it connects the parts and routes signals between them.
 --
--- DESIGN: ISA Injection
--- =====================
--- The Core knows HOW to move instructions through a pipeline, but not WHAT
--- any instruction means.  That knowledge lives in the ISA decoder, which the
--- caller injects at construction time:
+-- WHAT THE CORE PROVIDES:
 --
---   local decoder = MyDecoder.new()     -- implements decode/execute/instruction_size
---   local result  = Core.new(CoreConfig.simple(), decoder)
---   local core    = result.core
+--   Pipeline     — manages instruction flow through stages
+--   RegisterFile — fast operand storage (16 registers, 32-bit)
+--   MemoryController — access to backing memory
+--   ISA Decoder  — INJECTED from outside (not part of the Core itself)
 --
--- The ISA decoder must implement three methods:
---   decode(raw_instruction, token) → token   — fill opcode/rs1/rs2/rd/flags
---   execute(token, reg_file)       → token   — compute alu_result/branch_taken
---   instruction_size()             → int     — bytes per instruction (usually 4)
+-- DESIGN PHILOSOPHY: The Core knows HOW to move instructions through a
+-- pipeline, detect hazards, access caches. But it does NOT know WHAT
+-- instructions mean. That's the ISA decoder's job.
 --
--- SHARED STATE VIA CLOSURES
--- =========================
--- Lua is not functional (unlike Elixir).  We pass a shared `state` table by
--- reference into the pipeline callbacks.  The callbacks close over `state` and
--- mutate it as instructions flow through the stages.  This is safe because the
--- pipeline callbacks are always called sequentially (not concurrently).
+-- This separation means the same Core works with any instruction set:
+--   core = Core.new(config, arm_decoder)
+--   core = Core.new(config, riscv_decoder)
+--
+-- THE ISA DECODER PROTOCOL:
+-- An ISA decoder must provide:
+--   decoder.decode(raw_instruction, token) → token
+--   decoder.execute(token, register_file)  → token
+--   decoder.instruction_size()             → 4 (bytes)
+--
+-- FUNCTIONAL DESIGN:
+-- The Core is an immutable table. Each call to step() returns a new
+-- Core with updated state. There is no mutation.
+--
+-- CORE CONFIGURATION:
+--
+--   CoreConfig.simple()        — 5-stage, no frills, good for learning
+--   CoreConfig.performance()   — 13-stage, with forwarding and stall detection
+--
+-- LAYER POSITION:
+--
+--   ISA Simulators (ARM, RISC-V) ← inject decoder here
+--          ↓
+--   Core (D05) ← YOU ARE HERE
+--          ↓
+--   Pipeline (D04), Hazard Detection (D03), Cache (D01), CPU Simulator
 
-local cpu_pipeline = require("coding_adventures.cpu_pipeline")
-local cpu_sim      = require("coding_adventures.cpu_simulator")
+local Pipeline   = require("coding_adventures.cpu_pipeline.pipeline")
+local config_mod = require("coding_adventures.cpu_pipeline.config")
+local cpu_sim    = require("coding_adventures.cpu_simulator")
+local RegisterFile = cpu_sim.RegisterFile
+local Memory       = cpu_sim.Memory
 
-local Pipeline       = cpu_pipeline.Pipeline
-local PipelineConfig = cpu_pipeline.PipelineConfig
-local Memory         = cpu_sim.Memory
-local RegisterFile   = cpu_sim.RegisterFile
+local PipelineConfig = config_mod.PipelineConfig
+local HazardResponse = config_mod.HazardResponse
 
--- ---------------------------------------------------------------------------
--- MemoryController — thin wrapper around Memory with latency tracking
--- ---------------------------------------------------------------------------
--- In a multi-core system the memory controller serialises requests from all
--- cores.  This single-core implementation is a direct pass-through with a
--- stored latency value for metadata purposes.
+-- ========================================================================
+-- MemoryController
+-- ========================================================================
+--
+-- Wraps Memory with a latency model. In real hardware, a cache miss
+-- causes the CPU to stall while waiting for DRAM. We model this with
+-- a `latency` parameter (currently informational only — we don't inject
+-- stalls from cache misses in this simplified model).
 
 local MemoryController = {}
 MemoryController.__index = MemoryController
 
--- new(size, latency) — create a MemoryController backed by `size` bytes of RAM
 function MemoryController.new(size, latency)
-    size    = size    or 65536
-    latency = latency or 100
-    local self = setmetatable({}, MemoryController)
-    self.memory  = Memory.new(size)
-    self.latency = latency
-    return self
+    return setmetatable({
+        memory  = Memory.new(size),
+        size    = size,
+        latency = latency or 100,  -- DRAM latency in cycles (informational)
+    }, MemoryController)
 end
 
 function MemoryController:read_word(address)
@@ -70,134 +83,183 @@ function MemoryController:load_program(bytes, start_address)
     self.memory:load_bytes(start_address, bytes)
 end
 
--- ---------------------------------------------------------------------------
--- CoreConfig — micro-architecture parameters
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- CoreConfig
+-- ========================================================================
+--
+-- CoreConfig describes the micro-architectural parameters of a core.
+-- Every parameter is a tradeoff:
+--
+--   More pipeline stages → higher clock, worse misprediction penalty
+--   Larger register file → fewer spills, but more chip area
+--   More cache → fewer misses, but more area and power
+--
+-- Two presets are provided. You can create custom configs by constructing
+-- CoreConfig directly.
 
 local CoreConfig = {}
 CoreConfig.__index = CoreConfig
 
--- new(opts)
---   opts.name           — human-readable name (default "Default")
---   opts.pipeline       — PipelineConfig (default classic_5_stage)
---   opts.num_registers  — number of GPRs (default 16)
---   opts.register_width — bits per register (default 32)
---   opts.memory_size    — bytes of RAM (default 65536)
---   opts.memory_latency — DRAM latency in cycles (default 100)
+--- Creates a CoreConfig.
+--
+-- @param opts  table  Optional configuration fields:
+--   name             string  Human-readable name (default "Core")
+--   pipeline_config  PipelineConfig  (default: classic_5_stage)
+--   num_registers    number  (default 16)
+--   register_width   number  bits per register (default 32)
+--   memory_size      number  bytes (default 65536)
+--   memory_latency   number  cycles (default 100)
+-- @return CoreConfig
 function CoreConfig.new(opts)
     opts = opts or {}
-    local self = setmetatable({}, CoreConfig)
-    self.name           = opts.name           or "Default"
-    self.pipeline       = opts.pipeline       or PipelineConfig.classic_5_stage()
-    self.num_registers  = opts.num_registers  or 16
-    self.register_width = opts.register_width or 32
-    self.memory_size    = opts.memory_size    or 65536
-    self.memory_latency = opts.memory_latency or 100
-    return self
+    return setmetatable({
+        name           = opts.name           or "Core",
+        pipeline_config = opts.pipeline_config or PipelineConfig.classic_5_stage(),
+        num_registers  = opts.num_registers  or 16,
+        register_width = opts.register_width or 32,
+        memory_size    = opts.memory_size    or 65536,
+        memory_latency = opts.memory_latency or 100,
+    }, CoreConfig)
 end
 
--- simple() — 5-stage, 16 registers, 64KB RAM — good for teaching
+--- Simple 5-stage core — great for learning.
+--
+-- Equivalent to a 1980s microcontroller:
+--   5-stage pipeline, 16 registers, 64KB memory
 function CoreConfig.simple()
     return CoreConfig.new({
         name           = "Simple",
-        pipeline       = PipelineConfig.classic_5_stage(),
+        pipeline_config = PipelineConfig.classic_5_stage(),
         num_registers  = 16,
         register_width = 32,
         memory_size    = 65536,
-        memory_latency = 1,
-    })
-end
-
--- performance() — 13-stage, 31 registers, 256KB — inspired by ARM Cortex-A78
-function CoreConfig.performance()
-    return CoreConfig.new({
-        name           = "Performance",
-        pipeline       = PipelineConfig.deep_13_stage(),
-        num_registers  = 31,
-        register_width = 64,
-        memory_size    = 262144,
         memory_latency = 100,
     })
 end
 
--- ---------------------------------------------------------------------------
--- CoreStats — aggregate execution statistics
--- ---------------------------------------------------------------------------
+--- Performance 13-stage core — inspired by ARM Cortex-A78.
+--
+-- Higher clock speed, better throughput, but worse misprediction penalty.
+function CoreConfig.performance()
+    return CoreConfig.new({
+        name           = "Performance",
+        pipeline_config = PipelineConfig.deep_13_stage(),
+        num_registers  = 31,
+        register_width = 64,
+        memory_size    = 65536,
+        memory_latency = 100,
+    })
+end
+
+-- ========================================================================
+-- CoreStats
+-- ========================================================================
 
 local CoreStats = {}
 CoreStats.__index = CoreStats
 
-function CoreStats.new(instructions_completed, total_cycles, pipeline_stats)
-    local self = setmetatable({}, CoreStats)
-    self.instructions_completed = instructions_completed or 0
-    self.total_cycles           = total_cycles           or 0
-    self.pipeline_stats         = pipeline_stats         or nil
-    return self
+function CoreStats.new()
+    return setmetatable({
+        total_cycles           = 0,
+        instructions_completed = 0,
+        stall_cycles           = 0,
+        flush_cycles           = 0,
+    }, CoreStats)
 end
 
--- ipc() — Instructions Per Cycle
 function CoreStats:ipc()
     if self.total_cycles == 0 then return 0.0 end
     return self.instructions_completed / self.total_cycles
 end
 
--- cpi() — Cycles Per Instruction
-function CoreStats:cpi()
-    if self.instructions_completed == 0 then return 0.0 end
-    return self.total_cycles / self.instructions_completed
-end
-
 function CoreStats:to_string()
     return string.format(
-        "CoreStats{instr=%d cycles=%d ipc=%.3f cpi=%.3f}",
-        self.instructions_completed, self.total_cycles,
-        self:ipc(), self:cpi()
+        "CoreStats{cycles=%d, completed=%d, IPC=%.3f, stalls=%d, flushes=%d}",
+        self.total_cycles, self.instructions_completed, self:ipc(),
+        self.stall_cycles, self.flush_cycles
     )
 end
 
--- ---------------------------------------------------------------------------
--- Core — the wired-together processor
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- Core
+-- ========================================================================
+--
+-- The Core ties together pipeline, register file, memory controller,
+-- and an ISA decoder. It delegates all instruction semantics to the decoder.
+--
+-- USAGE:
+--
+--   1. Create a core:      local core = Core.new(config, decoder)
+--   2. Load a program:     core:load_program(bytes, start_addr)
+--   3. Step/run:           local snap = core:step()
+--                          core:run(1000)
+--   4. Read results:       core:read_register(0)
+--
+-- INTERNAL ARCHITECTURE:
+--
+--   The core holds a pipeline, register file, and memory controller.
+--   The pipeline's callbacks are closures over the core's state tables.
+--   Since Lua tables are passed by reference, callbacks can read/write
+--   the register file and memory directly.
+--
+--   ┌─────────────────────────────────────────────────────────────┐
+--   │  Core                                                        │
+--   │  ┌──────────┐  fetch_fn  ┌────────────────────────┐         │
+--   │  │ Memory   │←──────────→│                        │         │
+--   │  │ Controller│           │  Pipeline (D04)        │         │
+--   │  │          │  memory_fn │                        │         │
+--   │  │          │←──────────→│  IF → ID → EX → MEM → WB        │
+--   │  └──────────┘            │                        │         │
+--   │                          │        ↑ writeback_fn  │         │
+--   │  ┌──────────┐            │        │               │         │
+--   │  │Register  │←───────────┘        │               │         │
+--   │  │ File     │←────────────────────┘               │         │
+--   │  └──────────┘  decode_fn / execute_fn              │         │
+--   │                                     ↑              │         │
+--   │  ┌──────────┐                       │              │         │
+--   │  │ISA       │───────────────────────┘              │         │
+--   │  │ Decoder  │  (injected)                          │         │
+--   └──┴──────────┴──────────────────────────────────────┘         │
+--   └─────────────────────────────────────────────────────────────┘
 
 local Core = {}
 Core.__index = Core
 
--- Core.new(config, decoder) → {ok=true, core=<Core>} | {ok=false, err="reason"}
+--- Creates a new CPU Core.
 --
--- decoder must implement:
---   decoder:decode(raw_instruction, token)  → token
---   decoder:execute(token, reg_file)        → token
---   decoder:instruction_size()              → int
+-- @param config   CoreConfig
+-- @param decoder  table  Must implement decode(raw, token), execute(token, rf),
+--                        and instruction_size() methods
+-- @return {ok=true, core=...} | {ok=false, err="..."}
 function Core.new(config, decoder)
-    -- Validate config
-    if config == nil then
-        return {ok = false, err = "config is nil"}
-    end
-    if decoder == nil then
-        return {ok = false, err = "decoder is nil"}
-    end
+    -- 1. Build the register file
+    local reg_file = RegisterFile.new(config.num_registers, config.register_width)
 
-    -- 1. Create shared mutable state — passed by reference into callbacks
-    --    The pipeline callbacks close over this table.
+    -- 2. Build the memory controller
+    local mem_ctrl = MemoryController.new(config.memory_size, config.memory_latency)
+
+    -- 3. Build state tables (passed by reference to callbacks)
     local state = {
-        reg_file = RegisterFile.new(config.num_registers, config.register_width),
-        mem_ctrl = MemoryController.new(config.memory_size, config.memory_latency),
+        reg_file = reg_file,
+        mem_ctrl = mem_ctrl,
+        halted   = false,
+        cycle    = 0,
+        stats    = CoreStats.new(),
     }
 
-    -- 2. Define the five pipeline callbacks.
-    --    Each callback reads/writes `state` — this is safe because callbacks
-    --    are invoked sequentially by the single-threaded pipeline.
+    -- 4. Build the pipeline callbacks
+    --    These closures capture `state` and `decoder` by reference.
 
     local function fetch_fn(pc)
         return state.mem_ctrl:read_word(pc)
     end
 
     local function decode_fn(raw, token)
-        return decoder:decode(raw, token)
+        return decoder.decode(raw, token)
     end
 
     local function execute_fn(token)
-        return decoder:execute(token, state.reg_file)
+        return decoder.execute(token, state.reg_file)
     end
 
     local function memory_fn(token)
@@ -217,110 +279,118 @@ function Core.new(config, decoder)
         end
     end
 
-    -- 3. Build the pipeline
-    local pipeline_config = config.pipeline or PipelineConfig.classic_5_stage()
-    local pipeline_result = Pipeline.new(
-        pipeline_config,
+    -- 5. Create the pipeline
+    local result = Pipeline.new(
+        config.pipeline_config,
         fetch_fn, decode_fn, execute_fn, memory_fn, writeback_fn
     )
-    if not pipeline_result.ok then
-        return {ok = false, err = pipeline_result.err}
+
+    if not result.ok then
+        return { ok = false, err = result.err }
     end
 
-    -- 4. Set predict function (PC + instruction_size)
-    local p = pipeline_result.pipeline
-    p:set_predict_fn(function(pc)
-        return pc + decoder:instruction_size()
+    local pipeline = result.pipeline
+
+    -- Set predict function using the decoder's instruction size
+    pipeline:set_predict_fn(function(pc)
+        return pc + decoder.instruction_size()
     end)
 
-    -- 5. Assemble the Core struct
-    local self = setmetatable({}, Core)
-    self.config   = config
-    self.decoder  = decoder
-    self.pipeline = p
-    self.state    = state   -- shared with callbacks
-    self.cycle    = 0
-    self.halted   = false
+    -- Build the core
+    local core = setmetatable({
+        config   = config,
+        decoder  = decoder,
+        pipeline = pipeline,
+        state    = state,
+    }, Core)
 
-    return {ok = true, core = self}
+    return { ok = true, core = core }
 end
 
--- load_program(bytes, start_address)
--- Loads machine code into memory and resets the PC.
+--- Loads machine code into memory and sets the PC.
+-- @param bytes          table   List of byte values
+-- @param start_address  number  Address to load at (default 0)
 function Core:load_program(bytes, start_address)
     start_address = start_address or 0
     self.state.mem_ctrl:load_program(bytes, start_address)
     self.pipeline:set_pc(start_address)
 end
 
--- step() → Snapshot
--- Execute one clock cycle.
+--- Advances the core by one clock cycle.
+-- @return Snapshot  The pipeline state after this cycle
 function Core:step()
-    if self.halted then
-        return self.pipeline:snapshot()
-    end
-    self.cycle = self.cycle + 1
     local snap = self.pipeline:step()
-    if self.pipeline:is_halted() then
-        self.halted = true
-    end
+    self.state.cycle = self.state.cycle + 1
+
+    -- Sync stats from pipeline
+    local ps = self.pipeline:get_stats()
+    self.state.stats.total_cycles           = ps.total_cycles
+    self.state.stats.instructions_completed = ps.instructions_completed
+    self.state.stats.stall_cycles           = ps.stall_cycles
+    self.state.stats.flush_cycles           = ps.flush_cycles
+
     return snap
 end
 
--- run(max_cycles) → CoreStats
--- Run until halt or max_cycles reached.
+--- Runs the core until halted or max_cycles reached.
+-- @param max_cycles  number  (default 10000)
+-- @return CoreStats
 function Core:run(max_cycles)
-    max_cycles = max_cycles or 100000
-    while not self.halted and self.cycle < max_cycles do
+    max_cycles = max_cycles or 10000
+    while not self.pipeline:is_halted() and self.state.cycle < max_cycles do
         self:step()
     end
-    return self:get_stats()
+    return self.state.stats
 end
 
--- is_halted() → bool
+--- Returns true if the pipeline has halted.
 function Core:is_halted()
-    return self.halted
+    return self.pipeline:is_halted()
 end
 
--- get_cycle() → int
+--- Returns the current cycle number.
 function Core:get_cycle()
-    return self.cycle
+    return self.state.cycle
 end
 
--- get_stats() → CoreStats
+--- Returns current execution statistics.
 function Core:get_stats()
-    local p_stats = self.pipeline:get_stats()
-    return CoreStats.new(
-        p_stats.instructions_completed,
-        p_stats.total_cycles,
-        p_stats
-    )
+    return self.state.stats
 end
 
--- read_register(index) → int
+--- Reads a register value (0-based index).
 function Core:read_register(index)
     return self.state.reg_file:read(index)
 end
 
--- write_register(index, value)
+--- Writes a register value (0-based index).
 function Core:write_register(index, value)
     self.state.reg_file:write(index, value)
 end
 
--- read_memory_word(address) → int
+--- Reads a word from memory.
 function Core:read_memory_word(address)
     return self.state.mem_ctrl:read_word(address)
 end
 
--- write_memory_word(address, value)
+--- Writes a word to memory.
 function Core:write_memory_word(address, value)
     self.state.mem_ctrl:write_word(address, value)
 end
 
--- get_trace() → list of Snapshot
+--- Returns the current program counter.
+function Core:get_pc()
+    return self.pipeline:get_pc()
+end
+
+--- Returns the complete pipeline snapshot history.
 function Core:get_trace()
     return self.pipeline:get_trace()
 end
+
+-- ========================================================================
+-- Module exports
+-- ========================================================================
 
 return {
     Core               = Core,

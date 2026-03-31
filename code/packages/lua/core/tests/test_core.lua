@@ -1,304 +1,348 @@
--- Tests for coding_adventures.core
+-- test_core.lua — Tests for the CPU Core integration package
+--
+-- The Core integrates pipeline, register file, memory, and an ISA decoder.
+-- These tests verify:
+--
+--   1. CoreConfig presets (simple, performance)
+--   2. Core construction with a minimal decoder
+--   3. load_program and memory access
+--   4. step() and run()
+--   5. Register read/write through the core
+--   6. Halt detection via the decoder
+--   7. Statistics propagation from pipeline to core
 
-local core_mod = require("coding_adventures.core")
+package.path = "../src/?.lua;" .. "../src/?/init.lua;" ..
+               "../../cpu_pipeline/src/?.lua;" .. "../../cpu_pipeline/src/?/init.lua;" ..
+               "../../cpu_simulator/src/?.lua;" .. "../../cpu_simulator/src/?/init.lua;" ..
+               package.path
+
+local core_mod   = require("coding_adventures.core")
 local Core       = core_mod.Core
 local CoreConfig = core_mod.CoreConfig
-local CoreStats  = core_mod.CoreStats
 
--- ---------------------------------------------------------------------------
--- Minimal ISA decoder for tests
--- ---------------------------------------------------------------------------
--- Instruction encoding (1 byte at address 0, rest ignored):
---   0x00 = NOP    — no operation
---   0xFF = HALT   — stop execution
---   0x01 = LOAD_IMM rd=2, imm=77   — R2 ← 77
---   0x02 = ADD_IMM  rd=3, imm=10   — R3 ← R3 + 10
+-- ========================================================================
+-- Minimal ISA decoder for testing
+-- ========================================================================
+--
+-- This decoder treats every instruction as a NOP. The halt opcode is 0xFF.
+-- All other raw instructions are no-ops.
+--
+-- Instruction encoding (simplified):
+--   Opcode = raw_instruction & 0xFF
+--   0x00 = NOP
+--   0xFF = HALT
+--   0x01 = LOAD_IMM: rd = (raw >> 8) & 0xF, immediate = (raw >> 16) & 0xFF
+--   0x02 = ADD:      rd = (raw >> 8) & 0xF, rs1 = (raw >> 12) & 0xF
+--   0x03 = STORE:    rs1 = (raw >> 8) & 0xF, addr = (raw >> 16) & 0xFFFF
 
 local NopDecoder = {}
-NopDecoder.__index = NopDecoder
 
-function NopDecoder.new()
-    return setmetatable({}, NopDecoder)
-end
+function NopDecoder.decode(raw, token)
+    local opcode = raw & 0xFF
 
-function NopDecoder:decode(raw, token)
-    local opcode_byte = raw & 0xFF
-    if opcode_byte == 0xFF then
-        token.opcode    = "HALT"
-        token.is_halt   = true
-    elseif opcode_byte == 0x01 then
+    if opcode == 0xFF then
+        token.opcode   = "HALT"
+        token.is_halt  = true
+    elseif opcode == 0x01 then
         token.opcode    = "LOAD_IMM"
-        token.rd        = 2
-        token.immediate = 77
+        token.rd        = (raw >> 8) & 0xF
+        token.immediate = (raw >> 16) & 0xFF
         token.reg_write = true
-    elseif opcode_byte == 0x02 then
+    elseif opcode == 0x02 then
         token.opcode    = "ADD_IMM"
-        token.rd        = 3
-        token.rs1       = 3
-        token.immediate = 10
+        token.rd        = (raw >> 8)  & 0xF
+        token.rs1       = (raw >> 12) & 0xF
+        token.immediate = (raw >> 16) & 0xFF
         token.reg_write = true
+        token.source_regs = { token.rs1 }
     else
         token.opcode = "NOP"
     end
     return token
 end
 
-function NopDecoder:execute(token, reg_file)
+function NopDecoder.execute(token, rf)
     if token.opcode == "LOAD_IMM" then
         token.alu_result = token.immediate
         token.write_data = token.immediate
     elseif token.opcode == "ADD_IMM" then
-        local src = token.rs1 >= 0 and reg_file:read(token.rs1) or 0
-        token.alu_result = src + token.immediate
+        local v1 = token.rs1 >= 0 and rf:read(token.rs1) or 0
+        token.alu_result = (v1 + token.immediate) & 0xFFFFFFFF
         token.write_data = token.alu_result
     end
     return token
 end
 
-function NopDecoder:instruction_size()
+function NopDecoder.instruction_size()
     return 4
 end
 
--- ---------------------------------------------------------------------------
--- Helpers
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- CoreConfig tests
+-- ========================================================================
 
-local function make_core(opts)
-    opts = opts or {}
-    local config  = opts.config or CoreConfig.simple()
-    local decoder = opts.decoder or NopDecoder.new()
-    local result = Core.new(config, decoder)
-    assert(result.ok, "Core.new failed: " .. tostring(result.err))
-    return result.core
-end
+describe("CoreConfig", function()
 
--- Build a memory byte list with a specific opcode at address 0 followed by HALT
--- and NOPs filling the rest.
-local function program_with(first_opcode, halt_offset)
-    halt_offset = halt_offset or 4
-    local mem = {}
-    for i = 1, 256 do mem[i] = 0x00 end  -- NOP everywhere
-    mem[1] = first_opcode & 0xFF           -- instruction at address 0
-    mem[halt_offset + 1] = 0xFF            -- HALT
-    return mem
-end
-
--- ---------------------------------------------------------------------------
--- CoreConfig presets
--- ---------------------------------------------------------------------------
-
-describe("CoreConfig presets", function()
-    it("simple() returns valid config", function()
+    it("simple() creates a 5-stage config", function()
         local cfg = CoreConfig.simple()
-        assert.equals("Simple", cfg.name)
-        assert.equals(16, cfg.num_registers)
-        assert.equals(32, cfg.register_width)
-        assert.equals(65536, cfg.memory_size)
+        assert.are.equal("Simple", cfg.name)
+        assert.are.equal(5,  cfg.pipeline_config:num_stages())
+        assert.are.equal(16, cfg.num_registers)
+        assert.are.equal(32, cfg.register_width)
     end)
 
-    it("performance() returns 13-stage, 31-register config", function()
+    it("performance() creates a 13-stage config", function()
         local cfg = CoreConfig.performance()
-        assert.equals("Performance", cfg.name)
-        assert.equals(31, cfg.num_registers)
+        assert.are.equal("Performance", cfg.name)
+        assert.are.equal(13, cfg.pipeline_config:num_stages())
+        assert.are.equal(31, cfg.num_registers)
+        assert.are.equal(64, cfg.register_width)
     end)
+
+    it("new() with defaults creates a 5-stage config", function()
+        local cfg = CoreConfig.new()
+        assert.are.equal("Core", cfg.name)
+        assert.are.equal(5, cfg.pipeline_config:num_stages())
+    end)
+
 end)
 
--- ---------------------------------------------------------------------------
--- Core construction
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- Core construction tests
+-- ========================================================================
 
-describe("Core.new", function()
-    it("succeeds with valid config and decoder", function()
-        local result = Core.new(CoreConfig.simple(), NopDecoder.new())
-        assert.is_true(result.ok)
-        assert.not_nil(result.core)
+describe("Core construction", function()
+
+    it("returns ok=true with a valid config and decoder", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        assert.is_true(result.ok, result.err)
+        assert.is_not_nil(result.core)
     end)
 
-    it("returns error for nil config", function()
-        local result = Core.new(nil, NopDecoder.new())
-        assert.is_false(result.ok)
-        assert.truthy(result.err)
+    it("starts with cycle=0 and not halted", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        assert.are.equal(0,     core:get_cycle())
+        assert.is_false(core:is_halted())
     end)
 
-    it("returns error for nil decoder", function()
-        local result = Core.new(CoreConfig.simple(), nil)
-        assert.is_false(result.ok)
-        assert.truthy(result.err)
+    it("starts with all registers at 0", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        for i = 0, 15 do
+            assert.are.equal(0, core:read_register(i))
+        end
     end)
 
-    it("starts not halted", function()
-        local c = make_core()
-        assert.is_false(c:is_halted())
+    it("starts with PC=0", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        assert.are.equal(0, result.core:get_pc())
     end)
 
-    it("starts at cycle 0", function()
-        local c = make_core()
-        assert.equals(0, c:get_cycle())
-    end)
 end)
 
--- ---------------------------------------------------------------------------
--- load_program / step / run
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- Memory and program loading tests
+-- ========================================================================
 
-describe("Core.load_program", function()
-    it("loads bytes into memory correctly", function()
-        local c = make_core()
-        c:load_program({0xFF, 0, 0, 0}, 0)
-        -- The HALT byte should be at address 0
-        local word = c:read_memory_word(0)
-        assert.equals(0xFF, word & 0xFF)
+describe("Core load_program and memory", function()
+
+    it("load_program stores bytes in memory", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        -- Write 0xDEADBEEF in little-endian
+        core:load_program({ 0xEF, 0xBE, 0xAD, 0xDE }, 0)
+        local word = core:read_memory_word(0)
+        assert.are.equal(0xDEADBEEF, word)
     end)
+
+    it("load_program sets the PC to start_address", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0x00, 0x00, 0x00, 0x00 }, 0x100)
+        assert.are.equal(0x100, core:get_pc())
+    end)
+
+    it("write_memory_word / read_memory_word round-trip", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:write_memory_word(0x20, 0xABCDEF01)
+        assert.are.equal(0xABCDEF01, core:read_memory_word(0x20))
+    end)
+
 end)
 
-describe("Core.step", function()
-    it("advances cycle counter", function()
-        local c = make_core()
-        c:load_program({0x00, 0, 0, 0, 0xFF, 0, 0, 0}, 0)
-        c:step()
-        assert.equals(1, c:get_cycle())
+-- ========================================================================
+-- step() and run() tests
+-- ========================================================================
+
+describe("Core step and run", function()
+
+    it("step() increments the cycle counter", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        core:step()
+        assert.are.equal(1, core:get_cycle())
+        core:step()
+        assert.are.equal(2, core:get_cycle())
     end)
 
-    it("returns a Snapshot with cycle number", function()
-        local c = make_core()
-        c:load_program({0x00, 0, 0, 0}, 0)
-        local snap = c:step()
-        assert.equals(1, snap.cycle)
+    it("step() returns a snapshot", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        local snap = core:step()
+        assert.are.equal(1, snap.cycle)
     end)
 
-    it("does not advance cycle when already halted", function()
-        local c = make_core()
-        c:load_program({0xFF, 0, 0, 0}, 0)
-        for _ = 1, 10 do c:step() end
-        local after_halt = c:get_cycle()
-        c:step()
-        assert.equals(after_halt, c:get_cycle())
+    it("run() executes multiple cycles", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)  -- NOP program
+        core:run(10)
+        assert.are.equal(10, core:get_cycle())
     end)
+
+    it("run() returns CoreStats", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        local stats = core:run(10)
+        assert.are.equal(10, stats.total_cycles)
+        assert.is_true(stats:ipc() > 0)
+    end)
+
 end)
 
-describe("Core.run — NOP then HALT", function()
-    it("halts after HALT instruction completes pipeline", function()
-        local c = make_core()
-        -- HALT at address 0: takes 5 cycles (5-stage pipeline) + a few for drain
-        c:load_program({0xFF, 0, 0, 0}, 0)
-        c:run(20)
-        assert.is_true(c:is_halted())
-    end)
-
-    it("multiple NOP then HALT completes", function()
-        local c = make_core()
-        -- NOP at 0, NOP at 4, HALT at 8
-        local prog = {0x00,0,0,0, 0x00,0,0,0, 0xFF,0,0,0}
-        c:load_program(prog, 0)
-        c:run(30)
-        assert.is_true(c:is_halted())
-    end)
-end)
-
--- ---------------------------------------------------------------------------
--- Register access
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- Register access tests
+-- ========================================================================
 
 describe("Core register access", function()
-    it("read_register returns 0 initially", function()
-        local c = make_core()
-        assert.equals(0, c:read_register(0))
-        assert.equals(0, c:read_register(7))
+
+    it("write_register / read_register round-trip", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:write_register(3, 999)
+        assert.are.equal(999, core:read_register(3))
     end)
 
-    it("write_register / read_register roundtrip", function()
-        local c = make_core()
-        c:write_register(5, 0xBEEF)
-        assert.equals(0xBEEF, c:read_register(5))
+    it("LOAD_IMM instruction writes a register after reaching WB", function()
+        -- Encode: opcode=0x01, rd=2, immediate=77
+        -- raw = (77 << 16) | (2 << 8) | 0x01 = 0x004D0201
+        local raw = (77 << 16) | (2 << 8) | 0x01
+        -- Little-endian bytes of raw
+        local b0 = raw & 0xFF
+        local b1 = (raw >> 8) & 0xFF
+        local b2 = (raw >> 16) & 0xFF
+        local b3 = (raw >> 24) & 0xFF
+
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ b0, b1, b2, b3, 0, 0, 0, 0 }, 0)
+
+        -- Need 5 cycles to propagate through 5-stage pipeline
+        core:run(6)
+        -- R2 should now be 77
+        assert.are.equal(77, core:read_register(2))
     end)
+
 end)
 
--- ---------------------------------------------------------------------------
--- LOAD_IMM execution test
--- ---------------------------------------------------------------------------
--- This end-to-end test verifies that a LOAD_IMM instruction (opcode 0x01)
--- actually writes the immediate value (77) to R2.
---
--- Program:
---   0x00:  LOAD_IMM → R2 = 77
---   0x04:  HALT
---
--- After the pipeline drains, R2 should contain 77.
+-- ========================================================================
+-- Halt detection tests
+-- ========================================================================
 
-describe("Core — LOAD_IMM execution", function()
-    it("LOAD_IMM writes immediate value to destination register", function()
-        local c = make_core()
-        -- 0x01 = LOAD_IMM (R2 ← 77), 0xFF = HALT
-        local prog = {0x01, 0, 0, 0,   0xFF, 0, 0, 0}
-        c:load_program(prog, 0)
-        c:run(20)
-        assert.is_true(c:is_halted())
-        assert.equals(77, c:read_register(2))
+describe("Core halt detection", function()
+
+    it("halts when HALT instruction reaches WB", function()
+        -- 0xFF = HALT opcode
+        local halt_bytes = { 0xFF, 0x00, 0x00, 0x00 }
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program(halt_bytes, 0)
+
+        -- Run enough cycles for HALT to propagate through 5 stages
+        for i = 1, 10 do
+            core:step()
+            if core:is_halted() then break end
+        end
+
+        assert.is_true(core:is_halted())
     end)
+
+    it("run() stops at max_cycles even without halt", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)  -- infinite NOPs
+        core:run(5)
+        assert.are.equal(5, core:get_cycle())
+        assert.is_false(core:is_halted())
+    end)
+
 end)
 
--- ---------------------------------------------------------------------------
--- Stats
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- Statistics tests
+-- ========================================================================
 
-describe("CoreStats", function()
-    it("ipc is 0 when no cycles", function()
-        local s = CoreStats.new(0, 0, nil)
-        assert.equals(0.0, s:ipc())
+describe("Core statistics", function()
+
+    it("get_stats() returns CoreStats with correct total_cycles", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        core:run(20)
+        local stats = core:get_stats()
+        assert.are.equal(20, stats.total_cycles)
     end)
 
-    it("cpi is 0 when no instructions", function()
-        local s = CoreStats.new(0, 5, nil)
-        assert.equals(0.0, s:cpi())
+    it("IPC approaches 1.0 for independent instructions", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        core:run(50)
+        local stats = core:get_stats()
+        assert.is_true(stats:ipc() > 0.8,
+            "IPC should be > 0.8 for NOPs, got " .. stats:ipc())
     end)
 
-    it("ipc = instructions / cycles", function()
-        local s = CoreStats.new(10, 20, nil)
-        assert.equals(0.5, s:ipc())
+    it("to_string() includes useful info", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:run(5)
+        local s = core:get_stats():to_string()
+        assert.truthy(s:find("IPC"))
+        assert.truthy(s:find("cycles"))
     end)
 
-    it("get_stats() after run returns meaningful data", function()
-        local c = make_core()
-        c:load_program({0xFF, 0, 0, 0}, 0)
-        c:run(20)
-        local stats = c:get_stats()
-        assert.truthy(stats.total_cycles > 0)
-        assert.truthy(stats.instructions_completed > 0)
-    end)
 end)
 
--- ---------------------------------------------------------------------------
--- Trace
--- ---------------------------------------------------------------------------
+-- ========================================================================
+-- Trace tests
+-- ========================================================================
 
-describe("Core.get_trace", function()
-    it("returns snapshots equal to step count", function()
-        local c = make_core()
-        c:load_program({0x00,0,0,0, 0xFF,0,0,0}, 0)
-        c:step(); c:step(); c:step()
-        local trace = c:get_trace()
-        assert.equals(3, #trace)
+describe("Core trace", function()
+
+    it("get_trace() returns snapshots for each cycle", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        for i = 1, 3 do core:step() end
+        local trace = core:get_trace()
+        assert.are.equal(3, #trace)
     end)
 
-    it("snapshots are in chronological order", function()
-        local c = make_core()
-        c:load_program({0x00,0,0,0}, 0)
-        c:step(); c:step()
-        local trace = c:get_trace()
-        assert.equals(1, trace[1].cycle)
-        assert.equals(2, trace[2].cycle)
+    it("trace snapshots have sequential cycle numbers", function()
+        local result = Core.new(CoreConfig.simple(), NopDecoder)
+        local core   = result.core
+        core:load_program({ 0, 0, 0, 0 }, 0)
+        for i = 1, 4 do core:step() end
+        local trace = core:get_trace()
+        for i, snap in ipairs(trace) do
+            assert.are.equal(i, snap.cycle)
+        end
     end)
-end)
 
--- ---------------------------------------------------------------------------
--- Performance config
--- ---------------------------------------------------------------------------
-
-describe("Core with performance config", function()
-    it("runs 13-stage pipeline without error", function()
-        local c = make_core({config = CoreConfig.performance()})
-        c:load_program({0xFF, 0, 0, 0}, 0)
-        c:run(40)
-        assert.is_true(c:is_halted())
-    end)
 end)

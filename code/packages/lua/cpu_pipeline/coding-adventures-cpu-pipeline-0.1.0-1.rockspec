@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "Configurable N-stage CPU instruction pipeline",
+    summary = "Configurable N-stage CPU instruction pipeline simulator",
     license = "MIT",
 }
 dependencies = {
