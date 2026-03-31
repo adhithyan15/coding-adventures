@@ -2,6 +2,18 @@
 
 All notable changes to `coding_adventures_sql_lexer` will be documented in this file.
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- STRING token values now preserve their original case even when SQL's
+  case-insensitive grammar is active. Previously, `'Alice'` in a SQL string
+  literal would produce `STRING("alice")` because the lexer lowercased the
+  entire source for case-insensitive keyword matching. This is fixed in the
+  underlying `ruby/lexer` package (GrammarLexer now stores an `@original_source`
+  and extracts string bodies from it). Tests `test_insert_statement` and
+  `test_update_statement` now pass.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
