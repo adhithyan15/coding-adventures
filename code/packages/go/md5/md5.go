@@ -66,6 +66,11 @@
 //	md5("a")             → "0cc175b9c0f1b6a831c399e269772661"
 //	md5("abc")           → "900150983cd24fb0d6963f7d28e17f72"
 //	md5("message digest") → "f96b697d7cb7938d525a2f31aaf161d0"
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package md5
 
 import (
@@ -334,22 +339,26 @@ func compress(state [4]uint32, block []byte) [4]uint32 {
 //	// digest == [16]byte{0x90, 0x01, 0x50, 0x98, 0x3c, 0xd2, 0x4f, 0xb0,
 //	//                    0xd6, 0x96, 0x3f, 0x7d, 0x28, 0xe1, 0x7f, 0x72}
 func SumMD5(data []byte) [16]byte {
-	// Pad the data to a multiple of 64 bytes, then process each 64-byte block.
-	padded := pad(data)
-	state := [4]uint32{initA, initB, initC, initD}
-	for i := 0; i < len(padded); i += 64 {
-		state = compress(state, padded[i:i+64])
-	}
+	result, _ := StartNew[[16]byte]("md5.SumMD5", [16]byte{},
+		func(_ *Operation[[16]byte], rf *ResultFactory[[16]byte]) *OperationResult[[16]byte] {
+			// Pad the data to a multiple of 64 bytes, then process each 64-byte block.
+			padded := pad(data)
+			state := [4]uint32{initA, initB, initC, initD}
+			for i := 0; i < len(padded); i += 64 {
+				state = compress(state, padded[i:i+64])
+			}
 
-	// Serialize the four 32-bit state words as LITTLE-ENDIAN bytes.
-	// The little-endian encoding is what makes MD5 digests look "backwards"
-	// compared to SHA-1 or SHA-256.
-	var out [16]byte
-	binary.LittleEndian.PutUint32(out[0:], state[0])
-	binary.LittleEndian.PutUint32(out[4:], state[1])
-	binary.LittleEndian.PutUint32(out[8:], state[2])
-	binary.LittleEndian.PutUint32(out[12:], state[3])
-	return out
+			// Serialize the four 32-bit state words as LITTLE-ENDIAN bytes.
+			// The little-endian encoding is what makes MD5 digests look "backwards"
+			// compared to SHA-1 or SHA-256.
+			var out [16]byte
+			binary.LittleEndian.PutUint32(out[0:], state[0])
+			binary.LittleEndian.PutUint32(out[4:], state[1])
+			binary.LittleEndian.PutUint32(out[8:], state[2])
+			binary.LittleEndian.PutUint32(out[12:], state[3])
+			return rf.Generate(true, false, out)
+		}).GetResult()
+	return result
 }
 
 // HexString computes the MD5 digest and returns it as a 32-character lowercase
@@ -361,8 +370,12 @@ func SumMD5(data []byte) [16]byte {
 //	s := HexString([]byte("abc"))
 //	// s == "900150983cd24fb0d6963f7d28e17f72"
 func HexString(data []byte) string {
-	d := SumMD5(data)
-	return fmt.Sprintf("%x", d[:])
+	result, _ := StartNew[string]("md5.HexString", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			d := SumMD5(data)
+			return rf.Generate(true, false, fmt.Sprintf("%x", d[:]))
+		}).GetResult()
+	return result
 }
 
 // ── Streaming API ───────────────────────────────────────────────────────────
@@ -408,9 +421,13 @@ type Digest struct {
 //	d.Write([]byte("c"))
 //	fmt.Println(d.HexDigest()) // "900150983cd24fb0d6963f7d28e17f72"
 func New() *Digest {
-	return &Digest{
-		state: [4]uint32{initA, initB, initC, initD},
-	}
+	result, _ := StartNew[*Digest]("md5.New", nil,
+		func(_ *Operation[*Digest], rf *ResultFactory[*Digest]) *OperationResult[*Digest] {
+			return rf.Generate(true, false, &Digest{
+				state: [4]uint32{initA, initB, initC, initD},
+			})
+		}).GetResult()
+	return result
 }
 
 // Write feeds p into the hasher. It implements io.Writer.
@@ -419,17 +436,20 @@ func New() *Digest {
 // (Write(a) then Write(b) hashes a concatenated with b, same as Write(ab)).
 // Write never returns an error.
 func (d *Digest) Write(p []byte) (int, error) {
-	d.buffer = append(d.buffer, p...)
-	d.byteCount += uint64(len(p))
+	return StartNew[int]("md5.Write", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			d.buffer = append(d.buffer, p...)
+			d.byteCount += uint64(len(p))
 
-	// Process complete 64-byte blocks eagerly.
-	// We only keep incomplete block data in the buffer.
-	for len(d.buffer) >= 64 {
-		d.state = compress(d.state, d.buffer[:64])
-		d.buffer = d.buffer[64:]
-	}
+			// Process complete 64-byte blocks eagerly.
+			// We only keep incomplete block data in the buffer.
+			for len(d.buffer) >= 64 {
+				d.state = compress(d.state, d.buffer[:64])
+				d.buffer = d.buffer[64:]
+			}
 
-	return len(p), nil
+			return rf.Generate(true, false, len(p))
+		}).GetResult()
 }
 
 // SumMD5 returns the MD5 digest of all data written so far as a 16-byte array.
@@ -442,44 +462,52 @@ func (d *Digest) Write(p []byte) (int, error) {
 // process the padded tail blocks, then serialize the result — all without
 // touching d.state or d.buffer.
 func (d *Digest) SumMD5() [16]byte {
-	// Build the padded tail from the buffered bytes and the byte count.
-	// We do NOT modify d.state here — this is a snapshot operation.
-	bitLen := d.byteCount * 8
+	result, _ := StartNew[[16]byte]("md5.Digest.SumMD5", [16]byte{},
+		func(_ *Operation[[16]byte], rf *ResultFactory[[16]byte]) *OperationResult[[16]byte] {
+			// Build the padded tail from the buffered bytes and the byte count.
+			// We do NOT modify d.state here — this is a snapshot operation.
+			bitLen := d.byteCount * 8
 
-	// Start with the buffered bytes, append the 0x80 end-marker.
-	tail := make([]byte, len(d.buffer)+1)
-	copy(tail, d.buffer)
-	tail[len(d.buffer)] = 0x80
+			// Start with the buffered bytes, append the 0x80 end-marker.
+			tail := make([]byte, len(d.buffer)+1)
+			copy(tail, d.buffer)
+			tail[len(d.buffer)] = 0x80
 
-	// Pad to ≡ 56 (mod 64).
-	for len(tail)%64 != 56 {
-		tail = append(tail, 0x00)
-	}
+			// Pad to ≡ 56 (mod 64).
+			for len(tail)%64 != 56 {
+				tail = append(tail, 0x00)
+			}
 
-	// Append the 64-bit bit-length in little-endian.
-	var lenBuf [8]byte
-	binary.LittleEndian.PutUint64(lenBuf[:], bitLen)
-	tail = append(tail, lenBuf[:]...)
+			// Append the 64-bit bit-length in little-endian.
+			var lenBuf [8]byte
+			binary.LittleEndian.PutUint64(lenBuf[:], bitLen)
+			tail = append(tail, lenBuf[:]...)
 
-	// Run the compression over the tail blocks using a copy of the state.
-	state := d.state
-	for i := 0; i < len(tail); i += 64 {
-		state = compress(state, tail[i:i+64])
-	}
+			// Run the compression over the tail blocks using a copy of the state.
+			state := d.state
+			for i := 0; i < len(tail); i += 64 {
+				state = compress(state, tail[i:i+64])
+			}
 
-	// Serialize as little-endian.
-	var out [16]byte
-	binary.LittleEndian.PutUint32(out[0:], state[0])
-	binary.LittleEndian.PutUint32(out[4:], state[1])
-	binary.LittleEndian.PutUint32(out[8:], state[2])
-	binary.LittleEndian.PutUint32(out[12:], state[3])
-	return out
+			// Serialize as little-endian.
+			var out [16]byte
+			binary.LittleEndian.PutUint32(out[0:], state[0])
+			binary.LittleEndian.PutUint32(out[4:], state[1])
+			binary.LittleEndian.PutUint32(out[8:], state[2])
+			binary.LittleEndian.PutUint32(out[12:], state[3])
+			return rf.Generate(true, false, out)
+		}).GetResult()
+	return result
 }
 
 // HexDigest returns the MD5 digest as a 32-character lowercase hex string.
 //
 // Like SumMD5, this is non-destructive.
 func (d *Digest) HexDigest() string {
-	digest := d.SumMD5()
-	return fmt.Sprintf("%x", digest[:])
+	result, _ := StartNew[string]("md5.Digest.HexDigest", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			digest := d.SumMD5()
+			return rf.Generate(true, false, fmt.Sprintf("%x", digest[:]))
+		}).GetResult()
+	return result
 }

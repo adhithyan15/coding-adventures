@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-03-31
+
+### Changed
+
+- **Operations system integration**: All public functions and methods (`SumMD5`,
+  `HexString`, `New`, `Digest.Write`, `Digest.SumMD5`, `Digest.HexDigest`) are
+  now wrapped with `StartNew[T]` from the package's Operations infrastructure.
+  Each call gains automatic timing, structured logging, and panic recovery.
+  `Digest.SumMD5` uses the operation name `"md5.Digest.SumMD5"` to distinguish
+  it from the package-level `SumMD5`.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

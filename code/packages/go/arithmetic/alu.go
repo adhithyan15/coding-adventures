@@ -40,10 +40,15 @@ type ALU struct {
 
 // NewALU initializes an ALU with a fixed bus width.
 func NewALU(bitWidth int) *ALU {
-	if bitWidth < 1 {
-		panic("bitWidth must be at least 1")
-	}
-	return &ALU{BitWidth: bitWidth}
+	result, _ := StartNew[*ALU]("arithmetic.NewALU", nil,
+		func(op *Operation[*ALU], rf *ResultFactory[*ALU]) *OperationResult[*ALU] {
+			op.AddProperty("bitWidth", bitWidth)
+			if bitWidth < 1 {
+				panic("bitWidth must be at least 1")
+			}
+			return rf.Generate(true, false, &ALU{BitWidth: bitWidth})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // bitwiseOp runs a single-bit logic gate parallel across an entire array of bits.
@@ -89,85 +94,90 @@ func twosComplementNegate(bits []int) ([]int, int) {
 // It routes the A and B buses into the appropriate circuit based on the
 // op code, and then computes the condition flags corresponding to the output.
 func (alu *ALU) Execute(op ALUOp, a, b []int) ALUResult {
-	if len(a) != alu.BitWidth {
-		panic("a length must match bitWidth")
-	}
-	// The NOT instruction only uses the A bus, so B can be empty.
-	if op != NOT && len(b) != alu.BitWidth {
-		panic("b length must match bitWidth")
-	}
+	result, _ := StartNew[ALUResult]("arithmetic.Execute", ALUResult{},
+		func(operation *Operation[ALUResult], rf *ResultFactory[ALUResult]) *OperationResult[ALUResult] {
+			operation.AddProperty("op", string(op))
+			if len(a) != alu.BitWidth {
+				panic("a length must match bitWidth")
+			}
+			// The NOT instruction only uses the A bus, so B can be empty.
+			if op != NOT && len(b) != alu.BitWidth {
+				panic("b length must match bitWidth")
+			}
 
-	var value []int
-	carryBit := 0
+			var value []int
+			carryBit := 0
 
-	// 1. Calculate the result based on the requested operation.
-	switch op {
-	case ADD:
-		value, carryBit = RippleCarryAdder(a, b, 0)
-	case SUB:
-		// A - B is mathematically equivalent to A + (-B).
-		// We use Two's Complement to negate B, and add them!
-		negB, _ := twosComplementNegate(b)
-		value, carryBit = RippleCarryAdder(a, negB, 0)
-	case AND:
-		value = bitwiseOp(a, b, lg.AND)
-	case OR:
-		value = bitwiseOp(a, b, lg.OR)
-	case XOR:
-		value = bitwiseOp(a, b, lg.XOR)
-	case NOT:
-		value = make([]int, len(a))
-		for i, bit := range a {
-			value[i] = lg.NOT(bit)
-		}
-	default:
-		panic("unknown operation")
-	}
+			// 1. Calculate the result based on the requested operation.
+			switch op {
+			case ADD:
+				value, carryBit = RippleCarryAdder(a, b, 0)
+			case SUB:
+				// A - B is mathematically equivalent to A + (-B).
+				// We use Two's Complement to negate B, and add them!
+				negB, _ := twosComplementNegate(b)
+				value, carryBit = RippleCarryAdder(a, negB, 0)
+			case AND:
+				value = bitwiseOp(a, b, lg.AND)
+			case OR:
+				value = bitwiseOp(a, b, lg.OR)
+			case XOR:
+				value = bitwiseOp(a, b, lg.XOR)
+			case NOT:
+				value = make([]int, len(a))
+				for i, bit := range a {
+					value[i] = lg.NOT(bit)
+				}
+			default:
+				panic("unknown operation")
+			}
 
-	// 2. Calculate the condition flags.
-	
-	// Zero flag is true if every single bit is 0.
-	zero := true
-	for _, bit := range value {
-		if bit != 0 {
-			zero = false
-			break
-		}
-	}
+			// 2. Calculate the condition flags.
 
-	// Negative flag simply checks the Most Significant Bit (MSB).
-	// In two's complement, an MSB of 1 signifies a negative number.
-	negative := len(value) > 0 && value[len(value)-1] == 1
-	carry := carryBit == 1
+			// Zero flag is true if every single bit is 0.
+			zero := true
+			for _, bit := range value {
+				if bit != 0 {
+					zero = false
+					break
+				}
+			}
 
-	// Overflow flag indicates when the sign of the result is mathematically
-	// impossible, implying we "ran out of bits" to represent the magnitude.
-	// E.g., Adding two large positive numbers shouldn't give a negative sum.
-	overflow := false
-	if op == ADD || op == SUB {
-		aSign := a[len(a)-1]
-		var bSign int
-		if op == ADD {
-			bSign = b[len(b)-1]
-		} else {
-			// For subtraction, we are adding NOT(B) + 1, so the effective
-			// sign of the second operand in the inner addition is inverted.
-			bSign = lg.NOT(b[len(b)-1])
-		}
-		resultSign := value[len(value)-1]
-		
-		// If both operands had the same sign, but the result has a different sign,
-		// an overflow corruption occurred.
-		if aSign == bSign && resultSign != aSign {
-			overflow = true
-		}
-	}
+			// Negative flag simply checks the Most Significant Bit (MSB).
+			// In two's complement, an MSB of 1 signifies a negative number.
+			negative := len(value) > 0 && value[len(value)-1] == 1
+			carry := carryBit == 1
 
-	return ALUResult{
-		Value:    value,
-		Zero:     zero,
-		Carry:    carry,
-		Negative: negative,
-		Overflow: overflow,
-	}
+			// Overflow flag indicates when the sign of the result is mathematically
+			// impossible, implying we "ran out of bits" to represent the magnitude.
+			// E.g., Adding two large positive numbers shouldn't give a negative sum.
+			overflow := false
+			if op == ADD || op == SUB {
+				aSign := a[len(a)-1]
+				var bSign int
+				if op == ADD {
+					bSign = b[len(b)-1]
+				} else {
+					// For subtraction, we are adding NOT(B) + 1, so the effective
+					// sign of the second operand in the inner addition is inverted.
+					bSign = lg.NOT(b[len(b)-1])
+				}
+				resultSign := value[len(value)-1]
+
+				// If both operands had the same sign, but the result has a different sign,
+				// an overflow corruption occurred.
+				if aSign == bSign && resultSign != aSign {
+					overflow = true
+				}
+			}
+
+			return rf.Generate(true, false, ALUResult{
+				Value:    value,
+				Zero:     zero,
+				Carry:    carry,
+				Negative: negative,
+				Overflow: overflow,
+			})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }

@@ -49,6 +49,11 @@
 // Functions panic on invalid inputs. In real hardware, voltages outside
 // the valid range cause undefined behavior — our panic is the software
 // equivalent of "the chip does something unpredictable."
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package logicgates
 
 import (
@@ -135,15 +140,21 @@ func validateBits(values []int, name string) {
 // BOTH the right row AND the right column?), enable signals (is the
 // chip selected AND the clock active?), and masking operations.
 func AND(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	// Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
-	// EvaluateDigital returns (int, error); panic on error since we've
-	// already validated inputs, making an error impossible.
-	result, err := _cmosAnd.EvaluateDigital(a, b)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: AND CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.AND", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			// Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
+			// EvaluateDigital returns (int, error); panic on error since we've
+			// already validated inputs, making an error impossible.
+			res, err := _cmosAnd.EvaluateDigital(a, b)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: AND CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -177,13 +188,19 @@ func AND(a, b int) int {
 // Real-world use: interrupt controllers (did ANY device signal?),
 // bus arbitration, combining error flags.
 func OR(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	// Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
-	result, err := _cmosOr.EvaluateDigital(a, b)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: OR CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.OR", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			// Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
+			res, err := _cmosOr.EvaluateDigital(a, b)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: OR CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -215,12 +232,17 @@ func OR(a, b int) int {
 // Real-world use: NOT is everywhere — clock inversion, active-low
 // signals, complementary outputs, building other gates.
 func NOT(a int) int {
-	validateBit(a, "a")
-	// Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
-	result, err := _cmosNot.EvaluateDigital(a)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: NOT CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.NOT", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			validateBit(a, "a")
+			// Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
+			res, err := _cmosNot.EvaluateDigital(a)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: NOT CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -247,13 +269,19 @@ func NOT(a int) int {
 // generators, CRC checksums, cryptographic operations, toggling
 // bits in registers.
 func XOR(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	// Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
-	result, err := _cmosXor.EvaluateDigital(a, b)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: XOR CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.XOR", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			// Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
+			res, err := _cmosXor.EvaluateDigital(a, b)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: XOR CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -284,13 +312,19 @@ func XOR(a, b int) int {
 // after this gate because its memory cells are arranged in a NAND
 // configuration.
 func NAND(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	// Delegate to the CMOS NAND gate (4 transistors — the natural CMOS gate).
-	result, err := _cmosNand.EvaluateDigital(a, b)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: NAND CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.NAND", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			// Delegate to the CMOS NAND gate (4 transistors — the natural CMOS gate).
+			res, err := _cmosNand.EvaluateDigital(a, b)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: NAND CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -314,13 +348,19 @@ func NAND(a, b int) int {
 // built from two cross-coupled NOR gates. We implement this in
 // sequential.go.
 func NOR(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	// Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS gate).
-	result, err := _cmosNor.EvaluateDigital(a, b)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: NOR CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.NOR", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			// Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS gate).
+			res, err := _cmosNor.EvaluateDigital(a, b)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: NOR CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -341,13 +381,19 @@ func NOR(a, b int) int {
 // Real-world use: equality comparators (are these two bus lines
 // carrying the same value?), error detection circuits.
 func XNOR(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	// Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
-	result, err := _cmosXnor.EvaluateDigital(a, b)
-	if err != nil {
-		panic(fmt.Sprintf("logicgates: XNOR CMOS evaluation error: %v", err))
-	}
+	result, _ := StartNew[int]("logic-gates.XNOR", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			// Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
+			res, err := _cmosXnor.EvaluateDigital(a, b)
+			if err != nil {
+				panic(fmt.Sprintf("logicgates: XNOR CMOS evaluation error: %v", err))
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -376,8 +422,13 @@ func XNOR(a, b int) int {
 //
 // This works because A AND A = A, so NOT(A AND A) = NOT(A).
 func NAND_NOT(a int) int {
-	validateBit(a, "a")
-	return NAND(a, a)
+	result, _ := StartNew[int]("logic-gates.NAND_NOT", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			validateBit(a, "a")
+			return rf.Generate(true, false, NAND(a, a))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // NAND_AND implements AND using only NAND gates.
@@ -398,9 +449,15 @@ func NAND_NOT(a int) int {
 // why AND gates are slightly slower than NAND gates — they require
 // an extra inverter stage.
 func NAND_AND(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	return NAND_NOT(NAND(a, b))
+	result, _ := StartNew[int]("logic-gates.NAND_AND", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			return rf.Generate(true, false, NAND_NOT(NAND(a, b)))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // NAND_OR implements OR using only NAND gates.
@@ -421,9 +478,15 @@ func NAND_AND(a, b int) int {
 //
 // Gate count: 3 NANDs to make 1 OR.
 func NAND_OR(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	return NAND(NAND(a, a), NAND(b, b))
+	result, _ := StartNew[int]("logic-gates.NAND_OR", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			return rf.Generate(true, false, NAND(NAND(a, a), NAND(b, b)))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // NAND_XOR implements XOR using only NAND gates.
@@ -448,10 +511,16 @@ func NAND_OR(a, b int) int {
 // Gate count: 4 NANDs to make 1 XOR. This is the minimum — you
 // cannot build XOR from fewer than 4 NAND gates.
 func NAND_XOR(a, b int) int {
-	validateBit(a, "a")
-	validateBit(b, "b")
-	c := NAND(a, b)
-	return NAND(NAND(a, c), NAND(b, c))
+	result, _ := StartNew[int]("logic-gates.NAND_XOR", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			validateBit(a, "a")
+			validateBit(b, "b")
+			c := NAND(a, b)
+			return rf.Generate(true, false, NAND(NAND(a, c), NAND(b, c)))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // =========================================================================
@@ -493,14 +562,18 @@ func NAND_XOR(a, b int) int {
 // (does this address match ALL the required bits?) and in
 // instruction decode logic.
 func ANDn(inputs ...int) int {
-	if len(inputs) < 2 {
-		panic("logicgates: ANDn requires at least 2 inputs")
-	}
-	validateBits(inputs, "inputs")
-	result := inputs[0]
-	for _, v := range inputs[1:] {
-		result = AND(result, v)
-	}
+	result, _ := StartNew[int]("logic-gates.ANDn", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(inputs) < 2 {
+				panic("logicgates: ANDn requires at least 2 inputs")
+			}
+			validateBits(inputs, "inputs")
+			res := inputs[0]
+			for _, v := range inputs[1:] {
+				res = AND(res, v)
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -516,13 +589,17 @@ func ANDn(inputs ...int) int {
 // Real-world use: wide OR gates appear in interrupt controllers
 // (did ANY device signal an interrupt?) and bus contention logic.
 func ORn(inputs ...int) int {
-	if len(inputs) < 2 {
-		panic("logicgates: ORn requires at least 2 inputs")
-	}
-	validateBits(inputs, "inputs")
-	result := inputs[0]
-	for _, v := range inputs[1:] {
-		result = OR(result, v)
-	}
+	result, _ := StartNew[int]("logic-gates.ORn", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(inputs) < 2 {
+				panic("logicgates: ORn requires at least 2 inputs")
+			}
+			validateBits(inputs, "inputs")
+			res := inputs[0]
+			for _, v := range inputs[1:] {
+				res = OR(res, v)
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
 	return result
 }

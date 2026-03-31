@@ -11,6 +11,11 @@
 // manipulate binary numbers. From a simple "Half Adder" that adds two
 // individual bits, we will build up to an entire "Arithmetic Logic Unit"
 // (ALU) — the mathematical heart of every CPU.
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package arithmetic
 
 import (
@@ -47,9 +52,19 @@ import (
 // - Sum is exactly the XOR operation (1 only when inputs differ).
 // - Carry is exactly the AND operation (1 only when both inputs are 1).
 func HalfAdder(a, b int) (sum int, carry int) {
-	sum = lg.XOR(a, b)
-	carry = lg.AND(a, b)
-	return sum, carry
+	type halfAdderResult struct {
+		sum   int
+		carry int
+	}
+	result, _ := StartNew[halfAdderResult]("arithmetic.HalfAdder", halfAdderResult{},
+		func(op *Operation[halfAdderResult], rf *ResultFactory[halfAdderResult]) *OperationResult[halfAdderResult] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			s := lg.XOR(a, b)
+			c := lg.AND(a, b)
+			return rf.Generate(true, false, halfAdderResult{sum: s, carry: c})
+		}).GetResult()
+	return result.sum, result.carry
 }
 
 // FullAdder adds two bits plus a carry bit from a previous addition.
@@ -73,10 +88,21 @@ func HalfAdder(a, b int) (sum int, carry int) {
 //	0 | 1 |  1  |  0  |  1   (1 + 1 = 10 -> Sum 0, Carry 1)
 //	1 | 1 |  1  |  1  |  1   (1 + 1 + 1 = 11 -> Sum 1, Carry 1)
 func FullAdder(a, b, carryIn int) (sum int, carryOut int) {
-	partialSum, partialCarry := HalfAdder(a, b)
-	sum, carry2 := HalfAdder(partialSum, carryIn)
-	carryOut = lg.OR(partialCarry, carry2)
-	return sum, carryOut
+	type fullAdderResult struct {
+		sum     int
+		carryOut int
+	}
+	result, _ := StartNew[fullAdderResult]("arithmetic.FullAdder", fullAdderResult{},
+		func(op *Operation[fullAdderResult], rf *ResultFactory[fullAdderResult]) *OperationResult[fullAdderResult] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			op.AddProperty("carryIn", carryIn)
+			partialSum, partialCarry := HalfAdder(a, b)
+			s, carry2 := HalfAdder(partialSum, carryIn)
+			co := lg.OR(partialCarry, carry2)
+			return rf.Generate(true, false, fullAdderResult{sum: s, carryOut: co})
+		}).GetResult()
+	return result.sum, result.carryOut
 }
 
 // RippleCarryAdder adds two N-bit numbers by chaining Full Adders.
@@ -95,21 +121,30 @@ func FullAdder(a, b, carryIn int) (sum int, carryOut int) {
 //
 // Inputs are slices of integers (0 or 1), structured Little-Endian (LSB is at index 0).
 func RippleCarryAdder(a, b []int, carryIn int) (sumBits []int, carryOut int) {
-	if len(a) != len(b) {
-		panic("a and b must have the same length")
+	type rcaResult struct {
+		sumBits  []int
+		carryOut int
 	}
-	if len(a) == 0 {
-		panic("bit lists must not be empty")
-	}
+	result, _ := StartNew[rcaResult]("arithmetic.RippleCarryAdder", rcaResult{},
+		func(op *Operation[rcaResult], rf *ResultFactory[rcaResult]) *OperationResult[rcaResult] {
+			op.AddProperty("carryIn", carryIn)
+			if len(a) != len(b) {
+				panic("a and b must have the same length")
+			}
+			if len(a) == 0 {
+				panic("bit lists must not be empty")
+			}
 
-	sumBits = make([]int, len(a))
-	carry := carryIn
+			sumBits := make([]int, len(a))
+			carry := carryIn
 
-	for i := 0; i < len(a); i++ {
-		var sumBit int
-		sumBit, carry = FullAdder(a[i], b[i], carry)
-		sumBits[i] = sumBit
-	}
+			for i := 0; i < len(a); i++ {
+				var sumBit int
+				sumBit, carry = FullAdder(a[i], b[i], carry)
+				sumBits[i] = sumBit
+			}
 
-	return sumBits, carry
+			return rf.Generate(true, false, rcaResult{sumBits: sumBits, carryOut: carry})
+		}).PanicOnUnexpected().GetResult()
+	return result.sumBits, result.carryOut
 }

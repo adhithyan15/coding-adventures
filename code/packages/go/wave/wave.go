@@ -44,6 +44,11 @@
 // By constructing waves from our own trig functions (which themselves use
 // Maclaurin series), we maintain a complete chain of understanding from
 // Taylor polynomials all the way up to wave physics.
+//
+// # Operations
+//
+// Every public function and method is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package wave
 
 import (
@@ -116,26 +121,33 @@ type Wave struct {
 //	// An error case — negative amplitude:
 //	w, err := wave.New(-1.0, 1.0, 0.0)  // err == ErrNegativeAmplitude
 func New(amplitude, frequency, phase float64) (*Wave, error) {
-	// Validate amplitude: must be non-negative.
-	// Amplitude is the absolute peak value of the wave. A negative peak
-	// doesn't make physical sense — you'd use phase to invert the wave.
-	if amplitude < 0 {
-		return nil, ErrNegativeAmplitude
-	}
+	return StartNew[*Wave]("wave.New", nil,
+		func(op *Operation[*Wave], rf *ResultFactory[*Wave]) *OperationResult[*Wave] {
+			op.AddProperty("amplitude", amplitude)
+			op.AddProperty("frequency", frequency)
+			op.AddProperty("phase", phase)
 
-	// Validate frequency: must be strictly positive.
-	// A wave with zero frequency would never oscillate. A wave with negative
-	// frequency is mathematically equivalent to positive frequency with a
-	// phase shift of pi, so we enforce positive for simplicity.
-	if frequency <= 0 {
-		return nil, ErrZeroFrequency
-	}
+			// Validate amplitude: must be non-negative.
+			// Amplitude is the absolute peak value of the wave. A negative peak
+			// doesn't make physical sense — you'd use phase to invert the wave.
+			if amplitude < 0 {
+				return rf.Fail(nil, ErrNegativeAmplitude)
+			}
 
-	return &Wave{
-		Amplitude: amplitude,
-		Frequency: frequency,
-		Phase:     phase,
-	}, nil
+			// Validate frequency: must be strictly positive.
+			// A wave with zero frequency would never oscillate. A wave with negative
+			// frequency is mathematically equivalent to positive frequency with a
+			// phase shift of pi, so we enforce positive for simplicity.
+			if frequency <= 0 {
+				return rf.Fail(nil, ErrZeroFrequency)
+			}
+
+			return rf.Generate(true, false, &Wave{
+				Amplitude: amplitude,
+				Frequency: frequency,
+				Phase:     phase,
+			})
+		}).GetResult()
 }
 
 // ============================================================================
@@ -160,7 +172,11 @@ func New(amplitude, frequency, phase float64) (*Wave, error) {
 //
 // If frequency is in Hertz (cycles/second), then period is in seconds.
 func (w *Wave) Period() float64 {
-	return 1.0 / w.Frequency
+	result, _ := StartNew[float64]("wave.Period", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			return rf.Generate(true, false, 1.0/w.Frequency)
+		}).GetResult()
+	return result
 }
 
 // AngularFrequency returns omega = 2 * pi * f, the rate of phase change
@@ -184,7 +200,11 @@ func (w *Wave) Period() float64 {
 // Angular frequency is measured in radians per second (rad/s).
 // A 1 Hz wave has omega = 2*pi ≈ 6.283 rad/s.
 func (w *Wave) AngularFrequency() float64 {
-	return 2.0 * trig.PI * w.Frequency
+	result, _ := StartNew[float64]("wave.AngularFrequency", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			return rf.Generate(true, false, 2.0*trig.PI*w.Frequency)
+		}).GetResult()
+	return result
 }
 
 // ============================================================================
@@ -226,13 +246,19 @@ func (w *Wave) AngularFrequency() float64 {
 //	w.Evaluate(0.75)  // sin(3*pi/2)  = -1.0   (reaches trough)
 //	w.Evaluate(1.00)  // sin(2*pi)    = 0.0    (completes one cycle)
 func (w *Wave) Evaluate(t float64) float64 {
-	// Compute the total phase angle at time t.
-	// This combines the time-dependent phase (2*pi*f*t) with the initial
-	// phase offset (phi).
-	angle := 2.0*trig.PI*w.Frequency*t + w.Phase
+	result, _ := StartNew[float64]("wave.Evaluate", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("t", t)
 
-	// Apply the sine function and scale by amplitude.
-	// We use our own trig.Sin which is built from Maclaurin series —
-	// no standard library needed.
-	return w.Amplitude * trig.Sin(angle)
+			// Compute the total phase angle at time t.
+			// This combines the time-dependent phase (2*pi*f*t) with the initial
+			// phase offset (phi).
+			angle := 2.0*trig.PI*w.Frequency*t + w.Phase
+
+			// Apply the sine function and scale by amplitude.
+			// We use our own trig.Sin which is built from Maclaurin series —
+			// no standard library needed.
+			return rf.Generate(true, false, w.Amplitude*trig.Sin(angle))
+		}).GetResult()
+	return result
 }
