@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml — WaterWear (WearOS)
+
+  This file declares everything the Android system needs to know about the app
+  before it installs it:
+    1. What hardware the app requires (watch screen)
+    2. What permissions the app needs
+    3. What Activities, Services, and Receivers are in the app
+    4. How those components should be launched
+
+  WearOS CRITICAL: The <uses-feature> for android.hardware.type.watch is
+  what tells the Play Store this is a WearOS-only app. Without it, the APK
+  appears in phone search results and may be installed on phones, where it
+  would crash because Wear Compose APIs are not available.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      ═══ PERMISSIONS ═══════════════════════════════════════════════════════
+
+      WAKE_LOCK: WearOS watches aggressively suspend CPU to save battery.
+      AlarmManager uses WAKE_LOCK to briefly wake the CPU when a scheduled
+      alarm fires, so the notification is delivered on time instead of being
+      deferred until the user lifts the wrist.
+    -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!--
+      POST_NOTIFICATIONS: Required on Android 13+ (API 33+) and WearOS 4+
+      to show notifications. The user sees a runtime permission dialog the
+      first time the app tries to schedule a notification.
+      On older WearOS (API 30-32) this permission is silently ignored.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+      RECEIVE_BOOT_COMPLETED: AlarmManager alarms are erased when the watch
+      reboots or powers off. This permission allows BootReceiver to re-register
+      all 8 daily alarms after a reboot, keeping reminders working indefinitely.
+    -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!--
+      SCHEDULE_EXACT_ALARM: Required on Android 12+ (API 31+) to use
+      AlarmManager.setExactAndAllowWhileIdle(), which fires at the exact hour
+      we want. Without this, alarms can drift by minutes or hours due to
+      Doze mode batching.
+    -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!--
+      ═══ HARDWARE FEATURE DECLARATION ══════════════════════════════════════
+
+      This is the single most important WearOS manifest entry.
+      It marks the app as a WearOS-only application in two ways:
+        1. Play Store filters: only shows the app on WearOS-capable devices.
+        2. Runtime: WearOS launcher uses this to identify the app as watch-native.
+
+      android:required="true" means the app CANNOT install on a device without
+      this feature (i.e., a phone). This prevents accidental phone installs.
+    -->
+    <uses-feature
+        android:name="android.hardware.type.watch"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault">
+
+        <!--
+          MainActivity — the single screen of the app.
+
+          android.intent.category.LAUNCHER: places the app icon on the watch
+          home screen / app launcher so users can tap to open it.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          NotificationReceiver — a BroadcastReceiver that fires when an alarm
+          triggers. It shows the notification and reschedules the same alarm
+          for the next day (self-perpetuating daily reminders).
+
+          android:exported="false": only this app (and AlarmManager) can send
+          intents to this receiver. Prevents malicious apps from flooding us
+          with fake notifications.
+        -->
+        <receiver
+            android:name=".NotificationReceiver"
+            android:exported="false" />
+
+        <!--
+          BootReceiver — fires on BOOT_COMPLETED after the watch restarts.
+          All AlarmManager alarms are wiped on reboot; this receiver
+          re-registers all 8 daily reminders so they survive power cycles.
+        -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

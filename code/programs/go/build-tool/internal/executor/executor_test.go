@@ -350,6 +350,48 @@ func TestBuildResourceKeysIncludesGlobalHexCacheForElixirDepsGet(t *testing.T) {
 	}
 }
 
+func TestBuildResourceKeysIncludesGlobalLuaRocksLockOnWindows(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD_windows": "luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec",
+	})
+
+	pkg := discovery.Package{
+		Name:          "lua/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec"},
+		Language:      "lua",
+	}
+
+	keys := buildResourceKeysForOS(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "lua/pkg",
+	}, "windows")
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:luarocks-windows") {
+		t.Fatalf("expected keys to include global luarocks-windows lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysDoesNotIncludeGlobalLuaRocksLockOnLinux(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec",
+	})
+
+	pkg := discovery.Package{
+		Name:          "lua/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec"},
+		Language:      "lua",
+	}
+
+	keys := buildResourceKeysForOS(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "lua/pkg",
+	}, "linux")
+	joined := strings.Join(keys, ",")
+	if strings.Contains(joined, "global:luarocks-windows") {
+		t.Fatalf("expected no global luarocks-windows lock on Linux, got %v", keys)
+	}
+}
+
 func TestExecuteBuildsSerializesSharedBuildResources(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("uses shell commands that are only asserted on Unix runners")

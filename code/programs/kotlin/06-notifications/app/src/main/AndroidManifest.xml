@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    AndroidManifest.xml — the app's identity card for the Android OS.
+
+    The manifest tells the OS:
+      - What this app is called and what it looks like (label, icon, theme)
+      - Which Activities are entry points (exported=true + MAIN/LAUNCHER intent)
+      - Which system capabilities it needs (uses-permission)
+      - Which BroadcastReceivers exist and what intents they respond to
+
+    PERMISSION NOTES:
+    ─────────────────
+    POST_NOTIFICATIONS   → Android 13+ (API 33) requires explicit permission for
+                           showing notifications. On API 32 and below this is
+                           granted automatically. We request it at runtime in
+                           MainActivity.
+
+    RECEIVE_BOOT_COMPLETED → Lets BootReceiver run after the device restarts.
+                             AlarmManager alarms are erased on reboot, so this
+                             lets us reschedule them automatically.
+
+    SCHEDULE_EXACT_ALARM → Required on API 31+ for AlarmManager.setExact().
+                            Without it, the OS batches alarms and they may fire
+                            minutes late — unacceptable for time-sensitive
+                            hydration reminders.
+
+    USE_EXACT_ALARM      → API 33+ alternative that doesn't require user
+                            grant in Settings (unlike SCHEDULE_EXACT_ALARM which
+                            might need the user to grant it manually on some
+                            devices). Including both gives the widest coverage.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Notification permission (Android 13+ / API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Boot receiver permission — lets us reschedule alarms after reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Exact alarm permissions — needed for AlarmManager.setExact() -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <application
+        android:allowBackup="true"
+        android:label="WaterNotify"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             MAIN ACTIVITY
+             ═══════════════════════════════════════════════════════════════
+             The MAIN + LAUNCHER intent-filter makes this the app's launch
+             Activity — what opens when the user taps the icon.
+             exported=true is required for activities with intent-filters.     -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             NOTIFICATION RECEIVER
+             ═══════════════════════════════════════════════════════════════
+             Receives the alarm intent from AlarmManager and fires the
+             notification. exported=false means only our own app can
+             trigger this receiver — external apps cannot send fake
+             notification triggers.
+
+             The custom action string namespaces the intent so it doesn't
+             collide with system or third-party intents.                        -->
+        <receiver
+            android:name=".NotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.codingadventures.waternotify.SHOW_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             BOOT RECEIVER
+             ═══════════════════════════════════════════════════════════════
+             Runs after the device finishes booting. Must be exported=true
+             because the OS (a different process) sends BOOT_COMPLETED —
+             if exported=false the OS broadcast would be blocked.
+
+             IMPORTANT: This receiver only fires if the app has been
+             launched at least once since installation. Android 3.1+
+             puts freshly-installed apps in a "stopped state" and blocks
+             boot receivers until the user opens the app manually.               -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

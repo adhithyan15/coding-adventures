@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- A simple "HW" icon for the Hello World extension -->
+  <rect width="128" height="128" rx="16" fill="#4A90D9"/>
+  <text x="64" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="52" fill="white">HW</text>
+</svg>

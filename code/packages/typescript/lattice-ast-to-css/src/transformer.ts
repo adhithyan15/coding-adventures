@@ -1789,11 +1789,13 @@ export class LatticeTransformer {
     const funcDef = this.functions.get(funcName)!;
     const children = getChildren(node);
 
-    // Parse arguments from function_args
+    // Parse arguments from function_args, resolving variables in the caller scope
+    // so that e.g. space($i) inside @for passes the resolved number, not the raw
+    // variable token.
     let args: Array<ASTNode | Token | LatticeValue> = [];
     for (const child of children) {
       if (isASTNode(child) && (child as ASTNode).ruleName === "function_args") {
-        args = this._parseFunctionCallArgs(child as ASTNode);
+        args = this._parseFunctionCallArgs(child as ASTNode, scope);
         break;
       }
     }
@@ -2077,9 +2079,16 @@ export class LatticeTransformer {
    * function_arg = ... | COMMA | ...
    *
    * Arguments are separated by COMMA tokens.
+   *
+   * When a caller scope is provided, VARIABLE tokens are resolved against it
+   * immediately. This is necessary so that a call like `space($i)` inside a
+   * `@for` loop passes the loop variable's *value* (e.g. LatticeNumber(2))
+   * rather than a bare LatticeIdent("$i") that the function body cannot
+   * perform arithmetic on.
    */
   private _parseFunctionCallArgs(
-    node: ASTNode
+    node: ASTNode,
+    scope?: ScopeChain
   ): Array<LatticeValue | ASTNode | Token> {
     const argGroups: Array<Array<LatticeValue | ASTNode | Token>> = [[]];
 
@@ -2098,7 +2107,28 @@ export class LatticeTransformer {
               argGroups.push([]);
               continue;
             }
-            argGroups[argGroups.length - 1].push(tokenToValue(ic as Token));
+            // Resolve VARIABLE tokens in the caller scope so that loop variables
+            // (e.g. $i in `space($i)`) are evaluated to their concrete values
+            // before being bound to the function parameter.
+            const tok = ic as Token;
+            if (scope && tokenTypeName(tok) === "VARIABLE") {
+              const resolved = scope.get(tok.value);
+              if (resolved !== undefined && resolved !== null) {
+                if (typeof resolved === "object" && "kind" in resolved) {
+                  argGroups[argGroups.length - 1].push(resolved as LatticeValue);
+                } else if (typeof resolved === "object" && "type" in resolved) {
+                  argGroups[argGroups.length - 1].push(tokenToValue(resolved as Token));
+                } else if (typeof resolved === "object" && "ruleName" in resolved) {
+                  argGroups[argGroups.length - 1].push(extractValueFromAst(resolved as ASTNode));
+                } else {
+                  argGroups[argGroups.length - 1].push(tokenToValue(tok));
+                }
+              } else {
+                argGroups[argGroups.length - 1].push(tokenToValue(tok));
+              }
+            } else {
+              argGroups[argGroups.length - 1].push(tokenToValue(tok));
+            }
           } else {
             argGroups[argGroups.length - 1].push(ic as ASTNode);
           }

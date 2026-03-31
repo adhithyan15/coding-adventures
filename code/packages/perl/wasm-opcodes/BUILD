@@ -1,0 +1,2 @@
+cpanm --notest --quiet Test2::V0
+PERL5LIB=$(cd ../wasm-leb128 && pwd)/lib:$(cd ../wasm-types && pwd)/lib:${PERL5LIB:-} prove -l -v t/
