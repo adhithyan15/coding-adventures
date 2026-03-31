@@ -1,70 +1,41 @@
 /**
- * types.ts — The storage contract and schema definitions.
+ * types.ts — Type re-exports and backward compatibility aliases.
  *
- * KVStorage is the interface that all storage backends implement.
- * Think of it as the JDBC of browser storage — one interface, multiple
- * implementations (IndexedDB for production, Map-of-Maps for testing).
+ * All schema types and the full Storage interface now live in
+ * @coding-adventures/storage. This file re-exports them so existing
+ * consumers of @coding-adventures/indexeddb don't break.
  *
- * The interface is intentionally minimal: get, getAll, put, delete.
- * No queries, no joins, no cursors. This is a key-value store, not SQL.
+ * The old KVStorage interface (CRUD only, no query/transaction) is kept
+ * as a backward-compatible alias. New code should use Storage instead.
  */
 
-export interface StorageRecord {
-  [key: string]: unknown;
-}
+// ── Re-exports from @coding-adventures/storage ──────────────────────────────
+//
+// These are the canonical definitions. Everything below is re-exported
+// unchanged so that `import { ... } from "@coding-adventures/indexeddb"`
+// continues to work.
 
-export interface IndexSchema {
-  name: string;
-  keyPath: string;
-  unique?: boolean;
-}
+export type {
+  Storage,
+  StorageRecord,
+  StorageConfig,
+  StoreSchema,
+  IndexSchema,
+  QueryResult,
+  SqlValue,
+} from "@coding-adventures/storage";
 
-export interface StoreSchema {
-  name: string;
-  keyPath: string;
+// ── Backward-compatible KVStorage alias ─────────────────────────────────────
+//
+// KVStorage was the original interface in this package — CRUD + open/close,
+// no query() or transaction(). Apps that import KVStorage keep working.
+// Once all consumers migrate to Storage, this alias can be removed.
+//
+// We define it as a standalone interface (not a type alias for Storage)
+// because KVStorage intentionally omits query() and transaction().
+// IndexedDBStorage implements KVStorage today; it will implement the full
+// Storage interface when query/transaction support is added.
 
-  /**
-   * renamedFrom — the OLD store name that should be migrated into this store.
-   *
-   * When this field is set AND the old store still exists in the database
-   * (i.e., this is the first open after a rename), IndexedDBStorage will:
-   *   1. Create the new store (if not already present — handled by the
-   *      normal schema creation loop above).
-   *   2. Open a cursor on the old store and copy every record into the
-   *      new store.
-   *   3. Delete the old store once all records have been copied.
-   *
-   * All of this happens inside the versionchange transaction — it is
-   * fully atomic. If the page crashes mid-migration, the next open will
-   * retry from scratch (the old store will still be present).
-   *
-   * On subsequent opens (after the first successful migration), the old
-   * store no longer exists, so `db.objectStoreNames.contains(renamedFrom)`
-   * returns false and no migration runs — making it idempotent.
-   *
-   * Example:
-   *   { name: "tasks", keyPath: "id", renamedFrom: "todos" }
-   *   → on v4→v5 upgrade, copies all "todos" records into "tasks"
-   *     and deletes the "todos" store.
-   */
-  renamedFrom?: string;
-
-  indexes?: IndexSchema[];
-}
-
-export interface StorageConfig {
-  dbName: string;
-  version: number;
-  stores: StoreSchema[];
-}
-
-/**
- * KVStorage — the contract every storage backend must fulfill.
- *
- * Every method returns a Promise because the browser IndexedDB API
- * is asynchronous. Even MemoryStorage returns Promises (they just
- * resolve immediately) to keep the interface uniform.
- */
 export interface KVStorage {
   open(): Promise<void>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

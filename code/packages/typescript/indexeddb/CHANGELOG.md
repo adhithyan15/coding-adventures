@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.3.0] - 2026-03-31
+
+### Changed
+
+- **Types re-exported from `@coding-adventures/storage`** — `StorageRecord`,
+  `StorageConfig`, `StoreSchema`, `IndexSchema` now live in the storage package.
+  This package re-exports them for backward compatibility.
+- **MemoryStorage re-exported from `@coding-adventures/storage`** — the
+  canonical implementation now lives in the storage package and supports the
+  full `Storage` interface (CRUD + SQL querying + transactions).
+
+### Added
+
+- Re-exports `Storage`, `QueryResult`, `SqlValue` types from
+  `@coding-adventures/storage`
+- `KVStorage` interface kept as backward-compatible CRUD-only alias
+
+### Dependencies
+
+- Added `@coding-adventures/storage` as a dependency
+
 ## [0.2.0] - 2026-03-28
 
 ### Added

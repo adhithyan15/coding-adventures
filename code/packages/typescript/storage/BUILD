@@ -6,6 +6,5 @@ cd ../parser && npm ci --quiet
 cd ../sql-lexer && npm ci --quiet
 cd ../sql-parser && npm ci --quiet
 cd ../sql-execution-engine && npm ci --quiet
-cd ../storage && npm ci --quiet
 npm ci --quiet
-npx vitest run
+npx vitest run --coverage
