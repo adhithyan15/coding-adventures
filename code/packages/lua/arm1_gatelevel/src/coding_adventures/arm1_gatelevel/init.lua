@@ -210,12 +210,21 @@ end
 
 local function gate_ror_by_n(bits, n)
     -- Rotate right by n positions (n mod 32)
+    --
+    -- In LSB-first 1-indexed arrays, rotating the 32-bit integer right by n
+    -- means each logical bit[k] moves to bit[k-n] (wrapping).
+    -- In our array: result[i] = bits[src] where
+    --   src = ((i + n - 1) mod 32) + 1
+    --
+    -- Verification for ROR by 1: bit[1] of result should come from bit[2]
+    -- of input (LSB shifts out, MSB absorbs top bit).
+    --   i=1, n=1: src = ((1+1-1) % 32)+1 = (1 % 32)+1 = 2  ✓
+    --   i=32, n=1: src = ((32+1-1) % 32)+1 = (32 % 32)+1 = 0+1 = 1  ✓
     n = n & 31
     if n == 0 then return {table.unpack(bits)} end
     local result = {}
     for i = 1, 32 do
-        -- bit i of result comes from bit (i+n-1)%32+1 of input
-        local src = ((i + n - 2) % 32) + 1
+        local src = ((i + n - 1) % 32) + 1
         result[i] = bits[src]
     end
     return result
@@ -295,7 +304,8 @@ end
 --
 -- Returns: result_bits (array), carry_out (0 or 1)
 function M.gate_barrel_shift(value_bits, shift_type, amount, carry_in, by_register)
-    carry_in = carry_in and 1 or 0
+    -- In Lua, 0 is truthy, so use explicit boolean test to convert to 0/1.
+    carry_in = (carry_in == true or carry_in == 1) and 1 or 0
 
     -- Register shift by 0: no change
     if amount == 0 and by_register then
@@ -460,7 +470,7 @@ end
 function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
     local a_bits = M.int_to_bits(a, 32)
     local b_bits = M.int_to_bits(b, 32)
-    local c_in   = (carry_in or carry_in == 1) and 1 or 0
+    local c_in   = (carry_in == 1 or carry_in == true) and 1 or 0
     local sc     = (type(shifter_carry) == "boolean") and (shifter_carry and 1 or 0) or shifter_carry
     local ov     = (type(old_v) == "boolean") and (old_v and 1 or 0) or old_v
 
@@ -495,7 +505,7 @@ function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
     elseif opcode == ARM1.OP_ADD or opcode == ARM1.OP_CMN then
         local sum_bits, cout = adder.ripple_carry_adder(a_bits, b_bits, 0)
         result_bits = sum_bits
-        carry = cout and 1 or 0
+        carry = (cout == 1 or cout == true) and 1 or 0
         -- Overflow: inputs same sign but result differs
         local sa = a_bits[32]; local sb = b_bits[32]; local sr = sum_bits[32]
         overflow = lg.AND(lg.XNOR(sa, sb), lg.XOR(sa, sr))
@@ -503,7 +513,7 @@ function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
     elseif opcode == ARM1.OP_ADC then
         local sum_bits, cout = adder.ripple_carry_adder(a_bits, b_bits, c_in)
         result_bits = sum_bits
-        carry = cout and 1 or 0
+        carry = (cout == 1 or cout == true) and 1 or 0
         local sa = a_bits[32]; local sb = b_bits[32]; local sr = sum_bits[32]
         overflow = lg.AND(lg.XNOR(sa, sb), lg.XOR(sa, sr))
 
@@ -513,7 +523,7 @@ function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
         for i = 1, 32 do nb[i] = lg.NOT(b_bits[i]) end
         local sum_bits, cout = adder.ripple_carry_adder(a_bits, nb, 1)
         result_bits = sum_bits
-        carry = cout and 1 or 0
+        carry = (cout == 1 or cout == true) and 1 or 0
         local sa = a_bits[32]; local sb = nb[32]; local sr = sum_bits[32]
         overflow = lg.AND(lg.XNOR(sa, sb), lg.XOR(sa, sr))
 
@@ -522,7 +532,7 @@ function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
         for i = 1, 32 do nb[i] = lg.NOT(b_bits[i]) end
         local sum_bits, cout = adder.ripple_carry_adder(a_bits, nb, c_in)
         result_bits = sum_bits
-        carry = cout and 1 or 0
+        carry = (cout == 1 or cout == true) and 1 or 0
         local sa = a_bits[32]; local sb = nb[32]; local sr = sum_bits[32]
         overflow = lg.AND(lg.XNOR(sa, sb), lg.XOR(sa, sr))
 
@@ -532,7 +542,7 @@ function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
         for i = 1, 32 do na[i] = lg.NOT(a_bits[i]) end
         local sum_bits, cout = adder.ripple_carry_adder(b_bits, na, 1)
         result_bits = sum_bits
-        carry = cout and 1 or 0
+        carry = (cout == 1 or cout == true) and 1 or 0
         local sa = b_bits[32]; local sb = na[32]; local sr = sum_bits[32]
         overflow = lg.AND(lg.XNOR(sa, sb), lg.XOR(sa, sr))
 
@@ -541,7 +551,7 @@ function M.gate_alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
         for i = 1, 32 do na[i] = lg.NOT(a_bits[i]) end
         local sum_bits, cout = adder.ripple_carry_adder(b_bits, na, c_in)
         result_bits = sum_bits
-        carry = cout and 1 or 0
+        carry = (cout == 1 or cout == true) and 1 or 0
         local sa = b_bits[32]; local sb = na[32]; local sr = sum_bits[32]
         overflow = lg.AND(lg.XNOR(sa, sb), lg.XOR(sa, sr))
 

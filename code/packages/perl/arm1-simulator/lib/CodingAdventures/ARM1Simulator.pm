@@ -241,14 +241,14 @@ sub write_word {
 
 sub read_byte {
     my ($self, $addr) = @_;
-    $addr &= PC_MASK;
+    $addr &= MASK32;
     return 0 if $addr >= $self->{mem_size};
     return $self->{memory}[$addr] // 0;
 }
 
 sub write_byte {
     my ($self, $addr, $value) = @_;
-    $addr &= PC_MASK;
+    $addr &= MASK32;
     return if $addr >= $self->{mem_size};
     $self->{memory}[$addr] = $value & 0xFF;
 }

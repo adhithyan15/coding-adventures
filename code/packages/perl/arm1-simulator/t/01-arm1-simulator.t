@@ -33,8 +33,8 @@ subtest 'register access' => sub {
         is($cpu->read_register($i), $i * 100, "R$i round-trip");
     }
 
-    # 32-bit masking
-    $cpu->write_register(0, 0x1_FFFF_FFFF);
+    # 32-bit masking — use arithmetic to avoid non-portable hex literal > 0xFFFFFFFF
+    $cpu->write_register(0, 0xFFFFFFFF + 0x100000000);
     is($cpu->read_register(0), 0xFFFFFFFF, 'masks to 32 bits');
 };
 
