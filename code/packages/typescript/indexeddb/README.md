@@ -1,20 +1,24 @@
 # IndexedDB
 
-A Promise-based wrapper around the browser's IndexedDB API. No external dependencies.
+A Promise-based wrapper around the browser's IndexedDB API.
 
 ## Architecture
 
-One interface (`KVStorage`), two implementations:
+Two storage implementations sharing a common interface:
 
 - **IndexedDBStorage** — wraps the raw browser IndexedDB API in Promises.
   Each method opens a transaction, performs the operation, and returns a
-  Promise that resolves on success or rejects on error.
+  Promise that resolves on success or rejects on error. Currently implements
+  `KVStorage` (CRUD only).
 
-- **MemoryStorage** — in-memory Map-of-Maps for testing and environments
-  where IndexedDB is unavailable (Node, SSR).
+- **MemoryStorage** — re-exported from `@coding-adventures/storage`. Implements
+  the full `Storage` interface (CRUD + SQL querying + transactions).
 
-Both implement the same `KVStorage` interface, so consuming code can swap
-between them without changes.
+The unified `Storage` interface and all schema types now live in
+`@coding-adventures/storage`. This package re-exports them for backward
+compatibility. The old `KVStorage` interface (CRUD-only subset) is kept as
+a backward-compatible alias. New code should prefer `Storage` from
+`@coding-adventures/storage`.
 
 ## Usage
 
