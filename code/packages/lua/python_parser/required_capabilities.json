@@ -1,0 +1,4 @@
+{
+  "package": "lua/python_parser",
+  "capabilities": ["filesystem:read"]
+}

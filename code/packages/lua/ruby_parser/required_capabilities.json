@@ -1,0 +1,4 @@
+{
+  "package": "lua/ruby_parser",
+  "capabilities": ["filesystem:read"]
+}

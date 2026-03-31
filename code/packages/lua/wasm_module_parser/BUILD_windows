@@ -1,0 +1,4 @@
+luarocks show coding-adventures-wasm-leb128 1>nul 2>nul || (cd ../wasm_leb128 && luarocks make --local coding-adventures-wasm-leb128-0.1.0-1.rockspec)
+luarocks show coding-adventures-wasm-types 1>nul 2>nul || (cd ../wasm_types && luarocks make --local coding-adventures-wasm-types-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-wasm-module-parser-0.1.0-1.rockspec
+cd tests && busted . --verbose --pattern=test_

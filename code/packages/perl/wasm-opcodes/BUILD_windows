@@ -1,0 +1,2 @@
+REM prereqs: ../wasm-leb128 ../wasm-types
+echo Perl testing is not supported on Windows - skipping
