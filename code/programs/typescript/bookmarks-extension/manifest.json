@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "description": "Annotate and save bookmarks with notes — stored locally, with a pluggable storage backend for future cloud sync",
   "action": {
-    "default_popup": "src/popup/popup.html",
     "default_icon": {
       "16": "icons/icon-16.png",
       "48": "icons/icon-48.png",
@@ -16,7 +15,18 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["activeTab", "tabs"],
+  "permissions": ["activeTab", "tabs", "sidePanel"],
+  "side_panel": {
+    "default_path": "src/panel/panel.html"
+  },
+  "sidebar_action": {
+    "default_panel": "src/panel/panel.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png"
+    },
+    "default_title": "Bookmarks"
+  },
   "background": {
     "service_worker": "src/background/service-worker.ts"
   },

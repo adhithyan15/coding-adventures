@@ -21,8 +21,15 @@
  * ```
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, test } from "vitest";
 import type { BookmarkStorage } from "../src/storage/bookmark-storage";
+
+// Vitest requires at least one test in a file. This file exports a
+// reusable contract test function that other test files call.
+// The actual test runs happen in indexeddb-storage.test.ts.
+test("contract test module loads", () => {
+  expect(runStorageContractTests).toBeDefined();
+});
 
 /**
  * Run the full contract test suite against a storage backend.
