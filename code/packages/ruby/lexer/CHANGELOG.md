@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.1] - 2026-03-31
+
+### Fixed
+
+- **STRING case preservation in case-insensitive grammars**: When a grammar uses
+  `case_sensitive: false` (e.g. SQL, VHDL), the lexer lowercases the working
+  source copy for pattern matching. Previously this also lowercased STRING token
+  values — `'Alice'` would tokenize as `STRING("alice")` instead of `STRING("Alice")`.
+  The fix stores the original (unmodified) source in `@original_source` and uses
+  it when extracting the body of STRING tokens, so string literal case is always
+  preserved regardless of the grammar's case-sensitivity setting.
+
 ## [0.2.0] - 2026-03-21
 
 ### Added

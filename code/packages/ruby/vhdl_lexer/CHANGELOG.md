@@ -2,6 +2,14 @@
 
 All notable changes to `coding_adventures_vhdl_lexer` will be documented in this file.
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+- **STRING token case preservation**: Updated `test_string_case_preserved` to assert
+  the original case `"Hello World"` is preserved. The ruby/lexer fix now correctly
+  returns string literal content with its original casing when `@case_insensitive true`
+  is set — the old test was asserting the buggy lowercased value `"hello world"`.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added
