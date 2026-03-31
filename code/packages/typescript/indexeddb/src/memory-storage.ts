@@ -1,14 +1,23 @@
 /**
- * memory-storage.ts — In-memory KVStorage implementation.
+ * memory-storage.ts — Lightweight in-memory KVStorage implementation.
  *
- * Internally holds a Map<storeName, Map<key, record>>. Every operation
- * is synchronous but wrapped in Promise.resolve() to match the KVStorage
- * interface.
+ * This is a CRUD-only MemoryStorage for browser fallback scenarios:
+ * when IndexedDB is unavailable (private browsing, SSR, etc.), the app
+ * falls back to this in-memory store. It works identically for CRUD
+ * operations, just loses persistence on reload.
  *
- * Used for:
- *   - Unit tests (no browser APIs needed)
- *   - Environments where IndexedDB is unavailable (SSR, Node scripts)
- *   - Fallback when IndexedDB fails to open
+ * For the full Storage implementation with SQL querying and transactions,
+ * use MemoryStorage from @coding-adventures/storage instead.
+ *
+ * === Why this exists separately from @coding-adventures/storage ===
+ *
+ * The storage package's MemoryStorage imports sql-execution-engine and
+ * sql-parser, which depend on Node.js built-ins (fs, path, url) for
+ * grammar file loading. When Vite bundles a browser app, it follows
+ * these imports and fails because Node.js modules can't be resolved
+ * in a browser context. By keeping this CRUD-only version in the
+ * indexeddb package, browser apps get a working fallback without
+ * pulling in the sql chain.
  */
 
 import type { KVStorage, StoreSchema } from "./types.js";
@@ -25,6 +34,8 @@ export class MemoryStorage implements KVStorage {
     }
   }
 
+  // ── Connection ──────────────────────────────────────────────────────────
+
   async open(): Promise<void> {
     for (const [name] of this.keyPaths) {
       if (!this.stores.has(name)) {
@@ -32,6 +43,12 @@ export class MemoryStorage implements KVStorage {
       }
     }
   }
+
+  close(): void {
+    // No-op for in-memory storage
+  }
+
+  // ── CRUD ────────────────────────────────────────────────────────────────
 
   async get<T = unknown>(storeName: string, key: string): Promise<T | undefined> {
     const store = this.stores.get(storeName);
@@ -59,9 +76,5 @@ export class MemoryStorage implements KVStorage {
     const store = this.stores.get(storeName);
     if (!store) throw new Error(`Unknown store: ${storeName}`);
     store.delete(key);
-  }
-
-  close(): void {
-    // No-op for in-memory storage
   }
 }

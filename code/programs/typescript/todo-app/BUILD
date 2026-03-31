@@ -6,6 +6,10 @@ cd ../../../packages/typescript/grammar-tools && npm install --quiet
 cd ../../../packages/typescript/lexer && npm install --quiet
 cd ../../../packages/typescript/state-machine && npm install --quiet
 cd ../../../packages/typescript/parser && npm install --quiet
+cd ../../../packages/typescript/sql-lexer && npm install --quiet
+cd ../../../packages/typescript/sql-parser && npm install --quiet
+cd ../../../packages/typescript/sql-execution-engine && npm install --quiet
+cd ../../../packages/typescript/storage && npm install --quiet
 cd ../../../packages/typescript/lattice-lexer && npm install --quiet
 cd ../../../packages/typescript/lattice-parser && npm install --quiet
 cd ../../../packages/typescript/lattice-ast-to-css && npm install --quiet

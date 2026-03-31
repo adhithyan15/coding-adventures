@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/storage",
+  "version": "0.1.0",
+  "description": "Unified storage interface — CRUD, SQL queries, and transactions across any backend",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["storage", "database", "indexeddb", "sql", "transactions", "education"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/sql-execution-engine": "file:../sql-execution-engine",
+    "coding-adventures-sql-parser": "file:../sql-parser",
+    "coding-adventures-sql-lexer": "file:../sql-lexer",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
