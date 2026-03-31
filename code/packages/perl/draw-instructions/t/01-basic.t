@@ -43,14 +43,15 @@ is($text->{font_size},   16,           'text default font_size');
 is($text->{align},       'middle',     'text default align');
 is(ref $text->{metadata}, 'HASH',      'text metadata is hashref');
 
-# draw_text with all params
+# draw_text with all params (including font_weight and metadata)
 my $text2 = $pkg->can('draw_text')->(
-    5, 10, 'Hi', '#ff0000', 'sans-serif', 12, 'start', { class => 'label' }
+    5, 10, 'Hi', '#ff0000', 'sans-serif', 12, 'start', undef, { class => 'label' }
 );
 is($text2->{fill},        '#ff0000',   'text custom fill');
 is($text2->{font_family}, 'sans-serif','text custom font_family');
 is($text2->{font_size},   12,          'text custom font_size');
 is($text2->{align},       'start',     'text custom align');
+ok(!defined $text2->{font_weight},     'text font_weight undef when not set');
 is($text2->{metadata}{class}, 'label', 'text custom metadata');
 
 # ---------------------------------------------------------------------------
@@ -136,7 +137,82 @@ is($outer->{children}[1]{kind}, 'circle', 'nested group outer child 1 is circle'
 is($outer->{children}[0]{children}[0]{kind}, 'rect', 'inner group contains rect');
 
 # ---------------------------------------------------------------------------
-# 9. Instructions are independent hashrefs (not shared mutable state)
+# 9. draw_clip — basic
+# ---------------------------------------------------------------------------
+my $clip_child = $pkg->can('draw_rect')->(0, 0, 200, 200, '#ff0000');
+my $clip = $pkg->can('draw_clip')->(10, 10, 80, 80, [$clip_child]);
+is($clip->{kind},   'clip', 'clip kind');
+is($clip->{x},      10,     'clip x');
+is($clip->{y},      10,     'clip y');
+is($clip->{width},  80,     'clip width');
+is($clip->{height}, 80,     'clip height');
+is(ref $clip->{children}, 'ARRAY', 'clip children is arrayref');
+is(scalar @{$clip->{children}}, 1,  'clip has 1 child');
+is($clip->{children}[0]{kind}, 'rect', 'clip child is rect');
+is(ref $clip->{metadata}, 'HASH', 'clip metadata is hashref');
+is(scalar keys %{$clip->{metadata}}, 0, 'clip metadata is empty by default');
+
+# draw_clip with metadata
+my $clip2 = $pkg->can('draw_clip')->(0, 0, 50, 50, [], { id => 'mask' });
+is($clip2->{metadata}{id}, 'mask', 'clip metadata passed through');
+is(scalar @{$clip2->{children}}, 0, 'clip with empty children');
+
+# ---------------------------------------------------------------------------
+# 10. draw_rect with stroke
+# ---------------------------------------------------------------------------
+my $stroked = $pkg->can('draw_rect')->(
+    10, 20, 100, 50, '#ff0000',
+    stroke => '#000000', stroke_width => 2
+);
+is($stroked->{kind},         'rect',    'stroked rect kind');
+is($stroked->{fill},         '#ff0000', 'stroked rect fill');
+is($stroked->{stroke},       '#000000', 'stroked rect stroke');
+is($stroked->{stroke_width}, 2,         'stroked rect stroke_width');
+is(ref $stroked->{metadata}, 'HASH',    'stroked rect metadata is hashref');
+
+# draw_rect with stroke and metadata
+my $stroked2 = $pkg->can('draw_rect')->(
+    0, 0, 10, 10, 'blue',
+    stroke => 'red', stroke_width => 1, metadata => { class => 'bordered' }
+);
+is($stroked2->{stroke},              'red',      'stroked2 stroke');
+is($stroked2->{stroke_width},        1,          'stroked2 stroke_width');
+is($stroked2->{metadata}{class},     'bordered', 'stroked2 metadata');
+
+# draw_rect without stroke has undef stroke fields
+my $no_stroke = $pkg->can('draw_rect')->(0, 0, 10, 10, 'green');
+ok(!defined $no_stroke->{stroke},       'no stroke by default');
+ok(!defined $no_stroke->{stroke_width}, 'no stroke_width by default');
+
+# draw_rect legacy metadata-as-hashref call still works
+my $legacy = $pkg->can('draw_rect')->(0, 0, 10, 10, 'white', { id => 'old' });
+is($legacy->{metadata}{id}, 'old', 'legacy hashref metadata still works');
+ok(!defined $legacy->{stroke},     'legacy call has no stroke');
+
+# ---------------------------------------------------------------------------
+# 11. draw_text with font_weight
+# ---------------------------------------------------------------------------
+my $bold_text = $pkg->can('draw_text')->(
+    10, 20, 'Bold', '#000000', 'sans-serif', 14, 'start', 'bold'
+);
+is($bold_text->{kind},        'text',       'bold text kind');
+is($bold_text->{font_weight}, 'bold',       'bold text font_weight');
+is($bold_text->{value},       'Bold',       'bold text value');
+is($bold_text->{font_family}, 'sans-serif', 'bold text font_family');
+
+# draw_text with font_weight and metadata
+my $bold_text2 = $pkg->can('draw_text')->(
+    0, 0, 'X', '#fff', 'monospace', 12, 'end', 'normal', { id => 'lbl' }
+);
+is($bold_text2->{font_weight},    'normal', 'normal font_weight');
+is($bold_text2->{metadata}{id},   'lbl',    'bold text metadata');
+
+# draw_text without font_weight (default behaviour unchanged)
+my $plain_text = $pkg->can('draw_text')->(5, 5, 'Hi');
+ok(!defined $plain_text->{font_weight}, 'font_weight is undef by default');
+
+# ---------------------------------------------------------------------------
+# 12. Instructions are independent hashrefs (not shared mutable state)
 # ---------------------------------------------------------------------------
 my $r1 = $pkg->can('draw_rect')->(1, 2, 3, 4, 'red');
 my $r2 = $pkg->can('draw_rect')->(5, 6, 7, 8, 'blue');

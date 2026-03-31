@@ -28,28 +28,85 @@ func metadataToAttributes(metadata drawinstructions.Metadata) string {
 	return builder.String()
 }
 
-func renderInstruction(instruction drawinstructions.DrawInstruction) string {
+// renderInstruction dispatches a single draw instruction to the
+// appropriate SVG serializer. The counter is used to generate unique
+// IDs for clip paths.
+func renderInstruction(instruction drawinstructions.DrawInstruction, counter *int) string {
 	switch item := instruction.(type) {
 	case drawinstructions.DrawRectInstruction:
-		return fmt.Sprintf(
-			`  <rect x="%d" y="%d" width="%d" height="%d" fill="%s"%s />`,
-			item.X, item.Y, item.Width, item.Height, html.EscapeString(item.Fill), metadataToAttributes(item.Metadata),
-		)
+		return renderRect(item)
 	case drawinstructions.DrawTextInstruction:
-		return fmt.Sprintf(
-			`  <text x="%d" y="%d" text-anchor="%s" font-family="%s" font-size="%d" fill="%s"%s>%s</text>`,
-			item.X, item.Y, item.Align, html.EscapeString(item.FontFamily), item.FontSize, html.EscapeString(item.Fill),
-			metadataToAttributes(item.Metadata), html.EscapeString(item.Value),
-		)
+		return renderText(item)
 	case drawinstructions.DrawGroupInstruction:
 		children := make([]string, 0, len(item.Children))
 		for _, child := range item.Children {
-			children = append(children, renderInstruction(child))
+			children = append(children, renderInstruction(child, counter))
 		}
 		return fmt.Sprintf("  <g%s>\n%s\n  </g>", metadataToAttributes(item.Metadata), strings.Join(children, "\n"))
+	case drawinstructions.DrawLineInstruction:
+		return renderLine(item)
+	case drawinstructions.DrawClipInstruction:
+		return renderClip(item, counter)
 	default:
 		return ""
 	}
+}
+
+// renderRect serializes a rectangle. When Stroke is set, the outline
+// attributes are included.
+func renderRect(item drawinstructions.DrawRectInstruction) string {
+	strokeAttrs := ""
+	if item.Stroke != "" {
+		strokeAttrs = fmt.Sprintf(` stroke="%s" stroke-width="%.4g"`,
+			html.EscapeString(item.Stroke), item.StrokeWidth)
+	}
+	return fmt.Sprintf(
+		`  <rect x="%d" y="%d" width="%d" height="%d" fill="%s"%s%s />`,
+		item.X, item.Y, item.Width, item.Height, html.EscapeString(item.Fill),
+		strokeAttrs, metadataToAttributes(item.Metadata),
+	)
+}
+
+// renderText serializes a text label. When FontWeight is "bold", the
+// font-weight attribute is emitted.
+func renderText(item drawinstructions.DrawTextInstruction) string {
+	weightAttr := ""
+	if item.FontWeight == "bold" {
+		weightAttr = ` font-weight="bold"`
+	}
+	return fmt.Sprintf(
+		`  <text x="%d" y="%d" text-anchor="%s" font-family="%s" font-size="%d"%s fill="%s"%s>%s</text>`,
+		item.X, item.Y, item.Align, html.EscapeString(item.FontFamily), item.FontSize,
+		weightAttr, html.EscapeString(item.Fill),
+		metadataToAttributes(item.Metadata), html.EscapeString(item.Value),
+	)
+}
+
+// renderLine serializes a line segment to an SVG <line> element.
+func renderLine(item drawinstructions.DrawLineInstruction) string {
+	return fmt.Sprintf(
+		`  <line x1="%.4g" y1="%.4g" x2="%.4g" y2="%.4g" stroke="%s" stroke-width="%.4g"%s />`,
+		item.X1, item.Y1, item.X2, item.Y2,
+		html.EscapeString(item.Stroke), item.StrokeWidth,
+		metadataToAttributes(item.Metadata),
+	)
+}
+
+// renderClip wraps children in a clipPath-limited group. Each clip
+// gets a unique ID derived from the shared counter.
+func renderClip(item drawinstructions.DrawClipInstruction, counter *int) string {
+	*counter++
+	id := fmt.Sprintf("clip-%d", *counter)
+	children := make([]string, 0, len(item.Children))
+	for _, child := range item.Children {
+		children = append(children, renderInstruction(child, counter))
+	}
+	return fmt.Sprintf(
+		"  <defs>\n    <clipPath id=\"%s\">\n      <rect x=\"%.4g\" y=\"%.4g\" width=\"%.4g\" height=\"%.4g\" />\n    </clipPath>\n  </defs>\n  <g clip-path=\"url(#%s)\"%s>\n%s\n  </g>",
+		id, item.X, item.Y, item.Width, item.Height,
+		id, metadataToAttributes(item.Metadata),
+		strings.Join(children, "\n"),
+	)
 }
 
 type SvgRenderer struct{}
@@ -59,6 +116,7 @@ func (SvgRenderer) Render(scene drawinstructions.DrawScene) string {
 	if value, ok := scene.Metadata["label"]; ok {
 		label = fmt.Sprint(value)
 	}
+	counter := 0
 	lines := []string{
 		fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="%s">`,
 			scene.Width, scene.Height, scene.Width, scene.Height, html.EscapeString(label)),
@@ -66,7 +124,7 @@ func (SvgRenderer) Render(scene drawinstructions.DrawScene) string {
 			scene.Width, scene.Height, html.EscapeString(scene.Background)),
 	}
 	for _, instruction := range scene.Instructions {
-		lines = append(lines, renderInstruction(instruction))
+		lines = append(lines, renderInstruction(instruction, &counter))
 	}
 	lines = append(lines, "</svg>")
 	return strings.Join(lines, "\n")
