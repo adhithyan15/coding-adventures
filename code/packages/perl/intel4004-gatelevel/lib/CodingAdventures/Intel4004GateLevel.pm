@@ -652,7 +652,7 @@ sub _exec_io {
         # SBM: subtract RAM from accumulator through gates
         my $ram_val   = $self->_ram_read_main();
         my $compl_val = $self->_gate_not4($ram_val);
-        my $borrow_in = $self->_read_carry() ? 0 : 1;
+        my $borrow_in = $self->_read_carry() ? 1 : 0;
         my ($result, $cout) = $self->_gate_add($acc, $compl_val, $borrow_in);
         $self->_write_acc($result & 0xF);
         $self->_write_carry($cout);
