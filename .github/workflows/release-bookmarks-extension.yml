@@ -1,0 +1,83 @@
+# Release — Bookmarks Extension
+#
+# Builds the Bookmarks browser extension for Chrome, Firefox, and Safari,
+# then attaches the zip files to a GitHub Release.
+#
+# Triggered by pushing a tag matching `bookmarks-extension-v*`:
+#   git tag bookmarks-extension-v0.1.0
+#   git push origin bookmarks-extension-v0.1.0
+#
+# The workflow:
+#   1. Installs dependencies (toolkit + extension)
+#   2. Builds with Vite and runs the multi-browser build script
+#   3. Zips each browser directory (chrome, firefox, safari)
+#   4. Creates a GitHub Release with all three zips attached
+#
+# Why a single build job?
+# Browser extensions are just HTML, CSS, and JavaScript — they're
+# platform-independent. Unlike Electron apps that need per-OS builds,
+# we only need one build on Ubuntu to produce output that works everywhere.
+
+name: Release Bookmarks Extension
+
+on:
+  push:
+    tags:
+      - "bookmarks-extension-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install toolkit dependencies
+        working-directory: code/packages/typescript/browser-extension-toolkit
+        run: npm install --silent
+
+      - name: Install extension dependencies
+        working-directory: code/programs/typescript/bookmarks-extension
+        run: npm install --silent
+
+      - name: Build for all browsers
+        working-directory: code/programs/typescript/bookmarks-extension
+        run: npm run build:release
+
+      - name: Zip browser extensions
+        working-directory: code/programs/typescript/bookmarks-extension/dist
+        run: |
+          zip -r ../bookmarks-extension-chrome.zip chrome/
+          zip -r ../bookmarks-extension-firefox.zip firefox/
+          zip -r ../bookmarks-extension-safari.zip safari/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            code/programs/typescript/bookmarks-extension/bookmarks-extension-chrome.zip
+            code/programs/typescript/bookmarks-extension/bookmarks-extension-firefox.zip
+            code/programs/typescript/bookmarks-extension/bookmarks-extension-safari.zip
+          body: |
+            ## Bookmarks Extension ${{ github.ref_name }}
+
+            Save annotated bookmarks with notes. Click the extension icon to open a side panel where you can add notes to the current page and save it.
+
+            Download the zip for your browser, unzip it, and load it:
+
+            | Browser | File | How to load |
+            |---------|------|-------------|
+            | Chrome | `bookmarks-extension-chrome.zip` | `chrome://extensions` → Developer mode → Load unpacked |
+            | Firefox | `bookmarks-extension-firefox.zip` | `about:debugging` → Load Temporary Add-on |
+            | Safari | `bookmarks-extension-safari.zip` | Unzip, then run `xcrun safari-web-extension-converter <dir>` |
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
