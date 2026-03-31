@@ -18,12 +18,17 @@
 # - Statements don't require newlines (semicolons or newlines separate them)
 # - Method definitions use `def ... end`
 # - `puts` is a method call (handled as a keyword + expression)
+#
+# IMPORTANT: The lexer reclassifies all names in the `keywords:` section of
+# ruby.tokens (including puts, true, false, nil, if, else, end, def, etc.)
+# as KEYWORD tokens. Grammar rules must therefore reference KEYWORD rather
+# than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
 statement    = assignment | method_call | expression_stmt ;
 assignment   = NAME EQUALS expression ;
-method_call  = ( NAME | PUTS ) LPAREN [ expression { COMMA expression } ] RPAREN ;
+method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
 expression_stmt = expression ;
 expression   = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
-factor       = NUMBER | STRING | NAME | TRUE | FALSE | NIL | PUTS | LPAREN expression RPAREN ;
+factor       = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;
