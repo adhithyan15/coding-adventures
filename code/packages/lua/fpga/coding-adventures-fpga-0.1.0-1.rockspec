@@ -18,6 +18,8 @@ description = {
 
 dependencies = {
   "lua >= 5.4",
+  "coding-adventures-logic-gates >= 0.1.0",
+  "coding-adventures-block-ram >= 0.1.0",
 }
 
 build = {

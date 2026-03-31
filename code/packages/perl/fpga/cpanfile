@@ -1,3 +1,6 @@
+requires 'coding-adventures-logic-gates', '0.01';
+requires 'coding-adventures-block-ram',   '0.01';
+
 # Test dependencies
 on 'test' => sub {
     requires 'Test2::V0';
