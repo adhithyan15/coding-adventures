@@ -2,6 +2,19 @@
 
 All notable changes to the JSON value package will be documented in this file.
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- **JSON string escape sequences now decoded correctly**: The JSON grammar uses
+  `escapes: none`, which means the lexer returns STRING tokens with raw escape
+  sequences (e.g. `\n` as two characters). Previously `from_ast()` passed the
+  raw token value directly to `JsonString`, so `"hello\nworld"` would produce
+  `JsonString("hello\\nworld")` instead of `JsonString("hello\nworld")`.
+  Added `_unescape_json_string()` helper that decodes all JSON escape
+  sequences (`\"`, `\\`, `\/`, `\b`, `\f`, `\n`, `\r`, `\t`, `\uXXXX`)
+  before constructing the `JsonString`. Test `test_string_with_escapes` now passes.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

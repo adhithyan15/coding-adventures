@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- **JSON string escape sequences now decoded correctly**: The JSON grammar uses
+  `escapes: none`, which means the lexer returns STRING tokens with raw escape
+  sequences (e.g. `\n` as two characters). Previously `FromAST()` passed the
+  raw token value directly to `JsonString`, so `"hello\nworld"` would produce
+  `JsonString{Value: "hello\\nworld"}` instead of `JsonString{Value: "hello\nworld"}`.
+  Added `unescapeJSONString()` helper that decodes all JSON escape sequences
+  (`\"`, `\\`, `\/`, `\b`, `\f`, `\n`, `\r`, `\t`, `\uXXXX`) before
+  constructing the `JsonString`. Test `TestParseStringWithEscapes` now passes.
+
 ## 0.1.0 — 2026-03-22
 
 ### Added
