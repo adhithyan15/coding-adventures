@@ -61,19 +61,14 @@
  *     const minified = transpileLattice("h1 { color: red; }", { minified: true });
  *     // "h1{color:red;}"
  *
- * Browser Usage
- * -------------
+ * Browser Compatibility
+ * ---------------------
  *
- * This module uses Node.js `fs.readFileSync()` to load the grammar files at
- * runtime. It does NOT work in a browser environment without bundling.
- *
- * For browser usage, import from the browser entry point instead:
- *
- *     import { transpileLatticeInBrowser } from
- *       "@coding-adventures/lattice-transpiler/src/browser.js";
- *
- * The browser entry point embeds the grammar strings directly, so no file
- * system access is needed.
+ * The underlying lattice-lexer and lattice-parser packages use pre-compiled
+ * grammar objects (imported from `_grammar.ts` files) instead of reading
+ * grammar files from disk. This means the entire pipeline — including this
+ * transpiler — works in Node.js, browsers, edge runtimes, and any other
+ * JavaScript environment without any special configuration.
  */
 
 import { parseLattice } from "@coding-adventures/lattice-parser";
