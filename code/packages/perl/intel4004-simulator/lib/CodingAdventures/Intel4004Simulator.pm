@@ -336,7 +336,7 @@ sub _exec_sub {
     my ($self, $reg) = @_;
     my $reg_val    = $self->{registers}[$reg];
     my $complement = (~$reg_val) & 0xF;
-    my $borrow_in  = $self->{carry} ? 1 : 0;
+    my $borrow_in  = $self->{carry} ? 0 : 1;
     my $result     = $self->{accumulator} + $complement + $borrow_in;
     $self->{accumulator} = $result & 0xF;
     $self->{carry}       = $result > 0xF ? 1 : 0;
@@ -498,7 +498,7 @@ sub _exec_io {
         my ($b, $r, $c) = @{$self}{qw(ram_bank ram_register ram_character)};
         my $ram_val    = $self->{ram}[$b][$r][$c];
         my $complement = (~$ram_val) & 0xF;
-        my $borrow_in  = $self->{carry} ? 1 : 0;
+        my $borrow_in  = $self->{carry} ? 0 : 1;
         my $result     = $self->{accumulator} + $complement + $borrow_in;
         $self->{accumulator} = $result & 0xF;
         $self->{carry}       = $result > 0xF ? 1 : 0;

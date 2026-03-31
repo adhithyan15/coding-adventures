@@ -1041,6 +1041,8 @@ package CodingAdventures::SqlExecutionEngine::InMemoryDataSource;
 
 sub new {
     my ($class, $tables) = @_;
+    $tables = $tables->{tables_data}
+        if ref($tables) eq 'HASH' && exists $tables->{tables_data};
     return bless { tables => $tables }, $class;
 }
 

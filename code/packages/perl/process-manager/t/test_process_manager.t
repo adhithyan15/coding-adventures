@@ -259,7 +259,7 @@ subtest 'Manager — wait_child not_exited when still running' => sub {
     my $m    = $Mgr->new();
     my $ppid = $m->spawn('shell');
     my $cpid = $m->fork($ppid);
-    my ($st, $_) = $m->wait_child($ppid, $cpid);
+    my ($st, $ignored) = $m->wait_child($ppid, $cpid);
     is($st, 'not_exited', 'not exited');
 };
 
@@ -267,7 +267,7 @@ subtest 'Manager — wait_child no_child for non-child' => sub {
     my $m  = $Mgr->new();
     my $p1 = $m->spawn('p1');
     my $p2 = $m->spawn('p2');
-    my ($st, $_) = $m->wait_child($p1, $p2);
+    my ($st, $ignored) = $m->wait_child($p1, $p2);
     is($st, 'no_child', 'no child');
 };
 

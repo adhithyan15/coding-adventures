@@ -298,7 +298,7 @@ subtest 'Manager — destroy_pipe' => sub {
     my $m = $Manager->new();
     my $h = $m->create_pipe();
     is($m->destroy_pipe($h->{pipe_id}), 'ok', 'destroyed');
-    my ($st, $_) = $m->get_pipe($h->{pipe_id});
+    my ($st, $ignored) = $m->get_pipe($h->{pipe_id});
     is($st, 'not_found', 'gone');
 };
 
@@ -314,7 +314,7 @@ subtest 'Manager — message queue lifecycle' => sub {
     my ($st, $q2) = $m->get_message_queue('q');
     is($st, 'ok', 'found');
     is($m->destroy_message_queue('q'), 'ok', 'destroyed');
-    my ($rs, $_) = $m->get_message_queue('q');
+    my ($rs, $ignored) = $m->get_message_queue('q');
     is($rs, 'not_found', 'gone');
 };
 
@@ -325,7 +325,7 @@ subtest 'Manager — shared memory lifecycle' => sub {
     my ($st, $s2) = $m->get_shared_memory('seg');
     is($st, 'ok', 'found');
     is($m->destroy_shared_memory('seg'), 'ok', 'destroyed');
-    my ($rs, $_) = $m->get_shared_memory('seg');
+    my ($rs, $ignored) = $m->get_shared_memory('seg');
     is($rs, 'not_found', 'gone');
 };
 

@@ -53,14 +53,14 @@ subtest 'SimulatedDisk — initialize' => sub {
 
 subtest 'SimulatedDisk — open before initialize' => sub {
     my $d = $Disk->new();
-    my ($st, $_) = $d->open();
+    my ($st, $ignored) = $d->open();
     is($st, 'not_initialized', 'not_initialized');
 };
 
 subtest 'SimulatedDisk — open and close' => sub {
     my $d = $Disk->new();
     $d->initialize();
-    my ($st1, $_) = $d->open();
+    my ($st1, $ignored) = $d->open();
     is($st1, 'ok', 'open ok');
     is($d->{open_count}, 1, 'count 1');
     my ($st2, $_2) = $d->close();
@@ -71,13 +71,13 @@ subtest 'SimulatedDisk — open and close' => sub {
 subtest 'SimulatedDisk — close when not open' => sub {
     my $d = $Disk->new();
     $d->initialize();
-    my ($st, $_) = $d->close();
+    my ($st, $ignored) = $d->close();
     is($st, 'not_open', 'not_open');
 };
 
 subtest 'SimulatedDisk — write_block and read_block' => sub {
     my $d = $Disk->new(block_size => 8, total_blocks => 4);
-    my ($ws, $_) = $d->write_block(0, 'ABCDEFGH');
+    my ($ws, $ignored) = $d->write_block(0, 'ABCDEFGH');
     is($ws, 'ok', 'write ok');
     my ($rs, $self, $data) = $d->read_block(0);
     is($rs,   'ok',       'read ok');
@@ -95,7 +95,7 @@ subtest 'SimulatedDisk — write to non-zero block' => sub {
 
 subtest 'SimulatedDisk — write out of bounds' => sub {
     my $d = $Disk->new(block_size => 4, total_blocks => 2);
-    my ($st, $_) = $d->write_block(2, 'XXXX');
+    my ($st, $ignored) = $d->write_block(2, 'XXXX');
     is($st, 'out_of_bounds', 'out_of_bounds');
     ($st, $_) = $d->write_block(-1, 'XXXX');
     is($st, 'out_of_bounds', 'negative block');
@@ -103,7 +103,7 @@ subtest 'SimulatedDisk — write out of bounds' => sub {
 
 subtest 'SimulatedDisk — write wrong size' => sub {
     my $d = $Disk->new(block_size => 8, total_blocks => 4);
-    my ($st, $_) = $d->write_block(0, 'short');
+    my ($st, $ignored) = $d->write_block(0, 'short');
     is($st, 'wrong_size', 'wrong_size');
 };
 
@@ -122,7 +122,7 @@ subtest 'SimulatedDisk — ioctl' => sub {
     my ($st2, $tb) = $d->ioctl('get_total_blocks');
     is($st2, 'ok', 'ok');
     is($tb,  100,  '100');
-    my ($st3, $_) = $d->ioctl('format');
+    my ($st3, $ignored) = $d->ioctl('format');
     is($st3, 'unsupported', 'unsupported');
 };
 
@@ -142,7 +142,7 @@ subtest 'SimulatedSerial — lifecycle' => sub {
     my $s = $Serial->new();
     $s->initialize();
     ok($s->{initialized}, 'initialized');
-    my ($st1, $_) = $s->open();
+    my ($st1, $ignored) = $s->open();
     is($st1, 'ok', 'open ok');
     is($s->{open_count}, 1, 'count 1');
     my ($st2, $_2) = $s->close();
@@ -152,14 +152,14 @@ subtest 'SimulatedSerial — lifecycle' => sub {
 
 subtest 'SimulatedSerial — open before initialize' => sub {
     my $s = $Serial->new();
-    my ($st, $_) = $s->open();
+    my ($st, $ignored) = $s->open();
     is($st, 'not_initialized', 'error');
 };
 
 subtest 'SimulatedSerial — close when not open' => sub {
     my $s = $Serial->new();
     $s->initialize();
-    my ($st, $_) = $s->close();
+    my ($st, $ignored) = $s->close();
     is($st, 'not_open', 'error');
 };
 
@@ -210,7 +210,7 @@ subtest 'SimulatedSerial — ioctl baud rate' => sub {
 
 subtest 'SimulatedSerial — ioctl unsupported' => sub {
     my $s = $Serial->new();
-    my ($st, $_) = $s->ioctl('flush');
+    my ($st, $ignored) = $s->ioctl('flush');
     is($st, 'unsupported', 'unsupported');
 };
 
@@ -231,7 +231,7 @@ subtest 'SimulatedNIC — lifecycle' => sub {
     my $n = $NIC->new();
     $n->initialize();
     ok($n->{initialized}, 'initialized');
-    my ($st1, $_) = $n->open();
+    my ($st1, $ignored) = $n->open();
     is($st1, 'ok', 'open');
     is($n->{open_count}, 1, 'count 1');
     my ($st2, $_2) = $n->close();
@@ -241,14 +241,14 @@ subtest 'SimulatedNIC — lifecycle' => sub {
 
 subtest 'SimulatedNIC — open before initialize' => sub {
     my $n = $NIC->new();
-    my ($st, $_) = $n->open();
+    my ($st, $ignored) = $n->open();
     is($st, 'not_initialized', 'error');
 };
 
 subtest 'SimulatedNIC — close when not open' => sub {
     my $n = $NIC->new();
     $n->initialize();
-    my ($st, $_) = $n->close();
+    my ($st, $ignored) = $n->close();
     is($st, 'not_open', 'error');
 };
 
@@ -293,7 +293,7 @@ subtest 'SimulatedNIC — ioctl get_mac' => sub {
 
 subtest 'SimulatedNIC — ioctl unsupported' => sub {
     my $n = $NIC->new();
-    my ($st, $_) = $n->ioctl('reset');
+    my ($st, $ignored) = $n->ioctl('reset');
     is($st, 'unsupported', 'unsupported');
 };
 
@@ -325,7 +325,7 @@ subtest 'Registry — double register returns already_registered' => sub {
 
 subtest 'Registry — get not_found' => sub {
     my $r = $Reg->new();
-    my ($st, $_) = $r->get('nodev');
+    my ($st, $ignored) = $r->get('nodev');
     is($st, 'not_found', 'not_found');
 };
 
@@ -340,7 +340,7 @@ subtest 'Registry — get_by_major_minor' => sub {
 
 subtest 'Registry — get_by_major_minor not_found' => sub {
     my $r = $Reg->new();
-    my ($st, $_) = $r->get_by_major_minor(99, 0);
+    my ($st, $ignored) = $r->get_by_major_minor(99, 0);
     is($st, 'not_found', 'not_found');
 };
 
@@ -366,7 +366,7 @@ subtest 'Registry — unregister' => sub {
     my $d = $Disk->new(major => 3, minor => 0);
     $r->register($d);
     is($r->unregister('disk0'), 'ok', 'unregistered');
-    my ($st, $_) = $r->get('disk0');
+    my ($st, $ignored) = $r->get('disk0');
     is($st, 'not_found', 'gone');
     # major:minor also removed
     my ($st2, $_2) = $r->get_by_major_minor(3, 0);
@@ -397,7 +397,7 @@ subtest 'Registry — full driver lifecycle' => sub {
     $d->write_block(1, 'HELLO!!!');
     my (undef, undef, $data) = $d->read_block(1);
     is($data, 'HELLO!!!', 'data correct');
-    my ($st, $_) = $d->close();
+    my ($st, $ignored) = $d->close();
     is($st, 'ok', 'closed');
 };
 
