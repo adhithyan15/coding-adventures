@@ -122,6 +122,51 @@ M.CGT_BYTE   = 0x02   -- cgt second byte: push 1 if a > b
 M.CLT_BYTE   = 0x04   -- clt second byte: push 1 if a < b
 
 -- ============================================================================
+-- Stack Helpers
+-- ============================================================================
+--
+-- The CLR stack must support nil as a valid value (via ldnull). Plain Lua
+-- tables cannot count nil entries with '#'. We solve this by storing a '_n'
+-- field that tracks the logical size, and attaching a __len metamethod so
+-- that '#stack' returns '_n' even when some slots hold nil.
+--
+-- Example: after ldnull, stack[1]==nil but #stack==1.
+
+local STACK_MT = {__len = function(t) return t._n end}
+
+local function new_stack()
+    return setmetatable({_n = 0}, STACK_MT)
+end
+
+local function copy_stack(s)
+    local c = setmetatable({_n = s._n}, STACK_MT)
+    for i = 1, s._n do c[i] = s[i] end
+    return c
+end
+
+-- Pop the top value from the stack; raises on underflow.
+local function pop(sim)
+    if sim.stack._n == 0 then
+        error("Stack underflow")
+    end
+    local s = copy_stack(sim.stack)
+    local val = s[s._n]
+    s[s._n] = nil  -- clear slot (optional but tidy)
+    s._n = s._n - 1
+    sim.stack = s
+    return sim, val
+end
+
+-- Push a value onto the stack (nil-safe via explicit index).
+local function push(sim, val)
+    local s = copy_stack(sim.stack)
+    s._n = s._n + 1
+    s[s._n] = val
+    sim.stack = s
+    return sim
+end
+
+-- ============================================================================
 -- Trace Record
 -- ============================================================================
 
@@ -238,51 +283,6 @@ local function little_signed32_at(bytecode, pos)
     -- Convert to signed 32-bit
     if v >= 2147483648 then v = v - 4294967296 end
     return v
-end
-
--- ============================================================================
--- Stack Helpers
--- ============================================================================
---
--- The CLR stack must support nil as a valid value (via ldnull). Plain Lua
--- tables cannot count nil entries with '#'. We solve this by storing a '_n'
--- field that tracks the logical size, and attaching a __len metamethod so
--- that '#stack' returns '_n' even when some slots hold nil.
---
--- Example: after ldnull, stack[1]==nil but #stack==1.
-
-local STACK_MT = {__len = function(t) return t._n end}
-
-local function new_stack()
-    return setmetatable({_n = 0}, STACK_MT)
-end
-
-local function copy_stack(s)
-    local c = setmetatable({_n = s._n}, STACK_MT)
-    for i = 1, s._n do c[i] = s[i] end
-    return c
-end
-
--- Pop the top value from the stack; raises on underflow.
-local function pop(sim)
-    if sim.stack._n == 0 then
-        error("Stack underflow")
-    end
-    local s = copy_stack(sim.stack)
-    local val = s[s._n]
-    s[s._n] = nil  -- clear slot (optional but tidy)
-    s._n = s._n - 1
-    sim.stack = s
-    return sim, val
-end
-
--- Push a value onto the stack (nil-safe via explicit index).
-local function push(sim, val)
-    local s = copy_stack(sim.stack)
-    s._n = s._n + 1
-    s[s._n] = val
-    sim.stack = s
-    return sim
 end
 
 -- ============================================================================
