@@ -716,9 +716,9 @@ describe("integration: max(5, 8) = 8", function()
         -- 4: ldloc.0    1 byte  ← load a
         -- 5: ldloc.1    1 byte  ← load b
         -- 6: FE 02      2 bytes ← cgt (a > b?)
-        -- 8: brfalse.s  +2 (2 bytes) → if false, jump to 12 (8+2+2=12)
+        -- 8: brfalse.s  +3 (2 bytes) → if false, jump to 13 (8+2+3=13)
         -- 10: ldloc.0   1 byte  ← a (the max)
-        -- 11: br.s      +1 (2 bytes) → jump to 13 (11+2+1=14)
+        -- 11: br.s      +1 (2 bytes) → jump to 14 (11+2+1=14)
         -- 13: ldloc.1   1 byte  ← b (the max)
         -- 14: ret       1 byte
         local code = {
@@ -729,7 +729,7 @@ describe("integration: max(5, 8) = 8", function()
             0x06,           -- ldloc.0 (a)
             0x07,           -- ldloc.1 (b)
             0xFE, 0x02,     -- cgt
-            0x2C, 2,        -- brfalse.s +2 → jump to load-b if NOT a>b
+            0x2C, 3,        -- brfalse.s +3 → jump to load-b if NOT a>b
             0x06,           -- ldloc.0 (return a)
             0x2B, 1,        -- br.s +1 → jump over load-b
             0x07,           -- ldloc.1 (return b)
