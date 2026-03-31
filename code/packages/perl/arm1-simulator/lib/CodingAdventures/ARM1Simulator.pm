@@ -543,7 +543,7 @@ sub _decode_branch {
     # Sign-extend from 24 bits
     $offset |= 0xFF000000 if ($offset >> 23) != 0;
     # Treat as signed 32-bit
-    $offset -= 0x100000000 if $offset >= 0x80000000;
+    $offset -= (1 << 32) if $offset >= 0x80000000;
     $d->{branch_offset} = $offset * 4;
     return $d;
 }
@@ -955,7 +955,7 @@ sub step {
 sub run {
     my ($self, $max_steps) = @_;
     my @traces;
-    for my $_ (1..$max_steps) {
+    for my $discard (1..$max_steps) {
         last if $self->{halted};
         my $trace = $self->step();
         push @traces, $trace;

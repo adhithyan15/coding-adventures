@@ -11,7 +11,7 @@ our $VERSION = '0.01';
 #
 # Carry chain (when carry_enable=1):
 #   out_a = LUT_A XOR carry_in;  carry_mid = LUT_A AND carry_in
-#   out_b = LUT_B XOR carry_mid; carry_out = LUT_B AND carry_mid
+#   out_b = LUT_B XOR carry_mid; carry_out = carry_mid
 
 sub new {
     my ($class, %opts) = @_;
@@ -45,7 +45,7 @@ sub evaluate {
         $out_a_comb = $lut_a_result ^ $carry_in;
         my $carry_mid = $lut_a_result & $carry_in;
         $out_b_comb = $lut_b_result ^ $carry_mid;
-        $carry_out  = $lut_b_result & $carry_mid;
+        $carry_out  = $carry_mid;
     } else {
         $out_a_comb = $lut_a_result;
         $out_b_comb = $lut_b_result;

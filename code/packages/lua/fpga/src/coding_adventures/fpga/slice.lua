@@ -9,7 +9,7 @@
 --   out_a_comb = LUT_A_result XOR carry_in   (sum bit)
 --   carry_mid  = LUT_A_result AND carry_in   (carry to B)
 --   out_b_comb = LUT_B_result XOR carry_mid
---   carry_out  = LUT_B_result AND carry_mid
+--   carry_out  = carry_mid
 --
 -- Each LUT output can pass through a flip-flop (registered) or bypass it
 -- (combinational), controlled by use_ff_a and use_ff_b.
@@ -67,7 +67,7 @@ function Slice:evaluate(inputs_a, inputs_b, clock, carry_in)
         out_a_comb = lut_a_result ~ carry_in     -- XOR in Lua 5.4
         local carry_mid = lut_a_result & carry_in -- AND
         out_b_comb  = lut_b_result ~ carry_mid
-        carry_out   = lut_b_result & carry_mid
+        carry_out   = carry_mid
     else
         out_a_comb = lut_a_result
         out_b_comb = lut_b_result
