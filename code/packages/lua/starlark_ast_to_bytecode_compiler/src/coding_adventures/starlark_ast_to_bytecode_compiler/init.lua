@@ -267,6 +267,36 @@ end
 --
 -- Token nodes have: { node_kind="token", type="NAME", value="x" }
 
+-- ============================================================================
+-- Forward Declarations for Private Helper Functions
+-- ============================================================================
+--
+-- Lua local variables must be declared before first use. All the helper
+-- functions below are defined later in the file (after the handler registration
+-- section), but they are referenced inside closures created during
+-- _register_all_handlers(). Forward-declaring them here as locals ensures
+-- that the closures capture the correct upvalue binding (not the global).
+-- The actual function bodies are assigned later via "local function _foo()".
+
+local _pass_through
+local _compile_store
+local _compile_load
+local _compile_binary_chain
+local _binary_or_pass
+local _compile_if_chain
+local _find_iterable_in_for
+local _find_first_string
+local _get_string_value
+local _collect_params
+local _compile_call_args
+local _get_compare_op
+local _find_ast_child
+local _find_token
+local _find_token_type
+local _get_token_value
+local _find_first_token
+local _strip_quotes
+
 local StarlarkCompiler = {}
 StarlarkCompiler.__index = StarlarkCompiler
 
@@ -964,7 +994,7 @@ end
 -- ============================================================================
 
 --- Compile a single-child node by passing to the child.
-local function _pass_through(c, node)
+_pass_through = function(c, node)
     if #node.children == 1 then
         c:compile_node(node.children[1])
     elseif #node.children > 1 then
@@ -977,7 +1007,7 @@ local function _pass_through(c, node)
 end
 
 --- Emit a STORE instruction for a target node.
-local function _compile_store(c, target)
+_compile_store = function(c, target)
     if target.node_kind == "token" then
         if target.type == "NAME" then
             local idx = c:add_name(target.value)
@@ -999,7 +1029,7 @@ local function _compile_store(c, target)
 end
 
 --- Emit a LOAD instruction for a source node.
-local function _compile_load(c, source)
+_compile_load = function(c, source)
     if source.node_kind == "token" and source.type == "NAME" then
         local idx = c:add_name(source.value)
         c:emit(M.OP_LOAD_NAME, idx)
@@ -1018,7 +1048,7 @@ local function _compile_load(c, source)
 end
 
 --- Compile a chain of binary operations: left op right (op right)*
-local function _compile_binary_chain(c, children)
+_compile_binary_chain = function(c, children)
     c:compile_node(children[1])
     local i = 2
     while i <= #children do
@@ -1034,7 +1064,7 @@ local function _compile_binary_chain(c, children)
 end
 
 --- Binary-op handler that falls through for single-child nodes.
-local function _binary_or_pass(c, node)
+_binary_or_pass = function(c, node)
     if #node.children == 1 then
         c:compile_node(node.children[1])
     else
@@ -1043,7 +1073,7 @@ local function _binary_or_pass(c, node)
 end
 
 --- Compile if/elif/else chain.
-local function _compile_if_chain(c, children, start)
+_compile_if_chain = function(c, children, start)
     -- Find condition and suite
     local cond = nil
     local suite = nil
@@ -1090,7 +1120,7 @@ end
 --- Find the iterable expression in a for-stmt child list.
 -- for TARGET in ITERABLE: BODY
 -- Children typically: [FOR, target, IN, iterable, COLON, suite]
-local function _find_iterable_in_for(children)
+_find_iterable_in_for = function(children)
     local saw_in = false
     for _, child in ipairs(children) do
         if child.node_kind == "token" and child.value == "in" then
@@ -1104,7 +1134,7 @@ local function _find_iterable_in_for(children)
 end
 
 --- Find the first string literal in a list of children.
-local function _find_first_string(children)
+_find_first_string = function(children)
     for _, child in ipairs(children) do
         if child.node_kind == "token" and child.type == "STRING" then
             return _strip_quotes(child.value)
@@ -1117,7 +1147,7 @@ local function _find_first_string(children)
 end
 
 --- Get string value from an argument node.
-local function _get_string_value(node)
+_get_string_value = function(node)
     for _, child in ipairs(node.children or {}) do
         if child.node_kind == "token" and child.type == "STRING" then
             return _strip_quotes(child.value)
@@ -1129,7 +1159,7 @@ local function _get_string_value(node)
 end
 
 --- Collect parameter names from a param_list node.
-local function _collect_params(param_list)
+_collect_params = function(param_list)
     local params = {}
     for _, child in ipairs(param_list.children or {}) do
         if child.node_kind == "ast" and child.rule_name == "param" then
@@ -1143,7 +1173,7 @@ local function _collect_params(param_list)
 end
 
 --- Compile call arguments, return count.
-local function _compile_call_args(c, args_node)
+_compile_call_args = function(c, args_node)
     local count = 0
     for _, child in ipairs(args_node.children) do
         if child.node_kind == "ast" then
@@ -1155,7 +1185,7 @@ local function _compile_call_args(c, args_node)
 end
 
 --- Get the comparison operator string from a comparison node's children.
-local function _get_compare_op(children)
+_get_compare_op = function(children)
     -- Could be [left, "not", "in", right] or [left, "==", right]
     for i = 2, #children - 1 do
         local tok = children[i]
@@ -1168,7 +1198,7 @@ local function _get_compare_op(children)
 end
 
 --- Find first AST child with given rule_name (or any AST child if rule_name is nil).
-local function _find_ast_child(children, rule_name)
+_find_ast_child = function(children, rule_name)
     for _, child in ipairs(children or {}) do
         if child.node_kind == "ast" then
             if rule_name == nil or child.rule_name == rule_name then
@@ -1180,7 +1210,7 @@ local function _find_ast_child(children, rule_name)
 end
 
 --- Find a token value in children.
-local function _find_token(children, start_idx)
+_find_token = function(children, start_idx)
     for i = (start_idx or 1), #children do
         if children[i].node_kind == "token" then
             return children[i].value
@@ -1190,7 +1220,7 @@ local function _find_token(children, start_idx)
 end
 
 --- Find a token with a specific type.
-local function _find_token_type(children, token_type)
+_find_token_type = function(children, token_type)
     for _, child in ipairs(children or {}) do
         if child.node_kind == "token" and child.type == token_type then
             return child.value
@@ -1200,7 +1230,7 @@ local function _find_token_type(children, token_type)
 end
 
 --- Get value from first token in children list.
-local function _get_token_value(children)
+_get_token_value = function(children)
     for _, child in ipairs(children or {}) do
         if child.node_kind == "token" then
             return child.value
