@@ -5,6 +5,17 @@ All notable changes to the lexer package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-03-31
+
+### Fixed
+- **STRING case preservation in case-insensitive mode**: When a grammar uses
+  `# @case_insensitive true`, the lexer lowercases the source for pattern
+  matching. Previously this also lowercased STRING token values — `'Ada'`
+  would tokenize as `STRING("ada")` instead of `STRING("Ada")`. The fix
+  preserves the original source separately (`_original_source`) and uses
+  it when extracting string literal bodies, so case in string content is
+  always preserved regardless of the grammar's case-sensitivity setting.
+
 ## [0.3.0] - 2026-03-21
 
 ### Added
