@@ -6,6 +6,8 @@
 -- for both uppercase and lowercase letters, preserves non-alphabetic
 -- characters, and satisfies the self-inverse property.
 
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
+
 local m = require("coding_adventures.atbash_cipher")
 
 describe("atbash-cipher", function()
