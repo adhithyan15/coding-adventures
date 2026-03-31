@@ -49,9 +49,12 @@ defmodule CodingAdventures.JsonLexerTest do
     end
 
     test "tokenizes string with escapes" do
+      # The JSON lexer uses `escapes: none` — escape sequences are passed
+      # through raw and decoded by the parser, not the lexer. So \n in the
+      # source remains as the two-character sequence \n in the token value.
       {:ok, tokens} = JsonLexer.tokenize(~S("hello\nworld"))
       [str, _eof] = tokens
-      assert str.value == "hello\nworld"
+      assert str.value == "hello\\nworld"
     end
 
     test "tokenizes true" do

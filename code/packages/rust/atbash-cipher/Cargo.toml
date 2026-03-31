@@ -1,0 +1,7 @@
+[package]
+name = "atbash-cipher"
+version = "0.1.0"
+edition = "2021"
+description = "Atbash cipher — fixed reverse-alphabet substitution, self-inverse"
+
+[dependencies]
