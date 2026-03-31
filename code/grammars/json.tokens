@@ -16,19 +16,25 @@
 # Value tokens — the actual data in JSON
 # ---------------------------------------------------------------------------
 
+# Escape mode: none tells the lexer to strip the surrounding quotes but
+# leave escape sequences (\n, \t, \uXXXX, etc.) as raw text. Decoding
+# escape sequences is the JSON parser's responsibility, not the lexer's.
+escapes: none
+
 # String: double-quoted with escape sequences.
 # Allowed escapes: \" \\ \/ \b \f \n \r \t \uXXXX
 # The regex matches the entire string including quotes. The lexer engine
-# strips the quotes and processes escape sequences automatically.
+# strips the quotes (see escapes: none above) and leaves escapes intact.
 # Note: We use \x2f instead of / inside the regex because the grammar file
 # uses / as the regex delimiter and the parser does not support escaping.
 STRING   = /"([^"\\]|\\["\\\x2fbfnrt]|\\u[0-9a-fA-F]{4})*"/
 
-# Number: optional negative sign, integer part, optional decimal, optional
-# exponent. In JSON, -42 is a single number token (the minus is part of the
-# number, not a separate operator). Leading zeros are not allowed except for
-# the number 0 itself (0.5 is fine, 007 is not).
-NUMBER   = /-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/
+# Number: optional negative sign, followed by integer part, optional decimal,
+# and optional exponent. Written without alternation groups (|) or optional
+# capture groups (...)? so that the Lua pcre_to_lua converter handles it
+# correctly. The pattern is slightly more permissive than the JSON spec
+# (allows leading zeros) but correct tokenization is the parser's job.
+NUMBER   = /-?[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/
 
 # Value literals — these are NOT keywords (JSON has no NAME/identifier token).
 # Each gets its own token type rather than being reclassified from NAME.

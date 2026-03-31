@@ -28,9 +28,9 @@
 
 program        = { statement } ;
 statement      = var_declaration | assignment | expression_stmt ;
-var_declaration = KEYWORD NAME EQUALS expression SEMICOLON ;
+var_declaration = ( VAR | LET | CONST ) NAME EQUALS expression SEMICOLON ;
 assignment     = NAME EQUALS expression SEMICOLON ;
 expression_stmt = expression SEMICOLON ;
 expression     = term { ( PLUS | MINUS ) term } ;
 term           = factor { ( STAR | SLASH ) factor } ;
-factor         = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;
+factor         = NUMBER | STRING | NAME | TRUE | FALSE | NULL | UNDEFINED | LPAREN expression RPAREN ;
