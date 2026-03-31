@@ -996,3 +996,33 @@ When adding build scripts (like `scripts/build-all-browsers.ts`) to a TypeScript
 
 **Solution:** Add `"scripts/**"` to the vitest config's `coverage.exclude` array, alongside other non-testable files like `dist/**` and `vite.config.ts`.
 
+---
+
+### 2026-03-29: Swift IS available on Windows — don't skip it
+
+When Swift's `BUILD` file (`swift test`) failed on Windows CI with "'swift' is not recognized", the initial reaction was to create a `BUILD_windows` that skips tests. This was wrong — Swift has been available on Windows since Swift 5.3 (2020). The real issue was that the CI workflow had no Swift setup step.
+
+**Fix:** Add `swift-actions/setup-swift@v3` to the CI workflow with a `needs_swift` conditional (matching the pattern used for Python, Ruby, etc.). The build tool already emits `needs_swift=true|false` — the CI workflow just wasn't reading it.
+
+**Rule:** When a language tool is missing on a CI runner, investigate whether it can be installed via an action before skipping. Don't assume a language isn't supported on a platform — check first. Swift runs on macOS, Linux, and Windows.
+
+**Update (same day):** `swift-actions/setup-swift@v3` does NOT support Windows yet — it throws "Windows is not supported yet" at runtime. But that doesn't mean Swift can't run on Windows CI! Instead of skipping, install Swift directly via `winget install --id Swift.Toolchain` (following https://www.swift.org/install/windows/). The CI workflow uses `swift-actions/setup-swift` on macOS/Linux and `winget` on Windows. Don't skip a platform just because one action doesn't support it — there's always a manual install path.
+
+---
+
+### 2026-03-30: Swift BUILD files must use `xcrun swift test`, not `swift test`
+
+When `swift-actions/setup-swift` installs a Swift toolchain on macOS CI runners, the XCTest framework lives inside the Xcode app bundle, not on the toolchain's rpath. Running bare `swift test` fails with `Library not loaded: @rpath/XCTestCore.framework`. Using `xcrun swift test` instead resolves framework paths through Xcode automatically.
+
+**Rule:** Use `xcrun swift test` on macOS (resolves XCTest framework paths via DEVELOPER_DIR) but `xcrun` doesn't exist on Linux. BUILD files must be platform-aware:
+```
+if command -v xcrun >/dev/null 2>&1; then xcrun swift test; else swift test; fi
+```
+
+---
+
+### 2026-03-30: Lua BUILD_windows must use Windows cmd syntax for environment variables
+
+Unix-style inline env vars (`LUA_PATH=... lua`) don't work on Windows cmd.exe — you get "'LUA_PATH' is not recognized as an internal or external command". Use `set "LUA_PATH=..." && lua ...` instead.
+
+**Rule:** When a BUILD_windows file needs to set environment variables, use `set "VAR=value" && command` syntax, not Unix-style `VAR=value command`.
