@@ -10,7 +10,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
   defp simple_grammar do
     {:ok, g} =
       TokenGrammar.parse("""
-      NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+      NAME   = /[a-zA-Z_][a-zA-Z_0-9]*/
       NUMBER = /[0-9]+/
       PLUS   = "+"
       MINUS  = "-"
@@ -25,6 +25,17 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       |> Path.expand()
 
     {:ok, g} = TokenGrammar.parse(File.read!(Path.join(grammar_dir, "json.tokens")))
+    g
+  end
+
+  # A minimal STRING grammar with escape processing enabled.
+  #
+  # The JSON grammar uses `escapes: none` because JSON escape decoding is the
+  # parser's responsibility — the lexer hands raw token text to the parser.
+  # These tests use a grammar without that flag so the lexer's own
+  # escape-processing path (process_escapes/1) is exercised.
+  defp escape_processing_grammar do
+    {:ok, g} = TokenGrammar.parse(~S{STRING = /"([^"\\]|\\.)*"/})
     g
   end
 
@@ -47,7 +58,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       OPEN_TAG  = "<"
 
       group tag:
-        TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+        TAG_NAME  = /[a-zA-Z_][a-zA-Z_0-9]*/
         EQUALS    = "="
         VALUE     = /"[^"]*"/
         TAG_CLOSE = ">"
@@ -145,7 +156,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
     test "reclassifies NAME as KEYWORD" do
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
         NUMBER = /[0-9]+/
 
         keywords:
@@ -183,7 +194,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
         TokenGrammar.parse("""
         # @case_insensitive true
 
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         keywords:
           select
@@ -249,7 +260,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       # set (which stores "select" as-is), so it becomes a NAME token.
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         keywords:
           select
@@ -266,7 +277,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       # In case-sensitive mode, "select" (exact match) is still a KEYWORD.
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         keywords:
           select
@@ -284,7 +295,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
     test "reserved keywords produce errors" do
       {:ok, g} =
         TokenGrammar.parse("""
-        NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME = /[a-zA-Z_][a-zA-Z_0-9]*/
 
         reserved:
           class
@@ -306,8 +317,14 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
   end
 
   describe "tokenize/2 — string escape processing" do
-    test "processes standard escapes via JSON grammar" do
-      g = json_grammar()
+    # These tests use escape_processing_grammar/0, not json_grammar/0.
+    # The JSON grammar intentionally declares `escapes: none` so that the
+    # lexer passes raw escape text to the parser for semantic decoding.
+    # escape_processing_grammar/0 omits that flag, routing STRING tokens
+    # through process_escapes/1 inside the lexer.
+
+    test "processes standard escapes (\\n, \\t, etc.)" do
+      g = escape_processing_grammar()
       source = ~S("hello\nworld")
       {:ok, tokens} = GrammarLexer.tokenize(source, g)
       [token, _eof] = tokens
@@ -315,8 +332,8 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       assert token.value == "hello\nworld"
     end
 
-    test "processes unicode escapes via JSON grammar" do
-      g = json_grammar()
+    test "processes unicode escapes (\\uXXXX)" do
+      g = escape_processing_grammar()
       source = ~S("caf\u00E9")
       {:ok, tokens} = GrammarLexer.tokenize(source, g)
       [token, _eof] = tokens
@@ -580,7 +597,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
         OPEN_TAG         = "<"
 
         group tag:
-          TAG_NAME  = /[a-zA-Z_][a-zA-Z0-9_]*/
+          TAG_NAME  = /[a-zA-Z_][a-zA-Z_0-9]*/
           TAG_CLOSE = ">"
           SLASH     = "/"
         """)
@@ -781,7 +798,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       # = same behavior as the original GrammarLexer.
       {:ok, grammar} =
         TokenGrammar.parse("""
-        NAME   = /[a-zA-Z_][a-zA-Z0-9_]*/
+        NAME   = /[a-zA-Z_][a-zA-Z_0-9]*/
         NUMBER = /[0-9]+/
         PLUS   = "+"
         """)

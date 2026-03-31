@@ -296,7 +296,18 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
     # This mirrors the Python GrammarLexer behavior — keyword promotion and
     # pattern matching both operate on the lowercased text, which is the
     # correct behavior for case-insensitive languages like VHDL or SQL.
-    effective_source = if grammar.case_sensitive, do: source, else: String.downcase(source)
+    #
+    # Exception: when `case_insensitive: true` is ALSO set, the lexer uses
+    # the smarter Elixir-native approach (upcase lookup on keywords only,
+    # identifiers preserve their original case). In that mode we do NOT
+    # lowercase the source — the keyword normalisation in Stage 3 handles
+    # case folding only for KEYWORD tokens. This lets `case_sensitive: false`
+    # in shared grammar files coexist with Elixir's `case_insensitive: true`
+    # without accidentally casefolding identifier values.
+    effective_source =
+      if grammar.case_sensitive or grammar.case_insensitive,
+        do: source,
+        else: String.downcase(source)
 
     state = init_state(effective_source, grammar, on_token)
 
