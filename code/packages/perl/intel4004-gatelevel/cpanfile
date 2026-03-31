@@ -1,6 +1,6 @@
 requires 'perl', '5.016';
-requires 'CodingAdventures::LogicGates';
-requires 'CodingAdventures::Arithmetic';
+requires 'coding-adventures-logic-gates', '0';
+requires 'coding-adventures-arithmetic',  '0';
 
 on test => sub {
     requires 'Test2::V0';
