@@ -35,7 +35,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
   # These tests use a grammar without that flag so the lexer's own
   # escape-processing path (process_escapes/1) is exercised.
   defp escape_processing_grammar do
-    {:ok, g} = TokenGrammar.parse(~S(STRING = /"([^"\\]|\\.)*"/))
+    {:ok, g} = TokenGrammar.parse(~S{STRING = /"([^"\\]|\\.)*"/})
     g
   end
 
