@@ -2,6 +2,16 @@
 
 All notable changes to the Ruby Parser package will be documented in this file.
 
+## [0.1.1] - 2026-03-31
+
+### Fixed
+
+- Updated `ruby.grammar` so that `method_call` and `factor` reference `KEYWORD`
+  instead of `PUTS`, `TRUE`, `FALSE`, and `NIL`. The grammar-driven lexer
+  reclassifies all keyword identifiers (including `puts`, `true`, `false`, `nil`)
+  to `KEYWORD` tokens; the grammar must use that token type.
+  This fixes `GrammarParseError: Parse error at 1:1: Unexpected token: "puts"`.
+
 ## [0.1.0] - 2026-03-18
 
 ### Added
