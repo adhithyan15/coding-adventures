@@ -1,0 +1,7 @@
+requires 'CodingAdventures::LogicGates';
+requires 'CodingAdventures::Arithmetic';
+requires 'CodingAdventures::ARM1Simulator';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};
