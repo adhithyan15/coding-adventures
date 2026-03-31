@@ -12,11 +12,16 @@ hello-world extension and the browser-extension-toolkit.
 
 ## What We're Building
 
-**bookmarks-extension** — A popup-based extension with:
+**bookmarks-extension** — A side-panel-based extension with:
 - A form to annotate the current tab's URL with a title and note
 - Persistent storage via IndexedDB
 - A list view to browse, search, edit, and delete saved bookmarks
 - A storage abstraction layer enabling future cloud sync backends
+- Cross-browser sidebar abstraction (Chrome sidePanel + Firefox sidebar_action)
+
+**Implementation note:** The original spec described a popup UI. During implementation,
+this was changed to a side panel approach because side panels persist while the user
+browses (popups are destroyed on click-away), providing a better UX for annotation tasks.
 
 ---
 
@@ -280,11 +285,26 @@ function wrapRequest<T>(request: IDBRequest<T>): Promise<T> {
 
 ---
 
-## Popup UI Design
+## Side Panel UI Design
+
+### Side Panel vs Popup
+
+The extension uses a **side panel** instead of a popup. Key differences:
+
+| Aspect | Popup | Side Panel |
+|--------|-------|------------|
+| Lifetime | Destroyed on click-away | Persists while browsing |
+| Size | Small fixed-size window | Full browser height, adjustable width |
+| Chrome API | `action.default_popup` | `sidePanel` API (Chrome 114+) |
+| Firefox API | `action.default_popup` | `sidebar_action` API |
+| Safari | Supported | Not supported (falls back to popup) |
+
+The service worker registers an `action.onClicked` listener that opens the
+appropriate sidebar API for the current browser.
 
 ### Two-view layout
 
-The popup has two views, toggled by a tab bar at the top:
+The panel has two views, toggled by a tab bar at the top:
 
 ```
 ┌─────────────────────────────────────┐
@@ -333,16 +353,19 @@ The popup has two views, toggled by a tab bar at the top:
 └─────────────────────────────────────┘
 ```
 
-### Popup lifecycle and storage
+### Panel lifecycle and storage
 
 ```
 User clicks extension icon
        │
        ▼
-popup.html loads
+Service worker opens side panel (sidePanel or sidebarAction)
        │
        ▼
-initPopup(storage?) called
+panel.html loads
+       │
+       ▼
+initPanel(storage?) called
        │
        ├── Creates storage (or uses injected one)
        ├── Calls storage.initialize()
@@ -356,15 +379,15 @@ initPopup(storage?) called
 User interacts (saves, edits, deletes, searches)
        │
        ▼
-User clicks away → popup destroyed → state is in IndexedDB
+Panel stays open until user closes it → state is in IndexedDB
 ```
 
 ### Dependency injection for testability
 
-The `initPopup()` function accepts an optional `BookmarkStorage`:
+The `initPanel()` function accepts an optional `BookmarkStorage`:
 
 ```typescript
-export async function initPopup(storage?: BookmarkStorage): Promise<void> {
+export async function initPanel(storage?: BookmarkStorage): Promise<void> {
   const store = storage ?? createStorage();
   await store.initialize();
   // ... wire up UI
@@ -378,15 +401,19 @@ uses the default `createStorage()` which returns `IndexedDBStorage`.
 
 ## Permissions
 
-| Permission | Why |
-|-----------|-----|
-| `activeTab` | Access the current tab's URL and title when the user clicks the icon |
-| `tabs` | Use `browser.tabs.query()` to get the active tab's info |
+| Permission | Why | Browsers |
+|-----------|-----|----------|
+| `activeTab` | Access the current tab's URL and title when the user clicks the icon | All |
+| `tabs` | Use `browser.tabs.query()` to get the active tab's info | All |
+| `sidePanel` | Open Chrome's side panel via `chrome.sidePanel.open()` | Chrome only |
 
 **What we DON'T need:**
 - `storage` — IndexedDB doesn't require any permission
 - `bookmarks` — We're not reading/writing the browser's built-in bookmarks
 - `<all_urls>` — We don't inject content scripts into pages
+
+**Note:** The `sidePanel` permission is stripped from the Firefox and Safari
+manifests by the manifest transformer, since those browsers don't support it.
 
 ---
 

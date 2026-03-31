@@ -1,13 +1,15 @@
 # Bookmarks Extension
 
-A browser extension for saving annotated bookmarks. Click the toolbar icon, see the current tab's URL, write a note about it, and save. Works in Chrome, Firefox, and Safari.
+A browser extension for saving annotated bookmarks. Click the toolbar icon to open a side panel where you can add notes to the current page and save it. Works in Chrome and Firefox.
 
 ## Features
 
+- Side panel UI that persists while you browse
 - Save the current tab with a title and note
 - Browse, search, edit, and delete saved bookmarks
 - Local storage via IndexedDB (no account required)
 - Pluggable storage backend for future cloud sync
+- Cross-browser sidebar abstraction (Chrome sidePanel + Firefox sidebar_action)
 
 ## Development
 
@@ -27,12 +29,14 @@ npm run test:coverage  # Run tests with coverage
 1. Open `chrome://extensions`
 2. Enable **Developer mode**
 3. Click **Load unpacked** and select the `dist/` directory
+4. Click the extension icon — the side panel opens
 
 ### Firefox
 
 1. Open `about:debugging#/runtime/this-firefox`
 2. Click **Load Temporary Add-on...**
 3. Select `dist/manifest.json`
+4. The sidebar appears in the browser's sidebar area
 
 ### Safari
 
@@ -43,7 +47,7 @@ npm run test:coverage  # Run tests with coverage
 
 ## Architecture
 
-The extension uses a **Strategy pattern** for storage:
+### Storage (Strategy pattern)
 
 ```
 BookmarkStorage (interface)
@@ -55,6 +59,17 @@ BookmarkStorage (interface)
 Consumer code calls `createStorage()` which returns the active backend.
 Swapping backends is a one-line change in `src/storage/index.ts`.
 
+### Sidebar abstraction
+
+The service worker detects which sidebar API is available and opens the right one:
+
+| Browser | API | Manifest key |
+|---------|-----|-------------|
+| Chrome | `chrome.sidePanel.open()` | `side_panel` |
+| Firefox | `browser.sidebarAction.open()` | `sidebar_action` |
+
+Both use the same panel HTML/CSS/JS — only the manifest entries and open mechanism differ.
+
 ## Project Structure
 
 ```
@@ -64,12 +79,12 @@ src/
 │   ├── bookmark-storage.ts      # Interface + types
 │   ├── indexeddb-storage.ts     # IndexedDB implementation
 │   └── index.ts                 # Factory
-├── popup/
-│   ├── popup.html               # Extension popup UI
-│   ├── popup.ts                 # Popup logic
-│   └── popup.css                # Styles
+├── panel/
+│   ├── panel.html               # Side panel UI
+│   ├── panel.ts                 # Panel logic
+│   └── panel.css                # Styles
 └── background/
-    └── service-worker.ts        # Background script
+    └── service-worker.ts        # Opens side panel on icon click
 ```
 
 ## Part of coding-adventures
