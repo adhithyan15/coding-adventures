@@ -3,7 +3,7 @@
 // Source: required_capabilities.json
 // Regenerate:
 //   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \
-//     --manifest=/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/fervent-gould/code/packages/go/excel-parser/required_capabilities.json
+//     --manifest=C:/Users/adhit/Downloads/coding-adventures/.claude/worktrees/go-operations-generator/code/packages/go/excel-parser/required_capabilities.json
 //
 // The JSON file is a development-time artifact; this file is what the
 // runtime enforces. Edit required_capabilities.json and re-run the
