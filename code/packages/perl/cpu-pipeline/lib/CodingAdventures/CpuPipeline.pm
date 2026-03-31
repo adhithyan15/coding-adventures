@@ -398,9 +398,16 @@ sub step {
     my $num_stages = $self->{config}->num_stages();
 
     # Phase 1: Query hazard detector
+    # Pass next_preview (post-shift view) so the hazard detector sees what
+    # stages will look like after a normal advance — not the pre-shift state.
     my $hazard;
     if ($self->{hazard_fn}) {
-        $hazard = $self->{hazard_fn}->($self->{stages});
+        my @next_preview;
+        $next_preview[0] = undef;  # stage 1: new instruction not yet fetched
+        for my $i (1 .. $num_stages - 1) {
+            $next_preview[$i] = $self->{stages}[$i - 1];
+        }
+        $hazard = $self->{hazard_fn}->(\@next_preview);
     } else {
         $hazard = CodingAdventures::CpuPipeline::HazardResponse->new(action => 'none');
     }

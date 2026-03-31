@@ -194,9 +194,18 @@ function Pipeline:step()
     local num_stages = self.config:num_stages()
 
     -- ---- Phase 1: Check for hazards ----
+    -- Build the "would-be next stages" (after a normal shift) so the hazard
+    -- detector sees the pipeline state it will act upon — not the stale state.
+    -- Stage i+1 receives what is currently in stage i; stage 1 gets nil (new
+    -- fetch will fill it), shifted indices are {nil, stages[1], stages[2], ...}.
     local hazard
     if self.hazard_fn then
-        hazard = self.hazard_fn(self.stages)
+        local next_preview = {}
+        next_preview[1] = nil  -- new instruction not yet fetched
+        for i = 2, num_stages do
+            next_preview[i] = self.stages[i - 1]
+        end
+        hazard = self.hazard_fn(next_preview)
     else
         hazard = HazardResponse.new({ action = "none" })
     end

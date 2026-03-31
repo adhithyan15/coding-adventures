@@ -629,13 +629,26 @@ function M.NetworkStack:add_arp(ip, mac)
   return st
 end
 
+--- Append a 4-byte placeholder FCS to wire bytes (simulating Ethernet CRC32).
+-- Real hardware computes CRC32 over the frame; we use four zero bytes as a
+-- placeholder since our simulation does not verify the checksum.
+local function append_fcs(bytes)
+  local wire = {}
+  for _, b in ipairs(bytes) do wire[#wire + 1] = b end
+  wire[#wire + 1] = 0x00
+  wire[#wire + 1] = 0x00
+  wire[#wire + 1] = 0x00
+  wire[#wire + 1] = 0x00
+  return wire
+end
+
 --- Send a UDP payload: construct UDP → IP → Ethernet → return wire bytes.
 -- @param dst_ip    List of 4 bytes
 -- @param dst_mac   List of 6 bytes
 -- @param src_port  UDP source port
 -- @param dst_port  UDP destination port
 -- @param data      List of bytes (application payload)
--- @return list of raw wire bytes
+-- @return list of raw wire bytes (includes 4-byte FCS trailer)
 function M.NetworkStack:send_udp(dst_ip, dst_mac, src_port, dst_port, data)
   -- Layer 4: UDP
   local udp = M.UDPDatagram.new(src_port, dst_port, data)
@@ -644,9 +657,9 @@ function M.NetworkStack:send_udp(dst_ip, dst_mac, src_port, dst_port, data)
   -- Layer 3: IP
   local ip_bytes = self.ip_layer:create_packet(dst_ip, M.PROTO_UDP, udp_bytes)
 
-  -- Layer 2: Ethernet
+  -- Layer 2: Ethernet (with FCS trailer)
   local frame = M.EthernetFrame.new(dst_mac, self.local_mac, M.ETHERTYPE_IPV4, ip_bytes)
-  return frame:serialize()
+  return append_fcs(frame:serialize())
 end
 
 --- Send a TCP payload: construct TCP → IP → Ethernet → return wire bytes.
@@ -658,9 +671,9 @@ function M.NetworkStack:send_tcp(dst_ip, dst_mac, src_port, dst_port, seq, ack, 
   -- Layer 3: IP
   local ip_bytes = self.ip_layer:create_packet(dst_ip, M.PROTO_TCP, tcp_bytes)
 
-  -- Layer 2: Ethernet
+  -- Layer 2: Ethernet (with FCS trailer)
   local frame = M.EthernetFrame.new(dst_mac, self.local_mac, M.ETHERTYPE_IPV4, ip_bytes)
-  return frame:serialize()
+  return append_fcs(frame:serialize())
 end
 
 --- Receive and decapsulate wire bytes.
@@ -668,6 +681,13 @@ end
 -- Returns: "ok", protocol, src_ip, src_port, dst_port, payload
 --       OR "error", reason, nil...
 function M.NetworkStack:receive(wire_bytes)
+  -- Strip 4-byte FCS trailer if present (added by send_udp/send_tcp)
+  if #wire_bytes > 14 then
+    local stripped = {}
+    for i = 1, #wire_bytes - 4 do stripped[i] = wire_bytes[i] end
+    wire_bytes = stripped
+  end
+
   -- Layer 2: Ethernet
   if #wire_bytes < 14 then return "error", "too_short", nil, nil, nil, nil end
   local frame = M.EthernetFrame.deserialize(wire_bytes)

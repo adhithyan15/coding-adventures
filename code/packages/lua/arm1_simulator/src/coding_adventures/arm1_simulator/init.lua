@@ -432,14 +432,14 @@ end
 
 --- Reads a single byte from memory.
 function ARM1Simulator:read_byte(addr)
-  addr = addr & PC_MASK
+  addr = addr & 0x03FFFFFF  -- 26-bit address space, all byte positions valid
   if addr >= self.memory_size then return 0 end
   return self.memory[addr] or 0
 end
 
 --- Writes a single byte to memory.
 function ARM1Simulator:write_byte(addr, value)
-  addr = addr & PC_MASK
+  addr = addr & 0x03FFFFFF  -- 26-bit address space, all byte positions valid
   if addr >= self.memory_size then return end
   self.memory[addr] = value & 0xFF
 end
@@ -1276,9 +1276,13 @@ end
 
 --- Creates a Branch or Branch-with-Link instruction.
 function ARM1Simulator.encode_branch(condition, link, offset)
+  -- offset is in bytes, relative to the current instruction address.
+  -- ARM pipeline: target = (PC+8) + encoded*4, and execute_branch computes
+  -- branch_base = (PC+4)+4 = PC+8 after step() advances PC by 4.
+  -- So encoded = (offset - 8) / 4 to compensate: target = PC+8+(offset-8) = PC+offset.
   local inst = (condition << 28) | 0x0A000000
   if link then inst = inst | 0x01000000 end
-  local encoded = math.floor(offset / 4) & 0x00FFFFFF
+  local encoded = math.floor((offset - 8) / 4) & 0x00FFFFFF
   return mask32(inst | encoded)
 end
 

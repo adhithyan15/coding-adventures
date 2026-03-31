@@ -367,7 +367,7 @@ sub execute {
     my $a = $registers->read($instr->{rs1});
     my $b = $registers->read($instr->{rs2});
     if ($a == $b) {
-      $result->{next_pc_offset} = floor($instr->{immediate});
+      $result->{next_pc_offset} = floor($instr->{immediate}) - 1;
       $result->{description} = sprintf("BEQ R%d, R%d: %g == %g → taken (offset %d)",
         $instr->{rs1}, $instr->{rs2}, $a, $b, $result->{next_pc_offset});
     } else {
@@ -379,7 +379,7 @@ sub execute {
     my $a = $registers->read($instr->{rs1});
     my $b = $registers->read($instr->{rs2});
     if ($a < $b) {
-      $result->{next_pc_offset} = floor($instr->{immediate});
+      $result->{next_pc_offset} = floor($instr->{immediate}) - 1;
       $result->{description} = sprintf("BLT R%d, R%d: %g < %g → taken (offset %d)",
         $instr->{rs1}, $instr->{rs2}, $a, $b, $result->{next_pc_offset});
     } else {
@@ -391,7 +391,7 @@ sub execute {
     my $a = $registers->read($instr->{rs1});
     my $b = $registers->read($instr->{rs2});
     if ($a != $b) {
-      $result->{next_pc_offset} = floor($instr->{immediate});
+      $result->{next_pc_offset} = floor($instr->{immediate}) - 1;
       $result->{description} = sprintf("BNE R%d, R%d: %g != %g → taken (offset %d)",
         $instr->{rs1}, $instr->{rs2}, $a, $b, $result->{next_pc_offset});
     } else {

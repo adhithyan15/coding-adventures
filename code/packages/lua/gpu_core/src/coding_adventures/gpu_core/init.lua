@@ -453,11 +453,13 @@ function GenericISA:execute(instr, registers, memory)
     result.description = string.format("R%d = %g (immediate)", instr.rd, v)
 
   elseif op == "BEQ" then
-    -- if Rs1 == Rs2 then PC += offset
+    -- if Rs1 == Rs2 then PC = current_pc + offset
+    -- Core computes: next_pc = current_pc + 1 + next_pc_offset
+    -- So next_pc_offset = immediate - 1 to get target = current_pc + immediate
     local a = registers:read(instr.rs1)
     local b = registers:read(instr.rs2)
     if a == b then
-      result.next_pc_offset = math.floor(instr.immediate)
+      result.next_pc_offset = math.floor(instr.immediate) - 1
       result.description = string.format("BEQ R%d, R%d: %g == %g → taken (offset %d)",
         instr.rs1, instr.rs2, a, b, result.next_pc_offset)
     else
@@ -466,11 +468,11 @@ function GenericISA:execute(instr, registers, memory)
     end
 
   elseif op == "BLT" then
-    -- if Rs1 < Rs2 then PC += offset
+    -- if Rs1 < Rs2 then PC = current_pc + offset
     local a = registers:read(instr.rs1)
     local b = registers:read(instr.rs2)
     if a < b then
-      result.next_pc_offset = math.floor(instr.immediate)
+      result.next_pc_offset = math.floor(instr.immediate) - 1
       result.description = string.format("BLT R%d, R%d: %g < %g → taken (offset %d)",
         instr.rs1, instr.rs2, a, b, result.next_pc_offset)
     else
@@ -479,11 +481,11 @@ function GenericISA:execute(instr, registers, memory)
     end
 
   elseif op == "BNE" then
-    -- if Rs1 != Rs2 then PC += offset
+    -- if Rs1 != Rs2 then PC = current_pc + offset
     local a = registers:read(instr.rs1)
     local b = registers:read(instr.rs2)
     if a ~= b then
-      result.next_pc_offset = math.floor(instr.immediate)
+      result.next_pc_offset = math.floor(instr.immediate) - 1
       result.description = string.format("BNE R%d, R%d: %g != %g → taken (offset %d)",
         instr.rs1, instr.rs2, a, b, result.next_pc_offset)
     else

@@ -1223,8 +1223,25 @@ end
 local InMemoryDataSource = {}
 InMemoryDataSource.__index = InMemoryDataSource
 
-function InMemoryDataSource.new()
-  return setmetatable({ tables = {}, schemas = {} }, InMemoryDataSource)
+--- Create a new InMemoryDataSource.
+-- @param tables_data  Optional table of { [table_name] = { row, ... } }.
+--                     Schema is inferred from the keys of the first row.
+function InMemoryDataSource.new(tables_data)
+  local ds = setmetatable({ tables = {}, schemas = {} }, InMemoryDataSource)
+  if type(tables_data) == "table" then
+    for tname, rows in pairs(tables_data) do
+      -- Infer schema from the first row's keys (sorted for determinism)
+      local schema = {}
+      if rows[1] then
+        for col, _ in pairs(rows[1]) do
+          schema[#schema + 1] = col
+        end
+        table.sort(schema)
+      end
+      ds:add_table(tname, schema, rows)
+    end
+  end
+  return ds
 end
 
 function InMemoryDataSource:add_table(name, schema, rows)

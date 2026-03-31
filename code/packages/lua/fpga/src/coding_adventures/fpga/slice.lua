@@ -117,7 +117,7 @@ function Slice:evaluate(inputs_a, inputs_b, clock, carry_in)
     carry_mid  = lut_a_result & carry_in   -- AND: carry out of A
 
     out_b_comb = lut_b_result ~ carry_mid
-    carry_out  = lut_b_result & carry_mid
+    carry_out  = carry_mid  -- carry from lut_a stage passes to slice carry output
   else
     out_a_comb = lut_a_result
     out_b_comb = lut_b_result

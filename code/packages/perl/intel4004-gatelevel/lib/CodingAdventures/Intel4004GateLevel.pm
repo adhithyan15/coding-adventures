@@ -532,7 +532,7 @@ sub _exec_sub {
     my $rn       = $self->_read_reg($reg);
     my $carry    = $self->_read_carry();
     my $compl_rn = $self->_gate_not4($rn);
-    my $borrow_in = !$carry;   # carry=1 means no borrow -> borrow_in=0
+    my $borrow_in = $carry ? 1 : 0;  # carry is added directly: A = A + ~Rn + CY
     my ($result, $cout) = $self->_gate_add($a, $compl_rn, $borrow_in);
     $self->_write_acc($result & 0xF);
     $self->_write_carry($cout);
@@ -571,7 +571,7 @@ sub _exec_jms {
 sub _exec_bbl {
     my ($self, $n) = @_;
     my $ret = $self->_stack_pop();
-    $self->_write_acc($n & 0xF);
+    $self->_write_acc($n & 0xF) if $n != 0;  # BBL 0 preserves accumulator
     $self->_write_pc_val($ret);
     return "BBL $n";
 }
@@ -652,7 +652,7 @@ sub _exec_io {
         # SBM: subtract RAM from accumulator through gates
         my $ram_val   = $self->_ram_read_main();
         my $compl_val = $self->_gate_not4($ram_val);
-        my $borrow_in = !$self->_read_carry();
+        my $borrow_in = $self->_read_carry() ? 1 : 0;
         my ($result, $cout) = $self->_gate_add($acc, $compl_val, $borrow_in);
         $self->_write_acc($result & 0xF);
         $self->_write_carry($cout);

@@ -2,6 +2,6 @@ use strict;
 use warnings;
 use Test2::V0;
 
-use_ok 'CodingAdventures::ARM1Simulator';
+ok( eval { require CodingAdventures::ARM1Simulator; 1 }, 'CodingAdventures::ARM1Simulator loads' );
 
 done_testing;

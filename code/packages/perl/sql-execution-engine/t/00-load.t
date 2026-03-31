@@ -2,13 +2,13 @@ use strict;
 use warnings;
 use Test2::V0;
 
-use_ok('CodingAdventures::SqlExecutionEngine');
-use_ok('CodingAdventures::SqlExecutionEngine::InMemoryDataSource');
+ok( eval { require CodingAdventures::SqlExecutionEngine; 1 },                  'CodingAdventures::SqlExecutionEngine loads' );
+ok( eval { require CodingAdventures::SqlExecutionEngine::InMemoryDataSource; 1 }, 'CodingAdventures::SqlExecutionEngine::InMemoryDataSource loads' );
 
-can_ok('CodingAdventures::SqlExecutionEngine', 'execute');
-can_ok('CodingAdventures::SqlExecutionEngine', 'execute_all');
-can_ok('CodingAdventures::SqlExecutionEngine::InMemoryDataSource', 'new');
-can_ok('CodingAdventures::SqlExecutionEngine::InMemoryDataSource', 'schema');
-can_ok('CodingAdventures::SqlExecutionEngine::InMemoryDataSource', 'scan');
+ok( CodingAdventures::SqlExecutionEngine->can('execute'),     'SqlExecutionEngine->execute exists' );
+ok( CodingAdventures::SqlExecutionEngine->can('execute_all'), 'SqlExecutionEngine->execute_all exists' );
+ok( CodingAdventures::SqlExecutionEngine::InMemoryDataSource->can('new'),    'InMemoryDataSource->new exists' );
+ok( CodingAdventures::SqlExecutionEngine::InMemoryDataSource->can('schema'), 'InMemoryDataSource->schema exists' );
+ok( CodingAdventures::SqlExecutionEngine::InMemoryDataSource->can('scan'),   'InMemoryDataSource->scan exists' );
 
 done_testing;

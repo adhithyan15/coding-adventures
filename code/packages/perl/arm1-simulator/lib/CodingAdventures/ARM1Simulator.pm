@@ -423,7 +423,7 @@ sub write_word {
 
 sub read_byte {
     my ($self, $addr) = @_;
-    $addr &= PC_MASK;
+    $addr &= 0x03FFFFFF;  # 26-bit address space, all byte positions valid
     return 0 if $addr >= $self->{memory_size};
     return $self->{memory}[$addr] // 0;
 }
@@ -436,7 +436,7 @@ sub read_byte {
 
 sub write_byte {
     my ($self, $addr, $value) = @_;
-    $addr &= PC_MASK;
+    $addr &= 0x03FFFFFF;  # 26-bit address space, all byte positions valid
     return if $addr >= $self->{memory_size};
     $self->{memory}[$addr] = $value & 0xFF;
 }
@@ -715,7 +715,7 @@ sub _decode {
         my $raw_off = $instruction & 0x00FFFFFF;
         # Sign-extend from 24 bits
         if ($raw_off >> 23) {
-            $raw_off |= 0xFFFFFFFFFF000000;  # sign extend (64-bit Perl)
+            $raw_off |= 0xFFFFFFFF_FF000000;  # sign extend (64-bit Perl)
         }
         # Convert to signed and shift left by 2
         # In Perl: use the fact that the value is already signed 64-bit
@@ -1160,7 +1160,7 @@ sub encode_branch {
     my ($condition, $link, $offset) = @_;
     my $inst = ($condition << 28) | 0x0A000000;
     $inst |= 0x01000000 if $link;
-    my $encoded = int($offset / 4) & 0x00FFFFFF;
+    my $encoded = int(($offset - 8) / 4) & 0x00FFFFFF;
     return _mask32($inst | $encoded);
 }
 

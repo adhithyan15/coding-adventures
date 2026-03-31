@@ -486,13 +486,14 @@ function Intel4004GateLevel:_exec_add(reg)
 end
 
 -- SUB: complement-add subtraction through gates
--- A = A + NOT(Rn) + borrow_in; carry=true means no borrow
+-- A = A + NOT(Rn) + CY; carry is added directly (A = A + NOT(Rn) + CY).
+-- Intel 4004 SUB: uses carry as the incoming borrow complement.
 function Intel4004GateLevel:_exec_sub(reg)
     local a         = self:_read_acc()
     local rn        = self:_read_reg(reg)
     local carry     = self:_read_carry()
     local compl_rn  = gate_not4(rn)
-    local borrow_in = not carry  -- carry=true means no borrow
+    local borrow_in = carry  -- carry is added directly (CY=1 means add 1)
     local result, carry_out = gate_add(a, compl_rn, borrow_in)
     self:_write_acc(result & 0xF)
     self:_write_carry(carry_out)
@@ -528,7 +529,7 @@ end
 
 function Intel4004GateLevel:_exec_bbl(n)
     local ret = self:_stack_pop()
-    self:_write_acc(n & 0xF)
+    if n ~= 0 then self:_write_acc(n & 0xF) end  -- only load if n≠0
     self:_write_pc_val(ret)
     return "BBL " .. n
 end

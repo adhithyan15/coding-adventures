@@ -331,13 +331,12 @@ sub _exec_add {
 }
 
 # SUB: Subtract register from accumulator (complement-add method).
-# A = A + (~Rn) + borrow_in   where borrow_in = carry ? 0 : 1
-# carry=1 means NO borrow (MCS-4 carry semantics).
+# A = A + (~Rn) + CY   where CY (carry) = 1 means no borrow (MCS-4 carry semantics).
 sub _exec_sub {
     my ($self, $reg) = @_;
     my $reg_val    = $self->{registers}[$reg];
     my $complement = (~$reg_val) & 0xF;
-    my $borrow_in  = $self->{carry} ? 0 : 1;
+    my $borrow_in  = $self->{carry} ? 1 : 0;
     my $result     = $self->{accumulator} + $complement + $borrow_in;
     $self->{accumulator} = $result & 0xF;
     $self->{carry}       = $result > 0xF ? 1 : 0;
@@ -388,11 +387,12 @@ sub _exec_jms {
 }
 
 # BBL: Branch back and load.
-# Pop return address from stack. Set A = immediate nibble.
+# Pop return address from stack. Set A = immediate nibble (only if n != 0).
+# BBL 0 is used to return while preserving the accumulator's current value.
 sub _exec_bbl {
     my ($self, $n) = @_;
     my $return_addr  = $self->_stack_pop();
-    $self->{accumulator} = $n & 0xF;
+    $self->{accumulator} = $n & 0xF if $n != 0;
     $self->{pc}          = $return_addr;
     return "BBL $n";
 }
@@ -498,7 +498,7 @@ sub _exec_io {
         my ($b, $r, $c) = @{$self}{qw(ram_bank ram_register ram_character)};
         my $ram_val    = $self->{ram}[$b][$r][$c];
         my $complement = (~$ram_val) & 0xF;
-        my $borrow_in  = $self->{carry} ? 0 : 1;
+        my $borrow_in  = $self->{carry} ? 1 : 0;
         my $result     = $self->{accumulator} + $complement + $borrow_in;
         $self->{accumulator} = $result & 0xF;
         $self->{carry}       = $result > 0xF ? 1 : 0;

@@ -321,12 +321,12 @@ function Intel4004:_exec_add(reg)
 end
 
 -- SUB: Subtract register from accumulator (complement-add method).
--- A = A + (~Rn) + borrow_in   where borrow_in = carry ? 0 : 1
--- carry=true means NO borrow (MCS-4 carry semantics).
+-- A = A + (~Rn) + CY   (carry is added directly — carry=1 means no borrow)
+-- Intel 4004 SUB: A = A + NOT(Rn) + CY
 function Intel4004:_exec_sub(reg)
     local reg_val = self.registers[reg + 1]
     local complement = (~reg_val) & 0xF
-    local borrow_in = self.carry and 0 or 1
+    local borrow_in = self.carry and 1 or 0
     local result = self.accumulator + complement + borrow_in
     self.accumulator = result & 0xF
     self.carry = result > 0xF
@@ -374,10 +374,11 @@ function Intel4004:_exec_jms(lower, raw2, addr)
 end
 
 -- BBL: Branch back and load.
--- Pop return address from stack. Set A = immediate nibble.
+-- Pop return address from stack. Set A = immediate nibble (only if n≠0).
+-- When n=0, the accumulator retains its current value (subroutine return value).
 function Intel4004:_exec_bbl(n)
     local return_addr = self:_stack_pop()
-    self.accumulator  = n & 0xF
+    if n ~= 0 then self.accumulator = n & 0xF end
     self.pc           = return_addr
     return "BBL " .. n
 end

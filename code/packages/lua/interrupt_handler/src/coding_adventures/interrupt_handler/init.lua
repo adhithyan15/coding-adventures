@@ -353,7 +353,16 @@ function M.Controller:dispatch(frame, kernel)
     return self, kernel
   end
   local new_ctrl = self:acknowledge(irq)
-  local new_kernel = new_ctrl.registry:dispatch(irq, frame, kernel)
+  -- If the kernel holds a reference to this controller (e.g. kernel.ctrl),
+  -- update it to the acknowledged state so handlers that raise new interrupts
+  -- do not accidentally re-queue the already-dispatched IRQ.
+  local dispatch_kernel = kernel
+  if type(kernel) == "table" and kernel.ctrl == self then
+    dispatch_kernel = {}
+    for k, v in pairs(kernel) do dispatch_kernel[k] = v end
+    dispatch_kernel.ctrl = new_ctrl
+  end
+  local new_kernel = new_ctrl.registry:dispatch(irq, frame, dispatch_kernel)
   return new_ctrl, new_kernel
 end
 

@@ -645,9 +645,14 @@ function Parser.parse(spec, argv)
   while i <= #argv and in_routing do
     local token = argv[i]
 
-    -- Check if this token is a subcommand name at the current level
-    local matched = false
-    if not token:match("^-") then
+    -- Flags (tokens starting with "-") are never subcommand names.
+    -- Pass them to the scanner but continue routing for subsequent tokens.
+    if token:match("^-") then
+      remaining_argv[#remaining_argv + 1] = token
+      i = i + 1
+    else
+      -- Check if this token is a subcommand name at the current level
+      local matched = false
       for _, cmd in ipairs(current_node.commands or {}) do
         if cmd.name == token then
           command_path[#command_path + 1] = cmd.name
@@ -656,14 +661,14 @@ function Parser.parse(spec, argv)
           break
         end
       end
-    end
 
-    if not matched then
-      in_routing = false
-      -- This token is not a subcommand — it goes to the scanner
-      for j = i, #argv do remaining_argv[#remaining_argv + 1] = argv[j] end
-    else
-      i = i + 1
+      if not matched then
+        in_routing = false
+        -- This token is not a subcommand — it and the rest go to the scanner
+        for j = i, #argv do remaining_argv[#remaining_argv + 1] = argv[j] end
+      else
+        i = i + 1
+      end
     end
   end
   -- If we consumed all tokens in routing:

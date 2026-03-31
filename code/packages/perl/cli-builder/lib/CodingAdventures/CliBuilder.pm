@@ -440,14 +440,19 @@ sub parse {
   for my $i (0..$#$argv) {
     my $token = $argv->[$i];
     if (!$routed) {
-      my ($match) = grep { $_->{name} eq $token } @{$current_node->{commands} // []};
-      if ($match && $token !~ /^-/) {
-        push @command_path, $match->{name};
-        $current_node = $match;
+      if ($token =~ /^-/) {
+        # Flag tokens are never subcommand names — pass to scanner but keep routing
+        push @remaining, $token;
       } else {
-        $routed = 1;
-        push @remaining, @{$argv}[$i..$#$argv];
-        last;
+        my ($match) = grep { $_->{name} eq $token } @{$current_node->{commands} // []};
+        if ($match) {
+          push @command_path, $match->{name};
+          $current_node = $match;
+        } else {
+          $routed = 1;
+          push @remaining, @{$argv}[$i..$#$argv];
+          last;
+        }
       }
     }
   }
