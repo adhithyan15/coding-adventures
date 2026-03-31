@@ -375,6 +375,9 @@ fn infer_col_name(node: &ASTNodeOrToken) -> String {
     match node {
         ASTNodeOrToken::Token(tok) => tok.value.clone(),
         ASTNodeOrToken::Node(n) => {
+            if let Some(name) = infer_wrapped_function_name(n) {
+                return name;
+            }
             if n.rule_name == "column_ref" {
                 // Use the last NAME token
                 if let Some(last_token) = n.children.iter().rev().find_map(|c| {
@@ -383,9 +386,40 @@ fn infer_col_name(node: &ASTNodeOrToken) -> String {
                     return last_token.value.clone();
                 }
             }
+            if n.rule_name == "function_call" {
+                // Normalize function name to uppercase so that SUM(salary),
+                // sum(salary), and Sum(salary) all produce "SUM(salary)".
+                // The SQL lexer lowercases all tokens in case-insensitive mode
+                // (because @case_insensitive true lowercases the source text
+                // before pattern matching), so without this step the output
+                // column name would be "sum(salary)" on all platforms.
+                if let Some(ASTNodeOrToken::Token(func_tok)) = n.children.first() {
+                    let func_upper = func_tok.value.to_uppercase();
+                    let rest: String = n.children[1..].iter().map(node_text).collect();
+                    return format!("{func_upper}{rest}");
+                }
+            }
             node_text_from_ast(n)
         }
     }
+}
+
+fn infer_wrapped_function_name(node: &GrammarASTNode) -> Option<String> {
+    if node.rule_name == "function_call" {
+        if let Some(ASTNodeOrToken::Token(func_tok)) = node.children.first() {
+            let func_upper = func_tok.value.to_uppercase();
+            let rest: String = node.children[1..].iter().map(node_text).collect();
+            return Some(format!("{func_upper}{rest}"));
+        }
+    }
+
+    if node.children.len() == 1 {
+        if let ASTNodeOrToken::Node(child) = &node.children[0] {
+            return infer_wrapped_function_name(child);
+        }
+    }
+
+    None
 }
 
 // ---------------------------------------------------------------------------
