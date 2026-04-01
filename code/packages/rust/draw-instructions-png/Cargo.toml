@@ -6,4 +6,4 @@ description = "PNG encoder for draw-instructions pixel buffers"
 
 [dependencies]
 draw-instructions-pixels = { path = "../draw-instructions-pixels" }
-png = "0.18"
+png = { path = "../png" }
