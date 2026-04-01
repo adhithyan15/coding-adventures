@@ -55,6 +55,12 @@
 //! ndc.y = 1.0 - (pixel_y / height) * 2.0
 //! ```
 
+// This crate requires arm64 (Apple Silicon).  The objc_msgSend ABI for
+// struct arguments differs between arm64 and x86_64.  On x86_64, large
+// struct arguments may require objc_msgSend_stret, which we don't implement.
+#[cfg(not(target_arch = "aarch64"))]
+compile_error!("draw-instructions-metal requires arm64 (Apple Silicon). x86_64 is not supported.");
+
 pub const VERSION: &str = "0.1.0";
 
 use draw_instructions::{
@@ -479,6 +485,15 @@ unsafe fn render_metal_unsafe(scene: &DrawScene) -> PixelBuffer {
     if width == 0 || height == 0 {
         return PixelBuffer::new(width, height);
     }
+
+    // Guard against excessive allocations.  A 16384×16384 RGBA image is
+    // 1 GB — anything larger risks OOM on most systems.
+    const MAX_DIMENSION: u32 = 16384;
+    assert!(
+        width <= MAX_DIMENSION && height <= MAX_DIMENSION,
+        "Scene dimensions {}x{} exceed maximum {}x{}",
+        width, height, MAX_DIMENSION, MAX_DIMENSION
+    );
 
     // Step 1: Create Metal device
     let device = MTLCreateSystemDefaultDevice();

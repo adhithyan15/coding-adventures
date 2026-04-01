@@ -79,7 +79,10 @@ impl PixelBuffer {
     /// Every pixel starts as (0, 0, 0, 0) — fully transparent black.
     /// This is the conventional "empty" state for an RGBA buffer.
     pub fn new(width: u32, height: u32) -> Self {
-        let size = (width as usize) * (height as usize) * BYTES_PER_PIXEL;
+        let size = (width as usize)
+            .checked_mul(height as usize)
+            .and_then(|s| s.checked_mul(BYTES_PER_PIXEL))
+            .expect("PixelBuffer dimensions overflow (width * height * 4 exceeds usize)");
         Self {
             width,
             height,

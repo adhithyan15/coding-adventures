@@ -71,6 +71,13 @@ pub fn encode_png(buffer: &PixelBuffer) -> Vec<u8> {
 /// Encode and write a PNG directly to a file.
 ///
 /// Creates the file if it doesn't exist, truncates it if it does.
+///
+/// # Safety (path handling)
+///
+/// The `path` is used directly with `std::fs::File::create`.  The caller
+/// is responsible for ensuring the path is safe — do not pass untrusted
+/// user input without validation.  This function does not guard against
+/// path traversal (e.g. `"../../etc/shadow"`).
 pub fn write_png(buffer: &PixelBuffer, path: &str) -> io::Result<()> {
     let file = std::fs::File::create(path)?;
     let mut writer = BufWriter::new(file);

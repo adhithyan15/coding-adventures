@@ -149,16 +149,24 @@ unsafe fn show_window(pixels: &PixelBuffer, title: &str) {
     // Run the event loop (blocks until app terminates)
     msg!(app, "run");
 
-    // Cleanup
-    release(image);
-    release(image_view);
-    release(window);
+    // No explicit cleanup needed — AppKit takes ownership of the window,
+    // its content view, and the image when they are added to the window
+    // hierarchy.  Releasing them here would be a double-free since AppKit
+    // releases them during application teardown.
 }
 
 /// Create an NSImage from a PixelBuffer.
 ///
 /// The pixel buffer is RGBA8, row-major, top-left origin.
 /// NSBitmapImageRep expects the same format, so we can use the data directly.
+///
+/// # Safety
+///
+/// NSBitmapImageRep does NOT copy the pixel data — it references the
+/// buffer directly.  The caller MUST ensure the PixelBuffer outlives
+/// the returned NSImage.  In `show_window`, this is guaranteed because
+/// `msg!(app, "run")` blocks until the window closes, and the PixelBuffer
+/// borrow is held for the entire duration.
 unsafe fn create_nsimage_from_pixels(pixels: &PixelBuffer) -> Id {
     let rep_class = class("NSBitmapImageRep");
 
