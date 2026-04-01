@@ -1,0 +1,7 @@
+[package]
+name = "objc-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-dependency Rust wrapper for the Objective-C runtime, Metal, CoreGraphics, and CoreText C APIs"
+
+[dependencies]

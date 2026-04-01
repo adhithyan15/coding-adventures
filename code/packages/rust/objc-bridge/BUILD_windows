@@ -1,0 +1,1 @@
+echo "SKIP: objc-bridge requires macOS/Apple platform — not supported on Windows"
