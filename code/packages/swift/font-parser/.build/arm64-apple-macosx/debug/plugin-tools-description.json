@@ -1,0 +1,602 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.xctest/Contents/MacOS/font-parserPackageTests",
+      "packagePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser",
+      "productName" : "font-parserPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.FontParser-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Sources/FontParser/FontParser.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "FontParser",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/FontParser.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/FontParser.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/include/FontParser-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "font_parser"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/FontParser.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/FontParser.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Sources/FontParser/FontParser.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.FontParserTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Tests/FontParserTests/FontParserTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/FontParser.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "FontParserTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/FontParserTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "font_parser"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/FontParserTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Tests/FontParserTests/FontParserTests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.font-parserPackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/FontParserTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "font_parserPackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/font_parserPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/include/font-parserPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "font_parser"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules/font_parserPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "FontParser" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "FontParser",
+      "-package-name",
+      "font_parser",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Sources/FontParser/FontParser.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/include/FontParser-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "font_parser",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "FontParserTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "FontParserTests",
+      "-package-name",
+      "font_parser",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Tests/FontParserTests/FontParserTests.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "font_parser",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "font_parserPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "font_parserPackageTests",
+      "-package-name",
+      "font_parser",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/include/font-parserPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "font_parser",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "FontParser" : [
+
+    ],
+    "FontParserTests" : [
+      "FontParser"
+    ],
+    "font_parserPackageTests" : [
+      "FontParserTests",
+      "FontParser"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Sources/FontParser/FontParser.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Tests/FontParserTests/FontParserTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParser.build/FontParser.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/runner.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font-parserPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/font_parserPackageTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

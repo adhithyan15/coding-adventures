@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/Tests/FontParserTests/FontParserTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/font-parser/.build/arm64-apple-macosx/debug/FontParserTests.build/FontParserTests.dia"
+  }
+}
