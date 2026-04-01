@@ -51,7 +51,16 @@
 
 pub const VERSION: &str = "0.1.0";
 
-use std::ffi::{c_char, c_double, c_int, c_ulong, c_void, CString};
+// Everything below requires an Apple platform (macOS, iOS, tvOS).
+// The Objective-C runtime, Metal, CoreText, and CoreGraphics are all
+// Apple-only frameworks.  On non-Apple platforms, the crate compiles
+// but all content is hidden behind #[cfg(target_vendor = "apple")].
+// The BUILD files use platform detection to skip tests on non-Apple CI.
+
+use std::ffi::{c_double, c_ulong, c_void};
+
+#[cfg(target_vendor = "apple")]
+use std::ffi::{c_char, c_int, CString};
 
 // ---------------------------------------------------------------------------
 // Opaque types
@@ -204,6 +213,7 @@ pub const K_CG_BITMAP_BYTE_ORDER_32_BIG: u32 = 1 << 12;
 // been ABI-stable since macOS 10.0 (2001).  When our dylib is loaded,
 // the dynamic linker resolves these symbols against the running runtime.
 
+#[cfg(target_vendor = "apple")]
 #[allow(non_snake_case)]
 #[link(name = "objc", kind = "dylib")]
 extern "C" {
@@ -292,6 +302,7 @@ extern "C" {
 // Metal framework — C function (not ObjC)
 // ---------------------------------------------------------------------------
 
+#[cfg(target_vendor = "apple")]
 #[link(name = "Metal", kind = "framework")]
 extern "C" {
     /// Create the default Metal device (GPU).
@@ -305,6 +316,7 @@ extern "C" {
 // CoreGraphics — C functions
 // ---------------------------------------------------------------------------
 
+#[cfg(target_vendor = "apple")]
 #[link(name = "CoreGraphics", kind = "framework")]
 extern "C" {
     #[allow(non_snake_case)]
@@ -351,6 +363,7 @@ extern "C" {
 // font loading, glyph shaping, line breaking, and rendering to a
 // CoreGraphics context.
 
+#[cfg(target_vendor = "apple")]
 #[link(name = "CoreText", kind = "framework")]
 extern "C" {
     /// Create a font by name and size.
@@ -389,6 +402,7 @@ extern "C" {
 // CFDictionary ↔ NSDictionary, etc.).  We need these for creating
 // attributed strings for CoreText.
 
+#[cfg(target_vendor = "apple")]
 #[link(name = "CoreFoundation", kind = "framework")]
 extern "C" {
     #[allow(non_snake_case)]
@@ -426,6 +440,7 @@ extern "C" {
 pub const K_CF_STRING_ENCODING_UTF8: u32 = 0x08000100;
 
 // CoreText attribute key names (these are global CFString constants)
+#[cfg(target_vendor = "apple")]
 #[link(name = "CoreText", kind = "framework")]
 extern "C" {
     /// The attributed string key for the font (value: CTFontRef).
@@ -438,6 +453,7 @@ extern "C" {
 }
 
 // CoreFoundation dictionary callbacks (used with CFDictionaryCreate)
+#[cfg(target_vendor = "apple")]
 #[link(name = "CoreFoundation", kind = "framework")]
 extern "C" {
     #[allow(non_upper_case_globals)]
@@ -451,6 +467,7 @@ extern "C" {
 // AppKit framework — for window display
 // ---------------------------------------------------------------------------
 
+#[cfg(target_vendor = "apple")]
 #[link(name = "AppKit", kind = "framework")]
 extern "C" {
     /// Start the NSApplication event loop.
@@ -578,9 +595,10 @@ macro_rules! msg {
 }
 
 // ---------------------------------------------------------------------------
-// Safe wrappers
+// Safe wrappers (Apple-only)
 // ---------------------------------------------------------------------------
 
+#[cfg(target_vendor = "apple")]
 /// Look up an Objective-C class by name.
 ///
 /// # Example
@@ -609,6 +627,7 @@ pub fn class(name: &str) -> ClassPtr {
 /// Selectors are interned strings that identify method names.  For example,
 /// the selector for `[obj init]` is `sel("init")`, and the selector for
 /// `[obj setValue:forKey:]` is `sel("setValue:forKey:")`.
+#[cfg(target_vendor = "apple")]
 pub fn sel(name: &str) -> Sel {
     let c_name = CString::new(name).expect("selector name must not contain NUL");
     unsafe { sel_registerName(c_name.as_ptr()) }
@@ -618,6 +637,7 @@ pub fn sel(name: &str) -> Sel {
 ///
 /// The returned pointer is a retained CFString — the caller is responsible
 /// for releasing it with `CFRelease`.
+#[cfg(target_vendor = "apple")]
 pub fn cfstring(s: &str) -> Id {
     let c_str = CString::new(s).expect("string must not contain NUL");
     unsafe {
@@ -633,6 +653,7 @@ pub fn cfstring(s: &str) -> Id {
 ///
 /// NSString and CFString are toll-free bridged — same object, different
 /// type name.  This is a convenience alias for `cfstring`.
+#[cfg(target_vendor = "apple")]
 pub fn nsstring(s: &str) -> Id {
     cfstring(s)
 }
@@ -647,6 +668,7 @@ pub fn nsstring(s: &str) -> Id {
 /// - `receiver` is a valid object or class pointer
 /// - The selector exists on the receiver's class
 /// - The return type is a pointer (Id)
+#[cfg(target_vendor = "apple")]
 pub unsafe fn msg_send_id(receiver: Id, selector: &str) -> Id {
     msg!(receiver, selector)
 }
@@ -655,6 +677,7 @@ pub unsafe fn msg_send_id(receiver: Id, selector: &str) -> Id {
 ///
 /// Equivalent to `[ClassName selector]` in Objective-C.
 /// Classes are objects too, so this is just msg_send with a cast.
+#[cfg(target_vendor = "apple")]
 pub unsafe fn msg_send_class(cls: ClassPtr, selector: &str) -> Id {
     msg!(cls as Id, selector)
 }
@@ -662,6 +685,7 @@ pub unsafe fn msg_send_class(cls: ClassPtr, selector: &str) -> Id {
 /// Alloc + init an object (the most common ObjC pattern).
 ///
 /// Equivalent to `[[ClassName alloc] init]`.
+#[cfg(target_vendor = "apple")]
 pub unsafe fn alloc_init(class_name: &str) -> Id {
     let cls = class(class_name);
     let obj = msg!(cls as Id, "alloc");
@@ -669,6 +693,7 @@ pub unsafe fn alloc_init(class_name: &str) -> Id {
 }
 
 /// Release an Objective-C object (decrement reference count).
+#[cfg(target_vendor = "apple")]
 pub unsafe fn release(obj: Id) {
     if !obj.is_null() {
         msg!(obj, "release");
@@ -676,6 +701,7 @@ pub unsafe fn release(obj: Id) {
 }
 
 /// Retain an Objective-C object (increment reference count).
+#[cfg(target_vendor = "apple")]
 pub unsafe fn retain(obj: Id) -> Id {
     if obj.is_null() {
         return obj;
@@ -687,7 +713,7 @@ pub unsafe fn retain(obj: Id) -> Id {
 // Tests
 // ---------------------------------------------------------------------------
 
-#[cfg(test)]
+#[cfg(all(test, target_vendor = "apple"))]
 mod tests {
     use super::*;
 

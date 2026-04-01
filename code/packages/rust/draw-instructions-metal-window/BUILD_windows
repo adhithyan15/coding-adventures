@@ -1,0 +1,1 @@
+echo "SKIP: draw-instructions-metal-window requires macOS/Apple platform — not supported on Windows"
