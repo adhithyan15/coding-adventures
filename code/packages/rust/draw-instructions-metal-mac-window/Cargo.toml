@@ -1,5 +1,5 @@
 [package]
-name = "draw-instructions-metal-window"
+name = "draw-instructions-metal-mac-window"
 version = "0.1.0"
 edition = "2021"
 description = "Native macOS window display for draw-instructions scenes via Metal"

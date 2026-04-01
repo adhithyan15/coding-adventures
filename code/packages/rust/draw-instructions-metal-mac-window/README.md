@@ -1,4 +1,4 @@
-# draw-instructions-metal-window
+# draw-instructions-metal-mac-window
 
 Native macOS window display for draw-instructions scenes.
 

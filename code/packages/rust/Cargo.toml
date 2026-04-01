@@ -29,7 +29,7 @@ members = [
     "display",
     "draw-instructions",
     "draw-instructions-metal",
-    "draw-instructions-metal-window",
+    "draw-instructions-metal-mac-window",
     "draw-instructions-pixels",
     "draw-instructions-png",
     "draw-instructions-svg",
