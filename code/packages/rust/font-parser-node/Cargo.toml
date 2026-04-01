@@ -1,0 +1,19 @@
+# font-parser-node — Node.js N-API addon wrapping the Rust font-parser core.
+#
+# Build produces a .node file that Node.js loads via `require()`.
+# crate-type = ["cdylib"]: emit a C-compatible shared library.
+
+[package]
+name = "font-parser-node"
+version = "0.1.0"
+edition = "2021"
+description = "Node.js N-API addon exposing the Rust font-parser core — zero dependencies beyond Node.js"
+
+[lib]
+# cdylib: produce a .so / .dylib / .dll that Node.js renames to .node.
+crate-type = ["cdylib"]
+name = "font_parser_native"
+
+[dependencies]
+font-parser = { path = "../font-parser" }
+node-bridge = { path = "../node-bridge" }

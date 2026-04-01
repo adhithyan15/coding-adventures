@@ -2,7 +2,6 @@
 # extern "C" — no pyo3-ffi, no bindgen, no build-time header requirement.
 # These function signatures are part of Python's stable Limited API (PEP 384)
 # and have been unchanged since Python 3.2 (2011).
-[workspace]
 
 [package]
 name = "python-bridge"

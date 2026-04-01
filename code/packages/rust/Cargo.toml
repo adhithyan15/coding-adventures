@@ -142,5 +142,11 @@ members = [
   "caesar-cipher",
   "atbash-cipher",
   "draw-instructions-text",
+  "python-bridge",
+  "ruby-bridge",
+  "node-bridge",
   "font-parser",
+  "font-parser-python",
+  "font-parser-ruby",
+  "font-parser-node",
 ]
