@@ -767,6 +767,22 @@ sub _decode {
     return $d;
 }
 
+=head2 decode
+
+  my $d = $cpu->decode($instruction_word);
+
+Public wrapper around C<_decode>.  Accepts the 32-bit instruction word and
+returns a hash-ref with all decoded fields.  Intended for use by gate-level
+or visualisation consumers that need to inspect the decoded instruction
+without stepping the CPU.
+
+=cut
+
+sub decode {
+    my ($self, $instruction) = @_;
+    return _decode($instruction);
+}
+
 # ===========================================================================
 # Disassembly
 # ===========================================================================
