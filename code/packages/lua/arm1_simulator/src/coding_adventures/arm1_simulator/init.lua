@@ -1413,4 +1413,7 @@ ARM1Simulator.INST_UNDEFINED       = INST_UNDEFINED
 ARM1Simulator.PC_MASK  = 0x03FFFFFC  -- bits 25:2: Program Counter field in R15
 ARM1Simulator.HALT_SWI = 0x123456    -- pseudo-halt SWI number used by encode_halt()
 
+-- Decoder (exported for gate-level simulator which calls ARM1.decode directly)
+ARM1Simulator.decode = decode
+
 return ARM1Simulator
