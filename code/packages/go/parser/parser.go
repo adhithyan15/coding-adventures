@@ -80,7 +80,7 @@ func (p *Parser) Parse() Program {
 	result, _ := StartNew[Program]("parser.Parse", Program{},
 		func(op *Operation[Program], rf *ResultFactory[Program]) *OperationResult[Program] {
 			return rf.Generate(true, false, p.parseProgram())
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
