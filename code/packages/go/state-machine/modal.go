@@ -107,65 +107,71 @@ func NewModalStateMachine(
 	modeTransitions map[[2]string]string,
 	initialMode string,
 ) *ModalStateMachine {
-	if len(modes) == 0 {
-		panic("statemachine: at least one mode must be provided")
-	}
-	if _, ok := modes[initialMode]; !ok {
-		panic(fmt.Sprintf(
-			"statemachine: initial mode %q is not in the modes map",
-			initialMode,
-		))
-	}
+	result, _ := StartNew[*ModalStateMachine]("state-machine.NewModalStateMachine", nil,
+		func(op *Operation[*ModalStateMachine], rf *ResultFactory[*ModalStateMachine]) *OperationResult[*ModalStateMachine] {
+			op.AddProperty("modeCount", len(modes))
+			op.AddProperty("initialMode", initialMode)
+			if len(modes) == 0 {
+				panic("statemachine: at least one mode must be provided")
+			}
+			if _, ok := modes[initialMode]; !ok {
+				panic(fmt.Sprintf(
+					"statemachine: initial mode %q is not in the modes map",
+					initialMode,
+				))
+			}
 
-	// Validate mode transitions
-	for key, target := range modeTransitions {
-		from := key[0]
-		if _, ok := modes[from]; !ok {
-			panic(fmt.Sprintf(
-				"statemachine: mode transition source %q is not a valid mode",
-				from,
-			))
-		}
-		if _, ok := modes[target]; !ok {
-			panic(fmt.Sprintf(
-				"statemachine: mode transition target %q is not a valid mode",
-				target,
-			))
-		}
-	}
+			// Validate mode transitions
+			for key, target := range modeTransitions {
+				from := key[0]
+				if _, ok := modes[from]; !ok {
+					panic(fmt.Sprintf(
+						"statemachine: mode transition source %q is not a valid mode",
+						from,
+					))
+				}
+				if _, ok := modes[target]; !ok {
+					panic(fmt.Sprintf(
+						"statemachine: mode transition target %q is not a valid mode",
+						target,
+					))
+				}
+			}
 
-	// Copy maps to avoid aliasing
-	modesCopy := make(map[string]*DFA, len(modes))
-	for k, v := range modes {
-		modesCopy[k] = v
-	}
+			// Copy maps to avoid aliasing
+			modesCopy := make(map[string]*DFA, len(modes))
+			for k, v := range modes {
+				modesCopy[k] = v
+			}
 
-	transCopy := make(map[[2]string]string, len(modeTransitions))
-	for k, v := range modeTransitions {
-		transCopy[k] = v
-	}
+			transCopy := make(map[[2]string]string, len(modeTransitions))
+			for k, v := range modeTransitions {
+				transCopy[k] = v
+			}
 
-	// --- Build internal graph of mode transitions ---
-	//
-	// Each mode becomes a node. Each mode transition (mode, trigger) -> target
-	// becomes a labeled edge from mode to target with the trigger as the label.
-	mg := directedgraph.NewLabeledGraphAllowSelfLoops()
-	for mode := range modesCopy {
-		mg.AddNode(mode)
-	}
-	for key, target := range transCopy {
-		from, trigger := key[0], key[1]
-		mg.AddEdge(from, target, trigger)
-	}
+			// --- Build internal graph of mode transitions ---
+			//
+			// Each mode becomes a node. Each mode transition (mode, trigger) -> target
+			// becomes a labeled edge from mode to target with the trigger as the label.
+			mg := directedgraph.NewLabeledGraphAllowSelfLoops()
+			for mode := range modesCopy {
+				mg.AddNode(mode)
+			}
+			for key, target := range transCopy {
+				from, trigger := key[0], key[1]
+				mg.AddEdge(from, target, trigger)
+			}
 
-	return &ModalStateMachine{
-		modes:           modesCopy,
-		modeTransitions: transCopy,
-		initialMode:     initialMode,
-		modeGraph:       mg,
-		currentMode:     initialMode,
-		modeTrace:       nil,
-	}
+			return rf.Generate(true, false, &ModalStateMachine{
+				modes:           modesCopy,
+				modeTransitions: transCopy,
+				initialMode:     initialMode,
+				modeGraph:       mg,
+				currentMode:     initialMode,
+				modeTrace:       nil,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -174,29 +180,45 @@ func NewModalStateMachine(
 
 // CurrentMode returns the name of the currently active mode.
 func (m *ModalStateMachine) CurrentMode() string {
-	return m.currentMode
+	result, _ := StartNew[string]("state-machine.ModalStateMachine.CurrentMode", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, m.currentMode)
+		}).GetResult()
+	return result
 }
 
 // ActiveMachine returns the DFA for the current mode.
 func (m *ModalStateMachine) ActiveMachine() *DFA {
-	return m.modes[m.currentMode]
+	result, _ := StartNew[*DFA]("state-machine.ModalStateMachine.ActiveMachine", nil,
+		func(op *Operation[*DFA], rf *ResultFactory[*DFA]) *OperationResult[*DFA] {
+			return rf.Generate(true, false, m.modes[m.currentMode])
+		}).GetResult()
+	return result
 }
 
 // ModeTrace returns a copy of the mode switch history.
 func (m *ModalStateMachine) ModeTrace() []ModeTransitionRecord {
-	result := make([]ModeTransitionRecord, len(m.modeTrace))
-	copy(result, m.modeTrace)
+	result, _ := StartNew[[]ModeTransitionRecord]("state-machine.ModalStateMachine.ModeTrace", nil,
+		func(op *Operation[[]ModeTransitionRecord], rf *ResultFactory[[]ModeTransitionRecord]) *OperationResult[[]ModeTransitionRecord] {
+			out := make([]ModeTransitionRecord, len(m.modeTrace))
+			copy(out, m.modeTrace)
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
 // Modes returns a sorted slice of all mode names.
 func (m *ModalStateMachine) Modes() []string {
-	names := make([]string, 0, len(m.modes))
-	for k := range m.modes {
-		names = append(names, k)
-	}
-	sort.Strings(names)
-	return names
+	result, _ := StartNew[[]string]("state-machine.ModalStateMachine.Modes", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			names := make([]string, 0, len(m.modes))
+			for k := range m.modes {
+				names = append(names, k)
+			}
+			sort.Strings(names)
+			return rf.Generate(true, false, names)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -212,29 +234,34 @@ func (m *ModalStateMachine) Modes() []string {
 //
 // Panics if no mode transition exists for this trigger.
 func (m *ModalStateMachine) SwitchMode(trigger string) string {
-	key := [2]string{m.currentMode, trigger}
-	newMode, ok := m.modeTransitions[key]
-	if !ok {
-		panic(fmt.Sprintf(
-			"statemachine: no mode transition for (mode=%q, trigger=%q)",
-			m.currentMode, trigger,
-		))
-	}
+	result, _ := StartNew[string]("state-machine.ModalStateMachine.SwitchMode", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("trigger", trigger)
+			key := [2]string{m.currentMode, trigger}
+			newMode, ok := m.modeTransitions[key]
+			if !ok {
+				panic(fmt.Sprintf(
+					"statemachine: no mode transition for (mode=%q, trigger=%q)",
+					m.currentMode, trigger,
+				))
+			}
 
-	oldMode := m.currentMode
+			oldMode := m.currentMode
 
-	// Reset the target mode's DFA to its initial state
-	m.modes[newMode].Reset()
+			// Reset the target mode's DFA to its initial state
+			m.modes[newMode].Reset()
 
-	// Record the switch
-	m.modeTrace = append(m.modeTrace, ModeTransitionRecord{
-		FromMode: oldMode,
-		Trigger:  trigger,
-		ToMode:   newMode,
-	})
+			// Record the switch
+			m.modeTrace = append(m.modeTrace, ModeTransitionRecord{
+				FromMode: oldMode,
+				Trigger:  trigger,
+				ToMode:   newMode,
+			})
 
-	m.currentMode = newMode
-	return newMode
+			m.currentMode = newMode
+			return rf.Generate(true, false, newMode)
+		}).GetResult()
+	return result
 }
 
 // Process processes an input event in the current mode's DFA.
@@ -244,14 +271,23 @@ func (m *ModalStateMachine) SwitchMode(trigger string) string {
 //
 // Panics if the event is invalid for the current mode.
 func (m *ModalStateMachine) Process(event string) string {
-	return m.modes[m.currentMode].Process(event)
+	result, _ := StartNew[string]("state-machine.ModalStateMachine.Process", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("event", event)
+			return rf.Generate(true, false, m.modes[m.currentMode].Process(event))
+		}).GetResult()
+	return result
 }
 
 // Reset resets to the initial mode and resets all sub-machines.
 func (m *ModalStateMachine) Reset() {
-	m.currentMode = m.initialMode
-	m.modeTrace = nil
-	for _, dfa := range m.modes {
-		dfa.Reset()
-	}
+	_, _ = StartNew[struct{}]("state-machine.ModalStateMachine.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			m.currentMode = m.initialMode
+			m.modeTrace = nil
+			for _, dfa := range m.modes {
+				dfa.Reset()
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }

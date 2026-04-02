@@ -79,17 +79,21 @@ type SystemConfig struct {
 // the hello-world demo. All addresses, sizes, and intervals are pre-configured
 // so that PowerOn() + Run(100000) produces "Hello World" on the display.
 func DefaultSystemConfig() SystemConfig {
-	biosConfig := rombios.DefaultBIOSConfig()
-	biosConfig.MemorySize = 1024 * 1024 // Skip memory probe, use 1 MB
+	result, _ := StartNew[SystemConfig]("system-board.DefaultSystemConfig", SystemConfig{},
+		func(op *Operation[SystemConfig], rf *ResultFactory[SystemConfig]) *OperationResult[SystemConfig] {
+			biosConfig := rombios.DefaultBIOSConfig()
+			biosConfig.MemorySize = 1024 * 1024 // Skip memory probe, use 1 MB
 
-	blConfig := bootloader.DefaultBootloaderConfig()
+			blConfig := bootloader.DefaultBootloaderConfig()
 
-	return SystemConfig{
-		MemorySize:       1024 * 1024,
-		DisplayConfig:    display.DefaultDisplayConfig(),
-		BIOSConfig:       biosConfig,
-		BootloaderConfig: blConfig,
-		KernelConfig:     oskernel.DefaultKernelConfig(),
-		UserProgram:      nil, // Will generate default hello-world
-	}
+			return rf.Generate(true, false, SystemConfig{
+				MemorySize:       1024 * 1024,
+				DisplayConfig:    display.DefaultDisplayConfig(),
+				BIOSConfig:       biosConfig,
+				BootloaderConfig: blConfig,
+				KernelConfig:     oskernel.DefaultKernelConfig(),
+				UserProgram:      nil, // Will generate default hello-world
+			})
+		}).GetResult()
+	return result
 }

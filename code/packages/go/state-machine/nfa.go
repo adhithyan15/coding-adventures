@@ -110,107 +110,114 @@ func NewNFA(
 	initial string,
 	accepting []string,
 ) *NFA {
-	if len(states) == 0 {
-		panic("statemachine: states set must be non-empty")
-	}
+	result, _ := StartNew[*NFA]("state-machine.NewNFA", nil,
+		func(op *Operation[*NFA], rf *ResultFactory[*NFA]) *OperationResult[*NFA] {
+			op.AddProperty("stateCount", len(states))
+			op.AddProperty("alphabetSize", len(alphabet))
+			op.AddProperty("initial", initial)
+			if len(states) == 0 {
+				panic("statemachine: states set must be non-empty")
+			}
 
-	stateSet := make(map[string]bool, len(states))
-	for _, s := range states {
-		stateSet[s] = true
-	}
+			stateSet := make(map[string]bool, len(states))
+			for _, s := range states {
+				stateSet[s] = true
+			}
 
-	alphaSet := make(map[string]bool, len(alphabet))
-	for _, a := range alphabet {
-		if a == EPSILON {
-			panic("statemachine: alphabet must not contain the empty string (reserved for epsilon)")
-		}
-		alphaSet[a] = true
-	}
+			alphaSet := make(map[string]bool, len(alphabet))
+			for _, a := range alphabet {
+				if a == EPSILON {
+					panic("statemachine: alphabet must not contain the empty string (reserved for epsilon)")
+				}
+				alphaSet[a] = true
+			}
 
-	if !stateSet[initial] {
-		panic(fmt.Sprintf(
-			"statemachine: initial state %q is not in the states set",
-			initial,
-		))
-	}
-
-	acceptSet := make(map[string]bool, len(accepting))
-	for _, a := range accepting {
-		if !stateSet[a] {
-			panic(fmt.Sprintf(
-				"statemachine: accepting state %q is not in the states set",
-				a,
-			))
-		}
-		acceptSet[a] = true
-	}
-
-	// Validate transitions
-	for key, targets := range transitions {
-		source, event := key[0], key[1]
-		if !stateSet[source] {
-			panic(fmt.Sprintf(
-				"statemachine: transition source %q is not in the states set",
-				source,
-			))
-		}
-		if event != EPSILON && !alphaSet[event] {
-			panic(fmt.Sprintf(
-				"statemachine: transition event %q is not in the alphabet and is not epsilon",
-				event,
-			))
-		}
-		for _, t := range targets {
-			if !stateSet[t] {
+			if !stateSet[initial] {
 				panic(fmt.Sprintf(
-					"statemachine: transition target %q (from (%s, %q)) is not in the states set",
-					t, source, event,
+					"statemachine: initial state %q is not in the states set",
+					initial,
 				))
 			}
-		}
-	}
 
-	// Copy transitions
-	trans := make(map[[2]string][]string, len(transitions))
-	for k, v := range transitions {
-		cp := make([]string, len(v))
-		copy(cp, v)
-		trans[k] = cp
-	}
+			acceptSet := make(map[string]bool, len(accepting))
+			for _, a := range accepting {
+				if !stateSet[a] {
+					panic(fmt.Sprintf(
+						"statemachine: accepting state %q is not in the states set",
+						a,
+					))
+				}
+				acceptSet[a] = true
+			}
 
-	// --- Build internal graph representation ---
-	//
-	// Each state becomes a node. Each transition (source, event) -> targets
-	// becomes labeled edges from source to each target with the event as label.
-	// Self-loops are allowed because an FSM state can transition to itself.
-	g := directedgraph.NewLabeledGraphAllowSelfLoops()
-	for s := range stateSet {
-		g.AddNode(s)
-	}
-	for key, targets := range trans {
-		source, event := key[0], key[1]
-		label := event
-		if event == EPSILON {
-			label = EPSILON
-		}
-		for _, target := range targets {
-			g.AddEdge(source, target, label)
-		}
-	}
+			// Validate transitions
+			for key, targets := range transitions {
+				source, event := key[0], key[1]
+				if !stateSet[source] {
+					panic(fmt.Sprintf(
+						"statemachine: transition source %q is not in the states set",
+						source,
+					))
+				}
+				if event != EPSILON && !alphaSet[event] {
+					panic(fmt.Sprintf(
+						"statemachine: transition event %q is not in the alphabet and is not epsilon",
+						event,
+					))
+				}
+				for _, t := range targets {
+					if !stateSet[t] {
+						panic(fmt.Sprintf(
+							"statemachine: transition target %q (from (%s, %q)) is not in the states set",
+							t, source, event,
+						))
+					}
+				}
+			}
 
-	nfa := &NFA{
-		states:      stateSet,
-		alphabet:    alphaSet,
-		transitions: trans,
-		initial:     initial,
-		accepting:   acceptSet,
-		graph:       g,
-	}
+			// Copy transitions
+			trans := make(map[[2]string][]string, len(transitions))
+			for k, v := range transitions {
+				cp := make([]string, len(v))
+				copy(cp, v)
+				trans[k] = cp
+			}
 
-	// Start in the epsilon closure of the initial state
-	nfa.current = nfa.EpsilonClosure(map[string]bool{initial: true})
+			// --- Build internal graph representation ---
+			//
+			// Each state becomes a node. Each transition (source, event) -> targets
+			// becomes labeled edges from source to each target with the event as label.
+			// Self-loops are allowed because an FSM state can transition to itself.
+			g := directedgraph.NewLabeledGraphAllowSelfLoops()
+			for s := range stateSet {
+				g.AddNode(s)
+			}
+			for key, targets := range trans {
+				source, event := key[0], key[1]
+				label := event
+				if event == EPSILON {
+					label = EPSILON
+				}
+				for _, target := range targets {
+					g.AddEdge(source, target, label)
+				}
+			}
 
-	return nfa
+			nfa := &NFA{
+				states:      stateSet,
+				alphabet:    alphaSet,
+				transitions: trans,
+				initial:     initial,
+				accepting:   acceptSet,
+				graph:       g,
+			}
+
+			// Start in the epsilon closure of the initial state
+			nfa.current = nfa.EpsilonClosure(map[string]bool{initial: true})
+
+			return rf.Generate(true, false, nfa)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -218,23 +225,51 @@ func NewNFA(
 // =========================================================================
 
 // States returns a sorted slice of all state names.
-func (n *NFA) States() []string { return sortedKeys(n.states) }
+func (n *NFA) States() []string {
+	result, _ := StartNew[[]string]("state-machine.NFA.States", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, sortedKeys(n.states))
+		}).GetResult()
+	return result
+}
 
 // Alphabet returns a sorted slice of all input symbols.
-func (n *NFA) Alphabet() []string { return sortedKeys(n.alphabet) }
+func (n *NFA) Alphabet() []string {
+	result, _ := StartNew[[]string]("state-machine.NFA.Alphabet", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, sortedKeys(n.alphabet))
+		}).GetResult()
+	return result
+}
 
 // Initial returns the initial state name.
-func (n *NFA) Initial() string { return n.initial }
+func (n *NFA) Initial() string {
+	result, _ := StartNew[string]("state-machine.NFA.Initial", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, n.initial)
+		}).GetResult()
+	return result
+}
 
 // Accepting returns a sorted slice of accepting state names.
-func (n *NFA) Accepting() []string { return sortedKeys(n.accepting) }
+func (n *NFA) Accepting() []string {
+	result, _ := StartNew[[]string]("state-machine.NFA.Accepting", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, sortedKeys(n.accepting))
+		}).GetResult()
+	return result
+}
 
 // CurrentStates returns a copy of the current active state set.
 func (n *NFA) CurrentStates() map[string]bool {
-	result := make(map[string]bool, len(n.current))
-	for k := range n.current {
-		result[k] = true
-	}
+	result, _ := StartNew[map[string]bool]("state-machine.NFA.CurrentStates", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			out := make(map[string]bool, len(n.current))
+			for k := range n.current {
+				out[k] = true
+			}
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -262,30 +297,34 @@ func (n *NFA) CurrentStates() map[string]bool {
 //	Given: q0 --epsilon--> q1 --epsilon--> q2
 //	EpsilonClosure({q0}) = {q0, q1, q2}
 func (n *NFA) EpsilonClosure(states map[string]bool) map[string]bool {
-	closure := make(map[string]bool)
-	for s := range states {
-		closure[s] = true
-	}
-
-	worklist := make([]string, 0, len(states))
-	for s := range states {
-		worklist = append(worklist, s)
-	}
-
-	for len(worklist) > 0 {
-		state := worklist[len(worklist)-1]
-		worklist = worklist[:len(worklist)-1]
-
-		targets := n.transitions[[2]string{state, EPSILON}]
-		for _, target := range targets {
-			if !closure[target] {
-				closure[target] = true
-				worklist = append(worklist, target)
+	result, _ := StartNew[map[string]bool]("state-machine.NFA.EpsilonClosure", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			closure := make(map[string]bool)
+			for s := range states {
+				closure[s] = true
 			}
-		}
-	}
 
-	return closure
+			worklist := make([]string, 0, len(states))
+			for s := range states {
+				worklist = append(worklist, s)
+			}
+
+			for len(worklist) > 0 {
+				state := worklist[len(worklist)-1]
+				worklist = worklist[:len(worklist)-1]
+
+				targets := n.transitions[[2]string{state, EPSILON}]
+				for _, target := range targets {
+					if !closure[target] {
+						closure[target] = true
+						worklist = append(worklist, target)
+					}
+				}
+			}
+
+			return rf.Generate(true, false, closure)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -299,23 +338,28 @@ func (n *NFA) EpsilonClosure(states map[string]bool) map[string]bool {
 //
 // Panics if the event is not in the alphabet.
 func (n *NFA) Process(event string) map[string]bool {
-	if !n.alphabet[event] {
-		panic(fmt.Sprintf(
-			"statemachine: event %q is not in the alphabet",
-			event,
-		))
-	}
+	result, _ := StartNew[map[string]bool]("state-machine.NFA.Process", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			op.AddProperty("event", event)
+			if !n.alphabet[event] {
+				panic(fmt.Sprintf(
+					"statemachine: event %q is not in the alphabet",
+					event,
+				))
+			}
 
-	nextStates := map[string]bool{}
-	for state := range n.current {
-		targets := n.transitions[[2]string{state, event}]
-		for _, t := range targets {
-			nextStates[t] = true
-		}
-	}
+			nextStates := map[string]bool{}
+			for state := range n.current {
+				targets := n.transitions[[2]string{state, event}]
+				for _, t := range targets {
+					nextStates[t] = true
+				}
+			}
 
-	n.current = n.EpsilonClosure(nextStates)
-	return n.CurrentStates()
+			n.current = n.EpsilonClosure(nextStates)
+			return rf.Generate(true, false, n.CurrentStates())
+		}).GetResult()
+	return result
 }
 
 // Accepts checks if the NFA accepts the input sequence.
@@ -325,43 +369,51 @@ func (n *NFA) Process(event string) map[string]bool {
 //
 // Does NOT modify the NFA's current state — runs on a simulation copy.
 func (n *NFA) Accepts(events []string) bool {
-	current := n.EpsilonClosure(map[string]bool{n.initial: true})
+	result, _ := StartNew[bool]("state-machine.NFA.Accepts", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			current := n.EpsilonClosure(map[string]bool{n.initial: true})
 
-	for _, event := range events {
-		if !n.alphabet[event] {
-			panic(fmt.Sprintf(
-				"statemachine: event %q is not in the alphabet",
-				event,
-			))
-		}
+			for _, event := range events {
+				if !n.alphabet[event] {
+					panic(fmt.Sprintf(
+						"statemachine: event %q is not in the alphabet",
+						event,
+					))
+				}
 
-		nextStates := map[string]bool{}
-		for state := range current {
-			targets := n.transitions[[2]string{state, event}]
-			for _, t := range targets {
-				nextStates[t] = true
+				nextStates := map[string]bool{}
+				for state := range current {
+					targets := n.transitions[[2]string{state, event}]
+					for _, t := range targets {
+						nextStates[t] = true
+					}
+				}
+
+				current = n.EpsilonClosure(nextStates)
+
+				// If no states are active, the NFA is dead — reject early
+				if len(current) == 0 {
+					return rf.Generate(true, false, false)
+				}
 			}
-		}
 
-		current = n.EpsilonClosure(nextStates)
-
-		// If no states are active, the NFA is dead — reject early
-		if len(current) == 0 {
-			return false
-		}
-	}
-
-	for s := range current {
-		if n.accepting[s] {
-			return true
-		}
-	}
-	return false
+			for s := range current {
+				if n.accepting[s] {
+					return rf.Generate(true, false, true)
+				}
+			}
+			return rf.Generate(true, false, false)
+		}).GetResult()
+	return result
 }
 
 // Reset returns the NFA to its initial state (with epsilon closure).
 func (n *NFA) Reset() {
-	n.current = n.EpsilonClosure(map[string]bool{n.initial: true})
+	_, _ = StartNew[struct{}]("state-machine.NFA.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			n.current = n.EpsilonClosure(map[string]bool{n.initial: true})
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -390,76 +442,80 @@ func (n *NFA) Reset() {
 //
 //	{q0, q1} -> "{q0,q1}"
 func (n *NFA) ToDFA() *DFA {
-	// Step 1: initial DFA state = epsilon-closure of NFA initial state
-	startClosure := n.EpsilonClosure(map[string]bool{n.initial: true})
-	dfaStart := stateSetName(startClosure)
+	result, _ := StartNew[*DFA]("state-machine.NFA.ToDFA", nil,
+		func(op *Operation[*DFA], rf *ResultFactory[*DFA]) *OperationResult[*DFA] {
+			// Step 1: initial DFA state = epsilon-closure of NFA initial state
+			startClosure := n.EpsilonClosure(map[string]bool{n.initial: true})
+			dfaStart := stateSetName(startClosure)
 
-	// Track DFA states and transitions as we discover them
-	dfaStates := map[string]bool{dfaStart: true}
-	dfaTransitions := map[[2]string]string{}
-	dfaAccepting := map[string]bool{}
+			// Track DFA states and transitions as we discover them
+			dfaStates := map[string]bool{dfaStart: true}
+			dfaTransitions := map[[2]string]string{}
+			dfaAccepting := map[string]bool{}
 
-	// Map from DFA state name -> set of NFA states
-	stateMap := map[string]map[string]bool{dfaStart: startClosure}
+			// Map from DFA state name -> set of NFA states
+			stateMap := map[string]map[string]bool{dfaStart: startClosure}
 
-	// Check if start state is accepting
-	if setsIntersect(startClosure, n.accepting) {
-		dfaAccepting[dfaStart] = true
-	}
+			// Check if start state is accepting
+			if setsIntersect(startClosure, n.accepting) {
+				dfaAccepting[dfaStart] = true
+			}
 
-	// Step 2-3: BFS over DFA states
-	worklist := []string{dfaStart}
-	sortedAlpha := sortedKeys(n.alphabet)
+			// Step 2-3: BFS over DFA states
+			worklist := []string{dfaStart}
+			sortedAlpha := sortedKeys(n.alphabet)
 
-	for len(worklist) > 0 {
-		currentName := worklist[0]
-		worklist = worklist[1:]
-		currentNFAStates := stateMap[currentName]
+			for len(worklist) > 0 {
+				currentName := worklist[0]
+				worklist = worklist[1:]
+				currentNFAStates := stateMap[currentName]
 
-		for _, event := range sortedAlpha {
-			// Collect all NFA states reachable via this event
-			nextNFA := map[string]bool{}
-			for nfaState := range currentNFAStates {
-				targets := n.transitions[[2]string{nfaState, event}]
-				for _, t := range targets {
-					nextNFA[t] = true
+				for _, event := range sortedAlpha {
+					// Collect all NFA states reachable via this event
+					nextNFA := map[string]bool{}
+					for nfaState := range currentNFAStates {
+						targets := n.transitions[[2]string{nfaState, event}]
+						for _, t := range targets {
+							nextNFA[t] = true
+						}
+					}
+
+					// Epsilon closure of the result
+					nextClosure := n.EpsilonClosure(nextNFA)
+
+					if len(nextClosure) == 0 {
+						// Dead state — no transition
+						continue
+					}
+
+					nextName := stateSetName(nextClosure)
+
+					// Record this DFA transition
+					dfaTransitions[[2]string{currentName, event}] = nextName
+
+					// If this is a new DFA state, add it
+					if !dfaStates[nextName] {
+						dfaStates[nextName] = true
+						stateMap[nextName] = nextClosure
+						worklist = append(worklist, nextName)
+
+						if setsIntersect(nextClosure, n.accepting) {
+							dfaAccepting[nextName] = true
+						}
+					}
 				}
 			}
 
-			// Epsilon closure of the result
-			nextClosure := n.EpsilonClosure(nextNFA)
-
-			if len(nextClosure) == 0 {
-				// Dead state — no transition
-				continue
-			}
-
-			nextName := stateSetName(nextClosure)
-
-			// Record this DFA transition
-			dfaTransitions[[2]string{currentName, event}] = nextName
-
-			// If this is a new DFA state, add it
-			if !dfaStates[nextName] {
-				dfaStates[nextName] = true
-				stateMap[nextName] = nextClosure
-				worklist = append(worklist, nextName)
-
-				if setsIntersect(nextClosure, n.accepting) {
-					dfaAccepting[nextName] = true
-				}
-			}
-		}
-	}
-
-	return NewDFA(
-		sortedKeys(dfaStates),
-		sortedKeys(n.alphabet),
-		dfaTransitions,
-		dfaStart,
-		sortedKeys(dfaAccepting),
-		nil,
-	)
+			return rf.Generate(true, false, NewDFA(
+				sortedKeys(dfaStates),
+				sortedKeys(n.alphabet),
+				dfaTransitions,
+				dfaStart,
+				sortedKeys(dfaAccepting),
+				nil,
+			))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -471,74 +527,78 @@ func (n *NFA) ToDFA() *DFA {
 // Epsilon transitions are labeled with the epsilon Unicode character.
 // Non-deterministic transitions produce multiple edges.
 func (n *NFA) ToDot() string {
-	var b strings.Builder
+	result, _ := StartNew[string]("state-machine.NFA.ToDot", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			var b strings.Builder
 
-	b.WriteString("digraph NFA {\n")
-	b.WriteString("    rankdir=LR;\n")
-	b.WriteString("\n")
+			b.WriteString("digraph NFA {\n")
+			b.WriteString("    rankdir=LR;\n")
+			b.WriteString("\n")
 
-	// Start arrow
-	b.WriteString("    __start [shape=point, width=0.2];\n")
-	b.WriteString(fmt.Sprintf("    __start -> %q;\n", n.initial))
-	b.WriteString("\n")
+			// Start arrow
+			b.WriteString("    __start [shape=point, width=0.2];\n")
+			b.WriteString(fmt.Sprintf("    __start -> %q;\n", n.initial))
+			b.WriteString("\n")
 
-	// State shapes
-	for _, state := range sortedKeys(n.states) {
-		shape := "circle"
-		if n.accepting[state] {
-			shape = "doublecircle"
-		}
-		b.WriteString(fmt.Sprintf("    %q [shape=%s];\n", state, shape))
-	}
-	b.WriteString("\n")
+			// State shapes
+			for _, state := range sortedKeys(n.states) {
+				shape := "circle"
+				if n.accepting[state] {
+					shape = "doublecircle"
+				}
+				b.WriteString(fmt.Sprintf("    %q [shape=%s];\n", state, shape))
+			}
+			b.WriteString("\n")
 
-	// Transitions — group by (source, target) to combine labels
-	type edgeKey struct{ source, target string }
-	edgeLabels := map[edgeKey][]string{}
+			// Transitions — group by (source, target) to combine labels
+			type edgeKey struct{ source, target string }
+			edgeLabels := map[edgeKey][]string{}
 
-	// Sort transition keys for deterministic output
-	var tkeys [][2]string
-	for k := range n.transitions {
-		tkeys = append(tkeys, k)
-	}
-	sort.Slice(tkeys, func(i, j int) bool {
-		if tkeys[i][0] != tkeys[j][0] {
-			return tkeys[i][0] < tkeys[j][0]
-		}
-		return tkeys[i][1] < tkeys[j][1]
-	})
+			// Sort transition keys for deterministic output
+			var tkeys [][2]string
+			for k := range n.transitions {
+				tkeys = append(tkeys, k)
+			}
+			sort.Slice(tkeys, func(i, j int) bool {
+				if tkeys[i][0] != tkeys[j][0] {
+					return tkeys[i][0] < tkeys[j][0]
+				}
+				return tkeys[i][1] < tkeys[j][1]
+			})
 
-	for _, k := range tkeys {
-		label := "\u03b5" // epsilon character
-		if k[1] != EPSILON {
-			label = k[1]
-		}
-		for _, target := range n.transitions[k] {
-			ek := edgeKey{k[0], target}
-			edgeLabels[ek] = append(edgeLabels[ek], label)
-		}
-	}
+			for _, k := range tkeys {
+				label := "\u03b5" // epsilon character
+				if k[1] != EPSILON {
+					label = k[1]
+				}
+				for _, target := range n.transitions[k] {
+					ek := edgeKey{k[0], target}
+					edgeLabels[ek] = append(edgeLabels[ek], label)
+				}
+			}
 
-	var ekeys []edgeKey
-	for k := range edgeLabels {
-		ekeys = append(ekeys, k)
-	}
-	sort.Slice(ekeys, func(i, j int) bool {
-		if ekeys[i].source != ekeys[j].source {
-			return ekeys[i].source < ekeys[j].source
-		}
-		return ekeys[i].target < ekeys[j].target
-	})
+			var ekeys []edgeKey
+			for k := range edgeLabels {
+				ekeys = append(ekeys, k)
+			}
+			sort.Slice(ekeys, func(i, j int) bool {
+				if ekeys[i].source != ekeys[j].source {
+					return ekeys[i].source < ekeys[j].source
+				}
+				return ekeys[i].target < ekeys[j].target
+			})
 
-	for _, ek := range ekeys {
-		labels := edgeLabels[ek]
-		sort.Strings(labels)
-		label := strings.Join(labels, ", ")
-		b.WriteString(fmt.Sprintf("    %q -> %q [label=%q];\n", ek.source, ek.target, label))
-	}
+			for _, ek := range ekeys {
+				labels := edgeLabels[ek]
+				sort.Strings(labels)
+				label := strings.Join(labels, ", ")
+				b.WriteString(fmt.Sprintf("    %q -> %q [label=%q];\n", ek.source, ek.target, label))
+			}
 
-	b.WriteString("}")
-	return b.String()
+			b.WriteString("}")
+			return rf.Generate(true, false, b.String())
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

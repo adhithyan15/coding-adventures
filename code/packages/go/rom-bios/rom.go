@@ -51,10 +51,14 @@ type ROMConfig struct {
 //
 //	BaseAddress: 0xFFFF0000, Size: 65536 (64KB).
 func DefaultROMConfig() ROMConfig {
-	return ROMConfig{
-		BaseAddress: DefaultROMBase,
-		Size:        DefaultROMSize,
-	}
+	result, _ := StartNew[ROMConfig]("rom-bios.DefaultROMConfig", ROMConfig{},
+		func(op *Operation[ROMConfig], rf *ResultFactory[ROMConfig]) *OperationResult[ROMConfig] {
+			return rf.Generate(true, false, ROMConfig{
+				BaseAddress: DefaultROMBase,
+				Size:        DefaultROMSize,
+			})
+		}).GetResult()
+	return result
 }
 
 // ROM represents a read-only memory region.
@@ -92,18 +96,18 @@ type ROM struct {
 //	firmware := []byte{0x37, 0x12, 0x00, 0x00} // lui x4, 0x12
 //	rom := NewROM(DefaultROMConfig(), firmware)
 func NewROM(config ROMConfig, firmware []byte) *ROM {
-	if len(firmware) > config.Size {
-		panic("firmware larger than ROM size")
-	}
-
-	// Copy firmware into a fixed-size buffer (zero-filled beyond firmware)
-	data := make([]byte, config.Size)
-	copy(data, firmware)
-
-	return &ROM{
-		config: config,
-		data:   data,
-	}
+	result, _ := StartNew[*ROM]("rom-bios.NewROM", nil,
+		func(op *Operation[*ROM], rf *ResultFactory[*ROM]) *OperationResult[*ROM] {
+			op.AddProperty("configSize", config.Size)
+			op.AddProperty("firmwareLen", len(firmware))
+			if len(firmware) > config.Size {
+				panic("firmware larger than ROM size")
+			}
+			data := make([]byte, config.Size)
+			copy(data, firmware)
+			return rf.Generate(true, false, &ROM{config: config, data: data})
+		}).GetResult()
+	return result
 }
 
 // Read returns a single byte from the given absolute address.
@@ -112,11 +116,16 @@ func NewROM(config ROMConfig, firmware []byte) *ROM {
 // Out-of-range addresses return 0, modeling the behavior of reading
 // from unmapped memory.
 func (r *ROM) Read(address uint32) byte {
-	offset := r.addressToOffset(address)
-	if offset < 0 {
-		return 0
-	}
-	return r.data[offset]
+	result, _ := StartNew[byte]("rom-bios.ROM.Read", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("address", address)
+			offset := r.addressToOffset(address)
+			if offset < 0 {
+				return rf.Generate(true, false, byte(0))
+			}
+			return rf.Generate(true, false, r.data[offset])
+		}).GetResult()
+	return result
 }
 
 // ReadWord returns a 32-bit little-endian word starting at the given
@@ -132,11 +141,16 @@ func (r *ROM) Read(address uint32) byte {
 //	Address+2: byte 2 (bits 23:16)
 //	Address+3: byte 3 (bits 31:24)
 func (r *ROM) ReadWord(address uint32) uint32 {
-	offset := r.addressToOffset(address)
-	if offset < 0 || offset+3 >= len(r.data) {
-		return 0
-	}
-	return readLE32(r.data[offset:])
+	result, _ := StartNew[uint32]("rom-bios.ROM.ReadWord", 0,
+		func(op *Operation[uint32], rf *ResultFactory[uint32]) *OperationResult[uint32] {
+			op.AddProperty("address", address)
+			offset := r.addressToOffset(address)
+			if offset < 0 || offset+3 >= len(r.data) {
+				return rf.Generate(true, false, uint32(0))
+			}
+			return rf.Generate(true, false, readLE32(r.data[offset:]))
+		}).GetResult()
+	return result
 }
 
 // Write attempts to write a byte to ROM. Since ROM is read-only,
@@ -146,24 +160,41 @@ func (r *ROM) ReadWord(address uint32) uint32 {
 // data lines simply do not connect to write circuitry. We model this
 // by accepting the call but doing nothing.
 func (r *ROM) Write(address uint32, value byte) {
-	// Silently ignored -- ROM is read-only.
-	_ = address
-	_ = value
+	_, _ = StartNew[struct{}]("rom-bios.ROM.Write", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("address", address)
+			op.AddProperty("value", value)
+			// Silently ignored -- ROM is read-only.
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Size returns the total size of the ROM in bytes.
 func (r *ROM) Size() int {
-	return r.config.Size
+	result, _ := StartNew[int]("rom-bios.ROM.Size", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, r.config.Size)
+		}).GetResult()
+	return result
 }
 
 // BaseAddress returns the base address of the ROM.
 func (r *ROM) BaseAddress() uint32 {
-	return r.config.BaseAddress
+	result, _ := StartNew[uint32]("rom-bios.ROM.BaseAddress", 0,
+		func(op *Operation[uint32], rf *ResultFactory[uint32]) *OperationResult[uint32] {
+			return rf.Generate(true, false, r.config.BaseAddress)
+		}).GetResult()
+	return result
 }
 
 // Contains returns true if the given address falls within the ROM region.
 func (r *ROM) Contains(address uint32) bool {
-	return r.addressToOffset(address) >= 0
+	result, _ := StartNew[bool]("rom-bios.ROM.Contains", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("address", address)
+			return rf.Generate(true, false, r.addressToOffset(address) >= 0)
+		}).GetResult()
+	return result
 }
 
 // addressToOffset converts an absolute address to a byte offset within

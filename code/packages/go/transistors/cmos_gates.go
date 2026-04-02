@@ -74,17 +74,21 @@ type CMOSInverter struct {
 // NewCMOSInverter creates a CMOS inverter. Pass nil for any parameter
 // to use defaults.
 func NewCMOSInverter(circuit *CircuitParams, nmosParams, pmosParams *MOSFETParams) *CMOSInverter {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSInverter{
-		Circuit: c,
-		Nmos:    NewNMOS(nmosParams),
-		Pmos:    NewPMOS(pmosParams),
-	}
+	result, _ := StartNew[*CMOSInverter]("transistors.NewCMOSInverter", nil,
+		func(op *Operation[*CMOSInverter], rf *ResultFactory[*CMOSInverter]) *OperationResult[*CMOSInverter] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSInverter{
+				Circuit: c,
+				Nmos:    NewNMOS(nmosParams),
+				Pmos:    NewPMOS(pmosParams),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate runs the inverter with an analog input voltage and returns
@@ -212,19 +216,23 @@ type CMOSNand struct {
 
 // NewCMOSNand creates a CMOS NAND gate.
 func NewCMOSNand(circuit *CircuitParams, nmosParams, pmosParams *MOSFETParams) *CMOSNand {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSNand{
-		Circuit: c,
-		Nmos1:   NewNMOS(nmosParams),
-		Nmos2:   NewNMOS(nmosParams),
-		Pmos1:   NewPMOS(pmosParams),
-		Pmos2:   NewPMOS(pmosParams),
-	}
+	result, _ := StartNew[*CMOSNand]("transistors.NewCMOSNand", nil,
+		func(op *Operation[*CMOSNand], rf *ResultFactory[*CMOSNand]) *OperationResult[*CMOSNand] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSNand{
+				Circuit: c,
+				Nmos1:   NewNMOS(nmosParams),
+				Nmos2:   NewNMOS(nmosParams),
+				Pmos1:   NewPMOS(pmosParams),
+				Pmos2:   NewPMOS(pmosParams),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates the NAND gate with analog input voltages.
@@ -326,19 +334,23 @@ type CMOSNor struct {
 
 // NewCMOSNor creates a CMOS NOR gate.
 func NewCMOSNor(circuit *CircuitParams, nmosParams, pmosParams *MOSFETParams) *CMOSNor {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSNor{
-		Circuit: c,
-		Nmos1:   NewNMOS(nmosParams),
-		Nmos2:   NewNMOS(nmosParams),
-		Pmos1:   NewPMOS(pmosParams),
-		Pmos2:   NewPMOS(pmosParams),
-	}
+	result, _ := StartNew[*CMOSNor]("transistors.NewCMOSNor", nil,
+		func(op *Operation[*CMOSNor], rf *ResultFactory[*CMOSNor]) *OperationResult[*CMOSNor] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSNor{
+				Circuit: c,
+				Nmos1:   NewNMOS(nmosParams),
+				Nmos2:   NewNMOS(nmosParams),
+				Pmos1:   NewPMOS(pmosParams),
+				Pmos2:   NewPMOS(pmosParams),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates the NOR gate with analog input voltages.
@@ -433,17 +445,21 @@ type CMOSAnd struct {
 
 // NewCMOSAnd creates a CMOS AND gate.
 func NewCMOSAnd(circuit *CircuitParams) *CMOSAnd {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSAnd{
-		Circuit: c,
-		nand:    NewCMOSNand(&c, nil, nil),
-		inv:     NewCMOSInverter(&c, nil, nil),
-	}
+	result, _ := StartNew[*CMOSAnd]("transistors.NewCMOSAnd", nil,
+		func(op *Operation[*CMOSAnd], rf *ResultFactory[*CMOSAnd]) *OperationResult[*CMOSAnd] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSAnd{
+				Circuit: c,
+				nand:    NewCMOSNand(&c, nil, nil),
+				inv:     NewCMOSInverter(&c, nil, nil),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates AND = NOT(NAND(A, B)).
@@ -493,17 +509,21 @@ type CMOSOr struct {
 
 // NewCMOSOr creates a CMOS OR gate.
 func NewCMOSOr(circuit *CircuitParams) *CMOSOr {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSOr{
-		Circuit: c,
-		nor:     NewCMOSNor(&c, nil, nil),
-		inv:     NewCMOSInverter(&c, nil, nil),
-	}
+	result, _ := StartNew[*CMOSOr]("transistors.NewCMOSOr", nil,
+		func(op *Operation[*CMOSOr], rf *ResultFactory[*CMOSOr]) *OperationResult[*CMOSOr] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSOr{
+				Circuit: c,
+				nor:     NewCMOSNor(&c, nil, nil),
+				inv:     NewCMOSInverter(&c, nil, nil),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates OR = NOT(NOR(A, B)).
@@ -560,19 +580,23 @@ type CMOSXor struct {
 
 // NewCMOSXor creates a CMOS XOR gate.
 func NewCMOSXor(circuit *CircuitParams) *CMOSXor {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSXor{
-		Circuit: c,
-		nand1:   NewCMOSNand(&c, nil, nil),
-		nand2:   NewCMOSNand(&c, nil, nil),
-		nand3:   NewCMOSNand(&c, nil, nil),
-		nand4:   NewCMOSNand(&c, nil, nil),
-	}
+	result, _ := StartNew[*CMOSXor]("transistors.NewCMOSXor", nil,
+		func(op *Operation[*CMOSXor], rf *ResultFactory[*CMOSXor]) *OperationResult[*CMOSXor] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSXor{
+				Circuit: c,
+				nand1:   NewCMOSNand(&c, nil, nil),
+				nand2:   NewCMOSNand(&c, nil, nil),
+				nand3:   NewCMOSNand(&c, nil, nil),
+				nand4:   NewCMOSNand(&c, nil, nil),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates XOR using 4 NAND gates.
@@ -661,17 +685,21 @@ type CMOSXnor struct {
 
 // NewCMOSXnor creates a CMOS XNOR gate.
 func NewCMOSXnor(circuit *CircuitParams) *CMOSXnor {
-	var c CircuitParams
-	if circuit != nil {
-		c = *circuit
-	} else {
-		c = DefaultCircuitParams()
-	}
-	return &CMOSXnor{
-		Circuit:  c,
-		xorGate:  NewCMOSXor(&c),
-		inverter: NewCMOSInverter(&c, nil, nil),
-	}
+	result, _ := StartNew[*CMOSXnor]("transistors.NewCMOSXnor", nil,
+		func(op *Operation[*CMOSXnor], rf *ResultFactory[*CMOSXnor]) *OperationResult[*CMOSXnor] {
+			var c CircuitParams
+			if circuit != nil {
+				c = *circuit
+			} else {
+				c = DefaultCircuitParams()
+			}
+			return rf.Generate(true, false, &CMOSXnor{
+				Circuit:  c,
+				xorGate:  NewCMOSXor(&c),
+				inverter: NewCMOSInverter(&c, nil, nil),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates XNOR using XOR followed by an Inverter.

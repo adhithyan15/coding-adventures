@@ -125,14 +125,18 @@ type MOSFETParams struct {
 
 // DefaultMOSFETParams returns parameters for a typical 180nm CMOS process.
 func DefaultMOSFETParams() MOSFETParams {
-	return MOSFETParams{
-		Vth:    0.4,
-		K:      0.001,
-		W:      1e-6,
-		L:      180e-9,
-		CGate:  1e-15,
-		CDrain: 0.5e-15,
-	}
+	result, _ := StartNew[MOSFETParams]("transistors.DefaultMOSFETParams", MOSFETParams{},
+		func(op *Operation[MOSFETParams], rf *ResultFactory[MOSFETParams]) *OperationResult[MOSFETParams] {
+			return rf.Generate(true, false, MOSFETParams{
+				Vth:    0.4,
+				K:      0.001,
+				W:      1e-6,
+				L:      180e-9,
+				CGate:  1e-15,
+				CDrain: 0.5e-15,
+			})
+		}).GetResult()
+	return result
 }
 
 // BJTParams holds electrical parameters for a BJT transistor.
@@ -166,13 +170,17 @@ type BJTParams struct {
 
 // DefaultBJTParams returns parameters for a typical 2N2222-style NPN transistor.
 func DefaultBJTParams() BJTParams {
-	return BJTParams{
-		Beta:   100.0,
-		VbeOn:  0.7,
-		VceSat: 0.2,
-		Is:     1e-14,
-		CBase:  5e-12,
-	}
+	result, _ := StartNew[BJTParams]("transistors.DefaultBJTParams", BJTParams{},
+		func(op *Operation[BJTParams], rf *ResultFactory[BJTParams]) *OperationResult[BJTParams] {
+			return rf.Generate(true, false, BJTParams{
+				Beta:   100.0,
+				VbeOn:  0.7,
+				VceSat: 0.2,
+				Is:     1e-14,
+				CBase:  5e-12,
+			})
+		}).GetResult()
+	return result
 }
 
 // CircuitParams holds parameters for a complete logic gate circuit.
@@ -189,10 +197,14 @@ type CircuitParams struct {
 
 // DefaultCircuitParams returns typical circuit parameters (3.3V, 300K).
 func DefaultCircuitParams() CircuitParams {
-	return CircuitParams{
-		Vdd:         3.3,
-		Temperature: 300.0,
-	}
+	result, _ := StartNew[CircuitParams]("transistors.DefaultCircuitParams", CircuitParams{},
+		func(op *Operation[CircuitParams], rf *ResultFactory[CircuitParams]) *OperationResult[CircuitParams] {
+			return rf.Generate(true, false, CircuitParams{
+				Vdd:         3.3,
+				Temperature: 300.0,
+			})
+		}).GetResult()
+	return result
 }
 
 // ===========================================================================

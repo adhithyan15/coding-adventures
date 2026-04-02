@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 — 2026-04-02
+
+### Changed
+
+- **Operations pattern**: Wrapped all public functions and methods with `StartNew` for automatic timing, structured logging, and panic recovery. Methods covered: `NewSystemBoard`, `PowerOn`, `Step`, `Run`, `InjectKeystroke`, `DisplaySnapshot`, `GetBootTrace`, `IsIdle`, `GetCycleCount`, `GetCurrentPhase`, `DefaultSystemConfig`, `BootPhase.String`, `BootTrace.AddEvent`, `BootTrace.Phases`, `BootTrace.EventsInPhase`, `BootTrace.TotalCycles`, `BootTrace.PhaseStartCycle`. The public API is fully backward-compatible.
+
 ## 0.1.0 — 2026-03-21
 
 ### Added

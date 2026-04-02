@@ -79,15 +79,27 @@ type SystemBoard struct {
 // NewSystemBoard creates a system board with all components instantiated
 // but not yet powered on.
 func NewSystemBoard(config SystemConfig) *SystemBoard {
-	return &SystemBoard{
-		Config: config,
-		Trace:  &BootTrace{},
-	}
+	result, _ := StartNew[*SystemBoard]("system-board.NewSystemBoard", nil,
+		func(op *Operation[*SystemBoard], rf *ResultFactory[*SystemBoard]) *OperationResult[*SystemBoard] {
+			return rf.Generate(true, false, &SystemBoard{
+				Config: config,
+				Trace:  &BootTrace{},
+			})
+		}).GetResult()
+	return result
 }
 
 // PowerOn initializes all components and begins the boot sequence.
 // Sets PC to ROM base address. The BIOS begins executing on the next Step().
 func (b *SystemBoard) PowerOn() {
+	_, _ = StartNew[struct{}]("system-board.PowerOn", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			b.powerOnInternal()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+}
+
+func (b *SystemBoard) powerOnInternal() {
 	if b.Powered {
 		return // Idempotent
 	}
@@ -277,89 +289,123 @@ func (b *SystemBoard) PowerOn() {
 
 // Step executes one CPU cycle and checks for traps/phase transitions.
 func (b *SystemBoard) Step() {
-	if !b.Powered {
-		return
-	}
+	_, _ = StartNew[struct{}]("system-board.Step", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if !b.Powered {
+				return rf.Generate(true, false, struct{}{})
+			}
 
-	b.previousPC = uint32(b.CPU.CPU.PC)
-	b.Cycle++
+			b.previousPC = uint32(b.CPU.CPU.PC)
+			b.Cycle++
 
-	// Execute one instruction.
-	b.CPU.Step()
+			// Execute one instruction.
+			b.CPU.Step()
 
-	// Check for phase transitions based on PC.
-	b.detectPhaseTransition()
+			// Check for phase transitions based on PC.
+			b.detectPhaseTransition()
 
-	// Check for ecall trap (CSR mepc/mcause set by the ISA decoder).
-	b.handleTrap()
+			// Check for ecall trap (CSR mepc/mcause set by the ISA decoder).
+			b.handleTrap()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Run executes cycles until the system is idle or maxCycles is exhausted.
 // Returns the complete boot trace.
 func (b *SystemBoard) Run(maxCycles int) *BootTrace {
-	if !b.Powered {
-		return b.Trace
-	}
-
-	for i := 0; i < maxCycles; i++ {
-		b.Step()
-
-		// Check if we've reached idle state.
-		if b.kernelBooted && b.Kernel.IsIdle() {
-			if b.CurrentPhase != PhaseIdle {
-				b.CurrentPhase = PhaseIdle
-				b.Trace.AddEvent(PhaseIdle, b.Cycle,
-					"System idle -- all user programs terminated")
+	result, _ := StartNew[*BootTrace]("system-board.Run", nil,
+		func(op *Operation[*BootTrace], rf *ResultFactory[*BootTrace]) *OperationResult[*BootTrace] {
+			op.AddProperty("maxCycles", maxCycles)
+			if !b.Powered {
+				return rf.Generate(true, false, b.Trace)
 			}
-			break
-		}
 
-		// Safety: if CPU halted (ecall with mtvec=0), stop.
-		if b.CPU.CPU.Halted {
-			break
-		}
-	}
+			for i := 0; i < maxCycles; i++ {
+				b.Step()
 
-	return b.Trace
+				// Check if we've reached idle state.
+				if b.kernelBooted && b.Kernel.IsIdle() {
+					if b.CurrentPhase != PhaseIdle {
+						b.CurrentPhase = PhaseIdle
+						b.Trace.AddEvent(PhaseIdle, b.Cycle,
+							"System idle -- all user programs terminated")
+					}
+					break
+				}
+
+				// Safety: if CPU halted (ecall with mtvec=0), stop.
+				if b.CPU.CPU.Halted {
+					break
+				}
+			}
+
+			return rf.Generate(true, false, b.Trace)
+		}).GetResult()
+	return result
 }
 
 // InjectKeystroke simulates a keyboard press.
 func (b *SystemBoard) InjectKeystroke(char byte) {
-	if b.Kernel != nil {
-		b.Kernel.AddKeystroke(char)
-	}
-	if b.InterruptCtrl != nil {
-		b.InterruptCtrl.RaiseInterrupt(oskernel.InterruptKeyboard)
-	}
+	_, _ = StartNew[struct{}]("system-board.InjectKeystroke", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("char", char)
+			if b.Kernel != nil {
+				b.Kernel.AddKeystroke(char)
+			}
+			if b.InterruptCtrl != nil {
+				b.InterruptCtrl.RaiseInterrupt(oskernel.InterruptKeyboard)
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // DisplaySnapshot returns the current state of the text display.
 func (b *SystemBoard) DisplaySnapshot() *display.DisplaySnapshot {
-	if b.Display == nil {
-		return nil
-	}
-	snap := b.Display.Snapshot()
-	return &snap
+	result, _ := StartNew[*display.DisplaySnapshot]("system-board.DisplaySnapshot", nil,
+		func(op *Operation[*display.DisplaySnapshot], rf *ResultFactory[*display.DisplaySnapshot]) *OperationResult[*display.DisplaySnapshot] {
+			if b.Display == nil {
+				return rf.Generate(true, false, nil)
+			}
+			snap := b.Display.Snapshot()
+			return rf.Generate(true, false, &snap)
+		}).GetResult()
+	return result
 }
 
 // GetBootTrace returns the accumulated boot trace.
 func (b *SystemBoard) GetBootTrace() *BootTrace {
-	return b.Trace
+	result, _ := StartNew[*BootTrace]("system-board.GetBootTrace", nil,
+		func(op *Operation[*BootTrace], rf *ResultFactory[*BootTrace]) *OperationResult[*BootTrace] {
+			return rf.Generate(true, false, b.Trace)
+		}).GetResult()
+	return result
 }
 
 // IsIdle returns true when the kernel reports only the idle process remains.
 func (b *SystemBoard) IsIdle() bool {
-	return b.kernelBooted && b.Kernel != nil && b.Kernel.IsIdle()
+	result, _ := StartNew[bool]("system-board.IsIdle", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, b.kernelBooted && b.Kernel != nil && b.Kernel.IsIdle())
+		}).GetResult()
+	return result
 }
 
 // GetCycleCount returns the total CPU cycles executed since PowerOn.
 func (b *SystemBoard) GetCycleCount() int {
-	return b.Cycle
+	result, _ := StartNew[int]("system-board.GetCycleCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, b.Cycle)
+		}).GetResult()
+	return result
 }
 
 // GetCurrentPhase returns the current boot phase.
 func (b *SystemBoard) GetCurrentPhase() BootPhase {
-	return b.CurrentPhase
+	result, _ := StartNew[BootPhase]("system-board.GetCurrentPhase", PhasePowerOn,
+		func(op *Operation[BootPhase], rf *ResultFactory[BootPhase]) *OperationResult[BootPhase] {
+			return rf.Generate(true, false, b.CurrentPhase)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

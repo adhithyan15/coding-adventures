@@ -84,15 +84,19 @@ type HardwareInfo struct {
 // MemorySize is set to 0, meaning "not yet probed" -- the BIOS firmware
 // will fill it in during the memory probe step.
 func DefaultHardwareInfo() HardwareInfo {
-	return HardwareInfo{
-		MemorySize:      0,
-		DisplayColumns:  80,
-		DisplayRows:     25,
-		FramebufferBase: 0xFFFB0000,
-		IDTBase:         0x00000000,
-		IDTEntries:      256,
-		BootloaderEntry: 0x00010000,
-	}
+	result, _ := StartNew[HardwareInfo]("rom-bios.DefaultHardwareInfo", HardwareInfo{},
+		func(op *Operation[HardwareInfo], rf *ResultFactory[HardwareInfo]) *OperationResult[HardwareInfo] {
+			return rf.Generate(true, false, HardwareInfo{
+				MemorySize:      0,
+				DisplayColumns:  80,
+				DisplayRows:     25,
+				FramebufferBase: 0xFFFB0000,
+				IDTBase:         0x00000000,
+				IDTEntries:      256,
+				BootloaderEntry: 0x00010000,
+			})
+		}).GetResult()
+	return result
 }
 
 // ToBytes serializes the HardwareInfo struct to a 28-byte slice in
@@ -108,15 +112,19 @@ func DefaultHardwareInfo() HardwareInfo {
 //     // bytes[4:8]  = 0x50000000 (80 in little-endian)
 //     // ...
 func (h HardwareInfo) ToBytes() []byte {
-	buf := make([]byte, HardwareInfoSize)
-	putLE32(buf[0:], h.MemorySize)
-	putLE32(buf[4:], h.DisplayColumns)
-	putLE32(buf[8:], h.DisplayRows)
-	putLE32(buf[12:], h.FramebufferBase)
-	putLE32(buf[16:], h.IDTBase)
-	putLE32(buf[20:], h.IDTEntries)
-	putLE32(buf[24:], h.BootloaderEntry)
-	return buf
+	result, _ := StartNew[[]byte]("rom-bios.HardwareInfo.ToBytes", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			buf := make([]byte, HardwareInfoSize)
+			putLE32(buf[0:], h.MemorySize)
+			putLE32(buf[4:], h.DisplayColumns)
+			putLE32(buf[8:], h.DisplayRows)
+			putLE32(buf[12:], h.FramebufferBase)
+			putLE32(buf[16:], h.IDTBase)
+			putLE32(buf[20:], h.IDTEntries)
+			putLE32(buf[24:], h.BootloaderEntry)
+			return rf.Generate(true, false, buf)
+		}).GetResult()
+	return result
 }
 
 // HardwareInfoFromBytes deserializes a 28-byte little-endian buffer
@@ -124,18 +132,22 @@ func (h HardwareInfo) ToBytes() []byte {
 //
 // Panics if len(data) < HardwareInfoSize.
 func HardwareInfoFromBytes(data []byte) HardwareInfo {
-	if len(data) < HardwareInfoSize {
-		panic("HardwareInfoFromBytes: data too short")
-	}
-	return HardwareInfo{
-		MemorySize:      readLE32(data[0:]),
-		DisplayColumns:  readLE32(data[4:]),
-		DisplayRows:     readLE32(data[8:]),
-		FramebufferBase: readLE32(data[12:]),
-		IDTBase:         readLE32(data[16:]),
-		IDTEntries:      readLE32(data[20:]),
-		BootloaderEntry: readLE32(data[24:]),
-	}
+	result, _ := StartNew[HardwareInfo]("rom-bios.HardwareInfoFromBytes", HardwareInfo{},
+		func(op *Operation[HardwareInfo], rf *ResultFactory[HardwareInfo]) *OperationResult[HardwareInfo] {
+			if len(data) < HardwareInfoSize {
+				panic("HardwareInfoFromBytes: data too short")
+			}
+			return rf.Generate(true, false, HardwareInfo{
+				MemorySize:      readLE32(data[0:]),
+				DisplayColumns:  readLE32(data[4:]),
+				DisplayRows:     readLE32(data[8:]),
+				FramebufferBase: readLE32(data[12:]),
+				IDTBase:         readLE32(data[16:]),
+				IDTEntries:      readLE32(data[20:]),
+				BootloaderEntry: readLE32(data[24:]),
+			})
+		}).GetResult()
+	return result
 }
 
 // putLE32 writes a uint32 in little-endian byte order.

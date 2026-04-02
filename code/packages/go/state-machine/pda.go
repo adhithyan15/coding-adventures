@@ -160,94 +160,100 @@ func NewPushdownAutomaton(
 	initialStackSymbol string,
 	accepting []string,
 ) *PushdownAutomaton {
-	if len(states) == 0 {
-		panic("statemachine: states set must be non-empty")
-	}
+	result, _ := StartNew[*PushdownAutomaton]("state-machine.NewPushdownAutomaton", nil,
+		func(op *Operation[*PushdownAutomaton], rf *ResultFactory[*PushdownAutomaton]) *OperationResult[*PushdownAutomaton] {
+			op.AddProperty("stateCount", len(states))
+			op.AddProperty("initial", initial)
+			if len(states) == 0 {
+				panic("statemachine: states set must be non-empty")
+			}
 
-	stateSet := make(map[string]bool, len(states))
-	for _, s := range states {
-		stateSet[s] = true
-	}
+			stateSet := make(map[string]bool, len(states))
+			for _, s := range states {
+				stateSet[s] = true
+			}
 
-	if !stateSet[initial] {
-		panic(fmt.Sprintf(
-			"statemachine: initial state %q is not in the states set",
-			initial,
-		))
-	}
+			if !stateSet[initial] {
+				panic(fmt.Sprintf(
+					"statemachine: initial state %q is not in the states set",
+					initial,
+				))
+			}
 
-	inputSet := make(map[string]bool, len(inputAlphabet))
-	for _, a := range inputAlphabet {
-		inputSet[a] = true
-	}
+			inputSet := make(map[string]bool, len(inputAlphabet))
+			for _, a := range inputAlphabet {
+				inputSet[a] = true
+			}
 
-	stackSet := make(map[string]bool, len(stackAlphabet))
-	for _, a := range stackAlphabet {
-		stackSet[a] = true
-	}
+			stackSet := make(map[string]bool, len(stackAlphabet))
+			for _, a := range stackAlphabet {
+				stackSet[a] = true
+			}
 
-	if !stackSet[initialStackSymbol] {
-		panic(fmt.Sprintf(
-			"statemachine: initial stack symbol %q is not in the stack alphabet",
-			initialStackSymbol,
-		))
-	}
+			if !stackSet[initialStackSymbol] {
+				panic(fmt.Sprintf(
+					"statemachine: initial stack symbol %q is not in the stack alphabet",
+					initialStackSymbol,
+				))
+			}
 
-	acceptSet := make(map[string]bool, len(accepting))
-	for _, a := range accepting {
-		if !stateSet[a] {
-			panic(fmt.Sprintf(
-				"statemachine: accepting state %q is not in the states set",
-				a,
-			))
-		}
-		acceptSet[a] = true
-	}
+			acceptSet := make(map[string]bool, len(accepting))
+			for _, a := range accepting {
+				if !stateSet[a] {
+					panic(fmt.Sprintf(
+						"statemachine: accepting state %q is not in the states set",
+						a,
+					))
+				}
+				acceptSet[a] = true
+			}
 
-	// Build transition index
-	index := map[pdaKey]*PDATransition{}
-	transCopy := make([]PDATransition, len(transitions))
-	for i, t := range transitions {
-		// Copy the StackPush slice
-		sp := make([]string, len(t.StackPush))
-		copy(sp, t.StackPush)
-		transCopy[i] = PDATransition{
-			Source:    t.Source,
-			Event:     t.Event,
-			StackRead: t.StackRead,
-			Target:    t.Target,
-			StackPush: sp,
-		}
+			// Build transition index
+			index := map[pdaKey]*PDATransition{}
+			transCopy := make([]PDATransition, len(transitions))
+			for i, t := range transitions {
+				// Copy the StackPush slice
+				sp := make([]string, len(t.StackPush))
+				copy(sp, t.StackPush)
+				transCopy[i] = PDATransition{
+					Source:    t.Source,
+					Event:     t.Event,
+					StackRead: t.StackRead,
+					Target:    t.Target,
+					StackPush: sp,
+				}
 
-		var key pdaKey
-		if t.Event == nil {
-			key = pdaKey{state: t.Source, eventIsNil: true, stackTop: t.StackRead}
-		} else {
-			key = pdaKey{state: t.Source, event: *t.Event, stackTop: t.StackRead}
-		}
+				var key pdaKey
+				if t.Event == nil {
+					key = pdaKey{state: t.Source, eventIsNil: true, stackTop: t.StackRead}
+				} else {
+					key = pdaKey{state: t.Source, event: *t.Event, stackTop: t.StackRead}
+				}
 
-		if _, exists := index[key]; exists {
-			panic(fmt.Sprintf(
-				"statemachine: duplicate transition for (state=%q, event=%v, stack_top=%q) — this PDA must be deterministic",
-				t.Source, t.Event, t.StackRead,
-			))
-		}
-		index[key] = &transCopy[i]
-	}
+				if _, exists := index[key]; exists {
+					panic(fmt.Sprintf(
+						"statemachine: duplicate transition for (state=%q, event=%v, stack_top=%q) — this PDA must be deterministic",
+						t.Source, t.Event, t.StackRead,
+					))
+				}
+				index[key] = &transCopy[i]
+			}
 
-	return &PushdownAutomaton{
-		states:          stateSet,
-		inputAlphabet:   inputSet,
-		stackAlphabet:   stackSet,
-		transitions:     transCopy,
-		initial:         initial,
-		initialStackSym: initialStackSymbol,
-		accepting:       acceptSet,
-		transitionIndex: index,
-		current:         initial,
-		stack:           []string{initialStackSymbol},
-		trace:           nil,
-	}
+			return rf.Generate(true, false, &PushdownAutomaton{
+				states:          stateSet,
+				inputAlphabet:   inputSet,
+				stackAlphabet:   stackSet,
+				transitions:     transCopy,
+				initial:         initial,
+				initialStackSym: initialStackSymbol,
+				accepting:       acceptSet,
+				transitionIndex: index,
+				current:         initial,
+				stack:           []string{initialStackSymbol},
+				trace:           nil,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -317,21 +323,26 @@ func (p *PushdownAutomaton) tryEpsilon() bool {
 // Looks for a transition matching (current_state, event, stack_top).
 // Panics if no transition matches.
 func (p *PushdownAutomaton) Process(event string) string {
-	t := p.findTransition(&event)
-	if t == nil {
-		var topStr string
-		if len(p.stack) > 0 {
-			topStr = p.stack[len(p.stack)-1]
-		} else {
-			topStr = "<empty>"
-		}
-		panic(fmt.Sprintf(
-			"statemachine: no PDA transition for (state=%q, event=%q, stack_top=%q)",
-			p.current, event, topStr,
-		))
-	}
-	p.applyTransition(t)
-	return p.current
+	result, _ := StartNew[string]("state-machine.PushdownAutomaton.Process", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("event", event)
+			t := p.findTransition(&event)
+			if t == nil {
+				var topStr string
+				if len(p.stack) > 0 {
+					topStr = p.stack[len(p.stack)-1]
+				} else {
+					topStr = "<empty>"
+				}
+				panic(fmt.Sprintf(
+					"statemachine: no PDA transition for (state=%q, event=%q, stack_top=%q)",
+					p.current, event, topStr,
+				))
+			}
+			p.applyTransition(t)
+			return rf.Generate(true, false, p.current)
+		}).GetResult()
+	return result
 }
 
 // ProcessSequence processes a sequence of inputs and returns the trace
@@ -340,15 +351,19 @@ func (p *PushdownAutomaton) Process(event string) string {
 // After processing all inputs, tries epsilon transitions until none are
 // available (this handles acceptance transitions that fire at end-of-input).
 func (p *PushdownAutomaton) ProcessSequence(events []string) []PDATraceEntry {
-	traceStart := len(p.trace)
-	for _, event := range events {
-		p.Process(event)
-	}
-	// Try epsilon transitions at end of input
-	for p.tryEpsilon() {
-	}
-	result := make([]PDATraceEntry, len(p.trace)-traceStart)
-	copy(result, p.trace[traceStart:])
+	result, _ := StartNew[[]PDATraceEntry]("state-machine.PushdownAutomaton.ProcessSequence", nil,
+		func(op *Operation[[]PDATraceEntry], rf *ResultFactory[[]PDATraceEntry]) *OperationResult[[]PDATraceEntry] {
+			traceStart := len(p.trace)
+			for _, event := range events {
+				p.Process(event)
+			}
+			// Try epsilon transitions at end of input
+			for p.tryEpsilon() {
+			}
+			out := make([]PDATraceEntry, len(p.trace)-traceStart)
+			copy(out, p.trace[traceStart:])
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -359,68 +374,88 @@ func (p *PushdownAutomaton) ProcessSequence(events []string) []PDATraceEntry {
 //
 // Does NOT modify this PDA's state — runs on a simulation copy.
 func (p *PushdownAutomaton) Accepts(events []string) bool {
-	// Simulate on copies of the mutable state
-	state := p.initial
-	stack := []string{p.initialStackSym}
+	result, _ := StartNew[bool]("state-machine.PushdownAutomaton.Accepts", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			// Simulate on copies of the mutable state
+			state := p.initial
+			stack := []string{p.initialStackSym}
 
-	for _, event := range events {
-		if len(stack) == 0 {
-			return false
-		}
-		top := stack[len(stack)-1]
-		key := pdaKey{state: state, event: event, stackTop: top}
-		t := p.transitionIndex[key]
-		if t == nil {
-			return false
-		}
-		stack = stack[:len(stack)-1]
-		stack = append(stack, t.StackPush...)
-		state = t.Target
-	}
+			for _, event := range events {
+				if len(stack) == 0 {
+					return rf.Generate(true, false, false)
+				}
+				top := stack[len(stack)-1]
+				key := pdaKey{state: state, event: event, stackTop: top}
+				t := p.transitionIndex[key]
+				if t == nil {
+					return rf.Generate(true, false, false)
+				}
+				stack = stack[:len(stack)-1]
+				stack = append(stack, t.StackPush...)
+				state = t.Target
+			}
 
-	// Try epsilon transitions at end of input
-	maxEpsilon := len(p.transitions) + 1
-	for i := 0; i < maxEpsilon; i++ {
-		if len(stack) == 0 {
-			break
-		}
-		top := stack[len(stack)-1]
-		key := pdaKey{state: state, eventIsNil: true, stackTop: top}
-		t := p.transitionIndex[key]
-		if t == nil {
-			break
-		}
-		stack = stack[:len(stack)-1]
-		stack = append(stack, t.StackPush...)
-		state = t.Target
-	}
+			// Try epsilon transitions at end of input
+			maxEpsilon := len(p.transitions) + 1
+			for i := 0; i < maxEpsilon; i++ {
+				if len(stack) == 0 {
+					break
+				}
+				top := stack[len(stack)-1]
+				key := pdaKey{state: state, eventIsNil: true, stackTop: top}
+				t := p.transitionIndex[key]
+				if t == nil {
+					break
+				}
+				stack = stack[:len(stack)-1]
+				stack = append(stack, t.StackPush...)
+				state = t.Target
+			}
 
-	return p.accepting[state]
+			return rf.Generate(true, false, p.accepting[state])
+		}).GetResult()
+	return result
 }
 
 // Reset returns the PDA to its initial state with the initial stack.
 func (p *PushdownAutomaton) Reset() {
-	p.current = p.initial
-	p.stack = []string{p.initialStackSym}
-	p.trace = nil
+	_, _ = StartNew[struct{}]("state-machine.PushdownAutomaton.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			p.current = p.initial
+			p.stack = []string{p.initialStackSym}
+			p.trace = nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // CurrentState returns the current state of the PDA.
 func (p *PushdownAutomaton) CurrentState() string {
-	return p.current
+	result, _ := StartNew[string]("state-machine.PushdownAutomaton.CurrentState", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, p.current)
+		}).GetResult()
+	return result
 }
 
 // Stack returns a copy of the current stack contents (bottom to top).
 func (p *PushdownAutomaton) Stack() []string {
-	result := make([]string, len(p.stack))
-	copy(result, p.stack)
+	result, _ := StartNew[[]string]("state-machine.PushdownAutomaton.Stack", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			out := make([]string, len(p.stack))
+			copy(out, p.stack)
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
 // StackTop returns the top of the stack, or empty string if empty.
 func (p *PushdownAutomaton) StackTop() string {
-	if len(p.stack) == 0 {
-		return ""
-	}
-	return p.stack[len(p.stack)-1]
+	result, _ := StartNew[string]("state-machine.PushdownAutomaton.StackTop", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if len(p.stack) == 0 {
+				return rf.Generate(true, false, "")
+			}
+			return rf.Generate(true, false, p.stack[len(p.stack)-1])
+		}).GetResult()
+	return result
 }
