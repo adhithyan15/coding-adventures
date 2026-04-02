@@ -86,27 +86,39 @@ type RiscVSimulator struct {
 // Memory size should be large enough to hold both the program and any
 // data it accesses. 65536 (64 KiB) is a good default for testing.
 func NewRiscVSimulator(memorySize int) *RiscVSimulator {
-	decoder := &RiscVDecoder{}
-	csrFile := NewCSRFile()
-	executor := &RiscVExecutor{CSR: csrFile}
-	return &RiscVSimulator{
-		Decoder:  decoder,
-		Executor: executor,
-		CPU:      cpu.NewCPU(decoder, executor, 32, 32, memorySize),
-		CSR:      csrFile,
-	}
+	result, _ := StartNew[*RiscVSimulator]("riscv-simulator.NewRiscVSimulator", nil,
+		func(op *Operation[*RiscVSimulator], rf *ResultFactory[*RiscVSimulator]) *OperationResult[*RiscVSimulator] {
+			decoder := &RiscVDecoder{}
+			csrFile := NewCSRFile()
+			executor := &RiscVExecutor{CSR: csrFile}
+			return rf.Generate(true, false, &RiscVSimulator{
+				Decoder:  decoder,
+				Executor: executor,
+				CPU:      cpu.NewCPU(decoder, executor, 32, 32, memorySize),
+				CSR:      csrFile,
+			})
+		}).GetResult()
+	return result
 }
 
 // Run loads a program (as raw bytes) into memory starting at address 0,
 // then executes instructions until the CPU halts or the 10,000-step
 // safety limit is reached (preventing infinite loops in tests).
 func (s *RiscVSimulator) Run(program []byte) []cpu.PipelineTrace {
-	s.CPU.LoadProgram(program, 0)
-	return s.CPU.Run(10000)
+	result, _ := StartNew[[]cpu.PipelineTrace]("riscv-simulator.RiscVSimulator.Run", nil,
+		func(op *Operation[[]cpu.PipelineTrace], rf *ResultFactory[[]cpu.PipelineTrace]) *OperationResult[[]cpu.PipelineTrace] {
+			s.CPU.LoadProgram(program, 0)
+			return rf.Generate(true, false, s.CPU.Run(10000))
+		}).GetResult()
+	return result
 }
 
 // Step advances the pipeline by a single instruction, returning a trace
 // of what happened during fetch, decode, and execute.
 func (s *RiscVSimulator) Step() cpu.PipelineTrace {
-	return s.CPU.Step()
+	result, _ := StartNew[cpu.PipelineTrace]("riscv-simulator.RiscVSimulator.Step", cpu.PipelineTrace{},
+		func(op *Operation[cpu.PipelineTrace], rf *ResultFactory[cpu.PipelineTrace]) *OperationResult[cpu.PipelineTrace] {
+			return rf.Generate(true, false, s.CPU.Step())
+		}).GetResult()
+	return result
 }

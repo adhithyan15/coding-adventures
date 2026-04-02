@@ -82,10 +82,14 @@ type RiscVISADecoder struct {
 // NewRiscVISADecoder creates a new adapter that bridges RISC-V decoding
 // into the Core's ISADecoder interface.
 func NewRiscVISADecoder() *RiscVISADecoder {
-	return &RiscVISADecoder{
-		decoder: &RiscVDecoder{},
-		csr:     NewCSRFile(),
-	}
+	result, _ := StartNew[*RiscVISADecoder]("riscv-simulator.NewRiscVISADecoder", nil,
+		func(op *Operation[*RiscVISADecoder], rf *ResultFactory[*RiscVISADecoder]) *OperationResult[*RiscVISADecoder] {
+			return rf.Generate(true, false, &RiscVISADecoder{
+				decoder: &RiscVDecoder{},
+				csr:     NewCSRFile(),
+			})
+		}).GetResult()
+	return result
 }
 
 // InstructionSize returns 4 — all RV32I instructions are 32 bits (4 bytes).
@@ -93,7 +97,11 @@ func NewRiscVISADecoder() *RiscVISADecoder {
 // RISC-V also defines a compressed extension (RV32C) with 16-bit instructions,
 // but this simulator implements only the base ISA.
 func (d *RiscVISADecoder) InstructionSize() int {
-	return 4
+	result, _ := StartNew[int]("riscv-simulator.RiscVISADecoder.InstructionSize", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 4)
+		}).GetResult()
+	return result
 }
 
 // Decode translates raw RISC-V instruction bits into a PipelineToken.
@@ -594,22 +602,36 @@ func decodeFieldsFromToken(token *cpupipeline.PipelineToken) map[string]int {
 //   config := core.SimpleConfig()
 //   c, err := NewRiscVCore(config, 65536)
 //   // Load a program, then c.Run(10000)
+// riscvCoreResult is an internal helper struct for returning multiple values from NewRiscVCore.
+type riscvCoreResult struct {
+	c   *core.Core
+	err error
+}
+
 func NewRiscVCore(config core.CoreConfig, memorySize int) (*core.Core, error) {
-	// Override register file config to match RISC-V conventions.
-	riscvRegs := core.RegisterFileConfig{
-		Count:        32,
-		Width:        32,
-		ZeroRegister: true, // x0 is hardwired to zero
-	}
-	config.RegisterFile = &riscvRegs
+	res, _ := StartNew[riscvCoreResult]("riscv-simulator.NewRiscVCore", riscvCoreResult{},
+		func(op *Operation[riscvCoreResult], rf *ResultFactory[riscvCoreResult]) *OperationResult[riscvCoreResult] {
+			// Override register file config to match RISC-V conventions.
+			riscvRegs := core.RegisterFileConfig{
+				Count:        32,
+				Width:        32,
+				ZeroRegister: true, // x0 is hardwired to zero
+			}
+			config.RegisterFile = &riscvRegs
 
-	// Set memory size.
-	if memorySize > 0 {
-		config.MemorySize = memorySize
-	}
+			// Set memory size.
+			if memorySize > 0 {
+				config.MemorySize = memorySize
+			}
 
-	decoder := NewRiscVISADecoder()
-	return core.NewCore(config, decoder)
+			decoder := NewRiscVISADecoder()
+			c, err := core.NewCore(config, decoder)
+			if err != nil {
+				return rf.Fail(riscvCoreResult{}, err)
+			}
+			return rf.Generate(true, false, riscvCoreResult{c, nil})
+		}).GetResult()
+	return res.c, res.err
 }
 
 // NewRiscVCoreWithSparseMemory creates a D05 Core configured for RISC-V with
@@ -639,20 +661,32 @@ func NewRiscVCore(config core.CoreConfig, memorySize int) (*core.Core, error) {
 // a memory size large enough to cover your program's address range, or
 // create a custom integration that replaces the Core's memory callbacks.
 func NewRiscVCoreWithSparseMemory(config core.CoreConfig, memory *cpu.SparseMemory) (*core.Core, error) {
-	// Override register file config to match RISC-V conventions.
-	riscvRegs := core.RegisterFileConfig{
-		Count:        32,
-		Width:        32,
-		ZeroRegister: true,
-	}
-	config.RegisterFile = &riscvRegs
+	res, _ := StartNew[riscvCoreResult]("riscv-simulator.NewRiscVCoreWithSparseMemory", riscvCoreResult{},
+		func(op *Operation[riscvCoreResult], rf *ResultFactory[riscvCoreResult]) *OperationResult[riscvCoreResult] {
+			// Override register file config to match RISC-V conventions.
+			riscvRegs := core.RegisterFileConfig{
+				Count:        32,
+				Width:        32,
+				ZeroRegister: true,
+			}
+			config.RegisterFile = &riscvRegs
 
-	decoder := NewRiscVISADecoder()
-	return core.NewCore(config, decoder)
+			decoder := NewRiscVISADecoder()
+			c, err := core.NewCore(config, decoder)
+			if err != nil {
+				return rf.Fail(riscvCoreResult{}, err)
+			}
+			return rf.Generate(true, false, riscvCoreResult{c, nil})
+		}).GetResult()
+	return res.c, res.err
 }
 
 // CSR returns the CSR file from a RiscVISADecoder.
 // Useful for tests that need to inspect or configure CSR state.
 func (d *RiscVISADecoder) CSR() *CSRFile {
-	return d.csr
+	result, _ := StartNew[*CSRFile]("riscv-simulator.RiscVISADecoder.CSR", nil,
+		func(op *Operation[*CSRFile], rf *ResultFactory[*CSRFile]) *OperationResult[*CSRFile] {
+			return rf.Generate(true, false, d.csr)
+		}).GetResult()
+	return result
 }

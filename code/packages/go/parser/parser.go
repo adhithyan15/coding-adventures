@@ -21,10 +21,14 @@ type Parser struct {
 }
 
 func NewParser(tokens []lexer.Token) *Parser {
-	return &Parser{
-		tokens: tokens,
-		pos:    0,
-	}
+	result, _ := StartNew[*Parser]("parser.NewParser", nil,
+		func(op *Operation[*Parser], rf *ResultFactory[*Parser]) *OperationResult[*Parser] {
+			return rf.Generate(true, false, &Parser{
+				tokens: tokens,
+				pos:    0,
+			})
+		}).GetResult()
+	return result
 }
 
 func (p *Parser) peek() lexer.Token {
@@ -73,7 +77,11 @@ func (p *Parser) skipNewlines() {
 }
 
 func (p *Parser) Parse() Program {
-	return p.parseProgram()
+	result, _ := StartNew[Program]("parser.Parse", Program{},
+		func(op *Operation[Program], rf *ResultFactory[Program]) *OperationResult[Program] {
+			return rf.Generate(true, false, p.parseProgram())
+		}).GetResult()
+	return result
 }
 
 func (p *Parser) parseProgram() Program {

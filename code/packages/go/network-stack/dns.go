@@ -20,29 +20,49 @@ type DNSResolver struct {
 
 // NewDNSResolver creates a resolver pre-populated with localhost -> 127.0.0.1.
 func NewDNSResolver() *DNSResolver {
-	return &DNSResolver{
-		static: map[string]uint32{
-			"localhost": 0x7F000001,
-		},
-	}
+	result, _ := StartNew[*DNSResolver]("network-stack.NewDNSResolver", nil,
+		func(op *Operation[*DNSResolver], rf *ResultFactory[*DNSResolver]) *OperationResult[*DNSResolver] {
+			return rf.Generate(true, false, &DNSResolver{
+				static: map[string]uint32{
+					"localhost": 0x7F000001,
+				},
+			})
+		}).GetResult()
+	return result
 }
 
 // AddStatic registers a hostname-to-IP mapping (like /etc/hosts).
 func (r *DNSResolver) AddStatic(hostname string, ip uint32) {
-	r.static[hostname] = ip
+	_, _ = StartNew[struct{}]("network-stack.AddStatic", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("hostname", hostname)
+			r.static[hostname] = ip
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Resolve looks up a hostname. Returns the IP and whether it was found.
 func (r *DNSResolver) Resolve(hostname string) (uint32, bool) {
-	ip, ok := r.static[hostname]
-	return ip, ok
+	var found bool
+	ip, _ := StartNew[uint32]("network-stack.Resolve", 0,
+		func(op *Operation[uint32], rf *ResultFactory[uint32]) *OperationResult[uint32] {
+			op.AddProperty("hostname", hostname)
+			v, ok := r.static[hostname]
+			found = ok
+			return rf.Generate(true, false, v)
+		}).GetResult()
+	return ip, found
 }
 
 // Entries returns a copy of all static DNS entries.
 func (r *DNSResolver) Entries() map[string]uint32 {
-	result := make(map[string]uint32, len(r.static))
-	for k, v := range r.static {
-		result[k] = v
-	}
+	result, _ := StartNew[map[string]uint32]("network-stack.Entries", nil,
+		func(op *Operation[map[string]uint32], rf *ResultFactory[map[string]uint32]) *OperationResult[map[string]uint32] {
+			copy := make(map[string]uint32, len(r.static))
+			for k, v := range r.static {
+				copy[k] = v
+			}
+			return rf.Generate(true, false, copy)
+		}).GetResult()
 	return result
 }

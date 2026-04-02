@@ -88,25 +88,33 @@ type TCPHeader struct {
 
 // NewTCPHeader creates a header with sensible defaults.
 func NewTCPHeader() *TCPHeader {
-	return &TCPHeader{
-		DataOffset: 5,
-		WindowSize: 65535,
-	}
+	result, _ := StartNew[*TCPHeader]("network-stack.NewTCPHeader", nil,
+		func(op *Operation[*TCPHeader], rf *ResultFactory[*TCPHeader]) *OperationResult[*TCPHeader] {
+			return rf.Generate(true, false, &TCPHeader{
+				DataOffset: 5,
+				WindowSize: 65535,
+			})
+		}).GetResult()
+	return result
 }
 
 // Serialize converts the TCP header to 20 raw bytes.
 func (h *TCPHeader) Serialize() []byte {
-	buf := make([]byte, 20)
-	binary.BigEndian.PutUint16(buf[0:2], h.SrcPort)
-	binary.BigEndian.PutUint16(buf[2:4], h.DstPort)
-	binary.BigEndian.PutUint32(buf[4:8], h.SeqNum)
-	binary.BigEndian.PutUint32(buf[8:12], h.AckNum)
-	buf[12] = (h.DataOffset << 4) & 0xF0
-	buf[13] = h.Flags
-	binary.BigEndian.PutUint16(buf[14:16], h.WindowSize)
-	binary.BigEndian.PutUint16(buf[16:18], h.Checksum)
-	binary.BigEndian.PutUint16(buf[18:20], 0) // urgent pointer
-	return buf
+	result, _ := StartNew[[]byte]("network-stack.TCPHeader.Serialize", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			buf := make([]byte, 20)
+			binary.BigEndian.PutUint16(buf[0:2], h.SrcPort)
+			binary.BigEndian.PutUint16(buf[2:4], h.DstPort)
+			binary.BigEndian.PutUint32(buf[4:8], h.SeqNum)
+			binary.BigEndian.PutUint32(buf[8:12], h.AckNum)
+			buf[12] = (h.DataOffset << 4) & 0xF0
+			buf[13] = h.Flags
+			binary.BigEndian.PutUint16(buf[14:16], h.WindowSize)
+			binary.BigEndian.PutUint16(buf[16:18], h.Checksum)
+			binary.BigEndian.PutUint16(buf[18:20], 0) // urgent pointer
+			return rf.Generate(true, false, buf)
+		}).GetResult()
+	return result
 }
 
 // DeserializeTCPHeader parses 20 bytes into a TCPHeader.

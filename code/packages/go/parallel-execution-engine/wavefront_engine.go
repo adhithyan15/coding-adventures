@@ -77,14 +77,18 @@ type WavefrontConfig struct {
 
 // DefaultWavefrontConfig returns a WavefrontConfig with sensible defaults.
 func DefaultWavefrontConfig() WavefrontConfig {
-	return WavefrontConfig{
-		WaveWidth:   32,
-		NumVGPRs:    256,
-		NumSGPRs:    104,
-		LDSSize:     65536,
-		FloatFormat: fp.FP32,
-		ISA:         gpucore.GenericISA{},
-	}
+	result, _ := StartNew[WavefrontConfig]("parallel-execution-engine.DefaultWavefrontConfig", WavefrontConfig{},
+		func(op *Operation[WavefrontConfig], rf *ResultFactory[WavefrontConfig]) *OperationResult[WavefrontConfig] {
+			return rf.Generate(true, false, WavefrontConfig{
+				WaveWidth:   32,
+				NumVGPRs:    256,
+				NumSGPRs:    104,
+				LDSSize:     65536,
+				FloatFormat: fp.FP32,
+				ISA:         gpucore.GenericISA{},
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -113,39 +117,55 @@ type VectorRegisterFile struct {
 
 // NewVectorRegisterFile creates a new vector register file initialized to zero.
 func NewVectorRegisterFile(numVGPRs, waveWidth int, fmt fp.FloatFormat) *VectorRegisterFile {
-	data := make([][]fp.FloatBits, numVGPRs)
-	zero := fp.FloatToBits(0.0, fmt)
-	for i := range data {
-		row := make([]fp.FloatBits, waveWidth)
-		for j := range row {
-			row[j] = zero
-		}
-		data[i] = row
-	}
-	return &VectorRegisterFile{
-		NumVGPRs:  numVGPRs,
-		WaveWidth: waveWidth,
-		Fmt:       fmt,
-		data:      data,
-	}
+	result, _ := StartNew[*VectorRegisterFile]("parallel-execution-engine.NewVectorRegisterFile", nil,
+		func(op *Operation[*VectorRegisterFile], rf *ResultFactory[*VectorRegisterFile]) *OperationResult[*VectorRegisterFile] {
+			data := make([][]fp.FloatBits, numVGPRs)
+			zero := fp.FloatToBits(0.0, fmt)
+			for i := range data {
+				row := make([]fp.FloatBits, waveWidth)
+				for j := range row {
+					row[j] = zero
+				}
+				data[i] = row
+			}
+			return rf.Generate(true, false, &VectorRegisterFile{
+				NumVGPRs:  numVGPRs,
+				WaveWidth: waveWidth,
+				Fmt:       fmt,
+				data:      data,
+			})
+		}).GetResult()
+	return result
 }
 
 // Read reads one lane of a vector register as a Go float64.
 func (v *VectorRegisterFile) Read(vreg, lane int) float64 {
-	return fp.BitsToFloat(v.data[vreg][lane])
+	result, _ := StartNew[float64]("parallel-execution-engine.VectorRegisterFile.Read", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			return rf.Generate(true, false, fp.BitsToFloat(v.data[vreg][lane]))
+		}).GetResult()
+	return result
 }
 
 // Write writes a Go float64 to one lane of a vector register.
 func (v *VectorRegisterFile) Write(vreg, lane int, value float64) {
-	v.data[vreg][lane] = fp.FloatToBits(value, v.Fmt)
+	_, _ = StartNew[struct{}]("parallel-execution-engine.VectorRegisterFile.Write", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			v.data[vreg][lane] = fp.FloatToBits(value, v.Fmt)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ReadAllLanes reads all lanes of a vector register as float64 values.
 func (v *VectorRegisterFile) ReadAllLanes(vreg int) []float64 {
-	result := make([]float64, v.WaveWidth)
-	for lane := 0; lane < v.WaveWidth; lane++ {
-		result[lane] = fp.BitsToFloat(v.data[vreg][lane])
-	}
+	result, _ := StartNew[[]float64]("parallel-execution-engine.VectorRegisterFile.ReadAllLanes", nil,
+		func(op *Operation[[]float64], rf *ResultFactory[[]float64]) *OperationResult[[]float64] {
+			out := make([]float64, v.WaveWidth)
+			for lane := 0; lane < v.WaveWidth; lane++ {
+				out[lane] = fp.BitsToFloat(v.data[vreg][lane])
+			}
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -166,26 +186,38 @@ type ScalarRegisterFile struct {
 
 // NewScalarRegisterFile creates a new scalar register file initialized to zero.
 func NewScalarRegisterFile(numSGPRs int, fmt fp.FloatFormat) *ScalarRegisterFile {
-	data := make([]fp.FloatBits, numSGPRs)
-	zero := fp.FloatToBits(0.0, fmt)
-	for i := range data {
-		data[i] = zero
-	}
-	return &ScalarRegisterFile{
-		NumSGPRs: numSGPRs,
-		Fmt:      fmt,
-		data:     data,
-	}
+	result, _ := StartNew[*ScalarRegisterFile]("parallel-execution-engine.NewScalarRegisterFile", nil,
+		func(op *Operation[*ScalarRegisterFile], rf *ResultFactory[*ScalarRegisterFile]) *OperationResult[*ScalarRegisterFile] {
+			data := make([]fp.FloatBits, numSGPRs)
+			zero := fp.FloatToBits(0.0, fmt)
+			for i := range data {
+				data[i] = zero
+			}
+			return rf.Generate(true, false, &ScalarRegisterFile{
+				NumSGPRs: numSGPRs,
+				Fmt:      fmt,
+				data:     data,
+			})
+		}).GetResult()
+	return result
 }
 
 // Read reads a scalar register as a Go float64.
 func (s *ScalarRegisterFile) Read(sreg int) float64 {
-	return fp.BitsToFloat(s.data[sreg])
+	result, _ := StartNew[float64]("parallel-execution-engine.ScalarRegisterFile.Read", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			return rf.Generate(true, false, fp.BitsToFloat(s.data[sreg]))
+		}).GetResult()
+	return result
 }
 
 // Write writes a Go float64 to a scalar register.
 func (s *ScalarRegisterFile) Write(sreg int, value float64) {
-	s.data[sreg] = fp.FloatToBits(value, s.Fmt)
+	_, _ = StartNew[struct{}]("parallel-execution-engine.ScalarRegisterFile.Write", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			s.data[sreg] = fp.FloatToBits(value, s.Fmt)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -219,58 +251,96 @@ type WavefrontEngine struct {
 
 // NewWavefrontEngine creates a new AMD-style SIMD wavefront engine.
 func NewWavefrontEngine(config WavefrontConfig, clk *clock.Clock) *WavefrontEngine {
-	lanes := make([]*gpucore.GPUCore, config.WaveWidth)
-	memPerLane := config.LDSSize
-	if config.WaveWidth > 0 {
-		memPerLane = config.LDSSize / config.WaveWidth
-	}
-	for i := 0; i < config.WaveWidth; i++ {
-		lanes[i] = gpucore.NewGPUCore(
-			gpucore.WithISA(config.ISA),
-			gpucore.WithFormat(config.FloatFormat),
-			gpucore.WithNumRegisters(config.NumVGPRs),
-			gpucore.WithMemorySize(memPerLane),
-		)
-	}
+	result, _ := StartNew[*WavefrontEngine]("parallel-execution-engine.NewWavefrontEngine", nil,
+		func(op *Operation[*WavefrontEngine], rf *ResultFactory[*WavefrontEngine]) *OperationResult[*WavefrontEngine] {
+			lanes := make([]*gpucore.GPUCore, config.WaveWidth)
+			memPerLane := config.LDSSize
+			if config.WaveWidth > 0 {
+				memPerLane = config.LDSSize / config.WaveWidth
+			}
+			for i := 0; i < config.WaveWidth; i++ {
+				lanes[i] = gpucore.NewGPUCore(
+					gpucore.WithISA(config.ISA),
+					gpucore.WithFormat(config.FloatFormat),
+					gpucore.WithNumRegisters(config.NumVGPRs),
+					gpucore.WithMemorySize(memPerLane),
+				)
+			}
 
-	execMask := make([]bool, config.WaveWidth)
-	for i := range execMask {
-		execMask[i] = true
-	}
+			execMask := make([]bool, config.WaveWidth)
+			for i := range execMask {
+				execMask[i] = true
+			}
 
-	return &WavefrontEngine{
-		config:   config,
-		clk:      clk,
-		execMask: execMask,
-		VRF:      NewVectorRegisterFile(config.NumVGPRs, config.WaveWidth, config.FloatFormat),
-		SRF:      NewScalarRegisterFile(config.NumSGPRs, config.FloatFormat),
-		lanes:    lanes,
-	}
+			return rf.Generate(true, false, &WavefrontEngine{
+				config:   config,
+				clk:      clk,
+				execMask: execMask,
+				VRF:      NewVectorRegisterFile(config.NumVGPRs, config.WaveWidth, config.FloatFormat),
+				SRF:      NewScalarRegisterFile(config.NumSGPRs, config.FloatFormat),
+				lanes:    lanes,
+			})
+		}).GetResult()
+	return result
 }
 
 // --- Interface methods ---
 
 // Name returns the engine name for traces.
-func (w *WavefrontEngine) Name() string { return "WavefrontEngine" }
+func (w *WavefrontEngine) Name() string {
+	result, _ := StartNew[string]("parallel-execution-engine.WavefrontEngine.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "WavefrontEngine")
+		}).GetResult()
+	return result
+}
 
 // Width returns the number of SIMD lanes.
-func (w *WavefrontEngine) Width() int { return w.config.WaveWidth }
+func (w *WavefrontEngine) Width() int {
+	result, _ := StartNew[int]("parallel-execution-engine.WavefrontEngine.Width", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, w.config.WaveWidth)
+		}).GetResult()
+	return result
+}
 
 // ExecutionModel returns SIMD.
-func (w *WavefrontEngine) ExecutionModel() ExecutionModel { return SIMD }
+func (w *WavefrontEngine) ExecutionModel() ExecutionModel {
+	result, _ := StartNew[ExecutionModel]("parallel-execution-engine.WavefrontEngine.ExecutionModel", SIMD,
+		func(op *Operation[ExecutionModel], rf *ResultFactory[ExecutionModel]) *OperationResult[ExecutionModel] {
+			return rf.Generate(true, false, SIMD)
+		}).GetResult()
+	return result
+}
 
 // IsHalted returns true if the wavefront has halted.
-func (w *WavefrontEngine) IsHalted() bool { return w.halted }
+func (w *WavefrontEngine) IsHalted() bool {
+	result, _ := StartNew[bool]("parallel-execution-engine.WavefrontEngine.IsHalted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, w.halted)
+		}).GetResult()
+	return result
+}
 
 // ExecMask returns a copy of the current EXEC mask.
 func (w *WavefrontEngine) ExecMask() []bool {
-	mask := make([]bool, len(w.execMask))
-	copy(mask, w.execMask)
-	return mask
+	result, _ := StartNew[[]bool]("parallel-execution-engine.WavefrontEngine.ExecMask", nil,
+		func(op *Operation[[]bool], rf *ResultFactory[[]bool]) *OperationResult[[]bool] {
+			mask := make([]bool, len(w.execMask))
+			copy(mask, w.execMask)
+			return rf.Generate(true, false, mask)
+		}).GetResult()
+	return result
 }
 
 // Config returns the configuration this engine was created with.
-func (w *WavefrontEngine) Config() WavefrontConfig { return w.config }
+func (w *WavefrontEngine) Config() WavefrontConfig {
+	result, _ := StartNew[WavefrontConfig]("parallel-execution-engine.WavefrontEngine.Config", WavefrontConfig{},
+		func(op *Operation[WavefrontConfig], rf *ResultFactory[WavefrontConfig]) *OperationResult[WavefrontConfig] {
+			return rf.Generate(true, false, w.config)
+		}).GetResult()
+	return result
+}
 
 // --- Program loading ---
 
@@ -280,16 +350,20 @@ func (w *WavefrontEngine) Config() WavefrontConfig { return w.config }
 // each thread can (logically) have a different PC, the wavefront has
 // ONE shared PC for all lanes.
 func (w *WavefrontEngine) LoadProgram(program []gpucore.Instruction) {
-	w.program = make([]gpucore.Instruction, len(program))
-	copy(w.program, program)
-	for _, lane := range w.lanes {
-		lane.LoadProgram(w.program)
-	}
-	for i := range w.execMask {
-		w.execMask[i] = true
-	}
-	w.halted = false
-	w.cycle = 0
+	_, _ = StartNew[struct{}]("parallel-execution-engine.WavefrontEngine.LoadProgram", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			w.program = make([]gpucore.Instruction, len(program))
+			copy(w.program, program)
+			for _, lane := range w.lanes {
+				lane.LoadProgram(w.program)
+			}
+			for i := range w.execMask {
+				w.execMask[i] = true
+			}
+			w.halted = false
+			w.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // --- Register setup ---
@@ -301,33 +375,52 @@ func (w *WavefrontEngine) LoadProgram(program []gpucore.Instruction) {
 //
 // Returns an error if the lane is out of range.
 func (w *WavefrontEngine) SetLaneRegister(lane, vreg int, value float64) error {
-	if lane < 0 || lane >= w.config.WaveWidth {
-		return fmt.Errorf("lane %d out of range [0, %d)", lane, w.config.WaveWidth)
-	}
-	w.VRF.Write(vreg, lane, value)
-	return w.lanes[lane].Registers.WriteFloat(vreg, value)
+	result, err := StartNew[struct{}]("parallel-execution-engine.WavefrontEngine.SetLaneRegister", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if lane < 0 || lane >= w.config.WaveWidth {
+				return rf.Fail(struct{}{}, fmt.Errorf("lane %d out of range [0, %d)", lane, w.config.WaveWidth))
+			}
+			w.VRF.Write(vreg, lane, value)
+			writeErr := w.lanes[lane].Registers.WriteFloat(vreg, value)
+			if writeErr != nil {
+				return rf.Fail(struct{}{}, writeErr)
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	_ = result
+	return err
 }
 
 // SetScalarRegister sets a scalar register value (shared across all lanes).
 //
 // Returns an error if the scalar register is out of range.
 func (w *WavefrontEngine) SetScalarRegister(sreg int, value float64) error {
-	if sreg < 0 || sreg >= w.config.NumSGPRs {
-		return fmt.Errorf("scalar register %d out of range [0, %d)", sreg, w.config.NumSGPRs)
-	}
-	w.SRF.Write(sreg, value)
-	return nil
+	result, err := StartNew[struct{}]("parallel-execution-engine.WavefrontEngine.SetScalarRegister", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if sreg < 0 || sreg >= w.config.NumSGPRs {
+				return rf.Fail(struct{}{}, fmt.Errorf("scalar register %d out of range [0, %d)", sreg, w.config.NumSGPRs))
+			}
+			w.SRF.Write(sreg, value)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	_ = result
+	return err
 }
 
 // SetExecMask explicitly sets the EXEC mask.
 //
 // Returns an error if the mask length doesn't match the wave width.
 func (w *WavefrontEngine) SetExecMask(mask []bool) error {
-	if len(mask) != w.config.WaveWidth {
-		return fmt.Errorf("mask length %d != wave_width %d", len(mask), w.config.WaveWidth)
-	}
-	copy(w.execMask, mask)
-	return nil
+	result, err := StartNew[struct{}]("parallel-execution-engine.WavefrontEngine.SetExecMask", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if len(mask) != w.config.WaveWidth {
+				return rf.Fail(struct{}{}, fmt.Errorf("mask length %d != wave_width %d", len(mask), w.config.WaveWidth))
+			}
+			copy(w.execMask, mask)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	_ = result
+	return err
 }
 
 // --- Execution ---
@@ -338,138 +431,152 @@ func (w *WavefrontEngine) SetExecMask(mask []bool) error {
 // which lanes actually execute. Masked-off lanes still advance their PC
 // to stay in sync with the rest of the wavefront.
 func (w *WavefrontEngine) Step(edge clock.ClockEdge) EngineTrace {
-	w.cycle++
+	result, _ := StartNew[EngineTrace]("parallel-execution-engine.WavefrontEngine.Step", EngineTrace{},
+		func(op *Operation[EngineTrace], rf *ResultFactory[EngineTrace]) *OperationResult[EngineTrace] {
+			w.cycle++
 
-	if w.halted {
-		return w.makeHaltedTrace()
-	}
-
-	maskBefore := make([]bool, len(w.execMask))
-	copy(maskBefore, w.execMask)
-
-	// Execute on all lanes. Active lanes execute normally,
-	// masked-off lanes still step to keep PCs in sync but results are discarded.
-	unitTraces := make(map[int]string)
-	for laneID := 0; laneID < w.config.WaveWidth; laneID++ {
-		laneCore := w.lanes[laneID]
-		if w.execMask[laneID] && !laneCore.Halted() {
-			trace, err := laneCore.Step()
-			if err != nil {
-				unitTraces[laneID] = "(error)"
-			} else if trace.Halted {
-				unitTraces[laneID] = "HALTED"
-			} else {
-				unitTraces[laneID] = trace.Description
+			if w.halted {
+				return rf.Generate(true, false, w.makeHaltedTrace())
 			}
-		} else if laneCore.Halted() {
-			unitTraces[laneID] = "(halted)"
-		} else {
-			// Masked-off lane: step to keep PC in sync but discard result.
-			if !laneCore.Halted() {
-				_, err := laneCore.Step()
-				if err != nil {
-					unitTraces[laneID] = "(masked -- error)"
+
+			maskBefore := make([]bool, len(w.execMask))
+			copy(maskBefore, w.execMask)
+
+			// Execute on all lanes. Active lanes execute normally,
+			// masked-off lanes still step to keep PCs in sync but results are discarded.
+			unitTraces := make(map[int]string)
+			for laneID := 0; laneID < w.config.WaveWidth; laneID++ {
+				laneCore := w.lanes[laneID]
+				if w.execMask[laneID] && !laneCore.Halted() {
+					trace, err := laneCore.Step()
+					if err != nil {
+						unitTraces[laneID] = "(error)"
+					} else if trace.Halted {
+						unitTraces[laneID] = "HALTED"
+					} else {
+						unitTraces[laneID] = trace.Description
+					}
+				} else if laneCore.Halted() {
+					unitTraces[laneID] = "(halted)"
 				} else {
-					unitTraces[laneID] = "(masked -- result discarded)"
+					// Masked-off lane: step to keep PC in sync but discard result.
+					if !laneCore.Halted() {
+						_, err := laneCore.Step()
+						if err != nil {
+							unitTraces[laneID] = "(masked -- error)"
+						} else {
+							unitTraces[laneID] = "(masked -- result discarded)"
+						}
+					} else {
+						unitTraces[laneID] = "(halted)"
+					}
 				}
-			} else {
-				unitTraces[laneID] = "(halted)"
 			}
-		}
-	}
 
-	// Sync VRF with internal core registers for active lanes.
-	syncRegs := 32
-	if w.config.NumVGPRs < syncRegs {
-		syncRegs = w.config.NumVGPRs
-	}
-	for laneID := 0; laneID < w.config.WaveWidth; laneID++ {
-		if w.execMask[laneID] {
-			for vreg := 0; vreg < syncRegs; vreg++ {
-				val, _ := w.lanes[laneID].Registers.ReadFloat(vreg)
-				w.VRF.Write(vreg, laneID, val)
+			// Sync VRF with internal core registers for active lanes.
+			syncRegs := 32
+			if w.config.NumVGPRs < syncRegs {
+				syncRegs = w.config.NumVGPRs
 			}
-		}
-	}
-
-	// Check if all lanes halted.
-	allDone := true
-	for _, lane := range w.lanes {
-		if !lane.Halted() {
-			allDone = false
-			break
-		}
-	}
-	if allDone {
-		w.halted = true
-	}
-
-	// Count active lanes.
-	activeCount := 0
-	for i := 0; i < w.config.WaveWidth; i++ {
-		if w.execMask[i] && !w.lanes[i].Halted() {
-			activeCount++
-		}
-	}
-	total := w.config.WaveWidth
-
-	// Build description from first active lane's trace.
-	desc := "no active lanes"
-	for i := 0; i < w.config.WaveWidth; i++ {
-		if tr, ok := unitTraces[i]; ok {
-			if tr != "(masked -- result discarded)" && tr != "(halted)" &&
-				tr != "(error)" && tr != "(masked -- error)" && tr != "HALTED" {
-				desc = tr
-				break
+			for laneID := 0; laneID < w.config.WaveWidth; laneID++ {
+				if w.execMask[laneID] {
+					for vreg := 0; vreg < syncRegs; vreg++ {
+						val, _ := w.lanes[laneID].Registers.ReadFloat(vreg)
+						w.VRF.Write(vreg, laneID, val)
+					}
+				}
 			}
-		}
-	}
 
-	currentMask := make([]bool, w.config.WaveWidth)
-	for i := 0; i < w.config.WaveWidth; i++ {
-		currentMask[i] = w.execMask[i] && !w.lanes[i].Halted()
-	}
+			// Check if all lanes halted.
+			allDone := true
+			for _, lane := range w.lanes {
+				if !lane.Halted() {
+					allDone = false
+					break
+				}
+			}
+			if allDone {
+				w.halted = true
+			}
 
-	utilization := 0.0
-	if total > 0 {
-		utilization = float64(activeCount) / float64(total)
-	}
+			// Count active lanes.
+			activeCount := 0
+			for i := 0; i < w.config.WaveWidth; i++ {
+				if w.execMask[i] && !w.lanes[i].Halted() {
+					activeCount++
+				}
+			}
+			total := w.config.WaveWidth
 
-	return EngineTrace{
-		Cycle:       w.cycle,
-		EngineName:  w.Name(),
-		Model:       w.ExecutionModel(),
-		Description: fmt.Sprintf("%s -- %d/%d lanes active", desc, activeCount, total),
-		UnitTraces:  unitTraces,
-		ActiveMask:  currentMask,
-		ActiveCount: activeCount,
-		TotalCount:  total,
-		Utilization: utilization,
-		Divergence: &DivergenceInfo{
-			ActiveMaskBefore: maskBefore,
-			ActiveMaskAfter:  w.ExecMask(),
-			ReconvergencePC:  -1,
-			DivergenceDepth:  0,
-		},
-	}
+			// Build description from first active lane's trace.
+			desc := "no active lanes"
+			for i := 0; i < w.config.WaveWidth; i++ {
+				if tr, ok := unitTraces[i]; ok {
+					if tr != "(masked -- result discarded)" && tr != "(halted)" &&
+						tr != "(error)" && tr != "(masked -- error)" && tr != "HALTED" {
+						desc = tr
+						break
+					}
+				}
+			}
+
+			currentMask := make([]bool, w.config.WaveWidth)
+			for i := 0; i < w.config.WaveWidth; i++ {
+				currentMask[i] = w.execMask[i] && !w.lanes[i].Halted()
+			}
+
+			utilization := 0.0
+			if total > 0 {
+				utilization = float64(activeCount) / float64(total)
+			}
+
+			return rf.Generate(true, false, EngineTrace{
+				Cycle:       w.cycle,
+				EngineName:  w.Name(),
+				Model:       w.ExecutionModel(),
+				Description: fmt.Sprintf("%s -- %d/%d lanes active", desc, activeCount, total),
+				UnitTraces:  unitTraces,
+				ActiveMask:  currentMask,
+				ActiveCount: activeCount,
+				TotalCount:  total,
+				Utilization: utilization,
+				Divergence: &DivergenceInfo{
+					ActiveMaskBefore: maskBefore,
+					ActiveMaskAfter:  w.ExecMask(),
+					ReconvergencePC:  -1,
+					DivergenceDepth:  0,
+				},
+			})
+		}).GetResult()
+	return result
+}
+
+// waveRunResult is an internal helper struct for returning multiple values from Run.
+type waveRunResult struct {
+	traces []EngineTrace
+	err    error
 }
 
 // Run executes until all lanes halt or maxCycles is reached.
 func (w *WavefrontEngine) Run(maxCycles int) ([]EngineTrace, error) {
-	var traces []EngineTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := w.Step(edge)
-		traces = append(traces, trace)
-		if w.halted {
-			return traces, nil
-		}
-	}
-	return traces, fmt.Errorf("WavefrontEngine: max_cycles (%d) reached", maxCycles)
+	res, _ := StartNew[waveRunResult]("parallel-execution-engine.WavefrontEngine.Run", waveRunResult{},
+		func(op *Operation[waveRunResult], rf *ResultFactory[waveRunResult]) *OperationResult[waveRunResult] {
+			var traces []EngineTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := w.Step(edge)
+				traces = append(traces, trace)
+				if w.halted {
+					return rf.Generate(true, false, waveRunResult{traces, nil})
+				}
+			}
+			return rf.Generate(true, false, waveRunResult{traces, fmt.Errorf("WavefrontEngine: max_cycles (%d) reached", maxCycles)})
+		}).GetResult()
+	return res.traces, res.err
 }
 
 // makeHaltedTrace produces a trace for when all lanes are halted.
@@ -493,19 +600,23 @@ func (w *WavefrontEngine) makeHaltedTrace() EngineTrace {
 
 // Reset resets the engine to its initial state.
 func (w *WavefrontEngine) Reset() {
-	for _, lane := range w.lanes {
-		lane.Reset()
-		if len(w.program) > 0 {
-			lane.LoadProgram(w.program)
-		}
-	}
-	for i := range w.execMask {
-		w.execMask[i] = true
-	}
-	w.halted = false
-	w.cycle = 0
-	w.VRF = NewVectorRegisterFile(w.config.NumVGPRs, w.config.WaveWidth, w.config.FloatFormat)
-	w.SRF = NewScalarRegisterFile(w.config.NumSGPRs, w.config.FloatFormat)
+	_, _ = StartNew[struct{}]("parallel-execution-engine.WavefrontEngine.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for _, lane := range w.lanes {
+				lane.Reset()
+				if len(w.program) > 0 {
+					lane.LoadProgram(w.program)
+				}
+			}
+			for i := range w.execMask {
+				w.execMask[i] = true
+			}
+			w.halted = false
+			w.cycle = 0
+			w.VRF = NewVectorRegisterFile(w.config.NumVGPRs, w.config.WaveWidth, w.config.FloatFormat)
+			w.SRF = NewScalarRegisterFile(w.config.NumSGPRs, w.config.FloatFormat)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable representation of the engine.
