@@ -297,11 +297,11 @@ describe("gate-level ARM1 simulation", function()
     GL.write_register(cpu, 2, 0x33333333)
     GL.write_register(cpu, 13, 0x200)
     GL.load_instructions(cpu, {
-      ARM1.encode_stm(ARM1.COND_AL, 13, 0x7, 0, 'IA'),
+      ARM1.encode_stm(ARM1.COND_AL, 13, 0x7, false, 'IA'),
       ARM1.encode_mov_imm(ARM1.COND_AL, 0, 0),
       ARM1.encode_mov_imm(ARM1.COND_AL, 1, 0),
       ARM1.encode_mov_imm(ARM1.COND_AL, 2, 0),
-      ARM1.encode_ldm(ARM1.COND_AL, 13, 0x7, 0, 'IA'),
+      ARM1.encode_ldm(ARM1.COND_AL, 13, 0x7, false, 'IA'),
       ARM1.encode_halt(),
     })
     GL.run(cpu, 100)
@@ -360,7 +360,7 @@ describe("gate-level ARM1 simulation", function()
                     (1 << 20) | (1 << 16) | (1 << 12) | 1
     sub_imm = sub_imm & 0xFFFFFFFF
 
-    local bne = ARM1.encode_branch(ARM1.COND_NE, 0, -8)
+    local bne = ARM1.encode_branch(ARM1.COND_NE, 0, -16)
 
     GL.load_instructions(cpu, {
       ARM1.encode_mov_imm(ARM1.COND_AL, 0, 0),
