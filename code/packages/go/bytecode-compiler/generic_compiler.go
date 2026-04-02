@@ -370,7 +370,7 @@ func (c *GenericCompiler) PatchJump(index int, target ...int) {
 				Operand: t,
 			}
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // CurrentOffset returns the index where the *next* emitted instruction
@@ -473,7 +473,7 @@ func (c *GenericCompiler) ExitScope() *CompilerScope {
 			exited := c.Scope
 			c.Scope = exited.Parent
 			return rf.Generate(true, false, exited)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -569,7 +569,7 @@ func (c *GenericCompiler) CompileNode(node interface{}) {
 					"Register a handler with compiler.RegisterRule(%q, handler).",
 				astNode.RuleName, len(astNode.Children), astNode.RuleName,
 			))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // CompileToken compiles a token node. By default, this is a no-op — tokens

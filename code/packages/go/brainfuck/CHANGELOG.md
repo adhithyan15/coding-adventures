@@ -2,6 +2,12 @@
 
 All notable changes to the Brainfuck interpreter (Go) package.
 
+## [0.2.1] - 2026-04-02
+
+### Fixed
+
+- Added `.PanicOnUnexpected()` to `Execute`, `Step`, and `Translate` operations so intentional panics (tape boundary violations, unmatched brackets) propagate correctly instead of being swallowed by the Operations panic-recovery wrapper.
+
 ## [0.2.0] - 2026-03-31
 
 ### Changed

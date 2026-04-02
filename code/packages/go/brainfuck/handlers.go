@@ -132,7 +132,7 @@ func (bvm *BrainfuckVM) Execute(code vm.CodeObject) []vm.VMTrace {
 				traces = append(traces, trace)
 			}
 			return rf.Generate(true, false, traces)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -153,7 +153,7 @@ func (bvm *BrainfuckVM) Step(code vm.CodeObject) vm.VMTrace {
 	result, _ := StartNew[vm.VMTrace]("brainfuck.Step", vm.VMTrace{},
 		func(_ *Operation[vm.VMTrace], rf *ResultFactory[vm.VMTrace]) *OperationResult[vm.VMTrace] {
 			return rf.Generate(true, false, bvm.step(code))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

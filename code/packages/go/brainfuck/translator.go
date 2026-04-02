@@ -156,6 +156,6 @@ func Translate(source string) vm.CodeObject {
 				Constants:    []interface{}{},
 				Names:        []string{},
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
