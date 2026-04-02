@@ -67,6 +67,17 @@ ARM1Simulator.MODE_FIQ = 1  -- Fast Interrupt (banks R8-R14)
 ARM1Simulator.MODE_IRQ = 2  -- Normal Interrupt (banks R13, R14)
 ARM1Simulator.MODE_SVC = 3  -- Supervisor (OS mode, banks R13, R14)
 
+-- =========================================================================
+-- Constants — Status Register Flags (exported for gate-level simulator)
+-- =========================================================================
+--
+-- These flags live in R15 (which doubles as PC + status register in ARMv1).
+-- They are exported so that the gate-level simulator can reference them
+-- without duplicating magic constants.
+
+ARM1Simulator.FLAG_I = 0x08000000  -- bit 27: IRQ disable
+ARM1Simulator.FLAG_F = 0x04000000  -- bit 26: FIQ disable
+
 -- Mode name strings
 local MODE_NAMES = { [0]="USR", [1]="FIQ", [2]="IRQ", [3]="SVC" }
 
@@ -1397,5 +1408,9 @@ ARM1Simulator.INST_BRANCH          = INST_BRANCH
 ARM1Simulator.INST_SWI             = INST_SWI
 ARM1Simulator.INST_COPROCESSOR     = INST_COPROCESSOR
 ARM1Simulator.INST_UNDEFINED       = INST_UNDEFINED
+
+-- Program counter and special SWI constants (exported for gate-level simulator)
+ARM1Simulator.PC_MASK  = 0x03FFFFFC  -- bits 25:2: Program Counter field in R15
+ARM1Simulator.HALT_SWI = 0x123456    -- pseudo-halt SWI number used by encode_halt()
 
 return ARM1Simulator
