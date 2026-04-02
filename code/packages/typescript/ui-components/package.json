@@ -12,6 +12,10 @@
   "keywords": ["react", "ui-components", "accessibility", "i18n", "visualization"],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/draw-instructions": "file:../draw-instructions",
+    "@coding-adventures/draw-instructions-canvas": "file:../draw-instructions-canvas"
+  },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

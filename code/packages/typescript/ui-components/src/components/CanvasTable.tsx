@@ -1,28 +1,26 @@
 /**
  * CanvasTable — Canvas rendering backend for tabular data.
  *
- * Draws the table directly to a `<canvas>` element using the 2D rendering
- * context. An ARIA grid overlay provides full accessibility — screen reader
- * traversal and keyboard navigation — on top of the visual canvas.
+ * Builds a DrawScene from the table data and delegates rendering to the
+ * draw-instructions-canvas package. This means the same table can be
+ * rendered to SVG, ASCII text, or any other backend by swapping the
+ * renderer — the scene is the universal intermediate representation.
  *
  * === Architecture ===
  *
  * ```
- * ┌────────────────────────────────────────────────────┐
- * │ <div role="grid" class="table table--canvas">      │
- * │                                                    │
- * │   ┌──────────────────────────────────────────┐     │
- * │   │ <canvas aria-hidden="true">              │     │  Visual layer
- * │   │   Draws: headers, grid lines, cell text  │     │
- * │   └──────────────────────────────────────────┘     │
- * │                                                    │
- * │   ┌──────────────────────────────────────────┐     │
- * │   │ <div class="table__a11y-overlay">        │     │  A11y layer
- * │   │   role="row", role="gridcell"            │     │  (screen readers
- * │   │   Positioned to match canvas cells       │     │   + keyboard)
- * │   └──────────────────────────────────────────┘     │
- * │                                                    │
- * └────────────────────────────────────────────────────┘
+ * Table data + columns + theme
+ *         │
+ *         ▼
+ *   buildTableScene()  →  DrawScene (backend-neutral)
+ *         │
+ *         ├──→ renderCanvas(scene, ctx)     [visual layer]
+ *         ├──→ renderSvg(scene)             [export]
+ *         └──→ renderText(scene)            [debugging]
+ *
+ * React component renders:
+ *   <canvas> (painted by draw-instructions-canvas)
+ *   <div role="grid"> (ARIA overlay for accessibility)
  * ```
  *
  * === Column Resizing ===
@@ -60,9 +58,21 @@ import {
 } from "react";
 import type { TableBaseProps, ColumnDef } from "./Table.js";
 import { resolveCellValue } from "./Table.js";
-import { useCanvasTheme } from "../hooks/useCanvasTheme.js";
+import { useCanvasTheme, type CanvasTheme } from "../hooks/useCanvasTheme.js";
 import { useGridKeyboard } from "../hooks/useGridKeyboard.js";
 import { useColumnResize, MIN_COL_WIDTH } from "../hooks/useColumnResize.js";
+
+import {
+  createScene,
+  drawRect,
+  drawText,
+  drawLine,
+  drawClip,
+  drawGroup,
+  type DrawScene,
+  type DrawInstruction,
+} from "@coding-adventures/draw-instructions";
+import { renderCanvas } from "@coding-adventures/draw-instructions-canvas";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -86,6 +96,9 @@ const RESIZE_HIT_ZONE = 5;
 /** Default column width when resizable and no width specified. */
 const DEFAULT_RESIZABLE_WIDTH = 150;
 
+/** Font family used for table text. */
+const FONT_FAMILY = "system-ui, -apple-system, sans-serif";
+
 // ---------------------------------------------------------------------------
 // Layout
 // ---------------------------------------------------------------------------
@@ -97,9 +110,6 @@ interface ColumnLayout {
 
 /**
  * Computes the x-position and width of each column.
- *
- * Columns with explicit widths (numbers) are honored first. Remaining
- * canvas width is distributed equally among auto-width columns.
  */
 function computeColumnLayout(
   widths: number[],
@@ -145,105 +155,28 @@ function resolveWidths<T>(
         ? col.width
         : resizable
           ? DEFAULT_RESIZABLE_WIDTH
-          : 0; // 0 signals auto-width
+          : 0;
     return resizable ? getColumnWidth(col.id, base || DEFAULT_RESIZABLE_WIDTH) : base;
   });
 }
 
 // ---------------------------------------------------------------------------
-// Canvas Drawing
+// Scene Builder
+//
+// This is the key refactor: instead of calling ctx.fillRect() directly,
+// we build a DrawScene — a backend-neutral description of what to paint.
+// The scene is then handed to renderCanvas() from draw-instructions-canvas.
+//
+// The same scene could be rendered to SVG, ASCII text, or any future
+// backend without changing a single line of table logic.
 // ---------------------------------------------------------------------------
 
 /**
- * Draws the entire table to the canvas.
+ * Computes the text x-position for a cell, respecting alignment.
+ *
+ * Maps the table's "left"/"center"/"right" alignment to draw-instruction's
+ * "start"/"middle"/"end" alignment model.
  */
-function drawTable<T>(
-  ctx: CanvasRenderingContext2D,
-  columns: ColumnDef<T>[],
-  data: T[],
-  colLayouts: ColumnLayout[],
-  canvasWidth: number,
-  theme: ReturnType<typeof useCanvasTheme>,
-  dpr: number,
-): void {
-  const totalHeight = ROW_HEIGHT + data.length * ROW_HEIGHT;
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, canvasWidth, totalHeight);
-
-  // Header background
-  ctx.fillStyle = theme.headerBg;
-  ctx.fillRect(0, 0, canvasWidth, ROW_HEIGHT);
-
-  // Header text
-  ctx.fillStyle = theme.headerText;
-  ctx.font = `600 ${FONT_SIZE}px ${theme.fontFamily}`;
-
-  for (let c = 0; c < columns.length; c++) {
-    const col = columns[c]!;
-    const layout = colLayouts[c]!;
-    const textX = computeTextX(col.align ?? "left", layout, CELL_PADDING_X);
-
-    ctx.textAlign = col.align ?? "left";
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(layout.x, 0, layout.width, ROW_HEIGHT);
-    ctx.clip();
-    ctx.fillText(col.header, textX, TEXT_OFFSET_Y);
-    ctx.restore();
-  }
-
-  // Body rows
-  ctx.font = `${FONT_SIZE}px ${theme.fontFamily}`;
-
-  for (let r = 0; r < data.length; r++) {
-    const row = data[r]!;
-    const rowY = ROW_HEIGHT + r * ROW_HEIGHT;
-
-    if (r % 2 === 1) {
-      ctx.fillStyle = theme.altRowBg;
-      ctx.fillRect(0, rowY, canvasWidth, ROW_HEIGHT);
-    }
-
-    ctx.fillStyle = theme.bodyText;
-
-    for (let c = 0; c < columns.length; c++) {
-      const col = columns[c]!;
-      const layout = colLayouts[c]!;
-      const value = resolveCellValue(col, row, r);
-      const textX = computeTextX(col.align ?? "left", layout, CELL_PADDING_X);
-
-      ctx.textAlign = col.align ?? "left";
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(layout.x, rowY, layout.width, ROW_HEIGHT);
-      ctx.clip();
-      ctx.fillText(value, textX, rowY + TEXT_OFFSET_Y);
-      ctx.restore();
-    }
-  }
-
-  // Grid lines
-  ctx.strokeStyle = theme.borderColor;
-  ctx.lineWidth = 1;
-
-  for (let r = 0; r <= data.length; r++) {
-    const y = ROW_HEIGHT + r * ROW_HEIGHT;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvasWidth, y);
-    ctx.stroke();
-  }
-
-  for (let c = 0; c <= columns.length; c++) {
-    const x = c < colLayouts.length ? colLayouts[c]!.x : canvasWidth;
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, ROW_HEIGHT + data.length * ROW_HEIGHT);
-    ctx.stroke();
-  }
-}
-
 function computeTextX(
   align: "left" | "center" | "right",
   layout: ColumnLayout,
@@ -257,6 +190,129 @@ function computeTextX(
     default:
       return layout.x + padding;
   }
+}
+
+/**
+ * Maps table column alignment to draw-instruction text alignment.
+ */
+function toDrawAlign(
+  align: "left" | "center" | "right" | undefined,
+): "start" | "middle" | "end" {
+  switch (align) {
+    case "center":
+      return "middle";
+    case "right":
+      return "end";
+    default:
+      return "start";
+  }
+}
+
+/**
+ * Builds a DrawScene representing the entire table.
+ *
+ * This is a pure function: data in, scene out. No side effects, no canvas
+ * context, no DOM. The scene can be inspected in tests, serialized to JSON,
+ * or rendered by any backend.
+ */
+function buildTableScene<T>(
+  columns: ColumnDef<T>[],
+  data: T[],
+  colLayouts: ColumnLayout[],
+  canvasWidth: number,
+  theme: CanvasTheme,
+): DrawScene {
+  const totalHeight = ROW_HEIGHT + data.length * ROW_HEIGHT;
+  const instructions: DrawInstruction[] = [];
+
+  // --- Header background ---
+  instructions.push(
+    drawRect(0, 0, canvasWidth, ROW_HEIGHT, theme.headerBg),
+  );
+
+  // --- Header text (bold, clipped per cell) ---
+  const headerCells: DrawInstruction[] = [];
+  for (let c = 0; c < columns.length; c++) {
+    const col = columns[c]!;
+    const layout = colLayouts[c]!;
+    const textX = computeTextX(col.align ?? "left", layout, CELL_PADDING_X);
+
+    headerCells.push(
+      drawClip(layout.x, 0, layout.width, ROW_HEIGHT, [
+        drawText(textX, TEXT_OFFSET_Y, col.header, {
+          fill: theme.headerText,
+          fontFamily: theme.fontFamily || FONT_FAMILY,
+          fontSize: FONT_SIZE,
+          align: toDrawAlign(col.align),
+          fontWeight: "bold",
+          metadata: { columnId: col.id, role: "header" },
+        }),
+      ]),
+    );
+  }
+  instructions.push(drawGroup(headerCells, { role: "header-row" }));
+
+  // --- Body rows ---
+  for (let r = 0; r < data.length; r++) {
+    const row = data[r]!;
+    const rowY = ROW_HEIGHT + r * ROW_HEIGHT;
+    const rowInstructions: DrawInstruction[] = [];
+
+    // Alternating row background
+    if (r % 2 === 1) {
+      rowInstructions.push(
+        drawRect(0, rowY, canvasWidth, ROW_HEIGHT, theme.altRowBg),
+      );
+    }
+
+    // Cell text (clipped per cell)
+    for (let c = 0; c < columns.length; c++) {
+      const col = columns[c]!;
+      const layout = colLayouts[c]!;
+      const value = resolveCellValue(col, row, r);
+      const textX = computeTextX(col.align ?? "left", layout, CELL_PADDING_X);
+
+      rowInstructions.push(
+        drawClip(layout.x, rowY, layout.width, ROW_HEIGHT, [
+          drawText(textX, rowY + TEXT_OFFSET_Y, value, {
+            fill: theme.bodyText,
+            fontFamily: theme.fontFamily || FONT_FAMILY,
+            fontSize: FONT_SIZE,
+            align: toDrawAlign(col.align),
+            metadata: { columnId: col.id, rowIndex: r },
+          }),
+        ]),
+      );
+    }
+
+    instructions.push(drawGroup(rowInstructions, { role: "body-row", rowIndex: r }));
+  }
+
+  // --- Grid lines ---
+  const gridLines: DrawInstruction[] = [];
+
+  // Horizontal lines (below each row)
+  for (let r = 0; r <= data.length; r++) {
+    const y = ROW_HEIGHT + r * ROW_HEIGHT;
+    gridLines.push(drawLine(0, y, canvasWidth, y, theme.borderColor, 1));
+  }
+
+  // Vertical lines (at each column boundary)
+  for (let c = 0; c <= columns.length; c++) {
+    const x = c < colLayouts.length ? colLayouts[c]!.x : canvasWidth;
+    gridLines.push(drawLine(x, 0, x, totalHeight, theme.borderColor, 1));
+  }
+
+  instructions.push(drawGroup(gridLines, { role: "grid-lines" }));
+
+  return createScene(canvasWidth, totalHeight, instructions, {
+    background: theme.bodyBg,
+    metadata: {
+      component: "table",
+      rowCount: data.length,
+      columnCount: columns.length,
+    },
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -432,7 +488,17 @@ export function CanvasTable<T>({
     return () => observer.disconnect();
   }, []);
 
-  // Canvas drawing
+  // ---------------------------------------------------------------------------
+  // Canvas drawing via draw-instructions pipeline
+  //
+  // Instead of calling ctx.fillRect() directly, we:
+  // 1. Build a DrawScene (pure data, backend-neutral)
+  // 2. Hand it to renderCanvas() from draw-instructions-canvas
+  //
+  // The same scene could be rendered to SVG or ASCII text by swapping
+  // the renderer. The table doesn't know or care which backend is used.
+  // ---------------------------------------------------------------------------
+
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -450,12 +516,19 @@ export function CanvasTable<T>({
     );
     const logicalH = ROW_HEIGHT + data.length * ROW_HEIGHT;
 
+    // Set canvas dimensions for DPR
     canvas.width = logicalW * dpr;
     canvas.height = logicalH * dpr;
     canvas.style.width = `${logicalW}px`;
     canvas.style.height = `${logicalH}px`;
 
-    drawTable(ctx, columns, data, layouts, logicalW, theme, dpr);
+    // Scale for DPR, then let draw-instructions-canvas handle the rest
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, logicalW, logicalH);
+
+    // Build the scene and render it
+    const scene = buildTableScene(columns, data, layouts, logicalW, theme);
+    renderCanvas(scene, ctx);
   }, [columns, data, theme, getColumnWidth, resizable]);
 
   useEffect(() => {
@@ -473,7 +546,6 @@ export function CanvasTable<T>({
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Only show resize cursor in header row
       if (y > ROW_HEIGHT) {
         container.style.cursor = "";
         return;
@@ -482,7 +554,6 @@ export function CanvasTable<T>({
       const widths = resolveWidths(columns, getColumnWidth, resizable);
       const layouts = computeColumnLayout(widths, widthRef.current);
 
-      // Check if cursor is near a column boundary
       for (let c = 0; c < layouts.length; c++) {
         const colRight = layouts[c]!.x + layouts[c]!.width;
         if (Math.abs(x - colRight) <= RESIZE_HIT_ZONE) {
@@ -567,3 +638,11 @@ export function CanvasTable<T>({
     </div>
   );
 }
+
+/**
+ * Exported for testing — builds the DrawScene without rendering it.
+ * Consumers can use this to render the table to SVG, ASCII, or any
+ * other backend.
+ */
+export { buildTableScene, computeColumnLayout, resolveWidths };
+export type { ColumnLayout };
