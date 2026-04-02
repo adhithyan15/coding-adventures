@@ -110,7 +110,7 @@ func (s *JVMSimulator) Step() JVMTrace {
 			opcodeByte := s.bytecode[pc]
 
 			return rf.Generate(true, false, s.executeOpcode(opcodeByte, stackBefore, pc))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -126,7 +126,7 @@ func (s *JVMSimulator) Run(maxSteps int) []JVMTrace {
 				traces = append(traces, s.Step())
 			}
 			return rf.Generate(true, false, traces)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

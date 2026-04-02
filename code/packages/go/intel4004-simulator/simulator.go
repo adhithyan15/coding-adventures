@@ -357,7 +357,7 @@ func (s *Intel4004Simulator) Step() Intel4004Trace {
 				CarryBefore:       carryBefore,
 				CarryAfter:        s.Carry,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

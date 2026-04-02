@@ -223,6 +223,9 @@ func StringifyPretty(value interface{}, config *SerializerConfig) (string, error
 	}
 	r, _ := StartNew[serResult]("json-serializer.StringifyPretty", serResult{},
 		func(op *Operation[serResult], rf *ResultFactory[serResult]) *OperationResult[serResult] {
+			if config == nil {
+				config = DefaultConfig()
+			}
 			jv, err := jsonvalue.FromNative(value)
 			if err != nil {
 				return rf.Generate(true, false, serResult{"", &JsonSerializerError{
