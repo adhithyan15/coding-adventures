@@ -236,7 +236,7 @@ func NewDFA(
 				current:     initial,
 				trace:       nil,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -372,7 +372,7 @@ func (d *DFA) Process(event string) string {
 			// Move to the new state
 			d.current = target
 			return rf.Generate(true, false, target)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -425,7 +425,7 @@ func (d *DFA) Accepts(events []string) bool {
 				state = target
 			}
 			return rf.Generate(true, false, d.accepting[state])
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

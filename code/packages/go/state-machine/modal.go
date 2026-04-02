@@ -170,7 +170,7 @@ func NewModalStateMachine(
 				currentMode:     initialMode,
 				modeTrace:       nil,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -260,7 +260,7 @@ func (m *ModalStateMachine) SwitchMode(trigger string) string {
 
 			m.currentMode = newMode
 			return rf.Generate(true, false, newMode)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -275,7 +275,7 @@ func (m *ModalStateMachine) Process(event string) string {
 		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
 			op.AddProperty("event", event)
 			return rf.Generate(true, false, m.modes[m.currentMode].Process(event))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

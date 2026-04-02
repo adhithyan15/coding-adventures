@@ -4,6 +4,28 @@ All notable changes to the `state-machine` package will be documented in this fi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] - 2026-04-02
+
+### Fixed
+
+- **`PanicOnUnexpected` on all intentionally-panicking operations** — The ops
+  framework swallows panics by default and returns a zero value instead, which
+  caused tests that expected panics (e.g., `assertPanics("empty states", ...)`)
+  to see no panic and fail. Added `.PanicOnUnexpected()` to the `StartNew`
+  chain in every constructor or method that panics as part of its documented
+  contract:
+  - `NewDFA` — panics on empty states, bad initial/accepting/transition values
+  - `DFA.Process` — panics on unknown event or missing transition
+  - `DFA.Accepts` — panics on unknown event
+  - `NewNFA` — panics on empty states, epsilon in alphabet, bad references
+  - `NFA.Process` — panics on unknown event
+  - `NFA.Accepts` — panics on unknown event
+  - `NewPushdownAutomaton` — panics on empty states, bad references, duplicate transitions
+  - `PushdownAutomaton.Process` — panics on missing transition
+  - `NewModalStateMachine` — panics on empty modes or bad mode references
+  - `ModalStateMachine.SwitchMode` — panics on missing mode transition
+  - `ModalStateMachine.Process` — delegates to `DFA.Process` which panics
+
 ## [0.1.0] - 2026-03-20
 
 ### Added

@@ -252,7 +252,7 @@ func NewPushdownAutomaton(
 				stack:           []string{initialStackSymbol},
 				trace:           nil,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -341,7 +341,7 @@ func (p *PushdownAutomaton) Process(event string) string {
 			}
 			p.applyTransition(t)
 			return rf.Generate(true, false, p.current)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

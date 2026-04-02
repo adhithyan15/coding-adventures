@@ -216,7 +216,7 @@ func NewNFA(
 			nfa.current = nfa.EpsilonClosure(map[string]bool{initial: true})
 
 			return rf.Generate(true, false, nfa)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -358,7 +358,7 @@ func (n *NFA) Process(event string) map[string]bool {
 
 			n.current = n.EpsilonClosure(nextStates)
 			return rf.Generate(true, false, n.CurrentStates())
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -403,7 +403,7 @@ func (n *NFA) Accepts(events []string) bool {
 				}
 			}
 			return rf.Generate(true, false, false)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
