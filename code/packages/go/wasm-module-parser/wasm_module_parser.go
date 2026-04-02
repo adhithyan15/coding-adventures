@@ -162,7 +162,11 @@ type Parser struct{}
 
 // New creates a new Parser.
 func New() *Parser {
-	return &Parser{}
+	result, _ := StartNew[*Parser]("wasm-module-parser.New", nil,
+		func(op *Operation[*Parser], rf *ResultFactory[*Parser]) *OperationResult[*Parser] {
+			return rf.Generate(true, false, &Parser{})
+		}).GetResult()
+	return result
 }
 
 // Parse decodes a complete .wasm binary into a WasmModule.
@@ -183,6 +187,18 @@ func New() *Parser {
 //	data, _ := os.ReadFile("hello.wasm")
 //	module, err := wasmmoduleparser.New().Parse(data)
 func (p *Parser) Parse(data []byte) (*wasmtypes.WasmModule, error) {
+	return StartNew[*wasmtypes.WasmModule]("wasm-module-parser.Parse", nil,
+		func(op *Operation[*wasmtypes.WasmModule], rf *ResultFactory[*wasmtypes.WasmModule]) *OperationResult[*wasmtypes.WasmModule] {
+			op.AddProperty("dataLen", len(data))
+			module, err := p.parseInternal(data)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, module)
+		}).GetResult()
+}
+
+func (p *Parser) parseInternal(data []byte) (*wasmtypes.WasmModule, error) {
 	pos := 0
 
 	// ------------------------------------------------------------------

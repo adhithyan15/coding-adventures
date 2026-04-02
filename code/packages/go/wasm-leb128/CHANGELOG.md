@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- Wrapped all public functions (`DecodeUnsigned`, `DecodeSigned`, `EncodeUnsigned`, `EncodeSigned`) with the Operations system (`StartNew[T]`), providing automatic timing, structured logging, and panic recovery. Public API signatures unchanged.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

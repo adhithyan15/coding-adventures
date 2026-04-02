@@ -31,9 +31,9 @@ import (
 
 // Common errors returned by MMU operations.
 var (
-	ErrAddressSpaceExists    = errors.New("address space already exists")
-	ErrNoAddressSpace        = errors.New("no address space for PID")
-	ErrOutOfMemory           = errors.New("out of physical memory")
+	ErrAddressSpaceExists = errors.New("address space already exists")
+	ErrNoAddressSpace     = errors.New("no address space for PID")
+	ErrOutOfMemory        = errors.New("out of physical memory")
 )
 
 // MMU manages per-process address spaces and translates virtual addresses.
@@ -50,18 +50,23 @@ type MMU struct {
 // NewMMU creates an MMU with the given number of physical frames.
 // If policy is nil, FIFO is used as the default replacement policy.
 func NewMMU(totalFrames int, policy ReplacementPolicy) *MMU {
-	if policy == nil {
-		policy = NewFIFOPolicy()
-	}
-	return &MMU{
-		pageTables:     make(map[int]*TwoLevelPageTable),
-		tlb:            NewTLB(64),
-		frameAllocator: NewPhysicalFrameAllocator(totalFrames),
-		policy:         policy,
-		frameToPIDVPN:  make(map[int][2]int),
-		frameRefcounts: make(map[int]int),
-		activePID:      -1,
-	}
+	result, _ := StartNew[*MMU]("virtual-memory.NewMMU", nil,
+		func(op *Operation[*MMU], rf *ResultFactory[*MMU]) *OperationResult[*MMU] {
+			op.AddProperty("totalFrames", totalFrames)
+			if policy == nil {
+				policy = NewFIFOPolicy()
+			}
+			return rf.Generate(true, false, &MMU{
+				pageTables:     make(map[int]*TwoLevelPageTable),
+				tlb:            NewTLB(64),
+				frameAllocator: NewPhysicalFrameAllocator(totalFrames),
+				policy:         policy,
+				frameToPIDVPN:  make(map[int][2]int),
+				frameRefcounts: make(map[int]int),
+				activePID:      -1,
+			})
+		}).GetResult()
+	return result
 }
 
 // =============================================================================
@@ -70,34 +75,44 @@ func NewMMU(totalFrames int, policy ReplacementPolicy) *MMU {
 
 // CreateAddressSpace creates a new, empty address space for a process.
 func (m *MMU) CreateAddressSpace(pid int) error {
-	if _, ok := m.pageTables[pid]; ok {
-		return fmt.Errorf("%w: PID %d", ErrAddressSpaceExists, pid)
-	}
-	m.pageTables[pid] = NewTwoLevelPageTable()
-	return nil
+	_, err := StartNew[struct{}]("virtual-memory.MMU.CreateAddressSpace", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("pid", pid)
+			if _, ok := m.pageTables[pid]; ok {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: PID %d", ErrAddressSpaceExists, pid))
+			}
+			m.pageTables[pid] = NewTwoLevelPageTable()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // DestroyAddressSpace frees all frames owned by a process and removes
 // its page table.
 func (m *MMU) DestroyAddressSpace(pid int) error {
-	if _, ok := m.pageTables[pid]; !ok {
-		return fmt.Errorf("%w: PID %d", ErrNoAddressSpace, pid)
-	}
+	_, err := StartNew[struct{}]("virtual-memory.MMU.DestroyAddressSpace", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("pid", pid)
+			if _, ok := m.pageTables[pid]; !ok {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, pid))
+			}
 
-	// Find and release all frames owned by this process.
-	var framesToFree []int
-	for frame, info := range m.frameToPIDVPN {
-		if info[0] == pid {
-			framesToFree = append(framesToFree, frame)
-		}
-	}
+			// Find and release all frames owned by this process.
+			var framesToFree []int
+			for frame, info := range m.frameToPIDVPN {
+				if info[0] == pid {
+					framesToFree = append(framesToFree, frame)
+				}
+			}
 
-	for _, frame := range framesToFree {
-		m.releaseFrame(frame)
-	}
+			for _, frame := range framesToFree {
+				m.releaseFrame(frame)
+			}
 
-	delete(m.pageTables, pid)
-	return nil
+			delete(m.pageTables, pid)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // releaseFrame handles COW reference counting when freeing a frame.
@@ -126,30 +141,35 @@ func (m *MMU) releaseFrame(frame int) {
 // MapPage maps a virtual address to a newly allocated physical frame.
 // Returns the allocated frame number, or an error.
 func (m *MMU) MapPage(pid, virtualAddr int, writable, executable bool) (int, error) {
-	if _, ok := m.pageTables[pid]; !ok {
-		return -1, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, pid)
-	}
+	return StartNew[int]("virtual-memory.MMU.MapPage", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("pid", pid)
+			op.AddProperty("virtualAddr", virtualAddr)
+			if _, ok := m.pageTables[pid]; !ok {
+				return rf.Fail(-1, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, pid))
+			}
 
-	frame := m.frameAllocator.Allocate()
-	if frame < 0 {
-		// Memory full — evict a page.
-		evicted := m.evictPage()
-		if evicted < 0 {
-			return -1, fmt.Errorf("%w: cannot allocate frame", ErrOutOfMemory)
-		}
-		frame = evicted
-	}
+			frame := m.frameAllocator.Allocate()
+			if frame < 0 {
+				// Memory full — evict a page.
+				evicted := m.evictPage()
+				if evicted < 0 {
+					return rf.Fail(-1, fmt.Errorf("%w: cannot allocate frame", ErrOutOfMemory))
+				}
+				frame = evicted
+			}
 
-	vpn := virtualAddr >> PageOffsetBits
-	pt := m.pageTables[pid]
-	pt.Map(virtualAddr, frame, writable, executable, true)
+			vpn := virtualAddr >> PageOffsetBits
+			pt := m.pageTables[pid]
+			pt.Map(virtualAddr, frame, writable, executable, true)
 
-	m.frameToPIDVPN[frame] = [2]int{pid, vpn}
-	m.frameRefcounts[frame] = 1
-	m.policy.AddFrame(frame)
-	m.tlb.Invalidate(vpn)
+			m.frameToPIDVPN[frame] = [2]int{pid, vpn}
+			m.frameRefcounts[frame] = 1
+			m.policy.AddFrame(frame)
+			m.tlb.Invalidate(vpn)
 
-	return frame, nil
+			return rf.Generate(true, false, frame)
+		}).GetResult()
 }
 
 // =============================================================================
@@ -159,69 +179,82 @@ func (m *MMU) MapPage(pid, virtualAddr int, writable, executable bool) (int, err
 // Translate converts a virtual address to a physical address.
 // This is the core MMU operation — every memory access goes through here.
 func (m *MMU) Translate(pid, virtualAddr int, write bool) (int, error) {
-	if _, ok := m.pageTables[pid]; !ok {
-		return 0, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, pid)
-	}
-
-	// Auto-flush TLB when switching between PIDs.
-	if m.activePID >= 0 && m.activePID != pid {
-		m.tlb.Flush()
-	}
-	m.activePID = pid
-
-	vpn := virtualAddr >> PageOffsetBits
-	offset := virtualAddr & OffsetMask
-
-	// Step 1: Check TLB (fast path).
-	if frame, pte, ok := m.tlb.Lookup(vpn); ok {
-		if write && !pte.Writable {
-			m.handleCOWFault(pid, vpn)
-			return m.Translate(pid, virtualAddr, write)
-		}
-		pte.Accessed = true
-		if write {
-			pte.Dirty = true
-		}
-		m.policy.RecordAccess(frame)
-		return (frame << PageOffsetBits) | offset, nil
-	}
-
-	// Step 2: TLB miss — walk page table.
-	pt := m.pageTables[pid]
-	result := pt.Translate(virtualAddr)
-
-	if result == nil || !result.PTE.Present {
-		// Page fault — allocate on demand.
-		physAddr, err := m.HandlePageFault(pid, virtualAddr)
-		if err != nil {
-			return 0, err
-		}
-		if write {
-			result2 := pt.Translate(virtualAddr)
-			if result2 != nil {
-				result2.PTE.Dirty = true
+	return StartNew[int]("virtual-memory.MMU.Translate", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("pid", pid)
+			op.AddProperty("virtualAddr", virtualAddr)
+			if _, ok := m.pageTables[pid]; !ok {
+				return rf.Fail(0, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, pid))
 			}
-		}
-		return physAddr, nil
-	}
 
-	pte := result.PTE
+			// Auto-flush TLB when switching between PIDs.
+			if m.activePID >= 0 && m.activePID != pid {
+				m.tlb.Flush()
+			}
+			m.activePID = pid
 
-	// Handle COW fault on write to read-only shared page.
-	if write && !pte.Writable {
-		m.handleCOWFault(pid, vpn)
-		return m.Translate(pid, virtualAddr, write)
-	}
+			vpn := virtualAddr >> PageOffsetBits
+			offset := virtualAddr & OffsetMask
 
-	pte.Accessed = true
-	if write {
-		pte.Dirty = true
-	}
+			// Step 1: Check TLB (fast path).
+			if frame, pte, ok := m.tlb.Lookup(vpn); ok {
+				if write && !pte.Writable {
+					m.handleCOWFault(pid, vpn)
+					physAddr, err := m.Translate(pid, virtualAddr, write)
+					if err != nil {
+						return rf.Fail(0, err)
+					}
+					return rf.Generate(true, false, physAddr)
+				}
+				pte.Accessed = true
+				if write {
+					pte.Dirty = true
+				}
+				m.policy.RecordAccess(frame)
+				return rf.Generate(true, false, (frame<<PageOffsetBits)|offset)
+			}
 
-	m.tlb.Insert(vpn, pte.FrameNumber, pte)
-	m.policy.RecordAccess(pte.FrameNumber)
+			// Step 2: TLB miss — walk page table.
+			pt := m.pageTables[pid]
+			result := pt.Translate(virtualAddr)
 
-	return result.PhysicalAddr, nil
+			if result == nil || !result.PTE.Present {
+				// Page fault — allocate on demand.
+				physAddr, err := m.HandlePageFault(pid, virtualAddr)
+				if err != nil {
+					return rf.Fail(0, err)
+				}
+				if write {
+					result2 := pt.Translate(virtualAddr)
+					if result2 != nil {
+						result2.PTE.Dirty = true
+					}
+				}
+				return rf.Generate(true, false, physAddr)
+			}
+
+			pte := result.PTE
+
+			// Handle COW fault on write to read-only shared page.
+			if write && !pte.Writable {
+				m.handleCOWFault(pid, vpn)
+				physAddr, err := m.Translate(pid, virtualAddr, write)
+				if err != nil {
+					return rf.Fail(0, err)
+				}
+				return rf.Generate(true, false, physAddr)
+			}
+
+			pte.Accessed = true
+			if write {
+				pte.Dirty = true
+			}
+
+			m.tlb.Insert(vpn, pte.FrameNumber, pte)
+			m.policy.RecordAccess(pte.FrameNumber)
+
+			return rf.Generate(true, false, result.PhysicalAddr)
+		}).GetResult()
 }
 
 // =============================================================================
@@ -230,32 +263,37 @@ func (m *MMU) Translate(pid, virtualAddr int, write bool) (int, error) {
 
 // HandlePageFault allocates a frame for a faulting page and maps it.
 func (m *MMU) HandlePageFault(pid, virtualAddr int) (int, error) {
-	vpn := virtualAddr >> PageOffsetBits
-	offset := virtualAddr & OffsetMask
+	return StartNew[int]("virtual-memory.MMU.HandlePageFault", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("pid", pid)
+			op.AddProperty("virtualAddr", virtualAddr)
+			vpn := virtualAddr >> PageOffsetBits
+			offset := virtualAddr & OffsetMask
 
-	frame := m.frameAllocator.Allocate()
-	if frame < 0 {
-		evicted := m.evictPage()
-		if evicted < 0 {
-			return 0, fmt.Errorf("%w: during page fault", ErrOutOfMemory)
-		}
-		frame = evicted
-	}
+			frame := m.frameAllocator.Allocate()
+			if frame < 0 {
+				evicted := m.evictPage()
+				if evicted < 0 {
+					return rf.Fail(0, fmt.Errorf("%w: during page fault", ErrOutOfMemory))
+				}
+				frame = evicted
+			}
 
-	pt := m.pageTables[pid]
-	pt.Map(virtualAddr, frame, true, false, true)
+			pt := m.pageTables[pid]
+			pt.Map(virtualAddr, frame, true, false, true)
 
-	m.frameToPIDVPN[frame] = [2]int{pid, vpn}
-	m.frameRefcounts[frame] = 1
-	m.policy.AddFrame(frame)
-	m.tlb.Invalidate(vpn)
+			m.frameToPIDVPN[frame] = [2]int{pid, vpn}
+			m.frameRefcounts[frame] = 1
+			m.policy.AddFrame(frame)
+			m.tlb.Invalidate(vpn)
 
-	pte, _ := pt.LookupVPN(vpn)
-	if pte != nil {
-		m.tlb.Insert(vpn, frame, pte)
-	}
+			pte, _ := pt.LookupVPN(vpn)
+			if pte != nil {
+				m.tlb.Insert(vpn, frame, pte)
+			}
 
-	return (frame << PageOffsetBits) | offset, nil
+			return rf.Generate(true, false, (frame<<PageOffsetBits)|offset)
+		}).GetResult()
 }
 
 // =============================================================================
@@ -292,48 +330,54 @@ func (m *MMU) evictPage() int {
 // CloneAddressSpace creates a COW copy of a process's address space.
 // All shared pages are marked read-only in both parent and child.
 func (m *MMU) CloneAddressSpace(fromPID, toPID int) error {
-	sourcePT, ok := m.pageTables[fromPID]
-	if !ok {
-		return fmt.Errorf("%w: PID %d", ErrNoAddressSpace, fromPID)
-	}
-	if _, ok := m.pageTables[toPID]; ok {
-		return fmt.Errorf("%w: PID %d", ErrAddressSpaceExists, toPID)
-	}
-
-	destPT := NewTwoLevelPageTable()
-	dir := sourcePT.Directory()
-
-	for l1Idx := 0; l1Idx < L1Entries; l1Idx++ {
-		l2Table := dir[l1Idx]
-		if l2Table == nil {
-			continue
-		}
-
-		for l2VPN, pte := range l2Table.Entries() {
-			if !pte.Present {
-				continue
+	_, err := StartNew[struct{}]("virtual-memory.MMU.CloneAddressSpace", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("fromPID", fromPID)
+			op.AddProperty("toPID", toPID)
+			sourcePT, ok := m.pageTables[fromPID]
+			if !ok {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, fromPID))
+			}
+			if _, ok := m.pageTables[toPID]; ok {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: PID %d", ErrAddressSpaceExists, toPID))
 			}
 
-			fullVPN := (l1Idx << 10) | l2VPN
+			destPT := NewTwoLevelPageTable()
+			dir := sourcePT.Directory()
 
-			// Mark parent as read-only (COW).
-			pte.Writable = false
+			for l1Idx := 0; l1Idx < L1Entries; l1Idx++ {
+				l2Table := dir[l1Idx]
+				if l2Table == nil {
+					continue
+				}
 
-			// Map in child with same frame, read-only.
-			destPT.MapVPN(fullVPN, pte.FrameNumber, false, pte.Executable, pte.UserAccessible)
+				for l2VPN, pte := range l2Table.Entries() {
+					if !pte.Present {
+						continue
+					}
 
-			// Increment reference count.
-			refcount := m.frameRefcounts[pte.FrameNumber]
-			if refcount == 0 {
-				refcount = 1
+					fullVPN := (l1Idx << 10) | l2VPN
+
+					// Mark parent as read-only (COW).
+					pte.Writable = false
+
+					// Map in child with same frame, read-only.
+					destPT.MapVPN(fullVPN, pte.FrameNumber, false, pte.Executable, pte.UserAccessible)
+
+					// Increment reference count.
+					refcount := m.frameRefcounts[pte.FrameNumber]
+					if refcount == 0 {
+						refcount = 1
+					}
+					m.frameRefcounts[pte.FrameNumber] = refcount + 1
+				}
 			}
-			m.frameRefcounts[pte.FrameNumber] = refcount + 1
-		}
-	}
 
-	m.pageTables[toPID] = destPT
-	m.tlb.Flush()
-	return nil
+			m.pageTables[toPID] = destPT
+			m.tlb.Flush()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // handleCOWFault resolves a copy-on-write fault by making a private copy.
@@ -396,12 +440,17 @@ func (m *MMU) handleCOWFault(pid, vpn int) {
 // ContextSwitch switches to a different process's address space.
 // Flushes the TLB to prevent security violations.
 func (m *MMU) ContextSwitch(newPID int) error {
-	if _, ok := m.pageTables[newPID]; !ok {
-		return fmt.Errorf("%w: PID %d", ErrNoAddressSpace, newPID)
-	}
-	m.activePID = newPID
-	m.tlb.Flush()
-	return nil
+	_, err := StartNew[struct{}]("virtual-memory.MMU.ContextSwitch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("newPID", newPID)
+			if _, ok := m.pageTables[newPID]; !ok {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: PID %d", ErrNoAddressSpace, newPID))
+			}
+			m.activePID = newPID
+			m.tlb.Flush()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // =============================================================================
@@ -409,10 +458,28 @@ func (m *MMU) ContextSwitch(newPID int) error {
 // =============================================================================
 
 // TLB returns the TLB instance for inspection.
-func (m *MMU) TLB() *TLB { return m.tlb }
+func (m *MMU) TLB() *TLB {
+	result, _ := StartNew[*TLB]("virtual-memory.MMU.TLB", nil,
+		func(op *Operation[*TLB], rf *ResultFactory[*TLB]) *OperationResult[*TLB] {
+			return rf.Generate(true, false, m.tlb)
+		}).GetResult()
+	return result
+}
 
 // FrameAllocator returns the frame allocator for inspection.
-func (m *MMU) FrameAllocator() *PhysicalFrameAllocator { return m.frameAllocator }
+func (m *MMU) FrameAllocator() *PhysicalFrameAllocator {
+	result, _ := StartNew[*PhysicalFrameAllocator]("virtual-memory.MMU.FrameAllocator", nil,
+		func(op *Operation[*PhysicalFrameAllocator], rf *ResultFactory[*PhysicalFrameAllocator]) *OperationResult[*PhysicalFrameAllocator] {
+			return rf.Generate(true, false, m.frameAllocator)
+		}).GetResult()
+	return result
+}
 
 // ActivePID returns the currently active process ID (-1 if none).
-func (m *MMU) ActivePID() int { return m.activePID }
+func (m *MMU) ActivePID() int {
+	result, _ := StartNew[int]("virtual-memory.MMU.ActivePID", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, m.activePID)
+		}).GetResult()
+	return result
+}

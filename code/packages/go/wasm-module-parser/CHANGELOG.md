@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- Wrapped public functions `New` and `Parse` with the Operations system (`StartNew[T]`), providing automatic timing, structured logging, and panic recovery. `Parse` delegates to a private `parseInternal` helper to keep the wrapping clean. Public API signatures unchanged.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

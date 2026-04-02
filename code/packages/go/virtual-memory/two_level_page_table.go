@@ -59,7 +59,11 @@ type TwoLevelPageTable struct {
 // NewTwoLevelPageTable creates an empty two-level page table.
 // All directory entries start as nil (no regions mapped).
 func NewTwoLevelPageTable() *TwoLevelPageTable {
-	return &TwoLevelPageTable{}
+	result, _ := StartNew[*TwoLevelPageTable]("virtual-memory.NewTwoLevelPageTable", nil,
+		func(op *Operation[*TwoLevelPageTable], rf *ResultFactory[*TwoLevelPageTable]) *OperationResult[*TwoLevelPageTable] {
+			return rf.Generate(true, false, &TwoLevelPageTable{})
+		}).GetResult()
+	return result
 }
 
 // splitAddress splits a 32-bit virtual address into L1 index, L2 index,
@@ -80,27 +84,43 @@ func splitAddress(virtualAddr int) (l1Index, l2Index, offset int) {
 // Map creates a mapping from a virtual address to a physical frame.
 // Creates the Level 2 page table if it doesn't exist yet (lazy allocation).
 func (pt *TwoLevelPageTable) Map(virtualAddr, physicalFrame int, writable, executable, user bool) {
-	l1, l2, _ := splitAddress(virtualAddr)
+	_, _ = StartNew[struct{}]("virtual-memory.TwoLevelPageTable.Map", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("virtualAddr", virtualAddr)
+			op.AddProperty("physicalFrame", physicalFrame)
+			l1, l2, _ := splitAddress(virtualAddr)
 
-	// Create Level 2 table on demand — only allocate page table structures
-	// for address space regions that are actually used.
-	if pt.directory[l1] == nil {
-		pt.directory[l1] = NewPageTable()
-	}
+			// Create Level 2 table on demand — only allocate page table structures
+			// for address space regions that are actually used.
+			if pt.directory[l1] == nil {
+				pt.directory[l1] = NewPageTable()
+			}
 
-	pt.directory[l1].MapPage(l2, physicalFrame, writable, executable, user)
+			pt.directory[l1].MapPage(l2, physicalFrame, writable, executable, user)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Unmap removes the mapping for the page containing the given virtual address.
 // Returns the removed PTE and true, or nil and false if not mapped.
 func (pt *TwoLevelPageTable) Unmap(virtualAddr int) (*PageTableEntry, bool) {
-	l1, l2, _ := splitAddress(virtualAddr)
-
-	if pt.directory[l1] == nil {
-		return nil, false
+	type unmapResult struct {
+		pte *PageTableEntry
+		ok  bool
 	}
+	res, _ := StartNew[unmapResult]("virtual-memory.TwoLevelPageTable.Unmap", unmapResult{nil, false},
+		func(op *Operation[unmapResult], rf *ResultFactory[unmapResult]) *OperationResult[unmapResult] {
+			op.AddProperty("virtualAddr", virtualAddr)
+			l1, l2, _ := splitAddress(virtualAddr)
 
-	return pt.directory[l1].UnmapPage(l2)
+			if pt.directory[l1] == nil {
+				return rf.Generate(true, false, unmapResult{nil, false})
+			}
+
+			pte, ok := pt.directory[l1].UnmapPage(l2)
+			return rf.Generate(true, false, unmapResult{pte, ok})
+		}).GetResult()
+	return res.pte, res.ok
 }
 
 // TranslateResult holds the result of a page table translation.
@@ -114,48 +134,73 @@ type TranslateResult struct {
 //
 // Returns nil if the virtual address is not mapped.
 func (pt *TwoLevelPageTable) Translate(virtualAddr int) *TranslateResult {
-	l1, l2, offset := splitAddress(virtualAddr)
+	result, _ := StartNew[*TranslateResult]("virtual-memory.TwoLevelPageTable.Translate", nil,
+		func(op *Operation[*TranslateResult], rf *ResultFactory[*TranslateResult]) *OperationResult[*TranslateResult] {
+			op.AddProperty("virtualAddr", virtualAddr)
+			l1, l2, offset := splitAddress(virtualAddr)
 
-	// Step 1: Look up Level 2 table in the directory.
-	if pt.directory[l1] == nil {
-		return nil // This 4 MB region is completely unmapped.
-	}
+			// Step 1: Look up Level 2 table in the directory.
+			if pt.directory[l1] == nil {
+				return rf.Generate(true, false, nil) // This 4 MB region is completely unmapped.
+			}
 
-	// Step 2: Look up the PTE in the Level 2 table.
-	pte, ok := pt.directory[l1].Lookup(l2)
-	if !ok {
-		return nil // This specific page is not mapped.
-	}
+			// Step 2: Look up the PTE in the Level 2 table.
+			pte, ok := pt.directory[l1].Lookup(l2)
+			if !ok {
+				return rf.Generate(true, false, nil) // This specific page is not mapped.
+			}
 
-	// Step 3: Compute physical address.
-	// physical_addr = (frame_number << 12) | offset
-	physicalAddr := (pte.FrameNumber << PageOffsetBits) | offset
+			// Step 3: Compute physical address.
+			// physical_addr = (frame_number << 12) | offset
+			physicalAddr := (pte.FrameNumber << PageOffsetBits) | offset
 
-	return &TranslateResult{
-		PhysicalAddr: physicalAddr,
-		PTE:          pte,
-	}
+			return rf.Generate(true, false, &TranslateResult{
+				PhysicalAddr: physicalAddr,
+				PTE:          pte,
+			})
+		}).GetResult()
+	return result
 }
 
 // LookupVPN looks up a PTE by virtual page number (not full address).
 func (pt *TwoLevelPageTable) LookupVPN(vpn int) (*PageTableEntry, bool) {
-	l1 := (vpn >> L2Bits) & IndexMask
-	l2 := vpn & IndexMask
-
-	if pt.directory[l1] == nil {
-		return nil, false
+	type lookupResult struct {
+		pte *PageTableEntry
+		ok  bool
 	}
+	res, _ := StartNew[lookupResult]("virtual-memory.TwoLevelPageTable.LookupVPN", lookupResult{nil, false},
+		func(op *Operation[lookupResult], rf *ResultFactory[lookupResult]) *OperationResult[lookupResult] {
+			op.AddProperty("vpn", vpn)
+			l1 := (vpn >> L2Bits) & IndexMask
+			l2 := vpn & IndexMask
 
-	return pt.directory[l1].Lookup(l2)
+			if pt.directory[l1] == nil {
+				return rf.Generate(true, false, lookupResult{nil, false})
+			}
+
+			pte, ok := pt.directory[l1].Lookup(l2)
+			return rf.Generate(true, false, lookupResult{pte, ok})
+		}).GetResult()
+	return res.pte, res.ok
 }
 
 // MapVPN maps a virtual page number to a physical frame.
 func (pt *TwoLevelPageTable) MapVPN(vpn, physicalFrame int, writable, executable, user bool) {
-	virtualAddr := vpn << PageOffsetBits
-	pt.Map(virtualAddr, physicalFrame, writable, executable, user)
+	_, _ = StartNew[struct{}]("virtual-memory.TwoLevelPageTable.MapVPN", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("vpn", vpn)
+			op.AddProperty("physicalFrame", physicalFrame)
+			virtualAddr := vpn << PageOffsetBits
+			pt.Map(virtualAddr, physicalFrame, writable, executable, user)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Directory returns the raw directory for iteration (used during fork/clone).
 func (pt *TwoLevelPageTable) Directory() [L1Entries]*PageTable {
-	return pt.directory
+	result, _ := StartNew[[L1Entries]*PageTable]("virtual-memory.TwoLevelPageTable.Directory", [L1Entries]*PageTable{},
+		func(op *Operation[[L1Entries]*PageTable], rf *ResultFactory[[L1Entries]*PageTable]) *OperationResult[[L1Entries]*PageTable] {
+			return rf.Generate(true, false, pt.directory)
+		}).GetResult()
+	return result
 }

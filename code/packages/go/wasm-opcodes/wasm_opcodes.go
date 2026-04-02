@@ -644,8 +644,17 @@ func init() {
 //	_, ok = GetOpcode(0xFF)
 //	// ok == false (0xFF is not a valid WASM 1.0 opcode)
 func GetOpcode(opcode byte) (OpcodeInfo, bool) {
-	info, ok := Opcodes[opcode]
-	return info, ok
+	type getResult struct {
+		info OpcodeInfo
+		ok   bool
+	}
+	res, _ := StartNew[getResult]("wasm-opcodes.GetOpcode", getResult{},
+		func(op *Operation[getResult], rf *ResultFactory[getResult]) *OperationResult[getResult] {
+			op.AddProperty("opcode", opcode)
+			info, ok := Opcodes[opcode]
+			return rf.Generate(true, false, getResult{info, ok})
+		}).GetResult()
+	return res.info, res.ok
 }
 
 // GetOpcodeByName returns the OpcodeInfo for the given mnemonic and true,
@@ -660,6 +669,15 @@ func GetOpcode(opcode byte) (OpcodeInfo, bool) {
 //	_, ok = GetOpcodeByName("not_real")
 //	// ok == false
 func GetOpcodeByName(name string) (OpcodeInfo, bool) {
-	info, ok := OpcodesByName[name]
-	return info, ok
+	type getResult struct {
+		info OpcodeInfo
+		ok   bool
+	}
+	res, _ := StartNew[getResult]("wasm-opcodes.GetOpcodeByName", getResult{},
+		func(op *Operation[getResult], rf *ResultFactory[getResult]) *OperationResult[getResult] {
+			op.AddProperty("name", name)
+			info, ok := OpcodesByName[name]
+			return rf.Generate(true, false, getResult{info, ok})
+		}).GetResult()
+	return res.info, res.ok
 }
