@@ -142,6 +142,16 @@ func goTokenDefSliceLit(defs []TokenDefinition, pkg, indent string) string {
 //
 // Returns a complete Go source file as a string. Write it to a .go file.
 func CompileTokenGrammar(grammar *TokenGrammar, sourceFile, pkgName string) string {
+	result, _ := StartNew[string]("grammar-tools.CompileTokenGrammar", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("sourceFile", sourceFile)
+			op.AddProperty("pkgName", pkgName)
+			return rf.Generate(true, false, compileTokenGrammarImpl(grammar, sourceFile, pkgName))
+		}).GetResult()
+	return result
+}
+
+func compileTokenGrammarImpl(grammar *TokenGrammar, sourceFile, pkgName string) string {
 	const importPath = "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	const alias = "gt"
 	indent := "\t"
@@ -283,6 +293,16 @@ func goElementLit(element GrammarElement, pkg, indent string) string {
 //
 // Returns a complete Go source file as a string.
 func CompileParserGrammar(grammar *ParserGrammar, sourceFile, pkgName string) string {
+	result, _ := StartNew[string]("grammar-tools.CompileParserGrammar", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("sourceFile", sourceFile)
+			op.AddProperty("pkgName", pkgName)
+			return rf.Generate(true, false, compileParserGrammarImpl(grammar, sourceFile, pkgName))
+		}).GetResult()
+	return result
+}
+
+func compileParserGrammarImpl(grammar *ParserGrammar, sourceFile, pkgName string) string {
 	const importPath = "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	const alias = "gt"
 	indent := "\t"

@@ -1,4 +1,11 @@
 // Package drawinstructionssvg serializes generic draw scenes to SVG.
+//
+// # Operations
+//
+// Every public function/method is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery. This
+// package declares zero OS capabilities, so no op.File / op.Net
+// namespace fields are available inside callbacks.
 package drawinstructionssvg
 
 import (
@@ -112,26 +119,34 @@ func renderClip(item drawinstructions.DrawClipInstruction, counter *int) string 
 type SvgRenderer struct{}
 
 func (SvgRenderer) Render(scene drawinstructions.DrawScene) string {
-	label := "draw instructions scene"
-	if value, ok := scene.Metadata["label"]; ok {
-		label = fmt.Sprint(value)
-	}
-	counter := 0
-	lines := []string{
-		fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="%s">`,
-			scene.Width, scene.Height, scene.Width, scene.Height, html.EscapeString(label)),
-		fmt.Sprintf(`  <rect x="0" y="0" width="%d" height="%d" fill="%s" />`,
-			scene.Width, scene.Height, html.EscapeString(scene.Background)),
-	}
-	for _, instruction := range scene.Instructions {
-		lines = append(lines, renderInstruction(instruction, &counter))
-	}
-	lines = append(lines, "</svg>")
-	return strings.Join(lines, "\n")
+	result, _ := StartNew[string]("draw-instructions-svg.SvgRenderer.Render", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			label := "draw instructions scene"
+			if value, ok := scene.Metadata["label"]; ok {
+				label = fmt.Sprint(value)
+			}
+			counter := 0
+			lines := []string{
+				fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="%s">`,
+					scene.Width, scene.Height, scene.Width, scene.Height, html.EscapeString(label)),
+				fmt.Sprintf(`  <rect x="0" y="0" width="%d" height="%d" fill="%s" />`,
+					scene.Width, scene.Height, html.EscapeString(scene.Background)),
+			}
+			for _, instruction := range scene.Instructions {
+				lines = append(lines, renderInstruction(instruction, &counter))
+			}
+			lines = append(lines, "</svg>")
+			return rf.Generate(true, false, strings.Join(lines, "\n"))
+		}).GetResult()
+	return result
 }
 
 var SVGRenderer = SvgRenderer{}
 
 func RenderSVG(scene drawinstructions.DrawScene) string {
-	return SVGRenderer.Render(scene)
+	result, _ := StartNew[string]("draw-instructions-svg.RenderSVG", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, SVGRenderer.Render(scene))
+		}).GetResult()
+	return result
 }

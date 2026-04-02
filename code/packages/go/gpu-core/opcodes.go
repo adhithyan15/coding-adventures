@@ -114,10 +114,14 @@ var opcodeNames = map[Opcode]string{
 
 // String returns the assembly mnemonic for an opcode.
 func (op Opcode) String() string {
-	if name, ok := opcodeNames[op]; ok {
-		return name
-	}
-	return fmt.Sprintf("UNKNOWN(%d)", int(op))
+	result, _ := StartNew[string]("gpu-core.Opcode.String", "",
+		func(o *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if name, ok := opcodeNames[op]; ok {
+				return rf.Generate(true, false, name)
+			}
+			return rf.Generate(true, false, fmt.Sprintf("UNKNOWN(%d)", int(op)))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -159,34 +163,40 @@ type Instruction struct {
 //	BEQ R0, R1, +3           (conditional branch with offset)
 //	HALT                     (no operands)
 func (inst Instruction) String() string {
-	switch inst.Op {
-	case OpFADD, OpFSUB, OpFMUL:
-		return fmt.Sprintf("%s R%d, R%d, R%d", inst.Op, inst.Rd, inst.Rs1, inst.Rs2)
-	case OpFFMA:
-		return fmt.Sprintf("%s R%d, R%d, R%d, R%d", inst.Op, inst.Rd, inst.Rs1, inst.Rs2, inst.Rs3)
-	case OpFNEG, OpFABS:
-		return fmt.Sprintf("%s R%d, R%d", inst.Op, inst.Rd, inst.Rs1)
-	case OpLOAD:
-		return fmt.Sprintf("%s R%d, [R%d+%g]", inst.Op, inst.Rd, inst.Rs1, inst.Immediate)
-	case OpSTORE:
-		return fmt.Sprintf("%s [R%d+%g], R%d", inst.Op, inst.Rs1, inst.Immediate, inst.Rs2)
-	case OpMOV:
-		return fmt.Sprintf("%s R%d, R%d", inst.Op, inst.Rd, inst.Rs1)
-	case OpLIMM:
-		return fmt.Sprintf("%s R%d, %g", inst.Op, inst.Rd, inst.Immediate)
-	case OpBEQ, OpBLT, OpBNE:
-		sign := "+"
-		if inst.Immediate < 0 {
-			sign = ""
-		}
-		return fmt.Sprintf("%s R%d, R%d, %s%d", inst.Op, inst.Rs1, inst.Rs2, sign, int(inst.Immediate))
-	case OpJMP:
-		return fmt.Sprintf("%s %d", inst.Op, int(inst.Immediate))
-	case OpNOP:
-		return "NOP"
-	case OpHALT:
-		return "HALT"
-	default:
-		return fmt.Sprintf("%s rd=%d rs1=%d rs2=%d", inst.Op, inst.Rd, inst.Rs1, inst.Rs2)
-	}
+	result, _ := StartNew[string]("gpu-core.Instruction.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			var s string
+			switch inst.Op {
+			case OpFADD, OpFSUB, OpFMUL:
+				s = fmt.Sprintf("%s R%d, R%d, R%d", inst.Op, inst.Rd, inst.Rs1, inst.Rs2)
+			case OpFFMA:
+				s = fmt.Sprintf("%s R%d, R%d, R%d, R%d", inst.Op, inst.Rd, inst.Rs1, inst.Rs2, inst.Rs3)
+			case OpFNEG, OpFABS:
+				s = fmt.Sprintf("%s R%d, R%d", inst.Op, inst.Rd, inst.Rs1)
+			case OpLOAD:
+				s = fmt.Sprintf("%s R%d, [R%d+%g]", inst.Op, inst.Rd, inst.Rs1, inst.Immediate)
+			case OpSTORE:
+				s = fmt.Sprintf("%s [R%d+%g], R%d", inst.Op, inst.Rs1, inst.Immediate, inst.Rs2)
+			case OpMOV:
+				s = fmt.Sprintf("%s R%d, R%d", inst.Op, inst.Rd, inst.Rs1)
+			case OpLIMM:
+				s = fmt.Sprintf("%s R%d, %g", inst.Op, inst.Rd, inst.Immediate)
+			case OpBEQ, OpBLT, OpBNE:
+				sign := "+"
+				if inst.Immediate < 0 {
+					sign = ""
+				}
+				s = fmt.Sprintf("%s R%d, R%d, %s%d", inst.Op, inst.Rs1, inst.Rs2, sign, int(inst.Immediate))
+			case OpJMP:
+				s = fmt.Sprintf("%s %d", inst.Op, int(inst.Immediate))
+			case OpNOP:
+				s = "NOP"
+			case OpHALT:
+				s = "HALT"
+			default:
+				s = fmt.Sprintf("%s rd=%d rs1=%d rs2=%d", inst.Op, inst.Rd, inst.Rs1, inst.Rs2)
+			}
+			return rf.Generate(true, false, s)
+		}).GetResult()
+	return result
 }

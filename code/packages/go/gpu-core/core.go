@@ -133,30 +133,50 @@ type gpuCoreConfig struct {
 
 // WithISA sets the instruction set for the GPU core.
 func WithISA(isa InstructionSet) Option {
-	return func(c *gpuCoreConfig) {
-		c.isa = isa
-	}
+	result, _ := StartNew[Option]("gpu-core.WithISA", nil,
+		func(op *Operation[Option], rf *ResultFactory[Option]) *OperationResult[Option] {
+			opt := func(c *gpuCoreConfig) {
+				c.isa = isa
+			}
+			return rf.Generate(true, false, opt)
+		}).GetResult()
+	return result
 }
 
 // WithFormat sets the floating-point format for registers.
 func WithFormat(format fp.FloatFormat) Option {
-	return func(c *gpuCoreConfig) {
-		c.fmt = format
-	}
+	result, _ := StartNew[Option]("gpu-core.WithFormat", nil,
+		func(op *Operation[Option], rf *ResultFactory[Option]) *OperationResult[Option] {
+			opt := func(c *gpuCoreConfig) {
+				c.fmt = format
+			}
+			return rf.Generate(true, false, opt)
+		}).GetResult()
+	return result
 }
 
 // WithNumRegisters sets the number of floating-point registers.
 func WithNumRegisters(n int) Option {
-	return func(c *gpuCoreConfig) {
-		c.numRegisters = n
-	}
+	result, _ := StartNew[Option]("gpu-core.WithNumRegisters", nil,
+		func(op *Operation[Option], rf *ResultFactory[Option]) *OperationResult[Option] {
+			opt := func(c *gpuCoreConfig) {
+				c.numRegisters = n
+			}
+			return rf.Generate(true, false, opt)
+		}).GetResult()
+	return result
 }
 
 // WithMemorySize sets the local memory size in bytes.
 func WithMemorySize(size int) Option {
-	return func(c *gpuCoreConfig) {
-		c.memorySize = size
-	}
+	result, _ := StartNew[Option]("gpu-core.WithMemorySize", nil,
+		func(op *Operation[Option], rf *ResultFactory[Option]) *OperationResult[Option] {
+			opt := func(c *gpuCoreConfig) {
+				c.memorySize = size
+			}
+			return rf.Generate(true, false, opt)
+		}).GetResult()
+	return result
 }
 
 // NewGPUCore creates a new GPU core with the given options.
@@ -180,52 +200,71 @@ func WithMemorySize(size int) Option {
 //	val, _ := core.Registers.ReadFloat(2)
 //	// val == 12.0
 func NewGPUCore(opts ...Option) *GPUCore {
-	// Apply defaults.
-	cfg := &gpuCoreConfig{
-		isa:          GenericISA{},
-		fmt:          fp.FP32,
-		numRegisters: 32,
-		memorySize:   4096,
-	}
+	result, _ := StartNew[*GPUCore]("gpu-core.NewGPUCore", nil,
+		func(op *Operation[*GPUCore], rf *ResultFactory[*GPUCore]) *OperationResult[*GPUCore] {
+			// Apply defaults.
+			cfg := &gpuCoreConfig{
+				isa:          GenericISA{},
+				fmt:          fp.FP32,
+				numRegisters: 32,
+				memorySize:   4096,
+			}
 
-	// Apply user options.
-	for _, opt := range opts {
-		opt(cfg)
-	}
+			// Apply user options.
+			for _, opt := range opts {
+				opt(cfg)
+			}
 
-	// Create subsystems. These constructors can't fail with valid defaults,
-	// so we panic on error (indicates a programming bug in the options).
-	regs, err := NewFPRegisterFile(cfg.numRegisters, cfg.fmt)
-	if err != nil {
-		panic(fmt.Sprintf("gpucore: invalid register config: %v", err))
-	}
-	mem, err := NewLocalMemory(cfg.memorySize)
-	if err != nil {
-		panic(fmt.Sprintf("gpucore: invalid memory config: %v", err))
-	}
+			// Create subsystems. These constructors can't fail with valid defaults,
+			// so we panic on error (indicates a programming bug in the options).
+			regs, err := NewFPRegisterFile(cfg.numRegisters, cfg.fmt)
+			if err != nil {
+				panic(fmt.Sprintf("gpucore: invalid register config: %v", err))
+			}
+			mem, err := NewLocalMemory(cfg.memorySize)
+			if err != nil {
+				panic(fmt.Sprintf("gpucore: invalid memory config: %v", err))
+			}
 
-	return &GPUCore{
-		ISA:       cfg.isa,
-		Fmt:       cfg.fmt,
-		Registers: regs,
-		Memory:    mem,
-	}
+			return rf.Generate(true, false, &GPUCore{
+				ISA:       cfg.isa,
+				Fmt:       cfg.fmt,
+				Registers: regs,
+				Memory:    mem,
+			})
+		}).GetResult()
+	return result
 }
 
 // IsHalted returns true if the core has executed a HALT instruction.
 func (c *GPUCore) IsHalted() bool {
-	return c.halted
+	result, _ := StartNew[bool]("gpu-core.IsHalted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, c.halted)
+		}).GetResult()
+	return result
 }
 
 // Halted implements the ProcessingElement interface.
 func (c *GPUCore) Halted() bool {
-	return c.halted
+	result, _ := StartNew[bool]("gpu-core.Halted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, c.halted)
+		}).GetResult()
+	return result
 }
 
 // StepOne implements the ProcessingElement interface.
 // It wraps Step() to return an interface{} for generic PE usage.
 func (c *GPUCore) StepOne() (interface{}, error) {
-	return c.Step()
+	return StartNew[interface{}]("gpu-core.StepOne", nil,
+		func(op *Operation[interface{}], rf *ResultFactory[interface{}]) *OperationResult[interface{}] {
+			trace, err := c.Step()
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, interface{}(trace))
+		}).GetResult()
 }
 
 // LoadProgram loads a program (list of instructions) into the core.
@@ -233,11 +272,15 @@ func (c *GPUCore) StepOne() (interface{}, error) {
 // This replaces any previously loaded program and resets the PC to 0,
 // but does NOT reset registers or memory. Call Reset() for a full reset.
 func (c *GPUCore) LoadProgram(program []Instruction) {
-	c.program = make([]Instruction, len(program))
-	copy(c.program, program)
-	c.PC = 0
-	c.halted = false
-	c.Cycle = 0
+	_, _ = StartNew[struct{}]("gpu-core.LoadProgram", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			c.program = make([]Instruction, len(program))
+			copy(c.program, program)
+			c.PC = 0
+			c.halted = false
+			c.Cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Step executes one instruction and returns a trace of what happened.
@@ -252,56 +295,59 @@ func (c *GPUCore) LoadProgram(program []Instruction) {
 // Returns a GPUCoreTrace and an error. The error is non-nil if the core
 // is halted or the PC is out of range.
 func (c *GPUCore) Step() (GPUCoreTrace, error) {
-	if c.halted {
-		return GPUCoreTrace{}, fmt.Errorf("cannot step: core is halted")
-	}
+	return StartNew[GPUCoreTrace]("gpu-core.Step", GPUCoreTrace{},
+		func(op *Operation[GPUCoreTrace], rf *ResultFactory[GPUCoreTrace]) *OperationResult[GPUCoreTrace] {
+			if c.halted {
+				return rf.Fail(GPUCoreTrace{}, fmt.Errorf("cannot step: core is halted"))
+			}
 
-	if c.PC < 0 || c.PC >= len(c.program) {
-		return GPUCoreTrace{}, fmt.Errorf(
-			"PC=%d out of program range [0, %d)", c.PC, len(c.program),
-		)
-	}
+			if c.PC < 0 || c.PC >= len(c.program) {
+				return rf.Fail(GPUCoreTrace{}, fmt.Errorf(
+					"PC=%d out of program range [0, %d)", c.PC, len(c.program),
+				))
+			}
 
-	// Fetch the instruction at the current program counter.
-	instruction := c.program[c.PC]
-	currentPC := c.PC
-	c.Cycle++
+			// Fetch the instruction at the current program counter.
+			instruction := c.program[c.PC]
+			currentPC := c.PC
+			c.Cycle++
 
-	// Execute -- delegated to the pluggable ISA.
-	result := c.ISA.Execute(instruction, c.Registers, c.Memory)
+			// Execute -- delegated to the pluggable ISA.
+			result := c.ISA.Execute(instruction, c.Registers, c.Memory)
 
-	// Update the program counter based on the execution result.
-	var nextPC int
-	if result.Halted {
-		c.halted = true
-		nextPC = currentPC // PC doesn't advance on halt
-	} else if result.AbsoluteJump {
-		nextPC = result.NextPCOffset
-	} else {
-		nextPC = currentPC + result.NextPCOffset
-	}
-	c.PC = nextPC
+			// Update the program counter based on the execution result.
+			var nextPC int
+			if result.Halted {
+				c.halted = true
+				nextPC = currentPC // PC doesn't advance on halt
+			} else if result.AbsoluteJump {
+				nextPC = result.NextPCOffset
+			} else {
+				nextPC = currentPC + result.NextPCOffset
+			}
+			c.PC = nextPC
 
-	// Build the execution trace.
-	regsChanged := result.RegistersChanged
-	if regsChanged == nil {
-		regsChanged = make(map[string]float64)
-	}
-	memChanged := result.MemoryChanged
-	if memChanged == nil {
-		memChanged = make(map[int]float64)
-	}
+			// Build the execution trace.
+			regsChanged := result.RegistersChanged
+			if regsChanged == nil {
+				regsChanged = make(map[string]float64)
+			}
+			memChanged := result.MemoryChanged
+			if memChanged == nil {
+				memChanged = make(map[int]float64)
+			}
 
-	return GPUCoreTrace{
-		Cycle:            c.Cycle,
-		PC:               currentPC,
-		Inst:             instruction,
-		Description:      result.Description,
-		NextPC:           nextPC,
-		Halted:           result.Halted,
-		RegistersChanged: regsChanged,
-		MemoryChanged:    memChanged,
-	}, nil
+			return rf.Generate(true, false, GPUCoreTrace{
+				Cycle:            c.Cycle,
+				PC:               currentPC,
+				Inst:             instruction,
+				Description:      result.Description,
+				NextPC:           nextPC,
+				Halted:           result.Halted,
+				RegistersChanged: regsChanged,
+				MemoryChanged:    memChanged,
+			})
+		}).GetResult()
 }
 
 // Run executes the program until HALT or maxSteps reached.
@@ -312,26 +358,29 @@ func (c *GPUCore) Step() (GPUCoreTrace, error) {
 // Returns a list of GPUCoreTrace records, one per instruction executed.
 // Returns an error if maxSteps is exceeded (likely an infinite loop).
 func (c *GPUCore) Run(maxSteps int) ([]GPUCoreTrace, error) {
-	var traces []GPUCoreTrace
-	steps := 0
+	return StartNew[[]GPUCoreTrace]("gpu-core.Run", nil,
+		func(op *Operation[[]GPUCoreTrace], rf *ResultFactory[[]GPUCoreTrace]) *OperationResult[[]GPUCoreTrace] {
+			var traces []GPUCoreTrace
+			steps := 0
 
-	for !c.halted && steps < maxSteps {
-		trace, err := c.Step()
-		if err != nil {
-			return traces, err
-		}
-		traces = append(traces, trace)
-		steps++
-	}
+			for !c.halted && steps < maxSteps {
+				trace, err := c.Step()
+				if err != nil {
+					return rf.Fail(traces, err)
+				}
+				traces = append(traces, trace)
+				steps++
+			}
 
-	if !c.halted && steps >= maxSteps {
-		return traces, fmt.Errorf(
-			"execution limit reached (%d steps). Possible infinite loop. Last PC=%d",
-			maxSteps, c.PC,
-		)
-	}
+			if !c.halted && steps >= maxSteps {
+				return rf.Fail(traces, fmt.Errorf(
+					"execution limit reached (%d steps). Possible infinite loop. Last PC=%d",
+					maxSteps, c.PC,
+				))
+			}
 
-	return traces, nil
+			return rf.Generate(true, false, traces)
+		}).GetResult()
 }
 
 // Reset resets the core to its initial state.
@@ -339,23 +388,31 @@ func (c *GPUCore) Run(maxSteps int) ([]GPUCoreTrace, error) {
 // Clears registers, memory, PC, and cycle count. The loaded program
 // is preserved -- call LoadProgram() to change it.
 func (c *GPUCore) Reset() {
-	regs, _ := NewFPRegisterFile(c.Registers.NumRegisters, c.Fmt)
-	mem, _ := NewLocalMemory(c.Memory.Size)
-	c.Registers = regs
-	c.Memory = mem
-	c.PC = 0
-	c.Cycle = 0
-	c.halted = false
+	_, _ = StartNew[struct{}]("gpu-core.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			regs, _ := NewFPRegisterFile(c.Registers.NumRegisters, c.Fmt)
+			mem, _ := NewLocalMemory(c.Memory.Size)
+			c.Registers = regs
+			c.Memory = mem
+			c.PC = 0
+			c.Cycle = 0
+			c.halted = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable representation of the core.
 func (c *GPUCore) String() string {
-	status := fmt.Sprintf("running at PC=%d", c.PC)
-	if c.halted {
-		status = "halted"
-	}
-	return fmt.Sprintf(
-		"GPUCore(isa=%s, regs=%d, fmt=%s, %s)",
-		c.ISA.Name(), c.Registers.NumRegisters, c.Fmt.Name, status,
-	)
+	result, _ := StartNew[string]("gpu-core.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			status := fmt.Sprintf("running at PC=%d", c.PC)
+			if c.halted {
+				status = "halted"
+			}
+			return rf.Generate(true, false, fmt.Sprintf(
+				"GPUCore(isa=%s, regs=%d, fmt=%s, %s)",
+				c.ISA.Name(), c.Registers.NumRegisters, c.Fmt.Name, status,
+			))
+		}).GetResult()
+	return result
 }

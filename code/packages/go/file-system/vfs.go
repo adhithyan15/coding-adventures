@@ -42,23 +42,37 @@ type VFS struct {
 
 // NewVFS creates a new VFS with the given number of blocks and inodes.
 func NewVFS(totalBlocks, totalInodes int) *VFS {
-	return &VFS{
-		storage:       make([]byte, totalBlocks*BlockSize),
-		superblock:    NewSuperblock(totalBlocks, totalInodes),
-		inodeTable:    NewInodeTable(totalInodes),
-		blockBitmap:   NewBlockBitmap(totalBlocks),
-		openFileTable: NewOpenFileTable(),
-	}
+	result, _ := StartNew[*VFS]("file-system.NewVFS", nil,
+		func(op *Operation[*VFS], rf *ResultFactory[*VFS]) *OperationResult[*VFS] {
+			op.AddProperty("totalBlocks", totalBlocks)
+			op.AddProperty("totalInodes", totalInodes)
+			return rf.Generate(true, false, &VFS{
+				storage:       make([]byte, totalBlocks*BlockSize),
+				superblock:    NewSuperblock(totalBlocks, totalInodes),
+				inodeTable:    NewInodeTable(totalInodes),
+				blockBitmap:   NewBlockBitmap(totalBlocks),
+				openFileTable: NewOpenFileTable(),
+			})
+		}).GetResult()
+	return result
 }
 
 // NewDefaultVFS creates a VFS with default parameters (512 blocks, 128 inodes).
 func NewDefaultVFS() *VFS {
-	return NewVFS(MaxBlocks, MaxInodes)
+	result, _ := StartNew[*VFS]("file-system.NewDefaultVFS", nil,
+		func(op *Operation[*VFS], rf *ResultFactory[*VFS]) *OperationResult[*VFS] {
+			return rf.Generate(true, false, NewVFS(MaxBlocks, MaxInodes))
+		}).GetResult()
+	return result
 }
 
 // GetSuperblock returns the file system's superblock (for inspection).
 func (vfs *VFS) GetSuperblock() *Superblock {
-	return vfs.superblock
+	result, _ := StartNew[*Superblock]("file-system.VFS.GetSuperblock", nil,
+		func(op *Operation[*Superblock], rf *ResultFactory[*Superblock]) *OperationResult[*Superblock] {
+			return rf.Generate(true, false, vfs.superblock)
+		}).GetResult()
+	return result
 }
 
 // =======================================================================
@@ -74,31 +88,35 @@ func (vfs *VFS) GetSuperblock() *Superblock {
 //  3. Write the initial directory entries ("." and "..") to that block.
 //  4. Update the superblock's free counts.
 func (vfs *VFS) Format() error {
-	// Step 1: allocate inode 0 for root directory
-	rootInode := vfs.inodeTable.Allocate(FileTypeDirectory)
-	if rootInode == nil {
-		return errNoFreeInodes
-	}
+	_, err := StartNew[struct{}]("file-system.VFS.Format", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			// Step 1: allocate inode 0 for root directory
+			rootInode := vfs.inodeTable.Allocate(FileTypeDirectory)
+			if rootInode == nil {
+				return rf.Fail(struct{}{}, errNoFreeInodes)
+			}
 
-	// Step 2: allocate a data block for root's directory entries
-	rootBlock := vfs.blockBitmap.Allocate()
-	if rootBlock < 0 {
-		return errDiskFull
-	}
-	rootInode.DirectBlks[0] = rootBlock
+			// Step 2: allocate a data block for root's directory entries
+			rootBlock := vfs.blockBitmap.Allocate()
+			if rootBlock < 0 {
+				return rf.Fail(struct{}{}, errDiskFull)
+			}
+			rootInode.DirectBlks[0] = rootBlock
 
-	// Step 3: create "." and ".." entries
-	dotEntry, _ := NewDirectoryEntry(".", 0)
-	dotDotEntry, _ := NewDirectoryEntry("..", 0)
-	entries := []*DirectoryEntry{dotEntry, dotDotEntry}
-	vfs.writeDirEntries(rootInode, entries)
+			// Step 3: create "." and ".." entries
+			dotEntry, _ := NewDirectoryEntry(".", 0)
+			dotDotEntry, _ := NewDirectoryEntry("..", 0)
+			entries := []*DirectoryEntry{dotEntry, dotDotEntry}
+			vfs.writeDirEntries(rootInode, entries)
 
-	// Step 4: update superblock
-	vfs.superblock.FreeBlocks = vfs.blockBitmap.FreeCount()
-	vfs.superblock.FreeInodes = vfs.inodeTable.FreeCount()
-	vfs.formatted = true
+			// Step 4: update superblock
+			vfs.superblock.FreeBlocks = vfs.blockBitmap.FreeCount()
+			vfs.superblock.FreeInodes = vfs.inodeTable.FreeCount()
+			vfs.formatted = true
 
-	return nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // =======================================================================
@@ -108,6 +126,16 @@ func (vfs *VFS) Format() error {
 // Open opens a file by path. Creates the file if O_CREAT is set and it
 // doesn't exist. Returns a file descriptor (fd >= 3) on success, -1 on error.
 func (vfs *VFS) Open(path string, flags int) int {
+	result, _ := StartNew[int]("file-system.VFS.Open", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("path", path)
+			op.AddProperty("flags", flags)
+			return rf.Generate(true, false, vfs.openImpl(path, flags))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) openImpl(path string, flags int) int {
 	inode := vfs.ResolvePath(path)
 
 	if inode == nil {
@@ -170,10 +198,15 @@ func (vfs *VFS) Open(path string, flags int) int {
 
 // Close closes a file descriptor. Returns 0 on success, -1 on error.
 func (vfs *VFS) Close(fd int) int {
-	if vfs.openFileTable.Close(fd) {
-		return 0
-	}
-	return -1
+	result, _ := StartNew[int]("file-system.VFS.Close", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			if vfs.openFileTable.Close(fd) {
+				return rf.Generate(true, false, 0)
+			}
+			return rf.Generate(true, false, -1)
+		}).GetResult()
+	return result
 }
 
 // =======================================================================
@@ -183,6 +216,16 @@ func (vfs *VFS) Close(fd int) int {
 // Read reads up to count bytes from the file at the current offset.
 // Returns the data read (may be shorter than count if EOF is reached).
 func (vfs *VFS) Read(fd int, count int) []byte {
+	result, _ := StartNew[[]byte]("file-system.VFS.Read", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("fd", fd)
+			op.AddProperty("count", count)
+			return rf.Generate(true, false, vfs.readImpl(fd, count))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) readImpl(fd int, count int) []byte {
 	openFile := vfs.openFileTable.Get(fd)
 	if openFile == nil {
 		return nil
@@ -243,6 +286,16 @@ func (vfs *VFS) Read(fd int, count int) []byte {
 // Write writes data to the file at the current offset. Allocates new
 // blocks as needed. Returns number of bytes written, or -1 on error.
 func (vfs *VFS) Write(fd int, data []byte) int {
+	result, _ := StartNew[int]("file-system.VFS.Write", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			op.AddProperty("dataLen", len(data))
+			return rf.Generate(true, false, vfs.writeImpl(fd, data))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) writeImpl(fd int, data []byte) int {
 	openFile := vfs.openFileTable.Get(fd)
 	if openFile == nil {
 		return -1
@@ -308,6 +361,17 @@ func (vfs *VFS) Write(fd int, data []byte) int {
 
 // Lseek repositions the read/write offset. Returns the new offset, or -1.
 func (vfs *VFS) Lseek(fd int, offset int, whence int) int {
+	result, _ := StartNew[int]("file-system.VFS.Lseek", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			op.AddProperty("offset", offset)
+			op.AddProperty("whence", whence)
+			return rf.Generate(true, false, vfs.lseekImpl(fd, offset, whence))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) lseekImpl(fd int, offset int, whence int) int {
 	openFile := vfs.openFileTable.Get(fd)
 	if openFile == nil {
 		return -1
@@ -344,7 +408,12 @@ func (vfs *VFS) Lseek(fd int, offset int, whence int) int {
 
 // Stat returns the inode for the given path, or nil if not found.
 func (vfs *VFS) Stat(path string) *Inode {
-	return vfs.ResolvePath(path)
+	result, _ := StartNew[*Inode]("file-system.VFS.Stat", nil,
+		func(op *Operation[*Inode], rf *ResultFactory[*Inode]) *OperationResult[*Inode] {
+			op.AddProperty("path", path)
+			return rf.Generate(true, false, vfs.ResolvePath(path))
+		}).GetResult()
+	return result
 }
 
 // =======================================================================
@@ -354,6 +423,16 @@ func (vfs *VFS) Stat(path string) *Inode {
 // MkDir creates a new directory at the given path. Returns 0 on success, -1
 // on error. Creates "." and ".." entries automatically.
 func (vfs *VFS) MkDir(path string, permissions int) int {
+	result, _ := StartNew[int]("file-system.VFS.MkDir", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("path", path)
+			op.AddProperty("permissions", permissions)
+			return rf.Generate(true, false, vfs.mkDirImpl(path, permissions))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) mkDirImpl(path string, permissions int) int {
 	if vfs.ResolvePath(path) != nil {
 		return -1 // Already exists
 	}
@@ -413,14 +492,19 @@ func (vfs *VFS) MkDir(path string, permissions int) int {
 // ReadDir returns the directory entries at the given path.
 // Returns nil if the path doesn't exist or is not a directory.
 func (vfs *VFS) ReadDir(path string) []*DirectoryEntry {
-	inode := vfs.ResolvePath(path)
-	if inode == nil {
-		return nil
-	}
-	if inode.Type != FileTypeDirectory {
-		return nil
-	}
-	return vfs.readDirEntries(inode)
+	result, _ := StartNew[[]*DirectoryEntry]("file-system.VFS.ReadDir", nil,
+		func(op *Operation[[]*DirectoryEntry], rf *ResultFactory[[]*DirectoryEntry]) *OperationResult[[]*DirectoryEntry] {
+			op.AddProperty("path", path)
+			inode := vfs.ResolvePath(path)
+			if inode == nil {
+				return rf.Generate(true, false, nil)
+			}
+			if inode.Type != FileTypeDirectory {
+				return rf.Generate(true, false, nil)
+			}
+			return rf.Generate(true, false, vfs.readDirEntries(inode))
+		}).GetResult()
+	return result
 }
 
 // =======================================================================
@@ -430,6 +514,15 @@ func (vfs *VFS) ReadDir(path string) []*DirectoryEntry {
 // Unlink removes a file. Returns 0 on success, -1 on error.
 // Does not work on directories (use RmDir instead).
 func (vfs *VFS) Unlink(path string) int {
+	result, _ := StartNew[int]("file-system.VFS.Unlink", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("path", path)
+			return rf.Generate(true, false, vfs.unlinkImpl(path))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) unlinkImpl(path string) int {
 	parentPath, filename := splitPath(path)
 	if filename == "" {
 		return -1
@@ -496,6 +589,15 @@ func (vfs *VFS) Unlink(path string) int {
 //  5. If found, move to that entry's inode and continue.
 //  6. If not found, return nil.
 func (vfs *VFS) ResolvePath(path string) *Inode {
+	result, _ := StartNew[*Inode]("file-system.VFS.ResolvePath", nil,
+		func(op *Operation[*Inode], rf *ResultFactory[*Inode]) *OperationResult[*Inode] {
+			op.AddProperty("path", path)
+			return rf.Generate(true, false, vfs.resolvePathImpl(path))
+		}).GetResult()
+	return result
+}
+
+func (vfs *VFS) resolvePathImpl(path string) *Inode {
 	if path == "" || path[0] != '/' {
 		return nil
 	}

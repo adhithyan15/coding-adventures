@@ -64,36 +64,40 @@ type GPUCoreTrace struct {
 //	  -> Registers: {R3=7}
 //	  -> Next PC: 3
 func (t GPUCoreTrace) Format() string {
-	lines := fmt.Sprintf("[Cycle %d] PC=%d: %s", t.Cycle, t.PC, t.Inst.String())
-	lines += fmt.Sprintf("\n  -> %s", t.Description)
+	result, _ := StartNew[string]("gpu-core.GPUCoreTrace.Format", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			lines := fmt.Sprintf("[Cycle %d] PC=%d: %s", t.Cycle, t.PC, t.Inst.String())
+			lines += fmt.Sprintf("\n  -> %s", t.Description)
 
-	if len(t.RegistersChanged) > 0 {
-		regs := ""
-		for k, v := range t.RegistersChanged {
-			if regs != "" {
-				regs += ", "
+			if len(t.RegistersChanged) > 0 {
+				regs := ""
+				for k, v := range t.RegistersChanged {
+					if regs != "" {
+						regs += ", "
+					}
+					regs += fmt.Sprintf("%s=%g", k, v)
+				}
+				lines += fmt.Sprintf("\n  -> Registers: {%s}", regs)
 			}
-			regs += fmt.Sprintf("%s=%g", k, v)
-		}
-		lines += fmt.Sprintf("\n  -> Registers: {%s}", regs)
-	}
 
-	if len(t.MemoryChanged) > 0 {
-		mems := ""
-		for k, v := range t.MemoryChanged {
-			if mems != "" {
-				mems += ", "
+			if len(t.MemoryChanged) > 0 {
+				mems := ""
+				for k, v := range t.MemoryChanged {
+					if mems != "" {
+						mems += ", "
+					}
+					mems += fmt.Sprintf("0x%04X=%g", k, v)
+				}
+				lines += fmt.Sprintf("\n  -> Memory: {%s}", mems)
 			}
-			mems += fmt.Sprintf("0x%04X=%g", k, v)
-		}
-		lines += fmt.Sprintf("\n  -> Memory: {%s}", mems)
-	}
 
-	if t.Halted {
-		lines += "\n  -> HALTED"
-	} else {
-		lines += fmt.Sprintf("\n  -> Next PC: %d", t.NextPC)
-	}
+			if t.Halted {
+				lines += "\n  -> HALTED"
+			} else {
+				lines += fmt.Sprintf("\n  -> Next PC: %d", t.NextPC)
+			}
 
-	return lines
+			return rf.Generate(true, false, lines)
+		}).GetResult()
+	return result
 }

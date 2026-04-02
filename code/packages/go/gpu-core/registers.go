@@ -89,22 +89,25 @@ type FPRegisterFile struct {
 //
 // Returns an error if numRegisters is out of range [1, 256].
 func NewFPRegisterFile(numRegisters int, format fp.FloatFormat) (*FPRegisterFile, error) {
-	if numRegisters < 1 || numRegisters > 256 {
-		return nil, fmt.Errorf("num_registers must be 1-256, got %d", numRegisters)
-	}
+	return StartNew[*FPRegisterFile]("gpu-core.NewFPRegisterFile", nil,
+		func(op *Operation[*FPRegisterFile], rf *ResultFactory[*FPRegisterFile]) *OperationResult[*FPRegisterFile] {
+			if numRegisters < 1 || numRegisters > 256 {
+				return rf.Fail(nil, fmt.Errorf("num_registers must be 1-256, got %d", numRegisters))
+			}
 
-	zero := fp.FloatToBits(0.0, format)
-	values := make([]fp.FloatBits, numRegisters)
-	for i := range values {
-		values[i] = zero
-	}
+			zero := fp.FloatToBits(0.0, format)
+			values := make([]fp.FloatBits, numRegisters)
+			for i := range values {
+				values[i] = zero
+			}
 
-	return &FPRegisterFile{
-		NumRegisters: numRegisters,
-		Fmt:          format,
-		values:       values,
-		zero:         zero,
-	}, nil
+			return rf.Generate(true, false, &FPRegisterFile{
+				NumRegisters: numRegisters,
+				Fmt:          format,
+				values:       values,
+				zero:         zero,
+			})
+		}).GetResult()
 }
 
 // checkIndex validates a register index, returning an error if out of bounds.
@@ -123,10 +126,13 @@ func (rf *FPRegisterFile) checkIndex(index int) error {
 // Returns the FloatBits value stored in that register, or an error if the
 // index is out of range.
 func (rf *FPRegisterFile) Read(index int) (fp.FloatBits, error) {
-	if err := rf.checkIndex(index); err != nil {
-		return fp.FloatBits{}, err
-	}
-	return rf.values[index], nil
+	return StartNew[fp.FloatBits]("gpu-core.FPRegisterFile.Read", fp.FloatBits{},
+		func(op *Operation[fp.FloatBits], res *ResultFactory[fp.FloatBits]) *OperationResult[fp.FloatBits] {
+			if err := rf.checkIndex(index); err != nil {
+				return res.Fail(fp.FloatBits{}, err)
+			}
+			return res.Generate(true, false, rf.values[index])
+		}).GetResult()
 }
 
 // Write stores a FloatBits value in a register.
@@ -137,11 +143,15 @@ func (rf *FPRegisterFile) Read(index int) (fp.FloatBits, error) {
 //
 // Returns an error if the index is out of range.
 func (rf *FPRegisterFile) Write(index int, value fp.FloatBits) error {
-	if err := rf.checkIndex(index); err != nil {
-		return err
-	}
-	rf.values[index] = value
-	return nil
+	_, err := StartNew[struct{}]("gpu-core.FPRegisterFile.Write", struct{}{},
+		func(op *Operation[struct{}], res *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if err := rf.checkIndex(index); err != nil {
+				return res.Fail(struct{}{}, err)
+			}
+			rf.values[index] = value
+			return res.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // ReadFloat is a convenience method that reads a register as a Go float64.
@@ -149,11 +159,14 @@ func (rf *FPRegisterFile) Write(index int, value fp.FloatBits) error {
 // This decodes the FloatBits back to a float64, which is useful for
 // inspection and testing but loses the bit-level detail.
 func (rf *FPRegisterFile) ReadFloat(index int) (float64, error) {
-	bits, err := rf.Read(index)
-	if err != nil {
-		return 0, err
-	}
-	return fp.BitsToFloat(bits), nil
+	return StartNew[float64]("gpu-core.FPRegisterFile.ReadFloat", 0,
+		func(op *Operation[float64], res *ResultFactory[float64]) *OperationResult[float64] {
+			bits, err := rf.Read(index)
+			if err != nil {
+				return res.Fail(0, err)
+			}
+			return res.Generate(true, false, fp.BitsToFloat(bits))
+		}).GetResult()
 }
 
 // WriteFloat is a convenience method that writes a Go float64 to a register.
@@ -161,7 +174,14 @@ func (rf *FPRegisterFile) ReadFloat(index int) (float64, error) {
 // This encodes the float64 as FloatBits in the register file's format,
 // then stores it. Useful for setting up test inputs.
 func (rf *FPRegisterFile) WriteFloat(index int, value float64) error {
-	return rf.Write(index, fp.FloatToBits(value, rf.Fmt))
+	_, err := StartNew[struct{}]("gpu-core.FPRegisterFile.WriteFloat", struct{}{},
+		func(op *Operation[struct{}], res *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if err := rf.Write(index, fp.FloatToBits(value, rf.Fmt)); err != nil {
+				return res.Fail(struct{}{}, err)
+			}
+			return res.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // Dump returns all non-zero register values as a map of "R{n}" -> float64.
@@ -169,13 +189,17 @@ func (rf *FPRegisterFile) WriteFloat(index int, value float64) error {
 // Useful for debugging and test assertions. Only includes non-zero
 // registers to reduce noise.
 func (rf *FPRegisterFile) Dump() map[string]float64 {
-	result := make(map[string]float64)
-	for i := 0; i < rf.NumRegisters; i++ {
-		val := fp.BitsToFloat(rf.values[i])
-		if val != 0.0 {
-			result[fmt.Sprintf("R%d", i)] = val
-		}
-	}
+	result, _ := StartNew[map[string]float64]("gpu-core.FPRegisterFile.Dump", nil,
+		func(op *Operation[map[string]float64], res *ResultFactory[map[string]float64]) *OperationResult[map[string]float64] {
+			out := make(map[string]float64)
+			for i := 0; i < rf.NumRegisters; i++ {
+				val := fp.BitsToFloat(rf.values[i])
+				if val != 0.0 {
+					out[fmt.Sprintf("R%d", i)] = val
+				}
+			}
+			return res.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -183,28 +207,36 @@ func (rf *FPRegisterFile) Dump() map[string]float64 {
 //
 // Unlike Dump(), this includes zero-valued registers.
 func (rf *FPRegisterFile) DumpAll() map[string]float64 {
-	result := make(map[string]float64)
-	for i := 0; i < rf.NumRegisters; i++ {
-		result[fmt.Sprintf("R%d", i)] = fp.BitsToFloat(rf.values[i])
-	}
+	result, _ := StartNew[map[string]float64]("gpu-core.FPRegisterFile.DumpAll", nil,
+		func(op *Operation[map[string]float64], res *ResultFactory[map[string]float64]) *OperationResult[map[string]float64] {
+			out := make(map[string]float64)
+			for i := 0; i < rf.NumRegisters; i++ {
+				out[fmt.Sprintf("R%d", i)] = fp.BitsToFloat(rf.values[i])
+			}
+			return res.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
 // String returns a human-readable representation of the register file.
 func (rf *FPRegisterFile) String() string {
-	nonZero := rf.Dump()
-	if len(nonZero) == 0 {
-		return fmt.Sprintf("FPRegisterFile(%d regs, all zero)", rf.NumRegisters)
-	}
-	entries := ""
-	for i := 0; i < rf.NumRegisters; i++ {
-		key := fmt.Sprintf("R%d", i)
-		if val, ok := nonZero[key]; ok {
-			if entries != "" {
-				entries += ", "
+	result, _ := StartNew[string]("gpu-core.FPRegisterFile.String", "",
+		func(op *Operation[string], res *ResultFactory[string]) *OperationResult[string] {
+			nonZero := rf.Dump()
+			if len(nonZero) == 0 {
+				return res.Generate(true, false, fmt.Sprintf("FPRegisterFile(%d regs, all zero)", rf.NumRegisters))
 			}
-			entries += fmt.Sprintf("%s=%g", key, val)
-		}
-	}
-	return fmt.Sprintf("FPRegisterFile(%s)", entries)
+			entries := ""
+			for i := 0; i < rf.NumRegisters; i++ {
+				key := fmt.Sprintf("R%d", i)
+				if val, ok := nonZero[key]; ok {
+					if entries != "" {
+						entries += ", "
+					}
+					entries += fmt.Sprintf("%s=%g", key, val)
+				}
+			}
+			return res.Generate(true, false, fmt.Sprintf("FPRegisterFile(%s)", entries))
+		}).GetResult()
+	return result
 }

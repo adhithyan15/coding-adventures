@@ -297,6 +297,18 @@ func (p *parser) parseElement() (GrammarElement, error) {
 }
 
 func ParseParserGrammar(source string) (*ParserGrammar, error) {
+	return StartNew[*ParserGrammar]("grammar-tools.ParseParserGrammar", nil,
+		func(op *Operation[*ParserGrammar], rf *ResultFactory[*ParserGrammar]) *OperationResult[*ParserGrammar] {
+			op.AddProperty("sourceLen", len(source))
+			result, err := parseParserGrammarImpl(source)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
+}
+
+func parseParserGrammarImpl(source string) (*ParserGrammar, error) {
 	grammar := &ParserGrammar{}
 
 	// Scan for magic comments (# @key value) before tokenizing.
@@ -336,33 +348,45 @@ func ParseParserGrammar(source string) (*ParserGrammar, error) {
 
 // RuleNames returns the set of all defined rule names in the grammar.
 func (g *ParserGrammar) RuleNames() map[string]bool {
-	names := make(map[string]bool)
-	for _, rule := range g.Rules {
-		names[rule.Name] = true
-	}
-	return names
+	result, _ := StartNew[map[string]bool]("grammar-tools.ParserGrammar.RuleNames", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			names := make(map[string]bool)
+			for _, rule := range g.Rules {
+				names[rule.Name] = true
+			}
+			return rf.Generate(true, false, names)
+		}).GetResult()
+	return result
 }
 
 // RuleReferences returns all lowercase rule names referenced in rule bodies.
 // These are the non-token references — names that should correspond to other
 // rules in this grammar.
 func (g *ParserGrammar) RuleReferences() map[string]bool {
-	refs := make(map[string]bool)
-	for _, rule := range g.Rules {
-		collectRuleRefs(rule.Body, refs)
-	}
-	return refs
+	result, _ := StartNew[map[string]bool]("grammar-tools.ParserGrammar.RuleReferences", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			refs := make(map[string]bool)
+			for _, rule := range g.Rules {
+				collectRuleRefs(rule.Body, refs)
+			}
+			return rf.Generate(true, false, refs)
+		}).GetResult()
+	return result
 }
 
 // TokenReferences returns all UPPERCASE names referenced in rule bodies.
 // These are token references — names that should correspond to tokens defined
 // in a .tokens file.
 func (g *ParserGrammar) TokenReferences() map[string]bool {
-	refs := make(map[string]bool)
-	for _, rule := range g.Rules {
-		collectTokenRefs(rule.Body, refs)
-	}
-	return refs
+	result, _ := StartNew[map[string]bool]("grammar-tools.ParserGrammar.TokenReferences", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			refs := make(map[string]bool)
+			for _, rule := range g.Rules {
+				collectTokenRefs(rule.Body, refs)
+			}
+			return rf.Generate(true, false, refs)
+		}).GetResult()
+	return result
 }
 
 // collectRuleRefs walks the grammar element tree and collects lowercase (rule)
@@ -433,6 +457,14 @@ func collectTokenRefs(element GrammarElement, refs map[string]bool) {
 // non-nil, UPPERCASE references are checked against it. Synthetic tokens
 // (NEWLINE, INDENT, DEDENT, EOF) are always valid.
 func ValidateParserGrammar(grammar *ParserGrammar, tokenNames map[string]bool) []string {
+	result, _ := StartNew[[]string]("grammar-tools.ValidateParserGrammar", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, validateParserGrammarImpl(grammar, tokenNames))
+		}).GetResult()
+	return result
+}
+
+func validateParserGrammarImpl(grammar *ParserGrammar, tokenNames map[string]bool) []string {
 	var issues []string
 
 	defined := grammar.RuleNames()
