@@ -221,15 +221,16 @@ func shiftRune(r rune, shift int) rune {
 // are automatically reduced modulo 26. Negative shifts shift backward
 // (equivalent to decrypting).
 func Encrypt(text string, shift int) string {
-	// Pre-allocate a byte slice for efficiency. We process rune-by-rune
-	// to correctly handle multi-byte UTF-8 characters.
-	result := make([]rune, 0, len(text))
-
-	for _, r := range text {
-		result = append(result, shiftRune(r, shift))
-	}
-
-	return string(result)
+	result, _ := StartNew[string]("caesar-cipher.Encrypt", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("shift", shift)
+			runes := make([]rune, 0, len(text))
+			for _, r := range text {
+				runes = append(runes, shiftRune(r, shift))
+			}
+			return rf.Generate(true, false, string(runes))
+		}).GetResult()
+	return result
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -252,7 +253,12 @@ func Encrypt(text string, shift int) string {
 //	ciphertext = Encrypt("HELLO", 3) = "KHOOR"
 //	recovered  = Decrypt("KHOOR", 3) = "HELLO"  ✓
 func Decrypt(text string, shift int) string {
-	return Encrypt(text, -shift)
+	result, _ := StartNew[string]("caesar-cipher.Decrypt", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("shift", shift)
+			return rf.Generate(true, false, Encrypt(text, -shift))
+		}).GetResult()
+	return result
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -283,7 +289,11 @@ func Decrypt(text string, shift int) string {
 //	Rot13("Hello")  → "Uryyb"
 //	Rot13("Uryyb")  → "Hello"   ← self-inverse!
 func Rot13(text string) string {
-	return Encrypt(text, 13)
+	result, _ := StartNew[string]("caesar-cipher.Rot13", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, Encrypt(text, 13))
+		}).GetResult()
+	return result
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -325,16 +335,18 @@ type BruteForceResult struct {
 //	    fmt.Printf("Shift %2d: %s\n", r.Shift, r.Plaintext)
 //	}
 func BruteForce(ciphertext string) []BruteForceResult {
-	results := make([]BruteForceResult, 0, 25)
-
-	for shift := 1; shift <= 25; shift++ {
-		results = append(results, BruteForceResult{
-			Shift:     shift,
-			Plaintext: Decrypt(ciphertext, shift),
-		})
-	}
-
-	return results
+	result, _ := StartNew[[]BruteForceResult]("caesar-cipher.BruteForce", nil,
+		func(_ *Operation[[]BruteForceResult], rf *ResultFactory[[]BruteForceResult]) *OperationResult[[]BruteForceResult] {
+			results := make([]BruteForceResult, 0, 25)
+			for shift := 1; shift <= 25; shift++ {
+				results = append(results, BruteForceResult{
+					Shift:     shift,
+					Plaintext: Decrypt(ciphertext, shift),
+				})
+			}
+			return rf.Generate(true, false, results)
+		}).GetResult()
+	return result
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -381,61 +393,55 @@ func BruteForce(ciphertext string) []BruteForceResult {
 //	shift, plaintext := FrequencyAnalysis("KHOOR ZRUOG")
 //	// shift = 3, plaintext = "HELLO WORLD"
 func FrequencyAnalysis(ciphertext string) (int, string) {
-	// Count total alphabetic characters. If there are none, we can't
-	// do frequency analysis — return the input unchanged.
-	totalLetters := 0
-	for _, r := range ciphertext {
-		if unicode.IsLetter(r) && ((r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z')) {
-			totalLetters++
-		}
+	type faResult struct {
+		shift     int
+		plaintext string
 	}
-
-	if totalLetters == 0 {
-		return 0, ciphertext
-	}
-
-	bestShift := 0
-	bestChi2 := math.MaxFloat64
-
-	// Try each of the 26 possible shifts (including 0).
-	for shift := 0; shift < 26; shift++ {
-		candidate := Decrypt(ciphertext, shift)
-
-		// Count letter occurrences in the candidate plaintext.
-		// We fold everything to uppercase for counting.
-		var counts [26]int
-		for _, r := range candidate {
-			if r >= 'A' && r <= 'Z' {
-				counts[r-'A']++
-			} else if r >= 'a' && r <= 'z' {
-				counts[r-'a']++
+	res, _ := StartNew[faResult]("caesar-cipher.FrequencyAnalysis", faResult{},
+		func(_ *Operation[faResult], rf *ResultFactory[faResult]) *OperationResult[faResult] {
+			totalLetters := 0
+			for _, r := range ciphertext {
+				if unicode.IsLetter(r) && ((r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z')) {
+					totalLetters++
+				}
 			}
-		}
 
-		// Compute chi-squared statistic against English frequencies.
-		//
-		// For each letter i (A=0, B=1, ..., Z=25):
-		//   expected = EnglishFrequencies[letter] * totalLetters
-		//   observed = counts[i]
-		//   χ² += (observed - expected)² / expected
-		//
-		// A lower χ² means the distribution is closer to English.
-		chi2 := 0.0
-		for i := 0; i < 26; i++ {
-			letter := rune('A' + i)
-			expected := EnglishFrequencies[letter] * float64(totalLetters)
-			observed := float64(counts[i])
-
-			if expected > 0 {
-				chi2 += (observed - expected) * (observed - expected) / expected
+			if totalLetters == 0 {
+				return rf.Generate(true, false, faResult{shift: 0, plaintext: ciphertext})
 			}
-		}
 
-		if chi2 < bestChi2 {
-			bestChi2 = chi2
-			bestShift = shift
-		}
-	}
+			bestShift := 0
+			bestChi2 := math.MaxFloat64
 
-	return bestShift, Decrypt(ciphertext, bestShift)
+			for shift := 0; shift < 26; shift++ {
+				candidate := Decrypt(ciphertext, shift)
+
+				var counts [26]int
+				for _, r := range candidate {
+					if r >= 'A' && r <= 'Z' {
+						counts[r-'A']++
+					} else if r >= 'a' && r <= 'z' {
+						counts[r-'a']++
+					}
+				}
+
+				chi2 := 0.0
+				for i := 0; i < 26; i++ {
+					letter := rune('A' + i)
+					expected := EnglishFrequencies[letter] * float64(totalLetters)
+					observed := float64(counts[i])
+					if expected > 0 {
+						chi2 += (observed - expected) * (observed - expected) / expected
+					}
+				}
+
+				if chi2 < bestChi2 {
+					bestChi2 = chi2
+					bestShift = shift
+				}
+			}
+
+			return rf.Generate(true, false, faResult{shift: bestShift, plaintext: Decrypt(ciphertext, bestShift)})
+		}).GetResult()
+	return res.shift, res.plaintext
 }

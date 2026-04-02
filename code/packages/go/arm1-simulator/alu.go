@@ -54,80 +54,86 @@ type ALUResult struct {
 //
 // Returns an ALUResult with the computed result and flags.
 func ALUExecute(opcode int, a, b uint32, carryIn bool, shifterCarry bool, oldV bool) ALUResult {
-	var result uint32
-	var carry, overflow bool
-	writeResult := !IsTestOp(opcode)
+	result, _ := StartNew[ALUResult]("arm1-simulator.ALUExecute", ALUResult{},
+		func(op *Operation[ALUResult], rf *ResultFactory[ALUResult]) *OperationResult[ALUResult] {
+			op.AddProperty("opcode", opcode)
 
-	switch opcode {
-	// ── Logical operations ─────────────────────────────────────────────
-	// C flag comes from the barrel shifter, V flag is preserved.
+			var res uint32
+			var carry, overflow bool
+			writeResult := !IsTestOp(opcode)
 
-	case OpAND, OpTST:
-		result = a & b
-		carry = shifterCarry
-		overflow = oldV
+			switch opcode {
+			// ── Logical operations ─────────────────────────────────────────────
+			// C flag comes from the barrel shifter, V flag is preserved.
 
-	case OpEOR, OpTEQ:
-		result = a ^ b
-		carry = shifterCarry
-		overflow = oldV
+			case OpAND, OpTST:
+				res = a & b
+				carry = shifterCarry
+				overflow = oldV
 
-	case OpORR:
-		result = a | b
-		carry = shifterCarry
-		overflow = oldV
+			case OpEOR, OpTEQ:
+				res = a ^ b
+				carry = shifterCarry
+				overflow = oldV
 
-	case OpMOV:
-		result = b
-		carry = shifterCarry
-		overflow = oldV
+			case OpORR:
+				res = a | b
+				carry = shifterCarry
+				overflow = oldV
 
-	case OpBIC:
-		result = a & ^b
-		carry = shifterCarry
-		overflow = oldV
+			case OpMOV:
+				res = b
+				carry = shifterCarry
+				overflow = oldV
 
-	case OpMVN:
-		result = ^b
-		carry = shifterCarry
-		overflow = oldV
+			case OpBIC:
+				res = a & ^b
+				carry = shifterCarry
+				overflow = oldV
 
-	// ── Arithmetic operations ──────────────────────────────────────────
-	// C flag comes from the adder carry-out, V flag detects signed overflow.
+			case OpMVN:
+				res = ^b
+				carry = shifterCarry
+				overflow = oldV
 
-	case OpADD, OpCMN:
-		// A + B
-		result, carry, overflow = add32(a, b, false)
+			// ── Arithmetic operations ──────────────────────────────────────────
+			// C flag comes from the adder carry-out, V flag detects signed overflow.
 
-	case OpADC:
-		// A + B + C
-		result, carry, overflow = add32(a, b, carryIn)
+			case OpADD, OpCMN:
+				// A + B
+				res, carry, overflow = add32(a, b, false)
 
-	case OpSUB, OpCMP:
-		// A - B = A + NOT(B) + 1
-		result, carry, overflow = add32(a, ^b, true)
+			case OpADC:
+				// A + B + C
+				res, carry, overflow = add32(a, b, carryIn)
 
-	case OpSBC:
-		// A - B - NOT(C) = A + NOT(B) + C
-		result, carry, overflow = add32(a, ^b, carryIn)
+			case OpSUB, OpCMP:
+				// A - B = A + NOT(B) + 1
+				res, carry, overflow = add32(a, ^b, true)
 
-	case OpRSB:
-		// B - A = B + NOT(A) + 1
-		result, carry, overflow = add32(b, ^a, true)
+			case OpSBC:
+				// A - B - NOT(C) = A + NOT(B) + C
+				res, carry, overflow = add32(a, ^b, carryIn)
 
-	case OpRSC:
-		// B - A - NOT(C) = B + NOT(A) + C
-		result, carry, overflow = add32(b, ^a, carryIn)
-	}
+			case OpRSB:
+				// B - A = B + NOT(A) + 1
+				res, carry, overflow = add32(b, ^a, true)
 
-	return ALUResult{
-		Result:      result,
-		N:           (result >> 31) != 0,
-		Z:           result == 0,
-		C:           carry,
-		V:           overflow,
-		WriteResult: writeResult,
-	}
+			case OpRSC:
+				// B - A - NOT(C) = B + NOT(A) + C
+				res, carry, overflow = add32(b, ^a, carryIn)
+			}
+
+			return rf.Generate(true, false, ALUResult{
+				Result:      res,
+				N:           (res >> 31) != 0,
+				Z:           res == 0,
+				C:           carry,
+				V:           overflow,
+				WriteResult: writeResult,
+			})
+		}).GetResult()
+	return result
 }
 
 // add32 performs a 32-bit addition with carry-in and computes carry-out and

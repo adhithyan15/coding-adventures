@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- Wrapped all public functions and methods with the Operations system (`StartNew[T]`) for automatic timing, structured logging, and panic recovery.
+- Added private `readWordRaw` helper to avoid nested Operation instrumentation inside `Step`.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

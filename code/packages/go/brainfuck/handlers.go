@@ -97,16 +97,21 @@ type BrainfuckVM struct {
 // buffer is set to the provided string (empty string means all ","
 // commands will read EOF / 0).
 func NewBrainfuckVM(inputData string) *BrainfuckVM {
-	tape := make([]byte, TapeSize)
-	return &BrainfuckVM{
-		Tape:        tape,
-		DP:          0,
-		PC:          0,
-		Halted:      false,
-		Output:      []string{},
-		InputBuffer: inputData,
-		InputPos:    0,
-	}
+	result, _ := StartNew[*BrainfuckVM]("brainfuck.NewBrainfuckVM", nil,
+		func(op *Operation[*BrainfuckVM], rf *ResultFactory[*BrainfuckVM]) *OperationResult[*BrainfuckVM] {
+			op.AddProperty("inputDataLen", len(inputData))
+			tape := make([]byte, TapeSize)
+			return rf.Generate(true, false, &BrainfuckVM{
+				Tape:        tape,
+				DP:          0,
+				PC:          0,
+				Halted:      false,
+				Output:      []string{},
+				InputBuffer: inputData,
+				InputPos:    0,
+			})
+		}).GetResult()
+	return result
 }
 
 // Execute runs a complete Brainfuck program (CodeObject) and returns
@@ -119,12 +124,16 @@ func NewBrainfuckVM(inputData string) *BrainfuckVM {
 // Each step produces a VMTrace entry recording the PC, instruction,
 // and any output. This is useful for debugging and visualization.
 func (bvm *BrainfuckVM) Execute(code vm.CodeObject) []vm.VMTrace {
-	var traces []vm.VMTrace
-	for !bvm.Halted && bvm.PC < len(code.Instructions) {
-		trace := bvm.Step(code)
-		traces = append(traces, trace)
-	}
-	return traces
+	result, _ := StartNew[[]vm.VMTrace]("brainfuck.Execute", nil,
+		func(_ *Operation[[]vm.VMTrace], rf *ResultFactory[[]vm.VMTrace]) *OperationResult[[]vm.VMTrace] {
+			var traces []vm.VMTrace
+			for !bvm.Halted && bvm.PC < len(code.Instructions) {
+				trace := bvm.step(code)
+				traces = append(traces, trace)
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // Step executes a single instruction and returns a VMTrace describing
@@ -141,6 +150,16 @@ func (bvm *BrainfuckVM) Execute(code vm.CodeObject) []vm.VMTrace {
 //
 // Each opcode handler is documented inline below.
 func (bvm *BrainfuckVM) Step(code vm.CodeObject) vm.VMTrace {
+	result, _ := StartNew[vm.VMTrace]("brainfuck.Step", vm.VMTrace{},
+		func(_ *Operation[vm.VMTrace], rf *ResultFactory[vm.VMTrace]) *OperationResult[vm.VMTrace] {
+			return rf.Generate(true, false, bvm.step(code))
+		}).GetResult()
+	return result
+}
+
+// step is the internal (non-instrumented) implementation of Step.
+// Called by Execute to avoid nested Operation instrumentation.
+func (bvm *BrainfuckVM) step(code vm.CodeObject) vm.VMTrace {
 	instr := code.Instructions[bvm.PC]
 	pcBefore := bvm.PC
 	var outputVal *string

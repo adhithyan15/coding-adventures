@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-04-02
+
+### Changed
+- Wrapped all public functions (`NewCLRSimulator`, `Load`, `Step`, `Run`, `EncodeLdcI4`, `EncodeStloc`, `EncodeLdloc`, `AssembleClr`) with the Operations system via `StartNew[T]`, providing automatic timing, structured logging, and panic recovery for every public call.
+
 ## [0.1.0] - Unreleased
 
 ### Added

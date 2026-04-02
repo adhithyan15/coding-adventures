@@ -144,10 +144,14 @@ type CompilerScope struct {
 // NewCompilerScope creates a new scope linked to the given parent.
 // If parent is nil, this is the outermost (global) scope.
 func NewCompilerScope(parent *CompilerScope) *CompilerScope {
-	return &CompilerScope{
-		Locals: make(map[string]int),
-		Parent: parent,
-	}
+	result, _ := StartNew[*CompilerScope]("bytecode-compiler.NewCompilerScope", nil,
+		func(_ *Operation[*CompilerScope], rf *ResultFactory[*CompilerScope]) *OperationResult[*CompilerScope] {
+			return rf.Generate(true, false, &CompilerScope{
+				Locals: make(map[string]int),
+				Parent: parent,
+			})
+		}).GetResult()
+	return result
 }
 
 // AddLocal registers a new local variable and returns its slot index.
@@ -156,12 +160,17 @@ func NewCompilerScope(parent *CompilerScope) *CompilerScope {
 // This deduplication prevents bugs where AddLocal("x") called twice would
 // give different slot indices for the same variable.
 func (s *CompilerScope) AddLocal(name string) int {
-	if slot, ok := s.Locals[name]; ok {
-		return slot
-	}
-	slot := len(s.Locals)
-	s.Locals[name] = slot
-	return slot
+	result, _ := StartNew[int]("bytecode-compiler.AddLocal", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("name", name)
+			if slot, ok := s.Locals[name]; ok {
+				return rf.Generate(true, false, slot)
+			}
+			slot := len(s.Locals)
+			s.Locals[name] = slot
+			return rf.Generate(true, false, slot)
+		}).GetResult()
+	return result
 }
 
 // GetLocal looks up a variable's slot index by name. Returns the slot and
@@ -171,15 +180,28 @@ func (s *CompilerScope) AddLocal(name string) int {
 // Different languages handle scope lookup differently (some have closures,
 // some don't), so we leave parent-scope resolution to the language plugin.
 func (s *CompilerScope) GetLocal(name string) (int, bool) {
-	slot, ok := s.Locals[name]
-	return slot, ok
+	type getLocalResult struct {
+		slot int
+		ok   bool
+	}
+	res, _ := StartNew[getLocalResult]("bytecode-compiler.GetLocal", getLocalResult{},
+		func(op *Operation[getLocalResult], rf *ResultFactory[getLocalResult]) *OperationResult[getLocalResult] {
+			op.AddProperty("name", name)
+			slot, ok := s.Locals[name]
+			return rf.Generate(true, false, getLocalResult{slot: slot, ok: ok})
+		}).GetResult()
+	return res.slot, res.ok
 }
 
 // NumLocals returns the total number of local variables registered in this
 // scope. This is needed when generating function metadata — the VM needs to
 // know how many local slots to allocate when entering a function call.
 func (s *CompilerScope) NumLocals() int {
-	return len(s.Locals)
+	result, _ := StartNew[int]("bytecode-compiler.NumLocals", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(s.Locals))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -232,14 +254,18 @@ type GenericCompiler struct {
 // registered handlers. Language plugins call RegisterRule to teach it
 // about their syntax.
 func NewGenericCompiler() *GenericCompiler {
-	return &GenericCompiler{
-		Instructions: []vm.Instruction{},
-		Constants:    []interface{}{},
-		Names:        []string{},
-		Scope:        nil,
-		dispatch:     make(map[string]CompileHandler),
-		codeObjects:  []vm.CodeObject{},
-	}
+	result, _ := StartNew[*GenericCompiler]("bytecode-compiler.NewGenericCompiler", nil,
+		func(_ *Operation[*GenericCompiler], rf *ResultFactory[*GenericCompiler]) *OperationResult[*GenericCompiler] {
+			return rf.Generate(true, false, &GenericCompiler{
+				Instructions: []vm.Instruction{},
+				Constants:    []interface{}{},
+				Names:        []string{},
+				Scope:        nil,
+				dispatch:     make(map[string]CompileHandler),
+				codeObjects:  []vm.CodeObject{},
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -252,7 +278,12 @@ func NewGenericCompiler() *GenericCompiler {
 // If a handler was already registered for the same rule name, it is
 // silently replaced. This allows plugins to override default behavior.
 func (c *GenericCompiler) RegisterRule(ruleName string, handler CompileHandler) {
-	c.dispatch[ruleName] = handler
+	_, _ = StartNew[struct{}]("bytecode-compiler.RegisterRule", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("ruleName", ruleName)
+			c.dispatch[ruleName] = handler
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -273,16 +304,19 @@ func (c *GenericCompiler) RegisterRule(ruleName string, handler CompileHandler) 
 // JUMP_IF_FALSE now and patch its target later when you know where
 // the else-branch starts.
 func (c *GenericCompiler) Emit(opcode vm.OpCode, operand ...interface{}) int {
-	var instr vm.Instruction
-	if len(operand) == 0 {
-		// No operand — instructions like ADD, POP, HALT.
-		instr = vm.Instruction{Opcode: opcode, Operand: nil}
-	} else {
-		// One operand — instructions like LOAD_CONST, STORE_NAME, JUMP.
-		instr = vm.Instruction{Opcode: opcode, Operand: operand[0]}
-	}
-	c.Instructions = append(c.Instructions, instr)
-	return len(c.Instructions) - 1
+	result, _ := StartNew[int]("bytecode-compiler.Emit", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("opcode", opcode)
+			var instr vm.Instruction
+			if len(operand) == 0 {
+				instr = vm.Instruction{Opcode: opcode, Operand: nil}
+			} else {
+				instr = vm.Instruction{Opcode: opcode, Operand: operand[0]}
+			}
+			c.Instructions = append(c.Instructions, instr)
+			return rf.Generate(true, false, len(c.Instructions)-1)
+		}).GetResult()
+	return result
 }
 
 // EmitJump emits a jump instruction with a placeholder operand (0).
@@ -298,7 +332,12 @@ func (c *GenericCompiler) Emit(opcode vm.OpCode, operand ...interface{}) int {
 //
 // This is used by every real compiler: JVM's javac, GCC, LLVM.
 func (c *GenericCompiler) EmitJump(opcode vm.OpCode) int {
-	return c.Emit(opcode, 0)
+	result, _ := StartNew[int]("bytecode-compiler.EmitJump", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("opcode", opcode)
+			return rf.Generate(true, false, c.Emit(opcode, 0))
+		}).GetResult()
+	return result
 }
 
 // PatchJump patches a previously emitted jump instruction with the real
@@ -316,23 +355,32 @@ func (c *GenericCompiler) EmitJump(opcode vm.OpCode) int {
 //	compileElseBranch()
 //	c.PatchJump(jumpOverElse) // after else
 func (c *GenericCompiler) PatchJump(index int, target ...int) {
-	if index < 0 || index >= len(c.Instructions) {
-		panic(fmt.Sprintf("CompilerError: Cannot patch jump at index %d: instruction does not exist", index))
-	}
-	t := c.CurrentOffset()
-	if len(target) > 0 {
-		t = target[0]
-	}
-	c.Instructions[index] = vm.Instruction{
-		Opcode:  c.Instructions[index].Opcode,
-		Operand: t,
-	}
+	_, _ = StartNew[struct{}]("bytecode-compiler.PatchJump", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("index", index)
+			if index < 0 || index >= len(c.Instructions) {
+				panic(fmt.Sprintf("CompilerError: Cannot patch jump at index %d: instruction does not exist", index))
+			}
+			t := c.CurrentOffset()
+			if len(target) > 0 {
+				t = target[0]
+			}
+			c.Instructions[index] = vm.Instruction{
+				Opcode:  c.Instructions[index].Opcode,
+				Operand: t,
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // CurrentOffset returns the index where the *next* emitted instruction
 // will be placed. This is used for jump target calculations.
 func (c *GenericCompiler) CurrentOffset() int {
-	return len(c.Instructions)
+	result, _ := StartNew[int]("bytecode-compiler.CurrentOffset", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(c.Instructions))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -351,26 +399,35 @@ func (c *GenericCompiler) CurrentOffset() int {
 // Real VMs deduplicate constants too — the JVM's constant pool deduplicates
 // strings, and CPython's compiler deduplicates constants.
 func (c *GenericCompiler) AddConstant(value interface{}) int {
-	for i, v := range c.Constants {
-		if v == value {
-			return i
-		}
-	}
-	c.Constants = append(c.Constants, value)
-	return len(c.Constants) - 1
+	result, _ := StartNew[int]("bytecode-compiler.AddConstant", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			for i, v := range c.Constants {
+				if v == value {
+					return rf.Generate(true, false, i)
+				}
+			}
+			c.Constants = append(c.Constants, value)
+			return rf.Generate(true, false, len(c.Constants)-1)
+		}).GetResult()
+	return result
 }
 
 // AddName adds a name to the name pool and returns its index. Like
 // AddConstant, names are deduplicated — the same variable name used in
 // multiple places gets the same index.
 func (c *GenericCompiler) AddName(name string) int {
-	for i, n := range c.Names {
-		if n == name {
-			return i
-		}
-	}
-	c.Names = append(c.Names, name)
-	return len(c.Names) - 1
+	result, _ := StartNew[int]("bytecode-compiler.AddName", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("name", name)
+			for i, n := range c.Names {
+				if n == name {
+					return rf.Generate(true, false, i)
+				}
+			}
+			c.Names = append(c.Names, name)
+			return rf.Generate(true, false, len(c.Names)-1)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -390,12 +447,16 @@ func (c *GenericCompiler) AddName(name string) int {
 //	// scope.GetLocal("x") => 0, true
 //	// scope.GetLocal("y") => 1, true
 func (c *GenericCompiler) EnterScope(params ...string) *CompilerScope {
-	newScope := NewCompilerScope(c.Scope)
-	for _, name := range params {
-		newScope.AddLocal(name)
-	}
-	c.Scope = newScope
-	return newScope
+	result, _ := StartNew[*CompilerScope]("bytecode-compiler.EnterScope", nil,
+		func(_ *Operation[*CompilerScope], rf *ResultFactory[*CompilerScope]) *OperationResult[*CompilerScope] {
+			newScope := NewCompilerScope(c.Scope)
+			for _, name := range params {
+				newScope.AddLocal(name)
+			}
+			c.Scope = newScope
+			return rf.Generate(true, false, newScope)
+		}).GetResult()
+	return result
 }
 
 // ExitScope pops the current scope and restores the parent scope. Returns
@@ -404,12 +465,16 @@ func (c *GenericCompiler) EnterScope(params ...string) *CompilerScope {
 //
 // Panics if not currently inside a scope — this is a programming error.
 func (c *GenericCompiler) ExitScope() *CompilerScope {
-	if c.Scope == nil {
-		panic("CompilerError: Cannot exit scope: not currently inside a scope. Did you call ExitScope() without a matching EnterScope()?")
-	}
-	exited := c.Scope
-	c.Scope = exited.Parent
-	return exited
+	result, _ := StartNew[*CompilerScope]("bytecode-compiler.ExitScope", nil,
+		func(_ *Operation[*CompilerScope], rf *ResultFactory[*CompilerScope]) *OperationResult[*CompilerScope] {
+			if c.Scope == nil {
+				panic("CompilerError: Cannot exit scope: not currently inside a scope. Did you call ExitScope() without a matching EnterScope()?")
+			}
+			exited := c.Scope
+			c.Scope = exited.Parent
+			return rf.Generate(true, false, exited)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -427,35 +492,33 @@ func (c *GenericCompiler) ExitScope() *CompilerScope {
 //   - CPython compiles each function body as a separate code object.
 //   - The JVM compiles inner classes and lambdas as separate .class files.
 func (c *GenericCompiler) CompileNested(node *ASTNode) vm.CodeObject {
-	// Save current state.
-	savedInstructions := c.Instructions
-	savedConstants := c.Constants
-	savedNames := c.Names
+	result, _ := StartNew[vm.CodeObject]("bytecode-compiler.CompileNested", vm.CodeObject{},
+		func(_ *Operation[vm.CodeObject], rf *ResultFactory[vm.CodeObject]) *OperationResult[vm.CodeObject] {
+			savedInstructions := c.Instructions
+			savedConstants := c.Constants
+			savedNames := c.Names
 
-	// Start fresh for the nested code unit.
-	c.Instructions = []vm.Instruction{}
-	c.Constants = []interface{}{}
-	c.Names = []string{}
+			c.Instructions = []vm.Instruction{}
+			c.Constants = []interface{}{}
+			c.Names = []string{}
 
-	// Compile the nested AST into the fresh state.
-	c.CompileNode(node)
+			c.CompileNode(node)
 
-	// Package the result as a CodeObject.
-	codeObject := vm.CodeObject{
-		Instructions: c.Instructions,
-		Constants:    c.Constants,
-		Names:        c.Names,
-	}
+			codeObject := vm.CodeObject{
+				Instructions: c.Instructions,
+				Constants:    c.Constants,
+				Names:        c.Names,
+			}
 
-	// Store the code object for later reference.
-	c.codeObjects = append(c.codeObjects, codeObject)
+			c.codeObjects = append(c.codeObjects, codeObject)
 
-	// Restore the outer compilation state.
-	c.Instructions = savedInstructions
-	c.Constants = savedConstants
-	c.Names = savedNames
+			c.Instructions = savedInstructions
+			c.Constants = savedConstants
+			c.Names = savedNames
 
-	return codeObject
+			return rf.Generate(true, false, codeObject)
+		}).GetResult()
+	return result
 }
 
 // CompileNode compiles a single AST node or token node. This is the main
@@ -478,37 +541,35 @@ func (c *GenericCompiler) CompileNested(node *ASTNode) vm.CodeObject {
 // node. The pass-through rule means we don't need handlers for these
 // "wrapper" rules.
 func (c *GenericCompiler) CompileNode(node interface{}) {
-	// Case 1: Token nodes (leaves) are handled by CompileToken.
-	if token, ok := node.(*TokenNode); ok {
-		c.CompileToken(token)
-		return
-	}
+	_, _ = StartNew[struct{}]("bytecode-compiler.CompileNode", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if token, ok := node.(*TokenNode); ok {
+				c.CompileToken(token)
+				return rf.Generate(true, false, struct{}{})
+			}
 
-	// Must be an *ASTNode.
-	astNode, ok := node.(*ASTNode)
-	if !ok {
-		panic(fmt.Sprintf("CompilerError: CompileNode received unexpected type %T", node))
-	}
+			astNode, ok := node.(*ASTNode)
+			if !ok {
+				panic(fmt.Sprintf("CompilerError: CompileNode received unexpected type %T", node))
+			}
 
-	// Case 2: Look for a registered handler for this rule name.
-	handler, exists := c.dispatch[astNode.RuleName]
-	if exists {
-		handler(c, astNode)
-		return
-	}
+			handler, exists := c.dispatch[astNode.RuleName]
+			if exists {
+				handler(c, astNode)
+				return rf.Generate(true, false, struct{}{})
+			}
 
-	// Case 3: No handler, but single child — pass through.
-	if len(astNode.Children) == 1 {
-		c.CompileNode(astNode.Children[0])
-		return
-	}
+			if len(astNode.Children) == 1 {
+				c.CompileNode(astNode.Children[0])
+				return rf.Generate(true, false, struct{}{})
+			}
 
-	// Case 4: No handler and multiple (or zero) children — error.
-	panic(fmt.Sprintf(
-		"UnhandledRuleError: No handler registered for rule %q and node has %d children. "+
-			"Register a handler with compiler.RegisterRule(%q, handler).",
-		astNode.RuleName, len(astNode.Children), astNode.RuleName,
-	))
+			panic(fmt.Sprintf(
+				"UnhandledRuleError: No handler registered for rule %q and node has %d children. "+
+					"Register a handler with compiler.RegisterRule(%q, handler).",
+				astNode.RuleName, len(astNode.Children), astNode.RuleName,
+			))
+		}).GetResult()
 }
 
 // CompileToken compiles a token node. By default, this is a no-op — tokens
@@ -516,9 +577,14 @@ func (c *GenericCompiler) CompileNode(node interface{}) {
 // context (is this number a literal? is this identifier a variable
 // reference? a function name?).
 func (c *GenericCompiler) CompileToken(token *TokenNode) {
-	// No-op by default. Tokens are typically consumed by their parent
-	// node's handler.
-	_ = token
+	_, _ = StartNew[struct{}]("bytecode-compiler.CompileToken", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if token != nil {
+				op.AddProperty("tokenType", token.Type)
+			}
+			_ = token
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -537,24 +603,22 @@ func (c *GenericCompiler) CompileToken(token *TokenNode) {
 // The optional haltOpcode parameter lets you specify a different halt
 // instruction. Defaults to vm.OpHalt (0xFF).
 func (c *GenericCompiler) Compile(ast *ASTNode, haltOpcode ...vm.OpCode) vm.CodeObject {
-	// Compile the entire tree, emitting instructions as we go.
-	c.CompileNode(ast)
+	result, _ := StartNew[vm.CodeObject]("bytecode-compiler.GenericCompile", vm.CodeObject{},
+		func(_ *Operation[vm.CodeObject], rf *ResultFactory[vm.CodeObject]) *OperationResult[vm.CodeObject] {
+			c.CompileNode(ast)
 
-	// Determine the halt opcode — default is OpHalt (0xFF).
-	halt := vm.OpHalt
-	if len(haltOpcode) > 0 {
-		halt = haltOpcode[0]
-	}
+			halt := vm.OpHalt
+			if len(haltOpcode) > 0 {
+				halt = haltOpcode[0]
+			}
 
-	// Append the halt instruction. Every program must end with HALT,
-	// just like every real CPU program must eventually stop. Without this,
-	// the VM would try to read past the end of the instruction array.
-	c.Emit(halt)
+			c.Emit(halt)
 
-	// Package everything into a self-contained CodeObject.
-	return vm.CodeObject{
-		Instructions: c.Instructions,
-		Constants:    c.Constants,
-		Names:        c.Names,
-	}
+			return rf.Generate(true, false, vm.CodeObject{
+				Instructions: c.Instructions,
+				Constants:    c.Constants,
+				Names:        c.Names,
+			})
+		}).GetResult()
+	return result
 }

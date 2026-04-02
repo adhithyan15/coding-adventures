@@ -43,7 +43,11 @@ type CacheStats struct {
 
 // TotalAccesses returns the total number of read + write operations.
 func (s *CacheStats) TotalAccesses() int {
-	return s.Reads + s.Writes
+	result, _ := StartNew[int]("cache.TotalAccesses", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, s.Reads+s.Writes)
+		}).GetResult()
+	return result
 }
 
 // HitRate returns the fraction of accesses that were cache hits (0.0 to 1.0).
@@ -52,11 +56,15 @@ func (s *CacheStats) TotalAccesses() int {
 // A hit rate of 0.95 means 95% of memory requests were served from
 // this cache level — excellent for an L1 cache.
 func (s *CacheStats) HitRate() float64 {
-	total := s.TotalAccesses()
-	if total == 0 {
-		return 0.0
-	}
-	return float64(s.Hits) / float64(total)
+	result, _ := StartNew[float64]("cache.HitRate", 0,
+		func(_ *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			total := s.TotalAccesses()
+			if total == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			return rf.Generate(true, false, float64(s.Hits)/float64(total))
+		}).GetResult()
+	return result
 }
 
 // MissRate returns the fraction of accesses that were cache misses (0.0 to 1.0).
@@ -65,31 +73,45 @@ func (s *CacheStats) HitRate() float64 {
 // miss rate is the more commonly discussed metric in architecture
 // papers ("this workload has a 5% L1 miss rate").
 func (s *CacheStats) MissRate() float64 {
-	total := s.TotalAccesses()
-	if total == 0 {
-		return 0.0
-	}
-	return float64(s.Misses) / float64(total)
+	result, _ := StartNew[float64]("cache.MissRate", 0,
+		func(_ *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			total := s.TotalAccesses()
+			if total == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			return rf.Generate(true, false, float64(s.Misses)/float64(total))
+		}).GetResult()
+	return result
 }
 
 // RecordRead records a read access. Pass hit=true for a cache hit.
 func (s *CacheStats) RecordRead(hit bool) {
-	s.Reads++
-	if hit {
-		s.Hits++
-	} else {
-		s.Misses++
-	}
+	_, _ = StartNew[struct{}]("cache.RecordRead", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("hit", hit)
+			s.Reads++
+			if hit {
+				s.Hits++
+			} else {
+				s.Misses++
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RecordWrite records a write access. Pass hit=true for a cache hit.
 func (s *CacheStats) RecordWrite(hit bool) {
-	s.Writes++
-	if hit {
-		s.Hits++
-	} else {
-		s.Misses++
-	}
+	_, _ = StartNew[struct{}]("cache.RecordWrite", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("hit", hit)
+			s.Writes++
+			if hit {
+				s.Hits++
+			} else {
+				s.Misses++
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RecordEviction records an eviction. Pass dirty=true if the evicted line was dirty.
@@ -99,10 +121,15 @@ func (s *CacheStats) RecordWrite(hit bool) {
 // the dirty data before discarding it — this is the extra cost of a
 // write-back policy.
 func (s *CacheStats) RecordEviction(dirty bool) {
-	s.Evictions++
-	if dirty {
-		s.Writebacks++
-	}
+	_, _ = StartNew[struct{}]("cache.RecordEviction", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("dirty", dirty)
+			s.Evictions++
+			if dirty {
+				s.Writebacks++
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Reset zeros all counters.
@@ -111,19 +138,27 @@ func (s *CacheStats) RecordEviction(dirty bool) {
 // execution (e.g., "what's the hit rate during matrix multiply?"
 // without counting the initial data loading phase).
 func (s *CacheStats) Reset() {
-	s.Reads = 0
-	s.Writes = 0
-	s.Hits = 0
-	s.Misses = 0
-	s.Evictions = 0
-	s.Writebacks = 0
+	_, _ = StartNew[struct{}]("cache.Reset", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			s.Reads = 0
+			s.Writes = 0
+			s.Hits = 0
+			s.Misses = 0
+			s.Evictions = 0
+			s.Writebacks = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable summary of cache statistics.
 func (s *CacheStats) String() string {
-	return fmt.Sprintf(
-		"CacheStats(accesses=%d, hits=%d, misses=%d, hit_rate=%.1f%%, evictions=%d, writebacks=%d)",
-		s.TotalAccesses(), s.Hits, s.Misses, s.HitRate()*100,
-		s.Evictions, s.Writebacks,
-	)
+	result, _ := StartNew[string]("cache.CacheStatsString", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf(
+				"CacheStats(accesses=%d, hits=%d, misses=%d, hit_rate=%.1f%%, evictions=%d, writebacks=%d)",
+				s.TotalAccesses(), s.Hits, s.Misses, s.HitRate()*100,
+				s.Evictions, s.Writebacks,
+			))
+		}).GetResult()
+	return result
 }

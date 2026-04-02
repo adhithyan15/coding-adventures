@@ -28,26 +28,42 @@ import (
 //
 // Returns the shifted value (32 bits) and carry-out (1 bit).
 func GateBarrelShift(value []int, shiftType, amount int, carryIn int, byRegister bool) ([]int, int) {
-	if byRegister && amount == 0 {
-		result := make([]int, 32)
-		copy(result, value)
-		return result, carryIn
+	type shiftResult struct {
+		bits  []int
+		carry int
 	}
+	res, _ := StartNew[shiftResult]("arm1-gatelevel.GateBarrelShift", shiftResult{},
+		func(op *Operation[shiftResult], rf *ResultFactory[shiftResult]) *OperationResult[shiftResult] {
+			op.AddProperty("shiftType", shiftType)
+			op.AddProperty("amount", amount)
+			op.AddProperty("carryIn", carryIn)
+			op.AddProperty("byRegister", byRegister)
 
-	switch shiftType {
-	case 0: // LSL
-		return gateLSL(value, amount, carryIn, byRegister)
-	case 1: // LSR
-		return gateLSR(value, amount, carryIn, byRegister)
-	case 2: // ASR
-		return gateASR(value, amount, carryIn, byRegister)
-	case 3: // ROR
-		return gateROR(value, amount, carryIn, byRegister)
-	default:
-		result := make([]int, 32)
-		copy(result, value)
-		return result, carryIn
-	}
+			if byRegister && amount == 0 {
+				result := make([]int, 32)
+				copy(result, value)
+				return rf.Generate(true, false, shiftResult{bits: result, carry: carryIn})
+			}
+
+			var bits []int
+			var carry int
+			switch shiftType {
+			case 0: // LSL
+				bits, carry = gateLSL(value, amount, carryIn, byRegister)
+			case 1: // LSR
+				bits, carry = gateLSR(value, amount, carryIn, byRegister)
+			case 2: // ASR
+				bits, carry = gateASR(value, amount, carryIn, byRegister)
+			case 3: // ROR
+				bits, carry = gateROR(value, amount, carryIn, byRegister)
+			default:
+				bits = make([]int, 32)
+				copy(bits, value)
+				carry = carryIn
+			}
+			return rf.Generate(true, false, shiftResult{bits: bits, carry: carry})
+		}).GetResult()
+	return res.bits, res.carry
 }
 
 // gateLSL — Logical Shift Left using a 5-level multiplexer tree.
@@ -236,12 +252,22 @@ func gateROR(value []int, amount int, carryIn int, byRegister bool) ([]int, int)
 
 // GateDecodeImmediate decodes a rotated immediate using gate-level rotation.
 func GateDecodeImmediate(imm8 uint32, rotate uint32) ([]int, int) {
-	// Convert 8-bit immediate to 32-bit
-	bits := IntToBits(imm8, 32)
-	rotateAmount := int(rotate * 2)
-	if rotateAmount == 0 {
-		return bits, 0
+	type decodeResult struct {
+		bits  []int
+		carry int
 	}
-	result, carry := gateROR(bits, rotateAmount, 0, false)
-	return result, carry
+	res, _ := StartNew[decodeResult]("arm1-gatelevel.GateDecodeImmediate", decodeResult{},
+		func(op *Operation[decodeResult], rf *ResultFactory[decodeResult]) *OperationResult[decodeResult] {
+			op.AddProperty("imm8", imm8)
+			op.AddProperty("rotate", rotate)
+			// Convert 8-bit immediate to 32-bit
+			bits := IntToBits(imm8, 32)
+			rotateAmount := int(rotate * 2)
+			if rotateAmount == 0 {
+				return rf.Generate(true, false, decodeResult{bits: bits, carry: 0})
+			}
+			result, carry := gateROR(bits, rotateAmount, 0, false)
+			return rf.Generate(true, false, decodeResult{bits: result, carry: carry})
+		}).GetResult()
+	return res.bits, res.carry
 }
