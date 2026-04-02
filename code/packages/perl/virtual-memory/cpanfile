@@ -1,0 +1,6 @@
+requires 'perl', '5.016';
+requires 'List::Util';
+
+on 'test' => sub {
+    requires 'Test2::V0';
+};
