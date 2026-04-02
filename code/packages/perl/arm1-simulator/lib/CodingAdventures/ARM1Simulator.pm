@@ -349,11 +349,31 @@ sub get_flags {
 =head2 set_flags
 
   $cpu->set_flags({n => 1, z => 0, c => 1, v => 0});
+  $cpu->set_flags($n, $z, $c, $v);   # also accepts 4 scalars
+
+Two calling conventions are supported for interoperability with
+gate-level consumers that call C<set_flags($n, $z, $c, $v)>:
+
+=over 4
+
+=item * Hashref form: C<set_flags({ n => 1, z => 0, c => 1, v => 0 })>
+
+=item * Scalar form:  C<set_flags($n, $z, $c, $v)>
+
+=back
 
 =cut
 
 sub set_flags {
-    my ($self, $f) = @_;
+    my $self = shift;
+    # Accept both ({n=>...,z=>...,c=>...,v=>...}) and ($n,$z,$c,$v)
+    my $f;
+    if (@_ == 1 && ref($_[0]) eq 'HASH') {
+        ($f) = @_;
+    } else {
+        my ($n, $z, $c, $v) = @_;
+        $f = { n => $n, z => $z, c => $c, v => $v };
+    }
     my $r15 = $self->{regs}[15] & _bnot32(FLAG_N | FLAG_Z | FLAG_C | FLAG_V);
     $r15 |= FLAG_N if $f->{n};
     $r15 |= FLAG_Z if $f->{z};
