@@ -969,23 +969,31 @@ sub run {
 # =============================================================================
 
 sub encode_data_processing {
-    my ($self, $condition, $opcode, $s, $rn, $rd, $operand2) = @_;
+    # Pure function — no object needed. Works whether called as a method
+    # ($obj->encode_data_processing(...)) or as a plain function reference
+    # ($ARM1->can('encode_data_processing')->(...)).  We detect a blessed
+    # invocant and discard it so both call styles receive the same arguments.
+    shift if ref($_[0]);
+    my ($condition, $opcode, $s, $rn, $rd, $operand2) = @_;
     return (($condition << 28) | $operand2 | ($opcode << 21) | ($s << 20)
             | ($rn << 16) | ($rd << 12)) & MASK32;
 }
 
 sub encode_mov_imm {
-    my ($self, $condition, $rd, $imm8) = @_;
-    return $self->encode_data_processing($condition, OP_MOV, 0, 0, $rd, (1 << 25) | $imm8);
+    shift if ref($_[0]);
+    my ($condition, $rd, $imm8) = @_;
+    return encode_data_processing($condition, OP_MOV, 0, 0, $rd, (1 << 25) | $imm8);
 }
 
 sub encode_alu_reg {
-    my ($self, $condition, $opcode, $s, $rd, $rn, $rm) = @_;
-    return $self->encode_data_processing($condition, $opcode, $s, $rn, $rd, $rm);
+    shift if ref($_[0]);
+    my ($condition, $opcode, $s, $rd, $rn, $rm) = @_;
+    return encode_data_processing($condition, $opcode, $s, $rn, $rd, $rm);
 }
 
 sub encode_branch {
-    my ($self, $condition, $link, $offset) = @_;
+    shift if ref($_[0]);
+    my ($condition, $link, $offset) = @_;
     my $inst = ($condition << 28) | 0x0A000000;
     $inst |= 0x01000000 if $link;
     my $encoded = int($offset / 4) & 0x00FFFFFF;
@@ -993,12 +1001,13 @@ sub encode_branch {
 }
 
 sub encode_halt {
-    my ($self) = @_;
+    shift if ref($_[0]);
     return ((COND_AL << 28) | 0x0F000000 | HALT_SWI) & MASK32;
 }
 
 sub encode_ldr {
-    my ($self, $condition, $rd, $rn, $offset, $pre_index) = @_;
+    shift if ref($_[0]);
+    my ($condition, $rd, $rn, $offset, $pre_index) = @_;
     my $inst = ($condition << 28) | 0x04100000;
     $inst |= ($rd << 12) | ($rn << 16);
     $inst |= (1 << 24) if $pre_index;
@@ -1011,7 +1020,8 @@ sub encode_ldr {
 }
 
 sub encode_str {
-    my ($self, $condition, $rd, $rn, $offset, $pre_index) = @_;
+    shift if ref($_[0]);
+    my ($condition, $rd, $rn, $offset, $pre_index) = @_;
     my $inst = ($condition << 28) | 0x04000000;
     $inst |= ($rd << 12) | ($rn << 16);
     $inst |= (1 << 24) if $pre_index;
@@ -1024,7 +1034,8 @@ sub encode_str {
 }
 
 sub encode_ldm {
-    my ($self, $condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
+    shift if ref($_[0]);
+    my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
     my $inst = ($condition << 28) | 0x08100000;
     $inst |= ($rn << 16) | $reg_list;
     $inst |= (1 << 21) if $write_back;
@@ -1036,8 +1047,9 @@ sub encode_ldm {
 }
 
 sub encode_stm {
-    my ($self, $condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
-    my $inst = $self->encode_ldm($condition, $rn, $reg_list, $write_back, $bt_mode);
+    shift if ref($_[0]);
+    my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
+    my $inst = encode_ldm($condition, $rn, $reg_list, $write_back, $bt_mode);
     return ($inst & ~(1 << 20)) & MASK32;
 }
 
