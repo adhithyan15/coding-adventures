@@ -1,0 +1,23 @@
+# font-parser-ruby — Ruby C extension wrapping the Rust font-parser core.
+#
+# Build produces a .so/.bundle that Ruby's require loads as
+# `font_parser_native`.  The pure-Ruby gem (code/packages/ruby/font_parser)
+# `require`s this extension for performance-critical paths.
+#
+# crate-type = ["cdylib"]: emit a C-compatible shared library with no
+# Rust-specific symbols — this is what Ruby's require expects.
+
+[package]
+name = "font-parser-ruby"
+version = "0.1.0"
+edition = "2021"
+description = "Ruby C extension exposing the Rust font-parser core — zero dependencies beyond libruby"
+
+[lib]
+# cdylib: produce a .so / .dylib / .bundle that Ruby can `require`.
+crate-type = ["cdylib"]
+name = "font_parser_native"
+
+[dependencies]
+font-parser = { path = "../font-parser" }
+ruby-bridge = { path = "../ruby-bridge" }

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/font-parser",
+  "capabilities": [],
+  "justification": "Pure computation package. Parses a bytes object that the caller provides. No filesystem, network, process, or environment access needed. Test suite reads a fixture file but that is test-only, not library code."
+}
