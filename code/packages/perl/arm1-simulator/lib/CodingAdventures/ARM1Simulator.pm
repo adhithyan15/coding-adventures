@@ -783,6 +783,21 @@ sub decode {
     return _decode($instruction);
 }
 
+=head2 decode_immediate
+
+  my ($value, $carry_out) = $cpu->decode_immediate($imm8, $rotate_field);
+
+Public wrapper around C<_decode_immediate>.  Applies the ARM rotate-right
+by C<$rotate_field * 2> bits to the 8-bit immediate C<$imm8>, returning the
+32-bit rotated value and the carry-out bit.  Used by gate-level consumers.
+
+=cut
+
+sub decode_immediate {
+    my ($self, $imm8, $rotate_field) = @_;
+    return _decode_immediate($imm8, $rotate_field);
+}
+
 # ===========================================================================
 # Disassembly
 # ===========================================================================
