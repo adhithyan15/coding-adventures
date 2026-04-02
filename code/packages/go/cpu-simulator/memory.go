@@ -30,7 +30,7 @@ func NewMemory(size int) *Memory {
 				data: make([]byte, size),
 				Size: size,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -48,7 +48,7 @@ func (m *Memory) ReadByte(address int) byte {
 			op.AddProperty("address", address)
 			m.checkAddress(address, 1)
 			return rf.Generate(true, false, m.data[address])
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -60,7 +60,7 @@ func (m *Memory) WriteByte(address int, value byte) {
 			m.checkAddress(address, 1)
 			m.data[address] = value
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // ReadWord reads a 32-bit word (4 bytes) from memory, little-endian.
@@ -73,7 +73,7 @@ func (m *Memory) ReadWord(address int) uint32 {
 				(uint32(m.data[address+1])<<8)|
 				(uint32(m.data[address+2])<<16)|
 				(uint32(m.data[address+3])<<24))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -88,7 +88,7 @@ func (m *Memory) WriteWord(address int, value uint32) {
 			m.data[address+2] = byte((value >> 16) & 0xFF)
 			m.data[address+3] = byte((value >> 24) & 0xFF)
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // LoadBytes copies a sequence of bytes into memory starting at `address`.
@@ -100,7 +100,7 @@ func (m *Memory) LoadBytes(address int, data []byte) {
 			m.checkAddress(address, len(data))
 			copy(m.data[address:], data)
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // Dump returns a slice of memory (copied to prevent modification).
@@ -113,6 +113,6 @@ func (m *Memory) Dump(start, length int) []byte {
 			data := make([]byte, length)
 			copy(data, m.data[start:start+length])
 			return rf.Generate(true, false, data)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }

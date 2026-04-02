@@ -80,7 +80,7 @@ func (c *SRAMCell) Read(wordLine int) *int {
 			}
 			v := c.value
 			return rf.Generate(true, false, &v)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -96,7 +96,7 @@ func (c *SRAMCell) Write(wordLine, bitLine int) {
 				c.value = bitLine
 			}
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // Value returns the current stored value (for inspection/debugging).
@@ -146,7 +146,7 @@ func NewSRAMArray(rows, cols int) *SRAMArray {
 				}
 			}
 			return rf.Generate(true, false, &SRAMArray{rows: rows, cols: cols, cells: cells})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -163,7 +163,7 @@ func (a *SRAMArray) Read(row int) []int {
 				out[c] = *val
 			}
 			return rf.Generate(true, false, out)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -184,7 +184,7 @@ func (a *SRAMArray) Write(row int, data []int) {
 				a.cells[row][c].Write(1, bit)
 			}
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // Shape returns the array dimensions as (rows, cols).

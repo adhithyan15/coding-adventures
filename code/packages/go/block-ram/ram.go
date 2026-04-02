@@ -86,7 +86,7 @@ func NewSinglePortRAM(depth, width int, readMode ReadMode) *SinglePortRAM {
 				lastRead:  lastRead,
 			}
 			return rf.Generate(true, false, ram)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -138,7 +138,7 @@ func (r *SinglePortRAM) Tick(clock, address int, dataIn []int, writeEnable int) 
 				copy(out, r.lastRead)
 				return rf.Generate(true, false, out)
 			}
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -234,7 +234,7 @@ func NewDualPortRAM(depth, width int, readModeA, readModeB ReadMode) *DualPortRA
 				lastReadB: make([]int, width),
 			}
 			return rf.Generate(true, false, ram)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -286,7 +286,7 @@ func (r *DualPortRAM) Tick(
 			copy(resultA, outA)
 			copy(resultB, outB)
 			return rf.Generate(true, false, dualPortTickResult{outA: resultA, outB: resultB, err: nil})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	if err != nil {
 		return nil, nil, err
 	}

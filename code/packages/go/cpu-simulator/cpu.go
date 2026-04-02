@@ -108,7 +108,7 @@ func (cpu *CPU) Step() PipelineTrace {
 
 			cpu.Cycle++
 			return rf.Generate(true, false, trace)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

@@ -4,6 +4,12 @@ All notable changes to the `block-ram` package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] - 2026-04-02
+
+### Fixed
+
+- Added `.PanicOnUnexpected()` to all `StartNew` chains in functions that intentionally panic as part of their contract. Previously, the Operations framework was catching and swallowing these panics, causing `assertPanics` tests to fail because the panic never reached the caller. Affected functions: `SRAMCell.Read`, `SRAMCell.Write`, `NewSRAMArray`, `SRAMArray.Read`, `SRAMArray.Write`, `NewSinglePortRAM`, `SinglePortRAM.Tick`, `NewDualPortRAM`, `DualPortRAM.Tick`, `NewConfigurableBRAM`, `ConfigurableBRAM.Reconfigure`.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

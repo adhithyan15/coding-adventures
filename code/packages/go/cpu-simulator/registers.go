@@ -41,7 +41,7 @@ func (r *RegisterFile) Read(index int) uint32 {
 				panic(fmt.Sprintf("Register index %d out of range (0-%d)", index, r.NumRegisters-1))
 			}
 			return rf.Generate(true, false, r.values[index])
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -56,7 +56,7 @@ func (r *RegisterFile) Write(index int, value uint32) {
 			}
 			r.values[index] = value & r.maxValue
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // Dump returns all register values as a map for inspection.

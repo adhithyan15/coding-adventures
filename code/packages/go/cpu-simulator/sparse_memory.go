@@ -175,7 +175,7 @@ func (m *SparseMemory) ReadByte(address uint32) byte {
 			op.AddProperty("address", address)
 			region, offset := m.findRegion(address, 1)
 			return rf.Generate(true, false, region.Data[offset])
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -194,7 +194,7 @@ func (m *SparseMemory) WriteByte(address uint32, value byte) {
 			}
 			region.Data[offset] = value
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // ReadWord reads a 32-bit word (4 bytes) from the sparse address space
@@ -221,7 +221,7 @@ func (m *SparseMemory) ReadWord(address uint32) uint32 {
 				(uint32(region.Data[offset+1])<<8)|
 				(uint32(region.Data[offset+2])<<16)|
 				(uint32(region.Data[offset+3])<<24))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -242,7 +242,7 @@ func (m *SparseMemory) WriteWord(address uint32, value uint32) {
 			region.Data[offset+2] = byte((value >> 16) & 0xFF)
 			region.Data[offset+3] = byte((value >> 24) & 0xFF)
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // LoadBytes copies a sequence of bytes into the sparse address space
@@ -264,7 +264,7 @@ func (m *SparseMemory) LoadBytes(address uint32, data []byte) {
 			region, offset := m.findRegion(address, len(data))
 			copy(region.Data[offset:], data)
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // Dump returns a copy of bytes from the sparse address space.
@@ -285,7 +285,7 @@ func (m *SparseMemory) Dump(start uint32, length int) []byte {
 			data := make([]byte, length)
 			copy(data, region.Data[offset:offset+length])
 			return rf.Generate(true, false, data)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

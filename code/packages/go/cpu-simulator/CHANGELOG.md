@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2026-04-02
+
+### Fixed
+
+- Added `.PanicOnUnexpected()` to all `StartNew` chains in functions that intentionally panic as part of their contract. Previously, the Operations framework was catching and swallowing these panics, causing panic-assertion tests to fail. Affected functions: `NewMemory`, `Memory.ReadByte`, `Memory.WriteByte`, `Memory.ReadWord`, `Memory.WriteWord`, `Memory.LoadBytes`, `Memory.Dump`, `RegisterFile.Read`, `RegisterFile.Write`, `SparseMemory.ReadByte`, `SparseMemory.WriteByte`, `SparseMemory.ReadWord`, `SparseMemory.WriteWord`, `SparseMemory.LoadBytes`, `SparseMemory.Dump`, `CPU.Step`.
+
 ## [0.2.0] - 2026-04-02
 
 ### Changed

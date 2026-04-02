@@ -52,7 +52,7 @@ func NewConfigurableBRAM(totalBits, width int) *ConfigurableBRAM {
 				lastReadB: make([]int, width),
 			}
 			return rf.Generate(true, false, bram)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -75,7 +75,7 @@ func (b *ConfigurableBRAM) Reconfigure(width int) {
 			b.lastReadA = make([]int, width)
 			b.lastReadB = make([]int, width)
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // TickA performs a port A operation.
