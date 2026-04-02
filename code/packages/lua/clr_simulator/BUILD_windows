@@ -1,2 +1,4 @@
+luarocks remove --force coding-adventures-clr-simulator 2>NUL || exit /b 0
+luarocks remove --force coding-adventures-cpu-pipeline 2>NUL || exit /b 0
 luarocks make --local coding-adventures-clr-simulator-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
