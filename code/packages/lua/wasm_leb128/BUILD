@@ -1,2 +1,2 @@
-luarocks make --local --no-manifest coding-adventures-wasm-leb128-0.1.0-1.rockspec
+luarocks make --local --no-manifest --no-deps coding-adventures-wasm-leb128-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
