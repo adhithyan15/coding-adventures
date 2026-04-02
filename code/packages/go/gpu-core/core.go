@@ -232,7 +232,7 @@ func NewGPUCore(opts ...Option) *GPUCore {
 				Registers: regs,
 				Memory:    mem,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

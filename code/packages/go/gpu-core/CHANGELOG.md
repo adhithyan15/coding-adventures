@@ -2,6 +2,11 @@
 
 All notable changes to the `gpu-core` Go package will be documented in this file.
 
+## [0.2.1] - 2026-04-02
+
+### Fixed
+- Added `.PanicOnUnexpected()` to the `NewGPUCore` `StartNew` chain so that intentional panics (on invalid register count or memory size) propagate correctly instead of being swallowed by the Operations framework's panic recovery. Tests `TestNewGPUCorePanicsOnBadRegisterConfig` and `TestNewGPUCorePanicsOnBadMemoryConfig` now pass as expected.
+
 ## [0.2.0] - 2026-04-02
 
 ### Changed
