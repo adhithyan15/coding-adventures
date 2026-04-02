@@ -1,0 +1,168 @@
+/**
+ * preview.css — Typography styles for rendered markdown content.
+ *
+ * Targets the .preview container and styles standard HTML elements
+ * produced by the @coding-adventures/document-ast-to-html renderer.
+ * Uses CSS custom properties from the shared dark theme.
+ */
+
+.preview {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--text-primary, #e6edf3);
+  word-wrap: break-word;
+}
+
+/* ── Headings ──────────────────────────────────────────────────────────── */
+
+.preview h1,
+.preview h2,
+.preview h3,
+.preview h4,
+.preview h5,
+.preview h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+.preview h1 { font-size: 1.75rem; }
+.preview h2 { font-size: 1.5rem; }
+.preview h3 { font-size: 1.25rem; }
+.preview h4 { font-size: 1rem; }
+.preview h5 { font-size: 0.875rem; }
+.preview h6 { font-size: 0.8rem; color: var(--text-secondary, #8b949e); }
+
+.preview h1:first-child,
+.preview h2:first-child,
+.preview h3:first-child {
+  margin-top: 0;
+}
+
+.preview h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--panel-border, #30363d);
+}
+
+/* ── Paragraphs ────────────────────────────────────────────────────────── */
+
+.preview p {
+  margin: 0 0 1em;
+}
+
+/* ── Links ─────────────────────────────────────────────────────────────── */
+
+.preview a {
+  color: var(--accent-color, #58a6ff);
+  text-decoration: none;
+}
+
+.preview a:hover {
+  text-decoration: underline;
+}
+
+/* ── Lists ─────────────────────────────────────────────────────────────── */
+
+.preview ul,
+.preview ol {
+  margin: 0 0 1em;
+  padding-left: 2em;
+}
+
+.preview li {
+  margin-bottom: 0.25em;
+}
+
+.preview li > p {
+  margin-bottom: 0.5em;
+}
+
+/* ── Task lists ────────────────────────────────────────────────────────── */
+
+.preview .task-list-item {
+  list-style: none;
+  margin-left: -1.5em;
+}
+
+.preview .task-list-item input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+/* ── Code ──────────────────────────────────────────────────────────────── */
+
+.preview code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85em;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  background: rgba(110, 118, 129, 0.2);
+}
+
+.preview pre {
+  margin: 0 0 1em;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background: var(--app-bg, #0d1117);
+  overflow-x: auto;
+}
+
+.preview pre > code {
+  padding: 0;
+  background: transparent;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* ── Blockquotes ───────────────────────────────────────────────────────── */
+
+.preview blockquote {
+  margin: 0 0 1em;
+  padding: 0.5em 1em;
+  border-left: 3px solid var(--accent-color, #58a6ff);
+  color: var(--text-secondary, #8b949e);
+}
+
+.preview blockquote > p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Tables ────────────────────────────────────────────────────────────── */
+
+.preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1em;
+}
+
+.preview th,
+.preview td {
+  padding: 6px 12px;
+  border: 1px solid var(--panel-border, #30363d);
+  text-align: left;
+}
+
+.preview th {
+  font-weight: 600;
+  background: rgba(110, 118, 129, 0.1);
+}
+
+/* ── Horizontal rule ───────────────────────────────────────────────────── */
+
+.preview hr {
+  border: none;
+  border-top: 1px solid var(--panel-border, #30363d);
+  margin: 1.5em 0;
+}
+
+/* ── Images ────────────────────────────────────────────────────────────── */
+
+.preview img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+/* ── Strong and emphasis ───────────────────────────────────────────────── */
+
+.preview strong {
+  font-weight: 600;
+}

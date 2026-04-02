@@ -1,0 +1,86 @@
+# Deploy Journal App to GitHub Pages
+#
+# Builds the Vite SPA and deploys to the /journal/ subdirectory on
+# GitHub Pages. Triggered on pushes to main that modify journal-app files.
+
+name: Deploy Journal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/journal-app/**"
+      - "code/packages/typescript/gfm/**"
+      - "code/packages/typescript/gfm-parser/**"
+      - "code/packages/typescript/document-ast/**"
+      - "code/packages/typescript/document-ast-to-html/**"
+      - "code/packages/typescript/document-ast-sanitizer/**"
+      - "code/packages/typescript/storage/**"
+      - "code/packages/typescript/indexeddb/**"
+      - "code/packages/typescript/store/**"
+      - "code/packages/typescript/ui-components/**"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy-journal
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          cd code/packages/typescript/directed-graph && npm install
+          cd ../grammar-tools && npm install
+          cd ../lexer && npm install
+          cd ../state-machine && npm install
+          cd ../parser && npm install
+          cd ../document-ast && npm install
+          cd ../document-ast-to-html && npm install
+          cd ../document-ast-sanitizer && npm install
+          cd ../gfm-parser && npm install
+          cd ../gfm && npm install
+          cd ../sql-lexer && npm install
+          cd ../sql-parser && npm install
+          cd ../sql-execution-engine && npm install
+          cd ../storage && npm install
+          cd ../indexeddb && npm install
+          cd ../store && npm install
+          cd ../ui-components && npm install
+          cd ../../../programs/typescript/journal-app && npm install
+
+      - name: Build
+        working-directory: code/programs/typescript/journal-app
+        run: npm run build
+        env:
+          VITE_BASE: /coding-adventures/journal/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: code/programs/typescript/journal-app/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
