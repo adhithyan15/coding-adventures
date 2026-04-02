@@ -1,0 +1,283 @@
+/**
+ * app.css — Application layout and component styles.
+ *
+ * Uses CSS custom properties from @coding-adventures/ui-components theme.css
+ * for consistent dark theme appearance across all apps in the repo.
+ */
+
+/* ── Global ────────────────────────────────────────────────────────────── */
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--app-bg, #0d1117);
+  color: var(--text-primary, #e6edf3);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* ── Timeline ──────────────────────────────────────────────────────────── */
+
+.timeline {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.timeline__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.timeline__header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.timeline__new-button {
+  padding: 8px 16px;
+  border: 1px solid var(--accent-color, #58a6ff);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent-color, #58a6ff);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.timeline__new-button:hover {
+  background: var(--accent-color, #58a6ff);
+  color: var(--app-bg, #0d1117);
+}
+
+.timeline__empty {
+  text-align: center;
+  color: var(--text-secondary, #8b949e);
+  padding: 48px 0;
+}
+
+.timeline__date-group {
+  margin-bottom: 24px;
+}
+
+.timeline__date-heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary, #8b949e);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--panel-border, #30363d);
+  margin: 0 0 12px;
+}
+
+.timeline__entries {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Entry Card ────────────────────────────────────────────────────────── */
+
+.entry-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: var(--panel-bg, #161b22);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  transition: border-color 0.15s;
+}
+
+.entry-card:hover {
+  border-color: var(--accent-color, #58a6ff);
+}
+
+.entry-card__title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.entry-card__preview {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #8b949e);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entry-card__time {
+  font-size: 0.75rem;
+  color: var(--text-tertiary, #6e7681);
+}
+
+/* ── Entry Editor ──────────────────────────────────────────────────────── */
+
+.entry-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.entry-editor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--panel-border, #30363d);
+}
+
+.entry-editor__header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.entry-editor__back,
+.entry-editor__save {
+  padding: 6px 12px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary, #e6edf3);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.entry-editor__save {
+  border-color: var(--accent-color, #58a6ff);
+  color: var(--accent-color, #58a6ff);
+}
+
+.entry-editor__save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.entry-editor__save:not(:disabled):hover {
+  background: var(--accent-color, #58a6ff);
+  color: var(--app-bg, #0d1117);
+}
+
+.entry-editor__title-row {
+  padding: 12px 0;
+}
+
+.entry-editor__title-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: var(--panel-bg, #161b22);
+  color: var(--text-primary, #e6edf3);
+  font-size: 1.125rem;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.entry-editor__title-input::placeholder {
+  color: var(--text-tertiary, #6e7681);
+}
+
+.entry-editor__split-pane {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 16px;
+}
+
+.entry-editor__textarea {
+  flex: 1;
+  resize: none;
+  padding: 12px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: var(--panel-bg, #161b22);
+  color: var(--text-primary, #e6edf3);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.entry-editor__textarea::placeholder {
+  color: var(--text-tertiary, #6e7681);
+}
+
+.entry-editor__preview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: var(--panel-bg, #161b22);
+}
+
+/* ── Entry View ────────────────────────────────────────────────────────── */
+
+.entry-view {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.entry-view__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--panel-border, #30363d);
+}
+
+.entry-view__date {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #8b949e);
+}
+
+.entry-view__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.entry-view__back,
+.entry-view__edit,
+.entry-view__delete {
+  padding: 6px 12px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary, #e6edf3);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.entry-view__delete {
+  border-color: var(--danger-color, #f87171);
+  color: var(--danger-color, #f87171);
+}
+
+.entry-view__title {
+  margin: 0 0 16px;
+  font-size: 1.75rem;
+}
+
+.entry-view__content {
+  padding: 16px;
+  border: 1px solid var(--panel-border, #30363d);
+  border-radius: 6px;
+  background: var(--panel-bg, #161b22);
+}

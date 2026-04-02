@@ -1,0 +1,19 @@
+{
+  "app.title": "Journal",
+  "timeline.title": "Your Journal",
+  "timeline.newEntry": "New Entry",
+  "timeline.empty": "No entries yet. Write your first journal entry to get started.",
+  "timeline.noEntries": "No entries for this date.",
+  "entry.new": "New Entry",
+  "entry.edit": "Edit Entry",
+  "entry.save": "Save",
+  "entry.cancel": "Cancel",
+  "entry.delete": "Delete",
+  "entry.back": "Back",
+  "entry.editButton": "Edit",
+  "entry.titlePlaceholder": "Entry title",
+  "entry.contentPlaceholder": "Write your journal entry in markdown...",
+  "entry.confirmDelete": "Delete this entry? This cannot be undone.",
+  "entry.notFound": "Entry not found.",
+  "preview.title": "Preview"
+}
