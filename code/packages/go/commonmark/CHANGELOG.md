@@ -1,5 +1,13 @@
 # Changelog — commonmark (Go)
 
+## [0.1.1] — 2026-03-31
+
+### Changed
+
+- Wrapped all public functions (`Parse`, `ToHtml`, `ToHtmlSafe`) with the
+  Operations system (`StartNew[T]`) for automatic timing, structured logging,
+  and panic recovery. Public API signatures are unchanged.
+
 ## [0.1.0] — 2026-03-24
 
 ### Added

@@ -53,18 +53,23 @@ import (
 //	doc.Children[0].NodeType()  // "heading"
 //	doc.Children[1].NodeType()  // "list"
 func Parse(markdown string) *documentast.DocumentNode {
-	// Phase 1: Block parsing — builds the structural skeleton
-	result := parseBlocks(markdown)
+	result, _ := StartNew[*documentast.DocumentNode]("commonmark-parser.Parse", nil,
+		func(op *Operation[*documentast.DocumentNode], rf *ResultFactory[*documentast.DocumentNode]) *OperationResult[*documentast.DocumentNode] {
+			op.AddProperty("markdown_len", len(markdown))
+			// Phase 1: Block parsing — builds the structural skeleton
+			blocks := parseBlocks(markdown)
 
-	// Convert mutable intermediate tree to final AST with raw inline content IDs
-	converted := convertToAST(result.document, result.linkRefs)
+			// Convert mutable intermediate tree to final AST with raw inline content IDs
+			converted := convertToAST(blocks.document, blocks.linkRefs)
 
-	// Phase 2: Inline parsing — fills in emphasis, links, code spans, etc.
-	resolveInlineContent(converted.document, converted.rawInlineContent, result.linkRefs)
+			// Phase 2: Inline parsing — fills in emphasis, links, code spans, etc.
+			resolveInlineContent(converted.document, converted.rawInlineContent, blocks.linkRefs)
 
-	// Replace internal heading/paragraph nodes (with rawIDs) with proper types.
-	// After resolveInlineContent, the Children slices are populated.
-	return flattenAST(converted.document)
+			// Replace internal heading/paragraph nodes (with rawIDs) with proper types.
+			// After resolveInlineContent, the Children slices are populated.
+			return rf.Generate(true, false, flattenAST(converted.document))
+		}).GetResult()
+	return result
 }
 
 // flattenAST replaces headingNodeWithID and paragraphNodeWithID with their

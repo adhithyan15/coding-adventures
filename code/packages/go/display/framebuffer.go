@@ -122,7 +122,11 @@ const (
 //	MakeAttribute(ColorLightGray, ColorBlack) = 0x07  (default terminal)
 //	MakeAttribute(ColorWhite, ColorRed) = 0x4F  (error highlight)
 func MakeAttribute(fg, bg byte) byte {
-	return (bg << 4) | (fg & 0x0F)
+	result, _ := StartNew[byte]("display.MakeAttribute", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			return rf.Generate(true, false, (bg<<4)|(fg&0x0F))
+		}).GetResult()
+	return result
 }
 
 // ============================================================
@@ -141,12 +145,16 @@ type DisplayConfig struct {
 
 // DefaultDisplayConfig returns the standard 80x25 VGA text mode configuration.
 func DefaultDisplayConfig() DisplayConfig {
-	return DisplayConfig{
-		Columns:          DefaultColumns,
-		Rows:             DefaultRows,
-		FramebufferBase:  DefaultFramebufferBase,
-		DefaultAttribute: DefaultAttribute,
-	}
+	result, _ := StartNew[DisplayConfig]("display.DefaultDisplayConfig", DisplayConfig{},
+		func(op *Operation[DisplayConfig], rf *ResultFactory[DisplayConfig]) *OperationResult[DisplayConfig] {
+			return rf.Generate(true, false, DisplayConfig{
+				Columns:          DefaultColumns,
+				Rows:             DefaultRows,
+				FramebufferBase:  DefaultFramebufferBase,
+				DefaultAttribute: DefaultAttribute,
+			})
+		}).GetResult()
+	return result
 }
 
 // Predefined configurations for common use cases.

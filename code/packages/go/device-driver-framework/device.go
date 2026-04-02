@@ -49,16 +49,20 @@ const (
 
 // String returns a human-readable name for the device type.
 func (dt DeviceType) String() string {
-	switch dt {
-	case DeviceCharacter:
-		return "CHARACTER"
-	case DeviceBlock:
-		return "BLOCK"
-	case DeviceNetwork:
-		return "NETWORK"
-	default:
-		return fmt.Sprintf("UNKNOWN(%d)", int(dt))
-	}
+	result, _ := StartNew[string]("device-driver-framework.DeviceType.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch dt {
+			case DeviceCharacter:
+				return rf.Generate(true, false, "CHARACTER")
+			case DeviceBlock:
+				return rf.Generate(true, false, "BLOCK")
+			case DeviceNetwork:
+				return rf.Generate(true, false, "NETWORK")
+			default:
+				return rf.Generate(true, false, fmt.Sprintf("UNKNOWN(%d)", int(dt)))
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -92,19 +96,31 @@ type DeviceBase struct {
 // Init sets the Initialized flag to true. Concrete device types override
 // this to perform hardware-specific setup.
 func (d *DeviceBase) Init() {
-	d.Initialized = true
+	_, _ = StartNew[struct{}]("device-driver-framework.DeviceBase.Init", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			d.Initialized = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // GetBase returns the DeviceBase, satisfying the Device interface.
 // This lets the registry access common fields without type assertions.
 func (d *DeviceBase) GetBase() *DeviceBase {
-	return d
+	result, _ := StartNew[*DeviceBase]("device-driver-framework.DeviceBase.GetBase", nil,
+		func(op *Operation[*DeviceBase], rf *ResultFactory[*DeviceBase]) *OperationResult[*DeviceBase] {
+			return rf.Generate(true, false, d)
+		}).GetResult()
+	return result
 }
 
 // String returns a human-readable representation of the device.
 func (d *DeviceBase) String() string {
-	return fmt.Sprintf("%s(name=%q, type=%s, major=%d, minor=%d, irq=%d)",
-		"Device", d.Name, d.Type, d.Major, d.Minor, d.InterruptNumber)
+	result, _ := StartNew[string]("device-driver-framework.DeviceBase.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("%s(name=%q, type=%s, major=%d, minor=%d, irq=%d)",
+				"Device", d.Name, d.Type, d.Major, d.Minor, d.InterruptNumber))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

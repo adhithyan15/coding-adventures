@@ -1,5 +1,16 @@
 # Changelog — commonmark-parser (Go)
 
+## [0.1.1] — 2026-03-31
+
+### Changed
+
+- Wrapped all public functions and methods (`Parse`, `NewScanner`, all Scanner
+  methods, `DecodeEntity`, `DecodeEntities`, `EscapeHTML`, `IsAsciiPunctuation`,
+  `IsUnicodePunctuation`, `IsAsciiWhitespace`, `IsUnicodeWhitespace`, `IsDigit`,
+  `NormalizeLinkLabel`, `NormalizeURL`) with the Operations system (`StartNew[T]`)
+  for automatic timing, structured logging, and panic recovery. Public API
+  signatures are unchanged.
+
 ## [0.1.0] — 2026-03-24
 
 ### Added

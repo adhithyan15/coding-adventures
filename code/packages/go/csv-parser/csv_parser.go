@@ -229,7 +229,15 @@ func newParser(source string, delimiter rune) *parser {
 //	// rows[0]["name"] == "Alice"
 //	// rows[0]["age"]  == "30"
 func ParseCSV(source string) ([]map[string]string, error) {
-	return ParseCSVWithDelimiter(source, ',')
+	return StartNew[[]map[string]string]("csv-parser.ParseCSV", nil,
+		func(op *Operation[[]map[string]string], rf *ResultFactory[[]map[string]string]) *OperationResult[[]map[string]string] {
+			op.AddProperty("source_len", len(source))
+			result, err := ParseCSVWithDelimiter(source, ',')
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // ParseCSVWithDelimiter is like ParseCSV but with a configurable delimiter.
@@ -244,13 +252,16 @@ func ParseCSV(source string) ([]map[string]string, error) {
 //
 //	rows, err := ParseCSVWithDelimiter("name\tage\nAlice\t30\n", '\t')
 func ParseCSVWithDelimiter(source string, delimiter rune) ([]map[string]string, error) {
-	p := newParser(source, delimiter)
-
-	if err := p.run(); err != nil {
-		return nil, err
-	}
-
-	return buildRowMaps(p.header(), p.dataRows()), nil
+	return StartNew[[]map[string]string]("csv-parser.ParseCSVWithDelimiter", nil,
+		func(op *Operation[[]map[string]string], rf *ResultFactory[[]map[string]string]) *OperationResult[[]map[string]string] {
+			op.AddProperty("source_len", len(source))
+			op.AddProperty("delimiter", string(delimiter))
+			p := newParser(source, delimiter)
+			if err := p.run(); err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, buildRowMaps(p.header(), p.dataRows()))
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
