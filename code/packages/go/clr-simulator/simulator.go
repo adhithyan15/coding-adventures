@@ -259,7 +259,7 @@ func (s *CLRSimulator) Step() CLRTrace {
 			}
 
 			panic(fmt.Sprintf("Unknown CLR opcode: 0x%02X at PC=%d", opcodeByte, pc))
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
@@ -388,7 +388,7 @@ func (s *CLRSimulator) Run(maxSteps int) []CLRTrace {
 				traces = append(traces, s.Step())
 			}
 			return rf.Generate(true, false, traces)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

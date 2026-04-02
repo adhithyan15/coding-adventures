@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.2] - 2026-04-02
+
+### Fixed
+- Added `.PanicOnUnexpected()` to `Step` and `Run` operations so intentional panics (division by zero, uninitialized local, unknown opcode, halted simulator) propagate correctly instead of being swallowed by the Operations panic-recovery wrapper.
+
 ## [0.1.1] - 2026-04-02
 
 ### Changed
