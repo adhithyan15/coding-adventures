@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "Pipeline hazard detection: RAW, control (branch misprediction), and structural hazards",
+    summary = "Pipeline hazard detection — data, control, and structural hazards",
     license = "MIT",
 }
 dependencies = {

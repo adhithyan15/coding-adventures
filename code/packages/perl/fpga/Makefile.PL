@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::FPGA',
     VERSION_FROM     => 'lib/CodingAdventures/FPGA.pm',
-    ABSTRACT         => 'FPGA fabric simulation — LUTs, Slices, CLBs, Switch Matrices, I/O Blocks',
+    ABSTRACT         => 'FPGA (Field-Programmable Gate Array) simulation',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',

@@ -3,21 +3,25 @@
 ## 0.1.0 — 2026-03-31
 
 ### Added
-- Gate-level ARM1 simulator: every ALU and barrel-shift operation routes through
-  logic gate function calls from coding_adventures.logic_gates and
-  coding_adventures.arithmetic.adder
-- `int_to_bits(v, w)` / `bits_to_int(bits)`: 1-indexed LSB-first bit array helpers
-- `gate_barrel_shift`: 5-level Mux2 tree implementation of ARM1 barrel shifter
-  - LSL, LSR, ASR, ROR each modelled as a cascade of 32 mux2 calls per level
-  - RRX (rotate right through carry) correctly handles carry_in→MSB, LSB→carry_out
-- `gate_alu_execute`: all 16 ARM1 ALU operations through gate primitives
-  - AND/EOR/ORR/BIC/MVN/MOV: bit-by-bit gate calls (32 per instruction)
-  - ADD/ADC/SUB/SBC/RSB/RSC: ripple_carry_adder (~160 gate calls for 32-bit)
-  - TST/TEQ/CMP/CMN: flag-only variants (write_result=false)
-  - Signed overflow detection via AND(XNOR(sa,sb), XOR(sa,sr))
-- Gate-level condition evaluation for all 16 ARM1 conditions using AND/OR/XOR/NOT/XNOR
-- `gate_ops` counter on CPU struct: tracks cumulative gate function calls
-- Full integration with arm1_simulator for instruction decode, memory, and
-  branch/load-store/block-transfer operations
-- Comprehensive test suite: bit helpers, barrel shifter, all 16 ALU ops,
-  conditional execution, and sum-1-to-10 integration test
+- Complete ARM1 gate-level processor simulator in Lua 5.4
+- Every arithmetic operation routes through logic gate function calls from the
+  logic_gates and arithmetic packages
+- **Gate-level ALU**: all 16 ARM1 opcodes (AND, EOR, SUB, RSB, ADD, ADC, SBC,
+  RSC, TST, TEQ, CMP, CMN, ORR, MOV, BIC, MVN); logical ops via 32-parallel
+  AND/OR/XOR/NOT calls; arithmetic ops via ripple_carry_adder (~160 gate calls)
+- **Gate-level barrel shifter**: 5-level Mux2 tree; LSL/LSR/ASR/ROR (immediate
+  and register-controlled); RRX (rotate right through carry); ~160 Mux2 calls
+  per shift
+- **Gate-level condition evaluator**: all 16 ARM1 conditions using AND/OR/XOR/NOT
+  gate calls (4-6 gate calls per condition)
+- **Bit conversion helpers**: `int_to_bits(v, w)` and `bits_to_int(bits)` bridge
+  the integer API and gate-level bit arrays (LSB-first)
+- **Register file**: 27 physical registers stored as 32-bit LSB-first arrays;
+  mode banking (USR/FIQ/IRQ/SVC) same as behavioral simulator
+- **Full ARMv1 instruction set**: data processing, load/store, block transfer,
+  branch, SWI; same decode and execution logic as behavioral simulator
+- **gate_ops counter**: tracks cumulative gate function call count per CPU
+- **Encoding helpers**: delegates to arm1_simulator for all encode_* functions
+- Comprehensive test suite: bit conversion, all ALU opcodes, barrel shifter
+  (LSL/LSR/ASR/ROR/RRX), full simulation tests matching behavioral simulator
+  output, end-to-end sum 1..10 = 55 program

@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::CpuPipeline',
     VERSION_FROM     => 'lib/CodingAdventures/CpuPipeline.pm',
-    ABSTRACT         => 'Configurable N-stage CPU instruction pipeline',
+    ABSTRACT         => 'Configurable N-stage CPU instruction pipeline simulator',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',

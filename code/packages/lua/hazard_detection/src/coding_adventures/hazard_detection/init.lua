@@ -1,133 +1,161 @@
--- =============================================================================
--- Hazard Detection — pipeline hazard detectors
--- =============================================================================
+-- init.lua — Pipeline Hazard Detection and Forwarding
 --
--- This module provides three detectors that together keep the pipeline
--- running correctly despite instruction dependencies:
+-- Pipelining overlaps instruction execution — while one instruction executes,
+-- the next is decoded, and the next is fetched. This creates HAZARDS:
+-- situations where the pipeline cannot proceed correctly because one
+-- instruction depends on data from another that hasn't finished yet.
 --
---   DataHazardDetector     — RAW (Read After Write) hazards
---   ControlHazardDetector  — branch mispredictions (→ flush)
---   StructuralHazardDetector — resource conflicts (ALU, FP unit, memory port)
+-- This package provides pure detection logic (no pipeline state of its own).
+-- You call detect() with a snapshot of the current pipeline registers and
+-- get back a HazardResult describing what action the pipeline must take.
 --
--- All three detectors are STATELESS: they examine the current pipeline slots
--- and return a HazardResult describing what action to take.  The pipeline
--- itself is responsible for acting on the result.
+-- THE THREE HAZARD TYPES:
 --
--- PRIORITY ORDER (highest wins when multiple hazards detected simultaneously):
+-- 1. DATA HAZARD (RAW — Read After Write):
 --
---   flush > stall > forward_ex > forward_mem > none
+--      Instruction A writes register R1 in WB (cycle 5).
+--      Instruction B reads register R1 in ID (cycle 3).
+--      B reads R1 BEFORE A has written it — WRONG VALUE!
 --
--- This mirrors real hardware: a control hazard (flush) takes precedence over
--- a data hazard that was about to be forwarded, because the instructions being
--- forwarded may themselves be from the wrong path.
+--      Solutions:
+--        a) Forwarding  — route A's result directly to B's ALU input
+--        b) Stalling    — freeze the pipeline for 1-2 cycles
+--
+-- 2. CONTROL HAZARD (branch misprediction):
+--
+--      A branch is fetched at cycle 1. Its outcome is not known until EX
+--      (cycle 3). Meanwhile, cycles 2 and 3 already fetched sequential
+--      instructions — those must be FLUSHED if the branch is taken.
+--
+-- 3. STRUCTURAL HAZARD:
+--
+--      Two instructions need the same hardware resource simultaneously.
+--      Example: two memory accesses in the same cycle when there is only
+--      one memory port. Usually avoided by hardware duplication.
+--
+-- FORWARDING PATHS:
+--
+--   EX-to-EX:  A computed a result in EX (cycle 3). B needs it in EX (cycle 4).
+--              Forward from EX/MEM pipeline register to B's ALU input.
+--
+--   MEM-to-EX: A's result was 2 cycles ago (in MEM/WB). B needs it in EX.
+--              Forward from MEM/WB pipeline register.
+--
+--   Load-use:  A's LOAD result is in MEM (cycle 4). B needs it in EX (cycle 4).
+--              Forwarding is IMPOSSIBLE — must STALL for one cycle.
+--
+-- PipelineSlot: a snapshot of one pipeline stage.
+-- HazardResult: the decision returned by a detector.
+--
+-- See DataHazardDetector, ControlHazardDetector, and StructuralHazardDetector.
 
--- ---------------------------------------------------------------------------
--- PipelineSlot — the view of one pipeline stage as seen by hazard detectors
--- ---------------------------------------------------------------------------
--- The detectors operate on "slots" rather than full PipelineTokens.  This
--- keeps the hazard detection API independent of the exact token structure.
+-- ========================================================================
+-- PipelineSlot — a snapshot of one pipeline stage
+-- ========================================================================
+--
+-- When you call detect(), you pass in PipelineSlot objects describing what
+-- is currently in each pipeline stage (ID, EX, MEM stages).
 --
 -- Fields:
---   valid             — is there a real instruction here? (false = bubble/empty)
---   pc                — program counter of the instruction in this slot
---   source_regs       — list of source register indices (rs1, rs2)
---   dest_reg          — destination register index (-1 = none)
---   dest_value        — current value that would be written to dest_reg
---   mem_read          — is this a load instruction?
---   mem_write         — is this a store instruction?
---   is_branch         — is this a branch instruction?
---   branch_taken      — was the branch actually taken? (resolved in EX)
+--   valid              — is there a real instruction here? (false = bubble/empty)
+--   pc                 — program counter of this instruction
+--   dest_reg           — register this instruction writes (-1 = none)
+--   dest_value         — current computed value (for forwarding)
+--   source_regs        — list of registers this instruction reads
+--   mem_read           — is this a LOAD instruction?
+--   is_branch          — is this a branch instruction?
+--   branch_taken       — was the branch actually taken?
 --   branch_predicted_taken — what did the predictor guess?
---   uses_alu          — does this instruction use the ALU?
---   uses_fp           — does this instruction use the FP unit?
+--   branch_target      — actual branch target address
 
 local PipelineSlot = {}
 PipelineSlot.__index = PipelineSlot
 
 function PipelineSlot.new(opts)
     opts = opts or {}
-    local self = setmetatable({}, PipelineSlot)
-    self.valid                  = opts.valid   ~= nil and opts.valid   or false
-    self.pc                     = opts.pc      or 0
-    self.source_regs            = opts.source_regs or {}
-    self.dest_reg               = opts.dest_reg    ~= nil and opts.dest_reg or -1
-    self.dest_value             = opts.dest_value  or 0
-    self.mem_read               = opts.mem_read    or false
-    self.mem_write              = opts.mem_write   or false
-    self.is_branch              = opts.is_branch   or false
-    self.branch_taken           = opts.branch_taken or false
-    self.branch_predicted_taken = opts.branch_predicted_taken or false
-    self.uses_alu               = opts.uses_alu or false
-    self.uses_fp                = opts.uses_fp  or false
-    return self
+    return setmetatable({
+        valid                  = opts.valid                  ~= false,  -- default true
+        pc                     = opts.pc                     or 0,
+        dest_reg               = opts.dest_reg               or -1,
+        dest_value             = opts.dest_value             or 0,
+        source_regs            = opts.source_regs            or {},
+        mem_read               = opts.mem_read               or false,
+        is_branch              = opts.is_branch              or false,
+        branch_taken           = opts.branch_taken           or false,
+        branch_predicted_taken = opts.branch_predicted_taken or false,
+        branch_target          = opts.branch_target          or 0,
+    }, PipelineSlot)
 end
 
--- empty_slot() — a slot representing an empty (bubble) stage
+--- Creates an empty (bubble/no-instruction) slot.
 function PipelineSlot.empty()
-    return PipelineSlot.new({valid = false})
+    return PipelineSlot.new({ valid = false })
 end
 
--- ---------------------------------------------------------------------------
--- HazardResult — what action the pipeline should take
--- ---------------------------------------------------------------------------
--- action:          "none" | "stall" | "flush" | "forward_ex" | "forward_mem"
--- stall_cycles:    how many cycles to stall (usually 1)
--- flush_count:     how many stages to flush (usually 2 for 5-stage pipeline)
--- forwarded_value: the value being forwarded
--- forwarded_from:  "EX" or "MEM"
--- reason:          human-readable explanation (for debugging)
+-- ========================================================================
+-- HazardResult — the detector's decision
+-- ========================================================================
+--
+-- The detector returns a HazardResult. The pipeline reads it to decide
+-- what to do this cycle.
+--
+-- Actions:
+--   "none"        — no hazard, proceed normally
+--   "stall"       — insert a bubble and freeze earlier stages
+--   "flush"       — discard speculative instructions (branch misprediction)
+--   "forward_ex"  — forward value from EX stage to the ALU input
+--   "forward_mem" — forward value from MEM stage to the ALU input
+--
+-- Priority: flush > stall > forward_ex > forward_mem > none
 
 local HazardResult = {}
 HazardResult.__index = HazardResult
 
 function HazardResult.new(opts)
     opts = opts or {}
-    local self = setmetatable({}, HazardResult)
-    self.action          = opts.action          or "none"
-    self.stall_cycles    = opts.stall_cycles    or 0
-    self.flush_count     = opts.flush_count     or 0
-    self.forwarded_value  = opts.forwarded_value  or 0
-    self.forwarded_from  = opts.forwarded_from  or ""
-    self.reason          = opts.reason          or ""
-    return self
+    return setmetatable({
+        action           = opts.action           or "none",
+        stall_cycles     = opts.stall_cycles     or 0,
+        forwarded_value  = opts.forwarded_value  or 0,
+        forwarded_from   = opts.forwarded_from   or "",
+        flush_target     = opts.flush_target     or 0,
+        reason           = opts.reason           or "no hazard detected",
+    }, HazardResult)
 end
 
--- Priority ordering for hazard actions (higher = more urgent)
-local function action_priority(action)
-    if action == "none"        then return 0 end
-    if action == "forward_mem" then return 1 end
-    if action == "forward_ex"  then return 2 end
-    if action == "stall"       then return 3 end
-    if action == "flush"       then return 4 end
-    return 0
-end
+-- Priority levels for picking the "worst" (highest priority) hazard
+local PRIORITY = {
+    none        = 0,
+    forward_mem = 1,
+    forward_ex  = 2,
+    stall       = 3,
+    flush       = 4,
+}
 
--- pick_higher_priority(a, b) → whichever HazardResult has higher priority
 local function pick_higher_priority(a, b)
-    if action_priority(b.action) > action_priority(a.action) then
-        return b
-    end
-    return a
+    local pa = PRIORITY[a.action] or 0
+    local pb = PRIORITY[b.action] or 0
+    if pb > pa then return b else return a end
 end
 
--- hex4(n) → "00AB" style hex string for PC display
-local function hex4(n)
-    return string.format("%04X", n or 0)
-end
-
--- ---------------------------------------------------------------------------
--- DataHazardDetector — RAW (Read After Write) hazard detection
--- ---------------------------------------------------------------------------
--- The classic data hazard: instruction B reads a register that instruction A
--- has not yet written back.
+-- ========================================================================
+-- DataHazardDetector
+-- ========================================================================
 --
--- FORWARDING PATHS (from newest to oldest):
---   EX forwarding:  instruction A is in EX, result available from EX/MEM reg
---   MEM forwarding: instruction A is in MEM, result available from MEM/WB reg
+-- Detects RAW (Read After Write) hazards between the ID stage and the
+-- EX/MEM stages. Returns the highest-priority action needed.
 --
--- STALL: load-use hazard — A is a LOAD in EX; B in ID needs the value.
---   The load does not complete until MEM, which is one stage too late.
---   The pipeline must insert a bubble and wait one cycle.
+-- Algorithm:
+--   For each source register read by the ID-stage instruction:
+--     1. Does EX have a pending write to that register?
+--        → If EX instruction is a LOAD: stall (MEM-to-EX forward would be
+--          too late — the value won't be ready until MEM ends, but we need
+--          it in EX which is EARLIER)
+--        → Otherwise: forward from EX
+--     2. Does MEM have a pending write to that register?
+--        → Forward from MEM
+--     3. No dependency → no action needed
+--   Return the highest-priority result across all source registers.
 
 local DataHazardDetector = {}
 DataHazardDetector.__index = DataHazardDetector
@@ -136,19 +164,24 @@ function DataHazardDetector.new()
     return setmetatable({}, DataHazardDetector)
 end
 
--- detect(id_slot, ex_slot, mem_slot) → HazardResult
--- id_slot  — instruction currently in ID (the consumer)
--- ex_slot  — instruction currently in EX (potential producer)
--- mem_slot — instruction currently in MEM (potential producer)
+--- Detects data hazards between the instruction in the ID stage and the
+--- instructions currently in EX and MEM.
+--
+-- @param id_slot   PipelineSlot  The instruction being decoded
+-- @param ex_slot   PipelineSlot  The instruction currently executing
+-- @param mem_slot  PipelineSlot  The instruction in the memory access stage
+-- @return HazardResult
 function DataHazardDetector:detect(id_slot, ex_slot, mem_slot)
     if not id_slot.valid then
-        return HazardResult.new({reason = "ID stage is empty (bubble)"})
-    end
-    if #id_slot.source_regs == 0 then
-        return HazardResult.new({reason = "instruction has no source registers"})
+        return HazardResult.new({ reason = "ID stage is empty (bubble)" })
     end
 
-    local worst = HazardResult.new({reason = "no data dependencies detected"})
+    if #id_slot.source_regs == 0 then
+        return HazardResult.new({ reason = "instruction has no source registers" })
+    end
+
+    -- Check all source registers and pick the worst hazard
+    local worst = HazardResult.new({ reason = "no data dependencies detected" })
     for _, src_reg in ipairs(id_slot.source_regs) do
         local result = self:_check_single_register(src_reg, ex_slot, mem_slot)
         worst = pick_higher_priority(worst, result)
@@ -157,54 +190,62 @@ function DataHazardDetector:detect(id_slot, ex_slot, mem_slot)
 end
 
 function DataHazardDetector:_check_single_register(src_reg, ex_slot, mem_slot)
-    -- Load-use hazard: EX is a load, and ID needs its result
+    -- EX stage: load-use hazard (cannot forward — must stall)
     if ex_slot.valid and ex_slot.dest_reg == src_reg and ex_slot.mem_read then
         return HazardResult.new({
-            action       = "stall",
+            action      = "stall",
             stall_cycles = 1,
-            reason       = string.format(
-                "load-use hazard: R%d is being loaded by instruction at PC=0x%s — must stall 1 cycle",
-                src_reg, hex4(ex_slot.pc)),
+            reason      = string.format(
+                "load-use hazard: R%d is being loaded by instruction at PC=0x%04X — must stall 1 cycle",
+                src_reg, ex_slot.pc
+            ),
         })
     end
 
-    -- EX forwarding: EX has a result we can bypass
+    -- EX stage: normal RAW hazard (forward from EX)
     if ex_slot.valid and ex_slot.dest_reg == src_reg then
         return HazardResult.new({
             action          = "forward_ex",
-            forwarded_value  = ex_slot.dest_value,
+            forwarded_value = ex_slot.dest_value,
             forwarded_from  = "EX",
             reason          = string.format(
-                "RAW hazard on R%d: forwarding value %d from EX (PC=0x%s)",
-                src_reg, ex_slot.dest_value, hex4(ex_slot.pc)),
+                "RAW hazard on R%d: forwarding value %d from EX stage (PC=0x%04X)",
+                src_reg, ex_slot.dest_value, ex_slot.pc
+            ),
         })
     end
 
-    -- MEM forwarding: MEM has a result we can bypass
+    -- MEM stage: RAW hazard (forward from MEM)
     if mem_slot.valid and mem_slot.dest_reg == src_reg then
         return HazardResult.new({
             action          = "forward_mem",
-            forwarded_value  = mem_slot.dest_value,
+            forwarded_value = mem_slot.dest_value,
             forwarded_from  = "MEM",
             reason          = string.format(
-                "RAW hazard on R%d: forwarding value %d from MEM (PC=0x%s)",
-                src_reg, mem_slot.dest_value, hex4(mem_slot.pc)),
+                "RAW hazard on R%d: forwarding value %d from MEM stage (PC=0x%04X)",
+                src_reg, mem_slot.dest_value, mem_slot.pc
+            ),
         })
     end
 
-    return HazardResult.new({reason = string.format("R%d has no pending writes", src_reg)})
+    return HazardResult.new({
+        reason = string.format("R%d has no pending writes in EX or MEM", src_reg),
+    })
 end
 
--- ---------------------------------------------------------------------------
--- ControlHazardDetector — branch misprediction detection
--- ---------------------------------------------------------------------------
--- When a branch resolves in the EX stage and the prediction was wrong, the
--- instructions fetched from the wrong path (in IF and ID) must be flushed.
+-- ========================================================================
+-- ControlHazardDetector
+-- ========================================================================
 --
--- FLUSH PENALTY for a classic 5-stage pipeline resolving branches in EX:
---   2 cycles (the instructions in IF and ID are discarded)
+-- Detects branch mispredictions. When a branch instruction in the EX stage
+-- is resolved, we compare the actual outcome with the predictor's guess.
+-- If they differ, the pipeline must flush the speculative instructions that
+-- were fetched after the branch.
 --
--- For deeper pipelines, the penalty is higher (more stages between IF and EX).
+-- In a 5-stage pipeline, the branch is resolved in EX (stage 3).
+-- Two instructions have been fetched after the branch (in IF and ID).
+-- On a misprediction, those two stages are flushed and the PC is redirected
+-- to the correct target.
 
 local ControlHazardDetector = {}
 ControlHazardDetector.__index = ControlHazardDetector
@@ -213,131 +254,99 @@ function ControlHazardDetector.new()
     return setmetatable({}, ControlHazardDetector)
 end
 
--- detect(ex_slot) → HazardResult
+--- Detects a branch misprediction in the EX stage.
+--
+-- @param ex_slot  PipelineSlot  The instruction in the EX stage
+-- @return HazardResult
 function ControlHazardDetector:detect(ex_slot)
     if not ex_slot.valid then
-        return HazardResult.new({reason = "EX stage is empty (bubble)"})
+        return HazardResult.new({ reason = "EX stage is empty (bubble)" })
     end
+
     if not ex_slot.is_branch then
-        return HazardResult.new({reason = "EX stage instruction is not a branch"})
+        return HazardResult.new({ reason = "EX stage instruction is not a branch" })
     end
+
     if ex_slot.branch_predicted_taken == ex_slot.branch_taken then
         local dir = ex_slot.branch_taken and "taken" or "not taken"
         return HazardResult.new({
-            reason = string.format("branch at PC=0x%s correctly predicted %s", hex4(ex_slot.pc), dir),
+            reason = string.format("branch correctly predicted as %s at PC=0x%04X", dir, ex_slot.pc),
         })
     end
 
-    -- Misprediction: flush IF and ID (2 stages)
-    local dir
-    if ex_slot.branch_taken then
-        dir = "predicted not-taken, actually taken"
-    else
-        dir = "predicted taken, actually not-taken"
-    end
+    -- Misprediction detected → flush
     return HazardResult.new({
         action      = "flush",
-        flush_count = 2,
+        flush_target = ex_slot.branch_taken and ex_slot.branch_target or (ex_slot.pc + 4),
         reason      = string.format(
-            "branch misprediction at PC=0x%s: %s — flushing IF and ID stages",
-            hex4(ex_slot.pc), dir),
+            "branch mispredicted at PC=0x%04X: predicted %s but actually %s — flushing pipeline, redirecting to 0x%04X",
+            ex_slot.pc,
+            ex_slot.branch_predicted_taken and "taken" or "not taken",
+            ex_slot.branch_taken and "taken" or "not taken",
+            ex_slot.branch_taken and ex_slot.branch_target or (ex_slot.pc + 4)
+        ),
     })
 end
 
--- ---------------------------------------------------------------------------
--- StructuralHazardDetector — resource conflict detection
--- ---------------------------------------------------------------------------
--- Modern CPUs avoid most structural hazards through hardware duplication
--- (split L1 caches, multiple ALUs).  This detector models:
---   - Execution unit conflicts: two instructions both need the ALU (or FP unit)
---   - Memory port conflict: unified cache causes IF and MEM to contend
+-- ========================================================================
+-- StructuralHazardDetector
+-- ========================================================================
+--
+-- Detects resource conflicts. In practice, most structural hazards are
+-- eliminated in hardware by:
+--   - Split L1 cache (instruction + data caches)
+--   - Multiple register file read/write ports
+--   - Dedicated execution units (ALU, FPU, load/store unit)
+--
+-- We detect two simple cases:
+--   1. Both IF and MEM stages need memory simultaneously (unified cache)
+--   2. Two instructions write back to the register file in the same cycle
 
 local StructuralHazardDetector = {}
 StructuralHazardDetector.__index = StructuralHazardDetector
 
--- new(opts)
---   opts.num_alus      — number of ALU units (default 1)
---   opts.num_fp_units  — number of FP units (default 1)
---   opts.split_caches  — true = split L1I+L1D, no memory conflict (default true)
-function StructuralHazardDetector.new(opts)
-    opts = opts or {}
-    local self = setmetatable({}, StructuralHazardDetector)
-    self.num_alus     = opts.num_alus     or 1
-    self.num_fp_units = opts.num_fp_units or 1
-    -- Use explicit nil check so that passing split_caches=false is respected.
-    -- The classic Lua idiom `x ~= nil and x or default` fails when x=false.
-    if opts.split_caches ~= nil then
-        self.split_caches = opts.split_caches
-    else
-        self.split_caches = true  -- default: split caches (no memory port conflict)
-    end
-    return self
+function StructuralHazardDetector.new()
+    return setmetatable({}, StructuralHazardDetector)
 end
 
--- detect(id_slot, ex_slot, opts) → HazardResult
---   opts.if_stage  — PipelineSlot for IF (used for memory conflict check)
---   opts.mem_stage — PipelineSlot for MEM
-function StructuralHazardDetector:detect(id_slot, ex_slot, opts)
-    opts = opts or {}
+--- Detects structural hazards.
+--
+-- @param mem_slot  PipelineSlot  The instruction in the MEM stage
+-- @param wb_slot   PipelineSlot  The instruction in the WB stage
+-- @param has_split_cache  boolean  True if L1I and L1D are separate (no conflict)
+-- @return HazardResult
+function StructuralHazardDetector:detect(mem_slot, wb_slot, has_split_cache)
+    has_split_cache = has_split_cache ~= false  -- default: split cache (no hazard)
 
-    local exec_result = self:_check_execution_unit(id_slot, ex_slot)
-    if exec_result.action ~= "none" then
-        return exec_result
-    end
-
-    if opts.if_stage and opts.mem_stage then
-        return self:_check_memory_port(opts.if_stage, opts.mem_stage)
-    end
-
-    return HazardResult.new({reason = "no structural hazards — all resources available"})
-end
-
-function StructuralHazardDetector:_check_execution_unit(id_slot, ex_slot)
-    if not id_slot.valid or not ex_slot.valid then
-        return HazardResult.new({reason = "one or both stages are empty (bubble)"})
-    end
-
-    if id_slot.uses_alu and ex_slot.uses_alu and self.num_alus < 2 then
+    -- Check memory port conflict (IF + MEM both accessing a unified cache)
+    if not has_split_cache and mem_slot.valid and mem_slot.mem_read then
         return HazardResult.new({
-            action       = "stall",
+            action = "stall",
             stall_cycles = 1,
-            reason       = string.format(
-                "structural hazard: both ID (PC=0x%s) and EX (PC=0x%s) need the ALU, but only %d ALU available",
-                hex4(id_slot.pc), hex4(ex_slot.pc), self.num_alus),
+            reason = "structural hazard: unified cache — IF and MEM both need memory",
         })
     end
 
-    if id_slot.uses_fp and ex_slot.uses_fp and self.num_fp_units < 2 then
+    -- Check register file write port conflict
+    if mem_slot.valid and wb_slot.valid and
+       mem_slot.dest_reg >= 0 and wb_slot.dest_reg >= 0 and
+       mem_slot.dest_reg == wb_slot.dest_reg then
         return HazardResult.new({
-            action       = "stall",
+            action = "stall",
             stall_cycles = 1,
-            reason       = string.format(
-                "structural hazard: both ID and EX need the FP unit, but only %d FP unit available",
-                self.num_fp_units),
+            reason = string.format(
+                "structural hazard: both MEM and WB want to write R%d — need two write ports",
+                mem_slot.dest_reg
+            ),
         })
     end
 
-    return HazardResult.new({reason = "no execution unit conflict"})
+    return HazardResult.new({ reason = "no structural hazard detected" })
 end
 
-function StructuralHazardDetector:_check_memory_port(if_slot, mem_slot)
-    if self.split_caches then
-        return HazardResult.new({reason = "split caches — no memory port conflict"})
-    end
-
-    if if_slot.valid and mem_slot.valid and (mem_slot.mem_read or mem_slot.mem_write) then
-        local access = mem_slot.mem_read and "load" or "store"
-        return HazardResult.new({
-            action       = "stall",
-            stall_cycles = 1,
-            reason       = string.format(
-                "structural hazard: IF (PC=0x%s) and MEM (%s at PC=0x%s) both need the shared memory bus",
-                hex4(if_slot.pc), access, hex4(mem_slot.pc)),
-        })
-    end
-
-    return HazardResult.new({reason = "no memory port conflict"})
-end
+-- ========================================================================
+-- Module exports
+-- ========================================================================
 
 return {
     PipelineSlot             = PipelineSlot,

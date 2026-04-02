@@ -1,26 +1,23 @@
-# coding-adventures-arm1-simulator (Lua)
+# arm1-simulator (Lua)
 
-ARM1 (ARMv1) behavioral instruction set simulator — the complete ARMv1 instruction set in pure Lua.
+Behavioral simulator of the ARM1 processor — the first commercial ARM chip, designed by Sophie Wilson and Steve Furber at Acorn Computers and first powered on April 26, 1985.
 
-## What Is the ARM1?
+## What is the ARM1?
 
-The ARM1 was designed by Sophie Wilson and Steve Furber at Acorn Computers in Cambridge, UK. First silicon powered on April 26, 1985 — and worked correctly on the very first attempt. With just 25,000 transistors and a 26-bit address space (64 MiB), its accidentally low power consumption (~0.1W) later made the ARM architecture dominant in mobile computing, with over 250 billion chips shipped.
+The ARM1 had just 25,000 transistors yet implemented a complete 32-bit RISC instruction set. Its accidental low power consumption (~0.1W) made ARM architecture dominant in mobile. Today, ARM-based chips are in over 250 billion devices — every smartphone, tablet, and IoT device.
 
-## Architecture
+The ARM1 famously worked correctly on its very first power-on. Sophie Wilson tested it by typing `PRINT PI` at a BBC Micro and got the right answer.
 
-```
-Every ARM instruction:
-  Bits 31:28 — Condition code (16 conditions, every instr is conditional)
-  Bits 27:26 — Instruction type
-  Bits 25:0  — Operands, registers, immediate values
+## Key Features
 
-R15 = PC (bits 25:2) + N/Z/C/V/I/F flags (bits 31:26) + mode (bits 1:0)
-
-Physical register file (27 registers):
-  R0-R15       — base set (always visible)
-  R8-R14 (FIQ) — banked for fast interrupt
-  R13-R14 (IRQ, SVC) — banked for interrupt/supervisor modes
-```
+- 32-bit RISC with fixed 32-bit instructions
+- 16 visible registers (R0-R15), 25 physical (banked modes)
+- **R15 = PC + flags + mode** (unique to ARMv1 — later ARM split these)
+- **Conditional execution on every instruction** — not just branches
+- **Barrel shifter** — free shift/rotate on every data operation
+- 26-bit address space (64 MiB)
+- 4 processor modes: USR, FIQ, IRQ, SVC (with banked registers)
+- NO multiply instruction (added in ARM2)
 
 ## Installation
 
@@ -33,52 +30,57 @@ luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec
 ```lua
 local ARM1 = require("coding_adventures.arm1_simulator")
 
-local cpu = ARM1.new(4096)
-ARM1.load_instructions(cpu, {
-    ARM1.encode_mov_imm(ARM1.COND_AL, 0, 42),  -- MOV R0, #42
-    ARM1.encode_halt(),
+-- Create a simulator with 64 KiB memory
+local cpu = ARM1.new(64 * 1024)
+
+-- Load a simple program: R2 = R0 + R1
+cpu:load_instructions({
+  ARM1.encode_mov_imm(ARM1.COND_AL, 0, 1),    -- MOV R0, #1
+  ARM1.encode_mov_imm(ARM1.COND_AL, 1, 2),    -- MOV R1, #2
+  ARM1.encode_alu_reg(ARM1.COND_AL, ARM1.OP_ADD, false, 2, 0, 1), -- ADD R2, R0, R1
+  ARM1.encode_halt()
 })
-local traces = ARM1.run(cpu, 100)
-print(ARM1.read_register(cpu, 0))  -- 42
+
+-- Run until halted
+local traces = cpu:run(100)
+print("R2 =", cpu:read_register(2))  -- 3
+
+-- Conditional execution example: abs(R0)
+-- CMP R0, #0 / RSBLT R0, R0, #0  (two instructions, no branch!)
 ```
 
-## API
+## Instruction Set
 
-```lua
--- Construction
-local cpu = ARM1.new(memory_size)   -- default 1MB
-ARM1.reset(cpu)
+### Data Processing (16 operations)
+AND, EOR, SUB, RSB, ADD, ADC, SBC, RSC, TST, TEQ, CMP, CMN, ORR, MOV, BIC, MVN
 
--- Registers
-ARM1.read_register(cpu, n)          -- n = 0..15
-ARM1.write_register(cpu, n, value)
-ARM1.get_pc(cpu)                    -- 26-bit byte address
-ARM1.set_pc(cpu, addr)
-ARM1.get_flags(cpu)                 -- {n, z, c, v} booleans
-ARM1.get_mode(cpu)                  -- MODE_USR/FIQ/IRQ/SVC
+All support:
+- Immediate operand with 8-bit value × 16 rotation positions
+- Register operand with optional shift (LSL, LSR, ASR, ROR, RRX)
+- S-bit to update condition flags
 
--- Memory
-ARM1.read_word(cpu, addr)
-ARM1.write_word(cpu, addr, value)
-ARM1.read_byte(cpu, addr)
-ARM1.write_byte(cpu, addr, value)
-ARM1.load_instructions(cpu, {word, ...})
+### Load/Store
+LDR, STR, LDRB, STRB with:
+- Pre/post-indexed addressing
+- Add/subtract offset
+- Write-back
 
--- Execution
-local trace = ARM1.step(cpu)
-local traces = ARM1.run(cpu, max_steps)
+### Block Transfer
+LDM, STM in all four modes: IA, IB, DA, DB
 
--- Core functions (also available directly)
-ARM1.barrel_shift(value, shift_type, amount, carry_in, by_register)
-ARM1.decode_immediate(imm8, rotate)
-ARM1.alu_execute(opcode, a, b, carry_in, shifter_carry, old_v)
-ARM1.evaluate_condition(cond, flags)
-ARM1.decode(instruction)
-ARM1.disassemble(decoded)
+### Branch
+B, BL — with all 16 condition codes
+
+### SWI
+Software interrupt for OS calls; `SWI 0x123456` acts as a halt instruction
+
+## Stack Usage
+
+```
+code/specs/07e-arm1-simulator.md  ← specification
+code/packages/lua/arm1_simulator/ ← this package
 ```
 
-## Running Tests
+## CHANGELOG
 
-```bash
-cd tests && busted . --verbose --pattern=test_
-```
+See [CHANGELOG.md](CHANGELOG.md).

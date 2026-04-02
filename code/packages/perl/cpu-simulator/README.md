@@ -1,6 +1,6 @@
 # CodingAdventures::CpuSimulator (Perl)
 
-CPU simulator building blocks: byte-addressable Memory, SparseMemory, and RegisterFile.
+CPU simulator building blocks — Memory, SparseMemory, and RegisterFile.
 Part of the [coding-adventures](https://github.com/adhithyan15/coding-adventures) project.
 
 ## Synopsis
@@ -8,15 +8,16 @@ Part of the [coding-adventures](https://github.com/adhithyan15/coding-adventures
 ```perl
 use CodingAdventures::CpuSimulator;
 
-my $m = CodingAdventures::CpuSimulator::Memory->new(65536);
-$m->write_word(0, 0xDEADBEEF);
-printf "0x%08X\n", $m->read_word(0);  # 0xDEADBEEF
+my $mem = CodingAdventures::CpuSimulator::Memory->new(65536);
+$mem->write_word(0, 0xDEADBEEF);
+printf "0x%08X\n", $mem->read_word(0);  # 0xDEADBEEF
 
 my $rf = CodingAdventures::CpuSimulator::RegisterFile->new(16, 32);
-$rf->write(1, 0xCAFE);
-printf "%d\n", $rf->read(1);  # 51966
+$rf->write(0, 42);
+print $rf->read(0);  # 42
 ```
 
-## Dependencies
+## Description
 
-None.
+Provides the fundamental storage primitives for a CPU simulator.
+See `code/specs/08-cpu-simulator.md` for the full specification.

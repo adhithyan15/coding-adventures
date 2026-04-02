@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "CPU simulator building blocks: Memory, SparseMemory, RegisterFile",
+    summary = "CPU simulator — Memory, SparseMemory, and RegisterFile",
     license = "MIT",
 }
 dependencies = {

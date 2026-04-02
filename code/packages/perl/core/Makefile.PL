@@ -5,13 +5,13 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::Core',
     VERSION_FROM     => 'lib/CodingAdventures/Core.pm',
-    ABSTRACT         => 'Complete CPU core: pipeline + memory + register file with ISA decoder injection',
+    ABSTRACT         => 'CPU core — integrates pipeline, register file, memory controller',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
     PREREQ_PM        => {
-        'CodingAdventures::CpuPipeline'  => '0.01',
-        'CodingAdventures::CpuSimulator' => '0.01',
+        'CodingAdventures::CpuPipeline'  => 0,
+        'CodingAdventures::CpuSimulator' => 0,
     },
     TEST_REQUIRES    => {
         'Test2::V0' => 0,

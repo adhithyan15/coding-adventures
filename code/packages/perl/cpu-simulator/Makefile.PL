@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::CpuSimulator',
     VERSION_FROM     => 'lib/CodingAdventures/CpuSimulator.pm',
-    ABSTRACT         => 'CPU simulator building blocks: Memory, SparseMemory, RegisterFile',
+    ABSTRACT         => 'CPU simulator — Memory, SparseMemory, and RegisterFile',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',

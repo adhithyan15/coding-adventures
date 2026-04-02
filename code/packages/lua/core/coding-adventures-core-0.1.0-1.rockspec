@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "Complete CPU core: pipeline + memory + register file with ISA decoder injection",
+    summary = "CPU core — integrates pipeline, register file, memory controller, and ISA decoder",
     license = "MIT",
 }
 dependencies = {

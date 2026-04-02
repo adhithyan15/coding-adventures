@@ -4,18 +4,16 @@
 
 Initial release.
 
-- `PipelineSlot` — ISA-agnostic view of one pipeline stage for hazard detectors
-  - `new(opts)` — configurable slot
-  - `empty()` — represents a bubble/empty stage
-- `HazardResult` — result of hazard detection
-  - `action` — "none" | "stall" | "flush" | "forward_ex" | "forward_mem"
-  - `stall_cycles`, `flush_count`, `forwarded_value`, `forwarded_from`, `reason`
-- `DataHazardDetector` — RAW hazard detection with forwarding and stall
-  - `detect(id_slot, ex_slot, mem_slot)` — returns HazardResult
-  - Detects load-use (stall), EX forwarding, MEM forwarding
+- `PipelineSlot` — snapshot of one pipeline stage for hazard detection
+- `HazardResult` — detection result with action, forwarded value, reason
+- `DataHazardDetector` — detects RAW (Read After Write) hazards
+  - EX-to-EX forwarding (`"forward_ex"`)
+  - MEM-to-EX forwarding (`"forward_mem"`)
+  - Load-use stall (`"stall"`) — when LOAD result needed immediately
   - Priority: stall > forward_ex > forward_mem > none
-- `ControlHazardDetector` — branch misprediction detection
-  - `detect(ex_slot)` — flushes IF+ID (flush_count=2) on misprediction
-- `StructuralHazardDetector` — resource conflict detection
-  - `new(opts)` — configure num_alus, num_fp_units, split_caches
-  - `detect(id_slot, ex_slot, opts)` — ALU/FP/memory-port conflicts
+- `ControlHazardDetector` — detects branch mispredictions
+  - Flush on misprediction with correct PC redirect
+  - Correctly predicted branches return `"none"`
+- `StructuralHazardDetector` — detects resource conflicts
+  - Unified cache conflict (IF + MEM both need memory)
+  - Register file write-port conflict (two simultaneous writes)
