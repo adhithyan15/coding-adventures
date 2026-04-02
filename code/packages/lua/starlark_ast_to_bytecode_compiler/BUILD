@@ -1,3 +1,8 @@
+mkdir -p "$HOME/.luarocks/lib/luarocks/rocks-5.4"
+[ -f "$HOME/.luarocks/lib/luarocks/rocks-5.4/manifest" ] || printf 'commands={}
+dependencies={}
+modules={}
+repository={}' > "$HOME/.luarocks/lib/luarocks/rocks-5.4/manifest"
 (cd ../directed_graph && luarocks make --local --deps-mode none coding-adventures-directed-graph-0.1.0-1.rockspec)
 (cd ../state_machine && luarocks make --local --deps-mode none coding-adventures-state-machine-0.1.0-1.rockspec)
 (cd ../grammar_tools && luarocks make --local --deps-mode none coding-adventures-grammar-tools-0.1.0-1.rockspec)
