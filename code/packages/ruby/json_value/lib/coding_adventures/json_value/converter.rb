@@ -231,8 +231,10 @@ module CodingAdventures
     # The token's type tells us what kind of JSON value it is:
     #
     #   STRING -> JsonValue::String
-    #     The value is already unescaped by the lexer, so "\n" in
-    #     the JSON source is stored as an actual newline character.
+    #     The JSON grammar uses `escapes: none`, which means the lexer
+    #     returns STRING tokens with raw escape sequences (e.g. `\n` as
+    #     two characters: backslash and 'n'). We decode all JSON escape
+    #     sequences here before constructing the JsonValue::String.
     #
     #   NUMBER -> JsonValue::Number
     #     We inspect the string representation to decide integer vs
@@ -249,7 +251,7 @@ module CodingAdventures
 
       case type_name
       when "STRING"
-        String.new(value: token.value)
+        String.new(value: unescape_json_string(token.value))
       when "NUMBER"
         # Determine if the number is an integer or float by examining
         # the string representation. JSON spec says:
@@ -334,7 +336,7 @@ module CodingAdventures
 
       node.children.each do |child|
         if child.is_a?(CodingAdventures::Lexer::Token) && child.type.to_s == "STRING"
-          key = child.value
+          key = unescape_json_string(child.value)
         elsif child.is_a?(CodingAdventures::Parser::ASTNode) && child.rule_name == "value"
           val = from_ast(child)
         end
@@ -370,8 +372,73 @@ module CodingAdventures
       Array.new(elements: elements)
     end
 
+    # Decode JSON escape sequences in a string token value.
+    #
+    # The JSON grammar uses `escapes: none`, which tells the lexer to
+    # strip the surrounding quotes but leave all backslash sequences
+    # exactly as written in the source. For example, the JSON text:
+    #
+    #   "hello\nworld"
+    #
+    # arrives at this method as the 11-character string:
+    #
+    #   hello\nworld
+    #
+    # where \n is two characters (backslash + 'n'). We decode:
+    #
+    #   \"   -> "
+    #   \\   -> \
+    #   \/   -> /
+    #   \b   -> backspace (U+0008)
+    #   \f   -> form feed (U+000C)
+    #   \n   -> newline   (U+000A)
+    #   \r   -> carriage return (U+000D)
+    #   \t   -> horizontal tab (U+0009)
+    #   \uXXXX -> the Unicode code point XXXX
+    #
+    # Any other backslash sequence is passed through unchanged.
+    def self.unescape_json_string(s)
+      result = +""
+      i = 0
+      while i < s.length
+        if s[i] == "\\" && i + 1 < s.length
+          case s[i + 1]
+          when '"'  then result << '"';  i += 2
+          when '\\' then result << '\\'; i += 2
+          when '/'  then result << '/';  i += 2
+          when 'b'  then result << "\b"; i += 2
+          when 'f'  then result << "\f"; i += 2
+          when 'n'  then result << "\n"; i += 2
+          when 'r'  then result << "\r"; i += 2
+          when 't'  then result << "\t"; i += 2
+          when 'u'
+            if i + 5 < s.length
+              hex = s[i + 2, 4]
+              if hex =~ /\A[0-9a-fA-F]{4}\z/
+                result << hex.to_i(16).chr(Encoding::UTF_8)
+                i += 6
+              else
+                result << s[i]
+                i += 1
+              end
+            else
+              result << s[i]
+              i += 1
+            end
+          else
+            result << s[i]
+            i += 1
+          end
+        else
+          result << s[i]
+          i += 1
+        end
+      end
+      result
+    end
+
     private_class_method :convert_token, :convert_value_node,
                          :convert_object_node, :convert_pair_node,
-                         :convert_array_node
+                         :convert_array_node, :unescape_json_string
   end
 end

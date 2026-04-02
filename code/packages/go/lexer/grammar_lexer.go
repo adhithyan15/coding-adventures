@@ -300,6 +300,16 @@ type GrammarLexer struct {
 	// This allows SQL grammars to accept SELECT/select/Select etc. and
 	// still match grammar literals like "SELECT".
 	caseInsensitive bool
+
+	// originalSource stores the raw, unmodified input string.
+	//
+	// In case-insensitive mode the working source (l.source) is lowercased
+	// to make keyword pattern matching case-insensitive.  Without this field
+	// STRING token values would also be lowercased — 'Alice' would become
+	// 'alice'.  By keeping originalSource we can extract the body of every
+	// STRING token from the original text at the same byte offset, preserving
+	// whatever case the user wrote.
+	originalSource string
 }
 
 // NewGrammarLexer creates a new grammar-driven lexer.
@@ -410,6 +420,7 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 
 	return &GrammarLexer{
 		source:          src,
+		originalSource:  source,
 		grammar:         grammar,
 		pos:             0,
 		line:            1,
@@ -638,19 +649,31 @@ func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
 			// sequences as raw text. This is used by grammars like TOML and CSS
 			// where different string types have different escape semantics — the
 			// semantic layer handles escape processing instead of the lexer.
+			//
+			// Case-preservation: in case-insensitive mode, l.source is the
+			// lowercased working copy, so `value` is already lowercase.  For
+			// STRING tokens we want to preserve the original case the user typed
+			// (e.g. 'Alice' must not become 'alice').  We re-read the same byte
+			// range from l.originalSource (which is never lowercased) and use
+			// that for the string body instead of `value`.
 			if strings.Contains(p.Name, "STRING") || (p.Alias != "" && strings.Contains(p.Alias, "STRING")) {
-				if len(value) >= 2 {
-					quote := value[0]
+				tokenLen := loc[1]
+				originalValue := value
+				if l.caseInsensitive && tokenLen > 0 && l.pos+tokenLen <= len(l.originalSource) {
+					originalValue = l.originalSource[l.pos : l.pos+tokenLen]
+				}
+				if len(originalValue) >= 2 {
+					quote := originalValue[0]
 					if quote == '"' || quote == '\'' {
 						// Check for triple-quoted strings (""" or ''')
-						if len(value) >= 6 && value[0] == value[1] && value[1] == value[2] {
-							inner := value[3 : len(value)-3]
+						if len(originalValue) >= 6 && originalValue[0] == originalValue[1] && originalValue[1] == originalValue[2] {
+							inner := originalValue[3 : len(originalValue)-3]
 							if l.grammar.EscapeMode != "none" {
 								inner = processEscapes(inner)
 							}
 							value = inner
 						} else {
-							inner := value[1 : len(value)-1]
+							inner := originalValue[1 : len(originalValue)-1]
 							if l.grammar.EscapeMode != "none" {
 								inner = processEscapes(inner)
 							}

@@ -99,6 +99,83 @@ _VALUE_TOKEN_TYPES = frozenset({"STRING", "NUMBER", "TRUE", "FALSE", "NULL"})
 
 
 # ---------------------------------------------------------------------------
+# JSON string escape processing
+# ---------------------------------------------------------------------------
+
+
+def _unescape_json_string(s: str) -> str:
+    """Decode JSON escape sequences in a string value.
+
+    The JSON grammar (json.tokens) uses ``escapes: none``, which tells the
+    lexer to strip the surrounding quotes from STRING tokens but leave all
+    escape sequences as raw character pairs (e.g. ``\\n`` stays as two
+    characters: backslash + ``n``).  This function decodes those raw
+    sequences into the corresponding Unicode characters, matching the
+    behaviour of ``json.loads`` on the string content.
+
+    Supported escape sequences::
+
+        \\\"  --> "      (double quote)
+        \\\\  --> \\      (backslash)
+        \\/   --> /      (forward slash — valid but unusual)
+        \\b   --> \\x08  (backspace)
+        \\f   --> \\x0c  (form feed)
+        \\n   --> \\n    (newline)
+        \\r   --> \\r    (carriage return)
+        \\t   --> \\t    (tab)
+        \\uXXXX --> the corresponding Unicode code point
+
+    Any other two-character sequence starting with ``\\`` is left unchanged
+    so that malformed inputs do not silently lose data.
+    """
+    result: list[str] = []
+    i = 0
+    while i < len(s):
+        if s[i] == "\\" and i + 1 < len(s):
+            next_ch = s[i + 1]
+            if next_ch == '"':
+                result.append('"')
+                i += 2
+            elif next_ch == "\\":
+                result.append("\\")
+                i += 2
+            elif next_ch == "/":
+                result.append("/")
+                i += 2
+            elif next_ch == "b":
+                result.append("\b")
+                i += 2
+            elif next_ch == "f":
+                result.append("\f")
+                i += 2
+            elif next_ch == "n":
+                result.append("\n")
+                i += 2
+            elif next_ch == "r":
+                result.append("\r")
+                i += 2
+            elif next_ch == "t":
+                result.append("\t")
+                i += 2
+            elif next_ch == "u" and i + 5 < len(s):
+                hex_digits = s[i + 2 : i + 6]
+                if all(c in "0123456789abcdefABCDEF" for c in hex_digits):
+                    result.append(chr(int(hex_digits, 16)))
+                    i += 6
+                else:
+                    result.append(s[i])
+                    i += 1
+            else:
+                # Unknown escape — preserve as-is (be lenient with malformed input).
+                result.append(s[i])
+                i += 1
+        else:
+            result.append(s[i])
+            i += 1
+    return "".join(result)
+
+
+# ---------------------------------------------------------------------------
 # from_ast: ASTNode --> JsonValue
 # ---------------------------------------------------------------------------
 
@@ -182,7 +259,12 @@ def _convert_token(token: Token) -> JsonValue:
     type_name = _token_type_name(token)
 
     if type_name == "STRING":
-        return JsonString(token.value)
+        # The JSON lexer uses "escapes: none" (in json.tokens), which means
+        # it strips the surrounding quotes but leaves escape sequences as raw
+        # two-character pairs (e.g. \n stays as backslash + n).  We decode
+        # those sequences here so that JsonString values contain real Unicode
+        # characters, matching the behaviour of json.loads.
+        return JsonString(_unescape_json_string(token.value))
 
     if type_name == "NUMBER":
         return _parse_number(token.value)

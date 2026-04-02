@@ -90,11 +90,18 @@ import "fmt"
 //	 0  |  d0
 //	 1  |  d1
 func Mux2(d0, d1, sel int) int {
-	validateBit(d0, "d0")
-	validateBit(d1, "d1")
-	validateBit(sel, "sel")
+	result, _ := StartNew[int]("logic-gates.Mux2", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("d0", d0)
+			op.AddProperty("d1", d1)
+			op.AddProperty("sel", sel)
+			validateBit(d0, "d0")
+			validateBit(d1, "d1")
+			validateBit(sel, "sel")
 
-	return OR(AND(d0, NOT(sel)), AND(d1, sel))
+			return rf.Generate(true, false, OR(AND(d0, NOT(sel)), AND(d1, sel)))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // Mux4 is a 4-to-1 Multiplexer — selects one of four inputs using 2
@@ -121,22 +128,30 @@ func Mux2(d0, d1, sel int) int {
 //
 // The sel parameter is a slice of 2 bits [s0, s1] (LSB first).
 func Mux4(d0, d1, d2, d3 int, sel []int) int {
-	validateBit(d0, "d0")
-	validateBit(d1, "d1")
-	validateBit(d2, "d2")
-	validateBit(d3, "d3")
+	result, _ := StartNew[int]("logic-gates.Mux4", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("d0", d0)
+			op.AddProperty("d1", d1)
+			op.AddProperty("d2", d2)
+			op.AddProperty("d3", d3)
+			validateBit(d0, "d0")
+			validateBit(d1, "d1")
+			validateBit(d2, "d2")
+			validateBit(d3, "d3")
 
-	if len(sel) != 2 {
-		panic(fmt.Sprintf("logicgates: Mux4 sel must have exactly 2 bits, got %d", len(sel)))
-	}
-	validateBits(sel, "sel")
+			if len(sel) != 2 {
+				panic(fmt.Sprintf("logicgates: Mux4 sel must have exactly 2 bits, got %d", len(sel)))
+			}
+			validateBits(sel, "sel")
 
-	// First level: sel[0] selects within each pair
-	r0 := Mux2(d0, d1, sel[0])
-	r1 := Mux2(d2, d3, sel[0])
+			// First level: sel[0] selects within each pair
+			r0 := Mux2(d0, d1, sel[0])
+			r1 := Mux2(d2, d3, sel[0])
 
-	// Second level: sel[1] selects between the two pairs
-	return Mux2(r0, r1, sel[1])
+			// Second level: sel[1] selects between the two pairs
+			return rf.Generate(true, false, Mux2(r0, r1, sel[1]))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // MuxN is an N-to-1 Multiplexer — selects one of N inputs using log2(N)
@@ -157,30 +172,34 @@ func Mux4(d0, d1, d2, d3 int, sel []int) int {
 //
 // Returns the selected data input value (0 or 1).
 func MuxN(inputs, sel []int) int {
-	n := len(inputs)
+	result, _ := StartNew[int]("logic-gates.MuxN", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			n := len(inputs)
 
-	if n < 2 {
-		panic("logicgates: MuxN inputs must have at least 2 elements")
-	}
+			if n < 2 {
+				panic("logicgates: MuxN inputs must have at least 2 elements")
+			}
 
-	// Check power of 2: a number is a power of 2 if it has exactly one bit set
-	if n&(n-1) != 0 {
-		panic(fmt.Sprintf("logicgates: MuxN inputs length must be a power of 2, got %d", n))
-	}
+			// Check power of 2: a number is a power of 2 if it has exactly one bit set
+			if n&(n-1) != 0 {
+				panic(fmt.Sprintf("logicgates: MuxN inputs length must be a power of 2, got %d", n))
+			}
 
-	expectedSelBits := 0
-	for tmp := n; tmp > 1; tmp >>= 1 {
-		expectedSelBits++
-	}
+			expectedSelBits := 0
+			for tmp := n; tmp > 1; tmp >>= 1 {
+				expectedSelBits++
+			}
 
-	if len(sel) != expectedSelBits {
-		panic(fmt.Sprintf("logicgates: MuxN sel must have %d bits for %d inputs, got %d", expectedSelBits, n, len(sel)))
-	}
+			if len(sel) != expectedSelBits {
+				panic(fmt.Sprintf("logicgates: MuxN sel must have %d bits for %d inputs, got %d", expectedSelBits, n, len(sel)))
+			}
 
-	validateBits(inputs, "inputs")
-	validateBits(sel, "sel")
+			validateBits(inputs, "inputs")
+			validateBits(sel, "sel")
 
-	return muxNInner(inputs, sel)
+			return rf.Generate(true, false, muxNInner(inputs, sel))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // muxNInner is the inner recursive helper for MuxN — skips validation
@@ -237,30 +256,36 @@ func muxNInner(inputs, sel []int) int {
 //
 // Returns a slice of nOutputs bits. Exactly one equals data, rest are 0.
 func Demux(data int, sel []int, nOutputs int) []int {
-	validateBit(data, "data")
+	result, _ := StartNew[[]int]("logic-gates.Demux", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			op.AddProperty("data", data)
+			op.AddProperty("nOutputs", nOutputs)
+			validateBit(data, "data")
 
-	if nOutputs < 2 || nOutputs&(nOutputs-1) != 0 {
-		panic(fmt.Sprintf("logicgates: Demux nOutputs must be a power of 2 >= 2, got %d", nOutputs))
-	}
+			if nOutputs < 2 || nOutputs&(nOutputs-1) != 0 {
+				panic(fmt.Sprintf("logicgates: Demux nOutputs must be a power of 2 >= 2, got %d", nOutputs))
+			}
 
-	expectedSelBits := 0
-	for tmp := nOutputs; tmp > 1; tmp >>= 1 {
-		expectedSelBits++
-	}
+			expectedSelBits := 0
+			for tmp := nOutputs; tmp > 1; tmp >>= 1 {
+				expectedSelBits++
+			}
 
-	if len(sel) != expectedSelBits {
-		panic(fmt.Sprintf("logicgates: Demux sel must have %d bits for %d outputs, got %d", expectedSelBits, nOutputs, len(sel)))
-	}
+			if len(sel) != expectedSelBits {
+				panic(fmt.Sprintf("logicgates: Demux sel must have %d bits for %d outputs, got %d", expectedSelBits, nOutputs, len(sel)))
+			}
 
-	validateBits(sel, "sel")
+			validateBits(sel, "sel")
 
-	// Use decoder to get one-hot output, then AND each with data
-	decoded := Decoder(sel)
-	outputs := make([]int, nOutputs)
-	for i := 0; i < nOutputs; i++ {
-		outputs[i] = AND(decoded[i], data)
-	}
-	return outputs
+			// Use decoder to get one-hot output, then AND each with data
+			decoded := Decoder(sel)
+			outputs := make([]int, nOutputs)
+			for i := 0; i < nOutputs; i++ {
+				outputs[i] = AND(decoded[i], data)
+			}
+			return rf.Generate(true, false, outputs)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // =========================================================================
@@ -306,42 +331,46 @@ func Demux(data int, sel []int, nOutputs int) []int {
 //
 // Returns a slice of 2^N bits, exactly one of which is 1 (one-hot encoding).
 func Decoder(inputs []int) []int {
-	if len(inputs) < 1 {
-		panic("logicgates: Decoder inputs must have at least 1 element")
-	}
-
-	validateBits(inputs, "inputs")
-
-	n := len(inputs)
-	nOutputs := 1 << n // 2^n
-
-	// Precompute complements once
-	complements := make([]int, n)
-	for i, b := range inputs {
-		complements[i] = NOT(b)
-	}
-
-	outputs := make([]int, nOutputs)
-	for i := 0; i < nOutputs; i++ {
-		// Output i is the AND of all input bits where the bit corresponding
-		// to the binary representation of i is taken directly, and the rest
-		// are complemented.
-		//
-		// For i=5 (binary 101) with 3 inputs [A0, A1, A2]:
-		//   Y5 = AND(A0, NOT(A1), A2)
-		//   because 5 in binary is: bit0=1, bit1=0, bit2=1
-		result := 1
-		for bitPos := 0; bitPos < n; bitPos++ {
-			if (i>>bitPos)&1 == 1 {
-				result = AND(result, inputs[bitPos])
-			} else {
-				result = AND(result, complements[bitPos])
+	result, _ := StartNew[[]int]("logic-gates.Decoder", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			if len(inputs) < 1 {
+				panic("logicgates: Decoder inputs must have at least 1 element")
 			}
-		}
-		outputs[i] = result
-	}
 
-	return outputs
+			validateBits(inputs, "inputs")
+
+			n := len(inputs)
+			nOutputs := 1 << n // 2^n
+
+			// Precompute complements once
+			complements := make([]int, n)
+			for i, b := range inputs {
+				complements[i] = NOT(b)
+			}
+
+			outputs := make([]int, nOutputs)
+			for i := 0; i < nOutputs; i++ {
+				// Output i is the AND of all input bits where the bit corresponding
+				// to the binary representation of i is taken directly, and the rest
+				// are complemented.
+				//
+				// For i=5 (binary 101) with 3 inputs [A0, A1, A2]:
+				//   Y5 = AND(A0, NOT(A1), A2)
+				//   because 5 in binary is: bit0=1, bit1=0, bit2=1
+				res := 1
+				for bitPos := 0; bitPos < n; bitPos++ {
+					if (i>>bitPos)&1 == 1 {
+						res = AND(res, inputs[bitPos])
+					} else {
+						res = AND(res, complements[bitPos])
+					}
+				}
+				outputs[i] = res
+			}
+
+			return rf.Generate(true, false, outputs)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // =========================================================================
@@ -377,40 +406,44 @@ func Decoder(inputs []int) []int {
 //
 // Panics if input is not valid one-hot (zero or multiple bits set).
 func Encoder(inputs []int) []int {
-	nInputs := len(inputs)
+	result, _ := StartNew[[]int]("logic-gates.Encoder", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			nInputs := len(inputs)
 
-	if nInputs < 2 || nInputs&(nInputs-1) != 0 {
-		panic(fmt.Sprintf("logicgates: Encoder inputs length must be a power of 2 >= 2, got %d", nInputs))
-	}
+			if nInputs < 2 || nInputs&(nInputs-1) != 0 {
+				panic(fmt.Sprintf("logicgates: Encoder inputs length must be a power of 2 >= 2, got %d", nInputs))
+			}
 
-	validateBits(inputs, "inputs")
+			validateBits(inputs, "inputs")
 
-	// Validate one-hot: exactly one bit must be 1
-	activeCount := 0
-	activeIndex := 0
-	for i, v := range inputs {
-		activeCount += v
-		if v == 1 {
-			activeIndex = i
-		}
-	}
-	if activeCount != 1 {
-		panic(fmt.Sprintf("logicgates: Encoder inputs must be one-hot (exactly one bit = 1), got %d active bits", activeCount))
-	}
+			// Validate one-hot: exactly one bit must be 1
+			activeCount := 0
+			activeIndex := 0
+			for i, v := range inputs {
+				activeCount += v
+				if v == 1 {
+					activeIndex = i
+				}
+			}
+			if activeCount != 1 {
+				panic(fmt.Sprintf("logicgates: Encoder inputs must be one-hot (exactly one bit = 1), got %d active bits", activeCount))
+			}
 
-	// Compute number of output bits: log2(nInputs)
-	nOutputBits := 0
-	for tmp := nInputs; tmp > 1; tmp >>= 1 {
-		nOutputBits++
-	}
+			// Compute number of output bits: log2(nInputs)
+			nOutputBits := 0
+			for tmp := nInputs; tmp > 1; tmp >>= 1 {
+				nOutputBits++
+			}
 
-	// Convert to binary (LSB first)
-	output := make([]int, nOutputBits)
-	for bitPos := 0; bitPos < nOutputBits; bitPos++ {
-		output[bitPos] = (activeIndex >> bitPos) & 1
-	}
+			// Convert to binary (LSB first)
+			output := make([]int, nOutputBits)
+			for bitPos := 0; bitPos < nOutputBits; bitPos++ {
+				output[bitPos] = (activeIndex >> bitPos) & 1
+			}
 
-	return output
+			return rf.Generate(true, false, output)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // =========================================================================
@@ -451,48 +484,56 @@ func Encoder(inputs []int) []int {
 //   - binaryOutput: slice of N bits (LSB first) — index of highest active input
 //   - valid: 1 if any input is active, 0 if all inputs are 0
 func PriorityEncoder(inputs []int) ([]int, int) {
-	nInputs := len(inputs)
-
-	if nInputs < 2 || nInputs&(nInputs-1) != 0 {
-		panic(fmt.Sprintf("logicgates: PriorityEncoder inputs length must be a power of 2 >= 2, got %d", nInputs))
+	type peResult struct {
+		output []int
+		valid  int
 	}
+	result, _ := StartNew[peResult]("logic-gates.PriorityEncoder", peResult{},
+		func(op *Operation[peResult], rf *ResultFactory[peResult]) *OperationResult[peResult] {
+			nInputs := len(inputs)
 
-	validateBits(inputs, "inputs")
+			if nInputs < 2 || nInputs&(nInputs-1) != 0 {
+				panic(fmt.Sprintf("logicgates: PriorityEncoder inputs length must be a power of 2 >= 2, got %d", nInputs))
+			}
 
-	// Compute number of output bits: log2(nInputs)
-	nOutputBits := 0
-	for tmp := nInputs; tmp > 1; tmp >>= 1 {
-		nOutputBits++
-	}
+			validateBits(inputs, "inputs")
 
-	// Scan from highest index to lowest — first active input wins
-	highestActive := -1
-	for i := nInputs - 1; i >= 0; i-- {
-		if inputs[i] == 1 {
-			highestActive = i
-			break
-		}
-	}
+			// Compute number of output bits: log2(nInputs)
+			nOutputBits := 0
+			for tmp := nInputs; tmp > 1; tmp >>= 1 {
+				nOutputBits++
+			}
 
-	// Valid flag: 1 if any input was active
-	valid := 0
-	if highestActive != -1 {
-		valid = 1
-	}
+			// Scan from highest index to lowest — first active input wins
+			highestActive := -1
+			for i := nInputs - 1; i >= 0; i-- {
+				if inputs[i] == 1 {
+					highestActive = i
+					break
+				}
+			}
 
-	// Convert active index to binary (LSB first)
-	// If no input is active, output all zeros
-	index := highestActive
-	if index < 0 {
-		index = 0
-	}
+			// Valid flag: 1 if any input was active
+			valid := 0
+			if highestActive != -1 {
+				valid = 1
+			}
 
-	output := make([]int, nOutputBits)
-	for bitPos := 0; bitPos < nOutputBits; bitPos++ {
-		output[bitPos] = (index >> bitPos) & 1
-	}
+			// Convert active index to binary (LSB first)
+			// If no input is active, output all zeros
+			index := highestActive
+			if index < 0 {
+				index = 0
+			}
 
-	return output, valid
+			output := make([]int, nOutputBits)
+			for bitPos := 0; bitPos < nOutputBits; bitPos++ {
+				output[bitPos] = (index >> bitPos) & 1
+			}
+
+			return rf.Generate(true, false, peResult{output: output, valid: valid})
+		}).PanicOnUnexpected().GetResult()
+	return result.output, result.valid
 }
 
 // =========================================================================
@@ -536,13 +577,19 @@ func PriorityEncoder(inputs []int) ([]int, int) {
 //
 // Returns a pointer to the data value when enabled, nil when disabled.
 func TriState(data, enable int) *int {
-	validateBit(data, "data")
-	validateBit(enable, "enable")
+	result, _ := StartNew[*int]("logic-gates.TriState", nil,
+		func(op *Operation[*int], rf *ResultFactory[*int]) *OperationResult[*int] {
+			op.AddProperty("data", data)
+			op.AddProperty("enable", enable)
+			validateBit(data, "data")
+			validateBit(enable, "enable")
 
-	if enable == 0 {
-		return nil
-	}
+			if enable == 0 {
+				return rf.Generate(true, false, nil)
+			}
 
-	result := data
-	return &result
+			res := data
+			return rf.Generate(true, false, &res)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }

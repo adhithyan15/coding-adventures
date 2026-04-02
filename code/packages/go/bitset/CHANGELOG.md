@@ -2,6 +2,17 @@
 
 All notable changes to the Go bitset package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- **Operations system integration**: All public functions and methods (`NewBitset`,
+  `BitsetFromInteger`, `BitsetFromBinaryStr`, `Set`, `Clear`, `Test`, `Toggle`,
+  `And`, `Or`, `Xor`, `Not`, `AndNot`, `Popcount`, `Len`, `Capacity`, `Any`,
+  `All`, `None`, `IterSetBits`, `ToInteger`, `ToBinaryStr`, `String`, `Equal`)
+  are now wrapped with `StartNew[T]` from the package's Operations infrastructure.
+  Each call gains automatic timing, structured logging, and panic recovery.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

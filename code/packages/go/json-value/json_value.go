@@ -406,7 +406,12 @@ func fromASTArray(node *parser.ASTNode) (JsonValue, error) {
 func fromASTToken(tok *lexer.Token) (JsonValue, error) {
 	switch tok.TypeName {
 	case "STRING":
-		return &JsonString{Value: tok.Value}, nil
+		// The JSON grammar uses "escapes: none" (in json.tokens), so the lexer
+		// strips surrounding quotes but leaves escape sequences as raw two-char
+		// pairs (e.g. \n as backslash + n).  We decode those sequences here so
+		// that JsonString values contain real Unicode characters, matching the
+		// behaviour of encoding/json and Python's json.loads.
+		return &JsonString{Value: unescapeJSONString(tok.Value)}, nil
 
 	case "NUMBER":
 		return parseNumber(tok.Value)
@@ -425,6 +430,87 @@ func fromASTToken(tok *lexer.Token) (JsonValue, error) {
 			Message: fmt.Sprintf("not a value token: %s", tok.TypeName),
 		}
 	}
+}
+
+// unescapeJSONString decodes JSON escape sequences in a string value.
+//
+// The JSON grammar (json.tokens) uses "escapes: none", which tells the lexer
+// to strip surrounding quotes from STRING tokens but leave escape sequences as
+// raw two-character pairs (e.g. \n stays as backslash + n).  This function
+// decodes those sequences into the corresponding Unicode characters, matching
+// the behaviour of encoding/json on string content.
+//
+// Supported escape sequences:
+//
+//	\"   ->  "
+//	\\   ->  \
+//	\/   ->  /
+//	\b   ->  0x08 (backspace)
+//	\f   ->  0x0C (form feed)
+//	\n   ->  0x0A (newline)
+//	\r   ->  0x0D (carriage return)
+//	\t   ->  0x09 (tab)
+//	\uXXXX -> the corresponding Unicode code point
+//
+// Any other two-character sequence starting with \ is left unchanged so that
+// malformed inputs do not silently lose data.
+func unescapeJSONString(s string) string {
+	if !strings.ContainsRune(s, '\\') {
+		// Fast path: no escape sequences.
+		return s
+	}
+	var sb strings.Builder
+	i := 0
+	for i < len(s) {
+		if s[i] == '\\' && i+1 < len(s) {
+			switch s[i+1] {
+			case '"':
+				sb.WriteByte('"')
+				i += 2
+			case '\\':
+				sb.WriteByte('\\')
+				i += 2
+			case '/':
+				sb.WriteByte('/')
+				i += 2
+			case 'b':
+				sb.WriteByte('\b')
+				i += 2
+			case 'f':
+				sb.WriteByte('\f')
+				i += 2
+			case 'n':
+				sb.WriteByte('\n')
+				i += 2
+			case 'r':
+				sb.WriteByte('\r')
+				i += 2
+			case 't':
+				sb.WriteByte('\t')
+				i += 2
+			case 'u':
+				if i+5 < len(s) {
+					hexStr := s[i+2 : i+6]
+					if r, err := strconv.ParseUint(hexStr, 16, 32); err == nil {
+						sb.WriteRune(rune(r))
+						i += 6
+						continue
+					}
+				}
+				// Malformed \uXXXX — preserve as-is.
+				sb.WriteByte(s[i])
+				i++
+			default:
+				// Unknown escape — preserve as-is (lenient with malformed input).
+				sb.WriteByte(s[i])
+				i++
+			}
+		} else {
+			sb.WriteByte(s[i])
+			i++
+		}
+	}
+	return sb.String()
 }
 
 // parseNumber converts a JSON number string into a JsonNumber.

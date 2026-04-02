@@ -19,12 +19,17 @@
 # - Statements end with semicolons (not newlines)
 # - `function` keyword for function declarations
 # - Curly braces for blocks (not indentation or `end`)
+#
+# IMPORTANT: The lexer reclassifies all names in the `keywords:` section of
+# javascript.tokens (including let, const, var, true, false, null, undefined)
+# as KEYWORD tokens. Grammar rules must therefore reference KEYWORD rather
+# than VAR, LET, CONST, TRUE, FALSE, NULL, UNDEFINED as token types.
 
 program        = { statement } ;
 statement      = var_declaration | assignment | expression_stmt ;
-var_declaration = ( VAR | LET | CONST ) NAME EQUALS expression SEMICOLON ;
+var_declaration = KEYWORD NAME EQUALS expression SEMICOLON ;
 assignment     = NAME EQUALS expression SEMICOLON ;
 expression_stmt = expression SEMICOLON ;
 expression     = term { ( PLUS | MINUS ) term } ;
 term           = factor { ( STAR | SLASH ) factor } ;
-factor         = NUMBER | STRING | NAME | TRUE | FALSE | NULL | UNDEFINED | LPAREN expression RPAREN ;
+factor         = NUMBER | STRING | NAME | KEYWORD | LPAREN expression RPAREN ;

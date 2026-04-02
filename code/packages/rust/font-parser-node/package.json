@@ -1,0 +1,14 @@
+{
+  "name": "@coding-adventures/font-parser-native",
+  "version": "0.1.0",
+  "description": "Node.js N-API addon wrapping the Rust font-parser core",
+  "main": "font_parser_native.node",
+  "license": "MIT",
+  "keywords": ["font", "opentype", "truetype", "metrics", "native", "napi"],
+  "scripts": {
+    "build": "cargo build --release && cp target/release/libfont_parser_native.* font_parser_native.node 2>/dev/null || cp target/release/font_parser_native.dll font_parser_native.node 2>/dev/null || true"
+  },
+  "engines": {
+    "node": ">=10.16.0"
+  }
+}

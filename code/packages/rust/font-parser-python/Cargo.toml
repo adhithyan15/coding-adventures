@@ -1,0 +1,24 @@
+# font-parser-python — Python C extension wrapping the Rust font-parser core.
+#
+# Build produces a .so/.pyd that Python imports as `font_parser_native`.
+# The pure-Python `font_parser` package (code/packages/python/font-parser)
+# delegates to this crate for performance-critical paths.
+#
+# crate-type = ["cdylib"]: emit a C-compatible shared library with no
+# Rust-specific symbols — this is what Python's import machinery expects.
+
+[package]
+name = "font-parser-python"
+version = "0.1.0"
+edition = "2021"
+description = "Python C extension exposing the Rust font-parser core — zero dependencies beyond libpython"
+
+[lib]
+# cdylib: produce a .so / .dylib / .dll that Python can `import`.
+# No rlib because we are not a reusable Rust library — only a bridge.
+crate-type = ["cdylib"]
+name = "font_parser_native"
+
+[dependencies]
+font-parser = { path = "../font-parser" }
+python-bridge = { path = "../python-bridge" }

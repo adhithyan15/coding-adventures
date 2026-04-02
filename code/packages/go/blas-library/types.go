@@ -24,6 +24,11 @@
 // that all share one kitchen (Layer 5). Layer 3 gives us a single food
 // delivery app that routes your order to whichever restaurant is open. You
 // just say "I want matrix multiplication" -- the library picks the backend.
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 package blaslibrary
 
 import "fmt"
@@ -124,18 +129,26 @@ type Vector struct {
 // NewVector creates a new Vector from a slice of float32 values.
 // The size is inferred from the length of the data slice.
 func NewVector(data []float32) Vector {
-	return Vector{Data: data, Size: len(data)}
+	result, _ := StartNew[Vector]("blas-library.NewVector", Vector{},
+		func(op *Operation[Vector], rf *ResultFactory[Vector]) *OperationResult[Vector] {
+			return rf.Generate(true, false, Vector{Data: data, Size: len(data)})
+		}).GetResult()
+	return result
 }
 
 // NewVectorWithSize creates a Vector and validates that data length matches size.
 // Returns an error if there is a mismatch.
 func NewVectorWithSize(data []float32, size int) (Vector, error) {
-	if len(data) != size {
-		return Vector{}, fmt.Errorf(
-			"vector data has %d elements but size=%d", len(data), size,
-		)
-	}
-	return Vector{Data: data, Size: size}, nil
+	return StartNew[Vector]("blas-library.NewVectorWithSize", Vector{},
+		func(op *Operation[Vector], rf *ResultFactory[Vector]) *OperationResult[Vector] {
+			op.AddProperty("size", size)
+			if len(data) != size {
+				return rf.Fail(Vector{}, fmt.Errorf(
+					"vector data has %d elements but size=%d", len(data), size,
+				))
+			}
+			return rf.Generate(true, false, Vector{Data: data, Size: size})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -169,41 +182,63 @@ type Matrix struct {
 // Uses row-major order by default. Returns an error if data length does not
 // match rows * cols.
 func NewMatrix(data []float32, rows, cols int) (Matrix, error) {
-	if len(data) != rows*cols {
-		return Matrix{}, fmt.Errorf(
-			"matrix data has %d elements but shape is %dx%d = %d",
-			len(data), rows, cols, rows*cols,
-		)
-	}
-	return Matrix{Data: data, Rows: rows, Cols: cols, Order: RowMajor}, nil
+	return StartNew[Matrix]("blas-library.NewMatrix", Matrix{},
+		func(op *Operation[Matrix], rf *ResultFactory[Matrix]) *OperationResult[Matrix] {
+			op.AddProperty("rows", rows)
+			op.AddProperty("cols", cols)
+			if len(data) != rows*cols {
+				return rf.Fail(Matrix{}, fmt.Errorf(
+					"matrix data has %d elements but shape is %dx%d = %d",
+					len(data), rows, cols, rows*cols,
+				))
+			}
+			return rf.Generate(true, false, Matrix{Data: data, Rows: rows, Cols: cols, Order: RowMajor})
+		}).GetResult()
 }
 
 // MustMatrix creates a Matrix and panics if the dimensions don't match.
 // Useful in tests where you know the data is valid.
 func MustMatrix(data []float32, rows, cols int) Matrix {
-	m, err := NewMatrix(data, rows, cols)
-	if err != nil {
-		panic(err)
-	}
-	return m
+	result, _ := StartNew[Matrix]("blas-library.MustMatrix", Matrix{},
+		func(op *Operation[Matrix], rf *ResultFactory[Matrix]) *OperationResult[Matrix] {
+			op.AddProperty("rows", rows)
+			op.AddProperty("cols", cols)
+			m, err := NewMatrix(data, rows, cols)
+			if err != nil {
+				panic(err)
+			}
+			return rf.Generate(true, false, m)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // MustVector creates a Vector and panics if size doesn't match.
 // Useful in tests where you know the data is valid.
 func MustVector(data []float32, size int) Vector {
-	v, err := NewVectorWithSize(data, size)
-	if err != nil {
-		panic(err)
-	}
-	return v
+	result, _ := StartNew[Vector]("blas-library.MustVector", Vector{},
+		func(op *Operation[Vector], rf *ResultFactory[Vector]) *OperationResult[Vector] {
+			op.AddProperty("size", size)
+			v, err := NewVectorWithSize(data, size)
+			if err != nil {
+				panic(err)
+			}
+			return rf.Generate(true, false, v)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // Zeros creates a zero-filled Matrix with the given dimensions.
 func Zeros(rows, cols int) Matrix {
-	return Matrix{
-		Data:  make([]float32, rows*cols),
-		Rows:  rows,
-		Cols:  cols,
-		Order: RowMajor,
-	}
+	result, _ := StartNew[Matrix]("blas-library.Zeros", Matrix{},
+		func(op *Operation[Matrix], rf *ResultFactory[Matrix]) *OperationResult[Matrix] {
+			op.AddProperty("rows", rows)
+			op.AddProperty("cols", cols)
+			return rf.Generate(true, false, Matrix{
+				Data:  make([]float32, rows*cols),
+				Rows:  rows,
+				Cols:  cols,
+				Order: RowMajor,
+			})
+		}).GetResult()
+	return result
 }

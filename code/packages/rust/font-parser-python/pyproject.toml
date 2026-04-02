@@ -1,0 +1,26 @@
+[build-system]
+requires = ["maturin>=1.0"]
+build-backend = "maturin"
+
+[project]
+name = "font-parser-native"
+version = "0.1.0"
+description = "Rust-backed OpenType/TrueType font parser — Python native extension"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+keywords = ["font", "opentype", "truetype", "metrics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Topic :: Text Processing :: Fonts",
+]
+
+[tool.maturin]
+# Module name must match the `[lib] name` in Cargo.toml
+module-name = "font_parser_native"
+# Build the cdylib crate in Cargo.toml
+features = []

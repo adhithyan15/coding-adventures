@@ -54,10 +54,14 @@ var defaultPriority = []string{
 
 // NewBackendRegistry creates a new empty registry with default priority order.
 func NewBackendRegistry() *BackendRegistry {
-	return &BackendRegistry{
-		backends: make(map[string]func() (BlasBackend, error)),
-		priority: append([]string{}, defaultPriority...),
-	}
+	result, _ := StartNew[*BackendRegistry]("blas-library.NewBackendRegistry", nil,
+		func(_ *Operation[*BackendRegistry], rf *ResultFactory[*BackendRegistry]) *OperationResult[*BackendRegistry] {
+			return rf.Generate(true, false, &BackendRegistry{
+				backends: make(map[string]func() (BlasBackend, error)),
+				priority: append([]string{}, defaultPriority...),
+			})
+		}).GetResult()
+	return result
 }
 
 // Register adds a backend factory to the registry.
@@ -65,9 +69,14 @@ func NewBackendRegistry() *BackendRegistry {
 // The factory is stored but NOT called yet. Instantiation happens
 // when Get() or GetBest() is called.
 func (r *BackendRegistry) Register(name string, factory func() (BlasBackend, error)) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.backends[name] = factory
+	_, _ = StartNew[struct{}]("blas-library.Register", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("name", name)
+			r.mu.Lock()
+			defer r.mu.Unlock()
+			r.backends[name] = factory
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Get returns a specific backend by name, creating it on demand.
@@ -75,20 +84,28 @@ func (r *BackendRegistry) Register(name string, factory func() (BlasBackend, err
 // Returns an error if the backend name is not registered or if
 // the factory function fails.
 func (r *BackendRegistry) Get(name string) (BlasBackend, error) {
-	r.mu.RLock()
-	factory, ok := r.backends[name]
-	r.mu.RUnlock()
+	return StartNew[BlasBackend]("blas-library.Get", nil,
+		func(op *Operation[BlasBackend], rf *ResultFactory[BlasBackend]) *OperationResult[BlasBackend] {
+			op.AddProperty("name", name)
+			r.mu.RLock()
+			factory, ok := r.backends[name]
+			r.mu.RUnlock()
 
-	if !ok {
-		r.mu.RLock()
-		available := make([]string, 0, len(r.backends))
-		for k := range r.backends {
-			available = append(available, k)
-		}
-		r.mu.RUnlock()
-		return nil, fmt.Errorf("backend %q not registered. Available: %v", name, available)
-	}
-	return factory()
+			if !ok {
+				r.mu.RLock()
+				available := make([]string, 0, len(r.backends))
+				for k := range r.backends {
+					available = append(available, k)
+				}
+				r.mu.RUnlock()
+				return rf.Fail(nil, fmt.Errorf("backend %q not registered. Available: %v", name, available))
+			}
+			backend, err := factory()
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, backend)
+		}).GetResult()
 }
 
 // GetBest tries each backend in priority order, returning the first that works.
@@ -97,45 +114,56 @@ func (r *BackendRegistry) Get(name string) (BlasBackend, error) {
 // GPU available), we skip to the next one. CPU always works, so this never
 // fails (as long as CPU is registered).
 func (r *BackendRegistry) GetBest() (BlasBackend, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
+	return StartNew[BlasBackend]("blas-library.GetBest", nil,
+		func(_ *Operation[BlasBackend], rf *ResultFactory[BlasBackend]) *OperationResult[BlasBackend] {
+			r.mu.RLock()
+			defer r.mu.RUnlock()
 
-	var tried []string
-	for _, name := range r.priority {
-		factory, ok := r.backends[name]
-		if !ok {
-			continue
-		}
-		tried = append(tried, name)
-		backend, err := factory()
-		if err == nil {
-			return backend, nil
-		}
-		// This backend failed to initialize -- try the next one.
-		// Common reasons: no GPU driver, wrong platform, etc.
-	}
+			var tried []string
+			for _, name := range r.priority {
+				factory, ok := r.backends[name]
+				if !ok {
+					continue
+				}
+				tried = append(tried, name)
+				backend, err := factory()
+				if err == nil {
+					return rf.Generate(true, false, backend)
+				}
+				// This backend failed to initialize -- try the next one.
+				// Common reasons: no GPU driver, wrong platform, etc.
+			}
 
-	return nil, fmt.Errorf(
-		"no BLAS backend could be initialized. Tried: %v", tried,
-	)
+			return rf.Fail(nil, fmt.Errorf(
+				"no BLAS backend could be initialized. Tried: %v", tried,
+			))
+		}).GetResult()
 }
 
 // ListAvailable returns the names of all registered backends.
 func (r *BackendRegistry) ListAvailable() []string {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	result := make([]string, 0, len(r.backends))
-	for k := range r.backends {
-		result = append(result, k)
-	}
+	result, _ := StartNew[[]string]("blas-library.ListAvailable", nil,
+		func(_ *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			r.mu.RLock()
+			defer r.mu.RUnlock()
+			names := make([]string, 0, len(r.backends))
+			for k := range r.backends {
+				names = append(names, k)
+			}
+			return rf.Generate(true, false, names)
+		}).GetResult()
 	return result
 }
 
 // SetPriority changes the auto-detection priority order.
 func (r *BackendRegistry) SetPriority(priority []string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.priority = append([]string{}, priority...)
+	_, _ = StartNew[struct{}]("blas-library.SetPriority", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			r.mu.Lock()
+			defer r.mu.Unlock()
+			r.priority = append([]string{}, priority...)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -158,8 +186,19 @@ var GlobalRegistry = NewBackendRegistry()
 //	"opengl" -- OpenGL 4.3+ device
 //	"cpu"    -- pure Go fallback (always works)
 func CreateBlas(backendName string) (BlasBackend, error) {
-	if backendName == "auto" {
-		return GlobalRegistry.GetBest()
-	}
-	return GlobalRegistry.Get(backendName)
+	return StartNew[BlasBackend]("blas-library.CreateBlas", nil,
+		func(op *Operation[BlasBackend], rf *ResultFactory[BlasBackend]) *OperationResult[BlasBackend] {
+			op.AddProperty("backendName", backendName)
+			var backend BlasBackend
+			var err error
+			if backendName == "auto" {
+				backend, err = GlobalRegistry.GetBest()
+			} else {
+				backend, err = GlobalRegistry.Get(backendName)
+			}
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, backend)
+		}).GetResult()
 }

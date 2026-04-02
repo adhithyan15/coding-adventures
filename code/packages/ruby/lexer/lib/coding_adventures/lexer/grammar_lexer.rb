@@ -203,12 +203,23 @@ module CodingAdventures
       # @param source [String] the raw source code to tokenize
       # @param grammar [CodingAdventures::GrammarTools::TokenGrammar]
       def initialize(source, grammar)
+        # Preserve the original source so that string literal values can
+        # retain their case even when the grammar is case-insensitive.
+        # For example, 'Alice' in a SQL INSERT should tokenize as
+        # STRING("Alice"), not STRING("alice"), even though SQL keywords
+        # like SELECT and FROM are compared case-insensitively.
+        @original_source = source
+
         # Case sensitivity: when the grammar is case-insensitive, we
-        # lowercase the entire source before tokenization. This means
-        # all pattern matching happens against lowercase text, and token
-        # values are lowercase. Keyword promotion works automatically
-        # because both the source and keyword list are compared in the
-        # same case. Used by case-insensitive languages like VHDL and SQL.
+        # lowercase the working copy of the source before tokenization.
+        # This means all pattern matching happens against lowercase text,
+        # ensuring keywords are matched regardless of their case in the
+        # input. Keyword promotion works automatically because both the
+        # lowercased source and the (uppercased) keyword set are in a
+        # consistent case. Used by case-insensitive languages like VHDL
+        # and SQL.
+        # NOTE: @source is only used for pattern matching. String literal
+        # values are extracted from @original_source to preserve case.
         @source = grammar.case_sensitive ? source : source.downcase
         @grammar = grammar
         @pos = 0
@@ -703,10 +714,17 @@ module CodingAdventures
           # sequences as raw text. This is used by CSS and TOML where
           # escape semantics differ from JSON and are handled in the
           # semantic layer.
+          #
+          # IMPORTANT: use the ORIGINAL source (not the lowercased working
+          # copy) to extract the string body. This preserves the case of
+          # string literal values like 'Alice' even in case-insensitive
+          # grammars (e.g. SQL). Pattern matching uses the lowercased source
+          # to locate the token; value extraction uses the original source.
           if token_name == "STRING" || (alias_name && alias_name.include?("STRING"))
             # Only strip if the value is quoted.
-            if value.length >= 2 && value.start_with?('"', "'")
-              inner = value[1..-2]
+            original_value = @original_source[@pos, value.length]
+            if original_value && original_value.length >= 2 && original_value.start_with?('"', "'")
+              inner = original_value[1..-2]
               inner = process_escapes(inner) unless @grammar.escape_mode == "none"
               value = inner
             end

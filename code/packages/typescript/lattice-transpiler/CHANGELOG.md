@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- `browser.ts` replaced with thin re-export that delegates to main `transpileLattice()`
+- Main entry point now works in browsers — no separate browser entry needed
+- Underlying lattice-lexer and lattice-parser use pre-compiled grammars (no file I/O)
+- `transpileLatticeInBrowser` is now deprecated; use `transpileLattice` instead
+
 ## [0.1.1] - 2026-03-25
 
 ### Fixed

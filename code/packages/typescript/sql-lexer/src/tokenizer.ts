@@ -2,8 +2,9 @@
  * SQL Lexer -- tokenizes SQL text using the grammar-driven approach.
  *
  * This module is a **thin wrapper** around the generic `grammarTokenize` function
- * from the `@coding-adventures/lexer` package. It loads the `sql.tokens` grammar
- * file and delegates all tokenization work to the generic engine.
+ * from the `@coding-adventures/lexer` package. It uses a pre-compiled grammar
+ * object (from `_grammar.ts`) and delegates all tokenization work to the generic
+ * engine.
  *
  * What Is SQL?
  * ------------
@@ -91,46 +92,17 @@
  *   - Line comments: `-- this is a comment` (from `--` to end of line)
  *   - Block comments: `/* this is a comment *\/` (can span multiple lines)
  *
- * Locating the Grammar File
- * -------------------------
+ * Browser Compatibility
+ * ---------------------
  *
- * The `sql.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts -> sql-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * This module uses a pre-compiled grammar object imported from `_grammar.ts`.
+ * No file system access is needed at runtime — it works in Node.js, browsers,
+ * edge runtimes, and any other JavaScript environment.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
-
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist -- we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/tokenizer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname = .../sql-lexer/src/
- *   ..         = .../sql-lexer/
- *   ../..      = .../typescript/
- *   ../../..   = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const SQL_TOKENS_PATH = join(GRAMMARS_DIR, "sql.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 /**
  * Create a configured SQL lexer for the given source text.
@@ -153,11 +125,11 @@ export function createSQLLexer(source: string): Token[] {
 /**
  * Tokenize SQL text and return an array of tokens.
  *
- * The function reads the `sql.tokens` grammar file, parses it into a
- * `TokenGrammar` object, then passes the source text and grammar to the
- * generic `grammarTokenize` engine.
+ * The function uses a pre-compiled `TokenGrammar` object (from `_grammar.ts`)
+ * and passes the source text and grammar to the generic `grammarTokenize`
+ * engine.
  *
- * The `sql.tokens` grammar sets `@case_insensitive true`, which means:
+ * The grammar sets `caseInsensitive: true`, which means:
  *   - All SQL keywords are matched regardless of case
  *   - Keyword token values are normalized to uppercase
  *   - `select`, `SELECT`, and `Select` all produce KEYWORD("SELECT")
@@ -187,33 +159,17 @@ export function createSQLLexer(source: string): Token[] {
  */
 export function tokenizeSQL(source: string): Token[] {
   /**
-   * Read the grammar file from disk. In a production system, you would
-   * cache this -- but for an educational codebase, reading on every call
-   * keeps the code simple and makes the data flow obvious.
-   */
-  const grammarText = readFileSync(SQL_TOKENS_PATH, "utf-8");
-
-  /**
-   * Parse the grammar text into a structured TokenGrammar object.
-   * This extracts:
+   * The TOKEN_GRAMMAR object is a pre-compiled TokenGrammar containing:
    *   - Token patterns (regex and literal), including aliases
    *   - Skip patterns (whitespace, line comments, block comments)
    *   - Keyword list (normalized to uppercase for case-insensitive matching)
    *   - caseInsensitive flag (true for SQL)
    *
-   * Because sql.tokens declares `@case_insensitive true`, the grammar object
-   * will have `grammar.caseInsensitive = true`. The GrammarLexer (which
-   * `grammarTokenize` uses internally) reads this flag automatically and
-   * normalizes keyword values to uppercase on match.
-   */
-  const grammar = parseTokenGrammar(grammarText);
-
-  /**
-   * Run the generic grammar-driven tokenizer. This is the same engine
-   * used for JSON, Python, Ruby, and other languages -- the only thing
-   * that changes between languages is the grammar file.
+   * Because the grammar has `caseInsensitive: true`, the GrammarLexer
+   * (which `grammarTokenize` uses internally) normalizes keyword values
+   * to uppercase on match.
    *
-   * For SQL, the key behaviors are:
+   * The generic grammar-driven tokenizer handles:
    *   1. NAME tokens whose uppercase value is in the keyword list → KEYWORD
    *   2. KEYWORD values are normalized to uppercase (select → SELECT)
    *   3. `!=` and `<>` both produce NOT_EQUALS tokens (via alias)
@@ -221,5 +177,5 @@ export function tokenizeSQL(source: string): Token[] {
    *   5. Single-quoted strings produce STRING tokens (via alias)
    *   6. Comments and whitespace are silently skipped
    */
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }

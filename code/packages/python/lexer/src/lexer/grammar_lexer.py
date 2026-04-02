@@ -261,11 +261,14 @@ class GrammarLexer:
                 ``.tokens`` file using ``grammar_tools.parse_token_grammar``).
         """
         # For case-insensitive languages, lowercase the source text so that
-        # regex patterns match regardless of input casing. We keep the original
-        # source for position tracking but use the lowercased version for all
-        # pattern matching. Token values are extracted from the lowercased
-        # source, which is the correct behavior for case-insensitive languages.
-        self._source = source.lower() if not grammar.case_sensitive else source
+        # regex patterns match regardless of input casing. Keep the original
+        # source separately so emitted token values can preserve the user's
+        # original spelling.
+        self._original_source = source
+        self._source = (
+            source.lower() if (grammar.case_insensitive or not grammar.case_sensitive)
+            else source
+        )
         self._grammar = grammar
         self._pos = 0
         self._line = 1
@@ -917,6 +920,9 @@ class GrammarLexer:
             match = pattern.match(remaining)
             if match:
                 value = match.group(0)
+                original_value = self._original_source[
+                    self._pos : self._pos + len(value)
+                ]
                 start_line = self._line
                 start_column = self._column
 
@@ -932,7 +938,10 @@ class GrammarLexer:
                 # - "none": strip quotes only, leave escapes as-is
                 effective_name = self._alias_map.get(token_name, token_name)
                 if effective_name == "STRING" or token_name == "STRING":
-                    inner = value[1:-1]
+                    string_value = (
+                        original_value if self._case_insensitive else value
+                    )
+                    inner = string_value[1:-1]
                     if self._escape_mode != "none":
                         inner = self._process_escapes(inner)
                     token = Token(
@@ -945,9 +954,13 @@ class GrammarLexer:
                     # In case-insensitive mode, KEYWORD values are normalised
                     # to uppercase so that "select", "SELECT", and "Select"
                     # all produce a KEYWORD token with value "SELECT".
-                    # Non-keyword tokens (NAME, NUMBER, etc.) keep their
-                    # original casing from the source text.
-                    emit_value = value
+                    # ``@case_insensitive true`` grammars preserve the
+                    # original spelling for non-keyword tokens, while
+                    # legacy ``case_sensitive=False`` grammars keep the
+                    # historic lowercased value emission.
+                    emit_value = (
+                        original_value if self._case_insensitive else value
+                    )
                     if self._case_insensitive and token_type in (
                         TokenType.KEYWORD, "KEYWORD"
                     ):

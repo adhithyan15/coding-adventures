@@ -2,6 +2,15 @@
 
 All notable changes to this package are documented here.
 
+## [0.2.0] — 2026-03-31
+
+### Changed
+
+- Switch from runtime `readFileSync` grammar loading to pre-compiled `_grammar.ts` import
+- Remove `fs`, `path`, `url` Node.js built-in dependencies
+- Package now works in browsers, edge runtimes, and any JavaScript environment
+- No file system access needed at runtime — grammar is embedded as a TypeScript object
+
 ## [0.1.0] — 2026-03-23
 
 ### Added

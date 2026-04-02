@@ -3,8 +3,48 @@ package jsonlexer
 import (
 	"testing"
 
+	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
+
+// =============================================================================
+// Escape-processing grammar helper
+// =============================================================================
+//
+// The real JSON grammar (json.tokens) uses "escapes: none", which tells the
+// lexer to strip surrounding quotes from STRING tokens but leave escape
+// sequences raw. This is intentional: escape decoding is the JSON parser's
+// responsibility, not the lexer's.
+//
+// TestTokenizeJSONStringWithEscapes needs a grammar that DOES process escape
+// sequences so we can verify the lexer engine handles JSON escapes correctly.
+// This constant is identical to json.tokens except it omits "escapes: none".
+const escapeProcessingGrammarSrc = `
+STRING   = /"([^"\\]|\\["\\\x2fbfnrt]|\\u[0-9a-fA-F]{4})*"/
+NUMBER   = /-?[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/
+TRUE     = "true"
+FALSE    = "false"
+NULL     = "null"
+LBRACE   = "{"
+RBRACE   = "}"
+LBRACKET = "["
+RBRACKET = "]"
+COLON    = ":"
+COMMA    = ","
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+`
+
+// tokenizeWithEscapeProcessing tokenizes source using the escape-processing
+// grammar (no "escapes: none"), so escape sequences are decoded by the lexer.
+func tokenizeWithEscapeProcessing(source string) ([]lexer.Token, error) {
+	grammar, err := grammartools.ParseTokenGrammar(escapeProcessingGrammarSrc)
+	if err != nil {
+		return nil, err
+	}
+	l := lexer.NewGrammarLexer(source, grammar)
+	return l.Tokenize(), nil
+}
 
 // =============================================================================
 // TestTokenizeJSONSimpleString
@@ -41,12 +81,18 @@ func TestTokenizeJSONSimpleString(t *testing.T) {
 // TestTokenizeJSONStringWithEscapes
 // =============================================================================
 //
-// Verifies that JSON escape sequences inside strings are handled correctly.
-// JSON supports these escapes: \" \\ \/ \b \f \n \r \t \uXXXX
-// The lexer should process escape sequences and produce the unescaped value.
+// Verifies that JSON escape sequences inside strings are handled correctly
+// by the lexer engine. JSON supports: \" \\ \/ \b \f \n \r \t \uXXXX
+//
+// NOTE: The real JSON grammar (json.tokens) uses "escapes: none", which
+// intentionally leaves escape sequences as raw text for the parser to decode.
+// This test uses the escape-processing grammar defined in this file (which
+// omits "escapes: none") to verify that the lexer engine itself handles
+// JSON escape sequences correctly. This mirrors the approach used in the
+// Python json-lexer tests.
 func TestTokenizeJSONStringWithEscapes(t *testing.T) {
 	source := `"hello\nworld"`
-	tokens, err := TokenizeJSON(source)
+	tokens, err := tokenizeWithEscapeProcessing(source)
 	if err != nil {
 		t.Fatalf("Failed to tokenize JSON string with escapes: %v", err)
 	}
@@ -56,7 +102,7 @@ func TestTokenizeJSONStringWithEscapes(t *testing.T) {
 	for _, tok := range tokens {
 		if tok.Type == lexer.TokenString {
 			found = true
-			// The grammar lexer processes \n into a real newline
+			// The escape-processing grammar decodes \n into a real newline
 			if tok.Value != "hello\nworld" {
 				t.Errorf("Expected 'hello\\nworld' (with real newline), got %q", tok.Value)
 			}

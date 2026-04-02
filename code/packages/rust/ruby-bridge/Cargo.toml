@@ -1,7 +1,6 @@
 # Zero dependencies. We declare Ruby's C API functions ourselves using
 # extern "C" — no rb-sys, no Magnus, no bindgen, no build-time headers.
 # These function signatures have been stable since Ruby 1.8 (2003).
-[workspace]
 
 [package]
 name = "ruby-bridge"
