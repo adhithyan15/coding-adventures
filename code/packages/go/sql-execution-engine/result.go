@@ -36,67 +36,66 @@ type QueryResult struct {
 //	1   | Alice | 90000
 //	2   | Bob   | 75000
 func (r *QueryResult) String() string {
-	if len(r.Columns) == 0 {
-		return "(empty result)"
-	}
-
-	// Format each cell as a string first so we can compute column widths.
-	cellStr := make([][]string, len(r.Rows))
-	for i, row := range r.Rows {
-		cellStr[i] = make([]string, len(row))
-		for j, v := range row {
-			if v == nil {
-				cellStr[i][j] = "NULL"
-			} else {
-				cellStr[i][j] = fmt.Sprintf("%v", v)
+	result, _ := StartNew[string]("sql-execution-engine.QueryResult.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if len(r.Columns) == 0 {
+				return rf.Generate(true, false, "(empty result)")
 			}
-		}
-	}
 
-	// Compute per-column widths (at least as wide as the column header).
-	widths := make([]int, len(r.Columns))
-	for i, col := range r.Columns {
-		widths[i] = len(col)
-	}
-	for _, row := range cellStr {
-		for j, cell := range row {
-			if len(cell) > widths[j] {
-				widths[j] = len(cell)
+			cellStr := make([][]string, len(r.Rows))
+			for i, row := range r.Rows {
+				cellStr[i] = make([]string, len(row))
+				for j, v := range row {
+					if v == nil {
+						cellStr[i][j] = "NULL"
+					} else {
+						cellStr[i][j] = fmt.Sprintf("%v", v)
+					}
+				}
 			}
-		}
-	}
 
-	// Build the header row.
-	result := ""
-	for i, col := range r.Columns {
-		if i > 0 {
-			result += " | "
-		}
-		result += fmt.Sprintf("%-*s", widths[i], col)
-	}
-	result += "\n"
-
-	// Build the separator line.
-	for i, w := range widths {
-		if i > 0 {
-			result += "-+-"
-		}
-		for j := 0; j < w; j++ {
-			result += "-"
-		}
-	}
-	result += "\n"
-
-	// Build each data row.
-	for _, row := range cellStr {
-		for i, cell := range row {
-			if i > 0 {
-				result += " | "
+			widths := make([]int, len(r.Columns))
+			for i, col := range r.Columns {
+				widths[i] = len(col)
 			}
-			result += fmt.Sprintf("%-*s", widths[i], cell)
-		}
-		result += "\n"
-	}
+			for _, row := range cellStr {
+				for j, cell := range row {
+					if len(cell) > widths[j] {
+						widths[j] = len(cell)
+					}
+				}
+			}
 
+			out := ""
+			for i, col := range r.Columns {
+				if i > 0 {
+					out += " | "
+				}
+				out += fmt.Sprintf("%-*s", widths[i], col)
+			}
+			out += "\n"
+
+			for i, w := range widths {
+				if i > 0 {
+					out += "-+-"
+				}
+				for j := 0; j < w; j++ {
+					out += "-"
+				}
+			}
+			out += "\n"
+
+			for _, row := range cellStr {
+				for i, cell := range row {
+					if i > 0 {
+						out += " | "
+					}
+					out += fmt.Sprintf("%-*s", widths[i], cell)
+				}
+				out += "\n"
+			}
+
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }

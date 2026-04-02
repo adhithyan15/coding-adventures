@@ -54,119 +54,123 @@ import (
 // The minimized DFA is unique (up to state naming) for any regular
 // language — this is a fundamental theorem of automata theory.
 func Minimize(dfa *DFA) *DFA {
-	// Step 0: Remove unreachable states
-	reachable := dfa.ReachableStates()
+	result, _ := StartNew[*DFA]("state-machine.Minimize", nil,
+		func(op *Operation[*DFA], rf *ResultFactory[*DFA]) *OperationResult[*DFA] {
+			// Step 0: Remove unreachable states
+			reachable := dfa.ReachableStates()
 
-	// Filter transitions to only reachable states
-	transitions := map[[2]string]string{}
-	for key, target := range dfa.transitions {
-		if reachable[key[0]] && reachable[target] {
-			transitions[key] = target
-		}
-	}
-
-	// Step 1: Initial partition — accepting vs non-accepting
-	accepting := map[string]bool{}
-	nonAccepting := map[string]bool{}
-	for s := range reachable {
-		if dfa.accepting[s] {
-			accepting[s] = true
-		} else {
-			nonAccepting[s] = true
-		}
-	}
-
-	var partitions []map[string]bool
-	if len(accepting) > 0 {
-		partitions = append(partitions, accepting)
-	}
-	if len(nonAccepting) > 0 {
-		partitions = append(partitions, nonAccepting)
-	}
-
-	if len(partitions) == 0 {
-		return dfa
-	}
-
-	// Step 2-3: Iteratively refine partitions
-	alphabet := sortedKeys(dfa.alphabet)
-
-	for {
-		changed := false
-		var newPartitions []map[string]bool
-
-		for _, group := range partitions {
-			split := splitGroup(group, alphabet, transitions, partitions)
-			if len(split) > 1 {
-				changed = true
+			// Filter transitions to only reachable states
+			transitions := map[[2]string]string{}
+			for key, target := range dfa.transitions {
+				if reachable[key[0]] && reachable[target] {
+					transitions[key] = target
+				}
 			}
-			newPartitions = append(newPartitions, split...)
-		}
 
-		partitions = newPartitions
-		if !changed {
-			break
-		}
-	}
-
-	// Step 4: Build the minimized DFA
-	//
-	// Each partition becomes a state. We name it after its sorted members.
-	// If a partition has one member, we use that name directly.
-	// If it has multiple members, we join them: "{q0,q1}".
-
-	stateToPartition := map[string]int{}
-	for idx, partition := range partitions {
-		for state := range partition {
-			stateToPartition[state] = idx
-		}
-	}
-
-	partitionName := func(partition map[string]bool) string {
-		members := sortedKeys(partition)
-		if len(members) == 1 {
-			return members[0]
-		}
-		return "{" + strings.Join(members, ",") + "}"
-	}
-
-	newStates := map[string]bool{}
-	newTransitions := map[[2]string]string{}
-	newAccepting := map[string]bool{}
-
-	for _, partition := range partitions {
-		name := partitionName(partition)
-		newStates[name] = true
-
-		// Check if this partition contains an accepting state
-		if setsIntersect(partition, accepting) {
-			newAccepting[name] = true
-		}
-
-		// Use any representative state from the partition for transitions
-		representative := sortedKeys(partition)[0]
-		for _, event := range alphabet {
-			key := [2]string{representative, event}
-			if target, ok := transitions[key]; ok {
-				targetPartitionIdx := stateToPartition[target]
-				targetName := partitionName(partitions[targetPartitionIdx])
-				newTransitions[[2]string{name, event}] = targetName
+			// Step 1: Initial partition — accepting vs non-accepting
+			accepting := map[string]bool{}
+			nonAccepting := map[string]bool{}
+			for s := range reachable {
+				if dfa.accepting[s] {
+					accepting[s] = true
+				} else {
+					nonAccepting[s] = true
+				}
 			}
-		}
-	}
 
-	// Find the new initial state
-	initialPartitionIdx := stateToPartition[dfa.initial]
-	newInitial := partitionName(partitions[initialPartitionIdx])
+			var partitions []map[string]bool
+			if len(accepting) > 0 {
+				partitions = append(partitions, accepting)
+			}
+			if len(nonAccepting) > 0 {
+				partitions = append(partitions, nonAccepting)
+			}
 
-	return NewDFA(
-		sortedKeys(newStates),
-		alphabet,
-		newTransitions,
-		newInitial,
-		sortedKeys(newAccepting),
-		nil,
-	)
+			if len(partitions) == 0 {
+				return rf.Generate(true, false, dfa)
+			}
+
+			// Step 2-3: Iteratively refine partitions
+			alphabet := sortedKeys(dfa.alphabet)
+
+			for {
+				changed := false
+				var newPartitions []map[string]bool
+
+				for _, group := range partitions {
+					split := splitGroup(group, alphabet, transitions, partitions)
+					if len(split) > 1 {
+						changed = true
+					}
+					newPartitions = append(newPartitions, split...)
+				}
+
+				partitions = newPartitions
+				if !changed {
+					break
+				}
+			}
+
+			// Step 4: Build the minimized DFA
+			//
+			// Each partition becomes a state. We name it after its sorted members.
+			// If a partition has one member, we use that name directly.
+			// If it has multiple members, we join them: "{q0,q1}".
+
+			stateToPartition := map[string]int{}
+			for idx, partition := range partitions {
+				for state := range partition {
+					stateToPartition[state] = idx
+				}
+			}
+
+			partitionName := func(partition map[string]bool) string {
+				members := sortedKeys(partition)
+				if len(members) == 1 {
+					return members[0]
+				}
+				return "{" + strings.Join(members, ",") + "}"
+			}
+
+			newStates := map[string]bool{}
+			newTransitions := map[[2]string]string{}
+			newAccepting := map[string]bool{}
+
+			for _, partition := range partitions {
+				name := partitionName(partition)
+				newStates[name] = true
+
+				// Check if this partition contains an accepting state
+				if setsIntersect(partition, accepting) {
+					newAccepting[name] = true
+				}
+
+				// Use any representative state from the partition for transitions
+				representative := sortedKeys(partition)[0]
+				for _, event := range alphabet {
+					key := [2]string{representative, event}
+					if target, ok := transitions[key]; ok {
+						targetPartitionIdx := stateToPartition[target]
+						targetName := partitionName(partitions[targetPartitionIdx])
+						newTransitions[[2]string{name, event}] = targetName
+					}
+				}
+			}
+
+			// Find the new initial state
+			initialPartitionIdx := stateToPartition[dfa.initial]
+			newInitial := partitionName(partitions[initialPartitionIdx])
+
+			return rf.Generate(true, false, NewDFA(
+				sortedKeys(newStates),
+				alphabet,
+				newTransitions,
+				newInitial,
+				sortedKeys(newAccepting),
+				nil,
+			))
+		}).GetResult()
+	return result
 }
 
 // splitGroup attempts to split a group of states based on transition targets.

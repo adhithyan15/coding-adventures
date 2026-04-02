@@ -127,9 +127,14 @@ type Tree struct {
 // The root will be the ancestor of every other node in the tree.
 // A tree always starts with a root — you can't have an empty tree.
 func New(root string) *Tree {
-	g := directedgraph.New()
-	g.AddNode(root)
-	return &Tree{graph: g, root: root}
+	result, _ := StartNew[*Tree]("tree.New", nil,
+		func(op *Operation[*Tree], rf *ResultFactory[*Tree]) *OperationResult[*Tree] {
+			op.AddProperty("root", root)
+			g := directedgraph.New()
+			g.AddNode(root)
+			return rf.Generate(true, false, &Tree{graph: g, root: root})
+		}).GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------
@@ -144,15 +149,20 @@ func New(root string) *Tree {
 // Returns NodeNotFoundError if parent is not in the tree.
 // Returns DuplicateNodeError if child already exists.
 func (t *Tree) AddChild(parent, child string) error {
-	if !t.graph.HasNode(parent) {
-		return &NodeNotFoundError{Node: parent}
-	}
-	if t.graph.HasNode(child) {
-		return &DuplicateNodeError{Node: child}
-	}
-
-	t.graph.AddEdge(parent, child)
-	return nil
+	_, err := StartNew[struct{}]("tree.AddChild", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("parent", parent)
+			op.AddProperty("child", child)
+			if !t.graph.HasNode(parent) {
+				return rf.Fail(struct{}{}, &NodeNotFoundError{Node: parent})
+			}
+			if t.graph.HasNode(child) {
+				return rf.Fail(struct{}{}, &DuplicateNodeError{Node: child})
+			}
+			t.graph.AddEdge(parent, child)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // RemoveSubtree removes a node and all its descendants from the tree.
@@ -163,20 +173,23 @@ func (t *Tree) AddChild(parent, child string) error {
 // Returns NodeNotFoundError if node is not in the tree.
 // Returns RootRemovalError if node is the root.
 func (t *Tree) RemoveSubtree(node string) error {
-	if !t.graph.HasNode(node) {
-		return &NodeNotFoundError{Node: node}
-	}
-	if node == t.root {
-		return &RootRemovalError{}
-	}
+	_, err := StartNew[struct{}]("tree.RemoveSubtree", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(struct{}{}, &NodeNotFoundError{Node: node})
+			}
+			if node == t.root {
+				return rf.Fail(struct{}{}, &RootRemovalError{})
+			}
 
-	// Collect subtree via BFS, then remove in reverse (children first)
-	toRemove := t.collectSubtreeNodes(node)
-
-	for i := len(toRemove) - 1; i >= 0; i-- {
-		_ = t.graph.RemoveNode(toRemove[i])
-	}
-	return nil
+			toRemove := t.collectSubtreeNodes(node)
+			for i := len(toRemove) - 1; i >= 0; i-- {
+				_ = t.graph.RemoveNode(toRemove[i])
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // collectSubtreeNodes collects all nodes in the subtree rooted at node
@@ -204,87 +217,109 @@ func (t *Tree) collectSubtreeNodes(node string) []string {
 
 // Root returns the root node of the tree.
 func (t *Tree) Root() string {
-	return t.root
+	result, _ := StartNew[string]("tree.Root", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, t.root)
+		}).GetResult()
+	return result
 }
 
 // Parent returns the parent of a node, or "" if the node is the root.
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) Parent(node string) (string, error) {
-	if !t.graph.HasNode(node) {
-		return "", &NodeNotFoundError{Node: node}
-	}
+	return StartNew[string]("tree.Parent", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail("", &NodeNotFoundError{Node: node})
+			}
 
-	preds, _ := t.graph.Predecessors(node)
-	if len(preds) == 0 {
-		return "", nil
-	}
-	return preds[0], nil
+			preds, _ := t.graph.Predecessors(node)
+			if len(preds) == 0 {
+				return rf.Generate(true, false, "")
+			}
+			return rf.Generate(true, false, preds[0])
+		}).GetResult()
 }
 
 // Children returns the children of a node (sorted alphabetically).
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) Children(node string) ([]string, error) {
-	if !t.graph.HasNode(node) {
-		return nil, &NodeNotFoundError{Node: node}
-	}
+	return StartNew[[]string]("tree.Children", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(nil, &NodeNotFoundError{Node: node})
+			}
 
-	children, _ := t.graph.Successors(node)
-	sort.Strings(children)
-	return children, nil
+			children, _ := t.graph.Successors(node)
+			sort.Strings(children)
+			return rf.Generate(true, false, children)
+		}).GetResult()
 }
 
 // Siblings returns the siblings of a node (other children of the same parent).
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) Siblings(node string) ([]string, error) {
-	if !t.graph.HasNode(node) {
-		return nil, &NodeNotFoundError{Node: node}
-	}
+	return StartNew[[]string]("tree.Siblings", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(nil, &NodeNotFoundError{Node: node})
+			}
 
-	parentNode, err := t.Parent(node)
-	if err != nil {
-		return nil, err
-	}
-	if parentNode == "" {
-		return []string{}, nil
-	}
+			parentNode, err := t.Parent(node)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			if parentNode == "" {
+				return rf.Generate(true, false, []string{})
+			}
 
-	allChildren, _ := t.Children(parentNode)
-	var siblings []string
-	for _, c := range allChildren {
-		if c != node {
-			siblings = append(siblings, c)
-		}
-	}
-	if siblings == nil {
-		siblings = []string{}
-	}
-	return siblings, nil
+			allChildren, _ := t.Children(parentNode)
+			var siblings []string
+			for _, c := range allChildren {
+				if c != node {
+					siblings = append(siblings, c)
+				}
+			}
+			if siblings == nil {
+				siblings = []string{}
+			}
+			return rf.Generate(true, false, siblings)
+		}).GetResult()
 }
 
 // IsLeaf returns true if the node has no children.
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) IsLeaf(node string) (bool, error) {
-	if !t.graph.HasNode(node) {
-		return false, &NodeNotFoundError{Node: node}
-	}
-
-	children, _ := t.graph.Successors(node)
-	return len(children) == 0, nil
+	return StartNew[bool]("tree.IsLeaf", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(false, &NodeNotFoundError{Node: node})
+			}
+			children, _ := t.graph.Successors(node)
+			return rf.Generate(true, false, len(children) == 0)
+		}).GetResult()
 }
 
 // IsRoot returns true if the node is the root of the tree.
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) IsRoot(node string) (bool, error) {
-	if !t.graph.HasNode(node) {
-		return false, &NodeNotFoundError{Node: node}
-	}
-
-	return node == t.root, nil
+	return StartNew[bool]("tree.IsRoot", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(false, &NodeNotFoundError{Node: node})
+			}
+			return rf.Generate(true, false, node == t.root)
+		}).GetResult()
 }
 
 // Depth returns the depth of a node (distance from root).
@@ -293,77 +328,102 @@ func (t *Tree) IsRoot(node string) (bool, error) {
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) Depth(node string) (int, error) {
-	if !t.graph.HasNode(node) {
-		return 0, &NodeNotFoundError{Node: node}
-	}
+	return StartNew[int]("tree.Depth", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(0, &NodeNotFoundError{Node: node})
+			}
 
-	d := 0
-	current := node
-	for current != t.root {
-		preds, _ := t.graph.Predecessors(current)
-		current = preds[0]
-		d++
-	}
+			d := 0
+			current := node
+			for current != t.root {
+				preds, _ := t.graph.Predecessors(current)
+				current = preds[0]
+				d++
+			}
 
-	return d, nil
+			return rf.Generate(true, false, d)
+		}).GetResult()
 }
 
 // Height returns the height of the tree (maximum depth of any node).
 //
 // A single-node tree has height 0.
 func (t *Tree) Height() int {
-	maxDepth := 0
-	type item struct {
-		node  string
-		depth int
-	}
-	queue := []item{{t.root, 0}}
+	result, _ := StartNew[int]("tree.Height", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			maxDepth := 0
+			type item struct {
+				node  string
+				depth int
+			}
+			queue := []item{{t.root, 0}}
 
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
+			for len(queue) > 0 {
+				current := queue[0]
+				queue = queue[1:]
 
-		if current.depth > maxDepth {
-			maxDepth = current.depth
-		}
+				if current.depth > maxDepth {
+					maxDepth = current.depth
+				}
 
-		children, _ := t.graph.Successors(current.node)
-		for _, child := range children {
-			queue = append(queue, item{child, current.depth + 1})
-		}
-	}
+				children, _ := t.graph.Successors(current.node)
+				for _, child := range children {
+					queue = append(queue, item{child, current.depth + 1})
+				}
+			}
 
-	return maxDepth
+			return rf.Generate(true, false, maxDepth)
+		}).GetResult()
+	return result
 }
 
 // Size returns the total number of nodes in the tree.
 func (t *Tree) Size() int {
-	return t.graph.Size()
+	result, _ := StartNew[int]("tree.Size", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, t.graph.Size())
+		}).GetResult()
+	return result
 }
 
 // Nodes returns all nodes in the tree (sorted alphabetically).
 func (t *Tree) Nodes() []string {
-	nodes := t.graph.Nodes()
-	sort.Strings(nodes)
-	return nodes
+	result, _ := StartNew[[]string]("tree.Nodes", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			nodes := t.graph.Nodes()
+			sort.Strings(nodes)
+			return rf.Generate(true, false, nodes)
+		}).GetResult()
+	return result
 }
 
 // Leaves returns all leaf nodes (sorted alphabetically).
 func (t *Tree) Leaves() []string {
-	var leaves []string
-	for _, n := range t.graph.Nodes() {
-		children, _ := t.graph.Successors(n)
-		if len(children) == 0 {
-			leaves = append(leaves, n)
-		}
-	}
-	sort.Strings(leaves)
-	return leaves
+	result, _ := StartNew[[]string]("tree.Leaves", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			var leaves []string
+			for _, n := range t.graph.Nodes() {
+				children, _ := t.graph.Successors(n)
+				if len(children) == 0 {
+					leaves = append(leaves, n)
+				}
+			}
+			sort.Strings(leaves)
+			return rf.Generate(true, false, leaves)
+		}).GetResult()
+	return result
 }
 
 // HasNode returns true if the node exists in the tree.
 func (t *Tree) HasNode(node string) bool {
-	return t.graph.HasNode(node)
+	result, _ := StartNew[bool]("tree.HasNode", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("node", node)
+			return rf.Generate(true, false, t.graph.HasNode(node))
+		}).GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------
@@ -397,19 +457,23 @@ func (t *Tree) HasNode(node string) bool {
 // Uses an explicit stack. Children are pushed in reverse sorted order
 // so the smallest pops first.
 func (t *Tree) Preorder() []string {
-	var result []string
-	stack := []string{t.root}
+	result, _ := StartNew[[]string]("tree.Preorder", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			var nodes []string
+			stack := []string{t.root}
 
-	for len(stack) > 0 {
-		node := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
-		result = append(result, node)
+			for len(stack) > 0 {
+				node := stack[len(stack)-1]
+				stack = stack[:len(stack)-1]
+				nodes = append(nodes, node)
 
-		children, _ := t.graph.Successors(node)
-		sort.Sort(sort.Reverse(sort.StringSlice(children)))
-		stack = append(stack, children...)
-	}
+				children, _ := t.graph.Successors(node)
+				sort.Sort(sort.Reverse(sort.StringSlice(children)))
+				stack = append(stack, children...)
+			}
 
+			return rf.Generate(true, false, nodes)
+		}).GetResult()
 	return result
 }
 
@@ -417,8 +481,12 @@ func (t *Tree) Preorder() []string {
 //
 // Uses a recursive helper. Children visited in sorted order.
 func (t *Tree) Postorder() []string {
-	var result []string
-	t.postorderRecursive(t.root, &result)
+	result, _ := StartNew[[]string]("tree.Postorder", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			var nodes []string
+			t.postorderRecursive(t.root, &nodes)
+			return rf.Generate(true, false, nodes)
+		}).GetResult()
 	return result
 }
 
@@ -435,19 +503,23 @@ func (t *Tree) postorderRecursive(node string, result *[]string) {
 //
 // Classic BFS using a queue. Children visited in sorted order.
 func (t *Tree) LevelOrder() []string {
-	var result []string
-	queue := []string{t.root}
+	result, _ := StartNew[[]string]("tree.LevelOrder", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			var nodes []string
+			queue := []string{t.root}
 
-	for len(queue) > 0 {
-		node := queue[0]
-		queue = queue[1:]
-		result = append(result, node)
+			for len(queue) > 0 {
+				node := queue[0]
+				queue = queue[1:]
+				nodes = append(nodes, node)
 
-		children, _ := t.graph.Successors(node)
-		sort.Strings(children)
-		queue = append(queue, children...)
-	}
+				children, _ := t.graph.Successors(node)
+				sort.Strings(children)
+				queue = append(queue, children...)
+			}
 
+			return rf.Generate(true, false, nodes)
+		}).GetResult()
 	return result
 }
 
@@ -459,25 +531,29 @@ func (t *Tree) LevelOrder() []string {
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) PathTo(node string) ([]string, error) {
-	if !t.graph.HasNode(node) {
-		return nil, &NodeNotFoundError{Node: node}
-	}
+	return StartNew[[]string]("tree.PathTo", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(nil, &NodeNotFoundError{Node: node})
+			}
 
-	var path []string
-	current := node
+			var path []string
+			current := node
 
-	for current != "" {
-		path = append(path, current)
-		parent, _ := t.Parent(current)
-		current = parent
-	}
+			for current != "" {
+				path = append(path, current)
+				parent, _ := t.Parent(current)
+				current = parent
+			}
 
-	// Reverse
-	for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
-		path[i], path[j] = path[j], path[i]
-	}
+			// Reverse
+			for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
+				path[i], path[j] = path[j], path[i]
+			}
 
-	return path, nil
+			return rf.Generate(true, false, path)
+		}).GetResult()
 }
 
 // LCA returns the lowest common ancestor of nodes a and b.
@@ -486,31 +562,36 @@ func (t *Tree) PathTo(node string) ([]string, error) {
 //
 // Returns NodeNotFoundError if a or b doesn't exist.
 func (t *Tree) LCA(a, b string) (string, error) {
-	if !t.graph.HasNode(a) {
-		return "", &NodeNotFoundError{Node: a}
-	}
-	if !t.graph.HasNode(b) {
-		return "", &NodeNotFoundError{Node: b}
-	}
+	return StartNew[string]("tree.LCA", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("a", a)
+			op.AddProperty("b", b)
+			if !t.graph.HasNode(a) {
+				return rf.Fail("", &NodeNotFoundError{Node: a})
+			}
+			if !t.graph.HasNode(b) {
+				return rf.Fail("", &NodeNotFoundError{Node: b})
+			}
 
-	pathA, _ := t.PathTo(a)
-	pathB, _ := t.PathTo(b)
+			pathA, _ := t.PathTo(a)
+			pathB, _ := t.PathTo(b)
 
-	lcaNode := t.root
-	minLen := len(pathA)
-	if len(pathB) < minLen {
-		minLen = len(pathB)
-	}
+			lcaNode := t.root
+			minLen := len(pathA)
+			if len(pathB) < minLen {
+				minLen = len(pathB)
+			}
 
-	for i := 0; i < minLen; i++ {
-		if pathA[i] == pathB[i] {
-			lcaNode = pathA[i]
-		} else {
-			break
-		}
-	}
+			for i := 0; i < minLen; i++ {
+				if pathA[i] == pathB[i] {
+					lcaNode = pathA[i]
+				} else {
+					break
+				}
+			}
 
-	return lcaNode, nil
+			return rf.Generate(true, false, lcaNode)
+		}).GetResult()
 }
 
 // Subtree extracts the subtree rooted at the given node.
@@ -519,26 +600,30 @@ func (t *Tree) LCA(a, b string) (string, error) {
 //
 // Returns NodeNotFoundError if the node doesn't exist.
 func (t *Tree) Subtree(node string) (*Tree, error) {
-	if !t.graph.HasNode(node) {
-		return nil, &NodeNotFoundError{Node: node}
-	}
+	return StartNew[*Tree]("tree.Subtree", nil,
+		func(op *Operation[*Tree], rf *ResultFactory[*Tree]) *OperationResult[*Tree] {
+			op.AddProperty("node", node)
+			if !t.graph.HasNode(node) {
+				return rf.Fail(nil, &NodeNotFoundError{Node: node})
+			}
 
-	newTree := New(node)
-	queue := []string{node}
+			newTree := New(node)
+			queue := []string{node}
 
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
+			for len(queue) > 0 {
+				current := queue[0]
+				queue = queue[1:]
 
-		children, _ := t.graph.Successors(current)
-		sort.Strings(children)
-		for _, child := range children {
-			_ = newTree.AddChild(current, child)
-			queue = append(queue, child)
-		}
-	}
+				children, _ := t.graph.Successors(current)
+				sort.Strings(children)
+				for _, child := range children {
+					_ = newTree.AddChild(current, child)
+					queue = append(queue, child)
+				}
+			}
 
-	return newTree, nil
+			return rf.Generate(true, false, newTree)
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
@@ -555,9 +640,13 @@ func (t *Tree) Subtree(node string) (*Tree, error) {
 //	│   └── Name
 //	└── Print
 func (t *Tree) ToAscii() string {
-	var lines []string
-	t.asciiRecursive(t.root, "", "", &lines)
-	return strings.Join(lines, "\n")
+	result, _ := StartNew[string]("tree.ToAscii", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			var lines []string
+			t.asciiRecursive(t.root, "", "", &lines)
+			return rf.Generate(true, false, strings.Join(lines, "\n"))
+		}).GetResult()
+	return result
 }
 
 func (t *Tree) asciiRecursive(node, prefix, childPrefix string, lines *[]string) {
@@ -580,10 +669,18 @@ func (t *Tree) asciiRecursive(node, prefix, childPrefix string, lines *[]string)
 
 // Graph returns the underlying directed graph.
 func (t *Tree) Graph() *directedgraph.Graph {
-	return t.graph
+	result, _ := StartNew[*directedgraph.Graph]("tree.Graph", nil,
+		func(op *Operation[*directedgraph.Graph], rf *ResultFactory[*directedgraph.Graph]) *OperationResult[*directedgraph.Graph] {
+			return rf.Generate(true, false, t.graph)
+		}).GetResult()
+	return result
 }
 
 // String returns a string representation showing root and size.
 func (t *Tree) String() string {
-	return fmt.Sprintf("Tree(root=%q, size=%d)", t.root, t.Size())
+	result, _ := StartNew[string]("tree.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("Tree(root=%q, size=%d)", t.root, t.Size()))
+		}).GetResult()
+	return result
 }

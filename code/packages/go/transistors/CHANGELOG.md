@@ -4,6 +4,12 @@ All notable changes to the `transistors` package will be documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-04-02
+
+### Changed
+
+- **Operations pattern**: Wrapped all public constructors and analysis functions with `StartNew` for automatic timing, structured logging, and panic recovery. Functions covered: `DefaultMOSFETParams`, `DefaultBJTParams`, `DefaultCircuitParams`, `NewNMOS`, `NewPMOS`, `NewNPN`, `NewPNP`, all transistor methods (`Region`, `DrainCurrent`, `IsConducting`, `OutputVoltage`, `Transconductance`, `CollectorCurrent`, `BaseCurrent`), `NewCMOSInverter`, `NewCMOSNand`, `NewCMOSNor`, `NewCMOSAnd`, `NewCMOSOr`, `NewCMOSXor`, `NewCMOSXnor`, `NewTTLNand`, `NewRTLInverter`, `AnalyzeCommonSourceAmp`, `AnalyzeCommonEmitterAmp`, `ComputeNoiseMargins`, `AnalyzePower`, `AnalyzeTiming`, `CompareCMOSvsTTL`, `DemonstrateCMOSScaling`. The public API is fully backward-compatible.
+
 ## [0.2.0] - 2026-03-29
 
 ### Added

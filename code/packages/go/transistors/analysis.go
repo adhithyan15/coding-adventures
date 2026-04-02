@@ -78,35 +78,35 @@ func extractGateInfo(gate interface{}) (gateInfo, error) {
 //
 // Supported gate types: *CMOSInverter, *TTLNand.
 func ComputeNoiseMargins(gate interface{}) (NoiseMargins, error) {
-	var vol, voh, vil, vih float64
+	return StartNew[NoiseMargins]("transistors.ComputeNoiseMargins", NoiseMargins{},
+		func(op *Operation[NoiseMargins], rf *ResultFactory[NoiseMargins]) *OperationResult[NoiseMargins] {
+			var vol, voh, vil, vih float64
 
-	switch g := gate.(type) {
-	case *CMOSInverter:
-		vdd := g.Circuit.Vdd
-		// CMOS has nearly ideal rail-to-rail output
-		vol = 0.0
-		voh = vdd
-		// Input thresholds at ~40% and ~60% of Vdd (symmetric CMOS)
-		vil = 0.4 * vdd
-		vih = 0.6 * vdd
-	case *TTLNand:
-		// TTL specifications (standard 74xx series)
-		vol = 0.2  // Vce_sat of output transistor
-		voh = g.Vcc - 0.7 // Vcc minus one diode drop
-		vil = 0.8  // Standard TTL input LOW threshold
-		vih = 2.0  // Standard TTL input HIGH threshold
-	default:
-		return NoiseMargins{}, fmt.Errorf("unsupported gate type: %T", gate)
-	}
+			switch g := gate.(type) {
+			case *CMOSInverter:
+				vdd := g.Circuit.Vdd
+				vol = 0.0
+				voh = vdd
+				vil = 0.4 * vdd
+				vih = 0.6 * vdd
+			case *TTLNand:
+				vol = 0.2
+				voh = g.Vcc - 0.7
+				vil = 0.8
+				vih = 2.0
+			default:
+				return rf.Fail(NoiseMargins{}, fmt.Errorf("unsupported gate type: %T", gate))
+			}
 
-	nml := vil - vol
-	nmh := voh - vih
+			nml := vil - vol
+			nmh := voh - vih
 
-	return NoiseMargins{
-		VOL: vol, VOH: voh,
-		VIL: vil, VIH: vih,
-		NML: nml, NMH: nmh,
-	}, nil
+			return rf.Generate(true, false, NoiseMargins{
+				VOL: vol, VOH: voh,
+				VIL: vil, VIH: vih,
+				NML: nml, NMH: nmh,
+			})
+		}).GetResult()
 }
 
 // AnalyzePower computes power consumption for a gate at a given frequency.
@@ -124,27 +124,29 @@ func ComputeNoiseMargins(gate interface{}) (NoiseMargins, error) {
 //
 // Supported gate types: *CMOSInverter, *CMOSNand, *CMOSNor, *TTLNand.
 func AnalyzePower(gate interface{}, frequency, cLoad, activityFactor float64) (PowerAnalysis, error) {
-	info, err := extractGateInfo(gate)
-	if err != nil {
-		return PowerAnalysis{}, err
-	}
+	return StartNew[PowerAnalysis]("transistors.AnalyzePower", PowerAnalysis{},
+		func(op *Operation[PowerAnalysis], rf *ResultFactory[PowerAnalysis]) *OperationResult[PowerAnalysis] {
+			op.AddProperty("frequency", frequency)
+			op.AddProperty("cLoad", cLoad)
+			info, err := extractGateInfo(gate)
+			if err != nil {
+				return rf.Fail(PowerAnalysis{}, err)
+			}
 
-	staticPower := info.staticPow
-	vdd := info.vdd
+			staticPower := info.staticPow
+			vdd := info.vdd
 
-	// Dynamic power: P = C * V^2 * f * alpha
-	dynamic := cLoad * vdd * vdd * frequency * activityFactor
-	total := staticPower + dynamic
+			dynamic := cLoad * vdd * vdd * frequency * activityFactor
+			total := staticPower + dynamic
+			energyPerSwitch := cLoad * vdd * vdd
 
-	// Energy per switching event: E = C * V^2
-	energyPerSwitch := cLoad * vdd * vdd
-
-	return PowerAnalysis{
-		StaticPower:     staticPower,
-		DynamicPower:    dynamic,
-		TotalPower:      total,
-		EnergyPerSwitch: energyPerSwitch,
-	}, nil
+			return rf.Generate(true, false, PowerAnalysis{
+				StaticPower:     staticPower,
+				DynamicPower:    dynamic,
+				TotalPower:      total,
+				EnergyPerSwitch: energyPerSwitch,
+			})
+		}).GetResult()
 }
 
 // AnalyzeTiming computes timing characteristics for a gate.
@@ -160,47 +162,50 @@ func AnalyzePower(gate interface{}, frequency, cLoad, activityFactor float64) (P
 //
 // Supported gate types: *CMOSInverter, *CMOSNand, *CMOSNor, *TTLNand.
 func AnalyzeTiming(gate interface{}, cLoad float64) (TimingAnalysis, error) {
-	var tphl, tplh, riseTime, fallTime float64
+	return StartNew[TimingAnalysis]("transistors.AnalyzeTiming", TimingAnalysis{},
+		func(op *Operation[TimingAnalysis], rf *ResultFactory[TimingAnalysis]) *OperationResult[TimingAnalysis] {
+			op.AddProperty("cLoad", cLoad)
+			var tphl, tplh, riseTime, fallTime float64
 
-	switch g := gate.(type) {
-	case *TTLNand:
-		// TTL has relatively fixed timing characteristics
-		tphl = 7e-9    // HIGH to LOW: ~7 ns
-		tplh = 11e-9   // LOW to HIGH: ~11 ns (slower pull-up)
-		riseTime = 15e-9
-		fallTime = 10e-9
+			switch g := gate.(type) {
+			case *TTLNand:
+				tphl = 7e-9
+				tplh = 11e-9
+				riseTime = 15e-9
+				fallTime = 10e-9
 
-	case *CMOSInverter:
-		tphl, tplh, riseTime, fallTime = cmosTiming(
-			g.Circuit.Vdd, g.Nmos, g.Pmos, cLoad)
+			case *CMOSInverter:
+				tphl, tplh, riseTime, fallTime = cmosTiming(
+					g.Circuit.Vdd, g.Nmos, g.Pmos, cLoad)
 
-	case *CMOSNand:
-		tphl, tplh, riseTime, fallTime = cmosTiming(
-			g.Circuit.Vdd, g.Nmos1, g.Pmos1, cLoad)
+			case *CMOSNand:
+				tphl, tplh, riseTime, fallTime = cmosTiming(
+					g.Circuit.Vdd, g.Nmos1, g.Pmos1, cLoad)
 
-	case *CMOSNor:
-		tphl, tplh, riseTime, fallTime = cmosTiming(
-			g.Circuit.Vdd, g.Nmos1, g.Pmos1, cLoad)
+			case *CMOSNor:
+				tphl, tplh, riseTime, fallTime = cmosTiming(
+					g.Circuit.Vdd, g.Nmos1, g.Pmos1, cLoad)
 
-	default:
-		return TimingAnalysis{}, fmt.Errorf("unsupported gate type: %T", gate)
-	}
+			default:
+				return rf.Fail(TimingAnalysis{}, fmt.Errorf("unsupported gate type: %T", gate))
+			}
 
-	tpd := (tphl + tplh) / 2.0
+			tpd := (tphl + tplh) / 2.0
 
-	maxFrequency := math.Inf(1)
-	if tpd > 0 {
-		maxFrequency = 1.0 / (2.0 * tpd)
-	}
+			maxFrequency := math.Inf(1)
+			if tpd > 0 {
+				maxFrequency = 1.0 / (2.0 * tpd)
+			}
 
-	return TimingAnalysis{
-		Tphl:         tphl,
-		Tplh:         tplh,
-		Tpd:          tpd,
-		RiseTime:     riseTime,
-		FallTime:     fallTime,
-		MaxFrequency: maxFrequency,
-	}, nil
+			return rf.Generate(true, false, TimingAnalysis{
+				Tphl:         tphl,
+				Tplh:         tplh,
+				Tpd:          tpd,
+				RiseTime:     riseTime,
+				FallTime:     fallTime,
+				MaxFrequency: maxFrequency,
+			})
+		}).GetResult()
 }
 
 // cmosTiming calculates CMOS timing parameters from transistor characteristics.
@@ -240,42 +245,48 @@ func cmosTiming(vdd float64, nmos *NMOS, pmos *PMOS, cLoad float64) (tphl, tplh,
 //   - CMOS has better noise margins (relative to Vdd)
 //   - CMOS can operate at lower voltages
 func CompareCMOSvsTTL(frequency, cLoad float64) map[string]map[string]float64 {
-	cmosNand := NewCMOSNand(nil, nil, nil)
-	ttlNand := NewTTLNand(5.0, nil)
+	result, _ := StartNew[map[string]map[string]float64]("transistors.CompareCMOSvsTTL", nil,
+		func(op *Operation[map[string]map[string]float64], rf *ResultFactory[map[string]map[string]float64]) *OperationResult[map[string]map[string]float64] {
+			op.AddProperty("frequency", frequency)
+			op.AddProperty("cLoad", cLoad)
+			cmosNand := NewCMOSNand(nil, nil, nil)
+			ttlNand := NewTTLNand(5.0, nil)
 
-	cmosPower, _ := AnalyzePower(cmosNand, frequency, cLoad, 0.5)
-	ttlPower, _ := AnalyzePower(ttlNand, frequency, cLoad, 0.5)
+			cmosPower, _ := AnalyzePower(cmosNand, frequency, cLoad, 0.5)
+			ttlPower, _ := AnalyzePower(ttlNand, frequency, cLoad, 0.5)
 
-	cmosTiming, _ := AnalyzeTiming(cmosNand, cLoad)
-	ttlTiming, _ := AnalyzeTiming(ttlNand, cLoad)
+			cmosTiming, _ := AnalyzeTiming(cmosNand, cLoad)
+			ttlTiming, _ := AnalyzeTiming(ttlNand, cLoad)
 
-	cmosNM, _ := ComputeNoiseMargins(NewCMOSInverter(nil, nil, nil))
-	ttlNM, _ := ComputeNoiseMargins(ttlNand)
+			cmosNM, _ := ComputeNoiseMargins(NewCMOSInverter(nil, nil, nil))
+			ttlNM, _ := ComputeNoiseMargins(ttlNand)
 
-	return map[string]map[string]float64{
-		"cmos": {
-			"transistor_count":      4,
-			"supply_voltage":        cmosNand.Circuit.Vdd,
-			"static_power_w":        cmosPower.StaticPower,
-			"dynamic_power_w":       cmosPower.DynamicPower,
-			"total_power_w":         cmosPower.TotalPower,
-			"propagation_delay_s":   cmosTiming.Tpd,
-			"max_frequency_hz":      cmosTiming.MaxFrequency,
-			"noise_margin_low_v":    cmosNM.NML,
-			"noise_margin_high_v":   cmosNM.NMH,
-		},
-		"ttl": {
-			"transistor_count":      3,
-			"supply_voltage":        ttlNand.Vcc,
-			"static_power_w":        ttlPower.StaticPower,
-			"dynamic_power_w":       ttlPower.DynamicPower,
-			"total_power_w":         ttlPower.TotalPower,
-			"propagation_delay_s":   ttlTiming.Tpd,
-			"max_frequency_hz":      ttlTiming.MaxFrequency,
-			"noise_margin_low_v":    ttlNM.NML,
-			"noise_margin_high_v":   ttlNM.NMH,
-		},
-	}
+			return rf.Generate(true, false, map[string]map[string]float64{
+				"cmos": {
+					"transistor_count":    4,
+					"supply_voltage":      cmosNand.Circuit.Vdd,
+					"static_power_w":      cmosPower.StaticPower,
+					"dynamic_power_w":     cmosPower.DynamicPower,
+					"total_power_w":       cmosPower.TotalPower,
+					"propagation_delay_s": cmosTiming.Tpd,
+					"max_frequency_hz":    cmosTiming.MaxFrequency,
+					"noise_margin_low_v":  cmosNM.NML,
+					"noise_margin_high_v": cmosNM.NMH,
+				},
+				"ttl": {
+					"transistor_count":    3,
+					"supply_voltage":      ttlNand.Vcc,
+					"static_power_w":      ttlPower.StaticPower,
+					"dynamic_power_w":     ttlPower.DynamicPower,
+					"total_power_w":       ttlPower.TotalPower,
+					"propagation_delay_s": ttlTiming.Tpd,
+					"max_frequency_hz":    ttlTiming.MaxFrequency,
+					"noise_margin_low_v":  ttlNM.NML,
+					"noise_margin_high_v": ttlNM.NMH,
+				},
+			})
+		}).GetResult()
+	return result
 }
 
 // DemonstrateCMOSScaling shows how CMOS performance changes with technology scaling.
@@ -288,53 +299,54 @@ func CompareCMOSvsTTL(frequency, cLoad float64) map[string]map[string]float64 {
 //
 // If nodes is nil, defaults to [180nm, 90nm, 45nm, 22nm, 7nm, 3nm].
 func DemonstrateCMOSScaling(nodes []float64) []map[string]float64 {
-	if nodes == nil {
-		nodes = []float64{180e-9, 90e-9, 45e-9, 22e-9, 7e-9, 3e-9}
-	}
+	result, _ := StartNew[[]map[string]float64]("transistors.DemonstrateCMOSScaling", nil,
+		func(op *Operation[[]map[string]float64], rf *ResultFactory[[]map[string]float64]) *OperationResult[[]map[string]float64] {
+			if nodes == nil {
+				nodes = []float64{180e-9, 90e-9, 45e-9, 22e-9, 7e-9, 3e-9}
+			}
 
-	results := make([]map[string]float64, 0, len(nodes))
+			results := make([]map[string]float64, 0, len(nodes))
 
-	for _, node := range nodes {
-		// Empirical scaling relationships (simplified)
-		scale := node / 180e-9
+			for _, node := range nodes {
+				scale := node / 180e-9
 
-		vdd := 3.3 * math.Sqrt(scale)
-		if vdd < 0.7 {
-			vdd = 0.7
-		}
+				vdd := 3.3 * math.Sqrt(scale)
+				if vdd < 0.7 {
+					vdd = 0.7
+				}
 
-		vth := 0.4 * math.Pow(scale, 0.3)
-		if vth < 0.15 {
-			vth = 0.15
-		}
+				vth := 0.4 * math.Pow(scale, 0.3)
+				if vth < 0.15 {
+					vth = 0.15
+				}
 
-		cGate := 1e-15 * scale
-		k := 0.001 / math.Sqrt(scale)
+				cGate := 1e-15 * scale
+				k := 0.001 / math.Sqrt(scale)
 
-		// Create transistor and circuit with scaled parameters
-		params := MOSFETParams{Vth: vth, K: k, L: node, CGate: cGate,
-			W: 1e-6, CDrain: 0.5e-15}
-		circuit := CircuitParams{Vdd: vdd, Temperature: 300.0}
-		inv := NewCMOSInverter(&circuit, &params, &params)
+				params := MOSFETParams{Vth: vth, K: k, L: node, CGate: cGate,
+					W: 1e-6, CDrain: 0.5e-15}
+				circuit := CircuitParams{Vdd: vdd, Temperature: 300.0}
+				inv := NewCMOSInverter(&circuit, &params, &params)
 
-		loadCap := cGate * 10
-		timing, _ := AnalyzeTiming(inv, loadCap)
-		power, _ := AnalyzePower(inv, 1e9, loadCap, 0.5)
+				loadCap := cGate * 10
+				timing, _ := AnalyzeTiming(inv, loadCap)
+				power, _ := AnalyzePower(inv, 1e9, loadCap, 0.5)
 
-		// Leakage current increases exponentially as Vth decreases
-		leakage := 1e-12 * math.Exp((0.4-vth)/0.052)
+				leakage := 1e-12 * math.Exp((0.4-vth)/0.052)
 
-		results = append(results, map[string]float64{
-			"node_nm":              node * 1e9,
-			"vdd_v":               vdd,
-			"vth_v":               vth,
-			"c_gate_f":            cGate,
-			"propagation_delay_s": timing.Tpd,
-			"dynamic_power_w":     power.DynamicPower,
-			"leakage_current_a":   leakage,
-			"max_frequency_hz":    timing.MaxFrequency,
-		})
-	}
+				results = append(results, map[string]float64{
+					"node_nm":             node * 1e9,
+					"vdd_v":               vdd,
+					"vth_v":               vth,
+					"c_gate_f":            cGate,
+					"propagation_delay_s": timing.Tpd,
+					"dynamic_power_w":     power.DynamicPower,
+					"leakage_current_a":   leakage,
+					"max_frequency_hz":    timing.MaxFrequency,
+				})
+			}
 
-	return results
+			return rf.Generate(true, false, results)
+		}).GetResult()
+	return result
 }

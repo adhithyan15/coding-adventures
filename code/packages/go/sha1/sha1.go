@@ -188,26 +188,34 @@ func compress(state [5]uint32, block []byte) [5]uint32 {
 //
 // We name this Sum1 (not Sum) to avoid clashing with Go stdlib's crypto/sha1.Sum.
 func Sum1(data []byte) [20]byte {
-	padded := pad(data)
-	state := initState
-	for i := 0; i < len(padded); i += 64 {
-		state = compress(state, padded[i:i+64])
-	}
-	// Finalize: concatenate the five state words as big-endian bytes.
-	// Big-endian = most significant byte first (natural human-readable order).
-	var digest [20]byte
-	for i, w := range state {
-		binary.BigEndian.PutUint32(digest[i*4:], w)
-	}
-	return digest
+	result, _ := StartNew[[20]byte]("sha1.Sum1", [20]byte{},
+		func(op *Operation[[20]byte], rf *ResultFactory[[20]byte]) *OperationResult[[20]byte] {
+			op.AddProperty("dataLen", len(data))
+			padded := pad(data)
+			state := initState
+			for i := 0; i < len(padded); i += 64 {
+				state = compress(state, padded[i:i+64])
+			}
+			var digest [20]byte
+			for i, w := range state {
+				binary.BigEndian.PutUint32(digest[i*4:], w)
+			}
+			return rf.Generate(true, false, digest)
+		}).GetResult()
+	return result
 }
 
 // HexString computes SHA-1 and returns the 40-character lowercase hex string.
 //
 //	sha1.HexString([]byte("abc")) → "a9993e364706816aba3e25717850c26c9cd0d89d"
 func HexString(data []byte) string {
-	digest := Sum1(data)
-	return hex.EncodeToString(digest[:])
+	result, _ := StartNew[string]("sha1.HexString", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("dataLen", len(data))
+			digest := Sum1(data)
+			return rf.Generate(true, false, hex.EncodeToString(digest[:]))
+		}).GetResult()
+	return result
 }
 
 // Digest is a streaming SHA-1 hasher that accepts data in multiple chunks.
@@ -229,19 +237,26 @@ type Digest struct {
 
 // New returns a new streaming SHA-1 Digest initialized with the starting constants.
 func New() *Digest {
-	return &Digest{state: initState}
+	result, _ := StartNew[*Digest]("sha1.New", nil,
+		func(op *Operation[*Digest], rf *ResultFactory[*Digest]) *OperationResult[*Digest] {
+			return rf.Generate(true, false, &Digest{state: initState})
+		}).GetResult()
+	return result
 }
 
 // Write feeds more bytes into the hash computation. Always returns len(p), nil.
 func (d *Digest) Write(p []byte) (int, error) {
-	d.buf = append(d.buf, p...)
-	d.byteCount += uint64(len(p))
-	// Compress any complete 64-byte blocks to keep buf small
-	for len(d.buf) >= 64 {
-		d.state = compress(d.state, d.buf[:64])
-		d.buf = d.buf[64:]
-	}
-	return len(p), nil
+	return StartNew[int]("sha1.Digest.Write", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("pLen", len(p))
+			d.buf = append(d.buf, p...)
+			d.byteCount += uint64(len(p))
+			for len(d.buf) >= 64 {
+				d.state = compress(d.state, d.buf[:64])
+				d.buf = d.buf[64:]
+			}
+			return rf.Generate(true, false, len(p))
+		}).GetResult()
 }
 
 // Sum1 returns the 20-byte digest of all data written so far.
@@ -249,32 +264,38 @@ func (d *Digest) Write(p []byte) (int, error) {
 // Non-destructive: the internal state is not modified, so you can continue
 // writing after calling Sum1.
 func (d *Digest) Sum1() [20]byte {
-	// Pad the remaining buffer using the TOTAL byte count
-	bitLen := d.byteCount * 8
-	tail := append([]byte{}, d.buf...)
-	tail = append(tail, 0x80)
-	for len(tail)%64 != 56 {
-		tail = append(tail, 0x00)
-	}
-	var lenBuf [8]byte
-	binary.BigEndian.PutUint64(lenBuf[:], bitLen)
-	tail = append(tail, lenBuf[:]...)
+	result, _ := StartNew[[20]byte]("sha1.Digest.Sum1", [20]byte{},
+		func(op *Operation[[20]byte], rf *ResultFactory[[20]byte]) *OperationResult[[20]byte] {
+			bitLen := d.byteCount * 8
+			tail := append([]byte{}, d.buf...)
+			tail = append(tail, 0x80)
+			for len(tail)%64 != 56 {
+				tail = append(tail, 0x00)
+			}
+			var lenBuf [8]byte
+			binary.BigEndian.PutUint64(lenBuf[:], bitLen)
+			tail = append(tail, lenBuf[:]...)
 
-	// Compress padding against a copy of the live state
-	state := d.state
-	for i := 0; i < len(tail); i += 64 {
-		state = compress(state, tail[i:i+64])
-	}
+			state := d.state
+			for i := 0; i < len(tail); i += 64 {
+				state = compress(state, tail[i:i+64])
+			}
 
-	var digest [20]byte
-	for i, w := range state {
-		binary.BigEndian.PutUint32(digest[i*4:], w)
-	}
-	return digest
+			var digest [20]byte
+			for i, w := range state {
+				binary.BigEndian.PutUint32(digest[i*4:], w)
+			}
+			return rf.Generate(true, false, digest)
+		}).GetResult()
+	return result
 }
 
 // HexDigest returns the 40-character hex string of the digest.
 func (d *Digest) HexDigest() string {
-	digest := d.Sum1()
-	return hex.EncodeToString(digest[:])
+	result, _ := StartNew[string]("sha1.Digest.HexDigest", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			digest := d.Sum1()
+			return rf.Generate(true, false, hex.EncodeToString(digest[:]))
+		}).GetResult()
+	return result
 }

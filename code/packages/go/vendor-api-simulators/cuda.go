@@ -69,7 +69,14 @@ type Dim3 struct {
 
 // NewDim3 creates a Dim3 with the given dimensions.
 func NewDim3(x, y, z int) Dim3 {
-	return Dim3{X: x, Y: y, Z: z}
+	result, _ := StartNew[Dim3]("vendorapisimulators.NewDim3", Dim3{},
+		func(op *Operation[Dim3], rf *ResultFactory[Dim3]) *OperationResult[Dim3] {
+			op.AddProperty("x", x)
+			op.AddProperty("y", y)
+			op.AddProperty("z", z)
+			return rf.Generate(true, false, Dim3{X: x, Y: y, Z: z})
+		}).GetResult()
+	return result
 }
 
 // CUDAMemcpyKind identifies the direction of a CUDA memory copy.
@@ -182,13 +189,14 @@ type CUDARuntime struct {
 
 // NewCUDARuntime creates a new CUDA runtime, selecting an NVIDIA GPU.
 func NewCUDARuntime() (*CUDARuntime, error) {
-	base, err := InitBase(nil, "nvidia")
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize CUDA runtime: %w", err)
-	}
-	return &CUDARuntime{
-		BaseVendorSimulator: base,
-	}, nil
+	return StartNew[*CUDARuntime]("vendorapisimulators.NewCUDARuntime", nil,
+		func(op *Operation[*CUDARuntime], rf *ResultFactory[*CUDARuntime]) *OperationResult[*CUDARuntime] {
+			base, err := InitBase(nil, "nvidia")
+			if err != nil {
+				return rf.Fail(nil, fmt.Errorf("failed to initialize CUDA runtime: %w", err))
+			}
+			return rf.Generate(true, false, &CUDARuntime{BaseVendorSimulator: base})
+		}).GetResult()
 }
 
 // =================================================================

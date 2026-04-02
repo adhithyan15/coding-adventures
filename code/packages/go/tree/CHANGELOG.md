@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 (2026-04-02)
+
+### Changed
+
+- **Operations pattern**: Wrapped all public methods with `StartNew` for automatic timing, structured logging, and panic recovery. Methods covered: `New`, `AddChild`, `RemoveSubtree`, `Root`, `HasNode`, `Height`, `Size`, `Parent`, `Children`, `Siblings`, `IsLeaf`, `IsRoot`, `Depth`, `Nodes`, `Leaves`, `Preorder`, `Postorder`, `LevelOrder`, `PathTo`, `LCA`, `Subtree`, `ToAscii`, `String`, `Graph`. The public API is fully backward-compatible.
+
 ## 0.1.0 (2026-03-20)
 
 ### Added

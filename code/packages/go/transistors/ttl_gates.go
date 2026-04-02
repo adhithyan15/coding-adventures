@@ -65,20 +65,25 @@ type TTLNand struct {
 
 // NewTTLNand creates a TTL NAND gate. Default Vcc is 5V.
 func NewTTLNand(vcc float64, params *BJTParams) *TTLNand {
-	var p BJTParams
-	if params != nil {
-		p = *params
-	} else {
-		p = DefaultBJTParams()
-	}
-	return &TTLNand{
-		Vcc:     vcc,
-		Params:  p,
-		RPullup: 4000.0, // 4k ohm pull-up resistor
-		Q1:      NewNPN(&p),
-		Q2:      NewNPN(&p),
-		Q3:      NewNPN(&p),
-	}
+	result, _ := StartNew[*TTLNand]("transistors.NewTTLNand", nil,
+		func(op *Operation[*TTLNand], rf *ResultFactory[*TTLNand]) *OperationResult[*TTLNand] {
+			op.AddProperty("vcc", vcc)
+			var p BJTParams
+			if params != nil {
+				p = *params
+			} else {
+				p = DefaultBJTParams()
+			}
+			return rf.Generate(true, false, &TTLNand{
+				Vcc:     vcc,
+				Params:  p,
+				RPullup: 4000.0,
+				Q1:      NewNPN(&p),
+				Q2:      NewNPN(&p),
+				Q3:      NewNPN(&p),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates the TTL NAND gate with analog input voltages.
@@ -193,19 +198,24 @@ type RTLInverter struct {
 
 // NewRTLInverter creates an RTL inverter.
 func NewRTLInverter(vcc, rBase, rCollector float64, params *BJTParams) *RTLInverter {
-	var p BJTParams
-	if params != nil {
-		p = *params
-	} else {
-		p = DefaultBJTParams()
-	}
-	return &RTLInverter{
-		Vcc:        vcc,
-		RBase:      rBase,
-		RCollector: rCollector,
-		Params:     p,
-		Q1:         NewNPN(&p),
-	}
+	result, _ := StartNew[*RTLInverter]("transistors.NewRTLInverter", nil,
+		func(op *Operation[*RTLInverter], rf *ResultFactory[*RTLInverter]) *OperationResult[*RTLInverter] {
+			op.AddProperty("vcc", vcc)
+			var p BJTParams
+			if params != nil {
+				p = *params
+			} else {
+				p = DefaultBJTParams()
+			}
+			return rf.Generate(true, false, &RTLInverter{
+				Vcc:        vcc,
+				RBase:      rBase,
+				RCollector: rCollector,
+				Params:     p,
+				Q1:         NewNPN(&p),
+			})
+		}).GetResult()
+	return result
 }
 
 // Evaluate evaluates the RTL inverter with an analog input voltage.
