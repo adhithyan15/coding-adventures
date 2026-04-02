@@ -1,6 +1,6 @@
-(cd ../transistors && perl Makefile.PL && make && make install)
-(cd ../logic-gates && perl Makefile.PL && make && make install)
-(cd ../arithmetic && perl Makefile.PL && make && make install)
-(cd ../arm1-simulator && perl Makefile.PL && make && make install)
+(cd ../transistors && cpanm --notest --quiet .)
+(cd ../logic-gates && cpanm --notest --quiet .)
+(cd ../arithmetic && cpanm --notest --quiet .)
+(cd ../arm1-simulator && cpanm --notest --quiet .)
 cpanm --installdeps --quiet .
 prove -l -v t/

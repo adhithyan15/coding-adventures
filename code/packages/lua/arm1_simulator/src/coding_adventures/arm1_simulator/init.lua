@@ -315,9 +315,18 @@ function M.write_byte(cpu, addr, value)
 end
 
 -- Loads a list of 32-bit instruction words into memory starting at address 0.
-function M.load_instructions(cpu, instructions)
-    local addr = 0
-    for _, inst in ipairs(instructions) do
+function M.load_instructions(cpu, base_or_instructions, instructions)
+    -- Accept both two-arg form (cpu, instructions) and three-arg form (cpu, base, instructions).
+    -- The three-arg form is used by gate-level tests that specify a load address explicitly.
+    local addr, instrs
+    if instructions == nil then
+        addr   = 0
+        instrs = base_or_instructions
+    else
+        addr   = base_or_instructions
+        instrs = instructions
+    end
+    for _, inst in ipairs(instrs) do
         M.write_word(cpu, addr, inst)
         addr = addr + 4
     end
@@ -1118,7 +1127,10 @@ end
 -- These functions build ARM instruction words for use in test programs.
 
 function M.encode_data_processing(condition, opcode, s, rn, rd, operand2)
-    return ((condition << 28) | operand2 | (opcode << 21) | (s << 20)
+    -- s may arrive as a boolean (true/false from encode_alu_reg) or as an integer 0/1.
+    -- Bitwise shift requires an integer, so normalise to 0 or 1 before use.
+    local s_bit = (s == true or s == 1) and 1 or 0
+    return ((condition << 28) | operand2 | (opcode << 21) | (s_bit << 20)
             | (rn << 16) | (rd << 12)) & M.MASK32
 end
 
