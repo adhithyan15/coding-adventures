@@ -207,7 +207,7 @@ func (s *WasmSimulator) Run(program []byte, maxSteps int) []WasmStepTrace {
 				traces = append(traces, s.Step())
 			}
 			return rf.Generate(true, false, traces)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

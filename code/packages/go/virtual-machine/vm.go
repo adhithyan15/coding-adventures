@@ -100,7 +100,7 @@ func (vm *VirtualMachine) Execute(code CodeObject) []VMTrace {
 				traces = append(traces, vm.Step(code))
 			}
 			return rf.Generate(true, false, traces)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2026-04-02
+
+### Fixed
+
+- Added `.PanicOnUnexpected()` to `WasmSimulator.Run` so that panics raised inside `Step` (e.g., unknown WASM opcodes decoded by `WasmDecoder.Decode`) propagate out to the caller instead of being swallowed by the outer Operations wrapper. Fixes `TestUnknownOpcode`.
+
 ## [0.2.0] - 2026-03-31
 
 ### Changed
