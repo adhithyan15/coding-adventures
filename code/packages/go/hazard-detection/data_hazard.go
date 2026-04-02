@@ -22,25 +22,29 @@ type DataHazardDetector struct{}
 
 // Detect checks for data hazards between the ID stage and EX/MEM stages.
 func (d *DataHazardDetector) Detect(idStage, exStage, memStage PipelineSlot) HazardResult {
-	// If ID stage is empty (bubble), nothing to check.
-	if !idStage.Valid {
-		return HazardResult{Action: ActionNone, Reason: "ID stage is empty (bubble)"}
-	}
+	result, _ := StartNew[HazardResult]("hazard-detection.DataHazardDetector.Detect", HazardResult{},
+		func(op *Operation[HazardResult], rf *ResultFactory[HazardResult]) *OperationResult[HazardResult] {
+			// If ID stage is empty (bubble), nothing to check.
+			if !idStage.Valid {
+				return rf.Generate(true, false, HazardResult{Action: ActionNone, Reason: "ID stage is empty (bubble)"})
+			}
 
-	// No source registers means no data dependency.
-	if len(idStage.SourceRegs) == 0 {
-		return HazardResult{Action: ActionNone, Reason: "instruction has no source registers"}
-	}
+			// No source registers means no data dependency.
+			if len(idStage.SourceRegs) == 0 {
+				return rf.Generate(true, false, HazardResult{Action: ActionNone, Reason: "instruction has no source registers"})
+			}
 
-	// Check each source register; track the worst hazard found.
-	worst := HazardResult{Action: ActionNone, Reason: "no data dependencies detected"}
+			// Check each source register; track the worst hazard found.
+			worst := HazardResult{Action: ActionNone, Reason: "no data dependencies detected"}
 
-	for _, srcReg := range idStage.SourceRegs {
-		result := d.checkSingleRegister(srcReg, exStage, memStage)
-		worst = pickHigherPriority(worst, result)
-	}
+			for _, srcReg := range idStage.SourceRegs {
+				r := d.checkSingleRegister(srcReg, exStage, memStage)
+				worst = pickHigherPriority(worst, r)
+			}
 
-	return worst
+			return rf.Generate(true, false, worst)
+		}).GetResult()
+	return result
 }
 
 // checkSingleRegister checks one source register against EX and MEM destinations.

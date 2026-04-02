@@ -40,25 +40,33 @@ const (
 
 // Priority returns the numeric priority of the action (higher = more severe).
 func (a HazardAction) Priority() int {
-	return int(a)
+	result, _ := StartNew[int]("hazard-detection.HazardAction.Priority", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, int(a))
+		}).GetResult()
+	return result
 }
 
 // String returns a human-readable name for the action.
 func (a HazardAction) String() string {
-	switch a {
-	case ActionNone:
-		return "NONE"
-	case ActionForwardFromMEM:
-		return "FORWARD_FROM_MEM"
-	case ActionForwardFromEX:
-		return "FORWARD_FROM_EX"
-	case ActionStall:
-		return "STALL"
-	case ActionFlush:
-		return "FLUSH"
-	default:
-		return "UNKNOWN"
-	}
+	result, _ := StartNew[string]("hazard-detection.HazardAction.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch a {
+			case ActionNone:
+				return rf.Generate(true, false, "NONE")
+			case ActionForwardFromMEM:
+				return rf.Generate(true, false, "FORWARD_FROM_MEM")
+			case ActionForwardFromEX:
+				return rf.Generate(true, false, "FORWARD_FROM_EX")
+			case ActionStall:
+				return rf.Generate(true, false, "STALL")
+			case ActionFlush:
+				return rf.Generate(true, false, "FLUSH")
+			default:
+				return rf.Generate(true, false, "UNKNOWN")
+			}
+		}).GetResult()
+	return result
 }
 
 // PipelineSlot represents information about an instruction occupying a pipeline stage.
@@ -107,5 +115,10 @@ type HazardResult struct {
 // DestReg and DestValue fields on PipelineSlot, since Go doesn't allow
 // taking the address of a literal.
 func IntPtr(v int) *int {
-	return &v
+	result, _ := StartNew[*int]("hazard-detection.IntPtr", nil,
+		func(op *Operation[*int], rf *ResultFactory[*int]) *OperationResult[*int] {
+			op.AddProperty("v", v)
+			return rf.Generate(true, false, &v)
+		}).GetResult()
+	return result
 }

@@ -50,12 +50,19 @@ type InterruptFrame struct {
 // Returns a complete InterruptFrame that can later be passed to
 // RestoreContext to resume the interrupted code.
 func SaveContext(registers [32]uint32, pc uint32, mstatus uint32, mcause uint32) InterruptFrame {
-	return InterruptFrame{
-		PC:        pc,
-		Registers: registers,
-		MStatus:   mstatus,
-		MCause:    mcause,
-	}
+	result, _ := StartNew[InterruptFrame]("interrupt-handler.SaveContext", InterruptFrame{},
+		func(op *Operation[InterruptFrame], rf *ResultFactory[InterruptFrame]) *OperationResult[InterruptFrame] {
+			op.AddProperty("pc", pc)
+			op.AddProperty("mstatus", mstatus)
+			op.AddProperty("mcause", mcause)
+			return rf.Generate(true, false, InterruptFrame{
+				PC:        pc,
+				Registers: registers,
+				MStatus:   mstatus,
+				MCause:    mcause,
+			})
+		}).GetResult()
+	return result
 }
 
 // RestoreContext extracts CPU state from an InterruptFrame. This is called
@@ -67,5 +74,18 @@ func SaveContext(registers [32]uint32, pc uint32, mstatus uint32, mcause uint32)
 //   - pc: the program counter to resume at
 //   - mstatus: the machine status register
 func RestoreContext(frame InterruptFrame) (registers [32]uint32, pc uint32, mstatus uint32) {
-	return frame.Registers, frame.PC, frame.MStatus
+	type restoreResult struct {
+		registers [32]uint32
+		pc        uint32
+		mstatus   uint32
+	}
+	r, _ := StartNew[restoreResult]("interrupt-handler.RestoreContext", restoreResult{},
+		func(op *Operation[restoreResult], rf *ResultFactory[restoreResult]) *OperationResult[restoreResult] {
+			return rf.Generate(true, false, restoreResult{
+				registers: frame.Registers,
+				pc:        frame.PC,
+				mstatus:   frame.MStatus,
+			})
+		}).GetResult()
+	return r.registers, r.pc, r.mstatus
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1] - 2026-04-02
+
+### Changed
+
+- Wrapped all public functions (`NewJVMSimulator`, `Load`, `Step`, `Run`,
+  `EncodeIconst`, `EncodeIstore`, `EncodeIload`, `AssembleJvm`) with the
+  Operations system via `StartNew[T]`. Public API signatures are unchanged.
+
 ## [0.1.0] - Unreleased
 
 ### Added

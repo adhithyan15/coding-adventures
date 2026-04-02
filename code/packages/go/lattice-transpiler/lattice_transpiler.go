@@ -117,7 +117,16 @@ func resolveIndent(opts Options) string {
 //	`)
 //	// css = ".btn {\n  color: red;\n}\n"
 func Transpile(source string) (string, error) {
-	return latticeasttocss.TranspileLatticeFull(source, false, "  ")
+	type transpileResult struct {
+		css string
+		err error
+	}
+	r, _ := StartNew[transpileResult]("lattice-transpiler.Transpile", transpileResult{},
+		func(op *Operation[transpileResult], rf *ResultFactory[transpileResult]) *OperationResult[transpileResult] {
+			css, err := latticeasttocss.TranspileLatticeFull(source, false, "  ")
+			return rf.Generate(true, false, transpileResult{css, err})
+		}).GetResult()
+	return r.css, r.err
 }
 
 // TranspileMinified compiles a Lattice source string to compact CSS.
@@ -130,7 +139,16 @@ func Transpile(source string) (string, error) {
 //	css, err := TranspileMinified("$x: 1px; .a { margin: $x; }")
 //	// css = ".a{margin:1px;}"
 func TranspileMinified(source string) (string, error) {
-	return latticeasttocss.TranspileLatticeFull(source, true, "")
+	type transpileResult struct {
+		css string
+		err error
+	}
+	r, _ := StartNew[transpileResult]("lattice-transpiler.TranspileMinified", transpileResult{},
+		func(op *Operation[transpileResult], rf *ResultFactory[transpileResult]) *OperationResult[transpileResult] {
+			css, err := latticeasttocss.TranspileLatticeFull(source, true, "")
+			return rf.Generate(true, false, transpileResult{css, err})
+		}).GetResult()
+	return r.css, r.err
 }
 
 // TranspileWithOptions compiles a Lattice source string to CSS using the
@@ -146,6 +164,16 @@ func TranspileMinified(source string) (string, error) {
 //
 //	css, err := TranspileWithOptions(source, Options{Minify: true})
 func TranspileWithOptions(source string, opts Options) (string, error) {
-	indent := resolveIndent(opts)
-	return latticeasttocss.TranspileLatticeFull(source, opts.Minify, indent)
+	type transpileResult struct {
+		css string
+		err error
+	}
+	r, _ := StartNew[transpileResult]("lattice-transpiler.TranspileWithOptions", transpileResult{},
+		func(op *Operation[transpileResult], rf *ResultFactory[transpileResult]) *OperationResult[transpileResult] {
+			op.AddProperty("minify", opts.Minify)
+			indent := resolveIndent(opts)
+			css, err := latticeasttocss.TranspileLatticeFull(source, opts.Minify, indent)
+			return rf.Generate(true, false, transpileResult{css, err})
+		}).GetResult()
+	return r.css, r.err
 }

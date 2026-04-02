@@ -165,46 +165,60 @@ type Intel4004Simulator struct {
 // NewIntel4004Simulator creates a simulator with the given ROM size.
 // The standard 4004 addresses 4096 bytes, but smaller sizes work for testing.
 func NewIntel4004Simulator(memorySize int) *Intel4004Simulator {
-	return &Intel4004Simulator{
-		Memory: make([]byte, memorySize),
-	}
+	result, _ := StartNew[*Intel4004Simulator]("intel4004-simulator.NewIntel4004Simulator", nil,
+		func(op *Operation[*Intel4004Simulator], rf *ResultFactory[*Intel4004Simulator]) *OperationResult[*Intel4004Simulator] {
+			op.AddProperty("memorySize", memorySize)
+			return rf.Generate(true, false, &Intel4004Simulator{
+				Memory: make([]byte, memorySize),
+			})
+		}).GetResult()
+	return result
 }
 
 // LoadProgram copies a program into ROM starting at address 0.
 // The PC is reset to 0 and the Halted flag is cleared.
 func (s *Intel4004Simulator) LoadProgram(program []byte) {
-	// Clear ROM before loading
-	for i := range s.Memory {
-		s.Memory[i] = 0
-	}
-	for i, b := range program {
-		if i < len(s.Memory) {
-			s.Memory[i] = b
-		}
-	}
-	s.PC = 0
-	s.Halted = false
+	_, _ = StartNew[struct{}]("intel4004-simulator.Intel4004Simulator.LoadProgram", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("programLen", len(program))
+			// Clear ROM before loading
+			for i := range s.Memory {
+				s.Memory[i] = 0
+			}
+			for i, b := range program {
+				if i < len(s.Memory) {
+					s.Memory[i] = b
+				}
+			}
+			s.PC = 0
+			s.Halted = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Reset clears all CPU state to power-on defaults.
 func (s *Intel4004Simulator) Reset() {
-	s.Accumulator = 0
-	s.Registers = [16]int{}
-	s.Carry = false
-	for i := range s.Memory {
-		s.Memory[i] = 0
-	}
-	s.PC = 0
-	s.Halted = false
-	s.HwStack = [3]uint16{}
-	s.StackPointer = 0
-	s.RAM = [4][4][16]uint8{}
-	s.RAMStatus = [4][4][4]uint8{}
-	s.RAMOutput = [4]uint8{}
-	s.RAMBank = 0
-	s.RAMRegister = 0
-	s.RAMCharacter = 0
-	s.ROMPort = 0
+	_, _ = StartNew[struct{}]("intel4004-simulator.Intel4004Simulator.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			s.Accumulator = 0
+			s.Registers = [16]int{}
+			s.Carry = false
+			for i := range s.Memory {
+				s.Memory[i] = 0
+			}
+			s.PC = 0
+			s.Halted = false
+			s.HwStack = [3]uint16{}
+			s.StackPointer = 0
+			s.RAM = [4][4][16]uint8{}
+			s.RAMStatus = [4][4][4]uint8{}
+			s.RAMOutput = [4]uint8{}
+			s.RAMBank = 0
+			s.RAMRegister = 0
+			s.RAMCharacter = 0
+			s.ROMPort = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
@@ -311,36 +325,40 @@ func (s *Intel4004Simulator) ramWriteStatus(index int, value int) {
 //
 // Returns a trace record capturing the complete before/after state.
 func (s *Intel4004Simulator) Step() Intel4004Trace {
-	if s.Halted {
-		panic("CPU is halted")
-	}
+	result, _ := StartNew[Intel4004Trace]("intel4004-simulator.Intel4004Simulator.Step", Intel4004Trace{},
+		func(op *Operation[Intel4004Trace], rf *ResultFactory[Intel4004Trace]) *OperationResult[Intel4004Trace] {
+			if s.Halted {
+				panic("CPU is halted")
+			}
 
-	address := s.PC
-	raw := int(s.Memory[s.PC])
-	s.PC++
+			address := s.PC
+			raw := int(s.Memory[s.PC])
+			s.PC++
 
-	// Check for 2-byte instruction and fetch second byte
-	raw2 := -1
-	if isTwoByte(byte(raw)) {
-		raw2 = int(s.Memory[s.PC])
-		s.PC++
-	}
+			// Check for 2-byte instruction and fetch second byte
+			raw2 := -1
+			if isTwoByte(byte(raw)) {
+				raw2 = int(s.Memory[s.PC])
+				s.PC++
+			}
 
-	accBefore := s.Accumulator
-	carryBefore := s.Carry
+			accBefore := s.Accumulator
+			carryBefore := s.Carry
 
-	mnemonic := s.execute(raw, raw2)
+			mnemonic := s.execute(raw, raw2)
 
-	return Intel4004Trace{
-		Address:           address,
-		Raw:               raw,
-		Raw2:              raw2,
-		Mnemonic:          mnemonic,
-		AccumulatorBefore: accBefore,
-		AccumulatorAfter:  s.Accumulator,
-		CarryBefore:       carryBefore,
-		CarryAfter:        s.Carry,
-	}
+			return rf.Generate(true, false, Intel4004Trace{
+				Address:           address,
+				Raw:               raw,
+				Raw2:              raw2,
+				Mnemonic:          mnemonic,
+				AccumulatorBefore: accBefore,
+				AccumulatorAfter:  s.Accumulator,
+				CarryBefore:       carryBefore,
+				CarryAfter:        s.Carry,
+			})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // execute dispatches the instruction based on its encoding.
@@ -1038,16 +1056,21 @@ func (s *Intel4004Simulator) executeAccum(raw int) string {
 // Run loads and executes a program, returning a trace of every instruction.
 // Execution continues until HLT is encountered or maxSteps is reached.
 func (s *Intel4004Simulator) Run(program []byte, maxSteps int) []Intel4004Trace {
-	s.LoadProgram(program)
-	var traces []Intel4004Trace
-	for i := 0; i < maxSteps; i++ {
-		if s.Halted || s.PC >= len(s.Memory) {
-			break
-		}
-		trace := s.Step()
-		traces = append(traces, trace)
-	}
-	return traces
+	result, _ := StartNew[[]Intel4004Trace]("intel4004-simulator.Intel4004Simulator.Run", nil,
+		func(op *Operation[[]Intel4004Trace], rf *ResultFactory[[]Intel4004Trace]) *OperationResult[[]Intel4004Trace] {
+			op.AddProperty("maxSteps", maxSteps)
+			s.LoadProgram(program)
+			var traces []Intel4004Trace
+			for i := 0; i < maxSteps; i++ {
+				if s.Halted || s.PC >= len(s.Memory) {
+					break
+				}
+				trace := s.Step()
+				traces = append(traces, trace)
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------
@@ -1057,62 +1080,207 @@ func (s *Intel4004Simulator) Run(program []byte, maxSteps int) []Intel4004Trace 
 // They're primarily used in tests to build programs without hand-coding hex.
 
 // EncodeNOP returns the NOP instruction byte.
-func EncodeNOP() byte { return 0x00 }
+func EncodeNOP() byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeNOP", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			return rf.Generate(true, false, byte(0x00))
+		}).GetResult()
+	return result
+}
 
 // EncodeHlt returns the HLT instruction byte (simulator-only).
-func EncodeHlt() byte { return 0x01 }
+func EncodeHlt() byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeHlt", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			return rf.Generate(true, false, byte(0x01))
+		}).GetResult()
+	return result
+}
 
 // EncodeLdm returns a LDM N instruction byte.
-func EncodeLdm(n int) byte { return byte(0xD0 | (n & 0xF)) }
+func EncodeLdm(n int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeLdm", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("n", n)
+			return rf.Generate(true, false, byte(0xD0|(n&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeLd returns a LD Rn instruction byte.
-func EncodeLd(r int) byte { return byte(0xA0 | (r & 0xF)) }
+func EncodeLd(r int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeLd", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("r", r)
+			return rf.Generate(true, false, byte(0xA0|(r&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeXch returns a XCH Rn instruction byte.
-func EncodeXch(r int) byte { return byte(0xB0 | (r & 0xF)) }
+func EncodeXch(r int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeXch", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("r", r)
+			return rf.Generate(true, false, byte(0xB0|(r&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeAdd returns an ADD Rn instruction byte.
-func EncodeAdd(r int) byte { return byte(0x80 | (r & 0xF)) }
+func EncodeAdd(r int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeAdd", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("r", r)
+			return rf.Generate(true, false, byte(0x80|(r&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeSub returns a SUB Rn instruction byte.
-func EncodeSub(r int) byte { return byte(0x90 | (r & 0xF)) }
+func EncodeSub(r int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeSub", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("r", r)
+			return rf.Generate(true, false, byte(0x90|(r&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeInc returns an INC Rn instruction byte.
-func EncodeInc(r int) byte { return byte(0x60 | (r & 0xF)) }
+func EncodeInc(r int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeInc", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("r", r)
+			return rf.Generate(true, false, byte(0x60|(r&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeBbl returns a BBL N instruction byte.
-func EncodeBbl(n int) byte { return byte(0xC0 | (n & 0xF)) }
+func EncodeBbl(n int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeBbl", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("n", n)
+			return rf.Generate(true, false, byte(0xC0|(n&0xF)))
+		}).GetResult()
+	return result
+}
 
 // EncodeJun returns a 2-byte JUN addr instruction.
 func EncodeJun(addr int) (byte, byte) {
-	return byte(0x40 | ((addr >> 8) & 0xF)), byte(addr & 0xFF)
+	type encodeResult struct {
+		b1 byte
+		b2 byte
+	}
+	r, _ := StartNew[encodeResult]("intel4004-simulator.EncodeJun", encodeResult{},
+		func(op *Operation[encodeResult], rf *ResultFactory[encodeResult]) *OperationResult[encodeResult] {
+			op.AddProperty("addr", addr)
+			return rf.Generate(true, false, encodeResult{
+				b1: byte(0x40 | ((addr >> 8) & 0xF)),
+				b2: byte(addr & 0xFF),
+			})
+		}).GetResult()
+	return r.b1, r.b2
 }
 
 // EncodeJms returns a 2-byte JMS addr instruction.
 func EncodeJms(addr int) (byte, byte) {
-	return byte(0x50 | ((addr >> 8) & 0xF)), byte(addr & 0xFF)
+	type encodeResult struct {
+		b1 byte
+		b2 byte
+	}
+	r, _ := StartNew[encodeResult]("intel4004-simulator.EncodeJms", encodeResult{},
+		func(op *Operation[encodeResult], rf *ResultFactory[encodeResult]) *OperationResult[encodeResult] {
+			op.AddProperty("addr", addr)
+			return rf.Generate(true, false, encodeResult{
+				b1: byte(0x50 | ((addr >> 8) & 0xF)),
+				b2: byte(addr & 0xFF),
+			})
+		}).GetResult()
+	return r.b1, r.b2
 }
 
 // EncodeJcn returns a 2-byte JCN cond,addr instruction.
 func EncodeJcn(cond, addr int) (byte, byte) {
-	return byte(0x10 | (cond & 0xF)), byte(addr & 0xFF)
+	type encodeResult struct {
+		b1 byte
+		b2 byte
+	}
+	r, _ := StartNew[encodeResult]("intel4004-simulator.EncodeJcn", encodeResult{},
+		func(op *Operation[encodeResult], rf *ResultFactory[encodeResult]) *OperationResult[encodeResult] {
+			op.AddProperty("cond", cond)
+			op.AddProperty("addr", addr)
+			return rf.Generate(true, false, encodeResult{
+				b1: byte(0x10 | (cond & 0xF)),
+				b2: byte(addr & 0xFF),
+			})
+		}).GetResult()
+	return r.b1, r.b2
 }
 
 // EncodeFim returns a 2-byte FIM Pp,data instruction.
 func EncodeFim(pair, data int) (byte, byte) {
-	return byte(0x20 | ((pair & 0x7) << 1)), byte(data & 0xFF)
+	type encodeResult struct {
+		b1 byte
+		b2 byte
+	}
+	r, _ := StartNew[encodeResult]("intel4004-simulator.EncodeFim", encodeResult{},
+		func(op *Operation[encodeResult], rf *ResultFactory[encodeResult]) *OperationResult[encodeResult] {
+			op.AddProperty("pair", pair)
+			op.AddProperty("data", data)
+			return rf.Generate(true, false, encodeResult{
+				b1: byte(0x20 | ((pair & 0x7) << 1)),
+				b2: byte(data & 0xFF),
+			})
+		}).GetResult()
+	return r.b1, r.b2
 }
 
 // EncodeSrc returns a SRC Pp instruction byte.
-func EncodeSrc(pair int) byte { return byte(0x21 | ((pair & 0x7) << 1)) }
+func EncodeSrc(pair int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeSrc", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("pair", pair)
+			return rf.Generate(true, false, byte(0x21|((pair&0x7)<<1)))
+		}).GetResult()
+	return result
+}
 
 // EncodeFin returns a FIN Pp instruction byte.
-func EncodeFin(pair int) byte { return byte(0x30 | ((pair & 0x7) << 1)) }
+func EncodeFin(pair int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeFin", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("pair", pair)
+			return rf.Generate(true, false, byte(0x30|((pair&0x7)<<1)))
+		}).GetResult()
+	return result
+}
 
 // EncodeJin returns a JIN Pp instruction byte.
-func EncodeJin(pair int) byte { return byte(0x31 | ((pair & 0x7) << 1)) }
+func EncodeJin(pair int) byte {
+	result, _ := StartNew[byte]("intel4004-simulator.EncodeJin", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("pair", pair)
+			return rf.Generate(true, false, byte(0x31|((pair&0x7)<<1)))
+		}).GetResult()
+	return result
+}
 
 // EncodeIsz returns a 2-byte ISZ Rn,addr instruction.
 func EncodeIsz(reg, addr int) (byte, byte) {
-	return byte(0x70 | (reg & 0xF)), byte(addr & 0xFF)
+	type encodeResult struct {
+		b1 byte
+		b2 byte
+	}
+	r, _ := StartNew[encodeResult]("intel4004-simulator.EncodeIsz", encodeResult{},
+		func(op *Operation[encodeResult], rf *ResultFactory[encodeResult]) *OperationResult[encodeResult] {
+			op.AddProperty("reg", reg)
+			op.AddProperty("addr", addr)
+			return rf.Generate(true, false, encodeResult{
+				b1: byte(0x70 | (reg & 0xF)),
+				b2: byte(addr & 0xFF),
+			})
+		}).GetResult()
+	return r.b1, r.b2
 }

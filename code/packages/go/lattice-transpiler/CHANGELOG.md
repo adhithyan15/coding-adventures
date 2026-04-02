@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-04-02
+
+### Changed
+
+- Wrapped all public functions (`Transpile`, `TranspileMinified`,
+  `TranspileWithOptions`) with the Operations system via `StartNew[T]`.
+  Public API signatures are unchanged.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

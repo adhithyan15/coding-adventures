@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-03-31
+
+### Changed
+- Wrapped all public functions and methods with the Operations system (`StartNew[T]`) for automatic timing, structured logging, and panic recovery
+
 ## 0.1.0 — 2026-03-18
 
 ### Added

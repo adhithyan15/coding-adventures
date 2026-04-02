@@ -223,45 +223,42 @@ func (e *JsonValueError) Error() string {
 //
 // Returns a JsonValueError if the AST contains unexpected structure.
 func FromAST(node *parser.ASTNode) (JsonValue, error) {
-	if node == nil {
-		return nil, &JsonValueError{Message: "nil AST node"}
+	type fromASTResult struct {
+		v   JsonValue
+		err error
 	}
+	r, _ := StartNew[fromASTResult]("json-value.FromAST", fromASTResult{},
+		func(op *Operation[fromASTResult], rf *ResultFactory[fromASTResult]) *OperationResult[fromASTResult] {
+			if node == nil {
+				return rf.Generate(true, false, fromASTResult{nil, &JsonValueError{Message: "nil AST node"}})
+			}
 
-	// The grammar parser produces ASTNodes with rule names. The rule name
-	// tells us what kind of JSON construct we're looking at.
-	switch node.RuleName {
+			var v JsonValue
+			var err error
 
-	case "value":
-		// The "value" rule is a wrapper: it contains exactly one meaningful
-		// child -- either an ASTNode (object or array) or a Token (string,
-		// number, true, false, null). We find that child and recurse.
-		return fromASTValue(node)
-
-	case "object":
-		// An object node contains LBRACE, zero or more pair nodes, and RBRACE.
-		// We extract just the pair nodes.
-		return fromASTObject(node)
-
-	case "array":
-		// An array node contains LBRACKET, zero or more value nodes, and RBRACKET.
-		return fromASTArray(node)
-
-	case "pair":
-		// A pair node appears as a child of an object -- we shouldn't
-		// encounter it at the top level, but handle it gracefully.
-		key, val, err := fromASTPair(node)
-		if err != nil {
-			return nil, err
-		}
-		return &JsonObject{Pairs: []KeyValuePair{{Key: key, Value: val}}}, nil
-
-	default:
-		// Check if this is a leaf node wrapping a token
-		if node.IsLeaf() {
-			return fromASTToken(node.Token())
-		}
-		return nil, &JsonValueError{Message: fmt.Sprintf("unexpected rule: %s", node.RuleName)}
-	}
+			switch node.RuleName {
+			case "value":
+				v, err = fromASTValue(node)
+			case "object":
+				v, err = fromASTObject(node)
+			case "array":
+				v, err = fromASTArray(node)
+			case "pair":
+				key, val, pairErr := fromASTPair(node)
+				if pairErr != nil {
+					return rf.Generate(true, false, fromASTResult{nil, pairErr})
+				}
+				v = &JsonObject{Pairs: []KeyValuePair{{Key: key, Value: val}}}
+			default:
+				if node.IsLeaf() {
+					v, err = fromASTToken(node.Token())
+				} else {
+					err = &JsonValueError{Message: fmt.Sprintf("unexpected rule: %s", node.RuleName)}
+				}
+			}
+			return rf.Generate(true, false, fromASTResult{v, err})
+		}).GetResult()
+	return r.v, r.err
 }
 
 // fromASTValue handles the "value" rule, which wraps exactly one meaningful child.
@@ -561,43 +558,47 @@ func parseNumber(text string) (JsonValue, error) {
 //
 // The conversion is recursive -- nested JsonValues are also converted.
 func ToNative(value JsonValue) interface{} {
-	if value == nil {
-		return nil
-	}
+	result, _ := StartNew[interface{}]("json-value.ToNative", nil,
+		func(op *Operation[interface{}], rf *ResultFactory[interface{}]) *OperationResult[interface{}] {
+			if value == nil {
+				return rf.Generate(true, false, nil)
+			}
 
-	switch v := value.(type) {
-	case *JsonObject:
-		result := make(map[string]interface{})
-		for _, pair := range v.Pairs {
-			result[pair.Key] = ToNative(pair.Value)
-		}
-		return result
+			switch v := value.(type) {
+			case *JsonObject:
+				result := make(map[string]interface{})
+				for _, pair := range v.Pairs {
+					result[pair.Key] = ToNative(pair.Value)
+				}
+				return rf.Generate(true, false, interface{}(result))
 
-	case *JsonArray:
-		result := make([]interface{}, len(v.Elements))
-		for i, elem := range v.Elements {
-			result[i] = ToNative(elem)
-		}
-		return result
+			case *JsonArray:
+				result := make([]interface{}, len(v.Elements))
+				for i, elem := range v.Elements {
+					result[i] = ToNative(elem)
+				}
+				return rf.Generate(true, false, interface{}(result))
 
-	case *JsonString:
-		return v.Value
+			case *JsonString:
+				return rf.Generate(true, false, interface{}(v.Value))
 
-	case *JsonNumber:
-		if v.IsInteger {
-			return int(v.Value)
-		}
-		return v.Value
+			case *JsonNumber:
+				if v.IsInteger {
+					return rf.Generate(true, false, interface{}(int(v.Value)))
+				}
+				return rf.Generate(true, false, interface{}(v.Value))
 
-	case *JsonBool:
-		return v.Value
+			case *JsonBool:
+				return rf.Generate(true, false, interface{}(v.Value))
 
-	case *JsonNull:
-		return nil
+			case *JsonNull:
+				return rf.Generate(true, false, nil)
 
-	default:
-		return nil
-	}
+			default:
+				return rf.Generate(true, false, nil)
+			}
+		}).GetResult()
+	return result
 }
 
 // ============================================================================
@@ -624,74 +625,82 @@ func ToNative(value JsonValue) interface{} {
 //
 // Note: map keys must be strings. Non-string map keys produce an error.
 func FromNative(value interface{}) (JsonValue, error) {
-	if value == nil {
-		return &JsonNull{}, nil
+	type fromNativeResult struct {
+		v   JsonValue
+		err error
 	}
-
-	switch v := value.(type) {
-	case map[string]interface{}:
-		pairs := make([]KeyValuePair, 0, len(v))
-		for key, val := range v {
-			jv, err := FromNative(val)
-			if err != nil {
-				return nil, err
+	r, _ := StartNew[fromNativeResult]("json-value.FromNative", fromNativeResult{},
+		func(op *Operation[fromNativeResult], rf *ResultFactory[fromNativeResult]) *OperationResult[fromNativeResult] {
+			if value == nil {
+				return rf.Generate(true, false, fromNativeResult{&JsonNull{}, nil})
 			}
-			pairs = append(pairs, KeyValuePair{Key: key, Value: jv})
-		}
-		return &JsonObject{Pairs: pairs}, nil
 
-	case []interface{}:
-		elements := make([]JsonValue, len(v))
-		for i, elem := range v {
-			jv, err := FromNative(elem)
-			if err != nil {
-				return nil, err
+			switch v := value.(type) {
+			case map[string]interface{}:
+				pairs := make([]KeyValuePair, 0, len(v))
+				for key, val := range v {
+					jv, err := FromNative(val)
+					if err != nil {
+						return rf.Generate(true, false, fromNativeResult{nil, err})
+					}
+					pairs = append(pairs, KeyValuePair{Key: key, Value: jv})
+				}
+				return rf.Generate(true, false, fromNativeResult{&JsonObject{Pairs: pairs}, nil})
+
+			case []interface{}:
+				elements := make([]JsonValue, len(v))
+				for i, elem := range v {
+					jv, err := FromNative(elem)
+					if err != nil {
+						return rf.Generate(true, false, fromNativeResult{nil, err})
+					}
+					elements[i] = jv
+				}
+				return rf.Generate(true, false, fromNativeResult{&JsonArray{Elements: elements}, nil})
+
+			case string:
+				return rf.Generate(true, false, fromNativeResult{&JsonString{Value: v}, nil})
+
+			case int:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case int8:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case int16:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case int32:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case int64:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case uint:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case uint8:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case uint16:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case uint32:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+			case uint64:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: true}, nil})
+
+			case float32:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: float64(v), IsInteger: false}, nil})
+			case float64:
+				return rf.Generate(true, false, fromNativeResult{&JsonNumber{Value: v, IsInteger: false}, nil})
+
+			case bool:
+				return rf.Generate(true, false, fromNativeResult{&JsonBool{Value: v}, nil})
+
+			case JsonValue:
+				// Already a JsonValue -- return as-is
+				return rf.Generate(true, false, fromNativeResult{v, nil})
+
+			default:
+				return rf.Generate(true, false, fromNativeResult{nil, &JsonValueError{
+					Message: fmt.Sprintf("unsupported type: %T", value),
+				}})
 			}
-			elements[i] = jv
-		}
-		return &JsonArray{Elements: elements}, nil
-
-	case string:
-		return &JsonString{Value: v}, nil
-
-	case int:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case int8:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case int16:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case int32:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case int64:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case uint:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case uint8:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case uint16:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case uint32:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-	case uint64:
-		return &JsonNumber{Value: float64(v), IsInteger: true}, nil
-
-	case float32:
-		return &JsonNumber{Value: float64(v), IsInteger: false}, nil
-	case float64:
-		return &JsonNumber{Value: v, IsInteger: false}, nil
-
-	case bool:
-		return &JsonBool{Value: v}, nil
-
-	case JsonValue:
-		// Already a JsonValue -- return as-is
-		return v, nil
-
-	default:
-		return nil, &JsonValueError{
-			Message: fmt.Sprintf("unsupported type: %T", value),
-		}
-	}
+		}).GetResult()
+	return r.v, r.err
 }
 
 // ============================================================================
@@ -708,25 +717,37 @@ func FromNative(value interface{}) (JsonValue, error) {
 //	val, err := Parse(`{"name": "Alice", "age": 30}`)
 //	// val is *JsonObject with two pairs
 func Parse(text string) (result JsonValue, err error) {
-	// The lexer may panic on invalid input (e.g., unexpected characters).
-	// We recover from the panic and return it as an error instead, so
-	// callers get a clean error interface rather than a crash.
-	defer func() {
-		if r := recover(); r != nil {
-			result = nil
-			err = &JsonValueError{
-				Message: fmt.Sprintf("parse error: %v", r),
-			}
-		}
-	}()
-
-	ast, parseErr := jsonparser.ParseJSON(text)
-	if parseErr != nil {
-		return nil, &JsonValueError{
-			Message: fmt.Sprintf("parse error: %s", parseErr.Error()),
-		}
+	type parseResult struct {
+		v   JsonValue
+		err error
 	}
-	return FromAST(ast)
+	r, _ := StartNew[parseResult]("json-value.Parse", parseResult{},
+		func(op *Operation[parseResult], rf *ResultFactory[parseResult]) *OperationResult[parseResult] {
+			// The lexer may panic on invalid input (e.g., unexpected characters).
+			// We recover from the panic and return it as an error instead, so
+			// callers get a clean error interface rather than a crash.
+			var v JsonValue
+			var parseErr error
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						parseErr = &JsonValueError{
+							Message: fmt.Sprintf("parse error: %v", r),
+						}
+					}
+				}()
+				ast, astErr := jsonparser.ParseJSON(text)
+				if astErr != nil {
+					parseErr = &JsonValueError{
+						Message: fmt.Sprintf("parse error: %s", astErr.Error()),
+					}
+					return
+				}
+				v, parseErr = FromAST(ast)
+			}()
+			return rf.Generate(true, false, parseResult{v, parseErr})
+		}).GetResult()
+	return r.v, r.err
 }
 
 // ParseNative parses JSON text directly into native Go types.
@@ -739,9 +760,17 @@ func Parse(text string) (result JsonValue, err error) {
 //	result, err := ParseNative(`{"name": "Alice", "age": 30}`)
 //	// result is map[string]interface{}{"name": "Alice", "age": 30}
 func ParseNative(text string) (interface{}, error) {
-	val, err := Parse(text)
-	if err != nil {
-		return nil, err
+	type parseNativeResult struct {
+		v   interface{}
+		err error
 	}
-	return ToNative(val), nil
+	r, _ := StartNew[parseNativeResult]("json-value.ParseNative", parseNativeResult{},
+		func(op *Operation[parseNativeResult], rf *ResultFactory[parseNativeResult]) *OperationResult[parseNativeResult] {
+			val, err := Parse(text)
+			if err != nil {
+				return rf.Generate(true, false, parseNativeResult{nil, err})
+			}
+			return rf.Generate(true, false, parseNativeResult{ToNative(val), nil})
+		}).GetResult()
+	return r.v, r.err
 }

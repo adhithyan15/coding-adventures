@@ -128,25 +128,39 @@ type InterruptDescriptorTable struct {
 // initialized to not-present. This is the initial state before the BIOS
 // or kernel installs any interrupt handlers.
 func NewIDT() *InterruptDescriptorTable {
-	return &InterruptDescriptorTable{}
+	result, _ := StartNew[*InterruptDescriptorTable]("interrupt-handler.NewIDT", nil,
+		func(op *Operation[*InterruptDescriptorTable], rf *ResultFactory[*InterruptDescriptorTable]) *OperationResult[*InterruptDescriptorTable] {
+			return rf.Generate(true, false, &InterruptDescriptorTable{})
+		}).GetResult()
+	return result
 }
 
 // SetEntry installs a handler at the given interrupt number (0-255).
 // If the number is out of range, it panics -- this is a programming error,
 // not a runtime condition.
 func (idt *InterruptDescriptorTable) SetEntry(number int, entry IDTEntry) {
-	if number < 0 || number > 255 {
-		panic("IDT entry number must be 0-255")
-	}
-	idt.Entries[number] = entry
+	_, _ = StartNew[struct{}]("interrupt-handler.InterruptDescriptorTable.SetEntry", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("number", number)
+			if number < 0 || number > 255 {
+				panic("IDT entry number must be 0-255")
+			}
+			idt.Entries[number] = entry
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // GetEntry returns the entry for the given interrupt number (0-255).
 func (idt *InterruptDescriptorTable) GetEntry(number int) IDTEntry {
-	if number < 0 || number > 255 {
-		panic("IDT entry number must be 0-255")
-	}
-	return idt.Entries[number]
+	result, _ := StartNew[IDTEntry]("interrupt-handler.InterruptDescriptorTable.GetEntry", IDTEntry{},
+		func(op *Operation[IDTEntry], rf *ResultFactory[IDTEntry]) *OperationResult[IDTEntry] {
+			op.AddProperty("number", number)
+			if number < 0 || number > 255 {
+				panic("IDT entry number must be 0-255")
+			}
+			return rf.Generate(true, false, idt.Entries[number])
+		}).GetResult()
+	return result
 }
 
 // WriteToMemory serializes the entire IDT into a byte slice at the given
@@ -160,27 +174,32 @@ func (idt *InterruptDescriptorTable) GetEntry(number int) IDTEntry {
 // The memory slice must be large enough to hold baseAddress + 2048 bytes.
 // RISC-V is little-endian, so we use binary.LittleEndian throughout.
 func (idt *InterruptDescriptorTable) WriteToMemory(memory []byte, baseAddress uint32) {
-	for i := 0; i < 256; i++ {
-		offset := int(baseAddress) + i*IDTEntrySize
-		entry := idt.Entries[i]
+	_, _ = StartNew[struct{}]("interrupt-handler.InterruptDescriptorTable.WriteToMemory", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("baseAddress", baseAddress)
+			for i := 0; i < 256; i++ {
+				offset := int(baseAddress) + i*IDTEntrySize
+				entry := idt.Entries[i]
 
-		// Bytes 0-3: ISR address (little-endian)
-		binary.LittleEndian.PutUint32(memory[offset:offset+4], entry.ISRAddress)
+				// Bytes 0-3: ISR address (little-endian)
+				binary.LittleEndian.PutUint32(memory[offset:offset+4], entry.ISRAddress)
 
-		// Byte 4: Present bit
-		if entry.Present {
-			memory[offset+4] = 0x01
-		} else {
-			memory[offset+4] = 0x00
-		}
+				// Byte 4: Present bit
+				if entry.Present {
+					memory[offset+4] = 0x01
+				} else {
+					memory[offset+4] = 0x00
+				}
 
-		// Byte 5: Privilege level
-		memory[offset+5] = byte(entry.PrivilegeLevel)
+				// Byte 5: Privilege level
+				memory[offset+5] = byte(entry.PrivilegeLevel)
 
-		// Bytes 6-7: Reserved
-		memory[offset+6] = 0x00
-		memory[offset+7] = 0x00
-	}
+				// Bytes 6-7: Reserved
+				memory[offset+6] = 0x00
+				memory[offset+7] = 0x00
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // LoadFromMemory deserializes the IDT from a byte slice at the given base

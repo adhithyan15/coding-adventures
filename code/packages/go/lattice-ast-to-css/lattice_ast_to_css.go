@@ -81,45 +81,60 @@ import (
 //	    .btn { color: $color; }
 //	`, false, "  ")
 //	// css = ".btn {\n  color: red;\n}\n"
-func TranspileLatticeFull(source string, minify bool, indent string) (css string, err error) {
-	// Recover from any unexpected panics in the compiler (e.g., parser bugs).
-	// Return a descriptive error rather than crashing the caller.
-	defer func() {
-		if r := recover(); r != nil {
-			// If it's a LatticeError subtype, wrap it
-			if le, ok := r.(error); ok {
-				err = le
-				return
-			}
-			err = fmt.Errorf("internal compiler error: %v\n%s", r, debug.Stack())
-		}
-	}()
-
-	// Step 1: Tokenize
-	tokens, lexErr := latticelexer.TokenizeLatticeLexer(source)
-	if lexErr != nil {
-		return "", fmt.Errorf("lexer error: %w", lexErr)
+func TranspileLatticeFull(source string, minify bool, indent string) (string, error) {
+	type transpileResult struct {
+		css string
+		err error
 	}
-	_ = tokens // tokens are used by the parser internally
+	r, _ := StartNew[transpileResult]("lattice-ast-to-css.TranspileLatticeFull", transpileResult{},
+		func(op *Operation[transpileResult], rf *ResultFactory[transpileResult]) *OperationResult[transpileResult] {
+			op.AddProperty("minify", minify)
+			var css string
+			var err error
 
-	// Step 2: Parse
-	ast, parseErr := latticeparser.ParseLattice(source)
-	if parseErr != nil {
-		return "", fmt.Errorf("parse error: %w", parseErr)
-	}
+			func() {
+				// Recover from any unexpected panics in the compiler (e.g., parser bugs).
+				defer func() {
+					if r := recover(); r != nil {
+						if le, ok := r.(error); ok {
+							err = le
+							return
+						}
+						err = fmt.Errorf("internal compiler error: %v\n%s", r, debug.Stack())
+					}
+				}()
 
-	// Step 3: Transform (Lattice AST → CSS AST)
-	transformer := NewLatticeTransformer()
-	cssAST, transformErr := transformer.Transform(ast)
-	if transformErr != nil {
-		return "", transformErr
-	}
+				// Step 1: Tokenize
+				tokens, lexErr := latticelexer.TokenizeLatticeLexer(source)
+				if lexErr != nil {
+					err = fmt.Errorf("lexer error: %w", lexErr)
+					return
+				}
+				_ = tokens // tokens are used by the parser internally
 
-	// Step 4: Emit (CSS AST → CSS text)
-	emitter := NewCSSEmitter(minify, indent)
-	css = emitter.Emit(cssAST)
+				// Step 2: Parse
+				ast, parseErr := latticeparser.ParseLattice(source)
+				if parseErr != nil {
+					err = fmt.Errorf("parse error: %w", parseErr)
+					return
+				}
 
-	return css, nil
+				// Step 3: Transform (Lattice AST → CSS AST)
+				transformer := NewLatticeTransformer()
+				cssAST, transformErr := transformer.Transform(ast)
+				if transformErr != nil {
+					err = transformErr
+					return
+				}
+
+				// Step 4: Emit (CSS AST → CSS text)
+				emitter := NewCSSEmitter(minify, indent)
+				css = emitter.Emit(cssAST)
+			}()
+
+			return rf.Generate(true, false, transpileResult{css, err})
+		}).GetResult()
+	return r.css, r.err
 }
 
 // TranspileLattice compiles Lattice source to pretty-printed CSS with 2-space indentation.
@@ -130,7 +145,16 @@ func TranspileLatticeFull(source string, minify bool, indent string) (css string
 //
 //	css, err := TranspileLattice("$x: 1px; .a { margin: $x; }")
 func TranspileLattice(source string) (string, error) {
-	return TranspileLatticeFull(source, false, "  ")
+	type transpileResult struct {
+		css string
+		err error
+	}
+	r, _ := StartNew[transpileResult]("lattice-ast-to-css.TranspileLattice", transpileResult{},
+		func(op *Operation[transpileResult], rf *ResultFactory[transpileResult]) *OperationResult[transpileResult] {
+			css, err := TranspileLatticeFull(source, false, "  ")
+			return rf.Generate(true, false, transpileResult{css, err})
+		}).GetResult()
+	return r.css, r.err
 }
 
 // TranspileLatticeMinified compiles Lattice source to compact CSS with no extra whitespace.
@@ -140,7 +164,16 @@ func TranspileLattice(source string) (string, error) {
 //	css, err := TranspileLatticeMinified("$x: 1px; .a { margin: $x; }")
 //	// css = ".a{margin:1px;}"
 func TranspileLatticeMinified(source string) (string, error) {
-	return TranspileLatticeFull(source, true, "")
+	type transpileResult struct {
+		css string
+		err error
+	}
+	r, _ := StartNew[transpileResult]("lattice-ast-to-css.TranspileLatticeMinified", transpileResult{},
+		func(op *Operation[transpileResult], rf *ResultFactory[transpileResult]) *OperationResult[transpileResult] {
+			css, err := TranspileLatticeFull(source, true, "")
+			return rf.Generate(true, false, transpileResult{css, err})
+		}).GetResult()
+	return r.css, r.err
 }
 
 // ============================================================================
@@ -160,8 +193,17 @@ func TranspileLatticeMinified(source string) (string, error) {
 //	cssAST, err := TransformLatticeAST(ast)
 //	// cssAST is now pure CSS (no Lattice constructs)
 func TransformLatticeAST(ast *parser.ASTNode) (*parser.ASTNode, error) {
-	transformer := NewLatticeTransformer()
-	return transformer.Transform(ast)
+	type transformResult struct {
+		node *parser.ASTNode
+		err  error
+	}
+	r, _ := StartNew[transformResult]("lattice-ast-to-css.TransformLatticeAST", transformResult{},
+		func(op *Operation[transformResult], rf *ResultFactory[transformResult]) *OperationResult[transformResult] {
+			transformer := NewLatticeTransformer()
+			node, err := transformer.Transform(ast)
+			return rf.Generate(true, false, transformResult{node, err})
+		}).GetResult()
+	return r.node, r.err
 }
 
 // EmitCSS serializes a CSS AST to a pretty-printed string.
@@ -173,8 +215,12 @@ func TransformLatticeAST(ast *parser.ASTNode) (*parser.ASTNode, error) {
 //	cssAST, _ := TransformLatticeAST(ast)
 //	css := EmitCSS(cssAST)
 func EmitCSS(ast *parser.ASTNode) string {
-	emitter := NewCSSEmitter(false, "  ")
-	return emitter.Emit(ast)
+	result, _ := StartNew[string]("lattice-ast-to-css.EmitCSS", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			emitter := NewCSSEmitter(false, "  ")
+			return rf.Generate(true, false, emitter.Emit(ast))
+		}).GetResult()
+	return result
 }
 
 // EmitCSSMinified serializes a CSS AST to a compact string with no whitespace.
@@ -185,6 +231,10 @@ func EmitCSS(ast *parser.ASTNode) string {
 //	css := EmitCSSMinified(cssAST)
 //	// css = ".btn{color:red;}"
 func EmitCSSMinified(ast *parser.ASTNode) string {
-	emitter := NewCSSEmitter(true, "")
-	return emitter.Emit(ast)
+	result, _ := StartNew[string]("lattice-ast-to-css.EmitCSSMinified", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			emitter := NewCSSEmitter(true, "")
+			return rf.Generate(true, false, emitter.Emit(ast))
+		}).GetResult()
+	return result
 }
