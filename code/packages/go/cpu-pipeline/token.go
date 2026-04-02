@@ -127,20 +127,24 @@ const (
 
 // String returns a human-readable name for the stage category.
 func (c StageCategory) String() string {
-	switch c {
-	case StageFetch:
-		return "fetch"
-	case StageDecode:
-		return "decode"
-	case StageExecute:
-		return "execute"
-	case StageMemory:
-		return "memory"
-	case StageWriteback:
-		return "writeback"
-	default:
-		return "unknown"
-	}
+	result, _ := StartNew[string]("cpu-pipeline.StageCategory.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch c {
+			case StageFetch:
+				return rf.Generate(true, false, "fetch")
+			case StageDecode:
+				return rf.Generate(true, false, "decode")
+			case StageExecute:
+				return rf.Generate(true, false, "execute")
+			case StageMemory:
+				return rf.Generate(true, false, "memory")
+			case StageWriteback:
+				return rf.Generate(true, false, "writeback")
+			default:
+				return rf.Generate(true, false, "unknown")
+			}
+		}).GetResult()
+	return result
 }
 
 // PipelineStage defines a single stage in the pipeline.
@@ -160,7 +164,11 @@ type PipelineStage struct {
 
 // String returns the stage name for display in diagrams.
 func (s PipelineStage) String() string {
-	return s.Name
+	result, _ := StartNew[string]("cpu-pipeline.PipelineStage.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, s.Name)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -317,13 +325,17 @@ type PipelineToken struct {
 // a "no-op" on an assembly line -- the stage runs through its motions
 // but produces no output.
 func NewBubble() *PipelineToken {
-	return &PipelineToken{
-		IsBubble:     true,
-		Rs1:          -1,
-		Rs2:          -1,
-		Rd:           -1,
-		StageEntered: make(map[string]int),
-	}
+	result, _ := StartNew[*PipelineToken]("cpu-pipeline.NewBubble", nil,
+		func(op *Operation[*PipelineToken], rf *ResultFactory[*PipelineToken]) *OperationResult[*PipelineToken] {
+			return rf.Generate(true, false, &PipelineToken{
+				IsBubble:     true,
+				Rs1:          -1,
+				Rs2:          -1,
+				Rd:           -1,
+				StageEntered: make(map[string]int),
+			})
+		}).GetResult()
+	return result
 }
 
 // NewToken creates a new empty token with default register values.
@@ -332,12 +344,16 @@ func NewBubble() *PipelineToken {
 // all control signals set to false. The fetch callback will fill in
 // the PC and raw instruction; the decode callback fills in everything else.
 func NewToken() *PipelineToken {
-	return &PipelineToken{
-		Rs1:          -1,
-		Rs2:          -1,
-		Rd:           -1,
-		StageEntered: make(map[string]int),
-	}
+	result, _ := StartNew[*PipelineToken]("cpu-pipeline.NewToken", nil,
+		func(op *Operation[*PipelineToken], rf *ResultFactory[*PipelineToken]) *OperationResult[*PipelineToken] {
+			return rf.Generate(true, false, &PipelineToken{
+				Rs1:          -1,
+				Rs2:          -1,
+				Rd:           -1,
+				StageEntered: make(map[string]int),
+			})
+		}).GetResult()
+	return result
 }
 
 // String returns a human-readable representation of the token.
@@ -346,13 +362,17 @@ func NewToken() *PipelineToken {
 //   - Bubbles display as "---" (like empty slots on the assembly line)
 //   - Normal tokens display their opcode and PC
 func (t *PipelineToken) String() string {
-	if t.IsBubble {
-		return "---"
-	}
-	if t.Opcode != "" {
-		return fmt.Sprintf("%s@%d", t.Opcode, t.PC)
-	}
-	return fmt.Sprintf("instr@%d", t.PC)
+	result, _ := StartNew[string]("cpu-pipeline.PipelineToken.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if t.IsBubble {
+				return rf.Generate(true, false, "---")
+			}
+			if t.Opcode != "" {
+				return rf.Generate(true, false, fmt.Sprintf("%s@%d", t.Opcode, t.PC))
+			}
+			return rf.Generate(true, false, fmt.Sprintf("instr@%d", t.PC))
+		}).GetResult()
+	return result
 }
 
 // Clone returns a deep copy of the token.
@@ -362,16 +382,20 @@ func (t *PipelineToken) String() string {
 // modifying a token in one stage does not affect the copy in the
 // pipeline register.
 func (t *PipelineToken) Clone() *PipelineToken {
-	if t == nil {
-		return nil
-	}
-	clone := *t
-	// Deep copy the StageEntered map
-	clone.StageEntered = make(map[string]int, len(t.StageEntered))
-	for k, v := range t.StageEntered {
-		clone.StageEntered[k] = v
-	}
-	return &clone
+	result, _ := StartNew[*PipelineToken]("cpu-pipeline.PipelineToken.Clone", nil,
+		func(op *Operation[*PipelineToken], rf *ResultFactory[*PipelineToken]) *OperationResult[*PipelineToken] {
+			if t == nil {
+				return rf.Generate(true, false, nil)
+			}
+			clone := *t
+			// Deep copy the StageEntered map
+			clone.StageEntered = make(map[string]int, len(t.StageEntered))
+			for k, v := range t.StageEntered {
+				clone.StageEntered[k] = v
+			}
+			return rf.Generate(true, false, &clone)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -404,16 +428,20 @@ type PipelineConfig struct {
 // It matches the MIPS R2000 (1985) and is the foundation for understanding
 // all modern CPU pipelines.
 func Classic5Stage() PipelineConfig {
-	return PipelineConfig{
-		Stages: []PipelineStage{
-			{Name: "IF", Description: "Instruction Fetch", Category: StageFetch},
-			{Name: "ID", Description: "Instruction Decode", Category: StageDecode},
-			{Name: "EX", Description: "Execute", Category: StageExecute},
-			{Name: "MEM", Description: "Memory Access", Category: StageMemory},
-			{Name: "WB", Description: "Write Back", Category: StageWriteback},
-		},
-		ExecutionWidth: 1,
-	}
+	result, _ := StartNew[PipelineConfig]("cpu-pipeline.Classic5Stage", PipelineConfig{},
+		func(op *Operation[PipelineConfig], rf *ResultFactory[PipelineConfig]) *OperationResult[PipelineConfig] {
+			return rf.Generate(true, false, PipelineConfig{
+				Stages: []PipelineStage{
+					{Name: "IF", Description: "Instruction Fetch", Category: StageFetch},
+					{Name: "ID", Description: "Instruction Decode", Category: StageDecode},
+					{Name: "EX", Description: "Execute", Category: StageExecute},
+					{Name: "MEM", Description: "Memory Access", Category: StageMemory},
+					{Name: "WB", Description: "Write Back", Category: StageWriteback},
+				},
+				ExecutionWidth: 1,
+			})
+		}).GetResult()
+	return result
 }
 
 // Deep13Stage returns a 13-stage pipeline inspired by ARM Cortex-A78.
@@ -424,29 +452,37 @@ func Classic5Stage() PipelineConfig {
 //
 // The tradeoff: a branch misprediction now costs 10+ cycles instead of 2.
 func Deep13Stage() PipelineConfig {
-	return PipelineConfig{
-		Stages: []PipelineStage{
-			{Name: "IF1", Description: "Fetch 1 - TLB lookup", Category: StageFetch},
-			{Name: "IF2", Description: "Fetch 2 - cache read", Category: StageFetch},
-			{Name: "IF3", Description: "Fetch 3 - align/buffer", Category: StageFetch},
-			{Name: "ID1", Description: "Decode 1 - pre-decode", Category: StageDecode},
-			{Name: "ID2", Description: "Decode 2 - full decode", Category: StageDecode},
-			{Name: "ID3", Description: "Decode 3 - register read", Category: StageDecode},
-			{Name: "EX1", Description: "Execute 1 - ALU", Category: StageExecute},
-			{Name: "EX2", Description: "Execute 2 - shift/multiply", Category: StageExecute},
-			{Name: "EX3", Description: "Execute 3 - result select", Category: StageExecute},
-			{Name: "MEM1", Description: "Memory 1 - address calc", Category: StageMemory},
-			{Name: "MEM2", Description: "Memory 2 - cache access", Category: StageMemory},
-			{Name: "MEM3", Description: "Memory 3 - data align", Category: StageMemory},
-			{Name: "WB", Description: "Write Back", Category: StageWriteback},
-		},
-		ExecutionWidth: 1,
-	}
+	result, _ := StartNew[PipelineConfig]("cpu-pipeline.Deep13Stage", PipelineConfig{},
+		func(op *Operation[PipelineConfig], rf *ResultFactory[PipelineConfig]) *OperationResult[PipelineConfig] {
+			return rf.Generate(true, false, PipelineConfig{
+				Stages: []PipelineStage{
+					{Name: "IF1", Description: "Fetch 1 - TLB lookup", Category: StageFetch},
+					{Name: "IF2", Description: "Fetch 2 - cache read", Category: StageFetch},
+					{Name: "IF3", Description: "Fetch 3 - align/buffer", Category: StageFetch},
+					{Name: "ID1", Description: "Decode 1 - pre-decode", Category: StageDecode},
+					{Name: "ID2", Description: "Decode 2 - full decode", Category: StageDecode},
+					{Name: "ID3", Description: "Decode 3 - register read", Category: StageDecode},
+					{Name: "EX1", Description: "Execute 1 - ALU", Category: StageExecute},
+					{Name: "EX2", Description: "Execute 2 - shift/multiply", Category: StageExecute},
+					{Name: "EX3", Description: "Execute 3 - result select", Category: StageExecute},
+					{Name: "MEM1", Description: "Memory 1 - address calc", Category: StageMemory},
+					{Name: "MEM2", Description: "Memory 2 - cache access", Category: StageMemory},
+					{Name: "MEM3", Description: "Memory 3 - data align", Category: StageMemory},
+					{Name: "WB", Description: "Write Back", Category: StageWriteback},
+				},
+				ExecutionWidth: 1,
+			})
+		}).GetResult()
+	return result
 }
 
 // NumStages returns the number of stages in the pipeline.
 func (c PipelineConfig) NumStages() int {
-	return len(c.Stages)
+	result, _ := StartNew[int]("cpu-pipeline.PipelineConfig.NumStages", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(c.Stages))
+		}).GetResult()
+	return result
 }
 
 // Validate checks that the configuration is well-formed.
@@ -457,39 +493,43 @@ func (c PipelineConfig) NumStages() int {
 //   - All stage names must be unique
 //   - There must be at least one fetch stage and one writeback stage
 func (c PipelineConfig) Validate() error {
-	if len(c.Stages) < 2 {
-		return fmt.Errorf("pipeline must have at least 2 stages, got %d", len(c.Stages))
-	}
-	if c.ExecutionWidth < 1 {
-		return fmt.Errorf("execution width must be at least 1, got %d", c.ExecutionWidth)
-	}
+	_, err := StartNew[struct{}]("cpu-pipeline.PipelineConfig.Validate", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if len(c.Stages) < 2 {
+				return rf.Fail(struct{}{}, fmt.Errorf("pipeline must have at least 2 stages, got %d", len(c.Stages)))
+			}
+			if c.ExecutionWidth < 1 {
+				return rf.Fail(struct{}{}, fmt.Errorf("execution width must be at least 1, got %d", c.ExecutionWidth))
+			}
 
-	// Check for unique stage names
-	seen := make(map[string]bool)
-	for _, s := range c.Stages {
-		if seen[s.Name] {
-			return fmt.Errorf("duplicate stage name: %q", s.Name)
-		}
-		seen[s.Name] = true
-	}
+			// Check for unique stage names
+			seen := make(map[string]bool)
+			for _, s := range c.Stages {
+				if seen[s.Name] {
+					return rf.Fail(struct{}{}, fmt.Errorf("duplicate stage name: %q", s.Name))
+				}
+				seen[s.Name] = true
+			}
 
-	// Check for required categories
-	hasFetch := false
-	hasWriteback := false
-	for _, s := range c.Stages {
-		if s.Category == StageFetch {
-			hasFetch = true
-		}
-		if s.Category == StageWriteback {
-			hasWriteback = true
-		}
-	}
-	if !hasFetch {
-		return fmt.Errorf("pipeline must have at least one fetch stage")
-	}
-	if !hasWriteback {
-		return fmt.Errorf("pipeline must have at least one writeback stage")
-	}
+			// Check for required categories
+			hasFetch := false
+			hasWriteback := false
+			for _, s := range c.Stages {
+				if s.Category == StageFetch {
+					hasFetch = true
+				}
+				if s.Category == StageWriteback {
+					hasWriteback = true
+				}
+			}
+			if !hasFetch {
+				return rf.Fail(struct{}{}, fmt.Errorf("pipeline must have at least one fetch stage"))
+			}
+			if !hasWriteback {
+				return rf.Fail(struct{}{}, fmt.Errorf("pipeline must have at least one writeback stage"))
+			}
 
-	return nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }

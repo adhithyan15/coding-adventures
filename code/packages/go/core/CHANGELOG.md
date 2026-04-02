@@ -2,6 +2,20 @@
 
 All notable changes to the `core` package will be documented in this file.
 
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions and methods with the Operations system (`StartNew`) for unified observability, capability enforcement, and telemetry tracing.
+- `config.go`: `DefaultRegisterFileConfig()`, `DefaultCoreConfig()`, `SimpleConfig()`, `CortexA78LikeConfig()`, `DefaultMultiCoreConfig()` — wrapped with Operations.
+- `decoder.go`: `NewMockDecoder()`, `MockDecoder.InstructionSize()`, `MockDecoder.Decode()`, `MockDecoder.Execute()`, all `Encode*()` helpers — wrapped with Operations.
+- `interrupt_controller.go`: `NewInterruptController()`, `RaiseInterrupt()`, `Acknowledge()`, `PendingForCore()`, `PendingCount()`, `AcknowledgedCount()`, `Reset()` — wrapped with Operations.
+- `memory_controller.go`: `NewMemoryController()`, `RequestRead()`, `RequestWrite()`, `Tick()`, `ReadWord()`, `WriteWord()`, `LoadProgram()`, `MemorySize()`, `PendingCount()` — wrapped with Operations.
+- `register_file.go`: `NewRegisterFile()`, `Read()`, `Write()`, `Values()`, `Count()`, `Width()`, `Config()`, `Reset()`, `String()` — wrapped with Operations.
+- `stats.go`: `CoreStats.IPC()`, `CoreStats.CPI()`, `CoreStats.String()` — wrapped with Operations.
+- `core.go`: `NewCore()`, `LoadProgram()`, `Step()`, `Run()`, `Stats()`, `IsHalted()`, `ReadRegister()`, `WriteRegister()`, `RegisterFile()`, `MemoryController()`, `Cycle()`, `Config()`, `Pipeline()`, `Predictor()`, `CacheHierarchy()`, `EncodeProgram()` — wrapped with Operations.
+- `multi_core.go`: `NewMultiCoreCPU()`, `LoadProgram()`, `Step()`, `Run()`, `Cores()`, `Stats()`, `InterruptController()`, `SharedMemoryController()`, `Cycle()`, `AllHalted()` — wrapped with Operations.
+- Private callbacks and helpers remain unwrapped.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

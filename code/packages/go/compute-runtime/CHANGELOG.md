@@ -2,6 +2,13 @@
 
 All notable changes to the compute-runtime Go package will be documented here.
 
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions and methods with the Operations system (`StartNew`) for unified observability, capability enforcement, and telemetry tracing.
+- All public functions in the compute-runtime package are now wrapped with `StartNew`, enabling capability enforcement, telemetry tracing, and structured error handling.
+- Private helper functions remain unwrapped.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

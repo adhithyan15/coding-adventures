@@ -68,9 +68,14 @@ type AcknowledgedInterrupt struct {
 // NewInterruptController creates an interrupt controller for the given
 // number of cores.
 func NewInterruptController(numCores int) *InterruptController {
-	return &InterruptController{
-		numCores: numCores,
-	}
+	result, _ := StartNew[*InterruptController]("core.NewInterruptController", nil,
+		func(op *Operation[*InterruptController], rf *ResultFactory[*InterruptController]) *OperationResult[*InterruptController] {
+			op.AddProperty("num_cores", numCores)
+			return rf.Generate(true, false, &InterruptController{
+				numCores: numCores,
+			})
+		}).GetResult()
+	return result
 }
 
 // RaiseInterrupt queues an interrupt for delivery.
@@ -78,16 +83,22 @@ func NewInterruptController(numCores int) *InterruptController {
 // If targetCore is -1, the interrupt will be routed to core 0 (simplest
 // routing policy -- round-robin or load-based routing is a future extension).
 func (ic *InterruptController) RaiseInterrupt(interruptID int, targetCore int) {
-	if targetCore == -1 {
-		targetCore = 0 // default: route to core 0
-	}
-	if targetCore >= ic.numCores {
-		targetCore = 0
-	}
-	ic.pending = append(ic.pending, PendingInterrupt{
-		InterruptID: interruptID,
-		TargetCore:  targetCore,
-	})
+	_, _ = StartNew[struct{}]("core.InterruptController.RaiseInterrupt", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("interrupt_id", interruptID)
+			op.AddProperty("target_core", targetCore)
+			if targetCore == -1 {
+				targetCore = 0
+			}
+			if targetCore >= ic.numCores {
+				targetCore = 0
+			}
+			ic.pending = append(ic.pending, PendingInterrupt{
+				InterruptID: interruptID,
+				TargetCore:  targetCore,
+			})
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Acknowledge records that a core has begun handling an interrupt.
@@ -97,47 +108,69 @@ func (ic *InterruptController) RaiseInterrupt(interruptID int, targetCore int) {
 // The controller can then clear the pending flag and potentially deliver
 // the next interrupt.
 func (ic *InterruptController) Acknowledge(coreID int, interruptID int) {
-	ic.acknowledged = append(ic.acknowledged, AcknowledgedInterrupt{
-		CoreID:      coreID,
-		InterruptID: interruptID,
-	})
+	_, _ = StartNew[struct{}]("core.InterruptController.Acknowledge", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("core_id", coreID)
+			op.AddProperty("interrupt_id", interruptID)
+			ic.acknowledged = append(ic.acknowledged, AcknowledgedInterrupt{
+				CoreID:      coreID,
+				InterruptID: interruptID,
+			})
 
-	// Remove from pending.
-	remaining := ic.pending[:0]
-	removed := false
-	for _, p := range ic.pending {
-		if !removed && p.InterruptID == interruptID && p.TargetCore == coreID {
-			removed = true
-			continue
-		}
-		remaining = append(remaining, p)
-	}
-	ic.pending = remaining
+			remaining := ic.pending[:0]
+			removed := false
+			for _, p := range ic.pending {
+				if !removed && p.InterruptID == interruptID && p.TargetCore == coreID {
+					removed = true
+					continue
+				}
+				remaining = append(remaining, p)
+			}
+			ic.pending = remaining
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // PendingForCore returns all pending interrupts targeted at a specific core.
 func (ic *InterruptController) PendingForCore(coreID int) []PendingInterrupt {
-	var result []PendingInterrupt
-	for _, p := range ic.pending {
-		if p.TargetCore == coreID {
-			result = append(result, p)
-		}
-	}
+	result, _ := StartNew[[]PendingInterrupt]("core.InterruptController.PendingForCore", nil,
+		func(op *Operation[[]PendingInterrupt], rf *ResultFactory[[]PendingInterrupt]) *OperationResult[[]PendingInterrupt] {
+			op.AddProperty("core_id", coreID)
+			var pending []PendingInterrupt
+			for _, p := range ic.pending {
+				if p.TargetCore == coreID {
+					pending = append(pending, p)
+				}
+			}
+			return rf.Generate(true, false, pending)
+		}).GetResult()
 	return result
 }
 
 // PendingCount returns the total number of pending (unacknowledged) interrupts.
 func (ic *InterruptController) PendingCount() int {
-	return len(ic.pending)
+	result, _ := StartNew[int]("core.InterruptController.PendingCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(ic.pending))
+		}).GetResult()
+	return result
 }
 
 // AcknowledgedCount returns the total number of acknowledged interrupts.
 func (ic *InterruptController) AcknowledgedCount() int {
-	return len(ic.acknowledged)
+	result, _ := StartNew[int]("core.InterruptController.AcknowledgedCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(ic.acknowledged))
+		}).GetResult()
+	return result
 }
 
 // Reset clears all pending and acknowledged interrupts.
 func (ic *InterruptController) Reset() {
-	ic.pending = nil
-	ic.acknowledged = nil
+	_, _ = StartNew[struct{}]("core.InterruptController.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			ic.pending = nil
+			ic.acknowledged = nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }

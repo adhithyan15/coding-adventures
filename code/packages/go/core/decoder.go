@@ -127,12 +127,20 @@ type MockDecoder struct{}
 
 // NewMockDecoder creates a new MockDecoder.
 func NewMockDecoder() *MockDecoder {
-	return &MockDecoder{}
+	result, _ := StartNew[*MockDecoder]("core.NewMockDecoder", nil,
+		func(op *Operation[*MockDecoder], rf *ResultFactory[*MockDecoder]) *OperationResult[*MockDecoder] {
+			return rf.Generate(true, false, &MockDecoder{})
+		}).GetResult()
+	return result
 }
 
 // InstructionSize returns 4 (all mock instructions are 32 bits).
 func (d *MockDecoder) InstructionSize() int {
-	return 4
+	result, _ := StartNew[int]("core.MockDecoder.InstructionSize", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 4)
+		}).GetResult()
+	return result
 }
 
 // Decode extracts fields from a raw 32-bit instruction and fills in the token.
@@ -146,89 +154,82 @@ func (d *MockDecoder) InstructionSize() int {
 //
 // The immediate is sign-extended from 12 bits to a full int.
 func (d *MockDecoder) Decode(raw int, token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
-	// Extract fields using bit masking and shifting.
-	opcode := (raw >> 24) & 0xFF
-	rd := (raw >> 20) & 0x0F
-	rs1 := (raw >> 16) & 0x0F
-	rs2 := (raw >> 12) & 0x0F
-	imm := raw & 0xFFF
+	result, _ := StartNew[*cpupipeline.PipelineToken]("core.MockDecoder.Decode", nil,
+		func(op *Operation[*cpupipeline.PipelineToken], rf *ResultFactory[*cpupipeline.PipelineToken]) *OperationResult[*cpupipeline.PipelineToken] {
+			op.AddProperty("raw", raw)
+			opcode := (raw >> 24) & 0xFF
+			rd := (raw >> 20) & 0x0F
+			rs1 := (raw >> 16) & 0x0F
+			rs2 := (raw >> 12) & 0x0F
+			imm := raw & 0xFFF
 
-	// Sign-extend the 12-bit immediate to a full int.
-	// If bit 11 is set, the value is negative.
-	if imm&0x800 != 0 {
-		imm |= ^0xFFF // sign-extend by filling upper bits with 1s
-	}
+			if imm&0x800 != 0 {
+				imm |= ^0xFFF
+			}
 
-	// Fill in decoded fields based on opcode.
-	switch opcode {
-	case 0x00: // NOP
-		token.Opcode = "NOP"
-		token.Rd = -1
-		token.Rs1 = -1
-		token.Rs2 = -1
+			switch opcode {
+			case 0x00: // NOP
+				token.Opcode = "NOP"
+				token.Rd = -1
+				token.Rs1 = -1
+				token.Rs2 = -1
+			case 0x01: // ADD Rd, Rs1, Rs2
+				token.Opcode = "ADD"
+				token.Rd = rd
+				token.Rs1 = rs1
+				token.Rs2 = rs2
+				token.RegWrite = true
+			case 0x02: // LOAD Rd, [Rs1 + imm]
+				token.Opcode = "LOAD"
+				token.Rd = rd
+				token.Rs1 = rs1
+				token.Rs2 = -1
+				token.Immediate = imm
+				token.RegWrite = true
+				token.MemRead = true
+			case 0x03: // STORE [Rs1 + imm], Rs2
+				token.Opcode = "STORE"
+				token.Rd = -1
+				token.Rs1 = rs1
+				token.Rs2 = rs2
+				token.Immediate = imm
+				token.MemWrite = true
+			case 0x04: // BRANCH Rs1, Rs2, imm
+				token.Opcode = "BRANCH"
+				token.Rd = -1
+				token.Rs1 = rs1
+				token.Rs2 = rs2
+				token.Immediate = imm
+				token.IsBranch = true
+			case 0x05: // HALT
+				token.Opcode = "HALT"
+				token.Rd = -1
+				token.Rs1 = -1
+				token.Rs2 = -1
+				token.IsHalt = true
+			case 0x06: // ADDI Rd, Rs1, imm
+				token.Opcode = "ADDI"
+				token.Rd = rd
+				token.Rs1 = rs1
+				token.Rs2 = -1
+				token.Immediate = imm
+				token.RegWrite = true
+			case 0x07: // SUB Rd, Rs1, Rs2
+				token.Opcode = "SUB"
+				token.Rd = rd
+				token.Rs1 = rs1
+				token.Rs2 = rs2
+				token.RegWrite = true
+			default:
+				token.Opcode = "NOP"
+				token.Rd = -1
+				token.Rs1 = -1
+				token.Rs2 = -1
+			}
 
-	case 0x01: // ADD Rd, Rs1, Rs2
-		token.Opcode = "ADD"
-		token.Rd = rd
-		token.Rs1 = rs1
-		token.Rs2 = rs2
-		token.RegWrite = true
-
-	case 0x02: // LOAD Rd, [Rs1 + imm]
-		token.Opcode = "LOAD"
-		token.Rd = rd
-		token.Rs1 = rs1
-		token.Rs2 = -1
-		token.Immediate = imm
-		token.RegWrite = true
-		token.MemRead = true
-
-	case 0x03: // STORE [Rs1 + imm], Rs2
-		token.Opcode = "STORE"
-		token.Rd = -1
-		token.Rs1 = rs1
-		token.Rs2 = rs2
-		token.Immediate = imm
-		token.MemWrite = true
-
-	case 0x04: // BRANCH Rs1, Rs2, imm (branch if Rs1 == Rs2)
-		token.Opcode = "BRANCH"
-		token.Rd = -1
-		token.Rs1 = rs1
-		token.Rs2 = rs2
-		token.Immediate = imm
-		token.IsBranch = true
-
-	case 0x05: // HALT
-		token.Opcode = "HALT"
-		token.Rd = -1
-		token.Rs1 = -1
-		token.Rs2 = -1
-		token.IsHalt = true
-
-	case 0x06: // ADDI Rd, Rs1, imm
-		token.Opcode = "ADDI"
-		token.Rd = rd
-		token.Rs1 = rs1
-		token.Rs2 = -1
-		token.Immediate = imm
-		token.RegWrite = true
-
-	case 0x07: // SUB Rd, Rs1, Rs2
-		token.Opcode = "SUB"
-		token.Rd = rd
-		token.Rs1 = rs1
-		token.Rs2 = rs2
-		token.RegWrite = true
-
-	default: // Unknown opcode -- treat as NOP
-		token.Opcode = "NOP"
-		token.Rd = -1
-		token.Rs1 = -1
-		token.Rs2 = -1
-	}
-
-	return token
+			return rf.Generate(true, false, token)
+		}).GetResult()
+	return result
 }
 
 // Execute performs the ALU operation for a decoded instruction.
@@ -236,63 +237,51 @@ func (d *MockDecoder) Decode(raw int, token *cpupipeline.PipelineToken) *cpupipe
 // This reads register values, computes the result, and fills in
 // ALUResult, BranchTaken, BranchTarget, and WriteData.
 func (d *MockDecoder) Execute(token *cpupipeline.PipelineToken, regFile *RegisterFile) *cpupipeline.PipelineToken {
-	// Read source register values.
-	var rs1Val, rs2Val int
-	if token.Rs1 >= 0 {
-		rs1Val = regFile.Read(token.Rs1)
-	}
-	if token.Rs2 >= 0 {
-		rs2Val = regFile.Read(token.Rs2)
-	}
+	result, _ := StartNew[*cpupipeline.PipelineToken]("core.MockDecoder.Execute", nil,
+		func(op *Operation[*cpupipeline.PipelineToken], rf *ResultFactory[*cpupipeline.PipelineToken]) *OperationResult[*cpupipeline.PipelineToken] {
+			op.AddProperty("opcode", token.Opcode)
+			var rs1Val, rs2Val int
+			if token.Rs1 >= 0 {
+				rs1Val = regFile.Read(token.Rs1)
+			}
+			if token.Rs2 >= 0 {
+				rs2Val = regFile.Read(token.Rs2)
+			}
 
-	switch token.Opcode {
-	case "ADD":
-		// ALU result = Rs1 + Rs2
-		token.ALUResult = rs1Val + rs2Val
-		token.WriteData = token.ALUResult
+			switch token.Opcode {
+			case "ADD":
+				token.ALUResult = rs1Val + rs2Val
+				token.WriteData = token.ALUResult
+			case "SUB":
+				token.ALUResult = rs1Val - rs2Val
+				token.WriteData = token.ALUResult
+			case "ADDI":
+				token.ALUResult = rs1Val + token.Immediate
+				token.WriteData = token.ALUResult
+			case "LOAD":
+				token.ALUResult = rs1Val + token.Immediate
+			case "STORE":
+				token.ALUResult = rs1Val + token.Immediate
+				token.WriteData = rs2Val
+			case "BRANCH":
+				taken := rs1Val == rs2Val
+				token.BranchTaken = taken
+				target := token.PC + (token.Immediate * 4)
+				token.BranchTarget = target
+				if taken {
+					token.ALUResult = target
+				} else {
+					token.ALUResult = token.PC + 4
+				}
+			case "NOP", "HALT":
+				// No computation needed.
+			default:
+				// Unknown opcode -- no computation.
+			}
 
-	case "SUB":
-		// ALU result = Rs1 - Rs2
-		token.ALUResult = rs1Val - rs2Val
-		token.WriteData = token.ALUResult
-
-	case "ADDI":
-		// ALU result = Rs1 + immediate
-		token.ALUResult = rs1Val + token.Immediate
-		token.WriteData = token.ALUResult
-
-	case "LOAD":
-		// Effective address = Rs1 + immediate
-		// The actual memory read happens in the MEM stage (handled by Core).
-		token.ALUResult = rs1Val + token.Immediate
-
-	case "STORE":
-		// Effective address = Rs1 + immediate
-		// The data to store comes from Rs2.
-		token.ALUResult = rs1Val + token.Immediate
-		token.WriteData = rs2Val
-
-	case "BRANCH":
-		// Branch condition: Rs1 == Rs2
-		// Branch target: PC + (immediate * instruction_size)
-		taken := rs1Val == rs2Val
-		token.BranchTaken = taken
-		target := token.PC + (token.Immediate * 4)
-		token.BranchTarget = target
-		if taken {
-			token.ALUResult = target
-		} else {
-			token.ALUResult = token.PC + 4
-		}
-
-	case "NOP", "HALT":
-		// No computation needed.
-
-	default:
-		// Unknown opcode -- no computation.
-	}
-
-	return token
+			return rf.Generate(true, false, token)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -301,41 +290,73 @@ func (d *MockDecoder) Execute(token *cpupipeline.PipelineToken, regFile *Registe
 
 // EncodeNOP returns the raw encoding for a NOP instruction.
 func EncodeNOP() int {
-	return 0x00 << 24
+	result, _ := StartNew[int]("core.EncodeNOP", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 0x00<<24)
+		}).GetResult()
+	return result
 }
 
 // EncodeADD returns the raw encoding for ADD Rd, Rs1, Rs2.
 func EncodeADD(rd, rs1, rs2 int) int {
-	return (0x01 << 24) | (rd << 20) | (rs1 << 16) | (rs2 << 12)
+	result, _ := StartNew[int]("core.EncodeADD", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, (0x01<<24)|(rd<<20)|(rs1<<16)|(rs2<<12))
+		}).GetResult()
+	return result
 }
 
 // EncodeSUB returns the raw encoding for SUB Rd, Rs1, Rs2.
 func EncodeSUB(rd, rs1, rs2 int) int {
-	return (0x07 << 24) | (rd << 20) | (rs1 << 16) | (rs2 << 12)
+	result, _ := StartNew[int]("core.EncodeSUB", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, (0x07<<24)|(rd<<20)|(rs1<<16)|(rs2<<12))
+		}).GetResult()
+	return result
 }
 
 // EncodeADDI returns the raw encoding for ADDI Rd, Rs1, imm.
 func EncodeADDI(rd, rs1, imm int) int {
-	return (0x06 << 24) | (rd << 20) | (rs1 << 16) | (imm & 0xFFF)
+	result, _ := StartNew[int]("core.EncodeADDI", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, (0x06<<24)|(rd<<20)|(rs1<<16)|(imm&0xFFF))
+		}).GetResult()
+	return result
 }
 
 // EncodeLOAD returns the raw encoding for LOAD Rd, [Rs1 + imm].
 func EncodeLOAD(rd, rs1, imm int) int {
-	return (0x02 << 24) | (rd << 20) | (rs1 << 16) | (imm & 0xFFF)
+	result, _ := StartNew[int]("core.EncodeLOAD", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, (0x02<<24)|(rd<<20)|(rs1<<16)|(imm&0xFFF))
+		}).GetResult()
+	return result
 }
 
 // EncodeSTORE returns the raw encoding for STORE [Rs1 + imm], Rs2.
 func EncodeSTORE(rs1, rs2, imm int) int {
-	return (0x03 << 24) | (rs1 << 16) | (rs2 << 12) | (imm & 0xFFF)
+	result, _ := StartNew[int]("core.EncodeSTORE", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, (0x03<<24)|(rs1<<16)|(rs2<<12)|(imm&0xFFF))
+		}).GetResult()
+	return result
 }
 
 // EncodeBRANCH returns the raw encoding for BRANCH Rs1, Rs2, imm.
 // The branch is taken if Rs1 == Rs2, jumping to PC + imm*4.
 func EncodeBRANCH(rs1, rs2, imm int) int {
-	return (0x04 << 24) | (rs1 << 16) | (rs2 << 12) | (imm & 0xFFF)
+	result, _ := StartNew[int]("core.EncodeBRANCH", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, (0x04<<24)|(rs1<<16)|(rs2<<12)|(imm&0xFFF))
+		}).GetResult()
+	return result
 }
 
 // EncodeHALT returns the raw encoding for a HALT instruction.
 func EncodeHALT() int {
-	return 0x05 << 24
+	result, _ := StartNew[int]("core.EncodeHALT", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 0x05<<24)
+		}).GetResult()
+	return result
 }

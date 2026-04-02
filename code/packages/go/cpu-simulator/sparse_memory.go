@@ -124,14 +124,19 @@ type SparseMemory struct {
 //   }
 //   mem := NewSparseMemory(regions)
 func NewSparseMemory(regions []MemoryRegion) *SparseMemory {
-	copied := make([]MemoryRegion, len(regions))
-	for i, r := range regions {
-		copied[i] = r
-		if copied[i].Data == nil {
-			copied[i].Data = make([]byte, r.Size)
-		}
-	}
-	return &SparseMemory{Regions: copied}
+	result, _ := StartNew[*SparseMemory]("cpu-simulator.NewSparseMemory", nil,
+		func(op *Operation[*SparseMemory], rf *ResultFactory[*SparseMemory]) *OperationResult[*SparseMemory] {
+			op.AddProperty("num_regions", len(regions))
+			copied := make([]MemoryRegion, len(regions))
+			for i, r := range regions {
+				copied[i] = r
+				if copied[i].Data == nil {
+					copied[i].Data = make([]byte, r.Size)
+				}
+			}
+			return rf.Generate(true, false, &SparseMemory{Regions: copied})
+		}).GetResult()
+	return result
 }
 
 // findRegion locates the MemoryRegion that contains the given address range
@@ -165,8 +170,13 @@ func (m *SparseMemory) findRegion(address uint32, numBytes int) (*MemoryRegion, 
 // the corresponding offset within the region's Data slice is returned.
 // If no region contains the address, the function panics (bus fault).
 func (m *SparseMemory) ReadByte(address uint32) byte {
-	region, offset := m.findRegion(address, 1)
-	return region.Data[offset]
+	result, _ := StartNew[byte]("cpu-simulator.SparseMemory.ReadByte", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("address", address)
+			region, offset := m.findRegion(address, 1)
+			return rf.Generate(true, false, region.Data[offset])
+		}).GetResult()
+	return result
 }
 
 // WriteByte writes a single byte to the sparse address space.
@@ -175,11 +185,16 @@ func (m *SparseMemory) ReadByte(address uint32) byte {
 // This matches real hardware behavior — writing to ROM has no effect,
 // and the CPU does not receive an error signal.
 func (m *SparseMemory) WriteByte(address uint32, value byte) {
-	region, offset := m.findRegion(address, 1)
-	if region.ReadOnly {
-		return // writes to read-only regions are silently discarded
-	}
-	region.Data[offset] = value
+	_, _ = StartNew[struct{}]("cpu-simulator.SparseMemory.WriteByte", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("address", address)
+			region, offset := m.findRegion(address, 1)
+			if region.ReadOnly {
+				return rf.Generate(true, false, struct{}{}) // writes to read-only regions are silently discarded
+			}
+			region.Data[offset] = value
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ReadWord reads a 32-bit word (4 bytes) from the sparse address space
@@ -190,19 +205,24 @@ func (m *SparseMemory) WriteByte(address uint32, value byte) {
 // Little-endian means the least significant byte is stored at the lowest
 // address. For the value 0xDEADBEEF stored at address 0x1000:
 //
-//   Address  Byte
-//   0x1000   0xEF  (least significant)
-//   0x1001   0xBE
-//   0x1002   0xAD
-//   0x1003   0xDE  (most significant)
+//	Address  Byte
+//	0x1000   0xEF  (least significant)
+//	0x1001   0xBE
+//	0x1002   0xAD
+//	0x1003   0xDE  (most significant)
 //
 // This matches RISC-V, ARM (in default config), and x86 byte ordering.
 func (m *SparseMemory) ReadWord(address uint32) uint32 {
-	region, offset := m.findRegion(address, 4)
-	return uint32(region.Data[offset]) |
-		(uint32(region.Data[offset+1]) << 8) |
-		(uint32(region.Data[offset+2]) << 16) |
-		(uint32(region.Data[offset+3]) << 24)
+	result, _ := StartNew[uint32]("cpu-simulator.SparseMemory.ReadWord", 0,
+		func(op *Operation[uint32], rf *ResultFactory[uint32]) *OperationResult[uint32] {
+			op.AddProperty("address", address)
+			region, offset := m.findRegion(address, 4)
+			return rf.Generate(true, false, uint32(region.Data[offset])|
+				(uint32(region.Data[offset+1])<<8)|
+				(uint32(region.Data[offset+2])<<16)|
+				(uint32(region.Data[offset+3])<<24))
+		}).GetResult()
+	return result
 }
 
 // WriteWord writes a 32-bit word (4 bytes) to the sparse address space
@@ -210,14 +230,19 @@ func (m *SparseMemory) ReadWord(address uint32) uint32 {
 //
 // If the target region is read-only, the write is silently ignored.
 func (m *SparseMemory) WriteWord(address uint32, value uint32) {
-	region, offset := m.findRegion(address, 4)
-	if region.ReadOnly {
-		return
-	}
-	region.Data[offset] = byte(value & 0xFF)
-	region.Data[offset+1] = byte((value >> 8) & 0xFF)
-	region.Data[offset+2] = byte((value >> 16) & 0xFF)
-	region.Data[offset+3] = byte((value >> 24) & 0xFF)
+	_, _ = StartNew[struct{}]("cpu-simulator.SparseMemory.WriteWord", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("address", address)
+			region, offset := m.findRegion(address, 4)
+			if region.ReadOnly {
+				return rf.Generate(true, false, struct{}{})
+			}
+			region.Data[offset] = byte(value & 0xFF)
+			region.Data[offset+1] = byte((value >> 8) & 0xFF)
+			region.Data[offset+2] = byte((value >> 16) & 0xFF)
+			region.Data[offset+3] = byte((value >> 24) & 0xFF)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // LoadBytes copies a sequence of bytes into the sparse address space
@@ -232,8 +257,14 @@ func (m *SparseMemory) WriteWord(address uint32, value uint32) {
 // executing). Once the CPU is running, normal WriteByte/WriteWord
 // calls will respect the ReadOnly flag.
 func (m *SparseMemory) LoadBytes(address uint32, data []byte) {
-	region, offset := m.findRegion(address, len(data))
-	copy(region.Data[offset:], data)
+	_, _ = StartNew[struct{}]("cpu-simulator.SparseMemory.LoadBytes", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("address", address)
+			op.AddProperty("data_size", len(data))
+			region, offset := m.findRegion(address, len(data))
+			copy(region.Data[offset:], data)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Dump returns a copy of bytes from the sparse address space.
@@ -244,16 +275,26 @@ func (m *SparseMemory) LoadBytes(address uint32, data []byte) {
 //
 // Useful for inspecting memory contents during debugging:
 //
-//   bytes := mem.Dump(0x1000, 16) // inspect 16 bytes at 0x1000
+//	bytes := mem.Dump(0x1000, 16) // inspect 16 bytes at 0x1000
 func (m *SparseMemory) Dump(start uint32, length int) []byte {
-	region, offset := m.findRegion(start, length)
-	result := make([]byte, length)
-	copy(result, region.Data[offset:offset+length])
+	result, _ := StartNew[[]byte]("cpu-simulator.SparseMemory.Dump", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("start", start)
+			op.AddProperty("length", length)
+			region, offset := m.findRegion(start, length)
+			data := make([]byte, length)
+			copy(data, region.Data[offset:offset+length])
+			return rf.Generate(true, false, data)
+		}).GetResult()
 	return result
 }
 
 // RegionCount returns the number of mapped regions.
 // Useful for testing and diagnostics.
 func (m *SparseMemory) RegionCount() int {
-	return len(m.Regions)
+	result, _ := StartNew[int]("cpu-simulator.SparseMemory.RegionCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(m.Regions))
+		}).GetResult()
+	return result
 }

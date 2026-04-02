@@ -91,17 +91,21 @@ type MXUConfig struct {
 
 // DefaultMXUConfig returns an MXUConfig with sensible defaults.
 func DefaultMXUConfig() MXUConfig {
-	return MXUConfig{
-		ArrayRows:           128,
-		ArrayCols:           128,
-		SystolicFormat:      fp.BF16,
-		AccumulatorFormat:   fp.FP32,
-		VectorWidth:         128,
-		VectorFormat:        fp.FP32,
-		AccumulatorCount:    128,
-		WeightBufferSize:    4194304,
-		ActivationBufferSize: 2097152,
-	}
+	result, _ := StartNew[MXUConfig]("compute-unit.DefaultMXUConfig", MXUConfig{},
+		func(op *Operation[MXUConfig], rf *ResultFactory[MXUConfig]) *OperationResult[MXUConfig] {
+			return rf.Generate(true, false, MXUConfig{
+				ArrayRows:           128,
+				ArrayCols:           128,
+				SystolicFormat:      fp.BF16,
+				AccumulatorFormat:   fp.FP32,
+				VectorWidth:         128,
+				VectorFormat:        fp.FP32,
+				AccumulatorCount:    128,
+				WeightBufferSize:    4194304,
+				ActivationBufferSize: 2097152,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -137,43 +141,82 @@ type MatrixMultiplyUnit struct {
 
 // NewMatrixMultiplyUnit creates a new TPU-style MXU simulator.
 func NewMatrixMultiplyUnit(config MXUConfig, clk *clock.Clock) *MatrixMultiplyUnit {
-	array := pee.NewSystolicArray(
-		pee.SystolicConfig{
-			Rows:              config.ArrayRows,
-			Cols:              config.ArrayCols,
-			FloatFormat:       fp.FP32, // use FP32 internally for simulation
-			AccumulatorFormat: fp.FP32,
-		},
-		clk,
-	)
-
-	return &MatrixMultiplyUnit{
-		config:   config,
-		clk:      clk,
-		array:    array,
-		idleFlag: true,
-	}
+	result, _ := StartNew[*MatrixMultiplyUnit]("compute-unit.NewMatrixMultiplyUnit", nil,
+		func(op *Operation[*MatrixMultiplyUnit], rf *ResultFactory[*MatrixMultiplyUnit]) *OperationResult[*MatrixMultiplyUnit] {
+			array := pee.NewSystolicArray(
+				pee.SystolicConfig{
+					Rows:              config.ArrayRows,
+					Cols:              config.ArrayCols,
+					FloatFormat:       fp.FP32,
+					AccumulatorFormat: fp.FP32,
+				},
+				clk,
+			)
+			return rf.Generate(true, false, &MatrixMultiplyUnit{
+				config:   config,
+				clk:      clk,
+				array:    array,
+				idleFlag: true,
+			})
+		}).GetResult()
+	return result
 }
 
 // --- ComputeUnit interface ---
 
 // Name returns the compute unit name.
-func (mxu *MatrixMultiplyUnit) Name() string { return "MXU" }
+func (mxu *MatrixMultiplyUnit) Name() string {
+	result, _ := StartNew[string]("compute-unit.MatrixMultiplyUnit.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "MXU")
+		}).GetResult()
+	return result
+}
 
 // Arch returns Google MXU architecture.
-func (mxu *MatrixMultiplyUnit) Arch() Architecture { return ArchGoogleMXU }
+func (mxu *MatrixMultiplyUnit) Arch() Architecture {
+	result, _ := StartNew[Architecture]("compute-unit.MatrixMultiplyUnit.Arch", 0,
+		func(op *Operation[Architecture], rf *ResultFactory[Architecture]) *OperationResult[Architecture] {
+			return rf.Generate(true, false, ArchGoogleMXU)
+		}).GetResult()
+	return result
+}
 
 // Idle returns true if no work remains.
-func (mxu *MatrixMultiplyUnit) Idle() bool { return mxu.idleFlag }
+func (mxu *MatrixMultiplyUnit) Idle() bool {
+	result, _ := StartNew[bool]("compute-unit.MatrixMultiplyUnit.Idle", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, mxu.idleFlag)
+		}).GetResult()
+	return result
+}
 
 // Config returns the MXU configuration.
-func (mxu *MatrixMultiplyUnit) Config() MXUConfig { return mxu.config }
+func (mxu *MatrixMultiplyUnit) Config() MXUConfig {
+	result, _ := StartNew[MXUConfig]("compute-unit.MatrixMultiplyUnit.Config", MXUConfig{},
+		func(op *Operation[MXUConfig], rf *ResultFactory[MXUConfig]) *OperationResult[MXUConfig] {
+			return rf.Generate(true, false, mxu.config)
+		}).GetResult()
+	return result
+}
 
 // Result returns the result matrix from the last matmul.
-func (mxu *MatrixMultiplyUnit) Result() [][]float64 { return mxu.currentResult }
+func (mxu *MatrixMultiplyUnit) Result() [][]float64 {
+	result, _ := StartNew[[][]float64]("compute-unit.MatrixMultiplyUnit.Result", nil,
+		func(op *Operation[[][]float64], rf *ResultFactory[[][]float64]) *OperationResult[[][]float64] {
+			return rf.Generate(true, false, mxu.currentResult)
+		}).GetResult()
+	return result
+}
 
 // SystolicArray returns access to the underlying systolic array.
-func (mxu *MatrixMultiplyUnit) SystolicArray() *pee.SystolicArray { return mxu.array }
+func (mxu *MatrixMultiplyUnit) SystolicArray() *pee.SystolicArray {
+	result, _ := StartNew[*pee.SystolicArray]("compute-unit.MatrixMultiplyUnit.SystolicArray", nil,
+		func(op *Operation[*pee.SystolicArray], rf *ResultFactory[*pee.SystolicArray]) *OperationResult[*pee.SystolicArray] {
+			return rf.Generate(true, false, mxu.array)
+		}).GetResult()
+	return result
+}
 
 // --- Dispatch ---
 
@@ -184,9 +227,14 @@ func (mxu *MatrixMultiplyUnit) SystolicArray() *pee.SystolicArray { return mxu.a
 //
 //	result = InputData x WeightData
 func (mxu *MatrixMultiplyUnit) Dispatch(work WorkItem) error {
-	mxu.workItems = append(mxu.workItems, work)
-	mxu.idleFlag = false
-	return nil
+	_, err := StartNew[struct{}]("compute-unit.MatrixMultiplyUnit.Dispatch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("work_id", work.WorkID)
+			mxu.workItems = append(mxu.workItems, work)
+			mxu.idleFlag = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // --- Execution ---
@@ -195,73 +243,80 @@ func (mxu *MatrixMultiplyUnit) Dispatch(work WorkItem) error {
 //
 // If work is pending, performs the matmul using the systolic array.
 func (mxu *MatrixMultiplyUnit) Step(edge clock.ClockEdge) ComputeUnitTrace {
-	mxu.cycle++
+	result, _ := StartNew[ComputeUnitTrace]("compute-unit.MatrixMultiplyUnit.Step", ComputeUnitTrace{},
+		func(op *Operation[ComputeUnitTrace], rf *ResultFactory[ComputeUnitTrace]) *OperationResult[ComputeUnitTrace] {
+			op.AddProperty("cycle", edge.Cycle)
+			mxu.cycle++
 
-	if mxu.idleFlag || len(mxu.workItems) == 0 {
-		return mxu.makeIdleTrace()
-	}
+			if mxu.idleFlag || len(mxu.workItems) == 0 {
+				return rf.Generate(true, false, mxu.makeIdleTrace())
+			}
 
-	// Process the first pending work item
-	work := mxu.workItems[0]
+			work := mxu.workItems[0]
 
-	if work.InputData != nil && work.WeightData != nil {
-		mxu.currentResult = mxu.array.RunMatmul(work.InputData, work.WeightData)
-	} else {
-		mxu.currentResult = nil
-	}
+			if work.InputData != nil && work.WeightData != nil {
+				mxu.currentResult = mxu.array.RunMatmul(work.InputData, work.WeightData)
+			} else {
+				mxu.currentResult = nil
+			}
 
-	// Mark work as done
-	mxu.workItems = mxu.workItems[1:]
-	if len(mxu.workItems) == 0 {
-		mxu.idleFlag = true
-	}
+			mxu.workItems = mxu.workItems[1:]
+			if len(mxu.workItems) == 0 {
+				mxu.idleFlag = true
+			}
 
-	// Build trace
-	rows := len(mxu.currentResult)
-	cols := 0
-	if rows > 0 {
-		cols = len(mxu.currentResult[0])
-	}
+			rows := len(mxu.currentResult)
+			cols := 0
+			if rows > 0 {
+				cols = len(mxu.currentResult[0])
+			}
 
-	activeWarps := 0
-	occ := 0.0
-	if !mxu.idleFlag {
-		activeWarps = 1
-		occ = 1.0
-	}
+			activeWarps := 0
+			occ := 0.0
+			if !mxu.idleFlag {
+				activeWarps = 1
+				occ = 1.0
+			}
 
-	return ComputeUnitTrace{
-		Cycle:             mxu.cycle,
-		UnitName:          mxu.Name(),
-		Arch:              mxu.Arch(),
-		SchedulerAction:   fmt.Sprintf("matmul complete: %dx%d result", rows, cols),
-		ActiveWarps:       activeWarps,
-		TotalWarps:        1,
-		EngineTraces:      make(map[int]pee.EngineTrace),
-		SharedMemoryUsed:  0,
-		SharedMemoryTotal: mxu.config.WeightBufferSize,
-		RegisterFileUsed:  mxu.config.AccumulatorCount,
-		RegisterFileTotal: mxu.config.AccumulatorCount,
-		Occupancy:         occ,
-	}
+			return rf.Generate(true, false, ComputeUnitTrace{
+				Cycle:             mxu.cycle,
+				UnitName:          mxu.Name(),
+				Arch:              mxu.Arch(),
+				SchedulerAction:   fmt.Sprintf("matmul complete: %dx%d result", rows, cols),
+				ActiveWarps:       activeWarps,
+				TotalWarps:        1,
+				EngineTraces:      make(map[int]pee.EngineTrace),
+				SharedMemoryUsed:  0,
+				SharedMemoryTotal: mxu.config.WeightBufferSize,
+				RegisterFileUsed:  mxu.config.AccumulatorCount,
+				RegisterFileTotal: mxu.config.AccumulatorCount,
+				Occupancy:         occ,
+			})
+		}).GetResult()
+	return result
 }
 
 // Run runs until all work completes or maxCycles is reached.
 func (mxu *MatrixMultiplyUnit) Run(maxCycles int) []ComputeUnitTrace {
-	var traces []ComputeUnitTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := mxu.Step(edge)
-		traces = append(traces, trace)
-		if mxu.Idle() {
-			break
-		}
-	}
-	return traces
+	result, _ := StartNew[[]ComputeUnitTrace]("compute-unit.MatrixMultiplyUnit.Run", nil,
+		func(op *Operation[[]ComputeUnitTrace], rf *ResultFactory[[]ComputeUnitTrace]) *OperationResult[[]ComputeUnitTrace] {
+			op.AddProperty("max_cycles", maxCycles)
+			var traces []ComputeUnitTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := mxu.Step(edge)
+				traces = append(traces, trace)
+				if mxu.Idle() {
+					break
+				}
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // RunMatmul is a convenience method: run a complete matmul with optional activation.
@@ -276,24 +331,31 @@ func (mxu *MatrixMultiplyUnit) RunMatmul(
 	activations, weights [][]float64,
 	activationFn string,
 ) [][]float64 {
-	result := mxu.array.RunMatmul(activations, weights)
-
-	if activationFn != "none" {
-		result = applyActivation(result, activationFn)
-	}
-
-	mxu.currentResult = result
+	result, _ := StartNew[[][]float64]("compute-unit.MatrixMultiplyUnit.RunMatmul", nil,
+		func(op *Operation[[][]float64], rf *ResultFactory[[][]float64]) *OperationResult[[][]float64] {
+			op.AddProperty("activation_fn", activationFn)
+			res := mxu.array.RunMatmul(activations, weights)
+			if activationFn != "none" {
+				res = applyActivation(res, activationFn)
+			}
+			mxu.currentResult = res
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
 // Reset resets all state.
 func (mxu *MatrixMultiplyUnit) Reset() {
-	mxu.array.Reset()
-	mxu.accumulators = nil
-	mxu.currentResult = nil
-	mxu.workItems = nil
-	mxu.idleFlag = true
-	mxu.cycle = 0
+	_, _ = StartNew[struct{}]("compute-unit.MatrixMultiplyUnit.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			mxu.array.Reset()
+			mxu.accumulators = nil
+			mxu.currentResult = nil
+			mxu.workItems = nil
+			mxu.idleFlag = true
+			mxu.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // makeIdleTrace produces a trace for when the MXU is idle.
@@ -316,8 +378,12 @@ func (mxu *MatrixMultiplyUnit) makeIdleTrace() ComputeUnitTrace {
 
 // String returns a human-readable representation.
 func (mxu *MatrixMultiplyUnit) String() string {
-	return fmt.Sprintf("MatrixMultiplyUnit(%dx%d, idle=%t)",
-		mxu.config.ArrayRows, mxu.config.ArrayCols, mxu.idleFlag)
+	result, _ := StartNew[string]("compute-unit.MatrixMultiplyUnit.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("MatrixMultiplyUnit(%dx%d, idle=%t)",
+				mxu.config.ArrayRows, mxu.config.ArrayCols, mxu.idleFlag))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

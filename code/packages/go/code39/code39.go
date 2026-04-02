@@ -25,10 +25,10 @@ type BarcodeRun struct {
 }
 
 type RenderConfig struct {
-	NarrowUnit              int
-	WideUnit                int
-	BarHeight               int
-	QuietZoneUnits          int
+	NarrowUnit               int
+	WideUnit                 int
+	BarHeight                int
+	QuietZoneUnits           int
 	IncludeHumanReadableText bool
 }
 
@@ -78,54 +78,69 @@ func normalizeCode39(data string) (string, error) {
 	return normalized, nil
 }
 
+// EncodeCode39Char encodes a single character.
 func EncodeCode39Char(char string) (EncodedCharacter, error) {
-	pattern, ok := code39Patterns[char]
-	if !ok {
-		return EncodedCharacter{}, fmt.Errorf(`invalid character: %q is not supported by Code 39`, char)
-	}
-	return EncodedCharacter{Char: char, IsStartStop: char == "*", Pattern: widthPattern(pattern)}, nil
-}
-
-func EncodeCode39(data string) ([]EncodedCharacter, error) {
-	normalized, err := normalizeCode39(data)
-	if err != nil {
-		return nil, err
-	}
-	encoded := make([]EncodedCharacter, 0, len(normalized)+2)
-	for _, ch := range "*" + normalized + "*" {
-		item, err := EncodeCode39Char(string(ch))
-		if err != nil {
-			return nil, err
-		}
-		encoded = append(encoded, item)
-	}
-	return encoded, nil
-}
-
-func ExpandCode39Runs(data string) ([]BarcodeRun, error) {
-	encoded, err := EncodeCode39(data)
-	if err != nil {
-		return nil, err
-	}
-	colors := []string{"bar", "space", "bar", "space", "bar", "space", "bar", "space", "bar"}
-	runs := make([]BarcodeRun, 0)
-	for sourceIndex, encodedChar := range encoded {
-		for elementIndex, element := range encodedChar.Pattern {
-			width := "narrow"
-			if string(element) == "W" {
-				width = "wide"
+	return StartNew[EncodedCharacter]("code39.EncodeCode39Char", EncodedCharacter{},
+		func(op *Operation[EncodedCharacter], rf *ResultFactory[EncodedCharacter]) *OperationResult[EncodedCharacter] {
+			op.AddProperty("char", char)
+			pattern, ok := code39Patterns[char]
+			if !ok {
+				return rf.Fail(EncodedCharacter{}, fmt.Errorf(`invalid character: %q is not supported by Code 39`, char))
 			}
-			runs = append(runs, BarcodeRun{
-				Color: colors[elementIndex], Width: width, SourceChar: encodedChar.Char, SourceIndex: sourceIndex,
-			})
-		}
-		if sourceIndex < len(encoded)-1 {
-			runs = append(runs, BarcodeRun{
-				Color: "space", Width: "narrow", SourceChar: encodedChar.Char, SourceIndex: sourceIndex, IsInterCharacterGap: true,
-			})
-		}
-	}
-	return runs, nil
+			return rf.Generate(true, false, EncodedCharacter{Char: char, IsStartStop: char == "*", Pattern: widthPattern(pattern)})
+		}).GetResult()
+}
+
+// EncodeCode39 encodes a data string into Code 39 characters.
+func EncodeCode39(data string) ([]EncodedCharacter, error) {
+	return StartNew[[]EncodedCharacter]("code39.EncodeCode39", nil,
+		func(op *Operation[[]EncodedCharacter], rf *ResultFactory[[]EncodedCharacter]) *OperationResult[[]EncodedCharacter] {
+			op.AddProperty("data", data)
+			normalized, err := normalizeCode39(data)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			encoded := make([]EncodedCharacter, 0, len(normalized)+2)
+			for _, ch := range "*" + normalized + "*" {
+				item, err := EncodeCode39Char(string(ch))
+				if err != nil {
+					return rf.Fail(nil, err)
+				}
+				encoded = append(encoded, item)
+			}
+			return rf.Generate(true, false, encoded)
+		}).GetResult()
+}
+
+// ExpandCode39Runs expands encoded characters into barcode runs.
+func ExpandCode39Runs(data string) ([]BarcodeRun, error) {
+	return StartNew[[]BarcodeRun]("code39.ExpandCode39Runs", nil,
+		func(op *Operation[[]BarcodeRun], rf *ResultFactory[[]BarcodeRun]) *OperationResult[[]BarcodeRun] {
+			op.AddProperty("data", data)
+			encoded, err := EncodeCode39(data)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			colors := []string{"bar", "space", "bar", "space", "bar", "space", "bar", "space", "bar"}
+			runs := make([]BarcodeRun, 0)
+			for sourceIndex, encodedChar := range encoded {
+				for elementIndex, element := range encodedChar.Pattern {
+					width := "narrow"
+					if string(element) == "W" {
+						width = "wide"
+					}
+					runs = append(runs, BarcodeRun{
+						Color: colors[elementIndex], Width: width, SourceChar: encodedChar.Char, SourceIndex: sourceIndex,
+					})
+				}
+				if sourceIndex < len(encoded)-1 {
+					runs = append(runs, BarcodeRun{
+						Color: "space", Width: "narrow", SourceChar: encodedChar.Char, SourceIndex: sourceIndex, IsInterCharacterGap: true,
+					})
+				}
+			}
+			return rf.Generate(true, false, runs)
+		}).GetResult()
 }
 
 func unitWidth(width string, config RenderConfig) int {
@@ -135,48 +150,65 @@ func unitWidth(width string, config RenderConfig) int {
 	return config.NarrowUnit
 }
 
+// DrawOneDimensionalBarcode draws a generic 1D barcode from runs.
 func DrawOneDimensionalBarcode(runs []BarcodeRun, textValue string, config RenderConfig) (drawinstructions.DrawScene, error) {
-	if config.WideUnit <= config.NarrowUnit || config.NarrowUnit <= 0 || config.BarHeight <= 0 || config.QuietZoneUnits <= 0 {
-		return drawinstructions.DrawScene{}, fmt.Errorf("invalid render config")
-	}
-	quietZoneWidth := config.QuietZoneUnits * config.NarrowUnit
-	instructions := make([]drawinstructions.DrawInstruction, 0)
-	cursorX := quietZoneWidth
-	for _, run := range runs {
-		width := unitWidth(run.Width, config)
-		if run.Color == "bar" {
-			instructions = append(instructions, drawinstructions.DrawRect(cursorX, 0, width, config.BarHeight, "#000000",
-				drawinstructions.Metadata{"char": run.SourceChar, "index": run.SourceIndex}))
-		}
-		cursorX += width
-	}
-	if config.IncludeHumanReadableText && textValue != "" {
-		instructions = append(instructions, drawinstructions.DrawText(
-			(cursorX+quietZoneWidth)/2, config.BarHeight+textMargin+textFontSize-2, textValue,
-			drawinstructions.Metadata{"role": "label"},
-		))
-	}
-	height := config.BarHeight
-	if config.IncludeHumanReadableText {
-		height += textBlockHeight
-	}
-	return drawinstructions.CreateScene(cursorX+quietZoneWidth, height, instructions, "", drawinstructions.Metadata{
-		"label": fmt.Sprintf("Code 39 barcode for %s", textValue), "symbology": "code39",
-	}), nil
+	return StartNew[drawinstructions.DrawScene]("code39.DrawOneDimensionalBarcode", drawinstructions.DrawScene{},
+		func(op *Operation[drawinstructions.DrawScene], rf *ResultFactory[drawinstructions.DrawScene]) *OperationResult[drawinstructions.DrawScene] {
+			op.AddProperty("textValue", textValue)
+			if config.WideUnit <= config.NarrowUnit || config.NarrowUnit <= 0 || config.BarHeight <= 0 || config.QuietZoneUnits <= 0 {
+				return rf.Fail(drawinstructions.DrawScene{}, fmt.Errorf("invalid render config"))
+			}
+			quietZoneWidth := config.QuietZoneUnits * config.NarrowUnit
+			instructions := make([]drawinstructions.DrawInstruction, 0)
+			cursorX := quietZoneWidth
+			for _, run := range runs {
+				width := unitWidth(run.Width, config)
+				if run.Color == "bar" {
+					instructions = append(instructions, drawinstructions.DrawRect(cursorX, 0, width, config.BarHeight, "#000000",
+						drawinstructions.Metadata{"char": run.SourceChar, "index": run.SourceIndex}))
+				}
+				cursorX += width
+			}
+			if config.IncludeHumanReadableText && textValue != "" {
+				instructions = append(instructions, drawinstructions.DrawText(
+					(cursorX+quietZoneWidth)/2, config.BarHeight+textMargin+textFontSize-2, textValue,
+					drawinstructions.Metadata{"role": "label"},
+				))
+			}
+			height := config.BarHeight
+			if config.IncludeHumanReadableText {
+				height += textBlockHeight
+			}
+			scene := drawinstructions.CreateScene(cursorX+quietZoneWidth, height, instructions, "", drawinstructions.Metadata{
+				"label": fmt.Sprintf("Code 39 barcode for %s", textValue), "symbology": "code39",
+			})
+			return rf.Generate(true, false, scene)
+		}).GetResult()
 }
 
+// DrawCode39 generates a draw scene for a Code 39 barcode.
 func DrawCode39(data string, config RenderConfig) (drawinstructions.DrawScene, error) {
-	normalized, err := normalizeCode39(data)
-	if err != nil {
-		return drawinstructions.DrawScene{}, err
-	}
-	runs, err := ExpandCode39Runs(normalized)
-	if err != nil {
-		return drawinstructions.DrawScene{}, err
-	}
-	return DrawOneDimensionalBarcode(runs, normalized, config)
+	return StartNew[drawinstructions.DrawScene]("code39.DrawCode39", drawinstructions.DrawScene{},
+		func(op *Operation[drawinstructions.DrawScene], rf *ResultFactory[drawinstructions.DrawScene]) *OperationResult[drawinstructions.DrawScene] {
+			op.AddProperty("data", data)
+			normalized, err := normalizeCode39(data)
+			if err != nil {
+				return rf.Fail(drawinstructions.DrawScene{}, err)
+			}
+			runs, err := ExpandCode39Runs(normalized)
+			if err != nil {
+				return rf.Fail(drawinstructions.DrawScene{}, err)
+			}
+			scene, err := DrawOneDimensionalBarcode(runs, normalized, config)
+			if err != nil {
+				return rf.Fail(drawinstructions.DrawScene{}, err)
+			}
+			return rf.Generate(true, false, scene)
+		}).GetResult()
 }
 
+// RenderCode39 renders a Code 39 barcode using the given renderer.
+// Note: This is a generic function that delegates to DrawCode39 internally.
 func RenderCode39[T any](data string, renderer drawinstructions.Renderer[T], config RenderConfig) (T, error) {
 	scene, err := DrawCode39(data, config)
 	if err != nil {
