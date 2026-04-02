@@ -64,13 +64,16 @@ type LocalMemory struct {
 //
 // All bytes are initialized to zero. Returns an error if size < 1.
 func NewLocalMemory(size int) (*LocalMemory, error) {
-	if size < 1 {
-		return nil, fmt.Errorf("memory size must be positive, got %d", size)
-	}
-	return &LocalMemory{
-		Size: size,
-		data: make([]byte, size),
-	}, nil
+	return StartNew[*LocalMemory]("gpu-core.NewLocalMemory", nil,
+		func(op *Operation[*LocalMemory], rf *ResultFactory[*LocalMemory]) *OperationResult[*LocalMemory] {
+			if size < 1 {
+				return rf.Fail(nil, fmt.Errorf("memory size must be positive, got %d", size))
+			}
+			return rf.Generate(true, false, &LocalMemory{
+				Size: size,
+				data: make([]byte, size),
+			})
+		}).GetResult()
 }
 
 // checkBounds validates that a memory access is within bounds.
@@ -90,38 +93,52 @@ func (m *LocalMemory) checkBounds(address, numBytes int) error {
 
 // ReadByte reads a single byte from memory.
 func (m *LocalMemory) ReadByte(address int) (byte, error) {
-	if err := m.checkBounds(address, 1); err != nil {
-		return 0, err
-	}
-	return m.data[address], nil
+	return StartNew[byte]("gpu-core.LocalMemory.ReadByte", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			if err := m.checkBounds(address, 1); err != nil {
+				return rf.Fail(0, err)
+			}
+			return rf.Generate(true, false, m.data[address])
+		}).GetResult()
 }
 
 // WriteByte writes a single byte to memory.
 func (m *LocalMemory) WriteByte(address int, value byte) error {
-	if err := m.checkBounds(address, 1); err != nil {
-		return err
-	}
-	m.data[address] = value
-	return nil
+	_, err := StartNew[struct{}]("gpu-core.LocalMemory.WriteByte", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if err := m.checkBounds(address, 1); err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			m.data[address] = value
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // ReadBytes reads multiple bytes from memory.
 func (m *LocalMemory) ReadBytes(address, count int) ([]byte, error) {
-	if err := m.checkBounds(address, count); err != nil {
-		return nil, err
-	}
-	result := make([]byte, count)
-	copy(result, m.data[address:address+count])
-	return result, nil
+	return StartNew[[]byte]("gpu-core.LocalMemory.ReadBytes", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			if err := m.checkBounds(address, count); err != nil {
+				return rf.Fail(nil, err)
+			}
+			result := make([]byte, count)
+			copy(result, m.data[address:address+count])
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // WriteBytes writes multiple bytes to memory.
 func (m *LocalMemory) WriteBytes(address int, data []byte) error {
-	if err := m.checkBounds(address, len(data)); err != nil {
-		return err
-	}
-	copy(m.data[address:], data)
-	return nil
+	_, err := StartNew[struct{}]("gpu-core.LocalMemory.WriteBytes", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if err := m.checkBounds(address, len(data)); err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			copy(m.data[address:], data)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // =========================================================================
@@ -223,59 +240,91 @@ func bytesToFloatBits(data []byte, format fp.FloatFormat) (fp.FloatBits, error) 
 // Reads the appropriate number of bytes (4 for FP32, 2 for FP16/BF16)
 // starting at the given address, and converts them to a FloatBits.
 func (m *LocalMemory) LoadFloat(address int, format fp.FloatFormat) (fp.FloatBits, error) {
-	byteWidth := floatByteWidth(format)
-	data, err := m.ReadBytes(address, byteWidth)
-	if err != nil {
-		return fp.FloatBits{}, err
-	}
-	return bytesToFloatBits(data, format)
+	return StartNew[fp.FloatBits]("gpu-core.LocalMemory.LoadFloat", fp.FloatBits{},
+		func(op *Operation[fp.FloatBits], rf *ResultFactory[fp.FloatBits]) *OperationResult[fp.FloatBits] {
+			byteWidth := floatByteWidth(format)
+			data, err := m.ReadBytes(address, byteWidth)
+			if err != nil {
+				return rf.Fail(fp.FloatBits{}, err)
+			}
+			bits, err := bytesToFloatBits(data, format)
+			if err != nil {
+				return rf.Fail(fp.FloatBits{}, err)
+			}
+			return rf.Generate(true, false, bits)
+		}).GetResult()
 }
 
 // StoreFloat stores a floating-point value to memory.
 //
 // Converts the FloatBits to bytes and writes them starting at the given address.
 func (m *LocalMemory) StoreFloat(address int, value fp.FloatBits) error {
-	data, err := floatBitsToBytes(value)
-	if err != nil {
-		return err
-	}
-	return m.WriteBytes(address, data)
+	_, err := StartNew[struct{}]("gpu-core.LocalMemory.StoreFloat", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			data, err := floatBitsToBytes(value)
+			if err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			if err := m.WriteBytes(address, data); err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // LoadFloatAsGo is a convenience method: load a float and convert to Go float64.
 func (m *LocalMemory) LoadFloatAsGo(address int, format fp.FloatFormat) (float64, error) {
-	bits, err := m.LoadFloat(address, format)
-	if err != nil {
-		return 0, err
-	}
-	return fp.BitsToFloat(bits), nil
+	return StartNew[float64]("gpu-core.LocalMemory.LoadFloatAsGo", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			bits, err := m.LoadFloat(address, format)
+			if err != nil {
+				return rf.Fail(0, err)
+			}
+			return rf.Generate(true, false, fp.BitsToFloat(bits))
+		}).GetResult()
 }
 
 // StoreGoFloat is a convenience method: store a Go float64 to memory.
 func (m *LocalMemory) StoreGoFloat(address int, value float64, format fp.FloatFormat) error {
-	return m.StoreFloat(address, fp.FloatToBits(value, format))
+	_, err := StartNew[struct{}]("gpu-core.LocalMemory.StoreGoFloat", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if err := m.StoreFloat(address, fp.FloatToBits(value, format)); err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // Dump returns a slice of memory as a list of byte values.
 //
 // Useful for debugging. Default shows the first 64 bytes.
 func (m *LocalMemory) Dump(start, length int) []byte {
-	end := start + length
-	if end > m.Size {
-		end = m.Size
-	}
-	result := make([]byte, end-start)
-	copy(result, m.data[start:end])
+	result, _ := StartNew[[]byte]("gpu-core.LocalMemory.Dump", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			end := start + length
+			if end > m.Size {
+				end = m.Size
+			}
+			out := make([]byte, end-start)
+			copy(out, m.data[start:end])
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
 // String returns a human-readable representation of the memory.
 func (m *LocalMemory) String() string {
-	used := 0
-	for _, b := range m.data {
-		if b != 0 {
-			used++
-		}
-	}
-	return fmt.Sprintf("LocalMemory(%d bytes, %d non-zero)", m.Size, used)
+	result, _ := StartNew[string]("gpu-core.LocalMemory.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			used := 0
+			for _, b := range m.data {
+				if b != 0 {
+					used++
+				}
+			}
+			return rf.Generate(true, false, fmt.Sprintf("LocalMemory(%d bytes, %d non-zero)", m.Size, used))
+		}).GetResult()
+	return result
 }

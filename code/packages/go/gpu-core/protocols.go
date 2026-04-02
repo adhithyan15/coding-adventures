@@ -74,10 +74,14 @@ type ExecuteResult struct {
 // halted, and no registers or memory changed. This mirrors the Python
 // dataclass defaults.
 func NewExecuteResult(description string) ExecuteResult {
-	return ExecuteResult{
-		Description:  description,
-		NextPCOffset: 1,
-	}
+	result, _ := StartNew[ExecuteResult]("gpu-core.NewExecuteResult", ExecuteResult{},
+		func(op *Operation[ExecuteResult], rf *ResultFactory[ExecuteResult]) *OperationResult[ExecuteResult] {
+			return rf.Generate(true, false, ExecuteResult{
+				Description:  description,
+				NextPCOffset: 1,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

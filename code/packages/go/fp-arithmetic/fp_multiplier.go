@@ -66,6 +66,15 @@ import (
 //	Step 4: Already normalized
 //	Result: 1.1 x 2^1 = 3.0 (correct!)
 func FPMul(a, b FloatBits) FloatBits {
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FPMul", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("format", a.Fmt.Name)
+			return rf.Generate(true, false, fpMulImpl(a, b))
+		}).GetResult()
+	return result
+}
+
+func fpMulImpl(a, b FloatBits) FloatBits {
 	fmt := a.Fmt
 
 	// ===================================================================

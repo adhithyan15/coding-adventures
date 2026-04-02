@@ -63,6 +63,15 @@ import (
 //	        Already normalized, result = 1.101 x 2^1 = 3.25
 //	        Check: 1.5 * 2.0 + 0.25 = 3.0 + 0.25 = 3.25 correct!
 func FMA(a, b, c FloatBits) FloatBits {
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FMA", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("format", a.Fmt.Name)
+			return rf.Generate(true, false, fmaImpl(a, b, c))
+		}).GetResult()
+	return result
+}
+
+func fmaImpl(a, b, c FloatBits) FloatBits {
 	fmt := a.Fmt
 
 	// ===================================================================
@@ -293,13 +302,19 @@ func FMA(a, b, c FloatBits) FloatBits {
 //	BF16: [sign(1)] [exponent(8)] [mantissa(7) ]
 //	                               ^^^^^^^^^^^ just take the top 7 of 23
 func FPConvert(bits FloatBits, targetFmt FloatFormat) FloatBits {
-	// Same format: no conversion needed
-	if bits.Fmt == targetFmt {
-		return bits
-	}
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FPConvert", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("sourceFormat", bits.Fmt.Name)
+			op.AddProperty("targetFormat", targetFmt.Name)
+			// Same format: no conversion needed
+			if bits.Fmt == targetFmt {
+				return rf.Generate(true, false, bits)
+			}
 
-	// Strategy: decode to Go float64, then re-encode in target format.
-	// This handles all edge cases correctly.
-	value := BitsToFloat(bits)
-	return FloatToBits(value, targetFmt)
+			// Strategy: decode to Go float64, then re-encode in target format.
+			// This handles all edge cases correctly.
+			value := BitsToFloat(bits)
+			return rf.Generate(true, false, FloatToBits(value, targetFmt))
+		}).GetResult()
+	return result
 }

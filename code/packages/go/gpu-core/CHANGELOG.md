@@ -2,6 +2,18 @@
 
 All notable changes to the `gpu-core` Go package will be documented in this file.
 
+## [0.2.1] - 2026-04-02
+
+### Fixed
+- Added `.PanicOnUnexpected()` to the `NewGPUCore` `StartNew` chain so that intentional panics (on invalid register count or memory size) propagate correctly instead of being swallowed by the Operations framework's panic recovery. Tests `TestNewGPUCorePanicsOnBadRegisterConfig` and `TestNewGPUCorePanicsOnBadMemoryConfig` now pass as expected.
+
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions and methods with the Operations system (`StartNew[T]`), giving every call automatic timing, structured logging, and panic recovery.
+- Affected functions across all files: `NewGPUCore`, `WithISA`, `WithFormat`, `WithNumRegisters`, `WithMemorySize`, `IsHalted`, `Halted`, `StepOne`, `LoadProgram`, `Step`, `Run`, `Reset`, `String` (core.go); `Name`, `Execute` (generic_isa.go); all 16 instruction constructors in helpers.go; `NewLocalMemory`, `ReadByte`, `WriteByte`, `ReadBytes`, `WriteBytes`, `LoadFloat`, `StoreFloat`, `LoadFloatAsGo`, `StoreGoFloat`, `Dump`, `String` (memory.go); `NewExecuteResult` (protocols.go); `String` on `Opcode` and `Instruction` (opcodes.go); `NewFPRegisterFile`, `Read`, `Write`, `ReadFloat`, `WriteFloat`, `Dump`, `DumpAll`, `String` (registers.go); `Format` (trace.go).
+- Public API signatures are unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

@@ -75,6 +75,15 @@ import (
 //	Step 5: No rounding needed (exact)
 //	Result: 1.11 x 2^0 = 1.75 (correct!)
 func FPAdd(a, b FloatBits) FloatBits {
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FPAdd", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("format", a.Fmt.Name)
+			return rf.Generate(true, false, fpAddImpl(a, b))
+		}).GetResult()
+	return result
+}
+
+func fpAddImpl(a, b FloatBits) FloatBits {
 	fmt := a.Fmt
 
 	// ===================================================================
@@ -345,13 +354,18 @@ func FPAdd(a, b FloatBits) FloatBits {
 // In IEEE 754, a - b = a + (-b). To negate b, we just flip its sign bit.
 // This is a single XOR gate in hardware -- the cheapest possible operation.
 func FPSub(a, b FloatBits) FloatBits {
-	negB := FloatBits{
-		Sign:     logicgates.XOR(b.Sign, 1),
-		Exponent: b.Exponent,
-		Mantissa: b.Mantissa,
-		Fmt:      b.Fmt,
-	}
-	return FPAdd(a, negB)
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FPSub", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("format", a.Fmt.Name)
+			negB := FloatBits{
+				Sign:     logicgates.XOR(b.Sign, 1),
+				Exponent: b.Exponent,
+				Mantissa: b.Mantissa,
+				Fmt:      b.Fmt,
+			}
+			return rf.Generate(true, false, FPAdd(a, negB))
+		}).GetResult()
+	return result
 }
 
 // FPNeg negates a floating-point number: return -a.
@@ -361,12 +375,17 @@ func FPSub(a, b FloatBits) FloatBits {
 //
 // Note: neg(+0) = -0 and neg(-0) = +0. Both are valid IEEE 754 zeros.
 func FPNeg(a FloatBits) FloatBits {
-	return FloatBits{
-		Sign:     logicgates.XOR(a.Sign, 1),
-		Exponent: a.Exponent,
-		Mantissa: a.Mantissa,
-		Fmt:      a.Fmt,
-	}
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FPNeg", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("format", a.Fmt.Name)
+			return rf.Generate(true, false, FloatBits{
+				Sign:     logicgates.XOR(a.Sign, 1),
+				Exponent: a.Exponent,
+				Mantissa: a.Mantissa,
+				Fmt:      a.Fmt,
+			})
+		}).GetResult()
+	return result
 }
 
 // FPAbs returns the absolute value of a floating-point number.
@@ -376,12 +395,17 @@ func FPNeg(a FloatBits) FloatBits {
 //
 // Note: abs(NaN) is still NaN (with sign=0). This is the IEEE 754 behavior.
 func FPAbs(a FloatBits) FloatBits {
-	return FloatBits{
-		Sign:     0,
-		Exponent: a.Exponent,
-		Mantissa: a.Mantissa,
-		Fmt:      a.Fmt,
-	}
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FPAbs", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("format", a.Fmt.Name)
+			return rf.Generate(true, false, FloatBits{
+				Sign:     0,
+				Exponent: a.Exponent,
+				Mantissa: a.Mantissa,
+				Fmt:      a.Fmt,
+			})
+		}).GetResult()
+	return result
 }
 
 // FPCompare compares two floating-point numbers.
@@ -403,6 +427,15 @@ func FPAbs(a FloatBits) FloatBits {
 // For mixed signs: positive > negative (always).
 // For two negative numbers: comparison is reversed.
 func FPCompare(a, b FloatBits) int {
+	result, _ := StartNew[int]("fp-arithmetic.FPCompare", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("format", a.Fmt.Name)
+			return rf.Generate(true, false, fpCompareImpl(a, b))
+		}).GetResult()
+	return result
+}
+
+func fpCompareImpl(a, b FloatBits) int {
 	// NaN is unordered
 	if IsNaN(a) || IsNaN(b) {
 		return 0

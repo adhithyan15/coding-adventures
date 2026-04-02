@@ -28,6 +28,13 @@
 //   - document-ast: the shared intermediate representation types
 //
 // Spec: TE00 (Document AST), TE01 (GFM parser), TE02 (HTML renderer)
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery. This
+// package declares zero OS capabilities, so no op.File / op.Net
+// namespace fields are available inside callbacks.
 package commonmark
 
 import (
@@ -44,7 +51,12 @@ import (
 //	doc := commonmark.Parse("# Hello\n\nWorld\n")
 //	doc.Children[0].NodeType()  // "heading"
 func Parse(markdown string) *documentast.DocumentNode {
-	return parser.Parse(markdown)
+	result, _ := StartNew[*documentast.DocumentNode]("gfm.Parse", nil,
+		func(op *Operation[*documentast.DocumentNode], rf *ResultFactory[*documentast.DocumentNode]) *OperationResult[*documentast.DocumentNode] {
+			op.AddProperty("markdownLen", len(markdown))
+			return rf.Generate(true, false, parser.Parse(markdown))
+		}).GetResult()
+	return result
 }
 
 // ToHtml parses Markdown and renders it to an HTML string.
@@ -56,8 +68,13 @@ func Parse(markdown string) *documentast.DocumentNode {
 //	html := commonmark.ToHtml("# Hello\n\nWorld\n")
 //	// → "<h1>Hello</h1>\n<p>World</p>\n"
 func ToHtml(markdown string) string {
-	doc := parser.Parse(markdown)
-	return renderer.ToHtml(doc, renderer.RenderOptions{})
+	result, _ := StartNew[string]("gfm.ToHtml", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("markdownLen", len(markdown))
+			doc := parser.Parse(markdown)
+			return rf.Generate(true, false, renderer.ToHtml(doc, renderer.RenderOptions{}))
+		}).GetResult()
+	return result
 }
 
 // ToHtmlSafe parses Markdown and renders it to an HTML string with all raw
@@ -66,8 +83,13 @@ func ToHtml(markdown string) string {
 //	html := commonmark.ToHtmlSafe("Hello\n\n<script>evil</script>\n")
 //	// → "<p>Hello</p>\n"  (the <script> is dropped)
 func ToHtmlSafe(markdown string) string {
-	doc := parser.Parse(markdown)
-	return renderer.ToHtml(doc, renderer.RenderOptions{Sanitize: true})
+	result, _ := StartNew[string]("gfm.ToHtmlSafe", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("markdownLen", len(markdown))
+			doc := parser.Parse(markdown)
+			return rf.Generate(true, false, renderer.ToHtml(doc, renderer.RenderOptions{Sanitize: true}))
+		}).GetResult()
+	return result
 }
 
 // VERSION is the version of this commonmark package.

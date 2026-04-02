@@ -98,16 +98,21 @@ type Inode struct {
 // NewInode creates a new inode with sensible defaults. All direct block
 // pointers are initialized to -1 (unallocated).
 func NewInode(inodeNumber int, fileType FileType) *Inode {
-	inode := &Inode{
-		InodeNumber:   inodeNumber,
-		Type:          fileType,
-		Permissions:   0o755,
-		LinkCount:     1,
-		IndirectBlock: -1,
-	}
-	// Initialize all direct block pointers to -1 (unallocated)
-	for i := range inode.DirectBlks {
-		inode.DirectBlks[i] = -1
-	}
-	return inode
+	result, _ := StartNew[*Inode]("file-system.NewInode", nil,
+		func(op *Operation[*Inode], rf *ResultFactory[*Inode]) *OperationResult[*Inode] {
+			op.AddProperty("inodeNumber", inodeNumber)
+			inode := &Inode{
+				InodeNumber:   inodeNumber,
+				Type:          fileType,
+				Permissions:   0o755,
+				LinkCount:     1,
+				IndirectBlock: -1,
+			}
+			// Initialize all direct block pointers to -1 (unallocated)
+			for i := range inode.DirectBlks {
+				inode.DirectBlks[i] = -1
+			}
+			return rf.Generate(true, false, inode)
+		}).GetResult()
+	return result
 }

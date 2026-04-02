@@ -69,22 +69,26 @@ type TokenGrammar struct {
 // This is useful for cross-validation: the parser grammar references tokens
 // by name, and we need to check that every referenced token actually exists.
 func (g *TokenGrammar) TokenNames() map[string]bool {
-	names := make(map[string]bool)
+	result, _ := StartNew[map[string]bool]("grammar-tools.TokenGrammar.TokenNames", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			names := make(map[string]bool)
 
-	// Collect all definitions: top-level plus all group definitions.
-	allDefs := make([]TokenDefinition, 0, len(g.Definitions))
-	allDefs = append(allDefs, g.Definitions...)
-	for _, group := range g.Groups {
-		allDefs = append(allDefs, group.Definitions...)
-	}
+			// Collect all definitions: top-level plus all group definitions.
+			allDefs := make([]TokenDefinition, 0, len(g.Definitions))
+			allDefs = append(allDefs, g.Definitions...)
+			for _, group := range g.Groups {
+				allDefs = append(allDefs, group.Definitions...)
+			}
 
-	for _, d := range allDefs {
-		names[d.Name] = true
-		if d.Alias != "" {
-			names[d.Alias] = true
-		}
-	}
-	return names
+			for _, d := range allDefs {
+				names[d.Name] = true
+				if d.Alias != "" {
+					names[d.Alias] = true
+				}
+			}
+			return rf.Generate(true, false, names)
+		}).GetResult()
+	return result
 }
 
 // EffectiveTokenNames returns the set of token names as the parser will see
@@ -95,23 +99,27 @@ func (g *TokenGrammar) TokenNames() map[string]bool {
 // references. For definitions without aliases, this returns the definition
 // name. Includes names from all pattern groups.
 func (g *TokenGrammar) EffectiveTokenNames() map[string]bool {
-	names := make(map[string]bool)
+	result, _ := StartNew[map[string]bool]("grammar-tools.TokenGrammar.EffectiveTokenNames", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			names := make(map[string]bool)
 
-	// Collect all definitions: top-level plus all group definitions.
-	allDefs := make([]TokenDefinition, 0, len(g.Definitions))
-	allDefs = append(allDefs, g.Definitions...)
-	for _, group := range g.Groups {
-		allDefs = append(allDefs, group.Definitions...)
-	}
+			// Collect all definitions: top-level plus all group definitions.
+			allDefs := make([]TokenDefinition, 0, len(g.Definitions))
+			allDefs = append(allDefs, g.Definitions...)
+			for _, group := range g.Groups {
+				allDefs = append(allDefs, group.Definitions...)
+			}
 
-	for _, d := range allDefs {
-		if d.Alias != "" {
-			names[d.Alias] = true
-		} else {
-			names[d.Name] = true
-		}
-	}
-	return names
+			for _, d := range allDefs {
+				if d.Alias != "" {
+					names[d.Alias] = true
+				} else {
+					names[d.Name] = true
+				}
+			}
+			return rf.Generate(true, false, names)
+		}).GetResult()
+	return result
 }
 
 // findClosingSlash scans a /pattern/ string starting at index 1 and returns
@@ -239,6 +247,18 @@ var reservedGroupNames = map[string]bool{
 // enable context-sensitive lexing: the lexer maintains a stack of active
 // groups and only tries patterns from the group on top of the stack.
 func ParseTokenGrammar(source string) (*TokenGrammar, error) {
+	return StartNew[*TokenGrammar]("grammar-tools.ParseTokenGrammar", nil,
+		func(op *Operation[*TokenGrammar], rf *ResultFactory[*TokenGrammar]) *OperationResult[*TokenGrammar] {
+			op.AddProperty("sourceLen", len(source))
+			result, err := parseTokenGrammarImpl(source)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
+}
+
+func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 	grammar := &TokenGrammar{
 		Groups:        make(map[string]*PatternGroup),
 		CaseSensitive: true,
@@ -549,6 +569,14 @@ func validateDefinitions(definitions []TokenDefinition, label string) []string {
 //   - Empty pattern groups (no definitions)
 //   - Definition issues within groups (same checks as top-level)
 func ValidateTokenGrammar(grammar *TokenGrammar) []string {
+	result, _ := StartNew[[]string]("grammar-tools.ValidateTokenGrammar", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, validateTokenGrammarImpl(grammar))
+		}).GetResult()
+	return result
+}
+
+func validateTokenGrammarImpl(grammar *TokenGrammar) []string {
 	var issues []string
 
 	// Validate regular definitions

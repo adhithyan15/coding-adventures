@@ -35,6 +35,13 @@
 //	    return eventloop.Continue
 //	})
 //	loop.Run()
+//
+// # Operations
+//
+// Every public method is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery. This
+// package declares zero OS capabilities, so no op.File / op.Net
+// namespace fields are available inside callbacks.
 package eventloop
 
 import "runtime"
@@ -108,20 +115,32 @@ func New[E any]() *EventLoop[E] {
 
 // AddSource registers an event source. Sources are polled in registration order.
 func (l *EventLoop[E]) AddSource(s EventSource[E]) {
-	l.sources = append(l.sources, s)
+	_, _ = StartNew[struct{}]("event-loop.AddSource", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.sources = append(l.sources, s)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // OnEvent registers a handler function. Handlers receive each event in
 // registration order. If any handler returns Exit, the loop terminates
 // immediately — subsequent handlers for that event are not called.
 func (l *EventLoop[E]) OnEvent(h func(E) ControlFlow) {
-	l.handlers = append(l.handlers, h)
+	_, _ = StartNew[struct{}]("event-loop.OnEvent", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.handlers = append(l.handlers, h)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Stop signals the loop to exit on the next iteration. Safe to call from
 // outside a handler (e.g., from a goroutine or a deferred function).
 func (l *EventLoop[E]) Stop() {
-	l.stopped = true
+	_, _ = StartNew[struct{}]("event-loop.Stop", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.stopped = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Run starts the event loop. It blocks on the calling goroutine until a
@@ -136,38 +155,42 @@ func (l *EventLoop[E]) Stop() {
 //     the goroutine scheduler. This prevents the loop from busy-spinning at
 //     100% CPU when the application is idle between events.
 func (l *EventLoop[E]) Run() {
-	l.stopped = false
-	for !l.stopped {
-		// ── Phase 1: Collect ──────────────────────────────────────────────
-		//
-		// Poll every source. Append whatever each returns to the queue.
-		// Sources return empty slices when nothing is ready — that is normal.
-		var queue []E
-		for _, src := range l.sources {
-			queue = append(queue, src.Poll()...)
-		}
+	_, _ = StartNew[struct{}]("event-loop.Run", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.stopped = false
+			for !l.stopped {
+				// ── Phase 1: Collect ──────────────────────────────────────────────
+				//
+				// Poll every source. Append whatever each returns to the queue.
+				// Sources return empty slices when nothing is ready — that is normal.
+				var queue []E
+				for _, src := range l.sources {
+					queue = append(queue, src.Poll()...)
+				}
 
-		// ── Phase 2: Dispatch ─────────────────────────────────────────────
-		//
-		// Deliver each event to all handlers in registration order.
-		// The moment any handler returns Exit we stop the entire loop —
-		// not just that event.
-		for _, event := range queue {
-			for _, h := range l.handlers {
-				if h(event) == Exit {
-					return
+				// ── Phase 2: Dispatch ─────────────────────────────────────────────
+				//
+				// Deliver each event to all handlers in registration order.
+				// The moment any handler returns Exit we stop the entire loop —
+				// not just that event.
+				for _, event := range queue {
+					for _, h := range l.handlers {
+						if h(event) == Exit {
+							return rf.Generate(true, false, struct{}{})
+						}
+					}
+				}
+
+				// ── Phase 3: Idle ─────────────────────────────────────────────────
+				//
+				// If nothing happened this iteration, yield the goroutine scheduler.
+				// Without this, an idle loop would spin at 100% CPU waiting for the
+				// next event. runtime.Gosched() says "I have nothing to do right now;
+				// let other goroutines run."
+				if len(queue) == 0 {
+					runtime.Gosched()
 				}
 			}
-		}
-
-		// ── Phase 3: Idle ─────────────────────────────────────────────────
-		//
-		// If nothing happened this iteration, yield the goroutine scheduler.
-		// Without this, an idle loop would spin at 100% CPU waiting for the
-		// next event. runtime.Gosched() says "I have nothing to do right now;
-		// let other goroutines run."
-		if len(queue) == 0 {
-			runtime.Gosched()
-		}
-	}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
