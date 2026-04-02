@@ -1,2 +1,3 @@
+luarocks remove --force coding-adventures-network-stack 2>NUL || exit /b 0
 luarocks make --local coding-adventures-network-stack-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
