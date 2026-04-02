@@ -55,11 +55,17 @@ type message struct {
 
 // NewMessageQueue creates a new message queue with the given limits.
 func NewMessageQueue(maxMessages, maxMessageSize int) *MessageQueue {
-	return &MessageQueue{
-		messages:       make([]message, 0),
-		MaxMessages:    maxMessages,
-		MaxMessageSize: maxMessageSize,
-	}
+	result, _ := StartNew[*MessageQueue]("ipc.NewMessageQueue", nil,
+		func(op *Operation[*MessageQueue], rf *ResultFactory[*MessageQueue]) *OperationResult[*MessageQueue] {
+			op.AddProperty("maxMessages", maxMessages)
+			op.AddProperty("maxMessageSize", maxMessageSize)
+			return rf.Generate(true, false, &MessageQueue{
+				messages:       make([]message, 0),
+				MaxMessages:    maxMessages,
+				MaxMessageSize: maxMessageSize,
+			})
+		}).GetResult()
+	return result
 }
 
 // Send adds a message to the queue.
@@ -72,24 +78,29 @@ func NewMessageQueue(maxMessages, maxMessageSize int) *MessageQueue {
 // In a real OS, the "queue full" case would block the sender. In our
 // simulation we return false.
 func (mq *MessageQueue) Send(msgType int, data []byte) bool {
-	// Validate message type — must be positive
-	if msgType <= 0 {
-		return false
-	}
+	result, _ := StartNew[bool]("ipc.MessageQueue.Send", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("msgType", msgType)
+			// Validate message type — must be positive
+			if msgType <= 0 {
+				return rf.Generate(true, false, false)
+			}
 
-	// Validate message size
-	if len(data) > mq.MaxMessageSize {
-		return false
-	}
+			// Validate message size
+			if len(data) > mq.MaxMessageSize {
+				return rf.Generate(true, false, false)
+			}
 
-	// Check capacity
-	if len(mq.messages) >= mq.MaxMessages {
-		return false
-	}
+			// Check capacity
+			if len(mq.messages) >= mq.MaxMessages {
+				return rf.Generate(true, false, false)
+			}
 
-	// Enqueue — append to the back of the FIFO
-	mq.messages = append(mq.messages, message{MsgType: msgType, Data: data})
-	return true
+			// Enqueue — append to the back of the FIFO
+			mq.messages = append(mq.messages, message{MsgType: msgType, Data: data})
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // Receive removes and returns a message from the queue.
@@ -107,40 +118,62 @@ func (mq *MessageQueue) Send(msgType int, data []byte) bool {
 //	Receive(2) → (2, "status")
 //	Queue is now: (1, "req1"), (1, "req2")
 func (mq *MessageQueue) Receive(msgType int) (int, []byte, bool) {
-	if len(mq.messages) == 0 {
-		return 0, nil, false
+	type receiveResult struct {
+		msgType int
+		data    []byte
+		ok      bool
 	}
+	result, _ := StartNew[receiveResult]("ipc.MessageQueue.Receive", receiveResult{},
+		func(op *Operation[receiveResult], rf *ResultFactory[receiveResult]) *OperationResult[receiveResult] {
+			op.AddProperty("msgType", msgType)
+			if len(mq.messages) == 0 {
+				return rf.Generate(true, false, receiveResult{0, nil, false})
+			}
 
-	if msgType == 0 {
-		// Any type: dequeue the oldest message
-		msg := mq.messages[0]
-		mq.messages = mq.messages[1:]
-		return msg.MsgType, msg.Data, true
-	}
+			if msgType == 0 {
+				// Any type: dequeue the oldest message
+				msg := mq.messages[0]
+				mq.messages = mq.messages[1:]
+				return rf.Generate(true, false, receiveResult{msg.MsgType, msg.Data, true})
+			}
 
-	// Filtered receive: find first matching type.
-	// Like sorting through a mailbox looking for a specific label.
-	for i, msg := range mq.messages {
-		if msg.MsgType == msgType {
-			mq.messages = append(mq.messages[:i], mq.messages[i+1:]...)
-			return msg.MsgType, msg.Data, true
-		}
-	}
+			// Filtered receive: find first matching type.
+			// Like sorting through a mailbox looking for a specific label.
+			for i, msg := range mq.messages {
+				if msg.MsgType == msgType {
+					mq.messages = append(mq.messages[:i], mq.messages[i+1:]...)
+					return rf.Generate(true, false, receiveResult{msg.MsgType, msg.Data, true})
+				}
+			}
 
-	return 0, nil, false
+			return rf.Generate(true, false, receiveResult{0, nil, false})
+		}).GetResult()
+	return result.msgType, result.data, result.ok
 }
 
 // MessageCount returns the number of messages currently in the queue.
 func (mq *MessageQueue) MessageCount() int {
-	return len(mq.messages)
+	result, _ := StartNew[int]("ipc.MessageQueue.MessageCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(mq.messages))
+		}).GetResult()
+	return result
 }
 
 // IsEmpty returns true if the queue has no messages.
 func (mq *MessageQueue) IsEmpty() bool {
-	return len(mq.messages) == 0
+	result, _ := StartNew[bool]("ipc.MessageQueue.IsEmpty", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, len(mq.messages) == 0)
+		}).GetResult()
+	return result
 }
 
 // IsFull returns true if the queue is at MaxMessages capacity.
 func (mq *MessageQueue) IsFull() bool {
-	return len(mq.messages) >= mq.MaxMessages
+	result, _ := StartNew[bool]("ipc.MessageQueue.IsFull", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, len(mq.messages) >= mq.MaxMessages)
+		}).GetResult()
+	return result
 }

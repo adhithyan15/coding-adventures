@@ -92,6 +92,17 @@ type DecodedInstruction struct {
 //
 // Returns DecodedInstruction with all control signals set.
 func Decode(raw int, raw2 int) DecodedInstruction {
+	result, _ := StartNew[DecodedInstruction]("intel4004-gatelevel.Decode", DecodedInstruction{},
+		func(op *Operation[DecodedInstruction], rf *ResultFactory[DecodedInstruction]) *OperationResult[DecodedInstruction] {
+			op.AddProperty("raw", raw)
+			op.AddProperty("raw2", raw2)
+			return rf.Generate(true, false, decodeImpl(raw, raw2))
+		}).GetResult()
+	return result
+}
+
+// decodeImpl is the internal implementation of the decoder.
+func decodeImpl(raw int, raw2 int) DecodedInstruction {
 	// Extract individual bits using AND gates (masking)
 	b7 := (raw >> 7) & 1
 	b6 := (raw >> 6) & 1

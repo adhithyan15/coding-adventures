@@ -35,13 +35,19 @@ package intel4004gatelevel
 //	IntToBits(15, 4)      -> [1, 1, 1, 1]
 //	IntToBits(0xABC, 12)  -> [0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1]
 func IntToBits(value, width int) []int {
-	// Mask to width to handle negative or oversized values
-	value = value & ((1 << width) - 1)
-	bits := make([]int, width)
-	for i := 0; i < width; i++ {
-		bits[i] = (value >> i) & 1
-	}
-	return bits
+	result, _ := StartNew[[]int]("intel4004-gatelevel.IntToBits", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			op.AddProperty("value", value)
+			op.AddProperty("width", width)
+			// Mask to width to handle negative or oversized values
+			v := value & ((1 << width) - 1)
+			bits := make([]int, width)
+			for i := 0; i < width; i++ {
+				bits[i] = (v >> i) & 1
+			}
+			return rf.Generate(true, false, bits)
+		}).GetResult()
+	return result
 }
 
 // BitsToInt converts a slice of bits (LSB first) to an integer.
@@ -57,9 +63,13 @@ func IntToBits(value, width int) []int {
 //	BitsToInt([0, 0, 0, 0])  -> 0
 //	BitsToInt([1, 1, 1, 1])  -> 15
 func BitsToInt(bits []int) int {
-	result := 0
-	for i, bit := range bits {
-		result |= bit << i
-	}
+	result, _ := StartNew[int]("intel4004-gatelevel.BitsToInt", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			val := 0
+			for i, bit := range bits {
+				val |= bit << i
+			}
+			return rf.Generate(true, false, val)
+		}).GetResult()
 	return result
 }

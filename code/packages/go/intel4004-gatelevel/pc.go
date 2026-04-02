@@ -39,25 +39,38 @@ type ProgramCounter struct {
 
 // NewProgramCounter creates a new PC initialized to 0.
 func NewProgramCounter() *ProgramCounter {
-	zeros := make([]int, 12)
-	_, state := logicgates.Register(zeros, 0, nil)
-	_, state = logicgates.Register(zeros, 1, state)
-	return &ProgramCounter{state: state}
+	result, _ := StartNew[*ProgramCounter]("intel4004-gatelevel.NewProgramCounter", nil,
+		func(op *Operation[*ProgramCounter], rf *ResultFactory[*ProgramCounter]) *OperationResult[*ProgramCounter] {
+			zeros := make([]int, 12)
+			_, state := logicgates.Register(zeros, 0, nil)
+			_, state = logicgates.Register(zeros, 1, state)
+			return rf.Generate(true, false, &ProgramCounter{state: state})
+		}).GetResult()
+	return result
 }
 
 // Read reads the current PC value (0-4095).
 func (pc *ProgramCounter) Read() int {
-	zeros := make([]int, 12)
-	output, _ := logicgates.Register(zeros, 0, pc.state)
-	return BitsToInt(output)
+	result, _ := StartNew[int]("intel4004-gatelevel.ProgramCounter.Read", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			zeros := make([]int, 12)
+			output, _ := logicgates.Register(zeros, 0, pc.state)
+			return rf.Generate(true, false, BitsToInt(output))
+		}).GetResult()
+	return result
 }
 
 // Load loads a new address into the PC (for jumps).
 func (pc *ProgramCounter) Load(address int) {
-	bits := IntToBits(address&0xFFF, 12)
-	_, state := logicgates.Register(bits, 0, pc.state)
-	_, state = logicgates.Register(bits, 1, state)
-	pc.state = state
+	_, _ = StartNew[struct{}]("intel4004-gatelevel.ProgramCounter.Load", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("address", address)
+			bits := IntToBits(address&0xFFF, 12)
+			_, state := logicgates.Register(bits, 0, pc.state)
+			_, state = logicgates.Register(bits, 1, state)
+			pc.state = state
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Increment increments PC by 1 using a chain of half-adders.
@@ -68,31 +81,47 @@ func (pc *ProgramCounter) Load(address int) {
 //	For each bit position:
 //	    (new_bit, carry) = half_adder(old_bit, carry)
 func (pc *ProgramCounter) Increment() {
-	currentBits := IntToBits(pc.Read(), 12)
-	carry := 1 // Adding 1
-	newBits := make([]int, 12)
-	for i, bit := range currentBits {
-		sumBit, c := arithmetic.HalfAdder(bit, carry)
-		newBits[i] = sumBit
-		carry = c
-	}
-	pc.Load(BitsToInt(newBits))
+	_, _ = StartNew[struct{}]("intel4004-gatelevel.ProgramCounter.Increment", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			currentBits := IntToBits(pc.Read(), 12)
+			carry := 1 // Adding 1
+			newBits := make([]int, 12)
+			for i, bit := range currentBits {
+				sumBit, c := arithmetic.HalfAdder(bit, carry)
+				newBits[i] = sumBit
+				carry = c
+			}
+			pc.Load(BitsToInt(newBits))
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Increment2 increments PC by 2 (for 2-byte instructions).
 //
 // Two cascaded increments through the half-adder chain.
 func (pc *ProgramCounter) Increment2() {
-	pc.Increment()
-	pc.Increment()
+	_, _ = StartNew[struct{}]("intel4004-gatelevel.ProgramCounter.Increment2", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			pc.Increment()
+			pc.Increment()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Reset resets PC to 0.
 func (pc *ProgramCounter) Reset() {
-	pc.Load(0)
+	_, _ = StartNew[struct{}]("intel4004-gatelevel.ProgramCounter.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			pc.Load(0)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // GateCount returns 12-bit register (72 gates) + 12 half-adders (24 gates) = 96.
 func (pc *ProgramCounter) GateCount() int {
-	return 96
+	result, _ := StartNew[int]("intel4004-gatelevel.ProgramCounter.GateCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 96)
+		}).GetResult()
+	return result
 }

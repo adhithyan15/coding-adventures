@@ -81,12 +81,16 @@ type SerializerConfig struct {
 // DefaultConfig returns a SerializerConfig with sensible defaults:
 // 2-space indent, no key sorting, no trailing newline.
 func DefaultConfig() *SerializerConfig {
-	return &SerializerConfig{
-		IndentSize:      2,
-		IndentChar:      ' ',
-		SortKeys:        false,
-		TrailingNewline: false,
-	}
+	result, _ := StartNew[*SerializerConfig]("json-serializer.DefaultConfig", nil,
+		func(op *Operation[*SerializerConfig], rf *ResultFactory[*SerializerConfig]) *OperationResult[*SerializerConfig] {
+			return rf.Generate(true, false, &SerializerConfig{
+				IndentSize:      2,
+				IndentChar:      ' ',
+				SortKeys:        false,
+				TrailingNewline: false,
+			})
+		}).GetResult()
+	return result
 }
 
 // ============================================================================
@@ -121,10 +125,19 @@ func (e *JsonSerializerError) Error() string {
 //	Serialize(JsonArray{[1, 2]})                   -> "[1,2]"
 //	Serialize(JsonObject{[{k:"a", v:1}]})          -> `{"a":1}`
 func Serialize(value jsonvalue.JsonValue) (string, error) {
-	if value == nil {
-		return "null", nil
+	type serResult struct {
+		s   string
+		err error
 	}
-	return serializeValue(value)
+	r, _ := StartNew[serResult]("json-serializer.Serialize", serResult{},
+		func(op *Operation[serResult], rf *ResultFactory[serResult]) *OperationResult[serResult] {
+			if value == nil {
+				return rf.Generate(true, false, serResult{"null", nil})
+			}
+			s, err := serializeValue(value)
+			return rf.Generate(true, false, serResult{s, err})
+		}).GetResult()
+	return r.s, r.err
 }
 
 // SerializePretty converts a JsonValue to pretty-printed JSON text.
@@ -140,24 +153,32 @@ func Serialize(value jsonvalue.JsonValue) (string, error) {
 //	  "age": 30
 //	}
 func SerializePretty(value jsonvalue.JsonValue, config *SerializerConfig) (string, error) {
-	if config == nil {
-		config = DefaultConfig()
+	type serResult struct {
+		s   string
+		err error
 	}
-	if value == nil {
-		result := "null"
-		if config.TrailingNewline {
-			result += "\n"
-		}
-		return result, nil
-	}
-	result, err := serializePrettyValue(value, config, 0)
-	if err != nil {
-		return "", err
-	}
-	if config.TrailingNewline {
-		result += "\n"
-	}
-	return result, nil
+	r, _ := StartNew[serResult]("json-serializer.SerializePretty", serResult{},
+		func(op *Operation[serResult], rf *ResultFactory[serResult]) *OperationResult[serResult] {
+			if config == nil {
+				config = DefaultConfig()
+			}
+			if value == nil {
+				result := "null"
+				if config.TrailingNewline {
+					result += "\n"
+				}
+				return rf.Generate(true, false, serResult{result, nil})
+			}
+			result, err := serializePrettyValue(value, config, 0)
+			if err != nil {
+				return rf.Generate(true, false, serResult{"", err})
+			}
+			if config.TrailingNewline {
+				result += "\n"
+			}
+			return rf.Generate(true, false, serResult{result, nil})
+		}).GetResult()
+	return r.s, r.err
 }
 
 // ============================================================================
@@ -174,26 +195,44 @@ func SerializePretty(value jsonvalue.JsonValue, config *SerializerConfig) (strin
 //
 //	Stringify(map[string]interface{}{"a": 1})  ->  `{"a":1}`
 func Stringify(value interface{}) (string, error) {
-	jv, err := jsonvalue.FromNative(value)
-	if err != nil {
-		return "", &JsonSerializerError{
-			Message: fmt.Sprintf("cannot convert to JsonValue: %s", err.Error()),
-		}
+	type serResult struct {
+		s   string
+		err error
 	}
-	return Serialize(jv)
+	r, _ := StartNew[serResult]("json-serializer.Stringify", serResult{},
+		func(op *Operation[serResult], rf *ResultFactory[serResult]) *OperationResult[serResult] {
+			jv, err := jsonvalue.FromNative(value)
+			if err != nil {
+				return rf.Generate(true, false, serResult{"", &JsonSerializerError{
+					Message: fmt.Sprintf("cannot convert to JsonValue: %s", err.Error()),
+				}})
+			}
+			s, err := serializeValue(jv)
+			return rf.Generate(true, false, serResult{s, err})
+		}).GetResult()
+	return r.s, r.err
 }
 
 // StringifyPretty converts native Go types to pretty-printed JSON text.
 //
 // This is a convenience function that combines FromNative and SerializePretty.
 func StringifyPretty(value interface{}, config *SerializerConfig) (string, error) {
-	jv, err := jsonvalue.FromNative(value)
-	if err != nil {
-		return "", &JsonSerializerError{
-			Message: fmt.Sprintf("cannot convert to JsonValue: %s", err.Error()),
-		}
+	type serResult struct {
+		s   string
+		err error
 	}
-	return SerializePretty(jv, config)
+	r, _ := StartNew[serResult]("json-serializer.StringifyPretty", serResult{},
+		func(op *Operation[serResult], rf *ResultFactory[serResult]) *OperationResult[serResult] {
+			jv, err := jsonvalue.FromNative(value)
+			if err != nil {
+				return rf.Generate(true, false, serResult{"", &JsonSerializerError{
+					Message: fmt.Sprintf("cannot convert to JsonValue: %s", err.Error()),
+				}})
+			}
+			s, err := serializePrettyValue(jv, config, 0)
+			return rf.Generate(true, false, serResult{s, err})
+		}).GetResult()
+	return r.s, r.err
 }
 
 // ============================================================================

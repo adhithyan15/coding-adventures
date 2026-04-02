@@ -49,13 +49,20 @@ type SharedMemoryRegion struct {
 //
 // The data is zero-initialized, just like freshly allocated memory in a real OS.
 func NewSharedMemoryRegion(name string, size int, ownerPID int) *SharedMemoryRegion {
-	return &SharedMemoryRegion{
-		name:        name,
-		size:        size,
-		data:        make([]byte, size),
-		ownerPID:    ownerPID,
-		attachedPIDs: make(map[int]bool),
-	}
+	result, _ := StartNew[*SharedMemoryRegion]("ipc.NewSharedMemoryRegion", nil,
+		func(op *Operation[*SharedMemoryRegion], rf *ResultFactory[*SharedMemoryRegion]) *OperationResult[*SharedMemoryRegion] {
+			op.AddProperty("name", name)
+			op.AddProperty("size", size)
+			op.AddProperty("ownerPID", ownerPID)
+			return rf.Generate(true, false, &SharedMemoryRegion{
+				name:        name,
+				size:        size,
+				data:        make([]byte, size),
+				ownerPID:    ownerPID,
+				attachedPIDs: make(map[int]bool),
+			})
+		}).GetResult()
+	return result
 }
 
 // Attach maps this shared memory region into a process's address space.
@@ -66,22 +73,32 @@ func NewSharedMemoryRegion(name string, size int, ownerPID int) *SharedMemoryReg
 //
 // Returns true if the PID was newly attached, false if already attached.
 func (s *SharedMemoryRegion) Attach(pid int) bool {
-	if s.attachedPIDs[pid] {
-		return false
-	}
-	s.attachedPIDs[pid] = true
-	return true
+	result, _ := StartNew[bool]("ipc.SharedMemoryRegion.Attach", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("pid", pid)
+			if s.attachedPIDs[pid] {
+				return rf.Generate(true, false, false)
+			}
+			s.attachedPIDs[pid] = true
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // Detach unmaps this shared memory region from a process.
 //
 // Returns true if the PID was detached, false if it was not attached.
 func (s *SharedMemoryRegion) Detach(pid int) bool {
-	if !s.attachedPIDs[pid] {
-		return false
-	}
-	delete(s.attachedPIDs, pid)
-	return true
+	result, _ := StartNew[bool]("ipc.SharedMemoryRegion.Detach", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("pid", pid)
+			if !s.attachedPIDs[pid] {
+				return rf.Generate(true, false, false)
+			}
+			delete(s.attachedPIDs, pid)
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // ReadAt reads count bytes from the shared region starting at offset.
@@ -92,18 +109,28 @@ func (s *SharedMemoryRegion) Detach(pid int) bool {
 //
 // Returns an error if the access is out of bounds.
 func (s *SharedMemoryRegion) ReadAt(offset, count int) ([]byte, error) {
-	if offset < 0 {
-		return nil, fmt.Errorf("negative offset: %d", offset)
+	type readResult struct {
+		data []byte
+		err  error
 	}
-	if offset+count > s.size {
-		return nil, fmt.Errorf(
-			"read beyond region bounds: offset=%d, count=%d, size=%d",
-			offset, count, s.size,
-		)
-	}
-	result := make([]byte, count)
-	copy(result, s.data[offset:offset+count])
-	return result, nil
+	result, _ := StartNew[readResult]("ipc.SharedMemoryRegion.ReadAt", readResult{},
+		func(op *Operation[readResult], rf *ResultFactory[readResult]) *OperationResult[readResult] {
+			op.AddProperty("offset", offset)
+			op.AddProperty("count", count)
+			if offset < 0 {
+				return rf.Generate(true, false, readResult{nil, fmt.Errorf("negative offset: %d", offset)})
+			}
+			if offset+count > s.size {
+				return rf.Generate(true, false, readResult{nil, fmt.Errorf(
+					"read beyond region bounds: offset=%d, count=%d, size=%d",
+					offset, count, s.size,
+				)})
+			}
+			data := make([]byte, count)
+			copy(data, s.data[offset:offset+count])
+			return rf.Generate(true, false, readResult{data, nil})
+		}).GetResult()
+	return result.data, result.err
 }
 
 // WriteAt writes data into the shared region starting at offset.
@@ -114,40 +141,70 @@ func (s *SharedMemoryRegion) ReadAt(offset, count int) ([]byte, error) {
 //
 // Returns the number of bytes written, or an error if out of bounds.
 func (s *SharedMemoryRegion) WriteAt(offset int, data []byte) (int, error) {
-	if offset < 0 {
-		return 0, fmt.Errorf("negative offset: %d", offset)
+	type writeResult struct {
+		n   int
+		err error
 	}
-	if offset+len(data) > s.size {
-		return 0, fmt.Errorf(
-			"write beyond region bounds: offset=%d, len(data)=%d, size=%d",
-			offset, len(data), s.size,
-		)
-	}
-	copy(s.data[offset:], data)
-	return len(data), nil
+	result, _ := StartNew[writeResult]("ipc.SharedMemoryRegion.WriteAt", writeResult{},
+		func(op *Operation[writeResult], rf *ResultFactory[writeResult]) *OperationResult[writeResult] {
+			op.AddProperty("offset", offset)
+			if offset < 0 {
+				return rf.Generate(true, false, writeResult{0, fmt.Errorf("negative offset: %d", offset)})
+			}
+			if offset+len(data) > s.size {
+				return rf.Generate(true, false, writeResult{0, fmt.Errorf(
+					"write beyond region bounds: offset=%d, len(data)=%d, size=%d",
+					offset, len(data), s.size,
+				)})
+			}
+			copy(s.data[offset:], data)
+			return rf.Generate(true, false, writeResult{len(data), nil})
+		}).GetResult()
+	return result.n, result.err
 }
 
 // Name returns the human-readable name of this shared memory segment.
 func (s *SharedMemoryRegion) Name() string {
-	return s.name
+	result, _ := StartNew[string]("ipc.SharedMemoryRegion.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, s.name)
+		}).GetResult()
+	return result
 }
 
 // Size returns the size of this segment in bytes.
 func (s *SharedMemoryRegion) Size() int {
-	return s.size
+	result, _ := StartNew[int]("ipc.SharedMemoryRegion.Size", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, s.size)
+		}).GetResult()
+	return result
 }
 
 // OwnerPID returns the PID of the process that created this segment.
 func (s *SharedMemoryRegion) OwnerPID() int {
-	return s.ownerPID
+	result, _ := StartNew[int]("ipc.SharedMemoryRegion.OwnerPID", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, s.ownerPID)
+		}).GetResult()
+	return result
 }
 
 // AttachedCount returns the number of processes currently attached.
 func (s *SharedMemoryRegion) AttachedCount() int {
-	return len(s.attachedPIDs)
+	result, _ := StartNew[int]("ipc.SharedMemoryRegion.AttachedCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(s.attachedPIDs))
+		}).GetResult()
+	return result
 }
 
 // IsAttached checks whether a given PID is currently attached.
 func (s *SharedMemoryRegion) IsAttached(pid int) bool {
-	return s.attachedPIDs[pid]
+	result, _ := StartNew[bool]("ipc.SharedMemoryRegion.IsAttached", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("pid", pid)
+			return rf.Generate(true, false, s.attachedPIDs[pid])
+		}).GetResult()
+	return result
 }

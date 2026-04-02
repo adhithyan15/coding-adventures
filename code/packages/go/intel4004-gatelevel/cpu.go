@@ -104,101 +104,149 @@ type Intel4004GateLevel struct {
 
 // NewIntel4004GateLevel creates a new gate-level Intel 4004 CPU.
 func NewIntel4004GateLevel() *Intel4004GateLevel {
-	return &Intel4004GateLevel{
-		alu:   NewGateALU(),
-		regs:  NewRegisterFile(),
-		acc:   NewAccumulator(),
-		carry: NewCarryFlag(),
-		pc:    NewProgramCounter(),
-		stack: NewHardwareStack(),
-		ram:   NewRAM(),
-	}
+	result, _ := StartNew[*Intel4004GateLevel]("intel4004-gatelevel.NewIntel4004GateLevel", nil,
+		func(op *Operation[*Intel4004GateLevel], rf *ResultFactory[*Intel4004GateLevel]) *OperationResult[*Intel4004GateLevel] {
+			return rf.Generate(true, false, &Intel4004GateLevel{
+				alu:   NewGateALU(),
+				regs:  NewRegisterFile(),
+				acc:   NewAccumulator(),
+				carry: NewCarryFlag(),
+				pc:    NewProgramCounter(),
+				stack: NewHardwareStack(),
+				ram:   NewRAM(),
+			})
+		}).GetResult()
+	return result
 }
 
 // -- Property accessors (match behavioral simulator's interface) --
 
 // Accumulator reads the accumulator from flip-flops.
 func (cpu *Intel4004GateLevel) Accumulator() int {
-	return cpu.acc.Read()
+	result, _ := StartNew[int]("intel4004-gatelevel.Intel4004GateLevel.Accumulator", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, cpu.acc.Read())
+		}).GetResult()
+	return result
 }
 
 // Registers reads all 16 registers from flip-flops.
 func (cpu *Intel4004GateLevel) Registers() []int {
-	regs := make([]int, 16)
-	for i := 0; i < 16; i++ {
-		regs[i] = cpu.regs.Read(i)
-	}
-	return regs
+	result, _ := StartNew[[]int]("intel4004-gatelevel.Intel4004GateLevel.Registers", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			regs := make([]int, 16)
+			for i := 0; i < 16; i++ {
+				regs[i] = cpu.regs.Read(i)
+			}
+			return rf.Generate(true, false, regs)
+		}).GetResult()
+	return result
 }
 
 // Carry reads carry flag from flip-flop.
 func (cpu *Intel4004GateLevel) Carry() bool {
-	return cpu.carry.Read()
+	result, _ := StartNew[bool]("intel4004-gatelevel.Intel4004GateLevel.Carry", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, cpu.carry.Read())
+		}).GetResult()
+	return result
 }
 
 // PC reads program counter from flip-flops.
 func (cpu *Intel4004GateLevel) PC() int {
-	return cpu.pc.Read()
+	result, _ := StartNew[int]("intel4004-gatelevel.Intel4004GateLevel.PC", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, cpu.pc.Read())
+		}).GetResult()
+	return result
 }
 
 // Halted returns whether the CPU is halted.
 func (cpu *Intel4004GateLevel) Halted() bool {
-	return cpu.halted
+	result, _ := StartNew[bool]("intel4004-gatelevel.Intel4004GateLevel.Halted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, cpu.halted)
+		}).GetResult()
+	return result
 }
 
 // HWStack reads stack levels (for inspection only).
 func (cpu *Intel4004GateLevel) HWStack() []int {
-	values := make([]int, 3)
-	zeros := make([]int, 12)
-	for i := 0; i < 3; i++ {
-		output, _ := logicgates.Register(zeros, 0, cpu.stack.levels[i])
-		values[i] = BitsToInt(output)
-	}
-	return values
+	result, _ := StartNew[[]int]("intel4004-gatelevel.Intel4004GateLevel.HWStack", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			values := make([]int, 3)
+			zeros := make([]int, 12)
+			for i := 0; i < 3; i++ {
+				output, _ := logicgates.Register(zeros, 0, cpu.stack.levels[i])
+				values[i] = BitsToInt(output)
+			}
+			return rf.Generate(true, false, values)
+		}).GetResult()
+	return result
 }
 
 // RAMData reads RAM main characters.
 func (cpu *Intel4004GateLevel) RAMData() [4][4][16]int {
-	var result [4][4][16]int
-	for b := 0; b < 4; b++ {
-		for r := 0; r < 4; r++ {
-			for c := 0; c < 16; c++ {
-				result[b][r][c] = cpu.ram.ReadMain(b, r, c)
+	result, _ := StartNew[[4][4][16]int]("intel4004-gatelevel.Intel4004GateLevel.RAMData", [4][4][16]int{},
+		func(op *Operation[[4][4][16]int], rf *ResultFactory[[4][4][16]int]) *OperationResult[[4][4][16]int] {
+			var data [4][4][16]int
+			for b := 0; b < 4; b++ {
+				for r := 0; r < 4; r++ {
+					for c := 0; c < 16; c++ {
+						data[b][r][c] = cpu.ram.ReadMain(b, r, c)
+					}
+				}
 			}
-		}
-	}
+			return rf.Generate(true, false, data)
+		}).GetResult()
 	return result
 }
 
 // RAMStatus reads RAM status characters.
 func (cpu *Intel4004GateLevel) RAMStatus() [4][4][4]int {
-	var result [4][4][4]int
-	for b := 0; b < 4; b++ {
-		for r := 0; r < 4; r++ {
-			for s := 0; s < 4; s++ {
-				result[b][r][s] = cpu.ram.ReadStatus(b, r, s)
+	result, _ := StartNew[[4][4][4]int]("intel4004-gatelevel.Intel4004GateLevel.RAMStatus", [4][4][4]int{},
+		func(op *Operation[[4][4][4]int], rf *ResultFactory[[4][4][4]int]) *OperationResult[[4][4][4]int] {
+			var data [4][4][4]int
+			for b := 0; b < 4; b++ {
+				for r := 0; r < 4; r++ {
+					for s := 0; s < 4; s++ {
+						data[b][r][s] = cpu.ram.ReadStatus(b, r, s)
+					}
+				}
 			}
-		}
-	}
+			return rf.Generate(true, false, data)
+		}).GetResult()
 	return result
 }
 
 // RAMBank returns the current RAM bank.
 func (cpu *Intel4004GateLevel) RAMBank() int {
-	return cpu.ramBank
+	result, _ := StartNew[int]("intel4004-gatelevel.Intel4004GateLevel.RAMBank", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, cpu.ramBank)
+		}).GetResult()
+	return result
 }
 
 // ROMPort returns the current ROM port value.
 func (cpu *Intel4004GateLevel) ROMPort() int {
-	return cpu.romPort
+	result, _ := StartNew[int]("intel4004-gatelevel.Intel4004GateLevel.ROMPort", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, cpu.romPort)
+		}).GetResult()
+	return result
 }
 
 // RAMOutput returns the RAM output port values.
 func (cpu *Intel4004GateLevel) RAMOutput() [4]int {
-	var result [4]int
-	for i := 0; i < 4; i++ {
-		result[i] = cpu.ram.ReadOutput(i)
-	}
+	result, _ := StartNew[[4]int]("intel4004-gatelevel.Intel4004GateLevel.RAMOutput", [4]int{},
+		func(op *Operation[[4]int], rf *ResultFactory[[4]int]) *OperationResult[[4]int] {
+			var data [4]int
+			for i := 0; i < 4; i++ {
+				data[i] = cpu.ram.ReadOutput(i)
+			}
+			return rf.Generate(true, false, data)
+		}).GetResult()
 	return result
 }
 
@@ -206,100 +254,122 @@ func (cpu *Intel4004GateLevel) RAMOutput() [4]int {
 
 // LoadProgram loads a program into ROM.
 func (cpu *Intel4004GateLevel) LoadProgram(program []byte) {
-	cpu.rom = [4096]byte{}
-	for i, b := range program {
-		if i < 4096 {
-			cpu.rom[i] = b
-		}
-	}
+	_, _ = StartNew[struct{}]("intel4004-gatelevel.Intel4004GateLevel.LoadProgram", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			cpu.rom = [4096]byte{}
+			for i, b := range program {
+				if i < 4096 {
+					cpu.rom[i] = b
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Step executes one instruction through the gate-level pipeline.
 //
 // Returns a GateTrace with before/after state.
 func (cpu *Intel4004GateLevel) Step() GateTrace {
-	if cpu.halted {
-		panic("CPU is halted -- cannot step further")
-	}
+	result, _ := StartNew[GateTrace]("intel4004-gatelevel.Intel4004GateLevel.Step", GateTrace{},
+		func(op *Operation[GateTrace], rf *ResultFactory[GateTrace]) *OperationResult[GateTrace] {
+			if cpu.halted {
+				panic("CPU is halted -- cannot step further")
+			}
 
-	// Snapshot state before
-	accBefore := cpu.acc.Read()
-	carryBefore := cpu.carry.Read()
-	pcBefore := cpu.pc.Read()
+			// Snapshot state before
+			accBefore := cpu.acc.Read()
+			carryBefore := cpu.carry.Read()
+			pcBefore := cpu.pc.Read()
 
-	// FETCH: read instruction byte from ROM
-	raw := int(cpu.rom[pcBefore])
+			// FETCH: read instruction byte from ROM
+			raw := int(cpu.rom[pcBefore])
 
-	// DECODE: route through combinational decoder
-	decoded := Decode(raw, -1)
+			// DECODE: route through combinational decoder
+			decoded := Decode(raw, -1)
 
-	// FETCH2: if 2-byte, read second byte
-	raw2 := -1
-	hasRaw2 := false
-	if decoded.IsTwoByte != 0 {
-		raw2 = int(cpu.rom[(pcBefore+1)&0xFFF])
-		hasRaw2 = true
-		decoded = Decode(raw, raw2)
-	}
+			// FETCH2: if 2-byte, read second byte
+			raw2 := -1
+			hasRaw2 := false
+			if decoded.IsTwoByte != 0 {
+				raw2 = int(cpu.rom[(pcBefore+1)&0xFFF])
+				hasRaw2 = true
+				decoded = Decode(raw, raw2)
+			}
 
-	// EXECUTE: route through appropriate gate paths
-	mnemonic := cpu.execute(decoded)
+			// EXECUTE: route through appropriate gate paths
+			mnemonic := cpu.execute(decoded)
 
-	return GateTrace{
-		Address:           pcBefore,
-		Raw:               raw,
-		Raw2:              raw2,
-		HasRaw2:           hasRaw2,
-		Mnemonic:          mnemonic,
-		AccumulatorBefore: accBefore,
-		AccumulatorAfter:  cpu.acc.Read(),
-		CarryBefore:       carryBefore,
-		CarryAfter:        cpu.carry.Read(),
-	}
+			return rf.Generate(true, false, GateTrace{
+				Address:           pcBefore,
+				Raw:               raw,
+				Raw2:              raw2,
+				HasRaw2:           hasRaw2,
+				Mnemonic:          mnemonic,
+				AccumulatorBefore: accBefore,
+				AccumulatorAfter:  cpu.acc.Read(),
+				CarryBefore:       carryBefore,
+				CarryAfter:        cpu.carry.Read(),
+			})
+		}).GetResult()
+	return result
 }
 
 // Run loads and runs a program, returning execution trace.
 func (cpu *Intel4004GateLevel) Run(program []byte, maxSteps int) []GateTrace {
-	cpu.Reset()
-	cpu.LoadProgram(program)
+	result, _ := StartNew[[]GateTrace]("intel4004-gatelevel.Intel4004GateLevel.Run", nil,
+		func(op *Operation[[]GateTrace], rf *ResultFactory[[]GateTrace]) *OperationResult[[]GateTrace] {
+			op.AddProperty("maxSteps", maxSteps)
+			cpu.Reset()
+			cpu.LoadProgram(program)
 
-	traces := make([]GateTrace, 0)
-	for i := 0; i < maxSteps; i++ {
-		if cpu.halted {
-			break
-		}
-		traces = append(traces, cpu.Step())
-	}
-	return traces
+			traces := make([]GateTrace, 0)
+			for i := 0; i < maxSteps; i++ {
+				if cpu.halted {
+					break
+				}
+				traces = append(traces, cpu.Step())
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // Reset resets all CPU state.
 func (cpu *Intel4004GateLevel) Reset() {
-	cpu.acc.Reset()
-	cpu.carry.Reset()
-	cpu.regs.Reset()
-	cpu.pc.Reset()
-	cpu.stack.Reset()
-	cpu.ram.Reset()
-	cpu.rom = [4096]byte{}
-	cpu.ramBank = 0
-	cpu.ramRegister = 0
-	cpu.ramCharacter = 0
-	cpu.romPort = 0
-	cpu.halted = false
+	_, _ = StartNew[struct{}]("intel4004-gatelevel.Intel4004GateLevel.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			cpu.acc.Reset()
+			cpu.carry.Reset()
+			cpu.regs.Reset()
+			cpu.pc.Reset()
+			cpu.stack.Reset()
+			cpu.ram.Reset()
+			cpu.rom = [4096]byte{}
+			cpu.ramBank = 0
+			cpu.ramRegister = 0
+			cpu.ramCharacter = 0
+			cpu.romPort = 0
+			cpu.halted = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // GateCount returns total estimated gate count for the CPU.
 func (cpu *Intel4004GateLevel) GateCount() int {
-	return cpu.alu.GateCount() +
-		cpu.regs.GateCount() +
-		cpu.acc.GateCount() +
-		cpu.carry.GateCount() +
-		cpu.pc.GateCount() +
-		cpu.stack.GateCount() +
-		cpu.ram.GateCount() +
-		50 + // decoder
-		100 // control logic and wiring
+	result, _ := StartNew[int]("intel4004-gatelevel.Intel4004GateLevel.GateCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			total := cpu.alu.GateCount() +
+				cpu.regs.GateCount() +
+				cpu.acc.GateCount() +
+				cpu.carry.GateCount() +
+				cpu.pc.GateCount() +
+				cpu.stack.GateCount() +
+				cpu.ram.GateCount() +
+				50 + // decoder
+				100 // control logic and wiring
+			return rf.Generate(true, false, total)
+		}).GetResult()
+	return result
 }
 
 // -- Instruction execution -- routes through gate-level components --

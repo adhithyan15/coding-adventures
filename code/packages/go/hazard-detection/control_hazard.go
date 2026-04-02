@@ -18,38 +18,42 @@ type ControlHazardDetector struct{}
 
 // Detect checks if a branch in the EX stage was mispredicted.
 func (c *ControlHazardDetector) Detect(exStage PipelineSlot) HazardResult {
-	if !exStage.Valid {
-		return HazardResult{Action: ActionNone, Reason: "EX stage is empty (bubble)"}
-	}
+	result, _ := StartNew[HazardResult]("hazard-detection.ControlHazardDetector.Detect", HazardResult{},
+		func(op *Operation[HazardResult], rf *ResultFactory[HazardResult]) *OperationResult[HazardResult] {
+			if !exStage.Valid {
+				return rf.Generate(true, false, HazardResult{Action: ActionNone, Reason: "EX stage is empty (bubble)"})
+			}
 
-	if !exStage.IsBranch {
-		return HazardResult{Action: ActionNone, Reason: "EX stage instruction is not a branch"}
-	}
+			if !exStage.IsBranch {
+				return rf.Generate(true, false, HazardResult{Action: ActionNone, Reason: "EX stage instruction is not a branch"})
+			}
 
-	// Branch prediction was correct -- no hazard!
-	if exStage.BranchPredictedTaken == exStage.BranchTaken {
-		takenStr := "not taken"
-		if exStage.BranchTaken {
-			takenStr = "taken"
-		}
-		return HazardResult{
-			Action: ActionNone,
-			Reason: fmt.Sprintf("branch at PC=0x%04X correctly predicted %s", exStage.PC, takenStr),
-		}
-	}
+			// Branch prediction was correct -- no hazard!
+			if exStage.BranchPredictedTaken == exStage.BranchTaken {
+				takenStr := "not taken"
+				if exStage.BranchTaken {
+					takenStr = "taken"
+				}
+				return rf.Generate(true, false, HazardResult{
+					Action: ActionNone,
+					Reason: fmt.Sprintf("branch at PC=0x%04X correctly predicted %s", exStage.PC, takenStr),
+				})
+			}
 
-	// Misprediction detected! Flush IF and ID stages.
-	direction := "predicted taken, actually not-taken"
-	if exStage.BranchTaken {
-		direction = "predicted not-taken, actually taken"
-	}
+			// Misprediction detected! Flush IF and ID stages.
+			direction := "predicted taken, actually not-taken"
+			if exStage.BranchTaken {
+				direction = "predicted not-taken, actually taken"
+			}
 
-	return HazardResult{
-		Action:     ActionFlush,
-		FlushCount: 2,
-		Reason: fmt.Sprintf(
-			"branch misprediction at PC=0x%04X: %s -- flushing IF and ID stages",
-			exStage.PC, direction,
-		),
-	}
+			return rf.Generate(true, false, HazardResult{
+				Action:     ActionFlush,
+				FlushCount: 2,
+				Reason: fmt.Sprintf(
+					"branch misprediction at PC=0x%04X: %s -- flushing IF and ID stages",
+					exStage.PC, direction,
+				),
+			})
+		}).GetResult()
+	return result
 }
