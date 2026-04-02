@@ -47,31 +47,41 @@ type SimulatedDisplay struct {
 
 // NewSimulatedDisplay creates a new simulated display.
 func NewSimulatedDisplay(name string, minor int) *SimulatedDisplay {
-	d := &SimulatedDisplay{
-		DeviceBase: DeviceBase{
-			Name:            name,
-			Type:            DeviceCharacter,
-			Major:           MajorDisplay,
-			Minor:           minor,
-			InterruptNumber: -1, // Display does not generate interrupts
-		},
-		framebuffer: make([]byte, FramebufferSize),
-	}
-	d.clearScreen()
-	return d
+	result, _ := StartNew[*SimulatedDisplay]("device-driver-framework.NewSimulatedDisplay", nil,
+		func(op *Operation[*SimulatedDisplay], rf *ResultFactory[*SimulatedDisplay]) *OperationResult[*SimulatedDisplay] {
+			op.AddProperty("name", name)
+			op.AddProperty("minor", minor)
+			d := &SimulatedDisplay{
+				DeviceBase: DeviceBase{
+					Name:            name,
+					Type:            DeviceCharacter,
+					Major:           MajorDisplay,
+					Minor:           minor,
+					InterruptNumber: -1, // Display does not generate interrupts
+				},
+				framebuffer: make([]byte, FramebufferSize),
+			}
+			d.clearScreen()
+			return rf.Generate(true, false, d)
+		}).GetResult()
+	return result
 }
 
 // Init initializes the display by clearing the screen.
 func (d *SimulatedDisplay) Init() {
-	d.clearScreen()
-	d.Initialized = true
+	_, _ = StartNew[struct{}]("device-driver-framework.SimulatedDisplay.Init", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			d.clearScreen()
+			d.Initialized = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // clearScreen fills every cell with a space (0x20) and the default attribute.
 func (d *SimulatedDisplay) clearScreen() {
 	for i := 0; i < DisplayCols*DisplayRows; i++ {
 		offset := i * BytesPerCell
-		d.framebuffer[offset] = 0x20   // space
+		d.framebuffer[offset] = 0x20 // space
 		d.framebuffer[offset+1] = DefaultAttribute
 	}
 	d.cursorRow = 0
@@ -80,13 +90,21 @@ func (d *SimulatedDisplay) clearScreen() {
 
 // ClearScreen is the public version -- clears the display and resets cursor.
 func (d *SimulatedDisplay) ClearScreen() {
-	d.clearScreen()
+	_, _ = StartNew[struct{}]("device-driver-framework.SimulatedDisplay.ClearScreen", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			d.clearScreen()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Read attempts to read from the display (always returns 0).
 // You cannot read from a display -- it is an output-only device.
 func (d *SimulatedDisplay) Read(buf []byte) int {
-	return 0
+	result, _ := StartNew[int]("device-driver-framework.SimulatedDisplay.Read", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 0)
+		}).GetResult()
+	return result
 }
 
 // Write writes characters to the display at the current cursor position.
@@ -96,28 +114,32 @@ func (d *SimulatedDisplay) Read(buf []byte) int {
 //
 // Returns the number of bytes written.
 func (d *SimulatedDisplay) Write(data []byte) int {
-	for _, b := range data {
-		if b == 0x0A { // newline
-			d.cursorCol = 0
-			d.cursorRow++
-		} else {
-			d.putCharAt(d.cursorRow, d.cursorCol, b)
-			d.cursorCol++
-		}
+	result, _ := StartNew[int]("device-driver-framework.SimulatedDisplay.Write", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			for _, b := range data {
+				if b == 0x0A { // newline
+					d.cursorCol = 0
+					d.cursorRow++
+				} else {
+					d.putCharAt(d.cursorRow, d.cursorCol, b)
+					d.cursorCol++
+				}
 
-		// Wrap to next line if past the right edge
-		if d.cursorCol >= DisplayCols {
-			d.cursorCol = 0
-			d.cursorRow++
-		}
+				// Wrap to next line if past the right edge
+				if d.cursorCol >= DisplayCols {
+					d.cursorCol = 0
+					d.cursorRow++
+				}
 
-		// Scroll if past the bottom
-		if d.cursorRow >= DisplayRows {
-			d.scrollUp()
-			d.cursorRow = DisplayRows - 1
-		}
-	}
-	return len(data)
+				// Scroll if past the bottom
+				if d.cursorRow >= DisplayRows {
+					d.scrollUp()
+					d.cursorRow = DisplayRows - 1
+				}
+			}
+			return rf.Generate(true, false, len(data))
+		}).GetResult()
+	return result
 }
 
 // putCharAt places a character at a specific (row, col) position.
@@ -144,22 +166,44 @@ func (d *SimulatedDisplay) scrollUp() {
 
 // CharAt returns the character byte at a specific (row, col) position.
 func (d *SimulatedDisplay) CharAt(row, col int) byte {
-	offset := (row*DisplayCols + col) * BytesPerCell
-	return d.framebuffer[offset]
+	result, _ := StartNew[byte]("device-driver-framework.SimulatedDisplay.CharAt", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("row", row)
+			op.AddProperty("col", col)
+			offset := (row*DisplayCols + col) * BytesPerCell
+			return rf.Generate(true, false, d.framebuffer[offset])
+		}).GetResult()
+	return result
 }
 
 // AttrAt returns the attribute byte at a specific (row, col) position.
 func (d *SimulatedDisplay) AttrAt(row, col int) byte {
-	offset := (row*DisplayCols + col) * BytesPerCell
-	return d.framebuffer[offset+1]
+	result, _ := StartNew[byte]("device-driver-framework.SimulatedDisplay.AttrAt", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("row", row)
+			op.AddProperty("col", col)
+			offset := (row*DisplayCols + col) * BytesPerCell
+			return rf.Generate(true, false, d.framebuffer[offset+1])
+		}).GetResult()
+	return result
 }
 
 // CursorPosition returns the current cursor position as (row, col).
 func (d *SimulatedDisplay) CursorPosition() (int, int) {
-	return d.cursorRow, d.cursorCol
+	var col int
+	row, _ := StartNew[int]("device-driver-framework.SimulatedDisplay.CursorPosition", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			col = d.cursorCol
+			return rf.Generate(true, false, d.cursorRow)
+		}).GetResult()
+	return row, col
 }
 
 // Framebuffer returns the backing framebuffer slice (for testing/debugging).
 func (d *SimulatedDisplay) Framebuffer() []byte {
-	return d.framebuffer
+	result, _ := StartNew[[]byte]("device-driver-framework.SimulatedDisplay.Framebuffer", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			return rf.Generate(true, false, d.framebuffer)
+		}).GetResult()
+	return result
 }

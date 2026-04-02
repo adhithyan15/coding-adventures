@@ -44,7 +44,12 @@ import (
 //	doc := commonmark.Parse("# Hello\n\nWorld\n")
 //	doc.Children[0].NodeType()  // "heading"
 func Parse(markdown string) *documentast.DocumentNode {
-	return parser.Parse(markdown)
+	result, _ := StartNew[*documentast.DocumentNode]("commonmark.Parse", nil,
+		func(op *Operation[*documentast.DocumentNode], rf *ResultFactory[*documentast.DocumentNode]) *OperationResult[*documentast.DocumentNode] {
+			op.AddProperty("markdown_len", len(markdown))
+			return rf.Generate(true, false, parser.Parse(markdown))
+		}).GetResult()
+	return result
 }
 
 // ToHtml parses Markdown and renders it to an HTML string.
@@ -56,8 +61,13 @@ func Parse(markdown string) *documentast.DocumentNode {
 //	html := commonmark.ToHtml("# Hello\n\nWorld\n")
 //	// → "<h1>Hello</h1>\n<p>World</p>\n"
 func ToHtml(markdown string) string {
-	doc := parser.Parse(markdown)
-	return renderer.ToHtml(doc, renderer.RenderOptions{})
+	result, _ := StartNew[string]("commonmark.ToHtml", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("markdown_len", len(markdown))
+			doc := parser.Parse(markdown)
+			return rf.Generate(true, false, renderer.ToHtml(doc, renderer.RenderOptions{}))
+		}).GetResult()
+	return result
 }
 
 // ToHtmlSafe parses Markdown and renders it to an HTML string with all raw
@@ -66,8 +76,13 @@ func ToHtml(markdown string) string {
 //	html := commonmark.ToHtmlSafe("Hello\n\n<script>evil</script>\n")
 //	// → "<p>Hello</p>\n"  (the <script> is dropped)
 func ToHtmlSafe(markdown string) string {
-	doc := parser.Parse(markdown)
-	return renderer.ToHtml(doc, renderer.RenderOptions{Sanitize: true})
+	result, _ := StartNew[string]("commonmark.ToHtmlSafe", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("markdown_len", len(markdown))
+			doc := parser.Parse(markdown)
+			return rf.Generate(true, false, renderer.ToHtml(doc, renderer.RenderOptions{Sanitize: true}))
+		}).GetResult()
+	return result
 }
 
 // VERSION is the version of this commonmark package.

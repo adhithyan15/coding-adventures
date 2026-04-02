@@ -26,26 +26,30 @@ import (
 //	html := ToHtml(Sanitize(parse(md), STRICT))
 //	safe := SanitizeHtml(html, HTML_STRICT)
 func SanitizeHtml(html string, policy HtmlSanitizationPolicy) string {
-	result := html
+	sanitized, _ := StartNew[string]("document-html-sanitizer.SanitizeHtml", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			result := html
 
-	// Step 1: Drop HTML comments <!-- … -->
-	// Must be done before element dropping so that comments cannot hide
-	// dangerous content from the element-dropping regexps.
-	if policy.DropComments {
-		result = dropComments(result)
-	}
+			// Step 1: Drop HTML comments <!-- … -->
+			// Must be done before element dropping so that comments cannot hide
+			// dangerous content from the element-dropping regexps.
+			if policy.DropComments {
+				result = dropComments(result)
+			}
 
-	// Step 2: Drop dangerous elements (including their inner content).
-	// Each element is removed along with everything nested inside it.
-	for _, elem := range policy.DropElements {
-		result = dropElement(result, elem)
-	}
+			// Step 2: Drop dangerous elements (including their inner content).
+			// Each element is removed along with everything nested inside it.
+			for _, elem := range policy.DropElements {
+				result = dropElement(result, elem)
+			}
 
-	// Step 3 + 4 + 5: Process all remaining tags — strip attributes,
-	// sanitize URLs, strip style expressions.
-	result = processTags(result, policy)
+			// Step 3 + 4 + 5: Process all remaining tags — strip attributes,
+			// sanitize URLs, strip style expressions.
+			result = processTags(result, policy)
 
-	return result
+			return rf.Generate(true, false, result)
+		}).GetResult()
+	return sanitized
 }
 
 // ─── Step 1: Comment Dropping ─────────────────────────────────────────────────

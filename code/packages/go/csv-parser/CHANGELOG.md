@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 — 2026-03-31
+
+### Changed
+
+- Wrapped public functions `ParseCSV` and `ParseCSVWithDelimiter` with the
+  Operations system (`StartNew[T]`) for automatic timing, structured logging,
+  and panic recovery. Public API signatures are unchanged.
+
 ## 0.1.0 — 2026-03-25
 
 Initial release.

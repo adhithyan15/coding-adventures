@@ -43,7 +43,11 @@ var urlControlChars = regexp.MustCompile("[\u0000-\u001F\u200B-\u200D\u2060\uFEF
 //	StripControlChars("java\x00script:alert(1)")  → "javascript:alert(1)"
 //	StripControlChars("\u200bjavascript:alert(1)") → "javascript:alert(1)"
 func StripControlChars(url string) string {
-	return urlControlChars.ReplaceAllString(url, "")
+	result, _ := StartNew[string]("document-ast-sanitizer.StripControlChars", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, urlControlChars.ReplaceAllString(url, ""))
+		}).GetResult()
+	return result
 }
 
 // ExtractScheme returns the scheme component of a URL — everything before the
@@ -61,31 +65,35 @@ func StripControlChars(url string) string {
 //	ExtractScheme("?query=1")              → ""   (relative URL)
 //	ExtractScheme("foo/bar:baz")           → ""   (colon after slash)
 func ExtractScheme(url string) string {
-	// Find the position of the first colon.
-	colonIdx := strings.IndexByte(url, ':')
-	if colonIdx < 0 {
-		// No colon at all — definitely a relative URL.
-		return ""
-	}
+	result, _ := StartNew[string]("document-ast-sanitizer.ExtractScheme", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			// Find the position of the first colon.
+			colonIdx := strings.IndexByte(url, ':')
+			if colonIdx < 0 {
+				// No colon at all — definitely a relative URL.
+				return rf.Generate(true, false, "")
+			}
 
-	// If the colon appears AFTER a "/", "?", or "#", this is a path, query,
-	// or fragment component that happens to contain a colon, not a scheme.
-	//
-	// Example: "foo/bar:baz"  — the colon is inside a path segment.
-	// Example: "?key=val:ue"  — the colon is inside a query value.
-	// Example: "#id:value"    — the colon is inside a fragment (no scheme).
-	//
-	// The "#" check is important: "#javascript:alert(1)" would otherwise be
-	// parsed as having scheme "javascript", but it is a pure fragment URL
-	// that browsers treat as a safe same-page anchor navigation.
-	for i := 0; i < colonIdx; i++ {
-		if url[i] == '/' || url[i] == '?' || url[i] == '#' {
-			return ""
-		}
-	}
+			// If the colon appears AFTER a "/", "?", or "#", this is a path, query,
+			// or fragment component that happens to contain a colon, not a scheme.
+			//
+			// Example: "foo/bar:baz"  — the colon is inside a path segment.
+			// Example: "?key=val:ue"  — the colon is inside a query value.
+			// Example: "#id:value"    — the colon is inside a fragment (no scheme).
+			//
+			// The "#" check is important: "#javascript:alert(1)" would otherwise be
+			// parsed as having scheme "javascript", but it is a pure fragment URL
+			// that browsers treat as a safe same-page anchor navigation.
+			for i := 0; i < colonIdx; i++ {
+				if url[i] == '/' || url[i] == '?' || url[i] == '#' {
+					return rf.Generate(true, false, "")
+				}
+			}
 
-	// The colon is a genuine scheme delimiter.
-	return strings.ToLower(url[:colonIdx])
+			// The colon is a genuine scheme delimiter.
+			return rf.Generate(true, false, strings.ToLower(url[:colonIdx]))
+		}).GetResult()
+	return result
 }
 
 // IsSchemeAllowed reports whether the given URL is safe according to the
@@ -99,25 +107,29 @@ func ExtractScheme(url string) string {
 //
 // Returns true if the URL should be kept, false if it should be replaced with "".
 func IsSchemeAllowed(url string, policy SanitizationPolicy) bool {
-	clean := StripControlChars(url)
-	scheme := ExtractScheme(clean)
+	result, _ := StartNew[bool]("document-ast-sanitizer.IsSchemeAllowed", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			clean := StripControlChars(url)
+			scheme := ExtractScheme(clean)
 
-	// Relative URLs (no scheme) are always safe.
-	if scheme == "" {
-		return true
-	}
+			// Relative URLs (no scheme) are always safe.
+			if scheme == "" {
+				return rf.Generate(true, false, true)
+			}
 
-	// PASSTHROUGH: caller explicitly allows any scheme.
-	if policy.AllowAllSchemes {
-		return true
-	}
+			// PASSTHROUGH: caller explicitly allows any scheme.
+			if policy.AllowAllSchemes {
+				return rf.Generate(true, false, true)
+			}
 
-	// Check against the allowlist.
-	for _, allowed := range policy.AllowedUrlSchemes {
-		if strings.ToLower(allowed) == scheme {
-			return true
-		}
-	}
+			// Check against the allowlist.
+			for _, allowed := range policy.AllowedUrlSchemes {
+				if strings.ToLower(allowed) == scheme {
+					return rf.Generate(true, false, true)
+				}
+			}
 
-	return false
+			return rf.Generate(true, false, false)
+		}).GetResult()
+	return result
 }

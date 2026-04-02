@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.2.0] — 2026-04-02
+
+### Changed
+- Wrapped all public functions with the Operations system (`StartNew[T]`):
+  `Sanitize`, `StripControlChars`, `ExtractScheme`, `IsSchemeAllowed`.
+- Every public call now has automatic timing, structured logging, and panic
+  recovery via the capability-cage Operations infrastructure.
+- Public API signatures are unchanged.
+
 ## [0.1.0] — 2026-03-24
 
 ### Added

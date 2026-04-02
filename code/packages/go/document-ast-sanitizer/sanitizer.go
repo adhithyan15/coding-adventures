@@ -25,8 +25,12 @@ import (
 //	doc := Sanitize(parse(trustedMarkdown), PASSTHROUGH)
 //	html := ToHtml(doc)
 func Sanitize(document *documentast.DocumentNode, policy SanitizationPolicy) *documentast.DocumentNode {
-	children := sanitizeBlocks(document.Children, policy)
-	return &documentast.DocumentNode{Children: children}
+	result, _ := StartNew[*documentast.DocumentNode]("document-ast-sanitizer.Sanitize", nil,
+		func(op *Operation[*documentast.DocumentNode], rf *ResultFactory[*documentast.DocumentNode]) *OperationResult[*documentast.DocumentNode] {
+			children := sanitizeBlocks(document.Children, policy)
+			return rf.Generate(true, false, &documentast.DocumentNode{Children: children})
+		}).GetResult()
+	return result
 }
 
 // ─── Block node sanitization ──────────────────────────────────────────────────

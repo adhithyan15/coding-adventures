@@ -2,6 +2,17 @@
 
 All notable changes to the display package will be documented in this file.
 
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions with the Operations system (`StartNew[T]`):
+  `NewDisplayDriver`, `PutChar`, `PutCharAt`, `Puts`, `Clear`, `Scroll`,
+  `SetCursor`, `GetCursor`, `GetCell`, `MakeAttribute`, `DefaultDisplayConfig`,
+  `Snapshot`, `String`, `Contains`, `LineAt`.
+- Every public call now has automatic timing, structured logging, and panic
+  recovery via the capability-cage Operations infrastructure.
+- Public API signatures are unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added
