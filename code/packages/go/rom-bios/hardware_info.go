@@ -146,7 +146,7 @@ func HardwareInfoFromBytes(data []byte) HardwareInfo {
 				IDTEntries:      readLE32(data[20:]),
 				BootloaderEntry: readLE32(data[24:]),
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

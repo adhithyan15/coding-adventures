@@ -157,5 +157,5 @@ func ExecuteStarlark(source string) (*StarlarkResult, error) {
 				Output:    v.Output,
 				Traces:    traces,
 			})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }

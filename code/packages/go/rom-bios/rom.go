@@ -106,7 +106,7 @@ func NewROM(config ROMConfig, firmware []byte) *ROM {
 			data := make([]byte, config.Size)
 			copy(data, firmware)
 			return rf.Generate(true, false, &ROM{config: config, data: data})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
