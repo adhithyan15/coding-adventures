@@ -70,16 +70,20 @@ const (
 
 // String returns a human-readable name for the device type.
 func (d DeviceType) String() string {
-	switch d {
-	case DeviceTypeGPU:
-		return "gpu"
-	case DeviceTypeTPU:
-		return "tpu"
-	case DeviceTypeNPU:
-		return "npu"
-	default:
-		return "unknown"
-	}
+	result, _ := StartNew[string]("compute-runtime.DeviceType.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch d {
+			case DeviceTypeGPU:
+				return rf.Generate(true, false, "gpu")
+			case DeviceTypeTPU:
+				return rf.Generate(true, false, "tpu")
+			case DeviceTypeNPU:
+				return rf.Generate(true, false, "npu")
+			default:
+				return rf.Generate(true, false, "unknown")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -115,31 +119,40 @@ const (
 
 // String returns a human-readable name for the queue type.
 func (q QueueType) String() string {
-	switch q {
-	case QueueTypeCompute:
-		return "compute"
-	case QueueTypeTransfer:
-		return "transfer"
-	case QueueTypeComputeTransfer:
-		return "compute_transfer"
-	default:
-		return "unknown"
-	}
+	result, _ := StartNew[string]("compute-runtime.QueueType.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch q {
+			case QueueTypeCompute:
+				return rf.Generate(true, false, "compute")
+			case QueueTypeTransfer:
+				return rf.Generate(true, false, "transfer")
+			case QueueTypeComputeTransfer:
+				return rf.Generate(true, false, "compute_transfer")
+			default:
+				return rf.Generate(true, false, "unknown")
+			}
+		}).GetResult()
+	return result
 }
 
 // ParseQueueType converts a string to a QueueType.
 // Returns QueueTypeComputeTransfer if the string is unrecognized.
 func ParseQueueType(s string) QueueType {
-	switch s {
-	case "compute":
-		return QueueTypeCompute
-	case "transfer":
-		return QueueTypeTransfer
-	case "compute_transfer":
-		return QueueTypeComputeTransfer
-	default:
-		return QueueTypeComputeTransfer
-	}
+	result, _ := StartNew[QueueType]("compute-runtime.ParseQueueType", 0,
+		func(op *Operation[QueueType], rf *ResultFactory[QueueType]) *OperationResult[QueueType] {
+			op.AddProperty("input", s)
+			switch s {
+			case "compute":
+				return rf.Generate(true, false, QueueTypeCompute)
+			case "transfer":
+				return rf.Generate(true, false, QueueTypeTransfer)
+			case "compute_transfer":
+				return rf.Generate(true, false, QueueTypeComputeTransfer)
+			default:
+				return rf.Generate(true, false, QueueTypeComputeTransfer)
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -192,34 +205,42 @@ const (
 
 // Has checks whether m contains all flags in other.
 func (m MemoryType) Has(other MemoryType) bool {
-	return m&other == other
+	result, _ := StartNew[bool]("compute-runtime.MemoryType.Has", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, m&other == other)
+		}).GetResult()
+	return result
 }
 
 // String returns a human-readable representation of memory type flags.
 func (m MemoryType) String() string {
-	if m == 0 {
-		return "NONE"
-	}
-	names := []string{}
-	if m.Has(MemoryTypeDeviceLocal) {
-		names = append(names, "DEVICE_LOCAL")
-	}
-	if m.Has(MemoryTypeHostVisible) {
-		names = append(names, "HOST_VISIBLE")
-	}
-	if m.Has(MemoryTypeHostCoherent) {
-		names = append(names, "HOST_COHERENT")
-	}
-	if m.Has(MemoryTypeHostCached) {
-		names = append(names, "HOST_CACHED")
-	}
-	result := ""
-	for i, n := range names {
-		if i > 0 {
-			result += " | "
-		}
-		result += n
-	}
+	result, _ := StartNew[string]("compute-runtime.MemoryType.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if m == 0 {
+				return rf.Generate(true, false, "NONE")
+			}
+			names := []string{}
+			if m&MemoryTypeDeviceLocal != 0 {
+				names = append(names, "DEVICE_LOCAL")
+			}
+			if m&MemoryTypeHostVisible != 0 {
+				names = append(names, "HOST_VISIBLE")
+			}
+			if m&MemoryTypeHostCoherent != 0 {
+				names = append(names, "HOST_COHERENT")
+			}
+			if m&MemoryTypeHostCached != 0 {
+				names = append(names, "HOST_CACHED")
+			}
+			res := ""
+			for i, n := range names {
+				if i > 0 {
+					res += " | "
+				}
+				res += n
+			}
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -256,7 +277,11 @@ const (
 
 // Has checks whether u contains all flags in other.
 func (u BufferUsage) Has(other BufferUsage) bool {
-	return u&other == other
+	result, _ := StartNew[bool]("compute-runtime.BufferUsage.Has", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, u&other == other)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -292,20 +317,24 @@ const (
 
 // String returns a human-readable name for the pipeline stage.
 func (p PipelineStage) String() string {
-	switch p {
-	case PipelineStageTopOfPipe:
-		return "top_of_pipe"
-	case PipelineStageCompute:
-		return "compute"
-	case PipelineStageTransfer:
-		return "transfer"
-	case PipelineStageHost:
-		return "host"
-	case PipelineStageBottomOfPipe:
-		return "bottom_of_pipe"
-	default:
-		return "unknown"
-	}
+	result, _ := StartNew[string]("compute-runtime.PipelineStage.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch p {
+			case PipelineStageTopOfPipe:
+				return rf.Generate(true, false, "top_of_pipe")
+			case PipelineStageCompute:
+				return rf.Generate(true, false, "compute")
+			case PipelineStageTransfer:
+				return rf.Generate(true, false, "transfer")
+			case PipelineStageHost:
+				return rf.Generate(true, false, "host")
+			case PipelineStageBottomOfPipe:
+				return rf.Generate(true, false, "bottom_of_pipe")
+			default:
+				return rf.Generate(true, false, "unknown")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -357,20 +386,24 @@ const (
 
 // String returns a human-readable name for the command buffer state.
 func (s CommandBufferState) String() string {
-	switch s {
-	case CommandBufferStateInitial:
-		return "initial"
-	case CommandBufferStateRecording:
-		return "recording"
-	case CommandBufferStateRecorded:
-		return "recorded"
-	case CommandBufferStatePending:
-		return "pending"
-	case CommandBufferStateComplete:
-		return "complete"
-	default:
-		return "unknown"
-	}
+	result, _ := StartNew[string]("compute-runtime.CommandBufferState.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch s {
+			case CommandBufferStateInitial:
+				return rf.Generate(true, false, "initial")
+			case CommandBufferStateRecording:
+				return rf.Generate(true, false, "recording")
+			case CommandBufferStateRecorded:
+				return rf.Generate(true, false, "recorded")
+			case CommandBufferStatePending:
+				return rf.Generate(true, false, "pending")
+			case CommandBufferStateComplete:
+				return rf.Generate(true, false, "complete")
+			default:
+				return rf.Generate(true, false, "unknown")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -397,34 +430,38 @@ const (
 
 // String returns a human-readable name for the runtime event type.
 func (e RuntimeEventType) String() string {
-	switch e {
-	case RuntimeEventSubmit:
-		return "SUBMIT"
-	case RuntimeEventBeginExecution:
-		return "BEGIN_EXECUTION"
-	case RuntimeEventEndExecution:
-		return "END_EXECUTION"
-	case RuntimeEventFenceSignal:
-		return "FENCE_SIGNAL"
-	case RuntimeEventFenceWait:
-		return "FENCE_WAIT"
-	case RuntimeEventSemaphoreSignal:
-		return "SEMAPHORE_SIGNAL"
-	case RuntimeEventSemaphoreWait:
-		return "SEMAPHORE_WAIT"
-	case RuntimeEventBarrier:
-		return "BARRIER"
-	case RuntimeEventMemoryAlloc:
-		return "MEMORY_ALLOC"
-	case RuntimeEventMemoryFree:
-		return "MEMORY_FREE"
-	case RuntimeEventMemoryMap:
-		return "MEMORY_MAP"
-	case RuntimeEventMemoryTransfer:
-		return "MEMORY_TRANSFER"
-	default:
-		return "UNKNOWN"
-	}
+	result, _ := StartNew[string]("compute-runtime.RuntimeEventType.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch e {
+			case RuntimeEventSubmit:
+				return rf.Generate(true, false, "SUBMIT")
+			case RuntimeEventBeginExecution:
+				return rf.Generate(true, false, "BEGIN_EXECUTION")
+			case RuntimeEventEndExecution:
+				return rf.Generate(true, false, "END_EXECUTION")
+			case RuntimeEventFenceSignal:
+				return rf.Generate(true, false, "FENCE_SIGNAL")
+			case RuntimeEventFenceWait:
+				return rf.Generate(true, false, "FENCE_WAIT")
+			case RuntimeEventSemaphoreSignal:
+				return rf.Generate(true, false, "SEMAPHORE_SIGNAL")
+			case RuntimeEventSemaphoreWait:
+				return rf.Generate(true, false, "SEMAPHORE_WAIT")
+			case RuntimeEventBarrier:
+				return rf.Generate(true, false, "BARRIER")
+			case RuntimeEventMemoryAlloc:
+				return rf.Generate(true, false, "MEMORY_ALLOC")
+			case RuntimeEventMemoryFree:
+				return rf.Generate(true, false, "MEMORY_FREE")
+			case RuntimeEventMemoryMap:
+				return rf.Generate(true, false, "MEMORY_MAP")
+			case RuntimeEventMemoryTransfer:
+				return rf.Generate(true, false, "MEMORY_TRANSFER")
+			default:
+				return rf.Generate(true, false, "UNKNOWN")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -465,16 +502,20 @@ type DeviceLimits struct {
 
 // DefaultDeviceLimits returns DeviceLimits with sensible defaults.
 func DefaultDeviceLimits() DeviceLimits {
-	return DeviceLimits{
-		MaxWorkgroupSize:    [3]int{1024, 1024, 64},
-		MaxWorkgroupCount:   [3]int{65535, 65535, 65535},
-		MaxBufferSize:       2 * 1024 * 1024 * 1024, // 2 GB
-		MaxPushConstantSize: 128,
-		MaxDescriptorSets:   4,
-		MaxBindingsPerSet:   16,
-		MaxComputeQueues:    16,
-		MaxTransferQueues:   2,
-	}
+	result, _ := StartNew[DeviceLimits]("compute-runtime.DefaultDeviceLimits", DeviceLimits{},
+		func(op *Operation[DeviceLimits], rf *ResultFactory[DeviceLimits]) *OperationResult[DeviceLimits] {
+			return rf.Generate(true, false, DeviceLimits{
+				MaxWorkgroupSize:    [3]int{1024, 1024, 64},
+				MaxWorkgroupCount:   [3]int{65535, 65535, 65535},
+				MaxBufferSize:       2 * 1024 * 1024 * 1024, // 2 GB
+				MaxPushConstantSize: 128,
+				MaxDescriptorSets:   4,
+				MaxBindingsPerSet:   16,
+				MaxComputeQueues:    16,
+				MaxTransferQueues:   2,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -520,11 +561,16 @@ type DescriptorBinding struct {
 
 // DefaultDescriptorBinding returns a DescriptorBinding with sensible defaults.
 func DefaultDescriptorBinding(binding int) DescriptorBinding {
-	return DescriptorBinding{
-		Binding: binding,
-		Type:    "storage",
-		Count:   1,
-	}
+	result, _ := StartNew[DescriptorBinding]("compute-runtime.DefaultDescriptorBinding", DescriptorBinding{},
+		func(op *Operation[DescriptorBinding], rf *ResultFactory[DescriptorBinding]) *OperationResult[DescriptorBinding] {
+			op.AddProperty("binding", binding)
+			return rf.Generate(true, false, DescriptorBinding{
+				Binding: binding,
+				Type:    "storage",
+				Count:   1,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -596,10 +642,14 @@ type PipelineBarrierDesc struct {
 
 // DefaultPipelineBarrier returns a PipelineBarrierDesc with default stages.
 func DefaultPipelineBarrier() PipelineBarrierDesc {
-	return PipelineBarrierDesc{
-		SrcStage: PipelineStageTopOfPipe,
-		DstStage: PipelineStageBottomOfPipe,
-	}
+	result, _ := StartNew[PipelineBarrierDesc]("compute-runtime.DefaultPipelineBarrier", PipelineBarrierDesc{},
+		func(op *Operation[PipelineBarrierDesc], rf *ResultFactory[PipelineBarrierDesc]) *OperationResult[PipelineBarrierDesc] {
+			return rf.Generate(true, false, PipelineBarrierDesc{
+				SrcStage: PipelineStageTopOfPipe,
+				DstStage: PipelineStageBottomOfPipe,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -632,10 +682,14 @@ type RuntimeTrace struct {
 //
 //	[T=150 cycles] SUBMIT -- CB#1 to compute queue
 func (t RuntimeTrace) Format() string {
-	result := fmt.Sprintf("[T=%d cycles] %s", t.TimestampCycles, t.EventType.String())
-	if t.Description != "" {
-		result += " -- " + t.Description
-	}
+	result, _ := StartNew[string]("compute-runtime.RuntimeTrace.Format", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			res := fmt.Sprintf("[T=%d cycles] %s", t.TimestampCycles, t.EventType.String())
+			if t.Description != "" {
+				res += " -- " + t.Description
+			}
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -683,8 +737,12 @@ type RuntimeStats struct {
 
 // UpdateUtilization recalculates GPU utilization from current counts.
 func (s *RuntimeStats) UpdateUtilization() {
-	total := s.TotalDeviceCycles + s.TotalIdleCycles
-	if total > 0 {
-		s.GPUUtilization = float64(s.TotalDeviceCycles) / float64(total)
-	}
+	_, _ = StartNew[struct{}]("compute-runtime.RuntimeStats.UpdateUtilization", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			total := s.TotalDeviceCycles + s.TotalIdleCycles
+			if total > 0 {
+				s.GPUUtilization = float64(s.TotalDeviceCycles) / float64(total)
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }

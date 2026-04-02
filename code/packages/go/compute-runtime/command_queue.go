@@ -63,28 +63,46 @@ func NewCommandQueue(
 	memoryManager *MemoryManager,
 	stats *RuntimeStats,
 ) *CommandQueue {
-	return &CommandQueue{
-		queueType:     queueType,
-		queueIndex:    queueIndex,
-		device:        device,
-		memoryManager: memoryManager,
-		stats:         stats,
-	}
+	result, _ := StartNew[*CommandQueue]("compute-runtime.NewCommandQueue", nil,
+		func(op *Operation[*CommandQueue], rf *ResultFactory[*CommandQueue]) *OperationResult[*CommandQueue] {
+			op.AddProperty("queueType", queueType.String())
+			op.AddProperty("queueIndex", queueIndex)
+			return rf.Generate(true, false, &CommandQueue{
+				queueType:     queueType,
+				queueIndex:    queueIndex,
+				device:        device,
+				memoryManager: memoryManager,
+				stats:         stats,
+			})
+		}).GetResult()
+	return result
 }
 
 // QueueType returns what kind of work this queue handles.
 func (q *CommandQueue) QueueType() QueueType {
-	return q.queueType
+	result, _ := StartNew[QueueType]("compute-runtime.CommandQueue.QueueType", 0,
+		func(op *Operation[QueueType], rf *ResultFactory[QueueType]) *OperationResult[QueueType] {
+			return rf.Generate(true, false, q.queueType)
+		}).GetResult()
+	return result
 }
 
 // QueueIndex returns the index within queues of the same type.
 func (q *CommandQueue) QueueIndex() int {
-	return q.queueIndex
+	result, _ := StartNew[int]("compute-runtime.CommandQueue.QueueIndex", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, q.queueIndex)
+		}).GetResult()
+	return result
 }
 
 // TotalCycles returns the total device cycles consumed by this queue.
 func (q *CommandQueue) TotalCycles() int {
-	return q.totalCycles
+	result, _ := StartNew[int]("compute-runtime.CommandQueue.TotalCycles", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, q.totalCycles)
+		}).GetResult()
+	return result
 }
 
 // SubmitOptions holds optional parameters for Submit.
@@ -109,103 +127,108 @@ func (q *CommandQueue) Submit(
 	commandBuffers []*CommandBuffer,
 	opts *SubmitOptions,
 ) ([]RuntimeTrace, error) {
-	var traces []RuntimeTrace
+	res, err := StartNew[[]RuntimeTrace]("compute-runtime.CommandQueue.Submit", nil,
+		func(op *Operation[[]RuntimeTrace], rf *ResultFactory[[]RuntimeTrace]) *OperationResult[[]RuntimeTrace] {
+			op.AddProperty("num_command_buffers", len(commandBuffers))
+			var traces []RuntimeTrace
 
-	if opts == nil {
-		opts = &SubmitOptions{}
-	}
+			if opts == nil {
+				opts = &SubmitOptions{}
+			}
 
-	// Validate CB states
-	for _, cb := range commandBuffers {
-		if cb.State() != CommandBufferStateRecorded {
-			return nil, fmt.Errorf(
-				"CB#%d is in state %s, expected recorded",
-				cb.CommandBufferID(), cb.State(),
-			)
-		}
-	}
+			// Validate CB states
+			for _, cb := range commandBuffers {
+				if cb.State() != CommandBufferStateRecorded {
+					return rf.Fail(nil, fmt.Errorf(
+						"CB#%d is in state %s, expected recorded",
+						cb.CommandBufferID(), cb.State(),
+					))
+				}
+			}
 
-	// Wait on semaphores
-	for _, sem := range opts.WaitSemaphores {
-		if !sem.Signaled() {
-			return nil, fmt.Errorf(
-				"semaphore %d is not signaled -- cannot proceed (possible deadlock)",
-				sem.SemaphoreID(),
-			)
-		}
-		qt := q.queueType
-		semID := sem.SemaphoreID()
-		traces = append(traces, RuntimeTrace{
-			TimestampCycles: q.totalCycles,
-			EventType:       RuntimeEventSemaphoreWait,
-			Description:     fmt.Sprintf("Wait on semaphore S%d", semID),
-			QueueType:       &qt,
-			SemaphoreID:     &semID,
-		})
-		sem.Reset()
-	}
+			// Wait on semaphores
+			for _, sem := range opts.WaitSemaphores {
+				if !sem.Signaled() {
+					return rf.Fail(nil, fmt.Errorf(
+						"semaphore %d is not signaled -- cannot proceed (possible deadlock)",
+						sem.SemaphoreID(),
+					))
+				}
+				qt := q.queueType
+				semID := sem.SemaphoreID()
+				traces = append(traces, RuntimeTrace{
+					TimestampCycles: q.totalCycles,
+					EventType:       RuntimeEventSemaphoreWait,
+					Description:     fmt.Sprintf("Wait on semaphore S%d", semID),
+					QueueType:       &qt,
+					SemaphoreID:     &semID,
+				})
+				sem.Reset()
+			}
 
-	// Log submission
-	q.stats.TotalSubmissions++
-	q.stats.TotalCommandBuffers += len(commandBuffers)
+			// Log submission
+			q.stats.TotalSubmissions++
+			q.stats.TotalCommandBuffers += len(commandBuffers)
 
-	cbIDs := make([]int, len(commandBuffers))
-	for i, cb := range commandBuffers {
-		cbIDs[i] = cb.CommandBufferID()
-	}
+			cbIDs := make([]int, len(commandBuffers))
+			for i, cb := range commandBuffers {
+				cbIDs[i] = cb.CommandBufferID()
+			}
 
-	qt := q.queueType
-	traces = append(traces, RuntimeTrace{
-		TimestampCycles: q.totalCycles,
-		EventType:       RuntimeEventSubmit,
-		Description:     fmt.Sprintf("Submit CB %v to %s queue", cbIDs, q.queueType),
-		QueueType:       &qt,
-	})
+			qt := q.queueType
+			traces = append(traces, RuntimeTrace{
+				TimestampCycles: q.totalCycles,
+				EventType:       RuntimeEventSubmit,
+				Description:     fmt.Sprintf("Submit CB %v to %s queue", cbIDs, q.queueType),
+				QueueType:       &qt,
+			})
 
-	// Execute each command buffer
-	for _, cb := range commandBuffers {
-		cb.MarkPending()
-		cbTraces, err := q.executeCommandBuffer(cb)
-		if err != nil {
-			return traces, err
-		}
-		traces = append(traces, cbTraces...)
-		cb.MarkComplete()
-	}
+			// Execute each command buffer
+			for _, cb := range commandBuffers {
+				cb.MarkPending()
+				cbTraces, err := q.executeCommandBuffer(cb)
+				if err != nil {
+					return rf.Fail(traces, err)
+				}
+				traces = append(traces, cbTraces...)
+				cb.MarkComplete()
+			}
 
-	// Signal semaphores
-	for _, sem := range opts.SignalSemaphores {
-		sem.Signal()
-		q.stats.TotalSemaphoreSignals++
-		semID := sem.SemaphoreID()
-		traces = append(traces, RuntimeTrace{
-			TimestampCycles: q.totalCycles,
-			EventType:       RuntimeEventSemaphoreSignal,
-			Description:     fmt.Sprintf("Signal semaphore S%d", semID),
-			QueueType:       &qt,
-			SemaphoreID:     &semID,
-		})
-	}
+			// Signal semaphores
+			for _, sem := range opts.SignalSemaphores {
+				sem.Signal()
+				q.stats.TotalSemaphoreSignals++
+				semID := sem.SemaphoreID()
+				traces = append(traces, RuntimeTrace{
+					TimestampCycles: q.totalCycles,
+					EventType:       RuntimeEventSemaphoreSignal,
+					Description:     fmt.Sprintf("Signal semaphore S%d", semID),
+					QueueType:       &qt,
+					SemaphoreID:     &semID,
+				})
+			}
 
-	// Signal fence
-	if opts.Fence != nil {
-		opts.Fence.Signal()
-		fenceID := opts.Fence.FenceID()
-		traces = append(traces, RuntimeTrace{
-			TimestampCycles: q.totalCycles,
-			EventType:       RuntimeEventFenceSignal,
-			Description:     fmt.Sprintf("Signal fence F%d", fenceID),
-			QueueType:       &qt,
-			FenceID:         &fenceID,
-		})
-	}
+			// Signal fence
+			if opts.Fence != nil {
+				opts.Fence.Signal()
+				fenceID := opts.Fence.FenceID()
+				traces = append(traces, RuntimeTrace{
+					TimestampCycles: q.totalCycles,
+					EventType:       RuntimeEventFenceSignal,
+					Description:     fmt.Sprintf("Signal fence F%d", fenceID),
+					QueueType:       &qt,
+					FenceID:         &fenceID,
+				})
+			}
 
-	// Update stats
-	q.stats.TotalDeviceCycles = q.totalCycles
-	q.stats.UpdateUtilization()
-	q.stats.Traces = append(q.stats.Traces, traces...)
+			// Update stats
+			q.stats.TotalDeviceCycles = q.totalCycles
+			q.stats.UpdateUtilization()
+			q.stats.Traces = append(q.stats.Traces, traces...)
 
-	return traces, nil
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return res, err
 }
 
 // WaitIdle blocks until this queue has no pending work.
@@ -213,7 +236,11 @@ func (q *CommandQueue) Submit(
 // In our synchronous simulation, submit() always runs to completion,
 // so this is a no-op.
 func (q *CommandQueue) WaitIdle() {
-	// No-op in synchronous simulation
+	_, _ = StartNew[struct{}]("compute-runtime.CommandQueue.WaitIdle", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			// No-op in synchronous simulation
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // executeCommandBuffer executes all commands in a command buffer.

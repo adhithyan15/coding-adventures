@@ -99,32 +99,53 @@ type Fence struct {
 // needs to "wait" on a fence that has not been submitted yet, so it must
 // start signaled.
 func NewFence(signaled bool) *Fence {
-	id := nextFenceID
-	nextFenceID++
-	return &Fence{
-		id:       id,
-		signaled: signaled,
-	}
+	result, _ := StartNew[*Fence]("compute-runtime.NewFence", nil,
+		func(op *Operation[*Fence], rf *ResultFactory[*Fence]) *OperationResult[*Fence] {
+			op.AddProperty("signaled", signaled)
+			id := nextFenceID
+			nextFenceID++
+			return rf.Generate(true, false, &Fence{
+				id:       id,
+				signaled: signaled,
+			})
+		}).GetResult()
+	return result
 }
 
 // FenceID returns the unique identifier for this fence.
 func (f *Fence) FenceID() int {
-	return f.id
+	result, _ := StartNew[int]("compute-runtime.Fence.FenceID", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, f.id)
+		}).GetResult()
+	return result
 }
 
 // Signaled returns whether the GPU has signaled this fence.
 func (f *Fence) Signaled() bool {
-	return f.signaled
+	result, _ := StartNew[bool]("compute-runtime.Fence.Signaled", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, f.signaled)
+		}).GetResult()
+	return result
 }
 
 // WaitCycles returns the total cycles the CPU spent waiting on this fence.
 func (f *Fence) WaitCycles() int {
-	return f.waitCycles
+	result, _ := StartNew[int]("compute-runtime.Fence.WaitCycles", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, f.waitCycles)
+		}).GetResult()
+	return result
 }
 
 // Signal signals the fence (called by the runtime when GPU finishes).
 func (f *Fence) Signal() {
-	f.signaled = true
+	_, _ = StartNew[struct{}]("compute-runtime.Fence.Signal", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			f.signaled = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Wait waits for the fence to be signaled.
@@ -135,13 +156,21 @@ func (f *Fence) Signal() {
 //
 // Returns true if the fence was signaled, false if timeout expired.
 func (f *Fence) Wait(timeoutCycles *int) bool {
-	return f.signaled
+	result, _ := StartNew[bool]("compute-runtime.Fence.Wait", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, f.signaled)
+		}).GetResult()
+	return result
 }
 
 // Reset resets the fence to unsignaled state for reuse.
 func (f *Fence) Reset() {
-	f.signaled = false
-	f.waitCycles = 0
+	_, _ = StartNew[struct{}]("compute-runtime.Fence.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			f.signaled = false
+			f.waitCycles = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -171,29 +200,49 @@ type Semaphore struct {
 
 // NewSemaphore creates a new semaphore in unsignaled state.
 func NewSemaphore() *Semaphore {
-	id := nextSemaphoreID
-	nextSemaphoreID++
-	return &Semaphore{id: id}
+	result, _ := StartNew[*Semaphore]("compute-runtime.NewSemaphore", nil,
+		func(op *Operation[*Semaphore], rf *ResultFactory[*Semaphore]) *OperationResult[*Semaphore] {
+			id := nextSemaphoreID
+			nextSemaphoreID++
+			return rf.Generate(true, false, &Semaphore{id: id})
+		}).GetResult()
+	return result
 }
 
 // SemaphoreID returns the unique identifier for this semaphore.
 func (s *Semaphore) SemaphoreID() int {
-	return s.id
+	result, _ := StartNew[int]("compute-runtime.Semaphore.SemaphoreID", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, s.id)
+		}).GetResult()
+	return result
 }
 
 // Signaled returns whether this semaphore has been signaled.
 func (s *Semaphore) Signaled() bool {
-	return s.signaled
+	result, _ := StartNew[bool]("compute-runtime.Semaphore.Signaled", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, s.signaled)
+		}).GetResult()
+	return result
 }
 
 // Signal signals the semaphore (called by runtime after queue completes).
 func (s *Semaphore) Signal() {
-	s.signaled = true
+	_, _ = StartNew[struct{}]("compute-runtime.Semaphore.Signal", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			s.signaled = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Reset resets to unsignaled (called by runtime when consumed by a wait).
 func (s *Semaphore) Reset() {
-	s.signaled = false
+	_, _ = StartNew[struct{}]("compute-runtime.Semaphore.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			s.signaled = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -228,32 +277,56 @@ type Event struct {
 
 // NewEvent creates a new event in unsignaled state.
 func NewEvent() *Event {
-	id := nextEventID
-	nextEventID++
-	return &Event{id: id}
+	result, _ := StartNew[*Event]("compute-runtime.NewEvent", nil,
+		func(op *Operation[*Event], rf *ResultFactory[*Event]) *OperationResult[*Event] {
+			id := nextEventID
+			nextEventID++
+			return rf.Generate(true, false, &Event{id: id})
+		}).GetResult()
+	return result
 }
 
 // EventID returns the unique identifier for this event.
 func (e *Event) EventID() int {
-	return e.id
+	result, _ := StartNew[int]("compute-runtime.Event.EventID", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, e.id)
+		}).GetResult()
+	return result
 }
 
 // Signaled returns whether this event has been signaled.
 func (e *Event) Signaled() bool {
-	return e.signaled
+	result, _ := StartNew[bool]("compute-runtime.Event.Signaled", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, e.signaled)
+		}).GetResult()
+	return result
 }
 
 // Set signals the event.
 func (e *Event) Set() {
-	e.signaled = true
+	_, _ = StartNew[struct{}]("compute-runtime.Event.Set", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			e.signaled = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Reset clears the event.
 func (e *Event) Reset() {
-	e.signaled = false
+	_, _ = StartNew[struct{}]("compute-runtime.Event.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			e.signaled = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Status checks if signaled without blocking.
 func (e *Event) Status() bool {
-	return e.signaled
+	result, _ := StartNew[bool]("compute-runtime.Event.Status", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, e.signaled)
+		}).GetResult()
+	return result
 }
