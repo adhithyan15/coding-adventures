@@ -80,10 +80,14 @@ type CoreStats struct {
 //   - <1.0 = stalls/flushes wasting cycles
 //   - 0.0 = no instructions completed or no cycles elapsed
 func (s *CoreStats) IPC() float64 {
-	if s.TotalCycles == 0 {
-		return 0.0
-	}
-	return float64(s.InstructionsCompleted) / float64(s.TotalCycles)
+	result, _ := StartNew[float64]("core.CoreStats.IPC", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			if s.TotalCycles == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			return rf.Generate(true, false, float64(s.InstructionsCompleted)/float64(s.TotalCycles))
+		}).GetResult()
+	return result
 }
 
 // CPI returns cycles per instruction.
@@ -93,10 +97,14 @@ func (s *CoreStats) IPC() float64 {
 //   - >1.0 = some cycles wasted
 //   - 0.0 = no instructions completed
 func (s *CoreStats) CPI() float64 {
-	if s.InstructionsCompleted == 0 {
-		return 0.0
-	}
-	return float64(s.TotalCycles) / float64(s.InstructionsCompleted)
+	result, _ := StartNew[float64]("core.CoreStats.CPI", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			if s.InstructionsCompleted == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			return rf.Generate(true, false, float64(s.TotalCycles)/float64(s.InstructionsCompleted))
+		}).GetResult()
+	return result
 }
 
 // String returns a formatted summary of all statistics.
@@ -110,40 +118,44 @@ func (s *CoreStats) CPI() float64 {
 //	  IPC: 0.81   CPI: 1.23
 //	  ...
 func (s *CoreStats) String() string {
-	result := "Core Statistics:\n"
-	result += fmt.Sprintf("  Instructions completed: %d\n", s.InstructionsCompleted)
-	result += fmt.Sprintf("  Total cycles:           %d\n", s.TotalCycles)
-	result += fmt.Sprintf("  IPC: %.3f   CPI: %.3f\n", s.IPC(), s.CPI())
-	result += "\n"
+	result, _ := StartNew[string]("core.CoreStats.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			str := "Core Statistics:\n"
+			str += fmt.Sprintf("  Instructions completed: %d\n", s.InstructionsCompleted)
+			str += fmt.Sprintf("  Total cycles:           %d\n", s.TotalCycles)
+			str += fmt.Sprintf("  IPC: %.3f   CPI: %.3f\n", s.IPC(), s.CPI())
+			str += "\n"
 
-	result += "Pipeline:\n"
-	result += fmt.Sprintf("  Stall cycles:  %d\n", s.PipelineStats.StallCycles)
-	result += fmt.Sprintf("  Flush cycles:  %d\n", s.PipelineStats.FlushCycles)
-	result += fmt.Sprintf("  Bubble cycles: %d\n", s.PipelineStats.BubbleCycles)
-	result += "\n"
+			str += "Pipeline:\n"
+			str += fmt.Sprintf("  Stall cycles:  %d\n", s.PipelineStats.StallCycles)
+			str += fmt.Sprintf("  Flush cycles:  %d\n", s.PipelineStats.FlushCycles)
+			str += fmt.Sprintf("  Bubble cycles: %d\n", s.PipelineStats.BubbleCycles)
+			str += "\n"
 
-	if s.PredictorStats != nil {
-		result += "Branch Prediction:\n"
-		result += fmt.Sprintf("  Total branches:  %d\n", s.PredictorStats.Predictions)
-		result += fmt.Sprintf("  Correct:         %d\n", s.PredictorStats.Correct)
-		result += fmt.Sprintf("  Mispredictions:  %d\n", s.PredictorStats.Incorrect)
-		result += fmt.Sprintf("  Accuracy:        %.1f%%\n", s.PredictorStats.Accuracy())
-		result += "\n"
-	}
+			if s.PredictorStats != nil {
+				str += "Branch Prediction:\n"
+				str += fmt.Sprintf("  Total branches:  %d\n", s.PredictorStats.Predictions)
+				str += fmt.Sprintf("  Correct:         %d\n", s.PredictorStats.Correct)
+				str += fmt.Sprintf("  Mispredictions:  %d\n", s.PredictorStats.Incorrect)
+				str += fmt.Sprintf("  Accuracy:        %.1f%%\n", s.PredictorStats.Accuracy())
+				str += "\n"
+			}
 
-	if len(s.CacheStats) > 0 {
-		result += "Cache Performance:\n"
-		for name, stats := range s.CacheStats {
-			result += fmt.Sprintf("  %s: accesses=%d, hit_rate=%.1f%%\n",
-				name, stats.TotalAccesses(), stats.HitRate()*100)
-		}
-		result += "\n"
-	}
+			if len(s.CacheStats) > 0 {
+				str += "Cache Performance:\n"
+				for name, stats := range s.CacheStats {
+					str += fmt.Sprintf("  %s: accesses=%d, hit_rate=%.1f%%\n",
+						name, stats.TotalAccesses(), stats.HitRate()*100)
+				}
+				str += "\n"
+			}
 
-	result += "Hazards:\n"
-	result += fmt.Sprintf("  Forwards: %d\n", s.ForwardCount)
-	result += fmt.Sprintf("  Stalls:   %d\n", s.StallCount)
-	result += fmt.Sprintf("  Flushes:  %d\n", s.FlushCount)
+			str += "Hazards:\n"
+			str += fmt.Sprintf("  Forwards: %d\n", s.ForwardCount)
+			str += fmt.Sprintf("  Stalls:   %d\n", s.StallCount)
+			str += fmt.Sprintf("  Flushes:  %d\n", s.FlushCount)
 
+			return rf.Generate(true, false, str)
+		}).GetResult()
 	return result
 }

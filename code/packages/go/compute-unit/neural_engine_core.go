@@ -113,16 +113,20 @@ type ANECoreConfig struct {
 
 // DefaultANECoreConfig returns an ANECoreConfig with sensible defaults.
 func DefaultANECoreConfig() ANECoreConfig {
-	return ANECoreConfig{
-		NumMACs:           16,
-		MACFormat:         fp.FP16,
-		AccumulatorFormat: fp.FP32,
-		SRAMSize:          4194304,
-		ActivationBuffer:  131072,
-		WeightBuffer:      524288,
-		OutputBuffer:      131072,
-		DMABandwidth:      10,
-	}
+	result, _ := StartNew[ANECoreConfig]("compute-unit.DefaultANECoreConfig", ANECoreConfig{},
+		func(op *Operation[ANECoreConfig], rf *ResultFactory[ANECoreConfig]) *OperationResult[ANECoreConfig] {
+			return rf.Generate(true, false, ANECoreConfig{
+				NumMACs:           16,
+				MACFormat:         fp.FP16,
+				AccumulatorFormat: fp.FP32,
+				SRAMSize:          4194304,
+				ActivationBuffer:  131072,
+				WeightBuffer:      524288,
+				OutputBuffer:      131072,
+				DMABandwidth:      10,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -151,59 +155,99 @@ type NeuralEngineCore struct {
 
 // NewNeuralEngineCore creates a new Apple ANE Core simulator.
 func NewNeuralEngineCore(config ANECoreConfig, clk *clock.Clock) *NeuralEngineCore {
-	inputBufSize := config.ActivationBuffer / 4
-	if inputBufSize < 1024 {
-		inputBufSize = 1024
-	}
-	weightBufSize := config.WeightBuffer / 4
-	if weightBufSize < 4096 {
-		weightBufSize = 4096
-	}
-	outputBufSize := config.OutputBuffer / 4
-	if outputBufSize < 1024 {
-		outputBufSize = 1024
-	}
+	result, _ := StartNew[*NeuralEngineCore]("compute-unit.NewNeuralEngineCore", nil,
+		func(op *Operation[*NeuralEngineCore], rf *ResultFactory[*NeuralEngineCore]) *OperationResult[*NeuralEngineCore] {
+			inputBufSize := config.ActivationBuffer / 4
+			if inputBufSize < 1024 {
+				inputBufSize = 1024
+			}
+			weightBufSize := config.WeightBuffer / 4
+			if weightBufSize < 4096 {
+				weightBufSize = 4096
+			}
+			outputBufSize := config.OutputBuffer / 4
+			if outputBufSize < 1024 {
+				outputBufSize = 1024
+			}
 
-	macEngine := pee.NewMACArrayEngine(
-		pee.MACArrayConfig{
-			NumMACs:          config.NumMACs,
-			InputBufferSize:  inputBufSize,
-			WeightBufferSize: weightBufSize,
-			OutputBufferSize: outputBufSize,
-			FloatFormat:      fp.FP32, // use FP32 internally
-			AccumFormat:      fp.FP32,
-			HasActivation:    true,
-		},
-		clk,
-	)
+			macEngine := pee.NewMACArrayEngine(
+				pee.MACArrayConfig{
+					NumMACs:          config.NumMACs,
+					InputBufferSize:  inputBufSize,
+					WeightBufferSize: weightBufSize,
+					OutputBufferSize: outputBufSize,
+					FloatFormat:      fp.FP32,
+					AccumFormat:      fp.FP32,
+					HasActivation:    true,
+				},
+				clk,
+			)
 
-	return &NeuralEngineCore{
-		config:    config,
-		clk:       clk,
-		macEngine: macEngine,
-		idleFlag:  true,
-	}
+			return rf.Generate(true, false, &NeuralEngineCore{
+				config:    config,
+				clk:       clk,
+				macEngine: macEngine,
+				idleFlag:  true,
+			})
+		}).GetResult()
+	return result
 }
 
 // --- ComputeUnit interface ---
 
 // Name returns the compute unit name.
-func (ane *NeuralEngineCore) Name() string { return "ANECore" }
+func (ane *NeuralEngineCore) Name() string {
+	result, _ := StartNew[string]("compute-unit.NeuralEngineCore.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "ANECore")
+		}).GetResult()
+	return result
+}
 
 // Arch returns Apple ANE Core architecture.
-func (ane *NeuralEngineCore) Arch() Architecture { return ArchAppleANECore }
+func (ane *NeuralEngineCore) Arch() Architecture {
+	result, _ := StartNew[Architecture]("compute-unit.NeuralEngineCore.Arch", 0,
+		func(op *Operation[Architecture], rf *ResultFactory[Architecture]) *OperationResult[Architecture] {
+			return rf.Generate(true, false, ArchAppleANECore)
+		}).GetResult()
+	return result
+}
 
 // Idle returns true if no work remains.
-func (ane *NeuralEngineCore) Idle() bool { return ane.idleFlag }
+func (ane *NeuralEngineCore) Idle() bool {
+	result, _ := StartNew[bool]("compute-unit.NeuralEngineCore.Idle", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, ane.idleFlag)
+		}).GetResult()
+	return result
+}
 
 // Config returns the ANE Core configuration.
-func (ane *NeuralEngineCore) Config() ANECoreConfig { return ane.config }
+func (ane *NeuralEngineCore) Config() ANECoreConfig {
+	result, _ := StartNew[ANECoreConfig]("compute-unit.NeuralEngineCore.Config", ANECoreConfig{},
+		func(op *Operation[ANECoreConfig], rf *ResultFactory[ANECoreConfig]) *OperationResult[ANECoreConfig] {
+			return rf.Generate(true, false, ane.config)
+		}).GetResult()
+	return result
+}
 
 // ResultMatrix returns the result from the last computation.
-func (ane *NeuralEngineCore) ResultMatrix() [][]float64 { return ane.result }
+func (ane *NeuralEngineCore) ResultMatrix() [][]float64 {
+	result, _ := StartNew[[][]float64]("compute-unit.NeuralEngineCore.ResultMatrix", nil,
+		func(op *Operation[[][]float64], rf *ResultFactory[[][]float64]) *OperationResult[[][]float64] {
+			return rf.Generate(true, false, ane.result)
+		}).GetResult()
+	return result
+}
 
 // MACEngine returns the underlying MAC array engine.
-func (ane *NeuralEngineCore) MACEngine() *pee.MACArrayEngine { return ane.macEngine }
+func (ane *NeuralEngineCore) MACEngine() *pee.MACArrayEngine {
+	result, _ := StartNew[*pee.MACArrayEngine]("compute-unit.NeuralEngineCore.MACEngine", nil,
+		func(op *Operation[*pee.MACArrayEngine], rf *ResultFactory[*pee.MACArrayEngine]) *OperationResult[*pee.MACArrayEngine] {
+			return rf.Generate(true, false, ane.macEngine)
+		}).GetResult()
+	return result
+}
 
 // --- Dispatch ---
 
@@ -212,9 +256,14 @@ func (ane *NeuralEngineCore) MACEngine() *pee.MACArrayEngine { return ane.macEng
 // The WorkItem must provide InputData and WeightData. The ANE
 // Core will compute: result = InputData x WeightData.
 func (ane *NeuralEngineCore) Dispatch(work WorkItem) error {
-	ane.workItems = append(ane.workItems, work)
-	ane.idleFlag = false
-	return nil
+	_, err := StartNew[struct{}]("compute-unit.NeuralEngineCore.Dispatch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("work_id", work.WorkID)
+			ane.workItems = append(ane.workItems, work)
+			ane.idleFlag = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // --- Execution ---
@@ -224,65 +273,75 @@ func (ane *NeuralEngineCore) Dispatch(work WorkItem) error {
 // If work is pending, generates a compiler schedule, loads data
 // into the MAC engine, and runs it to completion.
 func (ane *NeuralEngineCore) Step(edge clock.ClockEdge) ComputeUnitTrace {
-	ane.cycle++
+	result, _ := StartNew[ComputeUnitTrace]("compute-unit.NeuralEngineCore.Step", ComputeUnitTrace{},
+		func(op *Operation[ComputeUnitTrace], rf *ResultFactory[ComputeUnitTrace]) *OperationResult[ComputeUnitTrace] {
+			op.AddProperty("cycle", edge.Cycle)
+			ane.cycle++
 
-	if ane.idleFlag || len(ane.workItems) == 0 {
-		return ane.makeIdleTrace()
-	}
+			if ane.idleFlag || len(ane.workItems) == 0 {
+				return rf.Generate(true, false, ane.makeIdleTrace())
+			}
 
-	work := ane.workItems[0]
-	ane.processWorkItem(work)
-	ane.workItems = ane.workItems[1:]
+			work := ane.workItems[0]
+			ane.processWorkItem(work)
+			ane.workItems = ane.workItems[1:]
 
-	if len(ane.workItems) == 0 {
-		ane.idleFlag = true
-	}
+			if len(ane.workItems) == 0 {
+				ane.idleFlag = true
+			}
 
-	rows := len(ane.result)
-	cols := 0
-	if rows > 0 {
-		cols = len(ane.result[0])
-	}
+			rows := len(ane.result)
+			cols := 0
+			if rows > 0 {
+				cols = len(ane.result[0])
+			}
 
-	activeWarps := 0
-	occ := 0.0
-	if !ane.idleFlag {
-		activeWarps = 1
-		occ = 1.0
-	}
+			activeWarps := 0
+			occ := 0.0
+			if !ane.idleFlag {
+				activeWarps = 1
+				occ = 1.0
+			}
 
-	return ComputeUnitTrace{
-		Cycle:             ane.cycle,
-		UnitName:          ane.Name(),
-		Arch:              ane.Arch(),
-		SchedulerAction:   fmt.Sprintf("inference complete: %dx%d result", rows, cols),
-		ActiveWarps:       activeWarps,
-		TotalWarps:        1,
-		EngineTraces:      make(map[int]pee.EngineTrace),
-		SharedMemoryUsed:  0,
-		SharedMemoryTotal: ane.config.SRAMSize,
-		RegisterFileUsed:  ane.config.NumMACs,
-		RegisterFileTotal: ane.config.NumMACs,
-		Occupancy:         occ,
-	}
+			return rf.Generate(true, false, ComputeUnitTrace{
+				Cycle:             ane.cycle,
+				UnitName:          ane.Name(),
+				Arch:              ane.Arch(),
+				SchedulerAction:   fmt.Sprintf("inference complete: %dx%d result", rows, cols),
+				ActiveWarps:       activeWarps,
+				TotalWarps:        1,
+				EngineTraces:      make(map[int]pee.EngineTrace),
+				SharedMemoryUsed:  0,
+				SharedMemoryTotal: ane.config.SRAMSize,
+				RegisterFileUsed:  ane.config.NumMACs,
+				RegisterFileTotal: ane.config.NumMACs,
+				Occupancy:         occ,
+			})
+		}).GetResult()
+	return result
 }
 
 // Run runs until all work completes or maxCycles is reached.
 func (ane *NeuralEngineCore) Run(maxCycles int) []ComputeUnitTrace {
-	var traces []ComputeUnitTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := ane.Step(edge)
-		traces = append(traces, trace)
-		if ane.Idle() {
-			break
-		}
-	}
-	return traces
+	result, _ := StartNew[[]ComputeUnitTrace]("compute-unit.NeuralEngineCore.Run", nil,
+		func(op *Operation[[]ComputeUnitTrace], rf *ResultFactory[[]ComputeUnitTrace]) *OperationResult[[]ComputeUnitTrace] {
+			op.AddProperty("max_cycles", maxCycles)
+			var traces []ComputeUnitTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := ane.Step(edge)
+				traces = append(traces, trace)
+				if ane.Idle() {
+					break
+				}
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // RunInference is a convenience method: run a complete inference pass.
@@ -302,23 +361,30 @@ func (ane *NeuralEngineCore) RunInference(
 	inputs, weights [][]float64,
 	activationFn string,
 ) [][]float64 {
-	result := matmul(inputs, weights)
-
-	if activationFn != "none" {
-		result = applyActivation(result, activationFn)
-	}
-
-	ane.result = result
+	result, _ := StartNew[[][]float64]("compute-unit.NeuralEngineCore.RunInference", nil,
+		func(op *Operation[[][]float64], rf *ResultFactory[[][]float64]) *OperationResult[[][]float64] {
+			op.AddProperty("activation_fn", activationFn)
+			res := matmul(inputs, weights)
+			if activationFn != "none" {
+				res = applyActivation(res, activationFn)
+			}
+			ane.result = res
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
 // Reset resets all state.
 func (ane *NeuralEngineCore) Reset() {
-	ane.macEngine.Reset()
-	ane.workItems = nil
-	ane.result = nil
-	ane.idleFlag = true
-	ane.cycle = 0
+	_, _ = StartNew[struct{}]("compute-unit.NeuralEngineCore.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			ane.macEngine.Reset()
+			ane.workItems = nil
+			ane.result = nil
+			ane.idleFlag = true
+			ane.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // --- Private helpers ---
@@ -383,6 +449,10 @@ func (ane *NeuralEngineCore) makeIdleTrace() ComputeUnitTrace {
 
 // String returns a human-readable representation.
 func (ane *NeuralEngineCore) String() string {
-	return fmt.Sprintf("NeuralEngineCore(macs=%d, idle=%t)",
-		ane.config.NumMACs, ane.idleFlag)
+	result, _ := StartNew[string]("compute-unit.NeuralEngineCore.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("NeuralEngineCore(macs=%d, idle=%t)",
+				ane.config.NumMACs, ane.idleFlag))
+		}).GetResult()
+	return result
 }

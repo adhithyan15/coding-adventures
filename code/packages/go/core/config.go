@@ -70,11 +70,15 @@ type RegisterFileConfig struct {
 // DefaultRegisterFileConfig returns a sensible default: 16 registers, 32-bit,
 // with R0 hardwired to zero (RISC-V convention).
 func DefaultRegisterFileConfig() RegisterFileConfig {
-	return RegisterFileConfig{
-		Count:        16,
-		Width:        32,
-		ZeroRegister: true,
-	}
+	result, _ := StartNew[RegisterFileConfig]("core.DefaultRegisterFileConfig", RegisterFileConfig{},
+		func(op *Operation[RegisterFileConfig], rf *ResultFactory[RegisterFileConfig]) *OperationResult[RegisterFileConfig] {
+			return rf.Generate(true, false, RegisterFileConfig{
+				Count:        16,
+				Width:        32,
+				ZeroRegister: true,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -189,22 +193,26 @@ type CoreConfig struct {
 // This is the "teaching core" -- a 5-stage pipeline with static prediction,
 // small caches, and 16 registers. Equivalent to a 1980s RISC microprocessor.
 func DefaultCoreConfig() CoreConfig {
-	return CoreConfig{
-		Name:                "Default",
-		Pipeline:            cpupipeline.Classic5Stage(),
-		BranchPredictorType: "static_always_not_taken",
-		BranchPredictorSize: 256,
-		BTBSize:             64,
-		HazardDetection:     true,
-		Forwarding:          true,
-		RegisterFile:        nil, // will use default
-		FPUnit:              nil, // no FP
-		L1ICache:            nil, // will use default
-		L1DCache:            nil, // will use default
-		L2Cache:             nil, // no L2
-		MemorySize:          65536,
-		MemoryLatency:       100,
-	}
+	result, _ := StartNew[CoreConfig]("core.DefaultCoreConfig", CoreConfig{},
+		func(op *Operation[CoreConfig], rf *ResultFactory[CoreConfig]) *OperationResult[CoreConfig] {
+			return rf.Generate(true, false, CoreConfig{
+				Name:                "Default",
+				Pipeline:            cpupipeline.Classic5Stage(),
+				BranchPredictorType: "static_always_not_taken",
+				BranchPredictorSize: 256,
+				BTBSize:             64,
+				HazardDetection:     true,
+				Forwarding:          true,
+				RegisterFile:        nil,
+				FPUnit:              nil,
+				L1ICache:            nil,
+				L1DCache:            nil,
+				L2Cache:             nil,
+				MemorySize:          65536,
+				MemoryLatency:       100,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -223,32 +231,35 @@ func DefaultCoreConfig() CoreConfig {
 //
 // Expected IPC: ~0.7-0.9 on simple programs.
 func SimpleConfig() CoreConfig {
-	l1i := cache.CacheConfig{
-		Name: "L1I", TotalSize: 4096, LineSize: 64,
-		Associativity: 1, AccessLatency: 1, WritePolicy: "write-back",
-	}
-	l1d := cache.CacheConfig{
-		Name: "L1D", TotalSize: 4096, LineSize: 64,
-		Associativity: 1, AccessLatency: 1, WritePolicy: "write-back",
-	}
-	regCfg := RegisterFileConfig{Count: 16, Width: 32, ZeroRegister: true}
-
-	return CoreConfig{
-		Name:                "Simple",
-		Pipeline:            cpupipeline.Classic5Stage(),
-		BranchPredictorType: "static_always_not_taken",
-		BranchPredictorSize: 256,
-		BTBSize:             64,
-		HazardDetection:     true,
-		Forwarding:          true,
-		RegisterFile:        &regCfg,
-		FPUnit:              nil,
-		L1ICache:            &l1i,
-		L1DCache:            &l1d,
-		L2Cache:             nil,
-		MemorySize:          65536,
-		MemoryLatency:       100,
-	}
+	result, _ := StartNew[CoreConfig]("core.SimpleConfig", CoreConfig{},
+		func(op *Operation[CoreConfig], rf *ResultFactory[CoreConfig]) *OperationResult[CoreConfig] {
+			l1i := cache.CacheConfig{
+				Name: "L1I", TotalSize: 4096, LineSize: 64,
+				Associativity: 1, AccessLatency: 1, WritePolicy: "write-back",
+			}
+			l1d := cache.CacheConfig{
+				Name: "L1D", TotalSize: 4096, LineSize: 64,
+				Associativity: 1, AccessLatency: 1, WritePolicy: "write-back",
+			}
+			regCfg := RegisterFileConfig{Count: 16, Width: 32, ZeroRegister: true}
+			return rf.Generate(true, false, CoreConfig{
+				Name:                "Simple",
+				Pipeline:            cpupipeline.Classic5Stage(),
+				BranchPredictorType: "static_always_not_taken",
+				BranchPredictorSize: 256,
+				BTBSize:             64,
+				HazardDetection:     true,
+				Forwarding:          true,
+				RegisterFile:        &regCfg,
+				FPUnit:              nil,
+				L1ICache:            &l1i,
+				L1DCache:            &l1d,
+				L2Cache:             nil,
+				MemorySize:          65536,
+				MemoryLatency:       100,
+			})
+		}).GetResult()
+	return result
 }
 
 // CortexA78LikeConfig approximates the ARM Cortex-A78 performance core.
@@ -263,37 +274,40 @@ func SimpleConfig() CoreConfig {
 //
 // Expected IPC: ~0.85-0.95 (our model is in-order; real A78 is out-of-order).
 func CortexA78LikeConfig() CoreConfig {
-	l1i := cache.CacheConfig{
-		Name: "L1I", TotalSize: 65536, LineSize: 64,
-		Associativity: 4, AccessLatency: 1, WritePolicy: "write-back",
-	}
-	l1d := cache.CacheConfig{
-		Name: "L1D", TotalSize: 65536, LineSize: 64,
-		Associativity: 4, AccessLatency: 1, WritePolicy: "write-back",
-	}
-	l2 := cache.CacheConfig{
-		Name: "L2", TotalSize: 262144, LineSize: 64,
-		Associativity: 8, AccessLatency: 12, WritePolicy: "write-back",
-	}
-	regCfg := RegisterFileConfig{Count: 31, Width: 64, ZeroRegister: false}
-	fpCfg := FPUnitConfig{Formats: []string{"fp32", "fp64"}, PipelineDepth: 4}
-
-	return CoreConfig{
-		Name:                "CortexA78Like",
-		Pipeline:            cpupipeline.Deep13Stage(),
-		BranchPredictorType: "two_bit",
-		BranchPredictorSize: 4096,
-		BTBSize:             1024,
-		HazardDetection:     true,
-		Forwarding:          true,
-		RegisterFile:        &regCfg,
-		FPUnit:              &fpCfg,
-		L1ICache:            &l1i,
-		L1DCache:            &l1d,
-		L2Cache:             &l2,
-		MemorySize:          1048576,
-		MemoryLatency:       100,
-	}
+	result, _ := StartNew[CoreConfig]("core.CortexA78LikeConfig", CoreConfig{},
+		func(op *Operation[CoreConfig], rf *ResultFactory[CoreConfig]) *OperationResult[CoreConfig] {
+			l1i := cache.CacheConfig{
+				Name: "L1I", TotalSize: 65536, LineSize: 64,
+				Associativity: 4, AccessLatency: 1, WritePolicy: "write-back",
+			}
+			l1d := cache.CacheConfig{
+				Name: "L1D", TotalSize: 65536, LineSize: 64,
+				Associativity: 4, AccessLatency: 1, WritePolicy: "write-back",
+			}
+			l2 := cache.CacheConfig{
+				Name: "L2", TotalSize: 262144, LineSize: 64,
+				Associativity: 8, AccessLatency: 12, WritePolicy: "write-back",
+			}
+			regCfg := RegisterFileConfig{Count: 31, Width: 64, ZeroRegister: false}
+			fpCfg := FPUnitConfig{Formats: []string{"fp32", "fp64"}, PipelineDepth: 4}
+			return rf.Generate(true, false, CoreConfig{
+				Name:                "CortexA78Like",
+				Pipeline:            cpupipeline.Deep13Stage(),
+				BranchPredictorType: "two_bit",
+				BranchPredictorSize: 4096,
+				BTBSize:             1024,
+				HazardDetection:     true,
+				Forwarding:          true,
+				RegisterFile:        &regCfg,
+				FPUnit:              &fpCfg,
+				L1ICache:            &l1i,
+				L1DCache:            &l1d,
+				L2Cache:             &l2,
+				MemorySize:          1048576,
+				MemoryLatency:       100,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -332,13 +346,17 @@ type MultiCoreConfig struct {
 
 // DefaultMultiCoreConfig returns a 2-core configuration for testing.
 func DefaultMultiCoreConfig() MultiCoreConfig {
-	return MultiCoreConfig{
-		NumCores:      2,
-		CoreConfig:    SimpleConfig(),
-		L3Cache:       nil,
-		MemorySize:    1048576,
-		MemoryLatency: 100,
-	}
+	result, _ := StartNew[MultiCoreConfig]("core.DefaultMultiCoreConfig", MultiCoreConfig{},
+		func(op *Operation[MultiCoreConfig], rf *ResultFactory[MultiCoreConfig]) *OperationResult[MultiCoreConfig] {
+			return rf.Generate(true, false, MultiCoreConfig{
+				NumCores:      2,
+				CoreConfig:    SimpleConfig(),
+				L3Cache:       nil,
+				MemorySize:    1048576,
+				MemoryLatency: 100,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -362,7 +380,6 @@ func createBranchPredictor(typ string, size int) branchpredictor.BranchPredictor
 	case "two_bit":
 		return branchpredictor.NewTwoBitPredictor(size, branchpredictor.WeaklyNotTaken)
 	default:
-		// Fall back to always-not-taken for unknown types.
 		return branchpredictor.NewAlwaysNotTakenPredictor()
 	}
 }

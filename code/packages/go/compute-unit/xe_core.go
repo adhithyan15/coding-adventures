@@ -90,19 +90,23 @@ type XeCoreConfig struct {
 
 // DefaultXeCoreConfig returns an XeCoreConfig with sensible defaults.
 func DefaultXeCoreConfig() XeCoreConfig {
-	return XeCoreConfig{
-		NumEUs:              16,
-		ThreadsPerEU:        7,
-		SIMDWidth:           8,
-		GRFPerEU:            128,
-		SLMSize:             65536,
-		L1CacheSize:         196608,
-		InstructionCacheSize: 65536,
-		Policy:              ScheduleRoundRobin,
-		FloatFmt:            fp.FP32,
-		ISA:                 gpucore.GenericISA{},
-		MemLatencyCycles:    200,
-	}
+	result, _ := StartNew[XeCoreConfig]("compute-unit.DefaultXeCoreConfig", XeCoreConfig{},
+		func(op *Operation[XeCoreConfig], rf *ResultFactory[XeCoreConfig]) *OperationResult[XeCoreConfig] {
+			return rf.Generate(true, false, XeCoreConfig{
+				NumEUs:              16,
+				ThreadsPerEU:        7,
+				SIMDWidth:           8,
+				GRFPerEU:            128,
+				SLMSize:             65536,
+				L1CacheSize:         196608,
+				InstructionCacheSize: 65536,
+				Policy:              ScheduleRoundRobin,
+				FloatFmt:            fp.FP32,
+				ISA:                 gpucore.GenericISA{},
+				MemLatencyCycles:    200,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -133,52 +137,89 @@ type XeCore struct {
 
 // NewXeCore creates a new Intel Xe Core simulator.
 func NewXeCore(config XeCoreConfig, clk *clock.Clock) *XeCore {
-	engine := pee.NewSubsliceEngine(
-		pee.SubsliceConfig{
-			NumEUs:       config.NumEUs,
-			ThreadsPerEU: config.ThreadsPerEU,
-			SIMDWidth:    config.SIMDWidth,
-			GRFSize:      config.GRFPerEU,
-			SLMSize:      config.SLMSize,
-			FloatFormat:  config.FloatFmt,
-			ISA:          config.ISA,
-		},
-		clk,
-	)
-
-	return &XeCore{
-		config:   config,
-		clk:      clk,
-		slm:      NewSharedMemory(config.SLMSize),
-		engine:   engine,
-		idleFlag: true,
-	}
+	result, _ := StartNew[*XeCore]("compute-unit.NewXeCore", nil,
+		func(op *Operation[*XeCore], rf *ResultFactory[*XeCore]) *OperationResult[*XeCore] {
+			engine := pee.NewSubsliceEngine(
+				pee.SubsliceConfig{
+					NumEUs:       config.NumEUs,
+					ThreadsPerEU: config.ThreadsPerEU,
+					SIMDWidth:    config.SIMDWidth,
+					GRFSize:      config.GRFPerEU,
+					SLMSize:      config.SLMSize,
+					FloatFormat:  config.FloatFmt,
+					ISA:          config.ISA,
+				},
+				clk,
+			)
+			return rf.Generate(true, false, &XeCore{
+				config:   config,
+				clk:      clk,
+				slm:      NewSharedMemory(config.SLMSize),
+				engine:   engine,
+				idleFlag: true,
+			})
+		}).GetResult()
+	return result
 }
 
 // --- ComputeUnit interface ---
 
 // Name returns the compute unit name.
-func (xe *XeCore) Name() string { return "XeCore" }
+func (xe *XeCore) Name() string {
+	result, _ := StartNew[string]("compute-unit.XeCore.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "XeCore")
+		}).GetResult()
+	return result
+}
 
 // Arch returns Intel Xe Core architecture.
-func (xe *XeCore) Arch() Architecture { return ArchIntelXeCore }
+func (xe *XeCore) Arch() Architecture {
+	result, _ := StartNew[Architecture]("compute-unit.XeCore.Arch", 0,
+		func(op *Operation[Architecture], rf *ResultFactory[Architecture]) *OperationResult[Architecture] {
+			return rf.Generate(true, false, ArchIntelXeCore)
+		}).GetResult()
+	return result
+}
 
 // Idle returns true if no work remains.
 func (xe *XeCore) Idle() bool {
-	if len(xe.workItems) == 0 && xe.idleFlag {
-		return true
-	}
-	return xe.idleFlag && xe.engine.IsHalted()
+	result, _ := StartNew[bool]("compute-unit.XeCore.Idle", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			if len(xe.workItems) == 0 && xe.idleFlag {
+				return rf.Generate(true, false, true)
+			}
+			return rf.Generate(true, false, xe.idleFlag && xe.engine.IsHalted())
+		}).GetResult()
+	return result
 }
 
 // Config returns the Xe Core configuration.
-func (xe *XeCore) Config() XeCoreConfig { return xe.config }
+func (xe *XeCore) Config() XeCoreConfig {
+	result, _ := StartNew[XeCoreConfig]("compute-unit.XeCore.Config", XeCoreConfig{},
+		func(op *Operation[XeCoreConfig], rf *ResultFactory[XeCoreConfig]) *OperationResult[XeCoreConfig] {
+			return rf.Generate(true, false, xe.config)
+		}).GetResult()
+	return result
+}
 
 // SLM returns the Shared Local Memory instance.
-func (xe *XeCore) SLM() *SharedMemory { return xe.slm }
+func (xe *XeCore) SLM() *SharedMemory {
+	result, _ := StartNew[*SharedMemory]("compute-unit.XeCore.SLM", nil,
+		func(op *Operation[*SharedMemory], rf *ResultFactory[*SharedMemory]) *OperationResult[*SharedMemory] {
+			return rf.Generate(true, false, xe.slm)
+		}).GetResult()
+	return result
+}
 
 // Engine returns the underlying SubsliceEngine.
-func (xe *XeCore) Engine() *pee.SubsliceEngine { return xe.engine }
+func (xe *XeCore) Engine() *pee.SubsliceEngine {
+	result, _ := StartNew[*pee.SubsliceEngine]("compute-unit.XeCore.Engine", nil,
+		func(op *Operation[*pee.SubsliceEngine], rf *ResultFactory[*pee.SubsliceEngine]) *OperationResult[*pee.SubsliceEngine] {
+			return rf.Generate(true, false, xe.engine)
+		}).GetResult()
+	return result
+}
 
 // --- Dispatch ---
 
@@ -187,31 +228,34 @@ func (xe *XeCore) Engine() *pee.SubsliceEngine { return xe.engine }
 // Loads the program into the SubsliceEngine and sets per-thread
 // register values.
 func (xe *XeCore) Dispatch(work WorkItem) error {
-	xe.workItems = append(xe.workItems, work)
-	xe.idleFlag = false
+	_, err := StartNew[struct{}]("compute-unit.XeCore.Dispatch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("work_id", work.WorkID)
+			xe.workItems = append(xe.workItems, work)
+			xe.idleFlag = false
 
-	if work.Program != nil {
-		xe.engine.LoadProgram(work.Program)
-	}
-
-	// Set per-thread data across EUs
-	for globalTID, regs := range work.PerThreadData {
-		// Map global thread ID to (eu, thread, lane)
-		totalLanes := xe.config.SIMDWidth
-		threadTotal := totalLanes * xe.config.ThreadsPerEU
-		euID := globalTID / threadTotal
-		remainder := globalTID % threadTotal
-		threadID := remainder / totalLanes
-		lane := remainder % totalLanes
-
-		if euID < xe.config.NumEUs {
-			for reg, val := range regs {
-				_ = xe.engine.SetEUThreadLaneRegister(euID, threadID, lane, reg, val)
+			if work.Program != nil {
+				xe.engine.LoadProgram(work.Program)
 			}
-		}
-	}
 
-	return nil
+			for globalTID, regs := range work.PerThreadData {
+				totalLanes := xe.config.SIMDWidth
+				threadTotal := totalLanes * xe.config.ThreadsPerEU
+				euID := globalTID / threadTotal
+				remainder := globalTID % threadTotal
+				threadID := remainder / totalLanes
+				lane := remainder % totalLanes
+
+				if euID < xe.config.NumEUs {
+					for reg, val := range regs {
+						_ = xe.engine.SetEUThreadLaneRegister(euID, threadID, lane, reg, val)
+					}
+				}
+			}
+
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // --- Execution ---
@@ -220,68 +264,86 @@ func (xe *XeCore) Dispatch(work WorkItem) error {
 //
 // Delegates to the SubsliceEngine which manages EU thread arbitration.
 func (xe *XeCore) Step(edge clock.ClockEdge) ComputeUnitTrace {
-	xe.cycle++
+	result, _ := StartNew[ComputeUnitTrace]("compute-unit.XeCore.Step", ComputeUnitTrace{},
+		func(op *Operation[ComputeUnitTrace], rf *ResultFactory[ComputeUnitTrace]) *OperationResult[ComputeUnitTrace] {
+			op.AddProperty("cycle", edge.Cycle)
+			xe.cycle++
 
-	engineTrace := xe.engine.Step(edge)
+			engineTrace := xe.engine.Step(edge)
 
-	if xe.engine.IsHalted() {
-		xe.idleFlag = true
-	}
+			if xe.engine.IsHalted() {
+				xe.idleFlag = true
+			}
 
-	active := engineTrace.ActiveCount
+			active := engineTrace.ActiveCount
 
-	activeWarps := 0
-	occupancy := 0.0
-	if active > 0 {
-		activeWarps = 1
-		occupancy = 1.0
-	}
+			activeWarps := 0
+			occupancy := 0.0
+			if active > 0 {
+				activeWarps = 1
+				occupancy = 1.0
+			}
 
-	return ComputeUnitTrace{
-		Cycle:             xe.cycle,
-		UnitName:          xe.Name(),
-		Arch:              xe.Arch(),
-		SchedulerAction:   engineTrace.Description,
-		ActiveWarps:       activeWarps,
-		TotalWarps:        1,
-		EngineTraces:      map[int]pee.EngineTrace{0: engineTrace},
-		SharedMemoryUsed:  0,
-		SharedMemoryTotal: xe.config.SLMSize,
-		RegisterFileUsed:  xe.config.GRFPerEU * xe.config.NumEUs,
-		RegisterFileTotal: xe.config.GRFPerEU * xe.config.NumEUs,
-		Occupancy:         occupancy,
-	}
+			return rf.Generate(true, false, ComputeUnitTrace{
+				Cycle:             xe.cycle,
+				UnitName:          xe.Name(),
+				Arch:              xe.Arch(),
+				SchedulerAction:   engineTrace.Description,
+				ActiveWarps:       activeWarps,
+				TotalWarps:        1,
+				EngineTraces:      map[int]pee.EngineTrace{0: engineTrace},
+				SharedMemoryUsed:  0,
+				SharedMemoryTotal: xe.config.SLMSize,
+				RegisterFileUsed:  xe.config.GRFPerEU * xe.config.NumEUs,
+				RegisterFileTotal: xe.config.GRFPerEU * xe.config.NumEUs,
+				Occupancy:         occupancy,
+			})
+		}).GetResult()
+	return result
 }
 
 // Run runs until all work completes or maxCycles is reached.
 func (xe *XeCore) Run(maxCycles int) []ComputeUnitTrace {
-	var traces []ComputeUnitTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := xe.Step(edge)
-		traces = append(traces, trace)
-		if xe.Idle() {
-			break
-		}
-	}
-	return traces
+	result, _ := StartNew[[]ComputeUnitTrace]("compute-unit.XeCore.Run", nil,
+		func(op *Operation[[]ComputeUnitTrace], rf *ResultFactory[[]ComputeUnitTrace]) *OperationResult[[]ComputeUnitTrace] {
+			op.AddProperty("max_cycles", maxCycles)
+			var traces []ComputeUnitTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := xe.Step(edge)
+				traces = append(traces, trace)
+				if xe.Idle() {
+					break
+				}
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // Reset resets all state.
 func (xe *XeCore) Reset() {
-	xe.engine.Reset()
-	xe.slm.Reset()
-	xe.workItems = nil
-	xe.idleFlag = true
-	xe.cycle = 0
+	_, _ = StartNew[struct{}]("compute-unit.XeCore.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			xe.engine.Reset()
+			xe.slm.Reset()
+			xe.workItems = nil
+			xe.idleFlag = true
+			xe.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable representation.
 func (xe *XeCore) String() string {
-	return fmt.Sprintf("XeCore(eus=%d, threads_per_eu=%d, idle=%t)",
-		xe.config.NumEUs, xe.config.ThreadsPerEU, xe.Idle())
+	result, _ := StartNew[string]("compute-unit.XeCore.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("XeCore(eus=%d, threads_per_eu=%d, idle=%t)",
+				xe.config.NumEUs, xe.config.ThreadsPerEU, xe.Idle()))
+		}).GetResult()
+	return result
 }

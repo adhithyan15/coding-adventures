@@ -1,31 +1,29 @@
 // Secure time wrappers.
-//
-// These functions wrap time.Now and time.Sleep with capability checks.
-//
-// Target is always "*" for time operations — there is no meaningful
-// resource identifier for "get the current time" or "sleep for N ms".
-// Packages that need time access declare time:read:* or time:sleep:*.
 package capabilitycage
 
 import "time"
 
 // Now checks time:read:* against m, then returns the current time.
-//
-// Returns CapabilityViolationError if the manifest does not declare time:read.
 func Now(m *Manifest) (time.Time, error) {
-	if err := m.Check(CategoryTime, ActionRead, "*"); err != nil {
-		return time.Time{}, err
-	}
-	return defaultBackend.Now(), nil
+	return StartNew[time.Time]("capability-cage.Now", time.Time{},
+		func(op *Operation[time.Time], rf *ResultFactory[time.Time]) *OperationResult[time.Time] {
+			if err := m.Check(CategoryTime, ActionRead, "*"); err != nil {
+				return rf.Fail(time.Time{}, err)
+			}
+			return rf.Generate(true, false, defaultBackend.Now())
+		}).GetResult()
 }
 
 // Sleep checks time:sleep:* against m, then sleeps for d.
-//
-// Returns CapabilityViolationError if the manifest does not declare time:sleep.
 func Sleep(m *Manifest, d time.Duration) error {
-	if err := m.Check(CategoryTime, ActionSleep, "*"); err != nil {
-		return err
-	}
-	defaultBackend.Sleep(d)
-	return nil
+	_, err := StartNew[struct{}]("capability-cage.Sleep", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("duration", d)
+			if err := m.Check(CategoryTime, ActionSleep, "*"); err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			defaultBackend.Sleep(d)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }

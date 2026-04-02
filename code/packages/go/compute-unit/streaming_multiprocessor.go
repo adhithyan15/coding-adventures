@@ -124,23 +124,27 @@ type SMConfig struct {
 // DefaultSMConfig returns an SMConfig with sensible defaults matching a
 // Volta-class SM.
 func DefaultSMConfig() SMConfig {
-	return SMConfig{
-		NumSchedulers:         4,
-		WarpWidth:             32,
-		MaxWarps:              48,
-		MaxThreads:            1536,
-		MaxBlocks:             16,
-		Policy:                ScheduleGTO,
-		RegisterFileSize:      65536,
-		MaxRegistersPerThread: 255,
-		SharedMemorySize:      98304,
-		L1CacheSize:           32768,
-		InstructionCacheSize:  131072,
-		FloatFmt:              fp.FP32,
-		ISA:                   gpucore.GenericISA{},
-		MemoryLatencyCycles:   200,
-		BarrierEnabled:        true,
-	}
+	result, _ := StartNew[SMConfig]("compute-unit.DefaultSMConfig", SMConfig{},
+		func(op *Operation[SMConfig], rf *ResultFactory[SMConfig]) *OperationResult[SMConfig] {
+			return rf.Generate(true, false, SMConfig{
+				NumSchedulers:         4,
+				WarpWidth:             32,
+				MaxWarps:              48,
+				MaxThreads:            1536,
+				MaxBlocks:             16,
+				Policy:                ScheduleGTO,
+				RegisterFileSize:      65536,
+				MaxRegistersPerThread: 255,
+				SharedMemorySize:      98304,
+				L1CacheSize:           32768,
+				InstructionCacheSize:  131072,
+				FloatFmt:              fp.FP32,
+				ISA:                   gpucore.GenericISA{},
+				MemoryLatencyCycles:   200,
+				BarrierEnabled:        true,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -203,59 +207,78 @@ type WarpScheduler struct {
 
 // NewWarpScheduler creates a new WarpScheduler with the given ID and policy.
 func NewWarpScheduler(id int, policy SchedulingPolicy) *WarpScheduler {
-	return &WarpScheduler{
-		SchedulerID: id,
-		policy:      policy,
-		lastIssued:  -1,
-	}
+	result, _ := StartNew[*WarpScheduler]("compute-unit.NewWarpScheduler", nil,
+		func(op *Operation[*WarpScheduler], rf *ResultFactory[*WarpScheduler]) *OperationResult[*WarpScheduler] {
+			op.AddProperty("scheduler_id", id)
+			return rf.Generate(true, false, &WarpScheduler{
+				SchedulerID: id,
+				policy:      policy,
+				lastIssued:  -1,
+			})
+		}).GetResult()
+	return result
 }
 
 // AddWarp adds a warp to this scheduler's management.
 func (ws *WarpScheduler) AddWarp(slot *WarpSlot) {
-	ws.warps = append(ws.warps, slot)
+	_, _ = StartNew[struct{}]("compute-unit.WarpScheduler.AddWarp", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("warp_id", slot.WarpID)
+			ws.warps = append(ws.warps, slot)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // TickStalls decrements stall counters and transitions stalled warps
 // to READY when their countdown expires.
 func (ws *WarpScheduler) TickStalls() {
-	for _, w := range ws.warps {
-		if w.StallCounter > 0 {
-			w.StallCounter--
-			if w.StallCounter == 0 && (w.State == WarpStateStalledMemory ||
-				w.State == WarpStateStalledDependency) {
-				w.State = WarpStateReady
+	_, _ = StartNew[struct{}]("compute-unit.WarpScheduler.TickStalls", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for _, w := range ws.warps {
+				if w.StallCounter > 0 {
+					w.StallCounter--
+					if w.StallCounter == 0 && (w.State == WarpStateStalledMemory ||
+						w.State == WarpStateStalledDependency) {
+						w.State = WarpStateReady
+					}
+				}
+				if w.State != WarpStateCompleted && w.State != WarpStateRunning {
+					w.Age++
+				}
 			}
-		}
-		// Age all non-completed, non-running warps (for OLDEST_FIRST / GTO).
-		if w.State != WarpStateCompleted && w.State != WarpStateRunning {
-			w.Age++
-		}
-	}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // PickWarp selects a ready warp according to the scheduling policy.
 // Returns nil if no warps are ready.
 func (ws *WarpScheduler) PickWarp() *WarpSlot {
-	var ready []*WarpSlot
-	for _, w := range ws.warps {
-		if w.State == WarpStateReady {
-			ready = append(ready, w)
-		}
-	}
-	if len(ready) == 0 {
-		return nil
-	}
+	result, _ := StartNew[*WarpSlot]("compute-unit.WarpScheduler.PickWarp", nil,
+		func(op *Operation[*WarpSlot], rf *ResultFactory[*WarpSlot]) *OperationResult[*WarpSlot] {
+			var ready []*WarpSlot
+			for _, w := range ws.warps {
+				if w.State == WarpStateReady {
+					ready = append(ready, w)
+				}
+			}
+			if len(ready) == 0 {
+				return rf.Generate(true, false, nil)
+			}
 
-	switch ws.policy {
-	case ScheduleRoundRobin, ScheduleLRR:
-		return ws.pickRoundRobin(ready)
-	case ScheduleGTO:
-		return ws.pickGTO(ready)
-	case ScheduleOldestFirst, ScheduleGreedy:
-		return ws.pickOldestFirst(ready)
-	default:
-		return ready[0]
-	}
+			var picked *WarpSlot
+			switch ws.policy {
+			case ScheduleRoundRobin, ScheduleLRR:
+				picked = ws.pickRoundRobin(ready)
+			case ScheduleGTO:
+				picked = ws.pickGTO(ready)
+			case ScheduleOldestFirst, ScheduleGreedy:
+				picked = ws.pickOldestFirst(ready)
+			default:
+				picked = ready[0]
+			}
+			return rf.Generate(true, false, picked)
+		}).GetResult()
+	return result
 }
 
 // pickRoundRobin rotates through warps in order.
@@ -302,20 +325,29 @@ func (ws *WarpScheduler) pickOldestFirst(ready []*WarpSlot) *WarpSlot {
 
 // MarkIssued records that a warp was just issued (for GTO policy).
 func (ws *WarpScheduler) MarkIssued(warpID int) {
-	ws.lastIssued = warpID
-	for _, w := range ws.warps {
-		if w.WarpID == warpID {
-			w.Age = 0
-			break
-		}
-	}
+	_, _ = StartNew[struct{}]("compute-unit.WarpScheduler.MarkIssued", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("warp_id", warpID)
+			ws.lastIssued = warpID
+			for _, w := range ws.warps {
+				if w.WarpID == warpID {
+					w.Age = 0
+					break
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ResetScheduler clears all warps from this scheduler.
 func (ws *WarpScheduler) ResetScheduler() {
-	ws.warps = nil
-	ws.rrIndex = 0
-	ws.lastIssued = -1
+	_, _ = StartNew[struct{}]("compute-unit.WarpScheduler.ResetScheduler", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			ws.warps = nil
+			ws.rrIndex = 0
+			ws.lastIssued = -1
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -370,38 +402,57 @@ type StreamingMultiprocessor struct {
 
 // NewStreamingMultiprocessor creates a new NVIDIA SM simulator.
 func NewStreamingMultiprocessor(config SMConfig, clk *clock.Clock) *StreamingMultiprocessor {
-	schedulers := make([]*WarpScheduler, config.NumSchedulers)
-	for i := 0; i < config.NumSchedulers; i++ {
-		schedulers[i] = NewWarpScheduler(i, config.Policy)
-	}
-
-	return &StreamingMultiprocessor{
-		config:       config,
-		clk:          clk,
-		sharedMemory: NewSharedMemory(config.SharedMemorySize),
-		schedulers:   schedulers,
-	}
+	result, _ := StartNew[*StreamingMultiprocessor]("compute-unit.NewStreamingMultiprocessor", nil,
+		func(op *Operation[*StreamingMultiprocessor], rf *ResultFactory[*StreamingMultiprocessor]) *OperationResult[*StreamingMultiprocessor] {
+			schedulers := make([]*WarpScheduler, config.NumSchedulers)
+			for i := 0; i < config.NumSchedulers; i++ {
+				schedulers[i] = NewWarpScheduler(i, config.Policy)
+			}
+			return rf.Generate(true, false, &StreamingMultiprocessor{
+				config:       config,
+				clk:          clk,
+				sharedMemory: NewSharedMemory(config.SharedMemorySize),
+				schedulers:   schedulers,
+			})
+		}).GetResult()
+	return result
 }
 
 // --- ComputeUnit interface ---
 
 // Name returns the compute unit name.
-func (sm *StreamingMultiprocessor) Name() string { return "SM" }
+func (sm *StreamingMultiprocessor) Name() string {
+	result, _ := StartNew[string]("compute-unit.StreamingMultiprocessor.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "SM")
+		}).GetResult()
+	return result
+}
 
 // Arch returns NVIDIA SM architecture.
-func (sm *StreamingMultiprocessor) Arch() Architecture { return ArchNvidiaSM }
+func (sm *StreamingMultiprocessor) Arch() Architecture {
+	result, _ := StartNew[Architecture]("compute-unit.StreamingMultiprocessor.Arch", 0,
+		func(op *Operation[Architecture], rf *ResultFactory[Architecture]) *OperationResult[Architecture] {
+			return rf.Generate(true, false, ArchNvidiaSM)
+		}).GetResult()
+	return result
+}
 
 // Idle returns true if no active warps remain.
 func (sm *StreamingMultiprocessor) Idle() bool {
-	if len(sm.allWarpSlots) == 0 {
-		return true
-	}
-	for _, w := range sm.allWarpSlots {
-		if w.State != WarpStateCompleted {
-			return false
-		}
-	}
-	return true
+	result, _ := StartNew[bool]("compute-unit.StreamingMultiprocessor.Idle", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			if len(sm.allWarpSlots) == 0 {
+				return rf.Generate(true, false, true)
+			}
+			for _, w := range sm.allWarpSlots {
+				if w.State != WarpStateCompleted {
+					return rf.Generate(true, false, false)
+				}
+			}
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // Occupancy returns the current occupancy: active (non-completed) warps / max warps.
@@ -410,26 +461,48 @@ func (sm *StreamingMultiprocessor) Idle() bool {
 // occupancy means the SM can't hide memory latency because there
 // aren't enough warps to switch between when one stalls.
 func (sm *StreamingMultiprocessor) Occupancy() float64 {
-	if sm.config.MaxWarps == 0 {
-		return 0.0
-	}
-	active := 0
-	for _, w := range sm.allWarpSlots {
-		if w.State != WarpStateCompleted {
-			active++
-		}
-	}
-	return float64(active) / float64(sm.config.MaxWarps)
+	result, _ := StartNew[float64]("compute-unit.StreamingMultiprocessor.Occupancy", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			if sm.config.MaxWarps == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			active := 0
+			for _, w := range sm.allWarpSlots {
+				if w.State != WarpStateCompleted {
+					active++
+				}
+			}
+			return rf.Generate(true, false, float64(active)/float64(sm.config.MaxWarps))
+		}).GetResult()
+	return result
 }
 
 // Config returns the SM configuration.
-func (sm *StreamingMultiprocessor) Config() SMConfig { return sm.config }
+func (sm *StreamingMultiprocessor) Config() SMConfig {
+	result, _ := StartNew[SMConfig]("compute-unit.StreamingMultiprocessor.Config", SMConfig{},
+		func(op *Operation[SMConfig], rf *ResultFactory[SMConfig]) *OperationResult[SMConfig] {
+			return rf.Generate(true, false, sm.config)
+		}).GetResult()
+	return result
+}
 
 // SharedMem returns the shared memory instance.
-func (sm *StreamingMultiprocessor) SharedMem() *SharedMemory { return sm.sharedMemory }
+func (sm *StreamingMultiprocessor) SharedMem() *SharedMemory {
+	result, _ := StartNew[*SharedMemory]("compute-unit.StreamingMultiprocessor.SharedMem", nil,
+		func(op *Operation[*SharedMemory], rf *ResultFactory[*SharedMemory]) *OperationResult[*SharedMemory] {
+			return rf.Generate(true, false, sm.sharedMemory)
+		}).GetResult()
+	return result
+}
 
 // WarpSlots returns all warp slots (for inspection).
-func (sm *StreamingMultiprocessor) WarpSlots() []*WarpSlot { return sm.allWarpSlots }
+func (sm *StreamingMultiprocessor) WarpSlots() []*WarpSlot {
+	result, _ := StartNew[[]*WarpSlot]("compute-unit.StreamingMultiprocessor.WarpSlots", nil,
+		func(op *Operation[[]*WarpSlot], rf *ResultFactory[[]*WarpSlot]) *OperationResult[[]*WarpSlot] {
+			return rf.Generate(true, false, sm.allWarpSlots)
+		}).GetResult()
+	return result
+}
 
 // --- Occupancy calculation ---
 
@@ -457,39 +530,42 @@ func (sm *StreamingMultiprocessor) WarpSlots() []*WarpSlot { return sm.allWarpSl
 func (sm *StreamingMultiprocessor) ComputeOccupancy(
 	registersPerThread, sharedMemPerBlock, threadsPerBlock int,
 ) float64 {
-	warpW := sm.config.WarpWidth
-	warpsPerBlock := (threadsPerBlock + warpW - 1) / warpW
+	result, _ := StartNew[float64]("compute-unit.StreamingMultiprocessor.ComputeOccupancy", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("regs_per_thread", registersPerThread)
+			op.AddProperty("shared_mem_per_block", sharedMemPerBlock)
+			op.AddProperty("threads_per_block", threadsPerBlock)
+			warpW := sm.config.WarpWidth
+			warpsPerBlock := (threadsPerBlock + warpW - 1) / warpW
 
-	// Limit 1: register file
-	regsPerWarp := registersPerThread * sm.config.WarpWidth
-	maxWarpsByRegs := sm.config.MaxWarps
-	if regsPerWarp > 0 {
-		maxWarpsByRegs = sm.config.RegisterFileSize / regsPerWarp
-	}
+			regsPerWarp := registersPerThread * sm.config.WarpWidth
+			maxWarpsByRegs := sm.config.MaxWarps
+			if regsPerWarp > 0 {
+				maxWarpsByRegs = sm.config.RegisterFileSize / regsPerWarp
+			}
 
-	// Limit 2: shared memory
-	maxWarpsBySmem := sm.config.MaxWarps
-	if sharedMemPerBlock > 0 {
-		maxBlocksBySmem := sm.config.SharedMemorySize / sharedMemPerBlock
-		maxWarpsBySmem = maxBlocksBySmem * warpsPerBlock
-	}
+			maxWarpsBySmem := sm.config.MaxWarps
+			if sharedMemPerBlock > 0 {
+				maxBlocksBySmem := sm.config.SharedMemorySize / sharedMemPerBlock
+				maxWarpsBySmem = maxBlocksBySmem * warpsPerBlock
+			}
 
-	// Limit 3: hardware limit
-	maxWarpsByHW := sm.config.MaxWarps
+			maxWarpsByHW := sm.config.MaxWarps
 
-	// Tightest constraint
-	activeWarps := maxWarpsByRegs
-	if maxWarpsBySmem < activeWarps {
-		activeWarps = maxWarpsBySmem
-	}
-	if maxWarpsByHW < activeWarps {
-		activeWarps = maxWarpsByHW
-	}
+			activeWarps := maxWarpsByRegs
+			if maxWarpsBySmem < activeWarps {
+				activeWarps = maxWarpsBySmem
+			}
+			if maxWarpsByHW < activeWarps {
+				activeWarps = maxWarpsByHW
+			}
 
-	result := float64(activeWarps) / float64(sm.config.MaxWarps)
-	if result > 1.0 {
-		return 1.0
-	}
+			res := float64(activeWarps) / float64(sm.config.MaxWarps)
+			if res > 1.0 {
+				res = 1.0
+			}
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -501,99 +577,96 @@ func (sm *StreamingMultiprocessor) ComputeOccupancy(
 // shared memory, creates WarpEngine instances, and adds warp slots
 // to the schedulers.
 func (sm *StreamingMultiprocessor) Dispatch(work WorkItem) error {
-	numWarps := (work.ThreadCount + sm.config.WarpWidth - 1) / sm.config.WarpWidth
-	regsNeeded := work.RegistersPerThread * sm.config.WarpWidth * numWarps
-	smemNeeded := work.SharedMemBytes
+	_, err := StartNew[struct{}]("compute-unit.StreamingMultiprocessor.Dispatch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("work_id", work.WorkID)
+			numWarps := (work.ThreadCount + sm.config.WarpWidth - 1) / sm.config.WarpWidth
+			regsNeeded := work.RegistersPerThread * sm.config.WarpWidth * numWarps
+			smemNeeded := work.SharedMemBytes
 
-	// Check resource availability
-	currentActive := 0
-	for _, w := range sm.allWarpSlots {
-		if w.State != WarpStateCompleted {
-			currentActive++
-		}
-	}
-
-	if currentActive+numWarps > sm.config.MaxWarps {
-		return &ResourceError{
-			Message: fmt.Sprintf("Not enough warp slots: need %d, available %d",
-				numWarps, sm.config.MaxWarps-currentActive),
-		}
-	}
-
-	if sm.regsAllocated+regsNeeded > sm.config.RegisterFileSize {
-		return &ResourceError{
-			Message: fmt.Sprintf("Not enough registers: need %d, available %d",
-				regsNeeded, sm.config.RegisterFileSize-sm.regsAllocated),
-		}
-	}
-
-	if sm.sharedMemoryUsed+smemNeeded > sm.config.SharedMemorySize {
-		return &ResourceError{
-			Message: fmt.Sprintf("Not enough shared memory: need %d, available %d",
-				smemNeeded, sm.config.SharedMemorySize-sm.sharedMemoryUsed),
-		}
-	}
-
-	// Allocate resources
-	sm.regsAllocated += regsNeeded
-	sm.sharedMemoryUsed += smemNeeded
-	sm.activeBlocks = append(sm.activeBlocks, work.WorkID)
-
-	// Create warps and distribute across schedulers
-	for warpIdx := 0; warpIdx < numWarps; warpIdx++ {
-		warpID := sm.nextWarpID
-		sm.nextWarpID++
-
-		threadStart := warpIdx * sm.config.WarpWidth
-		threadEnd := threadStart + sm.config.WarpWidth
-		if threadEnd > work.ThreadCount {
-			threadEnd = work.ThreadCount
-		}
-		actualThreads := threadEnd - threadStart
-
-		// Create a WarpEngine for this warp
-		engine := pee.NewWarpEngine(
-			pee.WarpConfig{
-				WarpWidth:       actualThreads,
-				NumRegisters:    work.RegistersPerThread,
-				MemoryPerThread: 1024,
-				FloatFormat:     sm.config.FloatFmt,
-				ISA:             sm.config.ISA,
-			},
-			sm.clk,
-		)
-
-		// Load program if provided
-		if work.Program != nil {
-			engine.LoadProgram(work.Program)
-		}
-
-		// Set per-thread data if provided
-		for tOffset := 0; tOffset < actualThreads; tOffset++ {
-			globalTID := threadStart + tOffset
-			if regs, ok := work.PerThreadData[globalTID]; ok {
-				for reg, val := range regs {
-					_ = engine.SetThreadRegister(tOffset, reg, val)
+			currentActive := 0
+			for _, w := range sm.allWarpSlots {
+				if w.State != WarpStateCompleted {
+					currentActive++
 				}
 			}
-		}
 
-		// Create the warp slot
-		slot := &WarpSlot{
-			WarpID:   warpID,
-			WorkID:   work.WorkID,
-			State:    WarpStateReady,
-			Engine:   engine,
-			RegsUsed: work.RegistersPerThread * actualThreads,
-		}
-		sm.allWarpSlots = append(sm.allWarpSlots, slot)
+			if currentActive+numWarps > sm.config.MaxWarps {
+				return rf.Fail(struct{}{}, &ResourceError{
+					Message: fmt.Sprintf("Not enough warp slots: need %d, available %d",
+						numWarps, sm.config.MaxWarps-currentActive),
+				})
+			}
 
-		// Distribute to schedulers round-robin
-		schedIdx := warpIdx % sm.config.NumSchedulers
-		sm.schedulers[schedIdx].AddWarp(slot)
-	}
+			if sm.regsAllocated+regsNeeded > sm.config.RegisterFileSize {
+				return rf.Fail(struct{}{}, &ResourceError{
+					Message: fmt.Sprintf("Not enough registers: need %d, available %d",
+						regsNeeded, sm.config.RegisterFileSize-sm.regsAllocated),
+				})
+			}
 
-	return nil
+			if sm.sharedMemoryUsed+smemNeeded > sm.config.SharedMemorySize {
+				return rf.Fail(struct{}{}, &ResourceError{
+					Message: fmt.Sprintf("Not enough shared memory: need %d, available %d",
+						smemNeeded, sm.config.SharedMemorySize-sm.sharedMemoryUsed),
+				})
+			}
+
+			sm.regsAllocated += regsNeeded
+			sm.sharedMemoryUsed += smemNeeded
+			sm.activeBlocks = append(sm.activeBlocks, work.WorkID)
+
+			for warpIdx := 0; warpIdx < numWarps; warpIdx++ {
+				warpID := sm.nextWarpID
+				sm.nextWarpID++
+
+				threadStart := warpIdx * sm.config.WarpWidth
+				threadEnd := threadStart + sm.config.WarpWidth
+				if threadEnd > work.ThreadCount {
+					threadEnd = work.ThreadCount
+				}
+				actualThreads := threadEnd - threadStart
+
+				engine := pee.NewWarpEngine(
+					pee.WarpConfig{
+						WarpWidth:       actualThreads,
+						NumRegisters:    work.RegistersPerThread,
+						MemoryPerThread: 1024,
+						FloatFormat:     sm.config.FloatFmt,
+						ISA:             sm.config.ISA,
+					},
+					sm.clk,
+				)
+
+				if work.Program != nil {
+					engine.LoadProgram(work.Program)
+				}
+
+				for tOffset := 0; tOffset < actualThreads; tOffset++ {
+					globalTID := threadStart + tOffset
+					if regs, ok := work.PerThreadData[globalTID]; ok {
+						for reg, val := range regs {
+							_ = engine.SetThreadRegister(tOffset, reg, val)
+						}
+					}
+				}
+
+				slot := &WarpSlot{
+					WarpID:   warpID,
+					WorkID:   work.WorkID,
+					State:    WarpStateReady,
+					Engine:   engine,
+					RegsUsed: work.RegistersPerThread * actualThreads,
+				}
+				sm.allWarpSlots = append(sm.allWarpSlots, slot)
+
+				schedIdx := warpIdx % sm.config.NumSchedulers
+				sm.schedulers[schedIdx].AddWarp(slot)
+			}
+
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // --- Execution ---
@@ -610,122 +683,133 @@ func (sm *StreamingMultiprocessor) Dispatch(work WorkItem) error {
 //  5. Check for HALT -> mark warp as completed.
 //  6. Build and return a ComputeUnitTrace.
 func (sm *StreamingMultiprocessor) Step(edge clock.ClockEdge) ComputeUnitTrace {
-	sm.cycle++
+	result, _ := StartNew[ComputeUnitTrace]("compute-unit.StreamingMultiprocessor.Step", ComputeUnitTrace{},
+		func(op *Operation[ComputeUnitTrace], rf *ResultFactory[ComputeUnitTrace]) *OperationResult[ComputeUnitTrace] {
+			op.AddProperty("cycle", edge.Cycle)
+			sm.cycle++
 
-	// Phase 1: Tick stall counters
-	for _, sched := range sm.schedulers {
-		sched.TickStalls()
-	}
+			for _, sched := range sm.schedulers {
+				sched.TickStalls()
+			}
 
-	// Phase 2: Each scheduler picks a warp and executes it
-	engineTraces := make(map[int]pee.EngineTrace)
-	var schedulerActions []string
+			engineTraces := make(map[int]pee.EngineTrace)
+			var schedulerActions []string
 
-	for _, sched := range sm.schedulers {
-		picked := sched.PickWarp()
-		if picked == nil {
-			schedulerActions = append(schedulerActions,
-				fmt.Sprintf("S%d: no ready warp", sched.SchedulerID))
-			continue
-		}
+			for _, sched := range sm.schedulers {
+				picked := sched.PickWarp()
+				if picked == nil {
+					schedulerActions = append(schedulerActions,
+						fmt.Sprintf("S%d: no ready warp", sched.SchedulerID))
+					continue
+				}
 
-		// Mark as running
-		picked.State = WarpStateRunning
+				picked.State = WarpStateRunning
 
-		// Execute one cycle on the warp's engine
-		trace := picked.Engine.Step(edge)
-		engineTraces[picked.WarpID] = trace
+				trace := picked.Engine.Step(edge)
+				engineTraces[picked.WarpID] = trace
 
-		// Record the scheduling decision
-		sched.MarkIssued(picked.WarpID)
-		schedulerActions = append(schedulerActions,
-			fmt.Sprintf("S%d: issued warp %d", sched.SchedulerID, picked.WarpID))
+				sched.MarkIssued(picked.WarpID)
+				schedulerActions = append(schedulerActions,
+					fmt.Sprintf("S%d: issued warp %d", sched.SchedulerID, picked.WarpID))
 
-		// Phase 3: Check execution results and update warp state
-		if picked.Engine.IsHalted() {
-			picked.State = WarpStateCompleted
-		} else if isMemoryInstruction(trace) {
-			picked.State = WarpStateStalledMemory
-			picked.StallCounter = sm.config.MemoryLatencyCycles
-		} else {
-			picked.State = WarpStateReady
-		}
-	}
+				if picked.Engine.IsHalted() {
+					picked.State = WarpStateCompleted
+				} else if isMemoryInstruction(trace) {
+					picked.State = WarpStateStalledMemory
+					picked.StallCounter = sm.config.MemoryLatencyCycles
+				} else {
+					picked.State = WarpStateReady
+				}
+			}
 
-	// Build the trace
-	activeWarps := 0
-	for _, w := range sm.allWarpSlots {
-		if w.State != WarpStateCompleted {
-			activeWarps++
-		}
-	}
-	totalWarps := sm.config.MaxWarps
+			activeWarps := 0
+			for _, w := range sm.allWarpSlots {
+				if w.State != WarpStateCompleted {
+					activeWarps++
+				}
+			}
+			totalWarps := sm.config.MaxWarps
 
-	occupancy := 0.0
-	if totalWarps > 0 {
-		occupancy = float64(activeWarps) / float64(totalWarps)
-	}
+			occupancy := 0.0
+			if totalWarps > 0 {
+				occupancy = float64(activeWarps) / float64(totalWarps)
+			}
 
-	return ComputeUnitTrace{
-		Cycle:             sm.cycle,
-		UnitName:          sm.Name(),
-		Arch:              sm.Arch(),
-		SchedulerAction:   joinStrings(schedulerActions, "; "),
-		ActiveWarps:       activeWarps,
-		TotalWarps:        totalWarps,
-		EngineTraces:      engineTraces,
-		SharedMemoryUsed:  sm.sharedMemoryUsed,
-		SharedMemoryTotal: sm.config.SharedMemorySize,
-		RegisterFileUsed:  sm.regsAllocated,
-		RegisterFileTotal: sm.config.RegisterFileSize,
-		Occupancy:         occupancy,
-	}
+			return rf.Generate(true, false, ComputeUnitTrace{
+				Cycle:             sm.cycle,
+				UnitName:          sm.Name(),
+				Arch:              sm.Arch(),
+				SchedulerAction:   joinStrings(schedulerActions, "; "),
+				ActiveWarps:       activeWarps,
+				TotalWarps:        totalWarps,
+				EngineTraces:      engineTraces,
+				SharedMemoryUsed:  sm.sharedMemoryUsed,
+				SharedMemoryTotal: sm.config.SharedMemorySize,
+				RegisterFileUsed:  sm.regsAllocated,
+				RegisterFileTotal: sm.config.RegisterFileSize,
+				Occupancy:         occupancy,
+			})
+		}).GetResult()
+	return result
 }
 
 // Run runs until all work completes or maxCycles is reached.
 //
 // Creates clock edges internally to drive execution.
 func (sm *StreamingMultiprocessor) Run(maxCycles int) []ComputeUnitTrace {
-	var traces []ComputeUnitTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := sm.Step(edge)
-		traces = append(traces, trace)
-		if sm.Idle() {
-			break
-		}
-	}
-	return traces
+	result, _ := StartNew[[]ComputeUnitTrace]("compute-unit.StreamingMultiprocessor.Run", nil,
+		func(op *Operation[[]ComputeUnitTrace], rf *ResultFactory[[]ComputeUnitTrace]) *OperationResult[[]ComputeUnitTrace] {
+			op.AddProperty("max_cycles", maxCycles)
+			var traces []ComputeUnitTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := sm.Step(edge)
+				traces = append(traces, trace)
+				if sm.Idle() {
+					break
+				}
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // Reset resets all state: engines, schedulers, shared memory.
 func (sm *StreamingMultiprocessor) Reset() {
-	for _, sched := range sm.schedulers {
-		sched.ResetScheduler()
-	}
-	sm.allWarpSlots = nil
-	sm.sharedMemory.Reset()
-	sm.sharedMemoryUsed = 0
-	sm.regsAllocated = 0
-	sm.activeBlocks = nil
-	sm.nextWarpID = 0
-	sm.cycle = 0
+	_, _ = StartNew[struct{}]("compute-unit.StreamingMultiprocessor.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for _, sched := range sm.schedulers {
+				sched.ResetScheduler()
+			}
+			sm.allWarpSlots = nil
+			sm.sharedMemory.Reset()
+			sm.sharedMemoryUsed = 0
+			sm.regsAllocated = 0
+			sm.activeBlocks = nil
+			sm.nextWarpID = 0
+			sm.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable representation of the SM.
 func (sm *StreamingMultiprocessor) String() string {
-	active := 0
-	for _, w := range sm.allWarpSlots {
-		if w.State != WarpStateCompleted {
-			active++
-		}
-	}
-	return fmt.Sprintf("StreamingMultiprocessor(warps=%d/%d, occupancy=%.1f%%, policy=%s)",
-		active, sm.config.MaxWarps, sm.Occupancy()*100, sm.config.Policy.String())
+	result, _ := StartNew[string]("compute-unit.StreamingMultiprocessor.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			active := 0
+			for _, w := range sm.allWarpSlots {
+				if w.State != WarpStateCompleted {
+					active++
+				}
+			}
+			return rf.Generate(true, false, fmt.Sprintf("StreamingMultiprocessor(warps=%d/%d, occupancy=%.1f%%, policy=%s)",
+				active, sm.config.MaxWarps, sm.Occupancy()*100, sm.config.Policy.String()))
+		}).GetResult()
+	return result
 }
 
 // joinStrings joins strings with a separator.

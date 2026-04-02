@@ -106,22 +106,26 @@ type AMDCUConfig struct {
 
 // DefaultAMDCUConfig returns an AMDCUConfig with sensible defaults.
 func DefaultAMDCUConfig() AMDCUConfig {
-	return AMDCUConfig{
-		NumSIMDUnits:    4,
-		WaveWidth:       64,
-		MaxWavefronts:   40,
-		MaxWorkGroups:   16,
-		Policy:          ScheduleLRR,
-		VGPRPerSIMD:     256,
-		SGPRCount:       104,
-		LDSSize:         65536,
-		L1VectorCache:   16384,
-		L1ScalarCache:   16384,
-		L1InstrCache:    32768,
-		FloatFmt:        fp.FP32,
-		ISA:             gpucore.GenericISA{},
-		MemLatencyCycles: 200,
-	}
+	result, _ := StartNew[AMDCUConfig]("compute-unit.DefaultAMDCUConfig", AMDCUConfig{},
+		func(op *Operation[AMDCUConfig], rf *ResultFactory[AMDCUConfig]) *OperationResult[AMDCUConfig] {
+			return rf.Generate(true, false, AMDCUConfig{
+				NumSIMDUnits:    4,
+				WaveWidth:       64,
+				MaxWavefronts:   40,
+				MaxWorkGroups:   16,
+				Policy:          ScheduleLRR,
+				VGPRPerSIMD:     256,
+				SGPRCount:       104,
+				LDSSize:         65536,
+				L1VectorCache:   16384,
+				L1ScalarCache:   16384,
+				L1InstrCache:    32768,
+				FloatFmt:        fp.FP32,
+				ISA:             gpucore.GenericISA{},
+				MemLatencyCycles: 200,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -176,57 +180,99 @@ type AMDComputeUnit struct {
 
 // NewAMDComputeUnit creates a new AMD CU simulator.
 func NewAMDComputeUnit(config AMDCUConfig, clk *clock.Clock) *AMDComputeUnit {
-	return &AMDComputeUnit{
-		config:        config,
-		clk:           clk,
-		lds:           NewSharedMemory(config.LDSSize),
-		vgprAllocated: make([]int, config.NumSIMDUnits),
-	}
+	result, _ := StartNew[*AMDComputeUnit]("compute-unit.NewAMDComputeUnit", nil,
+		func(op *Operation[*AMDComputeUnit], rf *ResultFactory[*AMDComputeUnit]) *OperationResult[*AMDComputeUnit] {
+			return rf.Generate(true, false, &AMDComputeUnit{
+				config:        config,
+				clk:           clk,
+				lds:           NewSharedMemory(config.LDSSize),
+				vgprAllocated: make([]int, config.NumSIMDUnits),
+			})
+		}).GetResult()
+	return result
 }
 
 // --- ComputeUnit interface ---
 
 // Name returns the compute unit name.
-func (cu *AMDComputeUnit) Name() string { return "CU" }
+func (cu *AMDComputeUnit) Name() string {
+	result, _ := StartNew[string]("compute-unit.AMDComputeUnit.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "CU")
+		}).GetResult()
+	return result
+}
 
 // Arch returns AMD CU architecture.
-func (cu *AMDComputeUnit) Arch() Architecture { return ArchAMDCU }
+func (cu *AMDComputeUnit) Arch() Architecture {
+	result, _ := StartNew[Architecture]("compute-unit.AMDComputeUnit.Arch", 0,
+		func(op *Operation[Architecture], rf *ResultFactory[Architecture]) *OperationResult[Architecture] {
+			return rf.Generate(true, false, ArchAMDCU)
+		}).GetResult()
+	return result
+}
 
 // Idle returns true if no active wavefronts remain.
 func (cu *AMDComputeUnit) Idle() bool {
-	if len(cu.wavefronts) == 0 {
-		return true
-	}
-	for _, w := range cu.wavefronts {
-		if w.State != WarpStateCompleted {
-			return false
-		}
-	}
-	return true
+	result, _ := StartNew[bool]("compute-unit.AMDComputeUnit.Idle", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			if len(cu.wavefronts) == 0 {
+				return rf.Generate(true, false, true)
+			}
+			for _, w := range cu.wavefronts {
+				if w.State != WarpStateCompleted {
+					return rf.Generate(true, false, false)
+				}
+			}
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // Occupancy returns the current occupancy: active wavefronts / max wavefronts.
 func (cu *AMDComputeUnit) Occupancy() float64 {
-	if cu.config.MaxWavefronts == 0 {
-		return 0.0
-	}
-	active := 0
-	for _, w := range cu.wavefronts {
-		if w.State != WarpStateCompleted {
-			active++
-		}
-	}
-	return float64(active) / float64(cu.config.MaxWavefronts)
+	result, _ := StartNew[float64]("compute-unit.AMDComputeUnit.Occupancy", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			if cu.config.MaxWavefronts == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			active := 0
+			for _, w := range cu.wavefronts {
+				if w.State != WarpStateCompleted {
+					active++
+				}
+			}
+			return rf.Generate(true, false, float64(active)/float64(cu.config.MaxWavefronts))
+		}).GetResult()
+	return result
 }
 
 // Config returns the CU configuration.
-func (cu *AMDComputeUnit) Config() AMDCUConfig { return cu.config }
+func (cu *AMDComputeUnit) Config() AMDCUConfig {
+	result, _ := StartNew[AMDCUConfig]("compute-unit.AMDComputeUnit.Config", AMDCUConfig{},
+		func(op *Operation[AMDCUConfig], rf *ResultFactory[AMDCUConfig]) *OperationResult[AMDCUConfig] {
+			return rf.Generate(true, false, cu.config)
+		}).GetResult()
+	return result
+}
 
 // LDS returns the Local Data Share instance.
-func (cu *AMDComputeUnit) LDS() *SharedMemory { return cu.lds }
+func (cu *AMDComputeUnit) LDS() *SharedMemory {
+	result, _ := StartNew[*SharedMemory]("compute-unit.AMDComputeUnit.LDS", nil,
+		func(op *Operation[*SharedMemory], rf *ResultFactory[*SharedMemory]) *OperationResult[*SharedMemory] {
+			return rf.Generate(true, false, cu.lds)
+		}).GetResult()
+	return result
+}
 
 // WavefrontSlots returns all wavefront slots (for inspection).
-func (cu *AMDComputeUnit) WavefrontSlots() []*WavefrontSlot { return cu.wavefronts }
+func (cu *AMDComputeUnit) WavefrontSlots() []*WavefrontSlot {
+	result, _ := StartNew[[]*WavefrontSlot]("compute-unit.AMDComputeUnit.WavefrontSlots", nil,
+		func(op *Operation[[]*WavefrontSlot], rf *ResultFactory[[]*WavefrontSlot]) *OperationResult[[]*WavefrontSlot] {
+			return rf.Generate(true, false, cu.wavefronts)
+		}).GetResult()
+	return result
+}
 
 // --- Dispatch ---
 
@@ -235,90 +281,92 @@ func (cu *AMDComputeUnit) WavefrontSlots() []*WavefrontSlot { return cu.wavefron
 // Decomposes the work group into wavefronts and assigns them to
 // SIMD units round-robin.
 func (cu *AMDComputeUnit) Dispatch(work WorkItem) error {
-	numWaves := (work.ThreadCount + cu.config.WaveWidth - 1) / cu.config.WaveWidth
+	_, err := StartNew[struct{}]("compute-unit.AMDComputeUnit.Dispatch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("work_id", work.WorkID)
+			numWaves := (work.ThreadCount + cu.config.WaveWidth - 1) / cu.config.WaveWidth
 
-	currentActive := 0
-	for _, w := range cu.wavefronts {
-		if w.State != WarpStateCompleted {
-			currentActive++
-		}
-	}
-
-	if currentActive+numWaves > cu.config.MaxWavefronts {
-		return &ResourceError{
-			Message: fmt.Sprintf("Not enough wavefront slots: need %d, available %d",
-				numWaves, cu.config.MaxWavefronts-currentActive),
-		}
-	}
-
-	smemNeeded := work.SharedMemBytes
-	if cu.ldsUsed+smemNeeded > cu.config.LDSSize {
-		return &ResourceError{
-			Message: fmt.Sprintf("Not enough LDS: need %d, available %d",
-				smemNeeded, cu.config.LDSSize-cu.ldsUsed),
-		}
-	}
-
-	cu.ldsUsed += smemNeeded
-
-	for waveIdx := 0; waveIdx < numWaves; waveIdx++ {
-		waveID := cu.nextWaveID
-		cu.nextWaveID++
-
-		threadStart := waveIdx * cu.config.WaveWidth
-		threadEnd := threadStart + cu.config.WaveWidth
-		if threadEnd > work.ThreadCount {
-			threadEnd = work.ThreadCount
-		}
-		actualLanes := threadEnd - threadStart
-
-		// Assign to a SIMD unit round-robin
-		simdUnit := waveIdx % cu.config.NumSIMDUnits
-
-		numVGPRs := cu.config.VGPRPerSIMD
-		if numVGPRs > 256 {
-			numVGPRs = 256
-		}
-
-		// Create WavefrontEngine
-		engine := pee.NewWavefrontEngine(
-			pee.WavefrontConfig{
-				WaveWidth:   actualLanes,
-				NumVGPRs:    numVGPRs,
-				NumSGPRs:    cu.config.SGPRCount,
-				LDSSize:     cu.config.LDSSize,
-				FloatFormat: cu.config.FloatFmt,
-				ISA:         cu.config.ISA,
-			},
-			cu.clk,
-		)
-
-		if work.Program != nil {
-			engine.LoadProgram(work.Program)
-		}
-
-		// Set per-lane data
-		for laneOffset := 0; laneOffset < actualLanes; laneOffset++ {
-			globalTID := threadStart + laneOffset
-			if regs, ok := work.PerThreadData[globalTID]; ok {
-				for reg, val := range regs {
-					_ = engine.SetLaneRegister(laneOffset, reg, val)
+			currentActive := 0
+			for _, w := range cu.wavefronts {
+				if w.State != WarpStateCompleted {
+					currentActive++
 				}
 			}
-		}
 
-		slot := &WavefrontSlot{
-			WaveID:    waveID,
-			WorkID:    work.WorkID,
-			State:     WarpStateReady,
-			SIMDUnit:  simdUnit,
-			Engine:    engine,
-			VGPRsUsed: numVGPRs,
-		}
-		cu.wavefronts = append(cu.wavefronts, slot)
-	}
+			if currentActive+numWaves > cu.config.MaxWavefronts {
+				return rf.Fail(struct{}{}, &ResourceError{
+					Message: fmt.Sprintf("Not enough wavefront slots: need %d, available %d",
+						numWaves, cu.config.MaxWavefronts-currentActive),
+				})
+			}
 
-	return nil
+			smemNeeded := work.SharedMemBytes
+			if cu.ldsUsed+smemNeeded > cu.config.LDSSize {
+				return rf.Fail(struct{}{}, &ResourceError{
+					Message: fmt.Sprintf("Not enough LDS: need %d, available %d",
+						smemNeeded, cu.config.LDSSize-cu.ldsUsed),
+				})
+			}
+
+			cu.ldsUsed += smemNeeded
+
+			for waveIdx := 0; waveIdx < numWaves; waveIdx++ {
+				waveID := cu.nextWaveID
+				cu.nextWaveID++
+
+				threadStart := waveIdx * cu.config.WaveWidth
+				threadEnd := threadStart + cu.config.WaveWidth
+				if threadEnd > work.ThreadCount {
+					threadEnd = work.ThreadCount
+				}
+				actualLanes := threadEnd - threadStart
+
+				simdUnit := waveIdx % cu.config.NumSIMDUnits
+
+				numVGPRs := cu.config.VGPRPerSIMD
+				if numVGPRs > 256 {
+					numVGPRs = 256
+				}
+
+				engine := pee.NewWavefrontEngine(
+					pee.WavefrontConfig{
+						WaveWidth:   actualLanes,
+						NumVGPRs:    numVGPRs,
+						NumSGPRs:    cu.config.SGPRCount,
+						LDSSize:     cu.config.LDSSize,
+						FloatFormat: cu.config.FloatFmt,
+						ISA:         cu.config.ISA,
+					},
+					cu.clk,
+				)
+
+				if work.Program != nil {
+					engine.LoadProgram(work.Program)
+				}
+
+				for laneOffset := 0; laneOffset < actualLanes; laneOffset++ {
+					globalTID := threadStart + laneOffset
+					if regs, ok := work.PerThreadData[globalTID]; ok {
+						for reg, val := range regs {
+							_ = engine.SetLaneRegister(laneOffset, reg, val)
+						}
+					}
+				}
+
+				slot := &WavefrontSlot{
+					WaveID:    waveID,
+					WorkID:    work.WorkID,
+					State:     WarpStateReady,
+					SIMDUnit:  simdUnit,
+					Engine:    engine,
+					VGPRsUsed: numVGPRs,
+				}
+				cu.wavefronts = append(cu.wavefronts, slot)
+			}
+
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // --- Execution ---
@@ -328,138 +376,152 @@ func (cu *AMDComputeUnit) Dispatch(work WorkItem) error {
 // The AMD CU scheduler uses LRR (Loose Round Robin) by default:
 // rotate through wavefronts, skip any that are stalled.
 func (cu *AMDComputeUnit) Step(edge clock.ClockEdge) ComputeUnitTrace {
-	cu.cycle++
+	result, _ := StartNew[ComputeUnitTrace]("compute-unit.AMDComputeUnit.Step", ComputeUnitTrace{},
+		func(op *Operation[ComputeUnitTrace], rf *ResultFactory[ComputeUnitTrace]) *OperationResult[ComputeUnitTrace] {
+			op.AddProperty("cycle", edge.Cycle)
+			cu.cycle++
 
-	// Tick stall counters
-	for _, slot := range cu.wavefronts {
-		if slot.StallCounter > 0 {
-			slot.StallCounter--
-			if slot.StallCounter == 0 && slot.State == WarpStateStalledMemory {
-				slot.State = WarpStateReady
+			for _, slot := range cu.wavefronts {
+				if slot.StallCounter > 0 {
+					slot.StallCounter--
+					if slot.StallCounter == 0 && slot.State == WarpStateStalledMemory {
+						slot.State = WarpStateReady
+					}
+				}
+				if slot.State != WarpStateCompleted && slot.State != WarpStateRunning {
+					slot.Age++
+				}
 			}
-		}
-		if slot.State != WarpStateCompleted && slot.State != WarpStateRunning {
-			slot.Age++
-		}
-	}
 
-	// Schedule: pick up to numSIMDUnits wavefronts (one per SIMD unit)
-	engineTraces := make(map[int]pee.EngineTrace)
-	var schedulerActions []string
+			engineTraces := make(map[int]pee.EngineTrace)
+			var schedulerActions []string
 
-	for simdID := 0; simdID < cu.config.NumSIMDUnits; simdID++ {
-		var ready []*WavefrontSlot
-		for _, w := range cu.wavefronts {
-			if w.State == WarpStateReady && w.SIMDUnit == simdID {
-				ready = append(ready, w)
+			for simdID := 0; simdID < cu.config.NumSIMDUnits; simdID++ {
+				var ready []*WavefrontSlot
+				for _, w := range cu.wavefronts {
+					if w.State == WarpStateReady && w.SIMDUnit == simdID {
+						ready = append(ready, w)
+					}
+				}
+				if len(ready) == 0 {
+					continue
+				}
+
+				picked := ready[0]
+				for _, w := range ready[1:] {
+					if w.Age > picked.Age {
+						picked = w
+					}
+				}
+
+				picked.State = WarpStateRunning
+				trace := picked.Engine.Step(edge)
+				engineTraces[picked.WaveID] = trace
+
+				schedulerActions = append(schedulerActions,
+					fmt.Sprintf("SIMD%d: issued wave %d", simdID, picked.WaveID))
+				picked.Age = 0
+
+				if picked.Engine.IsHalted() {
+					picked.State = WarpStateCompleted
+				} else if isMemoryInstruction(trace) {
+					picked.State = WarpStateStalledMemory
+					picked.StallCounter = cu.config.MemLatencyCycles
+				} else {
+					picked.State = WarpStateReady
+				}
 			}
-		}
-		if len(ready) == 0 {
-			continue
-		}
 
-		// LRR: pick oldest ready wavefront
-		picked := ready[0]
-		for _, w := range ready[1:] {
-			if w.Age > picked.Age {
-				picked = w
+			if len(schedulerActions) == 0 {
+				schedulerActions = append(schedulerActions, "all wavefronts stalled or completed")
 			}
-		}
 
-		picked.State = WarpStateRunning
-		trace := picked.Engine.Step(edge)
-		engineTraces[picked.WaveID] = trace
+			activeWaves := 0
+			for _, w := range cu.wavefronts {
+				if w.State != WarpStateCompleted {
+					activeWaves++
+				}
+			}
 
-		schedulerActions = append(schedulerActions,
-			fmt.Sprintf("SIMD%d: issued wave %d", simdID, picked.WaveID))
-		picked.Age = 0
+			totalVGPRs := cu.config.VGPRPerSIMD * cu.config.NumSIMDUnits
+			allocatedVGPRs := 0
+			for _, v := range cu.vgprAllocated {
+				allocatedVGPRs += v
+			}
 
-		// Update state after execution
-		if picked.Engine.IsHalted() {
-			picked.State = WarpStateCompleted
-		} else if isMemoryInstruction(trace) {
-			picked.State = WarpStateStalledMemory
-			picked.StallCounter = cu.config.MemLatencyCycles
-		} else {
-			picked.State = WarpStateReady
-		}
-	}
+			occupancy := 0.0
+			if cu.config.MaxWavefronts > 0 {
+				occupancy = float64(activeWaves) / float64(cu.config.MaxWavefronts)
+			}
 
-	if len(schedulerActions) == 0 {
-		schedulerActions = append(schedulerActions, "all wavefronts stalled or completed")
-	}
-
-	activeWaves := 0
-	for _, w := range cu.wavefronts {
-		if w.State != WarpStateCompleted {
-			activeWaves++
-		}
-	}
-
-	totalVGPRs := cu.config.VGPRPerSIMD * cu.config.NumSIMDUnits
-	allocatedVGPRs := 0
-	for _, v := range cu.vgprAllocated {
-		allocatedVGPRs += v
-	}
-
-	occupancy := 0.0
-	if cu.config.MaxWavefronts > 0 {
-		occupancy = float64(activeWaves) / float64(cu.config.MaxWavefronts)
-	}
-
-	return ComputeUnitTrace{
-		Cycle:             cu.cycle,
-		UnitName:          cu.Name(),
-		Arch:              cu.Arch(),
-		SchedulerAction:   joinStrings(schedulerActions, "; "),
-		ActiveWarps:       activeWaves,
-		TotalWarps:        cu.config.MaxWavefronts,
-		EngineTraces:      engineTraces,
-		SharedMemoryUsed:  cu.ldsUsed,
-		SharedMemoryTotal: cu.config.LDSSize,
-		RegisterFileUsed:  allocatedVGPRs,
-		RegisterFileTotal: totalVGPRs,
-		Occupancy:         occupancy,
-	}
+			return rf.Generate(true, false, ComputeUnitTrace{
+				Cycle:             cu.cycle,
+				UnitName:          cu.Name(),
+				Arch:              cu.Arch(),
+				SchedulerAction:   joinStrings(schedulerActions, "; "),
+				ActiveWarps:       activeWaves,
+				TotalWarps:        cu.config.MaxWavefronts,
+				EngineTraces:      engineTraces,
+				SharedMemoryUsed:  cu.ldsUsed,
+				SharedMemoryTotal: cu.config.LDSSize,
+				RegisterFileUsed:  allocatedVGPRs,
+				RegisterFileTotal: totalVGPRs,
+				Occupancy:         occupancy,
+			})
+		}).GetResult()
+	return result
 }
 
 // Run runs until all work completes or maxCycles is reached.
 func (cu *AMDComputeUnit) Run(maxCycles int) []ComputeUnitTrace {
-	var traces []ComputeUnitTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := cu.Step(edge)
-		traces = append(traces, trace)
-		if cu.Idle() {
-			break
-		}
-	}
-	return traces
+	result, _ := StartNew[[]ComputeUnitTrace]("compute-unit.AMDComputeUnit.Run", nil,
+		func(op *Operation[[]ComputeUnitTrace], rf *ResultFactory[[]ComputeUnitTrace]) *OperationResult[[]ComputeUnitTrace] {
+			op.AddProperty("max_cycles", maxCycles)
+			var traces []ComputeUnitTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := cu.Step(edge)
+				traces = append(traces, trace)
+				if cu.Idle() {
+					break
+				}
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // Reset resets all state.
 func (cu *AMDComputeUnit) Reset() {
-	cu.wavefronts = nil
-	cu.lds.Reset()
-	cu.ldsUsed = 0
-	cu.vgprAllocated = make([]int, cu.config.NumSIMDUnits)
-	cu.nextWaveID = 0
-	cu.rrIndex = 0
-	cu.cycle = 0
+	_, _ = StartNew[struct{}]("compute-unit.AMDComputeUnit.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			cu.wavefronts = nil
+			cu.lds.Reset()
+			cu.ldsUsed = 0
+			cu.vgprAllocated = make([]int, cu.config.NumSIMDUnits)
+			cu.nextWaveID = 0
+			cu.rrIndex = 0
+			cu.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable representation.
 func (cu *AMDComputeUnit) String() string {
-	active := 0
-	for _, w := range cu.wavefronts {
-		if w.State != WarpStateCompleted {
-			active++
-		}
-	}
-	return fmt.Sprintf("AMDComputeUnit(waves=%d/%d, occupancy=%.1f%%)",
-		active, cu.config.MaxWavefronts, cu.Occupancy()*100)
+	result, _ := StartNew[string]("compute-unit.AMDComputeUnit.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			active := 0
+			for _, w := range cu.wavefronts {
+				if w.State != WarpStateCompleted {
+					active++
+				}
+			}
+			return rf.Generate(true, false, fmt.Sprintf("AMDComputeUnit(waves=%d/%d, occupancy=%.1f%%)",
+				active, cu.config.MaxWavefronts, cu.Occupancy()*100))
+		}).GetResult()
+	return result
 }

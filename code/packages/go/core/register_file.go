@@ -48,26 +48,27 @@ type RegisterFile struct {
 // All registers are initialized to 0. If config is nil, the default
 // configuration is used (16 registers, 32-bit, zero register enabled).
 func NewRegisterFile(config *RegisterFileConfig) *RegisterFile {
-	cfg := DefaultRegisterFileConfig()
-	if config != nil {
-		cfg = *config
-	}
+	result, _ := StartNew[*RegisterFile]("core.NewRegisterFile", nil,
+		func(op *Operation[*RegisterFile], rf *ResultFactory[*RegisterFile]) *OperationResult[*RegisterFile] {
+			cfg := DefaultRegisterFileConfig()
+			if config != nil {
+				cfg = *config
+			}
 
-	// Compute the bit mask for the register width.
-	// For 32-bit: mask = 0xFFFFFFFF
-	// For 64-bit: mask = 0x7FFFFFFFFFFFFFFF (Go's int is at least 64 bits)
-	var mask int
-	if cfg.Width >= 64 {
-		mask = int(^uint(0) >> 1) // max int
-	} else {
-		mask = (1 << cfg.Width) - 1
-	}
+			var mask int
+			if cfg.Width >= 64 {
+				mask = int(^uint(0) >> 1)
+			} else {
+				mask = (1 << cfg.Width) - 1
+			}
 
-	return &RegisterFile{
-		config: cfg,
-		values: make([]int, cfg.Count),
-		mask:   mask,
-	}
+			return rf.Generate(true, false, &RegisterFile{
+				config: cfg,
+				values: make([]int, cfg.Count),
+				mask:   mask,
+			})
+		}).GetResult()
+	return result
 }
 
 // Read returns the value of register at the given index.
@@ -78,13 +79,18 @@ func NewRegisterFile(config *RegisterFileConfig) *RegisterFile {
 // Returns 0 if the index is out of range (defensive -- avoids panics in
 // the pipeline, which processes untrusted instruction data).
 func (r *RegisterFile) Read(index int) int {
-	if index < 0 || index >= r.config.Count {
-		return 0
-	}
-	if r.config.ZeroRegister && index == 0 {
-		return 0
-	}
-	return r.values[index]
+	result, _ := StartNew[int]("core.RegisterFile.Read", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("index", index)
+			if index < 0 || index >= r.config.Count {
+				return rf.Generate(true, false, 0)
+			}
+			if r.config.ZeroRegister && index == 0 {
+				return rf.Generate(true, false, 0)
+			}
+			return rf.Generate(true, false, r.values[index])
+		}).GetResult()
+	return result
 }
 
 // Write stores a value into the register at the given index.
@@ -95,42 +101,67 @@ func (r *RegisterFile) Read(index int) int {
 //
 // Writes to out-of-range indices are silently ignored (defensive).
 func (r *RegisterFile) Write(index int, value int) {
-	if index < 0 || index >= r.config.Count {
-		return
-	}
-	if r.config.ZeroRegister && index == 0 {
-		return // writes to zero register are discarded
-	}
-	r.values[index] = value & r.mask
+	_, _ = StartNew[struct{}]("core.RegisterFile.Write", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("index", index)
+			if index < 0 || index >= r.config.Count {
+				return rf.Generate(true, false, struct{}{})
+			}
+			if r.config.ZeroRegister && index == 0 {
+				return rf.Generate(true, false, struct{}{})
+			}
+			r.values[index] = value & r.mask
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Values returns a copy of all register values (for inspection and debugging).
 func (r *RegisterFile) Values() []int {
-	result := make([]int, len(r.values))
-	copy(result, r.values)
+	result, _ := StartNew[[]int]("core.RegisterFile.Values", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			res := make([]int, len(r.values))
+			copy(res, r.values)
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
 // Count returns the number of registers.
 func (r *RegisterFile) Count() int {
-	return r.config.Count
+	result, _ := StartNew[int]("core.RegisterFile.Count", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, r.config.Count)
+		}).GetResult()
+	return result
 }
 
 // Width returns the bit width of each register.
 func (r *RegisterFile) Width() int {
-	return r.config.Width
+	result, _ := StartNew[int]("core.RegisterFile.Width", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, r.config.Width)
+		}).GetResult()
+	return result
 }
 
 // Config returns the register file configuration.
 func (r *RegisterFile) Config() RegisterFileConfig {
-	return r.config
+	result, _ := StartNew[RegisterFileConfig]("core.RegisterFile.Config", RegisterFileConfig{},
+		func(op *Operation[RegisterFileConfig], rf *ResultFactory[RegisterFileConfig]) *OperationResult[RegisterFileConfig] {
+			return rf.Generate(true, false, r.config)
+		}).GetResult()
+	return result
 }
 
 // Reset sets all registers to zero.
 func (r *RegisterFile) Reset() {
-	for i := range r.values {
-		r.values[i] = 0
-	}
+	_, _ = StartNew[struct{}]("core.RegisterFile.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for i := range r.values {
+				r.values[i] = 0
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable dump of all registers.
@@ -139,11 +170,15 @@ func (r *RegisterFile) Reset() {
 //
 //	RegisterFile(16x32): R0=0 R1=42 R2=100 ...
 func (r *RegisterFile) String() string {
-	s := fmt.Sprintf("RegisterFile(%dx%d):", r.config.Count, r.config.Width)
-	for i := 0; i < r.config.Count; i++ {
-		if r.values[i] != 0 {
-			s += fmt.Sprintf(" R%d=%d", i, r.values[i])
-		}
-	}
-	return s
+	result, _ := StartNew[string]("core.RegisterFile.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			s := fmt.Sprintf("RegisterFile(%dx%d):", r.config.Count, r.config.Width)
+			for i := 0; i < r.config.Count; i++ {
+				if r.values[i] != 0 {
+					s += fmt.Sprintf(" R%d=%d", i, r.values[i])
+				}
+			}
+			return rf.Generate(true, false, s)
+		}).GetResult()
+	return result
 }

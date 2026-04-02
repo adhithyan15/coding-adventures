@@ -98,10 +98,14 @@ var architectureNames = map[Architecture]string{
 
 // String returns the human-readable name of an Architecture.
 func (a Architecture) String() string {
-	if name, ok := architectureNames[a]; ok {
-		return name
-	}
-	return fmt.Sprintf("UNKNOWN(%d)", int(a))
+	result, _ := StartNew[string]("compute-unit.Architecture.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if name, ok := architectureNames[a]; ok {
+				return rf.Generate(true, false, name)
+			}
+			return rf.Generate(true, false, fmt.Sprintf("UNKNOWN(%d)", int(a)))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -160,10 +164,14 @@ var warpStateNames = map[WarpState]string{
 
 // String returns the name of the WarpState.
 func (s WarpState) String() string {
-	if name, ok := warpStateNames[s]; ok {
-		return name
-	}
-	return fmt.Sprintf("UNKNOWN(%d)", int(s))
+	result, _ := StartNew[string]("compute-unit.WarpState.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if name, ok := warpStateNames[s]; ok {
+				return rf.Generate(true, false, name)
+			}
+			return rf.Generate(true, false, fmt.Sprintf("UNKNOWN(%d)", int(s)))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -216,10 +224,14 @@ var schedulingPolicyNames = map[SchedulingPolicy]string{
 
 // String returns the name of the SchedulingPolicy.
 func (p SchedulingPolicy) String() string {
-	if name, ok := schedulingPolicyNames[p]; ok {
-		return name
-	}
-	return fmt.Sprintf("UNKNOWN(%d)", int(p))
+	result, _ := StartNew[string]("compute-unit.SchedulingPolicy.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			if name, ok := schedulingPolicyNames[p]; ok {
+				return rf.Generate(true, false, name)
+			}
+			return rf.Generate(true, false, fmt.Sprintf("UNKNOWN(%d)", int(p)))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -284,12 +296,17 @@ type WorkItem struct {
 //
 // By default: 32 threads, 32 registers per thread, no shared memory.
 func NewWorkItem(workID int) WorkItem {
-	return WorkItem{
-		WorkID:             workID,
-		ThreadCount:        32,
-		RegistersPerThread: 32,
-		PerThreadData:      make(map[int]map[int]float64),
-	}
+	result, _ := StartNew[WorkItem]("compute-unit.NewWorkItem", WorkItem{},
+		func(op *Operation[WorkItem], rf *ResultFactory[WorkItem]) *OperationResult[WorkItem] {
+			op.AddProperty("work_id", workID)
+			return rf.Generate(true, false, WorkItem{
+				WorkID:             workID,
+				ThreadCount:        32,
+				RegistersPerThread: 32,
+				PerThreadData:      make(map[int]map[int]float64),
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -372,37 +389,41 @@ type ComputeUnitTrace struct {
 //	  Engine 0: FMUL R2, R0, R1 -- 32/32 threads active
 //	  Engine 1: (idle)
 func (t ComputeUnitTrace) Format() string {
-	occPct := fmt.Sprintf("%.1f%%", t.Occupancy*100)
-	lines := []string{
-		fmt.Sprintf("[Cycle %d] %s (%s) -- %s occupancy (%d/%d warps)",
-			t.Cycle, t.UnitName, t.Arch.String(), occPct,
-			t.ActiveWarps, t.TotalWarps),
-	}
-	lines = append(lines, fmt.Sprintf("  Scheduler: %s", t.SchedulerAction))
+	result, _ := StartNew[string]("compute-unit.ComputeUnitTrace.Format", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			occPct := fmt.Sprintf("%.1f%%", t.Occupancy*100)
+			lines := []string{
+				fmt.Sprintf("[Cycle %d] %s (%s) -- %s occupancy (%d/%d warps)",
+					t.Cycle, t.UnitName, t.Arch.String(), occPct,
+					t.ActiveWarps, t.TotalWarps),
+			}
+			lines = append(lines, fmt.Sprintf("  Scheduler: %s", t.SchedulerAction))
 
-	if t.SharedMemoryTotal > 0 {
-		smemPct := float64(t.SharedMemoryUsed) / float64(t.SharedMemoryTotal) * 100
-		lines = append(lines, fmt.Sprintf("  Shared memory: %d/%d bytes (%.1f%%)",
-			t.SharedMemoryUsed, t.SharedMemoryTotal, smemPct))
-	}
+			if t.SharedMemoryTotal > 0 {
+				smemPct := float64(t.SharedMemoryUsed) / float64(t.SharedMemoryTotal) * 100
+				lines = append(lines, fmt.Sprintf("  Shared memory: %d/%d bytes (%.1f%%)",
+					t.SharedMemoryUsed, t.SharedMemoryTotal, smemPct))
+			}
 
-	if t.RegisterFileTotal > 0 {
-		regPct := float64(t.RegisterFileUsed) / float64(t.RegisterFileTotal) * 100
-		lines = append(lines, fmt.Sprintf("  Registers: %d/%d (%.1f%%)",
-			t.RegisterFileUsed, t.RegisterFileTotal, regPct))
-	}
+			if t.RegisterFileTotal > 0 {
+				regPct := float64(t.RegisterFileUsed) / float64(t.RegisterFileTotal) * 100
+				lines = append(lines, fmt.Sprintf("  Registers: %d/%d (%.1f%%)",
+					t.RegisterFileUsed, t.RegisterFileTotal, regPct))
+			}
 
-	// Sort engine IDs for deterministic output.
-	eids := make([]int, 0, len(t.EngineTraces))
-	for eid := range t.EngineTraces {
-		eids = append(eids, eid)
-	}
-	sort.Ints(eids)
-	for _, eid := range eids {
-		lines = append(lines, fmt.Sprintf("  Engine %d: %s", eid, t.EngineTraces[eid].Description))
-	}
+			// Sort engine IDs for deterministic output.
+			eids := make([]int, 0, len(t.EngineTraces))
+			for eid := range t.EngineTraces {
+				eids = append(eids, eid)
+			}
+			sort.Ints(eids)
+			for _, eid := range eids {
+				lines = append(lines, fmt.Sprintf("  Engine %d: %s", eid, t.EngineTraces[eid].Description))
+			}
 
-	return strings.Join(lines, "\n")
+			return rf.Generate(true, false, strings.Join(lines, "\n"))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -458,37 +479,52 @@ type SharedMemory struct {
 // NewSharedMemory creates a new SharedMemory with the given size, 32 banks,
 // and 4-byte bank width.
 func NewSharedMemory(size int) *SharedMemory {
-	return &SharedMemory{
-		Size:      size,
-		NumBanks:  32,
-		BankWidth: 4,
-		data:      make([]byte, size),
-	}
+	result, _ := StartNew[*SharedMemory]("compute-unit.NewSharedMemory", nil,
+		func(op *Operation[*SharedMemory], rf *ResultFactory[*SharedMemory]) *OperationResult[*SharedMemory] {
+			op.AddProperty("size", size)
+			return rf.Generate(true, false, &SharedMemory{
+				Size:      size,
+				NumBanks:  32,
+				BankWidth: 4,
+				data:      make([]byte, size),
+			})
+		}).GetResult()
+	return result
 }
 
 // Read reads a 4-byte float from shared memory at the given byte address.
 //
 // Returns an error if the address is out of range.
 func (sm *SharedMemory) Read(address int) (float64, error) {
-	if address < 0 || address+4 > sm.Size {
-		return 0, fmt.Errorf("shared memory address %d out of range [0, %d)", address, sm.Size)
-	}
-	sm.totalAccesses++
-	bits := binary.LittleEndian.Uint32(sm.data[address : address+4])
-	return float64(math.Float32frombits(bits)), nil
+	res, err := StartNew[float64]("compute-unit.SharedMemory.Read", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("address", address)
+			if address < 0 || address+4 > sm.Size {
+				return rf.Fail(0, fmt.Errorf("shared memory address %d out of range [0, %d)", address, sm.Size))
+			}
+			sm.totalAccesses++
+			bits := binary.LittleEndian.Uint32(sm.data[address : address+4])
+			return rf.Generate(true, false, float64(math.Float32frombits(bits)))
+		}).GetResult()
+	return res, err
 }
 
 // Write writes a 4-byte float to shared memory at the given byte address.
 //
 // Returns an error if the address is out of range.
 func (sm *SharedMemory) Write(address int, value float64) error {
-	if address < 0 || address+4 > sm.Size {
-		return fmt.Errorf("shared memory address %d out of range [0, %d)", address, sm.Size)
-	}
-	sm.totalAccesses++
-	bits := math.Float32bits(float32(value))
-	binary.LittleEndian.PutUint32(sm.data[address:address+4], bits)
-	return nil
+	_, err := StartNew[struct{}]("compute-unit.SharedMemory.Write", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("address", address)
+			if address < 0 || address+4 > sm.Size {
+				return rf.Fail(struct{}{}, fmt.Errorf("shared memory address %d out of range [0, %d)", address, sm.Size))
+			}
+			sm.totalAccesses++
+			bits := math.Float32bits(float32(value))
+			binary.LittleEndian.PutUint32(sm.data[address:address+4], bits)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // CheckBankConflicts detects bank conflicts for a set of simultaneous accesses.
@@ -515,36 +551,57 @@ func (sm *SharedMemory) Write(address int, value float64) error {
 //	conflicts := smem.CheckBankConflicts([]int{0, 4, 128, 12})
 //	// conflicts = [[0, 2]]  -- threads 0 and 2 conflict on bank 0
 func (sm *SharedMemory) CheckBankConflicts(addresses []int) [][]int {
-	// Map bank -> list of thread indices
-	bankToThreads := make(map[int][]int)
-	for threadIdx, addr := range addresses {
-		bank := (addr / sm.BankWidth) % sm.NumBanks
-		bankToThreads[bank] = append(bankToThreads[bank], threadIdx)
-	}
+	result, _ := StartNew[[][]int]("compute-unit.SharedMemory.CheckBankConflicts", nil,
+		func(op *Operation[[][]int], rf *ResultFactory[[][]int]) *OperationResult[[][]int] {
+			op.AddProperty("num_addresses", len(addresses))
+			// Map bank -> list of thread indices
+			bankToThreads := make(map[int][]int)
+			for threadIdx, addr := range addresses {
+				bank := (addr / sm.BankWidth) % sm.NumBanks
+				bankToThreads[bank] = append(bankToThreads[bank], threadIdx)
+			}
 
-	// Find conflicts (banks with more than one thread)
-	var conflicts [][]int
-	for _, threads := range bankToThreads {
-		if len(threads) > 1 {
-			conflicts = append(conflicts, threads)
-			sm.totalConflicts += len(threads) - 1
-		}
-	}
-	return conflicts
+			// Find conflicts (banks with more than one thread)
+			var conflicts [][]int
+			for _, threads := range bankToThreads {
+				if len(threads) > 1 {
+					conflicts = append(conflicts, threads)
+					sm.totalConflicts += len(threads) - 1
+				}
+			}
+			return rf.Generate(true, false, conflicts)
+		}).GetResult()
+	return result
 }
 
 // Reset clears all data and resets statistics.
 func (sm *SharedMemory) Reset() {
-	sm.data = make([]byte, sm.Size)
-	sm.totalAccesses = 0
-	sm.totalConflicts = 0
+	_, _ = StartNew[struct{}]("compute-unit.SharedMemory.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			sm.data = make([]byte, sm.Size)
+			sm.totalAccesses = 0
+			sm.totalConflicts = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // TotalAccesses returns the total number of read/write accesses.
-func (sm *SharedMemory) TotalAccesses() int { return sm.totalAccesses }
+func (sm *SharedMemory) TotalAccesses() int {
+	result, _ := StartNew[int]("compute-unit.SharedMemory.TotalAccesses", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, sm.totalAccesses)
+		}).GetResult()
+	return result
+}
 
 // TotalConflicts returns the total bank conflicts detected.
-func (sm *SharedMemory) TotalConflicts() int { return sm.totalConflicts }
+func (sm *SharedMemory) TotalConflicts() int {
+	result, _ := StartNew[int]("compute-unit.SharedMemory.TotalConflicts", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, sm.totalConflicts)
+		}).GetResult()
+	return result
+}
 
 // =========================================================================
 // ComputeUnit -- the unified interface all compute units implement

@@ -90,53 +90,81 @@ type MappedMemory struct {
 
 // Buffer returns the buffer this mapping refers to.
 func (m *MappedMemory) Buffer() *Buffer {
-	return m.buffer
+	result, _ := StartNew[*Buffer]("compute-runtime.MappedMemory.Buffer", nil,
+		func(op *Operation[*Buffer], rf *ResultFactory[*Buffer]) *OperationResult[*Buffer] {
+			return rf.Generate(true, false, m.buffer)
+		}).GetResult()
+	return result
 }
 
 // Size returns the size of the mapped region.
 func (m *MappedMemory) Size() int {
-	return len(m.data)
+	result, _ := StartNew[int]("compute-runtime.MappedMemory.Size", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(m.data))
+		}).GetResult()
+	return result
 }
 
 // Dirty returns whether any writes have been made since mapping.
 func (m *MappedMemory) Dirty() bool {
-	return m.dirty
+	result, _ := StartNew[bool]("compute-runtime.MappedMemory.Dirty", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, m.dirty)
+		}).GetResult()
+	return result
 }
 
 // Read reads bytes from the mapped buffer.
 //
 // Returns an error if offset + size exceeds buffer size.
 func (m *MappedMemory) Read(offset, size int) ([]byte, error) {
-	if offset+size > len(m.data) {
-		return nil, fmt.Errorf(
-			"read out of bounds: offset=%d, size=%d, buffer_size=%d",
-			offset, size, len(m.data),
-		)
-	}
-	result := make([]byte, size)
-	copy(result, m.data[offset:offset+size])
-	return result, nil
+	res, err := StartNew[[]byte]("compute-runtime.MappedMemory.Read", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("offset", offset)
+			op.AddProperty("size", size)
+			if offset+size > len(m.data) {
+				return rf.Fail(nil, fmt.Errorf(
+					"read out of bounds: offset=%d, size=%d, buffer_size=%d",
+					offset, size, len(m.data),
+				))
+			}
+			result := make([]byte, size)
+			copy(result, m.data[offset:offset+size])
+			return rf.Generate(true, false, result)
+		}).GetResult()
+	return res, err
 }
 
 // Write writes bytes to the mapped buffer.
 //
 // Returns an error if offset + len(data) exceeds buffer size.
 func (m *MappedMemory) Write(offset int, data []byte) error {
-	if offset+len(data) > len(m.data) {
-		return fmt.Errorf(
-			"write out of bounds: offset=%d, data_size=%d, buffer_size=%d",
-			offset, len(data), len(m.data),
-		)
-	}
-	copy(m.data[offset:offset+len(data)], data)
-	m.dirty = true
-	return nil
+	_, err := StartNew[struct{}]("compute-runtime.MappedMemory.Write", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("offset", offset)
+			op.AddProperty("data_size", len(data))
+			if offset+len(data) > len(m.data) {
+				return rf.Fail(struct{}{}, fmt.Errorf(
+					"write out of bounds: offset=%d, data_size=%d, buffer_size=%d",
+					offset, len(data), len(m.data),
+				))
+			}
+			copy(m.data[offset:offset+len(data)], data)
+			m.dirty = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // GetData returns the full contents of the mapped buffer.
 func (m *MappedMemory) GetData() []byte {
-	result := make([]byte, len(m.data))
-	copy(result, m.data)
+	result, _ := StartNew[[]byte]("compute-runtime.MappedMemory.GetData", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			res := make([]byte, len(m.data))
+			copy(res, m.data)
+			return rf.Generate(true, false, res)
+		}).GetResult()
 	return result
 }
 
@@ -171,18 +199,26 @@ func NewMemoryManager(
 	properties MemoryProperties,
 	stats *RuntimeStats,
 ) *MemoryManager {
-	return &MemoryManager{
-		device:     device,
-		properties: properties,
-		stats:      stats,
-		buffers:    make(map[int]*Buffer),
-		bufferData: make(map[int][]byte),
-	}
+	result, _ := StartNew[*MemoryManager]("compute-runtime.NewMemoryManager", nil,
+		func(op *Operation[*MemoryManager], rf *ResultFactory[*MemoryManager]) *OperationResult[*MemoryManager] {
+			return rf.Generate(true, false, &MemoryManager{
+				device:     device,
+				properties: properties,
+				stats:      stats,
+				buffers:    make(map[int]*Buffer),
+				bufferData: make(map[int][]byte),
+			})
+		}).GetResult()
+	return result
 }
 
 // MemoryProperties returns the memory properties of the underlying device.
 func (mm *MemoryManager) MemoryProperties() MemoryProperties {
-	return mm.properties
+	result, _ := StartNew[MemoryProperties]("compute-runtime.MemoryManager.MemoryProperties", MemoryProperties{},
+		func(op *Operation[MemoryProperties], rf *ResultFactory[MemoryProperties]) *OperationResult[MemoryProperties] {
+			return rf.Generate(true, false, mm.properties)
+		}).GetResult()
+	return result
 }
 
 // Allocate allocates a buffer on the device.
@@ -199,70 +235,80 @@ func (mm *MemoryManager) MemoryProperties() MemoryProperties {
 //
 // Returns an error if size <= 0 or allocation fails.
 func (mm *MemoryManager) Allocate(size int, memType MemoryType, usage BufferUsage) (*Buffer, error) {
-	if size <= 0 {
-		return nil, fmt.Errorf("allocation size must be positive, got %d", size)
-	}
+	res, err := StartNew[*Buffer]("compute-runtime.MemoryManager.Allocate", nil,
+		func(op *Operation[*Buffer], rf *ResultFactory[*Buffer]) *OperationResult[*Buffer] {
+			op.AddProperty("size", size)
+			if size <= 0 {
+				return rf.Fail(nil, fmt.Errorf("allocation size must be positive, got %d", size))
+			}
 
-	deviceAddress, err := mm.device.Malloc(size)
-	if err != nil {
-		return nil, fmt.Errorf("device malloc failed: %w", err)
-	}
+			deviceAddress, err := mm.device.Malloc(size)
+			if err != nil {
+				return rf.Fail(nil, fmt.Errorf("device malloc failed: %w", err))
+			}
 
-	bufID := mm.nextID
-	mm.nextID++
+			bufID := mm.nextID
+			mm.nextID++
 
-	buf := &Buffer{
-		BufferID:      bufID,
-		Size:          size,
-		MemType:       memType,
-		Usage:         usage,
-		DeviceAddress: deviceAddress,
-	}
-	mm.buffers[bufID] = buf
-	mm.bufferData[bufID] = make([]byte, size)
+			buf := &Buffer{
+				BufferID:      bufID,
+				Size:          size,
+				MemType:       memType,
+				Usage:         usage,
+				DeviceAddress: deviceAddress,
+			}
+			mm.buffers[bufID] = buf
+			mm.bufferData[bufID] = make([]byte, size)
 
-	mm.currentBytes += size
-	mm.stats.TotalAllocatedBytes += size
-	mm.stats.TotalAllocations++
-	if mm.currentBytes > mm.stats.PeakAllocatedBytes {
-		mm.stats.PeakAllocatedBytes = mm.currentBytes
-	}
+			mm.currentBytes += size
+			mm.stats.TotalAllocatedBytes += size
+			mm.stats.TotalAllocations++
+			if mm.currentBytes > mm.stats.PeakAllocatedBytes {
+				mm.stats.PeakAllocatedBytes = mm.currentBytes
+			}
 
-	mm.stats.Traces = append(mm.stats.Traces, RuntimeTrace{
-		EventType:   RuntimeEventMemoryAlloc,
-		Description: fmt.Sprintf("Allocated %d bytes (buf#%d, %s)", size, bufID, memType),
-	})
+			mm.stats.Traces = append(mm.stats.Traces, RuntimeTrace{
+				EventType:   RuntimeEventMemoryAlloc,
+				Description: fmt.Sprintf("Allocated %d bytes (buf#%d, %s)", size, bufID, memType),
+			})
 
-	return buf, nil
+			return rf.Generate(true, false, buf)
+		}).GetResult()
+	return res, err
 }
 
 // Free frees a device memory allocation.
 //
 // Returns an error if the buffer is already freed, not found, or still mapped.
 func (mm *MemoryManager) Free(buffer *Buffer) error {
-	if buffer.Freed {
-		return fmt.Errorf("buffer %d already freed", buffer.BufferID)
-	}
-	if _, ok := mm.buffers[buffer.BufferID]; !ok {
-		return fmt.Errorf("buffer %d not found", buffer.BufferID)
-	}
-	if buffer.Mapped {
-		return fmt.Errorf("buffer %d is still mapped -- unmap before freeing", buffer.BufferID)
-	}
+	_, err := StartNew[struct{}]("compute-runtime.MemoryManager.Free", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			if buffer.Freed {
+				return rf.Fail(struct{}{}, fmt.Errorf("buffer %d already freed", buffer.BufferID))
+			}
+			if _, ok := mm.buffers[buffer.BufferID]; !ok {
+				return rf.Fail(struct{}{}, fmt.Errorf("buffer %d not found", buffer.BufferID))
+			}
+			if buffer.Mapped {
+				return rf.Fail(struct{}{}, fmt.Errorf("buffer %d is still mapped -- unmap before freeing", buffer.BufferID))
+			}
 
-	mm.device.Free(buffer.DeviceAddress)
-	buffer.Freed = true
-	mm.currentBytes -= buffer.Size
-	delete(mm.buffers, buffer.BufferID)
-	delete(mm.bufferData, buffer.BufferID)
+			mm.device.Free(buffer.DeviceAddress)
+			buffer.Freed = true
+			mm.currentBytes -= buffer.Size
+			delete(mm.buffers, buffer.BufferID)
+			delete(mm.bufferData, buffer.BufferID)
 
-	mm.stats.TotalFrees++
-	mm.stats.Traces = append(mm.stats.Traces, RuntimeTrace{
-		EventType:   RuntimeEventMemoryFree,
-		Description: fmt.Sprintf("Freed buf#%d (%d bytes)", buffer.BufferID, buffer.Size),
-	})
+			mm.stats.TotalFrees++
+			mm.stats.Traces = append(mm.stats.Traces, RuntimeTrace{
+				EventType:   RuntimeEventMemoryFree,
+				Description: fmt.Sprintf("Freed buf#%d (%d bytes)", buffer.BufferID, buffer.Size),
+			})
 
-	return nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // Map maps a buffer for CPU access.
@@ -270,31 +316,36 @@ func (mm *MemoryManager) Free(buffer *Buffer) error {
 // Only HOST_VISIBLE buffers can be mapped. Returns an error if the buffer
 // is not HOST_VISIBLE, already mapped, or freed.
 func (mm *MemoryManager) Map(buffer *Buffer) (*MappedMemory, error) {
-	if buffer.Freed {
-		return nil, fmt.Errorf("cannot map freed buffer %d", buffer.BufferID)
-	}
-	if buffer.Mapped {
-		return nil, fmt.Errorf("buffer %d is already mapped", buffer.BufferID)
-	}
-	if !buffer.MemType.Has(MemoryTypeHostVisible) {
-		return nil, fmt.Errorf(
-			"cannot map buffer %d: not HOST_VISIBLE (type=%s)",
-			buffer.BufferID, buffer.MemType,
-		)
-	}
+	res, err := StartNew[*MappedMemory]("compute-runtime.MemoryManager.Map", nil,
+		func(op *Operation[*MappedMemory], rf *ResultFactory[*MappedMemory]) *OperationResult[*MappedMemory] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			if buffer.Freed {
+				return rf.Fail(nil, fmt.Errorf("cannot map freed buffer %d", buffer.BufferID))
+			}
+			if buffer.Mapped {
+				return rf.Fail(nil, fmt.Errorf("buffer %d is already mapped", buffer.BufferID))
+			}
+			if !buffer.MemType.Has(MemoryTypeHostVisible) {
+				return rf.Fail(nil, fmt.Errorf(
+					"cannot map buffer %d: not HOST_VISIBLE (type=%s)",
+					buffer.BufferID, buffer.MemType,
+				))
+			}
 
-	buffer.Mapped = true
-	mm.stats.TotalMaps++
+			buffer.Mapped = true
+			mm.stats.TotalMaps++
 
-	mm.stats.Traces = append(mm.stats.Traces, RuntimeTrace{
-		EventType:   RuntimeEventMemoryMap,
-		Description: fmt.Sprintf("Mapped buf#%d", buffer.BufferID),
-	})
+			mm.stats.Traces = append(mm.stats.Traces, RuntimeTrace{
+				EventType:   RuntimeEventMemoryMap,
+				Description: fmt.Sprintf("Mapped buf#%d", buffer.BufferID),
+			})
 
-	return &MappedMemory{
-		buffer: buffer,
-		data:   mm.bufferData[buffer.BufferID],
-	}, nil
+			return rf.Generate(true, false, &MappedMemory{
+				buffer: buffer,
+				data:   mm.bufferData[buffer.BufferID],
+			})
+		}).GetResult()
+	return res, err
 }
 
 // Unmap unmaps a buffer, ending CPU access.
@@ -302,95 +353,149 @@ func (mm *MemoryManager) Map(buffer *Buffer) (*MappedMemory, error) {
 // If the mapped memory was written to (dirty) and the buffer has
 // HOST_COHERENT, the data is automatically synced to the device.
 func (mm *MemoryManager) Unmap(buffer *Buffer) error {
-	if !buffer.Mapped {
-		return fmt.Errorf("buffer %d is not mapped", buffer.BufferID)
-	}
+	_, err := StartNew[struct{}]("compute-runtime.MemoryManager.Unmap", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			if !buffer.Mapped {
+				return rf.Fail(struct{}{}, fmt.Errorf("buffer %d is not mapped", buffer.BufferID))
+			}
 
-	// If HOST_COHERENT, automatically sync to device
-	if buffer.MemType.Has(MemoryTypeHostCoherent) {
-		data := make([]byte, len(mm.bufferData[buffer.BufferID]))
-		copy(data, mm.bufferData[buffer.BufferID])
-		_, err := mm.device.MemcpyHostToDevice(buffer.DeviceAddress, data)
-		if err != nil {
-			return fmt.Errorf("sync to device failed: %w", err)
-		}
-	}
+			// If HOST_COHERENT, automatically sync to device
+			if buffer.MemType.Has(MemoryTypeHostCoherent) {
+				data := make([]byte, len(mm.bufferData[buffer.BufferID]))
+				copy(data, mm.bufferData[buffer.BufferID])
+				_, err := mm.device.MemcpyHostToDevice(buffer.DeviceAddress, data)
+				if err != nil {
+					return rf.Fail(struct{}{}, fmt.Errorf("sync to device failed: %w", err))
+				}
+			}
 
-	buffer.Mapped = false
-	return nil
+			buffer.Mapped = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // Flush flushes CPU writes to make them visible to GPU.
 //
 // Only needed for HOST_VISIBLE buffers without HOST_COHERENT.
 func (mm *MemoryManager) Flush(buffer *Buffer, offset, size int) error {
-	if buffer.Freed {
-		return fmt.Errorf("cannot flush freed buffer %d", buffer.BufferID)
-	}
-	actualSize := size
-	if actualSize <= 0 {
-		actualSize = buffer.Size
-	}
-	data := make([]byte, actualSize)
-	copy(data, mm.bufferData[buffer.BufferID][offset:offset+actualSize])
-	_, err := mm.device.MemcpyHostToDevice(buffer.DeviceAddress+offset, data)
+	_, err := StartNew[struct{}]("compute-runtime.MemoryManager.Flush", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			op.AddProperty("offset", offset)
+			op.AddProperty("size", size)
+			if buffer.Freed {
+				return rf.Fail(struct{}{}, fmt.Errorf("cannot flush freed buffer %d", buffer.BufferID))
+			}
+			actualSize := size
+			if actualSize <= 0 {
+				actualSize = buffer.Size
+			}
+			data := make([]byte, actualSize)
+			copy(data, mm.bufferData[buffer.BufferID][offset:offset+actualSize])
+			_, err := mm.device.MemcpyHostToDevice(buffer.DeviceAddress+offset, data)
+			if err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 	return err
 }
 
 // Invalidate invalidates CPU cache so GPU writes become visible to CPU.
 func (mm *MemoryManager) Invalidate(buffer *Buffer, offset, size int) error {
-	if buffer.Freed {
-		return fmt.Errorf("cannot invalidate freed buffer %d", buffer.BufferID)
-	}
-	actualSize := size
-	if actualSize <= 0 {
-		actualSize = buffer.Size
-	}
-	data, _, err := mm.device.MemcpyDeviceToHost(buffer.DeviceAddress+offset, actualSize)
-	if err != nil {
-		return err
-	}
-	copy(mm.bufferData[buffer.BufferID][offset:offset+actualSize], data)
-	return nil
+	_, err := StartNew[struct{}]("compute-runtime.MemoryManager.Invalidate", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			op.AddProperty("offset", offset)
+			op.AddProperty("size", size)
+			if buffer.Freed {
+				return rf.Fail(struct{}{}, fmt.Errorf("cannot invalidate freed buffer %d", buffer.BufferID))
+			}
+			actualSize := size
+			if actualSize <= 0 {
+				actualSize = buffer.Size
+			}
+			data, _, err := mm.device.MemcpyDeviceToHost(buffer.DeviceAddress+offset, actualSize)
+			if err != nil {
+				return rf.Fail(struct{}{}, err)
+			}
+			copy(mm.bufferData[buffer.BufferID][offset:offset+actualSize], data)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // GetBuffer looks up a buffer by ID.
 func (mm *MemoryManager) GetBuffer(bufferID int) (*Buffer, error) {
-	buf, ok := mm.buffers[bufferID]
-	if !ok {
-		return nil, fmt.Errorf("buffer %d not found", bufferID)
-	}
-	return buf, nil
+	res, err := StartNew[*Buffer]("compute-runtime.MemoryManager.GetBuffer", nil,
+		func(op *Operation[*Buffer], rf *ResultFactory[*Buffer]) *OperationResult[*Buffer] {
+			op.AddProperty("buffer_id", bufferID)
+			buf, ok := mm.buffers[bufferID]
+			if !ok {
+				return rf.Fail(nil, fmt.Errorf("buffer %d not found", bufferID))
+			}
+			return rf.Generate(true, false, buf)
+		}).GetResult()
+	return res, err
 }
 
 // AllocatedBufferCount returns the number of currently allocated buffers.
 func (mm *MemoryManager) AllocatedBufferCount() int {
-	return len(mm.buffers)
+	result, _ := StartNew[int]("compute-runtime.MemoryManager.AllocatedBufferCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(mm.buffers))
+		}).GetResult()
+	return result
 }
 
 // CurrentAllocatedBytes returns the current total bytes allocated.
 func (mm *MemoryManager) CurrentAllocatedBytes() int {
-	return mm.currentBytes
+	result, _ := StartNew[int]("compute-runtime.MemoryManager.CurrentAllocatedBytes", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, mm.currentBytes)
+		}).GetResult()
+	return result
 }
 
 // GetBufferData returns raw data for a buffer (internal use).
 func (mm *MemoryManager) GetBufferData(bufferID int) []byte {
-	return mm.bufferData[bufferID]
+	result, _ := StartNew[[]byte]("compute-runtime.MemoryManager.GetBufferData", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("buffer_id", bufferID)
+			return rf.Generate(true, false, mm.bufferData[bufferID])
+		}).GetResult()
+	return result
 }
 
 // SyncBufferToDevice pushes buffer data to device. Returns cycles consumed.
 func (mm *MemoryManager) SyncBufferToDevice(buffer *Buffer) (int, error) {
-	data := make([]byte, len(mm.bufferData[buffer.BufferID]))
-	copy(data, mm.bufferData[buffer.BufferID])
-	return mm.device.MemcpyHostToDevice(buffer.DeviceAddress, data)
+	res, err := StartNew[int]("compute-runtime.MemoryManager.SyncBufferToDevice", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			data := make([]byte, len(mm.bufferData[buffer.BufferID]))
+			copy(data, mm.bufferData[buffer.BufferID])
+			cycles, err := mm.device.MemcpyHostToDevice(buffer.DeviceAddress, data)
+			if err != nil {
+				return rf.Fail(0, err)
+			}
+			return rf.Generate(true, false, cycles)
+		}).GetResult()
+	return res, err
 }
 
 // SyncBufferFromDevice pulls buffer data from device. Returns cycles consumed.
 func (mm *MemoryManager) SyncBufferFromDevice(buffer *Buffer) (int, error) {
-	data, cycles, err := mm.device.MemcpyDeviceToHost(buffer.DeviceAddress, buffer.Size)
-	if err != nil {
-		return 0, err
-	}
-	copy(mm.bufferData[buffer.BufferID], data)
-	return cycles, nil
+	res, err := StartNew[int]("compute-runtime.MemoryManager.SyncBufferFromDevice", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("buffer_id", buffer.BufferID)
+			data, cycles, err := mm.device.MemcpyDeviceToHost(buffer.DeviceAddress, buffer.Size)
+			if err != nil {
+				return rf.Fail(0, err)
+			}
+			copy(mm.bufferData[buffer.BufferID], data)
+			return rf.Generate(true, false, cycles)
+		}).GetResult()
+	return res, err
 }
