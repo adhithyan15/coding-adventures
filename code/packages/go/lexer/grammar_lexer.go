@@ -151,7 +151,7 @@ func (ctx *LexerContext) PushGroup(groupName string) {
 			}
 			ctx.groupActions = append(ctx.groupActions, groupAction{"push", groupName})
 			return rf.Generate(true, false, struct{}{})
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 }
 
 // PopGroup pops the current group from the stack.
@@ -825,7 +825,7 @@ func (l *GrammarLexer) Tokenize() []Token {
 			}
 
 			return rf.Generate(true, false, tokens)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
 

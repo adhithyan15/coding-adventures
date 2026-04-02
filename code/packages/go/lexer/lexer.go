@@ -232,6 +232,6 @@ func (l *Lexer) Tokenize() []Token {
 
 			l.tokens = append(l.tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column})
 			return rf.Generate(true, false, l.tokens)
-		}).GetResult()
+		}).PanicOnUnexpected().GetResult()
 	return result
 }
