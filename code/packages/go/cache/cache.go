@@ -61,29 +61,28 @@ type Cache struct {
 // Creates all sets, precomputes bit positions for address decomposition,
 // and initializes statistics.
 func NewCache(config CacheConfig) *Cache {
-	numSets := config.NumSets()
-	sets := make([]*CacheSet, numSets)
-	for i := range sets {
-		sets[i] = NewCacheSet(config.Associativity, config.LineSize)
-	}
-
-	// Precompute bit positions for address decomposition.
-	//   offset_bits = log2(line_size)    e.g., log2(64) = 6
-	//   set_bits    = log2(num_sets)     e.g., log2(256) = 8
-	offsetBits := int(math.Log2(float64(config.LineSize)))
-	setBits := 0
-	if numSets > 1 {
-		setBits = int(math.Log2(float64(numSets)))
-	}
-	setMask := numSets - 1 // e.g., 0xFF for 256 sets
-
-	return &Cache{
-		Config:     config,
-		Sets:       sets,
-		offsetBits: offsetBits,
-		setBits:    setBits,
-		setMask:    setMask,
-	}
+	result, _ := StartNew[*Cache]("cache.NewCache", nil,
+		func(_ *Operation[*Cache], rf *ResultFactory[*Cache]) *OperationResult[*Cache] {
+			numSets := config.NumSets()
+			sets := make([]*CacheSet, numSets)
+			for i := range sets {
+				sets[i] = NewCacheSet(config.Associativity, config.LineSize)
+			}
+			offsetBits := int(math.Log2(float64(config.LineSize)))
+			setBits := 0
+			if numSets > 1 {
+				setBits = int(math.Log2(float64(numSets)))
+			}
+			setMask := numSets - 1
+			return rf.Generate(true, false, &Cache{
+				Config:     config,
+				Sets:       sets,
+				offsetBits: offsetBits,
+				setBits:    setBits,
+				setMask:    setMask,
+			})
+		}).GetResult()
+	return result
 }
 
 // DecomposeAddress splits a memory address into (tag, setIndex, offset).
@@ -91,10 +90,20 @@ func NewCache(config CacheConfig) *Cache {
 // This is pure bit manipulation — no division needed because all
 // sizes are powers of 2.
 func (c *Cache) DecomposeAddress(address int) (tag, setIndex, offset int) {
-	offset = address & ((1 << c.offsetBits) - 1)
-	setIndex = (address >> c.offsetBits) & c.setMask
-	tag = address >> (c.offsetBits + c.setBits)
-	return
+	type decompResult struct {
+		tag      int
+		setIndex int
+		offset   int
+	}
+	res, _ := StartNew[decompResult]("cache.DecomposeAddress", decompResult{},
+		func(op *Operation[decompResult], rf *ResultFactory[decompResult]) *OperationResult[decompResult] {
+			op.AddProperty("address", address)
+			off := address & ((1 << c.offsetBits) - 1)
+			si := (address >> c.offsetBits) & c.setMask
+			t := address >> (c.offsetBits + c.setBits)
+			return rf.Generate(true, false, decompResult{tag: t, setIndex: si, offset: off})
+		}).GetResult()
+	return res.tag, res.setIndex, res.offset
 }
 
 // Read reads data from the cache.
@@ -104,43 +113,44 @@ func (c *Cache) DecomposeAddress(address int) (tag, setIndex, offset int) {
 // — typically the hierarchy — is responsible for actually fetching
 // from the next level).
 func (c *Cache) Read(address, cycle int) CacheAccess {
-	tag, setIndex, offset := c.DecomposeAddress(address)
-	cacheSet := c.Sets[setIndex]
-
-	hit, line := cacheSet.Access(tag, cycle)
-	_ = line
-
-	if hit {
-		c.Stats.RecordRead(true)
-		return CacheAccess{
-			Address:  address,
-			Hit:      true,
-			Tag:      tag,
-			SetIndex: setIndex,
-			Offset:   offset,
-			Cycles:   c.Config.AccessLatency,
-		}
-	}
-
-	// Miss — allocate the line with dummy data.
-	c.Stats.RecordRead(false)
-	dummyData := make([]int, c.Config.LineSize)
-	evicted := cacheSet.Allocate(tag, dummyData, cycle)
-	if evicted != nil {
-		c.Stats.RecordEviction(true)
-	} else if allWaysValid(cacheSet) {
-		c.Stats.RecordEviction(false)
-	}
-
-	return CacheAccess{
-		Address:  address,
-		Hit:      false,
-		Tag:      tag,
-		SetIndex: setIndex,
-		Offset:   offset,
-		Cycles:   c.Config.AccessLatency,
-		Evicted:  evicted,
-	}
+	result, _ := StartNew[CacheAccess]("cache.Read", CacheAccess{},
+		func(op *Operation[CacheAccess], rf *ResultFactory[CacheAccess]) *OperationResult[CacheAccess] {
+			op.AddProperty("address", address)
+			op.AddProperty("cycle", cycle)
+			tag, setIndex, offset := c.DecomposeAddress(address)
+			cacheSet := c.Sets[setIndex]
+			hit, line := cacheSet.Access(tag, cycle)
+			_ = line
+			if hit {
+				c.Stats.RecordRead(true)
+				return rf.Generate(true, false, CacheAccess{
+					Address:  address,
+					Hit:      true,
+					Tag:      tag,
+					SetIndex: setIndex,
+					Offset:   offset,
+					Cycles:   c.Config.AccessLatency,
+				})
+			}
+			c.Stats.RecordRead(false)
+			dummyData := make([]int, c.Config.LineSize)
+			evicted := cacheSet.Allocate(tag, dummyData, cycle)
+			if evicted != nil {
+				c.Stats.RecordEviction(true)
+			} else if allWaysValid(cacheSet) {
+				c.Stats.RecordEviction(false)
+			}
+			return rf.Generate(true, false, CacheAccess{
+				Address:  address,
+				Hit:      false,
+				Tag:      tag,
+				SetIndex: setIndex,
+				Offset:   offset,
+				Cycles:   c.Config.AccessLatency,
+				Evicted:  evicted,
+			})
+		}).GetResult()
+	return result
 }
 
 // Write writes data to the cache.
@@ -151,68 +161,64 @@ func (c *Cache) Read(address, cycle int) CacheAccess {
 // On a write miss, we use write-allocate: first bring the line into
 // the cache (like a read miss), then perform the write.
 func (c *Cache) Write(address int, data []int, cycle int) CacheAccess {
-	tag, setIndex, offset := c.DecomposeAddress(address)
-	cacheSet := c.Sets[setIndex]
-
-	hit, line := cacheSet.Access(tag, cycle)
-
-	if hit {
-		c.Stats.RecordWrite(true)
-		// Write the data into the line
-		if data != nil {
-			for i, b := range data {
-				if offset+i < len(line.Data) {
-					line.Data[offset+i] = b
+	result, _ := StartNew[CacheAccess]("cache.Write", CacheAccess{},
+		func(op *Operation[CacheAccess], rf *ResultFactory[CacheAccess]) *OperationResult[CacheAccess] {
+			op.AddProperty("address", address)
+			op.AddProperty("cycle", cycle)
+			tag, setIndex, offset := c.DecomposeAddress(address)
+			cacheSet := c.Sets[setIndex]
+			hit, line := cacheSet.Access(tag, cycle)
+			if hit {
+				c.Stats.RecordWrite(true)
+				if data != nil {
+					for i, b := range data {
+						if offset+i < len(line.Data) {
+							line.Data[offset+i] = b
+						}
+					}
+				}
+				if c.Config.WritePolicy == "write-back" {
+					line.Dirty = true
+				}
+				return rf.Generate(true, false, CacheAccess{
+					Address:  address,
+					Hit:      true,
+					Tag:      tag,
+					SetIndex: setIndex,
+					Offset:   offset,
+					Cycles:   c.Config.AccessLatency,
+				})
+			}
+			c.Stats.RecordWrite(false)
+			fillData := make([]int, c.Config.LineSize)
+			if data != nil {
+				for i, b := range data {
+					if offset+i < len(fillData) {
+						fillData[offset+i] = b
+					}
 				}
 			}
-		}
-		// Mark dirty for write-back; write-through stays clean
-		if c.Config.WritePolicy == "write-back" {
-			line.Dirty = true
-		}
-		return CacheAccess{
-			Address:  address,
-			Hit:      true,
-			Tag:      tag,
-			SetIndex: setIndex,
-			Offset:   offset,
-			Cycles:   c.Config.AccessLatency,
-		}
-	}
-
-	// Write miss — allocate (write-allocate policy), then write
-	c.Stats.RecordWrite(false)
-	fillData := make([]int, c.Config.LineSize)
-	if data != nil {
-		for i, b := range data {
-			if offset+i < len(fillData) {
-				fillData[offset+i] = b
+			evicted := cacheSet.Allocate(tag, fillData, cycle)
+			if evicted != nil {
+				c.Stats.RecordEviction(true)
+			} else if allWaysValid(cacheSet) {
+				c.Stats.RecordEviction(false)
 			}
-		}
-	}
-
-	evicted := cacheSet.Allocate(tag, fillData, cycle)
-	if evicted != nil {
-		c.Stats.RecordEviction(true)
-	} else if allWaysValid(cacheSet) {
-		c.Stats.RecordEviction(false)
-	}
-
-	// For write-back, mark the newly allocated line as dirty
-	newHit, newLine := cacheSet.Access(tag, cycle)
-	if newHit && c.Config.WritePolicy == "write-back" {
-		newLine.Dirty = true
-	}
-
-	return CacheAccess{
-		Address:  address,
-		Hit:      false,
-		Tag:      tag,
-		SetIndex: setIndex,
-		Offset:   offset,
-		Cycles:   c.Config.AccessLatency,
-		Evicted:  evicted,
-	}
+			newHit, newLine := cacheSet.Access(tag, cycle)
+			if newHit && c.Config.WritePolicy == "write-back" {
+				newLine.Dirty = true
+			}
+			return rf.Generate(true, false, CacheAccess{
+				Address:  address,
+				Hit:      false,
+				Tag:      tag,
+				SetIndex: setIndex,
+				Offset:   offset,
+				Cycles:   c.Config.AccessLatency,
+				Evicted:  evicted,
+			})
+		}).GetResult()
+	return result
 }
 
 // allWaysValid checks if all ways in a set are valid (meaning an eviction occurred).
@@ -230,11 +236,15 @@ func allWaysValid(cacheSet *CacheSet) bool {
 // This is equivalent to a cold start — after invalidation, every
 // access will be a compulsory miss.
 func (c *Cache) Invalidate() {
-	for _, cacheSet := range c.Sets {
-		for _, line := range cacheSet.Lines {
-			line.Invalidate()
-		}
-	}
+	_, _ = StartNew[struct{}]("cache.CacheInvalidate", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for _, cacheSet := range c.Sets {
+				for _, line := range cacheSet.Lines {
+					line.Invalidate()
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // FillLine directly fills a cache line with data (used by hierarchy on miss).
@@ -243,19 +253,29 @@ func (c *Cache) Invalidate() {
 // hierarchy fetches data from a lower level and wants to install
 // it in this cache.
 func (c *Cache) FillLine(address int, data []int, cycle int) *CacheLine {
-	tag, setIndex, _ := c.DecomposeAddress(address)
-	cacheSet := c.Sets[setIndex]
-	return cacheSet.Allocate(tag, data, cycle)
+	result, _ := StartNew[*CacheLine]("cache.FillLine", nil,
+		func(op *Operation[*CacheLine], rf *ResultFactory[*CacheLine]) *OperationResult[*CacheLine] {
+			op.AddProperty("address", address)
+			op.AddProperty("cycle", cycle)
+			tag, setIndex, _ := c.DecomposeAddress(address)
+			cacheSet := c.Sets[setIndex]
+			return rf.Generate(true, false, cacheSet.Allocate(tag, data, cycle))
+		}).GetResult()
+	return result
 }
 
 // String returns a human-readable summary of the cache configuration.
 func (c *Cache) String() string {
-	return fmt.Sprintf(
-		"Cache(%s: %dKB, %d-way, %dB lines, %d sets)",
-		c.Config.Name,
-		c.Config.TotalSize/1024,
-		c.Config.Associativity,
-		c.Config.LineSize,
-		c.Config.NumSets(),
-	)
+	result, _ := StartNew[string]("cache.CacheString", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf(
+				"Cache(%s: %dKB, %d-way, %dB lines, %d sets)",
+				c.Config.Name,
+				c.Config.TotalSize/1024,
+				c.Config.Associativity,
+				c.Config.LineSize,
+				c.Config.NumSets(),
+			))
+		}).GetResult()
+	return result
 }

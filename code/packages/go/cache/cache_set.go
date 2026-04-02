@@ -51,45 +51,66 @@ type CacheConfig struct {
 // constraint because address bit-slicing only works cleanly with
 // power-of-2 sizes.
 func NewCacheConfig(name string, totalSize, lineSize, associativity, accessLatency int, writePolicy string) (CacheConfig, error) {
-	if totalSize <= 0 {
-		return CacheConfig{}, fmt.Errorf("total_size must be positive, got %d", totalSize)
+	type ccResult struct {
+		cfg CacheConfig
+		err error
 	}
-	if lineSize <= 0 || (lineSize&(lineSize-1)) != 0 {
-		return CacheConfig{}, fmt.Errorf("line_size must be a positive power of 2, got %d", lineSize)
-	}
-	if associativity <= 0 {
-		return CacheConfig{}, fmt.Errorf("associativity must be positive, got %d", associativity)
-	}
-	if totalSize%(lineSize*associativity) != 0 {
-		return CacheConfig{}, fmt.Errorf(
-			"total_size (%d) must be divisible by line_size * associativity (%d)",
-			totalSize, lineSize*associativity,
-		)
-	}
-	if writePolicy != "write-back" && writePolicy != "write-through" {
-		return CacheConfig{}, fmt.Errorf("write_policy must be 'write-back' or 'write-through', got '%s'", writePolicy)
-	}
-	if accessLatency < 0 {
-		return CacheConfig{}, fmt.Errorf("access_latency must be non-negative, got %d", accessLatency)
-	}
-	return CacheConfig{
-		Name:          name,
-		TotalSize:     totalSize,
-		LineSize:      lineSize,
-		Associativity: associativity,
-		AccessLatency: accessLatency,
-		WritePolicy:   writePolicy,
-	}, nil
+	res, _ := StartNew[ccResult]("cache.NewCacheConfig", ccResult{},
+		func(op *Operation[ccResult], rf *ResultFactory[ccResult]) *OperationResult[ccResult] {
+			op.AddProperty("name", name)
+			op.AddProperty("totalSize", totalSize)
+			op.AddProperty("lineSize", lineSize)
+			op.AddProperty("associativity", associativity)
+			op.AddProperty("accessLatency", accessLatency)
+			if totalSize <= 0 {
+				return rf.Generate(true, false, ccResult{err: fmt.Errorf("total_size must be positive, got %d", totalSize)})
+			}
+			if lineSize <= 0 || (lineSize&(lineSize-1)) != 0 {
+				return rf.Generate(true, false, ccResult{err: fmt.Errorf("line_size must be a positive power of 2, got %d", lineSize)})
+			}
+			if associativity <= 0 {
+				return rf.Generate(true, false, ccResult{err: fmt.Errorf("associativity must be positive, got %d", associativity)})
+			}
+			if totalSize%(lineSize*associativity) != 0 {
+				return rf.Generate(true, false, ccResult{err: fmt.Errorf(
+					"total_size (%d) must be divisible by line_size * associativity (%d)",
+					totalSize, lineSize*associativity,
+				)})
+			}
+			if writePolicy != "write-back" && writePolicy != "write-through" {
+				return rf.Generate(true, false, ccResult{err: fmt.Errorf("write_policy must be 'write-back' or 'write-through', got '%s'", writePolicy)})
+			}
+			if accessLatency < 0 {
+				return rf.Generate(true, false, ccResult{err: fmt.Errorf("access_latency must be non-negative, got %d", accessLatency)})
+			}
+			return rf.Generate(true, false, ccResult{cfg: CacheConfig{
+				Name:          name,
+				TotalSize:     totalSize,
+				LineSize:      lineSize,
+				Associativity: associativity,
+				AccessLatency: accessLatency,
+				WritePolicy:   writePolicy,
+			}})
+		}).GetResult()
+	return res.cfg, res.err
 }
 
 // NumLines returns the total number of cache lines = TotalSize / LineSize.
 func (c CacheConfig) NumLines() int {
-	return c.TotalSize / c.LineSize
+	result, _ := StartNew[int]("cache.NumLines", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, c.TotalSize/c.LineSize)
+		}).GetResult()
+	return result
 }
 
 // NumSets returns the number of sets = NumLines / Associativity.
 func (c CacheConfig) NumSets() int {
-	return c.NumLines() / c.Associativity
+	result, _ := StartNew[int]("cache.NumSets", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, c.NumLines()/c.Associativity)
+		}).GetResult()
+	return result
 }
 
 // CacheSet represents one set in the cache — contains N ways (lines).
@@ -107,11 +128,17 @@ type CacheSet struct {
 
 // NewCacheSet creates a cache set with the given number of ways.
 func NewCacheSet(associativity, lineSize int) *CacheSet {
-	lines := make([]*CacheLine, associativity)
-	for i := range lines {
-		lines[i] = NewCacheLine(lineSize)
-	}
-	return &CacheSet{Lines: lines}
+	result, _ := StartNew[*CacheSet]("cache.NewCacheSet", nil,
+		func(op *Operation[*CacheSet], rf *ResultFactory[*CacheSet]) *OperationResult[*CacheSet] {
+			op.AddProperty("associativity", associativity)
+			op.AddProperty("lineSize", lineSize)
+			lines := make([]*CacheLine, associativity)
+			for i := range lines {
+				lines[i] = NewCacheLine(lineSize)
+			}
+			return rf.Generate(true, false, &CacheSet{Lines: lines})
+		}).GetResult()
+	return result
 }
 
 // Lookup checks if a tag is present in this set.
@@ -122,12 +149,21 @@ func NewCacheSet(associativity, lineSize int) *CacheSet {
 //
 // Returns (hit, wayIndex). wayIndex is -1 on a miss.
 func (cs *CacheSet) Lookup(tag int) (bool, int) {
-	for i, line := range cs.Lines {
-		if line.Valid && line.Tag == tag {
-			return true, i
-		}
+	type lookupResult struct {
+		hit bool
+		idx int
 	}
-	return false, -1
+	res, _ := StartNew[lookupResult]("cache.Lookup", lookupResult{idx: -1},
+		func(op *Operation[lookupResult], rf *ResultFactory[lookupResult]) *OperationResult[lookupResult] {
+			op.AddProperty("tag", tag)
+			for i, line := range cs.Lines {
+				if line.Valid && line.Tag == tag {
+					return rf.Generate(true, false, lookupResult{hit: true, idx: i})
+				}
+			}
+			return rf.Generate(true, false, lookupResult{hit: false, idx: -1})
+		}).GetResult()
+	return res.hit, res.idx
 }
 
 // Access accesses this set for a given tag. Returns (hit, line).
@@ -136,15 +172,24 @@ func (cs *CacheSet) Lookup(tag int) (bool, int) {
 // most recently used. On a miss, returns the LRU victim line
 // (the caller decides what to do — typically allocate new data).
 func (cs *CacheSet) Access(tag, cycle int) (bool, *CacheLine) {
-	hit, wayIndex := cs.Lookup(tag)
-	if hit {
-		line := cs.Lines[wayIndex]
-		line.Touch(cycle)
-		return true, line
+	type accessResult struct {
+		hit  bool
+		line *CacheLine
 	}
-	// Miss — return the LRU line (candidate for eviction)
-	lruIndex := cs.FindLRU()
-	return false, cs.Lines[lruIndex]
+	res, _ := StartNew[accessResult]("cache.Access", accessResult{},
+		func(op *Operation[accessResult], rf *ResultFactory[accessResult]) *OperationResult[accessResult] {
+			op.AddProperty("tag", tag)
+			op.AddProperty("cycle", cycle)
+			hit, wayIndex := cs.Lookup(tag)
+			if hit {
+				line := cs.Lines[wayIndex]
+				line.Touch(cycle)
+				return rf.Generate(true, false, accessResult{hit: true, line: line})
+			}
+			lruIndex := cs.FindLRU()
+			return rf.Generate(true, false, accessResult{hit: false, line: cs.Lines[lruIndex]})
+		}).GetResult()
+	return res.hit, res.line
 }
 
 // Allocate brings new data into this set after a cache miss.
@@ -159,35 +204,35 @@ func (cs *CacheSet) Access(tag, cycle int) (bool, *CacheLine) {
 //  3. If that book had notes scribbled in it (dirty), you need
 //     to save those notes before putting the book away.
 func (cs *CacheSet) Allocate(tag int, data []int, cycle int) *CacheLine {
-	// Step 1: Look for an invalid (empty) way
-	for _, line := range cs.Lines {
-		if !line.Valid {
-			line.Fill(tag, data, cycle)
-			return nil // no eviction needed
-		}
-	}
+	result, _ := StartNew[*CacheLine]("cache.Allocate", nil,
+		func(op *Operation[*CacheLine], rf *ResultFactory[*CacheLine]) *OperationResult[*CacheLine] {
+			op.AddProperty("tag", tag)
+			op.AddProperty("cycle", cycle)
+			for _, line := range cs.Lines {
+				if !line.Valid {
+					line.Fill(tag, data, cycle)
+					return rf.Generate(true, false, (*CacheLine)(nil))
+				}
+			}
 
-	// Step 2: All ways full — evict the LRU line
-	lruIndex := cs.FindLRU()
-	victim := cs.Lines[lruIndex]
+			lruIndex := cs.FindLRU()
+			victim := cs.Lines[lruIndex]
 
-	// Step 3: Check if the victim is dirty (needs writeback)
-	var evicted *CacheLine
-	if victim.Dirty {
-		// Create a copy of the evicted line for writeback
-		evicted = NewCacheLine(len(victim.Data))
-		evicted.Valid = true
-		evicted.Dirty = true
-		evicted.Tag = victim.Tag
-		evicted.Data = make([]int, len(victim.Data))
-		copy(evicted.Data, victim.Data)
-		evicted.LastAccess = victim.LastAccess
-	}
+			var evicted *CacheLine
+			if victim.Dirty {
+				evicted = NewCacheLine(len(victim.Data))
+				evicted.Valid = true
+				evicted.Dirty = true
+				evicted.Tag = victim.Tag
+				evicted.Data = make([]int, len(victim.Data))
+				copy(evicted.Data, victim.Data)
+				evicted.LastAccess = victim.LastAccess
+			}
 
-	// Step 4: Overwrite the victim with new data
-	victim.Fill(tag, data, cycle)
-
-	return evicted
+			victim.Fill(tag, data, cycle)
+			return rf.Generate(true, false, evicted)
+		}).GetResult()
+	return result
 }
 
 // FindLRU finds the least recently used way index.
@@ -199,17 +244,20 @@ func (cs *CacheSet) Allocate(tag int, data []int, cycle int) *CacheLine {
 // Special case: invalid lines are always preferred over valid ones
 // (an empty slot is "older" than any real data).
 func (cs *CacheSet) FindLRU() int {
-	bestIndex := 0
-	bestTime := math.MaxInt
-	for i, line := range cs.Lines {
-		// Invalid lines are always the best candidates
-		if !line.Valid {
-			return i
-		}
-		if line.LastAccess < bestTime {
-			bestTime = line.LastAccess
-			bestIndex = i
-		}
-	}
-	return bestIndex
+	result, _ := StartNew[int]("cache.FindLRU", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			bestIndex := 0
+			bestTime := math.MaxInt
+			for i, line := range cs.Lines {
+				if !line.Valid {
+					return rf.Generate(true, false, i)
+				}
+				if line.LastAccess < bestTime {
+					bestTime = line.LastAccess
+					bestIndex = i
+				}
+			}
+			return rf.Generate(true, false, bestIndex)
+		}).GetResult()
+	return result
 }

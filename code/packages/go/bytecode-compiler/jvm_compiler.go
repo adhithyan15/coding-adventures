@@ -54,25 +54,32 @@ type JVMCompiler struct {
 }
 
 func NewJVMCompiler() *JVMCompiler {
-	return &JVMCompiler{
-		Bytecode:  []byte{},
-		Constants: []interface{}{},
-		Locals:    []string{},
-	}
+	result, _ := StartNew[*JVMCompiler]("bytecode-compiler.NewJVMCompiler", nil,
+		func(_ *Operation[*JVMCompiler], rf *ResultFactory[*JVMCompiler]) *OperationResult[*JVMCompiler] {
+			return rf.Generate(true, false, &JVMCompiler{
+				Bytecode:  []byte{},
+				Constants: []interface{}{},
+				Locals:    []string{},
+			})
+		}).GetResult()
+	return result
 }
 
 func (c *JVMCompiler) Compile(program parser.Program) JVMCodeObject {
-	for _, stmt := range program.Statements {
-		c.compileStatement(stmt)
-	}
-	c.Bytecode = append(c.Bytecode, RETURN)
-
-	return JVMCodeObject{
-		Bytecode:   c.Bytecode,
-		Constants:  c.Constants,
-		NumLocals:  len(c.Locals),
-		LocalNames: c.Locals,
-	}
+	result, _ := StartNew[JVMCodeObject]("bytecode-compiler.JVMCompile", JVMCodeObject{},
+		func(_ *Operation[JVMCodeObject], rf *ResultFactory[JVMCodeObject]) *OperationResult[JVMCodeObject] {
+			for _, stmt := range program.Statements {
+				c.compileStatement(stmt)
+			}
+			c.Bytecode = append(c.Bytecode, RETURN)
+			return rf.Generate(true, false, JVMCodeObject{
+				Bytecode:   c.Bytecode,
+				Constants:  c.Constants,
+				NumLocals:  len(c.Locals),
+				LocalNames: c.Locals,
+			})
+		}).GetResult()
+	return result
 }
 
 func (c *JVMCompiler) compileStatement(stmt parser.Statement) {

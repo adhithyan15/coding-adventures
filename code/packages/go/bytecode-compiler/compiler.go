@@ -21,24 +21,31 @@ type BytecodeCompiler struct {
 }
 
 func NewBytecodeCompiler() *BytecodeCompiler {
-	return &BytecodeCompiler{
-		Instructions: []vm.Instruction{},
-		Constants:    []interface{}{},
-		Names:        []string{},
-	}
+	result, _ := StartNew[*BytecodeCompiler]("bytecode-compiler.NewBytecodeCompiler", nil,
+		func(_ *Operation[*BytecodeCompiler], rf *ResultFactory[*BytecodeCompiler]) *OperationResult[*BytecodeCompiler] {
+			return rf.Generate(true, false, &BytecodeCompiler{
+				Instructions: []vm.Instruction{},
+				Constants:    []interface{}{},
+				Names:        []string{},
+			})
+		}).GetResult()
+	return result
 }
 
 func (c *BytecodeCompiler) Compile(program parser.Program) vm.CodeObject {
-	for _, stmt := range program.Statements {
-		c.compileStatement(stmt)
-	}
-	c.Instructions = append(c.Instructions, vm.Instruction{Opcode: vm.OpHalt})
-
-	return vm.CodeObject{
-		Instructions: c.Instructions,
-		Constants:    c.Constants,
-		Names:        c.Names,
-	}
+	result, _ := StartNew[vm.CodeObject]("bytecode-compiler.Compile", vm.CodeObject{},
+		func(_ *Operation[vm.CodeObject], rf *ResultFactory[vm.CodeObject]) *OperationResult[vm.CodeObject] {
+			for _, stmt := range program.Statements {
+				c.compileStatement(stmt)
+			}
+			c.Instructions = append(c.Instructions, vm.Instruction{Opcode: vm.OpHalt})
+			return rf.Generate(true, false, vm.CodeObject{
+				Instructions: c.Instructions,
+				Constants:    c.Constants,
+				Names:        c.Names,
+			})
+		}).GetResult()
+	return result
 }
 
 func (c *BytecodeCompiler) compileStatement(stmt parser.Statement) {

@@ -80,25 +80,40 @@ package arm1simulator
 // For ASR:  carry = last bit shifted out (bit [amount-1]),  or carryIn if amount=0
 // For ROR:  carry = last bit shifted out (bit [amount-1]),  or old bit 0 for RRX
 func BarrelShift(value uint32, shiftType int, amount int, carryIn bool, byRegister bool) (result uint32, carryOut bool) {
-	// When shifting by a register value, the bottom 8 bits are used as the
-	// shift amount. If the amount is 0, the value passes through unchanged
-	// and the carry flag is unaffected.
-	if byRegister && amount == 0 {
-		return value, carryIn
+	type shiftResult struct {
+		result   uint32
+		carryOut bool
 	}
+	res, _ := StartNew[shiftResult]("arm1-simulator.BarrelShift", shiftResult{},
+		func(op *Operation[shiftResult], rf *ResultFactory[shiftResult]) *OperationResult[shiftResult] {
+			op.AddProperty("shiftType", shiftType)
+			op.AddProperty("amount", amount)
+			op.AddProperty("byRegister", byRegister)
+			// When shifting by a register value, the bottom 8 bits are used as the
+			// shift amount. If the amount is 0, the value passes through unchanged
+			// and the carry flag is unaffected.
+			if byRegister && amount == 0 {
+				return rf.Generate(true, false, shiftResult{result: value, carryOut: carryIn})
+			}
 
-	switch shiftType {
-	case ShiftLSL:
-		return shiftLSL(value, amount, carryIn, byRegister)
-	case ShiftLSR:
-		return shiftLSR(value, amount, carryIn, byRegister)
-	case ShiftASR:
-		return shiftASR(value, amount, carryIn, byRegister)
-	case ShiftROR:
-		return shiftROR(value, amount, carryIn, byRegister)
-	default:
-		return value, carryIn
-	}
+			var r uint32
+			var c bool
+			switch shiftType {
+			case ShiftLSL:
+				r, c = shiftLSL(value, amount, carryIn, byRegister)
+			case ShiftLSR:
+				r, c = shiftLSR(value, amount, carryIn, byRegister)
+			case ShiftASR:
+				r, c = shiftASR(value, amount, carryIn, byRegister)
+			case ShiftROR:
+				r, c = shiftROR(value, amount, carryIn, byRegister)
+			default:
+				r = value
+				c = carryIn
+			}
+			return rf.Generate(true, false, shiftResult{result: r, carryOut: c})
+		}).GetResult()
+	return res.result, res.carryOut
 }
 
 // shiftLSL — Logical Shift Left
@@ -241,11 +256,21 @@ func shiftROR(value uint32, amount int, carryIn bool, byRegister bool) (uint32, 
 //   imm8=0xFF, rotate=8  → 0x00FF0000 (rotated right by 16)
 //   imm8=0x01, rotate=1  → 0x40000000 (1 rotated right by 2)
 func DecodeImmediate(imm8 uint32, rotate uint32) (value uint32, carryOut bool) {
-	rotateAmount := int(rotate * 2)
-	if rotateAmount == 0 {
-		return imm8, false // carry is unchanged (we return false as default)
+	type decodeResult struct {
+		value    uint32
+		carryOut bool
 	}
-	value = (imm8 >> rotateAmount) | (imm8 << (32 - rotateAmount))
-	carryOut = (value >> 31) != 0
-	return value, carryOut
+	res, _ := StartNew[decodeResult]("arm1-simulator.DecodeImmediate", decodeResult{},
+		func(op *Operation[decodeResult], rf *ResultFactory[decodeResult]) *OperationResult[decodeResult] {
+			op.AddProperty("imm8", imm8)
+			op.AddProperty("rotate", rotate)
+			rotateAmount := int(rotate * 2)
+			if rotateAmount == 0 {
+				return rf.Generate(true, false, decodeResult{value: imm8, carryOut: false})
+			}
+			v := (imm8 >> rotateAmount) | (imm8 << (32 - rotateAmount))
+			c := (v >> 31) != 0
+			return rf.Generate(true, false, decodeResult{value: v, carryOut: c})
+		}).GetResult()
+	return res.value, res.carryOut
 }

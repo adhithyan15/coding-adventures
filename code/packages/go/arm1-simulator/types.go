@@ -48,18 +48,23 @@ const (
 
 // ModeString returns a human-readable name for a processor mode.
 func ModeString(mode int) string {
-	switch mode {
-	case ModeUSR:
-		return "USR"
-	case ModeFIQ:
-		return "FIQ"
-	case ModeIRQ:
-		return "IRQ"
-	case ModeSVC:
-		return "SVC"
-	default:
-		return "???"
-	}
+	result, _ := StartNew[string]("arm1-simulator.ModeString", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("mode", mode)
+			switch mode {
+			case ModeUSR:
+				return rf.Generate(true, false, "USR")
+			case ModeFIQ:
+				return rf.Generate(true, false, "FIQ")
+			case ModeIRQ:
+				return rf.Generate(true, false, "IRQ")
+			case ModeSVC:
+				return rf.Generate(true, false, "SVC")
+			default:
+				return rf.Generate(true, false, "???")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -94,42 +99,47 @@ const (
 
 // CondString returns the assembly-language suffix for a condition code.
 func CondString(cond int) string {
-	switch cond {
-	case CondEQ:
-		return "EQ"
-	case CondNE:
-		return "NE"
-	case CondCS:
-		return "CS"
-	case CondCC:
-		return "CC"
-	case CondMI:
-		return "MI"
-	case CondPL:
-		return "PL"
-	case CondVS:
-		return "VS"
-	case CondVC:
-		return "VC"
-	case CondHI:
-		return "HI"
-	case CondLS:
-		return "LS"
-	case CondGE:
-		return "GE"
-	case CondLT:
-		return "LT"
-	case CondGT:
-		return "GT"
-	case CondLE:
-		return "LE"
-	case CondAL:
-		return ""
-	case CondNV:
-		return "NV"
-	default:
-		return "??"
-	}
+	result, _ := StartNew[string]("arm1-simulator.CondString", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("cond", cond)
+			switch cond {
+			case CondEQ:
+				return rf.Generate(true, false, "EQ")
+			case CondNE:
+				return rf.Generate(true, false, "NE")
+			case CondCS:
+				return rf.Generate(true, false, "CS")
+			case CondCC:
+				return rf.Generate(true, false, "CC")
+			case CondMI:
+				return rf.Generate(true, false, "MI")
+			case CondPL:
+				return rf.Generate(true, false, "PL")
+			case CondVS:
+				return rf.Generate(true, false, "VS")
+			case CondVC:
+				return rf.Generate(true, false, "VC")
+			case CondHI:
+				return rf.Generate(true, false, "HI")
+			case CondLS:
+				return rf.Generate(true, false, "LS")
+			case CondGE:
+				return rf.Generate(true, false, "GE")
+			case CondLT:
+				return rf.Generate(true, false, "LT")
+			case CondGT:
+				return rf.Generate(true, false, "GT")
+			case CondLE:
+				return rf.Generate(true, false, "LE")
+			case CondAL:
+				return rf.Generate(true, false, "")
+			case CondNV:
+				return rf.Generate(true, false, "NV")
+			default:
+				return rf.Generate(true, false, "??")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -161,32 +171,47 @@ const (
 
 // OpString returns the mnemonic for an ALU opcode.
 func OpString(opcode int) string {
-	names := [16]string{
-		"AND", "EOR", "SUB", "RSB", "ADD", "ADC", "SBC", "RSC",
-		"TST", "TEQ", "CMP", "CMN", "ORR", "MOV", "BIC", "MVN",
-	}
-	if opcode >= 0 && opcode < 16 {
-		return names[opcode]
-	}
-	return "???"
+	result, _ := StartNew[string]("arm1-simulator.OpString", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("opcode", opcode)
+			names := [16]string{
+				"AND", "EOR", "SUB", "RSB", "ADD", "ADC", "SBC", "RSC",
+				"TST", "TEQ", "CMP", "CMN", "ORR", "MOV", "BIC", "MVN",
+			}
+			if opcode >= 0 && opcode < 16 {
+				return rf.Generate(true, false, names[opcode])
+			}
+			return rf.Generate(true, false, "???")
+		}).GetResult()
+	return result
 }
 
 // IsTestOp returns true if the ALU opcode is a test-only operation
 // (TST, TEQ, CMP, CMN) that does not write to the destination register.
 func IsTestOp(opcode int) bool {
-	return opcode >= OpTST && opcode <= OpCMN
+	result, _ := StartNew[bool]("arm1-simulator.IsTestOp", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("opcode", opcode)
+			return rf.Generate(true, false, opcode >= OpTST && opcode <= OpCMN)
+		}).GetResult()
+	return result
 }
 
 // IsLogicalOp returns true if the ALU opcode is a logical operation.
 // For logical ops, the C flag comes from the barrel shifter carry-out
 // rather than the ALU's adder carry.
 func IsLogicalOp(opcode int) bool {
-	switch opcode {
-	case OpAND, OpEOR, OpTST, OpTEQ, OpORR, OpMOV, OpBIC, OpMVN:
-		return true
-	default:
-		return false
-	}
+	result, _ := StartNew[bool]("arm1-simulator.IsLogicalOp", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("opcode", opcode)
+			switch opcode {
+			case OpAND, OpEOR, OpTST, OpTEQ, OpORR, OpMOV, OpBIC, OpMVN:
+				return rf.Generate(true, false, true)
+			default:
+				return rf.Generate(true, false, false)
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -210,18 +235,23 @@ const (
 
 // ShiftString returns the mnemonic for a shift type.
 func ShiftString(shiftType int) string {
-	switch shiftType {
-	case ShiftLSL:
-		return "LSL"
-	case ShiftLSR:
-		return "LSR"
-	case ShiftASR:
-		return "ASR"
-	case ShiftROR:
-		return "ROR"
-	default:
-		return "???"
-	}
+	result, _ := StartNew[string]("arm1-simulator.ShiftString", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("shiftType", shiftType)
+			switch shiftType {
+			case ShiftLSL:
+				return rf.Generate(true, false, "LSL")
+			case ShiftLSR:
+				return rf.Generate(true, false, "LSR")
+			case ShiftASR:
+				return rf.Generate(true, false, "ASR")
+			case ShiftROR:
+				return rf.Generate(true, false, "ROR")
+			default:
+				return rf.Generate(true, false, "???")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

@@ -84,7 +84,12 @@ type BrainfuckResult struct {
 //	bvm.Execute(code)
 //	// bvm.Output is ["H"]
 func CreateBrainfuckVM(inputData string) *BrainfuckVM {
-	return NewBrainfuckVM(inputData)
+	result, _ := StartNew[*BrainfuckVM]("brainfuck.CreateBrainfuckVM", nil,
+		func(op *Operation[*BrainfuckVM], rf *ResultFactory[*BrainfuckVM]) *OperationResult[*BrainfuckVM] {
+			op.AddProperty("inputDataLen", len(inputData))
+			return rf.Generate(true, false, NewBrainfuckVM(inputData))
+		}).GetResult()
+	return result
 }
 
 // ExecuteBrainfuck translates and executes a Brainfuck program in one call.
@@ -117,28 +122,32 @@ func CreateBrainfuckVM(inputData string) *BrainfuckVM {
 //	result := ExecuteBrainfuck("+++++++++[>++++++++<-]>.", "")
 //	// result.Output == "H"
 func ExecuteBrainfuck(source string, inputData string) BrainfuckResult {
-	// Step 1: Translate source to bytecode.
-	code := Translate(source)
+	result, _ := StartNew[BrainfuckResult]("brainfuck.ExecuteBrainfuck", BrainfuckResult{},
+		func(op *Operation[BrainfuckResult], rf *ResultFactory[BrainfuckResult]) *OperationResult[BrainfuckResult] {
+			op.AddProperty("sourceLen", len(source))
+			op.AddProperty("inputDataLen", len(inputData))
+			// Step 1: Translate source to bytecode.
+			code := Translate(source)
 
-	// Step 2: Create a VM with the specified input.
-	bvm := CreateBrainfuckVM(inputData)
+			// Step 2: Create a VM with the specified input.
+			bvm := CreateBrainfuckVM(inputData)
 
-	// Step 3: Execute the program.
-	traces := bvm.Execute(code)
+			// Step 3: Execute the program.
+			traces := bvm.Execute(code)
 
-	// Step 4: Package the results.
-	// Join all output strings (each "." produces one character).
-	output := strings.Join(bvm.Output, "")
+			// Step 4: Package the results.
+			output := strings.Join(bvm.Output, "")
 
-	// Copy the tape so the caller gets an independent snapshot.
-	tapeCopy := make([]byte, len(bvm.Tape))
-	copy(tapeCopy, bvm.Tape)
+			tapeCopy := make([]byte, len(bvm.Tape))
+			copy(tapeCopy, bvm.Tape)
 
-	return BrainfuckResult{
-		Output: output,
-		Tape:   tapeCopy,
-		DP:     bvm.DP,
-		Traces: traces,
-		Steps:  len(traces),
-	}
+			return rf.Generate(true, false, BrainfuckResult{
+				Output: output,
+				Tape:   tapeCopy,
+				DP:     bvm.DP,
+				Traces: traces,
+				Steps:  len(traces),
+			})
+		}).GetResult()
+	return result
 }

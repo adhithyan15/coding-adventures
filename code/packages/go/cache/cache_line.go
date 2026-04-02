@@ -40,14 +40,19 @@ type CacheLine struct {
 // After creation, the line is invalid (empty box). It becomes valid when
 // data is loaded into it via Fill().
 func NewCacheLine(lineSize int) *CacheLine {
-	data := make([]int, lineSize)
-	return &CacheLine{
-		Valid:      false,
-		Dirty:      false,
-		Tag:        0,
-		LastAccess: 0,
-		Data:       data,
-	}
+	result, _ := StartNew[*CacheLine]("cache.NewCacheLine", nil,
+		func(op *Operation[*CacheLine], rf *ResultFactory[*CacheLine]) *OperationResult[*CacheLine] {
+			op.AddProperty("lineSize", lineSize)
+			data := make([]int, lineSize)
+			return rf.Generate(true, false, &CacheLine{
+				Valid:      false,
+				Dirty:      false,
+				Tag:        0,
+				LastAccess: 0,
+				Data:       data,
+			})
+		}).GetResult()
+	return result
 }
 
 // Fill loads data into this cache line, marking it valid.
@@ -55,12 +60,18 @@ func NewCacheLine(lineSize int) *CacheLine {
 // This is called when a cache miss brings data from a lower level
 // (L2, L3, or main memory) into this line.
 func (cl *CacheLine) Fill(tag int, data []int, cycle int) {
-	cl.Valid = true
-	cl.Dirty = false // freshly loaded data is clean
-	cl.Tag = tag
-	cl.Data = make([]int, len(data)) // defensive copy
-	copy(cl.Data, data)
-	cl.LastAccess = cycle
+	_, _ = StartNew[struct{}]("cache.Fill", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("tag", tag)
+			op.AddProperty("cycle", cycle)
+			cl.Valid = true
+			cl.Dirty = false
+			cl.Tag = tag
+			cl.Data = make([]int, len(data))
+			copy(cl.Data, data)
+			cl.LastAccess = cycle
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Touch updates the last access time — called on every hit.
@@ -68,7 +79,12 @@ func (cl *CacheLine) Fill(tag int, data []int, cycle int) {
 // This is the heartbeat of LRU: the most recently used line
 // gets the highest timestamp, so it's the *last* to be evicted.
 func (cl *CacheLine) Touch(cycle int) {
-	cl.LastAccess = cycle
+	_, _ = StartNew[struct{}]("cache.Touch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("cycle", cycle)
+			cl.LastAccess = cycle
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Invalidate marks this line as invalid (empty).
@@ -76,25 +92,37 @@ func (cl *CacheLine) Touch(cycle int) {
 // Used during cache flushes or coherence protocol invalidations.
 // The data is not zeroed — it's just marked as not-present.
 func (cl *CacheLine) Invalidate() {
-	cl.Valid = false
-	cl.Dirty = false
+	_, _ = StartNew[struct{}]("cache.Invalidate", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			cl.Valid = false
+			cl.Dirty = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // LineSize returns the number of bytes in this cache line.
 func (cl *CacheLine) LineSize() int {
-	return len(cl.Data)
+	result, _ := StartNew[int]("cache.LineSize", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(cl.Data))
+		}).GetResult()
+	return result
 }
 
 // String returns a compact representation for debugging.
 func (cl *CacheLine) String() string {
-	state := "-"
-	if cl.Valid {
-		state = "V"
-	}
-	if cl.Dirty {
-		state += "D"
-	} else {
-		state += "-"
-	}
-	return fmt.Sprintf("CacheLine(%s, tag=0x%X, lru=%d)", state, cl.Tag, cl.LastAccess)
+	result, _ := StartNew[string]("cache.CacheLineString", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			state := "-"
+			if cl.Valid {
+				state = "V"
+			}
+			if cl.Dirty {
+				state += "D"
+			} else {
+				state += "-"
+			}
+			return rf.Generate(true, false, fmt.Sprintf("CacheLine(%s, tag=0x%X, lru=%d)", state, cl.Tag, cl.LastAccess))
+		}).GetResult()
+	return result
 }

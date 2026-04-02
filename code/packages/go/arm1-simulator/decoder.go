@@ -103,51 +103,56 @@ type DecodedInstruction struct {
 // hardware uses combinational gate trees to extract these fields in
 // parallel. We do the same thing with bit masking and shifting.
 func Decode(instruction uint32) DecodedInstruction {
-	d := DecodedInstruction{
-		Raw:  instruction,
-		Cond: int((instruction >> 28) & 0xF),
-	}
+	result, _ := StartNew[DecodedInstruction]("arm1-simulator.Decode", DecodedInstruction{},
+		func(op *Operation[DecodedInstruction], rf *ResultFactory[DecodedInstruction]) *OperationResult[DecodedInstruction] {
+			op.AddProperty("instruction", instruction)
+			d := DecodedInstruction{
+				Raw:  instruction,
+				Cond: int((instruction >> 28) & 0xF),
+			}
 
-	// Classify by bits 27:25
-	bits2726 := (instruction >> 26) & 0x3
-	bit25 := (instruction >> 25) & 0x1
+			// Classify by bits 27:25
+			bits2726 := (instruction >> 26) & 0x3
+			bit25 := (instruction >> 25) & 0x1
 
-	switch {
-	case bits2726 == 0:
-		// Data Processing
-		d.Type = InstDataProcessing
-		d.decodeDataProcessing(instruction)
+			switch {
+			case bits2726 == 0:
+				// Data Processing
+				d.Type = InstDataProcessing
+				d.decodeDataProcessing(instruction)
 
-	case bits2726 == 1:
-		// Single Data Transfer (LDR/STR)
-		d.Type = InstLoadStore
-		d.decodeLoadStore(instruction)
+			case bits2726 == 1:
+				// Single Data Transfer (LDR/STR)
+				d.Type = InstLoadStore
+				d.decodeLoadStore(instruction)
 
-	case bits2726 == 2 && bit25 == 0:
-		// Block Data Transfer (LDM/STM)
-		d.Type = InstBlockTransfer
-		d.decodeBlockTransfer(instruction)
+			case bits2726 == 2 && bit25 == 0:
+				// Block Data Transfer (LDM/STM)
+				d.Type = InstBlockTransfer
+				d.decodeBlockTransfer(instruction)
 
-	case bits2726 == 2 && bit25 == 1:
-		// Branch (B/BL)
-		d.Type = InstBranch
-		d.decodeBranch(instruction)
+			case bits2726 == 2 && bit25 == 1:
+				// Branch (B/BL)
+				d.Type = InstBranch
+				d.decodeBranch(instruction)
 
-	case bits2726 == 3:
-		// Check if SWI (bits 27:24 = 1111)
-		if (instruction>>24)&0xF == 0xF {
-			d.Type = InstSWI
-			d.SWIComment = instruction & 0x00FFFFFF
-		} else {
-			// Coprocessor — ARM1 has no coprocessor, so this traps
-			d.Type = InstCoprocessor
-		}
+			case bits2726 == 3:
+				// Check if SWI (bits 27:24 = 1111)
+				if (instruction>>24)&0xF == 0xF {
+					d.Type = InstSWI
+					d.SWIComment = instruction & 0x00FFFFFF
+				} else {
+					// Coprocessor — ARM1 has no coprocessor, so this traps
+					d.Type = InstCoprocessor
+				}
 
-	default:
-		d.Type = InstUndefined
-	}
+			default:
+				d.Type = InstUndefined
+			}
 
-	return d
+			return rf.Generate(true, false, d)
+		}).GetResult()
+	return result
 }
 
 func (d *DecodedInstruction) decodeDataProcessing(inst uint32) {
@@ -222,27 +227,34 @@ func (d *DecodedInstruction) decodeBranch(inst uint32) {
 
 // Disassemble returns a human-readable assembly string for the instruction.
 func (d *DecodedInstruction) Disassemble() string {
-	cond := CondString(d.Cond)
+	result, _ := StartNew[string]("arm1-simulator.Disassemble", "",
+		func(_ *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			cond := CondString(d.Cond)
 
-	switch d.Type {
-	case InstDataProcessing:
-		return d.disasmDataProcessing(cond)
-	case InstLoadStore:
-		return d.disasmLoadStore(cond)
-	case InstBlockTransfer:
-		return d.disasmBlockTransfer(cond)
-	case InstBranch:
-		return d.disasmBranch(cond)
-	case InstSWI:
-		if d.SWIComment == HaltSWI {
-			return fmt.Sprintf("HLT%s", cond)
-		}
-		return fmt.Sprintf("SWI%s #0x%X", cond, d.SWIComment)
-	case InstCoprocessor:
-		return fmt.Sprintf("CDP%s (undefined)", cond)
-	default:
-		return fmt.Sprintf("UND%s #0x%08X", cond, d.Raw)
-	}
+			var s string
+			switch d.Type {
+			case InstDataProcessing:
+				s = d.disasmDataProcessing(cond)
+			case InstLoadStore:
+				s = d.disasmLoadStore(cond)
+			case InstBlockTransfer:
+				s = d.disasmBlockTransfer(cond)
+			case InstBranch:
+				s = d.disasmBranch(cond)
+			case InstSWI:
+				if d.SWIComment == HaltSWI {
+					s = fmt.Sprintf("HLT%s", cond)
+				} else {
+					s = fmt.Sprintf("SWI%s #0x%X", cond, d.SWIComment)
+				}
+			case InstCoprocessor:
+				s = fmt.Sprintf("CDP%s (undefined)", cond)
+			default:
+				s = fmt.Sprintf("UND%s #0x%08X", cond, d.Raw)
+			}
+			return rf.Generate(true, false, s)
+		}).GetResult()
+	return result
 }
 
 func (d *DecodedInstruction) disasmDataProcessing(cond string) string {

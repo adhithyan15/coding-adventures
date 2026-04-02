@@ -87,86 +87,75 @@ import (
 //	// code.Constants is []
 //	// code.Names is []
 func Translate(source string) vm.CodeObject {
-	// The instructions we're building up, one per BF command.
-	instructions := []vm.Instruction{}
+	result, _ := StartNew[vm.CodeObject]("brainfuck.Translate", vm.CodeObject{},
+		func(op *Operation[vm.CodeObject], rf *ResultFactory[vm.CodeObject]) *OperationResult[vm.CodeObject] {
+			op.AddProperty("sourceLen", len(source))
+			// The instructions we're building up, one per BF command.
+			instructions := []vm.Instruction{}
 
-	// bracketStack tracks the instruction indices of unmatched "[" opcodes.
-	// When we encounter a "]", we pop the most recent "[" and patch both
-	// instructions with each other's target addresses.
-	bracketStack := []int{}
+			// bracketStack tracks the instruction indices of unmatched "[" opcodes.
+			bracketStack := []int{}
 
-	for i := 0; i < len(source); i++ {
-		ch := source[i]
-		op, ok := CharToOp[ch]
-		if !ok {
-			// Not a Brainfuck command — it's a comment character, skip it.
-			continue
-		}
+			for i := 0; i < len(source); i++ {
+				ch := source[i]
+				bfop, ok := CharToOp[ch]
+				if !ok {
+					continue
+				}
 
-		switch op {
-		case OpLoopStart:
-			// Emit LOOP_START with a placeholder operand of 0.
-			// We'll patch this later when we find the matching "]".
-			index := len(instructions)
-			instructions = append(instructions, vm.Instruction{
-				Opcode:  OpLoopStart,
-				Operand: 0,
-			})
-			bracketStack = append(bracketStack, index)
+				switch bfop {
+				case OpLoopStart:
+					index := len(instructions)
+					instructions = append(instructions, vm.Instruction{
+						Opcode:  OpLoopStart,
+						Operand: 0,
+					})
+					bracketStack = append(bracketStack, index)
 
-		case OpLoopEnd:
-			// Pop the matching "[" from the stack.
-			if len(bracketStack) == 0 {
-				panic("TranslationError: Unmatched ']' — no matching '[' found")
+				case OpLoopEnd:
+					if len(bracketStack) == 0 {
+						panic("TranslationError: Unmatched ']' — no matching '[' found")
+					}
+					startIndex := bracketStack[len(bracketStack)-1]
+					bracketStack = bracketStack[:len(bracketStack)-1]
+
+					endIndex := len(instructions)
+
+					instructions[startIndex] = vm.Instruction{
+						Opcode:  OpLoopStart,
+						Operand: endIndex + 1,
+					}
+
+					instructions = append(instructions, vm.Instruction{
+						Opcode:  OpLoopEnd,
+						Operand: startIndex,
+					})
+
+				default:
+					instructions = append(instructions, vm.Instruction{
+						Opcode:  bfop,
+						Operand: nil,
+					})
+				}
 			}
-			startIndex := bracketStack[len(bracketStack)-1]
-			bracketStack = bracketStack[:len(bracketStack)-1]
 
-			endIndex := len(instructions)
-
-			// Patch LOOP_START to jump past LOOP_END (endIndex + 1).
-			// When the current cell is zero, the VM skips the entire loop
-			// body by jumping to the instruction after this "]".
-			instructions[startIndex] = vm.Instruction{
-				Opcode:  OpLoopStart,
-				Operand: endIndex + 1,
+			if len(bracketStack) > 0 {
+				panic(fmt.Sprintf(
+					"TranslationError: Unmatched '[' — %d unclosed bracket(s)",
+					len(bracketStack),
+				))
 			}
 
-			// Emit LOOP_END that jumps back to LOOP_START.
-			// When the current cell is nonzero, we jump back to re-test
-			// the loop condition at the "[".
 			instructions = append(instructions, vm.Instruction{
-				Opcode:  OpLoopEnd,
-				Operand: startIndex,
-			})
-
-		default:
-			// Simple command — no operand needed (pointer moves, cell
-			// modifications, and I/O all operate on implicit state).
-			instructions = append(instructions, vm.Instruction{
-				Opcode:  op,
+				Opcode:  OpHalt,
 				Operand: nil,
 			})
-		}
-	}
 
-	// Check for unmatched "[" brackets.
-	if len(bracketStack) > 0 {
-		panic(fmt.Sprintf(
-			"TranslationError: Unmatched '[' — %d unclosed bracket(s)",
-			len(bracketStack),
-		))
-	}
-
-	// Every program ends with HALT so the VM knows to stop.
-	instructions = append(instructions, vm.Instruction{
-		Opcode:  OpHalt,
-		Operand: nil,
-	})
-
-	return vm.CodeObject{
-		Instructions: instructions,
-		Constants:    []interface{}{},
-		Names:        []string{},
-	}
+			return rf.Generate(true, false, vm.CodeObject{
+				Instructions: instructions,
+				Constants:    []interface{}{},
+				Names:        []string{},
+			})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
