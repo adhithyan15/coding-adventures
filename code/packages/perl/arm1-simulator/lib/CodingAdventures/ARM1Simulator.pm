@@ -349,11 +349,31 @@ sub get_flags {
 =head2 set_flags
 
   $cpu->set_flags({n => 1, z => 0, c => 1, v => 0});
+  $cpu->set_flags($n, $z, $c, $v);   # also accepts 4 scalars
+
+Two calling conventions are supported for interoperability with
+gate-level consumers that call C<set_flags($n, $z, $c, $v)>:
+
+=over 4
+
+=item * Hashref form: C<set_flags({ n => 1, z => 0, c => 1, v => 0 })>
+
+=item * Scalar form:  C<set_flags($n, $z, $c, $v)>
+
+=back
 
 =cut
 
 sub set_flags {
-    my ($self, $f) = @_;
+    my $self = shift;
+    # Accept both ({n=>...,z=>...,c=>...,v=>...}) and ($n,$z,$c,$v)
+    my $f;
+    if (@_ == 1 && ref($_[0]) eq 'HASH') {
+        ($f) = @_;
+    } else {
+        my ($n, $z, $c, $v) = @_;
+        $f = { n => $n, z => $z, c => $c, v => $v };
+    }
     my $r15 = $self->{regs}[15] & _bnot32(FLAG_N | FLAG_Z | FLAG_C | FLAG_V);
     $r15 |= FLAG_N if $f->{n};
     $r15 |= FLAG_Z if $f->{z};
@@ -443,17 +463,42 @@ sub write_byte {
 
 =head2 load_instructions
 
-  $cpu->load_instructions(\@words, $start_address);
+  $cpu->load_instructions(\@words);
+  $cpu->load_instructions($start_address, \@words);
 
-Loads an array of 32-bit instruction words into memory.
+Loads an array of 32-bit instruction words into memory starting at
+C<$start_address> (default 0).  Two calling conventions are supported:
+
+=over 4
+
+=item *
+
+C<load_instructions(\@words)> — loads at address 0.
+
+=item *
+
+C<load_instructions($base, \@words)> — loads at C<$base>.
+
+=back
 
 =cut
 
 sub load_instructions {
-    my ($self, $instructions, $start_address) = @_;
-    $start_address //= 0;
-    for my $i (0 .. $#$instructions) {
-        $self->write_word($start_address + $i * 4, $instructions->[$i]);
+    my $self = shift;
+    # Accept either ($instrs) or ($base_addr, $instrs) calling conventions.
+    # The gate-level test calls load_instructions(0, \@instrs); behavioural
+    # tests call load_instructions(\@instrs).
+    my ($base, $instructions);
+    if (@_ == 2) {
+        ($base, $instructions) = @_;
+    } else {
+        $base = 0;
+        ($instructions) = @_;
+    }
+    my $addr = $base;
+    for my $inst (@$instructions) {
+        $self->write_word($addr, $inst);
+        $addr += 4;
     }
 }
 
@@ -740,6 +785,37 @@ sub _decode {
     }
 
     return $d;
+}
+
+=head2 decode
+
+  my $d = $cpu->decode($instruction_word);
+
+Public wrapper around C<_decode>.  Accepts the 32-bit instruction word and
+returns a hash-ref with all decoded fields.  Intended for use by gate-level
+or visualisation consumers that need to inspect the decoded instruction
+without stepping the CPU.
+
+=cut
+
+sub decode {
+    my ($self, $instruction) = @_;
+    return _decode($instruction);
+}
+
+=head2 decode_immediate
+
+  my ($value, $carry_out) = $cpu->decode_immediate($imm8, $rotate_field);
+
+Public wrapper around C<_decode_immediate>.  Applies the ARM rotate-right
+by C<$rotate_field * 2> bits to the 8-bit immediate C<$imm8>, returning the
+32-bit rotated value and the carry-out bit.  Used by gate-level consumers.
+
+=cut
+
+sub decode_immediate {
+    my ($self, $imm8, $rotate_field) = @_;
+    return _decode_immediate($imm8, $rotate_field);
 }
 
 # ===========================================================================
@@ -1110,7 +1186,7 @@ Creates a MOV Rd, #imm8 instruction word.
 =cut
 
 sub encode_mov_imm {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $rd, $imm8) = @_;
     my $inst = ($condition << 28) | 0x03A00000;
     $inst |= ($rd << 12) | $imm8;
@@ -1126,7 +1202,7 @@ Creates a data processing instruction with register operand.
 =cut
 
 sub encode_alu_reg {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $opcode, $s, $rd, $rn, $rm) = @_;
     my $s_bit = $s ? 1 : 0;
     my $inst = ($condition << 28) | ($opcode << 21) | ($s_bit << 20);
@@ -1143,11 +1219,40 @@ Creates a data processing instruction with shifted register operand.
 =cut
 
 sub encode_alu_reg_shift {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $opcode, $s, $rd, $rn, $rm, $shift_type, $shift_imm) = @_;
     my $s_bit = $s ? 1 : 0;
     my $inst = ($condition << 28) | ($opcode << 21) | ($s_bit << 20);
     $inst |= ($rn << 16) | ($rd << 12) | ($shift_imm << 7) | ($shift_type << 5) | $rm;
+    return _mask32($inst);
+}
+
+=head2 encode_data_processing
+
+  my $inst = CodingAdventures::ARM1Simulator::encode_data_processing($cond, $opcode, $s, $rn, $rd, $operand2);
+
+General-purpose ARM data-processing instruction encoder.  C<$operand2> is
+placed directly into bits 25:0 of the instruction word, so the caller is
+responsible for setting the I-bit (bit 25) when using an immediate operand:
+
+  # ADD R0, R0, #1  (I-bit = bit 25, imm8 = 1)
+  encode_data_processing(COND_AL, OP_ADD, 0, 0, 0, (1 << 25) | 1);
+
+  # CMP R0, #11  (sets flags, immediate)
+  encode_data_processing(COND_AL, OP_CMP, 1, 0, 0, (1 << 25) | 11);
+
+=cut
+
+sub encode_data_processing {
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
+    my ($condition, $opcode, $s, $rn, $rd, $operand2) = @_;
+    # ARM data-processing layout:
+    #   31:28 Cond | 27:25 (operand2 bits 26:24 via $operand2) |
+    #   24:21 Opcode | 20 S | 19:16 Rn | 15:12 Rd | 11:0 operand2 low
+    # $operand2 carries bits 25:0 (I-bit + rotate/imm or shift/reg).
+    my $s_bit = $s ? 1 : 0;
+    my $inst   = ($condition << 28) | ($opcode << 21) | ($s_bit << 20)
+               | ($rn << 16) | ($rd << 12) | ($operand2 & 0x03FFFFFF);
     return _mask32($inst);
 }
 
@@ -1160,7 +1265,7 @@ Creates a B or BL instruction with the given byte offset.
 =cut
 
 sub encode_branch {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $link, $offset) = @_;
     my $inst = ($condition << 28) | 0x0A000000;
     $inst |= 0x01000000 if $link;
@@ -1177,7 +1282,7 @@ Creates the pseudo-halt instruction (SWI 0x123456).
 =cut
 
 sub encode_halt {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     return _mask32((COND_AL << 28) | 0x0F000000 | HALT_SWI);
 }
 
@@ -1188,7 +1293,7 @@ sub encode_halt {
 =cut
 
 sub encode_ldr {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $rd, $rn, $offset, $pre_index) = @_;
     my $inst = ($condition << 28) | 0x04100000;
     $inst |= ($rd << 12) | ($rn << 16);
@@ -1208,7 +1313,7 @@ sub encode_ldr {
 =cut
 
 sub encode_str {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $rd, $rn, $offset, $pre_index) = @_;
     my $inst = ($condition << 28) | 0x04000000;
     $inst |= ($rd << 12) | ($rn << 16);
@@ -1230,7 +1335,7 @@ Creates an LDM instruction. $mode is "IA", "IB", "DA", or "DB".
 =cut
 
 sub encode_ldm {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
     my $inst = ($condition << 28) | 0x08100000;
     $inst |= ($rn << 16) | $reg_list;
@@ -1249,7 +1354,7 @@ sub encode_ldm {
 =cut
 
 sub encode_stm {
-    shift if !ref($_[0]);  # discard class invocant when called as method
+    shift if !ref($_[0]) && defined $_[0] && index($_[0], '::') >= 0;  # discard class invocant
     my ($condition, $rn, $reg_list, $write_back, $bt_mode) = @_;
     # Build STM directly (same as encode_ldm but with L=0 instead of L=1)
     my $inst = ($condition << 28) | 0x08000000;  # bits 27:25=100, L=0
