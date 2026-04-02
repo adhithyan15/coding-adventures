@@ -254,8 +254,18 @@ sub write_byte {
 }
 
 sub load_instructions {
-    my ($self, $instructions) = @_;
-    my $addr = 0;
+    my $self = shift;
+    # Accept either (instructions) or (base_addr, instructions) calling conventions.
+    # The gate-level test calls $cpu->load_instructions(0, \@instrs) with a base
+    # address argument; older callers pass just the arrayref.
+    my ($base, $instructions);
+    if (@_ == 2) {
+        ($base, $instructions) = @_;
+    } else {
+        $base = 0;
+        ($instructions) = @_;
+    }
+    my $addr = $base;
     for my $inst (@$instructions) {
         $self->write_word($addr, $inst);
         $addr += 4;
