@@ -136,18 +136,22 @@ type groupAction struct {
 // The pushed group becomes active for the next token match. Panics if the
 // group name is not defined in the grammar.
 func (ctx *LexerContext) PushGroup(groupName string) {
-	if _, ok := ctx.lexer.groupPatterns[groupName]; !ok {
-		// Collect available group names for a helpful error message.
-		available := make([]string, 0, len(ctx.lexer.groupPatterns))
-		for name := range ctx.lexer.groupPatterns {
-			available = append(available, name)
-		}
-		panic(fmt.Sprintf(
-			"Unknown pattern group: %q. Available groups: %v",
-			groupName, available,
-		))
-	}
-	ctx.groupActions = append(ctx.groupActions, groupAction{"push", groupName})
+	_, _ = StartNew[struct{}]("lexer.PushGroup", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("groupName", groupName)
+			if _, ok := ctx.lexer.groupPatterns[groupName]; !ok {
+				available := make([]string, 0, len(ctx.lexer.groupPatterns))
+				for name := range ctx.lexer.groupPatterns {
+					available = append(available, name)
+				}
+				panic(fmt.Sprintf(
+					"Unknown pattern group: %q. Available groups: %v",
+					groupName, available,
+				))
+			}
+			ctx.groupActions = append(ctx.groupActions, groupAction{"push", groupName})
+			return rf.Generate(true, false, struct{}{})
+		}).PanicOnUnexpected().GetResult()
 }
 
 // PopGroup pops the current group from the stack.
@@ -156,7 +160,11 @@ func (ctx *LexerContext) PushGroup(groupName string) {
 // the floor of the stack and cannot be popped — this prevents accidental
 // stack underflow when callbacks pop more times than they push.
 func (ctx *LexerContext) PopGroup() {
-	ctx.groupActions = append(ctx.groupActions, groupAction{"pop", ""})
+	_, _ = StartNew[struct{}]("lexer.PopGroup", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			ctx.groupActions = append(ctx.groupActions, groupAction{"pop", ""})
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ActiveGroup returns the name of the currently active group.
@@ -164,7 +172,11 @@ func (ctx *LexerContext) PopGroup() {
 // The active group is the top of the group stack. When no groups have been
 // pushed, this is always "default".
 func (ctx *LexerContext) ActiveGroup() string {
-	return ctx.lexer.groupStack[len(ctx.lexer.groupStack)-1]
+	result, _ := StartNew[string]("lexer.ActiveGroup", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, ctx.lexer.groupStack[len(ctx.lexer.groupStack)-1])
+		}).GetResult()
+	return result
 }
 
 // GroupStackDepth returns the depth of the group stack (always >= 1).
@@ -172,7 +184,11 @@ func (ctx *LexerContext) ActiveGroup() string {
 // A depth of 1 means only the default group is on the stack. Each PushGroup
 // call (once applied) increases the depth by 1.
 func (ctx *LexerContext) GroupStackDepth() int {
-	return len(ctx.lexer.groupStack)
+	result, _ := StartNew[int]("lexer.GroupStackDepth", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(ctx.lexer.groupStack))
+		}).GetResult()
+	return result
 }
 
 // Emit injects a synthetic token after the current one.
@@ -181,7 +197,11 @@ func (ctx *LexerContext) GroupStackDepth() int {
 // where a callback emits a token that triggers itself). Multiple Emit calls
 // produce tokens in call order.
 func (ctx *LexerContext) Emit(token Token) {
-	ctx.emitted = append(ctx.emitted, token)
+	_, _ = StartNew[struct{}]("lexer.Emit", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			ctx.emitted = append(ctx.emitted, token)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Suppress marks the current token for suppression — it will not be included
@@ -189,7 +209,11 @@ func (ctx *LexerContext) Emit(token Token) {
 // current token is suppressed. This enables token replacement: suppress the
 // original and emit a rewritten version.
 func (ctx *LexerContext) Suppress() {
-	ctx.suppressed = true
+	_, _ = StartNew[struct{}]("lexer.Suppress", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			ctx.suppressed = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Peek reads a source character past the current token.
@@ -197,11 +221,16 @@ func (ctx *LexerContext) Suppress() {
 // offset=1 means the character immediately after the token. Returns an empty
 // string if the position is past EOF.
 func (ctx *LexerContext) Peek(offset int) string {
-	idx := ctx.posAfter + offset - 1
-	if idx >= 0 && idx < len(ctx.source) {
-		return string(ctx.source[idx])
-	}
-	return ""
+	result, _ := StartNew[string]("lexer.Peek", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("offset", offset)
+			idx := ctx.posAfter + offset - 1
+			if idx >= 0 && idx < len(ctx.source) {
+				return rf.Generate(true, false, string(ctx.source[idx]))
+			}
+			return rf.Generate(true, false, "")
+		}).GetResult()
+	return result
 }
 
 // PeekStr reads the next `length` characters past the current token.
@@ -209,11 +238,16 @@ func (ctx *LexerContext) Peek(offset int) string {
 // Returns a shorter string if there are fewer than `length` characters
 // remaining in the source.
 func (ctx *LexerContext) PeekStr(length int) string {
-	end := ctx.posAfter + length
-	if end > len(ctx.source) {
-		end = len(ctx.source)
-	}
-	return ctx.source[ctx.posAfter:end]
+	result, _ := StartNew[string]("lexer.PeekStr", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("length", length)
+			end := ctx.posAfter + length
+			if end > len(ctx.source) {
+				end = len(ctx.source)
+			}
+			return rf.Generate(true, false, ctx.source[ctx.posAfter:end])
+		}).GetResult()
+	return result
 }
 
 // SetSkipEnabled toggles skip pattern processing.
@@ -222,7 +256,12 @@ func (ctx *LexerContext) PeekStr(length int) string {
 // useful for groups where whitespace is significant (e.g., CDATA sections,
 // raw text blocks). The change takes effect after the callback returns.
 func (ctx *LexerContext) SetSkipEnabled(enabled bool) {
-	ctx.skipEnabled = &enabled
+	_, _ = StartNew[struct{}]("lexer.SetSkipEnabled", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("enabled", enabled)
+			ctx.skipEnabled = &enabled
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
@@ -318,6 +357,14 @@ type GrammarLexer struct {
 // regexes. The compiled patterns are anchored to the start of the remaining
 // source (using ^) so that only matches at the current position are found.
 func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
+	result, _ := StartNew[*GrammarLexer]("lexer.NewGrammarLexer", nil,
+		func(op *Operation[*GrammarLexer], rf *ResultFactory[*GrammarLexer]) *OperationResult[*GrammarLexer] {
+			return rf.Generate(true, false, newGrammarLexerImpl(source, grammar))
+		}).GetResult()
+	return result
+}
+
+func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
 	// Case-insensitive mode: lowercase the entire source before tokenization.
 	// This ensures keyword matching works because keywords in the .tokens file
 	// are already lowercase, and now the source text will be too.
@@ -448,14 +495,22 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 // The hook receives the raw source string and returns a (possibly modified)
 // source string. Multiple hooks compose left-to-right.
 func (l *GrammarLexer) AddPreTokenize(hook PreTokenizeHook) {
-	l.preTokenizeHooks = append(l.preTokenizeHooks, hook)
+	_, _ = StartNew[struct{}]("lexer.AddPreTokenize", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.preTokenizeHooks = append(l.preTokenizeHooks, hook)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // AddPostTokenize registers a token transform to run after tokenization.
 // The hook receives the full token list (including EOF) and returns a
 // (possibly modified) token list. Multiple hooks compose left-to-right.
 func (l *GrammarLexer) AddPostTokenize(hook PostTokenizeHook) {
-	l.postTokenizeHooks = append(l.postTokenizeHooks, hook)
+	_, _ = StartNew[struct{}]("lexer.AddPostTokenize", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.postTokenizeHooks = append(l.postTokenizeHooks, hook)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SetOnToken registers a callback that fires on every token match.
@@ -472,7 +527,11 @@ func (l *GrammarLexer) AddPostTokenize(hook PostTokenizeHook) {
 //   - Tokens emitted via context.Emit() (prevents infinite loops)
 //   - The EOF token
 func (l *GrammarLexer) SetOnToken(callback OnTokenCallback) {
-	l.onToken = callback
+	_, _ = StartNew[struct{}]("lexer.SetOnToken", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			l.onToken = callback
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------
@@ -736,34 +795,38 @@ func processEscapes(s string) string {
 // Dispatches to the appropriate tokenization method based on whether
 // indentation mode is active.
 func (l *GrammarLexer) Tokenize() []Token {
-	// Stage 1: Pre-tokenize hooks transform the source text.
-	// Each hook receives the output of the previous hook, composing
-	// left-to-right. This enables source-level transforms like macro
-	// expansion or encoding normalization before any pattern matching.
-	if len(l.preTokenizeHooks) > 0 {
-		source := l.source
-		for _, hook := range l.preTokenizeHooks {
-			source = hook(source)
-		}
-		l.source = source
-	}
+	result, _ := StartNew[[]Token]("lexer.GrammarLexer.Tokenize", nil,
+		func(op *Operation[[]Token], rf *ResultFactory[[]Token]) *OperationResult[[]Token] {
+			// Stage 1: Pre-tokenize hooks transform the source text.
+			// Each hook receives the output of the previous hook, composing
+			// left-to-right. This enables source-level transforms like macro
+			// expansion or encoding normalization before any pattern matching.
+			if len(l.preTokenizeHooks) > 0 {
+				source := l.source
+				for _, hook := range l.preTokenizeHooks {
+					source = hook(source)
+				}
+				l.source = source
+			}
 
-	// Stage 2: Core tokenization.
-	var tokens []Token
-	if l.indentMode {
-		tokens = l.tokenizeIndentation()
-	} else {
-		tokens = l.tokenizeStandard()
-	}
+			// Stage 2: Core tokenization.
+			var tokens []Token
+			if l.indentMode {
+				tokens = l.tokenizeIndentation()
+			} else {
+				tokens = l.tokenizeStandard()
+			}
 
-	// Stage 3: Post-tokenize hooks transform the token list.
-	// Each hook receives the full token list (including EOF) and returns
-	// a (possibly modified) token list. Hooks compose left-to-right.
-	for _, hook := range l.postTokenizeHooks {
-		tokens = hook(tokens)
-	}
+			// Stage 3: Post-tokenize hooks transform the token list.
+			// Each hook receives the full token list (including EOF) and returns
+			// a (possibly modified) token list. Hooks compose left-to-right.
+			for _, hook := range l.postTokenizeHooks {
+				tokens = hook(tokens)
+			}
 
-	return tokens
+			return rf.Generate(true, false, tokens)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // ---------------------------------------------------------------------------

@@ -83,11 +83,15 @@ type PriorityScheduler struct {
 
 // NewPriorityScheduler creates a new, empty priority scheduler.
 func NewPriorityScheduler() *PriorityScheduler {
-	return &PriorityScheduler{
-		readyQueues: make(map[int][]int),
-		currentPID:  -1,
-		pidPriority: make(map[int]int),
-	}
+	result, _ := StartNew[*PriorityScheduler]("process-manager.NewPriorityScheduler", nil,
+		func(op *Operation[*PriorityScheduler], rf *ResultFactory[*PriorityScheduler]) *OperationResult[*PriorityScheduler] {
+			return rf.Generate(true, false, &PriorityScheduler{
+				readyQueues: make(map[int][]int),
+				currentPID:  -1,
+				pidPriority: make(map[int]int),
+			})
+		}).GetResult()
+	return result
 }
 
 // AddProcess adds a process to the appropriate ready queue.
@@ -95,16 +99,20 @@ func NewPriorityScheduler() *PriorityScheduler {
 // The process is placed at the END of its priority queue (FIFO ordering).
 // Priority is clamped to the valid range [0, 39].
 func (ps *PriorityScheduler) AddProcess(pid int, priority int) {
-	// Clamp priority to valid range.
-	if priority < MinPriority {
-		priority = MinPriority
-	}
-	if priority > MaxPriority {
-		priority = MaxPriority
-	}
+	_, _ = StartNew[struct{}]("process-manager.PriorityScheduler.AddProcess", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			// Clamp priority to valid range.
+			if priority < MinPriority {
+				priority = MinPriority
+			}
+			if priority > MaxPriority {
+				priority = MaxPriority
+			}
 
-	ps.readyQueues[priority] = append(ps.readyQueues[priority], pid)
-	ps.pidPriority[pid] = priority
+			ps.readyQueues[priority] = append(ps.readyQueues[priority], pid)
+			ps.pidPriority[pid] = priority
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RemoveProcess removes a process from the scheduler.
@@ -112,28 +120,32 @@ func (ps *PriorityScheduler) AddProcess(pid int, priority int) {
 // Called when a process exits, blocks, or is otherwise no longer ready.
 // If the process is the current process, currentPID is reset to -1.
 func (ps *PriorityScheduler) RemoveProcess(pid int) {
-	priority, exists := ps.pidPriority[pid]
-	if exists {
-		// Remove from the queue.
-		queue := ps.readyQueues[priority]
-		for i, p := range queue {
-			if p == pid {
-				ps.readyQueues[priority] = append(queue[:i], queue[i+1:]...)
-				break
+	_, _ = StartNew[struct{}]("process-manager.PriorityScheduler.RemoveProcess", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			priority, exists := ps.pidPriority[pid]
+			if exists {
+				// Remove from the queue.
+				queue := ps.readyQueues[priority]
+				for i, p := range queue {
+					if p == pid {
+						ps.readyQueues[priority] = append(queue[:i], queue[i+1:]...)
+						break
+					}
+				}
+
+				// Clean up empty queues.
+				if len(ps.readyQueues[priority]) == 0 {
+					delete(ps.readyQueues, priority)
+				}
+
+				delete(ps.pidPriority, pid)
 			}
-		}
 
-		// Clean up empty queues.
-		if len(ps.readyQueues[priority]) == 0 {
-			delete(ps.readyQueues, priority)
-		}
-
-		delete(ps.pidPriority, pid)
-	}
-
-	if ps.currentPID == pid {
-		ps.currentPID = -1
-	}
+			if ps.currentPID == pid {
+				ps.currentPID = -1
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Schedule selects the next process to run.
@@ -145,29 +157,39 @@ func (ps *PriorityScheduler) RemoveProcess(pid int) {
 // running after its time quantum, the caller must re-add it with AddProcess.
 //
 // Returns (pid, true) on success, or (0, false) if all queues are empty.
+// scheduleResult is an internal helper struct for returning multiple values from Schedule.
+type scheduleResult struct {
+	pid int
+	ok  bool
+}
+
 func (ps *PriorityScheduler) Schedule() (int, bool) {
-	for priority := MinPriority; priority <= MaxPriority; priority++ {
-		queue, exists := ps.readyQueues[priority]
-		if !exists || len(queue) == 0 {
-			continue
-		}
+	res, _ := StartNew[scheduleResult]("process-manager.PriorityScheduler.Schedule", scheduleResult{},
+		func(op *Operation[scheduleResult], rf *ResultFactory[scheduleResult]) *OperationResult[scheduleResult] {
+			for priority := MinPriority; priority <= MaxPriority; priority++ {
+				queue, exists := ps.readyQueues[priority]
+				if !exists || len(queue) == 0 {
+					continue
+				}
 
-		// Pop the front of the queue (FIFO).
-		pid := queue[0]
-		ps.readyQueues[priority] = queue[1:]
+				// Pop the front of the queue (FIFO).
+				pid := queue[0]
+				ps.readyQueues[priority] = queue[1:]
 
-		// Clean up empty queues.
-		if len(ps.readyQueues[priority]) == 0 {
-			delete(ps.readyQueues, priority)
-		}
+				// Clean up empty queues.
+				if len(ps.readyQueues[priority]) == 0 {
+					delete(ps.readyQueues, priority)
+				}
 
-		ps.currentPID = pid
-		return pid, true
-	}
+				ps.currentPID = pid
+				return rf.Generate(true, false, scheduleResult{pid, true})
+			}
 
-	// All queues empty.
-	ps.currentPID = -1
-	return 0, false
+			// All queues empty.
+			ps.currentPID = -1
+			return rf.Generate(true, false, scheduleResult{0, false})
+		}).GetResult()
+	return res.pid, res.ok
 }
 
 // SetPriority changes a process's priority.
@@ -175,55 +197,67 @@ func (ps *PriorityScheduler) Schedule() (int, bool) {
 // The process is moved from its current queue to the new one. It is placed
 // at the END of the new queue (like a fresh arrival).
 func (ps *PriorityScheduler) SetPriority(pid int, priority int) {
-	// Clamp priority.
-	if priority < MinPriority {
-		priority = MinPriority
-	}
-	if priority > MaxPriority {
-		priority = MaxPriority
-	}
+	_, _ = StartNew[struct{}]("process-manager.PriorityScheduler.SetPriority", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			// Clamp priority.
+			if priority < MinPriority {
+				priority = MinPriority
+			}
+			if priority > MaxPriority {
+				priority = MaxPriority
+			}
 
-	oldPriority, exists := ps.pidPriority[pid]
-	if !exists {
-		// Unknown PID — just record the priority.
-		ps.pidPriority[pid] = priority
-		return
-	}
+			oldPriority, exists := ps.pidPriority[pid]
+			if !exists {
+				// Unknown PID — just record the priority.
+				ps.pidPriority[pid] = priority
+				return rf.Generate(true, false, struct{}{})
+			}
 
-	if oldPriority == priority {
-		return // No change needed.
-	}
+			if oldPriority == priority {
+				return rf.Generate(true, false, struct{}{}) // No change needed.
+			}
 
-	// Remove from old queue.
-	queue := ps.readyQueues[oldPriority]
-	for i, p := range queue {
-		if p == pid {
-			ps.readyQueues[oldPriority] = append(queue[:i], queue[i+1:]...)
-			break
-		}
-	}
-	if len(ps.readyQueues[oldPriority]) == 0 {
-		delete(ps.readyQueues, oldPriority)
-	}
+			// Remove from old queue.
+			queue := ps.readyQueues[oldPriority]
+			for i, p := range queue {
+				if p == pid {
+					ps.readyQueues[oldPriority] = append(queue[:i], queue[i+1:]...)
+					break
+				}
+			}
+			if len(ps.readyQueues[oldPriority]) == 0 {
+				delete(ps.readyQueues, oldPriority)
+			}
 
-	// Add to new queue.
-	ps.readyQueues[priority] = append(ps.readyQueues[priority], pid)
-	ps.pidPriority[pid] = priority
+			// Add to new queue.
+			ps.readyQueues[priority] = append(ps.readyQueues[priority], pid)
+			ps.pidPriority[pid] = priority
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // GetPriority returns the current priority of a process.
 //
 // Returns DefaultPriority (20) if the PID is not known.
 func (ps *PriorityScheduler) GetPriority(pid int) int {
-	if priority, exists := ps.pidPriority[pid]; exists {
-		return priority
-	}
-	return DefaultPriority
+	result, _ := StartNew[int]("process-manager.PriorityScheduler.GetPriority", DefaultPriority,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if priority, exists := ps.pidPriority[pid]; exists {
+				return rf.Generate(true, false, priority)
+			}
+			return rf.Generate(true, false, DefaultPriority)
+		}).GetResult()
+	return result
 }
 
 // CurrentPID returns the PID of the currently running process, or -1 if none.
 func (ps *PriorityScheduler) CurrentPID() int {
-	return ps.currentPID
+	result, _ := StartNew[int]("process-manager.PriorityScheduler.CurrentPID", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, ps.currentPID)
+		}).GetResult()
+	return result
 }
 
 // GetTimeQuantum calculates the time quantum for a given priority level.
@@ -235,16 +269,24 @@ func (ps *PriorityScheduler) CurrentPID() int {
 //	Priority 20: 120 cycles
 //	Priority 39:  44 cycles
 func (ps *PriorityScheduler) GetTimeQuantum(priority int) int {
-	if priority < MinPriority {
-		priority = MinPriority
-	}
-	if priority > MaxPriority {
-		priority = MaxPriority
-	}
-	return BaseQuantum - (priority * QuantumPerPriority)
+	result, _ := StartNew[int]("process-manager.PriorityScheduler.GetTimeQuantum", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if priority < MinPriority {
+				priority = MinPriority
+			}
+			if priority > MaxPriority {
+				priority = MaxPriority
+			}
+			return rf.Generate(true, false, BaseQuantum-(priority*QuantumPerPriority))
+		}).GetResult()
+	return result
 }
 
 // IsEmpty returns true if the scheduler has no ready processes.
 func (ps *PriorityScheduler) IsEmpty() bool {
-	return len(ps.readyQueues) == 0
+	result, _ := StartNew[bool]("process-manager.PriorityScheduler.IsEmpty", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, len(ps.readyQueues) == 0)
+		}).GetResult()
+	return result
 }

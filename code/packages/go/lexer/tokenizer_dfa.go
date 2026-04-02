@@ -58,51 +58,58 @@ import (
 //	"bang"          !                BANG
 //	"other"         everything else  error
 func ClassifyChar(ch rune, ok bool) string {
-	if !ok {
-		return "eof"
-	}
-	switch {
-	case ch == ' ' || ch == '\t' || ch == '\r':
-		return "whitespace"
-	case ch == '\n':
-		return "newline"
-	case unicode.IsDigit(ch):
-		return "digit"
-	case unicode.IsLetter(ch):
-		return "alpha"
-	case ch == '_':
-		return "underscore"
-	case ch == '"':
-		return "quote"
-	case ch == '=':
-		return "equals"
-	case ch == '+' || ch == '-' || ch == '*' || ch == '/':
-		return "operator"
-	case ch == '(':
-		return "open_paren"
-	case ch == ')':
-		return "close_paren"
-	case ch == ',':
-		return "comma"
-	case ch == ':':
-		return "colon"
-	case ch == ';':
-		return "semicolon"
-	case ch == '{':
-		return "open_brace"
-	case ch == '}':
-		return "close_brace"
-	case ch == '[':
-		return "open_bracket"
-	case ch == ']':
-		return "close_bracket"
-	case ch == '.':
-		return "dot"
-	case ch == '!':
-		return "bang"
-	default:
-		return "other"
-	}
+	result, _ := StartNew[string]("lexer.ClassifyChar", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("ok", ok)
+			if !ok {
+				return rf.Generate(true, false, "eof")
+			}
+			var class string
+			switch {
+			case ch == ' ' || ch == '\t' || ch == '\r':
+				class = "whitespace"
+			case ch == '\n':
+				class = "newline"
+			case unicode.IsDigit(ch):
+				class = "digit"
+			case unicode.IsLetter(ch):
+				class = "alpha"
+			case ch == '_':
+				class = "underscore"
+			case ch == '"':
+				class = "quote"
+			case ch == '=':
+				class = "equals"
+			case ch == '+' || ch == '-' || ch == '*' || ch == '/':
+				class = "operator"
+			case ch == '(':
+				class = "open_paren"
+			case ch == ')':
+				class = "close_paren"
+			case ch == ',':
+				class = "comma"
+			case ch == ':':
+				class = "colon"
+			case ch == ';':
+				class = "semicolon"
+			case ch == '{':
+				class = "open_brace"
+			case ch == '}':
+				class = "close_brace"
+			case ch == '[':
+				class = "open_bracket"
+			case ch == ']':
+				class = "close_bracket"
+			case ch == '.':
+				class = "dot"
+			case ch == '!':
+				class = "bang"
+			default:
+				class = "other"
+			}
+			return rf.Generate(true, false, class)
+		}).GetResult()
+	return result
 }
 
 // tokenizerDFAStates is the set of states for the tokenizer DFA.
@@ -184,12 +191,17 @@ func buildTokenizerDFATransitions() map[[2]string]string {
 // The DFA models the top-level character classification dispatch of the
 // hand-written tokenizer.
 func NewTokenizerDFA() *statemachine.DFA {
-	return statemachine.NewDFA(
-		tokenizerDFAStates,
-		tokenizerDFAAlphabet,
-		buildTokenizerDFATransitions(),
-		"start",
-		[]string{"done"},
-		nil,
-	)
+	result, _ := StartNew[*statemachine.DFA]("lexer.NewTokenizerDFA", nil,
+		func(op *Operation[*statemachine.DFA], rf *ResultFactory[*statemachine.DFA]) *OperationResult[*statemachine.DFA] {
+			dfa := statemachine.NewDFA(
+				tokenizerDFAStates,
+				tokenizerDFAAlphabet,
+				buildTokenizerDFATransitions(),
+				"start",
+				[]string{"done"},
+				nil,
+			)
+			return rf.Generate(true, false, dfa)
+		}).GetResult()
+	return result
 }

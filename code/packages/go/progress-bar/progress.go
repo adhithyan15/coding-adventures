@@ -127,14 +127,20 @@ type Tracker struct {
 // pragmatic choice: large enough to prevent backpressure, small enough
 // to keep memory negligible.
 func New(total int, w io.Writer, label string) *Tracker {
-	return &Tracker{
-		total:    total,
-		building: make(map[string]bool),
-		events:   make(chan Event, 64),
-		done:     make(chan struct{}),
-		writer:   w,
-		label:    label,
-	}
+	result, _ := StartNew[*Tracker]("progress-bar.New", nil,
+		func(op *Operation[*Tracker], rf *ResultFactory[*Tracker]) *OperationResult[*Tracker] {
+			op.AddProperty("total", total)
+			op.AddProperty("label", label)
+			return rf.Generate(true, false, &Tracker{
+				total:    total,
+				building: make(map[string]bool),
+				events:   make(chan Event, 64),
+				done:     make(chan struct{}),
+				writer:   w,
+				label:    label,
+			})
+		}).GetResult()
+	return result
 }
 
 // Start launches the background renderer goroutine. Call this once before
@@ -144,11 +150,15 @@ func New(total int, w io.Writer, label string) *Tracker {
 // events from the channel, updating internal counters, and redrawing the
 // progress bar after each event.
 func (t *Tracker) Start() {
-	if t == nil {
-		return
-	}
-	t.startTime = time.Now()
-	go t.render()
+	_, _ = StartNew[struct{}]("progress-bar.Start", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if t == nil {
+				return rf.Generate(true, false, struct{}{})
+			}
+			t.startTime = time.Now()
+			go t.render()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Send submits an event to the tracker. This is safe to call from any
@@ -161,10 +171,14 @@ func (t *Tracker) Start() {
 //	// The caller doesn't need to know if progress tracking is enabled:
 //	tracker.Send(progress.Event{Type: progress.Started, Name: "pkg-a"})
 func (t *Tracker) Send(e Event) {
-	if t == nil {
-		return
-	}
-	t.events <- e
+	_, _ = StartNew[struct{}]("progress-bar.Send", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if t == nil {
+				return rf.Generate(true, false, struct{}{})
+			}
+			t.events <- e
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Child creates a nested sub-tracker for hierarchical progress.
@@ -180,21 +194,27 @@ func (t *Tracker) Send(e Event) {
 //	child := parent.Child(7, "Package")
 //	// Display: Level 1/3  [████░░░░]  3/7  Building: pkg-a  (2.1s)
 func (t *Tracker) Child(total int, label string) *Tracker {
-	if t == nil {
-		return nil
-	}
-	child := &Tracker{
-		total:     total,
-		building:  make(map[string]bool),
-		events:    make(chan Event, 64),
-		done:      make(chan struct{}),
-		writer:    t.writer,
-		startTime: t.startTime,
-		label:     label,
-		parent:    t,
-	}
-	go child.render()
-	return child
+	result, _ := StartNew[*Tracker]("progress-bar.Child", nil,
+		func(op *Operation[*Tracker], rf *ResultFactory[*Tracker]) *OperationResult[*Tracker] {
+			op.AddProperty("total", total)
+			op.AddProperty("label", label)
+			if t == nil {
+				return rf.Generate(true, false, nil)
+			}
+			child := &Tracker{
+				total:     total,
+				building:  make(map[string]bool),
+				events:    make(chan Event, 64),
+				done:      make(chan struct{}),
+				writer:    t.writer,
+				startTime: t.startTime,
+				label:     label,
+				parent:    t,
+			}
+			go child.render()
+			return rf.Generate(true, false, child)
+		}).GetResult()
+	return result
 }
 
 // Finish marks this child tracker as complete and advances the parent
@@ -203,26 +223,34 @@ func (t *Tracker) Child(total int, label string) *Tracker {
 // This closes the child's event channel, waits for its renderer to
 // finish, then sends a Finished event to the parent.
 func (t *Tracker) Finish() {
-	if t == nil {
-		return
-	}
-	close(t.events)
-	<-t.done
-	if t.parent != nil {
-		t.parent.Send(Event{Type: Finished, Name: t.label})
-	}
+	_, _ = StartNew[struct{}]("progress-bar.Finish", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if t == nil {
+				return rf.Generate(true, false, struct{}{})
+			}
+			close(t.events)
+			<-t.done
+			if t.parent != nil {
+				t.parent.Send(Event{Type: Finished, Name: t.label})
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Stop shuts down the tracker. It closes the event channel, waits for
 // the renderer goroutine to drain and exit, then prints a final newline
 // so the last progress line is preserved in the terminal scrollback.
 func (t *Tracker) Stop() {
-	if t == nil {
-		return
-	}
-	close(t.events)
-	<-t.done
-	fmt.Fprintln(t.writer)
+	_, _ = StartNew[struct{}]("progress-bar.Stop", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if t == nil {
+				return rf.Generate(true, false, struct{}{})
+			}
+			close(t.events)
+			<-t.done
+			fmt.Fprintln(t.writer)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ---------------------------------------------------------------------------

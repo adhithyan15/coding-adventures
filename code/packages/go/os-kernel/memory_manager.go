@@ -52,21 +52,29 @@ type MemoryManager struct {
 
 // NewMemoryManager creates a memory manager with pre-defined regions.
 func NewMemoryManager(regions []MemoryRegion) *MemoryManager {
-	copied := make([]MemoryRegion, len(regions))
-	copy(copied, regions)
-	return &MemoryManager{Regions: copied}
+	result, _ := StartNew[*MemoryManager]("os-kernel.NewMemoryManager", nil,
+		func(op *Operation[*MemoryManager], rf *ResultFactory[*MemoryManager]) *OperationResult[*MemoryManager] {
+			copied := make([]MemoryRegion, len(regions))
+			copy(copied, regions)
+			return rf.Generate(true, false, &MemoryManager{Regions: copied})
+		}).GetResult()
+	return result
 }
 
 // FindRegion returns the memory region containing the given address, or nil
 // if the address is not in any region.
 func (mm *MemoryManager) FindRegion(address uint32) *MemoryRegion {
-	for i := range mm.Regions {
-		r := &mm.Regions[i]
-		if address >= r.Base && address < r.Base+r.Size {
-			return r
-		}
-	}
-	return nil
+	result, _ := StartNew[*MemoryRegion]("os-kernel.MemoryManager.FindRegion", nil,
+		func(op *Operation[*MemoryRegion], rf *ResultFactory[*MemoryRegion]) *OperationResult[*MemoryRegion] {
+			for i := range mm.Regions {
+				r := &mm.Regions[i]
+				if address >= r.Base && address < r.Base+r.Size {
+					return rf.Generate(true, false, r)
+				}
+			}
+			return rf.Generate(true, false, nil)
+		}).GetResult()
+	return result
 }
 
 // CheckAccess verifies that the given PID can access the given address
@@ -77,30 +85,42 @@ func (mm *MemoryManager) FindRegion(address uint32) *MemoryRegion {
 //   - A process can access its own regions
 //   - The requested permission must be a subset of the region's permissions
 func (mm *MemoryManager) CheckAccess(pid int, address uint32, perm MemoryPermission) bool {
-	region := mm.FindRegion(address)
-	if region == nil {
-		return false
-	}
-	// Check owner (kernel regions are accessible by all)
-	if region.Owner != -1 && region.Owner != pid {
-		return false
-	}
-	// Check permissions
-	return (region.Permissions & perm) == perm
+	result, _ := StartNew[bool]("os-kernel.MemoryManager.CheckAccess", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			region := mm.FindRegion(address)
+			if region == nil {
+				return rf.Generate(true, false, false)
+			}
+			// Check owner (kernel regions are accessible by all)
+			if region.Owner != -1 && region.Owner != pid {
+				return rf.Generate(true, false, false)
+			}
+			// Check permissions
+			return rf.Generate(true, false, (region.Permissions&perm) == perm)
+		}).GetResult()
+	return result
 }
 
 // AllocateRegion adds a new memory region for the given PID.
 func (mm *MemoryManager) AllocateRegion(pid int, base, size uint32, perm MemoryPermission, name string) {
-	mm.Regions = append(mm.Regions, MemoryRegion{
-		Base:        base,
-		Size:        size,
-		Permissions: perm,
-		Owner:       pid,
-		Name:        name,
-	})
+	_, _ = StartNew[struct{}]("os-kernel.MemoryManager.AllocateRegion", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			mm.Regions = append(mm.Regions, MemoryRegion{
+				Base:        base,
+				Size:        size,
+				Permissions: perm,
+				Owner:       pid,
+				Name:        name,
+			})
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RegionCount returns the number of tracked regions.
 func (mm *MemoryManager) RegionCount() int {
-	return len(mm.Regions)
+	result, _ := StartNew[int]("os-kernel.MemoryManager.RegionCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, len(mm.Regions))
+		}).GetResult()
+	return result
 }

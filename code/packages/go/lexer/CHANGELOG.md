@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.2] - 2026-04-02
+
+### Fixed
+
+- **PanicOnUnexpected missing from intentional-panic operations**: `Lexer.Tokenize()`,
+  `GrammarLexer.Tokenize()`, and `LexerContext.PushGroup()` all call `StartNew` but
+  previously omitted `.PanicOnUnexpected()` before `.GetResult()`. The `StartNew`
+  framework recovers panics by default, silently swallowing errors that are part of
+  the documented contract (unterminated string literals, unexpected characters,
+  reserved keyword violations, tab indentation, inconsistent dedent, unknown group
+  names). Adding `.PanicOnUnexpected()` to these three chains restores the
+  intended panic-propagation behavior so callers can use `defer/recover` to catch
+  lex errors.
+
 ## [0.2.1] - 2026-03-31
 
 ### Fixed

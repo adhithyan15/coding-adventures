@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions with the Operations system (`StartNew[T]`) for
+  uniform observability, tracing, and error propagation across the package.
+  Affected files: `warp_engine.go`, `wavefront_engine.go`, `systolic_array.go`,
+  `mac_array_engine.go`, `subslice_engine.go`.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

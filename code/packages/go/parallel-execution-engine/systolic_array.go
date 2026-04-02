@@ -78,12 +78,16 @@ type SystolicConfig struct {
 
 // DefaultSystolicConfig returns a SystolicConfig with sensible defaults.
 func DefaultSystolicConfig() SystolicConfig {
-	return SystolicConfig{
-		Rows:              4,
-		Cols:              4,
-		FloatFormat:       fp.FP32,
-		AccumulatorFormat: fp.FP32,
-	}
+	result, _ := StartNew[SystolicConfig]("parallel-execution-engine.DefaultSystolicConfig", SystolicConfig{},
+		func(op *Operation[SystolicConfig], rf *ResultFactory[SystolicConfig]) *OperationResult[SystolicConfig] {
+			return rf.Generate(true, false, SystolicConfig{
+				Rows:              4,
+				Cols:              4,
+				FloatFormat:       fp.FP32,
+				AccumulatorFormat: fp.FP32,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -168,50 +172,84 @@ type SystolicArray struct {
 
 // NewSystolicArray creates a new systolic array engine.
 func NewSystolicArray(config SystolicConfig, clk *clock.Clock) *SystolicArray {
-	grid := make([][]*SystolicPE, config.Rows)
-	zeroWeight := fp.FloatToBits(0.0, config.FloatFormat)
-	zeroAcc := fp.FloatToBits(0.0, config.AccumulatorFormat)
-	for r := 0; r < config.Rows; r++ {
-		grid[r] = make([]*SystolicPE, config.Cols)
-		for c := 0; c < config.Cols; c++ {
-			grid[r][c] = &SystolicPE{
-				Row:         r,
-				Col:         c,
-				Weight:      zeroWeight,
-				Accumulator: zeroAcc,
+	result, _ := StartNew[*SystolicArray]("parallel-execution-engine.NewSystolicArray", nil,
+		func(op *Operation[*SystolicArray], rf *ResultFactory[*SystolicArray]) *OperationResult[*SystolicArray] {
+			grid := make([][]*SystolicPE, config.Rows)
+			zeroWeight := fp.FloatToBits(0.0, config.FloatFormat)
+			zeroAcc := fp.FloatToBits(0.0, config.AccumulatorFormat)
+			for r := 0; r < config.Rows; r++ {
+				grid[r] = make([]*SystolicPE, config.Cols)
+				for c := 0; c < config.Cols; c++ {
+					grid[r][c] = &SystolicPE{
+						Row:         r,
+						Col:         c,
+						Weight:      zeroWeight,
+						Accumulator: zeroAcc,
+					}
+				}
 			}
-		}
-	}
 
-	inputQueues := make([][]fp.FloatBits, config.Rows)
-	for i := range inputQueues {
-		inputQueues[i] = nil
-	}
+			inputQueues := make([][]fp.FloatBits, config.Rows)
+			for i := range inputQueues {
+				inputQueues[i] = nil
+			}
 
-	return &SystolicArray{
-		config:      config,
-		clk:         clk,
-		Grid:        grid,
-		inputQueues: inputQueues,
-	}
+			return rf.Generate(true, false, &SystolicArray{
+				config:      config,
+				clk:         clk,
+				Grid:        grid,
+				inputQueues: inputQueues,
+			})
+		}).GetResult()
+	return result
 }
 
 // --- Interface methods ---
 
 // Name returns the engine name for traces.
-func (s *SystolicArray) Name() string { return "SystolicArray" }
+func (s *SystolicArray) Name() string {
+	result, _ := StartNew[string]("parallel-execution-engine.SystolicArray.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "SystolicArray")
+		}).GetResult()
+	return result
+}
 
 // Width returns the total number of PEs in the array.
-func (s *SystolicArray) Width() int { return s.config.Rows * s.config.Cols }
+func (s *SystolicArray) Width() int {
+	result, _ := StartNew[int]("parallel-execution-engine.SystolicArray.Width", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, s.config.Rows*s.config.Cols)
+		}).GetResult()
+	return result
+}
 
 // ExecutionModel returns Systolic.
-func (s *SystolicArray) ExecutionModel() ExecutionModel { return Systolic }
+func (s *SystolicArray) ExecutionModel() ExecutionModel {
+	result, _ := StartNew[ExecutionModel]("parallel-execution-engine.SystolicArray.ExecutionModel", Systolic,
+		func(op *Operation[ExecutionModel], rf *ResultFactory[ExecutionModel]) *OperationResult[ExecutionModel] {
+			return rf.Generate(true, false, Systolic)
+		}).GetResult()
+	return result
+}
 
 // IsHalted returns true if all data has flowed through.
-func (s *SystolicArray) IsHalted() bool { return s.halted }
+func (s *SystolicArray) IsHalted() bool {
+	result, _ := StartNew[bool]("parallel-execution-engine.SystolicArray.IsHalted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, s.halted)
+		}).GetResult()
+	return result
+}
 
 // Config returns the configuration this array was created with.
-func (s *SystolicArray) Config() SystolicConfig { return s.config }
+func (s *SystolicArray) Config() SystolicConfig {
+	result, _ := StartNew[SystolicConfig]("parallel-execution-engine.SystolicArray.Config", SystolicConfig{},
+		func(op *Operation[SystolicConfig], rf *ResultFactory[SystolicConfig]) *OperationResult[SystolicConfig] {
+			return rf.Generate(true, false, s.config)
+		}).GetResult()
+	return result
+}
 
 // --- Weight loading ---
 
@@ -221,11 +259,15 @@ func (s *SystolicArray) Config() SystolicConfig { return s.config }
 // loading happens before the matrix multiply begins. The weights stay
 // fixed while activations flow through.
 func (s *SystolicArray) LoadWeights(weights [][]float64) {
-	for r := 0; r < len(weights) && r < s.config.Rows; r++ {
-		for c := 0; c < len(weights[r]) && c < s.config.Cols; c++ {
-			s.Grid[r][c].Weight = fp.FloatToBits(weights[r][c], s.config.FloatFormat)
-		}
-	}
+	_, _ = StartNew[struct{}]("parallel-execution-engine.SystolicArray.LoadWeights", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for r := 0; r < len(weights) && r < s.config.Rows; r++ {
+				for c := 0; c < len(weights[r]) && c < s.config.Cols; c++ {
+					s.Grid[r][c].Weight = fp.FloatToBits(weights[r][c], s.config.FloatFormat)
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // --- Input feeding ---
@@ -237,21 +279,30 @@ func (s *SystolicArray) LoadWeights(weights [][]float64) {
 //
 // Returns an error if the row is out of range.
 func (s *SystolicArray) FeedInput(row int, value float64) error {
-	if row < 0 || row >= s.config.Rows {
-		return fmt.Errorf("row %d out of range [0, %d)", row, s.config.Rows)
-	}
-	s.inputQueues[row] = append(s.inputQueues[row], fp.FloatToBits(value, s.config.FloatFormat))
-	return nil
+	result, err := StartNew[struct{}]("parallel-execution-engine.SystolicArray.FeedInput", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if row < 0 || row >= s.config.Rows {
+				return rf.Fail(struct{}{}, fmt.Errorf("row %d out of range [0, %d)", row, s.config.Rows))
+			}
+			s.inputQueues[row] = append(s.inputQueues[row], fp.FloatToBits(value, s.config.FloatFormat))
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	_ = result
+	return err
 }
 
 // FeedInputVector feeds a full column vector to all rows.
 func (s *SystolicArray) FeedInputVector(values []float64) {
-	for rowIdx, val := range values {
-		if rowIdx < s.config.Rows {
-			s.inputQueues[rowIdx] = append(s.inputQueues[rowIdx],
-				fp.FloatToBits(val, s.config.FloatFormat))
-		}
-	}
+	_, _ = StartNew[struct{}]("parallel-execution-engine.SystolicArray.FeedInputVector", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for rowIdx, val := range values {
+				if rowIdx < s.config.Rows {
+					s.inputQueues[rowIdx] = append(s.inputQueues[rowIdx],
+						fp.FloatToBits(val, s.config.FloatFormat))
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // --- Execution ---
@@ -268,105 +319,109 @@ func (s *SystolicArray) FeedInputVector(values []float64) {
 // We process PEs from right to left so that the "pass to right"
 // doesn't interfere with the current cycle's computation.
 func (s *SystolicArray) Step(edge clock.ClockEdge) EngineTrace {
-	s.cycle++
+	result, _ := StartNew[EngineTrace]("parallel-execution-engine.SystolicArray.Step", EngineTrace{},
+		func(op *Operation[EngineTrace], rf *ResultFactory[EngineTrace]) *OperationResult[EngineTrace] {
+			s.cycle++
 
-	activeCount := 0
-	peStates := make([][]string, s.config.Rows)
+			activeCount := 0
+			peStates := make([][]string, s.config.Rows)
 
-	// Phase 1: Move data rightward through the array.
-	// Process from right to left to avoid data collision.
-	for r := 0; r < s.config.Rows; r++ {
-		for c := s.config.Cols - 1; c >= 0; c-- {
-			pe := s.Grid[r][c]
-			output := pe.Compute()
-			if output != nil {
-				activeCount++
-				// Pass input to right neighbor (if exists).
-				if c+1 < s.config.Cols {
-					copied := *output
-					s.Grid[r][c+1].InputBuffer = &copied
+			// Phase 1: Move data rightward through the array.
+			// Process from right to left to avoid data collision.
+			for r := 0; r < s.config.Rows; r++ {
+				for c := s.config.Cols - 1; c >= 0; c-- {
+					pe := s.Grid[r][c]
+					output := pe.Compute()
+					if output != nil {
+						activeCount++
+						// Pass input to right neighbor (if exists).
+						if c+1 < s.config.Cols {
+							copied := *output
+							s.Grid[r][c+1].InputBuffer = &copied
+						}
+					}
+				}
+
+				// Build state strings (left to right for display).
+				peStates[r] = make([]string, s.config.Cols)
+				for c := 0; c < s.config.Cols; c++ {
+					pe := s.Grid[r][c]
+					accVal := fp.BitsToFloat(pe.Accumulator)
+					state := fmt.Sprintf("acc=%.4g", accVal)
+					if pe.InputBuffer != nil {
+						inVal := fp.BitsToFloat(*pe.InputBuffer)
+						state += fmt.Sprintf(", in=%.4g", inVal)
+					}
+					peStates[r][c] = state
 				}
 			}
-		}
 
-		// Build state strings (left to right for display).
-		peStates[r] = make([]string, s.config.Cols)
-		for c := 0; c < s.config.Cols; c++ {
-			pe := s.Grid[r][c]
-			accVal := fp.BitsToFloat(pe.Accumulator)
-			state := fmt.Sprintf("acc=%.4g", accVal)
-			if pe.InputBuffer != nil {
-				inVal := fp.BitsToFloat(*pe.InputBuffer)
-				state += fmt.Sprintf(", in=%.4g", inVal)
+			// Phase 2: Feed new inputs from queues into column 0.
+			for r := 0; r < s.config.Rows; r++ {
+				if len(s.inputQueues[r]) > 0 {
+					val := s.inputQueues[r][0]
+					s.inputQueues[r] = s.inputQueues[r][1:]
+					s.Grid[r][0].InputBuffer = &val
+				}
 			}
-			peStates[r][c] = state
-		}
-	}
 
-	// Phase 2: Feed new inputs from queues into column 0.
-	for r := 0; r < s.config.Rows; r++ {
-		if len(s.inputQueues[r]) > 0 {
-			val := s.inputQueues[r][0]
-			s.inputQueues[r] = s.inputQueues[r][1:]
-			s.Grid[r][0].InputBuffer = &val
-		}
-	}
-
-	// Check if computation is complete.
-	total := s.config.Rows * s.config.Cols
-	anyInputRemaining := false
-	for _, q := range s.inputQueues {
-		if len(q) > 0 {
-			anyInputRemaining = true
-			break
-		}
-	}
-	anyInputInFlight := false
-	for r := 0; r < s.config.Rows; r++ {
-		for c := 0; c < s.config.Cols; c++ {
-			if s.Grid[r][c].InputBuffer != nil {
-				anyInputInFlight = true
-				break
+			// Check if computation is complete.
+			total := s.config.Rows * s.config.Cols
+			anyInputRemaining := false
+			for _, q := range s.inputQueues {
+				if len(q) > 0 {
+					anyInputRemaining = true
+					break
+				}
 			}
-		}
-		if anyInputInFlight {
-			break
-		}
-	}
+			anyInputInFlight := false
+			for r := 0; r < s.config.Rows; r++ {
+				for c := 0; c < s.config.Cols; c++ {
+					if s.Grid[r][c].InputBuffer != nil {
+						anyInputInFlight = true
+						break
+					}
+				}
+				if anyInputInFlight {
+					break
+				}
+			}
 
-	if !anyInputRemaining && !anyInputInFlight {
-		s.halted = true
-	}
+			if !anyInputRemaining && !anyInputInFlight {
+				s.halted = true
+			}
 
-	utilization := 0.0
-	if total > 0 {
-		utilization = float64(activeCount) / float64(total)
-	}
+			utilization := 0.0
+			if total > 0 {
+				utilization = float64(activeCount) / float64(total)
+			}
 
-	// Build unit traces and active mask.
-	unitTraces := make(map[int]string)
-	activeMask := make([]bool, total)
-	for r := 0; r < s.config.Rows; r++ {
-		for c := 0; c < s.config.Cols; c++ {
-			idx := r*s.config.Cols + c
-			unitTraces[idx] = peStates[r][c]
-			// Mark as active if it computed or has pending input.
-			activeMask[idx] = s.Grid[r][c].InputBuffer != nil || idx < activeCount
-		}
-	}
+			// Build unit traces and active mask.
+			unitTraces := make(map[int]string)
+			activeMask := make([]bool, total)
+			for r := 0; r < s.config.Rows; r++ {
+				for c := 0; c < s.config.Cols; c++ {
+					idx := r*s.config.Cols + c
+					unitTraces[idx] = peStates[r][c]
+					// Mark as active if it computed or has pending input.
+					activeMask[idx] = s.Grid[r][c].InputBuffer != nil || idx < activeCount
+				}
+			}
 
-	return EngineTrace{
-		Cycle:       s.cycle,
-		EngineName:  s.Name(),
-		Model:       s.ExecutionModel(),
-		Description: fmt.Sprintf("Systolic step -- %d/%d PEs active", activeCount, total),
-		UnitTraces:  unitTraces,
-		ActiveMask:  activeMask,
-		ActiveCount: activeCount,
-		TotalCount:  total,
-		Utilization: utilization,
-		Dataflow:    &DataflowInfo{PEStates: peStates},
-	}
+			return rf.Generate(true, false, EngineTrace{
+				Cycle:       s.cycle,
+				EngineName:  s.Name(),
+				Model:       s.ExecutionModel(),
+				Description: fmt.Sprintf("Systolic step -- %d/%d PEs active", activeCount, total),
+				UnitTraces:  unitTraces,
+				ActiveMask:  activeMask,
+				ActiveCount: activeCount,
+				TotalCount:  total,
+				Utilization: utilization,
+				Dataflow:    &DataflowInfo{PEStates: peStates},
+			})
+		}).GetResult()
+	return result
 }
 
 // RunMatmul runs a complete matrix multiplication C = A x W.
@@ -384,83 +439,87 @@ func (s *SystolicArray) Step(edge clock.ClockEdge) EngineTrace {
 //	  2. Feed A[i][k] into PE row k (with staggered timing)
 //	  3. After all activations flow through, drain results
 func (s *SystolicArray) RunMatmul(activations [][]float64, weights [][]float64) [][]float64 {
-	numOutputRows := len(activations)
-	innerDim := 0
-	if numOutputRows > 0 {
-		innerDim = len(activations[0])
-	}
-	numOutputCols := 0
-	if len(weights) > 0 {
-		numOutputCols = len(weights[0])
-	}
-
-	// Load weights: PE(k, j) gets W[k][j].
-	s.Reset()
-	s.LoadWeights(weights)
-
-	result := make([][]float64, numOutputRows)
-
-	// Compute one output row at a time.
-	for i := 0; i < numOutputRows; i++ {
-		// Reset accumulators (but keep weights).
-		zeroAcc := fp.FloatToBits(0.0, s.config.AccumulatorFormat)
-		for r := 0; r < s.config.Rows; r++ {
-			for c := 0; c < s.config.Cols; c++ {
-				s.Grid[r][c].Accumulator = zeroAcc
-				s.Grid[r][c].InputBuffer = nil
+	result, _ := StartNew[[][]float64]("parallel-execution-engine.SystolicArray.RunMatmul", nil,
+		func(op *Operation[[][]float64], rf *ResultFactory[[][]float64]) *OperationResult[[][]float64] {
+			numOutputRows := len(activations)
+			innerDim := 0
+			if numOutputRows > 0 {
+				innerDim = len(activations[0])
 			}
-		}
-		s.inputQueues = make([][]fp.FloatBits, s.config.Rows)
-		for r := range s.inputQueues {
-			s.inputQueues[r] = nil
-		}
-		s.halted = false
+			numOutputCols := 0
+			if len(weights) > 0 {
+				numOutputCols = len(weights[0])
+			}
 
-		// Build a feed schedule: row k gets A[i][k] at cycle k.
-		feedSchedule := make(map[int][]struct {
-			row int
-			val float64
-		})
-		for k := 0; k < innerDim; k++ {
-			feedSchedule[k] = append(feedSchedule[k], struct {
-				row int
-				val float64
-			}{k, activations[i][k]})
-		}
+			// Load weights: PE(k, j) gets W[k][j].
+			s.Reset()
+			s.LoadWeights(weights)
 
-		// Run until all data has flowed through.
-		totalSteps := innerDim + s.config.Cols + 1
-		for stepNum := 0; stepNum < totalSteps; stepNum++ {
-			if feeds, ok := feedSchedule[stepNum]; ok {
-				for _, f := range feeds {
-					_ = s.FeedInput(f.row, f.val)
+			out := make([][]float64, numOutputRows)
+
+			// Compute one output row at a time.
+			for i := 0; i < numOutputRows; i++ {
+				// Reset accumulators (but keep weights).
+				zeroAcc := fp.FloatToBits(0.0, s.config.AccumulatorFormat)
+				for r := 0; r < s.config.Rows; r++ {
+					for c := 0; c < s.config.Cols; c++ {
+						s.Grid[r][c].Accumulator = zeroAcc
+						s.Grid[r][c].InputBuffer = nil
+					}
 				}
-			}
-			edge := clock.ClockEdge{
-				Cycle:    stepNum + 1,
-				Value:    1,
-				IsRising: true,
-			}
-			s.Step(edge)
-		}
+				s.inputQueues = make([][]fp.FloatBits, s.config.Rows)
+				for r := range s.inputQueues {
+					s.inputQueues[r] = nil
+				}
+				s.halted = false
 
-		// Drain: sum accumulators vertically for each column j.
-		// C[i][j] = sum_k PE(k, j).accumulator
-		rowResult := make([]float64, numOutputCols)
-		for j := 0; j < numOutputCols; j++ {
-			colSum := 0.0
-			limit := innerDim
-			if s.config.Rows < limit {
-				limit = s.config.Rows
-			}
-			for k := 0; k < limit; k++ {
-				colSum += fp.BitsToFloat(s.Grid[k][j].Accumulator)
-			}
-			rowResult[j] = colSum
-		}
-		result[i] = rowResult
-	}
+				// Build a feed schedule: row k gets A[i][k] at cycle k.
+				feedSchedule := make(map[int][]struct {
+					row int
+					val float64
+				})
+				for k := 0; k < innerDim; k++ {
+					feedSchedule[k] = append(feedSchedule[k], struct {
+						row int
+						val float64
+					}{k, activations[i][k]})
+				}
 
+				// Run until all data has flowed through.
+				totalSteps := innerDim + s.config.Cols + 1
+				for stepNum := 0; stepNum < totalSteps; stepNum++ {
+					if feeds, ok := feedSchedule[stepNum]; ok {
+						for _, f := range feeds {
+							_ = s.FeedInput(f.row, f.val)
+						}
+					}
+					edge := clock.ClockEdge{
+						Cycle:    stepNum + 1,
+						Value:    1,
+						IsRising: true,
+					}
+					s.Step(edge)
+				}
+
+				// Drain: sum accumulators vertically for each column j.
+				// C[i][j] = sum_k PE(k, j).accumulator
+				rowResult := make([]float64, numOutputCols)
+				for j := 0; j < numOutputCols; j++ {
+					colSum := 0.0
+					limit := innerDim
+					if s.config.Rows < limit {
+						limit = s.config.Rows
+					}
+					for k := 0; k < limit; k++ {
+						colSum += fp.BitsToFloat(s.Grid[k][j].Accumulator)
+					}
+					rowResult[j] = colSum
+				}
+				out[i] = rowResult
+			}
+
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -469,14 +528,18 @@ func (s *SystolicArray) RunMatmul(activations [][]float64, weights [][]float64) 
 // After computation, each PE's accumulator holds one element of the
 // result. PE(r, c) holds C[r][c].
 func (s *SystolicArray) DrainOutputs() [][]float64 {
-	result := make([][]float64, s.config.Rows)
-	for r := 0; r < s.config.Rows; r++ {
-		row := make([]float64, s.config.Cols)
-		for c := 0; c < s.config.Cols; c++ {
-			row[c] = fp.BitsToFloat(s.Grid[r][c].Accumulator)
-		}
-		result[r] = row
-	}
+	result, _ := StartNew[[][]float64]("parallel-execution-engine.SystolicArray.DrainOutputs", nil,
+		func(op *Operation[[][]float64], rf *ResultFactory[[][]float64]) *OperationResult[[][]float64] {
+			out := make([][]float64, s.config.Rows)
+			for r := 0; r < s.config.Rows; r++ {
+				row := make([]float64, s.config.Cols)
+				for c := 0; c < s.config.Cols; c++ {
+					row[c] = fp.BitsToFloat(s.Grid[r][c].Accumulator)
+				}
+				out[r] = row
+			}
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -485,19 +548,23 @@ func (s *SystolicArray) DrainOutputs() [][]float64 {
 // Clears all accumulators, input buffers, and queues. Weights are
 // preserved -- call LoadWeights() to change them.
 func (s *SystolicArray) Reset() {
-	zeroAcc := fp.FloatToBits(0.0, s.config.AccumulatorFormat)
-	for r := 0; r < s.config.Rows; r++ {
-		for c := 0; c < s.config.Cols; c++ {
-			s.Grid[r][c].Accumulator = zeroAcc
-			s.Grid[r][c].InputBuffer = nil
-		}
-	}
-	s.inputQueues = make([][]fp.FloatBits, s.config.Rows)
-	for r := range s.inputQueues {
-		s.inputQueues[r] = nil
-	}
-	s.cycle = 0
-	s.halted = false
+	_, _ = StartNew[struct{}]("parallel-execution-engine.SystolicArray.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			zeroAcc := fp.FloatToBits(0.0, s.config.AccumulatorFormat)
+			for r := 0; r < s.config.Rows; r++ {
+				for c := 0; c < s.config.Cols; c++ {
+					s.Grid[r][c].Accumulator = zeroAcc
+					s.Grid[r][c].InputBuffer = nil
+				}
+			}
+			s.inputQueues = make([][]fp.FloatBits, s.config.Rows)
+			for r := range s.inputQueues {
+				s.inputQueues[r] = nil
+			}
+			s.cycle = 0
+			s.halted = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // String returns a human-readable representation of the array.

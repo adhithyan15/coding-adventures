@@ -187,15 +187,19 @@ type MACArrayConfig struct {
 
 // DefaultMACArrayConfig returns a MACArrayConfig with sensible defaults.
 func DefaultMACArrayConfig() MACArrayConfig {
-	return MACArrayConfig{
-		NumMACs:          8,
-		InputBufferSize:  1024,
-		WeightBufferSize: 4096,
-		OutputBufferSize: 1024,
-		FloatFormat:      fp.FP16,
-		AccumFormat:      fp.FP32,
-		HasActivation:    true,
-	}
+	result, _ := StartNew[MACArrayConfig]("parallel-execution-engine.DefaultMACArrayConfig", MACArrayConfig{},
+		func(op *Operation[MACArrayConfig], rf *ResultFactory[MACArrayConfig]) *OperationResult[MACArrayConfig] {
+			return rf.Generate(true, false, MACArrayConfig{
+				NumMACs:          8,
+				InputBufferSize:  1024,
+				WeightBufferSize: 4096,
+				OutputBufferSize: 1024,
+				FloatFormat:      fp.FP16,
+				AccumFormat:      fp.FP32,
+				HasActivation:    true,
+			})
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -228,32 +232,66 @@ type MACArrayEngine struct {
 
 // NewMACArrayEngine creates a new scheduled MAC array engine.
 func NewMACArrayEngine(config MACArrayConfig, clk *clock.Clock) *MACArrayEngine {
-	return &MACArrayEngine{
-		config:          config,
-		clk:             clk,
-		inputBuffer:     make([]float64, config.InputBufferSize),
-		weightBuffer:    make([]float64, config.WeightBufferSize),
-		outputBuffer:    make([]float64, config.OutputBufferSize),
-		macAccumulators: make([]float64, config.NumMACs),
-	}
+	result, _ := StartNew[*MACArrayEngine]("parallel-execution-engine.NewMACArrayEngine", nil,
+		func(op *Operation[*MACArrayEngine], rf *ResultFactory[*MACArrayEngine]) *OperationResult[*MACArrayEngine] {
+			return rf.Generate(true, false, &MACArrayEngine{
+				config:          config,
+				clk:             clk,
+				inputBuffer:     make([]float64, config.InputBufferSize),
+				weightBuffer:    make([]float64, config.WeightBufferSize),
+				outputBuffer:    make([]float64, config.OutputBufferSize),
+				macAccumulators: make([]float64, config.NumMACs),
+			})
+		}).GetResult()
+	return result
 }
 
 // --- Interface methods ---
 
 // Name returns the engine name for traces.
-func (m *MACArrayEngine) Name() string { return "MACArrayEngine" }
+func (m *MACArrayEngine) Name() string {
+	result, _ := StartNew[string]("parallel-execution-engine.MACArrayEngine.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "MACArrayEngine")
+		}).GetResult()
+	return result
+}
 
 // Width returns the number of parallel MAC units.
-func (m *MACArrayEngine) Width() int { return m.config.NumMACs }
+func (m *MACArrayEngine) Width() int {
+	result, _ := StartNew[int]("parallel-execution-engine.MACArrayEngine.Width", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, m.config.NumMACs)
+		}).GetResult()
+	return result
+}
 
 // ExecutionModel returns ScheduledMAC.
-func (m *MACArrayEngine) ExecutionModel() ExecutionModel { return ScheduledMAC }
+func (m *MACArrayEngine) ExecutionModel() ExecutionModel {
+	result, _ := StartNew[ExecutionModel]("parallel-execution-engine.MACArrayEngine.ExecutionModel", ScheduledMAC,
+		func(op *Operation[ExecutionModel], rf *ResultFactory[ExecutionModel]) *OperationResult[ExecutionModel] {
+			return rf.Generate(true, false, ScheduledMAC)
+		}).GetResult()
+	return result
+}
 
 // IsHalted returns true if the schedule is complete.
-func (m *MACArrayEngine) IsHalted() bool { return m.halted }
+func (m *MACArrayEngine) IsHalted() bool {
+	result, _ := StartNew[bool]("parallel-execution-engine.MACArrayEngine.IsHalted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, m.halted)
+		}).GetResult()
+	return result
+}
 
 // Config returns the configuration this engine was created with.
-func (m *MACArrayEngine) Config() MACArrayConfig { return m.config }
+func (m *MACArrayEngine) Config() MACArrayConfig {
+	result, _ := StartNew[MACArrayConfig]("parallel-execution-engine.MACArrayEngine.Config", MACArrayConfig{},
+		func(op *Operation[MACArrayConfig], rf *ResultFactory[MACArrayConfig]) *OperationResult[MACArrayConfig] {
+			return rf.Generate(true, false, m.config)
+		}).GetResult()
+	return result
+}
 
 // --- Data loading ---
 
@@ -262,27 +300,39 @@ func (m *MACArrayEngine) Config() MACArrayConfig { return m.config }
 // In real hardware, this is a DMA transfer from external memory
 // to the on-chip input SRAM.
 func (m *MACArrayEngine) LoadInputs(data []float64) {
-	for i, val := range data {
-		if i < m.config.InputBufferSize {
-			m.inputBuffer[i] = val
-		}
-	}
+	_, _ = StartNew[struct{}]("parallel-execution-engine.MACArrayEngine.LoadInputs", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for i, val := range data {
+				if i < m.config.InputBufferSize {
+					m.inputBuffer[i] = val
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // LoadWeights loads weight data into the weight buffer.
 func (m *MACArrayEngine) LoadWeights(data []float64) {
-	for i, val := range data {
-		if i < m.config.WeightBufferSize {
-			m.weightBuffer[i] = val
-		}
-	}
+	_, _ = StartNew[struct{}]("parallel-execution-engine.MACArrayEngine.LoadWeights", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			for i, val := range data {
+				if i < m.config.WeightBufferSize {
+					m.weightBuffer[i] = val
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // LoadSchedule loads a compiler-generated execution schedule.
 func (m *MACArrayEngine) LoadSchedule(schedule []MACScheduleEntry) {
-	m.schedule = make([]MACScheduleEntry, len(schedule))
-	copy(m.schedule, schedule)
-	m.halted = false
+	_, _ = StartNew[struct{}]("parallel-execution-engine.MACArrayEngine.LoadSchedule", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			m.schedule = make([]MACScheduleEntry, len(schedule))
+			copy(m.schedule, schedule)
+			m.halted = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // --- Execution ---
@@ -293,142 +343,164 @@ func (m *MACArrayEngine) LoadSchedule(schedule []MACScheduleEntry) {
 // corresponding operation. If no entry exists for this cycle,
 // the MAC array idles (like a NOP).
 func (m *MACArrayEngine) Step(edge clock.ClockEdge) EngineTrace {
-	m.cycle++
+	result, _ := StartNew[EngineTrace]("parallel-execution-engine.MACArrayEngine.Step", EngineTrace{},
+		func(op *Operation[EngineTrace], rf *ResultFactory[EngineTrace]) *OperationResult[EngineTrace] {
+			m.cycle++
 
-	if m.halted {
-		return m.makeIdleTrace("Schedule complete")
-	}
-
-	// Find schedule entries for this cycle.
-	var entries []MACScheduleEntry
-	for _, e := range m.schedule {
-		if e.Cycle == m.cycle {
-			entries = append(entries, e)
-		}
-	}
-
-	if len(entries) == 0 {
-		// Check if we've passed all schedule entries.
-		maxCycle := 0
-		for _, e := range m.schedule {
-			if e.Cycle > maxCycle {
-				maxCycle = e.Cycle
+			if m.halted {
+				return rf.Generate(true, false, m.makeIdleTrace("Schedule complete"))
 			}
-		}
-		if m.cycle > maxCycle {
-			m.halted = true
-			return m.makeIdleTrace("Schedule complete")
-		}
-		return m.makeIdleTrace("No operation this cycle")
-	}
 
-	// Execute all entries for this cycle.
-	unitTraces := make(map[int]string)
-	activeCount := 0
-	var descriptions []string
-
-	for _, entry := range entries {
-		switch entry.Operation {
-		case OpLoadInput:
-			desc := fmt.Sprintf("LOAD_INPUT indices=%v", entry.InputIndices)
-			descriptions = append(descriptions, desc)
-			activeCount = len(entry.InputIndices)
-
-		case OpLoadWeights:
-			desc := fmt.Sprintf("LOAD_WEIGHTS indices=%v", entry.WeightIndices)
-			descriptions = append(descriptions, desc)
-			activeCount = len(entry.WeightIndices)
-
-		case OpMAC:
-			desc, traces := m.execMAC(entry)
-			descriptions = append(descriptions, desc)
-			for k, v := range traces {
-				unitTraces[k] = v
+			// Find schedule entries for this cycle.
+			var entries []MACScheduleEntry
+			for _, e := range m.schedule {
+				if e.Cycle == m.cycle {
+					entries = append(entries, e)
+				}
 			}
-			activeCount = len(traces)
 
-		case OpReduce:
-			desc := m.execReduce(entry)
-			descriptions = append(descriptions, desc)
-			activeCount = 1
+			if len(entries) == 0 {
+				// Check if we've passed all schedule entries.
+				maxCycle := 0
+				for _, e := range m.schedule {
+					if e.Cycle > maxCycle {
+						maxCycle = e.Cycle
+					}
+				}
+				if m.cycle > maxCycle {
+					m.halted = true
+					return rf.Generate(true, false, m.makeIdleTrace("Schedule complete"))
+				}
+				return rf.Generate(true, false, m.makeIdleTrace("No operation this cycle"))
+			}
 
-		case OpActivate:
-			desc := m.execActivate(entry)
-			descriptions = append(descriptions, desc)
-			activeCount = 1
+			// Execute all entries for this cycle.
+			unitTraces := make(map[int]string)
+			activeCount := 0
+			var descriptions []string
 
-		case OpStoreOutput:
-			desc := m.execStore(entry)
-			descriptions = append(descriptions, desc)
-			activeCount = 1
-		}
-	}
+			for _, entry := range entries {
+				switch entry.Operation {
+				case OpLoadInput:
+					desc := fmt.Sprintf("LOAD_INPUT indices=%v", entry.InputIndices)
+					descriptions = append(descriptions, desc)
+					activeCount = len(entry.InputIndices)
 
-	total := m.config.NumMACs
-	description := ""
-	for i, d := range descriptions {
-		if i > 0 {
-			description += "; "
-		}
-		description += d
-	}
+				case OpLoadWeights:
+					desc := fmt.Sprintf("LOAD_WEIGHTS indices=%v", entry.WeightIndices)
+					descriptions = append(descriptions, desc)
+					activeCount = len(entry.WeightIndices)
 
-	activeMask := make([]bool, total)
-	for i := 0; i < activeCount && i < total; i++ {
-		activeMask[i] = true
-	}
+				case OpMAC:
+					desc, traces := m.execMAC(entry)
+					descriptions = append(descriptions, desc)
+					for k, v := range traces {
+						unitTraces[k] = v
+					}
+					activeCount = len(traces)
 
-	utilization := 0.0
-	if total > 0 {
-		utilization = float64(activeCount) / float64(total)
-	}
+				case OpReduce:
+					desc := m.execReduce(entry)
+					descriptions = append(descriptions, desc)
+					activeCount = 1
 
-	return EngineTrace{
-		Cycle:       m.cycle,
-		EngineName:  m.Name(),
-		Model:       m.ExecutionModel(),
-		Description: fmt.Sprintf("%s -- %d/%d MACs active", description, activeCount, total),
-		UnitTraces:  unitTraces,
-		ActiveMask:  activeMask,
-		ActiveCount: activeCount,
-		TotalCount:  total,
-		Utilization: utilization,
-	}
+				case OpActivate:
+					desc := m.execActivate(entry)
+					descriptions = append(descriptions, desc)
+					activeCount = 1
+
+				case OpStoreOutput:
+					desc := m.execStore(entry)
+					descriptions = append(descriptions, desc)
+					activeCount = 1
+				}
+			}
+
+			total := m.config.NumMACs
+			description := ""
+			for i, d := range descriptions {
+				if i > 0 {
+					description += "; "
+				}
+				description += d
+			}
+
+			activeMask := make([]bool, total)
+			for i := 0; i < activeCount && i < total; i++ {
+				activeMask[i] = true
+			}
+
+			utilization := 0.0
+			if total > 0 {
+				utilization = float64(activeCount) / float64(total)
+			}
+
+			return rf.Generate(true, false, EngineTrace{
+				Cycle:       m.cycle,
+				EngineName:  m.Name(),
+				Model:       m.ExecutionModel(),
+				Description: fmt.Sprintf("%s -- %d/%d MACs active", description, activeCount, total),
+				UnitTraces:  unitTraces,
+				ActiveMask:  activeMask,
+				ActiveCount: activeCount,
+				TotalCount:  total,
+				Utilization: utilization,
+			})
+		}).GetResult()
+	return result
+}
+
+// macRunResult is an internal helper struct for returning multiple values from Run.
+type macRunResult struct {
+	traces []EngineTrace
+	err    error
 }
 
 // Run runs the full schedule.
 func (m *MACArrayEngine) Run(maxCycles int) ([]EngineTrace, error) {
-	var traces []EngineTrace
-	for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
-		edge := clock.ClockEdge{
-			Cycle:    cycleNum,
-			Value:    1,
-			IsRising: true,
-		}
-		trace := m.Step(edge)
-		traces = append(traces, trace)
-		if m.halted {
-			return traces, nil
-		}
-	}
-	return traces, fmt.Errorf("MACArrayEngine: max_cycles (%d) reached", maxCycles)
+	res, _ := StartNew[macRunResult]("parallel-execution-engine.MACArrayEngine.Run", macRunResult{},
+		func(op *Operation[macRunResult], rf *ResultFactory[macRunResult]) *OperationResult[macRunResult] {
+			var traces []EngineTrace
+			for cycleNum := 1; cycleNum <= maxCycles; cycleNum++ {
+				edge := clock.ClockEdge{
+					Cycle:    cycleNum,
+					Value:    1,
+					IsRising: true,
+				}
+				trace := m.Step(edge)
+				traces = append(traces, trace)
+				if m.halted {
+					return rf.Generate(true, false, macRunResult{traces, nil})
+				}
+			}
+			return rf.Generate(true, false, macRunResult{traces, fmt.Errorf("MACArrayEngine: max_cycles (%d) reached", maxCycles)})
+		}).GetResult()
+	return res.traces, res.err
 }
 
 // ReadOutputs reads results from the output buffer.
 func (m *MACArrayEngine) ReadOutputs() []float64 {
-	result := make([]float64, len(m.outputBuffer))
-	copy(result, m.outputBuffer)
+	result, _ := StartNew[[]float64]("parallel-execution-engine.MACArrayEngine.ReadOutputs", nil,
+		func(op *Operation[[]float64], rf *ResultFactory[[]float64]) *OperationResult[[]float64] {
+			out := make([]float64, len(m.outputBuffer))
+			copy(out, m.outputBuffer)
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
 // Reset resets to initial state.
 func (m *MACArrayEngine) Reset() {
-	m.inputBuffer = make([]float64, m.config.InputBufferSize)
-	m.weightBuffer = make([]float64, m.config.WeightBufferSize)
-	m.outputBuffer = make([]float64, m.config.OutputBufferSize)
-	m.macAccumulators = make([]float64, m.config.NumMACs)
-	m.halted = false
-	m.cycle = 0
+	_, _ = StartNew[struct{}]("parallel-execution-engine.MACArrayEngine.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			m.inputBuffer = make([]float64, m.config.InputBufferSize)
+			m.weightBuffer = make([]float64, m.config.WeightBufferSize)
+			m.outputBuffer = make([]float64, m.config.OutputBufferSize)
+			m.macAccumulators = make([]float64, m.config.NumMACs)
+			m.halted = false
+			m.cycle = 0
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // --- Operation implementations ---

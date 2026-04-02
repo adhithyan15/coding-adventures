@@ -61,75 +61,87 @@ type IPv4Header struct {
 
 // NewIPv4Header creates a header with sensible defaults.
 func NewIPv4Header() *IPv4Header {
-	return &IPv4Header{
-		Version:     4,
-		IHL:         5,
-		TotalLength: 20,
-		TTL:         64,
-		Protocol:    ProtocolTCP,
-	}
+	result, _ := StartNew[*IPv4Header]("network-stack.NewIPv4Header", nil,
+		func(op *Operation[*IPv4Header], rf *ResultFactory[*IPv4Header]) *OperationResult[*IPv4Header] {
+			return rf.Generate(true, false, &IPv4Header{
+				Version:     4,
+				IHL:         5,
+				TotalLength: 20,
+				TTL:         64,
+				Protocol:    ProtocolTCP,
+			})
+		}).GetResult()
+	return result
 }
 
 // Serialize converts the header to 20 raw bytes in network byte order.
 // It computes and embeds the checksum automatically.
 func (h *IPv4Header) Serialize() []byte {
-	buf := make([]byte, 20)
+	result, _ := StartNew[[]byte]("network-stack.IPv4Header.Serialize", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			buf := make([]byte, 20)
 
-	// Pack version (upper 4 bits) and IHL (lower 4 bits) into byte 0
-	buf[0] = (h.Version << 4) | h.IHL
-	buf[1] = 0 // Type of service (unused)
-	binary.BigEndian.PutUint16(buf[2:4], h.TotalLength)
-	binary.BigEndian.PutUint16(buf[4:6], h.Identification)
-	binary.BigEndian.PutUint16(buf[6:8], 0) // Flags + fragment offset
-	buf[8] = h.TTL
-	buf[9] = h.Protocol
-	binary.BigEndian.PutUint16(buf[10:12], 0) // Checksum placeholder
-	binary.BigEndian.PutUint32(buf[12:16], h.SrcIP)
-	binary.BigEndian.PutUint32(buf[16:20], h.DstIP)
+			// Pack version (upper 4 bits) and IHL (lower 4 bits) into byte 0
+			buf[0] = (h.Version << 4) | h.IHL
+			buf[1] = 0 // Type of service (unused)
+			binary.BigEndian.PutUint16(buf[2:4], h.TotalLength)
+			binary.BigEndian.PutUint16(buf[4:6], h.Identification)
+			binary.BigEndian.PutUint16(buf[6:8], 0) // Flags + fragment offset
+			buf[8] = h.TTL
+			buf[9] = h.Protocol
+			binary.BigEndian.PutUint16(buf[10:12], 0) // Checksum placeholder
+			binary.BigEndian.PutUint32(buf[12:16], h.SrcIP)
+			binary.BigEndian.PutUint32(buf[16:20], h.DstIP)
 
-	// Compute checksum over the header with checksum field = 0
-	h.Checksum = computeChecksum(buf)
-	binary.BigEndian.PutUint16(buf[10:12], h.Checksum)
+			// Compute checksum over the header with checksum field = 0
+			h.Checksum = computeChecksum(buf)
+			binary.BigEndian.PutUint16(buf[10:12], h.Checksum)
 
-	return buf
+			return rf.Generate(true, false, buf)
+		}).GetResult()
+	return result
 }
 
 // DeserializeIPv4Header parses 20 bytes into an IPv4Header.
 func DeserializeIPv4Header(data []byte) (*IPv4Header, error) {
-	if len(data) < 20 {
-		return nil, errors.New("IPv4 header too short: minimum 20 bytes")
-	}
-
-	h := &IPv4Header{
-		Version:        (data[0] >> 4) & 0x0F,
-		IHL:            data[0] & 0x0F,
-		TotalLength:    binary.BigEndian.Uint16(data[2:4]),
-		Identification: binary.BigEndian.Uint16(data[4:6]),
-		TTL:            data[8],
-		Protocol:       data[9],
-		Checksum:       binary.BigEndian.Uint16(data[10:12]),
-		SrcIP:          binary.BigEndian.Uint32(data[12:16]),
-		DstIP:          binary.BigEndian.Uint32(data[16:20]),
-	}
-
-	return h, nil
+	return StartNew[*IPv4Header]("network-stack.DeserializeIPv4Header", nil,
+		func(op *Operation[*IPv4Header], rf *ResultFactory[*IPv4Header]) *OperationResult[*IPv4Header] {
+			if len(data) < 20 {
+				return rf.Fail(nil, errors.New("IPv4 header too short: minimum 20 bytes"))
+			}
+			h := &IPv4Header{
+				Version:        (data[0] >> 4) & 0x0F,
+				IHL:            data[0] & 0x0F,
+				TotalLength:    binary.BigEndian.Uint16(data[2:4]),
+				Identification: binary.BigEndian.Uint16(data[4:6]),
+				TTL:            data[8],
+				Protocol:       data[9],
+				Checksum:       binary.BigEndian.Uint16(data[10:12]),
+				SrcIP:          binary.BigEndian.Uint32(data[12:16]),
+				DstIP:          binary.BigEndian.Uint32(data[16:20]),
+			}
+			return rf.Generate(true, false, h)
+		}).GetResult()
 }
 
 // ComputeChecksum calculates the Internet checksum for this header.
 func (h *IPv4Header) ComputeChecksum() uint16 {
-	buf := make([]byte, 20)
-	buf[0] = (h.Version << 4) | h.IHL
-	buf[1] = 0
-	binary.BigEndian.PutUint16(buf[2:4], h.TotalLength)
-	binary.BigEndian.PutUint16(buf[4:6], h.Identification)
-	binary.BigEndian.PutUint16(buf[6:8], 0)
-	buf[8] = h.TTL
-	buf[9] = h.Protocol
-	binary.BigEndian.PutUint16(buf[10:12], 0) // checksum = 0 for computation
-	binary.BigEndian.PutUint32(buf[12:16], h.SrcIP)
-	binary.BigEndian.PutUint32(buf[16:20], h.DstIP)
-
-	return computeChecksum(buf)
+	result, _ := StartNew[uint16]("network-stack.IPv4Header.ComputeChecksum", 0,
+		func(op *Operation[uint16], rf *ResultFactory[uint16]) *OperationResult[uint16] {
+			buf := make([]byte, 20)
+			buf[0] = (h.Version << 4) | h.IHL
+			buf[1] = 0
+			binary.BigEndian.PutUint16(buf[2:4], h.TotalLength)
+			binary.BigEndian.PutUint16(buf[4:6], h.Identification)
+			binary.BigEndian.PutUint16(buf[6:8], 0)
+			buf[8] = h.TTL
+			buf[9] = h.Protocol
+			binary.BigEndian.PutUint16(buf[10:12], 0) // checksum = 0 for computation
+			binary.BigEndian.PutUint32(buf[12:16], h.SrcIP)
+			binary.BigEndian.PutUint32(buf[16:20], h.DstIP)
+			return rf.Generate(true, false, computeChecksum(buf))
+		}).GetResult()
+	return result
 }
 
 // computeChecksum implements the Internet checksum algorithm (RFC 1071).
@@ -181,7 +193,11 @@ type route struct {
 
 // NewRoutingTable creates a new, empty routing table.
 func NewRoutingTable() *RoutingTable {
-	return &RoutingTable{}
+	result, _ := StartNew[*RoutingTable]("network-stack.NewRoutingTable", nil,
+		func(op *Operation[*RoutingTable], rf *ResultFactory[*RoutingTable]) *OperationResult[*RoutingTable] {
+			return rf.Generate(true, false, &RoutingTable{})
+		}).GetResult()
+	return result
 }
 
 // AddRoute adds a routing rule.
@@ -192,7 +208,12 @@ func NewRoutingTable() *RoutingTable {
 //   - gateway: Next-hop IP (0 for directly connected networks)
 //   - iface: Outgoing interface name
 func (rt *RoutingTable) AddRoute(network, mask, gateway uint32, iface string) {
-	rt.routes = append(rt.routes, route{network, mask, gateway, iface})
+	_, _ = StartNew[struct{}]("network-stack.RoutingTable.AddRoute", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("iface", iface)
+			rt.routes = append(rt.routes, route{network, mask, gateway, iface})
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Lookup finds the best route for a destination IP.
@@ -200,28 +221,37 @@ func (rt *RoutingTable) AddRoute(network, mask, gateway uint32, iface string) {
 // Returns (nextHop, interface, found). If gateway is 0 (directly connected),
 // nextHop is the destination IP itself. Returns found=false if no route matches.
 func (rt *RoutingTable) Lookup(destIP uint32) (uint32, string, bool) {
-	bestMask := -1
-	var bestHop uint32
-	var bestIface string
-	found := false
-
-	for _, r := range rt.routes {
-		if (destIP & r.mask) == (r.network & r.mask) {
-			maskBits := bits.OnesCount32(r.mask)
-			if maskBits > bestMask {
-				bestMask = maskBits
-				if r.gateway != 0 {
-					bestHop = r.gateway
-				} else {
-					bestHop = destIP
-				}
-				bestIface = r.iface
-				found = true
-			}
-		}
+	type lookupResult struct {
+		hop   uint32
+		iface string
+		found bool
 	}
+	lr, _ := StartNew[lookupResult]("network-stack.RoutingTable.Lookup", lookupResult{},
+		func(op *Operation[lookupResult], rf *ResultFactory[lookupResult]) *OperationResult[lookupResult] {
+			bestMask := -1
+			var bestHop uint32
+			var bestIface string
+			found := false
 
-	return bestHop, bestIface, found
+			for _, r := range rt.routes {
+				if (destIP & r.mask) == (r.network & r.mask) {
+					maskBits := bits.OnesCount32(r.mask)
+					if maskBits > bestMask {
+						bestMask = maskBits
+						if r.gateway != 0 {
+							bestHop = r.gateway
+						} else {
+							bestHop = destIP
+						}
+						bestIface = r.iface
+						found = true
+					}
+				}
+			}
+
+			return rf.Generate(true, false, lookupResult{hop: bestHop, iface: bestIface, found: found})
+		}).GetResult()
+	return lr.hop, lr.iface, lr.found
 }
 
 // IPLayer creates outgoing IP packets and parses incoming ones.
@@ -233,40 +263,56 @@ type IPLayer struct {
 
 // NewIPLayer creates an IP layer with the given local address and routing table.
 func NewIPLayer(localIP uint32, rt *RoutingTable) *IPLayer {
-	return &IPLayer{LocalIP: localIP, RoutingTable: rt}
+	result, _ := StartNew[*IPLayer]("network-stack.NewIPLayer", nil,
+		func(op *Operation[*IPLayer], rf *ResultFactory[*IPLayer]) *OperationResult[*IPLayer] {
+			return rf.Generate(true, false, &IPLayer{LocalIP: localIP, RoutingTable: rt})
+		}).GetResult()
+	return result
 }
 
 // CreatePacket builds an IP packet with the given destination, protocol, and payload.
 func (l *IPLayer) CreatePacket(destIP uint32, protocol uint8, payload []byte) []byte {
-	h := &IPv4Header{
-		Version:     4,
-		IHL:         5,
-		TotalLength: uint16(20 + len(payload)),
-		TTL:         64,
-		Protocol:    protocol,
-		SrcIP:       l.LocalIP,
-		DstIP:       destIP,
-	}
-	header := h.Serialize()
-	result := make([]byte, len(header)+len(payload))
-	copy(result, header)
-	copy(result[len(header):], payload)
+	result, _ := StartNew[[]byte]("network-stack.IPLayer.CreatePacket", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			h := &IPv4Header{
+				Version:     4,
+				IHL:         5,
+				TotalLength: uint16(20 + len(payload)),
+				TTL:         64,
+				Protocol:    protocol,
+				SrcIP:       l.LocalIP,
+				DstIP:       destIP,
+			}
+			header := h.Serialize()
+			pkt := make([]byte, len(header)+len(payload))
+			copy(pkt, header)
+			copy(pkt[len(header):], payload)
+			return rf.Generate(true, false, pkt)
+		}).GetResult()
 	return result
 }
 
 // ParsePacket splits a received IP packet into header and payload.
 // Returns nil header if the data is too short.
 func (l *IPLayer) ParsePacket(data []byte) (*IPv4Header, []byte) {
-	if len(data) < 20 {
-		return nil, nil
+	type parseResult struct {
+		header  *IPv4Header
+		payload []byte
 	}
-	h, err := DeserializeIPv4Header(data)
-	if err != nil {
-		return nil, nil
-	}
-	offset := int(h.IHL) * 4
-	if offset > len(data) {
-		offset = len(data)
-	}
-	return h, data[offset:]
+	pr, _ := StartNew[parseResult]("network-stack.IPLayer.ParsePacket", parseResult{},
+		func(op *Operation[parseResult], rf *ResultFactory[parseResult]) *OperationResult[parseResult] {
+			if len(data) < 20 {
+				return rf.Generate(true, false, parseResult{nil, nil})
+			}
+			h, err := DeserializeIPv4Header(data)
+			if err != nil {
+				return rf.Generate(true, false, parseResult{nil, nil})
+			}
+			offset := int(h.IHL) * 4
+			if offset > len(data) {
+				offset = len(data)
+			}
+			return rf.Generate(true, false, parseResult{h, data[offset:]})
+		}).GetResult()
+	return pr.header, pr.payload
 }

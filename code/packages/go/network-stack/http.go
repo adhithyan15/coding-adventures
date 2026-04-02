@@ -39,36 +39,44 @@ type HTTPRequest struct {
 
 // NewHTTPRequest creates a GET request to "/" with no headers.
 func NewHTTPRequest() *HTTPRequest {
-	return &HTTPRequest{
-		Method:  "GET",
-		Path:    "/",
-		Headers: make(map[string]string),
-	}
+	result, _ := StartNew[*HTTPRequest]("network-stack.NewHTTPRequest", nil,
+		func(op *Operation[*HTTPRequest], rf *ResultFactory[*HTTPRequest]) *OperationResult[*HTTPRequest] {
+			return rf.Generate(true, false, &HTTPRequest{
+				Method:  "GET",
+				Path:    "/",
+				Headers: make(map[string]string),
+			})
+		}).GetResult()
+	return result
 }
 
 // Serialize converts the request to raw HTTP bytes.
 func (r *HTTPRequest) Serialize() []byte {
-	var b strings.Builder
-	b.WriteString(fmt.Sprintf("%s %s HTTP/1.1\r\n", r.Method, r.Path))
+	out, _ := StartNew[[]byte]("network-stack.HTTPRequest.Serialize", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			var b strings.Builder
+			b.WriteString(fmt.Sprintf("%s %s HTTP/1.1\r\n", r.Method, r.Path))
 
-	headers := make(map[string]string)
-	for k, v := range r.Headers {
-		headers[k] = v
-	}
-	if len(r.Body) > 0 {
-		if _, ok := headers["Content-Length"]; !ok {
-			headers["Content-Length"] = strconv.Itoa(len(r.Body))
-		}
-	}
+			headers := make(map[string]string)
+			for k, v := range r.Headers {
+				headers[k] = v
+			}
+			if len(r.Body) > 0 {
+				if _, ok := headers["Content-Length"]; !ok {
+					headers["Content-Length"] = strconv.Itoa(len(r.Body))
+				}
+			}
 
-	for k, v := range headers {
-		b.WriteString(fmt.Sprintf("%s: %s\r\n", k, v))
-	}
-	b.WriteString("\r\n")
+			for k, v := range headers {
+				b.WriteString(fmt.Sprintf("%s: %s\r\n", k, v))
+			}
+			b.WriteString("\r\n")
 
-	result := []byte(b.String())
-	result = append(result, r.Body...)
-	return result
+			result := []byte(b.String())
+			result = append(result, r.Body...)
+			return rf.Generate(true, false, result)
+		}).GetResult()
+	return out
 }
 
 // HTTPResponse represents a server's response to a client.
@@ -81,85 +89,96 @@ type HTTPResponse struct {
 
 // NewHTTPResponse creates a 200 OK response with no body.
 func NewHTTPResponse() *HTTPResponse {
-	return &HTTPResponse{
-		StatusCode: 200,
-		StatusText: "OK",
-		Headers:    make(map[string]string),
-	}
+	result, _ := StartNew[*HTTPResponse]("network-stack.NewHTTPResponse", nil,
+		func(op *Operation[*HTTPResponse], rf *ResultFactory[*HTTPResponse]) *OperationResult[*HTTPResponse] {
+			return rf.Generate(true, false, &HTTPResponse{
+				StatusCode: 200,
+				StatusText: "OK",
+				Headers:    make(map[string]string),
+			})
+		}).GetResult()
+	return result
 }
 
 // Serialize converts the response to raw HTTP bytes.
 func (r *HTTPResponse) Serialize() []byte {
-	var b strings.Builder
-	b.WriteString(fmt.Sprintf("HTTP/1.1 %d %s\r\n", r.StatusCode, r.StatusText))
+	out, _ := StartNew[[]byte]("network-stack.HTTPResponse.Serialize", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			var b strings.Builder
+			b.WriteString(fmt.Sprintf("HTTP/1.1 %d %s\r\n", r.StatusCode, r.StatusText))
 
-	headers := make(map[string]string)
-	for k, v := range r.Headers {
-		headers[k] = v
-	}
-	if len(r.Body) > 0 {
-		if _, ok := headers["Content-Length"]; !ok {
-			headers["Content-Length"] = strconv.Itoa(len(r.Body))
-		}
-	}
+			headers := make(map[string]string)
+			for k, v := range r.Headers {
+				headers[k] = v
+			}
+			if len(r.Body) > 0 {
+				if _, ok := headers["Content-Length"]; !ok {
+					headers["Content-Length"] = strconv.Itoa(len(r.Body))
+				}
+			}
 
-	for k, v := range headers {
-		b.WriteString(fmt.Sprintf("%s: %s\r\n", k, v))
-	}
-	b.WriteString("\r\n")
+			for k, v := range headers {
+				b.WriteString(fmt.Sprintf("%s: %s\r\n", k, v))
+			}
+			b.WriteString("\r\n")
 
-	result := []byte(b.String())
-	result = append(result, r.Body...)
-	return result
+			result := []byte(b.String())
+			result = append(result, r.Body...)
+			return rf.Generate(true, false, result)
+		}).GetResult()
+	return out
 }
 
 // DeserializeHTTPResponse parses raw HTTP bytes into an HTTPResponse.
 func DeserializeHTTPResponse(data []byte) (*HTTPResponse, error) {
-	text := string(data)
+	return StartNew[*HTTPResponse]("network-stack.DeserializeHTTPResponse", nil,
+		func(op *Operation[*HTTPResponse], rf *ResultFactory[*HTTPResponse]) *OperationResult[*HTTPResponse] {
+			text := string(data)
 
-	var headerSection, bodyText string
-	if idx := strings.Index(text, "\r\n\r\n"); idx >= 0 {
-		headerSection = text[:idx]
-		bodyText = text[idx+4:]
-	} else {
-		headerSection = text
-		bodyText = ""
-	}
+			var headerSection, bodyText string
+			if idx := strings.Index(text, "\r\n\r\n"); idx >= 0 {
+				headerSection = text[:idx]
+				bodyText = text[idx+4:]
+			} else {
+				headerSection = text
+				bodyText = ""
+			}
 
-	lines := strings.Split(headerSection, "\r\n")
-	if len(lines) == 0 {
-		return nil, fmt.Errorf("empty HTTP response")
-	}
+			lines := strings.Split(headerSection, "\r\n")
+			if len(lines) == 0 {
+				return rf.Fail(nil, fmt.Errorf("empty HTTP response"))
+			}
 
-	// Parse status line: "HTTP/1.1 200 OK"
-	parts := strings.SplitN(lines[0], " ", 3)
-	if len(parts) < 2 {
-		return nil, fmt.Errorf("invalid HTTP status line: %s", lines[0])
-	}
+			// Parse status line: "HTTP/1.1 200 OK"
+			parts := strings.SplitN(lines[0], " ", 3)
+			if len(parts) < 2 {
+				return rf.Fail(nil, fmt.Errorf("invalid HTTP status line: %s", lines[0]))
+			}
 
-	code, err := strconv.Atoi(parts[1])
-	if err != nil {
-		return nil, fmt.Errorf("invalid status code: %s", parts[1])
-	}
+			code, err := strconv.Atoi(parts[1])
+			if err != nil {
+				return rf.Fail(nil, fmt.Errorf("invalid status code: %s", parts[1]))
+			}
 
-	statusText := ""
-	if len(parts) > 2 {
-		statusText = parts[2]
-	}
+			statusText := ""
+			if len(parts) > 2 {
+				statusText = parts[2]
+			}
 
-	headers := make(map[string]string)
-	for _, line := range lines[1:] {
-		if idx := strings.Index(line, ": "); idx >= 0 {
-			headers[line[:idx]] = line[idx+2:]
-		}
-	}
+			headers := make(map[string]string)
+			for _, line := range lines[1:] {
+				if idx := strings.Index(line, ": "); idx >= 0 {
+					headers[line[:idx]] = line[idx+2:]
+				}
+			}
 
-	return &HTTPResponse{
-		StatusCode: code,
-		StatusText: statusText,
-		Headers:    headers,
-		Body:       []byte(bodyText),
-	}, nil
+			return rf.Generate(true, false, &HTTPResponse{
+				StatusCode: code,
+				StatusText: statusText,
+				Headers:    headers,
+				Body:       []byte(bodyText),
+			})
+		}).GetResult()
 }
 
 // HTTPClient builds HTTP requests and parses responses. It uses a DNS
@@ -170,7 +189,11 @@ type HTTPClient struct {
 
 // NewHTTPClient creates a client with the given DNS resolver.
 func NewHTTPClient(dns *DNSResolver) *HTTPClient {
-	return &HTTPClient{DNS: dns}
+	result, _ := StartNew[*HTTPClient]("network-stack.NewHTTPClient", nil,
+		func(op *Operation[*HTTPClient], rf *ResultFactory[*HTTPClient]) *OperationResult[*HTTPClient] {
+			return rf.Generate(true, false, &HTTPClient{DNS: dns})
+		}).GetResult()
+	return result
 }
 
 // BuildRequest creates an HTTP request from a URL.
@@ -179,47 +202,68 @@ func NewHTTPClient(dns *DNSResolver) *HTTPClient {
 //
 // Returns (hostname, port, request, error).
 func (c *HTTPClient) BuildRequest(method, url string, body []byte) (string, int, *HTTPRequest, error) {
-	// Strip scheme
-	u := url
-	if strings.HasPrefix(u, "http://") {
-		u = u[7:]
-	} else if strings.HasPrefix(u, "https://") {
-		u = u[8:]
+	type buildResult struct {
+		hostname string
+		port     int
+		req      *HTTPRequest
 	}
+	br, err := StartNew[buildResult]("network-stack.HTTPClient.BuildRequest", buildResult{},
+		func(op *Operation[buildResult], rf *ResultFactory[buildResult]) *OperationResult[buildResult] {
+			op.AddProperty("method", method)
+			op.AddProperty("url", url)
+			// Strip scheme
+			u := url
+			if strings.HasPrefix(u, "http://") {
+				u = u[7:]
+			} else if strings.HasPrefix(u, "https://") {
+				u = u[8:]
+			}
 
-	// Split host and path
-	var hostPart, path string
-	if idx := strings.Index(u, "/"); idx >= 0 {
-		hostPart = u[:idx]
-		path = u[idx:]
-	} else {
-		hostPart = u
-		path = "/"
+			// Split host and path
+			var hostPart, path string
+			if idx := strings.Index(u, "/"); idx >= 0 {
+				hostPart = u[:idx]
+				path = u[idx:]
+			} else {
+				hostPart = u
+				path = "/"
+			}
+
+			// Split host and port
+			hostname := hostPart
+			port := 80
+			if idx := strings.Index(hostPart, ":"); idx >= 0 {
+				hostname = hostPart[:idx]
+				p, parseErr := strconv.Atoi(hostPart[idx+1:])
+				if parseErr != nil {
+					return rf.Fail(buildResult{}, fmt.Errorf("invalid port: %s", hostPart[idx+1:]))
+				}
+				port = p
+			}
+
+			req := &HTTPRequest{
+				Method:  method,
+				Path:    path,
+				Headers: map[string]string{"Host": hostname},
+				Body:    body,
+			}
+
+			return rf.Generate(true, false, buildResult{hostname: hostname, port: port, req: req})
+		}).GetResult()
+	if err != nil {
+		return "", 0, nil, err
 	}
-
-	// Split host and port
-	hostname := hostPart
-	port := 80
-	if idx := strings.Index(hostPart, ":"); idx >= 0 {
-		hostname = hostPart[:idx]
-		p, err := strconv.Atoi(hostPart[idx+1:])
-		if err != nil {
-			return "", 0, nil, fmt.Errorf("invalid port: %s", hostPart[idx+1:])
-		}
-		port = p
-	}
-
-	req := &HTTPRequest{
-		Method:  method,
-		Path:    path,
-		Headers: map[string]string{"Host": hostname},
-		Body:    body,
-	}
-
-	return hostname, port, req, nil
+	return br.hostname, br.port, br.req, nil
 }
 
 // ParseResponse is a convenience wrapper around DeserializeHTTPResponse.
 func (c *HTTPClient) ParseResponse(data []byte) (*HTTPResponse, error) {
-	return DeserializeHTTPResponse(data)
+	return StartNew[*HTTPResponse]("network-stack.HTTPClient.ParseResponse", nil,
+		func(op *Operation[*HTTPResponse], rf *ResultFactory[*HTTPResponse]) *OperationResult[*HTTPResponse] {
+			resp, err := DeserializeHTTPResponse(data)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, resp)
+		}).GetResult()
 }
