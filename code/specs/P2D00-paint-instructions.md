@@ -100,6 +100,7 @@ type PaintInstruction =
   | PaintPath
   | PaintGlyphRun
   | PaintGroup
+  | PaintLayer
   | PaintLine
   | PaintClip
   | PaintGradient
@@ -628,6 +629,136 @@ interface PaintImage extends PaintBase {
 
 ---
 
+### PaintLayer — Offscreen compositing surface
+
+`PaintLayer` is fundamentally different from `PaintGroup`. A group is a
+logical container for transform/clip inheritance — it renders directly into
+the parent surface. A layer allocates a **separate offscreen buffer**, renders
+its children into that buffer, applies filters to it as a unit, then composites
+the result back into the parent surface using a blend mode.
+
+This is the same model as Photoshop layers, CSS `filter` + `mix-blend-mode`,
+and SVG `<filter>` elements. The key insight: filters that modify pixel values
+(blur, drop shadow, color matrix) must operate on the layer as a whole after
+all children have been painted — they cannot be applied per-instruction.
+
+```typescript
+interface PaintLayer extends PaintBase {
+  kind: "layer";
+  children: PaintInstruction[];
+  // Instructions rendered into the offscreen buffer, back-to-front.
+  // Children may themselves be layers (nesting is allowed).
+
+  filters?: FilterEffect[];
+  // Zero or more filter effects applied to the composited offscreen buffer.
+  // Applied in array order (each filter receives the output of the previous).
+  // Empty array or undefined = no filtering.
+
+  blend_mode?: BlendMode;
+  // How the layer's offscreen buffer is composited back into the parent.
+  // Default: "normal" (standard alpha compositing / painter's algorithm).
+
+  opacity?: number;
+  // 0.0 (invisible) to 1.0 (fully opaque).
+  // Applied after filters, before compositing.
+  // Default: 1.0.
+
+  transform?: Transform2D;
+  // Optional 2D affine transform applied to the layer as a whole.
+  // Same format as PaintGroup.transform.
+}
+```
+
+#### FilterEffect union
+
+```typescript
+type FilterEffect =
+  | { kind: "blur";         radius: number }
+    // Gaussian blur. radius in user-space units.
+
+  | { kind: "drop_shadow";  dx: number; dy: number; blur: number; color: string }
+    // Drop shadow offset by (dx, dy), blurred by `blur` radius, filled with `color`.
+
+  | { kind: "color_matrix"; matrix: number[] }
+    // 4x5 color matrix (20 values, row-major). Maps [R, G, B, A, 1] → [R', G', B', A'].
+    // Same matrix layout as SVG feColorMatrix type="matrix".
+
+  | { kind: "brightness";   amount: number }
+    // Multiply luminance. 1.0 = no change, 0.0 = black, 2.0 = double brightness.
+
+  | { kind: "contrast";     amount: number }
+    // Adjust contrast. 1.0 = no change, 0.0 = flat grey, 2.0 = high contrast.
+
+  | { kind: "saturate";     amount: number }
+    // Adjust color saturation. 0.0 = greyscale, 1.0 = no change, 2.0 = vivid.
+
+  | { kind: "hue_rotate";   angle: number }
+    // Rotate hue. angle in degrees. 180 = complement.
+
+  | { kind: "invert";       amount: number }
+    // Invert colors. 0.0 = no change, 1.0 = fully inverted.
+
+  | { kind: "opacity";      amount: number };
+    // Premultiplied opacity filter. 0.0 = transparent, 1.0 = opaque.
+    // Distinct from PaintLayer.opacity: this is a filter in the pipeline,
+    // while .opacity is applied after all filters as a final multiplier.
+```
+
+#### BlendMode
+
+```typescript
+type BlendMode =
+  // Separable modes — operate per colour channel independently
+  | "normal"       // Standard alpha compositing (default)
+  | "multiply"     // Multiply source and destination — darkens
+  | "screen"       // Invert × multiply × invert — lightens
+  | "overlay"      // Multiply for darks, Screen for lights
+  | "darken"       // min(src, dst) per channel
+  | "lighten"      // max(src, dst) per channel
+  | "color_dodge"  // Divide dst by (1 − src) — brightens
+  | "color_burn"   // Invert dst, divide by src, invert — darkens
+  | "hard_light"   // Overlay with src and dst swapped
+  | "soft_light"   // Softer version of hard_light
+  | "difference"   // |src − dst| — high contrast edges
+  | "exclusion"    // Like difference but lower contrast
+
+  // Non-separable modes — operate on the combined HSL representation
+  | "hue"          // src hue + dst saturation + dst luminosity
+  | "saturation"   // dst hue + src saturation + dst luminosity
+  | "color"        // src hue + src saturation + dst luminosity
+  | "luminosity";  // dst hue + dst saturation + src luminosity
+```
+
+#### Backend complexity tiers
+
+Not all backends support `PaintLayer` equally. Filter and blend mode support
+requires either native browser API support or full GPU compute pipelines.
+
+| Backend        | Support level                                                          |
+|----------------|------------------------------------------------------------------------|
+| HTML5 Canvas   | **Native** — `ctx.filter`, `ctx.globalCompositeOperation`, `ctx.save()`/`restore()` |
+| SVG            | **Native** — `<filter>`, `<feGaussianBlur>`, `<feBlend>`, `mix-blend-mode` |
+| Metal / Vulkan | **Full, GPU** — allocate MTLTexture / VkImage for offscreen; apply compute shaders for filters; blend via fragment shader |
+| Direct2D       | **Native** — `ID2D1Effect` for filters; composition via `D2D1_COMPOSITE_MODE` |
+| Cairo          | **Partial** — `cairo_push_group()` / `cairo_pop_group_to_source()` for layers; filters require pixman or manual convolution |
+| Terminal       | **Degraded** — render children as if PaintGroup (no filters, no blend mode); warn once per session |
+
+Metal and Vulkan backends require offscreen texture allocation and per-pixel
+compute shaders to implement the full filter list. These implementations live
+in `paint-vm-metal` / `paint-vm-vulkan` (future P2D05+). A Canvas or SVG backend
+can implement PaintLayer in ~20 lines using the browser's native compositing APIs.
+
+#### Masking (deferred)
+
+Path-based masking (e.g. SVG `<mask>`, Canvas `ctx.clip()` with complex path,
+Metal `stencil buffer`) is **explicitly out of scope for P2D00 v0.1.0**. It will
+be designed in a future spec (P2D08 or later) as a `PaintMask` instruction type
+that references a layer by id. Masking is deferred because it introduces a
+non-trivial dependency graph between instructions (a mask must be fully rendered
+before it can be applied), which requires the VM to do a two-pass render.
+
+---
+
 ### PaintScene — The top-level container
 
 ```typescript
@@ -731,6 +862,7 @@ for its own backend.
 | PaintClip        | `<clipPath>` + `clip-path`   | `ctx.clip()`                        | `pushClip()` / `popClip()`           | bounds check per char  |
 | PaintGradient    | `<linearGradient>` / `<radialGradient>` | `ctx.createLinearGradient()` | Metal shader gradient          | ignored / fallback     |
 | PaintImage       | `<image>`                    | `ctx.drawImage()`                   | Metal texture sampling               | `[img]` placeholder    |
+| PaintLayer       | `<g filter="...">` / `<filter>` | `ctx.filter` + `ctx.save()`/`restore()` | Offscreen MTLTexture + compute shaders | render as PaintGroup (filters ignored) |
 
 ---
 
@@ -758,10 +890,6 @@ expressions, no conditionals. Variables are a producer concern.
 The diff algorithm lives in PaintVM.patch() (P2D01). A higher-level retained
 scene graph lives in P2D06.
 
-**Alpha compositing modes** — Only normal compositing is supported (paint on top).
-Multiply, Screen, Overlay, and other blend modes are not in the IR. They may be
-added as PaintGroup extensions in a future spec.
-
 ---
 
 ## P2D Series Roadmap
@@ -773,8 +901,10 @@ added as PaintGroup extensions in a future spec.
 | P2D02 | paint-vm-svg        | SVG backend — renders to SVG DOM/string            |
 | P2D03 | paint-vm-canvas     | HTML5 Canvas backend — renders to CanvasRenderingContext2D |
 | P2D04 | paint-vm-terminal   | Terminal/ASCII backend — renders to StringBuffer   |
-| P2D05 | paint-vm-metal      | Apple Metal backend via Rust FFI                   |
+| P2D05 | paint-vm-metal      | Apple Metal backend via Rust FFI (includes PaintLayer offscreen, compute shaders) |
 | P2D06 | scene-graph         | Retained-mode scene graph with automatic patch()   |
+| P2D07 | hit-tester          | Geometry-based hit testing; returns path from root to hit node |
+| P2D08 | tessellator         | Bézier → triangle lists for raw GPU backends (depends on bezier2d, point2d) |
 
 The specs are designed so that P2D00 (this spec) is the only shared dependency.
 Each backend (P2D02–P2D05) depends on P2D00 and P2D01 only. They do not depend
