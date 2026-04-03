@@ -116,6 +116,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 	if ciProblem := validateCIFullBuildToolchains(packages); ciProblem != "" {
 		problems = append(problems, ciProblem)
 	}
+	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 
 	if len(problems) == 0 {
 		return nil
@@ -320,6 +321,47 @@ func validateCIFullBuildToolchains(packages []discovery.Package) string {
 	)
 }
 
+func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.Language != "lua" {
+			continue
+		}
+		selfRock := "coding-adventures-" + strings.ReplaceAll(filepath.Base(pkg.Path), "_", "-")
+		for _, buildPath := range luaBuildFiles(pkg.Path) {
+			lines := readBuildLines(buildPath)
+			if len(lines) == 0 {
+				continue
+			}
+
+			if target := firstForeignLuaRemove(lines, selfRock); target != "" {
+				problems = append(problems, fmt.Sprintf(
+					"%s: Lua BUILD removes unrelated rock %s; isolated package builds should only remove the package they are rebuilding",
+					filepath.ToSlash(buildPath),
+					target,
+				))
+			}
+
+			stateMachineIndex := firstLineContainingAny(lines, "../state_machine", `..\state_machine`)
+			directedGraphIndex := firstLineContainingAny(lines, "../directed_graph", `..\directed_graph`)
+			if stateMachineIndex >= 0 && directedGraphIndex >= 0 && stateMachineIndex < directedGraphIndex {
+				problems = append(problems, fmt.Sprintf(
+					"%s: Lua BUILD installs state_machine before directed_graph; isolated LuaRocks builds require directed_graph first",
+					filepath.ToSlash(buildPath),
+				))
+			}
+
+			if hasGuardedLocalLuaInstall(lines) && !selfLuaInstallDisablesDeps(lines, selfRock) {
+				problems = append(problems, fmt.Sprintf(
+					"%s: Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest",
+					filepath.ToSlash(buildPath),
+				))
+			}
+		}
+	}
+	return problems
+}
+
 func languagesNeedingCIToolchains(packages []discovery.Package) []string {
 	seen := make(map[string]bool)
 	var langs []string
@@ -356,4 +398,87 @@ func inferRepoRootFromPackagePath(pkgPath string) string {
 		}
 		current = parent
 	}
+}
+
+func luaBuildFiles(pkgPath string) []string {
+	entries, err := os.ReadDir(pkgPath)
+	if err != nil {
+		return nil
+	}
+
+	var files []string
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasPrefix(entry.Name(), "BUILD") {
+			continue
+		}
+		files = append(files, filepath.Join(pkgPath, entry.Name()))
+	}
+	sort.Strings(files)
+	return files
+}
+
+func readBuildLines(path string) []string {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+
+	var lines []string
+	for _, line := range strings.Split(string(data), "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+		lines = append(lines, trimmed)
+	}
+	return lines
+}
+
+func firstForeignLuaRemove(lines []string, selfRock string) string {
+	re := regexp.MustCompile(`\bluarocks remove --force ([^ \t]+)`)
+	for _, line := range lines {
+		match := re.FindStringSubmatch(line)
+		if len(match) < 2 {
+			continue
+		}
+		if match[1] != selfRock {
+			return match[1]
+		}
+	}
+	return ""
+}
+
+func firstLineContainingAny(lines []string, patterns ...string) int {
+	for idx, line := range lines {
+		for _, pattern := range patterns {
+			if strings.Contains(line, pattern) {
+				return idx
+			}
+		}
+	}
+	return -1
+}
+
+func hasGuardedLocalLuaInstall(lines []string) bool {
+	for _, line := range lines {
+		if strings.Contains(line, "luarocks show ") &&
+			(strings.Contains(line, "../") || strings.Contains(line, `..\`)) {
+			return true
+		}
+	}
+	return false
+}
+
+func selfLuaInstallDisablesDeps(lines []string, selfRock string) bool {
+	for _, line := range lines {
+		if !strings.Contains(line, "luarocks make") || !strings.Contains(line, selfRock) {
+			continue
+		}
+		if strings.Contains(line, "--deps-mode=none") ||
+			strings.Contains(line, "--deps-mode none") ||
+			strings.Contains(line, "--no-manifest") {
+			return true
+		}
+	}
+	return false
 }

@@ -57,7 +57,7 @@ from build_tool.starlark_evaluator import (
     generate_commands,
     is_starlark_build,
 )
-from build_tool.validator import validate_ci_full_build_toolchains
+from build_tool.validator import validate_build_contracts
 
 # Optional progress bar integration. When the progress bar package is
 # installed, builds get a real-time terminal UI showing which packages are
@@ -293,12 +293,12 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
     if args.validate_build_files:
-        validation_error = validate_ci_full_build_toolchains(root, packages)
+        validation_error = validate_build_contracts(root, packages)
         if validation_error is not None:
             print(
                 "BUILD/CI validation failed:\n"
                 f"  - {validation_error}\n"
-                "Fix the CI workflow so full-build toolchain setup stays correct.",
+                "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.",
                 file=sys.stderr,
             )
             return 1
@@ -555,12 +555,12 @@ def _run_from_plan(args: argparse.Namespace, root: Path) -> int:
             return 0
 
     if args.validate_build_files:
-        validation_error = validate_ci_full_build_toolchains(root, packages)
+        validation_error = validate_build_contracts(root, packages)
         if validation_error is not None:
             print(
                 "BUILD/CI validation failed:\n"
                 f"  - {validation_error}\n"
-                "Fix the CI workflow so full-build toolchain setup stays correct.",
+                "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.",
                 file=sys.stderr,
             )
             return 1

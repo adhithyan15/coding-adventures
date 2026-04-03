@@ -290,11 +290,11 @@ module BuildTool
       end
 
       if options[:validate_build_files]
-        validation_error = Validator.validate_ci_full_build_toolchains(root, packages)
+        validation_error = Validator.validate_build_contracts(root, packages)
         if validation_error
           $stderr.puts "BUILD/CI validation failed:"
           $stderr.puts "  - #{validation_error}"
-          $stderr.puts "Fix the CI workflow so full-build toolchain setup stays correct."
+          $stderr.puts "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
           return 1
         end
       end
@@ -548,11 +548,11 @@ module BuildTool
       end
 
       if options[:validate_build_files]
-        validation_error = Validator.validate_ci_full_build_toolchains(root, packages)
+        validation_error = Validator.validate_build_contracts(root, packages)
         if validation_error
           $stderr.puts "BUILD/CI validation failed:"
           $stderr.puts "  - #{validation_error}"
-          $stderr.puts "Fix the CI workflow so full-build toolchain setup stays correct."
+          $stderr.puts "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
           return 1
         end
       end

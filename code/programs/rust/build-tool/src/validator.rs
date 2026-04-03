@@ -62,6 +62,21 @@ pub fn validate_ci_full_build_toolchains(repo_root: &Path, packages: &[Package])
     ))
 }
 
+pub fn validate_build_contracts(repo_root: &Path, packages: &[Package]) -> Option<String> {
+    let mut errors = Vec::new();
+
+    if let Some(error) = validate_ci_full_build_toolchains(repo_root, packages) {
+        errors.push(error);
+    }
+    errors.extend(validate_lua_isolated_build_files(packages));
+
+    if errors.is_empty() {
+        None
+    } else {
+        Some(errors.join("\n  - "))
+    }
+}
+
 fn languages_needing_ci_toolchains(packages: &[Package]) -> Vec<String> {
     let mut langs = BTreeSet::new();
     for pkg in packages {
@@ -72,9 +87,143 @@ fn languages_needing_ci_toolchains(packages: &[Package]) -> Vec<String> {
     langs.into_iter().collect()
 }
 
+fn validate_lua_isolated_build_files(packages: &[Package]) -> Vec<String> {
+    let mut errors = Vec::new();
+
+    for pkg in packages {
+        if pkg.language != "lua" {
+            continue;
+        }
+
+        let self_rock = format!(
+            "coding-adventures-{}",
+            pkg.path
+                .file_name()
+                .map(|name| name.to_string_lossy().replace('_', "-"))
+                .unwrap_or_default()
+        );
+
+        for build_path in lua_build_files(&pkg.path) {
+            let lines = read_build_lines(&build_path);
+            if lines.is_empty() {
+                continue;
+            }
+
+            if let Some(foreign_remove) = first_foreign_lua_remove(&lines, &self_rock) {
+                errors.push(format!(
+                    "{}: Lua BUILD removes unrelated rock {}; isolated package builds should only remove the package they are rebuilding",
+                    build_path.to_string_lossy().replace('\\', "/"),
+                    foreign_remove
+                ));
+            }
+
+            let state_machine_index =
+                first_line_containing(&lines, &["../state_machine", "..\\state_machine"]);
+            let directed_graph_index =
+                first_line_containing(&lines, &["../directed_graph", "..\\directed_graph"]);
+            if let (Some(state_machine_index), Some(directed_graph_index)) =
+                (state_machine_index, directed_graph_index)
+            {
+                if state_machine_index < directed_graph_index {
+                    errors.push(format!(
+                        "{}: Lua BUILD installs state_machine before directed_graph; isolated LuaRocks builds require directed_graph first",
+                        build_path.to_string_lossy().replace('\\', "/")
+                    ));
+                }
+            }
+
+            if has_guarded_local_lua_install(&lines) && !self_install_disables_deps(&lines, &self_rock) {
+                errors.push(format!(
+                    "{}: Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest",
+                    build_path.to_string_lossy().replace('\\', "/")
+                ));
+            }
+        }
+    }
+
+    errors
+}
+
+fn lua_build_files(pkg_path: &Path) -> Vec<std::path::PathBuf> {
+    let mut files = match fs::read_dir(pkg_path) {
+        Ok(entries) => entries
+            .filter_map(Result::ok)
+            .map(|entry| entry.path())
+            .filter(|path| {
+                path.is_file()
+                    && path
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .map(|name| name.starts_with("BUILD"))
+                        .unwrap_or(false)
+            })
+            .collect::<Vec<_>>(),
+        Err(_) => Vec::new(),
+    };
+    files.sort();
+    files
+}
+
+fn read_build_lines(build_path: &Path) -> Vec<String> {
+    let contents = match fs::read_to_string(build_path) {
+        Ok(contents) => contents,
+        Err(_) => return Vec::new(),
+    };
+
+    contents
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && !line.starts_with('#'))
+        .map(str::to_string)
+        .collect()
+}
+
+fn first_foreign_lua_remove(lines: &[String], self_rock: &str) -> Option<String> {
+    for line in lines {
+        let marker = "luarocks remove --force ";
+        let Some(start) = line.find(marker) else {
+            continue;
+        };
+        let remainder = &line[start + marker.len()..];
+        let target = remainder
+            .split_whitespace()
+            .next()
+            .unwrap_or_default();
+        if !target.is_empty() && target != self_rock {
+            return Some(target.to_string());
+        }
+    }
+    None
+}
+
+fn first_line_containing(lines: &[String], needles: &[&str]) -> Option<usize> {
+    lines.iter().enumerate().find_map(|(index, line)| {
+        needles
+            .iter()
+            .any(|needle| line.contains(needle))
+            .then_some(index)
+    })
+}
+
+fn has_guarded_local_lua_install(lines: &[String]) -> bool {
+    lines
+        .iter()
+        .any(|line| line.contains("luarocks show ") && (line.contains("../") || line.contains("..\\")))
+}
+
+fn self_install_disables_deps(lines: &[String], self_rock: &str) -> bool {
+    lines.iter().any(|line| {
+        line.contains("luarocks make")
+            && line.contains(self_rock)
+            && (line.contains("--deps-mode=none")
+                || line.contains("--deps-mode none")
+                || line.contains("--no-manifest"))
+    })
+}
+
 #[cfg(test)]
 mod tests {
-    use super::validate_ci_full_build_toolchains;
+    use super::{validate_build_contracts, validate_ci_full_build_toolchains};
     use crate::discovery::Package;
     use std::fs;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -176,6 +325,109 @@ jobs:
         .unwrap();
 
         assert!(validate_ci_full_build_toolchains(&root, &packages).is_none());
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn validate_build_contracts_flags_lua_isolated_build_violations() {
+        let root = make_temp_root("lua_violations");
+        let _ = fs::remove_dir_all(&root);
+
+        let problem_path = root.join("code/packages/lua/problem_pkg");
+        fs::create_dir_all(&problem_path).unwrap();
+
+        let packages = vec![Package {
+            name: "lua/problem_pkg".to_string(),
+            path: problem_path.clone(),
+            build_commands: vec!["echo hi".to_string()],
+            language: "lua".to_string(),
+        }];
+
+        fs::write(
+            problem_path.join("BUILD"),
+            r#"
+luarocks remove --force coding-adventures-branch-predictor 2>/dev/null || true
+(cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
+(cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-problem-pkg-0.1.0-1.rockspec
+"#,
+        )
+        .unwrap();
+
+        let error = validate_build_contracts(&root, &packages).unwrap();
+        assert!(error.contains("coding-adventures-branch-predictor"));
+        assert!(error.contains("state_machine before directed_graph"));
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn validate_build_contracts_flags_guarded_lua_install_without_deps_mode() {
+        let root = make_temp_root("lua_guarded");
+        let _ = fs::remove_dir_all(&root);
+
+        let guarded_path = root.join("code/packages/lua/guarded_pkg");
+        fs::create_dir_all(&guarded_path).unwrap();
+
+        let packages = vec![Package {
+            name: "lua/guarded_pkg".to_string(),
+            path: guarded_path.clone(),
+            build_commands: vec!["echo hi".to_string()],
+            language: "lua".to_string(),
+        }];
+
+        fs::write(
+            guarded_path.join("BUILD"),
+            r#"
+luarocks show coding-adventures-transistors >/dev/null 2>&1 || (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
+"#,
+        )
+        .unwrap();
+
+        let error = validate_build_contracts(&root, &packages).unwrap();
+        assert!(error.contains("--deps-mode=none or --no-manifest"));
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn validate_build_contracts_allows_safe_lua_patterns() {
+        let root = make_temp_root("lua_safe");
+        let _ = fs::remove_dir_all(&root);
+
+        let safe_path = root.join("code/packages/lua/safe_pkg");
+        fs::create_dir_all(&safe_path).unwrap();
+
+        let packages = vec![Package {
+            name: "lua/safe_pkg".to_string(),
+            path: safe_path.clone(),
+            build_commands: vec!["echo hi".to_string()],
+            language: "lua".to_string(),
+        }];
+
+        fs::write(
+            safe_path.join("BUILD"),
+            r#"
+luarocks remove --force coding-adventures-safe-pkg 2>/dev/null || true
+luarocks show coding-adventures-directed-graph >/dev/null 2>&1 || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine >/dev/null 2>&1 || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+"#,
+        )
+        .unwrap();
+        fs::write(
+            safe_path.join("BUILD_windows"),
+            r#"
+luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+"#,
+        )
+        .unwrap();
+
+        assert!(validate_build_contracts(&root, &packages).is_none());
 
         let _ = fs::remove_dir_all(&root);
     }

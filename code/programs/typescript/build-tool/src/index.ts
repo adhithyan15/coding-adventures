@@ -43,7 +43,7 @@ import { executeBuilds } from "./executor.js";
 import { printReport } from "./reporter.js";
 import { writePlan, readPlan, CURRENT_SCHEMA_VERSION } from "./plan.js";
 import type { BuildPlan, PackageEntry } from "./plan.js";
-import { validateCIFullBuildToolchains } from "./validator.js";
+import { validateBuildContracts } from "./validator.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -153,12 +153,12 @@ Options:
   }
 
   if (values["validate-build-files"]) {
-    const validationError = validateCIFullBuildToolchains(root, packages);
+    const validationError = validateBuildContracts(root, packages);
     if (validationError !== null) {
       console.error("BUILD/CI validation failed:");
       console.error(`  - ${validationError}`);
       console.error(
-        "Fix the CI workflow so full-build toolchain setup stays correct.",
+        "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.",
       );
       return 1;
     }

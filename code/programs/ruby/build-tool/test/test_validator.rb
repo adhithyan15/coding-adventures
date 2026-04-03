@@ -84,4 +84,92 @@ class TestValidator < Minitest::Test
       assert_nil BuildTool::Validator.validate_ci_full_build_toolchains(root, packages)
     end
   end
+
+  def test_validate_build_contracts_flags_lua_isolated_build_violations
+    Dir.mktmpdir("build_tool_validator") do |tmp|
+      root = Pathname(tmp)
+      package_path = root / "code/packages/lua/problem_pkg"
+      package_path.mkpath
+
+      packages = [
+        BuildTool::Package.new(
+          name: "lua/problem_pkg",
+          path: package_path,
+          build_commands: ["echo"],
+          language: "lua"
+        )
+      ]
+
+      write_file(package_path / "BUILD", <<~BUILD)
+        luarocks remove --force coding-adventures-branch-predictor 2>/dev/null || true
+        (cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
+        (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+        luarocks make --local coding-adventures-problem-pkg-0.1.0-1.rockspec
+      BUILD
+
+      error = BuildTool::Validator.validate_build_contracts(root, packages)
+
+      refute_nil error
+      assert_includes error, "coding-adventures-branch-predictor"
+      assert_includes error, "state_machine before directed_graph"
+    end
+  end
+
+  def test_validate_build_contracts_flags_guarded_lua_install_without_deps_mode
+    Dir.mktmpdir("build_tool_validator") do |tmp|
+      root = Pathname(tmp)
+      package_path = root / "code/packages/lua/guarded_pkg"
+      package_path.mkpath
+
+      packages = [
+        BuildTool::Package.new(
+          name: "lua/guarded_pkg",
+          path: package_path,
+          build_commands: ["echo"],
+          language: "lua"
+        )
+      ]
+
+      write_file(package_path / "BUILD", <<~BUILD)
+        luarocks show coding-adventures-transistors >/dev/null 2>&1 || (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+        luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
+      BUILD
+
+      error = BuildTool::Validator.validate_build_contracts(root, packages)
+
+      refute_nil error
+      assert_includes error, "--deps-mode=none or --no-manifest"
+    end
+  end
+
+  def test_validate_build_contracts_allows_safe_lua_isolated_builds
+    Dir.mktmpdir("build_tool_validator") do |tmp|
+      root = Pathname(tmp)
+      package_path = root / "code/packages/lua/safe_pkg"
+      package_path.mkpath
+
+      packages = [
+        BuildTool::Package.new(
+          name: "lua/safe_pkg",
+          path: package_path,
+          build_commands: ["echo"],
+          language: "lua"
+        )
+      ]
+
+      write_file(package_path / "BUILD", <<~BUILD)
+        luarocks remove --force coding-adventures-safe-pkg 2>/dev/null || true
+        luarocks show coding-adventures-directed-graph >/dev/null 2>&1 || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+        luarocks show coding-adventures-state-machine >/dev/null 2>&1 || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+        luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+      BUILD
+      write_file(package_path / "BUILD_windows", <<~BUILD)
+        luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+        luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+        luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+      BUILD
+
+      assert_nil BuildTool::Validator.validate_build_contracts(root, packages)
+    end
+  end
 end

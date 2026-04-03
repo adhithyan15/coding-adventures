@@ -157,7 +157,7 @@ defmodule BuildTool.CLI do
           packages = evaluate_starlark_builds(packages, repo_root)
 
           if validate_build_files do
-            case Validator.validate_ci_full_build_toolchains(repo_root, packages) do
+            case Validator.validate_build_contracts(repo_root, packages) do
               nil ->
                 do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
                   cache_file, emit_plan_path, plan_file_path)
@@ -165,7 +165,10 @@ defmodule BuildTool.CLI do
               validation_error ->
                 IO.puts(:stderr, "BUILD/CI validation failed:")
                 IO.puts(:stderr, "  - #{validation_error}")
-                IO.puts(:stderr, "Fix the CI workflow so full-build toolchain setup stays correct.")
+                IO.puts(
+                  :stderr,
+                  "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
+                )
                 1
             end
           else

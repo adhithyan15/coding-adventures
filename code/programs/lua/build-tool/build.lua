@@ -151,11 +151,11 @@ local function main()
     end
 
     if opts.validate_build_files then
-        local validation_error = Validator.validate_ci_full_build_toolchains(root, packages)
+        local validation_error = Validator.validate_build_contracts(root, packages)
         if validation_error then
             io.stderr:write("BUILD/CI validation failed:\n")
             io.stderr:write("  - " .. validation_error .. "\n")
-            io.stderr:write("Fix the CI workflow so full-build toolchain setup stays correct.\n")
+            io.stderr:write("Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.\n")
             os.exit(1)
         end
     end

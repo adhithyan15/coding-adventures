@@ -59,6 +59,25 @@ function Validator.validate_ci_full_build_toolchains(root, packages)
     return ci_path:gsub("\\", "/") .. ": " .. table.concat(parts, "; ")
 end
 
+function Validator.validate_build_contracts(root, packages)
+    local errors = {}
+
+    local ci_error = Validator.validate_ci_full_build_toolchains(root, packages)
+    if ci_error then
+        table.insert(errors, ci_error)
+    end
+
+    for _, error in ipairs(Validator.validate_lua_isolated_build_files(packages)) do
+        table.insert(errors, error)
+    end
+
+    if #errors == 0 then
+        return nil
+    end
+
+    return table.concat(errors, "\n  - ")
+end
+
 function Validator.languages_needing_ci_toolchains(packages)
     local seen = {}
     local langs = {}
@@ -73,6 +92,137 @@ function Validator.languages_needing_ci_toolchains(packages)
 
     table.sort(langs)
     return langs
+end
+
+function Validator.validate_lua_isolated_build_files(packages)
+    local errors = {}
+
+    for _, pkg in ipairs(packages) do
+        if pkg.language == "lua" and pkg.path then
+            local self_rock = "coding-adventures-" .. pkg.path:match("([^/\\]+)$"):gsub("_", "-")
+
+            for _, build_path in ipairs(Validator.lua_build_files(pkg.path)) do
+                local lines = Validator.read_build_lines(build_path)
+                if #lines > 0 then
+                    local foreign_remove = Validator.first_foreign_lua_remove(lines, self_rock)
+                    if foreign_remove then
+                        table.insert(errors,
+                            build_path:gsub("\\", "/") ..
+                            ": Lua BUILD removes unrelated rock " .. foreign_remove ..
+                            "; isolated package builds should only remove the package they are rebuilding")
+                    end
+
+                    local state_machine_index =
+                        Validator.first_line_containing(lines, { "../state_machine", "..\\state_machine" })
+                    local directed_graph_index =
+                        Validator.first_line_containing(lines, { "../directed_graph", "..\\directed_graph" })
+
+                    if state_machine_index and directed_graph_index and state_machine_index < directed_graph_index then
+                        table.insert(errors,
+                            build_path:gsub("\\", "/") ..
+                            ": Lua BUILD installs state_machine before directed_graph; isolated LuaRocks builds require directed_graph first")
+                    end
+
+                    if Validator.guarded_local_lua_install(lines) and
+                        not Validator.self_install_disables_deps(lines, self_rock)
+                    then
+                        table.insert(errors,
+                            build_path:gsub("\\", "/") ..
+                            ": Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest")
+                    end
+                end
+            end
+        end
+    end
+
+    return errors
+end
+
+function Validator.lua_build_files(pkg_path)
+    local files = {}
+    local handle
+
+    if package.config:sub(1, 1) == "\\" then
+        handle = io.popen('dir /b "' .. pkg_path .. '\\BUILD*" 2>NUL')
+    else
+        handle = io.popen('find "' .. pkg_path .. '" -maxdepth 1 -type f -name "BUILD*" -exec basename {} \\; 2>/dev/null')
+    end
+
+    if not handle then
+        return files
+    end
+
+    for entry in handle:lines() do
+        if entry ~= "" then
+            table.insert(files, pkg_path .. "/" .. entry)
+        end
+    end
+    handle:close()
+
+    table.sort(files)
+    return files
+end
+
+function Validator.read_build_lines(build_path)
+    local file = io.open(build_path, "r")
+    if not file then
+        return {}
+    end
+
+    local lines = {}
+    for line in file:lines() do
+        local trimmed = line:match("^%s*(.-)%s*$")
+        if trimmed ~= "" and trimmed:sub(1, 1) ~= "#" then
+            table.insert(lines, trimmed)
+        end
+    end
+    file:close()
+    return lines
+end
+
+function Validator.first_foreign_lua_remove(lines, self_rock)
+    for _, line in ipairs(lines) do
+        local target = line:match("luarocks remove %-%-force ([^%s]+)")
+        if target and target ~= self_rock then
+            return target
+        end
+    end
+    return nil
+end
+
+function Validator.first_line_containing(lines, needles)
+    for index, line in ipairs(lines) do
+        for _, needle in ipairs(needles) do
+            if line:find(needle, 1, true) then
+                return index
+            end
+        end
+    end
+    return nil
+end
+
+function Validator.guarded_local_lua_install(lines)
+    for _, line in ipairs(lines) do
+        if line:find("luarocks show ", 1, true) and
+            (line:find("../", 1, true) or line:find("..\\", 1, true))
+        then
+            return true
+        end
+    end
+    return false
+end
+
+function Validator.self_install_disables_deps(lines, self_rock)
+    for _, line in ipairs(lines) do
+        if line:find("luarocks make", 1, true) and line:find(self_rock, 1, true) and
+            (line:find("--deps-mode=none", 1, true) or
+                line:find("--deps-mode none", 1, true) or
+                line:find("--no-manifest", 1, true))
+        then
+            return true
+        end
+    end
+    return false
 end
 
 return Validator

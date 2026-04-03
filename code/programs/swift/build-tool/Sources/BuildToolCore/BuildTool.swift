@@ -85,8 +85,8 @@ public enum BuildTool {
         }
 
         if options.validateBuildFiles,
-           let validationError = Validator.validateCIFullBuildToolchains(repoRoot: repoRoot, packages: packages) {
-            fputs("BUILD/CI validation failed:\n  - \(validationError)\nFix the CI workflow so full-build toolchain setup stays correct.\n", stderr)
+           let validationError = Validator.validateBuildContracts(repoRoot: repoRoot, packages: packages) {
+            fputs("BUILD/CI validation failed:\n  - \(validationError)\nFix the BUILD file or CI workflow so isolated and full-build runs stay correct.\n", stderr)
             return 1
         }
 
@@ -202,8 +202,8 @@ public enum BuildTool {
             }
 
             if options.validateBuildFiles,
-               let validationError = Validator.validateCIFullBuildToolchains(repoRoot: repoRoot, packages: packages) {
-                fputs("BUILD/CI validation failed:\n  - \(validationError)\nFix the CI workflow so full-build toolchain setup stays correct.\n", stderr)
+               let validationError = Validator.validateBuildContracts(repoRoot: repoRoot, packages: packages) {
+                fputs("BUILD/CI validation failed:\n  - \(validationError)\nFix the BUILD file or CI workflow so isolated and full-build runs stay correct.\n", stderr)
                 return 1
             }
 

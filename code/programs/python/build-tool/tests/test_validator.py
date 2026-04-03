@@ -5,7 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from build_tool.discovery import Package
-from build_tool.validator import validate_ci_full_build_toolchains
+from build_tool.validator import (
+    validate_build_contracts,
+    validate_ci_full_build_toolchains,
+)
 
 
 def _make_pkg(root: Path, rel_path: str, language: str) -> Package:
@@ -81,3 +84,72 @@ jobs:
     )
 
     assert validate_ci_full_build_toolchains(tmp_path, packages) is None
+
+
+def test_validate_build_contracts_flags_lua_isolated_build_violations(tmp_path):
+    packages = [
+        _make_pkg(tmp_path, "code/packages/lua/problem_pkg", "lua"),
+    ]
+
+    (tmp_path / "code/packages/lua/problem_pkg/BUILD").write_text(
+        """
+luarocks remove --force coding-adventures-branch-predictor 2>/dev/null || true
+(cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
+(cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-problem-pkg-0.1.0-1.rockspec
+""",
+        encoding="utf-8",
+    )
+
+    error = validate_build_contracts(tmp_path, packages)
+
+    assert error is not None
+    assert "coding-adventures-branch-predictor" in error
+    assert "state_machine before directed_graph" in error
+
+
+def test_validate_build_contracts_flags_guarded_lua_install_without_deps_mode(
+    tmp_path,
+):
+    packages = [
+        _make_pkg(tmp_path, "code/packages/lua/guarded_pkg", "lua"),
+    ]
+
+    (tmp_path / "code/packages/lua/guarded_pkg/BUILD").write_text(
+        """
+luarocks show coding-adventures-transistors >/dev/null 2>&1 || (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
+""",
+        encoding="utf-8",
+    )
+
+    error = validate_build_contracts(tmp_path, packages)
+
+    assert error is not None
+    assert "--deps-mode=none or --no-manifest" in error
+
+
+def test_validate_build_contracts_allows_safe_lua_isolated_builds(tmp_path):
+    packages = [
+        _make_pkg(tmp_path, "code/packages/lua/safe_pkg", "lua"),
+    ]
+
+    (tmp_path / "code/packages/lua/safe_pkg/BUILD").write_text(
+        """
+luarocks remove --force coding-adventures-safe-pkg 2>/dev/null || true
+luarocks show coding-adventures-directed-graph >/dev/null 2>&1 || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine >/dev/null 2>&1 || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+""",
+        encoding="utf-8",
+    )
+    (tmp_path / "code/packages/lua/safe_pkg/BUILD_windows").write_text(
+        """
+luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+""",
+        encoding="utf-8",
+    )
+
+    assert validate_build_contracts(tmp_path, packages) is None

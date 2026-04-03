@@ -87,4 +87,56 @@ jobs:
             { language = "python" },
         }))
     end)
+
+    it("flags Lua isolated-build violations", function()
+        make_dir(tmpdir .. "/code/packages/lua/problem_pkg")
+        write_file(tmpdir .. "/code/packages/lua/problem_pkg/BUILD", [[
+luarocks remove --force coding-adventures-branch-predictor 2>/dev/null || true
+(cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
+(cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-problem-pkg-0.1.0-1.rockspec
+]])
+
+        local error = Validator.validate_build_contracts(tmpdir, {
+            { language = "lua", path = tmpdir .. "/code/packages/lua/problem_pkg" },
+        })
+
+        assert.is_not_nil(error)
+        assert.is_truthy(error:find("coding-adventures-branch-predictor", 1, true))
+        assert.is_truthy(error:find("state_machine before directed_graph", 1, true))
+    end)
+
+    it("flags guarded Lua installs without deps mode", function()
+        make_dir(tmpdir .. "/code/packages/lua/guarded_pkg")
+        write_file(tmpdir .. "/code/packages/lua/guarded_pkg/BUILD", [[
+luarocks show coding-adventures-transistors >/dev/null 2>&1 || (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
+]])
+
+        local error = Validator.validate_build_contracts(tmpdir, {
+            { language = "lua", path = tmpdir .. "/code/packages/lua/guarded_pkg" },
+        })
+
+        assert.is_not_nil(error)
+        assert.is_truthy(error:find("--deps-mode=none or --no-manifest", 1, true))
+    end)
+
+    it("allows safe Lua isolated-build patterns", function()
+        make_dir(tmpdir .. "/code/packages/lua/safe_pkg")
+        write_file(tmpdir .. "/code/packages/lua/safe_pkg/BUILD", [[
+luarocks remove --force coding-adventures-safe-pkg 2>/dev/null || true
+luarocks show coding-adventures-directed-graph >/dev/null 2>&1 || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine >/dev/null 2>&1 || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+]])
+        write_file(tmpdir .. "/code/packages/lua/safe_pkg/BUILD_windows", [[
+luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
+]])
+
+        assert.is_nil(Validator.validate_build_contracts(tmpdir, {
+            { language = "lua", path = tmpdir .. "/code/packages/lua/safe_pkg" },
+        }))
+    end)
 end)

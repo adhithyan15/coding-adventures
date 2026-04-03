@@ -96,14 +96,14 @@ sub run {
 
     if ($self->{validate_build_files}) {
         my $validation_error =
-            CodingAdventures::BuildTool::Validator::validate_ci_full_build_toolchains(
+            CodingAdventures::BuildTool::Validator::validate_build_contracts(
                 $self->{root},
                 \@all_packages,
             );
         if (defined $validation_error) {
             warn "BUILD/CI validation failed:\n";
             warn "  - $validation_error\n";
-            warn "Fix the CI workflow so full-build toolchain setup stays correct.\n";
+            warn "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.\n";
             return 1;
         }
     }

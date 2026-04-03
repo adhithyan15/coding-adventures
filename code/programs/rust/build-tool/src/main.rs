@@ -273,12 +273,10 @@ fn run() -> i32 {
     }
 
     if args.validate_build_files {
-        if let Some(validation_error) =
-            validator::validate_ci_full_build_toolchains(&repo_root, &packages)
-        {
+        if let Some(validation_error) = validator::validate_build_contracts(&repo_root, &packages) {
             eprintln!("BUILD/CI validation failed:");
             eprintln!("  - {}", validation_error);
-            eprintln!("Fix the CI workflow so full-build toolchain setup stays correct.");
+            eprintln!("Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.");
             return 1;
         }
     }
