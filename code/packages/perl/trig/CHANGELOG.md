@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-03
+
+### Added
+
+- `sqrt_approx($x)` — square root via Newton's method; `die`s for negative inputs. Exported.
+- `atan_approx($x)` — arctangent via Taylor series with outer and half-angle range reduction. Exported.
+- `atan2_approx($y, $x)` — four-quadrant arctangent. Exported.
+- `$HALF_PI` package variable (π/2).
+- `_atan_core($x)` private helper.
+- All new functions added to `@EXPORT_OK`.
+- Tests for all new functions in `t/01-basic.t`.
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

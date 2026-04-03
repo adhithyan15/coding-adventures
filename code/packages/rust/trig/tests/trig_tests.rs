@@ -195,3 +195,182 @@ fn round_trip_angle_conversion() {
         );
     }
 }
+
+// ===========================================================================
+// sqrt tests
+// ===========================================================================
+
+#[test]
+fn sqrt_zero() {
+    assert_eq!(sqrt(0.0), 0.0);
+}
+
+#[test]
+fn sqrt_one() {
+    assert!(approx_equal(sqrt(1.0), 1.0));
+}
+
+#[test]
+fn sqrt_four() {
+    assert!(approx_equal(sqrt(4.0), 2.0));
+}
+
+#[test]
+fn sqrt_nine() {
+    assert!(approx_equal(sqrt(9.0), 3.0));
+}
+
+#[test]
+fn sqrt_two() {
+    // sqrt(2) ≈ 1.41421356237
+    assert!(approx_equal(sqrt(2.0), 1.41421356237));
+}
+
+#[test]
+fn sqrt_quarter() {
+    assert!(approx_equal(sqrt(0.25), 0.5));
+}
+
+#[test]
+fn sqrt_large() {
+    // sqrt(1e10) = 1e5
+    let result = sqrt(1e10);
+    assert!((result - 1e5_f64).abs() < 1e-4);
+}
+
+#[test]
+fn sqrt_roundtrip() {
+    // sqrt(2) * sqrt(2) should equal 2.0
+    let s = sqrt(2.0);
+    assert!(approx_equal(s * s, 2.0));
+}
+
+#[test]
+#[should_panic]
+fn sqrt_negative_panics() {
+    sqrt(-1.0);
+}
+
+// ===========================================================================
+// tan tests
+// ===========================================================================
+
+#[test]
+fn tan_zero() {
+    assert!(approx_equal(tan(0.0), 0.0));
+}
+
+#[test]
+fn tan_pi_over_4() {
+    assert!(approx_equal(tan(PI / 4.0), 1.0));
+}
+
+#[test]
+fn tan_pi_over_6() {
+    // tan(pi/6) = 1/sqrt(3)
+    assert!(approx_equal(tan(PI / 6.0), 1.0 / sqrt(3.0)));
+}
+
+#[test]
+fn tan_negative_pi_over_4() {
+    assert!(approx_equal(tan(-PI / 4.0), -1.0));
+}
+
+// ===========================================================================
+// atan tests
+// ===========================================================================
+
+#[test]
+fn atan_zero() {
+    assert_eq!(atan(0.0), 0.0);
+}
+
+#[test]
+fn atan_one() {
+    assert!(approx_equal(atan(1.0), PI / 4.0));
+}
+
+#[test]
+fn atan_minus_one() {
+    assert!(approx_equal(atan(-1.0), -PI / 4.0));
+}
+
+#[test]
+fn atan_sqrt3() {
+    assert!(approx_equal(atan(sqrt(3.0)), PI / 3.0));
+}
+
+#[test]
+fn atan_inv_sqrt3() {
+    assert!(approx_equal(atan(1.0 / sqrt(3.0)), PI / 6.0));
+}
+
+#[test]
+fn atan_large_positive() {
+    // atan(1e10) should be very close to PI/2
+    assert!((atan(1e10) - PI / 2.0).abs() < 1e-5);
+}
+
+#[test]
+fn atan_large_negative() {
+    // atan(-1e10) should be very close to -PI/2
+    assert!((atan(-1e10) + PI / 2.0).abs() < 1e-5);
+}
+
+#[test]
+fn atan_tan_roundtrip() {
+    // atan(tan(pi/4)) ≈ pi/4
+    assert!(approx_equal(atan(tan(PI / 4.0)), PI / 4.0));
+}
+
+// ===========================================================================
+// atan2 tests
+// ===========================================================================
+
+#[test]
+fn atan2_positive_x_axis() {
+    // atan2(0, 1) = 0
+    assert!(approx_equal(atan2(0.0, 1.0), 0.0));
+}
+
+#[test]
+fn atan2_positive_y_axis() {
+    // atan2(1, 0) = pi/2
+    assert!(approx_equal(atan2(1.0, 0.0), PI / 2.0));
+}
+
+#[test]
+fn atan2_negative_x_axis() {
+    // atan2(0, -1) = pi
+    assert!(approx_equal(atan2(0.0, -1.0), PI));
+}
+
+#[test]
+fn atan2_negative_y_axis() {
+    // atan2(-1, 0) = -pi/2
+    assert!(approx_equal(atan2(-1.0, 0.0), -PI / 2.0));
+}
+
+#[test]
+fn atan2_q1() {
+    // atan2(1, 1) = pi/4 (first quadrant)
+    assert!(approx_equal(atan2(1.0, 1.0), PI / 4.0));
+}
+
+#[test]
+fn atan2_q2() {
+    // atan2(1, -1) = 3*pi/4 (second quadrant)
+    assert!(approx_equal(atan2(1.0, -1.0), 3.0 * PI / 4.0));
+}
+
+#[test]
+fn atan2_q3() {
+    // atan2(-1, -1) = -3*pi/4 (third quadrant)
+    assert!(approx_equal(atan2(-1.0, -1.0), -3.0 * PI / 4.0));
+}
+
+#[test]
+fn atan2_q4() {
+    // atan2(-1, 1) = -pi/4 (fourth quadrant)
+    assert!(approx_equal(atan2(-1.0, 1.0), -PI / 4.0));
+}

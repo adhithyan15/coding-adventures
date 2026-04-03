@@ -246,4 +246,197 @@ module Trig
   def self.degrees(rad)
     rad * 180.0 / PI
   end
+
+  # ---------------------------------------------------------------------------
+  # Square Root — Newton's (Babylonian) Method
+  # ---------------------------------------------------------------------------
+  #
+  # Newton's method for sqrt is one of the oldest numerical algorithms
+  # (Babylonian clay tablets, ~1700 BCE). The recurrence is:
+  #
+  #   next_guess = (guess + x / guess) / 2.0
+  #
+  # This has *quadratic convergence* — the number of correct decimal digits
+  # doubles each iteration. For x = 2:
+  #
+  #   Iteration 0: guess = 2.0
+  #   Iteration 1: guess = 1.5
+  #   Iteration 2: guess ≈ 1.41667
+  #   Iteration 3: guess ≈ 1.41422
+  #   Iteration 4: guess ≈ 1.41421356237...  (full double precision!)
+  #
+  # @param x [Numeric] the radicand (must be >= 0)
+  # @return [Float] the square root of x
+  # @raise [ArgumentError] if x < 0
+
+  def self.sqrt(x)
+    x = x.to_f
+    raise ArgumentError, "sqrt: domain error — input #{x} is negative" if x < 0
+
+    # sqrt(0) is exactly 0.
+    return 0.0 if x == 0.0
+
+    # Initial guess: x itself works for x >= 1 (large values converge faster
+    # from x than from 1). For x < 1, start at 1.0 to avoid tiny denominators.
+    guess = x >= 1.0 ? x : 1.0
+
+    # Iterate to convergence (or up to 60 steps as a safety cap).
+    60.times do
+      next_guess = (guess + x / guess) / 2.0
+
+      # Stop when improvement is below the precision floor.
+      # 1e-15 * guess is relative precision; 1e-300 handles subnormals.
+      return next_guess if (next_guess - guess).abs < 1e-15 * guess + 1e-300
+
+      guess = next_guess
+    end
+
+    guess
+  end
+
+  # ---------------------------------------------------------------------------
+  # Tangent — Sine / Cosine
+  # ---------------------------------------------------------------------------
+  #
+  # Tangent is defined as sin(x) / cos(x). On the unit circle, it is the
+  # y-coordinate of where the angle's ray meets the vertical tangent line
+  # at x = 1 — literally "the tangent."
+  #
+  # Poles: tan is undefined at x = π/2 + k·π where cos(x) = 0. We detect
+  # |cos(x)| < 1e-15 and return a very large finite float to signal
+  # near-singularity without raising a ZeroDivisionError.
+  #
+  # We call our own sin and cos here — no Math::sin or Math::cos.
+  #
+  # @param x [Numeric] angle in radians
+  # @return [Float] tangent of x
+
+  def self.tan(x)
+    s = sin(x)  # our own sin
+    c = cos(x)  # our own cos
+
+    # Guard: at poles, cos is effectively zero.
+    if c.abs < 1e-15
+      return s > 0 ? 1.0e308 : -1.0e308
+    end
+
+    s / c
+  end
+
+  # ---------------------------------------------------------------------------
+  # Private helper: range_reduce_for_atan — half-angle + Taylor series
+  # ---------------------------------------------------------------------------
+
+  # HALF_PI is π/2. Used in atan range reduction and atan2 quadrant cases.
+  HALF_PI = PI / 2.0
+
+  # atan_core computes atan(x) for |x| <= 1 using half-angle reduction
+  # followed by the Taylor series. This is a private helper.
+  #
+  # Half-angle identity:
+  #   atan(x) = 2·atan( x / (1 + sqrt(1 + x²)) )
+  #
+  # After reduction, |reduced| <= tan(π/8) ≈ 0.414, and the Taylor series
+  # atan(t) = t - t³/3 + t⁵/5 - ... converges in ~15 terms.
+
+  def self.atan_core(x)
+    # Half-angle reduction: shrink |x| to |y| <= ~0.414.
+    # We use our own sqrt — no Math::sqrt.
+    reduced = x / (1.0 + sqrt(1.0 + x * x))
+
+    # Taylor series: atan(t) = t - t³/3 + t⁵/5 - ...
+    # Iterative form: term_n = term_{n-1} * (-t²) * (2n-1) / (2n+1)
+    t = reduced
+    t_sq = t * t
+    term = t
+    result = t
+
+    1.upto(30) do |n|
+      term = term * (-t_sq) * (2 * n - 1) / (2 * n + 1)
+      result += term
+      break if term.abs < 1e-17
+    end
+
+    # Undo the half-angle: atan(x) = 2·atan(reduced).
+    2.0 * result
+  end
+
+  private_class_method :atan_core
+
+  # ---------------------------------------------------------------------------
+  # Arctangent — Inverse Tangent
+  # ---------------------------------------------------------------------------
+  #
+  # atan(x) returns the angle θ ∈ (-π/2, π/2) such that tan(θ) = x.
+  #
+  # Range reduction for |x| > 1:
+  #   atan(x)  = π/2 - atan(1/x)    for x > 1
+  #   atan(x)  = -π/2 - atan(1/x)   for x < -1
+  #
+  # This identity holds because tan(π/2 - θ) = cot(θ) = 1/tan(θ).
+  # So if tan(θ) = x, then tan(π/2 - θ) = 1/x, meaning atan(1/x) = π/2 - θ.
+  #
+  # @param x [Numeric] the value whose arctangent to compute
+  # @return [Float] angle in radians, in (-π/2, π/2)
+
+  def self.atan(x)
+    x = x.to_f
+    return 0.0 if x == 0.0
+
+    if x > 1.0
+      return HALF_PI - atan_core(1.0 / x)
+    end
+    if x < -1.0
+      return -HALF_PI - atan_core(1.0 / x)
+    end
+
+    atan_core(x)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Two-Argument Arctangent — Four-Quadrant Inverse Tangent
+  # ---------------------------------------------------------------------------
+  #
+  # atan2(y, x) returns the angle in (-π, π] that the vector (x, y) makes
+  # with the positive x-axis. Unlike atan(y/x), it correctly handles all
+  # four quadrants by inspecting the signs of x and y separately.
+  #
+  # Why atan(y/x) is insufficient:
+  #   atan(-1 / 1) = -π/4   (Q4 — correct)
+  #   atan(-1 / -1) = atan(1) = π/4   (but the point (-1, -1) is in Q3 — WRONG)
+  #
+  # Quadrant map:
+  #
+  #         y > 0
+  #     Q2  |  Q1       returns ∈ (0,    π]  for y >= 0
+  #   ------+------  x  returns ∈ (-π,   0)  for y <  0
+  #     Q3  |  Q4
+  #         y < 0
+  #
+  # @param y [Numeric] the y-coordinate (numerator)
+  # @param x [Numeric] the x-coordinate (denominator)
+  # @return [Float] angle in radians, in (-π, π]
+
+  def self.atan2(y, x)
+    y = y.to_f
+    x = x.to_f
+
+    if x > 0.0
+      return atan(y / x)
+    end
+    if x < 0.0 && y >= 0.0
+      return atan(y / x) + PI
+    end
+    if x < 0.0 && y < 0.0
+      return atan(y / x) - PI
+    end
+    if x == 0.0 && y > 0.0
+      return HALF_PI
+    end
+    if x == 0.0 && y < 0.0
+      return -HALF_PI
+    end
+    # Both zero: undefined by convention, return 0.
+    0.0
+  end
 end

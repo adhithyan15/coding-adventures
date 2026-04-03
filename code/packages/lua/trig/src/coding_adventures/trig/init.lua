@@ -351,4 +351,192 @@ function trig.degrees(rad)
     return rad * 180.0 / trig.PI
 end
 
+-- ============================================================================
+-- sqrt -- Square Root via Newton's (Babylonian) Method
+-- ============================================================================
+
+--- Compute the square root of x using Newton's iterative method.
+--
+-- ### Newton's (Babylonian) Method
+--
+-- The Babylonian method for square roots is one of the oldest numerical
+-- algorithms in human history (~1700 BCE). The key recurrence:
+--
+--     next_guess = (guess + x / guess) / 2.0
+--
+-- If guess < sqrt(x), then x/guess > sqrt(x). Their average is closer to
+-- the true value. If guess > sqrt(x), the argument is symmetric. We always
+-- move closer. This has **quadratic convergence** — the number of correct
+-- digits doubles each iteration.
+--
+-- Convergence table for sqrt(2):
+--
+--     iter | guess               | correct digits
+--     -----|---------------------|---------------
+--     0    | 2.0                 | 0
+--     1    | 1.5                 | 1
+--     2    | 1.41667             | 2
+--     3    | 1.41422             | 5
+--     4    | 1.41421356237...    | 11+ (full precision)
+--
+-- ### Error
+--
+-- Raises an error for negative inputs (real square roots are undefined there).
+--
+-- @param x   the radicand (must be >= 0)
+-- @return    square root of x
+function trig.sqrt(x)
+    if x < 0 then
+        error("trig.sqrt: domain error — input " .. tostring(x) .. " is negative", 2)
+    end
+
+    -- sqrt(0) is exactly 0.
+    if x == 0.0 then return 0.0 end
+
+    -- Initial guess: x itself for x >= 1 (better for large values),
+    -- 1.0 for x in (0, 1) (avoids dividing by a tiny number).
+    local guess = (x >= 1.0) and x or 1.0
+
+    -- Iterate up to 60 times. Quadratic convergence means ~15 in practice.
+    for _ = 1, 60 do
+        local next_guess = (guess + x / guess) / 2.0
+
+        -- Stop when improvement is below the precision floor.
+        -- 1e-15 * guess is relative precision; 1e-300 is a subnormal floor.
+        if math.abs(next_guess - guess) < 1e-15 * guess + 1e-300 then
+            return next_guess
+        end
+
+        guess = next_guess
+    end
+
+    return guess
+end
+
+-- ============================================================================
+-- atan -- Arctangent via Taylor Series with Half-Angle Reduction
+-- ============================================================================
+
+-- HALF_PI is pi/2. Used in atan's range reduction and atan2's quadrant cases.
+trig.HALF_PI = trig.PI / 2.0
+
+-- atan_core computes atan(x) for |x| <= 1 using half-angle reduction
+-- followed by the Taylor series. This is an internal helper.
+--
+-- Half-angle identity:
+--   atan(x) = 2 * atan( x / (1 + sqrt(1 + x^2)) )
+--
+-- After reduction, |reduced| <= tan(pi/8) ~= 0.414, and the Taylor series
+-- atan(t) = t - t^3/3 + t^5/5 - ... converges in ~15 terms.
+--
+-- Iterative term computation:
+--   term_0 = reduced
+--   term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+local function atan_core(x)
+    -- Half-angle reduction. We use our own trig.sqrt -- no math.sqrt.
+    local reduced = x / (1.0 + trig.sqrt(1.0 + x * x))
+
+    local t      = reduced
+    local t_sq   = t * t
+    local term   = t
+    local result = t
+
+    for n = 1, 30 do
+        -- term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+        term   = term * (-t_sq) * (2 * n - 1) / (2 * n + 1)
+        result = result + term
+
+        -- Early exit when the term is negligibly small.
+        if math.abs(term) < 1e-17 then break end
+    end
+
+    -- Undo the half-angle halving: atan(x) = 2 * atan(reduced).
+    return 2.0 * result
+end
+
+--- Compute the arctangent of x (in radians).
+--
+-- Returns a value in the open interval (-pi/2, pi/2).
+--
+-- ### Range Reduction
+--
+-- The Taylor series for atan converges only for |x| <= 1. For |x| > 1
+-- we use the complementary identity:
+--
+--     atan(x)  = pi/2 - atan(1/x)    for x > 1
+--     atan(x)  = -pi/2 - atan(1/x)   for x < -1
+--
+-- Proof: atan(x) + atan(1/x) = pi/2 for x > 0.
+-- If theta = atan(x), then tan(pi/2 - theta) = 1/x = cot(theta),
+-- so atan(1/x) = pi/2 - theta.
+--
+-- ### Examples
+--
+--     atan(0)    = 0
+--     atan(1)    = pi/4   (45 degrees)
+--     atan(-1)   = -pi/4
+--
+-- @param x   any real number
+-- @return    arctangent of x, in (-pi/2, pi/2)
+function trig.atan(x)
+    if x == 0.0 then return 0.0 end
+
+    if x > 1.0 then
+        return trig.HALF_PI - atan_core(1.0 / x)
+    elseif x < -1.0 then
+        return -trig.HALF_PI - atan_core(1.0 / x)
+    end
+
+    return atan_core(x)
+end
+
+-- ============================================================================
+-- atan2 -- Four-Quadrant Arctangent
+-- ============================================================================
+
+--- Compute the four-quadrant arctangent of (y, x).
+--
+-- Returns the angle in radians that the vector (x, y) makes with the
+-- positive x-axis, in the range (-pi, pi].
+--
+-- ### Why Not atan(y/x)?
+--
+-- atan(y/x) only gives angles in (-pi/2, pi/2). It cannot distinguish
+-- the second quadrant from the fourth, or the first from the third,
+-- because opposite quadrants give the same y/x ratio.
+--
+-- atan2 inspects the signs of both y and x separately:
+--
+--     Quadrant I   (x>0, y>0):  atan2 in (0,    pi/2)
+--     Quadrant II  (x<0, y>=0): atan2 in [pi/2, pi  ]
+--     Quadrant III (x<0, y<0):  atan2 in (-pi, -pi/2)
+--     Quadrant IV  (x>0, y<0):  atan2 in (-pi/2, 0  )
+--
+-- Special cases:
+--     atan2(0,  1) =  0       (positive x-axis)
+--     atan2(1,  0) =  pi/2    (positive y-axis)
+--     atan2(0, -1) =  pi      (negative x-axis)
+--     atan2(-1, 0) = -pi/2    (negative y-axis)
+--     atan2(0,  0) =  0       (undefined, return 0 by convention)
+--
+-- @param y   the y-coordinate
+-- @param x   the x-coordinate
+-- @return    angle in radians, in (-pi, pi]
+function trig.atan2(y, x)
+    if x > 0.0 then
+        return trig.atan(y / x)
+    elseif x < 0.0 and y >= 0.0 then
+        return trig.atan(y / x) + trig.PI
+    elseif x < 0.0 and y < 0.0 then
+        return trig.atan(y / x) - trig.PI
+    elseif x == 0.0 and y > 0.0 then
+        return trig.HALF_PI
+    elseif x == 0.0 and y < 0.0 then
+        return -trig.HALF_PI
+    else
+        -- Both zero: undefined by convention, return 0.
+        return 0.0
+    end
+end
+
 return trig

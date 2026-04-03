@@ -55,6 +55,8 @@ our $VERSION = '0.01';
 use Exporter 'import';
 our @EXPORT_OK = qw(
     sin_approx  cos_approx  tan_approx
+    sqrt_approx
+    atan_approx atan2_approx
     sin_deg     cos_deg     tan_deg
     degrees_to_radians  radians_to_degrees
 );
@@ -293,6 +295,183 @@ sub tan_approx {
 }
 
 # ============================================================================
+# sqrt_approx — Square Root via Newton's (Babylonian) Method
+# ============================================================================
+#
+# Newton's method for square roots has been known since Babylonian times
+# (~1700 BCE). The recurrence is:
+#
+#     next_guess = (guess + x / guess) / 2.0
+#
+# This has *quadratic convergence* — the number of correct digits doubles
+# each iteration. For x = 2:
+#
+#     iter | guess                | correct digits
+#     -----|----------------------|---------------
+#     0    | 2.0                  | 0
+#     1    | 1.5                  | 1
+#     2    | 1.41667              | 2
+#     3    | 1.41422              | 5
+#     4    | 1.41421356237...     | 11+ (full precision)
+#
+# DOMAIN
+#
+# The real square root is only defined for x >= 0. Negative inputs trigger
+# a Perl die() (equivalent to throwing an exception).
+#
+# @param  $x   The radicand (must be >= 0).
+# @return      sqrt(x) to double-precision accuracy.
+
+sub sqrt_approx {
+    my $x = ( @_ == 2 ) ? $_[1] : $_[0];
+
+    die "sqrt_approx: domain error — input $x is negative\n" if $x < 0;
+
+    # sqrt(0) = 0 exactly.
+    return 0.0 if $x == 0.0;
+
+    # Initial guess: x itself for x >= 1, else 1.0.
+    # For large x, starting at x converges faster than starting at 1.
+    # For x in (0, 1), starting at 1.0 avoids dividing by a tiny number.
+    my $guess = ( $x >= 1.0 ) ? $x : 1.0;
+
+    # Iterate to convergence (up to 60 steps as a safety cap).
+    for my $i ( 1 .. 60 ) {
+        my $next = ( $guess + $x / $guess ) / 2.0;
+
+        # Stop when improvement is negligibly small.
+        # 1e-15 * $guess handles relative precision for large values.
+        # 1e-300 is an absolute floor for subnormal inputs.
+        my $improvement = abs( $next - $guess );
+        return $next if $improvement < 1e-15 * $guess + 1e-300;
+
+        $guess = $next;
+    }
+
+    return $guess;
+}
+
+# ============================================================================
+# _atan_core — Taylor Series for atan, |x| <= 1, with Half-Angle Reduction
+# ============================================================================
+#
+# This is a private helper for atan_approx and atan2_approx.
+#
+# HALF-ANGLE REDUCTION
+#
+# The Taylor series for atan:
+#
+#     atan(x) = x - x^3/3 + x^5/5 - x^7/7 + ...   (for |x| <= 1)
+#
+# converges slowly near x = 1 (requires ~50 terms for full precision).
+# We apply the half-angle identity first:
+#
+#     atan(x) = 2 * atan( x / (1 + sqrt(1 + x^2)) )
+#
+# After reduction, |reduced| <= tan(pi/8) ~= 0.414, and the series
+# converges in ~15 terms with 17-digit accuracy.
+#
+# ITERATIVE TERM COMPUTATION
+#
+#     term_0 = reduced
+#     term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+#
+# We return 2 * result to undo the half-angle halving.
+
+sub _atan_core {
+    my ($x) = @_;
+
+    # Half-angle reduction. We use our own sqrt_approx — no POSIX sqrt.
+    my $reduced = $x / ( 1.0 + sqrt_approx( 1.0 + $x * $x ) );
+
+    my $t     = $reduced;
+    my $t_sq  = $t * $t;
+    my $term  = $t;
+    my $result = $t;
+
+    for my $n ( 1 .. 30 ) {
+        # term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+        $term   = $term * ( -$t_sq ) * ( 2 * $n - 1 ) / ( 2 * $n + 1 );
+        $result += $term;
+
+        # Early exit when term is negligibly small.
+        last if abs($term) < 1e-17;
+    }
+
+    return 2.0 * $result;
+}
+
+# ============================================================================
+# atan_approx — Arctangent (Single-Argument)
+# ============================================================================
+#
+# Computes atan(x), the angle θ ∈ (-π/2, π/2) such that tan(θ) = x.
+#
+# RANGE REDUCTION (for |x| > 1)
+#
+# The Taylor series converges only for |x| <= 1. For |x| > 1 we use:
+#
+#     atan(x)  = π/2 - atan(1/x)    for x > 1
+#     atan(x)  = -π/2 - atan(1/x)   for x < -1
+#
+# Proof: atan(x) + atan(1/x) = π/2 for x > 0.
+# If θ = atan(x), then tan(π/2 - θ) = cot(θ) = 1/x, so atan(1/x) = π/2 - θ.
+#
+# @param  $x   Any real number.
+# @return      atan(x) in radians, in (-π/2, π/2).
+
+our $HALF_PI = $PI / 2.0;
+
+sub atan_approx {
+    my $x = ( @_ == 2 ) ? $_[1] : $_[0];
+
+    return 0.0 if $x == 0.0;
+
+    if    ( $x >  1.0 ) { return $HALF_PI  - _atan_core( 1.0 / $x ); }
+    elsif ( $x < -1.0 ) { return -$HALF_PI - _atan_core( 1.0 / $x ); }
+
+    return _atan_core($x);
+}
+
+# ============================================================================
+# atan2_approx — Four-Quadrant Arctangent
+# ============================================================================
+#
+# atan2($y, $x) returns the angle in (-π, π] that the vector ($x, $y)
+# makes with the positive x-axis.
+#
+# Unlike atan($y/$x), atan2 inspects the signs of both arguments separately,
+# giving the correct result in all four quadrants.
+#
+# WHY atan($y/$x) IS INSUFFICIENT:
+#
+#     atan(-1 / 1) = -π/4     (Q4 — correct)
+#     atan(-1 / -1) = atan(1) = π/4  (but (-1,-1) is in Q3 — should be -3π/4!)
+#
+# QUADRANT DIAGRAM:
+#
+#          y > 0
+#      Q2  |  Q1        atan2 > 0 in Q1 and Q2
+#    ------+------  x   atan2 < 0 in Q3 and Q4
+#      Q3  |  Q4        atan2 = ±π on the negative x-axis
+#          y < 0
+#
+# @param  $y   y-coordinate (the "opposite" side).
+# @param  $x   x-coordinate (the "adjacent" side).
+# @return      Angle in radians, in (-π, π].
+
+sub atan2_approx {
+    my ( $y, $x ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+
+    if    ( $x > 0.0 )                { return atan_approx( $y / $x );         }
+    elsif ( $x < 0.0 && $y >= 0.0 )  { return atan_approx( $y / $x ) + $PI;   }
+    elsif ( $x < 0.0 && $y <  0.0 )  { return atan_approx( $y / $x ) - $PI;   }
+    elsif ( $x == 0.0 && $y >  0.0 ) { return  $HALF_PI;                       }
+    elsif ( $x == 0.0 && $y <  0.0 ) { return -$HALF_PI;                       }
+    else                              { return 0.0; } # both zero: undefined → 0
+}
+
+# ============================================================================
 # Angle Conversion
 # ============================================================================
 
@@ -408,6 +587,7 @@ CodingAdventures::Trig - Trigonometric functions from first principles (Maclauri
 =head1 SYNOPSIS
 
     use CodingAdventures::Trig qw(sin_approx cos_approx tan_approx
+                                   sqrt_approx atan_approx atan2_approx
                                    sin_deg cos_deg tan_deg
                                    degrees_to_radians radians_to_degrees);
 
@@ -436,6 +616,18 @@ Cosine of C<$x> in radians.
 =item B<tan_approx($x)>
 
 Tangent of C<$x> in radians.  Returns ±Inf at undefined points.
+
+=item B<sqrt_approx($x)>
+
+Square root of C<$x> via Newton's method.  Dies if C<$x < 0>.
+
+=item B<atan_approx($x)>
+
+Arctangent of C<$x> in radians.  Returns a value in C<(-π/2, π/2)>.
+
+=item B<atan2_approx($y, $x)>
+
+Four-quadrant arctangent of C<($y, $x)>.  Returns a value in C<(-π, π]>.
 
 =item B<sin_deg($deg)>
 

@@ -251,3 +251,241 @@ def degrees(rad: float) -> float:
         degrees = radians * (180 / pi)
     """
     return rad * 180 / PI
+
+
+# ---------------------------------------------------------------------------
+# Square Root — Newton's (Babylonian) Method
+# ---------------------------------------------------------------------------
+
+def sqrt(x: float) -> float:
+    """
+    Compute the square root of *x* using Newton's method.
+
+    Newton's Method for Square Roots
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Newton's method (also called the Babylonian method — it was known to
+    Babylonian mathematicians over 3,000 years ago) says: if *guess* is
+    an approximation to sqrt(x), then the average of *guess* and *x/guess*
+    is a better approximation.
+
+    Intuition: if guess < sqrt(x), then x/guess > sqrt(x), so their average
+    "squeezes" toward the true value from both sides.
+
+    The convergence is **quadratic** — the number of correct decimal digits
+    doubles with each iteration. For x = 2:
+
+        Iteration 0: guess = 2.0
+        Iteration 1: guess = (2.0 + 2.0/2.0) / 2 = 1.5
+        Iteration 2: guess = (1.5 + 2.0/1.5) / 2 ≈ 1.41667
+        Iteration 3: guess ≈ 1.41422
+        Iteration 4: guess ≈ 1.41421356237...  (full precision in 4 steps!)
+
+    Typically converges in 10–15 iterations for any normal double-precision input.
+    """
+    if x < 0:
+        raise ValueError(f"sqrt: domain error — input {x} is negative")
+
+    # sqrt(0) is exactly 0.
+    if x == 0.0:
+        return 0.0
+
+    # Initial guess: x itself for x >= 1 (good for large numbers),
+    # 1.0 for x < 1 (avoids dividing by a tiny number in the first step).
+    guess: float = x if x >= 1.0 else 1.0
+
+    # Iterate until convergence or safety limit.
+    for _ in range(60):
+        next_guess = (guess + x / guess) / 2.0
+
+        # Stop when improvement is below the precision floor.
+        # 1e-15 * guess is relative precision; 1e-300 handles subnormals.
+        if abs(next_guess - guess) < 1e-15 * guess + 1e-300:
+            return next_guess
+
+        guess = next_guess
+
+    return guess
+
+
+# ---------------------------------------------------------------------------
+# Tangent — Sine over Cosine
+# ---------------------------------------------------------------------------
+
+def tan(x: float) -> float:
+    """
+    Compute the tangent of *x* (in radians).
+
+    Definition and Geometry
+    ~~~~~~~~~~~~~~~~~~~~~~~
+
+    Tangent is the ratio of sine to cosine:
+
+        tan(x) = sin(x) / cos(x)
+
+    On the unit circle, if you draw a vertical line tangent to the circle at
+    (1, 0), then tan(x) is where the ray at angle x meets that line. This is
+    the literal origin of the name "tangent."
+
+    Undefined Points (Poles)
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Wherever cos(x) = 0 — at x = π/2 + k·π for any integer k — tan(x) is
+    undefined (division by zero). The function "blows up" to ±∞. We detect
+    when |cos(x)| < 1e-15 and return a very large finite number instead, to
+    signal the near-singularity without raising an error.
+
+    We call our own sin() and cos() here — no math.tan used.
+    """
+    s = sin(x)  # our own sin — no math.sin
+    c = cos(x)  # our own cos — no math.cos
+
+    # Guard against poles: |cos(x)| < 1e-15 means we're within
+    # about 1e-15 radians of a discontinuity.
+    if abs(c) < 1e-15:
+        # Return the largest float, signed to match the direction of divergence.
+        return 1.0e308 if s > 0 else -1.0e308
+
+    return s / c
+
+
+# ---------------------------------------------------------------------------
+# Arctangent — Inverse of Tangent
+# ---------------------------------------------------------------------------
+
+# HALF_PI is π/2. It appears in both atan's range reduction and atan2's
+# quadrant handling. We compute it once here for reuse.
+HALF_PI: float = PI / 2.0
+
+
+def _atan_core(x: float) -> float:
+    """
+    Core atan computation for |x| <= 1, using Taylor series + half-angle reduction.
+
+    This is a private helper. Callers should use atan() instead.
+
+    Half-Angle Reduction
+    ~~~~~~~~~~~~~~~~~~~~
+
+    The Taylor series for atan:
+
+        atan(x) = x - x^3/3 + x^5/5 - x^7/7 + ...   (for |x| <= 1)
+
+    converges slowly near x = 1 (requires ~50 terms for full precision).
+
+    Fix: the half-angle identity for atan:
+
+        atan(x) = 2 * atan( x / (1 + sqrt(1 + x^2)) )
+
+    This halves the argument: if |x| <= 1, then after reduction we get
+    |y| <= tan(pi/8) ~= 0.414, where the series converges in ~15 terms.
+
+    Taylor Series Iteration
+    ~~~~~~~~~~~~~~~~~~~~~~~
+
+    atan(t) = t - t^3/3 + t^5/5 - t^7/7 + ...
+
+    Iterative ratio between consecutive terms:
+
+        term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+
+    We multiply the final result by 2 to undo the half-angle halving.
+    """
+    # Half-angle reduction: shrink |x| to |y| <= tan(pi/8) ~= 0.414.
+    # We use our own sqrt here — no math.sqrt.
+    reduced: float = x / (1.0 + sqrt(1.0 + x * x))
+
+    # Taylor series on the reduced argument.
+    t: float = reduced
+    t_sq: float = t * t
+    term: float = t
+    result: float = t
+
+    for n in range(1, 31):
+        # Each term: term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+        term = term * (-t_sq) * (2 * n - 1) / (2 * n + 1)
+        result += term
+
+        # Early exit when terms are negligibly small.
+        if abs(term) < 1e-17:
+            break
+
+    # Undo the half-angle: atan(x) = 2 * atan(reduced).
+    return 2.0 * result
+
+
+def atan(x: float) -> float:
+    """
+    Compute the arctangent of *x*, returning the angle in radians.
+
+    Return range: (-pi/2, pi/2).
+
+    Range Reduction
+    ~~~~~~~~~~~~~~~
+
+    The Taylor series for atan converges only for |x| <= 1. For |x| > 1
+    we use the complementary identity:
+
+        atan(x)  = pi/2 - atan(1/x)    for x > 1
+        atan(x)  = -pi/2 - atan(1/x)   for x < -1
+
+    Proof: atan(x) + atan(1/x) = pi/2 for x > 0. If theta = atan(x),
+    then tan(pi/2 - theta) = cot(theta) = 1/x, so atan(1/x) = pi/2 - theta.
+    """
+    if x == 0.0:
+        return 0.0
+
+    if x > 1.0:
+        return HALF_PI - _atan_core(1.0 / x)
+    if x < -1.0:
+        return -HALF_PI - _atan_core(1.0 / x)
+
+    return _atan_core(x)
+
+
+def atan2(y: float, x: float) -> float:
+    """
+    Compute the four-quadrant arctangent of *y* and *x*.
+
+    Return range: (-pi, pi].
+
+    Why Is atan2 Different from atan?
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    atan(y/x) only gives angles in (-pi/2, pi/2) — the right half of the
+    plane. It cannot distinguish between:
+
+        (y=1, x=1)  →  angle +pi/4   (first quadrant)
+        (y=-1, x=-1) →  y/x = 1, so atan gives pi/4 — WRONG, should be -3pi/4
+
+    atan2 inspects the signs of both y and x separately to determine the
+    correct quadrant.
+
+    Quadrant Diagram:
+    ~~~~~~~~~~~~~~~~~
+
+            y > 0
+        Q2  |  Q1        atan2 > 0 in Q1 and Q2
+      ------+------  x   atan2 < 0 in Q3 and Q4
+        Q3  |  Q4        atan2 = ±pi on the negative x-axis
+
+    Special Cases:
+    ~~~~~~~~~~~~~~
+      (y=0, x>0)   → 0       (positive x-axis)
+      (y>0, x=0)   → pi/2    (positive y-axis)
+      (y=0, x<0)   → pi      (negative x-axis, by atan(0/x<0) + pi = pi)
+      (y<0, x=0)   → -pi/2   (negative y-axis)
+      (y=0, x=0)   → 0       (undefined by convention)
+    """
+    if x > 0.0:
+        return atan(y / x)
+    if x < 0.0 and y >= 0.0:
+        return atan(y / x) + PI
+    if x < 0.0 and y < 0.0:
+        return atan(y / x) - PI
+    if x == 0.0 and y > 0.0:
+        return HALF_PI
+    if x == 0.0 and y < 0.0:
+        return -HALF_PI
+    # x == 0.0 and y == 0.0: undefined, return 0 by convention.
+    return 0.0

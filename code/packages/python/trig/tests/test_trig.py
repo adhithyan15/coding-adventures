@@ -8,7 +8,7 @@ pytest.approx with an absolute tolerance of 1e-10 throughout.
 
 import pytest
 
-from trig import PI, sin, cos, radians, degrees
+from trig import PI, sin, cos, tan, atan, atan2, sqrt, radians, degrees
 
 
 # ---------------------------------------------------------------------------
@@ -226,3 +226,152 @@ class TestWithDegrees:
     def test_sin_45_degrees(self) -> None:
         """sin(45 degrees) = sqrt(2)/2."""
         assert sin(radians(45)) == pytest.approx(0.7071067811865476, abs=TOL)
+
+
+# ---------------------------------------------------------------------------
+# sqrt
+# ---------------------------------------------------------------------------
+
+class TestSqrt:
+    """Verify sqrt using Newton's method."""
+
+    def test_sqrt_zero(self) -> None:
+        """sqrt(0) is exactly 0."""
+        assert sqrt(0) == 0.0
+
+    def test_sqrt_one(self) -> None:
+        """sqrt(1) is 1."""
+        assert sqrt(1) == pytest.approx(1.0, abs=TOL)
+
+    def test_sqrt_four(self) -> None:
+        """sqrt(4) is 2."""
+        assert sqrt(4) == pytest.approx(2.0, abs=TOL)
+
+    def test_sqrt_nine(self) -> None:
+        """sqrt(9) is 3."""
+        assert sqrt(9) == pytest.approx(3.0, abs=TOL)
+
+    def test_sqrt_two(self) -> None:
+        """sqrt(2) ≈ 1.41421356237."""
+        assert sqrt(2) == pytest.approx(1.41421356237, abs=TOL)
+
+    def test_sqrt_quarter(self) -> None:
+        """sqrt(0.25) = 0.5."""
+        assert sqrt(0.25) == pytest.approx(0.5, abs=TOL)
+
+    def test_sqrt_large(self) -> None:
+        """sqrt(1e10) ≈ 1e5."""
+        assert sqrt(1e10) == pytest.approx(1e5, rel=1e-9)
+
+    def test_sqrt_roundtrip(self) -> None:
+        """sqrt(2) * sqrt(2) ≈ 2.0."""
+        assert sqrt(2) * sqrt(2) == pytest.approx(2.0, abs=TOL)
+
+    def test_sqrt_negative_raises(self) -> None:
+        """sqrt of negative raises ValueError."""
+        with pytest.raises(ValueError):
+            sqrt(-1)
+
+
+# ---------------------------------------------------------------------------
+# tan
+# ---------------------------------------------------------------------------
+
+class TestTan:
+    """Verify tangent function."""
+
+    def test_tan_zero(self) -> None:
+        """tan(0) = 0."""
+        assert tan(0) == pytest.approx(0.0, abs=TOL)
+
+    def test_tan_pi_over_4(self) -> None:
+        """tan(pi/4) = 1."""
+        assert tan(PI / 4) == pytest.approx(1.0, abs=TOL)
+
+    def test_tan_pi_over_6(self) -> None:
+        """tan(pi/6) = 1/sqrt(3)."""
+        assert tan(PI / 6) == pytest.approx(1.0 / sqrt(3), abs=TOL)
+
+    def test_tan_negative_pi_over_4(self) -> None:
+        """tan(-pi/4) = -1."""
+        assert tan(-PI / 4) == pytest.approx(-1.0, abs=TOL)
+
+
+# ---------------------------------------------------------------------------
+# atan
+# ---------------------------------------------------------------------------
+
+class TestAtan:
+    """Verify arctangent function."""
+
+    def test_atan_zero(self) -> None:
+        """atan(0) = 0."""
+        assert atan(0) == 0.0
+
+    def test_atan_one(self) -> None:
+        """atan(1) = pi/4."""
+        assert atan(1) == pytest.approx(PI / 4, abs=TOL)
+
+    def test_atan_minus_one(self) -> None:
+        """atan(-1) = -pi/4."""
+        assert atan(-1) == pytest.approx(-PI / 4, abs=TOL)
+
+    def test_atan_sqrt3(self) -> None:
+        """atan(sqrt(3)) = pi/3."""
+        assert atan(sqrt(3)) == pytest.approx(PI / 3, abs=TOL)
+
+    def test_atan_inv_sqrt3(self) -> None:
+        """atan(1/sqrt(3)) = pi/6."""
+        assert atan(1.0 / sqrt(3)) == pytest.approx(PI / 6, abs=TOL)
+
+    def test_atan_large(self) -> None:
+        """atan of a large positive number approaches pi/2."""
+        assert atan(1e10) == pytest.approx(PI / 2, abs=1e-5)
+
+    def test_atan_large_negative(self) -> None:
+        """atan of a large negative number approaches -pi/2."""
+        assert atan(-1e10) == pytest.approx(-PI / 2, abs=1e-5)
+
+    def test_atan_tan_roundtrip(self) -> None:
+        """atan(tan(pi/4)) ≈ pi/4."""
+        assert atan(tan(PI / 4)) == pytest.approx(PI / 4, abs=TOL)
+
+
+# ---------------------------------------------------------------------------
+# atan2
+# ---------------------------------------------------------------------------
+
+class TestAtan2:
+    """Verify four-quadrant arctangent."""
+
+    def test_atan2_positive_x_axis(self) -> None:
+        """atan2(0, 1) = 0."""
+        assert atan2(0, 1) == pytest.approx(0.0, abs=TOL)
+
+    def test_atan2_positive_y_axis(self) -> None:
+        """atan2(1, 0) = pi/2."""
+        assert atan2(1, 0) == pytest.approx(PI / 2, abs=TOL)
+
+    def test_atan2_negative_x_axis(self) -> None:
+        """atan2(0, -1) = pi."""
+        assert atan2(0, -1) == pytest.approx(PI, abs=TOL)
+
+    def test_atan2_negative_y_axis(self) -> None:
+        """atan2(-1, 0) = -pi/2."""
+        assert atan2(-1, 0) == pytest.approx(-PI / 2, abs=TOL)
+
+    def test_atan2_q1(self) -> None:
+        """atan2(1, 1) = pi/4 (first quadrant)."""
+        assert atan2(1, 1) == pytest.approx(PI / 4, abs=TOL)
+
+    def test_atan2_q2(self) -> None:
+        """atan2(1, -1) = 3*pi/4 (second quadrant)."""
+        assert atan2(1, -1) == pytest.approx(3 * PI / 4, abs=TOL)
+
+    def test_atan2_q3(self) -> None:
+        """atan2(-1, -1) = -3*pi/4 (third quadrant)."""
+        assert atan2(-1, -1) == pytest.approx(-3 * PI / 4, abs=TOL)
+
+    def test_atan2_q4(self) -> None:
+        """atan2(-1, 1) = -pi/4 (fourth quadrant)."""
+        assert atan2(-1, 1) == pytest.approx(-PI / 4, abs=TOL)

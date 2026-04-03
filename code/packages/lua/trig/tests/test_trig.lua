@@ -554,3 +554,122 @@ describe("double angle identities", function()
         end
     end)
 end)
+
+-- ============================================================================
+-- sqrt tests
+-- ============================================================================
+
+describe("sqrt", function()
+    it("sqrt(0) is 0", function()
+        assert.are.equal(trig.sqrt(0), 0.0)
+    end)
+
+    it("sqrt(1) is 1", function()
+        assert.is_true(approx_equal(trig.sqrt(1), 1.0))
+    end)
+
+    it("sqrt(4) is 2", function()
+        assert.is_true(approx_equal(trig.sqrt(4), 2.0))
+    end)
+
+    it("sqrt(9) is 3", function()
+        assert.is_true(approx_equal(trig.sqrt(9), 3.0))
+    end)
+
+    it("sqrt(2) ≈ 1.41421356237", function()
+        assert.is_true(approx_equal(trig.sqrt(2), 1.41421356237))
+    end)
+
+    it("sqrt(0.25) is 0.5", function()
+        assert.is_true(approx_equal(trig.sqrt(0.25), 0.5))
+    end)
+
+    it("sqrt(1e10) ≈ 1e5", function()
+        assert.is_true(approx_equal(trig.sqrt(1e10), 1e5, 1e-4))
+    end)
+
+    it("sqrt(2)^2 ≈ 2.0 (roundtrip)", function()
+        local s = trig.sqrt(2)
+        assert.is_true(approx_equal(s * s, 2.0))
+    end)
+
+    it("sqrt(-1) raises an error", function()
+        assert.has_error(function() trig.sqrt(-1) end)
+    end)
+end)
+
+-- ============================================================================
+-- atan tests
+-- ============================================================================
+
+describe("atan", function()
+    it("atan(0) is 0", function()
+        assert.are.equal(trig.atan(0.0), 0.0)
+    end)
+
+    it("atan(1) ≈ pi/4", function()
+        assert.is_true(approx_equal(trig.atan(1), trig.PI / 4))
+    end)
+
+    it("atan(-1) ≈ -pi/4", function()
+        assert.is_true(approx_equal(trig.atan(-1), -trig.PI / 4))
+    end)
+
+    it("atan(sqrt(3)) ≈ pi/3", function()
+        assert.is_true(approx_equal(trig.atan(trig.sqrt(3)), trig.PI / 3))
+    end)
+
+    it("atan(1/sqrt(3)) ≈ pi/6", function()
+        assert.is_true(approx_equal(trig.atan(1.0 / trig.sqrt(3)), trig.PI / 6))
+    end)
+
+    it("atan(large positive) approaches pi/2", function()
+        assert.is_true(approx_equal(trig.atan(1e10), trig.PI / 2, 1e-5))
+    end)
+
+    it("atan(large negative) approaches -pi/2", function()
+        assert.is_true(approx_equal(trig.atan(-1e10), -trig.PI / 2, 1e-5))
+    end)
+
+    it("atan(tan(pi/4)) ≈ pi/4 (roundtrip)", function()
+        assert.is_true(approx_equal(trig.atan(trig.tan(trig.PI / 4)), trig.PI / 4))
+    end)
+end)
+
+-- ============================================================================
+-- atan2 tests
+-- ============================================================================
+
+describe("atan2", function()
+    it("atan2(0, 1) = 0 (positive x-axis)", function()
+        assert.is_true(approx_equal(trig.atan2(0, 1), 0.0))
+    end)
+
+    it("atan2(1, 0) = pi/2 (positive y-axis)", function()
+        assert.is_true(approx_equal(trig.atan2(1, 0), trig.PI / 2))
+    end)
+
+    it("atan2(0, -1) = pi (negative x-axis)", function()
+        assert.is_true(approx_equal(trig.atan2(0, -1), trig.PI))
+    end)
+
+    it("atan2(-1, 0) = -pi/2 (negative y-axis)", function()
+        assert.is_true(approx_equal(trig.atan2(-1, 0), -trig.PI / 2))
+    end)
+
+    it("atan2(1, 1) ≈ pi/4 (Q1)", function()
+        assert.is_true(approx_equal(trig.atan2(1, 1), trig.PI / 4))
+    end)
+
+    it("atan2(1, -1) ≈ 3*pi/4 (Q2)", function()
+        assert.is_true(approx_equal(trig.atan2(1, -1), 3 * trig.PI / 4))
+    end)
+
+    it("atan2(-1, -1) ≈ -3*pi/4 (Q3)", function()
+        assert.is_true(approx_equal(trig.atan2(-1, -1), -3 * trig.PI / 4))
+    end)
+
+    it("atan2(-1, 1) ≈ -pi/4 (Q4)", function()
+        assert.is_true(approx_equal(trig.atan2(-1, 1), -trig.PI / 4))
+    end)
+end)
