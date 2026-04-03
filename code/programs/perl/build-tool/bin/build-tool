@@ -63,6 +63,7 @@ my %opts = (
     language  => undef,
     diff_base => 'origin/main',
     verbose   => 0,
+    validate_build_files => 0,
     help      => 0,
     version   => 0,
 );
@@ -75,6 +76,7 @@ GetOptions(
     'language=s'   => \$opts{language},
     'diff-base=s'  => \$opts{diff_base},
     'verbose'      => \$opts{verbose},
+    'validate-build-files' => \$opts{validate_build_files},
     'help'         => \$opts{help},
     'version'      => \$opts{version},
 ) or do {
@@ -113,6 +115,7 @@ my $bt = CodingAdventures::BuildTool->new(
     language  => $opts{language},
     diff_base => $opts{diff_base},
     verbose   => $opts{verbose},
+    validate_build_files => $opts{validate_build_files},
 );
 
 exit $bt->run();
@@ -131,6 +134,7 @@ sub print_usage {
           --language LANG      Only build packages of this language
           --diff-base REF      Git ref for change detection (default: origin/main)
           --verbose            Extra output for debugging
+          --validate-build-files  Validate BUILD/CI metadata contracts before continuing
           --help               Show this help
           --version            Show version
 

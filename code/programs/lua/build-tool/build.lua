@@ -34,6 +34,7 @@ local Discovery = require("build_tool.discovery")
 local Resolver = require("build_tool.resolver")
 local Executor = require("build_tool.executor")
 local Reporter = require("build_tool.reporter")
+local Validator = require("build_tool.validator")
 
 -- =========================================================================
 -- Argument parsing
@@ -51,6 +52,7 @@ local function parse_args()
         dry_run = false,
         language = "all",
         force = false,
+        validate_build_files = false,
     }
 
     local i = 1
@@ -65,6 +67,8 @@ local function parse_args()
             opts.language = arg[i]
         elseif arg[i] == "--force" then
             opts.force = true
+        elseif arg[i] == "--validate-build-files" then
+            opts.validate_build_files = true
         elseif arg[i] == "--help" or arg[i] == "-h" then
             print("Usage: lua build.lua [OPTIONS]")
             print()
@@ -73,6 +77,7 @@ local function parse_args()
             print("  --dry-run        Show what would build without building")
             print("  --language LANG  Only build packages for this language (default: all)")
             print("  --force          Rebuild everything")
+            print("  --validate-build-files  Validate BUILD/CI metadata contracts before continuing")
             print("  --help           Show this help")
             os.exit(0)
         end
@@ -143,6 +148,16 @@ local function main()
     if #packages == 0 then
         print("No packages to build.")
         os.exit(0)
+    end
+
+    if opts.validate_build_files then
+        local validation_error = Validator.validate_ci_full_build_toolchains(root, packages)
+        if validation_error then
+            io.stderr:write("BUILD/CI validation failed:\n")
+            io.stderr:write("  - " .. validation_error .. "\n")
+            io.stderr:write("Fix the CI workflow so full-build toolchain setup stays correct.\n")
+            os.exit(1)
+        end
     end
 
     -- Step 3: Resolve dependencies.

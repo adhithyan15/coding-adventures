@@ -40,7 +40,7 @@ defmodule BuildTool.CLI do
       ./build_tool --root /path/to/repo --force
   """
 
-  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Plan, Reporter, Resolver, StarlarkEvaluator}
+  alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Plan, Reporter, Resolver, StarlarkEvaluator, Validator}
   alias CodingAdventures.ProgressBar
 
   # ---------------------------------------------------------------------------
@@ -77,6 +77,7 @@ defmodule BuildTool.CLI do
           language: :string,
           diff_base: :string,
           cache_file: :string,
+          validate_build_files: :boolean,
           emit_plan: :string,
           plan_file: :string
         ],
@@ -96,6 +97,7 @@ defmodule BuildTool.CLI do
     language = Keyword.get(opts, :language, "all")
     diff_base = Keyword.get(opts, :diff_base, "origin/main")
     cache_file = Keyword.get(opts, :cache_file, ".build-cache.json")
+    validate_build_files = Keyword.get(opts, :validate_build_files, false)
     emit_plan_path = Keyword.get(opts, :emit_plan, nil)
     plan_file_path = Keyword.get(opts, :plan_file, nil)
 
@@ -113,12 +115,13 @@ defmodule BuildTool.CLI do
       1
     else
       do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
+        validate_build_files,
         emit_plan_path, plan_file_path)
     end
   end
 
   defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
-               emit_plan_path, plan_file_path) do
+               validate_build_files, emit_plan_path, plan_file_path) do
     # The build starts from the code/ directory inside the repo root.
     code_root = Path.join(repo_root, "code")
 
@@ -153,8 +156,22 @@ defmodule BuildTool.CLI do
           # shell commands with generated commands from the declared targets.
           packages = evaluate_starlark_builds(packages, repo_root)
 
-          do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-            cache_file, emit_plan_path, plan_file_path)
+          if validate_build_files do
+            case Validator.validate_ci_full_build_toolchains(repo_root, packages) do
+              nil ->
+                do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+                  cache_file, emit_plan_path, plan_file_path)
+
+              validation_error ->
+                IO.puts(:stderr, "BUILD/CI validation failed:")
+                IO.puts(:stderr, "  - #{validation_error}")
+                IO.puts(:stderr, "Fix the CI workflow so full-build toolchain setup stays correct.")
+                1
+            end
+          else
+            do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
+              cache_file, emit_plan_path, plan_file_path)
+          end
       end
     end
   end

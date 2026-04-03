@@ -43,6 +43,7 @@ import { executeBuilds } from "./executor.js";
 import { printReport } from "./reporter.js";
 import { writePlan, readPlan, CURRENT_SCHEMA_VERSION } from "./plan.js";
 import type { BuildPlan, PackageEntry } from "./plan.js";
+import { validateCIFullBuildToolchains } from "./validator.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -88,6 +89,7 @@ async function main(argv?: string[]): Promise<number> {
       "cache-file": { type: "string", default: ".build-cache.json" },
       "emit-plan": { type: "boolean", default: false },
       "plan-file": { type: "string", default: "build-plan.json" },
+      "validate-build-files": { type: "boolean", default: false },
       help: { type: "boolean", default: false },
     },
     strict: true,
@@ -106,6 +108,8 @@ Options:
   --cache-file <f>   Path to build cache file (default: .build-cache.json)
   --emit-plan        Write a build plan JSON file and exit (no builds executed)
   --plan-file <f>    Path to write/read the build plan (default: build-plan.json)
+  --validate-build-files
+                     Validate BUILD/CI metadata contracts before continuing
   --help             Show this help message`);
     return 0;
   }
@@ -145,6 +149,18 @@ Options:
     if (packages.length === 0) {
       console.error(`No ${language} packages found.`);
       return 0;
+    }
+  }
+
+  if (values["validate-build-files"]) {
+    const validationError = validateCIFullBuildToolchains(root, packages);
+    if (validationError !== null) {
+      console.error("BUILD/CI validation failed:");
+      console.error(`  - ${validationError}`);
+      console.error(
+        "Fix the CI workflow so full-build toolchain setup stays correct.",
+      );
+      return 1;
     }
   }
 
