@@ -2,8 +2,7 @@
   "name": "trig",
   "version": "0.1.0",
   "description": "Trigonometric functions from first principles using Taylor series",
-  "main": "dist/trig.js",
-  "types": "dist/trig.d.ts",
+  "main": "src/trig.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest"

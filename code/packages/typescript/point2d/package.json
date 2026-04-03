@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/point2d",
+  "version": "0.1.0",
+  "description": "2D point/vector and axis-aligned bounding box — the leaf geometric primitive",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "trig": "file:../trig"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

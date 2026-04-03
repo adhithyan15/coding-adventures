@@ -1,0 +1,10 @@
+[package]
+name = "point2d"
+version = "0.1.0"
+edition = "2021"
+description = "2D point/vector and axis-aligned bounding box — the leaf geometric primitive"
+
+[dependencies]
+trig = { path = "../trig" }
+
+[dev-dependencies]

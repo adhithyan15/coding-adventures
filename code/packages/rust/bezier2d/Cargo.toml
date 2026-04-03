@@ -1,0 +1,11 @@
+[package]
+name = "bezier2d"
+version = "0.1.0"
+edition = "2021"
+description = "Quadratic and cubic Bezier curves — pure polynomial arithmetic on 2D points"
+
+[dependencies]
+point2d = { path = "../point2d" }
+trig = { path = "../trig" }
+
+[dev-dependencies]

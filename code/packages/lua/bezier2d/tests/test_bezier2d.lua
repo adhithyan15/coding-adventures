@@ -1,0 +1,77 @@
+-- Tests for coding_adventures.bezier2d
+package.path = "../src/?.lua;../src/?/init.lua;../../trig/src/?.lua;../../trig/src/?/init.lua;../../point2d/src/?.lua;../../point2d/src/?/init.lua;" .. package.path
+
+local bz  = require("coding_adventures.bezier2d")
+local p2d = require("coding_adventures.point2d")
+
+local DELTA = 1e-9
+local function approx(a, b) return math.abs(a - b) < DELTA end
+local function pt_approx(a, b) return approx(a.x, b.x) and approx(a.y, b.y) end
+
+local q = bz.new_quad(p2d.new_point(0,0), p2d.new_point(1,2), p2d.new_point(2,0))
+local c = bz.new_cubic(p2d.new_point(0,0), p2d.new_point(1,2), p2d.new_point(3,2), p2d.new_point(4,0))
+
+describe("quadratic bezier", function()
+    it("eval at 0", function()
+        assert.is_true(pt_approx(bz.eval_quad(q, 0), p2d.new_point(0,0)))
+    end)
+    it("eval at 1", function()
+        assert.is_true(pt_approx(bz.eval_quad(q, 1), p2d.new_point(2,0)))
+    end)
+    it("eval midpoint", function()
+        assert.is_true(pt_approx(bz.eval_quad(q, 0.5), p2d.new_point(1,1)))
+    end)
+    it("split midpoints", function()
+        local left, right = bz.split_quad(q, 0.5)
+        local m = bz.eval_quad(q, 0.5)
+        assert.is_true(pt_approx(left.p2, m))
+        assert.is_true(pt_approx(right.p0, m))
+    end)
+    it("straight polyline gives 2 points", function()
+        local s = bz.new_quad(p2d.new_point(0,0), p2d.new_point(1,0), p2d.new_point(2,0))
+        local pts = bz.polyline_quad(s, 0.1)
+        assert.are_equal(#pts, 2)
+    end)
+    it("bbox contains endpoints", function()
+        local bb = bz.bbox_quad(q)
+        assert.is_true(bb.x <= 0 and bb.x + bb.width >= 2)
+    end)
+    it("elevate is equivalent", function()
+        local ce = bz.elevate_quad(q)
+        for _, t in ipairs({0, 0.25, 0.5, 0.75, 1}) do
+            local qp = bz.eval_quad(q, t)
+            local cp = bz.eval_cubic(ce, t)
+            assert.is_true(pt_approx(qp, cp))
+        end
+    end)
+end)
+
+describe("cubic bezier", function()
+    it("eval at 0", function()
+        assert.is_true(pt_approx(bz.eval_cubic(c, 0), p2d.new_point(0,0)))
+    end)
+    it("eval at 1", function()
+        assert.is_true(pt_approx(bz.eval_cubic(c, 1), p2d.new_point(4,0)))
+    end)
+    it("symmetric midpoint x", function()
+        assert.is_true(approx(bz.eval_cubic(c, 0.5).x, 2))
+    end)
+    it("split midpoints", function()
+        local left, right = bz.split_cubic(c, 0.5)
+        local m = bz.eval_cubic(c, 0.5)
+        assert.is_true(pt_approx(left.p3, m))
+        assert.is_true(pt_approx(right.p0, m))
+    end)
+    it("straight polyline gives 2 points", function()
+        local s = bz.new_cubic(p2d.new_point(0,0), p2d.new_point(1,0), p2d.new_point(2,0), p2d.new_point(3,0))
+        local pts = bz.polyline_cubic(s, 0.1)
+        assert.are_equal(#pts, 2)
+    end)
+    it("bbox contains samples", function()
+        local bb = bz.bbox_cubic(c)
+        for i = 0, 20 do
+            local p = bz.eval_cubic(c, i/20)
+            assert.is_true(p.x >= bb.x - 1e-6 and p.x <= bb.x + bb.width + 1e-6)
+        end
+    end)
+end)

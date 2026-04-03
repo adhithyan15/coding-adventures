@@ -1,0 +1,11 @@
+[package]
+name = "affine2d"
+version = "0.1.0"
+edition = "2021"
+description = "2D affine transformation matrix — 6-float representation for translate/rotate/scale/skew"
+
+[dependencies]
+trig = { path = "../trig" }
+point2d = { path = "../point2d" }
+
+[dev-dependencies]
