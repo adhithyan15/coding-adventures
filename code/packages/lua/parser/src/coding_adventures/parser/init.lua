@@ -1127,6 +1127,18 @@ function GrammarParser:_match_token_reference(element)
         return { token }, true
     end
 
+    -- Grammar-driven lexers may promote keywords to their specific token
+    -- names ("var" -> VAR, "puts" -> PUTS) while parser grammars still
+    -- reference the broader KEYWORD token class.
+    if element.name == "KEYWORD"
+       and type_name ~= "KEYWORD"
+       and type(token.value) == "string"
+       and token.value:match("^[%a_][%w_]*$")
+       and type_name == token.value:upper() then
+        self.pos = self.pos + 1
+        return { token }, true
+    end
+
     -- Backward compatibility: try enum-based matching
     local expected_type = string_to_token_type[element.name]
     if expected_type and token.type == expected_type

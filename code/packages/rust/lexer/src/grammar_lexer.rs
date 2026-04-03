@@ -53,7 +53,7 @@
 //!   indentation levels and emits synthetic INDENT/DEDENT/NEWLINE tokens,
 //!   following the Python/Starlark whitespace rules.
 
-use regex::Regex;
+use regex::{Regex, RegexBuilder};
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
@@ -374,7 +374,7 @@ struct CompiledPattern {
 }
 
 /// Compile a list of token definitions into anchored regex patterns.
-fn compile_patterns(definitions: &[TokenDefinition]) -> Vec<CompiledPattern> {
+fn compile_patterns(definitions: &[TokenDefinition], case_sensitive: bool) -> Vec<CompiledPattern> {
     definitions
         .iter()
         .map(|defn| {
@@ -384,7 +384,10 @@ fn compile_patterns(definitions: &[TokenDefinition]) -> Vec<CompiledPattern> {
                 format!("^{}", regex::escape(&defn.pattern))
             };
 
-            let compiled = Regex::new(&regex_str).unwrap_or_else(|e| {
+            let compiled = RegexBuilder::new(&regex_str)
+                .case_insensitive(!case_sensitive)
+                .build()
+                .unwrap_or_else(|e| {
                 panic!(
                     "Failed to compile pattern for token {}: {}",
                     defn.name, e
@@ -441,7 +444,9 @@ pub struct GrammarLexer<'a> {
     chars: Vec<char>,
 
     /// The original source string (for regex matching on slices).
-    /// When case_sensitive is false, this holds the lowercased copy.
+    ///
+    /// We preserve the original casing so identifiers and string literals
+    /// retain their source text even when the grammar matches case-insensitively.
     source: Cow<'a, str>,
 
     /// Current byte position in the source string.
@@ -585,8 +590,8 @@ impl<'a> GrammarLexer<'a> {
         } else {
             grammar.reserved_keywords.iter().cloned().collect()
         };
-        let patterns = compile_patterns(&grammar.definitions);
-        let skip_patterns = compile_patterns(&grammar.skip_definitions);
+        let patterns = compile_patterns(&grammar.definitions, case_sensitive);
+        let skip_patterns = compile_patterns(&grammar.skip_definitions, case_sensitive);
         let indent_mode = grammar.mode.as_deref() == Some("indentation");
         let escape_mode = grammar.escapes.clone();
 
@@ -607,7 +612,10 @@ impl<'a> GrammarLexer<'a> {
                 };
                 CompiledPattern {
                     name: defn.name.clone(),
-                    pattern: Regex::new(&regex_str).unwrap(),
+                    pattern: RegexBuilder::new(&regex_str)
+                        .case_insensitive(!case_sensitive)
+                        .build()
+                        .unwrap(),
                     alias: defn.alias.clone(),
                 }
             })
@@ -615,22 +623,12 @@ impl<'a> GrammarLexer<'a> {
         group_patterns.insert("default".to_string(), default_compiled);
 
         for (group_name, group) in &grammar.groups {
-            let compiled = compile_patterns(&group.definitions);
+            let compiled = compile_patterns(&group.definitions, case_sensitive);
             group_patterns.insert(group_name.clone(), compiled);
         }
 
         // Build the set of valid group names for validation.
         let group_names: HashSet<String> = group_patterns.keys().cloned().collect();
-
-        // When case_sensitive is false, lowercase the entire source so that
-        // patterns and keywords match regardless of the original casing. Both
-        // `source` (used for regex matching) and `chars` (used for indexed
-        // access) operate on the lowercased text.
-        let effective_source: Cow<'a, str> = if case_sensitive {
-            Cow::Borrowed(source)
-        } else {
-            Cow::Owned(source.to_lowercase())
-        };
 
         // Build the context keyword set from the grammar.
         // Context keywords are emitted as NAME tokens with TOKEN_CONTEXT_KEYWORD flag.
@@ -639,10 +637,9 @@ impl<'a> GrammarLexer<'a> {
             .iter()
             .cloned()
             .collect();
-
         GrammarLexer {
-            chars: effective_source.chars().collect(),
-            source: effective_source,
+            chars: source.chars().collect(),
+            source: Cow::Borrowed(source),
             byte_pos: 0,
             char_pos: 0,
             line: 1,
