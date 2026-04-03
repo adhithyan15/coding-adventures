@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/gf256",
+  "version": "0.1.0",
+  "description": "Galois Field GF(2^8) arithmetic — log/antilog table implementation",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
