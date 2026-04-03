@@ -9,6 +9,9 @@
 //   - A BUILD file for an isolated-env language (for example Python or
 //     TypeScript) forgets to materialize a local prerequisite that is needed
 //     when the package is built on a fresh runner.
+//   - CI runs a forced full build on main, but conditional toolchain setup is
+//     still wired to incremental diff outputs. That lets commands like mix,
+//     bundle, uv, luarocks, or cpanm disappear only on the full-build path.
 package validator
 
 import (
@@ -30,6 +33,19 @@ import (
 var requiresExplicitPrereqs = map[string]bool{
 	"python":     true,
 	"typescript": true,
+	"perl":       true,
+}
+
+// Languages in this set are installed conditionally by the main CI workflow.
+// If main also forces a full build, detect-job outputs must be normalized so
+// these toolchains are always enabled on that path.
+var ciManagedToolchainLanguages = map[string]bool{
+	"python":     true,
+	"ruby":       true,
+	"typescript": true,
+	"rust":       true,
+	"elixir":     true,
+	"lua":        true,
 	"perl":       true,
 }
 
@@ -97,13 +113,17 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		problems = append(problems, fmt.Sprintf("%s (%s): %s", pkg.Name, buildFileLabel(pkg.Path), strings.Join(parts, "; ")))
 	}
 
+	if ciProblem := validateCIFullBuildToolchains(packages); ciProblem != "" {
+		problems = append(problems, ciProblem)
+	}
+
 	if len(problems) == 0 {
 		return nil
 	}
 
 	sort.Strings(problems)
 	return fmt.Errorf(
-		"BUILD file validation failed:\n  - %s\nFix the BUILD file so it matches the metadata dependency graph and works on a clean standalone build.",
+		"BUILD/CI validation failed:\n  - %s\nFix the BUILD file or CI workflow so metadata dependencies and toolchain setup stay correct on clean standalone and full-build runs.",
 		strings.Join(problems, "\n  - "),
 	)
 }
@@ -236,4 +256,104 @@ func extractMetadataDeps(line string, knownNames map[string]string, re *regexp.R
 		}
 	}
 	return found
+}
+
+func validateCIFullBuildToolchains(packages []discovery.Package) string {
+	repoRoot := inferRepoRoot(packages)
+	if repoRoot == "" {
+		return ""
+	}
+
+	ciPath := filepath.Join(repoRoot, ".github", "workflows", "ci.yml")
+	data, err := os.ReadFile(ciPath)
+	if err != nil {
+		return ""
+	}
+
+	workflow := string(data)
+	if !strings.Contains(workflow, "Full build on main merge") {
+		return ""
+	}
+
+	var missingOutputBinding []string
+	var missingMainForce []string
+
+	for _, lang := range languagesNeedingCIToolchains(packages) {
+		outputPattern := regexp.MustCompile(
+			fmt.Sprintf(
+				`needs_%s:\s*\$\{\{\s*steps\.toolchains\.outputs\.needs_%s\s*\}\}`,
+				regexp.QuoteMeta(lang),
+				regexp.QuoteMeta(lang),
+			),
+		)
+		if !outputPattern.MatchString(workflow) {
+			missingOutputBinding = append(missingOutputBinding, lang)
+		}
+
+		if !strings.Contains(workflow, fmt.Sprintf("needs_%s=true", lang)) {
+			missingMainForce = append(missingMainForce, lang)
+		}
+	}
+
+	if len(missingOutputBinding) == 0 && len(missingMainForce) == 0 {
+		return ""
+	}
+
+	var parts []string
+	if len(missingOutputBinding) > 0 {
+		parts = append(parts, fmt.Sprintf(
+			"detect outputs for forced main full builds are not normalized through steps.toolchains for: %s",
+			strings.Join(missingOutputBinding, ", "),
+		))
+	}
+	if len(missingMainForce) > 0 {
+		parts = append(parts, fmt.Sprintf(
+			"forced main full-build path does not explicitly enable toolchains for: %s",
+			strings.Join(missingMainForce, ", "),
+		))
+	}
+
+	return fmt.Sprintf(
+		"%s: %s",
+		filepath.ToSlash(ciPath),
+		strings.Join(parts, "; "),
+	)
+}
+
+func languagesNeedingCIToolchains(packages []discovery.Package) []string {
+	seen := make(map[string]bool)
+	var langs []string
+	for _, pkg := range packages {
+		if !ciManagedToolchainLanguages[pkg.Language] || seen[pkg.Language] {
+			continue
+		}
+		seen[pkg.Language] = true
+		langs = append(langs, pkg.Language)
+	}
+	sort.Strings(langs)
+	return langs
+}
+
+func inferRepoRoot(packages []discovery.Package) string {
+	for _, pkg := range packages {
+		root := inferRepoRootFromPackagePath(pkg.Path)
+		if root != "" {
+			return root
+		}
+	}
+	return ""
+}
+
+func inferRepoRootFromPackagePath(pkgPath string) string {
+	current := filepath.Clean(pkgPath)
+	for {
+		parent := filepath.Dir(current)
+		if filepath.Base(current) == "code" {
+			return parent
+		}
+		if parent == current {
+			return ""
+		}
+		current = parent
+	}
 }
