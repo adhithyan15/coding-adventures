@@ -13,6 +13,42 @@ Producer (game, chart, barcode renderer, Mermaid diagram)
   → Backend (SVG, Canvas, Metal, Direct2D, Cairo, terminal)
 ```
 
+### When you do NOT need PaintInstructions
+
+If your target is a **browser** and your layout engine produces **HTML/CSS/React
+elements**, you can skip PaintInstructions entirely. Go straight from layout to the
+DOM:
+
+```
+Layout Engine
+  → HTML + CSS + React elements
+  → Browser DOM
+  → Browser paints (GPU compositing, dirty tracking, accessibility — all free)
+```
+
+The browser's rendering engine (Blink, WebKit, Gecko) is itself a full paint
+backend. It handles everything below layout for you: GPU rasterization, layer
+compositing, dirty region tracking, scrolling, and the accessibility tree. React
+is a reconciler that drives that DOM efficiently — it is already a retained-mode
+scene graph with diffing built in.
+
+PaintInstructions exists for the cases where the browser DOM is **not available**
+or **not appropriate**:
+
+- **Native apps** — Metal (macOS/iOS), Direct2D (Windows), Cairo (Linux). No DOM.
+- **Server-side rendering** — generating SVG or PDF on a server process.
+- **Games** — Canvas or WebGL, bypassing the DOM for performance.
+- **Electron apps** — want Canvas-level control without DOM overhead.
+- **Terminal renderers** — box-drawing characters, no GPU.
+- **Cross-platform libraries** — one codebase targeting browser Canvas AND
+  native Metal AND server-side SVG simultaneously.
+
+If your stack is browser-only and layout-driven, the HTML/React path is the right
+choice. PaintInstructions is not a replacement for the DOM — it is the abstraction
+for everything else.
+
+---
+
 The IR is deliberately **ignorant in both directions**:
 
 - It knows nothing about SVG. There is no `<g>` element here, no `stroke-dasharray`,
