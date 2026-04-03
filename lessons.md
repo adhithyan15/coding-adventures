@@ -1103,3 +1103,53 @@ if command -v xcrun >/dev/null 2>&1; then xcrun swift test; else swift test; fi
 Unix-style inline env vars (`LUA_PATH=... lua`) don't work on Windows cmd.exe — you get "'LUA_PATH' is not recognized as an internal or external command". Use `set "LUA_PATH=..." && lua ...` instead.
 
 **Rule:** When a BUILD_windows file needs to set environment variables, use `set "VAR=value" && command` syntax, not Unix-style `VAR=value command`.
+
+---
+
+### 2026-04-03: Perl modules must add `use lib` for their own dependencies
+
+When a Perl module (`.pm` file) uses another internal module via `use CodingAdventures::Trig`, the dependency's `lib/` directory must be in `@INC` at module load time — not just in the test file. `prove -l` only adds the local `lib/` directory, and `use lib` in test files doesn't help if the MODULE itself triggers the `use` at compile time.
+
+**Pattern (from Point2D.pm):** Add `use lib '../trig/lib'` directly to the module file, before the `use CodingAdventures::Trig` line. The path is relative to the CWD when `prove` runs (the package directory), so `../trig/lib` resolves to the sibling package's lib directory.
+
+```perl
+use strict;
+use warnings;
+use lib '../trig/lib';
+use lib '../point2d/lib';
+use CodingAdventures::Trig qw(sin_approx cos_approx);
+use CodingAdventures::Point2D qw(new_point);
+```
+
+**Rule:** Every Perl module that `use`s a sibling package must add `use lib '../sibling/lib'` to the module itself.
+
+---
+
+### 2026-04-03: Hatchling rejects `@ file:` direct references by default
+
+Hatchling ≥ 1.18 forbids PEP 440 direct references (`@ file:../sibling`) in the `dependencies` field of `pyproject.toml`. Building the editable package metadata fails with:
+
+```
+Call to `hatchling.build.prepare_metadata_for_build_editable` failed
+cannot be a direct reference unless field
+```
+
+**Fix:** Add `[tool.hatch.metadata] allow-direct-references = true` to `pyproject.toml`:
+
+```toml
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mypackage"]
+```
+
+**Rule:** Every Python package that depends on a sibling via `@ file:../sibling` needs this hatchling opt-in.
+
+---
+
+### 2026-04-03: TypeScript trig package.json must use src/trig.ts as main
+
+The `trig` package predates Vitest adoption and had `"main": "dist/trig.js"` pointing to compiled output. When other packages depend on `trig` via `"file:../trig"` and are tested with Vitest, Vite resolves the entry via `main` and fails because `dist/trig.js` doesn't exist.
+
+**Fix:** Set `"main": "src/trig.ts"` (consistent with the rule for all TypeScript packages). This is the same rule from 2026-03-19 but applied to the leaf `trig` package that was created before the rule was established.
