@@ -1,19 +1,6 @@
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarLexer, LexerContext } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const EXCEL_TOKENS_PATH = join(GRAMMARS_DIR, "excel.tokens");
-
-function loadExcelTokenGrammar() {
-  const grammarText = readFileSync(EXCEL_TOKENS_PATH, "utf-8");
-  return parseTokenGrammar(grammarText);
-}
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 function nextNonSpaceChar(ctx: LexerContext): string {
   let offset = 1;
@@ -45,8 +32,7 @@ export function excelOnToken(token: Token, ctx: LexerContext): void {
 }
 
 export function createExcelLexer(source: string): GrammarLexer {
-  const grammar = loadExcelTokenGrammar();
-  const lexer = new GrammarLexer(source, grammar);
+  const lexer = new GrammarLexer(source, TOKEN_GRAMMAR);
   lexer.setOnToken(excelOnToken);
   return lexer;
 }
