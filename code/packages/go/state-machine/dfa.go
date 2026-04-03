@@ -120,117 +120,124 @@ func NewDFA(
 	accepting []string,
 	actions map[[2]string]Action,
 ) *DFA {
-	// --- Validate states ---
-	if len(states) == 0 {
-		panic("statemachine: states set must be non-empty")
-	}
+	result, _ := StartNew[*DFA]("state-machine.NewDFA", nil,
+		func(op *Operation[*DFA], rf *ResultFactory[*DFA]) *OperationResult[*DFA] {
+			op.AddProperty("stateCount", len(states))
+			op.AddProperty("alphabetSize", len(alphabet))
+			op.AddProperty("initial", initial)
+			// --- Validate states ---
+			if len(states) == 0 {
+				panic("statemachine: states set must be non-empty")
+			}
 
-	stateSet := make(map[string]bool, len(states))
-	for _, s := range states {
-		stateSet[s] = true
-	}
+			stateSet := make(map[string]bool, len(states))
+			for _, s := range states {
+				stateSet[s] = true
+			}
 
-	// --- Validate alphabet ---
-	alphaSet := make(map[string]bool, len(alphabet))
-	for _, a := range alphabet {
-		alphaSet[a] = true
-	}
+			// --- Validate alphabet ---
+			alphaSet := make(map[string]bool, len(alphabet))
+			for _, a := range alphabet {
+				alphaSet[a] = true
+			}
 
-	// --- Validate initial state ---
-	if !stateSet[initial] {
-		panic(fmt.Sprintf(
-			"statemachine: initial state %q is not in the states set",
-			initial,
-		))
-	}
-
-	// --- Validate accepting states ---
-	acceptSet := make(map[string]bool, len(accepting))
-	for _, a := range accepting {
-		if !stateSet[a] {
-			panic(fmt.Sprintf(
-				"statemachine: accepting state %q is not in the states set",
-				a,
-			))
-		}
-		acceptSet[a] = true
-	}
-
-	// --- Validate transitions ---
-	// Every transition must go FROM a known state ON a known event TO a known state.
-	for key, target := range transitions {
-		source, event := key[0], key[1]
-		if !stateSet[source] {
-			panic(fmt.Sprintf(
-				"statemachine: transition source %q is not in the states set",
-				source,
-			))
-		}
-		if !alphaSet[event] {
-			panic(fmt.Sprintf(
-				"statemachine: transition event %q is not in the alphabet",
-				event,
-			))
-		}
-		if !stateSet[target] {
-			panic(fmt.Sprintf(
-				"statemachine: transition target %q (from (%s, %s)) is not in the states set",
-				target, source, event,
-			))
-		}
-	}
-
-	// --- Validate actions ---
-	if actions != nil {
-		for key := range actions {
-			if _, ok := transitions[key]; !ok {
+			// --- Validate initial state ---
+			if !stateSet[initial] {
 				panic(fmt.Sprintf(
-					"statemachine: action defined for (%s, %s) but no transition exists for that pair",
-					key[0], key[1],
+					"statemachine: initial state %q is not in the states set",
+					initial,
 				))
 			}
-		}
-	}
 
-	// Copy the transitions map to avoid aliasing
-	trans := make(map[[2]string]string, len(transitions))
-	for k, v := range transitions {
-		trans[k] = v
-	}
+			// --- Validate accepting states ---
+			acceptSet := make(map[string]bool, len(accepting))
+			for _, a := range accepting {
+				if !stateSet[a] {
+					panic(fmt.Sprintf(
+						"statemachine: accepting state %q is not in the states set",
+						a,
+					))
+				}
+				acceptSet[a] = true
+			}
 
-	acts := make(map[[2]string]Action)
-	if actions != nil {
-		for k, v := range actions {
-			acts[k] = v
-		}
-	}
+			// --- Validate transitions ---
+			// Every transition must go FROM a known state ON a known event TO a known state.
+			for key, target := range transitions {
+				source, event := key[0], key[1]
+				if !stateSet[source] {
+					panic(fmt.Sprintf(
+						"statemachine: transition source %q is not in the states set",
+						source,
+					))
+				}
+				if !alphaSet[event] {
+					panic(fmt.Sprintf(
+						"statemachine: transition event %q is not in the alphabet",
+						event,
+					))
+				}
+				if !stateSet[target] {
+					panic(fmt.Sprintf(
+						"statemachine: transition target %q (from (%s, %s)) is not in the states set",
+						target, source, event,
+					))
+				}
+			}
 
-	// --- Build internal graph representation ---
-	//
-	// We build a LabeledGraph from states and transitions so that
-	// structural queries like ReachableStates() can delegate to the
-	// graph's TransitiveClosure algorithm instead of hand-rolling BFS.
-	// Self-loops are allowed because an FSM state can transition to itself.
-	g := directedgraph.NewLabeledGraphAllowSelfLoops()
-	for s := range stateSet {
-		g.AddNode(s)
-	}
-	for key, target := range trans {
-		source, event := key[0], key[1]
-		g.AddEdge(source, target, event)
-	}
+			// --- Validate actions ---
+			if actions != nil {
+				for key := range actions {
+					if _, ok := transitions[key]; !ok {
+						panic(fmt.Sprintf(
+							"statemachine: action defined for (%s, %s) but no transition exists for that pair",
+							key[0], key[1],
+						))
+					}
+				}
+			}
 
-	return &DFA{
-		states:      stateSet,
-		alphabet:    alphaSet,
-		transitions: trans,
-		initial:     initial,
-		accepting:   acceptSet,
-		actions:     acts,
-		graph:       g,
-		current:     initial,
-		trace:       nil,
-	}
+			// Copy the transitions map to avoid aliasing
+			trans := make(map[[2]string]string, len(transitions))
+			for k, v := range transitions {
+				trans[k] = v
+			}
+
+			acts := make(map[[2]string]Action)
+			if actions != nil {
+				for k, v := range actions {
+					acts[k] = v
+				}
+			}
+
+			// --- Build internal graph representation ---
+			//
+			// We build a LabeledGraph from states and transitions so that
+			// structural queries like ReachableStates() can delegate to the
+			// graph's TransitiveClosure algorithm instead of hand-rolling BFS.
+			// Self-loops are allowed because an FSM state can transition to itself.
+			g := directedgraph.NewLabeledGraphAllowSelfLoops()
+			for s := range stateSet {
+				g.AddNode(s)
+			}
+			for key, target := range trans {
+				source, event := key[0], key[1]
+				g.AddEdge(source, target, event)
+			}
+
+			return rf.Generate(true, false, &DFA{
+				states:      stateSet,
+				alphabet:    alphaSet,
+				transitions: trans,
+				initial:     initial,
+				accepting:   acceptSet,
+				actions:     acts,
+				graph:       g,
+				current:     initial,
+				trace:       nil,
+			})
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // =========================================================================
@@ -239,42 +246,70 @@ func NewDFA(
 
 // States returns a sorted slice of all state names.
 func (d *DFA) States() []string {
-	return sortedKeys(d.states)
+	result, _ := StartNew[[]string]("state-machine.DFA.States", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, sortedKeys(d.states))
+		}).GetResult()
+	return result
 }
 
 // Alphabet returns a sorted slice of all input symbols.
 func (d *DFA) Alphabet() []string {
-	return sortedKeys(d.alphabet)
+	result, _ := StartNew[[]string]("state-machine.DFA.Alphabet", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, sortedKeys(d.alphabet))
+		}).GetResult()
+	return result
 }
 
 // Initial returns the initial state name.
 func (d *DFA) Initial() string {
-	return d.initial
+	result, _ := StartNew[string]("state-machine.DFA.Initial", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, d.initial)
+		}).GetResult()
+	return result
 }
 
 // Accepting returns a sorted slice of accepting state names.
 func (d *DFA) Accepting() []string {
-	return sortedKeys(d.accepting)
+	result, _ := StartNew[[]string]("state-machine.DFA.Accepting", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			return rf.Generate(true, false, sortedKeys(d.accepting))
+		}).GetResult()
+	return result
 }
 
 // CurrentState returns the state the machine is currently in.
 func (d *DFA) CurrentState() string {
-	return d.current
+	result, _ := StartNew[string]("state-machine.DFA.CurrentState", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, d.current)
+		}).GetResult()
+	return result
 }
 
 // Trace returns a copy of the execution trace.
 func (d *DFA) Trace() []TransitionRecord {
-	result := make([]TransitionRecord, len(d.trace))
-	copy(result, d.trace)
+	result, _ := StartNew[[]TransitionRecord]("state-machine.DFA.Trace", nil,
+		func(op *Operation[[]TransitionRecord], rf *ResultFactory[[]TransitionRecord]) *OperationResult[[]TransitionRecord] {
+			out := make([]TransitionRecord, len(d.trace))
+			copy(out, d.trace)
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
 // Transitions returns a copy of the transition map.
 func (d *DFA) Transitions() map[[2]string]string {
-	result := make(map[[2]string]string, len(d.transitions))
-	for k, v := range d.transitions {
-		result[k] = v
-	}
+	result, _ := StartNew[map[[2]string]string]("state-machine.DFA.Transitions", nil,
+		func(op *Operation[map[[2]string]string], rf *ResultFactory[map[[2]string]string]) *OperationResult[map[[2]string]string] {
+			out := make(map[[2]string]string, len(d.transitions))
+			for k, v := range d.transitions {
+				out[k] = v
+			}
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -297,43 +332,48 @@ func (d *DFA) Transitions() map[[2]string]string {
 //	m := statemachine.NewDFA(...)
 //	newState := m.Process("coin")  // returns "unlocked"
 func (d *DFA) Process(event string) string {
-	// Validate the event
-	if !d.alphabet[event] {
-		panic(fmt.Sprintf(
-			"statemachine: event %q is not in the alphabet",
-			event,
-		))
-	}
+	result, _ := StartNew[string]("state-machine.DFA.Process", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("event", event)
+			// Validate the event
+			if !d.alphabet[event] {
+				panic(fmt.Sprintf(
+					"statemachine: event %q is not in the alphabet",
+					event,
+				))
+			}
 
-	// Look up the transition
-	key := [2]string{d.current, event}
-	target, ok := d.transitions[key]
-	if !ok {
-		panic(fmt.Sprintf(
-			"statemachine: no transition defined for (state=%q, event=%q)",
-			d.current, event,
-		))
-	}
+			// Look up the transition
+			key := [2]string{d.current, event}
+			target, ok := d.transitions[key]
+			if !ok {
+				panic(fmt.Sprintf(
+					"statemachine: no transition defined for (state=%q, event=%q)",
+					d.current, event,
+				))
+			}
 
-	// Execute the action if one exists
-	actionName := ""
-	if action, exists := d.actions[key]; exists {
-		action(d.current, event, target)
-		actionName = fmt.Sprintf("%v", action)
-	}
+			// Execute the action if one exists
+			actionName := ""
+			if action, exists := d.actions[key]; exists {
+				action(d.current, event, target)
+				actionName = fmt.Sprintf("%v", action)
+			}
 
-	// Log the transition
-	record := TransitionRecord{
-		Source:     d.current,
-		Event:      event,
-		Target:     target,
-		ActionName: actionName,
-	}
-	d.trace = append(d.trace, record)
+			// Log the transition
+			record := TransitionRecord{
+				Source:     d.current,
+				Event:      event,
+				Target:     target,
+				ActionName: actionName,
+			}
+			d.trace = append(d.trace, record)
 
-	// Move to the new state
-	d.current = target
-	return target
+			// Move to the new state
+			d.current = target
+			return rf.Generate(true, false, target)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // ProcessSequence processes a sequence of inputs and returns the new trace
@@ -342,12 +382,16 @@ func (d *DFA) Process(event string) string {
 // Each input is processed in order. The machine's state is updated after
 // each input.
 func (d *DFA) ProcessSequence(events []string) []TransitionRecord {
-	traceStart := len(d.trace)
-	for _, event := range events {
-		d.Process(event)
-	}
-	result := make([]TransitionRecord, len(d.trace)-traceStart)
-	copy(result, d.trace[traceStart:])
+	result, _ := StartNew[[]TransitionRecord]("state-machine.DFA.ProcessSequence", nil,
+		func(op *Operation[[]TransitionRecord], rf *ResultFactory[[]TransitionRecord]) *OperationResult[[]TransitionRecord] {
+			traceStart := len(d.trace)
+			for _, event := range events {
+				d.Process(event)
+			}
+			out := make([]TransitionRecord, len(d.trace)-traceStart)
+			copy(out, d.trace[traceStart:])
+			return rf.Generate(true, false, out)
+		}).GetResult()
 	return result
 }
 
@@ -363,28 +407,36 @@ func (d *DFA) ProcessSequence(events []string) []TransitionRecord {
 // Returns false (does not panic) if a transition is missing — the machine
 // is considered to have "died" at that point.
 func (d *DFA) Accepts(events []string) bool {
-	state := d.initial
-	for _, event := range events {
-		if !d.alphabet[event] {
-			panic(fmt.Sprintf(
-				"statemachine: event %q is not in the alphabet",
-				event,
-			))
-		}
-		key := [2]string{state, event}
-		target, ok := d.transitions[key]
-		if !ok {
-			return false
-		}
-		state = target
-	}
-	return d.accepting[state]
+	result, _ := StartNew[bool]("state-machine.DFA.Accepts", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			state := d.initial
+			for _, event := range events {
+				if !d.alphabet[event] {
+					panic(fmt.Sprintf(
+						"statemachine: event %q is not in the alphabet",
+						event,
+					))
+				}
+				key := [2]string{state, event}
+				target, ok := d.transitions[key]
+				if !ok {
+					return rf.Generate(true, false, false)
+				}
+				state = target
+			}
+			return rf.Generate(true, false, d.accepting[state])
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 // Reset returns the machine to its initial state and clears the trace.
 func (d *DFA) Reset() {
-	d.current = d.initial
-	d.trace = nil
+	_, _ = StartNew[struct{}]("state-machine.DFA.Reset", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			d.current = d.initial
+			d.trace = nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -400,18 +452,22 @@ func (d *DFA) Reset() {
 // States that are defined but not reachable are "dead weight" — they can
 // never be entered and can be safely removed during minimization.
 func (d *DFA) ReachableStates() map[string]bool {
-	// Delegate to the internal LabeledGraph's TransitiveClosure, which
-	// performs BFS over the transition graph. TransitiveClosure returns
-	// all nodes reachable FROM the initial state (not including the
-	// initial state itself), so we add {initial} to get the full set.
-	reachable, err := d.graph.TransitiveClosure(d.initial)
-	if err != nil {
-		// This should never happen — the initial state is always a node
-		// in the graph. But if it does, fall back to just the initial state.
-		return map[string]bool{d.initial: true}
-	}
-	reachable[d.initial] = true
-	return reachable
+	result, _ := StartNew[map[string]bool]("state-machine.DFA.ReachableStates", nil,
+		func(op *Operation[map[string]bool], rf *ResultFactory[map[string]bool]) *OperationResult[map[string]bool] {
+			// Delegate to the internal LabeledGraph's TransitiveClosure, which
+			// performs BFS over the transition graph. TransitiveClosure returns
+			// all nodes reachable FROM the initial state (not including the
+			// initial state itself), so we add {initial} to get the full set.
+			reachable, err := d.graph.TransitiveClosure(d.initial)
+			if err != nil {
+				// This should never happen — the initial state is always a node
+				// in the graph. But if it does, fall back to just the initial state.
+				return rf.Generate(true, false, map[string]bool{d.initial: true})
+			}
+			reachable[d.initial] = true
+			return rf.Generate(true, false, reachable)
+		}).GetResult()
+	return result
 }
 
 // IsComplete checks if a transition is defined for every (state, input) pair.
@@ -421,14 +477,18 @@ func (d *DFA) ReachableStates() map[string]bool {
 // "dead" or "trap" state). Practical DFAs often omit transitions to save
 // space, treating missing transitions as errors.
 func (d *DFA) IsComplete() bool {
-	for s := range d.states {
-		for e := range d.alphabet {
-			if _, ok := d.transitions[[2]string{s, e}]; !ok {
-				return false
+	result, _ := StartNew[bool]("state-machine.DFA.IsComplete", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			for s := range d.states {
+				for e := range d.alphabet {
+					if _, ok := d.transitions[[2]string{s, e}]; !ok {
+						return rf.Generate(true, false, false)
+					}
+				}
 			}
-		}
-	}
-	return true
+			return rf.Generate(true, false, true)
+		}).GetResult()
+	return result
 }
 
 // Validate checks for common issues and returns a list of warnings.
@@ -440,49 +500,53 @@ func (d *DFA) IsComplete() bool {
 //
 // Returns an empty slice if no issues found.
 func (d *DFA) Validate() []string {
-	var warnings []string
+	result, _ := StartNew[[]string]("state-machine.DFA.Validate", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			var warnings []string
 
-	// Check for unreachable states
-	reachable := d.ReachableStates()
-	var unreachable []string
-	for s := range d.states {
-		if !reachable[s] {
-			unreachable = append(unreachable, s)
-		}
-	}
-	if len(unreachable) > 0 {
-		sort.Strings(unreachable)
-		warnings = append(warnings, fmt.Sprintf("Unreachable states: %v", unreachable))
-	}
-
-	// Check for unreachable accepting states
-	var unreachableAccepting []string
-	for s := range d.accepting {
-		if !reachable[s] {
-			unreachableAccepting = append(unreachableAccepting, s)
-		}
-	}
-	if len(unreachableAccepting) > 0 {
-		sort.Strings(unreachableAccepting)
-		warnings = append(warnings, fmt.Sprintf("Unreachable accepting states: %v", unreachableAccepting))
-	}
-
-	// Check for missing transitions
-	var missing []string
-	sortedStates := sortedKeys(d.states)
-	sortedAlpha := sortedKeys(d.alphabet)
-	for _, s := range sortedStates {
-		for _, e := range sortedAlpha {
-			if _, ok := d.transitions[[2]string{s, e}]; !ok {
-				missing = append(missing, fmt.Sprintf("(%s, %s)", s, e))
+			// Check for unreachable states
+			reachable := d.ReachableStates()
+			var unreachable []string
+			for s := range d.states {
+				if !reachable[s] {
+					unreachable = append(unreachable, s)
+				}
 			}
-		}
-	}
-	if len(missing) > 0 {
-		warnings = append(warnings, fmt.Sprintf("Missing transitions: %s", strings.Join(missing, ", ")))
-	}
+			if len(unreachable) > 0 {
+				sort.Strings(unreachable)
+				warnings = append(warnings, fmt.Sprintf("Unreachable states: %v", unreachable))
+			}
 
-	return warnings
+			// Check for unreachable accepting states
+			var unreachableAccepting []string
+			for s := range d.accepting {
+				if !reachable[s] {
+					unreachableAccepting = append(unreachableAccepting, s)
+				}
+			}
+			if len(unreachableAccepting) > 0 {
+				sort.Strings(unreachableAccepting)
+				warnings = append(warnings, fmt.Sprintf("Unreachable accepting states: %v", unreachableAccepting))
+			}
+
+			// Check for missing transitions
+			var missing []string
+			sortedStates := sortedKeys(d.states)
+			sortedAlpha := sortedKeys(d.alphabet)
+			for _, s := range sortedStates {
+				for _, e := range sortedAlpha {
+					if _, ok := d.transitions[[2]string{s, e}]; !ok {
+						missing = append(missing, fmt.Sprintf("(%s, %s)", s, e))
+					}
+				}
+			}
+			if len(missing) > 0 {
+				warnings = append(warnings, fmt.Sprintf("Missing transitions: %s", strings.Join(missing, ", ")))
+			}
+
+			return rf.Generate(true, false, warnings)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -499,70 +563,74 @@ func (d *DFA) Validate() []string {
 //
 //	dot -Tpng machine.dot -o machine.png
 func (d *DFA) ToDot() string {
-	var b strings.Builder
+	result, _ := StartNew[string]("state-machine.DFA.ToDot", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			var b strings.Builder
 
-	b.WriteString("digraph DFA {\n")
-	b.WriteString("    rankdir=LR;\n")
-	b.WriteString("\n")
+			b.WriteString("digraph DFA {\n")
+			b.WriteString("    rankdir=LR;\n")
+			b.WriteString("\n")
 
-	// Invisible start node
-	b.WriteString("    __start [shape=point, width=0.2];\n")
-	b.WriteString(fmt.Sprintf("    __start -> %q;\n", d.initial))
-	b.WriteString("\n")
+			// Invisible start node
+			b.WriteString("    __start [shape=point, width=0.2];\n")
+			b.WriteString(fmt.Sprintf("    __start -> %q;\n", d.initial))
+			b.WriteString("\n")
 
-	// State shapes
-	for _, state := range sortedKeys(d.states) {
-		shape := "circle"
-		if d.accepting[state] {
-			shape = "doublecircle"
-		}
-		b.WriteString(fmt.Sprintf("    %q [shape=%s];\n", state, shape))
-	}
-	b.WriteString("\n")
+			// State shapes
+			for _, state := range sortedKeys(d.states) {
+				shape := "circle"
+				if d.accepting[state] {
+					shape = "doublecircle"
+				}
+				b.WriteString(fmt.Sprintf("    %q [shape=%s];\n", state, shape))
+			}
+			b.WriteString("\n")
 
-	// Group transitions with same source and target to combine labels
-	type edgeKey struct{ source, target string }
-	edgeLabels := map[edgeKey][]string{}
+			// Group transitions with same source and target to combine labels
+			type edgeKey struct{ source, target string }
+			edgeLabels := map[edgeKey][]string{}
 
-	// Sort transition keys for deterministic output
-	var tkeys [][2]string
-	for k := range d.transitions {
-		tkeys = append(tkeys, k)
-	}
-	sort.Slice(tkeys, func(i, j int) bool {
-		if tkeys[i][0] != tkeys[j][0] {
-			return tkeys[i][0] < tkeys[j][0]
-		}
-		return tkeys[i][1] < tkeys[j][1]
-	})
+			// Sort transition keys for deterministic output
+			var tkeys [][2]string
+			for k := range d.transitions {
+				tkeys = append(tkeys, k)
+			}
+			sort.Slice(tkeys, func(i, j int) bool {
+				if tkeys[i][0] != tkeys[j][0] {
+					return tkeys[i][0] < tkeys[j][0]
+				}
+				return tkeys[i][1] < tkeys[j][1]
+			})
 
-	for _, k := range tkeys {
-		target := d.transitions[k]
-		ek := edgeKey{k[0], target}
-		edgeLabels[ek] = append(edgeLabels[ek], k[1])
-	}
+			for _, k := range tkeys {
+				target := d.transitions[k]
+				ek := edgeKey{k[0], target}
+				edgeLabels[ek] = append(edgeLabels[ek], k[1])
+			}
 
-	// Sort edge keys for deterministic output
-	var ekeys []edgeKey
-	for k := range edgeLabels {
-		ekeys = append(ekeys, k)
-	}
-	sort.Slice(ekeys, func(i, j int) bool {
-		if ekeys[i].source != ekeys[j].source {
-			return ekeys[i].source < ekeys[j].source
-		}
-		return ekeys[i].target < ekeys[j].target
-	})
+			// Sort edge keys for deterministic output
+			var ekeys []edgeKey
+			for k := range edgeLabels {
+				ekeys = append(ekeys, k)
+			}
+			sort.Slice(ekeys, func(i, j int) bool {
+				if ekeys[i].source != ekeys[j].source {
+					return ekeys[i].source < ekeys[j].source
+				}
+				return ekeys[i].target < ekeys[j].target
+			})
 
-	for _, ek := range ekeys {
-		labels := edgeLabels[ek]
-		sort.Strings(labels)
-		label := strings.Join(labels, ", ")
-		b.WriteString(fmt.Sprintf("    %q -> %q [label=%q];\n", ek.source, ek.target, label))
-	}
+			for _, ek := range ekeys {
+				labels := edgeLabels[ek]
+				sort.Strings(labels)
+				label := strings.Join(labels, ", ")
+				b.WriteString(fmt.Sprintf("    %q -> %q [label=%q];\n", ek.source, ek.target, label))
+			}
 
-	b.WriteString("}")
-	return b.String()
+			b.WriteString("}")
+			return rf.Generate(true, false, b.String())
+		}).GetResult()
+	return result
 }
 
 // ToAscii returns an ASCII transition table.
@@ -576,78 +644,82 @@ func (d *DFA) ToDot() string {
 //
 // Accepting states are marked with (*). The initial state is marked with (>).
 func (d *DFA) ToAscii() string {
-	sortedEvents := sortedKeys(d.alphabet)
-	sortedStates := sortedKeys(d.states)
+	result, _ := StartNew[string]("state-machine.DFA.ToAscii", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			sortedEvents := sortedKeys(d.alphabet)
+			sortedStates := sortedKeys(d.states)
 
-	// Calculate column widths
-	stateWidth := 0
-	for _, s := range sortedStates {
-		w := len(s) + 4 // +4 for markers like ">*"
-		if w > stateWidth {
-			stateWidth = w
-		}
-	}
-
-	eventWidth := 5 // minimum
-	for _, e := range sortedEvents {
-		if len(e) > eventWidth {
-			eventWidth = len(e)
-		}
-	}
-	for _, s := range sortedStates {
-		for _, e := range sortedEvents {
-			target, ok := d.transitions[[2]string{s, e}]
-			if ok && len(target) > eventWidth {
-				eventWidth = len(target)
+			// Calculate column widths
+			stateWidth := 0
+			for _, s := range sortedStates {
+				w := len(s) + 4 // +4 for markers like ">*"
+				if w > stateWidth {
+					stateWidth = w
+				}
 			}
-		}
-	}
 
-	var lines []string
-
-	// Header row
-	header := strings.Repeat(" ", stateWidth) + "|"
-	for _, event := range sortedEvents {
-		header += fmt.Sprintf(" %-*s |", eventWidth, event)
-	}
-	lines = append(lines, header)
-
-	// Separator
-	sep := strings.Repeat("-", stateWidth) + "+"
-	for range sortedEvents {
-		sep += strings.Repeat("-", eventWidth+2) + "+"
-	}
-	sep = sep[:len(sep)-1] // remove trailing +
-	lines = append(lines, sep)
-
-	// Data rows
-	for _, state := range sortedStates {
-		markers := ""
-		if state == d.initial {
-			markers += ">"
-		}
-		if d.accepting[state] {
-			markers += "*"
-		}
-		var label string
-		if markers != "" {
-			label = markers + " " + state
-		} else {
-			label = "  " + state
-		}
-
-		row := fmt.Sprintf("%-*s|", stateWidth, label)
-		for _, event := range sortedEvents {
-			target := "\u2014" // em-dash
-			if t, ok := d.transitions[[2]string{state, event}]; ok {
-				target = t
+			eventWidth := 5 // minimum
+			for _, e := range sortedEvents {
+				if len(e) > eventWidth {
+					eventWidth = len(e)
+				}
 			}
-			row += fmt.Sprintf(" %-*s |", eventWidth, target)
-		}
-		lines = append(lines, row)
-	}
+			for _, s := range sortedStates {
+				for _, e := range sortedEvents {
+					target, ok := d.transitions[[2]string{s, e}]
+					if ok && len(target) > eventWidth {
+						eventWidth = len(target)
+					}
+				}
+			}
 
-	return strings.Join(lines, "\n")
+			var lines []string
+
+			// Header row
+			header := strings.Repeat(" ", stateWidth) + "|"
+			for _, event := range sortedEvents {
+				header += fmt.Sprintf(" %-*s |", eventWidth, event)
+			}
+			lines = append(lines, header)
+
+			// Separator
+			sep := strings.Repeat("-", stateWidth) + "+"
+			for range sortedEvents {
+				sep += strings.Repeat("-", eventWidth+2) + "+"
+			}
+			sep = sep[:len(sep)-1] // remove trailing +
+			lines = append(lines, sep)
+
+			// Data rows
+			for _, state := range sortedStates {
+				markers := ""
+				if state == d.initial {
+					markers += ">"
+				}
+				if d.accepting[state] {
+					markers += "*"
+				}
+				var label string
+				if markers != "" {
+					label = markers + " " + state
+				} else {
+					label = "  " + state
+				}
+
+				row := fmt.Sprintf("%-*s|", stateWidth, label)
+				for _, event := range sortedEvents {
+					target := "\u2014" // em-dash
+					if t, ok := d.transitions[[2]string{state, event}]; ok {
+						target = t
+					}
+					row += fmt.Sprintf(" %-*s |", eventWidth, target)
+				}
+				lines = append(lines, row)
+			}
+
+			return rf.Generate(true, false, strings.Join(lines, "\n"))
+		}).GetResult()
+	return result
 }
 
 // ToTable returns the transition table as a list of rows.
@@ -656,28 +728,32 @@ func (d *DFA) ToAscii() string {
 // Subsequent rows: [state_name, target1, target2, ...].
 // Missing transitions are represented as "\u2014" (em-dash).
 func (d *DFA) ToTable() [][]string {
-	sortedEvents := sortedKeys(d.alphabet)
-	sortedStates := sortedKeys(d.states)
+	result, _ := StartNew[[][]string]("state-machine.DFA.ToTable", nil,
+		func(op *Operation[[][]string], rf *ResultFactory[[][]string]) *OperationResult[[][]string] {
+			sortedEvents := sortedKeys(d.alphabet)
+			sortedStates := sortedKeys(d.states)
 
-	var rows [][]string
-	header := make([]string, 0, len(sortedEvents)+1)
-	header = append(header, "State")
-	header = append(header, sortedEvents...)
-	rows = append(rows, header)
+			var rows [][]string
+			header := make([]string, 0, len(sortedEvents)+1)
+			header = append(header, "State")
+			header = append(header, sortedEvents...)
+			rows = append(rows, header)
 
-	for _, state := range sortedStates {
-		row := []string{state}
-		for _, event := range sortedEvents {
-			target := "\u2014"
-			if t, ok := d.transitions[[2]string{state, event}]; ok {
-				target = t
+			for _, state := range sortedStates {
+				row := []string{state}
+				for _, event := range sortedEvents {
+					target := "\u2014"
+					if t, ok := d.transitions[[2]string{state, event}]; ok {
+						target = t
+					}
+					row = append(row, target)
+				}
+				rows = append(rows, row)
 			}
-			row = append(row, target)
-		}
-		rows = append(rows, row)
-	}
 
-	return rows
+			return rf.Generate(true, false, rows)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

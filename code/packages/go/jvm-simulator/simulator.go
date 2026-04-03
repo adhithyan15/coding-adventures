@@ -1,7 +1,7 @@
 // Package jvmsimulator provides a stack-based virtual machine explicitly bound by Typed operations.
-// 
+//
 // === Stack machine with typed opcodes ===
-// 
+//
 // Like WASM, the JVM is a stack-based machine. But the JVM is typed.
 // Where conventional VMs have a generic ADD instruction, the JVM forces variable integrity:
 //     iadd          <-- integer add
@@ -62,54 +62,72 @@ type JVMSimulator struct {
 }
 
 func NewJVMSimulator() *JVMSimulator {
-	return &JVMSimulator{
-		numLocals: 16,
-		Locals:    make([]*int, 16),
-	}
+	result, _ := StartNew[*JVMSimulator]("jvm-simulator.NewJVMSimulator", nil,
+		func(op *Operation[*JVMSimulator], rf *ResultFactory[*JVMSimulator]) *OperationResult[*JVMSimulator] {
+			return rf.Generate(true, false, &JVMSimulator{
+				numLocals: 16,
+				Locals:    make([]*int, 16),
+			})
+		}).GetResult()
+	return result
 }
 
 func (s *JVMSimulator) Load(bytecode []byte, constants []interface{}, numLocals int) {
-	s.bytecode = bytecode
-	if constants == nil {
-		s.Constants = []interface{}{}
-	} else {
-		s.Constants = constants
-	}
-	s.numLocals = numLocals
-	s.Stack = []int{}
-	s.Locals = make([]*int, numLocals)
-	s.PC = 0
-	s.Halted = false
-	s.ReturnValue = nil
+	_, _ = StartNew[struct{}]("jvm-simulator.JVMSimulator.Load", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("numLocals", numLocals)
+			s.bytecode = bytecode
+			if constants == nil {
+				s.Constants = []interface{}{}
+			} else {
+				s.Constants = constants
+			}
+			s.numLocals = numLocals
+			s.Stack = []int{}
+			s.Locals = make([]*int, numLocals)
+			s.PC = 0
+			s.Halted = false
+			s.ReturnValue = nil
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 func (s *JVMSimulator) Step() JVMTrace {
-	if s.Halted {
-		panic("JVM simulator has halted")
-	}
+	result, _ := StartNew[JVMTrace]("jvm-simulator.JVMSimulator.Step", JVMTrace{},
+		func(op *Operation[JVMTrace], rf *ResultFactory[JVMTrace]) *OperationResult[JVMTrace] {
+			if s.Halted {
+				panic("JVM simulator has halted")
+			}
 
-	pc := s.PC
-	if pc >= len(s.bytecode) {
-		panic(fmt.Sprintf("PC (%d) past end of bytecode", pc))
-	}
+			pc := s.PC
+			if pc >= len(s.bytecode) {
+				panic(fmt.Sprintf("PC (%d) past end of bytecode", pc))
+			}
 
-	stackBefore := make([]int, len(s.Stack))
-	copy(stackBefore, s.Stack)
+			stackBefore := make([]int, len(s.Stack))
+			copy(stackBefore, s.Stack)
 
-	opcodeByte := s.bytecode[pc]
+			opcodeByte := s.bytecode[pc]
 
-	return s.executeOpcode(opcodeByte, stackBefore, pc)
+			return rf.Generate(true, false, s.executeOpcode(opcodeByte, stackBefore, pc))
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 func (s *JVMSimulator) Run(maxSteps int) []JVMTrace {
-	var traces []JVMTrace
-	for i := 0; i < maxSteps; i++ {
-		if s.Halted {
-			break
-		}
-		traces = append(traces, s.Step())
-	}
-	return traces
+	result, _ := StartNew[[]JVMTrace]("jvm-simulator.JVMSimulator.Run", nil,
+		func(op *Operation[[]JVMTrace], rf *ResultFactory[[]JVMTrace]) *OperationResult[[]JVMTrace] {
+			op.AddProperty("maxSteps", maxSteps)
+			var traces []JVMTrace
+			for i := 0; i < maxSteps; i++ {
+				if s.Halted {
+					break
+				}
+				traces = append(traces, s.Step())
+			}
+			return rf.Generate(true, false, traces)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }
 
 func (s *JVMSimulator) copyLocals() []*int {
@@ -305,49 +323,69 @@ func (s *JVMSimulator) doIfIcmp(pc int, mnemonic string, stackBefore []int, op f
 
 // Bytecode Assembly Generators
 func EncodeIconst(n int) []byte {
-	if n >= 0 && n <= 5 {
-		return []byte{byte(OpIconst0 + n)}
-	}
-	if n >= -128 && n <= 127 {
-		raw := n
-		if n < 0 {
-			raw += 256
-		}
-		return []byte{OpBipush, byte(raw)}
-	}
-	panic("Out of range")
+	result, _ := StartNew[[]byte]("jvm-simulator.EncodeIconst", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("n", n)
+			if n >= 0 && n <= 5 {
+				return rf.Generate(true, false, []byte{byte(OpIconst0 + n)})
+			}
+			if n >= -128 && n <= 127 {
+				raw := n
+				if n < 0 {
+					raw += 256
+				}
+				return rf.Generate(true, false, []byte{OpBipush, byte(raw)})
+			}
+			panic("Out of range")
+		}).GetResult()
+	return result
 }
 
 func EncodeIstore(slot int) []byte {
-	if slot >= 0 && slot <= 3 {
-		return []byte{byte(OpIstore0 + slot)}
-	}
-	return []byte{OpIstore, byte(slot)}
+	result, _ := StartNew[[]byte]("jvm-simulator.EncodeIstore", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("slot", slot)
+			if slot >= 0 && slot <= 3 {
+				return rf.Generate(true, false, []byte{byte(OpIstore0 + slot)})
+			}
+			return rf.Generate(true, false, []byte{OpIstore, byte(slot)})
+		}).GetResult()
+	return result
 }
 
 func EncodeIload(slot int) []byte {
-	if slot >= 0 && slot <= 3 {
-		return []byte{byte(OpIload0 + slot)}
-	}
-	return []byte{OpIload, byte(slot)}
+	result, _ := StartNew[[]byte]("jvm-simulator.EncodeIload", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("slot", slot)
+			if slot >= 0 && slot <= 3 {
+				return rf.Generate(true, false, []byte{byte(OpIload0 + slot)})
+			}
+			return rf.Generate(true, false, []byte{OpIload, byte(slot)})
+		}).GetResult()
+	return result
 }
 
 type Instr struct {
 	Opcode byte
 	Params []int
 }
+
 func AssembleJvm(instructions []Instr) []byte {
-	var res []byte
-	for _, inst := range instructions {
-		res = append(res, inst.Opcode)
-		switch inst.Opcode {
-		case OpBipush, OpIload, OpIstore, OpLdc:
-			res = append(res, byte(inst.Params[0]))
-		case OpGoto, OpIfIcmpeq, OpIfIcmpgt:
-			off := inst.Params[0]
-			raw := uint16(off)
-			res = append(res, byte((raw>>8)&0xFF), byte(raw&0xFF))
-		}
-	}
-	return res
+	result, _ := StartNew[[]byte]("jvm-simulator.AssembleJvm", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			var res []byte
+			for _, inst := range instructions {
+				res = append(res, inst.Opcode)
+				switch inst.Opcode {
+				case OpBipush, OpIload, OpIstore, OpLdc:
+					res = append(res, byte(inst.Params[0]))
+				case OpGoto, OpIfIcmpeq, OpIfIcmpgt:
+					off := inst.Params[0]
+					raw := uint16(off)
+					res = append(res, byte((raw>>8)&0xFF), byte(raw&0xFF))
+				}
+			}
+			return rf.Generate(true, false, res)
+		}).GetResult()
+	return result
 }

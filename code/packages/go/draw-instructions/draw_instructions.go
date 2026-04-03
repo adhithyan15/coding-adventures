@@ -8,6 +8,13 @@
 //   - Code 39 decides where the bars go
 //   - this package provides generic rectangles, text, and groups
 //   - an SVG backend can then serialize the scene without knowing barcode rules
+//
+// # Operations
+//
+// Every public function is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery. This
+// package declares zero OS capabilities, so no op.File / op.Net
+// namespace fields are available inside callbacks.
 package drawinstructions
 
 const Version = "0.1.0"
@@ -101,72 +108,117 @@ type Renderer[T any] interface {
 }
 
 func DrawRect(x, y, width, height int, fill string, metadata Metadata) DrawRectInstruction {
-	if fill == "" {
-		fill = "#000000"
-	}
-	if metadata == nil {
-		metadata = Metadata{}
-	}
-	return DrawRectInstruction{X: x, Y: y, Width: width, Height: height, Fill: fill, Metadata: metadata}
+	result, _ := StartNew[DrawRectInstruction]("draw-instructions.DrawRect", DrawRectInstruction{},
+		func(op *Operation[DrawRectInstruction], rf *ResultFactory[DrawRectInstruction]) *OperationResult[DrawRectInstruction] {
+			op.AddProperty("x", x)
+			op.AddProperty("y", y)
+			op.AddProperty("width", width)
+			op.AddProperty("height", height)
+			op.AddProperty("fill", fill)
+			if fill == "" {
+				fill = "#000000"
+			}
+			if metadata == nil {
+				metadata = Metadata{}
+			}
+			return rf.Generate(true, false, DrawRectInstruction{X: x, Y: y, Width: width, Height: height, Fill: fill, Metadata: metadata})
+		}).GetResult()
+	return result
 }
 
 func DrawText(x, y int, value string, metadata Metadata) DrawTextInstruction {
-	if metadata == nil {
-		metadata = Metadata{}
-	}
-	return DrawTextInstruction{
-		X: x, Y: y, Value: value, Fill: "#000000",
-		FontFamily: "monospace", FontSize: 16, Align: "middle", Metadata: metadata,
-	}
+	result, _ := StartNew[DrawTextInstruction]("draw-instructions.DrawText", DrawTextInstruction{},
+		func(op *Operation[DrawTextInstruction], rf *ResultFactory[DrawTextInstruction]) *OperationResult[DrawTextInstruction] {
+			op.AddProperty("x", x)
+			op.AddProperty("y", y)
+			op.AddProperty("value", value)
+			if metadata == nil {
+				metadata = Metadata{}
+			}
+			return rf.Generate(true, false, DrawTextInstruction{
+				X: x, Y: y, Value: value, Fill: "#000000",
+				FontFamily: "monospace", FontSize: 16, Align: "middle", Metadata: metadata,
+			})
+		}).GetResult()
+	return result
 }
 
 func DrawGroup(children []DrawInstruction, metadata Metadata) DrawGroupInstruction {
-	if metadata == nil {
-		metadata = Metadata{}
-	}
-	return DrawGroupInstruction{Children: children, Metadata: metadata}
+	result, _ := StartNew[DrawGroupInstruction]("draw-instructions.DrawGroup", DrawGroupInstruction{},
+		func(op *Operation[DrawGroupInstruction], rf *ResultFactory[DrawGroupInstruction]) *OperationResult[DrawGroupInstruction] {
+			if metadata == nil {
+				metadata = Metadata{}
+			}
+			return rf.Generate(true, false, DrawGroupInstruction{Children: children, Metadata: metadata})
+		}).GetResult()
+	return result
 }
 
 // DrawLine creates a line segment from (x1,y1) to (x2,y2).
 // Stroke defaults to black and StrokeWidth defaults to 1 when omitted.
 func DrawLine(x1, y1, x2, y2 float64, stroke string, strokeWidth float64, metadata Metadata) DrawLineInstruction {
-	if stroke == "" {
-		stroke = "#000000"
-	}
-	if strokeWidth == 0 {
-		strokeWidth = 1
-	}
-	if metadata == nil {
-		metadata = Metadata{}
-	}
-	return DrawLineInstruction{
-		X1: x1, Y1: y1, X2: x2, Y2: y2,
-		Stroke: stroke, StrokeWidth: strokeWidth, Metadata: metadata,
-	}
+	result, _ := StartNew[DrawLineInstruction]("draw-instructions.DrawLine", DrawLineInstruction{},
+		func(op *Operation[DrawLineInstruction], rf *ResultFactory[DrawLineInstruction]) *OperationResult[DrawLineInstruction] {
+			op.AddProperty("x1", x1)
+			op.AddProperty("y1", y1)
+			op.AddProperty("x2", x2)
+			op.AddProperty("y2", y2)
+			op.AddProperty("stroke", stroke)
+			op.AddProperty("strokeWidth", strokeWidth)
+			if stroke == "" {
+				stroke = "#000000"
+			}
+			if strokeWidth == 0 {
+				strokeWidth = 1
+			}
+			if metadata == nil {
+				metadata = Metadata{}
+			}
+			return rf.Generate(true, false, DrawLineInstruction{
+				X1: x1, Y1: y1, X2: x2, Y2: y2,
+				Stroke: stroke, StrokeWidth: strokeWidth, Metadata: metadata,
+			})
+		}).GetResult()
+	return result
 }
 
 // DrawClipRegion creates a clipping rectangle that masks its children.
 // The name avoids collision with the DrawClipInstruction struct.
 func DrawClipRegion(x, y, width, height float64, children []DrawInstruction, metadata Metadata) DrawClipInstruction {
-	if metadata == nil {
-		metadata = Metadata{}
-	}
-	return DrawClipInstruction{
-		X: x, Y: y, Width: width, Height: height,
-		Children: children, Metadata: metadata,
-	}
+	result, _ := StartNew[DrawClipInstruction]("draw-instructions.DrawClipRegion", DrawClipInstruction{},
+		func(op *Operation[DrawClipInstruction], rf *ResultFactory[DrawClipInstruction]) *OperationResult[DrawClipInstruction] {
+			op.AddProperty("x", x)
+			op.AddProperty("y", y)
+			op.AddProperty("width", width)
+			op.AddProperty("height", height)
+			if metadata == nil {
+				metadata = Metadata{}
+			}
+			return rf.Generate(true, false, DrawClipInstruction{
+				X: x, Y: y, Width: width, Height: height,
+				Children: children, Metadata: metadata,
+			})
+		}).GetResult()
+	return result
 }
 
 func CreateScene(width, height int, instructions []DrawInstruction, background string, metadata Metadata) DrawScene {
-	if background == "" {
-		background = "#ffffff"
-	}
-	if metadata == nil {
-		metadata = Metadata{}
-	}
-	return DrawScene{
-		Width: width, Height: height, Background: background, Instructions: instructions, Metadata: metadata,
-	}
+	result, _ := StartNew[DrawScene]("draw-instructions.CreateScene", DrawScene{},
+		func(op *Operation[DrawScene], rf *ResultFactory[DrawScene]) *OperationResult[DrawScene] {
+			op.AddProperty("width", width)
+			op.AddProperty("height", height)
+			op.AddProperty("background", background)
+			if background == "" {
+				background = "#ffffff"
+			}
+			if metadata == nil {
+				metadata = Metadata{}
+			}
+			return rf.Generate(true, false, DrawScene{
+				Width: width, Height: height, Background: background, Instructions: instructions, Metadata: metadata,
+			})
+		}).GetResult()
+	return result
 }
 
 func RenderWith[T any](scene DrawScene, renderer Renderer[T]) T {

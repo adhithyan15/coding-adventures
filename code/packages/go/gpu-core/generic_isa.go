@@ -56,7 +56,11 @@ type GenericISA struct{}
 
 // Name returns the ISA identifier.
 func (g GenericISA) Name() string {
-	return "Generic"
+	result, _ := StartNew[string]("gpu-core.GenericISA.Name", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "Generic")
+		}).GetResult()
+	return result
 }
 
 // Execute executes a single instruction.
@@ -65,54 +69,60 @@ func (g GenericISA) Name() string {
 // their implementations. Each case reads operands, performs the operation,
 // writes results, and returns a trace description.
 func (g GenericISA) Execute(inst Instruction, regs *FPRegisterFile, mem *LocalMemory) ExecuteResult {
-	switch inst.Op {
-	// --- Floating-point arithmetic ---
-	case OpFADD:
-		return g.execFadd(inst, regs)
-	case OpFSUB:
-		return g.execFsub(inst, regs)
-	case OpFMUL:
-		return g.execFmul(inst, regs)
-	case OpFFMA:
-		return g.execFfma(inst, regs)
-	case OpFNEG:
-		return g.execFneg(inst, regs)
-	case OpFABS:
-		return g.execFabs(inst, regs)
+	result, _ := StartNew[ExecuteResult]("gpu-core.GenericISA.Execute", ExecuteResult{},
+		func(op *Operation[ExecuteResult], rf *ResultFactory[ExecuteResult]) *OperationResult[ExecuteResult] {
+			var execResult ExecuteResult
+			switch inst.Op {
+			// --- Floating-point arithmetic ---
+			case OpFADD:
+				execResult = g.execFadd(inst, regs)
+			case OpFSUB:
+				execResult = g.execFsub(inst, regs)
+			case OpFMUL:
+				execResult = g.execFmul(inst, regs)
+			case OpFFMA:
+				execResult = g.execFfma(inst, regs)
+			case OpFNEG:
+				execResult = g.execFneg(inst, regs)
+			case OpFABS:
+				execResult = g.execFabs(inst, regs)
 
-	// --- Memory ---
-	case OpLOAD:
-		return g.execLoad(inst, regs, mem)
-	case OpSTORE:
-		return g.execStore(inst, regs, mem)
+			// --- Memory ---
+			case OpLOAD:
+				execResult = g.execLoad(inst, regs, mem)
+			case OpSTORE:
+				execResult = g.execStore(inst, regs, mem)
 
-	// --- Data movement ---
-	case OpMOV:
-		return g.execMov(inst, regs)
-	case OpLIMM:
-		return g.execLimm(inst, regs)
+			// --- Data movement ---
+			case OpMOV:
+				execResult = g.execMov(inst, regs)
+			case OpLIMM:
+				execResult = g.execLimm(inst, regs)
 
-	// --- Control flow ---
-	case OpBEQ:
-		return g.execBeq(inst, regs)
-	case OpBLT:
-		return g.execBlt(inst, regs)
-	case OpBNE:
-		return g.execBne(inst, regs)
-	case OpJMP:
-		return g.execJmp(inst)
-	case OpNOP:
-		return NewExecuteResult("No operation")
-	case OpHALT:
-		return ExecuteResult{Description: "Halted", NextPCOffset: 1, Halted: true}
+			// --- Control flow ---
+			case OpBEQ:
+				execResult = g.execBeq(inst, regs)
+			case OpBLT:
+				execResult = g.execBlt(inst, regs)
+			case OpBNE:
+				execResult = g.execBne(inst, regs)
+			case OpJMP:
+				execResult = g.execJmp(inst)
+			case OpNOP:
+				execResult = NewExecuteResult("No operation")
+			case OpHALT:
+				execResult = ExecuteResult{Description: "Halted", NextPCOffset: 1, Halted: true}
 
-	default:
-		// This should never happen if all opcodes are covered.
-		return ExecuteResult{
-			Description:  fmt.Sprintf("Unknown opcode: %s", inst.Op),
-			NextPCOffset: 1,
-		}
-	}
+			default:
+				// This should never happen if all opcodes are covered.
+				execResult = ExecuteResult{
+					Description:  fmt.Sprintf("Unknown opcode: %s", inst.Op),
+					NextPCOffset: 1,
+				}
+			}
+			return rf.Generate(true, false, execResult)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================

@@ -26,48 +26,53 @@ var entityPattern = regexp.MustCompile(`&(?:#[xX][0-9a-fA-F]{1,6}|#[0-9]{1,7}|[a
 // named entity + ;". The decoded character should appear in the output, not
 // the raw reference. So &amp; in Markdown source becomes & in the rendered text.
 func DecodeEntity(ref string) string {
-	if !strings.HasPrefix(ref, "&") || !strings.HasSuffix(ref, ";") {
-		return ref
-	}
-
-	inner := ref[1 : len(ref)-1] // strip & and ;
-
-	// Numeric reference: &#NNN; or &#xHHH;
-	if strings.HasPrefix(inner, "#") {
-		rest := inner[1:]
-		var codePoint rune
-
-		if strings.HasPrefix(rest, "x") || strings.HasPrefix(rest, "X") {
-			// Hex reference: &#xHHH;
-			var n int64
-			_, err := scanHex(rest[1:], &n)
-			if err != nil {
-				return "\uFFFD"
+	result, _ := StartNew[string]("commonmark-parser.DecodeEntity", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("ref", ref)
+			if !strings.HasPrefix(ref, "&") || !strings.HasSuffix(ref, ";") {
+				return rf.Generate(true, false, ref)
 			}
-			codePoint = rune(n)
-		} else {
-			// Decimal reference: &#NNN;
-			var n int64
-			_, err := scanDecimal(rest, &n)
-			if err != nil {
-				return "\uFFFD"
+
+			inner := ref[1 : len(ref)-1] // strip & and ;
+
+			// Numeric reference: &#NNN; or &#xHHH;
+			if strings.HasPrefix(inner, "#") {
+				rest := inner[1:]
+				var codePoint rune
+
+				if strings.HasPrefix(rest, "x") || strings.HasPrefix(rest, "X") {
+					// Hex reference: &#xHHH;
+					var n int64
+					_, err := scanHex(rest[1:], &n)
+					if err != nil {
+						return rf.Generate(true, false, "\uFFFD")
+					}
+					codePoint = rune(n)
+				} else {
+					// Decimal reference: &#NNN;
+					var n int64
+					_, err := scanDecimal(rest, &n)
+					if err != nil {
+						return rf.Generate(true, false, "\uFFFD")
+					}
+					codePoint = rune(n)
+				}
+
+				// Invalid or null code point — per CommonMark spec, replace with U+FFFD
+				if codePoint == 0 || codePoint > 0x10FFFF || !utf8.ValidRune(codePoint) {
+					return rf.Generate(true, false, "\uFFFD")
+				}
+
+				return rf.Generate(true, false, string(codePoint))
 			}
-			codePoint = rune(n)
-		}
 
-		// Invalid or null code point — per CommonMark spec, replace with U+FFFD
-		if codePoint == 0 || codePoint > 0x10FFFF || !utf8.ValidRune(codePoint) {
-			return "\uFFFD"
-		}
-
-		return string(codePoint)
-	}
-
-	// Named reference: &name;
-	if decoded, ok := namedEntities[inner]; ok {
-		return decoded
-	}
-	return ref // unrecognised — leave as-is
+			// Named reference: &name;
+			if decoded, ok := namedEntities[inner]; ok {
+				return rf.Generate(true, false, decoded)
+			}
+			return rf.Generate(true, false, ref) // unrecognised — leave as-is
+		}).GetResult()
+	return result
 }
 
 // scanHex parses a hex string and stores the result in *n.
@@ -129,11 +134,16 @@ const errBadDigit parseError = "bad digit"
 //	DecodeEntities("&#x1F600; smile")           // "😀 smile"
 //	DecodeEntities("&lt;p&gt;hello&lt;/p&gt;") // "<p>hello</p>"
 func DecodeEntities(text string) string {
-	// Fast path: no & means no entities
-	if !strings.Contains(text, "&") {
-		return text
-	}
-	return entityPattern.ReplaceAllStringFunc(text, DecodeEntity)
+	result, _ := StartNew[string]("commonmark-parser.DecodeEntities", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("text_len", len(text))
+			// Fast path: no & means no entities
+			if !strings.Contains(text, "&") {
+				return rf.Generate(true, false, text)
+			}
+			return rf.Generate(true, false, entityPattern.ReplaceAllStringFunc(text, DecodeEntity))
+		}).GetResult()
+	return result
 }
 
 // EscapeHTML encodes characters that must be escaped in HTML attribute
@@ -149,33 +159,38 @@ func DecodeEntities(text string) string {
 // Apostrophes are NOT escaped because CommonMark's reference implementation
 // uses double-quoted attributes.
 func EscapeHTML(text string) string {
-	// Fast path: scan for any of the special characters
-	needsEscape := false
-	for _, ch := range text {
-		if ch == '&' || ch == '<' || ch == '>' || ch == '"' {
-			needsEscape = true
-			break
-		}
-	}
-	if !needsEscape {
-		return text
-	}
+	result, _ := StartNew[string]("commonmark-parser.EscapeHTML", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			op.AddProperty("text_len", len(text))
+			// Fast path: scan for any of the special characters
+			needsEscape := false
+			for _, ch := range text {
+				if ch == '&' || ch == '<' || ch == '>' || ch == '"' {
+					needsEscape = true
+					break
+				}
+			}
+			if !needsEscape {
+				return rf.Generate(true, false, text)
+			}
 
-	var b strings.Builder
-	b.Grow(len(text) + 16)
-	for _, ch := range text {
-		switch ch {
-		case '&':
-			b.WriteString("&amp;")
-		case '<':
-			b.WriteString("&lt;")
-		case '>':
-			b.WriteString("&gt;")
-		case '"':
-			b.WriteString("&quot;")
-		default:
-			b.WriteRune(ch)
-		}
-	}
-	return b.String()
+			var b strings.Builder
+			b.Grow(len(text) + 16)
+			for _, ch := range text {
+				switch ch {
+				case '&':
+					b.WriteString("&amp;")
+				case '<':
+					b.WriteString("&lt;")
+				case '>':
+					b.WriteString("&gt;")
+				case '"':
+					b.WriteString("&quot;")
+				default:
+					b.WriteRune(ch)
+				}
+			}
+			return rf.Generate(true, false, b.String())
+		}).GetResult()
+	return result
 }

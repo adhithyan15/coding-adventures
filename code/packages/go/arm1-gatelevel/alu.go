@@ -41,95 +41,104 @@ type GateALUResult struct {
 //   - shifterCarry: carry from barrel shifter (0 or 1)
 //   - oldV: current overflow flag (0 or 1)
 func GateALUExecute(opcode int, a, b []int, carryIn, shifterCarry, oldV int) GateALUResult {
-	var result []int
-	var carry, overflow int
+	result, _ := StartNew[GateALUResult]("arm1-gatelevel.GateALUExecute", GateALUResult{},
+		func(op *Operation[GateALUResult], rf *ResultFactory[GateALUResult]) *OperationResult[GateALUResult] {
+			op.AddProperty("opcode", opcode)
+			op.AddProperty("carryIn", carryIn)
+			op.AddProperty("shifterCarry", shifterCarry)
+			op.AddProperty("oldV", oldV)
 
-	switch opcode {
-	// ── Logical operations ─────────────────────────────────────────────
-	// Each bit processed independently through gate functions.
-	// C flag comes from barrel shifter, V flag preserved.
+			var res []int
+			var carry, overflow int
 
-	case 0x0, 0x8: // AND, TST
-		result = bitwiseGate(a, b, gates.AND)
-		carry = shifterCarry
-		overflow = oldV
+			switch opcode {
+			// ── Logical operations ─────────────────────────────────────────────
+			// Each bit processed independently through gate functions.
+			// C flag comes from barrel shifter, V flag preserved.
 
-	case 0x1, 0x9: // EOR, TEQ
-		result = bitwiseGate(a, b, gates.XOR)
-		carry = shifterCarry
-		overflow = oldV
+			case 0x0, 0x8: // AND, TST
+				res = bitwiseGate(a, b, gates.AND)
+				carry = shifterCarry
+				overflow = oldV
 
-	case 0xC: // ORR
-		result = bitwiseGate(a, b, gates.OR)
-		carry = shifterCarry
-		overflow = oldV
+			case 0x1, 0x9: // EOR, TEQ
+				res = bitwiseGate(a, b, gates.XOR)
+				carry = shifterCarry
+				overflow = oldV
 
-	case 0xD: // MOV
-		result = make([]int, len(b))
-		copy(result, b)
-		carry = shifterCarry
-		overflow = oldV
+			case 0xC: // ORR
+				res = bitwiseGate(a, b, gates.OR)
+				carry = shifterCarry
+				overflow = oldV
 
-	case 0xE: // BIC = AND(a, NOT(b))
-		notB := bitwiseNot(b)
-		result = bitwiseGate(a, notB, gates.AND)
-		carry = shifterCarry
-		overflow = oldV
+			case 0xD: // MOV
+				res = make([]int, len(b))
+				copy(res, b)
+				carry = shifterCarry
+				overflow = oldV
 
-	case 0xF: // MVN = NOT(b)
-		result = bitwiseNot(b)
-		carry = shifterCarry
-		overflow = oldV
+			case 0xE: // BIC = AND(a, NOT(b))
+				notB := bitwiseNot(b)
+				res = bitwiseGate(a, notB, gates.AND)
+				carry = shifterCarry
+				overflow = oldV
 
-	// ── Arithmetic operations ──────────────────────────────────────────
-	// All route through the ripple-carry adder (32 full adders chained).
+			case 0xF: // MVN = NOT(b)
+				res = bitwiseNot(b)
+				carry = shifterCarry
+				overflow = oldV
 
-	case 0x4, 0xB: // ADD, CMN: A + B
-		result, carry = arithmetic.RippleCarryAdder(a, b, 0)
-		overflow = computeOverflow(a, b, result)
+			// ── Arithmetic operations ──────────────────────────────────────────
+			// All route through the ripple-carry adder (32 full adders chained).
 
-	case 0x5: // ADC: A + B + C
-		result, carry = arithmetic.RippleCarryAdder(a, b, carryIn)
-		overflow = computeOverflow(a, b, result)
+			case 0x4, 0xB: // ADD, CMN: A + B
+				res, carry = arithmetic.RippleCarryAdder(a, b, 0)
+				overflow = computeOverflow(a, b, res)
 
-	case 0x2, 0xA: // SUB, CMP: A - B = A + NOT(B) + 1
-		notB := bitwiseNot(b)
-		result, carry = arithmetic.RippleCarryAdder(a, notB, 1)
-		overflow = computeOverflow(a, notB, result)
+			case 0x5: // ADC: A + B + C
+				res, carry = arithmetic.RippleCarryAdder(a, b, carryIn)
+				overflow = computeOverflow(a, b, res)
 
-	case 0x6: // SBC: A - B - !C = A + NOT(B) + C
-		notB := bitwiseNot(b)
-		result, carry = arithmetic.RippleCarryAdder(a, notB, carryIn)
-		overflow = computeOverflow(a, notB, result)
+			case 0x2, 0xA: // SUB, CMP: A - B = A + NOT(B) + 1
+				notB := bitwiseNot(b)
+				res, carry = arithmetic.RippleCarryAdder(a, notB, 1)
+				overflow = computeOverflow(a, notB, res)
 
-	case 0x3: // RSB: B - A = B + NOT(A) + 1
-		notA := bitwiseNot(a)
-		result, carry = arithmetic.RippleCarryAdder(b, notA, 1)
-		overflow = computeOverflow(b, notA, result)
+			case 0x6: // SBC: A - B - !C = A + NOT(B) + C
+				notB := bitwiseNot(b)
+				res, carry = arithmetic.RippleCarryAdder(a, notB, carryIn)
+				overflow = computeOverflow(a, notB, res)
 
-	case 0x7: // RSC: B - A - !C = B + NOT(A) + C
-		notA := bitwiseNot(a)
-		result, carry = arithmetic.RippleCarryAdder(b, notA, carryIn)
-		overflow = computeOverflow(b, notA, result)
+			case 0x3: // RSB: B - A = B + NOT(A) + 1
+				notA := bitwiseNot(a)
+				res, carry = arithmetic.RippleCarryAdder(b, notA, 1)
+				overflow = computeOverflow(b, notA, res)
 
-	default:
-		result = make([]int, 32)
-	}
+			case 0x7: // RSC: B - A - !C = B + NOT(A) + C
+				notA := bitwiseNot(a)
+				res, carry = arithmetic.RippleCarryAdder(b, notA, carryIn)
+				overflow = computeOverflow(b, notA, res)
 
-	// Compute N and Z flags from result bits using gates
-	n := result[31] // Negative = MSB
+			default:
+				res = make([]int, 32)
+			}
 
-	// Zero flag: NOR of all 32 result bits
-	// Z = 1 only when all bits are 0
-	z := computeZero(result)
+			// Compute N and Z flags from result bits using gates
+			n := res[31] // Negative = MSB
 
-	return GateALUResult{
-		Result: result,
-		N:      n,
-		Z:      z,
-		C:      carry,
-		V:      overflow,
-	}
+			// Zero flag: NOR of all 32 result bits
+			// Z = 1 only when all bits are 0
+			z := computeZero(res)
+
+			return rf.Generate(true, false, GateALUResult{
+				Result: res,
+				N:      n,
+				Z:      z,
+				C:      carry,
+				V:      overflow,
+			})
+		}).GetResult()
+	return result
 }
 
 // bitwiseGate applies a 2-input gate function to each bit pair.

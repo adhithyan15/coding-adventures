@@ -29,22 +29,26 @@ const (
 
 // String returns a human-readable name for the boot phase.
 func (p BootPhase) String() string {
-	switch p {
-	case PhasePowerOn:
-		return "PowerOn"
-	case PhaseBIOS:
-		return "BIOS"
-	case PhaseBootloader:
-		return "Bootloader"
-	case PhaseKernelInit:
-		return "KernelInit"
-	case PhaseUserProgram:
-		return "UserProgram"
-	case PhaseIdle:
-		return "Idle"
-	default:
-		return "Unknown"
-	}
+	result, _ := StartNew[string]("system-board.BootPhase.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch p {
+			case PhasePowerOn:
+				return rf.Generate(true, false, "PowerOn")
+			case PhaseBIOS:
+				return rf.Generate(true, false, "BIOS")
+			case PhaseBootloader:
+				return rf.Generate(true, false, "Bootloader")
+			case PhaseKernelInit:
+				return rf.Generate(true, false, "KernelInit")
+			case PhaseUserProgram:
+				return rf.Generate(true, false, "UserProgram")
+			case PhaseIdle:
+				return rf.Generate(true, false, "Idle")
+			default:
+				return rf.Generate(true, false, "Unknown")
+			}
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -70,52 +74,76 @@ type BootTrace struct {
 
 // AddEvent appends a new event to the trace.
 func (t *BootTrace) AddEvent(phase BootPhase, cycle int, description string) {
-	t.Events = append(t.Events, BootEvent{
-		Phase:       phase,
-		Cycle:       cycle,
-		Description: description,
-	})
+	_, _ = StartNew[struct{}]("system-board.BootTrace.AddEvent", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("phase", phase)
+			op.AddProperty("cycle", cycle)
+			t.Events = append(t.Events, BootEvent{
+				Phase:       phase,
+				Cycle:       cycle,
+				Description: description,
+			})
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Phases returns the distinct phases that occurred, in order.
 func (t *BootTrace) Phases() []BootPhase {
-	seen := make(map[BootPhase]bool)
-	var phases []BootPhase
-	for _, e := range t.Events {
-		if !seen[e.Phase] {
-			seen[e.Phase] = true
-			phases = append(phases, e.Phase)
-		}
-	}
-	return phases
+	result, _ := StartNew[[]BootPhase]("system-board.BootTrace.Phases", nil,
+		func(op *Operation[[]BootPhase], rf *ResultFactory[[]BootPhase]) *OperationResult[[]BootPhase] {
+			seen := make(map[BootPhase]bool)
+			var phases []BootPhase
+			for _, e := range t.Events {
+				if !seen[e.Phase] {
+					seen[e.Phase] = true
+					phases = append(phases, e.Phase)
+				}
+			}
+			return rf.Generate(true, false, phases)
+		}).GetResult()
+	return result
 }
 
 // EventsInPhase returns all events belonging to the given phase.
 func (t *BootTrace) EventsInPhase(phase BootPhase) []BootEvent {
-	var result []BootEvent
-	for _, e := range t.Events {
-		if e.Phase == phase {
-			result = append(result, e)
-		}
-	}
+	result, _ := StartNew[[]BootEvent]("system-board.BootTrace.EventsInPhase", nil,
+		func(op *Operation[[]BootEvent], rf *ResultFactory[[]BootEvent]) *OperationResult[[]BootEvent] {
+			op.AddProperty("phase", phase)
+			var events []BootEvent
+			for _, e := range t.Events {
+				if e.Phase == phase {
+					events = append(events, e)
+				}
+			}
+			return rf.Generate(true, false, events)
+		}).GetResult()
 	return result
 }
 
 // TotalCycles returns the cycle count of the last event, or 0 if empty.
 func (t *BootTrace) TotalCycles() int {
-	if len(t.Events) == 0 {
-		return 0
-	}
-	return t.Events[len(t.Events)-1].Cycle
+	result, _ := StartNew[int]("system-board.BootTrace.TotalCycles", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(t.Events) == 0 {
+				return rf.Generate(true, false, 0)
+			}
+			return rf.Generate(true, false, t.Events[len(t.Events)-1].Cycle)
+		}).GetResult()
+	return result
 }
 
 // PhaseStartCycle returns the cycle at which the given phase began.
 // Returns -1 if the phase was not found.
 func (t *BootTrace) PhaseStartCycle(phase BootPhase) int {
-	for _, e := range t.Events {
-		if e.Phase == phase {
-			return e.Cycle
-		}
-	}
-	return -1
+	result, _ := StartNew[int]("system-board.BootTrace.PhaseStartCycle", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("phase", phase)
+			for _, e := range t.Events {
+				if e.Phase == phase {
+					return rf.Generate(true, false, e.Cycle)
+				}
+			}
+			return rf.Generate(true, false, -1)
+		}).GetResult()
+	return result
 }

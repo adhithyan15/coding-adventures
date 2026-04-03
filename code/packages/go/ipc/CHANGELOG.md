@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-04-02
+
+### Changed
+
+- Wrapped all public functions (`NewIPCManager`, `CreatePipe`, `GetPipe`,
+  `ClosePipeRead`, `ClosePipeWrite`, `DestroyPipe`, `CreateMessageQueue`,
+  `GetMessageQueue`, `DeleteMessageQueue`, `CreateSharedMemory`,
+  `GetSharedMemory`, `DeleteSharedMemory`, `ListPipes`, `ListMessageQueues`,
+  `ListSharedRegions`, `NewMessageQueue`, `Send`, `Receive`, `MessageCount`,
+  `IsEmpty`, `IsFull`, `NewPipe`, `Write`, `Read`, `CloseRead`, `CloseWrite`,
+  `Available`, `Space`, `IsEOF`, `Capacity`, `NewSharedMemoryRegion`,
+  `Attach`, `Detach`, `ReadAt`, `WriteAt`, `Name`, `Size`, `OwnerPID`,
+  `AttachedCount`, `IsAttached`) with the Operations system via `StartNew[T]`.
+  Public API signatures are unchanged.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

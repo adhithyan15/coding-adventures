@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions with the Operations system (`StartNew[T]`) for
+  uniform observability, tracing, and error propagation across the package.
+  Affected files: `simulator.go`, `encoding.go`, `core_adapter.go`.
+
 ## [0.2.0] - Unreleased
 
 ### Added

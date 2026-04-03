@@ -43,56 +43,60 @@ import "fmt"
 // Returns a list of error/warning strings. An empty list means the two
 // grammars are fully consistent.
 func CrossValidate(tokenGrammar *TokenGrammar, parserGrammar *ParserGrammar) []string {
-	var issues []string
+	result, _ := StartNew[[]string]("grammar-tools.CrossValidate", nil,
+		func(op *Operation[[]string], rf *ResultFactory[[]string]) *OperationResult[[]string] {
+			var issues []string
 
-	// Build the set of all token names the parser can reference.
-	// This includes both definition names and their aliases.
-	definedTokens := tokenGrammar.TokenNames()
+			// Build the set of all token names the parser can reference.
+			// This includes both definition names and their aliases.
+			definedTokens := tokenGrammar.TokenNames()
 
-	// Synthetic tokens are always valid — the lexer produces these
-	// implicitly without needing a .tokens definition:
-	//   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
-	//   INDENT/DEDENT — emitted in indentation mode
-	//   EOF — always emitted at end of input
-	definedTokens["NEWLINE"] = true
-	definedTokens["EOF"] = true
-	if tokenGrammar.Mode == "indentation" {
-		definedTokens["INDENT"] = true
-		definedTokens["DEDENT"] = true
-	}
+			// Synthetic tokens are always valid — the lexer produces these
+			// implicitly without needing a .tokens definition:
+			//   NEWLINE — emitted at bare '\n' when skip pattern excludes newlines
+			//   INDENT/DEDENT — emitted in indentation mode
+			//   EOF — always emitted at end of input
+			definedTokens["NEWLINE"] = true
+			definedTokens["EOF"] = true
+			if tokenGrammar.Mode == "indentation" {
+				definedTokens["INDENT"] = true
+				definedTokens["DEDENT"] = true
+			}
 
-	referencedTokens := parserGrammar.TokenReferences()
+			referencedTokens := parserGrammar.TokenReferences()
 
-	// --- Missing token references (errors) ---
-	// Every UPPERCASE name in the grammar must be defined in the tokens file.
-	sortedRefs := sortedKeys(referencedTokens)
-	for _, ref := range sortedRefs {
-		if !definedTokens[ref] {
-			issues = append(issues, fmt.Sprintf(
-				"Error: Grammar references token '%s' which is not defined in the tokens file",
-				ref,
-			))
-		}
-	}
+			// --- Missing token references (errors) ---
+			// Every UPPERCASE name in the grammar must be defined in the tokens file.
+			sortedRefs := sortedKeys(referencedTokens)
+			for _, ref := range sortedRefs {
+				if !definedTokens[ref] {
+					issues = append(issues, fmt.Sprintf(
+						"Error: Grammar references token '%s' which is not defined in the tokens file",
+						ref,
+					))
+				}
+			}
 
-	// --- Unused tokens (warnings) ---
-	// A definition is "used" if its name OR alias is referenced anywhere in
-	// the grammar. Aliased definitions are typically referenced by alias
-	// (e.g., STRING_DQ with alias=STRING is "used" when STRING appears in
-	// the grammar). We warn about definitions that are completely unused.
-	for _, defn := range tokenGrammar.Definitions {
-		isUsed := referencedTokens[defn.Name]
-		if defn.Alias != "" && referencedTokens[defn.Alias] {
-			isUsed = true
-		}
+			// --- Unused tokens (warnings) ---
+			// A definition is "used" if its name OR alias is referenced anywhere in
+			// the grammar. Aliased definitions are typically referenced by alias
+			// (e.g., STRING_DQ with alias=STRING is "used" when STRING appears in
+			// the grammar). We warn about definitions that are completely unused.
+			for _, defn := range tokenGrammar.Definitions {
+				isUsed := referencedTokens[defn.Name]
+				if defn.Alias != "" && referencedTokens[defn.Alias] {
+					isUsed = true
+				}
 
-		if !isUsed {
-			issues = append(issues, fmt.Sprintf(
-				"Warning: Token '%s' (line %d) is defined but never used in the grammar",
-				defn.Name, defn.LineNumber,
-			))
-		}
-	}
+				if !isUsed {
+					issues = append(issues, fmt.Sprintf(
+						"Warning: Token '%s' (line %d) is defined but never used in the grammar",
+						defn.Name, defn.LineNumber,
+					))
+				}
+			}
 
-	return issues
+			return rf.Generate(true, false, issues)
+		}).GetResult()
+	return result
 }

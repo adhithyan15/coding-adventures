@@ -1,0 +1,3 @@
+REM Prerequisite (not installed on Windows): ../cpu-pipeline
+REM Prerequisite (not installed on Windows): ../cpu-simulator
+echo Perl testing is not supported on Windows - skipping

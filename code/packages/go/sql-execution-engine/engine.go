@@ -60,25 +60,28 @@ import (
 //   - A referenced table does not exist (TableNotFoundError)
 //   - A referenced column does not exist (ColumnNotFoundError)
 func Execute(sql string, source DataSource) (*QueryResult, error) {
-	// Step 1: Parse the SQL text into an AST.
-	// The sql-parser package handles tokenization and grammar-driven parsing.
-	// The result is a *parser.ASTNode rooted at the "program" rule.
-	ast, err := sqlparser.ParseSQL(sql)
-	if err != nil {
-		return nil, fmt.Errorf("parse error: %w", err)
-	}
+	return StartNew[*QueryResult]("sql-execution-engine.Execute", nil,
+		func(op *Operation[*QueryResult], rf *ResultFactory[*QueryResult]) *OperationResult[*QueryResult] {
+			op.AddProperty("sql", sql)
+			// Step 1: Parse the SQL text into an AST.
+			ast, err := sqlparser.ParseSQL(sql)
+			if err != nil {
+				return rf.Fail(nil, fmt.Errorf("parse error: %w", err))
+			}
 
-	// Step 2: Navigate to the first statement's select_stmt node.
-	// The grammar structure is:
-	//   program → statement → select_stmt | insert_stmt | ...
-	// We dig through the wrapper nodes to find the actual statement type.
-	selectNode, err := findSelectNode(ast)
-	if err != nil {
-		return nil, err
-	}
+			// Step 2: Navigate to the first statement's select_stmt node.
+			selectNode, err := findSelectNode(ast)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
 
-	// Step 3: Execute the select statement.
-	return executeSelect(selectNode, source)
+			// Step 3: Execute the select statement.
+			result, err := executeSelect(selectNode, source)
+			if err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // ExecuteAll parses and executes all SQL statements in sql, returning one
@@ -90,36 +93,36 @@ func Execute(sql string, source DataSource) (*QueryResult, error) {
 //
 // Returns an error as soon as any statement fails.
 func ExecuteAll(sql string, source DataSource) ([]*QueryResult, error) {
-	ast, err := sqlparser.ParseSQL(sql)
-	if err != nil {
-		return nil, fmt.Errorf("parse error: %w", err)
-	}
+	return StartNew[[]*QueryResult]("sql-execution-engine.ExecuteAll", nil,
+		func(op *Operation[[]*QueryResult], rf *ResultFactory[[]*QueryResult]) *OperationResult[[]*QueryResult] {
+			op.AddProperty("sql", sql)
+			ast, err := sqlparser.ParseSQL(sql)
+			if err != nil {
+				return rf.Fail(nil, fmt.Errorf("parse error: %w", err))
+			}
 
-	// Collect all select_stmt nodes from the program's statement list.
-	// The grammar: program = statement { ";" statement } [ ";" ]
-	// So program.Children alternates between statement nodes and ";" tokens.
-	var results []*QueryResult
-	for _, child := range ast.Children {
-		stmtNode, ok := child.(*parser.ASTNode)
-		if !ok {
-			continue // skip semicolon tokens
-		}
-		if stmtNode.RuleName != "statement" {
-			continue
-		}
-		// Each statement has one child: the actual statement type.
-		selectNode, err := findSelectInStatement(stmtNode)
-		if err != nil {
-			return nil, err
-		}
-		result, err := executeSelect(selectNode, source)
-		if err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
+			var results []*QueryResult
+			for _, child := range ast.Children {
+				stmtNode, ok := child.(*parser.ASTNode)
+				if !ok {
+					continue
+				}
+				if stmtNode.RuleName != "statement" {
+					continue
+				}
+				selectNode, err := findSelectInStatement(stmtNode)
+				if err != nil {
+					return rf.Fail(nil, err)
+				}
+				result, err := executeSelect(selectNode, source)
+				if err != nil {
+					return rf.Fail(nil, err)
+				}
+				results = append(results, result)
+			}
 
-	return results, nil
+			return rf.Generate(true, false, results)
+		}).GetResult()
 }
 
 // findSelectNode navigates from a "program" root to the first "select_stmt"

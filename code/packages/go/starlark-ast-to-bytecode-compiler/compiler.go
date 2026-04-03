@@ -99,12 +99,16 @@ type StarlarkCompiler struct {
 
 // NewStarlarkCompiler creates a fresh compiler with empty state.
 func NewStarlarkCompiler() *StarlarkCompiler {
-	return &StarlarkCompiler{
-		instructions: []vm.Instruction{},
-		constants:    []interface{}{},
-		names:        []string{},
-		scopeDepth:   0,
-	}
+	result, _ := StartNew[*StarlarkCompiler]("starlark-ast-to-bytecode-compiler.NewStarlarkCompiler", nil,
+		func(op *Operation[*StarlarkCompiler], rf *ResultFactory[*StarlarkCompiler]) *OperationResult[*StarlarkCompiler] {
+			return rf.Generate(true, false, &StarlarkCompiler{
+				instructions: []vm.Instruction{},
+				constants:    []interface{}{},
+				names:        []string{},
+				scopeDepth:   0,
+			})
+		}).GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -451,36 +455,41 @@ var augmentedAssignOpMap = map[string]vm.OpCode{
 //	// code.Constants = [1, 2]
 //	// code.Names = ["x"]
 func CompileStarlark(source string) (vm.CodeObject, error) {
-	// Step 1 + 2: Lex and parse.
-	ast, err := starlarkparser.ParseStarlark(source)
-	if err != nil {
-		return vm.CodeObject{}, fmt.Errorf("parse error: %w", err)
-	}
+	return StartNew[vm.CodeObject]("starlark-ast-to-bytecode-compiler.CompileStarlark", vm.CodeObject{},
+		func(op *Operation[vm.CodeObject], rf *ResultFactory[vm.CodeObject]) *OperationResult[vm.CodeObject] {
+			op.AddProperty("sourceLen", len(source))
+			ast, err := starlarkparser.ParseStarlark(source)
+			if err != nil {
+				return rf.Fail(vm.CodeObject{}, fmt.Errorf("parse error: %w", err))
+			}
 
-	// Step 3: Compile.
-	compiler := NewStarlarkCompiler()
-	compiler.compileNode(ast)
-	compiler.emit(OpHalt)
+			compiler := NewStarlarkCompiler()
+			compiler.compileNode(ast)
+			compiler.emit(OpHalt)
 
-	return vm.CodeObject{
-		Instructions: compiler.instructions,
-		Constants:    compiler.constants,
-		Names:        compiler.names,
-	}, nil
+			return rf.Generate(true, false, vm.CodeObject{
+				Instructions: compiler.instructions,
+				Constants:    compiler.constants,
+				Names:        compiler.names,
+			})
+		}).GetResult()
 }
 
 // CompileAST compiles a pre-parsed AST into a CodeObject.
 // Useful when you already have an AST and want to skip re-parsing.
 func CompileAST(ast *parser.ASTNode) vm.CodeObject {
-	compiler := NewStarlarkCompiler()
-	compiler.compileNode(ast)
-	compiler.emit(OpHalt)
-
-	return vm.CodeObject{
-		Instructions: compiler.instructions,
-		Constants:    compiler.constants,
-		Names:        compiler.names,
-	}
+	result, _ := StartNew[vm.CodeObject]("starlark-ast-to-bytecode-compiler.CompileAST", vm.CodeObject{},
+		func(op *Operation[vm.CodeObject], rf *ResultFactory[vm.CodeObject]) *OperationResult[vm.CodeObject] {
+			compiler := NewStarlarkCompiler()
+			compiler.compileNode(ast)
+			compiler.emit(OpHalt)
+			return rf.Generate(true, false, vm.CodeObject{
+				Instructions: compiler.instructions,
+				Constants:    compiler.constants,
+				Names:        compiler.names,
+			})
+		}).GetResult()
+	return result
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -1944,17 +1953,21 @@ func (c *StarlarkCompiler) compileLambdaExpr(node *parser.ASTNode) {
 // Disassemble returns a human-readable string representation of a CodeObject.
 // Useful for debugging and testing.
 func Disassemble(code vm.CodeObject) string {
-	var sb strings.Builder
-	for i, instr := range code.Instructions {
-		name := OpcodeName[instr.Opcode]
-		if name == "" {
-			name = fmt.Sprintf("UNKNOWN(0x%02x)", int(instr.Opcode))
-		}
-		if instr.Operand != nil {
-			fmt.Fprintf(&sb, "%04d  %-24s %v\n", i, name, instr.Operand)
-		} else {
-			fmt.Fprintf(&sb, "%04d  %s\n", i, name)
-		}
-	}
-	return sb.String()
+	result, _ := StartNew[string]("starlark-ast-to-bytecode-compiler.Disassemble", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			var sb strings.Builder
+			for i, instr := range code.Instructions {
+				name := OpcodeName[instr.Opcode]
+				if name == "" {
+					name = fmt.Sprintf("UNKNOWN(0x%02x)", int(instr.Opcode))
+				}
+				if instr.Operand != nil {
+					fmt.Fprintf(&sb, "%04d  %-24s %v\n", i, name, instr.Operand)
+				} else {
+					fmt.Fprintf(&sb, "%04d  %s\n", i, name)
+				}
+			}
+			return rf.Generate(true, false, sb.String())
+		}).GetResult()
+	return result
 }

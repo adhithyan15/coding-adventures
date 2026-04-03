@@ -30,11 +30,15 @@ type LexerConfig struct {
 }
 
 func (c LexerConfig) KeywordSet() map[string]struct{} {
-	set := make(map[string]struct{})
-	for _, k := range c.Keywords {
-		set[k] = struct{}{}
-	}
-	return set
+	result, _ := StartNew[map[string]struct{}]("lexer.KeywordSet", nil,
+		func(op *Operation[map[string]struct{}], rf *ResultFactory[map[string]struct{}]) *OperationResult[map[string]struct{}] {
+			set := make(map[string]struct{})
+			for _, k := range c.Keywords {
+				set[k] = struct{}{}
+			}
+			return rf.Generate(true, false, set)
+		}).GetResult()
+	return result
 }
 
 type Lexer struct {
@@ -174,56 +178,60 @@ func (l *Lexer) readString() Token {
 }
 
 func (l *Lexer) Tokenize() []Token {
-	l.tokens = []Token{}
-	dfa := NewTokenizerDFA()
+	result, _ := StartNew[[]Token]("lexer.Tokenize", nil,
+		func(op *Operation[[]Token], rf *ResultFactory[[]Token]) *OperationResult[[]Token] {
+			l.tokens = []Token{}
+			dfa := NewTokenizerDFA()
 
-	for {
-		char, ok := l.currentChar()
-		charClass := ClassifyChar(char, ok)
-		nextState := dfa.Process(charClass)
+			for {
+				char, ok := l.currentChar()
+				charClass := ClassifyChar(char, ok)
+				nextState := dfa.Process(charClass)
 
-		switch nextState {
-		case "at_whitespace":
-			l.skipWhitespace()
-		case "at_newline":
-			t := Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column}
-			l.advance()
-			l.tokens = append(l.tokens, t)
-		case "in_number":
-			l.tokens = append(l.tokens, l.readNumber())
-		case "in_name":
-			l.tokens = append(l.tokens, l.readName())
-		case "in_string":
-			l.tokens = append(l.tokens, l.readString())
-		case "in_equals":
-			startLine := l.line
-			startCol := l.column
-			l.advance()
-			if next, hasNext := l.currentChar(); hasNext && next == '=' {
-				l.advance()
-				l.tokens = append(l.tokens, Token{Type: TokenEqualsEquals, Value: "==", Line: startLine, Column: startCol})
-			} else {
-				l.tokens = append(l.tokens, Token{Type: TokenEquals, Value: "=", Line: startLine, Column: startCol})
+				switch nextState {
+				case "at_whitespace":
+					l.skipWhitespace()
+				case "at_newline":
+					t := Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column}
+					l.advance()
+					l.tokens = append(l.tokens, t)
+				case "in_number":
+					l.tokens = append(l.tokens, l.readNumber())
+				case "in_name":
+					l.tokens = append(l.tokens, l.readName())
+				case "in_string":
+					l.tokens = append(l.tokens, l.readString())
+				case "in_equals":
+					startLine := l.line
+					startCol := l.column
+					l.advance()
+					if next, hasNext := l.currentChar(); hasNext && next == '=' {
+						l.advance()
+						l.tokens = append(l.tokens, Token{Type: TokenEqualsEquals, Value: "==", Line: startLine, Column: startCol})
+					} else {
+						l.tokens = append(l.tokens, Token{Type: TokenEquals, Value: "=", Line: startLine, Column: startCol})
+					}
+				case "in_operator":
+					tType := SimpleTokens[char]
+					t := Token{Type: tType, Value: string(char), Line: l.line, Column: l.column}
+					l.advance()
+					l.tokens = append(l.tokens, t)
+				case "done":
+					break
+				case "error":
+					panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
+				}
+
+				if nextState == "done" {
+					break
+				}
+
+				// Reset the DFA back to "start" for the next character.
+				dfa.Reset()
 			}
-		case "in_operator":
-			tType := SimpleTokens[char]
-			t := Token{Type: tType, Value: string(char), Line: l.line, Column: l.column}
-			l.advance()
-			l.tokens = append(l.tokens, t)
-		case "done":
-			break
-		case "error":
-			panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
-		}
 
-		if nextState == "done" {
-			break
-		}
-
-		// Reset the DFA back to "start" for the next character.
-		dfa.Reset()
-	}
-
-	l.tokens = append(l.tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column})
-	return l.tokens
+			l.tokens = append(l.tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column})
+			return rf.Generate(true, false, l.tokens)
+		}).PanicOnUnexpected().GetResult()
+	return result
 }

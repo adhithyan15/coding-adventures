@@ -50,142 +50,201 @@ type SocketManager struct {
 
 // NewSocketManager creates a new manager with an empty socket table.
 func NewSocketManager() *SocketManager {
-	return &SocketManager{
-		sockets: make(map[int]*Socket),
-		nextFD:  10,
-	}
+	result, _ := StartNew[*SocketManager]("network-stack.NewSocketManager", nil,
+		func(op *Operation[*SocketManager], rf *ResultFactory[*SocketManager]) *OperationResult[*SocketManager] {
+			return rf.Generate(true, false, &SocketManager{
+				sockets: make(map[int]*Socket),
+				nextFD:  10,
+			})
+		}).GetResult()
+	return result
 }
 
 // CreateSocket creates a new socket and returns its file descriptor.
 func (m *SocketManager) CreateSocket(sockType SocketType) int {
-	fd := m.nextFD
-	m.nextFD++
-	m.sockets[fd] = &Socket{
-		Type: sockType,
-		FD:   fd,
-	}
-	return fd
+	result, _ := StartNew[int]("network-stack.SocketManager.CreateSocket", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			fd := m.nextFD
+			m.nextFD++
+			m.sockets[fd] = &Socket{
+				Type: sockType,
+				FD:   fd,
+			}
+			return rf.Generate(true, false, fd)
+		}).GetResult()
+	return result
 }
 
 // Bind assigns an IP address and port to a socket.
 // Returns 0 on success, -1 on error.
 func (m *SocketManager) Bind(fd int, ip uint32, port uint16) int {
-	sock := m.GetSocket(fd)
-	if sock == nil {
-		return -1
-	}
-	sock.BoundIP = ip
-	sock.BoundPort = port
-
-	if sock.Type == SocketDgram {
-		sock.UDPSock = NewUDPSocket(port)
-	} else if sock.Type == SocketStream {
-		sock.TCPConn = NewTCPConnection(port, 0, 0)
-	}
-	return 0
+	result, _ := StartNew[int]("network-stack.SocketManager.Bind", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil {
+				return rf.Generate(true, false, -1)
+			}
+			sock.BoundIP = ip
+			sock.BoundPort = port
+			if sock.Type == SocketDgram {
+				sock.UDPSock = NewUDPSocket(port)
+			} else if sock.Type == SocketStream {
+				sock.TCPConn = NewTCPConnection(port, 0, 0)
+			}
+			return rf.Generate(true, false, 0)
+		}).GetResult()
+	return result
 }
 
 // Listen marks a TCP socket as a passive listener.
 // Returns 0 on success, -1 on error.
 func (m *SocketManager) Listen(fd int, backlog int) int {
-	sock := m.GetSocket(fd)
-	if sock == nil || sock.Type != SocketStream {
-		return -1
-	}
-	sock.Listening = true
-	if sock.TCPConn != nil {
-		sock.TCPConn.InitiateListen()
-	}
-	return 0
+	result, _ := StartNew[int]("network-stack.SocketManager.Listen", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			op.AddProperty("backlog", backlog)
+			sock := m.GetSocket(fd)
+			if sock == nil || sock.Type != SocketStream {
+				return rf.Generate(true, false, -1)
+			}
+			sock.Listening = true
+			if sock.TCPConn != nil {
+				sock.TCPConn.InitiateListen()
+			}
+			return rf.Generate(true, false, 0)
+		}).GetResult()
+	return result
 }
 
 // Accept dequeues a pending connection. Returns the new fd, or -1 if none.
 func (m *SocketManager) Accept(fd int) int {
-	sock := m.GetSocket(fd)
-	if sock == nil || !sock.Listening || len(sock.AcceptQueue) == 0 {
-		return -1
-	}
-	conn := sock.AcceptQueue[0]
-	sock.AcceptQueue = sock.AcceptQueue[1:]
+	result, _ := StartNew[int]("network-stack.SocketManager.Accept", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil || !sock.Listening || len(sock.AcceptQueue) == 0 {
+				return rf.Generate(true, false, -1)
+			}
+			conn := sock.AcceptQueue[0]
+			sock.AcceptQueue = sock.AcceptQueue[1:]
 
-	newFD := m.CreateSocket(SocketStream)
-	newSock := m.sockets[newFD]
-	newSock.TCPConn = conn
-	newSock.BoundIP = sock.BoundIP
-	newSock.BoundPort = sock.BoundPort
-	return newFD
+			newFD := m.CreateSocket(SocketStream)
+			newSock := m.sockets[newFD]
+			newSock.TCPConn = conn
+			newSock.BoundIP = sock.BoundIP
+			newSock.BoundPort = sock.BoundPort
+			return rf.Generate(true, false, newFD)
+		}).GetResult()
+	return result
 }
 
 // Connect initiates a TCP connection to a remote host.
 // Returns 0 on success, -1 on error.
 func (m *SocketManager) Connect(fd int, ip uint32, port uint16) int {
-	sock := m.GetSocket(fd)
-	if sock == nil || sock.Type != SocketStream {
-		return -1
-	}
-	if sock.TCPConn == nil {
-		sock.TCPConn = NewTCPConnection(sock.BoundPort, ip, port)
-	} else {
-		sock.TCPConn.RemoteIP = ip
-		sock.TCPConn.RemotePort = port
-	}
-	sock.TCPConn.InitiateConnect()
-	return 0
+	result, _ := StartNew[int]("network-stack.SocketManager.Connect", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil || sock.Type != SocketStream {
+				return rf.Generate(true, false, -1)
+			}
+			if sock.TCPConn == nil {
+				sock.TCPConn = NewTCPConnection(sock.BoundPort, ip, port)
+			} else {
+				sock.TCPConn.RemoteIP = ip
+				sock.TCPConn.RemotePort = port
+			}
+			sock.TCPConn.InitiateConnect()
+			return rf.Generate(true, false, 0)
+		}).GetResult()
+	return result
 }
 
 // Send queues data on a TCP socket. Returns bytes sent or -1 on error.
 func (m *SocketManager) Send(fd int, data []byte) int {
-	sock := m.GetSocket(fd)
-	if sock == nil || sock.TCPConn == nil {
-		return -1
-	}
-	sock.TCPConn.Send(data)
-	return len(data)
+	result, _ := StartNew[int]("network-stack.SocketManager.Send", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil || sock.TCPConn == nil {
+				return rf.Generate(true, false, -1)
+			}
+			sock.TCPConn.Send(data)
+			return rf.Generate(true, false, len(data))
+		}).GetResult()
+	return result
 }
 
 // Recv reads from a TCP socket's receive buffer.
 func (m *SocketManager) Recv(fd int, count int) []byte {
-	sock := m.GetSocket(fd)
-	if sock == nil || sock.TCPConn == nil {
-		return nil
-	}
-	return sock.TCPConn.Receive(count)
+	result, _ := StartNew[[]byte]("network-stack.SocketManager.Recv", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("fd", fd)
+			op.AddProperty("count", count)
+			sock := m.GetSocket(fd)
+			if sock == nil || sock.TCPConn == nil {
+				return rf.Generate(true, false, nil)
+			}
+			return rf.Generate(true, false, sock.TCPConn.Receive(count))
+		}).GetResult()
+	return result
 }
 
 // SendTo sends a UDP datagram. Returns bytes sent or -1 on error.
 func (m *SocketManager) SendTo(fd int, data []byte, ip uint32, port uint16) int {
-	sock := m.GetSocket(fd)
-	if sock == nil || sock.UDPSock == nil {
-		return -1
-	}
-	sock.UDPSock.SendTo(data, ip, port)
-	return len(data)
+	result, _ := StartNew[int]("network-stack.SocketManager.SendTo", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil || sock.UDPSock == nil {
+				return rf.Generate(true, false, -1)
+			}
+			sock.UDPSock.SendTo(data, ip, port)
+			return rf.Generate(true, false, len(data))
+		}).GetResult()
+	return result
 }
 
 // RecvFrom receives a UDP datagram. Returns nil if none available.
 func (m *SocketManager) RecvFrom(fd int) *Datagram {
-	sock := m.GetSocket(fd)
-	if sock == nil || sock.UDPSock == nil {
-		return nil
-	}
-	return sock.UDPSock.ReceiveFrom()
+	result, _ := StartNew[*Datagram]("network-stack.SocketManager.RecvFrom", nil,
+		func(op *Operation[*Datagram], rf *ResultFactory[*Datagram]) *OperationResult[*Datagram] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil || sock.UDPSock == nil {
+				return rf.Generate(true, false, nil)
+			}
+			return rf.Generate(true, false, sock.UDPSock.ReceiveFrom())
+		}).GetResult()
+	return result
 }
 
 // Close closes a socket and removes it from the table.
 // Returns 0 on success, -1 on error.
 func (m *SocketManager) Close(fd int) int {
-	sock := m.GetSocket(fd)
-	if sock == nil {
-		return -1
-	}
-	if sock.TCPConn != nil {
-		sock.TCPConn.InitiateClose()
-	}
-	delete(m.sockets, fd)
-	return 0
+	result, _ := StartNew[int]("network-stack.SocketManager.Close", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("fd", fd)
+			sock := m.GetSocket(fd)
+			if sock == nil {
+				return rf.Generate(true, false, -1)
+			}
+			if sock.TCPConn != nil {
+				sock.TCPConn.InitiateClose()
+			}
+			delete(m.sockets, fd)
+			return rf.Generate(true, false, 0)
+		}).GetResult()
+	return result
 }
 
 // GetSocket looks up a socket by file descriptor. Returns nil if not found.
 func (m *SocketManager) GetSocket(fd int) *Socket {
-	return m.sockets[fd]
+	result, _ := StartNew[*Socket]("network-stack.SocketManager.GetSocket", nil,
+		func(op *Operation[*Socket], rf *ResultFactory[*Socket]) *OperationResult[*Socket] {
+			op.AddProperty("fd", fd)
+			return rf.Generate(true, false, m.sockets[fd])
+		}).GetResult()
+	return result
 }

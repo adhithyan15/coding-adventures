@@ -55,8 +55,12 @@ type PipelineSnapshot struct {
 //
 //	[cycle 7] IF:instr@28 | ID:ADD@24 | EX:--- | MEM:LDR@12 | WB:... [STALL]
 func (s *PipelineSnapshot) String() string {
-	return fmt.Sprintf("[cycle %d] PC=%d stalled=%v flushing=%v",
-		s.Cycle, s.PC, s.Stalled, s.Flushing)
+	result, _ := StartNew[string]("cpu-pipeline.PipelineSnapshot.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf("[cycle %d] PC=%d stalled=%v flushing=%v",
+				s.Cycle, s.PC, s.Stalled, s.Flushing))
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -132,10 +136,14 @@ type PipelineStats struct {
 //
 // Returns 0.0 if no cycles have been executed (avoids division by zero).
 func (s *PipelineStats) IPC() float64 {
-	if s.TotalCycles == 0 {
-		return 0.0
-	}
-	return float64(s.InstructionsCompleted) / float64(s.TotalCycles)
+	result, _ := StartNew[float64]("cpu-pipeline.PipelineStats.IPC", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			if s.TotalCycles == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			return rf.Generate(true, false, float64(s.InstructionsCompleted)/float64(s.TotalCycles))
+		}).GetResult()
+	return result
 }
 
 // CPI returns cycles per instruction (inverse of IPC).
@@ -147,22 +155,30 @@ func (s *PipelineStats) IPC() float64 {
 //
 // Returns 0.0 if no instructions have completed (avoids division by zero).
 func (s *PipelineStats) CPI() float64 {
-	if s.InstructionsCompleted == 0 {
-		return 0.0
-	}
-	return float64(s.TotalCycles) / float64(s.InstructionsCompleted)
+	result, _ := StartNew[float64]("cpu-pipeline.PipelineStats.CPI", 0.0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			if s.InstructionsCompleted == 0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			return rf.Generate(true, false, float64(s.TotalCycles)/float64(s.InstructionsCompleted))
+		}).GetResult()
+	return result
 }
 
 // String returns a formatted summary of pipeline statistics.
 func (s *PipelineStats) String() string {
-	return fmt.Sprintf(
-		"PipelineStats{cycles=%d, completed=%d, IPC=%.3f, CPI=%.3f, stalls=%d, flushes=%d, bubbles=%d}",
-		s.TotalCycles,
-		s.InstructionsCompleted,
-		s.IPC(),
-		s.CPI(),
-		s.StallCycles,
-		s.FlushCycles,
-		s.BubbleCycles,
-	)
+	result, _ := StartNew[string]("cpu-pipeline.PipelineStats.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, fmt.Sprintf(
+				"PipelineStats{cycles=%d, completed=%d, IPC=%.3f, CPI=%.3f, stalls=%d, flushes=%d, bubbles=%d}",
+				s.TotalCycles,
+				s.InstructionsCompleted,
+				s.IPC(),
+				s.CPI(),
+				s.StallCycles,
+				s.FlushCycles,
+				s.BubbleCycles,
+			))
+		}).GetResult()
+	return result
 }

@@ -107,13 +107,18 @@ type Clock struct {
 // The clock starts at value 0 (low), cycle 0, with no ticks elapsed.
 // This is the state of a real oscillator before it starts oscillating.
 func New(frequencyHz int) *Clock {
-	return &Clock{
-		FrequencyHz: frequencyHz,
-		Cycle:       0,
-		Value:       0,
-		totalTicks:  0,
-		listeners:   nil,
-	}
+	result, _ := StartNew[*Clock]("clock.New", nil,
+		func(op *Operation[*Clock], rf *ResultFactory[*Clock]) *OperationResult[*Clock] {
+			op.AddProperty("frequencyHz", frequencyHz)
+			return rf.Generate(true, false, &Clock{
+				FrequencyHz: frequencyHz,
+				Cycle:       0,
+				Value:       0,
+				totalTicks:  0,
+				listeners:   nil,
+			})
+		}).GetResult()
+	return result
 }
 
 // Tick advances one half-cycle and returns the edge that occurred.
@@ -125,31 +130,28 @@ func New(frequencyHz int) *Clock {
 // After toggling, all registered listeners are notified with the
 // edge record. This is how connected components "see" the clock.
 func (c *Clock) Tick() ClockEdge {
-	oldValue := c.Value
-	c.Value = 1 - c.Value
-	c.totalTicks++
-
-	isRising := oldValue == 0 && c.Value == 1
-	isFalling := oldValue == 1 && c.Value == 0
-
-	// Cycle count increments on each rising edge.
-	if isRising {
-		c.Cycle++
-	}
-
-	edge := ClockEdge{
-		Cycle:     c.Cycle,
-		Value:     c.Value,
-		IsRising:  isRising,
-		IsFalling: isFalling,
-	}
-
-	// Notify all listeners -- this is the observer pattern.
-	for _, listener := range c.listeners {
-		listener(edge)
-	}
-
-	return edge
+	result, _ := StartNew[ClockEdge]("clock.Tick", ClockEdge{},
+		func(_ *Operation[ClockEdge], rf *ResultFactory[ClockEdge]) *OperationResult[ClockEdge] {
+			oldValue := c.Value
+			c.Value = 1 - c.Value
+			c.totalTicks++
+			isRising := oldValue == 0 && c.Value == 1
+			isFalling := oldValue == 1 && c.Value == 0
+			if isRising {
+				c.Cycle++
+			}
+			edge := ClockEdge{
+				Cycle:     c.Cycle,
+				Value:     c.Value,
+				IsRising:  isRising,
+				IsFalling: isFalling,
+			}
+			for _, listener := range c.listeners {
+				listener(edge)
+			}
+			return rf.Generate(true, false, edge)
+		}).GetResult()
+	return result
 }
 
 // FullCycle executes one complete cycle (rising + falling edge).
@@ -158,9 +160,17 @@ func (c *Clock) Tick() ClockEdge {
 //  1. Rising edge (0 -> 1): the "active" half
 //  2. Falling edge (1 -> 0): the "idle" half
 func (c *Clock) FullCycle() (ClockEdge, ClockEdge) {
-	rising := c.Tick()
-	falling := c.Tick()
-	return rising, falling
+	type fullCycleResult struct {
+		rising  ClockEdge
+		falling ClockEdge
+	}
+	res, _ := StartNew[fullCycleResult]("clock.FullCycle", fullCycleResult{},
+		func(_ *Operation[fullCycleResult], rf *ResultFactory[fullCycleResult]) *OperationResult[fullCycleResult] {
+			rising := c.Tick()
+			falling := c.Tick()
+			return rf.Generate(true, false, fullCycleResult{rising: rising, falling: falling})
+		}).GetResult()
+	return res.rising, res.falling
 }
 
 // Run executes N complete cycles and returns all edges.
@@ -168,12 +178,17 @@ func (c *Clock) FullCycle() (ClockEdge, ClockEdge) {
 // Since each cycle has two edges (rising + falling), running N cycles
 // produces 2N edges total.
 func (c *Clock) Run(cycles int) []ClockEdge {
-	edges := make([]ClockEdge, 0, cycles*2)
-	for range cycles {
-		r, f := c.FullCycle()
-		edges = append(edges, r, f)
-	}
-	return edges
+	result, _ := StartNew[[]ClockEdge]("clock.Run", nil,
+		func(op *Operation[[]ClockEdge], rf *ResultFactory[[]ClockEdge]) *OperationResult[[]ClockEdge] {
+			op.AddProperty("cycles", cycles)
+			edges := make([]ClockEdge, 0, cycles*2)
+			for range cycles {
+				r, f := c.FullCycle()
+				edges = append(edges, r, f)
+			}
+			return rf.Generate(true, false, edges)
+		}).GetResult()
+	return result
 }
 
 // RegisterListener adds a function to be called on every clock edge.
@@ -181,7 +196,11 @@ func (c *Clock) Run(cycles int) []ClockEdge {
 // In real hardware, this is like connecting a wire from the clock
 // to a component's clock input pin.
 func (c *Clock) RegisterListener(listener Listener) {
-	c.listeners = append(c.listeners, listener)
+	_, _ = StartNew[struct{}]("clock.RegisterListener", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			c.listeners = append(c.listeners, listener)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // UnregisterListener removes a previously registered listener by index.

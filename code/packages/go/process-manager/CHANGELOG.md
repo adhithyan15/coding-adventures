@@ -2,6 +2,13 @@
 
 All notable changes to the process-manager package will be documented in this file.
 
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions with the Operations system (`StartNew[T]`) for
+  uniform observability, tracing, and error propagation across the package.
+  Affected files: `process_manager.go`, `priority_scheduler.go`, `signals.go`.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

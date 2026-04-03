@@ -51,37 +51,60 @@ type FIFOPolicy struct {
 
 // NewFIFOPolicy creates a FIFO replacement policy.
 func NewFIFOPolicy() *FIFOPolicy {
-	return &FIFOPolicy{queue: make([]int, 0)}
+	result, _ := StartNew[*FIFOPolicy]("virtual-memory.NewFIFOPolicy", nil,
+		func(op *Operation[*FIFOPolicy], rf *ResultFactory[*FIFOPolicy]) *OperationResult[*FIFOPolicy] {
+			return rf.Generate(true, false, &FIFOPolicy{queue: make([]int, 0)})
+		}).GetResult()
+	return result
 }
 
 // RecordAccess is a no-op for FIFO — it only cares about insertion order.
 func (f *FIFOPolicy) RecordAccess(frame int) {
-	// Intentionally empty. FIFO ignores access events.
+	_, _ = StartNew[struct{}]("virtual-memory.FIFOPolicy.RecordAccess", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			// Intentionally empty. FIFO ignores access events.
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SelectVictim evicts the oldest frame (front of queue).
 func (f *FIFOPolicy) SelectVictim() int {
-	if len(f.queue) == 0 {
-		return -1
-	}
-	victim := f.queue[0]
-	f.queue = f.queue[1:]
-	return victim
+	result, _ := StartNew[int]("virtual-memory.FIFOPolicy.SelectVictim", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(f.queue) == 0 {
+				return rf.Generate(true, false, -1)
+			}
+			victim := f.queue[0]
+			f.queue = f.queue[1:]
+			return rf.Generate(true, false, victim)
+		}).GetResult()
+	return result
 }
 
 // AddFrame adds a newly loaded frame to the back of the queue.
 func (f *FIFOPolicy) AddFrame(frame int) {
-	f.queue = append(f.queue, frame)
+	_, _ = StartNew[struct{}]("virtual-memory.FIFOPolicy.AddFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			f.queue = append(f.queue, frame)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RemoveFrame removes a frame from the queue.
 func (f *FIFOPolicy) RemoveFrame(frame int) {
-	for i, v := range f.queue {
-		if v == frame {
-			f.queue = append(f.queue[:i], f.queue[i+1:]...)
-			return
-		}
-	}
+	_, _ = StartNew[struct{}]("virtual-memory.FIFOPolicy.RemoveFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			for i, v := range f.queue {
+				if v == frame {
+					f.queue = append(f.queue[:i], f.queue[i+1:]...)
+					return rf.Generate(true, false, struct{}{})
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =============================================================================
@@ -103,47 +126,70 @@ type LRUPolicy struct {
 
 // NewLRUPolicy creates an LRU replacement policy.
 func NewLRUPolicy() *LRUPolicy {
-	return &LRUPolicy{
-		accessTimes: make(map[int]int),
-	}
+	result, _ := StartNew[*LRUPolicy]("virtual-memory.NewLRUPolicy", nil,
+		func(op *Operation[*LRUPolicy], rf *ResultFactory[*LRUPolicy]) *OperationResult[*LRUPolicy] {
+			return rf.Generate(true, false, &LRUPolicy{
+				accessTimes: make(map[int]int),
+			})
+		}).GetResult()
+	return result
 }
 
 // RecordAccess updates a frame's timestamp to the current clock value.
 func (l *LRUPolicy) RecordAccess(frame int) {
-	l.accessTimes[frame] = l.clock
-	l.clock++
+	_, _ = StartNew[struct{}]("virtual-memory.LRUPolicy.RecordAccess", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			l.accessTimes[frame] = l.clock
+			l.clock++
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SelectVictim evicts the frame with the oldest (smallest) timestamp.
 func (l *LRUPolicy) SelectVictim() int {
-	if len(l.accessTimes) == 0 {
-		return -1
-	}
+	result, _ := StartNew[int]("virtual-memory.LRUPolicy.SelectVictim", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(l.accessTimes) == 0 {
+				return rf.Generate(true, false, -1)
+			}
 
-	minTime := l.clock + 1 // larger than any existing timestamp
-	victim := -1
-	for frame, t := range l.accessTimes {
-		if t < minTime {
-			minTime = t
-			victim = frame
-		}
-	}
+			minTime := l.clock + 1 // larger than any existing timestamp
+			victim := -1
+			for frame, t := range l.accessTimes {
+				if t < minTime {
+					minTime = t
+					victim = frame
+				}
+			}
 
-	if victim >= 0 {
-		delete(l.accessTimes, victim)
-	}
-	return victim
+			if victim >= 0 {
+				delete(l.accessTimes, victim)
+			}
+			return rf.Generate(true, false, victim)
+		}).GetResult()
+	return result
 }
 
 // AddFrame registers a new frame with the current timestamp.
 func (l *LRUPolicy) AddFrame(frame int) {
-	l.accessTimes[frame] = l.clock
-	l.clock++
+	_, _ = StartNew[struct{}]("virtual-memory.LRUPolicy.AddFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			l.accessTimes[frame] = l.clock
+			l.clock++
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RemoveFrame stops tracking a frame.
 func (l *LRUPolicy) RemoveFrame(frame int) {
-	delete(l.accessTimes, frame)
+	_, _ = StartNew[struct{}]("virtual-memory.LRUPolicy.RemoveFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			delete(l.accessTimes, frame)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =============================================================================
@@ -174,78 +220,101 @@ func (l *LRUPolicy) RemoveFrame(frame int) {
 //	   +---| C |--+
 //	       +---+
 type ClockPolicy struct {
-	frames  []int          // Circular buffer of frame numbers.
-	useBits map[int]bool   // Frame -> use bit.
-	hand    int            // Current hand position.
+	frames  []int        // Circular buffer of frame numbers.
+	useBits map[int]bool // Frame -> use bit.
+	hand    int          // Current hand position.
 }
 
 // NewClockPolicy creates a Clock replacement policy.
 func NewClockPolicy() *ClockPolicy {
-	return &ClockPolicy{
-		frames:  make([]int, 0),
-		useBits: make(map[int]bool),
-	}
+	result, _ := StartNew[*ClockPolicy]("virtual-memory.NewClockPolicy", nil,
+		func(op *Operation[*ClockPolicy], rf *ResultFactory[*ClockPolicy]) *OperationResult[*ClockPolicy] {
+			return rf.Generate(true, false, &ClockPolicy{
+				frames:  make([]int, 0),
+				useBits: make(map[int]bool),
+			})
+		}).GetResult()
+	return result
 }
 
 // RecordAccess sets the use bit for a frame, protecting it from eviction.
 func (c *ClockPolicy) RecordAccess(frame int) {
-	if _, ok := c.useBits[frame]; ok {
-		c.useBits[frame] = true
-	}
+	_, _ = StartNew[struct{}]("virtual-memory.ClockPolicy.RecordAccess", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			if _, ok := c.useBits[frame]; ok {
+				c.useBits[frame] = true
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SelectVictim finds a victim using the clock (second chance) algorithm.
 func (c *ClockPolicy) SelectVictim() int {
-	if len(c.frames) == 0 {
-		return -1
-	}
-
-	maxIter := len(c.frames) * 2 // worst case: clear all bits, then evict
-
-	for i := 0; i < maxIter; i++ {
-		if c.hand >= len(c.frames) {
-			c.hand = 0
-		}
-
-		frame := c.frames[c.hand]
-
-		if !c.useBits[frame] {
-			// Use bit clear -> evict.
-			c.frames = append(c.frames[:c.hand], c.frames[c.hand+1:]...)
-			delete(c.useBits, frame)
-			if c.hand >= len(c.frames) && len(c.frames) > 0 {
-				c.hand = 0
+	result, _ := StartNew[int]("virtual-memory.ClockPolicy.SelectVictim", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(c.frames) == 0 {
+				return rf.Generate(true, false, -1)
 			}
-			return frame
-		}
 
-		// Use bit set -> give second chance, clear it.
-		c.useBits[frame] = false
-		c.hand++
-	}
+			maxIter := len(c.frames) * 2 // worst case: clear all bits, then evict
 
-	return -1
+			for i := 0; i < maxIter; i++ {
+				if c.hand >= len(c.frames) {
+					c.hand = 0
+				}
+
+				frame := c.frames[c.hand]
+
+				if !c.useBits[frame] {
+					// Use bit clear -> evict.
+					c.frames = append(c.frames[:c.hand], c.frames[c.hand+1:]...)
+					delete(c.useBits, frame)
+					if c.hand >= len(c.frames) && len(c.frames) > 0 {
+						c.hand = 0
+					}
+					return rf.Generate(true, false, frame)
+				}
+
+				// Use bit set -> give second chance, clear it.
+				c.useBits[frame] = false
+				c.hand++
+			}
+
+			return rf.Generate(true, false, -1)
+		}).GetResult()
+	return result
 }
 
 // AddFrame adds a newly loaded frame. New frames start with use=true.
 func (c *ClockPolicy) AddFrame(frame int) {
-	c.frames = append(c.frames, frame)
-	c.useBits[frame] = true
+	_, _ = StartNew[struct{}]("virtual-memory.ClockPolicy.AddFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			c.frames = append(c.frames, frame)
+			c.useBits[frame] = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RemoveFrame removes a frame from the clock buffer.
 func (c *ClockPolicy) RemoveFrame(frame int) {
-	delete(c.useBits, frame)
-	for i, v := range c.frames {
-		if v == frame {
-			c.frames = append(c.frames[:i], c.frames[i+1:]...)
-			if i < c.hand {
-				c.hand--
+	_, _ = StartNew[struct{}]("virtual-memory.ClockPolicy.RemoveFrame", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			delete(c.useBits, frame)
+			for i, v := range c.frames {
+				if v == frame {
+					c.frames = append(c.frames[:i], c.frames[i+1:]...)
+					if i < c.hand {
+						c.hand--
+					}
+					if c.hand >= len(c.frames) && len(c.frames) > 0 {
+						c.hand = 0
+					}
+					return rf.Generate(true, false, struct{}{})
+				}
 			}
-			if c.hand >= len(c.frames) && len(c.frames) > 0 {
-				c.hand = 0
-			}
-			return
-		}
-	}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }

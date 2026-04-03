@@ -16,6 +16,11 @@
 //   7. WRITE:   Store result in register file (32 flip-flops)
 //
 // Total per instruction: ~1,000-1,500 gate function calls.
+//
+// # Operations
+//
+// Every public method is wrapped in an Operation, giving each call
+// automatic timing, structured logging, and panic recovery.
 
 package arm1gatelevel
 
@@ -48,18 +53,32 @@ type ARM1GateLevel struct {
 
 // NewGateLevel creates a new gate-level ARM1 simulator.
 func NewGateLevel(memorySize int) *ARM1GateLevel {
-	if memorySize <= 0 {
-		memorySize = 1024 * 1024
-	}
-	cpu := &ARM1GateLevel{
-		memory: make([]byte, memorySize),
-	}
-	cpu.Reset()
-	return cpu
+	result, _ := StartNew[*ARM1GateLevel]("arm1-gatelevel.NewGateLevel", nil,
+		func(op *Operation[*ARM1GateLevel], rf *ResultFactory[*ARM1GateLevel]) *OperationResult[*ARM1GateLevel] {
+			op.AddProperty("memorySize", memorySize)
+			if memorySize <= 0 {
+				memorySize = 1024 * 1024
+			}
+			cpu := &ARM1GateLevel{
+				memory: make([]byte, memorySize),
+			}
+			cpu.reset()
+			return rf.Generate(true, false, cpu)
+		}).GetResult()
+	return result
 }
 
 // Reset restores the CPU to power-on state.
 func (cpu *ARM1GateLevel) Reset() {
+	_, _ = StartNew[struct{}]("arm1-gatelevel.Reset", struct{}{},
+		func(_ *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			cpu.reset()
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+}
+
+// reset is the internal (non-instrumented) reset used by NewGateLevel.
+func (cpu *ARM1GateLevel) reset() {
 	for i := range cpu.regs {
 		for j := range cpu.regs[i] {
 			cpu.regs[i][j] = 0
@@ -110,25 +129,41 @@ func (cpu *ARM1GateLevel) readRegBits(index int) []int {
 	return result
 }
 
+// PC returns the current program counter (26-bit address).
 func (cpu *ARM1GateLevel) PC() uint32 {
-	return BitsToInt(cpu.regs[15][:]) & sim.PCMask
+	result, _ := StartNew[uint32]("arm1-gatelevel.PC", 0,
+		func(_ *Operation[uint32], rf *ResultFactory[uint32]) *OperationResult[uint32] {
+			return rf.Generate(true, false, BitsToInt(cpu.regs[15][:])&sim.PCMask)
+		}).GetResult()
+	return result
 }
 
+// SetPC sets the program counter portion of R15.
 func (cpu *ARM1GateLevel) SetPC(addr uint32) {
-	r15 := BitsToInt(cpu.regs[15][:])
-	r15 = (r15 & ^uint32(sim.PCMask)) | (addr & sim.PCMask)
-	bits := IntToBits(r15, 32)
-	copy(cpu.regs[15][:], bits)
+	_, _ = StartNew[struct{}]("arm1-gatelevel.SetPC", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("addr", addr)
+			r15 := BitsToInt(cpu.regs[15][:])
+			r15 = (r15 & ^uint32(sim.PCMask)) | (addr & sim.PCMask)
+			bits := IntToBits(r15, 32)
+			copy(cpu.regs[15][:], bits)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
+// Flags returns the current condition flags.
 func (cpu *ARM1GateLevel) Flags() sim.Flags {
-	r15 := cpu.regs[15]
-	return sim.Flags{
-		N: r15[31] == 1,
-		Z: r15[30] == 1,
-		C: r15[29] == 1,
-		V: r15[28] == 1,
-	}
+	result, _ := StartNew[sim.Flags]("arm1-gatelevel.Flags", sim.Flags{},
+		func(_ *Operation[sim.Flags], rf *ResultFactory[sim.Flags]) *OperationResult[sim.Flags] {
+			r15 := cpu.regs[15]
+			return rf.Generate(true, false, sim.Flags{
+				N: r15[31] == 1,
+				Z: r15[30] == 1,
+				C: r15[29] == 1,
+				V: r15[28] == 1,
+			})
+		}).GetResult()
+	return result
 }
 
 func (cpu *ARM1GateLevel) setFlags(n, z, c, v int) {
@@ -138,70 +173,116 @@ func (cpu *ARM1GateLevel) setFlags(n, z, c, v int) {
 	cpu.regs[15][28] = v
 }
 
+// Mode returns the current processor mode.
 func (cpu *ARM1GateLevel) Mode() int {
-	return int(BitsToInt(cpu.regs[15][:]) & sim.ModeMask)
+	result, _ := StartNew[int]("arm1-gatelevel.Mode", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, int(BitsToInt(cpu.regs[15][:])&sim.ModeMask))
+		}).GetResult()
+	return result
 }
 
+// Halted returns true if the CPU has been halted.
 func (cpu *ARM1GateLevel) Halted() bool {
-	return cpu.halted
+	result, _ := StartNew[bool]("arm1-gatelevel.Halted", false,
+		func(_ *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, cpu.halted)
+		}).GetResult()
+	return result
 }
 
 // GateOps returns the total number of gate operations performed.
 func (cpu *ARM1GateLevel) GateOps() int {
-	return cpu.gateOps
+	result, _ := StartNew[int]("arm1-gatelevel.GateOps", 0,
+		func(_ *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, cpu.gateOps)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
 // Memory (same as behavioral — not gate-level)
 // =========================================================================
 
+// ReadWord reads a 32-bit word from memory (little-endian).
 func (cpu *ARM1GateLevel) ReadWord(addr uint32) uint32 {
-	addr &= sim.PCMask
-	a := int(addr & ^uint32(3))
-	if a+3 >= len(cpu.memory) {
-		return 0
-	}
-	return uint32(cpu.memory[a]) |
-		uint32(cpu.memory[a+1])<<8 |
-		uint32(cpu.memory[a+2])<<16 |
-		uint32(cpu.memory[a+3])<<24
+	result, _ := StartNew[uint32]("arm1-gatelevel.ReadWord", 0,
+		func(op *Operation[uint32], rf *ResultFactory[uint32]) *OperationResult[uint32] {
+			op.AddProperty("addr", addr)
+			addr &= sim.PCMask
+			a := int(addr & ^uint32(3))
+			if a+3 >= len(cpu.memory) {
+				return rf.Generate(true, false, uint32(0))
+			}
+			return rf.Generate(true, false, uint32(cpu.memory[a])|
+				uint32(cpu.memory[a+1])<<8|
+				uint32(cpu.memory[a+2])<<16|
+				uint32(cpu.memory[a+3])<<24)
+		}).GetResult()
+	return result
 }
 
+// WriteWord writes a 32-bit word to memory (little-endian).
 func (cpu *ARM1GateLevel) WriteWord(addr uint32, value uint32) {
-	addr &= sim.PCMask
-	a := int(addr & ^uint32(3))
-	if a+3 >= len(cpu.memory) {
-		return
-	}
-	cpu.memory[a] = byte(value)
-	cpu.memory[a+1] = byte(value >> 8)
-	cpu.memory[a+2] = byte(value >> 16)
-	cpu.memory[a+3] = byte(value >> 24)
+	_, _ = StartNew[struct{}]("arm1-gatelevel.WriteWord", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("addr", addr)
+			op.AddProperty("value", value)
+			addr &= sim.PCMask
+			a := int(addr & ^uint32(3))
+			if a+3 >= len(cpu.memory) {
+				return rf.Generate(true, false, struct{}{})
+			}
+			cpu.memory[a] = byte(value)
+			cpu.memory[a+1] = byte(value >> 8)
+			cpu.memory[a+2] = byte(value >> 16)
+			cpu.memory[a+3] = byte(value >> 24)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
+// ReadByte reads a single byte from memory.
 func (cpu *ARM1GateLevel) ReadByte(addr uint32) byte {
-	addr &= sim.PCMask
-	if int(addr) >= len(cpu.memory) {
-		return 0
-	}
-	return cpu.memory[int(addr)]
+	result, _ := StartNew[byte]("arm1-gatelevel.ReadByte", 0,
+		func(op *Operation[byte], rf *ResultFactory[byte]) *OperationResult[byte] {
+			op.AddProperty("addr", addr)
+			addr &= sim.PCMask
+			if int(addr) >= len(cpu.memory) {
+				return rf.Generate(true, false, byte(0))
+			}
+			return rf.Generate(true, false, cpu.memory[int(addr)])
+		}).GetResult()
+	return result
 }
 
+// WriteByte writes a single byte to memory.
 func (cpu *ARM1GateLevel) WriteByte(addr uint32, value byte) {
-	addr &= sim.PCMask
-	if int(addr) >= len(cpu.memory) {
-		return
-	}
-	cpu.memory[int(addr)] = value
+	_, _ = StartNew[struct{}]("arm1-gatelevel.WriteByte", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("addr", addr)
+			op.AddProperty("value", value)
+			addr &= sim.PCMask
+			if int(addr) >= len(cpu.memory) {
+				return rf.Generate(true, false, struct{}{})
+			}
+			cpu.memory[int(addr)] = value
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
+// LoadProgram loads machine code into memory at the given start address.
 func (cpu *ARM1GateLevel) LoadProgram(code []byte, startAddr uint32) {
-	for i, b := range code {
-		addr := int(startAddr) + i
-		if addr < len(cpu.memory) {
-			cpu.memory[addr] = b
-		}
-	}
+	_, _ = StartNew[struct{}]("arm1-gatelevel.LoadProgram", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("startAddr", startAddr)
+			for i, b := range code {
+				addr := int(startAddr) + i
+				if addr < len(cpu.memory) {
+					cpu.memory[addr] = b
+				}
+			}
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // =========================================================================
@@ -269,60 +350,98 @@ func (cpu *ARM1GateLevel) evaluateCondition(cond int, flags sim.Flags) bool {
 // Execution
 // =========================================================================
 
+// Step executes one instruction and returns a trace.
 func (cpu *ARM1GateLevel) Step() sim.Trace {
-	pc := cpu.PC()
-	var regsBefore [16]uint32
-	for i := 0; i < 16; i++ {
-		regsBefore[i] = cpu.readReg(i)
-	}
-	flagsBefore := cpu.Flags()
+	result, _ := StartNew[sim.Trace]("arm1-gatelevel.Step", sim.Trace{},
+		func(_ *Operation[sim.Trace], rf *ResultFactory[sim.Trace]) *OperationResult[sim.Trace] {
+			pc := BitsToInt(cpu.regs[15][:]) & sim.PCMask
+			var regsBefore [16]uint32
+			for i := 0; i < 16; i++ {
+				regsBefore[i] = cpu.readReg(i)
+			}
+			flagsBefore := sim.Flags{
+				N: cpu.regs[15][31] == 1,
+				Z: cpu.regs[15][30] == 1,
+				C: cpu.regs[15][29] == 1,
+				V: cpu.regs[15][28] == 1,
+			}
 
-	instruction := cpu.ReadWord(pc)
-	decoded := sim.Decode(instruction)
-	condMet := cpu.evaluateCondition(decoded.Cond, flagsBefore)
+			instruction := cpu.readWordRaw(pc)
+			decoded := sim.Decode(instruction)
+			condMet := cpu.evaluateCondition(decoded.Cond, flagsBefore)
 
-	trace := sim.Trace{
-		Address:      pc,
-		Raw:          instruction,
-		Mnemonic:     decoded.Disassemble(),
-		Condition:    sim.CondString(decoded.Cond),
-		ConditionMet: condMet,
-		RegsBefore:   regsBefore,
-		FlagsBefore:  flagsBefore,
-	}
+			trace := sim.Trace{
+				Address:      pc,
+				Raw:          instruction,
+				Mnemonic:     decoded.Disassemble(),
+				Condition:    sim.CondString(decoded.Cond),
+				ConditionMet: condMet,
+				RegsBefore:   regsBefore,
+				FlagsBefore:  flagsBefore,
+			}
 
-	cpu.SetPC(pc + 4)
+			// Advance PC
+			r15 := BitsToInt(cpu.regs[15][:])
+			r15 = (r15 & ^uint32(sim.PCMask)) | ((pc + 4) & sim.PCMask)
+			bits := IntToBits(r15, 32)
+			copy(cpu.regs[15][:], bits)
 
-	if condMet {
-		switch decoded.Type {
-		case sim.InstDataProcessing:
-			cpu.executeDataProcessing(&decoded, &trace)
-		case sim.InstLoadStore:
-			cpu.executeLoadStore(&decoded, &trace)
-		case sim.InstBlockTransfer:
-			cpu.executeBlockTransfer(&decoded, &trace)
-		case sim.InstBranch:
-			cpu.executeBranch(&decoded, &trace)
-		case sim.InstSWI:
-			cpu.executeSWI(&decoded, &trace)
-		case sim.InstCoprocessor, sim.InstUndefined:
-			cpu.trapUndefined(pc)
-		}
-	}
+			if condMet {
+				switch decoded.Type {
+				case sim.InstDataProcessing:
+					cpu.executeDataProcessing(&decoded, &trace)
+				case sim.InstLoadStore:
+					cpu.executeLoadStore(&decoded, &trace)
+				case sim.InstBlockTransfer:
+					cpu.executeBlockTransfer(&decoded, &trace)
+				case sim.InstBranch:
+					cpu.executeBranch(&decoded, &trace)
+				case sim.InstSWI:
+					cpu.executeSWI(&decoded, &trace)
+				case sim.InstCoprocessor, sim.InstUndefined:
+					cpu.trapUndefined(pc)
+				}
+			}
 
-	for i := 0; i < 16; i++ {
-		trace.RegsAfter[i] = cpu.readReg(i)
-	}
-	trace.FlagsAfter = cpu.Flags()
-	return trace
+			for i := 0; i < 16; i++ {
+				trace.RegsAfter[i] = cpu.readReg(i)
+			}
+			trace.FlagsAfter = sim.Flags{
+				N: cpu.regs[15][31] == 1,
+				Z: cpu.regs[15][30] == 1,
+				C: cpu.regs[15][29] == 1,
+				V: cpu.regs[15][28] == 1,
+			}
+			return rf.Generate(true, false, trace)
+		}).GetResult()
+	return result
 }
 
-func (cpu *ARM1GateLevel) Run(maxSteps int) []sim.Trace {
-	traces := make([]sim.Trace, 0, maxSteps)
-	for i := 0; i < maxSteps && !cpu.halted; i++ {
-		traces = append(traces, cpu.Step())
+// readWordRaw reads a word without going through the public instrumented ReadWord.
+func (cpu *ARM1GateLevel) readWordRaw(addr uint32) uint32 {
+	addr &= sim.PCMask
+	a := int(addr & ^uint32(3))
+	if a+3 >= len(cpu.memory) {
+		return 0
 	}
-	return traces
+	return uint32(cpu.memory[a]) |
+		uint32(cpu.memory[a+1])<<8 |
+		uint32(cpu.memory[a+2])<<16 |
+		uint32(cpu.memory[a+3])<<24
+}
+
+// Run executes instructions until halted or max steps reached.
+func (cpu *ARM1GateLevel) Run(maxSteps int) []sim.Trace {
+	result, _ := StartNew[[]sim.Trace]("arm1-gatelevel.Run", nil,
+		func(op *Operation[[]sim.Trace], rf *ResultFactory[[]sim.Trace]) *OperationResult[[]sim.Trace] {
+			op.AddProperty("maxSteps", maxSteps)
+			traces := make([]sim.Trace, 0, maxSteps)
+			for i := 0; i < maxSteps && !cpu.halted; i++ {
+				traces = append(traces, cpu.Step())
+			}
+			return rf.Generate(true, false, traces)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -341,7 +460,12 @@ func (cpu *ARM1GateLevel) executeDataProcessing(d *sim.DecodedInstruction, trace
 	// Get Operand2 through gate-level barrel shifter
 	var bBits []int
 	var shifterCarry int
-	flags := cpu.Flags()
+	flags := sim.Flags{
+		N: cpu.regs[15][31] == 1,
+		Z: cpu.regs[15][30] == 1,
+		C: cpu.regs[15][29] == 1,
+		V: cpu.regs[15][28] == 1,
+	}
 	flagC := 0
 	if flags.C {
 		flagC = 1
@@ -360,7 +484,7 @@ func (cpu *ARM1GateLevel) executeDataProcessing(d *sim.DecodedInstruction, trace
 		rmBits := cpu.readRegBitsForExec(d.Rm)
 		var shiftAmount int
 		if d.ShiftByReg {
-			shiftAmount = int(cpu.readReg(d.Rs) & 0xFF) // Use readReg since we just need the value
+			shiftAmount = int(cpu.readReg(d.Rs) & 0xFF)
 		} else {
 			shiftAmount = d.ShiftImm
 		}
@@ -380,7 +504,10 @@ func (cpu *ARM1GateLevel) executeDataProcessing(d *sim.DecodedInstruction, trace
 				r15bits := IntToBits(resultVal, 32)
 				copy(cpu.regs[15][:], r15bits)
 			} else {
-				cpu.SetPC(resultVal & sim.PCMask)
+				r15 := BitsToInt(cpu.regs[15][:])
+				r15 = (r15 & ^uint32(sim.PCMask)) | (resultVal & sim.PCMask)
+				bits := IntToBits(r15, 32)
+				copy(cpu.regs[15][:], bits)
 			}
 		} else {
 			cpu.writeReg(d.Rd, resultVal)
@@ -416,7 +543,7 @@ func (cpu *ARM1GateLevel) executeLoadStore(d *sim.DecodedInstruction, trace *sim
 		if d.ShiftImm != 0 {
 			rmBits := IntToBits(rmVal, 32)
 			flagC := 0
-			if cpu.Flags().C {
+			if cpu.regs[15][29] == 1 {
 				flagC = 1
 			}
 			shifted, _ := GateBarrelShift(rmBits, d.ShiftType, d.ShiftImm, flagC, false)
@@ -443,9 +570,9 @@ func (cpu *ARM1GateLevel) executeLoadStore(d *sim.DecodedInstruction, trace *sim
 	if d.Load {
 		var value uint32
 		if d.Byte {
-			value = uint32(cpu.ReadByte(transferAddr))
+			value = uint32(cpu.memory[int(transferAddr&sim.PCMask)])
 		} else {
-			value = cpu.ReadWord(transferAddr)
+			value = cpu.readWordRaw(transferAddr)
 			rotation := (transferAddr & 3) * 8
 			if rotation != 0 {
 				value = (value >> rotation) | (value << (32 - rotation))
@@ -461,9 +588,18 @@ func (cpu *ARM1GateLevel) executeLoadStore(d *sim.DecodedInstruction, trace *sim
 	} else {
 		value := cpu.readRegForExec(d.Rd)
 		if d.Byte {
-			cpu.WriteByte(transferAddr, byte(value&0xFF))
+			a := int(transferAddr & sim.PCMask)
+			if a < len(cpu.memory) {
+				cpu.memory[a] = byte(value & 0xFF)
+			}
 		} else {
-			cpu.WriteWord(transferAddr, value)
+			a := int(transferAddr & ^uint32(3) & sim.PCMask)
+			if a+3 < len(cpu.memory) {
+				cpu.memory[a] = byte(value)
+				cpu.memory[a+1] = byte(value >> 8)
+				cpu.memory[a+2] = byte(value >> 16)
+				cpu.memory[a+3] = byte(value >> 24)
+			}
 		}
 		trace.MemoryWrites = append(trace.MemoryWrites, sim.MemoryAccess{Address: transferAddr, Value: value})
 	}
@@ -512,7 +648,7 @@ func (cpu *ARM1GateLevel) executeBlockTransfer(d *sim.DecodedInstruction, trace 
 			continue
 		}
 		if d.Load {
-			value := cpu.ReadWord(addr)
+			value := cpu.readWordRaw(addr)
 			trace.MemoryReads = append(trace.MemoryReads, sim.MemoryAccess{Address: addr, Value: value})
 			if i == 15 {
 				bits := IntToBits(value, 32)
@@ -527,7 +663,13 @@ func (cpu *ARM1GateLevel) executeBlockTransfer(d *sim.DecodedInstruction, trace 
 			} else {
 				value = cpu.readReg(i)
 			}
-			cpu.WriteWord(addr, value)
+			a := int(addr & ^uint32(3) & sim.PCMask)
+			if a+3 < len(cpu.memory) {
+				cpu.memory[a] = byte(value)
+				cpu.memory[a+1] = byte(value >> 8)
+				cpu.memory[a+2] = byte(value >> 16)
+				cpu.memory[a+3] = byte(value >> 24)
+			}
 			trace.MemoryWrites = append(trace.MemoryWrites, sim.MemoryAccess{Address: addr, Value: value})
 		}
 		addr += 4
@@ -545,13 +687,16 @@ func (cpu *ARM1GateLevel) executeBlockTransfer(d *sim.DecodedInstruction, trace 
 }
 
 func (cpu *ARM1GateLevel) executeBranch(d *sim.DecodedInstruction, trace *sim.Trace) {
-	branchBase := cpu.PC() + 4
+	branchBase := (BitsToInt(cpu.regs[15][:]) & sim.PCMask) + 4
 	if d.Link {
 		returnAddr := BitsToInt(cpu.regs[15][:])
 		cpu.writeReg(14, returnAddr)
 	}
 	target := uint32(int32(branchBase) + d.BranchOffset)
-	cpu.SetPC(target & sim.PCMask)
+	r15 := BitsToInt(cpu.regs[15][:])
+	r15 = (r15 & ^uint32(sim.PCMask)) | (target & sim.PCMask)
+	bits := IntToBits(r15, 32)
+	copy(cpu.regs[15][:], bits)
 }
 
 func (cpu *ARM1GateLevel) executeSWI(d *sim.DecodedInstruction, trace *sim.Trace) {
@@ -567,7 +712,10 @@ func (cpu *ARM1GateLevel) executeSWI(d *sim.DecodedInstruction, trace *sim.Trace
 	r15val |= sim.FlagI
 	bits := IntToBits(r15val, 32)
 	copy(cpu.regs[15][:], bits)
-	cpu.SetPC(0x08)
+	r15 := BitsToInt(cpu.regs[15][:])
+	r15 = (r15 & ^uint32(sim.PCMask)) | (0x08 & sim.PCMask)
+	bits = IntToBits(r15, 32)
+	copy(cpu.regs[15][:], bits)
 }
 
 func (cpu *ARM1GateLevel) trapUndefined(instrAddr uint32) {
@@ -577,5 +725,8 @@ func (cpu *ARM1GateLevel) trapUndefined(instrAddr uint32) {
 	r15val |= sim.FlagI
 	bits := IntToBits(r15val, 32)
 	copy(cpu.regs[15][:], bits)
-	cpu.SetPC(0x04)
+	r15 := BitsToInt(cpu.regs[15][:])
+	r15 = (r15 & ^uint32(sim.PCMask)) | (0x04 & sim.PCMask)
+	bits = IntToBits(r15, 32)
+	copy(cpu.regs[15][:], bits)
 }

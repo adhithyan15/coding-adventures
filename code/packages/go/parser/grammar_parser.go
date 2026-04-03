@@ -17,20 +17,28 @@ type ASTNode struct {
 
 // IsLeaf returns true if this node wraps a single token.
 func (n *ASTNode) IsLeaf() bool {
-	if len(n.Children) == 1 {
-		_, ok := n.Children[0].(lexer.Token)
-		return ok
-	}
-	return false
+	result, _ := StartNew[bool]("parser.ASTNode.IsLeaf", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			if len(n.Children) == 1 {
+				_, ok := n.Children[0].(lexer.Token)
+				return rf.Generate(true, false, ok)
+			}
+			return rf.Generate(true, false, false)
+		}).GetResult()
+	return result
 }
 
 // Token returns the leaf token if IsLeaf(), nil otherwise.
 func (n *ASTNode) Token() *lexer.Token {
-	if n.IsLeaf() {
-		tok := n.Children[0].(lexer.Token)
-		return &tok
-	}
-	return nil
+	result, _ := StartNew[*lexer.Token]("parser.ASTNode.Token", nil,
+		func(op *Operation[*lexer.Token], rf *ResultFactory[*lexer.Token]) *OperationResult[*lexer.Token] {
+			if n.IsLeaf() {
+				tok := n.Children[0].(lexer.Token)
+				return rf.Generate(true, false, &tok)
+			}
+			return rf.Generate(true, false, nil)
+		}).GetResult()
+	return result
 }
 
 // GrammarParseError is raised when grammar-driven parsing fails.
@@ -86,7 +94,11 @@ type GrammarParser struct {
 
 // NewGrammarParser creates a new grammar-driven parser with memoization.
 func NewGrammarParser(tokens []lexer.Token, grammar *grammartools.ParserGrammar) *GrammarParser {
-	return NewGrammarParserWithTrace(tokens, grammar, false)
+	result, _ := StartNew[*GrammarParser]("parser.NewGrammarParser", nil,
+		func(op *Operation[*GrammarParser], rf *ResultFactory[*GrammarParser]) *OperationResult[*GrammarParser] {
+			return rf.Generate(true, false, NewGrammarParserWithTrace(tokens, grammar, false))
+		}).GetResult()
+	return result
 }
 
 // NewGrammarParserWithTrace creates a grammar-driven parser with optional
@@ -101,43 +113,59 @@ func NewGrammarParser(tokens []lexer.Token, grammar *grammartools.ParserGrammar)
 // parser uses packrat memoization, each (rule, position) pair is traced at
 // most once.
 func NewGrammarParserWithTrace(tokens []lexer.Token, grammar *grammartools.ParserGrammar, trace bool) *GrammarParser {
-	rules := make(map[string]grammartools.GrammarRule)
-	ruleIndex := make(map[string]int)
-	for i, rule := range grammar.Rules {
-		rules[rule.Name] = rule
-		ruleIndex[rule.Name] = i
-	}
-
-	p := &GrammarParser{
-		tokens:    tokens,
-		grammar:   grammar,
-		pos:       0,
-		rules:     rules,
-		memo:      make(map[[2]int]*memoEntry),
-		ruleIndex: ruleIndex,
-		trace:     trace,
-	}
-	p.newlinesSignificant = p.grammarReferencesNewline()
-	return p
+	result, _ := StartNew[*GrammarParser]("parser.NewGrammarParserWithTrace", nil,
+		func(op *Operation[*GrammarParser], rf *ResultFactory[*GrammarParser]) *OperationResult[*GrammarParser] {
+			op.AddProperty("trace", trace)
+			rules := make(map[string]grammartools.GrammarRule)
+			ruleIndex := make(map[string]int)
+			for i, rule := range grammar.Rules {
+				rules[rule.Name] = rule
+				ruleIndex[rule.Name] = i
+			}
+			p := &GrammarParser{
+				tokens:    tokens,
+				grammar:   grammar,
+				pos:       0,
+				rules:     rules,
+				memo:      make(map[[2]int]*memoEntry),
+				ruleIndex: ruleIndex,
+				trace:     trace,
+			}
+			p.newlinesSignificant = p.grammarReferencesNewline()
+			return rf.Generate(true, false, p)
+		}).GetResult()
+	return result
 }
 
 // AddPreParse registers a token transform to run before parsing.
 // The hook receives the token list and returns a (possibly modified) token
 // list. Multiple hooks compose left-to-right.
 func (p *GrammarParser) AddPreParse(hook PreParseHook) {
-	p.preParseHooks = append(p.preParseHooks, hook)
+	_, _ = StartNew[struct{}]("parser.AddPreParse", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			p.preParseHooks = append(p.preParseHooks, hook)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // AddPostParse registers an AST transform to run after parsing.
 // The hook receives the root AST node and returns a (possibly modified)
 // AST node. Multiple hooks compose left-to-right.
 func (p *GrammarParser) AddPostParse(hook PostParseHook) {
-	p.postParseHooks = append(p.postParseHooks, hook)
+	_, _ = StartNew[struct{}]("parser.AddPostParse", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			p.postParseHooks = append(p.postParseHooks, hook)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // NewlinesSignificant returns whether newlines are significant in this grammar.
 func (p *GrammarParser) NewlinesSignificant() bool {
-	return p.newlinesSignificant
+	result, _ := StartNew[bool]("parser.NewlinesSignificant", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, p.newlinesSignificant)
+		}).GetResult()
+	return result
 }
 
 func (p *GrammarParser) current() lexer.Token {
@@ -256,72 +284,75 @@ func (p *GrammarParser) elementReferencesNewline(element grammartools.GrammarEle
 
 // Parse parses the token stream using the first grammar rule as entry point.
 func (p *GrammarParser) Parse() (*ASTNode, error) {
-	// Stage 1: Pre-parse hooks transform the token list.
-	// Each hook receives the output of the previous hook, composing
-	// left-to-right. This enables token-level transforms like filtering,
-	// rewriting, or injecting synthetic tokens before parsing begins.
-	if len(p.preParseHooks) > 0 {
-		tokens := p.tokens
-		for _, hook := range p.preParseHooks {
-			tokens = hook(tokens)
-		}
-		p.tokens = tokens
-	}
-
-	if len(p.grammar.Rules) == 0 {
-		return nil, fmt.Errorf("Grammar has no rules")
-	}
-
-	entryRule := p.grammar.Rules[0]
-	result := p.parseRule(entryRule.Name)
-
-	if result == nil {
-		tok := p.current()
-		if len(p.furthestExpected) > 0 {
-			expected := strings.Join(p.furthestExpected, " or ")
-			return nil, &GrammarParseError{
-				Message: fmt.Sprintf("Expected %s, got %q", expected, tok.Value),
-				Tok:     tok,
+	return StartNew[*ASTNode]("parser.GrammarParser.Parse", nil,
+		func(op *Operation[*ASTNode], rf *ResultFactory[*ASTNode]) *OperationResult[*ASTNode] {
+			// Stage 1: Pre-parse hooks transform the token list.
+			// Each hook receives the output of the previous hook, composing
+			// left-to-right. This enables token-level transforms like filtering,
+			// rewriting, or injecting synthetic tokens before parsing begins.
+			if len(p.preParseHooks) > 0 {
+				tokens := p.tokens
+				for _, hook := range p.preParseHooks {
+					tokens = hook(tokens)
+				}
+				p.tokens = tokens
 			}
-		}
-		return nil, &GrammarParseError{
-			Message: "Failed to parse",
-			Tok:     tok,
-		}
-	}
 
-	// Skip trailing newlines
-	for p.pos < len(p.tokens) && tokenTypeName(p.current()) == "NEWLINE" {
-		p.pos++
-	}
-
-	if p.pos < len(p.tokens) && tokenTypeName(p.current()) != "EOF" {
-		tok := p.current()
-		if len(p.furthestExpected) > 0 && p.furthestPos > p.pos {
-			expected := strings.Join(p.furthestExpected, " or ")
-			furthestTok := tok
-			if p.furthestPos < len(p.tokens) {
-				furthestTok = p.tokens[p.furthestPos]
+			if len(p.grammar.Rules) == 0 {
+				return rf.Fail(nil, fmt.Errorf("Grammar has no rules"))
 			}
-			return nil, &GrammarParseError{
-				Message: fmt.Sprintf("Expected %s, got %q", expected, furthestTok.Value),
-				Tok:     furthestTok,
+
+			entryRule := p.grammar.Rules[0]
+			parseResult := p.parseRule(entryRule.Name)
+
+			if parseResult == nil {
+				tok := p.current()
+				if len(p.furthestExpected) > 0 {
+					expected := strings.Join(p.furthestExpected, " or ")
+					return rf.Fail(nil, &GrammarParseError{
+						Message: fmt.Sprintf("Expected %s, got %q", expected, tok.Value),
+						Tok:     tok,
+					})
+				}
+				return rf.Fail(nil, &GrammarParseError{
+					Message: "Failed to parse",
+					Tok:     tok,
+				})
 			}
-		}
-		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("Unexpected token: %q", tok.Value),
-			Tok:     tok,
-		}
-	}
 
-	// Stage 3: Post-parse hooks transform the AST.
-	// Each hook receives the root AST node and returns a (possibly modified)
-	// AST node. Hooks compose left-to-right.
-	for _, hook := range p.postParseHooks {
-		result = hook(result)
-	}
+			// Skip trailing newlines
+			for p.pos < len(p.tokens) && tokenTypeName(p.current()) == "NEWLINE" {
+				p.pos++
+			}
 
-	return result, nil
+			if p.pos < len(p.tokens) && tokenTypeName(p.current()) != "EOF" {
+				tok := p.current()
+				if len(p.furthestExpected) > 0 && p.furthestPos > p.pos {
+					expected := strings.Join(p.furthestExpected, " or ")
+					furthestTok := tok
+					if p.furthestPos < len(p.tokens) {
+						furthestTok = p.tokens[p.furthestPos]
+					}
+					return rf.Fail(nil, &GrammarParseError{
+						Message: fmt.Sprintf("Expected %s, got %q", expected, furthestTok.Value),
+						Tok:     furthestTok,
+					})
+				}
+				return rf.Fail(nil, &GrammarParseError{
+					Message: fmt.Sprintf("Unexpected token: %q", tok.Value),
+					Tok:     tok,
+				})
+			}
+
+			// Stage 3: Post-parse hooks transform the AST.
+			// Each hook receives the root AST node and returns a (possibly modified)
+			// AST node. Hooks compose left-to-right.
+			for _, hook := range p.postParseHooks {
+				parseResult = hook(parseResult)
+			}
+
+			return rf.Generate(true, false, parseResult)
+		}).GetResult()
 }
 
 func (p *GrammarParser) parseRule(ruleName string) *ASTNode {

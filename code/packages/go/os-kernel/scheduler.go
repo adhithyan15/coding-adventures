@@ -27,10 +27,14 @@ type Scheduler struct {
 
 // NewScheduler creates a scheduler with the given process table.
 func NewScheduler(processTable []*ProcessControlBlock) *Scheduler {
-	return &Scheduler{
-		ProcessTable: processTable,
-		Current:      0,
-	}
+	result, _ := StartNew[*Scheduler]("os-kernel.NewScheduler", nil,
+		func(op *Operation[*Scheduler], rf *ResultFactory[*Scheduler]) *OperationResult[*Scheduler] {
+			return rf.Generate(true, false, &Scheduler{
+				ProcessTable: processTable,
+				Current:      0,
+			})
+		}).GetResult()
+	return result
 }
 
 // Schedule picks the next Ready process using round-robin.
@@ -39,26 +43,30 @@ func NewScheduler(processTable []*ProcessControlBlock) *Scheduler {
 //
 // Returns the PID of the next process to run.
 func (s *Scheduler) Schedule() int {
-	n := len(s.ProcessTable)
-	if n == 0 {
-		return 0
-	}
+	result, _ := StartNew[int]("os-kernel.Scheduler.Schedule", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			n := len(s.ProcessTable)
+			if n == 0 {
+				return rf.Generate(true, false, 0)
+			}
 
-	// Search for the next Ready process starting after the current one.
-	for i := 1; i <= n; i++ {
-		idx := (s.Current + i) % n
-		if s.ProcessTable[idx].State == ProcessReady {
-			return idx
-		}
-	}
+			// Search for the next Ready process starting after the current one.
+			for i := 1; i <= n; i++ {
+				idx := (s.Current + i) % n
+				if s.ProcessTable[idx].State == ProcessReady {
+					return rf.Generate(true, false, idx)
+				}
+			}
 
-	// If no other process is Ready, check if current is still Ready.
-	if s.Current < n && s.ProcessTable[s.Current].State == ProcessReady {
-		return s.Current
-	}
+			// If no other process is Ready, check if current is still Ready.
+			if s.Current < n && s.ProcessTable[s.Current].State == ProcessReady {
+				return rf.Generate(true, false, s.Current)
+			}
 
-	// Fall back to idle process (PID 0).
-	return 0
+			// Fall back to idle process (PID 0).
+			return rf.Generate(true, false, 0)
+		}).GetResult()
+	return result
 }
 
 // ContextSwitch saves the CPU state to the outgoing process's PCB and
@@ -69,13 +77,17 @@ func (s *Scheduler) Schedule() int {
 //   - Outgoing: Running -> Ready (unless Terminated)
 //   - Incoming: Ready -> Running
 func (s *Scheduler) ContextSwitch(from, to int) {
-	if from >= 0 && from < len(s.ProcessTable) {
-		if s.ProcessTable[from].State == ProcessRunning {
-			s.ProcessTable[from].State = ProcessReady
-		}
-	}
-	if to >= 0 && to < len(s.ProcessTable) {
-		s.ProcessTable[to].State = ProcessRunning
-	}
-	s.Current = to
+	_, _ = StartNew[struct{}]("os-kernel.Scheduler.ContextSwitch", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if from >= 0 && from < len(s.ProcessTable) {
+				if s.ProcessTable[from].State == ProcessRunning {
+					s.ProcessTable[from].State = ProcessReady
+				}
+			}
+			if to >= 0 && to < len(s.ProcessTable) {
+				s.ProcessTable[to].State = ProcessRunning
+			}
+			s.Current = to
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }

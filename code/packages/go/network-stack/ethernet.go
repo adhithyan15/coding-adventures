@@ -62,12 +62,16 @@ type EthernetFrame struct {
 // The format is simply the fields concatenated: dest_mac(6) + src_mac(6) +
 // ether_type(2, big-endian) + payload(N).
 func (f *EthernetFrame) Serialize() []byte {
-	buf := make([]byte, 14+len(f.Payload))
-	copy(buf[0:6], f.DestMAC[:])
-	copy(buf[6:12], f.SrcMAC[:])
-	binary.BigEndian.PutUint16(buf[12:14], f.EtherType)
-	copy(buf[14:], f.Payload)
-	return buf
+	result, _ := StartNew[[]byte]("network-stack.EthernetFrame.Serialize", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			buf := make([]byte, 14+len(f.Payload))
+			copy(buf[0:6], f.DestMAC[:])
+			copy(buf[6:12], f.SrcMAC[:])
+			binary.BigEndian.PutUint16(buf[12:14], f.EtherType)
+			copy(buf[14:], f.Payload)
+			return rf.Generate(true, false, buf)
+		}).GetResult()
+	return result
 }
 
 // DeserializeEthernetFrame parses raw bytes from the wire into an EthernetFrame.
@@ -75,19 +79,20 @@ func (f *EthernetFrame) Serialize() []byte {
 // The minimum frame is 14 bytes (6+6+2, with empty payload). Everything after
 // byte 14 is the payload.
 func DeserializeEthernetFrame(data []byte) (*EthernetFrame, error) {
-	if len(data) < 14 {
-		return nil, errors.New("ethernet frame too short: minimum 14 bytes")
-	}
-
-	frame := &EthernetFrame{
-		EtherType: binary.BigEndian.Uint16(data[12:14]),
-		Payload:   make([]byte, len(data)-14),
-	}
-	copy(frame.DestMAC[:], data[0:6])
-	copy(frame.SrcMAC[:], data[6:12])
-	copy(frame.Payload, data[14:])
-
-	return frame, nil
+	return StartNew[*EthernetFrame]("network-stack.DeserializeEthernetFrame", nil,
+		func(op *Operation[*EthernetFrame], rf *ResultFactory[*EthernetFrame]) *OperationResult[*EthernetFrame] {
+			if len(data) < 14 {
+				return rf.Fail(nil, errors.New("ethernet frame too short: minimum 14 bytes"))
+			}
+			frame := &EthernetFrame{
+				EtherType: binary.BigEndian.Uint16(data[12:14]),
+				Payload:   make([]byte, len(data)-14),
+			}
+			copy(frame.DestMAC[:], data[0:6])
+			copy(frame.SrcMAC[:], data[6:12])
+			copy(frame.Payload, data[14:])
+			return rf.Generate(true, false, frame)
+		}).GetResult()
 }
 
 // ARPTable maps IP addresses to MAC addresses. This is the ARP cache — it
@@ -103,28 +108,46 @@ type ARPTable struct {
 
 // NewARPTable creates a new, empty ARP table.
 func NewARPTable() *ARPTable {
-	return &ARPTable{entries: make(map[uint32][6]byte)}
+	result, _ := StartNew[*ARPTable]("network-stack.NewARPTable", nil,
+		func(op *Operation[*ARPTable], rf *ResultFactory[*ARPTable]) *OperationResult[*ARPTable] {
+			return rf.Generate(true, false, &ARPTable{entries: make(map[uint32][6]byte)})
+		}).GetResult()
+	return result
 }
 
 // Lookup returns the MAC address for the given IP, and a boolean indicating
 // whether the entry exists. Returns false if the IP is not in the table,
 // meaning an ARP request would be needed.
 func (t *ARPTable) Lookup(ip uint32) ([6]byte, bool) {
-	mac, ok := t.entries[ip]
-	return mac, ok
+	var found bool
+	mac, _ := StartNew[[6]byte]("network-stack.ARPTable.Lookup", [6]byte{},
+		func(op *Operation[[6]byte], rf *ResultFactory[[6]byte]) *OperationResult[[6]byte] {
+			v, ok := t.entries[ip]
+			found = ok
+			return rf.Generate(true, false, v)
+		}).GetResult()
+	return mac, found
 }
 
 // Update adds or overwrites an IP-to-MAC mapping. Called when we receive an
 // ARP reply or see a packet that reveals a (source IP, source MAC) pair.
 func (t *ARPTable) Update(ip uint32, mac [6]byte) {
-	t.entries[ip] = mac
+	_, _ = StartNew[struct{}]("network-stack.ARPTable.Update", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			t.entries[ip] = mac
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Entries returns a copy of all entries in the table.
 func (t *ARPTable) Entries() map[uint32][6]byte {
-	result := make(map[uint32][6]byte, len(t.entries))
-	for k, v := range t.entries {
-		result[k] = v
-	}
+	result, _ := StartNew[map[uint32][6]byte]("network-stack.ARPTable.Entries", nil,
+		func(op *Operation[map[uint32][6]byte], rf *ResultFactory[map[uint32][6]byte]) *OperationResult[map[uint32][6]byte] {
+			copy := make(map[uint32][6]byte, len(t.entries))
+			for k, v := range t.entries {
+				copy[k] = v
+			}
+			return rf.Generate(true, false, copy)
+		}).GetResult()
 	return result
 }

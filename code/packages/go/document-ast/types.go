@@ -95,7 +95,13 @@ type DocumentNode struct {
 	Children []BlockNode
 }
 
-func (n *DocumentNode) NodeType() string { return "document" }
+func (n *DocumentNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.DocumentNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "document")
+		}).GetResult()
+	return result
+}
 func (n *DocumentNode) blockNode()       {}
 
 // HeadingNode is a section heading with a nesting depth.
@@ -113,7 +119,13 @@ type HeadingNode struct {
 	Children []InlineNode
 }
 
-func (n *HeadingNode) NodeType() string { return "heading" }
+func (n *HeadingNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.HeadingNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "heading")
+		}).GetResult()
+	return result
+}
 func (n *HeadingNode) blockNode()       {}
 
 // ParagraphNode is a block of prose containing one or more inline nodes.
@@ -129,7 +141,13 @@ type ParagraphNode struct {
 	Children []InlineNode
 }
 
-func (n *ParagraphNode) NodeType() string { return "paragraph" }
+func (n *ParagraphNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.ParagraphNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "paragraph")
+		}).GetResult()
+	return result
+}
 func (n *ParagraphNode) blockNode()       {}
 
 // CodeBlockNode is a block of literal code or pre-formatted text.
@@ -155,7 +173,13 @@ type CodeBlockNode struct {
 	Value string
 }
 
-func (n *CodeBlockNode) NodeType() string { return "code_block" }
+func (n *CodeBlockNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.CodeBlockNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "code_block")
+		}).GetResult()
+	return result
+}
 func (n *CodeBlockNode) blockNode()       {}
 
 // BlockquoteNode is a block of content set apart as a quotation or aside.
@@ -171,7 +195,13 @@ type BlockquoteNode struct {
 	Children []BlockNode
 }
 
-func (n *BlockquoteNode) NodeType() string { return "blockquote" }
+func (n *BlockquoteNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.BlockquoteNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "blockquote")
+		}).GetResult()
+	return result
+}
 func (n *BlockquoteNode) blockNode()       {}
 
 // ListNode is an ordered (numbered) or unordered (bulleted) list.
@@ -208,7 +238,13 @@ type ListNode struct {
 	Children []ListChildNode
 }
 
-func (n *ListNode) NodeType() string { return "list" }
+func (n *ListNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.ListNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "list")
+		}).GetResult()
+	return result
+}
 func (n *ListNode) blockNode()       {}
 
 // ListItemNode is one item in a ListNode. Contains block-level content.
@@ -220,7 +256,13 @@ type ListItemNode struct {
 	Children []BlockNode
 }
 
-func (n *ListItemNode) NodeType() string { return "list_item" }
+func (n *ListItemNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.ListItemNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "list_item")
+		}).GetResult()
+	return result
+}
 func (n *ListItemNode) blockNode()       {}
 func (n *ListItemNode) listChildNode()   {}
 
@@ -230,7 +272,13 @@ type TaskItemNode struct {
 	Children []BlockNode
 }
 
-func (n *TaskItemNode) NodeType() string { return "task_item" }
+func (n *TaskItemNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.TaskItemNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "task_item")
+		}).GetResult()
+	return result
+}
 func (n *TaskItemNode) blockNode()       {}
 func (n *TaskItemNode) listChildNode()   {}
 
@@ -239,7 +287,13 @@ func (n *TaskItemNode) listChildNode()   {}
 // In HTML renders as <hr />. In RST: ----. In plain text: ---.
 type ThematicBreakNode struct{}
 
-func (n *ThematicBreakNode) NodeType() string { return "thematic_break" }
+func (n *ThematicBreakNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.ThematicBreakNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "thematic_break")
+		}).GetResult()
+	return result
+}
 func (n *ThematicBreakNode) blockNode()       {}
 
 // RawBlockNode is a block of raw content to be passed through verbatim to a
@@ -272,7 +326,13 @@ type RawBlockNode struct {
 	Value string
 }
 
-func (n *RawBlockNode) NodeType() string { return "raw_block" }
+func (n *RawBlockNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.RawBlockNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "raw_block")
+		}).GetResult()
+	return result
+}
 func (n *RawBlockNode) blockNode()       {}
 
 // TableAlignment is a column alignment hint for GFM tables.
@@ -291,7 +351,13 @@ type TableNode struct {
 	Children []*TableRowNode
 }
 
-func (n *TableNode) NodeType() string { return "table" }
+func (n *TableNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.TableNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "table")
+		}).GetResult()
+	return result
+}
 func (n *TableNode) blockNode()       {}
 
 // TableRowNode is one row in a table.
@@ -300,7 +366,13 @@ type TableRowNode struct {
 	Children []*TableCellNode
 }
 
-func (n *TableRowNode) NodeType() string { return "table_row" }
+func (n *TableRowNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.TableRowNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "table_row")
+		}).GetResult()
+	return result
+}
 func (n *TableRowNode) blockNode()       {}
 
 // TableCellNode is a single table cell containing inline content.
@@ -308,7 +380,13 @@ type TableCellNode struct {
 	Children []InlineNode
 }
 
-func (n *TableCellNode) NodeType() string { return "table_cell" }
+func (n *TableCellNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.TableCellNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "table_cell")
+		}).GetResult()
+	return result
+}
 func (n *TableCellNode) blockNode()       {}
 
 // ─── Inline Node Types ────────────────────────────────────────────────────────
@@ -329,7 +407,13 @@ type TextNode struct {
 	Value string
 }
 
-func (n *TextNode) NodeType() string { return "text" }
+func (n *TextNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.TextNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "text")
+		}).GetResult()
+	return result
+}
 func (n *TextNode) inlineNode()      {}
 
 // EmphasisNode is stressed emphasis. In HTML renders as <em>.
@@ -341,7 +425,13 @@ type EmphasisNode struct {
 	Children []InlineNode
 }
 
-func (n *EmphasisNode) NodeType() string { return "emphasis" }
+func (n *EmphasisNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.EmphasisNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "emphasis")
+		}).GetResult()
+	return result
+}
 func (n *EmphasisNode) inlineNode()      {}
 
 // StrongNode is strong importance. In HTML renders as <strong>.
@@ -353,7 +443,13 @@ type StrongNode struct {
 	Children []InlineNode
 }
 
-func (n *StrongNode) NodeType() string { return "strong" }
+func (n *StrongNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.StrongNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "strong")
+		}).GetResult()
+	return result
+}
 func (n *StrongNode) inlineNode()      {}
 
 // StrikethroughNode marks text as deleted / struck through.
@@ -361,7 +457,13 @@ type StrikethroughNode struct {
 	Children []InlineNode
 }
 
-func (n *StrikethroughNode) NodeType() string { return "strikethrough" }
+func (n *StrikethroughNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.StrikethroughNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "strikethrough")
+		}).GetResult()
+	return result
+}
 func (n *StrikethroughNode) inlineNode()      {}
 
 // CodeSpanNode is inline code. The value is raw — not decoded for HTML entities
@@ -375,7 +477,13 @@ type CodeSpanNode struct {
 	Value string
 }
 
-func (n *CodeSpanNode) NodeType() string { return "code_span" }
+func (n *CodeSpanNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.CodeSpanNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "code_span")
+		}).GetResult()
+	return result
+}
 func (n *CodeSpanNode) inlineNode()      {}
 
 // LinkNode is a hyperlink with resolved destination.
@@ -402,7 +510,13 @@ type LinkNode struct {
 	Children []InlineNode
 }
 
-func (n *LinkNode) NodeType() string { return "link" }
+func (n *LinkNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.LinkNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "link")
+		}).GetResult()
+	return result
+}
 func (n *LinkNode) inlineNode()      {}
 
 // ImageNode is an embedded image.
@@ -429,7 +543,13 @@ type ImageNode struct {
 	Alt string
 }
 
-func (n *ImageNode) NodeType() string { return "image" }
+func (n *ImageNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.ImageNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "image")
+		}).GetResult()
+	return result
+}
 func (n *ImageNode) inlineNode()      {}
 
 // AutolinkNode is a URL or email address presented as a direct link,
@@ -454,7 +574,13 @@ type AutolinkNode struct {
 	IsEmail bool
 }
 
-func (n *AutolinkNode) NodeType() string { return "autolink" }
+func (n *AutolinkNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.AutolinkNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "autolink")
+		}).GetResult()
+	return result
+}
 func (n *AutolinkNode) inlineNode()      {}
 
 // RawInlineNode is an inline span of raw content to be passed through verbatim
@@ -473,7 +599,13 @@ type RawInlineNode struct {
 	Value string
 }
 
-func (n *RawInlineNode) NodeType() string { return "raw_inline" }
+func (n *RawInlineNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.RawInlineNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "raw_inline")
+		}).GetResult()
+	return result
+}
 func (n *RawInlineNode) inlineNode()      {}
 
 // HardBreakNode is a forced line break within a paragraph.
@@ -483,7 +615,13 @@ func (n *RawInlineNode) inlineNode()      {}
 // newline, or a backslash \ immediately before a newline.
 type HardBreakNode struct{}
 
-func (n *HardBreakNode) NodeType() string { return "hard_break" }
+func (n *HardBreakNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.HardBreakNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "hard_break")
+		}).GetResult()
+	return result
+}
 func (n *HardBreakNode) inlineNode()      {}
 
 // SoftBreakNode is a soft line break — a newline within a paragraph that
@@ -498,5 +636,11 @@ func (n *HardBreakNode) inlineNode()      {}
 // breaks and re-wrap paragraphs independently.
 type SoftBreakNode struct{}
 
-func (n *SoftBreakNode) NodeType() string { return "soft_break" }
+func (n *SoftBreakNode) NodeType() string {
+	result, _ := StartNew[string]("document-ast.SoftBreakNode.NodeType", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, "soft_break")
+		}).GetResult()
+	return result
+}
 func (n *SoftBreakNode) inlineNode()      {}

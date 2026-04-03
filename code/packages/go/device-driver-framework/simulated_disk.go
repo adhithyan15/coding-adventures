@@ -38,24 +38,36 @@ type SimulatedDisk struct {
 //   - blockSize: bytes per block (typically 512)
 //   - totalBlocks: number of blocks (e.g., 2048 for 1 MB)
 func NewSimulatedDisk(name string, minor, blockSize, totalBlocks int) *SimulatedDisk {
-	return &SimulatedDisk{
-		DeviceBase: DeviceBase{
-			Name:            name,
-			Type:            DeviceBlock,
-			Major:           MajorDisk,
-			Minor:           minor,
-			InterruptNumber: IntDisk,
-		},
-		blockSize:   blockSize,
-		totalBlocks: totalBlocks,
-		storage:     make([]byte, blockSize*totalBlocks),
-	}
+	result, _ := StartNew[*SimulatedDisk]("device-driver-framework.NewSimulatedDisk", nil,
+		func(op *Operation[*SimulatedDisk], rf *ResultFactory[*SimulatedDisk]) *OperationResult[*SimulatedDisk] {
+			op.AddProperty("name", name)
+			op.AddProperty("minor", minor)
+			op.AddProperty("blockSize", blockSize)
+			op.AddProperty("totalBlocks", totalBlocks)
+			return rf.Generate(true, false, &SimulatedDisk{
+				DeviceBase: DeviceBase{
+					Name:            name,
+					Type:            DeviceBlock,
+					Major:           MajorDisk,
+					Minor:           minor,
+					InterruptNumber: IntDisk,
+				},
+				blockSize:   blockSize,
+				totalBlocks: totalBlocks,
+				storage:     make([]byte, blockSize*totalBlocks),
+			})
+		}).GetResult()
+	return result
 }
 
 // Init initializes the disk by zeroing out the storage.
 func (d *SimulatedDisk) Init() {
-	d.storage = make([]byte, d.blockSize*d.totalBlocks)
-	d.Initialized = true
+	_, _ = StartNew[struct{}]("device-driver-framework.SimulatedDisk.Init", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			d.storage = make([]byte, d.blockSize*d.totalBlocks)
+			d.Initialized = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // ReadBlock reads one block from the disk.
@@ -68,13 +80,17 @@ func (d *SimulatedDisk) Init() {
 // On a real disk, this would involve seeking, waiting for rotation,
 // and reading magnetic flux patterns. Our simulation is instant.
 func (d *SimulatedDisk) ReadBlock(blockNum int) ([]byte, error) {
-	if blockNum < 0 || blockNum >= d.totalBlocks {
-		return nil, fmt.Errorf("block number %d out of range (0..%d)", blockNum, d.totalBlocks-1)
-	}
-	offset := blockNum * d.blockSize
-	result := make([]byte, d.blockSize)
-	copy(result, d.storage[offset:offset+d.blockSize])
-	return result, nil
+	return StartNew[[]byte]("device-driver-framework.SimulatedDisk.ReadBlock", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("blockNum", blockNum)
+			if blockNum < 0 || blockNum >= d.totalBlocks {
+				return rf.Fail(nil, fmt.Errorf("block number %d out of range (0..%d)", blockNum, d.totalBlocks-1))
+			}
+			offset := blockNum * d.blockSize
+			result := make([]byte, d.blockSize)
+			copy(result, d.storage[offset:offset+d.blockSize])
+			return rf.Generate(true, false, result)
+		}).GetResult()
 }
 
 // WriteBlock writes one block to the disk.
@@ -82,28 +98,45 @@ func (d *SimulatedDisk) ReadBlock(blockNum int) ([]byte, error) {
 // The data must be exactly blockSize bytes. This constraint mirrors real
 // disk hardware, which always writes complete sectors.
 func (d *SimulatedDisk) WriteBlock(blockNum int, data []byte) error {
-	if blockNum < 0 || blockNum >= d.totalBlocks {
-		return fmt.Errorf("block number %d out of range (0..%d)", blockNum, d.totalBlocks-1)
-	}
-	if len(data) != d.blockSize {
-		return fmt.Errorf("data must be exactly %d bytes, got %d", d.blockSize, len(data))
-	}
-	offset := blockNum * d.blockSize
-	copy(d.storage[offset:offset+d.blockSize], data)
-	return nil
+	_, err := StartNew[struct{}]("device-driver-framework.SimulatedDisk.WriteBlock", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("blockNum", blockNum)
+			if blockNum < 0 || blockNum >= d.totalBlocks {
+				return rf.Fail(struct{}{}, fmt.Errorf("block number %d out of range (0..%d)", blockNum, d.totalBlocks-1))
+			}
+			if len(data) != d.blockSize {
+				return rf.Fail(struct{}{}, fmt.Errorf("data must be exactly %d bytes, got %d", d.blockSize, len(data)))
+			}
+			offset := blockNum * d.blockSize
+			copy(d.storage[offset:offset+d.blockSize], data)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // BlockSize returns the number of bytes per block.
 func (d *SimulatedDisk) BlockSize() int {
-	return d.blockSize
+	result, _ := StartNew[int]("device-driver-framework.SimulatedDisk.BlockSize", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, d.blockSize)
+		}).GetResult()
+	return result
 }
 
 // TotalBlocks returns the total number of blocks on this device.
 func (d *SimulatedDisk) TotalBlocks() int {
-	return d.totalBlocks
+	result, _ := StartNew[int]("device-driver-framework.SimulatedDisk.TotalBlocks", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, d.totalBlocks)
+		}).GetResult()
+	return result
 }
 
 // Storage returns the backing byte slice (for testing/debugging).
 func (d *SimulatedDisk) Storage() []byte {
-	return d.storage
+	result, _ := StartNew[[]byte]("device-driver-framework.SimulatedDisk.Storage", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			return rf.Generate(true, false, d.storage)
+		}).GetResult()
+	return result
 }

@@ -112,79 +112,74 @@ type Core struct {
 //
 // Returns an error if the pipeline configuration is invalid.
 func NewCore(config CoreConfig, decoder ISADecoder) (*Core, error) {
-	c := &Core{
-		config:  config,
-		decoder: decoder,
-	}
+	result, err := StartNew[*Core]("core.NewCore", nil,
+		func(op *Operation[*Core], rf *ResultFactory[*Core]) *OperationResult[*Core] {
+			op.AddProperty("config_name", config.Name)
+			c := &Core{
+				config:  config,
+				decoder: decoder,
+			}
 
-	// --- 1. Register File ---
-	c.regFile = NewRegisterFile(config.RegisterFile)
+			c.regFile = NewRegisterFile(config.RegisterFile)
 
-	// --- 2. Memory ---
-	memSize := config.MemorySize
-	if memSize <= 0 {
-		memSize = 65536
-	}
-	memory := make([]byte, memSize)
-	memLatency := config.MemoryLatency
-	if memLatency <= 0 {
-		memLatency = 100
-	}
-	c.memCtrl = NewMemoryController(memory, memLatency)
+			memSize := config.MemorySize
+			if memSize <= 0 {
+				memSize = 65536
+			}
+			memory := make([]byte, memSize)
+			memLatency := config.MemoryLatency
+			if memLatency <= 0 {
+				memLatency = 100
+			}
+			c.memCtrl = NewMemoryController(memory, memLatency)
 
-	// --- 3. Cache Hierarchy ---
-	c.cacheHierarchy = c.buildCacheHierarchy(config, memLatency)
+			c.cacheHierarchy = c.buildCacheHierarchy(config, memLatency)
 
-	// --- 4. Branch Predictor + BTB ---
-	c.predictor = createBranchPredictor(config.BranchPredictorType, config.BranchPredictorSize)
-	btbSize := config.BTBSize
-	if btbSize <= 0 {
-		btbSize = 64
-	}
-	c.btb = branchpredictor.NewBranchTargetBuffer(btbSize)
+			c.predictor = createBranchPredictor(config.BranchPredictorType, config.BranchPredictorSize)
+			btbSize := config.BTBSize
+			if btbSize <= 0 {
+				btbSize = 64
+			}
+			c.btb = branchpredictor.NewBranchTargetBuffer(btbSize)
 
-	// --- 5. Hazard Unit ---
-	numFPUnits := 0
-	if config.FPUnit != nil {
-		numFPUnits = 1
-	}
-	c.hazardUnit = hazarddetection.NewHazardUnit(1, numFPUnits, true)
+			numFPUnits := 0
+			if config.FPUnit != nil {
+				numFPUnits = 1
+			}
+			c.hazardUnit = hazarddetection.NewHazardUnit(1, numFPUnits, true)
 
-	// --- 6. Pipeline ---
-	pipelineConfig := config.Pipeline
-	if len(pipelineConfig.Stages) == 0 {
-		pipelineConfig = cpupipeline.Classic5Stage()
-	}
+			pipelineConfig := config.Pipeline
+			if len(pipelineConfig.Stages) == 0 {
+				pipelineConfig = cpupipeline.Classic5Stage()
+			}
 
-	pipeline, err := cpupipeline.NewPipeline(
-		pipelineConfig,
-		c.fetchCallback,
-		c.decodeCallback,
-		c.executeCallback,
-		c.memoryCallback,
-		c.writebackCallback,
-	)
-	if err != nil {
-		return nil, err
-	}
+			pipeline, pipelineErr := cpupipeline.NewPipeline(
+				pipelineConfig,
+				c.fetchCallback,
+				c.decodeCallback,
+				c.executeCallback,
+				c.memoryCallback,
+				c.writebackCallback,
+			)
+			if pipelineErr != nil {
+				return rf.Fail(nil, pipelineErr)
+			}
 
-	// Wire optional callbacks.
-	if config.HazardDetection {
-		pipeline.SetHazardFunc(c.hazardCallback)
-	}
-	pipeline.SetPredictFunc(c.predictCallback)
+			if config.HazardDetection {
+				pipeline.SetHazardFunc(c.hazardCallback)
+			}
+			pipeline.SetPredictFunc(c.predictCallback)
 
-	c.pipeline = pipeline
+			c.pipeline = pipeline
+			c.clk = clock.New(1000000000)
 
-	// --- 7. Clock ---
-	c.clk = clock.New(1000000000) // 1 GHz nominal
-
-	return c, nil
+			return rf.Generate(true, false, c)
+		}).GetResult()
+	return result, err
 }
 
 // buildCacheHierarchy creates the L1I, L1D, and optional L2 caches.
 func (c *Core) buildCacheHierarchy(config CoreConfig, memLatency int) *cache.CacheHierarchy {
-	// Default L1I: 4KB direct-mapped, 64B lines, 1-cycle latency.
 	l1iCfg := config.L1ICache
 	if l1iCfg == nil {
 		defaultCfg := cache.CacheConfig{
@@ -195,7 +190,6 @@ func (c *Core) buildCacheHierarchy(config CoreConfig, memLatency int) *cache.Cac
 	}
 	l1i := cache.NewCache(*l1iCfg)
 
-	// Default L1D: 4KB direct-mapped, 64B lines, 1-cycle latency.
 	l1dCfg := config.L1DCache
 	if l1dCfg == nil {
 		defaultCfg := cache.CacheConfig{
@@ -206,7 +200,6 @@ func (c *Core) buildCacheHierarchy(config CoreConfig, memLatency int) *cache.Cac
 	}
 	l1d := cache.NewCache(*l1dCfg)
 
-	// Optional L2.
 	var l2 *cache.Cache
 	if config.L2Cache != nil {
 		l2 = cache.NewCache(*config.L2Cache)
@@ -220,38 +213,20 @@ func (c *Core) buildCacheHierarchy(config CoreConfig, memLatency int) *cache.Cac
 // =========================================================================
 
 // fetchCallback is called by the pipeline's IF stage.
-//
-// It reads the raw instruction bits from memory at the given PC.
-// In a real CPU, this goes through the L1I cache. For simplicity,
-// we read directly from the memory controller (the cache hierarchy
-// tracks statistics separately).
 func (c *Core) fetchCallback(pc int) int {
-	// Read from instruction cache hierarchy for statistics.
 	c.cacheHierarchy.Read(pc, true, c.cycle)
-
-	// Read the actual instruction bits from memory.
 	return c.memCtrl.ReadWord(pc)
 }
 
 // decodeCallback is called by the pipeline's ID stage.
-//
-// It delegates to the injected ISA decoder to fill in the token's
-// decoded fields (opcode, registers, control signals).
 func (c *Core) decodeCallback(raw int, token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
 	return c.decoder.Decode(raw, token)
 }
 
 // executeCallback is called by the pipeline's EX stage.
-//
-// It delegates to the ISA decoder's Execute method, which computes
-// ALU results, resolves branches, and calculates effective addresses.
-//
-// After execution, if the instruction is a branch, we update the
-// branch predictor and BTB with the actual outcome.
 func (c *Core) executeCallback(token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
 	result := c.decoder.Execute(token, c.regFile)
 
-	// Update branch predictor with actual outcome.
 	if result.IsBranch {
 		c.predictor.Update(result.PC, result.BranchTaken, result.BranchTarget)
 		if result.BranchTaken {
@@ -263,36 +238,20 @@ func (c *Core) executeCallback(token *cpupipeline.PipelineToken) *cpupipeline.Pi
 }
 
 // memoryCallback is called by the pipeline's MEM stage.
-//
-// For load instructions (MemRead=true): reads data from the L1D cache
-// (which may go to L2 or memory on a miss) and fills in MemData.
-//
-// For store instructions (MemWrite=true): writes data to the L1D cache.
-//
-// For other instructions: passes the token through unchanged.
 func (c *Core) memoryCallback(token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
 	if token.MemRead {
-		// Load: read from data cache hierarchy.
 		c.cacheHierarchy.Read(token.ALUResult, false, c.cycle)
-
-		// Read the actual word from memory.
 		token.MemData = c.memCtrl.ReadWord(token.ALUResult)
 		token.WriteData = token.MemData
 	} else if token.MemWrite {
-		// Store: write to data cache hierarchy.
 		data := []int{token.WriteData & 0xFF}
 		c.cacheHierarchy.Write(token.ALUResult, data, c.cycle)
-
-		// Write the actual word to memory.
 		c.memCtrl.WriteWord(token.ALUResult, token.WriteData)
 	}
 	return token
 }
 
 // writebackCallback is called by the pipeline's WB stage.
-//
-// For register-writing instructions (RegWrite=true), WriteData is written
-// to the destination register Rd. The instruction is now "retired."
 func (c *Core) writebackCallback(token *cpupipeline.PipelineToken) {
 	if token.RegWrite && token.Rd >= 0 {
 		c.regFile.Write(token.Rd, token.WriteData)
@@ -300,10 +259,6 @@ func (c *Core) writebackCallback(token *cpupipeline.PipelineToken) {
 }
 
 // hazardCallback is called at the start of each cycle to check for hazards.
-//
-// It translates the pipeline's stage contents into PipelineSlots that the
-// hazard unit can analyze, then converts the hazard result back into a
-// HazardResponse that the pipeline understands.
 func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.HazardResponse {
 	numStages := len(stages)
 	pipelineCfg := c.config.Pipeline
@@ -311,7 +266,6 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		pipelineCfg = cpupipeline.Classic5Stage()
 	}
 
-	// Find the IF, ID, EX, MEM stages by category.
 	var ifTok, idTok, exTok, memTok *cpupipeline.PipelineToken
 	for i, stage := range pipelineCfg.Stages {
 		if i >= numStages {
@@ -324,7 +278,6 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 				ifTok = tok
 			}
 		case cpupipeline.StageDecode:
-			// Use the LAST decode stage (closest to EX).
 			idTok = tok
 		case cpupipeline.StageExecute:
 			if exTok == nil {
@@ -337,16 +290,13 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		}
 	}
 
-	// Convert PipelineTokens to PipelineSlots for the hazard unit.
 	ifSlot := tokenToSlot(ifTok)
 	idSlot := tokenToSlot(idTok)
 	exSlot := tokenToSlot(exTok)
 	memSlot := tokenToSlot(memTok)
 
-	// Run hazard detection.
 	result := c.hazardUnit.Check(ifSlot, idSlot, exSlot, memSlot)
 
-	// Convert HazardResult to HazardResponse.
 	response := cpupipeline.HazardResponse{
 		Action: cpupipeline.HazardNone,
 	}
@@ -360,7 +310,6 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 	case hazarddetection.ActionFlush:
 		response.Action = cpupipeline.HazardFlush
 		response.FlushCount = result.FlushCount
-		// Redirect PC to the correct target.
 		if exTok != nil && exTok.IsBranch {
 			if exTok.BranchTaken {
 				response.RedirectPC = exTok.BranchTarget
@@ -391,31 +340,21 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 }
 
 // predictCallback is called by the pipeline's IF stage to predict the next PC.
-//
-// It consults the branch predictor for direction and the BTB for target:
-//   - If the predictor says "taken" and the BTB has a target, fetch from target.
-//   - Otherwise, fetch sequentially (PC + instruction_size).
 func (c *Core) predictCallback(pc int) int {
 	prediction := c.predictor.Predict(pc)
 	instrSize := c.decoder.InstructionSize()
 
 	if prediction.Taken {
-		// Check BTB for target address.
 		target := c.btb.Lookup(pc)
 		if target != branchpredictor.NoTarget {
 			return target
 		}
 	}
 
-	// Default: sequential fetch.
 	return pc + instrSize
 }
 
 // tokenToSlot converts a PipelineToken to a hazard-detection PipelineSlot.
-//
-// This bridges the gap between the pipeline package (which uses PipelineToken)
-// and the hazard-detection package (which uses PipelineSlot). The Core must
-// translate between the two because the packages are deliberately decoupled.
 func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
 	if tok == nil || tok.IsBubble {
 		return hazarddetection.PipelineSlot{Valid: false}
@@ -427,10 +366,9 @@ func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
 		IsBranch: tok.IsBranch,
 		MemRead:  tok.MemRead,
 		MemWrite: tok.MemWrite,
-		UsesALU:  true, // Most instructions use the ALU
+		UsesALU:  true,
 	}
 
-	// Source registers.
 	if tok.Rs1 >= 0 {
 		slot.SourceRegs = append(slot.SourceRegs, tok.Rs1)
 	}
@@ -438,10 +376,8 @@ func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
 		slot.SourceRegs = append(slot.SourceRegs, tok.Rs2)
 	}
 
-	// Destination register.
 	if tok.Rd >= 0 && tok.RegWrite {
 		slot.DestReg = hazarddetection.IntPtr(tok.Rd)
-		// Provide the computed value for forwarding.
 		if tok.ALUResult != 0 || tok.WriteData != 0 {
 			val := tok.ALUResult
 			if tok.WriteData != 0 {
@@ -451,13 +387,9 @@ func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
 		}
 	}
 
-	// Branch prediction tracking.
 	if tok.IsBranch {
 		slot.BranchTaken = tok.BranchTaken
-		// BranchPredictedTaken is set based on whether we fetched sequentially.
-		// If the pipeline fetched from a non-sequential address, the prediction
-		// was "taken". This is approximated here.
-		slot.BranchPredictedTaken = false // Default assumption
+		slot.BranchPredictedTaken = false
 	}
 
 	return slot
@@ -479,8 +411,14 @@ func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
 //	core.LoadProgram(program, 0)
 //	core.Run(100)
 func (c *Core) LoadProgram(program []byte, startAddress int) {
-	c.memCtrl.LoadProgram(program, startAddress)
-	c.pipeline.SetPC(startAddress)
+	_, _ = StartNew[struct{}]("core.Core.LoadProgram", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("start_address", startAddress)
+			op.AddProperty("program_size", len(program))
+			c.memCtrl.LoadProgram(program, startAddress)
+			c.pipeline.SetPC(startAddress)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // Step executes one clock cycle.
@@ -493,22 +431,24 @@ func (c *Core) LoadProgram(program []byte, startAddress int) {
 //
 // Returns the pipeline snapshot for this cycle (useful for tracing).
 func (c *Core) Step() cpupipeline.PipelineSnapshot {
-	if c.halted {
-		return c.pipeline.Snapshot()
-	}
+	result, _ := StartNew[cpupipeline.PipelineSnapshot]("core.Core.Step", cpupipeline.PipelineSnapshot{},
+		func(op *Operation[cpupipeline.PipelineSnapshot], rf *ResultFactory[cpupipeline.PipelineSnapshot]) *OperationResult[cpupipeline.PipelineSnapshot] {
+			if c.halted {
+				return rf.Generate(true, false, c.pipeline.Snapshot())
+			}
 
-	c.cycle++
-	snap := c.pipeline.Step()
+			c.cycle++
+			snap := c.pipeline.Step()
 
-	// Check if the pipeline halted this cycle.
-	if c.pipeline.IsHalted() {
-		c.halted = true
-	}
+			if c.pipeline.IsHalted() {
+				c.halted = true
+			}
 
-	// Track completed instructions.
-	c.instructionsCompleted = c.pipeline.Stats().InstructionsCompleted
+			c.instructionsCompleted = c.pipeline.Stats().InstructionsCompleted
 
-	return snap
+			return rf.Generate(true, false, snap)
+		}).GetResult()
+	return result
 }
 
 // Run executes the core until it halts or maxCycles is reached.
@@ -521,10 +461,15 @@ func (c *Core) Step() cpupipeline.PipelineSnapshot {
 //	stats := core.Run(10000)
 //	fmt.Printf("IPC: %.3f\n", stats.IPC())
 func (c *Core) Run(maxCycles int) CoreStats {
-	for c.cycle < maxCycles && !c.halted {
-		c.Step()
-	}
-	return c.Stats()
+	result, _ := StartNew[CoreStats]("core.Core.Run", CoreStats{},
+		func(op *Operation[CoreStats], rf *ResultFactory[CoreStats]) *OperationResult[CoreStats] {
+			op.AddProperty("max_cycles", maxCycles)
+			for c.cycle < maxCycles && !c.halted {
+				c.Step()
+			}
+			return rf.Generate(true, false, c.Stats())
+		}).GetResult()
+	return result
 }
 
 // Stats returns aggregate statistics from all sub-components.
@@ -532,81 +477,126 @@ func (c *Core) Run(maxCycles int) CoreStats {
 // This collects stats from the pipeline, branch predictor, hazard unit,
 // and cache hierarchy into a single CoreStats struct.
 func (c *Core) Stats() CoreStats {
-	pStats := c.pipeline.Stats()
+	result, _ := StartNew[CoreStats]("core.Core.Stats", CoreStats{},
+		func(op *Operation[CoreStats], rf *ResultFactory[CoreStats]) *OperationResult[CoreStats] {
+			pStats := c.pipeline.Stats()
 
-	stats := CoreStats{
-		InstructionsCompleted: pStats.InstructionsCompleted,
-		TotalCycles:           pStats.TotalCycles,
-		PipelineStats:         pStats,
-		PredictorStats:        c.predictor.Stats(),
-		CacheStats:            make(map[string]*cache.CacheStats),
-		ForwardCount:          c.forwardCount,
-		StallCount:            c.stallCount,
-		FlushCount:            c.flushCount,
-	}
+			stats := CoreStats{
+				InstructionsCompleted: pStats.InstructionsCompleted,
+				TotalCycles:           pStats.TotalCycles,
+				PipelineStats:         pStats,
+				PredictorStats:        c.predictor.Stats(),
+				CacheStats:            make(map[string]*cache.CacheStats),
+				ForwardCount:          c.forwardCount,
+				StallCount:            c.stallCount,
+				FlushCount:            c.flushCount,
+			}
 
-	// Collect cache stats.
-	if c.cacheHierarchy.L1I != nil {
-		stats.CacheStats["L1I"] = &c.cacheHierarchy.L1I.Stats
-	}
-	if c.cacheHierarchy.L1D != nil {
-		stats.CacheStats["L1D"] = &c.cacheHierarchy.L1D.Stats
-	}
-	if c.cacheHierarchy.L2 != nil {
-		stats.CacheStats["L2"] = &c.cacheHierarchy.L2.Stats
-	}
+			if c.cacheHierarchy.L1I != nil {
+				stats.CacheStats["L1I"] = &c.cacheHierarchy.L1I.Stats
+			}
+			if c.cacheHierarchy.L1D != nil {
+				stats.CacheStats["L1D"] = &c.cacheHierarchy.L1D.Stats
+			}
+			if c.cacheHierarchy.L2 != nil {
+				stats.CacheStats["L2"] = &c.cacheHierarchy.L2.Stats
+			}
 
-	return stats
+			return rf.Generate(true, false, stats)
+		}).GetResult()
+	return result
 }
 
 // IsHalted returns true if a halt instruction has completed.
 func (c *Core) IsHalted() bool {
-	return c.halted
+	result, _ := StartNew[bool]("core.Core.IsHalted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, c.halted)
+		}).GetResult()
+	return result
 }
 
 // ReadRegister reads a general-purpose register.
 func (c *Core) ReadRegister(index int) int {
-	return c.regFile.Read(index)
+	result, _ := StartNew[int]("core.Core.ReadRegister", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			op.AddProperty("index", index)
+			return rf.Generate(true, false, c.regFile.Read(index))
+		}).GetResult()
+	return result
 }
 
 // WriteRegister writes a general-purpose register.
 func (c *Core) WriteRegister(index int, value int) {
-	c.regFile.Write(index, value)
+	_, _ = StartNew[struct{}]("core.Core.WriteRegister", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("index", index)
+			c.regFile.Write(index, value)
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // RegisterFile returns the core's register file (for direct access).
 func (c *Core) RegisterFile() *RegisterFile {
-	return c.regFile
+	result, _ := StartNew[*RegisterFile]("core.Core.RegisterFile", nil,
+		func(op *Operation[*RegisterFile], rf *ResultFactory[*RegisterFile]) *OperationResult[*RegisterFile] {
+			return rf.Generate(true, false, c.regFile)
+		}).GetResult()
+	return result
 }
 
 // MemoryController returns the core's memory controller (for direct access).
 func (c *Core) MemoryController() *MemoryController {
-	return c.memCtrl
+	result, _ := StartNew[*MemoryController]("core.Core.MemoryController", nil,
+		func(op *Operation[*MemoryController], rf *ResultFactory[*MemoryController]) *OperationResult[*MemoryController] {
+			return rf.Generate(true, false, c.memCtrl)
+		}).GetResult()
+	return result
 }
 
 // Cycle returns the current cycle number.
 func (c *Core) Cycle() int {
-	return c.cycle
+	result, _ := StartNew[int]("core.Core.Cycle", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, c.cycle)
+		}).GetResult()
+	return result
 }
 
 // Config returns the core configuration.
 func (c *Core) Config() CoreConfig {
-	return c.config
+	result, _ := StartNew[CoreConfig]("core.Core.Config", CoreConfig{},
+		func(op *Operation[CoreConfig], rf *ResultFactory[CoreConfig]) *OperationResult[CoreConfig] {
+			return rf.Generate(true, false, c.config)
+		}).GetResult()
+	return result
 }
 
 // Pipeline returns the underlying pipeline (for advanced inspection).
 func (c *Core) Pipeline() *cpupipeline.Pipeline {
-	return c.pipeline
+	result, _ := StartNew[*cpupipeline.Pipeline]("core.Core.Pipeline", nil,
+		func(op *Operation[*cpupipeline.Pipeline], rf *ResultFactory[*cpupipeline.Pipeline]) *OperationResult[*cpupipeline.Pipeline] {
+			return rf.Generate(true, false, c.pipeline)
+		}).GetResult()
+	return result
 }
 
 // Predictor returns the branch predictor (for inspection).
 func (c *Core) Predictor() branchpredictor.BranchPredictor {
-	return c.predictor
+	result, _ := StartNew[branchpredictor.BranchPredictor]("core.Core.Predictor", nil,
+		func(op *Operation[branchpredictor.BranchPredictor], rf *ResultFactory[branchpredictor.BranchPredictor]) *OperationResult[branchpredictor.BranchPredictor] {
+			return rf.Generate(true, false, c.predictor)
+		}).GetResult()
+	return result
 }
 
 // CacheHierarchy returns the cache hierarchy (for inspection).
 func (c *Core) CacheHierarchy() *cache.CacheHierarchy {
-	return c.cacheHierarchy
+	result, _ := StartNew[*cache.CacheHierarchy]("core.Core.CacheHierarchy", nil,
+		func(op *Operation[*cache.CacheHierarchy], rf *ResultFactory[*cache.CacheHierarchy]) *OperationResult[*cache.CacheHierarchy] {
+			return rf.Generate(true, false, c.cacheHierarchy)
+		}).GetResult()
+	return result
 }
 
 // =========================================================================
@@ -623,13 +613,18 @@ func (c *Core) CacheHierarchy() *cache.CacheHierarchy {
 //	program := EncodeProgram(EncodeADDI(1, 0, 42), EncodeHALT())
 //	core.LoadProgram(program, 0)
 func EncodeProgram(instructions ...int) []byte {
-	result := make([]byte, len(instructions)*4)
-	for i, instr := range instructions {
-		offset := i * 4
-		result[offset] = byte(instr & 0xFF)
-		result[offset+1] = byte((instr >> 8) & 0xFF)
-		result[offset+2] = byte((instr >> 16) & 0xFF)
-		result[offset+3] = byte((instr >> 24) & 0xFF)
-	}
+	result, _ := StartNew[[]byte]("core.EncodeProgram", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			op.AddProperty("num_instructions", len(instructions))
+			encoded := make([]byte, len(instructions)*4)
+			for i, instr := range instructions {
+				offset := i * 4
+				encoded[offset] = byte(instr & 0xFF)
+				encoded[offset+1] = byte((instr >> 8) & 0xFF)
+				encoded[offset+2] = byte((instr >> 16) & 0xFF)
+				encoded[offset+3] = byte((instr >> 24) & 0xFF)
+			}
+			return rf.Generate(true, false, encoded)
+		}).GetResult()
 	return result
 }

@@ -85,7 +85,11 @@ type RenderOptions struct {
 //	// Untrusted Markdown (user-supplied content):
 //	html := ToHtml(doc, RenderOptions{Sanitize: true})
 func ToHtml(document *documentast.DocumentNode, opts RenderOptions) string {
-	return renderBlocks(document.Children, false, opts)
+	result, _ := StartNew[string]("document-ast-to-html.ToHtml", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(true, false, renderBlocks(document.Children, false, opts))
+		}).GetResult()
+	return result
 }
 
 // ─── Block Rendering ──────────────────────────────────────────────────────────
@@ -550,32 +554,36 @@ func sanitizeURL(url string) string {
 // EscapeHtml encodes characters that must be escaped in HTML attribute values
 // and text content. Characters escaped: & < > "
 func EscapeHtml(text string) string {
-	needsEscape := false
-	for _, ch := range text {
-		if ch == '&' || ch == '<' || ch == '>' || ch == '"' {
-			needsEscape = true
-			break
-		}
-	}
-	if !needsEscape {
-		return text
-	}
+	result, _ := StartNew[string]("document-ast-to-html.EscapeHtml", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			needsEscape := false
+			for _, ch := range text {
+				if ch == '&' || ch == '<' || ch == '>' || ch == '"' {
+					needsEscape = true
+					break
+				}
+			}
+			if !needsEscape {
+				return rf.Generate(true, false, text)
+			}
 
-	var b strings.Builder
-	b.Grow(len(text) + 16)
-	for _, ch := range text {
-		switch ch {
-		case '&':
-			b.WriteString("&amp;")
-		case '<':
-			b.WriteString("&lt;")
-		case '>':
-			b.WriteString("&gt;")
-		case '"':
-			b.WriteString("&quot;")
-		default:
-			b.WriteRune(ch)
-		}
-	}
-	return b.String()
+			var b strings.Builder
+			b.Grow(len(text) + 16)
+			for _, ch := range text {
+				switch ch {
+				case '&':
+					b.WriteString("&amp;")
+				case '<':
+					b.WriteString("&lt;")
+				case '>':
+					b.WriteString("&gt;")
+				case '"':
+					b.WriteString("&quot;")
+				default:
+					b.WriteRune(ch)
+				}
+			}
+			return rf.Generate(true, false, b.String())
+		}).GetResult()
+	return result
 }

@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-03-31
+
+### Changed
+
+- No public functions to wrap (package contains only types, constants, and structs). Operations system incorporation complete — no changes required to this package.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

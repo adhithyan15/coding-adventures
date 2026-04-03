@@ -50,20 +50,30 @@ type Superblock struct {
 // NewSuperblock creates a superblock with the given block and inode counts.
 // All blocks and inodes start as free.
 func NewSuperblock(totalBlocks, totalInodes int) *Superblock {
-	return &Superblock{
-		Magic:        SuperblockMagic,
-		BlockSize:    BlockSize,
-		TotalBlocks:  totalBlocks,
-		TotalInodes:  totalInodes,
-		FreeBlocks:   totalBlocks,
-		FreeInodes:   totalInodes,
-		RootInodeNum: RootInode,
-	}
+	result, _ := StartNew[*Superblock]("file-system.NewSuperblock", nil,
+		func(op *Operation[*Superblock], rf *ResultFactory[*Superblock]) *OperationResult[*Superblock] {
+			op.AddProperty("totalBlocks", totalBlocks)
+			op.AddProperty("totalInodes", totalInodes)
+			return rf.Generate(true, false, &Superblock{
+				Magic:        SuperblockMagic,
+				BlockSize:    BlockSize,
+				TotalBlocks:  totalBlocks,
+				TotalInodes:  totalInodes,
+				FreeBlocks:   totalBlocks,
+				FreeInodes:   totalInodes,
+				RootInodeNum: RootInode,
+			})
+		}).GetResult()
+	return result
 }
 
 // IsValid checks whether this superblock has the correct magic number.
 // Returns true if the magic number matches SuperblockMagic, meaning this
 // disk was formatted with our file system.
 func (sb *Superblock) IsValid() bool {
-	return sb.Magic == SuperblockMagic
+	result, _ := StartNew[bool]("file-system.Superblock.IsValid", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, sb.Magic == SuperblockMagic)
+		}).GetResult()
+	return result
 }

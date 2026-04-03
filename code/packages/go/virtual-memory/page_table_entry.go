@@ -115,22 +115,30 @@ type PageTableEntry struct {
 // NewPageTableEntry creates a PTE with sensible defaults: not present,
 // writable, user-accessible.
 func NewPageTableEntry() PageTableEntry {
-	return PageTableEntry{
-		Writable:       true,
-		UserAccessible: true,
-	}
+	result, _ := StartNew[PageTableEntry]("virtual-memory.NewPageTableEntry", PageTableEntry{},
+		func(op *Operation[PageTableEntry], rf *ResultFactory[PageTableEntry]) *OperationResult[PageTableEntry] {
+			return rf.Generate(true, false, PageTableEntry{
+				Writable:       true,
+				UserAccessible: true,
+			})
+		}).GetResult()
+	return result
 }
 
 // Copy creates a deep copy of this PTE. Used during copy-on-write operations
 // when forking a process.
 func (pte PageTableEntry) Copy() PageTableEntry {
-	return PageTableEntry{
-		FrameNumber:    pte.FrameNumber,
-		Present:        pte.Present,
-		Dirty:          pte.Dirty,
-		Accessed:       pte.Accessed,
-		Writable:       pte.Writable,
-		Executable:     pte.Executable,
-		UserAccessible: pte.UserAccessible,
-	}
+	result, _ := StartNew[PageTableEntry]("virtual-memory.PageTableEntry.Copy", PageTableEntry{},
+		func(op *Operation[PageTableEntry], rf *ResultFactory[PageTableEntry]) *OperationResult[PageTableEntry] {
+			return rf.Generate(true, false, PageTableEntry{
+				FrameNumber:    pte.FrameNumber,
+				Present:        pte.Present,
+				Dirty:          pte.Dirty,
+				Accessed:       pte.Accessed,
+				Writable:       pte.Writable,
+				Executable:     pte.Executable,
+				UserAccessible: pte.UserAccessible,
+			})
+		}).GetResult()
+	return result
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — 2026-04-02
+
+### Fixed
+- Added `.PanicOnUnexpected()` to `NewROM` and `HardwareInfoFromBytes` operations so intentional panics (oversized firmware, short data buffer) propagate correctly instead of being swallowed by the Operations panic-recovery wrapper.
+
 ## 0.1.0 — 2026-03-19
 
 ### Added

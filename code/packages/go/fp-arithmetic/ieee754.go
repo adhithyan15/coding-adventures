@@ -52,11 +52,17 @@ import (
 // position i (counting from width-1 down to 0), we check if that bit is
 // set using a right-shift and AND with 1.
 func IntToBitsMSB(value int, width int) []int {
-	bits := make([]int, width)
-	for i := 0; i < width; i++ {
-		bits[i] = (value >> (width - 1 - i)) & 1
-	}
-	return bits
+	result, _ := StartNew[[]int]("fp-arithmetic.IntToBitsMSB", nil,
+		func(op *Operation[[]int], rf *ResultFactory[[]int]) *OperationResult[[]int] {
+			op.AddProperty("value", value)
+			op.AddProperty("width", width)
+			bits := make([]int, width)
+			for i := 0; i < width; i++ {
+				bits[i] = (value >> (width - 1 - i)) & 1
+			}
+			return rf.Generate(true, false, bits)
+		}).GetResult()
+	return result
 }
 
 // BitsMSBToInt converts a slice of bits (MSB first) back to a non-negative integer.
@@ -72,10 +78,14 @@ func IntToBitsMSB(value int, width int) []int {
 // How it works: iterate from MSB to LSB. For each bit, shift the accumulator
 // left by 1 (multiply by 2) and OR in the new bit.
 func BitsMSBToInt(bits []int) int {
-	result := 0
-	for _, bit := range bits {
-		result = (result << 1) | bit
-	}
+	result, _ := StartNew[int]("fp-arithmetic.BitsMSBToInt", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			val := 0
+			for _, bit := range bits {
+				val = (val << 1) | bit
+			}
+			return rf.Generate(true, false, val)
+		}).GetResult()
 	return result
 }
 
@@ -109,6 +119,16 @@ func BitsMSBToInt(bits []int) int {
 //	Mantissa: 10010001111010111000010 (23 bits after the implicit 1)
 //	                                   ^-- note: the leading 1 is NOT stored
 func FloatToBits(value float64, fmt FloatFormat) FloatBits {
+	result, _ := StartNew[FloatBits]("fp-arithmetic.FloatToBits", FloatBits{},
+		func(op *Operation[FloatBits], rf *ResultFactory[FloatBits]) *OperationResult[FloatBits] {
+			op.AddProperty("value", value)
+			op.AddProperty("format", fmt.Name)
+			return rf.Generate(true, false, floatToBitsImpl(value, fmt))
+		}).GetResult()
+	return result
+}
+
+func floatToBitsImpl(value float64, fmt FloatFormat) FloatBits {
 	// --- Handle NaN specially ---
 	// Go has math.NaN(), and IEEE 754 defines NaN as exponent=all-1s,
 	// mantissa=non-zero. We use a "quiet NaN" with the MSB of mantissa set.
@@ -248,6 +268,15 @@ func FloatToBits(value float64, fmt FloatFormat) FloatBits {
 //
 //	value = (-1)^sign x 2^(exponent - bias) x 1.mantissa
 func BitsToFloat(bits FloatBits) float64 {
+	result, _ := StartNew[float64]("fp-arithmetic.BitsToFloat", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("format", bits.Fmt.Name)
+			return rf.Generate(true, false, bitsToFloatImpl(bits))
+		}).GetResult()
+	return result
+}
+
+func bitsToFloatImpl(bits FloatBits) float64 {
 	expInt := BitsMSBToInt(bits.Exponent)
 	mantInt := BitsMSBToInt(bits.Mantissa)
 	maxExp := (1 << bits.Fmt.ExponentBits) - 1
@@ -358,7 +387,11 @@ func allZeros(bits []int) bool {
 //
 // We don't distinguish between them here.
 func IsNaN(bits FloatBits) bool {
-	return allOnes(bits.Exponent) && !allZeros(bits.Mantissa)
+	result, _ := StartNew[bool]("fp-arithmetic.IsNaN", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, allOnes(bits.Exponent) && !allZeros(bits.Mantissa))
+		}).GetResult()
+	return result
 }
 
 // IsInf checks if a FloatBits represents Infinity (+Inf or -Inf).
@@ -370,7 +403,11 @@ func IsNaN(bits FloatBits) bool {
 //	1e38 * 10 = +Inf (in FP32)
 //	-1.0 / 0.0 = -Inf
 func IsInf(bits FloatBits) bool {
-	return allOnes(bits.Exponent) && allZeros(bits.Mantissa)
+	result, _ := StartNew[bool]("fp-arithmetic.IsInf", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, allOnes(bits.Exponent) && allZeros(bits.Mantissa))
+		}).GetResult()
+	return result
 }
 
 // IsZero checks if a FloatBits represents zero (+0 or -0).
@@ -381,7 +418,11 @@ func IsInf(bits FloatBits) bool {
 // but they are different bit patterns. Having -0 is important for preserving
 // the sign through operations like 1.0 / -Inf = -0.
 func IsZero(bits FloatBits) bool {
-	return allZeros(bits.Exponent) && allZeros(bits.Mantissa)
+	result, _ := StartNew[bool]("fp-arithmetic.IsZero", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, allZeros(bits.Exponent) && allZeros(bits.Mantissa))
+		}).GetResult()
+	return result
 }
 
 // IsDenormalized checks if a FloatBits represents a denormalized (subnormal) number.
@@ -402,7 +443,11 @@ func IsZero(bits FloatBits) bool {
 //	Normal:     1.mantissa x 2^(exp-bias)     (implicit 1)
 //	Denormal:   0.mantissa x 2^(1-bias)       (implicit 0)
 func IsDenormalized(bits FloatBits) bool {
-	return allZeros(bits.Exponent) && !allZeros(bits.Mantissa)
+	result, _ := StartNew[bool]("fp-arithmetic.IsDenormalized", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, allZeros(bits.Exponent) && !allZeros(bits.Mantissa))
+		}).GetResult()
+	return result
 }
 
 // bitLength returns the position of the highest set bit + 1, like Python's int.bit_length().

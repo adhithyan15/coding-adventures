@@ -102,20 +102,24 @@ const (
 
 // String returns a human-readable name for the hazard action.
 func (a HazardAction) String() string {
-	switch a {
-	case HazardNone:
-		return "NONE"
-	case HazardForwardFromEX:
-		return "FORWARD_FROM_EX"
-	case HazardForwardFromMEM:
-		return "FORWARD_FROM_MEM"
-	case HazardStall:
-		return "STALL"
-	case HazardFlush:
-		return "FLUSH"
-	default:
-		return "UNKNOWN"
-	}
+	result, _ := StartNew[string]("cpu-pipeline.HazardAction.String", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			switch a {
+			case HazardNone:
+				return rf.Generate(true, false, "NONE")
+			case HazardForwardFromEX:
+				return rf.Generate(true, false, "FORWARD_FROM_EX")
+			case HazardForwardFromMEM:
+				return rf.Generate(true, false, "FORWARD_FROM_MEM")
+			case HazardStall:
+				return rf.Generate(true, false, "STALL")
+			case HazardFlush:
+				return rf.Generate(true, false, "FLUSH")
+			default:
+				return rf.Generate(true, false, "UNKNOWN")
+			}
+		}).GetResult()
+	return result
 }
 
 // HazardResponse is the full response from the hazard detection callback.
@@ -266,22 +270,25 @@ func NewPipeline(
 	memory MemoryFunc,
 	writeback WritebackFunc,
 ) (*Pipeline, error) {
-	if err := config.Validate(); err != nil {
-		return nil, err
-	}
-
-	return &Pipeline{
-		config:      config,
-		stages:      make([]*PipelineToken, config.NumStages()),
-		pc:          0,
-		cycle:       0,
-		halted:      false,
-		fetchFn:     fetch,
-		decodeFn:    decode,
-		executeFn:   execute,
-		memoryFn:    memory,
-		writebackFn: writeback,
-	}, nil
+	result, err := StartNew[*Pipeline]("cpu-pipeline.NewPipeline", nil,
+		func(op *Operation[*Pipeline], rf *ResultFactory[*Pipeline]) *OperationResult[*Pipeline] {
+			if err := config.Validate(); err != nil {
+				return rf.Fail(nil, err)
+			}
+			return rf.Generate(true, false, &Pipeline{
+				config:      config,
+				stages:      make([]*PipelineToken, config.NumStages()),
+				pc:          0,
+				cycle:       0,
+				halted:      false,
+				fetchFn:     fetch,
+				decodeFn:    decode,
+				executeFn:   execute,
+				memoryFn:    memory,
+				writebackFn: writeback,
+			})
+		}).GetResult()
+	return result, err
 }
 
 // SetHazardFunc sets the optional hazard detection callback.
@@ -289,7 +296,11 @@ func NewPipeline(
 // The hazard function is called at the beginning of each cycle to determine
 // if the pipeline needs to stall or flush.
 func (p *Pipeline) SetHazardFunc(fn HazardFunc) {
-	p.hazardFn = fn
+	_, _ = StartNew[struct{}]("cpu-pipeline.Pipeline.SetHazardFunc", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			p.hazardFn = fn
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SetPredictFunc sets the optional branch prediction callback.
@@ -297,17 +308,30 @@ func (p *Pipeline) SetHazardFunc(fn HazardFunc) {
 // The predict function is called during the fetch stage to determine the
 // next PC to fetch from (speculatively, before the branch is resolved).
 func (p *Pipeline) SetPredictFunc(fn PredictFunc) {
-	p.predictFn = fn
+	_, _ = StartNew[struct{}]("cpu-pipeline.Pipeline.SetPredictFunc", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			p.predictFn = fn
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // SetPC sets the program counter (the address of the next instruction to fetch).
 func (p *Pipeline) SetPC(pc int) {
-	p.pc = pc
+	_, _ = StartNew[struct{}]("cpu-pipeline.Pipeline.SetPC", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("pc", pc)
+			p.pc = pc
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
 }
 
 // PC returns the current program counter.
 func (p *Pipeline) PC() int {
-	return p.pc
+	result, _ := StartNew[int]("cpu-pipeline.Pipeline.PC", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, p.pc)
+		}).GetResult()
+	return result
 }
 
 // Step advances the pipeline by one clock cycle.
@@ -354,6 +378,15 @@ func (p *Pipeline) PC() int {
 // stages, then committing the changes. This prevents one stage's update
 // from affecting another stage's input within the same cycle.
 func (p *Pipeline) Step() PipelineSnapshot {
+	result, _ := StartNew[PipelineSnapshot]("cpu-pipeline.Pipeline.Step", PipelineSnapshot{},
+		func(op *Operation[PipelineSnapshot], rf *ResultFactory[PipelineSnapshot]) *OperationResult[PipelineSnapshot] {
+			return rf.Generate(true, false, p.stepInternal())
+		}).GetResult()
+	return result
+}
+
+// stepInternal is the internal implementation of Step().
+func (p *Pipeline) stepInternal() PipelineSnapshot {
 	if p.halted {
 		return p.takeSnapshot()
 	}
@@ -676,10 +709,15 @@ func (p *Pipeline) fetchNewInstruction() *PipelineToken {
 //
 // Returns the final execution statistics.
 func (p *Pipeline) Run(maxCycles int) PipelineStats {
-	for p.cycle < maxCycles && !p.halted {
-		p.Step()
-	}
-	return p.stats
+	result, _ := StartNew[PipelineStats]("cpu-pipeline.Pipeline.Run", PipelineStats{},
+		func(op *Operation[PipelineStats], rf *ResultFactory[PipelineStats]) *OperationResult[PipelineStats] {
+			op.AddProperty("max_cycles", maxCycles)
+			for p.cycle < maxCycles && !p.halted {
+				p.Step()
+			}
+			return rf.Generate(true, false, p.stats)
+		}).GetResult()
+	return result
 }
 
 // Snapshot returns the current pipeline state without advancing the clock.
@@ -687,22 +725,38 @@ func (p *Pipeline) Run(maxCycles int) PipelineStats {
 // This is useful for inspecting the pipeline between steps or after
 // the simulation completes.
 func (p *Pipeline) Snapshot() PipelineSnapshot {
-	return p.takeSnapshot()
+	result, _ := StartNew[PipelineSnapshot]("cpu-pipeline.Pipeline.Snapshot", PipelineSnapshot{},
+		func(op *Operation[PipelineSnapshot], rf *ResultFactory[PipelineSnapshot]) *OperationResult[PipelineSnapshot] {
+			return rf.Generate(true, false, p.takeSnapshot())
+		}).GetResult()
+	return result
 }
 
 // Stats returns a copy of the current execution statistics.
 func (p *Pipeline) Stats() PipelineStats {
-	return p.stats
+	result, _ := StartNew[PipelineStats]("cpu-pipeline.Pipeline.Stats", PipelineStats{},
+		func(op *Operation[PipelineStats], rf *ResultFactory[PipelineStats]) *OperationResult[PipelineStats] {
+			return rf.Generate(true, false, p.stats)
+		}).GetResult()
+	return result
 }
 
 // IsHalted returns true if a halt instruction has reached the last stage.
 func (p *Pipeline) IsHalted() bool {
-	return p.halted
+	result, _ := StartNew[bool]("cpu-pipeline.Pipeline.IsHalted", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			return rf.Generate(true, false, p.halted)
+		}).GetResult()
+	return result
 }
 
 // Cycle returns the current cycle number.
 func (p *Pipeline) Cycle() int {
-	return p.cycle
+	result, _ := StartNew[int]("cpu-pipeline.Pipeline.Cycle", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, p.cycle)
+		}).GetResult()
+	return result
 }
 
 // Trace returns the complete history of pipeline snapshots.
@@ -710,8 +764,12 @@ func (p *Pipeline) Cycle() int {
 // The trace includes one snapshot per cycle, in chronological order.
 // This is used for visualization and debugging.
 func (p *Pipeline) Trace() []PipelineSnapshot {
-	result := make([]PipelineSnapshot, len(p.history))
-	copy(result, p.history)
+	result, _ := StartNew[[]PipelineSnapshot]("cpu-pipeline.Pipeline.Trace", nil,
+		func(op *Operation[[]PipelineSnapshot], rf *ResultFactory[[]PipelineSnapshot]) *OperationResult[[]PipelineSnapshot] {
+			snapshots := make([]PipelineSnapshot, len(p.history))
+			copy(snapshots, p.history)
+			return rf.Generate(true, false, snapshots)
+		}).GetResult()
 	return result
 }
 
@@ -719,17 +777,26 @@ func (p *Pipeline) Trace() []PipelineSnapshot {
 //
 // Returns nil if the stage is empty or the stage name is invalid.
 func (p *Pipeline) StageContents(stageName string) *PipelineToken {
-	for i, s := range p.config.Stages {
-		if s.Name == stageName {
-			return p.stages[i]
-		}
-	}
-	return nil
+	result, _ := StartNew[*PipelineToken]("cpu-pipeline.Pipeline.StageContents", nil,
+		func(op *Operation[*PipelineToken], rf *ResultFactory[*PipelineToken]) *OperationResult[*PipelineToken] {
+			op.AddProperty("stage_name", stageName)
+			for i, s := range p.config.Stages {
+				if s.Name == stageName {
+					return rf.Generate(true, false, p.stages[i])
+				}
+			}
+			return rf.Generate(true, false, nil)
+		}).GetResult()
+	return result
 }
 
 // Config returns the pipeline configuration.
 func (p *Pipeline) Config() PipelineConfig {
-	return p.config
+	result, _ := StartNew[PipelineConfig]("cpu-pipeline.Pipeline.Config", PipelineConfig{},
+		func(op *Operation[PipelineConfig], rf *ResultFactory[PipelineConfig]) *OperationResult[PipelineConfig] {
+			return rf.Generate(true, false, p.config)
+		}).GetResult()
+	return result
 }
 
 // takeSnapshot creates a snapshot of the current pipeline state.

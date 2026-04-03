@@ -114,13 +114,18 @@ type BIOSConfig struct {
 //	MemorySize: 0 (probe), DisplayColumns: 80, DisplayRows: 25,
 //	FramebufferBase: 0xFFFB0000, BootloaderEntry: 0x00010000.
 func DefaultBIOSConfig() BIOSConfig {
-	return BIOSConfig{
-		MemorySize:      0,
-		DisplayColumns:  80,
-		DisplayRows:     25,
-		FramebufferBase: DefaultFramebufferBase,
-		BootloaderEntry: DefaultBootloaderEntry,
-	}
+	result, _ := StartNew[BIOSConfig]("rom-bios.DefaultBIOSConfig", BIOSConfig{},
+		func(op *Operation[BIOSConfig], rf *ResultFactory[BIOSConfig]) *OperationResult[BIOSConfig] {
+			cfg := BIOSConfig{
+				MemorySize:      0,
+				DisplayColumns:  80,
+				DisplayRows:     25,
+				FramebufferBase: DefaultFramebufferBase,
+				BootloaderEntry: DefaultBootloaderEntry,
+			}
+			return rf.Generate(true, false, cfg)
+		}).GetResult()
+	return result
 }
 
 // AnnotatedInstruction pairs a machine code instruction with its
@@ -156,24 +161,44 @@ type BIOSFirmware struct {
 
 // NewBIOSFirmware creates a firmware generator with the given config.
 func NewBIOSFirmware(config BIOSConfig) *BIOSFirmware {
-	return &BIOSFirmware{Config: config}
+	result, _ := StartNew[*BIOSFirmware]("rom-bios.NewBIOSFirmware", nil,
+		func(op *Operation[*BIOSFirmware], rf *ResultFactory[*BIOSFirmware]) *OperationResult[*BIOSFirmware] {
+			op.AddProperty("memorySize", config.MemorySize)
+			op.AddProperty("bootloaderEntry", config.BootloaderEntry)
+			return rf.Generate(true, false, &BIOSFirmware{Config: config})
+		}).GetResult()
+	return result
 }
 
 // Generate returns the BIOS firmware as raw RISC-V machine code bytes.
 // The returned byte slice can be loaded directly into a ROM.
 func (b *BIOSFirmware) Generate() []byte {
-	annotated := b.GenerateWithComments()
-	instructions := make([]uint32, len(annotated))
-	for i, a := range annotated {
-		instructions[i] = a.MachineCode
-	}
-	return riscv.Assemble(instructions)
+	result, _ := StartNew[[]byte]("rom-bios.BIOSFirmware.Generate", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			annotated := b.GenerateWithComments()
+			instructions := make([]uint32, len(annotated))
+			for i, a := range annotated {
+				instructions[i] = a.MachineCode
+			}
+			return rf.Generate(true, false, riscv.Assemble(instructions))
+		}).GetResult()
+	return result
 }
 
 // GenerateWithComments returns the firmware as annotated instructions.
 // Each instruction includes its address, machine code, assembly text,
 // and a human-readable comment.
 func (b *BIOSFirmware) GenerateWithComments() []AnnotatedInstruction {
+	result, _ := StartNew[[]AnnotatedInstruction]("rom-bios.BIOSFirmware.GenerateWithComments", nil,
+		func(op *Operation[[]AnnotatedInstruction], rf *ResultFactory[[]AnnotatedInstruction]) *OperationResult[[]AnnotatedInstruction] {
+			r := b.generateWithCommentsImpl()
+			return rf.Generate(true, false, r)
+		}).GetResult()
+	return result
+}
+
+// generateWithCommentsImpl is the internal implementation of GenerateWithComments.
+func (b *BIOSFirmware) generateWithCommentsImpl() []AnnotatedInstruction {
 	var instructions []AnnotatedInstruction
 	address := DefaultROMBase
 

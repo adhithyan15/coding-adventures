@@ -39,62 +39,93 @@ type PhysicalFrameAllocator struct {
 
 // NewPhysicalFrameAllocator creates an allocator with all frames free.
 func NewPhysicalFrameAllocator(totalFrames int) *PhysicalFrameAllocator {
-	return &PhysicalFrameAllocator{
-		bitmap:      make([]bool, totalFrames),
-		totalFrames: totalFrames,
-	}
+	result, _ := StartNew[*PhysicalFrameAllocator]("virtual-memory.NewPhysicalFrameAllocator", nil,
+		func(op *Operation[*PhysicalFrameAllocator], rf *ResultFactory[*PhysicalFrameAllocator]) *OperationResult[*PhysicalFrameAllocator] {
+			op.AddProperty("totalFrames", totalFrames)
+			return rf.Generate(true, false, &PhysicalFrameAllocator{
+				bitmap:      make([]bool, totalFrames),
+				totalFrames: totalFrames,
+			})
+		}).GetResult()
+	return result
 }
 
 // Allocate finds the first free frame, marks it as used, and returns its number.
 // Returns -1 if all frames are in use (out of memory).
 func (a *PhysicalFrameAllocator) Allocate() int {
-	for i := 0; i < a.totalFrames; i++ {
-		if !a.bitmap[i] {
-			a.bitmap[i] = true
-			return i
-		}
-	}
-	return -1 // No free frames.
+	result, _ := StartNew[int]("virtual-memory.Allocate", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			for i := 0; i < a.totalFrames; i++ {
+				if !a.bitmap[i] {
+					a.bitmap[i] = true
+					return rf.Generate(true, false, i)
+				}
+			}
+			return rf.Generate(true, false, -1) // No free frames.
+		}).GetResult()
+	return result
 }
 
 // Free marks a frame as free. Returns an error if the frame is out of range
 // or already free (double-free).
 func (a *PhysicalFrameAllocator) Free(frame int) error {
-	if frame < 0 || frame >= a.totalFrames {
-		return fmt.Errorf("%w: frame %d not in [0, %d)", ErrOutOfRange, frame, a.totalFrames)
-	}
-	if !a.bitmap[frame] {
-		return fmt.Errorf("%w: frame %d is already free", ErrDoubleFree, frame)
-	}
-	a.bitmap[frame] = false
-	return nil
+	_, err := StartNew[struct{}]("virtual-memory.Free", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			op.AddProperty("frame", frame)
+			if frame < 0 || frame >= a.totalFrames {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: frame %d not in [0, %d)", ErrOutOfRange, frame, a.totalFrames))
+			}
+			if !a.bitmap[frame] {
+				return rf.Fail(struct{}{}, fmt.Errorf("%w: frame %d is already free", ErrDoubleFree, frame))
+			}
+			a.bitmap[frame] = false
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
 }
 
 // IsAllocated checks whether a frame is currently in use.
 func (a *PhysicalFrameAllocator) IsAllocated(frame int) bool {
-	if frame < 0 || frame >= a.totalFrames {
-		return false
-	}
-	return a.bitmap[frame]
+	result, _ := StartNew[bool]("virtual-memory.IsAllocated", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("frame", frame)
+			if frame < 0 || frame >= a.totalFrames {
+				return rf.Generate(true, false, false)
+			}
+			return rf.Generate(true, false, a.bitmap[frame])
+		}).GetResult()
+	return result
 }
 
 // FreeCount returns the number of unallocated frames.
 func (a *PhysicalFrameAllocator) FreeCount() int {
-	count := 0
-	for _, used := range a.bitmap {
-		if !used {
-			count++
-		}
-	}
-	return count
+	result, _ := StartNew[int]("virtual-memory.FreeCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			count := 0
+			for _, used := range a.bitmap {
+				if !used {
+					count++
+				}
+			}
+			return rf.Generate(true, false, count)
+		}).GetResult()
+	return result
 }
 
 // AllocatedCount returns the number of allocated frames.
 func (a *PhysicalFrameAllocator) AllocatedCount() int {
-	return a.totalFrames - a.FreeCount()
+	result, _ := StartNew[int]("virtual-memory.AllocatedCount", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, a.totalFrames-a.FreeCount())
+		}).GetResult()
+	return result
 }
 
 // TotalFrames returns the total number of frames managed.
 func (a *PhysicalFrameAllocator) TotalFrames() int {
-	return a.totalFrames
+	result, _ := StartNew[int]("virtual-memory.TotalFrames", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, a.totalFrames)
+		}).GetResult()
+	return result
 }

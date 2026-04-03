@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0] - 2026-04-02
+
+### Changed
+- Wrapped all public functions and methods with the Operations system (`StartNew`) for unified observability, capability enforcement, and telemetry tracing.
+- `StageCategory.String()`, `PipelineStage.String()` — wrapped with Operations.
+- `NewBubble()`, `NewToken()`, `PipelineToken.String()`, `PipelineToken.Clone()` — wrapped with Operations.
+- `Classic5Stage()`, `Deep13Stage()` — wrapped with Operations.
+- `PipelineConfig.NumStages()`, `PipelineConfig.Validate()` — wrapped with Operations; Validate now uses `rf.Fail` for error cases.
+- `PipelineSnapshot.String()` — wrapped with Operations.
+- `PipelineStats.IPC()`, `PipelineStats.CPI()`, `PipelineStats.String()` — wrapped with Operations.
+- `HazardAction.String()` — wrapped with Operations.
+- `NewPipeline()` — wrapped with Operations; returns error via `rf.Fail` on invalid config.
+- `Pipeline.SetHazardFunc()`, `Pipeline.SetPredictFunc()`, `Pipeline.SetPC()`, `Pipeline.PC()` — wrapped with Operations.
+- `Pipeline.Step()` — wrapped with Operations; internal logic extracted to `stepInternal()` (private).
+- `Pipeline.Run()`, `Pipeline.Snapshot()`, `Pipeline.Stats()`, `Pipeline.IsHalted()`, `Pipeline.Cycle()`, `Pipeline.Trace()`, `Pipeline.StageContents()`, `Pipeline.Config()` — wrapped with Operations.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

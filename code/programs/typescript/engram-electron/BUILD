@@ -9,6 +9,8 @@ cd ../../../packages/typescript/sql-execution-engine && npm install --quiet
 cd ../../../packages/typescript/storage && npm install --quiet
 cd ../../../packages/typescript/indexeddb && npm install --quiet
 cd ../../../packages/typescript/store && npm install --quiet
+cd ../../../packages/typescript/draw-instructions && npm install --quiet
+cd ../../../packages/typescript/draw-instructions-canvas && npm install --quiet
 cd ../../../packages/typescript/ui-components && npm install --quiet
 cd ../engram-app && npm install --quiet && npm run build
 cd ../engram-electron && npm install

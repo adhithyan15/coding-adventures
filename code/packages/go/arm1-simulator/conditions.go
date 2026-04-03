@@ -58,40 +58,45 @@ package arm1simulator
 // evaluation hardware — a small block of combinational logic that gates
 // instruction execution.
 func EvaluateCondition(cond int, flags Flags) bool {
-	switch cond {
-	case CondEQ:
-		return flags.Z
-	case CondNE:
-		return !flags.Z
-	case CondCS:
-		return flags.C
-	case CondCC:
-		return !flags.C
-	case CondMI:
-		return flags.N
-	case CondPL:
-		return !flags.N
-	case CondVS:
-		return flags.V
-	case CondVC:
-		return !flags.V
-	case CondHI:
-		return flags.C && !flags.Z
-	case CondLS:
-		return !flags.C || flags.Z
-	case CondGE:
-		return flags.N == flags.V
-	case CondLT:
-		return flags.N != flags.V
-	case CondGT:
-		return !flags.Z && (flags.N == flags.V)
-	case CondLE:
-		return flags.Z || (flags.N != flags.V)
-	case CondAL:
-		return true
-	case CondNV:
-		return false
-	default:
-		return false
-	}
+	result, _ := StartNew[bool]("arm1-simulator.EvaluateCondition", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("cond", cond)
+			switch cond {
+			case CondEQ:
+				return rf.Generate(true, false, flags.Z)
+			case CondNE:
+				return rf.Generate(true, false, !flags.Z)
+			case CondCS:
+				return rf.Generate(true, false, flags.C)
+			case CondCC:
+				return rf.Generate(true, false, !flags.C)
+			case CondMI:
+				return rf.Generate(true, false, flags.N)
+			case CondPL:
+				return rf.Generate(true, false, !flags.N)
+			case CondVS:
+				return rf.Generate(true, false, flags.V)
+			case CondVC:
+				return rf.Generate(true, false, !flags.V)
+			case CondHI:
+				return rf.Generate(true, false, flags.C && !flags.Z)
+			case CondLS:
+				return rf.Generate(true, false, !flags.C || flags.Z)
+			case CondGE:
+				return rf.Generate(true, false, flags.N == flags.V)
+			case CondLT:
+				return rf.Generate(true, false, flags.N != flags.V)
+			case CondGT:
+				return rf.Generate(true, false, !flags.Z && (flags.N == flags.V))
+			case CondLE:
+				return rf.Generate(true, false, flags.Z || (flags.N != flags.V))
+			case CondAL:
+				return rf.Generate(true, false, true)
+			case CondNV:
+				return rf.Generate(true, false, false)
+			default:
+				return rf.Generate(true, false, false)
+			}
+		}).GetResult()
+	return result
 }

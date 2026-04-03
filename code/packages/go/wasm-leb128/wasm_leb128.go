@@ -144,51 +144,64 @@ func (e *LEB128Error) Error() string {
 //	DecodeUnsigned([]byte{0xE5, 0x8E, 0x26}, 0)   // → (624485, 3, nil)
 //	DecodeUnsigned([]byte{0x80, 0x80}, 0)          // → error
 func DecodeUnsigned(data []byte, offset int) (uint64, int, error) {
-	var result uint64
-	var shift uint
-	start := offset
+	type decodeResult struct {
+		value         uint64
+		bytesConsumed int
+	}
+	res, err := StartNew[decodeResult]("wasm-leb128.DecodeUnsigned", decodeResult{},
+		func(op *Operation[decodeResult], rf *ResultFactory[decodeResult]) *OperationResult[decodeResult] {
+			op.AddProperty("offset", offset)
+			var result uint64
+			var shift uint
+			start := offset
+			pos := offset
 
-	for i := 0; i < maxBytes; i++ {
-		// Guard against reading past the end of the slice.
-		if offset >= len(data) {
-			return 0, 0, &LEB128Error{
+			for i := 0; i < maxBytes; i++ {
+				// Guard against reading past the end of the slice.
+				if pos >= len(data) {
+					return rf.Fail(decodeResult{}, &LEB128Error{
+						Message: fmt.Sprintf(
+							"unterminated LEB128 at offset %d: ran out of bytes after %d byte(s)",
+							start, i,
+						),
+						Offset: start,
+					})
+				}
+
+				b := data[pos]
+				pos++
+
+				// Extract the 7 data bits and place them at the correct bit position.
+				//
+				// byte = 0xE5 = 1110_0101  (i=0, shift=0)
+				//               ^           continuation bit (stripped below)
+				//                ^^^ ^^^^  7 data bits → 0x65
+				//
+				// payload = 0xE5 & 0x7F = 0x65
+				// result  |= 0x65 << 0  = 0x00000065
+				payload := uint64(b & 0x7F)
+				result |= payload << shift
+				shift += 7
+
+				if b&0x80 == 0 {
+					// Continuation bit is 0 → this was the last byte.
+					return rf.Generate(true, false, decodeResult{result, pos - start})
+				}
+			}
+
+			// Consumed maxBytes without seeing a final byte. Malformed.
+			return rf.Fail(decodeResult{}, &LEB128Error{
 				Message: fmt.Sprintf(
-					"unterminated LEB128 at offset %d: ran out of bytes after %d byte(s)",
-					start, i,
+					"unterminated LEB128 at offset %d: continuation bit still set after %d bytes (max for 32-bit)",
+					start, maxBytes,
 				),
 				Offset: start,
-			}
-		}
-
-		b := data[offset]
-		offset++
-
-		// Extract the 7 data bits and place them at the correct bit position.
-		//
-		// byte = 0xE5 = 1110_0101  (i=0, shift=0)
-		//               ^           continuation bit (stripped below)
-		//                ^^^ ^^^^  7 data bits → 0x65
-		//
-		// payload = 0xE5 & 0x7F = 0x65
-		// result  |= 0x65 << 0  = 0x00000065
-		payload := uint64(b & 0x7F)
-		result |= payload << shift
-		shift += 7
-
-		if b&0x80 == 0 {
-			// Continuation bit is 0 → this was the last byte.
-			return result, offset - start, nil
-		}
+			})
+		}).GetResult()
+	if err != nil {
+		return 0, 0, err
 	}
-
-	// Consumed maxBytes without seeing a final byte. Malformed.
-	return 0, 0, &LEB128Error{
-		Message: fmt.Sprintf(
-			"unterminated LEB128 at offset %d: continuation bit still set after %d bytes (max for 32-bit)",
-			start, maxBytes,
-		),
-		Offset: start,
-	}
+	return res.value, res.bytesConsumed, nil
 }
 
 // DecodeSigned reads a signed LEB128 integer from data starting at offset.
@@ -217,49 +230,62 @@ func DecodeUnsigned(data []byte, offset int) (uint64, int, error) {
 //
 // Parameters and return values mirror DecodeUnsigned but value is int64.
 func DecodeSigned(data []byte, offset int) (int64, int, error) {
-	var result int64
-	var shift uint
-	start := offset
+	type decodeResult struct {
+		value         int64
+		bytesConsumed int
+	}
+	res, err := StartNew[decodeResult]("wasm-leb128.DecodeSigned", decodeResult{},
+		func(op *Operation[decodeResult], rf *ResultFactory[decodeResult]) *OperationResult[decodeResult] {
+			op.AddProperty("offset", offset)
+			var result int64
+			var shift uint
+			start := offset
+			pos := offset
 
-	for i := 0; i < maxBytes; i++ {
-		if offset >= len(data) {
-			return 0, 0, &LEB128Error{
+			for i := 0; i < maxBytes; i++ {
+				if pos >= len(data) {
+					return rf.Fail(decodeResult{}, &LEB128Error{
+						Message: fmt.Sprintf(
+							"unterminated LEB128 at offset %d: ran out of bytes after %d byte(s)",
+							start, i,
+						),
+						Offset: start,
+					})
+				}
+
+				b := data[pos]
+				pos++
+
+				payload := int64(b & 0x7F)
+				result |= payload << shift
+				shift += 7
+
+				if b&0x80 == 0 {
+					// Last byte. Check the sign bit (bit 6 of this byte = bit (shift-1) overall).
+					//
+					// Bit 6 of b is tested as: b & 0x40 != 0
+					//
+					// If set, the decoded value is negative in the original integer width
+					// (32-bit for WASM), so we sign-extend to fill int64.
+					if b&0x40 != 0 {
+						result |= -(int64(1) << shift)
+					}
+					return rf.Generate(true, false, decodeResult{result, pos - start})
+				}
+			}
+
+			return rf.Fail(decodeResult{}, &LEB128Error{
 				Message: fmt.Sprintf(
-					"unterminated LEB128 at offset %d: ran out of bytes after %d byte(s)",
-					start, i,
+					"unterminated LEB128 at offset %d: continuation bit still set after %d bytes (max for 32-bit)",
+					start, maxBytes,
 				),
 				Offset: start,
-			}
-		}
-
-		b := data[offset]
-		offset++
-
-		payload := int64(b & 0x7F)
-		result |= payload << shift
-		shift += 7
-
-		if b&0x80 == 0 {
-			// Last byte. Check the sign bit (bit 6 of this byte = bit (shift-1) overall).
-			//
-			// Bit 6 of b is tested as: b & 0x40 != 0
-			//
-			// If set, the decoded value is negative in the original integer width
-			// (32-bit for WASM), so we sign-extend to fill int64.
-			if b&0x40 != 0 {
-				result |= -(int64(1) << shift)
-			}
-			return result, offset - start, nil
-		}
+			})
+		}).GetResult()
+	if err != nil {
+		return 0, 0, err
 	}
-
-	return 0, 0, &LEB128Error{
-		Message: fmt.Sprintf(
-			"unterminated LEB128 at offset %d: continuation bit still set after %d bytes (max for 32-bit)",
-			start, maxBytes,
-		),
-		Offset: start,
-	}
+	return res.value, res.bytesConsumed, nil
 }
 
 // EncodeUnsigned encodes a non-negative integer as unsigned LEB128.
@@ -285,22 +311,26 @@ func DecodeSigned(data []byte, offset int) (int64, int, error) {
 //	        emit 0x26
 //	result: [0xE5, 0x8E, 0x26] ✓
 func EncodeUnsigned(value uint64) []byte {
-	var out []byte
+	result, _ := StartNew[[]byte]("wasm-leb128.EncodeUnsigned", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			var out []byte
 
-	for {
-		payload := byte(value & 0x7F) // low 7 bits
-		value >>= 7
-		if value != 0 {
-			// More groups remain → set continuation bit.
-			out = append(out, payload|0x80)
-		} else {
-			// Final group → no continuation bit.
-			out = append(out, payload)
-			break
-		}
-	}
+			for {
+				payload := byte(value & 0x7F) // low 7 bits
+				value >>= 7
+				if value != 0 {
+					// More groups remain → set continuation bit.
+					out = append(out, payload|0x80)
+				} else {
+					// Final group → no continuation bit.
+					out = append(out, payload)
+					break
+				}
+			}
 
-	return out
+			return rf.Generate(true, false, out)
+		}).GetResult()
+	return result
 }
 
 // EncodeSigned encodes a signed integer as signed LEB128 (two's complement).
@@ -332,22 +362,26 @@ func EncodeUnsigned(value uint64) []byte {
 //	        emit 0x7E
 //	result: [0x7E] ✓
 func EncodeSigned(value int64) []byte {
-	var out []byte
+	result, _ := StartNew[[]byte]("wasm-leb128.EncodeSigned", nil,
+		func(op *Operation[[]byte], rf *ResultFactory[[]byte]) *OperationResult[[]byte] {
+			var out []byte
 
-	for {
-		payload := byte(value & 0x7F) // low 7 bits
-		value >>= 7                   // arithmetic right shift (preserves sign)
+			for {
+				payload := byte(value & 0x7F) // low 7 bits
+				value >>= 7                   // arithmetic right shift (preserves sign)
 
-		// Check done condition.
-		done := (value == 0 && payload&0x40 == 0) ||
-			(value == -1 && payload&0x40 != 0)
+				// Check done condition.
+				done := (value == 0 && payload&0x40 == 0) ||
+					(value == -1 && payload&0x40 != 0)
 
-		if done {
-			out = append(out, payload) // final byte — no continuation bit
-			break
-		}
-		out = append(out, payload|0x80) // more bytes follow
-	}
+				if done {
+					out = append(out, payload) // final byte — no continuation bit
+					break
+				}
+				out = append(out, payload|0x80) // more bytes follow
+			}
 
-	return out
+			return rf.Generate(true, false, out)
+		}).GetResult()
+	return result
 }
