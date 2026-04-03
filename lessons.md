@@ -4,6 +4,73 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-01: kern Format 0 coverage — format is in HIGH byte (bits 8-15)
+
+The `coverage` field of a kern subtable header is a 16-bit value. Bits 0-7
+contain directional flags (bit 0 = horizontal). **Bits 8-15 contain the
+subtable format number.** To check for Format 0 (sorted pairs): `coverage >> 8 == 0`.
+Using `coverage & 0xFF == 0` (the low byte) checks the flags, not the format,
+and will skip all valid Format 0 subtables since the horizontal flag (bit 0)
+is usually set (making the low byte == 1, not 0).
+
+**Rule:** Always extract format as `coverage >> 8` when parsing kern subtable headers.
+
+---
+
+### 2026-04-01: Elixir ranges — always use explicit step //1 when count may be zero
+
+In Elixir, `0..(n - 1)` when `n = 0` creates the range `0..-1` which
+**defaults to step -1** and iterates `[0, -1]`. This causes out-of-bounds
+`binary_part/3` calls (negative offsets) → `ArgumentError` → `ParseError` in
+the error handler, masking the real issue.
+
+**Rule:** All ranges over font table entries must use `//1`: `0..(n - 1)//1`.
+An ascending range `0..-1//1` is correctly empty (zero iterations).
+
+---
+
+### 2026-04-01: Swift XCTestCase shadows module-level `load` function
+
+`XCTestCase` (via `NSObject`) has a static `load()` class method. Inside a
+test class that subclasses `XCTestCase`, calling `load(data)` resolves to
+the inherited class method, not the `FontParser.load(_:)` module function.
+The error is "static member 'load' cannot be used on instance of type '...'".
+
+**Rule:** In Swift test files that use `FontParser.load`, always qualify the
+call as `FontParser.load(...)` to bypass the `XCTestCase` shadow.
+
+---
+
+### 2026-04-01: Swift .build/ directory must be gitignored before first test run
+
+`swift build` / `swift test` creates a `.build/` directory with thousands of
+binary files. If you commit before adding a `.gitignore`, these get staged.
+Add `.gitignore` containing `.build/` **before** running any Swift build commands.
+
+**Rule:** For every new Swift package, create `.gitignore` with `.build/` as
+the very first file — before `swift test`.
+
+---
+
+### 2026-04-01: OpenType synthetic font builder — head table needs 54 bytes exactly
+
+The `head` table in a minimal synthetic OpenType font has this exact layout (54 bytes):
+- 4×u32 (version, fontRevision, checkSumAdjust, magicNumber) = 16 bytes
+- flags u16 + unitsPerEm u16 = 4 bytes
+- created i64 + modified i64 = 16 bytes
+- xMin i16 + yMin i16 + xMax i16 + yMax i16 = 8 bytes
+- macStyle u16 + lowestRecPPEM u16 + fontDirectionHint i16 + indexToLocFormat i16 + glyphDataFormat i16 = 10 bytes
+
+Missing the xMin/yMin/xMax/yMax fields (8 bytes) makes the table only 46 bytes,
+causing all subsequent table offsets to be wrong, leading to `ParseError` when
+loading the synthetic font.
+
+**Rule:** When building a synthetic OpenType font in tests, verify total table
+sizes match the declared lengths in the directory. Assert `buf.count == expected_size`
+at the end of the builder if your language supports it.
+
+---
+
 ### 2026-03-18: Cannot create a PR when remote has no main branch
 
 When working with a completely empty GitHub repo, you can't create a PR because there's no base branch. The `gh pr create` command fails with "no history in common." Solution: push an initial commit to main first (even an empty one), then create PRs from feature branches. For the very first content, merging directly to main is acceptable.

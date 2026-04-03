@@ -1,0 +1,12 @@
+[package]
+name = "arc2d"
+version = "0.1.0"
+edition = "2021"
+description = "Elliptical arcs with endpoint↔center form conversion and cubic Bezier approximation"
+
+[dependencies]
+trig = { path = "../trig" }
+point2d = { path = "../point2d" }
+bezier2d = { path = "../bezier2d" }
+
+[dev-dependencies]

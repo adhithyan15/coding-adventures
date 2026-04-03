@@ -149,4 +149,8 @@ members = [
   "font-parser-python",
   "font-parser-ruby",
   "font-parser-node",
+  "point2d",
+  "affine2d",
+  "bezier2d",
+  "arc2d",
 ]
