@@ -204,4 +204,145 @@ defmodule TrigTest do
       end
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # sqrt/1
+  # ---------------------------------------------------------------------------
+
+  describe "sqrt/1" do
+    test "sqrt(0) is 0" do
+      assert Trig.sqrt(0) == 0.0
+    end
+
+    test "sqrt(1) is 1" do
+      assert_in_delta Trig.sqrt(1), 1.0, @tolerance
+    end
+
+    test "sqrt(4) is 2" do
+      assert_in_delta Trig.sqrt(4), 2.0, @tolerance
+    end
+
+    test "sqrt(9) is 3" do
+      assert_in_delta Trig.sqrt(9), 3.0, @tolerance
+    end
+
+    test "sqrt(2) is approximately 1.41421356237" do
+      assert_in_delta Trig.sqrt(2), 1.41421356237, @tolerance
+    end
+
+    test "sqrt(0.25) is 0.5" do
+      assert_in_delta Trig.sqrt(0.25), 0.5, @tolerance
+    end
+
+    test "sqrt(1.0e10) is approximately 1.0e5" do
+      assert_in_delta Trig.sqrt(1.0e10), 1.0e5, 1.0e-4
+    end
+
+    test "sqrt(2) * sqrt(2) ≈ 2.0 (roundtrip)" do
+      s = Trig.sqrt(2)
+      assert_in_delta s * s, 2.0, @tolerance
+    end
+
+    test "sqrt of negative raises ArithmeticError" do
+      assert_raise ArithmeticError, fn -> Trig.sqrt(-1) end
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # tan/1
+  # ---------------------------------------------------------------------------
+
+  describe "tan/1" do
+    test "tan(0) is 0" do
+      assert_in_delta Trig.tan(0), 0.0, @tolerance
+    end
+
+    test "tan(pi/4) is 1" do
+      assert_in_delta Trig.tan(@pi / 4), 1.0, @tolerance
+    end
+
+    test "tan(pi/6) is 1/sqrt(3)" do
+      assert_in_delta Trig.tan(@pi / 6), 1.0 / Trig.sqrt(3), @tolerance
+    end
+
+    test "tan(-pi/4) is -1" do
+      assert_in_delta Trig.tan(-@pi / 4), -1.0, @tolerance
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # atan/1
+  # ---------------------------------------------------------------------------
+
+  describe "atan/1" do
+    test "atan(0) is 0" do
+      assert Trig.atan(0) == 0.0
+    end
+
+    test "atan(1) is pi/4" do
+      assert_in_delta Trig.atan(1), @pi / 4, @tolerance
+    end
+
+    test "atan(-1) is -pi/4" do
+      assert_in_delta Trig.atan(-1), -@pi / 4, @tolerance
+    end
+
+    test "atan(sqrt(3)) is pi/3" do
+      assert_in_delta Trig.atan(Trig.sqrt(3)), @pi / 3, @tolerance
+    end
+
+    test "atan(1/sqrt(3)) is pi/6" do
+      assert_in_delta Trig.atan(1.0 / Trig.sqrt(3)), @pi / 6, @tolerance
+    end
+
+    test "atan of large positive number approaches pi/2" do
+      assert_in_delta Trig.atan(1.0e10), @pi / 2, 1.0e-5
+    end
+
+    test "atan of large negative number approaches -pi/2" do
+      assert_in_delta Trig.atan(-1.0e10), -@pi / 2, 1.0e-5
+    end
+
+    test "atan(tan(pi/4)) ≈ pi/4 (roundtrip)" do
+      assert_in_delta Trig.atan(Trig.tan(@pi / 4)), @pi / 4, @tolerance
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # atan2/2
+  # ---------------------------------------------------------------------------
+
+  describe "atan2/2" do
+    test "atan2(0, 1) is 0 (positive x-axis)" do
+      assert_in_delta Trig.atan2(0, 1), 0.0, @tolerance
+    end
+
+    test "atan2(1, 0) is pi/2 (positive y-axis)" do
+      assert_in_delta Trig.atan2(1, 0), @pi / 2, @tolerance
+    end
+
+    test "atan2(0, -1) is pi (negative x-axis)" do
+      assert_in_delta Trig.atan2(0, -1), @pi, @tolerance
+    end
+
+    test "atan2(-1, 0) is -pi/2 (negative y-axis)" do
+      assert_in_delta Trig.atan2(-1, 0), -@pi / 2, @tolerance
+    end
+
+    test "atan2(1, 1) is pi/4 (Q1)" do
+      assert_in_delta Trig.atan2(1, 1), @pi / 4, @tolerance
+    end
+
+    test "atan2(1, -1) is 3*pi/4 (Q2)" do
+      assert_in_delta Trig.atan2(1, -1), 3 * @pi / 4, @tolerance
+    end
+
+    test "atan2(-1, -1) is -3*pi/4 (Q3)" do
+      assert_in_delta Trig.atan2(-1, -1), -3 * @pi / 4, @tolerance
+    end
+
+    test "atan2(-1, 1) is -pi/4 (Q4)" do
+      assert_in_delta Trig.atan2(-1, 1), -@pi / 4, @tolerance
+    end
+  end
 end

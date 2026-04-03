@@ -309,3 +309,281 @@ func Degrees(rad float64) float64 {
 		}).GetResult()
 	return result
 }
+
+// ============================================================================
+// Constants used by the new functions
+// ============================================================================
+
+// halfPI is π/2, the boundary between atan's natural range and where
+// range reduction is needed. It also appears in atan2's quadrant rules.
+const halfPI = PI / 2.0
+
+// ============================================================================
+// Sqrt — Newton's (Babylonian) Method
+// ============================================================================
+
+// Sqrt computes the square root of x using Newton's iterative method.
+//
+// # Newton's Method
+//
+// The Babylonian method, known for over 3,000 years, says:
+//
+//	If `guess` approximates sqrt(x), then (guess + x/guess) / 2 is better.
+//
+// Intuition: if guess < sqrt(x), then x/guess > sqrt(x). Their average
+// "squeezes" both over/underestimates closer together each step.
+//
+// The method has *quadratic convergence*: each iteration doubles the number
+// of correct digits. Convergence table for sqrt(2):
+//
+//	iter | guess          | digits correct
+//	-----|----------------|---------------
+//	0    | 2.000000       | 0
+//	1    | 1.500000       | 1
+//	2    | 1.416667       | 2
+//	3    | 1.414216       | 5
+//	4    | 1.41421356237  | 11  (full precision)
+//
+// Typically converges in 10–15 iterations for any normal float64 input.
+func Sqrt(x float64) float64 {
+	result, _ := StartNew[float64]("trig.Sqrt", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+
+			// Negative inputs are outside the domain of real square roots.
+			if x < 0 {
+				panic("trig.Sqrt: domain error — input is negative")
+			}
+
+			// sqrt(0) = 0 exactly.
+			if x == 0.0 {
+				return rf.Generate(true, false, 0.0)
+			}
+
+			// Initial guess: x itself for large values (saves a few iterations),
+			// 1.0 for values in (0, 1) (avoids an expensive first step).
+			guess := x
+			if x < 1.0 {
+				guess = 1.0
+			}
+
+			// Iterate until convergence. The safety cap of 60 is extreme;
+			// quadratic convergence means real-world termination in ~15 steps.
+			for i := 0; i < 60; i++ {
+				next := (guess + x/guess) / 2.0
+
+				// Stop when improvement is below the precision floor.
+				// 1e-15*guess handles relative precision for large values.
+				// 1e-300 is an absolute floor for subnormal inputs.
+				improvement := next - guess
+				if improvement < 0 {
+					improvement = -improvement
+				}
+				if improvement < 1e-15*guess+1e-300 {
+					return rf.Generate(true, false, next)
+				}
+
+				guess = next
+			}
+
+			return rf.Generate(true, false, guess)
+		}).GetResult()
+	return result
+}
+
+// ============================================================================
+// Tan — Tangent as Sine / Cosine
+// ============================================================================
+
+// Tan computes the tangent of x (in radians).
+//
+// # Definition
+//
+// Tangent is the ratio of sine to cosine:
+//
+//	tan(x) = sin(x) / cos(x)
+//
+// On the unit circle, a ray at angle x meets the circle at (cos x, sin x),
+// and meets the vertical tangent line at x=1 at height sin(x)/cos(x).
+// This geometric picture is the origin of the name "tangent."
+//
+// # Undefined Points (Poles)
+//
+// tan is undefined at x = π/2 + k·π for any integer k, because cos(x) = 0
+// there. Our implementation detects |cos(x)| < 1e-15 and returns the largest
+// representable float64 (magnitude ≈ 1.8e308) with appropriate sign, to
+// avoid a runtime division-by-zero panic.
+//
+// We call our own Sin and Cos — not math.Sin or math.Cos.
+func Tan(x float64) float64 {
+	result, _ := StartNew[float64]("trig.Tan", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+
+			s := Sin(x) // our own Sin
+			c := Cos(x) // our own Cos
+
+			// Guard against division by near-zero cosine.
+			// |cos(x)| < 1e-15 means we're within ~1e-15 radians of a pole
+			// (x ≈ π/2 + k·π). Return a large finite value with the sign that
+			// indicates the direction of divergence.
+			absC := c
+			if absC < 0 {
+				absC = -absC
+			}
+			if absC < 1e-15 {
+				var val float64
+				if s > 0 {
+					val = 1.0e308
+				} else {
+					val = -1.0e308
+				}
+				return rf.Generate(true, false, val)
+			}
+
+			return rf.Generate(true, false, s/c)
+		}).GetResult()
+	return result
+}
+
+// ============================================================================
+// atan — Arctangent via Taylor Series with Range Reduction
+// ============================================================================
+
+// atanCore computes atan for |x| <= 1 using half-angle reduction + Taylor series.
+//
+// This is an internal helper; users call Atan or Atan2.
+//
+// Half-angle reduction:
+//
+//	atan(x) = 2·atan( x / (1 + sqrt(1 + x²)) )
+//
+// This shrinks |x| <= 1 to |y| <= tan(π/8) ≈ 0.414, where the Taylor
+// series atan(t) = t - t³/3 + t⁵/5 - ... converges in ~15 terms.
+//
+// Iterative term computation:
+//
+//	term_0 = t
+//	term_n = term_{n-1} * (-t²) * (2n-1) / (2n+1)
+func atanCore(x float64) float64 {
+	// Half-angle: shrink x to a smaller argument.
+	// We call our own Sqrt here — no math.Sqrt.
+	reduced := x / (1.0 + Sqrt(1.0+x*x))
+
+	t := reduced
+	tSq := t * t
+	term := t
+	result := t
+
+	for n := 1; n <= 30; n++ {
+		// term_n = term_{n-1} * (-t²) * (2n-1) / (2n+1)
+		// The ratio (2n-1)/(2n+1) connects consecutive odd-denominator terms:
+		//   atan series denominators: 1, 3, 5, 7, ...
+		//   consecutive ratio: (2n-1) / (2n+1)
+		term = term * (-tSq) * float64(2*n-1) / float64(2*n+1)
+		result += term
+
+		// Early exit when term's magnitude is negligibly small.
+		absterm := term
+		if absterm < 0 {
+			absterm = -absterm
+		}
+		if absterm < 1e-17 {
+			break
+		}
+	}
+
+	// Undo the half-angle halving: atan(x) = 2·atan(reduced).
+	return 2.0 * result
+}
+
+// Atan computes the arctangent of x (in radians).
+//
+// # Returns
+//
+// A value in the open interval (-π/2, π/2).
+//
+// # Range Reduction
+//
+// The Taylor series atan(x) = x - x³/3 + x⁵/5 - ... converges only for
+// |x| <= 1. For |x| > 1 we use the complementary identity:
+//
+//	atan(x)  = π/2 - atan(1/x)    for x > 1
+//	atan(x)  = -π/2 - atan(1/x)   for x < -1
+//
+// Inside atan_core, a further half-angle reduction halves the argument,
+// giving fast convergence for the Taylor series.
+//
+// # Examples
+//
+//	Atan(0)    = 0
+//	Atan(1)    = π/4   (45 degrees)
+//	Atan(-1)   = -π/4
+func Atan(x float64) float64 {
+	result, _ := StartNew[float64]("trig.Atan", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("x", x)
+
+			if x == 0.0 {
+				return rf.Generate(true, false, 0.0)
+			}
+			if x > 1.0 {
+				return rf.Generate(true, false, halfPI-atanCore(1.0/x))
+			}
+			if x < -1.0 {
+				return rf.Generate(true, false, -halfPI-atanCore(1.0/x))
+			}
+			return rf.Generate(true, false, atanCore(x))
+		}).GetResult()
+	return result
+}
+
+// Atan2 computes the four-quadrant arctangent of (y, x).
+//
+// # Returns
+//
+// The angle in radians that the point (x, y) makes with the positive x-axis,
+// in the range (-π, π].
+//
+// # Why atan2 and not atan(y/x)?
+//
+// atan(y/x) only returns angles in (-π/2, π/2) — the right half-plane.
+// Crucially, it cannot distinguish (y=1, x=-1) from (y=-1, x=1), because
+// both give y/x = ±1. atan2 uses the signs of y and x separately:
+//
+//	Quadrant I   (x>0, y>0):  atan2 ∈ (0,    π/2)
+//	Quadrant II  (x<0, y>0):  atan2 ∈ (π/2,  π  ]
+//	Quadrant III (x<0, y<0):  atan2 ∈ (-π,  -π/2)
+//	Quadrant IV  (x>0, y<0):  atan2 ∈ (-π/2,  0 )
+//
+// # Examples
+//
+//	Atan2(0,  1) = 0       (positive x-axis)
+//	Atan2(1,  0) = π/2     (positive y-axis)
+//	Atan2(0, -1) = π       (negative x-axis)
+//	Atan2(-1, 0) = -π/2    (negative y-axis)
+func Atan2(y, x float64) float64 {
+	result, _ := StartNew[float64]("trig.Atan2", 0,
+		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
+			op.AddProperty("y", y)
+			op.AddProperty("x", x)
+
+			var val float64
+			if x > 0.0 {
+				val = Atan(y / x)
+			} else if x < 0.0 && y >= 0.0 {
+				val = Atan(y/x) + PI
+			} else if x < 0.0 && y < 0.0 {
+				val = Atan(y/x) - PI
+			} else if x == 0.0 && y > 0.0 {
+				val = halfPI
+			} else if x == 0.0 && y < 0.0 {
+				val = -halfPI
+			} else {
+				val = 0.0 // both zero: undefined, return 0 by convention
+			}
+
+			return rf.Generate(true, false, val)
+		}).GetResult()
+	return result
+}

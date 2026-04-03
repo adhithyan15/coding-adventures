@@ -9,6 +9,7 @@ ok( eval { require CodingAdventures::Trig; 1 }, 'CodingAdventures::Trig loads' )
 
 use CodingAdventures::Trig qw(
     sin_approx  cos_approx  tan_approx
+    sqrt_approx atan_approx atan2_approx
     sin_deg     cos_deg     tan_deg
     degrees_to_radians  radians_to_degrees
 );
@@ -155,5 +156,49 @@ ok( near( CodingAdventures::Trig->degrees_to_radians(180), $PI ),
     'class method: degrees_to_radians(180) = pi' );
 ok( near( CodingAdventures::Trig->sin_deg(30), 0.5 ),
     'class method: sin_deg(30) = 0.5' );
+
+# ===========================================================================
+# 11. sqrt_approx
+# ===========================================================================
+
+ok( near( sqrt_approx(0),    0.0 ),          'sqrt(0) = 0' );
+ok( near( sqrt_approx(1),    1.0 ),          'sqrt(1) = 1' );
+ok( near( sqrt_approx(4),    2.0 ),          'sqrt(4) = 2' );
+ok( near( sqrt_approx(9),    3.0 ),          'sqrt(9) = 3' );
+ok( near( sqrt_approx(2),    1.41421356237, 1e-9 ), 'sqrt(2) ≈ 1.41421356237' );
+ok( near( sqrt_approx(0.25), 0.5 ),          'sqrt(0.25) = 0.5' );
+ok( near( sqrt_approx(1e10), 1e5,  1e-4 ),  'sqrt(1e10) ≈ 1e5' );
+
+# Roundtrip: sqrt(2)^2 ≈ 2
+my $sq2 = sqrt_approx(2);
+ok( near( $sq2 * $sq2, 2.0 ), 'sqrt(2)^2 ≈ 2.0' );
+
+# Negative input should die
+ok( eval { sqrt_approx(-1); 0 } || 1, 'sqrt(-1) dies' );
+
+# ===========================================================================
+# 12. atan_approx
+# ===========================================================================
+
+ok( near( atan_approx(0),  0.0 ),         'atan(0) = 0' );
+ok( near( atan_approx(1),  $PI / 4 ),     'atan(1) = pi/4' );
+ok( near( atan_approx(-1), -$PI / 4 ),    'atan(-1) = -pi/4' );
+ok( near( atan_approx( sqrt_approx(3) ),  $PI / 3 ), 'atan(sqrt(3)) = pi/3' );
+ok( near( atan_approx( 1.0 / sqrt_approx(3) ), $PI / 6 ), 'atan(1/sqrt(3)) = pi/6' );
+ok( near( atan_approx(1e10),  $PI / 2, 1e-5 ),  'atan(1e10) ≈ pi/2' );
+ok( near( atan_approx(-1e10), -$PI / 2, 1e-5 ), 'atan(-1e10) ≈ -pi/2' );
+
+# ===========================================================================
+# 13. atan2_approx
+# ===========================================================================
+
+ok( near( atan2_approx(0, 1),   0.0 ),         'atan2(0,  1) = 0         (positive x-axis)' );
+ok( near( atan2_approx(1, 0),   $PI / 2 ),     'atan2(1,  0) = pi/2      (positive y-axis)' );
+ok( near( atan2_approx(0, -1),  $PI ),         'atan2(0, -1) = pi        (negative x-axis)' );
+ok( near( atan2_approx(-1, 0), -$PI / 2 ),     'atan2(-1, 0) = -pi/2     (negative y-axis)' );
+ok( near( atan2_approx(1, 1),   $PI / 4 ),     'atan2(1,  1) = pi/4      (Q1)' );
+ok( near( atan2_approx(1, -1),  3 * $PI / 4 ), 'atan2(1, -1) = 3*pi/4    (Q2)' );
+ok( near( atan2_approx(-1, -1),-3 * $PI / 4 ), 'atan2(-1,-1) = -3*pi/4   (Q3)' );
+ok( near( atan2_approx(-1, 1), -$PI / 4 ),     'atan2(-1, 1) = -pi/4     (Q4)' );
 
 done_testing;

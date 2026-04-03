@@ -1,3 +1,3 @@
-from .trig import PI, sin, cos, radians, degrees
+from .trig import PI, HALF_PI, sin, cos, tan, sqrt, atan, atan2, radians, degrees
 
-__all__ = ["PI", "sin", "cos", "radians", "degrees"]
+__all__ = ["PI", "HALF_PI", "sin", "cos", "tan", "sqrt", "atan", "atan2", "radians", "degrees"]

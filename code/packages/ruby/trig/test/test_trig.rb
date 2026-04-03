@@ -245,4 +245,138 @@ class TestTrig < Minitest::Test
   def test_cos_of_45_degrees
     assert_in_delta Math.sqrt(2) / 2, Trig.cos(Trig.radians(45)), DELTA
   end
+
+  # ---------------------------------------------------------------------------
+  # sqrt
+  # ---------------------------------------------------------------------------
+
+  def test_sqrt_zero
+    assert_in_delta 0.0, Trig.sqrt(0), DELTA
+  end
+
+  def test_sqrt_one
+    assert_in_delta 1.0, Trig.sqrt(1), DELTA
+  end
+
+  def test_sqrt_four
+    assert_in_delta 2.0, Trig.sqrt(4), DELTA
+  end
+
+  def test_sqrt_nine
+    assert_in_delta 3.0, Trig.sqrt(9), DELTA
+  end
+
+  def test_sqrt_two
+    assert_in_delta 1.41421356237, Trig.sqrt(2), DELTA
+  end
+
+  def test_sqrt_quarter
+    assert_in_delta 0.5, Trig.sqrt(0.25), DELTA
+  end
+
+  def test_sqrt_large
+    assert_in_delta 1e5, Trig.sqrt(1e10), 1e-4
+  end
+
+  def test_sqrt_roundtrip
+    s = Trig.sqrt(2)
+    assert_in_delta 2.0, s * s, DELTA
+  end
+
+  def test_sqrt_negative_raises
+    assert_raises(ArgumentError) { Trig.sqrt(-1) }
+  end
+
+  # ---------------------------------------------------------------------------
+  # tan
+  # ---------------------------------------------------------------------------
+
+  def test_tan_zero
+    assert_in_delta 0.0, Trig.tan(0), DELTA
+  end
+
+  def test_tan_pi_over_4
+    assert_in_delta 1.0, Trig.tan(Trig::PI / 4), DELTA
+  end
+
+  def test_tan_pi_over_6
+    # tan(pi/6) = 1/sqrt(3)
+    assert_in_delta 1.0 / Trig.sqrt(3), Trig.tan(Trig::PI / 6), DELTA
+  end
+
+  def test_tan_negative_pi_over_4
+    assert_in_delta(-1.0, Trig.tan(-Trig::PI / 4), DELTA)
+  end
+
+  # ---------------------------------------------------------------------------
+  # atan
+  # ---------------------------------------------------------------------------
+
+  def test_atan_zero
+    assert_in_delta 0.0, Trig.atan(0), DELTA
+  end
+
+  def test_atan_one
+    assert_in_delta Trig::PI / 4, Trig.atan(1), DELTA
+  end
+
+  def test_atan_minus_one
+    assert_in_delta(-Trig::PI / 4, Trig.atan(-1), DELTA)
+  end
+
+  def test_atan_sqrt3
+    assert_in_delta Trig::PI / 3, Trig.atan(Trig.sqrt(3)), DELTA
+  end
+
+  def test_atan_inv_sqrt3
+    assert_in_delta Trig::PI / 6, Trig.atan(1.0 / Trig.sqrt(3)), DELTA
+  end
+
+  def test_atan_large_positive
+    assert_in_delta Trig::PI / 2, Trig.atan(1e10), 1e-5
+  end
+
+  def test_atan_large_negative
+    assert_in_delta(-Trig::PI / 2, Trig.atan(-1e10), 1e-5)
+  end
+
+  def test_atan_tan_roundtrip
+    assert_in_delta Trig::PI / 4, Trig.atan(Trig.tan(Trig::PI / 4)), DELTA
+  end
+
+  # ---------------------------------------------------------------------------
+  # atan2
+  # ---------------------------------------------------------------------------
+
+  def test_atan2_positive_x_axis
+    assert_in_delta 0.0, Trig.atan2(0, 1), DELTA
+  end
+
+  def test_atan2_positive_y_axis
+    assert_in_delta Trig::PI / 2, Trig.atan2(1, 0), DELTA
+  end
+
+  def test_atan2_negative_x_axis
+    assert_in_delta Trig::PI, Trig.atan2(0, -1), DELTA
+  end
+
+  def test_atan2_negative_y_axis
+    assert_in_delta(-Trig::PI / 2, Trig.atan2(-1, 0), DELTA)
+  end
+
+  def test_atan2_q1
+    assert_in_delta Trig::PI / 4, Trig.atan2(1, 1), DELTA
+  end
+
+  def test_atan2_q2
+    assert_in_delta 3 * Trig::PI / 4, Trig.atan2(1, -1), DELTA
+  end
+
+  def test_atan2_q3
+    assert_in_delta(-3 * Trig::PI / 4, Trig.atan2(-1, -1), DELTA)
+  end
+
+  def test_atan2_q4
+    assert_in_delta(-Trig::PI / 4, Trig.atan2(-1, 1), DELTA)
+  end
 end

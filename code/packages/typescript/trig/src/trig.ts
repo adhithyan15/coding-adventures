@@ -161,3 +161,246 @@ export function radians(deg: number): number {
 export function degrees(rad: number): number {
   return rad * (180.0 / PI);
 }
+
+// ----------------------------------------------------------------------------
+// sqrt(x) — Square Root via Newton's (Babylonian) Method
+// ----------------------------------------------------------------------------
+// Newton's method for square roots is one of the oldest numerical algorithms,
+// known to Babylonian mathematicians over 3,000 years ago. The idea is simple:
+// if `guess` is an approximation to sqrt(x), then the average of `guess` and
+// `x / guess` is a better approximation.
+//
+// Why does this work? If guess < sqrt(x), then x/guess > sqrt(x), so their
+// average lands somewhere closer to the true value. If guess > sqrt(x), the
+// argument is symmetric. In either case, we move closer.
+//
+// The convergence is *quadratic* — the number of correct decimal digits
+// doubles with each iteration. For x = 2:
+//
+//   Iteration 0: guess = 2.0
+//   Iteration 1: guess = (2.0 + 2.0/2.0) / 2 = 1.5
+//   Iteration 2: guess = (1.5 + 2.0/1.5) / 2 ≈ 1.41667
+//   Iteration 3: guess = ≈ 1.41422
+//   Iteration 4: guess = ≈ 1.41421356237...  (converged!)
+//
+// Typically converges in 10-15 iterations for most double-precision inputs.
+
+export function sqrt(x: number): number {
+  // Negative inputs are mathematically undefined (in real numbers).
+  // We throw an error to signal clearly rather than returning NaN silently.
+  if (x < 0) {
+    throw new Error(`sqrt: domain error — input ${x} is negative`);
+  }
+
+  // sqrt(0) is exactly 0 by definition.
+  if (x === 0.0) return 0.0;
+
+  // Initial guess: use x itself for x >= 1 (decent for large numbers),
+  // and 1.0 for x < 1 (avoids dividing by a very small number early on).
+  // Both converge correctly; this just saves a few iterations.
+  let guess = x >= 1.0 ? x : 1.0;
+
+  // Iterate up to 60 times. In practice the loop exits in ~15 iterations
+  // due to quadratic convergence. The cap prevents infinite loops on
+  // edge cases near floating-point subnormals.
+  for (let i = 0; i < 60; i++) {
+    const next = (guess + x / guess) / 2.0;
+
+    // Convergence check: stop when the improvement is smaller than the
+    // best precision we can hope for at this magnitude.
+    // The 1e-15 * guess term accounts for relative precision near large values.
+    // The 1e-300 absolute floor handles subnormals safely.
+    if (Math.abs(next - guess) < 1e-15 * guess + 1e-300) {
+      return next;
+    }
+
+    guess = next;
+  }
+
+  return guess;
+}
+
+// ----------------------------------------------------------------------------
+// tan(x) — Tangent as Sine / Cosine
+// ----------------------------------------------------------------------------
+// Tangent is defined geometrically as the ratio of the opposite side to the
+// adjacent side in a right triangle, which on the unit circle becomes:
+//
+//   tan(x) = sin(x) / cos(x)
+//
+// This is the standard definition. We use our own sin and cos here (not
+// any built-in Math functions) to keep the module self-contained.
+//
+// Where is tangent undefined?
+// At x = π/2 + k·π for any integer k, cos(x) = 0, so the ratio is undefined.
+// The tangent function "blows up" — approaching +∞ from the left and −∞
+// from the right. We guard against cos(x) being too close to zero and return
+// a large finite number to signal the near-singularity.
+//
+// Visual: The tangent function on [-π, π]:
+//
+//    y
+//    |        /
+//    |       /
+//  __|______/_____ x
+//    |   /
+//    |  /
+//    | /
+//    |/               ← tan(0) = 0
+//   /|
+//  / |
+// ∞ at ±π/2
+
+export function tan(x: number): number {
+  const s = sin(x); // our own sin — no Math.sin
+  const c = cos(x); // our own cos — no Math.cos
+
+  // Guard against poles: when |cos(x)| < 1e-15, we are extremely close
+  // to x = π/2 + k·π. Return the largest representable float with the
+  // appropriate sign to indicate the direction of divergence.
+  if (Math.abs(c) < 1e-15) {
+    return s > 0 ? 1.0e308 : -1.0e308;
+  }
+
+  return s / c;
+}
+
+// ----------------------------------------------------------------------------
+// HALF_PI — Used internally by atan and atan2
+// ----------------------------------------------------------------------------
+// This is π/2 ≈ 1.5707963267948966. It appears in atan's range reduction
+// (atan(x) = π/2 - atan(1/x) for x > 1) and in atan2's quadrant rules.
+
+const HALF_PI = PI / 2.0;
+
+// ----------------------------------------------------------------------------
+// atan_core(x) — Taylor Series for |x| ≤ 1, After Half-Angle Reduction
+// ----------------------------------------------------------------------------
+// This is the inner workhorse of atan. It computes atan(x) for |x| ≤ 1
+// by first applying the half-angle identity to shrink the argument further,
+// then applying the Taylor series.
+//
+// Why not just apply the Taylor series directly?
+// atan(x) = x - x³/3 + x⁵/5 - x⁷/7 + ...  (for |x| ≤ 1)
+// Near x = 1, convergence is slow: atan(1) = π/4, but we need ~50 terms.
+//
+// Fix — half-angle identity:
+//   atan(x) = 2·atan( x / (1 + sqrt(1 + x²)) )
+// This reduces the argument by roughly half each application. One application
+// brings |x| ≤ 1 down to |x| ≤ tan(π/8) ≈ 0.414, where the series
+// converges in ~15 terms with 17-digit accuracy.
+//
+// Then we multiply the series result by 2 to undo the identity.
+
+function atanCore(x: number): number {
+  // --- Half-angle reduction ---
+  // Let y = x / (1 + sqrt(1 + x²)).
+  // Then atan(x) = 2·atan(y), and |y| ≤ tan(π/8) ≈ 0.414.
+  //
+  // We use our own sqrt here (defined above) — no Math.sqrt.
+  const reduced = x / (1.0 + sqrt(1.0 + x * x));
+
+  // --- Taylor series for atan(reduced) ---
+  // atan(t) = t - t³/3 + t⁵/5 - t⁷/7 + ...
+  //
+  // Iterative form: term_0 = t, term_n = term_{n-1} * (-t²) * (2n-1)/(2n+1)
+  //
+  // Why the (2n-1)/(2n+1) factor? Because consecutive terms differ by:
+  //   t^(2n+1) / (2n+1)   divided by   t^(2n-1) / (2n-1)
+  //   = t² × (2n-1) / (2n+1)
+  // We include the sign flip from -t² in the ratio.
+  const t = reduced;
+  const tSq = t * t;
+  let term = t;
+  let result = t;
+
+  for (let n = 1; n <= 30; n++) {
+    // Advance to the next term of the alternating series.
+    // Multiply by -t² and scale by (2n-1)/(2n+1) to hit the next odd power.
+    term = term * (-tSq) * (2 * n - 1) / (2 * n + 1);
+    result += term;
+
+    // Early exit when the term is negligibly small.
+    if (Math.abs(term) < 1e-17) break;
+  }
+
+  // Undo the half-angle halving: atan(x) = 2·atan(y).
+  return 2.0 * result;
+}
+
+// ----------------------------------------------------------------------------
+// atan(x) — Four-Quadrant Arctangent (Single-Argument)
+// ----------------------------------------------------------------------------
+// atan(x) is the inverse of tan: given a ratio, return the angle.
+// Its range is (-π/2, π/2) — a single semicircle.
+//
+// We need range reduction because the Taylor series converges only for |x| ≤ 1.
+// For |x| > 1, we use the complementary identity:
+//
+//   atan(x) = π/2 - atan(1/x)    for x > 1
+//   atan(x) = -π/2 - atan(1/x)   for x < -1
+//
+// This follows from: atan(x) + atan(1/x) = π/2  (for x > 0).
+//
+// Proof sketch: if θ = atan(x), then tan(θ) = x, so tan(π/2 - θ) = 1/x
+// (because tan and cot are complementary), meaning atan(1/x) = π/2 - θ.
+
+export function atan(x: number): number {
+  // Special case: atan(0) = 0 exactly.
+  if (x === 0.0) return 0.0;
+
+  // Reduce |x| > 1 using the complementary identity.
+  if (x > 1.0) {
+    return HALF_PI - atanCore(1.0 / x);
+  }
+  if (x < -1.0) {
+    return -HALF_PI - atanCore(1.0 / x);
+  }
+
+  // |x| ≤ 1: compute directly via the core routine.
+  return atanCore(x);
+}
+
+// ----------------------------------------------------------------------------
+// atan2(y, x) — Four-Quadrant Arctangent
+// ----------------------------------------------------------------------------
+// Standard atan(y/x) only returns angles in (-π/2, π/2) — the right half-
+// plane. atan2 returns the angle in all four quadrants: (-π, π].
+//
+// Why is this needed? If y = 1 and x = -1, then y/x = -1, and atan(-1) = -π/4.
+// But the actual angle (the one pointing to (-1, 1) in the plane) is 3π/4 —
+// in the second quadrant. atan2 handles this correctly by inspecting the
+// signs of both y and x.
+//
+// Quadrant diagram:
+//
+//        y > 0
+//    Q2  |  Q1        atan2 > 0 in Q1, Q2
+//  ------+------  x   atan2 < 0 in Q3, Q4
+//    Q3  |  Q4        atan2 = ±π on negative x-axis
+//        y < 0
+
+export function atan2(y: number, x: number): number {
+  if (x > 0.0) {
+    // First or fourth quadrant: standard atan works fine.
+    return atan(y / x);
+  }
+  if (x < 0.0 && y >= 0.0) {
+    // Second quadrant (or negative x-axis with y = 0 → returns π).
+    return atan(y / x) + PI;
+  }
+  if (x < 0.0 && y < 0.0) {
+    // Third quadrant.
+    return atan(y / x) - PI;
+  }
+  if (x === 0.0 && y > 0.0) {
+    // Positive y-axis.
+    return HALF_PI;
+  }
+  if (x === 0.0 && y < 0.0) {
+    // Negative y-axis.
+    return -HALF_PI;
+  }
+  // Both zero: undefined. Return 0 by convention (matches C's atan2).
+  return 0.0;
+}

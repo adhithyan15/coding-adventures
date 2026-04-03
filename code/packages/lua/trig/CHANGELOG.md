@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-03
+
+### Added
+
+- `trig.sqrt(x)` — square root via Newton's method; `error()`s for negative inputs.
+- `trig.atan(x)` — arctangent via Taylor series with outer and half-angle range reduction.
+- `trig.atan2(y, x)` — four-quadrant arctangent.
+- `trig.HALF_PI` public constant (π/2).
+- `atan_core(x)` local (private) helper function.
+- Tests for all new functions in `tests/test_trig.lua`.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

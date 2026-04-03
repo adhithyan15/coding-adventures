@@ -275,4 +275,256 @@ defmodule Trig do
   def degrees(rad) when is_number(rad) do
     rad * 180.0 / @pi
   end
+
+  # ---------------------------------------------------------------------------
+  # sqrt/1 — Newton's (Babylonian) Method
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Computes the square root of `x` using Newton's iterative method.
+
+  ## The Algorithm
+
+  Newton's method (also called the Babylonian method — Babylonian mathematicians
+  used it over 3,000 years ago) says: if `guess` approximates sqrt(x), then:
+
+      next_guess = (guess + x / guess) / 2.0
+
+  is a better approximation. The convergence is *quadratic*: the number of
+  correct digits doubles each iteration. Convergence for sqrt(2):
+
+      iter | guess
+      -----|---------------
+      0    | 2.0
+      1    | 1.5
+      2    | 1.41667
+      3    | 1.41422
+      4    | 1.41421356237...   (full precision!)
+
+  ## Guard
+
+  Negative inputs raise an `ArithmeticError` — the real square root is only
+  defined for non-negative numbers.
+
+  ## Examples
+
+      iex> Trig.sqrt(0)
+      0.0
+
+      iex> Trig.sqrt(4)
+      2.0
+
+      iex> abs(Trig.sqrt(2) - 1.41421356237) < 1.0e-10
+      true
+
+  """
+  def sqrt(x) when is_number(x) and x < 0 do
+    raise ArithmeticError, "sqrt: domain error — input #{x} is negative"
+  end
+
+  def sqrt(x) when is_number(x) do
+    x = x / 1.0  # ensure float
+
+    # sqrt(0) is exactly 0.
+    if x == 0.0 do
+      0.0
+    else
+      # Initial guess: x itself for x >= 1, else 1.0.
+      guess = if x >= 1.0, do: x, else: 1.0
+
+      # Iterate up to 60 times — quadratic convergence means ~15 in practice.
+      sqrt_iterate(x, guess, 0)
+    end
+  end
+
+  # Private recursive helper for sqrt Newton iterations.
+  defp sqrt_iterate(_x, guess, 60), do: guess
+
+  defp sqrt_iterate(x, guess, iteration) do
+    next_guess = (guess + x / guess) / 2.0
+    improvement = abs(next_guess - guess)
+
+    # Stop when improvement is below the precision floor.
+    # 1.0e-15 * guess gives relative precision; 1.0e-300 handles subnormals.
+    if improvement < 1.0e-15 * guess + 1.0e-300 do
+      next_guess
+    else
+      sqrt_iterate(x, next_guess, iteration + 1)
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # tan/1 — Tangent as Sine / Cosine
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Computes the tangent of `x` (in radians).
+
+  ## Definition
+
+  Tangent is the ratio of sine to cosine:
+
+      tan(x) = sin(x) / cos(x)
+
+  On the unit circle, this is the y-coordinate where the ray at angle x
+  meets the vertical line x=1 — the literal "tangent line" to the circle.
+
+  ## Undefined Points (Poles)
+
+  tan is undefined at x = π/2 + k·π for any integer k, where cos(x) = 0.
+  When |cos(x)| < 1.0e-15 we return ±1.0e308 (the largest finite float)
+  to signal near-singularity without crashing.
+
+  We call our own `sin/1` and `cos/1` — no `:math.tan` used.
+
+  ## Examples
+
+      iex> abs(Trig.tan(0)) < 1.0e-10
+      true
+
+      iex> abs(Trig.tan(Trig.pi() / 4) - 1.0) < 1.0e-10
+      true
+
+  """
+  def tan(x) when is_number(x) do
+    s = sin(x)  # our own sin
+    c = cos(x)  # our own cos
+
+    # Guard against poles: |cos| < 1e-15 means we're near a discontinuity.
+    if abs(c) < 1.0e-15 do
+      if s > 0, do: 1.0e308, else: -1.0e308
+    else
+      s / c
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Constants for atan
+  # ---------------------------------------------------------------------------
+
+  # HALF_PI is π/2. Used in atan's range reduction and atan2's quadrant cases.
+  @half_pi @pi / 2.0
+
+  # ---------------------------------------------------------------------------
+  # atan/1 — Arctangent via Taylor Series with Half-Angle Reduction
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Computes the arctangent of `x` (in radians).
+
+  Returns a value in the open interval (-π/2, π/2).
+
+  ## Range Reduction
+
+  The Taylor series atan(x) = x - x³/3 + x⁵/5 - ... converges only for
+  |x| <= 1. For |x| > 1 we apply the complementary identity:
+
+      atan(x)  = π/2 - atan(1/x)    for x > 1
+      atan(x)  = -π/2 - atan(1/x)   for x < -1
+
+  Inside the core computation, a half-angle reduction further halves the
+  argument, ensuring fast convergence in ~15 Taylor terms.
+
+  ## Examples
+
+      iex> abs(Trig.atan(0)) < 1.0e-10
+      true
+
+      iex> abs(Trig.atan(1) - Trig.pi() / 4) < 1.0e-10
+      true
+
+      iex> abs(Trig.atan(-1) + Trig.pi() / 4) < 1.0e-10
+      true
+
+  """
+  def atan(x) when is_number(x) do
+    x = x / 1.0
+
+    cond do
+      x == 0.0  -> 0.0
+      x >  1.0  -> @half_pi - atan_core(1.0 / x)
+      x < -1.0  -> -@half_pi - atan_core(1.0 / x)
+      true      -> atan_core(x)
+    end
+  end
+
+  # Private helper: atan_core computes atan for |x| <= 1 via half-angle + Taylor.
+  #
+  # Half-angle identity:
+  #   atan(x) = 2 * atan( x / (1 + sqrt(1 + x^2)) )
+  #
+  # This brings |x| <= 1 down to |y| <= tan(pi/8) ~= 0.414, where the Taylor
+  # series converges rapidly.
+  defp atan_core(x) do
+    # Half-angle reduction. We use our own sqrt/1.
+    reduced = x / (1.0 + sqrt(1.0 + x * x))
+
+    t = reduced
+    t_sq = t * t
+
+    # Taylor series with iterative term computation.
+    # term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+    {_term, result} =
+      Enum.reduce_while(1..30, {t, t}, fn n, {term, acc} ->
+        next_term = term * (-t_sq) * (2 * n - 1) / (2 * n + 1)
+        next_acc = acc + next_term
+
+        # Early exit when term is negligibly small.
+        if abs(next_term) < 1.0e-17 do
+          {:halt, {next_term, next_acc}}
+        else
+          {:cont, {next_term, next_acc}}
+        end
+      end)
+
+    # Undo the half-angle halving: atan(x) = 2 * atan(reduced).
+    2.0 * result
+  end
+
+  # ---------------------------------------------------------------------------
+  # atan2/2 — Four-Quadrant Arctangent
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Computes the four-quadrant arctangent of (`y`, `x`).
+
+  Returns the angle in radians that the vector (x, y) makes with the positive
+  x-axis, in the range (-π, π].
+
+  ## Why Not atan(y/x)?
+
+  `atan(y/x)` only gives angles in (-π/2, π/2). It cannot distinguish
+  Q1 from Q3 or Q2 from Q4 — both pairs produce the same y/x ratio.
+  `atan2` inspects the signs of y and x separately:
+
+      Quadrant I   (x>0, y>0):  atan2 ∈ (0,   π/2)
+      Quadrant II  (x<0, y≥0):  atan2 ∈ [π/2,  π ]
+      Quadrant III (x<0, y<0):  atan2 ∈ (-π, -π/2)
+      Quadrant IV  (x>0, y<0):  atan2 ∈ (-π/2,  0)
+
+  ## Examples
+
+      iex> abs(Trig.atan2(0, 1)) < 1.0e-10      # positive x-axis
+      true
+
+      iex> abs(Trig.atan2(1, 0) - Trig.pi() / 2) < 1.0e-10   # positive y-axis
+      true
+
+      iex> abs(Trig.atan2(0, -1) - Trig.pi()) < 1.0e-10      # negative x-axis
+      true
+
+  """
+  def atan2(y, x) when is_number(y) and is_number(x) do
+    y = y / 1.0
+    x = x / 1.0
+
+    cond do
+      x > 0.0                  -> atan(y / x)
+      x < 0.0 and y >= 0.0    -> atan(y / x) + @pi
+      x < 0.0 and y < 0.0     -> atan(y / x) - @pi
+      x == 0.0 and y > 0.0    -> @half_pi
+      x == 0.0 and y < 0.0    -> -@half_pi
+      true                     -> 0.0   # both zero: undefined, return 0
+    end
+  end
 end
