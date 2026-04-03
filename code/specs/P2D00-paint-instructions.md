@@ -618,14 +618,57 @@ interface PaintImage extends PaintBase {
   y: number;        // top-left y
   width: number;    // rendered width (may differ from intrinsic image width)
   height: number;   // rendered height
-  src: string;      // image source — one of:
-                    //   URI:      "https://example.com/photo.jpg"
-                    //   file URI: "file:///assets/logo.png"
-                    //   data URL: "data:image/png;base64,iVBORw0K..."
-                    // The backend resolves the src. The IR does not validate it.
+
+  src: string | PixelContainer;
+  // Image source — one of:
+  //
+  //   string (URI or data URL):
+  //     "https://example.com/photo.jpg"   — remote URI
+  //     "file:///assets/logo.png"         — local file URI
+  //     "data:image/png;base64,iVBORw0K..." — inline data URL
+  //   The backend resolves URI strings. The IR does not validate or fetch them.
+  //
+  //   PixelContainer (already-decoded pixels):
+  //     Pass a PixelContainer directly if you have already decoded the image.
+  //     The VM paints the pixels as-is — no decoding step needed.
+  //     This is the zero-copy path: vm.export() → PixelContainer → PaintImage.src.
+  //
+  // The VM does not care which form is used. Both produce the same visual result.
+  // The PixelContainer path is faster when the caller already has decoded pixels
+  // (e.g., compositing the output of one VM into the scene of another).
+
   opacity?: number; // 0.0 (invisible) to 1.0 (fully opaque), default 1.0
 }
 ```
+
+#### The PixelContainer shortcut
+
+Because `src` accepts a `PixelContainer`, you can feed the output of one VM directly
+into the input of another without any codec round-trip:
+
+```typescript
+// Render a sub-scene to pixels
+const sub_pixels = thumbnail_vm.export(sub_scene);
+
+// Embed the sub-scene pixels into a larger scene
+const main_scene: PaintScene = {
+  width: 1200, height: 800, background: "#fff",
+  instructions: [
+    { kind: "image", x: 50, y: 50, width: 300, height: 200, src: sub_pixels },
+    //                                                            ^^^^^^^^^^
+    //                                    PixelContainer — no encoding/decoding
+    { kind: "rect", x: 0, y: 0, width: 1200, height: 800, stroke: "#ccc" },
+  ]
+};
+
+main_vm.execute(main_scene, ctx);
+```
+
+This is the correct primitive for picture-in-picture, thumbnail strips, layer caching,
+and any scenario where a fully composited sub-scene needs to be embedded as a bitmap
+into a larger scene. The VM never needs to know what format the pixels "came from".
+Internally, Canvas backends call `ctx.putImageData()`, Metal backends upload a texture
+— same as decoding a PNG, just without the decode step.
 
 ---
 
@@ -841,6 +884,105 @@ bars.map(b => ({ kind: "rect", x: b.x, y: b.y, ... }))
 
 // GOOD — each bar has a stable identity
 bars.map(b => ({ kind: "rect", id: b.id, x: b.x, y: b.y, ... }))
+```
+
+---
+
+## Pixel Output Types
+
+These types represent the pixel-level output of a PaintVM `export()` call (defined in
+P2D01). They live in P2D00 because they are the shared vocabulary between the VM
+and the image codec layer — a codec never imports from a specific backend.
+
+### PixelContainer — Raw pixel buffer
+
+```typescript
+interface PixelContainer {
+  width: number;
+  // Width of the image in pixels.
+
+  height: number;
+  // Height of the image in pixels.
+
+  channels: 3 | 4;
+  // Number of channels per pixel.
+  //   3 = RGB  (no alpha channel — export background is always opaque)
+  //   4 = RGBA (includes alpha — useful for transparent PNGs, WebP lossless)
+
+  bit_depth: 8 | 16;
+  // Bits per channel.
+  //   8  = standard precision (0–255 per channel). Use for sRGB/display output.
+  //   16 = high precision (0–65535 per channel). Use for HDR or print pipelines.
+
+  pixels: Uint8Array | Uint16Array;
+  // Raw pixel data, row-major, top-left origin, channels interleaved.
+  //
+  // Layout for RGBA (channels=4, bit_depth=8):
+  //   offset = (row * width + col) * 4
+  //   pixels[offset + 0] = R
+  //   pixels[offset + 1] = G
+  //   pixels[offset + 2] = B
+  //   pixels[offset + 3] = A
+  //
+  // For bit_depth=16, use Uint16Array and each channel is 2 bytes big-endian.
+  // Total byte length: width × height × channels × (bit_depth / 8)
+
+  color_space?: "srgb" | "display-p3" | "linear-srgb";
+  // The color space of the pixel values. Default: "srgb".
+  //   "srgb"        — standard web color space (gamma-encoded). Use for most output.
+  //   "display-p3"  — wide-gamut P3 (common on modern Apple/Samsung displays).
+  //   "linear-srgb" — linear light values (no gamma). Use for HDR compositing.
+  //
+  // Codecs that don't support the specified color space SHOULD convert to sRGB
+  // before encoding, not silently reinterpret the values.
+}
+```
+
+### ImageCodec — Encode/decode interface
+
+```typescript
+interface ImageCodec {
+  mime_type: string;
+  // The IANA media type for this codec.
+  // Examples: "image/png", "image/webp", "image/jpeg", "image/avif", "image/bmp"
+
+  encode(pixels: PixelContainer): Uint8Array;
+  // Compress the raw pixel buffer into the codec's binary format.
+  // Returns the encoded bytes ready to write to disk or send over a network.
+  // The codec may internally convert bit_depth or color_space to match its
+  // format constraints (e.g., JPEG requires 8-bit and does not support alpha).
+
+  decode(bytes: Uint8Array): PixelContainer;
+  // Decompress encoded bytes into a raw PixelContainer.
+  // Returns bit_depth=8 for standard formats, 16 for HDR formats (AVIF 10/12-bit).
+  // Used by VM backends to load PaintImage.src assets into textures.
+}
+```
+
+#### Why ImageCodec lives here and not in a codec package
+
+The codec implementations (`paint-codec-png`, `paint-codec-webp`, etc.) live in their
+own packages and are never imported by the VM. But both the VM and the codecs need to
+agree on the `PixelContainer` shape — the VM produces it, the codec consumes it.
+By defining both interfaces in P2D00, the dependency graph stays acyclic:
+
+```
+paint-codec-png ──────┐
+paint-codec-webp ─────┤
+paint-codec-jpeg ─────┤──▶ P2D00 (PixelContainer, ImageCodec)
+paint-codec-avif ─────┘         ▲
+                                 │
+paint-vm-canvas ─────────────────┤
+paint-vm-metal  ─────────────────┘
+```
+
+No codec imports from any VM. No VM imports from any codec. P2D00 is the shared
+contract. A producer that wants to export a WebP file calls:
+
+```typescript
+const pixels = vm.export(scene);             // PaintVM → PixelContainer
+const bytes  = webpCodec.encode(pixels);     // PixelContainer → Uint8Array
+fs.writeFileSync("output.webp", bytes);
 ```
 
 ---

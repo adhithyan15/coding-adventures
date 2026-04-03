@@ -40,7 +40,16 @@ Dispatch table: kind → handler
      ├── "line"      → line_handler(instruction, ctx, vm)
      ├── "clip"      → clip_handler(instruction, ctx, vm)
      ├── "gradient"  → gradient_handler(instruction, ctx, vm)
-     └── "image"     → image_handler(instruction, ctx, vm)
+     ├── "image"     → image_handler(instruction, ctx, vm)
+     └── "layer"     → layer_handler(instruction, ctx, vm)
+
+PaintVM.export(scene, options?)              ← pixel output: renders to offscreen, returns PixelContainer
+     |
+     ▼
+PixelContainer (P2D00)
+     |
+     ▼
+ImageCodec.encode(pixels)                   ← codec layer (paint-codec-png, paint-codec-webp, ...)
 ```
 
 Each backend creates a PaintVM instance, registers its handlers, and exports
@@ -90,6 +99,46 @@ interface PaintVM<TContext> {
   //
   // See "patch() algorithm" below for the full diffing contract.
   patch(old: PaintScene, new: PaintScene, context: TContext): void;
+
+  // Pixel export: render the scene to an internal offscreen buffer and return
+  // the raw pixels as a PixelContainer (P2D00).
+  //
+  // export() does NOT use or modify the live TContext. It allocates its own
+  // internal offscreen surface, runs execute() against it, reads back pixels,
+  // and returns them. The caller's context is untouched.
+  //
+  // Use export() when:
+  //   - You need to write the scene to an image file (PNG, WebP, JPEG, etc.).
+  //   - You need to pass pixels to a codec, a test comparator, or a hash function.
+  //   - You need a pixel-accurate snapshot without affecting the live render surface.
+  //
+  // The returned PixelContainer is owned by the caller — the VM does not retain it.
+  // Pass it to an ImageCodec.encode() to compress it into a specific format.
+  //
+  // Example:
+  //   const pixels = vm.export(scene, { scale: 2 });  // 2× pixel density
+  //   const bytes  = pngCodec.encode(pixels);
+  //   fs.writeFileSync("output.png", bytes);
+  export(scene: PaintScene, options?: ExportOptions): PixelContainer;
+}
+
+// Options for export().
+interface ExportOptions {
+  scale?: number;
+  // Pixel density multiplier. Default: 1.0.
+  // At scale 2.0, a scene with width=400 produces a 800-pixel-wide PixelContainer.
+  // Use 2.0 or 3.0 for high-DPI (Retina) exports.
+
+  channels?: 3 | 4;
+  // Number of channels in the output PixelContainer. Default: 4 (RGBA).
+  // Use 3 (RGB) when the format doesn't support alpha (e.g., JPEG).
+
+  bit_depth?: 8 | 16;
+  // Bits per channel. Default: 8.
+  // Use 16 for HDR pipelines or lossless precision.
+
+  color_space?: "srgb" | "display-p3" | "linear-srgb";
+  // Output color space. Default: "srgb".
 }
 
 // A handler for a single instruction kind.
@@ -447,7 +496,52 @@ function handleRect(
 If your backend supports patch(), implement these three operations.
 A backend that only supports execute() can skip them.
 
-### Step 5: Export a factory function
+### Step 5 (optional): Implement export()
+
+`export()` is optional — backends that have no way to read back pixels (e.g., a
+live SVG DOM or a terminal) can leave it unimplemented and throw
+`ExportNotSupportedError`.
+
+Backends that can read back pixels (Canvas via `getImageData`, Metal via
+`MTLTexture.getBytes`, Cairo via `cairo_image_surface_get_data`) should implement
+it by:
+
+1. Allocating an offscreen surface at `scene.width * scale` × `scene.height * scale`.
+2. Creating an internal context for that surface.
+3. Calling `execute(scene, offscreen_context)`.
+4. Reading back the pixels from the offscreen surface.
+5. Wrapping them in a `PixelContainer` and returning.
+
+```typescript
+// Canvas backend export() — uses OffscreenCanvas
+export function exportScene(
+  vm: PaintVM<CanvasRenderingContext2D>,
+  scene: PaintScene,
+  options: ExportOptions = {}
+): PixelContainer {
+  const scale = options.scale ?? 1.0;
+  const w = Math.round(scene.width  * scale);
+  const h = Math.round(scene.height * scale);
+
+  const offscreen = new OffscreenCanvas(w, h);
+  const ctx = offscreen.getContext("2d")!;
+  if (scale !== 1.0) ctx.scale(scale, scale);
+
+  vm.execute(scene, ctx);
+
+  const imageData = ctx.getImageData(0, 0, w, h);  // reads RGBA pixels
+  return {
+    width: w,
+    height: h,
+    channels: 4,
+    bit_depth: 8,
+    pixels: new Uint8Array(imageData.data.buffer),
+    color_space: "srgb",
+  };
+}
+```
+
+### Step 6: Export a factory function
 
 ```typescript
 // The factory function creates and configures a complete, ready-to-use VM.
@@ -458,6 +552,7 @@ export function createCanvasVM(): PaintVM<CanvasRenderingContext2D> {
   vm.register("path",      handlePath);
   vm.register("glyph_run", handleGlyphRun);
   vm.register("group",     handleGroup);
+  vm.register("layer",     handleLayer);
   vm.register("line",      handleLine);
   vm.register("clip",      handleClip);
   vm.register("gradient",  handleGradient);
@@ -537,6 +632,7 @@ understands PaintVM.
 | `DuplicateHandlerError`     | `register()` is called twice for the same kind         | Remove the duplicate registration         |
 | `NullContextError`          | `execute()` or `patch()` is called with a null context | Pass a valid context object               |
 | `MalformedSceneError`       | `instructions` is null or not an array                 | Validate scene with PaintScene type guard |
+| `ExportNotSupportedError`   | `export()` called on a backend that cannot read pixels | Use a backend that supports pixel readback (Canvas, Metal, Cairo) |
 
 These are all programming errors. They indicate a bug in the backend or producer
 code, not a runtime data error. They should never be caught and ignored.
