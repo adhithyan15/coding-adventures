@@ -15,6 +15,8 @@ package CodingAdventures::Affine2D;
 use strict;
 use warnings;
 use Exporter 'import';
+use lib '../trig/lib';
+use lib '../point2d/lib';
 use CodingAdventures::Trig qw(sin_approx cos_approx tan_approx);
 use CodingAdventures::Point2D qw(new_point);
 
