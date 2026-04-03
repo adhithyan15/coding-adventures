@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/paint-instructions",
+  "version": "0.1.0",
+  "description": "Universal 2D paint intermediate representation — backend-neutral typed instruction set",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
