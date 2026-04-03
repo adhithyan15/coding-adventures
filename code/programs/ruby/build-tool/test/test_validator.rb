@@ -9,13 +9,13 @@ class TestValidator < Minitest::Test
     Dir.mktmpdir("build_tool_validator") do |tmp|
       root = Pathname(tmp)
       packages = [
-        Discovery::Package.new(
+        BuildTool::Package.new(
           name: "elixir/actor",
           path: root / "code/packages/elixir/actor",
           build_commands: ["echo"],
           language: "elixir"
         ),
-        Discovery::Package.new(
+        BuildTool::Package.new(
           name: "python/actor",
           path: root / "code/packages/python/actor",
           build_commands: ["echo"],
@@ -48,13 +48,13 @@ class TestValidator < Minitest::Test
     Dir.mktmpdir("build_tool_validator") do |tmp|
       root = Pathname(tmp)
       packages = [
-        Discovery::Package.new(
+        BuildTool::Package.new(
           name: "elixir/actor",
           path: root / "code/packages/elixir/actor",
           build_commands: ["echo"],
           language: "elixir"
         ),
-        Discovery::Package.new(
+        BuildTool::Package.new(
           name: "python/actor",
           path: root / "code/packages/python/actor",
           build_commands: ["echo"],
