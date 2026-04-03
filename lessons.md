@@ -1125,26 +1125,35 @@ use CodingAdventures::Point2D qw(new_point);
 
 ---
 
-### 2026-04-03: Hatchling rejects `@ file:` direct references by default
+### 2026-04-03: Never use `@ file:` direct references in Python pyproject.toml dependencies
 
-Hatchling ≥ 1.18 forbids PEP 440 direct references (`@ file:../sibling`) in the `dependencies` field of `pyproject.toml`. Building the editable package metadata fails with:
+`file:../sibling` path references in `pyproject.toml` `dependencies` cause two cascading failures:
 
-```
-Call to `hatchling.build.prepare_metadata_for_build_editable` failed
-cannot be a direct reference unless field
-```
+1. **Hatchling ≥ 1.18** rejects them: `cannot be a direct reference unless field` — adding `allow-direct-references = true` fixes hatchling, but then:
+2. **uv** fails when building the wheel from a temp directory: `relative path without a working directory: ../trig` — uv resolves the relative path from the temp build dir, not the package dir.
 
-**Fix:** Add `[tool.hatch.metadata] allow-direct-references = true` to `pyproject.toml`:
+**Fix:** Use bare package names in `pyproject.toml` and let the BUILD script pre-install sibling packages:
 
 ```toml
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/mypackage"]
+# pyproject.toml — bare name only
+dependencies = [
+    "coding-adventures-trig",
+    "coding-adventures-point2d",
+]
 ```
 
-**Rule:** Every Python package that depends on a sibling via `@ file:../sibling` needs this hatchling opt-in.
+```bash
+# BUILD — pre-install siblings in leaf-to-root order before the target
+uv venv --quiet --clear
+uv pip install --no-deps -e ../trig --quiet
+uv pip install --no-deps -e ../point2d --quiet
+uv pip install -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v
+```
+
+When `uv pip install -e ".[dev]"` runs, it sees `coding-adventures-trig` in `dependencies`, finds it already installed in the venv, and skips the PyPI fetch.
+
+**Rule:** Never put `@ file:../path` in pyproject.toml dependencies. Always use bare names + BUILD pre-installation.
 
 ---
 
