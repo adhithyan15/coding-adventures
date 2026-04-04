@@ -219,9 +219,12 @@ enum BlockParser {
         // ── Code listing delimiter ─────────────────────────────────────────
         // Pattern: 4+ consecutive dashes `----`.
         if isListingDelimiter(line) {
+            // Save the pending language *before* flush — the normal-mode flush
+            // would clear it, but we need it to annotate the upcoming code block.
+            let savedLanguage = s.pendingLanguage
             s = flush(s)
             s.mode = .codeBlock
-            // pendingLanguage set by [source,lang] above carries over
+            s.pendingLanguage = savedLanguage
             return s
         }
 

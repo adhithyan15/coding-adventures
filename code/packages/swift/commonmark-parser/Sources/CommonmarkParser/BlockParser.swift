@@ -617,7 +617,23 @@ enum BlockParser {
         guard line.hasPrefix("<") else { return false }
         let rest = line.dropFirst()
         guard let first = rest.first else { return false }
-        return first.isLetter || first == "/" || first == "!" || first == "?"
+        guard first.isLetter || first == "/" || first == "!" || first == "?" else { return false }
+
+        // Exclude URL-like patterns: `<scheme://...>` or `<user@domain>`.
+        // These are CommonMark autolinks, not HTML blocks.
+        // After a letter-only tag name, a `:` means it's a URL scheme (e.g. https:),
+        // and an `@` means it's an email address — neither is an HTML tag.
+        if first.isLetter {
+            var idx = rest.index(after: rest.startIndex)
+            while idx < rest.endIndex && rest[idx].isLetter {
+                idx = rest.index(after: idx)
+            }
+            if idx < rest.endIndex && (rest[idx] == ":" || rest[idx] == "@") {
+                return false
+            }
+        }
+
+        return true
     }
 
     /// Collect lines for an HTML block.

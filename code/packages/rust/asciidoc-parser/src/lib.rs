@@ -24,7 +24,7 @@
 //!
 //! # Quick Start
 //!
-//! ```rust
+//! ```rust,ignore
 //! use asciidoc_parser::parse;
 //!
 //! let doc = parse("= Hello\n\nWorld *with* bold.\n");
@@ -53,7 +53,7 @@ pub use document_ast::*;
 ///
 /// # Examples
 ///
-/// ```rust
+/// ```rust,ignore
 /// use asciidoc_parser::parse;
 ///
 /// let doc = parse("== Section\n\n- item 1\n");

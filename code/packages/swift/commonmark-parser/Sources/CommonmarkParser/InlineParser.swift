@@ -137,10 +137,17 @@ struct InlineScanner {
                 }
 
             case "!":
-                // Image: ![alt](url)
-                flushText(into: &nodes)
-                if let node = tryImage() {
-                    nodes.append(node)
+                // Image: ![alt](url) — only special when followed by `[`.
+                // If `!` is not followed by `[` we treat it as plain text without
+                // flushing, so that "Hello!" stays as a single TextNode.
+                if pos + 1 < chars.count && chars[pos + 1] == "[" {
+                    flushText(into: &nodes)
+                    if let node = tryImage() {
+                        nodes.append(node)
+                    } else {
+                        textBuffer.append(ch)
+                        pos += 1
+                    }
                 } else {
                     textBuffer.append(ch)
                     pos += 1
