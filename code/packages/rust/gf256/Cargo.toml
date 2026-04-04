@@ -1,0 +1,8 @@
+[package]
+name = "gf256"
+version = "0.1.0"
+edition = "2021"
+description = "Galois Field GF(2^8) arithmetic — the math behind Reed-Solomon error correction"
+
+[dependencies]
+# none

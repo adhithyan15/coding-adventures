@@ -1,0 +1,22 @@
+# Compiles to a cdylib that Lua loads with require("polynomial_native").
+# The exported entry point is luaopen_polynomial_native (the Lua convention).
+[workspace]
+
+[package]
+name = "polynomial-native-lua"
+version = "0.1.0"
+edition = "2021"
+description = "Lua C extension exposing polynomial arithmetic from Rust"
+build = "build.rs"
+
+[lib]
+# The shared library filename determines the require() name.
+# Lua looks for libpolynomial_native.so → luaopen_polynomial_native.
+name = "polynomial_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Zero-dependency Lua 5.4 C API bridge.
+lua-bridge = { path = "../../rust/lua-bridge" }
+# The pure-Rust polynomial arithmetic crate.
+polynomial = { path = "../../rust/polynomial" }

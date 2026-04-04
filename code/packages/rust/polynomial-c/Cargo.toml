@@ -1,0 +1,23 @@
+[workspace]
+[package]
+name = "polynomial-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the polynomial crate — for Swift/C compile-time interop"
+
+# We produce two output formats:
+#   staticlib (.a) — used by Swift Package Manager for compile-time linking
+#   cdylib     (.so / .dylib) — available for dynamic linking if needed
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+polynomial = { path = "../polynomial" }
+
+[profile.release]
+# Link-Time Optimisation collapses the thin wrapper and the underlying
+# polynomial logic into a single optimised compilation unit. This is
+# especially important here because every exported function is a thin
+# shim; LTO lets the compiler inline the underlying Rust code and
+# eliminate the function-call overhead.
+lto = true

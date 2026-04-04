@@ -1,0 +1,27 @@
+/*
+ * module.modulemap — Clang module map for CGF256.
+ *
+ * This file tells Swift Package Manager (and the underlying Clang/LLVM
+ * toolchain) that there is a module named "CGF256" whose public API
+ * is declared in "gf256_c.h".
+ *
+ * With this module map in place, Swift code can write:
+ *
+ *     import CGF256
+ *
+ * ... and the compiler will make all the C functions declared in
+ * gf256_c.h directly available in Swift with their C types mapped
+ * to Swift equivalents:
+ *
+ *     C type       → Swift type
+ *     uint8_t      → UInt8
+ *     uint32_t     → UInt32
+ *
+ * The `export *` directive re-exports all symbols, so callers that import
+ * GF256Native (the Swift wrapper) can also access CGF256 if they need
+ * direct access to the raw C functions.
+ */
+module CGF256 {
+    header "gf256_c.h"
+    export *
+}

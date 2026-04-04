@@ -1,0 +1,14 @@
+[workspace]
+
+[package]
+name = "polynomial-native-node"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+node-bridge = { path = "../../rust/node-bridge" }
+polynomial = { path = "../../rust/polynomial" }

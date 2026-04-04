@@ -153,4 +153,6 @@ members = [
   "affine2d",
   "bezier2d",
   "arc2d",
+  "polynomial",
+  "gf256",
 ]

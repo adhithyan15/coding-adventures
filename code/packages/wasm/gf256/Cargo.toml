@@ -1,0 +1,52 @@
+# Cargo.toml — WASM GF256 Package
+# ==================================
+#
+# Compiles the pure-Rust `gf256` crate to WebAssembly (wasm32-unknown-unknown)
+# with a plain C ABI — zero wasm-bindgen, zero JavaScript glue, zero external deps.
+#
+# Why a separate crate?
+#
+# The core `gf256` crate has zero dependencies and compiles to any target.
+# This crate adds the #[no_mangle] pub extern "C" wrappers needed for WASM
+# export, keeping the core library clean for native Rust consumers.
+#
+# Build with:
+#   cargo build --target wasm32-unknown-unknown --release
+#
+# The resulting artifact lives at:
+#   target/wasm32-unknown-unknown/release/gf256_wasm.wasm
+#
+# GF(2^8) operations are all scalar (u8 in, u8 out), so there is no memory
+# protocol — all values are passed and returned directly as u32 (WASM has no
+# native u8 type; i32 is the smallest integer type in WASM).
+#
+# Any WASM runtime (Wasmtime, WAMR, Wasmer, a future runtime in this repo) can
+# load the .wasm and call the exported functions by name via the C ABI.
+
+# Each wasm package is its own workspace root so it does not interfere with the
+# main Rust workspace at code/packages/rust/.
+[workspace]
+
+[package]
+name = "gf256-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly build of GF(2^8) arithmetic — zero-dep, no wasm-bindgen, pure C ABI exports"
+
+[lib]
+# cdylib produces a .wasm file when targeting wasm32-unknown-unknown.
+crate-type = ["cdylib"]
+
+[dependencies]
+# The core GF(2^8) library, referenced by relative path.
+gf256 = { path = "../../rust/gf256" }
+
+[profile.release]
+# "z" optimizes for smallest binary size — important for .wasm files.
+opt-level = "z"
+# Link-time optimisation across all IR before machine-code generation.
+lto = true
+# Strip debug symbols from the release binary.
+strip = true
+# WASM has no stack-unwinding runtime. "abort" is required.
+panic = "abort"

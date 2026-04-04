@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "gf256-native-lua"
+version = "0.1.0"
+edition = "2021"
+description = "Lua C extension exposing GF(256) Galois Field arithmetic from Rust"
+build = "build.rs"
+
+[lib]
+name = "gf256_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+lua-bridge = { path = "../../rust/lua-bridge" }
+gf256 = { path = "../../rust/gf256" }

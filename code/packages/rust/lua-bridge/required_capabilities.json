@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/lua-bridge",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "load",
+      "target": "liblua5.4.*",
+      "justification": "Loads the Lua 5.4 shared library via extern \"C\" declarations to call the Lua C API."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "Lua 5.4 C API",
+      "justification": "Calls Lua C API functions (lua_pushinteger, lua_gettable, luaL_setfuncs, etc.) through FFI."
+    }
+  ],
+  "justification": "FFI bridge to Lua 5.4 runtime. Loads the Lua shared library and calls C API functions through raw extern \"C\" declarations."
+}

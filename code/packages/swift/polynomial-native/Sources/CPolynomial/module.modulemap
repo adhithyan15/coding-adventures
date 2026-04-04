@@ -1,0 +1,12 @@
+/*
+ * module.modulemap — Clang module map for CPolynomial.
+ *
+ * SPM's .systemLibrary target requires module.modulemap at the root of the
+ * target path (Sources/CPolynomial/), not in a subdirectory.
+ *
+ * The header is in include/ — we reference it with the relative path.
+ */
+module CPolynomial {
+    header "include/polynomial_c.h"
+    export *
+}

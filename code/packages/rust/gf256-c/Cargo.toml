@@ -1,0 +1,19 @@
+[workspace]
+[package]
+name = "gf256-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the gf256 crate — for Swift/C compile-time interop"
+
+# staticlib (.a) — used by Swift Package Manager for compile-time linking
+# cdylib     (.so / .dylib) — available for dynamic linking if needed
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+gf256 = { path = "../gf256" }
+
+[profile.release]
+# LTO eliminates the thin-shim function-call overhead by inlining the
+# underlying GF256 arithmetic directly into the exported C functions.
+lto = true

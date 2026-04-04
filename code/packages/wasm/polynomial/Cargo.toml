@@ -1,0 +1,51 @@
+# Cargo.toml — WASM Polynomial Package
+# ======================================
+#
+# Compiles the pure-Rust `polynomial` crate to WebAssembly (wasm32-unknown-unknown)
+# with a plain C ABI — zero wasm-bindgen, zero JavaScript glue, zero external deps.
+#
+# Why a separate crate?
+#
+# The core `polynomial` crate has zero dependencies and can compile to any target.
+# This crate adds the #[no_mangle] pub extern "C" wrappers and a simple memory
+# allocator protocol, keeping the core library clean for native Rust consumers.
+#
+# Build with:
+#   cargo build --target wasm32-unknown-unknown --release
+#
+# The resulting artifact lives at:
+#   target/wasm32-unknown-unknown/release/polynomial_wasm.wasm
+#
+# Any WASM runtime (Wasmtime, WAMR, Wasmer, a future runtime in this repo) can
+# load the .wasm and call the exported functions by name via the C ABI.
+
+# Each wasm package is its own workspace root so it does not interfere with the
+# main Rust workspace at code/packages/rust/.
+[workspace]
+
+[package]
+name = "polynomial-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly build of polynomial arithmetic — zero-dep, no wasm-bindgen, pure C ABI exports"
+
+[lib]
+# cdylib produces a .wasm file when targeting wasm32-unknown-unknown.
+crate-type = ["cdylib"]
+
+[dependencies]
+# The core polynomial library, referenced by relative path.
+polynomial = { path = "../../rust/polynomial" }
+
+[profile.release]
+# "z" optimizes for smallest binary size — important for .wasm files that may
+# be distributed over the network or embedded in other artifacts.
+opt-level = "z"
+# Link-time optimisation: merge all IR before machine-code generation,
+# enabling cross-crate dead-code elimination. Reduces .wasm size significantly.
+lto = true
+# Strip debug symbols from the release binary.
+strip = true
+# WASM has no stack-unwinding runtime. "abort" replaces the unwind machinery
+# with a single trap instruction, further shrinking the binary.
+panic = "abort"

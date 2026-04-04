@@ -1,0 +1,30 @@
+/*
+ * module.modulemap — Clang module map for CPolynomial.
+ *
+ * This file tells Swift Package Manager (and the underlying Clang/LLVM
+ * toolchain) that there is a module named "CPolynomial" whose public API
+ * is declared in "polynomial_c.h".
+ *
+ * With this module map in place, Swift code can write:
+ *
+ *     import CPolynomial
+ *
+ * ... and the compiler will make all the C functions declared in
+ * polynomial_c.h directly available in Swift with their C types mapped
+ * to Swift equivalents:
+ *
+ *     C type       → Swift type
+ *     double       → Double
+ *     size_t       → Int
+ *     int          → Int32
+ *     const double* → UnsafePointer<Double>!
+ *     double*       → UnsafeMutablePointer<Double>!
+ *
+ * The `export *` directive re-exports all symbols, so callers that import
+ * PolynomialNative (the Swift wrapper) can also import CPolynomial if they
+ * need direct access to the C functions.
+ */
+module CPolynomial {
+    header "polynomial_c.h"
+    export *
+}

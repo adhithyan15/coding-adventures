@@ -1,0 +1,5 @@
+# Windows: Perl native extension requires Perl DLL import library to link against.
+# The Perl DLL symbols (PL_markstack_ptr, sv_2iv, etc.) are not available
+# on Windows CI runners without a full Perl development install.
+# Linux and macOS CI runners cover this package fully.
+echo Skipping perl/gf256_native on Windows — Perl import library not available

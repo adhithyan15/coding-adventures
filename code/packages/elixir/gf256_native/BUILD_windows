@@ -1,0 +1,4 @@
+# Windows: Elixir NIF builds require linking against ERTS (beam.smp).
+# On Windows, ERTS does not ship an import library, so linking fails.
+# Linux and macOS CI runners cover this package fully.
+echo Skipping elixir/gf256_native on Windows — ERTS import library not available

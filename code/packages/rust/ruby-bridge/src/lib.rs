@@ -31,6 +31,10 @@ use std::ffi::{c_char, c_int, c_long, c_void, CString};
 /// immediate or a pointer to a heap-allocated object.
 pub type VALUE = usize;
 
+/// Ruby's ID type — used for interned symbols (method names, variable names).
+/// Same size as VALUE (machine word) on all architectures.
+pub type ID = usize;
+
 // ---------------------------------------------------------------------------
 // Well-known VALUE constants
 // ---------------------------------------------------------------------------
@@ -119,9 +123,27 @@ extern "C" {
     pub fn rb_ary_push(ary: VALUE, item: VALUE) -> VALUE;
     pub fn rb_ary_entry(ary: VALUE, offset: c_long) -> VALUE;
 
-    // RARRAY_LEN is a macro in Ruby's headers, but we can use
-    // rb_array_len which is a proper C function (Ruby 2.7+).
-    pub fn rb_array_len(ary: VALUE) -> c_long;
+    // -- Symbol interning --------------------------------------------------
+    //
+    // rb_intern converts a C string to a Ruby ID (interned symbol). IDs are
+    // cached after the first call, so repeated calls with the same string are
+    // O(1) hash-table lookups. This is how Ruby caches method names.
+    pub fn rb_intern(name: *const c_char) -> ID;
+
+    // -- Method dispatch ---------------------------------------------------
+    //
+    // rb_funcallv is the non-variadic form of rb_funcall. It takes the
+    // argument array as a pointer, making it safe to call from Rust FFI.
+    // For zero-argument calls, pass argc=0 and argv=null.
+    //
+    // We prefer rb_funcallv over rb_funcall because rb_funcall is variadic
+    // (takes ...) which requires #[no_mangle] + nightly __variadic feature in
+    // Rust. rb_funcallv has a fixed signature and works on stable Rust.
+    pub fn rb_funcallv(recv: VALUE, mid: ID, argc: c_int, argv: *const VALUE) -> VALUE;
+
+    // rb_num2long converts any Ruby Numeric VALUE to a C long.
+    // Used to convert the Fixnum returned by Array#length into a Rust usize.
+    pub fn rb_num2long(v: VALUE) -> c_long;
 
     // -- Integer operations ------------------------------------------------
     pub fn rb_int2inum(v: c_long) -> VALUE;
@@ -272,8 +294,19 @@ pub fn array_push(array: VALUE, item: VALUE) {
 }
 
 /// Get the length of a Ruby Array.
+///
+/// We cannot use `rb_array_len` (static inline in Ruby 3.x headers, not
+/// exported) or `rb_ary_length` (defined as a static function in array.c,
+/// also not exported in Ruby 3.4). Instead we call the Ruby `length` method
+/// via `rb_funcallv`, which is always exported and works on all Ruby versions.
 pub fn array_len(array: VALUE) -> usize {
-    unsafe { rb_array_len(array) as usize }
+    unsafe {
+        // rb_intern caches the ID after the first call — no performance concern.
+        let mid = rb_intern(b"length\0".as_ptr() as *const c_char);
+        // rb_funcallv with argc=0 and null argv calls array.length with no args.
+        let len_val = rb_funcallv(array, mid, 0, std::ptr::null());
+        rb_num2long(len_val) as usize
+    }
 }
 
 /// Get an element from a Ruby Array by index.
