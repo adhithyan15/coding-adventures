@@ -291,7 +291,10 @@ static FUNCS: FuncTable = FuncTable([
 struct NifEntry(erl_nif_bridge::ErlNifEntry);
 unsafe impl Sync for NifEntry {}
 
-static MODULE_NAME_BYTES: &[u8] = b"polynomial_native\0";
+// The NIF module name must match the calling Erlang/Elixir module atom exactly.
+// Elixir modules like `CodingAdventures.PolynomialNative` compile to the Erlang
+// atom `'Elixir.CodingAdventures.PolynomialNative'`. Must match exactly.
+static MODULE_NAME_BYTES: &[u8] = b"Elixir.CodingAdventures.PolynomialNative\0";
 static VM_VARIANT_BYTES: &[u8] = b"beam.vanilla\0";
 static MIN_ERTS_BYTES: &[u8] = b"erts-13.0\0";
 
