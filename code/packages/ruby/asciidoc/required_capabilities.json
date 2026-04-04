@@ -1,0 +1,5 @@
+{
+  "package": "ruby/asciidoc",
+  "capabilities": [],
+  "justification": "Pure text transformation. Chains the parser and renderer — no I/O, no network, no filesystem access."
+}

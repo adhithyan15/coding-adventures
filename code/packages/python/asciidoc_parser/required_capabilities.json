@@ -1,0 +1,5 @@
+{
+  "package": "python/asciidoc_parser",
+  "capabilities": [],
+  "justification": "Pure parsing. No I/O, no network, no filesystem access beyond reading source strings."
+}
