@@ -40,6 +40,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             keywords: [],
             skip_definitions: [],
             reserved_keywords: [],
+            context_keywords: [],
             mode: nil,
             escape_mode: nil,
             groups: %{},
@@ -74,6 +75,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           keywords: [String.t()],
           skip_definitions: [token_definition()],
           reserved_keywords: [String.t()],
+          context_keywords: [String.t()],
           mode: String.t() | nil,
           escape_mode: String.t() | nil,
           groups: %{optional(String.t()) => pattern_group()},
@@ -221,8 +223,11 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             stripped in ["errors:", "errors :"] ->
               {:cont, %{acc | section: :errors}}
 
-            # Inside a section — indented lines are section entries
-            acc.section in [:keywords, :reserved] and
+            stripped in ["context_keywords:", "context_keywords :"] ->
+              {:cont, %{acc | section: :context_keywords}}
+
+            # Inside a section �� indented lines are section entries
+            acc.section in [:keywords, :reserved, :context_keywords] and
                 (String.starts_with?(line, " ") or String.starts_with?(line, "\t")) ->
               word = stripped
 
@@ -233,6 +238,10 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
 
                 :reserved ->
                   grammar = %{acc.grammar | reserved_keywords: acc.grammar.reserved_keywords ++ [word]}
+                  {:cont, %{acc | grammar: grammar}}
+
+                :context_keywords ->
+                  grammar = %{acc.grammar | context_keywords: acc.grammar.context_keywords ++ [word]}
                   {:cont, %{acc | grammar: grammar}}
               end
 
@@ -283,7 +292,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             # Non-indented line exits any section
             true ->
               section =
-                if acc.section in [:keywords, :reserved, :skip, :errors] or match?({:group, _}, acc.section),
+                if acc.section in [:keywords, :reserved, :skip, :errors, :context_keywords] or match?({:group, _}, acc.section),
                   do: :definitions,
                   else: acc.section
 

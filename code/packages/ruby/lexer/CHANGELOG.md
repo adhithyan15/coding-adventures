@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0] - 2026-04-04
+
+### Added
+- **Token flags**: `Token` now accepts an optional `flags:` keyword argument
+  (Integer or nil). Two bitmask constants are defined:
+  - `TOKEN_PRECEDED_BY_NEWLINE` (1) -- set when a line break appeared before the token
+  - `TOKEN_CONTEXT_KEYWORD` (2) -- set for context-sensitive keywords (e.g., `async`, `yield`)
+- **LexerContext extensions**:
+  - `previous_token` -- lookbehind: returns the most recently emitted token
+  - `bracket_depth(kind = nil)` -- query nesting depth for `()`, `[]`, `{}`
+  - `preceded_by_newline?` -- true if a newline appeared before the current token
+- **GrammarLexer extensions**:
+  - `bracket_depth(kind = nil)` -- public API for bracket depth tracking
+  - Automatic bracket depth tracking via `update_bracket_depth` on every token
+  - `@last_emitted_token` tracking for lookbehind support
+  - Context keyword support: NAME tokens matching `context_keywords` from the
+    grammar receive the `TOKEN_CONTEXT_KEYWORD` flag
+
 ## [0.2.1] - 2026-03-31
 
 ### Fixed

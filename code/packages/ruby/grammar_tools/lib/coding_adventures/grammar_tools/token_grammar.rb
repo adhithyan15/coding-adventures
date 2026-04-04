@@ -116,14 +116,26 @@ module CodingAdventures
     # case_insensitive  -- when true, token patterns should be matched without
     #                      regard to letter case; set via "# @case_insensitive
     #                      true" magic comment; defaults to false
+    # The complete contents of a parsed .tokens file.
+    #
+    # context_keywords -- list of context-sensitive keywords from the
+    #                     context_keywords: section. These are words that
+    #                     are keywords in some syntactic positions but
+    #                     identifiers in others (e.g., JavaScript's async,
+    #                     await, yield, get, set). The lexer emits them as
+    #                     NAME tokens with the TOKEN_CONTEXT_KEYWORD flag
+    #                     set, leaving the final keyword-vs-identifier
+    #                     decision to the language-specific parser.
     class TokenGrammar
-      attr_reader :definitions, :keywords, :skip_definitions, :error_definitions, :reserved_keywords, :groups
+      attr_reader :definitions, :keywords, :skip_definitions, :error_definitions,
+                  :reserved_keywords, :groups, :context_keywords
       attr_accessor :mode, :escape_mode, :case_sensitive, :version, :case_insensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
                      reserved_keywords: [], escape_mode: nil, groups: {},
-                     case_sensitive: true, version: 0, case_insensitive: false)
+                     case_sensitive: true, version: 0, case_insensitive: false,
+                     context_keywords: [])
         @definitions = definitions
         @keywords = keywords
         @mode = mode
@@ -135,6 +147,7 @@ module CodingAdventures
         @case_sensitive = case_sensitive
         @version = version
         @case_insensitive = case_insensitive
+        @context_keywords = context_keywords
       end
 
       # Return the set of all defined token names (including aliases).
@@ -458,12 +471,22 @@ module CodingAdventures
           next
         end
 
+        # context_keywords: section -- words that are keywords in some
+        # syntactic positions but identifiers in others. The lexer emits
+        # these as NAME tokens with the TOKEN_CONTEXT_KEYWORD flag set.
+        if stripped == "context_keywords:" || stripped == "context_keywords :"
+          current_section = "context_keywords"
+          next
+        end
+
         # Inside a section -- indented lines belong to the section.
         if current_section
           if line.start_with?(" ", "\t")
             case current_section
             when "keywords"
               grammar.keywords << stripped unless stripped.empty?
+            when "context_keywords"
+              grammar.context_keywords << stripped unless stripped.empty?
             when "reserved"
               grammar.reserved_keywords << stripped unless stripped.empty?
             when "skip"

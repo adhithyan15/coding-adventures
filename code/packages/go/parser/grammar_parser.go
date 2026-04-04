@@ -10,9 +10,17 @@ import (
 )
 
 // ASTNode is a generic AST node produced by grammar-driven parsing.
+//
+// Position fields (StartLine, StartColumn, EndLine, EndColumn) are computed
+// from the first and last leaf tokens in the children tree. A value of 0
+// means unset (e.g., an empty repetition node with no tokens).
 type ASTNode struct {
-	RuleName string
-	Children []interface{} // Can be *ASTNode or lexer.Token
+	RuleName    string
+	Children    []interface{} // Can be *ASTNode or lexer.Token
+	StartLine   int           // 1-based line of first token (0 = unset)
+	StartColumn int           // 1-based column of first token (0 = unset)
+	EndLine     int           // 1-based line of last token (0 = unset)
+	EndColumn   int           // 1-based column of last token (0 = unset)
 }
 
 // IsLeaf returns true if this node wraps a single token.
@@ -278,6 +286,14 @@ func (p *GrammarParser) elementReferencesNewline(element grammartools.GrammarEle
 		return p.elementReferencesNewline(e.Element)
 	case grammartools.Group:
 		return p.elementReferencesNewline(e.Element)
+	case grammartools.PositiveLookahead:
+		return p.elementReferencesNewline(e.Element)
+	case grammartools.NegativeLookahead:
+		return p.elementReferencesNewline(e.Element)
+	case grammartools.OneOrMoreRepetition:
+		return p.elementReferencesNewline(e.Element)
+	case grammartools.SeparatedRepetition:
+		return p.elementReferencesNewline(e.Element) || p.elementReferencesNewline(e.Separator)
 	}
 	return false
 }
@@ -445,7 +461,10 @@ func (p *GrammarParser) parseRule(ruleName string) *ASTNode {
 		children = []interface{}{}
 	}
 
-	return &ASTNode{RuleName: ruleName, Children: children}
+	// Compute position info from child tokens.
+	node := &ASTNode{RuleName: ruleName, Children: children}
+	computeNodePosition(node)
+	return node
 }
 
 func (p *GrammarParser) matchElement(element grammartools.GrammarElement) ([]interface{}, bool) {
@@ -524,6 +543,84 @@ func (p *GrammarParser) matchElement(element grammartools.GrammarElement) ([]int
 		}
 		p.recordFailure(fmt.Sprintf("%q", e.Value))
 		return nil, false
+
+	// ---------------------------------------------------------------
+	// Extension: Syntactic predicates (lookahead without consuming)
+	// ---------------------------------------------------------------
+
+	case grammartools.PositiveLookahead:
+		// Succeed if inner element matches, but consume no input.
+		_, ok := p.matchElement(e.Element)
+		p.pos = savePos
+		if ok {
+			return []interface{}{}, true
+		}
+		return nil, false
+
+	case grammartools.NegativeLookahead:
+		// Succeed if inner element does NOT match, consume no input.
+		_, ok := p.matchElement(e.Element)
+		p.pos = savePos
+		if !ok {
+			return []interface{}{}, true
+		}
+		return nil, false
+
+	// ---------------------------------------------------------------
+	// Extension: One-or-more repetition
+	// ---------------------------------------------------------------
+
+	case grammartools.OneOrMoreRepetition:
+		// Match one required, then zero or more additional.
+		first, ok := p.matchElement(e.Element)
+		if !ok {
+			p.pos = savePos
+			return nil, false
+		}
+		children := append([]interface{}{}, first...)
+		for {
+			saveRep := p.pos
+			res, ok := p.matchElement(e.Element)
+			if !ok {
+				p.pos = saveRep
+				break
+			}
+			children = append(children, res...)
+		}
+		return children, true
+
+	// ---------------------------------------------------------------
+	// Extension: Separated repetition
+	// ---------------------------------------------------------------
+
+	case grammartools.SeparatedRepetition:
+		// Match: element { separator element }
+		// Or with AtLeastOne=false: [ element { separator element } ]
+		first, ok := p.matchElement(e.Element)
+		if !ok {
+			p.pos = savePos
+			if e.AtLeastOne {
+				return nil, false
+			}
+			return []interface{}{}, true // zero occurrences is valid
+		}
+		children := append([]interface{}{}, first...)
+		for {
+			saveSep := p.pos
+			sep, ok := p.matchElement(e.Separator)
+			if !ok {
+				p.pos = saveSep
+				break
+			}
+			next, ok := p.matchElement(e.Element)
+			if !ok {
+				p.pos = saveSep
+				break
+			}
+			children = append(children, sep...)
+			children = append(children, next...)
+		}
+		return children, true
 	}
 
 	return nil, false
@@ -557,6 +654,170 @@ func (p *GrammarParser) matchTokenReference(e grammartools.RuleReference) ([]int
 
 	p.recordFailure(e.Name)
 	return nil, false
+}
+
+// ===========================================================================
+// AST POSITION COMPUTATION
+// ===========================================================================
+
+// computeNodePosition fills in the StartLine/StartColumn/EndLine/EndColumn
+// fields on an ASTNode by walking its children to find the first and last
+// leaf tokens. If the children contain no tokens (e.g., empty repetition),
+// the position fields remain zero (unset).
+func computeNodePosition(node *ASTNode) {
+	first := findFirstToken(node.Children)
+	last := findLastToken(node.Children)
+	if first != nil && last != nil {
+		node.StartLine = first.Line
+		node.StartColumn = first.Column
+		node.EndLine = last.Line
+		node.EndColumn = last.Column
+	}
+}
+
+// findFirstToken returns the first leaf token in a children slice by
+// depth-first traversal. Returns nil if no tokens are found.
+func findFirstToken(children []interface{}) *lexer.Token {
+	for _, child := range children {
+		switch c := child.(type) {
+		case *ASTNode:
+			tok := findFirstToken(c.Children)
+			if tok != nil {
+				return tok
+			}
+		case lexer.Token:
+			return &c
+		}
+	}
+	return nil
+}
+
+// findLastToken returns the last leaf token in a children slice by
+// reverse depth-first traversal. Returns nil if no tokens are found.
+func findLastToken(children []interface{}) *lexer.Token {
+	for i := len(children) - 1; i >= 0; i-- {
+		switch c := children[i].(type) {
+		case *ASTNode:
+			tok := findLastToken(c.Children)
+			if tok != nil {
+				return tok
+			}
+		case lexer.Token:
+			return &c
+		}
+	}
+	return nil
+}
+
+// ===========================================================================
+// AST WALKING UTILITIES
+// ===========================================================================
+
+// ASTVisitor defines callbacks for walking an AST tree. Both Enter and Leave
+// are optional. Each receives the current node and its parent (nil for the
+// root). Returning a non-nil *ASTNode replaces the visited node; returning
+// nil keeps the original.
+type ASTVisitor struct {
+	// Enter is called before visiting children. Return a replacement node
+	// or nil to keep the original.
+	Enter func(node *ASTNode, parent *ASTNode) *ASTNode
+
+	// Leave is called after visiting children. Return a replacement node
+	// or nil to keep the original.
+	Leave func(node *ASTNode, parent *ASTNode) *ASTNode
+}
+
+// WalkAST performs a depth-first walk of an AST tree with enter/leave visitor
+// callbacks. Visitor callbacks can return a replacement node or nil (keep
+// original). Token children are not visited — only ASTNode children are
+// walked.
+//
+// This is the generic traversal primitive. Language packages use it for
+// cover grammar rewriting, desugaring, and semantic analysis.
+func WalkAST(node *ASTNode, visitor ASTVisitor) *ASTNode {
+	return walkNode(node, nil, visitor)
+}
+
+func walkNode(node *ASTNode, parent *ASTNode, visitor ASTVisitor) *ASTNode {
+	// Enter phase — visitor may replace the node.
+	current := node
+	if visitor.Enter != nil {
+		if replacement := visitor.Enter(current, parent); replacement != nil {
+			current = replacement
+		}
+	}
+
+	// Walk children recursively.
+	childrenChanged := false
+	newChildren := make([]interface{}, len(current.Children))
+	for i, child := range current.Children {
+		if astChild, ok := child.(*ASTNode); ok {
+			walked := walkNode(astChild, current, visitor)
+			if walked != astChild {
+				childrenChanged = true
+			}
+			newChildren[i] = walked
+		} else {
+			newChildren[i] = child
+		}
+	}
+
+	// If children changed, create a new node with updated children.
+	if childrenChanged {
+		current = &ASTNode{
+			RuleName:    current.RuleName,
+			Children:    newChildren,
+			StartLine:   current.StartLine,
+			StartColumn: current.StartColumn,
+			EndLine:     current.EndLine,
+			EndColumn:   current.EndColumn,
+		}
+	}
+
+	// Leave phase — visitor may replace the node.
+	if visitor.Leave != nil {
+		if replacement := visitor.Leave(current, parent); replacement != nil {
+			current = replacement
+		}
+	}
+
+	return current
+}
+
+// FindNodes returns all nodes matching a rule name in depth-first order.
+func FindNodes(node *ASTNode, ruleName string) []*ASTNode {
+	var results []*ASTNode
+	WalkAST(node, ASTVisitor{
+		Enter: func(n *ASTNode, parent *ASTNode) *ASTNode {
+			if n.RuleName == ruleName {
+				results = append(results, n)
+			}
+			return nil
+		},
+	})
+	return results
+}
+
+// CollectTokens collects all tokens in depth-first order. If tokenType is
+// non-empty, only tokens whose effective type name matches are included.
+// Pass "" to collect all tokens.
+func CollectTokens(node *ASTNode, tokenType string) []lexer.Token {
+	var results []lexer.Token
+	var walk func(n *ASTNode)
+	walk = func(n *ASTNode) {
+		for _, child := range n.Children {
+			switch c := child.(type) {
+			case *ASTNode:
+				walk(c)
+			case lexer.Token:
+				if tokenType == "" || tokenTypeName(c) == tokenType {
+					results = append(results, c)
+				}
+			}
+		}
+	}
+	walk(node)
+	return results
 }
 
 // stringToTokenType maps grammar token names to TokenType constants.

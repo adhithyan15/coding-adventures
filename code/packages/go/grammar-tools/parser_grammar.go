@@ -48,6 +48,66 @@ type Group struct {
 }
 func (Group) isElement() {}
 
+// PositiveLookahead is a syntactic predicate written as &element in the grammar.
+//
+// Succeeds (producing no AST children) if element matches at the current
+// position. Fails if element does not match. Does NOT consume input.
+//
+// This is a standard PEG operator. Example:
+//
+//	arrow_params = LPAREN [ param_list ] RPAREN &ARROW ;
+//
+// The &ARROW predicate checks that => follows without consuming it,
+// disambiguating arrow function parameters from parenthesized expressions.
+type PositiveLookahead struct {
+	Element GrammarElement
+}
+func (PositiveLookahead) isElement() {}
+
+// NegativeLookahead is a syntactic predicate written as !element in the grammar.
+//
+// Succeeds (producing no AST children) if element does NOT match at the
+// current position. Fails if element does match. Does NOT consume input.
+//
+// This is a standard PEG operator. Example:
+//
+//	postfix_expr = primary !NEWLINE ( "++" | "--" ) ;
+//
+// The !NEWLINE predicate ensures no line terminator before ++ or --,
+// implementing JavaScript's restricted production for postfix operators.
+type NegativeLookahead struct {
+	Element GrammarElement
+}
+func (NegativeLookahead) isElement() {}
+
+// OneOrMoreRepetition is written as { element }+ in the grammar.
+//
+// Like zero-or-more { element } but requires at least one match.
+// Fails if the first match fails.
+type OneOrMoreRepetition struct {
+	Element GrammarElement
+}
+func (OneOrMoreRepetition) isElement() {}
+
+// SeparatedRepetition is written as { element // separator } in the grammar.
+//
+// Matches zero or more occurrences of element separated by separator.
+// With the + suffix ({ element // separator }+), requires at least one.
+//
+// Example:
+//
+//	args = { expression // COMMA } ;
+//
+// is equivalent to:
+//
+//	args = [ expression { COMMA expression } ] ;
+type SeparatedRepetition struct {
+	Element    GrammarElement
+	Separator  GrammarElement
+	AtLeastOne bool
+}
+func (SeparatedRepetition) isElement() {}
+
 type GrammarRule struct {
 	Name       string
 	Body       GrammarElement
@@ -124,6 +184,25 @@ func tokenizeGrammar(source string) ([]internalToken, error) {
 			case ')':
 				tokens = append(tokens, internalToken{"RPAREN", ")", lineNum})
 				j++
+			// Lookahead predicates: & (positive) and ! (negative)
+			case '&':
+				tokens = append(tokens, internalToken{"AMPERSAND", "&", lineNum})
+				j++
+			case '!':
+				tokens = append(tokens, internalToken{"BANG", "!", lineNum})
+				j++
+			// One-or-more suffix
+			case '+':
+				tokens = append(tokens, internalToken{"PLUS", "+", lineNum})
+				j++
+			// Separator operator (// inside repetition braces)
+			case '/':
+				if j+1 < len(line) && line[j+1] == '/' {
+					tokens = append(tokens, internalToken{"DOUBLE_SLASH", "//", lineNum})
+					j += 2
+				} else {
+					return nil, fmt.Errorf("Line %d: Unexpected character %q", lineNum, ch)
+				}
 			case '"':
 				k := j + 1
 				for k < len(line) && line[k] != '"' {
@@ -233,7 +312,7 @@ func (p *parser) parseSequence() (GrammarElement, error) {
 	var elements []GrammarElement
 	for {
 		kind := p.peek().kind
-		if kind == "PIPE" || kind == "SEMI" || kind == "RBRACE" || kind == "RBRACKET" || kind == "RPAREN" || kind == "EOF" {
+		if kind == "PIPE" || kind == "SEMI" || kind == "RBRACE" || kind == "RBRACKET" || kind == "RPAREN" || kind == "EOF" || kind == "DOUBLE_SLASH" {
 			break
 		}
 		elem, err := p.parseElement()
@@ -253,7 +332,27 @@ func (p *parser) parseSequence() (GrammarElement, error) {
 
 func (p *parser) parseElement() (GrammarElement, error) {
 	tok := p.peek()
-	
+
+	// --- Lookahead predicates: & (positive) and ! (negative) ---
+	// These are prefix operators that match without consuming input.
+	if tok.kind == "AMPERSAND" {
+		p.advance()
+		inner, err := p.parseElement()
+		if err != nil {
+			return nil, err
+		}
+		return PositiveLookahead{Element: inner}, nil
+	}
+
+	if tok.kind == "BANG" {
+		p.advance()
+		inner, err := p.parseElement()
+		if err != nil {
+			return nil, err
+		}
+		return NegativeLookahead{Element: inner}, nil
+	}
+
 	switch tok.kind {
 	case "IDENT":
 		p.advance()
@@ -268,8 +367,36 @@ func (p *parser) parseElement() (GrammarElement, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		// Check for separator syntax: { element // separator }
+		if p.peek().kind == "DOUBLE_SLASH" {
+			p.advance() // consume //
+			separator, err := p.parseBody()
+			if err != nil {
+				return nil, err
+			}
+			if _, err := p.expect("RBRACE"); err != nil {
+				return nil, err
+			}
+			// Check for + suffix (one-or-more)
+			atLeastOne := p.peek().kind == "PLUS"
+			if atLeastOne {
+				p.advance()
+			}
+			return SeparatedRepetition{
+				Element:    body,
+				Separator:  separator,
+				AtLeastOne: atLeastOne,
+			}, nil
+		}
+
 		if _, err := p.expect("RBRACE"); err != nil {
 			return nil, err
+		}
+		// Check for + suffix: { element }+
+		if p.peek().kind == "PLUS" {
+			p.advance()
+			return OneOrMoreRepetition{Element: body}, nil
 		}
 		return Repetition{Element: body}, nil
 	case "LBRACKET":
@@ -411,6 +538,15 @@ func collectRuleRefs(element GrammarElement, refs map[string]bool) {
 		collectRuleRefs(e.Element, refs)
 	case Group:
 		collectRuleRefs(e.Element, refs)
+	case PositiveLookahead:
+		collectRuleRefs(e.Element, refs)
+	case NegativeLookahead:
+		collectRuleRefs(e.Element, refs)
+	case OneOrMoreRepetition:
+		collectRuleRefs(e.Element, refs)
+	case SeparatedRepetition:
+		collectRuleRefs(e.Element, refs)
+		collectRuleRefs(e.Separator, refs)
 	}
 }
 
@@ -436,6 +572,15 @@ func collectTokenRefs(element GrammarElement, refs map[string]bool) {
 		collectTokenRefs(e.Element, refs)
 	case Group:
 		collectTokenRefs(e.Element, refs)
+	case PositiveLookahead:
+		collectTokenRefs(e.Element, refs)
+	case NegativeLookahead:
+		collectTokenRefs(e.Element, refs)
+	case OneOrMoreRepetition:
+		collectTokenRefs(e.Element, refs)
+	case SeparatedRepetition:
+		collectTokenRefs(e.Element, refs)
+		collectTokenRefs(e.Separator, refs)
 	}
 }
 

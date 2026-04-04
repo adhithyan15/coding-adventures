@@ -145,9 +145,13 @@ from grammar_tools import (
     GrammarRule,
     Group,
     Literal,
+    NegativeLookahead,
+    OneOrMoreRepetition,
     ParserGrammar,
+    PositiveLookahead,
     Repetition,
     RuleReference,
+    SeparatedRepetition,
     Sequence,
 )
 from grammar_tools import (
@@ -164,6 +168,10 @@ GrammarElement = (
     | Group
     | RuleReference
     | Literal
+    | PositiveLookahead
+    | NegativeLookahead
+    | OneOrMoreRepetition
+    | SeparatedRepetition
 )
 
 # =============================================================================
@@ -179,13 +187,26 @@ class ASTNode:
     The ``rule_name`` tells you *what* grammar rule created the node, and
     ``children`` contains the matched sub-structure.
 
+    Position fields (``start_line``, ``start_column``, ``end_line``,
+    ``end_column``) are computed from the first and last leaf tokens in
+    the children tree. They are None for nodes with no token descendants
+    (e.g., empty repetitions).
+
     Attributes:
         rule_name: Which grammar rule produced this node.
         children: The matched elements — a mix of ``ASTNode`` and ``Token``.
+        start_line: 1-based line number of the first token in this node's span.
+        start_column: 1-based column of the first token in this node's span.
+        end_line: 1-based line number of the last token in this node's span.
+        end_column: 1-based column of the last token in this node's span.
     """
 
     rule_name: str
     children: list[ASTNode | Token]
+    start_line: int | None = None
+    start_column: int | None = None
+    end_line: int | None = None
+    end_column: int | None = None
 
     @property
     def is_leaf(self) -> bool:
@@ -388,8 +409,13 @@ class GrammarParser:
             return any(self._element_references_newline(e) for e in element.elements)
         if isinstance(element, Alternation):
             return any(self._element_references_newline(c) for c in element.choices)
-        if isinstance(element, (Repetition, OptionalElement, Group)):
+        if isinstance(element, (Repetition, OptionalElement, Group, PositiveLookahead, NegativeLookahead, OneOrMoreRepetition)):
             return self._element_references_newline(element.element)
+        if isinstance(element, SeparatedRepetition):
+            return (
+                self._element_references_newline(element.element)
+                or self._element_references_newline(element.separator)
+            )
         return False
 
     def parse(self) -> ASTNode:
@@ -604,6 +630,10 @@ class GrammarParser:
                 self._current(),
             )
 
+        # Compute position info from child tokens.
+        pos = _compute_node_position(children)
+        if pos:
+            return ASTNode(rule_name=rule_name, children=children, **pos)
         return ASTNode(rule_name=rule_name, children=children)
 
     # =========================================================================
@@ -714,6 +744,65 @@ class GrammarParser:
             self._record_failure(f'"{element.value}"')
             return None
 
+        # -----------------------------------------------------------------
+        # POSITIVE LOOKAHEAD: &A — succeed if A matches, consume nothing
+        # -----------------------------------------------------------------
+        elif isinstance(element, PositiveLookahead):
+            result = self._match_element(element.element)
+            self._pos = save_pos
+            return [] if result is not None else None
+
+        # -----------------------------------------------------------------
+        # NEGATIVE LOOKAHEAD: !A — succeed if A does NOT match, consume nothing
+        # -----------------------------------------------------------------
+        elif isinstance(element, NegativeLookahead):
+            result = self._match_element(element.element)
+            self._pos = save_pos
+            return [] if result is None else None
+
+        # -----------------------------------------------------------------
+        # ONE-OR-MORE: { A }+ — match one required, then zero or more
+        # -----------------------------------------------------------------
+        elif isinstance(element, OneOrMoreRepetition):
+            first = self._match_element(element.element)
+            if first is None:
+                self._pos = save_pos
+                return None
+            children = list(first)
+            while True:
+                save_rep = self._pos
+                result = self._match_element(element.element)
+                if result is None:
+                    self._pos = save_rep
+                    break
+                children.extend(result)
+            return children
+
+        # -----------------------------------------------------------------
+        # SEPARATED REPETITION: { A // B } — match A { B A }
+        # -----------------------------------------------------------------
+        elif isinstance(element, SeparatedRepetition):
+            first = self._match_element(element.element)
+            if first is None:
+                self._pos = save_pos
+                if element.at_least_one:
+                    return None
+                return []  # zero occurrences is valid
+            children = list(first)
+            while True:
+                save_sep = self._pos
+                sep = self._match_element(element.separator)
+                if sep is None:
+                    self._pos = save_sep
+                    break
+                nxt = self._match_element(element.element)
+                if nxt is None:
+                    self._pos = save_sep
+                    break
+                children.extend(sep)
+                children.extend(nxt)
+            return children
+
         return None  # pragma: no cover
 
     def _match_token_reference(
@@ -761,3 +850,180 @@ class GrammarParser:
 
         self._record_failure(element.name)
         return None
+
+
+# ===========================================================================
+# AST POSITION COMPUTATION
+# ===========================================================================
+
+
+def _find_first_token(children: list[ASTNode | Token]) -> Token | None:
+    """Find the first leaf Token in a children list (depth-first)."""
+    for child in children:
+        if isinstance(child, ASTNode):
+            tok = _find_first_token(child.children)
+            if tok is not None:
+                return tok
+        else:
+            return child
+    return None
+
+
+def _find_last_token(children: list[ASTNode | Token]) -> Token | None:
+    """Find the last leaf Token in a children list (reverse depth-first)."""
+    for i in range(len(children) - 1, -1, -1):
+        child = children[i]
+        if isinstance(child, ASTNode):
+            tok = _find_last_token(child.children)
+            if tok is not None:
+                return tok
+        else:
+            return child
+    return None
+
+
+def _compute_node_position(
+    children: list[ASTNode | Token],
+) -> dict[str, int] | None:
+    """Compute the start and end positions of an AST node from its children.
+
+    Walks the children tree to find the first and last leaf tokens,
+    then uses their line/column as the node's span. Returns None
+    if the children array contains no tokens (e.g., empty repetition).
+    """
+    first = _find_first_token(children)
+    last = _find_last_token(children)
+    if first is None or last is None:
+        return None
+    return {
+        "start_line": first.line,
+        "start_column": first.column,
+        "end_line": last.line,
+        "end_column": last.column,
+    }
+
+
+# ===========================================================================
+# AST WALKING UTILITIES
+# ===========================================================================
+
+
+def is_ast_node(child: ASTNode | Token) -> bool:
+    """Check if a child element is an ASTNode (not a Token)."""
+    return isinstance(child, ASTNode)
+
+
+def walk_ast(
+    node: ASTNode,
+    enter: Callable[[ASTNode, ASTNode | None], ASTNode | None] | None = None,
+    leave: Callable[[ASTNode, ASTNode | None], ASTNode | None] | None = None,
+) -> ASTNode:
+    """Depth-first walk of an AST tree with enter/leave callbacks.
+
+    Callbacks can return a replacement node or None (keep original).
+    Token children are not visited — only ASTNode children are walked.
+
+    This is the generic traversal primitive. Language packages use it for
+    cover grammar rewriting, desugaring, and semantic analysis.
+
+    Args:
+        node: The root ASTNode to walk.
+        enter: Called when first entering a node. Receives ``(node, parent)``.
+            Return an ASTNode to replace the visited node, or None to keep it.
+        leave: Called when leaving a node (after children are walked).
+            Receives ``(node, parent)``. Return an ASTNode to replace it,
+            or None to keep it.
+
+    Returns:
+        The (possibly transformed) root ASTNode.
+    """
+    return _walk_node(node, None, enter, leave)
+
+
+def _walk_node(
+    node: ASTNode,
+    parent: ASTNode | None,
+    enter: Callable[[ASTNode, ASTNode | None], ASTNode | None] | None,
+    leave: Callable[[ASTNode, ASTNode | None], ASTNode | None] | None,
+) -> ASTNode:
+    """Internal recursive walker for walk_ast."""
+    current = node
+    if enter is not None:
+        replacement = enter(current, parent)
+        if replacement is not None:
+            current = replacement
+
+    # Walk children recursively.
+    children_changed = False
+    new_children: list[ASTNode | Token] = []
+    for child in current.children:
+        if isinstance(child, ASTNode):
+            walked = _walk_node(child, current, enter, leave)
+            if walked is not child:
+                children_changed = True
+            new_children.append(walked)
+        else:
+            new_children.append(child)
+
+    if children_changed:
+        current = ASTNode(
+            rule_name=current.rule_name,
+            children=new_children,
+            start_line=current.start_line,
+            start_column=current.start_column,
+            end_line=current.end_line,
+            end_column=current.end_column,
+        )
+
+    if leave is not None:
+        replacement = leave(current, parent)
+        if replacement is not None:
+            current = replacement
+
+    return current
+
+
+def find_nodes(node: ASTNode, rule_name: str) -> list[ASTNode]:
+    """Find all nodes matching a rule name (depth-first order).
+
+    Args:
+        node: The root ASTNode to search.
+        rule_name: The rule name to match.
+
+    Returns:
+        A list of all matching ASTNode instances.
+    """
+    results: list[ASTNode] = []
+
+    def _enter(n: ASTNode, _parent: ASTNode | None) -> ASTNode | None:
+        if n.rule_name == rule_name:
+            results.append(n)
+        return None
+
+    walk_ast(node, enter=_enter)
+    return results
+
+
+def collect_tokens(node: ASTNode, token_type: str | None = None) -> list[Token]:
+    """Collect all tokens in depth-first order, optionally filtered by type.
+
+    Args:
+        node: The root ASTNode to walk.
+        token_type: If provided, only tokens with this type name are collected.
+            Supports both ``TokenType`` enum members and string types.
+
+    Returns:
+        A list of Token objects in depth-first order.
+    """
+    results: list[Token] = []
+
+    def _walk(n: ASTNode) -> None:
+        for child in n.children:
+            if isinstance(child, ASTNode):
+                _walk(child)
+            else:
+                if token_type is None or _token_type_name(child) == token_type:
+                    results.append(child)
+
+    _walk(node)
+    return results

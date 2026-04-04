@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.3.0] - 2026-04-04
+
+### Added
+- **Token flags**: `Flags int` field on `Token` struct with bitmask constants
+  `TokenPrecededByNewline` (1) and `TokenContextKeyword` (2). Flags carry metadata
+  that is neither type nor value but affects how downstream consumers interpret a token.
+- **Per-type bracket depth tracking**: `GrammarLexer` now tracks `()`, `[]`, and `{}`
+  depths independently (previously only a single counter for indentation mode).
+  Exposed via `GrammarLexer.BracketDepth(kind)` and `LexerContext.BracketDepth(kind)`.
+- **Token lookbehind**: `LexerContext.PreviousToken()` returns the most recently
+  emitted token for context-sensitive decisions (e.g., regex vs division in JS).
+- **Newline detection**: `LexerContext.PrecededByNewline()` returns true when a line
+  break appeared between the previous and current token. Used for automatic semicolon
+  insertion in JavaScript/Go.
+- **Context keywords**: When the grammar defines `context_keywords:`, matching NAME
+  tokens are emitted with `Flags = TokenContextKeyword`. This supports words like
+  JavaScript's `async`, `yield`, `get` that are sometimes keywords and sometimes
+  identifiers.
+- `GrammarLexer` now resets `lastEmittedToken` and `bracketDepths` between
+  `Tokenize()` calls for safe reuse.
+
 ## [0.2.2] - 2026-04-02
 
 ### Fixed

@@ -224,6 +224,16 @@ class TokenGrammar:
     error_definitions: list[TokenDefinition] = field(default_factory=list)
     groups: dict[str, PatternGroup] = field(default_factory=dict)
     case_sensitive: bool = True
+    context_keywords: list[str] = field(default_factory=list)
+    """Context-sensitive keywords — words that are keywords in some
+    syntactic positions but identifiers in others.
+
+    These are emitted as NAME tokens with the ``TOKEN_CONTEXT_KEYWORD``
+    flag set, leaving the final keyword-vs-identifier decision to
+    the language-specific parser or callback.
+
+    Examples: JavaScript's ``async``, ``await``, ``yield``, ``get``, ``set``.
+    """
 
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
@@ -601,6 +611,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = "errors"
             continue
 
+        if stripped in ("context_keywords:", "context_keywords :"):
+            current_section = "context_keywords"
+            continue
+
         # --- Inside a section ---
         if current_section is not None:
             # Sections contain indented lines. A non-indented line exits
@@ -612,6 +626,9 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                 elif current_section == "reserved":
                     if stripped:
                         grammar.reserved_keywords.append(stripped)
+                elif current_section == "context_keywords":
+                    if stripped:
+                        grammar.context_keywords.append(stripped)
                 elif current_section == "skip":
                     # Skip section contains token definitions
                     if "=" not in stripped:

@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.5.0] - 2026-04-04
+
+### Added
+- **TokenGrammar**: `context_keywords` attribute -- list of context-sensitive
+  keywords parsed from the `context_keywords:` section in `.tokens` files
+- **Token grammar parser**: recognises `context_keywords:` section header and
+  collects indented keyword entries (same format as `keywords:` section)
+- **ParserGrammar element types**:
+  - `PositiveLookahead` -- `&element` predicate (match without consuming)
+  - `NegativeLookahead` -- `!element` predicate (succeed if element fails)
+  - `OneOrMoreRepetition` -- `{ element }+` (one-or-more)
+  - `SeparatedRepetition` -- `{ element // separator }` with optional `+` suffix
+- **Grammar tokenizer**: recognises `&`, `!`, `+`, and `//` tokens in `.grammar` files
+- **EBNF parser**: `parse_element` handles all four new element types
+- **Collect helpers**: `collect_token_refs` and `collect_rule_refs` traverse new
+  element types correctly
+- **Compiler**: `element_src` generates Ruby constructor calls for all four new
+  element types; `compile_token_grammar` includes `context_keywords` in output
+
 ## [0.4.0] - 2026-03-26
 
 ### Added

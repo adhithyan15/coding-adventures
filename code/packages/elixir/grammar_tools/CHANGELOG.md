@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0] - 2026-04-04
+
+### Added
+- `TokenGrammar.context_keywords` field — list of context-sensitive keywords
+- `context_keywords:` section parsing in `.tokens` files — words listed are
+  emitted as NAME tokens with the `TOKEN_CONTEXT_KEYWORD` flag by the lexer
+- `ParserGrammar` new grammar element types:
+  - `{:positive_lookahead, element}` — `&element` syntax, matches without consuming
+  - `{:negative_lookahead, element}` — `!element` syntax, succeeds if element fails
+  - `{:one_or_more, element}` — `{ element }+` syntax, requires at least one match
+  - `{:separated_repetition, element, separator, at_least_one}` — `{ element // separator }`
+    syntax for comma-separated lists and similar patterns
+- Tokenizer support for `&`, `!`, `+`, and `//` operators in `.grammar` files
+- `collect_refs` handles all new element types for reference collection
+
 ## [0.4.0] - 2026-03-26
 
 ### Added

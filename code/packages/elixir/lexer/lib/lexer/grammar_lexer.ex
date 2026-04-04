@@ -106,7 +106,10 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       :group_stack_depth,
       :source,
       :pos_after_token,
-      :available_groups
+      :available_groups,
+      :previous_token,
+      :bracket_depths,
+      :current_token_line
     ]
 
     @type t :: %__MODULE__{
@@ -114,7 +117,10 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
             group_stack_depth: pos_integer(),
             source: String.t(),
             pos_after_token: non_neg_integer(),
-            available_groups: [String.t()]
+            available_groups: [String.t()],
+            previous_token: Token.t() | nil,
+            bracket_depths: %{paren: non_neg_integer(), bracket: non_neg_integer(), brace: non_neg_integer()},
+            current_token_line: pos_integer()
           }
 
     @doc """
@@ -169,6 +175,68 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         ""
       end
     end
+
+    @doc """
+    Return the most recently emitted token, or `nil` at the start of input.
+
+    "Emitted" means the token actually made it into the output list --
+    suppressed tokens are not counted. This provides **lookbehind**
+    capability for context-sensitive decisions.
+
+    For example, in JavaScript `/` is a regex literal after `=`, `(`
+    or `,` but a division operator after `)`, `]`, identifiers, or
+    numbers. The callback can check `LexerContext.previous_token(ctx)`
+    to decide which interpretation to use.
+    """
+    @spec previous_token(t()) :: Token.t() | nil
+    def previous_token(%__MODULE__{previous_token: prev}), do: prev
+
+    @doc """
+    Return the current nesting depth for a specific bracket type,
+    or the total depth across all types if `kind` is `:all`.
+
+    Depth starts at 0 and increments on each opener (`(`, `[`, `{`),
+    decrements on each closer (`)`, `]`, `}`). The count never goes
+    below 0 -- unmatched closers are clamped.
+
+    This is essential for template literal interpolation in languages
+    like JavaScript, Kotlin, and Ruby, where `}` at brace-depth 0
+    closes the interpolation rather than being part of a nested
+    expression.
+
+    ## Examples
+
+        iex> LexerContext.bracket_depth(ctx, :paren)
+        2
+        iex> LexerContext.bracket_depth(ctx, :all)
+        5
+    """
+    @spec bracket_depth(t(), :paren | :bracket | :brace | :all) :: non_neg_integer()
+    def bracket_depth(%__MODULE__{bracket_depths: depths}, :all) do
+      depths.paren + depths.bracket + depths.brace
+    end
+
+    def bracket_depth(%__MODULE__{bracket_depths: depths}, kind)
+        when kind in [:paren, :bracket, :brace] do
+      Map.fetch!(depths, kind)
+    end
+
+    @doc """
+    Return true if a newline appeared between the previous token
+    and the current token (i.e., they are on different lines).
+
+    This is used by languages with automatic semicolon insertion
+    (JavaScript, Go) to detect line breaks that trigger implicit
+    statement termination.
+
+    Returns false if there is no previous token (start of input).
+    """
+    @spec preceded_by_newline(t()) :: boolean()
+    def preceded_by_newline(%__MODULE__{previous_token: nil}), do: false
+
+    def preceded_by_newline(%__MODULE__{previous_token: prev, current_token_line: current_line}) do
+      prev.line < current_line
+    end
   end
 
   # ---------------------------------------------------------------------------
@@ -203,6 +271,9 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       # Maps group name → [{name, compiled_regex}, ...]
       # The "default" group always exists and uses the top-level definitions.
       :group_patterns,
+      # -- Context keywords ---
+      # MapSet of context-sensitive keywords (emitted as NAME with flag).
+      :context_keyword_set,
       # In Elixir, bare atoms (:field) must come before keyword pairs
       # (field: default) in defstruct lists. That is why group_patterns
       # appears above and case_insensitive / group_stack / etc. appear below.
@@ -217,6 +288,12 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       on_token: nil,
       # Whether skip patterns are active. Callbacks can toggle this.
       skip_enabled: true,
+      # -- Extension: Token lookbehind ---
+      # The most recently emitted token, for lookbehind in callbacks.
+      last_emitted_token: nil,
+      # -- Extension: Bracket depth tracking ---
+      # Per-type bracket nesting depth counters: %{paren: 0, bracket: 0, brace: 0}
+      bracket_depths: %{paren: 0, bracket: 0, brace: 0},
       # -- Position tracking ---
       pos: 0,
       line: 1,
@@ -382,6 +459,10 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         MapSet.new(grammar.keywords)
       end
 
+    # Build context keyword set for O(1) lookup.
+    context_keyword_set =
+      MapSet.new(Map.get(grammar, :context_keywords, []) || [])
+
     %State{
       source: source,
       patterns: patterns,
@@ -393,9 +474,12 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       escape_mode: grammar.escape_mode,
       case_insensitive: grammar.case_insensitive,
       group_patterns: group_patterns,
+      context_keyword_set: context_keyword_set,
       group_stack: ["default"],
       on_token: on_token,
-      skip_enabled: true
+      skip_enabled: true,
+      last_emitted_token: nil,
+      bracket_depths: %{paren: 0, bracket: 0, brace: 0}
     }
   end
 
@@ -487,7 +571,8 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
     if ch == "\n" do
       token = %Token{type: "NEWLINE", value: "\\n", line: state.line, column: state.column}
-      {:continue, advance(state), [token | tokens]}
+      new_state = %{advance(state) | last_emitted_token: token}
+      {:continue, new_state, [token | tokens]}
     else
       # Use the active group's patterns (top of the group stack).
       # When no groups are defined, this is always "default", preserving
@@ -497,14 +582,18 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
       case try_match_token_in_group(remaining, state, group_pats) do
         {:matched, token, new_state} ->
+          # Update bracket depth tracking.
+          new_state = update_bracket_depth(new_state, token.value)
+
           # If a callback is registered, invoke it and process the
           # returned actions. The callback receives a read-only context
           # and returns a list of action tuples.
           if new_state.on_token do
-            ctx = build_context(new_state)
+            ctx = build_context(new_state, token.line)
             actions = new_state.on_token.(token, ctx)
             apply_actions(actions, token, new_state, tokens)
           else
+            new_state = %{new_state | last_emitted_token: token}
             {:continue, new_state, [token | tokens]}
           end
 
@@ -520,13 +609,20 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
   # -- Build a LexerContext from the current state -----------------------------
 
-  defp build_context(%State{} = state) do
+  defp build_context(%State{} = state, nil) do
+    build_context(state, state.line)
+  end
+
+  defp build_context(%State{} = state, token_line) when is_integer(token_line) do
     %LexerContext{
       active_group: List.first(state.group_stack),
       group_stack_depth: length(state.group_stack),
       source: state.source,
       pos_after_token: state.pos,
-      available_groups: Map.keys(state.group_patterns)
+      available_groups: Map.keys(state.group_patterns),
+      previous_token: state.last_emitted_token,
+      bracket_depths: state.bracket_depths,
+      current_token_line: token_line
     }
   end
 
@@ -554,6 +650,16 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         _ -> false
       end)
       |> Enum.map(fn {:emit, tok} -> tok end)
+
+    # Track last emitted token through suppression and emission.
+    # If not suppressed, the current token is last; then any emitted
+    # tokens become last in order.
+    last_emitted =
+      cond do
+        emitted_tokens != [] -> List.last(emitted_tokens)
+        not suppressed -> token
+        true -> state.last_emitted_token
+      end
 
     # Build the new token list:
     # - If not suppressed, prepend the current token
@@ -603,6 +709,8 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         _, acc ->
           acc
       end)
+
+    new_state = %{new_state | last_emitted_token: last_emitted}
 
     {:continue, new_state, new_tokens}
   end
@@ -669,11 +777,26 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
                   value
                 end
 
+              # Check if this NAME token is a context keyword — a word that
+              # is sometimes a keyword and sometimes an identifier depending
+              # on syntactic position. Context keywords are emitted as NAME
+              # with the TOKEN_CONTEXT_KEYWORD flag, leaving the final
+              # decision to the language-specific parser or callback.
+              flags =
+                if token_type == "NAME" and
+                     MapSet.size(state.context_keyword_set) > 0 and
+                     MapSet.member?(state.context_keyword_set, value) do
+                  Token.context_keyword()
+                else
+                  nil
+                end
+
               token = %Token{
                 type: token_type,
                 value: value,
                 line: start_line,
-                column: start_column
+                column: start_column,
+                flags: flags
               }
 
               new_state = advance_by(state, match)
@@ -722,6 +845,38 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
         {:ok, effective_name}
     end
   end
+
+  # -- Bracket depth tracking --------------------------------------------------
+  #
+  # Update bracket depth counters based on a token's value.
+  # Only single-character values are checked — multi-character tokens
+  # cannot be brackets.
+
+  defp update_bracket_depth(state, "("),
+    do: %{state | bracket_depths: %{state.bracket_depths | paren: state.bracket_depths.paren + 1}}
+
+  defp update_bracket_depth(state, ")") do
+    new = max(state.bracket_depths.paren - 1, 0)
+    %{state | bracket_depths: %{state.bracket_depths | paren: new}}
+  end
+
+  defp update_bracket_depth(state, "["),
+    do: %{state | bracket_depths: %{state.bracket_depths | bracket: state.bracket_depths.bracket + 1}}
+
+  defp update_bracket_depth(state, "]") do
+    new = max(state.bracket_depths.bracket - 1, 0)
+    %{state | bracket_depths: %{state.bracket_depths | bracket: new}}
+  end
+
+  defp update_bracket_depth(state, "{"),
+    do: %{state | bracket_depths: %{state.bracket_depths | brace: state.bracket_depths.brace + 1}}
+
+  defp update_bracket_depth(state, "}") do
+    new = max(state.bracket_depths.brace - 1, 0)
+    %{state | bracket_depths: %{state.bracket_depths | brace: new}}
+  end
+
+  defp update_bracket_depth(state, _value), do: state
 
   # -- Escape processing for string tokens ------------------------------------
   #

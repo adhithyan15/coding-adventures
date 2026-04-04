@@ -19,6 +19,18 @@
 #     [ x ]   -- optional x
 #     ( x )   -- grouping
 #
+# Extensions beyond standard EBNF
+# --------------------------------
+#
+# This parser supports several additional operators from PEG (Parsing
+# Expression Grammars) and other modern grammar notations:
+#
+#     & x     -- positive lookahead (succeed without consuming if x matches)
+#     ! x     -- negative lookahead (succeed without consuming if x fails)
+#     { x }+  -- one-or-more repetition (like { x } but requires >= 1)
+#     { x // sep }   -- zero-or-more separated repetition
+#     { x // sep }+  -- one-or-more separated repetition
+#
 # The recursive descent parser
 # ----------------------------
 #
@@ -29,8 +41,9 @@
 #     rule          = rule_name "=" body ";" ;
 #     body          = sequence { "|" sequence } ;
 #     sequence      = { element } ;
-#     element       = rule_ref | token_ref | literal
-#                   | "{" body "}"
+#     element       = "&" element | "!" element
+#                   | rule_ref | token_ref | literal
+#                   | "{" body [ "//" body ] "}" [ "+" ]
 #                   | "[" body "]"
 #                   | "(" body ")" ;
 # ==========================================================================
@@ -72,6 +85,49 @@ module CodingAdventures
 
     # Explicit grouping, written as ( x ) in EBNF.
     Group = Data.define(:element)
+
+    # Positive lookahead predicate, written as &element in the grammar.
+    #
+    # Succeeds (producing no AST children) if element matches at the current
+    # position. Fails if element does not match. Does NOT consume input.
+    #
+    # This is a standard PEG operator. Example:
+    #
+    #     arrow_params = LPAREN [ param_list ] RPAREN &ARROW ;
+    #
+    # The &ARROW predicate checks that => follows without consuming it,
+    # disambiguating arrow function parameters from parenthesized expressions.
+    PositiveLookahead = Data.define(:element)
+
+    # Negative lookahead predicate, written as !element in the grammar.
+    #
+    # Succeeds (producing no AST children) if element does NOT match at the
+    # current position. Fails if element does match. Does NOT consume input.
+    #
+    # This is a standard PEG operator. Example:
+    #
+    #     postfix_expr = primary !NEWLINE ( "++" | "--" ) ;
+    #
+    # The !NEWLINE predicate ensures no line terminator before ++ or --,
+    # implementing JavaScript's restricted production for postfix operators.
+    NegativeLookahead = Data.define(:element)
+
+    # One-or-more repetition, written as { element }+ in the grammar.
+    #
+    # Like zero-or-more { element } but requires at least one match.
+    # Fails if the first match fails.
+    OneOrMoreRepetition = Data.define(:element)
+
+    # Separated repetition, written as { element // separator } in the grammar.
+    #
+    # Matches zero or more occurrences of element separated by separator.
+    # With at_least_one: true ({ element // separator }+), requires at least one.
+    #
+    # Example:
+    #     args = { expression // COMMA } ;
+    # is equivalent to:
+    #     args = [ expression { COMMA expression } ] ;
+    SeparatedRepetition = Data.define(:element, :separator, :at_least_one)
 
     # A single rule from a .grammar file.
     GrammarRule = Data.define(:name, :body, :line_number)
@@ -118,8 +174,12 @@ module CodingAdventures
           node.elements.each { |e| collect_token_refs(e, refs) }
         when Alternation
           node.choices.each { |c| collect_token_refs(c, refs) }
-        when Repetition, OptionalElement, Group
+        when Repetition, OptionalElement, Group,
+             PositiveLookahead, NegativeLookahead, OneOrMoreRepetition
           collect_token_refs(node.element, refs)
+        when SeparatedRepetition
+          collect_token_refs(node.element, refs)
+          collect_token_refs(node.separator, refs)
         end
       end
 
@@ -131,8 +191,12 @@ module CodingAdventures
           node.elements.each { |e| collect_rule_refs(e, refs) }
         when Alternation
           node.choices.each { |c| collect_rule_refs(c, refs) }
-        when Repetition, OptionalElement, Group
+        when Repetition, OptionalElement, Group,
+             PositiveLookahead, NegativeLookahead, OneOrMoreRepetition
           collect_rule_refs(node.element, refs)
+        when SeparatedRepetition
+          collect_rule_refs(node.element, refs)
+          collect_rule_refs(node.separator, refs)
         end
       end
     end
@@ -196,6 +260,25 @@ module CodingAdventures
           when ")"
             tokens << GrammarToken.new(kind: "RPAREN", value: ")", line: line_number)
             i += 1
+          # Lookahead predicates: & (positive) and ! (negative).
+          when "&"
+            tokens << GrammarToken.new(kind: "AMPERSAND", value: "&", line: line_number)
+            i += 1
+          when "!"
+            tokens << GrammarToken.new(kind: "BANG", value: "!", line: line_number)
+            i += 1
+          # One-or-more suffix: +
+          when "+"
+            tokens << GrammarToken.new(kind: "PLUS", value: "+", line: line_number)
+            i += 1
+          # Separator operator: // (inside repetition braces)
+          when "/"
+            if i + 1 < line.length && line[i + 1] == "/"
+              tokens << GrammarToken.new(kind: "DOUBLE_SLASH", value: "//", line: line_number)
+              i += 2
+            else
+              raise ParserGrammarError.new("Unexpected character: #{ch.inspect}", line_number)
+            end
           when '"'
             j = i + 1
             while j < line.length && line[j] != '"'
@@ -301,33 +384,73 @@ module CodingAdventures
         Sequence.new(elements: elements)
       end
 
-      # element = ident | string | "{" body "}" | "[" body "]" | "(" body ")"
+      # element = "&" element | "!" element | ident | string
+      #         | "{" body [ "//" body ] "}" [ "+" ]
+      #         | "[" body "]"
+      #         | "(" body ")"
       def parse_element
         tok = peek
 
         case tok.kind
+        # --- Lookahead predicates: & (positive) and ! (negative) ---
+        # These are prefix operators that match without consuming input.
+        when "AMPERSAND"
+          advance
+          inner = parse_element
+          PositiveLookahead.new(element: inner)
+
+        when "BANG"
+          advance
+          inner = parse_element
+          NegativeLookahead.new(element: inner)
+
         when "IDENT"
           advance
           is_token = tok.value == tok.value.upcase && tok.value[0].match?(/[A-Z]/)
           RuleReference.new(name: tok.value, is_token: is_token)
+
         when "STRING"
           advance
           Literal.new(value: tok.value)
+
         when "LBRACE"
           advance
           body = parse_body
-          expect("RBRACE")
-          Repetition.new(element: body)
+
+          # Check for separator syntax: { element // separator }
+          if peek.kind == "DOUBLE_SLASH"
+            advance # consume //
+            separator = parse_body
+            expect("RBRACE")
+            # Check for + suffix (one-or-more)
+            at_least_one = peek.kind == "PLUS"
+            advance if at_least_one
+            SeparatedRepetition.new(
+              element: body, separator: separator, at_least_one: at_least_one
+            )
+          else
+            expect("RBRACE")
+            # Check for + suffix: { element }+
+            if peek.kind == "PLUS"
+              advance
+              OneOrMoreRepetition.new(element: body)
+            else
+              Repetition.new(element: body)
+            end
+          end
+
         when "LBRACKET"
           advance
           body = parse_body
           expect("RBRACKET")
           OptionalElement.new(element: body)
+
         when "LPAREN"
           advance
           body = parse_body
           expect("RPAREN")
           Group.new(element: body)
+
         else
           raise ParserGrammarError.new(
             "Unexpected token: #{tok.kind} (#{tok.value.inspect})",

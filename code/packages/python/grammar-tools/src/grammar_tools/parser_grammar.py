@@ -217,10 +217,103 @@ class Group:
     element: GrammarElement
 
 
+@dataclass(frozen=True)
+class PositiveLookahead:
+    """Positive lookahead predicate, written as ``&element`` in the grammar.
+
+    Succeeds (producing no AST children) if element matches at the current
+    position. Fails if element does not match. Does NOT consume input.
+
+    This is a standard PEG operator. Example::
+
+        arrow_params = LPAREN [ param_list ] RPAREN &ARROW ;
+
+    The ``&ARROW`` predicate checks that ``=>`` follows without consuming it,
+    disambiguating arrow function parameters from parenthesized expressions.
+
+    Attributes:
+        element: The sub-element to test without consuming.
+    """
+
+    element: GrammarElement
+
+
+@dataclass(frozen=True)
+class NegativeLookahead:
+    """Negative lookahead predicate, written as ``!element`` in the grammar.
+
+    Succeeds (producing no AST children) if element does NOT match at the
+    current position. Fails if element does match. Does NOT consume input.
+
+    This is a standard PEG operator. Example::
+
+        postfix_expr = primary !NEWLINE ( "++" | "--" ) ;
+
+    The ``!NEWLINE`` predicate ensures no line terminator before ``++`` or
+    ``--``, implementing JavaScript's restricted production for postfix
+    operators.
+
+    Attributes:
+        element: The sub-element to test without consuming.
+    """
+
+    element: GrammarElement
+
+
+@dataclass(frozen=True)
+class OneOrMoreRepetition:
+    """One-or-more repetition, written as ``{ element }+`` in the grammar.
+
+    Like zero-or-more ``{ element }`` but requires at least one match.
+    Fails if the first match fails.
+
+    Attributes:
+        element: The sub-element to repeat one or more times.
+    """
+
+    element: GrammarElement
+
+
+@dataclass(frozen=True)
+class SeparatedRepetition:
+    """Separated repetition, written as ``{ element // separator }`` in the grammar.
+
+    Matches zero or more occurrences of element separated by separator.
+    With ``at_least_one=True`` (from the ``+`` suffix), requires at least one.
+
+    Example::
+
+        args = { expression // COMMA } ;
+
+    is equivalent to::
+
+        args = [ expression { COMMA expression } ] ;
+
+    Attributes:
+        element: The sub-element to repeat.
+        separator: The separator between repetitions.
+        at_least_one: When True, at least one element must match.
+    """
+
+    element: GrammarElement
+    separator: GrammarElement
+    at_least_one: bool
+
+
 # The union of all grammar element types. This is what recursive functions
 # over the grammar tree accept and pattern-match on.
 GrammarElement = (
-    RuleReference | Literal | Alternation | Sequence | Repetition | Optional | Group
+    RuleReference
+    | Literal
+    | Alternation
+    | Sequence
+    | Repetition
+    | Optional
+    | Group
+    | PositiveLookahead
+    | NegativeLookahead
+    | OneOrMoreRepetition
+    | SeparatedRepetition
 )
 
 
@@ -302,6 +395,11 @@ def _collect_token_refs(node: GrammarElement, refs: set[str]) -> None:
                 _collect_token_refs(c, refs)
         case Repetition(element=e) | Optional(element=e) | Group(element=e):
             _collect_token_refs(e, refs)
+        case PositiveLookahead(element=e) | NegativeLookahead(element=e) | OneOrMoreRepetition(element=e):
+            _collect_token_refs(e, refs)
+        case SeparatedRepetition(element=e, separator=sep):
+            _collect_token_refs(e, refs)
+            _collect_token_refs(sep, refs)
 
 
 def _collect_rule_refs(node: GrammarElement, refs: set[str]) -> None:
@@ -321,6 +419,11 @@ def _collect_rule_refs(node: GrammarElement, refs: set[str]) -> None:
                 _collect_rule_refs(c, refs)
         case Repetition(element=e) | Optional(element=e) | Group(element=e):
             _collect_rule_refs(e, refs)
+        case PositiveLookahead(element=e) | NegativeLookahead(element=e) | OneOrMoreRepetition(element=e):
+            _collect_rule_refs(e, refs)
+        case SeparatedRepetition(element=e, separator=sep):
+            _collect_rule_refs(e, refs)
+            _collect_rule_refs(sep, refs)
 
 
 # ---------------------------------------------------------------------------
@@ -408,6 +511,24 @@ def _tokenize_grammar(source: str) -> list[_Token]:
             elif ch == ")":
                 tokens.append(_Token("RPAREN", ")", line_number))
                 i += 1
+
+            # Lookahead predicates.
+            elif ch == "&":
+                tokens.append(_Token("AMPERSAND", "&", line_number))
+                i += 1
+            elif ch == "!":
+                tokens.append(_Token("BANG", "!", line_number))
+                i += 1
+
+            # One-or-more suffix.
+            elif ch == "+":
+                tokens.append(_Token("PLUS", "+", line_number))
+                i += 1
+
+            # Separator operator (// inside repetition braces).
+            elif ch == "/" and i + 1 < len(line) and line[i + 1] == "/":
+                tokens.append(_Token("DOUBLE_SLASH", "//", line_number))
+                i += 2
 
             # Quoted string literal.
             elif ch == '"':
@@ -544,6 +665,7 @@ class _Parser:
             "RBRACE",
             "RBRACKET",
             "RPAREN",
+            "DOUBLE_SLASH",
             "EOF",
         ):
             elements.append(self._parse_element())
@@ -564,8 +686,21 @@ class _Parser:
 
         This is where the recursive descent happens: braces, brackets,
         and parentheses cause us to recurse back into _parse_body.
+        Lookahead predicates (& and !) are prefix operators.
         """
         tok = self._peek()
+
+        # --- Lookahead predicates: & (positive) and ! (negative) ---
+        # These are prefix operators that match without consuming input.
+        if tok.kind == "AMPERSAND":
+            self._advance()
+            inner = self._parse_element()
+            return PositiveLookahead(element=inner)
+
+        if tok.kind == "BANG":
+            self._advance()
+            inner = self._parse_element()
+            return NegativeLookahead(element=inner)
 
         if tok.kind == "IDENT":
             self._advance()
@@ -580,7 +715,27 @@ class _Parser:
         if tok.kind == "LBRACE":
             self._advance()
             body = self._parse_body()
+
+            # Check for separator syntax: { element // separator }
+            if self._peek().kind == "DOUBLE_SLASH":
+                self._advance()  # consume //
+                separator = self._parse_body()
+                self._expect("RBRACE")
+                # Check for + suffix (one-or-more)
+                at_least_one = self._peek().kind == "PLUS"
+                if at_least_one:
+                    self._advance()
+                return SeparatedRepetition(
+                    element=body,
+                    separator=separator,
+                    at_least_one=at_least_one,
+                )
+
             self._expect("RBRACE")
+            # Check for + suffix: { element }+
+            if self._peek().kind == "PLUS":
+                self._advance()
+                return OneOrMoreRepetition(element=body)
             return Repetition(element=body)
 
         if tok.kind == "LBRACKET":

@@ -278,6 +278,24 @@ func goElementLit(element GrammarElement, pkg, indent string) string {
 		child := goElementLit(e.Element, pkg, next)
 		return fmt.Sprintf("%s.Group{Element: %s}", pkg, child)
 
+	case PositiveLookahead:
+		child := goElementLit(e.Element, pkg, next)
+		return fmt.Sprintf("%s.PositiveLookahead{Element: %s}", pkg, child)
+
+	case NegativeLookahead:
+		child := goElementLit(e.Element, pkg, next)
+		return fmt.Sprintf("%s.NegativeLookahead{Element: %s}", pkg, child)
+
+	case OneOrMoreRepetition:
+		child := goElementLit(e.Element, pkg, next)
+		return fmt.Sprintf("%s.OneOrMoreRepetition{Element: %s}", pkg, child)
+
+	case SeparatedRepetition:
+		elem := goElementLit(e.Element, pkg, next)
+		sep := goElementLit(e.Separator, pkg, next)
+		return fmt.Sprintf("%s.SeparatedRepetition{Element: %s, Separator: %s, AtLeastOne: %v}",
+			pkg, elem, sep, e.AtLeastOne)
+
 	default:
 		return fmt.Sprintf("/* unknown element: %T */", element)
 	}

@@ -42,7 +42,15 @@ AST Node Types (grammar-driven parser):
     ASTNode        — A generic node with rule_name and children
 """
 
-from lang_parser.grammar_parser import ASTNode, GrammarParseError, GrammarParser
+from lang_parser.grammar_parser import (
+    ASTNode,
+    GrammarParseError,
+    GrammarParser,
+    collect_tokens,
+    find_nodes,
+    is_ast_node,
+    walk_ast,
+)
 from lang_parser.parser import (
     Assignment,
     BinaryOp,
@@ -72,4 +80,8 @@ __all__ = [
     "ASTNode",
     "GrammarParseError",
     "GrammarParser",
+    "collect_tokens",
+    "find_nodes",
+    "is_ast_node",
+    "walk_ast",
 ]

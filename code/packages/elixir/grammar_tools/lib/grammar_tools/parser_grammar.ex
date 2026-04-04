@@ -9,13 +9,17 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
 
   ## Grammar Element Types (tagged tuples)
 
-      {:rule_reference, name, is_token}   — reference to a rule or token
-      {:literal, value}                   — literal string match
-      {:sequence, elements}               — A B C (all must match in order)
-      {:alternation, choices}             — A | B | C (first match wins)
-      {:repetition, element}              — { A } (zero or more)
-      {:optional, element}                — [ A ] (zero or one)
-      {:group, element}                   — ( A ) (grouping)
+      {:rule_reference, name, is_token}                      — reference to a rule or token
+      {:literal, value}                                      ��� literal string match
+      {:sequence, elements}                                  — A B C (all must match in order)
+      {:alternation, choices}                                — A | B | C (first match wins)
+      {:repetition, element}                                 ��� { A } (zero or more)
+      {:optional, element}                                   — [ A ] (zero or one)
+      {:group, element}                                      — ( A ) (grouping)
+      {:positive_lookahead, element}                         — &A (succeed if A matches, no consume)
+      {:negative_lookahead, element}                         — !A (succeed if A does NOT match, no consume)
+      {:one_or_more, element}                                — { A }+ (one or more)
+      {:separated_repetition, element, separator, at_least_one} — { A // B } or { A // B }+
   """
 
   defstruct rules: [],
@@ -29,6 +33,10 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
           | {:repetition, grammar_element()}
           | {:optional, grammar_element()}
           | {:group, grammar_element()}
+          | {:positive_lookahead, grammar_element()}
+          | {:negative_lookahead, grammar_element()}
+          | {:one_or_more, grammar_element()}
+          | {:separated_repetition, grammar_element(), grammar_element(), boolean()}
 
   @type grammar_rule :: %{
           name: String.t(),
@@ -234,8 +242,12 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
   defp collect_refs({:alternation, choices}, kind),
     do: Enum.flat_map(choices, &collect_refs(&1, kind))
 
-  defp collect_refs({tag, element}, kind) when tag in [:repetition, :optional, :group],
-    do: collect_refs(element, kind)
+  defp collect_refs({tag, element}, kind)
+       when tag in [:repetition, :optional, :group, :positive_lookahead, :negative_lookahead, :one_or_more],
+       do: collect_refs(element, kind)
+
+  defp collect_refs({:separated_repetition, element, separator, _at_least_one}, kind),
+    do: collect_refs(element, kind) ++ collect_refs(separator, kind)
 
   # -- Tokenizer for .grammar files -----------------------------------------
   # Breaks the grammar source into tokens: IDENT, STRING, EQUALS, SEMI, PIPE,
@@ -305,6 +317,21 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
 
       ch == ")" ->
         tokenize_line(line, pos + 1, line_num, [{:rparen, ")", line_num} | acc])
+
+      # Lookahead predicates
+      ch == "&" ->
+        tokenize_line(line, pos + 1, line_num, [{:ampersand, "&", line_num} | acc])
+
+      ch == "!" ->
+        tokenize_line(line, pos + 1, line_num, [{:bang, "!", line_num} | acc])
+
+      # One-or-more suffix
+      ch == "+" ->
+        tokenize_line(line, pos + 1, line_num, [{:plus, "+", line_num} | acc])
+
+      # Separator operator (// inside repetition braces)
+      ch == "/" and pos + 1 < byte_size(line) and String.at(line, pos + 1) == "/" ->
+        tokenize_line(line, pos + 2, line_num, [{:double_slash, "//", line_num} | acc])
 
       ch == "\"" ->
         start = pos + 1
@@ -448,13 +475,29 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
   end
 
   defp collect_elements([{kind, _, _} | _] = tokens, elements)
-       when kind in [:pipe, :semi, :rbrace, :rbracket, :rparen, :eof] do
+       when kind in [:pipe, :semi, :rbrace, :rbracket, :rparen, :eof, :double_slash] do
     {:ok, elements, tokens}
   end
 
   defp collect_elements(tokens, elements) do
     case parse_element(tokens) do
       {:ok, element, rest} -> collect_elements(rest, [element | elements])
+      {:error, msg} -> {:error, msg}
+    end
+  end
+
+  # Lookahead predicates: & (positive) and ! (negative)
+  # These are prefix operators that match without consuming input.
+  defp parse_element([{:ampersand, _, _} | rest]) do
+    case parse_element(rest) do
+      {:ok, inner, rest2} -> {:ok, {:positive_lookahead, inner}, rest2}
+      {:error, msg} -> {:error, msg}
+    end
+  end
+
+  defp parse_element([{:bang, _, _} | rest]) do
+    case parse_element(rest) do
+      {:ok, inner, rest2} -> {:ok, {:negative_lookahead, inner}, rest2}
       {:error, msg} -> {:error, msg}
     end
   end
@@ -470,8 +513,35 @@ defmodule CodingAdventures.GrammarTools.ParserGrammar do
 
   defp parse_element([{:lbrace, _, _} | rest]) do
     case parse_body(rest) do
+      # Check for separator: { element // separator }
+      {:ok, body, [{:double_slash, _, _} | rest2]} ->
+        case parse_body(rest2) do
+          {:ok, separator, [{:rbrace, _, _} | rest3]} ->
+            # Check for + suffix (one-or-more)
+            {at_least_one, rest3} =
+              case rest3 do
+                [{:plus, _, _} | rest4] -> {true, rest4}
+                _ -> {false, rest3}
+              end
+
+            {:ok, {:separated_repetition, body, separator, at_least_one}, rest3}
+
+          {:ok, _, [{kind, val, ln} | _]} ->
+            {:error, "Line #{ln}: Expected '}', got #{kind} (#{inspect(val)})"}
+
+          {:error, msg} ->
+            {:error, msg}
+        end
+
       {:ok, body, [{:rbrace, _, _} | rest2]} ->
-        {:ok, {:repetition, body}, rest2}
+        # Check for + suffix: { element }+
+        case rest2 do
+          [{:plus, _, _} | rest3] ->
+            {:ok, {:one_or_more, body}, rest3}
+
+          _ ->
+            {:ok, {:repetition, body}, rest2}
+        end
 
       {:ok, _, [{kind, val, ln} | _]} ->
         {:error, "Line #{ln}: Expected '}', got #{kind} (#{inspect(val)})"}

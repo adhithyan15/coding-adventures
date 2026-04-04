@@ -71,10 +71,14 @@ from grammar_tools.parser_grammar import (
     GrammarRule,
     Group,
     Literal,
+    NegativeLookahead,
+    OneOrMoreRepetition,
     Optional,
     ParserGrammar,
+    PositiveLookahead,
     Repetition,
     RuleReference,
+    SeparatedRepetition,
     Sequence,
 )
 from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar
@@ -314,6 +318,43 @@ def _compile_element(element: GrammarElement, indent: str) -> str:
                 f"{indent}),",
             ])
 
+        case PositiveLookahead(element=child):
+            child_src = _compile_element(child, i1)
+            return "\n".join([
+                f"{indent}PositiveLookahead(element=",
+                child_src,
+                f"{indent}),",
+            ])
+
+        case NegativeLookahead(element=child):
+            child_src = _compile_element(child, i1)
+            return "\n".join([
+                f"{indent}NegativeLookahead(element=",
+                child_src,
+                f"{indent}),",
+            ])
+
+        case OneOrMoreRepetition(element=child):
+            child_src = _compile_element(child, i1)
+            return "\n".join([
+                f"{indent}OneOrMoreRepetition(element=",
+                child_src,
+                f"{indent}),",
+            ])
+
+        case SeparatedRepetition(element=elem, separator=sep, at_least_one=at_least_one):
+            elem_src = _compile_element(elem, i1)
+            sep_src = _compile_element(sep, i1)
+            return "\n".join([
+                f"{indent}SeparatedRepetition(",
+                f"{i1}element=",
+                elem_src,
+                f"{i1}separator=",
+                sep_src,
+                f"{i1}at_least_one={at_least_one!r},",
+                f"{indent}),",
+            ])
+
         case _:
             raise TypeError(f"Unknown grammar element type: {type(element)}")
 
@@ -382,10 +423,14 @@ def compile_parser_grammar(grammar: ParserGrammar, source_file: str = "") -> str
         "    GrammarRule,\n"
         "    Group,\n"
         "    Literal,\n"
+        "    NegativeLookahead,\n"
+        "    OneOrMoreRepetition,\n"
         "    Optional,\n"
         "    ParserGrammar,\n"
+        "    PositiveLookahead,\n"
         "    Repetition,\n"
         "    RuleReference,\n"
+        "    SeparatedRepetition,\n"
         "    Sequence,\n"
         ")\n"
         "\n"

@@ -33,6 +33,8 @@ Usage::
 
 from lexer.grammar_lexer import GrammarLexer, LexerContext
 from lexer.tokenizer import (
+    TOKEN_CONTEXT_KEYWORD,
+    TOKEN_PRECEDED_BY_NEWLINE,
     TOKENIZER_DFA,
     Lexer,
     LexerConfig,
@@ -48,6 +50,8 @@ __all__ = [
     "LexerContext",
     "LexerConfig",
     "LexerError",
+    "TOKEN_CONTEXT_KEYWORD",
+    "TOKEN_PRECEDED_BY_NEWLINE",
     "TOKENIZER_DFA",
     "Token",
     "TokenType",

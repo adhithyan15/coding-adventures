@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0] - 2026-04-04
+
+### Added
+- **Context keywords section**: `ContextKeywords []string` field on `TokenGrammar`,
+  populated by the new `context_keywords:` section in `.tokens` files. Context
+  keywords are words that are keywords in some syntactic positions but identifiers
+  in others (e.g., JavaScript's `async`, `yield`, `get`, `set`).
+- **Positive lookahead** (`PositiveLookahead` struct): `&element` syntax in `.grammar`
+  files. Succeeds without consuming input if element matches at the current position.
+- **Negative lookahead** (`NegativeLookahead` struct): `!element` syntax. Succeeds
+  without consuming input if element does NOT match.
+- **One-or-more repetition** (`OneOrMoreRepetition` struct): `{ element }+` syntax.
+  Like zero-or-more but requires at least one match.
+- **Separated repetition** (`SeparatedRepetition` struct): `{ element // separator }`
+  syntax (with optional `+` suffix for one-or-more). Matches element occurrences
+  separated by separator.
+- Tokenizer now recognizes `&`, `!`, `+`, and `//` as grammar tokens.
+- `collectRuleRefs` and `collectTokenRefs` handle all four new element types.
+- Compiler (`goElementLit`) generates Go literals for all four new element types.
+
 ## [0.4.0] - 2026-03-26
 
 ### Added
