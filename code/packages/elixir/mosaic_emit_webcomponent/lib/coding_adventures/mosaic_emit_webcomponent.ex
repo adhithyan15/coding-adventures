@@ -360,9 +360,7 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
 
       "font-weight" ->
         case value do
-          %{kind: :string, value: v}
-          when v in ["100","200","300","400","500","600","700","800","900","normal","bold","bolder","lighter"] ->
-            {put_css_style(frame, "font-weight", v), state}
+          %{kind: :string, value: v} -> {put_css_style(frame, "font-weight", v), state}
           _ -> {frame, state}
         end
 
@@ -443,9 +441,7 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
           %{kind: :string, value: "none"}    -> {%{frame | attrs: frame.attrs ++ ["aria-hidden=\"true\""]}, state}
           %{kind: :string, value: "heading"} -> {%{frame | attrs: frame.attrs ++ ["role=\"heading\""]}, state}
           %{kind: :string, value: "image"}   -> {%{frame | attrs: frame.attrs ++ ["role=\"img\""]}, state}
-          %{kind: :string, value: v} when is_binary(v) ->
-            safe_v = String.replace(v, "\"", "&quot;") |> String.replace("'", "&#39;")
-            {%{frame | attrs: frame.attrs ++ ["role=\"#{safe_v}\""]}, state}
+          %{kind: :string, value: v}          -> {%{frame | attrs: frame.attrs ++ ["role=\"#{v}\""]}, state}
           _ -> {frame, state}
         end
 
@@ -631,23 +627,19 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
     raw_render_lines = serialize_fragments(component_frame.fragments, "    ")
 
     # Replace image source and aria placeholders with actual field references.
-    # Use Regex.run to extract the slot name, then do a plain literal string replacement.
-    # This avoids relying on String.replace's function-callback arity semantics,
-    # which differ across Elixir versions (1-arity vs 2-arity capture handling).
+    # In Elixir, String.replace with a regex and a function receives the full match string.
+    # We extract the slot name by stripping the placeholder prefix/suffix.
     render_lines =
       Enum.map(raw_render_lines, fn line ->
-        line = case Regex.run(~r/__IMG_SRC_(\w+)__/, line) do
-          [full, slot_name] ->
-            replacement = "\" + this._validateUrl(this.#{backing_field(slot_name)}) + \""
-            String.replace(line, full, replacement)
-          _ -> line
-        end
-        case Regex.run(~r/__ARIA_(\w+)__/, line) do
-          [full, slot_name] ->
-            replacement = "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
-            String.replace(line, full, replacement)
-          _ -> line
-        end
+        line
+        |> String.replace(~r/__IMG_SRC_(\w+)__/, fn match ->
+          slot_name = match |> String.replace("__IMG_SRC_", "") |> String.replace("__", "")
+          "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
+        end)
+        |> String.replace(~r/__ARIA_(\w+)__/, fn match ->
+          slot_name = match |> String.replace("__ARIA_", "") |> String.replace("__", "")
+          "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
+        end)
       end)
 
     # Assemble the file.
@@ -810,10 +802,7 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
   end
   defp ts_field_type(_), do: "unknown"
 
-  defp default_value(%{type: %{kind: :text}, default_value: %{kind: :string, value: v}}) do
-    escaped = String.replace(v, "\\", "\\\\") |> String.replace("'", "\\'")
-    "'#{escaped}'"
-  end
+  defp default_value(%{type: %{kind: :text}, default_value: %{kind: :string, value: v}}), do: "'#{v}'"
   defp default_value(%{type: %{kind: :number}, default_value: %{kind: :number, value: v}}), do: "#{v}"
   defp default_value(%{type: %{kind: :bool}, default_value: %{kind: :bool, value: v}}), do: "#{v}"
   defp default_value(%{type: %{kind: :text}}),      do: "''"
@@ -826,11 +815,7 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
   defp default_value(%{type: %{kind: :list}}),      do: "[]"
   defp default_value(_),                            do: "null"
 
-  # default_scalar is used for observedAttributes value in attributeChangedCallback —
-  # it becomes a JS string comparison value, so escape backslash and single-quote.
-  defp default_scalar(%{default_value: %{kind: :string, value: v}}) do
-    String.replace(v, "\\", "\\\\") |> String.replace("'", "\\'")
-  end
+  defp default_scalar(%{default_value: %{kind: :string, value: v}}), do: v
   defp default_scalar(%{default_value: %{kind: :number, value: v}}), do: "#{v}"
   defp default_scalar(%{default_value: %{kind: :bool, value: v}}),   do: "#{v}"
   defp default_scalar(%{type: %{kind: :number}}), do: "0"
@@ -874,11 +859,7 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
   end
 
   defp escape_attr(value) do
-    value
-    |> String.replace("&", "&amp;")
-    |> String.replace("<", "&lt;")
-    |> String.replace(">", "&gt;")
-    |> String.replace("\"", "&quot;")
+    String.replace(value, "\"", "&quot;")
   end
 
   defp escape_html_literal(s) do

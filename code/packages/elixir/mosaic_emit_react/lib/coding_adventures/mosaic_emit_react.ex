@@ -427,8 +427,7 @@ defmodule CodingAdventures.MosaicEmitReact do
 
       "font-weight" ->
         case value do
-          %{kind: :string, value: v}
-          when v in ["100","200","300","400","500","600","700","800","900","normal","bold","bolder","lighter"] ->
+          %{kind: :string, value: v} ->
             {put_style(frame, "fontWeight", ~s("#{v}")), state}
           _ -> {frame, state}
         end
@@ -447,26 +446,16 @@ defmodule CodingAdventures.MosaicEmitReact do
         end
 
       "style" ->
-        # Guards cannot use =~ (regex match) — validate in the body instead.
-        safe_ident = ~r/^[A-Za-z0-9_-]+$/
         case value do
-          %{kind: :enum, namespace: ns, member: m} when is_binary(ns) and is_binary(m) ->
-            if Regex.match?(safe_ident, ns) and Regex.match?(safe_ident, m) do
-              class_name = "mosaic-#{ns}-#{m}"
-              frame2 = %{frame | class_names: frame.class_names ++ [class_name]}
-              state2 = %{state | needs_type_scale_css: true}
-              {frame2, state2}
-            else
-              {frame, state}
-            end
-          %{kind: :string, value: v} when is_binary(v) ->
-            if Regex.match?(safe_ident, v) do
-              frame2 = %{frame | class_names: frame.class_names ++ ["mosaic-#{v}"]}
-              state2 = %{state | needs_type_scale_css: true}
-              {frame2, state2}
-            else
-              {frame, state}
-            end
+          %{kind: :enum, namespace: ns, member: m} ->
+            class_name = "mosaic-#{ns}-#{m}"
+            frame2 = %{frame | class_names: frame.class_names ++ [class_name]}
+            state2 = %{state | needs_type_scale_css: true}
+            {frame2, state2}
+          %{kind: :string, value: v} ->
+            frame2 = %{frame | class_names: frame.class_names ++ ["mosaic-#{v}"]}
+            state2 = %{state | needs_type_scale_css: true}
+            {frame2, state2}
           _ -> {frame, state}
         end
 
@@ -518,10 +507,8 @@ defmodule CodingAdventures.MosaicEmitReact do
             {%{frame | attrs: frame.attrs ++ ["role=\"heading\""]}, state}
           %{kind: :string, value: "image"} ->
             {%{frame | attrs: frame.attrs ++ ["role=\"img\""]}, state}
-          %{kind: :string, value: v} when is_binary(v) ->
-            # Escape " to prevent HTML attribute injection in generated JSX source
-            safe_v = String.replace(v, "\"", "&quot;") |> String.replace("'", "&#39;")
-            {%{frame | attrs: frame.attrs ++ ["role=\"#{safe_v}\""]}, state}
+          %{kind: :string, value: v} ->
+            {%{frame | attrs: frame.attrs ++ ["role=\"#{v}\""]}, state}
           _ -> {frame, state}
         end
 
@@ -769,11 +756,7 @@ defmodule CodingAdventures.MosaicEmitReact do
   defp value_to_jsx(_),                                   do: ""
 
   # Convert a ResolvedValue to a JSX attribute value string.
-  # Escape backslash and double-quote in string literals to prevent XSS in JSX attributes.
-  defp attr_value(%{kind: :string, value: v}) do
-    escaped = v |> String.replace("\\", "\\\\") |> String.replace("\"", "\\\"")
-    "\"#{escaped}\""
-  end
+  defp attr_value(%{kind: :string, value: v}),              do: "\"#{v}\""
   defp attr_value(%{kind: :slot_ref, slot_name: name}),     do: "{#{name}}"
   defp attr_value(_),                                       do: "\"\""
 
@@ -817,11 +800,7 @@ defmodule CodingAdventures.MosaicEmitReact do
   defp slot_type_to_ts(_), do: "unknown"
 
   # Convert a MosaicValue default to a TypeScript literal string.
-  # Escape backslash and double-quote in string literals to prevent broken TS output.
-  defp default_value_literal(%{kind: :string, value: v}) do
-    escaped = v |> String.replace("\\", "\\\\") |> String.replace("\"", "\\\"")
-    "\"#{escaped}\""
-  end
+  defp default_value_literal(%{kind: :string, value: v}), do: "\"#{v}\""
   defp default_value_literal(%{kind: :number, value: v}), do: "#{v}"
   defp default_value_literal(%{kind: :bool, value: v}),   do: "#{v}"
   defp default_value_literal(_),                          do: "undefined"
