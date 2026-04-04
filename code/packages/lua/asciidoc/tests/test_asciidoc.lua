@@ -11,11 +11,12 @@
 --
 -- @module test_asciidoc
 
--- Point the loader at the asciidoc src AND the asciidoc-parser src so that
--- the require() calls inside asciidoc/init.lua resolve correctly without
--- needing a full luarocks install.
+-- Point the loader at the asciidoc src, the asciidoc-parser src, and the
+-- document_ast_to_html src so that all require() calls inside asciidoc/init.lua
+-- resolve correctly without needing a full luarocks install.
 package.path = "../src/?.lua;../src/?/init.lua;"
   .. "../../asciidoc-parser/src/?.lua;../../asciidoc-parser/src/?/init.lua;"
+  .. "../../document_ast_to_html/src/?.lua;../../document_ast_to_html/src/?/init.lua;"
   .. package.path
 
 local asciidoc = require("coding_adventures.asciidoc")

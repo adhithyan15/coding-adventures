@@ -86,7 +86,7 @@ class TestLinks:
 
     def test_bare_url(self):
         html = to_html("https://example.com\n")
-        assert "https://example.com" in html
+        assert 'href="https://example.com"' in html
 
 
 class TestEmpty:
