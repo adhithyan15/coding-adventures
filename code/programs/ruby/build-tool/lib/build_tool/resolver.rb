@@ -584,6 +584,44 @@ module BuildTool
       internal_deps
     end
 
+    # parse_gradle_deps -- Extract internal dependencies from settings.gradle.kts.
+    #
+    # Both Java and Kotlin packages use Gradle as their build system. In this
+    # monorepo, sibling package dependencies are declared as composite builds
+    # in settings.gradle.kts:
+    #
+    #   includeBuild("../logic-gates")
+    #   includeBuild("../transistors")
+    #
+    # We scan for `includeBuild("../...")` entries and map the directory name
+    # back to our internal package name.
+    #
+    # @param package [Package]
+    # @param known_names [Hash<String, String>]
+    # @return [Array<String>]
+    def parse_gradle_deps(package, known_names)
+      settings_file = package.path / "settings.gradle.kts"
+      return [] unless settings_file.exist?
+
+      internal_deps = []
+      pattern = /includeBuild\s*\(\s*"\.\.\/([^"]+)"\s*\)/
+
+      settings_file.read.lines.each do |line|
+        stripped = line.strip
+        next if stripped.empty? || stripped.start_with?("//")
+
+        match = stripped.match(pattern)
+        if match
+          dep_dir = match[1].downcase
+          # Guard against path traversal.
+          next if dep_dir.include?("/") || dep_dir.include?("\\") || dep_dir == ".."
+          internal_deps << known_names[dep_dir] if known_names.key?(dep_dir)
+        end
+      end
+
+      internal_deps
+    end
+
     # build_known_names -- Build ecosystem-specific name -> package name mapping.
     #
     # For Python:     "coding-adventures-logic-gates" -> "python/logic-gates"
@@ -675,6 +713,11 @@ module BuildTool
           # Swift SPM package names are the kebab-case directory name.
           dir_base = pkg.path.basename.to_s.downcase
           set_known.call(dir_base, pkg.name, pkg.path)
+        when "java", "kotlin"
+          # Java and Kotlin use Gradle composite builds. Dependencies are
+          # referenced by directory name in settings.gradle.kts.
+          dir_base = pkg.path.basename.to_s.downcase
+          set_known.call(dir_base, pkg.name, pkg.path)
         end
       end
 
@@ -712,6 +755,7 @@ module BuildTool
                when "lua"        then parse_lua_deps(pkg, known_names)
                when "perl"       then parse_perl_deps(pkg, known_names)
                when "swift"      then parse_swift_deps(pkg, known_names)
+               when "java", "kotlin" then parse_gradle_deps(pkg, known_names)
                else []
                end
 

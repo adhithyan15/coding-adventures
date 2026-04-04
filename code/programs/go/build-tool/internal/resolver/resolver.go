@@ -573,6 +573,60 @@ func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []strin
 	return internalDeps
 }
 
+// parseGradleDeps extracts internal dependencies from a Gradle build.gradle.kts
+// file. This parser works for both Java and Kotlin packages since both use
+// Gradle as their build system.
+//
+// Gradle composite builds declare sibling project dependencies using
+// includeBuild() in settings.gradle.kts and then reference them as regular
+// dependencies in build.gradle.kts:
+//
+//	implementation("com.codingadventures:logic-gates")
+//
+// Alternatively, path-based composite builds are declared in
+// settings.gradle.kts:
+//
+//	includeBuild("../logic-gates")
+//
+// We scan settings.gradle.kts for includeBuild("../...") entries, which is
+// the primary mechanism for monorepo-local dependencies. The directory name
+// inside the "../" reference maps directly to our internal package names.
+func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
+	data, err := os.ReadFile(settingsFile)
+	if err != nil {
+		return nil
+	}
+
+	text := string(data)
+	var internalDeps []string
+
+	// Match: includeBuild("../logic-gates") or includeBuild("../some-dep")
+	// The "../" prefix indicates a sibling monorepo package.
+	re := regexp.MustCompile(`includeBuild\s*\(\s*"\.\.\/([^"]+)"\s*\)`)
+	for _, line := range strings.Split(text, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "//") {
+			continue
+		}
+		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			depDir := strings.ToLower(match[1])
+			// Guard against path traversal.
+			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+				continue
+			}
+			if pkgName, ok := knownNames[depDir]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 // buildKnownNames creates a mapping from ecosystem-specific dependency names
 // to our internal package names.
 //
@@ -705,6 +759,14 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// references the directory name "logic-gates" directly.
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(dirBase, pkg.Name, pkg.Path)
+
+		case "java", "kotlin":
+			// Java and Kotlin packages use Gradle composite builds. Dependencies
+			// are referenced by directory name in settings.gradle.kts via
+			// includeBuild("../dep-name"). The directory name maps directly to
+			// the internal package name, same as Swift and Rust.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path)
 		}
 	}
 
@@ -760,6 +822,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parsePerlDeps(pkg, knownNames)
 		case "swift":
 			deps = parseSwiftDeps(pkg, knownNames)
+		case "java", "kotlin":
+			deps = parseGradleDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

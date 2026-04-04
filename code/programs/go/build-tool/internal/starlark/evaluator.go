@@ -79,6 +79,8 @@ func IsStarlarkBuild(content string) bool {
 		"rust_library(", "rust_binary(",
 		"elixir_library(", "elixir_binary(",
 		"perl_library(", "perl_binary(",
+		"java_library(", "java_binary(",
+		"kotlin_library(", "kotlin_binary(",
 	}
 
 	for _, line := range strings.Split(content, "\n") {
@@ -298,6 +300,12 @@ func GenerateCommands(t Target) []string {
 		return []string{
 			"cpanm --installdeps --quiet .",
 			"prove -l -v t/",
+		}
+
+	case "java_library", "java_binary", "kotlin_library", "kotlin_binary":
+		return []string{
+			"gradle build",
+			"gradle test",
 		}
 
 	default:

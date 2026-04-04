@@ -4,6 +4,25 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-04: Gradle "build" directory conflicts with BUILD file on case-insensitive filesystems
+
+Gradle's default output directory is `build/`. On macOS and Windows (case-insensitive filesystems), this collides with our `BUILD` file — Gradle sees `BUILD` as a file where it expects to create a `build/` directory, causing `IllegalArgumentException: Could not create problems-report directory`.
+
+**Solution:** In every `build.gradle.kts` for Java/Kotlin packages in this monorepo, add this line BEFORE the plugins block:
+
+```kotlin
+layout.buildDirectory = file("gradle-build")
+```
+
+This redirects Gradle's output to `gradle-build/` instead of `build/`. Also add `gradle-build` to the skip dirs in all build tool implementations so the build tool doesn't recurse into Gradle output directories.
+
+**Checklist for every new Java/Kotlin package:**
+- [ ] `layout.buildDirectory = file("gradle-build")` in build.gradle.kts
+- [ ] BUILD file exists for the monorepo build tool
+- [ ] `gradle-build/` in .gitignore
+
+---
+
 ### 2026-04-04: elixir_make chicken-and-egg: do not use `:make` compiler in mix.exs when BUILD builds the NIF externally
 
 When `mix.exs` lists `compilers: Mix.compilers() ++ [:make]`, Mix tries to
