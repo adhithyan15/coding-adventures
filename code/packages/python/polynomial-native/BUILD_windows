@@ -1,0 +1,9 @@
+# Windows BUILD for polynomial-native
+#
+# On Windows, the build tool runs each line with `cmd /C`, so sh syntax
+# like `if [ -f ... ]` doesn't work. This file uses CMD-compatible commands.
+uv venv --quiet --clear
+uv pip install pytest --quiet
+cargo build --release
+copy target\release\polynomial_native.dll src\polynomial_native\polynomial_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python.exe -m pytest tests -v

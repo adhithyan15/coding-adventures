@@ -1,4 +1,4 @@
-# Windows: build the Rust NIF cdylib only. Mix/Elixir testing on Windows
-# is complex; full test support requires a separate investigation.
-# The native/XXX subdirectory contains the Cargo project.
-cd native/gf256_native && cargo build --release
+# Windows: Elixir NIF builds require linking against ERTS (beam.smp).
+# On Windows, ERTS does not ship an import library, so linking fails.
+# Linux and macOS CI runners cover this package fully.
+echo Skipping elixir/gf256_native on Windows — ERTS import library not available

@@ -7,6 +7,7 @@ name = "node-bridge"
 version = "0.1.0"
 edition = "2021"
 description = "Thin safe Rust wrapper over Node.js N-API — zero dependencies, no napi-rs, no macros"
+build = "build.rs"
 
 [dependencies]
 # None. That's the point.

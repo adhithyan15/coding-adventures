@@ -32,7 +32,7 @@
 // We expose `ZERO`, `ONE`, and `PRIMITIVE_POLYNOMIAL` as module-level constants
 // by adding them to the module after creation.
 
-use std::ffi::{c_char, c_int, CString};
+use std::ffi::{c_char, c_int, c_long, CString};
 use std::ptr;
 use std::sync::OnceLock;
 
@@ -45,16 +45,18 @@ use python_bridge::*;
 #[allow(non_snake_case)]
 extern "C" {
     // Integer operations: extract Python int as a C long.
-    fn PyLong_AsLong(obj: PyObjectPtr) -> i64;
+    // Return type is c_long (i64 on Linux/macOS, i32 on Windows) matching the CPython ABI.
+    fn PyLong_AsLong(obj: PyObjectPtr) -> c_long;
 
     // Error checking.
     fn PyErr_Occurred() -> PyObjectPtr;
 
     // Module attribute setting.
+    // value type is c_long to match CPython's `long value` parameter (i32 on Windows).
     fn PyModule_AddIntConstant(
         module: PyObjectPtr,
         name: *const c_char,
-        value: i64,
+        value: c_long,
     ) -> c_int;
 }
 // NOTE: PyLong_Check is intentionally NOT declared here.
@@ -147,7 +149,7 @@ unsafe extern "C" fn gf_add(_module: PyObjectPtr, args: PyObjectPtr) -> PyObject
         None => return ptr::null_mut(),
     };
     let result = gf256::add(a, b);
-    PyLong_FromLong(result as i64)
+    PyLong_FromLong(result as c_long)
 }
 
 // -- subtract(a: int, b: int) -> int ------------------------------------------
@@ -167,7 +169,7 @@ unsafe extern "C" fn gf_subtract(_module: PyObjectPtr, args: PyObjectPtr) -> PyO
         None => return ptr::null_mut(),
     };
     let result = gf256::subtract(a, b);
-    PyLong_FromLong(result as i64)
+    PyLong_FromLong(result as c_long)
 }
 
 // -- multiply(a: int, b: int) -> int ------------------------------------------
@@ -187,7 +189,7 @@ unsafe extern "C" fn gf_multiply(_module: PyObjectPtr, args: PyObjectPtr) -> PyO
         None => return ptr::null_mut(),
     };
     let result = gf256::multiply(a, b);
-    PyLong_FromLong(result as i64)
+    PyLong_FromLong(result as c_long)
 }
 
 // -- divide(a: int, b: int) -> int --------------------------------------------
@@ -210,7 +212,7 @@ unsafe extern "C" fn gf_divide(_module: PyObjectPtr, args: PyObjectPtr) -> PyObj
     // Catch the Rust panic for division by zero.
     let result = std::panic::catch_unwind(move || gf256::divide(a, b));
     match result {
-        Ok(val) => PyLong_FromLong(val as i64),
+        Ok(val) => PyLong_FromLong(val as c_long),
         Err(_) => {
             set_error(value_error_class(), "GF(256): division by zero");
             ptr::null_mut()
@@ -244,14 +246,14 @@ unsafe extern "C" fn gf_power(_module: PyObjectPtr, args: PyObjectPtr) -> PyObje
         set_error(value_error_class(), "power requires two arguments: base, exp");
         return ptr::null_mut();
     }
-    if PyLong_Check(exp_obj) == 0 {
-        set_error(value_error_class(), "argument 'exp' must be an integer");
-        return ptr::null_mut();
-    }
+    // PyLong_Check is `static inline` in CPython 3.12+ — NOT an exported symbol.
+    // Use try-extract: PyLong_AsLong sets TypeError if obj is not an integer.
+    // PyErr_Clear() first so PyErr_Occurred() reflects only this call.
+    PyErr_Clear();
     let exp_val = PyLong_AsLong(exp_obj);
     if exp_val == -1 && !PyErr_Occurred().is_null() {
         PyErr_Clear();
-        set_error(value_error_class(), "argument 'exp' is out of range");
+        set_error(value_error_class(), "argument 'exp' must be a non-negative integer");
         return ptr::null_mut();
     }
     if exp_val < 0 {
@@ -263,10 +265,12 @@ unsafe extern "C" fn gf_power(_module: PyObjectPtr, args: PyObjectPtr) -> PyObje
     }
 
     // Clamp to u32::MAX for very large exponents (edge case; not expected in practice).
-    let exp = exp_val.min(u32::MAX as i64) as u32;
+    // Cast to i64 first so the comparison is the same type on all platforms
+    // (c_long is i32 on Windows, i64 on Linux/macOS).
+    let exp = (exp_val as i64).min(u32::MAX as i64) as u32;
 
     let result = gf256::power(base, exp);
-    PyLong_FromLong(result as i64)
+    PyLong_FromLong(result as c_long)
 }
 
 // -- inverse(a: int) -> int ---------------------------------------------------
@@ -285,7 +289,7 @@ unsafe extern "C" fn gf_inverse(_module: PyObjectPtr, args: PyObjectPtr) -> PyOb
     // Catch the Rust panic for inverse(0).
     let result = std::panic::catch_unwind(move || gf256::inverse(a));
     match result {
-        Ok(val) => PyLong_FromLong(val as i64),
+        Ok(val) => PyLong_FromLong(val as c_long),
         Err(_) => {
             set_error(
                 value_error_class(),
@@ -465,9 +469,9 @@ pub unsafe extern "C" fn PyInit_gf256_native() -> PyObjectPtr {
     // Using a dropped `CString` here was the prior bug: the pointer passed to
     // CPython pointed into freed memory, which is undefined behaviour.
 
-    PyModule_AddIntConstant(module, cstr("ZERO"), gf256::ZERO as i64);
-    PyModule_AddIntConstant(module, cstr("ONE"), gf256::ONE as i64);
-    PyModule_AddIntConstant(module, cstr("PRIMITIVE_POLYNOMIAL"), gf256::PRIMITIVE_POLYNOMIAL as i64);
+    PyModule_AddIntConstant(module, cstr("ZERO"), gf256::ZERO as c_long);
+    PyModule_AddIntConstant(module, cstr("ONE"), gf256::ONE as c_long);
+    PyModule_AddIntConstant(module, cstr("PRIMITIVE_POLYNOMIAL"), gf256::PRIMITIVE_POLYNOMIAL as c_long);
 
     module
 }

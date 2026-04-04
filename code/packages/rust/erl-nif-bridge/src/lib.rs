@@ -235,10 +235,16 @@ extern "C" {
     pub fn enif_make_long(env: ErlNifEnv, i: c_long) -> ERL_NIF_TERM;
     /// Create an Erlang float term from a double.
     pub fn enif_make_double(env: ErlNifEnv, d: f64) -> ERL_NIF_TERM;
-    /// Create an Erlang integer term from an i64.
-    pub fn enif_make_int64(env: ErlNifEnv, i: i64) -> ERL_NIF_TERM;
-    /// Extract an i64 from an Erlang integer term.
-    pub fn enif_get_int64(env: ErlNifEnv, term: ERL_NIF_TERM, ip: *mut i64) -> c_int;
+    // NOTE: enif_make_int64 and enif_get_int64 are intentionally NOT declared here.
+    //
+    // In OTP 26 on Linux, these specific int64 variants may not be exported as
+    // direct symbols from beam.smp (depending on how OTP was compiled). Using
+    // them as extern "C" produces `undefined symbol: enif_get_int64` at dlopen()
+    // time — the same static-inline problem seen in Python's PyLong_Check.
+    //
+    // Replacement: enif_get_long / enif_make_long are the original, always-exported
+    // forms. On all 64-bit POSIX systems (Linux x86_64, macOS arm64/x86_64),
+    // c_long is 64 bits, making these functionally identical to the int64 variants.
 
     // -- Atoms -------------------------------------------------------------
     //
@@ -473,9 +479,11 @@ pub unsafe fn atom(env: ErlNifEnv, s: &str) -> ERL_NIF_TERM {
 
 /// Convert a Rust `i64` to an Erlang integer term.
 ///
-/// C equivalent: `enif_make_int64(env, i)`
+/// Uses `enif_make_long` (always-exported) rather than `enif_make_int64`
+/// (not reliably exported in all OTP 26 beam.smp builds on Linux).
+/// On 64-bit POSIX platforms c_long == i64, so the behavior is identical.
 pub unsafe fn make_i64(env: ErlNifEnv, i: i64) -> ERL_NIF_TERM {
-    enif_make_int64(env, i)
+    enif_make_long(env, i as c_long)
 }
 
 /// Convert a Rust `f64` to an Erlang float term.
@@ -488,11 +496,12 @@ pub unsafe fn make_f64(env: ErlNifEnv, d: f64) -> ERL_NIF_TERM {
 /// Try to extract an `i64` from an Erlang integer term.
 ///
 /// Returns `None` if the term is not an integer.
-/// C equivalent: `enif_get_int64(env, term, &mut val)` with error check.
+/// Uses `enif_get_long` (always-exported) rather than `enif_get_int64`.
+/// On 64-bit POSIX platforms c_long == i64, so the behavior is identical.
 pub unsafe fn get_i64(env: ErlNifEnv, term: ERL_NIF_TERM) -> Option<i64> {
-    let mut val: i64 = 0;
-    if enif_get_int64(env, term, &mut val) != 0 {
-        Some(val)
+    let mut val: c_long = 0;
+    if enif_get_long(env, term, &mut val) != 0 {
+        Some(val as i64)
     } else {
         None
     }
@@ -506,9 +515,10 @@ pub unsafe fn get_f64(env: ErlNifEnv, term: ERL_NIF_TERM) -> Option<f64> {
     if enif_get_double(env, term, &mut d) != 0 {
         return Some(d);
     }
-    // Erlang integers can also be coerced to float
-    let mut i: i64 = 0;
-    if enif_get_int64(env, term, &mut i) != 0 {
+    // Erlang integers can also be coerced to float.
+    // Use enif_get_long (always exported) instead of enif_get_int64.
+    let mut i: c_long = 0;
+    if enif_get_long(env, term, &mut i) != 0 {
         return Some(i as f64);
     }
     None

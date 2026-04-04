@@ -1,0 +1,4 @@
+# Windows: TypeScript native Node.js addons require node.lib to link against.
+# Providing node.lib on Windows CI is complex; this package is covered by
+# Linux and macOS CI runners.
+echo Skipping typescript/polynomial-native on Windows — Node.js import library not configured for CI
