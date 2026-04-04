@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.0 — 2026-04-04
+
+### Added
+- `Token.preceded_by_newline/0` — flag constant (bit 0, value 1) for newline detection
+- `Token.context_keyword/0` — flag constant (bit 1, value 2) for context-sensitive keywords
+- `Token.flags` field — optional bitmask carrying metadata about the token
+- `LexerContext.previous_token/1` — lookbehind access to the most recently emitted token
+- `LexerContext.bracket_depth/2` — query per-type or total bracket nesting depth
+- `LexerContext.preceded_by_newline/1` — detect line breaks between tokens
+- Bracket depth tracking in lexer state — tracks `()`, `[]`, `{}` independently
+- Last emitted token tracking — updated after each token push (including callback-emitted)
+- Context keyword support — words in `context_keywords:` section are emitted as NAME
+  with `TOKEN_CONTEXT_KEYWORD` flag set
+
+### Changed
+- `Token` struct now has an optional `:flags` field (nil when no flags set)
+- `LexerContext` struct extended with `:previous_token`, `:bracket_depths`,
+  and `:current_token_line` fields
+- `State` struct extended with `:last_emitted_token`, `:bracket_depths`,
+  and `:context_keyword_set` fields
+
 ## 0.2.0 — 2026-03-21
 
 ### Added

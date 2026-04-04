@@ -556,10 +556,14 @@ parser.Parser = Parser
 local ASTNode = {}
 ASTNode.__index = ASTNode
 
-function ASTNode.new(rule_name, children)
+function ASTNode.new(rule_name, children, start_line, start_column, end_line, end_column)
     return setmetatable({
-        rule_name = rule_name,
-        children = children or {},
+        rule_name    = rule_name,
+        children     = children or {},
+        start_line   = start_line,
+        start_column = start_column,
+        end_line     = end_line,
+        end_column   = end_column,
     }, ASTNode)
 end
 
@@ -778,12 +782,16 @@ function GrammarParser:_element_references_newline(element)
                 return true
             end
         end
-    elseif element.type == "repetition" then
+    elseif element.type == "repetition"
+        or element.type == "optional"
+        or element.type == "group"
+        or element.type == "positive_lookahead"
+        or element.type == "negative_lookahead"
+        or element.type == "one_or_more" then
         return self:_element_references_newline(element.element)
-    elseif element.type == "optional" then
+    elseif element.type == "separated_repetition" then
         return self:_element_references_newline(element.element)
-    elseif element.type == "group" then
-        return self:_element_references_newline(element.element)
+            or self:_element_references_newline(element.separator)
     end
     return false
 end
@@ -899,6 +907,14 @@ function GrammarParser:_parse_rule(rule_name)
         children = {}
     end
 
+    -- Compute position info from child tokens
+    local first_tok = parser._find_first_token(children)
+    local last_tok = parser._find_last_token(children)
+    if first_tok and last_tok then
+        return ASTNode.new(rule_name, children,
+            first_tok.line, first_tok.column or first_tok.col,
+            last_tok.line, last_tok.column or last_tok.col)
+    end
     return ASTNode.new(rule_name, children)
 end
 
@@ -996,6 +1012,93 @@ function GrammarParser:_match_element(element)
         end
         self:_record_failure(string.format("%q", element.value))
         return nil, false
+
+    -- ---------------------------------------------------------------
+    -- Extension: Syntactic predicates (lookahead without consuming)
+    -- ---------------------------------------------------------------
+
+    elseif element.type == "positive_lookahead" then
+        -- Succeed if inner element matches, but consume no input.
+        local res, ok = self:_match_element(element.element)
+        self.pos = save_pos
+        if ok then
+            return {}, true
+        end
+        return nil, false
+
+    elseif element.type == "negative_lookahead" then
+        -- Succeed if inner element does NOT match, consume no input.
+        local res, ok = self:_match_element(element.element)
+        self.pos = save_pos
+        if ok then
+            return nil, false
+        end
+        return {}, true
+
+    -- ---------------------------------------------------------------
+    -- Extension: One-or-more repetition
+    -- ---------------------------------------------------------------
+
+    elseif element.type == "one_or_more" then
+        -- Match one required, then zero or more additional.
+        local first, first_ok = self:_match_element(element.element)
+        if not first_ok then
+            self.pos = save_pos
+            return nil, false
+        end
+        local children = {}
+        for _, child in ipairs(first) do
+            children[#children + 1] = child
+        end
+        while true do
+            local save_rep = self.pos
+            local res, ok = self:_match_element(element.element)
+            if not ok then
+                self.pos = save_rep
+                break
+            end
+            for _, child in ipairs(res) do
+                children[#children + 1] = child
+            end
+        end
+        return children, true
+
+    -- ---------------------------------------------------------------
+    -- Extension: Separated repetition
+    -- ---------------------------------------------------------------
+
+    elseif element.type == "separated_repetition" then
+        -- Match: element { separator element }
+        local first, first_ok = self:_match_element(element.element)
+        if not first_ok then
+            self.pos = save_pos
+            if element.at_least_one then return nil, false end
+            return {}, true  -- zero occurrences is valid
+        end
+        local children = {}
+        for _, child in ipairs(first) do
+            children[#children + 1] = child
+        end
+        while true do
+            local save_sep = self.pos
+            local sep, sep_ok = self:_match_element(element.separator)
+            if not sep_ok then
+                self.pos = save_sep
+                break
+            end
+            local nxt, nxt_ok = self:_match_element(element.element)
+            if not nxt_ok then
+                self.pos = save_sep
+                break
+            end
+            for _, child in ipairs(sep) do
+                children[#children + 1] = child
+            end
+            for _, child in ipairs(nxt) do
+                children[#children + 1] = child
+            end
+        end
+        return children, true
     end
 
     return nil, false
@@ -1032,10 +1135,168 @@ function GrammarParser:_match_token_reference(element)
         return { token }, true
     end
 
+    -- Keyword category matching: grammar-driven lexers promote keyword
+    -- names to specific string types (e.g. "var" → type "VAR", "let" →
+    -- "LET").  When the grammar references the generic KEYWORD token, we
+    -- must still match these promoted types.  A promoted keyword has a
+    -- string `type` field that is NOT one of the standard token names
+    -- (NAME, NUMBER, PLUS, …).  If the token's string type is absent
+    -- from string_to_token_type it was produced by keyword promotion.
+    if element.name == "KEYWORD"
+       and type(token.type) == "string"
+       and not string_to_token_type[token.type] then
+        self.pos = self.pos + 1
+        return { token }, true
+    end
+
     self:_record_failure(element.name)
     return nil, false
 end
 
 parser.GrammarParser = GrammarParser
+
+-- =========================================================================
+-- AST Position Computation Helpers
+-- =========================================================================
+--
+-- These find the first and last leaf tokens in a children array,
+-- walking into ASTNode children recursively.
+
+--- Find the first token in a children array (depth-first).
+-- @param children array  List of ASTNode/Token children.
+-- @return Token|nil
+function parser._find_first_token(children)
+    for _, child in ipairs(children) do
+        if getmetatable(child) == ASTNode then
+            local tok = parser._find_first_token(child.children)
+            if tok then return tok end
+        else
+            return child
+        end
+    end
+    return nil
+end
+
+--- Find the last token in a children array (depth-first, reverse).
+-- @param children array  List of ASTNode/Token children.
+-- @return Token|nil
+function parser._find_last_token(children)
+    for i = #children, 1, -1 do
+        local child = children[i]
+        if getmetatable(child) == ASTNode then
+            local tok = parser._find_last_token(child.children)
+            if tok then return tok end
+        else
+            return child
+        end
+    end
+    return nil
+end
+
+-- =========================================================================
+-- AST Walking Utilities
+-- =========================================================================
+--
+-- Generic tree traversal functions for grammar-driven ASTs.
+
+--- Check if a child element is an ASTNode (not a Token).
+-- @param child ASTNode|Token
+-- @return boolean
+function parser.is_ast_node(child)
+    return getmetatable(child) == ASTNode
+end
+
+--- Depth-first walk of an AST tree with enter/leave visitor callbacks.
+--
+-- The visitor table may have:
+--   enter(node, parent) -> ASTNode|nil  (replacement or nil to keep)
+--   leave(node, parent) -> ASTNode|nil  (replacement or nil to keep)
+--
+-- Token children are not visited -- only ASTNode children are walked.
+--
+-- @param node ASTNode  The root node to walk.
+-- @param visitor table  Visitor with optional enter/leave functions.
+-- @return ASTNode  The (possibly replaced) root node.
+function parser.walk_ast(node, visitor)
+    return parser._walk_node(node, nil, visitor)
+end
+
+function parser._walk_node(node, parent, visitor)
+    -- Enter phase
+    local current = node
+    if visitor.enter then
+        local replacement = visitor.enter(current, parent)
+        if replacement ~= nil then
+            current = replacement
+        end
+    end
+
+    -- Walk children recursively
+    local children_changed = false
+    local new_children = {}
+    for _, child in ipairs(current.children) do
+        if parser.is_ast_node(child) then
+            local walked = parser._walk_node(child, current, visitor)
+            if walked ~= child then children_changed = true end
+            new_children[#new_children + 1] = walked
+        else
+            new_children[#new_children + 1] = child
+        end
+    end
+
+    -- If children changed, create a new node
+    if children_changed then
+        current = ASTNode.new(current.rule_name, new_children,
+            current.start_line, current.start_column,
+            current.end_line, current.end_column)
+    end
+
+    -- Leave phase
+    if visitor.leave then
+        local replacement = visitor.leave(current, parent)
+        if replacement ~= nil then
+            current = replacement
+        end
+    end
+
+    return current
+end
+
+--- Find all nodes matching a rule name (depth-first order).
+-- @param node ASTNode  The root node to search.
+-- @param rule_name string  The rule name to match.
+-- @return table  Array of matching ASTNode instances.
+function parser.find_nodes(node, rule_name)
+    local results = {}
+    parser.walk_ast(node, {
+        enter = function(n)
+            if n.rule_name == rule_name then
+                results[#results + 1] = n
+            end
+        end,
+    })
+    return results
+end
+
+--- Collect all tokens in depth-first order, optionally filtered by type.
+-- @param node ASTNode  The root node.
+-- @param token_type string|nil  Optional type filter.
+-- @return table  Array of Token tables.
+function parser.collect_tokens(node, token_type)
+    local results = {}
+    local function walk(n)
+        for _, child in ipairs(n.children) do
+            if parser.is_ast_node(child) then
+                walk(child)
+            else
+                if token_type == nil or parser.token_type_name(child) == token_type then
+                    results[#results + 1] = child
+                end
+            end
+        end
+    end
+    walk(node)
+    return results
+end
 
 return parser

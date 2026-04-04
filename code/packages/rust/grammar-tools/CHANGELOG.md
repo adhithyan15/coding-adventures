@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-04-04
+
+### Added
+- `TokenGrammar.context_keywords: Vec<String>` field for context-sensitive
+  keywords (words that are keywords in some syntactic positions but
+  identifiers in others, like JavaScript's `async`, `await`, `get`, `set`).
+- `context_keywords:` section parsing in `parse_token_grammar` — each
+  indented line in the section is collected as a context keyword.
+- Four new `GrammarElement` variants:
+  - `PositiveLookahead { element }` — `&element` syntax; succeeds without
+    consuming input if element matches.
+  - `NegativeLookahead { element }` — `!element` syntax; succeeds without
+    consuming input if element does NOT match.
+  - `OneOrMore { element }` — `{ element }+` syntax; one-or-more repetition.
+  - `SeparatedRepetition { element, separator, at_least_one }` —
+    `{ element // separator }` syntax; separated repetition.
+- Tokenizer: `Ampersand`, `Bang`, `Plus`, `DoubleSlash` token kinds for
+  the new grammar syntax.
+- Parser: `parse_element` handles `&`, `!` prefix operators, `+` suffix,
+  and `//` separator inside braces.
+- Compiler: `element_src` generates Rust code for all new element variants.
+- `collect_token_refs` and `collect_rule_refs` updated for new variants.
+
 ## [0.4.0] - 2026-03-26
 
 ### Added

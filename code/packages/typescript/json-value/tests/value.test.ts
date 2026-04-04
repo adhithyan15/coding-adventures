@@ -403,20 +403,14 @@ describe("fromAST (via parse)", () => {
 
   it("parses string with unicode escape", () => {
     /**
-     * The grammar-driven lexer processes \u escapes at the regex level:
-     * the backslash is consumed as part of the escape sequence matching,
-     * but the hex digits are kept as-is rather than being decoded to
-     * the corresponding Unicode code point. So \u0041 becomes "u0041"
-     * in the token value rather than "A".
-     *
-     * This is a known limitation of the grammar-driven lexer approach.
-     * A production lexer would decode \uXXXX to the actual character.
+     * The JSON \uXXXX escape sequence. The lexer strips surrounding quotes
+     * but leaves escape sequences as raw text. The json-value layer decodes
+     * \u0041 to "A" (Unicode code point U+0041 = Latin capital letter A).
      */
     const value = parse('"\\u0041"');
     expect(value.type).toBe("string");
     if (value.type === "string") {
-      // The lexer consumes \u but leaves the hex digits
-      expect(value.value).toBe("u0041");
+      expect(value.value).toBe("A");
     }
   });
 

@@ -57,6 +57,7 @@
 import type { TokenGrammar } from "../grammar-tools/index.js";
 
 import type { Token } from "./token.js";
+import { TOKEN_CONTEXT_KEYWORD } from "./token.js";
 import { LexerError } from "./tokenizer.js";
 
 // ---------------------------------------------------------------------------
@@ -246,10 +247,24 @@ export class LexerContext {
   /** @internal New skip-enabled state, or null if unchanged. */
   _skipEnabled: boolean | null = null;
 
-  constructor(lexer: GrammarLexer, source: string, posAfterToken: number) {
+  /** @internal The most recently emitted token (for lookbehind). */
+  private readonly _previousToken: Token | null;
+
+  /** @internal The current token's line number (for newline detection). */
+  private readonly _currentTokenLine: number;
+
+  constructor(
+    lexer: GrammarLexer,
+    source: string,
+    posAfterToken: number,
+    previousToken: Token | null,
+    currentTokenLine: number,
+  ) {
     this._lexer = lexer;
     this._source = source;
     this._posAfter = posAfterToken;
+    this._previousToken = previousToken;
+    this._currentTokenLine = currentTokenLine;
   }
 
   /**
@@ -362,6 +377,74 @@ export class LexerContext {
    */
   setSkipEnabled(enabled: boolean): void {
     this._skipEnabled = enabled;
+  }
+
+  // -----------------------------------------------------------------------
+  // Extension: Token Lookbehind
+  // -----------------------------------------------------------------------
+
+  /**
+   * Return the most recently emitted token, or null at the start of input.
+   *
+   * "Emitted" means the token actually made it into the output list —
+   * suppressed tokens are not counted. This provides **lookbehind**
+   * capability for context-sensitive decisions.
+   *
+   * For example, in JavaScript `/` is a regex literal after `=`, `(`
+   * or `,` but a division operator after `)`, `]`, identifiers, or
+   * numbers. The callback can check `ctx.previousToken()?.type` to
+   * decide which interpretation to use.
+   *
+   * @returns The last token in the output list, or null if no tokens
+   *          have been emitted yet.
+   */
+  previousToken(): Token | null {
+    return this._previousToken;
+  }
+
+  // -----------------------------------------------------------------------
+  // Extension: Bracket Depth Tracking
+  // -----------------------------------------------------------------------
+
+  /**
+   * Return the current nesting depth for a specific bracket type,
+   * or the total depth across all types if no argument is given.
+   *
+   * Depth starts at 0 and increments on each opener (`(`, `[`, `{`),
+   * decrements on each closer (`)`, `]`, `}`). The count never goes
+   * below 0 — unmatched closers are clamped.
+   *
+   * This is essential for template literal interpolation in languages
+   * like JavaScript, Kotlin, and Ruby, where `}` at brace-depth 0
+   * closes the interpolation rather than being part of a nested
+   * expression.
+   *
+   * @param kind - Optional bracket type to query. If omitted, returns
+   *               the sum of all three depths.
+   */
+  bracketDepth(kind?: "paren" | "bracket" | "brace"): number {
+    return this._lexer.bracketDepth(kind);
+  }
+
+  // -----------------------------------------------------------------------
+  // Extension: Newline Detection
+  // -----------------------------------------------------------------------
+
+  /**
+   * Return true if a newline appeared between the previous token
+   * and the current token (i.e., they are on different lines).
+   *
+   * This is used by languages with automatic semicolon insertion
+   * (JavaScript, Go) to detect line breaks that trigger implicit
+   * statement termination. The lexer exposes this as a convenience
+   * so callbacks and post-tokenize hooks can set the
+   * `TOKEN_PRECEDED_BY_NEWLINE` flag on tokens that need it.
+   *
+   * Returns false if there is no previous token (start of input).
+   */
+  precededByNewline(): boolean {
+    if (this._previousToken === null) return false;
+    return this._previousToken.line < this._currentTokenLine;
   }
 }
 
@@ -486,6 +569,38 @@ export class GrammarLexer {
    */
   private _skipEnabled: boolean = true;
 
+  // -- Extension: Token lookbehind --
+
+  /**
+   * The most recently emitted token, for lookbehind in callbacks.
+   * Updated after each token push (including callback-emitted tokens).
+   * Reset to null on each tokenize() call.
+   */
+  private _lastEmittedToken: Token | null = null;
+
+  // -- Extension: Bracket depth tracking --
+
+  /**
+   * Per-type bracket nesting depth counters.
+   *
+   * Tracks `()`, `[]`, and `{}` independently. Updated after each
+   * token match in both standard and indentation modes. Exposed to
+   * callbacks via `LexerContext.bracketDepth()`.
+   *
+   * This enables context-sensitive lexing for template literals,
+   * string interpolation, and other constructs where bracket nesting
+   * determines how to tokenize subsequent input.
+   */
+  private _bracketDepths = { paren: 0, bracket: 0, brace: 0 };
+
+  // -- Extension: Context keywords --
+
+  /**
+   * Pre-computed set of context-sensitive keywords for O(1) lookup.
+   * Words in this set are emitted as NAME with TOKEN_CONTEXT_KEYWORD flag.
+   */
+  private readonly _contextKeywordSet: ReadonlySet<string>;
+
   /** Pre-tokenize hooks: transform source text before lexing. */
   private _preTokenizeHooks: Array<(source: string) => string> = [];
 
@@ -510,6 +625,7 @@ export class GrammarLexer {
         : grammar.keywords,
     );
     this._reservedSet = new Set(grammar.reservedKeywords ?? []);
+    this._contextKeywordSet = new Set(grammar.contextKeywords ?? []);
     this._indentationMode = grammar.mode === "indentation";
     this._hasSkipPatterns = (grammar.skipDefinitions ?? []).length > 0;
 
@@ -523,6 +639,13 @@ export class GrammarLexer {
       }
     }
 
+    // When case-insensitive mode is active, compile all regexes with the
+    // "i" flag so that patterns written with lowercase character classes
+    // (e.g. /[a-z]+/) also match uppercase input. This mirrors the Rust
+    // lexer's approach of lowercasing the entire source, but preserves
+    // original casing in token values.
+    const reFlags = this._caseInsensitive ? "i" : "";
+
     // Compile token patterns into regex objects.
     // Order matters — patterns are tried in the order they appear in the
     // .tokens file. This is the "first match wins" rule from Lex/Flex.
@@ -530,7 +653,7 @@ export class GrammarLexer {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
       return {
         name: defn.name,
-        pattern: new RegExp(patternSource),
+        pattern: new RegExp(patternSource, reFlags),
         alias: defn.alias,
       };
     });
@@ -539,7 +662,7 @@ export class GrammarLexer {
     // These are tried before token patterns at each position.
     this._skipPatterns = (grammar.skipDefinitions ?? []).map((defn) => {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
-      return new RegExp(patternSource);
+      return new RegExp(patternSource, reFlags);
     });
 
     // --- Pattern groups ---
@@ -560,7 +683,7 @@ export class GrammarLexer {
           }
           return {
             name: defn.name,
-            pattern: new RegExp(patternSource),
+            pattern: new RegExp(patternSource, reFlags),
             alias: defn.alias,
           };
         });
@@ -611,6 +734,27 @@ export class GrammarLexer {
     return this._groupStack.length;
   }
 
+  // -- Extension: Bracket depth --
+
+  /**
+   * Return the current nesting depth for a specific bracket type,
+   * or the total depth across all types if no argument is given.
+   *
+   * This is the public API used by LexerContext to expose bracket
+   * depth to callbacks. Language packages use this for template
+   * literal interpolation and similar nested constructs.
+   */
+  bracketDepth(kind?: "paren" | "bracket" | "brace"): number {
+    if (kind === undefined) {
+      return (
+        this._bracketDepths.paren +
+        this._bracketDepths.bracket +
+        this._bracketDepths.brace
+      );
+    }
+    return this._bracketDepths[kind];
+  }
+
   // -- Hook registration --
 
   /**
@@ -658,6 +802,10 @@ export class GrammarLexer {
       }
       this._source = source;
     }
+
+    // Reset extension state for reuse.
+    this._lastEmittedToken = null;
+    this._bracketDepths = { paren: 0, bracket: 0, brace: 0 };
 
     // Stage 2: Core tokenization.
     let tokens: Token[];
@@ -724,12 +872,14 @@ export class GrammarLexer {
       // --- Newlines become NEWLINE tokens ---
       // Newlines are structural — they mark line boundaries.
       if (char === "\n") {
-        tokens.push({
+        const newlineTok: Token = {
           type: "NEWLINE",
           value: "\\n",
           line: this._line,
           column: this._column,
-        });
+        };
+        tokens.push(newlineTok);
+        this._lastEmittedToken = newlineTok;
         this._advance();
         continue;
       }
@@ -741,22 +891,35 @@ export class GrammarLexer {
       const activeGroupName = this._groupStack[this._groupStack.length - 1];
       const token = this._tryMatchTokenInGroup(activeGroupName);
       if (token !== null) {
+        // Update bracket depth tracking.
+        this._updateBracketDepth(token.value);
+
         // --- Invoke on-token callback ---
         // The callback can push/pop groups, emit extra tokens,
         // suppress the current token, or toggle skip processing.
         // Emitted tokens do NOT re-trigger the callback.
         if (this._onToken !== null) {
-          const ctx = new LexerContext(this, this._source, this._pos);
+          const ctx = new LexerContext(
+            this,
+            this._source,
+            this._pos,
+            this._lastEmittedToken,
+            token.line,
+          );
           this._onToken(token, ctx);
 
           // Apply suppression: if the callback suppressed this
           // token, don't add it to the output.
           if (!ctx._suppressed) {
             tokens.push(token);
+            this._lastEmittedToken = token;
           }
 
           // Append any tokens emitted by the callback.
-          tokens.push(...ctx._emitted);
+          for (const emitted of ctx._emitted) {
+            tokens.push(emitted);
+            this._lastEmittedToken = emitted;
+          }
 
           // Apply group stack actions in order.
           for (const [action, groupName] of ctx._groupActions) {
@@ -773,6 +936,7 @@ export class GrammarLexer {
           }
         } else {
           tokens.push(token);
+          this._lastEmittedToken = token;
         }
         continue;
       }
@@ -798,6 +962,27 @@ export class GrammarLexer {
     this._skipEnabled = true;
 
     return tokens;
+  }
+
+  // -- Extension: Bracket depth tracking helper --
+
+  /**
+   * Update bracket depth counters based on a token's value.
+   *
+   * Called after each token match in both standard and indentation modes.
+   * Only single-character values are checked — multi-character tokens
+   * cannot be brackets.
+   */
+  private _updateBracketDepth(value: string): void {
+    if (value.length !== 1) return;
+    switch (value) {
+      case "(": this._bracketDepths.paren++; break;
+      case ")": if (this._bracketDepths.paren > 0) this._bracketDepths.paren--; break;
+      case "[": this._bracketDepths.bracket++; break;
+      case "]": if (this._bracketDepths.bracket > 0) this._bracketDepths.bracket--; break;
+      case "{": this._bracketDepths.brace++; break;
+      case "}": if (this._bracketDepths.brace > 0) this._bracketDepths.brace--; break;
+    }
   }
 
   // -- Indentation mode tokenization --
@@ -863,7 +1048,7 @@ export class GrammarLexer {
       // Try token patterns (always uses default group for indentation mode)
       const tok = this._tryMatchTokenInGroup("default");
       if (tok !== null) {
-        // Track bracket depth
+        // Track bracket depth (local for INDENT/DEDENT logic)
         if (tok.value === "(" || tok.value === "[" || tok.value === "{") {
           bracketDepth++;
         } else if (
@@ -873,7 +1058,10 @@ export class GrammarLexer {
         ) {
           bracketDepth--;
         }
+        // Track bracket depth (shared for callback access)
+        this._updateBracketDepth(tok.value);
         tokens.push(tok);
+        this._lastEmittedToken = tok;
         continue;
       }
 
@@ -1115,12 +1303,23 @@ export class GrammarLexer {
           }
         }
 
-        const tok: Token = {
-          type: tokenType,
-          value,
-          line: startLine,
-          column: startColumn,
-        };
+        // Check if this NAME token is a context keyword — a word that
+        // is sometimes a keyword and sometimes an identifier depending
+        // on syntactic position. Context keywords are emitted as NAME
+        // with the TOKEN_CONTEXT_KEYWORD flag, leaving the final
+        // decision to the language-specific parser or callback.
+        let flags: number | undefined;
+        if (
+          tokenType === "NAME" &&
+          this._contextKeywordSet.size > 0 &&
+          this._contextKeywordSet.has(value)
+        ) {
+          flags = TOKEN_CONTEXT_KEYWORD;
+        }
+
+        const tok: Token = flags !== undefined
+          ? { type: tokenType, value, line: startLine, column: startColumn, flags }
+          : { type: tokenType, value, line: startLine, column: startColumn };
 
         for (let i = 0; i < match[0].length; i++) {
           this._advance();

@@ -59,7 +59,7 @@ use std::collections::{HashMap, HashSet};
 
 use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
 
-use crate::token::{LexerError, Token, TokenType, string_to_token_type};
+use crate::token::{LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD};
 
 // ===========================================================================
 // ContextAction — deferred mutations from the on-token callback
@@ -140,6 +140,31 @@ pub struct LexerContext<'a> {
 
     /// Whether the current token has been suppressed.
     suppressed: bool,
+
+    // -----------------------------------------------------------------------
+    // Extension fields: lookbehind, bracket depth, newline detection
+    // -----------------------------------------------------------------------
+
+    /// The most recently emitted token (for lookbehind).
+    ///
+    /// "Emitted" means the token actually made it into the output list --
+    /// suppressed tokens are not counted. This provides lookbehind
+    /// capability for context-sensitive decisions.
+    ///
+    /// For example, in JavaScript `/` is a regex literal after `=`, `(`
+    /// or `,` but a division operator after `)`, `]`, identifiers, or
+    /// numbers. The callback can check `ctx.previous_token()` to decide.
+    previous_token: Option<Token>,
+
+    /// Per-type bracket nesting depths: (paren, bracket, brace).
+    ///
+    /// Exposed to callbacks so they can make context-sensitive decisions
+    /// based on bracket nesting (e.g., template literal interpolation in
+    /// JavaScript, where `}` at brace-depth 0 closes the interpolation).
+    bracket_depths: BracketDepths,
+
+    /// The current token's line number (for newline detection).
+    current_token_line: usize,
 }
 
 impl<'a> LexerContext<'a> {
@@ -231,6 +256,103 @@ impl<'a> LexerContext<'a> {
     /// Useful for groups where whitespace is significant (e.g., CDATA).
     pub fn set_skip_enabled(&mut self, enabled: bool) {
         self.actions.push(ContextAction::SetSkipEnabled(enabled));
+    }
+
+    // -----------------------------------------------------------------------
+    // Extension: Token lookbehind
+    // -----------------------------------------------------------------------
+
+    /// Return the most recently emitted token, or `None` at the start of input.
+    ///
+    /// "Emitted" means the token actually made it into the output list --
+    /// suppressed tokens are not counted. This provides lookbehind
+    /// capability for context-sensitive decisions.
+    pub fn previous_token(&self) -> Option<&Token> {
+        self.previous_token.as_ref()
+    }
+
+    // -----------------------------------------------------------------------
+    // Extension: Bracket depth tracking
+    // -----------------------------------------------------------------------
+
+    /// Return the current nesting depth for a specific bracket type.
+    ///
+    /// Depth starts at 0 and increments on each opener (`(`, `[`, `{`),
+    /// decrements on each closer (`)`, `]`, `}`). The count never goes
+    /// below 0 -- unmatched closers are clamped.
+    pub fn bracket_depth(&self, kind: BracketKind) -> usize {
+        match kind {
+            BracketKind::Paren => self.bracket_depths.paren,
+            BracketKind::Bracket => self.bracket_depths.bracket,
+            BracketKind::Brace => self.bracket_depths.brace,
+        }
+    }
+
+    /// Return the total bracket nesting depth across all types.
+    pub fn total_bracket_depth(&self) -> usize {
+        self.bracket_depths.paren + self.bracket_depths.bracket + self.bracket_depths.brace
+    }
+
+    // -----------------------------------------------------------------------
+    // Extension: Newline detection
+    // -----------------------------------------------------------------------
+
+    /// Return true if a newline appeared between the previous token
+    /// and the current token (i.e., they are on different lines).
+    ///
+    /// Used by languages with automatic semicolon insertion (JavaScript, Go)
+    /// to detect line breaks that trigger implicit statement termination.
+    ///
+    /// Returns false if there is no previous token (start of input).
+    pub fn preceded_by_newline(&self) -> bool {
+        match &self.previous_token {
+            None => false,
+            Some(prev) => prev.line < self.current_token_line,
+        }
+    }
+}
+
+// ===========================================================================
+// Bracket depth tracking
+// ===========================================================================
+
+/// The three kinds of brackets tracked by the lexer.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BracketKind {
+    /// Parentheses `(` and `)`.
+    Paren,
+    /// Square brackets `[` and `]`.
+    Bracket,
+    /// Curly braces `{` and `}`.
+    Brace,
+}
+
+/// Per-type bracket nesting depth counters.
+///
+/// Tracks `()`, `[]`, and `{}` independently. Updated after each
+/// token match. Exposed to callbacks via [`LexerContext::bracket_depth()`].
+#[derive(Debug, Clone, Default)]
+pub struct BracketDepths {
+    pub paren: usize,
+    pub bracket: usize,
+    pub brace: usize,
+}
+
+impl BracketDepths {
+    /// Update depths based on a matched token value.
+    ///
+    /// Call this after each token emission. Increments on openers,
+    /// decrements (clamped to 0) on closers.
+    fn update(&mut self, value: &str) {
+        match value {
+            "(" => self.paren += 1,
+            ")" => self.paren = self.paren.saturating_sub(1),
+            "[" => self.bracket += 1,
+            "]" => self.bracket = self.bracket.saturating_sub(1),
+            "{" => self.brace += 1,
+            "}" => self.brace = self.brace.saturating_sub(1),
+            _ => {}
+        }
     }
 }
 
@@ -410,6 +532,34 @@ pub struct GrammarLexer<'a> {
     /// This means `select`, `SELECT`, and `Select` all produce a KEYWORD
     /// token with value `"SELECT"` when `SELECT` is in the keyword list.
     case_insensitive: bool,
+
+    // -----------------------------------------------------------------------
+    // Extension fields: lookbehind, bracket depth, context keywords
+    // -----------------------------------------------------------------------
+
+    /// The most recently emitted token, for lookbehind in callbacks.
+    ///
+    /// Updated after each token push (including callback-emitted tokens).
+    /// Reset to `None` on each `tokenize()` call. Exposed to callbacks
+    /// via [`LexerContext::previous_token()`].
+    last_emitted_token: Option<Token>,
+
+    /// Per-type bracket nesting depth counters.
+    ///
+    /// Tracks `()`, `[]`, and `{}` independently. Updated after each
+    /// token match in both standard and indentation modes. Exposed to
+    /// callbacks via [`LexerContext::bracket_depth()`].
+    bracket_depths: BracketDepths,
+
+    /// Context-sensitive keywords -- words that are keywords in some
+    /// syntactic positions but identifiers in others.
+    ///
+    /// These are emitted as NAME tokens with the [`TOKEN_CONTEXT_KEYWORD`]
+    /// flag set, leaving the final keyword-vs-identifier decision to the
+    /// language-specific parser or callback.
+    ///
+    /// Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
+    context_keyword_set: HashSet<String>,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -482,6 +632,14 @@ impl<'a> GrammarLexer<'a> {
             Cow::Owned(source.to_lowercase())
         };
 
+        // Build the context keyword set from the grammar.
+        // Context keywords are emitted as NAME tokens with TOKEN_CONTEXT_KEYWORD flag.
+        let context_keyword_set: HashSet<String> = grammar
+            .context_keywords
+            .iter()
+            .cloned()
+            .collect();
+
         GrammarLexer {
             chars: effective_source.chars().collect(),
             source: effective_source,
@@ -504,6 +662,9 @@ impl<'a> GrammarLexer<'a> {
             pre_tokenize_hooks: Vec::new(),
             post_tokenize_hooks: Vec::new(),
             case_insensitive,
+            last_emitted_token: None,
+            bracket_depths: BracketDepths::default(),
+            context_keyword_set,
         }
     }
 
@@ -783,7 +944,7 @@ impl<'a> GrammarLexer<'a> {
                     value: "\\n".to_string(),
                     line: self.line,
                     column: self.column,
-                    type_name: None,
+                    type_name: None, flags: None,
                 });
                 self.advance();
                 continue;
@@ -839,12 +1000,26 @@ impl<'a> GrammarLexer<'a> {
                 let char_count = matched.chars().count();
                 self.advance_n(char_count);
 
+                // Set the TOKEN_CONTEXT_KEYWORD flag for context-sensitive
+                // keywords. These are NAME tokens whose value appears in
+                // the `context_keywords:` section of the grammar. The flag
+                // tells the parser that this identifier might be a keyword
+                // depending on syntactic context.
+                let flags = if (token_type == TokenType::Name || type_name.as_deref() == Some("NAME"))
+                    && self.context_keyword_set.contains(&final_value)
+                {
+                    Some(TOKEN_CONTEXT_KEYWORD)
+                } else {
+                    None
+                };
+
                 let token = Token {
                     type_: token_type,
                     value: final_value,
                     line: start_line,
                     column: start_col,
                     type_name,
+                    flags,
                 };
 
                 // --- Invoke on-token callback ---
@@ -863,6 +1038,9 @@ impl<'a> GrammarLexer<'a> {
                         pos_after_token: self.byte_pos,
                         actions: Vec::new(),
                         suppressed: false,
+                        previous_token: self.last_emitted_token.clone(),
+                        bracket_depths: self.bracket_depths.clone(),
+                        current_token_line: token.line,
                     };
 
                     // Take the callback out temporarily.
@@ -874,6 +1052,8 @@ impl<'a> GrammarLexer<'a> {
                     // Apply suppression: if the callback suppressed this
                     // token, don't add it to the output.
                     if !ctx.suppressed {
+                        self.bracket_depths.update(&token.value);
+                        self.last_emitted_token = Some(token.clone());
                         tokens.push(token);
                     }
 
@@ -889,6 +1069,8 @@ impl<'a> GrammarLexer<'a> {
                                 }
                             }
                             ContextAction::Emit(emitted_token) => {
+                                self.bracket_depths.update(&emitted_token.value);
+                                self.last_emitted_token = Some(emitted_token.clone());
                                 tokens.push(emitted_token);
                             }
                             ContextAction::Suppress => {
@@ -900,6 +1082,8 @@ impl<'a> GrammarLexer<'a> {
                         }
                     }
                 } else {
+                    self.bracket_depths.update(&token.value);
+                    self.last_emitted_token = Some(token.clone());
                     tokens.push(token);
                 }
                 continue;
@@ -917,7 +1101,7 @@ impl<'a> GrammarLexer<'a> {
             value: String::new(),
             line: self.line,
             column: self.column,
-            type_name: None,
+            type_name: None, flags: None,
         });
 
         // Reset group stack and skip_enabled for reuse.
@@ -1010,7 +1194,7 @@ impl<'a> GrammarLexer<'a> {
                         value: String::new(),
                         line: indent_line,
                         column: indent_col,
-                        type_name: None,
+                        type_name: None, flags: None,
                     });
                 } else if spaces < current_indent {
                     // Emit DEDENT for each level we're leaving.
@@ -1021,7 +1205,7 @@ impl<'a> GrammarLexer<'a> {
                             value: String::new(),
                             line: indent_line,
                             column: indent_col,
-                            type_name: None,
+                            type_name: None, flags: None,
                         });
                     }
                     // Check that we landed on a valid indentation level.
@@ -1059,7 +1243,7 @@ impl<'a> GrammarLexer<'a> {
                         value: "\\n".to_string(),
                         line: self.line,
                         column: self.column,
-                        type_name: None,
+                        type_name: None, flags: None,
                     });
                     at_line_start = true;
                 }
@@ -1115,6 +1299,7 @@ impl<'a> GrammarLexer<'a> {
                     line: start_line,
                     column: start_col,
                     type_name,
+                    flags: None,
                 });
 
                 let char_count = matched.chars().count();
@@ -1139,7 +1324,7 @@ impl<'a> GrammarLexer<'a> {
                     value: "\\n".to_string(),
                     line: self.line,
                     column: self.column,
-                    type_name: None,
+                    type_name: None, flags: None,
                 });
             }
 
@@ -1150,7 +1335,7 @@ impl<'a> GrammarLexer<'a> {
                     value: String::new(),
                     line: self.line,
                     column: self.column,
-                    type_name: None,
+                    type_name: None, flags: None,
                 });
             }
         }
@@ -1160,7 +1345,7 @@ impl<'a> GrammarLexer<'a> {
             value: String::new(),
             line: self.line,
             column: self.column,
-            type_name: None,
+            type_name: None, flags: None,
         });
 
         Ok(tokens)
@@ -1763,6 +1948,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         ctx.push_group("tag").unwrap();
         assert_eq!(ctx.actions, vec![ContextAction::Push("tag".to_string())]);
@@ -1780,6 +1968,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         let result = ctx.push_group("nonexistent");
         assert!(result.is_err());
@@ -1798,6 +1989,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         ctx.pop_group();
         assert_eq!(ctx.actions, vec![ContextAction::Pop]);
@@ -1815,6 +2009,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         assert_eq!(ctx.active_group(), "default");
     }
@@ -1831,6 +2028,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         assert_eq!(ctx.group_stack_depth(), 1);
     }
@@ -1847,6 +2047,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         let synthetic = Token {
             type_: TokenType::Name,
@@ -1854,6 +2057,7 @@ PLUS = "+""#,
             line: 1,
             column: 1,
             type_name: Some("SYNTHETIC".to_string()),
+            flags: None,
         };
         ctx.emit(synthetic.clone());
         assert_eq!(ctx.actions, vec![ContextAction::Emit(synthetic)]);
@@ -1871,6 +2075,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         assert!(!ctx.suppressed);
         ctx.suppress();
@@ -1890,6 +2097,9 @@ PLUS = "+""#,
             pos_after_token: 3,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         assert_eq!(ctx.peek(1), "l");
         assert_eq!(ctx.peek(2), "o");
@@ -1908,6 +2118,9 @@ PLUS = "+""#,
             pos_after_token: 5,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         assert_eq!(ctx.peek_str(6), " world");
     }
@@ -1924,6 +2137,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         ctx.set_skip_enabled(false);
         assert_eq!(ctx.actions, vec![ContextAction::SetSkipEnabled(false)]);
@@ -1941,6 +2157,9 @@ PLUS = "+""#,
             pos_after_token: 1,
             actions: Vec::new(),
             suppressed: false,
+            previous_token: None,
+            bracket_depths: BracketDepths::default(),
+            current_token_line: 1,
         };
         ctx.push_group("tag").unwrap();
         ctx.push_group("tag").unwrap();
@@ -2101,6 +2320,7 @@ PLUS = "+""#,
                     line: token.line,
                     column: token.column,
                     type_name: Some("MARKER".to_string()),
+                    flags: None,
                 });
             }
         })));
@@ -2131,6 +2351,7 @@ PLUS = "+""#,
                     line: token.line,
                     column: token.column,
                     type_name: Some("REPLACED".to_string()),
+                    flags: None,
                 });
             }
         })));

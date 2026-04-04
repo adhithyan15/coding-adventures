@@ -2,6 +2,29 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.3.0] - 2026-04-04
+
+### Added
+- `GrammarASTNode` position fields: `start_line`, `start_column`,
+  `end_line`, `end_column` (all `Option<usize>`) — computed from the
+  first and last leaf tokens in the node's children.
+- `compute_node_position`, `find_first_token`, `find_last_token` —
+  helper functions for AST node position computation.
+- `ASTVisitor` trait with `enter`/`leave` callbacks for AST traversal.
+- `walk_ast(node, visitor)` — depth-first walk with enter/leave phases;
+  visitor callbacks can return replacement nodes.
+- `find_nodes(node, rule_name)` — collect all nodes matching a rule name.
+- `collect_tokens(node, type_filter)` — collect all tokens in depth-first
+  order, optionally filtered by type name.
+- `match_element` arms for new `GrammarElement` variants:
+  - `PositiveLookahead` — succeeds without consuming input if inner matches.
+  - `NegativeLookahead` — succeeds without consuming input if inner fails.
+  - `OneOrMore` — matches one required then zero or more additional.
+  - `SeparatedRepetition` — matches element { separator element } pattern.
+- `element_references_newline` updated for new variants.
+- New exports from `lib.rs`: `ASTNodeOrToken`, `ASTVisitor`, `walk_ast`,
+  `find_nodes`, `collect_tokens`.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

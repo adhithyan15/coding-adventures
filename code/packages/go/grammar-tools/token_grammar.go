@@ -58,6 +58,16 @@ type TokenGrammar struct {
 	ReservedKeywords []string                 // Keywords that cause lex errors
 	Groups           map[string]*PatternGroup // Named pattern groups for context-sensitive lexing
 	CaseSensitive    bool                     // Whether the lexer should match case-sensitively (default true)
+
+	// ContextKeywords are context-sensitive keywords — words that are keywords
+	// in some syntactic positions but identifiers in others.
+	//
+	// These are emitted as NAME tokens with the TokenContextKeyword flag set,
+	// leaving the final keyword-vs-identifier decision to the language-specific
+	// parser or callback.
+	//
+	// Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
+	ContextKeywords []string
 }
 
 // TokenNames returns the set of all defined token names (including aliases).
@@ -380,6 +390,10 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 			currentSection = "errors"
 			continue
 		}
+		if stripped == "context_keywords:" || stripped == "context_keywords :" {
+			currentSection = "context_keywords"
+			continue
+		}
 
 		// Inside a section
 		if currentSection != "" {
@@ -390,6 +404,10 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 				case currentSection == "keywords":
 					if stripped != "" {
 						grammar.Keywords = append(grammar.Keywords, stripped)
+					}
+				case currentSection == "context_keywords":
+					if stripped != "" {
+						grammar.ContextKeywords = append(grammar.ContextKeywords, stripped)
 					}
 				case currentSection == "reserved":
 					if stripped != "" {

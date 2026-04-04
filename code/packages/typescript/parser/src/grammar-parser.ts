@@ -61,6 +61,10 @@ import type {
 export interface ASTNode {
   readonly ruleName: string;
   readonly children: ReadonlyArray<ASTNode | Token>;
+  readonly startLine?: number;
+  readonly startColumn?: number;
+  readonly endLine?: number;
+  readonly endColumn?: number;
 }
 
 /**
@@ -340,7 +344,15 @@ export class GrammarParser {
       case "repetition":
       case "optional":
       case "group":
+      case "positive_lookahead":
+      case "negative_lookahead":
+      case "one_or_more":
         return this.elementReferencesNewline(element.element);
+      case "separated_repetition":
+        return (
+          this.elementReferencesNewline(element.element) ||
+          this.elementReferencesNewline(element.separator)
+        );
       default:
         return false;
     }
@@ -443,6 +455,11 @@ export class GrammarParser {
       return null;
     }
 
+    // Compute position info from child tokens.
+    const pos = computeNodePosition(children);
+    if (pos) {
+      return { ruleName, children, ...pos };
+    }
     return { ruleName, children };
   }
 
@@ -535,6 +552,79 @@ export class GrammarParser {
         return null;
       }
 
+      // ---------------------------------------------------------------
+      // Extension: Syntactic predicates (lookahead without consuming)
+      // ---------------------------------------------------------------
+
+      case "positive_lookahead": {
+        // Succeed if inner element matches, but consume no input.
+        const result = this.matchElement(element.element);
+        this.pos = savePos;
+        return result !== null ? [] : null;
+      }
+
+      case "negative_lookahead": {
+        // Succeed if inner element does NOT match, consume no input.
+        const result = this.matchElement(element.element);
+        this.pos = savePos;
+        return result === null ? [] : null;
+      }
+
+      // ---------------------------------------------------------------
+      // Extension: One-or-more repetition
+      // ---------------------------------------------------------------
+
+      case "one_or_more": {
+        // Match one required, then zero or more additional.
+        const first = this.matchElement(element.element);
+        if (first === null) {
+          this.pos = savePos;
+          return null;
+        }
+        const children: Array<ASTNode | Token> = [...first];
+        while (true) {
+          const saveRep = this.pos;
+          const result = this.matchElement(element.element);
+          if (result === null) {
+            this.pos = saveRep;
+            break;
+          }
+          children.push(...result);
+        }
+        return children;
+      }
+
+      // ---------------------------------------------------------------
+      // Extension: Separated repetition
+      // ---------------------------------------------------------------
+
+      case "separated_repetition": {
+        // Match: element { separator element }
+        // Or with atLeastOne=false: [ element { separator element } ]
+        const first = this.matchElement(element.element);
+        if (first === null) {
+          this.pos = savePos;
+          if (element.atLeastOne) return null;
+          return []; // zero occurrences is valid
+        }
+        const children: Array<ASTNode | Token> = [...first];
+        while (true) {
+          const saveSep = this.pos;
+          const sep = this.matchElement(element.separator);
+          if (sep === null) {
+            this.pos = saveSep;
+            break;
+          }
+          const next = this.matchElement(element.element);
+          if (next === null) {
+            this.pos = saveSep;
+            break;
+          }
+          children.push(...sep, ...next);
+        }
+        return children;
+      }
+
       default:
         return null;
     }
@@ -565,4 +655,159 @@ export class GrammarParser {
     this.recordFailure(expectedType);
     return null;
   }
+}
+
+// ===========================================================================
+// AST POSITION COMPUTATION
+// ===========================================================================
+
+/**
+ * Compute the start and end positions of an AST node from its children.
+ *
+ * Walks the children tree to find the first and last leaf tokens,
+ * then uses their line/column as the node's span. Returns undefined
+ * if the children array contains no tokens (e.g., empty repetition).
+ */
+function computeNodePosition(
+  children: ReadonlyArray<ASTNode | Token>,
+): { startLine: number; startColumn: number; endLine: number; endColumn: number } | null {
+  const first = findFirstToken(children);
+  const last = findLastToken(children);
+  if (!first || !last) return null;
+  return {
+    startLine: first.line,
+    startColumn: first.column,
+    endLine: last.line,
+    endColumn: last.column,
+  };
+}
+
+function findFirstToken(children: ReadonlyArray<ASTNode | Token>): Token | null {
+  for (const child of children) {
+    if (isASTNode(child)) {
+      const tok = findFirstToken(child.children);
+      if (tok) return tok;
+    } else {
+      return child;
+    }
+  }
+  return null;
+}
+
+function findLastToken(children: ReadonlyArray<ASTNode | Token>): Token | null {
+  for (let i = children.length - 1; i >= 0; i--) {
+    const child = children[i];
+    if (isASTNode(child)) {
+      const tok = findLastToken(child.children);
+      if (tok) return tok;
+    } else {
+      return child;
+    }
+  }
+  return null;
+}
+
+// ===========================================================================
+// AST WALKING UTILITIES
+// ===========================================================================
+
+/**
+ * Visitor interface for walkAST.
+ *
+ * Both callbacks are optional. Each receives the current node and its parent
+ * (null for the root). Returning an ASTNode replaces the visited node;
+ * returning void keeps the original.
+ */
+export interface ASTVisitor {
+  enter?(node: ASTNode, parent: ASTNode | null): ASTNode | void;
+  leave?(node: ASTNode, parent: ASTNode | null): ASTNode | void;
+}
+
+/**
+ * Depth-first walk of an AST tree with enter/leave visitor callbacks.
+ *
+ * Visitor callbacks can return a replacement node or void (keep original).
+ * Token children are not visited — only ASTNode children are walked.
+ *
+ * This is the generic traversal primitive. Language packages use it for
+ * cover grammar rewriting, desugaring, and semantic analysis.
+ */
+export function walkAST(node: ASTNode, visitor: ASTVisitor): ASTNode {
+  return walkNode(node, null, visitor);
+}
+
+function walkNode(
+  node: ASTNode,
+  parent: ASTNode | null,
+  visitor: ASTVisitor,
+): ASTNode {
+  // Enter phase — visitor may replace the node.
+  let current = node;
+  if (visitor.enter) {
+    const replacement = visitor.enter(current, parent);
+    if (replacement !== undefined) {
+      current = replacement;
+    }
+  }
+
+  // Walk children recursively.
+  let childrenChanged = false;
+  const newChildren: Array<ASTNode | Token> = [];
+  for (const child of current.children) {
+    if (isASTNode(child)) {
+      const walked = walkNode(child, current, visitor);
+      if (walked !== child) childrenChanged = true;
+      newChildren.push(walked);
+    } else {
+      newChildren.push(child);
+    }
+  }
+
+  // If children changed, create a new node with updated children.
+  if (childrenChanged) {
+    current = { ...current, children: newChildren };
+  }
+
+  // Leave phase — visitor may replace the node.
+  if (visitor.leave) {
+    const replacement = visitor.leave(current, parent);
+    if (replacement !== undefined) {
+      current = replacement;
+    }
+  }
+
+  return current;
+}
+
+/**
+ * Find all nodes matching a rule name (depth-first order).
+ */
+export function findNodes(node: ASTNode, ruleName: string): ASTNode[] {
+  const results: ASTNode[] = [];
+  walkAST(node, {
+    enter(n) {
+      if (n.ruleName === ruleName) results.push(n);
+    },
+  });
+  return results;
+}
+
+/**
+ * Collect all tokens in depth-first order, optionally filtered by type.
+ */
+export function collectTokens(node: ASTNode, type?: string): Token[] {
+  const results: Token[] = [];
+  function walk(n: ASTNode): void {
+    for (const child of n.children) {
+      if (isASTNode(child)) {
+        walk(child);
+      } else {
+        if (type === undefined || child.type === type) {
+          results.push(child);
+        }
+      }
+    }
+  }
+  walk(node);
+  return results;
 }

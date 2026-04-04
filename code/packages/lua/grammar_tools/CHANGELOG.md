@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-04
+
+### Added
+
+- `context_keywords` field on TokenGrammar for context-sensitive keywords
+- `context_keywords:` section parsing in `parse_token_grammar`
+- Four new parser grammar element types:
+  - `positive_lookahead` (`&element`) — succeeds if element matches, consumes nothing
+  - `negative_lookahead` (`!element`) — succeeds if element does NOT match, consumes nothing
+  - `one_or_more` (`{ element }+`) — one-or-more repetition
+  - `separated_repetition` (`{ element // separator }`) — separated list with optional `+` suffix
+- Grammar tokenizer handles `&`, `!`, `+`, `//` tokens
+- Grammar parser handles all four new element types
+- Element constructors: `make_positive_lookahead`, `make_negative_lookahead`, `make_one_or_more`, `make_separated_repetition`
+- Updated `collect_rule_refs` and `collect_token_refs` to walk new element types
+
 ## [0.2.0] - 2026-03-26
 
 ### Added

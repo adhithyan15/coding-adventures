@@ -165,6 +165,62 @@ pub enum GrammarElement {
     /// `( PLUS | MINUS )` groups the alternation so it can be used as a
     /// single element in a sequence: `term { ( PLUS | MINUS ) term }`.
     Group { element: Box<GrammarElement> },
+
+    /// Positive lookahead predicate, written as `&element` in the grammar.
+    ///
+    /// Succeeds (producing no AST children) if element matches at the current
+    /// position. Fails if element does not match. Does NOT consume input.
+    ///
+    /// This is a standard PEG operator. Example:
+    ///
+    /// ```text
+    /// arrow_params = LPAREN [ param_list ] RPAREN &ARROW ;
+    /// ```
+    ///
+    /// The `&ARROW` predicate checks that `=>` follows without consuming it.
+    PositiveLookahead { element: Box<GrammarElement> },
+
+    /// Negative lookahead predicate, written as `!element` in the grammar.
+    ///
+    /// Succeeds (producing no AST children) if element does NOT match at
+    /// the current position. Fails if element does match. Does NOT consume
+    /// input.
+    ///
+    /// Example:
+    ///
+    /// ```text
+    /// postfix_expr = primary !NEWLINE ( "++" | "--" ) ;
+    /// ```
+    ///
+    /// The `!NEWLINE` predicate ensures no line terminator before `++` or `--`.
+    NegativeLookahead { element: Box<GrammarElement> },
+
+    /// One-or-more repetition, written as `{ element }+` in the grammar.
+    ///
+    /// Like zero-or-more `{ element }` but requires at least one match.
+    /// Fails if the first match fails.
+    OneOrMore { element: Box<GrammarElement> },
+
+    /// Separated repetition, written as `{ element // separator }` in the
+    /// grammar.
+    ///
+    /// Matches zero or more occurrences of `element` separated by `separator`.
+    /// With `at_least_one = true` (from `{ element // separator }+`), requires
+    /// at least one occurrence.
+    ///
+    /// Example:
+    /// ```text
+    /// args = { expression // COMMA } ;
+    /// ```
+    /// is equivalent to:
+    /// ```text
+    /// args = [ expression { COMMA expression } ] ;
+    /// ```
+    SeparatedRepetition {
+        element: Box<GrammarElement>,
+        separator: Box<GrammarElement>,
+        at_least_one: bool,
+    },
 }
 
 // ===========================================================================
@@ -270,8 +326,15 @@ fn collect_token_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
         }
         GrammarElement::Repetition { element }
         | GrammarElement::Optional { element }
-        | GrammarElement::Group { element } => {
+        | GrammarElement::Group { element }
+        | GrammarElement::PositiveLookahead { element }
+        | GrammarElement::NegativeLookahead { element }
+        | GrammarElement::OneOrMore { element } => {
             collect_token_refs(element, refs);
+        }
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            collect_token_refs(element, refs);
+            collect_token_refs(separator, refs);
         }
     }
 }
@@ -296,8 +359,15 @@ fn collect_rule_refs(node: &GrammarElement, refs: &mut HashSet<String>) {
         }
         GrammarElement::Repetition { element }
         | GrammarElement::Optional { element }
-        | GrammarElement::Group { element } => {
+        | GrammarElement::Group { element }
+        | GrammarElement::PositiveLookahead { element }
+        | GrammarElement::NegativeLookahead { element }
+        | GrammarElement::OneOrMore { element } => {
             collect_rule_refs(element, refs);
+        }
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            collect_rule_refs(element, refs);
+            collect_rule_refs(separator, refs);
         }
     }
 }
@@ -347,6 +417,14 @@ enum TokenKind {
     RBracket,
     LParen,
     RParen,
+    /// `&` — prefix for positive lookahead predicates.
+    Ampersand,
+    /// `!` — prefix for negative lookahead predicates.
+    Bang,
+    /// `+` — suffix for one-or-more repetition.
+    Plus,
+    /// `//` — separator operator inside repetition braces.
+    DoubleSlash,
     Eof,
 }
 
@@ -421,6 +499,25 @@ fn tokenize_grammar(source: &str) -> Result<Vec<Token>, ParserGrammarError> {
                 b')' => {
                     tokens.push(Token { kind: TokenKind::RParen, value: ")".to_string(), line: line_number });
                     i += 1;
+                }
+                // Lookahead predicates.
+                b'&' => {
+                    tokens.push(Token { kind: TokenKind::Ampersand, value: "&".to_string(), line: line_number });
+                    i += 1;
+                }
+                b'!' => {
+                    tokens.push(Token { kind: TokenKind::Bang, value: "!".to_string(), line: line_number });
+                    i += 1;
+                }
+                // One-or-more suffix.
+                b'+' => {
+                    tokens.push(Token { kind: TokenKind::Plus, value: "+".to_string(), line: line_number });
+                    i += 1;
+                }
+                // Separator operator (// inside repetition braces).
+                b'/' if i + 1 < bytes.len() && bytes[i + 1] == b'/' => {
+                    tokens.push(Token { kind: TokenKind::DoubleSlash, value: "//".to_string(), line: line_number });
+                    i += 2;
                 }
                 // Quoted string literal.
                 // We scan forward until we find the closing quote,
@@ -594,6 +691,7 @@ impl Parser {
                 | TokenKind::RBrace
                 | TokenKind::RBracket
                 | TokenKind::RParen
+                | TokenKind::DoubleSlash
                 | TokenKind::Eof => break,
                 _ => elements.push(self.parse_element()?),
             }
@@ -623,6 +721,20 @@ impl Parser {
         let tok = self.peek().clone();
 
         match tok.kind {
+            // --- Lookahead predicates: & (positive) and ! (negative) ---
+            // These are prefix operators that match without consuming input.
+            TokenKind::Ampersand => {
+                self.advance();
+                let inner = self.parse_element()?;
+                Ok(GrammarElement::PositiveLookahead { element: Box::new(inner) })
+            }
+
+            TokenKind::Bang => {
+                self.advance();
+                let inner = self.parse_element()?;
+                Ok(GrammarElement::NegativeLookahead { element: Box::new(inner) })
+            }
+
             // Identifier: could be a rule reference (lowercase) or
             // a token reference (UPPERCASE).
             TokenKind::Ident => {
@@ -643,12 +755,39 @@ impl Parser {
                 Ok(GrammarElement::Literal { value: tok.value })
             }
 
-            // { body } — zero-or-more repetition.
+            // { body } — zero-or-more repetition, with extensions:
+            //   { body }+         — one-or-more repetition
+            //   { body // sep }   — separated repetition (zero-or-more)
+            //   { body // sep }+  — separated repetition (one-or-more)
             TokenKind::LBrace => {
                 self.advance();
                 let body = self.parse_body()?;
+
+                // Check for separator: { element // separator }
+                if self.peek().kind == TokenKind::DoubleSlash {
+                    self.advance(); // consume //
+                    let separator = self.parse_body()?;
+                    self.expect(TokenKind::RBrace)?;
+                    // Check for + suffix (one-or-more)
+                    let at_least_one = self.peek().kind == TokenKind::Plus;
+                    if at_least_one {
+                        self.advance();
+                    }
+                    return Ok(GrammarElement::SeparatedRepetition {
+                        element: Box::new(body),
+                        separator: Box::new(separator),
+                        at_least_one,
+                    });
+                }
+
                 self.expect(TokenKind::RBrace)?;
-                Ok(GrammarElement::Repetition { element: Box::new(body) })
+                // Check for + suffix: { element }+
+                if self.peek().kind == TokenKind::Plus {
+                    self.advance();
+                    Ok(GrammarElement::OneOrMore { element: Box::new(body) })
+                } else {
+                    Ok(GrammarElement::Repetition { element: Box::new(body) })
+                }
             }
 
             // [ body ] — optional.

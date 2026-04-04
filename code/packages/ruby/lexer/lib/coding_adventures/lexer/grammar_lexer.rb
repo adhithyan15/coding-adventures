@@ -45,6 +45,9 @@ require "coding_adventures_grammar_tools"
 # - Suppress the current token (token filtering)
 # - Toggle skip pattern processing (significant whitespace)
 # - Peek ahead in the source text
+# - Inspect the previous token (lookbehind)
+# - Query bracket nesting depth
+# - Test whether a newline preceded the current token
 #
 # Because both lexers produce identical Token objects, downstream consumers
 # (the parser) don't care which lexer generated the tokens.
@@ -87,10 +90,14 @@ module CodingAdventures
       # @param lexer [GrammarLexer] the lexer instance (for reading state)
       # @param source [String] the full source code being tokenized
       # @param pos_after_token [Integer] position in source after current token
-      def initialize(lexer, source, pos_after_token)
+      # @param previous_token [Token, nil] the most recently emitted token
+      # @param current_token_line [Integer] the current token's line number
+      def initialize(lexer, source, pos_after_token, previous_token = nil, current_token_line = 1)
         @lexer = lexer
         @source = source
         @pos_after = pos_after_token
+        @previous_token = previous_token
+        @current_token_line = current_token_line
 
         # Buffered actions -- applied by the tokenizer after callback returns.
         @suppressed = false
@@ -185,6 +192,69 @@ module CodingAdventures
       def set_skip_enabled(enabled)
         @skip_enabled = enabled
       end
+
+      # -----------------------------------------------------------------------
+      # Extension: Token Lookbehind
+      # -----------------------------------------------------------------------
+
+      # Return the most recently emitted token, or nil at the start of input.
+      #
+      # "Emitted" means the token actually made it into the output list --
+      # suppressed tokens are not counted. This provides lookbehind
+      # capability for context-sensitive decisions.
+      #
+      # For example, in JavaScript / is a regex literal after =, ( or ,
+      # but a division operator after ), ], identifiers, or numbers. The
+      # callback can check ctx.previous_token&.type to decide which
+      # interpretation to use.
+      #
+      # @return [Token, nil] the last emitted token, or nil if none yet
+      def previous_token
+        @previous_token
+      end
+
+      # -----------------------------------------------------------------------
+      # Extension: Bracket Depth Tracking
+      # -----------------------------------------------------------------------
+
+      # Return the current nesting depth for a specific bracket type,
+      # or the total depth across all types if no argument is given.
+      #
+      # Depth starts at 0 and increments on each opener ((, [, {),
+      # decrements on each closer (), ], }). The count never goes
+      # below 0 -- unmatched closers are clamped.
+      #
+      # This is essential for template literal interpolation in languages
+      # like JavaScript, Kotlin, and Ruby, where } at brace-depth 0
+      # closes the interpolation rather than being part of a nested
+      # expression.
+      #
+      # @param kind [Symbol, nil] :paren, :bracket, or :brace. nil for total.
+      # @return [Integer] the nesting depth
+      def bracket_depth(kind = nil)
+        @lexer.bracket_depth(kind)
+      end
+
+      # -----------------------------------------------------------------------
+      # Extension: Newline Detection
+      # -----------------------------------------------------------------------
+
+      # Return true if a newline appeared between the previous token
+      # and the current token (i.e., they are on different lines).
+      #
+      # This is used by languages with automatic semicolon insertion
+      # (JavaScript, Go) to detect line breaks that trigger implicit
+      # statement termination. The lexer exposes this as a convenience
+      # so callbacks and post-tokenize hooks can set the
+      # TOKEN_PRECEDED_BY_NEWLINE flag on tokens that need it.
+      #
+      # Returns false if there is no previous token (start of input).
+      #
+      # @return [Boolean]
+      def preceded_by_newline?
+        return false if @previous_token.nil?
+        @previous_token.line < @current_token_line
+      end
     end
 
     # ========================================================================
@@ -245,6 +315,12 @@ module CodingAdventures
           @reserved_set = grammar.reserved_keywords.to_set.freeze
         end
 
+        # Context-sensitive keywords -- words that are sometimes keywords
+        # and sometimes identifiers depending on syntactic position. These
+        # are emitted as NAME tokens with the TOKEN_CONTEXT_KEYWORD flag,
+        # leaving the final keyword-vs-identifier decision to the parser.
+        @context_keyword_set = (grammar.context_keywords || []).to_set.freeze
+
         # Compile token patterns into Regexp objects.
         # Each entry is [name, pattern, alias_name] -- the alias is used
         # when emitting the token type (e.g., STRING_DQ -> STRING).
@@ -278,7 +354,7 @@ module CodingAdventures
         # Indentation mode state.
         @indentation_mode = grammar.mode == "indentation"
         @indent_stack = [0]
-        @bracket_depth = 0
+        @bracket_depth_indent = 0
 
         # --- Pattern groups ---
         # Compile per-group patterns. The "default" group uses the
@@ -310,6 +386,17 @@ module CodingAdventures
         # Skip enabled flag -- can be toggled by callbacks for groups
         # where whitespace is significant (e.g., CDATA, raw content).
         @skip_enabled = true
+
+        # Extension: Token lookbehind -- the most recently emitted token.
+        # Updated after each token push (including callback-emitted tokens).
+        # Reset to nil on each tokenize() call.
+        @last_emitted_token = nil
+
+        # Extension: Bracket depth tracking -- per-type nesting counters.
+        # Tracks (), [], and {} independently. Updated after each token
+        # match in both standard and indentation modes. Exposed to
+        # callbacks via LexerContext#bracket_depth.
+        @bracket_depths = { paren: 0, bracket: 0, brace: 0 }
 
         # Transform hooks — pluggable pipeline stages for language-specific
         # processing. Hooks compose left-to-right.
@@ -349,6 +436,23 @@ module CodingAdventures
         @post_tokenize_hooks << hook
       end
 
+      # Return the current nesting depth for a specific bracket type,
+      # or the total depth across all types if no argument is given.
+      #
+      # This is the public API used by LexerContext to expose bracket
+      # depth to callbacks. Language packages use this for template
+      # literal interpolation and similar nested constructs.
+      #
+      # @param kind [Symbol, nil] :paren, :bracket, or :brace. nil for total.
+      # @return [Integer]
+      def bracket_depth(kind = nil)
+        if kind.nil?
+          @bracket_depths[:paren] + @bracket_depths[:bracket] + @bracket_depths[:brace]
+        else
+          @bracket_depths[kind]
+        end
+      end
+
       # Tokenize the source code using the grammar's token definitions.
       #
       # Dispatches to the appropriate tokenization method based on whether
@@ -362,6 +466,10 @@ module CodingAdventures
           @pre_tokenize_hooks.each { |hook| source = hook.call(source) }
           @source = source
         end
+
+        # Reset extension state for reuse.
+        @last_emitted_token = nil
+        @bracket_depths = { paren: 0, bracket: 0, brace: 0 }
 
         # Stage 2: Core tokenization.
         tokens = if @indentation_mode
@@ -421,10 +529,12 @@ module CodingAdventures
           # --- Newlines become NEWLINE tokens ---
           # Newlines are structural -- they mark line boundaries.
           if char == "\n"
-            tokens << Token.new(
+            newline_tok = Token.new(
               type: TokenType::NEWLINE, value: "\\n",
               line: @line, column: @column
             )
+            tokens << newline_tok
+            @last_emitted_token = newline_tok
             do_advance
             next
           end
@@ -436,20 +546,32 @@ module CodingAdventures
           active_group = @group_stack.last
           token = try_match_token_in_group(active_group)
           if token
+            # Update bracket depth tracking.
+            update_bracket_depth(token.value)
+
             # --- Invoke on-token callback ---
             # The callback can push/pop groups, emit extra tokens,
             # suppress the current token, or toggle skip processing.
             # Emitted tokens do NOT re-trigger the callback.
             if @on_token
-              ctx = LexerContext.new(self, @source, @pos)
+              ctx = LexerContext.new(
+                self, @source, @pos,
+                @last_emitted_token, token.line
+              )
               @on_token.call(token, ctx)
 
               # Apply suppression: if the callback suppressed this
               # token, don't add it to the output.
-              tokens << token unless ctx.suppressed
+              unless ctx.suppressed
+                tokens << token
+                @last_emitted_token = token
+              end
 
               # Append any tokens emitted by the callback.
-              tokens.concat(ctx.emitted)
+              ctx.emitted.each do |emitted|
+                tokens << emitted
+                @last_emitted_token = emitted
+              end
 
               # Apply group stack actions in order.
               ctx.group_actions.each do |action, group_name|
@@ -464,6 +586,7 @@ module CodingAdventures
               @skip_enabled = ctx.skip_enabled unless ctx.skip_enabled.nil?
             else
               tokens << token
+              @last_emitted_token = token
             end
             next
           end
@@ -487,6 +610,23 @@ module CodingAdventures
         tokens
       end
 
+      # Update bracket depth counters based on a token's value.
+      #
+      # Called after each token match in both standard and indentation modes.
+      # Only single-character values are checked -- multi-character tokens
+      # cannot be brackets.
+      def update_bracket_depth(value)
+        return unless value.length == 1
+        case value
+        when "(" then @bracket_depths[:paren] += 1
+        when ")" then @bracket_depths[:paren] -= 1 if @bracket_depths[:paren] > 0
+        when "[" then @bracket_depths[:bracket] += 1
+        when "]" then @bracket_depths[:bracket] -= 1 if @bracket_depths[:bracket] > 0
+        when "{" then @bracket_depths[:brace] += 1
+        when "}" then @bracket_depths[:brace] -= 1 if @bracket_depths[:brace] > 0
+        end
+      end
+
       # Indentation-aware tokenization (Python/Starlark style).
       #
       # At each logical line start, count leading spaces, compare to the
@@ -500,7 +640,7 @@ module CodingAdventures
           char = @source[@pos]
 
           # Process line start: count indentation, emit INDENT/DEDENT.
-          if at_line_start && @bracket_depth == 0
+          if at_line_start && @bracket_depth_indent == 0
             indent_tokens = process_line_start
             if indent_tokens == :skip_line
               # Blank or comment-only line -- skip entirely.
@@ -514,7 +654,7 @@ module CodingAdventures
 
           # Newline handling.
           if char == "\n"
-            if @bracket_depth == 0
+            if @bracket_depth_indent == 0
               tokens << Token.new(
                 type: TokenType::NEWLINE, value: "\\n",
                 line: @line, column: @column
@@ -526,7 +666,7 @@ module CodingAdventures
           end
 
           # Inside brackets: skip whitespace (implicit line joining).
-          if @bracket_depth > 0 && (char == " " || char == "\t" || char == "\r")
+          if @bracket_depth_indent > 0 && (char == " " || char == "\t" || char == "\r")
             do_advance
             next
           end
@@ -537,14 +677,17 @@ module CodingAdventures
           # Try each token pattern.
           token = try_match_token
           if token
-            # Track bracket depth.
+            # Track bracket depth (local for INDENT/DEDENT logic).
             case token.value
             when "(", "[", "{"
-              @bracket_depth += 1
+              @bracket_depth_indent += 1
             when ")", "]", "}"
-              @bracket_depth -= 1
+              @bracket_depth_indent -= 1
             end
+            # Track bracket depth (shared for callback access).
+            update_bracket_depth(token.value)
             tokens << token
+            @last_emitted_token = token
             next
           end
 
@@ -681,7 +824,7 @@ module CodingAdventures
       #
       # Tries each compiled pattern in the named group in priority order
       # (first match wins). Handles keyword detection, reserved word
-      # checking, aliases, and string escape processing.
+      # checking, aliases, context keywords, and string escape processing.
       #
       # @param group_name [String] the pattern group to use
       # @return [Token, nil] a Token if matched, nil otherwise
@@ -730,9 +873,22 @@ module CodingAdventures
             end
           end
 
+          # Check if this NAME token is a context keyword -- a word that
+          # is sometimes a keyword and sometimes an identifier depending
+          # on syntactic position. Context keywords are emitted as NAME
+          # with the TOKEN_CONTEXT_KEYWORD flag, leaving the final
+          # decision to the language-specific parser or callback.
+          flags = nil
+          if token_type_is_name?(token_type) &&
+              !@context_keyword_set.empty? &&
+              @context_keyword_set.include?(value)
+            flags = TOKEN_CONTEXT_KEYWORD
+          end
+
           result = Token.new(
             type: token_type, value: value,
-            line: start_line, column: start_column
+            line: start_line, column: start_column,
+            flags: flags
           )
 
           m[0].length.times { do_advance }
@@ -740,6 +896,12 @@ module CodingAdventures
         end
 
         nil
+      end
+
+      # Check if a token type represents a NAME token.
+      # Works with both string and constant-based token types.
+      def token_type_is_name?(token_type)
+        token_type == "NAME" || token_type == TokenType::NAME
       end
 
       def do_advance

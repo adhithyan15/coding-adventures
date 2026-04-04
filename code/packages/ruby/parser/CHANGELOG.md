@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] - 2026-04-04
+
+### Added
+- **ASTNode positions**: `start_line`, `start_column`, `end_line`, `end_column`
+  fields computed from child tokens. Nil when the node has no tokens (e.g.,
+  empty repetition). Downstream tools can map AST nodes to source locations.
+- **GrammarParser**: `match_element` handles new grammar element types:
+  - `PositiveLookahead` -- succeed without consuming if inner matches
+  - `NegativeLookahead` -- succeed without consuming if inner fails
+  - `OneOrMoreRepetition` -- match one then zero-or-more additional
+  - `SeparatedRepetition` -- match elements with separators between them
+- **AST walking utilities** (module-level methods on `CodingAdventures::Parser`):
+  - `walk_ast(node, visitor)` -- depth-first traversal with enter/leave callbacks
+  - `find_nodes(node, rule_name)` -- find all nodes matching a rule name
+  - `collect_tokens(node, type = nil)` -- collect tokens, optionally by type
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

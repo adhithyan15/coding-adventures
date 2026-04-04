@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-04
+
+### Added
+
+- ASTNode position fields: `start_line`, `start_column`, `end_line`, `end_column`
+- Position computation from child tokens (first/last token span)
+- GrammarParser handles four new element types:
+  - `positive_lookahead` — match without consuming input
+  - `negative_lookahead` — succeed if element does NOT match
+  - `one_or_more` — one-or-more repetition
+  - `separated_repetition` — separated list with optional at-least-one
+- AST walking utilities:
+  - `walk_ast(node, visitor)` — depth-first traversal with enter/leave callbacks
+  - `find_nodes(node, rule_name)` — find all nodes matching a rule name
+  - `collect_tokens(node, token_type)` — collect all leaf tokens, optionally filtered
+  - `is_ast_node(child)` — check if a child is an ASTNode
+- Helper functions: `_find_first_token`, `_find_last_token`
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

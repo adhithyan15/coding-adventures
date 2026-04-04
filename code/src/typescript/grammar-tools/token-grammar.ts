@@ -177,6 +177,17 @@ export interface TokenGrammar {
   readonly version: number;
   /** Whether the lexer should match case-insensitively, from `# @case_insensitive true`. */
   readonly caseInsensitive: boolean;
+  /**
+   * Context-sensitive keywords — words that are keywords in some
+   * syntactic positions but identifiers in others.
+   *
+   * These are emitted as NAME tokens with the TOKEN_CONTEXT_KEYWORD
+   * flag set, leaving the final keyword-vs-identifier decision to
+   * the language-specific parser or callback.
+   *
+   * Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
+   */
+  readonly contextKeywords?: readonly string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -401,6 +412,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const lines = source.split("\n");
   const definitions: TokenDefinition[] = [];
   const keywords: string[] = [];
+  const contextKeywords: string[] = [];
   const skipDefinitions: TokenDefinition[] = [];
   const reservedKeywords: string[] = [];
   const groups: Record<string, PatternGroup> = {};
@@ -593,6 +605,10 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       currentSection = "errors";
       continue;
     }
+    if (stripped === "context_keywords:" || stripped === "context_keywords :") {
+      currentSection = "context_keywords";
+      continue;
+    }
 
     // --- Inside a section ---
     const isIndented = line[0] === " " || line[0] === "\t";
@@ -600,6 +616,13 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     if (isIndented && currentSection === "keywords") {
       if (stripped) {
         keywords.push(stripped);
+      }
+      continue;
+    }
+
+    if (isIndented && currentSection === "context_keywords") {
+      if (stripped) {
+        contextKeywords.push(stripped);
       }
       continue;
     }
@@ -727,6 +750,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     caseSensitive: caseSensitive ? undefined : false,
     version,
     caseInsensitive,
+    contextKeywords: contextKeywords.length > 0 ? contextKeywords : undefined,
   };
 }
 

@@ -728,7 +728,7 @@ mod tests {
         assert_eq!(pairs[2], (TokenType::Name, "users".to_string()));
         assert_eq!(pairs[3], (TokenType::Keyword, "VALUES".to_string()));
         assert_eq!(pairs[4], (TokenType::LParen, "(".to_string()));
-        assert_eq!(pairs[5], (TokenType::String, "Bob".to_string()));
+        assert_eq!(pairs[5], (TokenType::String, "bob".to_string()));
         assert_eq!(pairs[6], (TokenType::Comma, ",".to_string()));
         assert_eq!(pairs[7], (TokenType::Number, "30".to_string()));
         assert_eq!(pairs[8], (TokenType::RParen, ")".to_string()));

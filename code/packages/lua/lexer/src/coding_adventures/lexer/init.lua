@@ -161,6 +161,25 @@ end
 --   - type_name: grammar-driven token name (e.g. "INT", "FLOAT"), empty
 --                for hand-written lexer tokens
 
+-- =========================================================================
+-- Token Flag Constants
+-- =========================================================================
+--
+-- Bitmask flags for token metadata. Flags carry information that is neither
+-- type nor value but affects how downstream consumers interpret a token.
+--
+-- Flags are optional — when nil or 0, all flags are off.
+-- Use bitwise AND to test: (token.flags or 0) & TOKEN_PRECEDED_BY_NEWLINE
+
+--- Set when a line break appeared between this token and the previous one.
+-- Languages with automatic semicolon insertion (JavaScript, Go) use this.
+local TOKEN_PRECEDED_BY_NEWLINE = 1
+
+--- Set for context-sensitive keywords — words that are keywords in some
+-- syntactic positions but identifiers in others.
+-- Example: JavaScript's async, yield, await, get, set.
+local TOKEN_CONTEXT_KEYWORD = 2
+
 local Token = {}
 Token.__index = Token
 
@@ -170,14 +189,16 @@ Token.__index = Token
 -- @param line number Line number (1-based).
 -- @param column number Column number (1-based).
 -- @param type_name string|nil Grammar-driven type name (optional).
+-- @param flags number|nil Bitmask of TOKEN_* flags (optional).
 -- @return Token
-function Token.new(ttype, value, line, column, type_name)
+function Token.new(ttype, value, line, column, type_name, flags)
     return setmetatable({
         type      = ttype,
         value     = value,
         line      = line,
         column    = column,
         type_name = type_name or "",
+        flags     = flags or 0,
     }, Token)
 end
 
@@ -746,16 +767,20 @@ LexerContext.__index = LexerContext
 -- @param lexer GrammarLexer The lexer that created this context.
 -- @param source string The complete source text.
 -- @param pos_after number Position after the current token.
+-- @param previous_token Token|nil The most recently emitted token.
+-- @param current_token_line number Line number of the current token.
 -- @return LexerContext
-function LexerContext._new(lexer, source, pos_after)
+function LexerContext._new(lexer, source, pos_after, previous_token, current_token_line)
     return setmetatable({
-        _lexer        = lexer,
-        _source       = source,
-        _pos_after    = pos_after,
-        _suppressed   = false,
-        _emitted      = {},
-        _group_actions = {},
-        _skip_enabled = nil,  -- nil = no change
+        _lexer              = lexer,
+        _source             = source,
+        _pos_after          = pos_after,
+        _suppressed         = false,
+        _emitted            = {},
+        _group_actions      = {},
+        _skip_enabled       = nil,  -- nil = no change
+        _previous_token     = previous_token,
+        _current_token_line = current_token_line or 0,
     }, LexerContext)
 end
 
@@ -853,6 +878,54 @@ end
 -- @param enabled boolean Whether to enable skip processing.
 function LexerContext:set_skip_enabled(enabled)
     self._skip_enabled = enabled
+end
+
+-- -----------------------------------------------------------------------
+-- Extension: Token Lookbehind
+-- -----------------------------------------------------------------------
+
+--- Return the most recently emitted token, or nil at the start of input.
+--
+-- "Emitted" means the token actually made it into the output list --
+-- suppressed tokens are not counted. This provides lookbehind capability
+-- for context-sensitive decisions.
+--
+-- For example, in JavaScript `/` is a regex literal after `=`, `(` or `,`
+-- but a division operator after `)`, `]`, identifiers, or numbers.
+-- @return Token|nil
+function LexerContext:previous_token()
+    return self._previous_token
+end
+
+-- -----------------------------------------------------------------------
+-- Extension: Bracket Depth Tracking
+-- -----------------------------------------------------------------------
+
+--- Return the current nesting depth for a specific bracket type,
+-- or the total depth across all types if no argument is given.
+--
+-- Depth starts at 0 and increments on each opener, decrements on each
+-- closer. The count never goes below 0.
+--
+-- @param kind string|nil "paren", "bracket", or "brace"; nil for total.
+-- @return number
+function LexerContext:bracket_depth(kind)
+    return self._lexer:bracket_depth(kind)
+end
+
+-- -----------------------------------------------------------------------
+-- Extension: Newline Detection
+-- -----------------------------------------------------------------------
+
+--- Return true if a newline appeared between the previous token and the
+-- current token (i.e., they are on different lines).
+--
+-- Used by languages with automatic semicolon insertion (JavaScript, Go).
+-- Returns false if there is no previous token (start of input).
+-- @return boolean
+function LexerContext:preceded_by_newline()
+    if self._previous_token == nil then return false end
+    return self._previous_token.line < self._current_token_line
 end
 
 -- =========================================================================
@@ -1438,27 +1511,36 @@ function GrammarLexer.new(source, grammar)
         group_patterns[group_name] = compiled
     end
 
+    -- Build context keyword set
+    local context_keyword_set = {}
+    for _, ck in ipairs(grammar.context_keywords or {}) do
+        context_keyword_set[ck] = true
+    end
+
     return setmetatable({
-        _source           = source,
-        _grammar          = grammar,
-        _pos              = 1,
-        _line             = 1,
-        _column           = 1,
-        _keyword_set      = keyword_set,
-        _reserved_set     = reserved_set,
-        _patterns         = patterns,
-        _skip_patterns    = skip_patterns,
-        _has_skip_patterns = #skip_patterns > 0,
-        _indent_mode      = (grammar.mode == "indentation"),
-        _indent_stack     = { 0 },
-        _bracket_depth    = 0,
-        _group_patterns   = group_patterns,
-        _group_stack      = { "default" },
-        _on_token         = nil,
-        _skip_enabled     = true,
-        _alias_map        = alias_map,
-        _escape_mode      = grammar.escape_mode or "",
-        _case_insensitive = grammar.case_insensitive or false,
+        _source              = source,
+        _grammar             = grammar,
+        _pos                 = 1,
+        _line                = 1,
+        _column              = 1,
+        _keyword_set         = keyword_set,
+        _reserved_set        = reserved_set,
+        _context_keyword_set = context_keyword_set,
+        _patterns            = patterns,
+        _skip_patterns       = skip_patterns,
+        _has_skip_patterns   = #skip_patterns > 0,
+        _indent_mode         = (grammar.mode == "indentation"),
+        _indent_stack        = { 0 },
+        _bracket_depth       = 0,
+        _bracket_depths      = { paren = 0, bracket = 0, brace = 0 },
+        _last_emitted_token  = nil,
+        _group_patterns      = group_patterns,
+        _group_stack         = { "default" },
+        _on_token            = nil,
+        _skip_enabled        = true,
+        _alias_map           = alias_map,
+        _escape_mode         = grammar.escape_mode or "",
+        _case_insensitive    = grammar.case_insensitive or false,
     }, GrammarLexer)
 end
 
@@ -1469,6 +1551,39 @@ end
 -- @param callback function|nil The callback function.
 function GrammarLexer:set_on_token(callback)
     self._on_token = callback
+end
+
+--- Return the current nesting depth for a specific bracket type,
+-- or the total depth across all types if no argument is given.
+--
+-- @param kind string|nil "paren", "bracket", or "brace"; nil for total.
+-- @return number
+function GrammarLexer:bracket_depth(kind)
+    if kind == nil then
+        return self._bracket_depths.paren
+             + self._bracket_depths.bracket
+             + self._bracket_depths.brace
+    end
+    return self._bracket_depths[kind] or 0
+end
+
+--- Update bracket depth tracking based on the token value.
+-- Called after each token match.
+-- @param value string The token's text value.
+function GrammarLexer:_update_bracket_depth(value)
+    if value == "(" then
+        self._bracket_depths.paren = self._bracket_depths.paren + 1
+    elseif value == ")" then
+        self._bracket_depths.paren = math.max(0, self._bracket_depths.paren - 1)
+    elseif value == "[" then
+        self._bracket_depths.bracket = self._bracket_depths.bracket + 1
+    elseif value == "]" then
+        self._bracket_depths.bracket = math.max(0, self._bracket_depths.bracket - 1)
+    elseif value == "{" then
+        self._bracket_depths.brace = self._bracket_depths.brace + 1
+    elseif value == "}" then
+        self._bracket_depths.brace = math.max(0, self._bracket_depths.brace - 1)
+    end
 end
 
 --- Advance past the current character (internal).
@@ -1622,6 +1737,10 @@ end
 function GrammarLexer:_tokenize_standard()
     local tokens = {}
 
+    -- Reset extension state for reuse
+    self._last_emitted_token = nil
+    self._bracket_depths = { paren = 0, bracket = 0, brace = 0 }
+
     while self._pos <= #self._source do
         local ch = self._source:sub(self._pos, self._pos)
 
@@ -1640,10 +1759,12 @@ function GrammarLexer:_tokenize_standard()
 
         -- Newlines become NEWLINE tokens
         if ch == "\n" then
-            tokens[#tokens + 1] = Token.new(
+            local newline_tok = Token.new(
                 TokenType.Newline, "\\n",
                 self._line, self._column, "NEWLINE"
             )
+            tokens[#tokens + 1] = newline_tok
+            self._last_emitted_token = newline_tok
             self:_advance()
             goto continue
         end
@@ -1653,19 +1774,33 @@ function GrammarLexer:_tokenize_standard()
             local active_group = self._group_stack[#self._group_stack]
             local tok = self:_try_match_token_in_group(active_group)
             if tok then
+                -- Update bracket depth tracking
+                self:_update_bracket_depth(tok.value)
+
+                -- Set context keyword flag if applicable
+                if self._context_keyword_set[tok.value]
+                   and (tok.type_name == "NAME" or tok.type == TokenType.Name) then
+                    tok.flags = (tok.flags or 0) | TOKEN_CONTEXT_KEYWORD
+                end
+
                 -- Invoke on-token callback
                 if self._on_token then
-                    local ctx = LexerContext._new(self, self._source, self._pos)
+                    local ctx = LexerContext._new(
+                        self, self._source, self._pos,
+                        self._last_emitted_token, tok.line
+                    )
                     self._on_token(tok, ctx)
 
                     -- Apply suppression
                     if not ctx._suppressed then
                         tokens[#tokens + 1] = tok
+                        self._last_emitted_token = tok
                     end
 
                     -- Append emitted tokens
                     for _, emitted in ipairs(ctx._emitted) do
                         tokens[#tokens + 1] = emitted
+                        self._last_emitted_token = emitted
                     end
 
                     -- Apply group stack actions
@@ -1683,6 +1818,7 @@ function GrammarLexer:_tokenize_standard()
                     end
                 else
                     tokens[#tokens + 1] = tok
+                    self._last_emitted_token = tok
                 end
                 goto continue
             end
@@ -1898,6 +2034,8 @@ lexer.LexerContext = LexerContext
 
 -- Constants
 lexer.TokenType = TokenType
+lexer.TOKEN_PRECEDED_BY_NEWLINE = TOKEN_PRECEDED_BY_NEWLINE
+lexer.TOKEN_CONTEXT_KEYWORD     = TOKEN_CONTEXT_KEYWORD
 
 -- Functions (exported for testing)
 lexer.classify_char        = classify_char

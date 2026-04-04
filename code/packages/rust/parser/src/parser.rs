@@ -477,7 +477,7 @@ mod tests {
             value: value.to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         }
     }
 
@@ -488,7 +488,7 @@ mod tests {
             value: value.to_string(),
             line,
             column: col,
-            type_name: None,
+            type_name: None, flags: None,
         }
     }
 

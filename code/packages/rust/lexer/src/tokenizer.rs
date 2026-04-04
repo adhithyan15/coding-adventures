@@ -281,7 +281,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
-            type_name: None,
+            type_name: None, flags: None,
         }
     }
 
@@ -323,7 +323,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
-            type_name: None,
+            type_name: None, flags: None,
         }
     }
 
@@ -416,7 +416,7 @@ impl<'a> Lexer<'a> {
             value,
             line: start_line,
             column: start_col,
-            type_name: None,
+            type_name: None, flags: None,
         })
     }
 
@@ -471,7 +471,7 @@ impl<'a> Lexer<'a> {
                         value: "\\n".to_string(),
                         line: self.line,
                         column: self.column,
-                        type_name: None,
+                        type_name: None, flags: None,
                     };
                     self.advance();
                     tokens.push(tok);
@@ -497,7 +497,7 @@ impl<'a> Lexer<'a> {
                             value: "==".to_string(),
                             line: start_line,
                             column: start_col,
-                            type_name: None,
+                            type_name: None, flags: None,
                         });
                     } else {
                         tokens.push(Token {
@@ -505,7 +505,7 @@ impl<'a> Lexer<'a> {
                             value: "=".to_string(),
                             line: start_line,
                             column: start_col,
-                            type_name: None,
+                            type_name: None, flags: None,
                         });
                     }
                 }
@@ -518,7 +518,7 @@ impl<'a> Lexer<'a> {
                         value: c.to_string(),
                         line: self.line,
                         column: self.column,
-                        type_name: None,
+                        type_name: None, flags: None,
                     };
                     self.advance();
                     tokens.push(tok);
@@ -550,7 +550,7 @@ impl<'a> Lexer<'a> {
             value: String::new(),
             line: self.line,
             column: self.column,
-            type_name: None,
+            type_name: None, flags: None,
         });
 
         Ok(tokens)

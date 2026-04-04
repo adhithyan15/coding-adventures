@@ -65,4 +65,44 @@ export interface Token {
   readonly value: string;
   readonly line: number;
   readonly column: number;
+  readonly flags?: number;
 }
+
+// ---------------------------------------------------------------------------
+// Token Flag Constants
+// ---------------------------------------------------------------------------
+
+/**
+ * Bitmask flags for token metadata.
+ *
+ * Flags carry information that is neither type nor value but affects
+ * how downstream consumers (parsers, formatters, linters) interpret
+ * a token. For example, JavaScript's automatic semicolon insertion
+ * rule depends on whether a newline appeared before certain tokens.
+ *
+ * Flags are optional — when `flags` is undefined, all flags are off.
+ * Use bitwise AND to test: `(token.flags ?? 0) & TOKEN_PRECEDED_BY_NEWLINE`
+ */
+
+/**
+ * Set when a line break appeared between this token and the previous one.
+ *
+ * Languages with automatic semicolon insertion (JavaScript, Go) use
+ * this to decide whether an implicit semicolon should be inserted.
+ * The lexer itself does not insert semicolons — that is a language-
+ * specific concern handled in language packages via post-tokenize
+ * hooks or parser pre-parse hooks.
+ */
+export const TOKEN_PRECEDED_BY_NEWLINE = 1;
+
+/**
+ * Set for context-sensitive keywords — words that are keywords in some
+ * syntactic positions but identifiers in others.
+ *
+ * For example, JavaScript's `async`, `yield`, `await`, `get`, `set`
+ * are sometimes keywords (in function declarations, property accessors)
+ * and sometimes plain identifiers (`let get = 5`). The lexer emits
+ * these as NAME tokens with this flag set, leaving the final
+ * keyword-vs-identifier decision to the language-specific parser.
+ */
+export const TOKEN_CONTEXT_KEYWORD = 2;

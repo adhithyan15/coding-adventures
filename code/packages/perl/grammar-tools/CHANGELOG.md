@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-04
+
+### Added
+
+- `context_keywords` field on TokenGrammar for context-sensitive keywords
+- `context_keywords:` section parsing in `parse_token_grammar`
+- `parse_parser_grammar($source)` — EBNF-style parser grammar parser (new)
+  - Tokenizer for `.grammar` files: IDENT, STRING, EQUALS, SEMI, PIPE, braces/brackets/parens, `&`, `!`, `+`, `//`
+  - Recursive descent parser producing grammar element AST
+- `validate_parser_grammar($grammar, $token_names)` — validation for parser grammars
+- Four new parser grammar element types:
+  - `positive_lookahead` (`&element`)
+  - `negative_lookahead` (`!element`)
+  - `one_or_more` (`{ element }+`)
+  - `separated_repetition` (`{ element // separator }`)
+- Reference collection helpers `_collect_rule_refs` and `_collect_token_refs`
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

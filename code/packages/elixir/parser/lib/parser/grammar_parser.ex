@@ -178,8 +178,11 @@ defmodule CodingAdventures.Parser.GrammarParser do
     do: Enum.any?(choices, &element_references_newline?/1)
 
   defp element_references_newline?({tag, element})
-       when tag in [:repetition, :optional, :group],
+       when tag in [:repetition, :optional, :group, :positive_lookahead, :negative_lookahead, :one_or_more],
        do: element_references_newline?(element)
+
+  defp element_references_newline?({:separated_repetition, element, separator, _}),
+    do: element_references_newline?(element) or element_references_newline?(separator)
 
   # -- Helpers ----------------------------------------------------------------
 
@@ -255,7 +258,7 @@ defmodule CodingAdventures.Parser.GrammarParser do
           {:ok, {children, end_pos}} ->
             current = current_token(state, :array.size(state.tokens))
             emit_trace(state, rule_name, state.pos, current, :match)
-            node = %ASTNode{rule_name: rule_name, children: children}
+            node = build_node(rule_name, children)
             {:ok, node, %{state | pos: end_pos}}
 
           :error ->
@@ -266,7 +269,7 @@ defmodule CodingAdventures.Parser.GrammarParser do
               {:ok, children, state} ->
                 emit_trace(state, rule_name, start_pos, current_at_start, :match)
                 state = %{state | memo: Map.put(state.memo, memo_key, {children, state.pos})}
-                node = %ASTNode{rule_name: rule_name, children: children}
+                node = build_node(rule_name, children)
                 {:ok, node, state}
 
               {:fail, state} ->
@@ -384,6 +387,62 @@ defmodule CodingAdventures.Parser.GrammarParser do
     end
   end
 
+  # Positive lookahead: &element -- succeed if element matches, no consume
+  defp match_element({:positive_lookahead, inner}, state) do
+    save_pos = state.pos
+
+    case match_element(inner, state) do
+      {:ok, _result, _state_after} ->
+        {:ok, [], %{state | pos: save_pos}}
+
+      {:fail, _state_after} ->
+        {:fail, %{state | pos: save_pos}}
+    end
+  end
+
+  # Negative lookahead: !element -- succeed if element does NOT match, no consume
+  defp match_element({:negative_lookahead, inner}, state) do
+    save_pos = state.pos
+
+    case match_element(inner, state) do
+      {:ok, _result, _state_after} ->
+        {:fail, %{state | pos: save_pos}}
+
+      {:fail, _state_after} ->
+        {:ok, [], %{state | pos: save_pos}}
+    end
+  end
+
+  # One-or-more: { element }+ -- match one required, then zero or more
+  defp match_element({:one_or_more, inner}, state) do
+    save_pos = state.pos
+
+    case match_element(inner, state) do
+      {:ok, first, state} ->
+        match_one_or_more_rest(inner, state, Enum.reverse(first))
+
+      {:fail, state} ->
+        {:fail, %{state | pos: save_pos}}
+    end
+  end
+
+  # Separated repetition: { element // separator } or { element // separator }+
+  defp match_element({:separated_repetition, element, separator, at_least_one}, state) do
+    save_pos = state.pos
+
+    case match_element(element, state) do
+      {:ok, first, state} ->
+        match_separated_rest(element, separator, state, Enum.reverse(first))
+
+      {:fail, state} ->
+        if at_least_one do
+          {:fail, %{state | pos: save_pos}}
+        else
+          {:ok, [], %{state | pos: save_pos}}
+        end
+    end
+  end
+
   # -- Element matching helpers ------------------------------------------------
 
   defp match_sequence([], state, children, _save_pos) do
@@ -424,6 +483,91 @@ defmodule CodingAdventures.Parser.GrammarParser do
         {:ok, Enum.reverse(children), %{state | pos: save_pos}}
     end
   end
+
+  defp match_one_or_more_rest(inner, state, children) do
+    save_pos = state.pos
+
+    case match_element(inner, state) do
+      {:ok, result, state} ->
+        match_one_or_more_rest(inner, state, Enum.reverse(result) ++ children)
+
+      {:fail, state} ->
+        {:ok, Enum.reverse(children), %{state | pos: save_pos}}
+    end
+  end
+
+  defp match_separated_rest(element, separator, state, children) do
+    save_sep = state.pos
+
+    case match_element(separator, state) do
+      {:ok, sep_result, state} ->
+        case match_element(element, state) do
+          {:ok, elem_result, state} ->
+            new_children = Enum.reverse(elem_result) ++ Enum.reverse(sep_result) ++ children
+            match_separated_rest(element, separator, state, new_children)
+
+          {:fail, state} ->
+            {:ok, Enum.reverse(children), %{state | pos: save_sep}}
+        end
+
+      {:fail, state} ->
+        {:ok, Enum.reverse(children), %{state | pos: save_sep}}
+    end
+  end
+
+  # -- AST Node Construction with Position Info --------------------------------
+  #
+  # Compute the start and end positions of an AST node from its children.
+  # Walks the children tree to find the first and last leaf tokens, then
+  # uses their line/column as the node's span.
+
+  defp build_node(rule_name, children) do
+    first = find_first_token(children)
+    last = find_last_token(children)
+
+    case {first, last} do
+      {%Token{} = f, %Token{} = l} ->
+        %ASTNode{
+          rule_name: rule_name,
+          children: children,
+          start_line: f.line,
+          start_column: f.column,
+          end_line: l.line,
+          end_column: l.column
+        }
+
+      _ ->
+        %ASTNode{rule_name: rule_name, children: children}
+    end
+  end
+
+  defp find_first_token([]), do: nil
+
+  defp find_first_token([%ASTNode{children: children} | rest]) do
+    case find_first_token(children) do
+      nil -> find_first_token(rest)
+      token -> token
+    end
+  end
+
+  defp find_first_token([%Token{} = token | _rest]), do: token
+
+  defp find_last_token(children) do
+    children
+    |> Enum.reverse()
+    |> find_first_in_reversed()
+  end
+
+  defp find_first_in_reversed([]), do: nil
+
+  defp find_first_in_reversed([%ASTNode{children: children} | rest]) do
+    case find_first_in_reversed(Enum.reverse(children)) do
+      nil -> find_first_in_reversed(rest)
+      token -> token
+    end
+  end
+
+  defp find_first_in_reversed([%Token{} = token | _rest]), do: token
 
   defp skip_newlines(state, token_count) do
     if state.pos < token_count do

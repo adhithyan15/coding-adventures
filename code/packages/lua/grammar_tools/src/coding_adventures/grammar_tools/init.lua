@@ -190,6 +190,7 @@ function TokenGrammar.new()
     local self = setmetatable({}, TokenGrammar)
     self.definitions = {}
     self.keywords = {}
+    self.context_keywords = {}
     self.mode = ""
     self.escape_mode = ""
     self.skip_definitions = {}
@@ -543,6 +544,10 @@ function grammar_tools.parse_token_grammar(source)
             current_section = "errors"
             goto continue
         end
+        if stripped == "context_keywords:" or stripped == "context_keywords :" then
+            current_section = "context_keywords"
+            goto continue
+        end
 
         -- Inside a section: lines must be indented (start with space or tab)
         if current_section ~= "" then
@@ -552,6 +557,11 @@ function grammar_tools.parse_token_grammar(source)
                 if current_section == "keywords" then
                     if stripped ~= "" then
                         grammar.keywords[#grammar.keywords + 1] = stripped
+                    end
+
+                elseif current_section == "context_keywords" then
+                    if stripped ~= "" then
+                        grammar.context_keywords[#grammar.context_keywords + 1] = stripped
                     end
 
                 elseif current_section == "reserved" then
@@ -897,6 +907,40 @@ local function make_group(element)
     return { type = "group", element = element }
 end
 
+--- Create a PositiveLookahead element (written as &element in the grammar).
+-- Succeeds if element matches at the current position, consuming no input.
+-- @param element  The element to check
+-- @return table   Grammar element
+local function make_positive_lookahead(element)
+    return { type = "positive_lookahead", element = element }
+end
+
+--- Create a NegativeLookahead element (written as !element in the grammar).
+-- Succeeds if element does NOT match at the current position, consuming no input.
+-- @param element  The element to check
+-- @return table   Grammar element
+local function make_negative_lookahead(element)
+    return { type = "negative_lookahead", element = element }
+end
+
+--- Create a OneOrMore element (written as { element }+ in the grammar).
+-- Like zero-or-more but requires at least one match.
+-- @param element  The repeated element
+-- @return table   Grammar element
+local function make_one_or_more(element)
+    return { type = "one_or_more", element = element }
+end
+
+--- Create a SeparatedRepetition element (written as { element // separator }).
+-- Matches zero or more occurrences of element separated by separator.
+-- @param element    The repeated element
+-- @param separator  The separator element
+-- @param at_least_one boolean  Whether at least one element is required
+-- @return table     Grammar element
+local function make_separated_repetition(element, separator, at_least_one)
+    return { type = "separated_repetition", element = element, separator = separator, at_least_one = at_least_one }
+end
+
 -- Export element constructors for testing
 grammar_tools.make_rule_reference = make_rule_reference
 grammar_tools.make_literal = make_literal
@@ -905,6 +949,10 @@ grammar_tools.make_alternation = make_alternation
 grammar_tools.make_repetition = make_repetition
 grammar_tools.make_optional = make_optional
 grammar_tools.make_group = make_group
+grammar_tools.make_positive_lookahead = make_positive_lookahead
+grammar_tools.make_negative_lookahead = make_negative_lookahead
+grammar_tools.make_one_or_more = make_one_or_more
+grammar_tools.make_separated_repetition = make_separated_repetition
 
 -- ============================================================================
 -- GrammarRule — a single production rule in a parser grammar
@@ -1002,12 +1050,16 @@ function collect_rule_refs(element, refs)
         for _, choice in ipairs(element.choices) do
             collect_rule_refs(choice, refs)
         end
-    elseif element.type == "repetition" then
+    elseif element.type == "repetition"
+        or element.type == "optional"
+        or element.type == "group"
+        or element.type == "positive_lookahead"
+        or element.type == "negative_lookahead"
+        or element.type == "one_or_more" then
         collect_rule_refs(element.element, refs)
-    elseif element.type == "optional" then
+    elseif element.type == "separated_repetition" then
         collect_rule_refs(element.element, refs)
-    elseif element.type == "group" then
-        collect_rule_refs(element.element, refs)
+        collect_rule_refs(element.separator, refs)
     end
 end
 
@@ -1029,12 +1081,16 @@ function collect_token_refs(element, refs)
         for _, choice in ipairs(element.choices) do
             collect_token_refs(choice, refs)
         end
-    elseif element.type == "repetition" then
+    elseif element.type == "repetition"
+        or element.type == "optional"
+        or element.type == "group"
+        or element.type == "positive_lookahead"
+        or element.type == "negative_lookahead"
+        or element.type == "one_or_more" then
         collect_token_refs(element.element, refs)
-    elseif element.type == "optional" then
+    elseif element.type == "separated_repetition" then
         collect_token_refs(element.element, refs)
-    elseif element.type == "group" then
-        collect_token_refs(element.element, refs)
+        collect_token_refs(element.separator, refs)
     end
 end
 
@@ -1119,6 +1175,24 @@ local function tokenize_grammar(source)
             elseif ch == ")" then
                 tokens[#tokens + 1] = { kind = "RPAREN", value = ")", line = line_num }
                 j = j + 1
+
+            -- Lookahead predicates
+            elseif ch == "&" then
+                tokens[#tokens + 1] = { kind = "AMPERSAND", value = "&", line = line_num }
+                j = j + 1
+            elseif ch == "!" then
+                tokens[#tokens + 1] = { kind = "BANG", value = "!", line = line_num }
+                j = j + 1
+
+            -- One-or-more suffix
+            elseif ch == "+" then
+                tokens[#tokens + 1] = { kind = "PLUS", value = "+", line = line_num }
+                j = j + 1
+
+            -- Separator operator (// inside repetition braces)
+            elseif ch == "/" and j + 1 <= #line and line:sub(j+1, j+1) == "/" then
+                tokens[#tokens + 1] = { kind = "DOUBLE_SLASH", value = "//", line = line_num }
+                j = j + 2
 
             -- String literal
             elseif ch == '"' then
@@ -1280,7 +1354,8 @@ function Parser:parse_sequence()
     while true do
         local kind = self:peek().kind
         if kind == "PIPE" or kind == "SEMI" or kind == "RBRACE"
-           or kind == "RBRACKET" or kind == "RPAREN" or kind == "EOF" then
+           or kind == "RBRACKET" or kind == "RPAREN" or kind == "EOF"
+           or kind == "DOUBLE_SLASH" then
             break
         end
         local elem, err = self:parse_element()
@@ -1300,9 +1375,24 @@ function Parser:parse_sequence()
     return make_sequence(elements), nil
 end
 
---- Parse a single element: IDENT | STRING | { body } | [ body ] | ( body )
+--- Parse a single element: IDENT | STRING | & elem | ! elem | { body } | [ body ] | ( body )
 function Parser:parse_element()
     local tok = self:peek()
+
+    -- Lookahead predicates: & (positive) and ! (negative)
+    if tok.kind == "AMPERSAND" then
+        self:advance()
+        local inner, err = self:parse_element()
+        if err then return nil, err end
+        return make_positive_lookahead(inner), nil
+    end
+
+    if tok.kind == "BANG" then
+        self:advance()
+        local inner, err = self:parse_element()
+        if err then return nil, err end
+        return make_negative_lookahead(inner), nil
+    end
 
     if tok.kind == "IDENT" then
         self:advance()
@@ -1320,8 +1410,28 @@ function Parser:parse_element()
         self:advance()
         local body, err = self:parse_body()
         if err then return nil, err end
+
+        -- Check for separator syntax: { element // separator }
+        if self:peek().kind == "DOUBLE_SLASH" then
+            self:advance()  -- consume //
+            local separator
+            separator, err = self:parse_body()
+            if err then return nil, err end
+            _, err = self:expect("RBRACE")
+            if err then return nil, err end
+            -- Check for + suffix (one-or-more)
+            local at_least_one = (self:peek().kind == "PLUS")
+            if at_least_one then self:advance() end
+            return make_separated_repetition(body, separator, at_least_one), nil
+        end
+
         _, err = self:expect("RBRACE")
         if err then return nil, err end
+        -- Check for + suffix: { element }+
+        if self:peek().kind == "PLUS" then
+            self:advance()
+            return make_one_or_more(body), nil
+        end
         return make_repetition(body), nil
 
     elseif tok.kind == "LBRACKET" then

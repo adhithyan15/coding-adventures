@@ -393,6 +393,35 @@ fn element_src(element: &GrammarElement, indent: &str) -> String {
                 child
             )
         }
+        GrammarElement::PositiveLookahead { element } => {
+            let child = element_src(element, &i);
+            format!(
+                "GrammarElement::PositiveLookahead {{ element: Box::new({}) }}",
+                child
+            )
+        }
+        GrammarElement::NegativeLookahead { element } => {
+            let child = element_src(element, &i);
+            format!(
+                "GrammarElement::NegativeLookahead {{ element: Box::new({}) }}",
+                child
+            )
+        }
+        GrammarElement::OneOrMore { element } => {
+            let child = element_src(element, &i);
+            format!(
+                "GrammarElement::OneOrMore {{ element: Box::new({}) }}",
+                child
+            )
+        }
+        GrammarElement::SeparatedRepetition { element, separator, at_least_one } => {
+            let elem_child = element_src(element, &i);
+            let sep_child = element_src(separator, &i);
+            format!(
+                "GrammarElement::SeparatedRepetition {{ element: Box::new({}), separator: Box::new({}), at_least_one: {} }}",
+                elem_child, sep_child, at_least_one
+            )
+        }
     }
 }
 

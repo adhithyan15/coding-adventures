@@ -35,12 +35,53 @@ require "coding_adventures_grammar_tools"
 #
 # - Furthest failure tracking: when parsing fails, reports what was expected
 #   at the furthest position reached, giving much better error messages.
+#
+# - Syntactic predicates: &element (positive lookahead) and !element
+#   (negative lookahead) check if a pattern matches without consuming input.
+#
+# - One-or-more repetition: { element }+ requires at least one match.
+#
+# - Separated repetition: { element // separator } matches zero-or-more
+#   elements with separators between them.
+#
+# AST Position Tracking
+# ---------------------
+#
+# ASTNode objects carry optional position information (start_line,
+# start_column, end_line, end_column) computed from their child tokens.
+# This enables downstream tools (linters, formatters, error reporters)
+# to map AST nodes back to source locations.
+#
+# AST Walking Utilities
+# ---------------------
+#
+# Three utility methods are provided for working with AST trees:
+#
+# - walk_ast(node, visitor) -- depth-first traversal with enter/leave
+# - find_nodes(node, rule_name) -- find all nodes with a given rule name
+# - collect_tokens(node, type) -- collect all tokens, optionally filtered
 # ==========================================================================
 
 module CodingAdventures
   module Parser
     # A generic AST node produced by grammar-driven parsing.
-    ASTNode = Data.define(:rule_name, :children) do
+    #
+    # Attributes:
+    #   rule_name    -- the grammar rule that produced this node
+    #   children     -- array of Token and ASTNode children
+    #   start_line   -- 1-based line of the first token (nil if empty)
+    #   start_column -- 1-based column of the first token (nil if empty)
+    #   end_line     -- 1-based line of the last token (nil if empty)
+    #   end_column   -- 1-based column of the last token (nil if empty)
+    ASTNode = Data.define(:rule_name, :children, :start_line, :start_column,
+                          :end_line, :end_column) do
+      def initialize(rule_name:, children:, start_line: nil, start_column: nil,
+                     end_line: nil, end_column: nil)
+        super(rule_name: rule_name, children: children,
+              start_line: start_line, start_column: start_column,
+              end_line: end_line, end_column: end_column)
+      end
+
       def leaf?
         children.length == 1 && children[0].is_a?(CodingAdventures::Lexer::Token)
       end
@@ -64,6 +105,122 @@ module CodingAdventures
         end
       end
     end
+
+    # =====================================================================
+    # AST Walking Utilities
+    # =====================================================================
+
+    # Visitor interface for walk_ast.
+    #
+    # Both callbacks are optional. Each receives the current node and its
+    # parent (nil for the root). Returning an ASTNode replaces the visited
+    # node; returning nil keeps the original.
+    #
+    # Usage:
+    #
+    #   visitor = {
+    #     enter: ->(node, parent) { ... },
+    #     leave: ->(node, parent) { ... }
+    #   }
+    #   new_ast = CodingAdventures::Parser.walk_ast(root, visitor)
+
+    # Depth-first walk of an AST tree with enter/leave visitor callbacks.
+    #
+    # Visitor callbacks can return a replacement node or nil (keep original).
+    # Token children are not visited -- only ASTNode children are walked.
+    #
+    # This is the generic traversal primitive. Language packages use it for
+    # cover grammar rewriting, desugaring, and semantic analysis.
+    #
+    # @param node [ASTNode] the root node to walk
+    # @param visitor [Hash] with optional :enter and :leave procs
+    # @return [ASTNode] the (possibly replaced) root node
+    def self.walk_ast(node, visitor)
+      walk_node(node, nil, visitor)
+    end
+
+    # Find all nodes matching a rule name (depth-first order).
+    #
+    # @param node [ASTNode] the root node to search
+    # @param rule_name [String] the rule name to match
+    # @return [Array<ASTNode>] all matching nodes
+    def self.find_nodes(node, rule_name)
+      results = []
+      walk_ast(node, {
+        enter: ->(n, _parent) {
+          results << n if n.rule_name == rule_name
+          nil
+        }
+      })
+      results
+    end
+
+    # Collect all tokens in depth-first order, optionally filtered by type.
+    #
+    # @param node [ASTNode] the root node
+    # @param type [String, nil] optional type filter (nil = all tokens)
+    # @return [Array<Token>] matching tokens
+    def self.collect_tokens(node, type = nil)
+      results = []
+      collect_tokens_recursive(node, type, results)
+      results
+    end
+
+    # @private
+    def self.walk_node(node, parent, visitor)
+      # Enter phase -- visitor may replace the node.
+      current = node
+      if visitor[:enter]
+        replacement = visitor[:enter].call(current, parent)
+        current = replacement if replacement.is_a?(ASTNode)
+      end
+
+      # Walk children recursively.
+      children_changed = false
+      new_children = current.children.map do |child|
+        if child.is_a?(ASTNode)
+          walked = walk_node(child, current, visitor)
+          children_changed = true if walked.object_id != child.object_id
+          walked
+        else
+          child
+        end
+      end
+
+      # If children changed, create a new node with updated children.
+      if children_changed
+        current = ASTNode.new(
+          rule_name: current.rule_name, children: new_children,
+          start_line: current.start_line, start_column: current.start_column,
+          end_line: current.end_line, end_column: current.end_column
+        )
+      end
+
+      # Leave phase -- visitor may replace the node.
+      if visitor[:leave]
+        replacement = visitor[:leave].call(current, parent)
+        current = replacement if replacement.is_a?(ASTNode)
+      end
+
+      current
+    end
+    private_class_method :walk_node
+
+    # @private
+    def self.collect_tokens_recursive(node, type, results)
+      node.children.each do |child|
+        if child.is_a?(ASTNode)
+          collect_tokens_recursive(child, type, results)
+        else
+          results << child if type.nil? || child.type.to_s == type
+        end
+      end
+    end
+    private_class_method :collect_tokens_recursive
+
+    # =====================================================================
+    # The Grammar-Driven Parser
+    # =====================================================================
 
     class GrammarDrivenParser
       TT = CodingAdventures::Lexer::TokenType
@@ -206,8 +363,12 @@ module CodingAdventures
           element.elements.any? { |e| element_references_newline?(e) }
         when GT::Alternation
           element.choices.any? { |c| element_references_newline?(c) }
-        when GT::Repetition, GT::OptionalElement, GT::Group
+        when GT::Repetition, GT::OptionalElement, GT::Group,
+             GT::PositiveLookahead, GT::NegativeLookahead, GT::OneOrMoreRepetition
           element_references_newline?(element.element)
+        when GT::SeparatedRepetition
+          element_references_newline?(element.element) ||
+            element_references_newline?(element.separator)
         else
           false
         end
@@ -217,20 +378,6 @@ module CodingAdventures
       #
       # Implements the seed-and-grow technique from Warth et al.,
       # "Packrat Parsers Can Support Left Recursion" (2008).
-      #
-      # The algorithm handles left-recursive rules like:
-      #   expression = expression PLUS term | term
-      #
-      # 1. Seed: plant a failure entry in the memo cache before parsing.
-      # 2. Initial parse: the left-recursive alternative fails (hits seed),
-      #    but a non-recursive alternative may succeed.
-      # 3. Grow: iteratively re-parse with previous result cached, letting
-      #    the left-recursive alternative consume more input each time.
-      #
-      # When trace mode is enabled, emits a [TRACE] line to $stderr for every
-      # rule attempt (both hits and misses), whether the result is fresh or
-      # served from the memo cache. This makes the full parse history visible
-      # without changing the parse result.
       def parse_rule(rule_name)
         unless @rules.key?(rule_name)
           raise GrammarParseError.new("Undefined rule: #{rule_name}")
@@ -253,16 +400,14 @@ module CodingAdventures
             )
           end
           emit_trace(rule_name, attempt_pos, tok, :match) if @trace
-          return ASTNode.new(rule_name: rule_name, children: cached_result)
+          return make_ast_node(rule_name, cached_result)
         end
 
         start_pos = @pos
         rule = @rules[rule_name]
 
         # Left-recursion guard: seed the memo with a failure entry BEFORE
-        # parsing the rule body. If the rule references itself at the same
-        # position, the memo check above will find this failure entry and
-        # raise GrammarParseError, breaking the infinite recursion cycle.
+        # parsing the rule body.
         @memo[memo_key] = [nil, start_pos]
 
         children = match_element(rule.body)
@@ -298,16 +443,58 @@ module CodingAdventures
         end
 
         emit_trace(rule_name, attempt_pos, tok, :match) if @trace
-        ASTNode.new(rule_name: rule_name, children: children)
+        make_ast_node(rule_name, children)
+      end
+
+      # Construct an ASTNode with computed position information.
+      #
+      # Walks the children to find the first and last leaf tokens,
+      # then uses their line/column as the node's span. Returns a
+      # node with nil positions if children contain no tokens.
+      def make_ast_node(rule_name, children)
+        first_tok = find_first_token(children)
+        last_tok = find_last_token(children)
+        if first_tok && last_tok
+          ASTNode.new(
+            rule_name: rule_name, children: children,
+            start_line: first_tok.line, start_column: first_tok.column,
+            end_line: last_tok.line, end_column: last_tok.column
+          )
+        else
+          ASTNode.new(rule_name: rule_name, children: children)
+        end
+      end
+
+      # Find the first leaf token in a children array (depth-first).
+      def find_first_token(children)
+        children.each do |child|
+          if child.is_a?(ASTNode)
+            tok = find_first_token(child.children)
+            return tok if tok
+          else
+            return child
+          end
+        end
+        nil
+      end
+
+      # Find the last leaf token in a children array (depth-first, reversed).
+      def find_last_token(children)
+        children.reverse_each do |child|
+          if child.is_a?(ASTNode)
+            tok = find_last_token(child.children)
+            return tok if tok
+          else
+            return child
+          end
+        end
+        nil
       end
 
       # Emit a single trace line to $stderr.
       #
       # Format:
       #   [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail
-      #
-      # The arrow uses the Unicode right arrow (→) to visually separate the
-      # context from the outcome, matching the Python trace format.
       def emit_trace(rule_name, pos, tok, outcome)
         type_str = tok.type.to_s
         val_str = tok.value.to_s
@@ -395,6 +582,76 @@ module CodingAdventures
             record_failure("\"#{element.value}\"")
             nil
           end
+
+        # ---------------------------------------------------------------
+        # Extension: Syntactic predicates (lookahead without consuming)
+        # ---------------------------------------------------------------
+
+        when GT::PositiveLookahead
+          # Succeed if inner element matches, but consume no input.
+          result = match_element(element.element)
+          @pos = save_pos
+          result.nil? ? nil : []
+
+        when GT::NegativeLookahead
+          # Succeed if inner element does NOT match, consume no input.
+          result = match_element(element.element)
+          @pos = save_pos
+          result.nil? ? [] : nil
+
+        # ---------------------------------------------------------------
+        # Extension: One-or-more repetition
+        # ---------------------------------------------------------------
+
+        when GT::OneOrMoreRepetition
+          # Match one required, then zero or more additional.
+          first = match_element(element.element)
+          if first.nil?
+            @pos = save_pos
+            return nil
+          end
+          children = first.dup
+          loop do
+            save_rep = @pos
+            result = match_element(element.element)
+            if result.nil?
+              @pos = save_rep
+              break
+            end
+            children.concat(result)
+          end
+          children
+
+        # ---------------------------------------------------------------
+        # Extension: Separated repetition
+        # ---------------------------------------------------------------
+
+        when GT::SeparatedRepetition
+          # Match: element { separator element }
+          # Or with at_least_one=false: [ element { separator element } ]
+          first = match_element(element.element)
+          if first.nil?
+            @pos = save_pos
+            return nil if element.at_least_one
+            return [] # zero occurrences is valid
+          end
+          children = first.dup
+          loop do
+            save_sep = @pos
+            sep = match_element(element.separator)
+            if sep.nil?
+              @pos = save_sep
+              break
+            end
+            nxt = match_element(element.element)
+            if nxt.nil?
+              @pos = save_sep
+              break
+            end
+            children.concat(sep)
+            children.concat(nxt)
+          end
+          children
         end
       end
 

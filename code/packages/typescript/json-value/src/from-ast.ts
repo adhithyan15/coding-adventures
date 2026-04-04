@@ -210,19 +210,21 @@ function convertToken(token: Token): JsonValue {
 /**
  * Extract the string value from a STRING token.
  *
- * The grammar-driven lexer in this project already:
+ * The grammar-driven lexer in this project uses `escapes: none` mode,
+ * which means it:
  *   1. Strips the surrounding double quotes from string tokens
- *   2. Processes standard escape sequences (\n, \t, \\, \", etc.)
+ *   2. Leaves escape sequences as raw text (e.g., \n stays as backslash + n)
  *
- * So by the time we receive the token value, it's already the unescaped
- * string content. For example:
+ * This function strips any remaining quotes, then processes the JSON escape
+ * sequences defined by RFC 8259 section 7:
  *
- *     JSON source: "hello"     --> token value: hello
- *     JSON source: "a\nb"     --> token value: a<newline>b  (real newline)
- *     JSON source: "a\\b"     --> token value: a\b          (real backslash + b)
+ *     JSON source: "hello"     --> token value: hello     --> result: hello
+ *     JSON source: "a\nb"     --> token value: a\nb      --> result: a<newline>b
+ *     JSON source: "a\\b"     --> token value: a\\b      --> result: a\b
+ *     JSON source: "\u0041"   --> token value: \u0041    --> result: A
  *
  * If the quotes are still present (e.g., from a different lexer configuration),
- * we strip them. Otherwise, we return the value as-is.
+ * we strip them before processing escapes.
  */
 function unquoteString(raw: string): string {
   /**
@@ -230,11 +232,123 @@ function unquoteString(raw: string): string {
    * The grammar-driven lexer strips them, but we handle both cases
    * for robustness.
    */
-  if (raw.length >= 2 && raw[0] === '"' && raw[raw.length - 1] === '"') {
-    return raw.slice(1, -1);
+  let content = raw;
+  if (content.length >= 2 && content[0] === '"' && content[content.length - 1] === '"') {
+    content = content.slice(1, -1);
   }
 
-  return raw;
+  return processJsonEscapes(content);
+}
+
+/**
+ * Process JSON string escape sequences according to RFC 8259 section 7.
+ *
+ * The JSON lexer uses `escapes: none` mode, which means it strips the
+ * surrounding quotes but leaves escape sequences as raw text. This
+ * function converts those raw escape sequences into their actual
+ * character values:
+ *
+ * | Escape   | Character              |
+ * |----------|------------------------|
+ * | `\\`     | reverse solidus U+005C |
+ * | `\/`     | solidus U+002F         |
+ * | `\"`     | quotation mark U+0022  |
+ * | `\b`     | backspace U+0008       |
+ * | `\f`     | form feed U+000C       |
+ * | `\n`     | line feed U+000A       |
+ * | `\r`     | carriage return U+000D |
+ * | `\t`     | tab U+0009             |
+ * | `\uXXXX` | Unicode code point     |
+ *
+ * The algorithm walks the string character by character. When it sees a
+ * backslash, it looks at the next character to determine which escape
+ * sequence to decode. Non-escape characters pass through unchanged.
+ */
+function processJsonEscapes(s: string): string {
+  /**
+   * Fast path: if there are no backslashes, there's nothing to process.
+   * This avoids allocating a new string for the common case.
+   */
+  if (!s.includes("\\")) {
+    return s;
+  }
+
+  const result: string[] = [];
+  let i = 0;
+
+  while (i < s.length) {
+    if (s[i] === "\\" && i + 1 < s.length) {
+      const next = s[i + 1];
+      switch (next) {
+        case '"':
+          result.push('"');
+          i += 2;
+          break;
+        case "\\":
+          result.push("\\");
+          i += 2;
+          break;
+        case "/":
+          result.push("/");
+          i += 2;
+          break;
+        case "b":
+          result.push("\b");
+          i += 2;
+          break;
+        case "f":
+          result.push("\f");
+          i += 2;
+          break;
+        case "n":
+          result.push("\n");
+          i += 2;
+          break;
+        case "r":
+          result.push("\r");
+          i += 2;
+          break;
+        case "t":
+          result.push("\t");
+          i += 2;
+          break;
+        case "u": {
+          /**
+           * Unicode escape: \uXXXX where XXXX is exactly 4 hex digits.
+           * We parse the 4-digit hex value and convert to a character.
+           * If there aren't enough digits, we emit the raw text.
+           */
+          if (i + 5 < s.length) {
+            const hex = s.substring(i + 2, i + 6);
+            const codePoint = parseInt(hex, 16);
+            if (!isNaN(codePoint)) {
+              result.push(String.fromCharCode(codePoint));
+              i += 6;
+              break;
+            }
+          }
+          // Malformed \u escape — emit as-is
+          result.push(next);
+          i += 2;
+          break;
+        }
+        default:
+          /**
+           * Unknown escape — emit the character after the backslash.
+           * This matches the behavior of most JSON parsers for
+           * unrecognized escape sequences.
+           */
+          result.push(next);
+          i += 2;
+          break;
+      }
+    } else {
+      result.push(s[i]);
+      i += 1;
+    }
+  }
+
+  return result.join("");
 }
 
 /**

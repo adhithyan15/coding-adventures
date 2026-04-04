@@ -96,7 +96,7 @@ from collections.abc import Callable
 
 from grammar_tools import TokenGrammar
 
-from lexer.tokenizer import LexerError, Token, TokenType
+from lexer.tokenizer import TOKEN_CONTEXT_KEYWORD, LexerError, Token, TokenType
 
 # ---------------------------------------------------------------------------
 # Lexer Context — Callback Interface for Group Transitions
@@ -127,6 +127,8 @@ class LexerContext:
         lexer: GrammarLexer,
         source: str,
         pos_after_token: int,
+        previous_token: Token | None = None,
+        current_token_line: int = 1,
     ) -> None:
         self._lexer = lexer
         self._source = source
@@ -135,6 +137,8 @@ class LexerContext:
         self._emitted: list[Token] = []
         self._group_actions: list[tuple[str, str]] = []
         self._skip_enabled: bool | None = None  # None = no change
+        self._previous_token = previous_token
+        self._current_token_line = current_token_line
 
     def push_group(self, group_name: str) -> None:
         """Push a pattern group onto the stack.
@@ -202,6 +206,64 @@ class LexerContext:
         Useful for groups where whitespace is significant (e.g., CDATA).
         """
         self._skip_enabled = enabled
+
+    # -- Extension: Token Lookbehind ------------------------------------------
+
+    def previous_token(self) -> Token | None:
+        """Return the most recently emitted token, or None at start of input.
+
+        "Emitted" means the token actually made it into the output list —
+        suppressed tokens are not counted. This provides **lookbehind**
+        capability for context-sensitive decisions.
+
+        For example, in JavaScript ``/`` is a regex literal after ``=``,
+        ``(`` or ``,`` but a division operator after ``)``, ``]``,
+        identifiers, or numbers. The callback can check
+        ``ctx.previous_token()`` to decide which interpretation to use.
+
+        Returns:
+            The last token in the output list, or None if no tokens
+            have been emitted yet.
+        """
+        return self._previous_token
+
+    # -- Extension: Bracket Depth Tracking ------------------------------------
+
+    def bracket_depth(self, kind: str | None = None) -> int:
+        """Return the current nesting depth for a specific bracket type,
+        or the total depth across all types if no argument is given.
+
+        Depth starts at 0 and increments on each opener (``(``, ``[``,
+        ``{``), decrements on each closer (``)``, ``]``, ``}``). The count
+        never goes below 0 — unmatched closers are clamped.
+
+        This is essential for template literal interpolation in languages
+        like JavaScript, Kotlin, and Ruby, where ``}`` at brace-depth 0
+        closes the interpolation rather than being part of a nested
+        expression.
+
+        Args:
+            kind: Optional bracket type to query — one of ``"paren"``,
+                ``"bracket"``, or ``"brace"``. If None, returns the sum
+                of all three depths.
+        """
+        return self._lexer.bracket_depth(kind)
+
+    # -- Extension: Newline Detection -----------------------------------------
+
+    def preceded_by_newline(self) -> bool:
+        """Return True if a newline appeared between the previous token
+        and the current token (i.e., they are on different lines).
+
+        This is used by languages with automatic semicolon insertion
+        (JavaScript, Go) to detect line breaks that trigger implicit
+        statement termination.
+
+        Returns False if there is no previous token (start of input).
+        """
+        if self._previous_token is None:
+            return False
+        return self._previous_token.line < self._current_token_line
 
 
 # ---------------------------------------------------------------------------
@@ -399,6 +461,30 @@ class GrammarLexer:
         # where whitespace is significant (e.g., CDATA, comments).
         self._skip_enabled: bool = True
 
+        # -- Extension: Token lookbehind --
+        # The most recently emitted token, for lookbehind in callbacks.
+        # Updated after each token push (including callback-emitted tokens).
+        # Reset to None on each tokenize() call.
+        self._last_emitted_token: Token | None = None
+
+        # -- Extension: Bracket depth tracking --
+        # Per-type bracket nesting depth counters. Tracks ``()``, ``[]``,
+        # and ``{}`` independently. Updated after each token match in both
+        # standard and indentation modes. Exposed to callbacks via
+        # ``LexerContext.bracket_depth()``.
+        self._bracket_depths: dict[str, int] = {
+            "paren": 0,
+            "bracket": 0,
+            "brace": 0,
+        }
+
+        # -- Extension: Context keywords --
+        # Pre-computed set of context-sensitive keywords for O(1) lookup.
+        # Words in this set are emitted as NAME with TOKEN_CONTEXT_KEYWORD flag.
+        self._context_keyword_set: frozenset[str] = frozenset(
+            grammar.context_keywords if hasattr(grammar, 'context_keywords') and grammar.context_keywords else []
+        )
+
         # Transform hooks — pluggable pipeline stages for language-specific
         # processing. Hooks compose left-to-right: if three pre_tokenize hooks
         # A, B, C are registered, source flows through A → B → C.
@@ -458,6 +544,47 @@ class GrammarLexer:
             hook: A function list[Token] → list[Token].
         """
         self._post_tokenize_hooks.append(hook)
+
+    # -- Extension: Bracket depth -----------------------------------------------
+
+    def bracket_depth(self, kind: str | None = None) -> int:
+        """Return the current nesting depth for a specific bracket type,
+        or the total depth across all types if no argument is given.
+
+        This is the public API used by LexerContext to expose bracket
+        depth to callbacks. Language packages use this for template
+        literal interpolation and similar nested constructs.
+
+        Args:
+            kind: One of ``"paren"``, ``"bracket"``, ``"brace"``, or
+                None for the total across all types.
+        """
+        if kind is None:
+            return sum(self._bracket_depths.values())
+        return self._bracket_depths.get(kind, 0)
+
+    def _update_bracket_depth(self, value: str) -> None:
+        """Update bracket depth counters based on a token's text value.
+
+        Called after each token match to track bracket nesting. Opening
+        brackets increment the appropriate counter; closing brackets
+        decrement it (clamped to 0 so unmatched closers don't go negative).
+
+        Args:
+            value: The matched token's text value.
+        """
+        if value == "(":
+            self._bracket_depths["paren"] += 1
+        elif value == ")":
+            self._bracket_depths["paren"] = max(0, self._bracket_depths["paren"] - 1)
+        elif value == "[":
+            self._bracket_depths["bracket"] += 1
+        elif value == "]":
+            self._bracket_depths["bracket"] = max(0, self._bracket_depths["bracket"] - 1)
+        elif value == "{":
+            self._bracket_depths["brace"] += 1
+        elif value == "}":
+            self._bracket_depths["brace"] = max(0, self._bracket_depths["brace"] - 1)
 
     # -- Main tokenization entry point ----------------------------------------
 
@@ -572,21 +699,51 @@ class GrammarLexer:
             active_group = self._group_stack[-1]
             token = self._try_match_token_in_group(active_group)
             if token is not None:
+                # --- Context keyword flagging ---
+                # If the matched token is a NAME whose value is in the
+                # context keyword set, flag it with TOKEN_CONTEXT_KEYWORD.
+                # This lets the parser decide whether it's a keyword or
+                # identifier based on syntactic position.
+                if (
+                    self._context_keyword_set
+                    and token.type in ("NAME", TokenType.NAME)
+                    and token.value in self._context_keyword_set
+                ):
+                    token = Token(
+                        type=token.type,
+                        value=token.value,
+                        line=token.line,
+                        column=token.column,
+                        flags=(token.flags or 0) | TOKEN_CONTEXT_KEYWORD,
+                    )
+
+                # --- Update bracket depth ---
+                self._update_bracket_depth(token.value)
+
                 # --- Invoke on-token callback ---
                 # The callback can push/pop groups, emit extra tokens,
                 # suppress the current token, or toggle skip processing.
                 # Emitted tokens do NOT re-trigger the callback.
                 if self._on_token is not None:
-                    ctx = LexerContext(self, self._source, self._pos)
+                    ctx = LexerContext(
+                        self,
+                        self._source,
+                        self._pos,
+                        previous_token=self._last_emitted_token,
+                        current_token_line=token.line,
+                    )
                     self._on_token(token, ctx)
 
                     # Apply suppression: if the callback suppressed this
                     # token, don't add it to the output.
                     if not ctx._suppressed:
                         tokens.append(token)
+                        self._last_emitted_token = token
 
                     # Append any tokens emitted by the callback.
-                    tokens.extend(ctx._emitted)
+                    for emitted in ctx._emitted:
+                        tokens.append(emitted)
+                        self._last_emitted_token = emitted
 
                     # Apply group stack actions in order.
                     for action, group_name in ctx._group_actions:
@@ -600,6 +757,7 @@ class GrammarLexer:
                         self._skip_enabled = ctx._skip_enabled
                 else:
                     tokens.append(token)
+                    self._last_emitted_token = token
                 continue
 
             # --- Try error patterns as fallback ---
@@ -625,9 +783,11 @@ class GrammarLexer:
             column=self._column,
         ))
 
-        # Reset group stack for reuse (in case tokenize is called again).
+        # Reset state for reuse (in case tokenize is called again).
         self._group_stack = ["default"]
         self._skip_enabled = True
+        self._last_emitted_token = None
+        self._bracket_depths = {"paren": 0, "bracket": 0, "brace": 0}
 
         return tokens
 

@@ -123,6 +123,14 @@ type LexerContext struct {
 	// skipEnabled records whether the callback changed skip processing.
 	// nil means no change; non-nil means the callback set a new value.
 	skipEnabled *bool
+
+	// previousToken is the most recently emitted token (for lookbehind).
+	// nil at the start of input.
+	previousToken *Token
+
+	// currentTokenLine is the line of the current token being processed,
+	// used for newline detection (precededByNewline).
+	currentTokenLine int
 }
 
 // groupAction represents a deferred push or pop on the group stack.
@@ -265,6 +273,63 @@ func (ctx *LexerContext) SetSkipEnabled(enabled bool) {
 }
 
 // ---------------------------------------------------------------------------
+// Extension: Token Lookbehind
+// ---------------------------------------------------------------------------
+
+// PreviousToken returns the most recently emitted token, or nil at the start
+// of input.
+//
+// "Emitted" means the token actually made it into the output list — suppressed
+// tokens are not counted. This provides lookbehind capability for context-
+// sensitive decisions.
+//
+// For example, in JavaScript `/` is a regex literal after `=`, `(` or `,`
+// but a division operator after `)`, `]`, identifiers, or numbers. The
+// callback can check ctx.PreviousToken().TypeName to decide which
+// interpretation to use.
+func (ctx *LexerContext) PreviousToken() *Token {
+	return ctx.previousToken
+}
+
+// ---------------------------------------------------------------------------
+// Extension: Bracket Depth Tracking
+// ---------------------------------------------------------------------------
+
+// BracketDepth returns the current nesting depth for a specific bracket type.
+// Pass "paren" for (), "bracket" for [], "brace" for {}, or "" for the total
+// depth across all three types.
+//
+// Depth starts at 0 and increments on each opener, decrements on each closer.
+// The count never goes below 0 — unmatched closers are clamped.
+//
+// This is essential for template literal interpolation in languages like
+// JavaScript, Kotlin, and Ruby, where `}` at brace-depth 0 closes the
+// interpolation rather than being part of a nested expression.
+func (ctx *LexerContext) BracketDepth(kind string) int {
+	return ctx.lexer.BracketDepth(kind)
+}
+
+// ---------------------------------------------------------------------------
+// Extension: Newline Detection
+// ---------------------------------------------------------------------------
+
+// PrecededByNewline returns true if a newline appeared between the previous
+// token and the current token (i.e., they are on different lines).
+//
+// This is used by languages with automatic semicolon insertion (JavaScript, Go)
+// to detect line breaks that trigger implicit statement termination. The lexer
+// exposes this as a convenience so callbacks and post-tokenize hooks can set
+// the TokenPrecededByNewline flag on tokens that need it.
+//
+// Returns false if there is no previous token (start of input).
+func (ctx *LexerContext) PrecededByNewline() bool {
+	if ctx.previousToken == nil {
+		return false
+	}
+	return ctx.previousToken.Line < ctx.currentTokenLine
+}
+
+// ---------------------------------------------------------------------------
 // The Grammar-Driven Lexer
 // ---------------------------------------------------------------------------
 
@@ -297,7 +362,34 @@ type GrammarLexer struct {
 	// Indentation mode state
 	indentMode   bool
 	indentStack  []int
-	bracketDepth int
+	bracketDepth int // Legacy: single bracket depth for indentation mode
+
+	// ---------------------------------------------------------------------------
+	// Extension: Per-type bracket depth tracking
+	// ---------------------------------------------------------------------------
+	//
+	// Tracks `()`, `[]`, and `{}` independently. Updated after each token match
+	// in both standard and indentation modes. Exposed to callbacks via
+	// LexerContext.BracketDepth().
+	//
+	// This enables context-sensitive lexing for template literals, string
+	// interpolation, and other constructs where bracket nesting determines
+	// how to tokenize subsequent input.
+	bracketDepths struct {
+		paren   int
+		bracket int
+		brace   int
+	}
+
+	// lastEmittedToken is the most recently emitted token, for lookbehind
+	// in callbacks. Updated after each token push (including callback-emitted
+	// tokens). Reset to nil on each Tokenize() call.
+	lastEmittedToken *Token
+
+	// contextKeywordSet is the pre-computed set of context-sensitive keywords
+	// for O(1) lookup. Words in this set are emitted as NAME tokens with
+	// the TokenContextKeyword flag.
+	contextKeywordSet map[string]struct{}
 
 	// --- Pattern groups ---
 	// groupPatterns maps group names to their compiled patterns. The
@@ -465,29 +557,36 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 		groupPatterns[groupName] = compiled
 	}
 
+	// Build context keyword set for O(1) lookup.
+	contextKeywordSet := make(map[string]struct{})
+	for _, ck := range grammar.ContextKeywords {
+		contextKeywordSet[ck] = struct{}{}
+	}
+
 	return &GrammarLexer{
-		source:          src,
-		originalSource:  source,
-		grammar:         grammar,
-		pos:             0,
-		line:            1,
-		column:          1,
-		keywordSet:      keywordSet,
-		reservedSet:     reservedSet,
-		patterns:        patterns,
-		skipPatterns:    skipPatterns,
-		hasSkipPatterns: len(grammar.SkipDefinitions) > 0,
-		indentMode:      grammar.Mode == "indentation",
-		indentStack:     []int{0},
-		bracketDepth:    0,
-		groupPatterns:   groupPatterns,
-		groupStack:      []string{"default"},
-		onToken:         nil,
+		source:            src,
+		originalSource:    source,
+		grammar:           grammar,
+		pos:               0,
+		line:              1,
+		column:            1,
+		keywordSet:        keywordSet,
+		reservedSet:       reservedSet,
+		patterns:          patterns,
+		skipPatterns:      skipPatterns,
+		hasSkipPatterns:   len(grammar.SkipDefinitions) > 0,
+		indentMode:        grammar.Mode == "indentation",
+		indentStack:       []int{0},
+		bracketDepth:      0,
+		groupPatterns:     groupPatterns,
+		groupStack:        []string{"default"},
+		onToken:           nil,
 		skipEnabled:       true,
 		aliasMap:          aliasMap,
 		caseInsensitive:   grammar.CaseInsensitive,
 		preTokenizeHooks:  nil,
 		postTokenizeHooks: nil,
+		contextKeywordSet: contextKeywordSet,
 	}
 }
 
@@ -532,6 +631,52 @@ func (l *GrammarLexer) SetOnToken(callback OnTokenCallback) {
 			l.onToken = callback
 			return rf.Generate(true, false, struct{}{})
 		}).GetResult()
+}
+
+// BracketDepth returns the current nesting depth for a specific bracket type.
+// Pass "paren" for (), "bracket" for [], "brace" for {}, or "" for the total
+// depth across all three types.
+func (l *GrammarLexer) BracketDepth(kind string) int {
+	switch kind {
+	case "paren":
+		return l.bracketDepths.paren
+	case "bracket":
+		return l.bracketDepths.bracket
+	case "brace":
+		return l.bracketDepths.brace
+	default:
+		return l.bracketDepths.paren + l.bracketDepths.bracket + l.bracketDepths.brace
+	}
+}
+
+// updateBracketDepth updates per-type bracket depth counters based on a
+// token's value. Called after each token match in both standard and
+// indentation modes. Only single-character values are checked — multi-
+// character tokens cannot be brackets.
+func (l *GrammarLexer) updateBracketDepth(value string) {
+	if len(value) != 1 {
+		return
+	}
+	switch value {
+	case "(":
+		l.bracketDepths.paren++
+	case ")":
+		if l.bracketDepths.paren > 0 {
+			l.bracketDepths.paren--
+		}
+	case "[":
+		l.bracketDepths.bracket++
+	case "]":
+		if l.bracketDepths.bracket > 0 {
+			l.bracketDepths.bracket--
+		}
+	case "{":
+		l.bracketDepths.brace++
+	case "}":
+		if l.bracketDepths.brace > 0 {
+			l.bracketDepths.brace--
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -742,7 +887,19 @@ func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
 				}
 			}
 
-			tok := Token{Type: tType, Value: value, Line: startLine, Column: startCol, TypeName: typeName}
+			// Check if this NAME token is a context keyword — a word that
+			// is sometimes a keyword and sometimes an identifier depending
+			// on syntactic position. Context keywords are emitted as NAME
+			// with the TokenContextKeyword flag, leaving the final decision
+			// to the language-specific parser or callback.
+			var flags int
+			if typeName == "NAME" && len(l.contextKeywordSet) > 0 {
+				if _, isCtx := l.contextKeywordSet[value]; isCtx {
+					flags = TokenContextKeyword
+				}
+			}
+
+			tok := Token{Type: tType, Value: value, Line: startLine, Column: startCol, TypeName: typeName, Flags: flags}
 
 			for i := 0; i < loc[1]; i++ {
 				l.advance()
@@ -809,6 +966,12 @@ func (l *GrammarLexer) Tokenize() []Token {
 				l.source = source
 			}
 
+			// Reset extension state for reuse between Tokenize() calls.
+			l.lastEmittedToken = nil
+			l.bracketDepths.paren = 0
+			l.bracketDepths.bracket = 0
+			l.bracketDepths.brace = 0
+
 			// Stage 2: Core tokenization.
 			var tokens []Token
 			if l.indentMode {
@@ -873,7 +1036,9 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 		// --- Newlines become NEWLINE tokens ---
 		// Newlines are structural — they mark line boundaries.
 		if char == '\n' {
-			tokens = append(tokens, Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column, TypeName: "NEWLINE"})
+			newlineTok := Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column, TypeName: "NEWLINE"}
+			tokens = append(tokens, newlineTok)
+			l.lastEmittedToken = &newlineTok
 			l.advance()
 			continue
 		}
@@ -885,15 +1050,20 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 		activeGroup := l.groupStack[len(l.groupStack)-1]
 		tok := l.tryMatchTokenInGroup(activeGroup)
 		if tok != nil {
+			// Update per-type bracket depth tracking.
+			l.updateBracketDepth(tok.Value)
+
 			// --- Invoke on-token callback ---
 			// The callback can push/pop groups, emit extra tokens, suppress
 			// the current token, or toggle skip processing. Emitted tokens
 			// do NOT re-trigger the callback.
 			if l.onToken != nil {
 				ctx := &LexerContext{
-					lexer:    l,
-					source:   l.source,
-					posAfter: l.pos,
+					lexer:            l,
+					source:           l.source,
+					posAfter:         l.pos,
+					previousToken:    l.lastEmittedToken,
+					currentTokenLine: tok.Line,
 				}
 				l.onToken(*tok, ctx)
 
@@ -901,10 +1071,15 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 				// don't add it to the output.
 				if !ctx.suppressed {
 					tokens = append(tokens, *tok)
+					l.lastEmittedToken = tok
 				}
 
 				// Append any tokens emitted by the callback.
-				tokens = append(tokens, ctx.emitted...)
+				for _, emitted := range ctx.emitted {
+					tokens = append(tokens, emitted)
+					emittedCopy := emitted
+					l.lastEmittedToken = &emittedCopy
+				}
 
 				// Apply group stack actions in order.
 				for _, action := range ctx.groupActions {
@@ -921,6 +1096,7 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 				}
 			} else {
 				tokens = append(tokens, *tok)
+				l.lastEmittedToken = tok
 			}
 			continue
 		}
@@ -987,14 +1163,17 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 		// Try token patterns
 		tok := l.tryMatchToken()
 		if tok != nil {
-			// Track bracket depth
+			// Track bracket depth (legacy single counter for indentation logic)
 			switch tok.Value {
 			case "(", "[", "{":
 				l.bracketDepth++
 			case ")", "]", "}":
 				l.bracketDepth--
 			}
+			// Track per-type bracket depth (shared for callback access)
+			l.updateBracketDepth(tok.Value)
 			tokens = append(tokens, *tok)
+			l.lastEmittedToken = tok
 			continue
 		}
 

@@ -466,12 +466,16 @@ class Token:
         value: The actual text from the source code that this token represents.
         line: The 1-based line number where this token starts.
         column: The 1-based column number where this token starts.
+        flags: Optional bitmask of token metadata flags. When None, all flags
+            are off. Use ``TOKEN_PRECEDED_BY_NEWLINE`` and ``TOKEN_CONTEXT_KEYWORD``
+            constants with bitwise AND to test individual flags.
     """
 
     type: TokenType | str
     value: str
     line: int
     column: int
+    flags: int | None = None
 
     @property
     def type_name(self) -> str:
@@ -494,6 +498,37 @@ class Token:
         'x' at line 1, column 1".
         """
         return f"Token({self.type_name}, {self.value!r}, {self.line}:{self.column})"
+
+
+# ---------------------------------------------------------------------------
+# Token Flag Constants
+# ---------------------------------------------------------------------------
+# Bitmask flags for token metadata. Flags carry information that is neither
+# type nor value but affects how downstream consumers (parsers, formatters,
+# linters) interpret a token.
+#
+# Flags are optional — when ``flags`` is None, all flags are off.
+# Use bitwise AND to test: ``(token.flags or 0) & TOKEN_PRECEDED_BY_NEWLINE``
+
+TOKEN_PRECEDED_BY_NEWLINE: int = 1
+"""Set when a line break appeared between this token and the previous one.
+
+Languages with automatic semicolon insertion (JavaScript, Go) use this
+to decide whether an implicit semicolon should be inserted. The lexer
+itself does not insert semicolons — that is a language-specific concern
+handled via post-tokenize hooks or parser pre-parse hooks.
+"""
+
+TOKEN_CONTEXT_KEYWORD: int = 2
+"""Set for context-sensitive keywords — words that are keywords in some
+syntactic positions but identifiers in others.
+
+For example, JavaScript's ``async``, ``yield``, ``await``, ``get``, ``set``
+are sometimes keywords (in function declarations, property accessors) and
+sometimes plain identifiers (``let get = 5``). The lexer emits these as
+NAME tokens with this flag set, leaving the final keyword-vs-identifier
+decision to the language-specific parser.
+"""
 
 
 # ---------------------------------------------------------------------------

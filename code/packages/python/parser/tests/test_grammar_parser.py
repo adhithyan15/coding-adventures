@@ -36,7 +36,18 @@ import pytest
 from grammar_tools import parse_parser_grammar
 from lexer import Lexer, Token, TokenType
 
-from lang_parser.grammar_parser import ASTNode, GrammarParseError, GrammarParser
+from lang_parser.grammar_parser import (
+    ASTNode,
+    GrammarParseError,
+    GrammarParser,
+    _compute_node_position,
+    _find_first_token,
+    _find_last_token,
+    collect_tokens,
+    find_nodes,
+    is_ast_node,
+    walk_ast,
+)
 
 # =============================================================================
 # FIXTURES — Load the grammar once and reuse across tests
@@ -909,6 +920,1007 @@ class TestStarlarkPipeline:
         )
         ast = parser.parse()
         assert ast.rule_name == "file"
+
+
+# =============================================================================
+# TEST: POSITIVE LOOKAHEAD (&element)
+# =============================================================================
+
+
+class TestPositiveLookahead:
+    """Tests for positive lookahead (&element) — succeed if element matches,
+    consume nothing."""
+
+    def test_positive_lookahead_succeeds(self) -> None:
+        """&NUMBER should succeed when the next token is a NUMBER, consuming nothing."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            PositiveLookahead,
+            RuleReference,
+            Sequence,
+        )
+
+        # Grammar: start = &NUMBER NUMBER ;
+        # The lookahead checks for NUMBER without consuming, then NUMBER consumes it.
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    PositiveLookahead(element=RuleReference(name="NUMBER", is_token=True)),
+                    RuleReference(name="NUMBER", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="42", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=3),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert ast.rule_name == "start"
+        # The lookahead produces no children; only the actual NUMBER match does.
+        assert len(ast.children) == 1
+        assert ast.children[0].value == "42"  # type: ignore[union-attr]
+
+    def test_positive_lookahead_fails(self) -> None:
+        """&NUMBER should fail when the next token is NAME, causing parse failure."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            PositiveLookahead,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    PositiveLookahead(element=RuleReference(name="NUMBER", is_token=True)),
+                    RuleReference(name="NAME", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="x", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        with pytest.raises(GrammarParseError):
+            parser.parse()
+
+    def test_positive_lookahead_does_not_consume(self) -> None:
+        """&NAME NAME should parse the NAME once (lookahead does not consume)."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            PositiveLookahead,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    PositiveLookahead(element=RuleReference(name="NAME", is_token=True)),
+                    RuleReference(name="NAME", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="hello", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=6),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert len(ast.children) == 1
+        assert ast.children[0].value == "hello"  # type: ignore[union-attr]
+
+
+# =============================================================================
+# TEST: NEGATIVE LOOKAHEAD (!element)
+# =============================================================================
+
+
+class TestNegativeLookahead:
+    """Tests for negative lookahead (!element) — succeed if element does NOT
+    match, consume nothing."""
+
+    def test_negative_lookahead_succeeds(self) -> None:
+        """!PLUS NAME should succeed when the next token is NAME (not PLUS)."""
+        from grammar_tools import (
+            GrammarRule,
+            NegativeLookahead,
+            ParserGrammar,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    NegativeLookahead(element=RuleReference(name="PLUS", is_token=True)),
+                    RuleReference(name="NAME", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="x", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert ast.rule_name == "start"
+        assert len(ast.children) == 1
+        assert ast.children[0].value == "x"  # type: ignore[union-attr]
+
+    def test_negative_lookahead_fails(self) -> None:
+        """!NUMBER should fail when the next token IS a NUMBER."""
+        from grammar_tools import (
+            GrammarRule,
+            NegativeLookahead,
+            ParserGrammar,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    NegativeLookahead(element=RuleReference(name="NUMBER", is_token=True)),
+                    RuleReference(name="NUMBER", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="42", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=3),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        with pytest.raises(GrammarParseError):
+            parser.parse()
+
+    def test_negative_lookahead_does_not_consume(self) -> None:
+        """!PLUS NUMBER should parse the NUMBER (lookahead does not consume)."""
+        from grammar_tools import (
+            GrammarRule,
+            NegativeLookahead,
+            ParserGrammar,
+            RuleReference,
+            Sequence,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    NegativeLookahead(element=RuleReference(name="PLUS", is_token=True)),
+                    RuleReference(name="NUMBER", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="7", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert len(ast.children) == 1
+        assert ast.children[0].value == "7"  # type: ignore[union-attr]
+
+
+# =============================================================================
+# TEST: ONE-OR-MORE REPETITION ({element}+)
+# =============================================================================
+
+
+class TestOneOrMoreRepetition:
+    """Tests for one-or-more repetition ({element}+) — must match at least once."""
+
+    def test_one_or_more_single_match(self) -> None:
+        """A single NUMBER should satisfy {NUMBER}+."""
+        from grammar_tools import (
+            GrammarRule,
+            OneOrMoreRepetition,
+            ParserGrammar,
+            RuleReference,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=OneOrMoreRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="1", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert ast.rule_name == "start"
+        assert len(ast.children) == 1
+        assert ast.children[0].value == "1"  # type: ignore[union-attr]
+
+    def test_one_or_more_multiple_matches(self) -> None:
+        """Multiple NUMBERs should all be consumed by {NUMBER}+."""
+        from grammar_tools import (
+            GrammarRule,
+            OneOrMoreRepetition,
+            ParserGrammar,
+            RuleReference,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=OneOrMoreRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="1", line=1, column=1),
+            Token(type=TokenType.NUMBER, value="2", line=1, column=3),
+            Token(type=TokenType.NUMBER, value="3", line=1, column=5),
+            Token(type=TokenType.EOF, value="", line=1, column=6),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert len(ast.children) == 3
+        assert [c.value for c in ast.children] == ["1", "2", "3"]  # type: ignore[union-attr]
+
+    def test_one_or_more_zero_matches_fails(self) -> None:
+        """Zero matches should fail for {NUMBER}+ (requires at least one)."""
+        from grammar_tools import (
+            GrammarRule,
+            OneOrMoreRepetition,
+            ParserGrammar,
+            RuleReference,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=OneOrMoreRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="x", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        with pytest.raises(GrammarParseError):
+            parser.parse()
+
+
+# =============================================================================
+# TEST: SEPARATED REPETITION ({element // separator})
+# =============================================================================
+
+
+class TestSeparatedRepetition:
+    """Tests for separated repetition ({element // separator})."""
+
+    def test_separated_single_element(self) -> None:
+        """A single NUMBER with no separator should succeed."""
+        from grammar_tools import (
+            GrammarRule,
+            Literal,
+            ParserGrammar,
+            RuleReference,
+            SeparatedRepetition,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=SeparatedRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                    separator=Literal(value=","),
+                    at_least_one=False,
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="1", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert ast.rule_name == "start"
+        assert len(ast.children) == 1
+
+    def test_separated_multiple_elements(self) -> None:
+        """NUMBER COMMA NUMBER COMMA NUMBER should parse as comma-separated list."""
+        from grammar_tools import (
+            GrammarRule,
+            Literal,
+            ParserGrammar,
+            RuleReference,
+            SeparatedRepetition,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=SeparatedRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                    separator=Literal(value=","),
+                    at_least_one=False,
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="1", line=1, column=1),
+            Token(type=TokenType.COMMA, value=",", line=1, column=2),
+            Token(type=TokenType.NUMBER, value="2", line=1, column=3),
+            Token(type=TokenType.COMMA, value=",", line=1, column=4),
+            Token(type=TokenType.NUMBER, value="3", line=1, column=5),
+            Token(type=TokenType.EOF, value="", line=1, column=6),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        # children: NUMBER, COMMA, NUMBER, COMMA, NUMBER
+        assert len(ast.children) == 5
+        values = [c.value for c in ast.children]  # type: ignore[union-attr]
+        assert values == ["1", ",", "2", ",", "3"]
+
+    def test_separated_zero_elements_allowed(self) -> None:
+        """Zero elements should succeed when at_least_one=False."""
+        from grammar_tools import (
+            GrammarRule,
+            Literal,
+            ParserGrammar,
+            RuleReference,
+            Sequence,
+            SeparatedRepetition,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    SeparatedRepetition(
+                        element=RuleReference(name="NUMBER", is_token=True),
+                        separator=Literal(value=","),
+                        at_least_one=False,
+                    ),
+                    RuleReference(name="NAME", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="end", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=4),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        assert ast.rule_name == "start"
+
+    def test_separated_at_least_one_fails_on_zero(self) -> None:
+        """Zero elements should fail when at_least_one=True."""
+        from grammar_tools import (
+            GrammarRule,
+            Literal,
+            ParserGrammar,
+            RuleReference,
+            SeparatedRepetition,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=SeparatedRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                    separator=Literal(value=","),
+                    at_least_one=True,
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NAME, value="x", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=2),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        with pytest.raises(GrammarParseError):
+            parser.parse()
+
+    def test_separated_trailing_separator_not_consumed(self) -> None:
+        """A trailing separator without a following element should not be consumed."""
+        from grammar_tools import (
+            GrammarRule,
+            Literal,
+            ParserGrammar,
+            RuleReference,
+            Sequence,
+            SeparatedRepetition,
+        )
+
+        # Grammar: start = { NUMBER // "," } NAME ;
+        # Input: 1 , x  — the "," should NOT be consumed because NAME follows, not NUMBER.
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=Sequence(elements=[
+                    SeparatedRepetition(
+                        element=RuleReference(name="NUMBER", is_token=True),
+                        separator=Literal(value=","),
+                        at_least_one=False,
+                    ),
+                    Literal(value=","),
+                    RuleReference(name="NAME", is_token=True),
+                ]),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="1", line=1, column=1),
+            Token(type=TokenType.COMMA, value=",", line=1, column=2),
+            Token(type=TokenType.NAME, value="x", line=1, column=3),
+            Token(type=TokenType.EOF, value="", line=1, column=4),
+        ]
+        parser = GrammarParser(tokens, grammar)
+        ast = parser.parse()
+        # The separated rep should only consume "1", leaving ",x" for the rest.
+        assert _find_token_in_tree(ast, "NAME", "x")
+
+
+# =============================================================================
+# TEST: AST POSITION FIELDS
+# =============================================================================
+
+
+class TestASTPositionFields:
+    """Tests for start_line, start_column, end_line, end_column on ASTNode."""
+
+    def test_position_fields_set_from_tokens(self, grammar: object) -> None:
+        """Parsed nodes should have position info derived from their token spans."""
+        ast = parse_source("42", grammar)
+        # The root program node should have position info.
+        assert ast.start_line is not None
+        assert ast.start_column is not None
+        assert ast.end_line is not None
+        assert ast.end_column is not None
+
+    def test_position_spans_multiple_tokens(self, grammar: object) -> None:
+        """A node spanning '1 + 2' should have start at '1' and end at '2'."""
+        ast = parse_source("1 + 2", grammar)
+        expression = _find_rule(ast, "expression")
+        assert expression is not None
+        assert expression.start_line == 1
+        assert expression.start_column == 1
+        # The end should be at token "2"
+        assert expression.end_line == 1
+        assert expression.end_column is not None
+        assert expression.end_column > 1
+
+    def test_compute_node_position_empty_children(self) -> None:
+        """_compute_node_position should return None for empty children."""
+        result = _compute_node_position([])
+        assert result is None
+
+    def test_compute_node_position_with_tokens(self) -> None:
+        """_compute_node_position should return correct span for tokens."""
+        t1 = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        t2 = Token(type=TokenType.PLUS, value="+", line=1, column=3)
+        t3 = Token(type=TokenType.NUMBER, value="2", line=1, column=5)
+        result = _compute_node_position([t1, t2, t3])
+        assert result is not None
+        assert result["start_line"] == 1
+        assert result["start_column"] == 1
+        assert result["end_line"] == 1
+        assert result["end_column"] == 5
+
+    def test_compute_node_position_nested_nodes(self) -> None:
+        """_compute_node_position should find tokens inside nested ASTNodes."""
+        t1 = Token(type=TokenType.NUMBER, value="1", line=2, column=5)
+        t2 = Token(type=TokenType.NUMBER, value="2", line=3, column=10)
+        inner1 = ASTNode(rule_name="a", children=[t1])
+        inner2 = ASTNode(rule_name="b", children=[t2])
+        result = _compute_node_position([inner1, inner2])
+        assert result is not None
+        assert result["start_line"] == 2
+        assert result["start_column"] == 5
+        assert result["end_line"] == 3
+        assert result["end_column"] == 10
+
+    def test_find_first_token_empty(self) -> None:
+        """_find_first_token on empty list returns None."""
+        assert _find_first_token([]) is None
+
+    def test_find_last_token_empty(self) -> None:
+        """_find_last_token on empty list returns None."""
+        assert _find_last_token([]) is None
+
+    def test_find_first_token_nested(self) -> None:
+        """_find_first_token should recurse into ASTNode children."""
+        t = Token(type=TokenType.NAME, value="x", line=1, column=1)
+        inner = ASTNode(rule_name="inner", children=[t])
+        assert _find_first_token([inner]) is t
+
+    def test_find_last_token_nested(self) -> None:
+        """_find_last_token should recurse into ASTNode children."""
+        t1 = Token(type=TokenType.NAME, value="x", line=1, column=1)
+        t2 = Token(type=TokenType.NAME, value="y", line=1, column=3)
+        inner = ASTNode(rule_name="inner", children=[t2])
+        assert _find_last_token([t1, inner]) is t2
+
+    def test_find_first_token_skips_empty_nodes(self) -> None:
+        """_find_first_token should skip ASTNodes with no tokens."""
+        empty = ASTNode(rule_name="empty", children=[])
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=5)
+        assert _find_first_token([empty, t]) is t
+
+    def test_find_last_token_skips_empty_nodes(self) -> None:
+        """_find_last_token should skip ASTNodes with no tokens."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=5)
+        empty = ASTNode(rule_name="empty", children=[])
+        assert _find_last_token([t, empty]) is t
+
+
+# =============================================================================
+# TEST: walk_ast
+# =============================================================================
+
+
+class TestWalkAst:
+    """Tests for the walk_ast utility with enter/leave callbacks."""
+
+    def test_walk_enter_visits_all_nodes(self) -> None:
+        """Enter callback should be called for every ASTNode."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        child = ASTNode(rule_name="child", children=[t])
+        root = ASTNode(rule_name="root", children=[child])
+
+        visited: list[str] = []
+
+        def enter(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            visited.append(node.rule_name)
+            return None
+
+        walk_ast(root, enter=enter)
+        assert visited == ["root", "child"]
+
+    def test_walk_leave_visits_all_nodes(self) -> None:
+        """Leave callback should be called after children are walked."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        child = ASTNode(rule_name="child", children=[t])
+        root = ASTNode(rule_name="root", children=[child])
+
+        visited: list[str] = []
+
+        def leave(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            visited.append(node.rule_name)
+            return None
+
+        walk_ast(root, leave=leave)
+        # Leave should visit child before root (depth-first post-order).
+        assert visited == ["child", "root"]
+
+    def test_walk_enter_and_leave_order(self) -> None:
+        """Enter and leave should interleave correctly for a tree."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        child = ASTNode(rule_name="child", children=[t])
+        root = ASTNode(rule_name="root", children=[child])
+
+        events: list[str] = []
+
+        def enter(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            events.append(f"enter:{node.rule_name}")
+            return None
+
+        def leave(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            events.append(f"leave:{node.rule_name}")
+            return None
+
+        walk_ast(root, enter=enter, leave=leave)
+        assert events == [
+            "enter:root", "enter:child", "leave:child", "leave:root",
+        ]
+
+    def test_walk_enter_replaces_node(self) -> None:
+        """Enter callback can replace a node by returning a new ASTNode."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        child = ASTNode(rule_name="child", children=[t])
+        root = ASTNode(rule_name="root", children=[child])
+
+        def enter(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            if node.rule_name == "child":
+                return ASTNode(rule_name="replaced", children=node.children)
+            return None
+
+        result = walk_ast(root, enter=enter)
+        # The root's child should now be "replaced".
+        assert result.children[0].rule_name == "replaced"  # type: ignore[union-attr]
+
+    def test_walk_leave_replaces_node(self) -> None:
+        """Leave callback can replace a node by returning a new ASTNode."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        child = ASTNode(rule_name="child", children=[t])
+        root = ASTNode(rule_name="root", children=[child])
+
+        def leave(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            if node.rule_name == "root":
+                return ASTNode(rule_name="new_root", children=node.children)
+            return None
+
+        result = walk_ast(root, leave=leave)
+        assert result.rule_name == "new_root"
+
+    def test_walk_parent_tracking(self) -> None:
+        """Callbacks should receive the correct parent node."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        child = ASTNode(rule_name="child", children=[t])
+        root = ASTNode(rule_name="root", children=[child])
+
+        parents: list[str | None] = []
+
+        def enter(node: ASTNode, parent: ASTNode | None) -> ASTNode | None:
+            parents.append(parent.rule_name if parent else None)
+            return None
+
+        walk_ast(root, enter=enter)
+        assert parents == [None, "root"]
+
+    def test_walk_no_callbacks(self) -> None:
+        """walk_ast with no callbacks should return the original tree."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        root = ASTNode(rule_name="root", children=[t])
+        result = walk_ast(root)
+        assert result is root
+
+
+# =============================================================================
+# TEST: find_nodes
+# =============================================================================
+
+
+class TestFindNodes:
+    """Tests for the find_nodes utility."""
+
+    def test_find_nodes_matching(self) -> None:
+        """find_nodes should return all nodes matching the rule name."""
+        t1 = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        t2 = Token(type=TokenType.NUMBER, value="2", line=1, column=3)
+        leaf1 = ASTNode(rule_name="number", children=[t1])
+        leaf2 = ASTNode(rule_name="number", children=[t2])
+        other = ASTNode(rule_name="name", children=[
+            Token(type=TokenType.NAME, value="x", line=1, column=5),
+        ])
+        root = ASTNode(rule_name="root", children=[leaf1, other, leaf2])
+
+        results = find_nodes(root, "number")
+        assert len(results) == 2
+        assert results[0] is leaf1
+        assert results[1] is leaf2
+
+    def test_find_nodes_no_match(self) -> None:
+        """find_nodes should return an empty list when no nodes match."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        root = ASTNode(rule_name="root", children=[t])
+        results = find_nodes(root, "nonexistent")
+        assert results == []
+
+    def test_find_nodes_includes_root(self) -> None:
+        """find_nodes should include the root if it matches."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        root = ASTNode(rule_name="target", children=[t])
+        results = find_nodes(root, "target")
+        assert len(results) == 1
+        assert results[0] is root
+
+    def test_find_nodes_nested(self) -> None:
+        """find_nodes should find deeply nested matches."""
+        t = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        deep = ASTNode(rule_name="target", children=[t])
+        mid = ASTNode(rule_name="mid", children=[deep])
+        root = ASTNode(rule_name="root", children=[mid])
+        results = find_nodes(root, "target")
+        assert len(results) == 1
+        assert results[0] is deep
+
+
+# =============================================================================
+# TEST: collect_tokens
+# =============================================================================
+
+
+class TestCollectTokens:
+    """Tests for the collect_tokens utility."""
+
+    def test_collect_all_tokens(self) -> None:
+        """collect_tokens with no filter should return all tokens."""
+        t1 = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        t2 = Token(type=TokenType.PLUS, value="+", line=1, column=3)
+        t3 = Token(type=TokenType.NUMBER, value="2", line=1, column=5)
+        root = ASTNode(rule_name="expr", children=[t1, t2, t3])
+
+        results = collect_tokens(root)
+        assert len(results) == 3
+        assert [t.value for t in results] == ["1", "+", "2"]
+
+    def test_collect_tokens_filtered(self) -> None:
+        """collect_tokens with a type filter should return only matching tokens."""
+        t1 = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        t2 = Token(type=TokenType.PLUS, value="+", line=1, column=3)
+        t3 = Token(type=TokenType.NUMBER, value="2", line=1, column=5)
+        root = ASTNode(rule_name="expr", children=[t1, t2, t3])
+
+        results = collect_tokens(root, "NUMBER")
+        assert len(results) == 2
+        assert [t.value for t in results] == ["1", "2"]
+
+    def test_collect_tokens_nested(self) -> None:
+        """collect_tokens should recurse into nested ASTNodes."""
+        t1 = Token(type=TokenType.NUMBER, value="1", line=1, column=1)
+        t2 = Token(type=TokenType.NUMBER, value="2", line=1, column=3)
+        inner = ASTNode(rule_name="inner", children=[t2])
+        root = ASTNode(rule_name="root", children=[t1, inner])
+
+        results = collect_tokens(root, "NUMBER")
+        assert len(results) == 2
+        assert [t.value for t in results] == ["1", "2"]
+
+    def test_collect_tokens_string_type(self) -> None:
+        """collect_tokens should work with string-based token types."""
+        t1 = Token(type="INT", value="42", line=1, column=1)
+        t2 = Token(type="FLOAT", value="3.14", line=1, column=4)
+        root = ASTNode(rule_name="expr", children=[t1, t2])
+
+        results = collect_tokens(root, "INT")
+        assert len(results) == 1
+        assert results[0].value == "42"
+
+    def test_collect_tokens_empty_tree(self) -> None:
+        """collect_tokens on a node with no tokens should return empty list."""
+        root = ASTNode(rule_name="empty", children=[])
+        results = collect_tokens(root)
+        assert results == []
+
+
+# =============================================================================
+# TEST: is_ast_node
+# =============================================================================
+
+
+class TestIsAstNode:
+    """Tests for the is_ast_node utility."""
+
+    def test_ast_node_returns_true(self) -> None:
+        """is_ast_node should return True for an ASTNode."""
+        node = ASTNode(rule_name="test", children=[])
+        assert is_ast_node(node) is True
+
+    def test_token_returns_false(self) -> None:
+        """is_ast_node should return False for a Token."""
+        token = Token(type=TokenType.NUMBER, value="42", line=1, column=1)
+        assert is_ast_node(token) is False
+
+
+# =============================================================================
+# TEST: NEWLINE DETECTION IN NEW ELEMENT TYPES
+# =============================================================================
+
+
+class TestNewlineDetectionNewElements:
+    """Tests for _element_references_newline with new grammar element types."""
+
+    def test_newline_in_positive_lookahead(self) -> None:
+        """Positive lookahead wrapping NEWLINE should be detected."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            PositiveLookahead,
+            RuleReference,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=PositiveLookahead(
+                    element=RuleReference(name="NEWLINE", is_token=True),
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [Token(type=TokenType.EOF, value="", line=1, column=1)]
+        parser = GrammarParser(tokens, grammar)
+        assert parser._newlines_significant is True
+
+    def test_newline_in_negative_lookahead(self) -> None:
+        """Negative lookahead wrapping NEWLINE should be detected."""
+        from grammar_tools import (
+            GrammarRule,
+            NegativeLookahead,
+            ParserGrammar,
+            RuleReference,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=NegativeLookahead(
+                    element=RuleReference(name="NEWLINE", is_token=True),
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [Token(type=TokenType.EOF, value="", line=1, column=1)]
+        parser = GrammarParser(tokens, grammar)
+        assert parser._newlines_significant is True
+
+    def test_newline_in_one_or_more(self) -> None:
+        """OneOrMoreRepetition wrapping NEWLINE should be detected."""
+        from grammar_tools import (
+            GrammarRule,
+            OneOrMoreRepetition,
+            ParserGrammar,
+            RuleReference,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=OneOrMoreRepetition(
+                    element=RuleReference(name="NEWLINE", is_token=True),
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [Token(type=TokenType.EOF, value="", line=1, column=1)]
+        parser = GrammarParser(tokens, grammar)
+        assert parser._newlines_significant is True
+
+    def test_newline_in_separated_repetition_element(self) -> None:
+        """SeparatedRepetition with NEWLINE in element should be detected."""
+        from grammar_tools import (
+            GrammarRule,
+            Literal,
+            ParserGrammar,
+            RuleReference,
+            SeparatedRepetition,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=SeparatedRepetition(
+                    element=RuleReference(name="NEWLINE", is_token=True),
+                    separator=Literal(value=","),
+                    at_least_one=False,
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [Token(type=TokenType.EOF, value="", line=1, column=1)]
+        parser = GrammarParser(tokens, grammar)
+        assert parser._newlines_significant is True
+
+    def test_newline_in_separated_repetition_separator(self) -> None:
+        """SeparatedRepetition with NEWLINE in separator should be detected."""
+        from grammar_tools import (
+            GrammarRule,
+            ParserGrammar,
+            RuleReference,
+            SeparatedRepetition,
+        )
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=SeparatedRepetition(
+                    element=RuleReference(name="NUMBER", is_token=True),
+                    separator=RuleReference(name="NEWLINE", is_token=True),
+                    at_least_one=False,
+                ),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [Token(type=TokenType.EOF, value="", line=1, column=1)]
+        parser = GrammarParser(tokens, grammar)
+        assert parser._newlines_significant is True
+
+
+# =============================================================================
+# TEST: PRE-PARSE AND POST-PARSE HOOKS
+# =============================================================================
+
+
+class TestParseHooks:
+    """Tests for the pre-parse and post-parse hook pipeline."""
+
+    def test_pre_parse_hook_transforms_tokens(self) -> None:
+        """A pre-parse hook should be able to filter/modify the token list."""
+        from grammar_tools import GrammarRule, ParserGrammar, RuleReference
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=RuleReference(name="NUMBER", is_token=True),
+                line_number=1,
+            ),
+        ])
+
+        # Tokens include a leading NAME that we'll filter out via hook.
+        tokens = [
+            Token(type=TokenType.NAME, value="skip", line=1, column=1),
+            Token(type=TokenType.NUMBER, value="42", line=1, column=6),
+            Token(type=TokenType.EOF, value="", line=1, column=8),
+        ]
+
+        def remove_names(toks: list[Token]) -> list[Token]:
+            return [t for t in toks if _type_name(t) != "NAME"]
+
+        parser = GrammarParser(tokens, grammar)
+        parser.add_pre_parse(remove_names)
+        ast = parser.parse()
+        assert ast.children[0].value == "42"  # type: ignore[union-attr]
+
+    def test_post_parse_hook_transforms_ast(self) -> None:
+        """A post-parse hook should be able to transform the AST."""
+        from grammar_tools import GrammarRule, ParserGrammar, RuleReference
+
+        grammar = ParserGrammar(rules=[
+            GrammarRule(
+                name="start",
+                body=RuleReference(name="NUMBER", is_token=True),
+                line_number=1,
+            ),
+        ])
+
+        tokens = [
+            Token(type=TokenType.NUMBER, value="42", line=1, column=1),
+            Token(type=TokenType.EOF, value="", line=1, column=3),
+        ]
+
+        def rename_root(node: ASTNode) -> ASTNode:
+            return ASTNode(rule_name="renamed", children=node.children)
+
+        parser = GrammarParser(tokens, grammar)
+        parser.add_post_parse(rename_root)
+        ast = parser.parse()
+        assert ast.rule_name == "renamed"
 
 
 # =============================================================================

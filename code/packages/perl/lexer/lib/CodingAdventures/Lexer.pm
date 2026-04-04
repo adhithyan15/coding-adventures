@@ -69,6 +69,25 @@ use constant {
 };
 
 # ============================================================================
+# Token Flag Constants (bitmask)
+# ============================================================================
+#
+# Flags carry information that is neither type nor value but affects how
+# downstream consumers (parsers, formatters, linters) interpret a token.
+#
+# Flags are optional -- when undef or 0, all flags are off.
+# Use bitwise AND to test: ($token->{flags} // 0) & TOKEN_PRECEDED_BY_NEWLINE
+
+# Set when a line break appeared between this token and the previous one.
+# Languages with automatic semicolon insertion (JavaScript, Go) use this.
+use constant TOKEN_PRECEDED_BY_NEWLINE => 1;
+
+# Set for context-sensitive keywords -- words that are keywords in some
+# syntactic positions but identifiers in others.
+# Example: JavaScript's async, yield, await, get, set.
+use constant TOKEN_CONTEXT_KEYWORD => 2;
+
+# ============================================================================
 # Default keyword list
 # ============================================================================
 #

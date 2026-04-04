@@ -49,7 +49,7 @@ fn normalize_excel_reference_tokens(tokens: Vec<Token>) -> Vec<Token> {
                     value: token.value,
                     line: token.line,
                     column: token.column,
-                    type_name: Some("COLUMN_REF".to_string()),
+                    type_name: Some("COLUMN_REF".to_string()), flags: None,
                 };
             }
 
@@ -59,7 +59,7 @@ fn normalize_excel_reference_tokens(tokens: Vec<Token>) -> Vec<Token> {
                     value: token.value,
                     line: token.line,
                     column: token.column,
-                    type_name: Some("ROW_REF".to_string()),
+                    type_name: Some("ROW_REF".to_string()), flags: None,
                 };
             }
 

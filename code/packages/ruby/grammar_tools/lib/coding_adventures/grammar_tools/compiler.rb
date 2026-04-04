@@ -100,6 +100,7 @@ module CodingAdventures
             reserved_keywords: #{grammar.reserved_keywords.inspect},
             error_definitions: #{err_src},
             groups: #{groups_src},
+            context_keywords: #{grammar.context_keywords.inspect},
           )
         RUBY
       end
@@ -219,6 +220,19 @@ module CodingAdventures
         when Group
           child = element_src(element.element, i)
           "GT::Group.new(element: #{child})"
+        when PositiveLookahead
+          child = element_src(element.element, i)
+          "GT::PositiveLookahead.new(element: #{child})"
+        when NegativeLookahead
+          child = element_src(element.element, i)
+          "GT::NegativeLookahead.new(element: #{child})"
+        when OneOrMoreRepetition
+          child = element_src(element.element, i)
+          "GT::OneOrMoreRepetition.new(element: #{child})"
+        when SeparatedRepetition
+          elem_child = element_src(element.element, i)
+          sep_child = element_src(element.separator, i)
+          "GT::SeparatedRepetition.new(element: #{elem_child}, separator: #{sep_child}, at_least_one: #{element.at_least_one.inspect})"
         else
           raise TypeError, "Unknown grammar element: #{element.class}"
         end

@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-04
+
+### Added
+
+- Token flag constants: `TOKEN_PRECEDED_BY_NEWLINE` (1) and `TOKEN_CONTEXT_KEYWORD` (2)
+- `flags` field on Token (optional bitmask, defaults to 0)
+- LexerContext extensions:
+  - `previous_token()` — lookbehind for context-sensitive decisions
+  - `bracket_depth(kind)` — per-type (`paren`, `bracket`, `brace`) or total nesting depth
+  - `preceded_by_newline()` — newline detection for ASI-like languages
+- GrammarLexer extensions:
+  - `_last_emitted_token` tracking for lookbehind
+  - Per-type `_bracket_depths` tracking (paren/bracket/brace)
+  - `_context_keyword_set` for context-sensitive keyword flagging
+  - `bracket_depth(kind)` public method
+  - `_update_bracket_depth(value)` internal helper
+  - Automatic `TOKEN_CONTEXT_KEYWORD` flag on NAME tokens matching context keywords
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
