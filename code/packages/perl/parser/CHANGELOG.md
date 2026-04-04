@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-04
+
+### Added
+
+- `CodingAdventures::Parser::ASTNode` class for grammar-driven ASTs
+  - Fields: `rule_name`, `children`, `start_line`, `start_column`, `end_line`, `end_column`
+  - Methods: `is_leaf()`, `token()`, accessors
+- Grammar-driven packrat parser via `new_grammar_parser($tokens, $grammar)`
+  - `grammar_parse()` — parse token stream using first rule as entry point
+  - Packrat memoization for O(n * g) performance
+  - Auto-detects newline significance from grammar rules
+  - Furthest-failure error reporting
+  - Handles all EBNF element types including:
+    - `positive_lookahead`, `negative_lookahead` (syntactic predicates)
+    - `one_or_more` (one-or-more repetition)
+    - `separated_repetition` (separated lists)
+- AST walking utilities:
+  - `walk_ast($node, $visitor)` — depth-first traversal with enter/leave callbacks
+  - `find_nodes($node, $rule_name)` — find all nodes matching a rule name
+  - `collect_tokens($node, $type)` — collect all leaf tokens, optionally filtered
+  - `is_ast_node($child)` — check if a child is an ASTNode
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

@@ -156,6 +156,7 @@ sub new {
     return bless {
         definitions       => [],
         keywords          => [],
+        context_keywords  => [],
         mode              => '',
         escape_mode       => '',
         skip_definitions  => [],
@@ -167,6 +168,7 @@ sub new {
 
 sub definitions       { $_[0]->{definitions}       }
 sub keywords          { $_[0]->{keywords}          }
+sub context_keywords  { $_[0]->{context_keywords}  }
 sub mode              { $_[0]->{mode}              }
 sub escape_mode       { $_[0]->{escape_mode}       }
 sub skip_definitions  { $_[0]->{skip_definitions}  }
@@ -433,6 +435,10 @@ sub parse_token_grammar {
             $current_section = 'errors';
             next;
         }
+        if ($stripped eq 'context_keywords:' || $stripped eq 'context_keywords :') {
+            $current_section = 'context_keywords';
+            next;
+        }
 
         # Inside a section: lines must be indented
         if ($current_section ne '') {
@@ -440,6 +446,9 @@ sub parse_token_grammar {
             if ($first_char eq ' ' || $first_char eq "\t") {
                 if ($current_section eq 'keywords') {
                     push @{ $grammar->{keywords} }, $stripped if $stripped ne '';
+                }
+                elsif ($current_section eq 'context_keywords') {
+                    push @{ $grammar->{context_keywords} }, $stripped if $stripped ne '';
                 }
                 elsif ($current_section eq 'reserved') {
                     push @{ $grammar->{reserved_keywords} }, $stripped if $stripped ne '';
@@ -1015,6 +1024,431 @@ sub is_ll1 {
     }
 
     return 1;
+}
+
+# ============================================================================
+# Parser grammar element constructors
+# ============================================================================
+#
+# These produce plain hashrefs representing EBNF grammar elements.
+# Each has a 'type' key for discrimination.
+
+sub _make_rule_reference {
+    my ($name, $is_token) = @_;
+    return { type => 'rule_reference', name => $name, is_token => $is_token ? 1 : 0 };
+}
+
+sub _make_literal {
+    my ($value) = @_;
+    return { type => 'literal', value => $value };
+}
+
+sub _make_sequence {
+    my ($elements) = @_;
+    return { type => 'sequence', elements => $elements };
+}
+
+sub _make_alternation {
+    my ($choices) = @_;
+    return { type => 'alternation', choices => $choices };
+}
+
+sub _make_repetition {
+    my ($element) = @_;
+    return { type => 'repetition', element => $element };
+}
+
+sub _make_optional {
+    my ($element) = @_;
+    return { type => 'optional', element => $element };
+}
+
+sub _make_group {
+    my ($element) = @_;
+    return { type => 'group', element => $element };
+}
+
+sub _make_positive_lookahead {
+    my ($element) = @_;
+    return { type => 'positive_lookahead', element => $element };
+}
+
+sub _make_negative_lookahead {
+    my ($element) = @_;
+    return { type => 'negative_lookahead', element => $element };
+}
+
+sub _make_one_or_more {
+    my ($element) = @_;
+    return { type => 'one_or_more', element => $element };
+}
+
+sub _make_separated_repetition {
+    my ($element, $separator, $at_least_one) = @_;
+    return { type => 'separated_repetition', element => $element,
+             separator => $separator, at_least_one => $at_least_one ? 1 : 0 };
+}
+
+# ============================================================================
+# _tokenize_grammar($source)
+# ============================================================================
+#
+# Tokenizes a .grammar file into a list of token hashrefs.
+# Each token: { kind => "...", value => "...", line => N }
+sub _tokenize_grammar {
+    my ($source) = @_;
+    my @tokens;
+    my @lines = split /\n/, $source;
+
+    for my $i (0 .. $#lines) {
+        my $line_num = $i + 1;
+        my $line = $lines[$i];
+        $line =~ s/\s+$//;
+        my $stripped = $line;
+        $stripped =~ s/^\s+|\s+$//g;
+
+        next if $stripped eq '' || substr($stripped, 0, 1) eq '#';
+
+        my $j = 0;
+        while ($j < length($line)) {
+            my $ch = substr($line, $j, 1);
+
+            # Skip whitespace
+            if ($ch eq ' ' || $ch eq "\t") { $j++; next; }
+
+            # Comment — rest of line
+            last if $ch eq '#';
+
+            # Single-character tokens
+            if    ($ch eq '=') { push @tokens, { kind => 'EQUALS',   value => '=', line => $line_num }; $j++; }
+            elsif ($ch eq ';') { push @tokens, { kind => 'SEMI',     value => ';', line => $line_num }; $j++; }
+            elsif ($ch eq '|') { push @tokens, { kind => 'PIPE',     value => '|', line => $line_num }; $j++; }
+            elsif ($ch eq '{') { push @tokens, { kind => 'LBRACE',   value => '{', line => $line_num }; $j++; }
+            elsif ($ch eq '}') { push @tokens, { kind => 'RBRACE',   value => '}', line => $line_num }; $j++; }
+            elsif ($ch eq '[') { push @tokens, { kind => 'LBRACKET', value => '[', line => $line_num }; $j++; }
+            elsif ($ch eq ']') { push @tokens, { kind => 'RBRACKET', value => ']', line => $line_num }; $j++; }
+            elsif ($ch eq '(') { push @tokens, { kind => 'LPAREN',   value => '(', line => $line_num }; $j++; }
+            elsif ($ch eq ')') { push @tokens, { kind => 'RPAREN',   value => ')', line => $line_num }; $j++; }
+            # Lookahead predicates
+            elsif ($ch eq '&') { push @tokens, { kind => 'AMPERSAND', value => '&', line => $line_num }; $j++; }
+            elsif ($ch eq '!') { push @tokens, { kind => 'BANG',      value => '!', line => $line_num }; $j++; }
+            # One-or-more suffix
+            elsif ($ch eq '+') { push @tokens, { kind => 'PLUS',      value => '+', line => $line_num }; $j++; }
+            # Separator operator //
+            elsif ($ch eq '/' && $j + 1 < length($line) && substr($line, $j+1, 1) eq '/') {
+                push @tokens, { kind => 'DOUBLE_SLASH', value => '//', line => $line_num }; $j += 2;
+            }
+            # String literal
+            elsif ($ch eq '"') {
+                my $k = $j + 1;
+                while ($k < length($line) && substr($line, $k, 1) ne '"') {
+                    $k++ if substr($line, $k, 1) eq "\\";
+                    $k++;
+                }
+                return (undef, "Line $line_num: Unterminated string literal")
+                    if $k >= length($line);
+                push @tokens, { kind => 'STRING', value => substr($line, $j+1, $k-$j-1), line => $line_num };
+                $j = $k + 1;
+            }
+            # Identifier
+            elsif ($ch =~ /[a-zA-Z_]/) {
+                my $k = $j;
+                $k++ while $k < length($line) && substr($line, $k, 1) =~ /[a-zA-Z0-9_]/;
+                push @tokens, { kind => 'IDENT', value => substr($line, $j, $k-$j), line => $line_num };
+                $j = $k;
+            }
+            else {
+                return (undef, "Line $line_num: Unexpected character '$ch'");
+            }
+        }
+    }
+
+    push @tokens, { kind => 'EOF', value => '', line => scalar @lines };
+    return (\@tokens, undef);
+}
+
+# ============================================================================
+# Recursive descent parser for .grammar files (internal)
+# ============================================================================
+
+{
+    # Parser state — closure variables
+    my @_tokens;
+    my $_pos;
+
+    sub _gp_peek { return $_tokens[$_pos] // { kind => 'EOF', value => '', line => 0 }; }
+    sub _gp_advance { my $t = _gp_peek(); $_pos++ unless $t->{kind} eq 'EOF'; return $t; }
+
+    sub _gp_expect {
+        my ($kind) = @_;
+        my $tok = _gp_advance();
+        if ($tok->{kind} ne $kind) {
+            return (undef, "Line $tok->{line}: Expected $kind, got $tok->{kind}");
+        }
+        return ($tok, undef);
+    }
+
+    sub _gp_parse_rules {
+        my @rules;
+        while (_gp_peek()->{kind} ne 'EOF') {
+            my ($rule, $err) = _gp_parse_rule();
+            return (undef, $err) if $err;
+            push @rules, $rule;
+        }
+        return (\@rules, undef);
+    }
+
+    sub _gp_parse_rule {
+        my ($name_tok, $err) = _gp_expect('IDENT');
+        return (undef, $err) if $err;
+        (undef, $err) = _gp_expect('EQUALS');
+        return (undef, $err) if $err;
+        my ($body, $berr) = _gp_parse_body();
+        return (undef, $berr) if $berr;
+        (undef, $err) = _gp_expect('SEMI');
+        return (undef, $err) if $err;
+        return ({ name => $name_tok->{value}, body => $body, line_number => $name_tok->{line} }, undef);
+    }
+
+    sub _gp_parse_body {
+        my ($first, $err) = _gp_parse_sequence();
+        return (undef, $err) if $err;
+        my @alternatives = ($first);
+        while (_gp_peek()->{kind} eq 'PIPE') {
+            _gp_advance();
+            my ($seq, $serr) = _gp_parse_sequence();
+            return (undef, $serr) if $serr;
+            push @alternatives, $seq;
+        }
+        return $alternatives[0] if @alternatives == 1;
+        return (_make_alternation(\@alternatives), undef);
+    }
+
+    sub _gp_parse_sequence {
+        my @elements;
+        my %stop = map { $_ => 1 } qw(PIPE SEMI RBRACE RBRACKET RPAREN EOF DOUBLE_SLASH);
+        while (!$stop{ _gp_peek()->{kind} }) {
+            my ($elem, $err) = _gp_parse_element();
+            return (undef, $err) if $err;
+            push @elements, $elem;
+        }
+        if (@elements == 0) {
+            my $tok = _gp_peek();
+            return (undef, "Line $tok->{line}: Expected at least one element in sequence");
+        }
+        return $elements[0] if @elements == 1;
+        return (_make_sequence(\@elements), undef);
+    }
+
+    sub _gp_parse_element {
+        my $tok = _gp_peek();
+
+        # Lookahead predicates
+        if ($tok->{kind} eq 'AMPERSAND') {
+            _gp_advance();
+            my ($inner, $err) = _gp_parse_element();
+            return (undef, $err) if $err;
+            return (_make_positive_lookahead($inner), undef);
+        }
+        if ($tok->{kind} eq 'BANG') {
+            _gp_advance();
+            my ($inner, $err) = _gp_parse_element();
+            return (undef, $err) if $err;
+            return (_make_negative_lookahead($inner), undef);
+        }
+
+        if ($tok->{kind} eq 'IDENT') {
+            _gp_advance();
+            my $is_token = ($tok->{value} eq uc($tok->{value}) && $tok->{value} =~ /^[A-Z]/);
+            return (_make_rule_reference($tok->{value}, $is_token), undef);
+        }
+        if ($tok->{kind} eq 'STRING') {
+            _gp_advance();
+            return (_make_literal($tok->{value}), undef);
+        }
+        if ($tok->{kind} eq 'LBRACE') {
+            _gp_advance();
+            my ($body, $err) = _gp_parse_body();
+            return (undef, $err) if $err;
+
+            # Check for separator: { element // separator }
+            if (_gp_peek()->{kind} eq 'DOUBLE_SLASH') {
+                _gp_advance();
+                my ($sep, $serr) = _gp_parse_body();
+                return (undef, $serr) if $serr;
+                (undef, $err) = _gp_expect('RBRACE');
+                return (undef, $err) if $err;
+                my $at_least_one = (_gp_peek()->{kind} eq 'PLUS');
+                _gp_advance() if $at_least_one;
+                return (_make_separated_repetition($body, $sep, $at_least_one), undef);
+            }
+
+            (undef, $err) = _gp_expect('RBRACE');
+            return (undef, $err) if $err;
+            # Check for + suffix
+            if (_gp_peek()->{kind} eq 'PLUS') {
+                _gp_advance();
+                return (_make_one_or_more($body), undef);
+            }
+            return (_make_repetition($body), undef);
+        }
+        if ($tok->{kind} eq 'LBRACKET') {
+            _gp_advance();
+            my ($body, $err) = _gp_parse_body();
+            return (undef, $err) if $err;
+            (undef, $err) = _gp_expect('RBRACKET');
+            return (undef, $err) if $err;
+            return (_make_optional($body), undef);
+        }
+        if ($tok->{kind} eq 'LPAREN') {
+            _gp_advance();
+            my ($body, $err) = _gp_parse_body();
+            return (undef, $err) if $err;
+            (undef, $err) = _gp_expect('RPAREN');
+            return (undef, $err) if $err;
+            return (_make_group($body), undef);
+        }
+
+        return (undef, "Line $tok->{line}: Unexpected token $tok->{kind}");
+    }
+
+    # parse_parser_grammar($source)
+    #
+    # Parses a .grammar file source string into a ParserGrammar hashref.
+    # Returns: ({ rules => [...], version => 0 }, undef) on success
+    #          (undef, $error_string) on failure
+    sub parse_parser_grammar {
+        my ($class_or_self, $source) = @_;
+        unless (defined $source) { $source = $class_or_self; }
+
+        my ($tokens, $err) = _tokenize_grammar($source);
+        return (undef, $err) if $err;
+
+        @_tokens = @$tokens;
+        $_pos = 0;
+
+        my ($rules, $rerr) = _gp_parse_rules();
+        return (undef, $rerr) if $rerr;
+
+        return ({ rules => $rules, version => 0 }, undef);
+    }
+}
+
+# ============================================================================
+# Reference collection helpers for parser grammars
+# ============================================================================
+
+sub _collect_rule_refs {
+    my ($element, $refs) = @_;
+    return unless $element;
+    my $type = $element->{type};
+    if ($type eq 'rule_reference') {
+        $refs->{ $element->{name} } = 1 unless $element->{is_token};
+    }
+    elsif ($type eq 'sequence') {
+        _collect_rule_refs($_, $refs) for @{ $element->{elements} };
+    }
+    elsif ($type eq 'alternation') {
+        _collect_rule_refs($_, $refs) for @{ $element->{choices} };
+    }
+    elsif ($type eq 'repetition' || $type eq 'optional' || $type eq 'group'
+        || $type eq 'positive_lookahead' || $type eq 'negative_lookahead'
+        || $type eq 'one_or_more') {
+        _collect_rule_refs($element->{element}, $refs);
+    }
+    elsif ($type eq 'separated_repetition') {
+        _collect_rule_refs($element->{element}, $refs);
+        _collect_rule_refs($element->{separator}, $refs);
+    }
+}
+
+sub _collect_token_refs {
+    my ($element, $refs) = @_;
+    return unless $element;
+    my $type = $element->{type};
+    if ($type eq 'rule_reference') {
+        $refs->{ $element->{name} } = 1 if $element->{is_token};
+    }
+    elsif ($type eq 'sequence') {
+        _collect_token_refs($_, $refs) for @{ $element->{elements} };
+    }
+    elsif ($type eq 'alternation') {
+        _collect_token_refs($_, $refs) for @{ $element->{choices} };
+    }
+    elsif ($type eq 'repetition' || $type eq 'optional' || $type eq 'group'
+        || $type eq 'positive_lookahead' || $type eq 'negative_lookahead'
+        || $type eq 'one_or_more') {
+        _collect_token_refs($element->{element}, $refs);
+    }
+    elsif ($type eq 'separated_repetition') {
+        _collect_token_refs($element->{element}, $refs);
+        _collect_token_refs($element->{separator}, $refs);
+    }
+}
+
+# validate_parser_grammar($grammar, $token_names)
+#
+# Validates a parsed parser grammar for common problems.
+# $grammar is a hashref { rules => [...] }
+# $token_names is an optional hashref of valid token names.
+# Returns an arrayref of issue strings.
+sub validate_parser_grammar {
+    my ($class_or_self, $grammar, $token_names) = @_;
+    unless (ref $grammar eq 'HASH' && exists $grammar->{rules}) {
+        ($grammar, $token_names) = ($class_or_self, $grammar);
+    }
+
+    my @issues;
+    my %defined;
+    my %referenced_rules;
+    my %referenced_tokens;
+
+    for my $rule (@{ $grammar->{rules} }) {
+        $defined{ $rule->{name} } = 1;
+        _collect_rule_refs($rule->{body}, \%referenced_rules);
+        _collect_token_refs($rule->{body}, \%referenced_tokens);
+    }
+
+    # Duplicate rule names
+    my %seen;
+    for my $rule (@{ $grammar->{rules} }) {
+        if (exists $seen{ $rule->{name} }) {
+            push @issues, "Line $rule->{line_number}: Duplicate rule name '$rule->{name}' (first defined on line $seen{$rule->{name}})";
+        } else {
+            $seen{ $rule->{name} } = $rule->{line_number};
+        }
+    }
+
+    # Non-lowercase rule names
+    for my $rule (@{ $grammar->{rules} }) {
+        push @issues, "Line $rule->{line_number}: Rule name '$rule->{name}' should be lowercase"
+            if $rule->{name} ne lc($rule->{name});
+    }
+
+    # Undefined rule references
+    for my $ref (sort keys %referenced_rules) {
+        push @issues, "Undefined rule reference: '$ref'" unless $defined{$ref};
+    }
+
+    # Undefined token references
+    my %synthetic = map { $_ => 1 } qw(NEWLINE INDENT DEDENT EOF);
+    if ($token_names) {
+        for my $ref (sort keys %referenced_tokens) {
+            push @issues, "Undefined token reference: '$ref'"
+                unless $token_names->{$ref} || $synthetic{$ref};
+        }
+    }
+
+    # Unreachable rules
+    if (@{ $grammar->{rules} } > 0) {
+        my $start = $grammar->{rules}[0]{name};
+        for my $rule (@{ $grammar->{rules} }) {
+            push @issues, "Line $rule->{line_number}: Rule '$rule->{name}' is defined but never referenced (unreachable)"
+                if $rule->{name} ne $start && !$referenced_rules{ $rule->{name} };
+        }
+    }
+
+    return \@issues;
 }
 
 1;

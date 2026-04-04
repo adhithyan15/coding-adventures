@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-04
+
+### Added
+
+- Token flag constants: `TOKEN_PRECEDED_BY_NEWLINE` (1) and `TOKEN_CONTEXT_KEYWORD` (2)
+- Exported as `use constant` for use by downstream lexer packages
+
 ## [0.1.0] - 2026-03-28
 
 ### Added
