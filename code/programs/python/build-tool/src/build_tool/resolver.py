@@ -590,6 +590,58 @@ def _parse_perl_deps(package: Package, known_names: dict[str, str]) -> list[str]
 
 
 # ---------------------------------------------------------------------------
+# Gradle (Java / Kotlin) dependency parsing
+# ---------------------------------------------------------------------------
+
+# Regex for Gradle composite build includes: includeBuild("../logic-gates")
+_GRADLE_INCLUDE_BUILD_RE = re.compile(r'includeBuild\s*\(\s*"\.\.\/([^"]+)"\s*\)')
+
+
+def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from a Gradle settings.gradle.kts file.
+
+    Both Java and Kotlin packages use Gradle as their build system. In this
+    monorepo, sibling package dependencies are declared as composite builds
+    in ``settings.gradle.kts``::
+
+        includeBuild("../logic-gates")
+        includeBuild("../transistors")
+
+    We scan for ``includeBuild("../...")`` entries and map the directory name
+    back to our internal package name. Only ``"../"`` prefixed entries are
+    considered (local monorepo siblings).
+
+    Args:
+        package: The Java or Kotlin package to inspect.
+        known_names: Mapping from directory name to package name.
+
+    Returns:
+        List of internal dependency package names.
+    """
+    settings_file = package.path / "settings.gradle.kts"
+    if not settings_file.exists():
+        return []
+
+    text = settings_file.read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("//"):
+            continue
+        match = _GRADLE_INCLUDE_BUILD_RE.search(stripped)
+        if match:
+            dep_dir = match.group(1).lower()
+            # Guard against path traversal.
+            if "/" in dep_dir or "\\" in dep_dir or dep_dir == "..":
+                continue
+            if dep_dir in known_names:
+                internal_deps.append(known_names[dep_dir])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -694,6 +746,13 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             dir_base = pkg.path.name.lower()
             _set_known(dir_base, pkg.name, pkg.path)
 
+        elif pkg.language in ("java", "kotlin"):
+            # Java and Kotlin packages use Gradle composite builds. Dependencies
+            # are referenced by directory name in settings.gradle.kts via
+            # includeBuild("../dep-name"). The directory name maps directly.
+            dir_base = pkg.path.name.lower()
+            _set_known(dir_base, pkg.name, pkg.path)
+
     return known
 
 
@@ -741,6 +800,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_perl_deps(pkg, known_names)
         elif pkg.language == "swift":
             deps = _parse_swift_deps(pkg, known_names)
+        elif pkg.language in ("java", "kotlin"):
+            deps = _parse_gradle_deps(pkg, known_names)
         else:
             deps = []
 

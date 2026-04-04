@@ -54,6 +54,7 @@ SKIP_DIRS: frozenset[str] = frozenset({
     "target",
     ".claude",
     "Pods",
+    ".gradle",
 })
 
 
@@ -108,7 +109,7 @@ def _infer_language(path: Path) -> str:
     "go", or "rust" that sits under "packages" or "programs".
     """
     parts = path.parts
-    for lang in ("python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl"):
+    for lang in ("python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "java", "kotlin"):
         if lang in parts:
             return lang
     return "unknown"
