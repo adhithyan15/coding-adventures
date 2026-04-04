@@ -1135,6 +1135,20 @@ function GrammarParser:_match_token_reference(element)
         return { token }, true
     end
 
+    -- Keyword category matching: grammar-driven lexers promote keyword
+    -- names to specific string types (e.g. "var" → type "VAR", "let" →
+    -- "LET").  When the grammar references the generic KEYWORD token, we
+    -- must still match these promoted types.  A promoted keyword has a
+    -- string `type` field that is NOT one of the standard token names
+    -- (NAME, NUMBER, PLUS, …).  If the token's string type is absent
+    -- from string_to_token_type it was produced by keyword promotion.
+    if element.name == "KEYWORD"
+       and type(token.type) == "string"
+       and not string_to_token_type[token.type] then
+        self.pos = self.pos + 1
+        return { token }, true
+    end
+
     self:_record_failure(element.name)
     return nil, false
 end
