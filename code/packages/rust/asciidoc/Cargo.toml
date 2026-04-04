@@ -1,0 +1,10 @@
+[package]
+name = "asciidoc"
+version = "0.1.0"
+edition = "2021"
+description = "AsciiDoc pipeline — parse AsciiDoc to HTML in one call"
+
+[dependencies]
+asciidoc-parser = { path = "../asciidoc-parser" }
+document-ast-to-html = { path = "../document-ast-to-html" }
+document-ast = { path = "../document-ast" }

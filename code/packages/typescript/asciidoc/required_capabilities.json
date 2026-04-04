@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.dev/schemas/required-capabilities/v1.json",
+  "version": 1,
+  "package": "typescript/asciidoc",
+  "capabilities": [],
+  "justification": "Pure parsing and rendering — no I/O, no network, no filesystem access. Transforms an AsciiDoc string into HTML in memory."
+}

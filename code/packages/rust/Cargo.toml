@@ -155,4 +155,6 @@ members = [
   "arc2d",
   "polynomial",
   "gf256",
+  "asciidoc-parser",
+  "asciidoc",
 ]
