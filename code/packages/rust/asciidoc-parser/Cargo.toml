@@ -1,0 +1,10 @@
+[package]
+name = "asciidoc-parser"
+version = "0.1.0"
+edition = "2021"
+description = "AsciiDoc parser producing a Document AST"
+
+[dependencies]
+document-ast = { path = "../document-ast" }
+
+[dev-dependencies]
