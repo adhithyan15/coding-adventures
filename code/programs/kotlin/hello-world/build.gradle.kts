@@ -47,8 +47,12 @@ application {
     mainClass.set("com.codingadventures.helloworld.MainKt")
 }
 
-// Java version compatibility. Both Java and Kotlin compile to JVM bytecode,
-// so they share the same JVM target version.
-kotlin {
-    jvmToolchain(21)
+// JVM target version. We use jvmTarget instead of jvmToolchain() because
+// toolchain requires the exact JDK version to be pre-installed. In CI, the
+// available JDK depends on what's on the runner. Setting jvmTarget lets any
+// JDK >= 11 compile this code.
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
 }

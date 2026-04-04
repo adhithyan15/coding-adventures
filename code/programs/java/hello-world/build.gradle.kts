@@ -48,9 +48,12 @@ application {
     mainClass.set("com.codingadventures.helloworld.Main")
 }
 
-// Java version compatibility. Java 21 is the current LTS release.
+// Java version compatibility. We use sourceCompatibility and targetCompatibility
+// instead of toolchain {} because toolchain requires the exact JDK version to
+// be pre-installed. In CI, the available JDK version depends on what
+// actions/setup-java provides (or what's pre-installed on the runner). Using
+// compatibility settings lets any JDK >= 11 compile this code.
 java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
