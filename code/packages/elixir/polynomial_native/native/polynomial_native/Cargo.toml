@@ -8,6 +8,7 @@ name = "polynomial-native-nif"
 version = "0.1.0"
 edition = "2021"
 description = "Erlang NIF exposing polynomial arithmetic from Rust to Elixir"
+build = "build.rs"
 
 [lib]
 # cdylib = C-compatible dynamic library (the format Erlang's NIF loader expects).

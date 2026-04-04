@@ -5,12 +5,11 @@ name = "gf256-native-perl"
 version = "0.1.0"
 edition = "2021"
 description = "Perl XS extension exposing GF(256) Galois Field arithmetic from Rust"
+build = "build.rs"
 
 [lib]
 name = "GF256Native"
 crate-type = ["cdylib"]
-
-build = "build.rs"
 
 [dependencies]
 perl-bridge = { path = "../../rust/perl-bridge" }

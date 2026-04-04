@@ -119,9 +119,15 @@ extern "C" {
     pub fn rb_ary_push(ary: VALUE, item: VALUE) -> VALUE;
     pub fn rb_ary_entry(ary: VALUE, offset: c_long) -> VALUE;
 
-    // RARRAY_LEN is a macro in Ruby's headers, but we can use
-    // rb_array_len which is a proper C function (Ruby 2.7+).
-    pub fn rb_array_len(ary: VALUE) -> c_long;
+    // rb_ary_length is the proper exported C function returning a Ruby Integer.
+    // rb_array_len looks like a proper function but is actually `static inline`
+    // in Ruby 3.x headers — it is NOT exported by libruby, causing an
+    // `undefined symbol: rb_array_len` LoadError at runtime.
+    pub fn rb_ary_length(ary: VALUE) -> VALUE;
+
+    // rb_num2long converts any Ruby Numeric VALUE to a C long.
+    // Used to decode the Fixnum returned by rb_ary_length.
+    pub fn rb_num2long(v: VALUE) -> c_long;
 
     // -- Integer operations ------------------------------------------------
     pub fn rb_int2inum(v: c_long) -> VALUE;
@@ -272,8 +278,12 @@ pub fn array_push(array: VALUE, item: VALUE) {
 }
 
 /// Get the length of a Ruby Array.
+///
+/// Uses `rb_ary_length` (returns a Ruby Integer VALUE) plus `rb_num2long`
+/// to convert to C long. We avoid `rb_array_len` which is `static inline`
+/// in Ruby 3.x headers and is therefore NOT an exported symbol in libruby.
 pub fn array_len(array: VALUE) -> usize {
-    unsafe { rb_array_len(array) as usize }
+    unsafe { rb_num2long(rb_ary_length(array)) as usize }
 }
 
 /// Get an element from a Ruby Array by index.

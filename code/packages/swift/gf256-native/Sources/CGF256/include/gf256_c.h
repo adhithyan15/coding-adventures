@@ -25,7 +25,7 @@
  * after the call with gf256_c_had_error():
  *
  *   uint8_t result = gf256_c_divide(42, 0);
- *   if (gf256_c_had_error()) { /* handle error */ }
+ *   if (gf256_c_had_error()) { handle_error(); }
  *
  * The error flag is cleared at the start of every gf256_c_* call.
  */

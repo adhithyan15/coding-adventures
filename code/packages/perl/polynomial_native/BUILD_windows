@@ -1,0 +1,4 @@
+# Windows: attempt Rust cdylib build only (no host tests — Lua/Perl DLL
+# linking on Windows requires the import library; the build.rs handles it).
+# If the link fails due to missing Lua/Perl DLL, this will error here.
+cargo build --release

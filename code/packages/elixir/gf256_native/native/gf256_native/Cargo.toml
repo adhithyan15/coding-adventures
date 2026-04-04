@@ -6,6 +6,7 @@ name = "gf256-native-nif"
 version = "0.1.0"
 edition = "2021"
 description = "Erlang NIF exposing GF(256) field arithmetic from Rust to Elixir"
+build = "build.rs"
 
 [lib]
 name = "gf256_native"

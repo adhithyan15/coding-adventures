@@ -1,0 +1,4 @@
+# Windows: build the Rust NIF cdylib only. Mix/Elixir testing on Windows
+# is complex; full test support requires a separate investigation.
+# The native/XXX subdirectory contains the Cargo project.
+cd native/gf256_native && cargo build --release

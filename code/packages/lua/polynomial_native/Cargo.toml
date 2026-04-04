@@ -7,6 +7,7 @@ name = "polynomial-native-lua"
 version = "0.1.0"
 edition = "2021"
 description = "Lua C extension exposing polynomial arithmetic from Rust"
+build = "build.rs"
 
 [lib]
 # The shared library filename determines the require() name.

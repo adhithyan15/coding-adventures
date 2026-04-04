@@ -50,9 +50,6 @@ extern "C" {
     // Error checking.
     fn PyErr_Occurred() -> PyObjectPtr;
 
-    // Type checking.
-    fn PyLong_Check(obj: PyObjectPtr) -> c_int;
-
     // Module attribute setting.
     fn PyModule_AddIntConstant(
         module: PyObjectPtr,
@@ -60,6 +57,15 @@ extern "C" {
         value: i64,
     ) -> c_int;
 }
+// NOTE: PyLong_Check is intentionally NOT declared here.
+//
+// In Python 3.12+, PyLong_Check is a `static inline` function in cpython/longobject.h,
+// NOT an exported symbol in libpython. Declaring it as extern "C" compiles fine but
+// produces an `undefined symbol: PyLong_Check` LoadError at runtime on Linux/macOS.
+//
+// Instead we use PyLong_AsLong and check PyErr_Occurred() to detect type errors:
+// if PyLong_AsLong returns -1 and an error is set, the object is not an integer.
+// PyFloat_Check has the same issue and is replaced with PyFloat_AsDouble + error check.
 
 // ---------------------------------------------------------------------------
 // Helper: extract a GF(256) element (u8) from a Python int argument
@@ -83,20 +89,16 @@ unsafe fn extract_u8(obj: PyObjectPtr, arg_name: &str) -> Option<u8> {
         return None;
     }
 
-    if PyLong_Check(obj) == 0 {
-        set_error(
-            value_error_class(),
-            &format!("argument '{}' must be an integer (0-255)", arg_name),
-        );
-        return None;
-    }
-
+    // Try integer extraction. PyLong_AsLong returns -1 and sets a TypeError
+    // if obj is not an integer (or any subclass). Clearing errors first
+    // ensures PyErr_Occurred() reflects only this call.
+    PyErr_Clear();
     let val = PyLong_AsLong(obj);
     if val == -1 && !PyErr_Occurred().is_null() {
         PyErr_Clear();
         set_error(
             value_error_class(),
-            &format!("argument '{}' is out of range", arg_name),
+            &format!("argument '{}' must be an integer (0-255)", arg_name),
         );
         return None;
     }

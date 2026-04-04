@@ -46,21 +46,31 @@ use python_bridge::*;
 
 #[allow(non_snake_case)]
 extern "C" {
-    // Float: Python float object functions
+    // Float: Python float object functions.
+    // PyFloat_AsDouble accepts Python int as well as float (calls __float__ protocol).
     fn PyFloat_AsDouble(obj: PyObjectPtr) -> f64;
     fn PyFloat_FromDouble(v: f64) -> PyObjectPtr;
 
-    // Long (int): needed for fallback when list items are Python ints
+    // Long (int): extract Python int as C long.
     fn PyLong_AsLong(obj: PyObjectPtr) -> i64;
 
     // Error checking
     fn PyErr_Occurred() -> PyObjectPtr;
 
-    // Type checking
+    // Type checking — only for list (PyList_Check is a real exported function)
     fn PyList_Check(obj: PyObjectPtr) -> c_int;
-    fn PyFloat_Check(obj: PyObjectPtr) -> c_int;
-    fn PyLong_Check(obj: PyObjectPtr) -> c_int;
 }
+// NOTE: PyFloat_Check and PyLong_Check are intentionally NOT declared here.
+//
+// In Python 3.12+, both are `static inline` in the CPython headers and are NOT
+// exported symbols in libpython. Using them as extern "C" produces an
+// `undefined symbol` LoadError at runtime.
+//
+// Replacement strategy:
+//   - To accept both float and int: call PyFloat_AsDouble() which internally
+//     calls __float__ on integers, returning the same value as float(int).
+//     It returns -1.0 and sets TypeError if the object is not numeric.
+//   - Check PyErr_Occurred() to distinguish "error" from "value is -1.0".
 
 // ---------------------------------------------------------------------------
 // Helper: convert a Python list of floats to Vec<f64>
@@ -110,41 +120,23 @@ unsafe fn py_list_to_vec_f64(obj: PyObjectPtr) -> Option<Vec<f64>> {
             return None;
         }
 
-        // Accept Python float or int, converting both to f64.
-        let val: f64 = if PyFloat_Check(item) != 0 {
-            // Python float -> f64 directly
-            let v = PyFloat_AsDouble(item);
-            if v == -1.0 && !PyErr_Occurred().is_null() {
-                PyErr_Clear();
-                set_error(
-                    value_error_class(),
-                    &format!("failed to convert float at index {}", i),
-                );
-                return None;
-            }
-            v
-        } else if PyLong_Check(item) != 0 {
-            // Python int -> i64 -> f64 (for coefficients like 0, 1, -1)
-            let v = PyLong_AsLong(item);
-            if v == -1 && !PyErr_Occurred().is_null() {
-                PyErr_Clear();
-                set_error(
-                    value_error_class(),
-                    &format!("integer at index {} is out of range", i),
-                );
-                return None;
-            }
-            v as f64
-        } else {
+        // Accept Python float or int, converting both to f64 via PyFloat_AsDouble.
+        // PyFloat_AsDouble calls __float__ internally, so Python ints are accepted
+        // without needing PyLong_Check (which is a static inline in Python 3.12+).
+        PyErr_Clear();
+        let val = PyFloat_AsDouble(item);
+        if val == -1.0 && !PyErr_Occurred().is_null() {
+            PyErr_Clear();
             set_error(
                 value_error_class(),
                 &format!(
-                    "list element at index {} must be a float or int, not {}",
-                    i, "another type"
+                    "list element at index {} must be a float or int",
+                    i
                 ),
             );
             return None;
-        };
+        }
+        let val: f64 = val;
 
         result.push(val);
     }
@@ -470,27 +462,17 @@ unsafe extern "C" fn poly_evaluate(_module: PyObjectPtr, args: PyObjectPtr) -> P
         None => return ptr::null_mut(),
     };
 
-    // x can be a float or an int
-    let x: f64 = if PyFloat_Check(x_obj) != 0 {
-        let v = PyFloat_AsDouble(x_obj);
-        if v == -1.0 && !PyErr_Occurred().is_null() {
-            PyErr_Clear();
-            set_error(value_error_class(), "x argument must be a float or int");
-            return ptr::null_mut();
-        }
-        v
-    } else if PyLong_Check(x_obj) != 0 {
-        let v = PyLong_AsLong(x_obj);
-        if v == -1 && !PyErr_Occurred().is_null() {
-            PyErr_Clear();
-            set_error(value_error_class(), "x argument is out of range");
-            return ptr::null_mut();
-        }
-        v as f64
-    } else {
+    // x can be a float or an int — use PyFloat_AsDouble which calls __float__
+    // for integer objects too. Avoids PyFloat_Check/PyLong_Check which are
+    // static inline in Python 3.12+ and not exported as symbols.
+    PyErr_Clear();
+    let x_raw = PyFloat_AsDouble(x_obj);
+    if x_raw == -1.0 && !PyErr_Occurred().is_null() {
+        PyErr_Clear();
         set_error(value_error_class(), "x argument must be a float or int");
         return ptr::null_mut();
-    };
+    }
+    let x: f64 = x_raw;
 
     let val = polynomial::evaluate(&poly, x);
     // PyFloat_FromDouble can return null if the interpreter is out of memory.

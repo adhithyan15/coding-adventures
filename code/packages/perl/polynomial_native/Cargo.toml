@@ -8,13 +8,12 @@ name = "polynomial-native-perl"
 version = "0.1.0"
 edition = "2021"
 description = "Perl XS extension exposing polynomial arithmetic from Rust"
+build = "build.rs"
 
 [lib]
 # DynaLoader looks for PolynomialNative.so → boot_CodingAdventures__PolynomialNative
 name = "PolynomialNative"
 crate-type = ["cdylib"]
-
-build = "build.rs"
 
 [dependencies]
 perl-bridge = { path = "../../rust/perl-bridge" }
