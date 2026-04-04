@@ -1,9 +1,15 @@
 defmodule CodingAdventures.GF256NativeTest do
   use ExUnit.Case, async: true
+  # Import Bitwise so the ^^^ (XOR) and other bitwise operators are in scope.
+  # Without this, `0x53 ^^^ 0xCA` fails with "undefined function ^^^/2".
+  # In Elixir ≥ 1.14 the `^^^` (XOR) operator from Bitwise is available but
+  # must be explicitly imported — it is not part of the kernel.
+  use Bitwise
 
   # -------------------------------------------------------------------------
   # NOTE: These tests require the Rust NIF to be compiled.
-  # Run `mix compile` (which builds the NIF via make) before `mix test`.
+  # Run `mix compile` before `mix test`. The NIF is built with:
+  #   cd native/gf256_native && cargo build --release
   # Without a compiled NIF, every call raises :not_loaded.
   # -------------------------------------------------------------------------
 
@@ -66,8 +72,11 @@ defmodule CodingAdventures.GF256NativeTest do
 
   # -- Division --------------------------------------------------------------
 
+  # When a NIF returns :badarg, Elixir raises ArgumentError (not ErlangError).
+  # ErlangError is for other Erlang errors that have no specific Elixir mapping.
+
   test "divide by zero raises badarg" do
-    assert_raise ErlangError, fn -> GF.divide(5, 0) end
+    assert_raise ArgumentError, fn -> GF.divide(5, 0) end
   end
 
   test "divide zero by non-zero gives zero" do
@@ -102,7 +111,7 @@ defmodule CodingAdventures.GF256NativeTest do
   # -- Inverse ---------------------------------------------------------------
 
   test "inverse of zero raises badarg" do
-    assert_raise ErlangError, fn -> GF.inverse(0) end
+    assert_raise ArgumentError, fn -> GF.inverse(0) end
   end
 
   test "inverse of one is one" do

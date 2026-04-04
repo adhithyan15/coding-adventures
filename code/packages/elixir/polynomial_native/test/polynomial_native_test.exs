@@ -106,8 +106,10 @@ defmodule CodingAdventures.PolynomialNativeTest do
     assert length(r) <= 1
   end
 
+  # When a NIF returns :badarg, Elixir raises ArgumentError (not ErlangError).
+  # ErlangError is reserved for Erlang errors with no specific Elixir mapping.
   test "divmod by zero polynomial raises badarg" do
-    assert_raise ErlangError, fn -> P.divmod([1.0, 2.0], []) end
+    assert_raise ArgumentError, fn -> P.divmod([1.0, 2.0], []) end
   end
 
   # -- Evaluate --------------------------------------------------------------
