@@ -1300,3 +1300,32 @@ Key CMD facts:
 **Rule:** For any package whose BUILD uses `if [ -f ... ]`, `elif`, or `fi`, create a BUILD_windows
 with CMD-compatible syntax. Python native packages especially need this.
 
+
+---
+
+### 2026-04-03: Elixir NIF module name must use Elixir atom format (not short name)
+
+When calling `:erlang.load_nif/2` from an Elixir module, Erlang checks that
+`ErlNifEntry.name` exactly matches the calling module's Erlang atom name.
+
+Elixir modules use the `Elixir.` prefix in their Erlang representation:
+```
+CodingAdventures.GF256Native       → 'Elixir.CodingAdventures.GF256Native'
+CodingAdventures.PolynomialNative  → 'Elixir.CodingAdventures.PolynomialNative'
+```
+
+Using the short name (e.g., `"gf256_native"`) causes a `:bad_lib` error at load time:
+```
+{:bad_lib, "Library module name 'gf256_native' does not match calling module
+ 'Elixir.CodingAdventures.GF256Native'"}
+```
+
+**Fix:** Set the module name to the full Elixir atom format:
+```rust
+// In the Rust NIF src/lib.rs:
+static MODULE_NAME_BYTES: &[u8] = b"Elixir.CodingAdventures.GF256Native\0";
+```
+
+**Rule:** For Elixir NIFs, always use the full `"Elixir.ModuleName"` format for
+`ErlNifEntry.name`. For Erlang NIFs, use the short lowercase atom name.
+
