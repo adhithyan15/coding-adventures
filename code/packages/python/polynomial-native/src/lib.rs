@@ -57,10 +57,8 @@ extern "C" {
     // Error checking
     fn PyErr_Occurred() -> PyObjectPtr;
 
-    // Type checking — only for list (PyList_Check is a real exported function)
-    fn PyList_Check(obj: PyObjectPtr) -> c_int;
 }
-// NOTE: PyFloat_Check and PyLong_Check are intentionally NOT declared here.
+// NOTE: PyFloat_Check, PyLong_Check, and PyList_Check are intentionally NOT declared here.
 //
 // In Python 3.12+, both are `static inline` in the CPython headers and are NOT
 // exported symbols in libpython. Using them as extern "C" produces an
@@ -71,6 +69,9 @@ extern "C" {
 //     calls __float__ on integers, returning the same value as float(int).
 //     It returns -1.0 and sets TypeError if the object is not numeric.
 //   - Check PyErr_Occurred() to distinguish "error" from "value is -1.0".
+//   - To check for list: call PyList_Size() directly. It validates the type
+//     internally (calls PyErr_BadInternalCall and returns -1 for non-lists).
+//     Clear the error and set our own ValueError for a clean user message.
 
 // ---------------------------------------------------------------------------
 // Helper: convert a Python list of floats to Vec<f64>
@@ -91,7 +92,15 @@ extern "C" {
 unsafe fn py_list_to_vec_f64(obj: PyObjectPtr) -> Option<Vec<f64>> {
     // Must be a list. We don't accept tuples or other iterables here
     // to keep the interface explicit and well-typed.
-    if obj.is_null() || PyList_Check(obj) == 0 {
+    //
+    // We cannot use PyList_Check() because in Python 3.12+ it is `static inline`
+    // in the CPython headers and is NOT exported by libpython — using it as
+    // extern "C" produces an `undefined symbol` LoadError at runtime.
+    //
+    // Instead, call PyList_Size() directly: it validates that the argument is
+    // a list internally (returning -1 + setting SystemError for non-lists).
+    // We clear that error and replace it with our own ValueError.
+    if obj.is_null() {
         set_error(
             value_error_class(),
             "argument must be a list of floats (e.g. [1.0, 2.0, 3.0])",
@@ -99,10 +108,16 @@ unsafe fn py_list_to_vec_f64(obj: PyObjectPtr) -> Option<Vec<f64>> {
         return None;
     }
 
+    PyErr_Clear();
     let len = PyList_Size(obj);
     if len < 0 {
+        // PyList_Size returns -1 for non-list objects (sets SystemError).
+        // Replace with a user-friendly ValueError.
         PyErr_Clear();
-        set_error(value_error_class(), "failed to get list size");
+        set_error(
+            value_error_class(),
+            "argument must be a list of floats (e.g. [1.0, 2.0, 3.0])",
+        );
         return None;
     }
 
