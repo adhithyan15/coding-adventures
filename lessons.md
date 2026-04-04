@@ -4,6 +4,23 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-04: elixir_make chicken-and-egg: do not use `:make` compiler in mix.exs when BUILD builds the NIF externally
+
+When `mix.exs` lists `compilers: Mix.compilers() ++ [:make]`, Mix tries to
+load `Mix.Tasks.Compile.Make` at startup — before `elixir_make` has been compiled
+from deps. This causes `** (Mix) The task "compile.make" could not be found` on
+every `mix` command in CI (including `mix deps.get`), making the BUILD fail.
+
+The error appears even though the subsequent `mix compile` may ultimately succeed
+(after auto-compiling elixir_make), because Mix exits non-zero from the first command.
+
+**Rule:** If the BUILD file already calls `cargo build --release` and copies the
+`.so` into `priv/`, do NOT also use `elixir_make` in `mix.exs`. Remove the
+`:make` compiler, `make_targets`, `make_clean`, `make_cwd`, and the
+`{:elixir_make, "~> 0.7", runtime: false}` dep. Use plain `Mix.compilers()`.
+
+---
+
 ### 2026-04-01: kern Format 0 coverage — format is in HIGH byte (bits 8-15)
 
 The `coverage` field of a kern subtable header is a 16-bit value. Bits 0-7

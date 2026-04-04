@@ -6,8 +6,17 @@ defmodule CodingAdventures.PolynomialNative.MixProject do
   # ---------------------------------------------------------------------------
   #
   # This package wraps the Rust `polynomial` crate as an Erlang NIF.
-  # The NIF shared library is built by `cargo build --release` in
-  # `native/polynomial_native/`, triggered by the `:make` compiler below.
+  #
+  # The Rust NIF shared library is built EXTERNALLY by the BUILD file, which
+  # runs `cargo build --release` and copies the resulting .so/.dylib into
+  # `priv/polynomial_native.so`. We do NOT use `elixir_make` here because Mix
+  # tries to load Mix.Tasks.Compile.Make at startup — before elixir_make has
+  # been compiled — causing a chicken-and-egg "task not found" error in CI.
+  #
+  # The BUILD file handles the full lifecycle:
+  #   1. cargo build --release            (builds the .so / .dylib)
+  #   2. cp ... priv/polynomial_native.so (places where :erlang.load_nif expects)
+  #   3. mix deps.get && mix compile && mix test
 
   def project do
     [
@@ -15,12 +24,6 @@ defmodule CodingAdventures.PolynomialNative.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      # The :make compiler runs our Makefile to build the Rust shared library.
-      # Mix's built-in compilers ([:erlang, :elixir, :app]) handle the .ex files.
-      compilers: Mix.compilers() ++ [:make],
-      make_targets: ["all"],
-      make_clean: ["clean"],
-      make_cwd: "native/polynomial_native",
       deps: deps(),
       test_coverage: [summary: [threshold: 80]]
     ]
@@ -31,9 +34,6 @@ defmodule CodingAdventures.PolynomialNative.MixProject do
   end
 
   defp deps do
-    [
-      # elixir_make provides the :make compiler that invokes cargo for us.
-      {:elixir_make, "~> 0.7", runtime: false}
-    ]
+    []
   end
 end
