@@ -268,5 +268,6 @@ pub fn token_grammar() -> TokenGrammar {
         case_sensitive: false,
         version: 0,
         case_insensitive: false,
+            context_keywords: Vec::new(),
     }
 }

@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-04
+
+### Added
+- Token flag constants: `TOKEN_PRECEDED_BY_NEWLINE` (bit 0) and
+  `TOKEN_CONTEXT_KEYWORD` (bit 1) for bitmask metadata on tokens.
+- `Token.flags: Option<u32>` field — optional bitmask carrying metadata
+  that is neither type nor value but affects downstream interpretation
+  (e.g., automatic semicolon insertion, context-sensitive keywords).
+- `BracketDepths` struct and `BracketKind` enum for per-type bracket
+  nesting depth tracking (`()`, `[]`, `{}`). The lexer updates depths
+  after each token emission; callbacks access them via `LexerContext`.
+- `LexerContext` extensions:
+  - `previous_token()` — lookbehind: the most recently emitted token.
+  - `bracket_depth(kind)` / `total_bracket_depth()` — bracket nesting.
+  - `preceded_by_newline()` — true if a line break appeared between the
+    previous token and the current token.
+- `GrammarLexer` extensions:
+  - `last_emitted_token` field — tracks the most recently emitted token.
+  - `bracket_depths` field — per-type nesting counters.
+  - `context_keyword_set` field — set of context-sensitive keywords from
+    the grammar's `context_keywords:` section. NAME tokens matching this
+    set are emitted with the `TOKEN_CONTEXT_KEYWORD` flag.
+
 ## [0.2.0] - 2026-03-21
 
 ### Added

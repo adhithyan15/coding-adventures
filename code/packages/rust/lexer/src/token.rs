@@ -36,6 +36,43 @@
 use std::fmt;
 
 // ===========================================================================
+// Token flag constants
+// ===========================================================================
+
+/// Bitmask flags for token metadata.
+///
+/// Flags carry information that is neither type nor value but affects
+/// how downstream consumers (parsers, formatters, linters) interpret
+/// a token. For example, JavaScript's automatic semicolon insertion
+/// rule depends on whether a newline appeared before certain tokens.
+///
+/// Flags are optional -- when `flags` is `None`, all flags are off.
+/// Use bitwise AND to test:
+///
+/// ```text
+/// let preceded = token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0;
+/// ```
+
+/// Set when a line break appeared between this token and the previous one.
+///
+/// Languages with automatic semicolon insertion (JavaScript, Go) use
+/// this to decide whether an implicit semicolon should be inserted.
+/// The lexer itself does not insert semicolons -- that is a language-
+/// specific concern handled in language packages via post-tokenize
+/// hooks or parser pre-parse hooks.
+pub const TOKEN_PRECEDED_BY_NEWLINE: u32 = 1;
+
+/// Set for context-sensitive keywords -- words that are keywords in some
+/// syntactic positions but identifiers in others.
+///
+/// For example, JavaScript's `async`, `yield`, `await`, `get`, `set`
+/// are sometimes keywords (in function declarations, property accessors)
+/// and sometimes plain identifiers (`let get = 5`). The lexer emits
+/// these as NAME tokens with this flag set, leaving the final
+/// keyword-vs-identifier decision to the language-specific parser.
+pub const TOKEN_CONTEXT_KEYWORD: u32 = 2;
+
+// ===========================================================================
 // TokenType — the classification of each token
 // ===========================================================================
 
@@ -256,6 +293,20 @@ pub struct Token {
     /// string name here and sets `type_` to `Name` as a fallback. The
     /// grammar-driven parser checks `type_name` first for matching.
     pub type_name: Option<std::string::String>,
+
+    /// Optional bitmask flags carrying metadata about this token.
+    ///
+    /// Flags encode information that is neither type nor value but affects
+    /// how downstream consumers interpret the token. See the
+    /// [`TOKEN_PRECEDED_BY_NEWLINE`] and [`TOKEN_CONTEXT_KEYWORD`] constants.
+    ///
+    /// When `None`, all flags are off (the common case). Use bitwise AND
+    /// to test a specific flag:
+    ///
+    /// ```text
+    /// let is_context_kw = token.flags.unwrap_or(0) & TOKEN_CONTEXT_KEYWORD != 0;
+    /// ```
+    pub flags: Option<u32>,
 }
 
 impl Token {
@@ -492,7 +543,7 @@ mod tests {
             value: "x".to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         };
         assert_eq!(format!("{}", tok), "Token(Name, \"x\", 1:1)");
     }
@@ -504,7 +555,7 @@ mod tests {
             value: "hello\nworld".to_string(),
             line: 3,
             column: 5,
-            type_name: None,
+            type_name: None, flags: None,
         };
         let display = format!("{}", tok);
         assert!(display.contains("String"));
@@ -522,14 +573,14 @@ mod tests {
             value: "42".to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         };
         let b = Token {
             type_: TokenType::Number,
             value: "42".to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         };
         assert_eq!(a, b);
     }
@@ -541,14 +592,14 @@ mod tests {
             value: "42".to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         };
         let b = Token {
             type_: TokenType::Name,
             value: "42".to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         };
         assert_ne!(a, b);
     }
@@ -593,7 +644,7 @@ mod tests {
             value: "if".to_string(),
             line: 10,
             column: 5,
-            type_name: None,
+            type_name: None, flags: None,
         };
         let cloned = original.clone();
         assert_eq!(original, cloned);

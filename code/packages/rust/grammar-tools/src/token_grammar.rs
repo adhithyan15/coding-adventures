@@ -189,6 +189,18 @@ pub struct TokenGrammar {
     pub version: u32,
     /// Whether matching is case-insensitive, declared via `# @case_insensitive true`.
     pub case_insensitive: bool,
+    /// Context-sensitive keywords -- words that are keywords in some
+    /// syntactic positions but identifiers in others.
+    ///
+    /// These are emitted as NAME tokens with the `TOKEN_CONTEXT_KEYWORD`
+    /// flag set, leaving the final keyword-vs-identifier decision to
+    /// the language-specific parser or callback.
+    ///
+    /// Declared via the `context_keywords:` section in the `.tokens` file.
+    /// Each indented line in that section is one context keyword.
+    ///
+    /// Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
+    pub context_keywords: Vec<String>,
 }
 
 // ===========================================================================
@@ -441,6 +453,7 @@ fn parse_alias(after_pattern: &str, line_number: usize) -> Result<Option<String>
 pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarError> {
     let mut definitions = Vec::new();
     let mut keywords = Vec::new();
+    let mut context_keywords = Vec::new();
     let mut mode: Option<String> = None;
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
@@ -586,6 +599,10 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             current_section = String::from("errors");
             continue;
         }
+        if stripped == "context_keywords:" || stripped == "context_keywords :" {
+            current_section = String::from("context_keywords");
+            continue;
+        }
 
         // --- Escapes directive ---
         //
@@ -656,6 +673,8 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
                 if !stripped.is_empty() {
                     if current_section == "keywords" {
                         keywords.push(stripped.to_string());
+                    } else if current_section == "context_keywords" {
+                        context_keywords.push(stripped.to_string());
                     } else if current_section == "reserved" {
                         reserved_keywords.push(stripped.to_string());
                     } else if current_section == "skip" {
@@ -722,6 +741,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         case_sensitive,
         version,
         case_insensitive,
+        context_keywords,
     })
 }
 
@@ -1077,6 +1097,7 @@ keywords:
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            context_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1104,6 +1125,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            context_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1131,6 +1153,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            context_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1337,6 +1360,7 @@ skip:
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            context_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));
@@ -1529,6 +1553,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            context_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Invalid regex")));
@@ -1557,6 +1582,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            context_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Empty pattern group")));

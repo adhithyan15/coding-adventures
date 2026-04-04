@@ -71,6 +71,14 @@ pub enum ASTNodeOrToken {
 pub struct GrammarASTNode {
     pub rule_name: String,
     pub children: Vec<ASTNodeOrToken>,
+    /// The 1-based line number where this node's first token appears.
+    pub start_line: Option<usize>,
+    /// The 1-based column number where this node's first token appears.
+    pub start_column: Option<usize>,
+    /// The 1-based line number where this node's last token appears.
+    pub end_line: Option<usize>,
+    /// The 1-based column number where this node's last token appears.
+    pub end_column: Option<usize>,
 }
 
 impl GrammarASTNode {
@@ -229,8 +237,8 @@ impl GrammarParser {
     ///
     /// let grammar = parse_parser_grammar("value = NUMBER ;").unwrap();
     /// let tokens = vec![
-    ///     Token { type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None },
-    ///     Token { type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None },
+    ///     Token { type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None, flags: None },
+    ///     Token { type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None, flags: None },
     /// ];
     /// let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
     /// let result = parser.parse();
@@ -423,9 +431,15 @@ impl GrammarParser {
                 if !ok {
                     return None;
                 }
+                let c = children.unwrap();
+                let (sl, sc, el, ec) = compute_node_position(&c);
                 return Some(GrammarASTNode {
                     rule_name: rule_name.to_string(),
-                    children: children.unwrap(),
+                    children: c,
+                    start_line: sl,
+                    start_column: sc,
+                    end_line: el,
+                    end_column: ec,
                 });
             }
 
@@ -496,10 +510,17 @@ impl GrammarParser {
         }
 
         match children {
-            Some(c) => Some(GrammarASTNode {
-                rule_name: rule_name.to_string(),
-                children: c,
-            }),
+            Some(c) => {
+                let (sl, sc, el, ec) = compute_node_position(&c);
+                Some(GrammarASTNode {
+                    rule_name: rule_name.to_string(),
+                    children: c,
+                    start_line: sl,
+                    start_column: sc,
+                    end_line: el,
+                    end_column: ec,
+                })
+            }
             None => {
                 self.pos = start_pos;
                 self.record_failure(rule_name);
@@ -605,6 +626,94 @@ impl GrammarParser {
                     None
                 }
             }
+
+            // ---------------------------------------------------------------
+            // Extension: Syntactic predicates (lookahead without consuming)
+            // ---------------------------------------------------------------
+
+            GrammarElement::PositiveLookahead { element: inner } => {
+                // Succeed if inner element matches, but consume no input.
+                let result = self.match_element(inner);
+                self.pos = save_pos;
+                if result.is_some() { Some(Vec::new()) } else { None }
+            }
+
+            GrammarElement::NegativeLookahead { element: inner } => {
+                // Succeed if inner element does NOT match, consume no input.
+                let result = self.match_element(inner);
+                self.pos = save_pos;
+                if result.is_none() { Some(Vec::new()) } else { None }
+            }
+
+            // ---------------------------------------------------------------
+            // Extension: One-or-more repetition
+            // ---------------------------------------------------------------
+
+            GrammarElement::OneOrMore { element: inner } => {
+                // Match one required, then zero or more additional.
+                let first = self.match_element(inner);
+                match first {
+                    None => {
+                        self.pos = save_pos;
+                        None
+                    }
+                    Some(mut children) => {
+                        loop {
+                            let save_rep = self.pos;
+                            match self.match_element(inner) {
+                                Some(mut result) => children.append(&mut result),
+                                None => {
+                                    self.pos = save_rep;
+                                    break;
+                                }
+                            }
+                        }
+                        Some(children)
+                    }
+                }
+            }
+
+            // ---------------------------------------------------------------
+            // Extension: Separated repetition
+            // ---------------------------------------------------------------
+
+            GrammarElement::SeparatedRepetition { element: inner, separator, at_least_one } => {
+                // Match: element { separator element }
+                // Or with at_least_one=false: [ element { separator element } ]
+                let first = self.match_element(inner);
+                match first {
+                    None => {
+                        self.pos = save_pos;
+                        if *at_least_one { None } else { Some(Vec::new()) }
+                    }
+                    Some(mut children) => {
+                        loop {
+                            let save_sep = self.pos;
+                            let sep = self.match_element(separator);
+                            match sep {
+                                None => {
+                                    self.pos = save_sep;
+                                    break;
+                                }
+                                Some(mut sep_children) => {
+                                    let next = self.match_element(inner);
+                                    match next {
+                                        None => {
+                                            self.pos = save_sep;
+                                            break;
+                                        }
+                                        Some(mut next_children) => {
+                                            children.append(&mut sep_children);
+                                            children.append(&mut next_children);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Some(children)
+                    }
+                }
+            }
         }
     }
 
@@ -665,6 +774,181 @@ impl GrammarParser {
 }
 
 // ===========================================================================
+// AST position computation
+// ===========================================================================
+
+/// Compute position info for a GrammarASTNode from its children.
+///
+/// Walks the children to find the first and last leaf tokens, then uses
+/// their line/column as the node's span. Returns `(None, None, None, None)`
+/// if there are no tokens (e.g., empty repetition).
+fn compute_node_position(
+    children: &[ASTNodeOrToken],
+) -> (Option<usize>, Option<usize>, Option<usize>, Option<usize>) {
+    let first = find_first_token(children);
+    let last = find_last_token(children);
+    match (first, last) {
+        (Some(f), Some(l)) => (Some(f.line), Some(f.column), Some(l.line), Some(l.column)),
+        _ => (None, None, None, None),
+    }
+}
+
+fn find_first_token(children: &[ASTNodeOrToken]) -> Option<&Token> {
+    for child in children {
+        match child {
+            ASTNodeOrToken::Token(tok) => return Some(tok),
+            ASTNodeOrToken::Node(node) => {
+                if let Some(tok) = find_first_token(&node.children) {
+                    return Some(tok);
+                }
+            }
+        }
+    }
+    None
+}
+
+fn find_last_token(children: &[ASTNodeOrToken]) -> Option<&Token> {
+    for child in children.iter().rev() {
+        match child {
+            ASTNodeOrToken::Token(tok) => return Some(tok),
+            ASTNodeOrToken::Node(node) => {
+                if let Some(tok) = find_last_token(&node.children) {
+                    return Some(tok);
+                }
+            }
+        }
+    }
+    None
+}
+
+// ===========================================================================
+// AST walking utilities
+// ===========================================================================
+
+/// Visitor interface for [`walk_ast`].
+///
+/// Both callbacks are optional. Each receives the current node and its parent
+/// (or `None` for the root). Returning `Some(node)` replaces the visited node;
+/// returning `None` keeps the original.
+pub trait ASTVisitor {
+    /// Called before visiting children. Return `Some` to replace the node.
+    fn enter(&mut self, _node: &GrammarASTNode, _parent: Option<&GrammarASTNode>) -> Option<GrammarASTNode> {
+        None
+    }
+    /// Called after visiting children. Return `Some` to replace the node.
+    fn leave(&mut self, _node: &GrammarASTNode, _parent: Option<&GrammarASTNode>) -> Option<GrammarASTNode> {
+        None
+    }
+}
+
+/// Depth-first walk of an AST tree with enter/leave visitor callbacks.
+///
+/// Visitor callbacks can return a replacement node or `None` (keep original).
+/// Token children are not visited -- only `GrammarASTNode` children are walked.
+///
+/// This is the generic traversal primitive. Language packages use it for
+/// cover grammar rewriting, desugaring, and semantic analysis.
+pub fn walk_ast(node: &GrammarASTNode, visitor: &mut dyn ASTVisitor) -> GrammarASTNode {
+    walk_node(node, None, visitor)
+}
+
+fn walk_node(
+    node: &GrammarASTNode,
+    parent: Option<&GrammarASTNode>,
+    visitor: &mut dyn ASTVisitor,
+) -> GrammarASTNode {
+    // Enter phase -- visitor may replace the node.
+    let mut current = match visitor.enter(node, parent) {
+        Some(replacement) => replacement,
+        None => node.clone(),
+    };
+
+    // Walk children recursively.
+    let mut children_changed = false;
+    let mut new_children = Vec::with_capacity(current.children.len());
+    for child in &current.children {
+        match child {
+            ASTNodeOrToken::Node(child_node) => {
+                let walked = walk_node(child_node, Some(&current), visitor);
+                if walked != *child_node {
+                    children_changed = true;
+                }
+                new_children.push(ASTNodeOrToken::Node(walked));
+            }
+            ASTNodeOrToken::Token(tok) => {
+                new_children.push(ASTNodeOrToken::Token(tok.clone()));
+            }
+        }
+    }
+
+    if children_changed {
+        current.children = new_children;
+    }
+
+    // Leave phase -- visitor may replace the node.
+    match visitor.leave(&current, parent) {
+        Some(replacement) => replacement,
+        None => current,
+    }
+}
+
+/// Find all nodes matching a rule name (depth-first order).
+pub fn find_nodes(node: &GrammarASTNode, rule_name: &str) -> Vec<GrammarASTNode> {
+    let mut results = Vec::new();
+    collect_matching_nodes(node, rule_name, &mut results);
+    results
+}
+
+fn collect_matching_nodes(
+    node: &GrammarASTNode,
+    rule_name: &str,
+    results: &mut Vec<GrammarASTNode>,
+) {
+    if node.rule_name == rule_name {
+        results.push(node.clone());
+    }
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(child_node) = child {
+            collect_matching_nodes(child_node, rule_name, results);
+        }
+    }
+}
+
+/// Collect all tokens in depth-first order, optionally filtered by type.
+///
+/// If `type_filter` is `None`, all tokens are collected. If `Some(type_name)`,
+/// only tokens whose effective type name matches are collected.
+pub fn collect_tokens(node: &GrammarASTNode, type_filter: Option<&str>) -> Vec<Token> {
+    let mut results = Vec::new();
+    collect_tokens_recursive(node, type_filter, &mut results);
+    results
+}
+
+fn collect_tokens_recursive(
+    node: &GrammarASTNode,
+    type_filter: Option<&str>,
+    results: &mut Vec<Token>,
+) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Node(child_node) => {
+                collect_tokens_recursive(child_node, type_filter, results);
+            }
+            ASTNodeOrToken::Token(tok) => {
+                match type_filter {
+                    None => results.push(tok.clone()),
+                    Some(type_name) => {
+                        if tok.effective_type_name() == type_name {
+                            results.push(tok.clone());
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===========================================================================
 // Newline detection — scan grammar for NEWLINE references
 // ===========================================================================
 
@@ -686,8 +970,14 @@ fn element_references_newline(element: &GrammarElement) -> bool {
         }
         GrammarElement::Repetition { element: inner }
         | GrammarElement::Optional { element: inner }
-        | GrammarElement::Group { element: inner } => {
+        | GrammarElement::Group { element: inner }
+        | GrammarElement::PositiveLookahead { element: inner }
+        | GrammarElement::NegativeLookahead { element: inner }
+        | GrammarElement::OneOrMore { element: inner } => {
             element_references_newline(inner)
+        }
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            element_references_newline(element) || element_references_newline(separator)
         }
         GrammarElement::Literal { .. } => false,
     }
@@ -709,7 +999,7 @@ mod tests {
             value: value.to_string(),
             line: 1,
             column: 1,
-            type_name: None,
+            type_name: None, flags: None,
         }
     }
 
@@ -721,6 +1011,7 @@ mod tests {
             line: 1,
             column: 1,
             type_name: Some(type_name.to_string()),
+            flags: None,
         }
     }
 
@@ -932,6 +1223,7 @@ mod tests {
         let leaf = GrammarASTNode {
             rule_name: "number".to_string(),
             children: vec![ASTNodeOrToken::Token(tok(TokenType::Number, "42"))],
+            start_line: None, start_column: None, end_line: None, end_column: None,
         };
         assert!(leaf.is_leaf());
         assert_eq!(leaf.token().unwrap().value, "42");
@@ -942,6 +1234,7 @@ mod tests {
                 ASTNodeOrToken::Node(leaf.clone()),
                 ASTNodeOrToken::Token(tok(TokenType::Plus, "+")),
             ],
+            start_line: None, start_column: None, end_line: None, end_column: None,
         };
         assert!(!non_leaf.is_leaf());
         assert!(non_leaf.token().is_none());

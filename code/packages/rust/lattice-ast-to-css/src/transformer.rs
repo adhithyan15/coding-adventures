@@ -582,7 +582,7 @@ impl LatticeTransformer {
     ) -> Result<GrammarASTNode, LatticeError> {
         let items = self.expand_rule_node_to_vec(node.clone(), scope)?;
         if items.is_empty() {
-            return Ok(GrammarASTNode { rule_name: "rule".to_string(), children: vec![] });
+            return Ok(GrammarASTNode { rule_name: "rule".to_string(), children: vec![], start_line: None, start_column: None, end_line: None, end_column: None });
         }
         if items.len() == 1 {
             return Ok(items.into_iter().next().unwrap());
@@ -592,6 +592,7 @@ impl LatticeTransformer {
         Ok(GrammarASTNode {
             rule_name: "stylesheet_fragment".to_string(),
             children: items.into_iter().map(ASTNodeOrToken::Node).collect(),
+            start_line: None, start_column: None, end_line: None, end_column: None,
         })
     }
 
@@ -698,7 +699,7 @@ impl LatticeTransformer {
         let items = self.expand_block_item_to_vec(node.clone(), &mut scope_copy)?;
         if items.is_empty() {
             // Return an empty block_item (will be cleaned up in Pass 3)
-            return Ok(GrammarASTNode { rule_name: "block_item".to_string(), children: vec![] });
+            return Ok(GrammarASTNode { rule_name: "block_item".to_string(), children: vec![], start_line: None, start_column: None, end_line: None, end_column: None });
         }
         // If there's exactly one result matching the original, return it
         if items.len() == 1 {
@@ -931,13 +932,13 @@ impl LatticeTransformer {
                             // Add comma + new selector tokens
                             n.children.push(ASTNodeOrToken::Token(Token {
                                 type_: TokenType::Name,
-                                type_name: Some("Comma".to_string()),
+                                type_name: Some("Comma".to_string()), flags: None,
                                 value: ",".to_string(),
                                 line: 0, column: 0,
                             }));
                             n.children.push(ASTNodeOrToken::Token(Token {
                                 type_: TokenType::Name,
-                                type_name: None,
+                                type_name: None, flags: None,
                                 value: format!(" {}", sel),
                                 line: 0, column: 0,
                             }));
@@ -1350,6 +1351,7 @@ impl LatticeTransformer {
                                                     let seg = GrammarASTNode {
                                                         rule_name: "value_list".to_string(),
                                                         children: current_children.clone(),
+                                                        start_line: None, start_column: None, end_line: None, end_column: None,
                                                     };
                                                     let val = evaluate_arg_node(self, &seg, scope);
                                                     if !val.is_empty() {
@@ -1367,6 +1369,7 @@ impl LatticeTransformer {
                                             let seg = GrammarASTNode {
                                                 rule_name: "value_list".to_string(),
                                                 children: current_children,
+                                                start_line: None, start_column: None, end_line: None, end_column: None,
                                             };
                                             let val = evaluate_arg_node(self, &seg, scope);
                                             if !val.is_empty() {
@@ -2349,6 +2352,7 @@ pub fn make_synthetic_token(value: &str, template: &Token) -> Token {
         value: value.to_string(),
         line: template.line,
         column: template.column,
+        flags: None,
     }
 }
 
@@ -2357,7 +2361,7 @@ pub fn make_value_node(value: &str, _template: &GrammarASTNode) -> GrammarASTNod
     // Find a template token for position info
     let template_token = Token {
         type_: TokenType::Name,
-        type_name: None,
+        type_name: None, flags: None,
         value: value.to_string(),
         line: 0,
         column: 0,
@@ -2367,6 +2371,7 @@ pub fn make_value_node(value: &str, _template: &GrammarASTNode) -> GrammarASTNod
     GrammarASTNode {
         rule_name: "value".to_string(),
         children: vec![ASTNodeOrToken::Token(token)],
+    start_line: None, start_column: None, end_line: None, end_column: None,
     }
 }
 

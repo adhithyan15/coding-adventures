@@ -33,7 +33,7 @@ fn excel_on_token(token: &Token, ctx: &mut LexerContext) {
             value: token.value.clone(),
             line: token.line,
             column: token.column,
-            type_name: Some("FUNCTION_NAME".to_string()),
+            type_name: Some("FUNCTION_NAME".to_string()), flags: None,
         });
         return;
     }
@@ -45,7 +45,7 @@ fn excel_on_token(token: &Token, ctx: &mut LexerContext) {
             value: token.value.clone(),
             line: token.line,
             column: token.column,
-            type_name: Some("TABLE_NAME".to_string()),
+            type_name: Some("TABLE_NAME".to_string()), flags: None,
         });
     }
 }

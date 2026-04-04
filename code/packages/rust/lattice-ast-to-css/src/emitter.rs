@@ -671,7 +671,7 @@ mod tests {
     fn make_ident_token(value: &str) -> ASTNodeOrToken {
         ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Name,
-            type_name: None,
+            type_name: None, flags: None,
             value: value.to_string(),
             line: 0,
             column: 0,
@@ -681,7 +681,7 @@ mod tests {
     fn make_named_token(type_name: &str, value: &str) -> ASTNodeOrToken {
         ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Name,
-            type_name: Some(type_name.to_string()),
+            type_name: Some(type_name.to_string()), flags: None,
             value: value.to_string(),
             line: 0,
             column: 0,
@@ -694,6 +694,7 @@ mod tests {
         let root = GrammarASTNode {
             rule_name: "stylesheet".to_string(),
             children: vec![],
+        start_line: None, start_column: None, end_line: None, end_column: None,
         };
         let result = emitter.emit(&root);
         assert_eq!(result, "");
@@ -707,7 +708,7 @@ mod tests {
         let prop = make_token_node("property", vec![make_ident_token("color")]);
         let val_token = ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Name,
-            type_name: None,
+            type_name: None, flags: None,
             value: "red".to_string(),
             line: 0, column: 0,
         });
@@ -732,7 +733,7 @@ mod tests {
         let prop = make_token_node("property", vec![make_ident_token("color")]);
         let val_token = ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Name,
-            type_name: None,
+            type_name: None, flags: None,
             value: "red".to_string(),
             line: 0, column: 0,
         });
@@ -756,7 +757,7 @@ mod tests {
         // class_selector = DOT IDENT
         let dot = ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Dot,
-            type_name: None,
+            type_name: None, flags: None,
             value: ".".to_string(),
             line: 0, column: 0,
         });
@@ -783,7 +784,7 @@ mod tests {
         // @import url("style.css");
         let at_node = ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Name,
-            type_name: Some("AT_KEYWORD".to_string()),
+            type_name: Some("AT_KEYWORD".to_string()), flags: None,
             value: "@import".to_string(),
             line: 0, column: 0,
         });
@@ -792,7 +793,7 @@ mod tests {
         let prelude = make_token_node("at_prelude", vec![ASTNodeOrToken::Node(prelude_token)]);
         let semicolon = ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Semicolon,
-            type_name: None,
+            type_name: None, flags: None,
             value: ";".to_string(),
             line: 0, column: 0,
         });

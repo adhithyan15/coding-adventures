@@ -18,4 +18,7 @@ pub mod grammar_parser;
 
 pub use ast::ASTNode;
 pub use parser::{Parser, ParseError};
-pub use grammar_parser::{GrammarParser, GrammarParseError, GrammarASTNode};
+pub use grammar_parser::{
+    GrammarParser, GrammarParseError, GrammarASTNode, ASTNodeOrToken, ASTVisitor,
+    walk_ast, find_nodes, collect_tokens,
+};
