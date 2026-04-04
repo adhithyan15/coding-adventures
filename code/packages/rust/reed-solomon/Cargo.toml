@@ -1,0 +1,8 @@
+[package]
+name = "reed-solomon"
+version = "0.1.0"
+edition = "2021"
+description = "Reed-Solomon error-correcting codes over GF(256) — the math behind QR codes, CDs, and deep-space communication"
+
+[dependencies]
+gf256 = { path = "../gf256" }
