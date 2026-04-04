@@ -90,6 +90,7 @@ var skipDirs = map[string]bool{
 	"Pods":          true,
 	".build":        true, // Swift Package Manager build artefacts and dependency checkouts
 	".gradle":       true, // Gradle build cache and wrapper metadata
+	"gradle-build":  true, // Gradle output dir (renamed from "build" to avoid BUILD file conflict)
 }
 
 // readLines reads a file and returns non-blank, non-comment lines.

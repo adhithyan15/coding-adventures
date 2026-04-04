@@ -55,6 +55,7 @@ SKIP_DIRS: frozenset[str] = frozenset({
     ".claude",
     "Pods",
     ".gradle",
+    "gradle-build",
 })
 
 

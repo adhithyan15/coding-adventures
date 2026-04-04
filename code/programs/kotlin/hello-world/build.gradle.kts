@@ -22,6 +22,15 @@
 // `mavenCentral()` is the primary repository for JVM libraries (shared
 // between Java and Kotlin, since both compile to JVM bytecode).
 
+// GRADLE BUILD DIRECTORY
+// ----------------------
+// By default, Gradle outputs compiled classes, JARs, and reports to a
+// directory called "build". This conflicts with our BUILD file on
+// case-insensitive filesystems (macOS, Windows) where "BUILD" and "build"
+// are the same name. We redirect Gradle's output to "gradle-build" to
+// avoid this collision.
+layout.buildDirectory = file("gradle-build")
+
 plugins {
     kotlin("jvm") version "2.1.20"
     application

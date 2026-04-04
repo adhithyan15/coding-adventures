@@ -24,6 +24,15 @@
 //   implementation("com.codingadventures:logic-gates")
 // For monorepo siblings, you use composite builds (see settings.gradle.kts).
 
+// GRADLE BUILD DIRECTORY
+// ----------------------
+// By default, Gradle outputs compiled classes, JARs, and reports to a
+// directory called "build". This conflicts with our BUILD file on
+// case-insensitive filesystems (macOS, Windows) where "BUILD" and "build"
+// are the same name. We redirect Gradle's output to "gradle-build" to
+// avoid this collision.
+layout.buildDirectory = file("gradle-build")
+
 plugins {
     java
     application
