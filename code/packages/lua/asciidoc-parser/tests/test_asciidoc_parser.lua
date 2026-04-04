@@ -151,10 +151,10 @@ describe("asciidoc_parser", function()
       assert.equals("python", node.language)
     end)
 
-    it("code block without source annotation has empty language", function()
+    it("code block without source annotation has nil language", function()
       local node = first_child("----\nno lang\n----\n")
       assert.equals("code_block", node.type)
-      assert.equals("", node.language)
+      assert.is_nil(node.language)
     end)
 
     it("literal block with ....", function()
