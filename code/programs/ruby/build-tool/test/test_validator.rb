@@ -142,6 +142,70 @@ class TestValidator < Minitest::Test
     end
   end
 
+  def test_validate_build_contracts_flags_windows_lua_sibling_drift
+    Dir.mktmpdir("build_tool_validator") do |tmp|
+      root = Pathname(tmp)
+      package_path = root / "code/packages/lua/arm1_gatelevel"
+      package_path.mkpath
+
+      packages = [
+        BuildTool::Package.new(
+          name: "lua/arm1_gatelevel",
+          path: package_path,
+          build_commands: ["echo"],
+          language: "lua"
+        )
+      ]
+
+      write_file(package_path / "BUILD", <<~BUILD)
+        (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+        (cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+        (cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+        (cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+        luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+      BUILD
+      write_file(package_path / "BUILD_windows", <<~BUILD)
+        (cd ..\\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+        luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+      BUILD
+
+      error = BuildTool::Validator.validate_build_contracts(root, packages)
+
+      refute_nil error
+      assert_includes error, "BUILD_windows is missing sibling installs present in BUILD"
+      assert_includes error, "../logic_gates"
+      assert_includes error, "../arithmetic"
+      assert_includes error, "--deps-mode=none or --no-manifest"
+    end
+  end
+
+  def test_validate_build_contracts_flags_perl_test2_bootstrap_without_notest
+    Dir.mktmpdir("build_tool_validator") do |tmp|
+      root = Pathname(tmp)
+      package_path = root / "code/packages/perl/draw-instructions-svg"
+      package_path.mkpath
+
+      packages = [
+        BuildTool::Package.new(
+          name: "perl/draw-instructions-svg",
+          path: package_path,
+          build_commands: ["echo"],
+          language: "perl"
+        )
+      ]
+
+      write_file(package_path / "BUILD", <<~BUILD)
+        cpanm --quiet Test2::V0
+        prove -l -I../draw-instructions/lib -v t/
+      BUILD
+
+      error = BuildTool::Validator.validate_build_contracts(root, packages)
+
+      refute_nil error
+      assert_includes error, "Test2::V0 without --notest"
+    end
+  end
+
   def test_validate_build_contracts_allows_safe_lua_isolated_builds
     Dir.mktmpdir("build_tool_validator") do |tmp|
       root = Pathname(tmp)

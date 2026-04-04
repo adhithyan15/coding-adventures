@@ -135,6 +135,67 @@ luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
     expect(error).toContain("--deps-mode=none or --no-manifest");
   });
 
+  it("flags Windows Lua sibling drift", () => {
+    const packagePath = path.join(
+      tmpDir,
+      "code",
+      "packages",
+      "lua",
+      "arm1_gatelevel",
+    );
+
+    writeFile(
+      path.join(packagePath, "BUILD"),
+      `
+(cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+(cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+(cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+`,
+    );
+    writeFile(
+      path.join(packagePath, "BUILD_windows"),
+      `
+(cd ..\\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+`,
+    );
+
+    const error = validateBuildContracts(tmpDir, [
+      { language: "lua", path: packagePath },
+    ]);
+
+    expect(error).toContain("BUILD_windows is missing sibling installs present in BUILD");
+    expect(error).toContain("../logic_gates");
+    expect(error).toContain("../arithmetic");
+    expect(error).toContain("--deps-mode=none or --no-manifest");
+  });
+
+  it("flags Perl Test2 bootstraps without --notest", () => {
+    const packagePath = path.join(
+      tmpDir,
+      "code",
+      "packages",
+      "perl",
+      "draw-instructions-svg",
+    );
+
+    writeFile(
+      path.join(packagePath, "BUILD"),
+      `
+cpanm --quiet Test2::V0
+prove -l -I../draw-instructions/lib -v t/
+`,
+    );
+
+    const error = validateBuildContracts(tmpDir, [
+      { language: "perl", path: packagePath },
+    ]);
+
+    expect(error).toContain("Test2::V0 without --notest");
+  });
+
   it("allows safe Lua isolated-build patterns", () => {
     const safePath = path.join(tmpDir, "code", "packages", "lua", "safe_pkg");
 

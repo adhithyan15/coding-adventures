@@ -111,6 +111,55 @@ defmodule BuildTool.ValidatorTest do
     assert error =~ "--deps-mode=none or --no-manifest"
   end
 
+  test "validate_build_contracts flags Windows Lua sibling drift", %{tmp_dir: tmp_dir} do
+    pkg_path = Path.join(tmp_dir, "code/packages/lua/arm1_gatelevel")
+    File.mkdir_p!(pkg_path)
+
+    File.write!(Path.join(pkg_path, "BUILD"), """
+    (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+    (cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+    (cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+    (cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+    luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+    """)
+
+    File.write!(Path.join(pkg_path, "BUILD_windows"), """
+    (cd ..\\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+    luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+    """)
+
+    packages = [
+      %{language: "lua", path: pkg_path}
+    ]
+
+    error = Validator.validate_build_contracts(tmp_dir, packages)
+
+    assert error =~ "BUILD_windows is missing sibling installs present in BUILD"
+    assert error =~ "../logic_gates"
+    assert error =~ "../arithmetic"
+    assert error =~ "--deps-mode=none or --no-manifest"
+  end
+
+  test "validate_build_contracts flags Perl Test2 bootstrap without --notest", %{
+    tmp_dir: tmp_dir
+  } do
+    pkg_path = Path.join(tmp_dir, "code/packages/perl/draw-instructions-svg")
+    File.mkdir_p!(pkg_path)
+
+    File.write!(Path.join(pkg_path, "BUILD"), """
+    cpanm --quiet Test2::V0
+    prove -l -I../draw-instructions/lib -v t/
+    """)
+
+    packages = [
+      %{language: "perl", path: pkg_path}
+    ]
+
+    error = Validator.validate_build_contracts(tmp_dir, packages)
+
+    assert error =~ "Test2::V0 without --notest"
+  end
+
   test "validate_build_contracts allows safe Lua isolated-build patterns", %{tmp_dir: tmp_dir} do
     pkg_path = Path.join(tmp_dir, "code/packages/lua/safe_pkg")
     File.mkdir_p!(pkg_path)

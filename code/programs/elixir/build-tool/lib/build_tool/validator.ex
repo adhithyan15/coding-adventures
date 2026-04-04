@@ -75,7 +75,8 @@ defmodule BuildTool.Validator do
   def validate_build_contracts(repo_root, packages) do
     errors =
       [validate_ci_full_build_toolchains(repo_root, packages)] ++
-        validate_lua_isolated_build_files(packages)
+        validate_lua_isolated_build_files(packages) ++
+        validate_perl_build_files(packages)
       |> Enum.reject(&is_nil/1)
 
     case errors do
@@ -97,11 +98,15 @@ defmodule BuildTool.Validator do
     |> Enum.filter(&(&1.language == "lua"))
     |> Enum.flat_map(fn pkg ->
       self_rock = "coding-adventures-" <> String.replace(Path.basename(pkg.path), "_", "-")
+      build_lines =
+        pkg.path
+        |> lua_build_files()
+        |> Map.new(fn build_path -> {Path.basename(build_path), read_build_lines(build_path)} end)
 
-      pkg.path
-      |> lua_build_files()
+      build_lines
+      |> Enum.map(fn {name, lines} -> {Path.join(pkg.path, name), lines} end)
       |> Enum.flat_map(fn build_path ->
-        lines = read_build_lines(build_path)
+        {build_path, lines} = build_path
 
         if lines == [] do
           []
@@ -136,9 +141,11 @@ defmodule BuildTool.Validator do
               errors
             end
 
-          if guarded_local_lua_install?(lines) and not self_install_disables_deps?(lines, self_rock) do
+          if (guarded_local_lua_install?(lines) or
+                (Path.basename(build_path) == "BUILD_windows" and local_lua_sibling_install?(lines))) and
+               not self_install_disables_deps?(lines, self_rock) do
             [
-              "#{String.replace(build_path, "\\", "/")}: Lua BUILD uses guarded sibling rock installs " <>
+              "#{String.replace(build_path, "\\", "/")}: Lua BUILD bootstraps sibling rocks " <>
                 "but the final self-install does not pass --deps-mode=none or --no-manifest"
               | errors
             ]
@@ -147,6 +154,40 @@ defmodule BuildTool.Validator do
           end
           |> Enum.reverse()
         end
+      end)
+      |> Kernel.++(
+        case missing_lua_sibling_installs(
+               Map.get(build_lines, "BUILD", []),
+               Map.get(build_lines, "BUILD_windows", [])
+             ) do
+          [] ->
+            []
+
+          missing ->
+            [
+              "#{String.replace(Path.join(pkg.path, "BUILD_windows"), "\\", "/")}: Lua BUILD_windows is missing sibling installs present in BUILD: #{Enum.join(missing, ", ")}"
+            ]
+        end
+      )
+    end)
+  end
+
+  defp validate_perl_build_files(packages) do
+    packages
+    |> Enum.filter(&(&1.language == "perl"))
+    |> Enum.flat_map(fn pkg ->
+      pkg.path
+      |> lua_build_files()
+      |> Enum.filter_map(fn build_path ->
+        lines = read_build_lines(build_path)
+
+        Enum.any?(lines, fn line ->
+          String.contains?(line, "cpanm") and
+            String.contains?(line, "Test2::V0") and
+            not String.contains?(line, "--notest")
+        end)
+      end, fn build_path ->
+        "#{String.replace(build_path, "\\", "/")}: Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself"
       end)
     end)
   end
@@ -201,6 +242,10 @@ defmodule BuildTool.Validator do
     end)
   end
 
+  defp local_lua_sibling_install?(lines) do
+    lua_sibling_install_dirs(lines) != []
+  end
+
   defp self_install_disables_deps?(lines, self_rock) do
     Enum.any?(lines, fn line ->
       String.contains?(line, "luarocks make") and
@@ -209,5 +254,26 @@ defmodule BuildTool.Validator do
            String.contains?(line, "--deps-mode none") or
            String.contains?(line, "--no-manifest"))
     end)
+  end
+
+  defp missing_lua_sibling_installs(unix_lines, windows_lines) do
+    windows_deps = MapSet.new(lua_sibling_install_dirs(windows_lines))
+
+    unix_lines
+    |> lua_sibling_install_dirs()
+    |> Enum.reject(&MapSet.member?(windows_deps, &1))
+  end
+
+  defp lua_sibling_install_dirs(lines) do
+    lines
+    |> Enum.filter(&String.contains?(&1, "luarocks make"))
+    |> Enum.flat_map(fn line ->
+      case Regex.run(~r|\bcd\s+([.][.][\\/][^ \t\r\n&()]+)|, line) do
+        [_, dep] -> [String.replace(dep, "\\", "/")]
+        _ -> []
+      end
+    end)
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 end

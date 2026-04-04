@@ -130,6 +130,52 @@ BUILD
     like($error, qr/--deps-mode=none or --no-manifest/, 'mentions deps-mode guidance');
 };
 
+subtest 'validate_build_contracts flags windows lua sibling drift' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    write_file("$root/code/packages/lua/arm1_gatelevel/BUILD", <<'BUILD');
+(cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+(cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+(cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+BUILD
+    write_file("$root/code/packages/lua/arm1_gatelevel/BUILD_windows", <<'BUILD');
+(cd ..\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+BUILD
+
+    my $error = CodingAdventures::BuildTool::Validator::validate_build_contracts(
+        $root,
+        [
+            { language => 'lua', path => "$root/code/packages/lua/arm1_gatelevel" },
+        ],
+    );
+
+    ok(defined $error, 'validation fails');
+    like($error, qr/BUILD_windows is missing sibling installs present in BUILD/, 'mentions missing windows prereqs');
+    like($error, qr/\.\.\/logic_gates/, 'mentions missing logic_gates prereq');
+    like($error, qr/\.\.\/arithmetic/, 'mentions missing arithmetic prereq');
+    like($error, qr/--deps-mode=none or --no-manifest/, 'mentions deps-mode guidance');
+};
+
+subtest 'validate_build_contracts flags perl Test2 bootstrap without --notest' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    write_file("$root/code/packages/perl/draw-instructions-svg/BUILD", <<'BUILD');
+cpanm --quiet Test2::V0
+prove -l -I../draw-instructions/lib -v t/
+BUILD
+
+    my $error = CodingAdventures::BuildTool::Validator::validate_build_contracts(
+        $root,
+        [
+            { language => 'perl', path => "$root/code/packages/perl/draw-instructions-svg" },
+        ],
+    );
+
+    ok(defined $error, 'validation fails');
+    like($error, qr/Test2::V0 without --notest/, 'mentions notest requirement');
+};
+
 subtest 'validate_build_contracts allows safe lua isolated-build patterns' => sub {
     my $root = tempdir(CLEANUP => 1);
     write_file("$root/code/packages/lua/safe_pkg/BUILD", <<'BUILD');

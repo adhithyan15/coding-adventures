@@ -398,3 +398,70 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
 		t.Fatalf("expected safe Lua BUILD validation to pass, got %v", err)
 	}
 }
+
+func TestValidateBuildFilesFailsWindowsLuaSiblingDrift(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "lua/arm1_gatelevel", relPath: "code/packages/lua/arm1_gatelevel", lang: "lua"},
+	})
+
+	writeBuildFile(t, pkgs[0].Path, "BUILD", `
+(cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+(cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+(cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+`)
+	writeBuildFile(t, pkgs[0].Path, "BUILD_windows", `
+(cd ..\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+`)
+
+	graph := directedgraph.New()
+	graph.AddNode("lua/arm1_gatelevel")
+
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil {
+		t.Fatal("expected Lua BUILD_windows validation failure")
+	}
+	if !strings.Contains(err.Error(), "BUILD_windows is missing sibling installs present in BUILD") {
+		t.Fatalf("expected missing sibling install message, got %v", err)
+	}
+	if !strings.Contains(err.Error(), "../logic_gates") || !strings.Contains(err.Error(), "../arithmetic") {
+		t.Fatalf("expected missing sibling package names, got %v", err)
+	}
+	if !strings.Contains(err.Error(), "final self-install does not pass --deps-mode=none or --no-manifest") {
+		t.Fatalf("expected deps-mode guidance, got %v", err)
+	}
+}
+
+func TestValidateBuildFilesFailsPerlTestBootstrapWithoutNotest(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/draw-instructions-svg", relPath: "code/packages/perl/draw-instructions-svg", lang: "perl"},
+	})
+
+	writeBuildFile(t, pkgs[0].Path, "BUILD", `
+cpanm --quiet Test2::V0
+prove -l -I../draw-instructions/lib -v t/
+`)
+
+	graph := directedgraph.New()
+	graph.AddNode("perl/draw-instructions-svg")
+
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil {
+		t.Fatal("expected Perl BUILD validation failure")
+	}
+	if !strings.Contains(err.Error(), "Test2::V0 without --notest") {
+		t.Fatalf("expected Perl bootstrap warning, got %v", err)
+	}
+}

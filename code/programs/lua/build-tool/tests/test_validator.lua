@@ -121,6 +121,46 @@ luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
         assert.is_truthy(error:find("--deps-mode=none or --no-manifest", 1, true))
     end)
 
+    it("flags Windows Lua sibling drift", function()
+        make_dir(tmpdir .. "/code/packages/lua/arm1_gatelevel")
+        write_file(tmpdir .. "/code/packages/lua/arm1_gatelevel/BUILD", [[
+(cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+(cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+(cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+]])
+        write_file(tmpdir .. "/code/packages/lua/arm1_gatelevel/BUILD_windows", [[
+(cd ..\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+]])
+
+        local error = Validator.validate_build_contracts(tmpdir, {
+            { language = "lua", path = tmpdir .. "/code/packages/lua/arm1_gatelevel" },
+        })
+
+        assert.is_not_nil(error)
+        assert.is_truthy(error:find("BUILD_windows is missing sibling installs present in BUILD", 1, true))
+        assert.is_truthy(error:find("../logic_gates", 1, true))
+        assert.is_truthy(error:find("../arithmetic", 1, true))
+        assert.is_truthy(error:find("--deps-mode=none or --no-manifest", 1, true))
+    end)
+
+    it("flags Perl Test2 bootstraps without --notest", function()
+        make_dir(tmpdir .. "/code/packages/perl/draw-instructions-svg")
+        write_file(tmpdir .. "/code/packages/perl/draw-instructions-svg/BUILD", [[
+cpanm --quiet Test2::V0
+prove -l -I../draw-instructions/lib -v t/
+]])
+
+        local error = Validator.validate_build_contracts(tmpdir, {
+            { language = "perl", path = tmpdir .. "/code/packages/perl/draw-instructions-svg" },
+        })
+
+        assert.is_not_nil(error)
+        assert.is_truthy(error:find("Test2::V0 without --notest", 1, true))
+    end)
+
     it("allows safe Lua isolated-build patterns", function()
         make_dir(tmpdir .. "/code/packages/lua/safe_pkg")
         write_file(tmpdir .. "/code/packages/lua/safe_pkg/BUILD", [[

@@ -117,6 +117,63 @@ struct ValidatorTests {
     }
 
     @Test
+    func validateBuildContractsFlagsWindowsLuaSiblingDrift() throws {
+        let root = try makeTempDirectory(label: "validator_lua_windows")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+
+        let packagePath = (root as NSString).appendingPathComponent("code/packages/lua/arm1_gatelevel")
+        try writeFile(
+            (packagePath as NSString).appendingPathComponent("BUILD"),
+            """
+            (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+            (cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+            (cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+            (cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+            luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+            """
+        )
+        try writeFile(
+            (packagePath as NSString).appendingPathComponent("BUILD_windows"),
+            """
+            (cd ..\\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+            luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+            """
+        )
+
+        let packages = [
+            BuildPackage(name: "lua/arm1_gatelevel", path: packagePath, language: "lua"),
+        ]
+
+        let error = Validator.validateBuildContracts(repoRoot: root, packages: packages)
+        #expect(error?.contains("BUILD_windows is missing sibling installs present in BUILD") == true)
+        #expect(error?.contains("../logic_gates") == true)
+        #expect(error?.contains("../arithmetic") == true)
+        #expect(error?.contains("--deps-mode=none or --no-manifest") == true)
+    }
+
+    @Test
+    func validateBuildContractsFlagsPerlTest2BootstrapWithoutNotest() throws {
+        let root = try makeTempDirectory(label: "validator_perl_test2")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+
+        let packagePath = (root as NSString).appendingPathComponent("code/packages/perl/draw-instructions-svg")
+        try writeFile(
+            (packagePath as NSString).appendingPathComponent("BUILD"),
+            """
+            cpanm --quiet Test2::V0
+            prove -l -I../draw-instructions/lib -v t/
+            """
+        )
+
+        let packages = [
+            BuildPackage(name: "perl/draw-instructions-svg", path: packagePath, language: "perl"),
+        ]
+
+        let error = Validator.validateBuildContracts(repoRoot: root, packages: packages)
+        #expect(error?.contains("Test2::V0 without --notest") == true)
+    }
+
+    @Test
     func validateBuildContractsAllowsSafeLuaPatterns() throws {
         let root = try makeTempDirectory(label: "validator_lua_safe")
         defer { try? FileManager.default.removeItem(atPath: root) }

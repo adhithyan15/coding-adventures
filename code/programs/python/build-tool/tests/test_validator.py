@@ -129,6 +129,62 @@ luarocks make --local coding-adventures-guarded-pkg-0.1.0-1.rockspec
     assert "--deps-mode=none or --no-manifest" in error
 
 
+def test_validate_build_contracts_flags_windows_lua_sibling_drift(tmp_path):
+    packages = [
+        _make_pkg(tmp_path, "code/packages/lua/arm1_gatelevel", "lua"),
+    ]
+
+    pkg_path = tmp_path / "code/packages/lua/arm1_gatelevel"
+    (pkg_path / "BUILD").write_text(
+        """
+(cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+(cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+(cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+""",
+        encoding="utf-8",
+    )
+    (pkg_path / "BUILD_windows").write_text(
+        """
+(cd ..\\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+""",
+        encoding="utf-8",
+    )
+
+    error = validate_build_contracts(tmp_path, packages)
+
+    assert error is not None
+    assert "BUILD_windows is missing sibling installs present in BUILD" in error
+    assert "../logic_gates" in error
+    assert "../arithmetic" in error
+    assert "--deps-mode=none or --no-manifest" in error
+
+
+def test_validate_build_contracts_flags_perl_test2_bootstrap_without_notest(
+    tmp_path,
+):
+    packages = [
+        _make_pkg(tmp_path, "code/packages/perl/draw-instructions-svg", "perl"),
+    ]
+
+    (
+        tmp_path / "code/packages/perl/draw-instructions-svg/BUILD"
+    ).write_text(
+        """
+cpanm --quiet Test2::V0
+prove -l -I../draw-instructions/lib -v t/
+""",
+        encoding="utf-8",
+    )
+
+    error = validate_build_contracts(tmp_path, packages)
+
+    assert error is not None
+    assert "Test2::V0 without --notest" in error
+
+
 def test_validate_build_contracts_allows_safe_lua_isolated_builds(tmp_path):
     packages = [
         _make_pkg(tmp_path, "code/packages/lua/safe_pkg", "lua"),

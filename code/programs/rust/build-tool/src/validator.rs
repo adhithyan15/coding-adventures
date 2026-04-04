@@ -69,6 +69,7 @@ pub fn validate_build_contracts(repo_root: &Path, packages: &[Package]) -> Optio
         errors.push(error);
     }
     errors.extend(validate_lua_isolated_build_files(packages));
+    errors.extend(validate_perl_build_files(packages));
 
     if errors.is_empty() {
         None
@@ -102,9 +103,13 @@ fn validate_lua_isolated_build_files(packages: &[Package]) -> Vec<String> {
                 .map(|name| name.to_string_lossy().replace('_', "-"))
                 .unwrap_or_default()
         );
+        let mut build_lines = std::collections::BTreeMap::new();
 
         for build_path in lua_build_files(&pkg.path) {
             let lines = read_build_lines(&build_path);
+            if let Some(name) = build_path.file_name().and_then(|value| value.to_str()) {
+                build_lines.insert(name.to_string(), lines.clone());
+            }
             if lines.is_empty() {
                 continue;
             }
@@ -132,9 +137,54 @@ fn validate_lua_isolated_build_files(packages: &[Package]) -> Vec<String> {
                 }
             }
 
-            if has_guarded_local_lua_install(&lines) && !self_install_disables_deps(&lines, &self_rock) {
+            if (has_guarded_local_lua_install(&lines)
+                || (build_path.file_name().and_then(|value| value.to_str()) == Some("BUILD_windows")
+                    && has_local_lua_sibling_install(&lines)))
+                && !self_install_disables_deps(&lines, &self_rock)
+            {
                 errors.push(format!(
-                    "{}: Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest",
+                    "{}: Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest",
+                    build_path.to_string_lossy().replace('\\', "/")
+                ));
+            }
+        }
+
+        let missing_windows_deps = missing_lua_sibling_installs(
+            build_lines.get("BUILD").map(Vec::as_slice).unwrap_or(&[]),
+            build_lines
+                .get("BUILD_windows")
+                .map(Vec::as_slice)
+                .unwrap_or(&[]),
+        );
+        if !missing_windows_deps.is_empty() {
+            errors.push(format!(
+                "{}: Lua BUILD_windows is missing sibling installs present in BUILD: {}",
+                pkg.path.join("BUILD_windows").to_string_lossy().replace('\\', "/"),
+                missing_windows_deps.join(", ")
+            ));
+        }
+    }
+
+    errors
+}
+
+fn validate_perl_build_files(packages: &[Package]) -> Vec<String> {
+    let mut errors = Vec::new();
+
+    for pkg in packages {
+        if pkg.language != "perl" {
+            continue;
+        }
+
+        for build_path in lua_build_files(&pkg.path) {
+            let lines = read_build_lines(&build_path);
+            if lines.iter().any(|line| {
+                line.contains("cpanm")
+                    && line.contains("Test2::V0")
+                    && !line.contains("--notest")
+            }) {
+                errors.push(format!(
+                    "{}: Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself",
                     build_path.to_string_lossy().replace('\\', "/")
                 ));
             }
@@ -211,6 +261,10 @@ fn has_guarded_local_lua_install(lines: &[String]) -> bool {
         .any(|line| line.contains("luarocks show ") && (line.contains("../") || line.contains("..\\")))
 }
 
+fn has_local_lua_sibling_install(lines: &[String]) -> bool {
+    !lua_sibling_install_dirs(lines).is_empty()
+}
+
 fn self_install_disables_deps(lines: &[String], self_rock: &str) -> bool {
     lines.iter().any(|line| {
         line.contains("luarocks make")
@@ -219,6 +273,36 @@ fn self_install_disables_deps(lines: &[String], self_rock: &str) -> bool {
                 || line.contains("--deps-mode none")
                 || line.contains("--no-manifest"))
     })
+}
+
+fn missing_lua_sibling_installs(unix_lines: &[String], windows_lines: &[String]) -> Vec<String> {
+    let windows_deps: std::collections::BTreeSet<String> =
+        lua_sibling_install_dirs(windows_lines).into_iter().collect();
+    lua_sibling_install_dirs(unix_lines)
+        .into_iter()
+        .filter(|dep| !windows_deps.contains(dep))
+        .collect()
+}
+
+fn lua_sibling_install_dirs(lines: &[String]) -> Vec<String> {
+    let mut dirs = BTreeSet::new();
+
+    for line in lines {
+        if !line.contains("luarocks make") {
+            continue;
+        }
+        let Some(start) = line.find("cd ") else {
+            continue;
+        };
+        let remainder = &line[start + 3..];
+        let dep = remainder.split_whitespace().next().unwrap_or_default();
+        if !(dep.starts_with("../") || dep.starts_with("..\\")) {
+            continue;
+        }
+        dirs.insert(dep.replace('\\', "/"));
+    }
+
+    dirs.into_iter().collect()
 }
 
 #[cfg(test)]
@@ -428,6 +512,80 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
         .unwrap();
 
         assert!(validate_build_contracts(&root, &packages).is_none());
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn validate_build_contracts_flags_windows_lua_sibling_drift() {
+        let root = make_temp_root("lua_windows_drift");
+        let _ = fs::remove_dir_all(&root);
+
+        let package_path = root.join("code/packages/lua/arm1_gatelevel");
+        fs::create_dir_all(&package_path).unwrap();
+
+        let packages = vec![Package {
+            name: "lua/arm1_gatelevel".to_string(),
+            path: package_path.clone(),
+            build_commands: vec!["echo hi".to_string()],
+            language: "lua".to_string(),
+        }];
+
+        fs::write(
+            package_path.join("BUILD"),
+            r#"
+(cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+(cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+(cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+"#,
+        )
+        .unwrap();
+        fs::write(
+            package_path.join("BUILD_windows"),
+            r#"
+(cd ..\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+"#,
+        )
+        .unwrap();
+
+        let error = validate_build_contracts(&root, &packages).unwrap();
+        assert!(error.contains("BUILD_windows is missing sibling installs present in BUILD"));
+        assert!(error.contains("../logic_gates"));
+        assert!(error.contains("../arithmetic"));
+        assert!(error.contains("--deps-mode=none or --no-manifest"));
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn validate_build_contracts_flags_perl_test2_bootstrap_without_notest() {
+        let root = make_temp_root("perl_test2");
+        let _ = fs::remove_dir_all(&root);
+
+        let package_path = root.join("code/packages/perl/draw-instructions-svg");
+        fs::create_dir_all(&package_path).unwrap();
+
+        let packages = vec![Package {
+            name: "perl/draw-instructions-svg".to_string(),
+            path: package_path.clone(),
+            build_commands: vec!["echo hi".to_string()],
+            language: "perl".to_string(),
+        }];
+
+        fs::write(
+            package_path.join("BUILD"),
+            r#"
+cpanm --quiet Test2::V0
+prove -l -I../draw-instructions/lib -v t/
+"#,
+        )
+        .unwrap();
+
+        let error = validate_build_contracts(&root, &packages).unwrap();
+        assert!(error.contains("Test2::V0 without --notest"));
 
         let _ = fs::remove_dir_all(&root);
     }

@@ -62,6 +62,7 @@ sub validate_build_contracts {
     my $ci_error = validate_ci_full_build_toolchains($root, $packages);
     push @errors, $ci_error if defined $ci_error;
     push @errors, validate_lua_isolated_build_files($packages);
+    push @errors, validate_perl_build_files($packages);
 
     return undef unless @errors;
     return join("\n  - ", @errors);
@@ -92,9 +93,11 @@ sub validate_lua_isolated_build_files {
 
         my $self_rock = 'coding-adventures-' . basename($pkg->{path});
         $self_rock =~ s/_/-/g;
+        my %build_lines;
 
         for my $build_path (lua_build_files($pkg->{path})) {
             my @lines = read_build_lines($build_path);
+            $build_lines{basename($build_path)} = [@lines];
             next unless @lines;
 
             my $foreign_remove = first_foreign_lua_remove(\@lines, $self_rock);
@@ -115,13 +118,52 @@ sub validate_lua_isolated_build_files {
                     . 'isolated LuaRocks builds require directed_graph first';
             }
 
-            if (guarded_local_lua_install(\@lines) &&
+            if ((guarded_local_lua_install(\@lines) ||
+                    (basename($build_path) eq 'BUILD_windows' && local_lua_sibling_install(\@lines))) &&
                 !self_install_disables_deps(\@lines, $self_rock)) {
                 (my $normalized = $build_path) =~ s{\\}{/}g;
                 push @errors,
-                    $normalized . ': Lua BUILD uses guarded sibling rock installs but the final '
+                    $normalized . ': Lua BUILD bootstraps sibling rocks but the final '
                     . 'self-install does not pass --deps-mode=none or --no-manifest';
             }
+        }
+
+        my @missing_windows_deps = missing_lua_sibling_installs(
+            $build_lines{BUILD} || [],
+            $build_lines{BUILD_windows} || [],
+        );
+        if (@missing_windows_deps) {
+            my $build_path = File::Spec->catfile($pkg->{path}, 'BUILD_windows');
+            $build_path =~ s{\\}{/}g;
+            push @errors,
+                $build_path . ': Lua BUILD_windows is missing sibling installs present in BUILD: '
+                . join(', ', @missing_windows_deps);
+        }
+    }
+
+    return @errors;
+}
+
+sub validate_perl_build_files {
+    my ($packages) = @_;
+    my @errors;
+
+    for my $pkg (@{$packages || []}) {
+        next unless ($pkg->{language} // '') eq 'perl';
+        next unless defined $pkg->{path};
+
+        for my $build_path (lua_build_files($pkg->{path})) {
+            my @lines = read_build_lines($build_path);
+            next unless grep {
+                index($_, 'cpanm') >= 0
+                    && index($_, 'Test2::V0') >= 0
+                    && index($_, '--notest') < 0
+            } @lines;
+
+            (my $normalized = $build_path) =~ s{\\}{/}g;
+            push @errors,
+                $normalized . ': Perl BUILD bootstraps Test2::V0 without --notest; '
+                . 'isolated Windows installs can fail while installing the test framework itself';
         }
     }
 
@@ -183,6 +225,12 @@ sub guarded_local_lua_install {
     return 0;
 }
 
+sub local_lua_sibling_install {
+    my ($lines) = @_;
+    my @dirs = lua_sibling_install_dirs($lines);
+    return @dirs ? 1 : 0;
+}
+
 sub self_install_disables_deps {
     my ($lines, $self_rock) = @_;
     for my $line (@{$lines || []}) {
@@ -193,6 +241,29 @@ sub self_install_disables_deps {
             || index($line, '--no-manifest') >= 0;
     }
     return 0;
+}
+
+sub missing_lua_sibling_installs {
+    my ($unix_lines, $windows_lines) = @_;
+    my %windows_deps = map { $_ => 1 } lua_sibling_install_dirs($windows_lines);
+    return grep { !$windows_deps{$_} } lua_sibling_install_dirs($unix_lines);
+}
+
+sub lua_sibling_install_dirs {
+    my ($lines) = @_;
+    my %seen;
+    my @dirs;
+
+    for my $line (@{$lines || []}) {
+        next if index($line, 'luarocks make') < 0;
+        next unless $line =~ /\bcd\s+([.][.][\\\/][^ \t\r\n&()]+)/;
+
+        (my $dep = $1) =~ s{\\}{/}g;
+        next if $seen{$dep}++;
+        push @dirs, $dep;
+    }
+
+    return sort @dirs;
 }
 
 1;

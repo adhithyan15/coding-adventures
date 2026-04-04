@@ -73,6 +73,7 @@ def validate_build_contracts(
         errors.append(ci_error)
 
     errors.extend(validate_lua_isolated_build_files(package_list))
+    errors.extend(validate_perl_build_files(package_list))
 
     if not errors:
         return None
@@ -88,8 +89,10 @@ def validate_lua_isolated_build_files(packages: Iterable[Package]) -> list[str]:
             continue
 
         self_rock = f"coding-adventures-{pkg.path.name.replace('_', '-')}"
+        build_lines: dict[str, list[str]] = {}
         for build_path in sorted(pkg.path.glob("BUILD*")):
             lines = _read_build_lines(build_path)
+            build_lines[build_path.name] = lines
             if not lines:
                 continue
 
@@ -118,14 +121,54 @@ def validate_lua_isolated_build_files(packages: Iterable[Package]) -> list[str]:
                     "directed_graph first"
                 )
 
-            if _has_guarded_local_lua_install(lines) and not _self_install_disables_deps(
-                lines, self_rock
-            ):
+            if (
+                _has_guarded_local_lua_install(lines)
+                or (
+                    build_path.name == "BUILD_windows"
+                    and _has_local_lua_sibling_install(lines)
+                )
+            ) and not _self_install_disables_deps(lines, self_rock):
                 errors.append(
-                    f"{build_path.as_posix()}: Lua BUILD uses guarded sibling rock "
-                    "installs but the final self-install does not pass "
+                    f"{build_path.as_posix()}: Lua BUILD bootstraps sibling rocks "
+                    "but the final self-install does not pass "
                     "--deps-mode=none or --no-manifest"
                 )
+
+        missing_windows_deps = _missing_lua_sibling_installs(
+            build_lines.get("BUILD", []),
+            build_lines.get("BUILD_windows", []),
+        )
+        if missing_windows_deps:
+            errors.append(
+                f"{(pkg.path / 'BUILD_windows').as_posix()}: Lua BUILD_windows is "
+                "missing sibling installs present in BUILD: "
+                f"{', '.join(missing_windows_deps)}"
+            )
+
+    return errors
+
+
+def validate_perl_build_files(packages: Iterable[Package]) -> list[str]:
+    """Validate Perl BUILD contracts needed for isolated cpanm installs."""
+    errors: list[str] = []
+
+    for pkg in packages:
+        if pkg.language != "perl":
+            continue
+
+        for build_path in sorted(pkg.path.glob("BUILD*")):
+            for line in _read_build_lines(build_path):
+                if (
+                    "cpanm" in line
+                    and "Test2::V0" in line
+                    and "--notest" not in line
+                ):
+                    errors.append(
+                        f"{build_path.as_posix()}: Perl BUILD bootstraps "
+                        "Test2::V0 without --notest; isolated Windows installs "
+                        "can fail while installing the test framework itself"
+                    )
+                    break
 
     return errors
 
@@ -178,6 +221,10 @@ def _has_guarded_local_lua_install(lines: Iterable[str]) -> bool:
     )
 
 
+def _has_local_lua_sibling_install(lines: Iterable[str]) -> bool:
+    return bool(_lua_sibling_install_dirs(lines))
+
+
 def _self_install_disables_deps(lines: Iterable[str], self_rock: str) -> bool:
     for line in lines:
         if "luarocks make" not in line or self_rock not in line:
@@ -189,3 +236,27 @@ def _self_install_disables_deps(lines: Iterable[str], self_rock: str) -> bool:
         ):
             return True
     return False
+
+
+def _missing_lua_sibling_installs(
+    unix_lines: Iterable[str],
+    windows_lines: Iterable[str],
+) -> list[str]:
+    unix_deps = _lua_sibling_install_dirs(unix_lines)
+    windows_deps = set(_lua_sibling_install_dirs(windows_lines))
+    return [dep for dep in unix_deps if dep not in windows_deps]
+
+
+def _lua_sibling_install_dirs(lines: Iterable[str]) -> list[str]:
+    deps: set[str] = set()
+    pattern = re.compile(r"\bcd\s+([.][.][\\/][^ \t\r\n&()]+)")
+
+    for line in lines:
+        if "luarocks make" not in line:
+            continue
+        match = pattern.search(line)
+        if match is None:
+            continue
+        deps.add(match.group(1).replace("\\", "/"))
+
+    return sorted(deps)

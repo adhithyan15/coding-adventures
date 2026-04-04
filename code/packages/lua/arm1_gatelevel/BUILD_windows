@@ -1,3 +1,6 @@
-(cd ../arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
-luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
+luarocks show coding-adventures-transistors 1>nul 2>nul || (cd ..\transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+luarocks show coding-adventures-logic-gates 1>nul 2>nul || (cd ..\logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+luarocks show coding-adventures-arithmetic 1>nul 2>nul || (cd ..\arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+luarocks show coding-adventures-arm1-simulator 1>nul 2>nul || (cd ..\arm1_simulator && luarocks make --local coding-adventures-arm1-simulator-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_

@@ -117,6 +117,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		problems = append(problems, ciProblem)
 	}
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
+	problems = append(problems, validatePerlBuildFiles(packages)...)
 
 	if len(problems) == 0 {
 		return nil
@@ -328,8 +329,10 @@ func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
 			continue
 		}
 		selfRock := "coding-adventures-" + strings.ReplaceAll(filepath.Base(pkg.Path), "_", "-")
+		buildLines := make(map[string][]string)
 		for _, buildPath := range luaBuildFiles(pkg.Path) {
 			lines := readBuildLines(buildPath)
+			buildLines[filepath.Base(buildPath)] = lines
 			if len(lines) == 0 {
 				continue
 			}
@@ -351,11 +354,47 @@ func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
 				))
 			}
 
-			if hasGuardedLocalLuaInstall(lines) && !selfLuaInstallDisablesDeps(lines, selfRock) {
+			if (hasGuardedLocalLuaInstall(lines) ||
+				(filepath.Base(buildPath) == "BUILD_windows" && hasLocalLuaSiblingInstall(lines))) &&
+				!selfLuaInstallDisablesDeps(lines, selfRock) {
 				problems = append(problems, fmt.Sprintf(
-					"%s: Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest",
+					"%s: Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest",
 					filepath.ToSlash(buildPath),
 				))
+			}
+		}
+
+		missingWindowsDeps := missingLuaSiblingInstalls(buildLines["BUILD"], buildLines["BUILD_windows"])
+		if len(missingWindowsDeps) > 0 {
+			problems = append(problems, fmt.Sprintf(
+				"%s: Lua BUILD_windows is missing sibling installs present in BUILD: %s",
+				filepath.ToSlash(filepath.Join(pkg.Path, "BUILD_windows")),
+				strings.Join(missingWindowsDeps, ", "),
+			))
+		}
+	}
+	return problems
+}
+
+func validatePerlBuildFiles(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.Language != "perl" {
+			continue
+		}
+
+		for _, buildPath := range luaBuildFiles(pkg.Path) {
+			lines := readBuildLines(buildPath)
+			for _, line := range lines {
+				if strings.Contains(line, "cpanm") &&
+					strings.Contains(line, "Test2::V0") &&
+					!strings.Contains(line, "--notest") {
+					problems = append(problems, fmt.Sprintf(
+						"%s: Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself",
+						filepath.ToSlash(buildPath),
+					))
+					break
+				}
 			}
 		}
 	}
@@ -469,6 +508,10 @@ func hasGuardedLocalLuaInstall(lines []string) bool {
 	return false
 }
 
+func hasLocalLuaSiblingInstall(lines []string) bool {
+	return len(luaSiblingInstallDirs(lines)) > 0
+}
+
 func selfLuaInstallDisablesDeps(lines []string, selfRock string) bool {
 	for _, line := range lines {
 		if !strings.Contains(line, "luarocks make") || !strings.Contains(line, selfRock) {
@@ -481,4 +524,51 @@ func selfLuaInstallDisablesDeps(lines []string, selfRock string) bool {
 		}
 	}
 	return false
+}
+
+func missingLuaSiblingInstalls(unixLines, windowsLines []string) []string {
+	if len(unixLines) == 0 || len(windowsLines) == 0 {
+		return nil
+	}
+
+	windowsDeps := make(map[string]bool)
+	for _, dep := range luaSiblingInstallDirs(windowsLines) {
+		windowsDeps[dep] = true
+	}
+
+	var missing []string
+	for _, dep := range luaSiblingInstallDirs(unixLines) {
+		if !windowsDeps[dep] {
+			missing = append(missing, dep)
+		}
+	}
+
+	return missing
+}
+
+func luaSiblingInstallDirs(lines []string) []string {
+	re := regexp.MustCompile(`\bcd\s+([.][.][\\/][^ \t\r\n&()]+)`)
+	seen := make(map[string]bool)
+	var dirs []string
+
+	for _, line := range lines {
+		if !strings.Contains(line, "luarocks make") {
+			continue
+		}
+
+		match := re.FindStringSubmatch(line)
+		if len(match) < 2 {
+			continue
+		}
+
+		dep := strings.ReplaceAll(match[1], `\`, `/`)
+		if seen[dep] {
+			continue
+		}
+		seen[dep] = true
+		dirs = append(dirs, dep)
+	}
+
+	sort.Strings(dirs)
+	return dirs
 }

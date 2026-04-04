@@ -70,6 +70,9 @@ function Validator.validate_build_contracts(root, packages)
     for _, error in ipairs(Validator.validate_lua_isolated_build_files(packages)) do
         table.insert(errors, error)
     end
+    for _, error in ipairs(Validator.validate_perl_build_files(packages)) do
+        table.insert(errors, error)
+    end
 
     if #errors == 0 then
         return nil
@@ -100,9 +103,12 @@ function Validator.validate_lua_isolated_build_files(packages)
     for _, pkg in ipairs(packages) do
         if pkg.language == "lua" and pkg.path then
             local self_rock = "coding-adventures-" .. pkg.path:match("([^/\\]+)$"):gsub("_", "-")
+            local build_lines = {}
 
             for _, build_path in ipairs(Validator.lua_build_files(pkg.path)) do
                 local lines = Validator.read_build_lines(build_path)
+                local build_name = build_path:match("([^/\\]+)$")
+                build_lines[build_name] = lines
                 if #lines > 0 then
                     local foreign_remove = Validator.first_foreign_lua_remove(lines, self_rock)
                     if foreign_remove then
@@ -123,12 +129,47 @@ function Validator.validate_lua_isolated_build_files(packages)
                             ": Lua BUILD installs state_machine before directed_graph; isolated LuaRocks builds require directed_graph first")
                     end
 
-                    if Validator.guarded_local_lua_install(lines) and
+                    if (Validator.guarded_local_lua_install(lines) or
+                            (build_name == "BUILD_windows" and Validator.local_lua_sibling_install(lines))) and
                         not Validator.self_install_disables_deps(lines, self_rock)
                     then
                         table.insert(errors,
                             build_path:gsub("\\", "/") ..
-                            ": Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest")
+                            ": Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest")
+                    end
+                end
+            end
+
+            local missing_windows_deps =
+                Validator.missing_lua_sibling_installs(build_lines.BUILD or {}, build_lines.BUILD_windows or {})
+            if #missing_windows_deps > 0 then
+                table.insert(errors,
+                    (pkg.path .. "/BUILD_windows"):gsub("\\", "/") ..
+                    ": Lua BUILD_windows is missing sibling installs present in BUILD: " ..
+                    table.concat(missing_windows_deps, ", "))
+            end
+        end
+    end
+
+    return errors
+end
+
+function Validator.validate_perl_build_files(packages)
+    local errors = {}
+
+    for _, pkg in ipairs(packages) do
+        if pkg.language == "perl" and pkg.path then
+            for _, build_path in ipairs(Validator.lua_build_files(pkg.path)) do
+                local lines = Validator.read_build_lines(build_path)
+                for _, line in ipairs(lines) do
+                    if line:find("cpanm", 1, true) and
+                        line:find("Test2::V0", 1, true) and
+                        not line:find("--notest", 1, true)
+                    then
+                        table.insert(errors,
+                            build_path:gsub("\\", "/") ..
+                            ": Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself")
+                        break
                     end
                 end
             end
@@ -212,6 +253,10 @@ function Validator.guarded_local_lua_install(lines)
     return false
 end
 
+function Validator.local_lua_sibling_install(lines)
+    return #Validator.lua_sibling_install_dirs(lines) > 0
+end
+
 function Validator.self_install_disables_deps(lines, self_rock)
     for _, line in ipairs(lines) do
         if line:find("luarocks make", 1, true) and line:find(self_rock, 1, true) and
@@ -223,6 +268,42 @@ function Validator.self_install_disables_deps(lines, self_rock)
         end
     end
     return false
+end
+
+function Validator.missing_lua_sibling_installs(unix_lines, windows_lines)
+    local windows_deps = {}
+    for _, dep in ipairs(Validator.lua_sibling_install_dirs(windows_lines)) do
+        windows_deps[dep] = true
+    end
+
+    local missing = {}
+    for _, dep in ipairs(Validator.lua_sibling_install_dirs(unix_lines)) do
+        if not windows_deps[dep] then
+            table.insert(missing, dep)
+        end
+    end
+    return missing
+end
+
+function Validator.lua_sibling_install_dirs(lines)
+    local seen = {}
+    local dirs = {}
+
+    for _, line in ipairs(lines) do
+        if line:find("luarocks make", 1, true) then
+            local dep = line:match("cd%s+([.][.][\\/][^ %(%)\t\r\n&]+)")
+            if dep then
+                dep = dep:gsub("\\", "/")
+                if not seen[dep] then
+                    seen[dep] = true
+                    table.insert(dirs, dep)
+                end
+            end
+        end
+    end
+
+    table.sort(dirs)
+    return dirs
 end
 
 return Validator

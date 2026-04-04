@@ -75,6 +75,7 @@ export function validateBuildContracts(
   }
 
   errors.push(...validateLuaIsolatedBuildFiles(packages));
+  errors.push(...validatePerlBuildFiles(packages));
 
   if (errors.length === 0) {
     return null;
@@ -107,9 +108,11 @@ function validateLuaIsolatedBuildFiles(
 
     const selfRock =
       "coding-adventures-" + path.basename(pkg.path).replaceAll("_", "-");
+    const buildLines = new Map<string, string[]>();
 
     for (const buildPath of luaBuildFiles(pkg.path)) {
       const lines = readBuildLines(buildPath);
+      buildLines.set(path.basename(buildPath), lines);
       if (lines.length === 0) {
         continue;
       }
@@ -140,12 +143,53 @@ function validateLuaIsolatedBuildFiles(
       }
 
       if (
-        hasGuardedLocalLuaInstall(lines) &&
+        (hasGuardedLocalLuaInstall(lines) ||
+          (path.basename(buildPath) === "BUILD_windows" &&
+            hasLocalLuaSiblingInstall(lines))) &&
         !selfInstallDisablesDeps(lines, selfRock)
       ) {
         errors.push(
-          `${slashPath(buildPath)}: Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest`,
+          `${slashPath(buildPath)}: Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest`,
         );
+      }
+    }
+
+    const missingWindowsDeps = missingLuaSiblingInstalls(
+      buildLines.get("BUILD") ?? [],
+      buildLines.get("BUILD_windows") ?? [],
+    );
+    if (missingWindowsDeps.length > 0) {
+      errors.push(
+        `${slashPath(path.join(pkg.path, "BUILD_windows"))}: Lua BUILD_windows is missing sibling installs present in BUILD: ${missingWindowsDeps.join(", ")}`,
+      );
+    }
+  }
+
+  return errors;
+}
+
+function validatePerlBuildFiles(
+  packages: ReadonlyArray<Pick<Package, "language" | "path">>,
+): string[] {
+  const errors: string[] = [];
+
+  for (const pkg of packages) {
+    if (pkg.language !== "perl") {
+      continue;
+    }
+
+    for (const buildPath of luaBuildFiles(pkg.path)) {
+      for (const line of readBuildLines(buildPath)) {
+        if (
+          line.includes("cpanm") &&
+          line.includes("Test2::V0") &&
+          !line.includes("--notest")
+        ) {
+          errors.push(
+            `${slashPath(buildPath)}: Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself`,
+          );
+          break;
+        }
       }
     }
   }
@@ -202,6 +246,10 @@ function hasGuardedLocalLuaInstall(lines: ReadonlyArray<string>): boolean {
   );
 }
 
+function hasLocalLuaSiblingInstall(lines: ReadonlyArray<string>): boolean {
+  return luaSiblingInstallDirs(lines).length > 0;
+}
+
 function selfInstallDisablesDeps(
   lines: ReadonlyArray<string>,
   selfRock: string,
@@ -214,6 +262,33 @@ function selfInstallDisablesDeps(
         line.includes("--deps-mode none") ||
         line.includes("--no-manifest")),
   );
+}
+
+function missingLuaSiblingInstalls(
+  unixLines: ReadonlyArray<string>,
+  windowsLines: ReadonlyArray<string>,
+): string[] {
+  const windowsDeps = new Set(luaSiblingInstallDirs(windowsLines));
+  return luaSiblingInstallDirs(unixLines).filter((dep) => !windowsDeps.has(dep));
+}
+
+function luaSiblingInstallDirs(lines: ReadonlyArray<string>): string[] {
+  const deps = new Set<string>();
+
+  for (const line of lines) {
+    if (!line.includes("luarocks make")) {
+      continue;
+    }
+
+    const match = /\bcd\s+([.][.][\\/][^ \t\r\n&()]+)/.exec(line);
+    if (match === null) {
+      continue;
+    }
+
+    deps.add(match[1].replaceAll("\\", "/"));
+  }
+
+  return [...deps].sort();
 }
 
 function slashPath(filepath: string): string {

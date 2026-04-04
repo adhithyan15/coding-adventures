@@ -68,6 +68,7 @@ public enum Validator {
         }
 
         errors.append(contentsOf: validateLuaIsolatedBuildFiles(packages: packages))
+        errors.append(contentsOf: validatePerlBuildFiles(packages: packages))
 
         return errors.isEmpty ? nil : errors.joined(separator: "\n  - ")
     }
@@ -77,9 +78,11 @@ public enum Validator {
 
         for package in packages where package.language == "lua" {
             let selfRock = "coding-adventures-\((package.path as NSString).lastPathComponent.replacingOccurrences(of: "_", with: "-"))"
+            var buildLines: [String: [String]] = [:]
 
             for buildPath in luaBuildFiles(packagePath: package.path) {
                 let lines = readBuildLines(buildPath: buildPath)
+                buildLines[(buildPath as NSString).lastPathComponent] = lines
                 guard !lines.isEmpty else {
                     continue
                 }
@@ -98,9 +101,44 @@ public enum Validator {
                     )
                 }
 
-                if hasGuardedLocalLuaInstall(lines: lines) && !selfInstallDisablesDeps(lines: lines, selfRock: selfRock) {
+                if (hasGuardedLocalLuaInstall(lines: lines) ||
+                    (((buildPath as NSString).lastPathComponent == "BUILD_windows") &&
+                     hasLocalLuaSiblingInstall(lines: lines))) &&
+                    !selfInstallDisablesDeps(lines: lines, selfRock: selfRock) {
                     errors.append(
-                        "\(buildPath.replacingOccurrences(of: "\\", with: "/")): Lua BUILD uses guarded sibling rock installs but the final self-install does not pass --deps-mode=none or --no-manifest"
+                        "\(buildPath.replacingOccurrences(of: "\\", with: "/")): Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest"
+                    )
+                }
+            }
+
+            let missingWindowsDeps = missingLuaSiblingInstalls(
+                unixLines: buildLines["BUILD"] ?? [],
+                windowsLines: buildLines["BUILD_windows"] ?? []
+            )
+            if !missingWindowsDeps.isEmpty {
+                let buildPath = (package.path as NSString).appendingPathComponent("BUILD_windows")
+                errors.append(
+                    "\(buildPath.replacingOccurrences(of: "\\", with: "/")): Lua BUILD_windows is missing sibling installs present in BUILD: \(missingWindowsDeps.joined(separator: ", "))"
+                )
+            }
+        }
+
+        return errors
+    }
+
+    static func validatePerlBuildFiles(packages: [BuildPackage]) -> [String] {
+        var errors: [String] = []
+
+        for package in packages where package.language == "perl" {
+            for buildPath in luaBuildFiles(packagePath: package.path) {
+                let lines = readBuildLines(buildPath: buildPath)
+                if lines.contains(where: { line in
+                    line.contains("cpanm") &&
+                        line.contains("Test2::V0") &&
+                        !line.contains("--notest")
+                }) {
+                    errors.append(
+                        "\(buildPath.replacingOccurrences(of: "\\", with: "/")): Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself"
                     )
                 }
             }
@@ -166,6 +204,10 @@ public enum Validator {
         }
     }
 
+    static func hasLocalLuaSiblingInstall(lines: [String]) -> Bool {
+        !luaSiblingInstallDirs(lines: lines).isEmpty
+    }
+
     static func selfInstallDisablesDeps(lines: [String], selfRock: String) -> Bool {
         lines.contains { line in
             line.contains("luarocks make") &&
@@ -174,5 +216,32 @@ public enum Validator {
                     line.contains("--deps-mode none") ||
                     line.contains("--no-manifest"))
         }
+    }
+
+    static func missingLuaSiblingInstalls(unixLines: [String], windowsLines: [String]) -> [String] {
+        let windowsDeps = Set(luaSiblingInstallDirs(lines: windowsLines))
+        return luaSiblingInstallDirs(lines: unixLines).filter { !windowsDeps.contains($0) }
+    }
+
+    static func luaSiblingInstallDirs(lines: [String]) -> [String] {
+        let pattern = try? NSRegularExpression(pattern: #"\bcd\s+([.][.][\\/][^ \t\r\n&()]+)"#)
+        var deps = Set<String>()
+
+        for line in lines {
+            guard line.contains("luarocks make"), let pattern else {
+                continue
+            }
+
+            let range = NSRange(line.startIndex..<line.endIndex, in: line)
+            guard let match = pattern.firstMatch(in: line, options: [], range: range),
+                  let depRange = Range(match.range(at: 1), in: line)
+            else {
+                continue
+            }
+
+            deps.insert(String(line[depRange]).replacingOccurrences(of: "\\", with: "/"))
+        }
+
+        return deps.sorted()
     }
 }
