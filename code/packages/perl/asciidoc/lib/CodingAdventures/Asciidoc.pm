@@ -635,6 +635,10 @@ sub _render_block {
     }
 
     # Raw/passthrough block: emitted verbatim.
+    # SECURITY: this is the AsciiDoc ++++...++++ passthrough block.
+    # Content is intentionally passed through without HTML escaping.
+    # Never call to_html() on untrusted user-supplied AsciiDoc without
+    # first stripping or escaping raw_block nodes with a sanitizer.
     if ($type eq 'raw_block') {
         return $block->{value} // '';
     }
@@ -664,12 +668,12 @@ sub _render_inline {
     return "\n"                                                    if $type eq 'soft_break';
 
     if ($type eq 'link') {
-        my $href = _escape_attr($node->{href} // '');
+        my $href = _escape_attr(_safe_url($node->{href} // ''));
         return qq(<a href="$href">) . _render_inlines($node->{children}) . '</a>';
     }
 
     if ($type eq 'image') {
-        my $src = _escape_attr($node->{src} // '');
+        my $src = _escape_attr(_safe_url($node->{src} // ''));
         my $alt = $node->{alt} // '';
         return qq(<img src="$src" alt="$alt" />);
     }
@@ -696,7 +700,19 @@ sub _escape_attr {
     $s //= '';
     $s =~ s/&/&amp;/g;
     $s =~ s/"/&quot;/g;
+    $s =~ s/'/&#39;/g;
     return $s;
+}
+
+# Returns the URL unchanged if its scheme is safe (http, https, ftp, mailto,
+# relative paths).  Returns '#' for anything else (e.g. javascript:, data:,
+# vbscript:) so that dangerous scheme injection cannot reach rendered output.
+sub _safe_url {
+    my ($url) = @_;
+    $url //= '';
+    return $url if $url =~ /\A(?:https?|ftp|mailto):/i;
+    return $url if $url =~ /\A[#\/\.]/;
+    return '#';
 }
 
 1;
