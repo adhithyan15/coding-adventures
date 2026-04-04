@@ -9,7 +9,7 @@ description = "AsciiDoc pipeline — thin to_html() wrapper over parse() and ren
 requires-python = ">=3.12"
 dependencies = [
     "coding-adventures-document-ast",
-    "coding-adventures-asciidoc-parser",
+    "coding-adventures-asciidoc_parser",
     "coding-adventures-document-ast-to-html",
 ]
 license = "MIT"
