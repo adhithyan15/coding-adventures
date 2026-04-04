@@ -179,8 +179,9 @@ function convertValue(node: ASTNode): JsonValue {
  * FALSE         boolean      false                  jsonBool(false)
  * NULL          null         null                   jsonNull()
  *
- * Note on STRING values: The lexer may or may not strip quotes. The json-lexer
- * in this project stores the raw token value with quotes. We strip them here.
+ * Note on STRING values: the lexer strips quotes for us, but the JSON value
+ * layer still resolves any remaining JSON escapes so callers always get the
+ * semantic string content.
  */
 function convertToken(token: Token): JsonValue {
   switch (token.type) {
@@ -208,33 +209,107 @@ function convertToken(token: Token): JsonValue {
 }
 
 /**
- * Extract the string value from a STRING token.
+ * Extract the semantic string value from a STRING token.
  *
- * The grammar-driven lexer in this project already:
- *   1. Strips the surrounding double quotes from string tokens
- *   2. Processes standard escape sequences (\n, \t, \\, \", etc.)
- *
- * So by the time we receive the token value, it's already the unescaped
- * string content. For example:
- *
- *     JSON source: "hello"     --> token value: hello
- *     JSON source: "a\nb"     --> token value: a<newline>b  (real newline)
- *     JSON source: "a\\b"     --> token value: a\b          (real backslash + b)
- *
- * If the quotes are still present (e.g., from a different lexer configuration),
- * we strip them. Otherwise, we return the value as-is.
+ * The lexer already strips the surrounding quotes, but JSON escape sequences
+ * may still be present in the token value. Decode them here so both object
+ * keys and string values use the same normalization path.
  */
 function unquoteString(raw: string): string {
-  /**
-   * Check if the string still has surrounding quotes.
-   * The grammar-driven lexer strips them, but we handle both cases
-   * for robustness.
-   */
-  if (raw.length >= 2 && raw[0] === '"' && raw[raw.length - 1] === '"') {
-    return raw.slice(1, -1);
+  const inner =
+    raw.length >= 2 && raw[0] === '"' && raw[raw.length - 1] === '"'
+      ? raw.slice(1, -1)
+      : raw;
+
+  const result: string[] = [];
+  let i = 0;
+
+  while (i < inner.length) {
+    if (inner[i] !== "\\") {
+      result.push(inner[i]);
+      i += 1;
+      continue;
+    }
+
+    if (i + 1 >= inner.length) {
+      result.push("\\");
+      break;
+    }
+
+    const escape = inner[i + 1];
+    switch (escape) {
+      case '"':
+      case "\\":
+      case "/":
+        result.push(escape);
+        i += 2;
+        break;
+      case "b":
+        result.push("\b");
+        i += 2;
+        break;
+      case "f":
+        result.push("\f");
+        i += 2;
+        break;
+      case "n":
+        result.push("\n");
+        i += 2;
+        break;
+      case "r":
+        result.push("\r");
+        i += 2;
+        break;
+      case "t":
+        result.push("\t");
+        i += 2;
+        break;
+      case "u": {
+        const hex = inner.slice(i + 2, i + 6);
+        if (!/^[0-9a-fA-F]{4}$/.test(hex)) {
+          result.push("u");
+          i += 2;
+          break;
+        }
+
+        const firstUnit = parseInt(hex, 16);
+        i += 6;
+
+        if (
+          firstUnit >= 0xd800 &&
+          firstUnit <= 0xdbff &&
+          inner[i] === "\\" &&
+          inner[i + 1] === "u"
+        ) {
+          const lowHex = inner.slice(i + 2, i + 6);
+          if (/^[0-9a-fA-F]{4}$/.test(lowHex)) {
+            const secondUnit = parseInt(lowHex, 16);
+            if (secondUnit >= 0xdc00 && secondUnit <= 0xdfff) {
+              result.push(String.fromCharCode(firstUnit, secondUnit));
+              i += 6;
+              break;
+            }
+          }
+          result.push("\uFFFD");
+          break;
+        }
+
+        if (firstUnit >= 0xdc00 && firstUnit <= 0xdfff) {
+          result.push("\uFFFD");
+          break;
+        }
+
+        result.push(String.fromCharCode(firstUnit));
+        break;
+      }
+      default:
+        result.push(escape);
+        i += 2;
+        break;
+    }
   }
 
-  return raw;
+  return result.join("");
 }
 
 /**

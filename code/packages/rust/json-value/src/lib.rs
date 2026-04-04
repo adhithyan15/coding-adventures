@@ -344,7 +344,7 @@ fn extract_pair(
                 // The STRING token is the key. We identify it by its
                 // TokenType — it will be TokenType::String.
                 if token.type_ == TokenType::String && key.is_none() {
-                    key = Some(token.value.clone());
+                    key = Some(decode_json_string(&token.value)?);
                 }
                 // Skip COLON and other structural tokens.
             }
@@ -395,7 +395,9 @@ fn token_to_json_value(
 
     // Check built-in token types.
     match token.type_ {
-        TokenType::String => Ok(Some(JsonValue::String(token.value.clone()))),
+        TokenType::String => Ok(Some(JsonValue::String(
+            decode_json_string(&token.value)?,
+        ))),
 
         TokenType::Number => {
             // Determine integer vs float by looking at the raw text.
@@ -424,6 +426,114 @@ fn token_to_json_value(
         // Structural tokens are not values — return None to signal "skip me."
         _ => Ok(None),
     }
+}
+
+fn decode_json_string(raw: &str) -> Result<String, JsonValueError> {
+    let inner = if raw.len() >= 2 && raw.starts_with('"') && raw.ends_with('"') {
+        &raw[1..raw.len() - 1]
+    } else {
+        raw
+    };
+
+    let chars: Vec<char> = inner.chars().collect();
+    let mut result = String::new();
+    let mut i = 0;
+
+    while i < chars.len() {
+        if chars[i] != '\\' {
+            result.push(chars[i]);
+            i += 1;
+            continue;
+        }
+
+        if i + 1 >= chars.len() {
+            result.push('\\');
+            break;
+        }
+
+        match chars[i + 1] {
+            '"' => {
+                result.push('"');
+                i += 2;
+            }
+            '\\' => {
+                result.push('\\');
+                i += 2;
+            }
+            '/' => {
+                result.push('/');
+                i += 2;
+            }
+            'b' => {
+                result.push('\u{0008}');
+                i += 2;
+            }
+            'f' => {
+                result.push('\u{000C}');
+                i += 2;
+            }
+            'n' => {
+                result.push('\n');
+                i += 2;
+            }
+            'r' => {
+                result.push('\r');
+                i += 2;
+            }
+            't' => {
+                result.push('\t');
+                i += 2;
+            }
+            'u' => {
+                if i + 5 >= chars.len() {
+                    return Err(JsonValueError::new(
+                        "incomplete unicode escape in JSON string",
+                    ));
+                }
+
+                let hex: String = chars[i + 2..i + 6].iter().collect();
+                let first_unit = u16::from_str_radix(&hex, 16).map_err(|_| {
+                    JsonValueError::new(format!(
+                        "invalid unicode escape in JSON string: \\u{}",
+                        hex
+                    ))
+                })?;
+                i += 6;
+
+                if (0xD800..=0xDBFF).contains(&first_unit)
+                    && i + 5 < chars.len()
+                    && chars[i] == '\\'
+                    && chars[i + 1] == 'u'
+                {
+                    let low_hex: String = chars[i + 2..i + 6].iter().collect();
+                    let second_unit = u16::from_str_radix(&low_hex, 16).map_err(|_| {
+                        JsonValueError::new(format!(
+                            "invalid unicode escape in JSON string: \\u{}",
+                            low_hex
+                        ))
+                    })?;
+
+                    if (0xDC00..=0xDFFF).contains(&second_unit) {
+                        result.push_str(&String::from_utf16_lossy(&[
+                            first_unit,
+                            second_unit,
+                        ]));
+                        i += 6;
+                    } else {
+                        result.push_str(&String::from_utf16_lossy(&[first_unit]));
+                    }
+                } else {
+                    result.push_str(&String::from_utf16_lossy(&[first_unit]));
+                }
+            }
+            other => {
+                result.push(other);
+                i += 2;
+            }
+        }
+    }
+
+    Ok(result)
 }
 
 // ===========================================================================
@@ -1126,17 +1236,11 @@ mod tests {
     // Test 40: String with unicode escape
     // -----------------------------------------------------------------
 
-    /// The JSON `\uXXXX` escape. The lexer may or may not fully resolve
-    /// unicode escapes — we verify the value comes through as-is from
-    /// the lexer's processing.
+    /// The JSON `\uXXXX` escape. The value layer should decode unicode
+    /// escapes to the actual character.
     #[test]
     fn test_string_with_unicode_escape() {
         let val = parse_ok(r#""\u0041""#);
-        // The lexer strips the backslash but may not fully resolve \uXXXX.
-        // We verify the parse succeeds and produces a string.
-        match val {
-            JsonValue::String(_) => {} // Success — any string is fine.
-            other => panic!("Expected String, got {:?}", other),
-        }
+        assert_eq!(val, JsonValue::String("A".to_string()));
     }
 }
