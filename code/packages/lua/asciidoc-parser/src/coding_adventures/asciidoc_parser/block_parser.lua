@@ -73,7 +73,7 @@ local function blockquote_node(children)
 end
 
 local function list_node(ordered, items)
-  return { type = "list", ordered = ordered, items = items }
+  return { type = "list", ordered = ordered, children = items }
 end
 
 local function list_item_node(children)

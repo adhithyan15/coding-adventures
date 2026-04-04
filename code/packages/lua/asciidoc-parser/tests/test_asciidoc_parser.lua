@@ -207,18 +207,18 @@ describe("asciidoc_parser", function()
 
     it("list has correct number of items", function()
       local node = first_child("* One\n* Two\n* Three\n")
-      assert.equals(3, #node.items)
+      assert.equals(3, #node.children)
     end)
 
     it("list items have list_item type", function()
       local node = first_child("* Item\n")
-      assert.equals("list_item", node.items[1].type)
+      assert.equals("list_item", node.children[1].type)
     end)
 
     it("** nested bullet treated as same-level item", function()
       local node = first_child("* Top\n** Nested\n")
       assert.equals("list", node.type)
-      assert.equals(2, #node.items)
+      assert.equals(2, #node.children)
     end)
   end)
 
@@ -231,7 +231,7 @@ describe("asciidoc_parser", function()
 
     it("ordered list has correct number of items", function()
       local node = first_child(". A\n. B\n. C\n")
-      assert.equals(3, #node.items)
+      assert.equals(3, #node.children)
     end)
   end)
 
