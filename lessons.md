@@ -1320,6 +1320,25 @@ with CMD-compatible syntax. Python native packages especially need this.
 
 ---
 
+### 2026-04-04: TypeScript program package.json path depth from code/programs/
+
+When a TypeScript program in `code/programs/typescript/<name>/` depends on a package
+in `code/packages/typescript/<pkg>/`, the relative `file:` path must traverse **three**
+directory levels up — not two:
+
+```
+code/programs/typescript/asciidoc-demo/   ← you are here
+code/packages/typescript/asciidoc/        ← dependency
+```
+
+Correct: `"file:../../../packages/typescript/asciidoc"`
+Wrong:   `"file:../../packages/typescript/asciidoc"`
+
+The `commonmark-demo` package uses the same `../../../` depth. Always count:
+`programs/typescript/<name>` → up 3 = repo root → down `packages/typescript/<pkg>`.
+
+---
+
 ### 2026-04-03: Elixir NIF module name must use Elixir atom format (not short name)
 
 When calling `:erlang.load_nif/2` from an Elixir module, Erlang checks that
