@@ -34,6 +34,7 @@
 
 use std::ffi::{c_char, c_int, CString};
 use std::ptr;
+use std::sync::OnceLock;
 
 use python_bridge::*;
 
@@ -313,116 +314,138 @@ unsafe extern "C" fn gf_inverse(_module: PyObjectPtr, args: PyObjectPtr) -> PyOb
 //   5: inverse    (VARARGS)
 //   6: sentinel
 
-#[no_mangle]
-pub unsafe extern "C" fn PyInit_gf256_native() -> PyObjectPtr {
-    // -- Method table ---------------------------------------------------------
+// ---------------------------------------------------------------------------
+// OnceLock-guarded method table and module definition
+// ---------------------------------------------------------------------------
+//
+// Same rationale as polynomial-native: `static mut` re-initialized on every
+// call is a data race if two threads import simultaneously. `OnceLock`
+// guarantees the table is built exactly once in a thread-safe way.
+//
+// # Why the `SendSync` wrapper?
+//
+// `PyMethodDef` and `PyModuleDef` contain raw pointers, which Rust marks as
+// `!Send + !Sync`. Our usage is safe: all pointed-to data are leaked CStrings
+// (immutable for the process lifetime) and function pointers. We assert
+// Send + Sync with a newtype wrapper.
 
-    static mut METHODS: [PyMethodDef; 7] = [
-        PyMethodDef {
-            ml_name: ptr::null(),
-            ml_meth: None,
-            ml_flags: 0,
-            ml_doc: ptr::null(),
-        };
-        7
-    ];
+struct SendSync<T>(T);
+// SAFETY: pointed-to data is immutable after initialization.
+unsafe impl<T> Send for SendSync<T> {}
+unsafe impl<T> Sync for SendSync<T> {}
 
-    METHODS[0] = PyMethodDef {
-        ml_name: cstr("add"),
-        ml_meth: Some(gf_add),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "add(a, b) -> int\n\n\
-             Add two GF(256) elements. In characteristic 2, this is XOR:\n\
-             add(0x53, 0xCA) == 0x53 ^ 0xCA == 0x99",
-        ),
-    };
-    METHODS[1] = PyMethodDef {
-        ml_name: cstr("subtract"),
-        ml_meth: Some(gf_subtract),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "subtract(a, b) -> int\n\n\
-             Subtract b from a in GF(256). Equals XOR (same as add in char 2).",
-        ),
-    };
-    METHODS[2] = PyMethodDef {
-        ml_name: cstr("multiply"),
-        ml_meth: Some(gf_multiply),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "multiply(a, b) -> int\n\n\
-             Multiply two GF(256) elements using log/antilog tables.\n\
-             multiply(0, x) == multiply(x, 0) == 0.",
-        ),
-    };
-    METHODS[3] = PyMethodDef {
-        ml_name: cstr("divide"),
-        ml_meth: Some(gf_divide),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "divide(a, b) -> int\n\n\
-             Divide a by b in GF(256). Raises ValueError if b == 0.",
-        ),
-    };
-    METHODS[4] = PyMethodDef {
-        ml_name: cstr("power"),
-        ml_meth: Some(gf_power),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "power(base, exp) -> int\n\n\
-             Raise base to a non-negative integer power in GF(256).\n\
-             power(2, 255) == 1 (by Fermat's little theorem for finite fields).",
-        ),
-    };
-    METHODS[5] = PyMethodDef {
-        ml_name: cstr("inverse"),
-        ml_meth: Some(gf_inverse),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "inverse(a) -> int\n\n\
-             Multiplicative inverse of a in GF(256): multiply(a, inverse(a)) == 1.\n\
-             Raises ValueError if a == 0.",
-        ),
-    };
-    METHODS[6] = method_def_sentinel();
+fn get_methods() -> &'static [PyMethodDef] {
+    static METHODS: OnceLock<SendSync<Vec<PyMethodDef>>> = OnceLock::new();
+    &METHODS.get_or_init(|| SendSync(vec![
+            PyMethodDef {
+                ml_name: cstr("add"),
+                ml_meth: Some(gf_add),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "add(a, b) -> int\n\n\
+                     Add two GF(256) elements. In characteristic 2, this is XOR:\n\
+                     add(0x53, 0xCA) == 0x53 ^ 0xCA == 0x99",
+                ),
+            },
+            PyMethodDef {
+                ml_name: cstr("subtract"),
+                ml_meth: Some(gf_subtract),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "subtract(a, b) -> int\n\n\
+                     Subtract b from a in GF(256). Equals XOR (same as add in char 2).",
+                ),
+            },
+            PyMethodDef {
+                ml_name: cstr("multiply"),
+                ml_meth: Some(gf_multiply),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "multiply(a, b) -> int\n\n\
+                     Multiply two GF(256) elements using log/antilog tables.\n\
+                     multiply(0, x) == multiply(x, 0) == 0.",
+                ),
+            },
+            PyMethodDef {
+                ml_name: cstr("divide"),
+                ml_meth: Some(gf_divide),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "divide(a, b) -> int\n\n\
+                     Divide a by b in GF(256). Raises ValueError if b == 0.",
+                ),
+            },
+            PyMethodDef {
+                ml_name: cstr("power"),
+                ml_meth: Some(gf_power),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "power(base, exp) -> int\n\n\
+                     Raise base to a non-negative integer power in GF(256).\n\
+                     power(2, 255) == 1 (by Fermat's little theorem for finite fields).",
+                ),
+            },
+            PyMethodDef {
+                ml_name: cstr("inverse"),
+                ml_meth: Some(gf_inverse),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "inverse(a) -> int\n\n\
+                     Multiplicative inverse of a in GF(256): multiply(a, inverse(a)) == 1.\n\
+                     Raises ValueError if a == 0.",
+                ),
+            },
+            // Null sentinel: CPython uses this to know where the table ends.
+            PyMethodDef {
+                ml_name: ptr::null(),
+                ml_meth: None,
+                ml_flags: 0,
+                ml_doc: ptr::null(),
+            },
+        ]))
+    .0
+}
 
-    // -- Module definition ----------------------------------------------------
-
-    static mut MODULE_DEF: PyModuleDef = PyModuleDef {
+fn get_module_def() -> &'static PyModuleDef {
+    static MODULE_DEF: OnceLock<SendSync<PyModuleDef>> = OnceLock::new();
+    &MODULE_DEF
+        .get_or_init(|| SendSync(PyModuleDef {
         m_base: PyModuleDef_Base {
             ob_base: [0; std::mem::size_of::<usize>() * 2],
             m_init: None,
             m_index: 0,
             m_copy: ptr::null_mut(),
         },
-        m_name: ptr::null(),
-        m_doc: ptr::null(),
+        m_name: cstr("gf256_native"),
+        m_doc: cstr(
+            "gf256_native -- Rust-backed GF(256) arithmetic for Python.\n\
+             \n\
+             GF(2^8) is a finite field with 256 elements (bytes 0-255).\n\
+             Addition is XOR. Multiplication uses log/antilog tables.\n\
+             \n\
+             Constants:\n\
+               ZERO                 = 0      (additive identity)\n\
+               ONE                  = 1      (multiplicative identity)\n\
+               PRIMITIVE_POLYNOMIAL = 0x11D  (irreducible reduction polynomial)\n\
+             \n\
+             All arguments must be integers in range [0, 255].",
+        ),
         m_size: -1,
-        m_methods: ptr::null_mut(),
+        m_methods: get_methods().as_ptr() as *mut PyMethodDef,
         m_slots: ptr::null_mut(),
         m_traverse: ptr::null_mut(),
         m_clear: ptr::null_mut(),
         m_free: ptr::null_mut(),
-    };
+    }))
+    .0
+}
 
-    MODULE_DEF.m_name = cstr("gf256_native");
-    MODULE_DEF.m_doc = cstr(
-        "gf256_native -- Rust-backed GF(256) arithmetic for Python.\n\
-         \n\
-         GF(2^8) is a finite field with 256 elements (bytes 0-255).\n\
-         Addition is XOR. Multiplication uses log/antilog tables.\n\
-         \n\
-         Constants:\n\
-           ZERO                 = 0      (additive identity)\n\
-           ONE                  = 1      (multiplicative identity)\n\
-           PRIMITIVE_POLYNOMIAL = 0x11D  (irreducible reduction polynomial)\n\
-         \n\
-         All arguments must be integers in range [0, 255].",
+#[no_mangle]
+pub unsafe extern "C" fn PyInit_gf256_native() -> PyObjectPtr {
+    let module = PyModule_Create2(
+        get_module_def() as *const PyModuleDef as *mut PyModuleDef,
+        PYTHON_API_VERSION,
     );
-    MODULE_DEF.m_methods = (&raw mut METHODS) as *mut PyMethodDef;
-
-    let module = PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION);
     if module.is_null() {
         return ptr::null_mut();
     }
@@ -430,20 +453,19 @@ pub unsafe extern "C" fn PyInit_gf256_native() -> PyObjectPtr {
     // -- Add module-level constants -------------------------------------------
     //
     // These correspond to the Rust constants:
-    //   gf256::ZERO                = 0u8
-    //   gf256::ONE                 = 1u8
+    //   gf256::ZERO                 = 0u8
+    //   gf256::ONE                  = 1u8
     //   gf256::PRIMITIVE_POLYNOMIAL = 0x11Du16 = 285
     //
-    // PyModule_AddIntConstant adds a name/value pair to the module's __dict__.
+    // We use `cstr()` (which intentionally leaks the allocation) rather than
+    // creating a temporary `CString` that would be dropped before
+    // `PyModule_AddIntConstant` finishes copying the name into the module dict.
+    // Using a dropped `CString` here was the prior bug: the pointer passed to
+    // CPython pointed into freed memory, which is undefined behaviour.
 
-    let zero_name = CString::new("ZERO").unwrap();
-    PyModule_AddIntConstant(module, zero_name.as_ptr(), gf256::ZERO as i64);
-
-    let one_name = CString::new("ONE").unwrap();
-    PyModule_AddIntConstant(module, one_name.as_ptr(), gf256::ONE as i64);
-
-    let pp_name = CString::new("PRIMITIVE_POLYNOMIAL").unwrap();
-    PyModule_AddIntConstant(module, pp_name.as_ptr(), gf256::PRIMITIVE_POLYNOMIAL as i64);
+    PyModule_AddIntConstant(module, cstr("ZERO"), gf256::ZERO as i64);
+    PyModule_AddIntConstant(module, cstr("ONE"), gf256::ONE as i64);
+    PyModule_AddIntConstant(module, cstr("PRIMITIVE_POLYNOMIAL"), gf256::PRIMITIVE_POLYNOMIAL as i64);
 
     module
 }

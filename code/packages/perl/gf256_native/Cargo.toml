@@ -10,6 +10,8 @@ description = "Perl XS extension exposing GF(256) Galois Field arithmetic from R
 name = "GF256Native"
 crate-type = ["cdylib"]
 
+build = "build.rs"
+
 [dependencies]
 perl-bridge = { path = "../../rust/perl-bridge" }
 gf256 = { path = "../../rust/gf256" }

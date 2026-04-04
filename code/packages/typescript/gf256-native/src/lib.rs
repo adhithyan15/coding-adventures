@@ -71,23 +71,44 @@ extern "C" {
 // ---------------------------------------------------------------------------
 //
 // GF(256) elements are bytes in [0, 255]. JS represents them as f64, but
-// `napi_get_value_uint32` gives us a clean u32. We then cast to u8,
-// silently truncating values >= 256 (the caller is responsible for valid input).
+// `napi_get_value_uint32` gives us a clean u32. We validate the range
+// explicitly: values >= 256 are rejected with a JS exception rather than
+// silently truncated, preventing subtle bugs where 256 wraps to 0.
+//
+// Returns None if napi_get_value_uint32 fails (wrong type) or if the value
+// is out of the valid GF(256) range. The caller must return undefined(env)
+// when None is returned, as a JS exception will already have been thrown.
 
-fn u8_from_js(env: napi_env, val: napi_value) -> u8 {
+fn u8_from_js(env: napi_env, val: napi_value) -> Option<u8> {
     let mut result: u32 = 0;
-    unsafe { napi_get_value_uint32(env, val, &mut result) };
-    result as u8
+    let status = unsafe { napi_get_value_uint32(env, val, &mut result) };
+    if status != 0 {
+        // napi_ok == 0; any other status means the value is not a uint32.
+        throw_error(env, "GF256 element must be a number");
+        return None;
+    }
+    if result > 255 {
+        throw_error(env, "GF256 element must be 0-255");
+        return None;
+    }
+    Some(result as u8)
 }
 
 // ---------------------------------------------------------------------------
 // Helper: extract a JS number as u32 (for the `exp` argument of `power`)
 // ---------------------------------------------------------------------------
+//
+// Returns None if napi_get_value_uint32 fails (wrong JS type). The caller
+// must return undefined(env) on None since a JS exception will be pending.
 
-fn u32_from_js(env: napi_env, val: napi_value) -> u32 {
+fn u32_from_js(env: napi_env, val: napi_value) -> Option<u32> {
     let mut result: u32 = 0;
-    unsafe { napi_get_value_uint32(env, val, &mut result) };
-    result
+    let status = unsafe { napi_get_value_uint32(env, val, &mut result) };
+    if status != 0 {
+        throw_error(env, "expected a non-negative integer for exp");
+        return None;
+    }
+    Some(result)
 }
 
 // ---------------------------------------------------------------------------
@@ -153,8 +174,8 @@ unsafe extern "C" fn gf_add(env: napi_env, info: napi_callback_info) -> napi_val
         throw_error(env, "add requires two GF256 element arguments");
         return undefined(env);
     }
-    let a = u8_from_js(env, args[0]);
-    let b = u8_from_js(env, args[1]);
+    let a = match u8_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match u8_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     u8_to_js(env, gf256::add(a, b))
 }
 
@@ -171,8 +192,8 @@ unsafe extern "C" fn gf_subtract(env: napi_env, info: napi_callback_info) -> nap
         throw_error(env, "subtract requires two GF256 element arguments");
         return undefined(env);
     }
-    let a = u8_from_js(env, args[0]);
-    let b = u8_from_js(env, args[1]);
+    let a = match u8_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match u8_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     u8_to_js(env, gf256::subtract(a, b))
 }
 
@@ -191,8 +212,8 @@ unsafe extern "C" fn gf_multiply(env: napi_env, info: napi_callback_info) -> nap
         throw_error(env, "multiply requires two GF256 element arguments");
         return undefined(env);
     }
-    let a = u8_from_js(env, args[0]);
-    let b = u8_from_js(env, args[1]);
+    let a = match u8_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match u8_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     u8_to_js(env, gf256::multiply(a, b))
 }
 
@@ -211,8 +232,8 @@ unsafe extern "C" fn gf_divide(env: napi_env, info: napi_callback_info) -> napi_
         throw_error(env, "divide requires two GF256 element arguments");
         return undefined(env);
     }
-    let a = u8_from_js(env, args[0]);
-    let b = u8_from_js(env, args[1]);
+    let a = match u8_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match u8_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     match run_or_throw(env, move || gf256::divide(a, b)) {
         None => undefined(env),
         Some(result) => u8_to_js(env, result),
@@ -239,8 +260,8 @@ unsafe extern "C" fn gf_power(env: napi_env, info: napi_callback_info) -> napi_v
         throw_error(env, "power requires (base, exp) arguments");
         return undefined(env);
     }
-    let base = u8_from_js(env, args[0]);
-    let exp = u32_from_js(env, args[1]);
+    let base = match u8_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let exp = match u32_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     u8_to_js(env, gf256::power(base, exp))
 }
 
@@ -259,7 +280,7 @@ unsafe extern "C" fn gf_inverse(env: napi_env, info: napi_callback_info) -> napi
         throw_error(env, "inverse requires one GF256 element argument");
         return undefined(env);
     }
-    let a = u8_from_js(env, args[0]);
+    let a = match u8_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
     match run_or_throw(env, move || gf256::inverse(a)) {
         None => undefined(env),
         Some(result) => u8_to_js(env, result),

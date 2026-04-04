@@ -142,9 +142,14 @@ fn vec_to_rb(poly: &[f64]) -> VALUE {
 //   CodingAdventures::PolynomialNative.normalize([1.0, 0.0, 0.0])  #=> [1.0]
 //   CodingAdventures::PolynomialNative.normalize([0.0])             #=> []
 extern "C" fn poly_normalize(_module: VALUE, poly_val: VALUE) -> VALUE {
-    let poly = vec_from_rb(poly_val);
-    let result = polynomial::normalize(&poly);
-    vec_to_rb(&result)
+    match std::panic::catch_unwind(|| {
+        let poly = vec_from_rb(poly_val);
+        let result = polynomial::normalize(&poly);
+        vec_to_rb(&result)
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- degree(poly) -> Integer -------------------------------------------------
@@ -155,9 +160,14 @@ extern "C" fn poly_normalize(_module: VALUE, poly_val: VALUE) -> VALUE {
 //   CodingAdventures::PolynomialNative.degree([3.0, 0.0, 2.0])  #=> 2
 //   CodingAdventures::PolynomialNative.degree([])                #=> 0
 extern "C" fn poly_degree(_module: VALUE, poly_val: VALUE) -> VALUE {
-    let poly = vec_from_rb(poly_val);
-    let deg = polynomial::degree(&poly);
-    ruby_bridge::usize_to_rb(deg)
+    match std::panic::catch_unwind(|| {
+        let poly = vec_from_rb(poly_val);
+        let deg = polynomial::degree(&poly);
+        ruby_bridge::usize_to_rb(deg)
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- zero -> Array<Float> ---------------------------------------------------
@@ -166,7 +176,12 @@ extern "C" fn poly_degree(_module: VALUE, poly_val: VALUE) -> VALUE {
 //
 //   CodingAdventures::PolynomialNative.zero  #=> [0.0]
 extern "C" fn poly_zero(_module: VALUE) -> VALUE {
-    vec_to_rb(&polynomial::zero())
+    match std::panic::catch_unwind(|| {
+        vec_to_rb(&polynomial::zero())
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- one -> Array<Float> ----------------------------------------------------
@@ -175,7 +190,12 @@ extern "C" fn poly_zero(_module: VALUE) -> VALUE {
 //
 //   CodingAdventures::PolynomialNative.one  #=> [1.0]
 extern "C" fn poly_one(_module: VALUE) -> VALUE {
-    vec_to_rb(&polynomial::one())
+    match std::panic::catch_unwind(|| {
+        vec_to_rb(&polynomial::one())
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- add(a, b) -> Array<Float> ----------------------------------------------
@@ -186,9 +206,14 @@ extern "C" fn poly_one(_module: VALUE) -> VALUE {
 //   b = [4.0, 5.0]       #  4 + 5x
 //   CodingAdventures::PolynomialNative.add(a, b)  #=> [5.0, 7.0, 3.0]
 extern "C" fn poly_add(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-    vec_to_rb(&polynomial::add(&a, &b))
+    match std::panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        vec_to_rb(&polynomial::add(&a, &b))
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- subtract(a, b) -> Array<Float> -----------------------------------------
@@ -199,9 +224,14 @@ extern "C" fn poly_add(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //   b = [1.0, 2.0, 3.0]
 //   CodingAdventures::PolynomialNative.subtract(a, b)  #=> [4.0, 5.0]
 extern "C" fn poly_subtract(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-    vec_to_rb(&polynomial::subtract(&a, &b))
+    match std::panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        vec_to_rb(&polynomial::subtract(&a, &b))
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- multiply(a, b) -> Array<Float> -----------------------------------------
@@ -212,9 +242,14 @@ extern "C" fn poly_subtract(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE
 //   b = [3.0, 4.0]  #  3 + 4x
 //   CodingAdventures::PolynomialNative.multiply(a, b)  #=> [3.0, 10.0, 8.0]
 extern "C" fn poly_multiply(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-    vec_to_rb(&polynomial::multiply(&a, &b))
+    match std::panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        vec_to_rb(&polynomial::multiply(&a, &b))
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- divmod_poly(dividend, divisor) -> [Array<Float>, Array<Float>] ----------
@@ -229,11 +264,14 @@ extern "C" fn poly_multiply(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE
 //   q, r = CodingAdventures::PolynomialNative.divmod_poly(dividend, divisor)
 //   #=> q: [3.0, -1.0, 2.0],  r: [-1.0]
 extern "C" fn poly_divmod(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-
-    // Catch the panic from polynomial::divmod when divisor is zero.
-    let result = panic::catch_unwind(|| polynomial::divmod(&a, &b));
+    // vec_from_rb calls rb_num2dbl which can longjmp (rb_raise) on bad input.
+    // Moving the calls INSIDE catch_unwind ensures any such longjmp is caught
+    // before it unwinds through Rust stack frames — which would be UB.
+    let result = panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        polynomial::divmod(&a, &b)
+    });
 
     match result {
         Ok((quot, rem)) => {
@@ -254,10 +292,13 @@ extern "C" fn poly_divmod(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //
 //   CodingAdventures::PolynomialNative.divide([3.0, -1.0], [1.0])  #=> [3.0, -1.0]
 extern "C" fn poly_divide(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-
-    let result = panic::catch_unwind(|| polynomial::divide(&a, &b));
+    // vec_from_rb calls rb_num2dbl which can longjmp (rb_raise) on bad input.
+    // Moving the calls INSIDE catch_unwind prevents UB from unwinding through Rust.
+    let result = panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        polynomial::divide(&a, &b)
+    });
     match result {
         Ok(quot) => vec_to_rb(&quot),
         Err(_) => raise_arg_error("divide: divisor is the zero polynomial"),
@@ -273,10 +314,13 @@ extern "C" fn poly_divide(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //   divisor  = [1.0, -1.0]       #  (x-1)
 //   CodingAdventures::PolynomialNative.modulo(dividend, divisor)  #=> []  (exact division)
 extern "C" fn poly_modulo(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-
-    let result = panic::catch_unwind(|| polynomial::modulo(&a, &b));
+    // vec_from_rb calls rb_num2dbl which can longjmp (rb_raise) on bad input.
+    // Moving the calls INSIDE catch_unwind prevents UB from unwinding through Rust.
+    let result = panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        polynomial::modulo(&a, &b)
+    });
     match result {
         Ok(rem) => vec_to_rb(&rem),
         Err(_) => raise_arg_error("modulo: divisor is the zero polynomial"),
@@ -290,10 +334,15 @@ extern "C" fn poly_modulo(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //   CodingAdventures::PolynomialNative.evaluate([3.0, 0.0, 1.0], 2.0)  #=> 7.0
 //   # 3 + 0*2 + 1*4 = 7
 extern "C" fn poly_evaluate(_module: VALUE, poly_val: VALUE, x_val: VALUE) -> VALUE {
-    let poly = vec_from_rb(poly_val);
-    let x = unsafe { rb_num2dbl(x_val) };
-    let result = polynomial::evaluate(&poly, x);
-    unsafe { rb_float_new(result) }
+    match std::panic::catch_unwind(|| {
+        let poly = vec_from_rb(poly_val);
+        let x = unsafe { rb_num2dbl(x_val) };
+        let result = polynomial::evaluate(&poly, x);
+        unsafe { rb_float_new(result) }
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // -- gcd(a, b) -> Array<Float> -----------------------------------------------
@@ -305,9 +354,14 @@ extern "C" fn poly_evaluate(_module: VALUE, poly_val: VALUE, x_val: VALUE) -> VA
 //   b = [1.0, -1.0]       # (x-1)
 //   CodingAdventures::PolynomialNative.gcd(a, b)  #=> [1.0, -1.0]  (x-1)
 extern "C" fn poly_gcd(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = vec_from_rb(a_val);
-    let b = vec_from_rb(b_val);
-    vec_to_rb(&polynomial::gcd(&a, &b))
+    match std::panic::catch_unwind(|| {
+        let a = vec_from_rb(a_val);
+        let b = vec_from_rb(b_val);
+        vec_to_rb(&polynomial::gcd(&a, &b))
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("polynomial operation panicked unexpectedly"),
+    }
 }
 
 // ---------------------------------------------------------------------------

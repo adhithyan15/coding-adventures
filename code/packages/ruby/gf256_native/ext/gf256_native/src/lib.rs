@@ -127,9 +127,14 @@ fn u8_from_rb(val: VALUE, arg_name: &str) -> u8 {
 //
 //   CodingAdventures::GF256Native.add(0x53, 0xCA)  #=> 153
 extern "C" fn gf_add(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = u8_from_rb(a_val, "add(a, b): a");
-    let b = u8_from_rb(b_val, "add(a, b): b");
-    ruby_bridge::usize_to_rb(gf256::add(a, b) as usize)
+    match std::panic::catch_unwind(|| {
+        let a = u8_from_rb(a_val, "add(a, b): a");
+        let b = u8_from_rb(b_val, "add(a, b): b");
+        ruby_bridge::usize_to_rb(gf256::add(a, b) as usize)
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("gf256 operation panicked unexpectedly"),
+    }
 }
 
 // -- subtract(a, b) -> Integer -----------------------------------------------
@@ -140,9 +145,14 @@ extern "C" fn gf_add(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //
 //   CodingAdventures::GF256Native.subtract(0x53, 0xCA)  #=> 153  (same as add)
 extern "C" fn gf_subtract(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = u8_from_rb(a_val, "subtract(a, b): a");
-    let b = u8_from_rb(b_val, "subtract(a, b): b");
-    ruby_bridge::usize_to_rb(gf256::subtract(a, b) as usize)
+    match std::panic::catch_unwind(|| {
+        let a = u8_from_rb(a_val, "subtract(a, b): a");
+        let b = u8_from_rb(b_val, "subtract(a, b): b");
+        ruby_bridge::usize_to_rb(gf256::subtract(a, b) as usize)
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("gf256 operation panicked unexpectedly"),
+    }
 }
 
 // -- multiply(a, b) -> Integer -----------------------------------------------
@@ -155,9 +165,14 @@ extern "C" fn gf_subtract(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //   CodingAdventures::GF256Native.multiply(2, 4)   #=> 8   (simple: 2^1 * 2^2 = 2^3)
 //   CodingAdventures::GF256Native.multiply(128, 2)  #=> 29  (overflow, reduce mod 0x11D)
 extern "C" fn gf_multiply(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = u8_from_rb(a_val, "multiply(a, b): a");
-    let b = u8_from_rb(b_val, "multiply(a, b): b");
-    ruby_bridge::usize_to_rb(gf256::multiply(a, b) as usize)
+    match std::panic::catch_unwind(|| {
+        let a = u8_from_rb(a_val, "multiply(a, b): a");
+        let b = u8_from_rb(b_val, "multiply(a, b): b");
+        ruby_bridge::usize_to_rb(gf256::multiply(a, b) as usize)
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("gf256 operation panicked unexpectedly"),
+    }
 }
 
 // -- divide(a, b) -> Integer -------------------------------------------------
@@ -170,11 +185,14 @@ extern "C" fn gf_multiply(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //   CodingAdventures::GF256Native.divide(0, 5)    #=> 0   (0 divided by anything is 0)
 //   CodingAdventures::GF256Native.divide(1, 0)    # raises ArgumentError
 extern "C" fn gf_divide(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
-    let a = u8_from_rb(a_val, "divide(a, b): a");
-    let b = u8_from_rb(b_val, "divide(a, b): b");
-
-    // Catch the panic from gf256::divide when b == 0.
-    let result = panic::catch_unwind(|| gf256::divide(a, b));
+    // u8_from_rb calls raise_arg_error (rb_raise / longjmp) on out-of-range input.
+    // Moving the calls INSIDE catch_unwind prevents that longjmp from unwinding
+    // through Rust frames — which would be undefined behaviour.
+    let result = panic::catch_unwind(|| {
+        let a = u8_from_rb(a_val, "divide(a, b): a");
+        let b = u8_from_rb(b_val, "divide(a, b): b");
+        gf256::divide(a, b)
+    });
     match result {
         Ok(val) => ruby_bridge::usize_to_rb(val as usize),
         Err(_) => raise_arg_error("divide: divisor must not be zero"),
@@ -199,16 +217,21 @@ extern "C" fn gf_divide(_module: VALUE, a_val: VALUE, b_val: VALUE) -> VALUE {
 //   CodingAdventures::GF256Native.power(2, 0)    #=> 1
 //   CodingAdventures::GF256Native.power(0, 0)    #=> 1
 extern "C" fn gf_power(_module: VALUE, base_val: VALUE, exp_val: VALUE) -> VALUE {
-    let base = u8_from_rb(base_val, "power(base, exp): base");
+    match std::panic::catch_unwind(|| {
+        let base = u8_from_rb(base_val, "power(base, exp): base");
 
-    // exp must be a non-negative u32
-    let exp_long = unsafe { rb_num2long(exp_val) };
-    if exp_long < 0 {
-        raise_arg_error("power(base, exp): exp must be non-negative");
+        // exp must be a non-negative u32
+        let exp_long = unsafe { rb_num2long(exp_val) };
+        if exp_long < 0 {
+            raise_arg_error("power(base, exp): exp must be non-negative");
+        }
+        let exp = exp_long as u32;
+
+        ruby_bridge::usize_to_rb(gf256::power(base, exp) as usize)
+    }) {
+        Ok(result) => result,
+        Err(_) => raise_arg_error("gf256 operation panicked unexpectedly"),
     }
-    let exp = exp_long as u32;
-
-    ruby_bridge::usize_to_rb(gf256::power(base, exp) as usize)
 }
 
 // -- inverse(a) -> Integer ---------------------------------------------------
@@ -225,10 +248,12 @@ extern "C" fn gf_power(_module: VALUE, base_val: VALUE, exp_val: VALUE) -> VALUE
 //   CodingAdventures::GF256Native.inverse(2)    #=> 142 (2 * 142 = 1 in GF(256))
 //   CodingAdventures::GF256Native.inverse(0)    # raises ArgumentError
 extern "C" fn gf_inverse(_module: VALUE, a_val: VALUE) -> VALUE {
-    let a = u8_from_rb(a_val, "inverse(a): a");
-
-    // Catch the panic from gf256::inverse when a == 0.
-    let result = panic::catch_unwind(|| gf256::inverse(a));
+    // u8_from_rb calls raise_arg_error (rb_raise / longjmp) on out-of-range input.
+    // Moving the call INSIDE catch_unwind prevents UB from unwinding through Rust.
+    let result = panic::catch_unwind(|| {
+        let a = u8_from_rb(a_val, "inverse(a): a");
+        gf256::inverse(a)
+    });
     match result {
         Ok(val) => ruby_bridge::usize_to_rb(val as usize),
         Err(_) => raise_arg_error("inverse: argument must not be zero (zero has no multiplicative inverse)"),

@@ -33,6 +33,7 @@
 
 use std::ffi::{c_char, c_int, CString};
 use std::ptr;
+use std::sync::OnceLock;
 
 use python_bridge::*;
 
@@ -167,6 +168,13 @@ unsafe fn vec_f64_to_py_list(v: &[f64]) -> PyObjectPtr {
         // PyFloat_FromDouble returns a new reference.
         // PyList_SetItem steals the reference — no manual Py_DecRef needed.
         let py_float = PyFloat_FromDouble(val);
+        if py_float.is_null() {
+            // Release the partially-built list before returning null,
+            // so the caller sees null and can propagate the error without
+            // a reference leak.
+            Py_DecRef(list);
+            return ptr::null_mut();
+        }
         PyList_SetItem(list, i as isize, py_float);
     }
     list
@@ -485,7 +493,18 @@ unsafe extern "C" fn poly_evaluate(_module: PyObjectPtr, args: PyObjectPtr) -> P
     };
 
     let val = polynomial::evaluate(&poly, x);
-    PyFloat_FromDouble(val)
+    // PyFloat_FromDouble can return null if the interpreter is out of memory.
+    // A null return without an active exception is itself an indication of
+    // allocation failure; treat it as a ValueError.
+    let py_result = PyFloat_FromDouble(val);
+    if py_result.is_null() {
+        set_error(
+            value_error_class(),
+            "failed to create Python float (out of memory?)",
+        );
+        return ptr::null_mut();
+    }
+    py_result
 }
 
 // -- gcd(a, b) -> list[float] ------------------------------------------------
@@ -530,135 +549,166 @@ unsafe extern "C" fn poly_gcd(_module: PyObjectPtr, args: PyObjectPtr) -> PyObje
 //  11: gcd        (VARARGS)
 //  12: sentinel   (null terminator)
 
+// ---------------------------------------------------------------------------
+// OnceLock-guarded method table and module definition
+// ---------------------------------------------------------------------------
+//
+// The CPython C API requires that `PyMethodDef` arrays and `PyModuleDef`
+// structs outlive the module object — effectively for the whole process
+// lifetime. Using `static mut` and re-initializing on every `PyInit_*` call
+// is unsound: if two threads import the module simultaneously the writes race.
+//
+// The fix: use `std::sync::OnceLock` so the table is built exactly once in a
+// thread-safe manner.
+//
+// # Why the `SendSync` wrapper?
+//
+// `PyMethodDef` and `PyModuleDef` contain raw pointers (`*const c_char`,
+// `*mut c_void`, etc.), which Rust conservatively marks as `!Send + !Sync`.
+// However, our usage is safe:
+//   - All `*const c_char` fields point to leaked `CString` allocations that
+//     are never mutated or freed after init — so sharing them across threads
+//     is fine.
+//   - `ml_meth` function pointers are inherently thread-safe.
+//   - `*mut c_void` slots are all null (we use `m_slots: null()`).
+//
+// We wrap the Vec/struct in a `SendSync` newtype that asserts these invariants.
+
+struct SendSync<T>(T);
+// SAFETY: See explanation above. The pointed-to data is immutable after init.
+unsafe impl<T> Send for SendSync<T> {}
+unsafe impl<T> Sync for SendSync<T> {}
+
+fn get_methods() -> &'static [PyMethodDef] {
+    static METHODS: OnceLock<SendSync<Vec<PyMethodDef>>> = OnceLock::new();
+    &METHODS.get_or_init(|| SendSync(vec![
+            PyMethodDef {
+                ml_name: cstr("normalize"),
+                ml_meth: Some(poly_normalize),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("normalize(poly) -> list[float]\n\nStrip trailing near-zero coefficients."),
+            },
+            PyMethodDef {
+                ml_name: cstr("degree"),
+                ml_meth: Some(poly_degree),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("degree(poly) -> int\n\nReturn the degree of a polynomial (index of highest non-zero term)."),
+            },
+            PyMethodDef {
+                ml_name: cstr("zero"),
+                ml_meth: Some(poly_zero),
+                ml_flags: METH_NOARGS,
+                ml_doc: cstr("zero() -> list[float]\n\nReturn the zero polynomial [0.0]."),
+            },
+            PyMethodDef {
+                ml_name: cstr("one"),
+                ml_meth: Some(poly_one),
+                ml_flags: METH_NOARGS,
+                ml_doc: cstr("one() -> list[float]\n\nReturn the multiplicative identity polynomial [1.0]."),
+            },
+            PyMethodDef {
+                ml_name: cstr("add"),
+                ml_meth: Some(poly_add),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("add(a, b) -> list[float]\n\nAdd two polynomials."),
+            },
+            PyMethodDef {
+                ml_name: cstr("subtract"),
+                ml_meth: Some(poly_subtract),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("subtract(a, b) -> list[float]\n\nSubtract polynomial b from a."),
+            },
+            PyMethodDef {
+                ml_name: cstr("multiply"),
+                ml_meth: Some(poly_multiply),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("multiply(a, b) -> list[float]\n\nMultiply two polynomials via convolution."),
+            },
+            PyMethodDef {
+                ml_name: cstr("divmod_poly"),
+                ml_meth: Some(poly_divmod),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr(
+                    "divmod_poly(dividend, divisor) -> tuple[list[float], list[float]]\n\n\
+                     Polynomial long division. Returns (quotient, remainder).\n\
+                     Raises ValueError if divisor is the zero polynomial.",
+                ),
+            },
+            PyMethodDef {
+                ml_name: cstr("divide"),
+                ml_meth: Some(poly_divide),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("divide(a, b) -> list[float]\n\nReturn quotient of a / b. Raises ValueError if b is zero."),
+            },
+            PyMethodDef {
+                ml_name: cstr("modulo"),
+                ml_meth: Some(poly_modulo),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("modulo(a, b) -> list[float]\n\nReturn remainder of a / b. Raises ValueError if b is zero."),
+            },
+            PyMethodDef {
+                ml_name: cstr("evaluate"),
+                ml_meth: Some(poly_evaluate),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("evaluate(poly, x) -> float\n\nEvaluate the polynomial at x using Horner's method."),
+            },
+            PyMethodDef {
+                ml_name: cstr("gcd"),
+                ml_meth: Some(poly_gcd),
+                ml_flags: METH_VARARGS,
+                ml_doc: cstr("gcd(a, b) -> list[float]\n\nGreatest common divisor of two polynomials (Euclidean algorithm)."),
+            },
+            // Null sentinel: CPython uses this to know where the table ends.
+            PyMethodDef {
+                ml_name: ptr::null(),
+                ml_meth: None,
+                ml_flags: 0,
+                ml_doc: ptr::null(),
+            },
+        ]))
+    .0
+}
+
+fn get_module_def() -> &'static PyModuleDef {
+    static MODULE_DEF: OnceLock<SendSync<PyModuleDef>> = OnceLock::new();
+    &MODULE_DEF
+        .get_or_init(|| {
+            SendSync(PyModuleDef {
+                m_base: PyModuleDef_Base {
+                    ob_base: [0; std::mem::size_of::<usize>() * 2],
+                    m_init: None,
+                    m_index: 0,
+                    m_copy: ptr::null_mut(),
+                },
+                m_name: cstr("polynomial_native"),
+                m_doc: cstr(
+                    "polynomial_native -- Rust-backed polynomial arithmetic for Python.\n\
+                     \n\
+                     Polynomials are represented as list[float] where index == degree:\n\
+                     [3.0, 0.0, 2.0] means 3 + 0x + 2x^2\n\
+                     \n\
+                     All operations return normalized polynomials (trailing zeros stripped).\n\
+                     Division functions raise ValueError if the divisor is zero.",
+                ),
+                m_size: -1,
+                // `get_methods()` has already ensured the Vec is allocated and pinned
+                // in the OnceLock; as_ptr() into it is stable for the process lifetime.
+                m_methods: get_methods().as_ptr() as *mut PyMethodDef,
+                m_slots: ptr::null_mut(),
+                m_traverse: ptr::null_mut(),
+                m_clear: ptr::null_mut(),
+                m_free: ptr::null_mut(),
+            })
+        })
+        .0
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_polynomial_native() -> PyObjectPtr {
-    // -- Method table ---------------------------------------------------------
-    //
-    // CPython expects a null-terminated array of PyMethodDef. We use a static
-    // mut because the array must outlive this function call (the module holds
-    // a pointer to it). The array is initialized once and never changed.
-
-    static mut METHODS: [PyMethodDef; 13] = [
-        PyMethodDef {
-            ml_name: ptr::null(),
-            ml_meth: None,
-            ml_flags: 0,
-            ml_doc: ptr::null(),
-        };
-        13
-    ];
-
-    METHODS[0] = PyMethodDef {
-        ml_name: cstr("normalize"),
-        ml_meth: Some(poly_normalize),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("normalize(poly) -> list[float]\n\nStrip trailing near-zero coefficients."),
-    };
-    METHODS[1] = PyMethodDef {
-        ml_name: cstr("degree"),
-        ml_meth: Some(poly_degree),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("degree(poly) -> int\n\nReturn the degree of a polynomial (index of highest non-zero term)."),
-    };
-    METHODS[2] = PyMethodDef {
-        ml_name: cstr("zero"),
-        ml_meth: Some(poly_zero),
-        ml_flags: METH_NOARGS,
-        ml_doc: cstr("zero() -> list[float]\n\nReturn the zero polynomial [0.0]."),
-    };
-    METHODS[3] = PyMethodDef {
-        ml_name: cstr("one"),
-        ml_meth: Some(poly_one),
-        ml_flags: METH_NOARGS,
-        ml_doc: cstr("one() -> list[float]\n\nReturn the multiplicative identity polynomial [1.0]."),
-    };
-    METHODS[4] = PyMethodDef {
-        ml_name: cstr("add"),
-        ml_meth: Some(poly_add),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("add(a, b) -> list[float]\n\nAdd two polynomials."),
-    };
-    METHODS[5] = PyMethodDef {
-        ml_name: cstr("subtract"),
-        ml_meth: Some(poly_subtract),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("subtract(a, b) -> list[float]\n\nSubtract polynomial b from a."),
-    };
-    METHODS[6] = PyMethodDef {
-        ml_name: cstr("multiply"),
-        ml_meth: Some(poly_multiply),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("multiply(a, b) -> list[float]\n\nMultiply two polynomials via convolution."),
-    };
-    METHODS[7] = PyMethodDef {
-        ml_name: cstr("divmod_poly"),
-        ml_meth: Some(poly_divmod),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr(
-            "divmod_poly(dividend, divisor) -> tuple[list[float], list[float]]\n\n\
-             Polynomial long division. Returns (quotient, remainder).\n\
-             Raises ValueError if divisor is the zero polynomial.",
-        ),
-    };
-    METHODS[8] = PyMethodDef {
-        ml_name: cstr("divide"),
-        ml_meth: Some(poly_divide),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("divide(a, b) -> list[float]\n\nReturn quotient of a / b. Raises ValueError if b is zero."),
-    };
-    METHODS[9] = PyMethodDef {
-        ml_name: cstr("modulo"),
-        ml_meth: Some(poly_modulo),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("modulo(a, b) -> list[float]\n\nReturn remainder of a / b. Raises ValueError if b is zero."),
-    };
-    METHODS[10] = PyMethodDef {
-        ml_name: cstr("evaluate"),
-        ml_meth: Some(poly_evaluate),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("evaluate(poly, x) -> float\n\nEvaluate the polynomial at x using Horner's method."),
-    };
-    METHODS[11] = PyMethodDef {
-        ml_name: cstr("gcd"),
-        ml_meth: Some(poly_gcd),
-        ml_flags: METH_VARARGS,
-        ml_doc: cstr("gcd(a, b) -> list[float]\n\nGreatest common divisor of two polynomials (Euclidean algorithm)."),
-    };
-    METHODS[12] = method_def_sentinel();
-
-    // -- Module definition ----------------------------------------------------
-    //
-    // The module definition must also be static (the module object holds a
-    // pointer to it for its entire lifetime).
-
-    static mut MODULE_DEF: PyModuleDef = PyModuleDef {
-        m_base: PyModuleDef_Base {
-            ob_base: [0; std::mem::size_of::<usize>() * 2],
-            m_init: None,
-            m_index: 0,
-            m_copy: ptr::null_mut(),
-        },
-        m_name: ptr::null(),
-        m_doc: ptr::null(),
-        m_size: -1,
-        m_methods: ptr::null_mut(),
-        m_slots: ptr::null_mut(),
-        m_traverse: ptr::null_mut(),
-        m_clear: ptr::null_mut(),
-        m_free: ptr::null_mut(),
-    };
-
-    MODULE_DEF.m_name = cstr("polynomial_native");
-    MODULE_DEF.m_doc = cstr(
-        "polynomial_native -- Rust-backed polynomial arithmetic for Python.\n\
-         \n\
-         Polynomials are represented as list[float] where index == degree:\n\
-         [3.0, 0.0, 2.0] means 3 + 0x + 2x^2\n\
-         \n\
-         All operations return normalized polynomials (trailing zeros stripped).\n\
-         Division functions raise ValueError if the divisor is zero.",
-    );
-    MODULE_DEF.m_methods = (&raw mut METHODS) as *mut PyMethodDef;
-
-    PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION)
+    // Both the method table and the module definition are now initialized at
+    // most once, regardless of how many threads race to import this module.
+    PyModule_Create2(
+        get_module_def() as *const PyModuleDef as *mut PyModuleDef,
+        PYTHON_API_VERSION,
+    )
 }

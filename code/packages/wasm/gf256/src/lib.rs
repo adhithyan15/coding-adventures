@@ -44,14 +44,18 @@
 //! The error flag is cleared at the start of each operation, so it reflects
 //! only the most recent call.
 
+use std::sync::atomic::{AtomicBool, Ordering};
+
 // =============================================================================
 // Error flag
 // =============================================================================
 
 /// Set to `true` when a call panicked (division by zero, inverse of zero).
 ///
-/// WASM is single-threaded, so a mutable static is safe here.
-static mut LAST_ERROR: bool = false;
+/// We use `AtomicBool` instead of `static mut bool` to eliminate undefined
+/// behaviour from mutable statics. WASM is single-threaded, so
+/// `Ordering::Relaxed` is correct and has no overhead compared to `static mut`.
+static LAST_ERROR: AtomicBool = AtomicBool::new(false);
 
 /// Returns 1 if the most recent operation set the error flag, 0 otherwise.
 ///
@@ -68,8 +72,8 @@ static mut LAST_ERROR: bool = false;
 /// }
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn gf256_had_error() -> u32 {
-    LAST_ERROR as u32
+pub extern "C" fn gf256_had_error() -> u32 {
+    LAST_ERROR.load(Ordering::Relaxed) as u32
 }
 
 // =============================================================================
@@ -92,8 +96,8 @@ pub unsafe extern "C" fn gf256_had_error() -> u32 {
 /// ## Returns
 /// `a XOR b` as a u32 (high bits are 0).
 #[no_mangle]
-pub unsafe extern "C" fn gf256_add(a: u32, b: u32) -> u32 {
-    LAST_ERROR = false;
+pub extern "C" fn gf256_add(a: u32, b: u32) -> u32 {
+    LAST_ERROR.store(false, Ordering::Relaxed);
     // Truncate to u8 before passing to the gf256 crate.
     gf256::add(a as u8, b as u8) as u32
 }
@@ -114,8 +118,8 @@ pub unsafe extern "C" fn gf256_add(a: u32, b: u32) -> u32 {
 /// ## Returns
 /// `a XOR b` as a u32 (high bits are 0).
 #[no_mangle]
-pub unsafe extern "C" fn gf256_subtract(a: u32, b: u32) -> u32 {
-    LAST_ERROR = false;
+pub extern "C" fn gf256_subtract(a: u32, b: u32) -> u32 {
+    LAST_ERROR.store(false, Ordering::Relaxed);
     gf256::subtract(a as u8, b as u8) as u32
 }
 
@@ -136,8 +140,8 @@ pub unsafe extern "C" fn gf256_subtract(a: u32, b: u32) -> u32 {
 /// ## Returns
 /// Product in GF(256) as u32 (0–255).
 #[no_mangle]
-pub unsafe extern "C" fn gf256_multiply(a: u32, b: u32) -> u32 {
-    LAST_ERROR = false;
+pub extern "C" fn gf256_multiply(a: u32, b: u32) -> u32 {
+    LAST_ERROR.store(false, Ordering::Relaxed);
     gf256::multiply(a as u8, b as u8) as u32
 }
 
@@ -163,12 +167,12 @@ pub unsafe extern "C" fn gf256_multiply(a: u32, b: u32) -> u32 {
 /// ## Returns
 /// Quotient in GF(256) as u32 (0–255), or 0xFF on error.
 #[no_mangle]
-pub unsafe extern "C" fn gf256_divide(a: u32, b: u32) -> u32 {
-    LAST_ERROR = false;
+pub extern "C" fn gf256_divide(a: u32, b: u32) -> u32 {
+    LAST_ERROR.store(false, Ordering::Relaxed);
     match std::panic::catch_unwind(|| gf256::divide(a as u8, b as u8)) {
         Ok(result) => result as u32,
         Err(_) => {
-            LAST_ERROR = true;
+            LAST_ERROR.store(true, Ordering::Relaxed);
             // Return 0xFF as a sentinel. Callers should check gf256_had_error().
             0xFF
         }
@@ -196,8 +200,8 @@ pub unsafe extern "C" fn gf256_divide(a: u32, b: u32) -> u32 {
 /// ## Returns
 /// `base^exp` in GF(256) as u32 (0–255).
 #[no_mangle]
-pub unsafe extern "C" fn gf256_power(base: u32, exp: u32) -> u32 {
-    LAST_ERROR = false;
+pub extern "C" fn gf256_power(base: u32, exp: u32) -> u32 {
+    LAST_ERROR.store(false, Ordering::Relaxed);
     gf256::power(base as u8, exp) as u32
 }
 
@@ -218,12 +222,12 @@ pub unsafe extern "C" fn gf256_power(base: u32, exp: u32) -> u32 {
 /// ## Returns
 /// `a^(-1)` in GF(256) as u32 (0–255), or 0xFF on error.
 #[no_mangle]
-pub unsafe extern "C" fn gf256_inverse(a: u32) -> u32 {
-    LAST_ERROR = false;
+pub extern "C" fn gf256_inverse(a: u32) -> u32 {
+    LAST_ERROR.store(false, Ordering::Relaxed);
     match std::panic::catch_unwind(|| gf256::inverse(a as u8)) {
         Ok(result) => result as u32,
         Err(_) => {
-            LAST_ERROR = true;
+            LAST_ERROR.store(true, Ordering::Relaxed);
             // Return 0xFF as a sentinel. Callers should check gf256_had_error().
             0xFF
         }
@@ -241,7 +245,7 @@ pub unsafe extern "C" fn gf256_inverse(a: u32) -> u32 {
 /// Provided as a function for symmetry with `gf256_one()` and to make WASM
 /// host code more self-documenting.
 #[no_mangle]
-pub unsafe extern "C" fn gf256_zero() -> u32 {
+pub extern "C" fn gf256_zero() -> u32 {
     gf256::ZERO as u32
 }
 
@@ -249,7 +253,7 @@ pub unsafe extern "C" fn gf256_zero() -> u32 {
 ///
 /// For any element `a`: `gf256_multiply(a, gf256_one()) = a`.
 #[no_mangle]
-pub unsafe extern "C" fn gf256_one() -> u32 {
+pub extern "C" fn gf256_one() -> u32 {
     gf256::ONE as u32
 }
 
@@ -267,6 +271,6 @@ pub unsafe extern "C" fn gf256_one() -> u32 {
 /// Note: AES uses a different primitive polynomial (`0x11B`); this crate
 /// uses `0x11D` (the same one used in Reed-Solomon implementations).
 #[no_mangle]
-pub unsafe extern "C" fn gf256_primitive_polynomial() -> u32 {
+pub extern "C" fn gf256_primitive_polynomial() -> u32 {
     gf256::PRIMITIVE_POLYNOMIAL as u32
 }

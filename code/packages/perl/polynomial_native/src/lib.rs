@@ -35,8 +35,7 @@
 //!
 //! The full XS calling convention (dXSARGS, ST(n), XSRETURN) requires
 //! accessing Perl's internal stack pointer from C. Rather than duplicating
-//! the full macro expansion in Rust, we expose a clean subset of functions
-//! that work with Perl's `call_sv` / `eval_sv` style, using a simpler
+//! the full macro expansion in Rust without Perl headers, we use a simpler
 //! approach: each XSUB reads globals from the Perl stack.
 //!
 //! For simplicity and correctness, we expose the functions as C-callable
@@ -49,6 +48,19 @@
 //!
 //! The `xs_init!` macro in perl-bridge requires `concat_idents`, which is
 //! not in stable Rust. We write the boot function by hand instead.
+//!
+//! ## SAFETY: ithreads limitation
+//!
+//! This extension assumes non-threaded (non-MULTIPLICITY) Perl.
+//! The PL_stack_sp, PL_stack_base, PL_markstack_ptr externs are only valid
+//! in a non-threaded Perl build. Threaded Perl defines these as
+//! thread-local struct fields accessed via macros, not global variables.
+//!
+//! If compiled against threaded Perl, memory corruption will occur.
+//! The build.rs emits a warning about this condition.
+//!
+//! TODO: Add a build.rs check that runs `perl -V:usethreads` and emits a
+//! compile_error! if threads are enabled.
 
 #![allow(non_snake_case, non_camel_case_types)]
 
@@ -101,23 +113,53 @@ extern "C" {
     static mut PL_stack_base: *mut *mut SV;
 }
 
+/// Declare SvRV — not in perl-bridge, needed to dereference array refs.
+extern "C" {
+    fn SvRV(sv: *mut SV) -> *mut SV;
+    /// Returns non-zero if sv is a reference (RV). Must be checked before SvRV.
+    fn SvROK(sv: *mut SV) -> c_int;
+}
+
 /// Read the number of arguments passed to the current XSUB.
 ///
 /// The XS calling convention uses a "mark" on the argument stack. The mark
 /// tells us where the current argument list begins. `ax` = mark index,
 /// `items` = number of args = sp - (mark + 1).
+///
+/// This function uses saturating arithmetic and pointer comparison to guard
+/// against pathological mark values that could cause pointer arithmetic overflow.
+///
+/// ## Guard against stack corruption
+///
+/// If `mark = i32::MAX`, then `ax = i32::MAX` (saturated), and
+/// `base.add(i32::MAX as usize)` is pointer arithmetic that exceeds the valid
+/// allocation range — undefined behaviour in Rust.
+///
+/// We therefore clamp `ax` to a sane maximum. Perl's maximum stack depth is
+/// far below 64k arguments; 4096 is generous.
 unsafe fn xsub_args() -> (*mut *mut SV, i32, i32) {
-    // sp = current stack pointer (top of arg list)
-    let sp = PL_stack_sp;
-    // The mark is at PL_markstack_ptr[0]; it is an index into PL_stack_base.
     let mark = *PL_markstack_ptr;
-    // ax = index of first argument relative to PL_stack_base
-    let ax = mark + 1;
-    // items = number of arguments
-    let items = (sp as isize - PL_stack_base.add(ax as usize) as isize)
-        / (std::mem::size_of::<*mut SV>() as isize)
-        + 1;
-    (sp, ax, items as i32)
+    // Guard against pathological mark values with saturating add.
+    let ax = mark.saturating_add(1);
+    let base = PL_stack_base;
+    let sp = PL_stack_sp;
+
+    // Guard: if ax is unreasonably large, Perl's stack is corrupted.
+    // Perl's maximum stack depth is far below 64k arguments; 4096 is generous.
+    const MAX_SANE_AX: i32 = 4096;
+    if ax > MAX_SANE_AX || ax < 0 {
+        // Stack is corrupted; return 0 items so each XSUB's arity check fires.
+        return (base, 0, 0);
+    }
+
+    // Compute items with overflow protection: only subtract if sp >= base_ax.
+    let base_ax = base.add(ax as usize);
+    let items = if sp >= base_ax {
+        ((sp as usize - base_ax as usize) / std::mem::size_of::<*mut SV>()) as i32 + 1
+    } else {
+        0
+    };
+    (base, ax, items)
 }
 
 /// Return n SV* results from an XSUB.
@@ -135,24 +177,22 @@ unsafe fn xsub_return(n: i32, ax: i32) {
 ///
 /// Dereferences an SV* holding an array reference to get the AV*,
 /// then converts the AV to Vec<f64>.
-unsafe fn arg_poly(base: *mut *mut SV, ax: i32, n: i32) -> Vec<f64> {
+///
+/// Returns `None` if the SV is null or not a reference. Callers must
+/// call `die()` with a helpful message when `None` is returned.
+unsafe fn arg_poly(base: *mut *mut SV, ax: i32, n: i32) -> Option<Vec<f64>> {
     let sv = *base.add((ax + n) as usize);
-    // Dereference the SV: get the AV* from an RV (reference to array).
-    // In Perl's C API, SvRV(sv) gives the referent of a reference SV.
-    // We use sv_2iv to get the integer representation which IS the pointer.
-    // Actually, the correct way: cast via Perl internals. We'll use the
-    // fact that sv_2iv on an RV gives the address of the referent.
-    // Better: use a direct cast approach via the AV pointer.
-    let av = SvRV(sv);
-    match av_to_f64_vec(av as *mut AV) {
-        Some(v) => v,
-        None => die("polynomial argument must be an array reference of numbers"),
+    if sv.is_null() {
+        return None;
     }
-}
-
-/// Declare SvRV — not in perl-bridge, needed to dereference array refs.
-extern "C" {
-    fn SvRV(sv: *mut SV) -> *mut SV;
+    // SvROK checks that the SV is actually a reference before calling SvRV.
+    // Calling SvRV on a non-reference SV is undefined behaviour and can
+    // segfault or corrupt memory.
+    if SvROK(sv) == 0 {
+        return None; // not a reference — caller handles via die()
+    }
+    let av = SvRV(sv);
+    av_to_f64_vec(av as *mut AV)
 }
 
 /// Place an SV* return value at stack position n.
@@ -183,80 +223,406 @@ unsafe fn poly_to_sv(values: &[f64]) -> *mut SV {
 // Each XSUB reads its arguments off Perl's stack, calls Rust, and puts the
 // result(s) back. The pattern:
 //
-//   1. let (sp, ax, items) = xsub_args();
-//   2. Read arg n as: *PL_stack_base.add((ax + n) as usize)
-//   3. Compute result.
-//   4. Place result SVs starting at PL_stack_base[ax].
-//   5. Call xsub_return(n_results, ax).
+//   1. Wrap everything in catch_unwind to prevent Rust panics from unwinding
+//      across the FFI boundary into Perl (undefined behaviour).
+//   2. Validate argument count before reading from the stack.
+//   3. Validate argument types (SvROK check via arg_poly).
+//   4. Compute result.
+//   5. Place result SVs starting at PL_stack_base[ax].
+//   6. Call xsub_return(n_results, ax).
+//
+// Note: `die()` calls Perl's `croak()` which uses C `longjmp` — it never
+// returns. The catch_unwind result only matters to distinguish "returned
+// normally" vs "panicked".
 
-unsafe extern "C" fn xs_normalize(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    let poly = arg_poly(base, ax, 0);
-    let result = polynomial::normalize(&poly);
-    set_return(base, ax, 0, poly_to_sv(&result));
-    xsub_return(1, ax);
+extern "C" fn xs_normalize(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 1 {
+                die("xs_normalize: expected 1 argument");
+                return;
+            }
+            let poly = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_normalize: argument must be an array reference");
+                    return;
+                }
+            };
+            let result = polynomial::normalize(&poly);
+            set_return(base, ax, 0, poly_to_sv(&result));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_degree(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    let poly = arg_poly(base, ax, 0);
-    let d = polynomial::degree(&poly) as IV;
-    set_return(base, ax, 0, newSViv(d));
-    xsub_return(1, ax);
+extern "C" fn xs_degree(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 1 {
+                die("xs_degree: expected 1 argument");
+                return;
+            }
+            let poly = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_degree: argument must be an array reference");
+                    return;
+                }
+            };
+            let d = polynomial::degree(&poly) as IV;
+            set_return(base, ax, 0, newSViv(d));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_zero(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    set_return(base, ax, 0, poly_to_sv(&polynomial::zero()));
-    xsub_return(1, ax);
+extern "C" fn xs_zero(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, _items) = xsub_args();
+            // xs_zero takes no arguments; items may be 0 or more (extras ignored).
+            set_return(base, ax, 0, poly_to_sv(&polynomial::zero()));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_one(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    set_return(base, ax, 0, poly_to_sv(&polynomial::one()));
-    xsub_return(1, ax);
+extern "C" fn xs_one(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, _items) = xsub_args();
+            // xs_one takes no arguments; items may be 0 or more (extras ignored).
+            set_return(base, ax, 0, poly_to_sv(&polynomial::one()));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_add(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    let a = arg_poly(base, ax, 0);
-    let b = arg_poly(base, ax, 1);
-    set_return(base, ax, 0, poly_to_sv(&polynomial::add(&a, &b)));
-    xsub_return(1, ax);
+extern "C" fn xs_add(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_add: expected 2 arguments");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_add: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_add: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            set_return(base, ax, 0, poly_to_sv(&polynomial::add(&a, &b)));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_subtract(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    let a = arg_poly(base, ax, 0);
-    let b = arg_poly(base, ax, 1);
-    set_return(base, ax, 0, poly_to_sv(&polynomial::subtract(&a, &b)));
-    xsub_return(1, ax);
+extern "C" fn xs_subtract(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_subtract: expected 2 arguments");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_subtract: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_subtract: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            set_return(base, ax, 0, poly_to_sv(&polynomial::subtract(&a, &b)));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_multiply(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    let a = arg_poly(base, ax, 0);
-    let b = arg_poly(base, ax, 1);
-    set_return(base, ax, 0, poly_to_sv(&polynomial::multiply(&a, &b)));
-    xsub_return(1, ax);
+extern "C" fn xs_multiply(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_multiply: expected 2 arguments");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_multiply: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_multiply: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            set_return(base, ax, 0, poly_to_sv(&polynomial::multiply(&a, &b)));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
-unsafe extern "C" fn xs_evaluate(_cv: *mut CV) {
-    let (_, ax, _items) = xsub_args();
-    let base = PL_stack_base;
-    let poly = arg_poly(base, ax, 0);
-    let x_sv = *base.add((ax + 1) as usize);
-    let x = sv_2nv(x_sv);
-    let result = polynomial::evaluate(&poly, x);
-    set_return(base, ax, 0, f64_to_sv(result));
-    xsub_return(1, ax);
+extern "C" fn xs_evaluate(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_evaluate: expected 2 arguments (poly, x)");
+                return;
+            }
+            let poly = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_evaluate: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let x_sv = *base.add((ax + 1) as usize);
+            let x = sv_2nv(x_sv);
+            let result = polynomial::evaluate(&poly, x);
+            set_return(base, ax, 0, f64_to_sv(result));
+            xsub_return(1, ax);
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
+}
+
+// ---------------------------------------------------------------------------
+// av_make — build an AV from a C array of SV*
+// ---------------------------------------------------------------------------
+//
+// `av_make(size, strp)` allocates a new AV (Perl array) of `size` elements,
+// copying the SV* pointers from `strp`. It increments refcounts as needed.
+// This lets us return an arrayref-of-arrayrefs without `av_store`.
+
+extern "C" {
+    fn av_make(size: i32, strp: *mut *mut SV) -> *mut AV;
+}
+
+// ---------------------------------------------------------------------------
+// Additional XSUBs: divmod_poly, divide, modulo, gcd
+// ---------------------------------------------------------------------------
+
+/// xs_divmod_poly(dividend_ref, divisor_ref) → arrayref [ quot_ref, rem_ref ]
+///
+/// Returns a reference to a 2-element Perl array whose first element is a
+/// reference to the quotient polynomial and whose second element is a
+/// reference to the remainder polynomial.
+///
+/// Returning a single arrayref (rather than two separate return values)
+/// is the safest approach for XSUBs: Perl pre-allocates stack space for
+/// the declared return count, and writing two values when the caller expects
+/// one can overwrite adjacent stack slots.
+extern "C" fn xs_divmod_poly(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_divmod_poly: expected 2 arguments (dividend, divisor)");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_divmod_poly: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_divmod_poly: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            // Catch division-by-zero panics from the Rust library.
+            match std::panic::catch_unwind(|| polynomial::divmod(&a, &b)) {
+                Ok((q, r)) => {
+                    let quot_sv = poly_to_sv(&q);
+                    let rem_sv = poly_to_sv(&r);
+                    // Build an AV of [quot_sv, rem_sv] then wrap in an RV.
+                    // av_make copies the pointers and increments refcounts.
+                    let mut items_arr: [*mut SV; 2] = [quot_sv, rem_sv];
+                    let outer_av = av_make(2, items_arr.as_mut_ptr());
+                    let outer_sv = newRV_noinc(outer_av as *mut SV);
+                    // We own quot_sv and rem_sv; av_make incremented their
+                    // refcounts, so we release our initial references.
+                    SvREFCNT_dec(quot_sv);
+                    SvREFCNT_dec(rem_sv);
+                    set_return(base, ax, 0, outer_sv);
+                    xsub_return(1, ax);
+                }
+                Err(_) => die("xs_divmod_poly: divisor is the zero polynomial"),
+            }
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
+}
+
+/// xs_divide(dividend_ref, divisor_ref) → quotient_ref
+///
+/// Performs polynomial long division and returns only the quotient.
+extern "C" fn xs_divide(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_divide: expected 2 arguments (dividend, divisor)");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_divide: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_divide: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            match std::panic::catch_unwind(|| polynomial::divide(&a, &b)) {
+                Ok(result) => {
+                    set_return(base, ax, 0, poly_to_sv(&result));
+                    xsub_return(1, ax);
+                }
+                Err(_) => die("xs_divide: divisor is the zero polynomial"),
+            }
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
+}
+
+/// xs_modulo(dividend_ref, divisor_ref) → remainder_ref
+///
+/// Performs polynomial long division and returns only the remainder.
+extern "C" fn xs_modulo(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_modulo: expected 2 arguments (dividend, divisor)");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_modulo: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_modulo: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            match std::panic::catch_unwind(|| polynomial::modulo(&a, &b)) {
+                Ok(result) => {
+                    set_return(base, ax, 0, poly_to_sv(&result));
+                    xsub_return(1, ax);
+                }
+                Err(_) => die("xs_modulo: divisor is the zero polynomial"),
+            }
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
+}
+
+/// xs_gcd(a_ref, b_ref) → gcd_ref
+///
+/// Computes the greatest common divisor of two polynomials using the
+/// Euclidean algorithm over polynomial rings.
+extern "C" fn xs_gcd(_cv: *mut CV) {
+    let result = std::panic::catch_unwind(|| {
+        unsafe {
+            let (base, ax, items) = xsub_args();
+            if items < 2 {
+                die("xs_gcd: expected 2 arguments");
+                return;
+            }
+            let a = match arg_poly(base, ax, 0) {
+                Some(p) => p,
+                None => {
+                    die("xs_gcd: argument 1 must be an array reference");
+                    return;
+                }
+            };
+            let b = match arg_poly(base, ax, 1) {
+                Some(p) => p,
+                None => {
+                    die("xs_gcd: argument 2 must be an array reference");
+                    return;
+                }
+            };
+            match std::panic::catch_unwind(|| polynomial::gcd(&a, &b)) {
+                Ok(result) => {
+                    set_return(base, ax, 0, poly_to_sv(&result));
+                    xsub_return(1, ax);
+                }
+                Err(_) => die("xs_gcd: computation panicked unexpectedly"),
+            }
+        }
+    });
+    if result.is_err() {
+        unsafe { die("polynomial operation panicked unexpectedly") };
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -294,4 +660,12 @@ pub unsafe extern "C" fn boot_CodingAdventures__PolynomialNative(_cv: *mut CV) {
           xs_multiply, file);
     newXS(b"CodingAdventures::PolynomialNative::evaluate\0".as_ptr() as *const c_char,
           xs_evaluate, file);
+    newXS(b"CodingAdventures::PolynomialNative::divmod_poly\0".as_ptr() as *const c_char,
+          xs_divmod_poly, file);
+    newXS(b"CodingAdventures::PolynomialNative::divide\0".as_ptr() as *const c_char,
+          xs_divide, file);
+    newXS(b"CodingAdventures::PolynomialNative::modulo\0".as_ptr() as *const c_char,
+          xs_modulo, file);
+    newXS(b"CodingAdventures::PolynomialNative::gcd\0".as_ptr() as *const c_char,
+          xs_gcd, file);
 }

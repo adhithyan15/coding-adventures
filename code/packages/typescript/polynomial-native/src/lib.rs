@@ -73,18 +73,31 @@ extern "C" {
 ///
 /// N-API uses f64 (IEEE 754 double) for all JS numbers internally.
 /// `napi_get_value_double` extracts this representation.
-fn f64_from_js(env: napi_env, val: napi_value) -> f64 {
+///
+/// Returns None and throws a JS exception if the value is not a JS number
+/// (e.g., a string or object was passed where a number was expected).
+fn f64_from_js(env: napi_env, val: napi_value) -> Option<f64> {
     let mut result: f64 = 0.0;
-    unsafe { napi_get_value_double(env, val, &mut result) };
-    result
+    let status = unsafe { napi_get_value_double(env, val, &mut result) };
+    if status != 0 {
+        // napi_ok == 0; any other status means the value is not a number.
+        throw_error(env, "expected a number");
+        return None;
+    }
+    Some(result)
 }
 
 /// Convert an f64 to a JS number value.
 ///
 /// `napi_create_double` creates a JS Number from an f64.
+/// Returns undefined and throws a JS exception if N-API fails to create the value.
 fn f64_to_js(env: napi_env, val: f64) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    unsafe { napi_create_double(env, val, &mut result) };
+    let status = unsafe { napi_create_double(env, val, &mut result) };
+    if status != 0 {
+        throw_error(env, "failed to create JS number");
+        return undefined(env);
+    }
     result
 }
 
@@ -102,22 +115,23 @@ fn array_with_length(env: napi_env, length: usize) -> napi_value {
 
 /// Convert a JS array of numbers to a Rust Vec<f64>.
 ///
-/// Each element is extracted as a double. If the array is empty (or the
-/// argument is not an array), returns an empty Vec.
+/// Each element is extracted as a double. Returns None (with a pending JS
+/// exception) if any element fails to convert (e.g., a non-number value in
+/// the array). Returns Some(empty Vec) for an empty array.
 ///
 /// ## Memory layout
 ///
 /// JS arrays store values as napi_value pointers (opaque handles). We
 /// loop over indices 0..len, call `napi_get_element` for each, then
 /// `napi_get_value_double` to extract the f64 value.
-fn vec_f64_from_js(env: napi_env, arr: napi_value) -> Vec<f64> {
+fn vec_f64_from_js(env: napi_env, arr: napi_value) -> Option<Vec<f64>> {
     let len = array_len(env, arr) as usize;
     let mut result = Vec::with_capacity(len);
     for i in 0..len {
         let elem = array_get(env, arr, i as u32);
-        result.push(f64_from_js(env, elem));
+        result.push(f64_from_js(env, elem)?);
     }
-    result
+    Some(result)
 }
 
 /// Convert a Rust Vec<f64> to a JS array of numbers.
@@ -182,7 +196,7 @@ unsafe extern "C" fn poly_normalize(env: napi_env, info: napi_callback_info) -> 
         throw_error(env, "normalize requires a poly argument");
         return undefined(env);
     }
-    let poly = vec_f64_from_js(env, args[0]);
+    let poly = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
     let result = polynomial::normalize(&poly);
     vec_f64_to_js(env, &result)
 }
@@ -200,7 +214,7 @@ unsafe extern "C" fn poly_degree(env: napi_env, info: napi_callback_info) -> nap
         throw_error(env, "degree requires a poly argument");
         return undefined(env);
     }
-    let poly = vec_f64_from_js(env, args[0]);
+    let poly = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
     let deg = polynomial::degree(&poly);
     usize_to_js(env, deg)
 }
@@ -241,8 +255,8 @@ unsafe extern "C" fn poly_add(env: napi_env, info: napi_callback_info) -> napi_v
         throw_error(env, "add requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     let result = polynomial::add(&a, &b);
     vec_f64_to_js(env, &result)
 }
@@ -259,8 +273,8 @@ unsafe extern "C" fn poly_subtract(env: napi_env, info: napi_callback_info) -> n
         throw_error(env, "subtract requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     let result = polynomial::subtract(&a, &b);
     vec_f64_to_js(env, &result)
 }
@@ -277,8 +291,8 @@ unsafe extern "C" fn poly_multiply(env: napi_env, info: napi_callback_info) -> n
         throw_error(env, "multiply requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     let result = polynomial::multiply(&a, &b);
     vec_f64_to_js(env, &result)
 }
@@ -305,8 +319,8 @@ unsafe extern "C" fn poly_divmod(env: napi_env, info: napi_callback_info) -> nap
         throw_error(env, "divmodPoly requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
 
     // polynomial::divmod panics on zero divisor -- catch and re-throw as JS error.
     let pair = run_or_throw(env, move || polynomial::divmod(&a, &b));
@@ -337,8 +351,8 @@ unsafe extern "C" fn poly_divide(env: napi_env, info: napi_callback_info) -> nap
         throw_error(env, "divide requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     match run_or_throw(env, move || polynomial::divide(&a, &b)) {
         None => undefined(env),
         Some(result) => vec_f64_to_js(env, &result),
@@ -359,8 +373,8 @@ unsafe extern "C" fn poly_modulo(env: napi_env, info: napi_callback_info) -> nap
         throw_error(env, "modulo requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     match run_or_throw(env, move || polynomial::modulo(&a, &b)) {
         None => undefined(env),
         Some(result) => vec_f64_to_js(env, &result),
@@ -379,8 +393,8 @@ unsafe extern "C" fn poly_evaluate(env: napi_env, info: napi_callback_info) -> n
         throw_error(env, "evaluate requires (poly, x) arguments");
         return undefined(env);
     }
-    let poly = vec_f64_from_js(env, args[0]);
-    let x = f64_from_js(env, args[1]);
+    let poly = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let x = match f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     let result = polynomial::evaluate(&poly, x);
     f64_to_js(env, result)
 }
@@ -399,8 +413,8 @@ unsafe extern "C" fn poly_gcd(env: napi_env, info: napi_callback_info) -> napi_v
         throw_error(env, "gcd requires two polynomial arguments");
         return undefined(env);
     }
-    let a = vec_f64_from_js(env, args[0]);
-    let b = vec_f64_from_js(env, args[1]);
+    let a = match vec_f64_from_js(env, args[0]) { Some(v) => v, None => return undefined(env) };
+    let b = match vec_f64_from_js(env, args[1]) { Some(v) => v, None => return undefined(env) };
     let result = polynomial::gcd(&a, &b);
     vec_f64_to_js(env, &result)
 }

@@ -66,7 +66,7 @@ use std::panic;
 /// The caller must guarantee `ptr` is non-null and points to `len`
 /// initialised `f64` values that are valid for the duration of this call.
 #[inline]
-unsafe fn slice(ptr: *const f64, len: usize) -> &'static [f64] {
+unsafe fn slice<'a>(ptr: *const f64, len: usize) -> &'a [f64] {
     if ptr.is_null() || len == 0 {
         &[]
     } else {
@@ -117,9 +117,15 @@ pub unsafe extern "C" fn poly_c_normalize(
     out: *mut f64,
     out_cap: usize,
 ) -> usize {
-    let poly = slice(coeffs, len);
-    let result = polynomial::normalize(poly);
-    write_out(result, out, out_cap)
+    // Catch any Rust panics to avoid unwinding through C frames (UB).
+    match panic::catch_unwind(|| {
+        let poly = unsafe { slice(coeffs, len) };
+        let result = polynomial::normalize(poly);
+        unsafe { write_out(result, out, out_cap) }
+    }) {
+        Ok(n) => n,
+        Err(_) => 0,
+    }
 }
 
 /// Return the degree of a polynomial.
@@ -127,26 +133,43 @@ pub unsafe extern "C" fn poly_c_normalize(
 /// The degree is the index of the highest non-zero coefficient.
 /// The zero polynomial returns 0 by convention.
 ///
+/// Returns `usize::MAX` as a sentinel on panic (which should never happen in
+/// practice, but panicking across a C ABI boundary is undefined behaviour).
+///
 /// # Safety
 ///
 /// See module-level safety contract.
 #[no_mangle]
 pub unsafe extern "C" fn poly_c_degree(coeffs: *const f64, len: usize) -> usize {
-    let poly = slice(coeffs, len);
-    polynomial::degree(poly)
+    // Clone the slice data so the closure is 'static (no borrow crossing the
+    // catch_unwind boundary).
+    let owned: Vec<f64> = slice(coeffs, len).to_vec();
+    match panic::catch_unwind(move || polynomial::degree(&owned)) {
+        Ok(d) => d,
+        Err(_) => usize::MAX, // sentinel: degree cannot be usize::MAX in practice
+    }
 }
 
 /// Evaluate a polynomial at `x` using Horner's method.
 ///
 /// The zero polynomial evaluates to 0.0.
 ///
+/// Returns `f64::NAN` as a conventional error sentinel on panic (which should
+/// never happen in practice, but panicking across a C ABI boundary is
+/// undefined behaviour).
+///
 /// # Safety
 ///
 /// See module-level safety contract.
 #[no_mangle]
 pub unsafe extern "C" fn poly_c_evaluate(coeffs: *const f64, len: usize, x: f64) -> f64 {
-    let poly = slice(coeffs, len);
-    polynomial::evaluate(poly, x)
+    // Clone the slice data so the closure is 'static (no borrow crossing the
+    // catch_unwind boundary).
+    let owned: Vec<f64> = slice(coeffs, len).to_vec();
+    match panic::catch_unwind(move || polynomial::evaluate(&owned, x)) {
+        Ok(v) => v,
+        Err(_) => f64::NAN, // NaN is the conventional floating-point error sentinel
+    }
 }
 
 // =============================================================================
@@ -171,10 +194,16 @@ pub unsafe extern "C" fn poly_c_add(
     out: *mut f64,
     out_cap: usize,
 ) -> usize {
-    let sa = slice(a, a_len);
-    let sb = slice(b, b_len);
-    let result = polynomial::add(sa, sb);
-    write_out(result, out, out_cap)
+    // Catch any Rust panics to avoid unwinding through C frames (UB).
+    match panic::catch_unwind(|| {
+        let sa = unsafe { slice(a, a_len) };
+        let sb = unsafe { slice(b, b_len) };
+        let result = polynomial::add(sa, sb);
+        unsafe { write_out(result, out, out_cap) }
+    }) {
+        Ok(n) => n,
+        Err(_) => 0,
+    }
 }
 
 /// Subtract polynomial `b` from polynomial `a` term-by-term.
@@ -195,10 +224,16 @@ pub unsafe extern "C" fn poly_c_subtract(
     out: *mut f64,
     out_cap: usize,
 ) -> usize {
-    let sa = slice(a, a_len);
-    let sb = slice(b, b_len);
-    let result = polynomial::subtract(sa, sb);
-    write_out(result, out, out_cap)
+    // Catch any Rust panics to avoid unwinding through C frames (UB).
+    match panic::catch_unwind(|| {
+        let sa = unsafe { slice(a, a_len) };
+        let sb = unsafe { slice(b, b_len) };
+        let result = polynomial::subtract(sa, sb);
+        unsafe { write_out(result, out, out_cap) }
+    }) {
+        Ok(n) => n,
+        Err(_) => 0,
+    }
 }
 
 // =============================================================================
@@ -223,10 +258,16 @@ pub unsafe extern "C" fn poly_c_multiply(
     out: *mut f64,
     out_cap: usize,
 ) -> usize {
-    let sa = slice(a, a_len);
-    let sb = slice(b, b_len);
-    let result = polynomial::multiply(sa, sb);
-    write_out(result, out, out_cap)
+    // Catch any Rust panics to avoid unwinding through C frames (UB).
+    match panic::catch_unwind(|| {
+        let sa = unsafe { slice(a, a_len) };
+        let sb = unsafe { slice(b, b_len) };
+        let result = polynomial::multiply(sa, sb);
+        unsafe { write_out(result, out, out_cap) }
+    }) {
+        Ok(n) => n,
+        Err(_) => 0,
+    }
 }
 
 // =============================================================================
@@ -273,13 +314,16 @@ pub unsafe extern "C" fn poly_c_divmod(
     rem_cap: usize,
     rem_len_out: *mut usize,
 ) -> c_int {
-    let sd = slice(dividend, dividend_len);
-    let sb = slice(divisor, divisor_len);
+    // Clone slice data into owned Vecs before entering catch_unwind.
+    // This eliminates the borrow-in-closure pattern: the move closure owns
+    // the data, so there is no lifetime or aliasing ambiguity.
+    let sd_owned: Vec<f64> = slice(dividend, dividend_len).to_vec();
+    let sb_owned: Vec<f64> = slice(divisor, divisor_len).to_vec();
 
     // Catch any Rust panics (e.g., division by zero in the underlying crate)
     // and translate them to an error code instead of unwinding through C frames.
     // Unwinding through C frames is undefined behaviour in Rust.
-    let result = panic::catch_unwind(|| polynomial::divmod(sd, sb));
+    let result = panic::catch_unwind(move || polynomial::divmod(&sd_owned, &sb_owned));
 
     match result {
         Ok((quot, rem)) => {
@@ -374,8 +418,14 @@ pub unsafe extern "C" fn poly_c_gcd(
     out: *mut f64,
     out_cap: usize,
 ) -> usize {
-    let sa = slice(a, a_len);
-    let sb = slice(b, b_len);
-    let result = polynomial::gcd(sa, sb);
-    write_out(result, out, out_cap)
+    // Catch any Rust panics to avoid unwinding through C frames (UB).
+    match panic::catch_unwind(|| {
+        let sa = unsafe { slice(a, a_len) };
+        let sb = unsafe { slice(b, b_len) };
+        let result = polynomial::gcd(sa, sb);
+        unsafe { write_out(result, out, out_cap) }
+    }) {
+        Ok(n) => n,
+        Err(_) => 0,
+    }
 }

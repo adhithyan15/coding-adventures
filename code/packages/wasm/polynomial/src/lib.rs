@@ -69,9 +69,10 @@
 //!
 //! The host is responsible for calling `poly_dealloc` on the quotient and
 //! remainder pointers after reading them. The next call to `poly_divmod` will
-//! overwrite the statics (without freeing the old pointers if the host forgot).
+//! free the old cached pointers automatically before overwriting (Fix 4).
 
 use std::alloc::{alloc, dealloc, Layout};
+use std::sync::atomic::{AtomicBool, AtomicPtr, AtomicU32, Ordering};
 
 // =============================================================================
 // Error flag
@@ -79,9 +80,13 @@ use std::alloc::{alloc, dealloc, Layout};
 
 /// Set to `true` when a call panicked (e.g., division by zero).
 ///
-/// We use a mutable static rather than a thread-local because WASM is
-/// single-threaded by default (no atomics needed, no Send/Sync concerns).
-static mut LAST_ERROR: bool = false;
+/// We use an `AtomicBool` rather than `static mut bool` to eliminate the
+/// undefined behaviour that `static mut` causes when read and written from
+/// multiple contexts (even though WASM is single-threaded today, the compiler
+/// does not know that and may misoptimise around `static mut` accesses).
+/// Using `Ordering::Relaxed` is safe here: WASM is single-threaded so there
+/// are no concurrent stores from another thread that could race with our load.
+static LAST_ERROR: AtomicBool = AtomicBool::new(false);
 
 /// Returns 1 if the most recent operation set the error flag, 0 otherwise.
 ///
@@ -98,8 +103,8 @@ static mut LAST_ERROR: bool = false;
 /// }
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn poly_had_error() -> u32 {
-    LAST_ERROR as u32
+pub extern "C" fn poly_had_error() -> u32 {
+    LAST_ERROR.load(Ordering::Relaxed) as u32
 }
 
 // =============================================================================
@@ -111,28 +116,47 @@ pub unsafe extern "C" fn poly_had_error() -> u32 {
 /// Returns a pointer to the first `f64`. The host can write coefficients into
 /// this region immediately after this call.
 ///
+/// For `len == 0`, returns a non-null dangling pointer. Callers MUST NOT
+/// dereference this pointer; it is only a sentinel to distinguish "valid empty
+/// allocation" from "allocation failed" (null).
+///
 /// ## Why 8-byte alignment?
 ///
 /// An `f64` is 8 bytes. The Rust allocator returns memory aligned to 8 bytes
 /// for `f64` arrays, which is required for correct WASM memory access.
 ///
-/// ## Panics / traps
+/// ## On allocation failure
 ///
-/// Traps if `len == 0` (Layout::array requires non-zero size) or if the
-/// allocator returns a null pointer (out of memory).
+/// Sets the error flag and returns null. The caller should check
+/// `poly_had_error()` if a null is returned for a non-zero `len`.
 #[no_mangle]
 pub unsafe extern "C" fn poly_alloc(len: u32) -> *mut f64 {
-    // Build the allocation layout: an array of `len` f64s.
-    // Layout::array panics on overflow, which would trap the WASM module.
-    let layout = Layout::array::<f64>(len as usize).unwrap();
-    // `alloc` returns a raw byte pointer; cast to *mut f64 for caller convenience.
-    alloc(layout) as *mut f64
+    if len == 0 {
+        // Return a non-null dangling pointer for zero-length allocations.
+        // Callers must not dereference this pointer.
+        return std::ptr::NonNull::<f64>::dangling().as_ptr();
+    }
+    let layout = match Layout::array::<f64>(len as usize) {
+        Ok(l) => l,
+        Err(_) => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let ptr = alloc(layout) as *mut f64;
+    if ptr.is_null() {
+        LAST_ERROR.store(true, Ordering::Relaxed);
+    }
+    ptr
 }
 
 /// Deallocate a slice of `len` `f64` values previously returned by this module.
 ///
-/// The host MUST call this for every pointer returned by a polynomial operation,
-/// otherwise the module's heap will leak and eventually exhaust WASM linear memory.
+/// The host MUST call this for every non-empty pointer returned by a polynomial
+/// operation, otherwise the module's heap will leak and eventually exhaust WASM
+/// linear memory.
+///
+/// For `len == 0` or a null `ptr`, this is a no-op (safe to call).
 ///
 /// ## Safety
 ///
@@ -142,7 +166,16 @@ pub unsafe extern "C" fn poly_alloc(len: u32) -> *mut f64 {
 /// - Must not be called twice on the same pointer (double-free).
 #[no_mangle]
 pub unsafe extern "C" fn poly_dealloc(ptr: *mut f64, len: u32) {
-    let layout = Layout::array::<f64>(len as usize).unwrap();
+    if len == 0 {
+        return; // dangling pointer from a zero-length alloc — nothing to free
+    }
+    if ptr.is_null() {
+        return;
+    }
+    let layout = match Layout::array::<f64>(len as usize) {
+        Ok(l) => l,
+        Err(_) => return,
+    };
     dealloc(ptr as *mut u8, layout);
 }
 
@@ -154,7 +187,10 @@ pub unsafe extern "C" fn poly_dealloc(ptr: *mut f64, len: u32) {
 ///
 /// After any function that returns `*mut f64`, call this to learn how many
 /// coefficients are in the result before reading them.
-static mut LAST_RESULT_LEN: u32 = 0;
+///
+/// Using `AtomicU32` instead of `static mut u32` avoids undefined behaviour
+/// from mutable statics (see comment on `LAST_ERROR` above).
+static LAST_RESULT_LEN: AtomicU32 = AtomicU32::new(0);
 
 /// Returns the number of `f64` elements in the most recently returned array.
 ///
@@ -170,8 +206,8 @@ static mut LAST_RESULT_LEN: u32 = 0;
 /// poly_dealloc(ptr, len);
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn poly_last_result_len() -> u32 {
-    LAST_RESULT_LEN
+pub extern "C" fn poly_last_result_len() -> u32 {
+    LAST_RESULT_LEN.load(Ordering::Relaxed)
 }
 
 // =============================================================================
@@ -184,16 +220,56 @@ pub unsafe extern "C" fn poly_last_result_len() -> u32 {
 /// If `v` is empty (the zero polynomial), returns null and sets len=0.
 /// The caller (host) should treat a null pointer as the zero polynomial.
 unsafe fn vec_to_wasm(v: Vec<f64>) -> *mut f64 {
-    LAST_RESULT_LEN = v.len() as u32;
+    // Fix 3: guard against vectors so large the length would overflow u32.
+    // In practice this cannot happen in WASM (4 GiB address space), but the
+    // check makes the cast provably safe and the error path explicit.
+    if v.len() > u32::MAX as usize {
+        LAST_ERROR.store(true, Ordering::Relaxed);
+        LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+        return std::ptr::null_mut();
+    }
+    LAST_RESULT_LEN.store(v.len() as u32, Ordering::Relaxed);
     if v.is_empty() {
         return std::ptr::null_mut();
     }
     // Allocate module-owned memory for the result.
     let ptr = poly_alloc(v.len() as u32);
+    if ptr.is_null() {
+        // poly_alloc already set LAST_ERROR; leave LAST_RESULT_LEN as set above.
+        return std::ptr::null_mut();
+    }
     // Copy coefficients from the temporary Vec into the allocated region.
     std::ptr::copy_nonoverlapping(v.as_ptr(), ptr, v.len());
     // `v` is dropped here; its heap storage is freed. The copy in `ptr` persists.
     ptr
+}
+
+/// Convert a raw pointer + length into a shared slice, with null and len==0 safety.
+///
+/// - If `len == 0`, returns an empty slice regardless of `ptr` (even if null).
+///   This is correct because `slice::from_raw_parts` with len=0 requires a
+///   non-null, aligned pointer, but empty polynomials are represented as null
+///   by this module's convention.
+/// - If `ptr` is null and `len > 0`, the caller passed an invalid pointer for a
+///   non-empty polynomial. Returns `None` so the caller can set the error flag
+///   and return early.
+/// - Otherwise delegates to `slice::from_raw_parts`, which is sound provided
+///   the caller supplied a valid, aligned, live pointer (as documented on every
+///   exported function).
+///
+/// # Safety
+///
+/// The caller must ensure that when `ptr` is non-null and `len > 0`, `ptr`
+/// points to at least `len` initialised, aligned `f64` values that remain live
+/// for the lifetime `'a`.
+unsafe fn as_slice<'a>(ptr: *const f64, len: u32) -> Option<&'a [f64]> {
+    if len == 0 {
+        return Some(&[]);
+    }
+    if ptr.is_null() {
+        return None;
+    }
+    Some(std::slice::from_raw_parts(ptr, len as usize))
 }
 
 // =============================================================================
@@ -201,13 +277,16 @@ unsafe fn vec_to_wasm(v: Vec<f64>) -> *mut f64 {
 // =============================================================================
 
 /// Cached quotient pointer from the most recent `poly_divmod` call.
-static mut DIVMOD_QUOTIENT_PTR: *mut f64 = std::ptr::null_mut();
+///
+/// Stored as an `AtomicPtr<f64>` to avoid the undefined behaviour of `static mut`.
+/// WASM is single-threaded, so `Ordering::Relaxed` loads and stores are correct.
+static DIVMOD_QUOTIENT_PTR: AtomicPtr<f64> = AtomicPtr::new(std::ptr::null_mut());
 /// Cached quotient length from the most recent `poly_divmod` call.
-static mut DIVMOD_QUOTIENT_LEN: u32 = 0;
+static DIVMOD_QUOTIENT_LEN: AtomicU32 = AtomicU32::new(0);
 /// Cached remainder pointer from the most recent `poly_divmod` call.
-static mut DIVMOD_REMAINDER_PTR: *mut f64 = std::ptr::null_mut();
+static DIVMOD_REMAINDER_PTR: AtomicPtr<f64> = AtomicPtr::new(std::ptr::null_mut());
 /// Cached remainder length from the most recent `poly_divmod` call.
-static mut DIVMOD_REMAINDER_LEN: u32 = 0;
+static DIVMOD_REMAINDER_LEN: AtomicU32 = AtomicU32::new(0);
 
 // =============================================================================
 // Exported polynomial operations
@@ -224,11 +303,19 @@ static mut DIVMOD_REMAINDER_LEN: u32 = 0;
 ///
 /// ## Returns
 /// Pointer to the normalized result. Use `poly_last_result_len()` for the length.
-/// Caller must free with `poly_dealloc`.
+/// Caller must free with `poly_dealloc`. Returns null and sets error on null input
+/// with non-zero len.
 #[no_mangle]
 pub unsafe extern "C" fn poly_normalize(ptr: *const f64, len: u32) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(ptr, len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(ptr, len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     let result = polynomial::normalize(a);
     vec_to_wasm(result)
 }
@@ -244,10 +331,17 @@ pub unsafe extern "C" fn poly_normalize(ptr: *const f64, len: u32) -> *mut f64 {
 ///
 /// ## Returns
 /// Degree as a `u32`. No heap allocation; no need to call `poly_dealloc`.
+/// Returns 0 and sets error flag if ptr is null with non-zero len.
 #[no_mangle]
 pub unsafe extern "C" fn poly_degree(ptr: *const f64, len: u32) -> u32 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(ptr, len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(ptr, len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            return 0;
+        }
+    };
     polynomial::degree(a) as u32
 }
 
@@ -262,6 +356,7 @@ pub unsafe extern "C" fn poly_degree(ptr: *const f64, len: u32) -> u32 {
 ///
 /// ## Returns
 /// Pointer to result. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
+/// Returns null and sets error if either pointer is null with non-zero len.
 #[no_mangle]
 pub unsafe extern "C" fn poly_add(
     a_ptr: *const f64,
@@ -269,9 +364,23 @@ pub unsafe extern "C" fn poly_add(
     b_ptr: *const f64,
     b_len: u32,
 ) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(a_ptr, a_len as usize);
-    let b = std::slice::from_raw_parts(b_ptr, b_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(a_ptr, a_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let b = match as_slice(b_ptr, b_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     let result = polynomial::add(a, b);
     vec_to_wasm(result)
 }
@@ -287,6 +396,7 @@ pub unsafe extern "C" fn poly_add(
 ///
 /// ## Returns
 /// Pointer to result. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
+/// Returns null and sets error if either pointer is null with non-zero len.
 #[no_mangle]
 pub unsafe extern "C" fn poly_subtract(
     a_ptr: *const f64,
@@ -294,9 +404,23 @@ pub unsafe extern "C" fn poly_subtract(
     b_ptr: *const f64,
     b_len: u32,
 ) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(a_ptr, a_len as usize);
-    let b = std::slice::from_raw_parts(b_ptr, b_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(a_ptr, a_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let b = match as_slice(b_ptr, b_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     let result = polynomial::subtract(a, b);
     vec_to_wasm(result)
 }
@@ -314,6 +438,7 @@ pub unsafe extern "C" fn poly_subtract(
 ///
 /// ## Returns
 /// Pointer to result. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
+/// Returns null and sets error if either pointer is null with non-zero len.
 #[no_mangle]
 pub unsafe extern "C" fn poly_multiply(
     a_ptr: *const f64,
@@ -321,9 +446,23 @@ pub unsafe extern "C" fn poly_multiply(
     b_ptr: *const f64,
     b_len: u32,
 ) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(a_ptr, a_len as usize);
-    let b = std::slice::from_raw_parts(b_ptr, b_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(a_ptr, a_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let b = match as_slice(b_ptr, b_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     let result = polynomial::multiply(a, b);
     vec_to_wasm(result)
 }
@@ -334,14 +473,15 @@ pub unsafe extern "C" fn poly_multiply(
 /// - `poly_divmod_quotient_ptr()` / `poly_divmod_quotient_len()`
 /// - `poly_divmod_remainder_ptr()` / `poly_divmod_remainder_len()`
 ///
-/// **Free both** with `poly_dealloc` after reading. If you call `poly_divmod`
-/// again before freeing, the old pointers are overwritten and the memory leaks.
+/// **Free both** with `poly_dealloc` after reading. The next call to
+/// `poly_divmod` will automatically free the previously cached pointers before
+/// overwriting them, so not freeing between calls does not leak memory.
 ///
 /// ## Parameters
 /// - `dividend_ptr`, `dividend_len` — the numerator polynomial
 /// - `divisor_ptr`, `divisor_len` — the denominator polynomial (must be non-zero)
 ///
-/// ## On error (divisor is zero polynomial)
+/// ## On error (divisor is zero polynomial, or null pointer with non-zero len)
 ///
 /// Sets `poly_had_error() = 1`. Both cached pointers are set to null, lengths to 0.
 #[no_mangle]
@@ -351,9 +491,38 @@ pub unsafe extern "C" fn poly_divmod(
     divisor_ptr: *const f64,
     divisor_len: u32,
 ) {
-    LAST_ERROR = false;
-    let dividend = std::slice::from_raw_parts(dividend_ptr, dividend_len as usize);
-    let divisor = std::slice::from_raw_parts(divisor_ptr, divisor_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+
+    // Free previous divmod results before overwriting (Fix 4: prevent memory leak).
+    let old_q_ptr = DIVMOD_QUOTIENT_PTR.load(Ordering::Relaxed);
+    let old_q_len = DIVMOD_QUOTIENT_LEN.load(Ordering::Relaxed);
+    if !old_q_ptr.is_null() && old_q_len > 0 {
+        poly_dealloc(old_q_ptr, old_q_len);
+    }
+    let old_r_ptr = DIVMOD_REMAINDER_PTR.load(Ordering::Relaxed);
+    let old_r_len = DIVMOD_REMAINDER_LEN.load(Ordering::Relaxed);
+    if !old_r_ptr.is_null() && old_r_len > 0 {
+        poly_dealloc(old_r_ptr, old_r_len);
+    }
+    DIVMOD_QUOTIENT_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+    DIVMOD_REMAINDER_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+    DIVMOD_QUOTIENT_LEN.store(0, Ordering::Relaxed);
+    DIVMOD_REMAINDER_LEN.store(0, Ordering::Relaxed);
+
+    let dividend = match as_slice(dividend_ptr, dividend_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            return;
+        }
+    };
+    let divisor = match as_slice(divisor_ptr, divisor_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            return;
+        }
+    };
 
     // Wrap the call in catch_unwind so a "division by zero" panic doesn't trap.
     let result = std::panic::catch_unwind(|| polynomial::divmod(dividend, divisor));
@@ -361,32 +530,56 @@ pub unsafe extern "C" fn poly_divmod(
     match result {
         Ok((quot, rem)) => {
             // Copy quotient into WASM-owned memory and cache the pointer+length.
-            DIVMOD_QUOTIENT_LEN = quot.len() as u32;
+            DIVMOD_QUOTIENT_LEN.store(quot.len() as u32, Ordering::Relaxed);
             if quot.is_empty() {
-                DIVMOD_QUOTIENT_PTR = std::ptr::null_mut();
+                DIVMOD_QUOTIENT_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
             } else {
                 let q_ptr = poly_alloc(quot.len() as u32);
+                // Fix 2: check for allocation failure before dereferencing.
+                if q_ptr.is_null() {
+                    LAST_ERROR.store(true, Ordering::Relaxed);
+                    DIVMOD_QUOTIENT_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+                    DIVMOD_QUOTIENT_LEN.store(0, Ordering::Relaxed);
+                    DIVMOD_REMAINDER_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+                    DIVMOD_REMAINDER_LEN.store(0, Ordering::Relaxed);
+                    return;
+                }
                 std::ptr::copy_nonoverlapping(quot.as_ptr(), q_ptr, quot.len());
-                DIVMOD_QUOTIENT_PTR = q_ptr;
+                DIVMOD_QUOTIENT_PTR.store(q_ptr, Ordering::Relaxed);
             }
 
             // Copy remainder into WASM-owned memory and cache.
-            DIVMOD_REMAINDER_LEN = rem.len() as u32;
+            DIVMOD_REMAINDER_LEN.store(rem.len() as u32, Ordering::Relaxed);
             if rem.is_empty() {
-                DIVMOD_REMAINDER_PTR = std::ptr::null_mut();
+                DIVMOD_REMAINDER_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
             } else {
                 let r_ptr = poly_alloc(rem.len() as u32);
+                // Fix 2: check for allocation failure before dereferencing.
+                if r_ptr.is_null() {
+                    LAST_ERROR.store(true, Ordering::Relaxed);
+                    // quotient was already stored successfully; free it to avoid a leak.
+                    let q_ptr = DIVMOD_QUOTIENT_PTR.load(Ordering::Relaxed);
+                    let q_len = DIVMOD_QUOTIENT_LEN.load(Ordering::Relaxed);
+                    if !q_ptr.is_null() && q_len > 0 {
+                        poly_dealloc(q_ptr, q_len);
+                    }
+                    DIVMOD_QUOTIENT_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+                    DIVMOD_QUOTIENT_LEN.store(0, Ordering::Relaxed);
+                    DIVMOD_REMAINDER_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+                    DIVMOD_REMAINDER_LEN.store(0, Ordering::Relaxed);
+                    return;
+                }
                 std::ptr::copy_nonoverlapping(rem.as_ptr(), r_ptr, rem.len());
-                DIVMOD_REMAINDER_PTR = r_ptr;
+                DIVMOD_REMAINDER_PTR.store(r_ptr, Ordering::Relaxed);
             }
         }
         Err(_) => {
             // The polynomial crate panicked (divisor was the zero polynomial).
-            LAST_ERROR = true;
-            DIVMOD_QUOTIENT_PTR = std::ptr::null_mut();
-            DIVMOD_QUOTIENT_LEN = 0;
-            DIVMOD_REMAINDER_PTR = std::ptr::null_mut();
-            DIVMOD_REMAINDER_LEN = 0;
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            DIVMOD_QUOTIENT_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+            DIVMOD_QUOTIENT_LEN.store(0, Ordering::Relaxed);
+            DIVMOD_REMAINDER_PTR.store(std::ptr::null_mut(), Ordering::Relaxed);
+            DIVMOD_REMAINDER_LEN.store(0, Ordering::Relaxed);
         }
     }
 }
@@ -395,30 +588,32 @@ pub unsafe extern "C" fn poly_divmod(
 ///
 /// Null if the divisor was zero or if the quotient is the zero polynomial.
 /// The host owns this memory and must call `poly_dealloc(ptr, len)` after use.
+/// Stored in an `AtomicPtr<f64>`; this accessor uses `Ordering::Relaxed`.
 #[no_mangle]
-pub unsafe extern "C" fn poly_divmod_quotient_ptr() -> *mut f64 {
-    DIVMOD_QUOTIENT_PTR
+pub extern "C" fn poly_divmod_quotient_ptr() -> *mut f64 {
+    DIVMOD_QUOTIENT_PTR.load(Ordering::Relaxed)
 }
 
 /// Return the number of f64 elements in the cached quotient.
 #[no_mangle]
-pub unsafe extern "C" fn poly_divmod_quotient_len() -> u32 {
-    DIVMOD_QUOTIENT_LEN
+pub extern "C" fn poly_divmod_quotient_len() -> u32 {
+    DIVMOD_QUOTIENT_LEN.load(Ordering::Relaxed)
 }
 
 /// Return the cached remainder pointer from the most recent `poly_divmod` call.
 ///
 /// Null if the divisor was zero or if the remainder is the zero polynomial.
 /// The host owns this memory and must call `poly_dealloc(ptr, len)` after use.
+/// Stored in an `AtomicPtr<f64>`; this accessor uses `Ordering::Relaxed`.
 #[no_mangle]
-pub unsafe extern "C" fn poly_divmod_remainder_ptr() -> *mut f64 {
-    DIVMOD_REMAINDER_PTR
+pub extern "C" fn poly_divmod_remainder_ptr() -> *mut f64 {
+    DIVMOD_REMAINDER_PTR.load(Ordering::Relaxed)
 }
 
 /// Return the number of f64 elements in the cached remainder.
 #[no_mangle]
-pub unsafe extern "C" fn poly_divmod_remainder_len() -> u32 {
-    DIVMOD_REMAINDER_LEN
+pub extern "C" fn poly_divmod_remainder_len() -> u32 {
+    DIVMOD_REMAINDER_LEN.load(Ordering::Relaxed)
 }
 
 /// Return the quotient of `a / b`.
@@ -428,6 +623,7 @@ pub unsafe extern "C" fn poly_divmod_remainder_len() -> u32 {
 ///
 /// ## Returns
 /// Pointer to quotient. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
+/// Returns null and sets error on null input pointer with non-zero len, or on panic.
 #[no_mangle]
 pub unsafe extern "C" fn poly_divide(
     a_ptr: *const f64,
@@ -435,14 +631,28 @@ pub unsafe extern "C" fn poly_divide(
     b_ptr: *const f64,
     b_len: u32,
 ) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(a_ptr, a_len as usize);
-    let b = std::slice::from_raw_parts(b_ptr, b_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(a_ptr, a_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let b = match as_slice(b_ptr, b_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     match std::panic::catch_unwind(|| polynomial::divide(a, b)) {
         Ok(result) => vec_to_wasm(result),
         Err(_) => {
-            LAST_ERROR = true;
-            LAST_RESULT_LEN = 0;
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
             std::ptr::null_mut()
         }
     }
@@ -455,6 +665,7 @@ pub unsafe extern "C" fn poly_divide(
 ///
 /// ## Returns
 /// Pointer to remainder. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
+/// Returns null and sets error on null input pointer with non-zero len, or on panic.
 #[no_mangle]
 pub unsafe extern "C" fn poly_modulo(
     a_ptr: *const f64,
@@ -462,14 +673,28 @@ pub unsafe extern "C" fn poly_modulo(
     b_ptr: *const f64,
     b_len: u32,
 ) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(a_ptr, a_len as usize);
-    let b = std::slice::from_raw_parts(b_ptr, b_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(a_ptr, a_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let b = match as_slice(b_ptr, b_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     match std::panic::catch_unwind(|| polynomial::modulo(a, b)) {
         Ok(result) => vec_to_wasm(result),
         Err(_) => {
-            LAST_ERROR = true;
-            LAST_RESULT_LEN = 0;
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
             std::ptr::null_mut()
         }
     }
@@ -486,10 +711,17 @@ pub unsafe extern "C" fn poly_modulo(
 ///
 /// ## Returns
 /// The scalar result as an `f64`. No heap allocation; no `poly_dealloc` needed.
+/// Returns 0.0 and sets error flag if ptr is null with non-zero len.
 #[no_mangle]
 pub unsafe extern "C" fn poly_evaluate(ptr: *const f64, len: u32, x: f64) -> f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(ptr, len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(ptr, len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            return 0.0;
+        }
+    };
     polynomial::evaluate(a, x)
 }
 
@@ -504,6 +736,7 @@ pub unsafe extern "C" fn poly_evaluate(ptr: *const f64, len: u32, x: f64) -> f64
 ///
 /// ## Returns
 /// Pointer to GCD polynomial. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
+/// Returns null and sets error on null input pointer with non-zero len, or on panic.
 #[no_mangle]
 pub unsafe extern "C" fn poly_gcd(
     a_ptr: *const f64,
@@ -511,14 +744,28 @@ pub unsafe extern "C" fn poly_gcd(
     b_ptr: *const f64,
     b_len: u32,
 ) -> *mut f64 {
-    LAST_ERROR = false;
-    let a = std::slice::from_raw_parts(a_ptr, a_len as usize);
-    let b = std::slice::from_raw_parts(b_ptr, b_len as usize);
+    LAST_ERROR.store(false, Ordering::Relaxed);
+    let a = match as_slice(a_ptr, a_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
+    let b = match as_slice(b_ptr, b_len) {
+        Some(s) => s,
+        None => {
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
+            return std::ptr::null_mut();
+        }
+    };
     match std::panic::catch_unwind(|| polynomial::gcd(a, b)) {
         Ok(result) => vec_to_wasm(result),
         Err(_) => {
-            LAST_ERROR = true;
-            LAST_RESULT_LEN = 0;
+            LAST_ERROR.store(true, Ordering::Relaxed);
+            LAST_RESULT_LEN.store(0, Ordering::Relaxed);
             std::ptr::null_mut()
         }
     }
