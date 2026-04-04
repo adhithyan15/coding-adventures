@@ -190,6 +190,71 @@ export interface Sequence {
   readonly elements: readonly GrammarElement[];
 }
 
+/**
+ * Positive lookahead predicate, written as &element in the grammar.
+ *
+ * Succeeds (producing no AST children) if element matches at the current
+ * position. Fails if element does not match. Does NOT consume input.
+ *
+ * This is a standard PEG operator. Example:
+ *
+ *     arrow_params = LPAREN [ param_list ] RPAREN &ARROW ;
+ *
+ * The &ARROW predicate checks that => follows without consuming it,
+ * disambiguating arrow function parameters from parenthesized expressions.
+ */
+export interface PositiveLookahead {
+  readonly type: "positive_lookahead";
+  readonly element: GrammarElement;
+}
+
+/**
+ * Negative lookahead predicate, written as !element in the grammar.
+ *
+ * Succeeds (producing no AST children) if element does NOT match at the
+ * current position. Fails if element does match. Does NOT consume input.
+ *
+ * This is a standard PEG operator. Example:
+ *
+ *     postfix_expr = primary !NEWLINE ( "++" | "--" ) ;
+ *
+ * The !NEWLINE predicate ensures no line terminator before ++ or --,
+ * implementing JavaScript's restricted production for postfix operators.
+ */
+export interface NegativeLookahead {
+  readonly type: "negative_lookahead";
+  readonly element: GrammarElement;
+}
+
+/**
+ * One-or-more repetition, written as { element }+ in the grammar.
+ *
+ * Like zero-or-more { element } but requires at least one match.
+ * Fails if the first match fails.
+ */
+export interface OneOrMoreRepetition {
+  readonly type: "one_or_more";
+  readonly element: GrammarElement;
+}
+
+/**
+ * Separated repetition, written as { element // separator } in the grammar.
+ *
+ * Matches zero or more occurrences of element separated by separator.
+ * With the + suffix ({ element // separator }+), requires at least one.
+ *
+ * Example:
+ *     args = { expression // COMMA } ;
+ * is equivalent to:
+ *     args = [ expression { COMMA expression } ] ;
+ */
+export interface SeparatedRepetition {
+  readonly type: "separated_repetition";
+  readonly element: GrammarElement;
+  readonly separator: GrammarElement;
+  readonly atLeastOne: boolean;
+}
+
 // The union of all grammar element types. This is what recursive functions
 // over the grammar tree accept and pattern-match on.
 export type GrammarElement =
@@ -200,7 +265,11 @@ export type GrammarElement =
   | Optional
   | Repetition
   | Alternation
-  | Sequence;
+  | Sequence
+  | PositiveLookahead
+  | NegativeLookahead
+  | OneOrMoreRepetition
+  | SeparatedRepetition;
 
 // ---------------------------------------------------------------------------
 // Data model for the complete grammar
@@ -287,7 +356,6 @@ function collectTokenRefs(node: GrammarElement, refs: Set<string>): void {
       break;
     case "rule_reference":
     case "literal":
-      // Leaf nodes that don't contain token references.
       break;
     case "sequence":
       for (const e of node.elements) {
@@ -302,7 +370,14 @@ function collectTokenRefs(node: GrammarElement, refs: Set<string>): void {
     case "repetition":
     case "optional":
     case "group":
+    case "positive_lookahead":
+    case "negative_lookahead":
+    case "one_or_more":
       collectTokenRefs(node.element, refs);
+      break;
+    case "separated_repetition":
+      collectTokenRefs(node.element, refs);
+      collectTokenRefs(node.separator, refs);
       break;
   }
 }
@@ -314,7 +389,6 @@ function collectRuleRefs(node: GrammarElement, refs: Set<string>): void {
       break;
     case "token_reference":
     case "literal":
-      // Leaf nodes that don't contain rule references.
       break;
     case "sequence":
       for (const e of node.elements) {
@@ -329,7 +403,14 @@ function collectRuleRefs(node: GrammarElement, refs: Set<string>): void {
     case "repetition":
     case "optional":
     case "group":
+    case "positive_lookahead":
+    case "negative_lookahead":
+    case "one_or_more":
       collectRuleRefs(node.element, refs);
+      break;
+    case "separated_repetition":
+      collectRuleRefs(node.element, refs);
+      collectRuleRefs(node.separator, refs);
       break;
   }
 }
@@ -420,6 +501,24 @@ function tokenizeGrammar(source: string): Token[] {
       } else if (ch === ")") {
         tokens.push({ kind: "RPAREN", value: ")", line: lineNumber });
         i++;
+      }
+      // Lookahead predicates.
+      else if (ch === "&") {
+        tokens.push({ kind: "AMPERSAND", value: "&", line: lineNumber });
+        i++;
+      } else if (ch === "!") {
+        tokens.push({ kind: "BANG", value: "!", line: lineNumber });
+        i++;
+      }
+      // One-or-more suffix.
+      else if (ch === "+") {
+        tokens.push({ kind: "PLUS", value: "+", line: lineNumber });
+        i++;
+      }
+      // Separator operator (// inside repetition braces).
+      else if (ch === "/" && i + 1 < line.length && line[i + 1] === "/") {
+        tokens.push({ kind: "DOUBLE_SLASH", value: "//", line: lineNumber });
+        i += 2;
       }
       // Quoted string literal.
       else if (ch === '"') {
@@ -604,6 +703,20 @@ class Parser {
   private parseElement(): GrammarElement {
     const tok = this.peek();
 
+    // --- Lookahead predicates: & (positive) and ! (negative) ---
+    // These are prefix operators that match without consuming input.
+    if (tok.kind === "AMPERSAND") {
+      this.advance();
+      const inner = this.parseElement();
+      return { type: "positive_lookahead", element: inner };
+    }
+
+    if (tok.kind === "BANG") {
+      this.advance();
+      const inner = this.parseElement();
+      return { type: "negative_lookahead", element: inner };
+    }
+
     if (tok.kind === "IDENT") {
       this.advance();
       // UPPERCASE = token reference, lowercase = rule reference.
@@ -623,8 +736,32 @@ class Parser {
 
     if (tok.kind === "LBRACE") {
       this.advance();
+      // Check for separator syntax: { element // separator }
+      // We first parse the body, then check for // separator.
       const body = this.parseBody();
+
+      // Check for separator: { element // separator }
+      if (this.peek().kind === "DOUBLE_SLASH") {
+        this.advance(); // consume //
+        const separator = this.parseBody();
+        this.expect("RBRACE");
+        // Check for + suffix (one-or-more)
+        const atLeastOne = this.peek().kind === "PLUS";
+        if (atLeastOne) this.advance();
+        return {
+          type: "separated_repetition",
+          element: body,
+          separator,
+          atLeastOne,
+        };
+      }
+
       this.expect("RBRACE");
+      // Check for + suffix: { element }+
+      if (this.peek().kind === "PLUS") {
+        this.advance();
+        return { type: "one_or_more", element: body };
+      }
       return { type: "repetition", element: body };
     }
 

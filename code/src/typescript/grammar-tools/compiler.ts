@@ -105,6 +105,7 @@ export function compileTokenGrammar(
     `  escapeMode: ${grammar.escapeMode !== undefined ? JSON.stringify(grammar.escapeMode) : "undefined"},`,
     `  skipDefinitions: ${skipLit},`,
     `  reservedKeywords: ${JSON.stringify(grammar.reservedKeywords ?? [])},`,
+    `  contextKeywords: ${JSON.stringify(grammar.contextKeywords ?? [])},`,
     `  errorDefinitions: ${errLit},`,
     `  groups: ${groupsLit},`,
     "};",
@@ -300,6 +301,30 @@ function elementLit(element: GrammarElement, indent: string): string {
     case "group": {
       const child = elementLit(element.element, i);
       return `{ type: "group", element: ${child} }`;
+    }
+
+    case "positive_lookahead": {
+      const child = elementLit(element.element, i);
+      return `{ type: "positive_lookahead", element: ${child} }`;
+    }
+
+    case "negative_lookahead": {
+      const child = elementLit(element.element, i);
+      return `{ type: "negative_lookahead", element: ${child} }`;
+    }
+
+    case "one_or_more": {
+      const child = elementLit(element.element, i);
+      return `{ type: "one_or_more", element: ${child} }`;
+    }
+
+    case "separated_repetition": {
+      const elem = elementLit(element.element, i);
+      const sep = elementLit(element.separator, i);
+      return (
+        `{ type: "separated_repetition", element: ${elem}, ` +
+        `separator: ${sep}, atLeastOne: ${element.atLeastOne} }`
+      );
     }
   }
 }

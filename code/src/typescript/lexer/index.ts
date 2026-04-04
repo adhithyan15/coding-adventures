@@ -44,6 +44,10 @@
  */
 
 export type { Token } from "./token.js";
+export {
+  TOKEN_PRECEDED_BY_NEWLINE,
+  TOKEN_CONTEXT_KEYWORD,
+} from "./token.js";
 export { tokenize, LexerError } from "./tokenizer.js";
 export type { LexerConfig } from "./tokenizer.js";
 export { grammarTokenize, GrammarLexer, LexerContext } from "./grammar-lexer.js";
