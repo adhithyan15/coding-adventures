@@ -1,0 +1,312 @@
+# ECMAScript 1 (1997) — Parser Grammar
+# @version 1
+# @ecmascript_edition 1
+#
+# ECMA-262, 1st Edition — June 1997
+#
+# This grammar defines the syntactic structure of ES1 JavaScript. It covers
+# the complete language as specified in the first ECMAScript standard:
+# variable declarations, function declarations/expressions, all statement
+# types, and the full expression precedence chain.
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from es1.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+#
+# IMPORTANT: The lexer reclassifies all keyword names as KEYWORD tokens.
+# Grammar rules must therefore use "keyword_value" (quoted literals) to
+# match specific keywords, not a KEYWORD token type directly.
+#
+# IMPORTANT: No left recursion allowed. The parser uses PEG semantics with
+# packrat memoization. Use iterative form: `a { op b }` instead of `a = a op b`.
+
+# ============================================================================
+# Program
+# ============================================================================
+#
+# An ES1 program is a sequence of source elements. Each source element is
+# either a function declaration or a statement. There is no module system —
+# that comes in ES2015.
+
+program = { source_element } ;
+
+source_element = function_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+#
+# ES1 has only two kinds of declarations: `var` and `function`.
+# There is no `let`, `const`, `class`, `import`, or `export` yet.
+
+function_declaration = "function" NAME LPAREN [ formal_parameter_list ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+formal_parameter_list = NAME { COMMA NAME } ;
+
+function_body = { source_element } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# ES1 supports 14 statement types. Notable absences compared to later versions:
+# - No try/catch/finally/throw (added in ES3)
+# - No for-of (added in ES2015)
+# - No debugger (added in ES5)
+#
+# The `with` statement is included (it was later deprecated in strict mode).
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | expression_statement ;
+
+# A block is a sequence of statements enclosed in curly braces.
+# Unlike Python, JavaScript uses braces for blocks, not indentation.
+
+block = LBRACE { statement } RBRACE ;
+
+# Variable declarations: `var x = 1, y = 2;`
+# ES1 only has `var` — no `let` or `const`.
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = NAME [ EQUALS assignment_expression ] ;
+
+# Empty statement: just a semicolon.
+
+empty_statement = SEMICOLON ;
+
+# Expression statement: any expression followed by a semicolon.
+# This is the catch-all for function calls, assignments via operators, etc.
+
+expression_statement = expression SEMICOLON ;
+
+# If/else: the dangling-else ambiguity is resolved by PEG's ordered choice —
+# the `else` always binds to the nearest `if`.
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+# While loop
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+# Do-while loop: the body executes at least once.
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+# For loop: the classic C-style three-part header.
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+# For-in loop: iterates over enumerable properties of an object.
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+# Continue and break: optionally target a label.
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+# Return: only valid inside a function body (semantic check, not grammar).
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+# With statement: extends the scope chain. Deprecated in strict mode (ES5+),
+# but legal in ES1.
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+# Switch statement: fall-through semantics like C.
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+# Labelled statement: any statement can be labelled for break/continue targeting.
+
+labelled_statement = NAME COLON statement ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Operator precedence is encoded by rule nesting, from lowest to highest:
+#
+#   comma < assignment < conditional (ternary) < logical_or < logical_and
+#   < bitwise_or < bitwise_xor < bitwise_and < equality < relational
+#   < shift < additive < multiplicative < unary < postfix
+#   < call/member < primary
+#
+# This is the iterative (non-left-recursive) encoding required by PEG parsers.
+# Each level uses `{ operator operand }` to handle left-associativity.
+
+# Comma expression: `a, b, c` evaluates all, returns last.
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+# Assignment: right-associative. Left side must be a valid target (semantic check).
+
+assignment_expression = conditional_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS
+                    | SLASH_EQUALS | PERCENT_EQUALS | AMPERSAND_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# Ternary conditional: `condition ? then : else`
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+# Logical OR and AND
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# Bitwise operators: OR, XOR, AND
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# Equality: ES1 only has == and != (no === or !==).
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# Relational: <, >, <=, >=, in, instanceof
+# Note: `in` is a keyword used both here and in for-in loops.
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "in" ) shift_expression } ;
+
+# Shift operators: <<, >>, >>> (unsigned right shift is unique to JS)
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+# Addition and subtraction
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# Multiplication, division, modulo
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# Unary operators: prefix operators applied right-to-left.
+
+unary_expression = postfix_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+# Postfix: increment and decrement after the operand.
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+# Left-hand side: anything that can appear on the left of an assignment.
+# This includes function calls, property accesses, and computed accesses.
+
+left_hand_side_expression = call_expression | new_expression ;
+
+# Call expression: member access followed by arguments, with further
+# property access or calls chained after.
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | LBRACKET expression RBRACKET } ;
+
+# New expression: `new Foo()` or `new new Foo()` (rare but legal).
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+# Member expression: property access via dot or bracket notation.
+
+member_expression = primary_expression { DOT NAME | LBRACKET expression RBRACKET }
+                  | "new" member_expression arguments ;
+
+# Arguments: the parenthesized argument list of a function call.
+
+arguments = LPAREN [ assignment_expression { COMMA assignment_expression } ] RPAREN ;
+
+# Primary expressions: the atoms of the expression grammar.
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | STRING
+                   | "true"
+                   | "false"
+                   | "null"
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | LPAREN expression RPAREN ;
+
+# Array literal: `[1, 2, 3]` or `[1, , 3]` (elision / holes allowed).
+
+array_literal = LBRACKET [ element_list ] RBRACKET ;
+
+element_list = [ assignment_expression ] { COMMA [ assignment_expression ] } ;
+
+# Object literal: `{ key: value }`. In ES1, property names are identifiers,
+# strings, or numbers. No computed properties, no shorthand, no methods.
+
+object_literal = LBRACE [ property_assignment { COMMA property_assignment } [ COMMA ] ] RBRACE ;
+
+property_assignment = property_name COLON assignment_expression ;
+
+property_name = NAME | STRING | NUMBER ;
+
+# Function expression: like a declaration but can be anonymous and used as a value.
+
+function_expression = "function" [ NAME ] LPAREN [ formal_parameter_list ] RPAREN
+                      LBRACE function_body RBRACE ;
