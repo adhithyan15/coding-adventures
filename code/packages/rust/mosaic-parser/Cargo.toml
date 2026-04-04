@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parses Mosaic token stream into an ASTNode tree"
+
+[dependencies]
+mosaic-lexer = { path = "../mosaic-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser = { path = "../parser" }
+state-machine = { path = "../state-machine" }

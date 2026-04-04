@@ -157,4 +157,10 @@ members = [
   "gf256",
   "asciidoc-parser",
   "asciidoc",
+  "mosaic-lexer",
+  "mosaic-parser",
+  "mosaic-analyzer",
+  "mosaic-vm",
+  "mosaic-emit-react",
+  "mosaic-emit-webcomponent",
 ]

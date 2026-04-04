@@ -1,0 +1,9 @@
+# Runtime dependencies
+requires 'coding-adventures-grammar-tools';
+requires 'coding-adventures-lexer';
+requires 'coding-adventures-directed-graph';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};

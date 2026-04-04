@@ -1,0 +1,16 @@
+[package]
+name = "mosaic-emit-react"
+version = "0.1.0"
+edition = "2021"
+description = "React backend: emits TSX functional components from MosaicIR"
+
+[dependencies]
+mosaic-vm = { path = "../mosaic-vm" }
+mosaic-analyzer = { path = "../mosaic-analyzer" }
+mosaic-parser = { path = "../mosaic-parser" }
+mosaic-lexer = { path = "../mosaic-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser = { path = "../parser" }
+state-machine = { path = "../state-machine" }
