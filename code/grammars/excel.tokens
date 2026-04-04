@@ -13,7 +13,8 @@ skip:
 SPACE = / +/
 
 REF_PREFIX_QUOTED   = /(\[[^\]]+\])?'([^']|'')*'!/ -> REF_PREFIX
-REF_PREFIX_BARE     = /[A-Za-z_][A-Za-z0-9_.]*!/ -> REF_PREFIX
+REF_PREFIX_WB_BARE  = /\[[^\]]+\][A-Za-z_][A-Za-z0-9_.:]*!/ -> REF_PREFIX
+REF_PREFIX_BARE     = /[A-Za-z_][A-Za-z0-9_.:]*!/ -> REF_PREFIX
 
 STRING            = /"([^"]|"")*"/
 ERROR_CONSTANT    = /#[a-z0-9\/\?!]+/

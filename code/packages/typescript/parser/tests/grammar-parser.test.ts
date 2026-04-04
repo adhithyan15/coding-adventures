@@ -45,6 +45,9 @@ import {
   isASTNode,
   isLeafNode,
   getLeafToken,
+  walkAST,
+  findNodes,
+  collectTokens,
 } from "../src/grammar-parser.js";
 import type { ASTNode } from "../src/grammar-parser.js";
 
@@ -1048,5 +1051,146 @@ describe("GrammarParserTraceMode", () => {
     expect(ast.ruleName).toBe("program");
     expect(findTokenInTree(ast, "NAME", "x")).toBe(true);
     expect(findTokenInTree(ast, "NUMBER", "42")).toBe(true);
+  });
+});
+
+// =============================================================================
+// AST UTILITIES — walkAST, findNodes, collectTokens
+// =============================================================================
+
+describe("walkAST", () => {
+  it("should visit all nodes with enter callback", () => {
+    const ast = new GrammarParser(tokenize("x = 1 + 2"), grammar).parse();
+    const visited: string[] = [];
+    walkAST(ast, {
+      enter(node) {
+        visited.push(node.ruleName);
+      },
+    });
+    expect(visited.length).toBeGreaterThan(0);
+    expect(visited[0]).toBe("program");
+  });
+
+  it("should visit all nodes with leave callback", () => {
+    const ast = new GrammarParser(tokenize("42"), grammar).parse();
+    const visited: string[] = [];
+    walkAST(ast, {
+      leave(node) {
+        visited.push(node.ruleName);
+      },
+    });
+    expect(visited.length).toBeGreaterThan(0);
+    // Leave visits in post-order, so program is last
+    expect(visited[visited.length - 1]).toBe("program");
+  });
+
+  it("should allow replacing nodes in enter", () => {
+    const token: Token = { type: "NUMBER", value: "42", line: 1, column: 1 };
+    const inner: ASTNode = { ruleName: "factor", children: [token] };
+    const ast: ASTNode = { ruleName: "program", children: [inner] };
+    const modified = walkAST(ast, {
+      enter(node) {
+        if (node.ruleName === "factor") {
+          return { ...node, ruleName: "replaced_factor" };
+        }
+      },
+    });
+    const hasReplaced = JSON.stringify(modified).includes("replaced_factor");
+    expect(hasReplaced).toBe(true);
+  });
+
+  it("should allow replacing nodes in leave", () => {
+    const token: Token = { type: "NUMBER", value: "42", line: 1, column: 1 };
+    const inner: ASTNode = { ruleName: "factor", children: [token] };
+    const ast: ASTNode = { ruleName: "program", children: [inner] };
+    const modified = walkAST(ast, {
+      leave(node) {
+        if (node.ruleName === "factor") {
+          return { ...node, ruleName: "replaced_factor" };
+        }
+      },
+    });
+    const hasReplaced = JSON.stringify(modified).includes("replaced_factor");
+    expect(hasReplaced).toBe(true);
+  });
+});
+
+describe("findNodes", () => {
+  it("should find nodes by rule name", () => {
+    const ast = new GrammarParser(tokenize("1 + 2"), grammar).parse();
+    const factors = findNodes(ast, "factor");
+    expect(factors.length).toBe(2);
+  });
+
+  it("should return empty array when no nodes match", () => {
+    const ast = new GrammarParser(tokenize("42"), grammar).parse();
+    const nodes = findNodes(ast, "nonexistent_rule");
+    expect(nodes).toEqual([]);
+  });
+});
+
+describe("collectTokens", () => {
+  it("should collect all tokens when given a type filter", () => {
+    const token1: Token = { type: "NUMBER", value: "1", line: 1, column: 1 };
+    const token2: Token = { type: "PLUS", value: "+", line: 1, column: 3 };
+    const token3: Token = { type: "NUMBER", value: "2", line: 1, column: 5 };
+    const inner1: ASTNode = { ruleName: "factor", children: [token1] };
+    const inner2: ASTNode = { ruleName: "factor", children: [token3] };
+    const ast: ASTNode = { ruleName: "expr", children: [inner1, token2, inner2] };
+
+    // Filter by NUMBER type
+    const numbers = collectTokens(ast, "NUMBER");
+    expect(numbers.length).toBe(2);
+    expect(numbers[0].value).toBe("1");
+    expect(numbers[1].value).toBe("2");
+
+    // Filter by PLUS type
+    const plusTokens = collectTokens(ast, "PLUS");
+    expect(plusTokens.length).toBe(1);
+    expect(plusTokens[0].value).toBe("+");
+  });
+
+  it("should return empty array when no tokens of given type", () => {
+    const token: Token = { type: "NUMBER", value: "42", line: 1, column: 1 };
+    const ast: ASTNode = { ruleName: "factor", children: [token] };
+    const strings = collectTokens(ast, "STRING");
+    expect(strings).toEqual([]);
+  });
+});
+
+// =============================================================================
+// PRE-PARSE AND POST-PARSE HOOKS
+// =============================================================================
+
+describe("pre-parse and post-parse hooks", () => {
+  it("should apply pre-parse hooks before parsing", () => {
+    const parser = new GrammarParser(tokenize("42"), grammar);
+    let hookCalled = false;
+    parser.addPreParse((tokens) => {
+      hookCalled = true;
+      return tokens;
+    });
+    parser.parse();
+    expect(hookCalled).toBe(true);
+  });
+
+  it("should apply post-parse hooks after parsing", () => {
+    const parser = new GrammarParser(tokenize("42"), grammar);
+    let hookCalled = false;
+    parser.addPostParse((ast) => {
+      hookCalled = true;
+      return ast;
+    });
+    parser.parse();
+    expect(hookCalled).toBe(true);
+  });
+
+  it("post-parse hook can transform the AST", () => {
+    const parser = new GrammarParser(tokenize("42"), grammar);
+    parser.addPostParse((ast) => {
+      return { ...ast, ruleName: "transformed_program" };
+    });
+    const result = parser.parse();
+    expect(result.ruleName).toBe("transformed_program");
   });
 });

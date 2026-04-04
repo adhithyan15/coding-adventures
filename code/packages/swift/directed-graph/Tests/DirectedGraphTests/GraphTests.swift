@@ -231,7 +231,7 @@ final class GraphTests: XCTestCase {
         let g = Graph()
         XCTAssertEqual(g.size, 0)
         XCTAssertEqual(g.nodes(), [])
-        XCTAssertEqual(g.edges(), [])
+        XCTAssertTrue(g.edges().isEmpty)
         XCTAssertEqual(try g.topologicalSort(), [])
         XCTAssertFalse(g.hasCycle())
     }

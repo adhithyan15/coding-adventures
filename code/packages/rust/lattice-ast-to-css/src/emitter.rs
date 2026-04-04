@@ -665,7 +665,14 @@ mod tests {
     use super::*;
 
     fn make_token_node(rule: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
-        GrammarASTNode { rule_name: rule.to_string(), children }
+        GrammarASTNode {
+            rule_name: rule.to_string(),
+            children,
+            start_line: None,
+            start_column: None,
+            end_line: None,
+            end_column: None,
+        }
     }
 
     fn make_ident_token(value: &str) -> ASTNodeOrToken {

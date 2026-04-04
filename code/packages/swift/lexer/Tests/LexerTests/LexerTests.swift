@@ -476,10 +476,10 @@ private func makeGroupGrammar() -> TokenGrammar {
             TokenDefinition(name: "OPEN_TAG", pattern: "<", isRegex: false, lineNumber: 2),
         ],
         keywords: [],
+        escapeMode: "none",
         skipDefinitions: [
             TokenDefinition(name: "WS", pattern: "[ \\t\\r\\n]+", isRegex: true, lineNumber: 3),
         ],
-        escapeMode: "none",
         groups: [
             "tag": PatternGroup(name: "tag", definitions: [
                 TokenDefinition(name: "TAG_NAME", pattern: "[a-zA-Z_][a-zA-Z0-9_]*", isRegex: true, lineNumber: 4),
@@ -593,10 +593,10 @@ final class PatternGroupTests: XCTestCase {
                 TokenDefinition(name: "START", pattern: "<!", isRegex: false, lineNumber: 2),
             ],
             keywords: [],
+            escapeMode: "none",
             skipDefinitions: [
                 TokenDefinition(name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 3),
             ],
-            escapeMode: "none",
             groups: [
                 "raw": PatternGroup(name: "raw", definitions: [
                     TokenDefinition(name: "RAW_TEXT", pattern: "[^>]+", isRegex: true, lineNumber: 4),

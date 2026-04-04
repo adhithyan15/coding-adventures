@@ -639,6 +639,13 @@ export class GrammarLexer {
       }
     }
 
+    // When case-insensitive mode is active, compile all regexes with the
+    // "i" flag so that patterns written with lowercase character classes
+    // (e.g. /[a-z]+/) also match uppercase input. This mirrors the Rust
+    // lexer's approach of lowercasing the entire source, but preserves
+    // original casing in token values.
+    const reFlags = this._caseInsensitive ? "i" : "";
+
     // Compile token patterns into regex objects.
     // Order matters — patterns are tried in the order they appear in the
     // .tokens file. This is the "first match wins" rule from Lex/Flex.
@@ -646,7 +653,7 @@ export class GrammarLexer {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
       return {
         name: defn.name,
-        pattern: new RegExp(patternSource),
+        pattern: new RegExp(patternSource, reFlags),
         alias: defn.alias,
       };
     });
@@ -655,7 +662,7 @@ export class GrammarLexer {
     // These are tried before token patterns at each position.
     this._skipPatterns = (grammar.skipDefinitions ?? []).map((defn) => {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
-      return new RegExp(patternSource);
+      return new RegExp(patternSource, reFlags);
     });
 
     // --- Pattern groups ---
@@ -676,7 +683,7 @@ export class GrammarLexer {
           }
           return {
             name: defn.name,
-            pattern: new RegExp(patternSource),
+            pattern: new RegExp(patternSource, reFlags),
             alias: defn.alias,
           };
         });

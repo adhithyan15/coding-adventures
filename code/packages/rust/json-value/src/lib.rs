@@ -364,6 +364,106 @@ fn extract_pair(
     }
 }
 
+/// Process JSON string escape sequences.
+///
+/// The JSON lexer uses `escapes: none` mode, which means it strips the
+/// surrounding quotes but leaves escape sequences as raw text. This
+/// function converts those raw escape sequences into their actual
+/// character values according to RFC 8259 section 7:
+///
+/// | Escape | Character             |
+/// |--------|-----------------------|
+/// | `\"`   | quotation mark U+0022 |
+/// | `\\`   | reverse solidus U+005C|
+/// | `\/`   | solidus U+002F        |
+/// | `\b`   | backspace U+0008      |
+/// | `\f`   | form feed U+000C      |
+/// | `\n`   | line feed U+000A      |
+/// | `\r`   | carriage return U+000D|
+/// | `\t`   | tab U+0009            |
+/// | `\uXXXX` | Unicode code point  |
+fn process_json_escapes(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    let mut chars = s.chars();
+
+    while let Some(ch) = chars.next() {
+        if ch != '\\' {
+            result.push(ch);
+            continue;
+        }
+
+        // We have a backslash — look at the next character.
+        match chars.next() {
+            Some('"') => result.push('"'),
+            Some('\\') => result.push('\\'),
+            Some('/') => result.push('/'),
+            Some('b') => result.push('\u{0008}'),
+            Some('f') => result.push('\u{000C}'),
+            Some('n') => result.push('\n'),
+            Some('r') => result.push('\r'),
+            Some('t') => result.push('\t'),
+            Some('u') => {
+                // Collect exactly 4 hex digits.
+                let hex: String = chars.by_ref().take(4).collect();
+                if hex.len() == 4 {
+                    if let Ok(code_point) = u32::from_str_radix(&hex, 16) {
+                        // Handle UTF-16 surrogate pairs: \uD800-\uDBFF followed
+                        // by \uDC00-\uDFFF.
+                        if (0xD800..=0xDBFF).contains(&code_point) {
+                            // High surrogate — look for \uXXXX low surrogate.
+                            let mut low_chars = chars.clone();
+                            if low_chars.next() == Some('\\') && low_chars.next() == Some('u') {
+                                let low_hex: String = low_chars.by_ref().take(4).collect();
+                                if low_hex.len() == 4 {
+                                    if let Ok(low_cp) = u32::from_str_radix(&low_hex, 16) {
+                                        if (0xDC00..=0xDFFF).contains(&low_cp) {
+                                            // Valid surrogate pair — decode it.
+                                            let combined = 0x10000
+                                                + ((code_point - 0xD800) << 10)
+                                                + (low_cp - 0xDC00);
+                                            if let Some(c) = char::from_u32(combined) {
+                                                result.push(c);
+                                                // Advance the real iterator past the
+                                                // low surrogate (\uXXXX = 6 chars).
+                                                for _ in 0..6 {
+                                                    chars.next();
+                                                }
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Lone high surrogate — use replacement character.
+                            result.push('\u{FFFD}');
+                        } else if let Some(c) = char::from_u32(code_point) {
+                            result.push(c);
+                        } else {
+                            result.push('\u{FFFD}');
+                        }
+                    } else {
+                        // Invalid hex — push replacement character.
+                        result.push('\u{FFFD}');
+                    }
+                } else {
+                    // Not enough hex digits — push replacement.
+                    result.push('\u{FFFD}');
+                }
+            }
+            Some(other) => {
+                // Unknown escape — just emit the character after the backslash.
+                result.push(other);
+            }
+            None => {
+                // Trailing backslash at end of string — keep it.
+                result.push('\\');
+            }
+        }
+    }
+
+    result
+}
+
 /// Convert a single token to a `JsonValue`, if the token represents a value.
 ///
 /// Returns:
@@ -395,7 +495,10 @@ fn token_to_json_value(
 
     // Check built-in token types.
     match token.type_ {
-        TokenType::String => Ok(Some(JsonValue::String(token.value.clone()))),
+        // The JSON lexer uses `escapes: none`, meaning quotes are stripped
+        // but escape sequences like `\n`, `\t`, `\\`, `\"`, `\uXXXX` are
+        // left as raw text. We must decode them here at the value layer.
+        TokenType::String => Ok(Some(JsonValue::String(process_json_escapes(&token.value)))),
 
         TokenType::Number => {
             // Determine integer vs float by looking at the raw text.
