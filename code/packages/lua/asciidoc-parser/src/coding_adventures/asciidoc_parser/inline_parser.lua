@@ -71,15 +71,15 @@ local function strong_node(children)
 end
 
 local function emph_node(children)
-  return { type = "emph", children = children }
+  return { type = "emphasis", children = children }
 end
 
-local function link_node(href, children)
-  return { type = "link", href = href, children = children }
+local function link_node(destination, children)
+  return { type = "link", destination = destination, children = children }
 end
 
-local function image_node(src, alt)
-  return { type = "image", src = src, alt = alt }
+local function image_node(destination, alt)
+  return { type = "image", destination = destination, alt = alt }
 end
 
 local function hard_break_node()
@@ -137,7 +137,7 @@ function M.parse_inline(text)
     do
       local code_val = rest:match("^`([^`]*)`")
       if code_val then
-        nodes[#nodes + 1] = code_span_node(escape_html(code_val))
+        nodes[#nodes + 1] = code_span_node(code_val)
         pos = pos + 2 + #code_val  -- 2 for the two backticks
         goto continue
       end
@@ -195,7 +195,7 @@ function M.parse_inline(text)
       local url, label = rest:match("^link:([^%[]+)%[([^%]]*)%]")
       if url then
         local children = (label ~= "") and M.parse_inline(label)
-                         or { text_node(escape_html(url)) }
+                         or { text_node(url) }
         nodes[#nodes + 1] = link_node(url, children)
         pos = pos + 5 + #url + 1 + #label + 1  -- "link:" + url + "[" + label + "]"
         goto continue
@@ -206,7 +206,7 @@ function M.parse_inline(text)
     do
       local url, alt = rest:match("^image:([^%[]+)%[([^%]]*)%]")
       if url then
-        nodes[#nodes + 1] = image_node(url, escape_html(alt))
+        nodes[#nodes + 1] = image_node(url, alt)
         pos = pos + 6 + #url + 1 + #alt + 1  -- "image:" + url + "[" + alt + "]"
         goto continue
       end
@@ -218,7 +218,7 @@ function M.parse_inline(text)
       local anchor, label = rest:match("^<<([^,>]+),([^>]*)>>")
       if anchor then
         local children = (label ~= "") and M.parse_inline(label)
-                         or { text_node(escape_html(anchor)) }
+                         or { text_node(anchor) }
         nodes[#nodes + 1] = link_node("#" .. anchor, children)
         pos = pos + 2 + #anchor + 1 + #label + 2  -- "<<" + anchor + "," + label + ">>"
         goto continue
@@ -227,7 +227,7 @@ function M.parse_inline(text)
       local anchor_only = rest:match("^<<([^>]+)>>")
       if anchor_only then
         nodes[#nodes + 1] = link_node("#" .. anchor_only,
-                                      { text_node(escape_html(anchor_only)) })
+                                      { text_node(anchor_only) })
         pos = pos + 2 + #anchor_only + 2
         goto continue
       end
@@ -239,7 +239,7 @@ function M.parse_inline(text)
     do
       local url = rest:match("^https?://[^%s<>\"'%]%)]+")
       if url then
-        nodes[#nodes + 1] = link_node(url, { text_node(escape_html(url)) })
+        nodes[#nodes + 1] = link_node(url, { text_node(url) })
         pos = pos + #url
         goto continue
       end
@@ -255,7 +255,7 @@ function M.parse_inline(text)
       -- `h` (https://http://), `<`, or `\n`, we stop the plain-text run.
       local plain = rest:match("^([^`%*_lihH<\n%+]+)")
       if plain then
-        nodes[#nodes + 1] = text_node(escape_html(plain))
+        nodes[#nodes + 1] = text_node(plain)
         pos = pos + #plain
         goto continue
       end
@@ -264,7 +264,7 @@ function M.parse_inline(text)
       -- This handles lone `*`, `_`, `l`, `i`, `h`, `<`, etc. that did not
       -- match any structured pattern above.
       local ch = text:sub(pos, pos)
-      nodes[#nodes + 1] = text_node(escape_html(ch))
+      nodes[#nodes + 1] = text_node(ch)
       pos = pos + 1
     end
 

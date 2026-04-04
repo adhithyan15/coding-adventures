@@ -704,15 +704,18 @@ sub _escape_attr {
     return $s;
 }
 
-# Returns the URL unchanged if its scheme is safe (http, https, ftp, mailto,
-# relative paths).  Returns '#' for anything else (e.g. javascript:, data:,
-# vbscript:) so that dangerous scheme injection cannot reach rendered output.
+# Returns the URL unchanged unless it carries a dangerous scheme
+# (javascript:, data:, vbscript:, blob:).  Relative paths (no scheme at all,
+# or starting with #, /, .) and safe absolute schemes (http, https, ftp,
+# mailto) are passed through unchanged.
 sub _safe_url {
     my ($url) = @_;
     $url //= '';
-    return $url if $url =~ /\A(?:https?|ftp|mailto):/i;
-    return $url if $url =~ /\A[#\/\.]/;
-    return '#';
+    # Block only URLs that start with a dangerous scheme.
+    # Relative paths (e.g. "photo.png", "/img/x.png", "#anchor") have no
+    # colon before the first slash/hash/end, so they pass through safely.
+    return '#' if $url =~ /\A(?:javascript|vbscript|data|blob):/i;
+    return $url;
 }
 
 1;
