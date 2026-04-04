@@ -1,0 +1,12 @@
+/*
+ * module.modulemap — Clang module map for CGF256.
+ *
+ * SPM's .systemLibrary target requires module.modulemap at the root of the
+ * target path (Sources/CGF256/), not in a subdirectory.
+ *
+ * The header is in include/ — we reference it with the relative path.
+ */
+module CGF256 {
+    header "include/gf256_c.h"
+    export *
+}
