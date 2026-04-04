@@ -48,12 +48,6 @@ application {
     mainClass.set("com.codingadventures.helloworld.Main")
 }
 
-// Java version compatibility. We use sourceCompatibility and targetCompatibility
-// instead of toolchain {} because toolchain requires the exact JDK version to
-// be pre-installed. In CI, the available JDK version depends on what
-// actions/setup-java provides (or what's pre-installed on the runner). Using
-// compatibility settings lets any JDK >= 11 compile this code.
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
+// JVM target version. We let Gradle use whatever JDK is available on the
+// build machine. This avoids requiring a specific JDK version in CI — the
+// hello-world program uses no version-specific APIs.

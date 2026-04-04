@@ -47,12 +47,8 @@ application {
     mainClass.set("com.codingadventures.helloworld.MainKt")
 }
 
-// JVM target version. We use jvmTarget instead of jvmToolchain() because
-// toolchain requires the exact JDK version to be pre-installed. In CI, the
-// available JDK depends on what's on the runner. Setting jvmTarget lets any
-// JDK >= 11 compile this code.
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-    }
-}
+// JVM target version. We let Gradle use whatever JDK is available on the
+// build machine. The Kotlin and Java compilation tasks will both default to
+// the same JVM target (the running JDK's version), avoiding the
+// "Inconsistent JVM-target compatibility" error that occurs when compileJava
+// and compileKotlin target different versions.
