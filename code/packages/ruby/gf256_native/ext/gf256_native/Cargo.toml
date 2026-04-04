@@ -1,0 +1,14 @@
+[workspace]
+
+[package]
+name = "gf256-native-ruby"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "gf256_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
+gf256 = { path = "../../../../rust/gf256" }

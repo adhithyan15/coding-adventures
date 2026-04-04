@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "polynomial-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust polynomial crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "polynomial_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Our own zero-dependency Python C API bridge — replaces PyO3.
+python-bridge = { path = "../../rust/python-bridge" }
+
+# The core polynomial crate — all polynomial arithmetic lives here.
+polynomial = { path = "../../rust/polynomial" }

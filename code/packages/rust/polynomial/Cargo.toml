@@ -1,0 +1,8 @@
+[package]
+name = "polynomial"
+version = "0.1.0"
+edition = "2021"
+description = "Polynomial arithmetic over f64 coefficients — add, subtract, multiply, divmod, evaluate, GCD"
+
+[dependencies]
+# none

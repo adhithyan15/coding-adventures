@@ -1,0 +1,12 @@
+# Zero dependencies. We declare Lua's C API functions ourselves using
+# extern "C" — no mlua, no rlua, no bindgen, no build-time header requirement.
+# Lua's C API has been stable since Lua 5.1 (2006); we target Lua 5.4.
+[workspace]
+
+[package]
+name = "lua-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Thin safe Rust wrapper over Lua 5.4 C API — zero dependencies, no mlua/rlua, no macros"
+
+[dependencies]

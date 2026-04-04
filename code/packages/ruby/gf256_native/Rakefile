@@ -1,0 +1,83 @@
+# frozen_string_literal: true
+
+# --------------------------------------------------------------------------
+# Rakefile — Build and test tasks for gf256_native
+# --------------------------------------------------------------------------
+#
+# Key tasks:
+#   rake compile   — Build the Rust native extension
+#   rake test      — Run the test suite (compiles first)
+#   rake clean     — Remove build artifacts
+#
+# The compile task calls cargo directly and copies the resulting shared
+# library to lib/. We don't use extconf.rb + make because `make` is not
+# reliably available on Windows.
+
+require "rake/testtask"
+require "rbconfig"
+
+# -- Platform detection ----------------------------------------------------
+
+DLEXT = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/gf256_native", __dir__)
+LIB_DIR = File.expand_path("lib", __dir__)
+
+# Cargo produces different filenames per platform:
+#   Linux:   libgf256_native.so
+#   macOS:   libgf256_native.dylib
+#   Windows: gf256_native.dll
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+             when /darwin/
+               "libgf256_native.dylib"
+             when /mingw|mswin|cygwin/
+               "gf256_native.dll"
+             else
+               "libgf256_native.so"
+             end
+
+# Ruby expects the extension as:
+#   gf256_native.so (Linux), gf256_native.bundle (macOS),
+#   gf256_native.dll (Windows)
+TARGET = "gf256_native.#{DLEXT}"
+
+# -- Compile task -----------------------------------------------------------
+#
+# Runs cargo build --release in the ext directory and copies the resulting
+# shared library to lib/.
+
+desc "Compile the Rust native extension"
+task :compile do
+  cd EXT_DIR do
+    sh "cargo build --release"
+  end
+
+  # Copy the compiled library to lib/
+  src = File.join(EXT_DIR, "target", "release", CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/"
+end
+
+# -- Test task --------------------------------------------------------------
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+# Tests depend on compilation
+task test: :compile
+
+# -- Clean task -------------------------------------------------------------
+
+desc "Remove build artifacts"
+task :clean do
+  cd EXT_DIR do
+    sh "cargo clean" if File.exist?("Cargo.toml")
+  end
+  rm_f Dir[File.join(LIB_DIR, "gf256_native.*")]
+end
+
+task default: :test

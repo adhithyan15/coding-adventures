@@ -1,0 +1,21 @@
+# This crate compiles to a shared library (.so/.dylib/.dll) that Erlang's
+# `erlang:load_nif/2` loads at runtime. It bridges Rust's polynomial crate
+# into the BEAM via the zero-dependency erl-nif-bridge.
+[workspace]
+
+[package]
+name = "polynomial-native-nif"
+version = "0.1.0"
+edition = "2021"
+description = "Erlang NIF exposing polynomial arithmetic from Rust to Elixir"
+
+[lib]
+# cdylib = C-compatible dynamic library (the format Erlang's NIF loader expects).
+name = "polynomial_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Our zero-dependency Erlang NIF bridge — no Rustler, no OTP headers needed.
+erl-nif-bridge = { path = "../../../../rust/erl-nif-bridge" }
+# The pure-Rust polynomial arithmetic crate we are wrapping.
+polynomial = { path = "../../../../rust/polynomial" }

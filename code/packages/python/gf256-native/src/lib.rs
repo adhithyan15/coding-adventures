@@ -1,0 +1,449 @@
+// lib.rs -- GF(256) Python extension using python-bridge
+// =======================================================
+//
+// Native extension wrapping the Rust `gf256` crate for Python via our
+// zero-dependency python-bridge. Like polynomial-native, this is a
+// **module-level API** of free functions (no class), since GF(256) operations
+// are on primitive `u8` values, not object instances.
+//
+// # GF(256) Background
+//
+// GF(2^8) is a finite field with 256 elements. Elements are bytes (0–255).
+// Arithmetic is very different from ordinary integer arithmetic:
+//
+//   - ADD = XOR (no carries, since 1 + 1 = 0 in GF(2))
+//   - SUBTRACT = XOR (same as add, since -1 = 1 in characteristic 2)
+//   - MULTIPLY = lookup table (log/antilog tables built at first use)
+//   - DIVIDE = multiply by the multiplicative inverse
+//
+// # Design
+//
+// All GF(256) functions take Python `int` arguments (0–255) and return
+// Python `int` values. We validate the range on entry to give clear error
+// messages.
+//
+// # Panic Handling
+//
+// The `divide` function panics if `b == 0`. The `inverse` function panics if
+// `a == 0`. We catch these via `std::panic::catch_unwind` and raise `ValueError`.
+//
+// # Module Constants
+//
+// We expose `ZERO`, `ONE`, and `PRIMITIVE_POLYNOMIAL` as module-level constants
+// by adding them to the module after creation.
+
+use std::ffi::{c_char, c_int, CString};
+use std::ptr;
+
+use python_bridge::*;
+
+// ---------------------------------------------------------------------------
+// Additional CPython extern declarations not in python-bridge
+// ---------------------------------------------------------------------------
+
+#[allow(non_snake_case)]
+extern "C" {
+    // Integer operations: extract Python int as a C long.
+    fn PyLong_AsLong(obj: PyObjectPtr) -> i64;
+
+    // Error checking.
+    fn PyErr_Occurred() -> PyObjectPtr;
+
+    // Type checking.
+    fn PyLong_Check(obj: PyObjectPtr) -> c_int;
+
+    // Module attribute setting.
+    fn PyModule_AddIntConstant(
+        module: PyObjectPtr,
+        name: *const c_char,
+        value: i64,
+    ) -> c_int;
+}
+
+// ---------------------------------------------------------------------------
+// Helper: extract a GF(256) element (u8) from a Python int argument
+// ---------------------------------------------------------------------------
+//
+// GF(256) elements are bytes: integers in the range [0, 255].
+// We extract the value from a Python int and validate the range.
+//
+// Returns `None` and sets a Python exception on:
+//   - null pointer (missing argument)
+//   - non-integer type
+//   - value out of range [0, 255]
+
+unsafe fn extract_u8(obj: PyObjectPtr, arg_name: &str) -> Option<u8> {
+    if obj.is_null() {
+        PyErr_Clear();
+        set_error(
+            value_error_class(),
+            &format!("argument '{}' is required", arg_name),
+        );
+        return None;
+    }
+
+    if PyLong_Check(obj) == 0 {
+        set_error(
+            value_error_class(),
+            &format!("argument '{}' must be an integer (0-255)", arg_name),
+        );
+        return None;
+    }
+
+    let val = PyLong_AsLong(obj);
+    if val == -1 && !PyErr_Occurred().is_null() {
+        PyErr_Clear();
+        set_error(
+            value_error_class(),
+            &format!("argument '{}' is out of range", arg_name),
+        );
+        return None;
+    }
+
+    if val < 0 || val > 255 {
+        set_error(
+            value_error_class(),
+            &format!(
+                "argument '{}' must be in range 0-255, got {}",
+                arg_name, val
+            ),
+        );
+        return None;
+    }
+
+    Some(val as u8)
+}
+
+// ---------------------------------------------------------------------------
+// Leaked CString helper
+// ---------------------------------------------------------------------------
+
+fn cstr(s: &str) -> *const c_char {
+    CString::new(s).expect("no NUL bytes").into_raw()
+}
+
+// ---------------------------------------------------------------------------
+// Module methods: free functions exposed to Python
+// ---------------------------------------------------------------------------
+
+// -- add(a: int, b: int) -> int -----------------------------------------------
+//
+// Add two GF(256) elements. In GF(256), addition is XOR (no carries).
+//
+// Example: add(0x53, 0xCA) = 0x53 ^ 0xCA = 0x99
+
+unsafe extern "C" fn gf_add(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let a_obj = PyTuple_GetItem(args, 0);
+    let b_obj = PyTuple_GetItem(args, 1);
+    let a = match extract_u8(a_obj, "a") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let b = match extract_u8(b_obj, "b") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let result = gf256::add(a, b);
+    PyLong_FromLong(result as i64)
+}
+
+// -- subtract(a: int, b: int) -> int ------------------------------------------
+//
+// Subtract two GF(256) elements. In GF(256) characteristic 2, subtraction
+// equals addition: a - b = a XOR b.
+
+unsafe extern "C" fn gf_subtract(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let a_obj = PyTuple_GetItem(args, 0);
+    let b_obj = PyTuple_GetItem(args, 1);
+    let a = match extract_u8(a_obj, "a") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let b = match extract_u8(b_obj, "b") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let result = gf256::subtract(a, b);
+    PyLong_FromLong(result as i64)
+}
+
+// -- multiply(a: int, b: int) -> int ------------------------------------------
+//
+// Multiply two GF(256) elements using log/antilog tables.
+// 0 * anything = 0.
+
+unsafe extern "C" fn gf_multiply(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let a_obj = PyTuple_GetItem(args, 0);
+    let b_obj = PyTuple_GetItem(args, 1);
+    let a = match extract_u8(a_obj, "a") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let b = match extract_u8(b_obj, "b") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let result = gf256::multiply(a, b);
+    PyLong_FromLong(result as i64)
+}
+
+// -- divide(a: int, b: int) -> int --------------------------------------------
+//
+// Divide a by b in GF(256). Raises ValueError if b == 0.
+// 0 / b = 0 for any non-zero b.
+
+unsafe extern "C" fn gf_divide(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let a_obj = PyTuple_GetItem(args, 0);
+    let b_obj = PyTuple_GetItem(args, 1);
+    let a = match extract_u8(a_obj, "a") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+    let b = match extract_u8(b_obj, "b") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+
+    // Catch the Rust panic for division by zero.
+    let result = std::panic::catch_unwind(move || gf256::divide(a, b));
+    match result {
+        Ok(val) => PyLong_FromLong(val as i64),
+        Err(_) => {
+            set_error(value_error_class(), "GF(256): division by zero");
+            ptr::null_mut()
+        }
+    }
+}
+
+// -- power(base: int, exp: int) -> int ----------------------------------------
+//
+// Raise a GF(256) element to a non-negative integer power.
+// Uses log tables: base^exp = ALOG[(LOG[base] * exp) % 255].
+//
+// Special cases:
+//   - 0^0 = 1 (by convention)
+//   - 0^n = 0 for n > 0
+//   - x^0 = 1 for any x
+
+unsafe extern "C" fn gf_power(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let base_obj = PyTuple_GetItem(args, 0);
+    let exp_obj = PyTuple_GetItem(args, 1);
+
+    let base = match extract_u8(base_obj, "base") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+
+    // exp is a u32 (non-negative integer). We accept Python ints and clamp
+    // to u32::MAX to avoid overflow in the Rust function.
+    if exp_obj.is_null() {
+        PyErr_Clear();
+        set_error(value_error_class(), "power requires two arguments: base, exp");
+        return ptr::null_mut();
+    }
+    if PyLong_Check(exp_obj) == 0 {
+        set_error(value_error_class(), "argument 'exp' must be an integer");
+        return ptr::null_mut();
+    }
+    let exp_val = PyLong_AsLong(exp_obj);
+    if exp_val == -1 && !PyErr_Occurred().is_null() {
+        PyErr_Clear();
+        set_error(value_error_class(), "argument 'exp' is out of range");
+        return ptr::null_mut();
+    }
+    if exp_val < 0 {
+        set_error(
+            value_error_class(),
+            &format!("argument 'exp' must be non-negative, got {}", exp_val),
+        );
+        return ptr::null_mut();
+    }
+
+    // Clamp to u32::MAX for very large exponents (edge case; not expected in practice).
+    let exp = exp_val.min(u32::MAX as i64) as u32;
+
+    let result = gf256::power(base, exp);
+    PyLong_FromLong(result as i64)
+}
+
+// -- inverse(a: int) -> int ---------------------------------------------------
+//
+// Compute the multiplicative inverse of a in GF(256).
+// Raises ValueError if a == 0 (zero has no multiplicative inverse).
+// inverse(a) satisfies: multiply(a, inverse(a)) == 1.
+
+unsafe extern "C" fn gf_inverse(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let a_obj = PyTuple_GetItem(args, 0);
+    let a = match extract_u8(a_obj, "a") {
+        Some(v) => v,
+        None => return ptr::null_mut(),
+    };
+
+    // Catch the Rust panic for inverse(0).
+    let result = std::panic::catch_unwind(move || gf256::inverse(a));
+    match result {
+        Ok(val) => PyLong_FromLong(val as i64),
+        Err(_) => {
+            set_error(
+                value_error_class(),
+                "GF(256): zero has no multiplicative inverse",
+            );
+            ptr::null_mut()
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Module initialization: PyInit_gf256_native
+// ---------------------------------------------------------------------------
+//
+// Creates the `gf256_native` module, registers all 6 arithmetic functions,
+// and adds 3 module-level constants:
+//
+//   ZERO                = 0      (additive identity)
+//   ONE                 = 1      (multiplicative identity)
+//   PRIMITIVE_POLYNOMIAL = 0x11D  (irreducible polynomial used for modular reduction)
+//
+// Method table:
+//   0: add        (VARARGS)
+//   1: subtract   (VARARGS)
+//   2: multiply   (VARARGS)
+//   3: divide     (VARARGS)
+//   4: power      (VARARGS)
+//   5: inverse    (VARARGS)
+//   6: sentinel
+
+#[no_mangle]
+pub unsafe extern "C" fn PyInit_gf256_native() -> PyObjectPtr {
+    // -- Method table ---------------------------------------------------------
+
+    static mut METHODS: [PyMethodDef; 7] = [
+        PyMethodDef {
+            ml_name: ptr::null(),
+            ml_meth: None,
+            ml_flags: 0,
+            ml_doc: ptr::null(),
+        };
+        7
+    ];
+
+    METHODS[0] = PyMethodDef {
+        ml_name: cstr("add"),
+        ml_meth: Some(gf_add),
+        ml_flags: METH_VARARGS,
+        ml_doc: cstr(
+            "add(a, b) -> int\n\n\
+             Add two GF(256) elements. In characteristic 2, this is XOR:\n\
+             add(0x53, 0xCA) == 0x53 ^ 0xCA == 0x99",
+        ),
+    };
+    METHODS[1] = PyMethodDef {
+        ml_name: cstr("subtract"),
+        ml_meth: Some(gf_subtract),
+        ml_flags: METH_VARARGS,
+        ml_doc: cstr(
+            "subtract(a, b) -> int\n\n\
+             Subtract b from a in GF(256). Equals XOR (same as add in char 2).",
+        ),
+    };
+    METHODS[2] = PyMethodDef {
+        ml_name: cstr("multiply"),
+        ml_meth: Some(gf_multiply),
+        ml_flags: METH_VARARGS,
+        ml_doc: cstr(
+            "multiply(a, b) -> int\n\n\
+             Multiply two GF(256) elements using log/antilog tables.\n\
+             multiply(0, x) == multiply(x, 0) == 0.",
+        ),
+    };
+    METHODS[3] = PyMethodDef {
+        ml_name: cstr("divide"),
+        ml_meth: Some(gf_divide),
+        ml_flags: METH_VARARGS,
+        ml_doc: cstr(
+            "divide(a, b) -> int\n\n\
+             Divide a by b in GF(256). Raises ValueError if b == 0.",
+        ),
+    };
+    METHODS[4] = PyMethodDef {
+        ml_name: cstr("power"),
+        ml_meth: Some(gf_power),
+        ml_flags: METH_VARARGS,
+        ml_doc: cstr(
+            "power(base, exp) -> int\n\n\
+             Raise base to a non-negative integer power in GF(256).\n\
+             power(2, 255) == 1 (by Fermat's little theorem for finite fields).",
+        ),
+    };
+    METHODS[5] = PyMethodDef {
+        ml_name: cstr("inverse"),
+        ml_meth: Some(gf_inverse),
+        ml_flags: METH_VARARGS,
+        ml_doc: cstr(
+            "inverse(a) -> int\n\n\
+             Multiplicative inverse of a in GF(256): multiply(a, inverse(a)) == 1.\n\
+             Raises ValueError if a == 0.",
+        ),
+    };
+    METHODS[6] = method_def_sentinel();
+
+    // -- Module definition ----------------------------------------------------
+
+    static mut MODULE_DEF: PyModuleDef = PyModuleDef {
+        m_base: PyModuleDef_Base {
+            ob_base: [0; std::mem::size_of::<usize>() * 2],
+            m_init: None,
+            m_index: 0,
+            m_copy: ptr::null_mut(),
+        },
+        m_name: ptr::null(),
+        m_doc: ptr::null(),
+        m_size: -1,
+        m_methods: ptr::null_mut(),
+        m_slots: ptr::null_mut(),
+        m_traverse: ptr::null_mut(),
+        m_clear: ptr::null_mut(),
+        m_free: ptr::null_mut(),
+    };
+
+    MODULE_DEF.m_name = cstr("gf256_native");
+    MODULE_DEF.m_doc = cstr(
+        "gf256_native -- Rust-backed GF(256) arithmetic for Python.\n\
+         \n\
+         GF(2^8) is a finite field with 256 elements (bytes 0-255).\n\
+         Addition is XOR. Multiplication uses log/antilog tables.\n\
+         \n\
+         Constants:\n\
+           ZERO                 = 0      (additive identity)\n\
+           ONE                  = 1      (multiplicative identity)\n\
+           PRIMITIVE_POLYNOMIAL = 0x11D  (irreducible reduction polynomial)\n\
+         \n\
+         All arguments must be integers in range [0, 255].",
+    );
+    MODULE_DEF.m_methods = (&raw mut METHODS) as *mut PyMethodDef;
+
+    let module = PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION);
+    if module.is_null() {
+        return ptr::null_mut();
+    }
+
+    // -- Add module-level constants -------------------------------------------
+    //
+    // These correspond to the Rust constants:
+    //   gf256::ZERO                = 0u8
+    //   gf256::ONE                 = 1u8
+    //   gf256::PRIMITIVE_POLYNOMIAL = 0x11Du16 = 285
+    //
+    // PyModule_AddIntConstant adds a name/value pair to the module's __dict__.
+
+    let zero_name = CString::new("ZERO").unwrap();
+    PyModule_AddIntConstant(module, zero_name.as_ptr(), gf256::ZERO as i64);
+
+    let one_name = CString::new("ONE").unwrap();
+    PyModule_AddIntConstant(module, one_name.as_ptr(), gf256::ONE as i64);
+
+    let pp_name = CString::new("PRIMITIVE_POLYNOMIAL").unwrap();
+    PyModule_AddIntConstant(module, pp_name.as_ptr(), gf256::PRIMITIVE_POLYNOMIAL as i64);
+
+    module
+}

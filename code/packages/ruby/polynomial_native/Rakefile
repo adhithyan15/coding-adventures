@@ -1,0 +1,83 @@
+# frozen_string_literal: true
+
+# --------------------------------------------------------------------------
+# Rakefile — Build and test tasks for polynomial_native
+# --------------------------------------------------------------------------
+#
+# Key tasks:
+#   rake compile   — Build the Rust native extension
+#   rake test      — Run the test suite (compiles first)
+#   rake clean     — Remove build artifacts
+#
+# The compile task calls cargo directly and copies the resulting shared
+# library to lib/. We don't use extconf.rb + make because `make` is not
+# reliably available on Windows.
+
+require "rake/testtask"
+require "rbconfig"
+
+# -- Platform detection ----------------------------------------------------
+
+DLEXT = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/polynomial_native", __dir__)
+LIB_DIR = File.expand_path("lib", __dir__)
+
+# Cargo produces different filenames per platform:
+#   Linux:   libpolynomial_native.so
+#   macOS:   libpolynomial_native.dylib
+#   Windows: polynomial_native.dll
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+             when /darwin/
+               "libpolynomial_native.dylib"
+             when /mingw|mswin|cygwin/
+               "polynomial_native.dll"
+             else
+               "libpolynomial_native.so"
+             end
+
+# Ruby expects the extension as:
+#   polynomial_native.so (Linux), polynomial_native.bundle (macOS),
+#   polynomial_native.dll (Windows)
+TARGET = "polynomial_native.#{DLEXT}"
+
+# -- Compile task -----------------------------------------------------------
+#
+# Runs cargo build --release in the ext directory and copies the resulting
+# shared library to lib/.
+
+desc "Compile the Rust native extension"
+task :compile do
+  cd EXT_DIR do
+    sh "cargo build --release"
+  end
+
+  # Copy the compiled library to lib/
+  src = File.join(EXT_DIR, "target", "release", CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/"
+end
+
+# -- Test task --------------------------------------------------------------
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+# Tests depend on compilation
+task test: :compile
+
+# -- Clean task -------------------------------------------------------------
+
+desc "Remove build artifacts"
+task :clean do
+  cd EXT_DIR do
+    sh "cargo clean" if File.exist?("Cargo.toml")
+  end
+  rm_f Dir[File.join(LIB_DIR, "polynomial_native.*")]
+end
+
+task default: :test

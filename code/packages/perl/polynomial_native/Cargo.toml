@@ -1,0 +1,19 @@
+# Compiles to a cdylib that Perl's DynaLoader loads via `use Module;`.
+# The exported boot function is boot_CodingAdventures__PolynomialNative
+# (Perl uses __ as package separator in C symbol names).
+[workspace]
+
+[package]
+name = "polynomial-native-perl"
+version = "0.1.0"
+edition = "2021"
+description = "Perl XS extension exposing polynomial arithmetic from Rust"
+
+[lib]
+# DynaLoader looks for PolynomialNative.so → boot_CodingAdventures__PolynomialNative
+name = "PolynomialNative"
+crate-type = ["cdylib"]
+
+[dependencies]
+perl-bridge = { path = "../../rust/perl-bridge" }
+polynomial = { path = "../../rust/polynomial" }

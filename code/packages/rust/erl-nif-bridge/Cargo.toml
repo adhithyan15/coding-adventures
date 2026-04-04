@@ -1,0 +1,13 @@
+# Zero dependencies. We declare Erlang's erl_nif functions ourselves using
+# extern "C" — no rustler, no erl_nif crate, no build-time header requirement.
+# erl_nif is part of OTP and has been stable since Erlang/OTP R13B (2009).
+[workspace]
+
+[package]
+name = "erl-nif-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Thin safe Rust wrapper over Erlang's erl_nif C API — zero dependencies, no Rustler, no macros"
+
+[dependencies]
+# None. That's the point.

@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "gf256-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust gf256 crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "gf256_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Our own zero-dependency Python C API bridge — replaces PyO3.
+python-bridge = { path = "../../rust/python-bridge" }
+
+# The core GF(256) arithmetic crate.
+gf256 = { path = "../../rust/gf256" }
