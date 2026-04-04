@@ -34,7 +34,7 @@ private func types(_ tokens: [Token]) -> [String] {
 }
 
 /// Extract just the token values from a token array.
-private func values(_ tokens: [Token]) -> [String] {
+private func tokenValues(_ tokens: [Token]) -> [String] {
     return tokens.map { $0.value }
 }
 
@@ -79,7 +79,7 @@ final class BasicTokenizationTests: XCTestCase {
             ["NAME", "EQUALS", "NUMBER", "PLUS", "NUMBER", "EOF"]
         )
         XCTAssertEqual(
-            values(tokens),
+            tokenValues(tokens),
             ["x", "=", "1", "+", "2", ""]
         )
     }
@@ -917,10 +917,10 @@ final class IndentationModeTests: XCTestCase {
                 TokenDefinition(name: "COLON", pattern: ":", isRegex: false, lineNumber: 4),
             ],
             keywords: ["if"],
+            mode: "indentation",
             skipDefinitions: [
                 TokenDefinition(name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10),
-            ],
-            mode: "indentation"
+            ]
         )
         let tokens = try grammarTokenize(source: "if x:\n    y = 1\n", grammar: grammar)
         let typeList = types(tokens)
@@ -935,10 +935,10 @@ final class IndentationModeTests: XCTestCase {
                 TokenDefinition(name: "COLON", pattern: ":", isRegex: false, lineNumber: 2),
             ],
             keywords: [],
+            mode: "indentation",
             skipDefinitions: [
                 TokenDefinition(name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10),
-            ],
-            mode: "indentation"
+            ]
         )
         XCTAssertThrowsError(try grammarTokenize(source: "if:\n\ty\n", grammar: grammar)) { error in
             guard let lexerError = error as? LexerError else {
@@ -952,10 +952,10 @@ final class IndentationModeTests: XCTestCase {
         let grammar = TokenGrammar(
             definitions: [],
             keywords: [],
+            mode: "indentation",
             skipDefinitions: [
                 TokenDefinition(name: "WS", pattern: "[ \\t]+", isRegex: true, lineNumber: 10),
-            ],
-            mode: "indentation"
+            ]
         )
         let tokens = try grammarTokenize(source: "", grammar: grammar)
         XCTAssertEqual(tokens.last?.type, "EOF")

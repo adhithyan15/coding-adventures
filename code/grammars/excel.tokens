@@ -17,7 +17,7 @@ REF_PREFIX_WB_BARE  = /\[[^\]]+\][A-Za-z_][A-Za-z0-9_.:]*!/ -> REF_PREFIX
 REF_PREFIX_BARE     = /[A-Za-z_][A-Za-z0-9_.:]*!/ -> REF_PREFIX
 
 STRING            = /"([^"]|"")*"/
-ERROR_CONSTANT    = /#[a-z0-9\/\?!]+/
+ERROR_CONSTANT    = /#[a-z0-9\/\?!]*[a-z0-9\?!]/
 # Numeric literals. Split into exponent and plain variants so that the
 # sign characters + and - are NOT consumed unless preceded by [eE].
 # The single merged pattern /[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/ is wrong:
