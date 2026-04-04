@@ -271,7 +271,23 @@ function M.parse_inline(text)
     ::continue::
   end
 
-  return nodes
+  -- Merge consecutive text nodes.
+  --
+  -- The plain-text scanner must stop at characters like `l`, `i`, `h`, `H`
+  -- because they might start inline macros (`link:`, `image:`, `https://`).
+  -- This causes words such as "hello" to be split into many single-character
+  -- text nodes.  Merging consecutive text nodes restores the full word into a
+  -- single node, which is both more correct and easier for callers to test.
+  local merged = {}
+  for _, node in ipairs(nodes) do
+    if node.type == "text" and #merged > 0 and merged[#merged].type == "text" then
+      merged[#merged].value = merged[#merged].value .. node.value
+    else
+      merged[#merged + 1] = node
+    end
+  end
+
+  return merged
 end
 
 return M

@@ -557,7 +557,23 @@ sub _parse_inlines {
         $pos++;
     }
 
-    return \@nodes;
+    # Merge consecutive text nodes.
+    #
+    # The plain-text scanner stops at characters like `l`, `i`, `h`, `H`
+    # because they could start inline macros (`link:`, `image:`, `https://`).
+    # This causes words like "hello" to be fragmented into single-character
+    # text nodes.  Merging consecutive text nodes restores full words so that
+    # callers (and tests) see a single text node with the complete value.
+    my @merged;
+    for my $node (@nodes) {
+        if ($node->{type} eq 'text' && @merged && $merged[-1]{type} eq 'text') {
+            $merged[-1]{value} .= $node->{value};
+        } else {
+            push @merged, $node;
+        }
+    }
+
+    return \@merged;
 }
 
 # ============================================================================
