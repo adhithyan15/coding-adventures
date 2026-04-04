@@ -61,7 +61,10 @@ local function paragraph_node(children)
 end
 
 local function code_block_node(language, value)
-  return { type = "code_block", language = language or "", value = value }
+  -- Store nil (not empty string) when there is no language, because the
+  -- renderer checks truthiness: `if node.language then` — in Lua an empty
+  -- string "" is truthy and would produce `<code class="language-">`.
+  return { type = "code_block", language = (language ~= "" and language or nil), value = value }
 end
 
 local function thematic_break_node()
@@ -116,10 +119,17 @@ local function parse_heading_line(line)
 end
 
 --- Build list items accumulated as {text_string, text_string, …}.
+--
+-- Each list item's content is wrapped in a paragraph_node so that
+-- render_list_item (in document_ast_to_html) can render it correctly.
+-- render_list_item calls render_blocks(node.children, ...) which expects
+-- block-level children (paragraphs, code blocks, etc.), not raw inline nodes.
+-- Without the paragraph wrapper, text/strong/emphasis nodes would fall through
+-- to the `else return ""` branch in render_block, producing empty <li> tags.
 local function build_list_items(raw_items)
   local items = {}
   for _, text in ipairs(raw_items) do
-    items[#items + 1] = list_item_node(inlines(text))
+    items[#items + 1] = list_item_node({ paragraph_node(inlines(text)) })
   end
   return items
 end
