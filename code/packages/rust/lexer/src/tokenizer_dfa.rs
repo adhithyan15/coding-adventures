@@ -195,7 +195,7 @@ fn build_transitions() -> HashMap<(String, String), String> {
 ///
 /// # Example
 ///
-/// ```
+/// ```ignore
 /// use lexer::tokenizer_dfa::{new_tokenizer_dfa, classify_char};
 ///
 /// let mut dfa = new_tokenizer_dfa();

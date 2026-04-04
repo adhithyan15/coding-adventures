@@ -384,6 +384,14 @@ luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_gr
 luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
 luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rockspec
 `)
+			writeBuildFile(t, pkg.Path, "coding-adventures-safe-pkg-0.1.0-1.rockspec", `
+package = "coding-adventures-safe-pkg"
+version = "0.1.0-1"
+dependencies = {
+  "lua >= 5.4",
+  "coding-adventures-state-machine >= 0.1.0",
+}
+`)
 		default:
 			writeBuildFile(t, pkg.Path, "BUILD", "echo ok\n")
 		}
@@ -396,6 +404,44 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
 
 	if err := ValidateBuildFiles(pkgs, graph); err != nil {
 		t.Fatalf("expected safe Lua BUILD validation to pass, got %v", err)
+	}
+}
+
+func TestValidateBuildFilesFailsLuaSelfManagedBuildWithoutExplicitLocalDeps(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "lua/wasm_leb128", relPath: "code/packages/lua/wasm_leb128", lang: "lua"},
+		{name: "lua/wasm_types", relPath: "code/packages/lua/wasm_types", lang: "lua"},
+	})
+
+	writeBuildFile(t, pkgs[0].Path, "BUILD", "echo ok\n")
+	writeBuildFile(t, pkgs[1].Path, "BUILD", `
+luarocks make --local --deps-mode=none coding-adventures-wasm-types-0.1.0-1.rockspec
+`)
+	writeBuildFile(t, pkgs[1].Path, "coding-adventures-wasm-types-0.1.0-1.rockspec", `
+package = "coding-adventures-wasm-types"
+version = "0.1.0-1"
+dependencies = {
+  "lua >= 5.4",
+  "coding-adventures-wasm-leb128 >= 0.1.0",
+}
+`)
+
+	graph := graphWithEdges([2]string{"lua/wasm_leb128", "lua/wasm_types"})
+
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil {
+		t.Fatal("expected Lua self-managed dependency validation failure")
+	}
+	if !strings.Contains(err.Error(), "does not bootstrap local rockspec dependencies") {
+		t.Fatalf("expected self-managed dependency guidance, got %v", err)
+	}
+	if !strings.Contains(err.Error(), "coding-adventures-wasm-leb128") {
+		t.Fatalf("expected missing local rock dependency, got %v", err)
 	}
 }
 

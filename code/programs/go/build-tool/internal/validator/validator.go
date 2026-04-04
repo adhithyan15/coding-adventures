@@ -324,6 +324,14 @@ func validateCIFullBuildToolchains(packages []discovery.Package) string {
 
 func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
 	var problems []string
+	localLuaRocks := make(map[string]string)
+	for _, pkg := range packages {
+		if pkg.Language != "lua" {
+			continue
+		}
+		localLuaRocks[luaRockNameForPackagePath(pkg.Path)] = filepath.Base(pkg.Path)
+	}
+
 	for _, pkg := range packages {
 		if pkg.Language != "lua" {
 			continue
@@ -361,6 +369,17 @@ func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
 					"%s: Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest",
 					filepath.ToSlash(buildPath),
 				))
+			}
+
+			if selfLuaInstallDisablesDeps(lines, selfRock) {
+				missingLocalDeps := missingLuaLocalDepsForSelfManagedBuild(pkg.Path, selfRock, lines, localLuaRocks)
+				if len(missingLocalDeps) > 0 {
+					problems = append(problems, fmt.Sprintf(
+						"%s: Lua BUILD self-install disables dependency resolution but does not bootstrap local rockspec dependencies: %s",
+						filepath.ToSlash(buildPath),
+						strings.Join(missingLocalDeps, ", "),
+					))
+				}
 			}
 		}
 
@@ -571,4 +590,104 @@ func luaSiblingInstallDirs(lines []string) []string {
 
 	sort.Strings(dirs)
 	return dirs
+}
+
+func luaRockNameForPackagePath(pkgPath string) string {
+	return "coding-adventures-" + strings.ReplaceAll(filepath.Base(pkgPath), "_", "-")
+}
+
+func missingLuaLocalDepsForSelfManagedBuild(pkgPath, selfRock string, lines []string, localLuaRocks map[string]string) []string {
+	deps := luaLocalRepoDeps(pkgPath, selfRock, localLuaRocks)
+	if len(deps) == 0 {
+		return nil
+	}
+
+	var missing []string
+	for _, dep := range deps {
+		dir := localLuaRocks[dep]
+		unixDir := "../" + dir
+		windowsDir := `..\` + dir
+		if containsLuaDepReference(lines, dep, unixDir, windowsDir) {
+			continue
+		}
+		missing = append(missing, dep)
+	}
+
+	return missing
+}
+
+func luaLocalRepoDeps(pkgPath, selfRock string, localLuaRocks map[string]string) []string {
+	rockspecPath := luaPackageRockspecPath(pkgPath, selfRock)
+	if rockspecPath == "" {
+		return nil
+	}
+
+	data, err := os.ReadFile(rockspecPath)
+	if err != nil {
+		return nil
+	}
+
+	var deps []string
+	seen := make(map[string]bool)
+	inDependencies := false
+	depSpecRe := regexp.MustCompile(`"([^"]+)"`)
+
+	for _, raw := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(raw)
+		if line == "" {
+			continue
+		}
+		if !inDependencies {
+			if strings.HasPrefix(line, "dependencies") && strings.HasSuffix(line, "{") {
+				inDependencies = true
+			}
+			continue
+		}
+		if strings.HasPrefix(line, "}") {
+			break
+		}
+
+		match := depSpecRe.FindStringSubmatch(line)
+		if len(match) < 2 {
+			continue
+		}
+
+		name := strings.Fields(match[1])[0]
+		if name == selfRock || seen[name] {
+			continue
+		}
+		if _, ok := localLuaRocks[name]; !ok {
+			continue
+		}
+		seen[name] = true
+		deps = append(deps, name)
+	}
+
+	sort.Strings(deps)
+	return deps
+}
+
+func luaPackageRockspecPath(pkgPath, selfRock string) string {
+	rockspecs, err := filepath.Glob(filepath.Join(pkgPath, "*.rockspec"))
+	if err != nil || len(rockspecs) == 0 {
+		return ""
+	}
+	sort.Strings(rockspecs)
+	for _, rockspec := range rockspecs {
+		if strings.Contains(filepath.Base(rockspec), selfRock) {
+			return rockspec
+		}
+	}
+	return rockspecs[0]
+}
+
+func containsLuaDepReference(lines []string, depNamesAndPaths ...string) bool {
+	for _, line := range lines {
+		for _, needle := range depNamesAndPaths {
+			if strings.Contains(line, needle) {
+				return true
+			}
+		}
+	}
+	return false
 }
