@@ -1162,3 +1162,141 @@ When `uv pip install -e ".[dev]"` runs, it sees `coding-adventures-trig` in `dep
 The `trig` package predates Vitest adoption and had `"main": "dist/trig.js"` pointing to compiled output. When other packages depend on `trig` via `"file:../trig"` and are tested with Vitest, Vite resolves the entry via `main` and fails because `dist/trig.js` doesn't exist.
 
 **Fix:** Set `"main": "src/trig.ts"` (consistent with the rule for all TypeScript packages). This is the same rule from 2026-03-19 but applied to the leaf `trig` package that was created before the rule was established.
+
+---
+
+### 2026-04-03: Python 3.13 c_long type mismatch in Python C extension (Windows)
+
+On Windows x64, `c_long` is `i32` (32-bit), not `i64`. The CPython C API functions
+`PyLong_AsLong`, `PyLong_FromLong`, and `PyModule_AddIntConstant` use `long` in their
+signatures, which maps to `c_long`.
+
+If you declare them as returning/taking `i64` (hardcoded), Rust compiles fine on Linux/macOS
+(where `c_long == i64`), but fails on Windows with type mismatch errors like:
+```
+error[E0308]: mismatched types
+150 |     PyLong_FromLong(result as i64)
+    |                     ^^^^^^^^^^^ expected `i32`, found `i64`
+```
+
+**Fix:** Always declare Python C API functions with `c_long` from `std::ffi::c_long`:
+```rust
+use std::ffi::c_long;
+
+extern "C" {
+    fn PyLong_AsLong(obj: PyObjectPtr) -> c_long;
+    fn PyModule_AddIntConstant(module: PyObjectPtr, name: *const c_char, value: c_long) -> c_int;
+}
+// Return from functions:
+PyLong_FromLong(result as c_long)
+```
+
+When comparing or doing arithmetic with `c_long` values that may differ in width:
+```rust
+// Safe on both platforms:
+let exp = (exp_val as i64).min(u32::MAX as i64) as u32;
+```
+
+**Rule:** All Python C API functions that take or return `long` must use `c_long` in Rust, not `i64`.
+
+---
+
+### 2026-04-03: OTP 26 Linux — enif_get_int64/enif_make_int64 not exported from beam.smp
+
+On OTP 26 (and some earlier versions) on Linux, `enif_get_int64` and `enif_make_int64` are NOT
+reliably exported from `beam.smp`. Declaring them as `extern "C"` compiles fine but causes:
+```
+undefined symbol: enif_get_int64
+```
+at NIF load time (dlopen).
+
+**Fix:** Use `enif_get_long` and `enif_make_long` (always exported). On 64-bit POSIX:
+- `c_long == i64`, so `enif_get_long` / `enif_make_long` are semantically equivalent to the
+  int64 variants.
+- Cast to/from `c_long` when calling these functions.
+
+```rust
+// make_i64: use enif_make_long
+pub unsafe fn make_i64(env: ErlNifEnv, i: i64) -> ERL_NIF_TERM {
+    enif_make_long(env, i as c_long)
+}
+
+// get_i64: use enif_get_long
+pub unsafe fn get_i64(env: ErlNifEnv, term: ERL_NIF_TERM) -> Option<i64> {
+    let mut val: c_long = 0;
+    if enif_get_long(env, term, &mut val) != 0 {
+        Some(val as i64)
+    } else {
+        None
+    }
+}
+```
+
+**Rule:** Never use `enif_get_int64`/`enif_make_int64` in erl-nif-bridge. Use `enif_get_long`/`enif_make_long`.
+
+---
+
+### 2026-04-03: Node.js N-API macOS linking — cargo:rustc-cdylib-link-arg must come from cdylib crate
+
+N-API addons (`.node` files) are cdylibs that need `-undefined dynamic_lookup` on macOS so the
+linker defers N-API symbol resolution to dlopen() time (when Node.js loads the addon).
+
+**Critical:** `cargo:rustc-cdylib-link-arg` from a dependency's build.rs does NOT propagate
+to the final cdylib. The flag must be emitted by the cdylib crate's own build.rs.
+
+Wrong (no effect):
+```
+node-bridge/build.rs → cargo:rustc-cdylib-link-arg=-undefined
+```
+
+Correct (applied to the cdylib link step):
+```
+gf256-native-node/build.rs → cargo:rustc-cdylib-link-arg=-undefined
+```
+
+Pattern for N-API cdylib build.rs:
+```rust
+fn main() {
+    let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+    if target_os == "macos" {
+        println!("cargo:rustc-cdylib-link-arg=-undefined");
+        println!("cargo:rustc-cdylib-link-arg=dynamic_lookup");
+    }
+}
+```
+
+**Rule:** Every cdylib that wraps N-API, Ruby, Python, Erlang, or Lua APIs needs its own build.rs
+emitting platform linker flags. Do not rely on the bridge library's build.rs.
+
+---
+
+### 2026-04-03: Windows CMD vs sh — BUILD files use `cmd /C` on Windows
+
+The Go build tool (executor.go) runs BUILD lines with `cmd /C <line>` on Windows, not `sh -c`.
+Shell syntax that works on Linux/macOS fails on Windows CMD:
+
+- `if [ -f file ]` → `-f was unexpected at this time.`
+- `elif`, `fi` → syntax errors
+- `{ cmd1 || cmd2; }` → `{` and `||` may not work as expected
+
+**Fix:** Create `BUILD_windows` files alongside `BUILD` files for packages that use sh-specific
+syntax. Use CMD-compatible commands:
+
+```
+# BUILD (Linux/macOS) — sh syntax
+if [ -f target/release/libfoo.so ]; then cp ...; fi
+
+# BUILD_windows — CMD syntax  
+copy target\release\foo.dll src\foo\foo.pyd
+set PYTHONPATH=src&& .venv\Scripts\python.exe -m pytest tests -v
+```
+
+Key CMD facts:
+- `set VAR=value&& command` sets VAR and runs command in the same subprocess (no space before &&)
+- `copy source destination` copies files
+- `where program >/dev/null 2>/dev/null && program || echo skip` checks for program availability
+- `&&` and `||` work as conditional separators (same as sh)
+
+**Rule:** For any package whose BUILD uses `if [ -f ... ]`, `elif`, or `fi`, create a BUILD_windows
+with CMD-compatible syntax. Python native packages especially need this.
+
