@@ -53,6 +53,7 @@ jobs:
       needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -119,7 +120,8 @@ jobs:
               'needs_rust=true' \
               'needs_elixir=true' \
               'needs_lua=true' \
-              'needs_perl=true' >> "$GITHUB_OUTPUT"
+              'needs_perl=true' \
+              'needs_swift=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -129,7 +131,8 @@ jobs:
               'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
-              'needs_perl=${{ steps.detect.outputs.needs_perl }}' >> "$GITHUB_OUTPUT"
+              'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
+              'needs_swift=${{ steps.detect.outputs.needs_swift }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -264,6 +267,59 @@ jobs:
           elixir-version: '1.16'
           otp-version: '26.0'
 
+      - name: Set up Swift (macOS/Linux)
+        if: needs.detect.outputs.needs_swift == 'true' && runner.os != 'Windows'
+        uses: swift-actions/setup-swift@v3
+        with:
+          swift-version: '6.0'
+          # Workaround for https://github.com/swift-actions/setup-swift/issues/798
+          # GPG key verification fails on Ubuntu runners with "No public key"
+          skip-verify-signature: ${{ runner.os == 'Linux' }}
+
+      - name: Set up Swift (Windows)
+        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # swift-actions/setup-swift doesn't support Windows yet, so we
+          # install the toolchain directly via winget (pre-installed on
+          # GitHub Windows runners) following https://www.swift.org/install/windows/
+          winget install --id Swift.Toolchain -e --source winget --accept-source-agreements --accept-package-agreements --silent
+          # Find where Swift was installed — winget may place it in various locations
+          $searchPaths = @(
+            "$env:ProgramFiles\Swift",
+            "$env:LOCALAPPDATA\Programs\Swift",
+            "${env:ProgramFiles(x86)}\Swift"
+          )
+          $swiftBin = $null
+          foreach ($base in $searchPaths) {
+            if (Test-Path $base) {
+              $found = Get-ChildItem -Path $base -Recurse -Filter "swift.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+              if ($found) {
+                $swiftBin = $found.DirectoryName
+                break
+              }
+            }
+          }
+          # Fallback: search PATH in case winget already added it
+          if (-not $swiftBin) {
+            $swiftExe = Get-Command swift -ErrorAction SilentlyContinue
+            if ($swiftExe) {
+              $swiftBin = Split-Path $swiftExe.Source
+            }
+          }
+          if ($swiftBin) {
+            echo "$swiftBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            echo "Swift found at: $swiftBin"
+          } else {
+            echo "WARNING: Swift installed but could not locate swift.exe"
+            foreach ($base in $searchPaths) {
+              if (Test-Path $base) {
+                echo "Contents of ${base}:"
+                Get-ChildItem -Path $base -Recurse -Depth 3 | ForEach-Object { echo $_.FullName }
+              }
+            }
+          }
+
       - name: Install cpanm and test dependencies (Perl)
         if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
         shell: bash
@@ -320,6 +376,9 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Perl: $(perl --version | head -2 | tail -1)"
             echo "cpanm: $(cpanm --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
+            echo "Swift: $(swift --version)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────
