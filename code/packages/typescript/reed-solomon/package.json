@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/reed-solomon",
+  "version": "0.1.0",
+  "description": "Reed-Solomon error-correcting codes over GF(256) — the math behind QR codes, CDs, and deep-space communication",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/gf256": "file:../gf256"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
