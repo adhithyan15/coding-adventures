@@ -3,18 +3,34 @@ defmodule CodingAdventures.PythonLexerTest do
 
   alias CodingAdventures.PythonLexer
 
-  defp token_types(source) do
-    {:ok, tokens} = PythonLexer.tokenize(source)
+  defp token_types(source, version \\ nil) do
+    {:ok, tokens} = PythonLexer.tokenize(source, version)
     Enum.map(tokens, & &1.type)
   end
 
-  defp token_values(source) do
-    {:ok, tokens} = PythonLexer.tokenize(source)
+  defp token_values(source, version \\ nil) do
+    {:ok, tokens} = PythonLexer.tokenize(source, version)
     Enum.map(tokens, & &1.value)
   end
 
-  describe "create_lexer/0" do
-    test "returns the parsed python token grammar" do
+  describe "version constants" do
+    test "default_version is 3.12" do
+      assert PythonLexer.default_version() == "3.12"
+    end
+
+    test "supported_versions includes expected versions" do
+      versions = PythonLexer.supported_versions()
+      assert "2.7" in versions
+      assert "3.0" in versions
+      assert "3.6" in versions
+      assert "3.8" in versions
+      assert "3.10" in versions
+      assert "3.12" in versions
+    end
+  end
+
+  describe "create_lexer/1" do
+    test "returns the parsed python token grammar for default version" do
       grammar = PythonLexer.create_lexer()
       names = Enum.map(grammar.definitions, & &1.name)
 
@@ -27,9 +43,15 @@ defmodule CodingAdventures.PythonLexerTest do
       assert "def" in grammar.keywords
       assert "True" in grammar.keywords
     end
+
+    test "accepts an explicit version string" do
+      grammar = PythonLexer.create_lexer("3.12")
+      names = Enum.map(grammar.definitions, & &1.name)
+      assert "NAME" in names
+    end
   end
 
-  describe "tokenize/1" do
+  describe "tokenize/2" do
     test "tokenizes a basic assignment expression" do
       assert token_types("x = 1 + 2") == ["NAME", "EQUALS", "NUMBER", "PLUS", "NUMBER", "EOF"]
       assert token_values("x = 1 + 2") == ["x", "=", "1", "+", "2", ""]
@@ -74,6 +96,18 @@ defmodule CodingAdventures.PythonLexerTest do
     test "returns an error on unexpected characters" do
       assert {:error, message} = PythonLexer.tokenize("@")
       assert message =~ "Unexpected character"
+    end
+
+    test "accepts an explicit version parameter" do
+      assert token_types("x = 1", "3.12") == ["NAME", "EQUALS", "NUMBER", "EOF"]
+    end
+
+    test "nil version defaults to 3.12" do
+      assert token_types("x = 1", nil) == ["NAME", "EQUALS", "NUMBER", "EOF"]
+    end
+
+    test "empty string version defaults to 3.12" do
+      assert token_types("x = 1", "") == ["NAME", "EQUALS", "NUMBER", "EOF"]
     end
   end
 end

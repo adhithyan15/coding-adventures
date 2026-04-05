@@ -143,6 +143,7 @@ members = [
   "atbash-cipher",
   "draw-instructions-text",
   "python-bridge",
+  "python-lexer",
   "ruby-bridge",
   "node-bridge",
   "font-parser",

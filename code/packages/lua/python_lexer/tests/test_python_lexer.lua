@@ -525,3 +525,42 @@ describe("error handling", function()
         end)
     end)
 end)
+
+-- =========================================================================
+-- Version support
+-- =========================================================================
+
+describe("version support", function()
+    it("exposes DEFAULT_VERSION as 3.12", function()
+        assert.are.equal("3.12", py_lexer.DEFAULT_VERSION)
+    end)
+
+    it("exposes SUPPORTED_VERSIONS table", function()
+        assert.is_table(py_lexer.SUPPORTED_VERSIONS)
+        assert.are.equal(6, #py_lexer.SUPPORTED_VERSIONS)
+    end)
+
+    it("tokenizes with explicit version parameter", function()
+        local tokens = py_lexer.tokenize("x = 1", "3.12")
+        local t = types(tokens)
+        assert.are.same({"NAME", "EQUALS", "NUMBER"}, t)
+    end)
+
+    it("nil version defaults to 3.12", function()
+        local tokens = py_lexer.tokenize("x = 1", nil)
+        local t = types(tokens)
+        assert.are.same({"NAME", "EQUALS", "NUMBER"}, t)
+    end)
+
+    it("get_grammar accepts a version parameter", function()
+        local g = py_lexer.get_grammar("3.12")
+        assert.is_not_nil(g)
+        assert.is_table(g.definitions)
+    end)
+
+    it("get_grammar with nil defaults to 3.12", function()
+        local g = py_lexer.get_grammar(nil)
+        assert.is_not_nil(g)
+        assert.is_table(g.definitions)
+    end)
+end)

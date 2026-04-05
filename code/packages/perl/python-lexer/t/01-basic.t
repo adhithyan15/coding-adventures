@@ -14,6 +14,12 @@ sub types_of {
     return [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$tokens ];
 }
 
+sub types_of_v {
+    my ($source, $version) = @_;
+    my $tokens = CodingAdventures::PythonLexer->tokenize($source, $version);
+    return [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$tokens ];
+}
+
 sub values_of {
     my ($source) = @_;
     my $tokens = CodingAdventures::PythonLexer->tokenize($source);
@@ -394,6 +400,45 @@ subtest 'unexpected character $ raises die' => sub {
     ok(
         dies { CodingAdventures::PythonLexer->tokenize('$x') },
         'unexpected $ causes die'
+    );
+};
+
+# ============================================================================
+# Version support
+# ============================================================================
+
+subtest 'DEFAULT_VERSION is 3.12' => sub {
+    is( CodingAdventures::PythonLexer::DEFAULT_VERSION, '3.12', 'default version' );
+};
+
+subtest 'SUPPORTED_VERSIONS contains expected versions' => sub {
+    my @versions = @CodingAdventures::PythonLexer::SUPPORTED_VERSIONS;
+    is( scalar @versions, 6, '6 supported versions' );
+    ok( (grep { $_ eq '3.12' } @versions), '3.12 in supported versions' );
+    ok( (grep { $_ eq '2.7' } @versions), '2.7 in supported versions' );
+};
+
+subtest 'tokenize with explicit version parameter' => sub {
+    is(
+        types_of_v('x = 1', '3.12'),
+        [qw(NAME EQUALS NUMBER)],
+        'explicit version 3.12'
+    );
+};
+
+subtest 'tokenize with undef version defaults to 3.12' => sub {
+    is(
+        types_of_v('x = 1', undef),
+        [qw(NAME EQUALS NUMBER)],
+        'undef version defaults'
+    );
+};
+
+subtest 'tokenize with empty string version defaults to 3.12' => sub {
+    is(
+        types_of_v('x = 1', ''),
+        [qw(NAME EQUALS NUMBER)],
+        'empty string version defaults'
     );
 };
 

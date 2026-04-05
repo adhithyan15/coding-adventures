@@ -1,17 +1,26 @@
 # Python Lexer
 
-A Ruby gem that tokenizes Python source code using the grammar-driven lexer engine.
+A Ruby gem that tokenizes Python source code using the grammar-driven lexer engine, with support for multiple Python versions.
 
 ## Overview
 
-This gem is a thin wrapper around `coding_adventures_lexer`'s `GrammarLexer`. Instead of hardcoding Python-specific tokenization rules, it loads the `python.tokens` grammar file and feeds it to the general-purpose lexer engine.
+This gem is a thin wrapper around `coding_adventures_lexer`'s `GrammarLexer`. Instead of hardcoding Python-specific tokenization rules, it loads versioned `python{version}.tokens` grammar files and feeds them to the general-purpose lexer engine.
 
 This demonstrates the core idea behind grammar-driven language tooling: the same engine can process any language, as long as you provide the right grammar file.
+
+## Supported Python Versions
+
+- `"2.7"` -- Python 2.7 (final Python 2 release)
+- `"3.0"` -- Python 3.0 (print as function, not keyword)
+- `"3.6"` -- Python 3.6 (f-strings, underscores in numeric literals)
+- `"3.8"` -- Python 3.8 (walrus operator `:=`)
+- `"3.10"` -- Python 3.10 (soft keywords: `match`, `case`, `_`)
+- `"3.12"` -- Python 3.12 (soft keyword: `type`) -- **default**
 
 ## How It Fits in the Stack
 
 ```
-python.tokens (grammar file)
+python{version}.tokens (versioned grammar files)
        |
        v
 grammar_tools (parses .tokens into TokenGrammar)
@@ -28,19 +37,20 @@ python_lexer (this gem -- thin wrapper providing Python API)
 ```ruby
 require "coding_adventures_python_lexer"
 
+# Default version (3.12)
 tokens = CodingAdventures::PythonLexer.tokenize("x = 1 + 2")
 tokens.each { |t| puts t }
-# Token(NAME, "x", 1:1)
-# Token(EQUALS, "=", 1:3)
-# Token(NUMBER, "1", 1:5)
-# Token(PLUS, "+", 1:7)
-# Token(NUMBER, "2", 1:9)
-# Token(EOF, "", 1:10)
+
+# Specify a version
+tokens = CodingAdventures::PythonLexer.tokenize("x = 1 + 2", version: "3.8")
+
+# Python 2.7
+tokens = CodingAdventures::PythonLexer.tokenize("print 'hello'", version: "2.7")
 ```
 
 ## Dependencies
 
-- `coding_adventures_grammar_tools` -- reads the `.tokens` grammar file
+- `coding_adventures_grammar_tools` -- reads the `.tokens` grammar files
 - `coding_adventures_lexer` -- the grammar-driven lexer engine
 
 ## Development

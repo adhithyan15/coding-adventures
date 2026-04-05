@@ -279,9 +279,14 @@ sub _build_rules {
 #   `die` with a "LexerError" message on unexpected input.
 
 sub tokenize {
-    my ($class_or_self, $source) = @_;
+    my ($class_or_self, $source, $version) = @_;
 
-    _build_rules();
+    my $v = _resolve_version($version);
+    _build_rules($v);
+
+    my $rules       = $_rules_cache{$v};
+    my $skip_rules  = $_skip_cache{$v};
+    my $keyword_map = $_keyword_cache{$v};
 
     my @tokens;
     my $line = 1;
@@ -293,14 +298,9 @@ sub tokenize {
         pos($source) = $pos;
 
         # ---- Try skip patterns -----------------------------------------------
-        #
-        # Whitespace in Python source (spaces, tabs, and newlines between
-        # tokens) is insignificant to the parser. We advance position without
-        # emitting anything, but still update line/col so that token positions
-        # after whitespace are accurate.
 
         my $skipped = 0;
-        for my $spat (@$_skip_rules) {
+        for my $spat (@$skip_rules) {
             pos($source) = $pos;
             if ($source =~ /$spat/gc) {
                 my $matched = $&;
@@ -324,19 +324,16 @@ sub tokenize {
         next if $skipped;
 
         # ---- Try token patterns ----------------------------------------------
-        #
-        # Each pattern is tried at the current pos() using /gc (keep pos on
-        # failure, anchored to \G). First match wins.
 
         my $matched_tok = 0;
-        for my $rule (@$_rules) {
+        for my $rule (@$rules) {
             pos($source) = $pos;
             if ($source =~ /$rule->{pat}/gc) {
                 my $value = $&;
 
                 my $tok_type = $rule->{name};
-                if ($tok_type eq 'NAME' && exists $_keyword_map->{$value}) {
-                    $tok_type = $_keyword_map->{$value};
+                if ($tok_type eq 'NAME' && exists $keyword_map->{$value}) {
+                    $tok_type = $keyword_map->{$value};
                 }
                 push @tokens, {
                     type  => $tok_type,
@@ -363,10 +360,7 @@ sub tokenize {
             }
         }
 
-        # ---- No match — unexpected character ---------------------------------
-        #
-        # A well-formed Python source should rarely reach here. We emit a
-        # descriptive error including position and the offending character.
+        # ---- No match -- unexpected character --------------------------------
 
         unless ($matched_tok) {
             my $ch = substr($source, $pos, 1);
@@ -378,7 +372,7 @@ sub tokenize {
         }
     }
 
-    # Sentinel EOF token — always present as the last element.
+    # Sentinel EOF token
     push @tokens, { type => 'EOF', value => '', line => $line, col => $col };
 
     return \@tokens;
@@ -396,7 +390,8 @@ CodingAdventures::PythonLexer - Grammar-driven Python tokenizer
 
     use CodingAdventures::PythonLexer;
 
-    my $tokens = CodingAdventures::PythonLexer->tokenize('def foo(x):');
+    my $tokens = CodingAdventures::PythonLexer->tokenize('def foo(x):', '3.12');
+    my $tokens = CodingAdventures::PythonLexer->tokenize('def foo(x):');  # defaults to 3.12
     for my $tok (@$tokens) {
         printf "%s  %s\n", $tok->{type}, $tok->{value};
     }
@@ -418,9 +413,12 @@ types: LPAREN, RPAREN, COMMA, COLON.
 
 =head1 METHODS
 
-=head2 tokenize($source)
+=head2 tokenize($source, $version)
 
-Tokenize a Python string. Returns an arrayref of token hashrefs.
+Tokenize a Python string using the grammar for the given version.
+If C<$version> is omitted or empty, defaults to C<"3.12">.
+Supported versions: 2.7, 3.0, 3.6, 3.8, 3.10, 3.12.
+Returns an arrayref of token hashrefs.
 Dies on unexpected input with a descriptive message.
 
 =head1 VERSION
