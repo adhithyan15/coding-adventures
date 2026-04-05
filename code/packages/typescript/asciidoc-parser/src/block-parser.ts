@@ -96,10 +96,20 @@ interface ParseState {
  * Returns `{ level, text }` if the line is a heading, or `null` otherwise.
  */
 function matchHeading(line: string): { level: 1 | 2 | 3 | 4 | 5 | 6; text: string } | null {
-  const m = /^(={1,6})\s+(.+)$/.exec(line);
-  if (!m) return null;
-  const level = Math.min(m[1].length, 6) as 1 | 2 | 3 | 4 | 5 | 6;
-  return { level, text: m[2] };
+  let index = 0;
+  while (index < line.length && index < 6 && line[index] === "=") {
+    index++;
+  }
+  if (index === 0) return null;
+
+  const level = index as 1 | 2 | 3 | 4 | 5 | 6;
+  const textStart = index;
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  if (index === textStart || index >= line.length) return null;
+
+  return { level, text: line.slice(index) };
 }
 
 // ─── Delimiter detection ──────────────────────────────────────────────────────
@@ -164,9 +174,20 @@ function matchSourceAttr(line: string): string | null {
  *   `** bar`  → { level: 2, text: "bar" }
  */
 function matchUnorderedItem(line: string): { level: number; text: string } | null {
-  const m = /^(\*+)\s+(.+)$/.exec(line);
-  if (!m) return null;
-  return { level: m[1].length, text: m[2] };
+  let index = 0;
+  while (index < line.length && line[index] === "*") {
+    index++;
+  }
+  if (index === 0) return null;
+
+  const level = index;
+  const textStart = index;
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  if (index === textStart || index >= line.length) return null;
+
+  return { level, text: line.slice(index) };
 }
 
 /**
@@ -179,9 +200,20 @@ function matchUnorderedItem(line: string): { level: number; text: string } | nul
  *   `.. bar` → { level: 2, text: "bar" }
  */
 function matchOrderedItem(line: string): { level: number; text: string } | null {
-  const m = /^(\.+)\s+(.+)$/.exec(line);
-  if (!m) return null;
-  return { level: m[1].length, text: m[2] };
+  let index = 0;
+  while (index < line.length && line[index] === ".") {
+    index++;
+  }
+  if (index === 0) return null;
+
+  const level = index;
+  const textStart = index;
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  if (index === textStart || index >= line.length) return null;
+
+  return { level, text: line.slice(index) };
 }
 
 // ─── Flush helpers ────────────────────────────────────────────────────────────

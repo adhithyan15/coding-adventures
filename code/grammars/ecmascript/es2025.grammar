@@ -1,0 +1,621 @@
+# ECMAScript 2025 (ES16) — Parser Grammar
+# @version 1
+# @ecmascript_edition 2025
+#
+# ECMA-262, 16th Edition — June 2025
+#
+# ES2025 adds three significant syntactic features: decorators, import
+# attributes, and explicit resource management (using/await using).
+#
+# Changes from ES2024:
+#   - Added: decorator, decorated_class_declaration, decorated_class_element
+#   - Added: import_attributes, import_attribute
+#   - Added: using_declaration, await_using_declaration
+#   - Changed: source_element gains decorated_class_declaration
+#   - Changed: class_element can be preceded by decorators
+#   - Changed: import_declaration gains optional import_attributes
+#   - Changed: export_declaration (re-exports) gains optional import_attributes
+#   - Changed: statement gains using_declaration, await_using_declaration
+#   - Changed: for_of_statement accepts "using" and "await" "using" heads
+#
+# === Decorators ===
+#
+# Decorators are functions that can observe, modify, or replace class
+# elements. They use the `@expression` syntax placed before the thing
+# being decorated.
+#
+# Decorator execution order:
+#   1. Decorator expressions are evaluated top-to-bottom, left-to-right
+#   2. Decorator functions are called bottom-to-top (innermost first)
+#
+# This means for:
+#   @a @b class C {}
+# The evaluation order is: evaluate a, evaluate b, call b(C), call a(result).
+#
+# What can be decorated:
+#   - Class declarations: @dec class C {}
+#   - Class methods: class C { @dec method() {} }
+#   - Class fields: class C { @dec field = value; }
+#   - Class getters/setters: class C { @dec get x() {} }
+#   - Class auto-accessors (if adopted): class C { @dec accessor x = 1; }
+#
+# What CANNOT be decorated (in this proposal):
+#   - Functions (not yet — separate proposal)
+#   - Object literal methods (not yet)
+#   - Variables or parameters (not supported)
+#
+# === Import Attributes ===
+#
+# Import attributes tell the module loader how to interpret a module:
+#
+#   import data from "./data.json" with { type: "json" };
+#
+# The `with` keyword was chosen over `assert` (from the earlier proposal)
+# because attributes can INFLUENCE module loading, not just verify it.
+# `with { type: "json" }` tells the loader to parse as JSON; `assert`
+# only checked after loading.
+#
+# === Explicit Resource Management ===
+#
+# `using` provides deterministic resource cleanup, similar to:
+#   - Python: `with open(f) as handle:`
+#   - C#: `using var stream = File.Open(path);`
+#   - Java: `try (var conn = getConnection())`
+#
+# The resource must implement Symbol.dispose (for `using`) or
+# Symbol.asyncDispose (for `await using`). When the containing block
+# exits — normally, via exception, break, continue, or return — the
+# dispose method is called automatically.
+
+# ============================================================================
+# Program
+# ============================================================================
+
+program = [ HASHBANG ] { source_element } ;
+
+source_element = import_declaration
+               | export_declaration
+               | function_declaration
+               | generator_declaration
+               | async_function_declaration
+               | async_generator_declaration
+               | decorated_class_declaration
+               | class_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+
+function_declaration = "function" NAME LPAREN [ formal_parameters ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA ] ;
+
+formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
+                 | ELLIPSIS ( NAME | binding_pattern ) ;
+
+function_body = { source_element } ;
+
+generator_declaration = "function" STAR NAME LPAREN [ formal_parameters ] RPAREN
+                        LBRACE function_body RBRACE ;
+
+generator_expression = "function" STAR [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+yield_expression = "yield" [ STAR ] assignment_expression ;
+
+async_function_declaration = "async" "function" NAME LPAREN [ formal_parameters ] RPAREN
+                             LBRACE function_body RBRACE ;
+
+async_function_expression = "async" "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE ;
+
+async_arrow_function = "async" arrow_parameters ARROW concise_body ;
+
+async_method = "async" [ STAR ] property_name LPAREN [ formal_parameters ] RPAREN
+               LBRACE function_body RBRACE ;
+
+await_expression = "await" unary_expression ;
+
+async_generator_declaration = "async" "function" STAR NAME
+                              LPAREN [ formal_parameters ] RPAREN
+                              LBRACE function_body RBRACE ;
+
+async_generator_expression = "async" "function" STAR [ NAME ]
+                             LPAREN [ formal_parameters ] RPAREN
+                             LBRACE function_body RBRACE ;
+
+lexical_declaration = ( "let" | "const" ) binding_list SEMICOLON ;
+
+binding_list = lexical_binding { COMMA lexical_binding } ;
+
+lexical_binding = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+# --- NEW IN ES2025: Using declarations ---
+#
+# `using` declares a resource that will be automatically disposed when
+# the enclosing block exits. The resource must have a `Symbol.dispose` method.
+#
+#   {
+#     using file = openFile("data.txt");
+#     const data = file.read();
+#     // file[Symbol.dispose]() called here, even if read() throws
+#   }
+#
+# `await using` is the async variant — the resource must have a
+# `Symbol.asyncDispose` method, and disposal is awaited:
+#
+#   async function process() {
+#     await using conn = await pool.connect();
+#     await conn.query("SELECT ...");
+#     // await conn[Symbol.asyncDispose]() called here
+#   }
+
+using_declaration = "using" binding_list SEMICOLON ;
+
+await_using_declaration = "await" "using" binding_list SEMICOLON ;
+
+# --- NEW IN ES2025: Decorators ---
+#
+# A decorator is `@` followed by a left-hand-side expression. The expression
+# must evaluate to a function (checked at runtime, not parse time).
+#
+# Valid decorator expressions:
+#   @simple                    — identifier
+#   @obj.method                — member expression
+#   @obj.method(args)          — call expression (decorator factory)
+#   @getDecorator()            — call expression
+#
+# Invalid (SyntaxError):
+#   @(expr)                    — parenthesized (forbidden)
+#   @arr[0]                    — computed member (forbidden)
+#   @fn?.method                — optional chain (forbidden)
+
+decorator = AT left_hand_side_expression ;
+
+# --- NEW IN ES2025: Decorated class declaration ---
+#
+# One or more decorators before a class declaration:
+#
+#   @singleton
+#   @log("verbose")
+#   class MyService { ... }
+
+decorated_class_declaration = { decorator } class_declaration ;
+
+# --- Classes (with ES2022+ features, now with decorators) ---
+
+class_declaration = "class" NAME [ class_heritage ] class_body ;
+
+class_expression = "class" [ NAME ] [ class_heritage ] class_body ;
+
+class_heritage = "extends" left_hand_side_expression ;
+
+class_body = LBRACE { class_element } RBRACE ;
+
+# --- CHANGED IN ES2025: class_element can be preceded by decorators ---
+#
+# Decorators can appear before methods, fields, getters, setters, and
+# auto-accessors within a class body:
+#
+#   class Example {
+#     @readonly
+#     name = "immutable";
+#
+#     @log
+#     greet() { return `Hello, ${this.name}`; }
+#
+#     @validate(Number)
+#     set age(value) { this._age = value; }
+#   }
+
+class_element = { decorator } [ "static" ] method_definition SEMICOLON
+              | { decorator } [ "static" ] async_method SEMICOLON
+              | { decorator } class_field_declaration
+              | { decorator } private_method_definition
+              | static_block
+              | SEMICOLON ;
+
+class_field_declaration = [ "static" ] ( property_name | PRIVATE_NAME )
+                          [ EQUALS assignment_expression ] SEMICOLON ;
+
+private_method_definition = [ "static" ] PRIVATE_NAME
+                            LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] "get" PRIVATE_NAME LPAREN RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] "set" PRIVATE_NAME
+                            LPAREN formal_parameter RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] STAR PRIVATE_NAME
+                            LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] "async" [ STAR ] PRIVATE_NAME
+                            LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE ;
+
+static_block = "static" LBRACE { statement } RBRACE ;
+
+method_definition = property_name LPAREN [ formal_parameters ] RPAREN
+                    LBRACE function_body RBRACE
+                  | "get" property_name LPAREN RPAREN
+                    LBRACE function_body RBRACE
+                  | "set" property_name LPAREN formal_parameter RPAREN
+                    LBRACE function_body RBRACE
+                  | STAR property_name LPAREN [ formal_parameters ] RPAREN
+                    LBRACE function_body RBRACE ;
+
+# --- Modules (with ES2025 import attributes) ---
+#
+# CHANGED IN ES2025: import_declaration gains optional import_attributes.
+#
+# Import attributes use the `with` keyword (already reserved since ES1):
+#
+#   import data from "./data.json" with { type: "json" };
+#   import styles from "./app.css" with { type: "css" };
+#   import { config } from "./config.json" with { type: "json" };
+#
+# Dynamic import also supports attributes:
+#   const mod = await import("./m.json", { with: { type: "json" } });
+
+import_declaration = "import" import_clause from_clause [ import_attributes ] SEMICOLON
+                   | "import" module_specifier [ import_attributes ] SEMICOLON ;
+
+import_clause = default_import [ COMMA named_imports ]
+              | default_import [ COMMA namespace_import ]
+              | named_imports
+              | namespace_import ;
+
+default_import = NAME ;
+
+named_imports = LBRACE [ import_specifier { COMMA import_specifier } [ COMMA ] ] RBRACE ;
+
+import_specifier = NAME [ "as" NAME ] ;
+
+namespace_import = STAR "as" NAME ;
+
+from_clause = "from" STRING ;
+
+module_specifier = STRING ;
+
+# --- NEW IN ES2025: Import attributes ---
+#
+# The `with` keyword introduces a block of key-value pairs that provide
+# metadata to the module loader. Keys can be identifiers or strings;
+# values must be strings.
+#
+# Examples:
+#   with { type: "json" }
+#   with { type: "css", nonce: "abc123" }
+
+import_attributes = "with" LBRACE attribute_list RBRACE ;
+
+attribute_list = import_attribute { COMMA import_attribute } [ COMMA ] ;
+
+import_attribute = ( NAME | STRING ) COLON STRING ;
+
+# --- CHANGED IN ES2025: export re-exports gain import_attributes ---
+
+export_declaration = "export" "default" ( function_declaration | generator_declaration
+                                        | async_function_declaration
+                                        | async_generator_declaration
+                                        | decorated_class_declaration
+                                        | class_declaration
+                                        | assignment_expression SEMICOLON )
+                   | "export" ( function_declaration | generator_declaration
+                              | async_function_declaration
+                              | async_generator_declaration
+                              | decorated_class_declaration
+                              | class_declaration | lexical_declaration
+                              | variable_statement )
+                   | "export" named_exports [ from_clause [ import_attributes ] ] SEMICOLON
+                   | "export" STAR from_clause [ import_attributes ] SEMICOLON ;
+
+named_exports = LBRACE [ export_specifier { COMMA export_specifier } [ COMMA ] ] RBRACE ;
+
+export_specifier = NAME [ "as" NAME ] ;
+
+# ============================================================================
+# Destructuring
+# ============================================================================
+
+binding_pattern = object_binding_pattern
+               | array_binding_pattern ;
+
+object_binding_pattern = LBRACE [ binding_property { COMMA binding_property } [ COMMA ] ]
+                         [ object_rest_property ] RBRACE ;
+
+object_rest_property = ELLIPSIS NAME ;
+
+array_binding_pattern = LBRACKET [ binding_element { COMMA binding_element } [ COMMA ] ] RBRACKET ;
+
+binding_property = property_name COLON binding_element
+                 | NAME [ EQUALS assignment_expression ] ;
+
+binding_element = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
+               | ELLIPSIS NAME ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# CHANGED IN ES2025: statement gains using_declaration, await_using_declaration
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | for_of_statement
+          | for_await_of_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | debugger_statement
+          | lexical_declaration
+          | using_declaration
+          | await_using_declaration
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list
+                  | "let" binding_list
+                  | "const" binding_list
+                  | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" binding_element
+                     | "const" binding_element
+                     | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+# --- CHANGED IN ES2025: for-of accepts "using" and "await" "using" ---
+#
+# Resources can be declared in for-of loops for automatic per-iteration
+# disposal:
+#
+#   for (using handle of getHandles()) {
+#     handle.process();
+#     // handle[Symbol.dispose]() called at end of each iteration
+#   }
+
+for_of_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" binding_element
+                     | "const" binding_element
+                     | "using" binding_element
+                     | left_hand_side_expression ) "of" assignment_expression
+                   RPAREN statement ;
+
+for_await_of_statement = "for" "await" LPAREN
+                           ( "var" variable_declaration
+                           | "let" binding_element
+                           | "const" binding_element
+                           | "using" binding_element
+                           | "await" "using" binding_element
+                           | left_hand_side_expression ) "of" assignment_expression
+                         RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" [ LPAREN NAME RPAREN ] block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" expression SEMICOLON ;
+
+debugger_statement = "debugger" SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+assignment_expression = conditional_expression
+                      | arrow_function
+                      | async_arrow_function
+                      | yield_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_STAR_EQUALS
+                    | STAR_EQUALS | SLASH_EQUALS | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS | PIPE_EQUALS | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS
+                    | OR_OR_EQUALS | AND_AND_EQUALS | NULLISH_COALESCE_EQUALS ;
+
+conditional_expression = nullish_coalescing_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+nullish_coalescing_expression = logical_or_expression
+                                { NULLISH_COALESCE logical_or_expression } ;
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression }
+                      | PRIVATE_NAME "in" shift_expression ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = exponentiation_expression
+                            { ( STAR | SLASH | PERCENT ) exponentiation_expression } ;
+
+exponentiation_expression = unary_expression [ STAR_STAR exponentiation_expression ] ;
+
+unary_expression = postfix_expression
+                 | await_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+left_hand_side_expression = call_expression
+                          | optional_chain_expression
+                          | new_expression ;
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | DOT PRIVATE_NAME
+                  | LBRACKET expression RBRACKET | template_literal } ;
+
+optional_chain_expression = member_expression
+                            { OPTIONAL_CHAIN NAME
+                            | OPTIONAL_CHAIN PRIVATE_NAME
+                            | OPTIONAL_CHAIN LBRACKET expression RBRACKET
+                            | OPTIONAL_CHAIN arguments
+                            | DOT NAME
+                            | DOT PRIVATE_NAME
+                            | LBRACKET expression RBRACKET
+                            | arguments
+                            | template_literal } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+member_expression = primary_expression
+                    { DOT NAME | DOT PRIVATE_NAME
+                    | LBRACKET expression RBRACKET | template_literal }
+                  | "new" member_expression arguments
+                  | "super" DOT NAME
+                  | "super" LBRACKET expression RBRACKET
+                  | "new" DOT "target" ;
+
+arguments = LPAREN [ argument_list [ COMMA ] ] RPAREN ;
+
+argument_list = ( spread_element | assignment_expression )
+                { COMMA ( spread_element | assignment_expression ) } ;
+
+spread_element = ELLIPSIS assignment_expression ;
+
+arrow_function = arrow_parameters ARROW concise_body ;
+
+arrow_parameters = NAME
+                 | LPAREN [ formal_parameters ] RPAREN ;
+
+concise_body = assignment_expression
+             | LBRACE function_body RBRACE ;
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | BIGINT
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | generator_expression
+                   | async_function_expression
+                   | class_expression
+                   | template_literal
+                   | dynamic_import
+                   | import_meta
+                   | LPAREN expression RPAREN ;
+
+dynamic_import = "import" LPAREN assignment_expression RPAREN ;
+
+import_meta = "import" DOT "meta" ;
+
+array_literal = LBRACKET [ element_list ] RBRACKET ;
+
+element_list = [ spread_element | assignment_expression ]
+               { COMMA [ spread_element | assignment_expression ] } ;
+
+object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
+
+property_definition = property_name COLON assignment_expression
+                    | NAME
+                    | method_definition
+                    | async_method
+                    | object_spread_property ;
+
+object_spread_property = ELLIPSIS assignment_expression ;
+
+property_name = NAME
+              | STRING
+              | NUMBER
+              | LBRACKET assignment_expression RBRACKET ;
+
+function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                      LBRACE function_body RBRACE ;
+
+template_literal = TEMPLATE_NO_SUB
+                 | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
+
+template_span = expression TEMPLATE_MIDDLE ;

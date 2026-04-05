@@ -92,6 +92,12 @@ export interface WavefrontConfig {
   readonly isa: InstructionSet;
 }
 
+function assertRegisterIndex(index: number, limit: number, label: string): void {
+  if (!Number.isSafeInteger(index) || index < 0 || index >= limit) {
+    throw new Error(`${label} index ${String(index)} out of bounds for size ${limit}.`);
+  }
+}
+
 /**
  * Create a WavefrontConfig with sensible defaults.
  */
@@ -152,16 +158,21 @@ export class VectorRegisterFile {
 
   /** Read one lane of a vector register as a number. */
   read(vreg: number, lane: number): number {
+    assertRegisterIndex(vreg, this._data.length, "vector register");
+    assertRegisterIndex(lane, this.waveWidth, "lane");
     return bitsToFloat(this._data[vreg][lane]);
   }
 
   /** Write a number to one lane of a vector register. */
   write(vreg: number, lane: number, value: number): void {
+    assertRegisterIndex(vreg, this._data.length, "vector register");
+    assertRegisterIndex(lane, this.waveWidth, "lane");
     this._data[vreg][lane] = floatToBits(value, this.fmt);
   }
 
   /** Read all lanes of a vector register. */
   readAllLanes(vreg: number): number[] {
+    assertRegisterIndex(vreg, this._data.length, "vector register");
     return this._data[vreg].map((bits) => bitsToFloat(bits));
   }
 }

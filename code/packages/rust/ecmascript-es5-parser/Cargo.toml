@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-ecmascript-es5-parser"
+version = "0.1.0"
+edition = "2021"
+description = "ECMAScript 5 (2009) parser — parses ES5 JavaScript source code into an AST using the grammar-driven parser and the es5.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-ecmascript-es5-lexer = { path = "../ecmascript-es5-lexer" }

@@ -1,0 +1,264 @@
+# ECMAScript 2021 (ES12) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2021
+#
+# ECMA-262, 12th Edition — June 2021
+#
+# ES2021 adds logical assignment operators and numeric separators.
+#
+# New features:
+#
+#   1. Logical assignment: `||=`, `&&=`, `??=`
+#      These combine logical/nullish operators with assignment, similar to
+#      how `+=` combines `+` with `=`:
+#
+#        x ||= y   →   x || (x = y)    — assign if x is falsy
+#        x &&= y   →   x && (x = y)    — assign if x is truthy
+#        x ??= y   →   x ?? (x = y)    — assign if x is null/undefined
+#
+#      Note the short-circuit semantics: assignment only happens if the
+#      logical condition triggers. This means `x ||= y` does NOT always
+#      write to x — it only writes when x is falsy. This matters for
+#      property setters and proxies.
+#
+#   2. Numeric separators: underscores in number literals
+#      `1_000_000` is the same as `1000000` but much more readable.
+#      Rules: no leading `_`, no trailing `_`, no double `__`, no `_`
+#      adjacent to `.`, `e`, `E`, `x`, `o`, `b`, or `n`.
+#
+#   3. String.prototype.replaceAll() — runtime only
+#   4. Promise.any() + AggregateError — runtime only
+#   5. WeakRef and FinalizationRegistry — runtime only
+#
+# Token ordering notes:
+#   - `||=` must come before `||`
+#   - `&&=` must come before `&&`
+#   - `??=` must come before `??` which must come before `?`
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers ---
+#
+# CHANGED IN ES2021: Numeric separators with `_` in all number forms.
+#
+# The underscore `_` can appear between any two digits in a number literal
+# to improve readability. It is purely visual — `1_000` and `1000` produce
+# identical values. The separator works in all numeric forms:
+#
+#   Decimal:     1_000_000
+#   Float:       3.141_592_653
+#   Scientific:  1.5e1_0 (= 1.5 * 10^10)
+#   Hex:         0xFF_FF_FF
+#   Binary:      0b1010_0001
+#   Octal:       0o777_777
+#   BigInt:      1_000_000n
+#
+# Restrictions (enforced by the lexer):
+#   - No leading underscore: `_100` is a NAME, not a NUMBER
+#   - No trailing underscore: `100_` is invalid
+#   - No adjacent to radix prefix: `0x_FF` is invalid
+#   - No adjacent to decimal point: `3._14` or `3_.14` is invalid
+#   - No adjacent to exponent: `1e_10` or `1_e10` is invalid
+#   - No double underscore: `1__000` is invalid
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings (unchanged from ES2019) ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals (unchanged) ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (unchanged from ES2018) ---
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gimsuy]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# NEW IN ES2021: Three logical assignment operators.
+#
+# These must appear before their non-assignment counterparts:
+#   ||= before ||
+#   &&= before &&
+#   ??= before ?? before ?
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+
+context_keywords:
+  as
+  async
+  await
+  from
+  of
+  get
+  set
+  static
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

@@ -1,0 +1,8 @@
+[project]
+name = "coding-adventures-hash-breaker"
+version = "1.0.0"
+description = "Demonstrates MD5 weaknesses: collision pairs, length extension, birthday attack"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-md5",
+]

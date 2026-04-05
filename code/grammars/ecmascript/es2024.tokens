@@ -1,0 +1,249 @@
+# ECMAScript 2024 (ES15) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2024
+#
+# ECMA-262, 15th Edition — June 2024
+#
+# ES2024 has no new syntax-level features visible to the parser grammar.
+# The only lexical change is adding the `v` (unicodeSets) flag to regular
+# expressions.
+#
+# New features:
+#
+#   1. RegExp `v` flag (unicodeSets)
+#      An upgrade to the `u` flag with extended character class syntax:
+#
+#        /[\p{Script=Greek}&&\p{Letter}]/v   — intersection
+#        /[\p{Decimal_Number}--[0-9]]/v      — subtraction (difference)
+#        /[[a-z][A-Z]]/v                     — union (nested classes)
+#        /[\q{abc|def}]/v                    — string literals in classes
+#
+#      The `v` flag is MUTUALLY EXCLUSIVE with `u` — they cannot be combined.
+#      Using both is a SyntaxError. The `v` flag is a strict superset of `u`
+#      in terms of matching behavior.
+#
+#   2. Well-formed Unicode strings — runtime only
+#   3. Atomics.waitAsync — runtime only
+#   4. Resizable ArrayBuffer — runtime only
+#   5. Array grouping (Object.groupBy, Map.groupBy) — runtime only
+#   6. Promise.withResolvers — runtime only
+#
+# Token changes from ES2023:
+#   - Changed: REGEX flag set gains `v` (unicodeSets)
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+HASHBANG = /^#![^\n]*/
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (with ES2021 numeric separators) ---
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions ---
+#
+# CHANGED IN ES2024: `v` (unicodeSets) flag added.
+#
+# The `v` flag enables a more powerful character class syntax inside regex
+# patterns. It supports:
+#   - Set intersection: [A&&B] — characters in both A and B
+#   - Set subtraction: [A--B] — characters in A but not B
+#   - Nested classes: [[a-z][A-Z]] — union of character classes
+#   - String literals: [\q{foo|bar}] — multi-character strings in classes
+#
+# The `v` flag is mutually exclusive with `u` — they cannot both be present.
+# The lexer emits the full flag string; the parser validates combinations.
+#
+# Available flags after ES2024: d, g, i, m, s, u, v, y
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsvy]*/
+
+# ============================================================================
+# Multi-character operators (unchanged from ES2023)
+# ============================================================================
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+
+context_keywords:
+  as
+  async
+  await
+  from
+  of
+  get
+  set
+  static
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

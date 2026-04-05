@@ -54,6 +54,65 @@ import type { Token } from "@coding-adventures/lexer";
 import type { ASTNode } from "@coding-adventures/parser";
 import { TypeErrorInExpression, LatticeRangeError, ZeroDivisionInExpressionError } from "./errors.js";
 
+function isAsciiLetter(value: string): boolean {
+  return value >= "A" && value <= "Z" || value >= "a" && value <= "z";
+}
+
+function parseDimensionParts(value: string): { numberPart: string; unit: string } | null {
+  let index = 0;
+  if (value[index] === "-") {
+    index++;
+  }
+
+  const integerStart = index;
+  while (index < value.length && value[index] >= "0" && value[index] <= "9") {
+    index++;
+  }
+  const integerDigits = index - integerStart;
+
+  let fractionalDigits = 0;
+  if (value[index] === ".") {
+    index++;
+    const fractionalStart = index;
+    while (index < value.length && value[index] >= "0" && value[index] <= "9") {
+      index++;
+    }
+    fractionalDigits = index - fractionalStart;
+  }
+
+  if (integerDigits === 0 && fractionalDigits === 0) {
+    return null;
+  }
+
+  if (value[index] === "e" || value[index] === "E") {
+    const exponentStart = index;
+    index++;
+    if (value[index] === "+" || value[index] === "-") {
+      index++;
+    }
+    const digitsStart = index;
+    while (index < value.length && value[index] >= "0" && value[index] <= "9") {
+      index++;
+    }
+    if (index === digitsStart) {
+      index = exponentStart;
+    }
+  }
+
+  const unit = value.slice(index);
+  if (unit.length === 0) return null;
+  for (const ch of unit) {
+    if (!isAsciiLetter(ch)) {
+      return null;
+    }
+  }
+
+  return {
+    numberPart: value.slice(0, index),
+    unit,
+  };
+}
+
 // =============================================================================
 // Value Classes
 // =============================================================================
@@ -508,9 +567,9 @@ export function tokenToValue(token: Token): LatticeValue {
     // Split "16px" into number (16) and unit (px).
     // Find where the numeric part ends and the unit begins.
     // The numeric part is: optional leading minus, digits, optional dot, more digits.
-    const match = value.match(/^(-?[0-9]*\.?[0-9]+(?:[eE][+-]?[0-9]+)?)([a-zA-Z]+)$/);
-    if (match) {
-      return new LatticeDimension(parseFloat(match[1]), match[2]);
+    const parsedDimension = parseDimensionParts(value);
+    if (parsedDimension) {
+      return new LatticeDimension(parseFloat(parsedDimension.numberPart), parsedDimension.unit);
     }
     // Fallback: try to parse the number up to the first letter
     let i = 0;
