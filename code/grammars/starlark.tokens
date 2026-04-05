@@ -4,6 +4,20 @@
 #
 # Starlark specification: https://github.com/bazelbuild/starlark/blob/master/spec.md
 #
+# Cross-reference: Starlark is a restricted subset of Python 3.6. For the
+# full Python token definitions, see the versioned files in python/:
+#
+#   python/python2.7.tokens   — Python 2.7 baseline
+#   python/python3.0.tokens   — Python 3.0 (the breaking change)
+#   python/python3.6.tokens   — Python 3.6 (f-strings, async/await)
+#   python/python3.8.tokens   — Python 3.8 (walrus operator)
+#   python/python3.10.tokens  — Python 3.10 (match/case soft keywords)
+#   python/python3.12.tokens  — Python 3.12 (type parameter syntax)
+#
+# This file removes tokens for features Starlark does not support (class,
+# import, while, try/except, etc.) and adds the `load` keyword and
+# `reserved:` section for clear error messages on Python-only keywords.
+#
 # Format:
 #   TOKEN_NAME = /regex/       — regex-based token pattern
 #   TOKEN_NAME = "literal"     — exact literal match

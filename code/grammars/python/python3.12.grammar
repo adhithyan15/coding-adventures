@@ -1,0 +1,605 @@
+# Parser grammar for Python 3.12
+# @version 1
+# Python 3.12 was released on October 2, 2023.
+#
+# Python 3.12 reference: https://docs.python.org/3.12/reference/grammar.html
+#
+# This grammar builds on Python 3.10 with these additions:
+#   1. Type parameter syntax (PEP 695): def f[T](x: T) -> T: ...
+#   2. Type alias statements (PEP 695): type Point = tuple[float, float]
+#   3. Exception groups / except* (PEP 654, from 3.11)
+#   4. F-string grammar integration (PEP 701)
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE = tokens from python3.12.tokens
+# lowercase = grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword or exact value)
+#
+# INDENT, DEDENT, NEWLINE are synthetic tokens from the indentation lexer.
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A Python module is a sequence of statements. The top-level scope can
+# contain any statement type — no "main" function requirement.
+
+file = { NEWLINE | statement } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Simple statements fit on one line (chained with semicolons).
+# Compound statements contain indented blocks (suites).
+
+statement = compound_stmt | simple_stmt ;
+
+simple_stmt = small_stmt { SEMICOLON small_stmt } NEWLINE ;
+
+small_stmt = return_stmt
+           | import_stmt
+           | from_import_stmt
+           | raise_stmt
+           | pass_stmt
+           | del_stmt
+           | yield_stmt
+           | assert_stmt
+           | break_stmt
+           | continue_stmt
+           | global_stmt
+           | nonlocal_stmt
+           | type_alias_stmt
+           | assign_stmt ;
+
+# ============================================================================
+# Simple Statements
+# ============================================================================
+
+return_stmt   = "return" [ expression_list ] ;
+pass_stmt     = "pass" ;
+break_stmt    = "break" ;
+continue_stmt = "continue" ;
+del_stmt      = "del" target_list ;
+yield_stmt    = yield_expr ;
+
+# Assert — debugging check, stripped by `python -O`.
+#   assert x > 0, "must be positive"
+assert_stmt   = "assert" expression [ COMMA expression ] ;
+
+# Global/nonlocal — rebind names from outer scopes.
+#   global x          -> module-level x
+#   nonlocal count    -> enclosing function's count (PEP 3104, Python 3.0)
+global_stmt   = "global" NAME { COMMA NAME } ;
+nonlocal_stmt = "nonlocal" NAME { COMMA NAME } ;
+
+# Import — brings modules or names into the current namespace.
+#   import os, sys
+#   import numpy as np
+import_stmt = "import" dotted_name [ "as" NAME ]
+              { COMMA dotted_name [ "as" NAME ] } ;
+
+# From-import — selective imports with optional relative path.
+#   from os.path import join, exists
+#   from . import sibling          (relative: current package)
+#   from ..parent import thing     (relative: parent package)
+from_import_stmt = "from" ( { DOT } dotted_name | { DOT } DOT )
+                   "import" ( STAR | import_names ) ;
+
+import_names = NAME [ "as" NAME ] { COMMA NAME [ "as" NAME ] } ;
+dotted_name  = NAME { DOT NAME } ;
+
+# Raise — throw or re-raise an exception.
+#   raise                          -> re-raise current exception
+#   raise ValueError("bad")       -> new exception
+#   raise ValueError from err     -> chained exception (PEP 3134)
+raise_stmt = "raise" [ expression [ "from" expression ] ] ;
+
+# ============================================================================
+# Type Alias Statement (PEP 695 — New in 3.12)
+# ============================================================================
+#
+# Creates a type alias with lazy evaluation. `type` is a soft keyword —
+# only acts as a keyword when followed by NAME.
+#
+#   type Point = tuple[float, float]
+#   type Matrix[T] = list[list[T]]
+#   type Tree[T] = T | list[Tree[T]]    # Recursive — no quoting needed
+#
+# The right-hand expression is lazily evaluated, enabling forward references
+# and recursive aliases without string annotations.
+
+type_alias_stmt = "type" NAME [ type_params ] EQUALS expression ;
+
+# ============================================================================
+# Type Parameters (PEP 695 — New in 3.12)
+# ============================================================================
+#
+# Generic type variables scoped to a function, class, or type alias.
+# Three kinds:
+#
+#   TypeVar:       def f[T](x: T) -> T:           # Single type
+#   TypeVar bound: def f[T: int](x: T) -> T:      # Upper bound
+#   TypeVarTuple:  def f[*Ts](x: tuple[*Ts]):     # Variadic types
+#   ParamSpec:     def f[**P](func: Callable[P, int]):  # Parameter types
+#
+# Type parameters create an "annotation scope" (PEP 695) — visible in
+# annotations and body, invisible outside the definition.
+
+type_params = LBRACKET type_param { COMMA type_param } [ COMMA ] RBRACKET ;
+
+type_param = NAME [ COLON expression ]
+           | STAR NAME
+           | DOUBLE_STAR NAME ;
+
+# ============================================================================
+# Assignment Statement
+# ============================================================================
+#
+# Handles simple, chained, augmented, and annotated assignments:
+#   x = 1                    simple
+#   x = y = z = 1            chained (right to left)
+#   a, *rest = [1, 2, 3]     star unpacking (PEP 3132)
+#   x += 1                   augmented
+#   x: int = 5               annotated (PEP 526)
+#   x: int                   annotation only (no value)
+
+assign_stmt = expression_list
+              [ COLON expression [ EQUALS expression_list ]
+              | ( EQUALS expression_list )+
+              | augmented_assign_op expression_list ] ;
+
+augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS
+                    | FLOOR_DIV_EQUALS | PERCENT_EQUALS | AMP_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | DOUBLE_STAR_EQUALS | AT_EQUALS ;
+
+# ============================================================================
+# Compound Statements
+# ============================================================================
+
+compound_stmt = if_stmt
+              | for_stmt
+              | while_stmt
+              | try_stmt
+              | with_stmt
+              | def_stmt
+              | class_stmt
+              | decorated
+              | async_stmt
+              | match_stmt ;
+
+# If/elif/else — conditional execution with arbitrary elif chains.
+if_stmt = "if" expression COLON suite
+          { "elif" expression COLON suite }
+          [ "else" COLON suite ] ;
+
+# For loop — iterates over any iterable. Optional else clause runs
+# when the loop completes without break (useful for search patterns).
+for_stmt = "for" target_list "in" expression_list COLON suite
+           [ "else" COLON suite ] ;
+
+# While loop — repeats while condition is truthy.
+while_stmt = "while" expression COLON suite
+             [ "else" COLON suite ] ;
+
+# ============================================================================
+# Try/Except/Finally — Exception Handling
+# ============================================================================
+#
+# Three forms:
+#   try/except [else] [finally]     — standard exception handling
+#   try/except* [else] [finally]    — exception groups (PEP 654, 3.11+)
+#   try/finally                     — cleanup only
+
+try_stmt = "try" COLON suite
+           ( except_clauses [ "else" COLON suite ] [ "finally" COLON suite ]
+           | except_star_clauses [ "else" COLON suite ] [ "finally" COLON suite ]
+           | "finally" COLON suite ) ;
+
+except_clauses = except_clause { except_clause } ;
+
+# except clause — catches one or more exception types.
+#   except ValueError:                 -> single type
+#   except (ValueError, TypeError):    -> multiple types
+#   except ValueError as e:            -> bind to name
+#   except:                            -> bare (catches all — discouraged)
+except_clause = "except" [ expression [ "as" NAME ] ] COLON suite ;
+
+# ============================================================================
+# Exception Groups and except* (PEP 654 — New in 3.11)
+# ============================================================================
+#
+# except* handles ExceptionGroup instances from structured concurrency.
+# Key differences from regular except:
+#   - Always requires an exception type (no bare except*)
+#   - Receives an ExceptionGroup even if only one exception matched
+#   - Multiple except* clauses can match different subsets of the same group
+#   - Cannot be mixed with regular except in the same try statement
+#
+#   try:
+#       async with asyncio.TaskGroup() as tg:
+#           tg.create_task(task1())
+#   except* ValueError as eg:
+#       for e in eg.exceptions:
+#           handle(e)
+
+except_star_clauses = except_star_clause { except_star_clause } ;
+
+except_star_clause = "except" STAR expression [ "as" NAME ] COLON suite ;
+
+# With statement — context managers for resource cleanup.
+#   with open("f.txt") as f:           single context manager
+#   with (open("a") as a, open("b") as b):   multiple (parens added in 3.10)
+with_stmt = "with" with_items COLON suite ;
+with_items = with_item { COMMA with_item } ;
+with_item = expression [ "as" target ] ;
+
+# ============================================================================
+# Function Definition (Modified in 3.12)
+# ============================================================================
+#
+# PEP 695 adds optional type_params between the function name and parameters:
+#
+#   def first[T](lst: list[T]) -> T:       # Generic function
+#       return lst[0]
+#
+# Before 3.12, this required a module-level TypeVar:
+#   T = TypeVar("T")
+#   def first(lst: list[T]) -> T: ...
+
+def_stmt = "def" NAME [ type_params ] LPAREN [ parameters ] RPAREN
+           [ ARROW expression ] COLON suite ;
+
+# ============================================================================
+# Function Parameters
+# ============================================================================
+#
+# Five parameter kinds with strict ordering:
+#   def f(a, b=1, /, c=2, *args, d, e=3, **kwargs):
+#         ^  ^^   ^  ^^    ^     ^  ^^    ^^
+#         |  ||   |  ||    |     |  ||    keyword collector
+#         |  ||   |  ||    |     |  keyword-only with default
+#         |  ||   |  ||    |     keyword-only required
+#         |  ||   |  ||    positional collector
+#         |  ||   |  |     normal with default
+#         |  ||   |  end of positional-only marker (PEP 570, 3.8)
+#         |  ||   positional-only with default
+#         |  positional-only required
+#
+# Bare `*` (no name) marks keyword-only without collecting extra args:
+#   def f(a, *, b): ...    # b must be passed as keyword: f(1, b=2)
+
+parameters = parameter { COMMA parameter } [ COMMA ] ;
+
+parameter = DOUBLE_STAR NAME [ COLON expression ]
+          | STAR NAME [ COLON expression ]
+          | STAR
+          | SLASH
+          | NAME [ COLON expression ] [ EQUALS expression ] ;
+
+# ============================================================================
+# Class Definition (Modified in 3.12)
+# ============================================================================
+#
+# PEP 695 adds optional type_params between the class name and bases:
+#
+#   class Stack[T]:                        # Generic class
+#       def push(self, item: T) -> None:
+#           self._items.append(item)
+#
+# Before 3.12: class Stack(Generic[T]): ...
+
+class_stmt = "class" NAME [ type_params ] [ LPAREN [ arguments ] RPAREN ]
+             COLON suite ;
+
+# Decorators — syntactic sugar for wrapping definitions.
+#   @staticmethod           -> helper = staticmethod(helper)
+#   @app.route("/users")    -> any expression since PEP 614 (3.9)
+# Multiple decorators apply bottom-up (innermost first).
+decorated = decorator { decorator } ( def_stmt | class_stmt | async_stmt ) ;
+
+decorator = AT expression NEWLINE ;
+
+# Async variants of def, for, and with (PEP 492, Python 3.5).
+# async def creates a coroutine; async for/with use the async protocols.
+async_stmt = "async" ( def_stmt | for_stmt | with_stmt ) ;
+
+# ============================================================================
+# Match Statement (PEP 634 — New in 3.10)
+# ============================================================================
+#
+# Structural pattern matching with destructuring. `match` and `case` are
+# soft keywords — only keywords at the start of these statements.
+#
+#   match command:
+#       case "quit":              literal pattern
+#       case ["go", direction]:   sequence pattern (captures direction)
+#       case {"action": action}:  mapping pattern
+#       case Point(x=0, y=0):    class pattern
+#       case _:                   wildcard pattern
+
+match_stmt = "match" expression COLON NEWLINE INDENT
+             { case_clause }
+             DEDENT ;
+
+case_clause = "case" pattern [ "if" expression ] COLON suite ;
+
+# ============================================================================
+# Patterns (PEP 634)
+# ============================================================================
+#
+# Patterns describe structure to match against. Key distinction:
+#   case x:       -> CAPTURE (binds subject to x)
+#   case Foo.x:   -> VALUE (matches if subject == Foo.x)
+# The dot prevents accidental capture.
+
+pattern = or_pattern [ "as" NAME ] ;
+
+or_pattern = closed_pattern { PIPE closed_pattern } ;
+
+closed_pattern = literal_pattern
+               | capture_pattern
+               | wildcard_pattern
+               | sequence_pattern
+               | mapping_pattern
+               | class_pattern
+               | group_pattern
+               | value_pattern ;
+
+# Literal patterns match by equality (or identity for None/True/False).
+literal_pattern = INT | FLOAT | STRING { STRING } | IMAG
+                | "None" | "True" | "False"
+                | MINUS ( INT | FLOAT | IMAG ) ;
+
+capture_pattern = NAME ;
+wildcard_pattern = "_" ;
+
+# Sequence: [first, *rest] or (x, y)
+sequence_pattern = LBRACKET [ pattern_list ] RBRACKET
+                 | LPAREN [ pattern_list ] RPAREN ;
+
+pattern_list = pattern { COMMA pattern } [ COMMA ] ;
+
+# Mapping: {"key": value, **rest}
+mapping_pattern = LBRACE [ mapping_items ] RBRACE ;
+
+mapping_items = mapping_item { COMMA mapping_item } [ COMMA [ DOUBLE_STAR NAME ] ]
+              | DOUBLE_STAR NAME ;
+
+mapping_item = ( literal_pattern | value_pattern ) COLON pattern ;
+
+# Class: Point(x=0, y=0) or Point(0, 0) using __match_args__
+class_pattern = dotted_name LPAREN [ class_pattern_args ] RPAREN ;
+
+class_pattern_args = pattern { COMMA pattern } [ COMMA ]
+                   | NAME EQUALS pattern { COMMA NAME EQUALS pattern } [ COMMA ]
+                   | pattern { COMMA pattern } COMMA
+                     NAME EQUALS pattern { COMMA NAME EQUALS pattern } [ COMMA ] ;
+
+group_pattern = LPAREN pattern RPAREN ;
+
+# Value pattern: dotted name matched by equality (dots prevent capture).
+value_pattern = NAME DOT NAME { DOT NAME } ;
+
+# ============================================================================
+# Suite — Indented Block
+# ============================================================================
+#
+# Compact form: if True: pass
+# Block form:   if True:\n    INDENT x = 1 DEDENT
+
+suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+
+# ============================================================================
+# Targets — Assignment LHS
+# ============================================================================
+
+target_list = target { COMMA target } [ COMMA ] ;
+
+target = NAME
+       | target DOT NAME
+       | target LBRACKET subscript RBRACKET
+       | STAR target
+       | LPAREN target_list RPAREN
+       | LBRACKET target_list RBRACKET ;
+
+# ============================================================================
+# Expressions — Precedence Table
+# ============================================================================
+#
+# Lowest (top) to highest (bottom). Each level is its own rule calling
+# the next level down, encoding precedence without ambiguity.
+#
+#   1.  lambda             lambda x: x + 1
+#   2.  if-else            a if cond else b
+#   3.  or                 a or b            (short-circuit)
+#   4.  and                a and b           (short-circuit)
+#   5.  not                not a
+#   6.  comparisons        a == b, a in b    (chaining: a < b < c)
+#   7.  |                  a | b             (bitwise OR / set union)
+#   8.  ^                  a ^ b
+#   9.  &                  a & b
+#  10.  << >>              a << 1
+#  11.  + -                a + b
+#  12.  * / // % @         a * b, A @ B
+#  13.  unary +, -, ~      -a, ~a
+#  14.  **                 a ** b            (right-associative)
+#  15.  await              await coro()
+#  16.  primary            x.attr, x[i], f()
+
+expression_list = expression { COMMA expression } [ COMMA ] ;
+
+# Walrus operator (:=) — assignment expression (PEP 572, Python 3.8).
+#   if (n := len(a)) > 10:
+named_expression = NAME WALRUS expression | expression ;
+
+expression = lambda_expr
+           | or_expr [ "if" or_expr "else" expression ]
+           | named_expression ;
+
+lambda_expr = "lambda" [ lambda_params ] COLON expression ;
+lambda_params = lambda_param { COMMA lambda_param } [ COMMA ] ;
+lambda_param = NAME [ EQUALS expression ]
+             | STAR NAME
+             | DOUBLE_STAR NAME
+             | STAR
+             | SLASH ;
+
+or_expr  = and_expr { "or" and_expr } ;
+and_expr = not_expr { "and" not_expr } ;
+not_expr = "not" not_expr | comparison ;
+
+# Comparison chaining: a < b < c means (a < b) and (b < c), with b evaluated once.
+comparison = bitwise_or { comp_op bitwise_or } ;
+
+comp_op = EQUALS_EQUALS | NOT_EQUALS
+        | LESS_THAN | GREATER_THAN
+        | LESS_EQUALS | GREATER_EQUALS
+        | "in" | "not" "in"
+        | "is" | "is" "not" ;
+
+bitwise_or  = bitwise_xor { PIPE bitwise_xor } ;
+bitwise_xor = bitwise_and { CARET bitwise_and } ;
+bitwise_and = shift { AMP shift } ;
+shift = arith { ( LEFT_SHIFT | RIGHT_SHIFT ) arith } ;
+arith = term { ( PLUS | MINUS ) term } ;
+term  = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT | AT ) factor } ;
+factor = ( PLUS | MINUS | TILDE ) factor | power ;
+
+# Exponentiation is right-associative: 2**3**2 = 2**(3**2) = 512
+# Unary minus binds less tightly: -2**2 = -(2**2) = -4
+power = await_expr [ DOUBLE_STAR factor ] ;
+
+# Await — suspends coroutine. Only valid inside async def (semantic check).
+await_expr = "await" primary | primary ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Atom + zero or more suffixes, left-to-right: f(x).attr[0]
+
+primary = atom { suffix } ;
+
+suffix = DOT NAME
+       | LBRACKET subscript RBRACKET
+       | LPAREN [ arguments ] RPAREN ;
+
+# Subscript — indexing or slicing with up to three colon-separated expressions.
+#   lst[0], d["key"], lst[1:3], lst[::2], lst[::-1]
+subscript = expression
+          | [ expression ] COLON [ expression ] [ COLON [ expression ] ] ;
+
+# ============================================================================
+# Atoms
+# ============================================================================
+
+atom = INT
+     | FLOAT
+     | IMAG
+     | STRING { STRING }
+     | fstring
+     | NAME
+     | "True" | "False" | "None"
+     | ELLIPSIS
+     | list_expr
+     | dict_expr
+     | set_expr
+     | paren_expr ;
+
+# ============================================================================
+# F-String Grammar (PEP 701 — New in 3.12)
+# ============================================================================
+#
+# F-strings are now first-class grammar constructs. Any expression is allowed
+# inside braces, including backslashes, same-type quotes, newlines, comments,
+# and nested f-strings:
+#
+#   f"Hello, {name!r:>20}"
+#   f"{'\\n'.join(items)}"       backslashes (was SyntaxError before 3.12)
+#   f"{'hello'}"                 same quotes (was SyntaxError before 3.12)
+#   f"{x=}"                      debug format (PEP 617, 3.8): prints "x=42"
+
+fstring = FSTRING_START { FSTRING_MIDDLE | fstring_replacement } FSTRING_END ;
+
+fstring_replacement = LBRACE expression [ EQUALS ]
+                      [ fstring_conversion ] [ fstring_format_spec ] RBRACE ;
+
+# Conversion: !s -> str(), !r -> repr(), !a -> ascii()
+fstring_conversion = "!" NAME ;
+
+# Format spec is itself f-string-like (can contain nested replacements):
+#   f"{value:{width}.{precision}f}"
+fstring_format_spec = COLON { FSTRING_MIDDLE | fstring_replacement } ;
+
+# ============================================================================
+# Collection Literals and Comprehensions
+# ============================================================================
+
+# List: [1, 2, 3] or [x*2 for x in range(10)]
+list_expr = LBRACKET [ list_body ] RBRACKET ;
+
+list_body = expression comp_clause
+          | expression { COMMA expression } [ COMMA ] ;
+
+# Dict: {"a": 1} or {k: v for k, v in pairs}
+# Note: {} is an empty DICT, not an empty set. Use set() for empty sets.
+dict_expr = LBRACE [ dict_body ] RBRACE ;
+
+dict_body = dict_entry comp_clause
+          | dict_entry { COMMA dict_entry } [ COMMA ] ;
+
+dict_entry = DOUBLE_STAR expression
+           | expression COLON expression ;
+
+# Set: {1, 2, 3} or {x for x in data if x > 0}
+set_expr = LBRACE set_body RBRACE ;
+
+set_body = expression comp_clause
+         | expression COMMA [ expression { COMMA expression } [ COMMA ] ] ;
+
+# Parenthesized expression, tuple, or generator expression.
+#   (x)            parenthesized (not a tuple!)
+#   (x,)           single-element tuple (trailing comma required)
+#   (x for x in r) generator expression (lazy)
+paren_expr = LPAREN [ paren_body ] RPAREN ;
+
+paren_body = expression comp_clause
+           | expression COMMA [ expression { COMMA expression } [ COMMA ] ]
+           | expression ;
+
+# Comprehension clauses — shared by list, set, dict, and generator forms.
+# Async comprehensions (PEP 530) use `async for`.
+comp_clause = comp_for { comp_for | comp_if } ;
+
+comp_for = [ "async" ] "for" target_list "in" or_expr ;
+
+comp_if = "if" or_expr ;
+
+# Yield — turns a function into a generator.
+#   yield            yields None
+#   yield value      yields a value
+#   yield from iter  delegates to sub-generator (PEP 380, Python 3.3)
+yield_expr = "yield" [ "from" expression | expression_list ] ;
+
+# ============================================================================
+# Function Call Arguments
+# ============================================================================
+#
+# Four kinds: positional, keyword (name=val), *unpacking, **unpacking.
+# PEP 448 (3.5) generalized unpacking: f(*a, *b, **c, **d) is valid.
+
+arguments = argument { COMMA argument } [ COMMA ] ;
+
+argument = DOUBLE_STAR expression
+         | STAR expression
+         | NAME EQUALS expression
+         | expression ;

@@ -1,0 +1,397 @@
+# Token definitions for Python 3.8
+# @version 1
+# The complete lexical grammar for CPython 3.8 (released October 2019).
+#
+# Python 3.8 reference: https://docs.python.org/3.8/reference/lexical_analysis.html
+# PEP 572: https://peps.python.org/pep-0572/ (assignment expressions)
+#
+# Format:
+#   TOKEN_NAME = /regex/       -- regex-based token pattern
+#   TOKEN_NAME = "literal"     -- exact literal match
+#   TOKEN_NAME = /regex/ -> T  -- regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., ** before *, // before /, := before :).
+#
+# New features used in this file (extensions to the original .tokens format):
+#
+#   mode: indentation     -- activates Python-style INDENT/DEDENT/NEWLINE tokens
+#   skip: ... section     -- patterns matched and discarded (comments, whitespace)
+#   -> TYPE alias         -- multiple patterns can emit the same token type
+#   reserved: ... section -- keywords that are syntax errors if used as identifiers
+#
+# What changed from Python 3.6 to 3.8:
+#
+#   1. COLONEQUALS `:=` (walrus operator, PEP 572)
+#      The walrus operator introduces assignment expressions, allowing you to
+#      assign a value to a variable as part of a larger expression:
+#
+#        if (n := len(a)) > 10:    # assign AND test in one shot
+#        while chunk := f.read():  # assign in loop condition
+#        [y := f(x), y**2, y**3]   # reuse expensive computation
+#
+#      COLONEQUALS must appear before COLON in the token ordering, because
+#      the first-match-wins rule would otherwise tokenize `:=` as COLON
+#      followed by EQUALS.
+#
+#   2. `async` and `await` are now fully reserved keywords.
+#      In Python 3.5-3.6, they were "soft keywords" -- valid as identifiers
+#      outside of async function bodies. From 3.7 onward they became true
+#      reserved words. By 3.8, using `async` or `await` as a variable name
+#      is a SyntaxError everywhere.
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Python uses significant indentation to delimit blocks. When this mode is
+# active, the lexer:
+#
+#   1. Tracks leading whitespace at each logical line start
+#   2. Maintains an indentation stack (starts at [0])
+#   3. Emits INDENT when indentation increases
+#   4. Emits one or more DEDENT when indentation decreases
+#   5. Emits NEWLINE at logical line boundaries
+#   6. Tracks bracket depth -- suppresses INDENT/DEDENT/NEWLINE inside (), [], {}
+#      This allows multi-line expressions without explicit line continuation:
+#
+#        result = (first_value
+#                  + second_value
+#                  + third_value)
+#
+#   7. Handles explicit line continuation with backslash-newline
+#   8. Mixing tabs and spaces in indentation is a TabError in Python 3
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# These patterns are matched and consumed but produce no tokens.
+# The lexer tries skip patterns first at each position, consuming all
+# skippable content before attempting token patterns.
+#
+# Comments in Python run from # to end of line. Unlike C-family languages,
+# Python has no multi-line comment syntax -- use triple-quoted strings for
+# that purpose (which are parsed as STRING tokens, not skipped).
+#
+# Inline whitespace (spaces and tabs between tokens on the same line) is
+# skipped. Leading whitespace at line start is handled by the indentation
+# algorithm, not the skip patterns.
+#
+# Type comments (PEP 484) look like: # type: int
+# They are still syntactically comments and are skipped by the lexer.
+# The type checker reads them separately.
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Python 3.8 supports a rich variety of string literal forms. Each string
+# has an optional prefix that changes its semantics:
+#
+#   Prefix    Meaning                  Example
+#   ------    -------                  -------
+#   (none)    regular string           "hello"
+#   r / R     raw string               r"no\escape"
+#   b / B     bytes literal            b"\x00\xff"
+#   f / F     formatted string (3.6+)  f"x={x}"
+#   rb / br   raw bytes                rb"raw\bytes"
+#   rf / fr   raw f-string             rf"path\{name}"
+#
+# Combinations: r+b, r+f are allowed. b+f is NOT allowed (can't format bytes).
+#
+# Each prefix variant can use four quoting styles:
+#   'single'  "double"  '''triple-single'''  """triple-double"""
+#
+# Triple-quoted strings can span multiple lines. They must come before
+# single-quoted patterns in this file because the first-match-wins rule
+# would otherwise consume the opening """ as two tokens: " and "".
+#
+# Python 3.8 f-string addition: the `=` specifier for debugging output.
+#   f"{expr=}"  prints both the expression text and its value.
+#   f"{x=}"     might produce "x=42"
+# This is handled at runtime, not in the tokenizer. The lexer treats the
+# entire f-string as a single STRING token; the f-string parser inside the
+# compiler handles the `=` specifier.
+#
+# All string variants emit the same STRING token type via the -> alias.
+# The parser and compiler distinguish them by examining the token's text.
+
+# --- Triple-quoted strings (must come before single-quoted) ---
+
+# Raw + bytes triple-quoted: rb"""...""" or br'''...'''
+STRING_RAW_BYTES_TRIPLE_DQ = /[rR][bB]"""([^"\\]|\\.|\n)*"""|[bB][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_BYTES_TRIPLE_SQ = /[rR][bB]?'''([^'\\]|\\.|\n)*'''|[bB][rR]'''([^'\\]|\\.|\n)*'''/  -> STRING
+
+# Raw + f-string triple-quoted: rf"""...""" or fr'''...'''
+STRING_RAW_FSTR_TRIPLE_DQ  = /[rR][fF]"""([^"\\]|\\.|\n)*"""|[fF][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_FSTR_TRIPLE_SQ  = /[rR][fF]'''([^'\\]|\\.|\n)*'''|[fF][rR]'''([^'\\]|\\.|\n)*'''/   -> STRING
+
+# F-string triple-quoted: f"""...""" or f'''...'''
+STRING_FSTR_TRIPLE_DQ      = /[fF]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_FSTR_TRIPLE_SQ      = /[fF]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# Bytes triple-quoted: b"""...""" or b'''...'''
+STRING_BYTES_TRIPLE_DQ     = /[bB]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_BYTES_TRIPLE_SQ     = /[bB]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# Raw triple-quoted: r"""...""" or r'''...'''
+STRING_RAW_TRIPLE_DQ       = /[rR]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_RAW_TRIPLE_SQ       = /[rR]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# Plain triple-quoted: """...""" or '''...'''
+STRING_TRIPLE_DQ           = /"""([^"\\]|\\.|\n)*"""/                                            -> STRING
+STRING_TRIPLE_SQ           = /'''([^'\\]|\\.|\n)*'''/                                            -> STRING
+
+# --- Single-quoted strings (after triple-quoted to avoid false matches) ---
+
+# Raw + bytes: rb"..." or br'...'
+STRING_RAW_BYTES_DQ        = /[rR][bB]"([^"\\]|\\.)*"|[bB][rR]"([^"\\]|\\.)*"/                  -> STRING
+STRING_RAW_BYTES_SQ        = /[rR][bB]?'([^'\\]|\\.)*'|[bB][rR]'([^'\\]|\\.)*'/                 -> STRING
+
+# Raw + f-string: rf"..." or fr'...'
+STRING_RAW_FSTR_DQ         = /[rR][fF]"([^"\\]|\\.)*"|[fF][rR]"([^"\\]|\\.)*"/                  -> STRING
+STRING_RAW_FSTR_SQ         = /[rR][fF]'([^'\\]|\\.)*'|[fF][rR]'([^'\\]|\\.)*'/                  -> STRING
+
+# F-string: f"..." or f'...'
+STRING_FSTR_DQ             = /[fF]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_FSTR_SQ             = /[fF]'([^'\\]|\\.)*'/                                               -> STRING
+
+# Bytes: b"..." or b'...'
+STRING_BYTES_DQ            = /[bB]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_BYTES_SQ            = /[bB]'([^'\\]|\\.)*'/                                               -> STRING
+
+# Raw: r"..." or r'...'
+STRING_RAW_DQ              = /[rR]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_RAW_SQ              = /[rR]'([^'\\]|\\.)*'/                                               -> STRING
+
+# Plain: "..." or '...'
+STRING_DQ                  = /"([^"\\]|\\.)*"/                                                   -> STRING
+STRING_SQ                  = /'([^'\\]|\\.)*'/                                                   -> STRING
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# Python 3.8 supports four integer notations and floating-point numbers.
+# Underscores are allowed as digit separators (PEP 515, added in 3.6):
+#   1_000_000, 0xFF_FF, 1_000.000_001, 1e1_000
+#
+# Float patterns must come before integer patterns so that 3.14 is tokenized
+# as FLOAT(3.14) rather than INT(3) DOT INT(14).
+#
+# Complex number literals (3+4j) are tokenized as FLOAT/INT PLUS IMAG.
+# The imaginary suffix j/J makes a separate token type.
+
+# Imaginary literals: 3j, 3.14j, .5j, 1e10j
+# Must come before FLOAT so that 3.14j is IMAG, not FLOAT + NAME.
+IMAG_FLOAT_EXP = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*[jJ]/            -> IMAG
+IMAG_FLOAT_DOT = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/       -> IMAG
+IMAG_FLOAT     = /[0-9](_?[0-9])*\.[0-9]*(_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/ -> IMAG
+IMAG_INT       = /[0-9](_?[0-9])*[jJ]/                                      -> IMAG
+
+# Floats: 3.14, .5, 5., 1e10, 1.5e-3, 1_000.000_1
+# Patterns ordered so the most specific form matches first:
+#   1. Integer with mandatory exponent (1e10)       -- no decimal point
+#   2. Leading-dot form (.5, .5e10)                 -- starts with dot
+#   3. Standard form (3.14, 3., 3.14e-5)            -- digit dot digit*
+FLOAT_EXP   = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*/                    -> FLOAT
+FLOAT_DOT   = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/              -> FLOAT
+FLOAT       = /[0-9](_?[0-9])*\.[0-9]*(_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/ -> FLOAT
+
+# Integers: hex, octal, binary, decimal
+# Hex: 0xFF, 0XA0, 0xff_ff
+# Octal: 0o77, 0O77
+# Binary: 0b1010, 0B1010_0101
+# Decimal: 42, 1_000_000 (but not 007 -- leading zeros are a SyntaxError)
+INT_HEX     = /0[xX](_?[0-9a-fA-F])+/                                       -> INT
+INT_OCT     = /0[oO](_?[0-7])+/                                             -> INT
+INT_BIN     = /0[bB](_?[01])+/                                              -> INT
+INT         = /[0-9](_?[0-9])*/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Names start with a letter or underscore, followed by letters, digits,
+# or underscores. Python 3 allows Unicode identifiers (PEP 3131), but
+# we restrict to ASCII here for simplicity and compatibility with the
+# grammar tooling.
+#
+# The keywords: section below reclassifies certain names as KEYWORD tokens.
+# For example, if the lexer matches NAME "if", the keywords section
+# reclassifies it as KEYWORD "if".
+
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Augmented assignment operators whose base operator is two characters.
+# These must come before two-character operators (first-match-wins).
+#
+# Python 3.8 has these three-character augmented assignments:
+#   **=  exponentiation assignment    x **= 2  is  x = x ** 2
+#   <<=  left shift assignment        x <<= 1  is  x = x << 1
+#   >>=  right shift assignment       x >>= 1  is  x = x >> 1
+#   //=  floor division assignment    x //= 3  is  x = x // 3
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+
+# ============================================================================
+# Two-Character Operators and Delimiters
+# ============================================================================
+#
+# Must come before their single-character components.
+# e.g., ** before *, == before =, := before : and =, // before /
+#
+# COLONEQUALS `:=` is the walrus operator, new in Python 3.8 (PEP 572).
+# It is an assignment expression -- it assigns a value AND returns it:
+#
+#   # Without walrus:                    # With walrus:
+#   n = len(a)                           if (n := len(a)) > 10:
+#   if n > 10:                               print(f"too long: {n}")
+#       print(f"too long: {n}")
+#
+#   # Without walrus:                    # With walrus:
+#   chunk = f.read(8192)                 while chunk := f.read(8192):
+#   while chunk:                             process(chunk)
+#       process(chunk)
+#       chunk = f.read(8192)
+#
+# COLONEQUALS must appear before COLON in the token list. If COLON came
+# first, the lexer would see `:` and emit COLON, then see `=` and emit
+# EQUALS -- two tokens instead of one.
+#
+# The -> operator is used for return type annotations (PEP 3107):
+#   def f(x: int) -> str:
+
+COLONEQUALS     = ":="
+DOUBLE_STAR     = "**"
+FLOOR_DIV       = "//"
+LEFT_SHIFT      = "<<"
+RIGHT_SHIFT     = ">>"
+EQUALS_EQUALS   = "=="
+NOT_EQUALS      = "!="
+LESS_EQUALS     = "<="
+GREATER_EQUALS  = ">="
+ARROW           = "->"
+ELLIPSIS        = "..."
+PLUS_EQUALS     = "+="
+MINUS_EQUALS    = "-="
+STAR_EQUALS     = "*="
+SLASH_EQUALS    = "/="
+PERCENT_EQUALS  = "%="
+AMP_EQUALS      = "&="
+PIPE_EQUALS     = "|="
+CARET_EQUALS    = "^="
+AT_EQUALS       = "@="
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# These come after all multi-character operators to avoid false matches.
+# For example, `=` must come after `==`, `:=`, `+=`, etc.
+
+PLUS            = "+"
+MINUS           = "-"
+STAR            = "*"
+SLASH           = "/"
+PERCENT         = "%"
+EQUALS          = "="
+LESS_THAN       = "<"
+GREATER_THAN    = ">"
+AMP             = "&"
+PIPE            = "|"
+CARET           = "^"
+TILDE           = "~"
+AT              = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Brackets ((), [], {}) serve double duty:
+#   1. Syntactic delimiters (function calls, list literals, dict literals)
+#   2. Implicit line continuation (the lexer suppresses NEWLINE inside them)
+#
+# The DOT is used for attribute access (obj.attr) and in float literals.
+# Since float patterns come before DOT in this file, `3.14` is always
+# tokenized as a single FLOAT token, never as INT DOT INT.
+#
+# SEMICOLON separates multiple simple statements on one line:
+#   x = 1; y = 2; z = 3
+
+LPAREN          = "("
+RPAREN          = ")"
+LBRACKET        = "["
+RBRACKET        = "]"
+LBRACE          = "{"
+RBRACE          = "}"
+COMMA           = ","
+COLON           = ":"
+SEMICOLON       = ";"
+DOT             = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# When the lexer matches a NAME token whose text appears in the keywords
+# list, it reclassifies the token as KEYWORD. This is the standard
+# mechanism used across all .tokens files in this project.
+#
+# Python 3.8 has 35 keywords. Compared to Python 3.6:
+#   - `async` and `await` are now TRUE reserved keywords (were soft keywords)
+#   - All other keywords remain the same
+#
+# The keywords are listed alphabetically for easy lookup. Case matters:
+# `True` is a keyword, `true` is a regular name.
+
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  async
+  await
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield

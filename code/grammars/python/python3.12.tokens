@@ -1,0 +1,288 @@
+# Token definitions for Python 3.12
+# @version 1
+# Python 3.12 was released on October 2, 2023.
+#
+# Python 3.12 reference: https://docs.python.org/3.12/reference/lexical_analysis.html
+#
+# This file builds on the Python 3.10 token set with two changes:
+#
+#   1. `type` becomes a SOFT KEYWORD (PEP 695) — only a keyword in
+#      `type X = ...` statements, remains a valid identifier elsewhere.
+#
+#   2. F-string tokenization reworked (PEP 701) — f-strings now produce
+#      structured tokens (FSTRING_START, FSTRING_MIDDLE, FSTRING_END)
+#      instead of an opaque STRING token. This allows backslashes, nested
+#      same-type quotes, multi-line expressions, and comments in f-strings.
+#
+# Format:
+#   TOKEN_NAME = /regex/       -- regex-based token pattern
+#   TOKEN_NAME = "literal"     -- exact literal match
+#   TOKEN_NAME = /regex/ -> T  -- regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., ** before *, // before /, == before =).
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Python uses significant indentation. The lexer tracks leading whitespace,
+# maintains an indentation stack, and emits INDENT/DEDENT/NEWLINE tokens.
+# Bracket depth suppresses these tokens inside (), [], {}.
+# Python 3 forbids mixing tabs and spaces (raises TabError).
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# Backslash-newline joins physical lines into one logical line.
+  LINE_CONTINUATION = /\\[ \t]*\n/
+
+# ============================================================================
+# F-String Tokens (PEP 701 — New in 3.12)
+# ============================================================================
+#
+# PEP 701 integrates f-string tokenization into the main tokenizer using
+# a "quote stack" approach. The lexer produces structured tokens:
+#
+#   f"Hello, {name}!"  ->  FSTRING_START  FSTRING_MIDDLE("Hello, ")
+#                           LBRACE  NAME("name")  RBRACE
+#                           FSTRING_MIDDLE("!")  FSTRING_END
+#
+# FSTRING_START pushes the quote style onto the stack. FSTRING_MIDDLE
+# consumes literal text until { or the closing quote. Inside braces,
+# normal expression tokenization resumes. FSTRING_END pops the stack.
+#
+# This enables features that were syntax errors before 3.12:
+#   f"{'hello'}"              -- same-type nested quotes
+#   f"{'\\n'.join(items)}"    -- backslashes in expressions
+#   f"{\n  x + y  # sum\n}"  -- multi-line expressions with comments
+#   f"{f"{f"{x}"}"}"         -- unlimited nesting depth
+#
+# Triple-quoted patterns must come before single-quoted (first-match-wins).
+
+FSTRING_START_TRIPLE_DQ  = /[fF][rRbB]?"""|[rRbB][fF]"""/    -> FSTRING_START
+FSTRING_START_TRIPLE_SQ  = /[fF][rRbB]?'''|[rRbB][fF]'''/    -> FSTRING_START
+FSTRING_START_DQ         = /[fF][rRbB]?"|[rRbB][fF]"/         -> FSTRING_START
+FSTRING_START_SQ         = /[fF][rRbB]?'|[rRbB][fF]'/         -> FSTRING_START
+
+# FSTRING_MIDDLE is state-machine-driven (not purely regex).
+# Approximate pattern: literal text with escaped braces {{ and }}.
+FSTRING_MIDDLE           = /([^{}\\'"#]|\\.|(\{\{)|(\}\}))+/
+
+FSTRING_END_TRIPLE_DQ    = /"""/                               -> FSTRING_END
+FSTRING_END_TRIPLE_SQ    = /'''/                               -> FSTRING_END
+FSTRING_END_DQ           = /"/                                 -> FSTRING_END
+FSTRING_END_SQ           = /'/                                 -> FSTRING_END
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Prefixes: (none)=str, b/B=bytes, r/R=raw, rb/br=raw bytes, u/U=str (PEP 414).
+# F-strings (f/F prefix) are handled by FSTRING_* tokens above.
+# Triple-quoted patterns must come before single-quoted (first-match-wins).
+
+STRING_RAW_BYTES_TRIPLE_DQ   = /[bB][rR]"""([^"\\]|\\.|\n)*"""|[rR][bB]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_BYTES_TRIPLE_SQ   = /[bB][rR]'''([^'\\]|\\.|\n)*'''|[rR][bB]'''([^'\\]|\\.|\n)*'''/   -> STRING
+STRING_UNICODE_TRIPLE_DQ     = /[uU]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_UNICODE_TRIPLE_SQ     = /[uU]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_RAW_TRIPLE_DQ         = /[rR]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_RAW_TRIPLE_SQ         = /[rR]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_BYTES_TRIPLE_DQ       = /[bB]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_BYTES_TRIPLE_SQ       = /[bB]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_TRIPLE_DQ             = /"""([^"\\]|\\.|\n)*"""/                                            -> STRING
+STRING_TRIPLE_SQ             = /'''([^'\\]|\\.|\n)*'''/                                            -> STRING
+
+STRING_RAW_BYTES_DQ          = /[bB][rR]"([^"\\]|\\.)*"|[rR][bB]"([^"\\]|\\.)*"/                   -> STRING
+STRING_RAW_BYTES_SQ          = /[bB][rR]'([^'\\]|\\.)*'|[rR][bB]'([^'\\]|\\.)*'/                   -> STRING
+STRING_UNICODE_DQ            = /[uU]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_UNICODE_SQ            = /[uU]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_RAW_DQ                = /[rR]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_RAW_SQ                = /[rR]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_BYTES_DQ              = /[bB]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_BYTES_SQ              = /[bB]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_DQ                    = /"([^"\\]|\\.)*"/                                                    -> STRING
+STRING_SQ                    = /'([^'\\]|\\.)*'/                                                    -> STRING
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# Underscores in numeric literals allowed since Python 3.6 (PEP 515):
+#   1_000_000, 0xFF_FF, 0b1010_0101, 3.14_15_93
+#
+# Imaginary literals (3.5j) must match before floats. Floats before integers.
+
+IMAG_FLOAT_EXP = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*[jJ]/                      -> IMAG
+IMAG_FLOAT_DOT = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/                 -> IMAG
+IMAG_FLOAT     = /[0-9](_?[0-9])*\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/  -> IMAG
+IMAG_INT       = /[0-9](_?[0-9])*[jJ]/                                                -> IMAG
+
+FLOAT_EXP      = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*/                           -> FLOAT
+FLOAT_DOT      = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/                      -> FLOAT
+FLOAT          = /[0-9](_?[0-9])*\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/       -> FLOAT
+
+INT_HEX        = /0[xX](_?[0-9a-fA-F])+/                                              -> INT
+INT_BIN        = /0[bB](_?[01])+/                                                      -> INT
+INT_OCT        = /0[oO](_?[0-7])+/                                                    -> INT
+INT            = /[0-9](_?[0-9])*/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Python 3 supports Unicode identifiers (PEP 3131) with NFKC normalization.
+# This pattern covers ASCII only; a production lexer uses Unicode categories.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Python 3 additions vs. Python 2: `:=` (walrus, PEP 572), `@=` (PEP 465),
+# `->` (return annotation). The legacy `<>` not-equal was removed in 3.0.
+
+DOUBLE_STAR         = "**"
+FLOOR_DIV           = "//"
+LEFT_SHIFT          = "<<"
+RIGHT_SHIFT         = ">>"
+EQUALS_EQUALS       = "=="
+NOT_EQUALS          = "!="
+LESS_EQUALS         = "<="
+GREATER_EQUALS      = ">="
+WALRUS              = ":="
+ARROW               = "->"
+PLUS_EQUALS         = "+="
+MINUS_EQUALS        = "-="
+STAR_EQUALS         = "*="
+SLASH_EQUALS        = "/="
+PERCENT_EQUALS      = "%="
+AMP_EQUALS          = "&="
+PIPE_EQUALS         = "|="
+CARET_EQUALS        = "^="
+AT_EQUALS           = "@="
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# @ serves double duty: decorator prefix (@staticmethod) and matrix
+# multiplication infix operator (A @ B, PEP 465, Python 3.5).
+
+PLUS                = "+"
+MINUS               = "-"
+STAR                = "*"
+SLASH               = "/"
+PERCENT             = "%"
+EQUALS              = "="
+LESS_THAN           = "<"
+GREATER_THAN        = ">"
+AMP                 = "&"
+PIPE                = "|"
+CARET               = "^"
+TILDE               = "~"
+AT                  = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# ELLIPSIS (...) must come before DOT so ... is one token, not three DOTs.
+# Ellipsis is a builtin constant used as a placeholder in type stubs:
+#   def abstract_method(self) -> None: ...
+
+ELLIPSIS            = "..."
+LPAREN              = "("
+RPAREN              = ")"
+LBRACKET            = "["
+RBRACKET            = "]"
+LBRACE              = "{"
+RBRACE              = "}"
+COMMA               = ","
+COLON               = ":"
+SEMICOLON           = ";"
+DOT                 = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Python 3.12 has 35 hard keywords (stable since Python 3.5).
+# vs. Python 2.7: removed `print`/`exec`, added `True`/`False`/`None`
+# (now keywords, not builtins), `nonlocal` (3.0), `async`/`await` (3.5).
+
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  async
+  await
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield
+
+# ============================================================================
+# Soft Keywords
+# ============================================================================
+#
+# Context-sensitive keywords: act as keywords only in specific syntactic
+# positions, and remain valid identifiers everywhere else. The lexer emits
+# NAME; the parser reclassifies based on position.
+#
+#   type = int          # NAME (variable assignment)
+#   type Point = ...    # KEYWORD (type alias statement)
+#   match = re.match()  # NAME (function call)
+#   match value:        # KEYWORD (match statement)
+#
+# Python 3.10 (PEP 634): match, case, _
+# Python 3.12 (PEP 695): type
+
+soft_keywords:
+  match
+  case
+  _
+  type

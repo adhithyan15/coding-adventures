@@ -1,0 +1,425 @@
+# Token definitions for Python 3.0
+# @version 1
+#
+# Python 3.0 -- The Breaking Change
+# ===================================
+#
+# Released December 3, 2008, Python 3.0 (also known as "Python 3000" or
+# "Py3k") was the first intentionally backwards-incompatible release of
+# Python. Guido van Rossum decided that the accumulated warts and
+# inconsistencies of the language could only be fixed by breaking
+# compatibility with the 2.x line.
+#
+# This file defines the complete token set for Python 3.0. Each change
+# from Python 2.7 is documented inline with the rationale.
+#
+# Reference: https://docs.python.org/3.0/reference/lexical_analysis.html
+# PEPs: 3100, 3107, 3120, 3131
+#
+# ============================================================================
+# Summary of Token-Level Changes from Python 2.7
+# ============================================================================
+#
+# KEYWORDS ADDED:
+#   - True, False, None are now keywords (were just builtin names in 2.7)
+#     Rationale: prevents reassignment like True = 0, which was legal in 2.x
+#   - nonlocal is a new keyword
+#     Rationale: allows closures to rebind variables in enclosing scopes
+#
+# KEYWORDS REMOVED (now ordinary NAMEs, lexed as builtins):
+#   - print: was a statement keyword in 2.x, now a builtin function
+#     Rationale: print("x", "y") was ambiguous -- tuple or arguments?
+#     As a function, print() gains keyword args: sep, end, file, flush
+#   - exec: was a statement keyword in 2.x, now a builtin function
+#     Rationale: exec rarely used; statement form prevented optimization
+#
+# OPERATORS REMOVED:
+#   - <> (diamond / alternate not-equal): use != exclusively
+#     Rationale: two spellings for the same operation was confusing
+#   - ` ` (backtick repr): use repr() function instead
+#     Rationale: backticks were cryptic and easily confused with quotes
+#
+# OPERATORS ADDED:
+#   - -> (arrow): used in function return type annotations (PEP 3107)
+#     Example: def add(x: int, y: int) -> int: ...
+#
+# LITERALS CHANGED:
+#   - ... (ellipsis) is now a first-class literal token, usable anywhere
+#     In 2.x, Ellipsis was only valid inside slice notation
+#     In 3.0, ... can appear as an expression: placeholder = ...
+#   - String prefixes: u/U prefix removed (all strings are unicode)
+#     The u"..." prefix is gone because ALL strings are unicode in 3.0
+#     b/B prefix kept for bytes literals: b"raw bytes"
+#     r/R prefix kept for raw strings: r"no\escapes"
+#
+# EVERYTHING ELSE: same operators and delimiters as 2.7
+#   All arithmetic, bitwise, comparison, augmented assignment operators
+#   All bracket types, comma, colon, semicolon, dot, at-sign
+#   Numeric literals (int, float, complex) unchanged at the token level
+#
+# Format:
+#   TOKEN_NAME = /regex/       -- regex-based token pattern
+#   TOKEN_NAME = "literal"     -- exact literal match
+#   TOKEN_NAME = /regex/ -> T  -- regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., ** before *, // before /, == before =).
+#
+# Extensions to the base format:
+#   mode: indentation     -- activates Python-style INDENT/DEDENT/NEWLINE
+#   skip: ... section     -- patterns matched and discarded
+#   -> TYPE alias         -- multiple patterns emit the same token type
+#   reserved: ... section -- keywords that are syntax errors if used
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Python uses significant indentation. When this mode is active, the lexer:
+#   1. Tracks leading whitespace at each logical line start
+#   2. Maintains an indentation stack (starts at [0])
+#   3. Emits INDENT when indentation increases
+#   4. Emits one or more DEDENT when indentation decreases
+#   5. Emits NEWLINE at logical line boundaries
+#   6. Tracks bracket depth -- suppresses INDENT/DEDENT/NEWLINE inside (), [], {}
+#   7. Supports explicit line continuation with backslash (\) at end of line
+#
+# Python 3.0 change: tabs and spaces can no longer be mixed for indentation.
+# If a source file mixes tabs and spaces inconsistently, the lexer raises
+# a TabError. In 2.x, tabs were silently treated as expanding to the next
+# 8-space boundary, which led to code that looked aligned but wasn't.
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# These patterns are matched and consumed but produce no tokens.
+# Comments run from # to end of line.
+# Inline whitespace (spaces and tabs between tokens) is skipped.
+# Leading whitespace at line start is handled by the indentation algorithm.
+#
+# Python 3.0 change: the source encoding default changed from ASCII to UTF-8
+# (PEP 3120). The # -*- coding: ... -*- declaration is now optional for
+# UTF-8 files.
+#
+# Line continuation: a backslash immediately before a newline joins the
+# next physical line into the same logical line. This is consumed here
+# so the indentation tracker never sees the intermediate line break.
+
+skip:
+  COMMENT           = /#[^\n]*/
+  WHITESPACE        = /[ \t]+/
+  LINE_CONTINUATION = /\\[ \t]*\n/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Python 3.0 fundamentally changed the string model:
+#
+#   2.7: str = bytes, unicode = text.  "hello" is bytes, u"hello" is text.
+#   3.0: str = text (unicode), bytes = bytes.  "hello" is text, b"hello" is bytes.
+#
+# Token-level consequences:
+#   - The u/U prefix is REMOVED. Every unprefixed string is unicode.
+#     u"hello" is a SyntaxError in 3.0 (it was restored in 3.3 for
+#     migration ease, but in strict 3.0 it does not exist).
+#   - The b/B prefix creates a bytes literal. Only ASCII characters
+#     (0x00-0x7F) are allowed in the source; use \xNN for others.
+#   - The r/R prefix still creates a raw string (no escape processing).
+#   - rb/br combinations create raw bytes literals.
+#
+# Triple-quoted strings (""" or ''') can span multiple lines.
+# They must come before single-quoted patterns (first-match-wins).
+
+# --- Triple-quoted strings with prefixes ---
+
+# Raw bytes triple-quoted (rb"..." or br"...")
+STRING_RAW_BYTES_TRIPLE_DQ = /[rR][bB]"""([^"\\]|\\.|\n)*"""|[bB][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_BYTES_TRIPLE_SQ = /[rR][bB]?'''([^'\\]|\\.|\n)*'''|[bB][rR]'''([^'\\]|\\.|\n)*'''/   -> STRING
+
+# Bytes triple-quoted (b"...")
+STRING_BYTES_TRIPLE_DQ     = /[bB]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_BYTES_TRIPLE_SQ     = /[bB]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# Raw triple-quoted (r"...")
+STRING_RAW_TRIPLE_DQ       = /[rR]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_RAW_TRIPLE_SQ       = /[rR]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# Plain triple-quoted (unicode by default in 3.0)
+STRING_TRIPLE_DQ           = /"""([^"\\]|\\.|\n)*"""/                                            -> STRING
+STRING_TRIPLE_SQ           = /'''([^'\\]|\\.|\n)*'''/                                            -> STRING
+
+# --- Single-quoted strings with prefixes ---
+
+# Raw bytes single-quoted
+STRING_RAW_BYTES_DQ        = /[rR][bB]"([^"\\]|\\.)*"|[bB][rR]"([^"\\]|\\.)*"/                  -> STRING
+STRING_RAW_BYTES_SQ        = /[rR][bB]'([^'\\]|\\.)*'|[bB][rR]'([^'\\]|\\.)*'/                  -> STRING
+
+# Bytes single-quoted
+STRING_BYTES_DQ            = /[bB]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_BYTES_SQ            = /[bB]'([^'\\]|\\.)*'/                                               -> STRING
+
+# Raw single-quoted
+STRING_RAW_DQ              = /[rR]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_RAW_SQ              = /[rR]'([^'\\]|\\.)*'/                                               -> STRING
+
+# Plain single-quoted (unicode by default in 3.0)
+STRING_DQ                  = /"([^"\\]|\\.)*"/                                                   -> STRING
+STRING_SQ                  = /'([^'\\]|\\.)*'/                                                   -> STRING
+
+# NOTE: No u/U prefix patterns at all. In Python 2.7, the lexer accepted
+# u"hello" for unicode strings. In 3.0, that prefix is gone because ALL
+# strings are unicode. Writing u"hello" is a SyntaxError.
+# (The u prefix was restored in Python 3.3 as a no-op for migration ease.)
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# Float patterns must come before integer patterns so that 3.14 is tokenized
+# as FLOAT(3.14) rather than INT(3) DOT INT(14).
+#
+# Python 3.0 change at the token level:
+#   - Octal literals now require 0o prefix: 0o755 (not 0755)
+#     In 2.x, 0755 was a valid octal literal. This was confusing because
+#     0123 looked like decimal 123 but was actually octal 83.
+#     In 3.0, 0755 is a SyntaxError. You must write 0o755.
+#   - The L/l suffix for long integers is removed.
+#     In 2.x, 1000000L forced a long integer. In 3.0, all integers are
+#     arbitrary-precision (the int/long distinction is gone).
+
+# Imaginary numbers (complex literal): 3j, 3.14j, .5j
+# Must come before float patterns since 3.14j should be one token.
+IMAG_FLOAT_STD = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[jJ]/  -> IMAG
+IMAG_FLOAT_DOT = /\.[0-9]+([eE][+-]?[0-9]+)?[jJ]/        -> IMAG
+IMAG_FLOAT_EXP = /[0-9]+[eE][+-]?[0-9]+[jJ]/             -> IMAG
+IMAG_INT       = /[0-9]+[jJ]/                              -> IMAG
+
+# Floats: 3.14, .5, 5., 1e10, 1.5e-3
+# Ordered most-specific-first:
+#   1. Integer with mandatory exponent (1e10) -- no decimal point
+#   2. Leading-dot form (.5, .5e10) -- starts with dot
+#   3. Standard form (3.14, 3., 3.14e-5) -- digit dot digit*
+FLOAT_EXP   = /[0-9]+[eE][+-]?[0-9]+/                     -> FLOAT
+FLOAT_DOT   = /\.[0-9]+([eE][+-]?[0-9]+)?/                -> FLOAT
+FLOAT       = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/          -> FLOAT
+
+# Integers: hex, octal (new 0o prefix), binary, decimal
+# Python 3.0: octal MUST use 0o prefix. The old 0NNN form is a SyntaxError.
+# Binary literals (0b101) were added in 2.6 but included here for 3.0.
+INT_HEX     = /0[xX][0-9a-fA-F]+/                         -> INT
+INT_OCT     = /0[oO][0-7]+/                               -> INT
+INT_BIN     = /0[bB][01]+/                                 -> INT
+INT         = /[0-9]+/
+
+# ============================================================================
+# Ellipsis Literal
+# ============================================================================
+#
+# Python 3.0 change: ... (three dots) is now a first-class literal token.
+#
+# In 2.x, Ellipsis was only valid in slice notation for multi-dimensional
+# arrays (numpy use case): array[..., 0]. The three dots were parsed as
+# individual DOT tokens by the slice grammar.
+#
+# In 3.0, ... is a standalone expression with its own value (the Ellipsis
+# singleton). Common uses:
+#   - Placeholder for unimplemented code:  def todo(): ...
+#   - Type stub annotations:               def f(x: int) -> str: ...
+#   - Sentinel values:                     _MISSING = ...
+#
+# The ELLIPSIS token must come before DOT (first-match-wins) so that
+# "..." is one token, not three DOT tokens.
+
+ELLIPSIS    = "..."
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Names start with a letter or underscore, followed by letters, digits,
+# or underscores. The keywords section below reclassifies certain names
+# as KEYWORD tokens.
+#
+# Python 3.0 change (PEP 3131): identifiers can use non-ASCII letters
+# from Unicode. For example, variable names like "cafe" with accented
+# characters are valid. This token file uses the ASCII-only regex for
+# simplicity; a full implementation would use Unicode categories.
+
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Arrow Operator (NEW in 3.0)
+# ============================================================================
+#
+# The -> operator was added for function return type annotations (PEP 3107).
+#
+#   def add(x: int, y: int) -> int:
+#       return x + y
+#
+# The arrow is purely syntactic -- Python 3.0 does not enforce the
+# annotation at runtime. Annotations are stored in f.__annotations__
+# and can be used by third-party tools (type checkers, IDEs, etc.).
+#
+# This must come before MINUS so that -> is one token, not MINUS GREATER_THAN.
+
+ARROW           = "->"
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Augmented assignment operators with two-character base operators.
+# Must come before two-character operators (first-match-wins).
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must come before their single-character components.
+#
+# Python 3.0 REMOVED:
+#   - <> (diamond not-equal) is gone. Use != exclusively.
+#     In 2.x, both <> and != meant "not equal". Having two operators for
+#     the same thing violated "There should be one obvious way to do it."
+#     The <> form was a holdover from ABC/Modula heritage.
+#
+# NOTE: There is NO <> token defined here. It was present in Python 2.7
+# token definitions but is deliberately absent from 3.0.
+
+DOUBLE_STAR     = "**"
+FLOOR_DIV       = "//"
+LEFT_SHIFT      = "<<"
+RIGHT_SHIFT     = ">>"
+EQUALS_EQUALS   = "=="
+NOT_EQUALS      = "!="
+LESS_EQUALS     = "<="
+GREATER_EQUALS  = ">="
+PLUS_EQUALS     = "+="
+MINUS_EQUALS    = "-="
+STAR_EQUALS     = "*="
+SLASH_EQUALS    = "/="
+PERCENT_EQUALS  = "%="
+AMP_EQUALS      = "&="
+PIPE_EQUALS     = "|="
+CARET_EQUALS    = "^="
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# NOTE on division (PEP 238):
+#   In 2.x: / was floor division for integers, true division for floats
+#   In 3.0: / is ALWAYS true division, // is ALWAYS floor division
+#   This is a semantic change, not a token change -- both / and // exist
+#   in both versions. But the meaning of SLASH changes fundamentally.
+
+PLUS            = "+"
+MINUS           = "-"
+STAR            = "*"
+SLASH           = "/"
+PERCENT         = "%"
+EQUALS          = "="
+LESS_THAN       = "<"
+GREATER_THAN    = ">"
+AMP             = "&"
+PIPE            = "|"
+CARET           = "^"
+TILDE           = "~"
+AT              = "@"
+
+# NOTE: No backtick (`) token. In Python 2.x, `expr` was shorthand for
+# repr(expr). This was removed in 3.0 because:
+#   1. Backticks are visually similar to single quotes -- easy to confuse
+#   2. Nested backticks were impossible: `x` worked but ``x`` did not
+#   3. repr() is clearer and more explicit
+#   4. Backticks are used in many markup languages, creating confusion
+# The repr() builtin function remains available.
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN          = "("
+RPAREN          = ")"
+LBRACKET        = "["
+RBRACKET        = "]"
+LBRACE          = "{"
+RBRACE          = "}"
+COMMA           = ","
+COLON           = ":"
+SEMICOLON       = ";"
+DOT             = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# When the lexer matches a NAME token whose value appears in the keywords
+# list, it reclassifies the token as KEYWORD.
+#
+# Python 3.0 keyword changes from 2.7:
+#
+# ADDED as keywords:
+#   True    -- was a builtin name in 2.x, could be reassigned: True = 0
+#              Now a keyword, so True = 0 is a SyntaxError. This prevents
+#              accidental or malicious redefinition of boolean constants.
+#   False   -- same rationale as True
+#   None    -- same rationale. None = "something" was legal in early 2.x
+#   nonlocal -- new keyword for rebinding names in enclosing function scopes
+#              In 2.x, closures could read but not write enclosing variables.
+#              nonlocal x allows: x = new_value inside a nested function.
+#
+# REMOVED as keywords (now builtin function names, lexed as NAME):
+#   print   -- was a statement: print "hello"
+#              Now a function: print("hello")
+#              Benefits: sep/end/file kwargs, usable in list comprehensions,
+#              mockable in tests, consistent with other I/O functions
+#   exec    -- was a statement: exec "code" in globals, locals
+#              Now a function: exec("code", globals, locals)
+#              Benefits: rarely used, function form is clearer
+#
+# The full keyword list for Python 3.0:
+
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield

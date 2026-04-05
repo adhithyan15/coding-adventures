@@ -1,0 +1,1147 @@
+# Parser grammar for Python 3.8
+# @version 1
+# The complete syntactic grammar for CPython 3.8 (released October 2019).
+#
+# Python 3.8 reference: https://docs.python.org/3.8/reference/grammar.html
+# PEP 572: https://peps.python.org/pep-0572/ (assignment expressions)
+# PEP 570: https://peps.python.org/pep-0570/ (positional-only parameters)
+#
+# This file feeds the grammar-driven parser. The parser reads these rules
+# and uses recursive descent with backtracking to produce an AST.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from python3.8.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword or exact value)
+#
+# Note: INDENT, DEDENT, and NEWLINE are synthetic tokens produced by the
+# lexer's indentation mode. They do not appear in python3.8.tokens but are
+# referenced here as regular tokens.
+#
+# What changed from Python 3.6 to 3.8:
+#
+#   1. Named expressions / walrus operator (PEP 572):
+#      Allows assignment inside expressions using `:=`
+#
+#        if (n := len(a)) > 10:           # assign and test
+#        while chunk := f.read(8192):     # assign in loop condition
+#        filtered = [y for x in data if (y := f(x)) is not None]
+#
+#      The named_expression rule is integrated into the expression
+#      precedence chain at a level just below expression_list, so that
+#      `x := value` binds more tightly than comma but less tightly than
+#      everything else.
+#
+#   2. Positional-only parameters (PEP 570):
+#      A `/` separator in function parameters marks everything before it
+#      as positional-only (cannot be passed by keyword):
+#
+#        def f(pos_only, /, normal, *, kw_only):
+#            ...
+#
+#        f(1, 2, kw_only=3)        # OK
+#        f(pos_only=1, ...)        # TypeError!
+#
+#      The parameters rule is extended to support the `/` separator.
+#
+#   3. f-string `=` for debugging (f"{expr=}"):
+#      This is a runtime/compiler feature, not a grammar change. The
+#      tokenizer treats f-strings as STRING tokens; the f-string parser
+#      inside the compiler handles the `=` specifier.
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A Python file is a sequence of statements separated by newlines.
+# The file may begin with an encoding declaration (handled by the tokenizer,
+# not the parser) and may contain blank lines anywhere.
+#
+# An interactive session uses single_input (one statement or expression).
+# The eval() function uses eval_input (a single expression).
+# A module file uses file_input (the full grammar).
+
+file_input    = { NEWLINE | statement } ;
+single_input  = NEWLINE | simple_stmt | compound_stmt NEWLINE ;
+eval_input    = expression_list { NEWLINE } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Python statements come in two major forms:
+#
+# 1. Simple statements -- occupy a single logical line, optionally chained
+#    with semicolons. Examples:
+#      x = 1
+#      x = 1; y = 2; z = 3
+#      return x + y
+#
+# 2. Compound statements -- contain indented blocks (suites).
+#    Examples: if, for, while, try, with, def, class, async
+#
+# The parser tries compound_stmt first because it requires a keyword at the
+# start (if, for, def, etc.), making it easy to distinguish from a simple
+# statement that starts with an expression or name.
+
+statement = compound_stmt | simple_stmt ;
+
+# A simple statement line: one or more small_stmts separated by semicolons,
+# terminated by a newline. The trailing semicolon is optional.
+#
+#   x = 1                    -- one small_stmt
+#   x = 1; y = 2             -- two small_stmts
+#   x = 1; y = 2;            -- trailing semicolon is allowed
+simple_stmt = small_stmt { SEMICOLON small_stmt } [ SEMICOLON ] NEWLINE ;
+
+small_stmt = return_stmt
+           | raise_stmt
+           | import_stmt
+           | from_import_stmt
+           | global_stmt
+           | nonlocal_stmt
+           | assert_stmt
+           | del_stmt
+           | break_stmt
+           | continue_stmt
+           | pass_stmt
+           | yield_stmt
+           | assign_stmt ;
+
+# ============================================================================
+# Simple Statements
+# ============================================================================
+
+# Return -- exits a function, optionally with a value.
+#
+#   return           -> returns None
+#   return x + y     -> returns the value of x + y
+#   return a, b      -> returns a tuple (a, b)
+#
+# A return outside a function is a SyntaxError (caught by semantic analysis,
+# not the grammar).
+return_stmt = "return" [ expression_list ] ;
+
+# Raise -- throws an exception.
+#
+#   raise                      -> re-raises the current exception
+#   raise ValueError("bad")   -> raises a new exception
+#   raise TypeError from err   -> exception chaining (PEP 3134)
+#
+# Exception chaining is a Python 3 feature that sets the __cause__
+# attribute, creating an explicit cause chain for debugging.
+raise_stmt = "raise" [ expression [ "from" expression ] ] ;
+
+# Import -- brings modules into the current namespace.
+#
+#   import os                     -> os.path.join(...)
+#   import os.path                -> os.path.join(...)
+#   import numpy as np            -> np.array(...)
+#   import os, sys                -> multiple imports
+#   import os.path as osp, sys    -> aliases and multiple
+import_stmt = "import" dotted_as_names ;
+
+dotted_as_names = dotted_as_name { COMMA dotted_as_name } ;
+dotted_as_name  = dotted_name [ "as" NAME ] ;
+dotted_name     = NAME { DOT NAME } ;
+
+# From-import -- imports specific names from a module.
+#
+#   from os import path                    -> path.join(...)
+#   from os.path import join, exists       -> join('/a', 'b')
+#   from collections import OrderedDict as OD
+#   from . import sibling                  -> relative import
+#   from ..package import module           -> parent relative import
+#   from os import *                       -> wildcard import (discouraged)
+#
+# The dot prefixes indicate relative imports:
+#   .    = current package
+#   ..   = parent package
+#   ...  = grandparent package
+from_import_stmt = "from" ( { DOT } dotted_name | { DOT } )
+                   "import" ( STAR | import_as_names
+                            | LPAREN import_as_names RPAREN ) ;
+
+import_as_names = import_as_name { COMMA import_as_name } [ COMMA ] ;
+import_as_name  = NAME [ "as" NAME ] ;
+
+# Global -- declares names as module-level (global scope).
+#
+#   x = 0
+#   def increment():
+#       global x       -> without this, `x = x + 1` would create a local
+#       x = x + 1
+#
+# Without `global`, an assignment inside a function creates a local variable.
+# The `global` statement overrides this, making the name refer to the
+# module-level variable instead.
+global_stmt = "global" NAME { COMMA NAME } ;
+
+# Nonlocal -- declares names from an enclosing function scope.
+#
+#   def outer():
+#       count = 0
+#       def inner():
+#           nonlocal count    -> refers to outer's `count`
+#           count += 1
+#       inner()
+#       print(count)          -> prints 1
+#
+# Without `nonlocal`, the assignment in `inner` would create a new local
+# variable, leaving `outer`'s `count` unchanged. `nonlocal` was added in
+# Python 3.0 to fix this common closure pitfall.
+nonlocal_stmt = "nonlocal" NAME { COMMA NAME } ;
+
+# Assert -- debugging check that raises AssertionError if the condition
+# is false.
+#
+#   assert x > 0                    -> AssertionError if x <= 0
+#   assert x > 0, "x must be pos"  -> with custom error message
+#
+# Assertions can be globally disabled with `python -O` (optimize mode),
+# so they should never be used for input validation or security checks.
+assert_stmt = "assert" expression [ COMMA expression ] ;
+
+# Del -- removes a name binding, list element, or dictionary entry.
+#
+#   del x              -> unbinds the name x
+#   del lst[0]         -> removes first element
+#   del d["key"]       -> removes dict entry
+#   del obj.attr       -> removes attribute
+#   del a, b           -> unbinds multiple names
+del_stmt = "del" target_list ;
+
+# Break and continue -- loop control flow.
+#
+#   for x in items:
+#       if x < 0:
+#           continue      -> skip to next iteration
+#       if x > 100:
+#           break         -> exit the loop entirely
+#       process(x)
+break_stmt    = "break" ;
+continue_stmt = "continue" ;
+
+# Pass -- no-op placeholder.
+#
+#   class MyError(Exception):
+#       pass                  -> empty class body
+#
+#   def todo():
+#       pass                  -> not yet implemented
+pass_stmt = "pass" ;
+
+# Yield statement -- turns a function into a generator.
+#
+#   def fibonacci():
+#       a, b = 0, 1
+#       while True:
+#           yield a           -> produces next value
+#           a, b = b, a + b
+#
+#   yield from iterable       -> delegates to sub-generator (PEP 380)
+yield_stmt = yield_expr ;
+
+# ============================================================================
+# Assignment Statements
+# ============================================================================
+#
+# Assignment in Python is more complex than in most languages because it
+# supports several forms:
+#
+#   x = 1                       -> simple assignment
+#   x = y = 1                   -> chained assignment (right to left)
+#   a, b = 1, 2                 -> tuple unpacking
+#   [a, b] = [1, 2]             -> list unpacking
+#   a, *rest = [1, 2, 3, 4]    -> starred unpacking (PEP 3132)
+#   x += 1                      -> augmented assignment
+#   x: int = 5                  -> annotated assignment (PEP 526)
+#   x: int                      -> annotation without assignment
+#
+# The grammar handles all of these through a single rule that parses the
+# left-hand side as an expression, then checks semantically whether it
+# is a valid assignment target.
+#
+# Named expressions (walrus operator, PEP 572) are NOT handled here.
+# They are part of the expression grammar (named_expression rule).
+# The distinction is:
+#   x = 1       -> statement (assign_stmt)
+#   (x := 1)    -> expression (named_expression), can appear inside if/while/etc.
+
+assign_stmt = expression_list assign_tail
+            | expression_list ;
+
+assign_tail = COLON expression [ EQUALS expression_list ]
+            | { EQUALS expression_list } EQUALS ( yield_expr | expression_list )
+            | augmented_assign_op ( yield_expr | expression_list ) ;
+
+# Annotation without assignment: `x: int` is captured by the first
+# alternative of assign_tail. Annotation with assignment: `x: int = 5`
+# is the same alternative with the optional EQUALS clause.
+#
+# Chained assignment: `x = y = z = 1` is handled by the second alternative
+# repeating `EQUALS expression_list`.
+
+augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS
+                    | FLOOR_DIV_EQUALS | PERCENT_EQUALS | AMP_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | DOUBLE_STAR_EQUALS | AT_EQUALS ;
+
+# ============================================================================
+# Target Lists (for del, assignment unpacking)
+# ============================================================================
+#
+# A target is something that can appear on the left-hand side of an
+# assignment or in a `del` statement. Valid targets:
+#
+#   NAME              x = 1
+#   target.attr       obj.x = 1
+#   target[subscript]  lst[0] = 1
+#   (targets)         (a, b) = 1, 2
+#   [targets]         [a, b] = [1, 2]
+#   *target           a, *rest = [1, 2, 3]
+#
+# The grammar does not enforce target validity -- it accepts any expression
+# and relies on semantic analysis to reject invalid targets like `1 = x`.
+
+target_list = target { COMMA target } [ COMMA ] ;
+
+target = STAR expression
+       | expression ;
+
+# ============================================================================
+# Compound Statements
+# ============================================================================
+#
+# Compound statements contain one or more suites (indented blocks of code).
+# They always start with a keyword and end with a colon before the suite.
+
+compound_stmt = if_stmt
+              | for_stmt
+              | while_stmt
+              | try_stmt
+              | with_stmt
+              | def_stmt
+              | class_stmt
+              | async_stmt
+              | decorated ;
+
+# ============================================================================
+# If / Elif / Else
+# ============================================================================
+#
+# Conditional execution. The elif chain can be any length.
+#
+#   if score >= 90:
+#       grade = "A"
+#   elif score >= 80:
+#       grade = "B"
+#   elif score >= 70:
+#       grade = "C"
+#   else:
+#       grade = "F"
+#
+# Python has no switch/case statement (until 3.10's match/case).
+# Chains of elif are the idiomatic replacement.
+
+if_stmt = "if" named_expression COLON suite
+          { "elif" named_expression COLON suite }
+          [ "else" COLON suite ] ;
+
+# ============================================================================
+# For Loop
+# ============================================================================
+#
+# Iterates over any iterable (list, tuple, dict, set, generator, etc.).
+#
+#   for item in items:
+#       process(item)
+#
+#   for key, value in d.items():     -> tuple unpacking
+#       print(f"{key}: {value}")
+#
+#   for i, (name, age) in enumerate(people):   -> nested unpacking
+#       print(f"#{i}: {name}, age {age}")
+#
+# The optional else clause runs when the loop completes WITHOUT a break:
+#
+#   for item in items:
+#       if item == target:
+#           print("found!")
+#           break
+#   else:
+#       print("not found")          -> only runs if no break occurred
+#
+# This is one of Python's most misunderstood features. The else clause
+# does NOT run "if the loop body was never entered" -- it runs when the
+# loop finishes normally (without break).
+
+for_stmt = "for" target_list "in" expression_list COLON suite
+           [ "else" COLON suite ] ;
+
+# ============================================================================
+# While Loop
+# ============================================================================
+#
+# Repeats a block as long as a condition is true.
+#
+#   while not done:
+#       done = process_next()
+#
+# The walrus operator (PEP 572) is particularly useful with while:
+#
+#   while chunk := f.read(8192):     -> assign and test in one step
+#       process(chunk)
+#
+# Like for-loops, while-loops support an else clause that runs when the
+# condition becomes false (not when break is used).
+
+while_stmt = "while" named_expression COLON suite
+             [ "else" COLON suite ] ;
+
+# ============================================================================
+# Try / Except / Finally
+# ============================================================================
+#
+# Exception handling. Python supports three forms:
+#
+# 1. try/except -- catch specific exceptions:
+#
+#   try:
+#       result = int(user_input)
+#   except ValueError:
+#       print("invalid number")
+#   except (TypeError, KeyError) as e:
+#       print(f"error: {e}")
+#   except:                            -> bare except (catches everything)
+#       print("unknown error")
+#
+# 2. try/finally -- cleanup code that always runs:
+#
+#   try:
+#       f = open("data.txt")
+#       process(f)
+#   finally:
+#       f.close()                      -> runs even if exception occurred
+#
+# 3. try/except/else/finally -- the full form:
+#
+#   try:
+#       result = compute()
+#   except ComputeError:
+#       result = default
+#   else:
+#       save(result)                   -> only runs if NO exception
+#   finally:
+#       cleanup()                      -> ALWAYS runs
+#
+# The else clause runs only if no exception was raised in the try block.
+# It is useful for code that should only run on success.
+
+try_stmt = "try" COLON suite
+           ( except_clauses [ "else" COLON suite ] [ "finally" COLON suite ]
+           | "finally" COLON suite ) ;
+
+except_clauses = except_clause { except_clause } ;
+
+# An except clause can:
+#   except:                  -> catch any exception (bare except)
+#   except TypeError:        -> catch a specific type
+#   except TypeError as e:   -> catch and bind to a name
+#   except (A, B) as e:     -> catch multiple types
+except_clause = "except" [ expression [ "as" NAME ] ] COLON suite ;
+
+# ============================================================================
+# With Statement (Context Managers)
+# ============================================================================
+#
+# Ensures cleanup code runs even if an exception occurs. Calls __enter__
+# on entry and __exit__ on exit.
+#
+#   with open("file.txt") as f:          -> single context manager
+#       data = f.read()
+#
+#   with open("in") as fin, open("out") as fout:   -> multiple (3.1+)
+#       fout.write(fin.read())
+#
+# The `as` clause is optional -- some context managers are used purely
+# for their side effects:
+#
+#   with suppress(FileNotFoundError):    -> no binding needed
+#       os.remove("temp.txt")
+
+with_stmt = "with" with_item { COMMA with_item } COLON suite ;
+
+with_item = expression [ "as" target ] ;
+
+# ============================================================================
+# Function Definition
+# ============================================================================
+#
+# Functions are first-class objects in Python. They can be assigned to
+# variables, passed as arguments, stored in data structures, and returned
+# from other functions.
+#
+#   def greet(name, greeting="Hello"):
+#       return f"{greeting}, {name}!"
+#
+#   def add(x: int, y: int) -> int:       -> type annotations (PEP 3107)
+#       return x + y
+#
+# Python 3.8 adds positional-only parameters (PEP 570):
+#
+#   def f(pos_only, /, normal, *, kw_only):
+#       pass
+#
+#   f(1, 2, kw_only=3)        -> OK
+#   f(1, normal=2, kw_only=3) -> OK
+#   f(pos_only=1, ...)        -> TypeError! pos_only is positional-only
+#
+# The `/` separator divides positional-only from normal parameters.
+# Everything before `/` must be passed positionally.
+# The `*` separator (existing since Python 3.0) divides normal from
+# keyword-only parameters. Everything after `*` must be passed by keyword.
+
+def_stmt = "def" NAME LPAREN [ parameters ] RPAREN [ ARROW expression ] COLON suite ;
+
+# ============================================================================
+# Function Parameters
+# ============================================================================
+#
+# Parameters support five forms arranged in a specific order:
+#
+#   def f(pos_only, /, normal, default=1, *args, kw_only, **kwargs):
+#         |__________|  |______________|  |____|  |______|  |______|
+#         positional    normal+default    vararg  kw-only   kw-vararg
+#         only (3.8+)
+#
+# Order rules (enforced semantically, not purely in grammar):
+#   1. Positional-only parameters (before /)     -- new in 3.8
+#   2. Normal positional parameters
+#   3. Parameters with default values
+#   4. *args (at most one) -- collects extra positional args
+#   5. Keyword-only parameters (after * or *args)
+#   6. **kwargs (at most one, must be last) -- collects extra keyword args
+#
+# The `/` separator (PEP 570, Python 3.8):
+#   - Everything before `/` is positional-only
+#   - `/` itself is not a parameter, just a separator
+#   - Must appear before `*` if both are present
+#
+# The `*` separator (PEP 3102, Python 3.0):
+#   - If bare `*` (no name), only serves as separator
+#   - If `*args`, also collects extra positional arguments
+#   - Everything after `*` or `*args` is keyword-only
+#
+# Examples showing the full range:
+#
+#   def simple(a, b, c):                      -> all normal
+#   def defaults(a, b=1, c=2):                -> with defaults
+#   def varargs(a, *args):                    -> collects extras
+#   def kwonly(a, *, key):                    -> key must be keyword
+#   def everything(a, /, b, *, c, **kw):      -> all forms (3.8)
+#   def divmod(a, b, /):                      -> both positional-only
+
+parameters = parameter_list [ COMMA ] ;
+
+# The parameter list handles all parameter forms including the / and *
+# separators. The grammar is permissive -- it allows orderings that are
+# semantically invalid (like defaults before non-defaults). The compiler
+# validates correct ordering.
+#
+# We model this as a flat comma-separated list where / and * are special
+# separator tokens mixed in with the parameters. This mirrors CPython's
+# actual grammar.
+
+parameter_list = param_or_sep { COMMA param_or_sep } ;
+
+param_or_sep = DOUBLE_STAR typed_param
+             | STAR typed_param
+             | STAR
+             | SLASH
+             | typed_param EQUALS expression
+             | typed_param ;
+
+# A typed parameter is a name with an optional type annotation:
+#   x         -> no annotation
+#   x: int    -> annotated
+typed_param = NAME [ COLON expression ] ;
+
+# ============================================================================
+# Class Definition
+# ============================================================================
+#
+# Classes support single and multiple inheritance.
+#
+#   class Animal:                          -> no base class (implicitly object)
+#       def __init__(self, name):
+#           self.name = name
+#
+#   class Dog(Animal):                     -> single inheritance
+#       def speak(self):
+#           return "Woof!"
+#
+#   class GuideDog(Dog, ServiceAnimal):    -> multiple inheritance
+#       pass
+#
+# Metaclasses and keyword arguments in the class header:
+#
+#   class MyModel(Base, metaclass=ABCMeta):
+#       pass
+#
+# The argument list uses the same syntax as function calls, supporting
+# positional args, keyword args, and */**unpacking.
+
+class_stmt = "class" NAME [ LPAREN [ arguments ] RPAREN ] COLON suite ;
+
+# ============================================================================
+# Async Statement
+# ============================================================================
+#
+# Async/await enables cooperative multitasking via coroutines (PEP 492).
+# In Python 3.8, `async` and `await` are fully reserved keywords.
+#
+#   async def fetch(url):                  -> async function (coroutine)
+#       async with aiohttp.get(url) as r:  -> async context manager
+#           async for chunk in r.content:   -> async iteration
+#               process(chunk)
+#       return await r.json()              -> await a coroutine
+#
+# The async variants of for, with, and def are syntactic sugar that
+# calls __aiter__/__anext__, __aenter__/__aexit__, and wraps the
+# function body in a coroutine, respectively.
+
+async_stmt = "async" ( def_stmt | for_stmt | with_stmt ) ;
+
+# ============================================================================
+# Decorators
+# ============================================================================
+#
+# Decorators modify functions and classes. They are applied bottom-up:
+#
+#   @staticmethod                          -> simple decorator
+#   @app.route("/")                        -> decorator with arguments
+#   @functools.lru_cache(maxsize=128)      -> decorator factory call
+#   def handler():
+#       return "Hello"
+#
+# Multiple decorators are applied from bottom to top (innermost first):
+#
+#   @decorator_a                           -> applied second (outermost)
+#   @decorator_b                           -> applied first (innermost)
+#   def f(): pass
+#
+#   Equivalent to: f = decorator_a(decorator_b(f))
+#
+# In Python 3.8, decorator expressions are limited to dotted names with
+# optional call arguments. Arbitrary expressions are not allowed until
+# Python 3.9 (PEP 614).
+
+decorated = { decorator } ( def_stmt | class_stmt | async_stmt ) ;
+
+decorator = AT dotted_name [ LPAREN [ arguments ] RPAREN ] NEWLINE ;
+
+# ============================================================================
+# Suite (Block Body)
+# ============================================================================
+#
+# A suite is the body of any compound statement. It comes in two forms:
+#
+# 1. Compact form -- a single simple statement on the same line as the colon:
+#    if True: pass
+#    def f(): return 42
+#
+# 2. Block form -- an indented block of one or more statements:
+#    if True:
+#        x = 1
+#        y = 2
+#
+# The INDENT and DEDENT tokens are synthetic, produced by the lexer's
+# indentation tracking algorithm. They function like { and } in C-family
+# languages.
+
+suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Expressions are organized by operator precedence, from lowest (top) to
+# highest (bottom). Each precedence level is its own grammar rule that
+# delegates to the next level down. This structure encodes operator
+# precedence without ambiguity in an LL(k) grammar.
+#
+# Precedence table (lowest to highest):
+#
+#   Level  Operator           Example                   Assoc.
+#   -----  --------           -------                   ------
+#    0     :=                 (x := 10)                 right
+#    1     lambda             lambda x: x + 1           right
+#    2     if-else            a if cond else b           right
+#    3     or                 a or b                     left
+#    4     and                a and b                    left
+#    5     not                not a                      unary
+#    6     comparisons        a == b, a in lst           chained
+#    7     |                  a | b                      left
+#    8     ^                  a ^ b                      left
+#    9     &                  a & b                      left
+#   10     << >>              a << 1                     left
+#   11     + -                a + b                      left
+#   12     * / // % @         a * b, m1 @ m2             left
+#   13     unary +, -, ~      -a, ~a                     unary
+#   14     **                 a ** b                     right
+#   15     await              await coro()               unary
+#   16     primary            x.attr, x[i], f(args)     left
+
+# Expression list -- for tuple creation and multi-assignment.
+# A trailing comma makes a single-element tuple: `(1,)` or just `1,`
+#
+#   1, 2, 3     -> tuple (1, 2, 3)
+#   x,          -> tuple (x,) -- single-element tuple
+#   a, b = 1, 2 -> tuple unpacking
+expression_list = expression { COMMA expression } [ COMMA ] ;
+
+# ============================================================================
+# Named Expression (Walrus Operator) -- NEW in Python 3.8
+# ============================================================================
+#
+# The walrus operator `:=` (PEP 572) allows assignment inside expressions.
+# It assigns a value to a name AND returns that value, enabling patterns
+# that were previously awkward or required separate statements.
+#
+# Common use cases:
+#
+# 1. Assign-and-test in if statements:
+#
+#    # Before 3.8:                      # With walrus:
+#    match = pattern.search(text)       if (match := pattern.search(text)):
+#    if match:                              print(match.group())
+#        print(match.group())
+#
+# 2. Avoid redundant computation in while loops:
+#
+#    # Before 3.8:                      # With walrus:
+#    chunk = f.read(8192)               while chunk := f.read(8192):
+#    while chunk:                           process(chunk)
+#        process(chunk)
+#        chunk = f.read(8192)
+#
+# 3. Reuse expensive values in comprehensions:
+#
+#    # Before 3.8:                      # With walrus:
+#    results = []                       results = [
+#    for x in data:                         clean
+#        clean = expensive_clean(x)         for x in data
+#        if clean:                          if (clean := expensive_clean(x))
+#            results.append(clean)      ]
+#
+# Restrictions (enforced by semantic analysis, not grammar):
+#   - Cannot use := at top-level of an expression statement (use = instead)
+#   - Cannot use := in comprehension iterable: [x for x in (y := iter)]
+#   - Cannot assign to anything other than a simple NAME
+#   - Cannot use := in f-string expressions (in 3.8)
+#
+# The named_expression rule sits just above the regular expression rule.
+# It is used in contexts where assignment-as-expression is meaningful:
+# if conditions, while conditions, and as a general sub-expression when
+# parenthesized.
+
+named_expression = NAME COLONEQUALS expression
+                 | expression ;
+
+# Top-level expression: lambda or conditional (ternary).
+#
+#   value = x if x > 0 else -x        -> conditional expression
+#   func = lambda x, y: x + y         -> anonymous function
+expression = lambda_expr
+           | or_expr [ "if" or_expr "else" expression ] ;
+
+# ============================================================================
+# Lambda Expressions
+# ============================================================================
+#
+# Lambda creates an anonymous function with a single expression body.
+#
+#   f = lambda x, y: x + y            -> two-parameter lambda
+#   g = lambda: 42                     -> no-parameter lambda
+#   h = lambda *args: sum(args)        -> variadic lambda
+#
+# Lambdas support the same parameter syntax as def statements, including
+# defaults, *args, and **kwargs. However, the body is limited to a single
+# expression (no statements, no assignments).
+#
+# The lambda parameters support the same forms as function parameters
+# including the new positional-only `/` separator from Python 3.8.
+# In practice, `/` in lambdas is extremely rare but syntactically valid.
+
+lambda_expr = "lambda" [ lambda_params ] COLON expression ;
+
+lambda_params = lambda_param { COMMA lambda_param } [ COMMA ] ;
+
+lambda_param = DOUBLE_STAR NAME
+             | STAR NAME
+             | STAR
+             | SLASH
+             | NAME EQUALS expression
+             | NAME ;
+
+# ============================================================================
+# Boolean and Comparison Operators
+# ============================================================================
+
+# Boolean OR -- short-circuit evaluation.
+#   a or b   -> returns a if a is truthy, else evaluates and returns b
+#
+# Short-circuiting means b is never evaluated if a is truthy:
+#   x = cached_value or expensive_compute()
+or_expr = and_expr { "or" and_expr } ;
+
+# Boolean AND -- short-circuit evaluation.
+#   a and b  -> returns a if a is falsy, else evaluates and returns b
+#
+# Short-circuiting means b is never evaluated if a is falsy:
+#   if obj and obj.valid:    -> safe: obj.valid not evaluated if obj is None
+and_expr = not_expr { "and" not_expr } ;
+
+# Boolean NOT -- logical negation.
+#   not x    -> True if x is falsy, False if x is truthy
+#
+# Unlike C's `!`, Python's `not` always returns True or False (not 0/1).
+not_expr = "not" not_expr | comparison ;
+
+# Comparisons -- the operators ==, !=, <, >, <=, >=, in, not in, is, is not.
+#
+# Python supports comparison chaining:
+#   1 < x < 10           -> True if x is between 1 and 10
+#   a == b == c           -> True if all three are equal
+#   a < b <= c < d        -> chained (each comparison shares middle operand)
+#
+# Chaining is NOT the same as (a < b) < c. In the chain, b is evaluated
+# once and compared to both a and c. The whole expression short-circuits:
+# if a < b is False, c is never evaluated.
+#
+# "is" tests identity (same object), not equality:
+#   x is None             -> True if x is the None singleton
+#   x is not None         -> True if x is a different object
+#
+# "in" tests membership:
+#   "a" in "abc"          -> True (substring test for strings)
+#   1 in [1, 2, 3]        -> True (element test for collections)
+#   "key" not in d        -> True if key is absent from dict
+comparison = bitwise_or { comp_op bitwise_or } ;
+
+comp_op = EQUALS_EQUALS | NOT_EQUALS
+        | LESS_THAN | GREATER_THAN
+        | LESS_EQUALS | GREATER_EQUALS
+        | "in" | "not" "in"
+        | "is" [ "not" ] ;
+
+# ============================================================================
+# Bitwise Operators
+# ============================================================================
+#
+# Integer bit manipulation, from lowest to highest precedence:
+#   |  bitwise OR     0b1010 | 0b0110 = 0b1110
+#   ^  bitwise XOR    0b1010 ^ 0b0110 = 0b1100
+#   &  bitwise AND    0b1010 & 0b0110 = 0b0010
+#
+# Also used with sets:
+#   a | b   -> union
+#   a & b   -> intersection
+#   a ^ b   -> symmetric difference
+
+bitwise_or  = bitwise_xor { PIPE bitwise_xor } ;
+bitwise_xor = bitwise_and { CARET bitwise_and } ;
+bitwise_and = shift { AMP shift } ;
+
+# Shift operators -- bit shifting.
+#   x << n   -> multiply x by 2^n (shift left)
+#   x >> n   -> divide x by 2^n, floor (shift right)
+shift = arith { ( LEFT_SHIFT | RIGHT_SHIFT ) arith } ;
+
+# ============================================================================
+# Arithmetic Operators
+# ============================================================================
+
+# Addition and subtraction.
+# Also handles string/list concatenation: "hello" + " world", [1] + [2]
+arith = term { ( PLUS | MINUS ) term } ;
+
+# Multiplication, division, floor division, modulo, matrix multiply.
+#
+#   a * b    -> multiplication, string repetition ("ab" * 3 = "ababab")
+#   a / b    -> true division (always returns float)
+#   a // b   -> floor division (rounds toward negative infinity)
+#   a % b    -> modulo (also: "Hello, %s" % name for formatting)
+#   a @ b    -> matrix multiplication (PEP 465, Python 3.5)
+term = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT | AT ) factor } ;
+
+# Unary operators -- prefix +, -, ~
+#   -x     -> arithmetic negation
+#   +x     -> no-op (but triggers __pos__)
+#   ~x     -> bitwise complement (~0 = -1, ~1 = -2, ~n = -(n+1))
+factor = ( PLUS | MINUS | TILDE ) factor | power ;
+
+# Exponentiation -- right-associative.
+#   2 ** 10   -> 1024
+#   2 ** 3 ** 2  -> 2 ** (3 ** 2) = 2 ** 9 = 512  (right-associative!)
+#
+# Note: unary minus binds LESS tightly than **:
+#   -2 ** 2   -> -(2 ** 2) = -4    (not (-2) ** 2 = 4)
+# This is why factor calls power, not the other way around.
+power = await_expr [ DOUBLE_STAR factor ] ;
+
+# ============================================================================
+# Await Expression
+# ============================================================================
+#
+# Suspends the current coroutine until the awaited coroutine completes.
+#
+#   result = await some_coroutine()
+#   data = await asyncio.gather(task1, task2)
+#
+# In Python 3.8, `await` is a fully reserved keyword (not a soft keyword).
+# It can only appear inside an `async def` function (enforced semantically).
+await_expr = [ "await" ] primary ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# A primary expression is an atom followed by zero or more suffixes.
+# The suffixes are:
+#
+#   .attr       attribute access     obj.name
+#   [i]         indexing              lst[0], d["key"]
+#   [i:j]       slicing              lst[1:3]
+#   [i:j:k]     slicing with step    lst[::2], lst[::-1]
+#   (args)      function call        f(x, y=1, *args, **kwargs)
+#
+# Suffixes bind left-to-right:
+#   f(x).attr[0]   ->   ((f(x)).attr)[0]
+
+primary = atom { suffix } ;
+
+suffix = DOT NAME
+       | LBRACKET subscript_list RBRACKET
+       | LPAREN [ arguments ] RPAREN ;
+
+# Subscript list -- allows multi-dimensional indexing (used by numpy).
+#   a[1, 2]     -> a.__getitem__((1, 2))    tuple key
+#   a[1:3, :]   -> a.__getitem__((slice(1,3), slice(None)))
+subscript_list = subscript { COMMA subscript } [ COMMA ] ;
+
+# Individual subscript -- either an index or a slice.
+#   lst[0]              -> index
+#   lst[1:3]            -> slice(1, 3)
+#   lst[::2]            -> slice(None, None, 2)
+#   lst[1:10:2]         -> slice(1, 10, 2)
+subscript = expression
+          | [ expression ] COLON [ expression ] [ COLON [ expression ] ] ;
+
+# ============================================================================
+# Atoms
+# ============================================================================
+#
+# Atoms are the indivisible building blocks of expressions -- the leaves
+# of the expression tree.
+
+atom = INT
+     | FLOAT
+     | IMAG
+     | STRING { STRING }
+     | NAME
+     | "True" | "False" | "None"
+     | ELLIPSIS
+     | list_expr
+     | dict_expr
+     | set_expr
+     | paren_expr ;
+
+# Adjacent string literals are concatenated at parse time (implicit
+# string concatenation):
+#   "hello " "world"   -> "hello world"
+#   ("This is a very "
+#    "long string")     -> "This is a very long string"
+#
+# This works across all string types:
+#   b"byte" b"s"       -> b"bytes"
+#   f"x={x}" " done"   -> f"x={x} done"
+#
+# The ELLIPSIS literal (...) is used as:
+#   - Type stub placeholder: def f(x: int) -> None: ...
+#   - Numpy indexing: a[..., 0]
+#   - Sentinel value: missing = ...
+
+# ============================================================================
+# List Expressions
+# ============================================================================
+#
+# List literal or list comprehension.
+#
+#   []                                    -> empty list
+#   [1, 2, 3]                            -> list literal
+#   [x * 2 for x in range(10)]          -> list comprehension
+#   [x for x in data if x > 0]          -> filtered comprehension
+#   [x + y for x in a for y in b]       -> nested comprehension
+
+list_expr = LBRACKET [ list_body ] RBRACKET ;
+
+list_body = expression comp_clause
+          | expression { COMMA expression } [ COMMA ] ;
+
+# ============================================================================
+# Dict Expressions
+# ============================================================================
+#
+# Dict literal or dict comprehension.
+#
+#   {}                                        -> empty dict
+#   {"a": 1, "b": 2}                        -> dict literal
+#   {k: v for k, v in pairs}                -> dict comprehension
+#   {**defaults, **overrides}                -> dict unpacking (PEP 448)
+#
+# Dict unpacking with ** merges dictionaries:
+#   {**a, **b, "key": "override"}
+
+dict_expr = LBRACE [ dict_body ] RBRACE ;
+
+dict_body = dict_entry comp_clause
+          | dict_entry { COMMA dict_entry } [ COMMA ] ;
+
+dict_entry = DOUBLE_STAR expression
+           | expression COLON expression ;
+
+# ============================================================================
+# Set Expressions
+# ============================================================================
+#
+# Set literal or set comprehension. Note: {} is an empty DICT, not a set.
+# Use set() for an empty set.
+#
+#   {1, 2, 3}                               -> set literal
+#   {x for x in data if x > 0}             -> set comprehension
+#
+# Sets require at least one element to distinguish from empty dicts.
+# The grammar achieves this by requiring `expression` (not `dict_entry`)
+# as the first element.
+
+set_expr = LBRACE set_body RBRACE ;
+
+set_body = expression comp_clause
+         | expression COMMA [ expression { COMMA expression } [ COMMA ] ] ;
+
+# ============================================================================
+# Parenthesized Expressions, Tuples, and Generator Expressions
+# ============================================================================
+#
+# Parentheses serve three purposes:
+#
+# 1. Grouping: (a + b) * c
+# 2. Tuple creation: (1, 2, 3) or (1,) for single-element tuple
+# 3. Generator expression: (x**2 for x in range(10))
+#
+# An empty pair of parentheses () is an empty tuple.
+# A single expression in parentheses is just grouping, NOT a tuple.
+# A trailing comma makes it a tuple: (x,)
+
+paren_expr = LPAREN [ paren_body ] RPAREN ;
+
+paren_body = expression comp_clause
+           | expression COMMA [ expression { COMMA expression } [ COMMA ] ]
+           | expression ;
+
+# ============================================================================
+# Comprehensions
+# ============================================================================
+#
+# Comprehension clauses (for + optional if filters) are shared across
+# list, dict, set, and generator comprehensions. A comprehension consists
+# of one or more for-clauses, each optionally followed by if-filters:
+#
+#   [expr for x in xs if pred(x) for y in ys if pred2(y)]
+#
+# The for-clauses nest: the second iterates inside the first.
+# This is equivalent to:
+#
+#   result = []
+#   for x in xs:
+#       if pred(x):
+#           for y in ys:
+#               if pred2(y):
+#                   result.append(expr)
+#
+# Python 3.8 change: the walrus operator CAN be used in comprehension
+# if-clauses (but NOT in the iterable expression of the first for-clause):
+#
+#   [y for x in data if (y := f(x)) > 0]    -> OK in 3.8
+#   [x for x in (y := range(10))]            -> SyntaxError in 3.8
+
+comp_clause = comp_for { comp_for | comp_if } ;
+
+comp_for = "for" target_list "in" or_expr ;
+
+comp_if = "if" or_expr ;
+
+# ============================================================================
+# Function Call Arguments
+# ============================================================================
+#
+# Function calls support four kinds of arguments:
+#
+#   f(1, 2)              -> positional arguments
+#   f(key=value)         -> keyword arguments
+#   f(*args)             -> positional unpacking (PEP 448 extended in 3.5)
+#   f(**kwargs)          -> keyword unpacking
+#
+# PEP 448 (Python 3.5) allows multiple unpacking operators:
+#   f(*a, *b, **c, **d)  -> valid since 3.5
+#
+# Order rules (enforced semantically, not in grammar):
+#   1. Positional arguments first
+#   2. Keyword arguments next
+#   3. *args unpacking (can appear multiple times since 3.5)
+#   4. **kwargs unpacking (can appear multiple times since 3.5)
+#
+# Generator expression as sole argument (parentheses optional):
+#   sum(x**2 for x in range(10))  -> generator expression argument
+
+arguments = argument { COMMA argument } [ COMMA ] ;
+
+argument = DOUBLE_STAR expression
+         | STAR expression
+         | NAME EQUALS expression
+         | expression comp_clause
+         | expression ;
+
+# ============================================================================
+# Yield Expression
+# ============================================================================
+#
+# Yield turns a function into a generator. Each yield suspends the
+# function and produces a value to the caller.
+#
+#   def counter(n):
+#       for i in range(n):
+#           yield i                -> produce values one at a time
+#
+#   def flatten(nested):
+#       for item in nested:
+#           yield from item        -> delegate to sub-generator (PEP 380)
+#
+# yield is an expression (not just a statement) so it can receive values:
+#
+#   def accumulator():
+#       total = 0
+#       while True:
+#           value = yield total    -> send() provides value, yield returns total
+#           total += value
+
+yield_expr = "yield" [ "from" expression | expression_list ] ;
