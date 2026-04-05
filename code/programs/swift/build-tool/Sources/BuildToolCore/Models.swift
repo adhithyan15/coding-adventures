@@ -250,6 +250,7 @@ public let allLanguages = [
     "lua",
     "perl",
     "swift",
+    "haskell",
 ]
 
 public let sharedPrefixes = [

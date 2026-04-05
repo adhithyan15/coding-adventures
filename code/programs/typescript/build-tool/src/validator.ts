@@ -10,6 +10,7 @@ const CI_MANAGED_TOOLCHAIN_LANGUAGES = new Set([
   "elixir",
   "lua",
   "perl",
+  "haskell",
 ]);
 
 export function validateCIFullBuildToolchains(

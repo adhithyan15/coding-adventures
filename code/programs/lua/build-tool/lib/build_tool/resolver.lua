@@ -154,9 +154,9 @@ local function parse_ruby_deps(pkg, known_names)
 
     local deps = {}
     for gem_name in text:gmatch('spec%.add_dependency%s+"([^"]+)"') do
-        gem_name = gem_name:lower()
-        if known_names[gem_name] then
-            deps[#deps + 1] = known_names[gem_name]
+        local name = gem_name:lower()
+        if known_names[name] then
+            deps[#deps + 1] = known_names[name]
         end
     end
 
@@ -228,8 +228,8 @@ local function parse_typescript_deps(pkg, known_names)
             if stripped:match("}") then
                 in_deps = false
             else
-                for npm_name in stripped:gmatch('"(@coding%-adventures/[^"]+)"') do
-                    npm_name = npm_name:lower()
+                for raw_npm_name in stripped:gmatch('"(@coding%-adventures/[^"]+)"') do
+                    local npm_name = raw_npm_name:lower()
                     if known_names[npm_name] then
                         deps[#deps + 1] = known_names[npm_name]
                     end
@@ -288,9 +288,9 @@ local function parse_elixir_deps(pkg, known_names)
 
     local deps = {}
     for app_name in text:gmatch("{:(coding_adventures_%w+)") do
-        app_name = app_name:lower()
-        if known_names[app_name] then
-            deps[#deps + 1] = known_names[app_name]
+        local name = app_name:lower()
+        if known_names[name] then
+            deps[#deps + 1] = known_names[name]
         end
     end
 
@@ -410,6 +410,34 @@ local function parse_perl_deps(pkg, known_names)
 end
 
 -- =========================================================================
+-- Haskell dependency parsing
+-- =========================================================================
+
+--- Extract internal dependencies from a Haskell .cabal file.
+--
+-- @param pkg table The package record.
+-- @param known_names table Mapping from cabal name to package name.
+-- @return table List of internal dependency package names.
+local function parse_haskell_deps(pkg, known_names)
+    local cabal_path = find_file_by_extension(pkg.path, "cabal")
+    if not cabal_path then return {} end
+
+    local text = read_file(cabal_path)
+    if not text then return {} end
+
+    local deps = {}
+
+    for dep_name in text:gmatch("(coding%-adventures%-[%a%d%-]+)") do
+        local name = dep_name:lower()
+        if known_names[name] then
+            deps[#deps + 1] = known_names[name]
+        end
+    end
+
+    return deps
+end
+
+-- =========================================================================
 
 --- Build a mapping from ecosystem-specific dependency names to internal
 -- package names.
@@ -475,6 +503,10 @@ function Resolver.build_known_names(packages)
             -- This matches the Python convention exactly.
             local cpan_name = "coding-adventures-" .. basename
             known[cpan_name] = pkg.name
+
+        elseif pkg.language == "haskell" then
+            local cabal_name = "coding-adventures-" .. basename:gsub("_", "-")
+            known[cabal_name] = pkg.name
         end
     end
 
@@ -514,6 +546,7 @@ function Resolver.resolve_dependencies(packages)
         elixir     = parse_elixir_deps,
         lua        = parse_lua_deps,
         perl       = parse_perl_deps,
+        haskell    = parse_haskell_deps,
     }
 
     -- Parse dependencies for each package and add edges.

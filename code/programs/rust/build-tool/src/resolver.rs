@@ -125,6 +125,11 @@ pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
                 let cpan_name = format!("coding-adventures-{}", dir_name);
                 known.insert(cpan_name, pkg.name.clone());
             }
+            "haskell" => {
+                // Haskell Cabal package names use hyphens.
+                let cabal_name = format!("coding-adventures-{}", dir_name);
+                known.insert(cabal_name, pkg.name.clone());
+            }
             _ => {}
         }
     }
@@ -576,6 +581,61 @@ fn parse_perl_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<
 }
 
 // ---------------------------------------------------------------------------
+// Haskell dependency parsing
+// ---------------------------------------------------------------------------
+
+/// Extracts internal dependencies from a Haskell Cabal file.
+fn parse_haskell_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+    let entries = match fs::read_dir(&pkg.path) {
+        Ok(e) => e,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut cabal_path = None;
+    for entry in entries.flatten() {
+        let name = entry.file_name().to_string_lossy().to_string();
+        if name.ends_with(".cabal") {
+            cabal_path = Some(entry.path());
+            break;
+        }
+    }
+
+    let cabal_path = match cabal_path {
+        Some(p) => p,
+        None => return Vec::new(),
+    };
+
+    let data = match fs::read_to_string(&cabal_path) {
+        Ok(s) => s,
+        Err(_) => return Vec::new(),
+    };
+
+    let mut internal_deps = Vec::new();
+    let prefix = "coding-adventures-";
+
+    for line in data.lines() {
+        let mut i = 0;
+        let chars: Vec<char> = line.chars().collect();
+        while i < chars.len() {
+            if chars[i..].starts_with(&prefix.chars().collect::<Vec<_>>()) {
+                let start = i;
+                while i < chars.len() && (chars[i].is_alphanumeric() || chars[i] == '-') {
+                    i += 1;
+                }
+                let dep_name: String = chars[start..i].iter().collect();
+                if let Some(pkg_name) = known_names.get(&dep_name.to_lowercase()) {
+                    internal_deps.push(pkg_name.clone());
+                }
+            } else {
+                i += 1;
+            }
+        }
+    }
+
+    internal_deps
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -609,6 +669,7 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
             "elixir" => parse_elixir_deps(pkg, &known_names),
             "lua" => parse_lua_deps(pkg, &known_names),
             "perl" => parse_perl_deps(pkg, &known_names),
+            "haskell" => parse_haskell_deps(pkg, &known_names),
             _ => Vec::new(),
         };
 

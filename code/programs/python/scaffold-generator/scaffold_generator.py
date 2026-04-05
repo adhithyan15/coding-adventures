@@ -38,7 +38,7 @@ from pathlib import Path
 
 SPEC_FILE = str(Path(__file__).parent.parent.parent / "scaffold-generator.json")
 
-VALID_LANGUAGES = ["python", "go", "ruby", "typescript", "rust", "elixir", "perl"]
+VALID_LANGUAGES = ["python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell"]
 KEBAB_RE = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
 
 
@@ -82,6 +82,9 @@ def read_deps(pkg_dir: str, lang: str) -> list[str]:
         "rust": _read_rust_deps,
         "elixir": _read_elixir_deps,
         "perl": _read_perl_deps,
+        "lua": _read_lua_deps,
+        "swift": _read_swift_deps,
+        "haskell": _read_haskell_deps,
     }
     return readers[lang](pkg_dir)
 
@@ -232,6 +235,36 @@ def _read_perl_deps(pkg_dir: str) -> list[str]:
         for line in f:
             m = pattern.search(line)
             if m:
+                deps.append(m.group(1))
+    return deps
+
+
+def _read_lua_deps(pkg_dir: str) -> list[str]:
+    # Stub for lua
+    return []
+
+
+def _read_swift_deps(pkg_dir: str) -> list[str]:
+    # Stub for swift
+    return []
+
+
+def _read_haskell_deps(pkg_dir: str) -> list[str]:
+    """Parse cabal file for dependencies entries."""
+    import glob
+    cabal_files = glob.glob(os.path.join(pkg_dir, "*.cabal"))
+    if not cabal_files:
+        return []
+    cabal_path = cabal_files[0]
+    deps = []
+    import re
+    pattern = re.compile(r"coding-adventures-([a-zA-Z0-9-]+)")
+    with open(cabal_path) as f:
+        for line in f:
+            m = pattern.search(line)
+            if m:
+                if "name:" in line or "executable" in line or "library" in line:
+                    continue
                 deps.append(m.group(1))
     return deps
 
@@ -914,6 +947,75 @@ done_testing;
     _write_file(os.path.join(target_dir, "BUILD"), build)
 
 
+def generate_haskell(
+    target_dir: str, pkg_name: str, description: str,
+    layer_ctx: str, direct_deps: list[str], ordered_deps: list[str],
+) -> None:
+    """Generate Haskell package files."""
+    pkg_name_haskell = f"coding-adventures-{pkg_name}"
+    module_name = to_camel_case(pkg_name)
+
+    cabal = f"""cabal-version: 3.0
+name:          {pkg_name_haskell}
+version:       0.1.0
+synopsis:      {description}
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  {module_name}
+    build-depends:    base >=4.14
+"""
+    for dep in ordered_deps:
+        cabal += f"                      , coding-adventures-{dep}\n"
+    cabal += f"""    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite {pkg_name_haskell}-test
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    build-depends:    base >=4.14
+                    , {pkg_name_haskell}
+"""
+    for dep in ordered_deps:
+        cabal += f"                    , coding-adventures-{dep}\n"
+    cabal += """    hs-source-dirs:   test
+    default-language: Haskell2010
+"""
+
+    lib_hs = f"""module {module_name} where
+
+-- | {description}
+-- {layer_ctx}
+someFunc :: IO ()
+someFunc = putStrLn "someFunc"
+"""
+
+    spec_hs = f"""import {module_name}
+
+main :: IO ()
+main = do
+    putStrLn "Test suite not yet implemented."
+"""
+
+    cabal_project = "packages: .\n"
+    for dep in ordered_deps:
+        cabal_project += f"          ../{dep}\n"
+
+    build = "cabal test all\n"
+
+    os.makedirs(os.path.join(target_dir, "src"), exist_ok=True)
+    os.makedirs(os.path.join(target_dir, "test"), exist_ok=True)
+
+    _write_file(os.path.join(target_dir, f"{pkg_name_haskell}.cabal"), cabal)
+    _write_file(os.path.join(target_dir, "cabal.project"), cabal_project)
+    _write_file(os.path.join(target_dir, "src", f"{module_name}.hs"), lib_hs)
+    _write_file(os.path.join(target_dir, "test", "Spec.hs"), spec_hs)
+    _write_file(os.path.join(target_dir, "BUILD"), build)
+
+
 def generate_common_files(
     target_dir: str, pkg_name: str, description: str,
     lang: str, layer: int, direct_deps: list[str],
@@ -1023,6 +1125,9 @@ def scaffold_one(
         "rust": lambda: generate_rust(target_dir, pkg_name, description, layer_ctx, direct_deps),
         "elixir": lambda: generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps),
         "perl": lambda: generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps),
+        "lua": lambda: None,
+        "swift": lambda: None,
+        "haskell": lambda: generate_haskell(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps),
     }
     generators[lang]()
     generate_common_files(target_dir, pkg_name, description, lang, layer, direct_deps)
