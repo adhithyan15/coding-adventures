@@ -4,6 +4,14 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-05: Always verify all agent-written files are staged before committing
+
+When using multiple background agents to write files in parallel, some files may be written after the initial `git add` command. Always run `git status --short` after all agents complete and before committing to catch untracked or unstaged files. In this case, Rust's `src/lib.rs`, Ruby/Elixir/Lua/Perl test updates, and workspace Cargo.toml changes were missed.
+
+**Rule:** After collecting agent results, run `git diff --name-only` and `git status --short` to verify ALL changes are staged. Don't trust a single `git add` command to catch everything when agents run concurrently.
+
+---
+
 ### 2026-04-05: Changing lexer token names breaks downstream parsers
 
 When updating the python-lexer to use versioned grammar files (python3.12.tokens), the token name for integers changed from `NUMBER` to `INT`. This broke the python-parser, which still loaded the old `python.grammar` containing `factor = NUMBER | ...`. The parser received `INT` tokens but had no grammar rule matching `INT`.
