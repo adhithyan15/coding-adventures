@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/paint-instructions",
+  "name": "@coding-adventures/image-codec-ppm",
   "version": "0.1.0",
-  "description": "Universal 2D paint intermediate representation — backend-neutral typed instruction set",
+  "description": "IC02: PPM P6 image encoder and decoder using PixelContainer",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

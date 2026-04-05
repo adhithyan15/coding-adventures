@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/paint-instructions",
+  "name": "@coding-adventures/pixel-container",
   "version": "0.1.0",
-  "description": "Universal 2D paint intermediate representation — backend-neutral typed instruction set",
+  "description": "IC00: Universal RGBA8 pixel buffer and image codec interface — zero dependencies",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -11,9 +11,7 @@
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {
-    "@coding-adventures/pixel-container": "file:../pixel-container"
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",

@@ -379,16 +379,13 @@ describe("paintImage", () => {
     const pixels: PixelContainer = {
       width: 100,
       height: 100,
-      channels: 4,
-      bit_depth: 8,
-      pixels: new Uint8Array(100 * 100 * 4),
-      color_space: "srgb",
+      data: new Uint8Array(100 * 100 * 4),
     };
     const img = paintImage(0, 0, 100, 100, pixels);
     expect(typeof img.src).toBe("object");
     if (typeof img.src === "object") {
       expect(img.src.width).toBe(100);
-      expect(img.src.channels).toBe(4);
+      expect(img.src.data.length).toBe(100 * 100 * 4);
     }
   });
 
@@ -434,44 +431,18 @@ describe("paintScene", () => {
 // ============================================================================
 
 describe("PixelContainer", () => {
-  it("holds RGBA 8-bit pixel data with correct byte length", () => {
+  it("holds RGBA8 pixel data with correct byte length", () => {
     const w = 4;
     const h = 2;
     const pixels: PixelContainer = {
       width: w,
       height: h,
-      channels: 4,
-      bit_depth: 8,
-      pixels: new Uint8Array(w * h * 4), // 32 bytes
+      data: new Uint8Array(w * h * 4), // 32 bytes
     };
-    expect(pixels.pixels.byteLength).toBe(32);
+    expect(pixels.data.byteLength).toBe(32);
   });
 
-  it("holds RGB 8-bit pixel data", () => {
-    const pixels: PixelContainer = {
-      width: 10,
-      height: 10,
-      channels: 3,
-      bit_depth: 8,
-      pixels: new Uint8Array(10 * 10 * 3),
-    };
-    expect(pixels.channels).toBe(3);
-  });
-
-  it("holds 16-bit HDR data in Uint16Array", () => {
-    const pixels: PixelContainer = {
-      width: 2,
-      height: 2,
-      channels: 4,
-      bit_depth: 16,
-      pixels: new Uint16Array(2 * 2 * 4),
-      color_space: "display-p3",
-    };
-    expect(pixels.bit_depth).toBe(16);
-    expect(pixels.color_space).toBe("display-p3");
-  });
-
-  it("pixel offset formula: (row * width + col) * channels", () => {
+  it("pixel offset formula: (row * width + col) * 4", () => {
     const w = 3;
     const h = 2;
     const raw = new Uint8Array(w * h * 4);
@@ -481,9 +452,9 @@ describe("PixelContainer", () => {
     raw[offset + 1] = 0;   // G
     raw[offset + 2] = 0;   // B
     raw[offset + 3] = 255; // A
-    const pixels: PixelContainer = { width: w, height: h, channels: 4, bit_depth: 8, pixels: raw };
-    expect(pixels.pixels[offset]).toBe(255);
-    expect(pixels.pixels[offset + 1]).toBe(0);
+    const pixels: PixelContainer = { width: w, height: h, data: raw };
+    expect(pixels.data[offset]).toBe(255);
+    expect(pixels.data[offset + 1]).toBe(0);
   });
 });
 
