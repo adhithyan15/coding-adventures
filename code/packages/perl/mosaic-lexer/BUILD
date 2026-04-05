@@ -1,5 +1,2 @@
-cd ../directed-graph && cpanm --installdeps --quiet .
-cd ../grammar-tools && cpanm --installdeps --quiet .
-cd ../lexer && cpanm --installdeps --quiet .
-cpanm --installdeps --quiet .
+cpanm --notest --quiet Test2::V0
 prove -l -v t/

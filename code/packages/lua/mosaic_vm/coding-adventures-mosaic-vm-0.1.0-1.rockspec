@@ -12,11 +12,11 @@ dependencies = {
     "coding-adventures-mosaic-analyzer >= 0.1.0",
     "coding-adventures-mosaic-parser >= 0.1.0",
     "coding-adventures-mosaic-lexer >= 0.1.0",
-    "coding-adventures-grammar-tools >= 0.1.0",
-    "coding-adventures-lexer >= 0.1.0",
-    "coding-adventures-directed-graph >= 0.1.0",
-    "coding-adventures-parser >= 0.1.0",
-    "coding-adventures-state-machine >= 0.1.0",
+
+
+
+
+
 }
 build = {
     type = "builtin",

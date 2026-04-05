@@ -1,7 +1,4 @@
-# Runtime dependencies
-requires 'coding-adventures-grammar-tools';
-requires 'coding-adventures-lexer';
-requires 'coding-adventures-directed-graph';
+# Runtime dependencies — none (hand-written, no external deps)
 
 # Test dependencies
 on 'test' => sub {

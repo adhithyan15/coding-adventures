@@ -11,11 +11,6 @@ WriteMakefile(
     MIN_PERL_VERSION => '5.026000',
     PREREQ_PM        => {
         'CodingAdventures::MosaicLexer' => 0,
-        'CodingAdventures::GrammarTools' => 0,
-        'CodingAdventures::Lexer' => 0,
-        'CodingAdventures::DirectedGraph' => 0,
-        'CodingAdventures::Parser' => 0,
-        'CodingAdventures::StateMachine' => 0,
     },
     TEST_REQUIRES    => {
         'Test2::V0' => 0,

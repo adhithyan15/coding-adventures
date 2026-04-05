@@ -22,11 +22,6 @@ let package = Package(
         .package(path: "../mosaic-analyzer"),
         .package(path: "../mosaic-parser"),
         .package(path: "../mosaic-lexer"),
-        .package(path: "../grammar-tools"),
-        .package(path: "../lexer"),
-        .package(path: "../directed-graph"),
-        .package(path: "../parser"),
-        .package(path: "../state-machine"),
     ],
     targets: [
         .target(
@@ -36,11 +31,6 @@ let package = Package(
                 .product(name: "MosaicAnalyzer", package: "mosaic-analyzer"),
                 .product(name: "MosaicParser", package: "mosaic-parser"),
                 .product(name: "MosaicLexer", package: "mosaic-lexer"),
-                .product(name: "GrammarTools", package: "grammar-tools"),
-                .product(name: "Lexer", package: "lexer"),
-                .product(name: "DirectedGraph", package: "directed-graph"),
-                .product(name: "Parser", package: "parser"),
-                .product(name: "StateMachine", package: "state-machine"),
             ]
         ),
         .testTarget(

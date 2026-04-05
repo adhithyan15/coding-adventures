@@ -1,10 +1,5 @@
 # Runtime dependencies
 requires 'coding-adventures-mosaic-lexer';
-requires 'coding-adventures-grammar-tools';
-requires 'coding-adventures-lexer';
-requires 'coding-adventures-directed-graph';
-requires 'coding-adventures-parser';
-requires 'coding-adventures-state-machine';
 
 # Test dependencies
 on 'test' => sub {

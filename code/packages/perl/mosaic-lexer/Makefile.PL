@@ -5,15 +5,11 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::MosaicLexer',
     VERSION_FROM     => 'lib/CodingAdventures/MosaicLexer.pm',
-    ABSTRACT         => 'Tokenizes .mosaic source using the grammar-driven lexer',
+    ABSTRACT         => 'Hand-written Mosaic tokenizer',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
-    PREREQ_PM        => {
-        'CodingAdventures::GrammarTools' => 0,
-        'CodingAdventures::Lexer' => 0,
-        'CodingAdventures::DirectedGraph' => 0,
-    },
+    PREREQ_PM        => {},
     TEST_REQUIRES    => {
         'Test2::V0' => 0,
     },
