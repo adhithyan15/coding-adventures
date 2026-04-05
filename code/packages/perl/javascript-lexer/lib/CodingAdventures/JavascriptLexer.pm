@@ -6,9 +6,9 @@ package CodingAdventures::JavascriptLexer;
 #
 # This module is a thin wrapper around the grammar infrastructure provided
 # by CodingAdventures::GrammarTools and CodingAdventures::Lexer. It reads
-# the shared `javascript.tokens` grammar file, compiles the token definitions
-# into Perl regexes, and applies them in priority order to tokenize JavaScript
-# source code.
+# the shared `javascript.tokens` grammar file (or a versioned ECMAScript
+# variant), compiles the token definitions into Perl regexes, and applies
+# them in priority order to tokenize JavaScript source code.
 #
 # # What is JavaScript tokenization?
 # =====================================
@@ -24,25 +24,47 @@ package CodingAdventures::JavascriptLexer;
 #   { type => "SEMICOLON", value => ";",     line => 1, col => 13 }
 #   { type => "EOF",       value => "",      line => 1, col => 14 }
 #
-# Whitespace is consumed silently — skip patterns in `javascript.tokens`
+# Whitespace is consumed silently — skip patterns in the grammar file
 # match whitespace and it is never emitted as a token.
+#
+# # Version-aware tokenization
+# =============================
+#
+# Pass an optional `$version` argument to `tokenize()`:
+#
+#   "es1"    — ECMAScript 1  (1997): original standardization.
+#   "es3"    — ECMAScript 3  (1999): try/catch, regex literals.
+#   "es5"    — ECMAScript 5  (2009): strict mode, JSON, Array extras.
+#   "es2015" — ECMAScript 6  (2015): let/const, arrow functions, classes.
+#   "es2016" — ECMAScript 7  (2016): exponentiation operator.
+#   "es2017" — ECMAScript 8  (2017): async/await.
+#   "es2018" — ECMAScript 9  (2018): rest/spread properties.
+#   "es2019" — ECMAScript 10 (2019): flat, flatMap.
+#   "es2020" — ECMAScript 11 (2020): nullish coalescing, optional chaining.
+#   "es2021" — ECMAScript 12 (2021): logical assignment, numeric separators.
+#   "es2022" — ECMAScript 13 (2022): class fields, top-level await.
+#   "es2023" — ECMAScript 14 (2023): array findLast, change array by copy.
+#   "es2024" — ECMAScript 15 (2024): Object.groupBy, Promise.withResolvers.
+#   "es2025" — ECMAScript 16 (2025): import attributes, RegExp.escape.
+#   undef / "" — Generic JavaScript (uses javascript.tokens).
+#
+# Version grammar files live under:
+#   code/grammars/ecmascript/<version>.tokens
 #
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `javascript.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar($version)` opens the correct .tokens
+#    file, parses it with `CodingAdventures::GrammarTools::parse_token_grammar`,
+#    and caches the result per-version.
 #
-# 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
-#    in the grammar into a `{ name => str, pat => qr/\G.../ }` hashref.
-#    Regex definitions use `qr/\G(?:<pattern>)/`; literal definitions use
-#    `qr/\G\Q<literal>\E/` to disable metacharacter interpretation.
+# 2. **Pattern compilation** — `_build_rules($version)` converts every
+#    TokenDefinition in the grammar into a `{ name => str, pat => qr/\G.../ }`
+#    hashref, cached per-version.
 #
 # 3. **Tokenization** — `tokenize()` walks the source string using Perl's
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
-#    patterns in definition order. First match wins. On no match, dies with
-#    position info.
+#    patterns in definition order. First match wins.
 #
 # # Path navigation
 # =================
@@ -51,7 +73,7 @@ package CodingAdventures::JavascriptLexer;
 # `dirname(__FILE__)` → `lib/CodingAdventures`
 #
 # From there we climb to the repo root (`code/`) then descend into
-# `grammars/javascript.tokens`:
+# `grammars/`:
 #
 #   lib/CodingAdventures  (dirname of __FILE__)
 #      ↑ up 1 → lib/
@@ -59,62 +81,43 @@ package CodingAdventures::JavascriptLexer;
 #      ↑ up 3 → perl/
 #      ↑ up 4 → packages/
 #      ↑ up 5 → code/                 ← repo root
-#   + /grammars/javascript.tokens
-#
-# # Token types
-# =============
-#
-# NAME        — identifiers; promoted to keyword type if in keywords section
-# NUMBER      — integer literals (e.g. 42, 0)
-# STRING      — double-quoted string literals
-#
-# Keyword tokens (promoted from NAME):
-#   LET, CONST, VAR, IF, ELSE, WHILE, FOR, DO, FUNCTION, RETURN,
-#   CLASS, IMPORT, EXPORT, FROM, AS, NEW, THIS, TYPEOF, INSTANCEOF,
-#   TRUE, FALSE, NULL, UNDEFINED
-#
-# Multi-char operators (matched before single-char ones):
-#   STRICT_EQUALS, STRICT_NOT_EQUALS, EQUALS_EQUALS, NOT_EQUALS,
-#   LESS_EQUALS, GREATER_EQUALS, ARROW
-#
-# Single-char operators:
-#   EQUALS, PLUS, MINUS, STAR, SLASH, LESS_THAN, GREATER_THAN, BANG
-#
-# Delimiters:
-#   LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
-#   COMMA, COLON, SEMICOLON, DOT
+#   + /grammars/javascript.tokens  (or ecmascript/<version>.tokens)
 #
 # ============================================================================
 
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use File::Basename qw(dirname);
 use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
-# Grammar loading and caching
+# Valid ECMAScript versions
+# ============================================================================
+
+my %VALID_VERSIONS = map { $_ => 1 } qw(
+    es1 es3 es5
+    es2015 es2016 es2017 es2018 es2019 es2020
+    es2021 es2022 es2023 es2024 es2025
+);
+
+# ============================================================================
+# Per-version caches
 # ============================================================================
 #
-# Reading and parsing the grammar file on every tokenize() call would be
-# wasteful. We cache the TokenGrammar object and compiled rule lists in
-# package-level variables. They are populated on the first call and reused.
+# Each cache is a hashref keyed by version string ("" = generic).
 
-my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
-my $_rules;        # arrayref of { name => str, pat => qr// }
-my $_skip_rules;   # arrayref of qr// patterns for skip definitions
-my $_keyword_map;  # hashref mapping keyword string → promoted token type
+my %_grammar_cache;     # version => TokenGrammar
+my %_rules_cache;       # version => arrayref of { name => str, pat => qr// }
+my %_skip_rules_cache;  # version => arrayref of qr//
+my %_keyword_map_cache; # version => hashref  keyword => type
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-#
-# We use File::Spec for cross-platform path construction and
-# File::Basename::dirname to strip the filename component.
+# ============================================================================
+# Path helpers
+# ============================================================================
 
 sub _grammars_dir {
     # __FILE__ = .../code/packages/perl/javascript-lexer/lib/CodingAdventures/JavascriptLexer.pm
@@ -126,53 +129,64 @@ sub _grammars_dir {
     return File::Spec->catdir($dir, 'grammars');
 }
 
-# --- _grammar() ---------------------------------------------------------------
+# --- _resolve_tokens_path($version) ------------------------------------------
 #
-# Load and parse `javascript.tokens`, caching the result.
-# Returns a CodingAdventures::GrammarTools::TokenGrammar object.
+# Return the absolute path to the correct .tokens grammar file.
+#
+#   undef / "" → grammars/javascript.tokens             (generic)
+#   "es1"      → grammars/ecmascript/es1.tokens
+#   "es2015"   → grammars/ecmascript/es2015.tokens
+
+sub _resolve_tokens_path {
+    my ($class, $version) = @_;
+    my $grammars = _grammars_dir();
+
+    return File::Spec->catfile($grammars, 'javascript.tokens')
+        unless $version;
+
+    die "CodingAdventures::JavascriptLexer: unknown ECMAScript version '$version'. "
+      . "Valid versions: es1 es3 es5 es2015..es2025"
+        unless $VALID_VERSIONS{$version};
+
+    return File::Spec->catfile($grammars, 'ecmascript', "$version.tokens");
+}
+
+# --- _grammar($version) -------------------------------------------------------
+#
+# Load and parse the grammar for `$version`, caching the result.
 
 sub _grammar {
-    return $_grammar if $_grammar;
+    my ($class, $version) = @_;
+    $version //= '';
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'javascript.tokens' );
+    return $_grammar_cache{$version} if $_grammar_cache{$version};
+
+    my $tokens_file = $class->_resolve_tokens_path($version);
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::JavascriptLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };
     close $fh;
 
     my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::JavascriptLexer: failed to parse javascript.tokens: $err"
+    die "CodingAdventures::JavascriptLexer: failed to parse '$tokens_file': $err"
         unless $grammar;
 
-    $_grammar = $grammar;
-    return $_grammar;
+    $_grammar_cache{$version} = $grammar;
+    return $grammar;
 }
 
-# --- _build_rules() -----------------------------------------------------------
+# --- _build_rules($version) ---------------------------------------------------
 #
-# Convert TokenGrammar definitions into two lists of compiled Perl patterns:
-#
-#   $_rules      — token definitions, each { name => str, pat => qr/\G.../ }
-#   $_skip_rules — skip definitions, each qr/\G.../
-#
-# Pattern compilation strategy:
-#
-#   is_regex == 1  →  treat `$defn->pattern` as a raw regex string.
-#                     Wrap in qr/\G(?:<pattern>)/ to anchor at current pos.
-#
-#   is_regex == 0  →  treat `$defn->pattern` as a literal string.
-#                     Use `\Q...\E` to disable regex metacharacters.
-#                     This is critical for operators like ===, !==, =>, etc.
-#
-# The `\G` anchor forces the match to start exactly at `pos($source)`,
-# preventing the regex engine from skipping ahead.
-#
-# Alias resolution: definitions with `-> ALIAS` emit the alias as type name.
+# Convert TokenGrammar definitions into compiled Perl pattern lists,
+# cached per version.
 
 sub _build_rules {
-    return if $_rules;    # already built
+    my ($class, $version) = @_;
+    $version //= '';
 
-    my $grammar = _grammar();
+    return if $_rules_cache{$version};    # already built for this version
+
+    my $grammar = $class->_grammar($version);
     my (@rules, @skip_rules);
 
     # Build skip patterns
@@ -211,19 +225,22 @@ sub _build_rules {
     # Build keyword lookup map from the grammar keywords section.
     my %kw_map;
     $kw_map{$_} = uc($_) for @{ $grammar->keywords };
-    $_keyword_map = \%kw_map;
 
-    $_skip_rules = \@skip_rules;
-    $_rules      = \@rules;
+    $_skip_rules_cache{$version}  = \@skip_rules;
+    $_rules_cache{$version}       = \@rules;
+    $_keyword_map_cache{$version} = \%kw_map;
 }
 
 # ============================================================================
 # Public API
 # ============================================================================
 
-# --- tokenize($source) --------------------------------------------------------
+# --- tokenize($source, $version) ----------------------------------------------
 #
 # Tokenize a JavaScript source string.
+#
+# $version is optional. Valid values: "es1", "es3", "es5", "es2015".."es2025",
+# or undef/"" for generic JavaScript.
 #
 # Algorithm:
 #
@@ -236,13 +253,6 @@ sub _build_rules {
 #   5. If nothing matched, die with a descriptive error message.
 #   6. After exhausting the input, push an EOF sentinel and return.
 #
-# Line/column tracking:
-#
-#   - `$line` starts at 1, incremented for each '\n' in matched text.
-#   - `$col`  starts at 1:
-#       - If the match contains no newlines: col += length(match).
-#       - If the match contains newlines: col = length of text after last '\n'.
-#
 # Return value:
 #
 #   An arrayref of hashrefs, each with keys: type, value, line, col.
@@ -251,11 +261,17 @@ sub _build_rules {
 # Raises:
 #
 #   `die` with a "LexerError" message on unexpected input.
+#   `die` on unknown version string.
 
 sub tokenize {
-    my ($class_or_self, $source) = @_;
+    my ($class_or_self, $source, $version) = @_;
+    $version //= '';
 
-    _build_rules();
+    $class_or_self->_build_rules($version);
+
+    my $rules       = $_rules_cache{$version};
+    my $skip_rules  = $_skip_rules_cache{$version};
+    my $keyword_map = $_keyword_map_cache{$version};
 
     my @tokens;
     my $line = 1;
@@ -273,7 +289,7 @@ sub tokenize {
         # line/col tracking so that token positions after whitespace are accurate.
 
         my $skipped = 0;
-        for my $spat (@$_skip_rules) {
+        for my $spat (@$skip_rules) {
             pos($source) = $pos;
             if ($source =~ /$spat/gc) {
                 my $matched = $&;
@@ -302,14 +318,14 @@ sub tokenize {
         # failure, anchored to \G). First match wins.
 
         my $matched_tok = 0;
-        for my $rule (@$_rules) {
+        for my $rule (@$rules) {
             pos($source) = $pos;
             if ($source =~ /$rule->{pat}/gc) {
                 my $value = $&;
 
                 my $tok_type = $rule->{name};
-                if ($tok_type eq 'NAME' && exists $_keyword_map->{$value}) {
-                    $tok_type = $_keyword_map->{$value};
+                if ($tok_type eq 'NAME' && exists $keyword_map->{$value}) {
+                    $tok_type = $keyword_map->{$value};
                 }
                 push @tokens, {
                     type  => $tok_type,
@@ -369,7 +385,12 @@ CodingAdventures::JavascriptLexer - Grammar-driven JavaScript tokenizer
 
     use CodingAdventures::JavascriptLexer;
 
+    # Generic (latest grammar)
     my $tokens = CodingAdventures::JavascriptLexer->tokenize('const x = 1;');
+
+    # Version-specific
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es1');
+
     for my $tok (@$tokens) {
         printf "%s  %s\n", $tok->{type}, $tok->{value};
     }
@@ -377,31 +398,29 @@ CodingAdventures::JavascriptLexer - Grammar-driven JavaScript tokenizer
 =head1 DESCRIPTION
 
 A thin wrapper around the grammar infrastructure in CodingAdventures::GrammarTools.
-Reads the shared C<javascript.tokens> file, compiles token definitions to Perl regexes,
-and tokenizes JavaScript source into a flat list of token hashrefs.
+Reads the shared C<javascript.tokens> file (or a versioned ECMAScript variant),
+compiles token definitions to Perl regexes, and tokenizes JavaScript source into a
+flat list of token hashrefs.
 
 Each token hashref has four keys: C<type>, C<value>, C<line>, C<col>.
 
 Whitespace is silently consumed. The last token is always C<EOF>.
 
-Token types include: NAME, NUMBER, STRING; keyword types: LET, CONST, VAR,
-IF, ELSE, WHILE, FOR, DO, FUNCTION, RETURN, CLASS, IMPORT, EXPORT, FROM, AS,
-NEW, THIS, TYPEOF, INSTANCEOF, TRUE, FALSE, NULL, UNDEFINED; operator types:
-STRICT_EQUALS, STRICT_NOT_EQUALS, EQUALS_EQUALS, NOT_EQUALS, LESS_EQUALS,
-GREATER_EQUALS, ARROW, EQUALS, PLUS, MINUS, STAR, SLASH, LESS_THAN,
-GREATER_THAN, BANG; delimiter types: LPAREN, RPAREN, LBRACE, RBRACE,
-LBRACKET, RBRACKET, COMMA, COLON, SEMICOLON, DOT.
-
 =head1 METHODS
 
-=head2 tokenize($source)
+=head2 tokenize($source, $version)
 
-Tokenize a JavaScript string. Returns an arrayref of token hashrefs.
+Tokenize a JavaScript string. C<$version> is optional; valid values are
+C<"es1">, C<"es3">, C<"es5">, C<"es2015">..C<"es2025">,
+or C<undef>/C<""> for generic JavaScript.
+
+Returns an arrayref of token hashrefs.
 Dies on unexpected input with a descriptive message.
+Dies on unknown version string.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

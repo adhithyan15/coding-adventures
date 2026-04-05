@@ -466,4 +466,74 @@ subtest 'backtick raises die (template literals not in grammar)' => sub {
     );
 };
 
+# ============================================================================
+# Version-aware tokenization
+# ============================================================================
+#
+# The optional $version argument selects a versioned grammar file under
+# code/grammars/ecmascript/. No-version calls continue to work (backward
+# compatible default).
+
+subtest 'tokenize with no version (backward compatible)' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('const x = 1;');
+    ok( scalar @$tokens > 0, 'produced tokens' );
+    is( $tokens->[0]{type}, 'CONST', 'first token is CONST' );
+};
+
+subtest 'tokenize with empty string version (backward compatible)' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('const x = 1;', '');
+    is( $tokens->[0]{type}, 'CONST', 'first token is CONST' );
+};
+
+subtest 'tokenize with es1' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es1');
+    ok( scalar @$tokens > 0, 'produced tokens' );
+    is( $tokens->[0]{type}, 'VAR', 'first token is VAR' );
+};
+
+subtest 'tokenize with es3' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es3');
+    is( $tokens->[0]{type}, 'VAR', 'first token is VAR' );
+};
+
+subtest 'tokenize with es5' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es5');
+    is( $tokens->[0]{type}, 'VAR', 'first token is VAR' );
+};
+
+subtest 'tokenize with es2015' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('let x = 1;', 'es2015');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with es2020' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('let x = 1;', 'es2020');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with es2025' => sub {
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize('let x = 1;', 'es2025');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'grammar is cached per version' => sub {
+    my $t1 = CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es5');
+    my $t2 = CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es5');
+    is( $t1->[0]{type}, $t2->[0]{type}, 'same type from cached grammar' );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'es99') },
+        'unknown version es99 causes die'
+    );
+};
+
+subtest 'TypeScript version string is rejected' => sub {
+    ok(
+        dies { CodingAdventures::JavascriptLexer->tokenize('var x = 1;', 'ts5.0') },
+        'ts5.0 is not a valid ECMAScript version'
+    );
+};
+
 done_testing;
