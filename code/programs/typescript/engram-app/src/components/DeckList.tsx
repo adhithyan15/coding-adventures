@@ -17,6 +17,7 @@ import { useStore } from "@coding-adventures/store";
 import { store } from "../state.js";
 import { startSessionAction, deleteDeckAction } from "../actions.js";
 import { buildSessionQueue, isDeckCaughtUp, getDeckStats } from "../queue.js";
+import { generateSecureId } from "../secure-id.js";
 import type { Deck } from "../types.js";
 
 interface DeckListProps {
@@ -31,9 +32,7 @@ export function DeckList({ onNavigate }: DeckListProps) {
     const queue = buildSessionQueue(state.cards, state.cardProgress, deck.id, now);
     if (queue.length === 0) return;
 
-    const sessionId = crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const sessionId = generateSecureId();
 
     store.dispatch(startSessionAction(deck.id, sessionId, queue));
     onNavigate("/session");

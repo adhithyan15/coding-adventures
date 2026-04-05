@@ -109,7 +109,7 @@ export function parse(source: string): { lines: ParsedLine[]; errors: AssemblyEr
     const rawLine = rawLines[i];
 
     // Strip comments — everything after ; or //
-    const withoutComment = rawLine.replace(/;.*$/, "").replace(/\/\/.*$/, "");
+    const withoutComment = stripInlineComment(rawLine);
 
     // Trim whitespace
     const trimmed = withoutComment.trim();
@@ -153,18 +153,18 @@ function parseLine(
   // A label may optionally have an instruction on the same line:
   //   "loop: MOV R0, #1" — label "loop" plus instruction MOV
   // But for simplicity, we treat labels as standalone lines.
-  if (/^[a-zA-Z_]\w*:$/.test(trimmed)) {
+  if (isStandaloneLabel(trimmed)) {
     const name = trimmed.slice(0, -1);  // remove the trailing colon
     return { parsed: { kind: "label", lineNumber, name } };
   }
 
   // Handle label + instruction on same line (e.g., "loop: MOV R0, #1")
-  const labelMatch = trimmed.match(/^([a-zA-Z_]\w*):\s+(.+)$/);
+  const labelMatch = parseLabelWithInstruction(trimmed);
   if (labelMatch) {
     // For now, we only return the label — the instruction part needs to be
     // handled by re-parsing. This is a simplification; a production assembler
     // would handle both in one pass.
-    const name = labelMatch[1];
+    const name = labelMatch;
     return { parsed: { kind: "label", lineNumber, name } };
   }
 
@@ -179,6 +179,58 @@ function parseLine(
 
   // --- Instruction parsing ---
   return parseInstruction(trimmed, lineNumber);
+}
+
+function stripInlineComment(rawLine: string): string {
+  for (let index = 0; index < rawLine.length; index++) {
+    const ch = rawLine[index];
+    if (ch === ";") {
+      return rawLine.slice(0, index);
+    }
+    if (ch === "/" && rawLine[index + 1] === "/") {
+      return rawLine.slice(0, index);
+    }
+  }
+  return rawLine;
+}
+
+function isIdentifierStart(ch: string | undefined): boolean {
+  return ch !== undefined
+    && ((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z") || ch === "_");
+}
+
+function isIdentifierChar(ch: string | undefined): boolean {
+  return isIdentifierStart(ch) || (ch !== undefined && ch >= "0" && ch <= "9");
+}
+
+function isLabelName(value: string): boolean {
+  if (value.length === 0 || !isIdentifierStart(value[0])) return false;
+  for (let index = 1; index < value.length; index++) {
+    if (!isIdentifierChar(value[index])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isStandaloneLabel(value: string): boolean {
+  return value.endsWith(":") && isLabelName(value.slice(0, -1));
+}
+
+function parseLabelWithInstruction(value: string): string | null {
+  const colonIndex = value.indexOf(":");
+  if (colonIndex <= 0 || colonIndex >= value.length - 1) return null;
+
+  const label = value.slice(0, colonIndex);
+  if (!isLabelName(label)) return null;
+
+  let index = colonIndex + 1;
+  while (index < value.length && (value[index] === " " || value[index] === "\t")) {
+    index++;
+  }
+  if (index === colonIndex + 1 || index >= value.length) return null;
+
+  return label;
 }
 
 // ---------------------------------------------------------------------------

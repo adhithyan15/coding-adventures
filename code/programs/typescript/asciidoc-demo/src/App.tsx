@@ -139,6 +139,15 @@ function countWords(text: string): number {
   return text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
 }
 
+function escapeHtmlText(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -154,7 +163,7 @@ export function App() {
     try {
       rendered = toHtml(asciidoc);
     } catch (err) {
-      rendered = `<p style="color:#f87171;font-family:monospace">Parse error: ${String(err)}</p>`;
+      rendered = `<p style="color:#f87171;font-family:monospace">Parse error: ${escapeHtmlText(String(err))}</p>`;
     }
     const t1 = performance.now();
     return { html: rendered, renderMs: t1 - t0 };

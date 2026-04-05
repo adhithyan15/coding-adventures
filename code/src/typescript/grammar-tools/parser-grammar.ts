@@ -444,13 +444,42 @@ interface Token {
   readonly line: number;
 }
 
+function parseMagicComment(line: string): { key: string; value: string } | null {
+  if (!line.startsWith("#")) return null;
+
+  let index = 1;
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  if (line[index] !== "@") return null;
+  index++;
+
+  const keyStart = index;
+  while (index < line.length) {
+    const ch = line[index];
+    const isWordChar = (ch >= "a" && ch <= "z")
+      || (ch >= "A" && ch <= "Z")
+      || (ch >= "0" && ch <= "9")
+      || ch === "_";
+    if (!isWordChar) break;
+    index++;
+  }
+  if (index === keyStart) return null;
+
+  const key = line.slice(keyStart, index);
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  return { key, value: line.slice(index).trim() };
+}
+
 function tokenizeGrammar(source: string): Token[] {
   const tokens: Token[] = [];
   const lines = source.split("\n");
 
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const lineNumber = lineIdx + 1;
-    const line = lines[lineIdx].replace(/\s+$/, "");
+    const line = lines[lineIdx].trimEnd();
     const stripped = line.trim();
 
     // Skip blanks and comments.
@@ -812,16 +841,14 @@ export function parseParserGrammar(source: string): ParserGrammar {
   // We walk the raw lines once before tokenizing, so that magic comments
   // are picked up regardless of where in the file they appear.
   let version = 0;
-  const magicCommentPattern = /^#\s*@(\w+)\s*(.*)$/;
   for (const rawLine of source.split("\n")) {
     const stripped = rawLine.trim();
     if (!stripped.startsWith("#")) {
       continue;
     }
-    const magicMatch = magicCommentPattern.exec(stripped);
+    const magicMatch = parseMagicComment(stripped);
     if (magicMatch) {
-      const key = magicMatch[1];
-      const value = magicMatch[2].trim();
+      const { key, value } = magicMatch;
       if (key === "version") {
         const parsed = parseInt(value, 10);
         version = isNaN(parsed) ? 0 : parsed;

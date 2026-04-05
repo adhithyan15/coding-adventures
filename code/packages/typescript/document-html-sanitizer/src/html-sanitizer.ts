@@ -131,8 +131,24 @@ function sanitizeHtmlWithRegex(html: string, policy: HtmlSanitizationPolicy): st
  * or comments inside attribute values (unusual but possible in malformed HTML).
  */
 function dropComments(html: string): string {
-  // (?:[\s\S]*?) — match anything including newlines, non-greedy
-  return html.replace(/<!--(?:[\s\S]*?)-->/g, "");
+  let result = "";
+  let index = 0;
+
+  while (index < html.length) {
+    const start = html.indexOf("<!--", index);
+    if (start === -1) {
+      return result + html.slice(index);
+    }
+
+    result += html.slice(index, start);
+    const end = findCommentEnd(html, start + 4);
+    if (end === -1) {
+      return result + html.slice(start);
+    }
+    index = end;
+  }
+
+  return result;
 }
 
 // ─── Step 2: Element Dropping ─────────────────────────────────────────────────
@@ -245,21 +261,136 @@ function buildDropAttributeSet(policy: HtmlSanitizationPolicy): Set<string> {
  */
 function sanitizeAttributes(html: string, policy: HtmlSanitizationPolicy): string {
   const dropAttrSet = buildDropAttributeSet(policy);
+  let result = "";
+  let index = 0;
 
-  // Match opening tags: <tagname attributes> or <tagname attributes />
-  // Capture groups: [1]=tagname, [2]=all attributes, [3]=closing />  or >
-  const TAG_PATTERN = /<([a-zA-Z][^\s/>]*)(\s[^>]*?)?(\/?>)/g;
+  while (index < html.length) {
+    const tagStart = html.indexOf("<", index);
+    if (tagStart === -1) {
+      return result + html.slice(index);
+    }
 
-  return html.replace(TAG_PATTERN, (_fullMatch, tagName: string, attrString: string | undefined, closing: string) => {
+    result += html.slice(index, tagStart);
+
+    const parsedTag = parseOpeningTag(html, tagStart);
+    if (!parsedTag) {
+      result += "<";
+      index = tagStart + 1;
+      continue;
+    }
+
+    const { tagName, attrString, closing, endIndex } = parsedTag;
     if (!attrString || attrString.trim() === "") {
-      // No attributes — return the tag unchanged
-      return `<${tagName}${closing}`;
+      result += `<${tagName}${closing}`;
+      index = endIndex;
+      continue;
     }
 
     const sanitizedAttrs = sanitizeAttributeString(attrString, dropAttrSet, policy);
     const attrPart = sanitizedAttrs ? " " + sanitizedAttrs : "";
-    return `<${tagName}${attrPart}${closing}`;
-  });
+    result += `<${tagName}${attrPart}${closing}`;
+    index = endIndex;
+  }
+
+  return result;
+}
+
+function isHtmlWhitespace(ch: string | undefined): boolean {
+  return ch === " " || ch === "\t" || ch === "\n" || ch === "\r" || ch === "\f";
+}
+
+function isAsciiLetter(ch: string | undefined): boolean {
+  return ch !== undefined && (
+    (ch >= "A" && ch <= "Z")
+    || (ch >= "a" && ch <= "z")
+  );
+}
+
+function isTagNameChar(ch: string | undefined): boolean {
+  return ch !== undefined && (
+    isAsciiLetter(ch)
+    || (ch >= "0" && ch <= "9")
+    || ch === "-"
+    || ch === "_"
+    || ch === ":"
+  );
+}
+
+function findCommentEnd(html: string, startIndex: number): number {
+  for (let index = startIndex; index < html.length - 2; index++) {
+    if (html[index] !== "-" || html[index + 1] !== "-") {
+      continue;
+    }
+    if (html[index + 2] === ">") {
+      return index + 3;
+    }
+    if (html[index + 2] === "!" && html[index + 3] === ">") {
+      return index + 4;
+    }
+  }
+  return -1;
+}
+
+function findTagEnd(html: string, startIndex: number): number {
+  let quote: string | null = null;
+
+  for (let index = startIndex; index < html.length; index++) {
+    const ch = html[index];
+    if (quote) {
+      if (ch === quote) {
+        quote = null;
+      }
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      continue;
+    }
+    if (ch === ">") {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function parseOpeningTag(
+  html: string,
+  startIndex: number,
+): { tagName: string; attrString: string; closing: ">" | "/>"; endIndex: number } | null {
+  if (html[startIndex] !== "<" || html[startIndex + 1] === "/" || !isAsciiLetter(html[startIndex + 1])) {
+    return null;
+  }
+
+  let index = startIndex + 1;
+  while (index < html.length && isTagNameChar(html[index])) {
+    index++;
+  }
+
+  const tagName = html.slice(startIndex + 1, index);
+  const tagEnd = findTagEnd(html, index);
+  if (tagEnd === -1) {
+    return null;
+  }
+
+  let attrString = html.slice(index, tagEnd);
+  let trimmedEnd = attrString.length;
+  while (trimmedEnd > 0 && isHtmlWhitespace(attrString[trimmedEnd - 1])) {
+    trimmedEnd--;
+  }
+
+  let closing: ">" | "/>" = ">";
+  if (trimmedEnd > 0 && attrString[trimmedEnd - 1] === "/") {
+    closing = "/>";
+    attrString = attrString.slice(0, trimmedEnd - 1);
+  }
+
+  return {
+    tagName,
+    attrString,
+    closing,
+    endIndex: tagEnd + 1,
+  };
 }
 
 /**
