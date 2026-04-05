@@ -6,9 +6,7 @@ import (
 )
 
 func intFromInt64(value int64) (int, error) {
-	const maxIntValue = int(^uint(0) >> 1)
-	const minIntValue = -maxIntValue - 1
-	if value < int64(minIntValue) || value > int64(maxIntValue) {
+	if value < math.MinInt || value > math.MaxInt {
 		return 0, fmt.Errorf("%d is outside the supported integer range", value)
 	}
 	return int(value), nil
@@ -24,9 +22,7 @@ func intFromFloat64(value float64) (int, error) {
 		return 0, fmt.Errorf("%v is not an integer", value)
 	}
 
-	const maxIntValue = int(^uint(0) >> 1)
-	const minIntValue = -maxIntValue - 1
-	if truncated < float64(minIntValue) || truncated > float64(maxIntValue) {
+	if truncated < float64(math.MinInt) || truncated > float64(math.MaxInt) {
 		return 0, fmt.Errorf("%v is outside the supported integer range", value)
 	}
 

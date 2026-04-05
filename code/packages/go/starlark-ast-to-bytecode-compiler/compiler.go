@@ -67,6 +67,7 @@ package starlarkcompiler
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"strconv"
 	"strings"
@@ -147,9 +148,7 @@ func (c *StarlarkCompiler) addConstant(value interface{}) int {
 }
 
 func checkedIntLiteral(value int64, raw string) int {
-	const maxIntValue = int(^uint(0) >> 1)
-	const minIntValue = -maxIntValue - 1
-	if value < int64(minIntValue) || value > int64(maxIntValue) {
+	if value < math.MinInt || value > math.MaxInt {
 		panic(fmt.Sprintf("integer literal out of range: %s", raw))
 	}
 	return int(value)
