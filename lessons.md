@@ -12,6 +12,14 @@ When using multiple background agents to write files in parallel, some files may
 
 ---
 
+### 2026-04-05: Hand-written parsers need manual token type updates
+
+The Perl python-parser is hand-written (not grammar-driven). It checks `$type eq 'NUMBER'` directly. When the lexer grammar changed from `NUMBER` to `INT`, the grammar-driven parsers (Go, TypeScript, Lua, Ruby) picked up the fix from `python.grammar`, but the Perl parser didn't — it never reads that file.
+
+**Rule:** When changing token names, check for BOTH grammar-driven parsers (which load `python.grammar`) AND hand-written parsers (which have hardcoded type checks). Grep for the old token name across ALL parser packages.
+
+---
+
 ### 2026-04-05: Changing lexer token names breaks downstream parsers
 
 When updating the python-lexer to use versioned grammar files (python3.12.tokens), the token name for integers changed from `NUMBER` to `INT`. This broke the python-parser, which still loaded the old `python.grammar` containing `factor = NUMBER | ...`. The parser received `INT` tokens but had no grammar rule matching `INT`.
