@@ -1,5 +1,9 @@
 # Changelog — TypeScript 5.8 (2025) Lexer
 
+## 0.1.2 (2026-04-05)
+
+- Add `BUILD_windows` for Windows CI compatibility (unquoted `.[dev]`, `uv run` instead of `.venv/bin/python`)
+
 ## 0.1.1 (2026-04-05)
 
 ### Fixed

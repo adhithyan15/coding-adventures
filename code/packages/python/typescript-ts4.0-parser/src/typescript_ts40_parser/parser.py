@@ -72,7 +72,7 @@ def create_ts40_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_ts40(source)
-    grammar = parse_parser_grammar(TS40_GRAMMAR_PATH.read_text())
+    grammar = parse_parser_grammar(TS40_GRAMMAR_PATH.read_text(encoding="utf-8"))
     return GrammarParser(tokens, grammar)
 
 

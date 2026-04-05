@@ -1,5 +1,10 @@
 # Changelog — TypeScript 5.8 (2025) Parser
 
+## 0.1.2 (2026-04-05)
+
+- Add `BUILD_windows` for Windows CI compatibility (unquoted `.[dev]`, `uv run` instead of `.venv/bin/python`)
+- Fix `read_text()` to use `encoding="utf-8"` explicitly (prevents `UnicodeDecodeError` on Windows cp1252)
+
 ## 0.1.1 (2026-04-05)
 
 ### Fixed

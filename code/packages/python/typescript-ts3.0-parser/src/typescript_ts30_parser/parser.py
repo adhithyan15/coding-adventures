@@ -54,7 +54,7 @@ def create_ts30_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_ts30(source)
-    grammar = parse_parser_grammar(TS30_GRAMMAR_PATH.read_text())
+    grammar = parse_parser_grammar(TS30_GRAMMAR_PATH.read_text(encoding="utf-8"))
     return GrammarParser(tokens, grammar)
 
 

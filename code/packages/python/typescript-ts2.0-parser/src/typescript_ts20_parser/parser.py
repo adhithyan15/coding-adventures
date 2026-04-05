@@ -71,7 +71,7 @@ def create_ts20_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_ts20(source)
-    grammar = parse_parser_grammar(TS20_GRAMMAR_PATH.read_text())
+    grammar = parse_parser_grammar(TS20_GRAMMAR_PATH.read_text(encoding="utf-8"))
     return GrammarParser(tokens, grammar)
 
 

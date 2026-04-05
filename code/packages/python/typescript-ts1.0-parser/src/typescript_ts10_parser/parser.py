@@ -62,7 +62,7 @@ def create_ts10_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_ts10(source)
-    grammar = parse_parser_grammar(TS10_GRAMMAR_PATH.read_text())
+    grammar = parse_parser_grammar(TS10_GRAMMAR_PATH.read_text(encoding="utf-8"))
     return GrammarParser(tokens, grammar)
 
 
