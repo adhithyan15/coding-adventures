@@ -1,0 +1,229 @@
+# ECMAScript 2019 (ES10) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2019
+#
+# ECMA-262, 10th Edition — June 2019
+#
+# ES2019 is a modest release focused on developer ergonomics:
+#
+#   - Optional catch binding: `catch { }` without `(error)` — grammar change
+#   - JSON superset: strings can now contain U+2028 and U+2029 — token change
+#   - Array.prototype.flat/flatMap — runtime only
+#   - Object.fromEntries() — runtime only
+#   - String.prototype.trimStart/trimEnd — runtime only
+#   - Symbol.prototype.description — runtime only
+#   - Well-formed JSON.stringify — runtime only
+#   - Function.prototype.toString revision — runtime only
+#
+# Token changes from ES2018:
+#   - STRING patterns updated to allow U+2028 (LINE SEPARATOR) and U+2029
+#     (PARAGRAPH SEPARATOR) inside string literals. Previously these were
+#     treated as line terminators and caused syntax errors in strings.
+#     This change aligns JavaScript strings with JSON, which has always
+#     allowed these characters. The motivation: make every valid JSON
+#     text also valid JavaScript (the "JSON superset" proposal).
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (unchanged from ES2018) ---
+
+BINARY_NUMBER = /0[bB][01]+/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]+/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# --- Strings ---
+#
+# CHANGED IN ES2019: U+2028 and U+2029 are now legal inside string literals.
+#
+# Before ES2019, JavaScript string literals could not contain U+2028 (LINE
+# SEPARATOR) or U+2029 (PARAGRAPH SEPARATOR) directly — they were treated
+# as line terminators, just like \n and \r. This meant that while JSON could
+# contain these characters in strings, JavaScript could not. Copying a JSON
+# string into JavaScript source code could produce a syntax error!
+#
+# ES2019 fixes this by allowing U+2028 and U+2029 in string literals. They
+# are still line terminators for purposes of ASI (automatic semicolon
+# insertion) and line counting, but the string lexer no longer rejects them.
+#
+# The regex below uses \u2028 and \u2029 notation. In practice, most regex
+# engines would handle this via a Unicode-aware character class. The key
+# change is: these characters no longer terminate the string.
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals (unchanged from ES2018) ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (unchanged from ES2018) ---
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gimsuy]*/
+
+# ============================================================================
+# Multi-character operators (unchanged from ES2018)
+# ============================================================================
+
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+
+context_keywords:
+  as
+  async
+  await
+  from
+  of
+  get
+  set
+  static
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

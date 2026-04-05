@@ -1,0 +1,500 @@
+# ECMAScript 2015 (ES6) — Parser Grammar
+# @version 1
+# @ecmascript_edition 2015
+#
+# ECMA-262, 6th Edition — June 2015
+#
+# The largest grammar expansion in JavaScript history. This grammar grows from
+# ES5's ~30 rules to ~65+ rules. Major additions:
+#
+#   - Classes: class_declaration, class_expression, class_body, method_definition
+#   - Modules: import_declaration, export_declaration (10+ sub-rules)
+#   - Arrow functions: arrow_function, concise_body
+#   - Destructuring: binding_pattern, object/array_binding_pattern
+#   - Generators: generator_declaration, yield_expression
+#   - Iterators: for_of_statement
+#   - Template literals: template_literal, template_span
+#   - Let/Const: lexical_declaration
+#   - Spread/Rest: spread_element, rest_parameter
+#   - Default parameters, computed properties, shorthand methods
+#
+# All ES5 rules are retained and extended where needed.
+
+# ============================================================================
+# Program
+# ============================================================================
+#
+# ES2015 introduces modules as a second parsing goal. A module can contain
+# import/export declarations. For simplicity, this grammar uses a single
+# entry point that accepts both script and module syntax.
+
+program = { source_element } ;
+
+source_element = import_declaration
+               | export_declaration
+               | function_declaration
+               | generator_declaration
+               | class_declaration
+               | lexical_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+
+# --- Function Declaration (unchanged from ES5) ---
+
+function_declaration = "function" NAME LPAREN [ formal_parameters ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+function_body = { source_element } ;
+
+# --- Formal Parameters (ES2015: default values, rest, destructuring) ---
+#
+# ES2015 expands function parameters significantly:
+#   - Default values: `function(x = 1) {}`
+#   - Rest parameter: `function(...args) {}`
+#   - Destructuring: `function({ a, b }) {}`
+
+formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA rest_parameter ]
+                  | rest_parameter ;
+
+formal_parameter = binding_element [ EQUALS assignment_expression ] ;
+
+rest_parameter = ELLIPSIS ( NAME | binding_pattern ) ;
+
+# --- Lexical Declarations (NEW in ES2015) ---
+#
+# `let` and `const` create block-scoped bindings. Unlike `var` (which is
+# function-scoped and hoisted), `let`/`const` respect block boundaries and
+# have a "temporal dead zone" before their declaration.
+
+lexical_declaration = ( "let" | "const" ) binding_list SEMICOLON ;
+
+binding_list = lexical_binding { COMMA lexical_binding } ;
+
+lexical_binding = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+# --- Generator Declaration (NEW in ES2015) ---
+#
+# Generators are functions that can pause and resume execution using `yield`.
+# They are declared with `function*` and return an iterator.
+#
+#   function* range(start, end) {
+#     for (let i = start; i < end; i++) yield i;
+#   }
+
+generator_declaration = "function" STAR NAME LPAREN [ formal_parameters ] RPAREN
+                        LBRACE function_body RBRACE ;
+
+# --- Class Declaration (NEW in ES2015) ---
+#
+# Classes provide syntactic sugar over JavaScript's prototype-based inheritance.
+# Under the hood, `class Foo extends Bar {}` creates a constructor function
+# with the prototype chain set up correctly.
+#
+#   class Animal {
+#     constructor(name) { this.name = name; }
+#     speak() { return `${this.name} makes a noise.`; }
+#   }
+#   class Dog extends Animal {
+#     speak() { return `${this.name} barks.`; }
+#   }
+
+class_declaration = "class" NAME [ class_heritage ] class_body ;
+
+class_heritage = "extends" left_hand_side_expression ;
+
+class_body = LBRACE { class_element } RBRACE ;
+
+class_element = [ "static" ] method_definition
+              | SEMICOLON ;
+
+method_definition = property_name LPAREN [ formal_parameters ] RPAREN
+                      LBRACE function_body RBRACE
+                  | "get" property_name LPAREN RPAREN LBRACE function_body RBRACE
+                  | "set" property_name LPAREN formal_parameter RPAREN
+                      LBRACE function_body RBRACE
+                  | STAR property_name LPAREN [ formal_parameters ] RPAREN
+                      LBRACE function_body RBRACE ;
+
+# ============================================================================
+# Module Declarations (NEW in ES2015)
+# ============================================================================
+#
+# ES2015 introduces a native module system. Before this, JavaScript had no
+# built-in way to share code between files — developers used patterns like
+# CommonJS (require/module.exports) or AMD (define/require).
+#
+# Import forms:
+#   import defaultExport from "module";
+#   import { named } from "module";
+#   import { named as alias } from "module";
+#   import * as namespace from "module";
+#   import "module";  (side-effect only)
+#
+# Export forms:
+#   export default expression;
+#   export { name1, name2 };
+#   export function foo() {}
+#   export class Bar {}
+#   export { name1 as alias1 } from "module";  (re-export)
+
+import_declaration = "import" import_clause from_clause SEMICOLON
+                   | "import" STRING SEMICOLON ;
+
+import_clause = default_import [ COMMA ( named_imports | namespace_import ) ]
+              | named_imports
+              | namespace_import ;
+
+default_import = NAME ;
+
+named_imports = LBRACE [ import_specifier { COMMA import_specifier } [ COMMA ] ] RBRACE ;
+
+import_specifier = NAME [ "as" NAME ] ;
+
+namespace_import = STAR "as" NAME ;
+
+from_clause = "from" STRING ;
+
+export_declaration = "export" "default" ( function_declaration
+                                        | generator_declaration
+                                        | class_declaration
+                                        | assignment_expression SEMICOLON )
+                   | "export" ( function_declaration
+                              | generator_declaration
+                              | class_declaration
+                              | lexical_declaration
+                              | variable_statement )
+                   | "export" named_exports [ from_clause ] SEMICOLON ;
+
+named_exports = LBRACE [ export_specifier { COMMA export_specifier } [ COMMA ] ] RBRACE ;
+
+export_specifier = NAME [ "as" NAME ] ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | for_of_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | debugger_statement
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list
+                  | lexical_declaration_no_semi
+                  | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+# Helper: lexical declaration without trailing semicolon (for use in for-loop header)
+lexical_declaration_no_semi = ( "let" | "const" ) binding_list ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" ( NAME | binding_pattern )
+                     | "const" ( NAME | binding_pattern )
+                     | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+# --- for-of Statement (NEW in ES2015) ---
+#
+# Iterates over iterable objects (arrays, strings, Maps, Sets, generators).
+# Unlike `for-in` (which iterates over enumerable property names), `for-of`
+# iterates over values using the Symbol.iterator protocol.
+#
+#   for (const item of [1, 2, 3]) { console.log(item); }
+
+for_of_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" ( NAME | binding_pattern )
+                     | "const" ( NAME | binding_pattern )
+                     | left_hand_side_expression ) "of" expression
+                   RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" LPAREN NAME RPAREN block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" expression SEMICOLON ;
+
+debugger_statement = "debugger" SEMICOLON ;
+
+# ============================================================================
+# Destructuring Patterns (NEW in ES2015)
+# ============================================================================
+#
+# Destructuring lets you extract values from arrays and objects into variables:
+#
+#   const [a, b, ...rest] = [1, 2, 3, 4];     // array destructuring
+#   const { name, age } = person;               // object destructuring
+#   const { name: n, age: a } = person;         // renaming
+#   const { x = 10 } = {};                      // default values
+#
+# Binding patterns can appear in:
+#   - Variable declarations: `let { a, b } = obj;`
+#   - Function parameters: `function({ a, b }) {}`
+#   - For-of loop variables: `for (const [k, v] of map) {}`
+
+binding_pattern = object_binding_pattern | array_binding_pattern ;
+
+object_binding_pattern = LBRACE [ binding_property { COMMA binding_property } [ COMMA ] ] RBRACE ;
+
+binding_property = property_name COLON binding_element
+                 | NAME [ EQUALS assignment_expression ] ;
+
+binding_element = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+array_binding_pattern = LBRACKET [ array_binding_element { COMMA array_binding_element } [ COMMA ] ] RBRACKET ;
+
+array_binding_element = binding_element
+                      | ELLIPSIS ( NAME | binding_pattern ) ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# ES2015 adds: arrow functions, yield, spread, template literals, class
+# expressions, super, new.target, and computed property names.
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+# Assignment: ES2015 adds arrow functions as an alternative.
+# Arrow function: `(x, y) => x + y` or `x => x * 2`
+
+assignment_expression = arrow_function
+                      | "yield" [ STAR ] assignment_expression
+                      | conditional_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS
+                    | SLASH_EQUALS | PERCENT_EQUALS | AMPERSAND_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# --- Arrow Function (NEW in ES2015) ---
+#
+# Arrow functions provide a concise syntax for function expressions.
+# They don't have their own `this`, `arguments`, `super`, or `new.target`.
+#
+#   const add = (a, b) => a + b;           // concise body (expression)
+#   const greet = name => `Hello ${name}`; // single param, no parens needed
+#   const log = (msg) => { console.log(msg); };  // block body
+
+arrow_function = arrow_parameters ARROW concise_body ;
+
+arrow_parameters = NAME
+                 | LPAREN [ formal_parameters ] RPAREN ;
+
+concise_body = LBRACE function_body RBRACE
+             | assignment_expression ;
+
+# Ternary conditional
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+# Logical operators
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# Bitwise operators
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# Equality
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# Relational
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression } ;
+
+# Shift operators
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+# Arithmetic
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# Unary operators
+
+unary_expression = postfix_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+# Postfix
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+# Left-hand side
+
+left_hand_side_expression = call_expression | new_expression ;
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  | template_literal } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+member_expression = primary_expression { DOT NAME | LBRACKET expression RBRACKET
+                                       | template_literal }
+                  | "super" DOT NAME
+                  | "super" LBRACKET expression RBRACKET
+                  | "new" member_expression arguments ;
+
+arguments = LPAREN [ argument_list ] RPAREN ;
+
+argument_list = ( ELLIPSIS assignment_expression | assignment_expression )
+                { COMMA ( ELLIPSIS assignment_expression | assignment_expression ) } ;
+
+# Primary expressions: ES2015 adds class expressions, generator expressions,
+# and template literals.
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | template_literal
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | generator_expression
+                   | class_expression
+                   | LPAREN expression RPAREN ;
+
+# --- Template Literals (NEW in ES2015) ---
+#
+# Template literals use backticks and support string interpolation:
+#
+#   `Hello, ${name}!`
+#   `multiline
+#    string`
+#   tag`raw ${expr} text`  (tagged template)
+#
+# TEMPLATE_NO_SUB: complete template with no interpolation
+# TEMPLATE_HEAD + template_span* + TEMPLATE_TAIL: template with interpolation
+
+template_literal = TEMPLATE_NO_SUB
+                 | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;
+
+# Array literal: ES2015 adds spread element
+
+array_literal = LBRACKET [ array_element_list ] RBRACKET ;
+
+array_element_list = array_element { COMMA array_element } [ COMMA ] ;
+
+array_element = ELLIPSIS assignment_expression
+              | assignment_expression ;
+
+# Object literal: ES2015 adds computed properties, shorthand properties,
+# shorthand methods, spread (actually ES2018, but the grammar supports it),
+# and generator methods.
+
+object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
+
+property_definition = property_name COLON assignment_expression
+                    | property_name LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
+                    | "get" property_name LPAREN RPAREN LBRACE function_body RBRACE
+                    | "set" property_name LPAREN formal_parameter RPAREN LBRACE function_body RBRACE
+                    | STAR property_name LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
+                    | NAME ;
+
+# Property names: ES2015 adds computed property names using [expression].
+
+property_name = NAME | STRING | NUMBER
+              | LBRACKET assignment_expression RBRACKET ;
+
+# Function and generator expressions
+
+function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                      LBRACE function_body RBRACE ;
+
+generator_expression = "function" STAR [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+# Class expression (like class declaration but can be anonymous)
+
+class_expression = "class" [ NAME ] [ class_heritage ] class_body ;

@@ -1,0 +1,267 @@
+# ECMAScript 2022 (ES13) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2022
+#
+# ECMA-262, 13th Edition — June 2022
+#
+# ES2022 brings major class enhancements: public and private class fields,
+# private methods, static initialization blocks, and the `d` regex flag.
+# It also makes top-level `await` valid in modules.
+#
+# New features:
+#
+#   1. Class fields: declare properties directly in the class body
+#        class Point { x = 0; y = 0; }
+#      No more constructor-only property initialization.
+#
+#   2. Private class members: `#` prefix for truly private fields and methods
+#        class Counter {
+#          #count = 0;           // private field
+#          #increment() {}       // private method
+#          get value() { return this.#count; }
+#        }
+#      Private members are enforced at the language level — not a convention
+#      like the `_` prefix. Accessing `obj.#count` outside the class is a
+#      hard SyntaxError.
+#
+#   3. Static class features: static fields, static private, static blocks
+#        class Config {
+#          static defaultPort = 3000;         // static field
+#          static #secret = loadSecret();     // static private field
+#          static { /* complex init logic */ } // static block
+#        }
+#
+#   4. `d` regex flag: match indices (hasIndices)
+#      /pattern/d returns start/end indices for each capture group.
+#
+#   5. Top-level `await`: valid at the top level of ES modules
+#      const data = await fetch(url);  // at module scope, not inside async fn
+#
+#   6. Ergonomic brand checks: `#field in obj` — use `in` with private names
+#
+#   7. Error.cause — runtime only
+#   8. Array.prototype.at() — runtime only
+#   9. Object.hasOwn() — runtime only
+#
+# Token changes from ES2021:
+#   - Added: PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+#   - Changed: REGEX flag set gains `d`
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- NEW IN ES2022: Private names ---
+#
+# Private names start with `#` and are scoped to the class body where they
+# are declared. The `#` is part of the identifier — it is NOT a separate
+# operator. `#foo` and `foo` are completely different names.
+#
+# Why `#` and not `private`? Because private fields need their own namespace.
+# `this.#x` and `this.x` can coexist in the same class without conflict.
+# The `#` prefix makes this visually clear and prevents accidental access.
+
+PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (with ES2021 numeric separators) ---
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions ---
+#
+# CHANGED IN ES2022: `d` (hasIndices) flag added.
+#
+# The `d` flag causes regex matches to include the start and end indices
+# of each capture group in the result. Without it, you only get the matched
+# text; with it, you also get `indices[0]`, `indices[1]`, etc.
+#
+# Available flags after ES2022: d, g, i, m, s, u, y
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuy]*/
+
+# ============================================================================
+# Multi-character operators (unchanged from ES2021)
+# ============================================================================
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+
+context_keywords:
+  as
+  async
+  await
+  from
+  of
+  get
+  set
+  static
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/
