@@ -7,6 +7,23 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] — 2026-04-04
+
+### Added (ML03 Matrix Extensions)
+
+- **Reductions:** `sum(mat)`, `sum_rows(mat)`, `sum_cols(mat)`, `mean(mat)`, `min(mat)`, `max(mat)`, `argmin(mat)`, `argmax(mat)`
+- **Element-wise math:** `map(mat, fn)`, `sqrt(mat)`, `abs(mat)`, `pow(mat, exp)`
+- **Shape operations:** `flatten(mat)`, `reshape(mat, rows, cols)`, `row(mat, i)`, `col(mat, j)`, `slice(mat, r0, r1, c0, c1)`
+- **Equality and comparison:** `equals(A, B)`, `close(A, B, tol)`
+- **Factory methods:** `identity(n)`, `from_diagonal(values)`
+
+### Changed
+
+- `set(mat, i, j, val)` now returns a **new** matrix instead of mutating in place, following the ML03 immutability principle
+- `get(mat, i, j)` now validates bounds and raises on out-of-range indices
+
+---
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

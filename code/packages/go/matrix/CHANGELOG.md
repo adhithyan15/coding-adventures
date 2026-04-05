@@ -5,6 +5,24 @@ All notable changes to the Go matrix package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-04-04
+
+### Added
+
+- **Element access:** `Get(row, col)` and `Set(row, col, value)` for fine-grained
+  cell reads and immutable updates.
+- **Reductions:** `Sum()`, `SumRows()`, `SumCols()`, `Mean()`, `Min()`, `Max()`,
+  `Argmin()`, `Argmax()` for aggregate computations.
+- **Element-wise math:** `Map(fn)`, `Sqrt()`, `Abs()`, `Pow(exp)` for applying
+  functions to every element independently.
+- **Shape operations:** `Flatten()`, `Reshape(rows, cols)`, `Row(i)`, `Col(j)`,
+  `Slice(r0, r1, c0, c1)` for rearranging elements.
+- **Equality:** `Equals(other)` for exact comparison, `Close(other, tolerance)`
+  for floating-point-safe comparison.
+- **Factory functions:** `Identity(n)` and `FromDiagonal(values)`.
+- Comprehensive test suite (47 tests, 91%+ coverage) including cross-language
+  parity vectors.
+
 ## [0.2.0] - 2026-03-31
 
 ### Changed
