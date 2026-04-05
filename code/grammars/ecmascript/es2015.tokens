@@ -220,10 +220,9 @@ reserved:
 # it pops back to the template group. TEMPLATE_MIDDLE and TEMPLATE_TAIL are
 # only matched inside the template group.
 
-groups:
-  template:
-    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
-    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
 
 # ============================================================================
 # Skip patterns

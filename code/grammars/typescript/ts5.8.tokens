@@ -1,0 +1,334 @@
+# TypeScript 5.8 — Lexical Grammar
+# @version 1
+# @typescript_version 5.8
+# @ecmascript_baseline 2025
+#
+# TypeScript 5.8 — February 2025
+#
+# TypeScript 5.8 aligns with the ES2025 specification, which contains three
+# landmark syntactic features: decorators, import attributes, and explicit
+# resource management (`using`).
+#
+# === ES2025 Baseline Features ===
+#
+# ES2025 brings JavaScript to feature parity with languages that have long
+# had these capabilities:
+#
+#   1. Standard TC39 Decorators (Stage 4 in 2023)
+#      The decorator proposal went through nine TC39 proposals over seven
+#      years. The final design chose simplicity: decorators are functions
+#      that receive the decorated value and a context object. They can
+#      replace the value or register metadata, but cannot imperatively
+#      modify the class body.
+#
+#   2. Import Attributes: `import data from "./file.json" with { type: "json" }`
+#      Provides metadata to the module loader. Uses `with` (already reserved)
+#      instead of `assert` (withdrawn). The key semantic difference: `with`
+#      attributes can INFLUENCE loading (treat as JSON), whereas `assert`
+#      could only verify properties after loading.
+#
+#   3. Explicit Resource Management: `using` and `await using`
+#      Deterministic cleanup of resources. Resources implement Symbol.dispose
+#      (sync) or Symbol.asyncDispose (async). When the block exits — via
+#      normal completion, exception, return, break, or continue — the
+#      dispose method is called automatically.
+#
+# === TypeScript 5.8 Additions ===
+#
+# TS 5.8 (February 2025) additions:
+#   - `--erasableSyntaxOnly` mode: only emit JavaScript-erasable syntax
+#     (no enums, no namespaces, no parameter properties — aligns with
+#     native TypeScript support in Node.js 23+ and browsers)
+#   - `import type` from computed module specifiers
+#   - Conditional types improvements (deferred/lazy evaluation)
+#   - `export type *` re-exports
+#   - Improved inference for generic functions
+#
+# TS 5.5 (June 2024) additions included in this grammar:
+#   - Inferred type predicates: TypeScript can now infer `x is T` return types
+#   - `Set` methods: intersection, union, difference (runtime, not grammar)
+#   - Regular expression syntax checking (regexp analysis, not new tokens)
+#
+# TS 5.6 (September 2024):
+#   - Iterator helper methods (runtime only)
+#   - Strict built-in iterator checking
+#
+# TS 5.7 (November 2024):
+#   - Paths rewriting for relative imports (--pathsRelativeToRoots)
+#   - `noUncheckedSideEffectImports` strictness option
+#   - `"--target ES2025"` support
+#
+# TS 5.8 (February 2025):
+#   - Require `return` in branches: all branches of conditional expressions
+#     that are used as statements must explicitly return
+#   - `--erasableSyntaxOnly` for pure-type-erasure mode
+#
+# Token changes vs ES2022 (the TS 5.0 baseline):
+#   - Added: AT = "@" (already present from TS 5.0, now part of ES2025 baseline)
+#   - Added: `using` context keyword (now in ES2025 standard)
+#   - Added: HASHBANG token (ES2025 baseline includes hashbang support)
+#   - Changed: REGEX gains `v` flag (ES2024 Unicode Sets)
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+# Hashbang comments at the start of scripts/modules (ES2025 normalization)
+#
+# Hashbang `#!` on the first line tells the OS what interpreter to use when
+# running the file directly. Node.js has supported it for years; ES2025
+# standardizes its treatment by JavaScript parsers (it becomes a comment).
+#
+#   #!/usr/bin/env node
+#   console.log("Hello from Node.js");
+#
+# TypeScript supports hashbang in scripts that will be run directly.
+
+HASHBANG = /^#![^\n]*/
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Private names (ES2022) ---
+
+PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (with ES2021 numeric separators) ---
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (ES2024 `v` flag: Unicode Sets) ---
+#
+# ES2024 added the `v` flag (Unicode Sets mode). It enhances Unicode matching
+# with set operations in character classes:
+#   /[\p{Letter}--\p{ASCII}]/v  — non-ASCII letters
+#   /[\p{Decimal_Number}&&\p{ASCII}]/v  — ASCII decimal digits only
+#
+# The `v` flag and `u` flag are mutually exclusive — you use one or the other.
+#
+# Available flags in ES2024/ES2025: d, g, i, m, s, u, v, y
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsvy]*/
+
+# ============================================================================
+# Multi-character operators (ES2021+)
+# ============================================================================
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# --- Decorator prefix (now in ES2025 standard) ---
+#
+# In TS 5.8, the `@` decorator syntax is both in the TypeScript type system
+# AND the ES2025 standard. TypeScript 5.8 uses the standard decorator model
+# by default (the experimental model requires --experimentalDecorators).
+#
+# The standard model is more predictable: decorators receive a context object
+# and can return a replacement. The experimental model had inconsistencies
+# between class decorators, method decorators, and parameter decorators.
+
+AT = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords (same as ES2025)
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+  enum
+  async
+  await
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# ES2025 adds `using` to the context keyword set (for explicit resource management).
+# `using` was a TypeScript-specific context keyword since TS 5.2 — now it's
+# standardized in ES2025.
+#
+# TypeScript adds its full set of type-system context keywords on top of the
+# ES2025 baseline.
+
+context_keywords:
+  # --- ES2025 context keywords ---
+  as
+  from
+  of
+  get
+  set
+  static
+  using
+  # --- TypeScript type system context keywords ---
+  type
+  interface
+  namespace
+  module
+  declare
+  abstract
+  readonly
+  is
+  keyof
+  asserts
+  unique
+  infer
+  never
+  unknown
+  override
+  out
+  satisfies
+  accessor
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

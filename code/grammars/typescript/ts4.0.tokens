@@ -1,0 +1,315 @@
+# TypeScript 4.0 — Lexical Grammar
+# @version 1
+# @typescript_version 4.0
+# @ecmascript_baseline 2020
+#
+# TypeScript 4.0 — August 2020
+#
+# TypeScript 4.x is a series of releases (4.0–4.9) spanning August 2020 to
+# November 2022. This grammar covers the full 4.x feature set.
+#
+# ES2020 baseline:
+#   TypeScript 4.0 aligns with ES2020, which added:
+#   - Optional chaining (`?.`)
+#   - Nullish coalescing (`??`)
+#   - BigInt literals (`42n`)
+#   - Dynamic import (`import("./mod.js")`)
+#   - import.meta
+#
+# TypeScript 4.x series highlights:
+#
+#   TS 4.0 (Aug 2020):
+#   - Variadic tuple types: `[...A, ...B]` where A and B are generic
+#   - Labeled tuple elements: `[first: string, second: number]`
+#   - Class properties inferred from constructors
+#
+#   TS 4.1 (Nov 2020):
+#   - Template literal types: `type Greeting = `Hello, ${string}``
+#   - Recursive conditional types
+#   - Key remapping via `as` in mapped types
+#
+#   TS 4.2 (Feb 2021):
+#   - Rest elements in non-trailing positions: `[first: string, ...rest: number[], last: boolean]`
+#   - Abstract construct signatures
+#
+#   TS 4.3 (May 2021):
+#   - `override` keyword for class methods that override base class methods
+#   - Separate write types for setters: set x(v: string | number) {}; get x(): string {}
+#
+#   TS 4.7 (May 2022):
+#   - `in`/`out` variance annotations on type parameters
+#   - Instantiation expressions: `Array<string>` as a value expression
+#   - `infer` with extends constraint: `infer T extends string`
+#
+#   TS 4.9 (Nov 2022):
+#   - `satisfies` operator: `expr satisfies Type`
+#
+# Token changes vs ES2020:
+#   - Added: AT = "@" (decorator prefix)
+#   - Added: TypeScript context keywords (type system words)
+#   - Added: OPTIONAL_CHAIN, NULLISH_COALESCE, BIGINT from ES2020 baseline
+#   - Added: `using` is NOT yet a context keyword in 4.x (added in 5.2)
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- BigInt literals (ES2020) ---
+#
+# BigInt supports arbitrary-precision integers. The `n` suffix distinguishes
+# BigInt from Number. TypeScript has full BigInt type support since TS 3.2.
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]+n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]+n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]+n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]+n/ -> BIGINT
+
+# --- Numbers ---
+
+BINARY_NUMBER = /0[bB][01]+/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]+/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+#
+# Template literal TYPES (TS 4.1) use the same tokens as template literal
+# values. The parser distinguishes by context:
+#   `Hello, ${string}`   — value: a template expression
+#   type G = `Hello, ${string}`  — type: a template literal type
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (ES2018 `s` flag) ---
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gimsuy]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# ES2020 adds OPTIONAL_CHAIN and NULLISH_COALESCE.
+# Ordering: `?.` before `?`, `??` before `?`.
+
+# --- ES2020: Optional chaining and nullish coalescing ---
+
+OPTIONAL_CHAIN   = "?."
+
+# --- ES2021: Logical assignment operators ---
+# These combine a logical operator with assignment. They short-circuit:
+#   a &&= b  is equivalent to:  a && (a = b)   — assign only if a is truthy
+#   a ||= b  is equivalent to:  a || (a = b)   — assign only if a is falsy
+#   a ??= b  is equivalent to:  a ?? (a = b)   — assign only if a is nullish
+#
+# Ordering: NULLISH_EQUALS ("??=") MUST come BEFORE NULLISH_COALESCE ("??")
+# and AND_AND_EQUALS ("&&=") MUST come BEFORE AND_AND ("&&"), etc.
+# The lexer uses first-match-wins; longer tokens must appear first.
+
+NULLISH_EQUALS   = "??="
+NULLISH_COALESCE = "??"
+AND_AND_EQUALS   = "&&="
+OR_OR_EQUALS     = "||="
+
+# --- ES2016+ operators ---
+
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# --- TypeScript: Decorator prefix ---
+#
+# `@` introduces a decorator annotation. TypeScript's experimental decorators
+# predate the final JavaScript decorator proposal. In TS 4.x, decorators
+# require `--experimentalDecorators`. The `@` token is identical regardless
+# of which decorator model is in use.
+
+AT = "@"
+
+# ============================================================================
+# Keywords (same as ES2020)
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+  enum
+  async
+  await
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# TypeScript 4.x adds `override` (4.3), `out` (4.7), and `satisfies` (4.9)
+# to the type system vocabulary. All remain context keywords — valid as
+# regular identifiers outside type positions.
+#
+# `using` is NOT yet in the context keywords for TS 4.x.
+# It was introduced in TS 5.2 (aligning with the TC39 explicit resource
+# management proposal which reached Stage 4 in 2023).
+
+context_keywords:
+  # --- ES2020 context keywords ---
+  as
+  from
+  of
+  get
+  set
+  static
+  # --- TypeScript type system context keywords ---
+  type
+  interface
+  namespace
+  module
+  declare
+  abstract
+  readonly
+  is
+  keyof
+  asserts
+  unique
+  infer
+  never
+  unknown
+  override
+  out
+  satisfies
+  accessor
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

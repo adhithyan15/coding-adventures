@@ -1,0 +1,961 @@
+# TypeScript 2.0 — Parser Grammar
+# @version 1
+# @typescript_version 2.0
+# @ecmascript_baseline 2015
+#
+# TypeScript 2.0 — September 2016
+#
+# This grammar is a superset of ES2015. Every ES2015 production is present,
+# extended where necessary to accommodate TypeScript's type system.
+#
+# Grammar architecture:
+#
+#   ES2015 base (all rules inherited from es2015.grammar)
+#     ├─ Classes          (class_declaration → ts_class_declaration)
+#     ├─ Modules          (import_declaration, export_declaration — extended)
+#     ├─ Arrow functions  (arrow_function — extended with type parameters)
+#     ├─ Destructuring    (binding_pattern — extended with type annotations)
+#     ├─ Generators       (generator_declaration — extended with typed params)
+#     ├─ Template literals (template_literal — unchanged)
+#     └─ let/const        (lexical_declaration — extended with type annotations)
+#
+#   TypeScript type system (all from ts1.0.grammar)
+#     ├─ Predefined types:   any, string, number, boolean, void, object, symbol,
+#     │                      undefined, null, never (NEW in 2.0)
+#     ├─ Type references:    Array<string>, Map<K, V>, etc.
+#     ├─ Object types:       { x: number; y: string; }
+#     ├─ Tuple types:        [string, number, boolean]
+#     ├─ Function types:     (x: number) => string
+#     ├─ Union types:        string | number
+#     ├─ Intersection types: Named & Aged
+#     ├─ Literal types:      "up" | "down", 0 | 1
+#     └─ Typeof types:       typeof someVariable
+#
+#   TypeScript 2.0 additions
+#     ├─ `never` type:       unreachable / bottom type
+#     ├─ Mapped types:       { [K in keyof T]: T[K] }  (TS 2.1)
+#     └─ Conditional types:  T extends U ? X : Y  (TS 2.8)
+#
+# The `never` type and strict null checks:
+#
+#   Strict null checks (--strictNullChecks flag) are a SEMANTIC feature,
+#   not a grammar feature. The grammar is the same; the type checker's
+#   inference rules change. But `never` IS a grammar addition — it appears
+#   as a type keyword in predefined_type.
+#
+#   Without strict null checks (TS 1.x default):
+#     let x: string = null;     // OK — null is a subtype of everything
+#
+#   With strict null checks (TS 2.0+ recommended):
+#     let x: string = null;     // ERROR — null is not assignable to string
+#     let y: string | null = null;  // OK — explicit null union
+
+# ============================================================================
+# Program
+# ============================================================================
+#
+# TypeScript 2.0 uses ES2015 modules as the baseline module system.
+# A file with `import` or `export` is a module; otherwise it's a script.
+# The grammar accepts both forms at the top level.
+
+program = { source_element } ;
+
+# source_element: the TypeScript 2.0 expansion adds all TS-specific declarations
+# on top of ES2015's already-expanded set.
+
+source_element = import_declaration
+               | export_declaration
+               | interface_declaration
+               | type_alias_declaration
+               | enum_declaration
+               | namespace_declaration
+               | ambient_declaration
+               | function_declaration
+               | generator_declaration
+               | ts_class_declaration
+               | lexical_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+
+# --- Function Declaration (TypeScript + ES2015) ---
+#
+# TypeScript adds type parameters (generics) and typed parameters.
+# ES2015 adds default parameters, rest parameters, destructuring.
+# TypeScript 2.0 combines both — fully typed ES2015 function declarations.
+#
+#   function identity<T>(x: T): T { return x; }
+#   function map<T, U>(arr: T[], fn: (x: T) => U): U[] { ... }
+#   function merge<T extends object, U extends object>(a: T, b: U): T & U { ... }
+
+function_declaration = "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                       [ COLON type_expression ]
+                       LBRACE function_body RBRACE ;
+
+function_body = { source_element } ;
+
+# --- Typed parameter list ---
+#
+# The fully typed parameter list combines ES2015's parameter features with
+# TypeScript type annotations. A parameter can be:
+#
+#   Regular:          `(x: string)`
+#   Optional:         `(x?: string)`
+#   Default value:    `(x: string = "default")`
+#   Rest:             `(...args: string[])`
+#   Destructured:     `({ name, age }: { name: string; age: number })`
+#   Constructor prop: `(private name: string)`  (only in constructors)
+#   Readonly prop:    `(readonly name: string)` (only in constructors)
+#
+# The accessibility_modifier (`public`, `private`, `protected`) is only
+# valid in class constructors — it creates a class property and assigns it.
+
+typed_parameter_list = typed_parameter { COMMA typed_parameter } [ COMMA rest_typed_parameter ]
+                     | rest_typed_parameter ;
+
+typed_parameter = [ accessibility_modifier ] ( NAME | binding_pattern ) [ QUESTION ] [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+rest_typed_parameter = ELLIPSIS NAME [ COLON type_expression ] ;
+
+# --- Lexical Declarations (TypeScript extension of ES2015) ---
+#
+# TypeScript adds type annotations to `let` and `const` declarations.
+#
+#   let count: number = 0;
+#   const greeting: string = "hello";
+#   let pairs: [string, number][] = [];
+#   const mapping: Map<string, number> = new Map();
+#
+# `const` with a type annotation is particularly powerful in TypeScript:
+# TypeScript can widen or narrow the inferred type.
+#   const x = "hello";          // type: "hello" (literal type, narrowed)
+#   const y: string = "hello";  // type: string  (widened by annotation)
+
+lexical_declaration = ( "let" | "const" ) typed_binding_list SEMICOLON ;
+
+typed_binding_list = typed_lexical_binding { COMMA typed_lexical_binding } ;
+
+typed_lexical_binding = ( NAME | binding_pattern ) [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+# For use in for-loop headers (no trailing semicolon)
+lexical_declaration_no_semi = ( "let" | "const" ) typed_binding_list ;
+
+# --- Variable Statement (TypeScript extension) ---
+#
+# `var` with TypeScript type annotations. In modern TypeScript, `let`/`const`
+# are preferred, but `var` is still valid (and commonly seen in compiled output).
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = ( NAME | binding_pattern ) [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+# --- Generator Declaration (TypeScript extension of ES2015) ---
+#
+# Generators can have typed parameters and return types.
+# The return type of a generator is typically `IterableIterator<T>` or `Generator<T>`.
+#
+#   function* range(start: number, end: number): IterableIterator<number> {
+#     for (let i = start; i < end; i++) yield i;
+#   }
+
+generator_declaration = "function" STAR NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                        [ COLON type_expression ]
+                        LBRACE function_body RBRACE ;
+
+# ============================================================================
+# TypeScript Class System (ES2015 base + TypeScript extensions)
+# ============================================================================
+#
+# TypeScript 2.0 classes build on ES2015 class syntax with:
+#   - Access modifiers: public, private, protected
+#   - Abstract classes and abstract members
+#   - Readonly properties
+#   - Implements clause
+#   - Constructor parameter properties
+#   - Index signatures in class bodies
+#   - Generic classes: `class Stack<T> { items: T[] = []; }`
+#
+# Design note: TypeScript's `private` is a compile-time concept — at runtime,
+# the field is just a regular JavaScript property. ES2022 adds true private
+# fields (#field syntax), but that's a later TypeScript/JavaScript feature.
+#
+# The `implements` clause is type-checking only:
+#   class Dog implements Animal { ... }  // TypeScript verifies Dog has all Animal members
+# No runtime artifact is created. This is pure structural type checking.
+
+ts_class_declaration = [ "abstract" ] "class" NAME [ type_parameters ] [ ts_class_heritage ] ts_class_body ;
+
+ts_class_heritage = [ "extends" type_reference ] [ "implements" type_reference { COMMA type_reference } ] ;
+
+ts_class_body = LBRACE { ts_class_element } RBRACE ;
+
+ts_class_element = ts_method_definition
+                 | ts_property_declaration
+                 | index_signature SEMICOLON
+                 | SEMICOLON ;
+
+ts_method_definition = [ accessibility_modifier ] [ "abstract" ] [ "static" ] [ "readonly" ] ts_method_definition_body ;
+
+accessibility_modifier = "public" | "private" | "protected" ;
+
+ts_method_definition_body = property_name [ QUESTION ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                          | "get" property_name LPAREN RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                          | "set" property_name LPAREN typed_parameter RPAREN LBRACE function_body RBRACE
+                          | STAR property_name [ QUESTION ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] LBRACE function_body RBRACE ;
+
+ts_property_declaration = [ accessibility_modifier ] [ "static" ] [ "abstract" ] [ "readonly" ] property_name [ QUESTION ] [ COLON type_expression ] [ EQUALS assignment_expression ] SEMICOLON ;
+
+# ============================================================================
+# Module Declarations (ES2015 + TypeScript extensions)
+# ============================================================================
+#
+# TypeScript extends ES2015 import/export with:
+#   - Type-only imports:  `import type { Foo } from "./foo"` (TS 3.8+, shown here)
+#   - Re-export with type: `export type { Foo }` from another module
+#   - Import = require:   `import x = require("module")` (CommonJS interop)
+#   - Export assignment:  `export = value` (CommonJS interop)
+#
+# ES2015 module forms (all inherited):
+#   import defaultExport from "module";
+#   import { named } from "module";
+#   import { named as alias } from "module";
+#   import * as namespace from "module";
+#   import "module";
+#   export default expression;
+#   export { name1, name2 };
+#   export { name1 as alias1 } from "module";
+
+import_declaration = "import" import_clause from_clause SEMICOLON
+                   | "import" STRING SEMICOLON
+                   | "import" NAME EQUALS "require" LPAREN STRING RPAREN SEMICOLON ;
+
+# The last form is TypeScript's CommonJS compatibility:
+# `import fs = require("fs")` is equivalent to const fs = require("fs") but typed.
+
+import_clause = default_import [ COMMA ( named_imports | namespace_import ) ]
+              | named_imports
+              | namespace_import ;
+
+default_import = NAME ;
+
+named_imports = LBRACE [ import_specifier { COMMA import_specifier } [ COMMA ] ] RBRACE ;
+
+import_specifier = NAME [ "as" NAME ] ;
+
+namespace_import = STAR "as" NAME ;
+
+from_clause = "from" STRING ;
+
+export_declaration = "export" "default" ( function_declaration
+                                        | generator_declaration
+                                        | ts_class_declaration
+                                        | assignment_expression SEMICOLON )
+                   | "export" ( function_declaration
+                              | generator_declaration
+                              | ts_class_declaration
+                              | lexical_declaration
+                              | variable_statement
+                              | interface_declaration
+                              | type_alias_declaration
+                              | enum_declaration
+                              | namespace_declaration )
+                   | "export" named_exports [ from_clause ] SEMICOLON
+                   | "export" EQUALS NAME SEMICOLON ;
+
+named_exports = LBRACE [ export_specifier { COMMA export_specifier } [ COMMA ] ] RBRACE ;
+
+export_specifier = NAME [ "as" NAME ] ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# TypeScript 2.0 inherits all ES2015 statements: for-of, destructuring in
+# for-in/for-of, etc. No new statement kinds are added in TypeScript.
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | for_of_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | debugger_statement
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list
+                  | lexical_declaration_no_semi
+                  | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" ( NAME | binding_pattern )
+                     | "const" ( NAME | binding_pattern )
+                     | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+# for-of: TypeScript adds typed loop variables.
+# `for (const item of items) {}` — item gets the type of items' element type.
+for_of_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" ( NAME | binding_pattern ) [ COLON type_expression ]
+                     | "const" ( NAME | binding_pattern ) [ COLON type_expression ]
+                     | left_hand_side_expression ) "of" expression
+                   RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" LPAREN NAME RPAREN block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" expression SEMICOLON ;
+
+debugger_statement = "debugger" SEMICOLON ;
+
+# ============================================================================
+# Destructuring Patterns (ES2015 + TypeScript)
+# ============================================================================
+#
+# TypeScript adds type annotations to destructuring patterns.
+#
+#   const { name, age }: { name: string; age: number } = person;
+#   const [first, second]: [string, number] = pair;
+#
+# The type annotation goes on the BINDING, not on individual pattern elements.
+# TypeScript infers the types of individual variables from the binding type.
+
+binding_pattern = object_binding_pattern | array_binding_pattern ;
+
+object_binding_pattern = LBRACE [ binding_property { COMMA binding_property } [ COMMA ] ] RBRACE ;
+
+binding_property = property_name COLON binding_element
+                 | NAME [ EQUALS assignment_expression ] ;
+
+binding_element = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+array_binding_pattern = LBRACKET [ array_binding_element { COMMA array_binding_element } [ COMMA ] ] RBRACKET ;
+
+array_binding_element = binding_element
+                      | ELLIPSIS ( NAME | binding_pattern ) ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# TypeScript 2.0 expressions inherit all ES2015 forms plus TypeScript 1.0
+# type assertion forms. Arrow functions gain type parameters.
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+# assignment_expression: TypeScript additions alongside ES2015 forms.
+# `yield` is an ES2015 addition (for generators).
+# `ts_as_expression`, `ts_angle_bracket_assertion` are TypeScript additions.
+# `ts_non_null_expression` is a postfix form (handled at left_hand_side level).
+
+assignment_expression = arrow_function
+                      | ts_as_expression
+                      | ts_angle_bracket_assertion
+                      | "yield" [ STAR ] assignment_expression
+                      | conditional_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS
+                    | SLASH_EQUALS | PERCENT_EQUALS | AMPERSAND_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# --- Arrow Function (ES2015 + TypeScript type parameters) ---
+#
+# TypeScript adds generics to arrow functions:
+#   const identity = <T>(x: T): T => x;
+#
+# Note: In .tsx files, `<T>` before the arrow is ambiguous with JSX.
+# TypeScript requires a trailing comma: `<T,>` to disambiguate.
+#
+#   (x: number, y: number): number => x + y  // typed params + return type
+#   <T>(x: T): T => x                         // generic arrow function
+
+arrow_function = arrow_parameters ARROW concise_body ;
+
+arrow_parameters = NAME
+                 | LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ]
+                 | LESS_THAN type_parameter_list GREATER_THAN LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+concise_body = LBRACE function_body RBRACE
+             | assignment_expression ;
+
+# --- TypeScript Type Assertions ---
+
+# `value as Type` — preferred, safe in all contexts including .tsx.
+ts_as_expression = ts_non_null_expression "as" type_expression ;
+
+# `value!` — non-null assertion. "Trust me, this isn't null."
+# When --strictNullChecks is on, this is the escape hatch from `T | null` to `T`.
+ts_non_null_expression = left_hand_side_expression BANG ;
+
+# `<Type>value` — legacy; not valid in .tsx. Use `as` instead.
+ts_angle_bracket_assertion = LESS_THAN type_expression GREATER_THAN assignment_expression ;
+
+# Ternary conditional
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+# Logical operators
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# Bitwise operators
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# Equality
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# Relational
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression } ;
+
+# Shift operators
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+# Arithmetic
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# Unary operators
+
+unary_expression = postfix_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+# Postfix
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+# Left-hand side
+
+left_hand_side_expression = call_expression | new_expression ;
+
+# ES2015: call expressions can chain template literals (tagged templates).
+# `tag\`string\`` — template literal with a tag function.
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  | template_literal } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+member_expression = primary_expression { DOT NAME | LBRACKET expression RBRACKET
+                                       | template_literal }
+                  | "super" DOT NAME
+                  | "super" LBRACKET expression RBRACKET
+                  | "new" member_expression arguments ;
+
+arguments = LPAREN [ argument_list ] RPAREN ;
+
+argument_list = ( ELLIPSIS assignment_expression | assignment_expression )
+                { COMMA ( ELLIPSIS assignment_expression | assignment_expression ) } ;
+
+# Primary expressions: all ES2015 forms plus class/generator expressions.
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | template_literal
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | generator_expression
+                   | ts_class_expression
+                   | LPAREN expression RPAREN ;
+
+# --- Template Literals (ES2015) ---
+#
+# Backtick strings with ${...} interpolation.
+# TypeScript does not change template literal syntax in 2.0.
+# (TypeScript 4.1 adds template literal TYPES, which are different.)
+
+template_literal = TEMPLATE_NO_SUB
+                 | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;
+
+# Array literal: ES2015 spread support.
+
+array_literal = LBRACKET [ array_element_list ] RBRACKET ;
+
+array_element_list = array_element { COMMA array_element } [ COMMA ] ;
+
+array_element = ELLIPSIS assignment_expression
+              | assignment_expression ;
+
+# Object literal: ES2015 computed properties, shorthand, spread.
+
+object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
+
+property_definition = property_name COLON assignment_expression
+                    | property_name LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                    | "get" property_name LPAREN RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                    | "set" property_name LPAREN typed_parameter RPAREN LBRACE function_body RBRACE
+                    | STAR property_name LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                    | ELLIPSIS assignment_expression
+                    | NAME ;
+
+# ES2015 computed property names: `{ [expression]: value }`
+property_name = NAME | STRING | NUMBER
+              | LBRACKET assignment_expression RBRACKET ;
+
+# Function and generator expressions with TypeScript types.
+
+function_expression = "function" [ NAME ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                      [ COLON type_expression ]
+                      LBRACE function_body RBRACE ;
+
+generator_expression = "function" STAR [ NAME ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                       [ COLON type_expression ]
+                       LBRACE function_body RBRACE ;
+
+# Class expression with TypeScript extensions.
+
+ts_class_expression = [ "abstract" ] "class" [ NAME ] [ type_parameters ] [ ts_class_heritage ] ts_class_body ;
+
+# ============================================================================
+# TypeScript Type System
+# ============================================================================
+#
+# TypeScript 2.0 inherits the full type system from TS 1.0, with key additions:
+#   - `never` type (new predefined type)
+#   - `object` type (more precisely defined in 2.0)
+#   - Mapped types (TS 2.1 — included here)
+#   - Conditional types (TS 2.8 — included here)
+#
+# The type expression hierarchy:
+#
+#   type_expression
+#     └─ conditional_type      (T extends U ? X : Y)  [new in 2.0]
+#         └─ union_type             (T | U)
+#             └─ intersection_type  (T & U)
+#                 └─ array_type      (T[])
+#                     └─ primary_type (T, {}, [], etc.)
+#
+# This ordering ensures:
+#   T extends U ? X : Y | W  parses as (T extends U ? X : Y) | W? No —
+#   the conditional_type wraps union_type on each side of the ternary.
+#   The `extends` and `?` in conditional types are parsed at a higher level.
+
+type_expression = conditional_type ;
+
+# --- Conditional Types (TypeScript 2.8) ---
+#
+# The most powerful addition to the TypeScript type system. Allows types to
+# be selected based on a type-level condition.
+#
+#   T extends U ? X : Y
+#   ────────────────────
+#   "If T is assignable to U, the type is X; otherwise the type is Y."
+#
+# Simple examples:
+#   type IsString<T> = T extends string ? "yes" : "no";
+#   type IsString<string>  // "yes"
+#   type IsString<number>  // "no"
+#
+# Distributed conditional types: when T is a union, the condition is applied
+# to each member of the union individually:
+#   type NonNullable<T> = T extends null | undefined ? never : T;
+#   type NonNullable<string | null | number>
+#   = (string extends null | undefined ? never : string)  // string
+#   | (null extends null | undefined ? never : null)      // never
+#   | (number extends null | undefined ? never : number)  // number
+#   = string | number  (never disappears from unions)
+#
+# This pattern is why `never` is called the "bottom type" — it disappears
+# in union types, just like 0 disappears in addition.
+
+conditional_type = union_type [ "extends" type_expression QUESTION type_expression COLON type_expression ] ;
+
+# Union type: T | U | V
+# A value that can be any one of the given types.
+
+union_type = intersection_type { PIPE intersection_type } ;
+
+# Intersection type: T & U & V
+# A value that must satisfy all given types simultaneously.
+
+intersection_type = array_type { AMPERSAND array_type } ;
+
+# Array type: T[]
+# Postfix brackets create array types. Can be chained: T[][] = array of array of T.
+
+array_type = primary_type { LBRACKET RBRACKET } ;
+
+# Primary type: atomic type building blocks.
+# mapped_type is new in TS 2.0 (2.1 technically).
+
+primary_type = predefined_type
+             | type_reference
+             | literal_type
+             | object_type
+             | tuple_type
+             | mapped_type
+             | function_type
+             | constructor_type
+             | "typeof" left_hand_side_expression
+             | "keyof" type_expression
+             | "unique" "symbol"
+             | "infer" NAME
+             | LPAREN type_expression RPAREN ;
+
+# --- Predefined Types (TypeScript 2.0 expanded set) ---
+#
+# TypeScript 2.0 adds `never` to the predefined types.
+#
+# `never` — the bottom type. Represents values that never occur.
+#
+#   When does `never` arise?
+#     1. A function that always throws:
+#        `function fail(msg: string): never { throw new Error(msg); }`
+#     2. A function that loops forever:
+#        `function loop(): never { while (true) {} }`
+#     3. An impossible intersection:
+#        `type Impossible = string & number;  // never`
+#     4. An exhausted union in a switch:
+#        switch (shape.kind) {
+#          case "circle": ...
+#          case "square": ...
+#          default: const _: never = shape;  // ERROR if a case was missed
+#        }
+#
+#   `never` is the dual of `unknown`:
+#     - `unknown` is the top type: every value is assignable to it
+#     - `never` is the bottom type: nothing is assignable to it
+#
+# `object` — any non-primitive value.
+#   With --strictNullChecks, `object` excludes null and undefined.
+#   More precise than `{}` or `Object` for constraining to non-primitives.
+#
+#   function merge<T extends object, U extends object>(a: T, b: U): T & U { ... }
+
+predefined_type = "any" | "string" | "number" | "boolean" | "void"
+                | "object" | "symbol" | "undefined" | "null" | "never" ;
+
+# --- Literal Types ---
+
+literal_type = NUMBER | STRING | "true" | "false" ;
+
+# --- Type Reference ---
+
+type_reference = NAME { DOT NAME } [ type_arguments ] ;
+
+type_arguments = LESS_THAN type_argument_list GREATER_THAN ;
+type_argument_list = type_expression { COMMA type_expression } ;
+
+# --- Type Parameters ---
+
+type_parameters = LESS_THAN type_parameter_list GREATER_THAN ;
+type_parameter_list = type_parameter { COMMA type_parameter } ;
+type_parameter = NAME [ "extends" type_expression ] [ EQUALS type_expression ] ;
+
+# --- Object Type ---
+
+object_type = LBRACE { type_member_semicolon } RBRACE ;
+type_member_semicolon = type_member SEMICOLON ;
+type_member = construct_signature
+            | call_signature
+            | index_signature
+            | method_signature
+            | property_signature ;
+
+property_signature = [ "readonly" ] property_name [ QUESTION ] [ COLON type_expression ] ;
+index_signature = LBRACKET NAME COLON type_expression RBRACKET COLON type_expression ;
+method_signature = property_name [ QUESTION ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+call_signature = [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+construct_signature = "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+# --- Mapped Types (TypeScript 2.1) ---
+#
+# Mapped types transform all properties of an existing type, creating a new
+# type where every key is processed through a type-level expression.
+#
+# Syntax: `{ [K in KeyType]: ValueType }`
+#
+#   K is a type variable that ranges over all keys in KeyType.
+#   The `in` keyword (already used in for-in and relational expressions)
+#   is reused here in a type context.
+#
+# The most important mapped types are TypeScript's built-in utility types,
+# which use this syntax:
+#
+#   Partial<T>:  `{ [K in keyof T]?: T[K] }`
+#     Makes all properties optional.
+#     `Partial<{ x: number; y: string }>` = `{ x?: number; y?: string }`
+#
+#   Readonly<T>: `{ readonly [K in keyof T]: T[K] }`
+#     Makes all properties readonly.
+#
+#   Required<T>: `{ [K in keyof T]-?: T[K] }`
+#     Makes all optional properties required (-? removes optionality).
+#
+#   Record<K, V>: `{ [P in K]: V }`
+#     Creates an object type with keys from K and values of type V.
+#     `Record<"a" | "b", number>` = `{ a: number; b: number }`
+#
+#   Pick<T, K>:  `{ [P in K]: T[P] }`
+#     Selects a subset of properties from T.
+#
+# Modifiers with + and -:
+#   The `+readonly` and `-readonly` modifiers add or remove readonly.
+#   The `+?` and `-?` modifiers add or remove optionality.
+#   Without + or -, the modifier is applied (same as +).
+#
+# `as` remap clause (TypeScript 4.1):
+#   `{ [K in keyof T as Capitalize<K>]: T[K] }`
+#   Renames the keys using a type expression. Included here for completeness.
+
+mapped_type = LBRACE [ readonly_modifier ] LBRACKET NAME "in" type_expression [ "as" type_expression ] RBRACKET [ question_modifier ] [ COLON type_expression ] SEMICOLON RBRACE ;
+
+# Readonly modifier: `readonly`, `+readonly`, or `-readonly`
+readonly_modifier = "readonly"
+                  | PLUS "readonly"
+                  | MINUS "readonly" ;
+
+# Question modifier: `?`, `+?`, or `-?`
+question_modifier = QUESTION
+                  | PLUS QUESTION
+                  | MINUS QUESTION ;
+
+# --- Tuple Type ---
+
+tuple_type = LBRACKET [ tuple_element_list ] RBRACKET ;
+tuple_element_list = tuple_element { COMMA tuple_element } ;
+tuple_element = [ ELLIPSIS ] type_expression [ QUESTION ] ;
+
+# --- Function Type ---
+
+function_type = [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression ;
+
+# Constructor type
+
+constructor_type = "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression ;
+
+# ============================================================================
+# TypeScript Declarations
+# ============================================================================
+
+# --- Interface Declaration ---
+#
+# Interfaces in TypeScript 2.0 are the same as TS 1.0.
+# Key reminder: interfaces CAN be augmented via declaration merging.
+# This is crucial for module augmentation:
+#
+#   // Augmenting a module's types:
+#   import "some-library";
+#   declare module "some-library" {
+#     interface Options {
+#       myNewOption: boolean;  // Added to the interface
+#     }
+#   }
+
+interface_declaration = "interface" NAME [ type_parameters ] [ interface_heritage ] object_type ;
+interface_heritage = "extends" type_reference { COMMA type_reference } ;
+
+# --- Type Alias Declaration ---
+#
+# TypeScript 2.0 type aliases can now be recursive (TS 2.2+ technically, but
+# the grammar supports it):
+#
+#   type Tree<T> = {
+#     value: T;
+#     children: Tree<T>[];  // recursive reference!
+#   };
+#
+# Also now supported: using conditional types in type aliases:
+#   type NonNullable<T> = T extends null | undefined ? never : T;
+
+type_alias_declaration = "type" NAME [ type_parameters ] EQUALS type_expression SEMICOLON ;
+
+# --- Enum Declaration ---
+#
+# Enums are unchanged from TS 1.0. `const enum` is fully erased at compile
+# time (values are inlined); regular `enum` emits a JavaScript object.
+#
+# String enums (new in TS 2.4, but grammar is the same):
+#   enum Direction { Up = "UP", Down = "DOWN" }
+
+enum_declaration = [ "const" ] "enum" NAME LBRACE [ enum_body ] RBRACE ;
+enum_body = enum_member { COMMA enum_member } [ COMMA ] ;
+enum_member = property_name [ EQUALS assignment_expression ] ;
+
+# --- Namespace Declaration ---
+#
+# Namespaces compile to self-executing functions (IIFE pattern).
+# In TypeScript 2.0 + ES2015 modules, namespaces are less common —
+# ES2015 modules are the preferred way to organize code.
+# Namespaces remain useful for:
+#   - Organizing types in .d.ts declaration files
+#   - Augmenting global types
+#   - Code that must run in non-module (script) contexts
+
+namespace_declaration = ( "namespace" | "module" ) qualified_name LBRACE { namespace_element } RBRACE ;
+qualified_name = NAME { DOT NAME } ;
+
+namespace_element = namespace_declaration
+                  | interface_declaration
+                  | type_alias_declaration
+                  | ts_class_declaration
+                  | function_declaration
+                  | generator_declaration
+                  | enum_declaration
+                  | lexical_declaration
+                  | variable_statement
+                  | export_assignment
+                  | export_namespace_element
+                  | statement ;
+
+export_assignment = "export" EQUALS NAME SEMICOLON ;
+
+export_namespace_element = "export" ( namespace_declaration
+                                    | interface_declaration
+                                    | type_alias_declaration
+                                    | ts_class_declaration
+                                    | function_declaration
+                                    | generator_declaration
+                                    | enum_declaration
+                                    | lexical_declaration
+                                    | variable_statement ) ;
+
+# --- Ambient Declaration ---
+#
+# `declare` is the foundation of TypeScript's declaration files (.d.ts).
+# The entire DefinitelyTyped ecosystem (@types/react, @types/node, etc.)
+# consists of files filled with ambient declarations.
+#
+# With TypeScript 2.0's strict null checks, ambient declarations must
+# explicitly include `| null` or `| undefined` where applicable.
+# This is a semantic concern — the grammar is the same.
+
+ambient_declaration = "declare" ambient_declaration_body ;
+ambient_declaration_body = variable_statement
+                         | ambient_function_declaration
+                         | generator_declaration
+                         | ts_class_declaration
+                         | interface_declaration
+                         | type_alias_declaration
+                         | enum_declaration
+                         | namespace_declaration
+                         | ambient_module_declaration
+                         | ambient_global_augmentation ;
+
+ambient_module_declaration = "module" STRING LBRACE { namespace_element } RBRACE ;
+
+# Ambient function declaration: a function signature without a body.
+# `declare function foo(x: string): void;`
+ambient_function_declaration = "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] SEMICOLON ;
+
+# Global augmentation: modifying global types from within a module.
+# `declare global { interface Window { myProp: string; } }`
+ambient_global_augmentation = "global" LBRACE { namespace_element } RBRACE ;
+
+# ============================================================================
+# Type Predicates
+# ============================================================================
+#
+# Type guards narrow the type of a value inside a conditional block.
+# TypeScript 2.0 makes type guards more powerful via control flow analysis:
+#
+#   function process(x: string | number | null) {
+#     if (x === null) {
+#       // TypeScript knows x is null here (narrowed by null check)
+#       return;
+#     }
+#     if (typeof x === "string") {
+#       x.toUpperCase();  // TypeScript knows x is string here
+#     } else {
+#       x.toFixed(2);     // TypeScript knows x is number here
+#     }
+#   }
+#
+# Type predicates (`x is Type`) extend this to user-defined functions:
+
+type_predicate = NAME "is" type_expression ;
+
+# ============================================================================
+# Type Annotation (convenience rule)
+# ============================================================================
+
+type_annotation = COLON type_expression ;
