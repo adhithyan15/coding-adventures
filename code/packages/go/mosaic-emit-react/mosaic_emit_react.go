@@ -432,10 +432,14 @@ func resolvedValueToJSXExpr(v mosaicvm.ResolvedValue) string {
 	switch v.Kind {
 	case "string":
 		s := v.StrValue
-		// Reject javascript: URLs in src attributes at compile time
+		// Block dangerous URL schemes (javascript:, data:, vbscript:) in src values.
+		// Use an allowlist: only http:, https:, protocol-relative //, and relative paths.
 		lower := strings.ToLower(strings.TrimSpace(s))
-		if strings.HasPrefix(lower, "javascript:") {
-			return "'about:blank'"
+		if strings.Contains(lower, ":") {
+			safe := strings.HasPrefix(lower, "http:") || strings.HasPrefix(lower, "https://")
+			if !safe {
+				return "'about:blank'"
+			}
 		}
 		// Escape backslash and single-quote to prevent JS string injection
 		escaped := strings.ReplaceAll(s, `\`, `\\`)
