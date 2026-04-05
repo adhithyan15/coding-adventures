@@ -548,6 +548,20 @@ defmodule CodingAdventures.ScaffoldGeneratorTest do
       assert File.exists?(Path.join(target, "README.md"))
     end
 
+    test "generates Haskell package structure" do
+      {tmp, config} = setup_scaffold_test("test-pkg", "haskell")
+
+      assert {:ok, _messages} = ScaffoldGenerator.scaffold(config, "haskell")
+
+      target = Path.join(tmp, "test-pkg")
+      assert File.exists?(Path.join(target, "coding-adventures-test-pkg.cabal"))
+      assert File.exists?(Path.join(target, "cabal.project"))
+      assert File.exists?(Path.join([target, "src", "TestPkg.hs"]))
+      assert File.exists?(Path.join([target, "test", "Spec.hs"]))
+      assert File.exists?(Path.join(target, "BUILD"))
+      assert File.exists?(Path.join(target, "README.md"))
+    end
+
     test "dry run does not create files" do
       {tmp, config} = setup_scaffold_test("test-pkg", "python")
       dry_config = %{config | dry_run: true}
