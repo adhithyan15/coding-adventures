@@ -1,3 +1,0 @@
-module VirtualMachine {
-    header "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/include/VirtualMachine-Swift.h"
-}
