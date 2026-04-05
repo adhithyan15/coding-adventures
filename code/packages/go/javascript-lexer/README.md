@@ -1,19 +1,19 @@
-# JavaScript Parser (Go)
+# JavaScript Lexer (Go)
 
-Parses JavaScript / ECMAScript source code into ASTs using the grammar-driven
-parser engine. A thin wrapper that loads the appropriate `.grammar` file and
-delegates parsing to the generic `GrammarParser`.
+Tokenizes JavaScript / ECMAScript source code using the grammar-driven lexer
+engine. A thin wrapper that loads the appropriate `.tokens` grammar file and
+delegates tokenization to the generic `GrammarLexer`.
 
 ## Usage
 
 ```go
-import javascriptparser "github.com/adhithyan15/coding-adventures/code/packages/go/javascript-parser"
+import javascriptlexer "github.com/adhithyan15/coding-adventures/code/packages/go/javascript-lexer"
 
 // Generic grammar — best when you don't know the exact ECMAScript version.
-ast, err := javascriptparser.ParseJavascript("let x = 1 + 2;", "")
+tokens, err := javascriptlexer.TokenizeJavascript("let x = 1 + 2;", "")
 
 // Versioned grammar — pin to a specific ECMAScript edition.
-ast, err := javascriptparser.ParseJavascript("const x = 1;", "es2022")
+tokens, err := javascriptlexer.TokenizeJavascript("const x = 1;", "es2022")
 ```
 
 ## Supported versions
