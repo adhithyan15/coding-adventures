@@ -1,7 +1,1 @@
-#!/usr/bin/env bash
-set -euo pipefail
-if command -v xcrun >/dev/null 2>&1; then
-    xcrun swift test --enable-code-coverage --verbose
-else
-    swift test --enable-code-coverage --verbose
-fi
+if command -v xcrun >/dev/null 2>&1; then xcrun swift test --enable-code-coverage --verbose; else swift test --enable-code-coverage --verbose; fi
