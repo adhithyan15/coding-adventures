@@ -147,6 +147,34 @@ impl PixelContainer {
         (self.data[i], self.data[i + 1], self.data[i + 2], self.data[i + 3])
     }
 
+    /// The number of pixels in the buffer (`width * height`).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pixel_container::PixelContainer;
+    ///
+    /// let buf = PixelContainer::new(4, 3);
+    /// assert_eq!(buf.pixel_count(), 12);
+    /// ```
+    pub fn pixel_count(&self) -> usize {
+        self.width as usize * self.height as usize
+    }
+
+    /// The number of bytes in the backing buffer (`width * height * 4`).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pixel_container::PixelContainer;
+    ///
+    /// let buf = PixelContainer::new(4, 3);
+    /// assert_eq!(buf.byte_count(), 48);
+    /// ```
+    pub fn byte_count(&self) -> usize {
+        self.data.len()
+    }
+
     /// Write the RGBA components of the pixel at `(x, y)`.
     ///
     /// No-op if the coordinates are out of bounds.

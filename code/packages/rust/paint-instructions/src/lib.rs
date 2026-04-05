@@ -39,182 +39,16 @@
 pub const VERSION: &str = "0.1.0";
 
 // ============================================================================
-// PixelContainer — raw pixel buffer
+// PixelContainer and ImageCodec — re-exported from pixel-container (IC00)
 // ============================================================================
+//
+// These types are defined in the standalone `pixel-container` crate so that
+// image codecs (BMP, PPM, QOI, PNG, JPEG…) can depend only on that crate
+// without pulling in the full paint IR. Re-exporting them here preserves the
+// existing `paint_instructions::{PixelContainer, ImageCodec}` import path so
+// all downstream crates (paint-codec-png, paint-metal, etc.) compile unchanged.
 
-/// A raw RGBA8 pixel buffer — the universal interchange format between
-/// GPU renderers and image encoders.
-///
-/// Pixels are stored in **row-major order** with a **top-left origin**:
-///
-/// ```text
-/// byte layout for a 3×2 RGBA image:
-///
-///  row 0:  [R0 G0 B0 A0] [R1 G1 B1 A1] [R2 G2 B2 A2]
-///  row 1:  [R3 G3 B3 A3] [R4 G4 B4 A4] [R5 G5 B5 A5]
-///
-///  byte offset for pixel (x, y) = (y * width + x) * 4
-/// ```
-///
-/// ## Why RGBA8?
-///
-/// This is the native output format of:
-/// - Metal `getBytes()` with `MTLPixelFormatRGBA8Unorm`
-/// - Vulkan `vkMapMemory` with `VK_FORMAT_R8G8B8A8_UNORM`
-/// - OpenGL `glReadPixels` with `GL_RGBA / GL_UNSIGNED_BYTE`
-///
-/// And the native input format of PNG, WebP, and JPEG encoders.
-/// No conversion is needed — pixels flow straight from GPU readback to encoder.
-///
-/// ## Relationship to `draw-instructions-pixels::PixelBuffer`
-///
-/// `PixelContainer` is the successor type. It carries the same RGBA8 data in the
-/// same row-major layout. The key difference is that it lives in the `paint-*`
-/// stack (P2D00 onward) rather than the legacy `draw-instructions-*` stack.
-/// New code should use `PixelContainer`; existing `draw-instructions-*` crates
-/// continue using `PixelBuffer` until they are migrated.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct PixelContainer {
-    /// Image width in pixels.
-    pub width: u32,
-    /// Image height in pixels.
-    pub height: u32,
-    /// Raw RGBA8 pixel data — exactly `width * height * 4` bytes.
-    pub data: Vec<u8>,
-}
-
-/// Number of bytes per pixel (R, G, B, A = 4 channels × 1 byte each).
-const BYTES_PER_PIXEL: usize = 4;
-
-impl PixelContainer {
-    /// Create a new pixel container filled with transparent black (all zeros).
-    ///
-    /// Every pixel starts as (0, 0, 0, 0) — fully transparent black.
-    /// This is the conventional "empty" state for an RGBA buffer.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `width * height * 4` overflows `usize`.
-    pub fn new(width: u32, height: u32) -> Self {
-        let size = (width as usize)
-            .checked_mul(height as usize)
-            .and_then(|s| s.checked_mul(BYTES_PER_PIXEL))
-            .expect("PixelContainer dimensions overflow (width * height * 4 exceeds usize)");
-        Self {
-            width,
-            height,
-            data: vec![0u8; size],
-        }
-    }
-
-    /// Create a pixel container from existing RGBA8 data.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `data.len() != width * height * 4`.
-    pub fn from_data(width: u32, height: u32, data: Vec<u8>) -> Self {
-        let expected = (width as usize) * (height as usize) * BYTES_PER_PIXEL;
-        assert_eq!(
-            data.len(),
-            expected,
-            "PixelContainer::from_data: expected {} bytes for {}×{} image, got {}",
-            expected,
-            width,
-            height,
-            data.len()
-        );
-        Self { width, height, data }
-    }
-
-    /// Read one pixel as `(red, green, blue, alpha)`, each in 0–255.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `x >= width` or `y >= height`.
-    pub fn pixel_at(&self, x: u32, y: u32) -> (u8, u8, u8, u8) {
-        let off = self.offset(x, y);
-        (self.data[off], self.data[off + 1], self.data[off + 2], self.data[off + 3])
-    }
-
-    /// Write one pixel.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `x >= width` or `y >= height`.
-    pub fn set_pixel(&mut self, x: u32, y: u32, r: u8, g: u8, b: u8, a: u8) {
-        let off = self.offset(x, y);
-        self.data[off] = r;
-        self.data[off + 1] = g;
-        self.data[off + 2] = b;
-        self.data[off + 3] = a;
-    }
-
-    /// Total number of pixels (`width × height`).
-    pub fn pixel_count(&self) -> usize {
-        (self.width as usize) * (self.height as usize)
-    }
-
-    /// Number of bytes in `data` (`width × height × 4`).
-    pub fn byte_count(&self) -> usize {
-        self.data.len()
-    }
-
-    /// Byte offset for pixel `(x, y)` using row-major packing.
-    ///
-    /// Formula: `(y * width + x) * 4`
-    fn offset(&self, x: u32, y: u32) -> usize {
-        assert!(x < self.width, "x={} out of bounds (width={})", x, self.width);
-        assert!(y < self.height, "y={} out of bounds (height={})", y, self.height);
-        ((y as usize) * (self.width as usize) + (x as usize)) * BYTES_PER_PIXEL
-    }
-}
-
-// ============================================================================
-// ImageCodec — encode/decode interface for image formats
-// ============================================================================
-
-/// Trait for image format encoders and decoders (PNG, JPEG, WebP, AVIF…).
-///
-/// Each codec is a separate crate (`paint-codec-png`, `paint-codec-webp`, …).
-/// No codec is bundled into the VM or the IR — this keeps the dependency graph
-/// acyclic and lets producers choose the codec at the call site.
-///
-/// ## Canonical pipeline
-///
-/// ```text
-/// let pixels = paint_metal::render(&scene);          // VM → PixelContainer
-/// let bytes  = PngCodec.encode(&pixels);             // PixelContainer → Vec<u8>
-/// std::fs::write("output.png", bytes).unwrap();
-/// ```
-///
-/// ## Decode path
-///
-/// Useful when loading a `PaintImage` source asset into a backend texture
-/// without going through a URI:
-///
-/// ```text
-/// let bytes  = std::fs::read("photo.png").unwrap();
-/// let pixels = PngCodec.decode(&bytes);              // Vec<u8> → PixelContainer
-/// let scene  = PaintScene { instructions: vec![
-///     PaintInstruction::Image(PaintImage { src: ImageSrc::Pixels(pixels), ... }),
-/// ], ... };
-/// ```
-pub trait ImageCodec {
-    /// MIME type for this codec, e.g. `"image/png"`, `"image/webp"`.
-    fn mime_type(&self) -> &str;
-
-    /// Encode a pixel container to the target image format.
-    ///
-    /// Returns the complete encoded file as a byte vector.  For PNG,
-    /// this includes the magic header, all chunks, and IEND.
-    fn encode(&self, pixels: &PixelContainer) -> Vec<u8>;
-
-    /// Decode image bytes back to a pixel container.
-    ///
-    /// Returns `Err` if the bytes are not valid for this format or if
-    /// the pixel format is not supported (e.g. a palette PNG).
-    fn decode(&self, bytes: &[u8]) -> Result<PixelContainer, String>;
-}
+pub use pixel_container::{ImageCodec, PixelContainer};
 
 // ============================================================================
 // PathCommand — pen-plotter commands inside a PaintPath
@@ -893,8 +727,9 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "expected 16 bytes")]
+    #[should_panic]
     fn pixel_container_from_data_wrong_size_panics() {
+        // pixel-container panics when data.len() != width*height*4.
         PixelContainer::from_data(2, 2, vec![0u8; 10]);
     }
 
@@ -926,15 +761,14 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "x=3 out of bounds")]
-    fn pixel_container_x_out_of_bounds_panics() {
-        PixelContainer::new(3, 3).pixel_at(3, 0);
+    fn pixel_container_x_out_of_bounds_returns_zero() {
+        // pixel-container returns (0,0,0,0) for OOB coordinates rather than panicking.
+        assert_eq!(PixelContainer::new(3, 3).pixel_at(3, 0), (0, 0, 0, 0));
     }
 
     #[test]
-    #[should_panic(expected = "y=3 out of bounds")]
-    fn pixel_container_y_out_of_bounds_panics() {
-        PixelContainer::new(3, 3).pixel_at(0, 3);
+    fn pixel_container_y_out_of_bounds_returns_zero() {
+        assert_eq!(PixelContainer::new(3, 3).pixel_at(0, 3), (0, 0, 0, 0));
     }
 
     // ─── PaintRect tests ─────────────────────────────────────────────────────
