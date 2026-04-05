@@ -50,6 +50,7 @@ jobs:
       needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
+      needs_java: ${{ steps.toolchains.outputs.needs_java }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -116,7 +117,8 @@ jobs:
               'needs_rust=true' \
               'needs_elixir=true' \
               'needs_lua=true' \
-              'needs_perl=true' >> "$GITHUB_OUTPUT"
+              'needs_perl=true' \
+              'needs_java=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -126,7 +128,8 @@ jobs:
               'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
-              'needs_perl=${{ steps.detect.outputs.needs_perl }}' >> "$GITHUB_OUTPUT"
+              'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
+              'needs_java=${{ steps.detect.outputs.needs_java }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -325,6 +328,22 @@ jobs:
         with:
           name: build-plan
         continue-on-error: true
+
+      # ── Java (JDK 21 + Gradle) ───────────────────────────────
+      #
+      # Java packages use Gradle as their build system.
+      # JDK 21 is required because the source code uses Java 21 features
+      # (sealed interfaces, records, pattern matching in switch).
+      - name: Set up JDK 21
+        if: needs.detect.outputs.needs_java == 'true'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        if: needs.detect.outputs.needs_java == 'true'
+        uses: gradle/actions/setup-gradle@v4
 
       # ── Build the build tool ──────────────────────────────────
       - name: Compile build tool
