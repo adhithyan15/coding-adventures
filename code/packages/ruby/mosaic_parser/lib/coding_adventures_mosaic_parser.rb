@@ -1,19 +1,27 @@
 # frozen_string_literal: true
 
+# ================================================================
+# coding_adventures_mosaic_parser -- Top-Level Require File
+# ================================================================
+#
+# Entry point for the gem. Loads version and parser modules.
+#
+# Usage:
+#   require "coding_adventures_mosaic_parser"
+#   ast = CodingAdventures::MosaicParser.parse(source)
+# ================================================================
+
 # IMPORTANT: Require dependencies FIRST, before own modules.
-# Ruby loads files in require order. If our modules reference
-# constants from dependencies, those gems must be loaded first.
-require "coding_adventures_mosaic_lexer"
 require "coding_adventures_grammar_tools"
 require "coding_adventures_lexer"
-require "coding_adventures_directed_graph"
 require "coding_adventures_parser"
-require "coding_adventures_state_machine"
+require "coding_adventures_mosaic_lexer"
 
 require_relative "coding_adventures/mosaic_parser/version"
+require_relative "coding_adventures/mosaic_parser/parser"
 
 module CodingAdventures
-  # Parses Mosaic token stream into an ASTNode tree
+  # Parses Mosaic source text into an ASTNode tree
   module MosaicParser
   end
 end

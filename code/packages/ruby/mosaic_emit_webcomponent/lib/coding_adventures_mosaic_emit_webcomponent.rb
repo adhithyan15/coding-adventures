@@ -14,6 +14,7 @@ require "coding_adventures_parser"
 require "coding_adventures_state_machine"
 
 require_relative "coding_adventures/mosaic_emit_webcomponent/version"
+require_relative "coding_adventures/mosaic_emit_webcomponent/webcomponent_renderer"
 
 module CodingAdventures
   # Web Components backend: emits Custom Element classes from MosaicIR

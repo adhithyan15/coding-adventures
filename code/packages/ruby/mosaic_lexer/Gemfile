@@ -5,9 +5,7 @@ gemspec
 
 # All transitive path dependencies must be listed here.
 # Bundler needs to know where to find each gem locally.
-gem "coding_adventures_/directed_graph", path: "..//directed_graph"
-gem "coding_adventures_/grammar_tools", path: "..//grammar_tools"
-gem "coding_adventures_/state_machine", path: "..//state_machine"
-gem "coding_adventures_directed_graph", path: "../directed_graph"
 gem "coding_adventures_grammar_tools", path: "../grammar_tools"
 gem "coding_adventures_lexer", path: "../lexer"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"

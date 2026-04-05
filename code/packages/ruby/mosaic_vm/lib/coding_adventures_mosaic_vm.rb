@@ -1,18 +1,25 @@
 # frozen_string_literal: true
 
-# IMPORTANT: Require dependencies FIRST, before own modules.
-# Ruby loads files in require order. If our modules reference
-# constants from dependencies, those gems must be loaded first.
-require "coding_adventures_mosaic_analyzer"
-require "coding_adventures_mosaic_parser"
-require "coding_adventures_mosaic_lexer"
+# ================================================================
+# coding_adventures_mosaic_vm -- Top-Level Require File
+# ================================================================
+#
+# Usage:
+#   require "coding_adventures_mosaic_vm"
+#   vm = CodingAdventures::MosaicVm::MosaicVM.new(ir)
+#   result = vm.run(renderer)
+# ================================================================
+
+# IMPORTANT: Require dependencies FIRST.
 require "coding_adventures_grammar_tools"
 require "coding_adventures_lexer"
-require "coding_adventures_directed_graph"
 require "coding_adventures_parser"
-require "coding_adventures_state_machine"
+require "coding_adventures_mosaic_lexer"
+require "coding_adventures_mosaic_parser"
+require "coding_adventures_mosaic_analyzer"
 
 require_relative "coding_adventures/mosaic_vm/version"
+require_relative "coding_adventures/mosaic_vm/vm"
 
 module CodingAdventures
   # Generic tree walker that drives Mosaic compiler backends
