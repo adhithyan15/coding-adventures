@@ -1160,19 +1160,28 @@ func executeBranch(gvm *vm.GenericVM, wctx *WasmExecutionContext, labelIndex int
 }
 
 // callFunction calls a WASM function (host or module-defined).
+//
+// For module functions, it saves the caller's entire execution state
+// (TypedStack, PC, Halted, TypedLocals, LabelStack, ControlFlowMap),
+// executes the callee in a fresh context using the SAME GenericVM,
+// collects the callee's results, restores the caller's state, pushes
+// results back onto the caller's stack, and advances the caller's PC.
+//
+// This is correct recursive execution.  The previous approach of
+// JumpTo(0) was broken: it reset the PC but left the CALLER's code
+// object in place, causing the call instruction to re-execute forever.
 func callFunction(gvm *vm.GenericVM, wctx *WasmExecutionContext, funcIndex int) {
 	funcType := wctx.FuncTypes[funcIndex]
 
-	// Pop arguments in reverse.
+	// Pop arguments in reverse (last argument is on top of stack).
 	args := make([]WasmValue, len(funcType.Params))
 	for j := len(funcType.Params) - 1; j >= 0; j-- {
 		args[j] = gvm.PopTyped()
 	}
 
-	// Host function?
-	hostFunc := wctx.HostFunctions[funcIndex]
-	if hostFunc != nil {
-		results := hostFunc.Call(args)
+	// Host function — call directly and continue.
+	if funcIndex < len(wctx.HostFunctions) && wctx.HostFunctions[funcIndex] != nil {
+		results := wctx.HostFunctions[funcIndex].Call(args)
 		for _, r := range results {
 			gvm.PushTyped(r)
 		}
@@ -1180,22 +1189,29 @@ func callFunction(gvm *vm.GenericVM, wctx *WasmExecutionContext, funcIndex int) 
 		return
 	}
 
-	// Module-defined function — save caller state and set up callee.
+	// Module-defined function.
 	body := wctx.FuncBodies[funcIndex]
 	if body == nil {
 		panic(NewTrapError("no body for function"))
 	}
 
-	wctx.SavedFrames = append(wctx.SavedFrames, SavedFrame{
-		Locals:         append([]WasmValue{}, wctx.TypedLocals...),
-		LabelStack:     append([]Label{}, wctx.LabelStack...),
-		StackHeight:    len(gvm.TypedStack),
-		ControlFlowMap: wctx.ControlFlowMap,
-		ReturnPC:       gvm.PC + 1,
-		ReturnArity:    len(funcType.Results),
-	})
+	// Guard against runaway recursion.
+	wctx.CallDepth++
+	if wctx.CallDepth > MaxCallDepth {
+		wctx.CallDepth--
+		panic(NewTrapError("call stack exhausted"))
+	}
 
-	// Initialize callee locals.
+	// ── Save caller state ───────────────────────────────────────────────
+	savedLocals := append([]WasmValue{}, wctx.TypedLocals...)
+	savedLabels := append([]Label{}, wctx.LabelStack...)
+	savedCFM := wctx.ControlFlowMap
+	savedReturned := wctx.Returned
+	savedStack := append([]WasmValue{}, gvm.TypedStack...)
+	savedPC := gvm.PC
+	savedHalted := gvm.Halted
+
+	// ── Set up callee ────────────────────────────────────────────────────
 	locals := make([]WasmValue, 0, len(args)+len(body.Locals))
 	locals = append(locals, args...)
 	for _, lt := range body.Locals {
@@ -1203,18 +1219,43 @@ func callFunction(gvm *vm.GenericVM, wctx *WasmExecutionContext, funcIndex int) 
 	}
 	wctx.TypedLocals = locals
 	wctx.LabelStack = nil
+	wctx.Returned = false
 
-	// Decode callee function and build control flow map.
 	decoded := DecodeFunctionBody(body)
 	wctx.ControlFlowMap = BuildControlFlowMap(decoded)
+	calleeCode := vm.CodeObject{Instructions: ToVMInstructions(decoded)}
 
-	// Replace the code instructions in the GenericVM.
-	// We need to update the code object — but since we can't modify it directly,
-	// we use the jumpTo approach: decode and set new instructions in the context.
-	// The engine will handle switching code objects.
-	wctx.Returned = false
+	// Fresh VM state for callee execution.
+	gvm.TypedStack = nil
+	gvm.PC = 0
 	gvm.Halted = false
-	gvm.JumpTo(0)
+
+	// ── Execute callee ───────────────────────────────────────────────────
+	gvm.ExecuteWithContext(calleeCode, wctx)
+
+	// ── Collect callee results ───────────────────────────────────────────
+	results := make([]WasmValue, len(funcType.Results))
+	for i := len(results) - 1; i >= 0; i-- {
+		if len(gvm.TypedStack) > 0 {
+			results[i] = gvm.PopTyped()
+		}
+	}
+
+	// ── Restore caller state ─────────────────────────────────────────────
+	wctx.CallDepth--
+	wctx.TypedLocals = savedLocals
+	wctx.LabelStack = savedLabels
+	wctx.ControlFlowMap = savedCFM
+	wctx.Returned = savedReturned
+	gvm.TypedStack = savedStack
+	gvm.PC = savedPC
+	gvm.Halted = savedHalted
+
+	// ── Push results to caller's stack and continue ──────────────────────
+	for _, r := range results {
+		gvm.PushTyped(r)
+	}
+	gvm.AdvancePC()
 }
 
 // ════════════════════════════════════════════════════════════════════════

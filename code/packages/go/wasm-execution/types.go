@@ -32,20 +32,6 @@ type ControlTarget struct {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// SAVED FRAME
-// ════════════════════════════════════════════════════════════════════════
-
-// SavedFrame is a snapshot of the caller's state before a function call.
-type SavedFrame struct {
-	Locals         []WasmValue
-	LabelStack     []Label
-	StackHeight    int
-	ControlFlowMap map[int]ControlTarget
-	ReturnPC       int
-	ReturnArity    int
-}
-
-// ════════════════════════════════════════════════════════════════════════
 // EXECUTION CONTEXT
 // ════════════════════════════════════════════════════════════════════════
 
@@ -65,7 +51,7 @@ type WasmExecutionContext struct {
 	TypedLocals    []WasmValue
 	LabelStack     []Label
 	ControlFlowMap map[int]ControlTarget
-	SavedFrames    []SavedFrame
+	CallDepth      int // tracks recursive call depth for stack overflow detection
 	Returned       bool
 	ReturnValues   []WasmValue
 }

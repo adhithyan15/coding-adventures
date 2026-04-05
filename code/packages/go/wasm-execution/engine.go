@@ -145,7 +145,7 @@ func (e *WasmExecutionEngine) CallFunction(funcIndex int, args []WasmValue) (res
 		TypedLocals:    typedLocals,
 		LabelStack:     nil,
 		ControlFlowMap: controlFlowMap,
-		SavedFrames:    nil,
+		CallDepth:      0,
 		Returned:       false,
 		ReturnValues:   nil,
 	}
