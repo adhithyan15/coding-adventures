@@ -16,15 +16,21 @@
  *
  * This parser accepts the same version strings as `@coding-adventures/typescript-lexer`:
  *
- * | Version string  | Grammar files                                      |
+ * | Version string  | Lexer tokens file                                  |
  * |-----------------|----------------------------------------------------|
- * | `"ts1.0"`       | `grammars/typescript/ts1.0.{tokens,grammar}`       |
- * | `"ts2.0"`       | `grammars/typescript/ts2.0.{tokens,grammar}`       |
- * | `"ts3.0"`       | `grammars/typescript/ts3.0.{tokens,grammar}`       |
- * | `"ts4.0"`       | `grammars/typescript/ts4.0.{tokens,grammar}`       |
- * | `"ts5.0"`       | `grammars/typescript/ts5.0.{tokens,grammar}`       |
- * | `"ts5.8"`       | `grammars/typescript/ts5.8.{tokens,grammar}`       |
- * | `undefined`/`""`| `grammars/typescript.{tokens,grammar}` (generic)   |
+ * | `"ts1.0"`       | `src/tokens/typescript/ts1.0.tokens`               |
+ * | `"ts2.0"`       | `src/tokens/typescript/ts2.0.tokens`               |
+ * | `"ts3.0"`       | `src/tokens/typescript/ts3.0.tokens`               |
+ * | `"ts4.0"`       | `src/tokens/typescript/ts4.0.tokens`               |
+ * | `"ts5.0"`       | `src/tokens/typescript/ts5.0.tokens`               |
+ * | `"ts5.8"`       | `src/tokens/typescript/ts5.8.tokens`               |
+ * | `undefined`/`""`| `src/tokens/typescript.tokens` (generic)           |
+ *
+ * The parser grammar is always the generic `typescript.grammar`, which uses
+ * simple rules (`var_declaration`, `expression`, etc.) regardless of TypeScript
+ * version. The version parameter only selects the lexer's token set — different
+ * TypeScript versions have different keyword sets, but the parser AST shape
+ * remains stable across versions.
  *
  * When no version is supplied the generic grammar is used, which is backwards-
  * compatible with v0.1.x.
@@ -33,7 +39,6 @@
  * -------------------------
  *
  * The `typescript.grammar` file lives in `code/grammars/` at the repository root.
- * Versioned grammars live in `code/grammars/typescript/`.
  *
  *     src/ -> typescript-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
  */
@@ -56,58 +61,35 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
 
 /**
- * Valid TypeScript version strings — mirrors the set accepted by the lexer.
- */
-const VALID_TS_VERSIONS = new Set([
-  "ts1.0",
-  "ts2.0",
-  "ts3.0",
-  "ts4.0",
-  "ts5.0",
-  "ts5.8",
-]);
-
-/**
- * Resolve the path to the TypeScript parser grammar for the given version.
+ * The generic TypeScript parser grammar path.
  *
- * @param version - Optional TypeScript version string.
- * @returns Absolute path to the `.grammar` file.
+ * The parser always uses this single grammar file. Version strings only
+ * affect which *lexer* token set is loaded (via `tokenizeTypescript`), keeping
+ * the AST shape consistent across TypeScript versions.
  */
-function resolveGrammarPath(version?: string): string {
-  if (!version) {
-    return join(GRAMMARS_DIR, "typescript.grammar");
-  }
-
-  if (!VALID_TS_VERSIONS.has(version)) {
-    throw new Error(
-      `Unknown TypeScript version "${version}". ` +
-        `Valid values: ${[...VALID_TS_VERSIONS].join(", ")}`
-    );
-  }
-
-  return join(GRAMMARS_DIR, "typescript", `${version}.grammar`);
-}
+const TS_GRAMMAR_PATH = join(GRAMMARS_DIR, "typescript.grammar");
 
 /**
  * Parse TypeScript source code and return an AST.
  *
  * @param source  - The TypeScript source code to parse.
  * @param version - Optional TypeScript version (e.g. `"ts5.8"`). When omitted
- *   (or the empty string) the generic grammars are used — backwards-compatible
- *   with v0.1.x.
+ *   (or the empty string) the generic token set is used — backwards-compatible
+ *   with v0.1.x. The version affects which *lexer* grammar is loaded; the parser
+ *   grammar is always the generic `typescript.grammar`.
  * @returns An ASTNode representing the parse tree, with `ruleName` of `"program"`.
  *
  * @example
  *     // Generic (backwards-compatible)
  *     const ast = parseTypescript("let x = 1 + 2;");
  *
- *     // Version-specific
+ *     // Version-specific lexer, generic parser rules
  *     const ast = parseTypescript("let x: number = 1;", "ts5.8");
  *     console.log(ast.ruleName); // "program"
  */
 export function parseTypescript(source: string, version?: string): ASTNode {
   const tokens = tokenizeTypescript(source, version);
-  const grammarText = readFileSync(resolveGrammarPath(version), "utf-8");
+  const grammarText = readFileSync(TS_GRAMMAR_PATH, "utf-8");
   const grammar = parseParserGrammar(grammarText);
   const parser = new GrammarParser(tokens, grammar);
   return parser.parse();

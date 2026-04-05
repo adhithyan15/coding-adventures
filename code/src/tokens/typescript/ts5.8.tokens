@@ -1,0 +1,138 @@
+# Token definitions for TypeScript 5.8 (February 2025)
+# TypeScript 5.8 added:
+# - `erasableSyntaxOnly` compiler option (warn/error on type-only erasable syntax)
+# - `require()` of ES modules support (Node.js 22+ feature)
+# - Narrowing improvements for `return` type predicates
+# - Granular checks for conditional return types
+# - `--module node20` for Node.js 20 compatibility
+# - `using` keyword (Explicit Resource Management, from 5.2) fully supported
+#
+# The keyword set is the same as TypeScript 5.0 — TypeScript 5.x releases
+# focus on compiler improvements and new type-level features rather than
+# introducing new syntactic keywords. The `using` and `await using` keywords
+# were added in 5.2 and are included here.
+#
+# Sources: TypeScript 5.8 release notes (devblogs.microsoft.com/typescript)
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators — multi-character first (longer matches win)
+# ============================================================================
+
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# ============================================================================
+# Keywords — TypeScript 5.8
+# Most current TypeScript keyword set as of February 2025.
+# Includes `using` and `await using` keywords (added in TypeScript 5.2).
+# ============================================================================
+
+keywords:
+  # JavaScript / ES2022+ keywords
+  var
+  let
+  const
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  in
+  delete
+  void
+  throw
+  try
+  catch
+  finally
+  break
+  continue
+  switch
+  case
+  default
+  with
+  debugger
+  await
+  # ES6+ class and module syntax
+  class
+  extends
+  super
+  export
+  import
+  from
+  as
+  implements
+  interface
+  public
+  private
+  protected
+  static
+  # TypeScript-specific keywords
+  type
+  enum
+  module
+  readonly
+  abstract
+  declare
+  namespace
+  keyof
+  infer
+  # Primitive and special types
+  any
+  void
+  string
+  number
+  boolean
+  object
+  symbol
+  bigint
+  never
+  unknown
+  # NEW in TypeScript 5.2: Explicit Resource Management
+  using
