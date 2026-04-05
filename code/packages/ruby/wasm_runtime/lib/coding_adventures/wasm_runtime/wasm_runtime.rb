@@ -47,19 +47,19 @@ module CodingAdventures
         # Resolve imports.
         wasm_module.imports.each do |imp|
           case imp.kind
-          when WasmTypes::EXTERNAL_KIND[:function]
+          when :function, WasmTypes::EXTERNAL_KIND[:function]
             type_idx = imp.type_info
             func_types << wasm_module.types[type_idx]
             func_bodies << nil
             host_func = @host&.resolve_function(imp.module_name, imp.name)
             host_functions << host_func
-          when WasmTypes::EXTERNAL_KIND[:memory]
+          when :memory, WasmTypes::EXTERNAL_KIND[:memory]
             imported_mem = @host&.resolve_memory(imp.module_name, imp.name)
             memory = imported_mem if imported_mem
-          when WasmTypes::EXTERNAL_KIND[:table]
+          when :table, WasmTypes::EXTERNAL_KIND[:table]
             imported_table = @host&.resolve_table(imp.module_name, imp.name)
             tables << imported_table if imported_table
-          when WasmTypes::EXTERNAL_KIND[:global]
+          when :global, WasmTypes::EXTERNAL_KIND[:global]
             imported_global = @host&.resolve_global(imp.module_name, imp.name)
             if imported_global
               global_types << imported_global[:type]
@@ -165,7 +165,7 @@ module CodingAdventures
       def call(instance, name, args = [])
         exp = instance.exports[name]
         raise WasmExecution::TrapError, "export \"#{name}\" not found" unless exp
-        unless exp[:kind] == WasmTypes::EXTERNAL_KIND[:function]
+        unless exp[:kind] == :function || exp[:kind] == WasmTypes::EXTERNAL_KIND[:function]
           raise WasmExecution::TrapError, "export \"#{name}\" is not a function"
         end
 

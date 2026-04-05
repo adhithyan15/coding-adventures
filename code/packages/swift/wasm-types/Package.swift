@@ -17,15 +17,9 @@ let package = Package(
     products: [
         .library(name: "WasmTypes", targets: ["WasmTypes"]),
     ],
-    dependencies: [
-        .package(path: "../wasm-leb128"),
-    ],
     targets: [
         .target(
-            name: "WasmTypes",
-            dependencies: [
-                .product(name: "WasmLeb128", package: "wasm-leb128"),
-            ]
+            name: "WasmTypes"
         ),
         .testTarget(
             name: "WasmTypesTests",

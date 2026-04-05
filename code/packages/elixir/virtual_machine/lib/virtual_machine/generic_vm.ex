@@ -108,6 +108,8 @@ defmodule CodingAdventures.VirtualMachine.GenericVM do
   - `max_recursion_depth` — optional limit on call stack depth
   - `frozen` — if true, the VM is in a read-only state
   - `extra` — open map for language-specific extensions
+  - `typed_stack` — a separate stack for typed values (used by WASM)
+  - `context_handlers` — opcode handlers that receive an extra context argument
   """
   defstruct stack: [],
             variables: %{},
@@ -117,12 +119,16 @@ defmodule CodingAdventures.VirtualMachine.GenericVM do
             output: [],
             call_stack: [],
             handlers: %{},
+            context_handlers: %{},
             builtins: %{},
             max_recursion_depth: nil,
             frozen: false,
-            extra: %{}
+            extra: %{},
+            typed_stack: []
 
   @type handler :: (t(), Instruction.t(), CodeObject.t() -> {String.t() | nil, t()})
+
+  @type context_handler :: (t(), Instruction.t(), CodeObject.t(), any() -> {String.t() | nil, t()})
 
   @type t :: %__MODULE__{
           stack: [any()],
@@ -133,10 +139,12 @@ defmodule CodingAdventures.VirtualMachine.GenericVM do
           output: [String.t()],
           call_stack: [CallFrame.t()],
           handlers: %{integer() => handler()},
+          context_handlers: %{integer() => context_handler()},
           builtins: %{String.t() => BuiltinFunction.t()},
           max_recursion_depth: non_neg_integer() | nil,
           frozen: boolean(),
-          extra: map()
+          extra: map(),
+          typed_stack: [map()]
         }
 
   # ===========================================================================
@@ -570,6 +578,189 @@ defmodule CodingAdventures.VirtualMachine.GenericVM do
   end
 
   # ===========================================================================
+  # Context-Aware Opcode Registration
+  # ===========================================================================
+
+  @doc """
+  Register a context-aware handler for a specific opcode.
+
+  Context-aware handlers receive a fourth argument: a context value that
+  carries domain-specific state (e.g., WASM execution context with memory,
+  tables, globals). This allows the GenericVM to remain generic while
+  supporting rich domain-specific execution models.
+
+  The handler signature is:
+      fn(vm, instruction, code, context) -> {output_or_nil, vm}
+
+  ## Example
+
+      vm = GenericVM.register_context_opcode(vm, 0x41, fn vm, instr, _code, _ctx ->
+        vm = GenericVM.push_typed(vm, %{type: 0x7F, value: instr.operand})
+        vm = GenericVM.advance_pc(vm)
+        {nil, vm}
+      end)
+  """
+  @spec register_context_opcode(t(), integer(), context_handler()) :: t()
+  def register_context_opcode(%__MODULE__{} = vm, opcode, handler)
+      when is_integer(opcode) and is_function(handler, 4) do
+    %{vm | context_handlers: Map.put(vm.context_handlers, opcode, handler)}
+  end
+
+  # ===========================================================================
+  # Typed Stack Operations
+  # ===========================================================================
+
+  @doc """
+  Push a typed value onto the typed stack.
+
+  The typed stack is a separate stack from the regular operand stack. It is
+  used by WASM and other typed execution environments where each stack value
+  carries a type tag alongside its payload.
+
+  A typed value is any map with at least `:type` and `:value` keys.
+
+  ## Example
+
+      vm = GenericVM.push_typed(vm, %{type: 0x7F, value: 42})
+  """
+  @spec push_typed(t(), map()) :: t()
+  def push_typed(%__MODULE__{} = vm, %{type: _, value: _} = typed_value) do
+    %{vm | typed_stack: [typed_value | vm.typed_stack]}
+  end
+
+  @doc """
+  Pop the top typed value from the typed stack.
+
+  Returns `{typed_value, updated_vm}`.
+
+  Raises `StackUnderflowError` if the typed stack is empty.
+
+  ## Example
+
+      {value, vm} = GenericVM.pop_typed(vm)
+      value.type   #=> 0x7F
+      value.value  #=> 42
+  """
+  @spec pop_typed(t()) :: {map(), t()}
+  def pop_typed(%__MODULE__{typed_stack: []}) do
+    raise Errors.StackUnderflowError, "Cannot pop from an empty typed stack."
+  end
+
+  def pop_typed(%__MODULE__{typed_stack: [top | rest]} = vm) do
+    {top, %{vm | typed_stack: rest}}
+  end
+
+  @doc """
+  Peek at the top typed value without removing it.
+
+  Raises `StackUnderflowError` if the typed stack is empty.
+
+  ## Example
+
+      value = GenericVM.peek_typed(vm)
+      value.type  #=> 0x7F
+  """
+  @spec peek_typed(t()) :: map()
+  def peek_typed(%__MODULE__{typed_stack: []}) do
+    raise Errors.StackUnderflowError, "Cannot peek at an empty typed stack."
+  end
+
+  def peek_typed(%__MODULE__{typed_stack: [top | _]}) do
+    top
+  end
+
+  # ===========================================================================
+  # Context-Aware Execution
+  # ===========================================================================
+
+  @doc """
+  Execute a program with an additional context value passed to handlers.
+
+  This is the WASM-style execution loop. Instead of using the regular
+  handler registry, it uses context_handlers which receive the context
+  as a fourth argument. The context is mutable state carried through
+  execution (e.g., linear memory, label stack, globals).
+
+  Returns `{traces, final_vm, final_context}`.
+
+  ## Example
+
+      ctx = %{memory: nil, globals: []}
+      {traces, vm, ctx} = GenericVM.execute_with_context(vm, code, ctx)
+  """
+  @spec execute_with_context(t(), CodeObject.t(), any()) :: {[VMTrace.t()], t(), any()}
+  def execute_with_context(%__MODULE__{} = vm, %CodeObject{} = code, context) do
+    do_execute_with_context(vm, code, context, [])
+  end
+
+  defp do_execute_with_context(%__MODULE__{halted: true} = vm, _code, context, traces) do
+    {Enum.reverse(traces), vm, context}
+  end
+
+  defp do_execute_with_context(
+         %__MODULE__{pc: pc} = vm,
+         %CodeObject{instructions: instrs} = _code,
+         context,
+         traces
+       )
+       when pc >= length(instrs) do
+    {Enum.reverse(traces), vm, context}
+  end
+
+  defp do_execute_with_context(%__MODULE__{} = vm, %CodeObject{} = code, context, traces) do
+    {trace, vm, context} = step_with_context(vm, code, context)
+    do_execute_with_context(vm, code, context, [trace | traces])
+  end
+
+  @doc """
+  Execute a single instruction with context and return the trace.
+
+  Looks up the handler in context_handlers first, then falls back to
+  regular handlers. Context handlers receive the context as a fourth
+  argument.
+  """
+  @spec step_with_context(t(), CodeObject.t(), any()) :: {VMTrace.t(), t(), any()}
+  def step_with_context(%__MODULE__{} = vm, %CodeObject{} = code, context) do
+    instruction = Enum.at(code.instructions, vm.pc)
+    pc_before = vm.pc
+    stack_before = Enum.reverse(vm.typed_stack)
+
+    ctx_handler = Map.get(vm.context_handlers, instruction.opcode)
+    reg_handler = Map.get(vm.handlers, instruction.opcode)
+
+    {output_value, vm, context} =
+      cond do
+        ctx_handler != nil ->
+          result = ctx_handler.(vm, instruction, code, context)
+          case result do
+            {output, %__MODULE__{} = new_vm, new_ctx} -> {output, new_vm, new_ctx}
+            {output, %__MODULE__{} = new_vm} -> {output, new_vm, context}
+            _ -> {nil, vm, context}
+          end
+
+        reg_handler != nil ->
+          {output, new_vm} = reg_handler.(vm, instruction, code)
+          {output, new_vm, context}
+
+        true ->
+          raise Errors.InvalidOpcodeError,
+                "Unknown opcode: #{inspect(instruction.opcode)}. No handler registered."
+      end
+
+    trace = %VMTrace{
+      pc: pc_before,
+      instruction: instruction,
+      stack_before: stack_before,
+      stack_after: Enum.reverse(vm.typed_stack),
+      variables: vm.variables,
+      output: output_value,
+      description: describe_step(instruction)
+    }
+
+    {trace, vm, context}
+  end
+
+  # ===========================================================================
   # Reset
   # ===========================================================================
 
@@ -603,7 +794,8 @@ defmodule CodingAdventures.VirtualMachine.GenericVM do
       output: [],
       call_stack: [],
       frozen: false,
-      extra: %{}
+      extra: %{},
+      typed_stack: []
     }
   end
 
