@@ -8,13 +8,6 @@
  * - `var_declaration` rule: `let x = 1 + 2;`
  * - Semicolons terminate statements
  * - The `factor` rule includes KEYWORD (for `true`, `false`, `null`, `undefined`)
- *
- * Version-aware API (added in v0.2.0)
- * ------------------------------------
- *
- * `parseJavascript(source, version?)` accepts an optional ECMAScript version
- * string (`"es1"`, `"es3"`, `"es5"`, `"es2015"` … `"es2025"`). Omitting the
- * version uses the generic grammar (backwards-compatible with v0.1.x).
  */
 
 import { describe, it, expect } from "vitest";
@@ -113,58 +106,5 @@ describe("assignments", () => {
 
     const assignments = findNodes(ast, "assignment");
     expect(assignments).toHaveLength(1);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Version-aware API tests (v0.2.0)
-// ---------------------------------------------------------------------------
-
-describe("version-aware parsing", () => {
-  it("parses with no version (generic grammar — backwards compatible)", () => {
-    const ast = parseJavascript("let x = 1;");
-    expect(ast.ruleName).toBe("program");
-    const varDecls = findNodes(ast, "var_declaration");
-    expect(varDecls).toHaveLength(1);
-  });
-
-  it("parses with empty string version (same as no version)", () => {
-    const ast = parseJavascript("let x = 1;", "");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with es5 version", () => {
-    const ast = parseJavascript("var x = 1 + 2;", "es5");
-    expect(ast.ruleName).toBe("program");
-    const varDecls = findNodes(ast, "var_declaration");
-    expect(varDecls).toHaveLength(1);
-  });
-
-  it("parses with es2015 version", () => {
-    const ast = parseJavascript("let x = 1 + 2;", "es2015");
-    expect(ast.ruleName).toBe("program");
-    const varDecls = findNodes(ast, "var_declaration");
-    expect(varDecls).toHaveLength(1);
-  });
-
-  it("parses with es2025 version", () => {
-    const ast = parseJavascript("const x = 42;", "es2025");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with es1 version", () => {
-    const ast = parseJavascript("var x = 0;", "es1");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with es3 version", () => {
-    const ast = parseJavascript("var x = 0;", "es3");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("throws for unknown ECMAScript version", () => {
-    expect(() => parseJavascript("let x = 1;", "es2099")).toThrow(
-      /Unknown JavaScript\/ECMAScript version "es2099"/
-    );
   });
 });

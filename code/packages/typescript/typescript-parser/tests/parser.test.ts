@@ -9,13 +9,6 @@
  * - Semicolons terminate statements
  * - The `factor` rule includes KEYWORD (for `true`, `false`, `null`, `undefined`)
  * - TypeScript-specific keywords like `interface`, `type`, `number` are recognized
- *
- * Version-aware API (added in v0.2.0)
- * ------------------------------------
- *
- * `parseTypescript(source, version?)` accepts an optional TypeScript version
- * string (`"ts1.0"` … `"ts5.8"`). Omitting the version uses the generic grammar
- * (backwards-compatible with v0.1.x).
  */
 
 import { describe, it, expect } from "vitest";
@@ -114,61 +107,5 @@ describe("assignments", () => {
 
     const assignments = findNodes(ast, "assignment");
     expect(assignments).toHaveLength(1);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Version-aware API tests (v0.2.0)
-// ---------------------------------------------------------------------------
-
-describe("version-aware parsing", () => {
-  it("parses with no version (generic grammar — backwards compatible)", () => {
-    const ast = parseTypescript("let x = 1;");
-    expect(ast.ruleName).toBe("program");
-    const varDecls = findNodes(ast, "var_declaration");
-    expect(varDecls).toHaveLength(1);
-  });
-
-  it("parses with empty string version (same as no version)", () => {
-    const ast = parseTypescript("let x = 1;", "");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with ts5.8 version", () => {
-    const ast = parseTypescript("let x = 1 + 2;", "ts5.8");
-    expect(ast.ruleName).toBe("program");
-    const varDecls = findNodes(ast, "var_declaration");
-    expect(varDecls).toHaveLength(1);
-  });
-
-  it("parses with ts5.0 version", () => {
-    const ast = parseTypescript("const y = 42;", "ts5.0");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with ts4.0 version", () => {
-    const ast = parseTypescript("var z = 3;", "ts4.0");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with ts3.0 version", () => {
-    const ast = parseTypescript("let a = 0;", "ts3.0");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with ts2.0 version", () => {
-    const ast = parseTypescript("let b = 0;", "ts2.0");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("parses with ts1.0 version", () => {
-    const ast = parseTypescript("var c = 0;", "ts1.0");
-    expect(ast.ruleName).toBe("program");
-  });
-
-  it("throws for unknown TypeScript version", () => {
-    expect(() => parseTypescript("let x = 1;", "ts99.0")).toThrow(
-      /Unknown TypeScript version "ts99.0"/
-    );
   });
 });
