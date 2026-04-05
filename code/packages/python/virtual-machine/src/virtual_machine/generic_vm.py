@@ -106,6 +106,59 @@ from virtual_machine.vm import (
 
 
 # =========================================================================
+# TypedVMValue — A value tagged with its type
+# =========================================================================
+#
+# In a type-safe execution environment like WebAssembly, every value on the
+# stack carries a *type tag* alongside its payload. This is different from
+# the untyped GenericVM stack where values can be anything.
+#
+# The ``type`` field is an integer that corresponds to WASM's ValueType:
+#   0x7F = i32, 0x7E = i64, 0x7D = f32, 0x7C = f64
+#
+# The ``value`` field holds the actual data (Python int, float, etc.).
+#
+# This dataclass is NOT frozen because the execution engine sometimes
+# needs to update values in-place (e.g., in the locals array). It uses
+# structural equality by default.
+#
+#   ┌──────────────────────────────────────────────┐
+#   │  TypedVMValue                                 │
+#   │  ┌──────────┐  ┌──────────────────────────┐  │
+#   │  │ type: int │  │ value: Any               │  │
+#   │  │ (0x7F)   │  │ (42)                     │  │
+#   │  └──────────┘  └──────────────────────────┘  │
+#   └──────────────────────────────────────────────┘
+# =========================================================================
+
+
+@dataclass
+class TypedVMValue:
+    """A value tagged with its type — the fundamental unit on the typed stack.
+
+    In WebAssembly, every value has an explicit type tag. This contrasts with
+    the untyped ``stack`` on GenericVM where any Python object can be pushed.
+    The typed stack ensures type safety at runtime.
+
+    Attributes:
+        type: An integer type tag (e.g., 0x7F for i32 in WASM).
+        value: The raw payload (int, float, or any compatible type).
+
+    Example::
+
+        val = TypedVMValue(type=0x7F, value=42)
+        assert val.type == 0x7F
+        assert val.value == 42
+    """
+
+    type: int
+    """Integer type tag (matches WASM ValueType encoding)."""
+
+    value: Any
+    """The raw value payload."""
+
+
+# =========================================================================
 # OpcodeHandler Protocol
 # =========================================================================
 
@@ -314,6 +367,51 @@ class GenericVM:
         Used by Starlark to prevent mutation after module evaluation.
         """
 
+        # -- Typed stack (for WASM-style typed execution) ---------------------
+        self.typed_stack: list[TypedVMValue] = []
+        """A secondary stack that carries type-tagged values.
+
+        WebAssembly requires every value to have an explicit type (i32, i64,
+        f32, f64). Instead of modifying the existing untyped ``stack`` (which
+        other plugins use), we add a parallel typed stack. WASM instruction
+        handlers use ``push_typed`` / ``pop_typed`` / ``peek_typed`` to work
+        with typed values while leaving the untyped stack alone.
+        """
+
+        # -- Execution context (for WASM-specific state) ----------------------
+        self.execution_context: Any | None = None
+        """An opaque context object passed to context-aware opcode handlers.
+
+        When executing WASM code, this holds the WasmExecutionContext (memory,
+        tables, globals, locals, label stack, etc.). Regular opcode handlers
+        don't use this — only handlers registered via ``register_context_opcode``
+        receive it as a fourth argument.
+        """
+
+        self._context_handlers: dict[int, Any] = {}
+        """Opcode → context-aware handler mapping.
+
+        Like ``_handlers`` but these receive a fourth argument (the execution
+        context). During context execution, these take priority over regular
+        handlers.
+        """
+
+        self._pre_instruction_hook: Any | None = None
+        """Optional callback invoked before each instruction during step().
+
+        Signature: (vm, instruction, code) -> Instruction | None
+        If it returns an Instruction, that instruction replaces the current one.
+        Used by the WASM decoder to transform variable-length bytecodes into
+        fixed-format instructions.
+        """
+
+        self._post_instruction_hook: Any | None = None
+        """Optional callback invoked after each instruction during step().
+
+        Signature: (vm, instruction, code, context) -> None
+        Used for instrumentation, logging, or detecting frame changes.
+        """
+
     # =====================================================================
     # Plugin Registration
     # =====================================================================
@@ -373,6 +471,52 @@ class GenericVM:
     def get_builtin(self, name: str) -> BuiltinFunction | None:
         """Look up a built-in function by name. Returns None if not found."""
         return self._builtins.get(name)
+
+    def register_context_opcode(self, opcode: int, handler: Any) -> None:
+        """Register a context-aware handler for an opcode.
+
+        Context-aware handlers receive four arguments instead of three:
+        ``(vm, instruction, code, context)``. The fourth argument is whatever
+        ``execution_context`` was set when ``execute_with_context`` was called.
+
+        During context execution, these handlers take priority over regular
+        handlers registered via ``register_opcode()``.
+
+        Parameters
+        ----------
+        opcode : int
+            The opcode number.
+        handler : callable
+            A callable ``(vm, instr, code, ctx) -> str | None``.
+
+        Example::
+
+            def handle_local_get(vm, instr, code, ctx):
+                index = instr.operand
+                vm.push_typed(ctx.typed_locals[index])
+                vm.advance_pc()
+
+            vm.register_context_opcode(0x20, handle_local_get)
+        """
+        self._context_handlers[opcode] = handler
+
+    def set_pre_instruction_hook(self, hook: Any) -> None:
+        """Set a callback invoked before each instruction dispatch.
+
+        The hook receives ``(vm, instruction, code)`` and may return a
+        modified Instruction to replace the current one (or None to keep it).
+        This is used by the WASM decoder to transform variable-length
+        bytecodes on the fly.
+        """
+        self._pre_instruction_hook = hook
+
+    def set_post_instruction_hook(self, hook: Any) -> None:
+        """Set a callback invoked after each instruction dispatch.
+
+        The hook receives ``(vm, instruction, code)`` and returns nothing.
+        Used for instrumentation or detecting frame changes.
+        """
+        self._post_instruction_hook = hook
 
     # =====================================================================
     # Configuration
@@ -479,6 +623,52 @@ class GenericVM:
         return self.stack[-1]
 
     # =====================================================================
+    # Typed Stack Operations — for type-safe execution (WASM)
+    # =====================================================================
+
+    def push_typed(self, value: TypedVMValue) -> None:
+        """Push a typed value onto the typed stack.
+
+        Used by WASM instruction handlers for type-safe stack operations.
+        The typed stack is separate from the untyped ``stack`` so that
+        existing plugins (Starlark, etc.) are unaffected.
+
+        Parameters
+        ----------
+        value : TypedVMValue
+            A value with a type tag and payload.
+        """
+        self.typed_stack.append(value)
+
+    def pop_typed(self) -> TypedVMValue:
+        """Pop and return the top typed value.
+
+        Raises
+        ------
+        StackUnderflowError
+            If the typed stack is empty.
+        """
+        if len(self.typed_stack) == 0:
+            raise StackUnderflowError(
+                "Cannot pop from an empty typed stack."
+            )
+        return self.typed_stack.pop()
+
+    def peek_typed(self) -> TypedVMValue:
+        """Return the top typed value without removing it.
+
+        Raises
+        ------
+        StackUnderflowError
+            If the typed stack is empty.
+        """
+        if len(self.typed_stack) == 0:
+            raise StackUnderflowError(
+                "Cannot peek at an empty typed stack."
+            )
+        return self.typed_stack[-1]
+
+    # =====================================================================
     # Call Stack Operations
     # =====================================================================
 
@@ -579,6 +769,9 @@ class GenericVM:
         """Execute one instruction and return a trace.
 
         This is the single-step entry point for debuggers and visualizers.
+        If a pre-instruction hook is set, it is called before dispatch.
+        If a post-instruction hook is set, it is called after dispatch.
+        During context execution, context handlers take priority.
 
         Parameters
         ----------
@@ -595,16 +788,44 @@ class GenericVM:
         pc_before = self.pc
         stack_before = list(self.stack)
 
-        # -- Decode & Execute --
-        handler = self._handlers.get(instruction.opcode)
-        if handler is None:
-            raise InvalidOpcodeError(
-                f"Unknown opcode: {instruction.opcode:#04x}. "
-                f"No handler registered. Did you forget to register "
-                f"this opcode with vm.register_opcode()?"
-            )
+        # -- Pre-instruction hook (e.g., WASM bytecode decoder) --
+        if self._pre_instruction_hook is not None:
+            replacement = self._pre_instruction_hook(self, instruction, code)
+            if replacement is not None:
+                instruction = replacement
 
-        output_value = handler(self, instruction, code)
+        # -- Decode & Execute --
+        # During context execution, prefer context handlers.
+        handler = None
+        if self.execution_context is not None:
+            ctx_handler = self._context_handlers.get(instruction.opcode)
+            if ctx_handler is not None:
+                output_value = ctx_handler(
+                    self, instruction, code, self.execution_context
+                )
+                handler = ctx_handler  # mark as found
+            else:
+                # Fall back to regular handler.
+                handler = self._handlers.get(instruction.opcode)
+                if handler is None:
+                    raise InvalidOpcodeError(
+                        f"Unknown opcode: {instruction.opcode:#04x}. "
+                        f"No handler registered."
+                    )
+                output_value = handler(self, instruction, code)
+        else:
+            handler = self._handlers.get(instruction.opcode)
+            if handler is None:
+                raise InvalidOpcodeError(
+                    f"Unknown opcode: {instruction.opcode:#04x}. "
+                    f"No handler registered. Did you forget to register "
+                    f"this opcode with vm.register_opcode()?"
+                )
+            output_value = handler(self, instruction, code)
+
+        # -- Post-instruction hook --
+        if self._post_instruction_hook is not None:
+            self._post_instruction_hook(self, instruction, code)
 
         # -- Build trace --
         trace = VMTrace(
@@ -619,12 +840,39 @@ class GenericVM:
 
         return trace
 
+    def execute_with_context(self, code: CodeObject, context: Any) -> list[VMTrace]:
+        """Execute a CodeObject with an execution context.
+
+        This is the WASM-specific entry point. It sets the execution context
+        before running the eval loop, then clears it afterward. Context-aware
+        handlers (registered via ``register_context_opcode``) will receive
+        the context as their fourth argument.
+
+        Parameters
+        ----------
+        code : CodeObject
+            The compiled bytecode to execute.
+        context : Any
+            The execution context (e.g., WasmExecutionContext).
+
+        Returns
+        -------
+        list[VMTrace]
+            A trace entry for every instruction executed.
+        """
+        self.execution_context = context
+        try:
+            return self.execute(code)
+        finally:
+            self.execution_context = None
+
     def reset(self) -> None:
         """Reset the VM to its initial state, preserving registered handlers.
 
         This clears all execution state (stack, variables, PC, etc.) but
-        keeps the registered opcode handlers and built-in functions. Use this
-        between executions when you want to reuse the same VM configuration.
+        keeps the registered opcode handlers, built-in functions, context
+        handlers, and hooks. Use this between executions when you want to
+        reuse the same VM configuration.
         """
         self.stack = []
         self.variables = {}
@@ -634,6 +882,8 @@ class GenericVM:
         self.output = []
         self.call_stack = []
         self._frozen = False
+        self.typed_stack = []
+        self.execution_context = None
 
     # =====================================================================
     # Internals

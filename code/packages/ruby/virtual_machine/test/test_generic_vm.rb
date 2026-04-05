@@ -450,4 +450,174 @@ class TestGenericVM < Minitest::Test
     assert_equal 1, traces.length
     assert_equal [42], vm.stack
   end
+
+  # =====================================================================
+  # Typed Stack Operations
+  # =====================================================================
+
+  def test_push_pop_typed
+    vm = GVM.new
+    tv = CodingAdventures::VirtualMachine::TypedVMValue.new(0x7F, 42)
+    vm.push_typed(tv)
+    result = vm.pop_typed
+    assert_equal 0x7F, result.type
+    assert_equal 42, result.value
+  end
+
+  def test_peek_typed
+    vm = GVM.new
+    tv = CodingAdventures::VirtualMachine::TypedVMValue.new(0x7C, 3.14)
+    vm.push_typed(tv)
+    peeked = vm.peek_typed
+    assert_equal tv, peeked
+    assert_equal 1, vm.typed_stack.length  # peek doesn't remove
+  end
+
+  def test_pop_typed_empty_raises
+    vm = GVM.new
+    assert_raises(CodingAdventures::VirtualMachine::StackUnderflowError) do
+      vm.pop_typed
+    end
+  end
+
+  def test_peek_typed_empty_raises
+    vm = GVM.new
+    assert_raises(CodingAdventures::VirtualMachine::StackUnderflowError) do
+      vm.peek_typed
+    end
+  end
+
+  # =====================================================================
+  # Context-Aware Execution
+  # =====================================================================
+
+  def test_register_context_opcode_and_execute_with_context
+    vm = GVM.new
+    ctx_data = { memory: "fake_memory" }
+
+    # Register a context handler that reads from the context
+    vm.register_context_opcode(0x41, ->(vm, instr, _code, ctx) {
+      tv = CodingAdventures::VirtualMachine::TypedVMValue.new(0x7F, instr.operand)
+      vm.push_typed(tv)
+      vm.advance_pc
+      "i32.const"
+    })
+
+    # Register a halt handler (does not need context)
+    vm.register_opcode(0xFF, ->(vm, _instr, _code) {
+      vm.halted = true
+      "halt"
+    })
+
+    code = make_code([
+      Inst.new(opcode: 0x41, operand: 42),
+      Inst.new(opcode: 0xFF)
+    ])
+
+    vm.execute_with_context(code, ctx_data)
+
+    assert_equal 1, vm.typed_stack.length
+    assert_equal 42, vm.typed_stack[0].value
+    assert_equal 0x7F, vm.typed_stack[0].type
+  end
+
+  def test_context_handlers_not_used_in_regular_execute
+    vm = GVM.new
+
+    vm.register_context_opcode(0x41, ->(vm, instr, _code, ctx) {
+      vm.push_typed(CodingAdventures::VirtualMachine::TypedVMValue.new(0x7F, 999))
+      vm.advance_pc
+    })
+
+    vm.register_opcode(0x41, ->(vm, instr, _code) {
+      vm.push(instr.operand)
+      vm.advance_pc
+    })
+    vm.register_opcode(0xFF, HANDLER_HALT)
+
+    code = make_code([
+      Inst.new(opcode: 0x41, operand: 42),
+      Inst.new(opcode: 0xFF)
+    ])
+
+    # Regular execute should use regular handler, not context handler
+    vm.execute(code)
+    assert_equal [42], vm.stack
+    assert_empty vm.typed_stack
+  end
+
+  def test_execute_with_context_falls_back_to_regular_handlers
+    vm = GVM.new
+
+    # Only register regular halt handler, no context handler for it
+    vm.register_opcode(0xFF, ->(vm, _instr, _code) {
+      vm.halted = true
+      "halt"
+    })
+
+    # Context handler for push
+    vm.register_context_opcode(0x41, ->(vm, instr, _code, ctx) {
+      vm.push_typed(CodingAdventures::VirtualMachine::TypedVMValue.new(0x7F, instr.operand))
+      vm.advance_pc
+    })
+
+    code = make_code([
+      Inst.new(opcode: 0x41, operand: 5),
+      Inst.new(opcode: 0xFF)
+    ])
+
+    vm.execute_with_context(code, {})
+    assert_equal 1, vm.typed_stack.length
+    assert vm.halted
+  end
+
+  # =====================================================================
+  # Pre/Post Instruction Hooks
+  # =====================================================================
+
+  def test_pre_instruction_hook
+    vm = setup_vm
+    hook_calls = []
+
+    vm.pre_instruction_hook = ->(vm, instr, code) {
+      hook_calls << instr.opcode
+    }
+
+    code = make_code([
+      Inst.new(opcode: OP_PUSH, operand: 10),
+      Inst.new(opcode: OP_HALT)
+    ])
+    vm.execute(code)
+
+    assert_equal [OP_PUSH, OP_HALT], hook_calls
+  end
+
+  def test_post_instruction_hook
+    vm = setup_vm
+    hook_calls = []
+
+    vm.post_instruction_hook = ->(vm, instr, code) {
+      hook_calls << instr.opcode
+    }
+
+    code = make_code([
+      Inst.new(opcode: OP_PUSH, operand: 10),
+      Inst.new(opcode: OP_HALT)
+    ])
+    vm.execute(code)
+
+    assert_equal [OP_PUSH, OP_HALT], hook_calls
+  end
+
+  # =====================================================================
+  # Reset clears typed stack and execution context
+  # =====================================================================
+
+  def test_reset_clears_typed_stack_and_context
+    vm = GVM.new
+    vm.push_typed(CodingAdventures::VirtualMachine::TypedVMValue.new(0x7F, 42))
+    vm.reset
+    assert_empty vm.typed_stack
+    assert_nil vm.execution_context
+  end
 end

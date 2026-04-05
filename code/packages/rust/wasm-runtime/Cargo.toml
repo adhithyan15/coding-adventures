@@ -1,0 +1,14 @@
+[package]
+name = "wasm-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly 1.0 wasm-runtime"
+
+[dependencies]
+wasm-leb128 = { path = "../wasm-leb128" }
+wasm-types = { path = "../wasm-types" }
+wasm-opcodes = { path = "../wasm-opcodes" }
+wasm-module-parser = { path = "../wasm-module-parser" }
+wasm-validator = { path = "../wasm-validator" }
+wasm-execution = { path = "../wasm-execution" }
+virtual-machine = { path = "../virtual-machine" }

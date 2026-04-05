@@ -381,13 +381,18 @@ sub registers {
 # Reset the VM to its initial state. Used internally and exposed for reuse.
 sub _reset {
     my ($self) = @_;
-    $self->{stack}      = [];   # operand stack (LIFO array, top at the end)
-    $self->{variables}  = {};   # named variable storage (global scope)
-    $self->{locals}     = [];   # indexed local variable slots
-    $self->{pc}         = 0;    # program counter (0-based index)
-    $self->{halted}     = 0;    # 1 when HALT has been executed
-    $self->{output}     = [];   # accumulated PRINT output
-    $self->{call_stack} = [];   # saved CallFrame stack for CALL/RETURN
+    $self->{stack}            = [];   # operand stack (LIFO array, top at the end)
+    $self->{variables}        = {};   # named variable storage (global scope)
+    $self->{locals}           = [];   # indexed local variable slots
+    $self->{pc}               = 0;    # program counter (0-based index)
+    $self->{halted}           = 0;    # 1 when HALT has been executed
+    $self->{output}           = [];   # accumulated PRINT output
+    $self->{call_stack}       = [];   # saved CallFrame stack for CALL/RETURN
+    $self->{typed_stack}      = [];   # typed value stack: [{type => N, value => V}, ...]
+    $self->{_context_handlers} //= {};  # preserve across reset
+    $self->{_current_context} = undef;  # execution context for context opcodes
+    $self->{_pre_step_hook}   = undef;  # hook called before each instruction
+    $self->{_max_recursion}   = 1024;   # maximum call depth
 }
 
 # load(program) — reset and prepare to run a new program.
@@ -465,6 +470,16 @@ sub _dispatch {
     my $opcode  = $instr->{opcode};
     my $operand = $instr->{operand};
     my $output  = undef;
+
+    # --- Context opcode handlers take priority when a context is active ---
+    # When executing with a context (e.g., WASM execution), registered context
+    # handlers MUST be checked first because WASM opcodes reuse the same numeric
+    # values as standard VM opcodes (e.g., WASM nop=0x01 vs VM LOAD_CONST=0x01).
+    if ($self->{_current_context} && exists $self->{_context_handlers}{$opcode}) {
+        my $handler = $self->{_context_handlers}{$opcode};
+        $handler->($self, $instr, $code, $self->{_current_context});
+        return $output;
+    }
 
     # --- Stack operations ---
 
@@ -685,9 +700,16 @@ sub _dispatch {
         $self->{halted} = 1;
 
     } else {
-        CodingAdventures::VirtualMachine::InvalidOpcodeError->throw(
-            sprintf('Unknown opcode: 0x%02x', $opcode)
-        );
+        # Check if there's a registered context opcode handler
+        if (exists $self->{_context_handlers}{$opcode}) {
+            my $handler = $self->{_context_handlers}{$opcode};
+            $handler->($self, $instr, $code, $self->{_current_context});
+            # Context opcodes manage their own PC advancement
+        } else {
+            CodingAdventures::VirtualMachine::InvalidOpcodeError->throw(
+                sprintf('Unknown opcode: 0x%02x', $opcode)
+            );
+        }
     }
 
     return $output;
@@ -826,6 +848,106 @@ sub _describe {
     } else {
         return sprintf("Unknown operation (0x%02x)", $op);
     }
+}
+
+# ============================================================================
+# TYPED STACK — Push/pop values tagged with their type
+# ============================================================================
+#
+# The typed stack is parallel to the regular stack but carries type information
+# alongside each value. This is essential for WebAssembly execution where every
+# value has a type (i32, i64, f32, f64).
+#
+# A typed value is a hashref: { type => $type_code, value => $raw_value }
+
+sub typed_stack { return $_[0]->{typed_stack} }
+
+# push_typed($typed_value) — push a {type => N, value => V} onto typed stack.
+sub push_typed {
+    my ($self, $typed_val) = @_;
+    push @{ $self->{typed_stack} }, $typed_val;
+}
+
+# pop_typed() — pop and return a typed value from the typed stack.
+sub pop_typed {
+    my ($self) = @_;
+    CodingAdventures::VirtualMachine::StackUnderflowError->throw(
+        'Cannot pop from an empty typed stack'
+    ) if @{ $self->{typed_stack} } == 0;
+    return pop @{ $self->{typed_stack} };
+}
+
+# peek_typed() — peek at the top typed value without removing it.
+sub peek_typed {
+    my ($self) = @_;
+    CodingAdventures::VirtualMachine::StackUnderflowError->throw(
+        'Cannot peek an empty typed stack'
+    ) if @{ $self->{typed_stack} } == 0;
+    return $self->{typed_stack}[-1];
+}
+
+# ============================================================================
+# CONTEXT OPCODE REGISTRATION — Register handlers for domain-specific opcodes
+# ============================================================================
+#
+# register_context_opcode($opcode, $handler) — register a handler sub for
+# an opcode that receives (vm, instr, code, context) as arguments.
+# These handlers are used by the WASM execution engine to add WASM-specific
+# instruction semantics to the generic VM.
+
+sub register_context_opcode {
+    my ($self, $opcode, $handler) = @_;
+    $self->{_context_handlers}{$opcode} = $handler;
+}
+
+# ============================================================================
+# EXECUTE WITH CONTEXT — Run code with a domain-specific context object
+# ============================================================================
+#
+# execute_with_context($code, $context) — execute a CodeObject with the given
+# context object available to all context opcode handlers.
+
+sub execute_with_context {
+    my ($self, $code, $context) = @_;
+    $self->{_current_context} = $context;
+    my $instrs = $code->instructions();
+    while ( !$self->{halted} && $self->{pc} < scalar(@$instrs) ) {
+        # Call pre-step hook if registered
+        if ($self->{_pre_step_hook}) {
+            $self->{_pre_step_hook}->($self, $code, $context);
+        }
+        $self->step($code);
+    }
+    $self->{_current_context} = undef;
+}
+
+# ============================================================================
+# HOOKS AND CONFIGURATION
+# ============================================================================
+
+# set_pre_step_hook($coderef) — register a hook called before each step.
+sub set_pre_step_hook {
+    my ($self, $hook) = @_;
+    $self->{_pre_step_hook} = $hook;
+}
+
+# set_max_recursion_depth($n) — set maximum call depth.
+sub set_max_recursion_depth {
+    my ($self, $n) = @_;
+    $self->{_max_recursion} = $n;
+}
+
+# max_recursion_depth() — get maximum call depth.
+sub max_recursion_depth {
+    return $_[0]->{_max_recursion};
+}
+
+# reset() — public alias for _reset. Preserves registered context handlers.
+sub reset {
+    my ($self) = @_;
+    my $handlers = $self->{_context_handlers} || {};
+    $self->_reset();
+    $self->{_context_handlers} = $handlers;
 }
 
 1;

@@ -854,6 +854,68 @@ function GenericVM.new()
     self._builtins = {}     -- name -> { name=..., implementation=... }
     self._max_recursion_depth = nil   -- nil = unlimited
     self._frozen = false
+
+    -- =====================================================================
+    -- TYPED STACK
+    -- =====================================================================
+    --
+    -- WebAssembly is statically typed: every value on the operand stack has
+    -- a known type (i32, i64, f32, f64, funcref, externref). The "typed
+    -- stack" is a parallel array of {value=V, type=T} entries that tracks
+    -- the type of each stack slot at runtime.
+    --
+    -- Why a separate stack?  The original GenericVM.stack holds raw Lua
+    -- values (numbers, strings, etc.) for simplicity and backward
+    -- compatibility. The typed_stack adds type annotations for runtimes
+    -- (like Wasm) that require type-aware operations.
+    --
+    -- Usage:
+    --   vm:push_typed(42, "i32")      -- push an i32 value
+    --   local entry = vm:pop_typed()  -- returns {value=42, type="i32"}
+    --   local top = vm:peek_typed()   -- look without removing
+    --
+    self.typed_stack = {}
+
+    -- =====================================================================
+    -- INSTRUCTION HOOKS
+    -- =====================================================================
+    --
+    -- Hooks run before/after every instruction in execute_with_context.
+    -- They are useful for tracing, profiling, breakpoints, and debugging.
+    --
+    -- Each hook is a function(vm, instr, code) that can inspect or modify
+    -- the VM state. Returning a truthy value from pre_instruction_hook
+    -- skips the instruction (useful for breakpoints that want to pause).
+    --
+    self.pre_instruction_hook = nil   -- function(vm, instr, code) or nil
+    self.post_instruction_hook = nil  -- function(vm, instr, code) or nil
+
+    -- =====================================================================
+    -- CONTEXT HANDLERS
+    -- =====================================================================
+    --
+    -- Context opcodes are a second dispatch table for instructions that
+    -- need access to external runtime context (linear memory, globals,
+    -- tables, host functions). Regular opcodes modify only the VM's
+    -- internal state; context opcodes can reach outside the VM into the
+    -- execution environment.
+    --
+    -- In WebAssembly, instructions like memory.load, global.get, and
+    -- call_indirect need access to the module instance's linear memory,
+    -- global variable store, and function table respectively. Rather than
+    -- baking these into the VM, we let the execution layer register
+    -- context handlers that receive the runtime context as an extra
+    -- argument.
+    --
+    -- Handler signature:
+    --   function(vm, instr, code, context) -> string_or_nil
+    --
+    -- The `context` parameter is an opaque table provided by the caller
+    -- of execute_with_context. It typically holds references to memory,
+    -- globals, tables, and other module instance state.
+    --
+    self._context_handlers = {}
+
     return self
 end
 
@@ -947,6 +1009,57 @@ function GenericVM:peek()
         error("StackUnderflowError")
     end
     return self.stack[#self.stack]
+end
+
+
+-- =========================================================================
+-- TYPED STACK OPERATIONS
+-- =========================================================================
+--
+-- The typed stack stores {value, type} pairs. It mirrors the regular
+-- stack but carries explicit type tags. WebAssembly needs this because
+-- the same Lua number could represent an i32, i64, f32, or f64 — the
+-- type determines how arithmetic wraps and how comparisons behave.
+--
+-- The typed stack is independent of the regular stack. You can use
+-- either or both depending on your needs:
+--   - Regular stack: simple, for non-typed bytecodes
+--   - Typed stack: for WebAssembly and other typed VMs
+
+--- Push a typed value onto the typed stack.
+--
+-- @param value any     The value to push.
+-- @param val_type string  The type tag (e.g., "i32", "i64", "f32", "f64").
+function GenericVM:push_typed(value, val_type)
+    self.typed_stack[#self.typed_stack + 1] = { value = value, type = val_type }
+end
+
+--- Pop and return the top typed entry from the typed stack.
+--
+-- Returns a table with {value=V, type=T}.
+-- Errors with "StackUnderflowError" if the typed stack is empty.
+--
+-- @return table  {value=V, type=T}
+function GenericVM:pop_typed()
+    if #self.typed_stack == 0 then
+        error("StackUnderflowError: typed stack is empty")
+    end
+    local entry = self.typed_stack[#self.typed_stack]
+    self.typed_stack[#self.typed_stack] = nil
+    return entry
+end
+
+--- Peek at the top typed entry without removing it.
+--
+-- Returns a table with {value=V, type=T}.
+-- Errors with "StackUnderflowError" if the typed stack is empty.
+--
+-- @return table  {value=V, type=T}
+function GenericVM:peek_typed()
+    if #self.typed_stack == 0 then
+        error("StackUnderflowError: typed stack is empty")
+    end
+    return self.typed_stack[#self.typed_stack]
 end
 
 
@@ -1108,6 +1221,99 @@ function GenericVM:execute(code)
         traces[#traces + 1] = self:step(code)
     end
     return traces
+end
+
+
+-- =========================================================================
+-- CONTEXT OPCODE REGISTRATION
+-- =========================================================================
+--
+-- Context opcodes extend the GenericVM with handlers that receive an
+-- additional `context` parameter. This is the mechanism by which the
+-- WebAssembly execution engine connects memory loads, global accesses,
+-- and function calls to the module instance's runtime state.
+--
+-- When the VM encounters an opcode during execute_with_context, it
+-- first checks the context handler table, then falls back to the
+-- regular handler table. This means context handlers take priority
+-- for opcodes that appear in both tables.
+
+--- Register a context-aware opcode handler.
+--
+-- Context handlers have the signature:
+--   function(vm, instr, code, context) -> string_or_nil
+--
+-- The `context` argument is the opaque table passed to execute_with_context.
+--
+-- @param opcode  number    The opcode constant.
+-- @param handler function  The context-aware handler function.
+function GenericVM:register_context_opcode(opcode, handler)
+    if self._frozen then
+        error("FrozenVMError: cannot register context opcodes on a frozen VM")
+    end
+    self._context_handlers[opcode] = handler
+end
+
+-- =========================================================================
+-- EXECUTE WITH CONTEXT
+-- =========================================================================
+--
+-- execute_with_context is the main execution loop for typed/contextual
+-- bytecodes like WebAssembly. It differs from plain execute() in three
+-- ways:
+--
+--   1. Context handlers are checked before regular handlers.
+--   2. pre_instruction_hook and post_instruction_hook are called.
+--   3. The context table is passed to context handlers.
+--
+-- This method does NOT collect traces for performance — Wasm execution
+-- can be millions of instructions, and allocating a trace per instruction
+-- would be prohibitively expensive. Use the hooks for debugging instead.
+
+--- Execute a CodeObject with a runtime context.
+--
+-- @param code    table  The CodeObject (instructions, constants, names).
+-- @param context table  Opaque context table passed to context handlers.
+function GenericVM:execute_with_context(code, context)
+    while not self.halted and self.pc <= #code.instructions do
+        local instr = code.instructions[self.pc]
+
+        -- Pre-instruction hook (for debugging, tracing, breakpoints)
+        if self.pre_instruction_hook then
+            local skip = self.pre_instruction_hook(self, instr, code)
+            if skip then
+                -- Hook requested we skip this instruction (e.g., breakpoint)
+                goto continue
+            end
+        end
+
+        -- Look up context handler first, then regular handler
+        local ctx_handler = self._context_handlers[instr.opcode]
+        if ctx_handler then
+            local output_val = ctx_handler(self, instr, code, context)
+            if output_val ~= nil then
+                self.output[#self.output + 1] = output_val
+            end
+        else
+            local handler = self._handlers[instr.opcode]
+            if handler == nil then
+                error(string.format(
+                    "InvalidOpcodeError: no handler registered for opcode 0x%02x",
+                    instr.opcode))
+            end
+            local output_val = handler(self, instr, code)
+            if output_val ~= nil then
+                self.output[#self.output + 1] = output_val
+            end
+        end
+
+        -- Post-instruction hook
+        if self.post_instruction_hook then
+            self.post_instruction_hook(self, instr, code)
+        end
+
+        ::continue::
+    end
 end
 
 
