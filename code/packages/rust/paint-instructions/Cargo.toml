@@ -1,0 +1,5 @@
+[package]
+name = "paint-instructions"
+version = "0.1.0"
+edition = "2021"
+description = "Universal 2D paint IR (P2D00): PixelContainer, ImageCodec, PaintScene, and all instruction types"
