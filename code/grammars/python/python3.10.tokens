@@ -1,0 +1,431 @@
+# Token definitions for Python 3.10
+# @version 1
+# @python_version 3.10
+#
+# Python 3.10 reference: https://docs.python.org/3.10/reference/lexical_analysis.html
+# PEP 634 (Structural Pattern Matching — Specification)
+# PEP 635 (Structural Pattern Matching — Motivation and Rationale)
+# PEP 636 (Structural Pattern Matching — Tutorial)
+#
+# Python 3.10 was released on October 4, 2021. From a LEXICAL perspective,
+# 3.10 is nearly identical to 3.8. The headline feature — structural pattern
+# matching — introduces `match`, `case`, and `_` as SOFT KEYWORDS, but
+# these are NOT handled by the lexer. They remain ordinary NAME tokens.
+#
+# ============================================================================
+# Soft Keywords: A New Concept in Python
+# ============================================================================
+#
+# Python 3.10 introduces the concept of SOFT KEYWORDS. Unlike hard keywords
+# (if, for, while, def, etc.) which are ALWAYS reserved and can NEVER be used
+# as identifiers, soft keywords are context-sensitive:
+#
+#   - `match` is a keyword ONLY when followed by an expression and a colon
+#     at the start of a statement
+#   - `case` is a keyword ONLY inside a match block, at the start of a line
+#   - `_` is a keyword ONLY as a pattern inside a case clause
+#
+# In ALL other contexts, they are ordinary names:
+#
+#   match = 42            # Valid! `match` is a variable name here
+#   case = "hello"        # Valid! `case` is a variable name here
+#   _ = some_function()   # Valid! `_` is a variable name here
+#   match.split()         # Valid! `match` is an object here
+#
+# WHY soft keywords?
+#
+# Hard keywords break backward compatibility. If `match` became a hard keyword,
+# every existing Python program that used `match` as a variable name would break.
+# The `re` module's `re.match()`, the popular `match` variable in test code,
+# and countless other uses would all become syntax errors overnight.
+#
+# Soft keywords solve this by pushing the disambiguation to the PARSER, not
+# the LEXER. The lexer emits `match` as a plain NAME token. The parser then
+# uses lookahead to determine whether this NAME is being used as a keyword
+# (starting a match statement) or as an identifier (variable, attribute, etc.).
+#
+# This means the .tokens file does NOT list match/case/_ in the keywords
+# section. They are documented here for completeness and cross-referenced
+# by the grammar file, which defines the syntactic contexts where they
+# become keywords.
+#
+# SOFT KEYWORDS (handled at parser level, NOT lexer level):
+#
+#   match  — introduces a match statement:    match expr:
+#   case   — introduces a case clause:        case pattern:
+#   _      — wildcard pattern in case clause: case _:
+#
+# The soft_keywords section below is purely documentary. It tells grammar
+# tool consumers that these names have special meaning in certain contexts,
+# but the lexer should NOT reclassify them.
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Python uses significant indentation. When this mode is active, the lexer:
+#   1. Tracks leading whitespace at each logical line start
+#   2. Maintains an indentation stack (starts at [0])
+#   3. Emits INDENT when indentation increases
+#   4. Emits one or more DEDENT when indentation decreases
+#   5. Emits NEWLINE at logical line boundaries
+#   6. Tracks bracket depth — suppresses INDENT/DEDENT/NEWLINE inside (), [], {}
+#
+# Since Python 3.0, tabs in leading whitespace cause a TabError if they are
+# mixed with spaces in a way that makes the indentation ambiguous. Pure tabs
+# or pure spaces are fine; mixing is the problem. (Python 2 merely warned.)
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# Comments run from # to end of line. Inline whitespace (spaces and tabs
+# between tokens) is skipped. Leading whitespace at line start is handled
+# by the indentation algorithm.
+#
+# Type comments (PEP 484, e.g., `# type: int`) are a convention layered on
+# top of regular comments — the lexer treats them as ordinary comments.
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# ============================================================================
+# Line Continuation
+# ============================================================================
+#
+# A backslash immediately before a newline joins the next line into the
+# current logical line. This produces no token — it is consumed as whitespace.
+#
+# Example:
+#   total = first_value + \
+#           second_value    # One logical line: total = first_value + second_value
+#
+# Implicit line continuation inside (), [], {} is handled by the indentation
+# mode's bracket-depth tracking — no backslash needed.
+
+  LINE_CONTINUATION = /\\[ \t]*\n/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Python 3.10 supports four string prefix categories:
+#
+#   (none)  — str (Unicode text, the default since Python 3.0)
+#   b/B     — bytes (sequences of integers 0-255)
+#   r/R     — raw str (backslashes are literal, no escape processing)
+#   f/F     — f-string (formatted string literal, PEP 498, Python 3.6+)
+#
+# Valid prefix combinations (case-insensitive, order-insensitive):
+#   (none), r, R           — plain str or raw str
+#   b, B, rb, Rb, rB, RB,
+#   br, bR, Br, BR         — bytes or raw bytes
+#   f, F, rf, Rf, rF, RF,
+#   fr, fR, Fr, FR         — f-string or raw f-string
+#
+# IMPORTANT: The `u`/`U` prefix is accepted for backward compatibility with
+# Python 2 code (PEP 414, "Explicit Unicode Literal for Python 3.3+").
+# It has no effect — all strings are already Unicode in Python 3.
+#
+# NOT valid: uf, fu, bf, fb — you cannot combine bytes with f-string,
+# and u with f is redundant/disallowed.
+#
+# Four quote styles: single, double, triple-single, triple-double.
+# Triple-quoted strings can span multiple lines.
+# Triple-quoted patterns MUST come before single-quoted (first-match-wins).
+#
+# All string variants emit the same STRING token type via the -> alias.
+# The parser determines the string's semantic type from the prefix.
+#
+# NOTE on f-strings in Python 3.10:
+# F-string expressions (the parts inside {}) are NOT tokenized as separate
+# tokens at the lexer level. The entire f-string is emitted as one STRING
+# token. Expression parsing inside f-strings happens at a later compilation
+# stage. (Python 3.12 changes this with PEP 701, but that is not relevant here.)
+
+# --- Triple-quoted strings: raw + f-string prefixes ---
+# rf"" / fr"" variants (raw f-string)
+STRING_RAW_FSTRING_TRIPLE_DQ = /[rR][fF]"""([^"\\]|\\.|\n)*"""|[fF][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_FSTRING_TRIPLE_SQ = /[rR][fF]'''([^'\\]|\\.|\n)*'''|[fF][rR]'''([^'\\]|\\.|\n)*'''/   -> STRING
+
+# rb"" / br"" variants (raw bytes)
+STRING_RAW_BYTES_TRIPLE_DQ   = /[rR][bB]"""([^"\\]|\\.|\n)*"""|[bB][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_BYTES_TRIPLE_SQ   = /[rR][bB]'''([^'\\]|\\.|\n)*'''|[bB][rR]'''([^'\\]|\\.|\n)*'''/   -> STRING
+
+# --- Triple-quoted strings: single prefix ---
+STRING_FSTRING_TRIPLE_DQ     = /[fF]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_FSTRING_TRIPLE_SQ     = /[fF]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_UNICODE_TRIPLE_DQ     = /[uU]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_UNICODE_TRIPLE_SQ     = /[uU]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_RAW_TRIPLE_DQ         = /[rR]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_RAW_TRIPLE_SQ         = /[rR]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_BYTES_TRIPLE_DQ       = /[bB]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_BYTES_TRIPLE_SQ       = /[bB]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# --- Triple-quoted strings: no prefix ---
+STRING_TRIPLE_DQ             = /"""([^"\\]|\\.|\n)*"""/                                            -> STRING
+STRING_TRIPLE_SQ             = /'''([^'\\]|\\.|\n)*'''/                                            -> STRING
+
+# --- Single-quoted strings: raw + f-string prefixes ---
+STRING_RAW_FSTRING_DQ        = /[rR][fF]"([^"\\]|\\.)*"|[fF][rR]"([^"\\]|\\.)*"/                  -> STRING
+STRING_RAW_FSTRING_SQ        = /[rR][fF]'([^'\\]|\\.)*'|[fF][rR]'([^'\\]|\\.)*'/                  -> STRING
+
+# rb"" / br"" variants (raw bytes)
+STRING_RAW_BYTES_DQ          = /[rR][bB]"([^"\\]|\\.)*"|[bB][rR]"([^"\\]|\\.)*"/                   -> STRING
+STRING_RAW_BYTES_SQ          = /[rR][bB]'([^'\\]|\\.)*'|[bB][rR]'([^'\\]|\\.)*'/                   -> STRING
+
+# --- Single-quoted strings: single prefix ---
+STRING_FSTRING_DQ            = /[fF]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_FSTRING_SQ            = /[fF]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_UNICODE_DQ            = /[uU]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_UNICODE_SQ            = /[uU]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_RAW_DQ                = /[rR]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_RAW_SQ                = /[rR]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_BYTES_DQ              = /[bB]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_BYTES_SQ              = /[bB]'([^'\\]|\\.)*'/                                               -> STRING
+
+# --- Single-quoted strings: no prefix ---
+STRING_DQ                    = /"([^"\\]|\\.)*"/                                                    -> STRING
+STRING_SQ                    = /'([^'\\]|\\.)*'/                                                    -> STRING
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# Float patterns must come before integer patterns so that 3.14 is tokenized
+# as FLOAT(3.14) rather than INT(3) DOT INT(14).
+#
+# Python 3.6+ allows underscores in numeric literals for readability (PEP 515):
+#   1_000_000, 0xFF_FF, 0b_1010_0101, 3.14_15_93, 1_0e1_0
+# The underscores are purely visual — they do not affect the value. They
+# cannot appear at the start or end, and cannot be doubled (1__0 is invalid).
+# These constraints are enforced semantically, not in the regex.
+#
+# Imaginary literals (e.g., 3.5j, 1j) produce complex numbers.
+# These must match before plain floats to avoid partial matches.
+
+# --- Imaginary numbers ---
+IMAG_FLOAT_EXP = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*[jJ]/                   -> IMAG
+IMAG_FLOAT_DOT = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/              -> IMAG
+IMAG_FLOAT     = /[0-9](_?[0-9])*\.[0-9]*(_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/  -> IMAG
+IMAG_INT       = /[0-9](_?[0-9])*[jJ]/                                              -> IMAG
+
+# --- Floating-point numbers ---
+# Patterns ordered so that the most specific form matches first:
+#   1. Integer with mandatory exponent (1e10, 1E-3)   -- no decimal point
+#   2. Leading-dot form (.5, .5e10)                   -- starts with dot
+#   3. Standard form (3.14, 3., 3.14e-5)              -- digit dot digit*
+FLOAT_EXP      = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*/                         -> FLOAT
+FLOAT_DOT      = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/                    -> FLOAT
+FLOAT          = /[0-9](_?[0-9])*\.[0-9]*(_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/    -> FLOAT
+
+# --- Integer literals ---
+# No long suffix (L) in Python 3 — all integers are arbitrary precision.
+# No legacy octal (0777) — must use 0o777 prefix.
+# Binary: 0b1010 (added in Python 2.6, retained in Python 3)
+INT_HEX        = /0[xX](_?[0-9a-fA-F])+/                                            -> INT
+INT_BIN        = /0[bB](_?[01])+/                                                    -> INT
+INT_OCT        = /0[oO](_?[0-7])+/                                                   -> INT
+INT            = /[0-9](_?[0-9])*/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Since Python 3.0 (PEP 3131), identifiers can contain Unicode letters and
+# digits (categories Lu, Ll, Lt, Lm, Lo, Nl, Mn, Mc, Nd, Pc). For simplicity,
+# the regex here covers the ASCII subset. A full implementation would use
+# Unicode character properties.
+#
+# Examples of valid Python 3 identifiers:
+#   temperatura, nombre, clase (Spanish)
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Augmented assignment operators whose base operator is two characters.
+# Must come before two-character operators (first-match-wins).
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must come before their single-character components.
+#
+# Notable Python 3 additions relative to Python 2:
+#   - WALRUS (:=) — assignment expression, PEP 572, Python 3.8
+#   - AT_EQUALS (@=) — matrix multiplication augmented assignment, PEP 465, Python 3.5
+#
+# Notable Python 2 removals:
+#   - LEGACY_NOT_EQUALS (<>) — removed in Python 3.0
+#   - BACKTICK (`) — removed in Python 3.0
+
+DOUBLE_STAR         = "**"
+FLOOR_DIV           = "//"
+LEFT_SHIFT          = "<<"
+RIGHT_SHIFT         = ">>"
+WALRUS              = ":="
+EQUALS_EQUALS       = "=="
+NOT_EQUALS          = "!="
+LESS_EQUALS         = "<="
+GREATER_EQUALS      = ">="
+PLUS_EQUALS         = "+="
+MINUS_EQUALS        = "-="
+STAR_EQUALS         = "*="
+SLASH_EQUALS        = "/="
+PERCENT_EQUALS      = "%="
+AMP_EQUALS          = "&="
+PIPE_EQUALS         = "|="
+CARET_EQUALS        = "^="
+AT_EQUALS           = "@="
+ARROW               = "->"
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# The @ operator serves double duty in Python 3:
+#   1. Decorator syntax:  @staticmethod (prefix, before a def/class)
+#   2. Matrix multiply:   A @ B          (infix, PEP 465, Python 3.5+)
+# The lexer emits the same AT token for both; the parser disambiguates.
+
+PLUS                = "+"
+MINUS               = "-"
+STAR                = "*"
+SLASH               = "/"
+PERCENT             = "%"
+EQUALS              = "="
+LESS_THAN           = "<"
+GREATER_THAN        = ">"
+AMP                 = "&"
+PIPE                = "|"
+CARET               = "^"
+TILDE               = "~"
+AT                  = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# The ELLIPSIS (...) is a builtin constant in Python 3, used as:
+#   - Slice placeholder:  a[..., 0]  (NumPy multi-dimensional indexing)
+#   - Type stub filler:   def f() -> int: ...
+#   - Sentinel value:     _missing = ...
+#
+# It must come before DOT (first-match-wins: "..." before ".").
+
+ELLIPSIS            = "..."
+LPAREN              = "("
+RPAREN              = ")"
+LBRACKET            = "["
+RBRACKET            = "]"
+LBRACE              = "{"
+RBRACE              = "}"
+COMMA               = ","
+COLON               = ":"
+SEMICOLON           = ";"
+DOT                 = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Python 3.10 has 35 hard keywords. When the lexer matches a NAME token whose
+# value appears in this list, it reclassifies the token as KEYWORD.
+#
+# Differences from Python 2.7:
+#   - `print` is NO LONGER a keyword (it became a builtin function in 3.0)
+#   - `exec` is NO LONGER a keyword (it became a builtin function in 3.0)
+#   - `True`, `False`, `None` ARE now keywords (cannot be reassigned since 3.0)
+#   - `nonlocal` was ADDED in 3.0 (PEP 3104)
+#   - `async` and `await` were ADDED in 3.5 (PEP 492), became hard keywords in 3.7
+#
+# IMPORTANT: `match`, `case`, and `_` are NOT listed here.
+# They are SOFT keywords — see the soft_keywords section below and the
+# detailed explanation at the top of this file.
+
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  async
+  await
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield
+
+# ============================================================================
+# Soft Keywords (PEP 634, Python 3.10)
+# ============================================================================
+#
+# This section is INFORMATIONAL ONLY. The lexer does NOT reclassify these
+# tokens. They remain NAME tokens in the lexer output. The PARSER is
+# responsible for recognizing when a NAME token with one of these values
+# is acting as a keyword based on syntactic context.
+#
+# How the parser disambiguates:
+#
+#   match:
+#     - KEYWORD when: NAME("match") followed by expression COLON NEWLINE
+#       at the beginning of a statement. The parser uses lookahead to
+#       distinguish `match expr:` (match statement) from `match = 5`
+#       (assignment) or `match.group()` (attribute access).
+#
+#   case:
+#     - KEYWORD when: NAME("case") appears at the start of a line inside
+#       a match block (after INDENT). The parser knows it is inside a match
+#       block and treats leading NAME("case") as a case clause.
+#
+#   _:
+#     - WILDCARD when: NAME("_") appears as a pattern inside a case clause.
+#       In this context, `_` matches anything without binding. Outside
+#       pattern context, `_` is a normal variable (commonly used for
+#       throwaway values: `_ = input()`, or as the last REPL result).
+#
+# A grammar tool or parser generator consuming this file should:
+#   1. Read the soft_keywords section
+#   2. Leave these tokens as NAME during lexing
+#   3. Apply context-sensitive keyword detection during parsing
+
+soft_keywords:
+  match
+  case
+  _

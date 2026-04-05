@@ -4,6 +4,20 @@
 #
 # Starlark specification: https://github.com/bazelbuild/starlark/blob/master/spec.md
 #
+# Cross-reference: Starlark is a restricted subset of Python 3.6. For the
+# full Python grammar definitions, see the versioned files in python/:
+#
+#   python/python2.7.grammar   — Python 2.7 baseline (print/exec statements)
+#   python/python3.0.grammar   — Python 3.0 (annotations, keyword-only args)
+#   python/python3.6.grammar   — Python 3.6 (f-strings, async/await, annotations)
+#   python/python3.8.grammar   — Python 3.8 (walrus operator, pos-only params)
+#   python/python3.10.grammar  — Python 3.10 (structural pattern matching)
+#   python/python3.12.grammar  — Python 3.12 (type params, exception groups)
+#
+# Starlark removes: class, import, while, try/except, with, yield, async/await,
+# global/nonlocal, del, is/is not, assert. It adds: load(). See spec PY03 for
+# the full restriction list and rationale.
+#
 # This file feeds the grammar-driven parser. The parser reads these rules
 # and uses recursive descent with backtracking to produce an AST.
 #

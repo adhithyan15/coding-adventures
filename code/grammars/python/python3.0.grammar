@@ -1,0 +1,951 @@
+# Parser grammar for Python 3.0
+# @version 1
+#
+# Python 3.0 -- The Breaking Change
+# ===================================
+#
+# This grammar defines the complete syntax of Python 3.0, the first
+# intentionally backwards-incompatible release. Every deviation from
+# Python 2.7 is documented inline with the rationale for the change.
+#
+# Reference: https://docs.python.org/3.0/reference/grammar.html
+# PEPs: 3100 (general cleanup), 3107 (annotations), 3104 (nonlocal),
+#        3120 (UTF-8 default), 3132 (extended unpacking)
+#
+# This file feeds the grammar-driven parser. The parser reads these rules
+# and uses recursive descent with backtracking to produce an AST.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from python3.0.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword or exact value)
+#
+# Note: INDENT, DEDENT, and NEWLINE are synthetic tokens produced by the
+# lexer's indentation mode. They do not appear in python3.0.tokens but
+# are referenced here as regular tokens.
+
+# ============================================================================
+# Summary of Grammar Changes from Python 2.7
+# ============================================================================
+#
+# REMOVED STATEMENTS:
+#   - print_stmt: print is now a function, parsed as expression_stmt
+#     In 2.7:  print "hello", "world"      (statement with special syntax)
+#     In 3.0:  print("hello", "world")      (ordinary function call)
+#     This means print("a", "b") now prints "a b" (two args to a function)
+#     instead of the tuple ("a", "b") as it would in 2.7.
+#
+#   - exec_stmt: exec is now a function, parsed as expression_stmt
+#     In 2.7:  exec code_string in global_dict, local_dict
+#     In 3.0:  exec(code_string, global_dict, local_dict)
+#
+# MODIFIED STATEMENTS:
+#   - raise: simplified to `raise [expr [from expr]]`
+#     In 2.7:  raise ExcType, value, traceback  (three-argument form)
+#     In 3.0:  raise ExcValue from cause         (exception chaining)
+#     The old three-arg form was confusing and error-prone. Exception
+#     chaining (PEP 3134) provides a cleaner mechanism for wrapping
+#     exceptions while preserving the original traceback.
+#
+#   - except: must use `as` for binding
+#     In 2.7:  except TypeError, e:   (comma syntax)
+#     In 3.0:  except TypeError as e: (as syntax only)
+#     The comma syntax was ambiguous: except (TypeError, ValueError), e
+#     could be misread as catching two exception types.
+#
+# NEW SYNTAX:
+#   - Function annotations (PEP 3107):
+#     def f(x: int, y: str = "hi") -> bool:
+#     Annotations are expressions attached to parameters and return values.
+#     Python does NOT enforce them; they're metadata for tools.
+#
+#   - Keyword-only arguments (PEP 3102):
+#     def f(a, b, *, key=None, verbose=False):
+#     Parameters after bare * can only be passed by keyword, never position.
+#
+#   - Extended unpacking (PEP 3132):
+#     a, *b, c = [1, 2, 3, 4, 5]  -> a=1, b=[2,3,4], c=5
+#     A starred name in an assignment target collects remaining items.
+#
+#   - Metaclass keyword argument:
+#     class Foo(Base, metaclass=Meta):
+#     In 2.7: __metaclass__ = Meta inside class body. The new syntax is
+#     explicit and evaluated before the class body executes.
+#
+# REMOVED SYNTAX:
+#   - Backtick repr: `expr` no longer valid, use repr(expr)
+#   - <> operator: removed from comparisons, use != only
+#   - Tuple parameter unpacking: def f((a, b)): gone in 3.0
+#     In 2.7, you could write: def f((x, y)): return x + y
+#     This was removed because it complicated function signatures,
+#     made introspection harder, and annotations couldn't attach to
+#     sub-parts of a tuple parameter.
+#
+# SEMANTIC CHANGES (same grammar, different meaning):
+#   - / is always true division (5 / 2 == 2.5, not 2)
+#   - // is always floor division (same as 2.7)
+#   - All strings are unicode by default
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A Python file is a sequence of statements separated by newlines.
+# Blank lines are allowed anywhere between statements.
+
+file = { NEWLINE | statement } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Statements come in two forms:
+#
+# 1. Simple statements -- one line, optionally chained with semicolons.
+#    Examples: x = 1; y = 2
+#
+# 2. Compound statements -- contain indented blocks.
+#    Examples: if, for, while, def, class, try, with
+
+statement = compound_stmt | simple_stmt ;
+
+# A simple statement line: one or more small statements separated by
+# semicolons, terminated by a newline.
+simple_stmt = small_stmt { SEMICOLON small_stmt } NEWLINE ;
+
+small_stmt = return_stmt
+           | yield_stmt
+           | raise_stmt
+           | break_stmt
+           | continue_stmt
+           | pass_stmt
+           | import_stmt
+           | from_import_stmt
+           | global_stmt
+           | nonlocal_stmt
+           | del_stmt
+           | assert_stmt
+           | assign_stmt ;
+
+# NOTE: No print_stmt rule. In Python 2.7, this grammar would have:
+#
+#   print_stmt = "print" [ expression { COMMA expression } [ COMMA ] ]
+#              | "print" ">>" expression { COMMA expression } [ COMMA ] ;
+#
+# The 2.7 print statement had bizarre syntax:
+#   print "hello"            -- print one value
+#   print "a", "b"           -- print two values separated by space
+#   print "hello",           -- trailing comma suppresses newline
+#   print >> sys.stderr, "x" -- redirect to a file object
+#
+# In 3.0, all of this is handled by the print() builtin function:
+#   print("hello")                       -- basic usage
+#   print("a", "b")                      -- sep=" " by default
+#   print("hello", end="")              -- suppress newline
+#   print("x", file=sys.stderr)         -- redirect output
+#
+# Since print is now a NAME (not a keyword), print(...) parses as a
+# regular function call through expression_stmt -> expression -> primary.
+
+# NOTE: No exec_stmt rule. In Python 2.7:
+#
+#   exec_stmt = "exec" expression [ "in" expression [ COMMA expression ] ] ;
+#
+# In 3.0, exec is a builtin function:
+#   exec(code)                          -- execute in current scope
+#   exec(code, globals)                 -- execute with specific globals
+#   exec(code, globals, locals)         -- execute with globals and locals
+
+# ============================================================================
+# Simple Statements
+# ============================================================================
+
+# Return -- exits a function, optionally with a value.
+# return        -> returns None
+# return expr   -> returns the value of expr
+return_stmt = "return" [ expression_list ] ;
+
+# Yield -- turns a function into a generator.
+# yield expr         -> produce a value
+# yield from iterable -> delegate to a sub-generator (3.3+, not in 3.0)
+#
+# In 3.0, yield is an expression (can appear in assignments):
+#   value = yield something
+# But at statement level, it is just: yield [expression_list]
+yield_stmt = yield_expr ;
+
+# Raise -- signal an exception.
+#
+# Python 3.0 CHANGED this significantly from 2.7.
+#
+# In 2.7, raise had three forms:
+#   raise                              -- re-raise current exception
+#   raise ExceptionType                -- raise with no arguments
+#   raise ExceptionType, args          -- raise with arguments
+#   raise ExceptionType, args, tb      -- raise with explicit traceback
+#
+# In 3.0, raise is simplified to two forms:
+#   raise                              -- re-raise current exception
+#   raise expression [from expression] -- raise with optional chaining
+#
+# The three-argument form is gone. To set a traceback, use:
+#   exc = ValueError("bad")
+#   exc.__traceback__ = tb
+#   raise exc
+#
+# The `from` clause enables exception chaining (PEP 3134):
+#   try:
+#       connect()
+#   except ConnectionError as e:
+#       raise ApplicationError("failed") from e
+#
+# This creates a chain: ApplicationError.__cause__ = ConnectionError
+# Python displays both exceptions in the traceback.
+raise_stmt = "raise" [ expression [ "from" expression ] ] ;
+
+# Break -- exits the innermost for/while loop.
+break_stmt = "break" ;
+
+# Continue -- jumps to the next iteration of the innermost loop.
+continue_stmt = "continue" ;
+
+# Pass -- no-op placeholder for empty blocks.
+#   class Todo:
+#       pass
+#
+# In 3.0, the Ellipsis literal (...) is sometimes used as an alternative:
+#   class Todo:
+#       ...
+# But pass remains the idiomatic choice for "do nothing."
+pass_stmt = "pass" ;
+
+# Import -- brings modules into the current namespace.
+#   import os
+#   import os.path
+#   import os as operating_system
+#   import os.path, sys, re
+import_stmt = "import" dotted_name [ "as" NAME ]
+              { COMMA dotted_name [ "as" NAME ] } ;
+
+# From-import -- imports specific names from a module.
+#   from os import path
+#   from os.path import join, exists
+#   from os import path as p
+#   from . import sibling           -- relative import
+#   from ..package import module    -- relative import (up two levels)
+#
+# Python 3.0 change: relative imports must use explicit dot syntax.
+# In 2.x, `import foo` inside a package would first search the package
+# directory (implicit relative import). In 3.0, `import foo` always
+# means an absolute import. Use `from . import foo` for relative.
+from_import_stmt = "from" ( dots dotted_name | dots | dotted_name )
+                   "import" ( STAR
+                            | LPAREN import_names RPAREN
+                            | import_names ) ;
+
+dots = DOT { DOT } ;
+
+import_names = NAME [ "as" NAME ] { COMMA NAME [ "as" NAME ] } [ COMMA ] ;
+
+dotted_name = NAME { DOT NAME } ;
+
+# Global -- declares names as belonging to the module scope.
+#   def counter():
+#       global count
+#       count += 1
+global_stmt = "global" NAME { COMMA NAME } ;
+
+# Nonlocal -- NEW in Python 3.0 (PEP 3104).
+#
+# Declares names as belonging to the nearest enclosing function scope.
+# This solves the long-standing "closure write" problem in Python.
+#
+# In 2.x, you could READ a variable from an enclosing scope:
+#   def outer():
+#       x = 0
+#       def inner():
+#           print(x)    # works: reads x from outer
+#       inner()
+#
+# But you could NOT WRITE to it:
+#   def outer():
+#       x = 0
+#       def inner():
+#           x += 1      # ERROR in 2.x: creates a local x, shadows outer
+#       inner()
+#
+# The workaround was to use a mutable container: x = [0]; x[0] += 1
+# This was ugly and error-prone.
+#
+# With nonlocal in 3.0:
+#   def outer():
+#       x = 0
+#       def inner():
+#           nonlocal x
+#           x += 1      # works: modifies outer's x
+#       inner()
+#       print(x)        # prints 1
+nonlocal_stmt = "nonlocal" NAME { COMMA NAME } ;
+
+# Del -- removes names or items from collections.
+#   del x              -- unbinds the name x
+#   del lst[0]         -- removes first element of lst
+#   del d["key"]       -- removes a dictionary entry
+#   del obj.attr       -- removes an attribute
+del_stmt = "del" target_list ;
+
+# Assert -- debugging check that raises AssertionError if condition is false.
+#   assert x > 0
+#   assert x > 0, "x must be positive"
+assert_stmt = "assert" expression [ COMMA expression ] ;
+
+# Assignment and expression statements.
+#
+# This handles several distinct cases via a single rule:
+#
+# 1. Simple assignment:      target = expr
+#    x = 1, obj.attr = 2, lst[i] = 3
+#
+# 2. Augmented assignment:   target op= expr
+#    x += 1, x -= 1, x *= 2, etc.
+#
+# 3. Multiple assignment:    a = b = expr
+#    Both a and b get the same value.
+#
+# 4. Expression statement:   expr
+#    print("hello"), f(x)
+#
+# 5. Extended unpacking (NEW in 3.0, PEP 3132):
+#    a, *b = [1, 2, 3, 4]   -> a=1, b=[2,3,4]
+#    a, *b, c = range(5)    -> a=0, b=[1,2,3], c=4
+#
+# The grammar parses all of these as expression_list with optional
+# assignment suffix. Semantic analysis validates targets.
+#
+# NOTE: Tuple parameter unpacking is REMOVED in 3.0.
+# In 2.7: def f((a, b)): return a + b
+# In 3.0: def f(pair): a, b = pair; return a + b
+# This was removed because annotations couldn't attach to tuple
+# sub-parameters, and it made function introspection complex.
+assign_stmt = expression_list
+              ( { EQUALS expression_list }
+              | augmented_assign_op expression_list
+              | ) ;
+
+augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS
+                    | FLOOR_DIV_EQUALS | PERCENT_EQUALS | AMP_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | DOUBLE_STAR_EQUALS ;
+
+# ============================================================================
+# Compound Statements
+# ============================================================================
+
+compound_stmt = if_stmt
+              | while_stmt
+              | for_stmt
+              | try_stmt
+              | with_stmt
+              | def_stmt
+              | class_stmt
+              | decorated ;
+
+# If/elif/else -- conditional execution.
+#
+#   if score >= 90:
+#       grade = "A"
+#   elif score >= 80:
+#       grade = "B"
+#   else:
+#       grade = "F"
+#
+# Unchanged from 2.7. The elif chain can be any length.
+if_stmt = "if" expression COLON suite
+          { "elif" expression COLON suite }
+          [ "else" COLON suite ] ;
+
+# While -- loop with a condition.
+#
+#   while queue:
+#       item = queue.pop(0)
+#       process(item)
+#
+# Unchanged from 2.7. The optional else clause runs when the condition
+# becomes false (but not on break).
+while_stmt = "while" expression COLON suite
+             [ "else" COLON suite ] ;
+
+# For -- iterate over a collection.
+#
+#   for item in items:
+#       process(item)
+#
+#   for key, value in d.items():
+#       print(key, value)
+#
+# Python 3.0 change: the loop target now supports extended unpacking:
+#   for first, *rest in groups:
+#       print(first, rest)
+#
+# The optional else clause runs when the iterable is exhausted (but
+# not on break). This is unchanged from 2.7.
+for_stmt = "for" target_list "in" expression_list COLON suite
+           [ "else" COLON suite ] ;
+
+# Try/except/finally -- exception handling.
+#
+# Two forms:
+#
+# Form 1: try/except with optional else and finally
+#   try:
+#       risky()
+#   except ValueError as e:
+#       handle(e)
+#   else:
+#       success()
+#   finally:
+#       cleanup()
+#
+# Form 2: try/finally only (no except)
+#   try:
+#       risky()
+#   finally:
+#       cleanup()
+#
+# Python 3.0 change: the except clause MUST use `as` for binding.
+#   2.7: except TypeError, e:   -- comma syntax (ambiguous)
+#   3.0: except TypeError as e: -- as syntax (clear)
+#
+# The comma syntax was confusing because:
+#   except (TypeError, ValueError), e:  -- catches both, binds to e
+#   except TypeError, ValueError:       -- catches TypeError, binds to ValueError!
+# The `as` keyword makes the binding unambiguous.
+#
+# Python 3.0 also clears the exception variable at the end of the except
+# block to avoid reference cycles with tracebacks.
+try_stmt = "try" COLON suite
+           ( except_clause { except_clause }
+             [ "else" COLON suite ]
+             [ "finally" COLON suite ]
+           | "finally" COLON suite ) ;
+
+except_clause = "except" [ expression [ "as" NAME ] ] COLON suite ;
+
+# With -- context manager protocol.
+#
+#   with open("file.txt") as f:
+#       data = f.read()
+#
+#   with lock:
+#       shared_data.modify()
+#
+# Calls __enter__ on entry and __exit__ on exit (even if an exception
+# occurs). Unchanged from 2.7 at the grammar level.
+#
+# Note: multiple context managers in one `with` (with a, b:) is a
+# Python 3.1+ feature, not in 3.0. In 3.0, you nest them:
+#   with a:
+#       with b:
+#           ...
+with_stmt = "with" expression [ "as" target ] COLON suite ;
+
+# ============================================================================
+# Function Definitions (with Annotations -- NEW in 3.0)
+# ============================================================================
+#
+# Python 3.0 adds function annotations via PEP 3107.
+#
+# Annotations are arbitrary expressions attached to parameters and return
+# values. Python stores them in f.__annotations__ but does NOT enforce them.
+# They are metadata for documentation, type checking, and tooling.
+#
+# Basic annotations:
+#   def greet(name: str, times: int = 1) -> str:
+#       return (name + "! ") * times
+#
+# Complex annotations (any expression is valid):
+#   def process(data: List[int], callback: Callable[[int], bool]) -> None:
+#       ...
+#
+# The -> arrow for return annotations is a new token added in 3.0.
+#
+# Keyword-only arguments (PEP 3102):
+#   def f(pos1, pos2, *, kw_only1, kw_only2="default"):
+#       ...
+#
+# Parameters after a bare * can ONLY be passed by keyword:
+#   f(1, 2, kw_only1="x")      -- OK
+#   f(1, 2, "x")                -- TypeError: too many positional arguments
+#
+# This prevents accidental positional binding of arguments that are
+# meant to be named. Common in APIs with many optional parameters.
+#
+# Combined example showing all parameter kinds:
+#   def f(pos, /, pos_or_kw, *, kw_only, **kwargs):
+#       ...
+# Note: the / syntax for positional-only is 3.8+, not in 3.0.
+
+def_stmt = "def" NAME LPAREN [ parameters ] RPAREN [ ARROW expression ] COLON suite ;
+
+# ============================================================================
+# Function Parameters (with Annotations)
+# ============================================================================
+#
+# Parameters follow Python's model with four kinds plus annotations:
+#
+#   def f(a: int, b: float = 1.0, *args: str, key: bool = True, **kwargs):
+#         ^^^^^  ^^^^^^^^^^^^^^^^  ^^^^^^^^^   ^^^^^^^^^^^^^^^^  ^^^^^^^^
+#         |      |                 |           |                 |
+#         |      |                 |           |                 +- keyword collector
+#         |      |                 |           +- keyword-only with default
+#         |      |                 +- positional collector
+#         |      +- annotated with default
+#         +- annotated positional
+#
+# The bare * separator (without a name) creates keyword-only parameters:
+#   def f(a, b, *, key=None):
+#         ^^^^     ^^^^^^^^
+#         |        +- keyword-only (must pass as key=value)
+#         +- positional
+#
+# Order rules (enforced semantically):
+#   1. Positional parameters (with optional defaults)
+#   2. *args collector OR bare * separator
+#   3. Keyword-only parameters (after * or *args)
+#   4. **kwargs collector (must be last)
+#
+# Python 3.0 REMOVED tuple parameter unpacking:
+#   2.7: def f((a, b), c): ...   -- legal, unpacks first arg
+#   3.0: def f(pair, c): ...     -- must unpack manually inside body
+#   Rationale: annotations can't attach to tuple sub-params;
+#   introspection and error messages become confusing.
+
+parameters = parameter { COMMA parameter } [ COMMA ] ;
+
+parameter = DOUBLE_STAR NAME [ COLON expression ]
+          | STAR NAME [ COLON expression ]
+          | STAR
+          | NAME COLON expression [ EQUALS expression ]
+          | NAME [ EQUALS expression ] ;
+
+# ============================================================================
+# Class Definitions (with Metaclass Syntax -- CHANGED in 3.0)
+# ============================================================================
+#
+# Python 3.0 changes how metaclasses are specified.
+#
+# In 2.7, the metaclass was a magic variable inside the class body:
+#   class Foo(object):
+#       __metaclass__ = MyMeta
+#       ...
+#
+# In 3.0, metaclass is a keyword argument in the class header:
+#   class Foo(Base, metaclass=MyMeta):
+#       ...
+#
+# This is cleaner because:
+#   1. The metaclass is visible in the class statement (no need to read body)
+#   2. The metaclass is evaluated BEFORE the class body executes
+#   3. Other keyword arguments can be passed to the metaclass __init__:
+#      class Foo(metaclass=Meta, registry=True):
+#
+# The argument list uses the same syntax as function calls, allowing
+# positional base classes and keyword arguments.
+#
+# In 3.0, all classes implicitly inherit from object. Writing
+# class Foo(object): is equivalent to class Foo:. The old-style
+# classes (class Foo: without inheriting object) from Python 2 are gone.
+# Every class is a new-style class.
+
+class_stmt = "class" NAME [ LPAREN [ class_args ] RPAREN ] COLON suite ;
+
+class_args = class_arg { COMMA class_arg } [ COMMA ] ;
+
+class_arg = DOUBLE_STAR expression
+          | NAME EQUALS expression
+          | STAR expression
+          | expression ;
+
+# ============================================================================
+# Decorators
+# ============================================================================
+#
+# Decorators modify the definition that follows them. Unchanged from 2.7.
+#
+#   @staticmethod
+#   def my_method(cls):
+#       ...
+#
+#   @app.route("/")
+#   def index():
+#       ...
+#
+# A decorator is applied by calling it with the decorated object:
+#   @decorator
+#   def f(): ...
+# is equivalent to:
+#   def f(): ...
+#   f = decorator(f)
+
+decorated = decorator { decorator } ( def_stmt | class_stmt ) ;
+
+decorator = AT dotted_name [ LPAREN [ arguments ] RPAREN ] NEWLINE ;
+
+# ============================================================================
+# Suite (Block Body)
+# ============================================================================
+#
+# A suite is the body of a compound statement. Two forms:
+#
+# 1. Compact: single simple statement on the same line
+#    if True: pass
+#
+# 2. Indented block: one or more statements
+#    if True:
+#        x = 1
+#        y = 2
+
+suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Expressions are organized by operator precedence, from lowest (top) to
+# highest (bottom). Each precedence level calls the next level down.
+#
+# Precedence table (lowest to highest):
+#
+#    1. lambda           lambda x: x + 1
+#    2. if-else          a if cond else b
+#    3. or               a or b
+#    4. and              a and b
+#    5. not              not a
+#    6. comparisons      a == b, a in lst, a < b < c
+#    7. |                a | b
+#    8. ^                a ^ b
+#    9. &                a & b
+#   10. << >>            a << 1, a >> 1
+#   11. + -              a + b, a - b
+#   12. * / // %         a * b, a // b
+#   13. unary +, -, ~    -a, ~a
+#   14. **               a ** b
+#   15. primary          x.attr, x[i], f(args)
+
+# Expression list -- for tuple creation and multi-assignment targets.
+# "1, 2, 3" is an expression list that creates a tuple.
+expression_list = expression { COMMA expression } [ COMMA ] ;
+
+# Top-level expression: lambda or conditional (ternary).
+#   value = x if x > 0 else -x
+#   func = lambda x, y: x + y
+expression = lambda_expr | or_expr [ "if" or_expr "else" expression ] ;
+
+# Lambda -- anonymous single-expression function.
+#   f = lambda x, y: x + y
+#   g = lambda: 42
+#
+# In 3.0, lambda parameters do NOT support annotations.
+# If you need annotations, use a def statement.
+lambda_expr = "lambda" [ lambda_params ] COLON expression ;
+lambda_params = lambda_param { COMMA lambda_param } [ COMMA ] ;
+lambda_param = NAME [ EQUALS expression ] | STAR NAME | DOUBLE_STAR NAME | STAR ;
+
+# Boolean OR -- short-circuit: returns first truthy operand.
+#   a or b   ->  a if a is truthy, else b
+or_expr = and_expr { "or" and_expr } ;
+
+# Boolean AND -- short-circuit: returns first falsy operand.
+#   a and b  ->  a if a is falsy, else b
+and_expr = not_expr { "and" not_expr } ;
+
+# Boolean NOT -- logical negation.
+#   not x    ->  True if x is falsy, False otherwise
+not_expr = "not" not_expr | comparison ;
+
+# Comparisons
+#
+# Python supports comparison chaining: a < b < c means (a < b) and (b < c).
+# The middle operand is evaluated only once.
+#
+# Python 3.0 REMOVED the <> operator from comparisons.
+# In 2.7, both <> and != meant "not equal":
+#   if x <> 0: ...   -- valid in 2.7
+#   if x != 0: ...   -- valid in both 2.7 and 3.0
+#
+# The <> form was a historical artifact from ABC and was redundant.
+# "There should be one-- and preferably only one --obvious way to do it."
+#
+# The `is` and `is not` operators test object identity (same object in
+# memory), NOT equality. `in` and `not in` test collection membership.
+comparison = bitwise_or { comp_op bitwise_or } ;
+
+comp_op = EQUALS_EQUALS | NOT_EQUALS
+        | LESS_THAN | GREATER_THAN
+        | LESS_EQUALS | GREATER_EQUALS
+        | "in" | "not" "in"
+        | "is" | "is" "not" ;
+
+# NOTE: No <> in comp_op. In Python 2.7, this list would include:
+#   | DIAMOND      -- <> alternate not-equal
+# Removed in 3.0. Use != exclusively.
+
+# Bitwise operators -- integer bit manipulation.
+bitwise_or  = bitwise_xor { PIPE bitwise_xor } ;
+bitwise_xor = bitwise_and { CARET bitwise_and } ;
+bitwise_and = shift { AMP shift } ;
+
+# Shift operators -- bit shifting.
+shift = arith { ( LEFT_SHIFT | RIGHT_SHIFT ) arith } ;
+
+# Arithmetic -- addition and subtraction.
+# Also handles string concatenation: "hello" + " " + "world"
+arith = term { ( PLUS | MINUS ) term } ;
+
+# Term -- multiplication, division, floor division, modulo.
+#
+# Python 3.0 SEMANTIC change for / (PEP 238):
+#   2.7: 5 / 2 == 2   (floor division for integers)
+#   3.0: 5 / 2 == 2.5 (true division always)
+#   Both: 5 // 2 == 2  (explicit floor division)
+#
+# The grammar is identical -- SLASH and FLOOR_DIV both exist in both
+# versions. But the MEANING of SLASH changes fundamentally. In 2.7,
+# the behavior of / depended on the types of its operands (int vs float).
+# In 3.0, / always performs true (floating-point) division.
+#
+# This was the single most impactful change for numerical code.
+# The `from __future__ import division` statement in 2.x enabled
+# the 3.0 behavior early, allowing gradual migration.
+term = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT ) factor } ;
+
+# Unary operators -- prefix +, -, ~
+#   -x     -> arithmetic negation
+#   +x     -> no-op (but type-checked)
+#   ~x     -> bitwise complement
+factor = ( PLUS | MINUS | TILDE ) factor | power ;
+
+# Exponentiation -- right-associative.
+#   2 ** 10  ->  1024
+#
+# Right-associative: 2 ** 3 ** 2 = 2 ** (3 ** 2) = 2 ** 9 = 512
+power = primary [ DOUBLE_STAR factor ] ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# A primary expression is an atom followed by zero or more suffixes:
+#   .attr       attribute access     obj.name
+#   [i]         indexing              lst[0]
+#   [i:j]       slicing              lst[1:3]
+#   [i:j:k]     slicing with step    lst[::2]
+#   (args)      function call        f(x, y)
+#
+# Suffixes bind left-to-right: f(x).attr[0] = ((f(x)).attr)[0]
+
+primary = atom { suffix } ;
+
+suffix = DOT NAME
+       | LBRACKET subscript RBRACKET
+       | LPAREN [ arguments ] RPAREN ;
+
+# Subscript -- indexing or slicing.
+#
+# Indexing:  lst[0], d["key"]
+# Slicing:  lst[1:3], lst[::2], lst[::-1]
+#
+# The Ellipsis literal (...) can now appear as a subscript expression:
+#   array[..., 0]   -- numpy-style multi-dimensional indexing
+# In 3.0, ... is a regular atom, so this falls out naturally from the
+# grammar without special slice handling.
+subscript = expression
+          | [ expression ] COLON [ expression ] [ COLON [ expression ] ] ;
+
+# ============================================================================
+# Atoms
+# ============================================================================
+#
+# Atoms are the indivisible leaves of the expression tree.
+
+atom = INT
+     | FLOAT
+     | IMAG
+     | STRING { STRING }
+     | NAME
+     | "True" | "False" | "None"
+     | ELLIPSIS
+     | list_expr
+     | dict_or_set_expr
+     | paren_expr
+     | generator_expr ;
+
+# NOTE: No backtick_repr rule. In Python 2.7, this list would include:
+#
+#   | BACKTICK expression BACKTICK    -- shorthand for repr(expression)
+#
+# Backtick repr was removed in 3.0 because:
+#   1. Visually similar to single quotes -- `x` vs 'x'
+#   2. Nesting was impossible: ``x`` is not valid syntax
+#   3. repr(x) is clearer and more consistent
+#   4. Backticks conflict with markup languages (Markdown, RST)
+
+# Adjacent string literals are concatenated at parse time:
+#   "hello " "world" -> "hello world"
+# This is useful for breaking long strings across lines.
+# In 3.0, this also works for bytes: b"hel" b"lo" -> b"hello"
+# But you cannot mix str and bytes: "hello" b"bytes" is a TypeError.
+
+# Ellipsis as an atom (NEW behavior in 3.0):
+# In 2.7, Ellipsis was only usable inside __getitem__ for slice objects.
+# In 3.0, ... is a first-class expression anywhere:
+#   placeholder = ...        -- sentinel value
+#   def stub() -> int: ...   -- type stub placeholder
+#   NOT_SET = ...            -- missing value sentinel
+
+# ============================================================================
+# Yield Expression
+# ============================================================================
+#
+# yield is an expression in 3.0 (it was a statement in early Python).
+# As an expression, it can appear on the right side of assignment:
+#   value = yield item
+# This enables coroutine-style send/receive patterns.
+
+yield_expr = "yield" [ expression_list ] ;
+
+# ============================================================================
+# Collection Literals
+# ============================================================================
+
+# List literal or list comprehension.
+#   [1, 2, 3]                    -> list literal
+#   [x * 2 for x in range(10)]  -> list comprehension
+list_expr = LBRACKET [ list_body ] RBRACKET ;
+
+list_body = expression comp_clause
+          | expression { COMMA expression } [ COMMA ] ;
+
+# Dict literal, dict comprehension, set literal, or set comprehension.
+#
+# Python 3.0 uses the same brace syntax for dicts and sets:
+#   {"a": 1, "b": 2}           -> dict literal
+#   {k: v for k, v in items}   -> dict comprehension
+#   {1, 2, 3}                  -> set literal (NEW readable syntax!)
+#   {x for x in range(10)}     -> set comprehension
+#
+# In 2.7, set literals ({1, 2, 3}) were added in 2.7 itself, but set
+# comprehensions were also new. The grammar here covers both versions.
+#
+# Note: {} is an empty DICT (not an empty set). Use set() for empty sets.
+# This asymmetry exists because {} was always dict syntax and changing
+# it would break too much code.
+dict_or_set_expr = LBRACE [ dict_or_set_body ] RBRACE ;
+
+dict_or_set_body = expression COLON expression comp_clause
+                 | expression COLON expression { COMMA expression COLON expression } [ COMMA ]
+                 | expression comp_clause
+                 | expression { COMMA expression } [ COMMA ] ;
+
+# Parenthesized expression, tuple literal, or generator expression.
+#   (x)        -> parenthesized expression (not a tuple!)
+#   (x,)       -> single-element tuple (trailing comma required)
+#   (x, y)     -> two-element tuple
+#   ()         -> empty tuple
+paren_expr = LPAREN [ paren_body ] RPAREN ;
+
+paren_body = expression COMMA [ expression { COMMA expression } [ COMMA ] ]
+           | expression ;
+
+# Generator expression -- lazy list comprehension.
+#   sum(x * x for x in range(10))
+#
+# A generator expression produces values lazily (on demand) rather than
+# building a full list in memory. This saves memory for large sequences.
+# Note: when a generator is the sole argument to a function, the outer
+# parentheses double as the function call parens.
+generator_expr = LPAREN expression comp_clause RPAREN ;
+
+# ============================================================================
+# Comprehension Clauses
+# ============================================================================
+#
+# Comprehension clauses appear in list, dict, set, and generator expressions.
+# A comprehension has one or more for-clauses with optional if-filters:
+#
+#   [expr for x in collection if condition for y in other]
+#
+# The for-clauses are nested: the second iterates inside the first.
+# If-clauses filter the current iteration.
+
+comp_clause = comp_for { comp_for | comp_if } ;
+
+comp_for = "for" target_list "in" or_expr ;
+
+comp_if = "if" or_expr ;
+
+# ============================================================================
+# Target List (Assignment Targets with Extended Unpacking)
+# ============================================================================
+#
+# A target list is used in assignment, for loops, and comprehensions.
+# It specifies the names (or patterns) that receive values.
+#
+# Python 3.0 adds extended unpacking (PEP 3132):
+#
+#   a, *b = [1, 2, 3, 4]      -> a=1, b=[2,3,4]
+#   a, *b, c = range(5)       -> a=0, b=[1,2,3], c=4
+#   *a, b = [1, 2, 3]         -> a=[1,2], b=3
+#   first, *rest = lines      -> first gets line 1, rest gets remainder
+#
+# The starred target collects all "leftover" items into a list.
+# At most ONE starred target is allowed per target list (enforced
+# semantically). Zero starred targets is also fine (classic unpacking).
+#
+# Why this was added:
+#   In 2.7, you had to know the exact length to unpack:
+#     first, second, third = three_items   -- must be exactly 3
+#   To get "first and rest", you needed:
+#     first = items[0]; rest = items[1:]   -- manual slicing
+#   Extended unpacking makes this pattern natural and works with any
+#   iterable (not just sequences that support slicing).
+
+target_list = target { COMMA target } [ COMMA ] ;
+
+target = STAR NAME
+       | NAME
+       | primary ;
+
+# ============================================================================
+# Function Call Arguments
+# ============================================================================
+#
+# Function calls support four kinds of arguments:
+#
+#   f(1, 2)              -> positional arguments
+#   f(key=value)         -> keyword arguments
+#   f(*args)             -> positional unpacking
+#   f(**kwargs)          -> keyword unpacking
+#
+# Order rules (enforced semantically):
+#   1. Positional arguments first
+#   2. Keyword arguments and *args (interleaved in 3.0!)
+#   3. **kwargs unpacking
+#
+# Python 3.0 change: *args can appear before keyword arguments:
+#   f(*args, key=value)   -- valid in 3.0
+# In 2.7, *args had to come after all keyword arguments.
+
+arguments = argument { COMMA argument } [ COMMA ] ;
+
+argument = DOUBLE_STAR expression
+         | STAR expression
+         | NAME EQUALS expression
+         | expression ;

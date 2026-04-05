@@ -1,0 +1,387 @@
+# Token definitions for Python 2.7
+# @version 1
+# The last release of the Python 2 line (EOL January 1, 2020).
+#
+# Python 2.7 reference: https://docs.python.org/2.7/reference/lexical_analysis.html
+#
+# This file defines the complete token set for Python 2.7. It serves as the
+# historical baseline against which the Python 3.x token files can be compared.
+# The key differences from Python 3 are:
+#
+#   1. `print` and `exec` are KEYWORDS (statements), not builtin functions.
+#      In Python 2, `print "hello"` is valid — no parentheses needed.
+#      In Python 3, `print("hello")` is required because print became a function.
+#
+#   2. `True`, `False`, and `None` are NOT keywords. They are ordinary names
+#      that happen to be bound to singleton objects. You could (disastrously)
+#      write `True = 0` in Python 2 and it would work. Python 3 made them
+#      proper keywords to prevent this.
+#
+#   3. The `<>` operator is a legacy synonym for `!=` (not-equal). It was
+#      inherited from ABC (Python's ancestor language) and removed in Python 3.
+#
+#   4. Backticks `` `x` `` are shorthand for `repr(x)`. This was removed in
+#      Python 3 for readability — repr() is always explicit now.
+#
+#   5. String prefixes include `u`/`U` for Unicode strings. In Python 2, bare
+#      strings like "hello" are byte strings by default, and u"hello" makes
+#      them Unicode. Python 3 reversed this: bare strings are Unicode, and
+#      b"hello" makes them bytes.
+#
+#   6. The `ur` prefix (raw Unicode) exists in Python 2 but was removed in
+#      Python 3.0-3.2, then partially reintroduced as `rb` only in Python 3.3+.
+#
+#   7. No f-strings (added in Python 3.6).
+#   8. No walrus operator `:=` (added in Python 3.8).
+#   9. No `@` matrix multiplication operator (added in Python 3.5).
+#      The `@` symbol is used ONLY for decorators in Python 2.
+#  10. Octal literals use the old `0777` form (no `0o` prefix required),
+#      though `0o777` was backported and also works in 2.7.
+#  11. Long integer literals use `L`/`l` suffix (e.g., `42L`).
+#
+# Format:
+#   TOKEN_NAME = /regex/       -- regex-based token pattern
+#   TOKEN_NAME = "literal"     -- exact literal match
+#   TOKEN_NAME = /regex/ -> T  -- regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., ** before *, // before /, == before =).
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Python uses significant indentation — the core syntactic feature that makes
+# Python "Python". When this mode is active, the lexer:
+#   1. Tracks leading whitespace at each logical line start
+#   2. Maintains an indentation stack (starts at [0])
+#   3. Emits INDENT when indentation increases
+#   4. Emits one or more DEDENT when indentation decreases
+#   5. Emits NEWLINE at logical line boundaries
+#   6. Tracks bracket depth — suppresses INDENT/DEDENT/NEWLINE inside (), [], {}
+#
+# Unlike Starlark, Python 2.7 allows tabs in leading whitespace (though mixing
+# tabs and spaces is strongly discouraged and produces warnings with -t / errors
+# with -tt). The lexer treats a tab as advancing to the next multiple of 8.
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# These patterns are matched and consumed but produce no tokens.
+# Comments in Python run from # to end of line (just like Starlark).
+# Inline whitespace (spaces and tabs between tokens) is skipped.
+# Leading whitespace at line start is handled by the indentation algorithm.
+#
+# Python 2.7 also supports the `coding:` declaration in the first two lines
+# (e.g., `# -*- coding: utf-8 -*-`) but that's handled at a higher level
+# than tokenization — the lexer just sees it as a normal comment.
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# ============================================================================
+# Line Continuation
+# ============================================================================
+#
+# A backslash at end of line joins the next line into the current logical line.
+# This is consumed as whitespace — it produces no token. The indentation
+# tracker treats the continuation as part of the same logical line.
+#
+# Example:
+#   x = 1 + \
+#       2       # This is one logical line: x = 1 + 2
+
+  LINE_CONTINUATION = /\\[ \t]*\n/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Python 2.7 has two fundamental string types:
+#   - byte strings: "hello" or b"hello" (the default — sequences of bytes)
+#   - unicode strings: u"hello" (sequences of Unicode code points)
+#
+# And two modifiers:
+#   - raw: r"hello" (backslashes are literal, no escape processing)
+#   - the combinations: ur"hello", br"hello", etc.
+#
+# Valid prefix combinations (case-insensitive):
+#   (none), b, B           -- byte string
+#   u, U                   -- unicode string
+#   r, R                   -- raw byte string
+#   br, bR, Br, BR         -- raw byte string (explicit)
+#   rb, rB, Rb, RB         -- raw byte string (alternate order, 2.7 allows both)
+#   ur, uR, Ur, UR         -- raw unicode string
+#   ru, rU, Ru, RU         -- raw unicode string (alternate order)
+#
+# Note: In Python 2, `rb` and `br` are equivalent, and `ru` and `ur` are
+# equivalent. Python 3 removed the `ur` prefix entirely (until 3.3 brought
+# back `rb`/`br` only).
+#
+# Four quote styles: single, double, triple-single, triple-double.
+# Triple-quoted strings can span multiple lines.
+# Triple-quoted patterns MUST come before single-quoted (first-match-wins).
+#
+# All string variants emit the same STRING token type via the -> alias.
+# The parser (not the lexer) decides whether a string is bytes or unicode
+# based on the prefix.
+
+# --- Triple-quoted strings with raw + unicode prefixes ---
+# These are the most specific: two prefix characters + triple quotes.
+# ur"" and ru"" variants (raw unicode, Python 2 only)
+STRING_RAW_UNICODE_TRIPLE_DQ = /[uU][rR]"""([^"\\]|\\.|\n)*"""|[rR][uU]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_UNICODE_TRIPLE_SQ = /[uU][rR]'''([^'\\]|\\.|\n)*'''|[rR][uU]'''([^'\\]|\\.|\n)*'''/   -> STRING
+
+# br"" and rb"" variants (raw bytes)
+STRING_RAW_BYTES_TRIPLE_DQ   = /[bB][rR]"""([^"\\]|\\.|\n)*"""|[rR][bB]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_BYTES_TRIPLE_SQ   = /[bB][rR]'''([^'\\]|\\.|\n)*'''|[rR][bB]'''([^'\\]|\\.|\n)*'''/   -> STRING
+
+# --- Triple-quoted strings with single prefix ---
+# u"" (unicode), b"" (bytes), r"" (raw)
+STRING_UNICODE_TRIPLE_DQ     = /[uU]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_UNICODE_TRIPLE_SQ     = /[uU]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_RAW_TRIPLE_DQ         = /[rR]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_RAW_TRIPLE_SQ         = /[rR]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+STRING_BYTES_TRIPLE_DQ       = /[bB]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_BYTES_TRIPLE_SQ       = /[bB]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
+
+# --- Triple-quoted strings with no prefix ---
+STRING_TRIPLE_DQ             = /"""([^"\\]|\\.|\n)*"""/                                            -> STRING
+STRING_TRIPLE_SQ             = /'''([^'\\]|\\.|\n)*'''/                                            -> STRING
+
+# --- Single-quoted strings with raw + unicode prefixes ---
+STRING_RAW_UNICODE_DQ        = /[uU][rR]"([^"\\]|\\.)*"|[rR][uU]"([^"\\]|\\.)*"/                  -> STRING
+STRING_RAW_UNICODE_SQ        = /[uU][rR]'([^'\\]|\\.)*'|[rR][uU]'([^'\\]|\\.)*'/                  -> STRING
+
+# br"" and rb"" variants (raw bytes)
+STRING_RAW_BYTES_DQ          = /[bB][rR]"([^"\\]|\\.)*"|[rR][bB]"([^"\\]|\\.)*"/                   -> STRING
+STRING_RAW_BYTES_SQ          = /[bB][rR]'([^'\\]|\\.)*'|[rR][bB]'([^'\\]|\\.)*'/                   -> STRING
+
+# --- Single-quoted strings with single prefix ---
+STRING_UNICODE_DQ            = /[uU]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_UNICODE_SQ            = /[uU]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_RAW_DQ                = /[rR]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_RAW_SQ                = /[rR]'([^'\\]|\\.)*'/                                               -> STRING
+STRING_BYTES_DQ              = /[bB]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_BYTES_SQ              = /[bB]'([^'\\]|\\.)*'/                                               -> STRING
+
+# --- Single-quoted strings with no prefix ---
+STRING_DQ                    = /"([^"\\]|\\.)*"/                                                    -> STRING
+STRING_SQ                    = /'([^'\\]|\\.)*'/                                                    -> STRING
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# Float patterns must come before integer patterns so that 3.14 is tokenized
+# as FLOAT(3.14) rather than INT(3) DOT INT(14).
+#
+# Python 2.7 has three integer types:
+#   - int (machine-word sized, typically 32 or 64 bits)
+#   - long (arbitrary precision) — indicated by L/l suffix
+#   - In practice, Python 2 auto-promotes int to long on overflow
+#
+# Python 2.7 supports two octal notations:
+#   - Legacy: 0777 (leading zero, no letter prefix — inherited from C)
+#   - Modern: 0o777 (explicit prefix — backported from Python 3)
+# Both are valid in 2.7. The legacy form was removed in Python 3.
+#
+# Imaginary literals (e.g., 3.5j, 1j) produce complex numbers.
+# These must match before plain floats to avoid partial matches.
+
+# --- Imaginary numbers ---
+# A float or integer followed by j/J produces a complex number's imaginary part.
+# Example: 3.14j, 1j, .5j, 1e10j
+IMAG_FLOAT_EXP = /[0-9]+[eE][+-]?[0-9]+[jJ]/                   -> IMAG
+IMAG_FLOAT_DOT = /\.[0-9]+([eE][+-]?[0-9]+)?[jJ]/              -> IMAG
+IMAG_FLOAT     = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[jJ]/        -> IMAG
+IMAG_INT       = /[0-9]+[jJ]/                                    -> IMAG
+
+# --- Floating-point numbers ---
+# Patterns ordered so that the most specific form matches first:
+#   1. Integer with mandatory exponent (1e10, 1E-3)   -- no decimal point
+#   2. Leading-dot form (.5, .5e10)                   -- starts with dot
+#   3. Standard form (3.14, 3., 3.14e-5)              -- digit dot digit*
+FLOAT_EXP      = /[0-9]+[eE][+-]?[0-9]+/                        -> FLOAT
+FLOAT_DOT      = /\.[0-9]+([eE][+-]?[0-9]+)?/                   -> FLOAT
+FLOAT          = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/             -> FLOAT
+
+# --- Long integer literals ---
+# The L/l suffix forces a value to be a long integer regardless of magnitude.
+# Example: 42L, 0xDEADBEEFL, 0777L
+# These must come before plain integers (first-match-wins).
+INT_HEX_LONG   = /0[xX][0-9a-fA-F]+[lL]/                        -> INT
+INT_OCT_LONG   = /0[oO][0-7]+[lL]/                              -> INT
+INT_LEGACY_OCT_LONG = /0[0-7]+[lL]/                             -> INT
+INT_DEC_LONG   = /[0-9]+[lL]/                                    -> INT
+
+# --- Plain integer literals ---
+# Hex: 0xFF, 0X1A
+INT_HEX        = /0[xX][0-9a-fA-F]+/                            -> INT
+# Binary: 0b1010, 0B11 (added in Python 2.6)
+INT_BIN        = /0[bB][01]+/                                    -> INT
+# Modern octal: 0o777 (backported from Python 3)
+INT_OCT        = /0[oO][0-7]+/                                  -> INT
+# Legacy octal: 0777 (leading zero, C-style — removed in Python 3)
+# This pattern matches any integer starting with 0 followed by more digits.
+# It must come after hex, binary, and modern octal to avoid stealing those.
+INT_LEGACY_OCT = /0[0-7]+/                                      -> INT
+# Decimal: 42, 0
+INT            = /[0-9]+/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Names start with a letter or underscore, followed by letters, digits,
+# or underscores. The keywords: section below reclassifies certain names
+# as KEYWORD tokens.
+#
+# In Python 2.7, identifiers are ASCII-only by default. Unicode identifiers
+# (PEP 3131) were not added until Python 3.0.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Augmented assignment operators whose base operator is two characters.
+# Must come before the two-character operators (first-match-wins).
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must come before their single-character components.
+# e.g., ** before *, == before =, // before /, <> before < and >
+#
+# Note the presence of `<>` — the legacy not-equal operator inherited from
+# ABC, Python's ancestor language designed by Guido van Rossum and Lambert
+# Meertens in the early 1980s. It was removed in Python 3 in favor of the
+# universal `!=` syntax.
+
+DOUBLE_STAR         = "**"
+FLOOR_DIV           = "//"
+LEFT_SHIFT          = "<<"
+RIGHT_SHIFT         = ">>"
+EQUALS_EQUALS       = "=="
+NOT_EQUALS          = "!="
+LEGACY_NOT_EQUALS   = "<>"
+LESS_EQUALS         = "<="
+GREATER_EQUALS      = ">="
+PLUS_EQUALS         = "+="
+MINUS_EQUALS        = "-="
+STAR_EQUALS         = "*="
+SLASH_EQUALS        = "/="
+PERCENT_EQUALS      = "%="
+AMP_EQUALS          = "&="
+PIPE_EQUALS         = "|="
+CARET_EQUALS        = "^="
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# In Python 2.7, the @ symbol is ONLY used for decorator syntax, not as an
+# operator. The matrix multiplication operator (@) was added in Python 3.5
+# via PEP 465. We include @ here as a delimiter/token so that the lexer can
+# recognize decorator lines like `@staticmethod`.
+#
+# The backtick (`) is the repr() shorthand: `x` is equivalent to repr(x).
+# This was considered unpythonic (too terse, too easy to confuse with single
+# quotes) and removed in Python 3.
+
+PLUS                = "+"
+MINUS               = "-"
+STAR                = "*"
+SLASH               = "/"
+PERCENT             = "%"
+EQUALS              = "="
+LESS_THAN           = "<"
+GREATER_THAN        = ">"
+AMP                 = "&"
+PIPE                = "|"
+CARET               = "^"
+TILDE               = "~"
+AT                  = "@"
+BACKTICK            = "`"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Python 2.7 uses the same delimiters as most C-family languages.
+# The ellipsis (...) is NOT a token in Python 2 — it only became a builtin
+# constant in Python 3.
+
+LPAREN              = "("
+RPAREN              = ")"
+LBRACKET            = "["
+RBRACKET            = "]"
+LBRACE              = "{"
+RBRACE              = "}"
+COMMA               = ","
+COLON               = ":"
+SEMICOLON           = ";"
+DOT                 = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Python 2.7 has 31 keywords. When the lexer matches a NAME token whose value
+# appears in this list, it reclassifies the token as KEYWORD.
+#
+# Notable differences from Python 3:
+#   - `print` is a keyword (statement):     print "hello"
+#   - `exec` is a keyword (statement):      exec code_string
+#   - `True`, `False`, `None` are NOT here — they are ordinary names in 2.7
+#   - `nonlocal` does not exist (added in Python 3.0, PEP 3104)
+#   - `async` / `await` do not exist (added in Python 3.5, PEP 492)
+#
+# The `with` and `as` keywords were added in Python 2.5 (PEP 343) for
+# context managers, and `yield` was promoted to a keyword in Python 2.5
+# (PEP 342) for generator enhancements.
+
+keywords:
+  and
+  as
+  assert
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  exec
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  not
+  or
+  pass
+  print
+  raise
+  return
+  try
+  while
+  with
+  yield

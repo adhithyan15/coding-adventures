@@ -1,0 +1,388 @@
+# Token definitions for Python 3.6
+# @version 1
+# Builds on Python 3.0 with f-strings, async/await, and underscore numerics.
+#
+# Python 3.6 (December 2016) was a landmark release for the language's syntax.
+# Three major additions changed how Python code is written:
+#
+#   1. F-strings (PEP 498) — formatted string literals
+#   2. async/await as soft keywords (PEP 530, building on PEP 492 from 3.5)
+#   3. Underscores in numeric literals (PEP 515)
+#   4. Variable annotations (PEP 526) — uses existing tokens, grammar-level
+#
+# Reference: https://docs.python.org/3.6/reference/lexical_analysis.html
+#
+# Format:
+#   TOKEN_NAME = /regex/       — regex-based token pattern
+#   TOKEN_NAME = "literal"     — exact literal match
+#   TOKEN_NAME = /regex/ -> T  — regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., ** before *, // before /, == before =).
+#
+# Extensions to the base .tokens format:
+#   mode: indentation     — Python-style INDENT/DEDENT/NEWLINE tokens
+#   skip: ... section     — patterns matched and discarded
+#   -> TYPE alias         — multiple patterns emit the same token type
+
+# ============================================================================
+# Lexer Mode
+# ============================================================================
+#
+# Python uses significant indentation. When this mode is active, the lexer:
+#   1. Tracks leading whitespace at each logical line start
+#   2. Maintains an indentation stack (starts at [0])
+#   3. Emits INDENT when indentation increases
+#   4. Emits one or more DEDENT when indentation decreases
+#   5. Emits NEWLINE at logical line boundaries
+#   6. Tracks bracket depth — suppresses INDENT/DEDENT/NEWLINE inside (), [], {}
+#   7. Handles line continuations via backslash-newline
+#
+# Python 3.6 allows tabs and spaces for indentation but forbids mixing them
+# in a single block. The lexer should reject inconsistent indentation.
+
+mode: indentation
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# Comments run from # to end of line. Inline whitespace between tokens is
+# skipped. Leading whitespace at line start is handled by the indentation
+# algorithm, not these skip patterns.
+
+skip:
+  COMMENT    = /#[^\n]*/
+  WHITESPACE = /[ \t]+/
+
+# ============================================================================
+# F-String Tokens (PEP 498) — New in Python 3.6
+# ============================================================================
+#
+# F-strings are the single biggest tokenization change in Python 3.6. They
+# introduce a fundamentally new challenge: strings that contain executable
+# expressions. This breaks the traditional model where a string is one atomic
+# token.
+#
+# Consider:  f"Hello, {name}! You have {count} items."
+#
+# The old tokenizer would try to match this as a single STRING token.
+# But the expressions inside {} must be lexed as normal Python code. This
+# means the lexer must switch modes when it encounters { inside an f-string.
+#
+# The solution is to break f-strings into multiple tokens:
+#
+#   f"Hello, {name}! You have {count} items."
+#   ^^^^^^^^                                    FSTRING_START  (f")
+#           ^^^^^^^                             FSTRING_MIDDLE (Hello, )
+#                  ^                            LBRACE_EXPR    ({)
+#                   ^^^^                        NAME           (name)
+#                       ^                       RBRACE_EXPR    (})
+#                        ^^^^^^^^^^^^^^^^^^^^   FSTRING_MIDDLE (! You have )
+#                                            ^  LBRACE_EXPR    ({)
+#                                             ^ NAME           (count)
+#                                              ^RBRACE_EXPR    (})
+#                                               ^^^^^^^        FSTRING_MIDDLE ( items.)
+#                                                      ^       FSTRING_END    (")
+#
+# Why not just use the existing { and } tokens?
+# Because f-strings can be nested: f"{'yes' if flag else 'no'}"
+# Inside the expression, there might be dicts: f"{{'key': value}}"
+# The lexer must track nesting depth to know when } closes an expression
+# vs. when it's part of a dict literal inside the expression.
+#
+# FSTRING_START opens a new f-string context. The lexer enters "f-string
+# mode" where literal text becomes FSTRING_MIDDLE tokens and { switches
+# to expression mode. FSTRING_END closes the context.
+#
+# LBRACE_EXPR and RBRACE_EXPR are distinct from LBRACE/RBRACE because
+# they carry different semantics: they delimit expression boundaries
+# within the f-string, not dict/set literals.
+#
+# F-string prefixes: f, F, and combinations with r/R (raw f-strings).
+# The prefix determines whether backslash escapes are processed in the
+# literal text portions. The expression portions are always standard Python.
+#
+# Note: b (bytes) cannot combine with f. You cannot have bf"..." or fb"...".
+# This is because f-strings produce str objects, and b produces bytes.
+#
+# Triple-quoted f-strings can span multiple lines:
+#   message = f"""
+#   Dear {name},
+#   Your order #{order_id} is ready.
+#   """
+
+# --- Triple-quoted f-string starters ---
+# These must come before single-quoted variants (first-match-wins).
+# Each prefix combination gets its own pattern but all emit FSTRING_START.
+
+FSTRING_RAW_TRIPLE_DQ_1 = /[rR][fF]"""/  -> FSTRING_START
+FSTRING_RAW_TRIPLE_DQ_2 = /[fF][rR]"""/  -> FSTRING_START
+FSTRING_RAW_TRIPLE_SQ_1 = /[rR][fF]'''/  -> FSTRING_START
+FSTRING_RAW_TRIPLE_SQ_2 = /[fF][rR]'''/  -> FSTRING_START
+FSTRING_TRIPLE_DQ       = /[fF]"""/       -> FSTRING_START
+FSTRING_TRIPLE_SQ       = /[fF]'''/       -> FSTRING_START
+
+# --- Single-quoted f-string starters ---
+FSTRING_RAW_DQ_1        = /[rR][fF]"/     -> FSTRING_START
+FSTRING_RAW_DQ_2        = /[fF][rR]"/     -> FSTRING_START
+FSTRING_RAW_SQ_1        = /[rR][fF]'/     -> FSTRING_START
+FSTRING_RAW_SQ_2        = /[fF][rR]'/     -> FSTRING_START
+FSTRING_DQ              = /[fF]"/         -> FSTRING_START
+FSTRING_SQ              = /[fF]'/         -> FSTRING_START
+
+# --- F-string interior tokens ---
+#
+# FSTRING_MIDDLE captures literal text between expressions. It matches
+# any sequence of characters that are not { } or the closing quote.
+# Escaped braces ({{ and }}) are literal braces, not expression delimiters.
+# The exact regex depends on the quote style; the lexer uses the opening
+# FSTRING_START to determine which closing quote to look for.
+#
+# In practice, FSTRING_MIDDLE is context-sensitive: the lexer tracks
+# whether it is inside an f-string and which quote style opened it.
+# The regex below is a simplified representation; a real implementation
+# uses a stateful lexer (mode stack) rather than pure regex.
+
+FSTRING_MIDDLE = /([^{}"'\\]|\\.|{{|}})+/
+
+# --- F-string delimiters ---
+#
+# FSTRING_END is the closing quote. Like FSTRING_MIDDLE, the actual
+# pattern depends on context (which quote style opened the f-string).
+# Represented here as the common single/double quote closings.
+
+FSTRING_END_TRIPLE_DQ = /"""/  -> FSTRING_END
+FSTRING_END_TRIPLE_SQ = /'''/  -> FSTRING_END
+FSTRING_END_DQ        = /"/    -> FSTRING_END
+FSTRING_END_SQ        = /'/    -> FSTRING_END
+
+# Expression delimiters within f-strings.
+# { opens an expression hole; } closes it. These are distinct from
+# LBRACE/RBRACE to let the parser distinguish f-string expression
+# boundaries from dict/set literals.
+LBRACE_EXPR  = "{"
+RBRACE_EXPR  = "}"
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Standard string literals (non-f-string). Python 3.6 supports:
+#   - b/B prefix for bytes
+#   - r/R prefix for raw strings
+#   - Combinations: rb, br, rB, bR, Rb, Br, RB, BR
+#   - No u prefix needed (all strings are Unicode in Python 3)
+#
+# Triple-quoted variants come first (first-match-wins: """ before ").
+
+# Triple-quoted with prefixes
+STRING_RAW_TRIPLE_DQ = /[rR][bB]?"""([^"\\]|\\.|\n)*"""|[bB][rR]"""([^"\\]|\\.|\n)*"""/  -> STRING
+STRING_RAW_TRIPLE_SQ = /[rR][bB]?'''([^'\\]|\\.|\n)*'''|[bB][rR]'''([^'\\]|\\.|\n)*'''/  -> STRING
+STRING_TRIPLE_DQ     = /[bB]?"""([^"\\]|\\.|\n)*"""/                                      -> STRING
+STRING_TRIPLE_SQ     = /[bB]?'''([^'\\]|\\.|\n)*'''/                                      -> STRING
+
+# Single-quoted with prefixes
+STRING_RAW_DQ        = /[rR][bB]?"([^"\\]|\\.)*"|[bB][rR]"([^"\\]|\\.)*"/                 -> STRING
+STRING_RAW_SQ        = /[rR][bB]?'([^'\\]|\\.)*'|[bB][rR]'([^'\\]|\\.)*'/                 -> STRING
+STRING_DQ            = /[bB]?"([^"\\]|\\.)*"/                                              -> STRING
+STRING_SQ            = /[bB]?'([^'\\]|\\.)*'/                                              -> STRING
+
+# ============================================================================
+# Numeric Literals (Updated for PEP 515 — Underscores)
+# ============================================================================
+#
+# PEP 515, new in Python 3.6, allows underscores as visual separators in
+# numeric literals. This makes large numbers much easier to read:
+#
+#   1_000_000       instead of  1000000
+#   0xFF_FF         instead of  0xFFFF
+#   0b_1111_0000    instead of  0b11110000
+#   3.14_15_93      instead of  3.141593
+#   1_000.000_001   instead of  1000.000001
+#   1e1_000         instead of  1e1000
+#
+# Rules for underscores (enforced by the lexer):
+#   - Underscores can appear between digits: 1_000 is valid
+#   - Cannot start or end with underscore: _1000 is a NAME, 1000_ is invalid
+#   - Cannot have consecutive underscores: 1__000 is invalid
+#   - Can appear after base prefix: 0x_FF is valid
+#   - Can appear in exponent: 1e1_0 is valid
+#
+# The regex pattern uses [0-9](_?[0-9])* to match digit sequences with
+# optional single underscores between digits. This naturally prevents
+# consecutive underscores and trailing underscores.
+
+# --- Floats ---
+# Patterns ordered most-specific first:
+#   1. Integer with mandatory exponent (1e10, 1E-3)
+#   2. Leading-dot form (.5, .5e10)
+#   3. Standard form (3.14, 3., 3.14e-5)
+
+FLOAT_EXP   = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*/                                  -> FLOAT
+FLOAT_DOT   = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?\b/                            -> FLOAT
+FLOAT       = /[0-9](_?[0-9])*\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?/               -> FLOAT
+FLOAT_TRAIL = /[0-9](_?[0-9])*\.([eE][+-]?[0-9](_?[0-9])*)?\b/                             -> FLOAT
+
+# --- Imaginary (complex) literals ---
+# Python 3.6 supports imaginary numbers: 3j, 3.14j, 1e10j
+# These are always floats with a j/J suffix.
+IMAG_FLOAT  = /[0-9](_?[0-9])*\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/          -> IMAGINARY
+IMAG_DOT    = /\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?[jJ]/                          -> IMAGINARY
+IMAG_EXP    = /[0-9](_?[0-9])*[eE][+-]?[0-9](_?[0-9])*[jJ]/                               -> IMAGINARY
+IMAG_INT    = /[0-9](_?[0-9])*[jJ]/                                                        -> IMAGINARY
+
+# --- Integers ---
+# Hex, octal, binary, then decimal. Each supports underscores.
+#
+#   0xFF_FF      hex with underscores
+#   0o77_77      octal with underscores
+#   0b1111_0000  binary with underscores
+#   1_000_000    decimal with underscores
+
+INT_HEX     = /0[xX](_?[0-9a-fA-F])+/    -> INT
+INT_OCT     = /0[oO](_?[0-7])+/          -> INT
+INT_BIN     = /0[bB](_?[01])+/           -> INT
+INT         = /[0-9](_?[0-9])*/
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Names start with a letter or underscore, followed by letters, digits,
+# or underscores. The keywords section below reclassifies certain names
+# as KEYWORD tokens.
+
+NAME        = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# ============================================================================
+# Decorators
+# ============================================================================
+#
+# The @ symbol is used for decorators in Python:
+#   @property
+#   @staticmethod
+#   @my_decorator(arg)
+# The @ token itself is simple; the grammar handles the rest.
+
+AT          = "@"
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Augmented assignment with two-character base operators.
+# Must come before two-character operators (first-match-wins).
+
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+AT_EQUALS           = "@="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must precede single-character counterparts.
+
+DOUBLE_STAR     = "**"
+FLOOR_DIV       = "//"
+LEFT_SHIFT      = "<<"
+RIGHT_SHIFT     = ">>"
+EQUALS_EQUALS   = "=="
+NOT_EQUALS      = "!="
+LESS_EQUALS     = "<="
+GREATER_EQUALS  = ">="
+PLUS_EQUALS     = "+="
+MINUS_EQUALS    = "-="
+STAR_EQUALS     = "*="
+SLASH_EQUALS    = "/="
+PERCENT_EQUALS  = "%="
+AMP_EQUALS      = "&="
+PIPE_EQUALS     = "|="
+CARET_EQUALS    = "^="
+ARROW           = "->"
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+
+PLUS            = "+"
+MINUS           = "-"
+STAR            = "*"
+SLASH           = "/"
+PERCENT         = "%"
+EQUALS          = "="
+LESS_THAN       = "<"
+GREATER_THAN    = ">"
+AMP             = "&"
+PIPE            = "|"
+CARET           = "^"
+TILDE           = "~"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN          = "("
+RPAREN          = ")"
+LBRACKET        = "["
+RBRACKET        = "]"
+LBRACE          = "{"
+RBRACE          = "}"
+COMMA           = ","
+COLON           = ":"
+SEMICOLON       = ";"
+DOT             = "."
+ELLIPSIS        = "..."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Python 3.6 has 35 keywords. When the lexer matches a NAME whose text
+# appears in this list, it reclassifies the token as KEYWORD.
+#
+# async and await: In Python 3.5 these were introduced as soft keywords
+# (only reserved inside async functions). In 3.6 they remain soft keywords.
+# They become fully reserved in 3.7. We include them here because code
+# using async/await is valid 3.6 and the lexer should recognize them.
+# A strict 3.6 lexer could treat them as contextual keywords instead.
+
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  async
+  await
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield

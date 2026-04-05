@@ -1,0 +1,1081 @@
+# Parser grammar for Python 3.10
+# @version 1
+# @python_version 3.10
+#
+# Python 3.10 reference: https://docs.python.org/3.10/reference/grammar.html
+# PEP 634 — Structural Pattern Matching: Specification
+# PEP 635 — Structural Pattern Matching: Motivation and Rationale
+# PEP 636 — Structural Pattern Matching: Tutorial
+# PEP 617 — New Parser for CPython (PEG parser, adopted in 3.9)
+#
+# This file defines the complete grammar for Python 3.10, building on
+# the Python 3.8 grammar with two major additions:
+#
+#   1. STRUCTURAL PATTERN MATCHING (PEP 634/635/636) — the largest single
+#      grammar addition in Python's history. Adds match/case statements
+#      with a rich pattern sublanguage for destructuring and matching.
+#
+#   2. PARENTHESIZED CONTEXT MANAGERS (BPO-12782) — allows grouping
+#      multiple context managers in parentheses across lines:
+#        with (open("a") as f, open("b") as g):
+#
+# Python 3.10 also includes better error messages (PEP 626, PEP 636) but
+# those are implementation details, not grammar changes.
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from python3.10.tokens
+# lowercase names reference other grammar rules (can be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword or exact value)
+#
+# Note: INDENT, DEDENT, and NEWLINE are synthetic tokens produced by the
+# lexer's indentation mode. They do not appear in python3.10.tokens but are
+# referenced here as regular tokens.
+#
+# Note on soft keywords: `match`, `case`, and `_` appear as quoted strings
+# in this grammar (e.g., "match", "case", "_"). The parser matches these
+# against NAME tokens whose string value equals the quoted text. This is
+# the mechanism that makes soft keywords work — the lexer emits NAME, and
+# the parser checks the value in context.
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A Python file is a sequence of statements separated by newlines.
+# Blank lines (consecutive NEWLINE tokens) are allowed between statements.
+# The file may optionally begin with a type comment or encoding declaration,
+# but these are handled at a higher level than the grammar.
+
+file = { NEWLINE | statement } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Statements come in two forms:
+#
+# 1. Simple statements — one line, optionally chained with semicolons.
+#    Examples: x = 1; y = 2; return x + y
+#
+# 2. Compound statements — contain indented blocks (suites).
+#    Examples: if, for, while, def, class, with, try, match
+
+statement = compound_stmt | simple_stmt ;
+
+# A simple statement line: one or more small statements separated by
+# semicolons, terminated by a newline.
+simple_stmt = small_stmt { SEMICOLON small_stmt } NEWLINE ;
+
+small_stmt = return_stmt
+           | raise_stmt
+           | assert_stmt
+           | del_stmt
+           | pass_stmt
+           | break_stmt
+           | continue_stmt
+           | import_stmt
+           | global_stmt
+           | nonlocal_stmt
+           | assign_stmt ;
+
+# ============================================================================
+# Simple Statements
+# ============================================================================
+
+# Return — exits a function, optionally with a value.
+#   return          -> returns None
+#   return expr     -> returns the value of expr
+#   return a, b     -> returns a tuple (a, b)
+return_stmt = "return" [ expression_list ] ;
+
+# Raise — signals an exception.
+#   raise                       -> re-raises the current exception
+#   raise ValueError("oops")   -> raises a new exception
+#   raise new from original    -> exception chaining (PEP 3134)
+raise_stmt = "raise" [ expression [ "from" expression ] ] ;
+
+# Assert — debugging check. Disabled when Python runs with -O (optimize).
+#   assert x > 0               -> AssertionError if x <= 0
+#   assert x > 0, "x negative" -> AssertionError with message
+assert_stmt = "assert" expression [ COMMA expression ] ;
+
+# Del — removes a name binding, attribute, or subscript.
+#   del x              -> unbinds x from the local scope
+#   del obj.attr       -> deletes attribute
+#   del lst[0]         -> removes item at index
+#   del a, b           -> deletes multiple targets
+del_stmt = "del" target_list ;
+
+# Pass — no-op placeholder. Used in empty function/class bodies:
+#   def todo():
+#       pass
+pass_stmt = "pass" ;
+
+# Break — exits the innermost for/while loop.
+break_stmt = "break" ;
+
+# Continue — jumps to the next iteration of the innermost loop.
+continue_stmt = "continue" ;
+
+# Import — brings names from other modules into scope.
+#   import os                       -> binds os
+#   import os.path                  -> binds os (with os.path accessible)
+#   from os import path             -> binds path
+#   from os.path import join, exists -> binds join and exists
+#   from . import sibling           -> relative import
+#   from .. import parent_sibling   -> relative import (up two levels)
+import_stmt = "import" dotted_name_list
+            | "from" import_from "import" import_targets ;
+
+dotted_name_list = dotted_name { COMMA dotted_name } ;
+dotted_name = NAME { DOT NAME } ;
+
+import_from = { DOT } dotted_name | { DOT } DOT ;
+import_targets = STAR
+               | LPAREN import_name_list RPAREN
+               | import_name_list ;
+import_name_list = import_name { COMMA import_name } [ COMMA ] ;
+import_name = NAME [ "as" NAME ] ;
+
+# Global — declares that a name refers to the module-level binding.
+#   global x         -> x in this function refers to module-level x
+#   global x, y, z   -> multiple names
+global_stmt = "global" NAME { COMMA NAME } ;
+
+# Nonlocal — declares that a name refers to an enclosing function's binding.
+# Added in Python 3.0 (PEP 3104). Used in closures:
+#   def outer():
+#       count = 0
+#       def inner():
+#           nonlocal count
+#           count += 1
+nonlocal_stmt = "nonlocal" NAME { COMMA NAME } ;
+
+# Assignment and expression statements.
+#
+# This handles several cases:
+#   1. Simple assignment:          target = expr
+#   2. Augmented assignment:       target op= expr     (x += 1)
+#   3. Annotated assignment:       target: type = expr  (x: int = 5)
+#   4. Annotation only:            target: type         (x: int)
+#   5. Expression statement:       expr                 (print("hi"))
+#   6. Tuple unpacking:            a, b = 1, 2
+#   7. Chained assignment:         a = b = c = 0
+#   8. Walrus (in subexpressions): (x := 10)           (PEP 572)
+#
+# The grammar parses all as expression_list with optional suffixes.
+# Semantic analysis validates that the LHS is a valid assignment target.
+assign_stmt = expression_list
+              ( assign_suffix | augmented_assign | annotation | ) ;
+
+assign_suffix = EQUALS expression_list { EQUALS expression_list } ;
+
+augmented_assign = augmented_assign_op expression_list ;
+
+augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS
+                    | FLOOR_DIV_EQUALS | PERCENT_EQUALS | AMP_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | DOUBLE_STAR_EQUALS | AT_EQUALS ;
+
+# Type annotations (PEP 526, Python 3.6+).
+#   x: int = 5       -> annotated assignment
+#   x: int            -> annotation only (no value assigned)
+#   self.x: int = 5   -> attribute annotation
+annotation = COLON expression [ EQUALS expression_list ] ;
+
+# ============================================================================
+# Compound Statements
+# ============================================================================
+#
+# Compound statements contain one or more suites (indented blocks).
+
+compound_stmt = if_stmt
+              | for_stmt
+              | while_stmt
+              | with_stmt
+              | try_stmt
+              | def_stmt
+              | class_stmt
+              | async_stmt
+              | match_stmt ;
+
+# If/elif/else — conditional execution.
+#
+#   if x > 0:
+#       print("positive")
+#   elif x == 0:
+#       print("zero")
+#   else:
+#       print("negative")
+if_stmt = "if" expression COLON suite
+          { "elif" expression COLON suite }
+          [ "else" COLON suite ] ;
+
+# For — iterates over an iterable.
+#
+#   for item in collection:
+#       process(item)
+#   else:
+#       print("loop completed without break")
+#
+# The else clause runs only if the loop completes without a break.
+# This is a commonly misunderstood feature — "else" here means "no break".
+for_stmt = "for" target_list "in" expression_list COLON suite
+           [ "else" COLON suite ] ;
+
+# While — loops until condition is false.
+#
+#   while queue:
+#       process(queue.pop())
+#   else:
+#       print("queue empty, no break")
+while_stmt = "while" expression COLON suite
+             [ "else" COLON suite ] ;
+
+# With — context manager protocol (PEP 343).
+#
+# Python 3.10 adds PARENTHESIZED context managers (BPO-12782):
+#
+#   # Old style (Python 3.1+): multiple items on one line
+#   with open("a") as f, open("b") as g:
+#       ...
+#
+#   # New style (Python 3.10+): parenthesized for multi-line readability
+#   with (
+#       open("a") as f,
+#       open("b") as g,
+#       open("c") as h,
+#   ):
+#       ...
+#
+# The parenthesized form allows trailing commas and multi-line layout.
+# This was technically possible before due to the PEG parser (3.9+), but
+# 3.10 officially blesses it. The grammar here supports both forms.
+#
+# The parenthesized form works because the PEG parser (PEP 617, adopted
+# in 3.9) can handle the ambiguity between a parenthesized with-item list
+# and a parenthesized expression. The old LL(1) parser could not.
+with_stmt = "with" with_items COLON suite ;
+
+with_items = LPAREN with_item { COMMA with_item } [ COMMA ] RPAREN
+           | with_item { COMMA with_item } ;
+
+with_item = expression [ "as" target ] ;
+
+# Try/except/else/finally — exception handling.
+#
+#   try:
+#       risky_operation()
+#   except ValueError as e:
+#       handle_value_error(e)
+#   except (TypeError, KeyError):
+#       handle_other()
+#   except:
+#       handle_anything()
+#   else:
+#       on_success()
+#   finally:
+#       cleanup()
+try_stmt = "try" COLON suite
+           ( except_clauses [ "else" COLON suite ] [ "finally" COLON suite ]
+           | "finally" COLON suite ) ;
+
+except_clauses = except_clause { except_clause } ;
+except_clause = "except" [ expression [ "as" NAME ] ] COLON suite ;
+
+# Function definition.
+#
+#   def greet(name: str, greeting: str = "Hello") -> str:
+#       return f"{greeting}, {name}"
+#
+#   # With decorators:
+#   @staticmethod
+#   def create() -> "MyClass":
+#       return MyClass()
+def_stmt = { decorator } "def" NAME LPAREN [ parameters ] RPAREN
+           [ ARROW expression ] COLON suite ;
+
+# Class definition.
+#
+#   class Dog(Animal):
+#       def __init__(self, name: str):
+#           self.name = name
+#
+#   @dataclass
+#   class Point:
+#       x: float
+#       y: float
+class_stmt = { decorator } "class" NAME [ LPAREN [ arguments ] RPAREN ]
+             COLON suite ;
+
+# Decorators — applied to functions and classes.
+# A decorator is any expression followed by NEWLINE:
+#   @app.route("/")          -> attribute access
+#   @cache                    -> simple name
+#   @lru_cache(maxsize=128)  -> function call
+decorator = AT expression NEWLINE ;
+
+# Async — async def and async for/with (PEP 492, Python 3.5+).
+#
+#   async def fetch(url):
+#       async with aiohttp.ClientSession() as session:
+#           async for chunk in response.content:
+#               process(chunk)
+async_stmt = "async" ( def_stmt | for_stmt | with_stmt ) ;
+
+# A suite is the body of a compound statement:
+#   1. Compact: single simple statement on the same line
+#      if True: pass
+#   2. Block: indented statements
+#      if True:
+#          x = 1
+#          y = 2
+suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+
+# ============================================================================
+# Structural Pattern Matching (PEP 634/635/636) — Python 3.10
+# ============================================================================
+#
+# Pattern matching is the most significant grammar addition in Python's
+# history. It adds a `match` statement with `case` clauses that can
+# destructure and bind values from complex data structures.
+#
+# OVERVIEW
+# --------
+# The match statement evaluates a "subject" expression once, then tests it
+# against each case clause's pattern in order. The first matching pattern
+# wins, and its block executes. If no pattern matches, execution continues
+# after the match block (there is no error).
+#
+#   match command.split():
+#       case ["quit"]:
+#           quit_game()
+#       case ["go", direction]:
+#           go(direction)
+#       case ["get", item] if item in room.items:
+#           pick_up(item)
+#       case _:
+#           print("Unknown command")
+#
+# COMPARISON WITH OTHER LANGUAGES
+# --------------------------------
+# Python's match is most similar to Rust's `match` and Scala's `match`,
+# but with some Python-specific twists:
+#
+#   - Soft keywords: `match` and `case` are not reserved words
+#   - No exhaustiveness checking (unlike Rust, which requires it)
+#   - Class patterns use positional args via __match_args__
+#   - The `_` wildcard is a soft keyword, not just a convention
+#
+# WHY SOFT KEYWORDS MATTER IN THE GRAMMAR
+# ----------------------------------------
+# Because `match` and `case` are soft keywords, they appear in this grammar
+# as quoted string literals "match" and "case". The parser matches these
+# against NAME tokens whose string value equals "match" or "case". This
+# is how the grammar handles the ambiguity:
+#
+#   match x:        # Parser sees NAME("match") NAME("x") COLON
+#                   # -> recognizes match_stmt
+#
+#   match = 42      # Parser sees NAME("match") EQUALS INT(42)
+#                   # -> recognizes assign_stmt (match is a variable)
+#
+#   match.group()   # Parser sees NAME("match") DOT NAME("group") LPAREN RPAREN
+#                   # -> recognizes expression_stmt (match is an object)
+
+# The match statement: evaluate subject, try each case in order.
+#
+# The subject expression is evaluated ONCE. It can be any expression,
+# but common subjects include:
+#   - Variables:          match status_code:
+#   - Method calls:       match command.split():
+#   - Tuple unpacking:    match (x, y):
+#   - Attribute access:   match response.status:
+match_stmt = "match" expression COLON NEWLINE INDENT
+             { case_clause }
+             DEDENT ;
+
+# A case clause: a pattern with an optional guard, followed by a suite.
+#
+#   case pattern:
+#       body
+#
+#   case pattern if condition:
+#       body
+#
+# The guard ("if condition") is evaluated ONLY if the pattern matches.
+# This allows conditions that cannot be expressed as patterns:
+#
+#   case Point(x, y) if x == y:
+#       print("on the diagonal")
+case_clause = "case" pattern [ guard ] COLON suite ;
+
+# Guard — an additional condition that must be true for the case to match.
+# The guard expression has access to any names bound by the pattern.
+#
+#   case [x, y] if x > 0 and y > 0:
+#       print("both positive")
+#
+# The guard is a full expression, not limited to simple comparisons.
+guard = "if" expression ;
+
+# ============================================================================
+# Pattern Rules
+# ============================================================================
+#
+# Patterns form their own sublanguage within Python. They look like
+# expressions but have very different semantics:
+#
+#   - In an expression, `x` READS the value of variable x
+#   - In a pattern, `x` CAPTURES (binds) the matched value TO variable x
+#
+#   - In an expression, `Point(1, 2)` CREATES a Point object
+#   - In a pattern, `Point(x, y)` DESTRUCTURES a Point object
+#
+# This is a fundamental conceptual shift. Patterns are about structure
+# and binding, not computation.
+#
+# PATTERN PRECEDENCE (lowest to highest):
+#   1. or_pattern:       pattern1 | pattern2
+#   2. as_pattern:       pattern as name
+#   3. all other patterns (same precedence)
+
+# Top-level pattern: or_pattern with optional `as name` binding.
+#
+# The as_pattern lets you capture the entire matched value while also
+# destructuring it:
+#
+#   case [1, 2, *rest] as whole_list:
+#       print(f"matched {whole_list}, rest is {rest}")
+#
+# Or bind an alternative:
+#
+#   case ("quit" | "exit" | "q") as command:
+#       print(f"exiting via {command}")
+pattern = or_pattern [ "as" NAME ] ;
+
+# Or pattern: match if ANY of the alternatives match.
+#
+#   case "north" | "south" | "east" | "west":
+#       print("cardinal direction")
+#
+#   case 200 | 201 | 202:
+#       print("success status")
+#
+# IMPORTANT CONSTRAINT: All alternatives in an or-pattern must bind the
+# SAME set of names. This is enforced semantically, not in the grammar:
+#
+#   case (x, y) | (y, x):    # ERROR: inconsistent bindings
+#   case [x, y] | [x, y]:    # OK: same names in both alternatives
+or_pattern = closed_pattern { PIPE closed_pattern } ;
+
+# Closed pattern: any pattern that is NOT an or_pattern or as_pattern.
+# This grouping exists to prevent ambiguity in the grammar — without it,
+# `a | b as c` could be parsed as `(a | b) as c` or `a | (b as c)`.
+# By restricting or_pattern alternatives to closed_patterns, we force
+# the `as` to bind the entire or_pattern: `(a | b) as c`.
+#
+# The ten kinds of closed patterns:
+closed_pattern = literal_pattern
+               | capture_pattern
+               | wildcard_pattern
+               | value_pattern
+               | group_pattern
+               | sequence_pattern
+               | mapping_pattern
+               | class_pattern
+               | star_pattern ;
+
+# ============================================================================
+# Literal Patterns
+# ============================================================================
+#
+# Match a value by equality (==). The subject is compared to the literal.
+#
+# Examples:
+#   case 404:                -> matches the integer 404
+#   case "hello":            -> matches the string "hello"
+#   case True:               -> matches True (by identity, not truthiness!)
+#   case None:               -> matches None (by identity: `is None`)
+#   case -1:                 -> matches negative one
+#   case 3+4j:               -> matches complex number 3+4j
+#
+# SUBTLE POINT: True/False/None are matched by IDENTITY (`is`), not equality
+# (`==`). This matters because `1 == True` is True in Python, but
+# `case True:` should not match the integer 1. The runtime uses `is` for
+# these three singletons.
+#
+# Numbers can be negated with unary minus:
+#   case -1:      -> matches negative one
+#   case -3.14:   -> matches negative pi
+#
+# Complex literals use + or - to combine real and imaginary parts:
+#   case 1+2j:    -> matches complex(1, 2)
+#   case -1-2j:   -> matches complex(-1, -2)
+
+literal_pattern = signed_number
+                | complex_number
+                | STRING { STRING }
+                | "True"
+                | "False"
+                | "None" ;
+
+# Signed numbers: optional unary minus before a numeric literal.
+# Unary plus is NOT allowed in patterns (it would be ambiguous with
+# complex number syntax).
+signed_number = [ MINUS ] ( INT | FLOAT ) ;
+
+# Complex number patterns: real +/- imaginary.
+# Both parts can be optionally negated.
+#
+#   3+4j     -> complex(3, 4)
+#   -1+2j    -> complex(-1, 2)
+#   -1-2j    -> complex(-1, -2)
+#   5j       -> complex(0, 5) — imaginary only
+complex_number = signed_number ( PLUS | MINUS ) IMAG
+               | [ MINUS ] IMAG ;
+
+# ============================================================================
+# Capture Patterns
+# ============================================================================
+#
+# A bare name in a pattern CAPTURES (binds) the matched value to that name.
+# This is the most basic form of destructuring.
+#
+# Examples:
+#   case x:                  -> always matches, binds subject to x
+#   case [first, second]:    -> first and second are capture patterns
+#   case {"key": value}:     -> value is a capture pattern
+#
+# CRITICAL DISTINCTION from expressions:
+#   - In `x = expr`:  x is an assignment target (LHS)
+#   - In `case x:`:   x is a capture pattern — it binds whatever the subject is
+#
+# A capture pattern ALWAYS matches (it is irrefutable). It is like a
+# catch-all that also gives you a name for the matched value.
+#
+# GOTCHA: If you write `case status:` intending to compare against a
+# variable named `status`, it will NOT do what you expect! It will always
+# match and rebind the name `status`. To compare against a variable's value,
+# use a value_pattern (dotted name): `case Status.OK:` or a guard:
+# `case x if x == status:`.
+#
+# The NAME must not be `_` (that is the wildcard_pattern, not a capture).
+# This distinction is enforced semantically.
+capture_pattern = NAME ;
+
+# ============================================================================
+# Wildcard Pattern
+# ============================================================================
+#
+# The underscore `_` matches ANYTHING without binding a name. It is the
+# "don't care" pattern, analogous to `_` in Haskell, Rust, and Scala.
+#
+# Examples:
+#   case _:                  -> catch-all (like `default:` in C/Java switch)
+#   case [_, second]:        -> ignore first element, capture second
+#   case {"key": _}:         -> check key exists, ignore value
+#
+# `_` is a SOFT KEYWORD in pattern context. Outside patterns, it remains
+# a valid variable name (commonly used for throwaway values).
+#
+# You can use `_` multiple times in one pattern — unlike capture patterns,
+# there is no "duplicate name" error because it never binds:
+#   case (_, _, third):      -> ignore first two, capture third
+wildcard_pattern = "_" ;
+
+# ============================================================================
+# Value Patterns
+# ============================================================================
+#
+# A DOTTED name in a pattern compares the subject against that name's value.
+# This is how you match against named constants and enum members.
+#
+# Examples:
+#   case http.HTTPStatus.OK:          -> matches if subject == 200
+#   case Color.RED:                    -> matches if subject is Color.RED
+#   case math.pi:                      -> matches if subject == 3.14159...
+#
+# WHY must it be dotted? Because a bare name (like `RED`) would be a
+# capture_pattern, not a comparison. The dot is the syntactic signal that
+# says "look up this value" rather than "bind to this name".
+#
+# This is a deliberate design choice in PEP 634. Alternatives considered:
+#   - Prefixing constants with ^ (like Elixir's pin operator): ^RED
+#   - Using == for comparison: case == RED:
+#   - Making all names comparisons by default (breaking destructuring)
+#
+# The dotted-name approach was chosen because:
+#   1. Constants are typically enum members or module attributes (already dotted)
+#   2. No new syntax needed
+#   3. Consistent with existing Python idioms
+value_pattern = NAME DOT NAME { DOT NAME } ;
+
+# ============================================================================
+# Group Pattern
+# ============================================================================
+#
+# Parentheses around a pattern for grouping, just like in expressions.
+# Useful for disambiguating complex patterns:
+#
+#   case (1 | 2) as x:        -> groups the or-pattern before the as-binding
+#   case ("a" | "b"):         -> groups alternatives (same as without parens here)
+#
+# A single parenthesized pattern is NOT a sequence pattern — it is the
+# same as the inner pattern. Compare:
+#   case (x):       -> group pattern — same as `case x:`
+#   case (x,):      -> sequence pattern — matches a 1-tuple
+group_pattern = LPAREN pattern RPAREN ;
+
+# ============================================================================
+# Sequence Patterns
+# ============================================================================
+#
+# Match ordered sequences (lists, tuples, and other sequences) by
+# destructuring their elements positionally.
+#
+# Two syntactic forms — square brackets and parenthesized with commas:
+#
+#   case [1, 2, 3]:                 -> matches a 3-element sequence [1, 2, 3]
+#   case (1, 2, 3):                 -> same (matches ANY sequence, not just tuples!)
+#   case [first, *rest]:            -> captures first element and rest as a list
+#   case []:                        -> matches empty sequence
+#   case [x]:                       -> matches 1-element sequence, captures x
+#   case [x, y, *_]:               -> captures first two, ignores rest
+#
+# IMPORTANT: Both `[...]` and `(a, b, ...)` match ANY sequence (list, tuple,
+# range, etc.) — the bracket style does NOT restrict to lists only. The
+# runtime calls `isinstance(subject, collections.abc.Sequence)` and excludes
+# strings and bytes (which are sequences but rarely intended as pattern targets).
+#
+# The `*name` form (star_pattern) captures remaining elements as a list.
+# At most one star_pattern is allowed per sequence pattern.
+#
+# The parenthesized form requires at least one comma to distinguish from
+# group_pattern. `(x)` is a group, but `(x,)` is a sequence.
+sequence_pattern = LBRACKET [ sequence_pattern_content ] RBRACKET
+                 | LPAREN sequence_pattern_tuple_content RPAREN ;
+
+# Content inside [...]: comma-separated patterns with optional star.
+sequence_pattern_content = maybe_star_pattern { COMMA maybe_star_pattern } [ COMMA ] ;
+
+# Content inside (...) for sequence: must have at least one comma.
+# This disambiguates from group_pattern: (x) is group, (x,) is sequence.
+sequence_pattern_tuple_content = maybe_star_pattern COMMA [ maybe_star_pattern { COMMA maybe_star_pattern } [ COMMA ] ] ;
+
+# A pattern inside a sequence: either a regular pattern or a star_pattern.
+maybe_star_pattern = star_pattern | pattern ;
+
+# ============================================================================
+# Star Pattern
+# ============================================================================
+#
+# Captures the "rest" of a sequence into a list. Analogous to `*args` in
+# function signatures and `*rest` in unpacking assignments.
+#
+#   case [first, *rest]:     -> rest gets a list of remaining elements
+#   case [head, *_, tail]:   -> ignore middle elements
+#   case [*all]:             -> captures the entire sequence as a list
+#
+# At most one star_pattern is allowed per sequence_pattern. This is
+# enforced semantically, not in the grammar.
+star_pattern = STAR NAME
+             | STAR "_" ;
+
+# ============================================================================
+# Mapping Patterns
+# ============================================================================
+#
+# Match dictionaries (and other mappings) by checking for specific keys
+# and destructuring their associated values.
+#
+# Examples:
+#   case {"status": 200}:
+#       print("OK")
+#
+#   case {"name": name, "age": age}:
+#       print(f"{name} is {age}")
+#
+#   case {"type": "circle", "radius": r}:
+#       area = math.pi * r ** 2
+#
+#   case {"action": action, **rest}:
+#       print(f"action={action}, extras={rest}")
+#
+# SEMANTICS:
+#   - Keys must be literal patterns or value patterns (not capture patterns)
+#   - The subject may contain MORE keys than the pattern specifies — extra
+#     keys are silently ignored (unless **rest captures them)
+#   - **rest captures all unmatched key-value pairs as a dict
+#   - **_ is allowed (match has extra keys, but discard them)
+#   - An empty mapping pattern {} matches any mapping
+#
+# WHY keys must be literals/values: Keys are used for LOOKUP, not matching.
+# The runtime does `subject[key]` for each key in the pattern. If keys could
+# be capture patterns, the meaning would be ambiguous (capture the key or
+# look up by key?).
+mapping_pattern = LBRACE [ mapping_pattern_content ] RBRACE ;
+
+mapping_pattern_content = mapping_entry { COMMA mapping_entry } [ COMMA [ double_star_capture ] ]
+                        | double_star_capture ;
+
+mapping_entry = ( literal_pattern | value_pattern ) COLON pattern ;
+
+# The **rest or **_ in a mapping pattern.
+double_star_capture = DOUBLE_STAR NAME
+                    | DOUBLE_STAR "_" ;
+
+# ============================================================================
+# Class Patterns
+# ============================================================================
+#
+# The most powerful pattern type: combines isinstance() checking with
+# attribute destructuring. This is Python's answer to Rust's enum patterns
+# and Scala's case class extractors.
+#
+# Examples:
+#   case Point(x, y):
+#       print(f"point at ({x}, {y})")
+#
+#   case Rectangle(width=w, height=h):
+#       area = w * h
+#
+#   case int(n):
+#       print(f"got integer {n}")
+#
+#   case str() | bytes():
+#       print("got text-like data")
+#
+# HOW POSITIONAL ARGUMENTS WORK:
+#
+# When you write `case Point(x, y):`, how does Python know which attributes
+# x and y correspond to? The answer is __match_args__:
+#
+#   class Point:
+#       __match_args__ = ("x", "y")
+#       def __init__(self, x, y):
+#           self.x = x
+#           self.y = y
+#
+# __match_args__ is a tuple of attribute names that defines the positional
+# order for class patterns. `Point(a, b)` is equivalent to
+# `Point(x=a, y=b)` because __match_args__[0] is "x" and [1] is "y".
+#
+# Dataclasses and named tuples automatically define __match_args__.
+#
+# BUILTIN TYPE PATTERNS:
+#   case int():           -> isinstance(subject, int)
+#   case int(n):          -> isinstance check + capture the value
+#   case str(s):          -> isinstance check + capture
+#
+# For builtin types (int, str, float, bytes, bool, bytearray, list, tuple,
+# set, frozenset, dict), a single positional argument captures the entire
+# matched value (they have `__match_args__ = ()`  but special handling).
+#
+# The class name can be a dotted name (for imported or nested classes):
+#   case http.HTTPStatus(code):
+#   case collections.OrderedDict({"key": value}):
+class_pattern = name_or_dotted LPAREN [ class_pattern_content ] RPAREN ;
+
+name_or_dotted = NAME { DOT NAME } ;
+
+class_pattern_content = class_positional_patterns [ COMMA class_keyword_patterns ] [ COMMA ]
+                      | class_keyword_patterns [ COMMA ] ;
+
+class_positional_patterns = pattern { COMMA pattern } ;
+
+class_keyword_patterns = keyword_pattern { COMMA keyword_pattern } ;
+
+keyword_pattern = NAME EQUALS pattern ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# Expressions are organized by operator precedence, from lowest (top) to
+# highest (bottom). Each level calls the next level down.
+#
+# Precedence table (lowest to highest):
+#
+#    1. lambda           lambda x: x + 1
+#    2. if-else          a if cond else b
+#    3. :=               x := expr (walrus / assignment expression, PEP 572)
+#    4. or               a or b
+#    5. and              a and b
+#    6. not              not a
+#    7. comparisons      a == b, a in lst, a < b < c
+#    8. |                a | b
+#    9. ^                a ^ b
+#   10. &                a & b
+#   11. << >>            a << 1, a >> 1
+#   12. + -              a + b, a - b
+#   13. * / // % @       a * b, a // b, A @ B
+#   14. unary +, -, ~    -a, ~a
+#   15. **               a ** b
+#   16. await            await coro
+#   17. primary          x.attr, x[i], f(args)
+#   18. atom             42, "hello", [1,2], {a:b}, (x,y)
+
+# Expression list — for tuple creation and multi-assignment targets.
+# "1, 2, 3" is an expression list that creates a tuple.
+expression_list = expression { COMMA expression } [ COMMA ] ;
+
+# Top-level expression: lambda or conditional (ternary) or walrus.
+#   value = x if x > 0 else -x
+#   func = lambda x, y: x + y
+#   if (n := len(data)) > 10:     # walrus (PEP 572)
+expression = lambda_expr
+           | walrus_expr ;
+
+walrus_expr = or_expr [ "if" or_expr "else" expression ]
+            | or_expr WALRUS expression ;
+
+# Lambda — anonymous single-expression function.
+#   f = lambda x, y: x + y
+#   g = lambda: 42
+#   h = lambda *args, **kw: (args, kw)
+lambda_expr = "lambda" [ lambda_params ] COLON expression ;
+lambda_params = lambda_param { COMMA lambda_param } [ COMMA ] ;
+lambda_param = NAME [ EQUALS expression ] | STAR NAME | DOUBLE_STAR NAME | STAR ;
+
+# Boolean OR — short-circuit: returns first truthy operand.
+or_expr = and_expr { "or" and_expr } ;
+
+# Boolean AND — short-circuit: returns first falsy operand.
+and_expr = not_expr { "and" not_expr } ;
+
+# Boolean NOT — logical negation.
+not_expr = "not" not_expr | comparison ;
+
+# Comparisons — supports chaining: a < b < c means (a < b) and (b < c).
+# Unlike Starlark (which disallows chaining), Python allows it.
+#
+# "is" and "is not" test identity (same object), not equality.
+# "in" and "not in" test membership.
+comparison = bitwise_or { comp_op bitwise_or } ;
+
+comp_op = EQUALS_EQUALS | NOT_EQUALS
+        | LESS_THAN | GREATER_THAN
+        | LESS_EQUALS | GREATER_EQUALS
+        | "in" | "not" "in"
+        | "is" | "is" "not" ;
+
+# Bitwise operators.
+bitwise_or  = bitwise_xor { PIPE bitwise_xor } ;
+bitwise_xor = bitwise_and { CARET bitwise_and } ;
+bitwise_and = shift { AMP shift } ;
+
+# Shift operators.
+shift = arith { ( LEFT_SHIFT | RIGHT_SHIFT ) arith } ;
+
+# Arithmetic — addition, subtraction.
+arith = term { ( PLUS | MINUS ) term } ;
+
+# Term — multiplication, division, floor division, modulo, matrix multiply.
+# The @ operator (PEP 465, Python 3.5+) is for matrix multiplication:
+#   result = matrix_a @ matrix_b
+term = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT | AT ) factor } ;
+
+# Unary operators — prefix +, -, ~
+factor = ( PLUS | MINUS | TILDE ) factor | power ;
+
+# Exponentiation — right-associative.
+#   2 ** 10  ->  1024
+#   2 ** 3 ** 2  ->  2 ** (3 ** 2)  ->  512
+power = await_expr [ DOUBLE_STAR factor ] ;
+
+# Await expression (PEP 492, Python 3.5+).
+#   result = await coroutine()
+# Only valid inside async functions (enforced semantically).
+await_expr = "await" primary | primary ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# A primary is an atom followed by zero or more suffixes (attribute access,
+# subscript, or function call). Suffixes bind left-to-right.
+
+primary = atom { suffix } ;
+
+suffix = DOT NAME
+       | LBRACKET subscript RBRACKET
+       | LPAREN [ arguments ] RPAREN ;
+
+# Subscript — indexing or slicing.
+#   lst[0], d["key"]              -> indexing
+#   lst[1:3], lst[::2]           -> slicing
+#   arr[1:3, 4:6]                -> multi-dimensional (NumPy)
+subscript = subscript_item { COMMA subscript_item } [ COMMA ] ;
+
+subscript_item = expression
+               | [ expression ] COLON [ expression ] [ COLON [ expression ] ] ;
+
+# ============================================================================
+# Atoms
+# ============================================================================
+#
+# Atoms are the indivisible leaves of the expression tree.
+
+atom = INT
+     | FLOAT
+     | IMAG
+     | STRING { STRING }
+     | NAME
+     | ELLIPSIS
+     | "True" | "False" | "None"
+     | list_expr
+     | dict_or_set_expr
+     | paren_expr ;
+
+# Adjacent string literals are concatenated at parse time (like C):
+#   "hello " "world" -> "hello world"
+
+# List literal or list comprehension.
+#   [1, 2, 3]                     -> list literal
+#   [x * 2 for x in range(10)]   -> list comprehension
+list_expr = LBRACKET [ list_body ] RBRACKET ;
+
+list_body = expression comp_clause
+          | expression { COMMA expression } [ COMMA ] ;
+
+# Dict/set literal or comprehension.
+# Dicts and sets share the { } delimiters. The parser distinguishes:
+#   {k: v, ...}                     -> dict (has colons)
+#   {k: v for k, v in items}       -> dict comprehension
+#   {a, b, c}                       -> set (no colons)
+#   {x for x in items}             -> set comprehension
+#   {}                               -> empty dict (NOT empty set!)
+#
+# To create an empty set, use set() — {} is always an empty dict.
+dict_or_set_expr = LBRACE [ dict_or_set_body ] RBRACE ;
+
+dict_or_set_body = dict_body | set_body ;
+
+dict_body = dict_entry comp_clause
+          | dict_entry { COMMA dict_entry } [ COMMA ]
+          | DOUBLE_STAR expression { COMMA ( dict_entry | DOUBLE_STAR expression ) } [ COMMA ] ;
+
+dict_entry = expression COLON expression ;
+
+set_body = expression comp_clause
+         | expression { COMMA expression } [ COMMA ] ;
+
+# Parenthesized expression, tuple, or generator expression.
+#   (x)           -> parenthesized expression (NOT a tuple)
+#   (x,)          -> single-element tuple
+#   (x, y)        -> two-element tuple
+#   ()            -> empty tuple
+#   (x for x in y) -> generator expression
+paren_expr = LPAREN [ paren_body ] RPAREN ;
+
+paren_body = expression comp_clause
+           | expression COMMA [ expression { COMMA expression } [ COMMA ] ]
+           | expression ;
+
+# ============================================================================
+# Comprehensions
+# ============================================================================
+#
+# Comprehension clauses appear in list, dict, set, and generator expressions.
+#
+#   [expr for x in collection if condition for y in other if test]
+#
+# The for-clauses nest: the second iterates inside the first.
+# The first iterable is evaluated in the enclosing scope; all subsequent
+# iterables and conditions are evaluated in the comprehension scope.
+#
+# Async comprehensions (PEP 530, Python 3.6+):
+#   [x async for x in aiter]
+#   [x async for x in aiter if pred(x)]
+
+comp_clause = comp_for { comp_for | comp_if } ;
+
+comp_for = [ "async" ] "for" target_list "in" or_expr ;
+
+comp_if = "if" or_expr ;
+
+# ============================================================================
+# Targets
+# ============================================================================
+#
+# Assignment targets and deletion targets. A target is a subset of
+# expressions that can appear on the left side of an assignment or in
+# a `del` statement.
+#
+#   x = 1              -> NAME target
+#   obj.attr = 1       -> attribute target
+#   lst[0] = 1         -> subscript target
+#   a, b = 1, 2        -> tuple unpacking
+#   [a, b] = [1, 2]    -> list unpacking
+#   a, *rest = [1,2,3] -> star unpacking
+
+target = primary ;
+target_list = target { COMMA target } [ COMMA ] ;
+
+# ============================================================================
+# Function Call Arguments
+# ============================================================================
+#
+# Function calls support four kinds of arguments:
+#   f(1, 2)              -> positional arguments
+#   f(key=value)         -> keyword arguments
+#   f(*args)             -> positional unpacking
+#   f(**kwargs)          -> keyword unpacking
+#
+# Order rules (enforced semantically):
+#   1. Positional arguments first
+#   2. *args unpacking
+#   3. Keyword arguments
+#   4. **kwargs unpacking
+
+arguments = argument { COMMA argument } [ COMMA ] ;
+
+argument = expression comp_clause
+         | DOUBLE_STAR expression
+         | STAR expression
+         | NAME EQUALS expression
+         | expression ;
+
+# ============================================================================
+# Function Parameters
+# ============================================================================
+#
+# Parameters follow Python's full model:
+#
+#   def f(a, b=1, /, c=2, *args, d, e=3, **kwargs):
+#         ^  ^^   ^   ^^   ^^    ^  ^^    ^^
+#         |  ||   |   ||   ||    |  ||    |+- keyword collector
+#         |  ||   |   ||   ||    |  |+--- keyword-only with default
+#         |  ||   |   ||   ||    +--+---- keyword-only (required)
+#         |  ||   |   ||   |+------------ positional collector
+#         |  ||   |   |+----------------- default value
+#         |  ||   +---------------------- positional-only marker (PEP 570, 3.8+)
+#         |  |+-------------------------- default value
+#         +--+--------------------------- positional (required)
+#
+# The / marker (PEP 570, Python 3.8) separates positional-only parameters
+# from regular ones. Parameters before / cannot be passed by keyword.
+# The * marker separates regular parameters from keyword-only ones.
+
+parameters = parameter_list ;
+
+parameter_list = param_with_default { COMMA param_with_default }
+                 [ COMMA [ slash_params | star_params | double_star_param ] ] ;
+
+slash_params = SLASH [ COMMA [ param_with_default { COMMA param_with_default }
+               [ COMMA [ star_params | double_star_param ] ] ] ] ;
+
+star_params = STAR [ NAME ] [ COMMA param_with_default { COMMA param_with_default } ]
+              [ COMMA [ double_star_param ] ] ;
+
+double_star_param = DOUBLE_STAR NAME [ COMMA ] ;
+
+param_with_default = NAME [ COLON expression ] [ EQUALS expression ] ;
