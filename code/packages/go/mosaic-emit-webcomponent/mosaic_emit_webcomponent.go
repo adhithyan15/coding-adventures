@@ -385,7 +385,16 @@ func dimToCSS(v mosaicvm.ResolvedValue) string {
 		return fmt.Sprintf("%g%s", v.NumValue, unit)
 	}
 	if v.Kind == "string" {
-		return v.StrValue
+		// CSS keyword allowlist — only permit known safe values to prevent " injection
+		// into the style attribute that would break the HTML attribute quoting.
+		safe := map[string]bool{
+			"auto": true, "none": true, "inherit": true, "initial": true,
+			"100%": true, "fit-content": true, "max-content": true, "min-content": true,
+		}
+		if safe[v.StrValue] {
+			return v.StrValue
+		}
+		return "auto"
 	}
 	return "auto"
 }

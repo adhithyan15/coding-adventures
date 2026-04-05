@@ -1016,7 +1016,12 @@ export class MosaicReactRenderer implements MosaicRenderer {
    */
   private _valueToJSX(value: ResolvedValue): string {
     switch (value.kind) {
-      case "string": return value.value;
+      case "string": return value.value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\{/g, "&#123;")
+        .replace(/\}/g, "&#125;");
       case "number": return String(value.value);
       case "bool":   return String(value.value);
       case "slot_ref":
@@ -1037,7 +1042,7 @@ export class MosaicReactRenderer implements MosaicRenderer {
    */
   private _attrValue(value: ResolvedValue): string {
     switch (value.kind) {
-      case "string":   return `"${value.value}"`;
+      case "string":   return `"${value.value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
       case "slot_ref": return `{${value.slotName}}`;
       default:         return '""';
     }

@@ -421,7 +421,10 @@ func resolvedValueToJSXExpr(v mosaicvm.ResolvedValue) string {
 		if strings.HasPrefix(lower, "javascript:") {
 			return "'about:blank'"
 		}
-		return fmt.Sprintf("'%s'", s)
+		// Escape backslash and single-quote to prevent JS string injection
+		escaped := strings.ReplaceAll(s, `\`, `\\`)
+		escaped = strings.ReplaceAll(escaped, `'`, `\'`)
+		return fmt.Sprintf("'%s'", escaped)
 	case "slot_ref":
 		return toCamelCase(v.SlotName)
 	case "number":

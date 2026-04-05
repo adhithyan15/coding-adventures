@@ -447,12 +447,14 @@ defmodule CodingAdventures.MosaicEmitReact do
 
       "style" ->
         case value do
-          %{kind: :enum, namespace: ns, member: m} ->
+          %{kind: :enum, namespace: ns, member: m}
+          when is_binary(ns) and is_binary(m) and ns =~ ~r/^[A-Za-z0-9_-]+$/ and m =~ ~r/^[A-Za-z0-9_-]+$/ ->
             class_name = "mosaic-#{ns}-#{m}"
             frame2 = %{frame | class_names: frame.class_names ++ [class_name]}
             state2 = %{state | needs_type_scale_css: true}
             {frame2, state2}
-          %{kind: :string, value: v} ->
+          %{kind: :string, value: v}
+          when is_binary(v) and v =~ ~r/^[A-Za-z0-9_-]+$/ ->
             frame2 = %{frame | class_names: frame.class_names ++ ["mosaic-#{v}"]}
             state2 = %{state | needs_type_scale_css: true}
             {frame2, state2}

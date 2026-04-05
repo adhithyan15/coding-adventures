@@ -379,6 +379,7 @@ sub _frag_to_code {
 
     if ($kind eq 'open_tag') {
         my $html = $frag->{html};
+        $html =~ s/\\/\\\\/g;
         $html =~ s/'/\\'/g;
         return "    html += '$html';";
     }
@@ -388,6 +389,7 @@ sub _frag_to_code {
     if ($kind eq 'self_closing') {
         my $html = $frag->{html};
         $html =~ s/>$/ \/>/;
+        $html =~ s/\\/\\\\/g;
         $html =~ s/'/\\'/g;
         return "    html += '$html';";
     }
@@ -418,7 +420,14 @@ sub _frag_to_code {
 sub _value_to_html {
     my ($self, $value) = @_;
     my $kind = $value->{kind};
-    return $value->{value}                          if $kind eq 'string';
+    if ($kind eq 'string') {
+        my $v = $value->{value};
+        $v =~ s/&/&amp;/g;
+        $v =~ s/</&lt;/g;
+        $v =~ s/>/&gt;/g;
+        $v =~ s/"/&quot;/g;
+        return $v;
+    }
     return $value->{value}                          if $kind eq 'number';
     return $value->{value} ? 'true' : 'false'       if $kind eq 'bool';
     return $value->{value}                          if $kind eq 'ident';
