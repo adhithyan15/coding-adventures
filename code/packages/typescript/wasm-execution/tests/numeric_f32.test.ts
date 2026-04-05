@@ -111,4 +111,104 @@ describe("numeric_f32", () => {
       expect(runBinary(vm, 0x5b, f32(NaN), f32(NaN)).value).toBe(0);
     });
   });
+
+  describe("f32.sub (0x93)", () => {
+    it("subtracts correctly", () => {
+      expect(runBinary(vm, 0x93, f32(10.5), f32(3.5)).value).toBe(Math.fround(7.0));
+    });
+  });
+
+  describe("f32.div (0x95)", () => {
+    it("divides correctly", () => {
+      expect(runBinary(vm, 0x95, f32(10.0), f32(4.0)).value).toBe(Math.fround(2.5));
+    });
+
+    it("returns Infinity on division by zero", () => {
+      expect(runBinary(vm, 0x95, f32(1.0), f32(0.0)).value).toBe(Infinity);
+    });
+  });
+
+  describe("f32.abs (0x8B)", () => {
+    it("returns absolute value", () => {
+      expect(runUnary(vm, 0x8b, f32(-5.0)).value).toBe(Math.fround(5.0));
+      expect(runUnary(vm, 0x8b, f32(5.0)).value).toBe(Math.fround(5.0));
+    });
+  });
+
+  describe("f32.neg (0x8C)", () => {
+    it("negates values", () => {
+      expect(runUnary(vm, 0x8c, f32(3.0)).value).toBe(Math.fround(-3.0));
+      expect(runUnary(vm, 0x8c, f32(-3.0)).value).toBe(Math.fround(3.0));
+    });
+  });
+
+  describe("f32.ceil (0x8D)", () => {
+    it("rounds up", () => {
+      expect(runUnary(vm, 0x8d, f32(1.1)).value).toBe(Math.fround(2));
+    });
+  });
+
+  describe("f32.floor (0x8E)", () => {
+    it("rounds down", () => {
+      expect(runUnary(vm, 0x8e, f32(1.9)).value).toBe(Math.fround(1));
+    });
+  });
+
+  describe("f32.trunc (0x8F)", () => {
+    it("truncates toward zero", () => {
+      expect(runUnary(vm, 0x8f, f32(1.9)).value).toBe(Math.fround(1));
+      expect(runUnary(vm, 0x8f, f32(-1.9)).value).toBe(Math.fround(-1));
+    });
+  });
+
+  describe("f32.sqrt (0x91)", () => {
+    it("computes square root", () => {
+      expect(runUnary(vm, 0x91, f32(4.0)).value).toBe(Math.fround(2.0));
+    });
+  });
+
+  describe("f32.copysign (0x98)", () => {
+    it("copies sign from second operand", () => {
+      expect(runBinary(vm, 0x98, f32(5.0), f32(-1.0)).value).toBe(Math.fround(-5.0));
+      expect(runBinary(vm, 0x98, f32(-5.0), f32(1.0)).value).toBe(Math.fround(5.0));
+    });
+  });
+
+  describe("f32.ne (0x5C)", () => {
+    it("returns 1 when not equal", () => {
+      expect(runBinary(vm, 0x5c, f32(1.0), f32(2.0)).value).toBe(1);
+    });
+
+    it("NaN != NaN is true", () => {
+      expect(runBinary(vm, 0x5c, f32(NaN), f32(NaN)).value).toBe(1);
+    });
+  });
+
+  describe("f32.lt (0x5D)", () => {
+    it("returns 1 when a < b", () => {
+      expect(runBinary(vm, 0x5d, f32(1.0), f32(2.0)).value).toBe(1);
+      expect(runBinary(vm, 0x5d, f32(2.0), f32(1.0)).value).toBe(0);
+    });
+  });
+
+  describe("f32.gt (0x5E)", () => {
+    it("returns 1 when a > b", () => {
+      expect(runBinary(vm, 0x5e, f32(2.0), f32(1.0)).value).toBe(1);
+      expect(runBinary(vm, 0x5e, f32(1.0), f32(2.0)).value).toBe(0);
+    });
+  });
+
+  describe("f32.le (0x5F)", () => {
+    it("returns 1 when a <= b", () => {
+      expect(runBinary(vm, 0x5f, f32(1.0), f32(2.0)).value).toBe(1);
+      expect(runBinary(vm, 0x5f, f32(1.0), f32(1.0)).value).toBe(1);
+    });
+  });
+
+  describe("f32.ge (0x60)", () => {
+    it("returns 1 when a >= b", () => {
+      expect(runBinary(vm, 0x60, f32(2.0), f32(1.0)).value).toBe(1);
+      expect(runBinary(vm, 0x60, f32(1.0), f32(1.0)).value).toBe(1);
+    });
+  });
 });

@@ -153,4 +153,141 @@ describe("numeric_i32", () => {
       expect(runUnary(vm, 0x69, i32(0b10110011)).value).toBe(5);
     });
   });
+
+  describe("i32.div_u (0x6E)", () => {
+    it("divides unsigned", () => {
+      expect(runBinary(vm, 0x6e, i32(10), i32(3)).value).toBe(3);
+    });
+
+    it("treats -1 as MAX_UINT32", () => {
+      /* -1 unsigned = 4294967295 / 2 = 2147483647 */
+      expect(runBinary(vm, 0x6e, i32(-1), i32(2)).value).toBe(2147483647);
+    });
+
+    it("traps on division by zero", () => {
+      expect(() => runBinary(vm, 0x6e, i32(1), i32(0))).toThrow(TrapError);
+    });
+  });
+
+  describe("i32.rem_s (0x6F)", () => {
+    it("computes signed remainder", () => {
+      expect(runBinary(vm, 0x6f, i32(7), i32(3)).value).toBe(1);
+    });
+
+    it("handles negative dividend", () => {
+      expect(runBinary(vm, 0x6f, i32(-7), i32(3)).value).toBe(-1);
+    });
+
+    it("traps on division by zero", () => {
+      expect(() => runBinary(vm, 0x6f, i32(7), i32(0))).toThrow(TrapError);
+    });
+  });
+
+  describe("i32.rem_u (0x70)", () => {
+    it("computes unsigned remainder", () => {
+      expect(runBinary(vm, 0x70, i32(7), i32(3)).value).toBe(1);
+    });
+
+    it("traps on division by zero", () => {
+      expect(() => runBinary(vm, 0x70, i32(7), i32(0))).toThrow(TrapError);
+    });
+  });
+
+  describe("i32.and (0x71)", () => {
+    it("bitwise AND", () => {
+      expect(runBinary(vm, 0x71, i32(0xFF), i32(0x0F)).value).toBe(0x0F);
+    });
+  });
+
+  describe("i32.or (0x72)", () => {
+    it("bitwise OR", () => {
+      expect(runBinary(vm, 0x72, i32(0xF0), i32(0x0F)).value).toBe(0xFF);
+    });
+  });
+
+  describe("i32.xor (0x73)", () => {
+    it("bitwise XOR", () => {
+      expect(runBinary(vm, 0x73, i32(0xFF), i32(0x0F)).value).toBe(0xF0);
+    });
+  });
+
+  describe("i32.shr_s (0x75)", () => {
+    it("arithmetic shift right", () => {
+      expect(runBinary(vm, 0x75, i32(-8), i32(2)).value).toBe(-2);
+    });
+  });
+
+  describe("i32.shr_u (0x76)", () => {
+    it("logical shift right", () => {
+      expect(runBinary(vm, 0x76, i32(-1), i32(24)).value).toBe(255);
+    });
+  });
+
+  describe("i32.rotl (0x77)", () => {
+    it("rotates left", () => {
+      expect(runBinary(vm, 0x77, i32(1), i32(1)).value).toBe(2);
+    });
+  });
+
+  describe("i32.eq (0x46)", () => {
+    it("returns 1 when equal", () => {
+      expect(runBinary(vm, 0x46, i32(42), i32(42)).value).toBe(1);
+    });
+
+    it("returns 0 when not equal", () => {
+      expect(runBinary(vm, 0x46, i32(1), i32(2)).value).toBe(0);
+    });
+  });
+
+  describe("i32.ne (0x47)", () => {
+    it("returns 1 when not equal", () => {
+      expect(runBinary(vm, 0x47, i32(1), i32(2)).value).toBe(1);
+    });
+
+    it("returns 0 when equal", () => {
+      expect(runBinary(vm, 0x47, i32(42), i32(42)).value).toBe(0);
+    });
+  });
+
+  describe("i32.gt_s (0x4A)", () => {
+    it("returns 1 when a > b signed", () => {
+      expect(runBinary(vm, 0x4a, i32(5), i32(3)).value).toBe(1);
+    });
+
+    it("returns 0 otherwise", () => {
+      expect(runBinary(vm, 0x4a, i32(3), i32(5)).value).toBe(0);
+    });
+  });
+
+  describe("i32.gt_u (0x4B)", () => {
+    it("treats values as unsigned", () => {
+      expect(runBinary(vm, 0x4b, i32(-1), i32(0)).value).toBe(1);
+    });
+  });
+
+  describe("i32.le_s (0x4C)", () => {
+    it("returns 1 when a <= b signed", () => {
+      expect(runBinary(vm, 0x4c, i32(3), i32(5)).value).toBe(1);
+      expect(runBinary(vm, 0x4c, i32(5), i32(5)).value).toBe(1);
+    });
+  });
+
+  describe("i32.le_u (0x4D)", () => {
+    it("returns 1 when a <= b unsigned", () => {
+      expect(runBinary(vm, 0x4d, i32(0), i32(-1)).value).toBe(1);
+    });
+  });
+
+  describe("i32.ge_s (0x4E)", () => {
+    it("returns 1 when a >= b signed", () => {
+      expect(runBinary(vm, 0x4e, i32(5), i32(3)).value).toBe(1);
+      expect(runBinary(vm, 0x4e, i32(5), i32(5)).value).toBe(1);
+    });
+  });
+
+  describe("i32.ge_u (0x4F)", () => {
+    it("returns 1 when a >= b unsigned", () => {
+      expect(runBinary(vm, 0x4f, i32(-1), i32(0)).value).toBe(1);
+    });
+  });
 });
