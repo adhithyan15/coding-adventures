@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_sha256"
+version = "0.1.0"
+edition = "2021"
+description = "SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch"
+
+[dependencies]

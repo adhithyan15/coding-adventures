@@ -172,4 +172,5 @@ members = [
   "ecmascript-es1-parser",
   "ecmascript-es3-parser",
   "ecmascript-es5-parser",
+  "sha256",
 ]
