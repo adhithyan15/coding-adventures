@@ -68,6 +68,25 @@ type TokenGrammar struct {
 	//
 	// Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
 	ContextKeywords []string
+
+	// SoftKeywords are words that act as keywords only in specific syntactic
+	// contexts, remaining ordinary identifiers everywhere else.
+	//
+	// Unlike ContextKeywords (which set a flag on the token), soft keywords
+	// produce plain NAME tokens with NO special flag. The lexer is completely
+	// unaware of their keyword status — the parser handles disambiguation
+	// entirely based on syntactic position.
+	//
+	// This distinction matters because:
+	//   - ContextKeywords: lexer hints to parser ("this NAME might be special")
+	//   - SoftKeywords: lexer ignores them completely, parser owns the decision
+	//
+	// Examples:
+	//   Python 3.10+: `match`, `case`, `_` (only keywords inside match statements)
+	//   Python 3.12+: `type` (only a keyword in `type X = ...` statements)
+	//
+	// A `soft_keywords:` section in a .tokens file populates this field.
+	SoftKeywords []string
 }
 
 // TokenNames returns the set of all defined token names (including aliases).
@@ -240,11 +259,13 @@ var groupNameRe = regexp.MustCompile(`^[a-z_][a-z0-9_]*$`)
 //   - "reserved" — the reserved: section
 //   - "errors" — the errors: section
 var reservedGroupNames = map[string]bool{
-	"default":  true,
-	"skip":     true,
-	"keywords": true,
-	"reserved": true,
-	"errors":   true,
+	"default":          true,
+	"skip":             true,
+	"keywords":         true,
+	"reserved":         true,
+	"errors":           true,
+	"context_keywords": true,
+	"soft_keywords":    true,
 }
 
 // ParseTokenGrammar parses a .tokens file into a TokenGrammar.
@@ -394,6 +415,10 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 			currentSection = "context_keywords"
 			continue
 		}
+		if stripped == "soft_keywords:" || stripped == "soft_keywords :" {
+			currentSection = "soft_keywords"
+			continue
+		}
 
 		// Inside a section
 		if currentSection != "" {
@@ -408,6 +433,10 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 				case currentSection == "context_keywords":
 					if stripped != "" {
 						grammar.ContextKeywords = append(grammar.ContextKeywords, stripped)
+					}
+				case currentSection == "soft_keywords":
+					if stripped != "" {
+						grammar.SoftKeywords = append(grammar.SoftKeywords, stripped)
 					}
 				case currentSection == "reserved":
 					if stripped != "" {
