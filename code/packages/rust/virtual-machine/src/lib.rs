@@ -46,6 +46,7 @@
 //! This is exactly what a physical CPU does billions of times per second.
 
 use std::collections::HashMap;
+use std::any::Any;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 1: Core Types
@@ -234,6 +235,35 @@ impl std::fmt::Display for Value {
     }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// TypedVMValue — a value tagged with a type code, used by WASM and other
+// typed bytecode engines that need finer type distinctions than Value provides.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// A typed VM value: a raw [`Value`] tagged with an integer type code.
+///
+/// While the base [`Value`] enum distinguishes ints from floats from strings,
+/// some execution engines (e.g. WebAssembly) need to distinguish i32 from i64,
+/// f32 from f64, etc.  The `value_type` field carries this extra type
+/// information as an opaque `u8`.
+///
+/// ```text
+/// TypedVMValue { value_type: 0x7F, value: Value::Int(42) }
+///                ^                  ^
+///                |                  The actual runtime value
+///                WASM type code for i32
+/// ```
+///
+/// The typed stack (`GenericVM::typed_stack`) stores these values, and the
+/// `push_typed` / `pop_typed` / `peek_typed` methods operate on it.
+#[derive(Debug, Clone)]
+pub struct TypedVMValue {
+    /// An opaque type code (e.g. 0x7F for WASM i32, 0x7E for i64, etc.).
+    pub value_type: u8,
+    /// The actual runtime value.
+    pub value: Value,
+}
+
 /// A compiled unit of code — the output of a compiler, the input to the VM.
 ///
 /// A CodeObject bundles together everything the VM needs to execute a piece of
@@ -358,6 +388,25 @@ pub type VMResult<T> = Result<T, VMError>;
 pub type OpcodeHandler =
     fn(vm: &mut GenericVM, instr: &Instruction, code: &CodeObject) -> VMResult<Option<String>>;
 
+/// A context-aware opcode handler receives an extra `&mut dyn Any` context
+/// argument. WASM instruction handlers use this to access the
+/// [`WasmExecutionContext`] (memory, tables, globals, locals, label stack).
+///
+/// The handler signature is:
+/// ```text
+/// fn(vm, instruction, code_object, context) -> Result<Option<description>, VMError>
+/// ```
+///
+/// The context is type-erased (`&mut dyn Any`) so that GenericVM remains
+/// agnostic to the concrete context type. Handlers downcast with
+/// `ctx.downcast_mut::<MyContext>().unwrap()`.
+pub type ContextOpcodeHandler = fn(
+    vm: &mut GenericVM,
+    instr: &Instruction,
+    code: &CodeObject,
+    ctx: &mut dyn Any,
+) -> VMResult<Option<String>>;
+
 /// A built-in function that can be called from bytecode.
 ///
 /// Built-ins are functions provided by the VM runtime rather than defined in
@@ -416,8 +465,21 @@ pub struct GenericVM {
     /// Each frame is a snapshot of the variables at the call site.
     pub call_stack: Vec<HashMap<String, Value>>,
 
+    // ── Typed stack (for WASM and other typed bytecode engines) ──────────
+    //
+    // The typed stack carries TypedVMValue entries instead of plain Values.
+    // This is used by WASM where every stack slot has an explicit type tag
+    // (i32, i64, f32, f64).
+
+    /// The typed operand stack for WASM-style execution.
+    pub typed_stack: Vec<TypedVMValue>,
+
     /// The handler dispatch table: opcode -> handler function.
     handlers: HashMap<OpCode, OpcodeHandler>,
+    /// Context-aware handlers: opcode -> context handler function.
+    /// These are checked *before* the regular handlers during
+    /// `execute_with_context` and receive the execution context.
+    pub context_handlers: HashMap<OpCode, ContextOpcodeHandler>,
     /// Built-in functions available to bytecode.
     builtins: HashMap<String, BuiltinFunction>,
     /// Maximum call stack depth (None = unlimited).
@@ -440,7 +502,9 @@ impl GenericVM {
             halted: false,
             output: Vec::new(),
             call_stack: Vec::new(),
+            typed_stack: Vec::new(),
             handlers: HashMap::new(),
+            context_handlers: HashMap::new(),
             builtins: HashMap::new(),
             max_recursion_depth: None,
             frozen: false,
@@ -688,6 +752,101 @@ impl GenericVM {
         self.halted = false;
         self.output.clear();
         self.call_stack.clear();
+        self.typed_stack.clear();
+    }
+
+    // ── Context-aware opcode registration ───────────────────────────────
+
+    /// Register a context-aware handler for a specific opcode.
+    ///
+    /// Context handlers are dispatched during `execute_with_context` and
+    /// receive an extra `&mut dyn Any` argument carrying the execution
+    /// context (e.g. a `WasmExecutionContext` for WASM instruction handlers).
+    ///
+    /// Context handlers take priority over regular handlers when
+    /// `execute_with_context` is used.
+    ///
+    /// Panics if the VM is frozen.
+    pub fn register_context_opcode(
+        &mut self,
+        opcode: OpCode,
+        handler: ContextOpcodeHandler,
+    ) {
+        assert!(
+            !self.frozen,
+            "Cannot register context opcodes on a frozen VM"
+        );
+        self.context_handlers.insert(opcode, handler);
+    }
+
+    // ── Typed stack operations ──────────────────────────────────────────
+
+    /// Push a typed value onto the typed stack.
+    ///
+    /// Used by WASM and other typed bytecode engines where each stack
+    /// slot carries an explicit type tag (e.g. i32, i64, f32, f64).
+    pub fn push_typed(&mut self, value: TypedVMValue) {
+        self.typed_stack.push(value);
+    }
+
+    /// Pop a typed value from the typed stack.
+    ///
+    /// Returns `VMError::StackUnderflow` if the typed stack is empty.
+    pub fn pop_typed(&mut self) -> VMResult<TypedVMValue> {
+        self.typed_stack.pop().ok_or_else(|| {
+            VMError::StackUnderflow("Cannot pop from empty typed stack".to_string())
+        })
+    }
+
+    /// Peek at the top typed value without removing it.
+    ///
+    /// Returns `VMError::StackUnderflow` if the typed stack is empty.
+    pub fn peek_typed(&self) -> VMResult<TypedVMValue> {
+        self.typed_stack.last().cloned().ok_or_else(|| {
+            VMError::StackUnderflow("Cannot peek at empty typed stack".to_string())
+        })
+    }
+
+    // ── Context-aware execution ─────────────────────────────────────────
+
+    /// Execute a CodeObject with a context, using context-aware handlers.
+    ///
+    /// This is the WASM execution entry point. It runs the fetch-decode-execute
+    /// cycle, dispatching to context handlers (which receive `ctx`) before
+    /// falling back to regular handlers.
+    ///
+    /// The `ctx` parameter is type-erased (`&mut dyn Any`) so that GenericVM
+    /// remains agnostic to the concrete context type. Handlers downcast
+    /// with `ctx.downcast_mut::<MyContext>().unwrap()`.
+    pub fn execute_with_context(
+        &mut self,
+        code: &CodeObject,
+        ctx: &mut dyn Any,
+    ) -> VMResult<()> {
+        while !self.halted && self.pc < code.instructions.len() {
+            let instr = code.instructions.get(self.pc).ok_or_else(|| {
+                VMError::InvalidOpcode(format!("PC {} is out of bounds", self.pc))
+            })?;
+            let instr_clone = instr.clone();
+            let pc_before = self.pc;
+
+            // Try context handler first, then regular handler.
+            if let Some(handler) = self.context_handlers.get(&instr.opcode).copied() {
+                handler(self, &instr_clone, code, ctx)?;
+            } else if let Some(handler) = self.handlers.get(&instr.opcode).copied() {
+                handler(self, &instr_clone, code)?;
+                // Auto-advance PC if the handler didn't change it.
+                if self.pc == pc_before {
+                    self.pc += 1;
+                }
+            } else {
+                return Err(VMError::InvalidOpcode(format!(
+                    "No handler for opcode 0x{:02X}",
+                    instr.opcode
+                )));
+            }
+        }
+        Ok(())
     }
 }
 
