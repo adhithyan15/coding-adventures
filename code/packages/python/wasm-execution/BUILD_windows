@@ -1,5 +1,5 @@
 uv venv --quiet --clear
-uv pip install -e ../virtual-machine -e ../wasm-leb128 -e ../wasm-types -e ../wasm-opcodes -e ../wasm-module-parser --quiet
+uv pip install -e ../wasm-leb128 -e ../wasm-types -e ../wasm-opcodes -e ../wasm-module-parser -e ../virtual-machine --quiet
 uv pip install --no-deps -e .[dev] --quiet
 uv pip install pytest pytest-cov ruff mypy --quiet
 uv run --no-project python -m pytest tests/ -v
