@@ -1,0 +1,250 @@
+# ECMAScript 3 (1999) — Parser Grammar
+# @version 1
+# @ecmascript_edition 3
+#
+# ECMA-262, 3rd Edition — December 1999
+#
+# ES3 adds structured error handling (try/catch/finally/throw), strict equality
+# operators (=== and !==), the `instanceof` operator, and regex literals to
+# the ES1 grammar.
+#
+# Changes from ES1:
+#   - Added: try_statement, throw_statement
+#   - Added: catch_clause, finally_clause
+#   - Added: REGEX as a primary expression
+#   - Added: === and !== to equality_expression
+#   - Added: `instanceof` to relational_expression
+#   - Statement list gains try_statement and throw_statement
+
+# ============================================================================
+# Program
+# ============================================================================
+
+program = { source_element } ;
+
+source_element = function_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+
+function_declaration = "function" NAME LPAREN [ formal_parameter_list ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+formal_parameter_list = NAME { COMMA NAME } ;
+
+function_body = { source_element } ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# ES3 adds try_statement and throw_statement to ES1's 14 statement types.
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = NAME [ EQUALS assignment_expression ] ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+# --- NEW IN ES3: Error Handling ---
+#
+# try/catch/finally provides structured error handling. Before ES3, the only
+# way to handle errors was through the `onerror` global event handler.
+#
+# The catch clause binds the thrown value to a variable name. This variable
+# is scoped to the catch block (one of the few block-scoped bindings in pre-ES2015).
+#
+# You can have:
+#   - try { } catch (e) { }
+#   - try { } finally { }
+#   - try { } catch (e) { } finally { }
+# But NOT:
+#   - try { } alone (must have at least one of catch or finally)
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" LPAREN NAME RPAREN block ;
+
+finally_clause = "finally" block ;
+
+# throw must be followed by an expression on the SAME LINE (ASI restricted).
+# In a full implementation, this would use !NEWLINE lookahead.
+
+throw_statement = "throw" expression SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+assignment_expression = conditional_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS
+                    | SLASH_EQUALS | PERCENT_EQUALS | AMPERSAND_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- CHANGED IN ES3: Strict equality operators ---
+#
+# ES1 only had == and != (abstract equality, with type coercion).
+# ES3 adds === and !== (strict equality, no type coercion).
+#
+# The strict operators are generally preferred because they avoid surprising
+# type coercion rules. For example:
+#   "" == 0     // true  (abstract equality coerces types)
+#   "" === 0    // false (strict equality, different types)
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# --- CHANGED IN ES3: instanceof operator ---
+#
+# ES3 adds `instanceof` to the relational operators. It checks whether an
+# object's prototype chain includes a constructor's prototype:
+#   myArray instanceof Array  // true
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression } ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+unary_expression = postfix_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+left_hand_side_expression = call_expression | new_expression ;
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | LBRACKET expression RBRACKET } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+member_expression = primary_expression { DOT NAME | LBRACKET expression RBRACKET }
+                  | "new" member_expression arguments ;
+
+arguments = LPAREN [ assignment_expression { COMMA assignment_expression } ] RPAREN ;
+
+# --- CHANGED IN ES3: Regex literal as primary expression ---
+#
+# ES1 left regex literals as implementation-defined. ES3 formalizes them
+# as a primary expression alternative, giving them equal footing with
+# string and number literals.
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | LPAREN expression RPAREN ;
+
+array_literal = LBRACKET [ element_list ] RBRACKET ;
+
+element_list = [ assignment_expression ] { COMMA [ assignment_expression ] } ;
+
+object_literal = LBRACE [ property_assignment { COMMA property_assignment } [ COMMA ] ] RBRACE ;
+
+property_assignment = property_name COLON assignment_expression ;
+
+property_name = NAME | STRING | NUMBER ;
+
+function_expression = "function" [ NAME ] LPAREN [ formal_parameter_list ] RPAREN
+                      LBRACE function_body RBRACE ;
