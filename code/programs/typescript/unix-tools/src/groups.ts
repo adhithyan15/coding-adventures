@@ -33,7 +33,8 @@
  */
 
 import * as path from "node:path";
-import { execSync } from "node:child_process";
+import { accessSync, constants as fsConstants } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 // ---------------------------------------------------------------------------
@@ -65,7 +66,9 @@ const SPEC_FILE = path.resolve(__dirname, "..", "groups.json");
  */
 export function getCurrentGroups(): string[] {
   try {
-    const output = execSync("id -Gn", { encoding: "utf-8" }).trim();
+    const idCommand = resolveIdCommand();
+    if (!idCommand) return [];
+    const output = execFileSync(idCommand, ["-Gn"], { encoding: "utf-8" }).trim();
     return output.split(/\s+/);
   } catch {
     return [];
@@ -84,13 +87,27 @@ export function getCurrentGroups(): string[] {
  */
 export function getUserGroups(username: string): string[] | null {
   try {
-    const output = execSync(`id -Gn ${username}`, {
+    const idCommand = resolveIdCommand();
+    if (!idCommand) return null;
+    const output = execFileSync(idCommand, ["-Gn", username], {
       encoding: "utf-8",
     }).trim();
     return output.split(/\s+/);
   } catch {
     return null;
   }
+}
+
+function resolveIdCommand(): string | null {
+  for (const candidate of ["/usr/bin/id", "/bin/id"]) {
+    try {
+      accessSync(candidate, fsConstants.X_OK);
+      return candidate;
+    } catch {
+      continue;
+    }
+  }
+  return null;
 }
 
 // ---------------------------------------------------------------------------

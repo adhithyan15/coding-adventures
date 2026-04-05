@@ -190,6 +190,35 @@ export interface TokenGrammar {
   readonly contextKeywords?: readonly string[];
 }
 
+function parseMagicComment(line: string): { key: string; value: string } | null {
+  if (!line.startsWith("#")) return null;
+
+  let index = 1;
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  if (line[index] !== "@") return null;
+  index++;
+
+  const keyStart = index;
+  while (index < line.length) {
+    const ch = line[index];
+    const isWordChar = (ch >= "a" && ch <= "z")
+      || (ch >= "A" && ch <= "Z")
+      || (ch >= "0" && ch <= "9")
+      || ch === "_";
+    if (!isWordChar) break;
+    index++;
+  }
+  if (index === keyStart) return null;
+
+  const key = line.slice(keyStart, index);
+  while (index < line.length && (line[index] === " " || line[index] === "\t")) {
+    index++;
+  }
+  return { key, value: line.slice(index).trim() };
+}
+
 // ---------------------------------------------------------------------------
 // Helper: extract all token names from a grammar
 // ---------------------------------------------------------------------------
@@ -426,11 +455,6 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   let version = 0;
   let caseInsensitive = false;
 
-  // Regex that matches a magic comment: `# @key optional_value`
-  // Group 1: the key  (word characters only)
-  // Group 2: the rest of the line after the key (may be empty)
-  const magicCommentPattern = /^#\s*@(\w+)\s*(.*)$/;
-
   // Section tracking. We use a string to track which section we're in,
   // since sections are mutually exclusive and we can only be in one at
   // a time (or in no section = definition mode).
@@ -458,7 +482,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
 
   for (let i = 0; i < lines.length; i++) {
     const lineNumber = i + 1;
-    const line = lines[i].replace(/\s+$/, "");
+    const line = lines[i].trimEnd();
     const stripped = line.trim();
 
     // Blank lines are always skipped.
@@ -470,10 +494,9 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     // carry structured metadata we need to extract before discarding the line.
     // We check for the magic pattern first; non-magic comments are skipped.
     if (stripped.startsWith("#")) {
-      const magicMatch = magicCommentPattern.exec(stripped);
+      const magicMatch = parseMagicComment(stripped);
       if (magicMatch) {
-        const key = magicMatch[1];
-        const value = magicMatch[2].trim();
+        const { key, value } = magicMatch;
         if (key === "version") {
           // Parse the version as a decimal integer. NaN falls back to 0
           // so a malformed `# @version abc` is treated as "unversioned."

@@ -16,6 +16,7 @@ import { store } from "../state.js";
 import { startSessionAction } from "../actions.js";
 import { buildSessionQueue } from "../queue.js";
 import { getSessionCorrectPct, getSessionNewCount } from "../reducer.js";
+import { generateSecureId } from "../secure-id.js";
 
 interface SessionCompleteProps {
   onNavigate: (path: string) => void;
@@ -60,9 +61,7 @@ export function SessionComplete({ onNavigate }: SessionCompleteProps) {
       return;
     }
 
-    const sessionId = crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const sessionId = generateSecureId();
 
     store.dispatch(startSessionAction(completedSession!.deckId, sessionId, queue));
     onNavigate("/session");

@@ -195,6 +195,45 @@ interface SyntheticToken extends Token {
   column: number;
 }
 
+function isAsciiLetter(value: string): boolean {
+  return value >= "A" && value <= "Z" || value >= "a" && value <= "z";
+}
+
+function consumeSimpleNumber(value: string): number {
+  let index = 0;
+  if (value[index] === "-") {
+    index++;
+  }
+
+  const integerStart = index;
+  while (index < value.length && value[index] >= "0" && value[index] <= "9") {
+    index++;
+  }
+  const integerDigits = index - integerStart;
+
+  let fractionalDigits = 0;
+  if (value[index] === ".") {
+    index++;
+    const fractionalStart = index;
+    while (index < value.length && value[index] >= "0" && value[index] <= "9") {
+      index++;
+    }
+    fractionalDigits = index - fractionalStart;
+  }
+
+  return integerDigits === 0 && fractionalDigits === 0 ? -1 : index;
+}
+
+function isAsciiLetterString(value: string): boolean {
+  if (value.length === 0) return false;
+  for (const ch of value) {
+    if (!isAsciiLetter(ch)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /** Create a synthetic token based on a CSS value string. */
 function makeSyntheticToken(value: string, template: ASTNode | Token): SyntheticToken {
   const line = isASTNode(template) ? 0 : (template as Token).line ?? 0;
@@ -206,12 +245,15 @@ function makeSyntheticToken(value: string, template: ASTNode | Token): Synthetic
     type = "HASH";
   } else if (value.startsWith('"') || value.startsWith("'")) {
     type = "STRING";
-  } else if (/^-?[0-9]*\.?[0-9]+%$/.test(value)) {
-    type = "PERCENTAGE";
-  } else if (/^-?[0-9]*\.?[0-9]+[a-zA-Z]/.test(value)) {
-    type = "DIMENSION";
-  } else if (/^-?[0-9]*\.?[0-9]+$/.test(value)) {
-    type = "NUMBER";
+  } else {
+    const numberEnd = consumeSimpleNumber(value);
+    if (numberEnd === value.length - 1 && value[numberEnd] === "%") {
+      type = "PERCENTAGE";
+    } else if (numberEnd > 0 && numberEnd < value.length && isAsciiLetterString(value.slice(numberEnd))) {
+      type = "DIMENSION";
+    } else if (numberEnd === value.length) {
+      type = "NUMBER";
+    }
   }
 
   return { type, value, line, column };
