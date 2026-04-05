@@ -334,23 +334,43 @@ func runGrep(specPath string, argv []string, stdout io.Writer, stderr io.Writer)
 		// Extract integer flags (cli-builder returns these as int64).
 		if v := r.Flags["max_count"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.MaxCount = int(n)
+				maxCount, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "grep: invalid max count: %s\n", err)
+					return 2
+				}
+				opts.MaxCount = maxCount
 			}
 		}
 		if v := r.Flags["after_context"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.AfterContext = int(n)
+				afterContext, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "grep: invalid after-context: %s\n", err)
+					return 2
+				}
+				opts.AfterContext = afterContext
 			}
 		}
 		if v := r.Flags["before_context"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.BeforeContext = int(n)
+				beforeContext, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "grep: invalid before-context: %s\n", err)
+					return 2
+				}
+				opts.BeforeContext = beforeContext
 			}
 		}
 		if v := r.Flags["context"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.AfterContext = int(n)
-				opts.BeforeContext = int(n)
+				contextLines, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "grep: invalid context: %s\n", err)
+					return 2
+				}
+				opts.AfterContext = contextLines
+				opts.BeforeContext = contextLines
 			}
 		}
 

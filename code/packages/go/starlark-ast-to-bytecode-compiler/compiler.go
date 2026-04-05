@@ -10,22 +10,22 @@
 //
 // The compilation pipeline looks like this:
 //
-//   Source Code (string)
-//       │
-//       ▼
-//   starlark-lexer: TokenizeStarlark(source)
-//       │
-//       ▼
-//   starlark-parser: ParseStarlark(source)
-//       │
-//       ▼
-//   AST (parser.ASTNode tree)
-//       │
-//       ▼
-//   THIS FILE: compile AST to bytecode
-//       │
-//       ▼
-//   CodeObject (instructions + constants + names)
+//	Source Code (string)
+//	    │
+//	    ▼
+//	starlark-lexer: TokenizeStarlark(source)
+//	    │
+//	    ▼
+//	starlark-parser: ParseStarlark(source)
+//	    │
+//	    ▼
+//	AST (parser.ASTNode tree)
+//	    │
+//	    ▼
+//	THIS FILE: compile AST to bytecode
+//	    │
+//	    ▼
+//	CodeObject (instructions + constants + names)
 //
 // ════════════════════════════════════════════════════════════════════════
 // HOW THE COMPILER WORKS
@@ -36,18 +36,19 @@
 //
 // For example, compiling "x = 1 + 2":
 //
-//   1. Visit assign_stmt node
-//   2. Visit the RHS expression first (1 + 2)
-//      a. Visit arith node
-//      b. Visit left atom (1) -> emit LOAD_CONST 0  (adds 1 to constants)
-//      c. Visit right atom (2) -> emit LOAD_CONST 1  (adds 2 to constants)
-//      d. See "+" operator -> emit ADD
-//   3. See "=" operator and LHS target "x"
-//   4. Emit STORE_NAME 0  (adds "x" to names)
+//  1. Visit assign_stmt node
+//  2. Visit the RHS expression first (1 + 2)
+//     a. Visit arith node
+//     b. Visit left atom (1) -> emit LOAD_CONST 0  (adds 1 to constants)
+//     c. Visit right atom (2) -> emit LOAD_CONST 1  (adds 2 to constants)
+//     d. See "+" operator -> emit ADD
+//  3. See "=" operator and LHS target "x"
+//  4. Emit STORE_NAME 0  (adds "x" to names)
 //
 // Result: instructions=[LOAD_CONST 0, LOAD_CONST 1, ADD, STORE_NAME 0, HALT]
-//         constants=[1, 2]
-//         names=["x"]
+//
+//	constants=[1, 2]
+//	names=["x"]
 //
 // ════════════════════════════════════════════════════════════════════════
 // AST STRUCTURE
@@ -56,12 +57,12 @@
 // The parser produces parser.ASTNode trees where:
 //   - node.RuleName is the grammar rule name (e.g., "file", "assign_stmt")
 //   - node.Children is []interface{} containing:
-//     - *parser.ASTNode for nested grammar rules
-//     - lexer.Token for terminal tokens (identifiers, literals, operators)
+//   - *parser.ASTNode for nested grammar rules
+//   - lexer.Token for terminal tokens (identifiers, literals, operators)
 //
 // Children are in source order. For "x = 1 + 2", assign_stmt's children are:
-//   [expression_list("x"), Token("="), expression_list("1 + 2")]
 //
+//	[expression_list("x"), Token("="), expression_list("1 + 2")]
 package starlarkcompiler
 
 import (
@@ -143,6 +144,14 @@ func (c *StarlarkCompiler) addConstant(value interface{}) int {
 	}
 	c.constants = append(c.constants, value)
 	return len(c.constants) - 1
+}
+
+func checkedIntLiteral(value int64, raw string) int {
+	converted := int(value)
+	if int64(converted) != value {
+		panic(fmt.Sprintf("integer literal out of range: %s", raw))
+	}
+	return converted
 }
 
 // addName adds a name to the names table and returns its index.
@@ -249,9 +258,10 @@ func tokenTypeName(tok lexer.Token) string {
 // tree down to the atom containing the NAME token.
 //
 // AST path: expression_list -> expression -> or_expr -> and_expr ->
-//           not_expr -> comparison -> bitwise_or -> bitwise_xor ->
-//           bitwise_and -> shift -> arith -> term -> factor ->
-//           power -> primary -> atom -> NAME token
+//
+//	not_expr -> comparison -> bitwise_or -> bitwise_xor ->
+//	bitwise_and -> shift -> arith -> term -> factor ->
+//	power -> primary -> atom -> NAME token
 //
 // Returns empty string if the expression is not a simple name.
 func extractSimpleName(node *parser.ASTNode) string {
@@ -291,7 +301,7 @@ func extractSimpleName(node *parser.ASTNode) string {
 // Starlark strings can be:
 //   - Single-quoted:  'hello'
 //   - Double-quoted:  "hello"
-//   - Triple-quoted:  '''hello''' or """hello"""
+//   - Triple-quoted:  ”'hello”' or """hello"""
 //   - Raw prefixed:   r"hello\n"  (backslashes are literal)
 //   - Byte prefixed:  b"hello"
 func parseStringLiteral(s string) string {
@@ -442,9 +452,9 @@ var augmentedAssignOpMap = map[string]vm.OpCode{
 // CompileStarlark is the one-shot entry point: source code in, CodeObject out.
 //
 // It performs the complete pipeline:
-//   1. Lex the source into tokens (via starlark-lexer)
-//   2. Parse the tokens into an AST (via starlark-parser)
-//   3. Compile the AST into bytecode (this package)
+//  1. Lex the source into tokens (via starlark-lexer)
+//  2. Parse the tokens into an AST (via starlark-parser)
+//  3. Compile the AST into bytecode (this package)
 //
 // Returns an error if lexing, parsing, or compilation fails.
 //
@@ -655,19 +665,22 @@ func (c *StarlarkCompiler) compileSmallStmt(node *parser.ASTNode) {
 // Grammar: assign_stmt = expression_list [ ( assign_op | augmented_assign_op ) expression_list ] ;
 //
 // Three cases:
-//   1. x = expr           (simple assignment)
-//   2. x += expr          (augmented assignment)
-//   3. expr               (expression statement — result discarded)
+//  1. x = expr           (simple assignment)
+//  2. x += expr          (augmented assignment)
+//  3. expr               (expression statement — result discarded)
 //
 // For case 1:
-//   Compile RHS, then emit STORE_NAME/STORE_LOCAL for the LHS target.
+//
+//	Compile RHS, then emit STORE_NAME/STORE_LOCAL for the LHS target.
 //
 // For case 2 (e.g., x += 1):
-//   Compile: LOAD_NAME x, LOAD_CONST 1, ADD, STORE_NAME x
+//
+//	Compile: LOAD_NAME x, LOAD_CONST 1, ADD, STORE_NAME x
 //
 // For case 3:
-//   Compile the expression, then emit POP to discard the result.
-//   (Expression statements are used for side effects like function calls.)
+//
+//	Compile the expression, then emit POP to discard the result.
+//	(Expression statements are used for side effects like function calls.)
 func (c *StarlarkCompiler) compileAssignStmt(node *parser.ASTNode) {
 	nodes := extractNodes(node)
 	tokens := extractTokens(node)
@@ -774,15 +787,16 @@ func (c *StarlarkCompiler) compileReturnStmt(node *parser.ASTNode) {
 // Grammar: load_stmt = "load" LPAREN STRING { COMMA load_arg } [ COMMA ] RPAREN ;
 //
 // Starlark's load() imports symbols from another module:
-//   load("module.star", "symbol1", alias = "symbol2")
+//
+//	load("module.star", "symbol1", alias = "symbol2")
 //
 // Compilation:
-//   1. LOAD_MODULE (push the module path as a constant)
-//   2. For each imported symbol:
-//      a. DUP the module object
-//      b. IMPORT_FROM (extract the symbol)
-//      c. STORE_NAME (bind to local/alias name)
-//   3. POP the module object
+//  1. LOAD_MODULE (push the module path as a constant)
+//  2. For each imported symbol:
+//     a. DUP the module object
+//     b. IMPORT_FROM (extract the symbol)
+//     c. STORE_NAME (bind to local/alias name)
+//  3. POP the module object
 func (c *StarlarkCompiler) compileLoadStmt(node *parser.ASTNode) {
 	tokens := extractTokens(node)
 	loadArgNodes := []*parser.ASTNode{}
@@ -846,18 +860,18 @@ func (c *StarlarkCompiler) compileLoadStmt(node *parser.ASTNode) {
 //
 // The bytecode pattern for if/elif/else:
 //
-//   compile condition1
-//   JUMP_IF_FALSE -> elif1 (or else, or end)
-//   compile body1
-//   JUMP -> end
-//   elif1:
-//   compile condition2
-//   JUMP_IF_FALSE -> else (or end)
-//   compile body2
-//   JUMP -> end
-//   else:
-//   compile else_body
-//   end:
+//	compile condition1
+//	JUMP_IF_FALSE -> elif1 (or else, or end)
+//	compile body1
+//	JUMP -> end
+//	elif1:
+//	compile condition2
+//	JUMP_IF_FALSE -> else (or end)
+//	compile body2
+//	JUMP -> end
+//	else:
+//	compile else_body
+//	end:
 //
 // This is a forward-branching pattern. We use placeholder jumps that
 // get patched once we know the target addresses.
@@ -946,14 +960,14 @@ func (c *StarlarkCompiler) compileIfStmt(node *parser.ASTNode) {
 //
 // Bytecode pattern:
 //
-//   compile iterable_expression
-//   GET_ITER
-//   loop_top:
-//   FOR_ITER -> loop_exit      (jump if iterator exhausted)
-//   STORE_NAME loop_var        (or UNPACK_SEQUENCE for multiple vars)
-//   compile loop_body
-//   JUMP -> loop_top
-//   loop_exit:
+//	compile iterable_expression
+//	GET_ITER
+//	loop_top:
+//	FOR_ITER -> loop_exit      (jump if iterator exhausted)
+//	STORE_NAME loop_var        (or UNPACK_SEQUENCE for multiple vars)
+//	compile loop_body
+//	JUMP -> loop_top
+//	loop_exit:
 //
 // The FOR_ITER instruction checks if the iterator has more values.
 // If yes, it pushes the next value and continues. If exhausted, it
@@ -1060,14 +1074,14 @@ func (c *StarlarkCompiler) compileForStmt(node *parser.ASTNode) {
 //
 // Function definitions are compiled into TWO parts:
 //
-//   1. The function body is compiled into a separate CodeObject
-//      (a nested compilation with its own instructions/constants/names).
+//  1. The function body is compiled into a separate CodeObject
+//     (a nested compilation with its own instructions/constants/names).
 //
-//   2. In the outer scope, we emit:
-//      - Any default argument values (pushed as constants)
-//      - LOAD_CONST (the function's CodeObject)
-//      - MAKE_FUNCTION (creates a function object from CodeObject + defaults)
-//      - STORE_NAME (binds the function to its name)
+//  2. In the outer scope, we emit:
+//     - Any default argument values (pushed as constants)
+//     - LOAD_CONST (the function's CodeObject)
+//     - MAKE_FUNCTION (creates a function object from CodeObject + defaults)
+//     - STORE_NAME (binds the function to its name)
 //
 // This mirrors how Python compiles function definitions: the def statement
 // is an executable statement that creates a function object and assigns it
@@ -1165,8 +1179,8 @@ func (c *StarlarkCompiler) compileDefStmt(node *parser.ASTNode) {
 //   - A single simple statement on the same line: if True: pass
 //   - An indented block of statements:
 //     if True:
-//         x = 1
-//         y = 2
+//     x = 1
+//     y = 2
 func (c *StarlarkCompiler) compileSuite(node *parser.ASTNode) {
 	for _, child := range node.Children {
 		if n, ok := child.(*parser.ASTNode); ok {
@@ -1183,16 +1197,18 @@ func (c *StarlarkCompiler) compileSuite(node *parser.ASTNode) {
 // Grammar: expression = lambda_expr | or_expr [ "if" or_expr "else" expression ] ;
 //
 // The "if" form is the ternary conditional expression:
-//   value = x if condition else y
+//
+//	value = x if condition else y
 //
 // Bytecode for ternary:
-//   compile condition (the middle expression)
-//   JUMP_IF_FALSE -> else_branch
-//   compile true_value (the left expression)
-//   JUMP -> end
-//   else_branch:
-//   compile false_value (the right expression)
-//   end:
+//
+//	compile condition (the middle expression)
+//	JUMP_IF_FALSE -> else_branch
+//	compile true_value (the left expression)
+//	JUMP -> end
+//	else_branch:
+//	compile false_value (the right expression)
+//	end:
 func (c *StarlarkCompiler) compileExpression(node *parser.ASTNode) {
 	nodes := extractNodes(node)
 
@@ -1248,18 +1264,20 @@ func (c *StarlarkCompiler) compileExpressionList(node *parser.ASTNode) {
 // returns a without evaluating b.
 //
 // Bytecode pattern:
-//   compile a
-//   JUMP_IF_TRUE_OR_POP -> end   (if a is truthy, keep it and skip b)
-//   compile b
-//   end:
+//
+//	compile a
+//	JUMP_IF_TRUE_OR_POP -> end   (if a is truthy, keep it and skip b)
+//	compile b
+//	end:
 //
 // For chained: a or b or c
-//   compile a
-//   JUMP_IF_TRUE_OR_POP -> end
-//   compile b
-//   JUMP_IF_TRUE_OR_POP -> end
-//   compile c
-//   end:
+//
+//	compile a
+//	JUMP_IF_TRUE_OR_POP -> end
+//	compile b
+//	JUMP_IF_TRUE_OR_POP -> end
+//	compile c
+//	end:
 func (c *StarlarkCompiler) compileOrExpr(node *parser.ASTNode) {
 	nodes := extractNodes(node)
 	if len(nodes) == 1 {
@@ -1287,10 +1305,11 @@ func (c *StarlarkCompiler) compileOrExpr(node *parser.ASTNode) {
 // without evaluating b.
 //
 // Bytecode pattern:
-//   compile a
-//   JUMP_IF_FALSE_OR_POP -> end   (if a is falsy, keep it and skip b)
-//   compile b
-//   end:
+//
+//	compile a
+//	JUMP_IF_FALSE_OR_POP -> end   (if a is falsy, keep it and skip b)
+//	compile b
+//	end:
 func (c *StarlarkCompiler) compileAndExpr(node *parser.ASTNode) {
 	nodes := extractNodes(node)
 	if len(nodes) == 1 {
@@ -1335,9 +1354,10 @@ func (c *StarlarkCompiler) compileNotExpr(node *parser.ASTNode) {
 // Grammar: comparison = bitwise_or { comp_op bitwise_or } ;
 //
 // For a single comparison (a < b):
-//   compile a
-//   compile b
-//   CMP_LT
+//
+//	compile a
+//	compile b
+//	CMP_LT
 //
 // For chained comparisons (a < b < c), Starlark forbids them,
 // but we handle the grammar structure: compile pairs left-to-right.
@@ -1380,7 +1400,8 @@ func (c *StarlarkCompiler) compileComparison(node *parser.ASTNode) {
 
 // extractCompOp extracts the comparison operator string from a comp_op node.
 // Grammar: comp_op = EQUALS_EQUALS | NOT_EQUALS | LESS_THAN | GREATER_THAN
-//                  | LESS_EQUALS | GREATER_EQUALS | "in" | "not" "in" ;
+//
+//	| LESS_EQUALS | GREATER_EQUALS | "in" | "not" "in" ;
 //
 // Special case: "not" "in" is a two-token operator that we combine into "not in".
 func (c *StarlarkCompiler) extractCompOp(node *parser.ASTNode) string {
@@ -1401,10 +1422,11 @@ func (c *StarlarkCompiler) extractCompOp(node *parser.ASTNode) string {
 // Grammar pattern: rule = subrule { OP subrule } ;
 //
 // Bytecode:
-//   compile first_operand
-//   for each additional operand:
-//     compile operand
-//     emit OP
+//
+//	compile first_operand
+//	for each additional operand:
+//	  compile operand
+//	  emit OP
 func (c *StarlarkCompiler) compileBinaryChain(node *parser.ASTNode, op string) {
 	nodes := extractNodes(node)
 	if len(nodes) == 0 {
@@ -1493,9 +1515,10 @@ func (c *StarlarkCompiler) compileFactor(node *parser.ASTNode) {
 // Grammar: power = primary [ DOUBLE_STAR factor ] ;
 //
 // If there's a ** operator:
-//   compile base (primary)
-//   compile exponent (factor)
-//   POWER
+//
+//	compile base (primary)
+//	compile exponent (factor)
+//	POWER
 func (c *StarlarkCompiler) compilePower(node *parser.ASTNode) {
 	nodes := extractNodes(node)
 	if len(nodes) == 0 {
@@ -1678,8 +1701,9 @@ func (c *StarlarkCompiler) compileArgument(node *parser.ASTNode, positionalCount
 
 // compileAtom compiles atomic expressions (literals, names, collections).
 // Grammar: atom = INT | FLOAT | STRING { STRING } | NAME
-//               | "True" | "False" | "None"
-//               | list_expr | dict_expr | paren_expr ;
+//
+//	| "True" | "False" | "None"
+//	| list_expr | dict_expr | paren_expr ;
 //
 // This is where literal values enter the bytecode. Each literal is added
 // to the constants pool and referenced by a LOAD_CONST instruction.
@@ -1765,7 +1789,7 @@ func (c *StarlarkCompiler) compileAtom(node *parser.ASTNode) {
 			c.emit(OpLoadConst, idx)
 		} else {
 			val, _ := strconv.ParseInt(tok.Value, 10, 64)
-			idx := c.addConstant(int(val))
+			idx := c.addConstant(checkedIntLiteral(val, tok.Value))
 			c.emit(OpLoadConst, idx)
 		}
 	}
@@ -1860,8 +1884,9 @@ func (c *StarlarkCompiler) compileParenExpr(node *parser.ASTNode) {
 
 // compileParenBody compiles the contents of parentheses.
 // Grammar: paren_body = expression comp_clause
-//                     | expression COMMA [ expression { COMMA expression } [ COMMA ] ]
-//                     | expression ;
+//
+//	| expression COMMA [ expression { COMMA expression } [ COMMA ] ]
+//	| expression ;
 func (c *StarlarkCompiler) compileParenBody(node *parser.ASTNode) {
 	nodes := extractNodes(node)
 

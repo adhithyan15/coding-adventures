@@ -364,6 +364,10 @@ func (m *Message) ToBytes() []byte {
 	envBytes, _ := json.Marshal(env)
 
 	// Step 2: Calculate total size.
+	maxBufferSize := int(^uint(0) >> 1)
+	if len(envBytes) > maxBufferSize-headerSize-len(m.payload) {
+		panic("actor: message too large to serialize")
+	}
 	totalSize := headerSize + len(envBytes) + len(m.payload)
 	buf := make([]byte, totalSize)
 

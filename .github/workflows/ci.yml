@@ -33,6 +33,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   # ── Job 1: Detect which languages need toolchains ────────────
   #

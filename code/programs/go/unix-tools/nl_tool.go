@@ -148,19 +148,34 @@ func runNlWithStdin(specPath string, argv []string, stdout io.Writer, stderr io.
 		// Extract number width with default of 6.
 		numWidth := 6
 		if v, ok := r.Flags["number_width"].(int64); ok {
-			numWidth = int(v)
+			parsedWidth, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "nl: invalid number width: %s\n", err)
+				return 1
+			}
+			numWidth = parsedWidth
 		}
 
 		// Extract line increment with default of 1.
 		lineIncrement := 1
 		if v, ok := r.Flags["line_increment"].(int64); ok {
-			lineIncrement = int(v)
+			parsedIncrement, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "nl: invalid line increment: %s\n", err)
+				return 1
+			}
+			lineIncrement = parsedIncrement
 		}
 
 		// Extract starting line number with default of 1.
 		startingNum := 1
 		if v, ok := r.Flags["starting_line_number"].(int64); ok {
-			startingNum = int(v)
+			parsedStart, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "nl: invalid starting line number: %s\n", err)
+				return 1
+			}
+			startingNum = parsedStart
 		}
 
 		// Extract separator with default of "\t".

@@ -37,6 +37,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -57,6 +58,29 @@ var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "eli
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
 var kebabCaseRe = regexp.MustCompile(`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`)
+
+func intFromFloatFlag(value float64) (int, error) {
+	if math.IsNaN(value) || math.IsInf(value, 0) {
+		return 0, fmt.Errorf("%v is not a finite integer", value)
+	}
+
+	truncated := math.Trunc(value)
+	if truncated != value {
+		return 0, fmt.Errorf("%v is not an integer", value)
+	}
+
+	asInt64 := int64(truncated)
+	if float64(asInt64) != truncated {
+		return 0, fmt.Errorf("%v is outside the supported integer range", value)
+	}
+
+	converted := int(asInt64)
+	if int64(converted) != asInt64 {
+		return 0, fmt.Errorf("%v is outside the supported integer range", value)
+	}
+
+	return converted, nil
+}
 
 // =========================================================================
 // Name normalization
@@ -617,9 +641,9 @@ class TestVersion:
 	}
 
 	files := map[string]string{
-		"pyproject.toml":                           pyproject,
-		filepath.Join("src", snake, "__init__.py"): initPy,
-		filepath.Join("tests", "__init__.py"):      "",
+		"pyproject.toml": pyproject,
+		filepath.Join("src", snake, "__init__.py"):  initPy,
+		filepath.Join("tests", "__init__.py"):       "",
 		filepath.Join("tests", "test_"+snake+".py"): testPy,
 		"BUILD":         build,
 		"BUILD_windows": buildWindows,
@@ -681,10 +705,10 @@ func TestPackageLoads(t *testing.T) {
 	build := "go test ./... -v -cover\n"
 
 	files := map[string]string{
-		"go.mod":              goMod.String(),
-		snake + ".go":         srcFile,
-		snake + "_test.go":    testFile,
-		"BUILD":               build,
+		"go.mod":           goMod.String(),
+		snake + ".go":      srcFile,
+		snake + "_test.go": testFile,
+		"BUILD":            build,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
@@ -814,11 +838,11 @@ end
 
 	files := map[string]string{
 		fmt.Sprintf("coding_adventures_%s.gemspec", snake): gemspec,
-		"Gemfile": gemfile.String(),
+		"Gemfile":  gemfile.String(),
 		"Rakefile": rakefile,
-		fmt.Sprintf("lib/coding_adventures_%s.rb", snake):                      entryPoint.String(),
-		fmt.Sprintf("lib/coding_adventures/%s/version.rb", snake):              versionRb,
-		filepath.Join("test", fmt.Sprintf("test_%s.rb", snake)):                testRb,
+		fmt.Sprintf("lib/coding_adventures_%s.rb", snake):         entryPoint.String(),
+		fmt.Sprintf("lib/coding_adventures/%s/version.rb", snake): versionRb,
+		filepath.Join("test", fmt.Sprintf("test_%s.rb", snake)):   testRb,
 		"BUILD": build,
 	}
 	for path, content := range files {
@@ -935,11 +959,11 @@ describe("%s", () => {
 	}
 
 	files := map[string]string{
-		"package.json":  packageJSON,
-		"tsconfig.json": tsconfig,
-		"vitest.config.ts": vitestConfig,
-		filepath.Join("src", "index.ts"):                     indexTs,
-		filepath.Join("tests", pkgName+".test.ts"):           testTs,
+		"package.json":                             packageJSON,
+		"tsconfig.json":                            tsconfig,
+		"vitest.config.ts":                         vitestConfig,
+		filepath.Join("src", "index.ts"):           indexTs,
+		filepath.Join("tests", pkgName+".test.ts"): testTs,
 		"BUILD": build,
 	}
 	for path, content := range files {
@@ -997,9 +1021,9 @@ mod tests {
 	}
 
 	files := map[string]string{
-		"Cargo.toml":                cargo.String(),
+		"Cargo.toml":                   cargo.String(),
 		filepath.Join("src", "lib.rs"): libRs,
-		"BUILD":                     build,
+		"BUILD":                        build,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
@@ -1108,7 +1132,7 @@ end
 		filepath.Join("lib", "coding_adventures", snake+".ex"): libEx,
 		filepath.Join("test", snake+"_test.exs"):               testExs,
 		filepath.Join("test", "test_helper.exs"):               testHelper,
-		"BUILD": build,
+		"BUILD":                                                build,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
@@ -1282,8 +1306,8 @@ done_testing;
 		filepath.Join("lib", "CodingAdventures", camel+".pm"): module,
 		filepath.Join("t", "00-load.t"):                       loadT,
 		filepath.Join("t", "01-basic.t"):                      basicT,
-		"BUILD":                                                build.String(),
-		"BUILD_windows":                                        buildWindows,
+		"BUILD":                                               build.String(),
+		"BUILD_windows":                                       buildWindows,
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
@@ -1408,10 +1432,10 @@ end)
 
 	rockspecFilename := fmt.Sprintf("coding-adventures-%s-0.1.0-1.rockspec", pkgName)
 	files := map[string]string{
-		rockspecFilename:                                build, // placeholder, overwritten below
-		"BUILD":                                         build,
-		"BUILD_windows":                                 build,
-		"required_capabilities.json":                    capJSON,
+		rockspecFilename:             build, // placeholder, overwritten below
+		"BUILD":                      build,
+		"BUILD_windows":              build,
+		"required_capabilities.json": capJSON,
 		filepath.Join("src", "coding_adventures", snake, "init.lua"): initLua,
 		filepath.Join("tests", "test_"+snake+".lua"):                 testLua,
 	}
@@ -1580,10 +1604,10 @@ final class %sTests: XCTestCase {
 	testPath := filepath.Join("Tests", pascal+"Tests", pascal+"Tests.swift")
 
 	files := map[string]string{
-		"BUILD":                    build,
-		"Package.swift":            pkg.String(),
-		sourcePath:                 sourceSwift,
-		testPath:                   testSwift,
+		"BUILD":                      build,
+		"Package.swift":              pkg.String(),
+		sourcePath:                   sourceSwift,
+		testPath:                     testSwift,
 		"required_capabilities.json": capJSON,
 	}
 
@@ -1942,12 +1966,18 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 			return 1
 		}
 
+		layer, err := intFromFloatFlag(layerVal)
+		if err != nil {
+			fmt.Fprintf(stderr, "scaffold-generator: invalid layer value: %s\n", err)
+			return 1
+		}
+
 		cfg := scaffoldConfig{
 			packageName: pkgName,
 			pkgType:     pkgType,
 			languages:   languages,
 			directDeps:  directDeps,
-			layer:       int(layerVal),
+			layer:       layer,
 			description: description,
 			dryRun:      dryRun,
 			repoRoot:    repoRoot,

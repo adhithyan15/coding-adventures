@@ -284,7 +284,7 @@ mod tests {
         let info = get_user_info().unwrap();
         let output = format_user_id(&info, false, false);
         let parsed: Result<u32, _> = output.parse();
-        assert!(parsed.is_ok(), "user id should be numeric, got: {}", output);
+        assert!(parsed.is_ok(), "user id should be numeric");
     }
 
     #[cfg(unix)]

@@ -39,13 +39,13 @@
 //
 // This package offers two ways to work with JSON data:
 //
-// 1. JsonValue (typed) -- a Go interface with concrete struct types for each
-//    JSON type. Use this when you need type safety, pattern matching via type
-//    switches, or custom traversal.
+//  1. JsonValue (typed) -- a Go interface with concrete struct types for each
+//     JSON type. Use this when you need type safety, pattern matching via type
+//     switches, or custom traversal.
 //
-// 2. Native Go types (dynamic) -- map[string]interface{}, []interface{},
-//    string, float64/int, bool, nil. Use this when you just want to read
-//    JSON data without caring about the type system.
+//  2. Native Go types (dynamic) -- map[string]interface{}, []interface{},
+//     string, float64/int, bool, nil. Use this when you just want to read
+//     JSON data without caring about the type system.
 //
 // # JSON Has Exactly Six Types
 //
@@ -78,6 +78,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	jsonparser "github.com/adhithyan15/coding-adventures/code/packages/go/json-parser"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -489,9 +490,12 @@ func unescapeJSONString(s string) string {
 				if i+5 < len(s) {
 					hexStr := s[i+2 : i+6]
 					if r, err := strconv.ParseUint(hexStr, 16, 32); err == nil {
-						sb.WriteRune(rune(r))
-						i += 6
-						continue
+						parsedRune := rune(r)
+						if utf8.ValidRune(parsedRune) {
+							sb.WriteRune(parsedRune)
+							i += 6
+							continue
+						}
 					}
 				}
 				// Malformed \uXXXX — preserve as-is.
