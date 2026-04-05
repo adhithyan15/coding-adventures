@@ -432,13 +432,9 @@ module CodingAdventures
           return DocumentAst::RawInlineNode.new(format: "html", value: scanner.source[saved_pos...scanner.pos])
         end
         until scanner.done?
-          terminator = if scanner.match?("-->")
-                         "-->"
-                       elsif scanner.match?("--!>")
-                         "--!>"
-                       end
-          if terminator
-            content = scanner.source[content_start...scanner.pos - terminator.length]
+          terminator_length = html_comment_terminator_length(scanner)
+          if terminator_length
+            content = scanner.source[content_start...scanner.pos - terminator_length]
             if content.end_with?("-")
               scanner.pos = saved_pos
               return nil
@@ -605,6 +601,18 @@ module CodingAdventures
       index = text.length
       index -= 1 while index > 0 && (text[index - 1] == " " || text[index - 1] == "\t")
       text[0...index]
+    end
+
+    def self.html_comment_terminator_length(scanner)
+      if scanner.peek_slice(4) == "--!>"
+        scanner.skip(4)
+        return 4
+      end
+      if scanner.peek_slice(3) == "-->"
+        scanner.skip(3)
+        return 3
+      end
+      nil
     end
 
     # ─── Autolink Parsing ────────────────────────────────────────────────────
