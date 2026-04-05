@@ -4,7 +4,7 @@ import XCTest
 /// WasmLeb128Tests — unit tests for the LEB128 encoding/decoding module.
 final class WasmLeb128Tests: XCTestCase {
 
-    // MARK: - Unsigned decoding
+    // MARK: - Unsigned convenience functions
 
     func testDecodeUnsignedSingleByte() throws {
         let (val, n) = try decodeLEB128Unsigned32([0x01], offset: 0)
@@ -30,7 +30,7 @@ final class WasmLeb128Tests: XCTestCase {
         XCTAssertEqual(n, 2)
     }
 
-    // MARK: - Signed decoding
+    // MARK: - Signed convenience functions
 
     func testDecodeSignedPositive() throws {
         let (val, n) = try decodeLEB128Signed32([0x3F], offset: 0)
@@ -52,45 +52,62 @@ final class WasmLeb128Tests: XCTestCase {
 
     // MARK: - LEB128Decoder struct
 
-    func testDecoderDecodeU32() throws {
-        let decoder = LEB128Decoder(bytes: [0x80, 0x01], offset: 0)
-        let val = try decoder.decodeU32()
+    func testDecoderDecodeUnsigned32() throws {
+        var decoder = LEB128Decoder(data: [0x80, 0x01], offset: 0)
+        let val = try decoder.decodeUnsigned32()
         XCTAssertEqual(val, 128)
     }
 
-    func testDecoderDecodeI32Negative() throws {
-        let decoder = LEB128Decoder(bytes: [0x7F], offset: 0)
-        let val = try decoder.decodeI32()
+    func testDecoderDecodeSigned32Negative() throws {
+        var decoder = LEB128Decoder(data: [0x7F], offset: 0)
+        let val = try decoder.decodeSigned32()
         XCTAssertEqual(val, -1)
+    }
+
+    func testDecoderHasMore() {
+        let decoder = LEB128Decoder(data: [0x80, 0x01], offset: 0)
+        XCTAssertTrue(decoder.hasMore)
+    }
+
+    func testDecoderRemaining() {
+        let decoder = LEB128Decoder(data: [0x80, 0x01, 0x03], offset: 0)
+        XCTAssertEqual(decoder.remaining, 3)
     }
 
     // MARK: - LEB128Encoder
 
-    func testEncodeUnsignedSingleByte() {
-        let bytes = LEB128Encoder.encodeUnsigned(1)
+    func testEncodeUnsigned32SingleByte() {
+        let bytes = LEB128Encoder.encodeUnsigned32(1)
         XCTAssertEqual(bytes, [0x01])
     }
 
-    func testEncodeUnsigned128() {
-        let bytes = LEB128Encoder.encodeUnsigned(128)
+    func testEncodeUnsigned32Value128() {
+        let bytes = LEB128Encoder.encodeUnsigned32(128)
         XCTAssertEqual(bytes, [0x80, 0x01])
     }
 
-    func testEncodeSignedNegativeOne() {
-        let bytes = LEB128Encoder.encodeSigned(-1)
+    func testEncodeSigned32NegativeOne() {
+        let bytes = LEB128Encoder.encodeSigned32(-1)
         XCTAssertEqual(bytes, [0x7F])
     }
 
-    func testRoundTripUnsigned() throws {
+    func testEncodeSigned32Zero() {
+        let bytes = LEB128Encoder.encodeSigned32(0)
+        XCTAssertEqual(bytes, [0x00])
+    }
+
+    // MARK: - Round-trip
+
+    func testRoundTripUnsigned32() throws {
         let original: UInt32 = 624485
-        let encoded = LEB128Encoder.encodeUnsigned(UInt64(original))
+        let encoded = LEB128Encoder.encodeUnsigned32(original)
         let (decoded, _) = try decodeLEB128Unsigned32(encoded, offset: 0)
         XCTAssertEqual(decoded, original)
     }
 
-    func testRoundTripSigned() throws {
+    func testRoundTripSigned32() throws {
         let original: Int32 = -123456
-        let encoded = LEB128Encoder.encodeSigned(Int64(original))
+        let encoded = LEB128Encoder.encodeSigned32(original)
         let (decoded, _) = try decodeLEB128Signed32(encoded, offset: 0)
         XCTAssertEqual(decoded, original)
     }
@@ -107,5 +124,15 @@ final class WasmLeb128Tests: XCTestCase {
         let (val, n) = try decodeLEB128Signed64([0x7F], offset: 0)
         XCTAssertEqual(val, -1)
         XCTAssertEqual(n, 1)
+    }
+
+    func testEncodeUnsigned64() {
+        let bytes = LEB128Encoder.encodeUnsigned64(128)
+        XCTAssertEqual(bytes, [0x80, 0x01])
+    }
+
+    func testEncodeSigned64NegativeOne() {
+        let bytes = LEB128Encoder.encodeSigned64(-1)
+        XCTAssertEqual(bytes, [0x7F])
     }
 }
