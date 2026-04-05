@@ -1,0 +1,15 @@
+{
+  "name": "hash-breaker",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "npx tsx src/main.ts"
+  },
+  "dependencies": {
+    "@coding-adventures/md5": "file:../../../packages/typescript/md5"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
+  }
+}

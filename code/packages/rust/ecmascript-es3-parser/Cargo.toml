@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-ecmascript-es3-parser"
+version = "0.1.0"
+edition = "2021"
+description = "ECMAScript 3 (1999) parser — parses ES3 JavaScript source code into an AST using the grammar-driven parser and the es3.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-ecmascript-es3-lexer = { path = "../ecmascript-es3-lexer" }
