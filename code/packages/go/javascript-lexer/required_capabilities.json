@@ -7,8 +7,92 @@
       "category": "fs",
       "action": "read",
       "target": "../../../grammars/javascript.tokens",
-      "justification": "Reads token grammar definition file to build the lexer DFA at initialization time."
+      "justification": "Generic JavaScript token grammar (no version specified)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es1.tokens",
+      "justification": "ECMAScript 1 token grammar (June 1997)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es3.tokens",
+      "justification": "ECMAScript 3 token grammar (December 1999)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es5.tokens",
+      "justification": "ECMAScript 5 token grammar (December 2009)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2015.tokens",
+      "justification": "ECMAScript 2015 token grammar (June 2015)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2016.tokens",
+      "justification": "ECMAScript 2016 token grammar (June 2016)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2017.tokens",
+      "justification": "ECMAScript 2017 token grammar (June 2017)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2018.tokens",
+      "justification": "ECMAScript 2018 token grammar (June 2018)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2019.tokens",
+      "justification": "ECMAScript 2019 token grammar (June 2019)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2020.tokens",
+      "justification": "ECMAScript 2020 token grammar (June 2020)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2021.tokens",
+      "justification": "ECMAScript 2021 token grammar (June 2021)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2022.tokens",
+      "justification": "ECMAScript 2022 token grammar (June 2022)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2023.tokens",
+      "justification": "ECMAScript 2023 token grammar (June 2023)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2024.tokens",
+      "justification": "ECMAScript 2024 token grammar (June 2024)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2025.tokens",
+      "justification": "ECMAScript 2025 token grammar (June 2025)."
     }
   ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "justification": "Reads grammar definition files for the selected ECMAScript version. No write, network, or process access needed."
 }
