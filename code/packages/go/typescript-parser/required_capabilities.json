@@ -7,8 +7,44 @@
       "category": "fs",
       "action": "read",
       "target": "../../../grammars/typescript.grammar",
-      "justification": "Reads parser grammar definition file to build parse tables at initialization time."
+      "justification": "Generic TypeScript parser grammar (no version specified)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts1.0.grammar",
+      "justification": "TypeScript 1.0 parser grammar (April 2014)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts2.0.grammar",
+      "justification": "TypeScript 2.0 parser grammar (September 2016)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts3.0.grammar",
+      "justification": "TypeScript 3.0 parser grammar (July 2018)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts4.0.grammar",
+      "justification": "TypeScript 4.0 parser grammar (August 2020)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts5.0.grammar",
+      "justification": "TypeScript 5.0 parser grammar (March 2023)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts5.8.grammar",
+      "justification": "TypeScript 5.8 parser grammar (February 2025)."
     }
   ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "justification": "Reads grammar definition files for the selected TypeScript version. No write, network, or process access needed."
 }
