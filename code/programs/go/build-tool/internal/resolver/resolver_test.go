@@ -203,6 +203,40 @@ func TestParseGoDepsNoGoMod(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
+// Tests for Swift dependency parsing
+// ---------------------------------------------------------------------------
+
+func TestParseSwiftDepsSupportsNestedPackagePaths(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"programs/hash-breaker/Package.swift": `import PackageDescription
+
+let package = Package(
+    name: "HashBreaker",
+    dependencies: [
+        .package(path: "../../../packages/swift/md5"),
+    ]
+)
+`,
+		"packages/md5/Package.swift": `import PackageDescription
+
+let package = Package(name: "md5")
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "swift/programs/hash-breaker", Path: filepath.Join(root, "programs/hash-breaker"), Language: "swift"},
+		{Name: "swift/md5", Path: filepath.Join(root, "packages/md5"), Language: "swift"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseSwiftDeps(packages[0], known)
+
+	if len(deps) != 1 || deps[0] != "swift/md5" {
+		t.Fatalf("expected swift/md5 dependency, got %v", deps)
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Tests for ResolveDependencies
 // ---------------------------------------------------------------------------
 

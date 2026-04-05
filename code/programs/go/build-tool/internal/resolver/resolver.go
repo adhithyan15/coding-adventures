@@ -528,21 +528,23 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 	return internalDeps
 }
 
-// swiftDepRe matches .package(path: "../dep-name") in Package.swift.
+// swiftDepRe matches .package(path: "...") in Package.swift.
 // Compiled once at package level to avoid repeated regex compilation.
-var swiftDepRe = regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"\.\.\/([^"]+)"`)
+var swiftDepRe = regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"([^"]+)"`)
 
 // parseSwiftDeps extracts internal dependencies from a Swift Package.swift file.
 //
-// Swift Package Manager uses relative path references for local (monorepo)
+// Swift Package Manager uses path references for local (monorepo)
 // dependencies. The declaration always appears on a single line in
 // scaffold-generated files:
 //
 //	.package(path: "../logic-gates"),
+//	.package(path: "../../../packages/swift/md5"),
 //
-// We scan for this pattern and map the directory name back to our internal
-// package name. External dependencies (declared with `url:`) are silently
-// skipped because they don't match the `path: "../"` prefix.
+// We scan for this pattern, take the final path component, and map that
+// directory name back to our internal package name. External dependencies
+// (declared with `url:`) are silently skipped because they don't match this
+// `path:` form.
 func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	manifest := filepath.Join(pkg.Path, "Package.swift")
 	data, err := os.ReadFile(manifest)
@@ -558,10 +560,12 @@ func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []strin
 		}
 		matches := swiftDepRe.FindStringSubmatch(trimmed)
 		if len(matches) >= 2 {
-			depDir := strings.ToLower(matches[1])
-			// Guard against path traversal: reject any segment containing
-			// a path separator or additional ".." components.
-			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+			cleaned := filepath.Clean(filepath.FromSlash(matches[1]))
+			if filepath.IsAbs(cleaned) {
+				continue
+			}
+			depDir := strings.ToLower(filepath.Base(cleaned))
+			if depDir == "." || depDir == ".." {
 				continue
 			}
 			if pkgName, ok := knownNames[depDir]; ok {
