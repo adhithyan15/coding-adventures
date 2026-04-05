@@ -271,6 +271,16 @@ fn decode_qoi_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
         .ok_or("QOI: image dimensions overflow")?;
     let data_cap = total_pixels.checked_mul(4)
         .ok_or("QOI: image dimensions overflow")?;
+
+    // Reject before allocating if the payload is provably insufficient.
+    // After the 14-byte header and 8-byte end marker, each remaining byte can
+    // encode at most 62 pixels (QOI_OP_RUN with a full run of 62). If the
+    // claimed pixel count exceeds that bound, the file is definitely truncated.
+    let payload_len = bytes.len().saturating_sub(22);
+    if total_pixels > payload_len.saturating_mul(62) {
+        return Err("QOI: pixel data truncated".into());
+    }
+
     let mut data = Vec::with_capacity(data_cap);
 
     // Decode state.

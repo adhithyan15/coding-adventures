@@ -104,7 +104,11 @@ pub fn decode_ppm(bytes: &[u8]) -> Result<PixelContainer, String> {
 fn encode_ppm_impl(c: &PixelContainer) -> Vec<u8> {
     // Build the ASCII header: "P6\n<width> <height>\n255\n"
     let header = format!("P6\n{} {}\n255\n", c.width, c.height);
-    let pixel_bytes = (c.width * c.height * 3) as usize;
+    // Use checked usize arithmetic to prevent silent u32 overflow in release mode.
+    let pixel_bytes = (c.width as usize)
+        .checked_mul(c.height as usize)
+        .and_then(|n| n.checked_mul(3))
+        .expect("PPM encode: image dimensions overflow usize");
 
     let mut out = Vec::with_capacity(header.len() + pixel_bytes);
     out.extend_from_slice(header.as_bytes());
